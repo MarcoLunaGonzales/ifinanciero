@@ -1,0 +1,2 @@
+[27-Nov-2019 02:13:27 UTC] PHP Notice:  Undefined index: cantidad_filas in /home/marcoluna/public_html/ibno_conta/sisadminibno/plantillas_costos/saveComplemento.php on line 11
+[27-Nov-2019 02:13:27 UTC] PHP Notice:  Undefined index: detalles in /home/marcoluna/public_html/ibno_conta/sisadminibno/plantillas_costos/saveComplemento.php on line 12

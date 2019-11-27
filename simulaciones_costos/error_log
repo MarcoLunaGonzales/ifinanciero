@@ -1,0 +1,2 @@
+[27-Nov-2019 02:12:15 UTC] PHP Notice:  Undefined variable: stmt in /home/marcoluna/public_html/ibno_conta/sisadminibno/simulaciones_costos/registerSimulacion.php on line 114
+[27-Nov-2019 02:12:15 UTC] PHP Fatal error:  Call to a member function fetch() on a non-object in /home/marcoluna/public_html/ibno_conta/sisadminibno/simulaciones_costos/registerSimulacion.php on line 114

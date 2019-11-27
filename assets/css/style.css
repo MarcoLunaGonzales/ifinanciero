@@ -1,0 +1,162 @@
+.count{
+    position: absolute;
+    background: red;
+    height:16;
+    top:3px;
+    right:0.3rem;
+    width:16px;
+    text-align: center;
+    line-height: 16px;
+    font-size: 9px;
+    border-radius: 50%;
+    color:black;
+}
+
+.estado{
+    position: absolute;
+    height:8px;
+    top:2px;
+    right:0.2rem;
+    width:8px;
+    border-radius: 50%;   
+}
+
+.text-small{
+  font-size: 10 !important;
+}
+.table-fixed tbody {
+    display:block;
+    height:500px;
+    overflow:auto;
+}
+.table-fixed thead, .table-fixed tbody tr {
+    display:table;
+    width:100%;
+    table-layout:fixed;
+}
+.table-fixed thead {
+    width: calc( 100% - 1em )
+}
+
+
+.dt-buttons{
+position: absolute !important;
+right :50px !important;
+top:-80px !important;
+z-index: 20;
+}
+
+.buttons-copy{
+  border: 1px solid #AAB7B8 !important;
+  color:#AAB7B8 !important;
+  width: 40px !important;
+  padding: 5px !important;
+}
+.buttons-csv{
+  border: 1px solid #2980B9 !important;
+  color:#2980B9 !important;
+  width: 40px !important;
+  padding: 5px !important;
+}
+.buttons-excel{
+  border: 1px solid #28B463 !important;
+  color:#28B463 !important;
+  width: 40px !important;
+  padding: 5px !important;
+}
+.buttons-print{
+  border: 1px solid #09bcb7 !important;
+  color:#09bcb7 !important;
+  width: 40px !important;
+  padding: 5px !important;
+}
+.buttons-pdf{
+  border: 1px solid #F93A11 !important;
+  color:#F93A11 !important;
+  width: 40px !important;
+  padding: 5px !important;
+}
+
+.buttons-copy:hover{
+  background: #AAB7B8 !important;
+  color:white !important;
+}
+.buttons-csv:hover{
+  background: #2980B9 !important;
+  color:white !important;
+}
+.buttons-excel:hover{
+  background: #28B463 !important;
+  color:white !important;
+}
+.buttons-print:hover{
+  background: #09bcb7 !important;
+  color:white !important;
+}
+.buttons-pdf:hover{
+  background: #F93A11 !important;
+  color:white !important;
+}
+.bg-plomo{
+ background: #D7DBDD; 
+}
+.bg-principal{
+  background:#8E4583;
+}
+
+.bg-blanco{
+   background:white !important;
+}
+
+.fondo-imagen { 
+background: url("../img/bg9.jpg") no-repeat center center fixed !important;
+-webkit-background-size: cover !important;
+-moz-background-size: cover !important;
+-o-background-size: cover !important;
+background-size: cover !important;
+position: fixed;
+filter:blur(6px);
+top:-20px;
+/*padding-top: 100px;*/
+width:100%;
+height: 120%;
+}
+.fondo-imagen2 { 
+background: url("../img/header-doc.jpg") no-repeat center center fixed !important;
+-webkit-background-size: cover !important;
+-moz-background-size: cover !important;
+-o-background-size: cover !important;
+background-size: cover !important;
+position: fixed;
+filter:blur(6px);
+top:-20px;
+/*padding-top: 100px;*/
+width:100%;
+height: 120%;
+}
+
+.fila-button{
+  background: white;
+  color:#1E7972;
+}
+
+.fila-button:hover{
+  background: #1E7972;
+  color: white;
+}
+
+.bg-table-primary{
+  background: #0D5F7C;
+}
+.icon-sm{
+  font-size: 16px !important;
+}
+.bg-table-total{
+  background: #0A5851;
+  color:white;
+}
+.div-center{
+        margin: 0 auto !important; /* Added */
+        float: none !important; /* Added */
+        margin-bottom: 10px !important; /* Added */
+}

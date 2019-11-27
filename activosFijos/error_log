@@ -1,0 +1,18 @@
+[02-Oct-2019 15:18:13 UTC] PHP Warning:  PDOStatement::bindColumn(): SQLSTATE[HY000]: General error: Did not find column name 'codigo1' in the defined columns; it will not be bound in /home/marcoluna/public_html/eduardo/ibno/activosFijos/afPrintDepreciacion1.php on line 59
+[02-Oct-2019 15:18:13 UTC] PHP Notice:  Use of undefined constant Arial - assumed 'Arial' in /home/marcoluna/public_html/eduardo/ibno/activosFijos/afPrintDepreciacion1.php on line 86
+[02-Oct-2019 15:18:13 UTC] PHP Notice:  Use of undefined constant Arial - assumed 'Arial' in /home/marcoluna/public_html/eduardo/ibno/activosFijos/afPrintDepreciacion1.php on line 103
+[02-Oct-2019 15:22:35 UTC] PHP Warning:  PDOStatement::bindColumn(): SQLSTATE[HY000]: General error: Did not find column name 'codigo1' in the defined columns; it will not be bound in /home/marcoluna/public_html/eduardo/ibno/activosFijos/afPrintDepreciacion1.php on line 59
+[02-Oct-2019 15:22:35 UTC] PHP Notice:  Use of undefined constant Arial - assumed 'Arial' in /home/marcoluna/public_html/eduardo/ibno/activosFijos/afPrintDepreciacion1.php on line 86
+[02-Oct-2019 15:22:35 UTC] PHP Notice:  Use of undefined constant Arial - assumed 'Arial' in /home/marcoluna/public_html/eduardo/ibno/activosFijos/afPrintDepreciacion1.php on line 103
+[02-Nov-2019 02:05:59 UTC] PHP Warning:  json_encode(): Invalid UTF-8 sequence in argument in /home/marcoluna/public_html/eduardo/ibno/activosFijos/depreciacionesAjax.php on line 18
+[02-Nov-2019 02:06:54 UTC] PHP Warning:  json_encode(): Invalid UTF-8 sequence in argument in /home/marcoluna/public_html/eduardo/ibno/activosFijos/depreciacionesAjax.php on line 18
+[02-Nov-2019 02:11:39 UTC] PHP Warning:  json_encode(): Invalid UTF-8 sequence in argument in /home/marcoluna/public_html/eduardo/ibno/activosFijos/depreciacionesAjax.php on line 18
+[02-Nov-2019 02:17:46 UTC] PHP Warning:  json_encode(): Invalid UTF-8 sequence in argument in /home/marcoluna/public_html/eduardo/ibno/activosFijos/depreciacionesAjax.php on line 18
+[02-Nov-2019 02:19:15 UTC] PHP Warning:  json_encode(): Invalid UTF-8 sequence in argument in /home/marcoluna/public_html/eduardo/ibno/activosFijos/depreciacionesAjax.php on line 18
+[04-Nov-2019 21:45:11 UTC] PHP Warning:  json_encode(): Invalid UTF-8 sequence in argument in /home/marcoluna/public_html/eduardo/ibno/activosFijos/depreciacionesAjax.php on line 18
+[27-Nov-2019 13:57:49 UTC] PHP Notice:  Undefined variable: unidadC in /home/marcoluna/public_html/ibno_conta/sisadminibno/activosFijos/afPrintDepreciacion1.php on line 217
+[27-Nov-2019 13:57:49 UTC] PHP Notice:  Undefined variable: tipoC in /home/marcoluna/public_html/ibno_conta/sisadminibno/activosFijos/afPrintDepreciacion1.php on line 217
+[27-Nov-2019 13:57:49 UTC] PHP Notice:  Undefined variable: numeroC in /home/marcoluna/public_html/ibno_conta/sisadminibno/activosFijos/afPrintDepreciacion1.php on line 217
+[27-Nov-2019 22:10:18 UTC] PHP Notice:  Undefined variable: unidadC in /home/marcoluna/public_html/ibno_conta/sisadminibno/activosFijos/afPrintDepreciacion1.php on line 217
+[27-Nov-2019 22:10:18 UTC] PHP Notice:  Undefined variable: tipoC in /home/marcoluna/public_html/ibno_conta/sisadminibno/activosFijos/afPrintDepreciacion1.php on line 217
+[27-Nov-2019 22:10:18 UTC] PHP Notice:  Undefined variable: numeroC in /home/marcoluna/public_html/ibno_conta/sisadminibno/activosFijos/afPrintDepreciacion1.php on line 217

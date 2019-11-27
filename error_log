@@ -1,0 +1,13 @@
+[12-Nov-2019 17:04:55 UTC] PHP Notice:  Undefined index: user in /home/marcoluna/public_html/ibno_conta/sisadminibno/session.php on line 8
+[12-Nov-2019 17:04:56 UTC] PHP Notice:  Undefined index: password in /home/marcoluna/public_html/ibno_conta/sisadminibno/session.php on line 9
+[18-Nov-2019 21:23:25 UTC] PHP Notice:  Undefined variable: urlRegister in /home/marcoluna/public_html/ibno_conta/sisadminibno/tipos_cambios/list.php on line 90
+[18-Nov-2019 21:24:41 UTC] PHP Notice:  Undefined variable: urlRegister in /home/marcoluna/public_html/ibno_conta/sisadminibno/tipos_cambios/list.php on line 90
+[18-Nov-2019 21:25:12 UTC] PHP Notice:  Undefined variable: urlRegister in /home/marcoluna/public_html/ibno_conta/sisadminibno/tipos_cambios/list.php on line 90
+[18-Nov-2019 21:25:35 UTC] PHP Notice:  Undefined variable: urlRegister in /home/marcoluna/public_html/ibno_conta/sisadminibno/tipos_cambios/list.php on line 90
+[18-Nov-2019 21:25:40 UTC] PHP Notice:  Undefined variable: urlRegister in /home/marcoluna/public_html/ibno_conta/sisadminibno/tipos_cambios/list.php on line 90
+[18-Nov-2019 21:48:10 UTC] PHP Notice:  Undefined variable: urlRegister in /home/marcoluna/public_html/ibno_conta/sisadminibno/tipos_cambios/list.php on line 90
+[20-Nov-2019 01:30:41 UTC] PHP Notice:  Undefined variable: urlRegister in /home/marcoluna/public_html/ibno_conta/sisadminibno/tipos_cambios/list.php on line 90
+[20-Nov-2019 01:31:27 UTC] PHP Notice:  Undefined variable: urlRegister in /home/marcoluna/public_html/ibno_conta/sisadminibno/tipos_cambios/list.php on line 90
+[23-Nov-2019 14:02:27 UTC] PHP Notice:  Undefined variable: urlRegister in /home/marcoluna/public_html/ibno_conta/sisadminibno/tipos_cambios/list.php on line 90
+[23-Nov-2019 14:02:55 UTC] PHP Notice:  Undefined variable: urlRegister in /home/marcoluna/public_html/ibno_conta/sisadminibno/tipos_cambios/list.php on line 90
+[25-Nov-2019 18:18:58 UTC] PHP Notice:  Undefined variable: urlRegister in /home/marcoluna/public_html/ibno_conta/sisadminibno/tipos_cambios/list.php on line 90

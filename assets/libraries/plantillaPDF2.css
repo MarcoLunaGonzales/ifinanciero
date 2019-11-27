@@ -1,0 +1,274 @@
+body{font-family:  sans-serif; font-size: 10px;}
+@page { margin-top: 140px; margin-left: 40px; margin-right: 40px; margin-bottom: 140px;}
+
+
+header { position: fixed; top: -85px; left: 0px; right: 0px; height: 70px;}
+footer { position: fixed; bottom: -40px; left: 0px; right: 0px; height: 50px; }
+
+.imagen-logo-izq{
+  position: absolute;
+  /*float: right;*/
+  padding-left: 50px;
+  padding-top: -25px;
+  left: 0px;
+  width:70px;
+  height:70px;
+}
+#header_titulo_texto{text-align: center; font-size: 16px; font-weight: bold;}
+#header_titulo_texto_des{text-align: left; font-size: 12px; font-weight: bold; border-top: 1px solid #000;}
+#header_titulo_texto_inf{text-align: center; font-size: 11px;padding-top: 20px;}
+
+
+.table-inf{
+width: 100%;  
+}
+
+.table{
+width: 100%;  
+border-collapse: collapse;
+}
+.table .fila-primary td{
+   padding: 5px;
+    border-top: 0px;
+    border-right: 0px;
+    border-bottom: 1px solid black;
+    border-left: 0px;
+}
+.table .fila-totales td{
+   padding: 5px;
+    border-bottom: 0px;
+    border-right: 0px;
+    border-top: 1px solid black;
+    border-left: 0px;
+}
+.table tr td{
+   padding: 5px;
+    border: 1px solid black;
+}
+.td-border-tb{
+    border: none !important;
+    border-top: 1px solid black !important;
+    border-bottom: 1px solid black !important;
+}
+.td-border-l{
+    border-left: 1px solid black !important;
+}
+.td-border-r{
+    border-right: 1px solid black !important;
+}
+.td-border-none{
+  border: none !important;
+}
+.table .table-title{
+ font-size: 12px;
+}
+.pt-1{
+  margin-top: 10px;
+}
+.pt-2{
+  margin-top: 20px;
+}
+.pt-3{
+  margin-top: 30px;
+}
+.pt-4{
+  margin-top: 40px;
+}
+
+.bold{
+  font-weight: bold;
+}
+.text-right{
+text-align: right;  
+}
+.text-center{
+  text-align: center;
+}
+.text-left{
+text-align: left;  
+}
+
+.text-medium{
+  font-size: 16px !important;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+.sbody{font-family:  sans-serif; font-size: 10px;}
+.header2 { position: fixed; top: -10px; left: 0px; right: 0px; height: 70px;}
+.headDes { position: fixed; top: 30px; left: 0px; right: 40px; height: 70px;}
+#header_logo{background: #ffd; width: 150px; text-align: center;}
+#logo{width: 80%;height: 105px;}
+.logo-pie{width: 60%;height: 50px;}
+#header_texto{text-align: center; background: #ffd; width: 450px;}
+#header_logos{background: #ffd; text-align: center; width: 150px;}
+#logo1, #logo2{width: 50px;}
+
+#footer_texto{text-align: left; font-size: 10px;color:black;}
+
+#texto_main{margin-top: 25px;font-size: 13px; text-align: justify;padding-left: 70px;padding-right: 90px;}
+
+#table_info{width: 100%;}
+
+
+#nombres{text-align: left; font-size: 13px; padding-left: 3em;}
+.final{text-align: left; font-size: 9px;padding-top: 180px;}
+.tablas{font-size: 8px;}
+#nombres2{text-align: left; font-size: 13px; padding-left: 2em;}
+.justificar{text-align: justify;}
+
+#header_titulo_dos{text-align: justify; font-size: 13px;padding-left: 120px;padding-top: 20px;padding-right: 90px;}
+
+.text-derecha{
+  font-size: 8px;
+  position: relative;
+  right: 0;
+  top:-20px;
+}
+.bg-pluma{
+  background-color:#a5a5a5;
+}
+.fondillo{
+  background-color:#303f9f;
+  color:#ffffff;
+}
+.fechassol{
+  border: 1px solid #000;
+}
+.firma{
+margin: auto;
+width: 80%;
+}
+.firma2{
+margin: auto;
+width: 100%;
+}
+.ref{
+  text-align: center;
+}
+.cont{
+padding-right: 35px;
+padding-left: 80px; 
+}
+.cont_des{
+  padding-top: 40px;
+padding-right: 40px;
+padding-left: 40px; 
+}
+.contInforme{
+padding-right: 20px;
+padding-left: 80px; 
+}
+.cont-borde{
+  padding: 2px;
+  border: 1px solid #000;
+}
+.cont-borde-in{
+  border: 1px solid #000;
+}
+.cont-cuerpo{
+  padding-left: 50px;
+  padding-right: 50px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+.cont-cuerpo-2{
+  padding-left: 25px;
+  padding-right: 25px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+.imagen-logo{
+  position: absolute;
+  /*float: right;*/
+  right: 0px;
+  width:100px;
+  height:50px;
+}
+
+
+.table-inf-reem{
+  margin: auto;
+width: 90%; 
+border-collapse: collapse;
+}
+.table-infPar{
+  margin: auto;
+width: 40%; 
+border-collapse: collapse;
+}
+
+.derecha{
+text-align: right;  
+}
+.center-txt{
+  text-align: center;
+}
+.text-muted{
+  text-align: left;
+  font-weight: bold;
+  color: #1a5276 ;
+}
+.informetecnico{
+  padding-bottom: 6px;
+}
+
+.fila-primary{
+  background-color:#a93226;
+  color: white;
+}
+.fila-secondary{
+  background-color: #16a085;
+  color: white;
+}
+.fila-totales{
+  background-color:#eaeded;
+}
+.table-infPar .fila-primary td{
+   padding: 5px;
+    border-top: 0px;
+    border-right: 0px;
+    border-bottom: 1px solid black;
+    border-left: 0px;
+}
+.table-infPar .fila-totales td{
+   padding: 5px;
+    border-bottom: 0px;
+    border-right: 0px;
+    border-top: 1px solid black;
+    border-left: 0px;
+}
+.table-infPar tr td{
+   padding: 5px;
+    border: 1px solid #5d6d7e;
+}
+
+.justi{
+  width: 80%;
+  margin: auto;
+}
+
+.tabla_p {
+   width: 100%;
+}
+.tabla_p td{
+   text-align: right;
+   vertical-align: top;
+   border: 1px solid #000;
+   border-collapse: collapse;
+   padding: 0.3em;
+   caption-side: bottom;
+}
+.hr {
+border-bottom: 1px solid #000;
+}

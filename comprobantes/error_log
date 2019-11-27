@@ -1,0 +1,114 @@
+[07-Nov-2019 23:39:05 UTC] PHP Notice:  Undefined variable: index in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/register.php on line 182
+[07-Nov-2019 23:43:50 UTC] PHP Notice:  Undefined variable: index in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/register.php on line 182
+[08-Nov-2019 01:42:02 UTC] PHP Notice:  Undefined variable: valFac in /home/marcoluna/public_html/ibno_conta/sisadminibno/functions.php on line 533
+[08-Nov-2019 01:42:02 UTC] PHP Notice:  Undefined variable: valFac in /home/marcoluna/public_html/ibno_conta/sisadminibno/functions.php on line 533
+[08-Nov-2019 12:37:21 UTC] PHP Notice:  Undefined variable: index in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/register.php on line 182
+[08-Nov-2019 12:41:33 UTC] PHP Warning:  Creating default object from empty value in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/ajaxSavePlantilla.php on line 51
+[08-Nov-2019 12:41:33 UTC] PHP Warning:  Creating default object from empty value in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/ajaxSavePlantilla.php on line 58
+[08-Nov-2019 12:41:33 UTC] PHP Notice:  Undefined variable: nombreX in /home/marcoluna/public_html/ibno_conta/sisadminibno/functions.php on line 47
+[08-Nov-2019 12:41:33 UTC] PHP Notice:  Undefined variable: nombreX in /home/marcoluna/public_html/ibno_conta/sisadminibno/functions.php on line 67
+[08-Nov-2019 12:41:33 UTC] PHP Warning:  Creating default object from empty value in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/ajaxSavePlantilla.php on line 58
+[08-Nov-2019 12:41:33 UTC] PHP Notice:  Undefined variable: nombreX in /home/marcoluna/public_html/ibno_conta/sisadminibno/functions.php on line 47
+[08-Nov-2019 12:41:33 UTC] PHP Notice:  Undefined variable: nombreX in /home/marcoluna/public_html/ibno_conta/sisadminibno/functions.php on line 67
+[08-Nov-2019 12:41:33 UTC] PHP Notice:  Undefined variable: archivo in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/ajaxSavePlantilla.php on line 94
+[08-Nov-2019 12:41:33 UTC] PHP Warning:  fclose() expects parameter 1 to be resource, null given in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/ajaxSavePlantilla.php on line 94
+[08-Nov-2019 12:41:52 UTC] PHP Notice:  Undefined offset: 2 in /home/marcoluna/public_html/ibno_conta/sisadminibno/functions.php on line 522
+[08-Nov-2019 12:41:52 UTC] PHP Notice:  Undefined offset: 1 in /home/marcoluna/public_html/ibno_conta/sisadminibno/functions.php on line 522
+[08-Nov-2019 12:41:52 UTC] PHP Notice:  Undefined offset: 2 in /home/marcoluna/public_html/ibno_conta/sisadminibno/functions.php on line 522
+[08-Nov-2019 12:41:52 UTC] PHP Notice:  Undefined offset: 1 in /home/marcoluna/public_html/ibno_conta/sisadminibno/functions.php on line 522
+[08-Nov-2019 12:41:52 UTC] PHP Notice:  Undefined offset: 2 in /home/marcoluna/public_html/ibno_conta/sisadminibno/functions.php on line 522
+[08-Nov-2019 12:41:52 UTC] PHP Notice:  Undefined offset: 1 in /home/marcoluna/public_html/ibno_conta/sisadminibno/functions.php on line 522
+[08-Nov-2019 12:41:52 UTC] PHP Notice:  Undefined offset: 2 in /home/marcoluna/public_html/ibno_conta/sisadminibno/functions.php on line 522
+[08-Nov-2019 12:41:52 UTC] PHP Notice:  Undefined offset: 1 in /home/marcoluna/public_html/ibno_conta/sisadminibno/functions.php on line 522
+[08-Nov-2019 12:43:07 UTC] PHP Notice:  Undefined variable: index in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/register.php on line 182
+[08-Nov-2019 12:45:38 UTC] PHP Notice:  Undefined variable: index in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/register.php on line 182
+[08-Nov-2019 12:51:16 UTC] PHP Notice:  Undefined variable: index in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/register.php on line 182
+[08-Nov-2019 12:54:23 UTC] PHP Notice:  Undefined variable: index in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/register.php on line 182
+[08-Nov-2019 15:09:09 UTC] PHP Notice:  Undefined variable: index in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/register.php on line 182
+[08-Nov-2019 15:14:30 UTC] PHP Notice:  Undefined variable: index in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/register.php on line 182
+[08-Nov-2019 15:16:45 UTC] PHP Warning:  Creating default object from empty value in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/ajaxSavePlantilla.php on line 51
+[08-Nov-2019 15:16:45 UTC] PHP Warning:  Creating default object from empty value in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/ajaxSavePlantilla.php on line 58
+[08-Nov-2019 15:16:45 UTC] PHP Notice:  Undefined variable: nombreX in /home/marcoluna/public_html/ibno_conta/sisadminibno/functions.php on line 47
+[08-Nov-2019 15:16:45 UTC] PHP Notice:  Undefined variable: nombreX in /home/marcoluna/public_html/ibno_conta/sisadminibno/functions.php on line 67
+[08-Nov-2019 15:16:45 UTC] PHP Warning:  Creating default object from empty value in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/ajaxSavePlantilla.php on line 58
+[08-Nov-2019 15:16:45 UTC] PHP Notice:  Undefined variable: nombreX in /home/marcoluna/public_html/ibno_conta/sisadminibno/functions.php on line 47
+[08-Nov-2019 15:16:45 UTC] PHP Notice:  Undefined variable: nombreX in /home/marcoluna/public_html/ibno_conta/sisadminibno/functions.php on line 67
+[08-Nov-2019 15:16:45 UTC] PHP Warning:  Creating default object from empty value in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/ajaxSavePlantilla.php on line 58
+[08-Nov-2019 15:16:45 UTC] PHP Notice:  Undefined variable: nombreX in /home/marcoluna/public_html/ibno_conta/sisadminibno/functions.php on line 47
+[08-Nov-2019 15:16:45 UTC] PHP Notice:  Undefined variable: nombreX in /home/marcoluna/public_html/ibno_conta/sisadminibno/functions.php on line 67
+[08-Nov-2019 15:16:45 UTC] PHP Warning:  Creating default object from empty value in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/ajaxSavePlantilla.php on line 58
+[08-Nov-2019 15:16:45 UTC] PHP Notice:  Undefined variable: nombreX in /home/marcoluna/public_html/ibno_conta/sisadminibno/functions.php on line 47
+[08-Nov-2019 15:16:45 UTC] PHP Notice:  Undefined variable: nombreX in /home/marcoluna/public_html/ibno_conta/sisadminibno/functions.php on line 67
+[08-Nov-2019 15:16:45 UTC] PHP Notice:  Undefined variable: archivo in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/ajaxSavePlantilla.php on line 94
+[08-Nov-2019 15:16:45 UTC] PHP Warning:  fclose() expects parameter 1 to be resource, null given in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/ajaxSavePlantilla.php on line 94
+[08-Nov-2019 15:16:49 UTC] PHP Notice:  Undefined variable: index in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/register.php on line 182
+[08-Nov-2019 15:17:31 UTC] PHP Notice:  Undefined variable: index in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/register.php on line 182
+[08-Nov-2019 15:22:26 UTC] PHP Notice:  Undefined variable: index in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/register.php on line 182
+[08-Nov-2019 15:26:00 UTC] PHP Notice:  Undefined variable: index in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/register.php on line 182
+[08-Nov-2019 15:28:19 UTC] PHP Notice:  Undefined variable: index in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/register.php on line 182
+[08-Nov-2019 15:34:46 UTC] PHP Notice:  Undefined index: globalNombreGestion in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/edit_prueba.php on line 17
+[08-Nov-2019 15:34:46 UTC] PHP Notice:  Undefined index: globalUser in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/edit_prueba.php on line 18
+[08-Nov-2019 15:34:46 UTC] PHP Notice:  Undefined index: globalGestion in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/edit_prueba.php on line 19
+[08-Nov-2019 15:34:46 UTC] PHP Notice:  Undefined index: globalUnidad in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/edit_prueba.php on line 20
+[08-Nov-2019 15:34:46 UTC] PHP Notice:  Undefined index: globalNombreUnidad in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/edit_prueba.php on line 21
+[08-Nov-2019 15:34:46 UTC] PHP Notice:  Undefined index: globalArea in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/edit_prueba.php on line 22
+[08-Nov-2019 15:34:46 UTC] PHP Notice:  Undefined index: globalAdmin in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/edit_prueba.php on line 23
+[08-Nov-2019 15:35:20 UTC] PHP Notice:  Undefined index: globalNombreGestion in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/edit_prueba.php on line 17
+[08-Nov-2019 15:35:20 UTC] PHP Notice:  Undefined index: globalUser in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/edit_prueba.php on line 18
+[08-Nov-2019 15:35:20 UTC] PHP Notice:  Undefined index: globalGestion in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/edit_prueba.php on line 19
+[08-Nov-2019 15:35:20 UTC] PHP Notice:  Undefined index: globalUnidad in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/edit_prueba.php on line 20
+[08-Nov-2019 15:35:20 UTC] PHP Notice:  Undefined index: globalNombreUnidad in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/edit_prueba.php on line 21
+[08-Nov-2019 15:35:20 UTC] PHP Notice:  Undefined index: globalArea in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/edit_prueba.php on line 22
+[08-Nov-2019 15:35:20 UTC] PHP Notice:  Undefined index: globalAdmin in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/edit_prueba.php on line 23
+[11-Nov-2019 14:29:23 UTC] PHP Notice:  Undefined variable: index in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/register.php on line 182
+[13-Nov-2019 02:19:18 UTC] PHP Notice:  Undefined variable: index in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/register.php on line 199
+[13-Nov-2019 11:20:52 UTC] PHP Notice:  Undefined index: globalAdmin in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/ajaxCuentaContable.php on line 14
+[13-Nov-2019 11:20:52 UTC] PHP Notice:  Undefined index: globalGestion in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/ajaxCuentaContable.php on line 15
+[13-Nov-2019 11:20:52 UTC] PHP Notice:  Undefined index: globalUnidad in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/ajaxCuentaContable.php on line 16
+[13-Nov-2019 11:20:52 UTC] PHP Notice:  Undefined index: globalArea in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/ajaxCuentaContable.php on line 17
+[13-Nov-2019 11:21:00 UTC] PHP Notice:  Undefined index: globalAdmin in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/ajaxBusquedaCuenta.php on line 14
+[13-Nov-2019 11:21:00 UTC] PHP Notice:  Undefined index: globalGestion in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/ajaxBusquedaCuenta.php on line 15
+[13-Nov-2019 11:21:00 UTC] PHP Notice:  Undefined index: globalUnidad in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/ajaxBusquedaCuenta.php on line 16
+[13-Nov-2019 11:21:00 UTC] PHP Notice:  Undefined index: globalArea in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/ajaxBusquedaCuenta.php on line 17
+[13-Nov-2019 12:21:27 UTC] PHP Notice:  Undefined variable: index in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/register.php on line 199
+[13-Nov-2019 12:28:25 UTC] PHP Notice:  Undefined variable: index in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/register.php on line 199
+[13-Nov-2019 12:51:32 UTC] PHP Notice:  Undefined variable: index in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/register.php on line 199
+[14-Nov-2019 23:44:54 UTC] PHP Notice:  Undefined variable: index in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/register.php on line 199
+[26-Nov-2019 12:27:27 UTC] PHP Notice:  Undefined variable: valFac in /home/marcoluna/public_html/ibno_conta/sisadminibno/functions.php on line 784
+[26-Nov-2019 12:27:27 UTC] PHP Notice:  Undefined variable: valFac in /home/marcoluna/public_html/ibno_conta/sisadminibno/functions.php on line 784
+[26-Nov-2019 13:48:37 UTC] PHP Notice:  Undefined index: globalNombreGestion in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/edit_prueba.php on line 17
+[26-Nov-2019 13:48:37 UTC] PHP Notice:  Undefined index: globalUser in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/edit_prueba.php on line 18
+[26-Nov-2019 13:48:37 UTC] PHP Notice:  Undefined index: globalGestion in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/edit_prueba.php on line 19
+[26-Nov-2019 13:48:37 UTC] PHP Notice:  Undefined index: globalUnidad in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/edit_prueba.php on line 20
+[26-Nov-2019 13:48:37 UTC] PHP Notice:  Undefined index: globalNombreUnidad in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/edit_prueba.php on line 21
+[26-Nov-2019 13:48:37 UTC] PHP Notice:  Undefined index: globalArea in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/edit_prueba.php on line 22
+[26-Nov-2019 13:48:37 UTC] PHP Notice:  Undefined index: globalAdmin in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/edit_prueba.php on line 23
+[26-Nov-2019 15:20:16 UTC] PHP Notice:  Undefined variable: centvos in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/imp.php on line 138
+[26-Nov-2019 15:27:10 UTC] PHP Warning:  Wrong parameter count for number_format() in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/imp.php on line 135
+[26-Nov-2019 15:28:22 UTC] PHP Warning:  Wrong parameter count for number_format() in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/imp.php on line 135
+[26-Nov-2019 15:29:21 UTC] PHP Warning:  Wrong parameter count for number_format() in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/imp.php on line 135
+[26-Nov-2019 15:29:30 UTC] PHP Warning:  Wrong parameter count for number_format() in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/imp.php on line 135
+[26-Nov-2019 15:29:46 UTC] PHP Warning:  Wrong parameter count for number_format() in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/imp.php on line 135
+[26-Nov-2019 15:30:31 UTC] PHP Warning:  Wrong parameter count for number_format() in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/imp.php on line 135
+[26-Nov-2019 15:30:39 UTC] PHP Warning:  Wrong parameter count for number_format() in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/imp.php on line 135
+[26-Nov-2019 15:32:02 UTC] PHP Warning:  Wrong parameter count for number_format() in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/imp.php on line 135
+[26-Nov-2019 15:32:07 UTC] PHP Warning:  Wrong parameter count for number_format() in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/imp.php on line 135
+[26-Nov-2019 15:32:44 UTC] PHP Warning:  Wrong parameter count for number_format() in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/imp.php on line 135
+[26-Nov-2019 15:33:10 UTC] PHP Warning:  Wrong parameter count for number_format() in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/imp.php on line 135
+[26-Nov-2019 15:51:16 UTC] PHP Warning:  Wrong parameter count for number_format() in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/imp.php on line 149
+[26-Nov-2019 17:16:14 UTC] PHP Notice:  Undefined variable: numero_cuenta in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/ajaxDistribucionGastos.php on line 139
+[26-Nov-2019 17:16:14 UTC] PHP Notice:  Undefined variable: numero_cuenta in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/ajaxDistribucionGastos.php on line 139
+[26-Nov-2019 17:16:14 UTC] PHP Notice:  Undefined variable: numero_cuenta in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/ajaxDistribucionGastos.php on line 139
+[26-Nov-2019 17:16:14 UTC] PHP Notice:  Undefined variable: numero_cuenta in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/ajaxDistribucionGastos.php on line 139
+[26-Nov-2019 17:16:14 UTC] PHP Notice:  Undefined variable: numero_cuenta in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/ajaxDistribucionGastos.php on line 139
+[26-Nov-2019 17:16:14 UTC] PHP Notice:  Undefined variable: numero_cuenta in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/ajaxDistribucionGastos.php on line 139
+[26-Nov-2019 17:16:14 UTC] PHP Notice:  Undefined variable: numero_cuenta in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/ajaxDistribucionGastos.php on line 139
+[26-Nov-2019 17:16:14 UTC] PHP Notice:  Undefined variable: numero_cuenta in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/ajaxDistribucionGastos.php on line 139
+[26-Nov-2019 17:27:02 UTC] PHP Notice:  Undefined variable: numero_cuenta in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/ajaxDistribucionGastos.php on line 140
+[26-Nov-2019 17:27:02 UTC] PHP Notice:  Undefined variable: numero_cuenta in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/ajaxDistribucionGastos.php on line 140
+[26-Nov-2019 17:27:02 UTC] PHP Notice:  Undefined variable: numero_cuenta in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/ajaxDistribucionGastos.php on line 140
+[26-Nov-2019 17:27:02 UTC] PHP Notice:  Undefined variable: numero_cuenta in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/ajaxDistribucionGastos.php on line 140
+[26-Nov-2019 17:27:02 UTC] PHP Notice:  Undefined variable: numero_cuenta in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/ajaxDistribucionGastos.php on line 140
+[26-Nov-2019 17:27:02 UTC] PHP Notice:  Undefined variable: numero_cuenta in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/ajaxDistribucionGastos.php on line 140
+[26-Nov-2019 17:27:02 UTC] PHP Notice:  Undefined variable: numero_cuenta in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/ajaxDistribucionGastos.php on line 140
+[26-Nov-2019 17:27:02 UTC] PHP Notice:  Undefined variable: numero_cuenta in /home/marcoluna/public_html/ibno_conta/sisadminibno/comprobantes/ajaxDistribucionGastos.php on line 140

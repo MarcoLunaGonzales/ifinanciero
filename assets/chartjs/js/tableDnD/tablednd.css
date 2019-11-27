@@ -1,0 +1,64 @@
+.tableDemo {
+    background-color: white;
+    border: 1px solid #666699;
+    margin-right: 10px;
+    padding: 6px;
+}
+
+.tableDemo table {
+    border: 1px solid silver;
+}
+
+.tableDemo td {
+    padding: 2px 6px
+}
+
+.tableDemo th {
+    background-color:#29215A;
+    color:white;
+}
+
+#table-2 th {
+    background-color: #29215A;
+    color: white;
+}
+
+#table-2 td, th {
+    padding-right: 8px;
+}
+
+.category td {
+    background-color: #E4EBF3;
+}
+
+.tDnD_whileDrag,.tDnD_whileDrag td {
+    /*background-color: #eee;*/
+    background: #29677e !important;
+    color:  white !important;
+    font-weight: bold !important;
+}
+
+tr.alt td {
+    background-color: #ecf6fc;
+}
+
+tr.myDragClass td {
+    color: yellow;
+    background-color: black;
+}
+
+td.dragHandle {
+
+}
+
+td.showDragHandle {
+    background-image: url(images/updown2.gif);
+    background-repeat: no-repeat;
+    background-position: center center;
+    cursor: move;
+}
+
+.versionHistory td {
+    vertical-align: top;
+    padding: 0.3em;
+}
