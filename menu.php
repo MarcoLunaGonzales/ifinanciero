@@ -6,8 +6,7 @@ $globalPerfilX=$_SESSION['globalPerfil'];
 $globalNameUserX=$_SESSION['globalNameUser'];
 $globalNombreUnidadX=$_SESSION['globalNombreUnidad'];
 $globalNombreAreaX=$_SESSION['globalNombreArea'];
-//hola
-//jeje
+
 ?>
 
 <div class="sidebar" data-color="purple" data-background-color="red" data-image="assets/img/scz.jpg">

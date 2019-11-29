@@ -179,7 +179,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                               <a title="Copiar Glosa (shift+g)" href="#modalCopy" data-toggle="modal" data-target="#modalCopy" class="<?=$buttonCeleste?> btn-fab btn-sm">
                       		        <i class="material-icons"><?=$iconCopy?></i>
 		                        </a>
-                               <a title="Subir Archivos Respaldo (shift+a)" href="#modalFile" data-toggle="modal" data-target="#modalFile" class="btn btn-default btn-fab btn-sm">
+                               <a title="Subir Archivos Respaldo (shift+r)" href="#modalFile" data-toggle="modal" data-target="#modalFile" class="btn btn-default btn-fab btn-sm">
                       		        <i class="material-icons"><?=$iconFile?></i><span id="narch" class="bg-warning"></span>
 		                        </a>
 		                        <a title="Cargar Plantilla (shift+p)"  href="#" onclick="cargarPlantillas()" class="btn btn-warning btn-fab btn-sm">
@@ -219,7 +219,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
 					*/
 					?>
 					<fieldset id="fiel" style="width:100%;border:0;">
-							<button title="Agregar (shift+n)" type="button" name="add" class="btn btn-warning btn-round btn-fab" onClick="addCuentaContable(this)">
+							<button title="Agregar (alt+a)" type="button" name="add" class="btn btn-warning btn-round btn-fab" onClick="addCuentaContable(this)">
                       		  <i class="material-icons">add</i>
 		                    </button>
 

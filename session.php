@@ -43,12 +43,20 @@ while ($rowDetalle = $stmt->fetch(PDO::FETCH_BOUND)) {
 	$stmtGestion->execute();
 	while ($rowGestion = $stmtGestion->fetch(PDO::FETCH_ASSOC)) {
 		$codGestionActiva=$rowGestion['cod_gestion'];
+
+		$sql1="SELECT * from meses_trabajo where cod_gestion='$codGestion' and cod_estadomesestrabajo=3";
+        $stmt1 = $dbh->prepare($sql1);
+        $stmt1->execute();
+        while ($row1= $stmt1->fetch(PDO::FETCH_ASSOC)) {
+          $codMesActiva=$row1['cod_mes'];
+        }
 	}
 	$nombreGestion=nameGestion($codGestionActiva);
 
 	$_SESSION['globalUser']=$codigo;
 	$_SESSION['globalNameUser']=$nombre;
 	$_SESSION['globalGestion']=$codGestionActiva;
+	$_SESSION['globalMes']=$codMesActiva;
 	$_SESSION['globalNombreGestion']=$nombreGestion;
 
 

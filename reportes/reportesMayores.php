@@ -59,14 +59,16 @@ $dbh = new Conexion();
 			                 <label class="col-sm-4 col-form-label">Cuenta</label>
 			                 <div class="col-sm-8">
 			                	<div class="form-group">
-	                              <select class="selectpicker show-menu-arrow form-control form-control-sm" data-style="<?=$comboColor;?>" data-live-search="true" title="-- Elija una cuenta --" name="cuenta" id="cuenta" data-style="select-with-transition" data-actions-box="true" required>
+	                              <select class="selectpicker form-control form-control-sm" data-style="select-with-transition" data-live-search="true" title="-- Elija una cuenta --" name="cuenta[]" id="cuenta" multiple data-actions-box="true" data-style="select-with-transition" data-actions-box="true" required>
 			  	                        <?php
-							  	         $stmt = $dbh->prepare("SELECT p.codigo, p.numero, p.nombre from plan_cuentas p where p.nivel=5 order by p.numero");
+							  	         $stmt = $dbh->prepare("SELECT p.codigo, p.numero, p.nombre, p.nivel from plan_cuentas p order by p.numero");
 								         $stmt->execute();
 								         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 								         	$codigoX=$row['codigo'];
 								         	$numeroX=$row['numero'];
 								         	$nombreX=$row['nombre'];
+								         	$nivelX=$row['nivel'];
+								         	$nombreCuenta=formateaPlanCuenta($numeroX." ".$nombreX,$nivelX);
 								         	$sqlCuentasAux="SELECT codigo,nro_cuenta, nombre FROM cuentas_auxiliares where cod_cuenta='$codigoX' order by 2";
 			                                 $stmtAux = $dbh->prepare($sqlCuentasAux);
 			                                 $stmtAux->execute();
@@ -75,10 +77,11 @@ $dbh = new Conexion();
 			                                 $stmtAux->bindColumn('nombre', $nombreCuentaAux);
 			                                 $nombreAux=" ";
 			                                 ?>
-								         <option value="<?=$codigoX;?>@normal"><?=$numeroX;?> <?=$nombreX?></option>	
+								         <option value="<?=$codigoX;?>@normal"><?=$nombreCuenta?></option>	
 								         <?php
 								         	while ($rowAux = $stmtAux->fetch(PDO::FETCH_BOUND)) {
-			                                  ?><option value="<?=$codigoCuentaAux?>@aux">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?=$nombreCuentaAux?> @auxiliar</option><?php
+								         		$nombreCuentaAux1=formateaPlanCuenta($nombreCuentaAux,5);
+			                                  ?><option value="<?=$codigoCuentaAux?>@aux">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?=$nombreCuentaAux1?></option><?php
 			                                }
 								       
 							  	         }
@@ -187,6 +190,23 @@ $dbh = new Conexion();
 			                      </div>
 			                  </div>
 			             </div>
+      	             </div>
+      	             <div class="col-sm-6">
+      	             	<div class="row">
+			               <label class="col-sm-4 col-form-label">Glosa completa</label>
+                           <div class="col-sm-8">
+			                  <div class="form-group">
+      	             	          <div class="form-check">
+                                    <label class="form-check-label">
+                                      <input class="form-check-input" type="checkbox" id="glosa_len" name="glosa_len[]" checked value="1">
+                                      <span class="form-check-sign">
+                                        <span class="check"></span>
+                                      </span>
+                                    </label>
+                                  </div>
+                                </div>  
+                             </div>     
+                        </div>  
       	             </div>
       	           </div><!--div row--> 
                 </div><!--card body-->

@@ -104,7 +104,14 @@
 		if ($_GET['opcion']=='listSimulacionesCostos') {
 			require_once('simulaciones_costos/list.php');
 		}
+		if ($_GET['opcion']=='listSimulacionesCostosAdmin') {
+			require_once('simulaciones_costos/listAdmin.php');
+		}
 
+        //MES EN CURSO
+        if ($_GET['opcion']=='mesCurso') {
+			require_once('mes_curso/list.php');
+		}
 
 		//******************************ACTIVOS FIJOS***********************************************************
 		if ($_GET['opcion']=='listUbicaciones') {

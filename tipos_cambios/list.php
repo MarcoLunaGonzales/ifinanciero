@@ -46,28 +46,32 @@ $stmt->bindColumn('nombre', $nombre);
                       </thead>
                       <tbody>
 <?php
-						$index=1;
+						$index=1;$cont=0;
                       	while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                         if($codigo!=1){
                           $valorTipo=obtenerValorTipoCambio($codigo,$fechaActual);
                           if($valorTipo==0){
                            $valor="Sin registro actual"; 
                            $estiloTipo="text-danger";
+                           $cont++;
+                           $html='<input type="hidden" id="codigo'.$cont.'" value="'.$codigo.'"><input type="number" id="valor'.$cont.'" name="valor'.$cont.'" step="0.0001" placeholder="Ingrese el valor de '.$abreviatura.' en Bs." class="form-control">';
                           }else{
                             $valor=$valorTipo;
                             $estiloTipo="text-success";
+                            $html='';
                           }
 ?>
                         <tr>
                           <td align="center"><?=$index;?></td>
                           <td><?=$nombre;?></td>
                           <td><?=$abreviatura;?></td>
-                          <td class="<?=$estiloTipo?>"><h3><b><?=$valor;?></b></h3></td>
-                          <td><?=$codEstadoRef;?></td>
+                          <td class="<?=$estiloTipo?>"><b><?=$valor;?></b><br><?=$html?></td>
+                          <td><?=$codEstadoRef;?>                 
+                          </td>
                           <td class="td-actions text-right">
-                            <a href='<?=$urlEdit;?>?codigo=<?=$codigo;?>' title="editar" target="_blank" rel="" class="btn btn-info btn-link">
+                            <!--<a href='<?=$urlEdit;?>?codigo=<?=$codigo;?>' title="editar" target="_blank" rel="" class="btn btn-info btn-link">
                               <i class="material-icons"><?=$iconEdit;?></i>
-                            </a>
+                            </a>-->
                             <a href='<?=$urlEdit2;?>?codigo=<?=$codigo;?>' title="historial" target="_blank" rel="" class="btn btn-info btn-link">
                               <i class="material-icons">history</i>
                             </a>
@@ -86,9 +90,14 @@ $stmt->bindColumn('nombre', $nombre);
                   </div>
                 </div>
               </div>
-      				<!--<div class="card-footer fixed-bottom">
-                <a href="#" onclick="javascript:window.open('<?=$urlRegister;?>')" class="<?=$buttonNormal;?>">Registrar</a>
-              </div>-->		  
+              <?php 
+              if($cont>0){
+      				?><div class="card-footer fixed-bottom">
+                <input type="hidden" value="<?=$cont?>" id="numeroMoneda">
+                <a href="#" onclick="guardarValoresMoneda()" class="btn btn-info">Guardar Valores</a>
+              </div><?php		  
+              }
+              ?>
             </div>
           </div>  
         </div>

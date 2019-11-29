@@ -23,77 +23,65 @@ $hasta=strftime('%Y-%m-%d',strtotime($_POST["fecha_hasta"]));
 $moneda=$_POST["moneda"];
 
 $codcuenta=$_POST["cuenta"];
-$porciones = explode("@", $codcuenta);
-$cuenta=$porciones[0];
-if($porciones[1]=="aux"){
-  $nombreCuenta=nameCuentaAux($cuenta);
- $query1="SELECT d.codigo as cod_det,d.cod_area,d.cod_unidadorganizacional,d.glosa,d.debe,d.haber,
-p.codigo,p.nro_cuenta,p.nombre,
-u.abreviatura,a.abreviatura as areaAbrev,
-c.cod_unidadorganizacional as unidad,c.fecha
-FROM cuentas_auxiliares p 
-join comprobantes_detalle d on p.codigo=d.cod_cuentaauxiliar 
-join areas a on d.cod_area=a.codigo 
-join unidades_organizacionales u on u.codigo=d.cod_unidadorganizacional 
-join comprobantes c on d.cod_comprobante=c.codigo
-where p.codigo=$cuenta and c.fecha BETWEEN '$desde' and '$hasta' and (";
-}else{
-  $nombreCuenta=nameCuenta($cuenta);
-  $query1="SELECT d.codigo as cod_det,d.cod_area,d.cod_unidadorganizacional,d.glosa,d.debe,d.haber,
-p.codigo,p.numero,p.nombre,p.cuenta_auxiliar,
-u.abreviatura,a.abreviatura as areaAbrev,
-c.cod_unidadorganizacional as unidad,c.fecha
-FROM plan_cuentas p 
-join comprobantes_detalle d on p.codigo=d.cod_cuenta 
-join areas a on d.cod_area=a.codigo 
-join unidades_organizacionales u on u.codigo=d.cod_unidadorganizacional 
-join comprobantes c on d.cod_comprobante=c.codigo
-where p.codigo=$cuenta and c.fecha BETWEEN '$desde' and '$hasta' and (";
-}
-
-
 $nombreMoneda=nameMoneda($moneda);
-//$tcA=obtenerValorTipoCambio($moneda,$fechaActual);
 $unidadCosto=$_POST['unidad_costo'];
 $areaCosto=$_POST['area_costo'];
 $unidad=$_POST['unidad'];
-$unidadGeneral="";
+if(isset($_POST['glosa_len'])){
+ $glosaLen=1; 
+}else{
+  $glosaLen=0;
+}
 
-
+$unidadGeneral="";$unidadAbrev="";$areaAbrev="";
+$queryFin="";
 for ($i=0; $i < cantidadF($unidadCosto) ; $i++) { 
+  $unidadAbrev.=abrevUnidad($unidadCosto[$i]);
   if(($i+1)==cantidadF($unidadCosto)){
-    $query1.="d.cod_unidadorganizacional=".$unidadCosto[$i].")";
+    $queryFin.="d.cod_unidadorganizacional=".$unidadCosto[$i].")";
   }else{
-    $query1.="d.cod_unidadorganizacional=".$unidadCosto[$i]." or ";
+    $queryFin.="d.cod_unidadorganizacional=".$unidadCosto[$i]." or ";
   }
    
 }
-$query1.=" and (";
-for ($j=0; $j < cantidadF($areaCosto) ; $j++) { 
+$queryFin.=" and (";
+for ($j=0; $j < cantidadF($areaCosto) ; $j++) {
+  $areaAbrev.=abrevArea($areaCosto[$j]); 
   if(($j+1)==cantidadF($areaCosto)){
-    $query1.="d.cod_area=".$areaCosto[$j].")";
+    $queryFin.="d.cod_area=".$areaCosto[$j].")";
   }else{
-    $query1.="d.cod_area=".$areaCosto[$j]." or ";
+    $queryFin.="d.cod_area=".$areaCosto[$j]." or ";
   }
    
 }
-$query1.=" and (";
+$queryFin.=" and (";
 for ($k=0; $k < cantidadF($unidad) ; $k++) { 
   $unidadGeneral.=" ".nameUnidad($unidad[$k]).", ";
   if(($k+1)==cantidadF($unidad)){
-    $query1.="c.cod_unidadorganizacional=".$unidad[$k].")";
+    $queryFin.="c.cod_unidadorganizacional=".$unidad[$k].")";
   }else{
-    $query1.="c.cod_unidadorganizacional=".$unidad[$k]." or ";
+    $queryFin.="c.cod_unidadorganizacional=".$unidad[$k]." or ";
   }
    
 }
-$query1.="order by c.fecha";
-
-$stmt = $dbh->prepare($query1);
-// Ejecutamos
-$stmt->execute();
-
- ?><div class="content">
+$queryFin.="order by c.fecha";
+$nombreCuentaTitle="";
+for ($jj=0; $jj < cantidadF($codcuenta); $jj++) { 
+    $porciones1 = explode("@", $codcuenta[$jj]);
+    $cuenta=$porciones1[0];
+    if($porciones1[1]=="aux"){
+      $nombreCuentaTitle.=nameCuentaAux($cuenta).", ";
+    }else{
+      $nombreCuentaTitle.=nameCuenta($cuenta).", ";
+    }
+}
+$periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d/%m/%Y',strtotime($hasta));
+ ?>
+<script> periodo_mayor='<?=$periodoTitle?>';
+          cuenta_mayor='<?=trim($nombreCuentaTitle)?>';
+          unidad_mayor='<?=$unidadGeneral?>';
+ </script>
+ <div class="content">
   <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
@@ -104,9 +92,13 @@ $stmt->execute();
                   </div>
                   <div class="float-right col-sm-2"><h6 class="card-title">Exportar como:</h6></div>
                   <h4 class="card-title text-center">Reporte Libro Mayor</h4>
-                  <h6 class="card-title">Periodo: Del <?=strftime('%d/%m/%Y',strtotime($desde));?> al <?=strftime('%d/%m/%Y',strtotime($hasta));?></h6>
-                  <h6 class="card-title">Cuenta: <?=$nombreCuenta;?></h6>
-                  <h6 class="card-title">Unidad:<?=$unidadGeneral?></h6> 
+                  <h6 class="card-title">Periodo: <?=$periodoTitle?></h6>
+                  <h6 class="card-title">Cuenta: <?=$nombreCuentaTitle;?></h6>
+                  <h6 class="card-title">Unidad:<?=$unidadGeneral?></h6>
+                  <div class="row">
+                    <div class="col-sm-6"><h5 class="card-title"><b>Unidades:</b> <small><?=$unidadAbrev?></small></h6></div>
+                    <div class="col-sm-6"><h5 class="card-title"><b>Areas:</b> <small><?=$areaAbrev?></small></h6></div>
+                  </div> 
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
@@ -134,8 +126,65 @@ $stmt->execute();
             '</tr>'.
            '</thead>'.
            '<tbody>'; 
+for ($xx=0; $xx < cantidadF($codcuenta); $xx++) { 
+$porciones = explode("@", $codcuenta[$xx]);
+$cuenta=$porciones[0];
+if($porciones[1]=="aux"){
+  $nombreCuenta=nameCuentaAux($cuenta);
+ $query1="SELECT d.codigo as cod_det,d.cod_area,d.cod_unidadorganizacional,d.glosa,d.debe,d.haber,
+p.codigo,p.nro_cuenta,p.nombre,
+u.abreviatura,a.abreviatura as areaAbrev,
+c.cod_unidadorganizacional as unidad,c.fecha
+FROM cuentas_auxiliares p 
+join comprobantes_detalle d on p.codigo=d.cod_cuentaauxiliar 
+join areas a on d.cod_area=a.codigo 
+join unidades_organizacionales u on u.codigo=d.cod_unidadorganizacional 
+join comprobantes c on d.cod_comprobante=c.codigo
+where p.codigo=$cuenta and c.fecha BETWEEN '$desde' and '$hasta' and ($queryFin";
+}else{
+  $nombreCuenta=nameCuenta($cuenta);
+  $query1="SELECT d.codigo as cod_det,d.cod_area,d.cod_unidadorganizacional,d.glosa,d.debe,d.haber,
+p.codigo,p.numero,p.nombre,p.cuenta_auxiliar,
+u.abreviatura,a.abreviatura as areaAbrev,
+c.cod_unidadorganizacional as unidad,c.fecha
+FROM plan_cuentas p 
+join comprobantes_detalle d on p.codigo=d.cod_cuenta 
+join areas a on d.cod_area=a.codigo 
+join unidades_organizacionales u on u.codigo=d.cod_unidadorganizacional 
+join comprobantes c on d.cod_comprobante=c.codigo
+where p.codigo=$cuenta and c.fecha BETWEEN '$desde' and '$hasta' and ($queryFin";
+}
+
+$stmt = $dbh->prepare($query1);
+// Ejecutamos
+$stmt->execute();
+$stmtCount = $dbh->prepare($query1);
+$stmtCount->execute();
+$contador=0;
+while ($rowCount = $stmtCount->fetch(PDO::FETCH_ASSOC)) {
+$contador++;
+}
+if($contador!=0){
+$html.='<tr class="bg-table-primary text-white">'.
+                  '<td colspan="5" class="text-left font-weight-bold">Nombre de la Cuenta: '.$nombreCuenta.' </td>'.
+                  '<td style="display: none;"></td>'.
+                  '<td style="display: none;"></td>'.
+                  '<td style="display: none;"></td>'.
+                  '<td style="display: none;"></td>'.
+                  //'<td style="display: none;"></td>'.
+                  '<td></td>'.
+                  '<td></td>'.
+                  '<td></td>'.
+                  '<td></td>'.
+                  '<td></td>'.
+                  '<td></td>'.      
+              '</tr>';
+  
+}
+
 $index=1; $tDebeTc=0;$tHaberTc=0;$tDebeBol=0;$tHaberBol=0;    
 while ($rowComp = $stmt->fetch(PDO::FETCH_ASSOC)) {
+  
     $fechaX=$rowComp['fecha'];
     $codigoX=$rowComp['cod_det'];
     $glosaX=$rowComp['glosa'];
@@ -145,15 +194,19 @@ while ($rowComp = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $haberX=$rowComp['haber'];
     $nombreUnidad=nameUnidad($rowComp['unidad']);
     //INICIAR valores de las sumas
-    
+    if($glosaLen==0){      
+      if(strlen($glosaX)>15){
+        $glosaX=substr($glosaX,0,15)."...";
+      }
+    }
     $tc=obtenerValorTipoCambio($moneda,strftime('%Y-%m-%d',strtotime($fechaX)));
-    if($tc==0){$tc=1;}    
+    if($tc==0){$tc=1;}  
              $html.='<tr>'.
                       //'<td class="font-weight-bold">'.$nombreUnidad.'</td>'.
                       '<td class="font-weight-bold">'.$unidadX.'</td>'.
                       '<td class="font-weight-bold">'.$areaX.'</td>'.
                       '<td class="font-weight-bold">'.strftime('%d/%m/%Y',strtotime($fechaX)).'</td>'.
-                      '<td>'.$glosaX.'</td>'.
+                      '<td class="text-left">'.$glosaX.'</td>'.
                       '<td class="font-weight-bold">'.$tc.'</td>';
                       $tDebeBol+=$debeX;$tHaberBol+=$haberX;
                       $tDebeTc+=$debeX/$tc;$tHaberTc+=$haberX/$tc;
@@ -173,6 +226,7 @@ while ($rowComp = $stmt->fetch(PDO::FETCH_ASSOC)) {
       }
     $index++; 
     }/* Fin del primer while*/
+    if($contador!=0){
       $html.='<tr class="bg-secondary text-white">'.
                   '<td colspan="5" class="text-center">Sumas del periodo:</td>'.
                   '<td style="display: none;"></td>'.
@@ -200,8 +254,12 @@ while ($rowComp = $stmt->fetch(PDO::FETCH_ASSOC)) {
                   '<td class="text-right font-weight-bold">'.number_format($tDebeTc, 2, '.', ',').'</td>'. 
                   '<td class="text-right font-weight-bold">'.number_format($tHaberTc, 2, '.', ',').'</td>'.
                   '<td class="text-right font-weight-bold">'.number_format(00000, 2, '.', ',').'</td>'.       
-              '</tr></tbody>';
-$html.=    '</table>';
+              '</tr>'; 
+            }
+
+}//fin del for de cuentas
+
+$html.=    '</tbody></table>';
 
 echo $html;
 ?>

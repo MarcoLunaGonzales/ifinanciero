@@ -185,7 +185,19 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
                     <span class="sidebar-mini"> A </span>
                     <span class="sidebar-normal"> Aprobaciones de comprobantes </span>
                   </a>
-                </li>                 
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listSimulacionesCostos">
+                    <span class="sidebar-mini"> SC </span>
+                    <span class="sidebar-normal"> Simulaciones de Costos</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listSimulacionesCostosAdmin">
+                    <span class="sidebar-mini"> AS </span>
+                    <span class="sidebar-normal"> Administracion de Simulaciones</span>
+                  </a>
+                </li>                  
               </ul>
             </div>
           </li>
@@ -249,7 +261,25 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
               </ul>
             </div>
           </li>
-
+           <!--UTILITARIOS-->
+          <li class="nav-item ">
+            <a class="nav-link" data-toggle="collapse" href="#utilitarios">
+              <i class="material-icons">assessment</i>
+              <p> Utilitarios
+                <b class="caret"></b>
+              </p>
+            </a>
+            <div class="collapse" id="utilitarios">
+              <ul class="nav">
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=mesCurso">
+                    <span class="sidebar-mini"> MC </span>
+                    <span class="sidebar-normal"> Mes en curso</span>
+                  </a>
+                </li>                          
+              </ul>
+            </div>
+          </li>
         </ul>
       </div>
     </div>

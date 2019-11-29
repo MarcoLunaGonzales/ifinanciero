@@ -54,6 +54,7 @@ $stmt->bindColumn('nombre', $nombreCuenta);
 	  			</tr>
 			</thead>
 		<?php
+		$cont=0;
 		while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
 			$numeroCuenta=trim($numeroCuenta);
 			$nombreCuenta=trim($nombreCuenta);
@@ -78,9 +79,12 @@ $stmt->bindColumn('nombre', $nombreCuenta);
 	      	<td class="text-left"><?=$txtAuxiliarCuentas;?></td>
 		</tr>
 		<?php
+		$cont++;
 		}
 		?>
 		</table>
 	</div>
 </div>
-
+<?php 
+echo "@".$cont."@".$codigoCuenta."@".$numeroCuenta."@".$nombreCuenta;
+?>

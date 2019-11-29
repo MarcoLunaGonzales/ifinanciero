@@ -145,14 +145,20 @@ function buscarCuenta(combo){
   var nroCuenta=document.getElementById('nro_cuenta').value;
   var nombreCuenta=document.getElementById('cuenta').value;
   var padre=$("#padre").val();
-  ajax=nuevoAjax();
-  ajax.open('GET', 'ajaxBusquedaCuenta.php?nro_cuenta='+nroCuenta+'&cuenta='+nombreCuenta+'&padre='+padre,true);
-  ajax.onreadystatechange=function() {
-    if (ajax.readyState==4) {
-      contenedor.innerHTML = ajax.responseText;
-    }
-  }
-  ajax.send(null)
+  var parametros={"nro_cuenta":nroCuenta,"cuenta":nombreCuenta,"padre":padre};
+  $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxBusquedaCuenta.php",
+        data: parametros,
+        success:  function (resp) {
+          var respuesta=resp.split('@');
+          contenedor.innerHTML = respuesta[0];
+          if(respuesta[1]==1){
+            setBusquedaCuenta(respuesta[2],respuesta[3],respuesta[4],'0',''); 
+          }     
+        }
+    });
 }
 
 function setBusquedaCuenta(codigoCuenta, numeroCuenta, nombreCuenta, codigoCuentaAux, nombreCuentaAux){
@@ -1253,4 +1259,29 @@ function enviarSimulacionAjax(){
          $('#modalSend').modal('show');
         }
     });
+}
+
+/*Ultima actualizacion 28-noviembre */
+////////////////////////////////variables para titulos en reporte diario y mayor PDF //////////////////////////////////
+var unidad_reporte_diario=""; var fecha_reporte_diario=""; var tipo_reporte_diario="";
+var periodo_mayor=""; var cuenta_mayor=""; var unidad_mayor="";
+
+function guardarValoresMoneda(){
+ var index=$("#numeroMoneda").val();
+ for (var i = 0; i < index; i++) {
+  var codigo=$("#codigo"+(i+1)).val();
+  var valor=$("#valor"+(i+1)).val();
+   ajax=nuevoAjax();
+   ajax.open('GET', 'tipos_cambios/ajaxSaveTipo.php?codigo='+codigo+'&valor='+valor,true);
+   ajax.onreadystatechange=function() {
+     if (ajax.readyState==4) {
+      window.location.href="index.php?opcion=tipoDeCambio";
+     }
+   }
+   ajax.send(null)
+  };
+}
+function editarCuentaComprobante(fila){
+  filaActiva=fila;
+  $('#myModal').modal('show');
 }
