@@ -114,10 +114,10 @@ $stmt->bindColumn('observaciones_devolucion', $observaciones_devolucion);
                                     if($cod_estadoasignacionaf==5){
                                   ?>
                                     <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalAceptar" onclick="agregaform('<?=$datos;?>')">
-                                      <i class="material-icons" title="Aceptar">thumb_up</i>
+                                      <i class="material-icons" title="Aceptar Devolución">thumb_up</i>
                                     </button>
                                     <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalObservar" onclick="agregaform('<?=$datos;?>')" >
-                                      <i class="material-icons" title="Observar">thumb_down</i>
+                                      <i class="material-icons" title="Rechazar Devolución">thumb_down</i>
                                     </button>
                                     
                                   <?php }?>
@@ -141,7 +141,7 @@ $stmt->bindColumn('observaciones_devolucion', $observaciones_devolucion);
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Sin Observaciones AF Devuelto</h4>
+        <h4 class="modal-title" id="myModalLabel">AF Devuelto Sin Observaciones</h4>
       </div>
       <div class="modal-body">
         <input type="hidden" name="codigo_af_aceptar1" id="codigo_af_aceptar1" value="0">
@@ -161,16 +161,16 @@ $stmt->bindColumn('observaciones_devolucion', $observaciones_devolucion);
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Observar Activo Fijo Devuelto</h4>
+        <h4 class="modal-title" id="myModalLabel">Rechazar Activo Fijo Devuelto</h4>
       </div>
       <div class="modal-body">
         <input type="hidden" name="codigo_af_aceptar1" id="codigo_af_aceptar1" value="0">
         <input type="hidden" name="codigo_af_aceptar2" id="codigo_af_aceptar2" value="0">
-        <label> Escriba Las Observaciones : </label><br>
-        <input type="text" name="observacionD" id="observacion" class="form-control input-sm">
+        No podrá revertir el proceso
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-success" id="RechazarAFD"  data-dismiss="modal">Aceptar</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
       </div>
     </div>
   </div>
@@ -182,8 +182,8 @@ $stmt->bindColumn('observaciones_devolucion', $observaciones_devolucion);
       
       cod_af=document.getElementById("codigo_af_aceptar1").value;
       cod_personal=document.getElementById("codigo_af_aceptar2").value;
-      observacion=$('#observacion').val();
-      rechazarDevolucion(cod_personal,cod_af,observacion);
+      //observacion=$('#observacion').val();
+      rechazarDevolucion(cod_personal,cod_af);
     });
 
     $('#AceptarAFD').click(function(){

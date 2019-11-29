@@ -1099,25 +1099,23 @@ function RecepcionarAF(cod_personal,cod_af){
   });
 }
 
-function DevolverAF(cod_personal,cod_af){
+function DevolverAF(cod_personal,cod_af,observacionD){
   $.ajax({
     type:"POST",
-    data:"cod_personal="+cod_personal+"&cod_af="+cod_af+"&cod_estadoasignacionaf=5&observacion=''",
+    data:"cod_personal="+cod_personal+"&cod_af="+cod_af+"&cod_estadoasignacionaf=5&observacion="+observacionD,
     url:"activosFijos/saveAsignacion.php",
     success:function(r){
       if(r==1){
-        //$('#tabla1').load('activosFijos/afEnCustodia.php');
-        //alertify.success("agregado");
         alerts.showSwal('success-message','index.php?opcion=afEnCustodia');
       }
     }
   });
 }
 
-function rechazarDevolucion(cod_personal,cod_af,observacion){
+function rechazarDevolucion(cod_personal,cod_af){
   $.ajax({
     type:"POST",
-    data:"cod_personal="+cod_personal+"&cod_af="+cod_af+"&cod_estadoasignacionaf=7&observacion="+observacion,
+    data:"cod_personal="+cod_personal+"&cod_af="+cod_af+"&cod_estadoasignacionaf=7&observacion=''",
     url:"activosFijos/saveAsignacion.php",
     success:function(r){
       if(r==1){
@@ -1131,7 +1129,7 @@ function rechazarDevolucion(cod_personal,cod_af,observacion){
 function AceptarDevolucion(cod_personal,cod_af){
   $.ajax({
     type:"POST",
-    data:"cod_personal="+cod_personal+"&cod_af="+cod_af+"&cod_estadoasignacionaf=6&observacion='S/N'",
+    data:"cod_personal="+cod_personal+"&cod_af="+cod_af+"&cod_estadoasignacionaf=6&observacion=''",
     url:"activosFijos/saveAsignacion.php",
     success:function(r){
       if(r==1){

@@ -159,6 +159,13 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
                     </a>
                 </li>
 
+                <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=aftransaccion">
+                      <span class="sidebar-mini"> D </span>
+                      <span class="sidebar-normal"> Transacción De AF</span>
+                    </a>
+                </li>
+
               </ul>
             </div>
           </li>
