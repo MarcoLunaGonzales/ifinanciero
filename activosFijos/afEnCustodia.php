@@ -68,7 +68,22 @@ $stmt->bindColumn('fecha_recepcion', $fecha_recepcion);
                       <tbody>
                         <?php $index=1;
                         while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { 
-                            $datos =$cod_activo;
+                            $datos =$cod_activo."-".$cod_personal;
+                            if($cod_estadoasignacionaf==1){
+                              $label='<span class="badge badge-warning">';
+                            }
+                            if($cod_estadoasignacionaf==2){
+                              $label='<span class="badge badge-success">';
+                            }
+                            if($cod_estadoasignacionaf==3){
+                              $label='<span class="badge badge-danger">';
+                            }
+                            if($cod_estadoasignacionaf==4){
+                              $label='<span class="badge badge-primary">';
+                            }
+                            if($cod_estadoasignacionaf==5){
+                              $label='<span class="badge badge-dark">';
+                            }
                           ?>
                             <tr>
                                 <td  class="td-actions text-right">
@@ -87,12 +102,18 @@ $stmt->bindColumn('fecha_recepcion', $fecha_recepcion);
                                   <?php
                                     if($cod_estadoasignacionaf==1){
                                   ?>
-                                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalAceptar" onclick="agregaform(<?php echo $datos;?>)">
+                                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalAceptar" onclick="agregaform('<?=$datos;?>')">
                                       <i class="material-icons" title="Recepcionar">thumb_up</i>
                                     </button>
-                                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalRechazar" onclick="agregaform(<?php echo $datos;?>)">
+                                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalRechazar" onclick="agregaform('<?=$datos;?>')">
                                       <i class="material-icons" title="Rechazar">thumb_down</i>
                                     </button>
+                                  <?php }elseif($cod_estadoasignacionaf==2){?>
+
+                                  <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#modalDevolver" onclick="agregaform('<?=$datos;?>')">
+                                      <i class="material-icons" title="Devolver">reply</i>
+                                    </button>
+                                    
                                   <?php }?>
                                     
                                 </td>
@@ -119,6 +140,8 @@ $stmt->bindColumn('fecha_recepcion', $fecha_recepcion);
         <h4 class="modal-title" id="myModalLabel">Se recepcionará el Activo fijo</h4>
       </div>
       <div class="modal-body">
+        <input type="hidden" name="codigo_af_aceptar1" id="codigo_af_aceptar1" value="0">
+        <input type="hidden" name="codigo_af_aceptar2" id="codigo_af_aceptar2" value="0">
         No podrá revertir el proceso
       </div>       
       <div class="modal-footer">
@@ -128,7 +151,6 @@ $stmt->bindColumn('fecha_recepcion', $fecha_recepcion);
     </div>
   </div>
 </div>
-
 <!-- Modal rechazaR-->
 <div class="modal fade" id="modalRechazar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog modal-sm" role="document">
@@ -138,6 +160,8 @@ $stmt->bindColumn('fecha_recepcion', $fecha_recepcion);
         <h4 class="modal-title" id="myModalLabel">Rechazar Activo Fijo</h4>
       </div>
       <div class="modal-body">
+        <input type="hidden" name="codigo_af_aceptar1" id="codigo_af_aceptar1" value="0">
+        <input type="hidden" name="codigo_af_aceptar2" id="codigo_af_aceptar2" value="0">
         <label> Observaciones</label><br>
         <input type="text" name="observacion" id="observacion" class="form-control input-sm">
       </div>
@@ -147,23 +171,49 @@ $stmt->bindColumn('fecha_recepcion', $fecha_recepcion);
     </div>
   </div>
 </div>
+<!-- Modal devolver-->
+<div class="modal fade" id="modalDevolver" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Se devolverá el Activo fijo</h4>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" name="codigo_af_aceptar1" id="codigo_af_aceptar1" value="0">
+        <input type="hidden" name="codigo_af_aceptar2" id="codigo_af_aceptar2" value="0">
+        No podrá revertir el proceso
+      </div>       
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" id="DevolverAF" data-dismiss="modal">Aceptar</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script type="text/javascript">
   $(document).ready(function(){
     $('#RechazarAF').click(function(){
-    
-      //alert(“Has escrito: ”);
-      cod_personal='<?php echo $cod_personal;?>';
+      cod_af=document.getElementById("codigo_af_aceptar1").value;
+      cod_personal=document.getElementById("codigo_af_aceptar2").value;
       observacion=$('#observacion').val();
-      rechazarRecepcion(cod_personal,observacion);
+      rechazarRecepcion(cod_personal,cod_af,observacion);
     });
 
     $('#RecepcionarAF').click(function(){
-    
-      //alert(“Has escrito: ”);
       //cod_af='<?php echo $cod_activo;?>';
-      cod_personal='<?php echo $cod_personal;?>';
-      RecepcionarAF(cod_personal);
+      cod_af=document.getElementById("codigo_af_aceptar1").value;
+      cod_personal=document.getElementById("codigo_af_aceptar2").value;
+
+      RecepcionarAF(cod_personal,cod_af);
+    });
+
+    $('#DevolverAF').click(function(){
+      //cod_af='<?php echo $cod_activo;?>';
+      cod_af=document.getElementById("codigo_af_aceptar1").value;
+      cod_personal=document.getElementById("codigo_af_aceptar2").value;
+      DevolverAF(cod_personal,cod_af);
     });
 
   });

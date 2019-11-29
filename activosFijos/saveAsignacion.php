@@ -19,23 +19,62 @@ $cod_personal=$_POST['cod_personal'];
 $cod_estadoasignacionaf=$_POST['cod_estadoasignacionaf'];
 $observacion=$_POST['observacion'];
 
-//echo "llega ".$observacion;
+//echo "llega ".$cod_estadoasignacionaf;
 
 $fecha_recepcion=date("Y-m-d H:i:s");
-
-
-// Prepare
-$stmtU = $dbhU->prepare("UPDATE activofijos_asignaciones 
-set cod_estadoasignacionaf=:cod_estadoasignacionaf,observaciones_recepcion=:observacion,fecha_recepcion=:fecha_recepcion
-where cod_activosfijos=:cod_af and cod_personal = :cod_personal");
-// Bind
-$stmtU->bindParam(':cod_af', $cod_af);
-$stmtU->bindParam(':cod_personal', $cod_personal);
-$stmtU->bindParam(':cod_estadoasignacionaf', $cod_estadoasignacionaf);
-$stmtU->bindParam(':fecha_recepcion', $fecha_recepcion);
-$stmtU->bindParam(':observacion', $observacion);
+if($cod_estadoasignacionaf==5){
+	// Prepare
+	$stmtU = $dbhU->prepare("UPDATE activofijos_asignaciones 
+	set cod_estadoasignacionaf=:cod_estadoasignacionaf,observaciones_devolucion=:observacion,fecha_devolucion=:fecha_recepcion
+	where cod_activosfijos=:cod_af and cod_personal = :cod_personal");
+	// Bind
+	$stmtU->bindParam(':cod_af', $cod_af);
+	$stmtU->bindParam(':cod_personal', $cod_personal);
+	$stmtU->bindParam(':cod_estadoasignacionaf', $cod_estadoasignacionaf);
+	$stmtU->bindParam(':fecha_recepcion', $fecha_recepcion);
+	$stmtU->bindParam(':observacion', $observacion);
 //$stmtU->execute();
 
+}elseif($cod_estadoasignacionaf==6){
+		//echo "entra al if : ".$observacion;
+		
+		// Prepare
+		$stmtU = $dbhU->prepare("UPDATE activofijos_asignaciones 
+		set cod_estadoasignacionaf=4,observaciones_devolucion=:observacion
+		where cod_activosfijos=:cod_af and cod_personal = :cod_personal");
+		// Bind
+		$stmtU->bindParam(':cod_af', $cod_af);
+		$stmtU->bindParam(':cod_personal', $cod_personal);
+		$stmtU->bindParam(':observacion', $observacion);
+
+		
+	//$stmtU->execute();
+
+	}elseif($cod_estadoasignacionaf==7){
+		// Prepare
+		$stmtU = $dbhU->prepare("UPDATE activofijos_asignaciones 
+		set cod_estadoasignacionaf=5,observaciones_devolucion=:observacion
+		where cod_activosfijos=:cod_af and cod_personal = :cod_personal");
+		// Bind
+		$stmtU->bindParam(':cod_af', $cod_af);
+		$stmtU->bindParam(':cod_personal', $cod_personal);
+		$stmtU->bindParam(':observacion', $observacion);
+	//$stmtU->execute();
+
+	}else{
+		// Prepare
+		$stmtU = $dbhU->prepare("UPDATE activofijos_asignaciones 
+		set cod_estadoasignacionaf=:cod_estadoasignacionaf,observaciones_recepcion=:observacion,fecha_recepcion=:fecha_recepcion
+		where cod_activosfijos=:cod_af and cod_personal = :cod_personal");
+		// Bind
+		$stmtU->bindParam(':cod_af', $cod_af);
+		$stmtU->bindParam(':cod_personal', $cod_personal);
+		$stmtU->bindParam(':cod_estadoasignacionaf', $cod_estadoasignacionaf);
+		$stmtU->bindParam(':fecha_recepcion', $fecha_recepcion);
+		$stmtU->bindParam(':observacion', $observacion);
+		//$stmtU->execute();
+
+}
 
 
 if($stmtU->execute()){

@@ -1060,6 +1060,13 @@ function ajaxPersonalUbicacionTrasfer(combo){
 }
 
 
+function agregaform(datos){
+  //console.log("datos: "+datos);
+  var d=datos.split('-');
+  document.getElementById("codigo_af_aceptar1").value=d[0];
+  document.getElementById("codigo_af_aceptar2").value=d[1];
+}
+
 function rechazarRecepcion(cod_personal,cod_af,observacion){
   // var contenedor;
   // contenedor = document.getElementById('div_personal_UO');
@@ -1077,12 +1084,7 @@ function rechazarRecepcion(cod_personal,cod_af,observacion){
     }
   });
 }
-
-
 function RecepcionarAF(cod_personal,cod_af){
-  // var contenedor;
-  // contenedor = document.getElementById('div_personal_UO');
-  
   $.ajax({
     type:"POST",
     data:"cod_personal="+cod_personal+"&cod_af="+cod_af+"&cod_estadoasignacionaf=2&observacion=''",
@@ -1096,6 +1098,51 @@ function RecepcionarAF(cod_personal,cod_af){
     }
   });
 }
+
+function DevolverAF(cod_personal,cod_af){
+  $.ajax({
+    type:"POST",
+    data:"cod_personal="+cod_personal+"&cod_af="+cod_af+"&cod_estadoasignacionaf=5&observacion=''",
+    url:"activosFijos/saveAsignacion.php",
+    success:function(r){
+      if(r==1){
+        //$('#tabla1').load('activosFijos/afEnCustodia.php');
+        //alertify.success("agregado");
+        alerts.showSwal('success-message','index.php?opcion=afEnCustodia');
+      }
+    }
+  });
+}
+
+function rechazarDevolucion(cod_personal,cod_af,observacion){
+  $.ajax({
+    type:"POST",
+    data:"cod_personal="+cod_personal+"&cod_af="+cod_af+"&cod_estadoasignacionaf=7&observacion="+observacion,
+    url:"activosFijos/saveAsignacion.php",
+    success:function(r){
+      if(r==1){
+        //$('#tabla1').load('index.php');
+        // alertify.success("agregado");
+        alerts.showSwal('success-message','index.php?opcion=aftransaccion');
+      }
+    }
+  });
+}
+function AceptarDevolucion(cod_personal,cod_af){
+  $.ajax({
+    type:"POST",
+    data:"cod_personal="+cod_personal+"&cod_af="+cod_af+"&cod_estadoasignacionaf=6&observacion='S/N'",
+    url:"activosFijos/saveAsignacion.php",
+    success:function(r){
+      if(r==1){
+        //$('#tabla1').load('activosFijos/afEnCustodia.php');
+        //alertify.success("agregado");
+        alerts.showSwal('success-message','index.php?opcion=aftransaccion');
+      }
+    }
+  });
+}
+
 
 
 

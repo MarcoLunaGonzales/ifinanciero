@@ -300,6 +300,10 @@
 		}
 
 		//ACTIVOS FIJOS EN CUSTODIA Y ACTUALIZACION DE LA DEPRECIACION
+		if ($_GET['opcion']=='aftransaccion') {
+			require_once('activosFijos/aftransaccion.php');
+		}
+
 		if ($_GET['opcion']=='afEnCustodia') {
 			require_once('activosFijos/afEnCustodia.php');
 		}
