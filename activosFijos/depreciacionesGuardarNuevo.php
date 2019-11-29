@@ -8,25 +8,21 @@ require_once 'configModule.php';
 $dbh = new Conexion();
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//try
 if ($_POST["codigo"] == 0){
-    //echo "por insert";
-    //$cod_empresa=$_POST["cod_empresa"];
     $cod_empresa=1;
     $nombre=$_POST["nombre"];
+    $abreviatura=$_POST["abreviatura"];
     $vida_util=$_POST["vida_util"];
-    //$coeficiente=$_POST["coeficiente"];
-    //$deprecia=$_POST["deprecia"];
-    //$actualiza=$_POST["actualiza"];
-    //$cod_estado=$_POST["cod_estado"];
     $cod_cuentacontable=$_POST["cod_cuentacontable"];
     $cod_estado=1;
     //Prepare
     try{
-        $stmt = $dbh->prepare("INSERT INTO depreciaciones(cod_empresa,nombre,vida_util,cod_estado, cod_cuentacontable) 
-        values (:cod_empresa, :nombre, :vida_util, :cod_estado, :cod_cuentacontable);");
+        $stmt = $dbh->prepare("INSERT INTO depreciaciones(cod_empresa,nombre,abreviatura,vida_util,cod_estado, cod_cuentacontable) 
+        values (:cod_empresa, :nombre, :abreviatura, :vida_util, :cod_estado, :cod_cuentacontable);");
         //Bind
         //$stmt->bindParam(':codigo', $codigo);
         $stmt->bindParam(':cod_empresa', $cod_empresa);
         $stmt->bindParam(':nombre', $nombre);
+        $stmt->bindParam(':abreviatura', $abreviatura);
         $stmt->bindParam(':vida_util', $vida_util);
         $stmt->bindParam(':cod_cuentacontable', $cod_cuentacontable);
         $stmt->bindParam(':cod_estado', $cod_estado);
@@ -42,18 +38,20 @@ if ($_POST["codigo"] == 0){
     $codigo=$_POST["codigo"];
     $cod_empresa=1;
     $nombre=$_POST["nombre"];
+    $abreviatura=$_POST["abreviatura"];
     $vida_util=$_POST["vida_util"];
     $cod_estado = 1;
     $cod_cuentacontable=$_POST["cod_cuentacontable"];
     try{
         
         //prepare
-        $stmt = $dbh->prepare("UPDATE depreciaciones set cod_empresa=:cod_empresa,nombre=:nombre,vida_util=:vida_util,
+        $stmt = $dbh->prepare("UPDATE depreciaciones set cod_empresa=:cod_empresa,nombre=:nombre, abreviatura=:abreviatura, vida_util=:vida_util,
             cod_estado=:cod_estado,cod_cuentacontable=:cod_cuentacontable where codigo = :codigo");
         //bind
         $stmt->bindParam(':codigo', $codigo);
         $stmt->bindParam(':cod_empresa', $cod_empresa);
         $stmt->bindParam(':nombre', $nombre);
+        $stmt->bindParam(':abreviatura', $abreviatura);
         $stmt->bindParam(':vida_util', $vida_util);
         $stmt->bindParam(':cod_estado', $cod_estado);
         $stmt->bindParam(':cod_cuentacontable', $cod_cuentacontable);

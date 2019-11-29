@@ -30,7 +30,7 @@ try {
     $cod_tiposbienes=$_POST["cod_tiposbienes"];
     $vidautilmeses=$_POST["vidautilmeses"];
     $estadobien=$_POST["estadobien"];
-    $otrodato='';
+    $otrodato=$_POST["otrodato"];
 
     $cod_ubicaciones=0;
     if(isset($_POST["cod_ubicaciones"])){

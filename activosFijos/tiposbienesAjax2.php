@@ -16,7 +16,8 @@ if (!$stmt->execute()) {
 $stmt->bindColumn('codigo', $codigo);
 $stmt->bindColumn('cod_depreciaciones', $cod_depreciaciones);
 $stmt->bindColumn('tipo_bien', $tipo_bien);
-echo "<select name='cod_tiposbienes' id='cod_tiposbienes' class='selectpicker' data-style='btn btn-primary'>";
+echo "<select name='cod_tiposbienes' id='cod_tiposbienes' class='selectpicker' data-style='btn btn-primary' required='true'>";
+echo "<option value=''>-</option>";
 while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { ?>
     <option value="<?=$codigo;?>"><?=$tipo_bien;?></option>s
 <?php } 

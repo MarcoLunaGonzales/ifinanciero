@@ -16,7 +16,7 @@ $_POST["cod_empresa"] = 1;
 // Preparamos
 //echo $table;
 //$stmt = $dbh->prepare("select * from depreciaciones where cod_empresa = ".$_POST["cod_empresa"].";");
-$stmt = $dbh->prepare("SELECT d.codigo, d.cod_empresa, d.nombre, d.vida_util, d.cod_estado, 
+$stmt = $dbh->prepare("SELECT d.codigo, d.cod_empresa, d.nombre, d.abreviatura,d.vida_util, d.cod_estado, 
   (SELECT v.codigocuenta from v_af_cuentacontablepararubros v where v.codigo=d.cod_cuentacontable)as codigocuenta,
   (SELECT v.cuentacontable from v_af_cuentacontablepararubros v where v.codigo=d.cod_cuentacontable)as cuentacontable
    from depreciaciones d where d.cod_estado=1 ");
@@ -26,6 +26,7 @@ $stmt->execute();
 $stmt->bindColumn('codigo', $codigo);
 $stmt->bindColumn('cod_empresa', $cod_empresa);
 $stmt->bindColumn('nombre', $nombre);
+$stmt->bindColumn('abreviatura', $abreviatura);
 $stmt->bindColumn('vida_util', $vida_util);
 $stmt->bindColumn('cod_estado', $cod_estado);
 
@@ -51,11 +52,9 @@ $stmt->bindColumn('cuentacontable', $cuentacontable);
                             <tr>
                               
                                 <th>NOMBRE</th>
+                                <th>ABREVIATURA</th>
                                 <th>VIDA UTIL (Meses)</th>
                                 <th>CUENTA CONTABLE</th>
-                                <th>CUENTA CONTABLE 2</th>
-                                <th>ESTADO</th>
-
                                 <th></th>
                             </tr>
                         </thead>
@@ -64,10 +63,9 @@ $stmt->bindColumn('cuentacontable', $cuentacontable);
                         while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { ?>
                             <tr>
                                 <td><?=$nombre;?></td>
+                                <td class="text-center"><?=$abreviatura;?></td>
                                 <td class="text-center"><?=$vida_util;?></td>
-                                <td><?=$codigocuenta;?> - <?=$cuentacontable;?></td>
-                                
-                                <td><?=$cod_estado;?></td>
+                                <td><?=$codigocuenta;?> - <?=$cuentacontable;?></td>                                
                                 <td  class="td-actions text-right">
                                 <?php
                                                     if($globalAdmin==1){

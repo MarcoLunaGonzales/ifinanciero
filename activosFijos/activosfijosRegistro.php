@@ -102,7 +102,9 @@ if ($codigo > 0){
     $codigo = 0;
 
     $codigo_aux = $result['id']+1; 
-    $codigoactivo = "AF-".$codigo_aux;
+    
+    //$codigoactivo = "AF-".$codigo_aux;
+    $codigoactivo = "-";
 
     $tipoalta = '';
     $fechalta = '';
@@ -154,7 +156,9 @@ if ($codigo > 0){
     <label class="col-sm-2 col-form-label">Codigo Activo</label>
     <div class="col-sm-4">
         <div class="form-group">
-            <input type="text"  readonly="readonly" style="padding-left:20px" class="form-control" name="codigoactivo" id="codigoactivo" required="true"  value="<?=$codigoactivo;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+            <div id="divCodigoAF">
+                <input type="text"  readonly="readonly" style="padding-left:20px" class="form-control" name="codigoactivo" id="codigoactivo" required="true"  value="<?=$codigoactivo;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+            </div>
         </div>
     </div>
     <div class='col-sm-6'>
@@ -243,10 +247,11 @@ if ($codigo > 0){
     <label class="col-sm-2 col-form-label">Rubro</label>
     <div class="col-sm-4">
         <div class="form-group">
-		<select name="cod_depreciaciones" id="cod_depreciaciones" class="selectpicker" data-style="btn btn-primary">
-					<?php while ($row = $statementDepre->fetch()){ ?>
-						<option <?php if($cod_depreciaciones == $row["codigo"]) echo "selected"; ?>  value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
-					<?php } ?>
+		<select name="cod_depreciaciones" id="cod_depreciaciones" class="selectpicker" data-style="btn btn-primary" onchange="ajaxCodigoActivo(this);">
+			<option disabled selected value="">-</option>
+    		<?php while ($row = $statementDepre->fetch()){ ?>
+				<option <?php if($cod_depreciaciones == $row["codigo"]) echo "selected"; ?>  value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+			<?php } ?>
 		</select>				
         </div>
     </div>
@@ -284,7 +289,7 @@ if ($codigo > 0){
     <label class="col-sm-2 col-form-label">Depr. Acumulada (Nuevo es 0)</label>
     <div class="col-sm-4">
     <div class="form-group">
-        <input class="form-control" type="text" name="depreciacionacumulada" id="depreciacionacumulada" required="true" value="<?=$depreciacionacumulada;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+        <input class="form-control" type="text" name="depreciacionacumulada" id="depreciacionacumulada" required="true" value="<?=($row["codigo"]==0)?"0":$depreciacionacumulada;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
     </div>
     </div>
 </div><!--fin campo depreciacionacumulada --> 
@@ -322,10 +327,19 @@ if ($codigo > 0){
 </div><!--fin campo cod_ubicaciones -->
 
 <div class="row">
-    <label class="col-sm-2 col-form-label">Descripcion del Activo</label>
+    <label class="col-sm-2 col-form-label">Nombre Activo</label>
     <div class="col-sm-7">
     <div class="form-group">
         <textarea rows="2" class="form-control" name="activo" id="activo" required="true" onkeyup="javascript:this.value=this.value.toUpperCase();"><?=$activo;?></textarea>
+    </div>
+    </div>
+</div><!--fin campo activo -->
+
+<div class="row">
+    <label class="col-sm-2 col-form-label">Datos Complementarios</label>
+    <div class="col-sm-7">
+    <div class="form-group">
+        <textarea rows="2" class="form-control" name="otrodato" id="otrodato" required="true" onkeyup="javascript:this.value=this.value.toUpperCase();"><?=$otrodato;?></textarea>
     </div>
     </div>
 </div><!--fin campo activo -->
@@ -487,5 +501,17 @@ $('.datetimepicker').datetimepicker({
     }
 });
 
-
+function ajaxCodigoActivo(combo){
+    var codRubro=combo.value;
+    console.log("rubro: "+codRubro);
+    var contenedor = document.getElementById('divCodigoAF');
+    ajax=nuevoAjax();
+    ajax.open('GET', 'activosFijos/ajaxCodigoActivoFijo.php?codigo='+codRubro,true);
+    ajax.onreadystatechange=function() {
+        if (ajax.readyState==4) {
+            contenedor.innerHTML = ajax.responseText;
+        }
+    }
+    ajax.send(null)
+}
 </script>

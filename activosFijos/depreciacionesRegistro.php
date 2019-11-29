@@ -20,6 +20,7 @@ if ($codigo > 0){
   $codigo = $result['codigo'];
   $cod_empresa = $result['cod_empresa'];
   $nombre = $result['nombre'];
+  $abreviatura = $result['abreviatura'];
   $vida_util = $result['vida_util'];
   $cod_estado = $result['cod_estado'];
   $cod_cuentacontable = $result['cod_cuentacontable'];
@@ -27,6 +28,7 @@ if ($codigo > 0){
   $codigo = 0;
   $cod_empresa = '';
   $nombre = '';
+  $abreviatura = '';
   $vida_util = '';
   $cod_estado = '';
   $cod_cuentacontable = '';
@@ -70,6 +72,16 @@ if ($codigo > 0){
     </div>
     </div>
 </div><!--fin campo nombre -->
+
+<div class="row">
+    <label class="col-sm-2 col-form-label">Abreviatura</label>
+    <div class="col-sm-7">
+    <div class="form-group">
+        <input class="form-control" type="text" name="abreviatura" id="abreviatura" required="true" value="<?=$abreviatura;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+    </div>
+    </div>
+</div><!--fin campo abreviatura -->
+
 <div class="row">
     <label class="col-sm-2 col-form-label">Vida Util (Años)</label>
     <div class="col-sm-7">
