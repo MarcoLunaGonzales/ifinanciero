@@ -1111,6 +1111,18 @@ function DevolverAF(cod_personal,cod_af,observacionD){
     }
   });
 }
+function DevolverAFAll(cod_personal){
+  $.ajax({
+    type:"POST",
+    data:"cod_personal="+cod_personal,
+    url:"activosFijos/saveAsignacionAll.php",
+    success:function(r){
+      
+        alerts.showSwal('success-message','index.php?opcion=afEnCustodia');
+      
+    }
+  });
+}
 
 function rechazarDevolucion(cod_personal,cod_af){
   $.ajax({

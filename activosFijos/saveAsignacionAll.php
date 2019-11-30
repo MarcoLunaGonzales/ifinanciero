@@ -13,10 +13,7 @@ $stmtX = $dbh->prepare($sqlX);
 $stmtX->execute();
 
 //RECIBIMOS LAS VARIABLES
-$cod_personal = $_GET["codigo"];//codigoactivofijo
-
-// $cod_estadoasignacionaf=5;
-// $observacion=$_POST['observacion'];
+$cod_personal=$_POST['cod_personal'];
 
 //echo "llega ".$cod_personal;
 
@@ -32,7 +29,7 @@ $stmt->bindColumn('cod_personal', $cod_personal);
 
 
 $cod_estadoasignacionaf=5;
-$observacion='';
+$observacion='Sin Novedad';
 $fecha_devolucion=date("Y-m-d H:i:s");
 
 
@@ -50,6 +47,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
 	$stmtU->bindParam(':observacion', $observacion);
 	$stmtU->execute();
 
-	}	
+}	
+echo $result;
+$dbhU=null;
 ?>
-alerts.showSwal('success-message','index.php?opcion=afEnCustodia');

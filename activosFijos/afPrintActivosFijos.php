@@ -37,7 +37,8 @@ $rubrosString=implode(",", $rubros);
 $sqlActivos="SELECT codigoactivo,activo,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional)as cod_unidadorganizacional,
 (select a.abreviatura from areas a where a.codigo=cod_area) as cod_area,
 (select d.nombre from depreciaciones d where d.codigo=cod_depreciaciones) as cod_depreciaciones,
-fechalta,(select r.nombre from personal2 r where r.codigo=cod_responsables_responsable) as cod_responsables_responsable
+tipoalta,
+fechalta,valorinicial,valorresidual,(select r.nombre from personal2 r where r.codigo=cod_responsables_responsable) as cod_responsables_responsable,(select e.nombre from estados_activofijo e where e.codigo=cod_estadoactivofijo) as estado_af
 from activosfijos 
 where cod_estadoactivofijo = 1 and cod_unidadorganizacional in ($unidadOrgString) and cod_area in ($areaString) and cod_depreciaciones in ($rubrosString)";  
 
@@ -53,7 +54,11 @@ $stmtActivos->bindColumn('cod_unidadorganizacional', $cod_unidadorganizacional);
 $stmtActivos->bindColumn('cod_area', $cod_area);
 $stmtActivos->bindColumn('cod_depreciaciones', $cod_depreciaciones);
 $stmtActivos->bindColumn('fechalta', $fecha_alta);
+$stmtActivos->bindColumn('tipoalta', $tipo_alta);
+$stmtActivos->bindColumn('valorinicial', $valor_inicial);
+$stmtActivos->bindColumn('valorresidual', $valor_residual);
 $stmtActivos->bindColumn('cod_responsables_responsable', $responsables_responsable);
+$stmtActivos->bindColumn('estado_af', $estado_af);
 ?>
 
 <div class="content">
@@ -79,12 +84,20 @@ $stmtActivos->bindColumn('cod_responsables_responsable', $responsables_responsab
                         <tr >
                           <th class="text-center">-</th>
                           <th class="font-weight-bold">Codigo Activo</th>
-                          <th class="font-weight-bold">Unidad O.</th>
+                          <th class="font-weight-bold">U. O.</th>
                           <th class="font-weight-bold">Area</th>
                           <th class="font-weight-bold">Rubro</th>
                           <th class="font-weight-bold">Activo</th>
-                          <th class="font-weight-bold">Fecha de Alta</th>
+
+                          <th class="font-weight-bold">Tipo De Alta</th>
+                          <th class="font-weight-bold">Fecha De Alta</th>
+                          <th class="font-weight-bold">Valor Ini.</th>
+                          <th class="font-weight-bold">Valor Res.</th>
+
+                          
                           <th class="font-weight-bold">Responsable</th>
+
+                          <th class="font-weight-bold">Estado AF</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -113,8 +126,16 @@ $stmtActivos->bindColumn('cod_responsables_responsable', $responsables_responsab
                           <td class="text-center small"><?= $cod_area; ?></td>
                           <td class="text-left small"><?= $cod_depreciaciones; ?></td>
                           <td class="text-left small"><?= $activoX; ?></td>
+
+                          <td class="text-left small"><?= $tipo_alta; ?></td>
                           <td class="text-center small"><?= $fecha_alta; ?></td>
+                          <td class="text-left small"><?= $valor_inicial; ?></td>
+                          <td class="text-left small"><?= $valor_residual; ?></td>
+
+                          
                           <td class="text-left small"><?= $responsables_responsable; ?></td>
+
+                          <td class="text-left small"><?= $estado_af; ?></td>
                         </tr>
                         <?php 
                             } 

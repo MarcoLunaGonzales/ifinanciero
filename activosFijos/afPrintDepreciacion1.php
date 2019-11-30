@@ -101,11 +101,13 @@ try{
 
 
     //asignaciones
-    $query2 = "SELECT afa.fechaasignacion,afa.estadobien_asig,
-    (select nombre from personal2 where codigo= afa.cod_personal)as nombre_personal,
-    (select nombre from unidades_organizacionales where codigo=afa.cod_unidadorganizacional) as u_o,
-    (select nombre from areas where codigo=afa.cod_area)as area FROM activofijos_asignaciones afa 
-    where cod_activosfijos = ".$codigo;
+    $query2 = "SELECT (select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional)as u_o,
+    (select a.abreviatura from areas a where a.codigo=cod_area)as area,fechaasignacion,estadobien_asig,
+    (select p.nombre from personal2 p where p.codigo=cod_personal)as nombre_personal,cod_estadoasignacionaf,
+    (select eaf.nombre from estados_asignacionaf eaf where eaf.codigo=cod_estadoasignacionaf) as estadoAsigAF,
+    fecha_recepcion,observaciones_recepcion,fecha_devolucion,observaciones_devolucion
+from activofijos_asignaciones
+where cod_activosfijos =".$codigo;
     $statement2 = $dbh->query($query2);
 
 
@@ -192,11 +194,17 @@ $html.=  '<header class="header">'.
             '<table class="table">'.
                 '<thead>'.
                     '<tr>'.
-                        '<th class="font-weight-bold">Fecha</th>'.
-                        '<th class="font-weight-bold">Estado</th>'.
+                        '<th class="font-weight-bold">Fecha Asig.</th>'.
+                        '<th class="font-weight-bold">Estado bien Asig.</th>'.
                         '<th class="font-weight-bold">Personal</th>'.
                         '<th class="font-weight-bold">UO</th>'.
                         '<th class="font-weight-bold">Area</th>'.
+
+                        '<th class="font-weight-bold">Estado Asignación</th>'.
+                        '<th class="font-weight-bold">F. Recepción</th>'.
+                        '<th class="font-weight-bold">Obs. Recepción</th>'.
+                        '<th class="font-weight-bold">F. Devolución</th>'.
+                        '<th class="font-weight-bold">Obs. Devolución</th>'.
                     '</tr>'.
                 '</thead>'.
                 '<tbody>';
@@ -204,10 +212,15 @@ $html.=  '<header class="header">'.
                        $html.='<tr>'.
                             '<td class="text-left small">'.$row["fechaasignacion"].'</td>'.
                             '<td class="text-left small">'.$row["estadobien_asig"].'</td>'.
-                 
                             '<td class="text-left small">'.$row["nombre_personal"].'</td>'.
                             '<td class="text-left small">'.$row["u_o"].'</td>'.
-                         '<td class="text-left small">'.$row["area"].'</td>'.
+                            '<td class="text-left small">'.$row["area"].'</td>'.
+
+                            '<td class="text-left small">'.$row["estadoAsigAF"].'</td>'.
+                            '<td class="text-left small">'.$row["fecha_recepcion"].'</td>'.
+                            '<td class="text-left small">'.$row["observaciones_recepcion"].'</td>'.
+                            '<td class="text-left small">'.$row["fecha_devolucion"].'</td>'.
+                            '<td class="text-left small">'.$row["observaciones_devolucion"].'</td>'.
                      '</tr>';
                      } 
                 $html.='</tbody>'.

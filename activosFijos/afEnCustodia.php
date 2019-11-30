@@ -110,7 +110,7 @@ $stmt->bindColumn('fecha_recepcion', $fecha_recepcion);
                                     </button>
                                   <?php }elseif($cod_estadoasignacionaf==2){?>
 
-                                  <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#modalDevolver" onclick="agregaform('<?=$datos;?>')">
+                                    <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#modalDevolver" onclick="agregaform('<?=$datos;?>')">
                                       <i class="material-icons" title="Devolver AF">reply</i>
                                     </button>
                                     
@@ -124,7 +124,7 @@ $stmt->bindColumn('fecha_recepcion', $fecha_recepcion);
                 </div>
                 
                 <div class="card-footer fixed-bottom">
-                  <button class="<?=$buttonNormal;?>" onClick="location.href='<?=$urldevolver_af_all;?>?codigo=<?=$cod_personal?>'">Devolver todos AF</button>
+                  <button class="<?=$buttonNormal;?>" data-toggle="modal" data-target="#modalDevolverAll" >Devolver todos AF S/N</button>
                 </div>
                 
               </div>
@@ -196,7 +196,24 @@ $stmt->bindColumn('fecha_recepcion', $fecha_recepcion);
     </div>
   </div>
 </div>
-
+<!-- Modal devolver all-->
+<div class="modal fade" id="modalDevolverAll" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Se devolverá todos los Activos Fijos <b>SIN OBSERVACIONES</b></h4>
+      </div>
+      <div class="modal-body">
+        No podrá revertir el proceso
+      </div>       
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" id="DevolverAFAll" data-dismiss="modal">Aceptar</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script type="text/javascript">
   $(document).ready(function(){
@@ -222,6 +239,13 @@ $stmt->bindColumn('fecha_recepcion', $fecha_recepcion);
       observacionD=$('#observacionD').val();
       DevolverAF(cod_personal,cod_af,observacionD);
     });
+
+    $('#DevolverAFAll').click(function(){
+      cod_personal=<?=$cod_personal?>;
+      DevolverAFAll(cod_personal);
+    });
+
+    
 
   });
 </script>

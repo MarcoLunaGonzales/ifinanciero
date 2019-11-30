@@ -287,12 +287,14 @@
             require_once('activosFijos/executeComprobanteDepreciacion.php');
 		}
 
+        if ($_GET['opcion']=='rptactivosfijos') {
+            require_once('activosFijos/rptactivosfijos.php');
+		}
+		if ($_GET['opcion']=='rptactivosfijosAsignados') {
+            require_once('activosFijos/rptactivosfijosAsignados.php');
+		}
         if ($_GET['opcion']=='rptxrubrosxmes') {
             require_once('activosFijos/rptxrubrosxmes.php');
-		}
-
-		if ($_GET['opcion']=='rptactivosfijos') {
-            require_once('activosFijos/rptactivosfijos.php');
 		}
 
 		if ($_GET['opcion']=='rptactivosfijosxunidad') {
