@@ -38,7 +38,7 @@ $stmt->bindColumn('fecha_recepcion', $fecha_recepcion);
 ?>
 
 <div class="content" id="tabla1">
-	<div class="container-fluid">
+  <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
               <div class="card">
@@ -96,26 +96,25 @@ $stmt->bindColumn('fecha_recepcion', $fecha_recepcion);
                                 <td><?=$cod_area;?></td>
                                 <td><?=$activo;?></td>
                                 <td><?=$fecha_asignacion;?></td>
-                                <td><?=$estado_asignacionaf;?></td>
+                                <td><?=$label.$estado_asignacionaf."</span>";?></td>
                                 <td><?=$fecha_recepcion;?></td>                                
                                 <td class="td-actions text-right">
                                   <?php
                                     if($cod_estadoasignacionaf==1){
                                   ?>
                                     <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalAceptar" onclick="agregaform('<?=$datos;?>')">
-                                      <i class="material-icons" title="Recepcionar">thumb_up</i>
+                                      <i class="material-icons" title="Recepcionar AF">thumb_up</i>
                                     </button>
                                     <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalRechazar" onclick="agregaform('<?=$datos;?>')">
-                                      <i class="material-icons" title="Rechazar">thumb_down</i>
+                                      <i class="material-icons" title="Rechazar Af">thumb_down</i>
                                     </button>
                                   <?php }elseif($cod_estadoasignacionaf==2){?>
 
-                                  <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#modalDevolver" onclick="agregaform('<?=$datos;?>')">
-                                      <i class="material-icons" title="Devolver">reply</i>
+                                    <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#modalDevolver" onclick="agregaform('<?=$datos;?>')">
+                                      <i class="material-icons" title="Devolver AF">reply</i>
                                     </button>
                                     
                                   <?php }?>
-                                    
                                 </td>
                             </tr>
                         <?php $index++; } ?>
@@ -123,6 +122,11 @@ $stmt->bindColumn('fecha_recepcion', $fecha_recepcion);
                     </table>
                   </div>
                 </div>
+                
+                <div class="card-footer fixed-bottom">
+                  <button class="<?=$buttonNormal;?>" data-toggle="modal" data-target="#modalDevolverAll" >Devolver todos AF S/N</button>
+                </div>
+                
               </div>
 
             </div>
@@ -182,10 +186,29 @@ $stmt->bindColumn('fecha_recepcion', $fecha_recepcion);
       <div class="modal-body">
         <input type="hidden" name="codigo_af_aceptar1" id="codigo_af_aceptar1" value="0">
         <input type="hidden" name="codigo_af_aceptar2" id="codigo_af_aceptar2" value="0">
+        <label> Observaciones : </label><br>
+        <input type="text" name="observacionD" id="observacionD" class="form-control input-sm" required="true">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" id="DevolverAF"  data-dismiss="modal">Aceptar</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal devolver all-->
+<div class="modal fade" id="modalDevolverAll" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Se devolverá todos los Activos Fijos <b>SIN OBSERVACIONES</b></h4>
+      </div>
+      <div class="modal-body">
         No podrá revertir el proceso
       </div>       
       <div class="modal-footer">
-        <button type="button" class="btn btn-success" id="DevolverAF" data-dismiss="modal">Aceptar</button>
+        <button type="button" class="btn btn-success" id="DevolverAFAll" data-dismiss="modal">Aceptar</button>
         <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
       </div>
     </div>
@@ -213,8 +236,16 @@ $stmt->bindColumn('fecha_recepcion', $fecha_recepcion);
       //cod_af='<?php echo $cod_activo;?>';
       cod_af=document.getElementById("codigo_af_aceptar1").value;
       cod_personal=document.getElementById("codigo_af_aceptar2").value;
-      DevolverAF(cod_personal,cod_af);
+      observacionD=$('#observacionD').val();
+      DevolverAF(cod_personal,cod_af,observacionD);
     });
+
+    $('#DevolverAFAll').click(function(){
+      cod_personal=<?=$cod_personal?>;
+      DevolverAFAll(cod_personal);
+    });
+
+    
 
   });
 </script>

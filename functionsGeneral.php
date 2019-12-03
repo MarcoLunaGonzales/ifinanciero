@@ -1,4 +1,5 @@
 <?php
+require_once 'conexion.php';
 
 function showAlertSuccessError($bandera, $url){
    if($bandera==true){

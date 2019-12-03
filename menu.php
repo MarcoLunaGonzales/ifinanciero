@@ -1,4 +1,5 @@
 <?php
+include("functionsGeneral.php");
 
 $globalUserX=$_SESSION['globalUser'];
 //echo $globalUserX;
@@ -58,29 +59,24 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
                    <span class="sidebar-normal"> Proveedores</span>
                  </a>
                </li>
-
-            
-
-                 <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=listDepreciaciones">
-                    <span class="sidebar-mini"> DAF </span>
-                    <span class="sidebar-normal"> Rubros/Depreciaciones</span>
-                  </a>
+                <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=listDepreciaciones">
+                      <span class="sidebar-mini"> DAF </span>
+                      <span class="sidebar-normal"> Rubros/Depreciaciones</span>
+                    </a>
                 </li>
                 <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=listaTiposBienes">
-                    <span class="sidebar-mini"> DAF </span>
-                    <span class="sidebar-normal"> Tipos de Bienes</span>
-                  </a>
+                    <a class="nav-link" href="?opcion=listaTiposBienes">
+                      <span class="sidebar-mini"> DAF </span>
+                      <span class="sidebar-normal"> Tipos de Bienes</span>
+                    </a>
                 </li>
                 <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=activosfijosLista">
-                    <span class="sidebar-mini"> DAF </span>
-                    <span class="sidebar-normal"> Activos Fijos</span>
-                  </a>
+                    <a class="nav-link" href="?opcion=activosfijosLista">
+                      <span class="sidebar-mini"> DAF </span>
+                      <span class="sidebar-normal"> Activos Fijos</span>
+                    </a>
                 </li>
-                
-
               </ul>
             </div>
           </li>
@@ -159,6 +155,23 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
                     </a>
                 </li>
 
+                
+                <?php
+                $valor=8;
+                $VariableConf=obtieneValorConfig($valor);
+                  if($globalUserX==$VariableConf){
+                ?>
+                <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=aftransaccion">
+                      <span class="sidebar-mini"> D </span>
+                      <span class="sidebar-normal"> Transacción De AF</span>
+                    </a>
+                </li>
+                <?php
+                  }
+                ?>
+                
+
               </ul>
             </div>
           </li>
@@ -207,15 +220,21 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
             <div class="collapse" id="reportesAF">
               <ul class="nav">
                 <li class="nav-item ">
-                    <a class="nav-link" href="?opcion=rptxrubrosxmes">
-                      <span class="sidebar-mini"> R </span>
-                      <span class="sidebar-normal"> Por Rubro por Mes</span>
-                    </a>
-                </li>
-                <li class="nav-item ">
                     <a class="nav-link" href="?opcion=rptactivosfijos">
                       <span class="sidebar-mini"> R </span>
                       <span class="sidebar-normal"> Activos Fijos</span>
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=rptactivosfijosAsignados">
+                      <span class="sidebar-mini"> R </span>
+                      <span class="sidebar-normal"> Activos Fijos Asignados</span>
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=rptxrubrosxmes">
+                      <span class="sidebar-mini"> R </span>
+                      <span class="sidebar-normal"> Por Rubro por Mes</span>
                     </a>
                 </li>
 

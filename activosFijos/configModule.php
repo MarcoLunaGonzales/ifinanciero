@@ -71,6 +71,8 @@ $urlSaveTransfer="?opcion=saveTransferActivosfijos";//guardar transferencia de a
 $urlEdit6="index.php?opcion=activofijoRegister";//form
 
 $urlEditTransfer="index.php?opcion=activofijoTransferir";
+$urlafAccesorios="index.php?opcion=activofijoAccesorios";
+$urlafEventos="index.php?opcion=activofijoEventos";
 
 $urlSaveEdit6="?opcion=saveActivosfijos";//guardar
 $urlDelete6="index.php?opcion=deleteDepreciacion";
@@ -121,5 +123,7 @@ $urlRegistrarProv="index.php?opcion=provForm";
 
 $rpt01 = "?opcion=rptxrubrosxmes";
 $rpt01procesar="activosFijos/afPrintDepreciacionxrubroxmes.php";
+//devolver AF all
+//$urldevolver_af_all="activosFijos/saveAsignacionAll.php";
 
 ?>

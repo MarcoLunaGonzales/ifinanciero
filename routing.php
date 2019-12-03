@@ -240,6 +240,15 @@
 			require_once('activosFijos/saveTransferActivosfijos.php');
 		}
 
+		if ($_GET['opcion']=='activofijoAccesorios') {
+			$codigo=$_GET['codigo'];
+			require_once('activosFijos/activofijoAccesorios.php');
+		}
+		if ($_GET['opcion']=='activofijoEventos') {
+			$codigo=$_GET['codigo'];
+			require_once('activosFijos/activofijoEventos.php');
+		}
+
 		//ASIGNACIONES DE ACTIVOS FIJOS
 		if ($_GET['opcion']=='asignacionesLista') {
 			require_once('activosFijos/asignacionesLista.php');
@@ -304,12 +313,14 @@
             require_once('activosFijos/executeComprobanteDepreciacion.php');
 		}
 
+        if ($_GET['opcion']=='rptactivosfijos') {
+            require_once('activosFijos/rptactivosfijos.php');
+		}
+		if ($_GET['opcion']=='rptactivosfijosAsignados') {
+            require_once('activosFijos/rptactivosfijosAsignados.php');
+		}
         if ($_GET['opcion']=='rptxrubrosxmes') {
             require_once('activosFijos/rptxrubrosxmes.php');
-		}
-
-		if ($_GET['opcion']=='rptactivosfijos') {
-            require_once('activosFijos/rptactivosfijos.php');
 		}
 
 		if ($_GET['opcion']=='rptactivosfijosxunidad') {

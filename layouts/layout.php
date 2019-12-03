@@ -2,15 +2,15 @@
 	include("head.php");
 
 	//include("menuService.php");
-   include("librerias.php");
+  include("librerias.php");
   include("menu.php");
+  // include("functionsGeneral.php");
 ?>    
     <div class="main-panel">
       <div class="content">
 
       <?php 
           include("cabecera.php");
-
           require_once('routing.php');
       ?>
 

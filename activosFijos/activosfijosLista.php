@@ -71,66 +71,78 @@ $stmt->bindColumn('nombre_area', $nombreArea);
                   <div class="table-responsive">
                     <table class="table" id="tablePaginator">
 
-                    <thead>
-    <tr>
-        <th></th>
-        <th>Codigo</th>
-        <th>Unidad/Area</th>
-        <th>Activo</th>
-        <th>F. Alta</th>
-      
-        <th>Rubro/Depr.</th>
-        <th>Tipo Bien</th>
-        <th>Estado bien</th>
-        <th>Ubicacion</th>
-        
-        
-        <th></th>
-    </tr>
-</thead>
-<tbody>
-<?php $index=1;
-while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { ?>
-    <tr>
-        <td  class="td-actions text-right">
-        
-          
-          <a href='<?=$printDepreciacion1;?>?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="<?=$buttonEdit;?>">
-            <i class="material-icons">print</i>
-          </a>
-        </td>
-        <td><?=$codigoactivo;?></td>
-        <td><?=$nombreUnidad;?>-<?=$nombreArea;?></td>
-        <td><?=$activo;?></td>
-        <td><?=$fechalta;?></td>
-        <td><?=$dep_nombre;?></td>
-        <td><?=$tb_tipo;?></td>
-        <td><?=$estadobien;?></td>
-        <td><?=$u_oficina;?> <?=$u_edificio;?></td>
-        
-        <td class="td-actions text-right">
-        <?php
-          if($globalAdmin==1){
-        ?>
-          <a href='<?=$urlEdit6;?>&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonEdit;?>">
-            <i class="material-icons"><?=$iconEdit;?></i>
-          </a>
-          <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete2;?>&codigo=<?=$codigo;?>')">
-            <i class="material-icons"><?=$iconDelete;?></i>
-          </button>
-          <a href='<?=$urlEditTransfer;?>&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonMorado;?>">
-            <i class="material-icons">transfer_within_a_station</i>
-          </a>
+                      <thead>
+                        <tr>
+                          <th></th>
+                            <th>Codigo</th>
+                            <th>Unidad/Area</th>
+                            <th>Activo</th>
+                            <th>F. Alta</th>
+                          
+                            <th>Rubro/Depr.</th>
+                            <th>Tipo Bien</th>
+                            <th>Estado bien</th>
+                            <th>Ubicacion</th>
+                            <th>Acc/Eventos</th>
+                            <th></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      <?php $index=1;
+                      while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { ?>
+                          <tr>
+                            <td  class="td-actions text-right">    
+                                <a href='<?=$printDepreciacion1;?>?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="<?=$buttonEdit;?>">
+                                  <i class="material-icons">print</i>
+                                </a>
+                              </td>
+                              <td><?=$codigoactivo;?></td>
+                              <td><?=$nombreUnidad;?>-<?=$nombreArea;?></td>
+                              <td><?=$activo;?></td>
+                              <td><?=$fechalta;?></td>
+                              <td><?=$dep_nombre;?></td>
+                              <td><?=$tb_tipo;?></td>
+                              <td><?=$estadobien;?></td>
+                              <td><?=$u_oficina;?> <?=$u_edificio;?></td>
+                              
+                              <td class="td-actions text-right">
+                              <?php
+                                if($globalAdmin==1){
+                              ?>
 
-          <?php
-            }
-          ?>
-        
-        </td>
-    </tr>
-<?php $index++; } ?>
-</tbody>
-                    
+                                <a href='<?=$urlafAccesorios;?>&codigo=<?=$codigo;?>' rel="tooltip" class="btn btn-warning">
+                                  <i class="material-icons" title="Accesorios AF">attach_file</i>
+                                </a>
+                                <a href='<?=$urlafEventos;?>&codigo=<?=$codigo;?>' rel="tooltip" class="btn btn-info">
+                                  <i class="material-icons" title="Eventos AF">class</i>
+                                </a>
+
+                                <?php
+                                  }
+                                ?>
+                              
+                              </td>
+                              <td class="td-actions text-right">
+                              <?php
+                                if($globalAdmin==1){
+                              ?>
+                                <a href='<?=$urlEdit6;?>&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonEdit;?>">
+                                  <i class="material-icons" title="Editar AF"><?=$iconEdit;?></i>
+                                </a>
+                                <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete2;?>&codigo=<?=$codigo;?>')">
+                                  <i class="material-icons" title="Borrar AF"><?=$iconDelete;?></i>
+                                </button>
+                                <a href='<?=$urlEditTransfer;?>&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonMorado;?>">
+                                  <i class="material-icons" title="Transferir AF">transfer_within_a_station</i>
+                                </a>
+                                <?php
+                                  }
+                                ?>
+                              
+                              </td>
+                          </tr>
+                      <?php $index++; } ?>
+                      </tbody>
                     </table>
                   </div>
                 </div>

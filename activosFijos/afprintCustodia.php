@@ -11,7 +11,12 @@ $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//try
 
 $codigo = $_GET["codigo"];//codigoactivofijo
 try{
-    $stmt = $dbh->prepare("SELECT afa.cod_activosfijos,(SELECT activo from activosfijos where codigo=afa.cod_activosfijos) as nombre_af,afa.fechaasignacion,(SELECT abreviatura from unidades_organizacionales where codigo=afa.cod_unidadorganizacional)as cod_unidadorganizacional,(SELECT abreviatura from areas where codigo=afa.cod_area) as cod_area,(SELECT nombre from personal2 where codigo=afa.cod_personal)as cod_personal,afa.estadobien_asig,(SELECT nombre from estados_asignacionaf where codigo=afa.cod_estadoasignacionaf)as cod_estadoasignacionaf,afa.fecha_recepcion,afa.observaciones_recepcion
+    $stmt = $dbh->prepare("SELECT afa.cod_activosfijos,(SELECT activo from activosfijos where codigo=afa.cod_activosfijos) as nombre_af,
+        afa.fechaasignacion,(SELECT abreviatura from unidades_organizacionales where codigo=afa.cod_unidadorganizacional)as cod_unidadorganizacional,
+        (SELECT abreviatura from areas where codigo=afa.cod_area) as cod_area,
+        (SELECT nombre from personal2 where codigo=afa.cod_personal)as cod_personal,afa.estadobien_asig,
+        (SELECT nombre from estados_asignacionaf where codigo=afa.cod_estadoasignacionaf)as cod_estadoasignacionaf,
+        afa.fecha_recepcion,afa.observaciones_recepcion,afa.fecha_devolucion,afa.observaciones_devolucion
         from activofijos_asignaciones afa
         where cod_activosfijos= :codigo");
     //Ejecutamos;
@@ -29,6 +34,9 @@ try{
     $cod_estadoasignacionaf = $result['cod_estadoasignacionaf'];
     $fecha_recepcion = $result['fecha_recepcion'];
     $observaciones_recepcion = $result['observaciones_recepcion'];
+
+    $fecha_devolucion = $result['fecha_devolucion'];
+    $observaciones_devolucion = $result['observaciones_devolucion'];
     //imagen
     $stmtIM = $dbh->prepare("SELECT * FROM activosfijosimagen  where codigo =:codigo");
     $stmtIM->bindParam(':codigo',$codigo);
@@ -89,7 +97,7 @@ $html.=  '<header class="header">'.
                                                 
                                             '</tr>'.
                                             '<tr>'.
-                                                '<td class="text-left" >Personal Responsable :</td>'.
+                                                '<td class="text-left" >Personal Asignado :</td>'.
                                                 '<td class="text-left" >'.$cod_personal.'</td>'.
                                             '</tr>'.
                                             '<tr>'.
@@ -105,8 +113,16 @@ $html.=  '<header class="header">'.
                                                 '<td class="text-left" >'.$fecha_recepcion.'</td>'.
                                             '</tr>'.
                                             '<tr>'.
-                                                '<td class="text-left" >Obervaciones :</td>'.
+                                                '<td class="text-left" >Obervaciones Recepcion:</td>'.
                                                 '<td class="text-left" >'.$observaciones_recepcion.'</td>'.
+                                            '</tr>'.
+                                            '<tr>'.
+                                                '<td class="text-left" >Fecha Devolución : </td>'.
+                                                '<td class="text-left" >'.$fecha_devolucion.'</td>'.
+                                            '</tr>'.
+                                            '<tr>'.
+                                                '<td class="text-left" >Obervaciones Devolución:</td>'.
+                                                '<td class="text-left" >'.$observaciones_devolucion.'</td>'.
                                             '</tr>'.
                                                 
                                             '<hr>'.
