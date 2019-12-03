@@ -1098,7 +1098,6 @@ function RecepcionarAF(cod_personal,cod_af){
     }
   });
 }
-
 function DevolverAF(cod_personal,cod_af,observacionD){
   $.ajax({
     type:"POST",
@@ -1123,7 +1122,6 @@ function DevolverAFAll(cod_personal){
     }
   });
 }
-
 function rechazarDevolucion(cod_personal,cod_af){
   $.ajax({
     type:"POST",
@@ -1148,6 +1146,118 @@ function AceptarDevolucion(cod_personal,cod_af){
         //$('#tabla1').load('activosFijos/afEnCustodia.php');
         //alertify.success("agregado");
         alerts.showSwal('success-message','index.php?opcion=aftransaccion');
+      }
+    }
+  });
+}
+
+function agregaformAcc(datos){
+  //console.log("datos: "+datos);
+  d=datos.split('||');
+  
+  //document.getElementById("codigo_af_aceptar1").value=d[0];
+  $('#idAccE').val(d[0]);
+  $('#nombreAccE').val(d[1]);
+  $('#estadoAccE').val(d[2]);
+
+}
+function agregaformAccB(datos){
+  //console.log("datos: "+datos);
+  d=datos.split('||');
+  document.getElementById("idAccE").value=d[0];
+}
+function RegistrarAccAF(codigoAF,nombreAcc,estadoAcc){
+    $.ajax({
+    type:"POST",
+    data:"idAccE=0&codigoAF="+codigoAF+"&nombreAcc="+nombreAcc+"&estadoAcc="+estadoAcc,
+    url:"activosFijos/saveAccesoriosAF.php",
+    success:function(r){
+      if(r==1){
+        //$('#tabla1').load('index.php');
+        // alertify.success("agregado");
+        alerts.showSwal('success-message','index.php?opcion=activofijoAccesorios&codigo='+codigoAF);
+      }
+    }
+  });
+}
+function SaveEditAccAF(idAccE,codigoAF,nombreAcc,estadoAcc){
+    $.ajax({
+    type:"POST",
+    data:"idAccE="+idAccE+"&codigoAF="+codigoAF+"&nombreAcc="+nombreAcc+"&estadoAcc="+estadoAcc,
+    url:"activosFijos/saveAccesoriosAF.php",
+    success:function(r){
+      if(r==1){
+        //$('#tabla1').load('index.php');
+        // alertify.success("agregado");
+        alerts.showSwal('success-message','index.php?opcion=activofijoAccesorios&codigo='+codigoAF);
+      }
+    }
+  });
+}
+function SaveDeleteAccAF(idAccE,codigoAF){
+    $.ajax({
+    type:"POST",
+    data:"idAccE="+idAccE+"&codigoAF="+codigoAF+"&nombreAcc=''&estadoAcc=6",
+    url:"activosFijos/saveAccesoriosAF.php",
+    success:function(r){
+      if(r==1){
+        alerts.showSwal('success-message','index.php?opcion=activofijoAccesorios&codigo='+codigoAF);
+      }
+    }
+  });
+}
+
+//funciones para modal eventos AF
+
+function agregaformEve(datos){
+  //console.log("datos: "+datos);
+  d=datos.split('||');
+  
+  //document.getElementById("codigo_af_aceptar1").value=d[0];
+  $('#idEveE').val(d[0]);
+  $('#nombreEveE').val(d[1]);
+  $('#personalEveE').val(d[2]);
+}
+function agregaformEveB(datos){
+  //console.log("datos: "+datos);
+  d=datos.split('||');
+  document.getElementById("idEveE").value=d[0];
+}
+function RegistrarEveAF(codigoAF,nombreEve,personalEve){
+    $.ajax({
+    type:"POST",
+    data:"idEveE=0&codigoAF="+codigoAF+"&nombreEve="+nombreEve+"&estadoEve=1&personalEve="+personalEve,
+    url:"activosFijos/saveEventosAF.php",
+    success:function(r){
+      if(r==1){
+        alerts.showSwal('success-message','index.php?opcion=activofijoEventos&codigo='+codigoAF);
+      }
+    }
+  });
+}
+function SaveEditEveAF(idEveE,codigoAF,nombreEve,cod_personalE){
+    $.ajax({
+    type:"POST",
+    data:"idEveE="+idEveE+"&codigoAF="+codigoAF+"&nombreEve="+nombreEve+"&estadoEve=1&personalEve="+cod_personalE,
+    url:"activosFijos/saveEventosAF.php",
+    success:function(r){
+      if(r==1){
+        //$('#tabla1').load('index.php');
+        // alertify.success("agregado");
+        alerts.showSwal('success-message','index.php?opcion=activofijoEventos&codigo='+codigoAF);
+      }
+    }
+  });
+}
+
+function SaveDeleteEveAF(idEveE,codigoAF){
+    $.ajax({
+    type:"POST",
+    data:"idEveE="+idEveE+"&codigoAF="+codigoAF+"&nombreEve=''&estadoEve=2&personalEve=''",
+    url:"activosFijos/saveEventosAF.php",
+    success:function(r){
+      if(r==1){
+        alerts.showSwal('success-message','index.php?opcion=activofijoEventos&codigo='+codigoAF);
       }
     }
   });

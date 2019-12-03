@@ -1,4 +1,5 @@
 <?php
+include("functionsGeneral.php");
 
 $globalUserX=$_SESSION['globalUser'];
 //echo $globalUserX;
@@ -155,13 +156,20 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
                 </li>
 
                 
-
+                <?php
+                $valor=8;
+                $VariableConf=obtieneValorConfig($valor);
+                  if($globalUserX==$VariableConf){
+                ?>
                 <li class="nav-item ">
                     <a class="nav-link" href="?opcion=aftransaccion">
                       <span class="sidebar-mini"> D </span>
                       <span class="sidebar-normal"> Transacción De AF</span>
                     </a>
                 </li>
+                <?php
+                  }
+                ?>
                 
 
               </ul>

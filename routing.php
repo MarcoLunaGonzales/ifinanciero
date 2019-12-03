@@ -223,6 +223,15 @@
 			require_once('activosFijos/saveTransferActivosfijos.php');
 		}
 
+		if ($_GET['opcion']=='activofijoAccesorios') {
+			$codigo=$_GET['codigo'];
+			require_once('activosFijos/activofijoAccesorios.php');
+		}
+		if ($_GET['opcion']=='activofijoEventos') {
+			$codigo=$_GET['codigo'];
+			require_once('activosFijos/activofijoEventos.php');
+		}
+
 		//ASIGNACIONES DE ACTIVOS FIJOS
 		if ($_GET['opcion']=='asignacionesLista') {
 			require_once('activosFijos/asignacionesLista.php');
