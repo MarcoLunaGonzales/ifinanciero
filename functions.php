@@ -1115,5 +1115,52 @@ where pc.codigo=$codigo and pgc.cod_tipocosto=$tipo GROUP BY pgd.cod_plantillagr
    }
    return($nombreX);
 }
+
+// obtener nombre de retencion
+function nameRetencion($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT nombre FROM configuracion_retenciones where codigo=:codigo");
+   $stmt->bindParam(':codigo',$codigo);
+   $stmt->execute();
+   $nombreX=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $nombreX=$row['nombre'];
+   }
+   return($nombreX);
+}
+// obtener porcentaje de retencion
+function porcentRetencion($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT porcentaje_cuentaorigen FROM configuracion_retenciones where codigo=:codigo");
+   $stmt->bindParam(':codigo',$codigo);
+   $stmt->execute();
+   $nombreX=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $nombreX=$row['porcentaje_cuentaorigen'];
+   }
+   return($nombreX);
+}
+function debeHaberRetencionDetalle($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT debe_haber FROM configuracion_retencionesdetalle where codigo=:codigo");
+   $stmt->bindParam(':codigo',$codigo);
+   $stmt->execute();
+   $nombreX=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $nombreX=$row['debe_haber'];
+   }
+   return($nombreX);
+}
+function porcentRetencionDetalle($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT porcentaje FROM configuracion_retencionesdetalle where codigo=:codigo");
+   $stmt->bindParam(':codigo',$codigo);
+   $stmt->execute();
+   $nombreX=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $nombreX=$row['porcentaje'];
+   }
+   return($nombreX);
+}
 ?>
 

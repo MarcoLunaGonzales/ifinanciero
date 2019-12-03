@@ -203,19 +203,19 @@ while ($rowComp = $stmt->fetch(PDO::FETCH_ASSOC)) {
     if($tc==0){$tc=1;}  
              $html.='<tr>'.
                       //'<td class="font-weight-bold">'.$nombreUnidad.'</td>'.
-                      '<td class="font-weight-bold">'.$unidadX.'</td>'.
-                      '<td class="font-weight-bold">'.$areaX.'</td>'.
-                      '<td class="font-weight-bold">'.strftime('%d/%m/%Y',strtotime($fechaX)).'</td>'.
-                      '<td class="text-left">'.$glosaX.'</td>'.
-                      '<td class="font-weight-bold">'.$tc.'</td>';
+                      '<td class="font-weight-bold small">'.$unidadX.'</td>'.
+                      '<td class="font-weight-bold small">'.$areaX.'</td>'.
+                      '<td class="font-weight-bold small">'.strftime('%d/%m/%Y',strtotime($fechaX)).'</td>'.
+                      '<td class="text-left small">'.$glosaX.'</td>'.
+                      '<td class="font-weight-bold small">'.$tc.'</td>';
                       $tDebeBol+=$debeX;$tHaberBol+=$haberX;
                       $tDebeTc+=$debeX/$tc;$tHaberTc+=$haberX/$tc;
-                       $html.='<td class="text-right font-weight-bold">'.number_format($debeX, 2, '.', ',').'</td>'.
-                      '<td class="text-right font-weight-bold">'.number_format($haberX, 2, '.', ',').'</td>'.
-                      '<td class="text-right font-weight-bold">'.number_format(00000, 2, '.', ',').'</td>'.
-                      '<td class="text-right font-weight-bold">'.number_format($debeX/$tc, 2, '.', ',').'</td>'.
-                      '<td class="text-right font-weight-bold">'.number_format($haberX/$tc, 2, '.', ',').'</td>'.
-                      '<td class="text-right font-weight-bold">'.number_format(00000, 2, '.', ',').'</td>';        
+                       $html.='<td class="text-right font-weight-bold small">'.number_format($debeX, 2, '.', ',').'</td>'.
+                      '<td class="text-right font-weight-bold small">'.number_format($haberX, 2, '.', ',').'</td>'.
+                      '<td class="text-right font-weight-bold small">'.number_format(00000, 2, '.', ',').'</td>'.
+                      '<td class="text-right font-weight-bold small">'.number_format($debeX/$tc, 2, '.', ',').'</td>'.
+                      '<td class="text-right font-weight-bold small">'.number_format($haberX/$tc, 2, '.', ',').'</td>'.
+                      '<td class="text-right font-weight-bold small">'.number_format(00000, 2, '.', ',').'</td>';        
                       
                     $html.='</tr>';
       $entero=floor($tDebeBol);
@@ -234,12 +234,12 @@ while ($rowComp = $stmt->fetch(PDO::FETCH_ASSOC)) {
                   '<td style="display: none;"></td>'.
                   '<td style="display: none;"></td>'.
                   //'<td style="display: none;"></td>'.
-                  '<td class="text-right font-weight-bold">'.number_format($tDebeBol, 2, '.', ',').'</td>'.
-                  '<td class="text-right font-weight-bold">'.number_format($tHaberBol, 2, '.', ',').'</td>'.
-                  '<td class="text-right font-weight-bold">'.number_format(00000, 2, '.', ',').'</td>'. 
-                  '<td class="text-right font-weight-bold">'.number_format($tDebeTc, 2, '.', ',').'</td>'. 
-                  '<td class="text-right font-weight-bold">'.number_format($tHaberTc, 2, '.', ',').'</td>'.
-                  '<td class="text-right font-weight-bold">'.number_format(00000, 2, '.', ',').'</td>'.       
+                  '<td class="text-right font-weight-bold small">'.number_format($tDebeBol, 2, '.', ',').'</td>'.
+                  '<td class="text-right font-weight-bold small">'.number_format($tHaberBol, 2, '.', ',').'</td>'.
+                  '<td class="text-right font-weight-bold small">'.number_format(00000, 2, '.', ',').'</td>'. 
+                  '<td class="text-right font-weight-bold small">'.number_format($tDebeTc, 2, '.', ',').'</td>'. 
+                  '<td class="text-right font-weight-bold small">'.number_format($tHaberTc, 2, '.', ',').'</td>'.
+                  '<td class="text-right font-weight-bold small">'.number_format(00000, 2, '.', ',').'</td>'.       
               '</tr>';
       $html.='<tr class="bg-secondary text-white">'.
                   '<td colspan="5" class="text-center">Sumas y saldos finales:</td>'.
@@ -248,12 +248,12 @@ while ($rowComp = $stmt->fetch(PDO::FETCH_ASSOC)) {
                   '<td style="display: none;"></td>'.
                   '<td style="display: none;"></td>'.
                   //'<td style="display: none;"></td>'.
-                  '<td class="text-right font-weight-bold">'.number_format($tDebeBol, 2, '.', ',').'</td>'.
-                  '<td class="text-right font-weight-bold">'.number_format($tHaberBol, 2, '.', ',').'</td>'.
-                  '<td class="text-right font-weight-bold">'.number_format(00000, 2, '.', ',').'</td>'. 
-                  '<td class="text-right font-weight-bold">'.number_format($tDebeTc, 2, '.', ',').'</td>'. 
-                  '<td class="text-right font-weight-bold">'.number_format($tHaberTc, 2, '.', ',').'</td>'.
-                  '<td class="text-right font-weight-bold">'.number_format(00000, 2, '.', ',').'</td>'.       
+                  '<td class="text-right font-weight-bold small">'.number_format($tDebeBol, 2, '.', ',').'</td>'.
+                  '<td class="text-right font-weight-bold small">'.number_format($tHaberBol, 2, '.', ',').'</td>'.
+                  '<td class="text-right font-weight-bold small">'.number_format(00000, 2, '.', ',').'</td>'. 
+                  '<td class="text-right font-weight-bold small">'.number_format($tDebeTc, 2, '.', ',').'</td>'. 
+                  '<td class="text-right font-weight-bold small">'.number_format($tHaberTc, 2, '.', ',').'</td>'.
+                  '<td class="text-right font-weight-bold small">'.number_format(00000, 2, '.', ',').'</td>'.       
               '</tr>'; 
             }
 

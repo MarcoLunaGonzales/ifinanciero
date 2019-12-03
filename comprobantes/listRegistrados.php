@@ -14,7 +14,7 @@ $dbh = new Conexion();
 $stmt = $dbh->prepare("SELECT (select u.nombre from unidades_organizacionales u where u.codigo=c.cod_unidadorganizacional)unidad, c.cod_gestion, 
 (select m.nombre from monedas m where m.codigo=c.cod_moneda)moneda, 
 (select t.nombre from tipos_comprobante t where t.codigo=c.cod_tipocomprobante)tipo_comprobante, c.fecha, c.numero,c.codigo, c.glosa,ec.nombre,ec.codigo as cod_estado
-from comprobantes c join estados_comprobantes ec on c.cod_estadocomprobante=ec.codigo;");
+from comprobantes c join estados_comprobantes ec on c.cod_estadocomprobante=ec.codigo where c.cod_estadocomprobante!=2;");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -42,7 +42,7 @@ $stmt->bindColumn('cod_estado', $codigoEstado);
                   <h4 class="card-title"><?=$moduleNamePlural?></h4>
                 </div>
                 <div class="card-body">
-                  <div class="col-sm-4 float-right">
+                  <!--<div class="col-sm-4 float-right">
                       <div class="input-group no-border">
                         <input type="text" value="" id="buscar_comprobantes" class="form-control" placeholder="Buscar..." onChange="buscarComprobantes('enproceso')" OnKeyUp="buscarComprobantes('enproceso')">
                         <a href="#" onclick="buscarComprobantes('enproceso')" class="btn btn-white btn-round btn-just-icon">
@@ -50,9 +50,9 @@ $stmt->bindColumn('cod_estado', $codigoEstado);
                           <div class="ripple-container"></div>
                         </a>
                       </div>
-                  </div>
-                  <div class="table-responsive" id="data_comprobantes">
-                    <table class="table">
+                  </div>-->
+                  <div class="" id="data_comprobantes">
+                    <table id="tablePaginator" class="table table-condensed">
                       <thead>
                         <tr>
                           <th class="text-center">#</th>
@@ -63,52 +63,38 @@ $stmt->bindColumn('cod_estado', $codigoEstado);
                           <th>Moneda</th>
                           <th>Glosa</th>
                           <th>Estado</th>
-                          <th class="text-right">Actions</th>
+                          <th class="text-right" width="10%">Actions</th>
                         </tr>
                       </thead>
                       <tbody>
 <?php
 						$index=1;
                       	while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
-                          
+                          switch ($codigoEstado) {
+                            case 1:
+                             $btnEstado="btn-info";$estadoIcon="how_to_vote";$values=3;
+                            break;
+                            case 2:
+                            $btnEstado="btn-danger";$estadoIcon="thumb_down";$values=3;
+                            break;
+                            case 3:
+                              $btnEstado="btn-warning";$estadoIcon="thumb_up";$values=1;
+                            break;
+                          }
 ?>
                         <tr>
                           <td align="center"><?=$index;?></td>
                           <td><?=$nombreGestion;?></td>
-                          <td><?=$fechaComprobante;?></td>
+                          <td><?=strftime('%d/%m/%Y',strtotime($fechaComprobante));?></td>
                           <td><?=$nombreTipoComprobante;?></td>
                           <td><?=$nroCorrelativo;?></td>
                           <td><?=$nombreMoneda;?></td>
                           <td><?=$glosaComprobante;?></td>
-                          <td><?=$estadoComprobante;?></td>
-                          <td class="td-actions text-right">
-                            
-                          <?php switch ($codigoEstado) {
-                            case 1:
-                              ?>
-                              <a href="#modalAprobar" data-toggle="modal" data-target="#modalAprobar" onclick="sendAprobacion(<?=$codigo?>,3)" target="_blank" rel="tooltip" class="btn btn-default btn-link btn-fab">
+                          <td class="text-right"><a href="#modalAprobar" data-toggle="modal" data-target="#modalAprobar" onclick="sendAprobacion(<?=$codigo?>,<?=$values?>)" class="btn <?=$btnEstado?> btn-sm"><?=$estadoComprobante;?>  <span class="material-icons small"><?=$estadoIcon?></span></a></td>
+                          <td width="10%" class="td-actions text-right">
+                            <!--<a href="#modalAprobar" data-toggle="modal" data-target="#modalAprobar" onclick="sendAprobacion(<?=$codigo?>,<?=$values?>)" target="_blank" rel="tooltip" class="btn btn-default btn-link btn-fab">
                               <i class="material-icons">done_all</i>
-                               </a> 
-                              <?php
-                              break;
-                            case 2:
-                              ?>
-                              <a href="#modalAprobar" data-toggle="modal" data-target="#modalAprobar" onclick="sendAprobacion(<?=$codigo?>,3)" target="_blank" rel="tooltip" class="btn btn-danger btn-link btn-fab">
-                              <i class="material-icons">clear</i>
-                               </a> 
-                              <?php
-                              break;
-                              case 3:
-                              ?>
-                              <a href="#modalAprobar" data-toggle="modal" data-target="#modalAprobar" onclick="sendAprobacion(<?=$codigo?>,1)" target="_blank" rel="tooltip" class="btn btn-info btn-link btn-fab">
-                              <i class="material-icons">done_all</i>
-                               </a> 
-                              <?php
-                              break;
-                            default:
-                              # code...
-                              break;
-                          }?>  
+                            </a>--> 
                            <div class="btn-group dropdown">
                               <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="material-icons"><?=$iconImp;?></i>
@@ -133,7 +119,7 @@ $stmt->bindColumn('cod_estado', $codigoEstado);
                                    ?>
                               </div>
                             </div>
-                            <a href='<?=$urlArchivo;?>?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="btn btn-warning">
+                            <a href='<?=$urlArchivo;?>?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="btn btn-default">
                               <i class="material-icons">attachment</i>
                             </a>                          
                           </td>

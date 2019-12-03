@@ -28,21 +28,21 @@ $stmt->bindColumn('cod_gestion', $codGestion);
         <div class="row">
             <div class="col-md-12">
               <div class="card">
-                <div class="card-header <?=$colorCard;?> card-header-icon">
+                <div class="card-header card-header-info card-header-icon">
                   <div class="card-icon">
-                    <i class="material-icons"><?=$iconCard;?></i>
+                    <i class="material-icons">build</i>
                   </div>
                   <h4 class="card-title"><?=$moduleNameSingular?></h4>
                 </div>
                 <div class="card-body">
                   <div class="table-responsive" id="data_comprobantes">
-                    <table class="table">
+                    <table id="tablePaginator" class="table table-condensed">
                       <thead>
                         <tr>
                           <th class="text-center">#</th>
                           <th>Gestion</th>
                           <th>Mes</th>
-                          <th>Estado</th>
+                          <th class="text-right" width="10%">Estado</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -53,19 +53,19 @@ $stmt->bindColumn('cod_gestion', $codGestion);
                         if($codEstadoMeses!=2){
                           if($codEstadoMeses==3){
                            $valor="Mes en Curso"; 
-                           $estiloTipo="btn btn-success";
+                           $estiloTipo="btn btn-info";$textStyle="text-info font-weight-bold";
                            $actionButton="";
                           }else{
                             $valor="Habilitar";
-                            $estiloTipo="btn btn-default";
+                            $estiloTipo="btn btn-default";$textStyle="";
                             $actionButton=$urlSave."?codigo=".$codigo;
                           }
 ?>
                         <tr>
-                          <td align="center"><?=$index;?></td>
-                          <td><?=nameGestion($codGestion);?></td>
-                          <td><?=$nombreMes;?></td>
-                          <td class=""><a href="<?=$actionButton?>" class="<?=$estiloTipo?> btn-sm"><?=$valor?></a></td>
+                          <td class="<?=$textStyle?>"align="center"><?=$index;?></td>
+                          <td class="<?=$textStyle?>"><?=nameGestion($codGestion);?></td>
+                          <td class="<?=$textStyle?>"><?=$nombreMes;?></td>
+                          <td class="text-right"><a href="<?=$actionButton?>" class="<?=$estiloTipo?> btn-sm"><?=$valor?></a></td>
                         </tr>
 <?php
 							$index++;

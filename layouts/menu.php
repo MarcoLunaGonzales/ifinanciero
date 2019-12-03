@@ -185,19 +185,7 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
                     <span class="sidebar-mini"> A </span>
                     <span class="sidebar-normal"> Aprobaciones de comprobantes </span>
                   </a>
-                </li>
-                <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=listSimulacionesCostos">
-                    <span class="sidebar-mini"> SC </span>
-                    <span class="sidebar-normal"> Simulaciones de Costos</span>
-                  </a>
-                </li>
-                <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=listSimulacionesCostosAdmin">
-                    <span class="sidebar-mini"> AS </span>
-                    <span class="sidebar-normal"> Administracion de Simulaciones</span>
-                  </a>
-                </li>                  
+                </li>                 
               </ul>
             </div>
           </li>
@@ -264,7 +252,7 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
            <!--UTILITARIOS-->
           <li class="nav-item ">
             <a class="nav-link" data-toggle="collapse" href="#utilitarios">
-              <i class="material-icons">assessment</i>
+              <i class="material-icons">build</i>
               <p> Utilitarios
                 <b class="caret"></b>
               </p>
@@ -275,6 +263,12 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
                   <a class="nav-link" href="?opcion=mesCurso">
                     <span class="sidebar-mini"> MC </span>
                     <span class="sidebar-normal"> Mes en curso</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=configuracionDeRetenciones">
+                    <span class="sidebar-mini"> CR </span>
+                    <span class="sidebar-normal"> Configuracion de Retenciones</span>
                   </a>
                 </li>                          
               </ul>

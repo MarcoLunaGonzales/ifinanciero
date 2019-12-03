@@ -34,11 +34,11 @@ $stmt->bindColumn('area', $area);
                 </div>
                 <div class="card-body">
                   <div class="table-responsive" id="data_comprobantes">
-                    <table class="table">
+                    <table id="tablePaginator" class="table table-condensed">
                       <thead>
                         <tr>
                           <th class="text-center">#</th>
-                          <th>Nombre</th>
+                          <th class="text-left">Nombre</th>
                           <th>Abreviatura</th>
                           <th>Unidad</th>
                           <th>Area</th>
@@ -53,7 +53,7 @@ $stmt->bindColumn('area', $area);
 ?>
                         <tr>
                           <td align="center"><?=$index;?></td>
-                          <td><?=$nombre;?></td>
+                          <td class="text-left"><?=$nombre;?></td>
                           <td><?=$abreviatura;?></td>
                           <td><?=$unidad;?></td>
                           <td><?=$area;?></td> 

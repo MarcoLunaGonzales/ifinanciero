@@ -22,9 +22,12 @@ $globalArea=$_SESSION["globalArea"];
 //$idFila=$_GET['idFila'];
 
 $valor=$_GET["valor"];
+if($valor==null||$valor==""){
+  $valor="";
+}
 
 $dbh = new Conexion();
-$query="SELECT u.nombre,c.cod_gestion,m.nombre as moneda,tc.nombre as tipo_comprobante,c.fecha,c.numero,c.codigo,c.glosa,ec.nombre as estado, ec.codigo as codigo_estado from comprobantes c join unidades_organizacionales u on c.cod_unidadorganizacional=u.codigo join monedas m on c.cod_moneda=m.codigo join tipos_comprobante tc on c.cod_tipocomprobante=tc.codigo join estados_comprobantes ec on c.cod_estadocomprobante=ec.codigo join comprobantes_detalle cd on c.codigo=cd.cod_comprobante join plan_cuentas p on cd.cod_cuenta=p.codigo where u.nombre like '%".$valor."%' or m.nombre like '%".$valor."%' or tc.nombre like '%".$valor."%' or c.fecha like '%".$valor."%' or c.numero like '%".$valor."%' or c.codigo like '%".$valor."%' or c.glosa like '%".$valor."%' or ec.nombre like '%".$valor."%' or p.nombre like '%".$valor."%' or cd.glosa like '%".$valor."%' group by c.codigo;";
+$query="SELECT u.nombre,c.cod_gestion,m.nombre as moneda,tc.nombre as tipo_comprobante,c.fecha,c.numero,c.codigo,c.glosa,ec.nombre as estado, ec.codigo as codigo_estado from comprobantes c join unidades_organizacionales u on c.cod_unidadorganizacional=u.codigo join monedas m on c.cod_moneda=m.codigo join tipos_comprobante tc on c.cod_tipocomprobante=tc.codigo join estados_comprobantes ec on c.cod_estadocomprobante=ec.codigo join comprobantes_detalle cd on c.codigo=cd.cod_comprobante join plan_cuentas p on cd.cod_cuenta=p.codigo where c.cod_estadocomprobante!=2 and (u.nombre like '%".$valor."%' or m.nombre like '%".$valor."%' or tc.nombre like '%".$valor."%' or c.fecha like '%".$valor."%' or c.numero like '%".$valor."%' or c.codigo like '%".$valor."%' or c.glosa like '%".$valor."%' or ec.nombre like '%".$valor."%' or p.nombre like '%".$valor."%' or cd.glosa like '%".$valor."%') group by c.codigo;";
 
 
 //echo $sqlBusqueda;
@@ -33,7 +36,7 @@ $stmt = $dbh->prepare($query);
 $stmt->execute();
 $i=1;
 ?>
-<table class="table">
+<table class="table table-condensed">
                       <thead>
                         <tr>
                           <th class="text-center">#</th>
@@ -44,7 +47,7 @@ $i=1;
                           <th>Moneda</th>
                           <th>Glosa</th>
                           <th>Estado</th>
-                          <th class="text-right">Actions</th>
+                          <th class="text-right" width="20%">Actions</th>
                         </tr>
                       </thead>
                       <tbody>

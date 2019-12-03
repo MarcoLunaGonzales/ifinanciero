@@ -383,3 +383,76 @@
   </div>
 </div>
 <!-- end notice modal -->
+
+<!-- small modal -->
+<div class="modal fade modal-primary" id="modalRetencion" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content card">
+                <div class="card-header card-header-warning card-header-icon">
+                  <div class="card-icon">
+                    <i class="material-icons text-dark">ballot</i>
+                  </div>
+                  <h4 class="card-title">Retenciones</h4>
+                </div>
+                <div class="card-body">
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                  <i class="material-icons">close</i>
+                </button>
+                <input class="form-control" type="hidden" name="retencion_codcuenta" id="retencion_codcuenta"/>
+                <input class="form-control" type="hidden" name="retFila" id="retFila"/>
+                <div class="row" id="retencion_cuenta">
+                  </div>
+                  <div class="row">
+                       <label class="col-sm-2 col-form-label">Importe</label>
+                       <div class="col-sm-10">
+                        <div class="form-group">
+                          <input class="form-control" type="number" step="0.001" name="retencion_montoimporte" id="retencion_montoimporte"/>
+                        </div>
+                        </div>
+                  </div>
+                  <div class="card-title"><center><h6>Retenciones</h6></center></div>
+                 <table class="table table-condensed table-striped">
+                   <thead>
+                     <tr>
+                       <th>Opcion</th>
+                       <th class="text-left">Descripci&oacute;n</th>
+                     </tr>
+                   </thead>
+                   <tbody>
+                     <?php 
+                        $stmtRetencion = $dbh->prepare("SELECT * from configuracion_retenciones where cod_estadoreferencial=1 order BY codigo");
+                        $stmtRetencion->execute();
+                        $contRetencion=0;
+                        while ($row = $stmtRetencion->fetch(PDO::FETCH_ASSOC)) {
+                           $nombreX=$row['nombre'];
+                           $codigoX=$row['codigo'];
+?>
+                        <tr>
+                          <td align="center" width="20%">
+                          <div class="form-check">
+                            <label class="form-check-label">
+                              <input class="form-check-input" type="radio" id="retencion<?=$codigoX?>" name="retenciones" <?=($contRetencion==0)?"checked":"";?> value="<?=$codigoX?>">
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                            </label>
+                          </div>
+                          </td>
+                          <td class="text-left"><?=$nombreX;?></td>
+                        </tr>
+
+                      <?php
+                      $contRetencion++;
+                        }
+                     ?>
+                   </tbody>  
+                 </table>
+                 <div id="mensaje_retencion"></div>
+                 <div class="form-group float-right">
+                        <button type="button" class="btn btn-info btn-round" onclick="agregarRetencion()">Agregar</button>
+                  </div>
+                </div>
+      </div>  
+    </div>
+  </div>
+<!--    end small modal -->

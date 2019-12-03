@@ -33,11 +33,11 @@ $stmt->bindColumn('observaciones', $observaciones);
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
-                    <table class="table">
+                    <table id="tablePaginator" class="table table-condensed">
                       <thead>
                         <tr>
                           <th class="text-center">#</th>
-                          <th>Nombre</th>
+                          <th class="text-left">Nombre</th>
                           <th>Descripcion</th>
                           <th class="text-right">Actions</th>
                         </tr>
@@ -64,7 +64,7 @@ $stmt->bindColumn('observaciones', $observaciones);
 ?>
                         <tr>
                           <td align="center"><?=$index;?></td>
-                          <td><?=$nombre;?></td>
+                          <td class="text-left"><?=$nombre;?></td>
                           <td><?=$observaciones;?></td>
                           <td class="td-actions text-right">
                             <a href='#' rel="tooltip" class="btn btn-warning" onclick="filaTablaGeneral($('#tablas_registradas'),<?=$index?>)">

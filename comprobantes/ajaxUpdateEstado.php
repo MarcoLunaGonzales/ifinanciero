@@ -21,6 +21,4 @@ $dbh = new Conexion();
 $sqlUpdate="UPDATE comprobantes SET  cod_estadocomprobante='$estado' where codigo=$codComprobante";
 $stmtUpdate = $dbh->prepare($sqlUpdate);
 $flagSuccess=$stmtUpdate->execute();
-
-
 ?>

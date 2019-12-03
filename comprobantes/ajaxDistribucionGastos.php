@@ -160,23 +160,24 @@ $globalAdmin=$_SESSION["globalAdmin"];
     <div class="col-sm-2">
         <div class="form-group">
               <label class="bmd-label-static">GlosaDetalle</label>
-        <textarea class="form-control" name="glosa_detalle<?=$idFila;?>" id="glosa_detalle<?=$idFila;?>"><?=$glosa?></textarea>
+        <textarea rows="1" class="form-control" name="glosa_detalle<?=$idFila;?>" id="glosa_detalle<?=$idFila;?>"><?=$glosa?></textarea>
       </div>
     </div>
     <div class="col-sm-1">
       <div class="btn-group">
-        <a href="#" id="boton_fac<?=$idFila;?>" onclick="listFac(<?=$idFila;?>);" class="btn btn-just-icon btn-info btn-link">
+        <a href="#" id="boton_fac<?=$idFila;?>" onclick="listFac(<?=$idFila;?>);" class="btn btn-info btn-sm btn-fab">
                <i class="material-icons">featured_play_list</i><span id="nfac<?=$idFila;?>" class="count bg-warning">0</span>
              </a>
-      <button rel="tooltip" class="btn btn-just-icon btn-danger btn-link" id="boton_remove<?=$idFila;?>" onclick="minusCuentaContable('<?=$idFila;?>');">
+      <a rel="tooltip" href="#" class="btn btn-danger btn-sm btn-fab" id="boton_remove<?=$idFila;?>" onclick="minusCuentaContable('<?=$idFila;?>');">
               <i class="material-icons">remove_circle</i>
-          </button>
+          </a>
         </div>  
     </div>
    </div>
  </div>
  <div class="h-divider"></div>
 </div>
+<script>$("#div"+<?=$idFila?>).bootstrapMaterialDesign();</script>
       <?php
 
   }

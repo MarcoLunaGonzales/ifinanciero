@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
   <!-- CSS Files -->
   <link href="../assets/css/material-dashboard.css?v=2.1.0" rel="stylesheet" />
-  
+  <link href="../assets/autocomplete/awesomplete.css" rel="stylesheet" />
   <link href="../assets/css/style.css" rel="stylesheet" />
 </head>
 
@@ -58,6 +58,8 @@
   <script src="../assets/js/plugins/bootstrap-selectpicker.js"></script>
   <script src="../assets/js/material-dashboard.js?v=2.1.0" type="text/javascript"></script>
   <script src="../assets/js/mousetrap.min.js"></script>
+
+  <script src="../assets/autocomplete/awesomplete.min.js"></script>
   <script src="../assets/alerts/alerts.js"></script>
   <script src="../assets/alerts/functionsGeneral.js"></script>
   <!--ESTE ES EL DOCUMENTO DEL BODYLOGIN -->
@@ -90,6 +92,11 @@ $(document).ready(function() {
         jQuery.extend(jQuery.validator.messages, {
         required: "El campo es requerido."
       });*/
+//campo input autocomplete
+     if ($('#cuenta_auto').length) {
+       autocompletar("cuenta_auto","cuenta_auto_id",array_cuenta);
+     }
+
     $("#formRegComp").submit(function(e) {
       var envio=0;
       var mensaje=""; var debehaber=0;
@@ -116,11 +123,11 @@ $(document).ready(function() {
                  $('#modalAlert').modal('show'); 
                  envio=1;
               }else{
-                var cont=0;
+                var cont=0; var contcuenta=0;
                 for (var i = 0; i < numFilas; i++) {
                   if($('select[name=area'+(i+1)+']').val()==null||$('select[name=unidad'+(i+1)+']').val()==null){
                     cont++;
-                  }
+                  }                  
                 }
                 if(cont!=0){
                     mensaje+="<p>Debe seleccionar la Unidad y el Area</p>";
@@ -134,8 +141,17 @@ $(document).ready(function() {
                         $('#msgError').html(mensaje);
                         $('#modalAlert').modal('show');
                         debehaber=1;
-                       }           
-                     } 
+                       }
+                       if($('#cuenta'+(i+1)).val()==""||$('#cuenta'+(i+1)).val()==null||$('#cuenta'+(i+1)).val()==0){
+                            contcuenta++;
+                        }           
+                     }
+                     if(contcuenta!=0){
+                       mensaje+="<p>No puede existir cuentas vacías!</p>";
+                        $('#msgError').html(mensaje);
+                        $('#modalAlert').modal('show');
+                        envio=1; 
+                     }else{
                      if(debehaber==1){
                        envio=1;
                      }else{
@@ -148,6 +164,8 @@ $(document).ready(function() {
                             }
                        }
                      }               
+                      
+                     } 
                   }
               }
           }

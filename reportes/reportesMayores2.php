@@ -1,4 +1,5 @@
 <?php
+require_once 'layouts/bodylogin2.php';
 require_once 'conexion.php';
 require_once 'comprobantes/configModule.php';
 require_once 'styles.php';
@@ -13,22 +14,6 @@ $d=date("d",(mktime(0,0,0,$m+1,1,$y)-1));
 $fechaDesde=$m."/01/".$y;
 $fechaHasta=$m."/".$d."/".$y;
 $dbh = new Conexion();
-$stmt = $dbh->prepare("SELECT p.codigo, p.numero, p.nombre, p.nivel from plan_cuentas p order by p.numero");
-$stmt->execute();
-$i=0;
-  echo "<script>var array_cuenta=[];</script>";
-  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-	 $codigoX=$row['codigo'];
-	 $numeroX=$row['numero'];
-	 $nombreX=$row['nombre'];
-	 $nivelX=$row['nivel'];
-	 $nombreCuenta=formateaPlanCuenta($numeroX." ".$nombreX,$nivelX);
-	 $arrayNuevo[$i][0]=$codigoX;
-	 $arrayNuevo[$i][1]=$numeroX;
-	 $arrayNuevo[$i][2]=$nombreCuenta;
-	 $arrayNuevo[$i][3]=$nivelX;
-		$i++;
-	}
 ?>
 
 <div class="content">
@@ -76,9 +61,30 @@ $i=0;
 			                	<div class="form-group">
 	                              <select class="selectpicker form-control form-control-sm" data-style="select-with-transition" data-live-search="true" title="-- Elija una cuenta --" name="cuenta[]" id="cuenta" multiple data-actions-box="true" data-style="select-with-transition" data-actions-box="true" required>
 			  	                        <?php
-			  	                        for ($i=0; $i < count($arrayNuevo); $i++) { 
-			  	                        	?><option value="<?=$arrayNuevo[$i][0];?>@normal"><?=$arrayNuevo[$i][2]?></option>	<?php
-			  	                        }
+							  	         $stmt = $dbh->prepare("SELECT p.codigo, p.numero, p.nombre, p.nivel from plan_cuentas p order by p.numero");
+								         $stmt->execute();
+								         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+								         	$codigoX=$row['codigo'];
+								         	$numeroX=$row['numero'];
+								         	$nombreX=$row['nombre'];
+								         	$nivelX=$row['nivel'];
+								         	$nombreCuenta=formateaPlanCuenta($numeroX." ".$nombreX,$nivelX);
+								         	$sqlCuentasAux="SELECT codigo,nro_cuenta, nombre FROM cuentas_auxiliares where cod_cuenta='$codigoX' order by 2";
+			                                 $stmtAux = $dbh->prepare($sqlCuentasAux);
+			                                 $stmtAux->execute();
+			                                 $stmtAux->bindColumn('codigo', $codigoCuentaAux);
+			                                 $stmtAux->bindColumn('nro_cuenta', $numeroCuentaAux);
+			                                 $stmtAux->bindColumn('nombre', $nombreCuentaAux);
+			                                 $nombreAux=" ";
+			                                 ?>
+								         <option value="<?=$codigoX;?>@normal"><?=$nombreCuenta?></option>	
+								         <?php
+								         	while ($rowAux = $stmtAux->fetch(PDO::FETCH_BOUND)) {
+								         		$nombreCuentaAux1=formateaPlanCuenta($nombreCuentaAux,5);
+			                                  ?><option value="<?=$codigoCuentaAux?>@aux">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?=$nombreCuentaAux1?></option><?php
+			                                }
+								       
+							  	         }
 							  	         ?>
 							         </select>
 			                      </div>

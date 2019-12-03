@@ -624,7 +624,8 @@ function cambiarEstadoCompro(){
   ajax.open('GET', 'comprobantes/ajaxUpdateEstado.php?codigo='+codigo+"&estado="+estado,true);
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
-      buscarComprobantes("nohay");
+      //buscarComprobantes("nohay");
+      window.location.href="index.php?opcion=listComprobantesRegistrados";
     }
   }
   ajax.send(null)
@@ -1332,3 +1333,135 @@ function editarCuentaComprobante(fila){
   filaActiva=fila;
   $('#myModal').modal('show');
 }
+
+//retenciones funciones
+function borrarRetencionDetalle(cod){
+  var contenedor=$('#tabla_detalle_retencion');
+  var parametros={"codigo":cod};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxDeleteDetalle.php",
+        data: parametros,
+        success:  function (resp) {
+         contenedor.html(resp);
+         $("#msgError").html("<p class='text-success'><small>Se eliminó el registro exitosamente!</small></p>");
+         $('#modalAlert').modal('show');
+        }
+    });
+}
+function editarRetencionNombre(){
+  var nombre=$("#nombre_retencion").val();
+  var porcentaje=$("#cuenta_origen").val();
+  if(nombre==""){
+    $("#msgError").html("<p class='text-danger'><small>No se puede poner un nombre vacío a la retención</small></p>");
+    $('#modalAlert').modal('show'); 
+  }else{
+    var codigo=$("#codigo").val();
+    ajax=nuevoAjax();
+    ajax.open('GET', 'ajaxUpdateRetencion.php?codigo='+codigo+'&nombre='+nombre+'&cuenta_origen='+porcentaje,true);
+    ajax.onreadystatechange=function() {
+      if (ajax.readyState==4) {
+        window.location.href="../index.php?opcion=configuracionDeRetenciones";
+      }
+    }
+    ajax.send(null)
+  }
+}
+//retenciones en el comprobante
+function quitarChecked(id){
+  var filaCheck=0;
+  $("input[name="+id+"]").each(function (index) { 
+      if(filaCheck!=0){
+         if($(this).is(':checked')){
+          $(this).prop('checked', false);
+         }   
+      }else{
+        $(this).prop('checked', true);
+      }     
+     filaCheck++;  
+    });
+}
+function listRetencion(id){
+  var fila=id;
+  var codigo=$("#cuenta"+fila).val();
+  var importe=$("#debe"+fila).val();
+   $("#retencion_cuenta").html($("#divCuentaDetalle"+fila).html());
+   $("#retencion_codcuenta").val(codigo);
+   $("#retFila").val(id);
+   $("#retencion_montoimporte").val(importe);
+   quitarChecked("retenciones");
+   abrirModal('modalRetencion');
+   $("#mensaje_retencion").html("<p class='text-info'>Seleccione una o varias retenciónes</p>");
+ }
+//inicializar el puntero el el primer input modal Buscar Cuenta...
+$(document).on("shown.bs.modal","#modalRetencion",function(){
+  document.getElementById('retencion_montoimporte').focus();
+});
+
+ function agregarRetencion(){
+  var listaRet=[];var i=0;
+  $("input[name=retenciones]").each(function (index) {  
+       if($(this).is(':checked')){
+          listaRet[i]= $(this).val();
+          i++;
+       }
+    });
+  if(listaRet.length>0){
+    if($("#retencion_montoimporte").val()==""){
+       $("#mensaje_retencion").html("<p class='text-danger'>Debe ingresar un valor en el IMPORTE</p>");
+    }else{
+      agregarRetencionCuenta(listaRet); 
+    }  
+  }else{
+    $("#mensaje_retencion").html("<p class='text-danger'>Debe seleccionar al menos una retención</p>");
+  }
+  
+ }
+
+ function agregarRetencionCuenta(listaRet){
+
+  var fila = $("#retFila").val();
+  var cuenta = $("#cuenta"+fila).val();
+  var valor=1;
+  var debe=$("#retencion_montoimporte").val();
+  if(cuenta==""){
+    valor=0;
+  }
+  if(fila==""){valor=0;}
+  if(valor!=0){
+  ajax=nuevoAjax();
+  ajax.open("GET","ajaxRetencionCuenta.php?fila_actual="+fila+"&debe="+debe+"&filas="+cantidadItems+"&cuenta="+cuenta+"&listRet="+JSON.stringify(listaRet),true);
+  ajax.onreadystatechange=function(){
+  if (ajax.readyState==4) {
+    var fi=$("#fiel");
+    fi.append(ajax.responseText);
+    $('.selectpicker').selectpicker(["refresh"]);
+   }
+  }
+  ajax.send(null); 
+  $("#retFila").val("");
+  $('#modalRetencion').modal('hide');
+  }  
+ }
+ function calcularImporteDespuesRetencion(valor,fila){
+  //$("#debe"+fila).val(valor);
+  $("#debe"+fila).val(valor);
+  $("#debe"+fila).focus();
+ }
+
+ function autocompletar(inp,inp_val,arr){
+   var input = document.getElementById(inp);
+       var input_value = document.getElementById(inp_val);
+         new Awesomplete(input, {
+          minChars: 1,
+          maxItems: 10,
+          autoFirst:true,
+          list: arr,
+          tabSelect:true,
+          replace: function(suggestion) {
+              input_value.value = suggestion.value;
+              this.input.value = suggestion.label;
+           }
+          });
+ }

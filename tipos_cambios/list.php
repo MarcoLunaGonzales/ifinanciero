@@ -33,11 +33,11 @@ $stmt->bindColumn('nombre', $nombre);
                 </div>
                 <div class="card-body">
                   <div class="table-responsive" id="data_comprobantes">
-                    <table class="table">
+                    <table id="tablePaginator" class="table table-condensed">
                       <thead>
                         <tr>
                           <th class="text-center">#</th>
-                          <th>Nombre</th>
+                          <th class="text-left">Nombre</th>
                           <th>Abrev</th>
                           <th>Tipo de Cambio (Hoy)</th>
                           <th>Estado</th>
@@ -63,7 +63,7 @@ $stmt->bindColumn('nombre', $nombre);
 ?>
                         <tr>
                           <td align="center"><?=$index;?></td>
-                          <td><?=$nombre;?></td>
+                          <td class="text-left"><?=$nombre;?></td>
                           <td><?=$abreviatura;?></td>
                           <td class="<?=$estiloTipo?>"><b><?=$valor;?></b><br><?=$html?></td>
                           <td><?=$codEstadoRef;?>                 

@@ -80,6 +80,10 @@
 		if ($_GET['opcion']=='registerComprobante') {
 			require_once('comprobantes/register.php');
 		}
+		if ($_GET['opcion']=='deleteComprobante') {
+			$codigo=$_GET['codigo'];
+			require_once('comprobantes/saveDelete.php');
+		}
         
         //REPORTES
 		if ($_GET['opcion']=='reportesComprobantes') {
@@ -111,6 +115,19 @@
         //MES EN CURSO
         if ($_GET['opcion']=='mesCurso') {
 			require_once('mes_curso/list.php');
+		}
+		//RETENCIONES
+        if ($_GET['opcion']=='configuracionDeRetenciones') {
+			require_once('retenciones/list.php');
+		}
+		if ($_GET['opcion']=='registerRetenciones') {
+			require_once('retenciones/register.php');
+		}
+		if ($_GET['opcion']=='deleteRetenciones') {
+			require_once('retenciones/saveDelete.php');
+		}
+		if ($_GET['opcion']=='editRetenciones') {
+			require_once('retenciones/edit.php');
 		}
 
 		//******************************ACTIVOS FIJOS***********************************************************
