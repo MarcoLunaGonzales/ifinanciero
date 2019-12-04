@@ -34,8 +34,6 @@ $stmt1 = $dbh->prepare($sql);
 $stmt1->execute();
 $stmt1->bindColumn('nombre_unidadO', $nombre_unidadO);
 
-
-
 ?>
 
 <div class="content">
@@ -54,15 +52,8 @@ $stmt1->bindColumn('nombre_unidadO', $nombre_unidadO);
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
-
                     <?php
-                        
-
-                    while ($row = $stmt1->fetch()) {
-                        
-                        
-                        //".$nombre_unidadO."
-                            //'OF DN LA PAZ'
+                    while ($row = $stmt1->fetch()) {        
                     ?>
                     <?php
                         //echo $nombre_unidadO;
@@ -101,7 +92,6 @@ $stmt1->bindColumn('nombre_unidadO', $nombre_unidadO);
 
                         $stmt2->bindColumn('nombre_depreciaciones', $nombre_depreciaciones);//rubros
                         $stmt2->bindColumn('nombre_uo2', $nombre_uo);//unidades organizacionales
-                      
                     ?>
                     <table class="table table-bordered table-condensed" id="tablePaginatorFixed">
                         <thead>
