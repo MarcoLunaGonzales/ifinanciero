@@ -55,13 +55,13 @@ $stmt->bindColumn('fecha_recepcion', $fecha_recepcion);
                         <tr>
                             <th></th>
                             <th>Nro.</th>
-                            <th>Codigo</th>
+                            <th>Código</th>
                             <th>Unidad O</th>
                             <th>Area</th>
                             <th>Activo</th>
                             <th>F. Asignación</th>
-                            <th>Estado Asignacion AF</th>
-                            <th>Fecha Recepcion</th>
+                            <th>Estado Asignación AF</th>
+                            <th>Fecha Recepción</th>
                             <th></th>
                         </tr>
                       </thead>
@@ -143,12 +143,12 @@ $stmt->bindColumn('fecha_recepcion', $fecha_recepcion);
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Se recepcionará el Activo fijo</h4>
+        <h4 class="modal-title" id="myModalLabel">¿Estás Seguro?</h4>
       </div>
       <div class="modal-body">
         <input type="hidden" name="codigo_af_aceptar1" id="codigo_af_aceptar1" value="0">
         <input type="hidden" name="codigo_af_aceptar2" id="codigo_af_aceptar2" value="0">
-        No podrá revertir el proceso
+        Esta acción recepcionará el Activo Fijo. ¿Deseas Continuar?
       </div>       
       <div class="modal-footer">
         <button type="button" class="btn btn-success" id="RecepcionarAF" data-dismiss="modal">Aceptar</button>
@@ -168,11 +168,12 @@ $stmt->bindColumn('fecha_recepcion', $fecha_recepcion);
       <div class="modal-body">
         <input type="hidden" name="codigo_af_aceptar1" id="codigo_af_aceptar1" value="0">
         <input type="hidden" name="codigo_af_aceptar2" id="codigo_af_aceptar2" value="0">
-        <label> Observaciones</label><br>
+        <h6> Observaciones : </h6><br>
         <input type="text" name="observacion" id="observacion" class="form-control input-sm">
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-success" id="RechazarAF"  data-dismiss="modal">Aceptar</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
       </div>
     </div>
   </div>

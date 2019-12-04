@@ -67,9 +67,9 @@ $statementPersonal2 = $dbh->query($query);
                     <i class="material-icons"><?=$iconCard;?></i>
                   </div>
                   <h3 class="card-title"><b>Eventos De Activos Fijos</b></h3>
-                  <h5 class="card-title"><?=$activo;?></h5>
-                  <h6 class="card-title"><?=$cod_unidadorganizacional;?> - <?=$cod_area;?></h6>
-                  <h6 class="card-title"><?=$cod_depreciaciones;?></h6>
+                  <h6 class="card-title">AF: <?=$activo;?></h6>
+                  <h6 class="card-title">UO-Area: <?=$cod_unidadorganizacional;?> - <?=$cod_area;?></h6>
+                  <h6 class="card-title">Rubro: <?=$cod_depreciaciones;?></h6>
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
@@ -183,14 +183,14 @@ $statementPersonal2 = $dbh->query($query);
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Estás seguro?</h4>
+        <h4 class="modal-title" id="myModalLabel">¿Estás seguro?</h4>
       </div>
       <div class="modal-body">      
         <input type="hidden" name="idEveE" id="idEveE" value="0">
-        Esta acción Borrará el Evento Del Activo Fijo. Deseas continuar?
+        Esta acción Borrará el Evento Del Activo Fijo. ¿Deseas continuar?
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-success" id="saveDeleteEveAF"  data-dismiss="modal">Continuar</button>
+        <button type="button" class="btn btn-success" id="saveDeleteEveAF"  data-dismiss="modal">Aceptar</button>
         <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
       </div>
     </div>

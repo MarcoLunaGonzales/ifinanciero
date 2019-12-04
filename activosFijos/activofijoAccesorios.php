@@ -67,7 +67,7 @@ $stmt2->bindColumn('cod_estadoaccesorioaf', $cod_estadoAcceAF);
 
                       <thead>
                         <tr>
-                            <th>Codigo Del Accesorio</th>
+                            <th>Código Del Accesorio</th>
                             <th>Nombre</th>
                             <th>Estado Del Accesorio</th>
                             <th></th>
@@ -121,7 +121,7 @@ $stmt2->bindColumn('cod_estadoaccesorioaf', $cod_estadoAcceAF);
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Registrar Accesorios Para AF</h4>
+        <h4 class="modal-title" id="myModalLabel">Registrar Accesorios Del AF</h4>
       </div>
       <div class="modal-body">
         
@@ -150,7 +150,7 @@ $stmt2->bindColumn('cod_estadoaccesorioaf', $cod_estadoAcceAF);
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Editar Accesorios Para AF</h4>
+        <h4 class="modal-title" id="myModalLabel">Editar Accesorios Del AF</h4>
       </div>
       <div class="modal-body">
         <label> codigo Accesorio: </label><br>
@@ -180,14 +180,14 @@ $stmt2->bindColumn('cod_estadoaccesorioaf', $cod_estadoAcceAF);
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Estás seguro?</h4>
+        <h4 class="modal-title" id="myModalLabel">¿Estás seguro?</h4>
       </div>
       <div class="modal-body">      
         <input type="hidden" name="idAccE" id="idAccE" value="0">
-        Esta acción Borrará el Accesorio del AF. Deseas continuar?
+        Esta acción Borrará el Accesorio del AF. ¿Deseas continuar?
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-success" id="saveDeleteAccAF"  data-dismiss="modal">Continuar</button>
+        <button type="button" class="btn btn-success" id="saveDeleteAccAF"  data-dismiss="modal">Aceptar</button>
         <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
       </div>
     </div>
