@@ -1069,9 +1069,6 @@ function agregaform(datos){
 }
 
 function rechazarRecepcion(cod_personal,cod_af,observacion){
-  // var contenedor;
-  // contenedor = document.getElementById('div_personal_UO');
-  
   $.ajax({
     type:"POST",
     data:"cod_personal="+cod_personal+"&cod_af="+cod_af+"&cod_estadoasignacionaf=3&observacion="+observacion,
@@ -1119,7 +1116,6 @@ function DevolverAFAll(cod_personal){
     success:function(r){
       
         alerts.showSwal('success-message','index.php?opcion=afEnCustodia');
-      
     }
   });
 }

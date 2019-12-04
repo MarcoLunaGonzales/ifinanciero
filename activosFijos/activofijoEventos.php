@@ -183,14 +183,14 @@ $statementPersonal2 = $dbh->query($query);
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Se Borrará el Evento Del AF</h4>
+        <h4 class="modal-title" id="myModalLabel">Estás seguro?</h4>
       </div>
       <div class="modal-body">      
         <input type="hidden" name="idEveE" id="idEveE" value="0">
-        No podrá revertir el proceso
+        Esta acción Borrará el Evento Del Activo Fijo. Deseas continuar?
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-success" id="saveDeleteEveAF"  data-dismiss="modal">Borrar</button>
+        <button type="button" class="btn btn-success" id="saveDeleteEveAF"  data-dismiss="modal">Continuar</button>
         <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
       </div>
     </div>

@@ -51,10 +51,10 @@ $stmt->bindColumn('fecha_recepcion', $fecha_recepcion);
                 <div class="card-body">
                   <div class="table-responsive">
                     <table class="table" id="tablePaginator">
-
                       <thead>
                         <tr>
                             <th></th>
+                            <th>Nro.</th>
                             <th>Codigo</th>
                             <th>Unidad O</th>
                             <th>Area</th>
@@ -85,12 +85,14 @@ $stmt->bindColumn('fecha_recepcion', $fecha_recepcion);
                               $label='<span class="badge badge-dark">';
                             }
                           ?>
+                            
                             <tr>
                                 <td  class="td-actions text-right">
                                   <a href='<?=$printAFCustodia;?>?codigo=<?=$cod_activo;?>' target="_blank" rel="tooltip" class="<?=$buttonEdit;?>">
                                     <i class="material-icons">print</i>
                                   </a>
                                 </td>
+                                <td><?=$index?></td>
                                 <td><?=$cod_activo;?></td>
                                 <td><?=$cod_unidadorganizacional;?></td>
                                 <td><?=$cod_area;?></td>
@@ -124,7 +126,7 @@ $stmt->bindColumn('fecha_recepcion', $fecha_recepcion);
                 </div>
                 
                 <div class="card-footer fixed-bottom">
-                  <button class="<?=$buttonNormal;?>" data-toggle="modal" data-target="#modalDevolverAll" >Devolver todos AF S/N</button>
+                  <button class="<?=$buttonNormal;?>" data-toggle="modal" data-target="#modalDevolverAll" >Devolver todos los AF</button>
                 </div>
                 
               </div>
@@ -186,10 +188,11 @@ $stmt->bindColumn('fecha_recepcion', $fecha_recepcion);
       <div class="modal-body">
         <input type="hidden" name="codigo_af_aceptar1" id="codigo_af_aceptar1" value="0">
         <input type="hidden" name="codigo_af_aceptar2" id="codigo_af_aceptar2" value="0">
-        <label> Observaciones : </label><br>
+        <h6> Observaciones : </h6><br>
         <input type="text" name="observacionD" id="observacionD" class="form-control input-sm" required="true">
       </div>
       <div class="modal-footer">
+        
         <button type="button" class="btn btn-success" id="DevolverAF"  data-dismiss="modal">Aceptar</button>
         <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
       </div>
@@ -202,15 +205,38 @@ $stmt->bindColumn('fecha_recepcion', $fecha_recepcion);
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Se devolverá todos los Activos Fijos <b>SIN OBSERVACIONES</b></h4>
+        <h4 class="modal-title" id="myModalLabel"> </b>Devolver todos los Activos Fijos</b></h4>
       </div>
-      <div class="modal-body">
-        No podrá revertir el proceso
-      </div>       
-      <div class="modal-footer">
-        <button type="button" class="btn btn-success" id="DevolverAFAll" data-dismiss="modal">Aceptar</button>
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-      </div>
+      <form id="form2" class="form-horizontal" action="activosFijos/saveAsignacionAll.php" method="post">
+        <div class="modal-body">
+              <?php
+
+                $stmt = $dbh->prepare("SELECT cod_activosfijos,cod_personal
+                 FROM activofijos_asignaciones
+                  where cod_estadoasignacionaf=2 and cod_personal=:cod_personal ");
+                // Bind
+                $stmt->bindParam(':cod_personal', $cod_personal);
+                $stmt->execute();
+                $stmt->bindColumn('cod_activosfijos', $cod_activosfijos);
+                $stmt->bindColumn('cod_personal', $cod_personal);
+                $cont_aux=1;
+                while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { 
+                  ?>
+                        <h6>Observaciones Para El AF Con Código: <?=$cod_activosfijos?> </h6>
+                        <input type="text" name="observacionD<?=$cont_aux;?>" id="observacionD<?=$cont_aux;?>" class="form-control input-sm" required="true">
+                <?php
+                  $cont_aux=$cont_aux+1;
+                  }
+                  $cantidad_items=$cont_aux-1;?>
+              <input type="hidden" name="cod_personal" id="cod_personal" value="<?=$cod_personal;?>">    
+              <input type="hidden" name="cantidad_items" id="cantidad_items" value="<?=$cantidad_items;?>">
+        </div>       
+        <div class="modal-footer">
+          <!-- <button type="button" class="btn btn-success" id="DevolverAFAll" data-dismiss="modal">Aceptar</button> -->
+          <button type="submit" class="btn btn-success" >Guardar</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>
@@ -238,14 +264,7 @@ $stmt->bindColumn('fecha_recepcion', $fecha_recepcion);
       cod_personal=document.getElementById("codigo_af_aceptar2").value;
       observacionD=$('#observacionD').val();
       DevolverAF(cod_personal,cod_af,observacionD);
-    });
-
-    $('#DevolverAFAll').click(function(){
-      cod_personal=<?=$cod_personal?>;
-      DevolverAFAll(cod_personal);
-    });
-
-    
+    });   
 
   });
 </script>
