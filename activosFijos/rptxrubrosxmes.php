@@ -29,7 +29,7 @@ $statement = $dbh->query($query);
                 <select name="gestion" id="gestion" class="selectpicker " data-style="btn btn-info"
                     required>
                     <?php
-                      $sql="SELECT * FROM gestiones order by 2";
+                      $sql="SELECT * FROM gestiones order by 2 desc";
                       $stmtg = $dbh->prepare($sql);
                       $stmtg->execute();
                       while ($rowg = $stmtg->fetch(PDO::FETCH_ASSOC)) {

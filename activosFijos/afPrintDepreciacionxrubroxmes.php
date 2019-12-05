@@ -98,16 +98,14 @@ $stmtUO->bindColumn('cod_unidadorganizacional', $cod_unidadorganizacional);
                         $stmt2->bindColumn('cod_unidadorganizacional', $nombre_uo);//unidades organizacionales        
                     ?>
 
-                      <table class="table table-bordered table-condensed" id="tablePaginatorFixed">
-                        <thead>
-                        <?php  
+                        <table class="table table-bordered table-condensed" id="tablePaginatorFixed">
+                            <thead>
+                                <?php  
                                 $ultimouo = "";//control
                                 $ultimorubro = "";//control
                                 $sumrubro_depreciacion = 0;
                                 $contador = 0; //control
-                                while ($row = $stmt2->fetch()) { //?>    
-                            
-                                <?php
+                                while ($row = $stmt2->fetch()) { 
                                     $contador++;               
                                     if ($ultimorubro != $nombre_depreciaciones) { //crea una fila mas , no hay else... pero ademas crea una nueva fila
                                         //1. mostrar totales del anterior
@@ -163,7 +161,7 @@ $stmtUO->bindColumn('cod_unidadorganizacional', $cod_unidadorganizacional);
 
                                         </tr>
                                         <tr >
-                                            <th class="font-weight-bold">Total :</th>
+                                            <th class="font-weight-bold">-----</th>
                                             
                                             <th class="font-weight-bold">Valor<br>Anterior</th>
                                             <!--th class="font-weight-bold">Factor Actual.</th-->
@@ -177,7 +175,7 @@ $stmtUO->bindColumn('cod_unidadorganizacional', $cod_unidadorganizacional);
                                             <th class="font-weight-bold">Vida Util Restante</th>            
 
                                         </tr>
-                                        <?php
+                                    <?php
                                     }
                                     $sumrubro_depreciacion =  $sumrubro_depreciacion + $d9_depreciacionacumuladaactual;
                                     $sumrubro_actualizacion = $sumrubro_actualizacion + $d5_incrementoporcentual;
@@ -189,27 +187,25 @@ $stmtUO->bindColumn('cod_unidadorganizacional', $cod_unidadorganizacional);
                                     $sum_depreciacionacumuladaanterior+=$d6_depreciacionacumuladaanterior;
                                     $sum_valornetobs+=$d10_valornetobs;
                                     $sum_vidarestante+=$d11_vidarestante;
-
+                                }
                                     ?>
-                                </thead>
-                                <tbody>
-                                
-                        <?php } ?>
+                            </thead>
+                            <tbody>
                                   <!-- el ultimo no sale -->
-                                <tr class="bg-info text-white">
+                                <tr class="bg-dark text-white">
                                     <th colspan="1">Total :</th>
-                                    <td ><?=formatNumberDec($sum_valorresidual); ?></td>
+                                    <td class="bg-secondary text-white"><?=formatNumberDec($sum_valorresidual); ?></td>
                                     <td class="text-center small  bg-success text-white"><?=formatNumberDec($sumrubro_actualizacion); ?></td>
-                                    <td colspan="1"><?=formatNumberDec($sum_valoractualizado); ?></td>
-                                    <td colspan="1"><?=formatNumberDec($sum_depreciacionacumuladaanterior); ?></td>
+                                    <td class="bg-secondary text-white"><?=formatNumberDec($sum_valoractualizado); ?></td>
+                                    <td class="bg-secondary text-white"><?=formatNumberDec($sum_depreciacionacumuladaanterior); ?></td>
                                     <td class="text-center small  bg-success text-white"><?=formatNumberDec($sumrubro_actDepreciacionAcum); ?></td>
                                     <td class="text-center small bg-success text-white"><?=formatNumberDec($sumrubro_depreciacionPeriodo); ?></td>
                                     <td class="text-center small bg-success text-white"><?=formatNumberDec($sumrubro_depreciacion); ?></td>
-                                    <td colspan="1"><?=formatNumberDec($sum_valornetobs); ?></td>
-                                    <td colspan="1"><?=formatNumberDec($sum_vidarestante); ?></td>
+                                    <td class="bg-secondary text-white"><?=formatNumberDec($sum_valornetobs); ?></td>
+                                    <td class="bg-secondary text-white"><?=formatNumberDec($sum_vidarestante); ?></td>
                                 </tr>
                             </tbody>
-                    </table>
+                        </table>
 
                     <?php
                       }
