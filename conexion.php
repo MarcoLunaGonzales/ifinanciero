@@ -3,7 +3,7 @@
    
    private $tipo_de_base = 'mysql';
    private $host = 'www.minkasoftware.com';
-   private $nombre_de_base = 'ibno_conta';
+   private $nombre_de_base = 'ibno_contaoficial';
    private $usuario = 'ibno_conta';
    private $contrasena = 'ibnorca.2019';
    private $port = '3306';
