@@ -25,7 +25,14 @@ if ($codigo > 0){
     $modified_at = $result['modified_at'];
     $modified_by = $result['modified_by'];
 } else {
-  $codigo = 0;
+    $codigo = 0;
+    $nombre = ' ';
+    $abreviatura = ' ';
+    $cod_estadoreferencial = ' ';
+    $created_at = ' ';
+    $created_by = ' ';
+    $modified_at = ' ';
+    $modified_by = ' ';
 }
 ?>
 

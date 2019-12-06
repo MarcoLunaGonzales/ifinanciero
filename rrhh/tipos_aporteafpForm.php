@@ -27,6 +27,12 @@ if ($codigo > 0){
 
 } else {
   $codigo = 0;
+  $nombre = ' ';
+    $abreviatura = ' ';
+    $cod_estadoreferencial = ' ';
+    $porcentaje_aporte = ' ';
+    $porcentaje_riesgoprofesional = ' ';
+    $porcentaje_provivienda = ' ';
 }
 ?>
 

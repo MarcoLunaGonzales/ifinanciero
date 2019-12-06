@@ -24,6 +24,9 @@ if ($codigo > 0){
 
 } else {
   $codigo = 0;
+  $nombre = ' ';
+    $abreviatura = ' ';
+    $cod_estadoreferencial = ' ';
 }
 ?>
 

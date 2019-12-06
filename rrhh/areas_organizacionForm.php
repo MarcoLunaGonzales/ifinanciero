@@ -28,6 +28,14 @@ if ($codigo > 0){
     $modified_by = $result['modified_by'];
 } else {
   $codigo = 0;
+    $cod_unidad = ' ';
+    $cod_area = ' ';
+    $cod_areaorganizacion_padre = ' ';
+    $cod_estadoreferencial = ' ';
+    $created_at = ' ';
+    $created_by = ' ';
+    $modified_at = ' ';
+    $modified_by = ' ';
 }
 
 //COMBOS...

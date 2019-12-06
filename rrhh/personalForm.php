@@ -53,6 +53,36 @@ if ($codigo > 0){
     $persona_contacto = $result['persona_contacto'];
 } else {//ES NUEVO
   $codigo = 0;
+  $ci = ' ';
+    $ci_lugar_emision = ' ';
+    $fecha_nacimiento = ' ';
+    $cod_cargo = ' ';//cb
+    $cod_unidadorganizacional = ' ';//cb
+    $cod_area = ' ';
+    $jubilado = ' ';
+    $cod_genero = ' ';//cb
+    $cod_tipopersonal = ' ';//cb
+    $haber_basico = ' ';
+    $paterno = ' ';
+    $materno = ' ';
+    $apellido_casada = ' ';
+    $primer_nombre = ' ';
+    $otros_nombres = ' ';
+    $nua_cua_asignado = ' ';
+    $direccion = ' ';
+    $cod_tipoafp = ' ';//
+    $cod_tipoaporteafp = ' ';
+    $nro_seguro = ' ';
+    $cod_estadopersonal = ' ';
+    $created_at = ' ';
+    $created_by = ' ';
+    $modified_at = ' ';
+    $modified_by = ' ';
+
+    $telefono = ' ';
+    $celular = ' ';
+    $email = ' ';
+    $persona_contacto = ' ';
 }
 
 //COMBOS...
