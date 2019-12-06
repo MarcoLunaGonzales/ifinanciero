@@ -2,7 +2,7 @@
 
 require_once 'conexion.php';
 require_once 'styles.php';
-require_once 'configModule.php';
+require_once 'rrhh/configModule.php';
 
 //$dbh = new Conexion();
 $dbh = new Conexion();
@@ -12,7 +12,7 @@ $dbh = new Conexion();
 if ($codigo > 0){
     //EDIT GET1 no guardar, sino obtener
     $codigo=$codigo;    
-    $stmt = $dbh->prepare("SELECT * FROM tipos_personal  where codigo =:codigo");
+    $stmt = $dbh->prepare("SELECT * FROM estados_personal  where codigo =:codigo");
     //Ejecutamos;
     $stmt->bindParam(':codigo',$codigo);
     $stmt->execute();
@@ -22,8 +22,8 @@ if ($codigo > 0){
     $abreviatura = $result['abreviatura'];
     $cod_estadoreferencial = $result['cod_estadoreferencial'];
 } else {
-  $codigo = 0;
-  $nombre = ' ';
+    $codigo = 0;    
+    $nombre = ' ';
     $abreviatura = ' ';
     $cod_estadoreferencial = ' ';
 }
@@ -33,12 +33,12 @@ if ($codigo > 0){
 	<div class="container-fluid">
 
 		<div class="col-md-12">
-		  <form id="form1" class="form-horizontal" action="<?=$urlSaveTipospersonal;?>" method="post">
+		  <form id="form1" class="form-horizontal" action="<?=$urlSaveEstados_personal;?>" method="post">
   
 			<div class="card">
 			  <div class="card-header <?=$colorCard;?> card-header-text">
 				<div class="card-text">
-				  <h4 class="card-title"><?php if ($codigo == 0) echo "Registrar"; else echo "Editar";?>  <?=$nombreSingularTipopersonal;?></h4>
+				  <h4 class="card-title"><?php if ($codigo == 0) echo "Registrar"; else echo "Editar";?>  <?=$nombreSingularEstadopersonal;?></h4>
 				</div>
 			  </div>
 			  <div class="card-body ">
@@ -69,7 +69,7 @@ if ($codigo > 0){
 			  </div>
 			  <div class="card-footer ml-auto mr-auto">
 				<button type="submit" class="<?=$buttonNormal;?>">Guardar</button>
-				<a href="<?=$urlListTipospersonal;?>" class="<?=$buttonCancel;?>">Cancelar</a>
+				<a href="<?=$urlListEstados_personal;?>" class="<?=$buttonCancel;?>">Cancelar</a>
 			  </div>
 			</div>
 		  </form>
