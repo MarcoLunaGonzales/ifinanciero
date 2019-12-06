@@ -46,10 +46,11 @@ $responsable='';
                       <table class="table">
                           <thead>
                               <tr>
-                                <th>Código Af</th>
+                                <th>CódigoAF</th>
+                                <th>Nombre</th>
                                 <th>Fecha Asignación</th>
                                 <th>Estado</th>
-                                <th>Personal</th>
+                                <th>Responsable</th>
                                 <th>UO</th>
                                  
                               </tr>
@@ -62,9 +63,11 @@ $responsable='';
                                   $estadobien_asig=$row["estadobien_asig"];
                                   $nombre_personal=$row["nombre_personal"];
                                   $nombre_uo=$row["nombre_uo"];
+                                  $nombreActivo=$row["activo"];
                                 }?>
                              <tr>
                                 <td><?=$codigo;?></td>
+                                <td><?=$nombreActivo;?></td>
                                   <td><?=$fechaasignacion;?></td>
                                   <td><?=$estadobien_asig;?></td>
                        
