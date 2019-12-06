@@ -16,7 +16,7 @@ $stmt->bindColumn('codigo', $codigo);
 $stmt->bindColumn('nombre', $nombre);
 $stmt->bindColumn('abreviatura', $abreviatura);
 $stmt->bindColumn('observaciones', $observaciones);
-$stmt->bindColumn('cod_estadoreferencial', $cod_estadoreferencial);
+$stmt->bindColumn('cod_estado', $cod_estadoreferencial);
 $stmt->bindColumn('created_at', $created_at);
 $stmt->bindColumn('created_by', $created_by);
 $stmt->bindColumn('modified_at', $modified_at);
