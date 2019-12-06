@@ -85,7 +85,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { ?>
               ?>
       				<div class="card-footer fixed-bottom">
                     <!--<button class="<?=$buttonNormal;?>" onClick="location.href='index.php?opcion=registerUbicacion'">Registrar</button>-->
-                    <button class="<?=$buttonNormal;?>" onClick="location.href='<?=$urlFormEstados_personal;?>'">Registrar</button>
+                    <button class="<?=$buttonNormal;?>" onClick="location.href='<?=$urlFormEstados_personal;?>&codigo=0'">Registrar</button>
               </div>
               <?php
               }
