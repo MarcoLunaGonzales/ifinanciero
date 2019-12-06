@@ -8,7 +8,9 @@ session_start();
 $user=$_POST["user"];
 $password=$_POST["password"];
 
-$sql="SELECT p.codigo, p.nombre, p.cod_area, p.cod_unidad, pd.perfil, pd.usuario_pon from personal2 p, personal_datosadicionales pd where p.codigo=pd.cod_personal and pd.usuario='$user' and pd.contrasena='$password'";
+$sql="SELECT p.codigo, p.nombre, p.cod_area, p.cod_unidad, pd.perfil, pd.usuario_pon 
+			from personal2 p, personal_datosadicionales pd 
+			where p.codigo=pd.cod_personal and pd.usuario='$user' and pd.contrasena='$password'";
 //echo $sql;
 $stmt = $dbh->prepare($sql);
 $stmt->execute();

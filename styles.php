@@ -6,6 +6,7 @@ $colorCard="card-header-primary";
 $iconEdit="edit";
 $iconDelete="delete";
 $iconCard="assignment";
+
 $iconImp="print";
 $iconCopy="file_copy";
 $iconFile="attach_file";
@@ -28,7 +29,5 @@ $comboColor="btn btn-primary";
 $comboColorDist="btn btn-warning";
 
 $colorCardDetail="card-header-rose";
-
-
 
 ?>

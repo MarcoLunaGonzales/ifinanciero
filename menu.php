@@ -129,6 +129,98 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
               </ul>
             </div>
           </li>
+          <!-- TABLAS RRHH-->
+          <li class="nav-item ">
+            <a class="nav-link" data-toggle="collapse" href="#pagesExamples">
+              <i class="material-icons">fullscreen</i>
+              <p> Tablas HHRR
+                <b class="caret"></b>
+              </p>
+            </a>
+            <div class="collapse" id="pagesExamples">
+              <ul class="nav">              
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=areasLista">
+                    <span class="sidebar-mini"> UAF </span>
+                    <span class="sidebar-normal"> Areas</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=uoLista">
+                    <span class="sidebar-mini"> UAF </span>
+                    <span class="sidebar-normal"> Unidades Organizacionales</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=areas_organizacionLista">
+                    <span class="sidebar-mini"> UAF </span>
+                    <span class="sidebar-normal"> Areas - Unidades Organizacionales</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=cargosLista">
+                    <span class="sidebar-mini"> UAF </span>
+                    <span class="sidebar-normal"> Cargos</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=tipospersonalLista">
+                    <span class="sidebar-mini"> UAF </span>
+                    <span class="sidebar-normal"> Tipos Personal</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=estadospersonalLista">
+                    <span class="sidebar-mini"> UAF </span>
+                    <span class="sidebar-normal"> Estados Personal</span>
+                  </a>
+                </li>            
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=tipos_generoLista">
+                    <span class="sidebar-mini"> UAF </span>
+                    <span class="sidebar-normal"> Genero</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=personalLista">
+                    <span class="sidebar-mini"> UAF </span>
+                    <span class="sidebar-normal"> Personal</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=estadosplanillaLista">
+                    <span class="sidebar-mini"> UAF </span>
+                    <span class="sidebar-normal"> Estados Planilla</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=tipos_aporteafpLista">
+                    <span class="sidebar-mini"> UAF </span>
+                    <span class="sidebar-normal"> Tipos de Aportes</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=tipos_afpLista">
+                    <span class="sidebar-mini"> UAF </span>
+                    <span class="sidebar-normal"> Tipos de Afp</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=aportes_patronalesForm">
+                    <span class="sidebar-mini"> UAF </span>
+                    <span class="sidebar-normal"> Aportes Patronales</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=aportes_laboralesForm">
+                    <span class="sidebar-mini"> UAF </span>
+                    <span class="sidebar-normal"> Aportes Laborales</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </li>
+
 
           <!--TRANSACCIONES ACTIVOS FIJOS-->          
           <li class="nav-item ">
@@ -209,7 +301,7 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
             </div>
           </li>
 
-          <!--REPORTES CONTABILIDAD-->
+          <!--REPORTES AF-->
           <li class="nav-item ">
             <a class="nav-link" data-toggle="collapse" href="#reportesAF">
               <i class="material-icons">assessment</i>
