@@ -386,26 +386,26 @@
 
 		//tipos personal
 		if ($_GET['opcion']=='tipospersonalLista') {
-			require_once('rrhh/tipospersonalLista.php'); //ok
+			require_once('personal/tipospersonalLista.php'); //ok
 		}
 		if ($_GET['opcion']=='tipospersonalForm') {
 			$codigo=$_GET['codigo'];
-			require_once('rrhh/tipospersonalForm.php');
+			require_once('personal/tipospersonalForm.php');
 		}
 		if ($_GET['opcion']=='tipospersonalSave') {
-			require_once('rrhh/tipospersonalSave.php');
+			require_once('personal/tipospersonalSave.php');
 		}
 
 		//estados personal
 		if ($_GET['opcion']=='estadospersonalLista') {
-			require_once('rrhh/estadospersonalLista.php'); //ok
+			require_once('personal/estadospersonalLista.php'); //ok
 		}
 		if ($_GET['opcion']=='estadospersonalForm') {
 			$codigo=$_GET['codigo'];
-			require_once('rrhh/estadospersonalForm.php');
+			require_once('personal/estadospersonalForm.php');
 		}
 		if ($_GET['opcion']=='estadospersonalSave') {
-			require_once('rrhh/estadospersonalSave.php');
+			require_once('personal/estadospersonalSave.php');
 		}
 		
 		//estados personal
@@ -458,15 +458,15 @@
 
 		//personal
 		if ($_GET['opcion']=='personalLista') {
-			require_once('rrhh/personalLista.php'); //ok
+			require_once('personal/personalLista.php'); //ok
 		}
 		if ($_GET['opcion']=='personalForm') {
 			$codigo=0;
 			$codigo=$_GET['codigo'];
-			require_once('rrhh/personalForm.php');
+			require_once('personal/personalForm.php');
 		}
 		if ($_GET['opcion']=='personalSave') {
-			require_once('rrhh/personalSave.php');
+			require_once('personal/personalSave.php');
 		}
 
 		//tipos_afpLista AFP PREVISION, BBVA

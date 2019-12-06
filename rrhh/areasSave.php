@@ -23,7 +23,7 @@ try {
     
     if ($_POST["codigo"] == 0){
         //$stmt = $dbh->prepare("INSERT INTO TABLA(codigoactivo,tipoalta,fechalta,indiceufv,tipocambio,moneda,valorinicial,depreciacionacumulada,valorresidual,cod_depreciaciones,cod_tiposbienes,vidautilmeses,estadobien,otrodato,cod_ubicaciones,cod_empresa,activo,cod_responsables_responsable,cod_responsables_autorizadopor,created_at,created_by,modified_at,modified_by) values (:codigoactivo, :tipoalta, :fechalta, :indiceufv, :tipocambio, :moneda, :valorinicial, :depreciacionacumulada, :valorresidual, :cod_depreciaciones, :cod_tiposbienes, :vidautilmeses, :estadobien, :otrodato, :cod_ubicaciones, :cod_empresa, :activo, :cod_responsables_responsable, :cod_responsables_autorizadopor, :created_at, :created_by, :modified_at, :modified_by)");
-        $stmt = $dbh->prepare("INSERT INTO areas(nombre,abreviatura,observaciones,cod_estadoreferencial,created_by,modified_by) values (:nombre, :abreviatura, :observaciones, :cod_estadoreferencial, :created_by, :modified_by)");
+        $stmt = $dbh->prepare("INSERT INTO areas(nombre,abreviatura,observaciones,cod_estado,created_by,modified_by) values (:nombre, :abreviatura, :observaciones, :cod_estadoreferencial, :created_by, :modified_by)");
         //Bind
         $stmt->bindParam(':nombre', $nombre);
         $stmt->bindParam(':abreviatura', $abreviatura);
@@ -48,7 +48,7 @@ try {
         //$stmt->debugDumpParams();
     } else {//update
 
-        $stmt = $dbh->prepare("UPDATE areas  set nombre=:nombre,abreviatura=:abreviatura,observaciones=:observaciones,cod_estadoreferencial=:cod_estadoreferencial,created_by=:created_by,modified_by=:modified_by where codigo = :codigo");
+        $stmt = $dbh->prepare("UPDATE areas  set nombre=:nombre,abreviatura=:abreviatura,observaciones=:observaciones,cod_estado=:cod_estadoreferencial,created_by=:created_by,modified_by=:modified_by where codigo = :codigo");
         //bind
         $stmt->bindParam(':codigo', $codigo);
         $stmt->bindParam(':nombre', $nombre);

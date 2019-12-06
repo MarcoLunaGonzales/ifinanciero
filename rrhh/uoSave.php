@@ -22,7 +22,7 @@ try {
     $modified_by = 1;//$_POST["modified_by"];
 
     if ($_POST["codigo"] == 0){
-        $stmt = $dbh->prepare("INSERT INTO unidades_organizacionales(nombre,abreviatura,observaciones,cod_estadoreferencial,created_by,modified_by) 
+        $stmt = $dbh->prepare("INSERT INTO unidades_organizacionales(nombre,abreviatura,observaciones,cod_estador,created_by,modified_by) 
         values (:nombre, :abreviatura, :observaciones, :cod_estadoreferencial, :created_by, :modified_by)");
         //Bind
         $stmt->bindParam(':nombre', $nombre);
@@ -47,7 +47,7 @@ try {
         //$stmt->debugDumpParams();
     } else {//update
 
-        $stmt = $dbh->prepare("UPDATE unidades_organizacionales set nombre=:nombre,abreviatura=:abreviatura,observaciones=:observaciones,cod_estadoreferencial=:cod_estadoreferencial,
+        $stmt = $dbh->prepare("UPDATE unidades_organizacionales set nombre=:nombre,abreviatura=:abreviatura,observaciones=:observaciones,cod_estado=:cod_estadoreferencial,
         created_by=:created_by,modified_by=:modified_by where codigo = :codigo");
         //bind
         $stmt->bindParam(':codigo', $codigo);

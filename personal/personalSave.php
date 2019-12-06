@@ -3,7 +3,7 @@
 //require_once '../layouts/bodylogin.php';
 require_once 'conexion.php';
 require_once 'functions.php';
-require_once 'configModule.php';
+require_once 'rrhh/configModule.php';
 ini_set('display_errors',1);
 
 $dbh = new Conexion();

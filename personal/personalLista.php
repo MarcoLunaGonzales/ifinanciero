@@ -1,7 +1,7 @@
 <?php
 
 require_once 'conexion.php';
-require_once 'configModule.php'; //configuraciones
+require_once 'rrhh/configModule.php'; //configuraciones
 require_once 'styles.php';
 
 $globalAdmin=$_SESSION["globalAdmin"];

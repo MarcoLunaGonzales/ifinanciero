@@ -2,7 +2,7 @@
 
 require_once 'conexion.php';
 require_once 'styles.php';
-require_once 'configModule.php';
+require_once 'rrhh/configModule.php';
 
 //$dbh = new Conexion();
 $dbh = new Conexion();
