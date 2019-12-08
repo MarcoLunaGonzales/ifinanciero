@@ -8,14 +8,17 @@ $globalAdmin=$_SESSION["globalAdmin"];
 
 $dbh = new Conexion();
 
-$stmt = $dbh->prepare("SELECT * from cargos where cod_estadoreferencial=1");
+$stmt = $dbh->prepare("select * from aportes_patronales where estado=1");
 //ejecutamos
 $stmt->execute();
 //bindColumn
 $stmt->bindColumn('codigo', $codigo);
-$stmt->bindColumn('nombre', $nombre);
-$stmt->bindColumn('abreviatura', $abreviatura);
-$stmt->bindColumn('cod_estadoreferencial', $cod_estadoreferencial);
+$stmt->bindColumn('seguro_riesgo_profesional', $seguro_riesgo_profesional);
+$stmt->bindColumn('provivienda', $provivienda);
+$stmt->bindColumn('infocal', $infocal);
+$stmt->bindColumn('cns', $cns);
+$stmt->bindColumn('aporte_patronal_solidario', $aporte_patronal_solidario);
+$stmt->bindColumn('estado', $cod_estadoreferencial);
 $stmt->bindColumn('created_at', $created_at);
 $stmt->bindColumn('created_by', $created_by);
 $stmt->bindColumn('modified_at', $modified_at);
@@ -31,7 +34,7 @@ $stmt->bindColumn('modified_by', $modified_by);
                   <div class="card-icon">
                     <i class="material-icons"><?=$iconCard;?></i>
                   </div>
-                  <h4 class="card-title"><?=$nombrePluralCargos?></h4>
+                  <h4 class="card-title"><?=$nombreSingularaportes_patronales?></h4>
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
@@ -39,11 +42,12 @@ $stmt->bindColumn('modified_by', $modified_by);
 
                     <thead>
     <tr>
-    <th>Codigo</th>
-        <th>Nombre</th>
-        <th>Abreviatura</th>
-       
-        
+        <th>Codigo</th>
+        <th>Seguro Rie. Prof.</th>
+        <th>Provivienda</th>
+        <th>Infocal</th>
+        <th>Cns</th>
+        <th>Aporte patro. Sol.</th>
         
         <th></th>
     </tr>
@@ -52,18 +56,21 @@ $stmt->bindColumn('modified_by', $modified_by);
 <?php $index=1;
 while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { ?>
     <tr>
-    <td><?=$codigo;?></td>
-        <td><?=$nombre;?></td>
-        <td><?=$abreviatura;?></td>
+        <td><?=$codigo;?></td>
+        <td><?=$seguro_riesgo_profesional;?></td>
+        <td><?=$provivienda;?></td>
+        <td><?=$infocal;?></td>
+        <td><?=$cns;?></td>
+        <td><?=$aporte_patronal_solidario;?></td>
         
         <td class="td-actions text-right">
         <?php
           if($globalAdmin==1){
         ?>
-          <a href='<?=$urlFormCargos;?>&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonEdit;?>">
+          <a href='<?=$urlFormaportes_patronales;?>&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonEdit;?>">
             <i class="material-icons"><?=$iconEdit;?></i>
           </a>
-          <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDeleteCargos;?>&codigo=<?=$codigo;?>')">
+          <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDeleteaportes_patronales;?>&codigo=<?=$codigo;?>')">
             <i class="material-icons"><?=$iconDelete;?></i>
           </button>
           <?php
@@ -89,7 +96,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { ?>
               ?>
       				<div class="card-footer fixed-bottom">
                     <!--<button class="<?=$buttonNormal;?>" onClick="location.href='index.php?opcion=registerUbicacion'">Registrar</button>-->
-                    <button class="<?=$buttonNormal;?>" onClick="location.href='<?=$urlFormCargos;?>&codigo=0'">Registrar</button>
+                    <button class="<?=$buttonNormal;?>" onClick="location.href='<?=$urlFormaportes_patronales;?>&codigo=0'">Registrar</button>
               </div>
               <?php
               }

@@ -9,18 +9,25 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $dbh = new Conexion();
 
 
-$stmt = $dbh->prepare("SELECT p.*, c.nombre as xcargo, uo.nombre as xuonombre, a.nombre as xarea, g.nombre as xgenero
-, e.nombre as xestado, af.nombre as xtipoafp
-from personal p, cargos c , unidades_organizacionales uo, areas a, tipos_genero g, 
-estados_personal e, tipos_afp af
-where p.cod_cargo = c.codigo and uo.codigo = p.cod_unidadorganizacional and p.cod_area = a.codigo
- and p.cod_genero = g.codigo and e.codigo = p.cod_estadopersonal and af.codigo = p.cod_tipoafp");
+$stmt = $dbh->prepare(" SELECT *, (select c.nombre from cargos c where c.codigo=cod_cargo)as xcargo,
+ (select uo.nombre from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional)as xuonombre,
+ (select a.nombre from areas a where a.codigo=cod_area)as xarea,
+ (select g.nombre from tipos_genero g where g.codigo=cod_genero)as xgenero,
+ (select ep.nombre from estados_personal ep where ep.codigo=cod_estadopersonal)as xestado,
+ (select tafp.nombre from tipos_afp tafp where tafp.codigo=cod_tipoafp)as xtipoafp,
+ (select taafp.nombre from tipos_aporteafp taafp where taafp.codigo=cod_tipoaporteafp) as xtipos_aporteafp,
+ (select tp.nombre from tipos_personal tp where tp.codigo=cod_tipopersonal)as xcod_tipopersonal
+ 
+ from personal_datos
+ where cod_estadoreferencial=1
+ ");
 //ejecutamos
 $stmt->execute();
 //bindColumn
 $stmt->bindColumn('codigo', $codigo);
 $stmt->bindColumn('ci', $ci);
 $stmt->bindColumn('ci_lugar_emision', $ci_lugar_emision);
+
 $stmt->bindColumn('fecha_nacimiento', $fecha_nacimiento);
 $stmt->bindColumn('cod_cargo', $cod_cargo);
 $stmt->bindColumn('cod_unidadorganizacional', $cod_unidadorganizacional);
@@ -28,6 +35,7 @@ $stmt->bindColumn('cod_area', $cod_area);
 $stmt->bindColumn('jubilado', $jubilado);
 $stmt->bindColumn('cod_genero', $cod_genero);
 $stmt->bindColumn('cod_tipopersonal', $cod_tipopersonal);
+
 $stmt->bindColumn('haber_basico', $haber_basico);
 $stmt->bindColumn('paterno', $paterno);
 $stmt->bindColumn('materno', $materno);
@@ -37,7 +45,7 @@ $stmt->bindColumn('otros_nombres', $otros_nombres);
 $stmt->bindColumn('nua_cua_asignado', $nua_cua_asignado);
 $stmt->bindColumn('direccion', $direccion);
 $stmt->bindColumn('cod_tipoafp', $cod_tipoafp);
-$stmt->bindColumn('tipos_aporteafp', $tipos_aporteafp);
+$stmt->bindColumn('cod_tipoaporteafp', $tipos_aporteafp);
 $stmt->bindColumn('nro_seguro', $nro_seguro);
 $stmt->bindColumn('cod_estadopersonal', $cod_estadopersonal);
 $stmt->bindColumn('created_at', $created_at);
@@ -50,6 +58,8 @@ $stmt->bindColumn('xarea', $xarea);
 $stmt->bindColumn('xgenero', $xgenero);
 $stmt->bindColumn('xestado', $xestado);
 $stmt->bindColumn('xtipoafp', $xtipoafp);
+$stmt->bindColumn('xcod_tipopersonal', $xcod_tipopersonal);
+$stmt->bindColumn('xtipos_aporteafp', $xtipos_aporteafp);
 
 ?>
 
@@ -96,7 +106,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { ?>
         <td><?=$xuonombre;?></td>
         <td><?=$xarea;?></td>
         <td><?=$xgenero;?></td>
-        <td><?=$cod_tipopersonal;?></td>
+        <td><?=$xcod_tipopersonal;?></td>
         <td><?=$haber_basico;?></td>
         <td><?=$paterno;?></td>
         <td><?=$materno;?></td>
@@ -111,7 +121,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { ?>
           <a href='<?=$urlFormPersonal;?>&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonEdit;?>">
             <i class="material-icons"><?=$iconEdit;?></i>
           </a>
-          <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDeleteAreas;?>&codigo=<?=$codigo;?>')">
+          <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDeletePersonal;?>&codigo=<?=$codigo;?>')">
             <i class="material-icons"><?=$iconDelete;?></i>
           </button>
           <?php

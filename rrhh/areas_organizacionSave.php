@@ -15,7 +15,7 @@ try {
     $cod_unidad = $_POST["cod_unidad"];
     $cod_area = $_POST["cod_area"];
     $cod_areaorganizacion_padre = $_POST["cod_areaorganizacion_padre"];
-    $cod_estadoreferencial = $_POST["cod_estadoreferencial"];
+    $cod_estadoreferencial = 1;
     //$created_at = $_POST["created_at"];
     $created_by = 1;//$_POST["created_by"];
     //$modified_at = $_POST["modified_at"];
@@ -35,7 +35,7 @@ try {
         $stmt->bindParam(':modified_by', $modified_by);
         $flagSuccess=$stmt->execute();
         $tabla_id = $dbh->lastInsertId();
-        showAlertSuccessError($flagSuccess,$urlListTipos_aporteafp);
+        showAlertSuccessError($flagSuccess,$urlListAreas_organizacion);
 
         //$stmt->debugDumpParams();
     } else {//update

@@ -7,14 +7,14 @@ require_once 'configModule.php';
 //$dbh = new Conexion();
 $dbh = new Conexion();
 
-
-//por is es edit
-
-
-
-    $stmt = $dbh->prepare("SELECT * FROM aportes_laborales");
+$codigo=$_GET['codigo'];
+if ($codigo > 0){
+    //EDIT GET1 no guardar, sino obtener
+    $codigo=$codigo;
+    
+    $stmt = $dbh->prepare("SELECT * FROM aportes_laborales where codigo =:codigo");
     //Ejecutamos;
-    //$stmt->bindParam(':codigo',$codigo);
+    $stmt->bindParam(':codigo',$codigo);
     $stmt->execute();
     $result = $stmt->fetch();
     $codigo = $result['codigo'];
@@ -33,6 +33,30 @@ $dbh = new Conexion();
     $created_by = $result['created_by'];
     $modified_at = $result['modified_at'];
     $modified_by = $result['modified_by'];
+
+} else {
+    $codigo = 0;
+    $salario_minimo_nacional = ' ';
+    $cuenta_individual_vejez = ' ';
+    $seguro_invalidez = ' ';
+    $comision_afp = ' ';
+    $provivienda = ' ';
+    $iva = ' ';
+    $asa = ' ';
+    $aporte_nac_solidario_13 = ' ';
+    $aporte_nac_solidario_25 = ' ';
+    $aporte_nac_solidario_35 = ' ';
+    $estado = ' ';
+    $created_at = ' ';
+    $created_by = ' ';
+    $modified_at = ' ';
+    $modified_by = ' ';
+}
+
+
+//por is es edit
+
+
 
 ?>
 
@@ -56,6 +80,7 @@ $dbh = new Conexion();
     <label class="col-sm-2 col-form-label">Salario Minimo Nacional</label>
     <div class="col-sm-7">
     <div class="form-group">
+        <input type="hidden" name="codigo" id="codigo" value="<?=$codigo;?>"/>
         <input class="form-control" type="text" name="salario_minimo_nacional" id="salario_minimo_nacional" required="true" value="<?=$salario_minimo_nacional;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
     </div>
     </div>

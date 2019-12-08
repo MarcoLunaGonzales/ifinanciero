@@ -8,7 +8,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 
 $dbh = new Conexion();
 
-$stmt = $dbh->prepare("select * from areas");
+$stmt = $dbh->prepare("SELECT * from areas where cod_estado=1");
 //ejecutamos
 $stmt->execute();
 //bindColumn

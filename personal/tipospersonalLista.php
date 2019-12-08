@@ -8,7 +8,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 
 $dbh = new Conexion();
 
-$stmt = $dbh->prepare("select * from tipos_personal");
+$stmt = $dbh->prepare("select * from tipos_personal where cod_estadoreferencial=1");
 //ejecutamos
 $stmt->execute();
 //bindColumn
@@ -58,7 +58,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { ?>
           <a href='<?=$urlFormTipospersonal;?>&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonEdit;?>">
             <i class="material-icons"><?=$iconEdit;?></i>
           </a>
-          <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDeleteAreas;?>&codigo=<?=$codigo;?>')">
+          <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDeleteTipospersonal;?>&codigo=<?=$codigo;?>')">
             <i class="material-icons"><?=$iconDelete;?></i>
           </button>
           <?php

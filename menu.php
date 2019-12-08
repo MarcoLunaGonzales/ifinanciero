@@ -206,13 +206,13 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
                   </a>
                 </li>
                 <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=aportes_patronalesForm">
+                  <a class="nav-link" href="?opcion=aportes_patronalesLista">
                     <span class="sidebar-mini"> UAF </span>
                     <span class="sidebar-normal"> Aportes Patronales</span>
                   </a>
                 </li>
                 <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=aportes_laboralesForm">
+                  <a class="nav-link" href="?opcion=aportes_laboralesLista">
                     <span class="sidebar-mini"> UAF </span>
                     <span class="sidebar-normal"> Aportes Laborales</span>
                   </a>

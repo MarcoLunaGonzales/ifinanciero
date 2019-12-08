@@ -43,15 +43,16 @@ try {
     $created_by = 1;//$_POST["created_by"];
     //$modified_at = $_POST["modified_at"];
     $modified_by = 1;//$_POST["modified_by"];
+    $cod_estadoreferencial=1;
     
     if ($_POST["codigo"] == 0){
-        $stmt = $dbh->prepare("INSERT INTO personal(ci,ci_lugar_emision,fecha_nacimiento,cod_cargo,cod_unidadorganizacional,cod_area,
+        $stmt = $dbh->prepare("INSERT INTO personal_datos(ci,ci_lugar_emision,fecha_nacimiento,cod_cargo,cod_unidadorganizacional,cod_area,
         jubilado,cod_genero,cod_tipopersonal,haber_basico,paterno,materno,apellido_casada,primer_nombre,otros_nombres,nua_cua_asignado,
-        direccion,cod_tipoafp,nro_seguro,cod_estadopersonal,created_by,modified_by,telefono,celular,email,persona_contacto, cod_tipoaporteafp) 
+        direccion,cod_tipoafp,nro_seguro,cod_estadopersonal,created_by,modified_by,telefono,celular,email,persona_contacto, cod_tipoaporteafp,cod_estadoreferencial) 
         values (:ci, :ci_lugar_emision, :fecha_nacimiento, 
         :cod_cargo, :cod_unidadorganizacional, :cod_area, :jubilado, :cod_genero, :cod_tipopersonal, :haber_basico, :paterno, 
         :materno, :apellido_casada, :primer_nombre, :otros_nombres, :nua_cua_asignado, :direccion, :cod_tipoafp, :nro_seguro, 
-        :cod_estadopersonal, :created_by, :modified_by, :telefono, :celular, :email, :persona_contacto, :cod_tipoaporteafp)");
+        :cod_estadopersonal, :created_by, :modified_by, :telefono, :celular, :email, :persona_contacto, :cod_tipoaporteafp,:cod_estadoreferencial)");
         //Bind
         $stmt->bindParam(':ci', $ci);
         $stmt->bindParam(':ci_lugar_emision', $ci_lugar_emision);
@@ -83,6 +84,8 @@ try {
         $stmt->bindParam(':created_by', $created_by);
         //$stmt->bindParam(':modified_at', $modified_at);
         $stmt->bindParam(':modified_by', $modified_by);
+        $stmt->bindParam(':cod_estadoreferencial', $cod_estadoreferencial);
+        
         
         $flagSuccess=$stmt->execute();
         $tabla_id = $dbh->lastInsertId();
@@ -108,7 +111,7 @@ try {
         //$stmt->debugDumpParams();
     } else {//update
 
-        $stmt = $dbh->prepare("UPDATE personal set ci=:ci,ci_lugar_emision=:ci_lugar_emision,fecha_nacimiento=:fecha_nacimiento,
+        $stmt = $dbh->prepare("UPDATE personal_datos set ci=:ci,ci_lugar_emision=:ci_lugar_emision,fecha_nacimiento=:fecha_nacimiento,
         cod_cargo=:cod_cargo,cod_unidadorganizacional=:cod_unidadorganizacional,cod_area=:cod_area,jubilado=:jubilado,
         cod_genero=:cod_genero,cod_tipopersonal=:cod_tipopersonal,haber_basico=:haber_basico,paterno=:paterno,
         materno=:materno,apellido_casada=:apellido_casada,primer_nombre=:primer_nombre,otros_nombres=:otros_nombres,

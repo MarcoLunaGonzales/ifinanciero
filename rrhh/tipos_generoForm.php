@@ -23,8 +23,8 @@ if ($codigo > 0){
     $abreviatura = $result['abreviatura'];
     $cod_estadoreferencial = $result['cod_estadoreferencial'];
 } else {
-  $codigo = 0;
-  $nombre = ' ';
+    $codigo = 0;
+    $nombre = ' ';
     $abreviatura = ' ';
     $cod_estadoreferencial = ' ';
 }
