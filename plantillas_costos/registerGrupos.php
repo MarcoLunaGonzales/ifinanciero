@@ -39,8 +39,8 @@ if(isset($_GET['cod'])){
 }else{
 	$codigo=0;
 }
-			$stmt = $dbh->prepare("SELECT p.*, u.abreviatura as unidad,a.abreviatura as area from plantillas_costo p,unidades_organizacionales u, areas a 
-  where p.cod_unidadorganizacional=u.codigo and p.cod_area=a.codigo and p.codigo='$codigo' order by codigo");
+			$stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_plantilla, u.abreviatura as unidad,a.abreviatura as area from plantillas_costo p,unidades_organizacionales u, areas a,estados_plantillascosto e
+  where p.cod_unidadorganizacional=u.codigo and p.cod_area=a.codigo and e.codigo=p.cod_estadoplantilla and p.codigo='$codigo' order by codigo");
 			$stmt->execute();
 			$stmt->bindColumn('codigo', $codigoX);
             $stmt->bindColumn('nombre', $nombreX);
@@ -49,6 +49,9 @@ if(isset($_GET['cod'])){
             $stmt->bindColumn('cod_area', $codAreaX);
             $stmt->bindColumn('area', $areaX);
             $stmt->bindColumn('unidad', $unidadX);
+            $stmt->bindColumn('estado_plantilla', $estadoX);
+            $stmt->bindColumn('utilidad_minimalocal', $utilidadIbnorcaX);
+            $stmt->bindColumn('utilidad_minimaexterno', $utilidadFueraX);
 ?>
 <form id="formRegDet" class="form-horizontal" action="saveEdit.php" method="post" enctype="multipart/form-data">
 <div class="content">
@@ -67,20 +70,39 @@ if(isset($_GET['cod'])){
 					<?php while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {?>
 					<input class="form-control" type="hidden" name="cod_unidad" value="<?=$codUnidadX?>" id="cod_unidad" readonly/>
 					<input class="form-control" type="hidden" name="cod_area" value="<?=$codAreaX?>" id="cod_area" readonly/>
-						<div class="col-sm-4">
+						<div class="col-sm-2">
 							<div class="form-group">
 						  		<label class="bmd-label-static">Nombre</label>
 					  			<input class="form-control" type="text" name="nombre" value="<?=$nombreX?>" id="nombre"/>
 							</div>
 						</div>
 
-						<div class="col-sm-4">
+						<div class="col-sm-1">
 							<div class="form-group">
 						  		<label class="bmd-label-static">Abreviatura</label>
 						  		<input class="form-control" type="text" name="abreviatura" value="<?=$abreviaturaX?>" id="abreviatura"/>
 							</div>
 						</div>
-
+						<div class="col-sm-2">
+							<div class="form-group has-success">
+						  		<label class="bmd-label-static">Utilidad IBNORCA</label>
+						  		<input class="form-control" type="number" step="0.001" name="utilidad_ibnorca" value="<?=$utilidadIbnorcaX?>" id="utilidad_ibnorca"/>
+						  		<span class="form-control-feedback">%</span>
+							</div>
+						</div>
+						<div class="col-sm-2">
+							<div class="form-group has-success">
+						  		<label class="bmd-label-static">Utilidad FUERA IBNORCA</label>
+						  		<input class="form-control" type="number" step="0.001" name="utilidad_fuera" value="<?=$utilidadFueraX?>" id="utilidad_fuera"/>
+						  		<span class="form-control-feedback">%</span>
+							</div>
+						</div>
+                        <div class="col-sm-2">
+							<div class="form-group">
+						  		<label class="bmd-label-static">Estado</label>
+						  		<input class="form-control" type="text" readonly name="estado_plan" value="<?=$estadoX?>" id="estado_plan"/>
+							</div>
+						</div>
 						<div class="col-sm-2">
 							<div class="form-group">
 						  		<label class="bmd-label-static">Unidad</label>
@@ -88,7 +110,7 @@ if(isset($_GET['cod'])){
 							</div>
 						</div>
 
-						<div class="col-sm-2">
+						<div class="col-sm-1">
 				        	<div class="form-group">
 						  		<label class="bmd-label-static">Area</label>
 						  		<input class="form-control" type="text" name="area" value="<?=$areaX?>" id="area" readonly/>

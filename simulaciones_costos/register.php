@@ -49,7 +49,7 @@ $dbh = new Conexion();
                        <label class="col-sm-3 col-form-label">Nombre:</label>
                        <div class="col-sm-9">
                         <div class="form-group">
-                          <input class="form-control" type="text" name="nombre" id="nombre" autofocus/>
+                          <input class="form-control" type="text" name="nombre" id="nombre" autocomplete="off" autofocus/>
                         </div>
                         </div>
                       </div>
@@ -57,9 +57,9 @@ $dbh = new Conexion();
                        <label class="col-sm-3 col-form-label">Plantilla de costos :</label>
                        <div class="col-sm-9">
                         <div class="form-group">
-                                <select class="selectpicker form-control form-control-sm" name="plantilla_costo" id="plantilla_costo" data-style="<?=$comboColor;?>"  data-live-search="true" title="-- Elija una plantilla --" data-style="select-with-transition" data-actions-box="true"required>
+                                <select class="selectpicker form-control" onchange="listarPreciosPlantilla(this.value)" name="plantilla_costo" id="plantilla_costo" data-style="<?=$comboColor;?>"  data-live-search="true" title="-- Elija una plantilla --" data-style="select-with-transition" data-actions-box="true"required>
                                 <?php
-                                 $stmt = $dbh->prepare("SELECT p.*, u.abreviatura as unidad,a.abreviatura as area from plantillas_costo p,unidades_organizacionales u, areas a where p.cod_unidadorganizacional=u.codigo and p.cod_area=a.codigo order by codigo");
+                                 $stmt = $dbh->prepare("SELECT p.*, u.abreviatura as unidad,a.abreviatura as area from plantillas_costo p,unidades_organizacionales u, areas a where p.cod_unidadorganizacional=u.codigo and p.cod_area=a.codigo and p.cod_estadoreferencial!=2 and p.cod_estadoplantilla=3 order by codigo");
                                  $stmt->execute();
                                   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                   $codigoX=$row['codigo'];
@@ -74,6 +74,23 @@ $dbh = new Conexion();
                               </div>
                         </div>
                       </div>
+                      <div class="row" id="lista_precios">
+                      </div>
+                          <div class="row">
+                           <label class="col-sm-3 col-form-label">En IBNORCA:</label>
+                           <div class="col-sm-1"> 
+                             <div class="form-group">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                      <input class="form-check-input" type="checkbox" id="ibnorca_check" name="ibnorca_check" value="1">
+                                      <span class="form-check-sign">
+                                        <span class="check"></span>
+                                      </span>
+                                    </label>
+                                  </div>
+                               </div>
+                             </div>     
+                          </div>
                       <hr>
                       <div class="form-group float-right">
                         <a href="../index.php?opcion=listSimulacionesCostos" class="btn btn-default btn-round">Cerrar</a>

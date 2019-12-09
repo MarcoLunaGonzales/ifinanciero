@@ -31,6 +31,9 @@ if(isset($_GET['cod'])){
 }else{
 	$codigo=0;
 }
+if(isset($_GET['admin'])){
+	$urlList=$urlList2;
+}
 $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_externo from simulaciones_costos sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo join precios_plantillacosto pa on sc.cod_precioplantilla=pa.codigo where sc.cod_estadoreferencial=1 and sc.codigo='$codigo'");
 			$stmt1->execute();
 			$stmt1->bindColumn('codigo', $codigoX);
@@ -46,9 +49,9 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
 
       while ($row1 = $stmt1->fetch(PDO::FETCH_BOUND)) {
          //plantilla datos      
-			      $stmt = $dbh->prepare("SELECT p.*, u.abreviatura as unidad,a.abreviatura as area from plantillas_costo p,unidades_organizacionales u, areas a where p.cod_unidadorganizacional=u.codigo and p.cod_area=a.codigo and p.codigo='$codigoPlan' order by codigo");
-			      $stmt->execute();
-			      $stmt->bindColumn('codigo', $codigoPX);
+			$stmt = $dbh->prepare("SELECT p.*, u.abreviatura as unidad,a.abreviatura as area from plantillas_costo p,unidades_organizacionales u, areas a where p.cod_unidadorganizacional=u.codigo and p.cod_area=a.codigo and p.codigo='$codigoPlan' order by codigo");
+			$stmt->execute();
+			$stmt->bindColumn('codigo', $codigoPX);
             $stmt->bindColumn('nombre', $nombreX);
             $stmt->bindColumn('abreviatura', $abreviaturaX);
             $stmt->bindColumn('cod_unidadorganizacional', $codUnidadX);        
@@ -61,189 +64,19 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
             $stmt->bindColumn('utilidad_minimaexterno', $utilidadFueraX);
 
       }
-  if($ibnorcaC==1){
-  	$checkIbnorca="checked";
-  	$simulacionEn="IBNORCA";
-  }else{
-  	$checkIbnorca="";
-  	$simulacionEn="FUERA DE IBNORCA";
-  }     
+     while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+
+     }
+     if($ibnorcaC==1){
+  	  $simulacionEn="IBNORCA";
+     }else{
+  	  $simulacionEn="FUERA DE IBNORCA";
+     }
 ?>
 <div id="logo_carga" class="logo-carga" style="display:none;"></div>
 <div class="content">
 	<div id="contListaGrupos" class="container-fluid">
 			<input type="hidden" name="cod_simulacion" id="cod_simulacion" value="<?=$codigo?>">
-      <input type="hidden" name="cod_precioplantilla" id="cod_precioplantilla" value="<?=$codPrecioPlan?>">
-            <div class="row"><div class="card col-sm-6">
-				<div class="card-header card-header-warning card-header-text">
-					<div class="card-text">
-					  <h4 class="card-title">Datos de la Simulacion</h4>
-					</div>
-				</div>
-				<div class="card-body ">
-					<div class="row">
-					<?php
-                    $responsable=namePersonal($codResponsableX);
-						?>
-						<div class="col-sm-4">
-							<div class="form-group">
-						  		<label class="bmd-label-static">Nombre</label>
-					  			<input class="form-control" type="text" name="nombre" value="<?=$nombreX?>" id="nombre"/>
-							</div>
-						</div>
-
-						<div class="col-sm-4">
-							<div class="form-group">
-						  		<label class="bmd-label-static">Responsable</label>
-						  		<input class="form-control" type="text" name="responsable" readonly value="<?=$responsable?>" id="responsable"/>
-							</div>
-						</div>
-
-						<div class="col-sm-2">
-							<div class="form-group">
-						  		<label class="bmd-label-static">Fecha</label>
-						  		<input class="form-control" type="text" name="fecha" value="<?=$fechaX?>" id="fecha" readonly/>
-							</div>
-						</div>
-
-						<div class="col-sm-2">
-				        	<div class="form-group">
-						  		<label class="bmd-label-static">Estado</label>
-						  		<input class="form-control" type="text" name="estado" value="<?=$estadoX?>" id="estado" readonly/>
-							</div>
-				      	</div>
-					</div>
-					<div class="row">
-						<div class="col-sm-4">
-							<div class="form-group">
-						  		<label class="bmd-label-static">Simulaci&oacute;n en</label>
-					  			<input class="form-control" type="text" readonly name="ibnorca" value="<?=$simulacionEn?>" id="ibnorca"/>
-							</div>
-						</div>
-						<!--<div class="col-sm-8" id="check_ibnorca">
-                          <div class="row">
-                           <label class="col-sm-4 col-form-label">En IBNORCA</label>
-                           <div class="col-sm-8">	
-                    	       <div class="form-group">
-      	             	          <div class="form-check">
-                                    <label class="form-check-label">
-                                      <input class="form-check-input" type="checkbox" id="ibnorca_check" name="ibnorca_check" <?=$checkIbnorca?> value="1">
-                                      <span class="form-check-sign">
-                                        <span class="check"></span>
-                                      </span>
-                                    </label>
-                                  </div>
-                               </div>
-                             </div>  		
-                          </div>
-                        </div>-->
-					</div>
-				</div>
-			</div>
-			<div class="card col-sm-6">
-				<div class="card-header card-header-info card-header-text">
-					<div class="card-text">
-					  <h4 class="card-title">Datos de la Plantilla</h4>
-					</div>
-				</div>
-				<div class="card-body ">
-                     <div class="row">
-					<?php while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {?>
-					<input type="hidden" name="cod_plantilla" id="cod_plantilla" value="<?=$codigoPX?>">
-						<div class="col-sm-4">
-							<div class="form-group">
-						  		<label class="bmd-label-static">Nombre Plantilla</label>
-					  			<input class="form-control" type="text" name="nombre_plan" value="<?=$nombreX?>" id="nombre_plan" READONLY />
-							</div>
-						</div>
-
-						<div class="col-sm-2">
-							<div class="form-group">
-						  		<label class="bmd-label-static">Abreviatura</label>
-						  		<input class="form-control" type="text" name="abreviatura_plan" value="<?=$abreviaturaX?>" READONLY id="abreviatura_plan"/>
-							</div>
-						</div>
-						<div class="col-sm-1">
-							<div class="form-group">
-						  		<label class="bmd-label-static">I</label>
-						  		<input class="form-control" type="text" name="alumnos_plan" value="<?=$alumnosX?>" READONLY id="alumnos_plan"/>
-							</div>
-						</div>
-                        <div class="col-sm-1">
-							<div class="form-group">
-						  		<label class="bmd-label-static">FI</label>
-						  		<input class="form-control" type="text" name="alumnos_plan_fuera" value="<?=$alumnosExternoX?>" READONLY id="alumnos_plan_fuera"/>
-							</div>
-						</div>
-						<div class="col-sm-2">
-							<div class="form-group">
-						  		<label class="bmd-label-static">Unidad</label>
-						  		<input class="form-control" type="text" name="unidad_plan" value="<?=$unidadX?>" id="unidad_plan" readonly/>
-							</div>
-						</div>
-
-						<div class="col-sm-2">
-				        	<div class="form-group">
-						  		<label class="bmd-label-static">Area</label>
-						  		<input class="form-control" type="text" name="area_plan" value="<?=$areaX?>" id="area_plan" readonly/>
-							</div>
-				      	</div>
-				      	<?php } ?>
-					</div>
-                    <div class="row">
-                    	<div class="col-sm-6">
-                    		 <div class="form-group">
-                                <select class="selectpicker form-control" onchange="presioneBoton();listarPreciosPlantilla(this.value,'sin',<?=$ibnorcaC?>);" name="plantilla_costo" id="plantilla_costo" data-style="<?=$comboColor;?>"  data-live-search="true" title="-- Elija una plantilla --" data-style="select-with-transition" data-actions-box="true"required>
-                                <?php
-                                 $stmt = $dbh->prepare("SELECT p.*, u.abreviatura as unidad,a.abreviatura as area from plantillas_costo p,unidades_organizacionales u, areas a where p.cod_unidadorganizacional=u.codigo and p.cod_area=a.codigo and p.cod_estadoreferencial!=2 and p.cod_estadoplantilla=3 order by codigo");
-                                 $stmt->execute();
-                                  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                                  $codigoX=$row['codigo'];
-                                  $nombreX=$row['nombre'];
-                                  $abrevX=$row['abreviatura'];
-                                  $unidadX=$row['unidad'];
-                                  $areaX=$row['area'];
-                                   ?>
-                                  <option value="<?=$codigoX;?>"><?=$nombreX;?> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; #<?=$unidadX?> @<?=$areaX?></option> 
-                                  <?php
-                                    }
-                                    ?>
-                                </select>
-                              </div>
-                              <div id="mensaje"></div>
-                    	</div>
-                    	<div class="col-sm-6" id="lista_precios">
-                       </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-8 d-none" id="check_simular">
-                          <div class="row">
-                           <label class="col-sm-4 col-form-label">Cantidad Alumnos Autom&aacute;ticos</label>
-                           <div class="col-sm-8">	
-                    	       <div class="form-group">
-      	             	          <div class="form-check">
-                                    <label class="form-check-label">
-                                      <input class="form-check-input" type="checkbox" id="alumnos_auto" name="alumnos_auto" checked value="1">
-                                      <span class="form-check-sign">
-                                        <span class="check"></span>
-                                      </span>
-                                    </label>
-                                  </div>
-                               </div>
-                             </div>  		
-                          </div>
-                        </div>
-                        <div class="col-sm-4 d-none" id="boton_simular">
-                    	  <div class="form-group">	
-                    		<a href="#" onclick="cargarPlantillaSimulacion(18,<?=$ibnorcaC?>); return false;" class="btn btn-warning text-dark btn-block">Simular Plantilla</a>
-                    	  </div>
-                        </div>
-                    </div>
-                      
-             
-				</div>
-			</div>
-		   </div>
            <div class="row">
              <div class="col-sm-12">
 			  <div class="card">
@@ -252,8 +85,8 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
 					  <h4 class="card-title"><b>SIMULACION</b></h4>
 					</div>
 				</div>
-				<div class="card-body" id="div_simulacion">
-			<?php
+				<div class="card-body">
+				<?php
 				//IVA y IT
 				$iva=obtenerValorConfiguracion(1);
 				$it=obtenerValorConfiguracion(2);
@@ -322,12 +155,8 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
                         }                      
                     }
                  }
-
-				?>	
-				<input type="hidden" id="cantidad_alibnorca" name="cantidad_alibnorca" readonly value="<?=$alumnosX?>">
-				<input type="hidden" id="cantidad_alfuera" name="cantidad_alfuera" readonly value="<?=$alumnosExternoX?>">
-				<input type="hidden" id="aprobado" name="aprobado" readonly value="<?=$codEstadoSimulacion?>">
-				  <div class="row"> 	
+				?>		
+					<div class="row"> 	
 					<div class="col-sm-4">	
 						<table class="table table-bordered table-condensed">
 							<thead>
@@ -399,10 +228,8 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
 						<h5><p class="<?=$estiloMensaje?>"><?=$mensajeText?></p></h5>
 					</div>	
 					</div>
-				  </div>
+
 				  	<div class="card-footer fixed-bottom">
-						<a onclick="guardarSimulacion()" class="btn btn-info">Guardar</a>
-						<a onclick="guardarSimulacion('enviar')" class="btn btn-warning text-dark"><i class="material-icons">send</i> Enviar Simulacion</a>
 						<a href="../<?=$urlList;?>" class="btn btn-default">Cancelar</a>
 
 				  	</div>
@@ -412,7 +239,3 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
             </div>
 	</div>
 </div>
-
-<?php
-require_once 'modal.php';
-?>

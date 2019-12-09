@@ -7,7 +7,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $dbh = new Conexion();
 
 // Preparamos
-$stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_costos sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo where sc.cod_estadoreferencial=1 order by sc.codigo");
+$stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_costos sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo where sc.cod_estadoreferencial=1 and sc.cod_estadosimulacion!=1 order by codigo");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -27,11 +27,11 @@ $stmt->bindColumn('estado', $estado);
         <div class="row">
             <div class="col-md-12">
               <div class="card">
-                <div class="card-header card-header-warning card-header-icon">
+                <div class="card-header card-header-info card-header-icon">
                   <div class="card-icon">
                     <i class="material-icons">polymer</i>
                   </div>
-                  <h4 class="card-title"><b><?=$moduleNamePlural?></b></h4>
+                  <h4 class="card-title"><b> Gestionar <?=$moduleNamePlural?></b></h4>
                 </div>
                 <div class="card-body">
                     <table class="table">
@@ -42,7 +42,7 @@ $stmt->bindColumn('estado', $estado);
                           <th>Responsable</th>
                           <th>Fecha</th>
                           <th>Estado</th>
-                          <th class="text-right">Actions</th>
+                          <th class="text-center">Actions</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -61,7 +61,7 @@ $stmt->bindColumn('estado', $estado);
                               $nEst=100;$barEstado="progress-bar-success";$btnEstado="btn-success";
                             break;
                             case 4:
-                              $nEst=60;$barEstado="progress-bar-warning";$btnEstado="btn-warning";
+                              $nEst=60;$barEstado="progress-bar-info";$btnEstado="btn-info";
                             break;
                           }
 ?>
@@ -80,43 +80,35 @@ $stmt->bindColumn('estado', $estado);
                              </div>
                           </td> 
                           <td class="td-actions text-right">
-                            <?php
-                              if($codEstado==4||$codEstado==3){
-                            ?>
                             <div class="btn-group dropdown">
                               <button type="button" class="btn <?=$btnEstado?> dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="material-icons">list</i> <?=$estado;?>
                               </button>
                               <div class="dropdown-menu">
+                                <a href="<?=$urlVer;?>?cod=<?=$codigo;?>&admin=0" class="dropdown-item">
+                                    <i class="material-icons text-info">bar_chart</i> Ver simulacion
+                                 </a>
+                              
                                 <?php 
-                                 if($codEstado==4){
-                                 ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1&admin=0" class="dropdown-item">
-                                    <i class="material-icons text-danger">clear</i> Cancelar solicitud
+                                if($codEstado==4){
+                                 ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=3" class="dropdown-item">
+                                    <i class="material-icons text-success">offline_pin</i> Aprobar Solicitud
+                                 </a>
+                                 <a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1" class="dropdown-item">
+                                    <i class="material-icons text-dark">report</i> Rechazar Solicitud
+                                 </a>
+                                 <a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=2" class="dropdown-item">
+                                    <i class="material-icons text-danger">clear</i> Anular Solicitud
                                  </a><?php 
-                                 }?>
-                                 <a href="<?=$urlVer;?>?cod=<?=$codigo;?>" class="dropdown-item">
-                                    <i class="material-icons text-warning">bar_chart</i> Ver simulacion
-                                 </a> 
+                                }else{
+                                ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=4" class="dropdown-item">
+                                    <i class="material-icons text-dark">reply</i> Deshacer Cambios
+                                 </a>
+                                 <?php 
+                                }
+                                ?>
                               </div>
-                            </div>                           
-                            <?php    
-                              }else{
-                              ?>
-                            <!--<a href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=4&admin=0' rel="tooltip" itle="Enviar Solicitud" class="btn btn-warning">
-                              <i class="material-icons">send</i>
-                            </a>-->  
-                            <a href='<?=$urlRegister;?>?cod=<?=$codigo;?>' rel="tooltip" class="btn btn-info">
-                              <i class="material-icons">list</i>
-                            </a>
-                            <a href='<?=$urlEdit;?>&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonEdit;?>">
-                              <i class="material-icons"><?=$iconEdit;?></i>
-                            </a>
-                            <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')">
-                              <i class="material-icons"><?=$iconDelete;?></i>
-                            </button>
-                              <?php  
-                              }
-                            ?>
+                             </div>                           
                           </td>
                         </tr>
 <?php
@@ -128,7 +120,7 @@ $stmt->bindColumn('estado', $estado);
                 </div>
               </div>
               <div class="card-footer fixed-bottom">
-                <a href="#" onclick="javascript:window.open('<?=$urlRegister2;?>')" class="<?=$buttonNormal;?>">Nueva Simulacion</a>
+                <a href="<?=$urlList2?>" class="btn btn-info"><i class="material-icons">refresh</i> Refrescar</a>
               </div>      
             </div>
           </div>  

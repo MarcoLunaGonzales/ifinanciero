@@ -125,11 +125,16 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
                 </li>
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listPlantillasCostos">
-                    <span class="sidebar-mini"> PTC </span>
+                    <span class="sidebar-mini"> PT </span>
                     <span class="sidebar-normal"> Plantillas de Costo </span>
                   </a>
                 </li>
-
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listPlantillasCostosAdmin">
+                    <span class="sidebar-mini"> GPT </span>
+                    <span class="sidebar-normal"> Gesti&oacute;n de Plantillas de Costo </span>
+                  </a>
+                </li>
               </ul>
             </div>
           </li>
@@ -184,6 +189,18 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
                   <a class="nav-link" href="?opcion=listComprobantesRegistrados">
                     <span class="sidebar-mini"> A </span>
                     <span class="sidebar-normal"> Aprobaciones de comprobantes </span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listSimulacionesCostos">
+                    <span class="sidebar-mini"> SC </span>
+                    <span class="sidebar-normal"> Simulaciones de Costos</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listSimulacionesCostosAdmin">
+                    <span class="sidebar-mini"> AS </span>
+                    <span class="sidebar-normal"> Gesti&oacute;n de Simulaciones</span>
                   </a>
                 </li>                 
               </ul>

@@ -103,6 +103,12 @@
 		if ($_GET['opcion']=='listPlantillasCostos') {
 			require_once('plantillas_costos/list.php');
 		}
+		if ($_GET['opcion']=='deletePlantillaCosto') {
+			require_once('plantillas_costos/saveDelete.php');
+		}
+		if ($_GET['opcion']=='listPlantillasCostosAdmin') {
+			require_once('plantillas_costos/listAdmin.php');
+		}
         
         //SIMULACIONES DE COSTO
 		if ($_GET['opcion']=='listSimulacionesCostos') {
@@ -110,6 +116,12 @@
 		}
 		if ($_GET['opcion']=='listSimulacionesCostosAdmin') {
 			require_once('simulaciones_costos/listAdmin.php');
+		}
+		if ($_GET['opcion']=='editSimulacion') {
+			require_once('simulaciones_costos/editSimulacion.php');
+		}
+		if ($_GET['opcion']=='deleteSimulacion') {
+			require_once('simulaciones_costos/saveDelete.php');
 		}
 
         //MES EN CURSO

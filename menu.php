@@ -204,6 +204,12 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
                     <span class="sidebar-mini"> SC </span>
                     <span class="sidebar-normal"> Simulaciones de Costos</span>
                   </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listSimulacionesCostosAdmin">
+                    <span class="sidebar-mini"> AS </span>
+                    <span class="sidebar-normal"> Administracion de Simulaciones</span>
+                  </a>
                 </li>                 
               </ul>
             </div>

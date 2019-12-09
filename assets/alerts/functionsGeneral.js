@@ -779,10 +779,13 @@ function guardarPlantillaCosto(){
   var abrev=$("#abreviatura").val();
   var unidad=$("#unidad").val();
   var area=$("#area").val();
-  if(nombre==""||abrev==""||!(unidad>0)||!(area>0)){
+  var utilidadLocal=$("#utilidad_minibnorca").val();
+  var utilidadExterna=$("#utilidad_minfuera").val();
+  var area=$("#area").val();
+  if(utilidadLocal==""||utilidadExterna==""||nombre==""||abrev==""||!(unidad>0)||!(area>0)){
    $("#mensaje").html("<center><p class='text-danger'>Todos los campos son requeridos.</p></center>");
   }else{
-     var parametros={"nombre":nombre,"abrev":abrev,"unidad":unidad,"area":area};
+     var parametros={"nombre":nombre,"abrev":abrev,"unidad":unidad,"area":area,"utilidad_local":utilidadLocal,"utilidad_externo":utilidadExterna};
      $.ajax({
         type: "GET",
         dataType: 'html',
@@ -1315,11 +1318,17 @@ function alertDatosTabla(){
 //funciones simulaciones
 function guardarSimulacionCosto(){
   var nombre=$("#nombre").val();
+  var precio=$("#precio_venta").val();
   var plantilla_costo=$("#plantilla_costo").val();
+  if( $("#ibnorca_check").is(':checked') ) {
+      var ibnorca=1;
+  }else{
+      var ibnorca=2;
+  }
   if(nombre==""||!(plantilla_costo>0)){
    $("#mensaje").html("<center><p class='text-danger'>Todos los campos son requeridos.</p></center>");
   }else{
-     var parametros={"nombre":nombre,"plantilla_costo":plantilla_costo};
+     var parametros={"nombre":nombre,"plantilla_costo":plantilla_costo,"precio":precio,"ibnorca":ibnorca};
      $.ajax({
         type: "GET",
         dataType: 'html',
@@ -1335,13 +1344,23 @@ function guardarSimulacionCosto(){
     });
   }
 }
-function cargarPlantillaSimulacion(mes){
+function cargarPlantillaSimulacion(mes,ibnorca){
   var plantilla_costo=$("#plantilla_costo").val();
+  var precio=$("#precio_venta").val();
   if(!(plantilla_costo>0)){
    $("#mensaje").html("<center><p class='text-danger'>Seleccione una plantilla.</p></center>");
   }else{
+    if(precio==null){
+       $("#mensaje").html("<center><p class='text-danger'>No hay registros de precios.</p></center>");
+    }else{
+    var alumnos=$("#alumnos_plan").val();
+    var alumnosfuera=$("#alumnos_plan_fuera").val();
+    if( $("#alumnos_auto").is(':checked') ) {
+        alumnos=0;
+        alumnosfuera=0;
+     }
     contenedor = document.getElementById('div_simulacion');
-     var parametros={"plantilla_costo":plantilla_costo,"mes":mes};
+     var parametros={"plantilla_costo":plantilla_costo,"mes":mes,"precio":precio,"alumnos":alumnos,"alumnos_fuera":alumnosfuera,"ibnorca":ibnorca};
      $.ajax({
         type: "GET",
         dataType: 'html',
@@ -1355,10 +1374,13 @@ function cargarPlantillaSimulacion(mes){
           contenedor.innerHTML = resp;
          $("#mensaje").html("<center><p class='text-success'>Proceso satisfactorio!</p></center>");
         }
-    });
+    });   
+    }
   }
 }
 function presioneBoton(){
+  $("#boton_simular").removeClass("d-none");
+  $("#check_simular").removeClass("d-none");
   $("#mensaje").html("<center><p class='text-muted'><small>Presione en SIMULAR PLANTILLA</small></p></center>");
 }
 
@@ -1374,11 +1396,29 @@ function guardarSimulacion(valor){
       $('#msgError2').html("<p>Nueva Plantilla detectada!</p>");
       $('#modalGuardar').modal('show');
     }else{
-      if(valor=="enviar"){
-       enviarSimulacionAjax();
+      if($("#cantidad_alibnorca").val()!=$("#alumnos_plan").val()||$("#cantidad_alfuera").val()!=$("#alumnos_plan_fuera").val()){
+        $('#msgError2').html("<p>Nuevas cantidades de Alumnos detectados!</p>");
+        $('#modalGuardar').modal('show');
       }else{
-       guardarSimulacionAjax(0); 
-      }      
+        if($("#precio_venta").length){
+         if($("#cod_precioplantilla").val()!=$("#precio_venta").val()){
+           $('#msgError2').html("<p>Nuevo previo de venta seleccionado!</p>");
+           $('#modalGuardar').modal('show');
+         }else{
+            if(valor=="enviar"){
+            enviarSimulacionAjax();
+           }else{
+            guardarSimulacionAjax(0); 
+           } 
+         }         
+        }else{
+           if(valor=="enviar"){
+            enviarSimulacionAjax();
+           }else{
+            guardarSimulacionAjax(0); 
+           } 
+        }
+      }           
     }
   }
 }
@@ -1387,10 +1427,17 @@ function guardarSimulacionAjax(valor){
   var nombre=$("#nombre").val();
   if(valor==0){
    var plantilla_costo=$("#cod_plantilla").val();
+   var cantidadIbnorca=$("#alumnos_plan").val();
+   var cantidadFuera=$("#alumnos_plan_fuera").val();
+   var precio=$("#cod_precioplantilla").val();
   }else{
-   var plantilla_costo=$("#plantilla_costo").val();  
+   var plantilla_costo=$("#plantilla_costo").val(); 
+   var cantidadIbnorca=$("#cantidad_alibnorca").val();
+   var cantidadFuera=$("#cantidad_alfuera").val();
+   var precio=$("#precio_venta").val(); 
   }
-  var parametros={"cod_plantilla":plantilla_costo,"nombre":nombre,"codigo":codigo};
+
+  var parametros={"cod_plantilla":plantilla_costo,"nombre":nombre,"codigo":codigo,"precio":precio,"alibnorca":cantidadIbnorca,"alfuera":cantidadFuera};
      $.ajax({
         type: "GET",
         dataType: 'html',
@@ -1408,7 +1455,8 @@ function guardarSimulacionAjax(valor){
 }
 function enviarSimulacionAjax(){
   var codigo=$("#cod_simulacion").val();
-  var parametros={"codigo":codigo};
+  var aprobado=$("#aprobado").val();
+  var parametros={"codigo":codigo,"aprobado":aprobado};
      $.ajax({
         type: "GET",
         dataType: 'html',
@@ -1580,4 +1628,61 @@ $(document).on("shown.bs.modal","#modalRetencion",function(){
               this.input.value = suggestion.label;
            }
           });
+ }
+
+ //funciones plantillas_costos 
+
+ function agregarPrecioPlantilla(codigo){
+  var precioLocal=$("#precio_venta_ibnorca").val();
+  var precioExterno=$("#precio_venta_fuera").val();
+  if(precioLocal==""||precioExterno==""){
+   alertaModal("Debe ingresar los precios","bg-warning","text-dark");
+  }else{
+    ajax=nuevoAjax();
+    ajax.open("GET","ajaxRegistrarPrecio.php?local="+precioLocal+"&externo="+precioExterno+"&codigo="+codigo,true);
+    ajax.onreadystatechange=function(){
+    if (ajax.readyState==4) {
+      var fi=$("#contenido_precio");
+      fi.html(ajax.responseText);
+      fi.bootstrapMaterialDesign();
+      $("#precio_venta_ibnorca").val("");
+      $("#precio_venta_fuera").val("");
+    }
+   }
+    ajax.send(null);
+  }
+ }
+ function removePrecioPlantilla(cod,codigo){
+  ajax=nuevoAjax();
+    ajax.open("GET","ajaxDeletePrecio.php?cod="+cod+"&codigo="+codigo,true);
+    ajax.onreadystatechange=function(){
+    if (ajax.readyState==4) {
+      var fi=$("#contenido_precio");
+      fi.html(ajax.responseText);
+      fi.bootstrapMaterialDesign();
+      $("#precio_venta_ibnorca").val("");
+      $("#precio_venta_fuera").val("");
+    }
+   }
+    ajax.send(null);
+ }
+
+ function listarPreciosPlantilla(codigo,label,ibnorca){
+  var url="";
+  if(label=="sin"){
+   url="ListComboPrecio.php";
+  }else{
+   url="../plantillas_costos/ajaxListaComboPrecio.php";
+  }
+  ajax=nuevoAjax();
+    ajax.open("GET",url+"?codigo="+codigo+"&ibnorca="+ibnorca,true);
+    ajax.onreadystatechange=function(){
+    if (ajax.readyState==4) {
+      var fi=$("#lista_precios");
+      fi.html(ajax.responseText);
+      fi.bootstrapMaterialDesign();
+       $('.selectpicker').selectpicker("refresh");
+    }
+   }
+    ajax.send(null);
  }
