@@ -74,7 +74,10 @@ function addCuentaContable(obj) {
       ajax.onreadystatechange=function(){
         if (ajax.readyState==4) {
           divDetalle.html(ajax.responseText);
-          divDetalle.bootstrapMaterialDesign();
+          divDetalle.bootstrapMaterialDesign();   
+          $('#nro_cuenta').val("");
+          $('#cuenta').val("");//
+          $('#padre').val("");
           $('.selectpicker').selectpicker("refresh");
           $('#myModal').modal('show');
           return false;
@@ -275,6 +278,15 @@ function minusCuentaContable(idF){
        $("#boton_fac"+nuevoId).attr("onclick","listFac('"+i+"')");
        $("#boton_fac"+nuevoId).attr("id","boton_fac"+i);
        $("#nfac"+nuevoId).attr("id","nfac"+i);
+
+       $("#mayor"+nuevoId).attr("onclick","mayorReporteComprobante('"+i+"')");
+       $("#mayor"+nuevoId).attr("id","mayor"+i);
+       $("#cambiar_cuenta"+nuevoId).attr("onclick","editarCuentaComprobante('"+i+"')");
+       $("#cambiar_cuenta"+nuevoId).attr("id","cambiar_cuenta"+i);
+       $("#distribucion"+nuevoId).attr("onclick","nuevaDistribucionPonerFila('"+i+"')");
+       $("#distribucion"+nuevoId).attr("id","distribucion"+i);
+       $("#boton_ret"+nuevoId).attr("onclick","listRetencion('"+i+"')");
+       $("#boton_ret"+nuevoId).attr("id","boton_ret"+i);
       }
      } 
      itemFacturas.splice((idF-1), 1);
@@ -1686,3 +1698,35 @@ $(document).on("shown.bs.modal","#modalRetencion",function(){
    }
     ajax.send(null);
  }
+
+ //////////////////////reporte mayores desde comprobante////////////
+function mayorReporteComprobante(fila){
+ if($("#cuenta"+fila).val()==""){
+   $("#msgError").html("<p>Ingrese una cuenta</p>");
+   $('#modalAlert').modal('show');
+ }else{
+  var cuenta=$("#cuenta"+fila).val();
+    var parametros={
+      "moneda":1,
+      "fecha_desde":null,
+      "fecha_hasta":null,
+      "glosa_len":1,
+      "unidad_costo":null,
+      "area_costo":null,
+      "cuenta_especifica":cuenta,
+      "cuenta":null,
+      "unidad":null
+    };
+     $.ajax({
+        type: "POST",
+        dataType: 'html',
+        url: "../reportes/reporteMayor.php",
+        data: parametros,
+        success:  function (resp) {
+         var newWindow = window.open("");
+         newWindow.document.write(resp);
+        }
+    });
+ }
+}
+ ///////////////////////////////////////////////////////////////////
