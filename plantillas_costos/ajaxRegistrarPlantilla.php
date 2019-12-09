@@ -26,9 +26,11 @@ if(isset($_GET['nombre'])){
   $abrev=$_GET['abrev'];
   $unidad=$_GET['unidad'];
   $area=$_GET['area'];
+  $utilidadLocal=$_GET['utilidad_local'];
+  $utilidadExterno=$_GET['utilidad_externo'];
   $codPlanCosto=obtenerCodigoPlanCosto();
   $dbh = new Conexion();
-  $sqlInsert="INSERT INTO plantillas_costo (codigo, nombre, abreviatura, cod_unidadorganizacional, cod_area) VALUES ('".$codPlanCosto."','".$nombre."','".$abrev."', '".$unidad."', '".$area."')";
+  $sqlInsert="INSERT INTO plantillas_costo (codigo, nombre, abreviatura, cod_unidadorganizacional, cod_area,utilidad_minimalocal,utilidad_minimaexterno) VALUES ('".$codPlanCosto."','".$nombre."','".$abrev."', '".$unidad."', '".$area."','".$utilidadLocal."','".$utilidadExterno."')";
   $stmtInsert = $dbh->prepare($sqlInsert);
   $stmtInsert->execute();
 

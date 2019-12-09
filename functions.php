@@ -1033,9 +1033,10 @@ function obtenerMontoPorCuenta($numero,$unidad,$area,$fecha){
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $precioLocalX=$row['precio_ventalocal'];
         $precioExternoX=$row['precio_ventaexterno'];
-        $alumnosX=$row['cantidad_alumnos'];
+        $alumnosX=$row['cantidad_alumnoslocal'];
+        $alumnosExternoX=$row['cantidad_alumnosexterno'];
      }
-     return array($precioLocalX,$precioExternoX,$alumnosX);
+     return array($precioLocalX,$precioExternoX,$alumnosX,$alumnosExternoX);
    }  
 
    //FUNCION DE SIMULACION OBTENER VALORES TOTALES TIPO FIJO O VARIABLE
@@ -1162,5 +1163,6 @@ function porcentRetencionDetalle($codigo){
    }
    return($nombreX);
 }
+
 ?>
 

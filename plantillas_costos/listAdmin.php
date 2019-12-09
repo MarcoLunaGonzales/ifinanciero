@@ -30,14 +30,14 @@ $stmt->bindColumn('estado_plantilla', $estadoPlantilla);
         <div class="row">
             <div class="col-md-12">
               <div class="card">
-                <div class="card-header <?=$colorCard;?> card-header-icon">
+                <div class="card-header card-header-info card-header-icon">
                   <div class="card-icon">
                     <i class="material-icons"><?=$iconCard;?></i>
                   </div>
-                  <h4 class="card-title"><?=$moduleNamePlural?></h4>
+                  <h4 class="card-title">Gesti&oacute;n  de <?=$moduleNamePlural?></h4>
                 </div>
                 <div class="card-body">
-                  <div class="table-responsive" id="data_comprobantes">
+                  <div class="" id="data_comprobantes">
                     <table class="table table-condensed" id="tablePaginator">
                       <thead>
                         <tr>
@@ -48,7 +48,7 @@ $stmt->bindColumn('estado_plantilla', $estadoPlantilla);
                           <th>Area</th>
                           <th>Utilidad Ibnorca</th>
                           <th>Utilidad Fuera Ibnorca</th>
-                          <th>Estado</th>
+                          <!--<th>Estado</th>-->
                           <th class="text-right">Actions</th>
                         </tr>
                       </thead>
@@ -58,13 +58,13 @@ $stmt->bindColumn('estado_plantilla', $estadoPlantilla);
                       	while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                           switch ($codEstado) {
                             case 1:
-                             $textEstado="text-info";//$estadoIcon="how_to_vote";
+                              $nEst=1;$barEstado="progress-bar-default";$btnEstado="btn-default";$textEstado="text-info";
                             break;
                             case 2:
-                            $textEstado="text-danger";//$estadoIcon="thumb_down";
+                              $nEst=2;$barEstado="progress-bar-danger";$btnEstado="btn-danger";$textEstado="text-danger";
                             break;
                             case 3:
-                              $textEstado="text-warning";//$estadoIcon="thumb_up";
+                              $nEst=3;$barEstado="progress-bar-success";$btnEstado="btn-success";$textEstado="text-success";
                             break;
                           }
 ?>
@@ -76,17 +76,33 @@ $stmt->bindColumn('estado_plantilla', $estadoPlantilla);
                           <td><?=$area;?></td>
                           <td><?=$utilidadLocal;?> %</td> 
                           <td><?=$utilidadExterno;?> %</td>
-                           <td class="<?=$textEstado?>"><?=$estadoPlantilla;?></td>
+                           <!--<td class="<?=$textEstado?>"><?=$estadoPlantilla;?></td>-->
                           <td class="td-actions text-right">
-                            <a href='<?=$urlReporte;?>?cod=<?=$codigo;?>' rel="tooltip" class="btn btn-info">
-                              <i class="material-icons" title="Registrar Cuentas">list</i>
-                            </a>
-                            <a href='<?=$urlRegister;?>?cod=<?=$codigo;?>' rel="tooltip" class="<?=$buttonEdit;?>">
-                              <i class="material-icons"><?=$iconEdit;?></i>
-                            </a>
-                            <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')">
-                              <i class="material-icons"><?=$iconDelete;?></i>
-                            </button>
+                            <div class="btn-group dropdown">
+                              <button type="button" class="btn <?=$btnEstado?> dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="material-icons">list</i> <?=$estadoPlantilla;?>
+                              </button>
+                              <div class="dropdown-menu">
+                                <!--<a href="<?=$urlVer;?>?cod=<?=$codigo;?>&admin=0" class="dropdown-item">
+                                    <i class="material-icons text-info">bar_chart</i> Ver simulacion
+                                 </a>-->     
+                                <?php 
+                                if($codEstado==1){
+                                 ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=3" class="dropdown-item">
+                                    <i class="material-icons text-success">offline_pin</i> Aprobar Plantilla
+                                 </a>
+                                 <a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=2" class="dropdown-item">
+                                    <i class="material-icons text-danger">clear</i> Anular Plantilla
+                                 </a><?php 
+                                }else{
+                                ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1" class="dropdown-item">
+                                    <i class="material-icons text-dark">reply</i> Deshacer Cambios
+                                 </a>
+                                 <?php 
+                                }
+                                ?>
+                              </div>
+                             </div>
                           </td>
                         </tr>
 <?php

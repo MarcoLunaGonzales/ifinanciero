@@ -22,7 +22,10 @@ $fechaHoraActual=date("Y-m-d H:i:s");
 
 $codPlantillaCosto=$_POST["cod_plantilla"];
 $nombrePlan=$_POST['nombre'];
-$sqlUpdate="UPDATE plantillas_costo SET  nombre='$nombrePlan' where codigo=$codPlantillaCosto";
+$abrevPlan=$_POST['abreviatura'];
+$utilidadIbrnocaPlan=$_POST['utilidad_ibnorca'];
+$utilidadFueraPlan=$_POST['utilidad_fuera'];
+$sqlUpdate="UPDATE plantillas_costo SET  nombre='$nombrePlan',abreviatura='$abrevPlan',utilidad_minimalocal='$utilidadIbrnocaPlan',utilidad_minimaexterno='$utilidadFueraPlan' where codigo=$codPlantillaCosto";
 echo $sqlUpdate;
 $stmtUpdate = $dbh->prepare($sqlUpdate);
 $flagSuccess=$stmtUpdate->execute();

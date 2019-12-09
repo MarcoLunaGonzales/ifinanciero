@@ -50,7 +50,7 @@ $dbh = new Conexion();
                        <label class="col-sm-3 col-form-label">Nombre de plantilla:</label>
                        <div class="col-sm-9">
                         <div class="form-group">
-                          <input class="form-control" type="text" name="nombre" id="nombre" autofocus/>
+                          <input class="form-control" type="text" name="nombre" id="nombre" autocomplete="off" autofocus/>
                         </div>
                         </div>
                       </div>
@@ -58,10 +58,34 @@ $dbh = new Conexion();
                        <label class="col-sm-3 col-form-label">Abreviatura :</label>
                        <div class="col-sm-9">
                         <div class="form-group">
-                          <input class="form-control" type="text" name="abreviatura" id="abreviatura"/>
+                          <input class="form-control" type="text" name="abreviatura" id="abreviatura" autocomplete="off"/>
                         </div>
                         </div>
                       </div>
+                      <div class="row">
+                       <label class="col-sm-3 col-form-label">Utilidad Ibnorca :</label>
+                       <div class="col-sm-9">
+                        <div class="row">
+                          <div class="col-sm-4">
+                            <div class="form-group has-success">
+                                <input class="form-control" type="number" step="0.001" name="utilidad_minibnorca" id="utilidad_minibnorca"/>
+                                <span class="form-control-feedback">%</span>
+                              </div>
+                          </div>
+                          <div class="col-sm-8">
+                            <div class="row">
+                            <label class="col-sm-7 col-form-label">Utilidad Fuera Ibnorca :</label>
+                            <div class="col-sm-5">
+                              <div class="form-group has-success">
+                                <input class="form-control" type="number" step="0.001" name="utilidad_minfuera" id="utilidad_minfuera"/>
+                                <span class="form-control-feedback">%</span>
+                              </div>
+                            </div>
+                           </div><!--row--> 
+                          </div> 
+                        </div>
+                       </div>
+                      </div><!--row-->
                       <div class="row">
                        <label class="col-sm-3 col-form-label">Unidad :</label>
                        <div class="col-sm-9">
