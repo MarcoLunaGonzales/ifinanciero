@@ -8,7 +8,9 @@ session_start();
 $user=$_POST["user"];
 $password=$_POST["password"];
 
-$sql="SELECT p.codigo, p.nombre, p.cod_area, p.cod_unidad, pd.perfil, pd.usuario_pon from personal2 p, personal_datosadicionales pd where p.codigo=pd.cod_personal and pd.usuario='$user' and pd.contrasena='$password'";
+$sql="SELECT p.codigo, p.nombre, p.cod_area, p.cod_unidad, pd.perfil, pd.usuario_pon 
+			from personal2 p, personal_datosadicionales pd 
+			where p.codigo=pd.cod_personal and pd.usuario='$user' and pd.contrasena='$password'";
 //echo $sql;
 $stmt = $dbh->prepare($sql);
 $stmt->execute();
@@ -69,7 +71,7 @@ while ($rowDetalle = $stmt->fetch(PDO::FETCH_BOUND)) {
 	$_SESSION['globalPerfil']=$perfil;
 
 
-	if($codigo==90){
+	if($codigo==90 || $codigo==89 || $codigo==227){
 		$_SESSION['globalAdmin']=1;			
 	}else{
 		$_SESSION['globalAdmin']=0;	
