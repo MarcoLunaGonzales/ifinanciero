@@ -251,6 +251,10 @@
 			//$codigo=$_GET['codigoactivo'];
 			require_once('activosFijos/saveTransferActivosfijos.php');
 		}
+		if ($_GET['opcion']=='saveReevaluoAF') {
+			//$codigo=$_GET['codigoactivo'];
+			require_once('activosFijos/saveReevaluoAF.php');
+		}
 
 		if ($_GET['opcion']=='activofijoAccesorios') {
 			$codigo=$_GET['codigo'];
@@ -260,6 +264,11 @@
 			$codigo=$_GET['codigo'];
 			require_once('activosFijos/activofijoEventos.php');
 		}
+		if ($_GET['opcion']=='activofijoRevaluar') {
+			$codigo=$_GET['codigo'];
+			require_once('activosFijos/activofijoRevaluar.php');
+		}
+		
 
 		//ASIGNACIONES DE ACTIVOS FIJOS
 		if ($_GET['opcion']=='asignacionesLista') {
