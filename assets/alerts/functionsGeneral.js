@@ -1730,3 +1730,72 @@ function mayorReporteComprobante(fila){
  }
 }
  ///////////////////////////////////////////////////////////////////
+
+
+
+function agregaformPAD(datos){
+  //console.log("datos: "+datos);
+  var d=datos.split('-');
+  document.getElementById("codigo_personal").value=d[0];
+  document.getElementById("codigo_distribucion").value=d[1];
+}
+function agregaformPADE(datos){
+  //console.log("datos: "+datos);
+  var d=datos.split('-');
+  document.getElementById("codigo_personalE").value=d[0];
+  document.getElementById("codigo_distribucionE").value=d[1];
+
+  document.getElementById("cod_areaE").value=d[2];
+  document.getElementById("porcentajeE").value=d[3];
+}
+function agregaformPADB(datos){
+  //console.log("datos: "+datos);
+  var d=datos.split('-');
+  document.getElementById("codigo_personalB").value=d[0];
+  document.getElementById("codigo_distribucionB").value=d[1];
+}
+
+function RegistrarDistribucion(cod_personal,cod_area,porcentaje){
+  $.ajax({
+    type:"POST",
+    data:"cod_personal="+cod_personal+"&cod_area="+cod_area+"&cod_estadoreferencial=1&porcentaje="+porcentaje,
+    url:"personal/savePersonalAreaDistribucion.php",
+    success:function(r){
+      if(r==1){
+        //$('#tabla1').load('index.php');
+        // alertify.success("agregado");
+        alerts.showSwal('success-message','index.php?opcion=PersonalAreaDistribucionForm&codigo='+cod_personal);
+      }
+    }
+  });
+}
+
+
+function EditarDistribucion(cod_personal,cod_distribucion,cod_area,porcentaje){
+  $.ajax({
+    type:"POST",
+    data:"cod_personal="+cod_distribucion+"&cod_area="+cod_area+"&cod_estadoreferencial=2&porcentaje="+porcentaje,
+    url:"personal/savePersonalAreaDistribucion.php",
+    success:function(r){
+      if(r==1){
+        //$('#tabla1').load('index.php');
+        // alertify.success("agregado");
+        alerts.showSwal('success-message','index.php?opcion=PersonalAreaDistribucionForm&codigo='+cod_personal);
+      }
+    }
+  });
+}
+function EliminarDistribucion(cod_personal,cod_distribucion){
+  $.ajax({
+    type:"POST",
+    data:"cod_personal="+cod_distribucion+"&cod_area=0&cod_estadoreferencial=3&porcentaje=0",
+    url:"personal/savePersonalAreaDistribucion.php",
+    success:function(r){
+      if(r==1){
+        //$('#tabla1').load('index.php');
+        // alertify.success("agregado");
+        alerts.showSwal('success-message','index.php?opcion=PersonalAreaDistribucionForm&codigo='+cod_personal);    
+      }
+    }
+  });
+}

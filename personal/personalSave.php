@@ -7,12 +7,14 @@ require_once 'rrhh/configModule.php';
 ini_set('display_errors',1);
 
 $dbh = new Conexion();
+$dbhS = new Conexion();
 
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//para mostrar errores en la ejecucion
 
 try {
     $codigo = $_POST["codigo"];
     $ci = $_POST["ci"];
+    $ci_aux=$ci;
     $ci_lugar_emision = $_POST["ci_lugar_emision"];
     $fecha_nacimiento = $_POST["fecha_nacimiento"];
     $cod_cargo = $_POST["cod_cargo"];
@@ -45,8 +47,30 @@ try {
     $modified_by = 1;//$_POST["modified_by"];
     $cod_estadoreferencial=1;
     
+    $porcentaje=100;
     if ($_POST["codigo"] == 0){
-        $stmt = $dbh->prepare("INSERT INTO personal_datos(ci,ci_lugar_emision,fecha_nacimiento,cod_cargo,cod_unidadorganizacional,cod_area,
+
+        $stmtPer = $dbhS->prepare("SELECT codigo from personal where ci=$ci_aux");
+        $stmtPer->execute();
+        $stmtPer->bindColumn('codigo', $codigoP);
+        while ($row = $stmtPer->fetch(PDO::FETCH_BOUND)) {
+
+        }    
+
+        $stmtDistribucion = $dbh->prepare("INSERT INTO personal_area_distribucion(cod_personal,cod_area,porcentaje,cod_estadoreferencial,created_by,modified_by) 
+        values (:cod_personal,:cod_area,:porcentaje,:cod_estadoreferencial,:created_by,:modified_by)");
+        //Bind
+        $stmtDistribucion->bindParam(':cod_personal', $codigoP);
+        $stmtDistribucion->bindParam(':cod_area', $cod_area);    
+        $stmtDistribucion->bindParam(':porcentaje', $porcentaje);
+        $stmtDistribucion->bindParam(':created_by', $created_by);
+        $stmtDistribucion->bindParam(':modified_by', $modified_by);
+        $stmtDistribucion->bindParam(':cod_estadoreferencial', $cod_estadoreferencial);
+        $stmtDistribucion->execute(); 
+
+
+
+        $stmt = $dbh->prepare("INSERT INTO personal(ci,ci_lugar_emision,fecha_nacimiento,cod_cargo,cod_unidadorganizacional,cod_area,
         jubilado,cod_genero,cod_tipopersonal,haber_basico,paterno,materno,apellido_casada,primer_nombre,otros_nombres,nua_cua_asignado,
         direccion,cod_tipoafp,nro_seguro,cod_estadopersonal,created_by,modified_by,telefono,celular,email,persona_contacto, cod_tipoaporteafp,cod_estadoreferencial) 
         values (:ci, :ci_lugar_emision, :fecha_nacimiento, 
@@ -87,7 +111,8 @@ try {
         $stmt->bindParam(':cod_estadoreferencial', $cod_estadoreferencial);
         
         
-        $flagSuccess=$stmt->execute();
+        $flagSuccess=$stmt->execute();    
+
         $tabla_id = $dbh->lastInsertId();
 
         if ($flagSuccess){
@@ -111,7 +136,7 @@ try {
         //$stmt->debugDumpParams();
     } else {//update
 
-        $stmt = $dbh->prepare("UPDATE personal_datos set ci=:ci,ci_lugar_emision=:ci_lugar_emision,fecha_nacimiento=:fecha_nacimiento,
+        $stmt = $dbh->prepare("UPDATE personal set ci=:ci,ci_lugar_emision=:ci_lugar_emision,fecha_nacimiento=:fecha_nacimiento,
         cod_cargo=:cod_cargo,cod_unidadorganizacional=:cod_unidadorganizacional,cod_area=:cod_area,jubilado=:jubilado,
         cod_genero=:cod_genero,cod_tipopersonal=:cod_tipopersonal,haber_basico=:haber_basico,paterno=:paterno,
         materno=:materno,apellido_casada=:apellido_casada,primer_nombre=:primer_nombre,otros_nombres=:otros_nombres,

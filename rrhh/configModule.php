@@ -83,6 +83,7 @@ $urlListPersonal="?opcion=personalLista";
 $urlSavePersonal="?opcion=personalSave";
 $urlFormPersonal="index.php?opcion=personalForm";
 $urlDeletePersonal="index.php?opcion=deletepersonal";
+$urlFormPersonalAreaDistribucion="index.php?opcion=PersonalAreaDistribucionForm";
 
 
 //tipos_afps

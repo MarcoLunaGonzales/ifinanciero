@@ -19,11 +19,19 @@ $statementAF = $dbh->query($query2);
 //unidad
 $queryUO = "SELECT * from unidades_organizacionales order by 2";
 $statementUO = $dbh->query($queryUO);
-
 //unidad
 $queryAREA = "SELECT * from areas order by 2";
 $statementArea = $dbh->query($queryAREA);
 
+//IMAGEN
+$stmtIMG = $dbh->prepare("SELECT * FROM activosfijosimagen where codigo =:codigo");
+//Ejecutamos;
+$stmtIMG->bindParam(':codigo',$codigo);
+$stmtIMG->execute();
+$resultIMG = $stmtIMG->fetch();
+$imagen = $resultIMG['imagen'];
+//$archivo = __DIR__.DIRECTORY_SEPARATOR."imagenes".DIRECTORY_SEPARATOR.$imagen;//sale mal
+$archivo = "activosfijos/imagenes/".$imagen;//sale mal
 
 $responsable='';
 ?>
@@ -48,6 +56,11 @@ $responsable='';
                               <tr>
                                 <th>CódigoAF</th>
                                 <th>Nombre</th>
+                                <th>QR</th>
+                                <th>Imagen</th>
+
+
+
                                 <th>Fecha Revaluo</th>
                                 <th>V. Neto</th>
                                 <th>V. Residual</th>
@@ -70,12 +83,30 @@ $responsable='';
                              <tr>
                                 <td><?=$codigo;?></td>
                                 <td><?=$activo;?></td>
-                                  <td><?=$fecha_reevaluo;?></td>
-                                  <td><?=$valorinicial;?></td>                       
-                                  <td><?=$valorresidual;?></td>
-                                  <td><?=$vida_util;?></td>
-                                  <td><?=$vidautilmeses_restante;?></td>
-                                  
+                                <td>
+                                  <?php
+                                  require 'assets/phpqrcode/qrlib.php';
+                                  $dir = 'qr_temp/';
+                                  if(!file_exists($dir)){
+                                      mkdir ($dir);}
+                                  $fileName = $dir.'test.png';
+                                  $tamanio = 4; //tamaño de imagen que se creará
+                                  $level = 'Q'; //tipo de precicion Baja L, mediana M, alta Q, maxima H
+                                  $frameSize = 1; //marco de qr
+                                  $contenido = $codigo;
+                                  QRcode::png($contenido, $fileName, $level,$tamanio,$frameSize);
+                                  echo '<img src="'.$fileName.'"/>';
+                                  ?>
+                                </td>
+                                <td class="text-right small">
+                                  <img src="<?=$archivo;?>" alt="..." style="width:200px;">
+                                </td>
+                                <td><?=$fecha_reevaluo;?></td>
+                                <td><?=$valorinicial;?></td>                       
+                                <td><?=$valorresidual;?></td>
+                                <td><?=$vida_util;?></td>
+                                <td><?=$vidautilmeses_restante;?></td>
+                                
                               </tr>
                           
                           </tbody>
@@ -108,7 +139,7 @@ $responsable='';
                       <label class="col-sm-2 col-form-label">Monto Del Reevaluo</label>
                       <div class="col-sm-7">
                         <div class="form-group">
-                          <input type="text" style="padding-left:20px" class="form-control" name="monto_reevaluo" id="monto_reevaluo" required="true"  />
+                          <input type="number" style="padding-left:20px" class="form-control" name="monto_reevaluo" id="monto_reevaluo" required="true"  />
                             
 
                         </div>
@@ -118,7 +149,7 @@ $responsable='';
                       <label class="col-sm-2 col-form-label">Cantidad De Meses Restante</label>
                       <div class="col-sm-7">
                         <div class="form-group">
-                          <input type="text"  style="padding-left:20px" class="form-control" name="meses_restantes" id="meses_restantes" required="true"/>
+                          <input type="number"  style="padding-left:20px" class="form-control" name="meses_restantes" id="meses_restantes" required="true"/>
                             
                         </div>
                       </div>

@@ -15,7 +15,7 @@ $dbh = new Conexion();
 //por is es edit
 if ($codigo > 0){
     $codigo=$codigo;
-    $stmt = $dbh->prepare("SELECT * FROM personal_datos where codigo =:codigo");
+    $stmt = $dbh->prepare("SELECT * FROM personal where codigo =:codigo");
     //Ejecutamos;
     $stmt->bindParam(':codigo',$codigo);
     $stmt->execute();
@@ -159,7 +159,7 @@ $statementestados_personal = $dbh->query($queryestados_personal);
     <label class="col-sm-2 col-form-label">Ci</label>
     <div class="col-sm-4">
         <div class="form-group">
-            <input class="form-control" type="text" name="ci" id="ci" required="true" value="<?=$ci;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+            <input class="form-control" type="number" name="ci" id="ci" required="true" value="<?=$ci;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
         </div>
     </div>
 
@@ -242,7 +242,7 @@ $statementestados_personal = $dbh->query($queryestados_personal);
     <div class="form-group">
     <select name="cod_genero"  class="selectpicker " data-style="btn btn-info">
 					<?php while ($row = $statementTgenero->fetch()) { ?>
-						<option <?php if($cod_genero == $row["codigo"]) echo "selected"; ?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+						<option  value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
 					<?php } ?>
 					</select>
         
@@ -339,7 +339,7 @@ $statementestados_personal = $dbh->query($queryestados_personal);
     <div class="form-group">
         <select name="cod_tipoaporteafp" id="cod_tipoaporteafp"  class="selectpicker " data-style="btn btn-info">
 					<?php while ($row = $statementtipos_aporteafp->fetch()) { ?>
-						<option <?php if($cod_tipoaporteafp == $row["codigo"]) echo "selected"; ?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+						<option  value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
 					<?php } ?>
 					</select>
     </div>

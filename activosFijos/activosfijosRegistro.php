@@ -405,6 +405,19 @@ if ($codigo > 0){
                     </div><!--fin numero factura -->
 
                     <div class="row">
+                        <label class="col-sm-2 col-form-label">Nombre Proyecto Financiación</label>
+                        <div class="col-sm-4">
+                            <div class="form-group">                            
+                                <select name="cod_proy_finan" id="cod_proy_finan" class="selectpicker" data-style="btn btn-primary" >                                    
+                                    <?php while ($row = $statementProyFinanciacion->fetch()){ ?>
+                                        <option value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
                         <div class="col-md-12">
                             <div class="fileinput fileinput-new text-center" data-provides="fileinput">
                                 <div class="fileinput-new img-raised">
@@ -429,27 +442,9 @@ if ($codigo > 0){
                     <a href="?opcion=activosfijosLista" class="<?=$buttonCancel;?>">Cancelar</a>
                 </div>
 			</div>
-            <div class="card">
-                <div class="card-header <?=$colorCardDetail;?> card-header-text">
-                    <div class="card-text">
-                      <h4 class="card-title">Proyecto Financiación</h4>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <label class="col-sm-2 col-form-label">Nombre Proy</label>
-                        <div class="col-sm-4">
-                            <div class="form-group">                            
-                                <select name="cod_proy_finan" id="cod_proy_finan" class="selectpicker" data-style="btn btn-primary" >                                    
-                                    <?php while ($row = $statementProyFinanciacion->fetch()){ ?>
-                                        <option value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
-                                    <?php } ?>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
+
+
 		  </form>
 		</div>
 	
@@ -475,29 +470,7 @@ if ($codigo > 0){
             $("#cod_tiposbienes_containers").empty();
             $('#cod_tiposbienes_containers').append(data);
             $('.selectpicker').selectpicker();
-            /*
-            //remover child cod_tiposbienes_containers
-            $("#cod_tiposbienes_containers").empty();
-            //$('#cod_tiposbienes_containers').append('<select name="cod_tiposbienes" id="cod_tiposbienes" class="selectpicker" data-style="btn btn-primary"></select>');
-            $('#cod_tiposbienes_containers').append('<select name="cod_tiposbienes" id="cod_tiposbienes"></select>');
             
-            //cod_tiposbienes
-            var select = $('#cod_tiposbienes').empty();
-            //$('#cod_tiposbienes').removeAttr("data-style");
-            //$('#cod_tiposbienes').removeClass("selectpicker");
-            
-            //class="selectpicker " data-style="select-with-transition"
-            //var data = $.parseJSON(data);
-            $.each(data, function (i, item) {
-                //console.log(item.tipo_bien);
-                select.append('<option value="' + item.codigo + '">' + item.tipo_bien + '</option>');
-            });
-            //agregar el atributo
-            select.attr("data-style","btn btn-primary");
-            select.addClass("selectpicker");
-
-            //id="cod_tiposbienes" class="selectpicker" data-style="btn btn-primary"
-            */
         });
 
         //pero ademas obtener el valor, vida util meses

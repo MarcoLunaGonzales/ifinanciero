@@ -18,7 +18,7 @@ $stmt = $dbh->prepare(" SELECT *, (select c.nombre from cargos c where c.codigo=
  (select taafp.nombre from tipos_aporteafp taafp where taafp.codigo=cod_tipoaporteafp) as xtipos_aporteafp,
  (select tp.nombre from tipos_personal tp where tp.codigo=cod_tipopersonal)as xcod_tipopersonal
  
- from personal_datos
+ from personal
  where cod_estadoreferencial=1
  ");
 //ejecutamos
@@ -93,7 +93,7 @@ $stmt->bindColumn('xtipos_aporteafp', $xtipos_aporteafp);
         
         <th>Afp</th>
         <th>Estado</th>
-        
+        <th></th>
         <th></th>
     </tr>
 </thead>
@@ -113,6 +113,17 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { ?>
         <td><?=$primer_nombre;?></td>
         <td><?=$xtipoafp;?></td>
         <td><?=$xestado;?></td>
+        <td class="td-actions text-right">
+        <?php
+          if($globalAdmin==1){
+        ?>
+          <a href='<?=$urlFormPersonalAreaDistribucion;?>&codigo=<?=$codigo;?>' rel="tooltip" class="btn btn-warning">            
+            <i class="material-icons" title="Area-Distribución">flare</i>
+          </a>          
+          <?php
+            }
+          ?>        
+        </td>
         
         <td class="td-actions text-right">
         <?php

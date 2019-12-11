@@ -435,6 +435,10 @@
 			$codigo=$_GET['codigo'];
 			require_once('personal/deletetipospersonal.php');
 		}
+		if ($_GET['opcion']=='PersonalAreaDistribucionForm') {
+			$codigo=$_GET['codigo'];
+			require_once('personal/PersonalAreaDistribucionForm.php');
+		}
 
 		//estados personal
 		if ($_GET['opcion']=='estadospersonalLista') {

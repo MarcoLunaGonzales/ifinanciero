@@ -42,6 +42,7 @@ try {
     //var_dump($_POST);
     $cod_responsables_responsable=0;
     $cod_responsables_autorizadopor=0;
+    $reevaluo=0;
 
     if(isset($_POST["cod_responsables_responsable"])){
         $cod_responsables_responsable=$_POST["cod_responsables_responsable"];
@@ -74,11 +75,11 @@ try {
         $stmt = $dbh->prepare("INSERT INTO activosfijos(codigoactivo,tipoalta,fechalta,indiceufv,tipocambio,moneda,valorinicial,
         depreciacionacumulada,valorresidual,cod_depreciaciones,cod_tiposbienes,vidautilmeses, vidautilmeses_restante,estadobien,otrodato,cod_ubicaciones,
         cod_empresa,activo,cod_responsables_responsable,cod_responsables_autorizadopor, cod_af_proveedores, numerofactura,
-        bandera_depreciar, cod_unidadorganizacional,cod_area, cod_estadoactivofijo,cod_proy_financiacion) values
+        bandera_depreciar, cod_unidadorganizacional,cod_area, cod_estadoactivofijo,cod_proy_financiacion,reevaluo) values
         (:codigoactivo, :tipoalta, :fechalta, :indiceufv, :tipocambio, :moneda, :valorinicial, :depreciacionacumulada, :valorresidual,
         :cod_depreciaciones, :cod_tiposbienes, :vidautilmeses, :vidautilmeses_restante, :estadobien, :otrodato, :cod_ubicaciones, :cod_empresa, :activo,
         :cod_responsables_responsable, :cod_responsables_autorizadopor, :cod_af_proveedores, :numerofactura,
-        :bandera_depreciar, :cod_unidadorganizacional, :cod_area ,:cod_estadoactivofijo,:cod_proy_financiacion)");
+        :bandera_depreciar, :cod_unidadorganizacional, :cod_area ,:cod_estadoactivofijo,:cod_proy_financiacion,:reevaluo)");
 
         //necesito guardar en una segunda tabla: activofijos_asignaciones
 
@@ -118,6 +119,7 @@ try {
         $stmt->bindParam(':cod_area', $cod_area);
         $stmt->bindParam(':cod_estadoactivofijo', $cod_estadoactivofijo);
         $stmt->bindParam(':cod_proy_financiacion', $cod_proy_finan);
+        $stmt->bindParam(':reevaluo', $reevaluo);
         
         //$stmt->bindParam(':created_at', $created_at);
         //$stmt->bindParam(':created_by', $created_by);

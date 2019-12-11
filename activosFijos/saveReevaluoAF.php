@@ -14,10 +14,11 @@ try {
     $monto_reevaluo=$_POST["monto_reevaluo"];
     $meses_restantes = $_POST['meses_restantes'];    
     $fecha_reevaluo=date("Y-m-d H:i:s");
-    $bandera_depreciar="NO";        
+    $bandera_depreciar="NO";  
+    $reevaluo=1;      
     
 
-    $stmt = $dbh->prepare("UPDATE activosfijos set fecha_reevaluo=:fecha_reevaluo,bandera_depreciar=:bandera_depreciar,vidautilmeses_restante=:meses_restantes,valorresidual=:monto_reevaluo
+    $stmt = $dbh->prepare("UPDATE activosfijos set reevaluo=:reevaluo,fecha_reevaluo=:fecha_reevaluo,bandera_depreciar=:bandera_depreciar,vidautilmeses_restante=:meses_restantes,valorresidual=:monto_reevaluo
     where codigo=:codigoactivo");
 
     $stmt->bindParam(':codigoactivo', $codigoactivo);
@@ -25,6 +26,7 @@ try {
     $stmt->bindParam(':bandera_depreciar', $bandera_depreciar);
     $stmt->bindParam(':meses_restantes', $meses_restantes);        
     $stmt->bindParam(':monto_reevaluo', $monto_reevaluo);
+    $stmt->bindParam(':reevaluo', $reevaluo);
 
     $flagSuccess=$stmt->execute();        
     showAlertSuccessError($flagSuccess,$urlList6);
