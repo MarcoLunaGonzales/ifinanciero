@@ -80,6 +80,8 @@ $stmt->bindColumn('xtipos_aporteafp', $xtipos_aporteafp);
 
                     <thead>
     <tr>
+      <th>Nombre</th>
+        
         <th>Ci</cIte></th>
         <th>Cargo</th>
         <th>U.O.</th>
@@ -87,9 +89,8 @@ $stmt->bindColumn('xtipos_aporteafp', $xtipos_aporteafp);
         <th>Genero</th>
         <th>Tipo Personal</th>
         <th>Basico</th>
-        <th>Paterno</th>
-        <th>Materno</th>
-        <th>Nombre</th>
+
+        
         
         <th>Afp</th>
         <th>Estado</th>
@@ -101,45 +102,45 @@ $stmt->bindColumn('xtipos_aporteafp', $xtipos_aporteafp);
 <?php $index=1;
 while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { ?>
     <tr>
-        <td><?=$ci;?> <?=$ci_lugar_emision;?></td>
-        <td><?=$xcargo;?></td>
-        <td><?=$xuonombre;?></td>
-        <td><?=$xarea;?></td>
-        <td><?=$xgenero;?></td>
-        <td><?=$xcod_tipopersonal;?></td>
-        <td><?=$haber_basico;?></td>
-        <td><?=$paterno;?></td>
-        <td><?=$materno;?></td>
-        <td><?=$primer_nombre;?></td>
-        <td><?=$xtipoafp;?></td>
-        <td><?=$xestado;?></td>
-        <td class="td-actions text-right">
+      <td><?=$primer_nombre;?> <?=$paterno;?> <?=$materno;?></td>      
+      <td><?=$ci;?> <?=$ci_lugar_emision;?></td>
+      <td><?=$xcargo;?></td>
+      <td><?=$xuonombre;?></td>
+      <td><?=$xarea;?></td>
+      <td><?=$xgenero;?></td>
+      <td><?=$xcod_tipopersonal;?></td>
+      <td><?=$haber_basico;?></td>
+
+      
+      <td><?=$xtipoafp;?></td>
+      <td><?=$xestado;?></td>
+      <td class="td-actions text-right">
+      <?php
+        if($globalAdmin==1){
+      ?>
+        <a href='<?=$urlFormPersonalAreaDistribucion;?>&codigo=<?=$codigo;?>' rel="tooltip" class="btn btn-warning">            
+          <i class="material-icons" title="Area-Distribución">flare</i>
+        </a>          
         <?php
-          if($globalAdmin==1){
-        ?>
-          <a href='<?=$urlFormPersonalAreaDistribucion;?>&codigo=<?=$codigo;?>' rel="tooltip" class="btn btn-warning">            
-            <i class="material-icons" title="Area-Distribución">flare</i>
-          </a>          
-          <?php
-            }
-          ?>        
-        </td>
+          }
+        ?>        
+      </td>
         
-        <td class="td-actions text-right">
+      <td class="td-actions text-right">
+      <?php
+        if($globalAdmin==1){
+      ?>
+        <a href='<?=$urlFormPersonal;?>&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonEdit;?>">
+          <i class="material-icons"><?=$iconEdit;?></i>
+        </a>
+        <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDeletePersonal;?>&codigo=<?=$codigo;?>')">
+          <i class="material-icons"><?=$iconDelete;?></i>
+        </button>
         <?php
-          if($globalAdmin==1){
+          }
         ?>
-          <a href='<?=$urlFormPersonal;?>&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonEdit;?>">
-            <i class="material-icons"><?=$iconEdit;?></i>
-          </a>
-          <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDeletePersonal;?>&codigo=<?=$codigo;?>')">
-            <i class="material-icons"><?=$iconDelete;?></i>
-          </button>
-          <?php
-            }
-          ?>
-        
-        </td>
+      
+      </td>
     </tr>
 <?php $index++; } ?>
 </tbody>

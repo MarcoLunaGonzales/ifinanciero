@@ -1731,7 +1731,7 @@ function mayorReporteComprobante(fila){
 }
  ///////////////////////////////////////////////////////////////////
 
-
+//perosnal area distribucion
 
 function agregaformPAD(datos){
   //console.log("datos: "+datos);
@@ -1798,4 +1798,11 @@ function EliminarDistribucion(cod_personal,cod_distribucion){
       }
     }
   });
+}
+//area_unidad organizacional
+function agregaListAreas_unidad(datos){
+  //console.log("datos: "+datos);
+  var d=datos.split('-');
+  document.getElementById("codigo_area_unidad").value=d[0];
+  
 }

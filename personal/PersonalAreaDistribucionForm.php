@@ -89,10 +89,10 @@ $statementAREASE = $dbh->query($query_areas);
 						<?php
 						if($sumPorcentaje!=100){
 								$stringClass="class='text-center small bg-danger text-white'";
-								$stringLabel="ERROR EN LOS PORCENTAJES!!!  :(";
+								$stringLabel="CORREGIR PORCENTAJE!!!  :(";
 							}else{
 								$stringClass="class='text-center small bg-success text-white'";
-								$stringLabel="PORCENTAJES ACEPTADOS!!!  :)";
+								$stringLabel="PORCENTAJE CORRECTO!!!  :)";
 							}
 
 							?>

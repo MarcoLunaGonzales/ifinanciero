@@ -49,27 +49,6 @@ try {
     
     $porcentaje=100;
     if ($_POST["codigo"] == 0){
-
-        $stmtPer = $dbhS->prepare("SELECT codigo from personal where ci=$ci_aux");
-        $stmtPer->execute();
-        $stmtPer->bindColumn('codigo', $codigoP);
-        while ($row = $stmtPer->fetch(PDO::FETCH_BOUND)) {
-
-        }    
-
-        $stmtDistribucion = $dbh->prepare("INSERT INTO personal_area_distribucion(cod_personal,cod_area,porcentaje,cod_estadoreferencial,created_by,modified_by) 
-        values (:cod_personal,:cod_area,:porcentaje,:cod_estadoreferencial,:created_by,:modified_by)");
-        //Bind
-        $stmtDistribucion->bindParam(':cod_personal', $codigoP);
-        $stmtDistribucion->bindParam(':cod_area', $cod_area);    
-        $stmtDistribucion->bindParam(':porcentaje', $porcentaje);
-        $stmtDistribucion->bindParam(':created_by', $created_by);
-        $stmtDistribucion->bindParam(':modified_by', $modified_by);
-        $stmtDistribucion->bindParam(':cod_estadoreferencial', $cod_estadoreferencial);
-        $stmtDistribucion->execute(); 
-
-
-
         $stmt = $dbh->prepare("INSERT INTO personal(ci,ci_lugar_emision,fecha_nacimiento,cod_cargo,cod_unidadorganizacional,cod_area,
         jubilado,cod_genero,cod_tipopersonal,haber_basico,paterno,materno,apellido_casada,primer_nombre,otros_nombres,nua_cua_asignado,
         direccion,cod_tipoafp,nro_seguro,cod_estadopersonal,created_by,modified_by,telefono,celular,email,persona_contacto, cod_tipoaporteafp,cod_estadoreferencial) 
@@ -109,11 +88,25 @@ try {
         //$stmt->bindParam(':modified_at', $modified_at);
         $stmt->bindParam(':modified_by', $modified_by);
         $stmt->bindParam(':cod_estadoreferencial', $cod_estadoreferencial);
-        
-        
         $flagSuccess=$stmt->execute();    
-
         $tabla_id = $dbh->lastInsertId();
+
+        
+        $stmtPer = $dbhS->prepare("SELECT codigo from personal where ci=$ci_aux");
+        $stmtPer->execute();
+        $stmtPer->bindColumn('codigo', $codigoP);
+        while ($row = $stmtPer->fetch(PDO::FETCH_BOUND)) {
+        }
+        $stmtDistribucion = $dbh->prepare("INSERT INTO personal_area_distribucion(cod_personal,cod_area,porcentaje,cod_estadoreferencial,created_by,modified_by) 
+        values (:cod_personal,:cod_area,:porcentaje,:cod_estadoreferencial,:created_by,:modified_by)");
+        //Bind
+        $stmtDistribucion->bindParam(':cod_personal', $codigoP);
+        $stmtDistribucion->bindParam(':cod_area', $cod_area);    
+        $stmtDistribucion->bindParam(':porcentaje', $porcentaje);
+        $stmtDistribucion->bindParam(':created_by', $created_by);
+        $stmtDistribucion->bindParam(':modified_by', $modified_by);
+        $stmtDistribucion->bindParam(':cod_estadoreferencial', $cod_estadoreferencial);
+        $stmtDistribucion->execute(); 
 
         if ($flagSuccess){
             $archivo = __DIR__.DIRECTORY_SEPARATOR."imagenes".DIRECTORY_SEPARATOR.$_FILES['image']['name']; //el nombre destino, que deberia ser el id
