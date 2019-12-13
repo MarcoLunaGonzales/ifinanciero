@@ -1769,8 +1769,6 @@ function RegistrarDistribucion(cod_personal,cod_area,porcentaje){
     }
   });
 }
-
-
 function EditarDistribucion(cod_personal,cod_distribucion,cod_area,porcentaje){
   $.ajax({
     type:"POST",
@@ -1805,4 +1803,73 @@ function agregaListAreas_unidad(datos){
   var d=datos.split('-');
   document.getElementById("codigo_area_unidad").value=d[0];
   
+}
+
+
+//contratos de personal
+function agregaformPC(datos){
+  //console.log("datos: "+datos);
+  var d=datos.split('/');
+  document.getElementById("codigo_personalA").value=d[0];
+}
+function agregaformPCE(datos){
+  //console.log("datos: "+datos);
+  var d=datos.split('/');
+  document.getElementById("codigo_personalE").value=d[0];
+  document.getElementById("codigo_contratoE").value=d[1];
+  document.getElementById("fecha_inicioE").value=d[2];
+
+  // document.getElementById("cod_areaE").value=d[2];
+  // document.getElementById("porcentajeE").value=d[3];
+}
+function agregaformPCB(datos){
+  //console.log("datos: "+datos);
+  var d=datos.split('/');
+  document.getElementById("codigo_personalB").value=d[0];
+  document.getElementById("codigo_contratoB").value=d[1];
+
+}
+
+function RegistrarContratoPersonal(cod_personal,cod_tipocontrato,fecha_inicio){
+  $.ajax({
+    type:"POST",
+    data:"cod_contrato=0&cod_personal="+cod_personal+"&cod_tipocontrato="+cod_tipocontrato+"&cod_estadoreferencial=1&fecha_inicio="+fecha_inicio,
+    url:"personal/savePersonalcontrato.php",
+    success:function(r){
+      if(r==1){
+        //$('#tabla1').load('index.php');
+        // alertify.success("agregado");
+        alerts.showSwal('success-message','index.php?opcion=FormPersonalContratos&codigo='+cod_personal);
+      }
+    }
+  });
+}
+function EditarContratoPersonal(codigo_contratoE,codigo_personalE,cod_tipocontratoE,fecha_inicioE){
+  $.ajax({
+    type:"POST",
+
+    data:"cod_contrato="+codigo_contratoE+"&cod_personal=0&cod_tipocontrato="+cod_tipocontratoE+"&cod_estadoreferencial=2&fecha_inicio="+fecha_inicioE,
+    url:"personal/savePersonalcontrato.php",
+    success:function(r){
+      if(r==1){
+        //$('#tabla1').load('index.php');
+        // alertify.success("agregado");
+        alerts.showSwal('success-message','index.php?opcion=FormPersonalContratos&codigo='+codigo_personalE);
+      }
+    }
+  });
+}
+function EliminarContratoPersonal(codigo_contratoB,codigo_personalB){
+  $.ajax({
+    type:"POST",
+    data:"cod_contrato="+codigo_contratoB+"&cod_personal=0&cod_tipocontrato=1&cod_estadoreferencial=3&fecha_inicio=0000-00-00",
+    url:"personal/savePersonalcontrato.php",
+    success:function(r){
+      if(r==1){
+        //$('#tabla1').load('index.php');
+        // alertify.success("agregado");
+        alerts.showSwal('success-message','index.php?opcion=FormPersonalContratos&codigo='+codigo_personalB);    
+      }
+    }
+  });
 }

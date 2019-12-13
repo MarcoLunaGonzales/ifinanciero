@@ -419,6 +419,14 @@
 			$codigo=$_GET['codigo'];
 			require_once('rrhh/uoDelete.php');
 		}
+		if ($_GET['opcion']=='registerAreasU') {
+			$codigo=$_GET['codigo'];
+			require_once('rrhh/registerAreasU.php');
+		}
+		//areas unidades organixaciones		
+		if ($_GET['opcion']=='areasuoSave') {
+			require_once('rrhh/areas_organizacionSave.php');
+		}
 
 		//tipos personal
 		if ($_GET['opcion']=='tipospersonalLista') {
@@ -438,6 +446,10 @@
 		if ($_GET['opcion']=='PersonalAreaDistribucionForm') {
 			$codigo=$_GET['codigo'];
 			require_once('personal/PersonalAreaDistribucionForm.php');
+		}
+		if ($_GET['opcion']=='FormPersonalContratos') {
+			$codigo=$_GET['codigo'];
+			require_once('personal/PersonalContratosForm.php');
 		}
 
 		//estados personal

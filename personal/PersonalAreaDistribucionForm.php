@@ -7,24 +7,33 @@ require_once 'styles.php';
 $globalAdmin=$_SESSION["globalAdmin"];
 
 $dbh = new Conexion();
-
+$cod_personal_1=$codigo;
 //SELECT
-$stmt = $dbh->prepare("SELECT *,(select p.primer_nombre from personal p where p.codigo=cod_personal) as nombre_personal,
-(select p.paterno from personal p where p.codigo=cod_personal) as paterno_personal,
+$stmt = $dbh->prepare("SELECT *,
 (select a.nombre from areas a where a.codigo=cod_area) as nombre_area
 from personal_area_distribucion
 where cod_personal=:codigo");
+
 $stmt->bindParam(':codigo',$codigo);
 //ejecutamos
 $stmt->execute();
 //bindColumn
 $stmt->bindColumn('codigo', $codigo);
-$stmt->bindColumn('cod_personal', $cod_personal);
 $stmt->bindColumn('cod_area', $cod_area);
 $stmt->bindColumn('porcentaje', $porcentaje);
-$stmt->bindColumn('nombre_personal', $nombre_personal);
-$stmt->bindColumn('paterno_personal', $paterno_personal);
 $stmt->bindColumn('nombre_area', $nombre_area);
+
+
+$stmtPersonal = $dbh->prepare("SELECT * from personal where codigo=:codigo");
+$stmtPersonal->bindParam(':codigo',$cod_personal_1);
+//ejecutamos
+$stmtPersonal->execute();
+$result=$stmtPersonal->fetch();
+$cod_personal=$result['codigo'];
+$ci=$result['ci'];
+$nombre_personal=$result['primer_nombre'];
+$paterno_personal=$result['paterno'];
+$materno_personal=$result['materno'];
 
 //listado para area registro de distribucion
 $query_areas = "select * from areas order by 2";
@@ -50,57 +59,61 @@ $statementAREASE = $dbh->query($query_areas);
                   <div class="table-responsive">
                     <table class="table table-bordered table-condensed" id="tablePaginatorFixed">
 
-                    <thead>
-                      <tr class="bg-dark text-white">
-                      	<th>Codigo</th>
-                      	<th>Personal</th>
-						<th>Area</th>
-						<th>Porcentaje</th>
-						<th></th>                                                   
-                      </tr>
-                  </thead>
-                  <tbody>
-                  <?php $index=1;
-                  $sumPorcentaje=0;
-                  while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { 
-                  	$sumPorcentaje=$sumPorcentaje+$porcentaje;
-                  	$datos =$cod_personal."-".$codigo."-".$cod_area."-".$porcentaje;
-                  	?>
+                      <thead>
+                        <tr class="bg-dark text-white">
+                        	<th>Codigo</th>
+                        	<th>Personal</th>
+              						<th>Area</th>
+              						<th>Porcentaje</th>
+  					             	<th></th>                                                   
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <?php $index=1;
+                        $sumPorcentaje=0;
+                        $datos =$cod_personal;
+                        while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { 
+                        	$sumPorcentaje=$sumPorcentaje+$porcentaje;
+                        	$datos =$cod_personal."-".$codigo."-".$cod_area."-".$porcentaje;
+                        	?>
 
-                      <tr>
-                          <td><?=$codigo;?></td>
-                          <td><?=$nombre_personal." ".$paterno_personal;?></td>
-                          <td><?=$nombre_area;?></td>
-                          <td><?=$porcentaje;?></td>
-                          <td>
-                          	<button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalEditar" onclick="agregaformPADE('<?=$datos;?>')">
-                          		<i class="material-icons" title="Editar"><?=$iconEdit;?></i>                             
-                            </button>
-                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalEliminar" onclick="agregaformPADB('<?=$datos;?>')">
-                              <i class="material-icons" title="Eliminar"><?=$iconDelete;?></i>
-                            </button>
-                          </td>
-                      </tr>
-                  <?php $index++; } ?>
+                            <tr>
+                                <td><?=$codigo;?></td>
+                                <td><?=$nombre_personal." ".$paterno_personal;?></td>
+                                <td><?=$nombre_area;?></td>
+                                <td><?=$porcentaje;?></td>
+                                <td class="td-actions text-right">
+                                	<button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalEditar" onclick="agregaformPADE('<?=$datos;?>')">
+                                		<i class="material-icons" title="Editar"><?=$iconEdit;?></i>                             
+                                  </button>
+                                  <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalEliminar" onclick="agregaformPADB('<?=$datos;?>')">
+                                    <i class="material-icons" title="Eliminar"><?=$iconDelete;?></i>
+                                  </button>
+                                </td>
+                            </tr>
+                          <?php $index++; } ?>
+                        </tbody>
+                        <tfoot>
+                          <tr class="bg-info text-white">
+                            <th colspan="2">Total :</th>
+                            <td class="text-center small">-</td>
+                            <?php
+                            $stringClass="";
+                            $stringLabel="";
+                            if($sumPorcentaje==100){
+                                $stringClass="class='text-center small bg-success text-white'";
+                                $stringLabel="PORCENTAJE CORRECTO!!!  :)";
+                            }else{
+                                $stringClass="class='text-center small bg-danger text-white'";
+                                $stringLabel="CORREGIR PORCENTAJE!!!  :(";
+                            }
 
-					<tr class="bg-info text-white">
-						<th colspan="2">Total :</th>
-						<td class="text-center small">-</td>
-						<?php
-						if($sumPorcentaje!=100){
-								$stringClass="class='text-center small bg-danger text-white'";
-								$stringLabel="CORREGIR PORCENTAJE!!!  :(";
-							}else{
-								$stringClass="class='text-center small bg-success text-white'";
-								$stringLabel="PORCENTAJE CORRECTO!!!  :)";
-							}
+                            ?>
+                            <td <?=$stringClass?> ><?=formatNumberDec($sumPorcentaje); ?></td>
+                            <td <?=$stringClass?> ><?=$stringLabel?></td>                           
+                          </tr>
 
-							?>
-						<td <?=$stringClass?>><?=formatNumberDec($sumPorcentaje); ?></td>
-						<td <?=$stringClass?>><?=$stringLabel?></td>
-						
-					</tr>
-                  </tbody>
+                        </tfoot>
                     
                     </table>
                   </div>
@@ -110,7 +123,7 @@ $statementAREASE = $dbh->query($query_areas);
 
               if($globalAdmin==1){
               ?>
-      			<div class="card-footer fixed-bottom">
+      			   <div class="card-footer fixed-bottom">
                     <button type="button" class="btn btn-warning btn-round btn-fab" data-toggle="modal" data-target="#modalAgregarD" onclick="agregaformPAD('<?=$datos;?>')">
                       		  <i class="material-icons" title="Agregar">add</i>
 		             </button>		             
@@ -131,7 +144,7 @@ $statementAREASE = $dbh->query($query_areas);
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Rechazar Activo Fijo</h4>
+        <h4 class="modal-title" id="myModalLabel">Agregar Area Distribución</h4>
       </div>
       <div class="modal-body">
         <input type="hidden" name="codigo_personal" id="codigo_personal" value="0">
@@ -179,7 +192,7 @@ $statementAREASE = $dbh->query($query_areas);
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Rechazar Activo Fijo</h4>
+        <h4 class="modal-title" id="myModalLabel">Editar Area Distribución</h4>
       </div>
       <div class="modal-body">
         <input type="hidden" name="codigo_personalE" id="codigo_personalE" value="0">

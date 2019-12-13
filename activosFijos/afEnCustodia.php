@@ -85,6 +85,7 @@ $stmt->bindColumn('fecha_recepcion', $fecha_recepcion);
                               $label='<span class="badge badge-dark">';
                             }
                           ?>
+                          
                             
                             <tr>
                                 <td  class="td-actions text-right">

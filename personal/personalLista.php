@@ -79,77 +79,82 @@ $stmt->bindColumn('xtipos_aporteafp', $xtipos_aporteafp);
                     <table class="table" id="tablePaginator">
 
                     <thead>
-    <tr>
-      <th>Nombre</th>
-        
-        <th>Ci</cIte></th>
-        <th>Cargo</th>
-        <th>U.O.</th>
-        <th>Area</th>
-        <th>Genero</th>
-        <th>Tipo Personal</th>
-        <th>Basico</th>
+                      <tr>
+                        <th></th>
+                        <th>Nombre</th>      
+                        <th>Ci</cIte></th>
+                        <th>Cargo</th>
+                        <th>U.O.</th>
+                        <th>Area</th>
+                        <th>Genero</th>
+                        <th>Tipo Personal</th>
+                        <th>Basico</th>      
+                        <th>Afp</th>
+                        <th>Estado</th>
+                        <th></th>
+                        <th></th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                  <?php $index=1;
+                  while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { ?>
+                      <tr>
+                        <td  class="td-actions text-right">    
+                          <a href='<?=$urlprintPersonal;?>?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="<?=$buttonEdit;?>">
+                            <i class="material-icons">print</i>
+                          </a>
+                        </td>
+                        <td><?=$primer_nombre;?> <?=$paterno;?> <?=$materno;?></td>      
+                        <td><?=$ci;?> <?=$ci_lugar_emision;?></td>
+                        <td><?=$xcargo;?></td>
+                        <td><?=$xuonombre;?></td>
+                        <td><?=$xarea;?></td>
+                        <td><?=$xgenero;?></td>
+                        <td><?=$xcod_tipopersonal;?></td>
+                        <td><?=$haber_basico;?></td>
 
-        
-        
-        <th>Afp</th>
-        <th>Estado</th>
-        <th></th>
-        <th></th>
-    </tr>
-</thead>
-<tbody>
-<?php $index=1;
-while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { ?>
-    <tr>
-      <td><?=$primer_nombre;?> <?=$paterno;?> <?=$materno;?></td>      
-      <td><?=$ci;?> <?=$ci_lugar_emision;?></td>
-      <td><?=$xcargo;?></td>
-      <td><?=$xuonombre;?></td>
-      <td><?=$xarea;?></td>
-      <td><?=$xgenero;?></td>
-      <td><?=$xcod_tipopersonal;?></td>
-      <td><?=$haber_basico;?></td>
-
-      
-      <td><?=$xtipoafp;?></td>
-      <td><?=$xestado;?></td>
-      <td class="td-actions text-right">
-      <?php
-        if($globalAdmin==1){
-      ?>
-        <a href='<?=$urlFormPersonalAreaDistribucion;?>&codigo=<?=$codigo;?>' rel="tooltip" class="btn btn-warning">            
-          <i class="material-icons" title="Area-Distribución">flare</i>
-        </a>          
-        <?php
-          }
-        ?>        
-      </td>
-        
-      <td class="td-actions text-right">
-      <?php
-        if($globalAdmin==1){
-      ?>
-        <a href='<?=$urlFormPersonal;?>&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonEdit;?>">
-          <i class="material-icons"><?=$iconEdit;?></i>
-        </a>
-        <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDeletePersonal;?>&codigo=<?=$codigo;?>')">
-          <i class="material-icons"><?=$iconDelete;?></i>
-        </button>
-        <?php
-          }
-        ?>
-      
-      </td>
-    </tr>
-<?php $index++; } ?>
-</tbody>
-                    
-                    </table>
-                  </div>
-                </div>
-              </div>
-              <?php
+                        
+                        <td><?=$xtipoafp;?></td>
+                        <td><?=$xestado;?></td>
+                        <td class="td-actions text-right">
+                        <?php
+                          if($globalAdmin==1){
+                        ?>
+                          <a href='<?=$urlFormPersonalContratos;?>&codigo=<?=$codigo;?>' rel="tooltip" class="btn btn-info">
+                            <i class="material-icons" title="Contratos">assignment</i>
+                          </a>
+                          <a href='<?=$urlFormPersonalAreaDistribucion;?>&codigo=<?=$codigo;?>' rel="tooltip" class="btn btn-warning">            
+                            <i class="material-icons" title="Area-Distribución">flare</i>
+                          </a>
+                          <?php
+                            }
+                          ?>        
+                        </td>
+                          
+                        <td class="td-actions text-right">
+                        <?php
+                          if($globalAdmin==1){
+                        ?>
+                          <a href='<?=$urlFormPersonal;?>&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonEdit;?>">
+                            <i class="material-icons"><?=$iconEdit;?></i>
+                          </a>
+                          <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDeletePersonal;?>&codigo=<?=$codigo;?>')">
+                            <i class="material-icons"><?=$iconDelete;?></i>
+                          </button>
+                          <?php
+                            }
+                          ?>
+                        
+                        </td>
+                      </tr>
+                  <?php $index++; } ?>
+                  </tbody>
+                                      
+                                      </table>
+                                    </div>
+                                  </div>
+                                </div>
+                                <?php
 
 
 

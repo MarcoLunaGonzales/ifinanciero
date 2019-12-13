@@ -71,9 +71,10 @@ $stmt->bindColumn('modified_by', $modified_by);
                                 <i class="material-icons" title="Listar Areas">settings_applications</i>
                               </button>
 
-                              <a href='<?=$urlRegisterCuentas;?>&codigo=<?=$codigo;?>' rel="tooltip" class="btn btn-success">
+                              <a href='<?=$urlRegisterAreasU;?>&codigo=<?=$codigo;?>' rel="tooltip" class="btn btn-success">
                                   <i class="material-icons" title="Registrar Areas">playlist_add</i>
                               </a>
+
                               <a href='<?=$urlFormUO;?>&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonEdit;?>">
                                 <i class="material-icons"><?=$iconEdit;?></i>
                               </a>
@@ -133,16 +134,22 @@ $stmt->bindColumn('modified_by', $modified_by);
           <tbody id="tablas_registradas">
             
             <input type="hidden" name="codigo_area_unidad" id="codigo_area_unidad" value="0">
-            <?php
-            $codigo_area_u=?>=document.getElementById("codigo_af_aceptar2").value;
-            <?php
+            <script>
+              var contenedor_aux=document.getElementById("codigo_area_unidad").value;
+            </script>
+
+            <?php            
+            $codigo_area_u="<script>document.write(contenedor_aux)</script>";
+            
+
             $stmtAreas = $dbh->prepare("SELECT codigo,cod_unidad,cod_area,cod_areapadre,
             (select a.nombre from areas a where a.codigo=cod_area) as nombre_area,
             (select a.nombre from areas a where a.codigo=cod_areapadre) as nombre_area_padre
             from areas_organizacion
             where cod_estadoreferencial=1 and cod_unidad=:codigo");
             //ejecutamos
-            $stmt->execute();
+            $stmtAreas->bindParam(':codigo',$codigo_area_u);
+            $stmtAreas->execute();
             //bindColumn
             $stmtAreas->bindColumn('codigo', $codigo_area_unidad);
             $stmtAreas->bindColumn('cod_unidad', $cod_unidad);
@@ -151,7 +158,7 @@ $stmt->bindColumn('modified_by', $modified_by);
             $stmtAreas->bindColumn('nombre_area', $nombre_area);
             $stmtAreas->bindColumn('nombre_area_padre', $nombre_area_padre);
 
-            echo "llega: ".$codigo_area_unidad;
+            
             while ($row = $stmtAreas->fetch(PDO::FETCH_BOUND)) { ?>
             <tr>
                 <td><?=$codigo_area_unidad;?></td>

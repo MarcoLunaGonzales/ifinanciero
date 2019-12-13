@@ -25,6 +25,16 @@ $urlListUO="?opcion=uoLista";
 $urlSaveUO="?opcion=uoSave";
 $urlFormUO="index.php?opcion=uoForm";
 $urlDeleteUO="index.php?opcion=deleteUO";
+$urlRegisterAreasU="index.php?opcion=registerAreasU";
+//areas_organizacion
+// $nombreSingularAreas_organizacion="Area Organizacion";
+// $nombrePluralAreas_organizacion="Areas de Organizacion";
+// $urlListAreas_organizacion="?opcion=areas_organizacionLista";
+// $urlSaveAreas_organizacion="?opcion=areas_organizacionSave";
+// $urlFormAreas_organizacion="index.php?opcion=areas_organizacionForm";
+// $urlDeleteAreas_organizacion="index.php?opcion=deleteareas_organizacion";
+$urlSaveAreas_organizacion="?opcion=areasuoSave";
+
 
 
 //tipos personal
@@ -68,13 +78,7 @@ $urlSaveTipos_genero="?opcion=tipos_generoSave";
 $urlFormTipos_genero="index.php?opcion=tipos_generoForm";
 $urlDeleteTipos_genero="index.php?opcion=deletetipos_genero";
 
-//areas_organizacion
-$nombreSingularAreas_organizacion="Area Organizacion";
-$nombrePluralAreas_organizacion="Areas de Organizacion";
-$urlListAreas_organizacion="?opcion=areas_organizacionLista";
-$urlSaveAreas_organizacion="?opcion=areas_organizacionSave";
-$urlFormAreas_organizacion="index.php?opcion=areas_organizacionForm";
-$urlDeleteAreas_organizacion="index.php?opcion=deleteareas_organizacion";
+
 
 //personal
 $nombreSingularPersonal="Personal";
@@ -84,6 +88,8 @@ $urlSavePersonal="?opcion=personalSave";
 $urlFormPersonal="index.php?opcion=personalForm";
 $urlDeletePersonal="index.php?opcion=deletepersonal";
 $urlFormPersonalAreaDistribucion="index.php?opcion=PersonalAreaDistribucionForm";
+$urlFormPersonalContratos="index.php?opcion=FormPersonalContratos";
+$urlprintPersonal="personal/personalPrintFicha.php";
 
 
 //tipos_afps
