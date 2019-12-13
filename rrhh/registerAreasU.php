@@ -42,6 +42,18 @@ $stmtArea->bindColumn('codigo', $codigoArea);
 $stmtArea->bindColumn('nombre', $nombreArea);
 $stmtArea->bindColumn('abreviatura', $abreviatura);
 
+$sql2="SELECT codigo,nombre, abreviatura
+      from areas
+      where cod_estado=1
+      ORDER BY 2";
+$stmtArea2 = $dbh->prepare($sql2);
+// Ejecutamos
+$stmtArea2->execute(); 
+// bindColumn
+$stmtArea2->bindColumn('codigo', $codigoArea2);
+$stmtArea2->bindColumn('nombre', $nombreArea2);
+$stmtArea2->bindColumn('abreviatura', $abreviatura2);
+
 ?>
 
 <div class="content">
@@ -83,20 +95,23 @@ $stmtArea->bindColumn('abreviatura', $abreviatura);
                           ?>
                           <tr>
                             <td align="center">
-                              <div class="form-check">                                
-                                  <input  type="checkbox" name="areas[]" value="<?=$codigoArea?>" >
+                              <div class="form-check">
+                                <label class="form-check-label">
+                                  <input  class="form-check-input" type="checkbox" name="areas[]" value="<?=$codigoArea?>" >
+                                  <span class="form-check-sign">
+                                    <span class="check"></span>
+                                  </span>
+                                </label>
                               </div>
                             </td>
                             <td><?=$codigoArea;?></td>
                             <td><?=$nombreArea;?></td>
                             <td>
-                              <select>
-                                <option>TECNOLOGIA</option>
-                                <option>TIC</option>
-                                <option>ADMIN</option>
-                                <option>CONTA</option>
-                                <option>RRHH</option>
-                              </select>
+                              <select name="cod_ubicaciones" id="cod_ubicaciones" class="selectpicker" data-style="btn btn-primary">
+                                    <?php while ($row = $stmtArea2->fetch()){ ?>
+                                        <option value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                                    <?php } ?>
+                                </select>
                             </td>
                           </tr>
 
@@ -112,7 +127,8 @@ $stmtArea->bindColumn('abreviatura', $abreviatura);
               </div>
         				<div class="card-footer fixed-bottom">
                     <button class="btn" type="submit">Guardar</button>
-                    <a href="<?=$urlList2;?>" class="<?=$buttonCancel;?>">Cancelar</a>
+                    <a href="<?=$urlListUO;?>" class="<?=$buttonCancel;?>">Cancelar</a>
+
                     <a href="#" onclick="filaTabla($('#tablas_registradas'));" id="boton_registradas" class="btn btn-warning text-dark">Areas Registradas <span class='badge bg-white text-warning'> <?=$nc?></span></a>
                 </div>
 			     </form>
