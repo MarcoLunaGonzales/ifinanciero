@@ -42,17 +42,9 @@ $stmtArea->bindColumn('codigo', $codigoArea);
 $stmtArea->bindColumn('nombre', $nombreArea);
 $stmtArea->bindColumn('abreviatura', $abreviatura);
 
-$sql2="SELECT codigo,nombre, abreviatura
-      from areas
-      where cod_estado=1
-      ORDER BY 2";
-$stmtArea2 = $dbh->prepare($sql2);
-// Ejecutamos
-$stmtArea2->execute(); 
-// bindColumn
-$stmtArea2->bindColumn('codigo', $codigoArea2);
-$stmtArea2->bindColumn('nombre', $nombreArea2);
-$stmtArea2->bindColumn('abreviatura', $abreviatura2);
+
+
+
 
 ?>
 
@@ -107,11 +99,23 @@ $stmtArea2->bindColumn('abreviatura', $abreviatura2);
                             <td><?=$codigoArea;?></td>
                             <td><?=$nombreArea;?></td>
                             <td>
+                              <?php
+                                $sql2="SELECT codigo,nombre, abreviatura
+                                from areas
+                                where cod_estado=1
+                                ORDER BY 2";
+                                $stmtArea2 = $dbh->prepare($sql2);
+                                $stmtArea2->execute(); 
+                                $stmtArea2->bindColumn('codigo', $codigoArea2);
+                                $stmtArea2->bindColumn('nombre', $nombreArea2);
+                                $stmtArea2->bindColumn('abreviatura', $abreviatura2);
+                              ?>
+                              
                               <select name="cod_ubicaciones" id="cod_ubicaciones" class="selectpicker" data-style="btn btn-primary">
                                     <?php while ($row = $stmtArea2->fetch()){ ?>
                                         <option value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
                                     <?php } ?>
-                                </select>
+                              </select>
                             </td>
                           </tr>
 

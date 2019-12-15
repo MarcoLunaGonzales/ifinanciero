@@ -72,7 +72,7 @@ $stmt->bindColumn('bandera', $bandera);
                           $nc++;
                           }
                           $nombre=formateaPlanCuenta($nombre,$nivel);
-?>
+                          ?>
                         <tr>
                           <td align="center">
                           <div class="form-check">
