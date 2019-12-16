@@ -55,6 +55,26 @@ try{
     $created_by = $result['created_by'];
     $modified_at = $result['modified_at'];
     $modified_by = $result['modified_by'];
+    //====================================
+    //personal discapacitado
+    $stmtDiscapacitado = $dbh->prepare("SELECT * FROM personal_discapacitado where codigo =:codigo");
+    $stmtDiscapacitado->bindParam(':codigo',$codigo);
+    $stmtDiscapacitado->execute();
+    $resultDiscapacitado = $stmtDiscapacitado->fetch();
+    $discapacitado = $resultDiscapacitado['discapacitado'];
+    $tutor_discapacitado = $resultDiscapacitado['tutor_discapacitado'];
+    $celular_tutor = $resultDiscapacitado['celular_tutor'];
+    $parentesco = $resultDiscapacitado['parentesco'];
+
+
+        //==================================================================================================================
+    //imagen
+    $stmtIM = $dbh->prepare("SELECT * FROM personalimagen  where codigo =:codigo");
+    $stmtIM->bindParam(':codigo',$codigo);
+    $stmtIM->execute();
+    $resultIM = $stmtIM->fetch();
+    //$codigo = $result['codigo'];
+    $imagen = $resultIM['imagen'];
     
 
 
@@ -88,18 +108,18 @@ $html.=  '<header class="header">'.
                     '<col style="width: 25%"/>'.
                 '</colgroup>'.
                 '<tbody style=" font-family: Times New Roman;
-                                font-size: 13px;
+                                font-size: 11px;
                                     ">';
 
                 $html.='<tr>'.
                         '<td colspan="3" align="center">'.                        
                             '<h2><b>'.$primer_nombre.' '.$paterno.' '.$materno.'</b><br></h2>'.
                             $cod_cargo.' / '.$cod_unidadorganizacional.'<br>'.
-                            $cod_area.'<br><br>'.
+                            $cod_area.'<br>'.
 
                         '</td>'.
-                        '<td rowspan="6" align="center">'.
-                            '<img src="imagenes/'.$imagen.'" style="width: 100px; height: 100px;"><br>'.
+                        '<td rowspan="8" align="center">'.
+                            '<img src="imagenes/'.$imagen.'" style="width: 120px; height: 120px;">'.
                         '</td>'.
                     '</tr>'.
                     
@@ -131,12 +151,12 @@ $html.=  '<header class="header">'.
                     '<tr>'.
                         '<td>Dirección</td>'.
                         '<td align="center">:</td>'.
-                        '<td colspan=2>'.$direccion.'</td>'.
+                        '<td >'.$direccion.'</td>'.
                     '</tr>'.
                     '<tr>'.
                         '<td>Email</td>'.
                         '<td align="center">:</td>'.
-                        '<td colspan=2>'.$email.'</td>'.
+                        '<td >'.$email.'</td>'.
                     '</tr>'.
                     
                     '<tr>'.
@@ -154,14 +174,22 @@ $html.=  '<header class="header">'.
                         '<td colspan=2>'.$cod_estadopersonal.'</td>'.
                     '</tr>'.
                     '<tr>'.
-                        '<td>HAber Básico</td>'.
+                        '<td>Haber Básico</td>'.
                         '<td align="center">:</td>'.
                         '<td colspan=2>'.$haber_basico.'</td>'.
                     '</tr>'.
                     '<tr>'.
                         '<td>Jubilado</td>'.
                         '<td align="center">:</td>'.
-                        '<td colspan=2>'.$jubilado.'</td>'.
+                        '<td colspan=2>';
+                        if($jubilado==0) $nombreAux0="NO";
+                        else $nombreAux0="SI";                        
+                        $html.=$nombreAux0.'</td>'.                        
+                    '</tr>'.
+                    '<tr>'.
+                        '<td>Contacto</td>'.
+                        '<td align="center">:</td>'.
+                        '<td colspan=2>'.$persona_contacto.'</td>'.
                     '</tr>'.
                     '<tr>'.
                         '<td colspan="4"><br></td>           '.
@@ -185,6 +213,35 @@ $html.=  '<header class="header">'.
                         '<td>Tipo Aporte AFP</td>'.
                         '<td align="center">:</td>'.
                         '<td colspan=2>'.$cod_tipoaporteafp.'</td>'.
+                    '</tr>'.
+                    '<tr>'.
+                        '<td colspan="4"><br></td>           '.
+                    '</tr>'.                 
+                    '<tr>'.
+                        '<td>Personal discapacitado</td>'.
+                        '<td align="center">:</td>'.
+                        '<td colspan=2>';
+                        if($discapacitado==0) $nombreAux="NO";
+                        else $nombreAux="SI";                        
+                        $html.=$nombreAux.'</td>'.
+                    '</tr>'.
+                    '<tr>'.
+                        '<td>Tutor De discapacitado</td>'.
+                        '<td align="center">:</td>'.
+                        '<td colspan=2>';
+                        if($tutor_discapacitado==0) $nombreAux1="NO";
+                        else $nombreAux1="SI";                        
+                        $html.=$nombreAux1.'</td>'.
+                    '</tr>'.
+                    '<tr>'.
+                        '<td>parentesco</td>'.
+                        '<td align="center">:</td>'.
+                        '<td colspan=2>'.$parentesco.'</td>'.
+                    '</tr>'.
+                    '<tr>'.
+                        '<td>Celular Tutor</td>'.
+                        '<td align="center">:</td>'.
+                        '<td colspan=2>'.$celular_tutor.'</td>'.
                     '</tr>'.
                 '</tbody>'.            
             '</table>'.

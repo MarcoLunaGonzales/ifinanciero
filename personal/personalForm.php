@@ -46,11 +46,31 @@ if ($codigo > 0){
     $created_by = $result['created_by'];
     $modified_at = $result['modified_at'];
     $modified_by = $result['modified_by'];
-
     $telefono = $result['telefono'];
     $celular = $result['celular'];
     $email = $result['email'];
     $persona_contacto = $result['persona_contacto'];
+//personal discapacitado
+    $stmtDiscapacitado = $dbh->prepare("SELECT * FROM personal_discapacitado where codigo =:codigo");
+    $stmtDiscapacitado->bindParam(':codigo',$codigo);
+    $stmtDiscapacitado->execute();
+    $resultDiscapacitado = $stmtDiscapacitado->fetch();
+    $discapacitado = $resultDiscapacitado['discapacitado'];
+    $tutor_discapacitado = $resultDiscapacitado['tutor_discapacitado'];
+    $celular_tutor = $resultDiscapacitado['celular_tutor'];
+    $parentesco = $resultDiscapacitado['parentesco'];
+    //IMAGEN
+    $stmtIMG = $dbh->prepare("SELECT * FROM personalimagen where codigo =:codigo");
+    //Ejecutamos;
+    $stmtIMG->bindParam(':codigo',$codigo);
+    $stmtIMG->execute();
+    $resultIMG = $stmtIMG->fetch();
+    $imagen = $resultIMG['imagen'];
+    //$archivo = __DIR__.DIRECTORY_SEPARATOR."imagenes".DIRECTORY_SEPARATOR.$imagen;//sale mal
+    $archivo = "personal/imagenes/".$imagen;//sale mal
+
+
+
 } else {//ES NUEVO
   $codigo = 0;
   $ci = ' ';
@@ -83,6 +103,11 @@ if ($codigo > 0){
     $celular = '';
     $email = '';
     $persona_contacto = '';
+
+    $discapacitado = '';
+    $tutor_discapacitado = '';
+    $celular_tutor = '';
+    $parentesco = '';
 }
 
 //COMBOS...
@@ -121,40 +146,30 @@ $statementestados_personal = $dbh->query($queryestados_personal);
 				  <h4 class="card-title"><?php if ($codigo == 0) echo "Registrar"; else echo "Editar";?>  <?=$nombreSingularPersonal;?></h4>
 				</div>
 			  </div>
-			  <div class="card-body ">
-				
-
-              <input type="hidden" name="codigo" id="codigo" value="<?=$codigo;?>"/>
+			  <div class="card-body ">			
 
             <div class="row">
                 <label class="col-sm-2 col-form-label">Imagen</label>
-                <div class="col-sm-7">
-                    <div class="form-group">
-                       
+                <div class="col-md-7">
                     <div class="fileinput fileinput-new text-center" data-provides="fileinput">
-                    <div class="fileinput-new img-raised">
-                        <img src="rrhh/imagenes/<?=$codigo;?>.jpg" alt="..." style="width:250px;">
-                    </div>
-                    <div class="fileinput-preview fileinput-exists thumbnail img-raised"></div>
-                    <div>
-                        <span class="btn btn-raised btn-round <?=$buttonNormal;?> btn-file">
-                        <span class="fileinput-new">Seleccionar Imagen</span>
-                        <span class="fileinput-exists">Cambiar</span>
-                        <input type="file" name="image" /><!-- ARCHHIVO -->
-                        </span>
+                        <div class="fileinput-new img-raised">
+                            <img src="<?=$archivo;?>" alt="..." style="width:250px;">
+                        </div>
+                        <div class="fileinput-preview fileinput-exists thumbnail img-raised">
+                        </div>
+                        <div>
+                            <span class="btn btn-raised btn-round <?=$buttonNormal;?> btn-file">
+                            <span class="fileinput-new">Seleccionar Imagen</span>
+                            <span class="fileinput-exists">Cambiar</span>
+                            <input type="file" name="image" /><!-- ARCHHIVO -->
+                            </span>
                             <a href="#" class="btn <?=$buttonNormal;?> btn-round fileinput-exists" data-dismiss="fileinput">
                             <i class="fa fa-times"></i> Quitar</a>
-                    </div>
-                    </div>
-
-
-
+                        </div>
                     </div>
                 </div>
-
-             
-              
-            </div><!--fin campo ci_lugar_emision -->
+            </div>
+            <!--fin campo ci_lugar_emision -->
             <div class="row">
                 <label class="col-sm-2 col-form-label">Ci</label>
                 <div class="col-sm-4">
@@ -397,6 +412,42 @@ $statementestados_personal = $dbh->query($queryestados_personal);
                 </div>
                 </div>
             </div><!--fin campo persona_contacto -->
+                        <div class="row">
+                <label class="col-sm-2 col-form-label">Persona Con Discapacidad</label>
+                <div class="col-sm-4">
+                <div class="form-group">
+                    <select name="cod_discapacidad" id="cod_discapacidad"  class="selectpicker " data-style="btn btn-info" required>                                
+                                    <option <?php if($discapacitado == 0) echo "selected"; ?> value="0"> NO</option>
+                                    <option <?php if($discapacitado == 1) echo "selected"; ?> value="1"> SI</option>                            
+                    </select>
+                </div>
+                </div>
+
+                <label class="col-sm-2 col-form-label">Tutor De Persona</label>
+                <div class="col-sm-4">
+                <div class="form-group">
+                    <select name="cod_tutordiscapacidad" id="cod_tutordiscapacidad"  class="selectpicker " data-style="btn btn-info" required>                                
+                                    <option <?php if($tutor_discapacitado == 0) echo "selected"; ?> value="0"> NO</option>
+                                    <option <?php if($tutor_discapacitado == 1) echo "selected"; ?> value="1"> SI</option>                            
+                    </select>                    
+                </div>
+                </div>
+            </div><!--fin campo persona discapacidad -->
+            <div class="row">
+                <label class="col-sm-2 col-form-label">Parentesco</label>
+                <div class="col-sm-4">
+                <div class="form-group">
+                    <input class="form-control" type="text" name="parentescotutor" id="parentescotutor" required value="<?=$parentesco;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+                </div>
+                </div>
+
+                <label class="col-sm-2 col-form-label">Celular Tutor</label>
+                <div class="col-sm-4">
+                <div class="form-group">
+                    <input class="form-control" type="number" name="celularTutor" id="celularTutor" required value="<?=$celular_tutor;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+                </div>
+                </div>
+            </div><!--fin campo celular tutor discapacidad -->
 
 
 

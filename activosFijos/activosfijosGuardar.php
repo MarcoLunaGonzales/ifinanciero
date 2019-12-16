@@ -182,8 +182,6 @@ try {
     } else {
         //UPDATE
         $codigo = $_POST["codigo"];
-
-
         //obtener unos datos antes de actualizar...
         $stmtPREVIO = $dbh->prepare("SELECT * FROM activosfijos where codigo =:codigo");
         //Ejecutamos;
@@ -226,11 +224,7 @@ try {
         $stmt->bindParam(':estadobien', $estadobien);
         $stmt->bindParam(':otrodato', $otrodato);
         $stmt->bindParam(':cod_empresa', $cod_empresa);
-        $stmt->bindParam(':activo', $activo);
-        //$stmt->bindParam(':created_at', $created_at);
-        //$stmt->bindParam(':created_by', $created_by);
-        ///$stmt->bindParam(':modified_at', $modified_at);
-        //$stmt->bindParam(':modified_by', $modified_by);
+        $stmt->bindParam(':activo', $activo);    
         $stmt->bindParam(':vidautilmeses_restante', $vidautilmeses_restante);
         $stmt->bindParam(':cod_af_proveedores', $cod_af_proveedores);
         $stmt->bindParam(':numerofactura', $numerofactura);
@@ -249,6 +243,7 @@ try {
         $resultANT = $stmtANT->fetch();
         //$codigo = $result['codigo'];
         $imagenANT = $resultANT['imagen'];
+
 
         if ($imagenANT != $_FILES['image']['name'] AND strlen($_FILES['image']['name']) > 1){//solo si es diferente actualizar
             //entra

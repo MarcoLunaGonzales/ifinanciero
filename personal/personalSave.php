@@ -12,7 +12,7 @@ $dbhS = new Conexion();
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//para mostrar errores en la ejecucion
 
 try {
-    $codigo = $_POST["codigo"];
+    // $codigo = $_POST["codigo"];
     $ci = $_POST["ci"];
     $ci_aux=$ci;
     $ci_lugar_emision = $_POST["ci_lugar_emision"];
@@ -41,6 +41,11 @@ try {
     $celular = $_POST["celular"];
     $email = $_POST["email"];
     $persona_contacto = $_POST["persona_contacto"];
+
+    $discapacitado=$_POST['cod_discapacidad'];
+    $tutordiscapacidad=$_POST['cod_tutordiscapacidad'];
+    $parentescotutor=$_POST['parentescotutor'];
+    $celularTutor=$_POST['celularTutor'];
     //$created_at = $_POST["created_at"];
     $created_by = 1;//$_POST["created_by"];
     //$modified_at = $_POST["modified_at"];
@@ -88,7 +93,8 @@ try {
         //$stmt->bindParam(':modified_at', $modified_at);
         $stmt->bindParam(':modified_by', $modified_by);
         $stmt->bindParam(':cod_estadoreferencial', $cod_estadoreferencial);
-        $flagSuccess=$stmt->execute();    
+        $flagSuccess=$stmt->execute(); 
+
         $tabla_id = $dbh->lastInsertId();
 
         
@@ -108,26 +114,40 @@ try {
         $stmtDistribucion->bindParam(':cod_estadoreferencial', $cod_estadoreferencial);
         $stmtDistribucion->execute(); 
 
+        $stmtDiscapacitado = $dbh->prepare("INSERT INTO personal_discapacitado (codigo,discapacitado,tutor_discapacitado,celular_tutor,parentesco)
+                                            values(:codigo,:discapacitado,:tutordiscapacidad,:celularTutor,:parentescotutor)");
+        //bind
+        $stmtDiscapacitado->bindParam(':codigo', $codigo);
+        $stmtDiscapacitado->bindParam(':discapacitado', $discapacitado);
+        $stmtDiscapacitado->bindParam(':tutordiscapacidad', $tutordiscapacidad);
+        $stmtDiscapacitado->bindParam(':parentescotutor', $parentescotutor);
+        $stmtDiscapacitado->bindParam(':celularTutor', $celularTutor);
+
         if ($flagSuccess){
-            $archivo = __DIR__.DIRECTORY_SEPARATOR."imagenes".DIRECTORY_SEPARATOR.$_FILES['image']['name']; //el nombre destino, que deberia ser el id
-            //esta guardando en rrhh\imagenes
+            $stmt3 = $dbh->prepare("INSERT INTO personalimagen(codigo,imagen) values (:codigo, :imagen)");
+            $stmt3->bindParam(':codigo', $tabla_id);
+            $stmt3->bindParam(':imagen', $_FILES['image']['name']);//la url esta poniendo
+            //sif (move_uploaded_file($_FILES['image']['name'], APP_PATH . DIRECTORY_SEPARATOR ."imagenes".DIRECTORY_SEPARATOR.$_FILES['image']['name']))
+            //echo $_FILES['image']['name']."...  ";
+            //$archivo = imagenes".DIRECTORY_SEPARATOR.$_FILES['image']['name'];
+            //$archivo = "d:\\UwAmp\\www\\ibno\\imagenes\\".$_FILES['image']['name'];//funciona
+            $archivo = __DIR__.DIRECTORY_SEPARATOR."imagenes".DIRECTORY_SEPARATOR.$_FILES['image']['name'];
+            //esta guardando en activosfijos\imagenes
 
             //echo $archivo;
-            if (move_uploaded_file($_FILES['image']['tmp_name'], $archivo)){ //esto intenta mover
-                //$extension = pathinfo($archivo, PATHINFO_EXTENSION);
-                //ahora queremos cambiar de nombre
-                $archivoNuevoNombre = __DIR__.DIRECTORY_SEPARATOR."imagenes".DIRECTORY_SEPARATOR.$tabla_id.".jpg";
-                rename($archivo, $archivoNuevoNombre);
+            if (move_uploaded_file($_FILES['image']['tmp_name'], $archivo))
                 echo "correcto";
-            }
             else
                 echo "error".$_FILES["image"]["error"];//sale error 0
+
+            $flagSuccess=$stmt3->execute();
         }
         
         showAlertSuccessError($flagSuccess,$urlListPersonal);
 
         //$stmt->debugDumpParams();
     } else {//update
+        $codigo = $_POST["codigo"];
 
         $stmt = $dbh->prepare("UPDATE personal set ci=:ci,ci_lugar_emision=:ci_lugar_emision,fecha_nacimiento=:fecha_nacimiento,
         cod_cargo=:cod_cargo,cod_unidadorganizacional=:cod_unidadorganizacional,cod_area=:cod_area,jubilado=:jubilado,
@@ -176,19 +196,54 @@ try {
         $stmt->bindParam(':modified_by', $modified_by);
         
         $flagSuccess=$stmt->execute();
-      
-        if ($flagSuccess){
-            $archivo = __DIR__.DIRECTORY_SEPARATOR."imagenes".DIRECTORY_SEPARATOR.$_FILES['image']['name']; //el nombre destino, que deberia ser el id
-            //esta guardando en rrhh\imagenes
+
+        $stmtDiscapacitado = $dbh->prepare("UPDATE personal_discapacitado set discapacitado = :discapacitado,
+            tutor_discapacitado=:tutordiscapacidad,parentesco=:parentescotutor,celular_tutor=:celularTutor
+        where codigo = :codigo");
+        //bind
+        $stmtDiscapacitado->bindParam(':codigo', $codigo);
+        $stmtDiscapacitado->bindParam(':discapacitado', $discapacitado);
+        $stmtDiscapacitado->bindParam(':tutordiscapacidad', $tutordiscapacidad);
+        $stmtDiscapacitado->bindParam(':parentescotutor', $parentescotutor);
+        $stmtDiscapacitado->bindParam(':celularTutor', $celularTutor);
+
+        
+        $flagSuccess=$stmtDiscapacitado->execute();
+        
+        //parte de imagen
+        //imagen anterior
+        $stmtANT = $dbh->prepare("SELECT * FROM personalimagen where codigo =:codigo");
+        $stmtANT->bindParam(':codigo',$codigo);
+        $stmtANT->execute();
+        $resultANT = $stmtANT->fetch();
+        $imagenANT = $resultANT['imagen'];
+
+        // echo "ver: ".$_FILES['image']['name'];
+        // echo "ver: ".$imagenANT;
+
+        // echo "ver2: ".strlen($_FILES['image']['name']);
+
+        if ($imagenANT != $_FILES['image']['name'] AND strlen($_FILES['image']['name']) > 1){//solo si es diferente actualizar            
+            
+            $results = $dbh->query("SELECT * from personalimagen where codigo = ".$codigo)->fetchAll(PDO::FETCH_ASSOC);
+            
+            if(count($results)) 
+            {                
+
+                $stmt3 = $dbh->prepare("UPDATE personalimagen set imagen = :imagen where codigo = :codigo");
+            }else {
+                $stmt3 = $dbh->prepare("INSERT into personalimagen (codigo, imagen) values (:codigo, :imagen)");
+            }
+                        
+            $stmt3->bindParam(':codigo', $codigo);
+            $stmt3->bindParam(':imagen', $_FILES['image']['name']);//la url esta poniendo        
+            $archivo = __DIR__.DIRECTORY_SEPARATOR."imagenes".DIRECTORY_SEPARATOR.$_FILES['image']['name'];
+            //esta guardando en activosfijos\imagenes
+            $stmt3->execute();
 
             //echo $archivo;
-            if (move_uploaded_file($_FILES['image']['tmp_name'], $archivo)){ //esto intenta mover
-                //$extension = pathinfo($archivo, PATHINFO_EXTENSION);
-                //ahora queremos cambiar de nombre
-                $archivoNuevoNombre = __DIR__.DIRECTORY_SEPARATOR."imagenes".DIRECTORY_SEPARATOR.$codigo.".jpg";
-                rename($archivo, $archivoNuevoNombre);
+            if (move_uploaded_file($_FILES['image']['tmp_name'], $archivo))
                 echo "correcto";
-            }
             else
                 echo "error".$_FILES["image"]["error"];//sale error 0
         }
