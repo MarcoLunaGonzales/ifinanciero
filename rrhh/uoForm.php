@@ -21,7 +21,7 @@ if ($codigo > 0){
     $nombre = $result['nombre'];
     $abreviatura = $result['abreviatura'];
     $observaciones = $result['observaciones'];
-    $cod_estadoreferencial = $result['cod_estadoreferencial'];
+    $cod_estadoreferencial = $result['cod_estado'];
     $created_at = $result['created_at'];
     $created_by = $result['created_by'];
     $modified_at = $result['modified_at'];

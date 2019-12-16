@@ -7,6 +7,7 @@ require_once 'configModule.php';
 $dbh = new Conexion();
 
 $codigo=$_GET["codigo"];
+$aprobado=$_GET["aprobado"];
 session_start();
 
 $globalUser=$_SESSION["globalUser"];
@@ -17,7 +18,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 
 $fechaHoraActual=date("Y-m-d H:i:s");
 
-$sqlUpdate="UPDATE simulaciones_costos SET  cod_estadosimulacion=4 where codigo=$codigo";
+$sqlUpdate="UPDATE simulaciones_costos SET  cod_estadosimulacion=$aprobado where codigo=$codigo";
 $stmtUpdate = $dbh->prepare($sqlUpdate);
 $flagSuccess=$stmtUpdate->execute();
 ?>

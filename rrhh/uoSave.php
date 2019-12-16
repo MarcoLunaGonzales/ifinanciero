@@ -15,14 +15,14 @@ try {
     $nombre = $_POST["nombre"];
     $abreviatura = $_POST["abreviatura"];
     $observaciones = $_POST["observaciones"];
-    $cod_estadoreferencial = $_POST["cod_estadoreferencial"];
+    $cod_estadoreferencial = 1;
     //$created_at = $_POST["created_at"];
     $created_by = 1;//$_POST["created_by"];
     //$modified_at = $_POST["modified_at"];
     $modified_by = 1;//$_POST["modified_by"];
 
     if ($_POST["codigo"] == 0){
-        $stmt = $dbh->prepare("INSERT INTO unidades_organizacionales(nombre,abreviatura,observaciones,cod_estador,created_by,modified_by) 
+        $stmt = $dbh->prepare("INSERT INTO unidades_organizacionales(nombre,abreviatura,observaciones,cod_estado,created_by,modified_by) 
         values (:nombre, :abreviatura, :observaciones, :cod_estadoreferencial, :created_by, :modified_by)");
         //Bind
         $stmt->bindParam(':nombre', $nombre);

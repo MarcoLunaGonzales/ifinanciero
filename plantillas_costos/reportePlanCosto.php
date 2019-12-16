@@ -296,7 +296,55 @@ echo $html;
 
 ?>
 
-                   </div>                  
+                </div> 
+                <br><br>
+                <div class="row">
+                  <div class="col-sm-6 div-center">
+                    <table class="table table-condensed table-striped table-bordered">
+                        <thead>
+                          <tr>
+                            <th width="10%">#</th>
+                            <th width="40%">Precio Venta Ibnorca</th>
+                            <th width="40%">Precio Venta Fuera Ibnorca</th>
+                            <th width="10%">Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody id="contenido_precio">
+                          <tr>
+                            <td>Nuevo</td>
+                            <td>
+                              <div class="form-group">
+                                <input class="form-control text-right" type="number" name="precio_venta_ibnorca" value="" placeholder="Precio de venta Ibnorca"  id="precio_venta_ibnorca" step="0.01"/>
+                              </div>
+                            </td>
+                            <td>
+                               <div class="form-group">                    
+                                 <input class="form-control text-right" type="number" name="precio_venta_fuera" value="" placeholder="Precio de venta Fuera Ibnorca" id="precio_venta_fuera" step="0.01"/>
+                               </div>
+                             </td>
+                             <td><a href="#" class="btn btn-warning btn-sm" onclick="agregarPrecioPlantilla(<?=$codigo?>); return false;">
+                              Agregar
+                            </a></td>
+                          </tr>
+                           <?php
+                           $stmt = $dbh->prepare("SELECT * FROM precios_plantillacosto where cod_plantillacosto=$codigo order by codigo");
+                           $stmt->execute();
+                           $indexPrecio=1;
+                         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                          $codigoPrecio=$row['codigo'];
+                          $precioLocal=number_format($row['venta_local'], 2, '.', ',');
+                          $precioExterno=number_format($row['venta_externo'], 2, '.', ',');
+                          ?><tr><td><?=$indexPrecio?></td><td class="text-right"><?=$precioLocal?></td><td class="text-right"><?=$precioExterno?></td>
+                          <td><a href="#" class="<?=$buttonDelete;?> btn-link btn-sm" onclick="removePrecioPlantilla(<?=$codigoPrecio?>,<?=$codigo?>); return false;">
+                              <i class="material-icons"><?=$iconDelete;?></i>
+                            </a>
+                          </td></tr><?php
+                          $indexPrecio++;
+                           }?>
+                        </tbody>
+                     </table>
+                  </div>
+                </div>                 
                 </div>
                 <div class="card-footer bg-white col-sm-12">
                    <div class="row col-sm-12">
@@ -310,27 +358,24 @@ echo $html;
                      </div>
                      <div class="col-sm-3">
                        <div class="form-group">
-                           <label class="bmd-label-static">Precio de Venta IBNORCA</label>
-                           <input class="form-control" type="number" name="precio_venta_ibnorca" value="<?=$detallePlantilla[0]?>" id="precio_venta_ibnorca" step="0.01" required/>
-                       </div>
-                     </div>
-                     <div class="col-sm-3">
-                       <div class="form-group">
-                           <label class="bmd-label-static">Precio de Venta FUERA DE IBNORCA</label>
-                           <input class="form-control" type="number" name="precio_venta_fuera" value="<?=$detallePlantilla[1]?>" id="precio_venta_fuera" step="0.01" required/>
-                       </div>
-                     </div>
-                     <div class="col-sm-3">
-                       <div class="form-group">
-                           <label class="bmd-label-static">Cantidad de Alumnos</label>
+                           <label class="bmd-label-static">Cantidad de Alumnos Ibnorca</label>
                            <input class="form-control" type="number" name="cantidad_alumnos" value="<?=$detallePlantilla[2]?>" id="cantidad_alumnos" required/>
+                       </div>
+                     </div>
+                     <div class="col-sm-3">
+                       <div class="form-group">
+                           <label class="bmd-label-static">Cantidad de Alumnos Fuera Ibnorca</label>
+                           <input class="form-control" type="number" name="cantidad_alumnos_fuera" value="<?=$detallePlantilla[3]?>" id="cantidad_alumnos_fuera" required/>
                        </div>
                      </div>
                    </div>
                 </div>
+                
               </div><!--fin DIV card-->
+
              </form>
             </div>
           </div>  
         </div>
     </div>
+<?php require_once 'modal.php';?>

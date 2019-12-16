@@ -42,6 +42,7 @@ try {
     //var_dump($_POST);
     $cod_responsables_responsable=0;
     $cod_responsables_autorizadopor=0;
+    $reevaluo=0;
 
     if(isset($_POST["cod_responsables_responsable"])){
         $cod_responsables_responsable=$_POST["cod_responsables_responsable"];
@@ -59,6 +60,9 @@ try {
     $bandera_depreciar = 'NO';#LA PRIMERA VEZ LUEGO SE CAMBIA A SI Y DEPRECIA
 
     $cod_unidadorganizacional = $_POST['cod_unidadorganizacional'];
+    $cod_proy_finan = $_POST['cod_proy_finan'];
+
+    // echo "llego: ".$cod_proy_finan;
 
     $cod_area=0;
     if(isset($_POST['cod_area'])){
@@ -71,11 +75,11 @@ try {
         $stmt = $dbh->prepare("INSERT INTO activosfijos(codigoactivo,tipoalta,fechalta,indiceufv,tipocambio,moneda,valorinicial,
         depreciacionacumulada,valorresidual,cod_depreciaciones,cod_tiposbienes,vidautilmeses, vidautilmeses_restante,estadobien,otrodato,cod_ubicaciones,
         cod_empresa,activo,cod_responsables_responsable,cod_responsables_autorizadopor, cod_af_proveedores, numerofactura,
-        bandera_depreciar, cod_unidadorganizacional,cod_area, cod_estadoactivofijo ) values
+        bandera_depreciar, cod_unidadorganizacional,cod_area, cod_estadoactivofijo,cod_proy_financiacion,reevaluo) values
         (:codigoactivo, :tipoalta, :fechalta, :indiceufv, :tipocambio, :moneda, :valorinicial, :depreciacionacumulada, :valorresidual,
         :cod_depreciaciones, :cod_tiposbienes, :vidautilmeses, :vidautilmeses_restante, :estadobien, :otrodato, :cod_ubicaciones, :cod_empresa, :activo,
         :cod_responsables_responsable, :cod_responsables_autorizadopor, :cod_af_proveedores, :numerofactura,
-        :bandera_depreciar, :cod_unidadorganizacional, :cod_area ,:cod_estadoactivofijo)");
+        :bandera_depreciar, :cod_unidadorganizacional, :cod_area ,:cod_estadoactivofijo,:cod_proy_financiacion,:reevaluo)");
 
         //necesito guardar en una segunda tabla: activofijos_asignaciones
 
@@ -114,6 +118,9 @@ try {
         $stmt->bindParam(':cod_unidadorganizacional', $cod_unidadorganizacional);
         $stmt->bindParam(':cod_area', $cod_area);
         $stmt->bindParam(':cod_estadoactivofijo', $cod_estadoactivofijo);
+        $stmt->bindParam(':cod_proy_financiacion', $cod_proy_finan);
+        $stmt->bindParam(':reevaluo', $reevaluo);
+        
         //$stmt->bindParam(':created_at', $created_at);
         //$stmt->bindParam(':created_by', $created_by);
         //$stmt->bindParam(':modified_at', $modified_at);
@@ -199,7 +206,7 @@ try {
         cod_depreciaciones=:cod_depreciaciones,cod_tiposbienes=:cod_tiposbienes,
         vidautilmeses=:vidautilmeses,estadobien=:estadobien,otrodato=:otrodato,cod_empresa=:cod_empresa,activo=:activo,
         vidautilmeses_restante=:vidautilmeses_restante,cod_af_proveedores=:cod_af_proveedores,
-        numerofactura=:numerofactura, bandera_depreciar = :bandera_depreciar where codigo = :codigo");
+        numerofactura=:numerofactura, bandera_depreciar = :bandera_depreciar,cod_proy_financiacion=:cod_proy_financiacion where codigo = :codigo");
         //bind
         //created_at=:created_at,created_by=:created_by,modified_at=:modified_at,modified_by=:modified_by,
        
@@ -228,6 +235,7 @@ try {
         $stmt->bindParam(':cod_af_proveedores', $cod_af_proveedores);
         $stmt->bindParam(':numerofactura', $numerofactura);
         $stmt->bindParam(':bandera_depreciar', $bandera_depreciar);
+        $stmt->bindParam(':cod_proy_financiacion', $cod_proy_finan);
 
         $flagSuccess=$stmt->execute();
 

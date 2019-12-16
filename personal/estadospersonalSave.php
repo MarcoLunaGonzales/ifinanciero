@@ -25,7 +25,6 @@ try {
         $flagSuccess=$stmt->execute();
         $tabla_id = $dbh->lastInsertId();
     
-        $flagSuccess=$stmt->execute();
         //$stmt3->debugDumpParams();
 
         //$arr = $stmt->errorInfo();

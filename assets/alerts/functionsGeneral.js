@@ -74,7 +74,10 @@ function addCuentaContable(obj) {
       ajax.onreadystatechange=function(){
         if (ajax.readyState==4) {
           divDetalle.html(ajax.responseText);
-          divDetalle.bootstrapMaterialDesign();
+          divDetalle.bootstrapMaterialDesign();   
+          $('#nro_cuenta').val("");
+          $('#cuenta').val("");//
+          $('#padre').val("");
           $('.selectpicker').selectpicker("refresh");
           $('#myModal').modal('show');
           return false;
@@ -275,6 +278,15 @@ function minusCuentaContable(idF){
        $("#boton_fac"+nuevoId).attr("onclick","listFac('"+i+"')");
        $("#boton_fac"+nuevoId).attr("id","boton_fac"+i);
        $("#nfac"+nuevoId).attr("id","nfac"+i);
+
+       $("#mayor"+nuevoId).attr("onclick","mayorReporteComprobante('"+i+"')");
+       $("#mayor"+nuevoId).attr("id","mayor"+i);
+       $("#cambiar_cuenta"+nuevoId).attr("onclick","editarCuentaComprobante('"+i+"')");
+       $("#cambiar_cuenta"+nuevoId).attr("id","cambiar_cuenta"+i);
+       $("#distribucion"+nuevoId).attr("onclick","nuevaDistribucionPonerFila('"+i+"')");
+       $("#distribucion"+nuevoId).attr("id","distribucion"+i);
+       $("#boton_ret"+nuevoId).attr("onclick","listRetencion('"+i+"')");
+       $("#boton_ret"+nuevoId).attr("id","boton_ret"+i);
       }
      } 
      itemFacturas.splice((idF-1), 1);
@@ -779,10 +791,13 @@ function guardarPlantillaCosto(){
   var abrev=$("#abreviatura").val();
   var unidad=$("#unidad").val();
   var area=$("#area").val();
-  if(nombre==""||abrev==""||!(unidad>0)||!(area>0)){
+  var utilidadLocal=$("#utilidad_minibnorca").val();
+  var utilidadExterna=$("#utilidad_minfuera").val();
+  var area=$("#area").val();
+  if(utilidadLocal==""||utilidadExterna==""||nombre==""||abrev==""||!(unidad>0)||!(area>0)){
    $("#mensaje").html("<center><p class='text-danger'>Todos los campos son requeridos.</p></center>");
   }else{
-     var parametros={"nombre":nombre,"abrev":abrev,"unidad":unidad,"area":area};
+     var parametros={"nombre":nombre,"abrev":abrev,"unidad":unidad,"area":area,"utilidad_local":utilidadLocal,"utilidad_externo":utilidadExterna};
      $.ajax({
         type: "GET",
         dataType: 'html',
@@ -1002,6 +1017,7 @@ function filaTabla(tabla){
   tabla.html(html);
   $("#modalCuentas").modal("show");
 }
+
 function filaTablaGeneral(tabla,index){
   var html="";
   for (var i = 0; i < cuentas_tabla_general[index-1].length; i++) {
@@ -1315,11 +1331,17 @@ function alertDatosTabla(){
 //funciones simulaciones
 function guardarSimulacionCosto(){
   var nombre=$("#nombre").val();
+  var precio=$("#precio_venta").val();
   var plantilla_costo=$("#plantilla_costo").val();
+  if( $("#ibnorca_check").is(':checked') ) {
+      var ibnorca=1;
+  }else{
+      var ibnorca=2;
+  }
   if(nombre==""||!(plantilla_costo>0)){
    $("#mensaje").html("<center><p class='text-danger'>Todos los campos son requeridos.</p></center>");
   }else{
-     var parametros={"nombre":nombre,"plantilla_costo":plantilla_costo};
+     var parametros={"nombre":nombre,"plantilla_costo":plantilla_costo,"precio":precio,"ibnorca":ibnorca};
      $.ajax({
         type: "GET",
         dataType: 'html',
@@ -1335,13 +1357,23 @@ function guardarSimulacionCosto(){
     });
   }
 }
-function cargarPlantillaSimulacion(mes){
+function cargarPlantillaSimulacion(mes,ibnorca){
   var plantilla_costo=$("#plantilla_costo").val();
+  var precio=$("#precio_venta").val();
   if(!(plantilla_costo>0)){
    $("#mensaje").html("<center><p class='text-danger'>Seleccione una plantilla.</p></center>");
   }else{
+    if(precio==null){
+       $("#mensaje").html("<center><p class='text-danger'>No hay registros de precios.</p></center>");
+    }else{
+    var alumnos=$("#alumnos_plan").val();
+    var alumnosfuera=$("#alumnos_plan_fuera").val();
+    if( $("#alumnos_auto").is(':checked') ) {
+        alumnos=0;
+        alumnosfuera=0;
+     }
     contenedor = document.getElementById('div_simulacion');
-     var parametros={"plantilla_costo":plantilla_costo,"mes":mes};
+     var parametros={"plantilla_costo":plantilla_costo,"mes":mes,"precio":precio,"alumnos":alumnos,"alumnos_fuera":alumnosfuera,"ibnorca":ibnorca};
      $.ajax({
         type: "GET",
         dataType: 'html',
@@ -1355,10 +1387,13 @@ function cargarPlantillaSimulacion(mes){
           contenedor.innerHTML = resp;
          $("#mensaje").html("<center><p class='text-success'>Proceso satisfactorio!</p></center>");
         }
-    });
+    });   
+    }
   }
 }
 function presioneBoton(){
+  $("#boton_simular").removeClass("d-none");
+  $("#check_simular").removeClass("d-none");
   $("#mensaje").html("<center><p class='text-muted'><small>Presione en SIMULAR PLANTILLA</small></p></center>");
 }
 
@@ -1374,11 +1409,29 @@ function guardarSimulacion(valor){
       $('#msgError2').html("<p>Nueva Plantilla detectada!</p>");
       $('#modalGuardar').modal('show');
     }else{
-      if(valor=="enviar"){
-       enviarSimulacionAjax();
+      if($("#cantidad_alibnorca").val()!=$("#alumnos_plan").val()||$("#cantidad_alfuera").val()!=$("#alumnos_plan_fuera").val()){
+        $('#msgError2').html("<p>Nuevas cantidades de Alumnos detectados!</p>");
+        $('#modalGuardar').modal('show');
       }else{
-       guardarSimulacionAjax(0); 
-      }      
+        if($("#precio_venta").length){
+         if($("#cod_precioplantilla").val()!=$("#precio_venta").val()){
+           $('#msgError2').html("<p>Nuevo previo de venta seleccionado!</p>");
+           $('#modalGuardar').modal('show');
+         }else{
+            if(valor=="enviar"){
+            enviarSimulacionAjax();
+           }else{
+            guardarSimulacionAjax(0); 
+           } 
+         }         
+        }else{
+           if(valor=="enviar"){
+            enviarSimulacionAjax();
+           }else{
+            guardarSimulacionAjax(0); 
+           } 
+        }
+      }           
     }
   }
 }
@@ -1387,10 +1440,17 @@ function guardarSimulacionAjax(valor){
   var nombre=$("#nombre").val();
   if(valor==0){
    var plantilla_costo=$("#cod_plantilla").val();
+   var cantidadIbnorca=$("#alumnos_plan").val();
+   var cantidadFuera=$("#alumnos_plan_fuera").val();
+   var precio=$("#cod_precioplantilla").val();
   }else{
-   var plantilla_costo=$("#plantilla_costo").val();  
+   var plantilla_costo=$("#plantilla_costo").val(); 
+   var cantidadIbnorca=$("#cantidad_alibnorca").val();
+   var cantidadFuera=$("#cantidad_alfuera").val();
+   var precio=$("#precio_venta").val(); 
   }
-  var parametros={"cod_plantilla":plantilla_costo,"nombre":nombre,"codigo":codigo};
+
+  var parametros={"cod_plantilla":plantilla_costo,"nombre":nombre,"codigo":codigo,"precio":precio,"alibnorca":cantidadIbnorca,"alfuera":cantidadFuera};
      $.ajax({
         type: "GET",
         dataType: 'html',
@@ -1408,7 +1468,8 @@ function guardarSimulacionAjax(valor){
 }
 function enviarSimulacionAjax(){
   var codigo=$("#cod_simulacion").val();
-  var parametros={"codigo":codigo};
+  var aprobado=$("#aprobado").val();
+  var parametros={"codigo":codigo,"aprobado":aprobado};
      $.ajax({
         type: "GET",
         dataType: 'html',
@@ -1581,3 +1642,289 @@ $(document).on("shown.bs.modal","#modalRetencion",function(){
            }
           });
  }
+
+ //funciones plantillas_costos 
+
+ function agregarPrecioPlantilla(codigo){
+  var precioLocal=$("#precio_venta_ibnorca").val();
+  var precioExterno=$("#precio_venta_fuera").val();
+  if(precioLocal==""||precioExterno==""){
+   alertaModal("Debe ingresar los precios","bg-warning","text-dark");
+  }else{
+    ajax=nuevoAjax();
+    ajax.open("GET","ajaxRegistrarPrecio.php?local="+precioLocal+"&externo="+precioExterno+"&codigo="+codigo,true);
+    ajax.onreadystatechange=function(){
+    if (ajax.readyState==4) {
+      var fi=$("#contenido_precio");
+      fi.html(ajax.responseText);
+      fi.bootstrapMaterialDesign();
+      $("#precio_venta_ibnorca").val("");
+      $("#precio_venta_fuera").val("");
+    }
+   }
+    ajax.send(null);
+  }
+ }
+ function removePrecioPlantilla(cod,codigo){
+  ajax=nuevoAjax();
+    ajax.open("GET","ajaxDeletePrecio.php?cod="+cod+"&codigo="+codigo,true);
+    ajax.onreadystatechange=function(){
+    if (ajax.readyState==4) {
+      var fi=$("#contenido_precio");
+      fi.html(ajax.responseText);
+      fi.bootstrapMaterialDesign();
+      $("#precio_venta_ibnorca").val("");
+      $("#precio_venta_fuera").val("");
+    }
+   }
+    ajax.send(null);
+ }
+
+ function listarPreciosPlantilla(codigo,label,ibnorca){
+  var url="";
+  if(label=="sin"){
+   url="ListComboPrecio.php";
+  }else{
+   url="../plantillas_costos/ajaxListaComboPrecio.php";
+  }
+  ajax=nuevoAjax();
+    ajax.open("GET",url+"?codigo="+codigo+"&ibnorca="+ibnorca,true);
+    ajax.onreadystatechange=function(){
+    if (ajax.readyState==4) {
+      var fi=$("#lista_precios");
+      fi.html(ajax.responseText);
+      fi.bootstrapMaterialDesign();
+       $('.selectpicker').selectpicker("refresh");
+    }
+   }
+    ajax.send(null);
+ }
+
+ //////////////////////reporte mayores desde comprobante////////////
+function mayorReporteComprobante(fila){
+ if($("#cuenta"+fila).val()==""){
+   $("#msgError").html("<p>Ingrese una cuenta</p>");
+   $('#modalAlert').modal('show');
+ }else{
+  var cuenta=$("#cuenta"+fila).val();
+    var parametros={
+      "moneda":1,
+      "fecha_desde":null,
+      "fecha_hasta":null,
+      "glosa_len":1,
+      "unidad_costo":null,
+      "area_costo":null,
+      "cuenta_especifica":cuenta,
+      "cuenta":null,
+      "unidad":null
+    };
+     $.ajax({
+        type: "POST",
+        dataType: 'html',
+        url: "../reportes/reporteMayor.php",
+        data: parametros,
+        success:  function (resp) {
+         var newWindow = window.open("");
+         newWindow.document.write(resp);
+        }
+    });
+ }
+}
+ ///////////////////////////////////////////////////////////////////
+
+//perosnal area distribucion
+
+function agregaformPAD(datos){
+  //console.log("datos: "+datos);
+  var d=datos.split('-');
+  document.getElementById("codigo_personal").value=d[0];
+  document.getElementById("codigo_distribucion").value=d[1];
+}
+function agregaformPADE(datos){
+  //console.log("datos: "+datos);
+  var d=datos.split('-');
+  document.getElementById("codigo_personalE").value=d[0];
+  document.getElementById("codigo_distribucionE").value=d[1];
+
+  document.getElementById("cod_areaE").value=d[2];
+  document.getElementById("porcentajeE").value=d[3];
+}
+function agregaformPADB(datos){
+  //console.log("datos: "+datos);
+  var d=datos.split('-');
+  document.getElementById("codigo_personalB").value=d[0];
+  document.getElementById("codigo_distribucionB").value=d[1];
+}
+
+function RegistrarDistribucion(cod_personal,cod_area,porcentaje){
+  $.ajax({
+    type:"POST",
+    data:"cod_personal="+cod_personal+"&cod_area="+cod_area+"&cod_estadoreferencial=1&porcentaje="+porcentaje,
+    url:"personal/savePersonalAreaDistribucion.php",
+    success:function(r){
+      if(r==1){
+        //$('#tabla1').load('index.php');
+        // alertify.success("agregado");
+        alerts.showSwal('success-message','index.php?opcion=PersonalAreaDistribucionForm&codigo='+cod_personal);
+      }
+    }
+  });
+}
+function EditarDistribucion(cod_personal,cod_distribucion,cod_area,porcentaje){
+  $.ajax({
+    type:"POST",
+    data:"cod_personal="+cod_distribucion+"&cod_area="+cod_area+"&cod_estadoreferencial=2&porcentaje="+porcentaje,
+    url:"personal/savePersonalAreaDistribucion.php",
+    success:function(r){
+      if(r==1){
+        //$('#tabla1').load('index.php');
+        // alertify.success("agregado");
+        alerts.showSwal('success-message','index.php?opcion=PersonalAreaDistribucionForm&codigo='+cod_personal);
+      }
+    }
+  });
+}
+function EliminarDistribucion(cod_personal,cod_distribucion){
+  $.ajax({
+    type:"POST",
+    data:"cod_personal="+cod_distribucion+"&cod_area=0&cod_estadoreferencial=3&porcentaje=0",
+    url:"personal/savePersonalAreaDistribucion.php",
+    success:function(r){
+      if(r==1){
+        //$('#tabla1').load('index.php');
+        // alertify.success("agregado");
+        alerts.showSwal('success-message','index.php?opcion=PersonalAreaDistribucionForm&codigo='+cod_personal);    
+      }
+    }
+  });
+}
+//area_unidad organizacional
+// function agregaListAreas_unidad(datos){
+//   //console.log("datos: "+datos);
+//   var d=datos.split('-');
+//   document.getElementById("codigo_area_unidad").value=d[0];
+//   // alert(d[0]);
+
+
+
+ var areas_tabla=[]; 
+ var areas_tabla_general=[]; 
+var numFilasA=0;
+function sendChekedA(id){
+  var check=document.getElementById("areas"+id);
+    check.onchange = function() {
+     if(this.checked) {
+      numFilasA++;
+      
+     }else{
+      
+      numFilasA--;
+     }
+     $("#boton_registradasA").html("Areas Registradas <span class='badge bg-white text-warning'>"+numFilasA+"</span>");
+   }
+} 
+
+// function filaTabla(tabla){
+//   var html="";
+//   for (var i = 0; i < areas_tabla.length; i++) {
+//     html+="<tr><td>"+(i+1)+"</td><td>"+areas_tabla[i].nombre+"</td><td>"+areas_tabla[i].numero+"</td></tr>";
+//   };
+//   tabla.html(html);
+//   $("#modalCuentas").modal("show");
+// }
+
+function filaTablaAGeneral(tabla,index){
+  var html="";
+  for (var i = 0; i < areas_tabla_general[index-1].length; i++) {
+    //alert(areas_tabla_general[index-1][i].nombre);
+    html+="<tr><td>"+(i+1)+"</td><td>"+areas_tabla_general[index-1][i].nombreA+"</td><td>"+areas_tabla_general[index-1][i].nombreAP+"</td></tr>";
+  }
+  tabla.html(html);
+  $("#modalAreas").modal("show");  
+}
+
+
+// function ajaxAUOPadre(combo){
+//   var contenedor;
+//   var codigo_UO=combo.value;
+//   contenedor = document.getElementById('cod_areaorganizacion_padre_div');
+//   ajax=nuevoAjax();
+//   ajax.open('GET', 'rrhh/AreaPadreAjax.php?codigo_UO='+codigo_UO,true);
+//   ajax.onreadystatechange=function() {
+//     if (ajax.readyState==4) {
+//       contenedor.innerHTML = ajax.responseText;
+//       $('.selectpicker').selectpicker(["refresh"]);
+      
+//     }
+//   }
+//   ajax.send(null)  
+// }
+
+
+//contratos de personal
+function agregaformPC(datos){
+  //console.log("datos: "+datos);
+  var d=datos.split('/');
+  document.getElementById("codigo_personalA").value=d[0];
+}
+function agregaformPCE(datos){
+  //console.log("datos: "+datos);
+  var d=datos.split('/');
+  document.getElementById("codigo_personalE").value=d[0];
+  document.getElementById("codigo_contratoE").value=d[1];
+  document.getElementById("fecha_inicioE").value=d[2];
+
+  // document.getElementById("cod_areaE").value=d[2];
+  // document.getElementById("porcentajeE").value=d[3];
+}
+function agregaformPCB(datos){
+  //console.log("datos: "+datos);
+  var d=datos.split('/');
+  document.getElementById("codigo_personalB").value=d[0];
+  document.getElementById("codigo_contratoB").value=d[1];
+
+}
+
+function RegistrarContratoPersonal(cod_personal,cod_tipocontrato,fecha_inicio){
+  $.ajax({
+    type:"POST",
+    data:"cod_contrato=0&cod_personal="+cod_personal+"&cod_tipocontrato="+cod_tipocontrato+"&cod_estadoreferencial=1&fecha_inicio="+fecha_inicio,
+    url:"personal/savePersonalcontrato.php",
+    success:function(r){
+      if(r==1){
+        //$('#tabla1').load('index.php');
+        // alertify.success("agregado");
+        alerts.showSwal('success-message','index.php?opcion=FormPersonalContratos&codigo='+cod_personal);
+      }
+    }
+  });
+}
+function EditarContratoPersonal(codigo_contratoE,codigo_personalE,cod_tipocontratoE,fecha_inicioE){
+  $.ajax({
+    type:"POST",
+
+    data:"cod_contrato="+codigo_contratoE+"&cod_personal=0&cod_tipocontrato="+cod_tipocontratoE+"&cod_estadoreferencial=2&fecha_inicio="+fecha_inicioE,
+    url:"personal/savePersonalcontrato.php",
+    success:function(r){
+      if(r==1){
+        //$('#tabla1').load('index.php');
+        // alertify.success("agregado");
+        alerts.showSwal('success-message','index.php?opcion=FormPersonalContratos&codigo='+codigo_personalE);
+      }
+    }
+  });
+}
+function EliminarContratoPersonal(codigo_contratoB,codigo_personalB){
+  $.ajax({
+    type:"POST",
+    data:"cod_contrato="+codigo_contratoB+"&cod_personal=0&cod_tipocontrato=1&cod_estadoreferencial=3&fecha_inicio=0000-00-00",
+    url:"personal/savePersonalcontrato.php",
+    success:function(r){
+      if(r==1){
+        //$('#tabla1').load('index.php');
+        // alertify.success("agregado");
+        alerts.showSwal('success-message','index.php?opcion=FormPersonalContratos&codigo='+codigo_personalB);    
+      }
+    }
+  });
+}

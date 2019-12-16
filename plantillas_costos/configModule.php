@@ -1,21 +1,21 @@
 <?php
 //AQUI SE DEFINEN LAS VARIABLES PARA EL ABM
-$table="comprobantes";
+$table="plantillas_costo";
 $moduleNameSingular="Plantilla de Costo";
 $moduleNamePlural="Plantillas de Costo";
 
 //$moduleNameSingular="Comprobantes";
 $urlList="index.php?opcion=listPlantillasCostos";
-$urlListReg="index.php?opcion=listComprobantesRegistrados";
+$urlList2="index.php?opcion=listPlantillasCostosAdmin";
 
 $urlReporte="plantillas_costos/reportePlanCosto.php";
 $urlRegister="plantillas_costos/registerGrupos.php";
 $urlRegister2="plantillas_costos/register.php";
 $urlEdit="index.php?opcion=editComprobante";
-$urlEdit2="comprobantes/edit_prueba.php";
+$urlEdit2="plantillas_costos/edit.php";
 $urlArchivo="comprobantes/archivoComprobante.php";
 $urlImp="comprobantes/imp.php";
-$urlDelete="index.php?opcion=deleteComprobante";
+$urlDelete="index.php?opcion=deletePlantillaCosto";
 $urlSave="comprobantes/save.php";
 $urlSaveEdit="comprobantes/saveEdit.php";
 $urlSaveDelete="";

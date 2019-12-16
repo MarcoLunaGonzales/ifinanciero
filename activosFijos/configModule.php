@@ -68,9 +68,11 @@ $moduleNamePlural6="Activos Fijos";
 $urlList6="?opcion=activosfijosLista";
 $urlSave6="?opcion=saveActivosfijos";//guardar
 $urlSaveTransfer="?opcion=saveTransferActivosfijos";//guardar transferencia de af
+$urlSaveReevaluoAF="?opcion=saveReevaluoAF";//
 $urlEdit6="index.php?opcion=activofijoRegister";//form
 
 $urlEditTransfer="index.php?opcion=activofijoTransferir";
+$urlRevaluarAF="index.php?opcion=activofijoRevaluar";
 $urlafAccesorios="index.php?opcion=activofijoAccesorios";
 $urlafEventos="index.php?opcion=activofijoEventos";
 

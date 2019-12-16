@@ -113,6 +113,9 @@ $stmt->bindColumn('nombre_area', $nombreArea);
                                 <a href='<?=$urlafEventos;?>&codigo=<?=$codigo;?>' rel="tooltip" class="btn btn-info">
                                   <i class="material-icons" title="Eventos AF">event</i>
                                 </a>
+                                <a href='<?=$urlRevaluarAF;?>&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonMorado;?>">
+                                  <i class="material-icons" title="Revaluar AF">trending_down</i>
+                                </a>
 
                                 <?php
                                   }

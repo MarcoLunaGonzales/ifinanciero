@@ -9,9 +9,10 @@
     $dbh = new Conexion();
 
     //SELECT
-    $stmt = $dbh->prepare("select a.*, uo.nombre as xunidad_org, ar.nombre as xarea, arpadre.nombre as xareapadre 
-    from areas_organizacion a, unidades_organizacionales uo, areas ar, areas arpadre 
-    where a.cod_unidad = uo.codigo and a.cod_area = ar.codigo and a.cod_areaorganizacion_padre = arpadre.codigo");
+    $stmt = $dbh->prepare("SELECT *,(select uo.nombre from unidades_organizacionales uo where uo.codigo=cod_unidad ) as xunidad_org,
+              (select a.nombre from areas a where a.codigo=cod_area) as xarea,
+              (select a.nombre from areas a where a.codigo=cod_areaorganizacion_padre) xareapadre
+                from areas_organizacion where cod_estadoreferencial=1");
     //ejecutamos
     $stmt->execute();
     //bindColumn
@@ -73,7 +74,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { ?>
           <a href='<?=$urlFormAreas_organizacion;?>&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonEdit;?>">
             <i class="material-icons"><?=$iconEdit;?></i>
           </a>
-          <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDeleteAreas;?>&codigo=<?=$codigo;?>')">
+          <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDeleteAreas_organizacion;?>&codigo=<?=$codigo;?>')">
             <i class="material-icons"><?=$iconDelete;?></i>
           </button>
           <?php

@@ -103,6 +103,12 @@
 		if ($_GET['opcion']=='listPlantillasCostos') {
 			require_once('plantillas_costos/list.php');
 		}
+		if ($_GET['opcion']=='deletePlantillaCosto') {
+			require_once('plantillas_costos/saveDelete.php');
+		}
+		if ($_GET['opcion']=='listPlantillasCostosAdmin') {
+			require_once('plantillas_costos/listAdmin.php');
+		}
         
         //SIMULACIONES DE COSTO
 		if ($_GET['opcion']=='listSimulacionesCostos') {
@@ -110,6 +116,12 @@
 		}
 		if ($_GET['opcion']=='listSimulacionesCostosAdmin') {
 			require_once('simulaciones_costos/listAdmin.php');
+		}
+		if ($_GET['opcion']=='editSimulacion') {
+			require_once('simulaciones_costos/editSimulacion.php');
+		}
+		if ($_GET['opcion']=='deleteSimulacion') {
+			require_once('simulaciones_costos/saveDelete.php');
 		}
 
         //MES EN CURSO
@@ -239,6 +251,10 @@
 			//$codigo=$_GET['codigoactivo'];
 			require_once('activosFijos/saveTransferActivosfijos.php');
 		}
+		if ($_GET['opcion']=='saveReevaluoAF') {
+			//$codigo=$_GET['codigoactivo'];
+			require_once('activosFijos/saveReevaluoAF.php');
+		}
 
 		if ($_GET['opcion']=='activofijoAccesorios') {
 			$codigo=$_GET['codigo'];
@@ -248,6 +264,11 @@
 			$codigo=$_GET['codigo'];
 			require_once('activosFijos/activofijoEventos.php');
 		}
+		if ($_GET['opcion']=='activofijoRevaluar') {
+			$codigo=$_GET['codigo'];
+			require_once('activosFijos/activofijoRevaluar.php');
+		}
+		
 
 		//ASIGNACIONES DE ACTIVOS FIJOS
 		if ($_GET['opcion']=='asignacionesLista') {
@@ -359,6 +380,12 @@
 		if ($_GET['opcion']=='areasSave') {
 			require_once('rrhh/areasSave.php');
 		}
+		if ($_GET['opcion']=='deleteAreas') {
+			$codigo=$_GET['codigo'];
+			require_once('rrhh/deleteAreas.php');
+		}
+
+		
 
 		//cargos
 		if ($_GET['opcion']=='cargosLista') {
@@ -372,6 +399,11 @@
 			require_once('rrhh/cargosSave.php');
 		}
 
+		if ($_GET['opcion']=='deleteCargos') {
+			$codigo=$_GET['codigo'];
+			require_once('rrhh/deleteCargos.php');
+		}
+
 		//unidades organizacionales
 		if ($_GET['opcion']=='uoLista') {
 			require_once('rrhh/uoLista.php'); //ok
@@ -382,6 +414,18 @@
 		}
 		if ($_GET['opcion']=='uoSave') {
 			require_once('rrhh/uoSave.php');
+		}
+		if ($_GET['opcion']=='deleteUO') {
+			$codigo=$_GET['codigo'];
+			require_once('rrhh/uoDelete.php');
+		}
+		if ($_GET['opcion']=='registerAreasU') {
+			$codigo=$_GET['codigo'];
+			require_once('rrhh/registerAreasU.php');
+		}
+		//areas unidades organixaciones		
+		if ($_GET['opcion']=='areasuoSave') {
+			require_once('rrhh/areas_organizacionSave.php');
 		}
 
 		//tipos personal
@@ -395,6 +439,18 @@
 		if ($_GET['opcion']=='tipospersonalSave') {
 			require_once('personal/tipospersonalSave.php');
 		}
+		if ($_GET['opcion']=='deletetipospersonal') {
+			$codigo=$_GET['codigo'];
+			require_once('personal/deletetipospersonal.php');
+		}
+		if ($_GET['opcion']=='PersonalAreaDistribucionForm') {
+			$codigo=$_GET['codigo'];
+			require_once('personal/PersonalAreaDistribucionForm.php');
+		}
+		if ($_GET['opcion']=='FormPersonalContratos') {
+			$codigo=$_GET['codigo'];
+			require_once('personal/PersonalContratosForm.php');
+		}
 
 		//estados personal
 		if ($_GET['opcion']=='estadospersonalLista') {
@@ -407,8 +463,12 @@
 		if ($_GET['opcion']=='estadospersonalSave') {
 			require_once('personal/estadospersonalSave.php');
 		}
+		if ($_GET['opcion']=='deleteestadospersonal') {
+			$codigo=$_GET['codigo'];
+			require_once('personal/deleteestadospersonal.php');
+		}
 		
-		//estados personal
+		//estados planilla
 		if ($_GET['opcion']=='estadosplanillaLista') {
 			require_once('rrhh/estadosplanillaLista.php'); //ok
 		}
@@ -419,6 +479,12 @@
 		if ($_GET['opcion']=='estadosplanillaSave') {
 			require_once('rrhh/estadosplanillaSave.php');
 		}
+		if ($_GET['opcion']=='deleteestadosplanilla') {
+			$codigo=$_GET['codigo'];
+			require_once('rrhh/deleteestadosplanilla.php');
+		}
+
+		
 		
 		//tipo aporte afp
 		if ($_GET['opcion']=='tipos_aporteafpLista') {
@@ -431,6 +497,10 @@
 		if ($_GET['opcion']=='tipos_aporteafpSave') {
 			require_once('rrhh/tipos_aporteafpSave.php');
 		}
+		if ($_GET['opcion']=='deletetipos_aporteafp') {
+			$codigo=$_GET['codigo'];
+			require_once('rrhh/deletetipos_aporteafp.php');
+		}
 
 		//tipos_genero
 		if ($_GET['opcion']=='tipos_generoLista') {
@@ -442,6 +512,10 @@
 		}
 		if ($_GET['opcion']=='tipos_generoSave') {
 			require_once('rrhh/tipos_generoSave.php');
+		}		
+		if ($_GET['opcion']=='deletetipos_genero') {
+			$codigo=$_GET['codigo'];
+			require_once('rrhh/deletetipos_genero.php');
 		}
 
 		//areas_organizacion RELACIONAL
@@ -456,6 +530,11 @@
 			require_once('rrhh/areas_organizacionSave.php');
 		}
 
+		if ($_GET['opcion']=='deleteareas_organizacion') {
+			$codigo=$_GET['codigo'];
+			require_once('rrhh/deleteareas_organizacion.php');
+		}
+
 		//personal
 		if ($_GET['opcion']=='personalLista') {
 			require_once('personal/personalLista.php'); //ok
@@ -467,6 +546,11 @@
 		}
 		if ($_GET['opcion']=='personalSave') {
 			require_once('personal/personalSave.php');
+		}
+		
+		if ($_GET['opcion']=='deletepersonal') {
+			$codigo=$_GET['codigo'];
+			require_once('personal/deletepersonal.php');
 		}
 
 		//tipos_afpLista AFP PREVISION, BBVA
@@ -480,8 +564,15 @@
 		if ($_GET['opcion']=='tipos_afpSave') {
 			require_once('rrhh/tipos_afpSave.php');
 		}
+		if ($_GET['opcion']=='deletetipos_afp') {
+			$codigo=$_GET['codigo'];
+			require_once('rrhh/deletetipos_afp.php');
+		}
 		
 		//aportes_patronales
+		if ($_GET['opcion']=='aportes_patronalesLista') {
+			require_once('rrhh/aportes_patronalesLista.php'); //ok
+		}
 		if ($_GET['opcion']=='aportes_patronalesForm') {
 			//$codigo=$_GET['codigo'];
 			require_once('rrhh/aportes_patronalesForm.php');
@@ -489,14 +580,25 @@
 		if ($_GET['opcion']=='aportes_patronalesSave') {
 			require_once('rrhh/aportes_patronalesSave.php');
 		}
+		if ($_GET['opcion']=='deleteaportes_patronales') {
+			$codigo=$_GET['codigo'];
+			require_once('rrhh/deleteaportes_patronales.php');
+		}
 
 		//aportes_laborales
+		if ($_GET['opcion']=='aportes_laboralesLista') {
+			require_once('rrhh/aportes_laboralesLista.php'); //ok
+		}
 		if ($_GET['opcion']=='aportes_laboralesForm') {
 			//$codigo=$_GET['codigo'];
 			require_once('rrhh/aportes_laboralesForm.php');
 		}
 		if ($_GET['opcion']=='aportes_laboralesSave') {
 			require_once('rrhh/aportes_laboralesSave.php');
+		}
+		if ($_GET['opcion']=='deleteaportes_laborales') {
+			$codigo=$_GET['codigo'];
+			require_once('rrhh/deleteaportes_laborales.php');
 		}
 
 		

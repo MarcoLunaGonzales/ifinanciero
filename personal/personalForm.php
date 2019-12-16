@@ -54,35 +54,35 @@ if ($codigo > 0){
 } else {//ES NUEVO
   $codigo = 0;
   $ci = ' ';
-    $ci_lugar_emision = ' ';
-    $fecha_nacimiento = ' ';
-    $cod_cargo = ' ';//cb
-    $cod_unidadorganizacional = ' ';//cb
-    $cod_area = ' ';
-    $jubilado = ' ';
-    $cod_genero = ' ';//cb
-    $cod_tipopersonal = ' ';//cb
-    $haber_basico = ' ';
-    $paterno = ' ';
-    $materno = ' ';
-    $apellido_casada = ' ';
-    $primer_nombre = ' ';
-    $otros_nombres = ' ';
-    $nua_cua_asignado = ' ';
-    $direccion = ' ';
-    $cod_tipoafp = ' ';//
-    $cod_tipoaporteafp = ' ';
-    $nro_seguro = ' ';
-    $cod_estadopersonal = ' ';
-    $created_at = ' ';
-    $created_by = ' ';
-    $modified_at = ' ';
-    $modified_by = ' ';
+    $ci_lugar_emision = '';
+    $fecha_nacimiento = '';
+    $cod_cargo = '';//cb
+    $cod_unidadorganizacional = '';//cb
+    $cod_area = '';
+    $jubilado = '';
+    $cod_genero = '';//cb
+    $cod_tipopersonal = '';//cb
+    $haber_basico = '';
+    $paterno = '';
+    $materno = '';
+    $apellido_casada = '';
+    $primer_nombre = '';
+    $otros_nombres = '';
+    $nua_cua_asignado = '';
+    $direccion = '';
+    $cod_tipoafp = '';//
+    $cod_tipoaporteafp = '';
+    $nro_seguro = '';
+    $cod_estadopersonal = '';
+    $created_at = '';
+    $created_by = '';
+    $modified_at = '';
+    $modified_by = '';
 
-    $telefono = ' ';
-    $celular = ' ';
-    $email = ' ';
-    $persona_contacto = ' ';
+    $telefono = '';
+    $celular = '';
+    $email = '';
+    $persona_contacto = '';
 }
 
 //COMBOS...
@@ -114,7 +114,7 @@ $statementestados_personal = $dbh->query($queryestados_personal);
 
 		<div class="col-md-12">
 		  <form id="form1" class="form-horizontal" action="<?=$urlSavePersonal;?>" method="post"  enctype="multipart/form-data">
-      <input type="hidden" name="codigo" id="codigo" value="<?=$codigo;?>"/>
+            <input type="hidden" name="codigo" id="codigo" value="<?=$codigo;?>"/>
 			<div class="card">
 			  <div class="card-header <?=$colorCard;?> card-header-text">
 				<div class="card-text">
@@ -126,276 +126,277 @@ $statementestados_personal = $dbh->query($queryestados_personal);
 
               <input type="hidden" name="codigo" id="codigo" value="<?=$codigo;?>"/>
 
-<div class="row">
-    <label class="col-sm-2 col-form-label">Imagen</label>
-    <div class="col-sm-7">
-        <div class="form-group">
-           
-        <div class="fileinput fileinput-new text-center" data-provides="fileinput">
-        <div class="fileinput-new img-raised">
-            <img src="rrhh/imagenes/<?=$codigo;?>.jpg" alt="..." style="width:250px;">
-        </div>
-        <div class="fileinput-preview fileinput-exists thumbnail img-raised"></div>
-        <div>
-            <span class="btn btn-raised btn-round <?=$buttonNormal;?> btn-file">
-            <span class="fileinput-new">Seleccionar Imagen</span>
-            <span class="fileinput-exists">Cambiar</span>
-            <input type="file" name="image" /><!-- ARCHHIVO -->
-            </span>
-                <a href="#" class="btn <?=$buttonNormal;?> btn-round fileinput-exists" data-dismiss="fileinput">
-                <i class="fa fa-times"></i> Quitar</a>
-        </div>
-        </div>
+            <div class="row">
+                <label class="col-sm-2 col-form-label">Imagen</label>
+                <div class="col-sm-7">
+                    <div class="form-group">
+                       
+                    <div class="fileinput fileinput-new text-center" data-provides="fileinput">
+                    <div class="fileinput-new img-raised">
+                        <img src="rrhh/imagenes/<?=$codigo;?>.jpg" alt="..." style="width:250px;">
+                    </div>
+                    <div class="fileinput-preview fileinput-exists thumbnail img-raised"></div>
+                    <div>
+                        <span class="btn btn-raised btn-round <?=$buttonNormal;?> btn-file">
+                        <span class="fileinput-new">Seleccionar Imagen</span>
+                        <span class="fileinput-exists">Cambiar</span>
+                        <input type="file" name="image" /><!-- ARCHHIVO -->
+                        </span>
+                            <a href="#" class="btn <?=$buttonNormal;?> btn-round fileinput-exists" data-dismiss="fileinput">
+                            <i class="fa fa-times"></i> Quitar</a>
+                    </div>
+                    </div>
 
 
 
-        </div>
-    </div>
+                    </div>
+                </div>
 
- 
-  
-</div><!--fin campo ci_lugar_emision -->
-<div class="row">
-    <label class="col-sm-2 col-form-label">Ci</label>
-    <div class="col-sm-4">
-        <div class="form-group">
-            <input class="form-control" type="text" name="ci" id="ci" required="true" value="<?=$ci;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
-        </div>
-    </div>
+             
+              
+            </div><!--fin campo ci_lugar_emision -->
+            <div class="row">
+                <label class="col-sm-2 col-form-label">Ci</label>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <input class="form-control" type="number" name="ci" id="ci" value="<?=$ci;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" required/>
+                    </div>
+                </div>
 
-    <label class="col-sm-2 col-form-label">Lugar Emision</label>
-    <div class="col-sm-4">
-    <div class="form-group">
-    <select name="ci_lugar_emision"  class="selectpicker " data-style="btn btn-info">
-        <option <?php if($ci_lugar_emision == 'LP') echo "selected"; ?> value="LP">LA PAZ</option>
-        <option <?php if($ci_lugar_emision == 'CH') echo "selected"; ?> value="CH">CHUQUISACA</option>
-        <option <?php if($ci_lugar_emision == 'OR') echo "selected"; ?> value="OR">ORURO</option>
-        <option <?php if($ci_lugar_emision == 'SC') echo "selected"; ?> value="SC">SANTA CRUZ</option>
-        <option <?php if($ci_lugar_emision == 'CO') echo "selected"; ?> value="CO">COCHABAMBAS</option>
+                <label class="col-sm-2 col-form-label">Lugar Emision</label>
+                <div class="col-sm-4">
+                <div class="form-group">
+                    <select name="ci_lugar_emision"  class="selectpicker " data-style="btn btn-info">
+                        <option <?php if($ci_lugar_emision == 'LP') echo "selected"; ?> value="LP">LA PAZ</option>
+                        <option <?php if($ci_lugar_emision == 'OR') echo "selected"; ?> value="OR">ORURO</option>
+                        <option <?php if($ci_lugar_emision == 'PO') echo "selected"; ?> value="PO">POTOSI</option>
+                        <option <?php if($ci_lugar_emision == 'CO') echo "selected"; ?> value="CO">COCHABAMBA</option>
+                        <option <?php if($ci_lugar_emision == 'SC') echo "selected"; ?> value="SC">SANTA CRUZ</option>
+                        <option <?php if($ci_lugar_emision == 'BE') echo "selected"; ?> value="BE">BENI</option>
+                        <option <?php if($ci_lugar_emision == 'CH') echo "selected"; ?> value="CH">CHUQUISACA</option>
+                        <option <?php if($ci_lugar_emision == 'TA') echo "selected"; ?> value="TA">TARIJA</option>
+                        <option <?php if($ci_lugar_emision == 'PA') echo "selected"; ?> value="PA">PANDO</option>        
+                	</select>						     
+                </div>
+                </div>
+            </div><!--fin campo ci_lugar_emision -->
+            <div class="row">
+                <label class="col-sm-2 col-form-label">Fecha Nacimiento</label>
+                <div class="col-sm-4">
+                <div class="form-group">
+                    <input class="form-control" type="date" name="fecha_nacimiento" id="fecha_nacimiento" required="true" value="<?=$fecha_nacimiento;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+                </div>
+                </div>
 
+                <label class="col-sm-2 col-form-label">Cargo</label>
+                <div class="col-sm-4">
+                <div class="form-group">
+                <select name="cod_cargo"  class="selectpicker" data-style="btn btn-info" required>
+            					<?php while ($row = $statementCargos->fetch()) { ?>
+            						<option <?php if($cod_cargo == $row["codigo"]) echo "selected"; ?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+            					<?php } ?>
+            					</select>
+                   
+                </div>
+                </div>
+            </div><!--fin campo cod_cargo -->
+            <div class="row">
+                <label class="col-sm-2 col-form-label">Unidad Organizacional</label>
+                <div class="col-sm-4">
+                <div class="form-group">
+                    <select name="cod_unidadorganizacional"  class="selectpicker " id="cod_unidadorganizacional" data-style="btn btn-info" required>
+            					<?php while ($row = $statementUO->fetch()) { ?>
+            						<option <?php if($cod_unidadorganizacional == $row["codigo"]) echo "selected"; ?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+            					<?php } ?>
+            					</select>
+                   
+                </div>
+                </div>
 
-	</select>			
-				
-       
-    </div>
-    </div>
-</div><!--fin campo ci_lugar_emision -->
-<div class="row">
-    <label class="col-sm-2 col-form-label">Fecha Nacimiento</label>
-    <div class="col-sm-4">
-    <div class="form-group">
-        <input class="form-control" type="date" name="fecha_nacimiento" id="fecha_nacimiento" required="true" value="<?=$fecha_nacimiento;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
-    </div>
-    </div>
+                <label class="col-sm-2 col-form-label">Area</label>
+                <div class="col-sm-4">
+                <div class="form-group">
+                    <div id="cod_area_containers">
+                        <select name="cod_area"  class="form-control" id="cod_area" data-style="btn btn-info" required>
+                        </select>
+                        <input type="hidden" name="cod_area2" id="cod_area2" value="<?=$cod_area;?>"/>
 
-    <label class="col-sm-2 col-form-label">Cargo</label>
-    <div class="col-sm-4">
-    <div class="form-group">
-    <select name="cod_cargo"  class="selectpicker " data-style="btn btn-info">
-					<?php while ($row = $statementCargos->fetch()) { ?>
-						<option <?php if($cod_cargo == $row["codigo"]) echo "selected"; ?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
-					<?php } ?>
-					</select>
-       
-    </div>
-    </div>
-</div><!--fin campo cod_cargo -->
-<div class="row">
-    <label class="col-sm-2 col-form-label">Unidad Organizacional</label>
-    <div class="col-sm-4">
-    <div class="form-group">
-        <select name="cod_unidadorganizacional"  class="selectpicker " id="cod_unidadorganizacional" data-style="btn btn-info">
-					<?php while ($row = $statementUO->fetch()) { ?>
-						<option <?php if($cod_unidadorganizacional == $row["codigo"]) echo "selected"; ?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
-					<?php } ?>
-					</select>
-       
-    </div>
-    </div>
+                    </div>
+                    </div>
+                </div>
+            </div><!--fin campo cod_area -->
+            <div class="row">
+                <label class="col-sm-2 col-form-label">Jubilado</label>
+                <div class="col-sm-4">
+                <div class="form-group">
+                <select name="jubilado"  class="selectpicker " data-style="btn btn-info">
+                    <option <?php if($ci_lugar_emision == '1') echo "selected"; ?> value="1">SI</option>
+                    <option <?php if($ci_lugar_emision == '0') echo "selected"; ?> value="0">NO</option>
+            	</select>			
 
-    <label class="col-sm-2 col-form-label">Area</label>
-    <div class="col-sm-4">
-    <div class="form-group">
-        <div id="cod_area_containers">
-            <select name="cod_area"  class="selectpicker " id="cod_area" data-style="btn btn-info">
-            </select>
-            <input type="hidden" name="cod_area2" id="cod_area2" value="<?=$cod_area;?>"/>
+                </div>
+                </div>
 
-        </div>
-        </div>
-    </div>
-</div><!--fin campo cod_area -->
-<div class="row">
-    <label class="col-sm-2 col-form-label">Jubilado</label>
-    <div class="col-sm-4">
-    <div class="form-group">
-    <select name="jubilado"  class="selectpicker " data-style="btn btn-info">
-        <option <?php if($ci_lugar_emision == '1') echo "selected"; ?> value="1">SI</option>
-        <option <?php if($ci_lugar_emision == '0') echo "selected"; ?> value="0">NO</option>
-	</select>			
+                <label class="col-sm-2 col-form-label">Genero</label>
+                <div class="col-sm-4">
+                <div class="form-group">
+                <select name="cod_genero"  class="selectpicker " data-style="btn btn-info" required>
+            					<?php while ($row = $statementTgenero->fetch()) { ?>
+            						<option  value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+            					<?php } ?>
+            					</select>
+                    
+                </div>
+                </div>
+            </div><!--fin campo cod_genero -->
+            <div class="row">
+                <label class="col-sm-2 col-form-label">Tipo Personal</label>
+                <div class="col-sm-4">
+                <div class="form-group">
+                <select name="cod_tipopersonal"  class="selectpicker " data-style="btn btn-info" required>
+            					<?php while ($row = $statementTPersonal->fetch()) { ?>
+            						<option <?php if($cod_tipopersonal == $row["codigo"]) echo "selected"; ?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+            					<?php } ?>
+            					</select>
+                </div>
+                </div>
 
-    </div>
-    </div>
+                <label class="col-sm-2 col-form-label">Haber Basico</label>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <input class="form-control" type="text" name="haber_basico" id="haber_basico" value="<?=$haber_basico;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" required/>
+                    </div>
+                </div>
 
-    <label class="col-sm-2 col-form-label">Genero</label>
-    <div class="col-sm-4">
-    <div class="form-group">
-    <select name="cod_genero"  class="selectpicker " data-style="btn btn-info">
-					<?php while ($row = $statementTgenero->fetch()) { ?>
-						<option <?php if($cod_genero == $row["codigo"]) echo "selected"; ?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
-					<?php } ?>
-					</select>
-        
-    </div>
-    </div>
-</div><!--fin campo cod_genero -->
-<div class="row">
-    <label class="col-sm-2 col-form-label">Tipo Personal</label>
-    <div class="col-sm-4">
-    <div class="form-group">
-    <select name="cod_tipopersonal"  class="selectpicker " data-style="btn btn-info">
-					<?php while ($row = $statementTPersonal->fetch()) { ?>
-						<option <?php if($cod_tipopersonal == $row["codigo"]) echo "selected"; ?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
-					<?php } ?>
-					</select>
-    </div>
-    </div>
+            </div><!--fin campo haber_basico -->
+            <div class="row">
+                <label class="col-sm-2 col-form-label">Paterno</label>
+                <div class="col-sm-4">
+                <div class="form-group">
+                    <input class="form-control" type="text" name="paterno" id="paterno" value="<?=$paterno;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" required/>
+                </div>
+                </div>
 
-    <label class="col-sm-2 col-form-label">Haber Basico</label>
-    <div class="col-sm-4">
-    <div class="form-group">
-        <input class="form-control" type="text" name="haber_basico" id="haber_basico" required="true" value="<?=$haber_basico;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
-    </div>
-    </div>
-</div><!--fin campo haber_basico -->
-<div class="row">
-    <label class="col-sm-2 col-form-label">Paterno</label>
-    <div class="col-sm-4">
-    <div class="form-group">
-        <input class="form-control" type="text" name="paterno" id="paterno" required="true" value="<?=$paterno;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
-    </div>
-    </div>
+                <label class="col-sm-2 col-form-label">Materno</label>
+                <div class="col-sm-4">
+                <div class="form-group">
+                    <input class="form-control" type="text" name="materno" id="materno" value="<?=$materno;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" required/>
+                </div>
+                </div>
+            </div><!--fin campo materno -->
+            <div class="row">
+                <label class="col-sm-2 col-form-label">Apellido Casada</label>
+                <div class="col-sm-4">
+                <div class="form-group">
+                    <input class="form-control" type="text" name="apellido_casada" id="apellido_casada" value="<?=$apellido_casada;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+                </div>
+                </div>
+            </div><!--fin campo apellido_casada -->
+            <div class="row">
+                <label class="col-sm-2 col-form-label">Primer Nombre</label>
+                <div class="col-sm-4">
+                <div class="form-group">
+                    <input class="form-control" type="text" name="primer_nombre" id="primer_nombre" value="<?=$primer_nombre;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" required/>
+                </div>
+                </div>
 
-    <label class="col-sm-2 col-form-label">Materno</label>
-    <div class="col-sm-4">
-    <div class="form-group">
-        <input class="form-control" type="text" name="materno" id="materno" required="true" value="<?=$materno;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
-    </div>
-    </div>
-</div><!--fin campo materno -->
-<div class="row">
-    <label class="col-sm-2 col-form-label">Apellido Casada</label>
-    <div class="col-sm-4">
-    <div class="form-group">
-        <input class="form-control" type="text" name="apellido_casada" id="apellido_casada" value="<?=$apellido_casada;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
-    </div>
-    </div>
-</div><!--fin campo apellido_casada -->
-<div class="row">
-    <label class="col-sm-2 col-form-label">Primer Nombre</label>
-    <div class="col-sm-4">
-    <div class="form-group">
-        <input class="form-control" type="text" name="primer_nombre" id="primer_nombre" required="true" value="<?=$primer_nombre;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
-    </div>
-    </div>
+                <label class="col-sm-2 col-form-label">Otros Nombres</label>
+                <div class="col-sm-4">
+                <div class="form-group">
+                    <input class="form-control" type="text" name="otros_nombres" id="otros_nombres" value="<?=$otros_nombres;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+                </div>
+                </div>
+            </div><!--fin campo otros_nombres -->
+            <div class="row">
+                <label class="col-sm-2 col-form-label">Nua / Cua Asignado</label>
+                <div class="col-sm-4">
+                <div class="form-group">
+                    <input class="form-control" type="text" name="nua_cua_asignado" id="nua_cua_asignado" value="<?=$nua_cua_asignado;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" required/>
+                </div>
+                </div>
+            </div><!--fin campo nua_cua_asignado -->
+            <div class="row">
+                <label class="col-sm-2 col-form-label">Direccion</label>
+                <div class="col-sm-7">
+                <div class="form-group">
+                    <input class="form-control" type="text" name="direccion" id="direccion" value="<?=$direccion;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" required/>
+                </div>
+                </div>
+            </div><!--fin campo direccion -->
+            <div class="row">
+                <label class="col-sm-2 col-form-label">Afp</label>
+                <div class="col-sm-4">
+                <div class="form-group">
+                    <select name="cod_tipoafp" id="cod_tipoafp"  class="selectpicker " data-style="btn btn-info" required>
+            					<?php while ($row = $statementtipos_afp->fetch()) { ?>
+            						<option <?php if($cod_tipoafp == $row["codigo"]) echo "selected"; ?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+            					<?php } ?>
+            					</select>
+                </div>
+                </div>
 
-    <label class="col-sm-2 col-form-label">Otros Nombres</label>
-    <div class="col-sm-4">
-    <div class="form-group">
-        <input class="form-control" type="text" name="otros_nombres" id="otros_nombres" value="<?=$otros_nombres;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
-    </div>
-    </div>
-</div><!--fin campo otros_nombres -->
-<div class="row">
-    <label class="col-sm-2 col-form-label">Nua / Cua Asignado</label>
-    <div class="col-sm-4">
-    <div class="form-group">
-        <input class="form-control" type="text" name="nua_cua_asignado" id="nua_cua_asignado" required="true" value="<?=$nua_cua_asignado;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
-    </div>
-    </div>
-</div><!--fin campo nua_cua_asignado -->
-<div class="row">
-    <label class="col-sm-2 col-form-label">Direccion</label>
-    <div class="col-sm-7">
-    <div class="form-group">
-        <input class="form-control" type="text" name="direccion" id="direccion" required="true" value="<?=$direccion;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
-    </div>
-    </div>
-</div><!--fin campo direccion -->
-<div class="row">
-    <label class="col-sm-2 col-form-label">Afp</label>
-    <div class="col-sm-4">
-    <div class="form-group">
-        <select name="cod_tipoafp"  class="selectpicker " data-style="btn btn-info">
-					<?php while ($row = $statementtipos_afp->fetch()) { ?>
-						<option <?php if($cod_tipoafp == $row["codigo"]) echo "selected"; ?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
-					<?php } ?>
-					</select>
-    </div>
-    </div>
+                <label class="col-sm-2 col-form-label">Tipo de Aporte AFP</label>
+                <div class="col-sm-4">
+                <div class="form-group">
+                    <select name="cod_tipoaporteafp" id="cod_tipoaporteafp"  class="selectpicker " data-style="btn btn-info" required>
+            					<?php while ($row = $statementtipos_aporteafp->fetch()) { ?>
+            						<option  value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+            					<?php } ?>
+            					</select>
+                </div>
+                </div>
+            </div><!--fin campo cod_tipoaporteafp -->
+            <div class="row">
+                <label class="col-sm-2 col-form-label">Nro seguro</label>
+                <div class="col-sm-4">
+                <div class="form-group">
+                    <input class="form-control" type="number" name="nro_seguro" id="nro_seguro" required value="<?=$nro_seguro;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+                </div>
+                </div>
 
-    <label class="col-sm-2 col-form-label">Tipo de Aporte AFP</label>
-    <div class="col-sm-4">
-    <div class="form-group">
-        <select name="cod_tipoaporteafp"  class="selectpicker " data-style="btn btn-info">
-					<?php while ($row = $statementtipos_aporteafp->fetch()) { ?>
-						<option <?php if($cod_tipoaporteafp == $row["codigo"]) echo "selected"; ?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
-					<?php } ?>
-					</select>
-    </div>
-    </div>
-</div><!--fin campo cod_tipoaporteafp -->
-<div class="row">
-    <label class="col-sm-2 col-form-label">Nro seguro</label>
-    <div class="col-sm-4">
-    <div class="form-group">
-        <input class="form-control" type="text" name="nro_seguro" id="nro_seguro" required="true" value="<?=$nro_seguro;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
-    </div>
-    </div>
+                <label class="col-sm-2 col-form-label">Estado</label>
+                <div class="col-sm-4">
+                <div class="form-group">
+                <select name="cod_estadopersonal"  class="selectpicker " data-style="btn btn-info" required>
+            					<?php while ($row = $statementestados_personal->fetch()) { ?>
+            						<option <?php if($cod_estadopersonal == $row["codigo"]) echo "selected"; ?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+            					<?php } ?>
+            					</select>
+                  
+                </div>
+                </div>
+            </div><!--fin campo cod_estadopersonal -->
+            <div class="row">
+                <label class="col-sm-2 col-form-label">Telefono</label>
+                <div class="col-sm-4">
+                <div class="form-group">
+                    <input class="form-control" type="number" name="telefono" id="telefono" required value="<?=$telefono;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+                </div>
+                </div>
 
-    <label class="col-sm-2 col-form-label">Estado</label>
-    <div class="col-sm-4">
-    <div class="form-group">
-    <select name="cod_estadopersonal"  class="selectpicker " data-style="btn btn-info">
-					<?php while ($row = $statementestados_personal->fetch()) { ?>
-						<option <?php if($cod_estadopersonal == $row["codigo"]) echo "selected"; ?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
-					<?php } ?>
-					</select>
-      
-    </div>
-    </div>
-</div><!--fin campo cod_estadopersonal -->
-<div class="row">
-    <label class="col-sm-2 col-form-label">Telefono</label>
-    <div class="col-sm-4">
-    <div class="form-group">
-        <input class="form-control" type="text" name="telefono" id="telefono" required="true" value="<?=$telefono;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
-    </div>
-    </div>
-
-    <label class="col-sm-2 col-form-label">Celular</label>
-    <div class="col-sm-4">
-    <div class="form-group">
-        <input class="form-control" type="text" name="celular" id="celular" required="true" value="<?=$celular;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
-    </div>
-    </div>
-</div><!--fin campo celular -->
-<div class="row">
-    <label class="col-sm-2 col-form-label">Email</label>
-    <div class="col-sm-7">
-    <div class="form-group">
-        <input class="form-control" type="text" name="email" id="email" required="true" value="<?=$email;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
-    </div>
-    </div>
-</div><!--fin campo email -->
-<div class="row">
-    <label class="col-sm-2 col-form-label">Persona Contacto</label>
-    <div class="col-sm-7">
-    <div class="form-group">
-        <input class="form-control" type="text" name="persona_contacto" id="persona_contacto" required="true" value="<?=$persona_contacto;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
-    </div>
-    </div>
-</div><!--fin campo persona_contacto -->
+                <label class="col-sm-2 col-form-label">Celular</label>
+                <div class="col-sm-4">
+                <div class="form-group">
+                    <input class="form-control" type="number" name="celular" id="celular" required value="<?=$celular;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+                </div>
+                </div>
+            </div><!--fin campo celular -->
+            <div class="row">
+                <label class="col-sm-2 col-form-label">Email</label>
+                <div class="col-sm-7">
+                <div class="form-group">
+                    <input class="form-control" type="text" name="email" id="email" required value="<?=$email;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+                </div>
+                </div>
+            </div><!--fin campo email -->
+            <div class="row">
+                <label class="col-sm-2 col-form-label">Persona Contacto</label>
+                <div class="col-sm-7">
+                <div class="form-group">
+                    <input class="form-control" type="text" name="persona_contacto" id="persona_contacto" required value="<?=$persona_contacto;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+                </div>
+                </div>
+            </div><!--fin campo persona_contacto -->
 
 
 

@@ -21,11 +21,10 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $fechaHoraActual=date("Y-m-d H:i:s");
 
 $codPlantillaCosto=$_POST["codigo_plantilla"];
-$precioIbnorca=$_POST["precio_venta_ibnorca"];
-$precioFuera=$_POST["precio_venta_fuera"];
 $cantAlumnos=$_POST["cantidad_alumnos"];
+$cantAlumnosExterno=$_POST["cantidad_alumnos_fuera"];
 
-$sqlUpdate="UPDATE plantillas_costo SET  precio_ventalocal=$precioIbnorca, precio_ventaexterno=$precioFuera,cantidad_alumnos=$cantAlumnos where codigo=$codPlantillaCosto";
+$sqlUpdate="UPDATE plantillas_costo SET cantidad_alumnoslocal=$cantAlumnos,cantidad_alumnosexterno=$cantAlumnosExterno where codigo=$codPlantillaCosto";
 echo $sqlUpdate;
 $stmtUpdate = $dbh->prepare($sqlUpdate);
 $flagSuccess=$stmtUpdate->execute();
