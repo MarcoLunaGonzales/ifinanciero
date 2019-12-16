@@ -1017,6 +1017,7 @@ function filaTabla(tabla){
   tabla.html(html);
   $("#modalCuentas").modal("show");
 }
+
 function filaTablaGeneral(tabla,index){
   var html="";
   for (var i = 0; i < cuentas_tabla_general[index-1].length; i++) {
@@ -1798,12 +1799,66 @@ function EliminarDistribucion(cod_personal,cod_distribucion){
   });
 }
 //area_unidad organizacional
-function agregaListAreas_unidad(datos){
-  //console.log("datos: "+datos);
-  var d=datos.split('-');
-  document.getElementById("codigo_area_unidad").value=d[0];
-  
+// function agregaListAreas_unidad(datos){
+//   //console.log("datos: "+datos);
+//   var d=datos.split('-');
+//   document.getElementById("codigo_area_unidad").value=d[0];
+//   // alert(d[0]);
+
+
+
+ var areas_tabla=[]; 
+ var areas_tabla_general=[]; 
+var numFilasA=0;
+function sendChekedA(id){
+  var check=document.getElementById("areas"+id);
+    check.onchange = function() {
+     if(this.checked) {
+      numFilasA++;
+      
+     }else{
+      
+      numFilasA--;
+     }
+     $("#boton_registradasA").html("Areas Registradas <span class='badge bg-white text-warning'>"+numFilasA+"</span>");
+   }
+} 
+
+// function filaTabla(tabla){
+//   var html="";
+//   for (var i = 0; i < areas_tabla.length; i++) {
+//     html+="<tr><td>"+(i+1)+"</td><td>"+areas_tabla[i].nombre+"</td><td>"+areas_tabla[i].numero+"</td></tr>";
+//   };
+//   tabla.html(html);
+//   $("#modalCuentas").modal("show");
+// }
+
+function filaTablaAGeneral(tabla,index){
+  var html="";
+  for (var i = 0; i < areas_tabla_general[index-1].length; i++) {
+    //alert(areas_tabla_general[index-1][i].nombre);
+    html+="<tr><td>"+(i+1)+"</td><td>"+areas_tabla_general[index-1][i].nombreA+"</td><td>"+areas_tabla_general[index-1][i].nombreAP+"</td></tr>";
+  }
+  tabla.html(html);
+  $("#modalAreas").modal("show");  
 }
+
+
+// function ajaxAUOPadre(combo){
+//   var contenedor;
+//   var codigo_UO=combo.value;
+//   contenedor = document.getElementById('cod_areaorganizacion_padre_div');
+//   ajax=nuevoAjax();
+//   ajax.open('GET', 'rrhh/AreaPadreAjax.php?codigo_UO='+codigo_UO,true);
+//   ajax.onreadystatechange=function() {
+//     if (ajax.readyState==4) {
+//       contenedor.innerHTML = ajax.responseText;
+//       $('.selectpicker').selectpicker(["refresh"]);
+      
+//     }
+//   }
+//   ajax.send(null)  
+// }
 
 
 //contratos de personal

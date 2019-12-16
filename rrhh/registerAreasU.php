@@ -30,21 +30,19 @@ $nombreUnidad = $result['nombre'];
 
 
 // Preparamos
-$sql="SELECT codigo,nombre, abreviatura
-      from areas
-      where cod_estado=1
-      ORDER BY 2";
+$sql="SELECT a.codigo,a.nombre,
+(select count(*) from areas_organizacion ao where a.codigo=ao.cod_area and ao.cod_unidad in (1)) as bandera
+from areas a
+where cod_estado=1 order by 2";
 $stmtArea = $dbh->prepare($sql);
+$stmtArea->bindParam(':codigo',$codUnidad);
 // Ejecutamos
 $stmtArea->execute(); 
 // bindColumn
 $stmtArea->bindColumn('codigo', $codigoArea);
 $stmtArea->bindColumn('nombre', $nombreArea);
-$stmtArea->bindColumn('abreviatura', $abreviatura);
-
-
-
-
+//$stmtArea->bindColumn('cod_area_padre', $codAreaPadre);
+$stmtArea->bindColumn('bandera', $bandera);
 
 ?>
 
@@ -78,18 +76,16 @@ $stmtArea->bindColumn('abreviatura', $abreviatura);
                           <?php
                           $index=1;$nc=0;
                         	while ($row = $stmtArea->fetch(PDO::FETCH_BOUND)) {
-                              // $nombreX=trim($nombre);$numeroX=trim($numero);
-                              // if($bandera>0){
-                              // $data[$nc][0]=$index;$data[$nc][1]=$nombreX;$data[$nc][2]=$numeroX;                           
-                              // $nc++;
-                              // }
-                              // $nombre=formateaPlanCuenta($nombre,$nivel);
+                            if($bandera>0){              
+                              $nc++;
+                            }
+                              //$nombre_areaX=formateaPlanCuenta($nombre_areaX,$nivel);
                           ?>
                           <tr>
                             <td align="center">
                               <div class="form-check">
                                 <label class="form-check-label">
-                                  <input  class="form-check-input" type="checkbox" name="areas[]" value="<?=$codigoArea?>" >
+                                  <input  class="form-check-input" type="checkbox" id="areas<?=$index?>" name="areas[]" onclick="sendChekedA(<?=$index?>,<?=$nc?>)"  value="<?=$codigoArea?>" <?=($bandera>0)?"checked":"";?> >
                                   <span class="form-check-sign">
                                     <span class="check"></span>
                                   </span>
@@ -98,8 +94,21 @@ $stmtArea->bindColumn('abreviatura', $abreviatura);
                             </td>
                             <td><?=$codigoArea;?></td>
                             <td><?=$nombreArea;?></td>
-                            <td>
-                              <?php
+                            <td >
+                              
+                                <?php
+                                //sacamos el cod de area padre
+                                $sqlAP="SELECT cod_areapadre
+                                from areas_organizacion
+                                where cod_estado=1 and codigo=:codigo";
+                                $stmtAreaPadre = $dbh->prepare($sqlAP);
+                                $stmtAreaPadre->bindParam(':codigo',$codUnidad);                                
+                                $stmtAreaPadre->execute();                                                             
+                                $resultAP=$stmtAreaPadre->fetch();
+                                $codAreaPadre=$resultAP['cod_areapadre'];
+
+                                //listados todas las area para padre
+
                                 $sql2="SELECT codigo,nombre, abreviatura
                                 from areas
                                 where cod_estado=1
@@ -109,13 +118,15 @@ $stmtArea->bindColumn('abreviatura', $abreviatura);
                                 $stmtArea2->bindColumn('codigo', $codigoArea2);
                                 $stmtArea2->bindColumn('nombre', $nombreArea2);
                                 $stmtArea2->bindColumn('abreviatura', $abreviatura2);
-                              ?>
-                              
-                              <select name="cod_ubicaciones" id="cod_ubicaciones" class="selectpicker" data-style="btn btn-primary">
+                              ?>                              
+                              <select name="cod_areaorganizacion_padre[]" id="cod_areaorganizacion_padre" class="selectpicker" data-style="btn btn-primary">
                                     <?php while ($row = $stmtArea2->fetch()){ ?>
-                                        <option value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                                        <option <?=($codAreaPadre==$codigoArea2)?"selected":"";?>  value="<?=$codigoArea2;?>"><?=$nombreArea2;?></option>
                                     <?php } ?>
                               </select>
+                              
+
+                              
                             </td>
                           </tr>
 
@@ -133,11 +144,14 @@ $stmtArea->bindColumn('abreviatura', $abreviatura);
                     <button class="btn" type="submit">Guardar</button>
                     <a href="<?=$urlListUO;?>" class="<?=$buttonCancel;?>">Cancelar</a>
 
-                    <a href="#" onclick="filaTabla($('#tablas_registradas'));" id="boton_registradas" class="btn btn-warning text-dark">Areas Registradas <span class='badge bg-white text-warning'> <?=$nc?></span></a>
+                    <a href="#" id="boton_registradasA" class="btn btn-warning text-dark">Areas Registradas <span class='badge bg-white text-warning'> <?=$nc?></span></a>
                 </div>
 			     </form>
             </div>
           </div>  
         </div>
     </div>
-<?php 
+<script>numFilasA=<?=$nc?>;</script> 
+
+
+

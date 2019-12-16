@@ -89,8 +89,8 @@ $stmt->bindColumn('bandera', $bandera);
                         </tr>
 
                           <?php
-                          							$index++;
-                          						}
+              							$index++;
+              						}
                           ?>
 
                       </tbody>

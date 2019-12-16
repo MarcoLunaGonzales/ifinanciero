@@ -3,6 +3,7 @@
 require_once 'conexion.php';
 require_once 'configModule.php'; //configuraciones
 require_once 'styles.php';
+require_once 'functionsGeneral.php';
 
 $globalAdmin=$_SESSION["globalAdmin"];
 
@@ -51,9 +52,43 @@ $stmt->bindColumn('modified_by', $modified_by);
                       </tr>
                     </thead>
                     <tbody>
-                      <?php $index=1;
+                      <?php $index=1;$cont= array();
                       while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { 
-                        $datos =$codigo;
+                        $datosX =$codigo;
+
+                        $dbh1 = new Conexion();
+                            $sqlA="SELECT codigo,cod_unidad,cod_area,cod_areapadre,
+                                  (select a.nombre from areas a where a.codigo=cod_area) as nombre_area,
+                                  (select a.nombre from areas a where a.codigo=cod_areapadre) as nombre_area_padre
+                                  from areas_organizacion
+                                  where cod_estadoreferencial=1 and cod_unidad=:codigo";
+                                   $stmt2 = $dbh1->prepare($sqlA);
+                                   $stmt2->bindParam(':codigo',$codigo);
+                                   $stmt2->execute(); 
+                                   $nc=0;
+                                   
+                                   while ($row2 = $stmt2->fetch(PDO::FETCH_ASSOC)) {
+                                      $dato =new stdClass();//obejto
+                                      
+                                      $nombre_areaX=trim($row2['nombre_area']);
+                                      $nombre_area_padreX=trim($row2['nombre_area_padre']);
+
+                                      // $stmtAreas->bindColumn('cod_unidad', $cod_unidad);
+                                      // $stmtAreas->bindColumn('cod_area', $cod_area);
+                                      // $stmtAreas->bindColumn('cod_areapadre', $cod_areapadre);
+                                      // $stmtAreas->bindColumn('nombre_area', $nombre_area);
+                                      // $stmtAreas->bindColumn('nombre_area_padre', $nombre_area_padre);
+
+
+
+                                      $dato->codigo=($nc+1);
+                                      $dato->nombreA=$nombre_areaX;
+                                      $dato->nombreAP=$nombre_area_padreX;
+                                      $datos[$index-1][$nc]=$dato;                           
+                                      $nc++;
+                                    }
+                                $cont[$index-1]=$nc;  
+
                         ?>
                         <tr>
                             <td><?=$codigo;?></td>
@@ -67,9 +102,16 @@ $stmt->bindColumn('modified_by', $modified_by);
                               ?>
 
 
-                              <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalAreas" onclick="agregaListAreas_unidad('<?=$datos;?>')">
+                              <!--<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalAreas" onclick="agregaListAreas_unidad('<?=$datos;?>')">
                                 <i class="material-icons" title="Listar Areas">settings_applications</i>
-                              </button>
+                              </button>-->
+                              <a href='#' rel="tooltip" class="btn btn-warning" onclick="filaTablaAGeneral($('#tablasA_registradas'),<?=$index?>)">
+                              <i class="material-icons" title="Ver Areas">settings_applications</i>
+                            </a>
+
+                              <!-- <a href='#' class="add_listar" product="<?=$codigo;?>">
+                                  <i class="material-icons" title="Registrar Areas">playlist_add</i>
+                              </a> -->
 
                               <a href='<?=$urlRegisterAreasU;?>&codigo=<?=$codigo;?>' rel="tooltip" class="btn btn-success">
                                   <i class="material-icons" title="Registrar Areas">playlist_add</i>
@@ -82,7 +124,8 @@ $stmt->bindColumn('modified_by', $modified_by);
                                 <i class="material-icons"><?=$iconDelete;?></i>
                               </button>
                               <?php
-                                }
+                              $nc++;}
+                                $cont[$index-1]=$nc;
                               ?>
                             
                             </td>
@@ -109,7 +152,7 @@ $stmt->bindColumn('modified_by', $modified_by);
         </div>
     </div>
 <!-- small modal para listar areas -->
-<div class="modal fade modal-primary" id="modalAreas" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<!-- <div class="modal fade modal-primary" id="modalAreas" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content card">
       <div class="card-header card-header-warning card-header-icon">
@@ -122,6 +165,11 @@ $stmt->bindColumn('modified_by', $modified_by);
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
           <i class="material-icons">close</i>
         </button>        
+        <input type="text" name="codigo_area_unidad" id="codigo_area_unidad" value="">
+        <script>
+              var contenedor_aux=document.getElementById("codigo_area_unidad").value;            
+              //alert(contenedor_aux);
+        </script>
         <table class="table table-condensed">
           <thead>
             <tr class="text-dark bg-plomo">
@@ -132,14 +180,8 @@ $stmt->bindColumn('modified_by', $modified_by);
             </tr>
           </thead>
           <tbody id="tablas_registradas">
-            
-            <input type="hidden" name="codigo_area_unidad" id="codigo_area_unidad" value="0">
-            <script>
-              var contenedor_aux=document.getElementById("codigo_area_unidad").value;
-            </script>
 
-            <?php            
-            $codigo_area_u="<script>document.write(contenedor_aux)</script>";
+            <?php           
             
 
             $stmtAreas = $dbh->prepare("SELECT codigo,cod_unidad,cod_area,cod_areapadre,
@@ -173,5 +215,37 @@ $stmt->bindColumn('modified_by', $modified_by);
       </div>
     </div>  
   </div>
-</div>
+</div> -->
+
+
+<!--<script type="text/javascript">
+  $(document).ready(function(){    
+    $('.add_listar').click(function(event){
+
+      event.preventDefault();
+      var area= $(this).attr('product');
+      alert(area);
+
+
+    }); 
+    
+
+  });
+</script>-->
+
+<?php 
+$lan=sizeof($cont);
+for ($i=0; $i < $lan; $i++) {
+  ?>
+  <script>var areas=[];</script>
+  <?php
+     for ($j=0; $j < $cont[$i]; $j++) { 
+         if($cont[$i]>0){
+          ?><script>areas.push({codigo:<?=$datos[$i][$j]->codigo?>,nombreA:'<?=$datos[$i][$j]->nombreA?>',nombreAP:'<?=$datos[$i][$j]->nombreAP?>'});</script><?php         
+          }          
+        }
+    ?><script>areas_tabla_general.push(areas);</script><?php                    
+}
+require_once 'rrhh/modal.php';
+?>
 
