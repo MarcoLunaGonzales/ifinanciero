@@ -23,6 +23,7 @@ try{
     //Ejecutamos;
     $stmt->bindParam(':codigo',$codigo);
     $stmt->execute();
+    
     $result = $stmt->fetch();
 
     $codigo = $result['codigo'];

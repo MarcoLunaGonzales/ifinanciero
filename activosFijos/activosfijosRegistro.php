@@ -163,6 +163,7 @@ if ($codigo > 0){
                                 </div>
                             </div>
                         </div>
+                        <!-- imagen qr-->
                         <div class='col-sm-6'>
                                 <?php
                                     require 'assets/phpqrcode/qrlib.php';
@@ -423,17 +424,18 @@ if ($codigo > 0){
                                 <div class="fileinput-new img-raised">
                                     <img src="<?=$archivo;?>" alt="..." style="width:250px;">
                                 </div>
-                                <div class="fileinput-preview fileinput-exists thumbnail img-raised"></div>
-                                    <div>
-                                        <span class="btn btn-raised btn-round <?=$buttonNormal;?> btn-file">
-                                        <span class="fileinput-new">Seleccionar Imagen</span>
-                                        <span class="fileinput-exists">Cambiar</span>
-                                        <input type="file" name="image" /><!-- ARCHHIVO -->
-                                        </span>
-                                        <a href="#" class="btn <?=$buttonNormal;?> btn-round fileinput-exists" data-dismiss="fileinput">
-                                        <i class="fa fa-times"></i> Quitar</a>
-                                    </div>
+                                <div class="fileinput-preview fileinput-exists thumbnail img-raised">
                                 </div>
+                                <div>
+                                    <span class="btn btn-raised btn-round <?=$buttonNormal;?> btn-file">
+                                    <span class="fileinput-new">Seleccionar Imagen</span>
+                                    <span class="fileinput-exists">Cambiar</span>
+                                    <input type="file" name="image" /><!-- ARCHHIVO -->
+                                    </span>
+                                    <a href="#" class="btn <?=$buttonNormal;?> btn-round fileinput-exists" data-dismiss="fileinput">
+                                    <i class="fa fa-times"></i> Quitar</a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
