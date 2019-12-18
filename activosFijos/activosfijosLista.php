@@ -108,13 +108,13 @@ $stmt->bindColumn('nombre_area', $nombreArea);
                               ?>
 
                                 <a href='<?=$urlafAccesorios;?>&codigo=<?=$codigo;?>' rel="tooltip" class="btn btn-warning">
-                                  <i class="material-icons" title="Accesorios AF">extension</i>
+                                  <i class="material-icons" title="Accesorios AF" style="color:black">extension</i>
                                 </a>
                                 <a href='<?=$urlafEventos;?>&codigo=<?=$codigo;?>' rel="tooltip" class="btn btn-info">
-                                  <i class="material-icons" title="Eventos AF">event</i>
+                                  <i class="material-icons" title="Eventos AF" style="color:black">event</i>
                                 </a>
-                                <a href='<?=$urlRevaluarAF;?>&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonMorado;?>">
-                                  <i class="material-icons" title="Revaluar AF">trending_down</i>
+                                <a href='<?=$urlRevaluarAF;?>&codigo=<?=$codigo;?>' rel="tooltip" class="btn btn-warning">
+                                  <i class="material-icons" title="Reevaluar AF" style="color:black">trending_up</i>
                                 </a>
 
                                 <?php

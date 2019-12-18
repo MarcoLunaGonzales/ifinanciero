@@ -133,7 +133,7 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
           <li class="nav-item ">
             <a class="nav-link" data-toggle="collapse" href="#pagesExamples">
               <i class="material-icons">fullscreen</i>
-              <p> Tablas HHRR
+              <p> Tablas RRHH
                 <b class="caret"></b>
               </p>
             </a>
@@ -412,6 +412,7 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
                   <a class="nav-link" href="?opcion=mesCurso">
                     <span class="sidebar-mini"> MC </span>
                     <span class="sidebar-normal"> Mes en curso</span>
+                    <span class="sidebar-normal">  Cambiar Mes de Trabajo </span>
                   </a>
                 </li>
                 <li class="nav-item ">

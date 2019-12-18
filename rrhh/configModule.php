@@ -85,7 +85,10 @@ $nombreSingularPersonal="Personal";
 $nombrePluralPersonal="Personal";
 $urlListPersonal="?opcion=personalLista";
 $urlSavePersonal="?opcion=personalSave";
+
 $urlFormPersonal="index.php?opcion=personalForm";
+$urlsaveWSPersonal="index.php?opcion=personalSaveWS";
+
 $urlDeletePersonal="index.php?opcion=deletepersonal";
 $urlFormPersonalAreaDistribucion="index.php?opcion=PersonalAreaDistribucionForm";
 $urlFormPersonalContratos="index.php?opcion=FormPersonalContratos";
