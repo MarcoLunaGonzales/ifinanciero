@@ -1658,7 +1658,6 @@ $(document).on("shown.bs.modal","#modalRetencion",function(){
            }
           });
  }
-
  //funciones plantillas_costos 
 
  function agregarPrecioPlantilla(codigo){

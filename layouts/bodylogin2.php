@@ -17,6 +17,7 @@
   <!-- CSS Files -->
   <link href="../assets/css/material-dashboard.css?v=2.1.0" rel="stylesheet" />
   <link href="../assets/autocomplete/awesomplete.css" rel="stylesheet" />
+  <link href="../assets/autocomplete/autocomplete/autocomplete-img.css" rel="stylesheet" />
   <link href="../assets/css/style.css" rel="stylesheet" />
 </head>
 
@@ -60,6 +61,7 @@
   <script src="../assets/js/mousetrap.min.js"></script>
 
   <script src="../assets/autocomplete/awesomplete.min.js"></script>
+  <script src="../assets/autocomplete/autocomplete/autocomplete-img.js"></script>
   <script src="../assets/alerts/alerts.js"></script>
   <script src="../assets/alerts/functionsGeneral.js"></script>
   <!--ESTE ES EL DOCUMENTO DEL BODYLOGIN -->
@@ -95,6 +97,9 @@
 //campo input autocomplete
      if ($('#cuenta_auto').length) {
        autocompletar("cuenta_auto","cuenta_auto_id",array_cuenta);
+     }
+     if ($('#cuenta_auto_num').length) {
+       autocomplete("cuenta_auto_num","cuenta_auto_num_id", array_cuenta, imagen_cuenta);
      }
 
     $("#formRegComp").submit(function(e) {

@@ -13,8 +13,8 @@ $nombre=$_POST["nombre_retencion"];
 $porcentajeCuentaOrigen=$_POST["cuenta_origen"];
 
 //$cuenta=$_POST["cuenta"];
-$cuenta=$_POST["cuenta_auto_id"];
-$cuentaText=$_POST["cuenta_auto"];
+$cuenta=$_POST["cuenta_auto_num_id"];
+$cuentaText=$_POST["cuenta_auto_num"];
 $porcentaje=$_POST["porcentaje"];
 $debehaber=$_POST["credito"];
 $glosa=$_POST["glosa_retencion"];
