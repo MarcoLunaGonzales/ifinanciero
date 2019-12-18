@@ -29,6 +29,9 @@ $sqlUnidades="SELECT a.cod_unidadorganizacional,
 from mesdepreciaciones m, mesdepreciaciones_detalle md, activosfijos a
 where m.codigo=md.cod_mesdepreciaciones and md.cod_activosfijos=a.codigo and m.codigo='$codDepreciacion' 
 group by a.cod_unidadorganizacional, nombreunidad";
+
+//echo $sqlUnidades;
+
 $stmtUnidades = $dbh->prepare($sqlUnidades);
 $stmtUnidades->execute();
 $stmtUnidades->bindColumn('cod_unidadorganizacional', $codUnidadCabecera);
@@ -43,6 +46,9 @@ while ($rowUnidades = $stmtUnidades->fetch(PDO::FETCH_BOUND)) {
       from mesdepreciaciones m, mesdepreciaciones_detalle md, activosfijos a
       where m.codigo=md.cod_mesdepreciaciones and md.cod_activosfijos=a.codigo and m.codigo='$codDepreciacion' and a.cod_unidadorganizacional='$codUnidadCabecera'
       group by m.mes, m.gestion, a.cod_unidadorganizacional, nombreunidad, a.cod_depreciaciones, nombrerubro";  
+      
+      //echo $sql;
+
       $stmt = $dbh->prepare($sql);
       $stmt->execute();
 
@@ -65,7 +71,12 @@ while ($rowUnidades = $stmtUnidades->fetch(PDO::FETCH_BOUND)) {
       $codMoneda=1;
       $codEstadoComprobante=1;
       $fechaActual=date("Y-m-d H:i:s");
-      $numeroComprobante=obtenerCorrelativoComprobante($tipoComprobante, $codUnidadO, 11);
+
+      $mesTrabajo=$_SESSION['globalMes'];
+      $gestionTrabajo=$_SESSION['globalNombreGestion'];
+
+      $numeroComprobante=obtenerCorrelativoComprobante($tipoComprobante, $codUnidadCabecera, $gestionTrabajo, $mesTrabajo);
+
       $glosaCabecera="Actualizacion y Depreciacion de Activos Fijos Mes: ".$codMes." ".$codAnio." Unidad: ".$nombreUnidadCabecera;
       $codComprobante=obtenerCodigoComprobante();
 
