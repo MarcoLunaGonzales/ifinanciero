@@ -51,9 +51,16 @@ try {
     //$modified_at = $_POST["modified_at"];
     $modified_by = 1;//$_POST["modified_by"];
     $cod_estadoreferencial=1;
-    
     $porcentaje=100;
     if ($_POST["codigo"] == 0){
+        //buscamos el ultimo registro de personal
+        $stmtPerAux = $dbhS->prepare("SELECT codigo from personal");
+        $stmtPerAux->execute();
+        $stmtPerAux->bindColumn('codigo', $codigoPAux);
+        $codigoPAux=$codigoPAux+1;
+        while ($row = $stmtPerAux->fetch(PDO::FETCH_BOUND)) {
+        }
+
         $stmt = $dbh->prepare("INSERT INTO personal(ci,ci_lugar_emision,fecha_nacimiento,cod_cargo,cod_unidadorganizacional,cod_area,
         jubilado,cod_genero,cod_tipopersonal,haber_basico,paterno,materno,apellido_casada,primer_nombre,otros_nombres,nua_cua_asignado,
         direccion,cod_tipoafp,nro_seguro,cod_estadopersonal,created_by,modified_by,telefono,celular,email,persona_contacto, cod_tipoaporteafp,cod_estadoreferencial) 
@@ -62,6 +69,7 @@ try {
         :materno, :apellido_casada, :primer_nombre, :otros_nombres, :nua_cua_asignado, :direccion, :cod_tipoafp, :nro_seguro, 
         :cod_estadopersonal, :created_by, :modified_by, :telefono, :celular, :email, :persona_contacto, :cod_tipoaporteafp,:cod_estadoreferencial)");
         //Bind
+        $stmt->bindParam(':codigoPAux', $codigoPAux);
         $stmt->bindParam(':ci', $ci);
         $stmt->bindParam(':ci_lugar_emision', $ci_lugar_emision);
         $stmt->bindParam(':fecha_nacimiento', $fecha_nacimiento);
@@ -97,7 +105,7 @@ try {
 
         $tabla_id = $dbh->lastInsertId();
 
-        
+        //para area distribucion
         $stmtPer = $dbhS->prepare("SELECT codigo from personal where ci=$ci_aux");
         $stmtPer->execute();
         $stmtPer->bindColumn('codigo', $codigoP);
@@ -122,6 +130,7 @@ try {
         $stmtDiscapacitado->bindParam(':tutordiscapacidad', $tutordiscapacidad);
         $stmtDiscapacitado->bindParam(':parentescotutor', $parentescotutor);
         $stmtDiscapacitado->bindParam(':celularTutor', $celularTutor);
+        $stmtDiscapacitado->execute();
 
         if ($flagSuccess){
             $stmt3 = $dbh->prepare("INSERT INTO personalimagen(codigo,imagen) values (:codigo, :imagen)");
@@ -148,7 +157,6 @@ try {
         //$stmt->debugDumpParams();
     } else {//update
         $codigo = $_POST["codigo"];
-
         $stmt = $dbh->prepare("UPDATE personal set ci=:ci,ci_lugar_emision=:ci_lugar_emision,fecha_nacimiento=:fecha_nacimiento,
         cod_cargo=:cod_cargo,cod_unidadorganizacional=:cod_unidadorganizacional,cod_area=:cod_area,jubilado=:jubilado,
         cod_genero=:cod_genero,cod_tipopersonal=:cod_tipopersonal,haber_basico=:haber_basico,paterno=:paterno,
@@ -197,6 +205,26 @@ try {
         
         $flagSuccess=$stmt->execute();
 
+        //para area distribucion
+        $stmtPer = $dbhS->prepare("SELECT codigo,cod_area 
+                from personal_area_distribucion 
+                where cod_personal=:cod_personal ORDER BY 1 DESC");
+        $stmtPer->bindParam(':cod_personal', $codigo);
+        $stmtPer->execute();
+        $stmtPer->bindColumn('codigo', $codigo_areaDP);
+        $stmtPer->bindColumn('cod_area', $codigo_areaP);
+        while ($row = $stmtPer->fetch(PDO::FETCH_BOUND)) {
+        }
+        if($codigo_areaP==0){//actualizamos los datos de area distribuion si el cod_area es 0
+            $stmtDistribucion = $dbh->prepare("UPDATE personal_area_distribucion 
+                set cod_area=:cod_area,porcentaje=:porcentaje where codigo=:codigo_areaDP");
+            //Bind
+            $stmtDistribucion->bindParam(':codigo_areaDP', $codigo_areaDP);
+            $stmtDistribucion->bindParam(':cod_area', $cod_area);    
+            $stmtDistribucion->bindParam(':porcentaje', $porcentaje);            
+            $stmtDistribucion->execute();     
+        }
+        //actualizamos la parte de personal discapacitado        
         $stmtDiscapacitado = $dbh->prepare("UPDATE personal_discapacitado set discapacitado = :discapacitado,
             tutor_discapacitado=:tutordiscapacidad,parentesco=:parentescotutor,celular_tutor=:celularTutor
         where codigo = :codigo");

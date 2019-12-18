@@ -65,20 +65,19 @@ $stmt->bindColumn('xtipos_aporteafp', $xtipos_aporteafp);
 
 <div class="content">
 	<div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-              <div class="card">
-                <div class="card-header <?=$colorCard;?> card-header-icon">
-                  <div class="card-icon">
-                    <i class="material-icons"><?=$iconCard;?></i>
-                  </div>
-                  <h4 class="card-title"><?=$nombrePluralPersonal?></h4>
-                </div>
-                <div class="card-body">
-                  <div class="table-responsive">
-                    <table class="table" id="tablePaginator">
-
-                    <thead>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header <?=$colorCard;?> card-header-icon">
+              <div class="card-icon">
+                <i class="material-icons"><?=$iconCard;?></i>
+              </div>
+              <h4 class="card-title"><?=$nombrePluralPersonal?></h4>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table" id="tablePaginator">
+                  <thead>
                       <tr>
                         <th></th>
                         <th>Nombre</th>      
@@ -96,8 +95,8 @@ $stmt->bindColumn('xtipos_aporteafp', $xtipos_aporteafp);
                       </tr>
                   </thead>
                   <tbody>
-                  <?php $index=1;
-                  while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { ?>
+                    <?php $index=1;
+                    while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { ?>
                       <tr>
                         <td  class="td-actions text-right">    
                           <a href='<?=$urlprintPersonal;?>?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="<?=$buttonEdit;?>">
@@ -147,30 +146,47 @@ $stmt->bindColumn('xtipos_aporteafp', $xtipos_aporteafp);
                         
                         </td>
                       </tr>
-                  <?php $index++; } ?>
-                  </tbody>
-                                      
-                                      </table>
-                                    </div>
-                                  </div>
-                                </div>
-                                <?php
-
-
-
-
-
-              if($globalAdmin==1){
-              ?>
-      				<div class="card-footer fixed-bottom">
-                    <!--<button class="<?=$buttonNormal;?>" onClick="location.href='index.php?opcion=registerUbicacion'">Registrar</button>-->
-                    <button class="<?=$buttonNormal;?>" onClick="location.href='<?=$urlFormPersonal;?>&codigo=0'">Registrar</button>
+                    <?php $index++; } ?>
+                  </tbody>                                      
+                </table>
               </div>
-              <?php
-              }
-              ?>
-		  
             </div>
-          </div>  
+          </div>
+          <?php
+
+          if($globalAdmin==1){
+          ?>
+  				<div class="card-footer fixed-bottom">
+                <!--<button class="<?=$buttonNormal;?>" onClick="location.href='index.php?opcion=registerUbicacion'">Registrar</button>-->
+                <button class="<?=$buttonNormal;?>" onClick="location.href='<?=$urlFormPersonal;?>&codigo=0'">Registrar</button>
+                <!--<button class="btn btn-success"  id="service">Web Service</button>-->
+                <button class="btn btn-success"  onClick="location.href='<?=$urlsaveWSPersonal;?>'">Actualizar Datos</button>
+          </div>
+          <div id="resultados">
+            <ul></ul>
+          </div>
+          <?php
+          }
+          ?>
+  
         </div>
+      </div>  
     </div>
+</div>
+
+<!--
+  //para sacar datos del json
+<script type="text/javascript">
+  $(document).ready(function(){
+    $("#service").on('click',function(){
+      $.getJSON("assets/plantillas/json/json-personal/personal_ws.json").done(function(personal_ws){
+        $.each(personal_ws,function(indice,valor){
+          $("#resultados ul").append("<li>"+valor.ci+ "</li>");
+        })
+      });
+
+    });
+
+  });
+
+</script>-->

@@ -547,6 +547,10 @@
 		if ($_GET['opcion']=='personalSave') {
 			require_once('personal/personalSave.php');
 		}
+
+		if ($_GET['opcion']=='personalSaveWS') {
+			require_once('personal/personalSaveWS.php');
+		}
 		
 		if ($_GET['opcion']=='deletepersonal') {
 			$codigo=$_GET['codigo'];
