@@ -104,17 +104,21 @@ $html.=  '<header class="header">'.
             '<thead>'.
             '<tr class="bold table-title text-center">'.
               '<td colspan="2" class="td-border-none"></td>'.
-              '<td colspan="2" class="td-border-none">Bolivianos</td>'.
-              '<td colspan="2" class="td-border-none">'.$nombreMonedaG.'</td>'.
-            '</tr>'.
+              '<td colspan="2" class="td-border-none">Bolivianos</td>';
+              if($moneda!=1){
+               $html.='<td colspan="2" class="td-border-none">'.$nombreMonedaG.'</td>'; 
+              }      
+            $html.='</tr>'.
             '<tr class="bold table-title text-center">'.
               '<td>Cuenta</td>'.
               '<td>Nombre de la cuenta / Descripción</td>'.
               '<td>Debe</td>'.
-              '<td>Haber</td>'.
-              '<td>Debe</td>'.
-              '<td>Haber</td>'.
-            '</tr>'.
+              '<td>Haber</td>';
+              if($moneda!=1){
+               $html.='<td>Debe</td>'.
+              '<td>Haber</td>'; 
+              }    
+            $html.='</tr>'.
            '</thead>'.
            '<tbody>';
             $index=1;
@@ -125,9 +129,12 @@ $html.=  '<header class="header">'.
                       $tDebeBol+=$row['debe'];$tHaberBol+=$row['haber'];
                       $tDebeDol+=$row['debe']/$tc;$tHaberDol+=$row['haber']/$tc;
                        $html.='<td class="text-right">'.number_format($row['debe'], 2, '.', ',').'</td>'.
-                      '<td class="text-right">'.number_format($row['haber'], 2, '.', ',').'</td>'.
-                      '<td class="text-right">'.number_format($row['debe']/$tc, 2, '.', ',').'</td>'.
-                      '<td class="text-right">'.number_format($row['haber']/$tc, 2, '.', ',').'</td>';                            
+                      '<td class="text-right">'.number_format($row['haber'], 2, '.', ',').'</td>';
+                      if($moneda!=1){
+                       $html.='<td class="text-right">'.number_format($row['debe']/$tc, 2, '.', ',').'</td>'.
+                      '<td class="text-right">'.number_format($row['haber']/$tc, 2, '.', ',').'</td>';
+                      }
+                                                  
                     $html.='</tr>';
               }
 
@@ -140,10 +147,13 @@ $html.=  '<header class="header">'.
       $html.='<tr class="bold table-title">'.
                   '<td colspan="2" class="text-center">Sumas:</td>'.
                   '<td class="text-right">'.number_format($tDebeBol, 2, '.', ',').'</td>'.
-                  '<td class="text-right">'.number_format($tHaberBol, 2, '.', ',').'</td>'. 
-                  '<td class="text-right">'.number_format($tDebeDol, 2, '.', ',').'</td>'. 
-                  '<td class="text-right">'.number_format($tHaberDol, 2, '.', ',').'</td>'.       
-              '</tr>'.
+                  '<td class="text-right">'.number_format($tHaberBol, 2, '.', ',').'</td>';
+                   if($moneda!=1){
+                       $html.='<td class="text-right">'.number_format($tDebeDol, 2, '.', ',').'</td>'. 
+                      '<td class="text-right">'.number_format($tHaberDol, 2, '.', ',').'</td>';
+                      }
+                         
+              $html.='</tr>'.
               '</tbody>';
 $html.=    '</table>';
 $html.='<p class="bold table-title">Son: '.ucfirst(CifrasEnLetras::convertirNumeroEnLetras($entero)).'      '.$centavos.'/100 Bolivianos</p>';         

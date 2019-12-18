@@ -107,14 +107,13 @@ $stmt->bindColumn('cod_estado', $codigoEstado);
                                     $codigoX=$row['codigo'];
                                     $nombreX=$row['nombre'];
                                     $abrevX=$row['abreviatura'];
-                                    if($codigoX!=1){
+                                   // if($codigoX!=1){
                                       ?>
                                        <a href="#" onclick="javascript:window.open('<?=$urlImp;?>?comp=<?=$codigo;?>&mon=<?=$codigoX?>')" class="dropdown-item">
                                            <i class="material-icons">keyboard_arrow_right</i> <?=$abrevX?>
                                        </a> 
                                      <?php
-                                    }
-                                  
+                                   // }   
                                    }
                                    ?>
                               </div>

@@ -286,71 +286,60 @@
                     </div>
                     <div class="tab-pane" id="link111">
                       <form name="form2">
-			               <input class="form-control" type="hidden" name="codCuenta" id="codCuenta"/>
-                           <div class="row">
+			                     <input class="form-control" type="hidden" name="codCuenta" id="codCuenta"/>
+                      <div class="row">
 			                 <label class="col-sm-2 col-form-label">NIT</label>
-			                 <div class="col-sm-10">
+			                 <div class="col-sm-4">
 			                	<div class="form-group">
 			                	  <input class="form-control" type="text" name="nit_fac" id="nit_fac" required="true"/>
 			                	</div>
 			                  </div>
-			                </div>
-			                <div class="row">
-			                 <label class="col-sm-2 col-form-label">Nro. Factura</label>
-			                 <div class="col-sm-10">
-			                	<div class="form-group">
-			                	  <input class="form-control" type="number" name="nro_fac" id="nro_fac" required="true"/>
-			                	</div>
-			                  </div>
+                        <label class="col-sm-2 col-form-label">Nro. Factura</label>
+                       <div class="col-sm-4">
+                        <div class="form-group">
+                          <input class="form-control" type="number" name="nro_fac" id="nro_fac" required="true"/>
+                        </div>
+                        </div>
 			                </div>
 			                <div class="row">
 			                 <label class="col-sm-2 col-form-label">Fecha</label>
-			                 <div class="col-sm-10">
+			                 <div class="col-sm-4">
 			                	<div class="form-group">
 			                	  <input type="text" class="form-control datepicker" name="fecha_fac" id="fecha_fac" value="10/06/2018">
 			                	</div>
-                             </div>
+                        </div>
+                        <label class="col-sm-2 col-form-label">Importe</label>
+                       <div class="col-sm-4">
+                        <div class="form-group">
+                          <input class="form-control" type="number" name="imp_fac" id="imp_fac" required="true"/>
+                        </div>
+                        </div>
 			                </div>
-			                <div class="row">
-			                 <label class="col-sm-2 col-form-label">Razon Social</label>
-			                 <div class="col-sm-10">
-			                	<div class="form-group">
-			                	  <textarea class="form-control" name="razon_fac" id="razon_fac" value=""></textarea>
-			                	</div>
-			                  </div>
-			                </div>
-			                <div class="row">
-			                 <label class="col-sm-2 col-form-label">Importe</label>
-			                 <div class="col-sm-10">
-			                	<div class="form-group">
-			                	  <input class="form-control" type="number" name="imp_fac" id="imp_fac" required="true"/>
-			                	</div>
-			                  </div>
-			                </div>
-			                <!--<div class="row">
-			                 <label class="col-sm-2 col-form-label">Exentos</label>
-			                 <div class="col-sm-10">
-			                	<div class="form-group">
-			                	  --><input class="form-control" type="hidden" name="exe_fac" id="exe_fac" required="true"/>
-			                	<!--</div>
-			                  </div>
-			                </div>-->
+                      <!-- Exento oculto-->
+                      <input class="form-control" type="hidden" name="exe_fac" id="exe_fac" required="true"/>
+                      <!--No tiene funcion este campo-->
 			                <div class="row">
 			                 <label class="col-sm-2 col-form-label">Nro. Autorizaci&oacute;n</label>
-			                 <div class="col-sm-10">
+			                 <div class="col-sm-4">
 			                	<div class="form-group">
 			                	  <input class="form-control" type="text" name="aut_fac" id="aut_fac" required="true"/>
 			                	</div>
 			                  </div>
+                        <label class="col-sm-2 col-form-label">Cod. Control</label>
+                       <div class="col-sm-4">
+                        <div class="form-group">
+                          <input class="form-control" type="text" name="con_fac" id="con_fac" required="true"/>
+                        </div>
+                       </div>
 			                </div>
-			                <div class="row">
-			                 <label class="col-sm-2 col-form-label">Cod. Control</label>
-			                 <div class="col-sm-10">
-			                	<div class="form-group">
-			                		<input class="form-control" type="text" name="con_fac" id="con_fac" required="true"/>
-			                	</div>
-			                 </div>
-			                </div>
+                      <div class="row">
+                       <label class="col-sm-2 col-form-label">Razon Social</label>
+                       <div class="col-sm-10">
+                        <div class="form-group">
+                          <textarea class="form-control" name="razon_fac" id="razon_fac" value=""></textarea>
+                        </div>
+                        </div>
+                      </div>
 			                <div class="form-group float-right">
 			                	<button type="button" class="btn btn-info btn-round" onclick="saveFactura()">Guardar</button>
 			                </div>

@@ -411,8 +411,7 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=mesCurso">
                     <span class="sidebar-mini"> MC </span>
-                    <span class="sidebar-normal"> Mes en curso</span>
-                    <span class="sidebar-normal">  Cambiar Mes de Trabajo </span>
+                    <span class="sidebar-normal"> Mes de Trabajo </span>
                   </a>
                 </li>
                 <li class="nav-item ">
