@@ -101,6 +101,10 @@
      if ($('#cuenta_auto_num').length) {
        autocomplete("cuenta_auto_num","cuenta_auto_num_id", array_cuenta, imagen_cuenta);
      }
+     if ($('#nro_cuenta').length) {
+       autocomplete("nro_cuenta","nro_cuenta_id", array_cuenta_numeros, imagen_cuenta);
+       autocomplete("cuenta","cuenta_id", array_cuenta_nombres, imagen_cuenta);
+     }
 
     $("#formRegComp").submit(function(e) {
       var envio=0;

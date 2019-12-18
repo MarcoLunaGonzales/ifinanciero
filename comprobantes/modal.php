@@ -161,10 +161,12 @@
 	  		<div class="row">
     	      	<div class="form-group col-sm-4">
             		<label for="nro_cuenta" class="bmd-label-floating">Nro. Cuenta:</label>
+                <input type="hidden" id="nro_cuenta_id" name="nro_cuenta_id">
             		<input type="number" class="form-control" id="nro_cuenta" name="nro_cuenta" onkeypress="pulsar(event)" autofocus>
           		</div>
           		<div class="form-group col-sm-4">
             		<label for="cuenta" class="bmd-label-floating">Cuenta:</label>
+                <input type="hidden" id="cuenta_id" name="cuenta_id">
             		<input type="text" class="form-control" id="cuenta" name="cuenta" onkeypress="pulsar(event)">
           		</div>
           		<div class="form-group col-sm-3">
