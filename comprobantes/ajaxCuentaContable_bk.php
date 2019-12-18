@@ -61,18 +61,18 @@ $idFila=$_GET['idFila'];
 			</div>
       	</div>
 
-      	<div class="col-sm-4">
+      	<div class="col-sm-3">
       		<input type="hidden" name="cuenta<?=$idFila;?>" id="cuenta<?=$idFila;?>">
     		<input type="hidden" name="cuenta_auxiliar<?=$idFila;?>" id="cuenta_auxiliar<?=$idFila;?>">
     		<div class="row">	
-    			<div class="col-sm-8">
+    			<div class="col-sm-9">
     				<div class="form-group" id="divCuentaDetalle<?=$idFila;?>">
     			
         	        </div>
     			</div>
-    			<div class="col-sm-4">
+    			<div class="col-sm-3">
     				<div class="btn-group">
-    				 <a title="Mayores" href="#" id="mayor<?=$idFila?>" onclick="mayorReporteComprobante(<?=$idFila?>)" class="btn btn-sm btn-info btn-fab"><span class="material-icons">list</span></a>	  	
+    				 <a title="Mayores" href="#" id="mayor<?=$idFila?>" onclick="mayorReporteComprobante(<?=$idFila?>)" class="btn btn-small btn-info"><span class="material-icons">list</span></a>	  	
     				 <a title="Cambiar cuenta" href="#" id="cambiar_cuenta<?=$idFila?>" onclick="editarCuentaComprobante(<?=$idFila?>)" class="btn btn-sm btn-warning btn-fab"><span class="material-icons text-dark">edit</span></a>	  
     				 <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion<?=$idFila?>" onclick="nuevaDistribucionPonerFila(<?=$idFila;?>);" class="btn btn-sm btn-default btn-fab"><span class="material-icons">scatter_plot</span></a>	  
     			    </div>  
@@ -80,20 +80,20 @@ $idFila=$_GET['idFila'];
     		</div>
       	</div>
 
-		<div class="col-sm-1">
+		<div class="col-sm-2">
             <div class="form-group">
             	<label for="debe<?=$idFila;?>" class="bmd-label-floating">Debe</label>			
           		<input class="form-control" type="number" name="debe<?=$idFila;?>" id="debe<?=$idFila;?>" onChange="calcularTotalesComprobante(this.id,event);" OnKeyUp="calcularTotalesComprobante(this.id,event);" step="0.01">	
 			</div>
       	</div>
 
-		<div class="col-sm-1">
+		<div class="col-sm-2">
             <div class="form-group">
             	<label for="haber<?=$idFila;?>" class="bmd-label-floating">Haber</label>			
           		<input class="form-control" type="number" name="haber<?=$idFila;?>" id="haber<?=$idFila;?>" onChange="calcularTotalesComprobante(this.id,event);" OnKeyUp="calcularTotalesComprobante(this.id,event);" step="0.01"> 	
 			</div>
       	</div>
-      	<div class="col-sm-3">
+      	<div class="col-sm-2">
 		    <div class="form-group">
           		<label for="glosa_detalle<?=$idFila;?>" class="bmd-label-static">GlosaDetalle</label>
 				<textarea rows="1" class="form-control" name="glosa_detalle<?=$idFila;?>" id="glosa_detalle<?=$idFila;?>" value=""></textarea>

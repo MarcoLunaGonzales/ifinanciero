@@ -192,8 +192,22 @@
             .appendTo('#formRegDet');
       }     
     });
+    $("#formSolDet").submit(function(e) {
+      var mensaje="";
+      /*if($("#cantidad_filas").val()==0){
+        mensaje+="<p></p>";
+        alertaModal('Debe registrar al menos un grupo','bg-secondary','text-white');
+        return false;*/
+      //}else{
+          $('<input />').attr('type', 'hidden')
+            .attr('name', 'facturas')
+            .attr('value', JSON.stringify(itemFacturas))
+            .appendTo('#formSolDet');
+      //}    
+    });
    document.getElementById('qrquincho').addEventListener('change', readSingleFile, false);
    document.getElementById('archivos').addEventListener('change', archivosPreview, false);
+   document.getElementById('archivosDetalle').addEventListener('change', archivosPreviewDetalle, false);
   });
   </script>
  <script>
@@ -215,7 +229,19 @@
         Mousetrap.bind('esc', function(){ $(".modal").modal("hide"); return false; });
         Mousetrap.bind('alt+enter', function(){ $(".modal").modal("hide"); return false; });
       }
-
+      if($("#formSolDet")){
+        if($("#simulacion").length){
+          var tipo_s=1;
+           Mousetrap.bind('alt+a', function(){ addSolicitudDetalle(null,tipo_s); return false; });
+        }else{
+          Mousetrap.bind('alt+s', function(){ addSolicitudDetalleSearch(); return false; });
+        }
+       
+        Mousetrap.bind('alt+q', function(){ minusDetalleSolicitud(numFilas); return false; });
+        //salir de los modals con escape
+        Mousetrap.bind('esc', function(){ $(".modal").modal("hide"); return false; });
+        Mousetrap.bind('alt+enter', function(){ $(".modal").modal("hide"); return false; });
+      }
       
     });
   </script>

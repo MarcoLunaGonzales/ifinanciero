@@ -141,6 +141,11 @@
 		if ($_GET['opcion']=='editRetenciones') {
 			require_once('retenciones/edit.php');
 		}
+		//SOLICITUD DE RECURSOS
+		if ($_GET['opcion']=='listSolicitudRecursos') {
+			require_once('solicitudes/listSolicitudRecursos.php');
+		}
+
 
 		//******************************ACTIVOS FIJOS***********************************************************
 		if ($_GET['opcion']=='listUbicaciones') {
@@ -350,7 +355,7 @@
 		if ($_GET['opcion']=='actualizarAsignacion') {
 			require_once('activosFijos/saveAsignacion.php');
 		}
-
+        
 
 
 		//*************************************************************************************************************/

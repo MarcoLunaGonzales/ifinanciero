@@ -23,7 +23,7 @@ $stmt->bindColumn('perfil', $perfil);
 while ($rowDetalle = $stmt->fetch(PDO::FETCH_BOUND)) {
 	echo "ENTRO A DETALLE";
 	$nombreUnidad=abrevUnidad($codUnidad);
-	$nombreArea=abrevUnidad($codArea);
+	$nombreArea=abrevArea($codArea);
 
 	//echo $codUnidad." ".$nombreUnidad;
 	

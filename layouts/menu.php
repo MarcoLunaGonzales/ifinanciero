@@ -206,7 +206,31 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
               </ul>
             </div>
           </li>
-
+          <!--Solicitud de recursos-->
+          <li class="nav-item ">
+            <a class="nav-link" data-toggle="collapse" href="#solicitudes">
+              <i class="material-icons">content_paste</i>
+              <p> Solicitudes de Recursos
+                <b class="caret"></b>
+              </p>
+            </a>
+            <div class="collapse" id="solicitudes">
+              <ul class="nav">
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listSolicitudRecursos">
+                    <span class="sidebar-mini"> SR </span>
+                    <span class="sidebar-normal"> Solicitudes de Recursos</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listSolicitudSimulacionProveedor">
+                    <span class="sidebar-mini"> GSR </span>
+                    <span class="sidebar-normal"> Gesti&oacute;n Solicitudes Recursos</span>
+                  </a>
+                </li>                          
+              </ul>
+            </div>
+          </li>
           <!--REPORTES CONTABILIDAD-->
           <li class="nav-item ">
             <a class="nav-link" data-toggle="collapse" href="#reportesAF">

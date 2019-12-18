@@ -379,14 +379,16 @@ function setFormValidation(id) {
     }
     
   //cargar el credito fiscal
-  var iva=configuraciones[0].valor;
-  var importeIva=parseFloat($('#imp_fac').val())*(iva/100);
-  var anterior= obtenerImportesFacturaIva(index);
+  //var iva=configuraciones[0].valor;
+  //var importeIva=parseFloat($('#imp_fac').val())*(iva/100);
+  //var anterior= obtenerImportesFacturaIva(index);
   itemFacturas[index-1].push(factura);
   limpiarFormFac();
   listarFact(index);
-  $("#debe"+index).val(anterior+importeIva);
-  calcularTotalesComprobante();
+  //$("#debe"+index).val(anterior+importeIva);
+  if($("#debe"+index).length){
+   calcularTotalesComprobante();  
+  } 
   $("#nfac"+index).html(itemFacturas[index-1].length);
   $("#link110").addClass("active");$("#link111").removeClass("active");$("#link112").removeClass("active");
   $("#nav_boton1").addClass("active");$("#nav_boton2").removeClass("active");$("#nav_boton3").removeClass("active");
@@ -1561,7 +1563,12 @@ function quitarChecked(id){
 function listRetencion(id){
   var fila=id;
   var codigo=$("#cuenta"+fila).val();
-  var importe=$("#debe"+fila).val();
+  if($("#debe"+fila).length){
+   var importe=$("#debe"+fila).val(); 
+ }else{
+   var importe=$("#importe"+fila).val();
+ }
+  
    $("#retencion_cuenta").html($("#divCuentaDetalle"+fila).html());
    $("#retencion_codcuenta").val(codigo);
    $("#retFila").val(id);
@@ -1730,3 +1737,265 @@ function mayorReporteComprobante(fila){
  }
 }
  ///////////////////////////////////////////////////////////////////
+
+ /*                              Solicitud de recursos                                      */
+
+ function listarTipoSolicitud(tipo){
+  var url="";
+  if(tipo==1){
+   url="ajaxListSimulacion.php";
+  }else{
+   url="ajaxListProveedor.php";
+  }
+  ajax=nuevoAjax();
+    ajax.open("GET",url,true);
+    ajax.onreadystatechange=function(){
+    if (ajax.readyState==4) {
+      var fi=$("#lista_tipo");
+      fi.html(ajax.responseText);
+      fi.bootstrapMaterialDesign();
+       $('.selectpicker').selectpicker("refresh");
+    }
+   }
+    ajax.send(null);
+ }
+ function guardarSolicitudRecursos(){
+  var numero=$("#numero").val();
+  var tipo=$("#tipo_solicitud").val();
+  if(tipo==1){
+    var codSim=$("#simulaciones").val();
+    var codProv=0;
+  }else{
+    var codProv=$("#proveedores").val();
+    var codSim=0;
+  }
+  if(numero==""||tipo==""){
+   $("#mensaje").html("<center><p class='text-danger'>Todos los campos son requeridos.</p></center>");
+  }else{
+     var parametros={"numero":numero,"cod_sim":codSim,"cod_prov":codProv};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxRegistrarSolicitud.php",
+        data: parametros,
+        beforeSend: function () { 
+         $("#mensaje").html("<center><p class='text-warning'>Procesando. Espere...</p></center>");
+          
+        },
+        success:  function (resp) {
+         $("#mensaje").html("<center><p class='text-success'>"+resp+"</p></center>");
+        }
+    });
+  }
+}
+
+function cargarDatosCuenta(){
+  var codigoProv=$("#proveedores").val();
+ for (var i = 0; i < numFilas; i++) {
+   $('select[name=proveedor'+(i+1)+']').val(codigoProv);  
+   }
+   $('.selectpicker').selectpicker("refresh");
+}
+
+function addSolicitudDetalle(obj,tipo) {
+    var codigoSol=$("#cod_solicitud").val();
+      numFilas++;
+      cantidadItems++;
+      filaActiva=numFilas;
+      //aumentar un itemfactura
+      var ndet=[];
+      itemDetalle.push(ndet);
+      var nfac=[];itemFacturas.push(nfac);
+      document.getElementById("cantidad_filas").value=numFilas;
+      console.log("num: "+numFilas+" cantidadItems: "+cantidadItems);
+      fi = document.getElementById('fiel');
+      contenedor = document.createElement('div');
+      contenedor.id = 'div'+numFilas;  
+      fi.type="style";
+      fi.appendChild(contenedor);
+      var divDetalle;
+      divDetalle=$("#div"+numFilas);
+      if(tipo==1){
+        var url="ajaxSolicitudRecursosDetalleSimulacion.php";
+      }else{
+        var url="ajaxSolicitudRecursosDetalleProveedor.php";
+      }
+      ajax=nuevoAjax();
+      ajax.open("GET",url+"?idFila="+numFilas+"&codigo="+codigoSol,true);
+      ajax.onreadystatechange=function(){
+        if (ajax.readyState==4) {
+          divDetalle.html(ajax.responseText);
+          autocompletar("partida_cuenta"+filaActiva,"partida_cuenta_id"+filaActiva,array_cuenta);
+          divDetalle.bootstrapMaterialDesign();
+          $('.selectpicker').selectpicker("refresh");
+          return false;
+       }
+      }   
+      ajax.send(null);
+}
+function habilitarFila(fila){
+  var check=document.getElementById("habilitar"+fila);
+  if(!check.checked){
+    $("#unidad"+fila).attr("disabled",true);
+    $("#area"+fila).attr("disabled",true);
+    $("#partida_cuenta"+fila).attr("disabled",true);
+    $("#detalle_detalle"+fila).attr("disabled",true);
+    $("#importe"+fila).attr("disabled",true);
+    $("#proveedor"+fila).attr("disabled",true); 
+    
+    $("#boton_archivos"+fila).addClass("d-none"); 
+    $("#boton_ret"+fila).addClass("d-none"); 
+    $("#boton_fac"+fila).addClass("d-none"); 
+    $("#boton_remove"+fila).addClass("d-none"); 
+  }else{
+    $("#unidad"+fila).removeAttr("disabled");
+    $("#area"+fila).removeAttr("disabled");
+    $("#partida_cuenta"+fila).removeAttr("disabled");
+    $("#detalle_detalle"+fila).removeAttr("disabled");
+    $("#importe"+fila).removeAttr("disabled");
+    $("#proveedor"+fila).removeAttr("disabled");
+    
+    $("#boton_archivos"+fila).removeClass("d-none");
+    $("#boton_ret"+fila).removeClass("d-none");
+    $("#boton_fac"+fila).removeClass("d-none");
+    $("#boton_remove"+fila).removeClass("d-none");
+  }
+  $('.selectpicker').selectpicker("refresh");
+}
+function minusDetalleSolicitud(idF){
+      var elem = document.getElementById('div'+idF);
+      elem.parentNode.removeChild(elem);
+      if(idF<numFilas){
+      for (var i = parseInt(idF); i < (numFilas+1); i++) {
+        var nuevoId=i+1;
+       $("#div"+nuevoId).attr("id","div"+i);
+       $("#unidad"+nuevoId).attr("name","unidad"+i);
+       $("#unidad"+nuevoId).attr("id","unidad"+i);
+       $("#area"+nuevoId).attr("name","area"+i);
+       $("#area"+nuevoId).attr("id","area"+i);
+       $("#habilitar"+nuevoId).attr("name","habilitar"+i);
+       $("#habilitar"+nuevoId).attr("id","habilitar"+i);
+       $("#habilitar"+nuevoId).attr("onchange","habilitarFila('"+i+"')");
+       if($("#simulacion").length){
+        $("#partida_cuenta_id"+nuevoId).attr("name","partida_cuenta_id"+i);
+        $("#partida_cuenta_id"+nuevoId).attr("id","partida_cuenta_id"+i);
+        $("#partida_cuenta"+nuevoId).attr("name","partida_cuenta"+i);
+        $("#partida_cuenta"+nuevoId).attr("id","partida_cuenta"+i);
+        $("#detalle_detalle"+nuevoId).attr("name","detalle_detalle"+i);
+        $("#detalle_detalle"+nuevoId).attr("id","detalle_detalle"+i);
+        $("#importe"+nuevoId).attr("name","importe"+i);
+        $("#importe"+nuevoId).attr("id","importe"+i);
+        $("#proveedor"+nuevoId).attr("name","proveedor"+i);
+        $("#proveedor"+nuevoId).attr("id","proveedor"+i);
+       }else{
+
+       }
+       $("#boton_remove"+nuevoId).attr("onclick","minusCuentaContable('"+i+"')");
+       $("#boton_remove"+nuevoId).attr("id","boton_remove"+i);
+       $("#boton_fac"+nuevoId).attr("onclick","listFac('"+i+"')");
+       $("#boton_fac"+nuevoId).attr("id","boton_fac"+i);
+       $("#nfac"+nuevoId).attr("id","nfac"+i);
+       $("#boton_ret"+nuevoId).attr("onclick","listRetencion('"+i+"')");
+       $("#boton_ret"+nuevoId).attr("id","boton_ret"+i);
+       $("#archivos_fila"+nuevoId).attr("id","archivos_fila"+i);
+       $("#archivos"+nuevoId).attr("name","archivos"+i);
+       $("#archivos"+nuevoId).attr("id","archivos"+i);
+       $("#boton_archivos"+nuevoId).attr("onclick","addArchivos('"+i+"')");
+       $("#boton_archivos"+nuevoId).attr("id","boton_archivos"+i);
+       $("#narch"+nuevoId).attr("id","narch"+i);
+       $("#importe_label"+nuevoId).attr("id","importe_label"+i); 
+       $("#cod_retencion"+nuevoId).attr("name","cod_retencion"+i);
+       $("#cod_retencion"+nuevoId).attr("id","cod_retencion"+i);
+      }
+     } 
+     itemFacturas.splice((idF-1), 1);
+      numFilas=numFilas-1;
+      cantidadItems=cantidadItems-1;
+      filaActiva=numFilas;
+      document.getElementById("cantidad_filas").value=numFilas;  
+}
+
+var numArchivosDetalle=0;
+function archivosPreviewDetalle(send) {
+  var fila =$("#codigo_fila").val();
+     var x = $("#archivosDetalle");
+      var y = x.clone();
+      y.attr("id", "archivos"+fila);
+      y.attr("name", "archivos"+fila+"[]");
+      $("#archivos_fila"+fila).html(y);
+      //y.insertAfter("button");
+    var inp=document.getElementById("archivosDetalle");
+    var inpDetalle=document.getElementById("archivos"+fila);
+    if(send!=1){
+      $("#lista_archivosdetalle").html("<p class='text-success text-center'>Lista de Archivos</p>");
+      for (var i = 0; i < inpDetalle.files.length; i++) {
+       numArchivosDetalle++;
+        var name = inpDetalle.files.item(i).name;
+        $("#lista_archivosdetalle").append("<div class='text-left'><label>"+name+"</label></div>");
+      };
+       $("#narch"+fila).addClass("estado");
+     }else{
+      numArchivosDetalle=0;
+        $("#lista_archivosdetalle").html("Ningun archivo seleccionado");
+        $("#narch"+fila).removeClass("estado");
+     }
+   }
+
+  function addArchivos(fila){
+    $("#codigo_fila").val(fila);
+    $("#archivosDetalle").val("");
+    $("#lista_archivosdetalle").html("Ningun archivo seleccionado");
+    var inpDetalle=document.getElementById("archivos"+fila);
+    var contador=0;
+    for (var i = 0; i < inpDetalle.files.length; i++) {
+       numArchivosDetalle++;
+        var name = inpDetalle.files.item(i).name;
+        $("#lista_archivosdetalle").append("<div class='text-left'><label>"+name+"</label></div>");
+        contador++;
+    };
+    if(contador==0){
+      $("#boton_quitararchivos").click();
+    }
+    $('#modalFileDet').modal('show');
+  }
+function agregarRetencionSolicitud(){
+  var listaRet=[];var i=0;
+  $("input[name=retenciones]").each(function (index) {  
+       if($(this).is(':checked')){
+          listaRet[i]= $(this).val();
+          i++;
+       }
+    });
+  if(listaRet.length>0){
+    var fila = $("#retFila").val();
+     var respuesta=listaRet[0].split('@');
+     $("#cod_retencion"+fila).val(respuesta[0]);
+     $("#retFila").val("");
+     $('#modalRetencion').modal('hide');
+     $("#importe_label"+fila).text("Importe - "+respuesta[1]);
+  }else{
+    $("#mensaje_retencion").html("<p class='text-danger'>Debe seleccionar al menos una retención</p>");
+  }
+  
+ }
+
+ function addSolicitudDetalleSearch() {
+
+    var codigoSol=$("#cod_solicitud").val();
+    var codCuenta=$("#cuenta_proveedor").val();
+    var fechai=$("#fecha_desde").val();
+    var fechaf=$("#fecha_hasta").val();
+     var fi = $('#solicitud_proveedor');
+      ajax=nuevoAjax();
+      ajax.open("GET","ajaxSolicitudRecursosDetalleProveedor.php?codigo="+codigoSol+"&fecha_i="+fechai+"&fecha_f="+fechaf+"&cod_cuenta="+codCuenta,true);
+      ajax.onreadystatechange=function(){
+        if (ajax.readyState==4) {
+          fi.html("");
+          fi.html(ajax.responseText);
+          fi.bootstrapMaterialDesign();
+          $('.selectpicker').selectpicker("refresh");
+          return false;
+       }
+      }   
+      ajax.send(null);
+}
