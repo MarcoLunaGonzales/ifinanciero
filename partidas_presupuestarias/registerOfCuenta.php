@@ -63,8 +63,8 @@ $stmt->bindColumn('bandera', $bandera);
                         </tr>
                       </thead>
                       <tbody>
-<?php
-						$index=1;$nc=0;
+                        <?php
+                				$index=1;$nc=0;
                       	while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                           $nombreX=trim($nombre);$numeroX=trim($numero);
                           if($bandera>0){
@@ -72,7 +72,7 @@ $stmt->bindColumn('bandera', $bandera);
                           $nc++;
                           }
                           $nombre=formateaPlanCuenta($nombre,$nivel);
-?>
+                          ?>
                         <tr>
                           <td align="center">
                           <div class="form-check">
@@ -88,10 +88,10 @@ $stmt->bindColumn('bandera', $bandera);
                           <td><?=$nombre;?></td>
                         </tr>
 
-<?php
-							$index++;
-						}
-?>
+                          <?php
+              							$index++;
+              						}
+                          ?>
 
                       </tbody>
                     </table>

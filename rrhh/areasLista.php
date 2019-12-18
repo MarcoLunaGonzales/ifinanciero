@@ -38,44 +38,44 @@ $stmt->bindColumn('modified_by', $modified_by);
                   <div class="table-responsive">
                     <table class="table" id="tablePaginator">
 
-                    <thead>
-    <tr>
-        <th>Codigo</th>
-        <th>Nombre</th>
-        <th>Abreviatura</th>
-        <th>Observaciones</th>
-        
-        
-        <th></th>
-    </tr>
-</thead>
-<tbody>
-<?php $index=1;
-while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { ?>
-    <tr>
-    <td><?=$codigo;?></td>
-        <td><?=$nombre;?></td>
-        <td><?=$abreviatura;?></td>
-        <td><?=$observaciones;?></td>
-        
-        <td class="td-actions text-right">
-        <?php
-          if($globalAdmin==1){
-        ?>
-          <a href='<?=$urlFormAreas;?>&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonEdit;?>">
-            <i class="material-icons"><?=$iconEdit;?></i>
-          </a>
-          <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDeleteAreas;?>&codigo=<?=$codigo;?>')">
-            <i class="material-icons"><?=$iconDelete;?></i>
-          </button>
-          <?php
-            }
-          ?>
-        
-        </td>
-    </tr>
-<?php $index++; } ?>
-</tbody>
+                      <thead>
+                      <tr>
+                          <th>Codigo</th>
+                          <th>Nombre</th>
+                          <th>Abreviatura</th>
+                          <th>Observaciones</th>
+                          
+                          
+                          <th></th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                  <?php $index=1;
+                  while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { ?>
+                      <tr>
+                      <td><?=$codigo;?></td>
+                          <td><?=$nombre;?></td>
+                          <td><?=$abreviatura;?></td>
+                          <td><?=$observaciones;?></td>
+                          
+                          <td class="td-actions text-right">
+                          <?php
+                            if($globalAdmin==1){
+                          ?>
+                            <a href='<?=$urlFormAreas;?>&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonEdit;?>">
+                              <i class="material-icons"><?=$iconEdit;?></i>
+                            </a>
+                            <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDeleteAreas;?>&codigo=<?=$codigo;?>')">
+                              <i class="material-icons"><?=$iconDelete;?></i>
+                            </button>
+                            <?php
+                              }
+                            ?>
+                          
+                          </td>
+                      </tr>
+                  <?php $index++; } ?>
+                  </tbody>
                     
                     </table>
                   </div>
@@ -100,4 +100,4 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { ?>
             </div>
           </div>  
         </div>
-    </div>
+</div>

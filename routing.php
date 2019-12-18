@@ -256,6 +256,10 @@
 			//$codigo=$_GET['codigoactivo'];
 			require_once('activosFijos/saveTransferActivosfijos.php');
 		}
+		if ($_GET['opcion']=='saveReevaluoAF') {
+			//$codigo=$_GET['codigoactivo'];
+			require_once('activosFijos/saveReevaluoAF.php');
+		}
 
 		if ($_GET['opcion']=='activofijoAccesorios') {
 			$codigo=$_GET['codigo'];
@@ -265,6 +269,11 @@
 			$codigo=$_GET['codigo'];
 			require_once('activosFijos/activofijoEventos.php');
 		}
+		if ($_GET['opcion']=='activofijoRevaluar') {
+			$codigo=$_GET['codigo'];
+			require_once('activosFijos/activofijoRevaluar.php');
+		}
+		
 
 		//ASIGNACIONES DE ACTIVOS FIJOS
 		if ($_GET['opcion']=='asignacionesLista') {
@@ -415,6 +424,14 @@
 			$codigo=$_GET['codigo'];
 			require_once('rrhh/uoDelete.php');
 		}
+		if ($_GET['opcion']=='registerAreasU') {
+			$codigo=$_GET['codigo'];
+			require_once('rrhh/registerAreasU.php');
+		}
+		//areas unidades organixaciones		
+		if ($_GET['opcion']=='areasuoSave') {
+			require_once('rrhh/areas_organizacionSave.php');
+		}
 
 		//tipos personal
 		if ($_GET['opcion']=='tipospersonalLista') {
@@ -430,6 +447,14 @@
 		if ($_GET['opcion']=='deletetipospersonal') {
 			$codigo=$_GET['codigo'];
 			require_once('personal/deletetipospersonal.php');
+		}
+		if ($_GET['opcion']=='PersonalAreaDistribucionForm') {
+			$codigo=$_GET['codigo'];
+			require_once('personal/PersonalAreaDistribucionForm.php');
+		}
+		if ($_GET['opcion']=='FormPersonalContratos') {
+			$codigo=$_GET['codigo'];
+			require_once('personal/PersonalContratosForm.php');
 		}
 
 		//estados personal

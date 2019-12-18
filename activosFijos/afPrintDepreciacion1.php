@@ -5,19 +5,25 @@ require '../assets/phpqrcode/qrlib.php';
 
 //require_once 'configModule.php';
 require_once __DIR__.'/../functions.php';
-
-
-
 $dbh = new Conexion();
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//try
 //RECIBIMOS LAS VARIABLES
 
 $codigo = $_GET["codigo"];//codigoactivofijo
 try{
-    $stmt = $dbh->prepare("select * from v_activosfijos WHERE codigo=:codigo");
+    $stmtAF = $dbh->prepare("SELECT (select p.nombre from proyectos_financiacionexterna p where p.codigo=cod_proy_financiacion) as nom_proy_financiacion
+    from activosfijos
+     WHERE codigo=:codigo");
+    $stmtAF->bindParam(':codigo',$codigo);
+    $stmtAF->execute();
+    $result = $stmtAF->fetch();
+    $nom_proy_financiacion = $result['nom_proy_financiacion'];    
+
+    $stmt = $dbh->prepare("SELECT * from v_activosfijos WHERE codigo=:codigo");
     //Ejecutamos;
     $stmt->bindParam(':codigo',$codigo);
     $stmt->execute();
+    
     $result = $stmt->fetch();
 
     $codigo = $result['codigo'];
@@ -45,6 +51,7 @@ try{
     $modified_at = $result['modified_at'];
     $modified_by = $result['modified_by'];
     $vidautilmeses_restante = $result['vidautilmeses_restante'];
+
     $nombre_personal = $result['nombre_personal'];
     $nombre_depreciaciones = $result['nombre_depreciaciones'];
     $tipo_bien = $result['tipo_bien'];
@@ -100,15 +107,16 @@ try{
     $stmt2->bindColumn('d11_vidarestante', $d11_vidarestante);
 
 
+
     //asignaciones
     $query2 = "SELECT (select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional)as u_o,
     (select a.abreviatura from areas a where a.codigo=cod_area)as area,fechaasignacion,estadobien_asig,
     (select p.nombre from personal2 p where p.codigo=cod_personal)as nombre_personal,cod_estadoasignacionaf,
     (select eaf.nombre from estados_asignacionaf eaf where eaf.codigo=cod_estadoasignacionaf) as estadoAsigAF,
     fecha_recepcion,observaciones_recepcion,fecha_devolucion,observaciones_devolucion
-from activofijos_asignaciones
-where cod_activosfijos =".$codigo;
-    $statement2 = $dbh->query($query2);
+    from activofijos_asignaciones
+    where cod_activosfijos =".$codigo;
+        $statement2 = $dbh->query($query2);
 
 
 $html = '';
@@ -134,11 +142,7 @@ $html.=  '<header class="header">'.
 
             '<br><br><br><br>'.
             '<table align="center">'.
-                '<tbody>';
-                    // while ($row = $stmt2->fetch()) { 
-                    //     $d2_valorresidual_aux = $row["d2_valorresidual"];
-                    //     $d10_valornetobs_aux = $row["d10_valornetobs"];
-                    // }
+                '<tbody>';                
 
                     $row = $stmt2->fetch();
                         $d2_valorresidual_aux = $row["d2_valorresidual"];
@@ -157,7 +161,8 @@ $html.=  '<header class="header">'.
                                 '<b>Fecha alta : </b>'.$fechalta.'<br>'.
                                 '<b>Tipo Bien : </b>'.$tipo_bien.'<br>'.
                                 '<b>Valor Residual : </b> '.$d2_valorresidual_aux.'<br>'.
-                                '<b>Valor Neto Bs : </b>'.$d10_valornetobs_aux.
+                                '<b>Valor Neto Bs : </b>'.$d10_valornetobs_aux.'<br>'.'<br>'.
+                                '<b>Proyecto Financiación : </b>'.$nom_proy_financiacion.
                             '</p>'.
                         '</td>'.
                         '<td class="text-right small">'.

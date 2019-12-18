@@ -1019,6 +1019,7 @@ function filaTabla(tabla){
   tabla.html(html);
   $("#modalCuentas").modal("show");
 }
+
 function filaTablaGeneral(tabla,index){
   var html="";
   for (var i = 0; i < cuentas_tabla_general[index-1].length; i++) {
@@ -1738,6 +1739,7 @@ function mayorReporteComprobante(fila){
 }
  ///////////////////////////////////////////////////////////////////
 
+<<<<<<< HEAD
  /*                              Solicitud de recursos                                      */
 
  function listarTipoSolicitud(tipo){
@@ -1998,4 +2000,200 @@ function agregarRetencionSolicitud(){
        }
       }   
       ajax.send(null);
+//perosnal area distribucion
+}
+function agregaformPAD(datos){
+  //console.log("datos: "+datos);
+  var d=datos.split('-');
+  document.getElementById("codigo_personal").value=d[0];
+  document.getElementById("codigo_distribucion").value=d[1];
+}
+function agregaformPADE(datos){
+  //console.log("datos: "+datos);
+  var d=datos.split('-');
+  document.getElementById("codigo_personalE").value=d[0];
+  document.getElementById("codigo_distribucionE").value=d[1];
+
+  document.getElementById("cod_areaE").value=d[2];
+  document.getElementById("porcentajeE").value=d[3];
+}
+function agregaformPADB(datos){
+  //console.log("datos: "+datos);
+  var d=datos.split('-');
+  document.getElementById("codigo_personalB").value=d[0];
+  document.getElementById("codigo_distribucionB").value=d[1];
+}
+
+function RegistrarDistribucion(cod_personal,cod_area,porcentaje){
+  $.ajax({
+    type:"POST",
+    data:"cod_personal="+cod_personal+"&cod_area="+cod_area+"&cod_estadoreferencial=1&porcentaje="+porcentaje,
+    url:"personal/savePersonalAreaDistribucion.php",
+    success:function(r){
+      if(r==1){
+        //$('#tabla1').load('index.php');
+        // alertify.success("agregado");
+        alerts.showSwal('success-message','index.php?opcion=PersonalAreaDistribucionForm&codigo='+cod_personal);
+      }
+    }
+  });
+}
+function EditarDistribucion(cod_personal,cod_distribucion,cod_area,porcentaje){
+  $.ajax({
+    type:"POST",
+    data:"cod_personal="+cod_distribucion+"&cod_area="+cod_area+"&cod_estadoreferencial=2&porcentaje="+porcentaje,
+    url:"personal/savePersonalAreaDistribucion.php",
+    success:function(r){
+      if(r==1){
+        //$('#tabla1').load('index.php');
+        // alertify.success("agregado");
+        alerts.showSwal('success-message','index.php?opcion=PersonalAreaDistribucionForm&codigo='+cod_personal);
+      }
+    }
+  });
+}
+function EliminarDistribucion(cod_personal,cod_distribucion){
+  $.ajax({
+    type:"POST",
+    data:"cod_personal="+cod_distribucion+"&cod_area=0&cod_estadoreferencial=3&porcentaje=0",
+    url:"personal/savePersonalAreaDistribucion.php",
+    success:function(r){
+      if(r==1){
+        //$('#tabla1').load('index.php');
+        // alertify.success("agregado");
+        alerts.showSwal('success-message','index.php?opcion=PersonalAreaDistribucionForm&codigo='+cod_personal);    
+      }
+    }
+  });
+}
+//area_unidad organizacional
+// function agregaListAreas_unidad(datos){
+//   //console.log("datos: "+datos);
+//   var d=datos.split('-');
+//   document.getElementById("codigo_area_unidad").value=d[0];
+//   // alert(d[0]);
+
+
+
+ var areas_tabla=[]; 
+ var areas_tabla_general=[]; 
+var numFilasA=0;
+function sendChekedA(id){
+  var check=document.getElementById("areas"+id);
+    check.onchange = function() {
+     if(this.checked) {
+      numFilasA++;
+      
+     }else{
+      
+      numFilasA--;
+     }
+     $("#boton_registradasA").html("Areas Registradas <span class='badge bg-white text-warning'>"+numFilasA+"</span>");
+   }
+} 
+
+// function filaTabla(tabla){
+//   var html="";
+//   for (var i = 0; i < areas_tabla.length; i++) {
+//     html+="<tr><td>"+(i+1)+"</td><td>"+areas_tabla[i].nombre+"</td><td>"+areas_tabla[i].numero+"</td></tr>";
+//   };
+//   tabla.html(html);
+//   $("#modalCuentas").modal("show");
+// }
+
+function filaTablaAGeneral(tabla,index){
+  var html="";
+  for (var i = 0; i < areas_tabla_general[index-1].length; i++) {
+    //alert(areas_tabla_general[index-1][i].nombre);
+    html+="<tr><td>"+(i+1)+"</td><td>"+areas_tabla_general[index-1][i].nombreA+"</td><td>"+areas_tabla_general[index-1][i].nombreAP+"</td></tr>";
+  }
+  tabla.html(html);
+  $("#modalAreas").modal("show");  
+}
+
+
+// function ajaxAUOPadre(combo){
+//   var contenedor;
+//   var codigo_UO=combo.value;
+//   contenedor = document.getElementById('cod_areaorganizacion_padre_div');
+//   ajax=nuevoAjax();
+//   ajax.open('GET', 'rrhh/AreaPadreAjax.php?codigo_UO='+codigo_UO,true);
+//   ajax.onreadystatechange=function() {
+//     if (ajax.readyState==4) {
+//       contenedor.innerHTML = ajax.responseText;
+//       $('.selectpicker').selectpicker(["refresh"]);
+      
+//     }
+//   }
+//   ajax.send(null)  
+// }
+
+
+//contratos de personal
+function agregaformPC(datos){
+  //console.log("datos: "+datos);
+  var d=datos.split('/');
+  document.getElementById("codigo_personalA").value=d[0];
+}
+function agregaformPCE(datos){
+  //console.log("datos: "+datos);
+  var d=datos.split('/');
+  document.getElementById("codigo_personalE").value=d[0];
+  document.getElementById("codigo_contratoE").value=d[1];
+  document.getElementById("fecha_inicioE").value=d[2];
+
+  // document.getElementById("cod_areaE").value=d[2];
+  // document.getElementById("porcentajeE").value=d[3];
+}
+function agregaformPCB(datos){
+  //console.log("datos: "+datos);
+  var d=datos.split('/');
+  document.getElementById("codigo_personalB").value=d[0];
+  document.getElementById("codigo_contratoB").value=d[1];
+
+}
+
+function RegistrarContratoPersonal(cod_personal,cod_tipocontrato,fecha_inicio){
+  $.ajax({
+    type:"POST",
+    data:"cod_contrato=0&cod_personal="+cod_personal+"&cod_tipocontrato="+cod_tipocontrato+"&cod_estadoreferencial=1&fecha_inicio="+fecha_inicio,
+    url:"personal/savePersonalcontrato.php",
+    success:function(r){
+      if(r==1){
+        //$('#tabla1').load('index.php');
+        // alertify.success("agregado");
+        alerts.showSwal('success-message','index.php?opcion=FormPersonalContratos&codigo='+cod_personal);
+      }
+    }
+  });
+}
+function EditarContratoPersonal(codigo_contratoE,codigo_personalE,cod_tipocontratoE,fecha_inicioE){
+  $.ajax({
+    type:"POST",
+
+    data:"cod_contrato="+codigo_contratoE+"&cod_personal=0&cod_tipocontrato="+cod_tipocontratoE+"&cod_estadoreferencial=2&fecha_inicio="+fecha_inicioE,
+    url:"personal/savePersonalcontrato.php",
+    success:function(r){
+      if(r==1){
+        //$('#tabla1').load('index.php');
+        // alertify.success("agregado");
+        alerts.showSwal('success-message','index.php?opcion=FormPersonalContratos&codigo='+codigo_personalE);
+      }
+    }
+  });
+}
+function EliminarContratoPersonal(codigo_contratoB,codigo_personalB){
+  $.ajax({
+    type:"POST",
+    data:"cod_contrato="+codigo_contratoB+"&cod_personal=0&cod_tipocontrato=1&cod_estadoreferencial=3&fecha_inicio=0000-00-00",
+    url:"personal/savePersonalcontrato.php",
+    success:function(r){
+      if(r==1){
+        //$('#tabla1').load('index.php');
+        // alertify.success("agregado");
+        alerts.showSwal('success-message','index.php?opcion=FormPersonalContratos&codigo='+codigo_personalB);    
+      }
+    }
+  });
+
 }

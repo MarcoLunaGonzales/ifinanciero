@@ -9,7 +9,7 @@ $dbh = new Conexion();
 $codigo=$codigo;
 
 // Prepare
-$stmt = $dbh->prepare("UPDATE personal_datos set cod_estadoreferencial=2 where codigo=:codigo");
+$stmt = $dbh->prepare("UPDATE personal set cod_estadoreferencial=2 where codigo=:codigo");
 // Bind
 $stmt->bindParam(':codigo', $codigo);
 
