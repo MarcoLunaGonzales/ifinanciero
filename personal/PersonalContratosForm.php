@@ -16,7 +16,7 @@ $stmtPersonal->bindParam(':codigo',$cod_personal);
 $stmtPersonal->execute();
 $result=$stmtPersonal->fetch();
 $cod_personal_1=$result['codigo'];
-$ci=$result['ci'];
+$ci=$result['identificacion'];
 $primer_nombre=$result['primer_nombre'];
 $paterno=$result['paterno'];
 $materno=$result['materno'];
@@ -65,7 +65,7 @@ $fecha_actual=date("Y-m-d");
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
-                    <table class="table table-bordered table-condensed" id="tablePaginatorFixed">
+                    <table class="table table-bordered table-condensed" id="tablePaginator">
                       <thead>
                         <tr class="bg-dark text-white">
                         	<th>Codigo C.</th>

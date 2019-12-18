@@ -25,8 +25,8 @@ $stmt = $dbh->prepare(" SELECT *, (select c.nombre from cargos c where c.codigo=
 $stmt->execute();
 //bindColumn
 $stmt->bindColumn('codigo', $codigo);
-$stmt->bindColumn('ci', $ci);
-$stmt->bindColumn('ci_lugar_emision', $ci_lugar_emision);
+$stmt->bindColumn('identificacion', $ci);
+$stmt->bindColumn('cod_lugar_emision', $ci_lugar_emision);
 
 $stmt->bindColumn('fecha_nacimiento', $fecha_nacimiento);
 $stmt->bindColumn('cod_cargo', $cod_cargo);
@@ -80,14 +80,14 @@ $stmt->bindColumn('xtipos_aporteafp', $xtipos_aporteafp);
                   <thead>
                       <tr>
                         <th></th>
+                        <th>Código</th>
                         <th>Nombre</th>      
-                        <th>Ci</cIte></th>
+                        <th>Identificación</cIte></th>
                         <th>Cargo</th>
                         <th>U.O.</th>
-                        <th>Area</th>
-                        <th>Genero</th>
+                        <th>Area</th>                        
                         <th>Tipo Personal</th>
-                        <th>Basico</th>      
+                        <th>Básico</th>      
                         <th>Afp</th>
                         <th>Estado</th>
                         <th></th>
@@ -103,12 +103,12 @@ $stmt->bindColumn('xtipos_aporteafp', $xtipos_aporteafp);
                             <i class="material-icons">print</i>
                           </a>
                         </td>
+                        <td><?=$codigo?></td>
                         <td><?=$primer_nombre;?> <?=$paterno;?> <?=$materno;?></td>      
-                        <td><?=$ci;?> <?=$ci_lugar_emision;?></td>
+                        <td><?=$ci;?> - <?=$ci_lugar_emision;?></td>
                         <td><?=$xcargo;?></td>
                         <td><?=$xuonombre;?></td>
-                        <td><?=$xarea;?></td>
-                        <td><?=$xgenero;?></td>
+                        <td><?=$xarea;?></td>                        
                         <td><?=$xcod_tipopersonal;?></td>
                         <td><?=$haber_basico;?></td>
 
@@ -156,9 +156,8 @@ $stmt->bindColumn('xtipos_aporteafp', $xtipos_aporteafp);
 
           if($globalAdmin==1){
           ?>
-  				<div class="card-footer fixed-bottom">
-                <!--<button class="<?=$buttonNormal;?>" onClick="location.href='index.php?opcion=registerUbicacion'">Registrar</button>-->
-                <button class="<?=$buttonNormal;?>" onClick="location.href='<?=$urlFormPersonal;?>&codigo=0'">Registrar</button>
+  				<div class="card-footer fixed-bottom">                
+                <!--<button class="<?=$buttonNormal;?>" onClick="location.href='<?=$urlFormPersonal;?>&codigo=0'">Registrar</button>-->
                 <!--<button class="btn btn-success"  id="service">Web Service</button>-->
                 <button class="btn btn-success"  onClick="location.href='<?=$urlsaveWSPersonal;?>'">Actualizar Datos</button>
           </div>
