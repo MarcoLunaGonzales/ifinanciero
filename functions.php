@@ -779,9 +779,16 @@ function obtenerPlantilla($codigo){
           $valFac[$h][6]=$fact[$i][$h]->autFac;
           $valFac[$h][7]=$fact[$i][$h]->conFac;
         }
-        $sql = obtenerFacturasCompro($codigo);
-        $cabeceraFac[0]="nit";$cabeceraFac[1]="nro_factura";$cabeceraFac[2]="fecha";$cabeceraFac[3]="razon_social";$cabeceraFac[4]="importe";$cabeceraFac[5]="exento";$cabeceraFac[6]="nro_autorizacion";$cabeceraFac[7]="codigo_control";
-        editarComprobanteDetalle($codigo,'cod_comprobantedetalle',contarFacturasCompra($codigo),cantidadF($fact[$i]),$sql,'facturas_compra',$cabeceraFac,$valFac,null);
+        if(cantidadF($fact[$i])>0){
+         $cabeceraFac[0]="nit";$cabeceraFac[1]="nro_factura";$cabeceraFac[2]="fecha";$cabeceraFac[3]="razon_social";$cabeceraFac[4]="importe";$cabeceraFac[5]="exento";$cabeceraFac[6]="nro_autorizacion";$cabeceraFac[7]="codigo_control";
+         if($title=="cod_solicitudrecurso"){
+            $sql = obtenerFacturasSoli($codigo); 
+            editarComprobanteDetalle($codigo,'cod_solicitudrecursodetalle',contarFacturasSoli($codigo),cantidadF($fact[$i]),$sql,'facturas_compra',$cabeceraFac,$valFac,null);
+         }else{
+           $sql = obtenerFacturasCompro($codigo); 
+           editarComprobanteDetalle($codigo,'cod_comprobantedetalle',contarFacturasCompra($codigo),cantidadF($fact[$i]),$sql,'facturas_compra',$cabeceraFac,$valFac,null);
+         }  
+        }              
       }
       $i++;
     }
@@ -803,7 +810,11 @@ function obtenerPlantilla($codigo){
           $dbh = new Conexion();
           $query2="INSERT INTO $tabla (codigo, ".$into.") values ($codFacturaCompra, ".$values.")";
         }else{
-          $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
+          if($title=="cod_solicitudrecurso"){
+            $codComprobanteDetalle=obtenerCodigoSolicitudDetalle();
+          }else{
+            $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
+          }    
           $dbh = new Conexion();
           $query2="INSERT INTO $tabla (codigo, ".$into.") values ($codComprobanteDetalle, ".$values.")";
 
@@ -823,11 +834,18 @@ function obtenerPlantilla($codigo){
           $valFac[$h][6]=$fact[$j][$h]->autFac;
           $valFac[$h][7]=$fact[$j][$h]->conFac;
         }
-        $sql = obtenerFacturasCompro($codComprobanteDetalle);
+        if(cantidadF($fact[$j])>0){
         $cabeceraFac[0]="nit";$cabeceraFac[1]="nro_factura";$cabeceraFac[2]="fecha";$cabeceraFac[3]="razon_social";$cabeceraFac[4]="importe";$cabeceraFac[5]="exento";$cabeceraFac[6]="nro_autorizacion";$cabeceraFac[7]="codigo_control";
-        editarComprobanteDetalle($codComprobanteDetalle,'cod_comprobantedetalle',contarFacturasCompra($codComprobanteDetalle),cantidadF($fact[$j]),$sql,'facturas_compra',$cabeceraFac,$valFac,null);
+          if($title=="cod_solicitudrecurso"){
+           $sql = obtenerFacturasSoli($codComprobanteDetalle); 
+           editarComprobanteDetalle($codComprobanteDetalle,'cod_solicitudrecursodetalle',contarFacturasSoli($codComprobanteDetalle),cantidadF($fact[$i]),$sql,'facturas_compra',$cabeceraFac,$valFac,null);
+          }else{
+           $sql = obtenerFacturasCompro($codComprobanteDetalle); 
+           editarComprobanteDetalle($codComprobanteDetalle,'cod_comprobantedetalle',contarFacturasCompra($codComprobanteDetalle),cantidadF($fact[$i]),$sql,'facturas_compra',$cabeceraFac,$valFac,null);
+          }    
+          
+         }
         }
-       
         $crud2 = $dbh->prepare($query2);
         $crud2->execute();
        }
@@ -984,18 +1002,22 @@ function obtenerMontoPorCuenta($numero,$unidad,$area,$fecha){
      $stmt = $dbh->prepare($sql);
      $stmt->execute();
      $sum=0;
+     $mes=date("m");
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       $numero=trim($row['numero']);
-      $sum+=(float)obtenerMontoPorCuenta($numero,$unidad,$area,$fecha);      
+      $cuenta=$row['cod_cuenta'];
+      $sum+= ejecutadoEgresosMes($unidad, $fecha, $mes, $area, 0, $numero);
+      //$sum+=(float)obtenerMontoPorCuenta($numero,$unidad,$area,$fecha);      
     }
-    $sql="SELECT * from configuraciones where id_configuracion=6";
+    /*$sql="SELECT * from configuraciones where id_configuracion=6";
     $dbh = new Conexion(); 
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       $valor=trim($row['valor_configuracion']);
     }
-    return redondearDecimal($sum/(int)$valor);
+    return redondearDecimal($sum/(int)$valor);*/
+    return $sum;
   }
     function calcularCostosPres($id,$unidad,$area,$fecha){
      $sql="SELECT p.cod_partidapresupuestaria,p.cod_cuenta,c.numero FROM partidaspresupuestarias_cuentas p join plan_cuentas c on p.cod_cuenta=c.codigo where p.cod_partidapresupuestaria=$id";
@@ -1163,7 +1185,100 @@ function porcentRetencionDetalle($codigo){
    }
    return($nombreX);
 }
+function obtenerCodigoSolicitudRecursos(){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT IFNULL(max(c.codigo)+1,1)as codigo from solicitud_recursos c");
+   $stmt->execute();
+   $codigoSolicitud=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $codigoSolicitud=$row['codigo'];
+   }
+   return($codigoSolicitud);
+}
 
+function nameSimulacion($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT nombre FROM simulaciones_costos where codigo=:codigo");
+   $stmt->bindParam(':codigo',$codigo);
+   $stmt->execute();
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $nombreX=$row['nombre'];
+   }
+   return($nombreX);
+}
+function obtenerDetalleSolicitud($codigo){
+   $dbh = new Conexion();
+   $sql="";
+   $sql="SELECT * from solicitud_recursosdetalle where cod_solicitudrecurso=$codigo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+}
+function obtenerDetalleSolicitudSimulacion($codigo){
+   $dbh = new Conexion();
+   $sql="";
+   $sql="SELECT pc.*,pp.nombre as partida, pp.codigo as cod_partida from simulaciones_costos s 
+join plantillas_costo p on s.cod_plantillacosto=p.codigo 
+join plantillas_gruposcosto pg on p.codigo=pg.cod_plantillacosto 
+join plantillas_grupocostodetalle pgd on pgd.cod_plantillagrupocosto=pg.codigo
+join partidas_presupuestarias pp on pp.codigo=pgd.cod_partidapresupuestaria 
+join partidaspresupuestarias_cuentas ppc on ppc.cod_partidapresupuestaria=pp.codigo 
+join plan_cuentas pc on ppc.cod_cuenta=pc.codigo where s.codigo=$codigo order by pp.codigo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+}
+function obtenerDetalleSolicitudProveedor($codigo,$fechai,$fechaf,$estado,$codUsuario){
+   $dbh = new Conexion();
+   $sql="";
+   $sql="SELECT pc.*,pp.nombre as partida, pp.codigo as cod_partida,s.nombre as simulacion,s.codigo as cod_simulacion,s.fecha as fecha_simulacion from simulaciones_costos s 
+join plantillas_costo p on s.cod_plantillacosto=p.codigo 
+join plantillas_gruposcosto pg on p.codigo=pg.cod_plantillacosto 
+join plantillas_grupocostodetalle pgd on pgd.cod_plantillagrupocosto=pg.codigo
+join partidas_presupuestarias pp on pp.codigo=pgd.cod_partidapresupuestaria 
+join partidaspresupuestarias_cuentas ppc on ppc.cod_partidapresupuestaria=pp.codigo 
+join plan_cuentas pc on ppc.cod_cuenta=pc.codigo where pc.codigo=$codigo and s.cod_estadosimulacion=$estado and s.cod_responsable=$codUsuario and s.fecha BETWEEN '$fechai' and '$fechaf' order by pp.codigo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+}
+function obtenerCuentasLista($nivel,$n){
+ $dbh = new Conexion();
+   $sql="";
+   $sqlAux="";
+   if($n!=null){
+    $sqlAux.="and (";
+     for ($i=0; $i < count($n); $i++) {
+       if($i==(count($n)-1)){
+        $sqlAux.="p.numero like '".$n[$i]."%')";
+       }else{
+        $sqlAux.="p.numero like '".$n[$i]."%' or ";
+       } 
+     }
+   }
+   $sql="SELECT p.codigo, p.numero, p.nombre from plan_cuentas p where p.nivel=$nivel $sqlAux order by p.numero";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+}
+function contarSolicitudDetalle($codigo){
+   $dbh = new Conexion();
+   $sql="";
+   $sql="select count(*) as total from solicitud_recursosdetalle where cod_solicitudrecurso=$codigo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+  }
+  function obtenerSolicitudesDet($codigo){
+   $dbh = new Conexion();
+   $sql="";
+   $sql="SELECT d.codigo as cod_det from solicitud_recursosdetalle d where d.cod_solicitudrecurso=$codigo order by cod_det";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   // bindColumn
+   //$stmt->bindColumn('cod_comprobante', $codigoC);
+   return $stmt;
+}
 
 function obtenerCorrelativoComprobante($cod_tipocomprobante, $unidad_organizacional, $gestion, $mes){
   $dbh = new Conexion(); 
@@ -1176,6 +1291,99 @@ function obtenerCorrelativoComprobante($cod_tipocomprobante, $unidad_organizacio
     $nroCorrelativo=$row['codigo'];
   }
   return ($nroCorrelativo);
+}
+
+
+function obtenerFacturasSoli($codigo){
+   $dbh = new Conexion();
+   $sql="";
+   $sql="SELECT codigo as cod_det,nit,nro_factura,fecha,razon_social,importe,exento,nro_autorizacion,codigo_control from facturas_compra  where cod_solicitudrecursodetalle=$codigo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+}
+function contarFacturasSoli($codigo){
+   $dbh = new Conexion();
+   $sql="";
+   $sql="select count(*) as total from facturas_compra where cod_solicitudrecursodetalle=$codigo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   $stmt->bindColumn('total', $contador);
+   while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+    $cont1=$contador;
+   }
+   return $cont1;
+  }
+  function obtenerCodigoSolicitudDetalle(){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT IFNULL(max(c.codigo)+1,1)as codigo from solicitud_recursosdetalle c");
+   $stmt->execute();
+   $codigoComprobanteDetalle=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $codigoComprobanteDetalle=$row['codigo'];
+   }
+   return($codigoComprobanteDetalle);
+}
+
+function obtenerCuentasSimulaciones($nivel,$estado,$codUsuario){
+ $dbh = new Conexion();
+   $sql="";
+   $sql="SELECT DISTINCT pc.* from simulaciones_costos s 
+join plantillas_costo p on s.cod_plantillacosto=p.codigo 
+join plantillas_gruposcosto pg on p.codigo=pg.cod_plantillacosto 
+join plantillas_grupocostodetalle pgd on pgd.cod_plantillagrupocosto=pg.codigo
+join partidas_presupuestarias pp on pp.codigo=pgd.cod_partidapresupuestaria 
+join partidaspresupuestarias_cuentas ppc on ppc.cod_partidapresupuestaria=pp.codigo 
+join plan_cuentas pc on ppc.cod_cuenta=pc.codigo WHERE s.cod_estadosimulacion=$estado and s.cod_responsable=$codUsuario and pc.nivel=$nivel order by pp.codigo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+}
+function obtenerCentroSolicitud($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT cod_unidadorganizacional,cod_area from solicitud_recursos where codigo=$codigo");
+   $stmt->execute();
+   $codigoUnidad=0;$codigoArea=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $codigoUnidad=$row['cod_unidadorganizacional'];
+      $codigoArea=$row['cod_area'];
+   }
+   return array($codigoUnidad,$codigoArea);
+}
+function obtenerSolicitudRecursosDetalleCuenta($codSol,$codigo){
+   $dbh = new Conexion();
+   $sql="";
+   $sql="SELECT sd.*,pc.numero,pc.nombre from solicitud_recursosdetalle sd join plan_cuentas pc on sd.cod_plancuenta=pc.codigo where pc.codigo=$codigo and sd.cod_solicitudrecurso=$codSol";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+}
+function obtenerSolicitudRecursosDetalle($codigo){
+   $dbh = new Conexion();
+   $sql="";
+   $sql="SELECT sd.*,pc.numero,pc.nombre from solicitud_recursosdetalle sd join plan_cuentas pc on sd.cod_plancuenta=pc.codigo where sd.codigo=$codigo and sd.cod_solicitudrecurso=$codSol";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+}
+function obtenerPartidasPlantillaCostos($codigo,$tipo){
+  $dbh = new Conexion();
+  $sql="";
+  $sql="SELECT DISTINCT p.cod_partidapresupuestaria,pc.cod_unidadorganizacional,pc.cod_area,pc.codigo as codPlantilla FROM partidaspresupuestarias_cuentas p join plan_cuentas c on p.cod_cuenta=c.codigo
+join plantillas_grupocostodetalle pd on pd.cod_partidapresupuestaria=p.cod_partidapresupuestaria
+join plantillas_gruposcosto pg on pg.codigo=pd.cod_plantillagrupocosto
+join plantillas_costo pc on pc.codigo=pg.cod_plantillacosto where pc.codigo=$codigo and pg.cod_tipocosto=$tipo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+}
+function obtenerCuentaPlantillaCostos($codigo){
+  $dbh = new Conexion();
+  $sql="";
+  $sql="SELECT p.cod_partidapresupuestaria,p.cod_cuenta,c.numero FROM partidaspresupuestarias_cuentas p join plan_cuentas c on p.cod_cuenta=c.codigo where p.cod_partidapresupuestaria=$codigo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
 }
 
 ?>

@@ -102,12 +102,16 @@ for ($jj=0; $jj < cantidadF($codcuenta); $jj++) {
     $porciones1 = explode("@", $codcuenta[$jj]);
     $cuenta=$porciones1[0];
     if($porciones1[1]=="aux"){
-      $nombreCuentaTitle.=nameCuentaAux($cuenta).", ";
+      $nombreCuentaTitle.=trim(nameCuentaAux($cuenta)).", ";
     }else{
-      $nombreCuentaTitle.=nameCuenta($cuenta).", ";
+      $nombreCuentaTitle.=trim(nameCuenta($cuenta)).", ";
     }
 }
 $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d/%m/%Y',strtotime($hasta));
+
+     if(strlen($nombreCuentaTitle)>190){
+        $nombreCuentaTitle=substr($nombreCuentaTitle,0,190)."...";
+      }
  ?>
 <script> periodo_mayor='<?=$periodoTitle?>';
           cuenta_mayor='<?=trim($nombreCuentaTitle)?>';
