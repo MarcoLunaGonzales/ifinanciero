@@ -307,7 +307,7 @@
 			                 <label class="col-sm-2 col-form-label">Fecha</label>
 			                 <div class="col-sm-4">
 			                	<div class="form-group">
-			                	  <input type="text" class="form-control datepicker" name="fecha_fac" id="fecha_fac" value="10/06/2018">
+			                	  <input type="text" class="form-control datepicker" name="fecha_fac" id="fecha_fac" value="<?=$fechaActualModal?>">
 			                	</div>
                         </div>
                         <label class="col-sm-2 col-form-label">Importe</label>

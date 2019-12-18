@@ -99,6 +99,7 @@ $contadorRegistros=0;
 		    ?>
 <?php
 $fechaActual=date("Y-m-d");
+$fechaActualModal=date("d/m/Y");
 $dbh = new Conexion();
 
 // Preparamos

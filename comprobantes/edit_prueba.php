@@ -31,7 +31,7 @@ $data->bindColumn('fecha', $fechaComprobante);
 $data->bindColumn('cod_tipocomprobante', $tipoComprobante);
 $data->bindColumn('numero', $nroCorrelativo);
 $data->bindColumn('glosa', $glosaComprobante);
-
+$fechaActualModal=date("d/m/Y");
 if(isset($_GET['codigo'])){
 	$globalCode=$_GET['codigo'];
 }else{
