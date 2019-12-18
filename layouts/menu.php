@@ -133,7 +133,7 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
           <li class="nav-item ">
             <a class="nav-link" data-toggle="collapse" href="#pagesExamples">
               <i class="material-icons">fullscreen</i>
-              <p> Tablas HHRR
+              <p> Tablas RRHH
                 <b class="caret"></b>
               </p>
             </a>
@@ -398,6 +398,34 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
               </ul>
             </div>
           </li>
+
+           <!--UTILITARIOS-->
+          <li class="nav-item ">
+            <a class="nav-link" data-toggle="collapse" href="#utilitarios">
+              <i class="material-icons">build</i>
+              <p> Utilitarios
+                <b class="caret"></b>
+              </p>
+            </a>
+            <div class="collapse" id="utilitarios">
+              <ul class="nav">
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=mesCurso">
+                    <span class="sidebar-mini"> MC </span>
+                    <span class="sidebar-normal">  Cambiar Mes de Trabajo </span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=configuracionDeRetenciones">
+                    <span class="sidebar-mini"> CR </span>
+                    <span class="sidebar-normal"> Configuracion de Retenciones</span>
+                  </a>
+                </li>                          
+              </ul>
+            </div>
+          </li>
+
+
 
         </ul>
       </div>

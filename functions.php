@@ -1280,7 +1280,20 @@ function contarSolicitudDetalle($codigo){
    return $stmt;
 }
 
-//////////////////////////////////////////////////////////////
+function obtenerCorrelativoComprobante($cod_tipocomprobante, $unidad_organizacional, $gestion, $mes){
+  $dbh = new Conexion(); 
+  $sql="SELECT IFNULL(max(c.numero)+1,1)as codigo from comprobantes c where c.cod_tipocomprobante='$cod_tipocomprobante' and c.cod_unidadorganizacional='$unidad_organizacional' and YEAR(c.fecha)='$gestion' and MONTH(c.fecha)='$mes'";
+  //echo $sql;
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  $nroCorrelativo=0;
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $nroCorrelativo=$row['codigo'];
+  }
+  return ($nroCorrelativo);
+}
+
+
 function obtenerFacturasSoli($codigo){
    $dbh = new Conexion();
    $sql="";
@@ -1372,5 +1385,6 @@ function obtenerCuentaPlantillaCostos($codigo){
    $stmt->execute();
    return $stmt;
 }
+
 ?>
 

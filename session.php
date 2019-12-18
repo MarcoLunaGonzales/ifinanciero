@@ -46,7 +46,7 @@ while ($rowDetalle = $stmt->fetch(PDO::FETCH_BOUND)) {
 	while ($rowGestion = $stmtGestion->fetch(PDO::FETCH_ASSOC)) {
 		$codGestionActiva=$rowGestion['cod_gestion'];
 
-		$sql1="SELECT * from meses_trabajo where cod_gestion='$codGestion' and cod_estadomesestrabajo=3";
+		$sql1="SELECT cod_mes from meses_trabajo where cod_gestion='$codGestionActiva' and cod_estadomesestrabajo=3";
         $stmt1 = $dbh->prepare($sql1);
         $stmt1->execute();
         while ($row1= $stmt1->fetch(PDO::FETCH_ASSOC)) {
