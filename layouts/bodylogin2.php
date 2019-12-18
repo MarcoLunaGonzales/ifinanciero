@@ -35,7 +35,11 @@
     </div>
   </nav>
   <!-- End Navbar -->
-
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.11/jquery.mask.min.js"></script>
+  <script>
+    $("#con_fac").mask("AA-AA-AA-AA-AA-AA-AA");
+  </script>
   <!--   Core JS Files   -->
   <script src="../assets/js/core/jquery.min.js"></script>
   <script src="../assets/js/core/popper.min.js"></script>
@@ -70,10 +74,7 @@
       // Initialise Sweet Alert library
       alerts.showSwal();
     });
-	
-	
   </script>
-
   <script type="text/javascript">
     $(document).ready(function() {
         $('#tablePaginatorReport ').DataTable({

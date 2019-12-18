@@ -195,7 +195,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
 					    <div class="col-sm-3">
 						    <div class="form-group">
 				          		<label for="glosa" class="bmd-label-static">Glosa</label>
-								<textarea class="form-control" name="glosa" id="glosa" required="true" rows="1" value=""></textarea>
+								<textarea class="form-control" name="glosa" id="glosa" required="true" rows="2" value=""></textarea>
 							</div>
 						</div>
 						<div class="col-sm-2">

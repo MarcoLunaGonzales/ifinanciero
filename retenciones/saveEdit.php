@@ -28,8 +28,8 @@ if($debehaber==1){
 if($cuentaText==""){
 	$cuenta=0;	
 }else{
-	$stmt = $dbh->prepare("UPDATE configuracion_retenciones set nombre='$nombre',porcentaje_cuentaorigen='$porcentajeCuentaOrigen' where codigo=$codigo");
-    $flagSuccess=$stmt->execute();
+	/*$stmt = $dbh->prepare("UPDATE configuracion_retenciones set nombre='$nombre',porcentaje_cuentaorigen='$porcentajeCuentaOrigen' where codigo=$codigo");
+    $flagSuccess=$stmt->execute();*/
 }
 
  $stmt2 = $dbh->prepare("INSERT INTO configuracion_retencionesdetalle (cod_configuracionretenciones,cod_cuenta,porcentaje,debe_haber,glosa) 

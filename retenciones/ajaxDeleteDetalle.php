@@ -33,9 +33,9 @@ if(isset($_GET['codigo'])){
   $stmtDelete = $dbh->prepare($sqlDelete);
   $stmtDelete->execute();
   if($codCuentaX!=0){
-    $stmt = $dbh->prepare("UPDATE configuracion_retenciones set porcentaje_cuentaorigen='$porcentajeOrigen' where codigo=$codigoX");
+    /*$stmt = $dbh->prepare("UPDATE configuracion_retenciones set porcentaje_cuentaorigen='$porcentajeOrigen' where codigo=$codigoX");
     $stmt->execute();
-    ?><script>$("#cuenta_origen").val(<?=$porcentajeOrigen?>)</script><?php
+    ?><script>$("#cuenta_origen").val(<?=$porcentajeOrigen?>)</script><?php*/
   }   
 }
 ?>

@@ -82,6 +82,7 @@ function addCuentaContable(obj) {
           $('#nro_cuenta').val("");
           $('#cuenta').val("");//
           $('#padre').val("");
+          $("#divResultadoBusqueda").html("<div class='form-group col-sm-8'>Resultados de la Búsqueda</div>");
           $('.selectpicker').selectpicker("refresh");
           $('#myModal').modal('show');
           if($("#add_boton").length){
@@ -126,11 +127,11 @@ function calcularTotalesComprobante(id,e){
   }*/
   for (var i=0;i<formulariop.elements.length;i++){
     if (formulariop.elements[i].id.indexOf("debe") !== -1 ){    
-      console.log("debe "+formulariop.elements[i].value);    
+      //console.log("debe "+formulariop.elements[i].value);    
       sumadebe += (formulariop.elements[i].value) * 1; 
     }
     if (formulariop.elements[i].id.indexOf("haber") !== -1 ){        
-      console.log("haber "+formulariop.elements[i].value);    
+      //console.log("haber "+formulariop.elements[i].value);    
       sumahaber += (formulariop.elements[i].value) * 1;
     }
   }
