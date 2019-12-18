@@ -53,6 +53,7 @@ function addCuentaContable(obj) {
   if($("#add_boton").length){
     $("#add_boton").attr("disabled",true);
   }
+  var glosa_det=$("#glosa").val();
   var tipoComprobante=document.getElementById("tipo_comprobante").value;
   console.log("tipocomprobante: "+tipoComprobante);
   if(tipoComprobante>0){
@@ -73,7 +74,7 @@ function addCuentaContable(obj) {
       divDetalle=$("#div"+numFilas);
       //document.getElementById('nro_cuenta').focus();
       ajax=nuevoAjax();
-      ajax.open("GET","ajaxCuentaContable.php?idFila="+numFilas,true);
+      ajax.open("GET","ajaxCuentaContable.php?idFila="+numFilas+"&glosa="+glosa_det,true);
       ajax.onreadystatechange=function(){
         if (ajax.readyState==4) {
           divDetalle.html(ajax.responseText);

@@ -16,6 +16,11 @@ $globalUnidad=$_SESSION["globalUnidad"];
 $globalArea=$_SESSION["globalArea"];
 
 $idFila=$_GET['idFila'];
+$glosaDet="";
+if(isset($_GET['glosa'])){
+	$glosaDet=$_GET['glosa'];
+}
+
 ?>
 <div id="comp_row" class="col-md-12">
 	<div class="row">
@@ -96,7 +101,7 @@ $idFila=$_GET['idFila'];
       	<div class="col-sm-3">
 		    <div class="form-group">
           		<label for="glosa_detalle<?=$idFila;?>" class="bmd-label-static">GlosaDetalle</label>
-				<textarea rows="1" class="form-control" name="glosa_detalle<?=$idFila;?>" id="glosa_detalle<?=$idFila;?>" value=""></textarea>
+				<textarea rows="1" class="form-control" name="glosa_detalle<?=$idFila;?>" id="glosa_detalle<?=$idFila;?>" value=""><?=$glosaDet?></textarea>
 			</div>
 		</div>
 		<div class="col-sm-1">
