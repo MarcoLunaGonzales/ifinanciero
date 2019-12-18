@@ -1,4 +1,3 @@
-[{"codigo":"1","ci":"1010","fecha_nacimiento":"2019-10-10","haber_basico":"2000","paterno":"perez","materno":"perez","nombres":"juana","direccion":"calle 1","telefono":"110","celular":"110","email":"juana@gmail.ocm"}]
-//,
-// {"codigo":"2","ci":"2020","fecha_nacimiento":"2019-20-20","haber_basico":"3000","paterno":"perez","materno":"valdivia","nombres":"juan","direccion":"calle 2","telefono":"120","celular":"120","email":"juan@gmail.ocm"},
-// {"codigo":"3","ci":"3030","fecha_nacimiento":"2019-20-20","haber_basico":"3000","paterno":"porto","materno":"valdivia","nombres":"ismael","direccion":"calle 2","telefono":"120","celular":"120","email":"juan@gmail.ocm"}
+[{"codigo":"1","ci":"1010","fecha_nacimiento":"2019-10-10","haber_basico":"2000","paterno":"perez","materno":"perez","nombres":"juana","direccion":"calle 1","telefono":"110","celular":"110","email":"juana@gmail.ocm"},
+{"codigo":"2","ci":"2020","fecha_nacimiento":"2019-20-20","haber_basico":"3000","paterno":"perez","materno":"valdivia","nombres":"juan","direccion":"calle 2","telefono":"120","celular":"120","email":"juan@gmail.ocm"},
+{"codigo":"3","ci":"3030","fecha_nacimiento":"2019-20-20","haber_basico":"3000","paterno":"porto","materno":"valdivia","nombres":"ismael","direccion":"calle 2","telefono":"120","celular":"120","email":"juan@gmail.ocm"}]

@@ -114,15 +114,15 @@ function cantidadF($arreglo){
 
 //tratando de cerar json para Web service
 
-// require_once 'personal/personal_ws.php';
-// function getPersonal()
-// {
-//   $this->load->model('personal_ws');
-//   $data->$this->personal_ws->getPersonal();
-//   header('Content-Type: personal/json');
-//   echo json_encode($data);
+    // require_once 'personal/personal_ws.php';
+    // function getPersonal()
+    // {
+    //   $this->load->model('personal_ws');
+    //   $data->$this->personal_ws->getPersonal();
+    //   header('Content-Type: personal/json');
+    //   echo json_encode($data);
 
-// }
+    // }
 
 ?>
 
