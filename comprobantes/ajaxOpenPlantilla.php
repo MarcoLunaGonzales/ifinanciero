@@ -126,7 +126,7 @@ while ($row = $data->fetch(PDO::FETCH_BOUND)) {
     </div>
   </div>
 
-   <div class="col-sm-3">
+   <div class="col-sm-4">
         <input type="hidden" name="numero_cuenta<?=$idFila;?>" value="<?=$numero_cuenta?>" id="numero_cuenta<?=$idFila;?>">
         <input type="hidden" name="cuenta<?=$idFila;?>" value="<?=$cod_cuenta?>" id="cuenta<?=$idFila;?>">
         <input type="hidden" name="cuenta_auxiliar<?=$idFila;?>" value="<?=$cod_cuenta_aux?>" id="cuenta_auxiliar<?=$idFila;?>">
@@ -134,19 +134,19 @@ while ($row = $data->fetch(PDO::FETCH_BOUND)) {
            <span class="text-danger font-weight-bold">[<?=$numero_cuenta?>]-<?=$nombre_cuenta?> </span><br><span class="text-primary font-weight-bold small"><?=$nombre_cuenta_aux?></span>     
           </div>
     </div>
-    <div class="col-sm-2">
+    <div class="col-sm-1">
             <div class="form-group">
               <label class="bmd-label-static">Debe</label>      
               <input class="form-control small" type="number" placeholder="0" value="<?=$debe?>" name="debe<?=$idFila;?>" id="debe<?=$idFila;?>" onChange="calcularTotalesComprobante(this.id,event);" OnKeyUp="calcularTotalesComprobante(this.id,event);" step="0.01"> 
       </div>
     </div>
-    <div class="col-sm-2">
+    <div class="col-sm-1">
             <div class="form-group">
               <label class="bmd-label-static">Haber</label>     
               <input class="form-control small" type="number" placeholder="0" value="<?=$haber?>" name="haber<?=$idFila;?>" id="haber<?=$idFila;?>" onChange="calcularTotalesComprobante(this.id,event);" OnKeyUp="calcularTotalesComprobante(this.id,event);" step="0.01">   
       </div>
     </div>
-    <div class="col-sm-2">
+    <div class="col-sm-3">
         <div class="form-group">
               <label class="bmd-label-static">GlosaDetalle</label>
         <textarea rows="1" class="form-control" name="glosa_detalle<?=$idFila;?>" id="glosa_detalle<?=$idFila;?>"><?=$glosa?></textarea>

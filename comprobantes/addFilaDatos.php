@@ -49,7 +49,7 @@
     </div>
   </div>
 
-   <div class="col-sm-3">
+   <div class="col-sm-4">
     <input type="hidden" name="numero_cuenta<?=$idFila;?>" value="<?=$n_cuenta?>" id="numero_cuenta<?=$idFila;?>">
         <input type="hidden" name="cuenta<?=$idFila;?>" value="<?=$cuenta?>" id="cuenta<?=$idFila;?>">
         <input type="hidden" name="cuenta_auxiliar<?=$idFila;?>" value="" id="cuenta_auxiliar<?=$idFila;?>">
@@ -58,19 +58,19 @@
             <p class="text-muted"><?=$porcentajeX?> <span>%</span> de <?=$importe?></p>   
           </div>
     </div>
-    <div class="col-sm-2">
+    <div class="col-sm-1">
             <div class="form-group">
               <label class="bmd-label-floating">Debe</label>      
               <input class="form-control small" type="number" placeholder="0" value="<?=$debe?>" readonly name="debe<?=$idFila;?>" id="debe<?=$idFila;?>" onChange="calcularTotalesComprobante(this.id,event);" OnKeyUp="calcularTotalesComprobante(this.id,event);" step="0.01"> 
       </div>
     </div>
-    <div class="col-sm-2">
+    <div class="col-sm-1">
             <div class="form-group">
               <label class="bmd-label-floating">Haber</label>     
               <input class="form-control small" type="number" placeholder="0" value="<?=$haber?>" readonly name="haber<?=$idFila;?>" id="haber<?=$idFila;?>" onChange="calcularTotalesComprobante(this.id,event);" OnKeyUp="calcularTotalesComprobante(this.id,event);" step="0.01">   
       </div>
     </div>
-    <div class="col-sm-2">
+    <div class="col-sm-3">
         <div class="form-group">
               <label class="bmd-label-floating">GlosaDetalle</label>
         <textarea rows="1" class="form-control" name="glosa_detalle<?=$idFila;?>" id="glosa_detalle<?=$idFila;?>"><?=$glosaX?></textarea>

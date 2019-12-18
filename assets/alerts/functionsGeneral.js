@@ -50,6 +50,9 @@ var numFilas=0;
 var cantidadItems=0;
 var filaActiva=0;
 function addCuentaContable(obj) {
+  if($("#add_boton").length){
+    $("#add_boton").attr("disabled",true);
+  }
   var tipoComprobante=document.getElementById("tipo_comprobante").value;
   console.log("tipocomprobante: "+tipoComprobante);
   if(tipoComprobante>0){
@@ -80,6 +83,9 @@ function addCuentaContable(obj) {
           $('#padre').val("");
           $('.selectpicker').selectpicker("refresh");
           $('#myModal').modal('show');
+          if($("#add_boton").length){
+            $("#add_boton").removeAttr("disabled");
+          }
           return false;
        }
       }   
@@ -88,6 +94,9 @@ function addCuentaContable(obj) {
     console.log('entrando a notify!!!!');
     $('#msgError').html("<p>Debe seleccionar un tipo de comprobante</p>");
     $('#modalAlert').modal('show');
+    if($("#add_boton").length){
+            $("#add_boton").removeAttr("disabled");
+    }
     return false;
   }
 }
@@ -1512,7 +1521,6 @@ function editarCuentaComprobante(fila){
   filaActiva=fila;
   $('#myModal').modal('show');
 }
-
 //retenciones funciones
 function borrarRetencionDetalle(cod){
   var contenedor=$('#tabla_detalle_retencion');
@@ -1631,6 +1639,7 @@ $(document).on("shown.bs.modal","#modalRetencion",function(){
  function calcularImporteDespuesRetencion(valor,fila){
   //$("#debe"+fila).val(valor);
   $("#debe"+fila).val(valor);
+  $("#haber"+fila).val("0");
   $("#debe"+fila).focus();
  }
 
@@ -1738,8 +1747,6 @@ function mayorReporteComprobante(fila){
  }
 }
  ///////////////////////////////////////////////////////////////////
-
-<<<<<<< HEAD
  /*                              Solicitud de recursos                                      */
 
  function listarTipoSolicitud(tipo){
@@ -1982,7 +1989,6 @@ function agregarRetencionSolicitud(){
  }
 
  function addSolicitudDetalleSearch() {
-
     var codigoSol=$("#cod_solicitud").val();
     var codCuenta=$("#cuenta_proveedor").val();
     var fechai=$("#fecha_desde").val();

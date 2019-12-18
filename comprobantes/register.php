@@ -219,7 +219,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
 					*/
 					?>
 					<fieldset id="fiel" style="width:100%;border:0;">
-							<button title="Agregar (alt+a)" type="button" name="add" class="btn btn-warning btn-round btn-fab" onClick="addCuentaContable(this)">
+							<button title="Agregar (alt+a)" type="button" id="add_boton" name="add" class="btn btn-warning btn-round btn-fab" onClick="addCuentaContable(this)">
                       		  <i class="material-icons">add</i>
 		                    </button>
 
@@ -246,19 +246,19 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
 		            </fieldset>
 							
 							<div class="row">
-								<div class="col-sm-5">
+								<div class="col-sm-6">
 						      	</div>
-								<div class="col-sm-2">
+								<div class="col-sm-1">
 						            <div class="form-group">	
 						          		<input class="form-control" type="number" name="totaldeb" placeholder="0" id="totaldeb" readonly="true">	
 									</div>
 						      	</div>
-								<div class="col-sm-2">
+								<div class="col-sm-1">
 						            <div class="form-group">
 						            	<input class="form-control" type="number" name="totalhab" placeholder="0" id="totalhab" readonly="true">	
 									</div>
 						      	</div>
-						      	<div class="col-sm-3">
+						      	<div class="col-sm-4">
 								</div>
 							</div>
 
