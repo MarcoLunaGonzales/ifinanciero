@@ -34,6 +34,29 @@ $contadorRegistros=0;
 	var configuraciones=[];
 </script>
 <?php
+  $i=0;
+  echo "<script>var array_cuenta_numeros=[],array_cuenta_nombres=[],imagen_cuenta=[];</script>";
+   $stmtCuenta = $dbh->prepare("SELECT p.codigo, p.numero, p.nombre from plan_cuentas p where p.nivel=5 order by p.numero");
+   $stmtCuenta->execute();
+   while ($rowCuenta = $stmtCuenta->fetch(PDO::FETCH_ASSOC)) {
+    $codigoX=$rowCuenta['codigo'];
+    $numeroX=$rowCuenta['numero'];
+    $nombreX=$rowCuenta['nombre'];
+    ?>
+    <script>
+     var obtejoLista={
+       label:'<?=trim($numeroX)?>',
+       value:'<?=$codigoX?>'};
+     var obtejoLista2={
+       label:'<?=trim($nombreX)?>',
+       value:'<?=$codigoX?>'};  
+       array_cuenta_numeros[<?=$i?>]=obtejoLista;
+       array_cuenta_nombres[<?=$i?>]=obtejoLista2;
+       imagen_cuenta[<?=$i?>]='../assets/img/calc.jpg';
+    </script> 
+    <?php
+    $i=$i+1;
+  }
             //configuraciones
 			$stmt = $dbh->prepare("SELECT id_configuracion, valor_configuracion, descripcion_configuracion FROM configuraciones");
 			$stmt->execute();
@@ -76,6 +99,7 @@ $contadorRegistros=0;
 		    ?>
 <?php
 $fechaActual=date("Y-m-d");
+$fechaActualModal=date("d/m/Y");
 $dbh = new Conexion();
 
 // Preparamos
@@ -171,7 +195,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
 					    <div class="col-sm-3">
 						    <div class="form-group">
 				          		<label for="glosa" class="bmd-label-static">Glosa</label>
-								<textarea class="form-control" name="glosa" id="glosa" required="true" rows="1" value=""></textarea>
+								<textarea class="form-control" name="glosa" id="glosa" required="true" rows="2" value=""></textarea>
 							</div>
 						</div>
 						<div class="col-sm-2">

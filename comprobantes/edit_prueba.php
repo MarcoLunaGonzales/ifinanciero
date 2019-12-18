@@ -31,7 +31,7 @@ $data->bindColumn('fecha', $fechaComprobante);
 $data->bindColumn('cod_tipocomprobante', $tipoComprobante);
 $data->bindColumn('numero', $nroCorrelativo);
 $data->bindColumn('glosa', $glosaComprobante);
-
+$fechaActualModal=date("d/m/Y");
 if(isset($_GET['codigo'])){
 	$globalCode=$_GET['codigo'];
 }else{
@@ -165,7 +165,7 @@ while ($row = $cont->fetch(PDO::FETCH_BOUND)) {
 					    <div class="col-sm-4">
 						    <div class="form-group">
 				          		<label for="glosa" class="bmd-label-static">Glosa</label>
-								<textarea class="form-control" name="glosa" id="glosa" required="true" rows="1" value=""><?=$glosaComprobante?></textarea>
+								<textarea class="form-control" name="glosa" id="glosa" required="true" rows="2" value=""><?=$glosaComprobante?></textarea>
 							</div>
 						</div>
 						<div class="col-sm-1">

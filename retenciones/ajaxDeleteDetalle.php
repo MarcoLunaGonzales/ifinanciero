@@ -14,12 +14,13 @@ $stmtX->execute();
 
 if(isset($_GET['codigo'])){
   $codigo=$_GET['codigo'];
-  $sqlCod="SELECT cod_configuracionretenciones from configuracion_retencionesdetalle where codigo=$codigo";
+  $sqlCod="SELECT cod_configuracionretenciones,cod_cuenta from configuracion_retencionesdetalle where codigo=$codigo";
   $stmt = $dbh->prepare($sqlCod);
   $stmt->execute();
   $codigoX=0;
   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $codigoX=$row['cod_configuracionretenciones'];
+    $codCuentaX=$row['cod_cuenta'];
   }
   $debehaber=debeHaberRetencionDetalle($codigo);
   $porcent=porcentRetencionDetalle($codigo);
@@ -31,13 +32,13 @@ if(isset($_GET['codigo'])){
   $sqlDelete="DELETE FROM configuracion_retencionesdetalle where codigo=$codigo";
   $stmtDelete = $dbh->prepare($sqlDelete);
   $stmtDelete->execute();
-
-  $stmt = $dbh->prepare("UPDATE configuracion_retenciones set porcentaje_cuentaorigen='$porcentajeOrigen' where codigo=$codigoX");
-  $stmt->execute();
-  
+  if($codCuentaX!=0){
+    /*$stmt = $dbh->prepare("UPDATE configuracion_retenciones set porcentaje_cuentaorigen='$porcentajeOrigen' where codigo=$codigoX");
+    $stmt->execute();
+    ?><script>$("#cuenta_origen").val(<?=$porcentajeOrigen?>)</script><?php*/
+  }   
 }
 ?>
-<script>$("#cuenta_origen").val(<?=$porcentajeOrigen?>)</script>
 <table class="table table-striped table-condensed table-bordered">
                      <thead>
                        <tr>

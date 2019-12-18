@@ -23,8 +23,12 @@ if($_POST["fecha_desde"]==null){
   $desde=strftime('%Y-%m-%d',strtotime("01/01/".$y));
   $hasta=strftime('%Y-%m-%d',strtotime("12/31/".$y));
 }else{
-  $desde=strftime('%Y-%m-%d',strtotime($_POST["fecha_desde"]));
-  $hasta=strftime('%Y-%m-%d',strtotime($_POST["fecha_hasta"]));
+  $porcionesFechaDesde = explode("/", $_POST["fecha_desde"]);
+  $porcionesFechaHasta = explode("/", $_POST["fecha_hasta"]);
+  $desde=$porcionesFechaDesde[2]."-".$porcionesFechaDesde[1]."-".$porcionesFechaDesde[0];
+  $hasta=$porcionesFechaHasta[2]."-".$porcionesFechaHasta[1]."-".$porcionesFechaHasta[0];
+  //$desde=strftime('%Y-%m-%d',strtotime($_POST["fecha_desde"]));
+  //$hasta=strftime('%Y-%m-%d',strtotime($_POST["fecha_hasta"]));
 }
 
 $moneda=$_POST["moneda"];

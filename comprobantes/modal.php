@@ -161,10 +161,12 @@
 	  		<div class="row">
     	      	<div class="form-group col-sm-4">
             		<label for="nro_cuenta" class="bmd-label-floating">Nro. Cuenta:</label>
+                <input type="hidden" id="nro_cuenta_id" name="nro_cuenta_id">
             		<input type="number" class="form-control" id="nro_cuenta" name="nro_cuenta" onkeypress="pulsar(event)" autofocus>
           		</div>
           		<div class="form-group col-sm-4">
             		<label for="cuenta" class="bmd-label-floating">Cuenta:</label>
+                <input type="hidden" id="cuenta_id" name="cuenta_id">
             		<input type="text" class="form-control" id="cuenta" name="cuenta" onkeypress="pulsar(event)">
           		</div>
           		<div class="form-group col-sm-3">
@@ -305,7 +307,7 @@
 			                 <label class="col-sm-2 col-form-label">Fecha</label>
 			                 <div class="col-sm-4">
 			                	<div class="form-group">
-			                	  <input type="text" class="form-control datepicker" name="fecha_fac" id="fecha_fac" value="10/06/2018">
+			                	  <input type="text" class="form-control datepicker" name="fecha_fac" id="fecha_fac" value="<?=$fechaActualModal?>">
 			                	</div>
                         </div>
                         <label class="col-sm-2 col-form-label">Importe</label>
@@ -445,3 +447,4 @@
     </div>
   </div>
 <!--    end small modal -->
+

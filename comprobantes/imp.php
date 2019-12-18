@@ -49,7 +49,7 @@ while ($rowDetalle = $stmt->fetch(PDO::FETCH_BOUND)) {
 $tDebeDol=0;$tHaberDol=0;$tDebeBol=0;$tHaberBol=0;
 
 // Llamamos a la funcion para obtener el reporte de comprobantes
-$data = obtenerComprobantesDet($codigo);
+$data = obtenerComprobantesDetImp($codigo);
 $tc=obtenerValorTipoCambio($moneda,strftime('%Y-%m-%d',strtotime($fechaC)));
 if($tc==0){$tc=1;}
 $fechaActual=date("Y-m-d");

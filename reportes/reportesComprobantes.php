@@ -11,8 +11,9 @@ $fechaActual=date("m/d/Y");
 $m=date("m");
 $y=date("Y");
 $d=date("d",(mktime(0,0,0,$m+1,1,$y)-1));
-$fechaDesde=$m."/01/".$y;
-$fechaHasta=$m."/".$d."/".$y;
+
+$fechaDesde="01/".$m."/".$y;
+$fechaHasta=$d."/".$m."/".$y;
 $dbh = new Conexion();
 ?>
 

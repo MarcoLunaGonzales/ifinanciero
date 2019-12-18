@@ -22,8 +22,12 @@ $fechaActual=date("Y-m-d");
 $unidad=$_POST["unidad"];
 $nombreUnidad=nameUnidad($unidad);
 $tipo=$_POST["tipo_comprobante"];
-$desde=strftime('%Y-%m-%d',strtotime($_POST["fecha_desde"]));
-$hasta=strftime('%Y-%m-%d',strtotime($_POST["fecha_hasta"]));
+$porcionesFechaDesde = explode("/", $_POST["fecha_desde"]);
+$porcionesFechaHasta = explode("/", $_POST["fecha_hasta"]);
+$desde=$porcionesFechaDesde[2]."-".$porcionesFechaDesde[1]."-".$porcionesFechaDesde[0];
+$hasta=$porcionesFechaHasta[2]."-".$porcionesFechaHasta[1]."-".$porcionesFechaHasta[0];
+//$desde=strftime('%Y-%m-%d',strtotime($_POST["fecha_desde"]));
+//$hasta=strftime('%Y-%m-%d',strtotime($_POST["fecha_hasta"]));
 $moneda=$_POST["moneda"];
 if(isset($_POST['glosa_len'])){
  $glosaLen=1; 
@@ -48,7 +52,7 @@ for ($i=0; $i < cantidadF($tipo); $i++) {
   $tiposTitulo.=nameTipoComprobante($tipo[$i]).", "; 
   }   
 }
-$fechaTitulo=strftime('%d/%m/%Y',strtotime($_POST["fecha_desde"]))." - ".strftime('%d/%m/%Y',strtotime($_POST["fecha_hasta"]));
+$fechaTitulo=strftime('%d/%m/%Y',strtotime($desde))." - ".strftime('%d/%m/%Y',strtotime($hasta));
 $stmt = $dbh->prepare($query1);
 // Ejecutamos
 $stmt->execute();
