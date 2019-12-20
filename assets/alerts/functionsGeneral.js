@@ -82,7 +82,7 @@ function addCuentaContable(obj) {
           $('#nro_cuenta').val("");
           $('#cuenta').val("");//
           $('#padre').val("");
-          $("#divResultadoBusqueda").html("<div class='form-group col-sm-8'>Resultados de la Búsqueda</div>");
+          //$("#divResultadoBusqueda").html("<div class='form-group col-sm-8'>Resultados de la Búsqueda</div>");
           $('.selectpicker').selectpicker("refresh");
           $('#myModal').modal('show');
           if($("#add_boton").length){
@@ -1828,7 +1828,8 @@ function addSolicitudDetalle(obj,tipo) {
       if(tipo==1){
         var url="ajaxSolicitudRecursosDetalleSimulacion.php";
       }else{
-        var url="ajaxSolicitudRecursosDetalleProveedor.php";
+        var url="ajaxSolicitudRecursosDetalleSimulacion.php";
+       // var url="ajaxSolicitudRecursosDetalleProveedor.php";
       }
       ajax=nuevoAjax();
       ajax.open("GET",url+"?idFila="+numFilas+"&codigo="+codigoSol,true);
@@ -1999,6 +2000,7 @@ function agregarRetencionSolicitud(){
       ajax.open("GET","ajaxSolicitudRecursosDetalleProveedor.php?codigo="+codigoSol+"&fecha_i="+fechai+"&fecha_f="+fechaf+"&cod_cuenta="+codCuenta,true);
       ajax.onreadystatechange=function(){
         if (ajax.readyState==4) {
+          itemFacturas=[];
           fi.html("");
           fi.html(ajax.responseText);
           fi.bootstrapMaterialDesign();
@@ -2009,6 +2011,27 @@ function agregarRetencionSolicitud(){
       ajax.send(null);
 //perosnal area distribucion
 }
+function modificarMontos(){
+  $('#modalSimulacionCuentas').modal('show');
+}
+function cargarCuentasSimulacion(cods,ib){
+  var fi = $('#cuentas_simulacion');
+  var codp=$("#partida_presupuestaria").val();
+  var codpar=$("#cod_plantilla").val();
+  if(codp!=""){
+  ajax=nuevoAjax();
+  ajax.open("GET","ajaxCargarCuentas.php?codigo="+codp+"&codSim="+cods+"&ibnorca="+ib+"&codPar="+codpar,true);
+  ajax.onreadystatechange=function(){
+        if (ajax.readyState==4) {
+          fi.html("");
+          fi.html(ajax.responseText);
+       }
+      }   
+  ajax.send(null);   
+  }
+}
+///////////////////////////////////////////////////
+
 function agregaformPAD(datos){
   //console.log("datos: "+datos);
   var d=datos.split('-');
@@ -2203,4 +2226,97 @@ function EliminarContratoPersonal(codigo_contratoB,codigo_personalB){
     }
   });
 
+}
+
+function calcularTotalPartida(){
+  var suma=0;
+  var total= $("#numero_cuentas").val();
+  var monto_anterior=parseFloat($("#monto_designado").val());
+  for (var i=1;i<=(total-1);i++){
+    suma+=parseFloat($("#monto_mod"+i).val());
+  }
+  const rest=Math.abs(suma-monto_anterior);
+  const porcent=(rest*100)/monto_anterior; 
+  var resultPorcent= Math.round(porcent*100)/100;  
+  var result=Math.round(suma*100)/100;
+  document.getElementById("monto_editable").value=result;
+
+
+  if(result<monto_anterior){
+    $("#monto_editable").addClass("text-danger");
+    $("#monto_editable").removeClass("text-success");
+    $("#monto_editable_text").addClass("text-danger");
+    $("#monto_editable_text").removeClass("text-success");
+    $("#monto_editable_text").text("- "+resultPorcent+" %");
+  }else{
+    if(result>monto_anterior){
+       $("#monto_editable").addClass("text-success");
+       $("#monto_editable").removeClass("text-danger");
+       $("#monto_editable_text").addClass("text-success");
+       $("#monto_editable_text").removeClass("text-danger");
+       $("#monto_editable_text").text("+ "+resultPorcent+" %");
+    }else{
+       $("#monto_editable").removeClass("text-success");
+       $("#monto_editable").removeClass("text-danger");
+       $("#monto_editable_text").removeClass("text-success");
+       $("#monto_editable_text").removeClass("text-danger");
+       $("#monto_editable_text").text("");
+    }
+  }
+}
+function guardarCuentasSimulacion(ib){
+  var total= $("#numero_cuentas").val();
+  var cosSim=$("#cod_simulacion").val();
+  var conta=0;
+  if((total-1)!=0){
+    for (var i=1;i<=(total-1);i++){
+      if($("#monto_mod"+i).val()==""){
+        conta++
+      }
+    }
+  if(conta==0){
+    for (var i=1;i<=(total-1);i++){
+      var codigo = $("#codigo"+i).val();
+      var monto = $("#monto_mod"+i).val();
+      var parametros = {"codigo":codigo,"monto":monto,"ibnorca":ib};
+      $.ajax({
+        type:"GET",
+        data:parametros,
+        url:"ajaxSaveCuentas.php",
+        beforeSend: function () { 
+          $("#guardar_cuenta").text("espere.."); 
+          $("#guardar_cuenta").attr("disabled",true);
+          $("#mensaje_cuenta").html("");
+        },
+        success:function(resp){
+          $("#guardar_cuenta").text("Guardar");
+          $("#guardar_cuenta").removeAttr("disabled");
+          $("#mensaje_cuenta").html("<p class='text-success'>Se insertaron los datos correctamente! <a class='btn btn-warning btn-sm' href=''>aplicar cambios a la simulación</a></p>");
+        }
+      });
+    }
+   }else{
+    $("#mensaje_cuenta").html("<p class='text-danger'>No debe haber un campo vacío!</p>");
+   }     
+  } 
+}
+function buscarCuentaList(combo){
+  var contenedor = document.getElementById('divResultadoBusqueda');
+  var nroCuenta=document.getElementById('nro_cuenta').value;
+  var nombreCuenta=document.getElementById('cuenta').value;
+  var padre=$("#padre").val();
+  var parametros={"nro_cuenta":nroCuenta,"cuenta":nombreCuenta,"padre":padre};
+  $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxBusquedaCuenta.php",
+        data: parametros,
+        success:  function (resp) {
+          var respuesta=resp.split('@');
+          contenedor.innerHTML = respuesta[0];
+          if(respuesta[1]==1){
+            setBusquedaCuenta(respuesta[2],respuesta[3],respuesta[4],'0',''); 
+          }     
+        }
+    });
 }

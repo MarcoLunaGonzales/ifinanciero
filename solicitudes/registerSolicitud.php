@@ -36,8 +36,8 @@ $fechaActual=date("Y-m-d");
 $m=date("m");
 $y=date("Y");
 $d=date("d",(mktime(0,0,0,$m+1,1,$y)-1));
-$fechaDesde=$m."/01/".$y;
-$fechaHasta=$m."/".$d."/".$y;
+$fechaDesde="01/".$m."/".$y;
+$fechaHasta=$d."/".$m."/".$y;
 
 $dbh = new Conexion();
 echo "<script>var array_cuenta=[];</script>";
@@ -259,6 +259,7 @@ if(isset($_GET['cod'])){
                   </button><?php
               }else{
               ?><button title="Buscar (alt + s)" type="button" name="add" class="btn btn-warning btn-round btn-fab" onClick="addSolicitudDetalleSearch()"><i class="material-icons">search</i>
+                  </button><button title="Agregar (alt + n)" type="button" name="add" class="btn btn-warning btn-round btn-fab" onClick="addSolicitudDetalle(this,<?=$tipoSolicitud?>)"><i class="material-icons">add</i>
                   </button><?php
               } 
               ?>

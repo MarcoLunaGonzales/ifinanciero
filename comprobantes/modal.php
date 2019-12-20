@@ -190,14 +190,18 @@
           		</div>
           	</div>
           	<div class="row" id="divResultadoBusqueda">
+              <?php 
+             // include "pruebaBusqueda2.php"; 
+              include "pruebaBusqueda.php";
+              ?>    
     	      	<div class="form-group col-sm-8">
-	          		Resultados de la Búsqueda        		
+	          		Resultados de la Búsqueda
+                    		
           		</div>
           	</div>
         </form>
       </div>
-      <div class="modal-footer">
-      	
+      <div class="modal-footer">     	
         <!--button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button-->
       </div>
     </div>

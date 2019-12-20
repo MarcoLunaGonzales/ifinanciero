@@ -58,7 +58,7 @@ for ($i=1;$i<=$cantidadFilas;$i++){
     if(isset($_POST["habilitar".$i])){      
     $data[$fila][0]=$_POST["partida_cuenta_id".$i]; 
     $data[$fila][1]=$_POST["detalle_detalle".$i]; 
-    $data[$fila][2]=0; 
+    $data[$fila][2]=$_POST["importe_presupuesto".$i]; 
     $data[$fila][3]=$_POST["importe".$i];           
     $data[$fila][4]=0; 
     $data[$fila][5]="";

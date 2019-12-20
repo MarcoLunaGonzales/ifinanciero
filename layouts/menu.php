@@ -125,7 +125,12 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
                     <span class="sidebar-normal"> Plantillas de Costo </span>
                   </a>
                 </li>
-
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listPlantillasCostosAdmin">
+                    <span class="sidebar-mini"> GPT </span>
+                    <span class="sidebar-normal"> Gesti&oacute;n de Plantillas de Costo </span>
+                  </a>
+                </li>
               </ul>
             </div>
           </li>
