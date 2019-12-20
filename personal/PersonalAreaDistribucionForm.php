@@ -30,7 +30,7 @@ $stmtPersonal->bindParam(':codigo',$cod_personal_1);
 $stmtPersonal->execute();
 $result=$stmtPersonal->fetch();
 $cod_personal=$result['codigo'];
-$ci=$result['ci'];
+$ci=$result['identificacion'];
 $nombre_personal=$result['primer_nombre'];
 $paterno_personal=$result['paterno'];
 $materno_personal=$result['materno'];
