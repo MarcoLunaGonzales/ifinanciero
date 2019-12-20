@@ -82,7 +82,7 @@ function addCuentaContable(obj) {
           $('#nro_cuenta').val("");
           $('#cuenta').val("");//
           $('#padre').val("");
-          //$("#divResultadoBusqueda").html("<div class='form-group col-sm-8'>Resultados de la Búsqueda</div>");
+          $("#divResultadoBusqueda").html("<div class='form-group col-sm-8'>Resultados de la Búsqueda</div>");
           $('.selectpicker').selectpicker("refresh");
           $('#myModal').modal('show');
           if($("#add_boton").length){
@@ -2300,23 +2300,64 @@ function guardarCuentasSimulacion(ib){
    }     
   } 
 }
-function buscarCuentaList(combo){
+var itemCuentas=[];
+var itemCuentasAux=[];
+function buscarCuentaList(campo){
   var contenedor = document.getElementById('divResultadoBusqueda');
   var nroCuenta=document.getElementById('nro_cuenta').value;
   var nombreCuenta=document.getElementById('cuenta').value;
   var padre=$("#padre").val();
-  var parametros={"nro_cuenta":nroCuenta,"cuenta":nombreCuenta,"padre":padre};
-  $.ajax({
-        type: "GET",
-        dataType: 'html',
-        url: "ajaxBusquedaCuenta.php",
-        data: parametros,
-        success:  function (resp) {
-          var respuesta=resp.split('@');
-          contenedor.innerHTML = respuesta[0];
-          if(respuesta[1]==1){
-            setBusquedaCuenta(respuesta[2],respuesta[3],respuesta[4],'0',''); 
-          }     
-        }
-    });
+  switch (campo){
+   case "numero":
+     buscarCuentaNumero(nroCuenta,1);
+   break;
+   case "nombre":
+     buscarCuentaNumero(nombreCuenta,2);
+   break;
+  }     
+}
+function buscarCuentaNumero(numeros,val){  
+  var contenedor = document.getElementById('divResultadoBusqueda');
+  //var str = numeros.replace(/^"(.*)"$/, '$1'); 
+  var html="<div class='col-md-12'>"+
+  "<div class='table-responsive'>"+
+    "<table class='table table-condensed'>"+
+      "<thead>"+
+        "<tr>"+
+          "<th>Nro. Cuenta</th>"+
+              "<th>Nombre</th>"+
+              "<th>Auxiliar</th>"+
+          "</tr>"+
+      "</thead>";
+  for (var i = 0; i < itemCuentas.length; i++) { 
+    //var n = itemCuentas[i].numero.search(/+str+/);
+    if(val==1){
+       var n = itemCuentas[i].numero.indexOf(numeros);
+    }else{
+      var cadenaBuscar=itemCuentas[i].nombre.toLowerCase();
+       var n = cadenaBuscar.indexOf(numeros.toLowerCase());
+    }
+    
+    if(n==0){
+      var textoAux="<table class='table table-condensed'>";
+        for (var j = 0; j < itemCuentasAux.length; j++) {
+          if(itemCuentasAux[j].codCuenta==itemCuentas[i].codigo){
+            textoAux+="<tr>"+
+               "<td class='text-left small'>"+itemCuentasAux[j].codigo+"</td>"+
+               "<td class='text-left small'><a href=\"javascript:setBusquedaCuenta(\'"+itemCuentas[i].codigo+"\',\'"+itemCuentas[i].numero+"\',\'"+itemCuentas[i].nombre+"\',\'"+itemCuentasAux[j].codigo+"\',\'"+itemCuentasAux[j].nombre+"\');\">"+itemCuentasAux[j].nombre+"</a></td>"+
+             "</tr>";
+          }
+        };
+       textoAux+="</table>";
+      html+="<tr>"+
+      "<td class='text-left'>"+itemCuentas[i].numero+"</td>"+
+          "<td class='text-left'><a href=\"javascript:setBusquedaCuenta(\'"+itemCuentas[i].codigo+"\',\'"+itemCuentas[i].numero+"\',\'"+itemCuentas[i].nombre+"\',\'0\',\'\');\">"+itemCuentas[i].nombre+"</a></td>"+
+          "<td class='text-left'>"+textoAux+"</td>"+
+    "</tr>";
+    }
+  };
+  html+="</table>"+
+  "</div>"+
+"</div>";
+   contenedor.innerHTML = html;
 }

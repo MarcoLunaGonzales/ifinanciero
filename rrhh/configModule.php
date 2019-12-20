@@ -87,7 +87,7 @@ $urlListPersonal="?opcion=personalLista";
 $urlSavePersonal="?opcion=personalSave";
 
 $urlFormPersonal="index.php?opcion=personalForm";
-$urlsaveWSPersonal="index.php?opcion=cargarPersonalWS";
+$urlsaveWSPersonal="index.php?opcion=personalSaveWS";
 
 $urlDeletePersonal="index.php?opcion=deletepersonal";
 $urlFormPersonalAreaDistribucion="index.php?opcion=PersonalAreaDistribucionForm";

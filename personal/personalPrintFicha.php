@@ -26,19 +26,8 @@ try{
     $result = $stmtPersonal->fetch();
 
     $codigo = $result['codigo'];
-
-    $cod_tipoIdentificacion = $result['cod_tipoIdentificacion'];
-    $tipo_identificacionOtro = $result['tipo_identificacionOtro'];
-    $identificacion = $result['identificacion'];
-    $cod_lugar_emision = $result['cod_lugar_emision'];
-    $lugar_emisionOtro = $result['lugar_emisionOtro'];
-    $cod_nacionalidad = $result['cod_nacionalidad'];
-    $cod_estadocivil = $result['cod_estadocivil'];//-
-    $cod_pais = $result['cod_pais'];
-    $cod_departamento = $result['cod_departamento'];
-    $cod_ciudad = $result['cod_ciudad'];
-    $ciudadOtro = $result['ciudadOtro']; 
-
+    $ci = $result['ci'];
+    $ci_lugar_emision = $result['ci_lugar_emision'];
     $fecha_nacimiento = $result['fecha_nacimiento'];
     $cod_cargo = $result['cod_cargoX'];
     $cod_unidadorganizacional = $result['cod_unidadorganizacionalX'];
@@ -140,14 +129,9 @@ $html.=  '<header class="header">'.
                         '<td>'.$codigo.'</td>'.
                     '</tr>'.
                     '<tr>'.
-                        '<td>Tipo De identificación</td>'.
+                        '<td>CI</td>'.
                         '<td align="center">:</td>'.
-                        '<td>'.$cod_tipoIdentificacion.' '.$tipo_identificacionOtro.'</td>'.
-                    '</tr>'.
-                    '<tr>'.
-                        '<td>Identificación</td>'.
-                        '<td align="center">:</td>'.
-                        '<td>'.$identificacion.' - '.$cod_lugar_emision.' '.$lugar_emisionOtro.'</td>'.
+                        '<td>'.$ci.' '.$ci_lugar_emision.'</td>'.
                     '</tr>'.
                     '<tr>'.
                         '<td>Fecha Nacimiento</td>'.
@@ -165,49 +149,19 @@ $html.=  '<header class="header">'.
                         '<td>'.$celular.'</td>'.
                     '</tr>'.
                     '<tr>'.
+                        '<td>Dirección</td>'.
+                        '<td align="center">:</td>'.
+                        '<td >'.$direccion.'</td>'.
+                    '</tr>'.
+                    '<tr>'.
                         '<td>Email</td>'.
                         '<td align="center">:</td>'.
                         '<td >'.$email.'</td>'.
-                    '</tr>'.                                        
+                    '</tr>'.
+                    
                     '<tr>'.
                         '<td colspan="4"><br></td>           '.
                     '</tr>'.
-
-                    '<tr>'.
-                        '<td>Dirección</td>'.
-                        '<td align="center">:</td>'.
-                        '<td colspan=2 >'.$direccion.'</td>'.
-                    '</tr>'.
-
-                    '<tr>'.
-                        '<td>Nacionalidad</td>'.
-                        '<td align="center">:</td>'.
-                        '<td colspan=2>'.$cod_nacionalidad.'</td>'.
-                    '</tr>'.
-                    '<tr>'.
-                        '<td>Pais</td>'.
-                        '<td align="center">:</td>'.
-                        '<td colspan=2>'.$cod_pais.'</td>'.
-                    '</tr>'.
-                    '<tr>'.
-                        '<td>Departamento</td>'.
-                        '<td align="center">:</td>'.
-                        '<td colspan=2>'.$cod_departamento.'</td>'.
-                    '</tr>'.
-                    '<tr>'.
-                        '<td>Ciudad</td>'.
-                        '<td align="center">:</td>'.
-                        '<td colspan=2>'.$cod_ciudad.'</td>'.
-                    '</tr>'.
-                    '<tr>'.
-                        '<td>Otra Ciudad</td>'.
-                        '<td align="center">:</td>'.
-                        '<td colspan=2>'.$ciudadOtro.'</td>'.
-                    '</tr>'.
-                    '<tr>'.
-                        '<td colspan="4"><br></td>           '.
-                    '</tr>'.
-    
                     
                     '<tr>'.
                         '<td>Tipo Personal</td>'.
@@ -233,14 +187,13 @@ $html.=  '<header class="header">'.
                         $html.=$nombreAux0.'</td>'.                        
                     '</tr>'.
                     '<tr>'.
-                        '<td>Persona Contacto</td>'.
+                        '<td>Contacto</td>'.
                         '<td align="center">:</td>'.
                         '<td colspan=2>'.$persona_contacto.'</td>'.
                     '</tr>'.
                     '<tr>'.
                         '<td colspan="4"><br></td>           '.
                     '</tr>'.
- 
                     '<tr>'.
                         '<td>Nro. Seguro</td>'.
                         '<td align="center">:</td>'.

@@ -96,8 +96,8 @@
  
             // DataTable
             var table = $('#tableCuentasBuscar').DataTable({
-              "paging":false});
-                /*"processing": true,
+              /*"paging":false});*/
+                "processing": true,
                 "serverSide": true,
           "ajax":{
             url :"../comprobantes/cuentasDatos.php", // json datasource
@@ -112,7 +112,7 @@
           ,"language": {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
             }
-              });*/
+              });
              // Apply the search
              table.columns().every( function () {
                  var that = this;
