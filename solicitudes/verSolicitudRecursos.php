@@ -100,7 +100,7 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
 								<tr class="">
 									<th>#</th>
 									<th>Numero</th>
-									<th>Nombre Cuenta</th>
+									<th class="text-left">Nombre Cuenta</th>
 									<th>Detalle</th>
 									<th>Retenci&oacute;n</th>
 									<th class="text-right">Presupuestado</th>
@@ -133,7 +133,7 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
                                 <tr>
                                     <td><?=$index?></td>
                                 	<td class="font-weight-bold"><?=$numeroCuentaX?></td>
-                                    <td><?=$nombreCuentaX?></td>
+                                    <td class="text-left"><?=$nombreCuentaX?></td>
                                     <td><?=$detalleX?></td>
                                     <td><?=$tituloImporte?></td>
                                     <td class="text-right"><?=number_format($importeX, 2, '.', ',')?></td>
