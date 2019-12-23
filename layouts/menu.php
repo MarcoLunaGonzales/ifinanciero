@@ -304,8 +304,8 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
                 </li>
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listSimulacionesCostosAdmin">
-                    <span class="sidebar-mini"> AS </span>
-                    <span class="sidebar-normal"> Administracion de Simulaciones</span>
+                    <span class="sidebar-mini"> GS </span>
+                    <span class="sidebar-normal"> Gesti&oacute;n de Simulaciones</span>
                   </a>
                 </li>                 
               </ul>
@@ -328,7 +328,7 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
                   </a>
                 </li>
                 <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=listSolicitudSimulacionProveedor">
+                  <a class="nav-link" href="?opcion=listSolicitudRecursosAdmin">
                     <span class="sidebar-mini"> GSR </span>
                     <span class="sidebar-normal"> Gesti&oacute;n Solicitudes Recursos</span>
                   </a>

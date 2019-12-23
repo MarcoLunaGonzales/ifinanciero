@@ -32,6 +32,9 @@
 							   $retencionX=$rowDetalles["cod_confretencion"];
 							   if($retencionX!=0){
 							   	$tituloImporte="Importe - ".nameRetencion($retencionX);
+							   	if(strlen($tituloImporte)>13){
+                                   $tituloImporte=substr($tituloImporte,0,13)."...";
+                                 }
 							   }
 							 $conta++;  							   
                             }
@@ -48,6 +51,8 @@
 
                        $solicitudDetalle=obtenerSolicitudRecursosDetalle($codigo);
                        while ($rowDetalles = $solicitudDetalle->fetch(PDO::FETCH_ASSOC)) {
+                          $tituloImporte="Importe";
+                          $codCuentaX=$rowDetalles['cod_plancuenta'];
                           $codigoDetX=$rowDetalles["codigo"];
                           $encontrar=0;
                           for ($i=0; $i < count($cuentasCodigos); $i++) { 
@@ -64,6 +69,9 @@
 							   $retencionX=$rowDetalles["cod_confretencion"];
 							   if($retencionX!=0){
 							   	$tituloImporte="Importe - ".nameRetencion($retencionX);
+							   	if(strlen($tituloImporte)>13){
+                                   $tituloImporte=substr($tituloImporte,0,13)."...";
+                                 }
 							   }
 							   $numeroCuentaX=trim($rowDetalles['numero']);
 							   $nombreCuentaX=trim($rowDetalles['nombre']);

@@ -1571,6 +1571,20 @@ function quitarChecked(id){
      filaCheck++;  
     });
 }
+function ponerChecked(id,val){
+  var filaCheck=0;
+  $("input[name="+id+"]").each(function (index) { 
+    var respuesta=$(this).val().split('@');
+      if(respuesta[0]!=val){
+         if($(this).is(':checked')){
+          $(this).prop('checked', false);
+         }   
+      }else{
+        $(this).prop('checked', true);
+      }   
+     filaCheck++;  
+    });
+}
 function listRetencion(id){
   var fila=id;
   var codigo=$("#cuenta"+fila).val();
@@ -1584,9 +1598,18 @@ function listRetencion(id){
    $("#retencion_codcuenta").val(codigo);
    $("#retFila").val(id);
    $("#retencion_montoimporte").val(importe);
-   quitarChecked("retenciones");
+   if($("#cod_retencion"+fila).length){
+      if($("#cod_retencion"+fila).val()==0){
+        quitarChecked("retenciones");
+      }else{
+        ponerChecked("retenciones",$("#cod_retencion"+fila).val());
+      }
+   }else{
+    quitarChecked("retenciones");
+   }
+   
    abrirModal('modalRetencion');
-   $("#mensaje_retencion").html("<p class='text-info'>Seleccione una o varias retenciónes</p>");
+   $("#mensaje_retencion").html("<p class='text-info'>Seleccione una retención</p>");
  }
 //inicializar el puntero el el primer input modal Buscar Cuenta...
 $(document).on("shown.bs.modal","#modalRetencion",function(){
@@ -1983,7 +2006,7 @@ function agregarRetencionSolicitud(){
      $("#cod_retencion"+fila).val(respuesta[0]);
      $("#retFila").val("");
      $('#modalRetencion').modal('hide');
-     $("#importe_label"+fila).text("Importe - "+respuesta[1]);
+     $("#importe_label"+fila).text("Importe - "+respuesta[1].substr(0,3)+"...");
   }else{
     $("#mensaje_retencion").html("<p class='text-danger'>Debe seleccionar al menos una retención</p>");
   }

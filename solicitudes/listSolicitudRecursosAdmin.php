@@ -7,7 +7,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $dbh = new Conexion();
 
 // Preparamos
-$stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecursos=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo where sr.cod_estadoreferencial=1 order by sr.codigo");
+$stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecursos=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo where sr.cod_estadoreferencial=1 and sr.cod_estadosolicitudrecursos!=1 order by sr.codigo");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -28,11 +28,11 @@ $stmt->bindColumn('estado', $estado);
         <div class="row">
             <div class="col-md-12">
               <div class="card">
-                <div class="card-header card-header-danger card-header-icon">
+                <div class="card-header card-header-info card-header-icon">
                   <div class="card-icon">
                     <i class="material-icons">content_paste</i>
                   </div>
-                  <h4 class="card-title"><b><?=$moduleNamePlural?></b></h4>
+                  <h4 class="card-title"><b>Gesti&oacute;n de <?=$moduleNamePlural?></b></h4>
                 </div>
                 <div class="card-body">
                     <table class="table table-condesed" id="tablePaginator">
@@ -43,7 +43,6 @@ $stmt->bindColumn('estado', $estado);
                           <th>Area</th>
                           <th>Responsable</th>
                           <th>Fecha</th>
-                          <th>Estado</th>
                           <th class="text-right">Actions</th>
                         </tr>
                       </thead>
@@ -63,7 +62,7 @@ $stmt->bindColumn('estado', $estado);
                               $nEst=100;$barEstado="progress-bar-success";$btnEstado="btn-success";
                             break;
                             case 4:
-                              $nEst=60;$barEstado="progress-bar-warning";$btnEstado="btn-warning";
+                              $nEst=60;$barEstado="progress-bar-info";$btnEstado="btn-info";
                             break;
                           }
 ?>
@@ -75,52 +74,37 @@ $stmt->bindColumn('estado', $estado);
                                  <img src="assets/img/faces/persona1.png" width="20" height="20"/><?=$solicitante;?>
                           </td>
                           <td><?=strftime('%d/%m/%Y',strtotime($fecha));?></td>
-                          <td><button class="btn <?=$btnEstado?> btn-sm btn-link"><?=$estado;?></button> <!--<?=$nEst?> %
-                             <div class="progress">
-                               <div class="progress-bar <?=$barEstado?>" role="progressbar" aria-valuenow="<?=$nEst?>" aria-valuemin="0" aria-valuemax="100" style="width:<?=$nEst?>%">
-                                  <span class="sr-only"><?=$nEst?>% Complete</span>
-                               </div>
-                             </div>-->
-                          </td> 
                           <td class="td-actions text-right">
-                            <?php
-                              if($codEstado==4||$codEstado==3){
-                            ?>
                             <div class="btn-group dropdown">
                               <button type="button" class="btn <?=$btnEstado?> dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="material-icons">list</i> <?=$estado;?>
                               </button>
                               <div class="dropdown-menu">
+                                <a href="<?=$urlVer;?>?cod=<?=$codigo;?>&admin=0" class="dropdown-item">
+                                    <i class="material-icons text-info">bar_chart</i> Ver Solicitud
+                                 </a>
+                              
                                 <?php 
-                                 if($codEstado==4){
-                                 ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1&admin=0" class="dropdown-item">
-                                    <i class="material-icons text-danger">clear</i> Cancelar solicitud
+                                if($codEstado==4){
+                                 ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=3" class="dropdown-item">
+                                    <i class="material-icons text-success">offline_pin</i> Aprobar Solicitud
+                                 </a>
+                                 <a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1" class="dropdown-item">
+                                    <i class="material-icons text-dark">report</i> Rechazar Solicitud
+                                 </a>
+                                 <a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=2" class="dropdown-item">
+                                    <i class="material-icons text-danger">clear</i> Anular Solicitud
                                  </a><?php 
-                                 }?>
-                                 <a href="<?=$urlVer;?>?cod=<?=$codigo;?>" class="dropdown-item">
-                                    <i class="material-icons text-danger">bar_chart</i> Ver Solicitud
-                                 </a> 
+                                }else{
+                                ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=4" class="dropdown-item">
+                                    <i class="material-icons text-dark">reply</i> Deshacer Cambios
+                                 </a>
+                                 <?php 
+                                }
+                                ?>
                               </div>
-                            </div>                           
-                            <?php    
-                              }else{
-                              ?>
-                            <a title="Enviar solicitud" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=4&admin=0' rel="tooltip" itle="Enviar Solicitud" class="btn btn-warning">
-                              <i class="material-icons">send</i>
-                            </a> 
-                            <a title="Editar solicitud - detalle" href='<?=$urlRegister;?>?cod=<?=$codigo;?>' rel="tooltip" class="btn btn-info">
-                              <i class="material-icons"><?=$iconEdit;?></i>
-                            </a>
-                            <!--<a title="Editar solicitud" href='<?=$urlEdit;?>&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonEdit;?>">
-                              <i class="material-icons"><?=$iconEdit;?></i>
-                            </a>-->
-                            <button title="Eliminar solicitud" rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')">
-                              <i class="material-icons"><?=$iconDelete;?></i>
-                            </button>
-                              <?php  
-                              }
-                            ?>
-                          </td>
+                             </div>
+                          </td> 
                         </tr>
 <?php
               $index++;

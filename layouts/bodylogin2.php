@@ -286,6 +286,9 @@
     $(document).ready(function() {
       // initialise Datetimepicker and Sliders 
       md.initFormExtendedDatetimepickers();
+      if($("#boton_solicitudbuscar").length){
+        addSolicitudDetalleSearch(); //
+      }
       if($("#formRegComp")){
         Mousetrap.bind('alt+t', function(){ $("#tipo_comprobante").focus(); return false; });
 

@@ -145,7 +145,15 @@
 		if ($_GET['opcion']=='listSolicitudRecursos') {
 			require_once('solicitudes/listSolicitudRecursos.php');
 		}
-
+		if ($_GET['opcion']=='listSolicitudRecursosAdmin') {
+			require_once('solicitudes/listSolicitudRecursosAdmin.php');
+		}
+        if ($_GET['opcion']=='deleteSolicitudRecursos') {
+			require_once('solicitudes/saveDelete.php');
+		}
+		if ($_GET['opcion']=='editSolicitudRecursos') {
+			require_once('solicitudes/editSolicitudRecursos.php');
+		}
 
 		//******************************ACTIVOS FIJOS***********************************************************
 		if ($_GET['opcion']=='listUbicaciones') {

@@ -33,6 +33,7 @@ $centros=obtenerCentroSolicitud($codigo);
 $unidadSol=$centros[0];
 $areaSol=$centros[1];
 $idFila=1;
+?><script>numFilas=0;cantidadItems=0;itemFacturas=[];</script><?php
 $cuentasCodigos=[];$conta=0;
             while ($row = $detalle->fetch(PDO::FETCH_ASSOC)) {
               $codCuentaX=$row['codigo'];
@@ -63,8 +64,11 @@ $cuentasCodigos=[];$conta=0;
                  $retencionX=$rowDetalles["cod_confretencion"];
                  if($retencionX!=0){
                   $tituloImporte="Importe - ".nameRetencion($retencionX);
+                  if(strlen($tituloImporte)>13){
+                     $tituloImporte=substr($tituloImporte,0,13)."...";
+                   }
                  }                 
-                            }
+               }
               $numeroCuentaX=trim($row['numero']);
               $nombreCuentaX=trim($row['nombre']);
               $nombrePartidaX=$row['simulacion'];
@@ -74,8 +78,9 @@ $cuentasCodigos=[];$conta=0;
              $idFila=$idFila+1;
             }
             $solicitudDetalle=obtenerSolicitudRecursosDetalle($codigo);
-            $tituloImporte="Importe";
             while ($rowDetalles = $solicitudDetalle->fetch(PDO::FETCH_ASSOC)) {
+                $tituloImporte="Importe";
+                $codCuentaX=$rowDetalles['cod_plancuenta'];
                 $codigoDetX=$rowDetalles["codigo"];
                 $encontrar=0;
               for ($i=0; $i < count($cuentasCodigos); $i++) { 
@@ -92,6 +97,9 @@ $cuentasCodigos=[];$conta=0;
                  $retencionX=$rowDetalles["cod_confretencion"];
                  if($retencionX!=0){
                   $tituloImporte="Importe - ".nameRetencion($retencionX);
+                  if(strlen($tituloImporte)>13){
+                     $tituloImporte=substr($tituloImporte,0,13)."...";
+                   }
                  }
                  $numeroCuentaX=trim($rowDetalles['numero']);
                  $nombreCuentaX=trim($rowDetalles['nombre']);
