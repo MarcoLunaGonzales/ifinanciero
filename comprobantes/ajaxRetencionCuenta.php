@@ -19,7 +19,7 @@ $stmtX->execute();
   $importeOriginal=$_GET['debe'];
  // $areaDet=$_GET['area'];
  $nom_cuenta_auxiliar="";
- $descuentohaber=0;$descuentodebe=0;$contracuenta=0;$totalImporteMayor=0;
+ $descuentohaber=0;$descuentodebe=0;$contracuenta=0;$totalImporteMayor=0;$importeOriginal2=0;
     //obtener datos de retenciones
     $codigoRet=$json[0];
     $stmtRetenciones = $dbh->prepare("SELECT cd.*,c.porcentaje_cuentaorigen from configuracion_retenciones c join configuracion_retencionesdetalle cd on cd.cod_configuracionretenciones=c.codigo where cd.cod_configuracionretenciones=$codigoRet order by cd.codigo");
@@ -35,6 +35,7 @@ $stmtX->execute();
     if($porcentajeCuentaX>100){
       $importe=($porcentajeCuentaX/100)*$importeOriginal;
     }else{
+      $importeOriginal2=($porcentajeCuentaX/100)*$importeOriginal;
       $importe=$importeOriginal;
     }
     $montoRetencion=($porcentajeX/100)*$importe;
@@ -69,8 +70,12 @@ $stmtX->execute();
       <?php
     }
   }
-  
- ?><script>calcularImporteDespuesRetencion(<?=$importe?>,<?=$filaActual?>);calcularTotalesComprobante("null");</script><?php
+  if($porcentajeCuentaX<=100){
+      ?><script>calcularImporteDespuesRetencion(<?=$importeOriginal2?>,<?=$filaActual?>);calcularTotalesComprobante("null");</script><?php
+  }else{
+    ?><script>calcularImporteDespuesRetencion(<?=$importe?>,<?=$filaActual?>);calcularTotalesComprobante("null");</script><?php
+  }
+ 
 
 
 
