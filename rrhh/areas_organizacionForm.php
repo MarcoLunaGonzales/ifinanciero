@@ -105,12 +105,6 @@ $statementArea2 = $dbh->query($queryArea2);
     </div>
     </div>
 </div><!--fin campo cod_areaorganizacion_padre -->
-
-
-
-
-
-
 			  </div>
 			  <div class="card-footer ml-auto mr-auto">
 				<button type="submit" class="<?=$buttonNormal;?>">Guardar</button>

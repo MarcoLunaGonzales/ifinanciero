@@ -216,7 +216,7 @@ foreach ($detalle as $objDet){
 }
 
 //volvemos al listado de personal
-showAlertSuccessError($flagSuccess,$urlListPersonal);
+showAlertSuccessError3($flagSuccess,$urlListPersonal);
 
 
 ?>

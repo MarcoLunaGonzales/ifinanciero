@@ -1412,5 +1412,146 @@ function obtenerCuentaPlantillaCostos($codigo){
    return $stmt;
 }
 
+
+//PARA  planilla sueldos
+function obtenerAporteAFPFuturo($id,$id2){
+  $dbh = new Conexion();
+  $stmt = $dbh->prepare("SELECT porcentaje_comision,porcentaje_aporte_afp,
+  porcentaje_riesgoprofesional,porcentaje_solidario,porcentaje_cps,porcentaje_provivienda,
+  porcentaje_seguro_medico from tipos_aporteafp c where codigo=$id");
+  $stmt->execute();
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
+  {
+    $porcentaje_comision=$row['porcentaje_comision'];
+    $porcentaje_aporte_afp=$row['porcentaje_aporte_afp'];
+    $porcentaje_riesgoprofesional=$row['porcentaje_riesgoprofesional'];
+    $porcentaje_solidario=$row['porcentaje_solidario'];
+    $porcentaje_cps=$row['porcentaje_cps'];
+    $porcentaje_provivienda=$row['porcentaje_provivienda'];
+    $porcentaje_seguro_medico=$row['porcentaje_seguro_medico'];      
+  }
+  $aporte_laboral_porcentaje=$porcentaje_comision+$porcentaje_aporte_afp+$porcentaje_riesgoprofesional+$porcentaje_solidario+$porcentaje_cps+$porcentaje_provivienda+$porcentaje_seguro_medico;
+
+  $aporte_laboral_aux=$id2*$aporte_laboral_porcentaje/100;
+  $aporte_laboral=number_format($aporte_laboral_aux,2,'.','');
+  return($aporte_laboral);
+}
+
+function obtenerAporteSolidario13000($total_ganado){
+  $dbh = new Conexion();
+  $stmt = $dbh->prepare("SELECT valor_configuracion from configuraciones_planillas where id_configuracion=2");
+  $stmt->execute();
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
+  {
+    $valor_configuracion=$row['valor_configuracion'];
+  }
+  if($total_ganado>13000){
+    $aporte_solidario_13000_aux=($total_ganado-13000)*$valor_configuracion/100;
+  }else $aporte_solidario_13000_aux = 0;
+  $aporte_solidario_13000=number_format($aporte_solidario_13000_aux,2,'.','');
+  return($aporte_solidario_13000);
+}
+function obtenerAporteSolidario25000($total_ganado){
+  $dbh = new Conexion();
+  $stmt = $dbh->prepare("SELECT valor_configuracion from configuraciones_planillas where id_configuracion=3");
+  $stmt->execute();
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
+  {
+    $valor_configuracion=$row['valor_configuracion'];
+  }
+  if($total_ganado>25000){
+    $aporte_solidario_25000_aux=($total_ganado-25000)*$valor_configuracion/100;
+  }else $aporte_solidario_25000_aux = 0;
+  $aporte_solidario_25000=number_format($aporte_solidario_25000_aux,2,'.','');
+  return($aporte_solidario_25000);
+}
+function obtenerAporteSolidario35000($total_ganado){
+  $dbh = new Conexion();
+  $stmt = $dbh->prepare("SELECT valor_configuracion from configuraciones_planillas where id_configuracion=4");
+  $stmt->execute();
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
+  {
+    $valor_configuracion=$row['valor_configuracion'];
+  }
+  if($total_ganado>35000){
+    $aporte_solidario_35000_aux=($total_ganado-35000)*$valor_configuracion/100;
+  }else $aporte_solidario_35000_aux = 0;
+  $aporte_solidario_35000=number_format($aporte_solidario_35000_aux,2,'.','');
+  return($aporte_solidario_35000);
+}
+function obtenerRC_IVA($total_ganado,$apf_f,$afp_p,$ap_sol_13000,$ap_sol_25000,$ap_sol_35000)
+{
+
+  $sueldo=$total_ganado-$apf_f-$afp_p-$ap_sol_13000-$ap_sol_25000-$ap_sol_35000;
+  $sueldo_neto=number_format($sueldo);
+  $minimo_no_imponible=4244; // no definido m10
+  $datosf39=10;//no definido
+
+  if($sueldo_neto>$minimo_no_imponible)$sueldo_gravado=$sueldo_neto-$minimo_no_imponible;
+  else $sueldo_gravado=0;
+  $fisco=$sueldo_gravado*$datosf39/100;
+  $t10=400;//no definido
+  $datosC40=0;//no definido
+  $datosC41=0;//no definido
+  $u10=number_format(($t10*$datosC40)/($datosC41-$t10));
+  $v10=$t10+$u10;
+  $s10=0;//no definido
+  $w10 = $v10 + $s10;
+  if($fisco>$w10)$aporte_rc_iva = $fisco-$w10;
+  else $aporte_rc_iva = 0;
+  $aporte_rc_iva_neto=number_format($aporte_rc_iva);
+  return ($aporte_rc_iva_neto);
+}
+function obtenerAtrasoPersonal($id_personal,$haber_basico,$valor_conf_x65_90,$valor_conf_x90_120,$valor_conf_x120_150,$valor_conf_x150){
+  $dbh = new Conexion();
+  //capturando fecha
+  $mes=date('m');
+  $gestion=date('Y');
+  $stmt = $dbh->prepare("SELECT * from personal_atrasos where cod_personal=$id_personal and mes=$mes and gestion=$gestion");
+  $stmt->execute();
+  $result=$stmt->fetch();
+  $codigo=$result['codigo'];
+  $cod_personal=$result['cod_personal'];
+  $total=$result['total'];
+  $x_65_90=$result['x_65_90'];
+  $x_90_120=$result['x_90_120'];
+  $x_120_150=$result['x_120_150'];
+  $x_150=$result['x_150'];
+
+  $descuentos=$x_65_90*$valor_conf_x65_90+$x_90_120*$valor_conf_x90_120+$x_120_150*$valor_conf_x120_150+$x_150*$valor_conf_x150;
+  $descuentos_neto=$descuentos*$haber_basico;
+  return ($descuentos_neto);
+
+}
+function obtenerOtrosDescuentos()
+{
+  $otrosDscuentos=0;
+  return ($otrosDscuentos);
+}
+function obtenerAnticipo($id_personal)
+{
+  $anticipo=0;
+  
+  $mes=date('m');
+  $gestion=date('Y');
+  $fecha_inicio=$gestion."-".$mes."-01";
+  $fecha_actual=date('Y-m-d');
+
+  $dbh = new Conexion();
+  $stmtAnticipos = $dbh->prepare("SELECT *
+  FROM personal_anticipos
+  WHERE cod_personal=id_personal and fecha BETWEEN '$fecha_inicio' AND 'fecha_actual'");
+  $stmtAnticipos->execute();
+  $resultAnticipacion=$stmtAnticipos->bindColumn('monto_anticipo',$monto_anticipo);
+  while ($row = $stmtAnticipos->fetch(PDO::FETCH_ASSOC))
+  {
+    $anticipo+=$monto_anticipo;
+  }
+  
+  return ($anticipo);
+}
+
+
 ?>
+
 

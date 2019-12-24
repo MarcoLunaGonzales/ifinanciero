@@ -59,6 +59,8 @@ try {
     $tutordiscapacidad=$_POST['cod_tutordiscapacidad'];
     $parentescotutor=$_POST['parentescotutor'];
     $celularTutor=$_POST['celularTutor'];
+    $grado_academico=$_POST['grado_academico'];
+    
     //$created_at = $_POST["created_at"];
     $created_by = 1;//$_POST["created_by"];
     //$modified_at = $_POST["modified_at"];
@@ -70,8 +72,7 @@ try {
     $stmt = $dbh->prepare("UPDATE personal set cod_cargo=:cod_cargo,cod_unidadorganizacional=:cod_unidadorganizacional,cod_area=:cod_area,jubilado=:jubilado,
     cod_tipopersonal=:cod_tipopersonal,haber_basico=:haber_basico,apellido_casada=:apellido_casada,otros_nombres=:otros_nombres,
     nua_cua_asignado=:nua_cua_asignado,
-    cod_tipoafp=:cod_tipoafp,
-    nro_seguro=:nro_seguro,
+    cod_tipoafp=:cod_tipoafp,nro_seguro=:nro_seguro,cod_grado_academico=:grado_academico,
     cod_estadopersonal=:cod_estadopersonal,persona_contacto=:persona_contacto,cod_tipoaporteafp = :cod_tipoaporteafp  
     where codigo = :codigo");
     //bind
@@ -89,7 +90,8 @@ try {
     $stmt->bindParam(':cod_tipoaporteafp', $cod_tipoaporteafp);        
     $stmt->bindParam(':nro_seguro', $nro_seguro);
     $stmt->bindParam(':cod_estadopersonal', $cod_estadopersonal);        
-    $stmt->bindParam(':persona_contacto', $persona_contacto);        
+    $stmt->bindParam(':persona_contacto', $persona_contacto);
+    $stmt->bindParam(':grado_academico', $grado_academico);
     $flagSuccess=$stmt->execute();
 
     //para area distribucion

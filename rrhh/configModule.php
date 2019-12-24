@@ -28,7 +28,7 @@ $urlDeleteUO="index.php?opcion=deleteUO";
 $urlRegisterAreasU="index.php?opcion=registerAreasU";
 //areas_organizacion
 // $nombreSingularAreas_organizacion="Area Organizacion";
-// $nombrePluralAreas_organizacion="Areas de Organizacion";
+ $nombrePluralAreas_organizacion="Areas de Unidad Organizacional";
 // $urlListAreas_organizacion="?opcion=areas_organizacionLista";
 // $urlSaveAreas_organizacion="?opcion=areas_organizacionSave";
 // $urlFormAreas_organizacion="index.php?opcion=areas_organizacionForm";
@@ -93,6 +93,16 @@ $urlDeletePersonal="index.php?opcion=deletepersonal";
 $urlFormPersonalAreaDistribucion="index.php?opcion=PersonalAreaDistribucionForm";
 $urlFormPersonalContratos="index.php?opcion=FormPersonalContratos";
 $urlprintPersonal="personal/personalPrintFicha.php";
+
+//planilla sueldo
+$urlPlanillasSueldoList="?opcion=planillasSueldoPersonal";
+$urlGenerarPlanillaSueldoPrevia="?opcion=generarPlanillaSueldoPrevia";
+
+$urlPlanillaSueldoPersonalActual="planillas/planillaSueldoPersonalActual.php";
+
+
+
+
 
 
 //tipos_afps

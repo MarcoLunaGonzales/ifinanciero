@@ -2202,5 +2202,93 @@ function EliminarContratoPersonal(codigo_contratoB,codigo_personalB){
       }
     }
   });
+}
 
+///=================planillas sueldos
+
+
+
+var planillas_tabla=[]; 
+var planillas_tabla_general=[]; 
+
+//PrerequisitosPlanillaSueldo
+function filaTablaGeneralPlanillasSueldo(tabla,index){  
+
+  var html="";
+  for (var i = 0; i < planillas_tabla_general[index-1].length; i++) {
+    //alert(planillas_tabla_general[index-1][i].nombre);
+
+    html+="<div class='row'>"+
+      "<label class='col-sm-3 col-form-label'>Descuentos : </label>"+
+      "<div class='col-sm-7'>"+
+          "<div class='form-group'>"+
+          "<input class='form-control' readonly='readonly' name='descuentos' id='descuentos' value='"+planillas_tabla_general[index-1][i].descuentos+" Registros Este Mes."+"'/>"+"<br>"+              
+          "</div>"+
+      "</div>"+
+    "</div>";
+
+    html+="<div class='row'>"+
+      "<label class='col-sm-3 col-form-label'>Bonos : </label>"+
+      "<div class='col-sm-7'>"+
+          "<div class='form-group'>"+
+          "<input class='form-control' readonly='readonly' name='bonos' id='bonos' value='"+planillas_tabla_general[index-1][i].bonos+" Registros Este Mes."+"'/>"+"<br>"+              
+          "</div>"+
+      "</div>"+
+    "</div>";
+
+    html+="<div class='row'>"+
+      "<label class='col-sm-3 col-form-label'>Atrasos : </label>"+
+      "<div class='col-sm-7'>"+
+          "<div class='form-group'>"+
+          "<input class='form-control' readonly='readonly' name='atrasos' id='atrasos' value='"+planillas_tabla_general[index-1][i].atrasos+" Registros Este Mes."+"'/>"+"<br>"+              
+          "</div>"+
+      "</div>"+
+    "</div>";
+    html+="<div class='row'>"+
+      "<label class='col-sm-3 col-form-label'>Anticipos : </label>"+
+      "<div class='col-sm-7'>"+
+          "<div class='form-group'>"+
+          "<input class='form-control' readonly='readonly' name='anticipos' id='anticipos' value='"+planillas_tabla_general[index-1][i].anticipos+" Registros Este Mes."+"'/>"+"<br>"+              
+          "</div>"+
+      "</div>"+
+    "</div>";  
+  }
+  tabla.html(html);
+  $("#modalPrerequisitos").modal("show");
+}
+
+
+function agregaformPre(datos){
+  //console.log("datos: "+datos);
+  var d=datos.split('-');
+  document.getElementById("codigo_planilla").value=d[0];
+}
+function ProcesarPlanilla(cod_planilla){
+  $.ajax({
+    type:"POST",
+    data:"cod_planilla="+cod_planilla+"&sw=2",
+    url:"planillas/savePlanillaMes.php",
+    success:function(r){
+      if(r==1){
+        //$('#tabla1').load('activosFijos/afEnCustodia.php');
+        //alertify.success("agregado");
+        alerts.showSwal('success-message','index.php?opcion=planillasSueldoPersonal');
+      }
+    }
+  });
+}
+
+function CerrarPlanilla(cod_planilla){
+  $.ajax({
+    type:"POST",
+    data:"cod_planilla="+cod_planilla+"&sw=3",
+    url:"planillas/savePlanillaMes.php",
+    success:function(r){
+      if(r==1){
+        //$('#tabla1').load('activosFijos/afEnCustodia.php');
+        //alertify.success("agregado");
+        alerts.showSwal('success-message','index.php?opcion=planillasSueldoPersonal');
+      }
+    }
+  });
 }

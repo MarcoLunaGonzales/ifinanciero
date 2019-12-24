@@ -306,6 +306,27 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
               </ul>
             </div>
           </li>
+          <!--TRANSACCIONES RRHH-->
+          <li class="nav-item ">
+            <a class="nav-link" data-toggle="collapse" href="#transaccHHRR">
+              <i class="material-icons">menu</i>
+              <p> Transacciones RRHH
+                <b class="caret"></b>
+              </p>
+            </a>
+            <div class="collapse" id="transaccHHRR">
+              <ul class="nav">
+                
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=planillasSueldoPersonal">
+                    <span class="sidebar-mini"> P </span>
+                    <span class="sidebar-normal"> Planillas Sueldos </span>
+                  </a>
+                </li>
+                
+              </ul>
+            </div>
+          </li>
           <!--Solicitud de recursos-->
           <li class="nav-item ">
             <a class="nav-link" data-toggle="collapse" href="#solicitudes">

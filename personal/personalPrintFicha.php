@@ -27,17 +27,17 @@ try{
 
     $codigo = $result['codigo'];
 
-    $cod_tipoIdentificacion = $result['cod_tipoIdentificacion'];
-    $tipo_identificacionOtro = $result['tipo_identificacionOtro'];
+    $cod_tipoIdentificacion = $result['cod_tipo_identificacion'];
+    $tipo_identificacionOtro = $result['tipo_identificacion_otro'];
     $identificacion = $result['identificacion'];
     $cod_lugar_emision = $result['cod_lugar_emision'];
-    $lugar_emisionOtro = $result['lugar_emisionOtro'];
+    $lugar_emisionOtro = $result['lugar_emision_otro'];
     $cod_nacionalidad = $result['cod_nacionalidad'];
     $cod_estadocivil = $result['cod_estadocivil'];//-
     $cod_pais = $result['cod_pais'];
     $cod_departamento = $result['cod_departamento'];
     $cod_ciudad = $result['cod_ciudad'];
-    $ciudadOtro = $result['ciudadOtro']; 
+    $ciudadOtro = $result['ciudad_otro']; 
 
     $fecha_nacimiento = $result['fecha_nacimiento'];
     $cod_cargo = $result['cod_cargoX'];

@@ -11,7 +11,6 @@ alerts = {
           .then((value) => {
           location.href=url;
       });
-
     }
     else if (type == 'warning-message-and-confirmation') {
       swal({
@@ -32,6 +31,12 @@ alerts = {
             return(false);
           }
         })
+    }else if(type == 'error-message3'){
+      swal("Informativo!", "La planilla previa del mes ya fue generada. Se actualizará prerequisitos.", "warning")
+          .then((value) => {
+          location.href=url;
+      });
+
     } 
   },
 }

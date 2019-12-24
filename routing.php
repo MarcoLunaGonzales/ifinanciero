@@ -489,6 +489,16 @@
 			require_once('rrhh/deleteestadosplanilla.php');
 		}
 
+		//planillas
+		if ($_GET['opcion']=='planillasSueldoPersonal') {
+			require_once('planillas/planillasSueldoList.php'); //ok
+		}
+		if ($_GET['opcion']=='generarPlanillaSueldoPrevia') {
+			require_once('planillas/generarPlanillaSueldo.php'); //ok
+		}
+
+		
+		//planillaSueldoPersonalRpt
 		
 		
 		//tipo aporte afp

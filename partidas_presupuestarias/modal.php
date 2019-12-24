@@ -9,7 +9,7 @@
                   <h4 class="card-title">Cuentas Registradas</h4>
                 </div>
                 <div class="card-body">
-                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                   <i class="material-icons">close</i>
                 </button>
                   <table class="table table-condensed">

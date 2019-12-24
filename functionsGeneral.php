@@ -26,6 +26,18 @@ function showAlertSuccessError2($bandera, $url){
       </script>";
    }
 }
+function showAlertSuccessError3($bandera, $url){
+   if($bandera==true){
+      echo "<script>
+         alerts.showSwal('success-message','$url');
+      </script>";
+   }
+   if ($bandera==false){
+      echo "<script>
+         alerts.showSwal('error-message3','$url');
+      </script>";
+   }
+}
 
 function clean_string($string)
 {

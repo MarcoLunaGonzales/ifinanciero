@@ -57,37 +57,28 @@ $stmt->bindColumn('modified_by', $modified_by);
                         $datosX =$codigo;
 
                         $dbh1 = new Conexion();
-                            $sqlA="SELECT codigo,cod_unidad,cod_area,cod_areapadre,
-                                  (select a.nombre from areas a where a.codigo=cod_area) as nombre_area,
-                                  (select a.nombre from areas a where a.codigo=cod_areapadre) as nombre_area_padre
-                                  from areas_organizacion
-                                  where cod_estadoreferencial=1 and cod_unidad=:codigo";
-                                   $stmt2 = $dbh1->prepare($sqlA);
-                                   $stmt2->bindParam(':codigo',$codigo);
-                                   $stmt2->execute(); 
-                                   $nc=0;
-                                   
-                                   while ($row2 = $stmt2->fetch(PDO::FETCH_ASSOC)) {
-                                      $dato =new stdClass();//obejto
-                                      
-                                      $nombre_areaX=trim($row2['nombre_area']);
-                                      $nombre_area_padreX=trim($row2['nombre_area_padre']);
-
-                                      // $stmtAreas->bindColumn('cod_unidad', $cod_unidad);
-                                      // $stmtAreas->bindColumn('cod_area', $cod_area);
-                                      // $stmtAreas->bindColumn('cod_areapadre', $cod_areapadre);
-                                      // $stmtAreas->bindColumn('nombre_area', $nombre_area);
-                                      // $stmtAreas->bindColumn('nombre_area_padre', $nombre_area_padre);
-
-
-
-                                      $dato->codigo=($nc+1);
-                                      $dato->nombreA=$nombre_areaX;
-                                      $dato->nombreAP=$nombre_area_padreX;
-                                      $datos[$index-1][$nc]=$dato;                           
-                                      $nc++;
-                                    }
-                                $cont[$index-1]=$nc;  
+                        $sqlA="SELECT codigo,cod_unidad,cod_area,cod_areapadre,
+                              (select a.nombre from areas a where a.codigo=cod_area) as nombre_area,
+                              (select a.nombre from areas a where a.codigo=cod_areapadre) as nombre_area_padre
+                              from areas_organizacion
+                              where cod_estadoreferencial=1 and cod_unidad=:codigo";
+                               $stmt2 = $dbh1->prepare($sqlA);
+                               $stmt2->bindParam(':codigo',$codigo);
+                               $stmt2->execute(); 
+                               $nc=0;
+                               
+                               while ($row2 = $stmt2->fetch(PDO::FETCH_ASSOC)) {
+                                  $dato = new stdClass();//obejto
+                                  
+                                  $nombre_areaX=trim($row2['nombre_area']);
+                                  $nombre_area_padreX=trim($row2['nombre_area_padre']);                                  
+                                  $dato->codigo=($nc+1);
+                                  $dato->nombreA=$nombre_areaX;
+                                  $dato->nombreAP=$nombre_area_padreX;
+                                  $datos[$index-1][$nc]=$dato;                           
+                                  $nc++;
+                                }
+                            $cont[$index-1]=$nc;  
 
                         ?>
                         <tr>
