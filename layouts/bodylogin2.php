@@ -88,6 +88,68 @@
               footer: true
             }
         } );
+        if($("#tableCuentasBuscar").length){
+          $('#tableCuentasBuscar tfoot th').each( function () {
+               var title = $(this).text();
+               $(this).html( '<input type="text" class="form-control" placeholder="Buscar '+title+'" />' );
+           } );
+ 
+            // DataTable
+            var table = $('#tableCuentasBuscar').DataTable({
+              /*"paging":false});*/
+                "processing": true,
+                "serverSide": true,
+          "ajax":{
+            url :"../comprobantes/cuentasDatos.php", // json datasource
+            type: "post",  // method  , by default get
+            error: function(){  // error handling
+              $(".employee-grid-error").html("");
+              $("#tableCuentasBuscar").append('<tbody class="employee-grid-error"><tr><th colspan="3">No hay datos en el Servidor</th></tr></tbody>');
+              $("#tableCuentasBuscar_processing").css("display","none");
+              
+            }
+          }
+          ,"language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            }
+              });
+             // Apply the search
+             table.columns().every( function () {
+                 var that = this;
+ 
+                 $( 'input', this.footer() ).on( 'keyup change clear', function (e) {
+                  if(e.keyCode == 13) {
+                   
+                  }
+                     if ( that.search() !== this.value ) {
+                         that
+                             .search( this.value )
+                             .draw();
+                     }
+                 } );
+             } );
+             var r = $('#tableCuentasBuscar tfoot tr');
+               r.find('th').each(function(){
+                    $(this).css('padding', 8);
+                });
+             $('#tableCuentasBuscar thead').append(r);
+             $('#search_0').css('text-align', 'center');
+
+          /*$('#tableCuentasBuscar').DataTable({
+            "paging":   false,
+            "info":     false,
+            "order": false,
+            "searching": false,
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            fixedHeader: {
+              header: true,
+              footer: true
+            }
+          } );*/
+        }
+        
     } );
     <!--FUNCIONES DE VALIDACION-->
     $(document).ready(function() {
@@ -103,8 +165,8 @@
        autocomplete("cuenta_auto_num","cuenta_auto_num_id", array_cuenta, imagen_cuenta);
      }
      if ($('#nro_cuenta').length) {
-       autocomplete("nro_cuenta","nro_cuenta_id", array_cuenta_numeros, imagen_cuenta);
-       autocomplete("cuenta","cuenta_id", array_cuenta_nombres, imagen_cuenta);
+       //autocomplete("nro_cuenta","nro_cuenta_id", array_cuenta_numeros, imagen_cuenta);
+      // autocomplete("cuenta","cuenta_id", array_cuenta_nombres, imagen_cuenta);
      }
 
     $("#formRegComp").submit(function(e) {
@@ -224,6 +286,9 @@
     $(document).ready(function() {
       // initialise Datetimepicker and Sliders 
       md.initFormExtendedDatetimepickers();
+      if($("#boton_solicitudbuscar").length){
+        addSolicitudDetalleSearch(); //
+      }
       if($("#formRegComp")){
         Mousetrap.bind('alt+t', function(){ $("#tipo_comprobante").focus(); return false; });
 

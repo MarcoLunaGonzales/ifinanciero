@@ -34,7 +34,7 @@ $stmt->bindColumn('estado', $estado);
                   <h4 class="card-title"><b><?=$moduleNamePlural?></b></h4>
                 </div>
                 <div class="card-body">
-                    <table class="table">
+                    <table class="table" id="tablePaginator">
                       <thead>
                         <tr>
                           <th class="text-center">#</th>
@@ -105,13 +105,13 @@ $stmt->bindColumn('estado', $estado);
                             <!--<a href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=4&admin=0' rel="tooltip" itle="Enviar Solicitud" class="btn btn-warning">
                               <i class="material-icons">send</i>
                             </a>-->  
-                            <a href='<?=$urlRegister;?>?cod=<?=$codigo;?>' rel="tooltip" class="btn btn-info">
+                            <a title="Editar Simulación - Detalle" href='<?=$urlRegister;?>?cod=<?=$codigo;?>' rel="tooltip" class="btn btn-info">
                               <i class="material-icons">list</i>
                             </a>
-                            <a href='<?=$urlEdit;?>&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonEdit;?>">
+                            <a title="Editar Simulación" href='<?=$urlEdit;?>&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonEdit;?>">
                               <i class="material-icons"><?=$iconEdit;?></i>
                             </a>
-                            <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')">
+                            <button title="Eliminar Simulación" rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')">
                               <i class="material-icons"><?=$iconDelete;?></i>
                             </button>
                               <?php  

@@ -115,7 +115,7 @@ $stmt->bindColumn('estado_plantilla', $estadoPlantilla);
                 </div>
               </div>
       				<div class="card-footer fixed-bottom">
-                <a href="#" onclick="javascript:window.open('<?=$urlRegister2;?>')" class="<?=$buttonNormal;?>">Registrar</a>
+                <!--<a href="#" onclick="javascript:window.open('<?=$urlRegister2;?>')" class="<?=$buttonNormal;?>">Registrar</a>-->
               </div>		  
             </div>
           </div>  

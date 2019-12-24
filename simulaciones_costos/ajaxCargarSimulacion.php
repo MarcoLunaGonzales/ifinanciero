@@ -72,7 +72,9 @@ $alumnosExternoX=$_GET['alumnos_fuera'];
 
 
                  $totalFijo=obtenerTotalesPlantilla($codigoPX,1,18); //tipo de costo 1:fijo,2:variable
+                 
                  $totalVariable=obtenerTotalesPlantilla($codigoPX,2,18);
+                 //$totalVariable=obtenerTotalesSimulacion($codigo);
                  
                  //calcular cantidad alumnos si no esta registrado
                  if($alumnosX==0||$alumnosX==""||$alumnosX==null||$alumnosExternoX==0||$alumnosExternoX==""||$alumnosExternoX==null){

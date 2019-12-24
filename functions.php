@@ -316,7 +316,16 @@ function nameCargo($codigo){
    }
    return($nombreX);
 }
-
+function nameProveedor($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT nombre FROM af_proveedores where codigo=:codigo");
+   $stmt->bindParam(':codigo',$codigo);
+   $stmt->execute();
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $nombreX=$row['nombre'];
+   }
+   return($nombreX);
+}
 function namePartidaPres($codigo){
    $dbh = new Conexion();
    $stmt = $dbh->prepare("SELECT nombre FROM partidas_presupuestarias where codigo=:codigo");
@@ -1139,7 +1148,7 @@ where pc.codigo=$codigo and pgc.cod_tipocosto=$tipo GROUP BY pgd.cod_plantillagr
 
       }  
     }
-  return array($totalImporte,$totalModulo,$totalExterno,$totalLocal);
+  return array($totalImporte,$totalModulo,$totalLocal,$totalExterno);
    }
 
   function obtenerValorConfiguracion($id){
@@ -1249,7 +1258,17 @@ join plantillas_gruposcosto pg on p.codigo=pg.cod_plantillacosto
 join plantillas_grupocostodetalle pgd on pgd.cod_plantillagrupocosto=pg.codigo
 join partidas_presupuestarias pp on pp.codigo=pgd.cod_partidapresupuestaria 
 join partidaspresupuestarias_cuentas ppc on ppc.cod_partidapresupuestaria=pp.codigo 
-join plan_cuentas pc on ppc.cod_cuenta=pc.codigo where s.codigo=$codigo order by pp.codigo";
+join plan_cuentas pc on ppc.cod_cuenta=pc.codigo where s.codigo=$codigo and pg.cod_tipocosto=2 order by pp.codigo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+}
+function obtenerDetalleSolicitudSimulacionCuenta($codigo){
+   $dbh = new Conexion();
+   $sql="";
+   $sql="SELECT pc.*,pp.nombre as partida, pp.codigo as cod_partida,sc.monto_local,sc.monto_externo from cuentas_simulacion sc 
+join partidas_presupuestarias pp on pp.codigo=sc.cod_partidapresupuestaria 
+join plan_cuentas pc on sc.cod_plancuenta=pc.codigo where sc.cod_simulacioncostos=$codigo order by pp.codigo";
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
    return $stmt;
@@ -1257,13 +1276,14 @@ join plan_cuentas pc on ppc.cod_cuenta=pc.codigo where s.codigo=$codigo order by
 function obtenerDetalleSolicitudProveedor($codigo,$fechai,$fechaf,$estado,$codUsuario){
    $dbh = new Conexion();
    $sql="";
-   $sql="SELECT pc.*,pp.nombre as partida, pp.codigo as cod_partida,s.nombre as simulacion,s.codigo as cod_simulacion,s.fecha as fecha_simulacion from simulaciones_costos s 
+   $sql="SELECT cs.monto_local,cs.monto_externo, pc.*,pp.nombre as partida, pp.codigo as cod_partida,s.nombre as simulacion,s.codigo as cod_simulacion,s.fecha as fecha_simulacion from simulaciones_costos s 
 join plantillas_costo p on s.cod_plantillacosto=p.codigo 
 join plantillas_gruposcosto pg on p.codigo=pg.cod_plantillacosto 
 join plantillas_grupocostodetalle pgd on pgd.cod_plantillagrupocosto=pg.codigo
 join partidas_presupuestarias pp on pp.codigo=pgd.cod_partidapresupuestaria 
 join partidaspresupuestarias_cuentas ppc on ppc.cod_partidapresupuestaria=pp.codigo 
-join plan_cuentas pc on ppc.cod_cuenta=pc.codigo where pc.codigo=$codigo and s.cod_estadosimulacion=$estado and s.cod_responsable=$codUsuario and s.fecha BETWEEN '$fechai' and '$fechaf' order by pp.codigo";
+join plan_cuentas pc on ppc.cod_cuenta=pc.codigo, cuentas_simulacion cs
+where pc.codigo=cs.cod_plancuenta and s.codigo=cs.cod_simulacioncostos and pc.codigo=$codigo and s.cod_estadosimulacion=$estado and s.cod_responsable=$codUsuario and s.fecha BETWEEN '$fechai' and '$fechaf' order by pp.codigo";
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
    return $stmt;
@@ -1360,7 +1380,7 @@ join plantillas_gruposcosto pg on p.codigo=pg.cod_plantillacosto
 join plantillas_grupocostodetalle pgd on pgd.cod_plantillagrupocosto=pg.codigo
 join partidas_presupuestarias pp on pp.codigo=pgd.cod_partidapresupuestaria 
 join partidaspresupuestarias_cuentas ppc on ppc.cod_partidapresupuestaria=pp.codigo 
-join plan_cuentas pc on ppc.cod_cuenta=pc.codigo WHERE s.cod_estadosimulacion=$estado and s.cod_responsable=$codUsuario and pc.nivel=$nivel order by pp.codigo";
+join plan_cuentas pc on ppc.cod_cuenta=pc.codigo WHERE s.cod_estadosimulacion=$estado and pg.cod_tipocosto=2 and s.cod_responsable=$codUsuario and pc.nivel=$nivel order by pp.codigo";
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
    return $stmt;
@@ -1387,7 +1407,7 @@ function obtenerSolicitudRecursosDetalleCuenta($codSol,$codigo){
 function obtenerSolicitudRecursosDetalle($codigo){
    $dbh = new Conexion();
    $sql="";
-   $sql="SELECT sd.*,pc.numero,pc.nombre from solicitud_recursosdetalle sd join plan_cuentas pc on sd.cod_plancuenta=pc.codigo where sd.codigo=$codigo and sd.cod_solicitudrecurso=$codSol";
+   $sql="SELECT sd.*,pc.numero,pc.nombre from solicitud_recursosdetalle sd join plan_cuentas pc on sd.cod_plancuenta=pc.codigo where sd.cod_solicitudrecurso=$codigo";
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
    return $stmt;
@@ -1395,7 +1415,7 @@ function obtenerSolicitudRecursosDetalle($codigo){
 function obtenerPartidasPlantillaCostos($codigo,$tipo){
   $dbh = new Conexion();
   $sql="";
-  $sql="SELECT DISTINCT p.cod_partidapresupuestaria,pc.cod_unidadorganizacional,pc.cod_area,pc.codigo as codPlantilla FROM partidaspresupuestarias_cuentas p join plan_cuentas c on p.cod_cuenta=c.codigo
+  $sql="SELECT DISTINCT p.cod_partidapresupuestaria,pc.cod_unidadorganizacional,pc.cod_area,pc.codigo as codPlantilla,pd.tipo_calculo,pd.monto_local,pd.monto_externo FROM partidaspresupuestarias_cuentas p join plan_cuentas c on p.cod_cuenta=c.codigo
 join plantillas_grupocostodetalle pd on pd.cod_partidapresupuestaria=p.cod_partidapresupuestaria
 join plantillas_gruposcosto pg on pg.codigo=pd.cod_plantillagrupocosto
 join plantillas_costo pc on pc.codigo=pg.cod_plantillacosto where pc.codigo=$codigo and pg.cod_tipocosto=$tipo";
@@ -1411,6 +1431,7 @@ function obtenerCuentaPlantillaCostos($codigo){
    $stmt->execute();
    return $stmt;
 }
+<<<<<<< HEAD
 
 
 //PARA  planilla sueldos
@@ -1552,6 +1573,69 @@ function obtenerAnticipo($id_personal)
 }
 
 
+=======
+function obtenerMontoPlantillaDetalle($codigoPar,$codigo,$ib){
+  $dbh = new Conexion();
+  $montoI=0;$montoF=0;
+   $stmt = $dbh->prepare("SELECT pd.monto_local,pd.monto_externo FROM plantillas_grupocostodetalle pd 
+    join plantillas_gruposcosto pg on pg.codigo=pd.cod_plantillagrupocosto
+    join plantillas_costo p on p.codigo=pg.cod_plantillacosto
+    where pd.cod_partidapresupuestaria=:codigo and p.codigo=:codPlan");
+   $stmt->bindParam(':codigo',$codigo);
+   $stmt->bindParam(':codPlan',$codigoPar);
+   $stmt->execute();
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $montoI=$row['monto_local'];
+      $montoF=$row['monto_externo'];
+   }
+   if($ib==1){
+     return($montoI);
+   }else{
+     return($montoF);
+   }
+}
+function obtenerMontoSimulacionCuenta($codigo,$codigoPar,$ib){
+  $dbh = new Conexion();
+  $montoI=0;$montoF=0;
+   $stmt = $dbh->prepare("SELECT sum(monto_local) as total_local, sum(monto_externo) as total_externo 
+    FROM cuentas_simulacion where cod_simulacioncostos=:codSim and cod_partidapresupuestaria=:codPar");
+   $stmt->bindParam(':codSim',$codigo);
+   $stmt->bindParam(':codPar',$codigoPar);
+   $stmt->execute();
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $montoI=$row['total_local'];
+      $montoF=$row['total_externo'];
+   }
+   if($ib==1){
+     return($montoI);
+   }else{
+     return($montoF);
+   }
+}
+function obtenerTotalesSimulacion($codigo){
+  $dbh = new Conexion();
+    $montoI=0;$montoF=0;
+   $stmt = $dbh->prepare("SELECT sum(monto_local) as total_local, sum(monto_externo) as total_externo 
+    FROM cuentas_simulacion where cod_simulacioncostos=:codSim");
+   $stmt->bindParam(':codSim',$codigo);
+   $stmt->execute();
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $montoI=$row['total_local'];
+      $montoF=$row['total_externo'];
+   }
+  return array(0,0,$montoI,$montoF);
+   }
+   function obtenerIbnorcaCheck($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT ibnorca FROM simulaciones_costos where codigo=:codigo");
+   $stmt->bindParam(':codigo',$codigo);
+   $stmt->execute();
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $nombreX=$row['ibnorca'];
+   }
+   return($nombreX);
+}
+>>>>>>> 9665608161fbd74baa97b51d1230f7cda83c0916
 ?>
 
 

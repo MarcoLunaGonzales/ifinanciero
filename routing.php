@@ -145,7 +145,15 @@
 		if ($_GET['opcion']=='listSolicitudRecursos') {
 			require_once('solicitudes/listSolicitudRecursos.php');
 		}
-
+		if ($_GET['opcion']=='listSolicitudRecursosAdmin') {
+			require_once('solicitudes/listSolicitudRecursosAdmin.php');
+		}
+        if ($_GET['opcion']=='deleteSolicitudRecursos') {
+			require_once('solicitudes/saveDelete.php');
+		}
+		if ($_GET['opcion']=='editSolicitudRecursos') {
+			require_once('solicitudes/editSolicitudRecursos.php');
+		}
 
 		//******************************ACTIVOS FIJOS***********************************************************
 		if ($_GET['opcion']=='listUbicaciones') {
@@ -563,8 +571,8 @@
 			require_once('personal/personalSave.php');
 		}
 
-		if ($_GET['opcion']=='cargarPersonalWS') {
-			require_once('personal/cargarPersonalWS.php');
+		if ($_GET['opcion']=='personalSaveWS') {
+			require_once('personal/personalSaveWS.php');
 		}
 		
 		if ($_GET['opcion']=='deletepersonal') {

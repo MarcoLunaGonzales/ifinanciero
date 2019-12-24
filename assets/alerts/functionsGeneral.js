@@ -1571,6 +1571,20 @@ function quitarChecked(id){
      filaCheck++;  
     });
 }
+function ponerChecked(id,val){
+  var filaCheck=0;
+  $("input[name="+id+"]").each(function (index) { 
+    var respuesta=$(this).val().split('@');
+      if(respuesta[0]!=val){
+         if($(this).is(':checked')){
+          $(this).prop('checked', false);
+         }   
+      }else{
+        $(this).prop('checked', true);
+      }   
+     filaCheck++;  
+    });
+}
 function listRetencion(id){
   var fila=id;
   var codigo=$("#cuenta"+fila).val();
@@ -1584,9 +1598,18 @@ function listRetencion(id){
    $("#retencion_codcuenta").val(codigo);
    $("#retFila").val(id);
    $("#retencion_montoimporte").val(importe);
-   quitarChecked("retenciones");
+   if($("#cod_retencion"+fila).length){
+      if($("#cod_retencion"+fila).val()==0){
+        quitarChecked("retenciones");
+      }else{
+        ponerChecked("retenciones",$("#cod_retencion"+fila).val());
+      }
+   }else{
+    quitarChecked("retenciones");
+   }
+   
    abrirModal('modalRetencion');
-   $("#mensaje_retencion").html("<p class='text-info'>Seleccione una o varias retenciónes</p>");
+   $("#mensaje_retencion").html("<p class='text-info'>Seleccione una retención</p>");
  }
 //inicializar el puntero el el primer input modal Buscar Cuenta...
 $(document).on("shown.bs.modal","#modalRetencion",function(){
@@ -1828,7 +1851,8 @@ function addSolicitudDetalle(obj,tipo) {
       if(tipo==1){
         var url="ajaxSolicitudRecursosDetalleSimulacion.php";
       }else{
-        var url="ajaxSolicitudRecursosDetalleProveedor.php";
+        var url="ajaxSolicitudRecursosDetalleSimulacion.php";
+       // var url="ajaxSolicitudRecursosDetalleProveedor.php";
       }
       ajax=nuevoAjax();
       ajax.open("GET",url+"?idFila="+numFilas+"&codigo="+codigoSol,true);
@@ -1982,7 +2006,7 @@ function agregarRetencionSolicitud(){
      $("#cod_retencion"+fila).val(respuesta[0]);
      $("#retFila").val("");
      $('#modalRetencion').modal('hide');
-     $("#importe_label"+fila).text("Importe - "+respuesta[1]);
+     $("#importe_label"+fila).text("Importe - "+respuesta[1].substr(0,3)+"...");
   }else{
     $("#mensaje_retencion").html("<p class='text-danger'>Debe seleccionar al menos una retención</p>");
   }
@@ -1999,6 +2023,7 @@ function agregarRetencionSolicitud(){
       ajax.open("GET","ajaxSolicitudRecursosDetalleProveedor.php?codigo="+codigoSol+"&fecha_i="+fechai+"&fecha_f="+fechaf+"&cod_cuenta="+codCuenta,true);
       ajax.onreadystatechange=function(){
         if (ajax.readyState==4) {
+          itemFacturas=[];
           fi.html("");
           fi.html(ajax.responseText);
           fi.bootstrapMaterialDesign();
@@ -2009,6 +2034,27 @@ function agregarRetencionSolicitud(){
       ajax.send(null);
 //perosnal area distribucion
 }
+function modificarMontos(){
+  $('#modalSimulacionCuentas').modal('show');
+}
+function cargarCuentasSimulacion(cods,ib){
+  var fi = $('#cuentas_simulacion');
+  var codp=$("#partida_presupuestaria").val();
+  var codpar=$("#cod_plantilla").val();
+  if(codp!=""){
+  ajax=nuevoAjax();
+  ajax.open("GET","ajaxCargarCuentas.php?codigo="+codp+"&codSim="+cods+"&ibnorca="+ib+"&codPar="+codpar,true);
+  ajax.onreadystatechange=function(){
+        if (ajax.readyState==4) {
+          fi.html("");
+          fi.html(ajax.responseText);
+       }
+      }   
+  ajax.send(null);   
+  }
+}
+///////////////////////////////////////////////////
+
 function agregaformPAD(datos){
   //console.log("datos: "+datos);
   var d=datos.split('-');
@@ -2278,6 +2324,7 @@ function ProcesarPlanilla(cod_planilla){
   });
 }
 
+<<<<<<< HEAD
 function CerrarPlanilla(cod_planilla){
   $.ajax({
     type:"POST",
@@ -2291,4 +2338,138 @@ function CerrarPlanilla(cod_planilla){
       }
     }
   });
+=======
+function calcularTotalPartida(){
+  var suma=0;
+  var total= $("#numero_cuentas").val();
+  var monto_anterior=parseFloat($("#monto_designado").val());
+  for (var i=1;i<=(total-1);i++){
+    suma+=parseFloat($("#monto_mod"+i).val());
+  }
+  const rest=Math.abs(suma-monto_anterior);
+  const porcent=(rest*100)/monto_anterior; 
+  var resultPorcent= Math.round(porcent*100)/100;  
+  var result=Math.round(suma*100)/100;
+  document.getElementById("monto_editable").value=result;
+
+
+  if(result<monto_anterior){
+    $("#monto_editable").addClass("text-danger");
+    $("#monto_editable").removeClass("text-success");
+    $("#monto_editable_text").addClass("text-danger");
+    $("#monto_editable_text").removeClass("text-success");
+    $("#monto_editable_text").text("- "+resultPorcent+" %");
+  }else{
+    if(result>monto_anterior){
+       $("#monto_editable").addClass("text-success");
+       $("#monto_editable").removeClass("text-danger");
+       $("#monto_editable_text").addClass("text-success");
+       $("#monto_editable_text").removeClass("text-danger");
+       $("#monto_editable_text").text("+ "+resultPorcent+" %");
+    }else{
+       $("#monto_editable").removeClass("text-success");
+       $("#monto_editable").removeClass("text-danger");
+       $("#monto_editable_text").removeClass("text-success");
+       $("#monto_editable_text").removeClass("text-danger");
+       $("#monto_editable_text").text("");
+    }
+  }
+}
+function guardarCuentasSimulacion(ib){
+  var total= $("#numero_cuentas").val();
+  var cosSim=$("#cod_simulacion").val();
+  var conta=0;
+  if((total-1)!=0){
+    for (var i=1;i<=(total-1);i++){
+      if($("#monto_mod"+i).val()==""){
+        conta++
+      }
+    }
+  if(conta==0){
+    for (var i=1;i<=(total-1);i++){
+      var codigo = $("#codigo"+i).val();
+      var monto = $("#monto_mod"+i).val();
+      var parametros = {"codigo":codigo,"monto":monto,"ibnorca":ib};
+      $.ajax({
+        type:"GET",
+        data:parametros,
+        url:"ajaxSaveCuentas.php",
+        beforeSend: function () { 
+          $("#guardar_cuenta").text("espere.."); 
+          $("#guardar_cuenta").attr("disabled",true);
+          $("#mensaje_cuenta").html("");
+        },
+        success:function(resp){
+          $("#guardar_cuenta").text("Guardar");
+          $("#guardar_cuenta").removeAttr("disabled");
+          $("#mensaje_cuenta").html("<p class='text-success'>Se insertaron los datos correctamente! <a class='btn btn-warning btn-sm' href=''>aplicar cambios a la simulación</a></p>");
+        }
+      });
+    }
+   }else{
+    $("#mensaje_cuenta").html("<p class='text-danger'>No debe haber un campo vacío!</p>");
+   }     
+  } 
+}
+var itemCuentas=[];
+var itemCuentasAux=[];
+function buscarCuentaList(campo){
+  var contenedor = document.getElementById('divResultadoBusqueda');
+  var nroCuenta=document.getElementById('nro_cuenta').value;
+  var nombreCuenta=document.getElementById('cuenta').value;
+  var padre=$("#padre").val();
+  switch (campo){
+   case "numero":
+     buscarCuentaNumero(nroCuenta,1);
+   break;
+   case "nombre":
+     buscarCuentaNumero(nombreCuenta,2);
+   break;
+  }     
+}
+function buscarCuentaNumero(numeros,val){  
+  var contenedor = document.getElementById('divResultadoBusqueda');
+  //var str = numeros.replace(/^"(.*)"$/, '$1'); 
+  var html="<div class='col-md-12'>"+
+  "<div class='table-responsive'>"+
+    "<table class='table table-condensed'>"+
+      "<thead>"+
+        "<tr>"+
+          "<th>Nro. Cuenta</th>"+
+              "<th>Nombre</th>"+
+              "<th>Auxiliar</th>"+
+          "</tr>"+
+      "</thead>";
+  for (var i = 0; i < itemCuentas.length; i++) { 
+    //var n = itemCuentas[i].numero.search(/+str+/);
+    if(val==1){
+       var n = itemCuentas[i].numero.indexOf(numeros);
+    }else{
+      var cadenaBuscar=itemCuentas[i].nombre.toLowerCase();
+       var n = cadenaBuscar.indexOf(numeros.toLowerCase());
+    }
+    
+    if(n==0){
+      var textoAux="<table class='table table-condensed'>";
+        for (var j = 0; j < itemCuentasAux.length; j++) {
+          if(itemCuentasAux[j].codCuenta==itemCuentas[i].codigo){
+            textoAux+="<tr>"+
+               "<td class='text-left small'>"+itemCuentasAux[j].codigo+"</td>"+
+               "<td class='text-left small'><a href=\"javascript:setBusquedaCuenta(\'"+itemCuentas[i].codigo+"\',\'"+itemCuentas[i].numero+"\',\'"+itemCuentas[i].nombre+"\',\'"+itemCuentasAux[j].codigo+"\',\'"+itemCuentasAux[j].nombre+"\');\">"+itemCuentasAux[j].nombre+"</a></td>"+
+             "</tr>";
+          }
+        };
+       textoAux+="</table>";
+      html+="<tr>"+
+      "<td class='text-left'>"+itemCuentas[i].numero+"</td>"+
+          "<td class='text-left'><a href=\"javascript:setBusquedaCuenta(\'"+itemCuentas[i].codigo+"\',\'"+itemCuentas[i].numero+"\',\'"+itemCuentas[i].nombre+"\',\'0\',\'\');\">"+itemCuentas[i].nombre+"</a></td>"+
+          "<td class='text-left'>"+textoAux+"</td>"+
+    "</tr>";
+    }
+  };
+  html+="</table>"+
+  "</div>"+
+"</div>";
+   contenedor.innerHTML = html;
+>>>>>>> 9665608161fbd74baa97b51d1230f7cda83c0916
 }

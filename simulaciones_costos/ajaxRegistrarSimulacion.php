@@ -38,21 +38,29 @@ if(isset($_GET['nombre'])){
   $anio=date("Y");
   $anio_pasado=((int)$anio)-1;
   $mes=date("m");
-  //seleccionar las partidas variables 
+  //seleccionar las partidas variables con montos_ibnorca y fuera
   $partidasPlan=obtenerPartidasPlantillaCostos($plantilla_costo,2);
   while ($rowPartida = $partidasPlan->fetch(PDO::FETCH_ASSOC)) {
      $idp=$rowPartida['cod_partidapresupuestaria'];
      $unidad=$rowPartida['cod_unidadorganizacional'];
      $area=$rowPartida['cod_area'];
+     $tipoCalculo=$rowPartida['tipo_calculo'];
+     $montoLocal=$rowPartida['monto_local'];
+     $montoExterno=$rowPartida['monto_externo'];
      $montoTotal = calcularCostosPresupuestarios($idp,$unidad,$area,$anio_pasado);
      $cuentasPlan=obtenerCuentaPlantillaCostos($idp);
       while ($rowCuenta = $cuentasPlan->fetch(PDO::FETCH_ASSOC)) {
       $codCuenta=$rowCuenta['cod_cuenta'];
       $numero=trim($rowCuenta['numero']);
+      //sacamos el porcentaje 
       $montoCuenta=trim(ejecutadoEgresosMes($unidad,$anio_pasado, $mes, $area, 0, $numero));
       $porcentaje=((float)$montoCuenta*100)/(float)$montoTotal;
-      $sqlInsertPorcentaje="INSERT INTO cuentas_simulacion (cod_plancuenta, monto_calculado, monto_modificado, porcentaje,cod_partidapresupuestaria,cod_simulacioncostos) 
-      VALUES ('".$codCuenta."','".$montoCuenta."','".$montoCuenta."', '".$porcentaje."', '".$idp."','".$codSimCosto."')";
+      //ingresamos valores segun porcentaje al total de partida
+      $montoIbnorca=($porcentaje*$montoLocal)/100;
+      $montoFuera=($porcentaje*$montoExterno)/100;
+
+      $sqlInsertPorcentaje="INSERT INTO cuentas_simulacion (cod_plancuenta, monto_local, monto_externo, porcentaje,cod_partidapresupuestaria,cod_simulacioncostos) 
+      VALUES ('".$codCuenta."','".$montoIbnorca."','".$montoFuera."', '".$porcentaje."', '".$idp."','".$codSimCosto."')";
       $stmtInsertPorcentaje = $dbh->prepare($sqlInsertPorcentaje);
       $stmtInsertPorcentaje->execute();
      }

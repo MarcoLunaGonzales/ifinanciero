@@ -34,7 +34,7 @@ $stmt->bindColumn('estado', $estado);
                   <h4 class="card-title"><b> Gestionar <?=$moduleNamePlural?></b></h4>
                 </div>
                 <div class="card-body">
-                    <table class="table">
+                    <table class="table" id="tablePaginator">
                       <thead>
                         <tr>
                           <th class="text-center">#</th>

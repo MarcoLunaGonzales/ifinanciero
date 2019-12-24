@@ -18,57 +18,12 @@
                                         </div>   	
 			                          </div>
                                    </div>
-		                            <div class="col-sm-1">
-                                    	<div class="form-group">
-	                                    <select class="selectpicker form-control form-control-sm" name="unidad<?=$idFila;?>" id="unidad<?=$idFila;?>" data-style="<?=$comboColor;?>" >
-			  	
-			  	                          <option disabled selected="selected" value="">Unidad</option>
-			  	                          <?php
-			  	                          $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM unidades_organizacionales where cod_estado=1 and centro_costos=1 order by 2");
-				                          $stmt->execute();
-				                          while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-					                       $codigoX=$row['codigo'];
-					                       $nombreX=$row['nombre'];
-					                       $abrevX=$row['abreviatura'];
-					                       if($codigoX==$unidadSol){
-					                       ?><option value="<?=$codigoX;?>" selected><?=$abrevX;?></option><?php
-					                       }else{
-					                       ?>
-				                           <option value="<?=$codigoX;?>"><?=$abrevX;?></option>	
-				                           <?php	
-					                       }
-			  	                            }
-			  	                            ?>
-			                            </select>
-			                            </div>
-      	                              </div>
-
-		                              <div class="col-sm-1">
-                                      	<div class="form-group">
-	                                      <select class="selectpicker form-control form-control-sm" name="area<?=$idFila;?>" id="area<?=$idFila;?>" data-style="<?=$comboColor;?>">
-		                              	  	<option disabled selected="selected" value="">Area</option>
-		                              	  	<?php
-		                              	  	$stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM areas where cod_estado=1 and centro_costos=1 order by 2");
-		                              		$stmt->execute();
-		                              		while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-		                              			$codigoX=$row['codigo'];
-		                              			$nombreX=$row['nombre'];
-		                              			$abrevX=$row['abreviatura'];
-		                              		   if($codigoX==$areaSol){
-		                              			?><option value="<?=$codigoX;?>" selected><?=$abrevX;?></option><?php
-		                              			}else{
-		                              			?>
-		                              		    <option value="<?=$codigoX;?>"><?=$abrevX;?></option>	
-		                              		    <?php	
-		                              			}	
-			  	                             }
-			  	                             ?>
-			                             </select>
-			                             </div>
-      	                              </div>
-      	                              <div class="col-sm-3">
+                               <input type="hidden" id="unidad<?=$idFila;?>" name="unidad<?=$idFila;?>" value="<?=$unidadSol?>">
+                               <input type="hidden" id="area<?=$idFila;?>" name="area<?=$idFila;?>" value="<?=$areaSol?>">    
+		
+      	                              <div class="col-sm-4">
                                           <div class="form-group">
-                                          	<label for="partida_cuenta<?=$idFila;?>" class="bmd-label-floating"><?=$nombrePartidaX?> / Cuenta</label>
+                                          	<label for="partida_cuenta<?=$idFila;?>" class="bmd-label-floating"><?=$nombrePartidaX?> / <?=$nombrePartidaDetalleX?></label>
                                           		<input class="form-control" type="hidden" name="partida_cuenta_id<?=$idFila?>" id="partida_cuenta_id<?=$idFila?>" value="<?=$codCuentaX?>"/>     		
                                         		<input class="form-control" type="text" name="partida_cuenta<?=$idFila;?>" id="partida_cuenta<?=$idFila;?>" value="[<?=$numeroCuentaX?>] - <?=$nombreCuentaX?>" readonly>	
 		                              	</div>
@@ -79,12 +34,18 @@
 		                              		<textarea rows="1" class="form-control" name="detalle_detalle<?=$idFila;?>" id="detalle_detalle<?=$idFila;?>" value=""><?=$detalleX?></textarea>
 		                              	</div>
 		                              </div>
+                                  <div class="col-sm-1">
+                                          <div class="form-group">
+                                            <label for="importe_presupuesto<?=$idFila;?>" class="bmd-label-floating">Imp Pres</label>      
+                                            <input class="form-control" type="number" name="importe_presupuesto<?=$idFila;?>" id="importe_presupuesto<?=$idFila;?>" value="<?=$importeX?>" step="0.001" required readonly>  
+                                    </div>
+                                  </div>
 		                              <div class="col-sm-1">
                                           <div class="form-group">
                                           	<label for="importe<?=$idFila;?>" class="bmd-label-floating" id="importe_label<?=$idFila;?>"><?=$tituloImporte?></label>			
-                                        		<input class="form-control" type="number" name="importe<?=$idFila;?>" id="importe<?=$idFila;?>" value="<?=$importeX?>" required>	
+                                        		<input class="form-control" type="number" name="importe<?=$idFila;?>" id="importe<?=$idFila;?>" value="<?=$importeSolX?>" step="0.001" required>	
 		                              	</div>
-      	                              </div>
+      	                          </div>
       	                              <div class="col-sm-2">
                                           <div class="form-group">
                                               <select class="selectpicker form-control form-control-sm" name="proveedor<?=$idFila?>" id="proveedor<?=$idFila?>" required data-style="<?=$comboColor;?>">

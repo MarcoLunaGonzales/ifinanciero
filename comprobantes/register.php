@@ -338,4 +338,38 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
 </div>
 <!--    end small modal -->
 </form>
-<?php require_once 'modal.php';?>
+
+<?php 
+$dbh = new Conexion();
+
+$sqlBusqueda="SELECT p.codigo, p.numero, p.nombre from plan_cuentas p where p.nivel=5 ";
+$sqlBusqueda.=" order by p.numero";
+
+
+$stmt = $dbh->prepare($sqlBusqueda);
+$stmt->execute();
+$stmt->bindColumn('codigo', $codigoCuenta);
+$stmt->bindColumn('numero', $numeroCuenta);
+$stmt->bindColumn('nombre', $nombreCuenta);
+		$cont=0;$contAux=0;
+		while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+
+			$numeroCuenta=trim($numeroCuenta);
+			$nombreCuenta=trim($nombreCuenta);
+
+			$sqlCuentasAux="SELECT codigo, nombre FROM cuentas_auxiliares where cod_cuenta='$codigoCuenta' order by 2";
+			$stmtAux = $dbh->prepare($sqlCuentasAux);
+			$stmtAux->execute();
+			$stmtAux->bindColumn('codigo', $codigoCuentaAux);
+			$stmtAux->bindColumn('nombre', $nombreCuentaAux);
+			while ($rowAux = $stmtAux->fetch(PDO::FETCH_BOUND)) {
+				?><script>itemCuentasAux.push({codigo:"<?=$codigoCuentaAux?>",nombre:"<?=$nombreCuentaAux?>",codCuenta:"<?=$codigoCuenta?>"});</script><?php
+				$contAux++;
+			}  	
+		 ?><script>
+		    itemCuentas.push({codigo:"<?=$codigoCuenta?>",numero:"<?=$numeroCuenta?>",nombre:"<?=$nombreCuenta?>",cod_aux:"0",nom_aux:""});
+		 </script><?php	
+		$cont++;
+		}
+
+require_once 'modal.php';?>
