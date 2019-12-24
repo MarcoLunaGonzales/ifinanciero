@@ -17,18 +17,23 @@ $sql = "SELECT *,(select p.primer_nombre from personal p where p.codigo=cod_pers
         (select pa.paterno from personal pa where pa.codigo=cod_personalcargo) as paterno,
         (select pa.materno from personal pa where pa.codigo=cod_personalcargo) as materno,
         (select p3.identificacion from personal p3 where p3.codigo=cod_personalcargo) as doc_id,
-        (select (select pd.abreviatura from personal_departamentos pd where pd.codigo=p3.cod_lugar_emision) from personal p3 where p3.codigo=cod_personalcargo) as lug_emision
+        (select (select pd.abreviatura from personal_departamentos pd where pd.codigo=p3.cod_lugar_emision)
+                 from personal p3 where p3.codigo=cod_personalcargo) as lug_emision,
+      (select p4.lugar_emision_otro from personal p4 where p4.codigo=cod_personalcargo) as lug_emision_otro
         from planillas_personal_mes where cod_planilla=$codigo_planilla";
 
 $stmtPersonal = $dbh->prepare($sql);
 $stmtPersonal->execute();
 $stmtPersonal->bindColumn('codigo', $codigo);
 $stmtPersonal->bindColumn('cod_planilla', $cod_planilla);
-$stmtPersonal->bindColumn('personal', $personal);
+$stmtPersonal->bindColumn('cod_personalcargo', $cod_personalcargo);
+$stmtPersonal->bindColumn('personal', $nombrePersonal);
 $stmtPersonal->bindColumn('paterno', $paterno);
 $stmtPersonal->bindColumn('materno', $materno);
 $stmtPersonal->bindColumn('doc_id', $doc_id);
 $stmtPersonal->bindColumn('lug_emision', $lug_emision);
+$stmtPersonal->bindColumn('lug_emision_otro', $lug_emision_otro);
+
 // $stmtPersonal->bindColumn('doc_id', $doc_id);
 
 
@@ -67,10 +72,11 @@ $stmtPersonal->bindColumn('liquido_pagable', $liquido_pagable);
           </div>
           <div class="card-body">
             <div class="table-responsive">                  
-              <table class="table table-bordered table-condensed" id="tablePaginatorFixed">
+              <table class="table table-bordered table-condensed" id="tablePaginatorFixedPlanillaSueldo">
                 <thead>
                   <tr class="bg-dark text-white">
                     <th></th>
+                    <th>Codigo</th>
                     <th>Nombres</th>
                     <th>Apellidos</th>                    
                     <th>Doc. Id</th>
@@ -104,9 +110,11 @@ $stmtPersonal->bindColumn('liquido_pagable', $liquido_pagable);
                       {  ?>
                   <tr>                    
                     <td><?=$index;?></td>
-                    <td><?=$personal;?></td>
+                    
+                    <td><?=$cod_personalcargo;?></td>
+                    <td><?=$nombrePersonal;?></td>
                     <td><?=$paterno;?> <?=$materno;?></td>                            
-                    <td><?=$doc_id;?> - <?=$lug_emision?><?=$lug_emision?></td>
+                    <td><?=$doc_id;?> - <?=$lug_emision?><?=$lug_emision_otro?></td>
 
                     <td>Cargo</td>
                     <td><?=$cod_gradoacademico;?></td>

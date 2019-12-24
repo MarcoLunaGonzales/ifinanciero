@@ -572,7 +572,7 @@
 		}
 
 		if ($_GET['opcion']=='personalSaveWS') {
-			require_once('personal/personalSaveWS.php');
+			require_once('personal/cargarPersonalWS.php');
 		}
 		
 		if ($_GET['opcion']=='deletepersonal') {
