@@ -2128,8 +2128,9 @@ function EliminarDistribucion(cod_personal,cod_distribucion){
 
 
 
- var areas_tabla=[]; 
- var areas_tabla_general=[]; 
+ 
+var areas_tabla=[]; 
+var areas_tabla_general=[]; 
 var numFilasA=0;
 function sendChekedA(id){
   var check=document.getElementById("areas"+id);
@@ -2324,7 +2325,9 @@ function ProcesarPlanilla(cod_planilla){
   });
 }
 
-<<<<<<< HEAD
+
+
+//<<<<<<< HEAD
 function CerrarPlanilla(cod_planilla){
   $.ajax({
     type:"POST",
@@ -2338,7 +2341,7 @@ function CerrarPlanilla(cod_planilla){
       }
     }
   });
-=======
+//=======
 function calcularTotalPartida(){
   var suma=0;
   var total= $("#numero_cuentas").val();
@@ -2471,5 +2474,5 @@ function buscarCuentaNumero(numeros,val){
   "</div>"+
 "</div>";
    contenedor.innerHTML = html;
->>>>>>> 9665608161fbd74baa97b51d1230f7cda83c0916
+//>>>>>>> 9665608161fbd74baa97b51d1230f7cda83c0916
 }

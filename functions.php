@@ -1431,7 +1431,7 @@ function obtenerCuentaPlantillaCostos($codigo){
    $stmt->execute();
    return $stmt;
 }
-<<<<<<< HEAD
+//<<<<<<< HEAD
 
 
 //PARA  planilla sueldos
@@ -1573,7 +1573,7 @@ function obtenerAnticipo($id_personal)
 }
 
 
-=======
+//=======
 function obtenerMontoPlantillaDetalle($codigoPar,$codigo,$ib){
   $dbh = new Conexion();
   $montoI=0;$montoF=0;
@@ -1635,7 +1635,7 @@ function obtenerTotalesSimulacion($codigo){
    }
    return($nombreX);
 }
->>>>>>> 9665608161fbd74baa97b51d1230f7cda83c0916
+//>>>>>>> 9665608161fbd74baa97b51d1230f7cda83c0916
 ?>
 
 
