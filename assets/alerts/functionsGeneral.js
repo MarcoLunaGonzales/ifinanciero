@@ -2341,6 +2341,7 @@ function CerrarPlanilla(cod_planilla){
       }
     }
   });
+}
 //=======
 function calcularTotalPartida(){
   var suma=0;
@@ -2434,7 +2435,7 @@ function buscarCuentaNumero(numeros,val){
   var contenedor = document.getElementById('divResultadoBusqueda');
   //var str = numeros.replace(/^"(.*)"$/, '$1'); 
   var html="<div class='col-md-12'>"+
-  "<div class='table-responsive'>"+
+    "<div class='table-responsive'>"+
     "<table class='table table-condensed'>"+
       "<thead>"+
         "<tr>"+
@@ -2467,12 +2468,12 @@ function buscarCuentaNumero(numeros,val){
       "<td class='text-left'>"+itemCuentas[i].numero+"</td>"+
           "<td class='text-left'><a href=\"javascript:setBusquedaCuenta(\'"+itemCuentas[i].codigo+"\',\'"+itemCuentas[i].numero+"\',\'"+itemCuentas[i].nombre+"\',\'0\',\'\');\">"+itemCuentas[i].nombre+"</a></td>"+
           "<td class='text-left'>"+textoAux+"</td>"+
-    "</tr>";
+      "</tr>";
     }
   };
   html+="</table>"+
   "</div>"+
-"</div>";
+  "</div>";
    contenedor.innerHTML = html;
 //>>>>>>> 9665608161fbd74baa97b51d1230f7cda83c0916
 }
