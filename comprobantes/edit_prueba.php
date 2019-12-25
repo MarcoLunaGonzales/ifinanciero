@@ -31,7 +31,7 @@ $data->bindColumn('fecha', $fechaComprobante);
 $data->bindColumn('cod_tipocomprobante', $tipoComprobante);
 $data->bindColumn('numero', $nroCorrelativo);
 $data->bindColumn('glosa', $glosaComprobante);
-
+$fechaActualModal=date("d/m/Y");
 if(isset($_GET['codigo'])){
 	$globalCode=$_GET['codigo'];
 }else{
@@ -165,7 +165,7 @@ while ($row = $cont->fetch(PDO::FETCH_BOUND)) {
 					    <div class="col-sm-4">
 						    <div class="form-group">
 				          		<label for="glosa" class="bmd-label-static">Glosa</label>
-								<textarea class="form-control" name="glosa" id="glosa" required="true" rows="1" value=""><?=$glosaComprobante?></textarea>
+								<textarea class="form-control" name="glosa" id="glosa" required="true" rows="2" value=""><?=$glosaComprobante?></textarea>
 							</div>
 						</div>
 						<div class="col-sm-1">
@@ -336,10 +336,10 @@ while ($row = $cont->fetch(PDO::FETCH_BOUND)) {
 
 		                       <div class="col-sm-1">
 		                         <div class="btn-group">
-		                         	<a href="#" id="boton_fac<?=$idFila;?>" onclick="listFac(<?=$idFila;?>);" class="btn btn-info btn-sm btn-fab">
+		                         	<a title="Facturas" href="#" id="boton_fac<?=$idFila;?>" onclick="listFac(<?=$idFila;?>);" class="btn btn-info btn-sm btn-fab">
                                       <i class="material-icons">featured_play_list</i><span id="nfac<?=$idFila;?>" class="count bg-warning">0</span>
                                     </a>
-                                   <a rel="tooltip" href="#" class="btn btn-danger btn-sm btn-fab" id="boton_remove<?=$idFila;?>" onclick="minusCuentaContable('<?=$idFila;?>');">
+                                   <a title="Eliminar (alt + q)" rel="tooltip" href="#" class="btn btn-danger btn-sm btn-fab" id="boton_remove<?=$idFila;?>" onclick="minusCuentaContable('<?=$idFila;?>');">
                                            <i class="material-icons">remove_circle</i>
                                     </a>
 	                             </div>  
@@ -435,5 +435,37 @@ while ($row = $cont->fetch(PDO::FETCH_BOUND)) {
 </div>
 <!--    end small modal -->
 </form>
-<?php require_once 'modal.php';?>
+<?php 
+$dbh = new Conexion();
+
+$sqlBusqueda="SELECT p.codigo, p.numero, p.nombre from plan_cuentas p where p.nivel=5 ";
+$sqlBusqueda.=" order by p.numero";
+
+
+$stmt = $dbh->prepare($sqlBusqueda);
+$stmt->execute();
+$stmt->bindColumn('codigo', $codigoCuenta);
+$stmt->bindColumn('numero', $numeroCuenta);
+$stmt->bindColumn('nombre', $nombreCuenta);
+		$cont=0;$contAux=0;
+		while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+
+			$numeroCuenta=trim($numeroCuenta);
+			$nombreCuenta=trim($nombreCuenta);
+
+			$sqlCuentasAux="SELECT codigo, nombre FROM cuentas_auxiliares where cod_cuenta='$codigoCuenta' order by 2";
+			$stmtAux = $dbh->prepare($sqlCuentasAux);
+			$stmtAux->execute();
+			$stmtAux->bindColumn('codigo', $codigoCuentaAux);
+			$stmtAux->bindColumn('nombre', $nombreCuentaAux);
+			while ($rowAux = $stmtAux->fetch(PDO::FETCH_BOUND)) {
+				?><script>itemCuentasAux.push({codigo:"<?=$codigoCuentaAux?>",nombre:"<?=$nombreCuentaAux?>",codCuenta:"<?=$codigoCuenta?>"});</script><?php
+				$contAux++;
+			}  	
+		 ?><script>
+		    itemCuentas.push({codigo:"<?=$codigoCuenta?>",numero:"<?=$numeroCuenta?>",nombre:"<?=$nombreCuenta?>",cod_aux:"0",nom_aux:""});
+		 </script><?php	
+		$cont++;
+		}
+require_once 'modal.php';?>
  <script>$("#totaldeb").val(<?=$totaldebDet?>);$("#totalhab").val(<?=$totalhabDet?>);</script>

@@ -54,8 +54,9 @@ $stmt->bindColumn('nombre', $nombreCuenta);
 	  			</tr>
 			</thead>
 		<?php
-		$cont=0;
+		$cont=0;$contAux=0;
 		while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+
 			$numeroCuenta=trim($numeroCuenta);
 			$nombreCuenta=trim($nombreCuenta);
 
@@ -70,6 +71,7 @@ $stmt->bindColumn('nombre', $nombreCuenta);
 				<td class='text-left small'>$codigoCuentaAux</td>
 				<td class='text-left small'><a href='javascript:setBusquedaCuenta(\"$codigoCuenta\",\"$numeroCuenta\",\"$nombreCuenta\",\"$codigoCuentaAux\",\"$nombreCuentaAux\");'>$nombreCuentaAux</a></td>
 				</tr>";
+				$contAux++;
 			}  	
 			$txtAuxiliarCuentas.="</table>";
 		?>
@@ -86,5 +88,8 @@ $stmt->bindColumn('nombre', $nombreCuenta);
 	</div>
 </div>
 <?php 
+if($cont==1&&$contAux!=0){
+	$cont=2;
+}
 echo "@".$cont."@".$codigoCuenta."@".$numeroCuenta."@".$nombreCuenta;
 ?>

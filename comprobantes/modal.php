@@ -161,11 +161,13 @@
 	  		<div class="row">
     	      	<div class="form-group col-sm-4">
             		<label for="nro_cuenta" class="bmd-label-floating">Nro. Cuenta:</label>
-            		<input type="number" class="form-control" id="nro_cuenta" name="nro_cuenta" onkeypress="pulsar(event)" autofocus>
+                <input type="hidden" id="nro_cuenta_id" name="nro_cuenta_id">
+            		<input type="number" class="form-control" id="nro_cuenta" name="nro_cuenta" onkeypress="buscarCuentaList('numero'); pulsar(event);" onkeyDown="buscarCuentaList('numero');" onkeyUp="buscarCuentaList('numero');" autofocus>
           		</div>
           		<div class="form-group col-sm-4">
             		<label for="cuenta" class="bmd-label-floating">Cuenta:</label>
-            		<input type="text" class="form-control" id="cuenta" name="cuenta" onkeypress="pulsar(event)">
+                <input type="hidden" id="cuenta_id" name="cuenta_id">
+            		<input type="text" class="form-control" id="cuenta" name="cuenta" onkeypress="buscarCuentaList('nombre');pulsar(event)" onkeyDown="buscarCuentaList('nombre');" onkeyUp="buscarCuentaList('nombre');">
           		</div>
           		<div class="form-group col-sm-3">
 	              <select class="selectpicker form-control form-control-sm" name="padre" id="padre" data-style="<?=$comboColor;?>" onchange="buscarCuenta(form1);">
@@ -188,14 +190,18 @@
           		</div>
           	</div>
           	<div class="row" id="divResultadoBusqueda">
+              <?php 
+              //include "pruebaBusqueda2.php"; 
+               include "pruebaBusqueda.php";
+              ?>    
     	      	<div class="form-group col-sm-8">
-	          		Resultados de la Búsqueda        		
+	          		Resultados de la Búsqueda
+                    		
           		</div>
           	</div>
         </form>
       </div>
-      <div class="modal-footer">
-      	
+      <div class="modal-footer">     	
         <!--button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button-->
       </div>
     </div>
@@ -286,71 +292,60 @@
                     </div>
                     <div class="tab-pane" id="link111">
                       <form name="form2">
-			               <input class="form-control" type="hidden" name="codCuenta" id="codCuenta"/>
-                           <div class="row">
+			                     <input class="form-control" type="hidden" name="codCuenta" id="codCuenta"/>
+                      <div class="row">
 			                 <label class="col-sm-2 col-form-label">NIT</label>
-			                 <div class="col-sm-10">
+			                 <div class="col-sm-4">
 			                	<div class="form-group">
 			                	  <input class="form-control" type="text" name="nit_fac" id="nit_fac" required="true"/>
 			                	</div>
 			                  </div>
-			                </div>
-			                <div class="row">
-			                 <label class="col-sm-2 col-form-label">Nro. Factura</label>
-			                 <div class="col-sm-10">
-			                	<div class="form-group">
-			                	  <input class="form-control" type="number" name="nro_fac" id="nro_fac" required="true"/>
-			                	</div>
-			                  </div>
+                        <label class="col-sm-2 col-form-label">Nro. Factura</label>
+                       <div class="col-sm-4">
+                        <div class="form-group">
+                          <input class="form-control" type="number" name="nro_fac" id="nro_fac" required="true"/>
+                        </div>
+                        </div>
 			                </div>
 			                <div class="row">
 			                 <label class="col-sm-2 col-form-label">Fecha</label>
-			                 <div class="col-sm-10">
+			                 <div class="col-sm-4">
 			                	<div class="form-group">
-			                	  <input type="text" class="form-control datepicker" name="fecha_fac" id="fecha_fac" value="10/06/2018">
+			                	  <input type="text" class="form-control datepicker" name="fecha_fac" id="fecha_fac" value="<?=$fechaActualModal?>">
 			                	</div>
-                             </div>
+                        </div>
+                        <label class="col-sm-2 col-form-label">Importe</label>
+                       <div class="col-sm-4">
+                        <div class="form-group">
+                          <input class="form-control" type="number" name="imp_fac" id="imp_fac" required="true"/>
+                        </div>
+                        </div>
 			                </div>
-			                <div class="row">
-			                 <label class="col-sm-2 col-form-label">Razon Social</label>
-			                 <div class="col-sm-10">
-			                	<div class="form-group">
-			                	  <textarea class="form-control" name="razon_fac" id="razon_fac" value=""></textarea>
-			                	</div>
-			                  </div>
-			                </div>
-			                <div class="row">
-			                 <label class="col-sm-2 col-form-label">Importe</label>
-			                 <div class="col-sm-10">
-			                	<div class="form-group">
-			                	  <input class="form-control" type="number" name="imp_fac" id="imp_fac" required="true"/>
-			                	</div>
-			                  </div>
-			                </div>
-			                <!--<div class="row">
-			                 <label class="col-sm-2 col-form-label">Exentos</label>
-			                 <div class="col-sm-10">
-			                	<div class="form-group">
-			                	  --><input class="form-control" type="hidden" name="exe_fac" id="exe_fac" required="true"/>
-			                	<!--</div>
-			                  </div>
-			                </div>-->
+                      <!-- Exento oculto-->
+                      <input class="form-control" type="hidden" name="exe_fac" id="exe_fac" required="true"/>
+                      <!--No tiene funcion este campo-->
 			                <div class="row">
 			                 <label class="col-sm-2 col-form-label">Nro. Autorizaci&oacute;n</label>
-			                 <div class="col-sm-10">
+			                 <div class="col-sm-4">
 			                	<div class="form-group">
 			                	  <input class="form-control" type="text" name="aut_fac" id="aut_fac" required="true"/>
 			                	</div>
 			                  </div>
+                        <label class="col-sm-2 col-form-label">Cod. Control</label>
+                       <div class="col-sm-4">
+                        <div class="form-group">
+                          <input class="form-control" type="text" name="con_fac" id="con_fac" required="true"/>
+                        </div>
+                       </div>
 			                </div>
-			                <div class="row">
-			                 <label class="col-sm-2 col-form-label">Cod. Control</label>
-			                 <div class="col-sm-10">
-			                	<div class="form-group">
-			                		<input class="form-control" type="text" name="con_fac" id="con_fac" required="true"/>
-			                	</div>
-			                 </div>
-			                </div>
+                      <div class="row">
+                       <label class="col-sm-2 col-form-label">Razon Social</label>
+                       <div class="col-sm-10">
+                        <div class="form-group">
+                          <textarea class="form-control" name="razon_fac" id="razon_fac" value=""></textarea>
+                        </div>
+                        </div>
+                      </div>
 			                <div class="form-group float-right">
 			                	<button type="button" class="btn btn-info btn-round" onclick="saveFactura()">Guardar</button>
 			                </div>
@@ -456,3 +451,4 @@
     </div>
   </div>
 <!--    end small modal -->
+

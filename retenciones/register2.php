@@ -50,9 +50,10 @@ $dbh = new Conexion();
     ?>
     <script>
      var obtejoLista={
-       label:'[<?=trim($numeroX)?>] - <?=trim($nombreX)?>',
+       label:'<?=trim($numeroX)?> - <?=trim($nombreX)?>',
        value:'<?=$codigoX?>'};
        array_cuenta[<?=$i?>]=obtejoLista;
+       imagen_cuenta[<?=$i?>]='../assets/img/calc.jpg';
     </script> 
     <?php
     $i=$i+1;
@@ -126,8 +127,8 @@ $dbh = new Conexion();
                        <label class="col-sm-3 col-form-label">Cuenta</label>
                        <div class="col-sm-9">
                          <div class="form-group has-success">
-                           <input class="form-control" type="text" name="cuenta_auto" id="cuenta_auto" placeholder="[numero] y nombre de cuenta (defecto:Cuenta vacía)"/>
-                           <input class="form-control" type="hidden" name="cuenta_auto_id" id="cuenta_auto_id"/>
+                           <input class="form-control" type="text" name="cuenta_auto_num" id="cuenta_auto_num" placeholder="[numero] y nombre de cuenta (defecto:Cuenta vacía)"/>
+                           <input class="form-control" type="hidden" name="cuenta_auto_num_id" id="cuenta_auto_num_id"/>
                          </div>
                         </div>
                      </div>

@@ -30,6 +30,9 @@ $sql="SELECT af.nombre_uo as nombre_unidadO
     from mesdepreciaciones m, mesdepreciaciones_detalle md, v_activosfijos af
     WHERE m.codigo = md.cod_mesdepreciaciones and md.cod_activosfijos = af.codigo
     and m.codigo =".$id." GROUP BY (nombre_unidadO) order by nombre_uo";
+
+//echo $sql;
+
 $stmt1 = $dbh->prepare($sql);
 $stmt1->execute();
 $stmt1->bindColumn('nombre_unidadO', $nombre_unidadO);
@@ -58,11 +61,12 @@ $stmt1->bindColumn('nombre_unidadO', $nombre_unidadO);
                     <?php
                         //echo $nombre_unidadO;
                         //$gestion2 = $_POST["gestion"];
-                        $stmt2 = $dbh->prepare("SELECT * 
+                        $sqlActivos="SELECT * 
                                 from mesdepreciaciones m, mesdepreciaciones_detalle md, v_activosfijos af
                                 WHERE m.codigo = md.cod_mesdepreciaciones and md.cod_activosfijos = af.codigo
-                                 and af.nombre_uo=:nombre_unidadO and m.codigo = ".$id." order by af.activo
-                        ");//nombre_depreciaciones es rubro
+                                 and af.nombre_uo=:nombre_unidadO and m.codigo = ".$id." order by af.nombre_depreciaciones, af.activo";
+                        //echo $sqlActivos;
+                        $stmt2 = $dbh->prepare($sqlActivos);//nombre_depreciaciones es rubro
                         // Ejecutamos
                         $stmt2->bindParam(':nombre_unidadO',$nombre_unidadO);
                         $stmt2->execute();
@@ -99,6 +103,16 @@ $stmt1->bindColumn('nombre_unidadO', $nombre_unidadO);
                                 $ultimouo = "";//control
                                 $ultimorubro = "";//control
                                 $sumrubro_depreciacion = 0;
+
+                                $sumRubroValorAnterior=0;
+                                $sumRubroActualizacion=0;
+                                $sumRubroValorActualizado=0;
+                                
+                                $sumRubroDepreciacionAcumulada=0;
+                                $sumRubroActDepreciacionAcumulada=0;
+                                $sumRubroValorNeto=0;
+    
+
                                 $contador = 0; //control
                                 while ($row = $stmt2->fetch()) { //?>    
                             
@@ -109,10 +123,16 @@ $stmt1->bindColumn('nombre_unidadO', $nombre_unidadO);
                                         if ($contador != 1)
                                             {?>
                                             <tr class="bg-info text-white">
-                                                <th colspan="5">Total :</th>
-                                                <td class="text-center small"><?php echo formatNumberDec($sumrubro_actualizacion); ?></td>
-                                                <td colspan="2">-</td>
-                                                <td class="text-center small"><?php echo formatNumberDec($sumrubro_depreciacion); ?></td>                                                
+                                                <th colspan="2">Total :</th>
+                                                <td class="text-center small"><?=formatNumberDec($sumRubroValorAnterior); ?></td>
+                                                <td class="text-center small"><?=formatNumberDec($sumRubroActualizacion); ?></td>
+                                                <td class="text-center small"><?=formatNumberDec($sumRubroValorActualizado); ?></td>
+                                    <td class="text-center small"><?=formatNumberDec($sumRubroDepreciacionAcumulada); ?></td>
+                                    <td class="text-center small"><?=formatNumberDec($sumRubroActDepreciacionAcumulada); ?></td>
+                                                <td class="text-center small"><?=formatNumberDec($sumrubro_depreciacionPeriodo); ?></td>
+                                                <td class="text-center small"><?=formatNumberDec($sumrubro_depreciacion); ?></td>
+                                                <td class="text-center small"><?=formatNumberDec($sumRubroValorNeto); ?></td>
+                                                <td>-</td>
                                             </tr>
                                                <?php    
                                         }
@@ -134,6 +154,14 @@ $stmt1->bindColumn('nombre_unidadO', $nombre_unidadO);
                                         $sumrubro_actualizacion=0;
                                         $sumrubro_actDepreciacionAcum=0;
                                         $sumrubro_depreciacionPeriodo=0;
+                                        
+                                        $sumRubroValorAnterior=0;
+                                        $sumRubroActualizacion=0;
+                                        $sumRubroValorActualizado=0;
+                                        $sumRubroDepreciacionAcumulada=0;
+                                        $sumRubroActDepreciacionAcumulada=0;
+                                        $sumRubroValorNeto=0;
+        
                                         ?>
                                         <tr class="bg-secondary text-white">
                                             <th colspan="11">Rubro : <?php echo $nombre_depreciaciones; ?></th>
@@ -158,6 +186,14 @@ $stmt1->bindColumn('nombre_unidadO', $nombre_unidadO);
                                     $sumrubro_actualizacion = $sumrubro_actualizacion + $d5_incrementoporcentual;
                                     $sumrubro_actDepreciacionAcum += $d7_incrementodepreciacionacumulada;
                                     $sumrubro_depreciacionPeriodo += $d8_depreciacionperiodo;
+                                    $sumRubroValorAnterior+=$d2_valorresidual;
+                                    $sumRubroActualizacion+=$d5_incrementoporcentual;
+                                    $sumRubroValorActualizado+=$d4_valoractualizado;
+
+                                    $sumRubroDepreciacionAcumulada+=$d6_depreciacionacumuladaanterior;
+                                    $sumRubroActDepreciacionAcumulada+=$d7_incrementodepreciacionacumulada;
+                                    $sumRubroValorNeto+=$d10_valornetobs;
+
                                     ?>
                                 </thead>
                                 <tbody>
@@ -178,13 +214,16 @@ $stmt1->bindColumn('nombre_unidadO', $nombre_unidadO);
                         <?php } ?>
                                   <!-- el ultimo no sale -->
                                 <tr class="bg-info text-white">
-                                    <th colspan="3">Total :</th>
-                                    <td class="text-center small"><?=formatNumberDec($sumrubro_actualizacion); ?></td>
-                                    <td colspan="2">-</td>
-                                    <td class="text-center small"><?=formatNumberDec($sumrubro_actDepreciacionAcum); ?></td>
+                                    <th colspan="2">Total :</th>
+                                    <td class="text-center small"><?=formatNumberDec($sumRubroValorAnterior); ?></td>
+                                    <td class="text-center small"><?=formatNumberDec($sumRubroActualizacion); ?></td>
+                                    <td class="text-center small"><?=formatNumberDec($sumRubroValorActualizado); ?></td>
+                                    <td class="text-center small"><?=formatNumberDec($sumRubroDepreciacionAcumulada); ?></td>
+                                    <td class="text-center small"><?=formatNumberDec($sumRubroActDepreciacionAcumulada); ?></td>
                                     <td class="text-center small"><?=formatNumberDec($sumrubro_depreciacionPeriodo); ?></td>
                                     <td class="text-center small"><?=formatNumberDec($sumrubro_depreciacion); ?></td>
-                                    <td colspan="2">-</td>
+                                    <td class="text-center small"><?=formatNumberDec($sumRubroValorNeto); ?></td>
+                                    <td>-</td>
                                 </tr>
                             </tbody>
                     </table>

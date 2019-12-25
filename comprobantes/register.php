@@ -34,6 +34,29 @@ $contadorRegistros=0;
 	var configuraciones=[];
 </script>
 <?php
+  $i=0;
+  echo "<script>var array_cuenta_numeros=[],array_cuenta_nombres=[],imagen_cuenta=[];</script>";
+   $stmtCuenta = $dbh->prepare("SELECT p.codigo, p.numero, p.nombre from plan_cuentas p where p.nivel=5 order by p.numero");
+   $stmtCuenta->execute();
+   while ($rowCuenta = $stmtCuenta->fetch(PDO::FETCH_ASSOC)) {
+    $codigoX=$rowCuenta['codigo'];
+    $numeroX=$rowCuenta['numero'];
+    $nombreX=$rowCuenta['nombre'];
+    ?>
+    <script>
+     var obtejoLista={
+       label:'<?=trim($numeroX)?>',
+       value:'<?=$codigoX?>'};
+     var obtejoLista2={
+       label:'<?=trim($nombreX)?>',
+       value:'<?=$codigoX?>'};  
+       array_cuenta_numeros[<?=$i?>]=obtejoLista;
+       array_cuenta_nombres[<?=$i?>]=obtejoLista2;
+       imagen_cuenta[<?=$i?>]='../assets/img/calc.jpg';
+    </script> 
+    <?php
+    $i=$i+1;
+  }
             //configuraciones
 			$stmt = $dbh->prepare("SELECT id_configuracion, valor_configuracion, descripcion_configuracion FROM configuraciones");
 			$stmt->execute();
@@ -76,6 +99,7 @@ $contadorRegistros=0;
 		    ?>
 <?php
 $fechaActual=date("Y-m-d");
+$fechaActualModal=date("d/m/Y");
 $dbh = new Conexion();
 
 // Preparamos
@@ -171,7 +195,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
 					    <div class="col-sm-3">
 						    <div class="form-group">
 				          		<label for="glosa" class="bmd-label-static">Glosa</label>
-								<textarea class="form-control" name="glosa" id="glosa" required="true" rows="1" value=""></textarea>
+								<textarea class="form-control" name="glosa" id="glosa" required="true" rows="2" value=""></textarea>
 							</div>
 						</div>
 						<div class="col-sm-2">
@@ -219,7 +243,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
 					*/
 					?>
 					<fieldset id="fiel" style="width:100%;border:0;">
-							<button title="Agregar (alt+a)" type="button" name="add" class="btn btn-warning btn-round btn-fab" onClick="addCuentaContable(this)">
+							<button title="Agregar (alt+a)" type="button" id="add_boton" name="add" class="btn btn-warning btn-round btn-fab" onClick="addCuentaContable(this)">
                       		  <i class="material-icons">add</i>
 		                    </button>
 
@@ -246,19 +270,19 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
 		            </fieldset>
 							
 							<div class="row">
-								<div class="col-sm-5">
+								<div class="col-sm-6">
 						      	</div>
-								<div class="col-sm-2">
+								<div class="col-sm-1">
 						            <div class="form-group">	
 						          		<input class="form-control" type="number" name="totaldeb" placeholder="0" id="totaldeb" readonly="true">	
 									</div>
 						      	</div>
-								<div class="col-sm-2">
+								<div class="col-sm-1">
 						            <div class="form-group">
 						            	<input class="form-control" type="number" name="totalhab" placeholder="0" id="totalhab" readonly="true">	
 									</div>
 						      	</div>
-						      	<div class="col-sm-3">
+						      	<div class="col-sm-4">
 								</div>
 							</div>
 
@@ -314,4 +338,38 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
 </div>
 <!--    end small modal -->
 </form>
-<?php require_once 'modal.php';?>
+
+<?php 
+$dbh = new Conexion();
+
+$sqlBusqueda="SELECT p.codigo, p.numero, p.nombre from plan_cuentas p where p.nivel=5 ";
+$sqlBusqueda.=" order by p.numero";
+
+
+$stmt = $dbh->prepare($sqlBusqueda);
+$stmt->execute();
+$stmt->bindColumn('codigo', $codigoCuenta);
+$stmt->bindColumn('numero', $numeroCuenta);
+$stmt->bindColumn('nombre', $nombreCuenta);
+		$cont=0;$contAux=0;
+		while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+
+			$numeroCuenta=trim($numeroCuenta);
+			$nombreCuenta=trim($nombreCuenta);
+
+			$sqlCuentasAux="SELECT codigo, nombre FROM cuentas_auxiliares where cod_cuenta='$codigoCuenta' order by 2";
+			$stmtAux = $dbh->prepare($sqlCuentasAux);
+			$stmtAux->execute();
+			$stmtAux->bindColumn('codigo', $codigoCuentaAux);
+			$stmtAux->bindColumn('nombre', $nombreCuentaAux);
+			while ($rowAux = $stmtAux->fetch(PDO::FETCH_BOUND)) {
+				?><script>itemCuentasAux.push({codigo:"<?=$codigoCuentaAux?>",nombre:"<?=$nombreCuentaAux?>",codCuenta:"<?=$codigoCuenta?>"});</script><?php
+				$contAux++;
+			}  	
+		 ?><script>
+		    itemCuentas.push({codigo:"<?=$codigoCuenta?>",numero:"<?=$numeroCuenta?>",nombre:"<?=$nombreCuenta?>",cod_aux:"0",nom_aux:""});
+		 </script><?php	
+		$cont++;
+		}
+
+require_once 'modal.php';?>

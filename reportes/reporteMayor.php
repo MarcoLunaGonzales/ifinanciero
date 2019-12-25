@@ -18,8 +18,19 @@ $globalArea=$_SESSION["globalArea"];
 $globalAdmin=$_SESSION["globalAdmin"];
 
 $fechaActual=date("Y-m-d");
-$desde=strftime('%Y-%m-%d',strtotime($_POST["fecha_desde"]));
-$hasta=strftime('%Y-%m-%d',strtotime($_POST["fecha_hasta"]));
+if($_POST["fecha_desde"]==null){
+  $y=date("Y");
+  $desde=strftime('%Y-%m-%d',strtotime("01/01/".$y));
+  $hasta=strftime('%Y-%m-%d',strtotime("12/31/".$y));
+}else{
+  $porcionesFechaDesde = explode("/", $_POST["fecha_desde"]);
+  $porcionesFechaHasta = explode("/", $_POST["fecha_hasta"]);
+  $desde=$porcionesFechaDesde[2]."-".$porcionesFechaDesde[1]."-".$porcionesFechaDesde[0];
+  $hasta=$porcionesFechaHasta[2]."-".$porcionesFechaHasta[1]."-".$porcionesFechaHasta[0];
+  //$desde=strftime('%Y-%m-%d',strtotime($_POST["fecha_desde"]));
+  //$hasta=strftime('%Y-%m-%d',strtotime($_POST["fecha_hasta"]));
+}
+
 $moneda=$_POST["moneda"];
 
 $codcuenta=$_POST["cuenta"];
@@ -33,6 +44,31 @@ if(isset($_POST['glosa_len'])){
   $glosaLen=0;
 }
 
+if(isset($_POST['cuenta_especifica'])){
+  $codcuenta=[];
+  $codcuenta[0]=$_POST['cuenta_especifica']."@normal";
+}
+if($unidadCosto==null){
+  $unidadCosto=[];$unidad=[];
+  $iu=0;
+  $stmtUnidad = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM unidades_organizacionales where cod_estado=1 and centro_costos=1 order by 3");
+  $stmtUnidad->execute();
+  while ($rowUnidad= $stmtUnidad->fetch(PDO::FETCH_ASSOC)) {
+    $unidadCosto[$iu]=$rowUnidad['codigo'];
+    $unidad[$iu]=$rowUnidad['codigo'];
+    $iu++;
+  }
+}
+if($areaCosto==null){
+  $areaCosto=[];
+  $iu=0;
+  $stmtArea = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM areas where cod_estado=1 and centro_costos=1 order by 2");
+  $stmtArea->execute();
+  while ($rowArea= $stmtArea->fetch(PDO::FETCH_ASSOC)) {
+    $areaCosto[$iu]=$rowArea['codigo'];
+    $iu++;
+  }
+}
 $unidadGeneral="";$unidadAbrev="";$areaAbrev="";
 $queryFin="";
 for ($i=0; $i < cantidadF($unidadCosto) ; $i++) { 
@@ -70,12 +106,16 @@ for ($jj=0; $jj < cantidadF($codcuenta); $jj++) {
     $porciones1 = explode("@", $codcuenta[$jj]);
     $cuenta=$porciones1[0];
     if($porciones1[1]=="aux"){
-      $nombreCuentaTitle.=nameCuentaAux($cuenta).", ";
+      $nombreCuentaTitle.=trim(nameCuentaAux($cuenta)).", ";
     }else{
-      $nombreCuentaTitle.=nameCuenta($cuenta).", ";
+      $nombreCuentaTitle.=trim(nameCuenta($cuenta)).", ";
     }
 }
 $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d/%m/%Y',strtotime($hasta));
+
+     if(strlen($nombreCuentaTitle)>190){
+        $nombreCuentaTitle=substr($nombreCuentaTitle,0,190)."...";
+      }
  ?>
 <script> periodo_mayor='<?=$periodoTitle?>';
           cuenta_mayor='<?=trim($nombreCuentaTitle)?>';

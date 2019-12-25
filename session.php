@@ -8,7 +8,9 @@ session_start();
 $user=$_POST["user"];
 $password=$_POST["password"];
 
-$sql="SELECT p.codigo, p.nombre, p.cod_area, p.cod_unidad, pd.perfil, pd.usuario_pon from personal2 p, personal_datosadicionales pd where p.codigo=pd.cod_personal and pd.usuario='$user' and pd.contrasena='$password'";
+$sql="SELECT p.codigo, p.nombre, p.cod_area, p.cod_unidad, pd.perfil, pd.usuario_pon 
+			from personal2 p, personal_datosadicionales pd 
+			where p.codigo=pd.cod_personal and pd.usuario='$user' and pd.contrasena='$password'";
 //echo $sql;
 $stmt = $dbh->prepare($sql);
 $stmt->execute();
@@ -21,7 +23,7 @@ $stmt->bindColumn('perfil', $perfil);
 while ($rowDetalle = $stmt->fetch(PDO::FETCH_BOUND)) {
 	echo "ENTRO A DETALLE";
 	$nombreUnidad=abrevUnidad($codUnidad);
-	$nombreArea=abrevUnidad($codArea);
+	$nombreArea=abrevArea($codArea);
 
 	//echo $codUnidad." ".$nombreUnidad;
 	
@@ -44,7 +46,7 @@ while ($rowDetalle = $stmt->fetch(PDO::FETCH_BOUND)) {
 	while ($rowGestion = $stmtGestion->fetch(PDO::FETCH_ASSOC)) {
 		$codGestionActiva=$rowGestion['cod_gestion'];
 
-		$sql1="SELECT * from meses_trabajo where cod_gestion='$codGestion' and cod_estadomesestrabajo=3";
+		$sql1="SELECT cod_mes from meses_trabajo where cod_gestion='$codGestionActiva' and cod_estadomesestrabajo=3";
         $stmt1 = $dbh->prepare($sql1);
         $stmt1->execute();
         while ($row1= $stmt1->fetch(PDO::FETCH_ASSOC)) {
@@ -69,7 +71,7 @@ while ($rowDetalle = $stmt->fetch(PDO::FETCH_BOUND)) {
 	$_SESSION['globalPerfil']=$perfil;
 
 
-	if($codigo==90){
+	if($codigo==90 || $codigo==89 || $codigo==227){
 		$_SESSION['globalAdmin']=1;			
 	}else{
 		$_SESSION['globalAdmin']=0;	

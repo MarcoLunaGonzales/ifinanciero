@@ -1,4 +1,5 @@
 <?php
+include("functionsGeneral.php");
 
 $globalUserX=$_SESSION['globalUser'];
 //echo $globalUserX;
@@ -58,29 +59,24 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
                    <span class="sidebar-normal"> Proveedores</span>
                  </a>
                </li>
-
-            
-
-                 <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=listDepreciaciones">
-                    <span class="sidebar-mini"> DAF </span>
-                    <span class="sidebar-normal"> Rubros/Depreciaciones</span>
-                  </a>
+                <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=listDepreciaciones">
+                      <span class="sidebar-mini"> DAF </span>
+                      <span class="sidebar-normal"> Rubros/Depreciaciones</span>
+                    </a>
                 </li>
                 <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=listaTiposBienes">
-                    <span class="sidebar-mini"> DAF </span>
-                    <span class="sidebar-normal"> Tipos de Bienes</span>
-                  </a>
+                    <a class="nav-link" href="?opcion=listaTiposBienes">
+                      <span class="sidebar-mini"> DAF </span>
+                      <span class="sidebar-normal"> Tipos de Bienes</span>
+                    </a>
                 </li>
                 <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=activosfijosLista">
-                    <span class="sidebar-mini"> DAF </span>
-                    <span class="sidebar-normal"> Activos Fijos</span>
-                  </a>
+                    <a class="nav-link" href="?opcion=activosfijosLista">
+                      <span class="sidebar-mini"> DAF </span>
+                      <span class="sidebar-normal"> Activos Fijos</span>
+                    </a>
                 </li>
-                
-
               </ul>
             </div>
           </li>
@@ -129,10 +125,107 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
                     <span class="sidebar-normal"> Plantillas de Costo </span>
                   </a>
                 </li>
-
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listPlantillasCostosAdmin">
+                    <span class="sidebar-mini"> GPT </span>
+                    <span class="sidebar-normal"> Gesti&oacute;n de Plantillas de Costo </span>
+                  </a>
+                </li>
               </ul>
             </div>
           </li>
+          <!-- TABLAS RRHH-->
+          <li class="nav-item ">
+            <a class="nav-link" data-toggle="collapse" href="#pagesExamples">
+              <i class="material-icons">fullscreen</i>
+              <p> Tablas RRHH
+                <b class="caret"></b>
+              </p>
+            </a>
+            <div class="collapse" id="pagesExamples">
+              <ul class="nav">              
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=areasLista">
+                    <span class="sidebar-mini"> UAF </span>
+                    <span class="sidebar-normal"> Areas</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=uoLista">
+                    <span class="sidebar-mini"> UAF </span>
+                    <span class="sidebar-normal"> Unidades Organizacionales</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=areas_organizacionLista">
+                    <span class="sidebar-mini"> UAF </span>
+                    <span class="sidebar-normal"> Areas - Unidades Organizacionales</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=cargosLista">
+                    <span class="sidebar-mini"> UAF </span>
+                    <span class="sidebar-normal"> Cargos</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=tipospersonalLista">
+                    <span class="sidebar-mini"> UAF </span>
+                    <span class="sidebar-normal"> Tipos Personal</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=estadospersonalLista">
+                    <span class="sidebar-mini"> UAF </span>
+                    <span class="sidebar-normal"> Estados Personal</span>
+                  </a>
+                </li>            
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=tipos_generoLista">
+                    <span class="sidebar-mini"> UAF </span>
+                    <span class="sidebar-normal"> Genero</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=personalLista">
+                    <span class="sidebar-mini"> UAF </span>
+                    <span class="sidebar-normal"> Personal</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=estadosplanillaLista">
+                    <span class="sidebar-mini"> UAF </span>
+                    <span class="sidebar-normal"> Estados Planilla</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=tipos_aporteafpLista">
+                    <span class="sidebar-mini"> UAF </span>
+                    <span class="sidebar-normal"> Tipos de Aportes</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=tipos_afpLista">
+                    <span class="sidebar-mini"> UAF </span>
+                    <span class="sidebar-normal"> Tipos de Afp</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=aportes_patronalesLista">
+                    <span class="sidebar-mini"> UAF </span>
+                    <span class="sidebar-normal"> Aportes Patronales</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=aportes_laboralesLista">
+                    <span class="sidebar-mini"> UAF </span>
+                    <span class="sidebar-normal"> Aportes Laborales</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </li>
+
 
           <!--TRANSACCIONES ACTIVOS FIJOS-->          
           <li class="nav-item ">
@@ -158,6 +251,23 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
                       <span class="sidebar-normal"> AF En Custodia</span>
                     </a>
                 </li>
+
+                
+                <?php
+                $valor=8;
+                $VariableConf=obtieneValorConfig($valor);
+                  if($globalUserX==$VariableConf){
+                ?>
+                <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=aftransaccion">
+                      <span class="sidebar-mini"> D </span>
+                      <span class="sidebar-normal"> Transacción De AF</span>
+                    </a>
+                </li>
+                <?php
+                  }
+                ?>
+                
 
               </ul>
             </div>
@@ -185,15 +295,76 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
                     <span class="sidebar-mini"> A </span>
                     <span class="sidebar-normal"> Aprobaciones de comprobantes </span>
                   </a>
+
                 </li> 
 
 
+            
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listSimulacionesCostos">
+                    <span class="sidebar-mini"> SC </span>
+                    <span class="sidebar-normal"> Simulaciones de Costos</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listSimulacionesCostosAdmin">
+                    <span class="sidebar-mini"> GS </span>
+                    <span class="sidebar-normal"> Gesti&oacute;n de Simulaciones</span>
+                  </a>
+                </li>                 
 
               </ul>
             </div>
           </li>
-
+          <!--TRANSACCIONES RRHH-->
+          <li class="nav-item ">
+            <a class="nav-link" data-toggle="collapse" href="#transaccHHRR">
+              <i class="material-icons">menu</i>
+              <p> Transacciones RRHH
+                <b class="caret"></b>
+              </p>
+            </a>
+            <div class="collapse" id="transaccHHRR">
+              <ul class="nav">
+                
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=planillasSueldoPersonal">
+                    <span class="sidebar-mini"> P </span>
+                    <span class="sidebar-normal"> Planillas Sueldos </span>
+                  </a>
+                </li>
+                
+              </ul>
+            </div>
+          </li>
+          <!--Solicitud de recursos-->
+          <li class="nav-item ">
+            <a class="nav-link" data-toggle="collapse" href="#solicitudes">
+              <i class="material-icons">content_paste</i>
+              <p> Solicitudes de Recursos
+                <b class="caret"></b>
+              </p>
+            </a>
+            <div class="collapse" id="solicitudes">
+              <ul class="nav">
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listSolicitudRecursos">
+                    <span class="sidebar-mini"> SR </span>
+                    <span class="sidebar-normal"> Solicitudes de Recursos</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listSolicitudRecursosAdmin">
+                    <span class="sidebar-mini"> GSR </span>
+                    <span class="sidebar-normal"> Gesti&oacute;n Solicitudes Recursos</span>
+                  </a>
+                </li>                          
+              </ul>
+            </div>
+          </li>
           <!--REPORTES CONTABILIDAD-->
+
+          <!--REPORTES AF-->
           <li class="nav-item ">
             <a class="nav-link" data-toggle="collapse" href="#reportesAF">
               <i class="material-icons">assessment</i>
@@ -204,15 +375,21 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
             <div class="collapse" id="reportesAF">
               <ul class="nav">
                 <li class="nav-item ">
-                    <a class="nav-link" href="?opcion=rptxrubrosxmes">
-                      <span class="sidebar-mini"> R </span>
-                      <span class="sidebar-normal"> Por Rubro por Mes</span>
-                    </a>
-                </li>
-                <li class="nav-item ">
                     <a class="nav-link" href="?opcion=rptactivosfijos">
                       <span class="sidebar-mini"> R </span>
                       <span class="sidebar-normal"> Activos Fijos</span>
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=rptactivosfijosAsignados">
+                      <span class="sidebar-mini"> R </span>
+                      <span class="sidebar-normal"> Activos Fijos Asignados</span>
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=rptxrubrosxmes">
+                      <span class="sidebar-mini"> R </span>
+                      <span class="sidebar-normal"> Por Rubro por Mes</span>
                     </a>
                 </li>
 
@@ -252,6 +429,7 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
               </ul>
             </div>
           </li>
+
 
           
 
@@ -322,8 +500,8 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
 
 
 
+          <!--UTILITARIOS-->
 
-           <!--UTILITARIOS-->
           <li class="nav-item ">
             <a class="nav-link" data-toggle="collapse" href="#utilitarios">
               <i class="material-icons">build</i>
@@ -336,7 +514,7 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=mesCurso">
                     <span class="sidebar-mini"> MC </span>
-                    <span class="sidebar-normal"> Mes en curso</span>
+                    <span class="sidebar-normal"> Mes de Trabajo </span>
                   </a>
                 </li>
                 <li class="nav-item ">

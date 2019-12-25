@@ -43,8 +43,8 @@ $stmt->bindColumn('observaciones', $observaciones);
                         </tr>
                       </thead>
                       <tbody>
-<?php
-						$index=1;$cont= array();
+                      <?php
+                      		$index=1;$cont= array();
                       	while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                           // Preparamos
                             $dbh1 = new Conexion();
@@ -55,8 +55,11 @@ $stmt->bindColumn('observaciones', $observaciones);
                                    
                                    while ($row2 = $stmt2->fetch(PDO::FETCH_ASSOC)) {
                                       $dato =new stdClass();
-                                      $nombreX=trim($row2['nombre']);$numeroX=trim($row2['numero']);
-                                      $dato->codigo=($nc+1);$dato->nombre=$nombreX;$dato->numero=$numeroX;
+                                      $nombreX=trim($row2['nombre']);
+                                      $numeroX=trim($row2['numero']);
+                                      $dato->codigo=($nc+1);
+                                      $dato->nombre=$nombreX;
+                                      $dato->numero=$numeroX;
                                       $datos[$index-1][$nc]=$dato;                           
                                       $nc++;
                                     }
@@ -70,6 +73,7 @@ $stmt->bindColumn('observaciones', $observaciones);
                             <a href='#' rel="tooltip" class="btn btn-warning" onclick="filaTablaGeneral($('#tablas_registradas'),<?=$index?>)">
                               <i class="material-icons" title="Ver Cuentas">settings_applications</i>
                             </a>
+                            
                             <a href='<?=$urlRegisterCuentas;?>&codigo=<?=$codigo;?>' rel="tooltip" class="btn btn-success">
                               <i class="material-icons" title="Registrar Cuentas">playlist_add</i>
                             </a>
@@ -82,10 +86,10 @@ $stmt->bindColumn('observaciones', $observaciones);
                             </button>
                           </td>
                         </tr>
-<?php
-							$index++;
-						}
-?>
+                        <?php
+              							$index++;
+              						}
+                        ?>
                       </tbody>
                     </table>
                   </div>

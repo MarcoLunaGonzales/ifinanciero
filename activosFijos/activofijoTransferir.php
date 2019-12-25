@@ -46,10 +46,13 @@ $responsable='';
                       <table class="table">
                           <thead>
                               <tr>
-                                <th>Código Af</th>
+                                <th>CódigoAF</th>
+                                <th>Nombre</th>
+                                <th>QR</th>
+                                <th>Imagen</th>
                                 <th>Fecha Asignación</th>
                                 <th>Estado</th>
-                                <th>Personal</th>
+                                <th>Responsable</th>
                                 <th>UO</th>
                                  
                               </tr>
@@ -62,14 +65,34 @@ $responsable='';
                                   $estadobien_asig=$row["estadobien_asig"];
                                   $nombre_personal=$row["nombre_personal"];
                                   $nombre_uo=$row["nombre_uo"];
+                                  $nombreActivo=$row["activo"];
                                 }?>
                              <tr>
                                 <td><?=$codigo;?></td>
-                                  <td><?=$fechaasignacion;?></td>
-                                  <td><?=$estadobien_asig;?></td>
-                       
-                                  <td><?=$nombre_personal;?></td>
-                                  <td><?=$nombre_uo;?></td>
+                                <td><?=$nombreActivo;?></td>
+                                <td>
+                                  <?php
+                                  require 'assets/phpqrcode/qrlib.php';
+                                  $dir = 'qr_temp/';
+                                  if(!file_exists($dir)){
+                                      mkdir ($dir);}
+                                  $fileName = $dir.'test.png';
+                                  $tamanio = 4; //tamaño de imagen que se creará
+                                  $level = 'Q'; //tipo de precicion Baja L, mediana M, alta Q, maxima H
+                                  $frameSize = 1; //marco de qr
+                                  $contenido = $codigo;
+                                  QRcode::png($contenido, $fileName, $level,$tamanio,$frameSize);
+                                  echo '<img src="'.$fileName.'"/>';
+                                  ?>
+                                </td>
+                                <td class="text-right small">
+                                  <img src="<?=$archivo;?>" alt="..." style="width:200px;">
+                                </td>
+                                <td><?=$fechaasignacion;?></td>
+                                <td><?=$estadobien_asig;?></td>
+                     
+                                <td><?=$nombre_personal;?></td>
+                                <td><?=$nombre_uo;?></td>
                                   
                               </tr>
                           

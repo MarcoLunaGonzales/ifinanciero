@@ -3,7 +3,7 @@
 
 	//include("menuService.php");
   include("librerias.php");
-  include("menu.php");
+  include("layouts/menu.php");
   // include("functionsGeneral.php");
 ?>    
     <div class="main-panel">

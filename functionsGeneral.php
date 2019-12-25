@@ -26,6 +26,18 @@ function showAlertSuccessError2($bandera, $url){
       </script>";
    }
 }
+function showAlertSuccessError3($bandera, $url){
+   if($bandera==true){
+      echo "<script>
+         alerts.showSwal('success-message','$url');
+      </script>";
+   }
+   if ($bandera==false){
+      echo "<script>
+         alerts.showSwal('error-message3','$url');
+      </script>";
+   }
+}
 
 function clean_string($string)
 {
@@ -112,6 +124,22 @@ function cantidadF($arreglo){
 
 
 
+
    
+//tratando de cerar json para Web service
+
+    // require_once 'personal/personal_ws.php';
+    // function getPersonal()
+    // {
+    //   $this->load->model('personal_ws');
+    //   $data->$this->personal_ws->getPersonal();
+    //   header('Content-Type: personal/json');
+    //   echo json_encode($data);
+
+    // }
+
 
 ?>
+
+
+

@@ -12,7 +12,7 @@ $sqlX="SET NAMES 'utf8'";
 $stmtX = $dbh->prepare($sqlX);
 $stmtX->execute();
 
-$sql="SELECT af.*, d.nombre dep_nombre, tb.tipo_bien tb_tipo, u.edificio u_edificio, u.oficina u_oficina, 
+$sql="SELECT af.*, d.abreviatura as dep_nombre, tb.tipo_bien tb_tipo, u.edificio u_edificio, u.oficina u_oficina, 
 (select afi.imagen from activosfijosimagen afi where af.codigo = afi.codigo) as imagen, (select uo.abreviatura from unidades_organizacionales uo where uo.codigo=af.cod_unidadorganizacional)as nombre_unidad, (select a.abreviatura from areas a where a.codigo=af.cod_area)as nombre_area
 from activosfijos af, depreciaciones d, tiposbienes tb, ubicaciones u 
 where af.cod_depreciaciones = d.codigo and af.cod_tiposbienes = tb.codigo and af.cod_ubicaciones  = u.codigo 
@@ -69,7 +69,7 @@ $stmt->bindColumn('nombre_area', $nombreArea);
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
-                    <table class="table" id="tablePaginator">
+                    <table class="table table-condensed" id="tablePaginator">
 
                       <thead>
                         <tr>
@@ -78,9 +78,7 @@ $stmt->bindColumn('nombre_area', $nombreArea);
                             <th>Unidad/Area</th>
                             <th>Activo</th>
                             <th>F. Alta</th>
-                          
-                            <th>Rubro/Depr.</th>
-                            <th>Tipo Bien</th>
+                            <th>Rubro/TipoBien</th>
                             <th>Estado bien</th>
                             <th>Ubicacion</th>
                             <th>Acc/Eventos</th>
@@ -96,14 +94,13 @@ $stmt->bindColumn('nombre_area', $nombreArea);
                                   <i class="material-icons">print</i>
                                 </a>
                               </td>
-                              <td><?=$codigoactivo;?></td>
-                              <td><?=$nombreUnidad;?>-<?=$nombreArea;?></td>
-                              <td><?=$activo;?></td>
-                              <td><?=$fechalta;?></td>
-                              <td><?=$dep_nombre;?></td>
-                              <td><?=$tb_tipo;?></td>
-                              <td><?=$estadobien;?></td>
-                              <td><?=$u_oficina;?> <?=$u_edificio;?></td>
+                              <td class="text-center small"><?=$codigoactivo;?></td>
+                              <td class="text-center small"><?=$nombreUnidad;?>-<?=$nombreArea;?></td>
+                              <td class="text-left small"><?=$activo;?></td>
+                              <td class="text-center small"><?=$fechalta;?></td>
+                              <td class="text-left small"><?=$dep_nombre;?>/<?=$tb_tipo;?></td>
+                              <td class="text-left small"><?=$estadobien;?></td>
+                              <td class="text-left small"><?=$u_oficina;?> <?=$u_edificio;?></td>
                               
                               <td class="td-actions text-right">
                               <?php
@@ -111,10 +108,13 @@ $stmt->bindColumn('nombre_area', $nombreArea);
                               ?>
 
                                 <a href='<?=$urlafAccesorios;?>&codigo=<?=$codigo;?>' rel="tooltip" class="btn btn-warning">
-                                  <i class="material-icons" title="Accesorios AF">attach_file</i>
+                                  <i class="material-icons" title="Accesorios AF" style="color:black">extension</i>
                                 </a>
                                 <a href='<?=$urlafEventos;?>&codigo=<?=$codigo;?>' rel="tooltip" class="btn btn-info">
-                                  <i class="material-icons" title="Eventos AF">class</i>
+                                  <i class="material-icons" title="Eventos AF" style="color:black">event</i>
+                                </a>
+                                <a href='<?=$urlRevaluarAF;?>&codigo=<?=$codigo;?>' rel="tooltip" class="btn btn-warning">
+                                  <i class="material-icons" title="Reevaluar AF" style="color:black">trending_up</i>
                                 </a>
 
                                 <?php

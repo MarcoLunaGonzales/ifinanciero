@@ -19,8 +19,15 @@ $fechaHoraActual=date("Y-m-d H:i:s");
 
 $codPlantillaCosto=$_GET["cod_plantilla"];
 $nombreSimu=$_GET['nombre'];
-$sqlUpdate="UPDATE simulaciones_costos SET  nombre='$nombreSimu',cod_plantillacosto='$codPlantillaCosto' where codigo=$codigo";
+$codPrecio=$_GET['precio'];
+$alIbnorca=$_GET['alibnorca'];
+$alFuera=$_GET['alfuera'];
+$sqlUpdate="UPDATE simulaciones_costos SET  nombre='$nombreSimu',cod_plantillacosto='$codPlantillaCosto',cod_precioplantilla='$codPrecio' where codigo=$codigo";
 $stmtUpdate = $dbh->prepare($sqlUpdate);
 $flagSuccess=$stmtUpdate->execute();
+
+$sqlUpdatePlantilla="UPDATE plantillas_costo SET  cantidad_alumnoslocal='$alIbnorca',cantidad_alumnosexterno='$alFuera' where codigo=$codPlantillaCosto";
+$stmtUpdatePlantilla = $dbh->prepare($sqlUpdatePlantilla);
+$stmtUpdatePlantilla->execute();
 
 ?>

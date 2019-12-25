@@ -54,14 +54,15 @@ $globalAdmin=$_SESSION["globalAdmin"];
     $haber=0;
     $estadohaber="readonly";
     $estadodebe="";
+    $debe=number_format($debe, 2, '.', '');
    }else{
     $debe=0;
     $haber=$valor*($porcent/100);
     $estadodebe="readonly";
     $estadohaber="";
+    $haber=number_format($haber, 2, '.', '');
    }
     
-
    // $glosa=$json[$i]->glosa_detalle;
     //$cod_cuenta=$json[$i]->cuenta;
     //$cod_cuenta_aux=$json[$i]->cuenta_auxiliar;
@@ -136,7 +137,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
     </div>
   </div>
 
-   <div class="col-sm-3">
+   <div class="col-sm-4">
     <input type="hidden" name="numero_cuenta<?=$idFila;?>" value="<?=$numero_cuenta?>" id="numero_cuenta<?=$idFila;?>">
         <input type="hidden" name="cuenta<?=$idFila;?>" value="<?=$cuenta?>" id="cuenta<?=$idFila;?>">
         <input type="hidden" name="cuenta_auxiliar<?=$idFila;?>" value="<?=$cuenta_aux?>" id="cuenta_auxiliar<?=$idFila;?>">
@@ -145,19 +146,19 @@ $globalAdmin=$_SESSION["globalAdmin"];
             <p class="text-muted"><?=$porcent?> <span>%</span> de <?=$valor?></p>   
           </div>
     </div>
-    <div class="col-sm-2">
+    <div class="col-sm-1">
             <div class="form-group">
               <label class="bmd-label-static">Debe</label>      
               <input class="form-control small" type="number" placeholder="0" value="<?=$debe?>" <?=$estadodebe?> name="debe<?=$idFila;?>" id="debe<?=$idFila;?>" onChange="calcularTotalesComprobante(this.id,event);" OnKeyUp="calcularTotalesComprobante(this.id,event);" step="0.01"> 
       </div>
     </div>
-    <div class="col-sm-2">
+    <div class="col-sm-1">
             <div class="form-group">
               <label class="bmd-label-static">Haber</label>     
               <input class="form-control small" type="number" placeholder="0" value="<?=$haber?>" <?=$estadohaber?> name="haber<?=$idFila;?>" id="haber<?=$idFila;?>" onChange="calcularTotalesComprobante(this.id,event);" OnKeyUp="calcularTotalesComprobante(this.id,event);" step="0.01">   
       </div>
     </div>
-    <div class="col-sm-2">
+    <div class="col-sm-3">
         <div class="form-group">
               <label class="bmd-label-static">GlosaDetalle</label>
         <textarea rows="1" class="form-control" name="glosa_detalle<?=$idFila;?>" id="glosa_detalle<?=$idFila;?>"><?=$glosa?></textarea>

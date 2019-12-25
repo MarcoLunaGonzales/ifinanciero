@@ -68,17 +68,18 @@ $stmt->bindColumn('cuentacontable', $cuentacontable);
                                 <td><?=$codigocuenta;?> - <?=$cuentacontable;?></td>                                
                                 <td  class="td-actions text-right">
                                 <?php
-                                                    if($globalAdmin==1){
-                                                        ?>
-                                                        <a href='<?=$urlRegistrar_depreciacion;?>&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonEdit;?>">
-                                                        <i class="material-icons"><?=$iconEdit;?></i>
-                                                        </a>
-                                                        <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDeleteDepr;?>&codigo=<?=$codigo;?>')">
-                                                        <i class="material-icons"><?=$iconDelete;?></i>
-                                                        </button>
-                                                        <?php
-                                                    }
-                                                    ?></td>
+                                  if($globalAdmin==1){
+                                      ?>
+                                      <a href='<?=$urlRegistrar_depreciacion;?>&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonEdit;?>">
+                                      <i class="material-icons"><?=$iconEdit;?></i>
+                                      </a>
+                                      <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDeleteDepr;?>&codigo=<?=$codigo;?>')">
+                                      <i class="material-icons"><?=$iconDelete;?></i>
+                                      </button>
+                                      <?php
+                                  }
+                                  ?>
+                              </td>
                             </tr>
                         <?php $index++; } ?>
                         </tbody>
