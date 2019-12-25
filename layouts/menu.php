@@ -185,7 +185,10 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
                     <span class="sidebar-mini"> A </span>
                     <span class="sidebar-normal"> Aprobaciones de comprobantes </span>
                   </a>
-                </li>                 
+                </li> 
+
+
+
               </ul>
             </div>
           </li>
@@ -249,6 +252,77 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
               </ul>
             </div>
           </li>
+
+          
+
+          <!--RECURSOS HUMANOS-->          
+          <li class="nav-item ">
+            <a class="nav-link" data-toggle="collapse" href="#bono">
+              <i class="material-icons">menu</i>
+              <p> Recursos Humanos 2
+                <b class="caret"></b>
+              </p>
+            </a>
+            <div class="collapse" id="bono">
+              <ul class="nav">
+
+                <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=listBonos">
+                      <span class="sidebar-mini"> B </span>
+                      <span class="sidebar-normal"> Bonos</span>
+                    </a>
+                </li>
+
+                <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=listDescuentos">
+                      <span class="sidebar-mini"> D </span>
+                      <span class="sidebar-normal"> Descuentos</span>
+                    </a>
+                </li>
+                <!--li class="nav-item ">
+                    <a class="nav-link" href="?opcion=listAnticipoPersonal">
+                      <span class="sidebar-mini"> A </span>
+                      <span class="sidebar-normal"> Anticipos de Personal</span>
+                    </a>
+                </li>
+
+
+                <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=listRcivaPersonal">
+                      <span class="sidebar-mini"> R </span>
+                      <span class="sidebar-normal"> RC IVA Personal</span>
+                    </a>
+                </li-->
+
+                <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=listEscalaAntiguedad">
+                      <span class="sidebar-mini"> E </span>
+                      <span class="sidebar-normal"> Escalas Antiguedad </span>
+                    </a>
+                </li>
+
+                <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=listPoliticaDescuento">
+                      <span class="sidebar-mini"> P </span>
+                      <span class="sidebar-normal"> Politicas de Descuentos </span>
+                    </a>
+                </li>
+
+                <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=listDotacion">
+                      <span class="sidebar-mini"> D </span>
+                      <span class="sidebar-normal"> Dotaciones </span>
+                    </a>
+                </li>
+
+              </ul>
+            </div>
+          </li>
+
+
+
+
+
            <!--UTILITARIOS-->
           <li class="nav-item ">
             <a class="nav-link" data-toggle="collapse" href="#utilitarios">

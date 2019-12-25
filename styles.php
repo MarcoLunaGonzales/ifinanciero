@@ -24,6 +24,8 @@ $buttonDetail="btn btn-fab btn-info";
 
 $buttonCard="card-header-rose card-header-icon";
 
+$buttonExcel="btn btn-success";
+
 $comboColor="btn btn-primary";
 $comboColorDist="btn btn-warning";
 

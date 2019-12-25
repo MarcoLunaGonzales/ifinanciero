@@ -10,13 +10,14 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $dbh = new Conexion();
 
 // Preparamos
-$stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM $table where cod_estadoreferencial=1");
+$stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura, observaciones FROM $table where cod_estadoreferencial!=2 order by nombre ");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
 $stmt->bindColumn('codigo', $codigo);
 $stmt->bindColumn('nombre', $nombre);
 $stmt->bindColumn('abreviatura', $abreviatura);
+$stmt->bindColumn('observaciones', $observaciones);
 
 ?>
 
@@ -33,37 +34,56 @@ $stmt->bindColumn('abreviatura', $abreviatura);
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
-                    <table class="table">
+                    <table id="tablePaginator" class="table table-condensed">
                       <thead>
                         <tr>
-                          <th class="text-center">#</th>
+                          <th class="text-left">#</th>
                           <th>Nombre</th>
                           <th>Abreviatura</th>
-                          <th class="text-right">Actions</th>
+                          <th>Observaciones</th>
+                          <th class="text-right">Acciones</th>
                         </tr>
                       </thead>
                       <tbody>
 <?php
 						$index=1;
                       	while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+                           
 ?>
                         <tr>
                           <td align="center"><?=$index;?></td>
-                          <td><?=$nombre;?></td>
-                          <td><?=$abreviatura;?></td>
+                          <td class="text-left"><?=$nombre;?></td>
+                          <td class="text-center"><?=$abreviatura;?></td>
+                          <td class="text-left"><?=$observaciones;?></td>
                           <td class="td-actions text-right">
-                            <?php
+                          <?php
                             if($globalAdmin==1){
                             ?>
-                            <a href='<?=$urlEdit;?>&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonEdit;?>">
+                            <!--a href='<?=$urlEdit;?>&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonEdit;?>">
                               <i class="material-icons"><?=$iconEdit;?></i>
                             </a>
                             <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')">
                               <i class="material-icons"><?=$iconDelete;?></i>
-                            </button>
+                            </button-->
                             <?php
                             }
                             ?>
+
+                            <!--a href='<?=$urlArchivo;?>?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="btn btn-default">
+                              <i class="material-icons">attachment</i>
+                            </a-->
+
+                  
+
+                            <a href='<?=$urlListMes;?>&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonDetailMin;?>">
+                              <i class="material-icons" title="Detalle">playlist_add</i>
+                            </a>
+                            <a href='<?=$urlEdit;?>&codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="<?=$buttonEdit;?>">
+                              <i class="material-icons" title="Editar"><?=$iconEdit;?></i>
+                            </a>
+                            <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')">
+                              <i class="material-icons" title="Eliminar"><?=$iconDelete;?></i>
+                            </button>
                           </td>
                         </tr>
 <?php
@@ -75,20 +95,21 @@ $stmt->bindColumn('abreviatura', $abreviatura);
                   </div>
                 </div>
               </div>
+
               <?php
               if($globalAdmin==1){
               ?>
-      				<div class="card-footer ml-auto mr-auto">
-                    <button class="<?=$buttonNormal;?>" onClick="location.href='<?=$urlRegister;?>&codigo=0'">Registrar</button>
-                    
+      				<div class="card-footer fixed-bottom">
+                    <button class="<?=$buttonNormal;?>" onClick="location.href='<?=$urlRegister;?>'">Registrar</button>
               </div>
               <?php
               }
               ?>
-        
 		  
             </div>
           </div>  
+              
+
+
         </div>
     </div>
-
