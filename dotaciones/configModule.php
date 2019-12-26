@@ -22,4 +22,6 @@ $urlListDotacionPersonal="?opcion=listDotacionPersonal";
 $urlDeleteDotacionPersonal="index.php?opcion=deleteDotacionPersonal";
 $urlRegisterDotacionPersonal="index.php?opcion=registerDotacionPersonal";
 $urlSaveDotacionPersonal="dotaciones/saveDotacionPersonal.php";
+
+$urlListDotPersonalMeses="?opcion=listDotPersonalMeses";
 ?>

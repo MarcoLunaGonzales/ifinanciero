@@ -7,25 +7,21 @@ require_once 'styles.php';
 $globalAdmin = $_SESSION["globalAdmin"];
 
 $codDotacion=$cod_dot;
+$codDotacionPersonal=$cod_dot_per;
 
 $dbh = new Conexion();
 
-$stmt = $dbh->prepare("SELECT dp.codigo as cod_dotacion_personal, dp.cod_personal as cod_persona,
-(select u.abreviatura from personal p, unidades_organizacionales u where p.codigo=dp.cod_personal and u.codigo=p.cod_unidadorganizacional)as unidad,
-(select c.nombre from personal p, cargos c where p.codigo=dp.cod_personal and c.codigo=p.cod_cargo)as cargo,
-(select concat(p.paterno,' ', p.materno,' ', p.primer_nombre) from personal p where p.codigo=dp.cod_personal)as nombrepersonal,
-dp.monto as detalle
-FROM dotaciones_personal dp where dp.cod_estadoreferencial=1 and dp.cod_dotacion=$codDotacion");
+$stmt = $dbh->prepare("SELECT dpm.cod_dotacionpersonal as cod_dotacion_personal, 
+(SELECT m.nombre FROM meses m WHERE dpm.cod_mes=m.codigo) as mes ,
+(SELECT g.nombre FROM gestiones g WHERE dpm.cod_gestion=g.codigo) as gestion,
+dpm.monto_mes as monto_mensual FROM dotaciones_personal_mes dpm WHERE dpm.cod_dotacionpersonal=$codDotacionPersonal");
 
 $stmt->execute();
 
 $stmt->bindColumn('cod_dotacion_personal', $codDotacionPersonal);
-$stmt->bindColumn('cod_persona', $codPersona);
-$stmt->bindColumn('unidad', $unidad);
-$stmt->bindColumn('cargo', $cargo);
-$stmt->bindColumn('nombrepersonal', $nombrePersonal);
-$stmt->bindColumn('detalle', $detalle);
-
+$stmt->bindColumn('mes', $mes);
+$stmt->bindColumn('gestion', $gestion);
+$stmt->bindColumn('monto_mensual', $monto_mensual);
 
 //Mostrar tipo dotacion
 $stmtb = $dbh->prepare("SELECT nombre FROM dotaciones WHERE codigo=$codDotacion");
@@ -35,6 +31,20 @@ $stmtb->bindColumn('nombre', $nombreDotacion);
 while ($row = $stmtb->fetch(PDO::FETCH_BOUND)) {
   $nomDotacion = $nombreDotacion;
 }
+
+//Mostrar Persona
+$stmtb = $dbh->prepare("select dp.codigo as codigo,dp.monto as monto,
+(select concat(p.paterno,' ', p.materno,' ', p.primer_nombre) from personal p where p.codigo=dp.cod_personal) as nombrepersonal
+FROM dotaciones_personal dp WHERE dp.codigo=$codDotacionPersonal");
+$stmtb->execute();
+$stmtb->bindColumn('monto', $monto);
+$stmtb->bindColumn('nombrepersonal', $nombrePersonal);
+
+while ($row = $stmtb->fetch(PDO::FETCH_BOUND)) {
+  $montoX = $monto;
+  $nomPersonal = $nombrePersonal;
+}
+
 
 
 
@@ -50,20 +60,21 @@ while ($row = $stmtb->fetch(PDO::FETCH_BOUND)) {
               <i class="material-icons"><?= $iconCard; ?></i>
             </div>
             <h4 class="card-title"><?= $moduleNamePluralDP ?></h4>
-            <h4 class="card-title" align="center"><?=  "Dotación de " . $nomDotacion ?></h4>
+            <h4 class="card-title" align="center"><?=  "Detalle de Dotación de " . $nomDotacion. " : ".$nombrePersonal ?></h4>
+            <!--h4 class="card-title" align="center"><?=  "Monto Total : " . $montoX ?></h4-->
+
 
           </div>
           <div class="card-body">
             <div class="table-responsive">
-              <table id="tablePaginator" class="table table-condensed">
+              <table class="table table-condensed">
                 <thead>
                   <tr>
                     <th class="text-left">#</th>
-                    <th class="text-center">Unidad</th>
-                    <th class="text-center">Cargo</th>
-                    <th class="text-center">Personal</th>
-                    <th class="text-center">Detalle</th>
-                    <th class="text-right">Actions</th>
+                    <th class="text-center">Mes</th>
+                    <th class="text-center">Gestion</th>
+                    <th class="text-center">Monto Mensual</th>
+                    <!--th class="text-right">Actions</th-->
                   </tr>
                 </thead>
                 <tbody>
@@ -73,31 +84,41 @@ while ($row = $stmtb->fetch(PDO::FETCH_BOUND)) {
                   ?>
                     <tr>
                       <td class="text-center"><?= $index; ?></td>
-                      <td class="text-left"><?= $unidad; ?></td>
-                      <td class="text-center"><?= $cargo; ?></td>
-                      <td class="text-left"><?= $nombrePersonal; ?></td>
-                      <td class="text-center"><?= $detalle; ?></td>
-                      <td class="td-actions text-right">
+                      <td class="text-left"><?= $mes; ?></td>
+                      <td class="text-center"><?= $gestion; ?></td>
+                      <td class="text-center"><?= $monto_mensual; ?></td>
+                      <!--td class="td-actions text-right">
                         <?php
                         if ($globalAdmin == 1) {
                         ?>
-                        <a href='<?=$urlListDotPersonalMeses;?>&cod_dot=<?=$codDotacion;?>&cod_dot_per=<?= $codDotacionPersonal; ?>' rel="tooltip" class="<?=$buttonDetailMin;?>">
-                              <i class="material-icons" title="Detalle de meses">playlist_add</i>
-                          </a>
+                       
                           <button rel="tooltip" class="<?= $buttonDelete; ?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?= $urlDeleteDotacionPersonal; ?>&cod_dot=<?= $codDotacion; ?>&cod_dot_per=<?= $codDotacionPersonal; ?>')">
                             <i class="material-icons"><?= $iconDelete; ?></i>
                           </button>
                         <?php
         }
                         ?>
-                      </td>
+                      </td-->
                     </tr>
+                    
                   <?php
                           $index++;
                          }
                   ?>
+                  
                 </tbody>
+                <tfoot>
+                <tr></tr>
+                <tr>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+                <th class="text-center">Total : </th>
+                <th class="text-center"><?= $montoX ; ?></th>
+              </tr>
+                </tfoot>
+                
               </table>
+              
             </div>
           </div>
         </div>
@@ -105,8 +126,8 @@ while ($row = $stmtb->fetch(PDO::FETCH_BOUND)) {
                   if ($globalAdmin == 1) {
         ?>
           <div class="card-footer fixed-bottom">
-                    <button class="<?=$buttonNormal;?>" onClick="location.href='<?=$urlRegisterDotacionPersonal;?>&cod_dot=<?=$codDotacion;?>'">Registrar</button>
-                    <button class="<?= $buttonCancel; ?>" onClick="location.href='<?= $urlList; ?>'">Cancelar</button>
+                   
+                    <button class="<?= $buttonCancel; ?>" onClick="location.href='<?= $urlListDotacionPersonal; ?>&cod_dot=<?=$codDotacion;?>'">Cancelar</button>
 
               </div>
         <?php

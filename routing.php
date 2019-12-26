@@ -880,6 +880,13 @@
 			require_once('dotaciones/registerDotacionPersonal.php');
 		}
 
+		//Dotacion Personal Meses
+		if ($_GET['opcion']=='listDotPersonalMeses') {
+			$cod_dot=$_GET['cod_dot'];
+			$cod_dot_per=$_GET['cod_dot_per'];
+			require_once('dotaciones/listDotPersonalMeses.php');
+		}
+
 
 
 		
