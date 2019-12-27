@@ -52,8 +52,8 @@ foreach ($detalle as $objDet){
         $flag=$stmtGI->execute(); 
     }
 }
-if($flag) echo "Género CORRECTO.<br>"
-else echo "Género ERROR.<br>"
+if($flag) echo "Género CORRECTO.<br>";
+else echo "Género ERROR.<br>";
 
 ?>
 

@@ -32,7 +32,7 @@ alerts = {
           }
         })
     }else if(type == 'error-message3'){
-      swal("Informativo!", "La planilla previa del mes ya fue generada. Se actualizará prerequisitos.", "warning")
+      swal("Informativo!", "La planilla previa del mes ya fue registrada. Reprosesar planilla.", "warning")
           .then((value) => {
           location.href=url;
       });

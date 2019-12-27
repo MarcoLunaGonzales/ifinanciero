@@ -52,8 +52,8 @@ foreach ($detalle as $objDet){
         $flag=$stmtGI->execute(); 
     }
 }
-if($flag) echo "Estado Civil CORRECTO.<br>"
-else echo "Estado Civil ERROR.<br>"
+if($flag) echo "Estado Civil CORRECTO.<br>";
+else echo "Estado Civil ERROR.<br>";
 
 
 ?>

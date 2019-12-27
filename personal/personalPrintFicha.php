@@ -12,6 +12,7 @@ $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//try
 $codigo = $_GET["codigo"];//codigoactivofijo
 try{
     $stmtPersonal = $dbh->prepare("SELECT *,
+        (SELECT ga.nombre from personal_grado_academico ga where ga.codigo=cod_grado_academico) as grado_academico,
         (SELECT ti.nombre from tipos_identificacion_personal  ti where ti.codigo=cod_tipo_identificacion)as tipo_identificacion,
         (select c.nombre from cargos c where c.codigo=cod_cargo) as cod_cargoX,
         (select uo.nombre from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional) as cod_unidadorganizacionalX,
@@ -28,7 +29,6 @@ try{
     $result = $stmtPersonal->fetch();
 
     $codigo = $result['codigo'];
-//<<<<<<< HEAD
 
     $cod_tipoIdentificacion = $result['tipo_identificacion'];
     $tipo_identificacionOtro = $result['tipo_identificacion_otro'];
@@ -36,6 +36,8 @@ try{
     $identificacion = $result['identificacion'];
     $cod_lugar_emision = $result['cod_lugar_emision'];
     $lugar_emisionOtro = $result['lugar_emision_otro'];
+    $grado_academico = $result['grado_academico'];
+    
 
     $cod_nacionalidad = $result['cod_nacionalidad'];
     $cod_estadocivil = $result['cod_estadocivil'];//-
@@ -155,9 +157,9 @@ $html.=  '<header class="header">'.
                         '<td>'.$identificacion.' - '.$cod_lugar_emision.' '.$lugar_emisionOtro.'</td>'.
                     '</tr>'.
                     '<tr>'.
-                        '<td>Fecha Nacimiento</td>'.
+                        '<td>Grado Académico</td>'.
                         '<td align="center">:</td>'.
-                        '<td>'.$fecha_nacimiento.'</td>'.
+                        '<td>'.$grado_academico.'</td>'.
                     '</tr>'.                    
                     '<tr>'.
                         '<td>Telefono</td>'.
@@ -177,6 +179,11 @@ $html.=  '<header class="header">'.
                     
                     '<tr>'.
                         '<td colspan="4"><br></td>           '.
+                    '</tr>'.
+                    '<tr>'.
+                        '<td>Fecha Nacimiento</td>'.
+                        '<td align="center">:</td>'.
+                        '<td colspan=2>'.$fecha_nacimiento.'</td>'.
                     '</tr>'.
                     '<tr>'.
                         '<td>Dirección</td>'.

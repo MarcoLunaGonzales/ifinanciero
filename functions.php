@@ -1431,30 +1431,22 @@ function obtenerCuentaPlantillaCostos($codigo){
    $stmt->execute();
    return $stmt;
 }
-//<<<<<<< HEAD
 
-
-//PARA  planilla sueldos
-function obtenerAporteAFPFuturo($id,$id2){
+//================ ========== PARA  planilla sueldos
+function obtenerAporteAFP($total_ganado){
+  $aporte_laboral_porcentaje_total=0;
   $dbh = new Conexion();
-  $stmt = $dbh->prepare("SELECT porcentaje_comision,porcentaje_aporte_afp,
-  porcentaje_riesgoprofesional,porcentaje_solidario,porcentaje_cps,porcentaje_provivienda,
-  porcentaje_seguro_medico from tipos_aporteafp c where codigo=$id");
+  $stmt = $dbh->prepare("SELECT valor_configuracion from configuraciones_planillas where id_configuracion in (12,13,14,15)");
   $stmt->execute();
   while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
   {
-    $porcentaje_comision=$row['porcentaje_comision'];
-    $porcentaje_aporte_afp=$row['porcentaje_aporte_afp'];
-    $porcentaje_riesgoprofesional=$row['porcentaje_riesgoprofesional'];
-    $porcentaje_solidario=$row['porcentaje_solidario'];
-    $porcentaje_cps=$row['porcentaje_cps'];
-    $porcentaje_provivienda=$row['porcentaje_provivienda'];
-    $porcentaje_seguro_medico=$row['porcentaje_seguro_medico'];      
-  }
-  $aporte_laboral_porcentaje=$porcentaje_comision+$porcentaje_aporte_afp+$porcentaje_riesgoprofesional+$porcentaje_solidario+$porcentaje_cps+$porcentaje_provivienda+$porcentaje_seguro_medico;
-
-  $aporte_laboral_aux=$id2*$aporte_laboral_porcentaje/100;
+    $valor_configuracion=$row['valor_configuracion'];
+    $aporte_laboral_porcentaje_total+=$valor_configuracion;
+  } 
+  $aporte_laboral_aux=$total_ganado*$aporte_laboral_porcentaje_total/100;
   $aporte_laboral=number_format($aporte_laboral_aux,2,'.','');
+  $stmt = null;
+  $dbh = null;
   return($aporte_laboral);
 }
 
@@ -1462,42 +1454,42 @@ function obtenerAporteSolidario13000($total_ganado){
   $dbh = new Conexion();
   $stmt = $dbh->prepare("SELECT valor_configuracion from configuraciones_planillas where id_configuracion=2");
   $stmt->execute();
-  while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
-  {
-    $valor_configuracion=$row['valor_configuracion'];
-  }
+  $result=$stmt->fetch();
+  $valor_configuracion=$result['valor_configuracion'];
   if($total_ganado>13000){
     $aporte_solidario_13000_aux=($total_ganado-13000)*$valor_configuracion/100;
   }else $aporte_solidario_13000_aux = 0;
   $aporte_solidario_13000=number_format($aporte_solidario_13000_aux,2,'.','');
+  $stmt = null;
+  $dbh = null;
   return($aporte_solidario_13000);
 }
 function obtenerAporteSolidario25000($total_ganado){
   $dbh = new Conexion();
   $stmt = $dbh->prepare("SELECT valor_configuracion from configuraciones_planillas where id_configuracion=3");
   $stmt->execute();
-  while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
-  {
-    $valor_configuracion=$row['valor_configuracion'];
-  }
+  $result=$stmt->fetch();
+  $valor_configuracion=$result['valor_configuracion'];
   if($total_ganado>25000){
     $aporte_solidario_25000_aux=($total_ganado-25000)*$valor_configuracion/100;
   }else $aporte_solidario_25000_aux = 0;
   $aporte_solidario_25000=number_format($aporte_solidario_25000_aux,2,'.','');
+  $stmt = null;
+  $dbh = null;
   return($aporte_solidario_25000);
 }
 function obtenerAporteSolidario35000($total_ganado){
   $dbh = new Conexion();
   $stmt = $dbh->prepare("SELECT valor_configuracion from configuraciones_planillas where id_configuracion=4");
   $stmt->execute();
-  while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
-  {
-    $valor_configuracion=$row['valor_configuracion'];
-  }
+  $result=$stmt->fetch();
+  $valor_configuracion=$result['valor_configuracion'];
   if($total_ganado>35000){
     $aporte_solidario_35000_aux=($total_ganado-35000)*$valor_configuracion/100;
   }else $aporte_solidario_35000_aux = 0;
   $aporte_solidario_35000=number_format($aporte_solidario_35000_aux,2,'.','');
+  $stmt = null;
+  $dbh = null;
   return($aporte_solidario_35000);
 }
 function obtenerRC_IVA($total_ganado,$apf_f,$afp_p,$ap_sol_13000,$ap_sol_25000,$ap_sol_35000)
@@ -1521,15 +1513,21 @@ function obtenerRC_IVA($total_ganado,$apf_f,$afp_p,$ap_sol_13000,$ap_sol_25000,$
   if($fisco>$w10)$aporte_rc_iva = $fisco-$w10;
   else $aporte_rc_iva = 0;
   $aporte_rc_iva_neto=number_format($aporte_rc_iva);
+
+  $stmt = null;
+  $dbh = null;
   return ($aporte_rc_iva_neto);
 }
 function obtenerAtrasoPersonal($id_personal,$haber_basico,$valor_conf_x65_90,$valor_conf_x90_120,$valor_conf_x120_150,$valor_conf_x150){
   $dbh = new Conexion();
+  set_time_limit(300);
   //capturando fecha
   $mes=date('m');
   $gestion=date('Y');
+  $descuentos=0;
   $stmt = $dbh->prepare("SELECT * from personal_atrasos where cod_personal=$id_personal and mes=$mes and gestion=$gestion");
   $stmt->execute();
+
   $result=$stmt->fetch();
   $codigo=$result['codigo'];
   $cod_personal=$result['cod_personal'];
@@ -1539,8 +1537,10 @@ function obtenerAtrasoPersonal($id_personal,$haber_basico,$valor_conf_x65_90,$va
   $x_120_150=$result['x_120_150'];
   $x_150=$result['x_150'];
 
-  $descuentos=$x_65_90*$valor_conf_x65_90+$x_90_120*$valor_conf_x90_120+$x_120_150*$valor_conf_x120_150+$x_150*$valor_conf_x150;
+  $descuentos=($x_65_90*$valor_conf_x65_90)+($x_90_120*$valor_conf_x90_120)+($x_120_150*$valor_conf_x120_150)+($x_150*$valor_conf_x150);
   $descuentos_neto=$descuentos*$haber_basico;
+  $stmt = null;
+  $dbh = null;
   return ($descuentos_neto);
 
 }
@@ -1568,8 +1568,25 @@ function obtenerAnticipo($id_personal)
   {
     $anticipo+=$monto_anticipo;
   }
-  
+  $stmt = null;
+  $dbh = null;  
   return ($anticipo);
+}
+
+function obtener_aporte_patronal_general($cod_config_planilla,$total_ganado){  
+  $dbh = new Conexion();
+  $stmt = $dbh->prepare("SELECT valor_configuracion from configuraciones_planillas where id_configuracion=$cod_config_planilla");
+  $stmt->execute();
+  $resultado=$stmt->fetch();
+  $valor_configuracion=$resultado['valor_configuracion'];
+
+  $aporte_p_seguro_medico=$total_ganado*$valor_configuracion/100;
+  $aporte_p_seguro_medico_X=number_format($aporte_p_seguro_medico,2,'.','');
+
+  //cerramos
+  $stmt = null;
+  $dbh = null;
+  return($aporte_p_seguro_medico_X);
 }
 
 

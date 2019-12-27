@@ -33,7 +33,7 @@ $stmt->bindColumn('estadoplanilla', $estadoplanilla);
 				  <div class="card-icon">
             <i class="material-icons"><?=$iconCard;?></i>
           </div>
-				  <h4 class="card-title">Planillas Anteriores De Sueldos</h4>				
+				  <h4 class="card-title">Planilla De Sueldo</h4>				
 			  </div>
 			  <div class="card-body ">
           <div class="table-responsive">
@@ -113,18 +113,19 @@ $stmt->bindColumn('estadoplanilla', $estadoplanilla);
                     <td class="td-actions text-right">
                       <?php
                       if($cod_estadoplanilla==1){    ?>
+           
+                      <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalProcesar" onclick="agregaformPre('<?=$datosX;?>')">
+                        <i class="material-icons" title="Procesar Planilla">perm_data_setting</i>
+                      </button>                      
+                      <?php }                                                                          
+                      if($cod_estadoplanilla==2){    ?>
                       <a href='#' rel="tooltip" class="btn btn-dark" onclick="filaTablaGeneralPlanillasSueldo($('#card_prerequisitos'),<?=$index?>)">
                         <i class="material-icons" title="Prerequisitos">chrome_reader_mode</i>
                       </a>
                                           
-                      <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalProcesar" onclick="agregaformPre('<?=$datosX;?>')">
-                        <i class="material-icons" title="Procesar Planilla">perm_data_setting</i>
-                      </button>
-                      <a href='<?=$urlPlanillaSueldoPersonalActual;?>?codigo_planilla=<?=$codigo_planilla;?>' target="_blank" rel="tooltip" class="btn btn-success">            
-                        <i class="material-icons" title="Ver Planilla">remove_red_eye</i>                        
-                      </a>
-                      <?php }                                                                          
-                      if($cod_estadoplanilla==2){    ?>
+                      <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalreProcesar" onclick="agregaformPre('<?=$datosX;?>')">
+                        <i class="material-icons" title="Reprocesar Planilla">perm_data_setting</i>
+                      </button>                      
                       <a href='<?=$urlPlanillaSueldoPersonalActual;?>?codigo_planilla=<?=$codigo_planilla;?>' target="_blank" rel="tooltip" class="btn btn-success">            
                         <i class="material-icons" title="Ver Planilla">remove_red_eye</i>                        
                       </a>                            
@@ -147,7 +148,7 @@ $stmt->bindColumn('estadoplanilla', $estadoplanilla);
 			  </div>
         <div class="card-footer fixed-bottom">
           <a href='<?=$urlGenerarPlanillaSueldoPrevia;?>' rel="tooltip" class="btn btn-success">
-            Generar Planilla Previa Mes Actual
+            Registrar Planilla Del Mes Actual
           </a>                                            
         </div>  
       </div>
@@ -174,7 +175,7 @@ $stmt->bindColumn('estadoplanilla', $estadoplanilla);
 
 
 
-<!--modal-->
+<!--modal procesar-->
 <div class="modal fade" id="modalProcesar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog modal-sm" role="document">
     <div class="modal-content">
@@ -193,7 +194,26 @@ $stmt->bindColumn('estadoplanilla', $estadoplanilla);
     </div>
   </div>
 </div>
-<!--modal-->
+<!--modal Reprocesar-->
+<div class="modal fade" id="modalreProcesar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">¿Estás Seguro?</h4>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" name="codigo_planilla" id="codigo_planilla" value="0">        
+        Esta acción ReProcesará La planilla Del Mes En Curso. ¿Deseas Continuar?
+      </div>       
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" id="AceptarReProceso" data-dismiss="modal">Aceptar</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--modal Cerrra-->
 <div class="modal fade" id="modalCerrar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog modal-sm" role="document">
     <div class="modal-content">
@@ -214,12 +234,15 @@ $stmt->bindColumn('estadoplanilla', $estadoplanilla);
 </div>
 <script type="text/javascript">
   $(document).ready(function(){
-
-
     $('#AceptarProceso').click(function(){      
       cod_planilla=document.getElementById("codigo_planilla").value;      
 
       ProcesarPlanilla(cod_planilla);
+    });
+    $('#AceptarReProceso').click(function(){      
+      cod_planilla=document.getElementById("codigo_planilla").value;      
+
+      ReprocesarPlanilla(cod_planilla);
     });
     $('#AceptarCerrar').click(function(){      
       cod_planilla=document.getElementById("codigo_planilla").value;      

@@ -52,8 +52,8 @@ foreach ($detalle as $objDet){
     }
 }
 
-if($flag) echo "Tipos Identificación CORRECTO.<br>"
-else echo "Tipos Identificación ERROR.<br>"
+if($flag) echo "Tipos Identificación CORRECTO.<br>";
+else echo "Tipos Identificación ERROR.<br>";
 
 ?>
 

@@ -2320,6 +2320,24 @@ function ProcesarPlanilla(cod_planilla){
         //$('#tabla1').load('activosFijos/afEnCustodia.php');
         //alertify.success("agregado");
         alerts.showSwal('success-message','index.php?opcion=planillasSueldoPersonal');
+      }else{
+        alerts.showSwal('error-message','index.php?opcion=planillasSueldoPersonal');
+      }
+    }
+  });
+}
+function ReprocesarPlanilla(cod_planilla){
+  $.ajax({
+    type:"POST",
+    data:"cod_planilla="+cod_planilla+"&sw=1",
+    url:"planillas/savePlanillaMes.php",
+    success:function(r){
+      if(r==1){
+        //$('#tabla1').load('activosFijos/afEnCustodia.php');
+        //alertify.success("agregado");
+        alerts.showSwal('success-message','index.php?opcion=planillasSueldoPersonal');
+      }else{
+        alerts.showSwal('error-message','index.php?opcion=planillasSueldoPersonal');
       }
     }
   });
