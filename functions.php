@@ -1220,6 +1220,180 @@ function porcentRetencionDetalle($codigo){
    }
    return($nombreX);
 }
+
+
+
+function verificarBonoPersonaMes($codigoPersona, $codMes, $codBono)
+{
+  $dbh = new Conexion();
+  $stmt = $dbh->prepare("SELECT cod_personal FROM bonos_personal_mes WHERE cod_mes=$codMes AND cod_bono=$codBono");
+  $stmt->execute();
+
+  $cont = 0;
+  $existe = 0;
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    if ($row['cod_personal'] == $codigoPersona) {
+      $cont++;
+    }
+  }
+  if ($cont == 0) {
+    $existe = 0;
+  } else {
+    $existe = 1;
+  }
+  return ($existe);
+}
+
+
+function verificarPersonaMes($codigoPersona, $codMes, $codDescuento)
+{
+  $dbh = new Conexion();
+  $stmt = $dbh->prepare("SELECT cod_personal FROM descuentos_personal_mes WHERE cod_mes=$codMes AND cod_descuento=$codDescuento");
+  $stmt->execute();
+
+  $cont = 0;
+  $existe = 0;
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    if ($row['cod_personal'] == $codigoPersona) {
+      $cont++;
+    }
+  }
+  if ($cont == 0) {
+    $existe = 0;
+  } else {
+    $existe = 1;
+  }
+  return ($existe);
+}
+
+function formatearNumerosExcel($numero)
+{
+  //reemplazar comas por puntos
+  $num = str_replace(',', '.', $numero);
+  return $num;
+}
+
+function formatoNombreArchivoExcel()
+{
+  $fecha = getdate();
+  $nombre_v = $fecha["mday"] . "-" . $fecha["mon"] . "-" . $fecha["year"] . "-" . $fecha["hours"] . "-" . $fecha["minutes"] . "-" . $fecha["seconds"] . ".csv";
+  return $nombre_v;
+}
+
+
+function verificarExistenciaPersona($codigoPersona)
+{
+  $dbh = new Conexion();
+  $stmt = $dbh->prepare("SELECT codigo FROM personal WHERE codigo=$codigoPersona and cod_estadoreferencial=1");
+  $stmt->execute();
+
+  $cont = 0;
+  $existe = 0;
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    if ($row['codigo'] == $codigoPersona) {
+      $cont++;
+    }
+  }
+  if ($cont == 0) {
+    $existe = false;
+  } else {
+    $existe = true;
+  }
+  return ($existe);
+}
+
+function nombrePersona($codigoPersona){
+  $dbh = new Conexion();
+  $stmt = $dbh->prepare("SELECT codigo,paterno,materno,primer_nombre FROM personal WHERE codigo=$codigoPersona and cod_estadoreferencial=1");
+  $stmt->execute();
+  $stmt->bindParam('paterno',$paterno);
+  $stmt->bindParam('materno',$materno);
+  $stmt->bindParam('primer_nombre',$primer_nombre);
+
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $paternoX=$row['paterno'];
+    $maternoX=$row['materno'];
+    $primer_nombreX=$row['primer_nombre'];
+    $nombre= $primer_nombreX." ".$paternoX." ".$maternoX;
+ }
+ return($nombre);
+
+}
+
+function calculaIva($monto){
+  $calculo=$monto*0.13;
+  return ($calculo);
+}
+
+function MesAnioEnLetra($fecha){
+  $anio = date("Y", strtotime($fecha));
+  $mes = array('Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre');
+  $mes = $mes[(date('m', strtotime($fecha))*1)-1];
+  return $mes.'/'.$anio;
+}
+
+
+function calculaBonoProfesion($codGrado){
+  $dbh = new Conexion();
+  //obtener sueldo basico de configuraciones_planillas
+  $stmt = $dbh->prepare("SELECT valor_configuracion FROM configuraciones_planillas where id_configuracion=1");
+  $stmt->execute();
+  $stmt->bindColumn('valor_configuracion', $sueldoBasico);
+
+  while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+    $sueldoBasicoX= $sueldoBasico;
+  }
+
+  //obtener codigo y porcentaje de profesion
+  $stmtb = $dbh->prepare("SELECT codigo,porcentaje FROM personal_grado_academico where codigo=$codGrado");
+  $stmtb->execute();
+  $stmtb->bindColumn('codigo', $codigo);
+  $stmtb->bindColumn('porcentaje', $porcentaje);
+
+  while ($row = $stmtb->fetch(PDO::FETCH_BOUND)) {
+    $codGAX = $codigo;
+    $porcentajeX = $porcentaje;
+
+    if($codGrado==$codGAX){
+      $bonoProf = $sueldoBasicoX*($porcentajeX/100);
+    }
+  }
+
+  return($bonoProf);
+}
+
+
+function insertarDotacionPersonaMes($codDotacionPersona,$monto,$nro_meses, $fecha,$codGestion)
+{
+  
+  $dbh = new Conexion();
+  $montoxMes=$monto/$nro_meses;
+  $codGest=$codGestion;
+
+  //$anio = date("Y", strtotime($fecha));
+  $mes = (date('m', strtotime($fecha)) * 1);
+
+  for ($i = 1; $i <= $nro_meses; $i++) {
+    if ($mes <= 12) {
+      //echo $nro_meses . " " . $mes . '/' . $anio . ".....";
+      $stmt = $dbh->prepare("INSERT INTO dotaciones_personal_mes(cod_dotacionpersonal,cod_gestion,cod_mes,monto_mes,cod_estadoreferencial)
+                           VALUES ($codDotacionPersona,$codGest,$mes,$montoxMes,1) ");
+      $stmt->execute();
+      $mes++;
+    } else {
+      $mes = 1;
+      //$anio++;
+      $codGest=$codGest+1;
+      //echo $nro_meses . " " . $mes . '/' . $anio . ".....";
+      $stmtb = $dbh->prepare("INSERT INTO dotaciones_personal_mes(cod_dotacionpersonal,cod_gestion,cod_mes,monto_mes,cod_estadoreferencial)
+                           VALUES ($codDotacionPersona,$codGest,$mes,$montoxMes,1) ");
+      $stmtb->execute();
+      $mes++;
+    }
+  }
+}
+
+
 function obtenerCodigoSolicitudRecursos(){
    $dbh = new Conexion();
    $stmt = $dbh->prepare("SELECT IFNULL(max(c.codigo)+1,1)as codigo from solicitud_recursos c");
@@ -1431,6 +1605,8 @@ function obtenerCuentaPlantillaCostos($codigo){
    $stmt->execute();
    return $stmt;
 }
+
+
 
 //================ ========== PARA  planilla sueldos
 function obtenerAporteAFP($total_ganado){
@@ -1652,7 +1828,7 @@ function obtenerTotalesSimulacion($codigo){
    }
    return($nombreX);
 }
-//>>>>>>> 9665608161fbd74baa97b51d1230f7cda83c0916
+
 ?>
 
 

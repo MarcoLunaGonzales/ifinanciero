@@ -124,6 +124,8 @@ function cantidadF($arreglo){
 
 
 
+
+   
 //tratando de cerar json para Web service
 
     // require_once 'personal/personal_ws.php';
@@ -135,6 +137,7 @@ function cantidadF($arreglo){
     //   echo json_encode($data);
 
     // }
+
 
 ?>
 
