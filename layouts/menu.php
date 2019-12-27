@@ -424,6 +424,12 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
                     <span class="sidebar-mini"> CR </span>
                     <span class="sidebar-normal"> Configuracion de Retenciones</span>
                   </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=configuracionEstadosCuenta">
+                    <span class="sidebar-mini"> CEC </span>
+                    <span class="sidebar-normal"> Configuracion Estados de Cuentas</span>
+                  </a>
                 </li>                          
               </ul>
             </div>

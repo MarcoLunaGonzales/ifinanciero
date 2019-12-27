@@ -249,6 +249,10 @@
             .attr('name', 'facturas')
             .attr('value', JSON.stringify(itemFacturas))
             .appendTo('#formRegComp');
+            $('<input />').attr('type', 'hidden')
+            .attr('name', 'estados_cuentas')
+            .attr('value', JSON.stringify(itemEstadosCuentas))
+            .appendTo('#formRegComp');
         }
     });
     $("#formRegDet").submit(function(e) {

@@ -306,6 +306,16 @@ function obtenerCodigoFacturaCompra(){
    }
    return($codigoFacturaCompra);
 }
+function obtenerCodigoEstadosCuenta(){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT IFNULL(max(c.codigo)+1,1)as codigo from estados_cuenta c");
+   $stmt->execute();
+   $codigoFacturaCompra=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $codigoFacturaCompra=$row['codigo'];
+   }
+   return($codigoFacturaCompra);
+}
 function nameCargo($codigo){
    $dbh = new Conexion();
    $stmt = $dbh->prepare("SELECT nombre FROM cargos where codigo=:codigo");
@@ -731,6 +741,14 @@ function obtenerFacturasCompro($codigo){
    $stmt->execute();
    return $stmt;
 }
+function obtenerEstadosCuenta($codigo){
+   $dbh = new Conexion();
+   $sql="";
+   $sql="SELECT codigo as cod_det,cod_plancuenta,monto,cod_proveedor,fecha from estados_cuenta  where cod_comprobantedetalle=$codigo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+}
     //funcion nueva obtener factura de comprobantesdetalle
 function obtenerPlantillasDetalle($codigo){
    $dbh = new Conexion();
@@ -745,6 +763,18 @@ function obtenerPlantillasDetalle($codigo){
    $dbh = new Conexion();
    $sql="";
    $sql="select count(*) as total from facturas_compra where cod_comprobantedetalle=$codigo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   $stmt->bindColumn('total', $contador);
+   while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+    $cont1=$contador;
+   }
+   return $cont1;
+  }
+  function contarEstadosCuenta($codigo){
+   $dbh = new Conexion();
+   $sql="";
+   $sql="select count(*) as total from estados_cuenta where cod_comprobantedetalle=$codigo";
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
    $stmt->bindColumn('total', $contador);
@@ -873,13 +903,161 @@ function obtenerPlantilla($codigo){
         $cabeceraFac[0]="nit";$cabeceraFac[1]="nro_factura";$cabeceraFac[2]="fecha";$cabeceraFac[3]="razon_social";$cabeceraFac[4]="importe";$cabeceraFac[5]="exento";$cabeceraFac[6]="nro_autorizacion";$cabeceraFac[7]="codigo_control";
           if($title=="cod_solicitudrecurso"){
            $sql = obtenerFacturasSoli($codComprobanteDetalle); 
-           editarComprobanteDetalle($codComprobanteDetalle,'cod_solicitudrecursodetalle',contarFacturasSoli($codComprobanteDetalle),cantidadF($fact[$i]),$sql,'facturas_compra',$cabeceraFac,$valFac,null);
+           editarComprobanteDetalle($codComprobanteDetalle,'cod_solicitudrecursodetalle',contarFacturasSoli($codComprobanteDetalle),cantidadF($fact[$j]),$sql,'facturas_compra',$cabeceraFac,$valFac,null);
           }else{
            $sql = obtenerFacturasCompro($codComprobanteDetalle); 
-           editarComprobanteDetalle($codComprobanteDetalle,'cod_comprobantedetalle',contarFacturasCompra($codComprobanteDetalle),cantidadF($fact[$i]),$sql,'facturas_compra',$cabeceraFac,$valFac,null);
+           editarComprobanteDetalle($codComprobanteDetalle,'cod_comprobantedetalle',contarFacturasCompra($codComprobanteDetalle),cantidadF($fact[$j]),$sql,'facturas_compra',$cabeceraFac,$valFac,null);
           }    
           
          }
+        }
+        $crud2 = $dbh->prepare($query2);
+        $crud2->execute();
+       }
+    }
+  }
+  function editarComprobanteDetalleCompleto($codComp,$title,$cant1,$cant2,$stmt,$tabla,$cabecera,$valores,$fact,$estados){
+    $dbh = new Conexion();
+    $i=0;$cab=cantidadF($cabecera);$codigo=0;
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $codigo=$row['cod_det'];
+      if($i<$cant2){
+        //update
+        $sets="";
+        for ($k=0; $k < $cab; $k++) { 
+          if($k==($cab-1)){
+            $sets.=$cabecera[$k]."='".$valores[$i][$k]."'";
+          }else{
+            $sets.=$cabecera[$k]."='".$valores[$i][$k]."', ";
+          }
+        } 
+         $query="UPDATE $tabla set $sets where codigo=$codigo";       
+      }else{
+        //delete
+        $query="DELETE from $tabla where codigo=$codigo";
+        $queryP="DELETE from estados_cuenta where cod_comprobantedetalle=$codigo";
+        $crudP = $dbh->prepare($queryP);
+        $crudP->execute();
+      }
+      $crud = $dbh->prepare($query);
+      $crud->execute();
+      if($fact!=null){
+        //recoger valores del array en un array general para enviar los datos
+        for($h=0;$h<cantidadF($fact[$i]);$h++){
+          $valFac[$h][0]=$fact[$i][$h]->nit;
+          $valFac[$h][1]=$fact[$i][$h]->nroFac;
+
+          $fecha=$fact[$i][$h]->fechaFac;
+          $porciones = explode("/", $fecha);
+          $fechaFac=$porciones[2]."-".$porciones[1]."-".$porciones[0];
+
+          $valFac[$h][2]=$fechaFac;
+          $valFac[$h][3]=$fact[$i][$h]->razonFac;
+          $valFac[$h][4]=$fact[$i][$h]->impFac;
+          $valFac[$h][5]=$fact[$i][$h]->exeFac;
+          $valFac[$h][6]=$fact[$i][$h]->autFac;
+          $valFac[$h][7]=$fact[$i][$h]->conFac;
+        }
+        if(cantidadF($fact[$i])>0){
+         $cabeceraFac[0]="nit";$cabeceraFac[1]="nro_factura";$cabeceraFac[2]="fecha";$cabeceraFac[3]="razon_social";$cabeceraFac[4]="importe";$cabeceraFac[5]="exento";$cabeceraFac[6]="nro_autorizacion";$cabeceraFac[7]="codigo_control";
+         if($title=="cod_solicitudrecurso"){
+            $sql = obtenerFacturasSoli($codigo); 
+            editarComprobanteDetalleCompleto($codigo,'cod_solicitudrecursodetalle',contarFacturasSoli($codigo),cantidadF($fact[$i]),$sql,'facturas_compra',$cabeceraFac,$valFac,null,null);
+         }else{
+           $sql = obtenerFacturasCompro($codigo); 
+           editarComprobanteDetalleCompleto($codigo,'cod_comprobantedetalle',contarFacturasCompra($codigo),cantidadF($fact[$i]),$sql,'facturas_compra',$cabeceraFac,$valFac,null,null);
+         }  
+        }
+        //estados de cuenta
+        if($estados!=null){
+         for($h=0;$h<cantidadF($estados[$i]);$h++){
+          $fecha=date("Y-m-d H:i:s");
+          $valEst[$h][0]=$estados[$i][$h]->cod_plancuenta;
+          $valEst[$h][1]=$estados[$i][$h]->monto;
+          $valEst[$h][2]=$estados[$i][$h]->cod_proveedor;
+          $valEst[$h][3]=$fecha;
+          $valEst[$h][4]=$estados[$i][$h]->cod_comprobantedetalle;
+         }
+           if(cantidadF($estados[$i])>0){
+              $cabeceraEst[0]="cod_plancuenta";$cabeceraEst[1]="monto";$cabeceraEst[2]="cod_proveedor";$cabeceraEst[3]="fecha";$cabeceraEst[4]="cod_comprobantedetalleorigen";
+              $sql = obtenerEstadosCuenta($codigo); 
+              editarComprobanteDetalleCompleto($codigo,'cod_comprobantedetalle',contarEstadosCuenta($codigo),cantidadF($estados[$i]),$sql,'estados_cuenta',$cabeceraEst,$valEst,null,null); 
+           }
+        }
+
+      }//fin de if ($fact != null)
+      $i++;
+    }
+    if($cant2>$cant1){
+       for ($j=$i; $j < $cant2; $j++) { 
+         //insert
+        $into=$title.",";$values=$codComp.",";
+        for ($l=0; $l < $cab; $l++) { 
+          if($l==($cab-1)){
+          $into.=$cabecera[$l]."";
+          $values.="'".$valores[$j][$l]."'";
+          }else{
+           $into.=$cabecera[$l].",";
+          $values.="'".$valores[$j][$l]."',";
+          }          
+        }
+        if($fact==null||$estados==null){
+          if($fact==null){
+            $codFacturaCompra=obtenerCodigoFacturaCompra();
+          }else{
+            $codFacturaCompra=obtenerCodigoEstadosCuenta();
+          }
+            $dbh = new Conexion();
+            $query2="INSERT INTO $tabla (codigo, ".$into.") values ($codFacturaCompra, ".$values.")";
+        }else{
+          if($title=="cod_solicitudrecurso"){
+            $codComprobanteDetalle=obtenerCodigoSolicitudDetalle();
+          }else{
+            $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
+          }    
+          $dbh = new Conexion();
+          $query2="INSERT INTO $tabla (codigo, ".$into.") values ($codComprobanteDetalle, ".$values.")";
+
+          //recoger valores del array en un array general para enviar los datos
+        for($h=0;$h<cantidadF($fact[$j]);$h++){
+          $valFac[$h][0]=$fact[$j][$h]->nit;
+          $valFac[$h][1]=$fact[$j][$h]->nroFac;
+
+          $fecha=$fact[$j][$h]->fechaFac;
+          $porciones = explode("/", $fecha);
+          $fechaFac=$porciones[2]."-".$porciones[1]."-".$porciones[0];
+
+          $valFac[$h][2]=$fechaFac;
+          $valFac[$h][3]=$fact[$j][$h]->razonFac;
+          $valFac[$h][4]=$fact[$j][$h]->impFac;
+          $valFac[$h][5]=$fact[$j][$h]->exeFac;
+          $valFac[$h][6]=$fact[$j][$h]->autFac;
+          $valFac[$h][7]=$fact[$j][$h]->conFac;
+        }
+        if(cantidadF($fact[$j])>0){
+        $cabeceraFac[0]="nit";$cabeceraFac[1]="nro_factura";$cabeceraFac[2]="fecha";$cabeceraFac[3]="razon_social";$cabeceraFac[4]="importe";$cabeceraFac[5]="exento";$cabeceraFac[6]="nro_autorizacion";$cabeceraFac[7]="codigo_control";
+          if($title=="cod_solicitudrecurso"){
+           $sql = obtenerFacturasSoli($codComprobanteDetalle); 
+           editarComprobanteDetalle($codComprobanteDetalle,'cod_solicitudrecursodetalle',contarFacturasSoli($codComprobanteDetalle),cantidadF($fact[$j]),$sql,'facturas_compra',$cabeceraFac,$valFac,null);
+          }else{
+           $sql = obtenerFacturasCompro($codComprobanteDetalle); 
+           editarComprobanteDetalle($codComprobanteDetalle,'cod_comprobantedetalle',contarFacturasCompra($codComprobanteDetalle),cantidadF($fact[$j]),$sql,'facturas_compra',$cabeceraFac,$valFac,null);
+          }    
+         }
+         // estados de cuenta items nuevos
+         for($h=0;$h<cantidadF($estados[$j]);$h++){
+          $fecha=date("Y-m-d H:i:s");
+          $valEst[$h][0]=$estados[$j][$h]->cod_plancuenta;
+          $valEst[$h][1]=$estados[$j][$h]->monto;
+          $valEst[$h][2]=$estados[$j][$h]->cod_proveedor;
+          $valEst[$h][3]=$fecha;
+          $valEst[$h][4]=$estados[$j][$h]->cod_comprobantedetalle;
+         }
+           if(cantidadF($estados[$j])>0){
+              $cabeceraEst[0]="cod_plancuenta";$cabeceraEst[1]="monto";$cabeceraEst[2]="cod_proveedor";$cabeceraEst[3]="fecha";$cabeceraEst[4]="cod_comprobantedetalleorigen";
+              $sql = obtenerEstadosCuenta($codComprobanteDetalle); 
+              echo editarComprobanteDetalleCompleto($codComprobanteDetalle,'cod_comprobantedetalle',contarEstadosCuenta($codComprobanteDetalle),cantidadF($estados[$j]),$sql,'estados_cuenta',$cabeceraEst,$valEst,null,null); 
+           }
         }
         $crud2 = $dbh->prepare($query2);
         $crud2->execute();

@@ -154,6 +154,17 @@
 		if ($_GET['opcion']=='editSolicitudRecursos') {
 			require_once('solicitudes/editSolicitudRecursos.php');
 		}
+		//ESTADOS DE CUENTAS
+		if ($_GET['opcion']=='configuracionEstadosCuenta') {
+			require_once('estados_cuenta/list.php');
+		}
+		if ($_GET['opcion']=='registerConfiguracionEstadoCuenta') {
+			require_once('estados_cuenta/register.php');
+		}
+		if ($_GET['opcion']=='deleteConfiguracionEstadoCuenta') {
+			require_once('estados_cuenta/saveDelete.php');
+		}
+		
 
 		//******************************ACTIVOS FIJOS***********************************************************
 		if ($_GET['opcion']=='listUbicaciones') {
