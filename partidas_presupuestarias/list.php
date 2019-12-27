@@ -86,10 +86,10 @@ $stmt->bindColumn('observaciones', $observaciones);
                             </button>
                           </td>
                         </tr>
-<?php
-							$index++;
-						}
-?>
+                        <?php
+              							$index++;
+              						}
+                        ?>
                       </tbody>
                     </table>
                   </div>
