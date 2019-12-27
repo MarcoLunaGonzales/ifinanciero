@@ -131,15 +131,15 @@ if($sw==2){//procesar planilla
 	while ($rowC = $stmtPersonal->fetch()) 
 	{
 		//calculado otros bonos
-		if($p_grado_academico==0)$otro_bonos = 0;
-		else $otro_bonos = $p_grado_academico/100*$minimo_salarial;
+		if($p_grado_academico==0)$bono_academico = 0;
+		else $bono_academico = $p_grado_academico/100*$minimo_salarial;
 
 		$bono_antiguedad= 233.42 ;//falta hacer
 		$otros_b = 0 ;//buscar datos
 
-		$total_bonos=$otro_bonos+$bono_antiguedad+$otros_b;
+		$total_bonos=$bono_academico+$bono_antiguedad+$otros_b;
 
-		$total_ganado = ($haber_basico/30*$dias_trabajados)+$otro_bonos+$bono_antiguedad+$otros_b;
+		$total_ganado = ($haber_basico/30*$dias_trabajados)+$bono_academico+$bono_antiguedad+$otros_b;
 		//calculamos descuentoss		
 		if($cod_tipoafp==1){
 		  $afp_futuro =obtenerAporteAFP($total_ganado);
@@ -183,9 +183,9 @@ if($sw==2){//procesar planilla
 
 		//==== insert de panillas de  personal mes
 		$sqlInsertPlanillas="INSERT into planillas_personal_mes(cod_planilla,cod_personalcargo,cod_gradoacademico,dias_trabajados,horas_pagadas,
-		  haber_basico,bono_antiguedad,horas_extra,comisiones,monto_bonos,total_ganado,monto_descuentos,otros_descuentos,afp_1,afp_2,
+		  haber_basico,bono_antiguedad,bono_academico,horas_extra,comisiones,monto_bonos,total_ganado,monto_descuentos,otros_descuentos,afp_1,afp_2,
 		  total_descuentos,liquido_pagable,cod_estadoreferencial,created_by,modified_by)
-		 values(:cod_planilla,:cod_personal_cargo,:cod_grado_academico,:dias_trabajados,:horas_pagadas,:haber_basico,:bono_antiguedad,
+		 values(:cod_planilla,:cod_personal_cargo,:cod_grado_academico,:dias_trabajados,:horas_pagadas,:haber_basico,:bono_antiguedad,:bono_academico
 		  :horas_extra,:comisiones,:monto_bonos,:total_ganado,:monto_descuentos,:otros_descuentos,:afp_1,:afp_2,:total_descuentos,
 		  :liquido_pagable,:cod_estadoreferencial,:created_by,:modified_by)";
 		$stmtInsertPlanillas = $dbhI->prepare($sqlInsertPlanillas);
@@ -196,6 +196,7 @@ if($sw==2){//procesar planilla
 		$stmtInsertPlanillas->bindParam(':horas_pagadas',$horas_pagadas);
 		$stmtInsertPlanillas->bindParam(':haber_basico',$haber_basico);
 		$stmtInsertPlanillas->bindParam(':bono_antiguedad',$bono_antiguedad);
+		$stmtInsertPlanillas->bindParam(':bono_academico',$bono_academico);
 		$stmtInsertPlanillas->bindParam(':horas_extra',$horas_extra);
 		$stmtInsertPlanillas->bindParam(':comisiones',$comisiones);
 		$stmtInsertPlanillas->bindParam(':monto_bonos',$total_bonos);
@@ -361,15 +362,15 @@ if($sw==2){//procesar planilla
 	while ($rowC = $stmtPersonal->fetch()) 
 	{
 		//calculado otros bonos
-		if($p_grado_academico==0)$otro_bonos = 0;
-		else $otro_bonos = $p_grado_academico/100*$minimo_salarial;
+		if($p_grado_academico==0)$bono_academico = 0;
+		else $bono_academico = $p_grado_academico/100*$minimo_salarial;
 
 		$bono_antiguedad= 233.42 ;//falta hacer
 		$otros_b = 0 ;//buscar datos
 
-		$total_bonos=$otro_bonos+$bono_antiguedad+$otros_b;
+		$total_bonos=$bono_academico+$bono_antiguedad+$otros_b;
 
-		$total_ganado = ($haber_basico/30*$dias_trabajados)+$otro_bonos+$bono_antiguedad+$otros_b;
+		$total_ganado = ($haber_basico/30*$dias_trabajados)+$bono_academico+$bono_antiguedad+$otros_b;
 		//calculamos descuentoss		
 		if($cod_tipoafp==1){
 		  $afp_futuro =obtenerAporteAFP($total_ganado);
@@ -413,7 +414,7 @@ if($sw==2){//procesar planilla
 
 		//==== update de panillas de  personal mes
 		$sqlInsertPlanillas="UPDATE planillas_personal_mes set cod_gradoacademico=:cod_grado_academico,dias_trabajados=:dias_trabajados,
-		horas_pagadas=:horas_pagadas,haber_basico=:haber_basico,bono_antiguedad=:bono_antiguedad,horas_extra=:horas_extra,comisiones=:comisiones,
+		horas_pagadas=:horas_pagadas,haber_basico=:haber_basico,bono_antiguedad=:bono_antiguedad,bono_academico=:bono_academico,horas_extra=:horas_extra,comisiones=:comisiones,
 		monto_bonos=:monto_bonos,total_ganado=:total_ganado,monto_descuentos=:monto_descuentos,otros_descuentos=:otros_descuentos,
 		afp_1=:afp_1,afp_2=:afp_2,total_descuentos=:total_descuentos,liquido_pagable=:liquido_pagable
 		where cod_planilla=:cod_planilla and cod_personalcargo=:cod_personal_cargo";
@@ -426,6 +427,7 @@ if($sw==2){//procesar planilla
 		$stmtInsertPlanillas->bindParam(':horas_pagadas',$horas_pagadas);
 		$stmtInsertPlanillas->bindParam(':haber_basico',$haber_basico);
 		$stmtInsertPlanillas->bindParam(':bono_antiguedad',$bono_antiguedad);
+		$stmtInsertPlanillas->bindParam(':bono_academico',$bono_academico);
 		$stmtInsertPlanillas->bindParam(':horas_extra',$horas_extra);
 		$stmtInsertPlanillas->bindParam(':comisiones',$comisiones);
 		$stmtInsertPlanillas->bindParam(':monto_bonos',$total_bonos);
@@ -440,21 +442,21 @@ if($sw==2){//procesar planilla
 
 
 
-		echo "cod_planilla: ".$cod_planilla."<br>";
-		echo "codigo_personal: ".$codigo_personal."<br>";
-		echo "aporte_solidario_13000: ".$aporte_solidario_13000."<br>";
-		echo "aporte_solidario_25000: ".$aporte_solidario_25000."<br>";
-		echo "aporte_solidario_35000: ".$aporte_solidario_35000."<br>";
-		echo "RC_IVA: ".$RC_IVA."<br>";
-		echo "atrasos: ".$atrasos."<br>";
-		echo "anticipo: ".$anticipo."<br>";	
+		// echo "cod_planilla: ".$cod_planilla."<br>";
+		// echo "codigo_personal: ".$codigo_personal."<br>";
+		// echo "aporte_solidario_13000: ".$aporte_solidario_13000."<br>";
+		// echo "aporte_solidario_25000: ".$aporte_solidario_25000."<br>";
+		// echo "aporte_solidario_35000: ".$aporte_solidario_35000."<br>";
+		// echo "RC_IVA: ".$RC_IVA."<br>";
+		// echo "atrasos: ".$atrasos."<br>";
+		// echo "anticipo: ".$anticipo."<br>";	
 		
-		echo "seguro_de_salud: ".$seguro_de_salud."<br>";
-		echo "riesgo_profesional: ".$riesgo_profesional."<br>";
-		echo "provivienda: ".$provivienda."<br>";
-		echo "a_patronal_sol: ".$a_patronal_sol."<br>";
-		echo "total_a_patronal: ".$total_a_patronal."<br>";
-		echo "==============<br>";	
+		// echo "seguro_de_salud: ".$seguro_de_salud."<br>";
+		// echo "riesgo_profesional: ".$riesgo_profesional."<br>";
+		// echo "provivienda: ".$provivienda."<br>";
+		// echo "a_patronal_sol: ".$a_patronal_sol."<br>";
+		// echo "total_a_patronal: ".$total_a_patronal."<br>";
+		// echo "==============<br>";	
 
 		//==== update de panillas de  personal mes de aporte patronal 
 		$sqlInsertPlanillaDetalleU="UPDATE planillas_personal_mes_patronal set a_solidario_13000=:a_solidario_13000,a_solidario_25000=:a_solidario_25000,a_solidario_35000=:a_solidario_35000,rc_iva=:rc_iva,

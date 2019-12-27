@@ -41,6 +41,7 @@ $stmtPersonal->bindColumn('dias_trabajados', $dias_trabajados);
 $stmtPersonal->bindColumn('horas_pagadas', $horas_pagadas);
 $stmtPersonal->bindColumn('haber_basico', $haber_basico);
 $stmtPersonal->bindColumn('bono_antiguedad', $bono_antiguedad);
+$stmtPersonal->bindColumn('bono_academico', $bono_academico);
 $stmtPersonal->bindColumn('horas_extra', $horas_extra);
 $stmtPersonal->bindColumn('comisiones', $comisiones);
 $stmtPersonal->bindColumn('monto_bonos', $monto_bonos);
@@ -88,6 +89,7 @@ $stmtPersonal->bindColumn('afp_2', $afp_2);
                     <th>Haber Básico</th>
                     <th>Días Trab</th>                  
                     <th>Bono Antig</th>                    
+                    <th>Bono Académico</th>
                     <th>Monto Bonos</th> 
                     <th>Total Ganado</th>
 
@@ -146,6 +148,7 @@ $stmtPersonal->bindColumn('afp_2', $afp_2);
                     <td><?=$haber_basico;?></td>
                     <td><?=$dias_trabajados;?></td>                    
                     <td><?=$bono_antiguedad;?></td>                  
+                    <td><?=$bono_academico;?></td>
                     <td><?=$monto_bonos;?></td>
                     <td><?=$total_ganado;?></td>
 

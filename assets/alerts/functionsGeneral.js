@@ -2315,12 +2315,18 @@ function ProcesarPlanilla(cod_planilla){
     type:"POST",
     data:"cod_planilla="+cod_planilla+"&sw=2",
     url:"planillas/savePlanillaMes.php",
+    beforeSend:function(objeto){ 
+      $('#cargaP').css({display:'block'});
+      $('#AceptarProceso').css({display:'none'});
+      $('#CancelarProceso').css({display:'none'});  
+    },
     success:function(r){
       if(r==1){
         //$('#tabla1').load('activosFijos/afEnCustodia.php');
-        //alertify.success("agregado");
+        $('#cargaP').css('display','none');
         alerts.showSwal('success-message','index.php?opcion=planillasSueldoPersonal');
       }else{
+        $('#cargaP').css('display','none');
         alerts.showSwal('error-message','index.php?opcion=planillasSueldoPersonal');
       }
     }
@@ -2331,12 +2337,17 @@ function ReprocesarPlanilla(cod_planilla){
     type:"POST",
     data:"cod_planilla="+cod_planilla+"&sw=1",
     url:"planillas/savePlanillaMes.php",
+    beforeSend:function(objeto){ 
+      $('#cargaR').css({display:'block'});
+      $('#AceptarReProceso').css({display:'none'});
+      $('#CancelarReProceso').css({display:'none'});  
+    },
     success:function(r){
       if(r==1){
-        //$('#tabla1').load('activosFijos/afEnCustodia.php');
-        //alertify.success("agregado");
+        $('#cargaR').css('display','none');
         alerts.showSwal('success-message','index.php?opcion=planillasSueldoPersonal');
       }else{
+        $('#cargaR').css('display','none');
         alerts.showSwal('error-message','index.php?opcion=planillasSueldoPersonal');
       }
     }

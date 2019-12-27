@@ -66,32 +66,32 @@ $stmt->bindColumn('estadoplanilla', $estadoplanilla);
 
                   //descuentos
                   $dbh1 = new Conexion();
-                  $sql2="SELECT count(codigo) as cantidad_descuentos from planillas_personal_mes where total_descuentos>0";
+                  $sql2="SELECT count(codigo) as cantidad_descuentos from planillas_personal_mes where total_descuentos>0 and cod_planilla=$codigo_planilla";
                   $stmt2 = $dbh1->prepare($sql2);
-                  $stmt2->execute(); 
-                  $nc=0;
+                  $stmt2->execute();                   
                   $result2= $stmt2->fetch();
                   $cantidad_descuentosX=trim($result2['cantidad_descuentos']);
 
                   //bonos
-                  $sql3="SELECT count(codigo) as cantidad_bonos from planillas_personal_mes where monto_bonos>0";
+                  $sql3="SELECT count(codigo) as cantidad_bonos from planillas_personal_mes where monto_bonos>0 and cod_planilla=$codigo_planilla";
                   $stmt3 = $dbh1->prepare($sql3);
                   $stmt3->execute();     
                   $result3= $stmt3->fetch();
                   $cantidad_bonosX=trim($result3['cantidad_bonos']);                                            
                   //atrasos
-                  $sql4="SELECT count(codigo) as cantidad_atrasos from planillas_personal_mes_detalle where atrasos>0";
+                  $sql4="SELECT count(codigo) as cantidad_atrasos from planillas_personal_mes_patronal where atrasos>0 and cod_planilla=$codigo_planilla";
                   $stmt4 = $dbh1->prepare($sql4);
                   $stmt4->execute();
                   $result4= $stmt4->fetch();
                   $cantidad_atrasosX=trim($result4['cantidad_atrasos']);
                   //anticipos
-                  $sql5="SELECT count(codigo) as cantidad_anticipos from planillas_personal_mes_detalle where anticipo>0";
+                  $sql5="SELECT count(codigo) as cantidad_anticipos from planillas_personal_mes_patronal where anticipo>0 and cod_planilla=$codigo_planilla";
                   $stmt5 = $dbh1->prepare($sql5);
                   $stmt5->execute(); 
                   $result5= $stmt5->fetch();
                   $cantidad_anticiposX=trim($result5['cantidad_anticipos']);
 
+                  $nc=0;
                   $dato = new stdClass();//obejto
 
                   $dato->codigo=($nc+1);
@@ -186,10 +186,13 @@ $stmt->bindColumn('estadoplanilla', $estadoplanilla);
       <div class="modal-body">
         <input type="hidden" name="codigo_planilla" id="codigo_planilla" value="0">        
         Esta acción Procesará La planilla Del Mes En Curso. ¿Deseas Continuar?
+        <div id="cargaP" style="display:none">
+          <h3><b>Por favor espere...</b></h3>
+        </div>
       </div>       
       <div class="modal-footer">
-        <button type="button" class="btn btn-success" id="AceptarProceso" data-dismiss="modal">Aceptar</button>
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-success" id="AceptarProceso">Aceptar</button>
+        <button type="button" class="btn btn-danger" id="CancelarProceso" data-dismiss="modal" >Cancelar</button>
       </div>
     </div>
   </div>
@@ -205,10 +208,13 @@ $stmt->bindColumn('estadoplanilla', $estadoplanilla);
       <div class="modal-body">
         <input type="hidden" name="codigo_planilla" id="codigo_planilla" value="0">        
         Esta acción ReProcesará La planilla Del Mes En Curso. ¿Deseas Continuar?
-      </div>       
+        <div id="cargaR" style="display:none">
+          <h3><b>Por favor espere...</b></h3>
+        </div>
+      </div>    
       <div class="modal-footer">
-        <button type="button" class="btn btn-success" id="AceptarReProceso" data-dismiss="modal">Aceptar</button>
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-success" id="AceptarReProceso" >Aceptar</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal" id="CancelarReProceso">Cancelar</button>
       </div>
     </div>
   </div>
