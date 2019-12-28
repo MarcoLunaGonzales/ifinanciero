@@ -32,6 +32,7 @@ $contadorRegistros=0;
 	var distribucionPor=[];
 	var configuracionCentro=[];
 	var configuraciones=[];
+	var estado_cuentas=[];
 </script>
 <?php
   $i=0;
@@ -67,6 +68,19 @@ $contadorRegistros=0;
 				$descripcionX=$row['descripcion_configuracion'];
 			 ?>
 			 <script>configuraciones.push({codigo:<?=$codigoX?>,valor:<?=$valorX?>,descripcion:'<?=$descripcionX?>'});</script>
+		    <?php
+			 }
+
+            //ESTADO DE CUENTAS
+			$stmt = $dbh->prepare("SELECT * FROM configuracion_estadocuentas");
+			$stmt->execute();
+			$i=0;
+			while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+				$codigoX=$row['codigo'];
+				$codPlanCuentaX=$row['cod_plancuenta'];
+				$tipoX=$row['tipo'];
+			 ?>
+			 <script>estado_cuentas.push({codigo:<?=$codigoX?>,cod_cuenta:<?=$codPlanCuentaX?>,tipo:<?=$tipoX?>});</script>
 		    <?php
 			 }
 		    ?>
