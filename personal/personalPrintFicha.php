@@ -129,7 +129,7 @@ $html.=  '<header class="header">'.
                                 font-size: 11px;
                                     ">';
 
-                $html.='<tr>'.
+                    $html.='<tr>'.
                         '<td colspan="3" align="center">'.                        
                             '<h2><b>'.$primer_nombre.' '.$paterno.' '.$materno.'</b><br></h2>'.
                             $cod_cargo.' / '.$cod_unidadorganizacional.'<br>'.

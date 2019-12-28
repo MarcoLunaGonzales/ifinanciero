@@ -1,16 +1,16 @@
 <?php //ESTADO FINALIZADO
 
 require_once __DIR__.'/../conexion.php';
-
-require_once __DIR__.'/../functions.php';
 require_once __DIR__.'/../functionsGeneral.php';
 require_once '../layouts/bodylogin2.php';
 $dbh = new Conexion();
-$mes_actual=date('F');
-$anio_actual=date('Y');
-$fecha_actual=date('Y-m-d');
+// $mes_actual=date('F');
+// $anio_actual=date('Y');
+// $fecha_actual=date('Y-m-d');
 
 $codigo_planilla = $_GET["codigo_planilla"];//
+$cod_gestion = $_GET["cod_gestion"];//
+$codigo_mes = $_GET["cod_mes"];//
 
 
 $sql = "SELECT *,
@@ -40,15 +40,10 @@ $stmtPersonal->bindColumn('grado_academico', $grado_academico);
 $stmtPersonal->bindColumn('dias_trabajados', $dias_trabajados);
 $stmtPersonal->bindColumn('horas_pagadas', $horas_pagadas);
 $stmtPersonal->bindColumn('haber_basico', $haber_basico);
-$stmtPersonal->bindColumn('bono_antiguedad', $bono_antiguedad);
 $stmtPersonal->bindColumn('bono_academico', $bono_academico);
-$stmtPersonal->bindColumn('horas_extra', $horas_extra);
-$stmtPersonal->bindColumn('comisiones', $comisiones);
 $stmtPersonal->bindColumn('monto_bonos', $monto_bonos);
 $stmtPersonal->bindColumn('total_ganado', $total_ganado);
 $stmtPersonal->bindColumn('monto_descuentos', $monto_descuentos);
-$stmtPersonal->bindColumn('otros_descuentos', $otros_descuentos);
-$stmtPersonal->bindColumn('total_descuentos', $total_descuentos);
 $stmtPersonal->bindColumn('liquido_pagable', $liquido_pagable);
 $stmtPersonal->bindColumn('afp_1', $afp_1);
 $stmtPersonal->bindColumn('afp_2', $afp_2);
@@ -64,12 +59,13 @@ $stmtPersonal->bindColumn('afp_2', $afp_2);
           <div class="card-header <?=$colorCard;?> card-header-icon">            
             <h4 class="card-title"> 
               <img  class="card-img-top"  src="../marca.png" style="widtd:100%; max-width:250px;">
-                Planilla De Sueldo
+                Planilla De Sueldos
             </h4>                  
             <h6 class="card-title">
-              Gestion: <?=$anio_actual; ?><br>
-              Mes: <?=$mes_actual; ?><br>
+              Gestion: <?=$cod_gestion; ?><br>
+              Mes: <?=$codigo_mes; ?><br>
               Codigo Planilla: <?=$codigo_planilla; ?><br>
+                     
             </h6>             
           </div>
           <div class="card-body">
@@ -82,32 +78,49 @@ $stmtPersonal->bindColumn('afp_2', $afp_2);
                     <th>Paterno</th>
                     <th>Materno</th>
                     <th>Nombres</th>                    
-                    <th>Doc. Id</th>
-
-                    
+                    <th>Doc. Id</th>                    
                     <th>Grado Académico</th>
                     <th>Haber Básico</th>
-                    <th>Días Trab</th>                  
-                    <th>Bono Antig</th>                    
-                    <th>Bono Académico</th>
-                    <th>Monto Bonos</th> 
+                    <th>Días Trab</th>                                        
+                    <th class="bg-success text-white"><button id="botonBonos" style="border:none;" class="bg-success text-white">Monto Bonos</button> </th>
+                    <?php
+                      $sqlBonos = "SELECT cod_bono,(select b.nombre from bonos b where b.codigo=cod_bono) as nombre_bono
+                              from bonos_personal_mes 
+                              where  cod_gestion=$cod_gestion and cod_mes=$codigo_mes GROUP BY (cod_bono)";
+                      $stmtBonos = $dbh->prepare($sqlBonos);
+                      $stmtBonos->execute();                      
+                      $stmtBonos->bindColumn('cod_bono',$cod_bono);
+                      $stmtBonos->bindColumn('nombre_bono',$nombre_bono);
+                      while ($row = $stmtBonos->fetch()) 
+                      { ?>
+                        <th class="bonosDet bg-success text-white"><?=$nombre_bono;?></th>
+
+                    <?php }
+                    ?>                                                      
                     <th>Total Ganado</th>
 
-                    <th>Afp Fut</th>
-                    <th>Afp Prev</th>
-                    <th>Apor Solid(13000)</th>
-                    <th>Apor Solid(25000)</th>
-                    <th>Apor Solid(35000)</th>
-                    <th>RC-IVA</th>
-                    <th>Atrasos</th>
-                    <th>Anticipos</th>
-                    <th>Total Descu</th>
+                    <th class="bg-warning text-white"><button id="botonDescuetos" style="border:none;" class="bg-warning text-white">Monto Descuentos</button></th>
+                    <th class="descuentosDet bg-warning text-white">Afp Fut</th>
+                    <th class="descuentosDet bg-warning text-white">Afp Prev</th>
+                    <th class="descuentosDet bg-warning text-white">Apor Solid(13000)</th>
+                    <th class="descuentosDet bg-warning text-white">Apor Solid(25000)</th>
+                    <th class="descuentosDet bg-warning text-white">Apor Solid(35000)</th>
+                    <th class="descuentosDet bg-warning text-white">RC-IVA</th>
+                    <th class="descuentosDet bg-warning text-white">Atrasos</th>
+                    <th class="descuentosDet bg-warning text-white">Anticipos</th>
+                    
                     <th>Liqu Pagable</th>                    
                     <th>Seguro De Salud</th>
                     <th>Riesgo Profesional</th>
                     <th>Provivienda</th>
                     <th>Apo Patronal Sol</th>
                     <th>Total Apo Patronal</th>
+                    <!--<?php
+                    $cant_items=0;
+                    for ($i=0; $i < $cant_items; $i++) { ?>
+                      <th></th> 
+                    <?php }
+                     ?>-->
                   </tr>                                  
                 </thead>
                 <tbody>
@@ -143,25 +156,38 @@ $stmtPersonal->bindColumn('afp_2', $afp_2);
                     <td><?=$materno;?></td>
                     <td><?=$nombrePersonal;?></td>
                     <td><?=$doc_id;?>-<?=$lug_emision?><?=$lug_emision_otro?></td>                  
-                    <td><?=$grado_academico;?></td>
-                    
+                    <td><?=$grado_academico;?></td>                    
                     <td><?=$haber_basico;?></td>
-                    <td><?=$dias_trabajados;?></td>                    
-                    <td><?=$bono_antiguedad;?></td>                  
-                    <td><?=$bono_academico;?></td>
+                    <td><?=$dias_trabajados;?></td>                
                     <td><?=$monto_bonos;?></td>
-                    <td><?=$total_ganado;?></td>
+                    <?php
+                      $sqlBonos = "SELECT monto
+                              from bonos_personal_mes 
+                              where  cod_personal=$cod_personalcargo and cod_gestion=$cod_gestion and cod_mes=$codigo_mes";
+                      $stmtBonos = $dbh->prepare($sqlBonos);
+                      $stmtBonos->execute();                      
+                      $stmtBonos->bindColumn('monto',$monto);                      
+                      while ($row = $stmtBonos->fetch()) 
+                      { ?>
+                        <td  class="bonosDet"><?=$monto;?></td>
 
-                    <td><?=$afp_1;?></td>
-                    <td><?=$afp_2;?></td>
-                    <td><?=$a_solidario_13000?></td>
-                    <td><?=$a_solidario_25000?></td>
-                    <td><?=$a_solidario_35000?></td>
-                    <td><?=$rc_iva?></td>
-                    <td><?=$atrasos?></td>
-                    <td><?=$anticipo?></td>
-                    <td><?=$total_descuentos;?></td>
-                    <td><?=$liquido_pagable;?></td>                                  
+                    <?php }
+                    ?>  
+
+                    <td><?=$total_ganado;?></td>
+                    <td ><?=$monto_descuentos;?></td>
+
+                    <td class="descuentosDet"><?=$afp_1;?></td>
+                    <td class="descuentosDet"><?=$afp_2;?></td>
+                    <td class="descuentosDet"><?=$a_solidario_13000?></td>
+                    <td class="descuentosDet"><?=$a_solidario_25000?></td>
+                    <td class="descuentosDet"><?=$a_solidario_35000?></td>
+                    <td class="descuentosDet"><?=$rc_iva?></td>
+                    <td class="descuentosDet"><?=$atrasos?></td>
+                    <td class="descuentosDet"><?=$anticipo?></td>
+                    
+                    <td><?=$liquido_pagable;?></td>
+                                  
                     <td><?=$seguro_de_salud;?></td>
                     <td><?=$riesgo_profesional;?></td>
                     <td><?=$provivienda;?></td>
@@ -179,4 +205,22 @@ $stmtPersonal->bindColumn('afp_2', $afp_2);
     </div>  
   </div>
 </div>
+
+<script type="text/javascript">
+  
+  $("#botonBonos").on("click", function(){
+
+  $(".bonosDet").toggle();
+
+  });
+  $("#botonDescuetos").on("click", function(){
+
+  $(".descuentosDet").toggle();
+
+});
+
+  
+
+</script>
+
 

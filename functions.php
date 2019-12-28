@@ -1609,6 +1609,31 @@ function obtenerCuentaPlantillaCostos($codigo){
 
 
 //================ ========== PARA  planilla sueldos
+function obtenerTotalBonos($codigo_personal)
+{
+  
+  $mes=date('m');
+  $gestion=date('Y');
+
+  $dbh = new Conexion();
+  $sqlGestion = "SELECT codigo from gestiones where nombre=$gestion";
+  $stmtGestion = $dbh->prepare($sqlGestion);
+  $stmtGestion->execute();
+  $resultGestion=$stmtGestion->fetch();
+  $cod_gestion = $resultGestion['codigo'];
+
+
+  $sqlBonos = "SELECT SUM(monto) as total_bonos from bonos_personal_mes 
+  where cod_personal = $codigo_personal and cod_gestion=$cod_gestion and cod_mes=$mes";
+  $stmtBonos = $dbh->prepare($sqlBonos);
+  $stmtBonos->execute();
+  $resultBonos=$stmtBonos->fetch();
+  $total_bonos = $resultBonos['total_bonos'];
+  $stmtGestion = null;
+  $stmtBonos = null;
+  $dbh = null;
+  return $total_bonos;
+}
 function obtenerAporteAFP($total_ganado){
   $aporte_laboral_porcentaje_total=0;
   $dbh = new Conexion();
@@ -1720,30 +1745,34 @@ function obtenerAtrasoPersonal($id_personal,$haber_basico,$valor_conf_x65_90,$va
   return ($descuentos_neto);
 
 }
-function obtenerOtrosDescuentos()
-{
-  $otrosDscuentos=0;
-  return ($otrosDscuentos);
-}
 function obtenerAnticipo($id_personal)
 {
   $anticipo=0;
   
   $mes=date('m');
   $gestion=date('Y');
-  $fecha_inicio=$gestion."-".$mes."-01";
-  $fecha_actual=date('Y-m-d');
 
   $dbh = new Conexion();
-  $stmtAnticipos = $dbh->prepare("SELECT *
-  FROM personal_anticipos
-  WHERE cod_personal=id_personal and fecha BETWEEN '$fecha_inicio' AND 'fecha_actual'");
+  $sqlGestion = "SELECT codigo from gestiones where nombre=$gestion";
+  $stmtGestion = $dbh->prepare($sqlGestion);
+  $stmtGestion->execute();
+  $resultGestion=$stmtGestion->fetch();
+  $cod_gestion = $resultGestion['codigo'];
+
+  // $fecha_inicio=$gestion."-".$mes."-01 00:00:00";
+  // $fecha_actual=date('Y-m-d G:i:s');
+
+  $dbh = new Conexion();
+  $stmtAnticipos = $dbh->prepare("SELECT sum(monto)as total_anticipos
+  FROM anticipos_personal
+  WHERE cod_personal=$id_personal and cod_gestion = $cod_gestion and cod_mes=$mes");
   $stmtAnticipos->execute();
-  $resultAnticipacion=$stmtAnticipos->bindColumn('monto_anticipo',$monto_anticipo);
-  while ($row = $stmtAnticipos->fetch(PDO::FETCH_ASSOC))
-  {
-    $anticipo+=$monto_anticipo;
+  $resultAnticipos=$stmtAnticipos->fetch();
+  $anticipo=$resultAnticipos['total_anticipos'];
+  if($anticipo==null){
+    $anticipo=0;
   }
+  $stmtGestion = null;
   $stmt = null;
   $dbh = null;  
   return ($anticipo);

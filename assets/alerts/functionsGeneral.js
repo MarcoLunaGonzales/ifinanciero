@@ -2257,6 +2257,7 @@ function EliminarContratoPersonal(codigo_contratoB,codigo_personalB){
 
 var planillas_tabla=[]; 
 var planillas_tabla_general=[]; 
+var planillas_tabla_bonos=[]; 
 
 //PrerequisitosPlanillaSueldo
 function filaTablaGeneralPlanillasSueldo(tabla,index){  
@@ -2266,13 +2267,14 @@ function filaTablaGeneralPlanillasSueldo(tabla,index){
     //alert(planillas_tabla_general[index-1][i].nombre);
 
     html+="<div class='row'>"+
-      "<label class='col-sm-3 col-form-label'>Descuentos : </label>"+
+      "<label class='col-sm-3 col-form-label'>DESCUENTOS : </label>"+
       "<div class='col-sm-7'>"+
           "<div class='form-group'>"+
-          "<input class='form-control' readonly='readonly' name='descuentos' id='descuentos' value='"+planillas_tabla_general[index-1][i].descuentos+" Registros Este Mes."+"'/>"+"<br>"+              
+          "<input class='form-control' readonly='readonly' name='descuentos' id='descuentos' value='"+planillas_tabla_general[index-1][i].descuentos+" Registros Este Mes."+"'/>"+"<br>"+
           "</div>"+
       "</div>"+
     "</div>";
+
 
     html+="<div class='row'>"+
       "<label class='col-sm-3 col-form-label'>Bonos : </label>"+

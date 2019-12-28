@@ -31,8 +31,7 @@ $sw=$_POST['sw'];
 
 //echo "llega ".$cod_estadoasignacionaf;
 
-if($sw==2){//procesar planilla
-	require_once 'planilla_sueldo_formulas.php';
+if($sw==2){//procesar planilla	
 	//actualizamos estado
 	$stmtU = $dbh->prepare("UPDATE planillas 
 	set cod_estadoplanilla=:cod_estadoplanilla
@@ -41,7 +40,7 @@ if($sw==2){//procesar planilla
 	$stmtU->bindParam(':cod_estadoplanilla', $cod_estadoplanilla);
 	$flagSuccess=$stmtU->execute();
 
-	//=========================creando la planilla previa
+	//=========================creando la planilla previa con valores ininciales
 	$dias_trabajados = 30; //por defecto
 	$horas_pagadas = 0; //buscar datos
 	$minimo_salarial=0;
@@ -53,8 +52,8 @@ if($sw==2){//procesar planilla
 	$total_ganado=0;
 
 	$haber_basico=0;//del personal
-	$horas_extra = 0; //buscar datos
-	$comisiones=0;//buscar datos
+	// $horas_extra = 0; //buscar datos
+	// $comisiones=0;//buscar datos
 	$aporte_solidario_13000 = 0;
 	$aporte_solidario_25000 = 0;
 	$aporte_solidario_35000 = 0;
@@ -62,17 +61,12 @@ if($sw==2){//procesar planilla
 
 	$atrasos = 0;
 	$anticipo = 0;
-
 	$monto_bonos=0;
-	$monto_descuentos=0;//???
-
-	$otros_descuentos=0;
 	$total_descuentos=0;
 	$liquido_pagable=0;
 	$cod_estadoreferencial=1;
 	$created_by=1;
 	$modified_by=1;
-
 
 	$seguro_de_salud=0;
 	$riesgo_profesional=0;
@@ -130,16 +124,18 @@ if($sw==2){//procesar planilla
 	$stmtPersonal->bindColumn('cod_tipoafp', $cod_tipoafp);
 	while ($rowC = $stmtPersonal->fetch()) 
 	{
-		//calculado otros bonos
+		//hacemos un listado de todos los bonos
+		
+		$total_bonos = obtenerTotalBonos($codigo_personal);
+
+		//calculado otros bonos		
 		if($p_grado_academico==0)$bono_academico = 0;
 		else $bono_academico = $p_grado_academico/100*$minimo_salarial;
+		//$bono_antiguedad= 233.42 ;//falta hacer	
+		//$otros_b = 0 ;//buscar datos
+		//$total_bonos=$bono_academico+$bono_antiguedad+$otros_b;	
 
-		$bono_antiguedad= 233.42 ;//falta hacer
-		$otros_b = 0 ;//buscar datos
-
-		$total_bonos=$bono_academico+$bono_antiguedad+$otros_b;
-
-		$total_ganado = ($haber_basico/30*$dias_trabajados)+$bono_academico+$bono_antiguedad+$otros_b;
+		$total_ganado = ($haber_basico/30*$dias_trabajados)+$total_bonos;	
 		//calculamos descuentoss		
 		if($cod_tipoafp==1){
 		  $afp_futuro =obtenerAporteAFP($total_ganado);
@@ -159,10 +155,10 @@ if($sw==2){//procesar planilla
 		$RC_IVA = obtenerRC_IVA($total_ganado,$afp_futuro,$afp_prevision,$aporte_solidario_13000,$aporte_solidario_25000,$aporte_solidario_35000);
 
 		$atrasos = obtenerAtrasoPersonal($codigo_personal,$haber_basico,$valor_conf_x65_90,$valor_conf_x90_120,$valor_conf_x120_150,$valor_conf_x150);
-		$otros_descuentos = obtenerOtrosDescuentos();
-		$anticipo = obtenerAnticipo($codigo_personal);    
+		$anticipo = obtenerAnticipo($codigo_personal);
 
-		$total_descuentos = $afp_futuro+$afp_prevision+$aporte_solidario_13000+$aporte_solidario_25000+$aporte_solidario_35000+$RC_IVA+$atrasos+$otros_descuentos+$anticipo;
+		$total_descuentos = $afp_futuro+$afp_prevision+$aporte_solidario_13000+$aporte_solidario_25000+$aporte_solidario_35000+$RC_IVA+$atrasos+$anticipo;
+		
 		$liquido_pagable=$total_ganado-$total_descuentos;
 
 		$cod_config_planilla_seguro_medico=16;
@@ -183,29 +179,24 @@ if($sw==2){//procesar planilla
 
 		//==== insert de panillas de  personal mes
 		$sqlInsertPlanillas="INSERT into planillas_personal_mes(cod_planilla,cod_personalcargo,cod_gradoacademico,dias_trabajados,horas_pagadas,
-		  haber_basico,bono_antiguedad,bono_academico,horas_extra,comisiones,monto_bonos,total_ganado,monto_descuentos,otros_descuentos,afp_1,afp_2,
-		  total_descuentos,liquido_pagable,cod_estadoreferencial,created_by,modified_by)
-		 values(:cod_planilla,:cod_personal_cargo,:cod_grado_academico,:dias_trabajados,:horas_pagadas,:haber_basico,:bono_antiguedad,:bono_academico
-		  :horas_extra,:comisiones,:monto_bonos,:total_ganado,:monto_descuentos,:otros_descuentos,:afp_1,:afp_2,:total_descuentos,
+		  haber_basico,bono_academico,monto_bonos,total_ganado,monto_descuentos,afp_1,afp_2,
+		  liquido_pagable,cod_estadoreferencial,created_by,modified_by)
+		 values(:cod_planilla,:codigo_personal,:cod_gradoacademico,:dias_trabajados,:horas_pagadas,:haber_basico,:bono_academico,
+		 	:monto_bonos,:total_ganado,:monto_descuentos,:afp_1,:afp_2,
 		  :liquido_pagable,:cod_estadoreferencial,:created_by,:modified_by)";
 		$stmtInsertPlanillas = $dbhI->prepare($sqlInsertPlanillas);
 		$stmtInsertPlanillas->bindParam(':cod_planilla', $cod_planilla);
-		$stmtInsertPlanillas->bindParam(':cod_personal_cargo',$codigo_personal);
-		$stmtInsertPlanillas->bindParam(':cod_grado_academico',$cod_gradoacademico);
+		$stmtInsertPlanillas->bindParam(':codigo_personal',$codigo_personal);
+		$stmtInsertPlanillas->bindParam(':cod_gradoacademico',$cod_gradoacademico);
 		$stmtInsertPlanillas->bindParam(':dias_trabajados',$dias_trabajados);
 		$stmtInsertPlanillas->bindParam(':horas_pagadas',$horas_pagadas);
-		$stmtInsertPlanillas->bindParam(':haber_basico',$haber_basico);
-		$stmtInsertPlanillas->bindParam(':bono_antiguedad',$bono_antiguedad);
-		$stmtInsertPlanillas->bindParam(':bono_academico',$bono_academico);
-		$stmtInsertPlanillas->bindParam(':horas_extra',$horas_extra);
-		$stmtInsertPlanillas->bindParam(':comisiones',$comisiones);
+		$stmtInsertPlanillas->bindParam(':haber_basico',$haber_basico);	
+		$stmtInsertPlanillas->bindParam(':bono_academico',$bono_academico);		
 		$stmtInsertPlanillas->bindParam(':monto_bonos',$total_bonos);
 		$stmtInsertPlanillas->bindParam(':total_ganado',$total_ganado);
-		$stmtInsertPlanillas->bindParam(':monto_descuentos',$monto_descuentos);
-		$stmtInsertPlanillas->bindParam(':otros_descuentos',$otros_descuentos);
+		$stmtInsertPlanillas->bindParam(':monto_descuentos',$total_descuentos);
 		$stmtInsertPlanillas->bindParam(':afp_1',$afp_futuro);  
-		$stmtInsertPlanillas->bindParam(':afp_2',$afp_prevision);
-		$stmtInsertPlanillas->bindParam(':total_descuentos',$total_descuentos);
+		$stmtInsertPlanillas->bindParam(':afp_2',$afp_prevision);				
 		$stmtInsertPlanillas->bindParam(':liquido_pagable',$liquido_pagable);
 		$stmtInsertPlanillas->bindParam(':cod_estadoreferencial',$cod_estadoreferencial);
 		$stmtInsertPlanillas->bindParam(':created_by',$created_by);
@@ -246,7 +237,6 @@ if($sw==2){//procesar planilla
 		$stmtInsertPlanillaDetalle->bindParam(':rc_iva',$RC_IVA);
 		$stmtInsertPlanillaDetalle->bindParam(':atrasos',$atrasos);
 		$stmtInsertPlanillaDetalle->bindParam(':anticipo',$anticipo);
-
 		$stmtInsertPlanillaDetalle->bindParam(':seguro_de_salud',$seguro_de_salud);
 		$stmtInsertPlanillaDetalle->bindParam(':riesgo_profesional',$riesgo_profesional);
 		$stmtInsertPlanillaDetalle->bindParam(':provivienda',$provivienda);
@@ -273,6 +263,7 @@ if($sw==2){//procesar planilla
 }elseif($sw==1)
 {//reporcesar planilla
 	//=========================creando la planilla previa
+	$flagSuccessIPMD=0;
 	$dias_trabajados = 30; //por defecto
 	$horas_pagadas = 0; //buscar datos
 	$minimo_salarial=0;
@@ -351,7 +342,6 @@ if($sw==2){//procesar planilla
 	(Select pga.porcentaje from personal_grado_academico pga where pga.codigo=cod_grado_academico) as p_grado_academico,  
 	cod_tipoafp
 	from personal where cod_estadoreferencial=1 and codigo in (1,5,7,8,9,12,84)";
-
 	$stmtPersonal = $dbh->prepare($sql);
 	$stmtPersonal->execute();
 	$stmtPersonal->bindColumn('codigo', $codigo_personal);
@@ -361,16 +351,17 @@ if($sw==2){//procesar planilla
 	$stmtPersonal->bindColumn('cod_tipoafp', $cod_tipoafp);
 	while ($rowC = $stmtPersonal->fetch()) 
 	{
-		//calculado otros bonos
+		//hacemos un listado de todos los bonos
+		$total_bonos = obtenerTotalBonos($codigo_personal);
+
+		//calculado otros bonos		
 		if($p_grado_academico==0)$bono_academico = 0;
 		else $bono_academico = $p_grado_academico/100*$minimo_salarial;
+		//$bono_antiguedad= 233.42 ;//falta hacer	
+		//$otros_b = 0 ;//buscar datos
+		//$total_bonos=$bono_academico+$bono_antiguedad+$otros_b;	
 
-		$bono_antiguedad= 233.42 ;//falta hacer
-		$otros_b = 0 ;//buscar datos
-
-		$total_bonos=$bono_academico+$bono_antiguedad+$otros_b;
-
-		$total_ganado = ($haber_basico/30*$dias_trabajados)+$bono_academico+$bono_antiguedad+$otros_b;
+		$total_ganado = ($haber_basico/30*$dias_trabajados)+$total_bonos;	
 		//calculamos descuentoss		
 		if($cod_tipoafp==1){
 		  $afp_futuro =obtenerAporteAFP($total_ganado);
@@ -390,10 +381,10 @@ if($sw==2){//procesar planilla
 		$RC_IVA = obtenerRC_IVA($total_ganado,$afp_futuro,$afp_prevision,$aporte_solidario_13000,$aporte_solidario_25000,$aporte_solidario_35000);
 
 		$atrasos = obtenerAtrasoPersonal($codigo_personal,$haber_basico,$valor_conf_x65_90,$valor_conf_x90_120,$valor_conf_x120_150,$valor_conf_x150);
-		$otros_descuentos = obtenerOtrosDescuentos();
-		$anticipo = obtenerAnticipo($codigo_personal);    
+		$anticipo = obtenerAnticipo($codigo_personal);
 
 		$total_descuentos = $afp_futuro+$afp_prevision+$aporte_solidario_13000+$aporte_solidario_25000+$aporte_solidario_35000+$RC_IVA+$atrasos+$otros_descuentos+$anticipo;
+		
 		$liquido_pagable=$total_ganado-$total_descuentos;
 
 		$cod_config_planilla_seguro_medico=16;
@@ -408,36 +399,29 @@ if($sw==2){//procesar planilla
 		
 		$total_a_patronal=$seguro_de_salud+$riesgo_profesional+$provivienda+$a_patronal_sol;
 
-
 		// echo "codigo".$codigo_personal.", total ganado ". $total_ganado."<br>";
 		// echo "liquido_pagable ".$liquido_pagable;
 
 		//==== update de panillas de  personal mes
 		$sqlInsertPlanillas="UPDATE planillas_personal_mes set cod_gradoacademico=:cod_grado_academico,dias_trabajados=:dias_trabajados,
-		horas_pagadas=:horas_pagadas,haber_basico=:haber_basico,bono_antiguedad=:bono_antiguedad,bono_academico=:bono_academico,horas_extra=:horas_extra,comisiones=:comisiones,
-		monto_bonos=:monto_bonos,total_ganado=:total_ganado,monto_descuentos=:monto_descuentos,otros_descuentos=:otros_descuentos,
-		afp_1=:afp_1,afp_2=:afp_2,total_descuentos=:total_descuentos,liquido_pagable=:liquido_pagable
+		horas_pagadas=:horas_pagadas,haber_basico=:haber_basico,bono_academico=:bono_academico,
+		monto_bonos=:monto_bonos,total_ganado=:total_ganado,monto_descuentos=:monto_descuentos,
+		afp_1=:afp_1,afp_2=:afp_2,liquido_pagable=:liquido_pagable
 		where cod_planilla=:cod_planilla and cod_personalcargo=:cod_personal_cargo";
 		$stmtInsertPlanillas = $dbhI->prepare($sqlInsertPlanillas);
 		$stmtInsertPlanillas->bindParam(':cod_planilla', $cod_planilla);
 		$stmtInsertPlanillas->bindParam(':cod_personal_cargo',$codigo_personal);
-
 		$stmtInsertPlanillas->bindParam(':cod_grado_academico',$cod_gradoacademico);
 		$stmtInsertPlanillas->bindParam(':dias_trabajados',$dias_trabajados);
 		$stmtInsertPlanillas->bindParam(':horas_pagadas',$horas_pagadas);
 		$stmtInsertPlanillas->bindParam(':haber_basico',$haber_basico);
-		$stmtInsertPlanillas->bindParam(':bono_antiguedad',$bono_antiguedad);
 		$stmtInsertPlanillas->bindParam(':bono_academico',$bono_academico);
-		$stmtInsertPlanillas->bindParam(':horas_extra',$horas_extra);
-		$stmtInsertPlanillas->bindParam(':comisiones',$comisiones);
 		$stmtInsertPlanillas->bindParam(':monto_bonos',$total_bonos);
 		$stmtInsertPlanillas->bindParam(':total_ganado',$total_ganado);
-		$stmtInsertPlanillas->bindParam(':monto_descuentos',$monto_descuentos);
-		$stmtInsertPlanillas->bindParam(':otros_descuentos',$otros_descuentos);
+		$stmtInsertPlanillas->bindParam(':monto_descuentos',$total_descuentos);
 		$stmtInsertPlanillas->bindParam(':afp_1',$afp_futuro);  
 		$stmtInsertPlanillas->bindParam(':afp_2',$afp_prevision);
-		$stmtInsertPlanillas->bindParam(':total_descuentos',$total_descuentos);
-		$stmtInsertPlanillas->bindParam(':liquido_pagable',$liquido_pagable);	
+		$stmtInsertPlanillas->bindParam(':liquido_pagable',$liquido_pagable);
 		$flagSuccessIP=$stmtInsertPlanillas->execute();
 
 
@@ -473,7 +457,6 @@ if($sw==2){//procesar planilla
 		$stmtInsertPlanillaDetalleU->bindParam(':rc_iva',$RC_IVA);
 		$stmtInsertPlanillaDetalleU->bindParam(':atrasos',$atrasos);
 		$stmtInsertPlanillaDetalleU->bindParam(':anticipo',$anticipo);
-
 		$stmtInsertPlanillaDetalleU->bindParam(':seguro_de_salud',$seguro_de_salud);
 		$stmtInsertPlanillaDetalleU->bindParam(':riesgo_profesional',$riesgo_profesional);
 		$stmtInsertPlanillaDetalleU->bindParam(':provivienda',$provivienda);
