@@ -41,12 +41,14 @@ $stmtPersonal->bindColumn('dias_trabajados', $dias_trabajados);
 $stmtPersonal->bindColumn('horas_pagadas', $horas_pagadas);
 $stmtPersonal->bindColumn('haber_basico', $haber_basico);
 $stmtPersonal->bindColumn('bono_academico', $bono_academico);
+$stmtPersonal->bindColumn('bono_antiguedad', $bono_antiguedad);
 $stmtPersonal->bindColumn('monto_bonos', $monto_bonos);
 $stmtPersonal->bindColumn('total_ganado', $total_ganado);
 $stmtPersonal->bindColumn('monto_descuentos', $monto_descuentos);
 $stmtPersonal->bindColumn('liquido_pagable', $liquido_pagable);
 $stmtPersonal->bindColumn('afp_1', $afp_1);
 $stmtPersonal->bindColumn('afp_2', $afp_2);
+$stmtPersonal->bindColumn('dotaciones', $dotaciones);
 
 ?>
 
@@ -82,7 +84,8 @@ $stmtPersonal->bindColumn('afp_2', $afp_2);
                     <th>Grado Académico</th>
                     <th>Haber Básico</th>
                     <th>Días Trab</th>                                        
-                    <th class="bg-success text-white"><button id="botonBonos" style="border:none;" class="bg-success text-white">Monto Bonos</button> </th>
+                    <th>Bono Antiguedad</th>
+                    <th class="bg-success text-white"><button id="botonBonos" style="border:none;" class="bg-success text-white">Otros Bonos</button> </th>
                     <?php
                       $sqlBonos = "SELECT cod_bono,(select b.nombre from bonos b where b.codigo=cod_bono) as nombre_bono
                               from bonos_personal_mes 
@@ -98,8 +101,10 @@ $stmtPersonal->bindColumn('afp_2', $afp_2);
                     <?php
                       $arrayBonos[] = $cod_bono;
                      }
-                    ?>                             
+                    ?>
+                    <th>Monto Bonos</th>                            
                     <th>Total Ganado</th>
+                    <th>Dotaciones</th>
 
                     <th class="bg-warning text-white"><button id="botonDescuetos" style="border:none;" class="bg-warning text-white">Monto Descuentos</button></th>
                     <th class="descuentosDet bg-warning text-white">Afp Fut</th>
@@ -161,7 +166,22 @@ $stmtPersonal->bindColumn('afp_2', $afp_2);
                     <td><?=$grado_academico;?></td>                    
                     <td><?=$haber_basico;?></td>
                     <td><?=$dias_trabajados;?></td>                
-                    <td><?=$monto_bonos;?></td>
+                    <td><?=$bono_antiguedad;?></td>
+                    <?php
+                    
+                     $sqlTotalOtroBonos = "SELECT SUM(monto) as suma_bono
+                              from bonos_personal_mes 
+                              where  cod_personal=$cod_personalcargo and cod_gestion=$cod_gestion and cod_mes=$codigo_mes";
+                    $stmtbonoOtros = $dbh->prepare($sqlTotalOtroBonos);
+                    $stmtbonoOtros->execute();
+                    $resultbonoOtros=$stmtbonoOtros->fetch();
+                    $sumaBono_otros=$resultbonoOtros['suma_bono'];
+                    if($sumaBono_otros==null)$sumaBono_otros=0;
+
+
+                    ?> 
+
+                    <td><?=$sumaBono_otros;?></td>
                     <?php
                       $sqlBonos = "SELECT cod_bono,monto
                               from bonos_personal_mes 
@@ -175,14 +195,15 @@ $stmtPersonal->bindColumn('afp_2', $afp_2);
                       while ($row = $stmtBonos->fetch())
                       { 
                         // $cantiItems=count($arrayBonos);
-                        // $cont=0;                                            
+                        // $cont=0;                       
+
                           if ($cod_bonoX==$arrayBonos[$i])
                           {                                                        
                             ?>
                               <td  class="bonosDet"><?=$montoX;?></td>
                             <?php
                           }else{                            
-                            $cont=0;
+                            $cont=0;                          
                             for ($j=$i; $j <count($arrayBonos) ; $j++) { 
                               if($cod_bonoX==$arrayBonos[$j]){?>
                                 <td  class="bonosDet"><?=$montoX;?></td>
@@ -200,11 +221,17 @@ $stmtPersonal->bindColumn('afp_2', $afp_2);
                             <?php
                           }
                           $i++;                        
-                        }                  
+                      }
+                      if($i==0){
+                        $montoAux=0;?>
+                              <td  class="bonosDet"><?=$montoAux;?></td>
+                        <?php
+                      }                  
                       
                     ?>  
-
+                    <td><?=$monto_bonos;?></td>
                     <td><?=$total_ganado;?></td>
+                    <td><?=$dotaciones;?></td>
                     <td ><?=$monto_descuentos;?></td>
 
                     <td class="descuentosDet"><?=$afp_1;?></td>

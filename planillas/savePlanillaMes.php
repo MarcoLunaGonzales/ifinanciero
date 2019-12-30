@@ -28,6 +28,12 @@ $cod_planilla=$_POST['cod_planilla'];
 $cod_estadoplanilla=$_POST['sw'];
 $sw=$_POST['sw'];
 
+$stmtDatosPlanilla = $dbh->prepare("SELECT cod_gestion,cod_mes from planillas where codigo=$cod_planilla");
+$stmtDatosPlanilla->execute();
+$resultDatosPlanilla =  $stmtDatosPlanilla->fetch();
+$cod_gestion_x = $resultDatosPlanilla['cod_gestion'];
+$cod_mes_x = $resultDatosPlanilla['cod_mes'];	
+
 
 //echo "llega ".$cod_estadoasignacionaf;
 
@@ -64,7 +70,7 @@ if($sw==2){//procesar planilla
 
 	$atrasos = 0;
 	$anticipo = 0;
-	$monto_bonos=0;
+	$dotaciones=0;
 	$total_descuentos=0;
 	$liquido_pagable=0;
 	$cod_estadoreferencial=1;
@@ -161,8 +167,9 @@ if($sw==2){//procesar planilla
 
 		$atrasos = obtenerAtrasoPersonal($codigo_personal,$haber_basico,$valor_conf_x65_90,$valor_conf_x90_120,$valor_conf_x120_150,$valor_conf_x150);
 		$anticipo = obtenerAnticipo($codigo_personal);
-
-		$total_descuentos = $afp_futuro+$afp_prevision+$aporte_solidario_13000+$aporte_solidario_25000+$aporte_solidario_35000+$RC_IVA+$atrasos+$anticipo;
+		$dotaciones = obtenerDotaciones($codigo_personal,$cod_gestion_x,$cod_mes_x);
+		
+		$total_descuentos = $afp_futuro+$afp_prevision+$aporte_solidario_13000+$aporte_solidario_25000+$aporte_solidario_35000+$RC_IVA+$atrasos+$anticipo+$dotaciones;
 		
 		$liquido_pagable=$total_ganado-$total_descuentos;
 
@@ -184,10 +191,10 @@ if($sw==2){//procesar planilla
 
 		//==== insert de panillas de  personal mes
 		$sqlInsertPlanillas="INSERT into planillas_personal_mes(cod_planilla,cod_personalcargo,cod_gradoacademico,dias_trabajados,horas_pagadas,
-		  haber_basico,bono_academico,bono_antiguedad,monto_bonos,total_ganado,monto_descuentos,afp_1,afp_2,
+		  haber_basico,bono_academico,bono_antiguedad,monto_bonos,total_ganado,monto_descuentos,afp_1,afp_2,dotaciones,
 		  liquido_pagable,cod_estadoreferencial,created_by,modified_by)
 		 values(:cod_planilla,:codigo_personal,:cod_gradoacademico,:dias_trabajados,:horas_pagadas,:haber_basico,:bono_academico,
-		 	:bono_antiguedad,:monto_bonos,:total_ganado,:monto_descuentos,:afp_1,:afp_2,
+		 	:bono_antiguedad,:monto_bonos,:total_ganado,:monto_descuentos,:afp_1,:afp_2,:dotaciones,
 		  :liquido_pagable,:cod_estadoreferencial,:created_by,:modified_by)";
 		$stmtInsertPlanillas = $dbhI->prepare($sqlInsertPlanillas);
 		$stmtInsertPlanillas->bindParam(':cod_planilla', $cod_planilla);
@@ -202,7 +209,8 @@ if($sw==2){//procesar planilla
 		$stmtInsertPlanillas->bindParam(':total_ganado',$total_ganado);
 		$stmtInsertPlanillas->bindParam(':monto_descuentos',$total_descuentos);
 		$stmtInsertPlanillas->bindParam(':afp_1',$afp_futuro);  
-		$stmtInsertPlanillas->bindParam(':afp_2',$afp_prevision);				
+		$stmtInsertPlanillas->bindParam(':afp_2',$afp_prevision);
+		$stmtInsertPlanillas->bindParam(':dotaciones',$dotaciones);			
 		$stmtInsertPlanillas->bindParam(':liquido_pagable',$liquido_pagable);
 		$stmtInsertPlanillas->bindParam(':cod_estadoreferencial',$cod_estadoreferencial);
 		$stmtInsertPlanillas->bindParam(':created_by',$created_by);
@@ -278,6 +286,7 @@ if($sw==2){//procesar planilla
 	$valor_conf_x120_150=0;
 	$valor_conf_x150=0;
 	$total_bonos=0;
+	//$monto_bonos=0;
 	$total_ganado=0;
 
 	$haber_basico=0;//del personal
@@ -291,12 +300,26 @@ if($sw==2){//procesar planilla
 	$atrasos = 0;
 	$anticipo = 0;
 
-	$monto_bonos=0;
-	$monto_descuentos=0;//???
+	
+	//$monto_descuentos=0;//
 
-	$otros_descuentos=0;
+	//$otros_descuentos=0;
+	$dotaciones=0;
+
 	$total_descuentos=0;
 	$liquido_pagable=0;
+
+
+
+	$atrasos = 0;
+	$anticipo = 0;
+	$dotaciones=0;
+	$total_descuentos=0;
+	$liquido_pagable=0;
+
+
+
+
 	$cod_estadoreferencial=1;
 	$created_by=1;
 	$modified_by=1;
@@ -310,6 +333,7 @@ if($sw==2){//procesar planilla
 
 	$flagSuccessIP=0;
 	$flagSuccessIPMD=0;
+
 	
 	$stmtConfiguracion = $dbh->prepare("SELECT * from configuraciones_planillas");
 	$stmtConfiguracion->execute();
@@ -389,8 +413,13 @@ if($sw==2){//procesar planilla
 
 		$atrasos = obtenerAtrasoPersonal($codigo_personal,$haber_basico,$valor_conf_x65_90,$valor_conf_x90_120,$valor_conf_x120_150,$valor_conf_x150);
 		$anticipo = obtenerAnticipo($codigo_personal);
+		$dotaciones = obtenerDotaciones($codigo_personal,$cod_gestion_x,$cod_mes_x);
 
-		$total_descuentos = $afp_futuro+$afp_prevision+$aporte_solidario_13000+$aporte_solidario_25000+$aporte_solidario_35000+$RC_IVA+$atrasos+$otros_descuentos+$anticipo;
+		// echo "personal: ".$codigo_personal."<br>";
+		// echo "dotaciones : ".$dotaciones."<br>";
+
+
+		$total_descuentos = $afp_futuro+$afp_prevision+$aporte_solidario_13000+$aporte_solidario_25000+$aporte_solidario_35000+$RC_IVA+$atrasos+$anticipo+$dotaciones;
 		
 		$liquido_pagable=$total_ganado-$total_descuentos;
 
@@ -413,7 +442,7 @@ if($sw==2){//procesar planilla
 		$sqlInsertPlanillas="UPDATE planillas_personal_mes set cod_gradoacademico=:cod_grado_academico,dias_trabajados=:dias_trabajados,
 		horas_pagadas=:horas_pagadas,haber_basico=:haber_basico,bono_academico=:bono_academico,bono_antiguedad=:bono_antiguedad,
 		monto_bonos=:monto_bonos,total_ganado=:total_ganado,monto_descuentos=:monto_descuentos,
-		afp_1=:afp_1,afp_2=:afp_2,liquido_pagable=:liquido_pagable
+		afp_1=:afp_1,afp_2=:afp_2,dotaciones=:dotaciones,liquido_pagable=:liquido_pagable
 		where cod_planilla=:cod_planilla and cod_personalcargo=:cod_personal_cargo";
 		$stmtInsertPlanillas = $dbhI->prepare($sqlInsertPlanillas);
 		$stmtInsertPlanillas->bindParam(':cod_planilla', $cod_planilla);
@@ -429,6 +458,7 @@ if($sw==2){//procesar planilla
 		$stmtInsertPlanillas->bindParam(':monto_descuentos',$total_descuentos);
 		$stmtInsertPlanillas->bindParam(':afp_1',$afp_futuro);  
 		$stmtInsertPlanillas->bindParam(':afp_2',$afp_prevision);
+		$stmtInsertPlanillas->bindParam(':dotaciones',$dotaciones);
 		$stmtInsertPlanillas->bindParam(':liquido_pagable',$liquido_pagable);
 		$flagSuccessIP=$stmtInsertPlanillas->execute();
 
