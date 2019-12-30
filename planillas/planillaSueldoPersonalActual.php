@@ -70,7 +70,7 @@ $stmtPersonal->bindColumn('afp_2', $afp_2);
           </div>
           <div class="card-body">
             <div class="table-responsive">                  
-              <table class="table table-bordered table-condensed" id="tablePaginatorFixedPlanillaSueldo">
+              <table class="table table-bordered table-condensed" >
                 <thead>
                   <tr class="bg-dark text-white">
                     
@@ -86,17 +86,19 @@ $stmtPersonal->bindColumn('afp_2', $afp_2);
                     <?php
                       $sqlBonos = "SELECT cod_bono,(select b.nombre from bonos b where b.codigo=cod_bono) as nombre_bono
                               from bonos_personal_mes 
-                              where  cod_gestion=$cod_gestion and cod_mes=$codigo_mes GROUP BY (cod_bono)";
+                              where  cod_gestion=$cod_gestion and cod_mes=$codigo_mes GROUP BY (cod_bono)
+                              order by cod_bono ASC";
                       $stmtBonos = $dbh->prepare($sqlBonos);
                       $stmtBonos->execute();                      
                       $stmtBonos->bindColumn('cod_bono',$cod_bono);
                       $stmtBonos->bindColumn('nombre_bono',$nombre_bono);
                       while ($row = $stmtBonos->fetch()) 
                       { ?>
-                        <th class="bonosDet bg-success text-white"><?=$nombre_bono;?></th>
-
-                    <?php }
-                    ?>                                                      
+                        <th class="bonosDet bg-success text-white"><?=$nombre_bono;?></th>                      
+                    <?php
+                      $arrayBonos[] = $cod_bono;
+                     }
+                    ?>                             
                     <th>Total Ganado</th>
 
                     <th class="bg-warning text-white"><button id="botonDescuetos" style="border:none;" class="bg-warning text-white">Monto Descuentos</button></th>
@@ -161,17 +163,45 @@ $stmtPersonal->bindColumn('afp_2', $afp_2);
                     <td><?=$dias_trabajados;?></td>                
                     <td><?=$monto_bonos;?></td>
                     <?php
-                      $sqlBonos = "SELECT monto
+                      $sqlBonos = "SELECT cod_bono,monto
                               from bonos_personal_mes 
-                              where  cod_personal=$cod_personalcargo and cod_gestion=$cod_gestion and cod_mes=$codigo_mes";
+                              where  cod_personal=$cod_personalcargo and cod_gestion=$cod_gestion and cod_mes=$codigo_mes
+                              order by cod_bono ASC";
                       $stmtBonos = $dbh->prepare($sqlBonos);
                       $stmtBonos->execute();                      
-                      $stmtBonos->bindColumn('monto',$monto);                      
-                      while ($row = $stmtBonos->fetch()) 
-                      { ?>
-                        <td  class="bonosDet"><?=$monto;?></td>
+                      $stmtBonos->bindColumn('cod_bono',$cod_bonoX);
+                      $stmtBonos->bindColumn('monto',$montoX);
+                      $i=0;
+                      while ($row = $stmtBonos->fetch())
+                      { 
+                        // $cantiItems=count($arrayBonos);
+                        // $cont=0;                                            
+                          if ($cod_bonoX==$arrayBonos[$i])
+                          {                                                        
+                            ?>
+                              <td  class="bonosDet"><?=$montoX;?></td>
+                            <?php
+                          }else{                            
+                            $cont=0;
+                            for ($j=$i; $j <count($arrayBonos) ; $j++) { 
+                              if($cod_bonoX==$arrayBonos[$j]){?>
+                                <td  class="bonosDet"><?=$montoX;?></td>
+                                $cont++;
+                              <?php }
+                            }
+                            if($cont==0){
+                              $montoAux=0;?>
+                              <td  class="bonosDet"><?=$montoAux;?></td>
+                              <?php
+                            }
 
-                    <?php }
+                            ?>
+                            
+                            <?php
+                          }
+                          $i++;                        
+                        }                  
+                      
                     ?>  
 
                     <td><?=$total_ganado;?></td>
@@ -196,7 +226,7 @@ $stmtPersonal->bindColumn('afp_2', $afp_2);
                   </tr> 
                   <?php 
                     $index+=1;}?>                      
-                </tbody>
+                </tbody>                
               </table>                                
             </div>                 
           </div>
