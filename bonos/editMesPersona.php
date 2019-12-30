@@ -60,9 +60,9 @@ while ($row = $stmtc->fetch(PDO::FETCH_BOUND)) {
       <div class="col-md-12">
       <form id="form1" class="form-horizontal" action="<?=$urlSaveEditGrupo;?>" method="POST">
 
-      <input type="hidden" name="cod_mes"  value="<?=$codMes;?>"/>
-                      <input type="hidden" name="cod_bono"  value="<?=$codBono;?>"/>
-                      <input type="hidden" name="cod_gestion"  value="<?=$idGestion;?>"/>
+          <input type="hidden" name="cod_mes"  value="<?=$codMes;?>"/>
+          <input type="hidden" name="cod_bono"  value="<?=$codBono;?>"/>
+          <input type="hidden" name="cod_gestion"  value="<?=$idGestion;?>"/>
         <div class="card">
           <div class="card-header <?= $colorCard; ?> card-header-icon">
             <div class="card-icon">

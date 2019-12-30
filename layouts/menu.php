@@ -131,6 +131,12 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
                     <span class="sidebar-normal"> Gesti&oacute;n de Plantillas de Costo </span>
                   </a>
                 </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listDistribucionGasto">
+                    <span class="sidebar-mini"> DGP </span>
+                    <span class="sidebar-normal"> Distribucion de Gastos</span>
+                  </a>
+                </li>
               </ul>
             </div>
           </li>
@@ -236,7 +242,7 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
                       <span class="sidebar-normal"> Descuentos</span>
                     </a>
                 </li>
-                <!--li class="nav-item ">
+                <li class="nav-item ">
                     <a class="nav-link" href="?opcion=listAnticipoPersonal">
                       <span class="sidebar-mini"> A </span>
                       <span class="sidebar-normal"> Anticipos de Personal</span>
@@ -249,7 +255,7 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
                       <span class="sidebar-mini"> R </span>
                       <span class="sidebar-normal"> RC IVA Personal</span>
                     </a>
-                </li-->
+                </li>
 
                 <li class="nav-item ">
                     <a class="nav-link" href="?opcion=listEscalaAntiguedad">
@@ -260,8 +266,8 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
 
                 <li class="nav-item ">
                     <a class="nav-link" href="?opcion=listPoliticaDescuento">
-                      <span class="sidebar-mini"> P </span>
-                      <span class="sidebar-normal"> Politicas de Descuentos </span>
+                      <span class="sidebar-mini"> PDR </span>
+                      <span class="sidebar-normal"> Politicas de Descuento por retrasos </span>
                     </a>
                 </li>
 
@@ -271,6 +277,14 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
                       <span class="sidebar-normal"> Dotaciones </span>
                     </a>
                 </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=listRefrigerio">
+                      <span class="sidebar-mini"> R </span>
+                      <span class="sidebar-normal"> Refrigerios </span>
+                    </a>
+                </li>
+
+
               </ul>
             </div>
           </li>
