@@ -54,7 +54,9 @@ if ($codigo > 0){
     $cod_departamento = $result['cod_departamento'];
     $cod_ciudad = $result['cod_ciudad'];
     $ciudadOtro = $result['ciudad_otro'];
-    $cod_grado_academico = $result['cod_grado_academico'];    
+    $cod_grado_academico = $result['cod_grado_academico'];   
+    $ing_contr = $result['ing_contr'];
+    $ing_planilla = $result['ing_planilla'];
     
 //personal discapacitado
     $stmtDiscapacitado = $dbh->prepare("SELECT * FROM personal_discapacitado where codigo =:codigo");
@@ -313,6 +315,23 @@ $statementgrado_academico = $dbh->query($querygrado_academico);
                         </div><!--fin campo direccion -->
 
                         <h3 align="center">CAMPOS EDITABLES</h3>
+                        
+                        <div class="row">
+                            <label class="col-sm-2 col-form-label">Ingreso Contrato</label>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <input class="form-control" type="date" name="ing_contr" id="ing_contr" required="true" value="<?=$ing_contr;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>                                    
+                                </div>
+                            </div>
+                            <label class="col-sm-2 col-form-label">Ingreso Planilla</label>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <input class="form-control" type="date" name="ing_planilla" id="ing_planilla" required="true" value="<?=$apellido_casada;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+                                </div>
+                            </div>
+                                        
+                        </div><!--fin campo ing contrato & ing planilla -->
+
                         <div class="row">
                             <label class="col-sm-2 col-form-label">Apellido Casada</label>
                             <div class="col-sm-4">

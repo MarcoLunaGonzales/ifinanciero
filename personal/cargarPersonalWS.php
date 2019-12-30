@@ -91,6 +91,9 @@ foreach ($detalle as $objDet){
     $modified_by = 1;//$_POST["modified_by"];
     $cod_estadoreferencial=1;
     $porcentaje=100;
+
+    $ing_contr='0000-00-00';
+    $ing_planilla = '0000-00-00';
     //consulta para verificar si personal esta en la bd
     $stmtBusquedaPersonal = $dbh->prepare("SELECT codigo from personal where codigo=:codigo");
     $stmtBusquedaPersonal->bindParam(':codigo',$codigo);
@@ -145,13 +148,13 @@ foreach ($detalle as $objDet){
     	$stmt = $dbh->prepare("INSERT INTO personal(codigo,cod_tipoIdentificacion,tipo_identificacionOtro,identificacion,cod_lugar_emision,lugar_emisionOtro,fecha_nacimiento,cod_cargo,cod_unidadorganizacional,cod_area,
         jubilado,cod_genero,cod_tipopersonal,haber_basico,paterno,materno,apellido_casada,primer_nombre,otros_nombres,nua_cua_asignado,
         direccion,cod_tipoafp,cod_tipoaporteafp,nro_seguro,cod_estadopersonal,telefono,celular,email,persona_contacto,created_by,modified_by,cod_estadoreferencial,cod_nacionalidad,cod_estadoCivil,
-        cod_pais,cod_departamento,cod_ciudad,CiudadOtro) 
+        cod_pais,cod_departamento,cod_ciudad,CiudadOtro,ing_contr,ing_planilla) 
         values (:codigo,:cod_tipoIdentificacion,:tipo_identificacionOtro,:identificacion,:cod_lugar_emision,:lugar_emisionOtro,:fecha_nacimiento,
         	:cod_cargo,:cod_unidadorganizacional,:cod_area,:jubilado,:cod_genero,:cod_tipopersonal,:haber_basico,:paterno,
         	:materno,:apellido_casada,:primer_nombre,:otros_nombres,:nua_cua_asignado,
         :direccion,:cod_tipoafp,:cod_tipoaporteafp,:nro_seguro,:cod_estadopersonal,:telefono,:celular,:email,:persona_contacto,:created_by,:modified_by,
         :cod_estadoreferencial,:cod_nacionalidad,:cod_estadoCivil,
-        :cod_pais,:cod_departamento,:cod_ciudad,:ciudadOtro)");
+        :cod_pais,:cod_departamento,:cod_ciudad,:ciudadOtro,:ing_contr,:ing_planilla)");
         //Bind
         $stmt->bindParam(':codigo', $codigo);
         $stmt->bindParam(':cod_tipoIdentificacion', $cod_tipoIdentificacion);
@@ -192,7 +195,11 @@ foreach ($detalle as $objDet){
         $stmt->bindParam(':cod_pais', $cod_pais);
         $stmt->bindParam(':cod_departamento', $cod_departamento);
         $stmt->bindParam(':cod_ciudad', $cod_ciudad);
-        $stmt->bindParam(':ciudadOtro', $CiudadOtro);        
+        $stmt->bindParam(':ciudadOtro', $CiudadOtro);
+
+        $stmt->bindParam(':ing_contr', $ing_contr); 
+        $stmt->bindParam(':ing_planilla', $ing_planilla); 
+
         $flagSuccess=$stmt->execute(); 
 		//======insertamos area distribucion
         $stmtDistribucion = $dbh->prepare("INSERT INTO personal_area_distribucion(cod_personal,cod_area,porcentaje,cod_estadoreferencial,created_by,modified_by) 

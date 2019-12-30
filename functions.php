@@ -1787,6 +1787,46 @@ function obtenerCuentaPlantillaCostos($codigo){
 
 
 //================ ========== PARA  planilla sueldos
+
+function obtenerBonoAntiguedad($minino_salarial,$ing_contr){
+
+  $fecha_actual = date('Y-m-d');
+  $anio_actual= date('Y');
+  
+  $fechaComoEntero = strtotime($ing_contr);
+  $anio_inicio = date("Y", $fechaComoEntero);
+
+  $diferencia_anios=$anio_actual-$anio_inicio;
+
+
+  $total_bono_antiguedad = 0;
+  $dbh = new Conexion();
+  $stmt = $dbh->prepare("SELECT * from escalas_antiguedad where cod_estadoreferencial = 1");
+  $stmt->execute();
+  $stmt->bindColumn('anios_inicio', $anios_inicio);
+  $stmt->bindColumn('anios_final', $anios_final);
+  $stmt->bindColumn('porcentaje', $porcentaje);  
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
+  {
+    if($diferencia_anios>=$anios_inicio){
+      if($diferencia_anios<$anios_final)
+        $l3 = $minino_salarial*$porcentaje/100;
+      else $l3 = 0;
+    }else $l3 = 0;
+
+    $total_bono_antiguedad +=$l3;
+  } 
+  // $aporte_laboral_aux=$total_ganado*$aporte_laboral_porcentaje_total/100;
+  $total_bono_antiguedad_x=number_format($total_bono_antiguedad,2,'.','');
+  // $stmt = null;
+  // $dbh = null;
+
+
+  return $total_bono_antiguedad_x;
+
+}
+
+
 function obtenerTotalBonos($codigo_personal)
 {
   

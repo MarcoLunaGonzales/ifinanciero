@@ -48,6 +48,9 @@ if($sw==2){//procesar planilla
 	$valor_conf_x90_120=0;
 	$valor_conf_x120_150=0;
 	$valor_conf_x150=0;
+	
+	$bono_antiguedad=0;
+	$otros_b=0;
 	$total_bonos=0;
 	$total_ganado=0;
 
@@ -112,7 +115,7 @@ if($sw==2){//procesar planilla
 	//============select del personal
 	$sql = "SELECT codigo,haber_basico,cod_grado_academico,
 	(Select pga.porcentaje from personal_grado_academico pga where pga.codigo=cod_grado_academico) as p_grado_academico,  
-	cod_tipoafp
+	cod_tipoafp,ing_contr
 	from personal where cod_estadoreferencial=1 and codigo in (1,5,7,8,9,12,84)";
 
 	$stmtPersonal = $dbh->prepare($sql);
@@ -122,19 +125,21 @@ if($sw==2){//procesar planilla
 	$stmtPersonal->bindColumn('cod_grado_academico', $cod_gradoacademico);  
 	$stmtPersonal->bindColumn('p_grado_academico', $p_grado_academico);  
 	$stmtPersonal->bindColumn('cod_tipoafp', $cod_tipoafp);
+	$stmtPersonal->bindColumn('ing_contr', $ing_contr);
 	while ($rowC = $stmtPersonal->fetch()) 
 	{
-		//hacemos un listado de todos los bonos
-		
-		$total_bonos = obtenerTotalBonos($codigo_personal);
-
+		//hacemos un listado de todos los bonos		
+		$otros_b = obtenerTotalBonos($codigo_personal);
 		//calculado otros bonos		
 		if($p_grado_academico==0)$bono_academico = 0;
 		else $bono_academico = $p_grado_academico/100*$minimo_salarial;
-		//$bono_antiguedad= 233.42 ;//falta hacer	
+		$bono_antiguedad= obtenerBonoAntiguedad($minimo_salarial,$ing_contr);//ok	
+
 		//$otros_b = 0 ;//buscar datos
 		//$total_bonos=$bono_academico+$bono_antiguedad+$otros_b;	
+		$total_bonos=$bono_antiguedad+$otros_b;	
 
+		
 		$total_ganado = ($haber_basico/30*$dias_trabajados)+$total_bonos;	
 		//calculamos descuentoss		
 		if($cod_tipoafp==1){
@@ -179,10 +184,10 @@ if($sw==2){//procesar planilla
 
 		//==== insert de panillas de  personal mes
 		$sqlInsertPlanillas="INSERT into planillas_personal_mes(cod_planilla,cod_personalcargo,cod_gradoacademico,dias_trabajados,horas_pagadas,
-		  haber_basico,bono_academico,monto_bonos,total_ganado,monto_descuentos,afp_1,afp_2,
+		  haber_basico,bono_academico,bono_antiguedad,monto_bonos,total_ganado,monto_descuentos,afp_1,afp_2,
 		  liquido_pagable,cod_estadoreferencial,created_by,modified_by)
 		 values(:cod_planilla,:codigo_personal,:cod_gradoacademico,:dias_trabajados,:horas_pagadas,:haber_basico,:bono_academico,
-		 	:monto_bonos,:total_ganado,:monto_descuentos,:afp_1,:afp_2,
+		 	:bono_antiguedad,:monto_bonos,:total_ganado,:monto_descuentos,:afp_1,:afp_2,
 		  :liquido_pagable,:cod_estadoreferencial,:created_by,:modified_by)";
 		$stmtInsertPlanillas = $dbhI->prepare($sqlInsertPlanillas);
 		$stmtInsertPlanillas->bindParam(':cod_planilla', $cod_planilla);
@@ -192,6 +197,7 @@ if($sw==2){//procesar planilla
 		$stmtInsertPlanillas->bindParam(':horas_pagadas',$horas_pagadas);
 		$stmtInsertPlanillas->bindParam(':haber_basico',$haber_basico);	
 		$stmtInsertPlanillas->bindParam(':bono_academico',$bono_academico);		
+		$stmtInsertPlanillas->bindParam(':bono_antiguedad',$bono_antiguedad);
 		$stmtInsertPlanillas->bindParam(':monto_bonos',$total_bonos);
 		$stmtInsertPlanillas->bindParam(':total_ganado',$total_ganado);
 		$stmtInsertPlanillas->bindParam(':monto_descuentos',$total_descuentos);
@@ -340,7 +346,7 @@ if($sw==2){//procesar planilla
 	//============select del personal
 	$sql = "SELECT codigo,haber_basico,cod_grado_academico,
 	(Select pga.porcentaje from personal_grado_academico pga where pga.codigo=cod_grado_academico) as p_grado_academico,  
-	cod_tipoafp
+	cod_tipoafp,ing_contr
 	from personal where cod_estadoreferencial=1 and codigo in (1,5,7,8,9,12,84)";
 	$stmtPersonal = $dbh->prepare($sql);
 	$stmtPersonal->execute();
@@ -349,17 +355,18 @@ if($sw==2){//procesar planilla
 	$stmtPersonal->bindColumn('cod_grado_academico', $cod_gradoacademico);  
 	$stmtPersonal->bindColumn('p_grado_academico', $p_grado_academico);  
 	$stmtPersonal->bindColumn('cod_tipoafp', $cod_tipoafp);
+	$stmtPersonal->bindColumn('ing_contr', $ing_contr);
 	while ($rowC = $stmtPersonal->fetch()) 
 	{
-		//hacemos un listado de todos los bonos
-		$total_bonos = obtenerTotalBonos($codigo_personal);
-
+		$otros_b = obtenerTotalBonos($codigo_personal);
 		//calculado otros bonos		
 		if($p_grado_academico==0)$bono_academico = 0;
 		else $bono_academico = $p_grado_academico/100*$minimo_salarial;
-		//$bono_antiguedad= 233.42 ;//falta hacer	
+		$bono_antiguedad= obtenerBonoAntiguedad($minimo_salarial,$ing_contr);//ok	
+
 		//$otros_b = 0 ;//buscar datos
 		//$total_bonos=$bono_academico+$bono_antiguedad+$otros_b;	
+		$total_bonos=$bono_antiguedad+$otros_b;	
 
 		$total_ganado = ($haber_basico/30*$dias_trabajados)+$total_bonos;	
 		//calculamos descuentoss		
@@ -404,7 +411,7 @@ if($sw==2){//procesar planilla
 
 		//==== update de panillas de  personal mes
 		$sqlInsertPlanillas="UPDATE planillas_personal_mes set cod_gradoacademico=:cod_grado_academico,dias_trabajados=:dias_trabajados,
-		horas_pagadas=:horas_pagadas,haber_basico=:haber_basico,bono_academico=:bono_academico,
+		horas_pagadas=:horas_pagadas,haber_basico=:haber_basico,bono_academico=:bono_academico,bono_antiguedad=:bono_antiguedad,
 		monto_bonos=:monto_bonos,total_ganado=:total_ganado,monto_descuentos=:monto_descuentos,
 		afp_1=:afp_1,afp_2=:afp_2,liquido_pagable=:liquido_pagable
 		where cod_planilla=:cod_planilla and cod_personalcargo=:cod_personal_cargo";
@@ -416,6 +423,7 @@ if($sw==2){//procesar planilla
 		$stmtInsertPlanillas->bindParam(':horas_pagadas',$horas_pagadas);
 		$stmtInsertPlanillas->bindParam(':haber_basico',$haber_basico);
 		$stmtInsertPlanillas->bindParam(':bono_academico',$bono_academico);
+		$stmtInsertPlanillas->bindParam(':bono_antiguedad',$bono_antiguedad);
 		$stmtInsertPlanillas->bindParam(':monto_bonos',$total_bonos);
 		$stmtInsertPlanillas->bindParam(':total_ganado',$total_ganado);
 		$stmtInsertPlanillas->bindParam(':monto_descuentos',$total_descuentos);
