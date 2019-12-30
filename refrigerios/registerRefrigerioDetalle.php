@@ -5,17 +5,20 @@ require_once 'styles.php';
 require_once 'configModule.php';
 
 $dbh = new Conexion();
-$codDotacion=$cod_dot;
+$codRefrigerio=$cod_refrigerio;
 $codGestion=$_SESSION["globalGestion"];
 
-//Mostrar tipo dotacion
-$stmtb = $dbh->prepare("SELECT nombre FROM dotaciones WHERE codigo=$codDotacion");
+
+//Seleccionar el monto de refrigerio de configuraciones
+$stmtb = $dbh->prepare("SELECT c.valor_configuracion FROM configuraciones c WHERE c.id_configuracion=10");
 $stmtb->execute();
-$stmtb->bindColumn('nombre', $nombreDotacion);
+$stmtb->bindColumn('valor_configuracion', $valorConfiguracion);
 
 while ($row = $stmtb->fetch(PDO::FETCH_BOUND)) {
-  $nomDotacion = $nombreDotacion;
+  $valorConfiguracionX = $valorConfiguracion;
 }
+
+
 
 
 ?>
@@ -24,13 +27,12 @@ while ($row = $stmtb->fetch(PDO::FETCH_BOUND)) {
 	<div class="container-fluid">
 
 		<div class="col-md-12">
-		  <form id="form1" class="form-horizontal" action="<?=$urlSaveDotacionPersonal;?>" method="post">
+		  <form id="form1" class="form-horizontal" action="<?=$urlSaveRefrigerioDetalle;?>" method="post">
 			<div class="card">
 			  <div class="card-header <?=$colorCard;?> card-header-text">
 				<div class="card-text">
-				  <h4 class="card-title">Registrar <?=$moduleNameSingularDP;?></h4>
+				  <h4 class="card-title">Registrar <?=$moduleNameSingular;?></h4>
 				</div>
-				<h4 class="card-title" align="center"><?=  "Dotación de " . $nomDotacion ?></h4>
 			  </div>
 			  <div class="card-body ">
 			  <div class="row">
@@ -40,16 +42,19 @@ while ($row = $stmtb->fetch(PDO::FETCH_BOUND)) {
 					        <select class="selectpicker form-control form-control-sm" data-style="select-with-transition" data-live-search="true" title="-- Elija un personal --" name="personal" id="personal" data-style="<?=$comboColor;?>" required="true">
 							  	<option disabled selected value="">Persona</option>
 							  	<?php
-								  $stmt = $dbh->prepare("select p.codigo as codigo, concat(p.paterno,' ', p.materno, ' ', p.primer_nombre) as nombrepersona from personal p 
-								  where p.codigo not in 
-								  (select rd.cod_personal from refrigerios_detalle rd, refrigerios r where rd.cod_refrigerio=r.codigo)");
+								  $stmt = $dbh->prepare("select p.codigo as codigo,
+								  concat(p.paterno,' ', p.materno, ' ', p.primer_nombre) as nombrepersona
+								  from personal p  where p.codigo  not in 
+								  (select rd.cod_personal from refrigerios_detalle rd, refrigerios r where rd.cod_refrigerio=r.codigo and rd.cod_refrigerio=$codRefrigerio)");
 								$stmt->execute();
 								while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 									$codigoX=$row['codigo'];
 									$nombrePersonaX=$row['nombrepersona'];
-
+									
 								?>
 								<option value="<?=$codigoX;?>"><?=$nombrePersonaX;?></option>	
+
+
 								<?php
 
 							  	}
@@ -59,16 +64,12 @@ while ($row = $stmtb->fetch(PDO::FETCH_BOUND)) {
 				      	</div>
 				</div>
 
-				<div class="row">
-				  <label class="col-sm-2 col-form-label">Monto</label>
-				  <div class="col-sm-7">
-					<div class="form-group">
-					  <input class="form-control" type="number" step="any" min="0" name="monto" id="monto" required="true"/>
-					</div>
-				  </div>
-				</div>
-				<input class="form-control" type="text" hidden="true" name="codDotacion" id="codDotacion"  value="<?=$codDotacion;?>"/>
-				<input class="form-control" type="text" hidden="true" name="codGestion" id="codGestion"  value="<?=$codGestion;?>"/>
+
+
+
+				<input class="form-control" type="text" hidden="true" name="monto" id="monto"  value="<?=$valorConfiguracionX;?>"/>
+				<input class="form-control" type="text" hidden="true" name="codRefrigerio" id="codRefrigerio"  value="<?=$codRefrigerio;?>"/>
+
 
 
 			  </div>

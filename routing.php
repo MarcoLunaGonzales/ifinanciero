@@ -898,6 +898,63 @@
 			require_once('dotaciones/listDotPersonalMeses.php');
 		}
 
+		//Distribucion Gastos y Porcentajes
+		if ($_GET['opcion']=='listDistribucionGasto') {
+			require_once('distribucion_gastosporcentaje/list.php');
+		}
+
+		if ($_GET['opcion']=='editDistribucionGastos') {
+			require_once('distribucion_gastosporcentaje/editDistribucionGastos.php');
+		}
+
+		if ($_GET['opcion']=='registerEscalaAntiguedad') {
+			require_once('escalas_antiguedad/register.php');
+		}
+
+		if ($_GET['opcion']=='deleteEscalaAntiguedad') {
+			$cod_esc_ant=$_GET['cod_esc_ant'];
+			require_once('escalas_antiguedad/saveDelete.php');
+		}
+
+		//refrigerios
+
+		if ($_GET['opcion']=='listRefrigerio') {
+			require_once('refrigerios/list.php');
+		}
+
+		if ($_GET['opcion']=='registerRefrigerio') {
+			require_once('refrigerios/register.php');
+		}
+
+		if ($_GET['opcion']=='listRefrigerioDetalle') {
+			$cod_refrigerio=$_GET['cod_ref'];
+			$cod_mes=$_GET['cod_mes'];
+			require_once('refrigerios/listDetalle.php');
+		}
+
+		if ($_GET['opcion']=='aprobarRefrigerio') {
+			$cod_refrigerio=$_GET['cod_ref'];
+			require_once('refrigerios/aprobarRefrigerio.php');
+		}
+
+		if ($_GET['opcion']=='editPoliticaDescuento') {
+			$cod_pol_desc=$_GET['cod_pol_desc'];
+			require_once('politicas_descuento/edit.php');
+		}
+
+		if ($_GET['opcion']=='registerRefrigerioDetalle') {
+			$cod_refrigerio=$_GET['cod_ref'];
+			require_once('refrigerios/registerRefrigerioDetalle.php');
+		}
+
+		if ($_GET['opcion']=='calculaRefrigerioMes') {
+			$cod_refrigerio=$_GET['cod_ref'];
+			$cod_mes=$_GET['cod_mes'];
+			require_once('refrigerios/calculaRefrigerioMes.php');
+		}
+
+
+
 
 
 		

@@ -2778,3 +2778,26 @@ function verEstadosCuentasModal(cuenta,cod_cuenta,tipo){
     return  sign ? '-' + amount_parts.join('.') : amount_parts.join('.');  //amount_parts.join('.');
 //>>>>>>> 9665608161fbd74baa97b51d1230f7cda83c0916
 }
+
+
+//distribucion gastos porcentaje
+function sumarPorcentaje() {
+  var sumaTotal = 0;
+  var formulariop = document.getElementById("form1");
+  for (var i = 0; i < formulariop.elements.length; i++) {
+    if (formulariop.elements[i].id.indexOf("porcentaje") != -1) {
+      //console.log("input: "+formulariop.elements[i].value);    
+      sumaTotal += (formulariop.elements[i].value) * 1;
+    }
+  }
+  //console.log("suma: "+sumaTotal); 
+  document.getElementById("total").value = sumaTotal;
+  var boton = document.getElementById("botonGuardar");
+  if (sumaTotal == 100) {
+    boton.disabled = false;
+  } else {
+    boton.disabled = true;
+  }
+
+}
+
