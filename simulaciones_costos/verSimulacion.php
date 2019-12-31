@@ -94,9 +94,11 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
 				//valores de la simulacion
 
 
-                 $totalFijo=obtenerTotalesPlantilla($codigoPX,1,18); //tipo de costo 1:fijo,2:variable
-                 $totalVariable=obtenerTotalesPlantilla($codigoPX,2,18);
-
+               $totalFijo=obtenerTotalesPlantilla($codigoPX,1,obtenerValorConfiguracion(6)); //tipo de costo 1:fijo,2:variable
+                
+                 $totalVariable=obtenerTotalesSimulacion($codigo);
+                 $totalVariable[2]=$totalVariable[2]/$alumnosX;
+                $totalVariable[3]=$totalVariable[3]/$alumnosExternoX;
                  //calcular cantidad alumnos si no esta registrado
                  if($alumnosX==0||$alumnosX==""||$alumnosX==null||$alumnosExternoX==0||$alumnosExternoX==""||$alumnosExternoX==null){
                  	$porcentajeFinalLocal=0;$alumnosX=0;$alumnosExternoX=0;$porcentajeFinalExterno=0;
@@ -230,7 +232,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
 					</div>
 
 				  	<div class="card-footer fixed-bottom">
-						<a href="../<?=$urlList;?>" class="btn btn-default">Cancelar</a>
+						<a href="../<?=$urlList;?>" class="btn btn-danger">Volver</a>
 
 				  	</div>
 				 </div>

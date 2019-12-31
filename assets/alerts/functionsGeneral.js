@@ -1445,6 +1445,7 @@ function guardarSimulacionCosto(){
     });
   }
 }
+
 function cargarPlantillaSimulacion(mes,ibnorca){
   var plantilla_costo=$("#plantilla_costo").val();
   var precio=$("#precio_venta").val();
@@ -1486,6 +1487,25 @@ function presioneBoton(){
 }
 
 function guardarSimulacion(valor){
+  Swal.fire({
+        title: '¿Esta Seguro?',
+        text: "La simulación se enviará para su posterior revisión",
+         type: 'warning',
+        showCancelButton: true,
+        confirmButtonClass: 'btn btn-info',
+        cancelButtonClass: 'btn btn-danger',
+        confirmButtonText: 'Si',
+        cancelButtonText: 'No',
+        buttonsStyling: false
+       }).then((result) => {
+          if (result.value) {
+               enviarSimulacionAjax();            
+            return(true);
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            return(false);
+          }
+        });
+/*
   var nombre=$("#nombre").val();
   var plantilla_costo=$("#plantilla_costo").val();
   var plantilla_costo_actual=$("#cod_plantilla").val();  
@@ -1521,7 +1541,7 @@ function guardarSimulacion(valor){
         }
       }           
     }
-  }
+  }*/
 }
 function guardarSimulacionAjax(valor){
   var codigo=$("#cod_simulacion").val();
@@ -1568,8 +1588,12 @@ function enviarSimulacionAjax(){
         },
         success:  function (resp) {
          $("#logo_carga").hide();
-         $('#msgError4').html("<p class='text-dark font-weight-bold'>"+resp+"Se envio la Simulacion</p>");
-         $('#modalSend').modal('show');
+         Swal.fire("Envío Existoso!", "Se registradon los datos exitosamente!", "success")
+             .then((value) => {
+             location.href="../index.php?opcion=listSimulacionesCostos";
+         });
+         /*$('#msgError4').html("<p class='text-dark font-weight-bold'>"+resp+"Se envio la Simulacion</p>");
+         $('#modalSend').modal('show');*/
         }
     });
 }
@@ -2140,15 +2164,18 @@ function agregarRetencionSolicitud(){
 //perosnal area distribucion
 }
 function modificarMontos(){
+  $('#modalEditPlantilla').modal('hide');
   $('#modalSimulacionCuentas').modal('show');
 }
 function cargarCuentasSimulacion(cods,ib){
   var fi = $('#cuentas_simulacion');
   var codp=$("#partida_presupuestaria").val();
   var codpar=$("#cod_plantilla").val();
+  var al_i=$("#alumnos_plan").val();
+  var al_f=$("#alumnos_plan_fuera").val();
   if(codp!=""){
   ajax=nuevoAjax();
-  ajax.open("GET","ajaxCargarCuentas.php?codigo="+codp+"&codSim="+cods+"&ibnorca="+ib+"&codPar="+codpar,true);
+  ajax.open("GET","ajaxCargarCuentas.php?codigo="+codp+"&codSim="+cods+"&ibnorca="+ib+"&codPar="+codpar+"&al_i="+al_i+"&al_f="+al_f,true);
   ajax.onreadystatechange=function(){
         if (ajax.readyState==4) {
           fi.html("");
@@ -2694,6 +2721,11 @@ function calcularTotalPartida(){
   var total= $("#numero_cuentas").val();
   var monto_anterior=parseFloat($("#monto_designado").val());
   for (var i=1;i<=(total-1);i++){
+    if($("#cod_ibnorca").val()==1){
+    $("#monto_mod"+i).val(parseFloat($("#monto_modal"+i).val())*parseInt($("#alumnos_plan").val()));
+    }else{
+     $("#monto_mod"+i).val(parseFloat($("#monto_modal"+i).val())*parseInt($("#alumnos_plan_fuera").val()));
+    }
     suma+=parseFloat($("#monto_mod"+i).val());
   }
   const rest=Math.abs(suma-monto_anterior);
@@ -3296,7 +3328,125 @@ function mandarDatosBonoIndefinido(){
   $("#obs").val(respuesta[2]);
 }
 
+function editarDatosSimulacion(){
+  var cod_i=$("#cod_ibnorca").val();
+  var nombre_s=$("#nombre").val();
+  $("#modal_nombresim").val(nombre_s);
+  $("#modal_tiposim").val(cod_i);
+  $('.selectpicker').selectpicker("refresh");
 
+  $("#modalEditSimulacion").modal("show");
+}
+function guardarDatosSimulacion(btn_id){
+  var codigo_s=$("#cod_simulacion").val();
+   var nombre_s=$("#modal_nombresim").val();
+   var cod_i=$("#modal_tiposim").val();   
+   var parametros={"codigo":codigo_s,"nombre":nombre_s,"ibnorca":cod_i};
+
+  if(nombre_s!=""){
+  $("#"+btn_id).attr("disabled",true); 
+  $.ajax({
+    url: "ajaxSaveDatosSimulacion.php",
+    type: "GET",
+    data: parametros,
+    dataType: "html",
+    success: function (resp) {   
+     Swal.fire("Correcto!", "El proceso fue satisfactorio!", "success");
+     $("#"+btn_id).removeAttr("disabled"); 
+     $("#nombre").val(nombre_s);
+     $("#cod_ibnorca").val(cod_i);
+     if(cod_i==1){
+       $("#ibnorca").val("IBNORCA"); 
+     }else{
+       $("#ibnorca").val("FUERA DE IBNORCA"); 
+     } 
+     $("#modalEditSimulacion").modal("hide");        
+    },
+    error: function (xhr, ajaxOptions, thrownError) {
+     Swal.fire("Error de envio!", "Verifique los datos e intentelo de nuevo", "error");
+      $("#"+btn_id).removeAttr("disabled"); 
+    }
+  });    
+  }else{
+    Swal.fire("Informativo!", "Debe llenar todos los campos", "warning");
+  }
+}
+function editarDatosPlantilla(){
+  $("#modal_utibnorca").val($("#utilidad_minlocal").val());
+  $("#modal_utifuera").val($("#utilidad_minext").val());
+  $("#modal_alibnorca").val($("#alumnos_plan").val());
+  $("#modal_alfuera").val($("#alumnos_plan_fuera").val());
+  $("#modal_importeplan").val($("#cod_precioplantilla").val());
+
+  $('.selectpicker').selectpicker("refresh");
+ $("#modalEditPlantilla").modal("show"); 
+}
+function guardarDatosPlantilla(btn_id){
+  var codigo_p=$("#cod_plantilla").val();
+  var cod_sim=$("#cod_simulacion").val();
+   var ut_i=$("#modal_utibnorca").val();
+   var ut_f=$("#modal_utifuera").val();
+   var al_i=$("#modal_alibnorca").val();
+   var al_f=$("#modal_alfuera").val(); 
+   var precio_p=$("#modal_importeplan").val(); 
+
+   var parametros={"cod_sim":cod_sim,"codigo":codigo_p,"ut_i":ut_i,"ut_f":ut_f,"al_i":al_i,"al_f":al_f,"precio_p":precio_p};
+
+  if(!(ut_i==""||ut_f==""||al_i==""||al_f=="")){
+  $("#"+btn_id).attr("disabled",true); 
+  $.ajax({
+    url: "ajaxSaveDatosPlantilla.php",
+    type: "GET",
+    data: parametros,
+    dataType: "html",
+    success: function (resp) {   
+     Swal.fire("Correcto!", "El proceso fue satisfactorio!", "success");
+     $("#"+btn_id).removeAttr("disabled"); 
+      var precios=resp.split('$$$');
+      $("#precio_local").val(precios[0].trim());
+      $("#precio_externo").val(precios[1].trim());
+      $("#cod_precioplantilla").val(precio_p);
+
+      $("#utilidad_minlocal").val(ut_i);
+      $("#utilidad_minext").val(ut_f);
+      $("#alumnos_plan").val(al_i);
+      $("#alumnos_plan_fuera").val(al_f);    
+
+     $("#modalEditPlantilla").modal("hide");
+     $("#narch").addClass("estado");        
+    },
+    error: function (xhr, ajaxOptions, thrownError) {
+     Swal.fire("Error de envio!", "Verifique los datos e intentelo de nuevo", "error");
+      $("#"+btn_id).removeAttr("disabled"); 
+    }
+  });    
+  }else{
+    Swal.fire("Informativo!", "Debe llenar todos los campos", "warning");
+  }
+}
+
+function actualizarSimulacion(){
+  var codigo=$("#cod_simulacion").val();
+   Swal.fire({
+        title: '¿Esta Seguro?',
+        text: "Los datos de la simulación se actualizarán!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonClass: 'btn btn-info',
+        cancelButtonClass: 'btn btn-danger',
+        confirmButtonText: 'Si',
+        cancelButtonText: 'No',
+        buttonsStyling: false
+      }).then((result) => {           
+         if (result.value) {
+            location.href='registerSimulacion.php?cod='+codigo;
+            $("#narch").removeClass("estado");
+            return(true);
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            return(false);
+          }
+         });
+}
 //funciones despues de cargar pantalla
 
 $(document).ready(function() {

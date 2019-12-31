@@ -232,7 +232,7 @@
                                <option value="1">Mensual</option>
                                <option value="2">Manual</option> 
                              </select>
-                             </div>
+                         </div>
                         </div>
                       </div>
                       <br><br>

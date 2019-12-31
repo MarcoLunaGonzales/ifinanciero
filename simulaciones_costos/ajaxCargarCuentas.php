@@ -16,6 +16,8 @@ if(isset($_GET["codigo"])){
  $ibnorca=$_GET["ibnorca"];
  $codSim=$_GET["codSim"];
  $codPar=$_GET["codPar"];
+ $al_i=$_GET["al_i"];
+ $al_f=$_GET["al_f"];
  $montoTotal=obtenerMontoPlantillaDetalle($codPar,$codigo,$ibnorca);
  $montoTotal=number_format($montoTotal, 2, '.', '');
  $montoEditado=obtenerMontoSimulacionCuenta($codSim,$codigo,$ibnorca);
@@ -32,7 +34,7 @@ if(isset($_GET["codigo"])){
            <input class="form-control text-right" type="number" name="monto_designado" id="monto_designado" value="<?=$montoTotal?>" readonly/>
          </div>
          </div>
-         <label class="col-sm-3 col-form-label">Monto Editado <small id="monto_editable_text"></small>:</label>
+         <label class="col-sm-3 col-form-label">Monto Editado:</label>
         <div class="col-sm-3">
          <div class="form-group">
            <input class="form-control text-right" type="number" name="monto_editable" id="monto_editable" value="<?=$montoEditado?>" readonly/>
@@ -44,8 +46,10 @@ if(isset($_GET["codigo"])){
          <tr class="text-dark bg-plomo">
         <th>Cuenta</th>
         <th>Porcentaje</th>
-        <th>Monto Ibnorca</th>
-        <th>Monto Fuera</th>     
+        <th>Ibnorca</th>
+        <th>Fuera</th>
+        <th>Alum Ib.</th>
+        <th>Alum Fu.</th>     
         </tr>
       </thead>
       <tbody>
@@ -56,15 +60,21 @@ if(isset($_GET["codigo"])){
     $numeroX=$row['numero'];
     $montoCalX=number_format($row['monto_local'], 2, '.', '');
     $montoModX=number_format($row['monto_externo'], 2, '.', ''); 
+
+    $montoCalAlX=number_format($montoCalX/$al_i, 0, '.', '');
+    $montoModAlX=number_format($montoModX/$al_f, 0, '.', ''); 
+
     $porcentajeX=$row['porcentaje'];
     ?><tr><td class="text-left">[<?=$numeroX?>] - <?=$nombreX?></td>
      <td class="text-right"><?=number_format($porcentajeX, 2, '.', ',')?> %</td> 
       <?php
     if($ibnorca==1){
      ?><td class="text-right"><input type="number" id="monto_mod<?=$i?>" name="monto_mod<?=$i?>" class="form-control text-info text-right" placeholder="Monto modificado" onchange="calcularTotalPartida()" onkeyUp="calcularTotalPartida()" value="<?=$montoCalX?>" step="0.001"><input type="hidden" id="codigo<?=$i?>" value="<?=$codigoX?>"></td><td class="text-right"><?=$montoModX?></td>
+     <td class="text-right"><input type="number" id="monto_modal<?=$i?>" name="monto_modal<?=$i?>" class="form-control text-danger text-right" placeholder="Monto" onchange="calcularTotalPartida()" onkeyUp="calcularTotalPartida()" value="<?=$montoCalAlX?>" step="0.01"></td><td class="text-right"><?=$montoModAlX?></td>
     <?php 
     }else{
       ?><td class="text-right"><?=$montoCalX?></td><td class="text-right has-sucess"><input type="number" id="monto_mod<?=$i?>" name="monto_mod<?=$i?>" class="form-control text-info text-right" placeholder="Monto modificado" onchange="calcularTotalPartida()" onkeyUp="calcularTotalPartida()" value="<?=$montoModX?>" step="0.001"><input type="hidden" id="codigo<?=$i?>" value="<?=$codigoX?>"></td>
+      <td class="text-right"><?=$montoCalAlX?></td><td class="text-right has-sucess"><input type="number" id="monto_modal<?=$i?>" name="monto_modal<?=$i?>" class="form-control text-danger text-right" placeholder="Monto" onchange="calcularTotalPartida()" onkeyUp="calcularTotalPartida()" value="<?=$montoModAlX?>" step="0.01"></td>
     <?php 
     } 
     $i++;
@@ -73,8 +83,8 @@ if(isset($_GET["codigo"])){
   ?>
    </tbody>
   </table>
-  <div class="form-group">
-    <button class="btn btn-info btn-sm" id="guardar_cuenta" onclick="guardarCuentasSimulacion(<?=$ibnorca?>)">Guardar</button>
+  <div class="form-group float-right">
+    <button class="btn btn-default" id="guardar_cuenta" onclick="guardarCuentasSimulacion(<?=$ibnorca?>)">Guardar</button>
   </div>
   <div id="mensaje_cuenta"></div>
   <input type="hidden" id="numero_cuentas" value="<?=$i?>">

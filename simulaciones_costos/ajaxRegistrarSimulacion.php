@@ -55,9 +55,16 @@ if(isset($_GET['nombre'])){
       while ($rowCuenta = $cuentasPlan->fetch(PDO::FETCH_ASSOC)) {
       $codCuenta=$rowCuenta['cod_cuenta'];
       $numero=trim($rowCuenta['numero']);
+      $tipoSim=obtenerValorConfiguracion(13);
       //sacamos el porcentaje 
-      $montoCuenta=trim(ejecutadoEgresosMes($unidad,$anio_pasado, $mes, $area, 1, $numero));
-      $montoCuenta=($montoCuenta/12)/obtenerValorConfiguracion(6);
+      if($tipoSim==1){
+       $montoCuenta=trim(ejecutadoEgresosMes($unidad,$anio_pasado, $mes, $area, 1, $numero));
+       $montoCuenta=($montoCuenta/12)/obtenerValorConfiguracion(6);  
+      }else{
+        $montoCuenta=trim(ejecutadoEgresosMes($unidad,$anio_pasado, $mes, $area, 0, $numero));
+        $montoCuenta=($montoCuenta)/obtenerValorConfiguracion(6);
+      }
+      
       $porcentaje=((float)$montoCuenta*100)/(float)$montoTotal;
       //ingresamos valores segun porcentaje al total de partida
       $montoIbnorca=($porcentaje*$montoLocal)/100;
