@@ -51,45 +51,34 @@ if ($codigo > 0){
 				
 
 
-  <div class="row">
-    <label class="col-sm-2 col-form-label">Cuenta Contable Relacionada</label>
-    <div class="col-sm-7">
-    <div class="form-group">
-        <select name="cod_cuentacontable" id="cod_cuentacontable" class="selectpicker form-control" data-style="btn btn-info">
-          <?php  while ($fila = $statement->fetch()){ ?>
-						<option <?php if ($fila['codigo']==$cod_cuentacontable){echo "selected";}?> value="<?=$fila['codigo'];?>"><?=$fila['codigocuenta'];?> - <?=$fila['cuentacontable'];?></option>
-					<?php } ?>
-				</select>
-    </div>
-    </div>
-  </div><!--fin campo nombre -->
-
 <div class="row">
-    <label class="col-sm-2 col-form-label">Nombre Rubro</label>
-    <div class="col-sm-7">
-    <div class="form-group">
-        <input class="form-control" type="text" name="nombre" id="nombre" required="true" value="<?=$nombre;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
-    </div>
-    </div>
-</div><!--fin campo nombre -->
-
-<div class="row">
-    <label class="col-sm-2 col-form-label">Abreviatura</label>
-    <div class="col-sm-7">
-    <div class="form-group">
-        <input class="form-control" type="text" name="abreviatura" id="abreviatura" required="true" value="<?=$abreviatura;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
-    </div>
-    </div>
-</div><!--fin campo abreviatura -->
-
-<div class="row">
-    <label class="col-sm-2 col-form-label">Vida Util (Años)</label>
-    <div class="col-sm-7">
-    <div class="form-group">
-        <input class="form-control"  type="number" step="1" name="vida_util" id="vida_util" required="true" value="<?=$vida_util;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
-    </div>
-    </div>
-</div><!--fin campo vida_util -->
+            <label class="col-sm-2 col-form-label">Oficina</label>
+            <div class="col-sm-7">
+              <div class="form-group">
+                <select name="cod_uo" id="cod_uo" class="selectpicker" data-style="btn btn-info" onChange="ajaxOficinaPersonal(this);">
+                    <option value=""></option>
+                    <?php 
+                    $queryUO = "SELECT codigo,nombre from unidades_organizacionales where cod_estado=1 order by nombre";
+                    $statementUO = $dbh->query($queryUO);
+                    while ($row = $statementUO->fetch()){ ?>
+                        <option value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                    <?php } ?>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <label class="col-sm-2 col-form-label">Personal</label>
+              <div class="col-sm-7">
+                <div class="form-group" >
+                    <div id="div_contenedor_personal">
+                        <select class="selectpicker" data-style="btn btn-info">
+                          <option value=""></option>
+                        </select>
+                    </div>                    
+                </div>
+              </div>
+          </div>
 
 
 			  </div>

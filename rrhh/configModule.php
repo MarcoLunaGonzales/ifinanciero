@@ -123,6 +123,19 @@ $urlPlanillaSueldoPersonalReporte="planillas/planillaSueldoPersonalReporte.php";
 $urlPlanillaContabilizacion="planillas/executeComprobantePlanillaSueldos.php";
 
 
+//planilla aguinaldos
+$urlPlanillasAguinaldosList="?opcion=planillasAguinaldosPersonal";
+$urlGenerarPlanillaAguinaldosPrevia="?opcion=generarPlanillaAguinaldosPrevia";
+$urlPlanillaAguinaldoPersonalReporte="planillas/planillaAguinaldoPersonalReporte.php";
+
+$urlPlanillaSueldoPersonalActual="planillas/planillaSueldoPersonalActual.php";
+$urlPlanillaSueldoPersonalActualPDF="planillas/reportePlanillasSueldos.php";
+$urlPlanillaTribPersonalPDF="planillas/reportePlanillasTributarias.php";
+$urlDetallePlanillaPrerequisitos="planillas/detallePlanillaPrerequisitos.php";
+
+$urlPlanillaContabilizacion="planillas/executeComprobantePlanillaSueldos.php";
+
+
 
 
 //tipos_afps

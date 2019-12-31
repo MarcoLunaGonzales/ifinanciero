@@ -31,7 +31,8 @@ try {
         $nombre_area=$resultarea['nombre'];
     
         $descripcion=$nombre_uo."/".$nombre_area;
-        $tipo="Oficina/Area";
+        
+        $tipo=1;
 
         $stmt = $dbh->prepare("UPDATE personal set cod_unidadorganizacional=:cod_uo,cod_area=:cod_area where codigo=:codigo");
         $stmt->bindParam(':codigo', $codigo_personal);
@@ -61,7 +62,7 @@ try {
         $nombre=$result['nombre'];
         
         $descripcion=$nombre;
-        $tipo="Cargo";
+        $tipo=2;
 
         $stmt = $dbh->prepare("UPDATE personal set cod_cargo=:cod_cargo where codigo = :codigo");
         $stmt->bindParam(':codigo', $codigo_personal);
@@ -89,7 +90,7 @@ try {
         $result=$stmt->fetch();
         $nombre=$result['nombre'];
         $descripcion=$nombre;
-        $tipo="Grado Académico";
+        $tipo=3;
 
         $stmt = $dbh->prepare("UPDATE personal set cod_grado_academico=:grado_academico where codigo = :codigo");
         $stmt->bindParam(':codigo', $codigo_personal);
@@ -113,7 +114,7 @@ try {
         $fecha_cambio=$_POST["fecha_cambio"];  
 
         $descripcion=$haber_basico;
-        $tipo="Haber Básico";
+        $tipo=4;
 
         $stmt = $dbh->prepare("UPDATE personal set haber_basico=:haber_basico where codigo = :codigo");
         $stmt->bindParam(':codigo', $codigo_personal);

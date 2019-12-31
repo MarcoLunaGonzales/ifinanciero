@@ -258,7 +258,7 @@ if($sw==2){//procesar planilla
 	// Bind
 	$stmtU->bindParam(':cod_planilla', $cod_planilla);
 	$stmtU->bindParam(':cod_uo', $cod_uo_x);
-	$stmtU->bindParam(':created_by', $cod_uo_x);
+	$stmtU->bindParam(':created_by', $created_by);
 	$stmtU->bindParam(':modified_by', $modified_by);
 	$flagSuccessIP=$stmtU->execute();
 }elseif($sw==1)
