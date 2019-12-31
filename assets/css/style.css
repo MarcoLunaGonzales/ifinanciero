@@ -31,15 +31,134 @@
 .after-loop .card-themes{
   background-color:#dd3d31
   }
+  .after-loop .card-snippets{
+  background-color:#ffc107
+  }
 .after-loop .card-templates{
   background-color:#007bff
-  }
-.after-loop .card-snippets{
-  background-color:#ffc107
   }
 .after-loop .card-guides{
   background-color:#28a745
   }
+
+/* Colores del menu lateral*/
+
+/* ROJO */
+.sidebar[data-background-color=rojo]{
+  background-color:#dd3d31
+  }
+.sidebar[data-background-color=rojo] .nav .nav-item .nav-link{
+    color:#fff
+  }
+.sidebar[data-background-color=rojo] .nav .nav-item i{
+    color:hsla(0,0%,100%,.8)
+    }
+.sidebar[data-background-color=rojo] .nav .nav-item.active [data-toggle=collapse],.sidebar[data-background-color=rojo] .nav .nav-item:hover [data-toggle=collapse]{
+  color:#fff
+  }
+.sidebar[data-background-color=rojo] .nav .nav-item.active [data-toggle=collapse] i,.sidebar[data-background-color=rojo] .nav .nav-item:hover [data-toggle=collapse] i{
+  color:hsla(0,0%,100%,.8)
+  }
+.sidebar[data-background-color=rojo] .simple-text,.sidebar[data-background-color=rojo] .user a{
+  color:#fff
+  }
+.sidebar[data-background-color=rojo] .sidebar-background:after{
+  background:#dd3d31;opacity:.8
+  }
+.sidebar[data-background-color=rojo] .logo:after,.sidebar[data-background-color=rojo] .nav li.separator:after,.sidebar[data-background-color=rojo] .user:after{
+  background-color:hsla(0,0%,100%,.3)
+  }
+.sidebar[data-background-color=rojo] .nav li.active>[data-toggle=collapse],.sidebar[data-background-color=rojo] .nav li:hover:not(.active)>a{
+  background-color:hsla(0,0%,100%,.1)
+  }
+
+  /* AMARILLO */
+.sidebar[data-background-color=amarillo]{
+  background-color:#B89618
+  }
+.sidebar[data-background-color=amarillo] .nav .nav-item .nav-link{
+    color:#fff
+  }
+.sidebar[data-background-color=amarillo] .nav .nav-item i{
+    color:hsla(0,0%,100%,.8)
+    }
+.sidebar[data-background-color=amarillo] .nav .nav-item.active [data-toggle=collapse],.sidebar[data-background-color=amarillo] .nav .nav-item:hover [data-toggle=collapse]{
+  color:#fff
+  }
+.sidebar[data-background-color=amarillo] .nav .nav-item.active [data-toggle=collapse] i,.sidebar[data-background-color=amarillo] .nav .nav-item:hover [data-toggle=collapse] i{
+  color:hsla(0,0%,100%,.8)
+  }
+.sidebar[data-background-color=amarillo] .simple-text,.sidebar[data-background-color=amarillo] .user a{
+  color:#fff
+  }
+.sidebar[data-background-color=amarillo] .sidebar-background:after{
+  background:#B89618;opacity:.8
+  }
+.sidebar[data-background-color=amarillo] .logo:after,.sidebar[data-background-color=amarillo] .nav li.separator:after,.sidebar[data-background-color=amarillo] .user:after{
+  background-color:hsla(0,0%,100%,.3)
+  }
+.sidebar[data-background-color=amarillo] .nav li.active>[data-toggle=collapse],.sidebar[data-background-color=amarillo] .nav li:hover:not(.active)>a{
+  background-color:hsla(0,0%,100%,.1)
+  }
+
+  /* CELESTE */
+.sidebar[data-background-color=celeste]{
+  background-color:#007bff
+  }
+.sidebar[data-background-color=celeste] .nav .nav-item .nav-link{
+    color:#fff
+  }
+.sidebar[data-background-color=celeste] .nav .nav-item i{
+    color:hsla(0,0%,100%,.8)
+    }
+.sidebar[data-background-color=celeste] .nav .nav-item.active [data-toggle=collapse],.sidebar[data-background-color=celeste] .nav .nav-item:hover [data-toggle=collapse]{
+  color:#fff
+  }
+.sidebar[data-background-color=celeste] .nav .nav-item.active [data-toggle=collapse] i,.sidebar[data-background-color=celeste] .nav .nav-item:hover [data-toggle=collapse] i{
+  color:hsla(0,0%,100%,.8)
+  }
+.sidebar[data-background-color=celeste] .simple-text,.sidebar[data-background-color=celeste] .user a{
+  color:#fff
+  }
+.sidebar[data-background-color=celeste] .sidebar-background:after{
+  background:#007bff;opacity:.8
+  }
+.sidebar[data-background-color=celeste] .logo:after,.sidebar[data-background-color=celeste] .nav li.separator:after,.sidebar[data-background-color=celeste] .user:after{
+  background-color:hsla(0,0%,100%,.3)
+  }
+.sidebar[data-background-color=celeste] .nav li.active>[data-toggle=collapse],.sidebar[data-background-color=celeste] .nav li:hover:not(.active)>a{
+  background-color:hsla(0,0%,100%,.1)
+  }
+
+   /* VERDE */
+.sidebar[data-background-color=verde]{
+  background-color:#28a745
+  }
+.sidebar[data-background-color=verde] .nav .nav-item .nav-link{
+    color:#fff
+  }
+.sidebar[data-background-color=verde] .nav .nav-item i{
+    color:hsla(0,0%,100%,.8)
+    }
+.sidebar[data-background-color=verde] .nav .nav-item.active [data-toggle=collapse],.sidebar[data-background-color=verde] .nav .nav-item:hover [data-toggle=collapse]{
+  color:#fff
+  }
+.sidebar[data-background-color=verde] .nav .nav-item.active [data-toggle=collapse] i,.sidebar[data-background-color=verde] .nav .nav-item:hover [data-toggle=collapse] i{
+  color:hsla(0,0%,100%,.8)
+  }
+.sidebar[data-background-color=verde] .simple-text,.sidebar[data-background-color=verde] .user a{
+  color:#fff
+  }
+.sidebar[data-background-color=verde] .sidebar-background:after{
+  background:#28a745;opacity:.8
+  }
+.sidebar[data-background-color=verde] .logo:after,.sidebar[data-background-color=verde] .nav li.separator:after,.sidebar[data-background-color=verde] .user:after{
+  background-color:hsla(0,0%,100%,.3)
+  }
+.sidebar[data-background-color=verde] .nav li.active>[data-toggle=collapse],.sidebar[data-background-color=verde] .nav li:hover:not(.active)>a{
+  background-color:hsla(0,0%,100%,.1)
+  }
+
 @media(min-width:992px){
   .after-loop a.after-loop-item:hover{
     transform:translateY(-0.25rem);

@@ -9,12 +9,31 @@ $globalNombreUnidadX=$_SESSION['globalNombreUnidad'];
 $globalNombreAreaX=$_SESSION['globalNombreArea'];
 
 $menuModulo=$_SESSION['modulo'];
+switch ($menuModulo) {
+  case 1:
+   $nombreModulo="Remuneración";
+   $estiloMenu="rojo";
+  break;
+  case 2:
+  $nombreModulo="Activos Fijos";
+   $estiloMenu="amarillo";
+  break;
+  case 3:
+  $nombreModulo="Contabilidad";
+   $estiloMenu="celeste";
+  break;
+  case 4:
+  $nombreModulo="Presupuestos y Solicitudes";
+   $estiloMenu="verde";
+  break;
+}
+
 if($menuModulo==0){
  ?><script>window.location.href="index.php";</script><?php
 }
 ?>
 
-<div class="sidebar" data-color="purple" data-background-color="red" data-image="assets/img/scz.jpg">
+<div class="sidebar" data-color="purple" data-background-color="<?=$estiloMenu?>" data-image="assets/img/scz.jpg">
       <div class="logo">
         <a href="http://www.creative-tim.com" class="simple-text logo-mini">
           <img src="assets/img/logo_ibnorca1.fw.png" width="30" />
@@ -42,7 +61,7 @@ if($menuModulo==0){
           <li class="nav-item ">
             <a class="nav-link" href="index.php?opcion=homeModulo">
               <i class="material-icons">home</i>
-              <p> Principal
+              <p> <?=$nombreModulo?>
               </p>
             </a>
           </li>  
