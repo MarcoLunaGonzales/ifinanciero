@@ -1,6 +1,77 @@
+.after-loop{
+  padding:3rem 0 5rem
+  }
+.after-loop a.after-loop-item{
+  color:#fff;
+  position:relative;
+  padding-top:1.5rem;
+  padding-bottom:1.5rem;
+  transition:.15s box-shadow ease,.15s transform ease;
+  -moz-transition:.15s box-shadow ease,.15s transform ease
+  }
+.after-loop a.after-loop-item .card-body i{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  font-size:4rem;
+  left:1rem;
+  color:rgba(255,255,255,.2);
+  transition:.15s all ease
+  }
+.after-loop a.after-loop-item .card-body h4{
+  font-weight:700
+  }
+.after-loop a.after-loop-item .card-body p{
+  color:rgba(255,255,255,.7);
+  font-weight:600
+  }
+.after-loop a.after-loop-item:hover{
+  text-decoration:none
+  }
+.after-loop .card-themes{
+  background-color:#dd3d31
+  }
+.after-loop .card-templates{
+  background-color:#007bff
+  }
+.after-loop .card-snippets{
+  background-color:#ffc107
+  }
+.after-loop .card-guides{
+  background-color:#28a745
+  }
+@media(min-width:992px){
+  .after-loop a.after-loop-item:hover{
+    transform:translateY(-0.25rem);
+    box-shadow:0 2.25rem 1.5rem -1.5rem rgba(33,37,41,.3),0 0 1.5rem .5rem rgba(33,37,41,.05)!important
+    }
+  .after-loop a.after-loop-item:hover .card-body i{
+    left:1.5rem;font-size:3rem
+    }
+  .after-loop a.after-loop-item:active{
+    transform:none;
+    box-shadow:0 2rem 1.5rem -1.5rem rgba(33,37,41,.15),0 0 1.5rem .5rem rgba(33,37,41,.05)!important
+    }
+ }
+
+
+.cargar{
+  position: fixed;
+  left:0px;
+  top:0px;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  background: url('../img/loading.gif') 50% 50% no-repeat rgba(6, 2, 7,0.8);
+  opacity: .95;
+}
+.div-loading{
+  padding-top: 400px;
+}
 .elem-frente{
   z-index:9999;
 }
+
 .count{
     position: absolute;
     background: red;

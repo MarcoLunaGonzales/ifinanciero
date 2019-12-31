@@ -3354,6 +3354,7 @@ function guardarDatosSimulacion(btn_id){
      Swal.fire("Correcto!", "El proceso fue satisfactorio!", "success");
      $("#"+btn_id).removeAttr("disabled"); 
      $("#nombre").val(nombre_s);
+     $("#titulo_curso").text(nombre_s);
      $("#cod_ibnorca").val(cod_i);
      if(cod_i==1){
        $("#ibnorca").val("IBNORCA"); 
@@ -3448,6 +3449,10 @@ function actualizarSimulacion(){
          });
 }
 //funciones despues de cargar pantalla
+window.onload = detectarCarga;
+  function detectarCarga(){
+    $(".cargar").fadeOut("slow");
+  }
 
 $(document).ready(function() {
   //para plantillas tributarias

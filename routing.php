@@ -1101,7 +1101,12 @@
 			$cod_mes=$_GET['cod_mes'];
 			require_once('refrigerios/calculaRefrigerioMes.php');
 		}
+        
 
+        if ($_GET['opcion']=='homeModulo') {
+			$codModulo=$menuModulo;
+			require_once('layouts/homeModulo.php');
+		}
 	}else{
 		//require("paginaprincipal.php");
 	}
