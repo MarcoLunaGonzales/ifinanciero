@@ -91,11 +91,6 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { ?>
                 </div>
               </div>
               <?php
-
-
-
-
-
               if($globalAdmin==1){
               ?>
       				<div class="card-footer fixed-bottom">

@@ -49,6 +49,7 @@ while ($row = $cont->fetch(PDO::FETCH_BOUND)) {
 	var distribucionPor=[];
 	var configuracionCentro=[];
 	var configuraciones=[];
+	var estado_cuentas=[];
 </script>
 <form id="formRegComp" class="form-horizontal" action="saveEdit.php" method="post" enctype="multipart/form-data">
 <div class="content">
@@ -66,8 +67,19 @@ while ($row = $cont->fetch(PDO::FETCH_BOUND)) {
 			 <script>configuraciones.push({codigo:<?=$codigoX?>,valor:<?=$valorX?>,descripcion:'<?=$descripcionX?>'});</script>
 		    <?php
 			 }
-		    ?>
-             <?php
+		    //ESTADO DE CUENTAS
+			$stmt = $dbh->prepare("SELECT * FROM configuracion_estadocuentas");
+			$stmt->execute();
+			$i=0;
+			while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+				$codigoX=$row['codigo'];
+				$codPlanCuentaX=$row['cod_plancuenta'];
+				$tipoX=$row['tipo'];
+			 ?>
+			 <script>estado_cuentas.push({codigo:<?=$codigoX?>,cod_cuenta:<?=$codPlanCuentaX?>,tipo:<?=$tipoX?>});</script>
+		    <?php
+			 }
+		    
 			$stmt = $dbh->prepare("SELECT codigo, cod_unidadorganizacional, porcentaje FROM distribucion_gastosporcentaje");
 			$stmt->execute();
 			$i=0;
@@ -289,12 +301,25 @@ while ($row = $cont->fetch(PDO::FETCH_BOUND)) {
 			                         </select>
 			                       </div>
       	                         </div>
-      	                         <div class="col-sm-3">
+      	                         <div class="col-sm-4">
       	                        	<input type="hidden" name="cuenta<?=$idFila;?>" id="cuenta<?=$idFila;?>" value="">
     	                        	<input type="hidden" name="cuenta_auxiliar<?=$idFila;?>" id="cuenta_auxiliar<?=$idFila;?>" value="">
-                                	<div class="form-group" id="divCuentaDetalle<?=$idFila;?>">
-        		                       
-			                        </div><!--i class="material-icons">add</i-->
+                                	<div class="row">	
+    			                        <div class="col-sm-8">
+    			                        	<div class="form-group" id="divCuentaDetalle<?=$idFila;?>">
+    			                        
+        	                                </div>
+    			                        </div>
+    			                        <div class="col-sm-4">
+    			                        	<div class="btn-group">
+    			                        	 <!--<a title="Mayores" href="#" id="mayor<?=$idFila?>" onclick="mayorReporteComprobante(<?=$idFila?>)" class="btn btn-sm btn-info btn-fab"><span class="material-icons">list</span></a>	  	
+    			                        	 <a title="Cambiar cuenta" href="#" id="cambiar_cuenta<?=$idFila?>" onclick="editarCuentaComprobante(<?=$idFila?>)" class="btn btn-sm btn-warning btn-fab"><span class="material-icons text-dark">edit</span></a>	  
+    			                        	 <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion<?=$idFila?>" onclick="nuevaDistribucionPonerFila(<?=$idFila;?>);" class="btn btn-sm btn-default btn-fab"><span class="material-icons">scatter_plot</span></a>-->	  
+    			                             <input type="hidden" id="tipo_estadocuentas<?=$idFila?>">
+    			                             <a title="Estado de Cuentas" id="estados_cuentas<?=$idFila?>" href="#" onclick="verEstadosCuentas(<?=$idFila;?>,0);" class="btn btn-sm btn-danger btn-fab d-none"><span class="material-icons text-dark">ballot</span><span id="nestado<?=$idFila?>" class="bg-warning"></span></a>	  
+    			                            </div>  
+    			                        </div>
+    		                        </div>
       	                        </div>
                                 <?php
 		                          	$numeroCuenta=trim($numeroDet);
@@ -313,21 +338,21 @@ while ($row = $cont->fetch(PDO::FETCH_BOUND)) {
 		                              <script>setBusquedaCuenta('<?=$codigoCuenta;?>','<?=$numeroCuenta;?>','<?=$nombreCuenta;?>','0','');</script>
 	                                 
 
-		                        <div class="col-sm-2">
+		                        <div class="col-sm-1">
                                     <div class="form-group">
                                     	<label class="bmd-label-static">Debe</label>			
                                   		<input class="form-control small" type="number" placeholder="0" value="<?=$debeDet?>" name="debe<?=$idFila;?>" id="debe<?=$idFila;?>" onChange="calcularTotalesComprobante(this.id,event);" OnKeyUp="calcularTotalesComprobante(this.id,event);" step="0.01">	
 		                        	</div>
       	                        </div>
 
-		                        <div class="col-sm-2">
+		                        <div class="col-sm-1">
                                     <div class="form-group">
                                     	<label class="bmd-label-static">Haber</label>			
                                   		<input class="form-control small" type="number" placeholder="0" value="<?=$haberDet?>" name="haber<?=$idFila;?>" id="haber<?=$idFila;?>" onChange="calcularTotalesComprobante(this.id,event);" OnKeyUp="calcularTotalesComprobante(this.id,event);" step="0.01"> 	
 		                        	</div>
       	                        </div>
 
-      	                        <div class="col-sm-2">
+      	                        <div class="col-sm-3">
 		                            <div class="form-group">
                                   		<label class="bmd-label-static">GlosaDetalle</label>
 		                        		<textarea rows="1" class="form-control" name="glosa_detalle<?=$idFila;?>" id="glosa_detalle<?=$idFila;?>"><?=$glosaDet?></textarea>
@@ -350,7 +375,7 @@ while ($row = $cont->fetch(PDO::FETCH_BOUND)) {
                            <div class="h-divider"></div>
                          </div>
 
-                       <script>var nfac=[];itemFacturas.push(nfac);</script>
+                       <script>var nfac=[];itemFacturas.push(nfac);var nest=[];itemEstadosCuentas.push(nest);</script>
 						 <?php
 						      $stmt = $dbh->prepare("SELECT * FROM facturas_compra where cod_comprobantedetalle=$codDet");
 				              $stmt->execute();
@@ -365,25 +390,34 @@ while ($row = $cont->fetch(PDO::FETCH_BOUND)) {
 				                    $control=$row['codigo_control'];
 				                    ?><script>abrirFactura(<?=$idFila?>,'<?=$nit?>',<?=$factura?>,'<?=$fechaFac?>','<?=$razon?>',<?=$importe?>,<?=$exento?>,'<?=$autorizacion?>','<?=$control?>');</script><?php
 			  	              }
-						 
+						      
+						      // estados de cuenta
+						      $stmt = $dbh->prepare("SELECT * FROM estados_cuenta where cod_comprobantedetalle=$codDet");
+				              $stmt->execute();
+				              while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+				                    $cuenta=$row['cod_plancuenta'];
+				                    $codComproDet=$row['cod_comprobantedetalleorigen'];
+				                    $monto=$row['monto'];
+				                    ?><script>abrirEstado(<?=$idFila?>,'<?=$cuenta?>',<?=$codComproDet?>,'<?=$monto?>');</script><?php
+			  	              }
 						 $idFila=$idFila+1;
 						}
 						?>
 		            </fieldset>
 							<div class="row">
-								<div class="col-sm-5">
+								<div class="col-sm-6">
 						      	</div>
-								<div class="col-sm-2">
+								<div class="col-sm-1">
 						            <div class="form-group">	
 						          		<input class="form-control" type="number" name="totaldeb" placeholder="0" id="totaldeb" readonly="true">	
 									</div>
 						      	</div>
-								<div class="col-sm-2">
+								<div class="col-sm-1">
 						            <div class="form-group">
 						            	<input class="form-control" type="number" name="totalhab" placeholder="0" id="totalhab" readonly="true">	
 									</div>
 						      	</div>
-						      	<div class="col-sm-3">
+						      	<div class="col-sm-4">
 								</div>
 							</div>
 				  	<div class="card-footer fixed-bottom">

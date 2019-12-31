@@ -452,3 +452,83 @@
   </div>
 <!--    end small modal -->
 
+<!-- small modal -->
+<div class="modal fade modal-primary" id="modalEstadosCuentas" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content card">
+                <div class="card-header card-header-danger card-header-icon">
+                  <div class="card-icon">
+                    <i class="material-icons text-dark">ballot</i>
+                  </div>
+                  <h4 class="card-title">Estados de cuenta</h4>
+                </div>
+                <div class="card-body">
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                  <i class="material-icons">close</i>
+                </button>
+                <!--<input class="form-control" type="text" name="est_codcuenta" id="est_codcuenta"/>
+                <input class="form-control" type="text" name="est_codcuentaaux" id="est_codcuentaaux"/>-->
+                <input class="form-control" type="hidden" name="estFila" id="estFila"/>
+                <div class="card-title"><center><h6>Datos de la nueva transaccion</h6></center></div>
+                 <div class="row">
+                       <label class="col-sm-2 col-form-label">Monto</label>
+                       <div class="col-sm-3">
+                        <div class="form-group">
+                          <input class="form-control" type="number" step="0.001" readonly name="monto_estadocuenta" id="monto_estadocuenta"/>
+                        </div>
+                        </div>
+                        <!--<div class="col-sm-7">
+                          <div class="form-group">
+                           <select class="selectpicker form-control form-control-sm" name="proveedores" id="proveedores" data-style="<?=$comboColor;?>" onChange="cargarDatosCuenta()">
+                               <option selected value="0">Sin Proveedor</option>
+                             <?php
+                              $stmt = $dbh->prepare("SELECT * FROM af_proveedores order by codigo");
+                              $stmt->execute();
+                              while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                $codigoX=$row['codigo'];
+                                $nombreX=$row['nombre'];
+                                ?>
+                                <option value="<?=$codigoX;?>"><?=$nombreX;?></option>  
+                                <?php
+                                  }
+                                  ?>
+                             </select>
+                          </div> 
+                       </div> -->     
+                  </div>
+                  <div class="row" id="div_cuentasorigen">
+                        <label class="col-sm-2 col-form-label">Cuenta Origen</label>
+                        <div class="col-sm-10">
+                          <div class="form-group">
+                           <select class="selectpicker form-control form-control-sm" onchange="verEstadosCuentasCred()" name="cuentas_origen" id="cuentas_origen" data-style="<?=$comboColor;?>">
+                             <option disabled selected value="">Seleccione una Cuenta</option>
+                             <?php
+                              $stmt = $dbh->prepare("SELECT p.* FROM plan_cuentas p, configuracion_estadocuentas c where c.cod_plancuenta=p.codigo and c.tipo=1 order by codigo");
+                              $stmt->execute();
+                              while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                $codigoX=$row['codigo'];
+                                $nombreX=$row['nombre'];
+                                $numeroX=$row['numero'];
+                                ?>
+                                <option value="<?=$codigoX;?>"><?=trim($numeroX);?> - <?=trim($nombreX);?></option>  
+                                <?php
+                                  }
+                                  ?>
+                             </select>
+                          </div> 
+                       </div>      
+                  </div>
+                  <br>
+                  <div class="card-title"><center><h6>Estado de Cuenta</h6> <div id="tituloCuentaModal"></div></center></div>
+                  <br>
+                 <div id="div_estadocuentas"></div>
+                 <div id="mensaje_estadoscuenta"></div>
+                 <div class="form-group float-right">
+                        <button type="button" class="btn btn-info btn-round" onclick="agregarEstadoCuenta()">Agregar</button>
+                        <button type="button" class="btn btn-danger btn-round" onclick="quitarEstadoCuenta()">Quitar</button>
+                  </div>
+                </div>
+      </div>  
+    </div>
+  </div>
+<!--    end small modal -->

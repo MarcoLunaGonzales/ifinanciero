@@ -9,13 +9,13 @@ require_once 'configModule.php';
 $dbh = new Conexion();
 
 $codGestion=$_POST["gestion"];
-//$fechaComprobante=$_POST["fecha"];
 $codUnidad=$_POST["unidad_organizacional"];
 $cantidadFilas=$_POST["cantidad_filas"];
 $tipoComprobante=$_POST["tipo_comprobante"];
 $nroCorrelativo=$_POST["nro_correlativo"];
 $glosa=$_POST["glosa"];
 $facturas= json_decode($_POST['facturas']);
+$estadosCuentas= json_decode($_POST['estados_cuentas']);
 session_start();
 
 $globalUser=$_SESSION["globalUser"];
@@ -30,7 +30,7 @@ $codComprobante=$_POST['codigo_comprobante'];
 $sqlUpdate="UPDATE comprobantes SET  glosa='$glosa', modified_at='$fechaHoraActual', modified_by='$globalUser' where codigo=$codComprobante";
 echo $sqlUpdate;
 $stmtUpdate = $dbh->prepare($sqlUpdate);
-$flagSuccess=$stmtUpdate->execute();
+$flagSuccess=$stmtUpdate->execute();	
 
 //subir archivos al servidor
 //Como el elemento es un arreglos utilizamos foreach para extraer todos los valores
@@ -61,41 +61,80 @@ $flagSuccess=$stmtUpdate->execute();
         }
     }
 
-//guardar las ediciones
-for ($i=1;$i<=$cantidadFilas;$i++){
+    $stmt1 = obtenerComprobantesDet($codComprobante);
+    while ($row1 = $stmt1->fetch(PDO::FETCH_ASSOC)) {
+      $codigo=$row1['cod_det'];
+      $sqlDeleteEstado="";
+      $sqlDeleteEstado="DELETE from estados_cuenta where cod_comprobantedetalle='$codigo'";
+      $stmtDelEstado = $dbh->prepare($sqlDeleteEstado);
+      $stmtDelEstado->execute();
+      $sqlDeleteFactura="";
+      $sqlDeleteFactura="DELETE from facturas_compra where cod_comprobantedetalle='$codigo'";
+      $stmtDelFactura = $dbh->prepare($sqlDeleteFactura);
+      $stmtDelFactura->execute();
+    }
+       //BORRAMOS LA TABLA
+		$sqlDelete="";
+		$sqlDelete="DELETE from comprobantes_detalle where cod_comprobante='$codComprobante'";
+		$stmtDel = $dbh->prepare($sqlDelete);
+		$flagSuccess=$stmtDel->execute();
+
+for ($i=1;$i<=$cantidadFilas;$i++){ 	    	
 	$cuenta=$_POST["cuenta".$i];
 
 	if($cuenta!=0 || $cuenta!=""){
-    $data[$i-1][0]=$_POST["cuenta".$i]; 
-    $data[$i-1][1]=$_POST["cuenta_auxiliar".$i]; 
-    $data[$i-1][2]=$_POST["unidad".$i]; 
-    $data[$i-1][3]=$_POST["area".$i]; 
-    $data[$i-1][4]=$_POST["debe".$i]; 	    	
-    $data[$i-1][5]=$_POST["haber".$i]; 
-    $data[$i-1][6]=$_POST["glosa_detalle".$i];
-    $data[$i-1][7]=$i;
-    //$dataInsert 	
+		$cuentaAuxiliar=$_POST["cuenta_auxiliar".$i];
+		$unidadDetalle=$_POST["unidad".$i];
+		$area=$_POST["area".$i];
+		$debe=$_POST["debe".$i];
+		$haber=$_POST["haber".$i];
+		$glosaDetalle=$_POST["glosa_detalle".$i];
+
+		
+        $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
+		$sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobanteDetalle','$codComprobante', '$cuenta', '$cuentaAuxiliar', '$unidadDetalle', '$area', '$debe', '$haber', '$glosaDetalle', '$i')";
+		$stmtDetalle = $dbh->prepare($sqlDetalle);
+		$flagSuccessDetalle=$stmtDetalle->execute();	
+
+        $nF=cantidadF($facturas[$i-1]);
+        
+         for($j=0;$j<$nF;$j++){
+         	  $nit=$facturas[$i-1][$j]->nit;
+         	  $nroFac=$facturas[$i-1][$j]->nroFac;
+         	  
+         	  $fecha=$facturas[$i-1][$j]->fechaFac;
+         	  $porciones = explode("/", $fecha);
+         	  $fechaFac=$porciones[2]."-".$porciones[1]."-".$porciones[0];
+         	  
+         	  $razonFac=$facturas[$i-1][$j]->razonFac;
+         	  $impFac=$facturas[$i-1][$j]->impFac;
+         	  $exeFac=$facturas[$i-1][$j]->exeFac;
+         	  $autFac=$facturas[$i-1][$j]->autFac;
+         	  $conFac=$facturas[$i-1][$j]->conFac;
+
+		      $sqlDetalle2="INSERT INTO facturas_compra (cod_comprobantedetalle, nit, nro_factura, fecha, razon_social, importe, exento, nro_autorizacion, codigo_control) VALUES ('$codComprobanteDetalle', '$nit', '$nroFac', '$fechaFac', '$razonFac', '$impFac', '$exeFac', '$autFac', '$conFac')";
+		      $stmtDetalle2 = $dbh->prepare($sqlDetalle2);
+		      $flagSuccessDetalle2=$stmtDetalle2->execute();
+         }
+
+         //itemEstadosCuenta
+          $nC=cantidadF($estadosCuentas[$i-1]);
+          for($j=0;$j<$nC;$j++){
+              $fecha=date("Y-m-d H:i:s");
+              $codPlanCuenta=$estadosCuentas[$i-1][$j]->cod_plancuenta;
+              $monto=$estadosCuentas[$i-1][$j]->monto;
+              $codProveedor=$estadosCuentas[$i-1][$j]->cod_proveedor;
+              $codComprobanteDetalleOrigen=$estadosCuentas[$i-1][$j]->cod_comprobantedetalle;
+              $fecha=$fecha;
+              $sqlDetalle3="INSERT INTO estados_cuenta (cod_comprobantedetalle, cod_plancuenta, monto, cod_proveedor, fecha,cod_comprobantedetalleorigen) VALUES ('$codComprobanteDetalle', '$codPlanCuenta', '$monto', '$codProveedor', '$fecha','$codComprobanteDetalleOrigen')";
+              $stmtDetalle3 = $dbh->prepare($sqlDetalle3);
+              $flagSuccessDetalle3=$stmtDetalle3->execute();
+         }
+         //FIN DE ESTADOS DE CUENTA
 	}
 } 
-$cab[0]="cod_cuenta";
-$cab[1]="cod_cuentaauxiliar";
-$cab[2]="cod_unidadorganizacional";
-$cab[3]="cod_area";
-$cab[4]="debe";
-$cab[5]="haber";
-$cab[6]="glosa";
-$cab[7]="orden";
 
-//$codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
-$comDet=contarComprobantesDetalle($codComprobante);
-$comDet->bindColumn('total', $contador);
-while ($row = $comDet->fetch(PDO::FETCH_BOUND)) {
- $cont1=$contador;
-}
-
-$stmt1 = obtenerComprobantesDet($codComprobante);
-editarComprobanteDetalle($codComprobante,'cod_comprobante',$cont1,$cantidadFilas,$stmt1,'comprobantes_detalle',$cab,$data,$facturas);
-if($flagSuccess==true){
+if($flagSuccessDetalle==true){
 	showAlertSuccessError(true,"../".$urlList);	
 }else{
 	showAlertSuccessError(false,"../".$urlList);

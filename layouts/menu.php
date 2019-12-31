@@ -131,6 +131,12 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
                     <span class="sidebar-normal"> Gesti&oacute;n de Plantillas de Costo </span>
                   </a>
                 </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listDistribucionGasto">
+                    <span class="sidebar-mini"> DGP </span>
+                    <span class="sidebar-normal"> Distribucion de Gastos</span>
+                  </a>
+                </li>
               </ul>
             </div>
           </li>
@@ -222,6 +228,63 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
                     <span class="sidebar-normal"> Aportes Laborales</span>
                   </a>
                 </li>
+                
+                <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=listBonos">
+                      <span class="sidebar-mini"> B </span>
+                      <span class="sidebar-normal"> Bonos</span>
+                    </a>
+                </li>
+
+                <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=listDescuentos">
+                      <span class="sidebar-mini"> D </span>
+                      <span class="sidebar-normal"> Descuentos</span>
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=listAnticipoPersonal">
+                      <span class="sidebar-mini"> A </span>
+                      <span class="sidebar-normal"> Anticipos de Personal</span>
+                    </a>
+                </li>
+
+
+                <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=listRcivaPersonal">
+                      <span class="sidebar-mini"> R </span>
+                      <span class="sidebar-normal"> RC IVA Personal</span>
+                    </a>
+                </li>
+
+                <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=listEscalaAntiguedad">
+                      <span class="sidebar-mini"> E </span>
+                      <span class="sidebar-normal"> Escalas Antiguedad </span>
+                    </a>
+                </li>
+
+                <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=listPoliticaDescuento">
+                      <span class="sidebar-mini"> PDR </span>
+                      <span class="sidebar-normal"> Politicas de Descuento por retrasos </span>
+                    </a>
+                </li>
+
+                <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=listDotacion">
+                      <span class="sidebar-mini"> D </span>
+                      <span class="sidebar-normal"> Dotaciones </span>
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=listRefrigerio">
+                      <span class="sidebar-mini"> R </span>
+                      <span class="sidebar-normal"> Refrigerios </span>
+                    </a>
+                </li>
+
+
               </ul>
             </div>
           </li>
@@ -295,7 +358,11 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
                     <span class="sidebar-mini"> A </span>
                     <span class="sidebar-normal"> Aprobaciones de comprobantes </span>
                   </a>
-                </li>
+
+                </li> 
+
+
+            
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listSimulacionesCostos">
                     <span class="sidebar-mini"> SC </span>
@@ -308,6 +375,28 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
                     <span class="sidebar-normal"> Gesti&oacute;n de Simulaciones</span>
                   </a>
                 </li>                 
+
+              </ul>
+            </div>
+          </li>
+          <!--TRANSACCIONES RRHH-->
+          <li class="nav-item ">
+            <a class="nav-link" data-toggle="collapse" href="#transaccHHRR">
+              <i class="material-icons">menu</i>
+              <p> Transacciones RRHH
+                <b class="caret"></b>
+              </p>
+            </a>
+            <div class="collapse" id="transaccHHRR">
+              <ul class="nav">
+                
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=planillasSueldoPersonal">
+                    <span class="sidebar-mini"> P </span>
+                    <span class="sidebar-normal"> Planillas Sueldos </span>
+                  </a>
+                </li>
+                
               </ul>
             </div>
           </li>
@@ -403,7 +492,32 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
               </ul>
             </div>
           </li>
+
+
+          
+
+          <!--RECURSOS HUMANOS>          
+          <li class="nav-item ">
+            <a class="nav-link" data-toggle="collapse" href="#bono">
+              <i class="material-icons">menu</i>
+              <p> Recursos Humanos 2
+                <b class="caret"></b>
+              </p>
+            </a>
+            <div class="collapse" id="bono">
+              <ul class="nav">
+
+                
+
+              </ul>
+            </div>
+          </li-->
+
+
+
+
           <!--UTILITARIOS-->
+
           <li class="nav-item ">
             <a class="nav-link" data-toggle="collapse" href="#utilitarios">
               <i class="material-icons">build</i>
@@ -423,6 +537,12 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
                   <a class="nav-link" href="?opcion=configuracionDeRetenciones">
                     <span class="sidebar-mini"> CR </span>
                     <span class="sidebar-normal"> Configuracion de Retenciones</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=configuracionEstadosCuenta">
+                    <span class="sidebar-mini"> CEC </span>
+                    <span class="sidebar-normal"> Configuracion Estados de Cuentas</span>
                   </a>
                 </li>                          
               </ul>

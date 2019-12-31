@@ -306,6 +306,16 @@ function obtenerCodigoFacturaCompra(){
    }
    return($codigoFacturaCompra);
 }
+function obtenerCodigoEstadosCuenta(){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT IFNULL(max(c.codigo)+1,1)as codigo from estados_cuenta c");
+   $stmt->execute();
+   $codigoFacturaCompra=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $codigoFacturaCompra=$row['codigo'];
+   }
+   return($codigoFacturaCompra);
+}
 function nameCargo($codigo){
    $dbh = new Conexion();
    $stmt = $dbh->prepare("SELECT nombre FROM cargos where codigo=:codigo");
@@ -731,6 +741,14 @@ function obtenerFacturasCompro($codigo){
    $stmt->execute();
    return $stmt;
 }
+function obtenerEstadosCuenta($codigo){
+   $dbh = new Conexion();
+   $sql="";
+   $sql="SELECT codigo as cod_det,cod_plancuenta,monto,cod_proveedor,fecha from estados_cuenta  where cod_comprobantedetalle=$codigo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+}
     //funcion nueva obtener factura de comprobantesdetalle
 function obtenerPlantillasDetalle($codigo){
    $dbh = new Conexion();
@@ -745,6 +763,18 @@ function obtenerPlantillasDetalle($codigo){
    $dbh = new Conexion();
    $sql="";
    $sql="select count(*) as total from facturas_compra where cod_comprobantedetalle=$codigo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   $stmt->bindColumn('total', $contador);
+   while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+    $cont1=$contador;
+   }
+   return $cont1;
+  }
+  function contarEstadosCuenta($codigo){
+   $dbh = new Conexion();
+   $sql="";
+   $sql="select count(*) as total from estados_cuenta where cod_comprobantedetalle=$codigo";
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
    $stmt->bindColumn('total', $contador);
@@ -873,13 +903,161 @@ function obtenerPlantilla($codigo){
         $cabeceraFac[0]="nit";$cabeceraFac[1]="nro_factura";$cabeceraFac[2]="fecha";$cabeceraFac[3]="razon_social";$cabeceraFac[4]="importe";$cabeceraFac[5]="exento";$cabeceraFac[6]="nro_autorizacion";$cabeceraFac[7]="codigo_control";
           if($title=="cod_solicitudrecurso"){
            $sql = obtenerFacturasSoli($codComprobanteDetalle); 
-           editarComprobanteDetalle($codComprobanteDetalle,'cod_solicitudrecursodetalle',contarFacturasSoli($codComprobanteDetalle),cantidadF($fact[$i]),$sql,'facturas_compra',$cabeceraFac,$valFac,null);
+           editarComprobanteDetalle($codComprobanteDetalle,'cod_solicitudrecursodetalle',contarFacturasSoli($codComprobanteDetalle),cantidadF($fact[$j]),$sql,'facturas_compra',$cabeceraFac,$valFac,null);
           }else{
            $sql = obtenerFacturasCompro($codComprobanteDetalle); 
-           editarComprobanteDetalle($codComprobanteDetalle,'cod_comprobantedetalle',contarFacturasCompra($codComprobanteDetalle),cantidadF($fact[$i]),$sql,'facturas_compra',$cabeceraFac,$valFac,null);
+           editarComprobanteDetalle($codComprobanteDetalle,'cod_comprobantedetalle',contarFacturasCompra($codComprobanteDetalle),cantidadF($fact[$j]),$sql,'facturas_compra',$cabeceraFac,$valFac,null);
           }    
           
          }
+        }
+        $crud2 = $dbh->prepare($query2);
+        $crud2->execute();
+       }
+    }
+  }
+  function editarComprobanteDetalleCompleto($codComp,$title,$cant1,$cant2,$stmt,$tabla,$cabecera,$valores,$fact,$estados){
+    $dbh = new Conexion();
+    $i=0;$cab=cantidadF($cabecera);$codigo=0;
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $codigo=$row['cod_det'];
+      if($i<$cant2){
+        //update
+        $sets="";
+        for ($k=0; $k < $cab; $k++) { 
+          if($k==($cab-1)){
+            $sets.=$cabecera[$k]."='".$valores[$i][$k]."'";
+          }else{
+            $sets.=$cabecera[$k]."='".$valores[$i][$k]."', ";
+          }
+        } 
+         $query="UPDATE $tabla set $sets where codigo=$codigo";       
+      }else{
+        //delete
+        $query="DELETE from $tabla where codigo=$codigo";
+        $queryP="DELETE from estados_cuenta where cod_comprobantedetalle=$codigo";
+        $crudP = $dbh->prepare($queryP);
+        $crudP->execute();
+      }
+      $crud = $dbh->prepare($query);
+      $crud->execute();
+      if($fact!=null){
+        //recoger valores del array en un array general para enviar los datos
+        for($h=0;$h<cantidadF($fact[$i]);$h++){
+          $valFac[$h][0]=$fact[$i][$h]->nit;
+          $valFac[$h][1]=$fact[$i][$h]->nroFac;
+
+          $fecha=$fact[$i][$h]->fechaFac;
+          $porciones = explode("/", $fecha);
+          $fechaFac=$porciones[2]."-".$porciones[1]."-".$porciones[0];
+
+          $valFac[$h][2]=$fechaFac;
+          $valFac[$h][3]=$fact[$i][$h]->razonFac;
+          $valFac[$h][4]=$fact[$i][$h]->impFac;
+          $valFac[$h][5]=$fact[$i][$h]->exeFac;
+          $valFac[$h][6]=$fact[$i][$h]->autFac;
+          $valFac[$h][7]=$fact[$i][$h]->conFac;
+        }
+        if(cantidadF($fact[$i])>0){
+         $cabeceraFac[0]="nit";$cabeceraFac[1]="nro_factura";$cabeceraFac[2]="fecha";$cabeceraFac[3]="razon_social";$cabeceraFac[4]="importe";$cabeceraFac[5]="exento";$cabeceraFac[6]="nro_autorizacion";$cabeceraFac[7]="codigo_control";
+         if($title=="cod_solicitudrecurso"){
+            $sql = obtenerFacturasSoli($codigo); 
+            editarComprobanteDetalleCompleto($codigo,'cod_solicitudrecursodetalle',contarFacturasSoli($codigo),cantidadF($fact[$i]),$sql,'facturas_compra',$cabeceraFac,$valFac,null,null);
+         }else{
+           $sql = obtenerFacturasCompro($codigo); 
+           editarComprobanteDetalleCompleto($codigo,'cod_comprobantedetalle',contarFacturasCompra($codigo),cantidadF($fact[$i]),$sql,'facturas_compra',$cabeceraFac,$valFac,null,null);
+         }  
+        }
+        //estados de cuenta
+        if($estados!=null){
+         for($h=0;$h<cantidadF($estados[$i]);$h++){
+          $fecha=date("Y-m-d H:i:s");
+          $valEst[$h][0]=$estados[$i][$h]->cod_plancuenta;
+          $valEst[$h][1]=$estados[$i][$h]->monto;
+          $valEst[$h][2]=$estados[$i][$h]->cod_proveedor;
+          $valEst[$h][3]=$fecha;
+          $valEst[$h][4]=$estados[$i][$h]->cod_comprobantedetalle;
+         }
+           if(cantidadF($estados[$i])>0){
+              $cabeceraEst[0]="cod_plancuenta";$cabeceraEst[1]="monto";$cabeceraEst[2]="cod_proveedor";$cabeceraEst[3]="fecha";$cabeceraEst[4]="cod_comprobantedetalleorigen";
+              $sql = obtenerEstadosCuenta($codigo); 
+              editarComprobanteDetalleCompleto($codigo,'cod_comprobantedetalle',contarEstadosCuenta($codigo),cantidadF($estados[$i]),$sql,'estados_cuenta',$cabeceraEst,$valEst,null,null); 
+           }
+        }
+
+      }//fin de if ($fact != null)
+      $i++;
+    }
+    if($cant2>$cant1){
+       for ($j=$i; $j < $cant2; $j++) { 
+         //insert
+        $into=$title.",";$values=$codComp.",";
+        for ($l=0; $l < $cab; $l++) { 
+          if($l==($cab-1)){
+          $into.=$cabecera[$l]."";
+          $values.="'".$valores[$j][$l]."'";
+          }else{
+           $into.=$cabecera[$l].",";
+          $values.="'".$valores[$j][$l]."',";
+          }          
+        }
+        if($fact==null||$estados==null){
+          if($fact==null){
+            $codFacturaCompra=obtenerCodigoFacturaCompra();
+          }else{
+            $codFacturaCompra=obtenerCodigoEstadosCuenta();
+          }
+            $dbh = new Conexion();
+            $query2="INSERT INTO $tabla (codigo, ".$into.") values ($codFacturaCompra, ".$values.")";
+        }else{
+          if($title=="cod_solicitudrecurso"){
+            $codComprobanteDetalle=obtenerCodigoSolicitudDetalle();
+          }else{
+            $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
+          }    
+          $dbh = new Conexion();
+          $query2="INSERT INTO $tabla (codigo, ".$into.") values ($codComprobanteDetalle, ".$values.")";
+
+          //recoger valores del array en un array general para enviar los datos
+        for($h=0;$h<cantidadF($fact[$j]);$h++){
+          $valFac[$h][0]=$fact[$j][$h]->nit;
+          $valFac[$h][1]=$fact[$j][$h]->nroFac;
+
+          $fecha=$fact[$j][$h]->fechaFac;
+          $porciones = explode("/", $fecha);
+          $fechaFac=$porciones[2]."-".$porciones[1]."-".$porciones[0];
+
+          $valFac[$h][2]=$fechaFac;
+          $valFac[$h][3]=$fact[$j][$h]->razonFac;
+          $valFac[$h][4]=$fact[$j][$h]->impFac;
+          $valFac[$h][5]=$fact[$j][$h]->exeFac;
+          $valFac[$h][6]=$fact[$j][$h]->autFac;
+          $valFac[$h][7]=$fact[$j][$h]->conFac;
+        }
+        if(cantidadF($fact[$j])>0){
+        $cabeceraFac[0]="nit";$cabeceraFac[1]="nro_factura";$cabeceraFac[2]="fecha";$cabeceraFac[3]="razon_social";$cabeceraFac[4]="importe";$cabeceraFac[5]="exento";$cabeceraFac[6]="nro_autorizacion";$cabeceraFac[7]="codigo_control";
+          if($title=="cod_solicitudrecurso"){
+           $sql = obtenerFacturasSoli($codComprobanteDetalle); 
+           editarComprobanteDetalle($codComprobanteDetalle,'cod_solicitudrecursodetalle',contarFacturasSoli($codComprobanteDetalle),cantidadF($fact[$j]),$sql,'facturas_compra',$cabeceraFac,$valFac,null);
+          }else{
+           $sql = obtenerFacturasCompro($codComprobanteDetalle); 
+           editarComprobanteDetalle($codComprobanteDetalle,'cod_comprobantedetalle',contarFacturasCompra($codComprobanteDetalle),cantidadF($fact[$j]),$sql,'facturas_compra',$cabeceraFac,$valFac,null);
+          }    
+         }
+         // estados de cuenta items nuevos
+         for($h=0;$h<cantidadF($estados[$j]);$h++){
+          $fecha=date("Y-m-d H:i:s");
+          $valEst[$h][0]=$estados[$j][$h]->cod_plancuenta;
+          $valEst[$h][1]=$estados[$j][$h]->monto;
+          $valEst[$h][2]=$estados[$j][$h]->cod_proveedor;
+          $valEst[$h][3]=$fecha;
+          $valEst[$h][4]=$estados[$j][$h]->cod_comprobantedetalle;
+         }
+           if(cantidadF($estados[$j])>0){
+              $cabeceraEst[0]="cod_plancuenta";$cabeceraEst[1]="monto";$cabeceraEst[2]="cod_proveedor";$cabeceraEst[3]="fecha";$cabeceraEst[4]="cod_comprobantedetalleorigen";
+              $sql = obtenerEstadosCuenta($codComprobanteDetalle); 
+              echo editarComprobanteDetalleCompleto($codComprobanteDetalle,'cod_comprobantedetalle',contarEstadosCuenta($codComprobanteDetalle),cantidadF($estados[$j]),$sql,'estados_cuenta',$cabeceraEst,$valEst,null,null); 
+           }
         }
         $crud2 = $dbh->prepare($query2);
         $crud2->execute();
@@ -1220,6 +1398,180 @@ function porcentRetencionDetalle($codigo){
    }
    return($nombreX);
 }
+
+
+
+function verificarBonoPersonaMes($codigoPersona, $codMes, $codBono)
+{
+  $dbh = new Conexion();
+  $stmt = $dbh->prepare("SELECT cod_personal FROM bonos_personal_mes WHERE cod_mes=$codMes AND cod_bono=$codBono");
+  $stmt->execute();
+
+  $cont = 0;
+  $existe = 0;
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    if ($row['cod_personal'] == $codigoPersona) {
+      $cont++;
+    }
+  }
+  if ($cont == 0) {
+    $existe = 0;
+  } else {
+    $existe = 1;
+  }
+  return ($existe);
+}
+
+
+function verificarPersonaMes($codigoPersona, $codMes, $codDescuento)
+{
+  $dbh = new Conexion();
+  $stmt = $dbh->prepare("SELECT cod_personal FROM descuentos_personal_mes WHERE cod_mes=$codMes AND cod_descuento=$codDescuento");
+  $stmt->execute();
+
+  $cont = 0;
+  $existe = 0;
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    if ($row['cod_personal'] == $codigoPersona) {
+      $cont++;
+    }
+  }
+  if ($cont == 0) {
+    $existe = 0;
+  } else {
+    $existe = 1;
+  }
+  return ($existe);
+}
+
+function formatearNumerosExcel($numero)
+{
+  //reemplazar comas por puntos
+  $num = str_replace(',', '.', $numero);
+  return $num;
+}
+
+function formatoNombreArchivoExcel()
+{
+  $fecha = getdate();
+  $nombre_v = $fecha["mday"] . "-" . $fecha["mon"] . "-" . $fecha["year"] . "-" . $fecha["hours"] . "-" . $fecha["minutes"] . "-" . $fecha["seconds"] . ".csv";
+  return $nombre_v;
+}
+
+
+function verificarExistenciaPersona($codigoPersona)
+{
+  $dbh = new Conexion();
+  $stmt = $dbh->prepare("SELECT codigo FROM personal WHERE codigo=$codigoPersona and cod_estadoreferencial=1");
+  $stmt->execute();
+
+  $cont = 0;
+  $existe = 0;
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    if ($row['codigo'] == $codigoPersona) {
+      $cont++;
+    }
+  }
+  if ($cont == 0) {
+    $existe = false;
+  } else {
+    $existe = true;
+  }
+  return ($existe);
+}
+
+function nombrePersona($codigoPersona){
+  $dbh = new Conexion();
+  $stmt = $dbh->prepare("SELECT codigo,paterno,materno,primer_nombre FROM personal WHERE codigo=$codigoPersona and cod_estadoreferencial=1");
+  $stmt->execute();
+  $stmt->bindParam('paterno',$paterno);
+  $stmt->bindParam('materno',$materno);
+  $stmt->bindParam('primer_nombre',$primer_nombre);
+
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $paternoX=$row['paterno'];
+    $maternoX=$row['materno'];
+    $primer_nombreX=$row['primer_nombre'];
+    $nombre= $primer_nombreX." ".$paternoX." ".$maternoX;
+ }
+ return($nombre);
+
+}
+
+function calculaIva($monto){
+  $calculo=$monto*0.13;
+  return ($calculo);
+}
+
+function MesAnioEnLetra($fecha){
+  $anio = date("Y", strtotime($fecha));
+  $mes = array('Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre');
+  $mes = $mes[(date('m', strtotime($fecha))*1)-1];
+  return $mes.'/'.$anio;
+}
+
+
+function calculaBonoProfesion($codGrado){
+  $dbh = new Conexion();
+  //obtener sueldo basico de configuraciones_planillas
+  $stmt = $dbh->prepare("SELECT valor_configuracion FROM configuraciones_planillas where id_configuracion=1");
+  $stmt->execute();
+  $stmt->bindColumn('valor_configuracion', $sueldoBasico);
+
+  while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+    $sueldoBasicoX= $sueldoBasico;
+  }
+
+  //obtener codigo y porcentaje de profesion
+  $stmtb = $dbh->prepare("SELECT codigo,porcentaje FROM personal_grado_academico where codigo=$codGrado");
+  $stmtb->execute();
+  $stmtb->bindColumn('codigo', $codigo);
+  $stmtb->bindColumn('porcentaje', $porcentaje);
+
+  while ($row = $stmtb->fetch(PDO::FETCH_BOUND)) {
+    $codGAX = $codigo;
+    $porcentajeX = $porcentaje;
+
+    if($codGrado==$codGAX){
+      $bonoProf = $sueldoBasicoX*($porcentajeX/100);
+    }
+  }
+
+  return($bonoProf);
+}
+
+
+function insertarDotacionPersonaMes($codDotacionPersona,$monto,$nro_meses, $fecha,$codGestion)
+{
+  
+  $dbh = new Conexion();
+  $montoxMes=$monto/$nro_meses;
+  $codGest=$codGestion;
+
+  //$anio = date("Y", strtotime($fecha));
+  $mes = (date('m', strtotime($fecha)) * 1);
+
+  for ($i = 1; $i <= $nro_meses; $i++) {
+    if ($mes <= 12) {
+      //echo $nro_meses . " " . $mes . '/' . $anio . ".....";
+      $stmt = $dbh->prepare("INSERT INTO dotaciones_personal_mes(cod_dotacionpersonal,cod_gestion,cod_mes,monto_mes,cod_estadoreferencial)
+                           VALUES ($codDotacionPersona,$codGest,$mes,$montoxMes,1) ");
+      $stmt->execute();
+      $mes++;
+    } else {
+      $mes = 1;
+      //$anio++;
+      $codGest=$codGest+1;
+      //echo $nro_meses . " " . $mes . '/' . $anio . ".....";
+      $stmtb = $dbh->prepare("INSERT INTO dotaciones_personal_mes(cod_dotacionpersonal,cod_gestion,cod_mes,monto_mes,cod_estadoreferencial)
+                           VALUES ($codDotacionPersona,$codGest,$mes,$montoxMes,1) ");
+      $stmtb->execute();
+      $mes++;
+    }
+  }
+}
+
+
 function obtenerCodigoSolicitudRecursos(){
    $dbh = new Conexion();
    $stmt = $dbh->prepare("SELECT IFNULL(max(c.codigo)+1,1)as codigo from solicitud_recursos c");
@@ -1431,6 +1783,249 @@ function obtenerCuentaPlantillaCostos($codigo){
    $stmt->execute();
    return $stmt;
 }
+
+
+
+//================ ========== PARA  planilla sueldos
+
+function obtenerBonoAntiguedad($minino_salarial,$ing_contr){
+
+  $fecha_actual = date('Y-m-d');
+  $anio_actual= date('Y');
+  
+  $fechaComoEntero = strtotime($ing_contr);
+  $anio_inicio = date("Y", $fechaComoEntero);
+
+  $diferencia_anios=$anio_actual-$anio_inicio;
+
+
+  $total_bono_antiguedad = 0;
+  $dbh = new Conexion();
+  $stmt = $dbh->prepare("SELECT * from escalas_antiguedad where cod_estadoreferencial = 1");
+  $stmt->execute();
+  $stmt->bindColumn('anios_inicio', $anios_inicio);
+  $stmt->bindColumn('anios_final', $anios_final);
+  $stmt->bindColumn('porcentaje', $porcentaje);  
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
+  {
+    if($diferencia_anios>=$anios_inicio){
+      if($diferencia_anios<$anios_final)
+        $l3 = $minino_salarial*$porcentaje/100;
+      else $l3 = 0;
+    }else $l3 = 0;
+
+    $total_bono_antiguedad +=$l3;
+  } 
+  // $aporte_laboral_aux=$total_ganado*$aporte_laboral_porcentaje_total/100;
+  $total_bono_antiguedad_x=number_format($total_bono_antiguedad,2,'.','');
+  // $stmt = null;
+  // $dbh = null;
+
+
+  return $total_bono_antiguedad_x;
+
+}
+
+
+function obtenerTotalBonos($codigo_personal)
+{
+  
+  $mes=date('m');
+  $gestion=date('Y');
+
+  $dbh = new Conexion();
+  $sqlGestion = "SELECT codigo from gestiones where nombre=$gestion";
+  $stmtGestion = $dbh->prepare($sqlGestion);
+  $stmtGestion->execute();
+  $resultGestion=$stmtGestion->fetch();
+  $cod_gestion = $resultGestion['codigo'];
+
+
+  $sqlBonos = "SELECT SUM(monto) as total_bonos from bonos_personal_mes 
+  where cod_personal = $codigo_personal and cod_gestion=$cod_gestion and cod_mes=$mes";
+  $stmtBonos = $dbh->prepare($sqlBonos);
+  $stmtBonos->execute();
+  $resultBonos=$stmtBonos->fetch();
+  $total_bonos = $resultBonos['total_bonos'];
+  $stmtGestion = null;
+  $stmtBonos = null;
+  $dbh = null;
+  return $total_bonos;
+}
+function obtenerAporteAFP($total_ganado){
+  $aporte_laboral_porcentaje_total=0;
+  $dbh = new Conexion();
+  $stmt = $dbh->prepare("SELECT valor_configuracion from configuraciones_planillas where id_configuracion in (12,13,14,15)");
+  $stmt->execute();
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
+  {
+    $valor_configuracion=$row['valor_configuracion'];
+    $aporte_laboral_porcentaje_total+=$valor_configuracion;
+  } 
+  $aporte_laboral_aux=$total_ganado*$aporte_laboral_porcentaje_total/100;
+  $aporte_laboral=number_format($aporte_laboral_aux,2,'.','');
+  $stmt = null;
+  $dbh = null;
+  return($aporte_laboral);
+}
+
+function obtenerAporteSolidario13000($total_ganado){
+  $dbh = new Conexion();
+  $stmt = $dbh->prepare("SELECT valor_configuracion from configuraciones_planillas where id_configuracion=2");
+  $stmt->execute();
+  $result=$stmt->fetch();
+  $valor_configuracion=$result['valor_configuracion'];
+  if($total_ganado>13000){
+    $aporte_solidario_13000_aux=($total_ganado-13000)*$valor_configuracion/100;
+  }else $aporte_solidario_13000_aux = 0;
+  $aporte_solidario_13000=number_format($aporte_solidario_13000_aux,2,'.','');
+  $stmt = null;
+  $dbh = null;
+  return($aporte_solidario_13000);
+}
+function obtenerAporteSolidario25000($total_ganado){
+  $dbh = new Conexion();
+  $stmt = $dbh->prepare("SELECT valor_configuracion from configuraciones_planillas where id_configuracion=3");
+  $stmt->execute();
+  $result=$stmt->fetch();
+  $valor_configuracion=$result['valor_configuracion'];
+  if($total_ganado>25000){
+    $aporte_solidario_25000_aux=($total_ganado-25000)*$valor_configuracion/100;
+  }else $aporte_solidario_25000_aux = 0;
+  $aporte_solidario_25000=number_format($aporte_solidario_25000_aux,2,'.','');
+  $stmt = null;
+  $dbh = null;
+  return($aporte_solidario_25000);
+}
+function obtenerAporteSolidario35000($total_ganado){
+  $dbh = new Conexion();
+  $stmt = $dbh->prepare("SELECT valor_configuracion from configuraciones_planillas where id_configuracion=4");
+  $stmt->execute();
+  $result=$stmt->fetch();
+  $valor_configuracion=$result['valor_configuracion'];
+  if($total_ganado>35000){
+    $aporte_solidario_35000_aux=($total_ganado-35000)*$valor_configuracion/100;
+  }else $aporte_solidario_35000_aux = 0;
+  $aporte_solidario_35000=number_format($aporte_solidario_35000_aux,2,'.','');
+  $stmt = null;
+  $dbh = null;
+  return($aporte_solidario_35000);
+}
+function obtenerRC_IVA($total_ganado,$apf_f,$afp_p,$ap_sol_13000,$ap_sol_25000,$ap_sol_35000)
+{
+
+  $sueldo=$total_ganado-$apf_f-$afp_p-$ap_sol_13000-$ap_sol_25000-$ap_sol_35000;
+  $sueldo_neto=number_format($sueldo);
+  $minimo_no_imponible=4244; // no definido m10
+  $datosf39=10;//no definido
+
+  if($sueldo_neto>$minimo_no_imponible)$sueldo_gravado=$sueldo_neto-$minimo_no_imponible;
+  else $sueldo_gravado=0;
+  $fisco=$sueldo_gravado*$datosf39/100;
+  $t10=400;//no definido
+  $datosC40=0;//no definido
+  $datosC41=0;//no definido
+  $u10=number_format(($t10*$datosC40)/($datosC41-$t10));
+  $v10=$t10+$u10;
+  $s10=0;//no definido
+  $w10 = $v10 + $s10;
+  if($fisco>$w10)$aporte_rc_iva = $fisco-$w10;
+  else $aporte_rc_iva = 0;
+  $aporte_rc_iva_neto=number_format($aporte_rc_iva);
+
+  $stmt = null;
+  $dbh = null;
+  return ($aporte_rc_iva_neto);
+}
+function obtenerAtrasoPersonal($id_personal,$haber_basico,$valor_conf_x65_90,$valor_conf_x90_120,$valor_conf_x120_150,$valor_conf_x150){
+  $dbh = new Conexion();
+  set_time_limit(300);
+  //capturando fecha
+  $mes=date('m');
+  $gestion=date('Y');
+  $descuentos=0;
+  $stmt = $dbh->prepare("SELECT * from personal_atrasos where cod_personal=$id_personal and mes=$mes and gestion=$gestion");
+  $stmt->execute();
+
+  $result=$stmt->fetch();
+  $codigo=$result['codigo'];
+  $cod_personal=$result['cod_personal'];
+  $total=$result['total'];
+  $x_65_90=$result['x_65_90'];
+  $x_90_120=$result['x_90_120'];
+  $x_120_150=$result['x_120_150'];
+  $x_150=$result['x_150'];
+
+  $descuentos=($x_65_90*$valor_conf_x65_90)+($x_90_120*$valor_conf_x90_120)+($x_120_150*$valor_conf_x120_150)+($x_150*$valor_conf_x150);
+  $descuentos_neto=$descuentos*$haber_basico;
+  $stmt = null;
+  $dbh = null;
+  return ($descuentos_neto);
+
+}
+function obtenerDotaciones($codigo_personal,$cod_gestion_x,$cod_mes_x){
+  $dbh = new Conexion();
+  $stmt = $dbh->prepare("SELECT SUM(dpm.monto_mes) as monto_mes_dotacion
+from dotaciones_personal_mes dpm, dotaciones_personal dm
+where dpm.cod_gestion=$cod_gestion_x and dpm.cod_mes=$cod_mes_x and dm.cod_personal=$codigo_personal
+and dpm.cod_dotacionpersonal=dm.codigo");
+  $stmt->execute();
+  $resultado=$stmt->fetch();
+  $monto_mes_dotacion=$resultado['monto_mes_dotacion'];
+  $monto_mes_dotacion_x=number_format($monto_mes_dotacion,2,'.','');
+  return $monto_mes_dotacion_x;
+}
+function obtenerAnticipo($id_personal)
+{
+  $anticipo=0;
+  
+  $mes=date('m');
+  $gestion=date('Y');
+
+  $dbh = new Conexion();
+  $sqlGestion = "SELECT codigo from gestiones where nombre=$gestion";
+  $stmtGestion = $dbh->prepare($sqlGestion);
+  $stmtGestion->execute();
+  $resultGestion=$stmtGestion->fetch();
+  $cod_gestion = $resultGestion['codigo'];
+
+  // $fecha_inicio=$gestion."-".$mes."-01 00:00:00";
+  // $fecha_actual=date('Y-m-d G:i:s');
+
+  $dbh = new Conexion();
+  $stmtAnticipos = $dbh->prepare("SELECT sum(monto)as total_anticipos
+  FROM anticipos_personal
+  WHERE cod_personal=$id_personal and cod_gestion = $cod_gestion and cod_mes=$mes");
+  $stmtAnticipos->execute();
+  $resultAnticipos=$stmtAnticipos->fetch();
+  $anticipo=$resultAnticipos['total_anticipos'];
+  if($anticipo==null){
+    $anticipo=0;
+  }
+  $stmtGestion = null;
+  $stmt = null;
+  $dbh = null;  
+  return ($anticipo);
+}
+
+function obtener_aporte_patronal_general($cod_config_planilla,$total_ganado){  
+  $dbh = new Conexion();
+  $stmt = $dbh->prepare("SELECT valor_configuracion from configuraciones_planillas where id_configuracion=$cod_config_planilla");
+  $stmt->execute();
+  $resultado=$stmt->fetch();
+  $valor_configuracion=$resultado['valor_configuracion'];
+
+  $aporte_p_seguro_medico=$total_ganado*$valor_configuracion/100;
+  $aporte_p_seguro_medico_X=number_format($aporte_p_seguro_medico,2,'.','');
+
+  //cerramos
+  $stmt = null;
+  $dbh = null;
+  return($aporte_p_seguro_medico_X);
+}
+
+
+//=======
 function obtenerMontoPlantillaDetalle($codigoPar,$codigo,$ib){
   $dbh = new Conexion();
   $montoI=0;$montoF=0;
@@ -1492,5 +2087,28 @@ function obtenerTotalesSimulacion($codigo){
    }
    return($nombreX);
 }
+//<<<<<<< HEAD
+//=======
+
+
+
+function obtenerValorRefrigerio(){
+  //Seleccionar el monto de refrigerio de configuraciones
+$dbh = new Conexion();
+$stmt = $dbh->prepare("SELECT c.valor_configuracion FROM configuraciones c WHERE c.id_configuracion=10");
+$stmt->execute();
+$stmt->bindColumn('valor_configuracion', $valorConfiguracion);
+
+while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+  $valorConfiguracionX = $valorConfiguracion;
+}
+
+return($valorConfiguracionX);
+}
+
+//>>>>>>> 9665608161fbd74baa97b51d1230f7cda83c0916
+//>>>>>>> ebf28257f9e59421ce70f01e3ea93e3078b56278
+
 ?>
+
 

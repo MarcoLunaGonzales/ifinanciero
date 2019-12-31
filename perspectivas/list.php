@@ -79,13 +79,16 @@ $stmt->bindColumn('abreviatura', $abreviatura);
               if($globalAdmin==1){
               ?>
       				<div class="card-footer ml-auto mr-auto">
-                    <button class="<?=$buttonNormal;?>" onClick="location.href='<?=$urlRegister;?>'">Registrar</button>
+                    <button class="<?=$buttonNormal;?>" onClick="location.href='<?=$urlRegister;?>&codigo=0'">Registrar</button>
+                    
               </div>
               <?php
               }
               ?>
+        
 		  
             </div>
           </div>  
         </div>
     </div>
+

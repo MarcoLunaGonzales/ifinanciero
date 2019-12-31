@@ -15,6 +15,7 @@ $tipoComprobante=$_POST["tipo_comprobante"];
 $nroCorrelativo=$_POST["nro_correlativo"];
 $glosa=$_POST["glosa"];
 $facturas= json_decode($_POST['facturas']);
+$estadosCuentas= json_decode($_POST['estados_cuentas']);
 session_start();
 
 $globalUser=$_SESSION["globalUser"];
@@ -102,6 +103,21 @@ for ($i=1;$i<=$cantidadFilas;$i++){
 		      $stmtDetalle2 = $dbh->prepare($sqlDetalle2);
 		      $flagSuccessDetalle2=$stmtDetalle2->execute();
          }
+
+         //itemEstadosCuenta
+          $nC=cantidadF($estadosCuentas[$i-1]);
+          for($j=0;$j<$nC;$j++){
+              $fecha=date("Y-m-d H:i:s");
+              $codPlanCuenta=$estadosCuentas[$i-1][$j]->cod_plancuenta;
+              $monto=$estadosCuentas[$i-1][$j]->monto;
+              $codProveedor=$estadosCuentas[$i-1][$j]->cod_proveedor;
+              $codComprobanteDetalleOrigen=$estadosCuentas[$i-1][$j]->cod_comprobantedetalle;
+              $fecha=$fecha;
+              $sqlDetalle3="INSERT INTO estados_cuenta (cod_comprobantedetalle, cod_plancuenta, monto, cod_proveedor, fecha,cod_comprobantedetalleorigen) VALUES ('$codComprobanteDetalle', '$codPlanCuenta', '$monto', '$codProveedor', '$fecha','$codComprobanteDetalleOrigen')";
+              $stmtDetalle3 = $dbh->prepare($sqlDetalle3);
+              $flagSuccessDetalle3=$stmtDetalle3->execute();
+         }
+         //FIN DE ESTADOS DE CUENTA
 	}
 } 
 

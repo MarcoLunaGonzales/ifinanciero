@@ -42,6 +42,8 @@
   <script src="assets/js/plugins/bootstrap-notify.js"></script>
   <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
   <script src="assets/js/material-dashboard.js?v=2.1.0" type="text/javascript"></script>
+
+  <script src="assets/autocomplete/awesomplete.min.js"></script>
   <!-- Material Dashboard DEMO methods, don't include it in your project! -->
   <script src="assets/alerts/alerts.js"></script>
 
@@ -242,6 +244,9 @@
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
             }
         } );
+        if ($('#cuenta_auto').length) {
+          autocompletar("cuenta_auto","cuenta_auto_id",array_cuenta);
+        }
     } );
   </script>
 
