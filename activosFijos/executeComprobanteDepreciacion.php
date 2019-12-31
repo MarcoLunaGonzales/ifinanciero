@@ -84,6 +84,12 @@ while ($rowUnidades = $stmtUnidades->fetch(PDO::FETCH_BOUND)) {
       $stmtInsertCab = $dbh->prepare($sqlInsertCab);
       $flagSuccess=$stmtInsertCab->execute();
 
+      //INSERTAMOS LA RELACION ENTRE COMPROBANTES Y DEPRECIACIONES.
+      $sqlInsertCabRelacion="INSERT INTO comprobantes_depreciaciones (cod_comprobante, cod_depreciacion) values ('$codComprobante','$codDepreciacion')";
+      $stmtInsertCabRelacion = $dbh->prepare($sqlInsertCabRelacion);
+      $flagSuccessRelacion=$stmtInsertCabRelacion->execute();
+
+
       //fin insertar cabecera
       $ordenComprobanteDetalle=1;
       while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { 
@@ -162,13 +168,12 @@ while ($rowUnidades = $stmtUnidades->fetch(PDO::FETCH_BOUND)) {
 
             //echo $codCuentaReg1." ".$codCuentaReg2."<br>";
                $ordenComprobanteDetalle=$ordenComprobanteDetalle+4;
-
          }
       }
 
 }
 
 
+showAlertSuccessError($flagSuccess,$urlList7);
 
-//showAlertSuccessError($flagSuccess,$urlList7);
 ?>

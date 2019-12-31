@@ -9,6 +9,8 @@ require_once 'configModule.php';
 
 
 setlocale(LC_TIME, "Spanish");
+set_time_limit(0);
+
 $dbh = new Conexion();
 
 $sqlX="SET NAMES 'utf8'";
