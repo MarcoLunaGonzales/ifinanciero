@@ -36,7 +36,6 @@ $dbh = new Conexion();
   <div class="container-fluid">
 
     <div class="col-md-12">
-      <form id="formRegComp" class="form-horizontal" action="save.php" method="post" enctype="multipart/form-data">
       <div class="card">
         <div class="card-header <?=$colorCard;?> card-header-text">
         <div class="card-text">
@@ -101,7 +100,6 @@ $dbh = new Conexion();
         <a href="<?=$urlList?>" class="<?=$buttonCancel;?>">Volver</a>
         </div>
       </div>
-      </form>
     </div>
       
   </div>

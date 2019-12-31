@@ -4,6 +4,7 @@ require_once '../layouts/bodylogin2.php';
 require_once '../conexion.php';
 require_once '../styles.php';
 require_once '../functionsGeneral.php';
+require_once '../functionsPOSIS.php';
 require_once '../functions.php';
 require_once 'configModule.php';
 require_once '../assets/libraries/CifrasEnLetras.php';
@@ -110,7 +111,7 @@ where pc.codigo=$codigo";
             '<tr class="text-center">'.
               '<th class="text-left"><small>DETALLE</small></th>'.
               '<th><small>IMPORTE TOTAL MENSUAL</small></th>'.
-              '<th><small>COSTO POR CURSO/MODULO/MES</small></th>'.
+              '<th><small>COSTO POR CURSO</small></th>'.
               '<th><small>BOB</small></th>'.
               '<th><small>BOB</small></th>'.
             '</tr>'.
@@ -175,7 +176,8 @@ where pc.codigo=$codigo";
             $stmt_cuentas = $dbh->prepare($query_cuentas);
             $stmt_cuentas->execute();
             while ($row_cuentas = $stmt_cuentas->fetch(PDO::FETCH_ASSOC)) {
-                $monto=obtenerMontoPorCuenta($row_cuentas['numero'],$grupoUnidad,$grupoArea,((int)$anio-1));
+                $monto=ejecutadoEgresosMes($grupoUnidad,((int)$anio-1),$mes,$grupoArea,1,$row_cuentas['numero']);
+                $monto=($monto/12);
                 if($monto==null){$monto=0;}
                 $montoCal=costoModulo($monto,$mes);
                 $html.='<tr class="cuenta'.$codPartida.'" style="display:none">'.
@@ -257,7 +259,8 @@ $html.='<tr class="bg-table-primary text-white">'.
             $stmt_cuentas = $dbh->prepare($query_cuentas);
             $stmt_cuentas->execute();
             while ($row_cuentas = $stmt_cuentas->fetch(PDO::FETCH_ASSOC)) {
-                $monto=obtenerMontoPorCuenta($row_cuentas['numero'],$grupoUnidad,$grupoArea,((int)$anio-1));
+                $monto=ejecutadoEgresosMes($grupoUnidad,((int)$anio-1),$mes,$grupoArea,1,$row_cuentas['numero']);
+                $monto=($monto/12);
                 if($monto==null){$monto=0;}
                 $montoCal=costoModulo($monto,$mes);
                 $html.='<tr class="cuenta'.$codPartida.'" style="display:none">'.

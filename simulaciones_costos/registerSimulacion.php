@@ -261,12 +261,13 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
 				//valores de la simulacion
 
                   //total desde la plantilla  
-                 $totalFijo=obtenerTotalesPlantilla($codigoPX,1,18); //tipo de costo 1:fijo,2:variable desde la plantilla
+                 $totalFijo=obtenerTotalesPlantilla($codigoPX,1,obtenerValorConfiguracion(6)); //tipo de costo 1:fijo,2:variable desde la plantilla
                   //total variable desde la plantilla
                  //$totalVariable=obtenerTotalesPlantilla($codigoPX,2,18);
                  //total variable desde simulacion cuentas
                   $totalVariable=obtenerTotalesSimulacion($codigo);
-                
+                $totalVariable[2]=$totalVariable[2]/$alumnosX;
+                $totalVariable[3]=$totalVariable[3]/$alumnosExternoX;
                  //calcular cantidad alumnos si no esta registrado
                if($alumnosX==0||$alumnosX==""||$alumnosX==null||$alumnosExternoX==0||$alumnosExternoX==""||$alumnosExternoX==null){
                  	$porcentajeFinalLocal=0;$alumnosX=0;$alumnosExternoX=0;$porcentajeFinalExterno=0;

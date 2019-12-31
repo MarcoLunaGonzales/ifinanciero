@@ -78,11 +78,12 @@ $stmt->bindColumn('estado_plantilla', $estadoPlantilla);
                           <td><?=$utilidadExterno;?> %</td>
                            <td class="<?=$textEstado?>"><button class="btn <?=$btnEstilo?> btn-sm"><?=$estadoPlantilla;?></button></td>
                           <td class="td-actions text-right">
-                            <?php if($codEstado!=3){
-                              ?>
                             <a href='<?=$urlReporte;?>?cod=<?=$codigo;?>' rel="tooltip" class="btn btn-primary">
                               <i class="material-icons" title="Registrar Cuentas">list</i>
                             </a>
+                            <?php if($codEstado!=3){
+                              ?>
+                            
                             <a href='<?=$urlRegister;?>?cod=<?=$codigo;?>' rel="tooltip" class="<?=$buttonEdit;?>">
                               <i class="material-icons"><?=$iconEdit;?></i>
                             </a>
