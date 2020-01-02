@@ -41,7 +41,7 @@ try {
     $celularTutor=$_POST['celularTutor'];
     $grado_academico=$_POST['grado_academico'];
     $ing_contr=$_POST['ing_contr'];
-    $ing_planilla=$_POST['ing_planilla'];
+    $ing_planilla=$_POST['ing_contr'];
     
     //$created_at = $_POST["created_at"];
     $created_by = 1;//$_POST["created_by"];

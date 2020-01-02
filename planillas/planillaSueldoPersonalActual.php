@@ -12,6 +12,12 @@
   $cod_gestion = $_GET["cod_gestion"];//
   $codigo_mes = $_GET["cod_mes"];//
 
+  $sqlGestion="SELECT nombre from gestiones where codigo=$cod_gestion";
+  $stmtGestion=$dbh->prepare($sqlGestion);
+  $stmtGestion->execute();
+  $resultGestion=$stmtGestion->fetch();
+  $nombre_gestion=$resultGestion['nombre'];
+
 
   $sql = "SELECT *,
         (SELECT ga.nombre from personal_grado_academico ga where ga.codigo=cod_gradoacademico) as grado_academico,
@@ -22,7 +28,7 @@
         (select (select pd.abreviatura from personal_departamentos pd where pd.codigo=p3.cod_lugar_emision)
                  from personal p3 where p3.codigo=cod_personalcargo) as lug_emision,
       (select p4.lugar_emision_otro from personal p4 where p4.codigo=cod_personalcargo) as lug_emision_otro
-        from planillas_personal_mes where cod_planilla=$codigo_planilla";
+        from planillas_personal_mes where cod_planilla=$codigo_planilla order by paterno";
 
   $stmtPersonal = $dbh->prepare($sql);
   $stmtPersonal->execute();
@@ -62,7 +68,7 @@
                 Planilla De Sueldos
             </h4>                  
             <h6 class="card-title">
-              Gestion: <?=$cod_gestion; ?><br>
+              Gestion: <?=$nombre_gestion; ?><br>
               Mes: <?=$codigo_mes; ?><br>
               Codigo Planilla: <?=$codigo_planilla; ?><br>
                      
@@ -74,6 +80,7 @@
                 <thead>
                   <tr class="bg-dark text-white">
                     
+                    <th>#</th>
                     <th>Codigo</th>
                     <th>Paterno</th>
                     <th>Materno</th>
@@ -104,11 +111,11 @@
                     <th>Total Ganado</th>
 
                     <th class="bg-success text-white"><button id="botonAportes" style="border:none;" class="bg-success text-white">Monto Aportes</button></th>
-                    <th class="aportesDet bg-success text-white" style="display:none">Afp Fut</th>
-                    <th class="aportesDet bg-success text-white" style="display:none">Afp Prev</th>
-                    <th class="aportesDet bg-success text-white" style="display:none">Apor Solid(13000)</th>
-                    <th class="aportesDet bg-success text-white" style="display:none">Apor Solid(25000)</th>
-                    <th class="aportesDet bg-success text-white" style="display:none">Apor Solid(35000)</th>
+                    <th class="aportesDet bg-success text-white" style="display:none">AFP.Fut</th>
+                    <th class="aportesDet bg-success text-white" style="display:none">AFP.Prev</th>
+                    <th class="aportesDet bg-success text-white" style="display:none">A.Solidario(13)</th>
+                    <th class="aportesDet bg-success text-white" style="display:none">A.Solidario(25)</th>
+                    <th class="aportesDet bg-success text-white" style="display:none">A.Solidario(35)</th>
                     <th class="aportesDet bg-success text-white" style="display:none">RC-IVA</th>
 
                     
@@ -172,12 +179,13 @@
                           $total_a_patronal=$result['total_a_patronal'];                      
                         ?>
                   <tr>                                                        
+                    <td><?=$index;?></td>
                     <td><?=$cod_personalcargo;?></td>
-                    <td><?=$paterno;?></td>                         
-                    <td><?=$materno;?></td>
-                    <td><?=$nombrePersonal;?></td>
+                    <td class="text-left"><?=$paterno;?></td>                         
+                    <td class="text-left"><?=$materno;?></td>
+                    <td class="text-left"><?=$nombrePersonal;?></td>
                     <td><?=$doc_id;?>-<?=$lug_emision?><?=$lug_emision_otro?></td>                  
-                    <td><?=$grado_academico;?></td>                    
+                    <td class="text-left"><?=$grado_academico;?></td>                    
                     <td><?=$haber_basico;?></td>
                     <td><?=$dias_trabajados;?></td>                
                     <td><?=$bono_antiguedad;?></td>

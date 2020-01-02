@@ -78,45 +78,6 @@ if ($codigo > 0){
     $archivo = "personal/imagenes/".$imagen;//sale mal
 }
 
-// }else {//ES NUEVO
-//     $codigo = 0;
-//     $identificacion = ' ';
-//     $cod_lugar_emision = '';
-//     $fecha_nacimiento = '';
-//     $cod_cargo = '';//cb
-//     $cod_unidadorganizacional = '';//cb
-//     $cod_area = '';
-//     $jubilado = '';
-//     $cod_genero = '';//cb
-//     $cod_tipopersonal = '';//cb
-//     $haber_basico = '';
-//     $paterno = '';
-//     $materno = '';
-//     $apellido_casada = '';
-//     $primer_nombre = '';
-//     $otros_nombres = '';
-//     $nua_cua_asignado = '';
-//     $direccion = '';
-//     $cod_tipoafp = '';//
-//     $cod_tipoaporteafp = '';
-//     $nro_seguro = '';
-//     $cod_estadopersonal = '';
-//     $created_at = '';
-//     $created_by = '';
-//     $modified_at = '';
-//     $modified_by = '';
-
-//     $telefono = '';
-//     $celular = '';
-//     $email = '';
-//     $persona_contacto = '';
-
-//     $discapacitado = '';
-//     $tutor_discapacitado = '';
-//     $celular_tutor = '';
-//     $parentesco = '';
-// }
-
 //COMBOS...
 $queryUO = "select * from unidades_organizacionales";
 $statementUO = $dbh->query($queryUO);
@@ -155,7 +116,7 @@ $statementgrado_academico = $dbh->query($querygrado_academico);
                           <h4 class="card-title"><?php if ($codigo == 0) echo "Registrar"; else echo "Editar";?>  <?=$nombreSingularPersonal;?></h4>
                         </div>
                     </div>
-                    <h3 align="center">CAMPOS NO EDITABLES</h3>
+                    <h3 align="center">CAMPOS NO GESTIONADOS POR RRHH</h3>
                     <div class="card-body ">
                         <div class="row">
                             <label class="col-sm-2 col-form-label">Código Personal</label>
@@ -314,22 +275,15 @@ $statementgrado_academico = $dbh->query($querygrado_academico);
                             </div>                        
                         </div><!--fin campo direccion -->
 
-                        <h3 align="center">CAMPOS EDITABLES</h3>
+                        <h3 align="center">CAMPOS GESTIONADOS POR RRHH</h3>
                         
                         <div class="row">
-                            <label class="col-sm-2 col-form-label">Ingreso Contrato</label>
+                            <label class="col-sm-2 col-form-label">Fecha de Ingreso</label>
                             <div class="col-sm-4">
                                 <div class="form-group">
-                                    <input class="form-control" type="date" name="ing_contr" id="ing_contr" required="true" value="<?=$ing_contr;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>                                    
+                                    <input class="form-control" type="date" name="ing_contr" id="ing_contr" required="true" value="<?=$ing_contr;?>" />                                    
                                 </div>
-                            </div>
-                            <label class="col-sm-2 col-form-label">Ingreso Planilla</label>
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <input class="form-control" type="date" name="ing_planilla" id="ing_planilla" required="true" value="<?=$apellido_casada;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
-                                </div>
-                            </div>
-                                        
+                            </div>                                                                
                         </div><!--fin campo ing contrato & ing planilla -->
 
                         <div class="row">

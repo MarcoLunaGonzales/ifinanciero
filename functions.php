@@ -1788,10 +1788,9 @@ function obtenerCuentaPlantillaCostos($codigo){
 
 //================ ========== PARA  planilla sueldos
 
-function obtenerBonoAntiguedad($minino_salarial,$ing_contr){
-
-  $fecha_actual = date('Y-m-d');
-  $anio_actual= date('Y');
+function obtenerBonoAntiguedad($minino_salarial,$ing_contr){  
+  //$anio_actual= date('Y');
+  $anio_actual=2019;
   
   $fechaComoEntero = strtotime($ing_contr);
   $anio_inicio = date("Y", $fechaComoEntero);

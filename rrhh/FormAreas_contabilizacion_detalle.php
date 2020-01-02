@@ -36,9 +36,8 @@ $statementArea = $dbh->query($queryArea);//uo
 				<div class="row">
 				  <label class="col-sm-2 col-form-label">Unidad Organizacional</label>
 				  <div class="col-sm-7">
-					<div class="form-group">					 
-
-					  <select name="cod_uo" id="cod_uo" class="selectpicker" data-style="btn btn-primary" >
+					<div class="form-group">
+						<select name="cod_uo" id="cod_uo" class="selectpicker" data-style="btn btn-primary" onChange="ajaxAreaContabilizacionDetalle(this);">
 	                        <option value=""></option>
 	                        <?php while ($row = $statementUO->fetch()){ ?>
 	                            <option value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
@@ -50,13 +49,15 @@ $statementArea = $dbh->query($queryArea);//uo
 				<div class="row">
 				  <label class="col-sm-2 col-form-label">Area</label>
 				  <div class="col-sm-7">
-					<div class="form-group">
-					  <select name="cod_area" id="cod_area" class="selectpicker" data-style="btn btn-primary" >
-	                        <option value=""></option>
-	                        <?php while ($row = $statementArea->fetch()){ ?>
-	                            <option value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
-	                        <?php } ?>
-	                    </select>
+					<div class="form-group" >
+						<div id="div_contenedor_area">
+							<select name="cod_area" id="cod_area" class="selectpicker" data-style="btn btn-primary" >
+		                        <option value=""></option>
+		                        <?php while ($row = $statementArea->fetch()){ ?>
+		                            <option value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+		                        <?php } ?>
+	                    	</select>
+						</div>					  
 					</div>
 				  </div>
 				</div>				

@@ -202,10 +202,8 @@ if ($codigo > 0){
                             <div id="div_contenedor_UO">
                                 <?php
                                 $sqlUO="SELECT uo.codigo, uo.abreviatura, uo.nombre from ubicaciones u, unidades_organizacionales uo 
-                                where u.cod_unidades_organizacionales=uo.codigo and uo.cod_estado=1 and u.codigo='$cod_ubicaciones'";
-                                
-                                //echo $sqlUO;
-                                
+                                where u.cod_unidades_organizacionales=uo.codigo and uo.cod_estado=1 and u.codigo='$cod_ubicaciones'";                                
+                                //echo $sqlUO;                                
                                 $stmt = $dbh->prepare($sqlUO);
                                 $stmt->execute();
                                 ?>

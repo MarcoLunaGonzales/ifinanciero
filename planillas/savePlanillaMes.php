@@ -122,7 +122,7 @@ if($sw==2){//procesar planilla
 	$sql = "SELECT codigo,haber_basico,cod_grado_academico,
 	(Select pga.porcentaje from personal_grado_academico pga where pga.codigo=cod_grado_academico) as p_grado_academico,  
 	cod_tipoafp,ing_contr
-	from personal where cod_estadoreferencial=1 and codigo in (1,5,7,8,9,12,84)";
+	from personal where cod_estadoreferencial=1 and codigo in (84,93,183,195,286,32,176,96,68,16,97,14793,168,99,5,9,277,90,89,227,91)";
 
 	$stmtPersonal = $dbh->prepare($sql);
 	$stmtPersonal->execute();
@@ -371,7 +371,7 @@ if($sw==2){//procesar planilla
 	$sql = "SELECT codigo,haber_basico,cod_grado_academico,
 	(Select pga.porcentaje from personal_grado_academico pga where pga.codigo=cod_grado_academico) as p_grado_academico,  
 	cod_tipoafp,ing_contr
-	from personal where cod_estadoreferencial=1 and codigo in (1,5,7,8,9,12,34,84)";
+	from personal where cod_estadoreferencial=1 and codigo in (84,93,183,195,286,32,176,96,68,16,97,14793,168,99,5,9,277,90,89,227,91)";
 	$stmtPersonal = $dbh->prepare($sql);
 	$stmtPersonal->execute();
 	$stmtPersonal->bindColumn('codigo', $codigo_personal);
