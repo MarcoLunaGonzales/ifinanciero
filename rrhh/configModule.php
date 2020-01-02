@@ -26,13 +26,19 @@ $urlSaveUO="?opcion=uoSave";
 $urlFormUO="index.php?opcion=uoForm";
 $urlDeleteUO="index.php?opcion=deleteUO";
 $urlRegisterAreasU="index.php?opcion=registerAreasU";
-//areas_organizacion
-// $nombreSingularAreas_organizacion="Area Organizacion";
- $nombrePluralAreas_organizacion="Areas de Unidad Organizacional";
-// $urlListAreas_organizacion="?opcion=areas_organizacionLista";
-// $urlSaveAreas_organizacion="?opcion=areas_organizacionSave";
-// $urlFormAreas_organizacion="index.php?opcion=areas_organizacionForm";
-// $urlDeleteAreas_organizacion="index.php?opcion=deleteareas_organizacion";
+
+$nombrePluralAreas_organizacion="Areas de Unidad Organizacional";
+//areas_contabilizacion
+$nombreSingularAreas_contabilizacion="Areas Contabilización";
+$nombreSingularAreas_contabilizacion_detalle="Areas Contabilización Detalle";
+$urlListAreas_contabilizacion="?opcion=listAreas_contabilizacion";
+$urlSaveAreas_contabilizacion="?opcion=areas_contabilizacionSave";
+$urlFormAreas_contabilizacion="index.php?opcion=FormAreas_contabilizacion";
+$list_areas_contabilizacion_Detalle="index.php?opcion=list_areas_contabilizacion_Detalle";
+$urlDeleteAreas_contabilizacion="index.php?opcion=deleteareas_contabilizacion";
+$urlFormAreas_contabilizacion_detalle="index.php?opcion=FormAreas_contabilizacion_detalle";
+$urlSaveAreas_contabilizacion_detalle="?opcion=saveAreas_contabilizacion_detalle";
+
 $urlSaveAreas_organizacion="?opcion=areasuoSave";
 
 
@@ -100,9 +106,6 @@ $urlGenerarPlanillaSueldoPrevia="?opcion=generarPlanillaSueldoPrevia";
 
 $urlPlanillaSueldoPersonalActual="planillas/planillaSueldoPersonalActual.php";
 $urlDetallePlanillaPrerequisitos="planillas/detallePlanillaPrerequisitos.php";
-
-
-
 
 
 

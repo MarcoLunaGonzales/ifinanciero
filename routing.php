@@ -569,6 +569,40 @@
 			require_once('rrhh/deleteareas_organizacion.php');
 		}
 
+		//areas contabilizacion
+		if ($_GET['opcion']=='listAreas_contabilizacion') {
+			require_once('rrhh/areas_contabilizacion.php'); //ok
+		}
+
+		if ($_GET['opcion']=='FormAreas_contabilizacion') {
+			$codigo=$_GET['codigo'];
+			require_once('rrhh/FormAreas_contabilizacion.php');
+		}
+		if ($_GET['opcion']=='areas_contabilizacionSave') {
+			require_once('rrhh/areas_contabilizacionSave.php');
+		}
+		if ($_GET['opcion']=='deleteareas_contabilizacion') {
+			$codigo=$_GET['codigo'];
+			require_once('rrhh/deleteareas_contabilizacion.php');
+		}
+		if ($_GET['opcion']=='list_areas_contabilizacion_Detalle') {
+			$codigo=$_GET['codigo'];
+			require_once('rrhh/list_areas_contabilizacion_Detalle.php');
+		}
+		if ($_GET['opcion']=='FormAreas_contabilizacion_detalle') {
+			$codigo=$_GET['codigo'];
+			require_once('rrhh/FormAreas_contabilizacion_detalle.php');
+		}
+		if ($_GET['opcion']=='saveAreas_contabilizacion_detalle') {
+			require_once('rrhh/areas_contabilizacion_detalle_save.php');
+		}
+		
+		
+
+		
+		
+
+
 		//personal
 		if ($_GET['opcion']=='personalLista') {
 			require_once('personal/personalLista.php'); //ok

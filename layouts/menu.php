@@ -163,9 +163,9 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
                   </a>
                 </li>
                 <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=areas_organizacionLista">
+                  <a class="nav-link" href="?opcion=listAreas_contabilizacion">
                     <span class="sidebar-mini"> UAF </span>
-                    <span class="sidebar-normal"> Areas - Unidades Organizacionales</span>
+                    <span class="sidebar-normal"> Areas Contabilización</span>
                   </a>
                 </li>
                 <li class="nav-item ">
