@@ -11,7 +11,7 @@ $codMes = $codigo_mes;
 
 $globalAdmin = $_SESSION["globalAdmin"];
 $nombreGestion = $_SESSION['globalNombreGestion'];
-$codGestionActiva=$_SESSION['globalGestion'];
+$codGestionActiva = $_SESSION['globalGestion'];
 
 $dbh = new Conexion();
 
@@ -82,7 +82,7 @@ while ($row = $stmtc->fetch(PDO::FETCH_BOUND)) {
                   $index = 1;
                   while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
 
-                    ?>
+                  ?>
                     <tr>
                       <td align="center"><?= $index; ?></td>
                       <td class="text-center"><?= $unidad; ?></td>
@@ -91,8 +91,8 @@ while ($row = $stmtc->fetch(PDO::FETCH_BOUND)) {
                       <td class="text-right"><?= $detalle; ?></td>
                       <td class="td-actions text-right">
                         <?php
-                          if ($globalAdmin == 1) {
-                            ?>
+                        if ($globalAdmin == 1) {
+                        ?>
                           <!--a href='<?= $urlEdit; ?>&codigo=<?= $codigo; ?>' rel="tooltip" class="<?= $buttonEdit; ?>">
                               <i class="material-icons"><?= $iconEdit; ?></i>
                             </a>
@@ -100,8 +100,8 @@ while ($row = $stmtc->fetch(PDO::FETCH_BOUND)) {
                               <i class="material-icons"><?= $iconDelete; ?></i>
                             </button-->
                         <?php
-                          }
-                          ?>
+                        }
+                        ?>
 
                         <!--a href='<?= $urlArchivo; ?>?codigo=<?= $codigo; ?>' target="_blank" rel="tooltip" class="btn btn-default">
                               <i class="material-icons">attachment</i>
@@ -126,7 +126,7 @@ while ($row = $stmtc->fetch(PDO::FETCH_BOUND)) {
 
         <?php
         if ($globalAdmin == 1) {
-          ?>
+        ?>
           <div class="card-footer fixed-bottom">
 
             <button class="<?= $buttonNormal; ?>" onClick="location.href='<?= $urlRegisterDescuentoMesPersona; ?>&cod_mes=<?= $codMes; ?>&cod_descuento=<?= $codDescuento; ?>'">Registrar</button>
@@ -138,10 +138,17 @@ while ($row = $stmtc->fetch(PDO::FETCH_BOUND)) {
             <button class="<?= $buttonCancel; ?>" onClick="location.href='<?= $urlListMes; ?>&codigo=<?= $codDescuento; ?>'">Cancelar</button>
 
 
+            <?php
+
+            if ($codDescuento== 5) {
+            ?>
+              <button class="<?= $comboColorDist; ?>" onClick="location.href='<?= $calculaDescuentoRetrasos; ?>&cod_mes=<?= $codMes; ?>&cod_descuento=<?= $codDescuento; ?>'">Calcular Descuento</button>
+
           </div>
-        <?php
-        }
-        ?>
+      <?php
+            }
+          }
+      ?>
 
       </div>
     </div>
