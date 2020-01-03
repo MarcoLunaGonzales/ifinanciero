@@ -10,9 +10,10 @@ $dbh = new Conexion();
 $cod_personal_1=$codigo;
 //SELECT
 $stmt = $dbh->prepare("SELECT *,
+(select uo.nombre from unidades_organizacionales uo where uo.codigo=cod_uo) as nombre_uo,
 (select a.nombre from areas a where a.codigo=cod_area) as nombre_area
 from personal_area_distribucion
-where cod_personal=:codigo");
+where cod_estadoreferencial=1 and cod_personal=:codigo");
 
 $stmt->bindParam(':codigo',$codigo);
 //ejecutamos
@@ -20,7 +21,9 @@ $stmt->execute();
 //bindColumn
 $stmt->bindColumn('codigo', $codigo);
 $stmt->bindColumn('cod_area', $cod_area);
+$stmt->bindColumn('cod_uo', $cod_uo);
 $stmt->bindColumn('porcentaje', $porcentaje);
+$stmt->bindColumn('nombre_uo', $nombre_uo);
 $stmt->bindColumn('nombre_area', $nombre_area);
 
 
@@ -30,7 +33,7 @@ $stmtPersonal->bindParam(':codigo',$cod_personal_1);
 $stmtPersonal->execute();
 $result=$stmtPersonal->fetch();
 $cod_personal=$result['codigo'];
-$ci=$result['ci'];
+$ci=$result['identificacion'];
 $nombre_personal=$result['primer_nombre'];
 $paterno_personal=$result['paterno'];
 $materno_personal=$result['materno'];
@@ -38,6 +41,12 @@ $materno_personal=$result['materno'];
 //listado para area registro de distribucion
 $query_areas = "select * from areas order by 2";
 $statementAREAS = $dbh->query($query_areas);
+
+
+$query_uo = "select * from unidades_organizacionales order by 2";
+$statementUO = $dbh->query($query_uo);
+$query_uoE = "select * from unidades_organizacionales order by 2";
+$statementUOE = $dbh->query($query_uoE);
 //listado para area Edicion de distribucion
 $query_areas = "select * from areas order by 2";
 $statementAREASE = $dbh->query($query_areas);
@@ -63,6 +72,7 @@ $statementAREASE = $dbh->query($query_areas);
                         <tr class="bg-dark text-white">
                         	<th>Codigo</th>
                         	<th>Personal</th>
+                          <th>UO</th>
               						<th>Area</th>
               						<th>Porcentaje</th>
   					             	<th></th>                                                   
@@ -74,12 +84,13 @@ $statementAREASE = $dbh->query($query_areas);
                         $datos =$cod_personal;
                         while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { 
                         	$sumPorcentaje=$sumPorcentaje+$porcentaje;
-                        	$datos =$cod_personal."-".$codigo."-".$cod_area."-".$porcentaje;
+                        	$datos =$cod_personal."-".$codigo."-".$cod_uo."-".$cod_area."-".$porcentaje;
                         	?>
 
                             <tr>
                                 <td><?=$codigo;?></td>
-                                <td><?=$nombre_personal." ".$paterno_personal;?></td>
+                                <td><?=$paterno_personal." ".$nombre_personal;?></td>
+                                <td><?=$nombre_uo;?></td>
                                 <td><?=$nombre_area;?></td>
                                 <td><?=$porcentaje;?></td>
                                 <td class="td-actions text-right">
@@ -150,12 +161,22 @@ $statementAREASE = $dbh->query($query_areas);
         <input type="hidden" name="codigo_personal" id="codigo_personal" value="0">
         <input type="hidden" name="codigo_distribucion" id="codigo_distribucion" value="0">
         
+        <h6> Unidad Organizacional : </h6>
+        <select name="cod_uo" id="cod_uo" class="selectpicker" data-style="btn btn-primary" onChange="ajaxPersonal_area_distribucion(this);">            
+            <?php while ($row = $statementUO->fetch()){ ?>
+                <option value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+            <?php } ?>
+        </select>
+
         <h6> Area : </h6>
-        <select name="cod_area" id="cod_area" class="selectpicker" data-style="btn btn-primary" >            
+        <div id="div_contenedor_area">
+          <select name="cod_area" id="cod_area" class="selectpicker" data-style="btn btn-primary" >            
             <?php while ($row = $statementAREAS->fetch()){ ?>
                 <option value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
             <?php } ?>
-        </select>       
+          </select>
+        </div>
+        
         <h6> Porcentaje : </h6>
         <input type="number" name="porcentaje" id="porcentaje" class="form-control input-sm">
       </div>
@@ -196,13 +217,24 @@ $statementAREASE = $dbh->query($query_areas);
       </div>
       <div class="modal-body">
         <input type="hidden" name="codigo_personalE" id="codigo_personalE" value="0">
-        <input type="hidden" name="codigo_distribucionE" id="codigo_distribucionE" value="0">     
-        <h6> Area : </h6>
-        <select name="cod_areaE" id="cod_areaE" class="selectpicker" data-style="btn btn-primary" >            
-            <?php while ($row = $statementAREASE->fetch()){ ?>
-                <option value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+        <input type="hidden" name="codigo_distribucionE" id="codigo_distribucionE" value="0">             
+
+        <h6> Unidad Organizacional : </h6>
+        <select name="cod_uoE" id="cod_uoE" class="selectpicker" data-style="btn btn-primary" onChange="ajaxPersonal_area_distribucionE(this);">
+            <?php while ($rowUOE = $statementUOE->fetch()){ ?>
+                <option <?=($cod_uo==$rowUOE["codigo"])?"selected":"";?> value="<?=$rowUOE["codigo"];?>"><?=$rowUOE["nombre"];?></option>
             <?php } ?>
-        </select>       
+        </select>
+
+        <h6> Area : </h6>
+        <div id="div_contenedor_areaE">
+          <select name="cod_areaE" id="cod_areaE" class="selectpicker" data-style="btn btn-primary" >            
+            <?php while ($row = $statementAREASE->fetch()){ ?>
+                <option <?=($cod_area==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+            <?php } ?>
+          </select>   
+        </div>      
+
         <h6> Porcentaje : </h6><br>
         <input type="number" name="porcentajeE" id="porcentajeE" class="form-control input-sm">
       </div>
@@ -218,11 +250,12 @@ $statementAREASE = $dbh->query($query_areas);
   $(document).ready(function(){
     $('#aceptarPAD').click(function(){    
       cod_personal=document.getElementById("codigo_personal").value;
+      cod_uo=$('#cod_uo').val();
       cod_area=$('#cod_area').val();
       porcentaje=$('#porcentaje').val();
-      RegistrarDistribucion(cod_personal,cod_area,porcentaje);
+      RegistrarDistribucion(cod_uo,cod_personal,cod_area,porcentaje);
     }); 
-    $('#EliminarPAD').click(function(){    
+    $('#eliminarPAD').click(function(){    
       cod_distribucion=document.getElementById("codigo_distribucionB").value;
       cod_personal=document.getElementById("codigo_personalB").value;   
       EliminarDistribucion(cod_personal,cod_distribucion);
@@ -230,9 +263,10 @@ $statementAREASE = $dbh->query($query_areas);
     $('#EditarPAD').click(function(){    
       cod_distribucion=document.getElementById("codigo_distribucionE").value;
       cod_personal=document.getElementById("codigo_personalE").value;
+      cod_uoE=$('#cod_uoE').val();
       cod_area=$('#cod_areaE').val();
       porcentaje=$('#porcentajeE').val();
-      EditarDistribucion(cod_personal,cod_distribucion,cod_area,porcentaje);
+      EditarDistribucion(cod_personal,cod_distribucion,cod_uoE,cod_area,porcentaje);
     });  
 
   });

@@ -131,7 +131,7 @@ $html.=  '<header class="header">'.
 
                     $html.='<tr>'.
                         '<td colspan="3" align="center">'.                        
-                            '<h2><b>'.$primer_nombre.' '.$paterno.' '.$materno.'</b><br></h2>'.
+                            '<h2><b>'.$paterno.' '.$materno.' '.$primer_nombre.'</b><br></h2>'.
                             $cod_cargo.' / '.$cod_unidadorganizacional.'<br>'.
                             $cod_area.'<br>'.
 

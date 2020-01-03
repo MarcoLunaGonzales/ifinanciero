@@ -1723,6 +1723,7 @@ function contarFacturasSoli($codigo){
    return($codigoComprobanteDetalle);
 }
 
+
 function obtenerCuentasSimulaciones($nivel,$estado,$codUsuario){
  $dbh = new Conexion();
    $sql="";
@@ -1787,6 +1788,21 @@ function obtenerCuentaPlantillaCostos($codigo){
 
 
 //================ ========== PARA  planilla sueldos
+
+function obtenerNombrePersonal($cod_personal){
+  $dbh = new Conexion();
+  $sqlNombrePersonal =" SELECT primer_nombre, paterno, materno from personal where codigo=$cod_personal";
+  $stmt = $dbh->prepare($sqlNombrePersonal);
+  $stmt->execute();
+  $resultNombrePersonal=$stmt->fetch();
+  $nombre_personal=$resultNombrePersonal['primer_nombre'];
+  $paterno=$resultNombrePersonal['paterno'];
+  $materno=$resultNombrePersonal['materno'];
+  $nombre_completo = $paterno." ".$materno." ".$nombre_personal;
+   return $nombre_completo;
+}
+
+
 
 function obtenerBonoAntiguedad($minino_salarial,$ing_contr){  
   //$anio_actual= date('Y');

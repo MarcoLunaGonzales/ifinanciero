@@ -128,18 +128,21 @@ foreach ($detalle as $objDet){
         $stmtPersonalU->bindParam(':cod_departamento', $cod_departamento);
         $stmtPersonalU->bindParam(':cod_ciudad', $cod_ciudad);
         $stmtPersonalU->bindParam(':ciudadOtro', $CiudadOtro);        
-        $stmtPersonalU->execute(); 		
-        $stmtDiscapacitado = $dbh->prepare("UPDATE personal_discapacitado set discapacitado = :discapacitado,
-            tutor_discapacitado=:tutordiscapacidad,parentesco=:parentescotutor,celular_tutor=:celularTutor
-        where codigo = :codigo");
-        //bind
-        $stmtDiscapacitado->bindParam(':codigo', $codigoPersonalD);
-        $stmtDiscapacitado->bindParam(':discapacitado', $discapacitado);
-        $stmtDiscapacitado->bindParam(':tutordiscapacidad', $tutordiscapacidad);
-        $stmtDiscapacitado->bindParam(':parentescotutor', $parentescotutor);
-        $stmtDiscapacitado->bindParam(':celularTutor', $celularTutor);
+        
+        $flagSuccess=$stmtPersonalU->execute();
 
-        $flagSuccess=$stmtDiscapacitado->execute();
+        // $stmtDiscapacitado = $dbh->prepare("UPDATE personal_discapacitado set discapacitado = :discapacitado,
+        //     tutor_discapacitado=:tutordiscapacidad,parentesco=:parentescotutor,celular_tutor=:celularTutor
+        // where codigo = :codigo");
+        // //bind
+        // $stmtDiscapacitado->bindParam(':codigo', $codigoPersonalD);
+        // $stmtDiscapacitado->bindParam(':discapacitado', $discapacitado);
+        // $stmtDiscapacitado->bindParam(':tutordiscapacidad', $tutordiscapacidad);
+        // $stmtDiscapacitado->bindParam(':parentescotutor', $parentescotutor);
+        // $stmtDiscapacitado->bindParam(':celularTutor', $celularTutor);
+
+        // $flagSuccess=$stmtDiscapacitado->execute();
+
 
         if($flagSuccess==false){
             $i++;            
@@ -206,11 +209,12 @@ foreach ($detalle as $objDet){
             $j++;            
         }
 		//======insertamos area distribucion
-        $stmtDistribucion = $dbh->prepare("INSERT INTO personal_area_distribucion(cod_personal,cod_area,porcentaje,cod_estadoreferencial,created_by,modified_by) 
-        values (:cod_personal,:cod_area,:porcentaje,:cod_estadoreferencial,:created_by,:modified_by)");
+        $stmtDistribucion = $dbh->prepare("INSERT INTO personal_area_distribucion(cod_personal,cod_uo,cod_area,porcentaje,cod_estadoreferencial,created_by,modified_by) 
+        values (:cod_personal,:cod_uo,:cod_area,:porcentaje,:cod_estadoreferencial,:created_by,:modified_by)");
         //Bind
         $stmtDistribucion->bindParam(':cod_personal', $codigoPersonalAD);
-        $stmtDistribucion->bindParam(':cod_area', $cod_area);    
+        $stmtDistribucion->bindParam(':cod_uo', $cod_uo);    
+        $stmtDistribucion->bindParam(':cod_area', $cod_area);
         $stmtDistribucion->bindParam(':porcentaje', $porcentaje);
         $stmtDistribucion->bindParam(':created_by', $created_by);
         $stmtDistribucion->bindParam(':modified_by', $modified_by);

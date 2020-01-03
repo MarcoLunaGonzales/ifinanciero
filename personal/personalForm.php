@@ -6,87 +6,82 @@ require_once 'rrhh/configModule.php';
 
 //$dbh = new Conexion();
 $dbh = new Conexion();
+$codigo=$codigo;
+$stmt = $dbh->prepare("SELECT * FROM personal where codigo =:codigo");
+$stmt->bindParam(':codigo',$codigo);
+$stmt->execute();
+//resultados
+$result = $stmt->fetch();
+$codigo = $result['codigo'];
+$cod_tipoIdentificacion = $result['cod_tipo_identificacion'];
+$tipo_identificacionOtro = $result['tipo_identificacion_otro'];
+$identificacion = $result['identificacion'];
+$cod_lugar_emision = $result['cod_lugar_emision'];
+$lugar_emisionOtro = $result['lugar_emision_otro'];
+$fecha_nacimiento = $result['fecha_nacimiento'];
+$cod_cargo = $result['cod_cargo'];
+$cod_unidadorganizacional = $result['cod_unidadorganizacional'];
+$cod_area = $result['cod_area'];
+$jubilado = $result['jubilado'];
+$cod_genero = $result['cod_genero'];
+$cod_tipopersonal = $result['cod_tipopersonal'];
+$haber_basico = $result['haber_basico'];
+$paterno = $result['paterno'];
+$materno = $result['materno'];
+$apellido_casada = $result['apellido_casada'];
+$primer_nombre = $result['primer_nombre'];
+$otros_nombres = $result['otros_nombres'];
+$nua_cua_asignado = $result['nua_cua_asignado'];
+$direccion = $result['direccion'];
+$cod_tipoafp = $result['cod_tipoafp'];
+$cod_tipoaporteafp = $result['cod_tipoaporteafp'];
+$nro_seguro = $result['nro_seguro'];
+$cod_estadopersonal = $result['cod_estadopersonal'];
+$telefono = $result['telefono'];
+$celular = $result['celular'];
+$email = $result['email'];
+$persona_contacto = $result['persona_contacto'];
+$created_at = $result['created_at'];
+$created_by = $result['created_by'];
+$modified_at = $result['modified_at'];
+$modified_by = $result['modified_by'];
 
-if ($codigo > 0){
-    $codigo=$codigo;
-    $stmt = $dbh->prepare("SELECT * FROM personal where codigo =:codigo");
-    $stmt->bindParam(':codigo',$codigo);
-    $stmt->execute();
-    //resultados
-    $result = $stmt->fetch();
-    $codigo = $result['codigo'];
-    $cod_tipoIdentificacion = $result['cod_tipo_identificacion'];
-    $tipo_identificacionOtro = $result['tipo_identificacion_otro'];
-    $identificacion = $result['identificacion'];
-    $cod_lugar_emision = $result['cod_lugar_emision'];
-    $lugar_emisionOtro = $result['lugar_emision_otro'];
-    $fecha_nacimiento = $result['fecha_nacimiento'];
-    $cod_cargo = $result['cod_cargo'];
-    $cod_unidadorganizacional = $result['cod_unidadorganizacional'];
-    $cod_area = $result['cod_area'];
-    $jubilado = $result['jubilado'];
-    $cod_genero = $result['cod_genero'];
-    $cod_tipopersonal = $result['cod_tipopersonal'];
-    $haber_basico = $result['haber_basico'];
-    $paterno = $result['paterno'];
-    $materno = $result['materno'];
-    $apellido_casada = $result['apellido_casada'];
-    $primer_nombre = $result['primer_nombre'];
-    $otros_nombres = $result['otros_nombres'];
-    $nua_cua_asignado = $result['nua_cua_asignado'];
-    $direccion = $result['direccion'];
-    $cod_tipoafp = $result['cod_tipoafp'];
-    $cod_tipoaporteafp = $result['cod_tipoaporteafp'];
-    $nro_seguro = $result['nro_seguro'];
-    $cod_estadopersonal = $result['cod_estadopersonal'];
-    $telefono = $result['telefono'];
-    $celular = $result['celular'];
-    $email = $result['email'];
-    $persona_contacto = $result['persona_contacto'];
-    $created_at = $result['created_at'];
-    $created_by = $result['created_by'];
-    $modified_at = $result['modified_at'];
-    $modified_by = $result['modified_by'];
+$cod_nacionalidad = $result['cod_nacionalidad'];
+$cod_estadocivil = $result['cod_estadocivil'];//-
+$cod_pais = $result['cod_pais'];
+$cod_departamento = $result['cod_departamento'];
+$cod_ciudad = $result['cod_ciudad'];
+$ciudadOtro = $result['ciudad_otro'];
+$cod_grado_academico = $result['cod_grado_academico'];   
+$ing_contr = $result['ing_contr'];
+$ing_planilla = $result['ing_planilla'];
 
-    $cod_nacionalidad = $result['cod_nacionalidad'];
-    $cod_estadocivil = $result['cod_estadocivil'];//-
-    $cod_pais = $result['cod_pais'];
-    $cod_departamento = $result['cod_departamento'];
-    $cod_ciudad = $result['cod_ciudad'];
-    $ciudadOtro = $result['ciudad_otro'];
-    $cod_grado_academico = $result['cod_grado_academico'];   
-    $ing_contr = $result['ing_contr'];
-    $ing_planilla = $result['ing_planilla'];
-    
 //personal discapacitado
-    $stmtDiscapacitado = $dbh->prepare("SELECT * FROM personal_discapacitado where codigo =:codigo");
-    $stmtDiscapacitado->bindParam(':codigo',$codigo);
-    $stmtDiscapacitado->execute();
-    $resultDiscapacitado = $stmtDiscapacitado->fetch();
-    $discapacitado = $resultDiscapacitado['discapacitado'];
-    $tutor_discapacitado = $resultDiscapacitado['tutor_discapacitado'];
-    $celular_tutor = $resultDiscapacitado['celular_tutor'];
-    $parentesco = $resultDiscapacitado['parentesco'];
-    //IMAGEN
-    $stmtIMG = $dbh->prepare("SELECT * FROM personalimagen where codigo =:codigo");
-    //Ejecutamos;
-    $stmtIMG->bindParam(':codigo',$codigo);
-    $stmtIMG->execute();
-    $resultIMG = $stmtIMG->fetch();
-    $imagen = $resultIMG['imagen'];
-    //$archivo = __DIR__.DIRECTORY_SEPARATOR."imagenes".DIRECTORY_SEPARATOR.$imagen;//sale mal
-    $archivo = "personal/imagenes/".$imagen;//sale mal
-}
+$stmtDiscapacitado = $dbh->prepare("SELECT * FROM personal_discapacitado where codigo =:codigo");
+$stmtDiscapacitado->bindParam(':codigo',$codigo);
+$stmtDiscapacitado->execute();
+$resultDiscapacitado = $stmtDiscapacitado->fetch();
+$discapacitado = $resultDiscapacitado['discapacitado'];
+$tutor_discapacitado = $resultDiscapacitado['tutor_discapacitado'];
+$celular_tutor = $resultDiscapacitado['celular_tutor'];
+$parentesco = $resultDiscapacitado['parentesco'];
+//IMAGEN
+$stmtIMG = $dbh->prepare("SELECT * FROM personalimagen where codigo =:codigo");
+//Ejecutamos;
+$stmtIMG->bindParam(':codigo',$codigo);
+$stmtIMG->execute();
+$resultIMG = $stmtIMG->fetch();
+$imagen = $resultIMG['imagen'];
+//$archivo = __DIR__.DIRECTORY_SEPARATOR."imagenes".DIRECTORY_SEPARATOR.$imagen;//sale mal
+$archivo = "personal/imagenes/".$imagen;//sale mal
 
 //COMBOS...
-$queryUO = "select * from unidades_organizacionales";
+$queryUO = "select * from unidades_organizacionales order by nombre";
 $statementUO = $dbh->query($queryUO);
 
 $queryCargos = "select * from cargos";
 $statementCargos = $dbh->query($queryCargos);
 
-$queryTGenero = "select * from tipos_genero";
-$statementTgenero = $dbh->query($queryTGenero);
 
 $queryTPersonal = "select * from tipos_personal";
 $statementTPersonal = $dbh->query($queryTPersonal);
