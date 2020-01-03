@@ -100,7 +100,7 @@ while ($row = $stmtc->fetch(PDO::FETCH_BOUND)) {
                       <td class="text-right">
                       <input type="hidden" name="codigo_persona[]"  value="<?=$cod_persona;?>"/>
                       <input type="hidden" name="codBonPerMes[]"  value="<?=$codigo;?>"/>
-                      <input class="form-control" type="text" name="detalle[]"  required="true" value="<?= $detalle; ?>" />
+                      <input class="form-control" type="text" name="detalle[]" value="<?= $detalle; ?>" />
                       </td>
                       
 

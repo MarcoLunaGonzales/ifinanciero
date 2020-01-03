@@ -76,10 +76,9 @@
           </div>
           <div class="card-body">
             <div class="table-responsive">                  
-              <table class="table table-bordered table-condensed" id="tablePaginator">
+              <table class="table table-bordered table-condensed table-hover" id="tablePaginator">
                 <thead>
-                  <tr class="bg-dark text-white">
-                    
+                  <tr class="bg-dark text-white">                  
                     <th>#</th>
                     <th>Codigo</th>
                     <th>Paterno</th>
@@ -103,9 +102,9 @@
                       while ($row = $stmtBonos->fetch()) 
                       { ?>
                         <th class="bonosDet bg-success text-white" style="display:none"><?=$nombre_bono;?></th>                      
-                    <?php
-                      $arrayBonos[] = $cod_bono;
-                     }
+                        <?php
+                        $arrayBonos[] = $cod_bono;
+                      }
                     ?>
                     <th>Monto Bonos</th>                            
                     <th>Total Ganado</th>
@@ -124,7 +123,7 @@
                     <th>Dotaciones</th>
                     <th class="bg-success text-white"><button id="botonOtrosDescuentos" style="border:none;" class="bg-success text-white">Otros Descuentos</button> </th>
                     <?php  
-                      $swDescuentoOtro=false;                    
+                      $swDescuentoOtro=false;                  
                       $sqlDescuento = "SELECT cod_descuento,(select d.nombre from descuentos d where d.codigo=cod_descuento) as nombre_descuentos
                               from descuentos_personal_mes 
                               where  cod_gestion=$cod_gestion and cod_mes=$codigo_mes GROUP BY (cod_descuento)
@@ -136,14 +135,13 @@
                       while ($row = $stmtDescuento->fetch()) 
                       { ?>
                         <th class="DescuentosOtros bg-success text-white" style="display:none"><?=$nombre_descuentos;?></th>
-                    <?php
-                      $arrayDescuentos[] = $cod_descuento;
-                      $swDescuentoOtro=true;
-                     }
+                        <?php
+                        $arrayDescuentos[] = $cod_descuento;
+                        $swDescuentoOtro=true;
+                      }
                     ?>
-
                     <th>Monto Descuentos</button></th>                                        
-                    <th>Liqu Pagable</th>                    
+                    <th class="bg-primary text-white">Liqu Pagable</th>                    
                     <th>Seguro De Salud</th>
                     <th>Riesgo Profesional</th>
                     <th>Provivienda</th>
@@ -153,30 +151,30 @@
                 </thead>
                 <tbody>
                   <?php 
-                      $index=1;
-                      while ($row = $stmtPersonal->fetch()) 
-                      {  
+                  $index=1;
+                  while ($row = $stmtPersonal->fetch()) 
+                  {  
                         $sql = "SELECT *                              
                                 from planillas_personal_mes_patronal 
                                 where cod_planilla=$cod_planilla and cod_personal_cargo=$cod_personalcargo";
                           $stmtPersonalPatronal = $dbh->prepare($sql);
                           $stmtPersonalPatronal->execute();
-                          $result=$stmtPersonalPatronal->fetch();
-                          $codigo_ppm_patronal=$result['codigo'];
-                          $cod_planilla_p=$result['cod_planilla'];
-                          $cod_personal_cargo_p=$result['cod_personal_cargo'];
-                          $a_solidario_13000=$result['a_solidario_13000'];
-                          $a_solidario_25000=$result['a_solidario_25000'];
-                          $a_solidario_35000=$result['a_solidario_35000'];
-                          $rc_iva=$result['rc_iva'];
+                          $resultPatronal=$stmtPersonalPatronal->fetch();
+                          $codigo_ppm_patronal=$resultPatronal['codigo'];
+                          $cod_planilla_p=$resultPatronal['cod_planilla'];
+                          $cod_personal_cargo_p=$resultPatronal['cod_personal_cargo'];
+                          $a_solidario_13000=$resultPatronal['a_solidario_13000'];
+                          $a_solidario_25000=$resultPatronal['a_solidario_25000'];
+                          $a_solidario_35000=$resultPatronal['a_solidario_35000'];
+                          $rc_iva=$resultPatronal['rc_iva'];
 
-                          $atrasos=$result['atrasos'];
-                          $anticipo=$result['anticipo'];
-                          $seguro_de_salud=$result['seguro_de_salud'];
-                          $riesgo_profesional=$result['riesgo_profesional'];
-                          $provivienda=$result['provivienda'];
-                          $a_patronal_sol=$result['a_patronal_sol'];
-                          $total_a_patronal=$result['total_a_patronal'];                      
+                          $atrasos=$resultPatronal['atrasos'];
+                          $anticipo=$resultPatronal['anticipo'];
+                          $seguro_de_salud=$resultPatronal['seguro_de_salud'];
+                          $riesgo_profesional=$resultPatronal['riesgo_profesional'];
+                          $provivienda=$resultPatronal['provivienda'];
+                          $a_patronal_sol=$resultPatronal['a_patronal_sol'];
+                          $total_a_patronal=$resultPatronal['total_a_patronal'];                      
                         ?>
                   <tr>                                                        
                     <td><?=$index;?></td>
@@ -189,64 +187,47 @@
                     <td><?=$haber_basico;?></td>
                     <td><?=$dias_trabajados;?></td>                
                     <td><?=$bono_antiguedad;?></td>
-                    <?php
-                    
-                    $sqlTotalOtroBonos = "SELECT SUM(monto) as suma_bono
+                    <?php                    
+                    if(count($arrayBonos)>0)
+                    {
+                      $sqlTotalOtroBonos = "SELECT SUM(monto) as suma_bono
                               from bonos_personal_mes 
                               where  cod_personal=$cod_personalcargo and cod_gestion=$cod_gestion and cod_mes=$codigo_mes";
-                    $stmtbonoOtros = $dbh->prepare($sqlTotalOtroBonos);
-                    $stmtbonoOtros->execute();
-                    $resultbonoOtros=$stmtbonoOtros->fetch();
-                    $sumaBono_otros=$resultbonoOtros['suma_bono'];
-                    if($sumaBono_otros==null)$sumaBono_otros=0;
-                    ?> 
+                      $stmtbonoOtros = $dbh->prepare($sqlTotalOtroBonos);
+                      $stmtbonoOtros->execute();
+                      $resultbonoOtros=$stmtbonoOtros->fetch();
+                      $sumaBono_otros=$resultbonoOtros['suma_bono'];
 
-                    <td><?=$sumaBono_otros;?></td>
-                    <?php
-                      $sqlBonos = "SELECT cod_bono,monto
-                              from bonos_personal_mes 
-                              where  cod_personal=$cod_personalcargo and cod_gestion=$cod_gestion and cod_mes=$codigo_mes
-                              order by cod_bono ASC";
-                      $stmtBonos = $dbh->prepare($sqlBonos);
-                      $stmtBonos->execute();                      
-                      $stmtBonos->bindColumn('cod_bono',$cod_bonoX);
-                      $stmtBonos->bindColumn('monto',$montoX);
-                      $i=0;
-                      while ($row = $stmtBonos->fetch())
-                      {                         
-                          if ($cod_bonoX==$arrayBonos[$i])
-                          {                                                        
-                            ?>
-                              <td  class="bonosDet" style="display:none"><?=$montoX;?></td>
-                            <?php
-                          }else{                            
-                            $cont=0;                          
-                            for ($j=$i; $j <count($arrayBonos) ; $j++) { 
-                              if($cod_bonoX==$arrayBonos[$j]){?>
-                                <td  class="bonosDet" style="display:none"><?=$montoX;?></td>
-                                $cont++;
-                              <?php }
-                            }
-                            if($cont==0){
-                              $montoAux=0;?>
-                              <td  class="bonosDet" style="display:none"><?=$montoAux;?></td>
-                              <?php
-                            }
+                      if($sumaBono_otros==null){ $sumaBono_otros=0;}
+                      ?> 
+                      <td><?=$sumaBono_otros;?></td>
+                      <?php
+                      set_time_limit(300);
+                      for ($j=0; $j <count($arrayBonos);$j++){ 
+                          $cod_bono_aux=$arrayBonos[$j];                          
+                          $sqlBonosOtrs = "SELECT cod_bono,monto
+                                from bonos_personal_mes 
+                                where  cod_personal=$cod_personalcargo and cod_gestion=$cod_gestion and cod_mes=$codigo_mes and  cod_bono=$cod_bono_aux";
+                          $stmtBonosOtrs = $dbh->prepare($sqlBonosOtrs);
+                          $stmtBonosOtrs->execute();
+                          $resultBonosOtros=$stmtBonosOtrs->fetch();
+                          $cod_bonosX=$resultBonosOtros['cod_bono'];
+                          $montoX=$resultBonosOtros['monto'];
 
-                            ?>
-                            
-                            <?php
+                          if($cod_bonosX==$cod_bono_aux){ ?>
+                            <td  class="bonosDet" style="display:none"><?=$montoX;?></td>  
+                          <?php                            
+                          }else{ $montoAux=0; ?>                                                          
+                            <td  class="bonosDet" style="display:none"><?=$montoAux;?></td>
+                          <?php                            
                           }
-                          $i++;                        
                       }
-                      if($i==0){
-                        $montoAux=0;?>
-                              <td  class="bonosDet" style="display:none"><?=$montoAux;?></td>
-                        <?php
-                      }
-
-                      $monto_aportes = $afp_1+$afp_2+$a_solidario_13000+$a_solidario_25000+$a_solidario_35000+$rc_iva;                  
-                      
+                    }else{$sumabonos_otros=0;
+                      ?>
+                      <td><?=$sumabonos_otros;?></td>
+                      <?php
+                    }                                          
+                      $monto_aportes = $afp_1+$afp_2+$a_solidario_13000+$a_solidario_25000+$a_solidario_35000+$rc_iva;                      
                     ?>  
                     <td><?=$monto_bonos;?></td>
                     <td><?=$total_ganado;?></td>
@@ -272,67 +253,43 @@
                       $stmtDescuentosOtros->execute();
                       $resultDescuentosOtros=$stmtDescuentosOtros->fetch();
                       $sumaDescuentos_otros=$resultDescuentosOtros['suma_descuentos'];
-                      if($sumaDescuentos_otros==null)$sumaDescuentos_otros=0;
+                      if($sumaDescuentos_otros==null){ $sumaDescuentos_otros=0;}
                       ?> 
-
                       <td><?=$sumaDescuentos_otros;?></td>
-                      <?php
-                        $sqlDescuentos = "SELECT cod_descuento,monto
-                                from descuentos_personal_mes 
-                                where  cod_personal=$cod_personalcargo and cod_gestion=$cod_gestion and cod_mes=$codigo_mes
-                                order by cod_descuento ASC";
-                        $stmtDescuentos = $dbh->prepare($sqlDescuentos);
-                        $stmtDescuentos->execute();                      
-                        $stmtDescuentos->bindColumn('cod_descuento',$cod_descuentosX);
-                        $stmtDescuentos->bindColumn('monto',$montoX);
-                        $i=0;
-                        while ($row = $stmtDescuentos->fetch())
-                        {                         
-                            if ($cod_descuentosX==$arrayDescuentos[$i])
-                            {                                                        
-                              ?>
-                                <td  class="DescuentosOtros" style="display:none"><?=$montoX;?></td>
-                              <?php
-                            }else{                            
-                              $cont=0;                          
-                              for ($j=$i; $j <count($arrayDescuentos) ; $j++) { 
-                                if($cod_descuentosX==$arrayDescuentos[$j]){?>
-                                  <td  class="DescuentosOtros" style="display:none"><?=$montoX;?></td>
-                                  $cont++;
-                                <?php }
-                              }
-                              if($cont==0){
-                                $montoAux=0;?>
-                                <td  class="DescuentosOtros" style="display:none"><?=$montoAux;?></td>
-                                <?php
-                              }
+                      <?php                      
 
-                              ?>
-                              
-                              <?php
-                            }
-                            $i++;                        
-                        }
-                        if($i==0){
-                          $montoAux=0;?>
-                                <td  class="DescuentosOtros" style="display:none"><?=$montoAux;?></td>
-                          <?php
-                        }                      
-                        $monto_descuentosX=$monto_descuentos+$sumaDescuentos_otros;
+                        for ($j=0; $j <count($arrayDescuentos); $j++) { 
+                          $cod_descuento_aux=$arrayDescuentos[$j];                          
+                          $sqlDescuentos = "SELECT cod_descuento,monto
+                                from descuentos_personal_mes 
+                                where  cod_personal=$cod_personalcargo and cod_gestion=$cod_gestion and cod_mes=$codigo_mes and  cod_descuento=$cod_descuento_aux";
+                          $stmtDescuentos = $dbh->prepare($sqlDescuentos);
+                          $stmtDescuentos->execute();
+                          $resultDescOtros=$stmtDescuentos->fetch();
+                          $cod_descuentosX=$resultDescOtros['cod_descuento'];
+                          $montoX=$resultDescOtros['monto'];
+                          if($cod_descuentosX==$cod_descuento_aux){ ?>
+                            <td  class="DescuentosOtros" style="display:none"><?=$montoX;?></td>  
+                          <?php                            
+                          }else{ $montoAux=0; ?>                                                          
+                            <td  class="DescuentosOtros" style="display:none"><?=$montoAux;?></td>
+                          <?php                            
+                          }
+                        }  
                       
+
+                        $monto_descuentosX=$monto_descuentos+$sumaDescuentos_otros;                      
                     }else{
                       $sumaDescuentos_otros=0;
                       ?>
                       <td><?=$sumaDescuentos_otros;?></td>
                       <?php
-
                       $monto_descuentosX=$monto_descuentos+$sumaDescuentos_otros;
-
                     }
                     ?>
                                           
                     <td ><?=$monto_descuentosX;?></td>                                                          
-                    <td><?=$liquido_pagable;?></td>                                  
+                    <td class="bg-primary text-white"><?=$liquido_pagable;?></td>                                  
                     <td><?=$seguro_de_salud;?></td>
                     <td><?=$riesgo_profesional;?></td>
                     <td><?=$provivienda;?></td>
