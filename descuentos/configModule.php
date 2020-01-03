@@ -32,4 +32,6 @@ $urlEditarDescuentoMesPersona = "index.php?opcion=editDescuentoMesPersona";
 $urlSaveEditGrupo="descuentos/saveEditGrupo.php";
 
 
+$calculaDescuentoRetrasos="index.php?opcion=calculaDescuentoRetrasos";
+
 ?>

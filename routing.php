@@ -806,6 +806,12 @@
 			require_once('descuentos/editMesPersona.php');
 		}
 
+		if ($_GET['opcion']=='calculaDescuentoRetrasos') {
+			$codigo_descuento=$_GET['cod_descuento'];
+			$codigo_mes=$_GET['cod_mes'];
+			require_once('descuentos/calculaDescuentoRetrasos.php');
+		}
+
 
 		//RC_IVA Personal
 		if ($_GET['opcion']=='listRcivaPersonal') {

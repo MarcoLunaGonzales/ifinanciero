@@ -2152,6 +2152,37 @@ return($valorConfiguracionX);
 //>>>>>>> 9665608161fbd74baa97b51d1230f7cda83c0916
 //>>>>>>> ebf28257f9e59421ce70f01e3ea93e3078b56278
 
+function calculaMontoDescuentoRetraso($minutos_retraso, $codigoPersona)
+{
+  $dbh = new Conexion();
+  $stmt = $dbh->prepare("SELECT porcentaje_diahaber from politica_descuentoretrasos
+where cod_estadoreferencial=1 and $minutos_retraso between minutos_inicio and minutos_final");
+  $stmt->execute();
+  $stmt->bindColumn('porcentaje_diahaber', $porcentaje_diahaber);
+
+  while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+    $porcentaje_diahaberX = $porcentaje_diahaber;
+  }
+
+  $stmtb = $dbh->prepare("SELECT dias_trabajados,haber_basico 
+from planillas_personal_mes where cod_personalcargo=$codigoPersona");
+  $stmtb->execute();
+  $stmtb->bindColumn('dias_trabajados', $dias_trabajados);
+  $stmtb->bindColumn('haber_basico', $haber_basico);
+
+  while ($row = $stmtb->fetch(PDO::FETCH_BOUND)) {
+    $dias_trabajadosX = $dias_trabajados;
+    $haber_basicoX = $haber_basico;
+
+    $montoRetraso = ($haber_basicoX / $dias_trabajadosX) * ($porcentaje_diahaberX / 100);
+  }
+  if($dias_trabajadosX==null and $haber_basicoX==null){
+    $montoRetraso=null;
+  }
+  return ($montoRetraso);
+}
+
+
 ?>
 
 
