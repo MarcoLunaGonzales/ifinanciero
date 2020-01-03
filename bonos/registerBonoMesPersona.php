@@ -56,7 +56,7 @@ while ($row = $stmtc->fetch(PDO::FETCH_BOUND)) {
 								  $stmt = $dbh->prepare("select p.codigo as codigo, concat(p.paterno,' ', p.materno, ' ', p.primer_nombre) as nombrepersona from personal p 
 								  where p.codigo not in 
 								  (select bpm.cod_personal from bonos_personal_mes bpm where bpm.cod_bono=$codBono and 
-								  bpm.cod_mes=$codMes and bpm.cod_gestion=$codGestion)");
+								  bpm.cod_mes=$codMes and bpm.cod_gestion=$codGestion) order by p.paterno");
 								$stmt->execute();
 								while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 									$codigoX=$row['codigo'];

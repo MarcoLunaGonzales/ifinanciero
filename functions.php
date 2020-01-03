@@ -1788,50 +1788,48 @@ function obtenerCuentaPlantillaCostos($codigo){
 
 //================ ========== PARA  planilla sueldos
 
-function obtenerBonoAntiguedad($minino_salarial,$ing_contr){
-
-  $fecha_actual = date('Y-m-d');
-  $anio_actual= date('Y');
+function obtenerBonoAntiguedad($minino_salarial,$ing_contr){  
+  //$anio_actual= date('Y');
+  $anio_actual=2019;
   
   $fechaComoEntero = strtotime($ing_contr);
   $anio_inicio = date("Y", $fechaComoEntero);
-
   $diferencia_anios=$anio_actual-$anio_inicio;
-
 
   $total_bono_antiguedad = 0;
   $dbh = new Conexion();
-  $stmt = $dbh->prepare("SELECT * from escalas_antiguedad where cod_estadoreferencial = 1");
+  $stmt = $dbh->prepare("SELECT * from escalas_antiguedad where cod_estadoreferencial=1");
   $stmt->execute();
   $stmt->bindColumn('anios_inicio', $anios_inicio);
   $stmt->bindColumn('anios_final', $anios_final);
   $stmt->bindColumn('porcentaje', $porcentaje);  
   while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
   {
-    if($diferencia_anios>=$anios_inicio){
-      if($diferencia_anios<$anios_final)
-        $l3 = $minino_salarial*$porcentaje/100;
-      else $l3 = 0;
+    if($anios_inicio<=$diferencia_anios and $diferencia_anios<$anios_final){
+        $l3 = $minino_salarial*$porcentaje/100;      
     }else $l3 = 0;
 
     $total_bono_antiguedad +=$l3;
-  } 
+  }
   // $aporte_laboral_aux=$total_ganado*$aporte_laboral_porcentaje_total/100;
   $total_bono_antiguedad_x=number_format($total_bono_antiguedad,2,'.','');
+  
+  
+
   // $stmt = null;
   // $dbh = null;
-
-
   return $total_bono_antiguedad_x;
 
 }
 
 
 function obtenerTotalBonos($codigo_personal)
-{
-  
-  $mes=date('m');
-  $gestion=date('Y');
+{  
+  // $mes=date('m');
+  // $gestion=date('Y');
+
+  $mes=11;
+  $gestion=2019;
 
   $dbh = new Conexion();
   $sqlGestion = "SELECT codigo from gestiones where nombre=$gestion";
@@ -1842,7 +1840,7 @@ function obtenerTotalBonos($codigo_personal)
 
 
   $sqlBonos = "SELECT SUM(monto) as total_bonos from bonos_personal_mes 
-  where cod_personal = $codigo_personal and cod_gestion=$cod_gestion and cod_mes=$mes";
+  where cod_personal = $codigo_personal and cod_gestion=$cod_gestion and cod_mes=$mes and cod_estadoreferencial=1";
   $stmtBonos = $dbh->prepare($sqlBonos);
   $stmtBonos->execute();
   $resultBonos=$stmtBonos->fetch();
@@ -1937,43 +1935,88 @@ function obtenerRC_IVA($total_ganado,$apf_f,$afp_p,$ap_sol_13000,$ap_sol_25000,$
   $dbh = null;
   return ($aporte_rc_iva_neto);
 }
-function obtenerAtrasoPersonal($id_personal,$haber_basico,$valor_conf_x65_90,$valor_conf_x90_120,$valor_conf_x120_150,$valor_conf_x150){
+function obtenerAtrasoPersonal($id_personal,$haber_basico){
   $dbh = new Conexion();
   set_time_limit(300);
   //capturando fecha
-  $mes=date('m');
-  $gestion=date('Y');
-  $descuentos=0;
-  $stmt = $dbh->prepare("SELECT * from personal_atrasos where cod_personal=$id_personal and mes=$mes and gestion=$gestion");
+  // $mes=date('m');
+  // $gestion=date('Y');
+  $mes=11;
+  $gestion=2019;
+
+  $dbh = new Conexion();
+  $sqlGestion = "SELECT codigo from gestiones where nombre=$gestion";
+  $stmtGestion = $dbh->prepare($sqlGestion);
+  $stmtGestion->execute();
+  $resultGestion=$stmtGestion->fetch();
+  $cod_gestion = $resultGestion['codigo'];
+
+  $porcentaje_diahaber_x=0;
+  $stmt = $dbh->prepare("SELECT minutos_retraso from retrasos_personal 
+   where cod_personal=$id_personal and cod_mes=$mes and cod_gestion=$cod_gestion");
   $stmt->execute();
-
   $result=$stmt->fetch();
-  $codigo=$result['codigo'];
-  $cod_personal=$result['cod_personal'];
-  $total=$result['total'];
-  $x_65_90=$result['x_65_90'];
-  $x_90_120=$result['x_90_120'];
-  $x_120_150=$result['x_120_150'];
-  $x_150=$result['x_150'];
+  $minutos_retraso=$result['minutos_retraso'];
 
-  $descuentos=($x_65_90*$valor_conf_x65_90)+($x_90_120*$valor_conf_x90_120)+($x_120_150*$valor_conf_x120_150)+($x_150*$valor_conf_x150);
-  $descuentos_neto=$descuentos*$haber_basico;
+  $stmtPoliticaRetraso = $dbh->prepare("SELECT minutos_inicio,minutos_final,porcentaje_diahaber 
+    from politica_descuentoretrasos where cod_estadoreferencial=1");
+  $stmtPoliticaRetraso->execute();
+  while ($row = $stmtPoliticaRetraso->fetch(PDO::FETCH_ASSOC)) {
+      $minutos_inicio=$row['minutos_inicio'];
+      $minutos_final=$row['minutos_final'];
+      $porcentaje_diahaber=$row['porcentaje_diahaber'];
+
+      if($minutos_inicio<=$minutos_retraso and $minutos_retraso<=$minutos_final )
+      {
+        $porcentaje_diahaber_x=$porcentaje_diahaber;
+      }
+  }
+  $dia_haber=$haber_basico/30;
+  $descuentos_neto=$dia_haber*$porcentaje_diahaber_x/100;
   $stmt = null;
   $dbh = null;
   return ($descuentos_neto);
-
 }
+function obtenerOtrosDescuentos($codigo_personal)
+{  
+  // $mes=date('m');
+  // $gestion=date('Y');
+
+  $mes=11;
+  $gestion=2019;
+
+  $dbh = new Conexion();
+  $sqlGestion = "SELECT codigo from gestiones where nombre=$gestion";
+  $stmtGestion = $dbh->prepare($sqlGestion);
+  $stmtGestion->execute();
+  $resultGestion=$stmtGestion->fetch();
+  $cod_gestion = $resultGestion['codigo'];
+
+
+  $sqlBonos = "SELECT SUM(monto) as total_descuentos_otros from descuentos_personal_mes 
+  where cod_personal = $codigo_personal and cod_gestion=$cod_gestion and cod_mes=$mes and cod_estadoreferencial=1";
+  $stmtBonos = $dbh->prepare($sqlBonos);
+  $stmtBonos->execute();
+  $resultBonos=$stmtBonos->fetch();
+  $total_descuentos_otros = $resultBonos['total_descuentos_otros'];
+  $stmtGestion = null;
+  $stmtBonos = null;
+  $dbh = null;
+  return $total_descuentos_otros;
+}
+
+
 function obtenerDotaciones($codigo_personal,$cod_gestion_x,$cod_mes_x){
   $dbh = new Conexion();
   $stmt = $dbh->prepare("SELECT SUM(dpm.monto_mes) as monto_mes_dotacion
-from dotaciones_personal_mes dpm, dotaciones_personal dm
-where dpm.cod_gestion=$cod_gestion_x and dpm.cod_mes=$cod_mes_x and dm.cod_personal=$codigo_personal
-and dpm.cod_dotacionpersonal=dm.codigo");
-  $stmt->execute();
-  $resultado=$stmt->fetch();
-  $monto_mes_dotacion=$resultado['monto_mes_dotacion'];
-  $monto_mes_dotacion_x=number_format($monto_mes_dotacion,2,'.','');
-  return $monto_mes_dotacion_x;
+  from dotaciones_personal_mes dpm, dotaciones_personal dm
+  where dpm.cod_gestion=$cod_gestion_x and dpm.cod_mes=$cod_mes_x and dm.cod_personal=$codigo_personal
+  and dpm.cod_dotacionpersonal=dm.codigo");
+    $stmt->execute();
+    $resultado=$stmt->fetch();
+    $monto_mes_dotacion=$resultado['monto_mes_dotacion'];
+    $monto_mes_dotacion_x=number_format($monto_mes_dotacion,2,'.','');
+    return $monto_mes_dotacion_x;
 }
 function obtenerAnticipo($id_personal)
 {
@@ -2108,6 +2151,37 @@ return($valorConfiguracionX);
 
 //>>>>>>> 9665608161fbd74baa97b51d1230f7cda83c0916
 //>>>>>>> ebf28257f9e59421ce70f01e3ea93e3078b56278
+
+function calculaMontoDescuentoRetraso($minutos_retraso, $codigoPersona)
+{
+  $dbh = new Conexion();
+  $stmt = $dbh->prepare("SELECT porcentaje_diahaber from politica_descuentoretrasos
+where cod_estadoreferencial=1 and $minutos_retraso between minutos_inicio and minutos_final");
+  $stmt->execute();
+  $stmt->bindColumn('porcentaje_diahaber', $porcentaje_diahaber);
+
+  while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+    $porcentaje_diahaberX = $porcentaje_diahaber;
+  }
+
+  $stmtb = $dbh->prepare("SELECT dias_trabajados,haber_basico 
+from planillas_personal_mes where cod_personalcargo=$codigoPersona");
+  $stmtb->execute();
+  $stmtb->bindColumn('dias_trabajados', $dias_trabajados);
+  $stmtb->bindColumn('haber_basico', $haber_basico);
+
+  while ($row = $stmtb->fetch(PDO::FETCH_BOUND)) {
+    $dias_trabajadosX = $dias_trabajados;
+    $haber_basicoX = $haber_basico;
+
+    $montoRetraso = ($haber_basicoX / $dias_trabajadosX) * ($porcentaje_diahaberX / 100);
+  }
+  if($dias_trabajadosX==null and $haber_basicoX==null){
+    $montoRetraso=null;
+  }
+  return ($montoRetraso);
+}
+
 
 ?>
 

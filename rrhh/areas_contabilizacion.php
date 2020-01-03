@@ -10,7 +10,8 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $dbh = new Conexion();
 
 // Preparamos
-$stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura, contabilizacion_vista FROM areas_contabilizacion where cod_estado_referencial=1 order by nombre");
+$stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura, contabilizacion_vista 
+  FROM areas_contabilizacion where cod_estado_referencial=1 order by nombre");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -55,8 +56,8 @@ $stmt->bindColumn('contabilizacion_vista', $contabilizacion_vista);
                           <td align="center"><?=$index;?></td>
                           <td align="center"><?=$codigo;?></td>
                           <td class="text-left"><?=$nombre;?></td>
-                          <td class="text-center"><?=$abreviatura;?></td>
-                          <td class="text-left"><?=$contabilizacion_vista;?></td>
+                          <td class="text-left"><?=$abreviatura;?></td>
+                          <td class="text-left"><?php if($contabilizacion_vista==0)echo "RESUMIDA";else echo "DETALLADA";?></td>
                           <td class="td-actions text-right">                                    
                             <a href='<?=$list_areas_contabilizacion_Detalle;?>&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonDetailMin;?>">
                               <i class="material-icons" title="Adicionar">playlist_add</i>

@@ -1094,8 +1094,7 @@ function ajaxAFunidadorganizacional(combo){
       ajaxPersonalUbicacion(codigo_UO);
     }
   }
-  ajax.send(null)
-  
+  ajax.send(null)  
 }
 
 function ajaxPersonalUbicacion(codigo_UO){
@@ -2798,6 +2797,20 @@ function sumarPorcentaje() {
   } else {
     boton.disabled = true;
   }
-
 }
 
+
+function ajaxAreaContabilizacionDetalle(combo){
+  var contenedor;
+  var codigo_UO=combo.value;
+  contenedor = document.getElementById('div_contenedor_area');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'rrhh/area_contabilizacion_detalle_ajax.php?codigo_UO='+codigo_UO,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);          
+    }
+  }
+  ajax.send(null)  
+}

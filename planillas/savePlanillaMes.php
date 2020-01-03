@@ -17,12 +17,6 @@ $dbh = new Conexion();
 $dbhI = new Conexion();
 $dbhIPD = new Conexion();
 
-
-
-// $sqlX="SET NAMES 'utf8'";
-// $stmtX = $dbh->prepare($sqlX);
-// $stmtX->execute();
-
 //RECIBIMOS LAS VARIABLES
 $cod_planilla=$_POST['cod_planilla'];
 $cod_estadoplanilla=$_POST['sw'];
@@ -86,7 +80,7 @@ if($sw==2){//procesar planilla
 	$flagSuccessIP=0;
 	$flagSuccessIPMD=0;
 	
-	$stmtConfiguracion = $dbh->prepare("SELECT * from configuraciones_planillas");
+	$stmtConfiguracion = $dbh->prepare("SELECT * from configuraciones_planillas where codigo in (1)");
 	$stmtConfiguracion->execute();
 	$stmtConfiguracion->bindColumn('id_configuracion', $codigo_configuracion);
 	$stmtConfiguracion->bindColumn('valor_configuracion',$valor_configuracion);
@@ -97,19 +91,7 @@ if($sw==2){//procesar planilla
 		switch ($codigo_configuracion) {
 		  case 1:
 		    $minimo_salarial=$valor_configuracion;
-		    break;
-		  case 5:
-		    $valor_conf_x65_90=$valor_configuracion;
-		    break;
-		  case 6:
-		    $valor_conf_x90_120=$valor_configuracion;
-		    break;
-		  case 7:
-		    $valor_conf_x120_150=$valor_configuracion;
-		    break;
-		  case 8:
-		    $valor_conf_x150=$valor_configuracion;
-		    break;
+		    break;		  
 		  
 		  default:
 		    
@@ -122,7 +104,7 @@ if($sw==2){//procesar planilla
 	$sql = "SELECT codigo,haber_basico,cod_grado_academico,
 	(Select pga.porcentaje from personal_grado_academico pga where pga.codigo=cod_grado_academico) as p_grado_academico,  
 	cod_tipoafp,ing_contr
-	from personal where cod_estadoreferencial=1 and codigo in (1,5,7,8,9,12,84)";
+	from personal where cod_estadoreferencial=1 and codigo in (84,93,183,195,286,32,176,96,68,16,97,14793,168,99,5,9,277,90,89,227,91)";
 
 	$stmtPersonal = $dbh->prepare($sql);
 	$stmtPersonal->execute();
@@ -134,7 +116,6 @@ if($sw==2){//procesar planilla
 	$stmtPersonal->bindColumn('ing_contr', $ing_contr);
 	while ($rowC = $stmtPersonal->fetch()) 
 	{
-		//hacemos un listado de todos los bonos		
 		$otros_b = obtenerTotalBonos($codigo_personal);
 		//calculado otros bonos		
 		if($p_grado_academico==0)$bono_academico = 0;
@@ -145,9 +126,8 @@ if($sw==2){//procesar planilla
 		//$total_bonos=$bono_academico+$bono_antiguedad+$otros_b;	
 		$total_bonos=$bono_antiguedad+$otros_b;	
 
-		
 		$total_ganado = ($haber_basico/30*$dias_trabajados)+$total_bonos;	
-		//calculamos descuentoss		
+		//calculamos descuentos
 		if($cod_tipoafp==1){
 		  $afp_futuro =obtenerAporteAFP($total_ganado);
 		  $afp_prevision=0;
@@ -165,11 +145,15 @@ if($sw==2){//procesar planilla
 
 		$RC_IVA = obtenerRC_IVA($total_ganado,$afp_futuro,$afp_prevision,$aporte_solidario_13000,$aporte_solidario_25000,$aporte_solidario_35000);
 
-		$atrasos = obtenerAtrasoPersonal($codigo_personal,$haber_basico,$valor_conf_x65_90,$valor_conf_x90_120,$valor_conf_x120_150,$valor_conf_x150);
+		$atrasos = obtenerAtrasoPersonal($codigo_personal,$haber_basico);
 		$anticipo = obtenerAnticipo($codigo_personal);
 		$dotaciones = obtenerDotaciones($codigo_personal,$cod_gestion_x,$cod_mes_x);
-		
-		$total_descuentos = $afp_futuro+$afp_prevision+$aporte_solidario_13000+$aporte_solidario_25000+$aporte_solidario_35000+$RC_IVA+$atrasos+$anticipo+$dotaciones;
+
+		// echo "personal: ".$codigo_personal."<br>";
+		// echo "dotaciones : ".$dotaciones."<br>";
+
+		$otros_descuentos=obtenerOtrosDescuentos($codigo_personal);
+		$total_descuentos = $afp_futuro+$afp_prevision+$aporte_solidario_13000+$aporte_solidario_25000+$aporte_solidario_35000+$RC_IVA+$atrasos+$anticipo+$dotaciones+$otros_descuentos;
 		
 		$liquido_pagable=$total_ganado-$total_descuentos;
 
@@ -184,10 +168,6 @@ if($sw==2){//procesar planilla
 		$a_patronal_sol=obtener_aporte_patronal_general($cod_config_planilla_solidario,$total_ganado);
 		
 		$total_a_patronal=$seguro_de_salud+$riesgo_profesional+$provivienda+$a_patronal_sol;
-
-
-		// echo "codigo".$codigo_personal.", total ganado ". $total_ganado."<br>";
-		// echo "liquido_pagable ".$liquido_pagable;
 
 		//==== insert de panillas de  personal mes
 		$sqlInsertPlanillas="INSERT into planillas_personal_mes(cod_planilla,cod_personalcargo,cod_gradoacademico,dias_trabajados,horas_pagadas,
@@ -300,7 +280,6 @@ if($sw==2){//procesar planilla
 	$atrasos = 0;
 	$anticipo = 0;
 
-	
 	//$monto_descuentos=0;//
 
 	//$otros_descuentos=0;
@@ -317,13 +296,9 @@ if($sw==2){//procesar planilla
 	$total_descuentos=0;
 	$liquido_pagable=0;
 
-
-
-
 	$cod_estadoreferencial=1;
 	$created_by=1;
 	$modified_by=1;
-
 
 	$seguro_de_salud=0;
 	$riesgo_profesional=0;
@@ -334,8 +309,7 @@ if($sw==2){//procesar planilla
 	$flagSuccessIP=0;
 	$flagSuccessIPMD=0;
 
-	
-	$stmtConfiguracion = $dbh->prepare("SELECT * from configuraciones_planillas");
+	$stmtConfiguracion = $dbh->prepare("SELECT * from configuraciones_planillas where id_configuracion in (1)");
 	$stmtConfiguracion->execute();
 	$stmtConfiguracion->bindColumn('id_configuracion', $codigo_configuracion);
 	$stmtConfiguracion->bindColumn('valor_configuracion',$valor_configuracion);
@@ -346,19 +320,7 @@ if($sw==2){//procesar planilla
 		switch ($codigo_configuracion) {
 		  case 1:
 		    $minimo_salarial=$valor_configuracion;
-		    break;
-		  case 5:
-		    $valor_conf_x65_90=$valor_configuracion;
-		    break;
-		  case 6:
-		    $valor_conf_x90_120=$valor_configuracion;
-		    break;
-		  case 7:
-		    $valor_conf_x120_150=$valor_configuracion;
-		    break;
-		  case 8:
-		    $valor_conf_x150=$valor_configuracion;
-		    break;
+		    break;		  
 		  
 		  default:
 		    
@@ -371,7 +333,9 @@ if($sw==2){//procesar planilla
 	$sql = "SELECT codigo,haber_basico,cod_grado_academico,
 	(Select pga.porcentaje from personal_grado_academico pga where pga.codigo=cod_grado_academico) as p_grado_academico,  
 	cod_tipoafp,ing_contr
-	from personal where cod_estadoreferencial=1 and codigo in (1,5,7,8,9,12,34,84)";
+	from personal where cod_estadoreferencial=1 and codigo in (84,93,183,195,286,32,176,96,68,16,97,14793,168,99,5,9,277,90,89,227,91)";
+	//from personal where cod_estadoreferencial=1 and codigo in (84,93,183,195,286,32,176,96,68,16,97,14793,168,99,5,9,277,90,89,227,91)";
+	
 	$stmtPersonal = $dbh->prepare($sql);
 	$stmtPersonal->execute();
 	$stmtPersonal->bindColumn('codigo', $codigo_personal);
@@ -393,7 +357,7 @@ if($sw==2){//procesar planilla
 		$total_bonos=$bono_antiguedad+$otros_b;	
 
 		$total_ganado = ($haber_basico/30*$dias_trabajados)+$total_bonos;	
-		//calculamos descuentoss		
+		//calculamos descuentos
 		if($cod_tipoafp==1){
 		  $afp_futuro =obtenerAporteAFP($total_ganado);
 		  $afp_prevision=0;
@@ -411,15 +375,15 @@ if($sw==2){//procesar planilla
 
 		$RC_IVA = obtenerRC_IVA($total_ganado,$afp_futuro,$afp_prevision,$aporte_solidario_13000,$aporte_solidario_25000,$aporte_solidario_35000);
 
-		$atrasos = obtenerAtrasoPersonal($codigo_personal,$haber_basico,$valor_conf_x65_90,$valor_conf_x90_120,$valor_conf_x120_150,$valor_conf_x150);
+		$atrasos = obtenerAtrasoPersonal($codigo_personal,$haber_basico);
 		$anticipo = obtenerAnticipo($codigo_personal);
 		$dotaciones = obtenerDotaciones($codigo_personal,$cod_gestion_x,$cod_mes_x);
 
 		// echo "personal: ".$codigo_personal."<br>";
 		// echo "dotaciones : ".$dotaciones."<br>";
 
-
-		$total_descuentos = $afp_futuro+$afp_prevision+$aporte_solidario_13000+$aporte_solidario_25000+$aporte_solidario_35000+$RC_IVA+$atrasos+$anticipo+$dotaciones;
+		$otros_descuentos=obtenerOtrosDescuentos($codigo_personal);
+		$total_descuentos = $afp_futuro+$afp_prevision+$aporte_solidario_13000+$aporte_solidario_25000+$aporte_solidario_35000+$RC_IVA+$atrasos+$anticipo+$dotaciones+$otros_descuentos;
 		
 		$liquido_pagable=$total_ganado-$total_descuentos;
 
