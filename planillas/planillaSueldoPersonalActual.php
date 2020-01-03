@@ -93,7 +93,7 @@
                     <?php
                       $sqlBonos = "SELECT cod_bono,(select b.nombre from bonos b where b.codigo=cod_bono) as nombre_bono
                               from bonos_personal_mes 
-                              where  cod_gestion=$cod_gestion and cod_mes=$codigo_mes GROUP BY (cod_bono)
+                              where  cod_gestion=$cod_gestion and cod_mes=$codigo_mes and cod_estadoreferencial=1 GROUP BY (cod_bono)
                               order by cod_bono ASC";
                       $stmtBonos = $dbh->prepare($sqlBonos);
                       $stmtBonos->execute();                      
@@ -126,7 +126,7 @@
                       $swDescuentoOtro=false;                  
                       $sqlDescuento = "SELECT cod_descuento,(select d.nombre from descuentos d where d.codigo=cod_descuento) as nombre_descuentos
                               from descuentos_personal_mes 
-                              where  cod_gestion=$cod_gestion and cod_mes=$codigo_mes GROUP BY (cod_descuento)
+                              where  cod_gestion=$cod_gestion and cod_mes=$codigo_mes and cod_estadoreferencial=1 GROUP BY (cod_descuento)
                               order by cod_descuento ASC";
                       $stmtDescuento = $dbh->prepare($sqlDescuento);
                       $stmtDescuento->execute();                      
@@ -192,7 +192,7 @@
                     {
                       $sqlTotalOtroBonos = "SELECT SUM(monto) as suma_bono
                               from bonos_personal_mes 
-                              where  cod_personal=$cod_personalcargo and cod_gestion=$cod_gestion and cod_mes=$codigo_mes";
+                              where  cod_personal=$cod_personalcargo and cod_gestion=$cod_gestion and cod_mes=$codigo_mes and cod_estadoreferencial=1";
                       $stmtbonoOtros = $dbh->prepare($sqlTotalOtroBonos);
                       $stmtbonoOtros->execute();
                       $resultbonoOtros=$stmtbonoOtros->fetch();
@@ -207,7 +207,7 @@
                           $cod_bono_aux=$arrayBonos[$j];                          
                           $sqlBonosOtrs = "SELECT cod_bono,monto
                                 from bonos_personal_mes 
-                                where  cod_personal=$cod_personalcargo and cod_gestion=$cod_gestion and cod_mes=$codigo_mes and  cod_bono=$cod_bono_aux";
+                                where  cod_personal=$cod_personalcargo and cod_gestion=$cod_gestion and cod_mes=$codigo_mes and  cod_bono=$cod_bono_aux and cod_estadoreferencial=1";
                           $stmtBonosOtrs = $dbh->prepare($sqlBonosOtrs);
                           $stmtBonosOtrs->execute();
                           $resultBonosOtros=$stmtBonosOtrs->fetch();
@@ -248,7 +248,7 @@
                     {
                       $sqlTotalOtroDescuentos = "SELECT SUM(monto) as suma_descuentos
                               from descuentos_personal_mes 
-                              where  cod_personal=$cod_personalcargo and cod_gestion=$cod_gestion and cod_mes=$codigo_mes";
+                              where  cod_personal=$cod_personalcargo and cod_gestion=$cod_gestion and cod_mes=$codigo_mes and cod_estadoreferencial=1";
                       $stmtDescuentosOtros = $dbh->prepare($sqlTotalOtroDescuentos);
                       $stmtDescuentosOtros->execute();
                       $resultDescuentosOtros=$stmtDescuentosOtros->fetch();
@@ -262,7 +262,7 @@
                           $cod_descuento_aux=$arrayDescuentos[$j];                          
                           $sqlDescuentos = "SELECT cod_descuento,monto
                                 from descuentos_personal_mes 
-                                where  cod_personal=$cod_personalcargo and cod_gestion=$cod_gestion and cod_mes=$codigo_mes and  cod_descuento=$cod_descuento_aux";
+                                where  cod_personal=$cod_personalcargo and cod_gestion=$cod_gestion and cod_mes=$codigo_mes and  cod_descuento=$cod_descuento_aux and cod_estadoreferencial=1";
                           $stmtDescuentos = $dbh->prepare($sqlDescuentos);
                           $stmtDescuentos->execute();
                           $resultDescOtros=$stmtDescuentos->fetch();

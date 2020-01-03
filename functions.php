@@ -1840,7 +1840,7 @@ function obtenerTotalBonos($codigo_personal)
 
 
   $sqlBonos = "SELECT SUM(monto) as total_bonos from bonos_personal_mes 
-  where cod_personal = $codigo_personal and cod_gestion=$cod_gestion and cod_mes=$mes";
+  where cod_personal = $codigo_personal and cod_gestion=$cod_gestion and cod_mes=$mes and cod_estadoreferencial=1";
   $stmtBonos = $dbh->prepare($sqlBonos);
   $stmtBonos->execute();
   $resultBonos=$stmtBonos->fetch();
@@ -1994,7 +1994,7 @@ function obtenerOtrosDescuentos($codigo_personal)
 
 
   $sqlBonos = "SELECT SUM(monto) as total_descuentos_otros from descuentos_personal_mes 
-  where cod_personal = $codigo_personal and cod_gestion=$cod_gestion and cod_mes=$mes";
+  where cod_personal = $codigo_personal and cod_gestion=$cod_gestion and cod_mes=$mes and cod_estadoreferencial=1";
   $stmtBonos = $dbh->prepare($sqlBonos);
   $stmtBonos->execute();
   $resultBonos=$stmtBonos->fetch();
@@ -2009,14 +2009,14 @@ function obtenerOtrosDescuentos($codigo_personal)
 function obtenerDotaciones($codigo_personal,$cod_gestion_x,$cod_mes_x){
   $dbh = new Conexion();
   $stmt = $dbh->prepare("SELECT SUM(dpm.monto_mes) as monto_mes_dotacion
-from dotaciones_personal_mes dpm, dotaciones_personal dm
-where dpm.cod_gestion=$cod_gestion_x and dpm.cod_mes=$cod_mes_x and dm.cod_personal=$codigo_personal
-and dpm.cod_dotacionpersonal=dm.codigo");
-  $stmt->execute();
-  $resultado=$stmt->fetch();
-  $monto_mes_dotacion=$resultado['monto_mes_dotacion'];
-  $monto_mes_dotacion_x=number_format($monto_mes_dotacion,2,'.','');
-  return $monto_mes_dotacion_x;
+  from dotaciones_personal_mes dpm, dotaciones_personal dm
+  where dpm.cod_gestion=$cod_gestion_x and dpm.cod_mes=$cod_mes_x and dm.cod_personal=$codigo_personal
+  and dpm.cod_dotacionpersonal=dm.codigo");
+    $stmt->execute();
+    $resultado=$stmt->fetch();
+    $monto_mes_dotacion=$resultado['monto_mes_dotacion'];
+    $monto_mes_dotacion_x=number_format($monto_mes_dotacion,2,'.','');
+    return $monto_mes_dotacion_x;
 }
 function obtenerAnticipo($id_personal)
 {
