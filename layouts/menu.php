@@ -152,109 +152,81 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
               <ul class="nav">              
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=areasLista">
-                    <span class="sidebar-mini"> UAF </span>
+                    <span class="sidebar-mini"> A </span>
                     <span class="sidebar-normal"> Areas</span>
                   </a>
                 </li>
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=uoLista">
-                    <span class="sidebar-mini"> UAF </span>
+                    <span class="sidebar-mini"> UO </span>
                     <span class="sidebar-normal"> Unidades Organizacionales</span>
                   </a>
                 </li>
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listAreas_contabilizacion">
-                    <span class="sidebar-mini"> UAF </span>
+                    <span class="sidebar-mini"> AC </span>
                     <span class="sidebar-normal"> Areas Contabilización</span>
                   </a>
                 </li>
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=cargosLista">
-                    <span class="sidebar-mini"> UAF </span>
+                    <span class="sidebar-mini"> C </span>
                     <span class="sidebar-normal"> Cargos</span>
                   </a>
                 </li>
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=tipospersonalLista">
-                    <span class="sidebar-mini"> UAF </span>
+                    <span class="sidebar-mini"> TP </span>
                     <span class="sidebar-normal"> Tipos Personal</span>
                   </a>
                 </li>
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=estadospersonalLista">
-                    <span class="sidebar-mini"> UAF </span>
+                    <span class="sidebar-mini"> EP </span>
                     <span class="sidebar-normal"> Estados Personal</span>
                   </a>
                 </li>            
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=tipos_generoLista">
-                    <span class="sidebar-mini"> UAF </span>
-                    <span class="sidebar-normal"> Genero</span>
+                    <span class="sidebar-mini"> G </span>
+                    <span class="sidebar-normal"> Genero </span>
                   </a>
                 </li>
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=personalLista">
-                    <span class="sidebar-mini"> UAF </span>
+                    <span class="sidebar-mini"> P </span>
                     <span class="sidebar-normal"> Personal</span>
                   </a>
                 </li>
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=estadosplanillaLista">
-                    <span class="sidebar-mini"> UAF </span>
+                    <span class="sidebar-mini"> EPL </span>
                     <span class="sidebar-normal"> Estados Planilla</span>
                   </a>
                 </li>
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=tipos_aporteafpLista">
-                    <span class="sidebar-mini"> UAF </span>
+                    <span class="sidebar-mini"> TA </span>
                     <span class="sidebar-normal"> Tipos de Aportes</span>
                   </a>
                 </li>
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=tipos_afpLista">
-                    <span class="sidebar-mini"> UAF </span>
+                    <span class="sidebar-mini"> TAFP </span>
                     <span class="sidebar-normal"> Tipos de Afp</span>
                   </a>
                 </li>
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=aportes_patronalesLista">
-                    <span class="sidebar-mini"> UAF </span>
+                    <span class="sidebar-mini"> AP </span>
                     <span class="sidebar-normal"> Aportes Patronales</span>
                   </a>
                 </li>
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=aportes_laboralesLista">
-                    <span class="sidebar-mini"> UAF </span>
+                    <span class="sidebar-mini"> AL </span>
                     <span class="sidebar-normal"> Aportes Laborales</span>
                   </a>
-                </li>
-                
-                <li class="nav-item ">
-                    <a class="nav-link" href="?opcion=listBonos">
-                      <span class="sidebar-mini"> B </span>
-                      <span class="sidebar-normal"> Bonos</span>
-                    </a>
-                </li>
-
-                <li class="nav-item ">
-                    <a class="nav-link" href="?opcion=listDescuentos">
-                      <span class="sidebar-mini"> D </span>
-                      <span class="sidebar-normal"> Descuentos</span>
-                    </a>
-                </li>
-                <li class="nav-item ">
-                    <a class="nav-link" href="?opcion=listAnticipoPersonal">
-                      <span class="sidebar-mini"> A </span>
-                      <span class="sidebar-normal"> Anticipos de Personal</span>
-                    </a>
-                </li>
-
-
-                <li class="nav-item ">
-                    <a class="nav-link" href="?opcion=listRcivaPersonal">
-                      <span class="sidebar-mini"> R </span>
-                      <span class="sidebar-normal"> RC IVA Personal</span>
-                    </a>
                 </li>
 
                 <li class="nav-item ">
@@ -268,19 +240,6 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
                     <a class="nav-link" href="?opcion=listPoliticaDescuento">
                       <span class="sidebar-mini"> PDR </span>
                       <span class="sidebar-normal"> Politicas de Descuento por retrasos </span>
-                    </a>
-                </li>
-
-                <li class="nav-item ">
-                    <a class="nav-link" href="?opcion=listDotacion">
-                      <span class="sidebar-mini"> D </span>
-                      <span class="sidebar-normal"> Dotaciones </span>
-                    </a>
-                </li>
-                <li class="nav-item ">
-                    <a class="nav-link" href="?opcion=listRefrigerio">
-                      <span class="sidebar-mini"> R </span>
-                      <span class="sidebar-normal"> Refrigerios </span>
                     </a>
                 </li>
 
@@ -391,8 +350,46 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
               <ul class="nav">
                 
                 <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=listAnticipoPersonal">
+                      <span class="sidebar-mini"> A </span>
+                      <span class="sidebar-normal"> Anticipos de Personal</span>
+                    </a>
+                </li>
+
+                <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=listBonos">
+                      <span class="sidebar-mini"> B </span>
+                      <span class="sidebar-normal"> Bonos</span>
+                    </a>
+                </li>
+
+                <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=listDescuentos">
+                      <span class="sidebar-mini"> D </span>
+                      <span class="sidebar-normal"> Descuentos</span>
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=listDotacion">
+                      <span class="sidebar-mini"> D </span>
+                      <span class="sidebar-normal"> Dotaciones </span>
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=listRcivaPersonal">
+                      <span class="sidebar-mini"> R </span>
+                      <span class="sidebar-normal"> RC IVA Personal</span>
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=listRefrigerio">
+                      <span class="sidebar-mini"> R </span>
+                      <span class="sidebar-normal"> Refrigerios </span>
+                    </a>
+                </li>
+                <li class="nav-item ">
                   <a class="nav-link" href="?opcion=planillasSueldoPersonal">
-                    <span class="sidebar-mini"> P </span>
+                    <span class="sidebar-mini"> PS </span>
                     <span class="sidebar-normal"> Planillas Sueldos </span>
                   </a>
                 </li>

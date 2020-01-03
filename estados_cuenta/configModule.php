@@ -1,8 +1,8 @@
 <?php
 //AQUI SE DEFINEN LAS VARIABLES PARA EL ABM
 $table="configuracion_estadocuentas";
-$moduleNameSingular="Configuracion Estados de Cuenta";
-$moduleNamePlural="Configuraciones Estados de Cuenta";
+$moduleNameSingular="Configuracion Estado de Cuenta";
+$moduleNamePlural="Configuracion de Estados de Cuenta";
 
 //$moduleNameSingular="Comprobantes";
 $urlList="index.php?opcion=listSimulacionesCostos";
