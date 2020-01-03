@@ -993,15 +993,6 @@
 			require_once('refrigerios/calculaRefrigerioMes.php');
 		}
 
-
-
-
-
-		
-		
-		
-
-
 	}else{
 		//require("paginaprincipal.php");
 	}
