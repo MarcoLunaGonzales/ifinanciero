@@ -597,8 +597,25 @@
 			require_once('rrhh/areas_contabilizacion_detalle_save.php');
 		}
 		
+		//Personal Financiación Externa (Proyectos)
+		if ($_GET['opcion']=='personalFinExterna') {
+			require_once('personal_finexterna/list.php'); //ok
+		}
 		
+		if ($_GET['opcion']=='deletePersonalFinExterna') {
+			$codigo=$_GET['codigo'];
+			require_once('personal_finexterna/saveDelete.php');
+		}
 
+		if ($_GET['opcion']=='editPersonalFinExterna') {
+			$codigo=$_GET['codigo'];
+			require_once('personal_finexterna/edit.php');
+		}
+
+		if ($_GET['opcion']=='registerPersonalFinExterna') {
+			require_once('personal_finexterna/register.php');
+		}
+		
 		
 		
 
@@ -836,6 +853,9 @@
 		//Anticipos Personal
 		if ($_GET['opcion']=='listAnticipoPersonal') {
 			require_once('anticipos_personal/list.php');
+		}
+		if ($_GET['opcion']=='listAnticipoPersonalMes') {
+			require_once('anticipos_personal/listMeses.php');
 		}
 		if ($_GET['opcion']=='deleteAnticipoPersonal') {
 			$cod_ant_per=$_GET['cod_ant_per'];

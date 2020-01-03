@@ -350,7 +350,7 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
               <ul class="nav">
                 
                 <li class="nav-item ">
-                    <a class="nav-link" href="?opcion=listAnticipoPersonal">
+                    <a class="nav-link" href="?opcion=listAnticipoPersonalMes">
                       <span class="sidebar-mini"> A </span>
                       <span class="sidebar-normal"> Anticipos de Personal</span>
                     </a>
@@ -391,6 +391,12 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
                   <a class="nav-link" href="?opcion=planillasSueldoPersonal">
                     <span class="sidebar-mini"> PS </span>
                     <span class="sidebar-normal"> Planillas Sueldos </span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=personalFinExterna">
+                    <span class="sidebar-mini"> PE </span>
+                    <span class="sidebar-normal"> Personal Financiaci&oacute;n Externa </span>
                   </a>
                 </li>
                 

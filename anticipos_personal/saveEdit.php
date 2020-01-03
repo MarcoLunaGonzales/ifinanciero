@@ -9,6 +9,7 @@ $dbh = new Conexion();
 
 $codigoAnticipoPersonal=$_POST["codigo"];
 $monto=$_POST["monto"];
+$codMes=$_POST["cod_mes"];
 $codEstado="1";
 
 // Prepare
@@ -18,6 +19,5 @@ $stmt->bindParam(':codigo', $codigoAnticipoPersonal);
 $stmt->bindParam(':monto', $monto);
 
 $flagSuccess=$stmt->execute();
-showAlertSuccessError($flagSuccess,$urlList2);
-
+showAlertSuccessError($flagSuccess,"../".$urlListMesPersona."&cod_mes=".$codMes);
 ?>

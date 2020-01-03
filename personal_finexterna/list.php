@@ -6,27 +6,18 @@ require_once 'styles.php';
 
 $globalAdmin = $_SESSION["globalAdmin"];
 $codGestionActiva = $_SESSION['globalGestion'];
-$codMes=$_GET['cod_mes'];
 $dbh = new Conexion();
 
-$stmt = $dbh->prepare("SELECT ap.codigo as codigo_antPersonal, ap.cod_personal as cod_personal, ap.monto as monto
-                     FROM $table_anticiposPersonal ap, $table_personal p where ap.cod_estadoreferencial=1 and ap.cod_personal=p.codigo and cod_gestion=$codGestionActiva and ap.cod_mes=$codMes");
+$stmt = $dbh->prepare("SELECT pfp.*,concat(primer_nombre,' ',paterno,' ',materno) as personal,py.nombre,py.abreviatura
+                     FROM $table_personalfin pfp, $table_personal p,$table_proyectos py where pfp.cod_estado_referencial=1 
+                     and pfp.cod_personal=p.codigo and pfp.cod_proyecto=py.codigo");
 
 $stmt->execute();
-
-$stmt->bindColumn('codigo_antPersonal', $codigo_antPersonal);
-$stmt->bindColumn('cod_personal', $cod_personal);
-$stmt->bindColumn('monto', $monto);
-
-//Mostrar Mes
-$stmtc = $dbh->prepare("SELECT nombre FROM meses WHERE codigo=$codMes");
-$stmtc->execute();
-$stmtc->bindColumn('nombre', $nombreMes);
-
-while ($row = $stmtc->fetch(PDO::FETCH_BOUND)) {
-  $nomMes = $nombreMes;
-}
-
+$stmt->bindColumn('codigo', $codigo);
+$stmt->bindColumn('nombre', $proyecto);
+$stmt->bindColumn('personal', $personal);
+$stmt->bindColumn('abreviatura', $abrev);
+$stmt->bindColumn('monto_subsidio', $monto);
 ?>
 
 <div class="content">
@@ -39,7 +30,6 @@ while ($row = $stmtc->fetch(PDO::FETCH_BOUND)) {
               <i class="material-icons"><?= $iconCard; ?></i>
             </div>
             <h4 class="card-title"><?= $moduleNamePlural ?></h4>
-            <h4 class="card-title" align="center">Mes de <?=$nomMes?></h4>
           </div>
           <div class="card-body">
             <div class="table-responsive">
@@ -47,6 +37,7 @@ while ($row = $stmtc->fetch(PDO::FETCH_BOUND)) {
                 <thead>
                   <tr>
                     <th class="text-center">#</th>
+                    <th class="text-center">Proyecto</th>
                     <th class="text-center">Personal</th>
                     <th class="text-center">Monto</th>
                     <th class="text-right">Actions</th>
@@ -59,16 +50,17 @@ while ($row = $stmtc->fetch(PDO::FETCH_BOUND)) {
                   ?>
                     <tr>
                       <td class="text-center"><?= $index; ?></td>
-                      <td class="text-left"><?= nombrePersona($cod_personal); ?></td>
+                      <td class="text-left"><?= $proyecto ?></td>
+                      <td class="text-left"><?= $personal ?></td>
                       <td class="text-right"><?= $monto; ?></td>
                       <td class="td-actions text-right">
                         <?php
                         if ($globalAdmin == 1) {
                         ?>
-                          <a href='<?= $urlEdit; ?>&cod_ant_per=<?= $codigo_antPersonal; ?>&cod_mes=<?=$codMes?>' rel="tooltip" class="<?= $buttonEdit; ?>">
+                          <a href='<?= $urlEdit; ?>&codigo=<?= $codigo; ?>' rel="tooltip" class="<?= $buttonEdit; ?>">
                             <i class="material-icons"><?= $iconEdit; ?></i>
                           </a>
-                          <button rel="tooltip" class="<?= $buttonDelete; ?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?= $urlDelete; ?>&cod_ant_per=<?= $codigo_antPersonal; ?>&cod_mes=<?=$codMes?>')">
+                          <button rel="tooltip" class="<?= $buttonDelete; ?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?= $urlDelete; ?>&codigo=<?= $codigo; ?>')">
                             <i class="material-icons"><?= $iconDelete; ?></i>
                           </button>
                         <?php
@@ -89,8 +81,7 @@ while ($row = $stmtc->fetch(PDO::FETCH_BOUND)) {
                   if ($globalAdmin == 1) {
         ?>
           <div class="card-footer fixed-bottom">
-                    <button class="<?=$buttonNormal;?>" onClick="location.href='<?= $urlRegister; ?>&cod_mes=<?= $codMes; ?>'">Registrar</button>
-                    <button class="<?= $buttonCancel; ?>" onClick="location.href='<?= $urlList; ?>'">Cancelar</button>
+                    <button class="<?=$buttonNormal;?>" onClick="location.href='<?= $urlRegister; ?>'">Registrar</button>
               </div>
         <?php
         }

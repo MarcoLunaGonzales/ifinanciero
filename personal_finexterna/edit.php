@@ -7,17 +7,16 @@ require_once 'configModule.php';
 $dbh = new Conexion();
 
 //RECIBIMOS LAS VARIABLES
-$codAnticipoPersonal=$cod_ant_per;
-$codMes=$_GET['cod_mes'];
+$codigoP=$codigo;
 
-$stmt = $dbh->prepare("SELECT codigo,monto FROM $table_anticiposPersonal where codigo=:codigo");
+$stmt = $dbh->prepare("SELECT codigo,monto_subsidio FROM $table_personalfin where codigo=:codigo");
 // Ejecutamos
-$stmt->bindParam(':codigo',$codAnticipoPersonal);
+$stmt->bindParam(':codigo',$codigoP);
 $stmt->execute();
 
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 	$codigoX=$row['codigo'];
-	$montoX=$row['monto'];
+	$montoX=$row['monto_subsidio'];
 }
 
 ?>
@@ -40,7 +39,6 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 				  <div class="col-sm-7">
 					<div class="form-group">
 					  <input class="form-control" type="text" name="monto" id="monto" required="true" value="<?=$montoX;?>" />
-					  <input class="form-control" type="hidden" name="cod_mes" id="cod_mes" value="<?=$codMes;?>" />
 					</div>
 				  </div>
 				</div>

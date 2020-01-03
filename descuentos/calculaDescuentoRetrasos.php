@@ -21,6 +21,7 @@ $stmt->execute();
 $stmt->bindColumn('cod_personal', $codPersonal);
 $stmt->bindColumn('minutos_retraso', $minutos_retraso);
 
+
 while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
     $codPersonalX= $codPersonal;
     $minutos_retrasoX=$minutos_retraso;
@@ -30,7 +31,6 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
 
     $sql = $dbh->prepare("INSERT INTO descuentos_personal_mes (cod_descuento,cod_personal,cod_gestion,cod_mes,monto,cod_estadoreferencial)
     VALUES ($codDescuento,$codPersonalX,$codGestionActiva,$codMes,$descuentoRetraso,$codEstado) ");
-
     $flagSuccess=$sql->execute();
     }else{
       $flagSuccess=true;

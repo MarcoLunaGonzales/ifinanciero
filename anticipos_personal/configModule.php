@@ -5,7 +5,8 @@ $table_personal="personal";
 $moduleNameSingular="Anticipo de Personal";
 $moduleNamePlural="Anticipos de Personal ";
 
-$urlList="?opcion=listAnticipoPersonal";
+$urlList="?opcion=listAnticipoPersonalMes";
+$urlListMesPersona="index.php?opcion=listAnticipoPersonal";
 $urlRegister="index.php?opcion=registerAnticipoPersonal";
 $urlEdit="index.php?opcion=editAnticipoPersonal";
 $urlDelete="index.php?opcion=deleteAnticipoPersonal";

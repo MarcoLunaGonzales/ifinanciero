@@ -6,20 +6,9 @@ require_once 'functions.php';
 require_once 'configModule.php';
 
 $dbh = new Conexion();
-
-$codMes=$_GET['cod_mes'];
 $codGestion=$_SESSION['globalGestion'];
 $nombreGestion=$_SESSION['globalNombreGestion'];
 
-
-//Mostrar Mes
-$stmtc = $dbh->prepare("SELECT nombre FROM meses WHERE codigo=$codMes");
-$stmtc->execute();
-$stmtc->bindColumn('nombre', $nombreMes);
-
-while ($row = $stmtc->fetch(PDO::FETCH_BOUND)) {
-  $nomMes = $nombreMes;
-}
 
 ?>
 
@@ -34,11 +23,30 @@ while ($row = $stmtc->fetch(PDO::FETCH_BOUND)) {
 				  <h4 class="card-title">Registrar <?=$moduleNameSingular?></h4>
 
 				</div>
-				<h4 class="card-title" align="center"><?=  $nomMes . " " . $nombreGestion ?></h4>
-
 			  </div>
 			  <div class="card-body ">
-				
+               <div class="row">
+				  <label class="col-sm-2 col-form-label">Proyectos</label>
+						<div class="col-sm-4">
+				        	<div class="form-group">
+					        <select class="selectpicker form-control form-control-sm" data-style="select-with-transition" data-live-search="true" title="-- Elija un proyecto --" name="proyecto" id="proyecto" data-style="<?=$comboColor;?>" required="true">
+							  	<option disabled selected value="">Proyecto</option>
+							  	<?php
+								  $stmt = $dbh->prepare("select p.codigo as codigo, p.nombre from proyectos_financiacionexterna p ORDER BY p.nombre");
+								$stmt->execute();
+								while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+									$codigoX=$row['codigo'];
+									$nombreProyectoX=$row['nombre'];
+							
+								?>
+								<option value="<?=$codigoX;?>"><?=$nombreProyectoX;?></option>	
+								<?php
+							  	}
+							  	?>
+							</select>
+							</div>
+				      	</div>
+				</div>				
 
 				<div class="row">
 				  <label class="col-sm-2 col-form-label">Personal</label>
@@ -47,10 +55,7 @@ while ($row = $stmtc->fetch(PDO::FETCH_BOUND)) {
 					        <select class="selectpicker form-control form-control-sm" data-style="select-with-transition" data-live-search="true" title="-- Elija un personal --" name="personal" id="personal" data-style="<?=$comboColor;?>" required="true">
 							  	<option disabled selected value="">Persona</option>
 							  	<?php
-								  $stmt = $dbh->prepare("select p.codigo as codigo, concat(p.paterno,' ', p.materno, ' ', p.primer_nombre) as nombrepersona from personal p 
-								  where p.codigo not in 
-								  (select d.cod_personal from anticipos_personal d where 
-								  d.cod_mes=$codMes and d.cod_gestion=$codGestion) ORDER BY p.paterno");
+								  $stmt = $dbh->prepare("select p.codigo as codigo, concat(p.paterno,' ', p.materno, ' ', p.primer_nombre) as nombrepersona from personal p ORDER BY p.paterno");
 								$stmt->execute();
 								while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 									$codigoX=$row['codigo'];
@@ -79,14 +84,10 @@ while ($row = $stmtc->fetch(PDO::FETCH_BOUND)) {
 				  </div>
 				</div>
 				
-				<input class="form-control" type="text" hidden="true" name="codMes" id="codMes"  value="<?=$codMes;?>"/>
-				<input class="form-control" type="text" hidden="true" name="codGestion" id="codGestion"  value="<?=$codGestion;?>"/>
-
-				
 			  </div>
 			  <div class="card-footer ml-auto mr-auto">
 				<button type="submit" class="<?=$buttonNormal;?>">Guardar</button>
-				<a href="<?=$urlListMesPersona;?>&cod_mes=<?=$codMes;?>&cod_descuento=<?=$codDescuento;?>" class="<?=$buttonCancel;?>">Cancelar</a>
+				<a href="<?=$urlList;?>" class="<?=$buttonCancel;?>">Cancelar</a>
 			  </div>
 			</div>
 		  </form>
