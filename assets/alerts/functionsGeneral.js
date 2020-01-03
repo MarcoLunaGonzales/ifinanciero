@@ -1097,6 +1097,7 @@ function ajaxAFunidadorganizacional(combo){
   ajax.send(null)  
 }
 
+
 function ajaxPersonalUbicacion(codigo_UO){
   var contenedor;
   contenedor = document.getElementById('div_personal_UO');
@@ -2093,6 +2094,38 @@ function cargarCuentasSimulacion(cods,ib){
 }
 ///////////////////////////////////////////////////
 
+//personal ARea distribucion
+function ajaxPersonal_area_distribucion(combo){
+  var contenedor;
+  var codigo_UO=combo.value;
+  contenedor = document.getElementById('div_contenedor_area');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'personal/personal_area_distribucionAjax.php?codigo_UO='+codigo_UO,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);            
+    }
+  }
+  ajax.send(null)  
+}
+
+//personal ARea distribucion
+function ajaxPersonal_area_distribucionE(combo){
+  var contenedor;
+  var codigo_UO=combo.value;
+  contenedor = document.getElementById('div_contenedor_areaE');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'personal/personal_area_distribucionEAjax.php?codigo_UO='+codigo_UO,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);            
+    }
+  }
+  ajax.send(null)  
+}
+
 function agregaformPAD(datos){
   //console.log("datos: "+datos);
   var d=datos.split('-');
@@ -2105,8 +2138,9 @@ function agregaformPADE(datos){
   document.getElementById("codigo_personalE").value=d[0];
   document.getElementById("codigo_distribucionE").value=d[1];
 
-  document.getElementById("cod_areaE").value=d[2];
-  document.getElementById("porcentajeE").value=d[3];
+  document.getElementById("cod_uoE").value=d[2];
+  document.getElementById("cod_areaE").value=d[3];
+  document.getElementById("porcentajeE").value=d[4];
 }
 function agregaformPADB(datos){
   //console.log("datos: "+datos);
@@ -2115,10 +2149,10 @@ function agregaformPADB(datos){
   document.getElementById("codigo_distribucionB").value=d[1];
 }
 
-function RegistrarDistribucion(cod_personal,cod_area,porcentaje){
+function RegistrarDistribucion(cod_uo,cod_personal,cod_area,porcentaje){
   $.ajax({
     type:"POST",
-    data:"cod_personal="+cod_personal+"&cod_area="+cod_area+"&cod_estadoreferencial=1&porcentaje="+porcentaje,
+    data:"cod_personal="+cod_personal+"&cod_uo="+cod_uo+"&cod_area="+cod_area+"&cod_estadoreferencial=1&porcentaje="+porcentaje,
     url:"personal/savePersonalAreaDistribucion.php",
     success:function(r){
       if(r==1){
@@ -2129,10 +2163,10 @@ function RegistrarDistribucion(cod_personal,cod_area,porcentaje){
     }
   });
 }
-function EditarDistribucion(cod_personal,cod_distribucion,cod_area,porcentaje){
+function EditarDistribucion(cod_personal,cod_distribucion,cod_uo,cod_area,porcentaje){
   $.ajax({
     type:"POST",
-    data:"cod_personal="+cod_distribucion+"&cod_area="+cod_area+"&cod_estadoreferencial=2&porcentaje="+porcentaje,
+    data:"cod_personal="+cod_distribucion+"&cod_uo="+cod_uo+"&cod_area="+cod_area+"&cod_estadoreferencial=2&porcentaje="+porcentaje,
     url:"personal/savePersonalAreaDistribucion.php",
     success:function(r){
       if(r==1){
@@ -2143,10 +2177,11 @@ function EditarDistribucion(cod_personal,cod_distribucion,cod_area,porcentaje){
     }
   });
 }
+
 function EliminarDistribucion(cod_personal,cod_distribucion){
   $.ajax({
     type:"POST",
-    data:"cod_personal="+cod_distribucion+"&cod_area=0&cod_estadoreferencial=3&porcentaje=0",
+    data:"cod_personal="+cod_distribucion+"&cod_uo=0&cod_area=0&cod_estadoreferencial=3&porcentaje=0",
     url:"personal/savePersonalAreaDistribucion.php",
     success:function(r){
       if(r==1){
