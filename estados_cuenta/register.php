@@ -7,7 +7,7 @@ $dbh = new Conexion();
 
   $i=0;
   echo "<script>var array_cuenta=[],imagen_cuenta=[];</script>";
-   $stmtCuenta = $dbh->prepare("SELECT p.codigo, p.numero, p.nombre from plan_cuentas p,configuracion_estadocuentas c where p.nivel=5 and p.codigo!=c.cod_plancuenta order by p.numero");
+   $stmtCuenta = $dbh->prepare("SELECT p.codigo, p.numero, p.nombre from plan_cuentas p where p.nivel=5 order by p.numero");
    $stmtCuenta->execute();
    while ($rowCuenta = $stmtCuenta->fetch(PDO::FETCH_ASSOC)) {
     $codigoX=$rowCuenta['codigo'];
