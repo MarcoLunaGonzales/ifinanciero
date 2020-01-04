@@ -71,7 +71,7 @@ while ($row = $stmtc->fetch(PDO::FETCH_BOUND)) {
 						<div class="row">
 							<label class="col-sm-2 col-form-label">Excel Formato .csv</label>
 							<div class="col-sm-7">
-								<input class="form-control" type="file" name="archivo" id="archivo" required="true" />
+								<input class="form-control" type="file" name="archivo" id="archivo" accept="csv" required="true" />
 							</div>
 						</div>
 

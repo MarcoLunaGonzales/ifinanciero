@@ -29,7 +29,7 @@ if($codBonPerMes[$key]==null){
 }
 
 }
-
+$flagSuccess=true;
 showAlertSuccessError($flagSuccess,"../".$urlListMesPersona."&cod_bono=".$codBono."&cod_mes=".$codMes);
 
 ?>

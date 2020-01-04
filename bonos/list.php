@@ -75,7 +75,7 @@ $stmt->bindColumn('observaciones', $observaciones);
 
                   
 
-                            <a href='<?=$urlListMes;?>&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonDetailMin;?>">
+                            <a href='<?=$urlListMes;?>&codigo=<?=$codigo;?>' class="<?=$buttonDetailMin;?>">
                               <i class="material-icons" title="Detalle">playlist_add</i>
                             </a>
                             <a href='<?=$urlEdit;?>&codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="<?=$buttonEdit;?>">
