@@ -46,6 +46,7 @@ $stmt->bindColumn('estadoplanilla', $estadoplanilla);
                     <th>Mes</th>      
                     <th>Estado</th>                    
                     <th></th>                    
+                    <th></th> 
                   </tr>
               </thead>
               <tbody>
@@ -64,76 +65,6 @@ $stmt->bindColumn('estadoplanilla', $estadoplanilla);
                   if($cod_estadoplanilla==3){
                     $label='<span class="badge badge-danger">';
                   }                  
-
-
-                  // //cantidad descuentos
-                  // $dbh1 = new Conexion();
-                  // $sql2="SELECT count(monto_descuentos) as total_descuentos from planillas_personal_mes where monto_descuentos>0 and cod_planilla=$codigo_planilla";
-                  // $stmt2 = $dbh1->prepare($sql2);
-                  // $stmt2->execute();                   
-                  // $result2= $stmt2->fetch();
-                  // $cantidad_descuentosX=trim($result2['total_descuentos']);
-
-                  // //cantidad bonos
-                  // $sql3="SELECT count(cod_bono) as cantidad_bonos from bonos_personal_mes where cod_gestion=$cod_gestion and cod_mes=$cod_mes";
-                  // $stmt3 = $dbh1->prepare($sql3);
-                  // $stmt3->execute();     
-                  // $result3= $stmt3->fetch();
-                  // $cantidad_bonosX=trim($result3['cantidad_bonos']);
-
-                  // echo "canti : ".$cantidad_bonosX;
-                  // echo "gestion : ".$ cod_gestion;
-                  // echo "mes : ".$cod_mes;
-                  
-
-
-                  // //bonos detalle
-                  // $sqlBonosDetalle="SELECT cod_bono,
-                  // (select b.nombre from bonos b where b.codigo=cod_bono) as nbono,count(*) as cant_bonos
-                  //  from bonos_personal_mes where cod_gestion=$cod_gestion and cod_mes=$cod_mes
-                  //  GROUP BY cod_bono";
-                  // $stmtBonosDetalle = $dbh1->prepare($sqlBonosDetalle);
-                  // $stmtBonosDetalle->execute();     
-                  // $stmtBonosDetalle->bindColumn('nbono',$nbono);
-                  // $stmtBonosDetalle->bindColumn('cant_bonos',$cant_bonos);
-                  // $ncAux=0;
-                  // while ($row = $stmtBonosDetalle->fetch(PDO::FETCH_BOUND)) {
-                  //   $datoDetBonos =new stdClass();
-                  //   $nbonoX=trim($nbono);
-                  //   $cant_bonosX=trim($cant_bonos);
-
-                  //   $datoDetBonos->codigo=($ncAux+1);
-                  //   $datoDetBonos->nbono=$nbonoX;
-                  //   $datoDetBonos->cant_bonos=$cant_bonosX;
-                  //   $datosDetBonos[$index-1][$ncAux]=$datoDetBonos;                           
-                  //   $ncAux++;
-                  // }
-                  // //canitdad atrasos
-                  // $sql4="SELECT count(codigo) as cantidad_atrasos from planillas_personal_mes_patronal where atrasos>0 and cod_planilla=$codigo_planilla";
-                  // $stmt4 = $dbh1->prepare($sql4);
-                  // $stmt4->execute();
-                  // $result4= $stmt4->fetch();
-                  // $cantidad_atrasosX=trim($result4['cantidad_atrasos']);
-                  // //canitidad anticipos
-                  // $sql5="SELECT count(codigo) as cantidad_anticipos from planillas_personal_mes_patronal where anticipo>0 and cod_planilla=$codigo_planilla";
-                  // $stmt5 = $dbh1->prepare($sql5);
-                  // $stmt5->execute(); 
-                  // $result5= $stmt5->fetch();
-                  // $cantidad_anticiposX=trim($result5['cantidad_anticipos']);
-
-                  // $nc=0;
-                  // $dato = new stdClass();//obejto
-
-                  // $dato->codigo=($nc+1);
-                  // $dato->descuentos=$cantidad_descuentosX;
-                  // $dato->bonos=$cantidad_bonosX;
-                  // $dato->atrasos=$cantidad_atrasosX;
-                  // $dato->anticipos=$cantidad_anticiposX;
-                  
-                  // $datos[$index-1][$nc]=$dato;              
-
-                  // $nc++;
-                  // $cont[$index-1]=$nc; 
                   ?>
                   <tr>                    
                     <td><?=$gestion?></td>
@@ -155,21 +86,57 @@ $stmt->bindColumn('estadoplanilla', $estadoplanilla);
                                           
                       <button type="button" class="btn" style="background-color:#3b83bd;color:#ffffff;" data-toggle="modal" data-target="#modalreProcesar" onclick="agregaformPre('<?=$datosX;?>')">
                         <i class="material-icons" title="Reprocesar Planilla">autorenew</i>                        
-                      </button>                      
-                      <a href='<?=$urlPlanillaSueldoPersonalActual;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>' target="_blank" rel="tooltip" class="btn btn-success">            
-                        <i class="material-icons" title="Ver Planilla">remove_red_eye</i>                        
-                      </a>                            
+                      </button>                                                                              
                     
                       <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalCerrar" onclick="agregaformPre('<?=$datosX;?>')">
                         <i class="material-icons" title="Cerrar Planilla">assignment_returned</i>
                       </button>
+                      <a href='<?=$urlPlanillaSueldoPersonalActual;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>' target="_blank" rel="tooltip" class="btn btn-success">            
+                        <i class="material-icons" title="Ver Planilla">remove_red_eye</i>                        
+                      </a>
                       <?php }?>
                       <?php if($cod_estadoplanilla==3){    ?>
                       <a href='<?=$urlPlanillaSueldoPersonalActual;?>?codigo_planilla=<?=$codigo_planilla;?>' target="_blank" rel="tooltip" class="btn btn-success">            
                         <i class="material-icons" title="Ver Planilla">remove_red_eye</i>                        
-                      </a>                                                                    
-                      <?php }?>                                             
-                    </td>                                        
+                      </a>
+                                                                              
+                      <?php }?>                                                                
+                    </td>
+
+                    <td class="td-actions text-right">
+                      <?php                      
+                      if($cod_estadoplanilla==2){    ?>                                                                                                                                 
+                      <div class="dropdown">
+                        <button class="btn btn-primary dropdown-toggle" type="button" id="reporte_sueldos" data-toggle="dropdown" aria-extended="true">
+                          <i class="material-icons" title="Ver Planilla por UO">remove_red_eye</i>                        
+                          <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="reporte_sueldos">
+                          <li><a href="#">ITEM #1</a></li>
+                          <li><a href="#">ITEM #2</a></li>
+                          <li><a href="#">ITEM #3</a></li>
+                        </ul>
+
+                      </div>
+
+                      <?php }?>
+                      <?php if($cod_estadoplanilla==3){    ?>      
+                      <div class="dropdown">
+                        <button class="btn btn-primary dropdown-toggle" type="button" id="reporte_sueldos" data-toggle="dropdown" aria-extended="true">
+                          <i class="material-icons" title="Ver Planilla por UO">remove_red_eye</i>                        
+                          <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="reporte_sueldos">
+                          <li><a href="#">ITEM #1</a></li>
+                          <li><a href="#">ITEM #2</a></li>
+                          <li><a href="#">ITEM #3</a></li>
+                        </ul>
+
+                      </div>                                                                   
+                      <?php }?>                          
+
+                    </td>
+
                   </tr>
                 <?php $index++; } ?>
               </tbody>                                      

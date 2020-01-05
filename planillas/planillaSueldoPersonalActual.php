@@ -21,6 +21,7 @@
 
   $sql = "SELECT *,
         (select (select uo.abreviatura from unidades_organizacionales uo where uo.codigo=pad.cod_uo)as nombre_uo from personal_area_distribucion pad where pad.cod_personal=cod_personalcargo) as cod_uo,
+        (select (select a.abreviatura from areas a where a.codigo=pad2.cod_area) from personal_area_distribucion pad2 where pad2.cod_personal=cod_personalcargo) as cod_area,
         (SELECT ga.nombre from personal_grado_academico ga where ga.codigo=cod_gradoacademico) as grado_academico,
         (select p.primer_nombre from personal p where p.codigo=cod_personalcargo) as personal,
         (select pa.paterno from personal pa where pa.codigo=cod_personalcargo) as paterno,
@@ -29,7 +30,7 @@
         (select (select pd.abreviatura from personal_departamentos pd where pd.codigo=p3.cod_lugar_emision)
                  from personal p3 where p3.codigo=cod_personalcargo) as lug_emision,
       (select p4.lugar_emision_otro from personal p4 where p4.codigo=cod_personalcargo) as lug_emision_otro
-        from planillas_personal_mes where cod_planilla=$codigo_planilla order by cod_uo asc";
+        from planillas_personal_mes where cod_planilla=$codigo_planilla order by cod_uo,cod_area asc";
 
   $stmtPersonal = $dbh->prepare($sql);
   $stmtPersonal->execute();
@@ -44,6 +45,7 @@
   $stmtPersonal->bindColumn('lug_emision_otro', $lug_emision_otro);
 
   $stmtPersonal->bindColumn('cod_uo', $cod_uo);
+  $stmtPersonal->bindColumn('cod_area', $cod_area);
   $stmtPersonal->bindColumn('cod_gradoacademico', $cod_gradoacademico);
   $stmtPersonal->bindColumn('grado_academico', $grado_academico);
   $stmtPersonal->bindColumn('dias_trabajados', $dias_trabajados);
@@ -88,6 +90,7 @@
                   <tr class="bg-dark text-white">                  
                     <th>#</th>
                     <th>UO</th>                    
+                    <th>Area</th>
                     <th>Paterno</th>
                     <th>Materno</th>
                     <th>Nombres</th>                    
@@ -216,6 +219,7 @@
                   <tr>                                                        
                     <td><?=$index;?></td>
                     <td><?=$cod_uo;?></td>
+                    <td><?=$cod_area;?></td>
                     <td class="text-left"><?=$paterno;?></td>
                     <td class="text-left"><?=$materno;?></td>
                     <td class="text-left"><?=$nombrePersonal;?></td>
@@ -234,7 +238,6 @@
                       $stmtbonoOtros->execute();
                       $resultbonoOtros=$stmtbonoOtros->fetch();
                       $sumaBono_otros=$resultbonoOtros['suma_bono'];
-
 
                       $sum_total_o_bonos+=$sumaBono_otros;
                 

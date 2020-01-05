@@ -13,7 +13,7 @@ $stmt->execute();
 if (!$stmt->execute()) {
     echo json_encode(print_r($stmt->errorInfo()));
 }
-$stmt->bindColumn('codigo', $codigo);
+$stmt->bindColumn('cod_area', $codigo);
 $stmt->bindColumn('xarea', $xarea);
 //$stmt->bindColumn('tipo_bien', $tipo_bien);
 echo "<select name='cod_area' id='cod_area' class='selectpicker' data-style='btn btn-info' required>";
