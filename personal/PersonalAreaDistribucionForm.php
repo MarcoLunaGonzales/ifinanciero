@@ -108,6 +108,7 @@ $statementAREASE = $dbh->query($query_areas);
                           <tr class="bg-info text-white">
                             <th colspan="2">Total :</th>
                             <td class="text-center small">-</td>
+                            <td class="text-center small">-</td>
                             <?php
                             $stringClass="";
                             $stringLabel="";

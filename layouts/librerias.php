@@ -256,7 +256,8 @@
             columnDefs: [{
             orderable: false,
             targets: [0]
-          }]
+          }],
+          "pageLength": 50
          }
         );
      $("#form_partidaspresupuestarias").submit(function(e) {

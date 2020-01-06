@@ -1370,6 +1370,7 @@ function calcularDatosPlantilla(){
         }
     });
 }
+
 var data_cuentas=null;
 function alertDatosTabla(){
   var data = data_cuentas.$('input:checked');
