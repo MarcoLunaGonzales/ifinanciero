@@ -59,11 +59,7 @@
   $stmtPersonal->bindColumn('liquido_pagable', $liquido_pagable);
   $stmtPersonal->bindColumn('afp_1', $afp_1);
   $stmtPersonal->bindColumn('afp_2', $afp_2);
-  $stmtPersonal->bindColumn('dotaciones', $dotaciones);
-
-
-
-                          
+  $stmtPersonal->bindColumn('dotaciones', $dotaciones);                     
 
 ?>
 <div class="content">
@@ -88,18 +84,18 @@
               <table class="table table-bordered table-condensed table-hover" id="tablePaginator">
                 <thead>
                   <tr class="bg-dark text-white">                  
-                    <th>#</th>
-                    <th>UO</th>                    
-                    <th>Area</th>
-                    <th>Paterno</th>
-                    <th>Materno</th>
-                    <th>Nombres</th>                    
-                    <th>Doc. Id</th>                    
-                    <th>Grado Académico</th>
-                    <th>Haber Básico</th>
-                    <th>Días Trab</th>                                        
-                    <th>Bono Antiguedad</th>
-                    <th class="bg-success text-white"><button id="botonBonos" style="border:none;" class="bg-success text-white">Otros Bonos</button> </th>
+                    <th><small>#</small></th>
+                    <th><small>UO</small></th>                    
+                    <th><small>Area</small></th>
+                    <th><small>Paterno</small></th>
+                    <th><small>Materno</small></th>
+                    <th><small>Nombres</small></th>                    
+                    <th><small>Doc. Id</small></th>                    
+                    <th><small>Grado Académico</small></th>
+                    <th><small>Haber Básico</small></th>
+                    <th><small>Días Trab</small></th>                                        
+                    <th><small>Bono Antiguedad</small></th>
+                    <th class="bg-success text-white"><button id="botonBonos" style="border:none;" class="bg-success text-white small">Otros Bonos</button> </th>
                     <?php
                       $sqlBonos = "SELECT cod_bono,(select b.nombre from bonos b where b.codigo=cod_bono) as nombre_bono
                               from bonos_personal_mes 
@@ -111,27 +107,27 @@
                       $stmtBonos->bindColumn('nombre_bono',$nombre_bono);
                       while ($row = $stmtBonos->fetch()) 
                       { ?>
-                        <th class="bonosDet bg-success text-white" style="display:none"><?=$nombre_bono;?></th>                      
+                        <th class="bonosDet bg-success text-white" style="display:none"><small><?=$nombre_bono;?></small></th>                      
                         <?php
                         $arrayBonos[] = $cod_bono;
                       }
                     ?>
-                    <th>Monto Bonos</th>                            
-                    <th>Total Ganado</th>
+                    <th><small>Monto Bonos</small></th>                            
+                    <th><small>Total Ganado</small></th>
 
-                    <th class="bg-success text-white"><button id="botonAportes" style="border:none;" class="bg-success text-white">Monto Aportes</button></th>
-                    <th class="aportesDet bg-success text-white" style="display:none">AFP.Fut</th>
-                    <th class="aportesDet bg-success text-white" style="display:none">AFP.Prev</th>
-                    <th class="aportesDet bg-success text-white" style="display:none">A.Solidario(13)</th>
-                    <th class="aportesDet bg-success text-white" style="display:none">A.Solidario(25)</th>
-                    <th class="aportesDet bg-success text-white" style="display:none">A.Solidario(35)</th>
-                    <th class="aportesDet bg-success text-white" style="display:none">RC-IVA</th>
+                    <th class="bg-success text-white"><button id="botonAportes" style="border:none;" class="bg-success text-white small">Monto Aportes</button></th>
+                    <th class="aportesDet bg-success text-white" style="display:none"><small>AFP.Fut</small></th>
+                    <th class="aportesDet bg-success text-white" style="display:none"><small>AFP.Prev</small></th>
+                    <th class="aportesDet bg-success text-white" style="display:none"><small>A.Solidario(13)</small></th>
+                    <th class="aportesDet bg-success text-white" style="display:none"><small>A.Solidario(25)</small></th>
+                    <th class="aportesDet bg-success text-white" style="display:none"><small>A.Solidario(35)</small></th>
+                    <th class="aportesDet bg-success text-white" style="display:none"><small>RC-IVA</small></th>
 
                     
-                    <th>Atrasos</th>
-                    <th>Anticipos</th>
-                    <th>Dotaciones</th>
-                    <th class="bg-success text-white"><button id="botonOtrosDescuentos" style="border:none;" class="bg-success text-white">Otros Descuentos</button> </th>
+                    <th><small>Atrasos</small></th>
+                    <th><small>Anticipos</small></th>
+                    <th><small>Dotaciones</small></th>
+                    <th class="bg-success text-white"><button id="botonOtrosDescuentos" style="border:none;" class="bg-success text-white small">Otros Descuentos</button> </th>
                     <?php  
                       $swDescuentoOtro=false;                  
                       $sqlDescuento = "SELECT cod_descuento,(select d.nombre from descuentos d where d.codigo=cod_descuento) as nombre_descuentos
@@ -144,19 +140,19 @@
                       $stmtDescuento->bindColumn('nombre_descuentos',$nombre_descuentos);
                       while ($row = $stmtDescuento->fetch()) 
                       { ?>
-                        <th class="DescuentosOtros bg-success text-white" style="display:none"><?=$nombre_descuentos;?></th>
+                        <th class="DescuentosOtros bg-success text-white" style="display:none"><small><?=$nombre_descuentos;?></small></th>
                         <?php
                         $arrayDescuentos[] = $cod_descuento;
                         $swDescuentoOtro=true;
                       }
                     ?>
-                    <th>Monto Descuentos</button></th>                                        
-                    <th class="bg-primary text-white">Liqu Pagable</th>                    
-                    <th>Seguro De Salud</th>
-                    <th>Riesgo Profesional</th>
-                    <th>Provivienda</th>
-                    <th>Apo Patronal Sol</th>
-                    <th>Total Apo Patronal</th>
+                    <th><small>Monto Descuentos</small></th>     
+                    <th class="bg-primary text-white"><small>Liqu Pagable</small></th>                    
+                    <th><small>Seguro De Salud</small></th>
+                    <th><small>Riesgo Profesional</small></th>
+                    <th><small>Provivienda</small></th>
+                    <th><small>Apo Patronal Sol</small></th>
+                    <th><small>Total Apo Patronal</small></th>
                   </tr>                                  
                 </thead>
                 <tbody>
@@ -217,17 +213,17 @@
 
                         ?>
                   <tr>                                                        
-                    <td><?=$index;?></td>
-                    <td><?=$cod_uo;?></td>
-                    <td><?=$cod_area;?></td>
-                    <td class="text-left"><?=$paterno;?></td>
-                    <td class="text-left"><?=$materno;?></td>
-                    <td class="text-left"><?=$nombrePersonal;?></td>
-                    <td><?=$doc_id;?>-<?=$lug_emision?><?=$lug_emision_otro?></td>                  
-                    <td class="text-left"><?=$grado_academico;?></td>                    
-                    <td><?=formatNumberDec($haber_basico);?></td>
-                    <td><?=$dias_trabajados;?></td>                
-                    <td><?=formatNumberDec($bono_antiguedad);?></td>
+                    <td class="text-center small"><?=$index;?></td>
+                    <td class="text-left small"><?=$cod_uo;?></td>
+                    <td class="text-left small"><?=$cod_area;?></td>
+                    <td class="text-left small"><?=$paterno;?></td>
+                    <td class="text-left small"><?=$materno;?></td>
+                    <td class="text-left small"><?=$nombrePersonal;?></td>
+                    <td class="text-center small"><?=$doc_id;?>-<?=$lug_emision?><?=$lug_emision_otro?></td>                  
+                    <td class="text-left small"><?=$grado_academico;?></td>                    
+                    <td class="text-center small"><?=formatNumberDec($haber_basico);?></td>
+                    <td class="text-center small"><?=$dias_trabajados;?></td>                
+                    <td class="text-center small"><?=formatNumberDec($bono_antiguedad);?></td>
                     <?php                    
                     if(count($arrayBonos)>0)
                     {
@@ -244,7 +240,7 @@
 
                       if($sumaBono_otros==null){ $sumaBono_otros=0;}
                       ?> 
-                      <td><?=formatNumberDec($sumaBono_otros);?></td>
+                      <td class="text-center small"><?=formatNumberDec($sumaBono_otros);?></td>
                       <?php
                       set_time_limit(300);
                       for ($j=0; $j <count($arrayBonos);$j++){ 
@@ -259,16 +255,16 @@
                           $montoX=$resultBonosOtros['monto'];
 
                           if($cod_bonosX==$cod_bono_aux){ ?>
-                            <td  class="bonosDet" style="display:none"><?=formatNumberDec($montoX);?></td>  
+                            <td  class="bonosDet small" style="display:none"><?=formatNumberDec($montoX);?></td>  
                           <?php                            
                           }else{ $montoAux=0; ?>                                                          
-                            <td  class="bonosDet" style="display:none"><?=formatNumberDec($montoAux);?></td>
+                            <td  class="bonosDet small" style="display:none"><?=formatNumberDec($montoAux);?></td>
                           <?php                            
                           }
                       }
                     }else{$sumabonos_otros=0;
                       ?>
-                      <td><?=formatNumberDec($sumabonos_otros);?></td>
+                      <td class="small"><?=formatNumberDec($sumabonos_otros);?></td>
                       <?php
                     }                                          
                       $monto_aportes = $afp_1+$afp_2+$a_solidario_13000+$a_solidario_25000+$a_solidario_35000+$rc_iva;
@@ -276,19 +272,19 @@
                       $sum_total_m_aportes+=$monto_aportes;                    
                           
                     ?>  
-                    <td><?=formatNumberDec($monto_bonos);?></td>
-                    <td><?=formatNumberDec($total_ganado);?></td>
-                    <td><?=formatNumberDec($monto_aportes);?></td> 
-                    <td class="aportesDet" style="display:none"><?=formatNumberDec($afp_1);?></td>
-                    <td class="aportesDet" style="display:none"><?=formatNumberDec($afp_2);?></td>
-                    <td class="aportesDet" style="display:none"><?=formatNumberDec($a_solidario_13000);?></td>
-                    <td class="aportesDet" style="display:none"><?=formatNumberDec($a_solidario_25000);?></td>
-                    <td class="aportesDet" style="display:none"><?=formatNumberDec($a_solidario_35000);?></td>
-                    <td class="aportesDet" style="display:none"><?=formatNumberDec($rc_iva);?></td>
+                    <td class="small"><?=formatNumberDec($monto_bonos);?></td>
+                    <td class="small"><?=formatNumberDec($total_ganado);?></td>
+                    <td class="small"><?=formatNumberDec($monto_aportes);?></td> 
+                    <td class="aportesDet small" style="display:none"><?=formatNumberDec($afp_1);?></td>
+                    <td class="aportesDet small" style="display:none"><?=formatNumberDec($afp_2);?></td>
+                    <td class="aportesDet small" style="display:none"><?=formatNumberDec($a_solidario_13000);?></td>
+                    <td class="aportesDet small" style="display:none"><?=formatNumberDec($a_solidario_25000);?></td>
+                    <td class="aportesDet small" style="display:none"><?=formatNumberDec($a_solidario_35000);?></td>
+                    <td class="aportesDet small" style="display:none"><?=formatNumberDec($rc_iva);?></td>
 
-                    <td><?=formatNumberDec($atrasos);?></td>
-                    <td><?=formatNumberDec($anticipo);?></td>
-                    <td><?=formatNumberDec($dotaciones);?></td>
+                    <td class="small"><?=formatNumberDec($atrasos);?></td>
+                    <td class="small"><?=formatNumberDec($anticipo);?></td>
+                    <td class="small"><?=formatNumberDec($dotaciones);?></td>
                     
                     <?php
                     if($swDescuentoOtro)
@@ -305,7 +301,7 @@
 
                       if($sumaDescuentos_otros==null){ $sumaDescuentos_otros=0;}
                       ?> 
-                      <td><?=formatNumberDec($sumaDescuentos_otros);?></td>
+                      <td class="small"><?=formatNumberDec($sumaDescuentos_otros);?></td>
                       <?php                      
 
                         for ($j=0; $j <count($arrayDescuentos); $j++) { 
@@ -319,10 +315,10 @@
                           $cod_descuentosX=$resultDescOtros['cod_descuento'];
                           $montoX=$resultDescOtros['monto'];
                           if($cod_descuentosX==$cod_descuento_aux){ ?>
-                            <td  class="DescuentosOtros" style="display:none"><?=formatNumberDec($montoX);?></td>  
+                            <td  class="DescuentosOtros small" style="display:none"><?=formatNumberDec($montoX);?></td>  
                           <?php                            
                           }else{ $montoAux=0; ?>                                                          
-                            <td  class="DescuentosOtros" style="display:none"><?=formatNumberDec($montoAux);?></td>
+                            <td  class="DescuentosOtros small" style="display:none"><?=formatNumberDec($montoAux);?></td>
                           <?php                            
                           }
                         }  
@@ -332,31 +328,31 @@
                     }else{
                       $sumaDescuentos_otros=0;
                       ?>
-                      <td><?=formatNumberDec($sumaDescuentos_otros);?></td>
+                      <td class="small"><?=formatNumberDec($sumaDescuentos_otros);?></td>
                       <?php
                       $monto_descuentosX=$monto_descuentos+$sumaDescuentos_otros;
                     }
                     ?>
                                           
-                    <td ><?=formatNumberDec($monto_descuentosX);?></td>                                                          
-                    <td class="bg-primary text-white"><?=formatNumberDec($liquido_pagable);?></td>                                  
-                    <td><?=formatNumberDec($seguro_de_salud);?></td>
-                    <td><?=formatNumberDec($riesgo_profesional);?></td>
-                    <td><?=formatNumberDec($provivienda);?></td>
-                    <td><?=formatNumberDec($a_patronal_sol);?></td>
-                    <td><?=formatNumberDec($total_a_patronal);?></td>
+                    <td class="text-center small"><?=formatNumberDec($monto_descuentosX);?></td>                                                          
+                    <td class="bg-primary text-white small"><?=formatNumberDec($liquido_pagable);?></td>                                  
+                    <td  class="text-center small"><?=formatNumberDec($seguro_de_salud);?></td>
+                    <td class="text-center small"><?=formatNumberDec($riesgo_profesional);?></td>
+                    <td class="text-center small"><?=formatNumberDec($provivienda);?></td>
+                    <td class="text-center small"><?=formatNumberDec($a_patronal_sol);?></td>
+                    <td class="text-center small"><?=formatNumberDec($total_a_patronal);?></td>
                   </tr> 
                   <?php 
                     $index+=1;}?>                      
                 </tbody>
                 <tfoot>
                     <tr class="bg-dark text-white">                  
-                    <th colspan="8">Total</th>
+                    <th colspan="8" class="text-center small">Total</th>
                     
-                    <th><?=$sum_total_basico?></th>
-                    <th>-</th>                                        
-                    <th><?=$sum_total_b_antiguedad;?></th>
-                    <th class="bg-success text-white"><?=$sum_total_o_bonos;?> </th>
+                    <th class="text-center small"><?=$sum_total_basico?></th>
+                    <th class="text-center small">-</th>                                        
+                    <th class="text-center small"><?=$sum_total_b_antiguedad;?></th>
+                    <th class="bg-success text-white small"><?=$sum_total_o_bonos;?> </th>
                     <?php
                       $sqlBonos = "SELECT cod_bono
                               from bonos_personal_mes 
@@ -366,26 +362,26 @@
                       $stmtBonos->bindColumn('cod_bono',$cod_bono);                      
                       while ($row = $stmtBonos->fetch()) 
                       { ?>
-                        <th class="bonosDet bg-success text-white" style="display:none">-</th>                      
+                        <th class="bonosDet bg-success text-white small" style="display:none">-</th>                      
                         <?php                        
                       }
                     ?>
-                    <th><?=$sum_total_m_bonos;?></th>                            
-                    <th><?=$sum_total_t_ganado;?></th>
+                    <th class="text-center small"><?=$sum_total_m_bonos;?></th>                            
+                    <th class="text-center small"><?=$sum_total_t_ganado;?></th>
 
-                    <th class="bg-success text-white"><?=$sum_total_m_aportes;?></th>
-                    <th class="aportesDet bg-success text-white" style="display:none">AFP.Fut</th>
-                    <th class="aportesDet bg-success text-white" style="display:none">AFP.Prev</th>
-                    <th class="aportesDet bg-success text-white" style="display:none">A.Solidario(13)</th>
-                    <th class="aportesDet bg-success text-white" style="display:none">A.Solidario(25)</th>
-                    <th class="aportesDet bg-success text-white" style="display:none">A.Solidario(35)</th>
-                    <th class="aportesDet bg-success text-white" style="display:none">RC-IVA</th>
+                    <th class="bg-success text-white small"><?=$sum_total_m_aportes;?></th>
+                    <th class="aportesDet bg-success text-white small" style="display:none">AFP.Fut</th>
+                    <th class="aportesDet bg-success text-white small" style="display:none">AFP.Prev</th>
+                    <th class="aportesDet bg-success text-white small" style="display:none">A.Solidario(13)</th>
+                    <th class="aportesDet bg-success text-white small" style="display:none">A.Solidario(25)</th>
+                    <th class="aportesDet bg-success text-white small" style="display:none">A.Solidario(35)</th>
+                    <th class="aportesDet bg-success text-white small" style="display:none">RC-IVA</th>
 
                     
-                    <th><?=$sum_total_atrasos;?></th>
-                    <th><?=$sum_total_anticipos;?></th>
-                    <th><?=$sum_total_dotaciones;?></th>
-                    <th class="bg-success text-white"><?=$sum_total_o_descuentos;?></th>
+                    <th class="text-center small"><?=$sum_total_atrasos;?></th>
+                    <th class="text-center small"><?=$sum_total_anticipos;?></th>
+                    <th class="text-center small"><?=$sum_total_dotaciones;?></th>
+                    <th class="bg-success text-white small"><?=$sum_total_o_descuentos;?></th>
                     <?php  
                       $swDescuentoOtro=false;                  
                       $sqlDescuento = "SELECT cod_descuento
@@ -396,17 +392,17 @@
                       $stmtDescuento->bindColumn('cod_descuento',$cod_descuento);                      
                       while ($row = $stmtDescuento->fetch()) 
                       { ?>
-                        <th class="DescuentosOtros bg-success text-white" style="display:none">-</th>
+                        <th class="DescuentosOtros bg-success text-white small" style="display:none">-</th>
                         <?php
                       }
                     ?>
-                    <th><?=$sum_total_m_descuentos;?></th>                                        
-                    <th class="bg-primary text-white"><?=$sum_total_l_pagable;?></th>                    
-                    <th>-</th>
-                    <th>-</th>
-                    <th>-</th>
-                    <th>-</th>
-                    <th><?=$sum_total_a_patronal;?></th>
+                    <th class="text-center small"><?=$sum_total_m_descuentos;?></th>                                        
+                    <th class="bg-primary text-white small"><?=$sum_total_l_pagable;?></th>                    
+                    <th class="text-center small">-</th>
+                    <th class="text-center small">-</th>
+                    <th class="text-center small">-</th>
+                    <th class="text-center small">-</th>
+                    <th class="text-center small"><?=$sum_total_a_patronal;?></th>
                   </tr>
                 </tfoot>               
               </table>                                
@@ -435,10 +431,6 @@
   $("#botonOtrosDescuentos").on("click", function(){
     $(".DescuentosOtros").toggle();
   });
-  
-
-  
-
 </script>
 
 

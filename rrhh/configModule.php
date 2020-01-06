@@ -106,6 +106,7 @@ $urlGenerarPlanillaSueldoPrevia="?opcion=generarPlanillaSueldoPrevia";
 
 $urlPlanillaSueldoPersonalActual="planillas/planillaSueldoPersonalActual.php";
 $urlDetallePlanillaPrerequisitos="planillas/detallePlanillaPrerequisitos.php";
+$urlPlanillaSueldoPersonalReporte="planillas/planillaSueldoPersonalReporte.php";
 
 
 
