@@ -8,7 +8,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 
 $dbh = new Conexion();
 
-$stmt = $dbh->prepare("select * from tipos_personal where cod_estadoreferencial=1");
+$stmt = $dbh->prepare("SELECT * from tipos_personal where cod_estadoreferencial=1 order by nombre");
 //ejecutamos
 $stmt->execute();
 //bindColumn
@@ -35,11 +35,10 @@ $stmt->bindColumn('cod_estadoreferencial', $cod_estadoreferencial);
 
                     <thead>
     <tr>
-    <th>Codigo</th>
+      <th>#</th>
+      <th>Codigo</th>
         <th>Nombre</th>
-        <th>Abreviatura</th>
-        
-        
+        <th>Abreviatura</th>            
         <th></th>
     </tr>
 </thead>
@@ -47,6 +46,7 @@ $stmt->bindColumn('cod_estadoreferencial', $cod_estadoreferencial);
 <?php $index=1;
 while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { ?>
     <tr>
+      <td><?=$index;?></td>
         <td><?=$codigo;?></td>
         <td><?=$nombre;?></td>
         <td><?=$abreviatura;?></td>

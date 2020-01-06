@@ -8,7 +8,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 
 $dbh = new Conexion();
 
-$stmt = $dbh->prepare("SELECT * from cargos where cod_estadoreferencial=1");
+$stmt = $dbh->prepare("SELECT * from cargos where cod_estadoreferencial=1 order by nombre");
 //ejecutamos
 $stmt->execute();
 //bindColumn
@@ -39,23 +39,22 @@ $stmt->bindColumn('modified_by', $modified_by);
 
                     <thead>
     <tr>
-    <th>Codigo</th>
-        <th>Nombre</th>
-        <th>Abreviatura</th>
-       
-        
-        
-        <th></th>
+      <th>#</th>
+      <th>Codigo</th>
+      <th>Nombre</th>
+      <th>Abreviatura</th>
+      <th></th>
     </tr>
 </thead>
 <tbody>
 <?php $index=1;
 while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { ?>
     <tr>
-    <td><?=$codigo;?></td>
+      
+      <td><?=$index;?></td>
+      <td><?=$codigo;?></td>
         <td><?=$nombre;?></td>
-        <td><?=$abreviatura;?></td>
-        
+        <td><?=$abreviatura;?></td>        
         <td class="td-actions text-right">
         <?php
           if($globalAdmin==1){

@@ -8,7 +8,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 
 $dbh = new Conexion();
 
-$sql="SELECT * from areas where cod_estado=1 order by nombre";
+$sql="SELECT codigo,nombre,abreviatura,observaciones from areas where cod_estado=1 order by nombre asc";
 $stmt = $dbh->prepare($sql);
 
 //echo $sql;
@@ -19,11 +19,6 @@ $stmt->bindColumn('codigo', $codigo);
 $stmt->bindColumn('nombre', $nombre);
 $stmt->bindColumn('abreviatura', $abreviatura);
 $stmt->bindColumn('observaciones', $observaciones);
-$stmt->bindColumn('cod_estado', $cod_estadoreferencial);
-$stmt->bindColumn('created_at', $created_at);
-$stmt->bindColumn('created_by', $created_by);
-$stmt->bindColumn('modified_at', $modified_at);
-$stmt->bindColumn('modified_by', $modified_by);
 ?>
 
 <div class="content">
@@ -43,6 +38,8 @@ $stmt->bindColumn('modified_by', $modified_by);
 
                       <thead>
                       <tr>
+                          
+                          <th>#</th>
                           <th>Codigo</th>
                           <th>Nombre</th>
                           <th>Abreviatura</th>
@@ -56,10 +53,11 @@ $stmt->bindColumn('modified_by', $modified_by);
                   <?php $index=1;
                   while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { ?>
                       <tr>
-                      <td><?=$codigo;?></td>
-                          <td><?=$nombre;?></td>
-                          <td><?=$abreviatura;?></td>
-                          <td><?=$observaciones;?></td>
+                        <td><?=$index;?></td>
+                        <td><?=$codigo;?></td>
+                        <td><?=$nombre;?></td>
+                        <td><?=$abreviatura;?></td>
+                        <td><?=$observaciones;?></td>
                           
                           <td class="td-actions text-right">
                           <?php

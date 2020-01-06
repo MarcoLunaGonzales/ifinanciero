@@ -3,6 +3,7 @@
 require_once 'conexion.php';
 require_once 'styles.php';
 require_once 'rrhh/configModule.php';
+require_once 'functions.php';
 
 //$dbh = new Conexion();
 $dbh = new Conexion();
@@ -102,22 +103,22 @@ $statementgrado_academico = $dbh->query($querygrado_academico);
 
 <div class="content">
     <div class="container-fluid">
-        <div class="col-md-12">
-            <form id="form1" class="form-horizontal" action="<?=$urlSavePersonal;?>" method="post"  enctype="multipart/form-data">
-                
+        <div class="row">
+            <div class="col-md-12">                
                 <div class="card">
                     <div class="card-header <?=$colorCard;?> card-header-text">
                         <div class="card-text">
                           <h4 class="card-title"><?php if ($codigo == 0) echo "Registrar"; else echo "Editar";?>  <?=$nombreSingularPersonal;?></h4>
                         </div>
-                    </div>
-                    <h3 align="center">CAMPOS NO GESTIONADOS POR RRHH</h3>
-                    <div class="card-body ">
+                    </div>                
+                    <div class="card-body">
+                        <form id="form1" action="<?=$urlSavePersonal;?>" method="post">    
+                        <h3 align="center">CAMPOS NO GESTIONADOS POR RRHH</h3>
                         <div class="row">
                             <label class="col-sm-2 col-form-label">Código Personal</label>
                             <div class="col-sm-4">
                                 <div class="form-group">
-                                    <input class="form-control" name="codigo" id="codigo" value="<?=$codigo;?>" readonly="readonly"/>
+                                    <input  name="codigo" id="codigo" value="<?=$codigo;?>" readonly="readonly"/>
                                 </div>
                             </div>                            
                         </div><!--fin campo codigo --> 
@@ -210,7 +211,7 @@ $statementgrado_academico = $dbh->query($querygrado_academico);
                             </div>
                         </div><!--fin genero y estadoCivil-->
                         <div class="row">                            
-                            <<label class="col-sm-2 col-form-label">Fecha Nacimiento</label>
+                            <label class="col-sm-2 col-form-label">Fecha Nacimiento</label>
                             <div class="col-sm-4">
                                 <div class="form-group">
                                     <input class="form-control"  name="fecha_nacimiento" id="fecha_nacimiento" readonly="readonly" value="<?=$fecha_nacimiento;?>"/>
@@ -221,16 +222,16 @@ $statementgrado_academico = $dbh->query($querygrado_academico);
                         <div class="row">
                             <label class="col-sm-2 col-form-label">Paterno</label>
                             <div class="col-sm-4">
-                            <div class="form-group">
-                                <input class="form-control" name="paterno"  id="paterno" readonly="readonly" value="<?=$paterno;?>" />
-                            </div>
+                                <div class="form-group">
+                                    <input class="form-control" name="paterno"  id="paterno" readonly="readonly" value="<?=$paterno;?>" />
+                                </div>
                             </div>
 
                             <label class="col-sm-2 col-form-label">Materno</label>
                             <div class="col-sm-4">
-                            <div class="form-group">
-                                <input class="form-control" name="materno" id="materno"  readonly="readonly" value="<?=$materno;?>" />
-                            </div>
+                                <div class="form-group">
+                                    <input class="form-control" name="materno" id="materno"  readonly="readonly" value="<?=$materno;?>" />
+                                </div>
                             </div>
                         </div><!--fin campo materno -->
                         <div class="row">
@@ -300,9 +301,10 @@ $statementgrado_academico = $dbh->query($querygrado_academico);
                             <label class="col-sm-2 col-form-label">Unidad Organizacional</label>
                             <div class="col-sm-4">
                             <div class="form-group">
-                                <select name="cod_unidadorganizacional"  class="selectpicker " id="cod_unidadorganizacional" data-style="btn btn-info" required>
+                                <select name="cod_unidadorganizacional" id="cod_unidadorganizacional" class="selectpicker" data-style="btn btn-info" required>
+                                    <option value="">-</option>
                                     <?php while ($row = $statementUO->fetch()) { ?>
-                                        <option <?php if($cod_unidadorganizacional == $row["codigo"]) echo "selected"; ?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                                        <option <?=($cod_unidadorganizacional==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
                                     <?php } ?>
                                 </select>                               
                             </div>
@@ -320,7 +322,7 @@ $statementgrado_academico = $dbh->query($querygrado_academico);
                                 </div>
                             </div>
                         </div><!--fin campo cod_area -->
-                        <div class="row">
+                        <div class="row" id="prueba">
                             <label class="col-sm-2 col-form-label">Cargo</label>
                             <div class="col-sm-4">
                                 <div class="form-group">
@@ -415,7 +417,7 @@ $statementgrado_academico = $dbh->query($querygrado_academico);
                             <label class="col-sm-2 col-form-label">Estado</label>
                             <div class="col-sm-4">
                             <div class="form-group">
-                            <select name="cod_estadopersonal"  class="selectpicker " data-style="btn btn-info" required>
+                                <select name="cod_estadopersonal"  class="selectpicker " data-style="btn btn-info" required>
                                             <?php while ($row = $statementestados_personal->fetch()) { ?>
                                                 <option <?php if($cod_estadopersonal == $row["codigo"]) echo "selected"; ?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
                                             <?php } ?>
@@ -489,6 +491,7 @@ $statementgrado_academico = $dbh->query($querygrado_academico);
                                 </div>
                             </div>
                         </div>
+                        </form>
                         <!--fin campo imagen-->
                     </div>
                     <div class="card-footer ml-auto mr-auto">
@@ -496,51 +499,42 @@ $statementgrado_academico = $dbh->query($querygrado_academico);
                         <a href="<?=$urlListPersonal;?>" class="<?=$buttonCancel;?>">Cancelar</a>
                     </div>
                 </div>
-            </form>
-            <!-- SOLO MUESTRO SI ES EN ESTADO EDICION... -->
-            <?php if ($codigo > 0){ ?>
+            
+                    <!-- SOLO MUESTRO SI ES EN ESTADO EDICION... -->
+                    <?php if ($codigo > 0){ ?>
 
-            <!-- tabs -->
-            <div class="card card-nav-tabs card-plain">
-                <div class="card-header <?=$colorCard;?>">
-                    <!-- colors: "header-primary", "header-info", "header-success", "header-warning", "header-danger" -->
-                    <div class="nav-tabs-navigation">
-                        <div class="nav-tabs-wrapper">
-                            <ul class="nav nav-tabs" data-tabs="tabs">
-                                <li class="nav-item">
-                                    <a class="nav-link active" href="#uno" data-toggle="tab">Distribucion Salarial</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#dos" data-toggle="tab">Historico Cargos</a>
-                                </li>
-                                <!--
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#history" data-toggle="tab">History</a>
-                                </li>
-                                -->
-                            </ul>
+                    <!-- tabs -->
+                   <!--  <div class="card card-nav-tabs card-plain">
+                        <div class="card-header <?=$colorCard;?>">                    
+                            <div class="nav-tabs-navigation">
+                                <div class="nav-tabs-wrapper">
+                                    <ul class="nav nav-tabs" data-tabs="tabs">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" href="#uno" data-toggle="tab">Distribucion Salarial</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="#dos" data-toggle="tab">Historico Cargos</a>
+                                        </li>          
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="card-body ">
-                    <div class="tab-content text-center">
-                        <div class="tab-pane active" id="uno">
-                            <p>I think that&#x2019;s a responsibility that I have, to push possibilities, to show people, this is the level that things could be at. So when you get something that has the name Kanye West on it, it&#x2019;s supposed to be pushing the furthest possibilities. I will be the leader of a company that ends up being worth billions of dollars, because I got the answers. I understand culture. I am the nucleus.</p>
-                        </div><!-- fin tab uno -->
-                        <div class="tab-pane" id="dos">
-                            <p> I will be the leader of a company that ends up being worth billions of dollars, because I got the answers. I understand culture. I am the nucleus. I think that&#x2019;s a responsibility that I have, to push possibilities, to show people, this is the level that things could be at. I think that&#x2019;s a responsibility that I have, to push possibilities, to show people, this is the level that things could be at. </p>
-                        </div><!-- fin tab dos -->
-                        <!--
-                        <div class="tab-pane" id="history">
-                            <p> I think that&#x2019;s a responsibility that I have, to push possibilities, to show people, this is the level that things could be at. I will be the leader of a company that ends up being worth billions of dollars, because I got the answers. I understand culture. I am the nucleus. I think that&#x2019;s a responsibility that I have, to push possibilities, to show people, this is the level that things could be at.</p>
+                        <div class="card-body ">
+                            <div class="tab-content text-center">
+                                <div class="tab-pane active" id="uno">
+                                    <p>I think that&#x2019;s a responsibility that I have, to push possibilities, to show people, this is the level that things could be at. So when you get something that has the name Kanye West on it, it&#x2019;s supposed to be pushing the furthest possibilities. I will be the leader of a company that ends up being worth billions of dollars, because I got the answers. I understand culture. I am the nucleus.</p>
+                                </div>
+                                <div class="tab-pane" id="dos">
+                                    <p> I will be the leader of a company that ends up being worth billions of dollars, because I got the answers. I understand culture. I am the nucleus. I think that&#x2019;s a responsibility that I have, to push possibilities, to show people, this is the level that things could be at. I think that&#x2019;s a responsibility that I have, to push possibilities, to show people, this is the level that things could be at. </p>
+                                </div>                        
+                            </div>
                         </div>
-                        -->
-                    </div>
-                </div>
+                    </div> -->
+                        <!-- fin tabs-->
+                    <?php } ?>
             </div>
-                <!-- fin tabs-->
-            <?php } ?>
         </div>
+        
     </div>
 </div>
 

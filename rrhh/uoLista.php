@@ -9,7 +9,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 
 $dbh = new Conexion();
 
-$stmt = $dbh->prepare("select * from unidades_organizacionales where cod_estado=1 order by nombre");
+$stmt = $dbh->prepare("SELECT * from unidades_organizacionales where cod_estado=1 order by nombre");
 //ejecutamos
 $stmt->execute();
 //bindColumn
@@ -38,10 +38,11 @@ $stmt->bindColumn('modified_by', $modified_by);
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
-                    <table class="table" id="tablePaginator50">
+                    <table class="table" id="tablePaginator">
 
                     <thead>
                       <tr>
+                          <th>#</th>
                           <th>Codigo</th>
                           <th>Nombre</th>
                           <th>Abreviatura</th>
@@ -82,6 +83,8 @@ $stmt->bindColumn('modified_by', $modified_by);
 
                         ?>
                         <tr>
+                            
+                            <td><?=$index;?></td>
                             <td><?=$codigo;?></td>
                             <td><?=$nombre;?></td>
                             <td><?=$abreviatura;?></td>
