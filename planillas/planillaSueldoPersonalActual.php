@@ -351,7 +351,7 @@
                 </tbody>
                 <tfoot>
                     <tr class="bg-dark text-white">                  
-                    <th colspan="7">Total</th>
+                    <th colspan="8">Total</th>
                     
                     <th><?=$sum_total_basico?></th>
                     <th>-</th>                                        

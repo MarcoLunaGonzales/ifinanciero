@@ -2850,3 +2850,9 @@ function ajaxAreaContabilizacionDetalle(combo){
   }
   ajax.send(null)  
 }
+
+var montos_personal=[]; 
+function registrarMontoPersonal(index){
+ var monto = $("#monto_detalle"+index).val();
+ montos_personal[index-1].monto=monto;
+}

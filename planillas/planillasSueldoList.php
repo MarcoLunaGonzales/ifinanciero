@@ -25,6 +25,12 @@ $stmt->bindColumn('cod_estadoplanilla', $cod_estadoplanilla);
 $stmt->bindColumn('estadoplanilla', $estadoplanilla);
 
 
+$stmtUO = $dbh->prepare("SELECT cod_uo from personal_area_distribucion
+GROUP BY cod_uo");
+//ejecutamos
+$stmtUO->execute();
+//bindColumn
+$stmtUO->bindColumn('cod_uo', $cod_uo_x);
 ?>
 
 <div class="content">
@@ -112,9 +118,25 @@ $stmt->bindColumn('estadoplanilla', $estadoplanilla);
                           <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu" role="menu" aria-labelledby="reporte_sueldos">
-                          <li><a href="#">ITEM #1</a></li>
-                          <li><a href="#">ITEM #2</a></li>
-                          <li><a href="#">ITEM #3</a></li>
+                          <?php
+                            while ($row = $stmtUO->fetch(PDO::FETCH_BOUND)) {
+                              if($cod_uo_x>0){?>
+                                <li role="presentation" class="dropdown-header"><?=$cod_uo_x;?></li>
+                              <?php
+
+                                $stmtArea = $dbh->prepare("SELECT cod_area from personal_area_distribucion
+                                                            where cod_uo=:cod_uo_x
+                                                            GROUP BY cod_area");                                
+                                $stmtArea->bindParam(':cod_uo_x', $cod_uo_x);
+                                $stmtArea->execute();                             
+                                $stmtArea->bindColumn('cod_area', $cod_area_x);
+                                while ($row = $stmtArea->fetch(PDO::FETCH_BOUND)) {?>
+                                  <li role="presentation"><a role="item" href="#"><?=$cod_area_x;?></a></li>
+                                <?php }
+
+                              }
+                            }
+                          ?>                          
                         </ul>
 
                       </div>
