@@ -266,6 +266,13 @@
             .attr('value', JSON.stringify(datos))
             .appendTo('#form_partidaspresupuestarias');     
      });
+
+     $("#form_bonosgrupos").submit(function(e) {
+          $('<input />').attr('type', 'hidden')
+            .attr('name', 'montos')
+            .attr('value', JSON.stringify(montos_personal))
+            .appendTo('#form_bonosgrupos');   
+    });
     } );
   </script>
   <script type="text/javascript">

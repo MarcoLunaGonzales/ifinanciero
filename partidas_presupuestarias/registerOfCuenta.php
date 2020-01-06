@@ -68,7 +68,9 @@ $stmt->bindColumn('bandera', $bandera);
                       	while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                           $nombreX=trim($nombre);$numeroX=trim($numero);
                           if($bandera>0){
-                          $data[$nc][0]=$index;$data[$nc][1]=$nombreX;$data[$nc][2]=$numeroX;                           
+                          $data[$nc][0]=$index;
+                          $data[$nc][1]=$nombreX;
+                          $data[$nc][2]=$numeroX;                           
                           $nc++;
                           }
                           $nombre=formateaPlanCuenta($nombre,$nivel);
