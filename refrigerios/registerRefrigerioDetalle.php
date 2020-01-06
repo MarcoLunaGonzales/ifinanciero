@@ -42,10 +42,13 @@ while ($row = $stmtb->fetch(PDO::FETCH_BOUND)) {
 					        <select class="selectpicker form-control form-control-sm" data-style="select-with-transition" data-live-search="true" title="-- Elija un personal --" name="personal" id="personal" data-style="<?=$comboColor;?>" required="true">
 							  	<option disabled selected value="">Persona</option>
 							  	<?php
-								  $stmt = $dbh->prepare("select p.codigo as codigo,
+								  /*$stmt = $dbh->prepare("select p.codigo as codigo,
 								  concat(p.paterno,' ', p.materno, ' ', p.primer_nombre) as nombrepersona
 								  from personal p  where p.codigo  not in 
-								  (select rd.cod_personal from refrigerios_detalle rd, refrigerios r where rd.cod_refrigerio=r.codigo and rd.cod_refrigerio=$codRefrigerio)");
+								  (select rd.cod_personal from refrigerios_detalle rd, refrigerios r where rd.cod_refrigerio=r.codigo and rd.cod_refrigerio=$codRefrigerio)");*/
+								$stmt = $dbh->prepare("select p.codigo as codigo,
+								  concat(p.paterno,' ', p.materno, ' ', p.primer_nombre) as nombrepersona
+								  from personal p order by p.paterno");
 								$stmt->execute();
 								while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 									$codigoX=$row['codigo'];

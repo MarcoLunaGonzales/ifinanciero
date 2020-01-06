@@ -273,6 +273,12 @@
             .attr('value', JSON.stringify(montos_personal))
             .appendTo('#form_bonosgrupos');   
     });
+     $("#form_anticipospersonal").submit(function(e) {
+         if($("#monto").val()>$("#haber_basico").val()){
+          $("#mensaje").html("<p class='text-danger'>El monto no puede ser mayor al 50% del haber b&aacute;sico</p>");
+          return false;
+         }
+    });
     } );
   </script>
   <script type="text/javascript">

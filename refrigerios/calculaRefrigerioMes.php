@@ -39,7 +39,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
     $codPersonaX=$codPersona;
     $dias_asistidosX=$dias_asistidos;
 
-
+  if($dias_asistidosX!=0){
     if($codigoX==null){
       if($dias_asistidosX!=null){
     $sql = $dbh->prepare("INSERT INTO refrigerios_detalle (cod_refrigerio,cod_personal,dias_asistidos,monto,cod_estadoreferencial)
@@ -70,9 +70,9 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
       }
     }
 
-
+    }//DIAS ASISTIDOS IF
   }
-
+  $flagSuccess=true;
   showAlertSuccessError($flagSuccess,$urlDetalle."&cod_ref=".$codRefrigerio."&cod_mes=".$codMes);
 
 ?>

@@ -2199,7 +2199,20 @@ from planillas_personal_mes where cod_personalcargo=$codigoPersona");
   return ($montoRetraso);
 }
 
+function calcularHaberBasicoPorPersona($codigo){
+  $haberX=null;
+  $dbh = new Conexion();
+  $stmt = $dbh->prepare("SELECT haber_basico from personal
+where cod_estadoreferencial=1 and codigo='$codigo'");
+  $stmt->execute();
+  $stmt->bindColumn('haber_basico', $haber);
 
+  while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+    $haberX = $haber;
+  }
+
+  return $haberX;
+}
 ?>
 
 

@@ -871,8 +871,13 @@
 			require_once('anticipos_personal/register.php');
 		}
 		
-
-		
+        if ($_GET['opcion']=='subirAnticipoExcel') {
+			$codigo_mes=$_GET['cod_mes'];
+			require_once('anticipos_personal/subirExcel.php');
+		}
+		if ($_GET['opcion']=='subirAnticipoExcel2') {
+			require_once('anticipos_personal/subirDatosExcel.php');
+		}
 
 
 		//Escalas Antiguedad

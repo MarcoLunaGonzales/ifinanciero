@@ -8,7 +8,7 @@ require_once 'configModule.php';
 $dbh = new Conexion();
 
 $mes=$_POST["mes"];
-$estadoPlanilla=$_POST["estado"];
+$estadoPlanilla=1;
 $codGestion=$_POST["codGestion"];
 
 $stmt = $dbh->prepare("INSERT INTO $table_refrigerios (cod_gestion, cod_mes,cod_estadoplanilla) VALUES (:cod_gestion,:cod_mes,:cod_estadoplanilla)");

@@ -13,7 +13,7 @@ $stmt = $dbh->prepare("SELECT r.codigo as cod_refrigerio,
 (SELECT m.nombre FROM meses m WHERE r.cod_mes=m.codigo) as mes,
 (SELECT m.codigo FROM meses m WHERE r.cod_mes=m.codigo) as codigo_mes,
 (SELECT ep.nombre FROM estados_planilla ep WHERE r.cod_estadoplanilla=ep.codigo) as estado_planilla
-FROM  $table_refrigerios r");
+FROM  $table_refrigerios r order by codigo_mes");
 
 $stmt->execute();
 

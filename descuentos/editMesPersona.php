@@ -58,7 +58,7 @@ while ($row = $stmtc->fetch(PDO::FETCH_BOUND)) {
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-12">
-      <form id="form1" class="form-horizontal" action="<?=$urlSaveEditGrupo;?>" method="POST">
+      <form id="form_bonosgrupos" class="form-horizontal" action="<?=$urlSaveEditGrupo;?>" method="POST">
 
       <input type="hidden" name="cod_mes"  value="<?=$codMes;?>"/>
                       <input type="hidden" name="cod_descuento"  value="<?=$codDescuento;?>"/>
@@ -82,7 +82,7 @@ while ($row = $stmtc->fetch(PDO::FETCH_BOUND)) {
                     <th>Unidad</th>
                     <th>Cargo</th>
                     <th>Personal</th>
-                    <th>Detalle</th>
+                    <th>Monto</th>
                     <th class="text-left">Acciones</th>
                   </tr>
                 </thead>
@@ -90,7 +90,10 @@ while ($row = $stmtc->fetch(PDO::FETCH_BOUND)) {
                   <?php
                   $index = 1;
                   while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
-
+                    $data[$index-1][0]=$index;
+                    $data[$index-1][1]=$cod_persona;
+                    $data[$index-1][2]=$codigo;
+                    $data[$index-1][3]=$detalle;
                     ?>
                     <tr>
                       <td align="center"><?= $index; ?></td>
@@ -100,7 +103,7 @@ while ($row = $stmtc->fetch(PDO::FETCH_BOUND)) {
                       <td class="text-right">
                       <input type="hidden" name="codigo_persona[]"  value="<?=$cod_persona;?>"/>
                       <input type="hidden" name="codDescPerMes[]"  value="<?=$codigo;?>"/>
-                      <input class="form-control" type="text" name="detalle[]"  required="true" value="<?= $detalle; ?>" />
+                      <input class="form-control text-right" type="text" name="detalle[]" id="monto_detalle<?=$index?>" autocomplete="off" value="<?= $detalle; ?>" onchange="registrarMontoPersonal(<?=$index?>)"/>
                       </td>
                       
 
@@ -160,3 +163,8 @@ while ($row = $stmtc->fetch(PDO::FETCH_BOUND)) {
 
   </div>
 </div>
+<?php 
+for ($i=0; $i < $index; $i++) { 
+  ?><script>montos_personal.push({codigo:<?=$data[$i][0]?>,cod_persona:'<?=$data[$i][1]?>',desc_mes:'<?=$data[$i][2]?>',monto:'<?=$data[$i][3]?>'});</script><?php
+}
+?>

@@ -14,7 +14,7 @@ $codPersona=$_POST['codigo_persona'];
 $detalle=$_POST['detalle'];
 $codBonPerMes=$_POST['codBonPerMes'];
 $codEstado="1";
-$montos=json_decode($_POST["montos"]);;
+$montos=json_decode($_POST["montos"]);
 
 /*foreach( $codPersona as $key => $n ) {
  //echo "El Id es ".$n.", detalle es ".$detalle[$key].", cod_descuento es ".$codDescPerMes[$key];
