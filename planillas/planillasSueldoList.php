@@ -25,11 +25,9 @@ $stmt->bindColumn('cod_estadoplanilla', $cod_estadoplanilla);
 $stmt->bindColumn('estadoplanilla', $estadoplanilla);
 
 
-$stmtUO = $dbh->prepare("SELECT cod_uo from personal_area_distribucion
+$stmtUO = $dbh->prepare("SELECT cod_uo from personal_area_distribucion where cod_estadoreferencial=1
 GROUP BY cod_uo");
-//ejecutamos
 $stmtUO->execute();
-//bindColumn
 $stmtUO->bindColumn('cod_uo', $cod_uo_x);
 ?>
 
@@ -138,27 +136,17 @@ $stmtUO->bindColumn('cod_uo', $cod_uo_x);
                           <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu" role="menu" aria-labelledby="reporte_sueldos">
+                          <li role="presentation" class="dropdown-header"><small>U.O.</small></li>
                           <?php
                             while ($row = $stmtUO->fetch(PDO::FETCH_BOUND)) {
-                              if($cod_uo_x>0){?>
-                                <li role="presentation" class="dropdown-header"><?=$cod_uo_x;?></li>
-                              <?php
-                                $stmtArea = $dbh->prepare("SELECT cod_area from personal_area_distribucion
-                                                            where cod_uo=:cod_uo_x
-                                                            GROUP BY cod_area");                                
-                                $stmtArea->bindParam(':cod_uo_x', $cod_uo_x);
-                                $stmtArea->execute();                             
-                                $stmtArea->bindColumn('cod_area', $cod_area_x);
-                                while ($row = $stmtArea->fetch(PDO::FETCH_BOUND)){?>
-
-                                  <li role="presentation"><a role="item" href="#"><?=$cod_area_x;?></a></li>
-                                <?php }
-
+                              if($cod_uo_x>0){?>                                                                
+                                  <li role="presentation"><a role="item" href="<?=$urlPlanillaSueldoPersonalReporte;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>&codigo_uo=<?=$cod_uo_x;?>" target="_blank"><small><?=$cod_uo_x;?></small></a></li>
+                                <?php 
                               }
                             }
                           ?>                          
                         </ul>
-                      </div>                                                                  
+                      </div>                                                                 
                       <?php }?>                          
 
                     </td>

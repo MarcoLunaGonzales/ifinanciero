@@ -136,9 +136,12 @@ $statementAREASE = $dbh->query($query_areas);
               if($globalAdmin==1){
               ?>
       			   <div class="card-footer fixed-bottom">
-                    <button type="button" class="btn btn-warning btn-round btn-fab" data-toggle="modal" data-target="#modalAgregarD" onclick="agregaformPAD('<?=$datos;?>')">
+                  <button type="button" class="btn btn-warning btn-round btn-fab" data-toggle="modal" data-target="#modalAgregarD" onclick="agregaformPAD('<?=$datos;?>')">
                       		  <i class="material-icons" title="Agregar">add</i>
-		             </button>		             
+		             </button>
+                <a href="<?=$urlListPersonal;?>" class="btn btn-danger btn-round btn-fab">
+                  <i class="material-icons" title="Retornar">keyboard_return</i>
+                </a>                 
               </div>
               <?php
               }
