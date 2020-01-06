@@ -66,7 +66,7 @@ if ($codigo>0) {
 					<div class="form-group">
 					  <!-- <input class="form-control" type="number" name="contabilizacion_vista" id="contabilizacion_vista" required="true" value="<?=$contabilizacion_vistaX;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/> -->
 					  <select name="contabilizacion_vista" id="contabilizacion_vista" class="selectpicker" data-style="btn btn-primary">
-					  	<option value="0">RESUMDIDA</option>
+					  	<option value="0">RESUMIDA</option>
 					  	<option value="1">DETALLADA</option>
 					  </select>	
 					</div>

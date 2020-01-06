@@ -1370,6 +1370,7 @@ function calcularDatosPlantilla(){
         }
     });
 }
+
 var data_cuentas=null;
 function alertDatosTabla(){
   var data = data_cuentas.$('input:checked');
@@ -2854,4 +2855,30 @@ var montos_personal=[];
 function registrarMontoPersonal(index){
  var monto = $("#monto_detalle"+index).val();
  montos_personal[index-1].monto=monto;
+}
+
+function calcularHaberBasico(){
+  var id = $("#personal").val();
+  var contenedor;
+  contenedor = document.getElementById('monto_max');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'anticipos_personal/ajaxCalcularHaberBasico.php?codigo='+id,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      if(ajax.responseText!="NN"){
+       $("#monto").val(ajax.responseText/2);
+       $("#haber_basico").val(ajax.responseText/2); 
+      }  
+      $('.selectpicker').selectpicker(["refresh"]);          
+    }
+  }
+  ajax.send(null) 
+}
+function montoNoMayor(){
+  if($("#monto").val()>$("#haber_basico").val()){
+    $("#mensaje").html("<p class='text-danger'>El monto no puede ser mayor al 50% del haber b&aacute;sico</p>");
+  }else{
+    $("#mensaje").html("");
+  }
 }

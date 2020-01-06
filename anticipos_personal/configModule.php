@@ -14,6 +14,9 @@ $urlSave="anticipos_personal/save.php";
 $urlSaveEdit="anticipos_personal/saveEdit.php";
 $urlSaveDelete="";
 
+$urlSubirExcel="index.php?opcion=subirAnticipoExcel";
+$urlSubirExcel2="index.php?opcion=subirAnticipoExcel2";
+
 $urlList2="../index.php?opcion=listAnticipoPersonal";
 
 ?>

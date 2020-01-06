@@ -44,27 +44,6 @@ $codGestion=$_SESSION['globalGestion'];
 				      	</div>
 				</div>
 				
-				<div class="row">
-				  <label class="col-sm-2 col-form-label">Estado Planilla</label>
-				  <div class="col-sm-4">
-				        	<div class="form-group">
-					        <select class="selectpicker form-control form-control-sm" data-style="select-with-transition" data-live-search="true" title="-- Elija estado de planilla --" name="estado" id="estado" data-style="<?=$comboColor;?>" required="true">
-							  	<option disabled selected value="">Estado</option>
-							  	<?php
-								  $stmt = $dbh->prepare("select codigo,nombre from estados_planilla where cod_estadoreferencial=1");
-								  $stmt->execute();
-								while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-									$codigoX=$row['codigo'];
-									$nombreEstadoX=$row['nombre'];							
-								?>
-								<option value="<?=$codigoX;?>"><?=$nombreEstadoX;?></option>	
-								<?php
-							  	}
-							  	?>
-							</select>
-							</div>
-				      	</div>
-				</div>
 				<input class="form-control" type="text" hidden="true" name="codGestion" id="codGestion"  value="<?=$codGestion;?>"/>
 
 			  </div>
