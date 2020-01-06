@@ -8,7 +8,10 @@ $globalAdmin=$_SESSION["globalAdmin"];
 
 $dbh = new Conexion();
 
-$stmt = $dbh->prepare("SELECT * from areas where cod_estado=1");
+$sql="SELECT * from areas where cod_estado=1 order by nombre";
+$stmt = $dbh->prepare($sql);
+
+//echo $sql;
 //ejecutamos
 $stmt->execute();
 //bindColumn
@@ -82,9 +85,6 @@ $stmt->bindColumn('modified_by', $modified_by);
                 </div>
               </div>
               <?php
-
-
-
 
 
               if($globalAdmin==1){

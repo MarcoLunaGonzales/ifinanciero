@@ -9,7 +9,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 
 $dbh = new Conexion();
 
-$stmt = $dbh->prepare("select * from unidades_organizacionales where cod_estado=1");
+$stmt = $dbh->prepare("select * from unidades_organizacionales where cod_estado=1 order by nombre");
 //ejecutamos
 $stmt->execute();
 //bindColumn
@@ -38,7 +38,7 @@ $stmt->bindColumn('modified_by', $modified_by);
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
-                    <table class="table" id="tablePaginator">
+                    <table class="table" id="tablePaginator50">
 
                     <thead>
                       <tr>
@@ -104,7 +104,7 @@ $stmt->bindColumn('modified_by', $modified_by);
                                   <i class="material-icons" title="Registrar Areas">playlist_add</i>
                               </a> -->
 
-                              <a href='<?=$urlRegisterAreasU;?>&codigo=<?=$codigo;?>' rel="tooltip" class="btn btn-success">
+                              <a href='<?=$urlRegisterAreasU;?>&codigo=<?=$codigo;?>' rel="tooltip" class="btn btn-primary">
                                   <i class="material-icons" title="Registrar Areas">playlist_add</i>
                               </a>
 

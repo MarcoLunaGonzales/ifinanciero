@@ -18,8 +18,8 @@ $stmt = $dbh->prepare(" SELECT *, (select c.nombre from cargos c where c.codigo=
  (select taafp.nombre from tipos_aporteafp taafp where taafp.codigo=cod_tipoaporteafp) as xtipos_aporteafp,
  (select tp.nombre from tipos_personal tp where tp.codigo=cod_tipopersonal)as xcod_tipopersonal
  
- from personal
- where cod_estadoreferencial=1
+ from personal p
+ where p.cod_estadoreferencial=1 order by p.paterno, p.materno, p.primer_nombre
  ");
 //ejecutamos
 $stmt->execute();
@@ -105,7 +105,7 @@ $stmt->bindColumn('xtipos_aporteafp', $xtipos_aporteafp);
                           </a>
                         </td>
                         <td><?=$codigo?></td>
-                        <td><?=$primer_nombre;?> <?=$paterno;?> <?=$materno;?></td>      
+                        <td><?=$paterno;?> <?=$materno;?> <?=$primer_nombre;?></td>      
                         <td><?=$ci;?> <?=$ci_lugar_emision;?></td>
                         <td><?=$xcargo;?></td>
                         <td><?=$xuonombre;?></td>
@@ -125,7 +125,7 @@ $stmt->bindColumn('xtipos_aporteafp', $xtipos_aporteafp);
                             <i class="material-icons" title="Contratos">assignment</i>
                           </a>
                           <a href='<?=$urlFormPersonalAreaDistribucion;?>&codigo=<?=$codigo;?>' rel="tooltip" class="btn btn-warning">            
-                            <i class="material-icons" title="Area-Distribución">flare</i>
+                            <i class="material-icons" title="Area-Distribución" style="color:black;">call_split</i>
                           </a>
                           <?php
                             }
