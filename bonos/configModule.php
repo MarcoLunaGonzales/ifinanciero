@@ -13,7 +13,7 @@ $urlSaveEdit="bonos/saveEdit.php";
 $urlSaveDelete="";
 
 $urlList2="../index.php?opcion=listBonos";
-
+$urlAyudaCSV="index.php?opcion=ayudaArchivoCsv";
 
 $moduleNameSingularDetalle="Bono Detalle por Mes";
 $moduleNamePluralDetalle="Bonos Detalle por Mes";

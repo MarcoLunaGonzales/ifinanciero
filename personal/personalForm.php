@@ -1,5 +1,4 @@
 <?php
-
 require_once 'conexion.php';
 require_once 'styles.php';
 require_once 'rrhh/configModule.php';

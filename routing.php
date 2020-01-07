@@ -882,7 +882,10 @@
 		if ($_GET['opcion']=='subirAnticipoExcel2') {
 			require_once('anticipos_personal/subirDatosExcel.php');
 		}
-
+		       //ayuda documento csv
+            if ($_GET['opcion']=='ayudaArchivoCsv') {
+			   require_once('anticipos_personal/helpCsv.php');
+		    }
 
 		//Escalas Antiguedad
 		if ($_GET['opcion']=='listEscalaAntiguedad') {
