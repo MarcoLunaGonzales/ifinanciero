@@ -43,7 +43,6 @@ $stmtUO->bindColumn('nombre_uo', $nombre_uo_x);
 				  <h4 class="card-title">Planilla De Sueldos</h4>				
 			  </div>
 			  <div class="card-body ">
-          <div class="table-responsive">
             <table class="table" id="tablePaginator">
               <thead>
                   <tr>                    
@@ -96,9 +95,46 @@ $stmtUO->bindColumn('nombre_uo', $nombre_uo_x);
                       <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalCerrar" onclick="agregaformCP('<?=$datosX;?>')">
                         <i class="material-icons" title="Cerrar Planilla">assignment_returned</i>
                       </button>
-                      <a href='<?=$urlPlanillaSueldoPersonalActual;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>' target="_blank" rel="tooltip" class="btn btn-success">            
+                      <!--<a href='<?=$urlPlanillaSueldoPersonalActual;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>' target="_blank" rel="tooltip" class="btn btn-success">            
                         <i class="material-icons" title="Ver Planilla">remove_red_eye</i>                        
-                      </a>
+                      </a>-->
+                      <a href='<?=$urlPlanillaSueldoPersonalActualPDF;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>' target="_blank" rel="tooltip" class="btn btn-success">            
+                        <i class="material-icons" title="Ver Planilla">remove_red_eye</i>                        
+                      </a>                      
+                      <label class="text-danger">|</label>
+                      <?php 
+                      $stmtTrib=$dbh->prepare("SELECT codigo,modified_at,modified_by from planillas_tributarias where cod_mes=$cod_mes and cod_gestion=$cod_gestion");
+                         //ejecutamos
+                      $stmtTrib->execute();
+                      $sinTrib=0;$codigoTrib=0;
+                      setlocale(LC_TIME, "Spanish");
+                      while ($rowTrib = $stmtTrib->fetch(PDO::FETCH_ASSOC)) {
+                        $sinTrib++;
+                        $codigoTrib=$rowTrib['codigo'];
+                        $modified_at=strftime('%d de %B de %Y %H:%M:%S',strtotime($rowTrib['modified_at']));
+                        $modified_by=nombrePersona($rowTrib['modified_by']);
+                        if($modified_by==null){
+                          $modified_by="No se encontró";
+                        }
+
+                      }
+                      if($sinTrib==0){
+                         ?>
+                        <button type="button" class="btn btn-info"  data-toggle="modal" data-target="#modalreProcesarPlanillaTributaria" onclick="agregaformPreTrib('<?=$codigoTrib;?>','<?=$datosX;?>','<?=$mes?>','<?=$modified_at?>','<?=$modified_by?>')">
+                          <i class="material-icons" title="Procesar Planilla Tributaria">perm_data_setting</i>  PT                      
+                        </button> 
+                         <?php
+                      }else{
+                         ?>
+                        <button type="button" class="btn"  style="background-color:#3b83bd;color:#ffffff;" data-toggle="modal" data-target="#modalreProcesarPlanillaTributaria" onclick="agregaformPreTrib('<?=$codigoTrib;?>','<?=$datosX;?>','<?=$mes?>','<?=$modified_at?>','<?=$modified_by?>')">
+                          <i class="material-icons" title="ReProcesar Planilla Tributaria">autorenew</i> PT                       
+                        </button> 
+                        <a href='<?=$urlPlanillaTribPersonalPDF;?>?codigo_trib=<?=$codigoTrib;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>' target="_blank" rel="tooltip" class="btn btn-success">            
+                          <i class="material-icons" title="Ver Planilla Triburaria">remove_red_eye</i> PT                       
+                        </a>
+                         <?php
+                      }
+                      ?>
                       <?php }?>
                       <?php if($cod_estadoplanilla==3){    ?>
                       <a href='<?=$urlPlanillaSueldoPersonalActual;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>' target="_blank" rel="tooltip" class="btn btn-success">            
@@ -156,7 +192,6 @@ $stmtUO->bindColumn('nombre_uo', $nombre_uo_x);
                 <?php $index++; } ?>
               </tbody>                                      
             </table>
-          </div>
 			  </div>
         <div class="card-footer fixed-bottom">
           <a href='<?=$urlGenerarPlanillaSueldoPrevia;?>' rel="tooltip" class="btn btn-success">
@@ -249,6 +284,45 @@ $stmtUO->bindColumn('nombre_uo', $nombre_uo_x);
     </div>
   </div>
 </div>
+<!--Modal planilla tributarua-->
+<div class="modal fade" id="modalreProcesarPlanillaTributaria" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title text-danger font-weight-bold" id="myModalLabel">PLANILLA TRIBUTARIA</h4>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" name="codigo_planilla2" id="codigo_planilla2" value="0">
+        <input type="hidden" name="codigo_planilla_trib" id="codigo_planilla_trib" value="0">        
+        
+        <table class="table table-condensed">
+          <thead>
+            <tr class="text-danger">
+              <th>Ultimo Proceso Realizado</th>
+              <th>Usuario</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td id="modified_at">No hay datos</td>
+              <td id="modified_by">No hay datos</td>
+            </tr>
+          </tbody>
+        </table>
+        <hr>
+        Esta acción Procesará La planilla TRIBUTARIA Del Mes <b class="font-weight-bold" id="mes_cursotitulo">En Curso</b>. ¿Deseas Continuar?
+        <div id="cargaR2" style="display:none">
+          <h3><b>Por favor espere...</b></h3>
+        </div>
+      </div>   
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" id="AceptarReProcesoTrib" >Aceptar</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal" id="CancelarReProcesoTrib">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>
 <script type="text/javascript">
   $(document).ready(function(){
     $('#AceptarProceso').click(function(){      
@@ -266,6 +340,10 @@ $stmtUO->bindColumn('nombre_uo', $nombre_uo_x);
 
       CerrarPlanilla(cod_planilla);
     });
-
+    $('#AceptarReProcesoTrib').click(function(){   
+     var cod_planilla=document.getElementById("codigo_planilla2").value;    
+      var cod_planillaTrib=document.getElementById("codigo_planilla_trib").value;      
+      ReprocesarPlanillaTrib(cod_planillaTrib,cod_planilla);
+    });
   });
 </script>

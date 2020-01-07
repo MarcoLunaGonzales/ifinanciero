@@ -2386,6 +2386,7 @@ function agregaformPre(datos){
   var d=datos.split('-');
   document.getElementById("codigo_planilla").value=d[0];
 }
+<<<<<<< HEAD
 function agregaformRP(datos){
   //console.log("datos: "+datos);
   var d=datos.split('-');
@@ -2395,6 +2396,16 @@ function agregaformCP(datos){
   //console.log("datos: "+datos);
   var d=datos.split('-');
   document.getElementById("codigo_planillaCP").value=d[0];
+=======
+function agregaformPreTrib(datos,plan,mes,tiempo,user){
+  var d=plan.split('-');
+  document.getElementById("codigo_planilla2").value=d[0];
+
+  $("#mes_cursotitulo").html(mes);
+  $("#modified_at").text(tiempo);
+  $("#modified_by").text(user);
+  document.getElementById("codigo_planilla_trib").value=datos;
+>>>>>>> f2b39307f5e931340362944736af075974562096
 }
 function ProcesarPlanilla(cod_planilla){
   $.ajax({
@@ -2440,7 +2451,27 @@ function ReprocesarPlanilla(cod_planilla){
   });
 }
 
-
+function ReprocesarPlanillaTrib(cod_planillaTrib,cod_planilla){
+  $.ajax({
+    type:"POST",
+    data:"cod_planillatrib="+cod_planillaTrib+"&sw=1&cod_planilla="+cod_planilla,
+    url:"planillas/savePlanillaTribMes.php",
+    beforeSend:function(objeto){ 
+      $('#cargaR2').css({display:'block'});
+      $('#AceptarReProcesoTrib').css({display:'none'});
+      $('#CancelarReProcesoTrib').css({display:'none'});  
+    },
+    success:function(r){
+      if(r==1){
+        $('#cargaR2').css('display','none');
+        alerts.showSwal('success-message','index.php?opcion=planillasSueldoPersonal');
+      }else{
+        $('#cargaR2').css('display','none');
+        alerts.showSwal('error-message','index.php?opcion=planillasSueldoPersonal');
+      }
+    }
+  });
+}
 
 //<<<<<<< HEAD
 function CerrarPlanilla(cod_planilla){
