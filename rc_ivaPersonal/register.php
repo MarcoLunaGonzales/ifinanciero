@@ -75,14 +75,14 @@ while ($row = $stmtc->fetch(PDO::FETCH_BOUND)) {
 				  </div>
 				</div>
 
-                <div class="row">
+                <!--<div class="row">
 				  <label class="col-sm-2 col-form-label">Monto Iva</label>
 				  <div class="col-sm-7">
 					<div class="form-group">
 					  <input class="form-control" type="number" autocomplete="off" required="true" name="monto_iva" value="" id="monto_iva" step="0.01" min="0"/>
 					</div>
 				  </div>
-				</div>
+				</div>-->
 
 				
 				<input class="form-control" type="text" hidden="true" name="codMes" id="codMes"  value="<?=$codMes;?>"/>

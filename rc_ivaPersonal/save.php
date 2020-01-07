@@ -3,12 +3,13 @@
 require_once '../layouts/bodylogin.php';
 require_once '../conexion.php';
 require_once '../functionsGeneral.php';
+require_once '../functions.php';
 require_once 'configModule.php';
 
 $dbh = new Conexion();
 
 $monto=$_POST["monto"];
-$monto_iva=$_POST["monto_iva"];
+$monto_iva=calculaIva($_POST["monto"]);
 $codPersona=$_POST["personal"];
 $codMes=$_POST["codMes"];
 $codGestion=$_POST["codGestion"];
