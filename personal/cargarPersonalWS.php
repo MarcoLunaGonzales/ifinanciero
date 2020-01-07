@@ -70,8 +70,8 @@ foreach ($detalle as $objDet){
 
     $haber_basico = '';	    
     $cod_cargo = '';
-    $cod_unidadorganizacional = '';
-    $cod_area = '';
+    $cod_unidadorganizacional = 0;
+    $cod_area = 0;
     $jubilado = '0';    
     $cod_tipopersonal = '';	    
     $apellido_casada = '';	    
@@ -92,20 +92,21 @@ foreach ($detalle as $objDet){
     $porcentaje=100;
     $cod_grado_academico=0;
     $ing_contr='0000-00-00';
-    $ing_planilla = '0000-00-00';
+    $ing_planilla ='0000-00-00';
     //consulta para verificar si personal esta en la bd
     $stmtBusquedaPersonal = $dbh->prepare("SELECT codigo from personal where codigo=:codigo");
     $stmtBusquedaPersonal->bindParam(':codigo',$codigo);
     $stmtBusquedaPersonal->execute();	    
     $resultP=$stmtBusquedaPersonal->fetch();
     $codigoPersonal2=$resultP['codigo'];
+    
     if($codigo==$codigoPersonal2){//UPDATE
-		$stmtPersonalU = $dbh->prepare("UPDATE personal set cod_tipoIdentificacion=:cod_tipoIdentificacion,tipo_identificacionOtro=:tipo_identificacionOtro,
-			identificacion=:identificacion,cod_lugar_emision=:cod_lugar_emision,lugar_emisionOtro=:lugar_emisionOtro,fecha_nacimiento=:fecha_nacimiento,
+		$stmtPersonalU = $dbh->prepare("UPDATE personal set cod_tipo_identificacion=:cod_tipoIdentificacion,tipo_identificacion_otro=:tipo_identificacionOtro,
+			identificacion=:identificacion,cod_lugar_emision=:cod_lugar_emision,lugar_emision_otro=:lugar_emisionOtro,fecha_nacimiento=:fecha_nacimiento,
 			cod_genero=:cod_genero,paterno=:paterno,materno=:materno,primer_nombre=:primer_nombre,
-        direccion=:direccion,telefono=:telefono,celular=:celular,email=:email,cod_nacionalidad=:cod_nacionalidad,cod_estadoCivil=:cod_estadoCivil,
-        cod_pais=:cod_pais,cod_departamento=:cod_departamento,cod_ciudad=:cod_ciudad,ciudadOtro=:ciudadOtro
-        where codigo = :codigo");
+        direccion=:direccion,telefono=:telefono,celular=:celular,email=:email,cod_nacionalidad=:cod_nacionalidad,cod_estadocivil=:cod_estadoCivil,
+        cod_pais=:cod_pais,cod_departamento=:cod_departamento,cod_ciudad=:cod_ciudad,ciudad_otro=:ciudadOtro
+        where codigo=:codigo");
         //bind
         $stmtPersonalU->bindParam(':codigo', $codigo);
         $stmtPersonalU->bindParam(':cod_tipoIdentificacion', $cod_tipoIdentificacion);
@@ -128,26 +129,10 @@ foreach ($detalle as $objDet){
         $stmtPersonalU->bindParam(':cod_departamento', $cod_departamento);
         $stmtPersonalU->bindParam(':cod_ciudad', $cod_ciudad);
         $stmtPersonalU->bindParam(':ciudadOtro', $CiudadOtro);        
-        
         $flagSuccess=$stmtPersonalU->execute();
-
-        // $stmtDiscapacitado = $dbh->prepare("UPDATE personal_discapacitado set discapacitado = :discapacitado,
-        //     tutor_discapacitado=:tutordiscapacidad,parentesco=:parentescotutor,celular_tutor=:celularTutor
-        // where codigo = :codigo");
-        // //bind
-        // $stmtDiscapacitado->bindParam(':codigo', $codigoPersonalD);
-        // $stmtDiscapacitado->bindParam(':discapacitado', $discapacitado);
-        // $stmtDiscapacitado->bindParam(':tutordiscapacidad', $tutordiscapacidad);
-        // $stmtDiscapacitado->bindParam(':parentescotutor', $parentescotutor);
-        // $stmtDiscapacitado->bindParam(':celularTutor', $celularTutor);
-
-        // $flagSuccess=$stmtDiscapacitado->execute();
-
-
-        if($flagSuccess==false){
+        if($flagSuccess){
             $i++;            
-        }
-    	
+        }    	
     }else{//INSERT
     	$stmtI = $dbh->prepare("INSERT INTO personal(codigo,cod_tipo_identificacion,tipo_identificacion_otro,identificacion,cod_lugar_emision,lugar_emision_otro,fecha_nacimiento,cod_cargo,cod_unidadorganizacional,cod_area,
         jubilado,cod_genero,cod_tipopersonal,haber_basico,paterno,materno,apellido_casada,primer_nombre,otros_nombres,nua_cua_asignado,
@@ -205,15 +190,15 @@ foreach ($detalle as $objDet){
         $stmtI->bindParam(':ing_planilla', $ing_planilla); 
 
         $flagSuccess=$stmtI->execute();
-        if($flagSuccess==false){
-            $j++;            
+        if($flagSuccess){
+            $j++;
         }
 		//======insertamos area distribucion
         $stmtDistribucion = $dbh->prepare("INSERT INTO personal_area_distribucion(cod_personal,cod_uo,cod_area,porcentaje,cod_estadoreferencial,created_by,modified_by) 
         values (:cod_personal,:cod_uo,:cod_area,:porcentaje,:cod_estadoreferencial,:created_by,:modified_by)");
         //Bind
         $stmtDistribucion->bindParam(':cod_personal', $codigoPersonalAD);
-        $stmtDistribucion->bindParam(':cod_uo', $cod_uo);    
+        $stmtDistribucion->bindParam(':cod_uo', $cod_unidadorganizacional);    
         $stmtDistribucion->bindParam(':cod_area', $cod_area);
         $stmtDistribucion->bindParam(':porcentaje', $porcentaje);
         $stmtDistribucion->bindParam(':created_by', $created_by);
@@ -221,7 +206,7 @@ foreach ($detalle as $objDet){
         $stmtDistribucion->bindParam(':cod_estadoreferencial', $cod_estadoreferencial);
         $stmtDistribucion->execute(); 
         //insertamos personal discapacitado
-        $stmtDiscapacitado = $dbh->prepare("INSERT INTO personal_discapacitado (codigo,discapacitado,tutor_discapacitado,celular_tutor,parentesco)
+        $stmtDiscapacitado = $dbh->prepare("INSERT INTO personal_discapacitado(codigo,discapacitado,tutor_discapacitado,celular_tutor,parentesco)
                                             values(:codigo,:discapacitado,:tutordiscapacidad,:celularTutor,:parentescotutor)");       
         $stmtDiscapacitado->bindParam(':codigo', $codigoPersonalD);
         $stmtDiscapacitado->bindParam(':discapacitado', $discapacitado);
@@ -230,11 +215,10 @@ foreach ($detalle as $objDet){
         $stmtDiscapacitado->bindParam(':celularTutor', $celularTutor);        
         $flagSuccess=$stmtDiscapacitado->execute();
     }
-
 }
 echo "<br>";
-echo  $j." ERROR AL REGISTRAR PERSONAL <br>";
-echo  $i." ERROR AL ACTUALIZAR PERSONAL <br>";
+echo  $j." REGISTROS INSERTADOS <br>";
+echo  $i." REGISTROS ACTUALIZADOS <br>";
 
 //volvemos al listado de personal
 showAlertSuccessError($flagSuccess,$urlListPersonal);

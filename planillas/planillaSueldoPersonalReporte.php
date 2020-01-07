@@ -381,10 +381,10 @@
 	                    <tr class="bg-dark text-white">                  
 	                    <th colspan="7" class="text-center small">Total</th>
 	                    
-	                    <th class="text-center small"><?=$sum_total_basico;?></th>
+	                    <th class="text-center small"><?=formatNumberDec($sum_total_basico);?></th>
 	                    <th class="text-center small">-</th>                                        
-	                    <th class="text-center small"><?=$sum_total_b_antiguedad;?></th>
-	                    <th class="bg-success text-white small"><?=$sum_total_o_bonos;?> </th>
+	                    <th class="text-center small"><?=formatNumberDec($sum_total_b_antiguedad);?></th>
+	                    <th class="bg-success text-white small"><?=formatNumberDec($sum_total_o_bonos);?> </th>
 	                    <?php
 	                      $sqlBonos = "SELECT cod_bono
 	                              from bonos_personal_mes 
@@ -398,10 +398,10 @@
 	                        <?php                        
 	                      }
 	                    ?>
-	                    <th class="text-center small"><?=$sum_total_m_bonos;?></th>                            
-	                    <th class="text-center small"><?=$sum_total_t_ganado;?></th>
+	                    <th class="text-center small"><?=formatNumberDec($sum_total_m_bonos);?></th>                            
+	                    <th class="text-center small"><?=formatNumberDec($sum_total_t_ganado);?></th>
 
-	                    <th class="bg-success text-white small"><?=$sum_total_m_aportes;?></th>
+	                    <th class="bg-success text-white small"><?=formatNumberDec($sum_total_m_aportes);?></th>
 	                    <th class="aportesDet bg-success text-white small" style="display:none">AFP.Fut</th>
 	                    <th class="aportesDet bg-success text-white small" style="display:none">AFP.Prev</th>
 	                    <th class="aportesDet bg-success text-white small" style="display:none">A.Solidario(13)</th>
@@ -410,10 +410,10 @@
 	                    <th class="aportesDet bg-success text-white small" style="display:none">RC-IVA</th>
 
 	                    
-	                    <th class="text-center small"><?=$sum_total_atrasos;?></th>
-	                    <th class="text-center small"><?=$sum_total_anticipos;?></th>
-	                    <th class="text-center small"><?=$sum_total_dotaciones;?></th>
-	                    <th class="bg-success text-white small"><?=$sum_total_o_descuentos;?></th>
+	                    <th class="text-center small"><?=formatNumberDec($sum_total_atrasos);?></th>
+	                    <th class="text-center small"><?=formatNumberDec($sum_total_anticipos);?></th>
+	                    <th class="text-center small"><?=formatNumberDec($sum_total_dotaciones);?></th>
+	                    <th class="bg-success text-white small"><?=formatNumberDec($sum_total_o_descuentos);?></th>
 	                    <?php  
 	                      $swDescuentoOtro=false;                  
 	                      $sqlDescuento = "SELECT cod_descuento
@@ -428,13 +428,13 @@
 	                        <?php
 	                      }
 	                    ?>
-	                    <th class="text-center small"><?=$sum_total_m_descuentos;?></th>                                        
-	                    <th class="bg-primary text-white small"><?=$sum_total_l_pagable;?></th>                    
+	                    <th class="text-center small"><?=formatNumberDec($sum_total_m_descuentos);?></th>                                        
+	                    <th class="bg-primary text-white small"><?=formatNumberDec($sum_total_l_pagable);?></th>                    
 	                    <th class="text-center small">-</th>
 	                    <th class="text-center small">-</th>
 	                    <th class="text-center small">-</th>
 	                    <th class="text-center small">-</th>
-	                    <th class="text-center small"><?=$sum_total_a_patronal;?></th>
+	                    <th class="text-center small"><?=formatNumberDec($sum_total_a_patronal);?></th>
 	                  </tr>
 	                </tfoot>               
               	</table>                                

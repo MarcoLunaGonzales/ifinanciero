@@ -64,6 +64,7 @@ $stmtArea->bindColumn('cod_area_padre', $codAreaPadre);
                   <h6 class="card-title">Por favor active la casilla para registrar el Area</h6>
                 </div>
                 <div class="card-body">
+                  
                   <div class="table-responsive">
                     <form id="lñp" method="post" action="<?=$urlSaveAreas_organizacion;?>">
                       <input type="hidden" name="codUnidad" value="<?=$codUnidad?>">
