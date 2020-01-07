@@ -275,7 +275,7 @@
             .appendTo('#form_bonosgrupos');   
     });
      $("#form_anticipospersonal").submit(function(e) {
-         if($("#monto").val()>$("#haber_basico").val()){
+         if($("#monto").val()>$("#haber_basico2").val()){
           $("#mensaje").html("<p class='text-danger'>El monto no puede ser mayor al 50% del haber b&aacute;sico</p>");
           return false;
          }
