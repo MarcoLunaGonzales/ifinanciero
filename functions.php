@@ -1481,6 +1481,7 @@ function verificarExistenciaPersona($codigoPersona)
 }
 
 function nombrePersona($codigoPersona){
+  $nombre=null;
   $dbh = new Conexion();
   $stmt = $dbh->prepare("SELECT codigo,paterno,materno,primer_nombre FROM personal WHERE codigo=$codigoPersona and cod_estadoreferencial=1");
   $stmt->execute();
@@ -2213,6 +2214,78 @@ where cod_estadoreferencial=1 and codigo='$codigo'");
 
   return $haberX;
 }
+
+//FUNCIONES DE REPORTE
+function obtenerPlanillaSueldosRevision($codigo){
+  $dbh = new Conexion();
+  $sql="SELECT p.codigo,p.cod_area,a.nombre as area, CONCAT(p.primer_nombre,' ', p.otros_nombres) as nombres,CONCAT(p.paterno,' ', p.materno) as apellidos,
+  p.identificacion as ci,p.ing_planilla,c.nombre as cargo,pm.haber_basico,
+  pm.dias_trabajados,pm.bono_academico,pm.bono_antiguedad,pm.total_ganado,pm.monto_descuentos,pm.liquido_pagable
+  FROM personal p
+  join cargos c on p.cod_cargo=c.codigo
+  join planillas_personal_mes pm on pm.cod_personalcargo=p.codigo
+  join areas a on p.cod_area=a.codigo where pm.cod_planilla=$codigo";
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  return $stmt;;
+}
+//FUNCIONES DE REPORTE
+function obtenerPlanillaTributariaReporte($codigo){
+  $dbh = new Conexion();
+  $sql="SELECT p.cod_area,a.nombre as area, CONCAT(p.primer_nombre,' ', p.otros_nombres) as nombres,CONCAT(p.paterno,' ', p.materno) as apellidos,
+  p.identificacion as ci,p.ing_planilla,c.nombre as cargo,
+  pm.*
+  FROM personal p
+  join cargos c on p.cod_cargo=c.codigo
+  join planillas_tributarias_personal_mes pm on pm.cod_personal=p.codigo
+  join areas a on p.cod_area=a.codigo where pm.cod_planillatributaria=$codigo";
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  return $stmt;;
+}
+ //funcion para descargar con dompdf
+function descargarPDFHorizontal($nom,$html){
+  //aumentamos la memoria  
+  ini_set("memory_limit", "128M");
+  // Cargamos DOMPDF
+  require_once 'assets/libraries/dompdf/dompdf_config.inc.php';
+  $mydompdf = new DOMPDF();
+  $mydompdf->set_paper('letter', 'landscape');
+  ob_clean();
+  $mydompdf->load_html($html);
+  $mydompdf->render();
+  $canvas = $mydompdf->get_canvas();
+  $canvas->page_text(730, 25, "Página:    {PAGE_NUM}", Font_Metrics::get_font("sans-serif"), 10, array(0,0,0)); 
+  $mydompdf->set_base_path('assets/libraries/plantillaPDF.css');
+  $mydompdf->stream($nom.".pdf", array("Attachment" => false));
+  } 
+
+  function obtenerSueldoMinimo(){
+    $dbh = new Conexion();
+    $stmt = $dbh->prepare("SELECT * from configuraciones_planillas where id_configuracion=1");
+    $stmt->execute();
+    $result= $stmt->fetch();
+    $monto=$result['valor_configuracion'];
+    return $monto;
+  }
+  function obtenerValorConfiguracionPlanillas($cod){
+    $dbh = new Conexion();
+    $stmt = $dbh->prepare("SELECT * from configuraciones_planillas where id_configuracion=$cod");
+    $stmt->execute();
+    $result= $stmt->fetch();
+    $valor=$result['valor_configuracion'];
+    return $valor;
+  }
+  function obtenerRcIvaPersonal($cod_persona,$cod_mes,$cod_gestion){
+    $monto=0;
+    $dbh = new Conexion();
+    $stmt = $dbh->prepare("SELECT monto_iva from rc_ivapersonal where cod_mes=$cod_mes and cod_gestion=$cod_gestion");
+    $stmt->execute();
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $monto = $row['monto_iva'];
+    }
+    return $monto;
+  }
 ?>
 
 
