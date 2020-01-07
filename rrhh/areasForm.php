@@ -20,8 +20,7 @@ if ($codigo > 0){
     $codigo = $result['codigo'];
     $nombre = $result['nombre'];
     $abreviatura = $result['abreviatura'];
-    $observaciones = $result['observaciones'];
-    $cod_estadoreferencial = $result['cod_estado'];
+    $observaciones = $result['observaciones'];    
     $created_at = $result['created_at'];
     $created_by = $result['created_by'];
     $modified_at = $result['modified_at'];
@@ -30,8 +29,7 @@ if ($codigo > 0){
   $codigo = 0;
     $nombre = ' ';
     $abreviatura = ' ';
-    $observaciones = ' ';
-    $cod_estadoreferencial = ' ';
+    $observaciones = ' ';    
     $created_at = ' ';
     $created_by = ' ';
     $modified_at = ' ';
@@ -75,18 +73,11 @@ if ($codigo > 0){
     <label class="col-sm-2 col-form-label">Observaciones</label>
     <div class="col-sm-7">
     <div class="form-group">
-        <input class="form-control" type="text" name="observaciones" id="observaciones" required="true" value="<?=$observaciones;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+        <input class="form-control" type="text" name="observaciones" id="observaciones" value="<?=$observaciones;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
     </div>
     </div>
 </div><!--fin campo observaciones -->
-<div class="row">
-    <label class="col-sm-2 col-form-label">Estado Referencial</label>
-    <div class="col-sm-7">
-    <div class="form-group">
-        <input class="form-control" type="text" name="cod_estadoreferencial" id="cod_estadoreferencial" required="true" value="<?=$cod_estadoreferencial;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
-    </div>
-    </div>
-</div><!--fin campo cod_estadoreferencial -->
+
 
 
 

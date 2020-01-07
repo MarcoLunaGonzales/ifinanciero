@@ -151,7 +151,7 @@
         }
         
     } );
-    <!--FUNCIONES DE VALIDACION-->
+    //<!--FUNCIONES DE VALIDACION-->
     $(document).ready(function() {
        /*setFormValidation('#form1');
         jQuery.extend(jQuery.validator.messages, {

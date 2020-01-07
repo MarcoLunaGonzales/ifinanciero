@@ -15,7 +15,7 @@ try {
     $nombre = $_POST["nombre"];
     $abreviatura = $_POST["abreviatura"];
     $observaciones = $_POST["observaciones"];
-    $cod_estadoreferencial = $_POST["cod_estadoreferencial"];
+    $cod_estadoreferencial = 1;
     //$created_at = $_POST["created_at"];
     $created_by = 1;//$_POST["created_by"];
     //$modified_at = $_POST["modified_at"];
