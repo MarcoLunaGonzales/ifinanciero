@@ -25,10 +25,11 @@ $stmt->bindColumn('cod_estadoplanilla', $cod_estadoplanilla);
 $stmt->bindColumn('estadoplanilla', $estadoplanilla);
 
 
-$stmtUO = $dbh->prepare("SELECT cod_uo from personal_area_distribucion where cod_estadoreferencial=1
+$stmtUO = $dbh->prepare("SELECT cod_uo,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_uo) as nombre_uo from personal_area_distribucion where cod_estadoreferencial=1
 GROUP BY cod_uo");
 $stmtUO->execute();
 $stmtUO->bindColumn('cod_uo', $cod_uo_x);
+$stmtUO->bindColumn('nombre_uo', $nombre_uo_x);
 ?>
 
 <div class="content">
@@ -88,11 +89,11 @@ $stmtUO->bindColumn('cod_uo', $cod_uo_x);
                         <i class="material-icons" title="Prerequisitos">chrome_reader_mode</i>
                       </a>
                                           
-                      <button type="button" class="btn" style="background-color:#3b83bd;color:#ffffff;" data-toggle="modal" data-target="#modalreProcesar" onclick="agregaformPre('<?=$datosX;?>')">
+                      <button type="button" class="btn" style="background-color:#3b83bd;color:#ffffff;" data-toggle="modal" data-target="#modalreProcesar" onclick="agregaformRP('<?=$datosX;?>')">
                         <i class="material-icons" title="Reprocesar Planilla">autorenew</i>                        
                       </button>                                                                              
                     
-                      <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalCerrar" onclick="agregaformPre('<?=$datosX;?>')">
+                      <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalCerrar" onclick="agregaformCP('<?=$datosX;?>')">
                         <i class="material-icons" title="Cerrar Planilla">assignment_returned</i>
                       </button>
                       <a href='<?=$urlPlanillaSueldoPersonalActual;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>' target="_blank" rel="tooltip" class="btn btn-success">            
@@ -120,7 +121,7 @@ $stmtUO->bindColumn('cod_uo', $cod_uo_x);
                           <?php
                             while ($row = $stmtUO->fetch(PDO::FETCH_BOUND)) {
                               if($cod_uo_x>0){?>                                                                
-                                  <li role="presentation"><a role="item" href="<?=$urlPlanillaSueldoPersonalReporte;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>&codigo_uo=<?=$cod_uo_x;?>" target="_blank"><small><?=$cod_uo_x;?></small></a></li>
+                                  <li role="presentation"><a role="item" href="<?=$urlPlanillaSueldoPersonalReporte;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>&codigo_uo=<?=$cod_uo_x;?>" target="_blank"><small><?=$nombre_uo_x;?></small></a></li>
                                 <?php 
                               }
                             }
@@ -140,7 +141,7 @@ $stmtUO->bindColumn('cod_uo', $cod_uo_x);
                           <?php
                             while ($row = $stmtUO->fetch(PDO::FETCH_BOUND)) {
                               if($cod_uo_x>0){?>                                                                
-                                  <li role="presentation"><a role="item" href="<?=$urlPlanillaSueldoPersonalReporte;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>&codigo_uo=<?=$cod_uo_x;?>" target="_blank"><small><?=$cod_uo_x;?></small></a></li>
+                                  <li role="presentation"><a role="item" href="<?=$urlPlanillaSueldoPersonalReporte;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>&codigo_uo=<?=$cod_uo_x;?>" target="_blank"><small><?=$nombre_uo_x;?></small></a></li>
                                 <?php 
                               }
                             }
@@ -216,7 +217,7 @@ $stmtUO->bindColumn('cod_uo', $cod_uo_x);
         <h4 class="modal-title" id="myModalLabel">¿Estás Seguro?</h4>
       </div>
       <div class="modal-body">
-        <input type="hidden" name="codigo_planilla" id="codigo_planilla" value="0">        
+        <input type="hidden" name="codigo_planillaRP" id="codigo_planillaRP" value="0">        
         Esta acción ReProcesará La planilla Del Mes En Curso. ¿Deseas Continuar?
         <div id="cargaR" style="display:none">
           <h3><b>Por favor espere...</b></h3>
@@ -238,7 +239,7 @@ $stmtUO->bindColumn('cod_uo', $cod_uo_x);
         <h4 class="modal-title" id="myModalLabel">¿Estás Seguro?</h4>
       </div>
       <div class="modal-body">
-        <input type="hidden" name="codigo_planilla" id="codigo_planilla" value="0">        
+        <input type="hidden" name="codigo_planillaCP" id="codigo_planillaCP" value="0">        
         Esta acción Cerrará La planilla Del Mes En Curso. ¿Deseas Continuar?
       </div>       
       <div class="modal-footer">
@@ -256,12 +257,12 @@ $stmtUO->bindColumn('cod_uo', $cod_uo_x);
       ProcesarPlanilla(cod_planilla);
     });
     $('#AceptarReProceso').click(function(){      
-      cod_planilla=document.getElementById("codigo_planilla").value;      
+      cod_planilla=document.getElementById("codigo_planillaRP").value;      
 
       ReprocesarPlanilla(cod_planilla);
     });
     $('#AceptarCerrar').click(function(){      
-      cod_planilla=document.getElementById("codigo_planilla").value;      
+      cod_planilla=document.getElementById("codigo_planillaCP").value;      
 
       CerrarPlanilla(cod_planilla);
     });

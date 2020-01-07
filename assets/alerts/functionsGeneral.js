@@ -2386,6 +2386,16 @@ function agregaformPre(datos){
   var d=datos.split('-');
   document.getElementById("codigo_planilla").value=d[0];
 }
+function agregaformRP(datos){
+  //console.log("datos: "+datos);
+  var d=datos.split('-');
+  document.getElementById("codigo_planillaRP").value=d[0];
+}
+function agregaformCP(datos){
+  //console.log("datos: "+datos);
+  var d=datos.split('-');
+  document.getElementById("codigo_planillaCP").value=d[0];
+}
 function ProcesarPlanilla(cod_planilla){
   $.ajax({
     type:"POST",

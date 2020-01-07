@@ -110,15 +110,15 @@ $statementgrado_academico = $dbh->query($querygrado_academico);
                         <div class="card-text">
                           <h4 class="card-title"><?php if ($codigo == 0) echo "Registrar"; else echo "Editar";?>  <?=$nombreSingularPersonal;?></h4>
                         </div>
-                    </div>                
+                    </div>
+                    <h3 align="center">CAMPOS NO GESTIONADOS POR RRHH</h3>
                     <div class="card-body">
                         <form id="form1" action="<?=$urlSavePersonal;?>" method="post">    
-                        <h3 align="center">CAMPOS NO GESTIONADOS POR RRHH</h3>
                         <div class="row">
                             <label class="col-sm-2 col-form-label">Código Personal</label>
                             <div class="col-sm-4">
                                 <div class="form-group">
-                                    <input  name="codigo" id="codigo" value="<?=$codigo;?>" readonly="readonly"/>
+                                    <input class="form-control" name="codigo" id="codigo" value="<?=$codigo;?>" readonly="readonly"/>
                                 </div>
                             </div>                            
                         </div><!--fin campo codigo --> 
@@ -417,7 +417,7 @@ $statementgrado_academico = $dbh->query($querygrado_academico);
                             <label class="col-sm-2 col-form-label">Estado</label>
                             <div class="col-sm-4">
                             <div class="form-group">
-                                <select name="cod_estadopersonal"  class="selectpicker " data-style="btn btn-info" required>
+                            <select name="cod_estadopersonal"  class="selectpicker " data-style="btn btn-info" required>
                                             <?php while ($row = $statementestados_personal->fetch()) { ?>
                                                 <option <?php if($cod_estadopersonal == $row["codigo"]) echo "selected"; ?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
                                             <?php } ?>
@@ -491,7 +491,6 @@ $statementgrado_academico = $dbh->query($querygrado_academico);
                                 </div>
                             </div>
                         </div>
-                        </form>
                         <!--fin campo imagen-->
                     </div>
                     <div class="card-footer ml-auto mr-auto">
@@ -500,39 +499,39 @@ $statementgrado_academico = $dbh->query($querygrado_academico);
                     </div>
                 </div>
             
-                    <!-- SOLO MUESTRO SI ES EN ESTADO EDICION... -->
-                    <?php if ($codigo > 0){ ?>
+            <!-- SOLO MUESTRO SI ES EN ESTADO EDICION... -->
+            <?php if ($codigo > 0){ ?>
 
-                    <!-- tabs -->
-                   <!--  <div class="card card-nav-tabs card-plain">
-                        <div class="card-header <?=$colorCard;?>">                    
-                            <div class="nav-tabs-navigation">
-                                <div class="nav-tabs-wrapper">
-                                    <ul class="nav nav-tabs" data-tabs="tabs">
-                                        <li class="nav-item">
-                                            <a class="nav-link active" href="#uno" data-toggle="tab">Distribucion Salarial</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="#dos" data-toggle="tab">Historico Cargos</a>
-                                        </li>          
-                                    </ul>
-                                </div>
-                            </div>
+            <!-- tabs -->
+           <!--  <div class="card card-nav-tabs card-plain">
+                <div class="card-header <?=$colorCard;?>">                    
+                    <div class="nav-tabs-navigation">
+                        <div class="nav-tabs-wrapper">
+                            <ul class="nav nav-tabs" data-tabs="tabs">
+                                <li class="nav-item">
+                                    <a class="nav-link active" href="#uno" data-toggle="tab">Distribucion Salarial</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#dos" data-toggle="tab">Historico Cargos</a>
+                                </li>          
+                            </ul>
                         </div>
-                        <div class="card-body ">
-                            <div class="tab-content text-center">
-                                <div class="tab-pane active" id="uno">
-                                    <p>I think that&#x2019;s a responsibility that I have, to push possibilities, to show people, this is the level that things could be at. So when you get something that has the name Kanye West on it, it&#x2019;s supposed to be pushing the furthest possibilities. I will be the leader of a company that ends up being worth billions of dollars, because I got the answers. I understand culture. I am the nucleus.</p>
-                                </div>
-                                <div class="tab-pane" id="dos">
-                                    <p> I will be the leader of a company that ends up being worth billions of dollars, because I got the answers. I understand culture. I am the nucleus. I think that&#x2019;s a responsibility that I have, to push possibilities, to show people, this is the level that things could be at. I think that&#x2019;s a responsibility that I have, to push possibilities, to show people, this is the level that things could be at. </p>
-                                </div>                        
-                            </div>
+                    </div>
+                </div>
+                <div class="card-body ">
+                    <div class="tab-content text-center">
+                        <div class="tab-pane active" id="uno">
+                            <p>I think that&#x2019;s a responsibility that I have, to push possibilities, to show people, this is the level that things could be at. So when you get something that has the name Kanye West on it, it&#x2019;s supposed to be pushing the furthest possibilities. I will be the leader of a company that ends up being worth billions of dollars, because I got the answers. I understand culture. I am the nucleus.</p>
                         </div>
-                    </div> -->
-                        <!-- fin tabs-->
-                    <?php } ?>
-            </div>
+                        <div class="tab-pane" id="dos">
+                            <p> I will be the leader of a company that ends up being worth billions of dollars, because I got the answers. I understand culture. I am the nucleus. I think that&#x2019;s a responsibility that I have, to push possibilities, to show people, this is the level that things could be at. I think that&#x2019;s a responsibility that I have, to push possibilities, to show people, this is the level that things could be at. </p>
+                        </div>                        
+                    </div>
+                </div>
+            </div> -->
+                <!-- fin tabs-->
+            <?php } ?>
+        </div>
         </div>
         
     </div>
