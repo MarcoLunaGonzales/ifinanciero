@@ -19,7 +19,7 @@ foreach ($_FILES as $key){
     if($key["type"]=="text/csv" or $key["type"]=="application/vnd.ms-excel"){
         $nombre_nuevo= formatoNombreArchivoExcel();
         $destino=$ruta.$nombre_nuevo;
-        move_uploaded_file($ruta_temporal,$destino);
+        //move_uploaded_file($ruta_temporal,$destino);
         $alert=true;
 
     }else{
@@ -52,7 +52,7 @@ while((($datos=fgetcsv($fichero,$longitudDeLinea,$delimitador))!=FALSE)){
 
     if($x>1){
         //inserta nuevos
-        if((verificarAnticipoPersonaMes($a[$k], $codMes, $codGestion)==0) and (verificarExistenciaPersona($a[$k])==true)){
+        if((verificarBonoPersonaMes($a[$k], $codMes, $codBono)==0) and (verificarExistenciaPersona($a[$k])==true)){
         $stmt = $dbh->prepare("INSERT INTO anticipos_personal ( cod_personal,cod_gestion,cod_mes,monto, cod_estadoreferencial) 
         VALUES ($a[$k],$codGestion,$codMes,$c[$k],$codEstado)");
         $flagSuccess=$stmt->execute();    
@@ -85,7 +85,7 @@ if($opcionCargar==2){
     
         if($x>1){
             //inserta nuevos
-        if((verificarAnticipoPersonaMes($a[$k], $codMes, $codGestion)==0) and (verificarExistenciaPersona($a[$k])==true)){
+        if((verificarBonoPersonaMes($a[$k], $codMes, $codBono)==0) and (verificarExistenciaPersona($a[$k])==true)){
             $stmt = $dbh->prepare("INSERT INTO anticipos_personal ( cod_personal,cod_gestion,cod_mes,monto, cod_estadoreferencial) 
             VALUES ($a[$k],$codGestion,$codMes,$c[$k],$codEstado)");
             $flagSuccess=$stmt->execute();    
@@ -129,8 +129,5 @@ if($opcionCargar==3){
     showAlertSuccessError($flagSuccess,$urlListMesPersona."&cod_mes=".$codMes);
     
     }
-
-   fclose($fichero); 
-   unlink($destino); 
 }
 ?>

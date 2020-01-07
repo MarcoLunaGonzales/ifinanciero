@@ -1399,7 +1399,26 @@ function porcentRetencionDetalle($codigo){
    return($nombreX);
 }
 
+function verificarAnticipoPersonaMes($codigoPersona, $codMes,$codGestion)
+{
+  $dbh = new Conexion();
+  $stmt = $dbh->prepare("SELECT cod_personal FROM anticipos_personal WHERE cod_mes=$codMes AND cod_gestion=$codGestion");
+  $stmt->execute();
 
+  $cont = 0;
+  $existe = 0;
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    if ($row['cod_personal'] == $codigoPersona) {
+      $cont++;
+    }
+  }
+  if ($cont == 0) {
+    $existe = 0;
+  } else {
+    $existe = 1;
+  }
+  return ($existe);
+}
 
 function verificarBonoPersonaMes($codigoPersona, $codMes, $codBono)
 {

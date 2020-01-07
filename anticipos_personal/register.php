@@ -50,7 +50,7 @@ while ($row = $stmtc->fetch(PDO::FETCH_BOUND)) {
 								  $stmt = $dbh->prepare("select p.codigo as codigo, concat(p.paterno,' ', p.materno, ' ', p.primer_nombre) as nombrepersona from personal p 
 								  where p.codigo not in 
 								  (select d.cod_personal from anticipos_personal d where 
-								  d.cod_mes=$codMes and d.cod_gestion=$codGestion) ORDER BY p.paterno");
+								  d.cod_mes=$codMes and d.cod_gestion=$codGestion and d.cod_estadoreferencial=1) ORDER BY p.paterno");
 								$stmt->execute();
 								while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 									$codigoX=$row['codigo'];
@@ -74,7 +74,7 @@ while ($row = $stmtc->fetch(PDO::FETCH_BOUND)) {
 				  <div class="col-sm-7">
 					<div class="form-group">
 					  <input class="form-control" type="text" readonly name="haber_basico" value="" id="haber_basico"/>
-					  <input class="form-control" type="hidden" name="haber_basico2" value="0" id="haber_basico"/>
+					  <input class="form-control" type="hidden" name="haber_basico2" value="0" id="haber_basico2"/>
 					</div>
 				  </div>
 				</div>
@@ -83,7 +83,7 @@ while ($row = $stmtc->fetch(PDO::FETCH_BOUND)) {
 				  <label class="col-sm-2 col-form-label">Monto <!--<small id="monto_max" class="text-danger"></small>--></label>
 				  <div class="col-sm-7">
 					<div class="form-group">
-					  <input class="form-control" type="number" autocomplete="off" step="0.01" min="0" name="monto" id="monto" required="true" onchange="montoNoMayor()" onkeypress="montoNoMayor()"/>					  
+					  <input class="form-control" type="number" autocomplete="off" step="0.01" min="0" name="monto" id="monto" required="true" onchange="montoNoMayor()"/>					  
 					</div>
 				  </div>
 				</div>
