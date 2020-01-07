@@ -2888,16 +2888,17 @@ function registrarMontoPersonal(index){
 
 function calcularHaberBasico(){
   var id = $("#personal").val();
-  var contenedor;
-  contenedor = document.getElementById('monto_max');
+  /*var contenedor;
+  contenedor = document.getElementById('monto_max');*/
   ajax=nuevoAjax();
   ajax.open('GET', 'anticipos_personal/ajaxCalcularHaberBasico.php?codigo='+id,true);
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
-      contenedor.innerHTML = ajax.responseText;
+      /*contenedor.innerHTML = ajax.responseText;*/
       if(ajax.responseText!="NN"){
        $("#monto").val(ajax.responseText/2);
-       $("#haber_basico").val(ajax.responseText/2); 
+       $("#haber_basico2").val(ajax.responseText/2);
+       $("#haber_basico").val(ajax.responseText);  
       }  
       $('.selectpicker').selectpicker(["refresh"]);          
     }
@@ -2905,7 +2906,7 @@ function calcularHaberBasico(){
   ajax.send(null) 
 }
 function montoNoMayor(){
-  if($("#monto").val()>$("#haber_basico").val()){
+  if($("#monto").val()>$("#haber_basico2").val()){
     $("#mensaje").html("<p class='text-danger'>El monto no puede ser mayor al 50% del haber b&aacute;sico</p>");
   }else{
     $("#mensaje").html("");

@@ -73,7 +73,7 @@ while ($row = $stmtc->fetch(PDO::FETCH_BOUND)) {
                     <th>Unidad</th>
                     <th>Cargo</th>
                     <th>Personal</th>
-                    <th>Detalle</th>
+                    <th>Monto</th>
                     <th class="text-right">Acciones</th>
                   </tr>
                 </thead>

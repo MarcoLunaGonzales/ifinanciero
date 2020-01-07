@@ -5,6 +5,7 @@ require_once 'configModule.php';
 require_once 'styles.php';
 
 $globalAdmin = $_SESSION["globalAdmin"];
+
 $codGestionActiva = $_SESSION['globalGestion'];
 $codMes=$_GET['cod_mes'];
 $dbh = new Conexion();

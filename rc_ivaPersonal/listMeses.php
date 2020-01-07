@@ -15,7 +15,7 @@ $dbh = new Conexion();
 
 // Preparamos
 $sql="SELECT m.codigo as codigo, m.nombre as nombre, count(apm.cod_personal) as cantidad FROM meses m 
-LEFT JOIN anticipos_personal apm 
+LEFT JOIN rc_ivapersonal apm 
 ON  apm.cod_mes=m.codigo and apm.cod_gestion=$codGestionActiva  and apm.cod_estadoreferencial=1 GROUP BY m.codigo";
 $stmt = $dbh->prepare($sql);
 // Ejecutamos
@@ -26,7 +26,7 @@ $stmt->bindColumn('nombre', $nombre);
 $stmt->bindColumn('cantidad',$cantidad);
 
 
-$nombreDescuento="Anticipos Personal";
+$nombreDescuento="Formularios 110";
 ?>
 <div class="content">
 	<div class="container-fluid">
@@ -96,7 +96,7 @@ $nombreDescuento="Anticipos Personal";
               if($globalAdmin==1){
               ?>
       				<div class="card-footer fixed-bottom">
-                    <button class="<?=$buttonCancel;?>" onClick="location.href='<?=$urlList;?>'">Cancelar</button>
+                    <!--<button class="<?=$buttonCancel;?>" onClick="location.href='<?=$urlList;?>'">Cancelar</button>-->
               </div>
               
 

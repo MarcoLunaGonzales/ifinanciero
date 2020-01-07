@@ -8,6 +8,8 @@ require_once 'configModule.php';
 $dbh = new Conexion();
 
 $codigo=$_POST["codigo"];
+$codMes=$_POST["cod_mes"];
+$codGestion=$_POST["codGestion"];
 $monto=$_POST["monto"];
 $monto_iva=$_POST["monto_iva"];
 $codEstado="1";
@@ -20,6 +22,6 @@ $stmt->bindParam(':monto', $monto);
 $stmt->bindParam(':monto_iva', $monto_iva);
 
 $flagSuccess=$stmt->execute();
-showAlertSuccessError($flagSuccess,$urlList2);
+showAlertSuccessError($flagSuccess,"../".$urlListMesPersona."&cod_mes=".$codMes);
 
 ?>

@@ -831,6 +831,10 @@
 
 
 		//RC_IVA Personal
+		if ($_GET['opcion']=='listRcivaPersonalMes') {
+			require_once('rc_ivaPersonal/listMeses.php');
+		}
+
 		if ($_GET['opcion']=='listRcivaPersonal') {
 			require_once('rc_ivaPersonal/list.php');
 		}

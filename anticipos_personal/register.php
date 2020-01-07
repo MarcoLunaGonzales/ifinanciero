@@ -69,13 +69,21 @@ while ($row = $stmtc->fetch(PDO::FETCH_BOUND)) {
 				</div>
 
 
-
-				<div class="row">
-				  <label class="col-sm-2 col-form-label">Monto <small id="monto_max" class="text-danger"></small></label>
+                <div class="row">
+				  <label class="col-sm-2 col-form-label">Haber Basico <!--<small id="monto_max" class="text-danger"></small>--></label>
 				  <div class="col-sm-7">
 					<div class="form-group">
-					  <input class="form-control" type="number" step="0.01" min="0" name="monto" id="monto" required="true" onchange="montoNoMayor()" onkeypress="montoNoMayor()"/>
-					  <input class="form-control" type="hidden" name="haber_basico" value="0" id="haber_basico"/>
+					  <input class="form-control" type="text" readonly name="haber_basico" value="" id="haber_basico"/>
+					  <input class="form-control" type="hidden" name="haber_basico2" value="0" id="haber_basico"/>
+					</div>
+				  </div>
+				</div>
+
+				<div class="row">
+				  <label class="col-sm-2 col-form-label">Monto <!--<small id="monto_max" class="text-danger"></small>--></label>
+				  <div class="col-sm-7">
+					<div class="form-group">
+					  <input class="form-control" type="number" autocomplete="off" step="0.01" min="0" name="monto" id="monto" required="true" onchange="montoNoMayor()" onkeypress="montoNoMayor()"/>					  
 					</div>
 				  </div>
 				</div>

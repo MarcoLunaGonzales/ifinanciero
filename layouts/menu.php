@@ -376,9 +376,9 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
                     </a>
                 </li>
                 <li class="nav-item ">
-                    <a class="nav-link" href="?opcion=listRcivaPersonal">
-                      <span class="sidebar-mini"> R </span>
-                      <span class="sidebar-normal"> RC IVA Personal</span>
+                    <a class="nav-link" href="?opcion=listRcivaPersonalMes">
+                      <span class="sidebar-mini"> F110 </span>
+                      <span class="sidebar-normal"> Formulario 110</span>
                     </a>
                 </li>
                 <li class="nav-item ">
@@ -390,7 +390,7 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=planillasSueldoPersonal">
                     <span class="sidebar-mini"> PS </span>
-                    <span class="sidebar-normal"> Planillas Sueldos </span>
+                    <span class="sidebar-normal"> Planilla de Sueldos </span>
                   </a>
                 </li>
                 <li class="nav-item ">
