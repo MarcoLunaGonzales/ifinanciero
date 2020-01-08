@@ -14,9 +14,10 @@ $codigo_area_cont=$codigox;
 $stmt = $dbh->prepare("UPDATE areas_contabilizacion_detalle set cod_estadoreferencial=2 where codigo=:codigo");
 // Bind
 $stmt->bindParam(':codigo', $codigo);
-// showAlertSuccessError($flagSuccess,$list_areas_contabilizacion_Detalle."&codigo=".$codigo_area_cont);
 
 $flagSuccess=$stmt->execute();
-showAlertSuccessError($flagSuccess,$urlListAreas_contabilizacion);
+//showAlertSuccessError($flagSuccess,$urlListAreas_contabilizacion);
+showAlertSuccessError($flagSuccess,$list_areas_contabilizacion_Detalle."&codigo=".$codigo_area_cont);
+
 
 ?>

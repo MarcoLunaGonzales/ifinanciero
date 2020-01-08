@@ -2,7 +2,7 @@
 	include("head.php");
 
 	//include("menuService.php");
-  
+   include("librerias.php");
   include("layouts/menu.php");
   // include("functionsGeneral.php");
 ?>    
@@ -18,5 +18,5 @@
     </div>
 
 <?php 
-  include("librerias.php");
+ 
 ?>
