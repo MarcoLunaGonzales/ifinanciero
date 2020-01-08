@@ -22,7 +22,6 @@ $statementArea = $dbh->query($queryArea);//uo
 
 <div class="content">
 	<div class="container-fluid">
-
 		<div class="col-md-12">
 		  <form id="form1" class="form-horizontal" action="<?=$urlSaveAreas_contabilizacion_detalle;?>" method="POST">
 			<input type="hidden" name="codigo" id="codigo" value="<?=$codigo;?>"/>

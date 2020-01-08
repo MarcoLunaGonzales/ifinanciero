@@ -366,7 +366,7 @@ function setFormValidation(id) {
  function abrirModal(id){
   $('#'+id).modal('show');
  }
- function listarFact(id){
+function listarFact(id){
   var div=$('<div>').addClass('table-responsive');
   var table = $('<table>').addClass('table table-condensed');
   var titulos = $('<tr>').addClass('');
@@ -397,15 +397,15 @@ function setFormValidation(id) {
    }
    div.append(table);
    $('#divResultadoListaFac').html(div);
- }
- function obtenerImportesFacturaIva(index){
+}
+function obtenerImportesFacturaIva(index){
   var total=0;
   for (var i = 0; i < itemFacturas[index-1].length; i++) {
      total+=parseFloat(itemFacturas[index-1][i].impFac);
   };
   return total*(configuraciones[0].valor/100);
- }
- function saveFactura(){
+}
+function saveFactura(){
   var index=$('#codCuenta').val();
   var factura={
     nit: $('#nit_fac').val(),
@@ -432,7 +432,7 @@ function setFormValidation(id) {
   $("#nfac"+index).html(itemFacturas[index-1].length);
   $("#link110").addClass("active");$("#link111").removeClass("active");$("#link112").removeClass("active");
   $("#nav_boton1").addClass("active");$("#nav_boton2").removeClass("active");$("#nav_boton3").removeClass("active");
- }
+}
  function abrirFactura(index,nit,nro,fecha,razon,imp,exe,aut,con){
    var factura={
     nit: nit,
@@ -2386,26 +2386,18 @@ function agregaformPre(datos){
   var d=datos.split('-');
   document.getElementById("codigo_planilla").value=d[0];
 }
-<<<<<<< HEAD
-//<<<<<<< HEAD
-=======
 
->>>>>>> 376c118ffb94695b9fa98ddd9946874574b18f74
 function agregaformRP(datos){
   //console.log("datos: "+datos);
   var d=datos.split('-');
   document.getElementById("codigo_planillaRP").value=d[0];
 }
-<<<<<<< HEAD
+
 function agregaformCP(datos){
   //console.log("datos: "+datos);
   var d=datos.split('-');
   document.getElementById("codigo_planillaCP").value=d[0];
 }
-//=======
-=======
-
->>>>>>> 376c118ffb94695b9fa98ddd9946874574b18f74
 function agregaformPreTrib(datos,plan,mes,tiempo,user){
   var d=plan.split('-');
   document.getElementById("codigo_planilla2").value=d[0];
@@ -2414,10 +2406,6 @@ function agregaformPreTrib(datos,plan,mes,tiempo,user){
   $("#modified_at").text(tiempo);
   $("#modified_by").text(user);
   document.getElementById("codigo_planilla_trib").value=datos;
-<<<<<<< HEAD
-//>>>>>>> f2b39307f5e931340362944736af075974562096
-=======
->>>>>>> 376c118ffb94695b9fa98ddd9946874574b18f74
 }
 function ProcesarPlanilla(cod_planilla){
   $.ajax({
@@ -2935,4 +2923,19 @@ function montoNoMayor(){
   }else{
     $("#mensaje").html("");
   }
+}
+
+function ajaxPersonalUnidadorganizacional(combo){
+  var contenedor;
+  var codigo_UO=combo.value;
+  contenedor = document.getElementById('cod_area_containers');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'hhrr/areas_organizacionAjax.php?codigo_UO='+codigo_UO,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);    
+    }
+  }
+  ajax.send(null)  
 }

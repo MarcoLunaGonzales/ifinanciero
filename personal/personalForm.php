@@ -2,7 +2,7 @@
 require_once 'conexion.php';
 require_once 'styles.php';
 require_once 'rrhh/configModule.php';
-require_once 'functions.php';
+
 
 //$dbh = new Conexion();
 $dbh = new Conexion();
@@ -78,6 +78,10 @@ $archivo = "personal/imagenes/".$imagen;//sale mal
 //COMBOS...
 $queryUO = "select * from unidades_organizacionales order by nombre";
 $statementUO = $dbh->query($queryUO);
+
+$queryArea = "SELECT codigo,nombre FROM  areas WHERE cod_estado=1
+order by nombre";
+$statementArea = $dbh->query($queryArea);//uo
 
 $queryCargos = "select * from cargos";
 $statementCargos = $dbh->query($queryCargos);
@@ -297,30 +301,32 @@ $statementgrado_academico = $dbh->query($querygrado_academico);
                                 </div>
                             </div><!--fin campo otros_nombres y apellido casada -->
                             <div class="row">
-                                <label class="col-sm-2 col-form-label">Unidad Organizacional</label>
-                                <div class="col-sm-4">
-                                <div class="form-group">
-                                    <select name="cod_unidadorganizacional" id="cod_unidadorganizacional" class="selectpicker" data-style="btn btn-info" required>
-                                        <option value="">-</option>
-                                        <?php while ($row = $statementUO->fetch()) { ?>
-                                            <option <?=($cod_unidadorganizacional==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
-                                        <?php } ?>
-                                    </select>                               
-                                </div>
-                                </div>
-
-                                <label class="col-sm-2 col-form-label">Area</label>
-                                <div class="col-sm-4">
-                                <div class="form-group">
-                                    <div id="cod_area_containers">
-                                        <select name="cod_area"  class="form-control" id="cod_area" data-style="btn btn-info" required>
-                                        </select>
-                                        <input type="hidden" name="cod_area2" id="cod_area2" value="<?=$cod_area;?>"/>
-
-                                    </div>
-                                    </div>
-                                </div>
-                            </div><!--fin campo cod_area -->
+                  <label class="col-sm-2 col-form-label">Unidad Organizacional</label>
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                        <select name="cod_uo" id="cod_uo" class="selectpicker" data-style="btn btn-info" onChange="ajaxAreaContabilizacionDetalle(this);">
+                            <option value=""></option>
+                            <?php while ($row = $statementUO->fetch()){ ?>
+                                <option <?=($cod_unidadorganizacional==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                  </div>
+               
+                  <label class="col-sm-2 col-form-label">Area</label>
+                  <div class="col-sm-4">
+                    <div class="form-group" >
+                        <div id="div_contenedor_area">
+                            <select name="cod_area" id="cod_area" class="selectpicker" data-style="btn btn-info" >
+                                <option value=""></option>
+                                <?php while ($row = $statementArea->fetch()){ ?>
+                                    <option <?=($cod_area==$row["codigo"])?"selected":"";?>  value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                                <?php } ?>
+                            </select>
+                        </div>                    
+                    </div>
+                  </div>
+                </div>              
                             <div class="row" id="prueba">
                                 <label class="col-sm-2 col-form-label">Cargo</label>
                                 <div class="col-sm-4">
@@ -503,29 +509,3 @@ $statementgrado_academico = $dbh->query($querygrado_academico);
     </div>
 </div>
 
-<script>
-    function cargarAreas(codigo){
-        $.post("rrhh/areas_organizacionAjax.php", "cod_unidadorganizacional="+codigo, function (data) {
-        //console.log("llega0");
-        $('#cod_area').remove();//elimino totalmente el combo
-        //console.log("llega1");
-        $("#cod_area_containers").empty();//vacio el padre
-        //console.log("llega2");
-        $('#cod_area_containers').append(data);//inserto el html+data q me llego
-        //console.log("llega3");
-        $('.selectpicker').selectpicker();//le doy estilo
-        //console.log("llega4");
-
-        //---------------------------------------------------------------------
-        //intentar seleccionar si es q hay un valor x defecto
-        });
-    }
-
-    $('#cod_unidadorganizacional').on('change', function() {
-      //alert( this.value );
-        //cod_tiposbienes
-        //console.log("llega-1");
-        cargarAreas($('#cod_unidadorganizacional').val());
-    });
-    cargarAreas($('#cod_unidadorganizacional').val());
-</script>
