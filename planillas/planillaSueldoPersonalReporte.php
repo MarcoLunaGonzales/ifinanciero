@@ -20,10 +20,7 @@
 	$stmtUO->execute();
 	$resultUO=$stmtUO->fetch();
 	$nombre_uo=$resultUO['nombre'];
-	
-
-
-  	$sql = "SELECT ppm.cod_personalcargo,ppm.cod_gradoacademico,ppm.dias_trabajados,ppm.horas_pagadas,ppm.haber_basico,
+	$sql = "SELECT ppm.cod_personalcargo,ppm.cod_gradoacademico,ppm.dias_trabajados,ppm.horas_pagadas,ppm.haber_basico,
   			ppm.bono_academico,ppm.bono_antiguedad,ppm.monto_bonos,ppm.total_ganado,ppm.monto_descuentos,
   			ppm.liquido_pagable,ppm.afp_1,ppm.afp_2,ppm.dotaciones,pad.porcentaje,
 			(SELECT ga.nombre from personal_grado_academico ga where ga.codigo=ppm.cod_gradoacademico) as grado_academico,
@@ -35,7 +32,7 @@
                  from personal p3 where p3.codigo=ppm.cod_personalcargo) as lug_emision,
       		(select p4.lugar_emision_otro from personal p4 where p4.codigo=ppm.cod_personalcargo) as lug_emision_otro
 			from planillas_personal_mes ppm,personal_area_distribucion pad
-			where ppm.cod_personalcargo=pad.cod_personal and cod_planilla=$cod_planilla and pad.cod_uo=$cod_uo";
+			where ppm.cod_personalcargo=pad.cod_personal and cod_planilla=$cod_planilla and pad.cod_uo=$cod_uo order by paterno";
 
 	$stmtPersonal = $dbh->prepare($sql);
 	$stmtPersonal->execute();	
@@ -115,7 +112,7 @@
 		                      }
 		                    ?>
 		                    <th><small>Monto Bonos</small></th>                            
-		                    <th><small>Total Ganado</small></th>
+		                    <th class="bg-primary text-white"><small>Total Ganado</small></th>
 
 		                    <th class="bg-success text-white"><button id="botonAportes" style="border:none;" class="bg-success text-white small">Monto Aportes</button></th>
 		                    <th class="aportesDet bg-success text-white" style="display:none"><small>AFP.Fut</small></th>
@@ -238,7 +235,13 @@
 	                    <td class="text-left small"><?=$nombrePersonal;?></td>
 	                    <td class="text-center small"><?=$doc_id;?>-<?=$lug_emision?><?=$lug_emision_otro?></td>                  
 	                    <td class="text-left small"><?=$grado_academico;?></td>                    
-	                    <td class="text-left small"><?=$porcentaje;?></td>
+	                    <?php if($porcentaje!=100){ ?>
+	                    <td class="text-center small"><span class="badge badge-danger"><?=$porcentaje;?></span></td>
+	                    <?php }else{?>
+	                    <td class="text-center small"><?=$porcentaje;?></td>
+	                    <?php }
+	                    ?>
+	                    
 	                    <td class="text-center small"><?=formatNumberDec($haber_basico_tp);?></td>
 	                    <td class="text-center small"><?=$dias_trabajados;?></td>                
 	                    <td class="text-center small"><?=formatNumberDec($bono_antiguedad_tp);?></td>
@@ -399,15 +402,15 @@
 	                      }
 	                    ?>
 	                    <th class="text-center small"><?=formatNumberDec($sum_total_m_bonos);?></th>                            
-	                    <th class="text-center small"><?=formatNumberDec($sum_total_t_ganado);?></th>
+	                    <th class="bg-primary text-white text-center small"><?=formatNumberDec($sum_total_t_ganado);?></th>
 
 	                    <th class="bg-success text-white small"><?=formatNumberDec($sum_total_m_aportes);?></th>
-	                    <th class="aportesDet bg-success text-white small" style="display:none">AFP.Fut</th>
-	                    <th class="aportesDet bg-success text-white small" style="display:none">AFP.Prev</th>
-	                    <th class="aportesDet bg-success text-white small" style="display:none">A.Solidario(13)</th>
-	                    <th class="aportesDet bg-success text-white small" style="display:none">A.Solidario(25)</th>
-	                    <th class="aportesDet bg-success text-white small" style="display:none">A.Solidario(35)</th>
-	                    <th class="aportesDet bg-success text-white small" style="display:none">RC-IVA</th>
+	                    <th class="aportesDet bg-success text-white small" style="display:none">-</th>
+	                    <th class="aportesDet bg-success text-white small" style="display:none">-</th>
+	                    <th class="aportesDet bg-success text-white small" style="display:none">-</th>
+	                    <th class="aportesDet bg-success text-white small" style="display:none">-</th>
+	                    <th class="aportesDet bg-success text-white small" style="display:none">-</th>
+	                    <th class="aportesDet bg-success text-white small" style="display:none">-</th>
 
 	                    
 	                    <th class="text-center small"><?=formatNumberDec($sum_total_atrasos);?></th>

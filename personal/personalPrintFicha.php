@@ -45,6 +45,7 @@ try{
     $cod_departamento = $result['cod_departamento'];
     $cod_ciudad = $result['cod_ciudad'];
     $ciudadOtro = $result['ciudad_otro']; 
+    $ingreso_contrato = $result['ing_contr']; 
 
     $fecha_nacimiento = $result['fecha_nacimiento'];
     $cod_cargo = $result['cod_cargoX'];
@@ -217,6 +218,16 @@ $html.=  '<header class="header">'.
                     '</tr>'.
                     '<tr>'.
                         '<td colspan="4"><br></td>           '.
+                    '</tr>'.
+                    '<tr>'.
+                        '<td>Ingreso Contrato</td>'.
+                        '<td align="center">:</td>'.
+                        '<td colspan=2>'.$ingreso_contrato.'</td>'.
+                    '</tr>'.
+                    '<tr>'.
+                        '<td>Ingreso Planilla</td>'.
+                        '<td align="center">:</td>'.
+                        '<td colspan=2>'.$ingreso_contrato.'</td>'.
                     '</tr>'.
                     '<tr>'.
                         '<td>Tipo Personal</td>'.

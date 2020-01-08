@@ -2386,7 +2386,7 @@ function agregaformPre(datos){
   var d=datos.split('-');
   document.getElementById("codigo_planilla").value=d[0];
 }
-<<<<<<< HEAD
+//<<<<<<< HEAD
 function agregaformRP(datos){
   //console.log("datos: "+datos);
   var d=datos.split('-');
@@ -2396,7 +2396,8 @@ function agregaformCP(datos){
   //console.log("datos: "+datos);
   var d=datos.split('-');
   document.getElementById("codigo_planillaCP").value=d[0];
-=======
+}
+//=======
 function agregaformPreTrib(datos,plan,mes,tiempo,user){
   var d=plan.split('-');
   document.getElementById("codigo_planilla2").value=d[0];
@@ -2405,7 +2406,7 @@ function agregaformPreTrib(datos,plan,mes,tiempo,user){
   $("#modified_at").text(tiempo);
   $("#modified_by").text(user);
   document.getElementById("codigo_planilla_trib").value=datos;
->>>>>>> f2b39307f5e931340362944736af075974562096
+//>>>>>>> f2b39307f5e931340362944736af075974562096
 }
 function ProcesarPlanilla(cod_planilla){
   $.ajax({
