@@ -482,7 +482,7 @@ if($sw==2){//procesar planilla
 			//==== update de panillas de  personal mes de aporte patronal 
 			$sqlInsertPlanillaDetalleU="UPDATE planillas_personal_mes_patronal set a_solidario_13000=:a_solidario_13000,a_solidario_25000=:a_solidario_25000,a_solidario_35000=:a_solidario_35000,rc_iva=:rc_iva,
 			atrasos=:atrasos,anticipo=:anticipo,seguro_de_salud=:seguro_de_salud,riesgo_profesional=:riesgo_profesional,
-			provivienda=:provivienda,a_patronal_sol=:a_patronal_sol,total_a_patronal=:total_a_patronal
+			provivienda=:provivienda,a_patronal_sol=:a_patronal_sol,total_a_patronal=:total_a_patronal,dotaciones=:dotaciones
 			where cod_planilla=:cod_planilla and cod_personal_cargo=:cod_personal_cargo";
 
 			$stmtInsertPlanillaDetalleU = $dbhIPD->prepare($sqlInsertPlanillaDetalleU);
@@ -499,7 +499,28 @@ if($sw==2){//procesar planilla
 			$stmtInsertPlanillaDetalleU->bindParam(':provivienda',$provivienda);
 			$stmtInsertPlanillaDetalleU->bindParam(':a_patronal_sol',$a_patronal_sol);
 			$stmtInsertPlanillaDetalleU->bindParam(':total_a_patronal',$total_a_patronal);
+			$stmtInsertPlanillaDetalleU->bindParam(':dotaciones',$dotaciones);
 			$flagSuccessIPMD=$stmtInsertPlanillaDetalleU->execute();
+			// $sqlInsertPlanillaDetalle="INSERT into planillas_personal_mes_patronal(cod_planilla,cod_personal_cargo,a_solidario_13000,a_solidario_25000,a_solidario_35000,rc_iva,atrasos,anticipo,
+			// seguro_de_salud,riesgo_profesional,provivienda,a_patronal_sol,total_a_patronal,dotaciones)
+			// values(:cod_planilla,:cod_personal_cargo,:a_solidario_13000,:a_solidario_25000,:a_solidario_35000,:rc_iva,:atrasos,:anticipo,
+			// 	:seguro_de_salud,:riesgo_profesional,:provivienda,:a_patronal_sol,:total_a_patronal,:dotaciones)";
+			// $stmtInsertPlanillaDetalle = $dbhIPD->prepare($sqlInsertPlanillaDetalle);
+			// $stmtInsertPlanillaDetalle->bindParam(':cod_planilla', $cod_planilla);
+			// $stmtInsertPlanillaDetalle->bindParam(':cod_personal_cargo',$codigo_personal);
+			// $stmtInsertPlanillaDetalle->bindParam(':a_solidario_13000',$aporte_solidario_13000);
+			// $stmtInsertPlanillaDetalle->bindParam(':a_solidario_25000',$aporte_solidario_25000);
+			// $stmtInsertPlanillaDetalle->bindParam(':a_solidario_35000',$aporte_solidario_35000);
+			// $stmtInsertPlanillaDetalle->bindParam(':rc_iva',$RC_IVA);
+			// $stmtInsertPlanillaDetalle->bindParam(':atrasos',$atrasos);
+			// $stmtInsertPlanillaDetalle->bindParam(':anticipo',$anticipo);
+			// $stmtInsertPlanillaDetalle->bindParam(':seguro_de_salud',$seguro_de_salud);
+			// $stmtInsertPlanillaDetalle->bindParam(':riesgo_profesional',$riesgo_profesional);
+			// $stmtInsertPlanillaDetalle->bindParam(':provivienda',$provivienda);
+			// $stmtInsertPlanillaDetalle->bindParam(':a_patronal_sol',$a_patronal_sol);
+			// $stmtInsertPlanillaDetalle->bindParam(':total_a_patronal',$total_a_patronal);
+			// $stmtInsertPlanillaDetalle->bindParam(':dotaciones',$dotaciones);
+			// $flagSuccessIPMD=$stmtInsertPlanillaDetalle->execute();
 		}
 
 		
