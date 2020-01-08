@@ -67,9 +67,6 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { ?>
     </tr>
 <?php $index++; } ?>
 </tbody>
-
-
-                    
                     </table>
                   </div>
                 </div>

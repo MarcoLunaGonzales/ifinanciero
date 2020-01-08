@@ -10,8 +10,10 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $dbh = new Conexion();
 
 // Preparamos
-$stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura, contabilizacion_vista 
-  FROM areas_contabilizacion where cod_estado_referencial=1 order by nombre");
+$stmt = $dbh->prepare("SELECT ac.codigo, ac.nombre, ac.abreviatura, ac.contabilizacion_vista,
+(select uo.nombre from unidades_organizacionales uo where uo.codigo=ac.cod_uo)as unidad,
+(select a.nombre from areas a where a.codigo=ac.cod_area)as area 
+  FROM areas_contabilizacion ac where ac.cod_estado_referencial=1 order by ac.nombre");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -19,6 +21,8 @@ $stmt->bindColumn('codigo', $codigo);
 $stmt->bindColumn('nombre', $nombre);
 $stmt->bindColumn('abreviatura', $abreviatura);
 $stmt->bindColumn('contabilizacion_vista', $contabilizacion_vista);
+$stmt->bindColumn('unidad', $nombreUnidad);
+$stmt->bindColumn('area', $nombreArea);
 
 ?>
 
@@ -42,6 +46,8 @@ $stmt->bindColumn('contabilizacion_vista', $contabilizacion_vista);
                           <th>Código</th>
                           <th>Nombre</th>
                           <th>Abreviatura</th>
+                          <th>Centro Costos UO</th>
+                          <th>Centro Costos Area</th>
                           <th>Contabilizacion vista</th>
                           <th class="text-right">Acciones</th>
                         </tr>
@@ -57,6 +63,8 @@ $stmt->bindColumn('contabilizacion_vista', $contabilizacion_vista);
                           <td align="center"><?=$codigo;?></td>
                           <td class="text-left"><?=$nombre;?></td>
                           <td class="text-left"><?=$abreviatura;?></td>
+                          <td class="text-left"><?=$nombreUnidad;?></td>
+                          <td class="text-left"><?=$nombreArea;?></td>
                           <td class="text-left"><?php if($contabilizacion_vista==0)echo "RESUMIDA";else echo "DETALLADA";?></td>
                           <td class="td-actions text-right">                                    
                             <a href='<?=$list_areas_contabilizacion_Detalle;?>&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonDetailMin;?>">

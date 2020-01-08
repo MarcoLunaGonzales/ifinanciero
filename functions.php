@@ -2173,16 +2173,16 @@ function obtenerTotalesSimulacion($codigo){
 
 function obtenerValorRefrigerio(){
   //Seleccionar el monto de refrigerio de configuraciones
-$dbh = new Conexion();
-$stmt = $dbh->prepare("SELECT c.valor_configuracion FROM configuraciones c WHERE c.id_configuracion=10");
-$stmt->execute();
-$stmt->bindColumn('valor_configuracion', $valorConfiguracion);
+  $dbh = new Conexion();
+  $stmt = $dbh->prepare("SELECT c.valor_configuracion FROM configuraciones c WHERE c.id_configuracion=10");
+  $stmt->execute();
+  $stmt->bindColumn('valor_configuracion', $valorConfiguracion);
 
-while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
-  $valorConfiguracionX = $valorConfiguracion;
-}
+  while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+    $valorConfiguracionX = $valorConfiguracion;
+  }
 
-return($valorConfiguracionX);
+  return($valorConfiguracionX);
 }
 
 //>>>>>>> 9665608161fbd74baa97b51d1230f7cda83c0916

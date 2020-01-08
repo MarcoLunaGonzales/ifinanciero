@@ -51,6 +51,7 @@ $stmtUO->bindColumn('nombre_uo', $nombre_uo_x);
                     <th>Estado</th>                    
                     <th></th>                    
                     <th></th> 
+                    <th></th> 
                   </tr>
               </thead>
               <tbody>
@@ -185,7 +186,12 @@ $stmtUO->bindColumn('nombre_uo', $nombre_uo_x);
                         </ul>
                       </div>                                                                 
                       <?php }?>                          
-
+                    </td>
+            
+                    <td class="text-center">
+                      <a href="<?=$urlPlanillaContabilizacion;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>">
+                        <i class="material-icons" title="Generar Comprobante" style="color:red">input</i>
+                      </a>
                     </td>
 
                   </tr>

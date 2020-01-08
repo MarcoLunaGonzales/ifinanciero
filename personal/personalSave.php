@@ -142,9 +142,7 @@ try {
                 $stmt3 = $dbh->prepare("UPDATE personalimagen set imagen = :imagen where codigo = :codigo");    
             } else {
                 $stmt3 = $dbh->prepare("INSERT into personalimagen (codigo, imagen) values (:codigo, :imagen)");
-            }
-
-                        
+            }                
             $stmt3->bindParam(':codigo', $codigo);
             $stmt3->bindParam(':imagen', $_FILES['image']['name']);//la url esta poniendo
             //if (move_uploaded_file($_FILES['image']['name'], APP_PATH . DIRECTORY_SEPARATOR ."imagenes".DIRECTORY_SEPARATOR.$_FILES['image']['name']))

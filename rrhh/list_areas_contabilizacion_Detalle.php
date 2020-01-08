@@ -18,7 +18,7 @@ $stmt = $dbh->prepare("SELECT codigo,
   (SELECT uo.nombre from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional) as nombre_unidadorganizacional,
   (SELECT a.nombre from areas a where a.codigo=cod_area) as nombre_area
 from areas_contabilizacion_detalle
-where cod_areacontabilizacion = $codigo_area_contabilizacion");
+where cod_areacontabilizacion = $codigo_area_contabilizacion and cod_estadoreferencial=1");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -62,6 +62,7 @@ $stmtb->bindColumn('nombre', $nombreContabilizacion);
                           <th class="text-center">#</th>
                           <th>Unidad Organizacional</th>
                           <th>Area</th>                          
+                          <th>Delete</th> 
                         </tr>
                       </thead>
                       <tbody>
@@ -71,8 +72,13 @@ $stmtb->bindColumn('nombre', $nombreContabilizacion);
                         ?>
                         <tr>
                           <td align="center"><?=$index;?></td>
-                          <td class="text-center"><?=$nombre_unidadorganizacional;?></td>
-                          <td class="text-center"><?=$nombre_area?></td>                          
+                          <td class="text-left"><?=$nombre_unidadorganizacional;?></td>
+                          <td class="text-left"><?=$nombre_area?></td>                          
+                          <td class="td-actions text-right">
+                              <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDeleteAreaContabilizacionDetalle;?>&codigo=<?=$codigo;?>&codigox=<?=$codigo_area_contabilizacion;?>')">
+                                  <i class="material-icons"><?=$iconDelete;?></i>
+                              </button>
+                          </td> 
                         </tr>
                         <?php
               							$index++;
