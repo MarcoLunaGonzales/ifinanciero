@@ -831,6 +831,10 @@
 
 
 		//RC_IVA Personal
+		if ($_GET['opcion']=='listRcivaPersonalMes') {
+			require_once('rc_ivaPersonal/listMeses.php');
+		}
+
 		if ($_GET['opcion']=='listRcivaPersonal') {
 			require_once('rc_ivaPersonal/list.php');
 		}
@@ -878,7 +882,10 @@
 		if ($_GET['opcion']=='subirAnticipoExcel2') {
 			require_once('anticipos_personal/subirDatosExcel.php');
 		}
-
+		       //ayuda documento csv
+            if ($_GET['opcion']=='ayudaArchivoCsv') {
+			   require_once('anticipos_personal/helpCsv.php');
+		    }
 
 		//Escalas Antiguedad
 		if ($_GET['opcion']=='listEscalaAntiguedad') {

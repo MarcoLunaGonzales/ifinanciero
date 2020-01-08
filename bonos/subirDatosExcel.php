@@ -130,5 +130,7 @@ if($opcionCargar==3){
     showAlertSuccessError($flagSuccess,$urlListMesPersona."&cod_mes=".$codMes."&cod_bono=".$codBono);
     
     }
+    fclose($fichero); 
+   unlink($destino); 
 }
 ?>

@@ -16,7 +16,7 @@ $codDescPerMes=$_POST['codDescPerMes'];
 $codEstado="1";
 $montos=json_decode($_POST["montos"]);
 
-/*foreach( $codPersona as $key => $n ) {
+foreach( $codPersona as $key => $n ) {
  //echo "El Id es ".$n.", detalle es ".$detalle[$key].", cod_descuento es ".$codDescPerMes[$key];
 if($codDescPerMes[$key]==null){
   $stmtt = $dbh->prepare("INSERT INTO descuentos_personal_mes(cod_descuento,cod_personal,cod_gestion,cod_mes,monto,cod_estadoreferencial) 
@@ -28,8 +28,8 @@ if($codDescPerMes[$key]==null){
   $flagSuccess=$stmt->execute();
 }
 
-}*/
-for ($i=0;$i<count($montos);$i++){ 
+}
+/*for ($i=0;$i<count($montos);$i++){ 
 	$n=$montos[$i]->cod_persona;
  	$montoDet=$montos[$i]->monto;
  if($montos[$i]->desc_mes==null){
@@ -42,7 +42,7 @@ for ($i=0;$i<count($montos);$i++){
   $flagSuccess=$stmt->execute();
  }
 
-}
+}*/
 $flagSuccess=true;
 showAlertSuccessError($flagSuccess,"../".$urlListMesPersona."&cod_descuento=".$codDescuento."&cod_mes=".$codMes);
 

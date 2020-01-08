@@ -8,9 +8,11 @@ $globalAdmin = $_SESSION["globalAdmin"];
 $codGestionActiva = $_SESSION['globalGestion'];
 
 $dbh = new Conexion();
+$codGestionActiva = $_SESSION['globalGestion'];
+$codMes=$_GET['cod_mes'];
 
 $stmt = $dbh->prepare("SELECT rcip.codigo as codigo_rciva, rcip.cod_personal as cod_personal, rcip.monto as monto,rcip.monto_iva as monto_iva
-                     FROM $table_rcivaPersonal rcip, personal p where rcip.cod_estadoreferencial=1 and rcip.cod_personal=p.codigo and cod_gestion=$codGestionActiva");
+                     FROM $table_rcivaPersonal rcip, personal p where rcip.cod_estadoreferencial=1 and rcip.cod_personal=p.codigo and rcip.cod_gestion=$codGestionActiva and rcip.cod_mes=$codMes");
 
 $stmt->execute();
 
@@ -18,6 +20,15 @@ $stmt->bindColumn('codigo_rciva', $codigo_rciva);
 $stmt->bindColumn('cod_personal', $cod_personal);
 $stmt->bindColumn('monto', $monto);
 $stmt->bindColumn('monto_iva', $monto_iva);
+
+//Mostrar Mes
+$stmtc = $dbh->prepare("SELECT nombre FROM meses WHERE codigo=$codMes");
+$stmtc->execute();
+$stmtc->bindColumn('nombre', $nombreMes);
+
+while ($row = $stmtc->fetch(PDO::FETCH_BOUND)) {
+  $nomMes = $nombreMes;
+}
 
 ?>
 
@@ -31,6 +42,7 @@ $stmt->bindColumn('monto_iva', $monto_iva);
               <i class="material-icons"><?= $iconCard; ?></i>
             </div>
             <h4 class="card-title"><?= $moduleNamePlural ?></h4>
+            <h4 class="card-title" align="center">Mes de <?=$nomMes?></h4>
           </div>
           <div class="card-body">
             <div class="table-responsive">
@@ -82,7 +94,8 @@ $stmt->bindColumn('monto_iva', $monto_iva);
                   if ($globalAdmin == 1) {
         ?>
           <div class="card-footer fixed-bottom">
-                    <button class="<?=$buttonNormal;?>" onClick="location.href='<?=$urlRegister;?>'">Registrar</button>
+                    <button class="<?=$buttonNormal;?>" onClick="location.href='<?=$urlRegister;?>&cod_mes=<?= $codMes; ?>'">Registrar</button>
+                    <button class="<?= $buttonCancel; ?>" onClick="location.href='<?= $urlList; ?>'">Cancelar</button>
               </div>
         <?php
         }

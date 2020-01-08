@@ -14,7 +14,7 @@ $urlSaveDelete="";
 
 $urlList2="../index.php?opcion=listDescuentos";
 
-
+$urlAyudaCSV="index.php?opcion=ayudaArchivoCsv";
 $moduleNameSingularDetalle="Descuento Detalle por Mes";
 $moduleNamePluralDetalle="Descuentos Detalle por Mes";
 $urlListMes="index.php?opcion=listDescuentoMes";

@@ -1399,7 +1399,26 @@ function porcentRetencionDetalle($codigo){
    return($nombreX);
 }
 
+function verificarAnticipoPersonaMes($codigoPersona, $codMes,$codGestion)
+{
+  $dbh = new Conexion();
+  $stmt = $dbh->prepare("SELECT cod_personal FROM anticipos_personal WHERE cod_mes=$codMes AND cod_gestion=$codGestion");
+  $stmt->execute();
 
+  $cont = 0;
+  $existe = 0;
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    if ($row['cod_personal'] == $codigoPersona) {
+      $cont++;
+    }
+  }
+  if ($cont == 0) {
+    $existe = 0;
+  } else {
+    $existe = 1;
+  }
+  return ($existe);
+}
 
 function verificarBonoPersonaMes($codigoPersona, $codMes, $codBono)
 {
@@ -2224,7 +2243,7 @@ function obtenerPlanillaSueldosRevision($codigo){
   FROM personal p
   join cargos c on p.cod_cargo=c.codigo
   join planillas_personal_mes pm on pm.cod_personalcargo=p.codigo
-  join areas a on p.cod_area=a.codigo where pm.cod_planilla=$codigo";
+  join areas a on p.cod_area=a.codigo where pm.cod_planilla=$codigo order by a.nombre";
   $stmt = $dbh->prepare($sql);
   $stmt->execute();
   return $stmt;;
@@ -2238,7 +2257,7 @@ function obtenerPlanillaTributariaReporte($codigo){
   FROM personal p
   join cargos c on p.cod_cargo=c.codigo
   join planillas_tributarias_personal_mes pm on pm.cod_personal=p.codigo
-  join areas a on p.cod_area=a.codigo where pm.cod_planillatributaria=$codigo";
+  join areas a on p.cod_area=a.codigo where pm.cod_planillatributaria=$codigo order by a.nombre";
   $stmt = $dbh->prepare($sql);
   $stmt->execute();
   return $stmt;;

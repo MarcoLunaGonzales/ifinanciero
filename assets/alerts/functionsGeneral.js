@@ -2386,18 +2386,26 @@ function agregaformPre(datos){
   var d=datos.split('-');
   document.getElementById("codigo_planilla").value=d[0];
 }
+<<<<<<< HEAD
 //<<<<<<< HEAD
+=======
+
+>>>>>>> 376c118ffb94695b9fa98ddd9946874574b18f74
 function agregaformRP(datos){
   //console.log("datos: "+datos);
   var d=datos.split('-');
   document.getElementById("codigo_planillaRP").value=d[0];
 }
+<<<<<<< HEAD
 function agregaformCP(datos){
   //console.log("datos: "+datos);
   var d=datos.split('-');
   document.getElementById("codigo_planillaCP").value=d[0];
 }
 //=======
+=======
+
+>>>>>>> 376c118ffb94695b9fa98ddd9946874574b18f74
 function agregaformPreTrib(datos,plan,mes,tiempo,user){
   var d=plan.split('-');
   document.getElementById("codigo_planilla2").value=d[0];
@@ -2406,7 +2414,10 @@ function agregaformPreTrib(datos,plan,mes,tiempo,user){
   $("#modified_at").text(tiempo);
   $("#modified_by").text(user);
   document.getElementById("codigo_planilla_trib").value=datos;
+<<<<<<< HEAD
 //>>>>>>> f2b39307f5e931340362944736af075974562096
+=======
+>>>>>>> 376c118ffb94695b9fa98ddd9946874574b18f74
 }
 function ProcesarPlanilla(cod_planilla){
   $.ajax({
@@ -2901,16 +2912,17 @@ function registrarMontoPersonal(index){
 
 function calcularHaberBasico(){
   var id = $("#personal").val();
-  var contenedor;
-  contenedor = document.getElementById('monto_max');
+  /*var contenedor;
+  contenedor = document.getElementById('monto_max');*/
   ajax=nuevoAjax();
   ajax.open('GET', 'anticipos_personal/ajaxCalcularHaberBasico.php?codigo='+id,true);
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
-      contenedor.innerHTML = ajax.responseText;
+      /*contenedor.innerHTML = ajax.responseText;*/
       if(ajax.responseText!="NN"){
        $("#monto").val(ajax.responseText/2);
-       $("#haber_basico").val(ajax.responseText/2); 
+       $("#haber_basico2").val(ajax.responseText/2);
+       $("#haber_basico").val(ajax.responseText);  
       }  
       $('.selectpicker').selectpicker(["refresh"]);          
     }
@@ -2918,7 +2930,7 @@ function calcularHaberBasico(){
   ajax.send(null) 
 }
 function montoNoMayor(){
-  if($("#monto").val()>$("#haber_basico").val()){
+  if($("#monto").val()>$("#haber_basico2").val()){
     $("#mensaje").html("<p class='text-danger'>El monto no puede ser mayor al 50% del haber b&aacute;sico</p>");
   }else{
     $("#mensaje").html("");
