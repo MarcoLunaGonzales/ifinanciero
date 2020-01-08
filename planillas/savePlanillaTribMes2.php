@@ -7,17 +7,19 @@ require_once '../rrhh/configModule.php';
 require_once '../functionsGeneral.php';
 $dbh = new Conexion();
 
-$codigo = $_POST['cod_planillatrib'];
-$codPlan = $_POST['cod_planilla'];
+$codigo = $_REQUEST['cod_planillatrib'];
+$codPlan = $_REQUEST['cod_planilla'];
 
 if($codigo==0){
   insertarPlanillaTributaria($codPlan);
+  $flagSuccess=true;
 }else{
   actualizarPlanillaTributaria($codigo);	
-  procesarPlanillaTributaria($codigo,$codPlan);	
+  $flagSuccess=procesarPlanillaTributaria($codigo,$codPlan);	
 }
 
-echo 1;
+showAlertSuccessError($flagSuccess,$urlPlanillasSueldoList);
+
 
 //actualizar la planilla tributaria el modified at
 function actualizarPlanillaTributaria($codigo){
@@ -60,7 +62,7 @@ function procesarPlanillaTributaria($codigo,$codPlan){
    $stmtDelete->execute();
 
    //insertamos los datos
-   $planillas="SELECT pl.*,p.cod_mes,p.cod_gestion,(select monto_iva from rc_ivapersonal where cod_personal=pl.cod_personalcargo) as monto_iva FROM planillas_personal_mes pl,planillas p where pl.cod_planilla=p.codigo and pl.cod_planilla=$codPlan";
+   $planillas="SELECT pl.*,p.cod_mes,p.cod_gestion FROM planillas_personal_mes pl,planillas p where pl.cod_planilla=p.codigo and pl.cod_planilla=$codPlan";
    $stmtPlanillas=$dbh->prepare($planillas);
    $stmtPlanillas->execute();
    
@@ -69,11 +71,6 @@ function procesarPlanillaTributaria($codigo,$codPlan){
    	$cod_mes=$row['cod_mes'];
    	$cod_gestion=$row['cod_gestion'];
 
-    $monto_iva=$row['monto_iva'];
-    if($monto_iva==null||$monto_iva==""){
-      $monto_iva=0;
-    }
-
    	//valores constantes
     $importe_cotizable=$row['liquido_pagable'];
     $prima=0;
@@ -81,7 +78,7 @@ function procesarPlanillaTributaria($codigo,$codPlan){
     // valores de plantilla
 
     $total_ganado=$importe_cotizable+$prima+$otros_ingresos;
-
+    
     $minimo_no_imponible=obtenerSueldoMinimo()*2;
     
     //suedo gravado
@@ -96,8 +93,7 @@ function procesarPlanillaTributaria($codigo,$codPlan){
     $porcentaje_sueldogravado=$sueldo_gravado*(obtenerValorConfiguracionPlanillas(21)/100);
     
     //13% del form110
-    //$porcentaje_formulario110=obtenerRcIvaPersonal($cod_personal,$cod_mes,$cod_gestion);
-    $porcentaje_formulario110=$monto_iva;
+    $porcentaje_formulario110=obtenerRcIvaPersonal($cod_personal,$cod_mes,$cod_gestion);
 
     //porcentajeSueldoMinimo
     $porcentaje_minimonoimponible=$minimo_no_imponible*(obtenerValorConfiguracionPlanillas(21)/100);
@@ -150,7 +146,7 @@ function procesarPlanillaTributaria($codigo,$codPlan){
      }else{
      	$importe_retenido=0;
      }
-     $dbhInstert = new Conexion();
+
      $sqlInsert="INSERT INTO planillas_tributarias_personal_mes (cod_planillatributaria,cod_personal,importe_cotizable,prima,otros_ingresos,total_ganado,minimo_no_imponible,sueldo_gravado,porcentaje_sueldogravado,porcentaje_formulario110,porcentaje_minimonoimponible,fisco,dependiente,saldo_mes_anterior,saldo_mes_anterior_actualizado,total_saldo,total_saldo_favordependiente,saldo_utilizado,importe_retenido,cod_estadoreferencial) 
      VALUES (
       '$codigo',
@@ -174,9 +170,10 @@ function procesarPlanillaTributaria($codigo,$codPlan){
       '$importe_retenido',
       '1'
      	)";
-     $stmtInsert = $dbhInstert->prepare($sqlInsert);
-     $stmtInsert->execute();     	
+     $flagBien=$stmtInsert = $dbh->prepare($sqlInsert);
+          	
    } //while plantillas
+   return $flagBien;
 }
 
 

@@ -2403,6 +2403,7 @@ function agregaformPreTrib(datos,plan,mes,tiempo,user){
   document.getElementById("codigo_planilla_trib").value=datos;
 }
 function ProcesarPlanilla(cod_planilla){
+  alert(cod_planilla)
   $.ajax({
     type:"POST",
     data:"cod_planilla="+cod_planilla+"&sw=2",
@@ -2447,6 +2448,7 @@ function ReprocesarPlanilla(cod_planilla){
 }
 
 function ReprocesarPlanillaTrib(cod_planillaTrib,cod_planilla){
+  //window.location.href="planillas/savePlanillaTribMes2.php?cod_planillatrib="+cod_planillaTrib+"&cod_planilla="+cod_planilla;
   $.ajax({
     type:"POST",
     data:"cod_planillatrib="+cod_planillaTrib+"&sw=1&cod_planilla="+cod_planilla,
@@ -2919,3 +2921,17 @@ function montoNoMayor(){
     $("#mensaje").html("");
   }
 }
+
+
+//funciones despues de cargar pantalla
+
+$(document).ready(function() {
+  //para plantillas tributarias
+  if($('#AceptarReProcesoTrib').length){
+    $('#AceptarReProcesoTrib').click(function(){   
+     var cod_planilla=document.getElementById("codigo_planilla2").value;    
+      var cod_planillaTrib=document.getElementById("codigo_planilla_trib").value;      
+      ReprocesarPlanillaTrib(cod_planillaTrib,cod_planilla);
+    });    
+  }  
+});

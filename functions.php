@@ -2269,7 +2269,7 @@ function descargarPDFHorizontal($nom,$html){
   // Cargamos DOMPDF
   require_once 'assets/libraries/dompdf/dompdf_config.inc.php';
   $mydompdf = new DOMPDF();
-  $mydompdf->set_paper('letter', 'landscape');
+  $mydompdf->set_paper('legal', 'landscape');
   ob_clean();
   $mydompdf->load_html($html);
   $mydompdf->render();
@@ -2298,10 +2298,26 @@ function descargarPDFHorizontal($nom,$html){
   function obtenerRcIvaPersonal($cod_persona,$cod_mes,$cod_gestion){
     $monto=0;
     $dbh = new Conexion();
-    $stmt = $dbh->prepare("SELECT monto_iva from rc_ivapersonal where cod_mes=$cod_mes and cod_gestion=$cod_gestion");
+    $stmt = $dbh->prepare("SELECT monto_iva from rc_ivapersonal where cod_personal='$cod_persona' and cod_mes=$cod_mes and cod_gestion=$cod_gestion");
     $stmt->execute();
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $monto = $row['monto_iva'];
+    }
+    if($monto==null){
+      $monto=0;
+    }
+    return $monto;
+  }
+  function obtenerSaldoMesAnteriorTrib($cod_persona,$cod_mes,$cod_gestion){
+    $monto=0;
+    $dbh = new Conexion();
+    $stmt = $dbh->prepare("SELECT ptd.total_saldo_favordependiente from planillas_tributarias_personal_mes ptd join planillas_tributarias pt on pt.codigo=ptd.cod_planillatributaria where ptd.cod_personal='$cod_persona' and pt.cod_mes='$cod_mes' and pt.cod_gestion='$cod_gestion'");
+    $stmt->execute();
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $monto = $row['total_saldo_favordependiente'];
+    }
+    if($monto==null){
+      $monto=0;
     }
     return $monto;
   }
