@@ -332,7 +332,7 @@ $stmtUO->bindColumn('nombre_uo', $nombre_uo_x);
 <script type="text/javascript">
   $(document).ready(function(){
     $('#AceptarProceso').click(function(){      
-      cod_planilla=document.getElementById("codigo_planilla").value;      
+      var cod_planilla=document.getElementById("codigo_planilla").value;      
 
       ProcesarPlanilla(cod_planilla);
     });
@@ -346,10 +346,6 @@ $stmtUO->bindColumn('nombre_uo', $nombre_uo_x);
 
       CerrarPlanilla(cod_planilla);
     });
-    $('#AceptarReProcesoTrib').click(function(){   
-     var cod_planilla=document.getElementById("codigo_planilla2").value;    
-      var cod_planillaTrib=document.getElementById("codigo_planilla_trib").value;      
-      ReprocesarPlanillaTrib(cod_planillaTrib,cod_planilla);
-    });
+    
   });
 </script>
