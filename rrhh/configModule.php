@@ -38,8 +38,9 @@ $list_areas_contabilizacion_Detalle="index.php?opcion=list_areas_contabilizacion
 $urlDeleteAreas_contabilizacion="index.php?opcion=deleteareas_contabilizacion";
 $urlFormAreas_contabilizacion_detalle="index.php?opcion=FormAreas_contabilizacion_detalle";
 $urlSaveAreas_contabilizacion_detalle="?opcion=saveAreas_contabilizacion_detalle";
-
+$urlDeleteAreaContabilizacionDetalle="index.php?opcion=delete_areas_conta_detalle";
 $urlSaveAreas_organizacion="?opcion=areasuoSave";
+
 
 
 

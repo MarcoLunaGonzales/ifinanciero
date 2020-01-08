@@ -75,6 +75,8 @@
       alerts.showSwal();
     });
   </script>
+
+  
   <script type="text/javascript">
     $(document).ready(function() {
         $('#tablePaginatorReport ').DataTable({
@@ -157,7 +159,7 @@
         jQuery.extend(jQuery.validator.messages, {
         required: "El campo es requerido."
       });*/
-//campo input autocomplete
+    //campo input autocomplete
      if ($('#cuenta_auto').length) {
        autocompletar("cuenta_auto","cuenta_auto_id",array_cuenta);
      }

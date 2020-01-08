@@ -596,6 +596,12 @@
 		if ($_GET['opcion']=='saveAreas_contabilizacion_detalle') {
 			require_once('rrhh/areas_contabilizacion_detalle_save.php');
 		}
+
+		if ($_GET['opcion']=='delete_areas_conta_detalle') {
+			$codigo=$_GET['codigo'];
+			$codigox=$_GET['codigox'];
+			require_once('rrhh/areas_contabilizacion_detalle_delete.php');
+		}
 		
 		//Personal Financiación Externa (Proyectos)
 		if ($_GET['opcion']=='personalFinExterna') {

@@ -9,8 +9,8 @@ $dbh = new Conexion();
 $dbhI = new Conexion();
 $dbhIPD = new Conexion();
 
-$anio_actual=date('Y');
-$mes_actual=date('m');
+$anio_actual=date('Y');//generar del anio y mes actual
+$mes_actual=date('m');//generar del anio y mes actual
 
 //obteniendo codigo de gestion para el registro de planilla
 $stmt = $dbh->prepare("SELECT * from gestiones where nombre=$anio_actual");

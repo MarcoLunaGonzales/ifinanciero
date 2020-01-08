@@ -10,7 +10,8 @@ $dbh = new Conexion();
 //RECIBIMOS LAS VARIABLES
 $codigo=$codigo;
 if ($codigo>0) {
-	$stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura, contabilizacion_vista FROM areas_contabilizacion where codigo=:codigo");
+	$stmt = $dbh->prepare("SELECT codigo,nombre,abreviatura,cod_area,cod_uo,contabilizacion_vista
+	 FROM areas_contabilizacion where codigo=:codigo");
 	// Ejecutamos
 	$stmt->bindParam(':codigo',$codigo);
 	$stmt->execute();
@@ -19,15 +20,27 @@ if ($codigo>0) {
 		$codigoX=$row['codigo'];
 		$nombreX=$row['nombre'];
 		$abreviaturaX=$row['abreviatura'];
+		$cod_areax=$row['cod_area'];
+		$cod_uox=$row['cod_uo'];
+		// $nombre_areaX=$row['nombre_area'];
+		// $nombre_uoX=$row['nombre_uo'];
 		$contabilizacion_vistaX=$row['contabilizacion_vista'];
 	}	
 }else{
 	$codigoX='';
 	$nombreX='';
 	$abreviaturaX='';
+	$cod_areax='';
+	$cod_uox='';
 	$contabilizacion_vistaX='';
-
 }
+
+$queryUO = "select * from unidades_organizacionales where cod_estado=1 order by nombre";
+$statementUO = $dbh->query($queryUO);
+
+$queryArea = "SELECT codigo,nombre FROM  areas WHERE cod_estado=1
+order by nombre";
+$statementArea = $dbh->query($queryArea);//uo
 
 ?>
 
@@ -72,6 +85,33 @@ if ($codigo>0) {
 					</div>
 				  </div>
 				</div>
+				<div class="row">
+                  <label class="col-sm-2 col-form-label">Centro Costos UO</label>
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                        <select name="cod_uo" id="cod_uo" class="selectpicker" data-style="btn btn-primary" onChange="ajaxAreaContabilizacionDetalle(this);">
+                            <option value=""></option>
+                            <?php while ($row = $statementUO->fetch()){ ?>
+                                <option <?=($cod_uox==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                  </div>
+               
+                  <label class="col-sm-2 col-form-label">Centro Costos Area</label>
+                  <div class="col-sm-4">
+                    <div class="form-group" >
+                        <div id="div_contenedor_area">
+                            <select name="cod_area" id="cod_area" class="selectpicker" data-style="btn btn-primary" >
+                                <option value=""></option>
+                                <?php while ($row = $statementArea->fetch()){ ?>
+                                    <option <?=($cod_areax==$row["codigo"])?"selected":"";?>  value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                                <?php } ?>
+                            </select>
+                        </div>                    
+                    </div>
+                  </div>
+                </div>
 			  </div>
 			  <div class="card-footer ml-auto mr-auto">
 				<button type="submit" class="<?=$buttonNormal;?>">Guardar</button>
