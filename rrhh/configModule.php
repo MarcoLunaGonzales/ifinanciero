@@ -109,6 +109,8 @@ $urlPlanillaSueldoPersonalActualPDF="planillas/reportePlanillasSueldos.php";
 $urlPlanillaTribPersonalPDF="planillas/reportePlanillasTributarias.php";
 $urlDetallePlanillaPrerequisitos="planillas/detallePlanillaPrerequisitos.php";
 $urlPlanillaSueldoPersonalReporte="planillas/planillaSueldoPersonalReporte.php";
+$urlPlanillaContabilizacion="planillas/executeComprobantePlanillaSueldos.php";
+
 
 
 
