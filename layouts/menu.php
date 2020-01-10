@@ -175,6 +175,12 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
                   </a>
                 </li>
                 <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=tiposContratosLista">
+                    <span class="sidebar-mini"> TCO </span>
+                    <span class="sidebar-normal"> Tipos Contratos</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
                   <a class="nav-link" href="?opcion=tipospersonalLista">
                     <span class="sidebar-mini"> TP </span>
                     <span class="sidebar-normal"> Tipos Personal</span>

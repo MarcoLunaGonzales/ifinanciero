@@ -451,7 +451,22 @@
 		if ($_GET['opcion']=='areasuoSave') {
 			require_once('rrhh/areas_organizacionSave.php');
 		}
-
+		//tipos contratos
+		if ($_GET['opcion']=='tiposContratosLista') {
+			require_once('personal/tiposContratosLista.php');
+		}		
+		if ($_GET['opcion']=='formContratosLista') {
+			$codigo=$_GET['codigo'];
+			require_once('personal/TiposContratosForm.php');
+		}
+		if ($_GET['opcion']=='saveTiposContrato') {
+			require_once('personal/tipos_contratosSave.php');
+		}
+		if ($_GET['opcion']=='deleteTiposContrato') {
+			$codigo=$_GET['codigo'];
+			require_once('personal/tiposContratoDelete.php');
+		}
+		
 		//tipos personal
 		if ($_GET['opcion']=='tipospersonalLista') {
 			require_once('personal/tipospersonalLista.php'); //ok
@@ -474,6 +489,16 @@
 		if ($_GET['opcion']=='FormPersonalContratos') {
 			$codigo=$_GET['codigo'];
 			require_once('personal/PersonalContratosForm.php');
+		}
+		// personal otros datos
+
+		if ($_GET['opcion']=='edit_uo_area_personal') {
+			$codigo_item=$_GET['codigo_item'];
+			$codigo_p=$_GET['codigo_p'];
+			require_once('personal/personal_edit_otros.php');
+		}
+		if ($_GET['opcion']=='personalOtrosSave') {
+			require_once('personal/personal_save_otros.php');
 		}
 
 		//estados personal

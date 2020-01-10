@@ -68,7 +68,7 @@ $stmt->bindColumn('area', $nombreArea);
                           <td class="text-left"><?php if($contabilizacion_vista==0)echo "RESUMIDA";else echo "DETALLADA";?></td>
                           <td class="td-actions text-right">                                    
                             <a href='<?=$list_areas_contabilizacion_Detalle;?>&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonDetailMin;?>">
-                              <i class="material-icons" title="Adicionar">playlist_add</i>
+                              <i class="material-icons" title="Detalle">playlist_add</i>
                             </a>
                             <a href='<?=$urlFormAreas_contabilizacion;?>&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonEdit;?>">
                               <i class="material-icons" title="Editar"><?=$iconEdit;?></i>

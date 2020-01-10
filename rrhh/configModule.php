@@ -86,7 +86,11 @@ $urlFormTipos_genero="index.php?opcion=tipos_generoForm";
 $urlDeleteTipos_genero="index.php?opcion=deletetipos_genero";
 
 
-
+//tipos de contratos
+$urlListTiposContratos="?opcion=tiposContratosLista";
+$urlFormTiposContratos="?opcion=formContratosLista";
+$urlSaveTiposContrato="?opcion=saveTiposContrato";
+$urlDeleteTiposContrato="?opcion=deleteTiposContrato";
 //personal
 $nombreSingularPersonal="Personal";
 $nombrePluralPersonal="Personal";
@@ -100,6 +104,11 @@ $urlDeletePersonal="index.php?opcion=deletepersonal";
 $urlFormPersonalAreaDistribucion="index.php?opcion=PersonalAreaDistribucionForm";
 $urlFormPersonalContratos="index.php?opcion=FormPersonalContratos";
 $urlprintPersonal="personal/personalPrintFicha.php";
+//edit otros personal
+
+$urledit_uo_area_personal="index.php?opcion=edit_uo_area_personal";
+$urlPersonalOtrosSave="?opcion=personalOtrosSave";
+
 
 //planilla sueldo
 $urlPlanillasSueldoList="?opcion=planillasSueldoPersonal";

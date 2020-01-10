@@ -138,9 +138,16 @@ $stmtUO->bindColumn('nombre_uo', $nombre_uo_x);
                       ?>
                       <?php }?>
                       <?php if($cod_estadoplanilla==3){    ?>
-                      <a href='<?=$urlPlanillaSueldoPersonalActual;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>' target="_blank" rel="tooltip" class="btn btn-success">            
+                      <!-- <a href='<?=$urlPlanillaSueldoPersonalActual;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>' target="_blank" rel="tooltip" class="btn btn-success">            
+                        <i class="material-icons" title="Ver Planilla">remove_red_eye</i>                        
+                      </a> -->
+                      <a href='<?=$urlPlanillaSueldoPersonalActualPDF;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>' target="_blank" rel="tooltip" class="btn btn-success">            
                         <i class="material-icons" title="Ver Planilla">remove_red_eye</i>                        
                       </a>
+                      <a href='<?=$urlPlanillaTribPersonalPDF;?>?codigo_trib=<?=$codigoTrib;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>' target="_blank" rel="tooltip" class="btn btn-success">            
+                          <i class="material-icons" title="Ver Planilla Triburaria">remove_red_eye</i> PT                       
+                      </a>
+
                                                                               
                       <?php }?>                                                                
                     </td>

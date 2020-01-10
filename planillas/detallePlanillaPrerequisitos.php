@@ -23,13 +23,13 @@ $stmtGestion->execute();
 $resultGestion= $stmtGestion->fetch();
 $gestion=$resultGestion['nombre'];
 //cantidad bonos
-$sql3="SELECT count(cod_bono) as cantidad_bonos from bonos_personal_mes where cod_gestion=$cod_gestion and cod_mes=$cod_mes";
+$sql3="SELECT count(cod_bono) as cantidad_bonos from bonos_personal_mes where cod_gestion=$cod_gestion and cod_mes=$cod_mes and cod_estadoreferencial=1";
 $stmt3 = $dbh->prepare($sql3);
 $stmt3->execute();     
 $result3= $stmt3->fetch();
 $cantidad_bonosX=trim($result3['cantidad_bonos']);
 
-$sql4="SELECT count(cod_descuento) as cantidad_descuentos_otros from descuentos_personal_mes where cod_gestion=$cod_gestion and cod_mes=$cod_mes";
+$sql4="SELECT count(cod_descuento) as cantidad_descuentos_otros from descuentos_personal_mes where cod_gestion=$cod_gestion and cod_mes=$cod_mes and cod_estadoreferencial=1";
 $stmt4 = $dbh->prepare($sql4);
 $stmt4->execute();     
 $result4= $stmt4->fetch();
@@ -42,16 +42,16 @@ $cantidad_descuentos_otros=trim($result4['cantidad_descuentos_otros']);
 //descuentos
 
 $sqlDescuentos = "SELECT
-(select count(b1.bono_antiguedad) from planillas_personal_mes b1 where b1.bono_antiguedad>0 and b1.cod_planilla=cod_planilla) as bono_antiguedad,
-(select count(a1.afp_1) from planillas_personal_mes a1 where a1.afp_1>0 and a1.cod_planilla=cod_planilla) as afp_1,
-(select count(a2.afp_2) from planillas_personal_mes a2 where a2.afp_2>0 and a2.cod_planilla=cod_planilla) as afp_2,
-(SELECT count(ap13.a_solidario_13000) from planillas_personal_mes_patronal ap13 where ap13.a_solidario_13000>0 and ap13.cod_planilla=cod_planilla) as as13,
+(select count(b1.bono_antiguedad) from planillas_personal_mes b1 where b1.bono_antiguedad>0 and b1.cod_planilla=cod_planilla and b1.cod_estadoreferencial=1) as bono_antiguedad,
+(select count(a1.afp_1) from planillas_personal_mes a1 where a1.afp_1>0 and a1.cod_planilla=cod_planilla and cod_estadoreferencial=1) as afp_1,
+(select count(a2.afp_2) from planillas_personal_mes a2 where a2.afp_2>0 and a2.cod_planilla=cod_planilla and cod_estadoreferencial=1) as afp_2,
+(SELECT count(ap13.a_solidario_13000) from planillas_personal_mes_patronal ap13 where ap13.a_solidario_13000>0 and ap13.cod_planilla=cod_planilla ) as as13,
 (SELECT count(ap25.a_solidario_25000) from planillas_personal_mes_patronal ap25 where ap25.a_solidario_25000>0 and ap25.cod_planilla=cod_planilla) as as25,
 (SELECT count(ap35.a_solidario_35000) from planillas_personal_mes_patronal ap35 where ap35.a_solidario_35000>0 and ap35.cod_planilla=cod_planilla) as as35,
 (SELECT count(rc.rc_iva) from planillas_personal_mes_patronal rc where rc.rc_iva>0 and rc.cod_planilla=cod_planilla) as rc_iva,
 (SELECT count(at.atrasos) from planillas_personal_mes_patronal at where at.atrasos>0 and at.cod_planilla=cod_planilla) as atrasos,
 (SELECT count(ant.anticipo) from planillas_personal_mes_patronal ant where ant.anticipo>0 and ant.cod_planilla=cod_planilla) as anticipos,
-(SELECT count(dot.dotaciones) from planillas_personal_mes dot where dot.dotaciones>0 and dot.cod_planilla=cod_planilla) as dotaciones
+(SELECT count(dot.dotaciones) from planillas_personal_mes dot where dot.dotaciones>0 and dot.cod_planilla=cod_planilla and cod_estadoreferencial=1) as dotaciones
 from planillas								
 where  cod_gestion=$cod_gestion and cod_mes=$cod_mes";
 $stmtDescuentos = $dbh->prepare($sqlDescuentos);
@@ -110,8 +110,8 @@ $total_descuentos=$atrasos+$anticipos+$dotaciones+$cantidad_descuentos_otros;
 						</tr>			  						          				        			  		
 				  			<?php 
 					  			$sqlBonos = "SELECT cod_bono,count(*) as cantidad_items,(select b.nombre from bonos b where b.codigo=cod_bono) as nombre_bono
-		                          from bonos_personal_mes 
-		                          where  cod_gestion=$cod_gestion and cod_mes=$cod_mes GROUP BY (cod_bono)";
+									from bonos_personal_mes 
+									where  cod_gestion=$cod_gestion and cod_mes=$cod_mes and cod_estadoreferencial=1  GROUP BY (cod_bono)";
 								$stmtBonos = $dbh->prepare($sqlBonos);
 								$stmtBonos->execute();                      
 								$stmtBonos->bindColumn('cod_bono',$cod_bono);
@@ -178,23 +178,22 @@ $total_descuentos=$atrasos+$anticipos+$dotaciones+$cantidad_descuentos_otros;
 
 				  		<!--OTROS DESCUeNTOS-->
 				  		</tr>			  						          				        			  		
-				  			<?php 
+				  			<?php				  				
 					  			$sqlBonos = "SELECT cod_descuento,count(*) as cantidad_descuentos,(select b.nombre from descuentos b where b.codigo=cod_descuento) as nombre_descuento
 									from descuentos_personal_mes 
-									where  cod_gestion=$cod_gestion and cod_mes=$cod_mes GROUP BY (cod_descuento)";
+									where  cod_gestion=$cod_gestion and cod_mes=$cod_mes and cod_estadoreferencial=1  GROUP BY (cod_descuento)";
 								$stmtBonos = $dbh->prepare($sqlBonos);
 								$stmtBonos->execute();                      
 								$stmtBonos->bindColumn('cod_descuento',$cod_descuento_otros);
 								$stmtBonos->bindColumn('cantidad_descuentos',$cantidad_descuentos_otros);
 								$stmtBonos->bindColumn('nombre_descuento',$nombre_descuento_otros);
 				  			while ($row = $stmtBonos->fetch()){ ?>
-				  			<tr>
-				  			<td class="id_bonos" style="display:none"></td>
-							<td class="id_bonos text-left" style="display:none"><?=$nombre_descuento_otros;?> : <?=$cantidad_descuentos_otros?> Registros este mes</td>
-							</tr>
+					  			<tr>
+						  			<td class="id_descuentos" style="display:none"></td>
+									<td class="id_descuentos text-left" style="display:none"><?=$nombre_descuento_otros;?> : <?=$cantidad_descuentos_otros?> Registros este mes</td>
+								</tr>
+
 							<?php }?>					  
-
-
 
 				  	</tbody>
 				    

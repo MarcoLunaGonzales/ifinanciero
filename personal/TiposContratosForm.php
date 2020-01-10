@@ -2,7 +2,7 @@
 
 require_once 'conexion.php';
 require_once 'styles.php';
-require_once 'configModule.php';
+require_once 'rrhh/configModule.php';
 
 //$dbh = new Conexion();
 $dbh = new Conexion();
@@ -10,30 +10,23 @@ $dbh = new Conexion();
 
 //por is es edit
 if ($codigo > 0){
-    //EDIT GET1 no guardar, sino obtener
     $codigo=$codigo;
-    $stmt = $dbh->prepare("SELECT * FROM areas where codigo =:codigo");
-    //Ejecutamos;
+    $stmt = $dbh->prepare("SELECT * FROM tipos_contrato_personal where codigo =:codigo");
     $stmt->bindParam(':codigo',$codigo);
     $stmt->execute();
     $result = $stmt->fetch();
     $codigo = $result['codigo'];
     $nombre = $result['nombre'];
-    $abreviatura = $result['abreviatura'];
-    $observaciones = $result['observaciones'];    
-    $created_at = $result['created_at'];
-    $created_by = $result['created_by'];
-    $modified_at = $result['modified_at'];
-    $modified_by = $result['modified_by'];
+    $duracion_meses = $result['duracion_meses'];
+    $meses_alerta = $result['meses_alerta'];
 } else {
-  $codigo = 0;
+    $codigo = 0;
     $nombre = ' ';
-    $abreviatura = ' ';
-    $observaciones = ' ';    
+    $duracion_meses = ' ';
+    $cod_estadoreferencial = ' ';
     $created_at = ' ';
     $created_by = ' ';
-    $modified_at = ' ';
-    $modified_by = ' ';
+    $meses_alerta = ' ';
 }
 ?>
 
@@ -41,19 +34,17 @@ if ($codigo > 0){
 	<div class="container-fluid">
 
 		<div class="col-md-12">
-		  <form id="form1" class="form-horizontal" action="<?=$urlSaveAreas;?>" method="post">
+		  <form id="form1" class="form-horizontal" action="<?=$urlSaveTiposContrato;?>" method="post">
             <input type="hidden" name="codigo" id="codigo" value="<?=$codigo;?>"/>
 			<div class="card">
 			  <div class="card-header <?=$colorCard;?> card-header-text">
 				<div class="card-text">
-				  <h4 class="card-title"><?php if ($codigo == 0) echo "Registrar"; else echo "Editar";?>  <?=$nombreSingularArea;?></h4>
+				  <h4 class="card-title"><?php if ($codigo == 0) echo "Registrar"; else echo "Editar";?> Tipo De Contratos</h4>
 				</div>
 			  </div>
-			  <div class="card-body ">
-				
-
+			  <div class="card-body ">		
               <input type="hidden" name="codigo" id="codigo" value="<?=$codigo;?>"/>
-              <div class="row">
+                  <div class="row">
                     <label class="col-sm-2 col-form-label">Nombre</label>
                     <div class="col-sm-7">
                     <div class="form-group">
@@ -62,25 +53,25 @@ if ($codigo > 0){
                     </div>
                 </div><!--fin campo nombre -->
                 <div class="row">
-                    <label class="col-sm-2 col-form-label">Abreviatura</label>
+                    <label class="col-sm-2 col-form-label">Duración De Meses</label>
                     <div class="col-sm-7">
                     <div class="form-group">
-                        <input class="form-control" type="text" name="abreviatura" id="abreviatura" required="true" value="<?=$abreviatura;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+                        <input class="form-control" type="text" name="duracion_meses" id="duracion_meses" required="true" value="<?=$duracion_meses;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
                     </div>
                     </div>
                 </div><!--fin campo abreviatura -->
                 <div class="row">
-                    <label class="col-sm-2 col-form-label">Observaciones</label>
+                    <label class="col-sm-2 col-form-label">Meses De Alerta</label>
                     <div class="col-sm-7">
                     <div class="form-group">
-                        <input class="form-control" type="text" name="observaciones" id="observaciones" value="<?=$observaciones;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+                        <input class="form-control" type="text" name="meses_alerta" id="meses_alerta" required="true" value="<?=$meses_alerta;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
                     </div>
                     </div>
-                </div><!--fin campo observaciones -->
+                </div><!--fin campo abreviatura -->
 			  </div>
 			  <div class="card-footer ml-auto mr-auto">
 				<button type="submit" class="<?=$buttonNormal;?>">Guardar</button>
-				<a href="<?=$urlListAreas;?>" class="<?=$buttonCancel;?>">Volver</a>
+				<a href="<?=$urlListTiposContratos;?>" class="<?=$buttonCancel;?>">Volver</a>
 			  </div>
 			</div>
 		  </form>

@@ -63,6 +63,7 @@ foreach ($detalle as $objDet){
 	$created_by = 1;//$_POST["created_by"];
     $modified_by = 1;//$_POST["modified_by"];
     $cod_estadoreferencial=1;
+    $bandera=0;
 
     $codigoPersonalAD=$codigo;
     $codigoPersonalD=$codigo;
@@ -137,13 +138,13 @@ foreach ($detalle as $objDet){
     	$stmtI = $dbh->prepare("INSERT INTO personal(codigo,cod_tipo_identificacion,tipo_identificacion_otro,identificacion,cod_lugar_emision,lugar_emision_otro,fecha_nacimiento,cod_cargo,cod_unidadorganizacional,cod_area,
         jubilado,cod_genero,cod_tipopersonal,haber_basico,paterno,materno,apellido_casada,primer_nombre,otros_nombres,nua_cua_asignado,
         direccion,cod_tipoafp,cod_tipoaporteafp,nro_seguro,cod_estadopersonal,telefono,celular,email,persona_contacto,created_by,modified_by,cod_estadoreferencial,cod_nacionalidad,cod_estadoCivil,
-        cod_pais,cod_departamento,cod_ciudad,Ciudad_otro,cod_grado_academico,ing_contr,ing_planilla) 
+        cod_pais,cod_departamento,cod_ciudad,Ciudad_otro,cod_grado_academico,ing_contr,ing_planilla,bandera) 
         values (:codigo,:cod_tipoIdentificacion,:tipo_identificacionOtro,:identificacion,:cod_lugar_emision,:lugar_emisionOtro,:fecha_nacimiento,
         	:cod_cargo,:cod_unidadorganizacional,:cod_area,:jubilado,:cod_genero,:cod_tipopersonal,:haber_basico,:paterno,
         	:materno,:apellido_casada,:primer_nombre,:otros_nombres,:nua_cua_asignado,
         :direccion,:cod_tipoafp,:cod_tipoaporteafp,:nro_seguro,:cod_estadopersonal,:telefono,:celular,:email,:persona_contacto,:created_by,:modified_by,
         :cod_estadoreferencial,:cod_nacionalidad,:cod_estadoCivil,
-        :cod_pais,:cod_departamento,:cod_ciudad,:ciudadOtro,:cod_grado_academico,:ing_contr,:ing_planilla)");
+        :cod_pais,:cod_departamento,:cod_ciudad,:ciudadOtro,:cod_grado_academico,:ing_contr,:ing_planilla,:bandera)");
         //Bind
         $stmtI->bindParam(':codigo', $codigo);
         $stmtI->bindParam(':cod_tipoIdentificacion', $cod_tipoIdentificacion);
@@ -174,9 +175,7 @@ foreach ($detalle as $objDet){
         $stmtI->bindParam(':celular', $celular);
         $stmtI->bindParam(':email', $email);
         $stmtI->bindParam(':persona_contacto', $persona_contacto);
-        //$stmtI->bindParam(':created_at', $created_at);
         $stmtI->bindParam(':created_by', $created_by);
-        //$stmtI->bindParam(':modified_at', $modified_at);
         $stmtI->bindParam(':modified_by', $modified_by);
         $stmtI->bindParam(':cod_estadoreferencial', $cod_estadoreferencial);
         $stmtI->bindParam(':cod_nacionalidad', $cod_nacionalidad);
@@ -187,8 +186,8 @@ foreach ($detalle as $objDet){
         $stmtI->bindParam(':ciudadOtro', $CiudadOtro);
         $stmtI->bindParam(':cod_grado_academico', $cod_grado_academico);
         $stmtI->bindParam(':ing_contr', $ing_contr); 
-        $stmtI->bindParam(':ing_planilla', $ing_planilla); 
-
+        $stmtI->bindParam(':ing_planilla', $ing_planilla);
+        $stmtI->bindParam(':bandera', $bandera);
         $flagSuccess=$stmtI->execute();
         if($flagSuccess){
             $j++;
