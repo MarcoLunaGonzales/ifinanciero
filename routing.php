@@ -741,7 +741,10 @@
 			$codigo_mes=$_GET['cod_mes'];
 			require_once('bonos/registerBonoMesPersona.php');
 		}
-
+        if ($_GET['opcion']=='registerBonoPeriodoPersona') {
+			$codigo_bono=$_GET['cod_bono'];
+			require_once('bonos/registerBonoPeriodoPersona.php');
+		}
 		if ($_GET['opcion']=='subirBonoExcel') {
 			$codigo_bono=$_GET['cod_bono'];
 			$codigo_mes=$_GET['cod_mes'];
@@ -1008,6 +1011,10 @@
 			$cod_refrigerio=$_GET['cod_ref'];
 			$cod_mes=$_GET['cod_mes'];
 			require_once('refrigerios/listDetalle.php');
+		}
+		if ($_GET['opcion']=='editRefrigerioDetalle') {
+			$cod_refrigeriodetalle=$_GET['cod_ref_det'];
+			require_once('refrigerios/editDetalle.php');
 		}
 
 		if ($_GET['opcion']=='aprobarRefrigerio') {

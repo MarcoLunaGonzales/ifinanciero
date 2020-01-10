@@ -1,4 +1,6 @@
-
+.elem-frente{
+  z-index:9999;
+}
 .count{
     position: absolute;
     background: red;

@@ -110,7 +110,8 @@ $stmtb->bindColumn('nombre', $nombreBono);
               if($globalAdmin==1){
               ?>
       				<div class="card-footer fixed-bottom">
-                    <button class="<?=$buttonCancel;?>" onClick="location.href='<?=$urlList;?>'">Cancelar</button>
+                <button class="<?=$buttonCancel;?>" onClick="location.href='<?=$urlList;?>'">Volver</button>
+                <button class="<?=$buttonNormal;?>" onClick="location.href='<?=$urlRegisterBonoPeriodoPersona;?>&cod_bono=<?=$codigoBono;?>'">Registrar por periodo</button>
               </div>
               
 

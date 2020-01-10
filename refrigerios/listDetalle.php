@@ -66,12 +66,12 @@ $stmt->bindColumn('total_mensual', $total_mensual);
                         <?php
                         if ($globalAdmin == 1) {
                         ?>
-                        <!--a href='<?= $urlDetalle; ?>&cod_ref=<?= $codRefrigerio; ?>' rel="tooltip" class="<?=$buttonDetailMin;?>">
-                              <i class="material-icons" title="Detalle">playlist_add</i>
+                        <a href='<?= $urlEditDetalle; ?>&cod_ref_det=<?= $cod_ref_detalle; ?>&cod_ref=<?=$codRefrigerio?>&cod_mes=<?=$codMes?>' rel="tooltip" class="<?=$buttonDetailMin;?>">
+                              <i class="material-icons" title="Editar">edit</i>
                             </a>
-                          <a href='<?= $urlAprobar; ?>&cod_ref=<?= $codRefrigerio; ?>' rel="tooltip" class="btn btn-warning">
+                         <!-- <a href='<?= $urlAprobar; ?>&cod_ref=<?= $codRefrigerio; ?>' rel="tooltip" class="btn btn-warning">
                             <i class="material-icons" title="Aprobar" style="color:black">extension</i>
-                          </a-->
+                          </a>-->
                           
                         <?php
         }
@@ -91,7 +91,7 @@ $stmt->bindColumn('total_mensual', $total_mensual);
                   if ($globalAdmin == 1) {
         ?>
           <div class="card-footer fixed-bottom">
-              <button class="<?=$buttonNormal;?>" onClick="location.href='<?=$calculaRefrigerioMes;?>&cod_ref=<?= $codRefrigerio; ?>&cod_mes=<?= $codMes; ?>'">Generar</button>
+              <button class="<?=$buttonNormal;?>" data-toggle="modal" data-target="#modalGenerar">Generar</button>
               <button class="<?= $buttonCancel; ?>" onClick="location.href='<?= $urlList; ?>'">Cancelar</button>
               </div>
         <?php
@@ -103,3 +103,26 @@ $stmt->bindColumn('total_mensual', $total_mensual);
     </div>
   </div>
 </div>
+
+    <!-- small modal -->
+<div class="modal fade modal-primary" id="modalGenerar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content card">
+                <div class="card-header card-header-warning card-header-icon">
+                  <div class="card-icon">
+                    <i class="material-icons text-dark">warning</i>
+                  </div>
+                  <h4 class="card-title">Generar lista de Refrigerios mes</h4>
+                </div>
+                <div class="card-body">
+
+                  <p class="text-warning">¿Est&aacute;s seguro de generar la lista? Las ediciones se restableceran!</p>
+                <button type="button" class="btn btn-danger float-right" data-dismiss="modal" aria-hidden="true">
+                  No
+                </button>
+                  <a href="#" onclick="location.href='<?=$calculaRefrigerioMes;?>&cod_ref=<?= $codRefrigerio; ?>&cod_mes=<?= $codMes; ?>'" class="btn btn-default float-right">SI</a>
+                </div>
+      </div>  
+    </div>
+  </div>
+<!--    end small modal -->

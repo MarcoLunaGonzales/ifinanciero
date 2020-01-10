@@ -10,13 +10,14 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $dbh = new Conexion();
 
 // Preparamos
-$stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura, observaciones FROM $table where cod_estadoreferencial!=2 order by nombre ");
+$stmt = $dbh->prepare("SELECT b.codigo, b.nombre, b.abreviatura, b.observaciones,t.nombre as calculo FROM $table b,tipos_calculobono t where b.cod_estadoreferencial!=2 and b.cod_tipocalculobono=t.codigo order by b.nombre ");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
 $stmt->bindColumn('codigo', $codigo);
 $stmt->bindColumn('nombre', $nombre);
 $stmt->bindColumn('abreviatura', $abreviatura);
+$stmt->bindColumn('calculo', $calculo);
 $stmt->bindColumn('observaciones', $observaciones);
 
 ?>
@@ -40,6 +41,7 @@ $stmt->bindColumn('observaciones', $observaciones);
                           <th class="text-left">#</th>
                           <th>Nombre</th>
                           <th>Abreviatura</th>
+                          <th>Tipo</th>
                           <th>Observaciones</th>
                           <th class="text-right">Acciones</th>
                         </tr>
@@ -54,6 +56,7 @@ $stmt->bindColumn('observaciones', $observaciones);
                           <td align="center"><?=$index;?></td>
                           <td class="text-left"><?=$nombre;?></td>
                           <td class="text-center"><?=$abreviatura;?></td>
+                          <td class="text-left"><?=$calculo;?></td>
                           <td class="text-left"><?=$observaciones;?></td>
                           <td class="td-actions text-right">
                           <?php

@@ -10,14 +10,16 @@ $dbh = new Conexion();
 $nombre=$_POST["nombre"];
 $abreviatura=$_POST["abreviatura"];
 $observaciones=$_POST["observaciones"];
+$tipo=$_POST["tipo"];
 $codEstado="1";
 
 // Prepare
-$stmt = $dbh->prepare("INSERT INTO $table (nombre, abreviatura,observaciones, cod_estadoreferencial) VALUES (:nombre, :abreviatura,:observaciones , :cod_estado)");
+$stmt = $dbh->prepare("INSERT INTO $table (nombre, abreviatura,observaciones,cod_tipocalculobono, cod_estadoreferencial) VALUES (:nombre, :abreviatura,:observaciones ,:cod_tipocalculobono, :cod_estado)");
 // Bind
 $stmt->bindParam(':nombre', $nombre);
 $stmt->bindParam(':abreviatura', $abreviatura);
 $stmt->bindParam(':observaciones', $observaciones);
+$stmt->bindParam(':cod_tipocalculobono', $tipo);
 $stmt->bindParam(':cod_estado', $codEstado);
 
 $flagSuccess=$stmt->execute();
