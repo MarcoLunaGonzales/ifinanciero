@@ -2,6 +2,7 @@
 	
 	if(isset($_GET['opcion'])){
 
+
 		//*********************************************   CONTABILIDAD BASICA         ********************************
 		//PLAN DE CUENTAS
 		if ($_GET['opcion']=='listPlanCuentas') {
@@ -128,6 +129,17 @@
         if ($_GET['opcion']=='mesCurso') {
 			require_once('mes_curso/list.php');
 		}
+
+		//notificaciones SISTEMA
+        if ($_GET['opcion']=='listNotificacionesSistema') {
+			require_once('notificaciones_sistema/list.php');
+		}
+		if ($_GET['opcion']=='registrarEventoSistema') {
+			require_once('notificaciones_sistema/register.php');
+		}
+       
+
+
 		//RETENCIONES
         if ($_GET['opcion']=='configuracionDeRetenciones') {
 			require_once('retenciones/list.php');

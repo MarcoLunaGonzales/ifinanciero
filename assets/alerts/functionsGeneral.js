@@ -2270,7 +2270,8 @@ function borrarCargoAreaOrganizacion(codigo){
 function agregarCargoAreaOrganizacion(){
   var cod=$("#areaorganizacion_id").val();
   var codCargo=$("#cargo_areaorg").val();
-  var parametros={"codigo":cod,"cod_cargo":codCargo};
+  if(codCargo!=""){
+    var parametros={"codigo":cod,"cod_cargo":codCargo};
    $.ajax({
     type:"GET",
     data:parametros,
@@ -2279,7 +2280,8 @@ function agregarCargoAreaOrganizacion(){
       $("#mensajeRealizado").html("<p class='text-success'>"+resp+"</p>");
       cargarCargosAreasOrganizacion(cod,$("#tutulo_cargosarea").text());
     }
-  });
+  });  
+  }  
 }
 // function ajaxAUOPadre(combo){
 //   var contenedor;
@@ -2980,6 +2982,88 @@ function ponerSiguienteAnio(ges){
   });
   $('.selectpicker').selectpicker("refresh");
 }
+
+function ponerDescripcionEvento(){
+  var evento= $("#evento").val();
+  if(evento!=""){
+    var respuesta=evento.split('@');
+     $("#descripcion").val(respuesta[1]);  
+  }else{
+    $("#descripcion").val(""); 
+  }
+}
+function ponerCorreoPersona(){
+  var persona= $("#personal").val();
+  if(persona!=""){
+    var respuesta=persona.split('$$$');
+     $("#correo").val(respuesta[1]);  
+  }else{
+    $("#correo").val(""); 
+  }
+}
+
+function enviarCorreoEvento(){
+   if($("#correo").val()==""||$("#correo").val()=="NN"){
+        Swal.fire('Informativo!','El correo no debe estar vacío','warning');  
+   }else{
+     if($("#evento").val()==""||$("#personal").val()==""){
+        Swal.fire('Informativo!','Debe completar los datos','warning');  
+      }else{
+        //enviar correo
+        Swal.fire({
+         title: '¿Esta seguro de enviar el correo?',
+         showCancelButton: true,
+         confirmButtonText: 'Enviar',
+         showLoaderOnConfirm: true,
+         closeOnConfirm: false
+       }).then((result) => {
+          if (result.value) {
+               enviarCorreoEventoAjax();            
+            return(true);
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            return(false);
+          }
+        });
+      }  
+    }  
+}
+
+function enviarCorreoEventoAjax(){
+  var evento=$("#evento").val();
+  var personal=$("#personal").val();
+  var respuesta=evento.split('@');
+  var respuesta2=personal.split('$$$');
+  var mensaje=$("#mensaje").val();
+  $("#boton_enviocorreo").attr("disabled",true); 
+  var parametros={"evento":respuesta[0],"personal":respuesta2[0],"correo":respuesta2[1],"mensaje":mensaje,"titulo":respuesta[2]};
+ $.ajax({
+    url: "notificaciones_sistema/sendEmail.php",
+    type: "GET",
+    data: parametros,
+    dataType: "html",
+    success: function (resp) {
+      var envio=resp.split('$$$');
+      if(parseInt(envio[0])==1){
+         Swal.fire("Mensaje enviado!", "El correo se envio a "+envio[1]+" exitosamente!", "success")
+             .then((value) => {
+             location.href="index.php?opcion=listNotificacionesSistema";
+         });
+        //redireccionar
+      }else{
+        Swal.fire("Error de envio!", "Verifique sus datos e intentelo de nuevo", "error");
+      }
+      $("#boton_enviocorreo").removeAttr("disabled");      
+    },
+    error: function (xhr, ajaxOptions, thrownError) {
+        Swal.fire("Error de envio!", "Verifique sus datos e intentelo de nuevo", "error");
+        $("#boton_enviocorreo").removeAttr("disabled");
+    }
+  });
+}
+
+
+
+
 //funciones despues de cargar pantalla
 
 $(document).ready(function() {
@@ -2991,4 +3075,5 @@ $(document).ready(function() {
       ReprocesarPlanillaTrib(cod_planillaTrib,cod_planilla);
     });    
   }  
+  
 });
