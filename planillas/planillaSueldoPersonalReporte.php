@@ -46,7 +46,7 @@
             <h6 class="card-title"><small>
               Codigo Planilla: <?=$cod_planilla;?><br>
               Gestion: <?=$nombre_gestion; ?> / Mes: <?=$cod_mes; ?><br>              
-              UO: <?=$nombre_uo;?>
+              OFICINA: <?=$nombre_uo;?>
               </small>                    
             </h6>             
           </div>

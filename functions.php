@@ -1825,9 +1825,8 @@ function obtenerNombrePersonal($cod_personal){
 
 
 function obtenerBonoAntiguedad($minino_salarial,$ing_contr){  
-  //$anio_actual= date('Y');
-  $anio_actual=2019;
-  
+  $anio_actual= date('Y');
+  //$anio_actual=2019;
   $fechaComoEntero = strtotime($ing_contr);
   $anio_inicio = date("Y", $fechaComoEntero);
   $diferencia_anios=$anio_actual-$anio_inicio;
@@ -1849,23 +1848,19 @@ function obtenerBonoAntiguedad($minino_salarial,$ing_contr){
   }
   // $aporte_laboral_aux=$total_ganado*$aporte_laboral_porcentaje_total/100;
   $total_bono_antiguedad_x=number_format($total_bono_antiguedad,2,'.','');
-  
-  
-
   // $stmt = null;
   // $dbh = null;
   return $total_bono_antiguedad_x;
 
 }
 
-
 function obtenerTotalBonos($codigo_personal)
 {  
-  // $mes=date('m');
-  // $gestion=date('Y');
+  $mes=date('m');
+  $gestion=date('Y');
 
-  $mes=11;
-  $gestion=2019;
+  // $mes=11;
+  // $gestion=2019;
 
   $dbh = new Conexion();
   $sqlGestion = "SELECT codigo from gestiones where nombre=$gestion";
@@ -1975,10 +1970,10 @@ function obtenerAtrasoPersonal($id_personal,$haber_basico){
   $dbh = new Conexion();
   set_time_limit(300);
   //capturando fecha
-  // $mes=date('m');
-  // $gestion=date('Y');
-  $mes=11;
-  $gestion=2019;
+  $mes=date('m');
+  $gestion=date('Y');
+  // $mes=11;
+  // $gestion=2019;
 
   $dbh = new Conexion();
   $sqlGestion = "SELECT codigo from gestiones where nombre=$gestion";
@@ -2015,11 +2010,11 @@ function obtenerAtrasoPersonal($id_personal,$haber_basico){
 }
 function obtenerOtrosDescuentos($codigo_personal)
 {  
-  // $mes=date('m');
-  // $gestion=date('Y');
+  $mes=date('m');
+  $gestion=date('Y');
 
-  $mes=11;
-  $gestion=2019;
+  // $mes=11;
+  // $gestion=2019;
 
   $dbh = new Conexion();
   $sqlGestion = "SELECT codigo from gestiones where nombre=$gestion";
@@ -2040,8 +2035,6 @@ function obtenerOtrosDescuentos($codigo_personal)
   $dbh = null;
   return $total_descuentos_otros;
 }
-
-
 function obtenerDotaciones($codigo_personal,$cod_gestion_x,$cod_mes_x){
   $dbh = new Conexion();
   $stmt = $dbh->prepare("SELECT SUM(dpm.monto_mes) as monto_mes_dotacion
@@ -2102,7 +2095,6 @@ function obtener_aporte_patronal_general($cod_config_planilla,$total_ganado){
   $dbh = null;
   return($aporte_p_seguro_medico_X);
 }
-
 
 //=======
 function obtenerMontoPlantillaDetalle($codigoPar,$codigo,$ib){
@@ -2166,10 +2158,6 @@ function obtenerTotalesSimulacion($codigo){
    }
    return($nombreX);
 }
-//<<<<<<< HEAD
-//=======
-
-
 
 function obtenerValorRefrigerio(){
   //Seleccionar el monto de refrigerio de configuraciones
@@ -2184,9 +2172,6 @@ function obtenerValorRefrigerio(){
 
   return($valorConfiguracionX);
 }
-
-//>>>>>>> 9665608161fbd74baa97b51d1230f7cda83c0916
-//>>>>>>> ebf28257f9e59421ce70f01e3ea93e3078b56278
 
 function calculaMontoDescuentoRetraso($minutos_retraso, $codigoPersona)
 {
