@@ -14,9 +14,10 @@ $urlSaveEdit="politicas_descuento/saveEdit.php";
 
 $urlList2="../index.php?opcion=listRefrigerio";
 
-$urlDetalle="?opcion=listRefrigerioDetalle";
+$urlDetalle="index.php?opcion=listRefrigerioDetalle";
+$urlEditDetalle="index.php?opcion=editRefrigerioDetalle";
 
-$urlAprobar="?opcion=aprobarRefrigerio";
+$urlAprobar="index.php?opcion=aprobarRefrigerio";
 $urlRegisterRefrigerioDetalle="index.php?opcion=registerRefrigerioDetalle";
 
 $urlSaveRefrigerioDetalle="refrigerios/saveRefrigerioDetalle.php";

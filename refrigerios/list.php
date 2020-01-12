@@ -38,7 +38,7 @@ $stmt->bindColumn('estado_planilla', $estadoPlanilla);
           </div>
           <div class="card-body">
             <div class="table-responsive">
-              <table id="tablePaginator" class="table table-condensed">
+              <table class="table table-condensed">
                 <thead>
                   <tr>
                     <th class="text-left"> # </th>

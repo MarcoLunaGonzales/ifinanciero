@@ -16,7 +16,7 @@ $codGestionActiva=$_SESSION['globalGestion'];
 $dbh = new Conexion();
 
 // Preparamos
-$stmt = $dbh->prepare("select bpm.cod_personal as cod_persona, bpm.codigo as codigo ,
+$stmt = $dbh->prepare("select bpm.cod_personal as cod_persona, bpm.codigo as codigo ,bpm.observaciones,
 (select u.abreviatura from personal p, unidades_organizacionales u where p.codigo=bpm.cod_personal and u.codigo=p.cod_unidadorganizacional)as unidad,
 (select c.nombre from personal p, cargos c where p.codigo=bpm.cod_personal and c.codigo=p.cod_cargo)as cargo,
 (select concat(p.paterno,' ', p.materno,' ', p.primer_nombre) from personal p where p.codigo=bpm.cod_personal)as nombrepersonal,
@@ -29,6 +29,7 @@ $stmt->bindColumn('unidad', $unidad);
 $stmt->bindColumn('cargo', $cargo);
 $stmt->bindColumn('nombrepersonal', $nombrepersonal);
 $stmt->bindColumn('detalle', $detalle);
+$stmt->bindColumn('observaciones', $observaciones);
 
 //Mostrar tipo bono
 $stmtb = $dbh->prepare("SELECT nombre FROM $table WHERE codigo=$codBono");
@@ -74,6 +75,7 @@ while ($row = $stmtc->fetch(PDO::FETCH_BOUND)) {
                           <th>Cargo</th>
                           <th>Personal</th>
                           <th>Monto</th>
+                          <th>Observaciones</th>
                           <th class="text-right">Acciones</th>
                         </tr>
                       </thead>
@@ -89,6 +91,7 @@ while ($row = $stmtc->fetch(PDO::FETCH_BOUND)) {
                           <td class="text-left"><?= $cargo; ?></td>
                           <td class="text-left"><?= $nombrepersonal; ?></td>
                           <td class="text-right"><?= $detalle; ?></td>
+                          <td class="text-left small"><?= $observaciones; ?></td>
                           <td class="td-actions text-right">
                           <?php
                             if($globalAdmin==1){
@@ -135,7 +138,7 @@ while ($row = $stmtc->fetch(PDO::FETCH_BOUND)) {
 
                 <button class="<?= $buttonExcel; ?>" onClick="location.href='<?= $urlSubirBonoExcel; ?>&cod_mes=<?= $codMes; ?>&cod_bono=<?= $codBono; ?>'">Subir Datos desde Excel</button>
 
-                <button class="<?=$buttonCancel;?>" onClick="location.href='<?=$urlListMes;?>&codigo=<?=$codBono;?>'">Cancelar</button>
+                <button class="<?=$buttonCancel;?>" onClick="location.href='<?=$urlListMes;?>&codigo=<?=$codBono;?>'">Volver</button>
               
               <?php
 

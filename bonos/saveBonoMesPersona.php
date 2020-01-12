@@ -12,11 +12,12 @@ $codPersona=$_POST["personal"];
 $codBono=$_POST["codBono"];
 $codMes=$_POST["codMes"];
 $codGestion=$_POST["codGestion"];
+$obs=$_POST["obs"];
 $codEstado="1";
 
 // Prepare
-$stmt = $dbh->prepare("INSERT INTO bonos_personal_mes (cod_bono, cod_personal,cod_gestion,cod_mes,monto, cod_estadoreferencial) 
-                        VALUES (:cod_bono,:codPersona,:codGestion,:codMes,:monto, :cod_estado)");
+$stmt = $dbh->prepare("INSERT INTO bonos_personal_mes (cod_bono, cod_personal,cod_gestion,cod_mes,monto,observaciones, cod_estadoreferencial) 
+                        VALUES (:cod_bono,:codPersona,:codGestion,:codMes,:monto,:observaciones, :cod_estado)");
 // Bind
 $stmt->bindParam(':monto', $monto);
 $stmt->bindParam(':cod_estado', $codEstado);
@@ -24,6 +25,7 @@ $stmt->bindParam(':cod_bono',$codBono);
 $stmt->bindParam(':codPersona',$codPersona);
 $stmt->bindParam(':codGestion',$codGestion);
 $stmt->bindParam(':codMes',$codMes);
+$stmt->bindParam(':observaciones',$obs);
 
 $flagSuccess=$stmt->execute();
 showAlertSuccessError($flagSuccess,"../".$urlListMesPersona."&cod_mes=".$codMes."&cod_bono=".$codBono);

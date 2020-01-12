@@ -90,7 +90,14 @@ while ($row = $stmtc->fetch(PDO::FETCH_BOUND)) {
 					</div>
 				  </div>
 				</div>
-				
+				<div class="row">
+				  <label class="col-sm-2 col-form-label">Observaciones</label>
+				  <div class="col-sm-10">
+					<div class="form-group">
+					  <textarea class="form-control" name="obs" id="obs" required="true"></textarea>
+					</div>
+				  </div>
+				</div>
 				<input class="form-control" type="text" hidden="true" name="codMes" id="codMes"  value="<?=$codMes;?>"/>
 				<input class="form-control" type="text" hidden="true" name="codDescuento" id="codDescuento"  value="<?=$codDescuento;?>"/>
 				<input class="form-control" type="text" hidden="true" name="codGestion" id="codGestion"  value="<?=$codGestion;?>"/>

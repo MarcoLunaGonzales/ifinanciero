@@ -22,7 +22,9 @@ $urlListMesPersona="index.php?opcion=listMesPersona";
 $urlDeleteBonoMesPersona="index.php?opcion=deleteBonoMesPersona";
 
 $urlRegisterBonoMesPersona="index.php?opcion=registerBonoMesPersona";
+$urlRegisterBonoPeriodoPersona="index.php?opcion=registerBonoPeriodoPersona";
 $urlSaveBonoMesPersona="bonos/saveBonoMesPersona.php";
+$urlSaveBonoPeriodoPersona="bonos/saveBonoPeriodoPersona.php";
 
 
 $urlSubirBonoExcel="index.php?opcion=subirBonoExcel";

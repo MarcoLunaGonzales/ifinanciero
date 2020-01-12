@@ -2,6 +2,7 @@
 	
 	if(isset($_GET['opcion'])){
 
+
 		//*********************************************   CONTABILIDAD BASICA         ********************************
 		//PLAN DE CUENTAS
 		if ($_GET['opcion']=='listPlanCuentas') {
@@ -128,6 +129,17 @@
         if ($_GET['opcion']=='mesCurso') {
 			require_once('mes_curso/list.php');
 		}
+
+		//notificaciones SISTEMA
+        if ($_GET['opcion']=='listNotificacionesSistema') {
+			require_once('notificaciones_sistema/list.php');
+		}
+		if ($_GET['opcion']=='registrarEventoSistema') {
+			require_once('notificaciones_sistema/register.php');
+		}
+       
+
+
 		//RETENCIONES
         if ($_GET['opcion']=='configuracionDeRetenciones') {
 			require_once('retenciones/list.php');
@@ -781,7 +793,10 @@
 			$codigo_mes=$_GET['cod_mes'];
 			require_once('bonos/registerBonoMesPersona.php');
 		}
-
+        if ($_GET['opcion']=='registerBonoPeriodoPersona') {
+			$codigo_bono=$_GET['cod_bono'];
+			require_once('bonos/registerBonoPeriodoPersona.php');
+		}
 		if ($_GET['opcion']=='subirBonoExcel') {
 			$codigo_bono=$_GET['cod_bono'];
 			$codigo_mes=$_GET['cod_mes'];
@@ -1048,6 +1063,10 @@
 			$cod_refrigerio=$_GET['cod_ref'];
 			$cod_mes=$_GET['cod_mes'];
 			require_once('refrigerios/listDetalle.php');
+		}
+		if ($_GET['opcion']=='editRefrigerioDetalle') {
+			$cod_refrigeriodetalle=$_GET['cod_ref_det'];
+			require_once('refrigerios/editDetalle.php');
 		}
 
 		if ($_GET['opcion']=='aprobarRefrigerio') {

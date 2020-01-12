@@ -53,7 +53,7 @@ $stmt->bindColumn('modified_by', $modified_by);
                       </tr>
                     </thead>
                     <tbody>
-                      <?php $index=1;$cont= array();
+                      <?php $index=1;$cont= array();$contC= array();
                       while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { 
                         $datosX =$codigo;
 
@@ -67,13 +67,14 @@ $stmt->bindColumn('modified_by', $modified_by);
                                $stmt2->bindParam(':codigo',$codigo);
                                $stmt2->execute(); 
                                $nc=0;
-                               
+                              
                                while ($row2 = $stmt2->fetch(PDO::FETCH_ASSOC)) {
                                   $dato = new stdClass();//obejto
-                                  
+                                  $codFila=(int)$row2['codigo'];
                                   $nombre_areaX=trim($row2['nombre_area']);
                                   $nombre_area_padreX=trim($row2['nombre_area_padre']);                                  
                                   $dato->codigo=($nc+1);
+                                  $dato->cod_areaorganizacion=$codFila;
                                   $dato->nombreA=$nombre_areaX;
                                   $dato->nombreAP=$nombre_area_padreX;
                                   $datos[$index-1][$nc]=$dato;                           
@@ -229,13 +230,14 @@ $stmt->bindColumn('modified_by', $modified_by);
 
 <?php 
 $lan=sizeof($cont);
+error_reporting(0);
 for ($i=0; $i < $lan; $i++) {
   ?>
   <script>var areas=[];</script>
   <?php
-     for ($j=0; $j < $cont[$i]; $j++) { 
+     for ($j=0; $j < $cont[$i]; $j++) {     
          if($cont[$i]>0){
-          ?><script>areas.push({codigo:<?=$datos[$i][$j]->codigo?>,nombreA:'<?=$datos[$i][$j]->nombreA?>',nombreAP:'<?=$datos[$i][$j]->nombreAP?>'});</script><?php         
+          ?><script>areas.push({codigo:<?=$datos[$i][$j]->codigo?>,cod_areaorganizacion:<?=$datos[$i][$j]->cod_areaorganizacion?>,nombreA:'<?=$datos[$i][$j]->nombreA?>',nombreAP:'<?=$datos[$i][$j]->nombreAP?>'});</script><?php         
           }          
         }
     ?><script>areas_tabla_general.push(areas);</script><?php                    

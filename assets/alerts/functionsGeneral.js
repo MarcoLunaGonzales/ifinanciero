@@ -2204,7 +2204,7 @@ function EliminarDistribucion(cod_personal,cod_distribucion){
 
  
 var areas_tabla=[]; 
-var areas_tabla_general=[]; 
+var areas_tabla_general=[];
 var numFilasA=0;
 function sendChekedA(id){
   var check=document.getElementById("areas"+id);
@@ -2233,13 +2233,56 @@ function filaTablaAGeneral(tabla,index){
   var html="";
   for (var i = 0; i < areas_tabla_general[index-1].length; i++) {
     //alert(areas_tabla_general[index-1][i].nombre);
-    html+="<tr><td>"+(i+1)+"</td><td>"+areas_tabla_general[index-1][i].nombreA+"</td><td>"+areas_tabla_general[index-1][i].nombreAP+"</td></tr>";
+    html+="<tr><td>"+(i+1)+"</td><td>"+areas_tabla_general[index-1][i].nombreA+"</td><td>"+areas_tabla_general[index-1][i].nombreAP+"</td><td><a href='#' onclick='cargarCargosAreasOrganizacion("+areas_tabla_general[index-1][i].cod_areaorganizacion+",\""+areas_tabla_general[index-1][i].nombreA+"\")' class='btn btn-fab btn-info btn-sm btn-rounded'><i class='material-icons' title='Asignar Cargos'>add</i></a></td></tr>";
   }
   tabla.html(html);
   $("#modalAreas").modal("show");  
 }
 
-
+function cargarCargosAreasOrganizacion(cod,nom){
+  var parametros={"codigo":cod,"nombreArea":nom};
+   $.ajax({
+    type:"GET",
+    data:parametros,
+    url:"rrhh/ajaxCargosAreasOrganizacion.php",
+    success:function(resp){
+      $("#mensajeRealizado").html("");
+      $("#tutulo_cargosarea").text(nom);
+      $("#areaorganizacion_id").val(cod);
+      $("#tablasCargos_registrados").html(resp);
+      $("#modalCargos").modal("show");
+    }
+  });
+}
+function borrarCargoAreaOrganizacion(codigo){
+  var cod=$("#areaorganizacion_id").val();
+  var parametros={"codigo_fila":codigo};
+   $.ajax({
+    type:"GET",
+    data:parametros,
+    url:"rrhh/ajaxBorrarCargoAreasOrganizacion.php",
+    success:function(resp){ 
+      $("#mensajeRealizado").html("<p class='text-danger'>"+resp+"</p>");
+      cargarCargosAreasOrganizacion(cod,$("#tutulo_cargosarea").text());
+    }
+  });
+}
+function agregarCargoAreaOrganizacion(){
+  var cod=$("#areaorganizacion_id").val();
+  var codCargo=$("#cargo_areaorg").val();
+  if(codCargo!=""){
+    var parametros={"codigo":cod,"cod_cargo":codCargo};
+   $.ajax({
+    type:"GET",
+    data:parametros,
+    url:"rrhh/ajaxNuevoCargoAreasOrganizacion.php",
+    success:function(resp){ 
+      $("#mensajeRealizado").html("<p class='text-success'>"+resp+"</p>");
+      cargarCargosAreasOrganizacion(cod,$("#tutulo_cargosarea").text());
+    }
+  });  
+  }  
+}
 // function ajaxAUOPadre(combo){
 //   var contenedor;
 //   var codigo_UO=combo.value;
@@ -2992,6 +3035,99 @@ function montoNoMayor(){
   }
 }
 
+function ponerSiguienteAnio(ges){
+  var mes = $("#desde").val();
+  $("#hasta option").each(function(){
+        if ($(this).val() != "0" ){ 
+          $(this).removeAttr("disabled");
+          if(parseInt($(this).val())<= parseInt(mes)){
+            $(this).attr("disabled",true);
+          }       
+        }
+  });
+  $('.selectpicker').selectpicker("refresh");
+}
+
+function ponerDescripcionEvento(){
+  var evento= $("#evento").val();
+  if(evento!=""){
+    var respuesta=evento.split('@');
+     $("#descripcion").val(respuesta[1]);  
+  }else{
+    $("#descripcion").val(""); 
+  }
+}
+function ponerCorreoPersona(){
+  var persona= $("#personal").val();
+  if(persona!=""){
+    var respuesta=persona.split('$$$');
+     $("#correo").val(respuesta[1]);  
+  }else{
+    $("#correo").val(""); 
+  }
+}
+
+function enviarCorreoEvento(){
+   if($("#correo").val()==""||$("#correo").val()=="NN"){
+        Swal.fire('Informativo!','El correo no debe estar vacío','warning');  
+   }else{
+     if($("#evento").val()==""||$("#personal").val()==""){
+        Swal.fire('Informativo!','Debe completar los datos','warning');  
+      }else{
+        //enviar correo
+        Swal.fire({
+         title: '¿Esta seguro de enviar el correo?',
+         showCancelButton: true,
+         confirmButtonText: 'Enviar',
+         showLoaderOnConfirm: true,
+         closeOnConfirm: false
+       }).then((result) => {
+          if (result.value) {
+               enviarCorreoEventoAjax();            
+            return(true);
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            return(false);
+          }
+        });
+      }  
+    }  
+}
+
+function enviarCorreoEventoAjax(){
+  var evento=$("#evento").val();
+  var personal=$("#personal").val();
+  var respuesta=evento.split('@');
+  var respuesta2=personal.split('$$$');
+  var mensaje=$("#mensaje").val();
+  $("#boton_enviocorreo").attr("disabled",true); 
+  var parametros={"evento":respuesta[0],"personal":respuesta2[0],"correo":respuesta2[1],"mensaje":mensaje,"titulo":respuesta[2]};
+ $.ajax({
+    url: "notificaciones_sistema/sendEmail.php",
+    type: "GET",
+    data: parametros,
+    dataType: "html",
+    success: function (resp) {
+      var envio=resp.split('$$$');
+      if(parseInt(envio[0])==1){
+         Swal.fire("Mensaje enviado!", "El correo se envio a "+envio[1]+" exitosamente!", "success")
+             .then((value) => {
+             location.href="index.php?opcion=listNotificacionesSistema";
+         });
+        //redireccionar
+      }else{
+        Swal.fire("Error de envio!", "Verifique sus datos e intentelo de nuevo", "error");
+      }
+      $("#boton_enviocorreo").removeAttr("disabled");      
+    },
+    error: function (xhr, ajaxOptions, thrownError) {
+        Swal.fire("Error de envio!", "Verifique sus datos e intentelo de nuevo", "error");
+        $("#boton_enviocorreo").removeAttr("disabled");
+    }
+  });
+}
+
+
+
 
 //funciones despues de cargar pantalla
 
@@ -3004,4 +3140,5 @@ $(document).ready(function() {
       ReprocesarPlanillaTrib(cod_planillaTrib,cod_planilla);
     });    
   }  
+  
 });

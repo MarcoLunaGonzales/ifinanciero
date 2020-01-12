@@ -543,6 +543,12 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
             <div class="collapse" id="utilitarios">
               <ul class="nav">
                 <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listNotificacionesSistema">
+                    <span class="sidebar-mini"> NT </span>
+                    <span class="sidebar-normal"> Notificaciones</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
                   <a class="nav-link" href="?opcion=mesCurso">
                     <span class="sidebar-mini"> MC </span>
                     <span class="sidebar-normal"> Mes de Trabajo </span>
