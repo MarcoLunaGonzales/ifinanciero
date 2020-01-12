@@ -2386,13 +2386,11 @@ function agregaformPre(datos){
   var d=datos.split('-');
   document.getElementById("codigo_planilla").value=d[0];
 }
-
 function agregaformRP(datos){
   //console.log("datos: "+datos);
   var d=datos.split('-');
   document.getElementById("codigo_planillaRP").value=d[0];
 }
-
 function agregaformCP(datos){
   //console.log("datos: "+datos);
   var d=datos.split('-');
@@ -2451,7 +2449,6 @@ function ReprocesarPlanilla(cod_planilla){
     }
   });
 }
-
 function ReprocesarPlanillaTrib(cod_planillaTrib,cod_planilla){
   //window.location.href="planillas/savePlanillaTribMes2.php?cod_planillatrib="+cod_planillaTrib+"&cod_planilla="+cod_planilla;
   $.ajax({
@@ -2474,13 +2471,81 @@ function ReprocesarPlanillaTrib(cod_planillaTrib,cod_planilla){
     }
   });
 }
-
-//<<<<<<< HEAD
 function CerrarPlanilla(cod_planilla){
   $.ajax({
     type:"POST",
     data:"cod_planilla="+cod_planilla+"&sw=3",
     url:"planillas/savePlanillaMes.php",
+    success:function(r){
+      if(r==1){
+        //$('#tabla1').load('activosFijos/afEnCustodia.php');
+        //alertify.success("agregado");
+        alerts.showSwal('success-message','index.php?opcion=planillasSueldoPersonal');
+      }
+    }
+  });
+}
+//funciones para el personal NO Admin
+function agregaformPreNA(datos){
+  var d=datos.split('-');
+  document.getElementById("codigo_planillaNA").value=d[0];
+}
+function agregaformRPNA(datos){
+  var d=datos.split('-');
+  document.getElementById("codigo_planillaRPNA").value=d[0];
+}
+function agregaformCPNA(datos){
+  var d=datos.split('-');
+  document.getElementById("codigo_planillaCPNA").value=d[0];
+}
+function ProcesarPlanillaNA(cod_planilla){  
+  $.ajax({
+    type:"POST",
+    data:"cod_planilla="+cod_planilla+"&sw=2",
+    url:"planillas/savePlanillaMesNA.php",
+    beforeSend:function(objeto){ 
+      $('#cargaPNA').css({display:'block'});
+      $('#AceptarProcesoNA').css({display:'none'});
+      $('#CancelarProcesoNA').css({display:'none'});  
+    },
+    success:function(r){
+      if(r==1){
+        //$('#tabla1').load('activosFijos/afEnCustodia.php');
+        $('#cargaPNA').css('display','none');
+        alerts.showSwal('success-message','index.php?opcion=planillasSueldoPersonal');
+      }else{
+        $('#cargaPNA').css('display','none');
+        alerts.showSwal('error-message','index.php?opcion=planillasSueldoPersonal');
+      }
+    }
+  });
+}
+function ReprocesarPlanillaNA(cod_planilla){
+  $.ajax({
+    type:"POST",
+    data:"cod_planilla="+cod_planilla+"&sw=1",
+    url:"planillas/savePlanillaMesNA.php",
+    beforeSend:function(objeto){ 
+      $('#cargaRNA').css({display:'block'});
+      $('#AceptarReProcesoNA').css({display:'none'});
+      $('#CancelarReProcesoNA').css({display:'none'});  
+    },
+    success:function(r){
+      if(r==1){
+        $('#cargaRNA').css('display','none');
+        alerts.showSwal('success-message','index.php?opcion=planillasSueldoPersonal');
+      }else{
+        $('#cargaRNA').css('display','none');
+        alerts.showSwal('error-message','index.php?opcion=planillasSueldoPersonal');
+      }
+    }
+  });
+}
+function CerrarPlanillaNA(cod_planilla){
+  $.ajax({
+    type:"POST",
+    data:"cod_planilla="+cod_planilla+"&sw=3",
+    url:"planillas/savePlanillaMesNA.php",
     success:function(r){
       if(r==1){
         //$('#tabla1').load('activosFijos/afEnCustodia.php');

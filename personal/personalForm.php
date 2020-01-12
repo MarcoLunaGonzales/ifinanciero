@@ -65,25 +65,28 @@ $nombre_grado_academico = $result['nombre_grado_academico'];
 $nombre_cargo = $result['nombre_cargo'];
 $nombre_uo = $result['nombre_uo'];
 $nombre_area = $result['nombre_area'];
+$email_empresa = $result['email_empresa'];
 
 //personal discapacitado
-$stmtDiscapacitado = $dbh->prepare("SELECT * FROM personal_discapacitado where codigo =:codigo");
+$stmtDiscapacitado = $dbh->prepare("SELECT * FROM personal_discapacitado where codigo =:codigo and cod_estadoreferencial=1");
 $stmtDiscapacitado->bindParam(':codigo',$codigo);
 $stmtDiscapacitado->execute();
 $resultDiscapacitado = $stmtDiscapacitado->fetch();
-$discapacitado = $resultDiscapacitado['discapacitado'];
-$tutor_discapacitado = $resultDiscapacitado['tutor_discapacitado'];
-$celular_tutor = $resultDiscapacitado['celular_tutor'];
-$parentesco = $resultDiscapacitado['parentesco'];
+$cod_tipo_persona_discapacitado = $resultDiscapacitado['tipo_persona_discapacitado'];
+$nro_carnet_discapacidad = $resultDiscapacitado['nro_carnet_discapacidad'];
+$fecha_nac_persona_dis = $resultDiscapacitado['fecha_nac_persona_dis'];
 //IMAGEN
 $stmtIMG = $dbh->prepare("SELECT * FROM personalimagen where codigo =:codigo");
-//Ejecutamos;
 $stmtIMG->bindParam(':codigo',$codigo);
 $stmtIMG->execute();
 $resultIMG = $stmtIMG->fetch();
 $imagen = $resultIMG['imagen'];
 //$archivo = __DIR__.DIRECTORY_SEPARATOR."imagenes".DIRECTORY_SEPARATOR.$imagen;//sale mal
 $archivo = "personal/imagenes/".$imagen;//sale mal
+
+
+
+
 
 //COMBOS...
 $queryTPersonal = "SELECT codigo,nombre from tipos_personal where cod_estadoreferencial=1";
@@ -370,6 +373,12 @@ $statementestados_personal = $dbh->query($queryestados_personal);
                                         <div class="form-group">
                                             <input class="form-control" type="text" name="haber_basico" id="haber_basico" value="<?=$haber_basico;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" required/>
                                         </div>
+                                    </div>
+                                    <label class="col-sm-2 col-form-label">Email Empresarial</label>
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <input class="form-control" type="text" name="email_empresa" id="email_empresa" required="true" value="<?=$email_empresa;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" />
+                                        </div>
                                     </div> 
                                 </div><!--haber basico-->
                                 <?php 
@@ -414,6 +423,12 @@ $statementestados_personal = $dbh->query($queryestados_personal);
                                     <div class="col-sm-4">
                                         <div class="form-group">
                                             <input class="form-control" type="text" name="haber_basico" id="haber_basico" value="<?=$haber_basico;?> Bs." readonly="readonly"/>
+                                        </div>
+                                    </div> 
+                                    <label class="col-sm-2 col-form-label">Email Empresarial</label>
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <input class="form-control" type="text" name="email_empresa" id="email_empresa" required="true" value="<?=$email_empresa;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" />
                                         </div>
                                     </div> 
                                 </div><!--haber basico-->
@@ -485,44 +500,59 @@ $statementestados_personal = $dbh->query($queryestados_personal);
                                 <div class="form-group">
                                     <input class="form-control" type="text" name="persona_contacto" id="persona_contacto" required value="<?=$persona_contacto;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
                                 </div>
-                                </div>
+                                </div>                        
                             </div><!--fin campo persona_contacto -->
+
+
+                            
+
                             <div class="row">
-                                <label class="col-sm-2 col-form-label">Persona Con Discapacidad</label>
+                                <label class="col-sm-2 col-form-label">Tipo De Persona Con Discapacidad</label>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <select name="cod_discapacidad" id="cod_discapacidad"  class="selectpicker " data-style="btn btn-info" >                                
-                                            <option <?php if($discapacitado == 0) echo "selected"; ?> value="0"> NO</option>
-                                            <option <?php if($discapacitado == 1) echo "selected"; ?> value="1"> SI</option>                            
+                                        <select name="tipo_persona_discapacitado" id="tipo_persona_discapacitado"  class="selectpicker " data-style="btn btn-info" >
+                                            <option <?php if($cod_tipo_persona_discapacitado == 0) echo "selected"; ?> value="0"> NINGUNO</option>
+                                            <option <?php if($cod_tipo_persona_discapacitado == 1) echo "selected"; ?> value="1">PERSONA CON DISCAPACIDAD</option>
+                                            <option <?php if($cod_tipo_persona_discapacitado == 2) echo "selected"; ?> value="2"> TUTOR DE PERSONA CON DISCAPACIDAD</option>                            
                                         </select>
                                     </div>
-                                </div>
-
-                                <label class="col-sm-2 col-form-label">Tutor De Persona</label>
-                                <div class="col-sm-4">
-                                <div class="form-group">
-                                    <select name="cod_tutordiscapacidad" id="cod_tutordiscapacidad"  class="selectpicker " data-style="btn btn-info" >
-                                        <option <?php if($tutor_discapacitado == 0) echo "selected"; ?> value="0"> NO</option>
-                                        <option <?php if($tutor_discapacitado == 1) echo "selected"; ?> value="1"> SI</option>                            
-                                    </select>                    
-                                </div>
-                                </div>
+                                </div>                                
                             </div><!--fin campo persona discapacidad -->
-                            <div class="row">
-                                <label class="col-sm-2 col-form-label">Parentesco</label>
-                                <div class="col-sm-4">
-                                <div class="form-group">
-                                    <input class="form-control" type="text" name="parentescotutor" id="parentescotutor" value="<?=$parentesco;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
-                                </div>
-                                </div>
 
-                                <label class="col-sm-2 col-form-label">Celular Tutor</label>
-                                <div class="col-sm-4">
-                                <div class="form-group">
-                                    <input class="form-control" type="number" name="celularTutor" id="celularTutor" value="<?=$celular_tutor;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
-                                </div>
-                                </div>
-                            </div><!--fin campo celular tutor discapacidad -->
+                            
+                            <div id="contenedor_padre_discapacidad" >
+                                <!-- <div id="div0">                                    
+                                </div> -->
+                               <!--  <div id="div1">                                
+                                    <div class="row">
+                                        <label class="col-sm-2 col-form-label">Nro Carnet Discapacidad</label>
+                                        <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <input class="form-control" type="number" name="nro_carnet_discapacidad" id="nro_carnet_discapacidad" value="<?=$nro_carnet_discapacidad;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+                                        </div>
+                                        </div>                                    
+                                    </div>
+                                </div> -->
+                                <div id="div2">                                
+                                    <div class="row">
+                                        <label class="col-sm-2 col-form-label">Nro Carnet Discapacidad</label>
+                                        <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <input class="form-control" type="number" name="nro_carnet_discapacidad" id="nro_carnet_discapacidad" value="<?=$nro_carnet_discapacidad;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+                                        </div>
+                                        </div>
+
+                                        <label class="col-sm-2 col-form-label">Fecha Nacimiento De Persona Con Discapacidad</label>
+                                        <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <input class="form-control" type="date" name="fecha_nac_persona_dis" id="fecha_nac_persona_dis" value="<?=$fecha_nac_persona_dis;?>" />  
+                                        </div>
+                                        </div>
+                                    </div>
+                                </div>    
+                            </div>
+                            
+                            
 
                             <div class="row">
                                 <label class="col-sm-2 col-form-label">Imagen</label>
@@ -558,4 +588,16 @@ $statementestados_personal = $dbh->query($queryestados_personal);
         
     </div>
 </div>
+
+
+<!-- <script type="text/javascript">
+    $(document).ready(function(){
+        $('#tipo_persona_discapacitado').on('change',function(){
+            var selectVar='#div'+$(this).val();            
+            $('#contenedor_padre_discapacidad').children('div').hide();
+            $('#contenedor_padre_discapacidad').children(selectVar).show();
+            $('#contenedor_padre_discapacidad').toggle();        
+        });
+    });
+</script> -->
 

@@ -91,6 +91,11 @@ $urlListTiposContratos="?opcion=tiposContratosLista";
 $urlFormTiposContratos="?opcion=formContratosLista";
 $urlSaveTiposContrato="?opcion=saveTiposContrato";
 $urlDeleteTiposContrato="?opcion=deleteTiposContrato";
+//tipos de cargos
+$urlListTiposCargos="?opcion=tiposCargosLista";
+$urlFormTiposCargos="?opcion=formCargosLista";
+$urlSaveTiposCargos="?opcion=saveTiposCargos";
+$urlDeleteTiposCargos="?opcion=deleteTiposCargos";
 //personal
 $nombreSingularPersonal="Personal";
 $nombrePluralPersonal="Personal";

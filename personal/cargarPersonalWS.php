@@ -83,10 +83,6 @@ foreach ($detalle as $objDet){
     $nro_seguro = '';
     $cod_estadopersonal = '';	   
     $persona_contacto = '';
-    $discapacitado='0';
-    $tutordiscapacidad='0';
-    $parentescotutor='';
-    $celularTutor='';  
     $created_by = 1;//$_POST["created_by"];
     $modified_by = 1;//$_POST["modified_by"];
     $cod_estadoreferencial=1;
@@ -94,6 +90,12 @@ foreach ($detalle as $objDet){
     $cod_grado_academico=0;
     $ing_contr='0000-00-00';
     $ing_planilla ='0000-00-00';
+
+    $email_empresa='';
+    $tipo_persona_discapacitado=0;
+    $nro_carnet_discapacidad=0;  
+    $fecha_nac_persona_dis ='0000-00-00';
+
     //consulta para verificar si personal esta en la bd
     $stmtBusquedaPersonal = $dbh->prepare("SELECT codigo from personal where codigo=:codigo");
     $stmtBusquedaPersonal->bindParam(':codigo',$codigo);
@@ -138,13 +140,13 @@ foreach ($detalle as $objDet){
     	$stmtI = $dbh->prepare("INSERT INTO personal(codigo,cod_tipo_identificacion,tipo_identificacion_otro,identificacion,cod_lugar_emision,lugar_emision_otro,fecha_nacimiento,cod_cargo,cod_unidadorganizacional,cod_area,
         jubilado,cod_genero,cod_tipopersonal,haber_basico,paterno,materno,apellido_casada,primer_nombre,otros_nombres,nua_cua_asignado,
         direccion,cod_tipoafp,cod_tipoaporteafp,nro_seguro,cod_estadopersonal,telefono,celular,email,persona_contacto,created_by,modified_by,cod_estadoreferencial,cod_nacionalidad,cod_estadoCivil,
-        cod_pais,cod_departamento,cod_ciudad,Ciudad_otro,cod_grado_academico,ing_contr,ing_planilla,bandera) 
+        cod_pais,cod_departamento,cod_ciudad,Ciudad_otro,cod_grado_academico,ing_contr,ing_planilla,email_empresa,bandera) 
         values (:codigo,:cod_tipoIdentificacion,:tipo_identificacionOtro,:identificacion,:cod_lugar_emision,:lugar_emisionOtro,:fecha_nacimiento,
         	:cod_cargo,:cod_unidadorganizacional,:cod_area,:jubilado,:cod_genero,:cod_tipopersonal,:haber_basico,:paterno,
         	:materno,:apellido_casada,:primer_nombre,:otros_nombres,:nua_cua_asignado,
         :direccion,:cod_tipoafp,:cod_tipoaporteafp,:nro_seguro,:cod_estadopersonal,:telefono,:celular,:email,:persona_contacto,:created_by,:modified_by,
         :cod_estadoreferencial,:cod_nacionalidad,:cod_estadoCivil,
-        :cod_pais,:cod_departamento,:cod_ciudad,:ciudadOtro,:cod_grado_academico,:ing_contr,:ing_planilla,:bandera)");
+        :cod_pais,:cod_departamento,:cod_ciudad,:ciudadOtro,:cod_grado_academico,:ing_contr,:ing_planilla,:email_empresa,:bandera)");
         //Bind
         $stmtI->bindParam(':codigo', $codigo);
         $stmtI->bindParam(':cod_tipoIdentificacion', $cod_tipoIdentificacion);
@@ -187,6 +189,7 @@ foreach ($detalle as $objDet){
         $stmtI->bindParam(':cod_grado_academico', $cod_grado_academico);
         $stmtI->bindParam(':ing_contr', $ing_contr); 
         $stmtI->bindParam(':ing_planilla', $ing_planilla);
+        $stmtI->bindParam(':email_empresa', $email_empresa);
         $stmtI->bindParam(':bandera', $bandera);
         $flagSuccess=$stmtI->execute();
         if($flagSuccess){
@@ -205,13 +208,13 @@ foreach ($detalle as $objDet){
         $stmtDistribucion->bindParam(':cod_estadoreferencial', $cod_estadoreferencial);
         $stmtDistribucion->execute(); 
         //insertamos personal discapacitado
-        $stmtDiscapacitado = $dbh->prepare("INSERT INTO personal_discapacitado(codigo,discapacitado,tutor_discapacitado,celular_tutor,parentesco)
-                                            values(:codigo,:discapacitado,:tutordiscapacidad,:celularTutor,:parentescotutor)");       
+        $stmtDiscapacitado = $dbh->prepare("INSERT INTO personal_discapacitado(codigo,tipo_persona_discapacitado,nro_carnet_discapacidad,fecha_nac_persona_dis,cod_estadoreferencial)
+                                            values(:codigo,:tipo_persona_discapacitado,:nro_carnet_discapacidad,:fecha_nac_persona_dis,:cod_estadoreferencial)");       
         $stmtDiscapacitado->bindParam(':codigo', $codigoPersonalD);
-        $stmtDiscapacitado->bindParam(':discapacitado', $discapacitado);
-        $stmtDiscapacitado->bindParam(':tutordiscapacidad', $tutordiscapacidad);
-        $stmtDiscapacitado->bindParam(':parentescotutor', $parentescotutor);
-        $stmtDiscapacitado->bindParam(':celularTutor', $celularTutor);        
+        $stmtDiscapacitado->bindParam(':tipo_persona_discapacitado', $tipo_persona_discapacitado);
+        $stmtDiscapacitado->bindParam(':nro_carnet_discapacidad', $nro_carnet_discapacidad);
+        $stmtDiscapacitado->bindParam(':fecha_nac_persona_dis', $fecha_nac_persona_dis);
+        $stmtDiscapacitado->bindParam(':cod_estadoreferencial', $cod_estadoreferencial);        
         $flagSuccess=$stmtDiscapacitado->execute();
     }
 }
