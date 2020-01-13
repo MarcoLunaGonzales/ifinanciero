@@ -1,29 +1,22 @@
 <?php
-session_start();
-require_once '../layouts/bodylogin.php';
 require_once '../conexion.php';
-require_once '../functions.php';
+require_once 'configModule.php'; //configuraciones
+require_once '../styles.php';
 require_once '../functionsGeneral.php';
-require_once 'configModule.php';
+require 'PHPMailer/send.php';
 
-$dbh = new Conexion();
+$correo=$_GET['correo'];
+$personal=$_GET['personal'];
+$evento=$_GET['evento'];
+$titulo=$_GET['titulo'];
+$mensaje="";
 
-$fechaHoraActual=date("Y-m-d H:i:s");
-
-$codigo=$_GET['codigo']; 
-     $sql1="UPDATE meses_trabajo SET cod_estadomesestrabajo=1 where cod_estadomesestrabajo=3";
-     $stmt1 = $dbh->prepare($sql1);
-     $stmt1->execute();
-
-     $sql="UPDATE meses_trabajo SET cod_estadomesestrabajo=3 where codigo=$codigo";
-     $stmt = $dbh->prepare($sql);
-     $flagSuccess=$stmt->execute();
-	 
-
-if($flagSuccess==true){
-	showAlertSuccessError(true,"../".$urlList);	
-}else{
-	showAlertSuccessError(false,"../".$urlList);
-}
-
+//datos para el envio
+$dbhB = new Conexion();
+ 
+     	echo "1$$$".$correo;
+     	$sqlB="INSERT INTO eventos_sistemapersonal (cod_eventosistema,cod_personal,cod_estadoreferencial,texto) 
+     	VALUES('$evento','$personal','1','$mensaje')";
+        $stmtB = $dbhB->prepare($sqlB);
+        $stmtB->execute();
 ?>

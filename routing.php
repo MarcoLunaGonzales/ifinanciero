@@ -138,7 +138,9 @@
 			require_once('notificaciones_sistema/register.php');
 		}
        
-
+        if ($_GET['opcion']=='registrarEventoSistemaNot') {
+			require_once('notificaciones_sistema/registerEvento.php');
+		}
 
 		//RETENCIONES
         if ($_GET['opcion']=='configuracionDeRetenciones') {

@@ -80,9 +80,10 @@ $contadorRegistros=0;
 			while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 				$codigoX=$row['codigo'];
 				$codPlanCuentaX=$row['cod_plancuenta'];
+				$codCuentaAuxX=$row['cod_cuentaaux'];
 				$tipoX=$row['tipo'];
 			 ?>
-			 <script>estado_cuentas.push({codigo:<?=$codigoX?>,cod_cuenta:<?=$codPlanCuentaX?>,tipo:<?=$tipoX?>});</script>
+			 <script>estado_cuentas.push({codigo:<?=$codigoX?>,cod_cuenta:<?=$codPlanCuentaX?>,cod_cuentaaux:<?=$codCuentaAuxX?>,tipo:<?=$tipoX?>});</script>
 		    <?php
 			 }
 		    ?>

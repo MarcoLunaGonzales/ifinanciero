@@ -228,8 +228,24 @@ function configuracionEstadosCuenta(fila,codigoCuenta,codigoCuentaAux){
        }     
       break;  
     }else{
+      if(estado_cuentas[i].cod_cuentaaux==codigoCuentaAux){
+         $("#estados_cuentas"+fila).removeClass("d-none"); 
+         $("#tipo_estadocuentas"+fila).val(estado_cuentas[i].tipo);
+        if(estado_cuentas[i].tipo==1){
+         //$("#debe"+fila).removeAttr("readonly");
+         $("#haber"+fila).val("");
+         //$("#haber"+fila).attr("readonly","readonly");
+       }else{
+         //$("#haber"+fila).removeAttr("readonly");
+         //$("#debe"+fila).attr("readonly","readonly");
+         $("#debe"+fila).val("");
+       }     
+      break;
+      }else{
       $("#estados_cuentas"+fila).removeClass("d-none"); 
       $("#estados_cuentas"+fila).addClass("d-none");
+        
+      }
     }
   };
 }
@@ -2925,8 +2941,8 @@ function obtieneDatosFilaEstadosCuenta(cod){
     $(".det-estados").show();
   }
 }
-function verEstadosCuentasModal(cuenta,cod_cuenta,tipo){
-   var parametros={"cod_cuenta":cod_cuenta,"tipo":tipo,"mes":12};
+function verEstadosCuentasModal(cuenta,cod_cuenta,cod_cuentaaux,tipo){
+   var parametros={"cod_cuenta":cod_cuenta,"cod_cuentaaux":cod_cuentaaux,"tipo":tipo,"mes":12};
     $.ajax({
         type: "GET",
         dataType: 'html',
@@ -3092,7 +3108,49 @@ function enviarCorreoEvento(){
       }  
     }  
 }
+function registrarCorreoEvento(){
+   if($("#correo").val()==""||$("#correo").val()=="NN"){
+        Swal.fire('Informativo!','El correo no debe estar vacío','warning');  
+   }else{
+     if($("#evento").val()==""||$("#personal").val()==""){
+        Swal.fire('Informativo!','Debe completar los datos','warning');  
+      }else{
+        registrarCorreoEventoAjax();
+      }  
+    }  
+}
 
+function registrarCorreoEventoAjax(){
+   var evento=$("#evento").val();
+  var personal=$("#personal").val();
+  var respuesta=evento.split('@');
+  var respuesta2=personal.split('$$$');
+  $("#boton_enviocorreo").attr("disabled",true); 
+  var parametros={"evento":respuesta[0],"personal":respuesta2[0],"correo":respuesta2[1],"titulo":respuesta[2]};
+ $.ajax({
+    url: "notificaciones_sistema/save.php",
+    type: "GET",
+    data: parametros,
+    dataType: "html",
+    success: function (resp) {
+      var envio=resp.split('$$$');
+      if(parseInt(envio[0])==1){
+         Swal.fire("Registro Existoso!", "Se registradon los datos exitosamente!", "success")
+             .then((value) => {
+             location.href="index.php?opcion=listNotificacionesSistema";
+         });
+        //redireccionar
+      }else{
+        Swal.fire("Error de envio!", "Contactese con el administrador", "error");
+      }
+      $("#boton_enviocorreo").removeAttr("disabled");      
+    },
+    error: function (xhr, ajaxOptions, thrownError) {
+        Swal.fire("Error de envio!", "Contactese con el administrador", "error");
+        $("#boton_enviocorreo").removeAttr("disabled");
+    }
+  });  
+}
 function enviarCorreoEventoAjax(){
   var evento=$("#evento").val();
   var personal=$("#personal").val();
