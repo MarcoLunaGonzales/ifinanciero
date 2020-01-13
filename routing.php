@@ -478,6 +478,21 @@
 			$codigo=$_GET['codigo'];
 			require_once('personal/tiposContratoDelete.php');
 		}
+		//tipos cargos
+		if ($_GET['opcion']=='tiposCargosLista') {
+			require_once('personal/tiposCargosLista.php');
+		}		
+		if ($_GET['opcion']=='formCargosLista') {
+			$codigo=$_GET['codigo'];
+			require_once('personal/TiposCargosForm.php');
+		}
+		if ($_GET['opcion']=='saveTiposCargos') {
+			require_once('personal/tiposCargosSave.php');
+		}
+		if ($_GET['opcion']=='deleteTiposCargos') {
+			$codigo=$_GET['codigo'];
+			require_once('personal/tiposCargosDelete.php');
+		}
 		
 		//tipos personal
 		if ($_GET['opcion']=='tipospersonalLista') {

@@ -5,6 +5,8 @@ require_once 'functions.php';
 require_once 'functionsGeneral.php';
 require_once 'rrhh/configModule.php';
 
+$globalCodUnidad=$_SESSION["globalUnidad"];
+
 $dbh = new Conexion();
 $dbhI = new Conexion();
 $dbhIPD = new Conexion();
@@ -26,7 +28,7 @@ $modified_by=1;
 //$fecha_actual=date('Y-m-d');
 $cont=0;
 //verificamos si exite registro de planilla en este mes
-$stmtPlanillas = $dbh->prepare("SELECT * from planillas where cod_gestion=$cod_gestion and cod_mes=$cod_mes");
+$stmtPlanillas = $dbh->prepare("SELECT codigo from planillas where cod_gestion=$cod_gestion and cod_mes=$cod_mes and cod_uo=globalCodUnidad");
 $stmtPlanillas->execute();
 $stmtPlanillas->bindColumn('codigo',$codigo_planilla);
 while ($row = $stmtPlanillas->fetch())
@@ -34,10 +36,11 @@ while ($row = $stmtPlanillas->fetch())
   $cont+=1; 
 }
 if($cont==0){//insert - cuando no existe planilla
-  $sqlInsert="INSERT into planillas (cod_gestion,cod_mes,cod_estadoplanilla,created_by,modified_by) values(:cod_gestion,:cod_mes,:cod_estadoplanilla,:created_by,:modified_by)";
+  $sqlInsert="INSERT into planillas(cod_gestion,cod_mes,cod_uo,cod_estadoplanilla,created_by,modified_by) values(:cod_gestion,:cod_mes,:cod_uo,:cod_estadoplanilla,:created_by,:modified_by)";
   $stmtInsert = $dbhI->prepare($sqlInsert);
   $stmtInsert->bindParam(':cod_gestion', $cod_gestion);
   $stmtInsert->bindParam(':cod_mes',$cod_mes);
+  $stmtInsert->bindParam(':cod_uo',$globalCodUnidad);
   $stmtInsert->bindParam(':cod_estadoplanilla',$cod_estadoplanilla);
   $stmtInsert->bindParam(':created_by',$created_by);
   $stmtInsert->bindParam(':modified_by',$modified_by);
