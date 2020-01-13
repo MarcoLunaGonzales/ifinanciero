@@ -2337,6 +2337,62 @@ function descargarPDFHorizontal($nom,$html){
       }
     }
   }
+
+  function enviarNotificacionesSistema($tipoContrato){
+    $mesActual=date("m");
+   $dbh = new Conexion();
+    $sql = "SELECT es.*,p.email_empresa,concat(p.primer_nombre,' ',p.otros_nombres,' ',p.paterno,' ',p.materno) as personal,e.nombre,
+pc.fecha_iniciocontrato,pc.fecha_fincontrato
+FROM eventos_sistemapersonal es 
+join personal_contratos pc on es.cod_personal=pc.cod_personal
+join personal p on es.cod_personal=p.codigo
+join eventos_sistema e on e.codigo=es.cod_eventosistema ";
+    if($tipoContrato==1){
+     $dias=obtenerValorConfiguracion(12); 
+     $sql.="where pc.cod_tipocontrato=1";  
+    }else{
+     $dias=obtenerValorConfiguracion(11);
+     $sql.="where pc.cod_tipocontrato!=1";
+    }
+    
+      $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+
+   $i=0;
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      
+      $codigo=$row['codigo'];
+      $correo=$row['email_empresa'];
+      $titulo=$row['nombre'];
+      $personal=strtoupper($row['personal']);
+      $fechaInicio=strftime('%d/%m/%Y',strtotime($row['fecha_iniciocontrato']));
+      if(trim($row['fecha_fincontrato'])!="INDEFINIDO"){
+      $fechaFin=strftime('%d/%m/%Y',strtotime($row['fecha_fincontrato']));  
+      }else{
+        $fechaFin=$row['fecha_fincontrato'];
+      }
+      
+      //contenido del mensaje
+      $mensaje="Estimado(a) ".$personal;
+      $mensaje.="<br>El presente contrato tiene como fecha de inicio: ".$fechaInicio. ", finaliza en fecha: ".$fechaFin;
+      $mensaje.="<br>Saludos.";
+    //datos del correo
+      $mail_username="noresponse@minkasoftware.com";//Correo electronico saliente ejemplo: tucorreo@gmail.com
+      $mail_userpassword="minka@2019";//Tu contraseña de gmail
+      $mail_addAddress=$correo;//correo electronico que recibira el mensaje
+      $template="notificaciones_sistema/PHPMailer/email_template.html";//Ruta de la plantilla HTML para enviar nuestro mensaje
+        
+        /*Inicio captura de datos enviados por $_POST para enviar el correo */
+       $mail_setFromEmail=$mail_username;
+       $mail_setFromName="IBNORCA";
+       $txt_message=$mensaje;
+       $mail_subject=$titulo; //el subject del mensaje
+  
+       $flag=sendemail($mail_username,$mail_userpassword,$mail_setFromEmail,$mail_setFromName,$mail_addAddress,$txt_message,$mail_subject,$template,$i);      
+      $i++;
+    }
+
+  }
 ?>
 
 
