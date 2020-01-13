@@ -2321,6 +2321,37 @@ function descargarPDFHorizontal($nom,$html){
     }
     return $monto;
   }
+  function bonosIndefinidos(){
+    $mesActual=date("m");
+   $dbh = new Conexion();
+    $stmt = $dbh->prepare("SELECT * from bonos_personal_mes where indefinido=1");
+    $stmt->execute();
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $codigo=$row['codigo'];
+      $codBono=$row['cod_bono'];
+      $codPersona=$row['cod_personal'];
+      $monto=$row['monto'];
+      $observaciones=$row['observaciones'];
+      $codEstado=$row['cod_estadoreferencial'];
+      $indefinido=$row['indefinido'];
+      if($row['cod_mes']<12){
+        $nuevoMes=$row['cod_mes'];
+        $gestion=$row['cod_gestion'];
+      }else{
+        $nuevoMes=$row['cod_mes'];
+        //$gestion=(int)nameGestion($row['cod_gestion']);
+        $gestion=$row['cod_gestion']+1;
+      }
+      if($row['cod_mes']<(int)$mesActual){
+          $stmt2 = $dbh->prepare("INSERT INTO bonos_personal_mes (cod_bono, cod_personal,cod_gestion,cod_mes,monto,observaciones,indefinido, cod_estadoreferencial) 
+                        VALUES ('$codBono','$codPersona','$gestion','$nuevoMes','$monto','$observaciones',1, '$codEstado')");
+          $stmt2->execute();
+          $stmt3 = $dbh->prepare("UPDATE bonos_personal_mes SET indefinido=0 where codigo=$codigo");
+          $stmt3->execute();  
+
+      }
+    }
+  }
 ?>
 
 

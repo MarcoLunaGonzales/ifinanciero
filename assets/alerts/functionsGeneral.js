@@ -3061,7 +3061,12 @@ function enviarCorreoEventoAjax(){
   });
 }
 
-
+function mandarDatosBonoIndefinido(){
+  var datos=$("#personal").val();
+  var respuesta=datos.split('@');
+  $("#monto").val(respuesta[1]);
+  $("#obs").val(respuesta[2]);
+}
 
 
 //funciones despues de cargar pantalla

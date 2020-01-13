@@ -782,6 +782,10 @@
 			$codigo_bono=$_GET['cod_bono'];
 			require_once('bonos/registerBonoPeriodoPersona.php');
 		}
+		if ($_GET['opcion']=='finBonoPeriodoPersona') {
+			$codigo_bono=$_GET['cod_bono'];
+			require_once('bonos/finBonoPeriodoPersona.php');
+		}
 		if ($_GET['opcion']=='subirBonoExcel') {
 			$codigo_bono=$_GET['cod_bono'];
 			$codigo_mes=$_GET['cod_mes'];

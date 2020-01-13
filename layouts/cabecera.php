@@ -56,6 +56,10 @@ require_once 'conexion.php';
 require_once 'functions.php';
 require_once 'functionsGeneral.php';
 
+//verificar si hay bonos indefinidos
+bonosIndefinidos();
+
+
 $fechaActual=date("Y-m-d");
 $dbh = new Conexion();
 

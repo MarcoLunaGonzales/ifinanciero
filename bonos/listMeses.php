@@ -31,6 +31,7 @@ $stmtb = $dbh->prepare("SELECT nombre FROM $table WHERE codigo=$codigoBono");
 $stmtb->execute();
 // bindColumn
 $stmtb->bindColumn('nombre', $nombreBono);
+
 ?>
 
 <div class="content">
@@ -112,6 +113,7 @@ $stmtb->bindColumn('nombre', $nombreBono);
       				<div class="card-footer fixed-bottom">
                 <button class="<?=$buttonCancel;?>" onClick="location.href='<?=$urlList;?>'">Volver</button>
                 <button class="<?=$buttonNormal;?>" onClick="location.href='<?=$urlRegisterBonoPeriodoPersona;?>&cod_bono=<?=$codigoBono;?>'">Registrar por periodo</button>
+                <button class="btn btn-warning" onClick="location.href='<?=$urlFinBonoPeriodoPersona;?>&cod_bono=<?=$codigoBono;?>'">Detener Bonos Indefinidos</button>
               </div>
               
 
