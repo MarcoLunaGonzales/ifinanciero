@@ -72,6 +72,7 @@ $stmt->bindColumn('email_empresa', $emailX);
               ?>
               <div class="card-footer fixed-bottom">
                     <a class="<?=$buttonNormal;?>" href="<?=$urlRegister;?>" target="_blank">Registrar</a>
+                    <a class="btn btn-warning" href="<?=$urlRegister2;?>" target="_blank">Notificacion Particular</a>
               </div>
               <?php
               }

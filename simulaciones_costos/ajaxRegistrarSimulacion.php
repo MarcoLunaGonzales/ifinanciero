@@ -48,6 +48,9 @@ if(isset($_GET['nombre'])){
      $montoLocal=$rowPartida['monto_local'];
      $montoExterno=$rowPartida['monto_externo'];
      $montoTotal = calcularCostosPresupuestarios($idp,$unidad,$area,$anio_pasado);
+     if($montoTotal==0){
+      $montoTotal=1;
+     }
      $cuentasPlan=obtenerCuentaPlantillaCostos($idp);
       while ($rowCuenta = $cuentasPlan->fetch(PDO::FETCH_ASSOC)) {
       $codCuenta=$rowCuenta['cod_cuenta'];

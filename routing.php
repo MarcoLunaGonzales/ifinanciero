@@ -138,7 +138,9 @@
 			require_once('notificaciones_sistema/register.php');
 		}
        
-
+        if ($_GET['opcion']=='registrarEventoSistemaNot') {
+			require_once('notificaciones_sistema/registerEvento.php');
+		}
 
 		//RETENCIONES
         if ($_GET['opcion']=='configuracionDeRetenciones') {
@@ -796,6 +798,10 @@
         if ($_GET['opcion']=='registerBonoPeriodoPersona') {
 			$codigo_bono=$_GET['cod_bono'];
 			require_once('bonos/registerBonoPeriodoPersona.php');
+		}
+		if ($_GET['opcion']=='finBonoPeriodoPersona') {
+			$codigo_bono=$_GET['cod_bono'];
+			require_once('bonos/finBonoPeriodoPersona.php');
 		}
 		if ($_GET['opcion']=='subirBonoExcel') {
 			$codigo_bono=$_GET['cod_bono'];

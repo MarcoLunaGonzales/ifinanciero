@@ -10,10 +10,19 @@ $dbh = new Conexion();
 $cuenta=$_POST["cuenta_auto_id"];
 $tipo=$_POST["credito"];
 
+$porciones = explode("$$", $cuenta);
+if($porciones[1]=="AUX"){
+	$codPlan="";
+	$codAux=$porciones[0];
+}else{
+	$codPlan=$porciones[0];
+	$codAux="";
+}
 // Prepare
-$stmt = $dbh->prepare("INSERT INTO $table (cod_plancuenta,tipo) VALUES ( :cod_plancuenta,:tipo)");
+$stmt = $dbh->prepare("INSERT INTO $table (cod_plancuenta,cod_cuentaaux,tipo) VALUES ( :cod_plancuenta,:cod_cuentaaux,:tipo)");
 // Bind
-$stmt->bindParam(':cod_plancuenta', $cuenta);
+$stmt->bindParam(':cod_plancuenta', $codPlan);
+$stmt->bindParam(':cod_cuentaaux', $codAux);
 $stmt->bindParam(':tipo', $tipo);
 $flagSuccess=$stmt->execute();
 if($flagSuccess==true){

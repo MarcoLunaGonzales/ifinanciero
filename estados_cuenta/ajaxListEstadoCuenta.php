@@ -18,6 +18,7 @@ $globalArea=$_SESSION["globalArea"];
 
 $fechaActual=date("d/m/Y");
 $codCuenta=$_GET['cod_cuenta'];
+$codCuentaAux=$_GET['cod_cuentaaux'];
 $tipo=$_GET['tipo'];
 $mes=$_GET['mes'];
 ?>
@@ -34,7 +35,12 @@ $mes=$_GET['mes'];
 	<tbody id="tabla_estadocuenta">
 <?php
   /*$stmt = $dbh->prepare("SELECT e.* FROM estados_cuenta e,comprobantes_detalle d where e.cod_comprobantedetalle=d.codigo and d.cod_cuenta=$codCuenta");*/
-  $stmt = $dbh->prepare("SELECT e.*,d.glosa,d.haber,d.debe FROM estados_cuenta e,comprobantes_detalle d where e.cod_comprobantedetalle=d.codigo and (d.cod_cuenta=$codCuenta or e.cod_plancuenta=$codCuenta) order by e.fecha");
+  if($codCuenta==0){
+   $stmt = $dbh->prepare("SELECT e.*,d.glosa,d.haber,d.debe FROM estados_cuenta e,comprobantes_detalle d where e.cod_comprobantedetalle=d.codigo and (d.cod_cuentaauxiliar=$codCuentaAux or e.cod_cuentaaux=$codCuentaAux) order by e.fecha");
+  }else{
+  	$stmt = $dbh->prepare("SELECT e.*,d.glosa,d.haber,d.debe FROM estados_cuenta e,comprobantes_detalle d where e.cod_comprobantedetalle=d.codigo and (d.cod_cuenta=$codCuenta or e.cod_plancuenta=$codCuenta) order by e.fecha");
+  }
+  
   $stmt->execute();
   $i=0;$saldo=0;
   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {

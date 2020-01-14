@@ -7,12 +7,15 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $dbh = new Conexion();
 
 // Preparamos
-$stmt = $dbh->prepare("SELECT *,p.codigo as cod_plan,p.numero,p.nombre from configuracion_estadocuentas c,plan_cuentas p where c.cod_plancuenta=p.codigo order BY p.numero");
+$stmt = $dbh->prepare("SELECT c.*,p.numero,p.nombre from configuracion_estadocuentas c,plan_cuentas p where c.cod_plancuenta=p.codigo
+UNION
+SELECT c.*,p.nro_cuenta as numero,p.nombre from configuracion_estadocuentas c,cuentas_auxiliares p where c.cod_cuentaaux=p.codigo");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
 $stmt->bindColumn('codigo', $codigo);
 $stmt->bindColumn('cod_plancuenta', $codCuenta);
+$stmt->bindColumn('cod_cuentaaux', $codCuentaAux);
 $stmt->bindColumn('nombre', $nombre);
 $stmt->bindColumn('numero', $numero);
 $stmt->bindColumn('tipo', $tipo);
@@ -60,7 +63,7 @@ $stmt->bindColumn('tipo', $tipo);
                             <?php 
                             if($tipo==1){
                               ?>
-                              <a title="Reporte" href='#' onclick="verEstadosCuentasModal('<?=$nombre?>',<?=$codCuenta?>,<?=$tipo?>)" class="btn btn-default">
+                              <a title="Reporte" href='#' onclick="verEstadosCuentasModal('<?=$nombre?>',<?=$codCuenta?>,<?=$codCuentaAux?>,<?=$tipo?>)" class="btn btn-default">
                                <i class="material-icons">ballot</i>
                               </a>
                               <?php

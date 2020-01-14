@@ -67,18 +67,20 @@ while ($row = $cont->fetch(PDO::FETCH_BOUND)) {
 			 <script>configuraciones.push({codigo:<?=$codigoX?>,valor:<?=$valorX?>,descripcion:'<?=$descripcionX?>'});</script>
 		    <?php
 			 }
-		    //ESTADO DE CUENTAS
+		   //ESTADO DE CUENTAS
 			$stmt = $dbh->prepare("SELECT * FROM configuracion_estadocuentas");
 			$stmt->execute();
 			$i=0;
 			while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 				$codigoX=$row['codigo'];
 				$codPlanCuentaX=$row['cod_plancuenta'];
+				$codCuentaAuxX=$row['cod_cuentaaux'];
 				$tipoX=$row['tipo'];
 			 ?>
-			 <script>estado_cuentas.push({codigo:<?=$codigoX?>,cod_cuenta:<?=$codPlanCuentaX?>,tipo:<?=$tipoX?>});</script>
+			 <script>estado_cuentas.push({codigo:<?=$codigoX?>,cod_cuenta:<?=$codPlanCuentaX?>,cod_cuentaaux:<?=$codCuentaAuxX?>,tipo:<?=$tipoX?>});</script>
 		    <?php
 			 }
+		    ?>
 		    
 			$stmt = $dbh->prepare("SELECT codigo, cod_unidadorganizacional, porcentaje FROM distribucion_gastosporcentaje");
 			$stmt->execute();
