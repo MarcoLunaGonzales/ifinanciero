@@ -42,7 +42,7 @@ if ($codigo > 0){
 
 		<div class="col-md-12">
 		  <form id="form1" class="form-horizontal" action="<?=$urlSaveAreas;?>" method="post">
-      <input type="hidden" name="codigo" id="codigo" value="<?=$codigo;?>"/>
+            <input type="hidden" name="codigo" id="codigo" value="<?=$codigo;?>"/>
 			<div class="card">
 			  <div class="card-header <?=$colorCard;?> card-header-text">
 				<div class="card-text">
@@ -54,40 +54,33 @@ if ($codigo > 0){
 
               <input type="hidden" name="codigo" id="codigo" value="<?=$codigo;?>"/>
               <div class="row">
-              <label class="col-sm-2 col-form-label">Nombre</label>
-    <div class="col-sm-7">
-    <div class="form-group">
-        <input class="form-control" type="text" name="nombre" id="nombre" required="true" value="<?=$nombre;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
-    </div>
-    </div>
-</div><!--fin campo nombre -->
-<div class="row">
-    <label class="col-sm-2 col-form-label">Abreviatura</label>
-    <div class="col-sm-7">
-    <div class="form-group">
-        <input class="form-control" type="text" name="abreviatura" id="abreviatura" required="true" value="<?=$abreviatura;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
-    </div>
-    </div>
-</div><!--fin campo abreviatura -->
-<div class="row">
-    <label class="col-sm-2 col-form-label">Observaciones</label>
-    <div class="col-sm-7">
-    <div class="form-group">
-        <input class="form-control" type="text" name="observaciones" id="observaciones" value="<?=$observaciones;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
-    </div>
-    </div>
-</div><!--fin campo observaciones -->
-
-
-
-
-
-
-
+                    <label class="col-sm-2 col-form-label">Nombre</label>
+                    <div class="col-sm-7">
+                    <div class="form-group">
+                        <input class="form-control" type="text" name="nombre" id="nombre" required="true" value="<?=$nombre;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+                    </div>
+                    </div>
+                </div><!--fin campo nombre -->
+                <div class="row">
+                    <label class="col-sm-2 col-form-label">Abreviatura</label>
+                    <div class="col-sm-7">
+                    <div class="form-group">
+                        <input class="form-control" type="text" name="abreviatura" id="abreviatura" required="true" value="<?=$abreviatura;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+                    </div>
+                    </div>
+                </div><!--fin campo abreviatura -->
+                <div class="row">
+                    <label class="col-sm-2 col-form-label">Observaciones</label>
+                    <div class="col-sm-7">
+                    <div class="form-group">
+                        <input class="form-control" type="text" name="observaciones" id="observaciones" value="<?=$observaciones;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+                    </div>
+                    </div>
+                </div><!--fin campo observaciones -->
 			  </div>
 			  <div class="card-footer ml-auto mr-auto">
 				<button type="submit" class="<?=$buttonNormal;?>">Guardar</button>
-				<a href="<?=$urlListAreas;?>" class="<?=$buttonCancel;?>">Cancelar</a>
+				<a href="<?=$urlListAreas;?>" class="<?=$buttonCancel;?>">Volver</a>
 			  </div>
 			</div>
 		  </form>

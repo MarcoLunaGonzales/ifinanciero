@@ -77,11 +77,18 @@ while ($row = $stmtc->fetch(PDO::FETCH_BOUND)) {
 				  <label class="col-sm-2 col-form-label">Monto</label>
 				  <div class="col-sm-7">
 					<div class="form-group">
-					  <input class="form-control" type="number" step="0.001" name="monto" id="monto" required="true"/>
+					  <input class="form-control" autocomplete="off" type="number" step="0.001" name="monto" id="monto" required="true"/>
 					</div>
 				  </div>
 				</div>
-				
+				<div class="row">
+				  <label class="col-sm-2 col-form-label">Observaciones</label>
+				  <div class="col-sm-10">
+					<div class="form-group">
+					  <textarea class="form-control" name="obs" id="obs" required="true"></textarea>
+					</div>
+				  </div>
+				</div>
 				<input class="form-control" type="text" hidden="true" name="codMes" id="codMes"  value="<?=$codMes;?>"/>
 				<input class="form-control" type="text" hidden="true" name="codBono" id="codBono"  value="<?=$codBono;?>"/>
 				<input class="form-control" type="text" hidden="true" name="codGestion" id="codGestion"  value="<?=$codGestion;?>"/>

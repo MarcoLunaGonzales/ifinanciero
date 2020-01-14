@@ -228,8 +228,24 @@ function configuracionEstadosCuenta(fila,codigoCuenta,codigoCuentaAux){
        }     
       break;  
     }else{
+      if(estado_cuentas[i].cod_cuentaaux==codigoCuentaAux){
+         $("#estados_cuentas"+fila).removeClass("d-none"); 
+         $("#tipo_estadocuentas"+fila).val(estado_cuentas[i].tipo);
+        if(estado_cuentas[i].tipo==1){
+         //$("#debe"+fila).removeAttr("readonly");
+         $("#haber"+fila).val("");
+         //$("#haber"+fila).attr("readonly","readonly");
+       }else{
+         //$("#haber"+fila).removeAttr("readonly");
+         //$("#debe"+fila).attr("readonly","readonly");
+         $("#debe"+fila).val("");
+       }     
+      break;
+      }else{
       $("#estados_cuentas"+fila).removeClass("d-none"); 
       $("#estados_cuentas"+fila).addClass("d-none");
+        
+      }
     }
   };
 }
@@ -2204,7 +2220,7 @@ function EliminarDistribucion(cod_personal,cod_distribucion){
 
  
 var areas_tabla=[]; 
-var areas_tabla_general=[]; 
+var areas_tabla_general=[];
 var numFilasA=0;
 function sendChekedA(id){
   var check=document.getElementById("areas"+id);
@@ -2233,13 +2249,56 @@ function filaTablaAGeneral(tabla,index){
   var html="";
   for (var i = 0; i < areas_tabla_general[index-1].length; i++) {
     //alert(areas_tabla_general[index-1][i].nombre);
-    html+="<tr><td>"+(i+1)+"</td><td>"+areas_tabla_general[index-1][i].nombreA+"</td><td>"+areas_tabla_general[index-1][i].nombreAP+"</td></tr>";
+    html+="<tr><td>"+(i+1)+"</td><td>"+areas_tabla_general[index-1][i].nombreA+"</td><td>"+areas_tabla_general[index-1][i].nombreAP+"</td><td><a href='#' onclick='cargarCargosAreasOrganizacion("+areas_tabla_general[index-1][i].cod_areaorganizacion+",\""+areas_tabla_general[index-1][i].nombreA+"\")' class='btn btn-fab btn-info btn-sm btn-rounded'><i class='material-icons' title='Asignar Cargos'>add</i></a></td></tr>";
   }
   tabla.html(html);
   $("#modalAreas").modal("show");  
 }
 
-
+function cargarCargosAreasOrganizacion(cod,nom){
+  var parametros={"codigo":cod,"nombreArea":nom};
+   $.ajax({
+    type:"GET",
+    data:parametros,
+    url:"rrhh/ajaxCargosAreasOrganizacion.php",
+    success:function(resp){
+      $("#mensajeRealizado").html("");
+      $("#tutulo_cargosarea").text(nom);
+      $("#areaorganizacion_id").val(cod);
+      $("#tablasCargos_registrados").html(resp);
+      $("#modalCargos").modal("show");
+    }
+  });
+}
+function borrarCargoAreaOrganizacion(codigo){
+  var cod=$("#areaorganizacion_id").val();
+  var parametros={"codigo_fila":codigo};
+   $.ajax({
+    type:"GET",
+    data:parametros,
+    url:"rrhh/ajaxBorrarCargoAreasOrganizacion.php",
+    success:function(resp){ 
+      $("#mensajeRealizado").html("<p class='text-danger'>"+resp+"</p>");
+      cargarCargosAreasOrganizacion(cod,$("#tutulo_cargosarea").text());
+    }
+  });
+}
+function agregarCargoAreaOrganizacion(){
+  var cod=$("#areaorganizacion_id").val();
+  var codCargo=$("#cargo_areaorg").val();
+  if(codCargo!=""){
+    var parametros={"codigo":cod,"cod_cargo":codCargo};
+   $.ajax({
+    type:"GET",
+    data:parametros,
+    url:"rrhh/ajaxNuevoCargoAreasOrganizacion.php",
+    success:function(resp){ 
+      $("#mensajeRealizado").html("<p class='text-success'>"+resp+"</p>");
+      cargarCargosAreasOrganizacion(cod,$("#tutulo_cargosarea").text());
+    }
+  });  
+  }  
+}
 // function ajaxAUOPadre(combo){
 //   var contenedor;
 //   var codigo_UO=combo.value;
@@ -2280,6 +2339,13 @@ function agregaformPCB(datos){
   document.getElementById("codigo_contratoB").value=d[1];
 
 }
+function agregaformEditEva(datos){
+  //console.log("datos: "+datos);
+  var d=datos.split('/');
+  document.getElementById("codigo_personalEv").value=d[0];
+  document.getElementById("codigo_contratoEv").value=d[1];
+  document.getElementById("fecha_EvaluacionEv").value=d[3];
+}
 
 function RegistrarContratoPersonal(cod_personal,cod_tipocontrato,fecha_inicio){
   $.ajax({
@@ -2306,6 +2372,21 @@ function EditarContratoPersonal(codigo_contratoE,codigo_personalE,cod_tipocontra
         //$('#tabla1').load('index.php');
         // alertify.success("agregado");
         alerts.showSwal('success-message','index.php?opcion=FormPersonalContratos&codigo='+codigo_personalE);
+      }
+    }
+  });
+}
+function EditarEvaluacionPersonal(codigo_contratoEv,codigo_personalEv,fecha_EvaluacionEv){
+  $.ajax({
+    type:"POST",
+
+    data:"cod_contrato="+codigo_contratoEv+"&cod_personal=0&cod_tipocontrato=0&cod_estadoreferencial=4&fecha_inicio="+fecha_EvaluacionEv,
+    url:"personal/savePersonalcontrato.php",
+    success:function(r){
+      if(r==1){
+        //$('#tabla1').load('index.php');
+        // alertify.success("agregado");
+        alerts.showSwal('success-message','index.php?opcion=FormPersonalContratos&codigo='+codigo_personalEv);
       }
     }
   });
@@ -2386,13 +2467,11 @@ function agregaformPre(datos){
   var d=datos.split('-');
   document.getElementById("codigo_planilla").value=d[0];
 }
-
 function agregaformRP(datos){
   //console.log("datos: "+datos);
   var d=datos.split('-');
   document.getElementById("codigo_planillaRP").value=d[0];
 }
-
 function agregaformCP(datos){
   //console.log("datos: "+datos);
   var d=datos.split('-');
@@ -2451,7 +2530,6 @@ function ReprocesarPlanilla(cod_planilla){
     }
   });
 }
-
 function ReprocesarPlanillaTrib(cod_planillaTrib,cod_planilla){
   //window.location.href="planillas/savePlanillaTribMes2.php?cod_planillatrib="+cod_planillaTrib+"&cod_planilla="+cod_planilla;
   $.ajax({
@@ -2474,13 +2552,84 @@ function ReprocesarPlanillaTrib(cod_planillaTrib,cod_planilla){
     }
   });
 }
-
-//<<<<<<< HEAD
 function CerrarPlanilla(cod_planilla){
   $.ajax({
     type:"POST",
     data:"cod_planilla="+cod_planilla+"&sw=3",
     url:"planillas/savePlanillaMes.php",
+    success:function(r){
+      if(r==1){
+        //$('#tabla1').load('activosFijos/afEnCustodia.php');
+        //alertify.success("agregado");
+        alerts.showSwal('success-message','index.php?opcion=planillasSueldoPersonal');
+      }
+    }
+  });
+}
+//funciones para el personal NO Admin
+function agregaformPreNA(datos){
+  var d=datos.split('-');
+  document.getElementById("codigo_planillaNA").value=d[0];
+  document.getElementById("codigo_uoNA").value=d[1];
+}
+function agregaformRPNA(datos){
+  var d=datos.split('-');
+  document.getElementById("codigo_planillaRPNA").value=d[0];
+  document.getElementById("codigo_uoRPNA").value=d[1];
+}
+function agregaformCPNA(datos){
+  var d=datos.split('-');
+  document.getElementById("codigo_planillaCPNA").value=d[0];
+  document.getElementById("codigo_uoCPNA").value=d[1];
+}
+function ProcesarPlanillaNA(cod_planilla){  
+  $.ajax({
+    type:"POST",
+    data:"cod_planilla="+cod_planilla+"&sw=2",
+    url:"planillas/savePlanillaMesNA.php",
+    beforeSend:function(objeto){ 
+      $('#cargaPNA').css({display:'block'});
+      $('#AceptarProcesoNA').css({display:'none'});
+      $('#CancelarProcesoNA').css({display:'none'});  
+    },
+    success:function(r){
+      if(r==1){
+        //$('#tabla1').load('activosFijos/afEnCustodia.php');
+        $('#cargaPNA').css('display','none');
+        alerts.showSwal('success-message','index.php?opcion=planillasSueldoPersonal');
+      }else{
+        $('#cargaPNA').css('display','none');
+        alerts.showSwal('error-message','index.php?opcion=planillasSueldoPersonal');
+      }
+    }
+  });
+}
+function ReprocesarPlanillaNA(cod_planilla,cod_uo){
+  $.ajax({
+    type:"POST",
+    data:"cod_planilla="+cod_planilla+"&sw=1&cod_uo="+cod_uo,
+    url:"planillas/savePlanillaMesNA.php",
+    beforeSend:function(objeto){ 
+      $('#cargaRNA').css({display:'block'});
+      $('#AceptarReProcesoNA').css({display:'none'});
+      $('#CancelarReProcesoNA').css({display:'none'});  
+    },
+    success:function(r){
+      if(r==1){
+        $('#cargaRNA').css('display','none');
+        alerts.showSwal('success-message','index.php?opcion=planillasSueldoPersonal');
+      }else{
+        $('#cargaRNA').css('display','none');
+        alerts.showSwal('error-message','index.php?opcion=planillasSueldoPersonal');
+      }
+    }
+  });
+}
+function CerrarPlanillaNA(cod_planilla){
+  $.ajax({
+    type:"POST",
+    data:"cod_planilla="+cod_planilla+"&sw=3&cod_uo="+cod_uo,
+    url:"planillas/savePlanillaMesNA.php",
     success:function(r){
       if(r==1){
         //$('#tabla1').load('activosFijos/afEnCustodia.php');
@@ -2817,8 +2966,8 @@ function obtieneDatosFilaEstadosCuenta(cod){
     $(".det-estados").show();
   }
 }
-function verEstadosCuentasModal(cuenta,cod_cuenta,tipo){
-   var parametros={"cod_cuenta":cod_cuenta,"tipo":tipo,"mes":12};
+function verEstadosCuentasModal(cuenta,cod_cuenta,cod_cuentaaux,tipo){
+   var parametros={"cod_cuenta":cod_cuenta,"cod_cuentaaux":cod_cuentaaux,"tipo":tipo,"mes":12};
     $.ajax({
         type: "GET",
         dataType: 'html',
@@ -2927,6 +3076,146 @@ function montoNoMayor(){
   }
 }
 
+function ponerSiguienteAnio(ges){
+  var mes = $("#desde").val();
+  $("#hasta option").each(function(){
+        if ($(this).val() != "0" ){ 
+          $(this).removeAttr("disabled");
+          if(parseInt($(this).val())<= parseInt(mes)){
+            $(this).attr("disabled",true);
+          }       
+        }
+  });
+  $('.selectpicker').selectpicker("refresh");
+}
+
+function ponerDescripcionEvento(){
+  var evento= $("#evento").val();
+  if(evento!=""){
+    var respuesta=evento.split('@');
+     $("#descripcion").val(respuesta[1]);  
+  }else{
+    $("#descripcion").val(""); 
+  }
+}
+function ponerCorreoPersona(){
+  var persona= $("#personal").val();
+  if(persona!=""){
+    var respuesta=persona.split('$$$');
+     $("#correo").val(respuesta[1]);  
+  }else{
+    $("#correo").val(""); 
+  }
+}
+
+function enviarCorreoEvento(){
+   if($("#correo").val()==""||$("#correo").val()=="NN"){
+        Swal.fire('Informativo!','El correo no debe estar vacío','warning');  
+   }else{
+     if($("#evento").val()==""||$("#personal").val()==""){
+        Swal.fire('Informativo!','Debe completar los datos','warning');  
+      }else{
+        //enviar correo
+        Swal.fire({
+         title: '¿Esta seguro de enviar el correo?',
+         showCancelButton: true,
+         confirmButtonText: 'Enviar',
+         showLoaderOnConfirm: true,
+         closeOnConfirm: false
+       }).then((result) => {
+          if (result.value) {
+               enviarCorreoEventoAjax();            
+            return(true);
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            return(false);
+          }
+        });
+      }  
+    }  
+}
+function registrarCorreoEvento(){
+   if($("#correo").val()==""||$("#correo").val()=="NN"){
+        Swal.fire('Informativo!','El correo no debe estar vacío','warning');  
+   }else{
+     if($("#evento").val()==""||$("#personal").val()==""){
+        Swal.fire('Informativo!','Debe completar los datos','warning');  
+      }else{
+        registrarCorreoEventoAjax();
+      }  
+    }  
+}
+
+function registrarCorreoEventoAjax(){
+   var evento=$("#evento").val();
+  var personal=$("#personal").val();
+  var respuesta=evento.split('@');
+  var respuesta2=personal.split('$$$');
+  $("#boton_enviocorreo").attr("disabled",true); 
+  var parametros={"evento":respuesta[0],"personal":respuesta2[0],"correo":respuesta2[1],"titulo":respuesta[2]};
+ $.ajax({
+    url: "notificaciones_sistema/save.php",
+    type: "GET",
+    data: parametros,
+    dataType: "html",
+    success: function (resp) {
+      var envio=resp.split('$$$');
+      if(parseInt(envio[0])==1){
+         Swal.fire("Registro Existoso!", "Se registradon los datos exitosamente!", "success")
+             .then((value) => {
+             location.href="index.php?opcion=listNotificacionesSistema";
+         });
+        //redireccionar
+      }else{
+        Swal.fire("Error de envio!", "Contactese con el administrador", "error");
+      }
+      $("#boton_enviocorreo").removeAttr("disabled");      
+    },
+    error: function (xhr, ajaxOptions, thrownError) {
+        Swal.fire("Error de envio!", "Contactese con el administrador", "error");
+        $("#boton_enviocorreo").removeAttr("disabled");
+    }
+  });  
+}
+function enviarCorreoEventoAjax(){
+  var evento=$("#evento").val();
+  var personal=$("#personal").val();
+  var respuesta=evento.split('@');
+  var respuesta2=personal.split('$$$');
+  var mensaje=$("#mensaje").val();
+  $("#boton_enviocorreo").attr("disabled",true); 
+  var parametros={"evento":respuesta[0],"personal":respuesta2[0],"correo":respuesta2[1],"mensaje":mensaje,"titulo":respuesta[2]};
+ $.ajax({
+    url: "notificaciones_sistema/sendEmail.php",
+    type: "GET",
+    data: parametros,
+    dataType: "html",
+    success: function (resp) {
+      var envio=resp.split('$$$');
+      if(parseInt(envio[0])==1){
+         Swal.fire("Mensaje enviado!", "El correo se envio a "+envio[1]+" exitosamente!", "success")
+             .then((value) => {
+             location.href="index.php?opcion=listNotificacionesSistema";
+         });
+        //redireccionar
+      }else{
+        Swal.fire("Error de envio!", "Verifique sus datos e intentelo de nuevo", "error");
+      }
+      $("#boton_enviocorreo").removeAttr("disabled");      
+    },
+    error: function (xhr, ajaxOptions, thrownError) {
+        Swal.fire("Error de envio!", "Verifique sus datos e intentelo de nuevo", "error");
+        $("#boton_enviocorreo").removeAttr("disabled");
+    }
+  });
+}
+
+function mandarDatosBonoIndefinido(){
+  var datos=$("#personal").val();
+  var respuesta=datos.split('@');
+  $("#monto").val(respuesta[1]);
+  $("#obs").val(respuesta[2]);
+}
+
 
 //funciones despues de cargar pantalla
 
@@ -2939,4 +3228,5 @@ $(document).ready(function() {
       ReprocesarPlanillaTrib(cod_planillaTrib,cod_planilla);
     });    
   }  
+  
 });

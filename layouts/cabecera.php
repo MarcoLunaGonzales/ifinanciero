@@ -53,8 +53,15 @@
               </li-->
 <?php
 require_once 'conexion.php';
+require_once 'notificaciones_sistema/PHPMailer/send.php';
 require_once 'functions.php';
 require_once 'functionsGeneral.php';
+
+//verificar si hay bonos indefinidos
+bonosIndefinidos();
+
+//enviar alertas a correos
+//enviarNotificacionesSistema(1);
 
 $fechaActual=date("Y-m-d");
 $dbh = new Conexion();

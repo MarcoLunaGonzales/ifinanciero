@@ -175,6 +175,13 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
                   </a>
                 </li>
                 <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=tiposCargosLista">
+                    <span class="sidebar-mini"> TCA </span>
+                    <span class="sidebar-normal"> Tipos Cargos</span>
+                  </a>
+                </li>
+        
+                <li class="nav-item ">
                   <a class="nav-link" href="?opcion=tipospersonalLista">
                     <span class="sidebar-mini"> TP </span>
                     <span class="sidebar-normal"> Tipos Personal</span>
@@ -481,6 +488,25 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
               </ul>
             </div>
           </li>
+          <!--REPORTES RRHH-->
+          <li class="nav-item ">
+            <a class="nav-link" data-toggle="collapse" href="#reportesRRHH">
+              <i class="material-icons">assessment</i>
+              <p> Reportes RRHH
+                <b class="caret"></b>
+              </p>
+            </a>
+            <div class="collapse" id="reportesRRHH">
+              <ul class="nav">                
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=rptCambiosPersonal">
+                    <span class="sidebar-mini"> R </span>
+                    <span class="sidebar-normal"> Cambios Del Personal</span>
+                  </a>
+                </li>                           
+              </ul>
+            </div>
+          </li>
 
 
           
@@ -516,6 +542,12 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
             </a>
             <div class="collapse" id="utilitarios">
               <ul class="nav">
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listNotificacionesSistema">
+                    <span class="sidebar-mini"> NT </span>
+                    <span class="sidebar-normal"> Notificaciones</span>
+                  </a>
+                </li>
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=mesCurso">
                     <span class="sidebar-mini"> MC </span>

@@ -2,6 +2,7 @@
 	
 	if(isset($_GET['opcion'])){
 
+
 		//*********************************************   CONTABILIDAD BASICA         ********************************
 		//PLAN DE CUENTAS
 		if ($_GET['opcion']=='listPlanCuentas') {
@@ -128,6 +129,19 @@
         if ($_GET['opcion']=='mesCurso') {
 			require_once('mes_curso/list.php');
 		}
+
+		//notificaciones SISTEMA
+        if ($_GET['opcion']=='listNotificacionesSistema') {
+			require_once('notificaciones_sistema/list.php');
+		}
+		if ($_GET['opcion']=='registrarEventoSistema') {
+			require_once('notificaciones_sistema/register.php');
+		}
+       
+        if ($_GET['opcion']=='registrarEventoSistemaNot') {
+			require_once('notificaciones_sistema/registerEvento.php');
+		}
+
 		//RETENCIONES
         if ($_GET['opcion']=='configuracionDeRetenciones') {
 			require_once('retenciones/list.php');
@@ -451,7 +465,37 @@
 		if ($_GET['opcion']=='areasuoSave') {
 			require_once('rrhh/areas_organizacionSave.php');
 		}
-
+		// reporte cambios personal rrhh
+		if ($_GET['opcion']=='rptCambiosPersonal') {
+			require_once('personal/rptCambiosPersonal.php');
+		}		
+		if ($_GET['opcion']=='rptCambiosPersonalPrint') {
+		$codigo=$_GET['codigo'];
+		require_once('personal/rptCambiosPersonalPrint.php');
+		}
+		// if ($_GET['opcion']=='saveTiposContrato') {
+		// 	require_once('personal/tipos_contratosSave.php');
+		// }
+		// if ($_GET['opcion']=='deleteTiposContrato') {
+		// 	$codigo=$_GET['codigo'];
+		// 	require_once('personal/tiposContratoDelete.php');
+		// }
+		//tipos cargos
+		if ($_GET['opcion']=='tiposCargosLista') {
+			require_once('personal/tiposCargosLista.php');
+		}		
+		if ($_GET['opcion']=='formCargosLista') {
+			$codigo=$_GET['codigo'];
+			require_once('personal/TiposCargosForm.php');
+		}
+		if ($_GET['opcion']=='saveTiposCargos') {
+			require_once('personal/tiposCargosSave.php');
+		}
+		if ($_GET['opcion']=='deleteTiposCargos') {
+			$codigo=$_GET['codigo'];
+			require_once('personal/tiposCargosDelete.php');
+		}
+		
 		//tipos personal
 		if ($_GET['opcion']=='tipospersonalLista') {
 			require_once('personal/tipospersonalLista.php'); //ok
@@ -474,6 +518,16 @@
 		if ($_GET['opcion']=='FormPersonalContratos') {
 			$codigo=$_GET['codigo'];
 			require_once('personal/PersonalContratosForm.php');
+		}
+		// personal otros datos
+
+		if ($_GET['opcion']=='edit_uo_area_personal') {
+			$codigo_item=$_GET['codigo_item'];
+			$codigo_p=$_GET['codigo_p'];
+			require_once('personal/personal_edit_otros.php');
+		}
+		if ($_GET['opcion']=='personalOtrosSave') {
+			require_once('personal/personal_save_otros.php');
 		}
 
 		//estados personal
@@ -741,7 +795,14 @@
 			$codigo_mes=$_GET['cod_mes'];
 			require_once('bonos/registerBonoMesPersona.php');
 		}
-
+        if ($_GET['opcion']=='registerBonoPeriodoPersona') {
+			$codigo_bono=$_GET['cod_bono'];
+			require_once('bonos/registerBonoPeriodoPersona.php');
+		}
+		if ($_GET['opcion']=='finBonoPeriodoPersona') {
+			$codigo_bono=$_GET['cod_bono'];
+			require_once('bonos/finBonoPeriodoPersona.php');
+		}
 		if ($_GET['opcion']=='subirBonoExcel') {
 			$codigo_bono=$_GET['cod_bono'];
 			$codigo_mes=$_GET['cod_mes'];
@@ -1008,6 +1069,10 @@
 			$cod_refrigerio=$_GET['cod_ref'];
 			$cod_mes=$_GET['cod_mes'];
 			require_once('refrigerios/listDetalle.php');
+		}
+		if ($_GET['opcion']=='editRefrigerioDetalle') {
+			$cod_refrigeriodetalle=$_GET['cod_ref_det'];
+			require_once('refrigerios/editDetalle.php');
 		}
 
 		if ($_GET['opcion']=='aprobarRefrigerio') {

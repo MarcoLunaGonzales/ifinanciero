@@ -7,7 +7,12 @@ require_once 'rrhh/configModule.php';
 //$dbh = new Conexion();
 $dbh = new Conexion();
 $codigo=$codigo;
-$stmt = $dbh->prepare("SELECT * FROM personal where codigo =:codigo");
+$stmt = $dbh->prepare("SELECT *,
+    (select ga.nombre from personal_grado_academico ga where ga.codigo=cod_grado_academico) as nombre_grado_academico,
+    (select ca.nombre from cargos ca where ca.codigo=cod_cargo) as nombre_cargo,
+    (select uo.nombre from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional) as nombre_uo,
+    (select a.nombre from areas a where a.codigo=cod_area) as nombre_area
+     FROM personal where codigo =:codigo");
 $stmt->bindParam(':codigo',$codigo);
 $stmt->execute();
 //resultados
@@ -52,22 +57,26 @@ $cod_pais = $result['cod_pais'];
 $cod_departamento = $result['cod_departamento'];
 $cod_ciudad = $result['cod_ciudad'];
 $ciudadOtro = $result['ciudad_otro'];
-$cod_grado_academico = $result['cod_grado_academico'];   
+$cod_grado_academico = $result['cod_grado_academico']; 
 $ing_contr = $result['ing_contr'];
 $ing_planilla = $result['ing_planilla'];
+$bandera = $result['bandera'];
+$nombre_grado_academico = $result['nombre_grado_academico'];
+$nombre_cargo = $result['nombre_cargo'];
+$nombre_uo = $result['nombre_uo'];
+$nombre_area = $result['nombre_area'];
+$email_empresa = $result['email_empresa'];
 
 //personal discapacitado
-$stmtDiscapacitado = $dbh->prepare("SELECT * FROM personal_discapacitado where codigo =:codigo");
+$stmtDiscapacitado = $dbh->prepare("SELECT * FROM personal_discapacitado where codigo =:codigo and cod_estadoreferencial=1");
 $stmtDiscapacitado->bindParam(':codigo',$codigo);
 $stmtDiscapacitado->execute();
 $resultDiscapacitado = $stmtDiscapacitado->fetch();
-$discapacitado = $resultDiscapacitado['discapacitado'];
-$tutor_discapacitado = $resultDiscapacitado['tutor_discapacitado'];
-$celular_tutor = $resultDiscapacitado['celular_tutor'];
-$parentesco = $resultDiscapacitado['parentesco'];
+$cod_tipo_persona_discapacitado = $resultDiscapacitado['tipo_persona_discapacitado'];
+$nro_carnet_discapacidad = $resultDiscapacitado['nro_carnet_discapacidad'];
+$fecha_nac_persona_dis = $resultDiscapacitado['fecha_nac_persona_dis'];
 //IMAGEN
 $stmtIMG = $dbh->prepare("SELECT * FROM personalimagen where codigo =:codigo");
-//Ejecutamos;
 $stmtIMG->bindParam(':codigo',$codigo);
 $stmtIMG->execute();
 $resultIMG = $stmtIMG->fetch();
@@ -75,33 +84,19 @@ $imagen = $resultIMG['imagen'];
 //$archivo = __DIR__.DIRECTORY_SEPARATOR."imagenes".DIRECTORY_SEPARATOR.$imagen;//sale mal
 $archivo = "personal/imagenes/".$imagen;//sale mal
 
+
 //COMBOS...
-$queryUO = "select * from unidades_organizacionales order by nombre";
-$statementUO = $dbh->query($queryUO);
-
-$queryArea = "SELECT codigo,nombre FROM  areas WHERE cod_estado=1
-order by nombre";
-$statementArea = $dbh->query($queryArea);//uo
-
-$queryCargos = "select * from cargos";
-$statementCargos = $dbh->query($queryCargos);
-
-
-$queryTPersonal = "select * from tipos_personal";
+$queryTPersonal = "SELECT codigo,nombre from tipos_personal where cod_estadoreferencial=1";
 $statementTPersonal = $dbh->query($queryTPersonal);
 
-$querytipos_afp = "select * from tipos_afp";
+$querytipos_afp = "SELECT codigo,nombre from tipos_afp where cod_estadoreferencial=1";
 $statementtipos_afp = $dbh->query($querytipos_afp);
 
-$querytipos_aporteafp = "select * from tipos_aporteafp";
+$querytipos_aporteafp = "SELECT codigo,nombre from tipos_aporteafp where cod_estadoreferencial=1";
 $statementtipos_aporteafp = $dbh->query($querytipos_aporteafp);
 
-
-$queryestados_personal = "select * from estados_personal";
+$queryestados_personal = "SELECT codigo,nombre from estados_personal where cod_estadoreferencial=1";
 $statementestados_personal = $dbh->query($queryestados_personal);
-
-$querygrado_academico = "select * from personal_grado_academico";
-$statementgrado_academico = $dbh->query($querygrado_academico);
 ?>
 
 <div class="content">
@@ -274,17 +269,15 @@ $statementgrado_academico = $dbh->query($querygrado_academico);
                                 </div>                        
                             </div><!--fin campo direccion -->
 
-                            <h3 align="center">CAMPOS GESTIONADOS POR RRHH</h3>
-                            
+                            <h3 align="center">CAMPOS GESTIONADOS POR RRHH</h3>                        
                             <div class="row">
                                 <label class="col-sm-2 col-form-label">Fecha de Ingreso</label>
                                 <div class="col-sm-4">
                                     <div class="form-group">
                                         <input class="form-control" type="date" name="ing_contr" id="ing_contr" required="true" value="<?=$ing_contr;?>" />                                    
                                     </div>
-                                </div>                                                                
-                            </div><!--fin campo ing contrato & ing planilla -->
-
+                                </div>
+                            </div> <!--fin campo ing contrato y ing planilla-->
                             <div class="row">
                                 <label class="col-sm-2 col-form-label">Apellido Casada</label>
                                 <div class="col-sm-4">
@@ -292,70 +285,6 @@ $statementgrado_academico = $dbh->query($querygrado_academico);
                                         <input class="form-control" type="text" name="apellido_casada" id="apellido_casada" value="<?=$apellido_casada;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
                                     </div>
                                 </div>
-
-                                
-                                <div class="col-sm-4">
-                                <div class="form-group">
-                                    <input class="form-control" type="hidden" name="otros_nombres" id="otros_nombres" value="<?=$otros_nombres;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
-                                </div>
-                                </div>
-                            </div><!--fin campo otros_nombres y apellido casada -->
-                            <div class="row">
-                  <label class="col-sm-2 col-form-label">Unidad Organizacional</label>
-                  <div class="col-sm-4">
-                    <div class="form-group">
-                        <select name="cod_uo" id="cod_uo" class="selectpicker" data-style="btn btn-info" onChange="ajaxAreaContabilizacionDetalle(this);">
-                            <option value=""></option>
-                            <?php while ($row = $statementUO->fetch()){ ?>
-                                <option <?=($cod_unidadorganizacional==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
-                            <?php } ?>
-                        </select>
-                    </div>
-                  </div>
-               
-                  <label class="col-sm-2 col-form-label">Area</label>
-                  <div class="col-sm-4">
-                    <div class="form-group" >
-                        <div id="div_contenedor_area">
-                            <select name="cod_area" id="cod_area" class="selectpicker" data-style="btn btn-info" >
-                                <option value=""></option>
-                                <?php while ($row = $statementArea->fetch()){ ?>
-                                    <option <?=($cod_area==$row["codigo"])?"selected":"";?>  value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
-                                <?php } ?>
-                            </select>
-                        </div>                    
-                    </div>
-                  </div>
-                </div>              
-                            <div class="row" id="prueba">
-                                <label class="col-sm-2 col-form-label">Cargo</label>
-                                <div class="col-sm-4">
-                                    <div class="form-group">
-                                        <select name="cod_cargo"  class="selectpicker" data-style="btn btn-info" required>
-                                            <?php while ($row = $statementCargos->fetch()) { ?>
-                                                <option <?php if($cod_cargo == $row["codigo"]) echo "selected"; ?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
-                                            <?php } ?>
-                                        </select>
-                                    </div>                    
-                                </div>                
-                                <label class="col-sm-2 col-form-label">Grado Académico</label>
-                                <div class="col-sm-4">
-                                    <div class="form-group">
-                                        <select name="grado_academico" id="grado_academico"  class="selectpicker " data-style="btn btn-info" required>
-                                            <?php while ($row = $statementgrado_academico->fetch()) { ?>
-                                                <option <?php if($cod_grado_academico == $row["codigo"]) echo "selected"; ?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
-                                            <?php } ?>
-                                        </select>
-                                    </div>
-                                </div>                                           
-                            </div><!--fin campo cargo -->
-                            <div class="row">
-                                <label class="col-sm-2 col-form-label">Haber Basico</label>
-                                <div class="col-sm-4">
-                                    <div class="form-group">
-                                        <input class="form-control" type="text" name="haber_basico" id="haber_basico" value="<?=$haber_basico;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" required/>
-                                    </div>
-                                </div> 
                                 <label class="col-sm-2 col-form-label">Tipo Personal</label>
                                 <div class="col-sm-4">
                                     <div class="form-group">
@@ -365,9 +294,140 @@ $statementgrado_academico = $dbh->query($querygrado_academico);
                                             <?php } ?>
                                         </select>
                                     </div>
-                                </div>                                                        
-                            </div><!--tipos personal -->
-                            
+                                </div>                                                                   
+                                <input class="form-control" type="hidden" name="otros_nombres" id="otros_nombres" value="<?=$otros_nombres;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+                            </div><!--fin campo apellido casada y tipo personal-->
+                            <?php
+                            if($bandera==0)
+                            { ?>
+                                <div class="row">
+                                  <label class="col-sm-2 col-form-label">Oficina</label>
+                                  <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <select name="cod_uo" id="cod_uo" class="selectpicker" data-style="btn btn-info" onChange="ajaxAreaContabilizacionDetalle(this);">
+                                            <option value=""></option>
+                                            <?php 
+                                            $queryUO = "SELECT codigo,nombre from unidades_organizacionales where cod_estado=1 order by nombre";
+                                            $statementUO = $dbh->query($queryUO);
+                                            while ($row = $statementUO->fetch()){ ?>
+                                                <option <?=($cod_unidadorganizacional==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>
+                                  </div>
+                               
+                                  <label class="col-sm-2 col-form-label">Area</label>
+                                  <div class="col-sm-4">
+                                    <div class="form-group" >
+                                        <div id="div_contenedor_area">
+                                            <select name="cod_area" id="cod_area" class="selectpicker" data-style="btn btn-info" >
+                                                <option value=""></option>
+                                                <?php 
+                                                $queryArea = "SELECT codigo,nombre FROM  areas WHERE cod_estado=1 order by nombre";
+                                                $statementArea = $dbh->query($queryArea);
+                                                while ($row = $statementArea->fetch()){ ?>
+                                                    <option <?=($cod_area==$row["codigo"])?"selected":"";?>  value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                                                <?php } ?>
+                                            </select>
+                                        </div>                    
+                                    </div>
+                                  </div>
+                                </div>              
+                                <div class="row">
+                                    <label class="col-sm-2 col-form-label">Cargo</label>
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <select name="cod_cargo"  class="selectpicker" data-style="btn btn-info" required>
+                                                <?php 
+                                                $queryCargos = "SELECT codigo,nombre,abreviatura from cargos where cod_estadoreferencial=1";
+                                                $statementCargos = $dbh->query($queryCargos);
+                                                while ($row = $statementCargos->fetch()) { ?>
+                                                    <option <?php if($cod_cargo == $row["codigo"]) echo "selected"; ?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                                                <?php } ?>
+                                            </select>
+                                        </div>                    
+                                    </div>                
+                                    <label class="col-sm-2 col-form-label">Grado Académico</label>
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <select name="grado_academico" id="grado_academico"  class="selectpicker" data-style="btn btn-info" required>
+                                                <?php 
+                                                $querygrado_academico = "SELECT codigo,nombre from personal_grado_academico where codestadoreferencial=1";
+                                                $statementgrado_academico = $dbh->query($querygrado_academico);
+                                                while ($row = $statementgrado_academico->fetch()) { ?>
+                                                    <option <?php if($cod_grado_academico == $row["codigo"]) echo "selected"; ?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                                                <?php } ?>
+                                            </select>
+                                        </div>
+                                    </div>                                           
+                                </div><!--fin campo cargo -->
+                                <div class="row">
+                                    <label class="col-sm-2 col-form-label">Haber Basico</label>
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <input class="form-control" type="text" name="haber_basico" id="haber_basico" value="<?=$haber_basico;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" required/>
+                                        </div>
+                                    </div>
+                                    <label class="col-sm-2 col-form-label">Email Empresarial</label>
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <input class="form-control" type="text" name="email_empresa" id="email_empresa" required="true" value="<?=$email_empresa;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" />
+                                        </div>
+                                    </div> 
+                                </div><!--haber basico-->
+                                <?php 
+                            }else{ ?>
+                                <div class="row">
+                                  <label class="col-sm-2 col-form-label">Oficina</label>
+                                  <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <input type="hidden" class="form-control"  name="cod_uo" id="cod_uo"  value="<?=$cod_unidadorganizacional;?>"/>
+                                        <input class="form-control" readonly="readonly" value="<?=$nombre_uo;?>"/>
+                                    </div>
+                                  </div>
+                               
+                                  <label class="col-sm-2 col-form-label">Area</label>
+                                  <div class="col-sm-4">
+                                    <div class="form-group" >
+                                        <div id="div_contenedor_area">
+                                            <input type="hidden" class="form-control"  name="cod_area" id="cod_area"  value="<?=$cod_area;?>"/>
+                                            <input class="form-control" readonly="readonly" value="<?=$nombre_area;?>"/>
+                                        </div>                    
+                                    </div>
+                                  </div>
+                                </div>              
+                                <div class="row">
+                                    <label class="col-sm-2 col-form-label">Cargo</label>
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <input type="hidden" class="form-control"  name="cod_cargo" id="cod_cargo"  value="<?=$cod_cargo;?>"/>
+                                            <input class="form-control" readonly="readonly" value="<?=$nombre_cargo;?>"/>
+                                        </div>                    
+                                    </div>                
+                                    <label class="col-sm-2 col-form-label">Grado Académico</label>
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <input type="hidden" class="form-control"  name="grado_academico" id="grado_academico"  value="<?=$cod_grado_academico;?>"/>
+                                            <input class="form-control" readonly="readonly" value="<?=$nombre_grado_academico;?>"/>
+                                        </div>
+                                    </div>                                           
+                                </div><!--fin campo cargo -->
+                                <div class="row">
+                                    <label class="col-sm-2 col-form-label">Haber Basico</label>
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <input class="form-control" type="text" name="haber_basico" id="haber_basico" value="<?=$haber_basico;?> Bs." readonly="readonly"/>
+                                        </div>
+                                    </div> 
+                                    <label class="col-sm-2 col-form-label">Email Empresarial</label>
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <input class="form-control" type="text" name="email_empresa" id="email_empresa" required="true" value="<?=$email_empresa;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" />
+                                        </div>
+                                    </div> 
+                                </div><!--haber basico-->
+                            <?php }
+                            ?>                
                             <div class="row">
                                 <label class="col-sm-2 col-form-label">Jubilado</label>
                                 <div class="col-sm-4">
@@ -385,8 +445,7 @@ $statementgrado_academico = $dbh->query($querygrado_academico);
                                     <input class="form-control" type="text" name="nua_cua_asignado" id="nua_cua_asignado" value="<?=$nua_cua_asignado;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" required/>
                                 </div>
                                 </div>
-                            </div><!--fin campo nua_cua_asignado -->
-
+                            </div><!--fin campo nua_cua_asignado-->
                             <div class="row">
                                 <label class="col-sm-2 col-form-label">Afp</label>
                                 <div class="col-sm-4">
@@ -409,7 +468,7 @@ $statementgrado_academico = $dbh->query($querygrado_academico);
                                         </select>
                                     </div>
                                 </div>
-                            </div><!--fin campo cod_tipoaporteafp -->
+                            </div><!--fin campo cod_tipoaporteafp-->
                             <div class="row">
                                 <label class="col-sm-2 col-form-label">Nro seguro</label>
                                 <div class="col-sm-4">
@@ -422,57 +481,72 @@ $statementgrado_academico = $dbh->query($querygrado_academico);
                                 <div class="col-sm-4">
                                 <div class="form-group">
                                 <select name="cod_estadopersonal"  class="selectpicker " data-style="btn btn-info" required>
-                                                <?php while ($row = $statementestados_personal->fetch()) { ?>
-                                                    <option <?php if($cod_estadopersonal == $row["codigo"]) echo "selected"; ?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
-                                                <?php } ?>
-                                                </select>                  
+                                <?php while ($row = $statementestados_personal->fetch()) { ?>
+                                    <option <?php if($cod_estadopersonal == $row["codigo"]) echo "selected"; ?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                                <?php } ?>
+                                </select>                  
                                 </div>
                                 </div>
-                            </div><!--fin campo cod_estadopersonal -->
+                            </div><!--fin campo cod_estadopersonal-->
                             <div class="row">
                                 <label class="col-sm-2 col-form-label">Persona Contacto</label>
                                 <div class="col-sm-7">
                                 <div class="form-group">
                                     <input class="form-control" type="text" name="persona_contacto" id="persona_contacto" required value="<?=$persona_contacto;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
                                 </div>
-                                </div>
+                                </div>                        
                             </div><!--fin campo persona_contacto -->
+
+
+                            
+
                             <div class="row">
-                                <label class="col-sm-2 col-form-label">Persona Con Discapacidad</label>
+                                <label class="col-sm-2 col-form-label">Tipo De Persona Con Discapacidad</label>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <select name="cod_discapacidad" id="cod_discapacidad"  class="selectpicker " data-style="btn btn-info" >                                
-                                            <option <?php if($discapacitado == 0) echo "selected"; ?> value="0"> NO</option>
-                                            <option <?php if($discapacitado == 1) echo "selected"; ?> value="1"> SI</option>                            
+                                        <select name="tipo_persona_discapacitado" id="tipo_persona_discapacitado"  class="selectpicker " data-style="btn btn-info" >
+                                            <option <?php if($cod_tipo_persona_discapacitado == 0) echo "selected"; ?> value="0"> NINGUNO</option>
+                                            <option <?php if($cod_tipo_persona_discapacitado == 1) echo "selected"; ?> value="1">PERSONA CON DISCAPACIDAD</option>
+                                            <option <?php if($cod_tipo_persona_discapacitado == 2) echo "selected"; ?> value="2"> TUTOR DE PERSONA CON DISCAPACIDAD</option>                            
                                         </select>
                                     </div>
-                                </div>
-
-                                <label class="col-sm-2 col-form-label">Tutor De Persona</label>
-                                <div class="col-sm-4">
-                                <div class="form-group">
-                                    <select name="cod_tutordiscapacidad" id="cod_tutordiscapacidad"  class="selectpicker " data-style="btn btn-info" >                                
-                                                    <option <?php if($tutor_discapacitado == 0) echo "selected"; ?> value="0"> NO</option>
-                                                    <option <?php if($tutor_discapacitado == 1) echo "selected"; ?> value="1"> SI</option>                            
-                                    </select>                    
-                                </div>
-                                </div>
+                                </div>                                
                             </div><!--fin campo persona discapacidad -->
-                            <div class="row">
-                                <label class="col-sm-2 col-form-label">Parentesco</label>
-                                <div class="col-sm-4">
-                                <div class="form-group">
-                                    <input class="form-control" type="text" name="parentescotutor" id="parentescotutor" value="<?=$parentesco;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
-                                </div>
-                                </div>
 
-                                <label class="col-sm-2 col-form-label">Celular Tutor</label>
-                                <div class="col-sm-4">
-                                <div class="form-group">
-                                    <input class="form-control" type="number" name="celularTutor" id="celularTutor" value="<?=$celular_tutor;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
-                                </div>
-                                </div>
-                            </div><!--fin campo celular tutor discapacidad -->
+                            
+                            <div id="contenedor_padre_discapacidad" >
+                                <!-- <div id="div0">                                    
+                                </div> -->
+                               <!--  <div id="div1">                                
+                                    <div class="row">
+                                        <label class="col-sm-2 col-form-label">Nro Carnet Discapacidad</label>
+                                        <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <input class="form-control" type="number" name="nro_carnet_discapacidad" id="nro_carnet_discapacidad" value="<?=$nro_carnet_discapacidad;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+                                        </div>
+                                        </div>                                    
+                                    </div>
+                                </div> -->
+                                <div id="div2">                                
+                                    <div class="row">
+                                        <label class="col-sm-2 col-form-label">Nro Carnet Discapacidad</label>
+                                        <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <input class="form-control" type="number" name="nro_carnet_discapacidad" id="nro_carnet_discapacidad" value="<?=$nro_carnet_discapacidad;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+                                        </div>
+                                        </div>
+
+                                        <label class="col-sm-2 col-form-label">Fecha Nacimiento De Persona Con Discapacidad</label>
+                                        <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <input class="form-control" type="date" name="fecha_nac_persona_dis" id="fecha_nac_persona_dis" value="<?=$fecha_nac_persona_dis;?>" />  
+                                        </div>
+                                        </div>
+                                    </div>
+                                </div>    
+                            </div>
+                            
+                            
 
                             <div class="row">
                                 <label class="col-sm-2 col-form-label">Imagen</label>
@@ -499,7 +573,7 @@ $statementgrado_academico = $dbh->query($querygrado_academico);
                         </div>
                         <div class="card-footer ml-auto mr-auto">
                             <button type="submit" class="<?=$buttonNormal;?>">Guardar</button>
-                            <a href="<?=$urlListPersonal;?>" class="<?=$buttonCancel;?>">Cancelar</a>
+                            <a href="<?=$urlListPersonal;?>" class="<?=$buttonCancel;?>">Volver</a>
                         </div>
                     </div>                            
                 </form>
@@ -508,4 +582,16 @@ $statementgrado_academico = $dbh->query($querygrado_academico);
         
     </div>
 </div>
+
+
+<!-- <script type="text/javascript">
+    $(document).ready(function(){
+        $('#tipo_persona_discapacitado').on('change',function(){
+            var selectVar='#div'+$(this).val();            
+            $('#contenedor_padre_discapacidad').children('div').hide();
+            $('#contenedor_padre_discapacidad').children(selectVar).show();
+            $('#contenedor_padre_discapacidad').toggle();        
+        });
+    });
+</script> -->
 

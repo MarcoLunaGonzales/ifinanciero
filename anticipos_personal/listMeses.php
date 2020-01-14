@@ -82,28 +82,15 @@ $nombreDescuento="Anticipos Personal";
                             
                           </td>
                         </tr>
-<?php
-							$index++;
-						}
-?>
+                        <?php
+                        							$index++;
+                        						}
+                        ?>
                       </tbody>
                     </table>
                   </div>
                 </div>
               </div>
-
-              <?php
-              if($globalAdmin==1){
-              ?>
-      				<div class="card-footer fixed-bottom">
-                    <button class="<?=$buttonCancel;?>" onClick="location.href='<?=$urlList;?>'">Cancelar</button>
-              </div>
-              
-
-              <?php
-              }
-              ?>
-		  
             </div>
           </div>  
               

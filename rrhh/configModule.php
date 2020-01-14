@@ -87,6 +87,11 @@ $urlDeleteTipos_genero="index.php?opcion=deletetipos_genero";
 
 
 
+//tipos de cargos
+$urlListTiposCargos="?opcion=tiposCargosLista";
+$urlFormTiposCargos="?opcion=formCargosLista";
+$urlSaveTiposCargos="?opcion=saveTiposCargos";
+$urlDeleteTiposCargos="?opcion=deleteTiposCargos";
 //personal
 $nombreSingularPersonal="Personal";
 $nombrePluralPersonal="Personal";
@@ -100,6 +105,11 @@ $urlDeletePersonal="index.php?opcion=deletepersonal";
 $urlFormPersonalAreaDistribucion="index.php?opcion=PersonalAreaDistribucionForm";
 $urlFormPersonalContratos="index.php?opcion=FormPersonalContratos";
 $urlprintPersonal="personal/personalPrintFicha.php";
+//edit otros personal
+
+$urledit_uo_area_personal="index.php?opcion=edit_uo_area_personal";
+$urlPersonalOtrosSave="?opcion=personalOtrosSave";
+
 
 //planilla sueldo
 $urlPlanillasSueldoList="?opcion=planillasSueldoPersonal";

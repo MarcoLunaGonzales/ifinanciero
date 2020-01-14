@@ -9,7 +9,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $dbh = new Conexion();
 
 
-$stmt = $dbh->prepare(" SELECT p.codigo,p.identificacion,p.cod_lugar_emision,p.paterno,p.materno,p.primer_nombre,
+$stmt = $dbh->prepare(" SELECT p.codigo,p.identificacion,p.cod_lugar_emision,p.paterno,p.materno,p.primer_nombre,p.bandera,
   p.ing_contr,
   (select c.nombre from cargos c where c.codigo=cod_cargo)as xcargo,
  (select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional)as xuonombre,
@@ -29,6 +29,7 @@ $stmt->bindColumn('cod_lugar_emision', $ci_lugar_emision);
 $stmt->bindColumn('paterno', $paterno);
 $stmt->bindColumn('materno', $materno);
 $stmt->bindColumn('primer_nombre', $primer_nombre);
+$stmt->bindColumn('bandera', $bandera);
 
 $stmt->bindColumn('ing_contr', $fecha_ingreso);
 $stmt->bindColumn('xcargo', $xcargo);
@@ -60,10 +61,11 @@ $stmt->bindColumn('xcod_tipopersonal', $xcod_tipopersonal);
                         <th>Nombre</th>      
                         <th>Ci</cIte></th>
                         <th>Cargo</th>
-                        <th>UO-Area</th>                        
+                        <th>Oficina-Area</th>                        
                         <th>Tipo Personal</th>                                                
                         <th>F.Ingreso</th>
                         <th>Estado</th>
+                        <th></th>
                         <th></th>
                         <th></th>
                       </tr>
@@ -86,34 +88,54 @@ $stmt->bindColumn('xcod_tipopersonal', $xcod_tipopersonal);
                         <td><?=$fecha_ingreso;?></td>
                         <td><?=$xestado;?></td>
                         <td class="td-actions text-right">
-                        <?php
-                          if($globalAdmin==1){
-                        ?>
-                          <a href='<?=$urlFormPersonalContratos;?>&codigo=<?=$codigo;?>' rel="tooltip" class="btn btn-info">
-                            <i class="material-icons" title="Contratos">assignment</i>
-                          </a>
-                          <a href='<?=$urlFormPersonalAreaDistribucion;?>&codigo=<?=$codigo;?>' rel="tooltip" class="btn btn-warning">            
-                            <i class="material-icons" title="Area-Distribución" style="color:black;">call_split</i>
-                          </a>
                           <?php
-                            }
-                          ?>        
+                            if($globalAdmin==1){
+                          ?>
+                            <a href='<?=$urlFormPersonalContratos;?>&codigo=<?=$codigo;?>' rel="tooltip" class="btn btn-info">
+                              <i class="material-icons" title="Contratos">assignment</i>
+                            </a>
+                            <a href='<?=$urlFormPersonalAreaDistribucion;?>&codigo=<?=$codigo;?>' rel="tooltip" class="btn btn-warning">            
+                              <i class="material-icons" title="Area-Distribución" style="color:black;">call_split</i>
+                            </a>
+                            <?php
+                              }
+                            ?>        
                         </td>
                           
                         <td class="td-actions text-right">
-                        <?php
-                          if($globalAdmin==1){
-                        ?>
-                          <a href='<?=$urlFormPersonal;?>&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonEdit;?>">
-                            <i class="material-icons"><?=$iconEdit;?></i>
-                          </a>
-                          <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDeletePersonal;?>&codigo=<?=$codigo;?>')">
-                            <i class="material-icons"><?=$iconDelete;?></i>
-                          </button>
                           <?php
-                            }
+                            if($globalAdmin==1){
                           ?>
-                        
+                            <a href='<?=$urlFormPersonal;?>&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonEdit;?>">
+                              <i class="material-icons"><?=$iconEdit;?></i>
+                            </a>
+                            <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDeletePersonal;?>&codigo=<?=$codigo;?>')">
+                              <i class="material-icons"><?=$iconDelete;?></i>
+                            </button>
+                            <?php
+                              }
+                            ?>                      
+                        </td>
+                        <td class="td-actions text-right">
+                          <?php
+                            if($globalAdmin==1 and $bandera==1){
+                          ?>
+                            <div class="dropdown">
+                              <button class="btn btn-primary dropdown-toggle" type="button" id="editar_otros" data-toggle="dropdown" aria-extended="true">
+                                <i class="material-icons" title="Editar"><?=$iconEdit;?></i>                        
+                                <span class="caret"></span>
+                              </button>
+                              <ul class="dropdown-menu" role="menu" aria-labelledby="editar_otros">
+                                <!-- <li role="presentation" class="dropdown-header"><small>U.O.</small></li> -->
+                                <li role="presentation"><a role="item" href='<?=$urledit_uo_area_personal;?>&codigo_item=1&codigo_p=<?=$codigo;?>'><small>Oficina/Area</small></a></li>
+                                <li role="presentation"><a role="item" href='<?=$urledit_uo_area_personal;?>&codigo_item=2&codigo_p=<?=$codigo;?>'><small>Cargo</small></a></li>
+                                <li role="presentation"><a role="item" href='<?=$urledit_uo_area_personal;?>&codigo_item=3&codigo_p=<?=$codigo;?>'><small>Grado Acad</small></a></li>
+                                <li role="presentation"><a role="item" href='<?=$urledit_uo_area_personal;?>&codigo_item=4&codigo_p=<?=$codigo;?>'><small>Haber Básico</small></a></li>
+                              </ul>
+                            </div>                            
+                            <?php
+                              }
+                            ?>                      
                         </td>
                       </tr>
                     <?php $index++; } ?>
@@ -143,20 +165,3 @@ $stmt->bindColumn('xcod_tipopersonal', $xcod_tipopersonal);
       </div>  
     </div>
 </div>
-
-<!--
-  //para sacar datos del json
-<script type="text/javascript">
-  $(document).ready(function(){
-    $("#service").on('click',function(){
-      $.getJSON("assets/plantillas/json/json-personal/personal_ws.json").done(function(personal_ws){
-        $.each(personal_ws,function(indice,valor){
-          $("#resultados ul").append("<li>"+valor.ci+ "</li>");
-        })
-      });
-
-    });
-
-  });
-
-</script>-->

@@ -43,6 +43,26 @@ $dbh = new Conexion();
 					</div>
 				  </div>
 				</div>
+				<div class="row">
+				  <label class="col-sm-2 col-form-label">Tipo de calculo</label>
+				  <div class="col-sm-7">
+					<div class="form-group">
+					 <select class="selectpicker form-control" name="tipo" id="tipo" data-style="<?=$comboColor;?>" required>
+					 	<?php
+					 	$stmt = $dbh->prepare("select codigo,nombre from tipos_calculobono order by codigo");
+								$stmt->execute();
+								while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+									$codigoX=$row['codigo'];
+									$nombreX=$row['nombre'];
+								?>
+								<option value="<?=$codigoX;?>"><?=$nombreX;?></option>	
+								<?php
+							  	}
+							  	?>
+					 </select>
+					</div>
+				  </div>
+				</div>
 			  </div>
 			  <div class="card-footer ml-auto mr-auto">
 				<button type="submit" class="<?=$buttonNormal;?>">Guardar</button>

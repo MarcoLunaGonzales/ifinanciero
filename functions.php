@@ -1825,9 +1825,8 @@ function obtenerNombrePersonal($cod_personal){
 
 
 function obtenerBonoAntiguedad($minino_salarial,$ing_contr){  
-  //$anio_actual= date('Y');
-  $anio_actual=2019;
-  
+  $anio_actual= date('Y');
+  //$anio_actual=2019;
   $fechaComoEntero = strtotime($ing_contr);
   $anio_inicio = date("Y", $fechaComoEntero);
   $diferencia_anios=$anio_actual-$anio_inicio;
@@ -1849,23 +1848,19 @@ function obtenerBonoAntiguedad($minino_salarial,$ing_contr){
   }
   // $aporte_laboral_aux=$total_ganado*$aporte_laboral_porcentaje_total/100;
   $total_bono_antiguedad_x=number_format($total_bono_antiguedad,2,'.','');
-  
-  
-
   // $stmt = null;
   // $dbh = null;
   return $total_bono_antiguedad_x;
 
 }
 
-
-function obtenerTotalBonos($codigo_personal)
+function obtenerTotalBonos($codigo_personal,$dias_trabajados_asistencia,$dias_trabajados_por_defecto)
 {  
-  // $mes=date('m');
-  // $gestion=date('Y');
+  $mes=date('m');
+  $gestion=date('Y');
 
-  $mes=11;
-  $gestion=2019;
+  // $mes=11;
+  // $gestion=2019;
 
   $dbh = new Conexion();
   $sqlGestion = "SELECT codigo from gestiones where nombre=$gestion";
@@ -1875,14 +1870,41 @@ function obtenerTotalBonos($codigo_personal)
   $cod_gestion = $resultGestion['codigo'];
 
 
-  $sqlBonos = "SELECT SUM(monto) as total_bonos from bonos_personal_mes 
-  where cod_personal = $codigo_personal and cod_gestion=$cod_gestion and cod_mes=$mes and cod_estadoreferencial=1";
-  $stmtBonos = $dbh->prepare($sqlBonos);
-  $stmtBonos->execute();
-  $resultBonos=$stmtBonos->fetch();
-  $total_bonos = $resultBonos['total_bonos'];
+  // $sqlBonos = "SELECT SUM(monto) as total_bonos from bonos_personal_mes 
+  // where cod_personal = $codigo_personal and cod_gestion=$cod_gestion and cod_mes=$mes and cod_estadoreferencial=1";
+  // $stmtBonos = $dbh->prepare($sqlBonos);
+  // $stmtBonos->execute();
+  // $resultBonos=$stmtBonos->fetch();
+  // $total_bonos = $resultBonos['total_bonos'];
+  $total_bonos1=0;
+  $total_bonos2=0;
+
+  $sqlBonos1 = "SELECT bpm.monto
+  from bonos_personal_mes bpm,bonos b
+  where bpm.cod_bono=b.codigo and bpm.cod_personal=$codigo_personal and bpm.cod_gestion=$cod_gestion and bpm.cod_mes=$cod_mes and bpm.cod_estadoreferencial=1 and b.cod_tipocalculobono=1";
+  $stmtBonos1 = $dbh->prepare($sqlBonos1);
+  $stmtBonos1->execute();
+  $stmtBonos1->bindColumn('monto',$monto1);
+  while ($row = $stmtBonos1->fetch()) 
+  {
+    $total_bonos1=$total_bonos1+$monto1;
+  }
+    $sqlBonos2 = "SELECT bpm.monto
+  from bonos_personal_mes bpm,bonos b
+  where bpm.cod_bono=b.codigo and bpm.cod_personal=$codigo_personal and bpm.cod_gestion=$cod_gestion and bpm.cod_mes=$cod_mes and bpm.cod_estadoreferencial=1 and b.cod_tipocalculobono=2";
+  $stmtBonos2 = $dbh->prepare($sqlBonos2);
+  $stmtBonos2->execute();
+  $stmtBonos2->bindColumn('monto',$monto2);
+  while ($row = $stmtBonos2->fetch()) 
+  {
+    $porcen_monto=$dias_trabajados_asistencia*100/$dias_trabajados_por_defecto;
+    $monto2_aux=$porcen_monto*$monto2/100;
+    $total_bonos2=$total_bonos2+$monto2_aux;
+  }
+  $total_bonos=$total_bonos1+$total_bonos2;
+
   $stmtGestion = null;
-  $stmtBonos = null;
+  $stmtBonos1 = null;
   $dbh = null;
   return $total_bonos;
 }
@@ -1975,10 +1997,10 @@ function obtenerAtrasoPersonal($id_personal,$haber_basico){
   $dbh = new Conexion();
   set_time_limit(300);
   //capturando fecha
-  // $mes=date('m');
-  // $gestion=date('Y');
-  $mes=11;
-  $gestion=2019;
+  $mes=date('m');
+  $gestion=date('Y');
+  // $mes=11;
+  // $gestion=2019;
 
   $dbh = new Conexion();
   $sqlGestion = "SELECT codigo from gestiones where nombre=$gestion";
@@ -2015,11 +2037,11 @@ function obtenerAtrasoPersonal($id_personal,$haber_basico){
 }
 function obtenerOtrosDescuentos($codigo_personal)
 {  
-  // $mes=date('m');
-  // $gestion=date('Y');
+  $mes=date('m');
+  $gestion=date('Y');
 
-  $mes=11;
-  $gestion=2019;
+  // $mes=11;
+  // $gestion=2019;
 
   $dbh = new Conexion();
   $sqlGestion = "SELECT codigo from gestiones where nombre=$gestion";
@@ -2040,8 +2062,6 @@ function obtenerOtrosDescuentos($codigo_personal)
   $dbh = null;
   return $total_descuentos_otros;
 }
-
-
 function obtenerDotaciones($codigo_personal,$cod_gestion_x,$cod_mes_x){
   $dbh = new Conexion();
   $stmt = $dbh->prepare("SELECT SUM(dpm.monto_mes) as monto_mes_dotacion
@@ -2102,7 +2122,6 @@ function obtener_aporte_patronal_general($cod_config_planilla,$total_ganado){
   $dbh = null;
   return($aporte_p_seguro_medico_X);
 }
-
 
 //=======
 function obtenerMontoPlantillaDetalle($codigoPar,$codigo,$ib){
@@ -2166,10 +2185,6 @@ function obtenerTotalesSimulacion($codigo){
    }
    return($nombreX);
 }
-//<<<<<<< HEAD
-//=======
-
-
 
 function obtenerValorRefrigerio(){
   //Seleccionar el monto de refrigerio de configuraciones
@@ -2184,9 +2199,6 @@ function obtenerValorRefrigerio(){
 
   return($valorConfiguracionX);
 }
-
-//>>>>>>> 9665608161fbd74baa97b51d1230f7cda83c0916
-//>>>>>>> ebf28257f9e59421ce70f01e3ea93e3078b56278
 
 function calculaMontoDescuentoRetraso($minutos_retraso, $codigoPersona)
 {
@@ -2320,6 +2332,93 @@ function descargarPDFHorizontal($nom,$html){
       $monto=0;
     }
     return $monto;
+  }
+  function bonosIndefinidos(){
+    $mesActual=date("m");
+   $dbh = new Conexion();
+    $stmt = $dbh->prepare("SELECT * from bonos_personal_mes where indefinido=1");
+    $stmt->execute();
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $codigo=$row['codigo'];
+      $codBono=$row['cod_bono'];
+      $codPersona=$row['cod_personal'];
+      $monto=$row['monto'];
+      $observaciones=$row['observaciones'];
+      $codEstado=$row['cod_estadoreferencial'];
+      $indefinido=$row['indefinido'];
+      if($row['cod_mes']<12){
+        $nuevoMes=$row['cod_mes'];
+        $gestion=$row['cod_gestion'];
+      }else{
+        $nuevoMes=$row['cod_mes'];
+        //$gestion=(int)nameGestion($row['cod_gestion']);
+        $gestion=$row['cod_gestion']+1;
+      }
+      if($row['cod_mes']<(int)$mesActual){
+          $stmt2 = $dbh->prepare("INSERT INTO bonos_personal_mes (cod_bono, cod_personal,cod_gestion,cod_mes,monto,observaciones,indefinido, cod_estadoreferencial) 
+                        VALUES ('$codBono','$codPersona','$gestion','$nuevoMes','$monto','$observaciones',1, '$codEstado')");
+          $stmt2->execute();
+          $stmt3 = $dbh->prepare("UPDATE bonos_personal_mes SET indefinido=0 where codigo=$codigo");
+          $stmt3->execute();  
+
+      }
+    }
+  }
+
+  function enviarNotificacionesSistema($tipoContrato){
+    $mesActual=date("m");
+   $dbh = new Conexion();
+    $sql = "SELECT es.*,p.email_empresa,concat(p.primer_nombre,' ',p.otros_nombres,' ',p.paterno,' ',p.materno) as personal,e.nombre,
+pc.fecha_iniciocontrato,pc.fecha_fincontrato
+FROM eventos_sistemapersonal es 
+join personal_contratos pc on es.cod_personal=pc.cod_personal
+join personal p on es.cod_personal=p.codigo
+join eventos_sistema e on e.codigo=es.cod_eventosistema ";
+    if($tipoContrato==1){
+     $dias=obtenerValorConfiguracion(12); 
+     $sql.="where pc.cod_tipocontrato=1";  
+    }else{
+     $dias=obtenerValorConfiguracion(11);
+     $sql.="where pc.cod_tipocontrato!=1";
+    }
+    
+      $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+
+   $i=0;
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      
+      $codigo=$row['codigo'];
+      $correo=$row['email_empresa'];
+      $titulo=$row['nombre'];
+      $personal=strtoupper($row['personal']);
+      $fechaInicio=strftime('%d/%m/%Y',strtotime($row['fecha_iniciocontrato']));
+      if(trim($row['fecha_fincontrato'])!="INDEFINIDO"){
+      $fechaFin=strftime('%d/%m/%Y',strtotime($row['fecha_fincontrato']));  
+      }else{
+        $fechaFin=$row['fecha_fincontrato'];
+      }
+      
+      //contenido del mensaje
+      $mensaje="Estimado(a) ".$personal;
+      $mensaje.="<br>El presente contrato tiene como fecha de inicio: ".$fechaInicio. ", finaliza en fecha: ".$fechaFin;
+      $mensaje.="<br>Saludos.";
+    //datos del correo
+      $mail_username="noresponse@minkasoftware.com";//Correo electronico saliente ejemplo: tucorreo@gmail.com
+      $mail_userpassword="minka@2019";//Tu contraseña de gmail
+      $mail_addAddress=$correo;//correo electronico que recibira el mensaje
+      $template="notificaciones_sistema/PHPMailer/email_template.html";//Ruta de la plantilla HTML para enviar nuestro mensaje
+        
+        /*Inicio captura de datos enviados por $_POST para enviar el correo */
+       $mail_setFromEmail=$mail_username;
+       $mail_setFromName="IBNORCA";
+       $txt_message=$mensaje;
+       $mail_subject=$titulo; //el subject del mensaje
+  
+       $flag=sendemail($mail_username,$mail_userpassword,$mail_setFromEmail,$mail_setFromName,$mail_addAddress,$txt_message,$mail_subject,$template,$i);      
+      $i++;
+    }
+
   }
 ?>
 
