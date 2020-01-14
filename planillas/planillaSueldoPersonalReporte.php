@@ -46,7 +46,7 @@
             <h6 class="card-title"><small>
               Codigo Planilla: <?=$cod_planilla;?><br>
               Gestion: <?=$nombre_gestion; ?> / Mes: <?=$cod_mes; ?><br>              
-              OFICINA: <?=$nombre_uo;?>
+              Oficina: <?=$nombre_uo;?>
               </small>                    
             </h6>             
           </div>
@@ -209,21 +209,25 @@
 
 
 		                          //dividiendo montos a su porcentaje respectivo
-		                          $haber_basico_tp=$haber_basico;
-		                          $bono_antiguedad_tp=$bono_antiguedad;
-		                          $monto_bonos_tp=$monto_bonos;
-		                          $total_ganado_tp=$total_ganado;
-		                          $atrasos_tp=$atrasos;
-		                          $anticipo_tp=$anticipo;
-		                          $monto_descuentos_tp=$monto_descuentos;
-		                          $dotaciones_tp=$dotaciones;
-		                          $seguro_de_salud_tp=$seguro_de_salud;
-		                          $riesgo_profesional_tp=$riesgo_profesional;
-		                          $provivienda_tp=$provivienda;
-		                          $a_patronal_sol_tp=$a_patronal_sol;
-		                          $liquido_pagable_tp=$liquido_pagable;
-		                          $total_a_patronal_tp=$total_a_patronal;
-		                          
+		                          $haber_basico_tp=$haber_basico*$porcentaje/100;
+		                          $bono_antiguedad_tp=$bono_antiguedad*$porcentaje/100;
+		                          $monto_bonos_tp=$monto_bonos*$porcentaje/100;
+		                          $total_ganado_tp=$total_ganado*$porcentaje/100;
+		                          $atrasos_tp=$atrasos*$porcentaje/100;
+		                          $anticipo_tp=$anticipo*$porcentaje/100;
+		                          $monto_descuentos_tp=$monto_descuentos*$porcentaje/100;
+		                          $dotaciones_tp=$dotaciones*$porcentaje/100;
+		                          $seguro_de_salud_tp=$seguro_de_salud*$porcentaje/100;
+		                          $riesgo_profesional_tp=$riesgo_profesional*$porcentaje/100;
+		                          $provivienda_tp=$provivienda*$porcentaje/100;
+		                          $a_patronal_sol_tp=$a_patronal_sol*$porcentaje/100;
+
+
+
+		                          $liquido_pagable_tp=$liquido_pagable*$porcentaje/100;
+		                          $total_a_patronal_tp=$total_a_patronal*$porcentaje/100;
+
+
 		                          $sum_total_basico+=$haber_basico_tp;
 		                          $sum_total_b_antiguedad+=$bono_antiguedad_tp;
 		                          $sum_total_m_bonos+=$monto_bonos_tp;
@@ -258,15 +262,34 @@
 				                    <?php                    
 				                    if(count($arrayBonos)>0)
 				                    {
-				                      $sqlTotalOtroBonos = "SELECT SUM(monto) as suma_bono
-				                              from bonos_personal_mes 
-				                              where  cod_personal=$cod_personalcargo and cod_gestion=$cod_gestion and cod_mes=$cod_mes and cod_estadoreferencial=1";
-				                      $stmtbonoOtros = $dbh->prepare($sqlTotalOtroBonos);
-				                      $stmtbonoOtros->execute();
-				                      $resultbonoOtros=$stmtbonoOtros->fetch();
-				                      $sumaBono_otros=$resultbonoOtros['suma_bono'];
+				                        $total_bonos1=0;
+										  $total_bonos2=0;
 
-				                      $sumaBono_otros_tp=$sumaBono_otros;
+										  $sqlBonos1 = "SELECT bpm.monto
+										  from bonos_personal_mes bpm,bonos b
+										  where bpm.cod_bono=b.codigo and bpm.cod_personal=$cod_personalcargo and bpm.cod_gestion=$cod_gestion and bpm.cod_mes=$cod_mes and bpm.cod_estadoreferencial=1 and b.cod_tipocalculobono=1";
+										  $stmtBonos1 = $dbh->prepare($sqlBonos1);
+										  $stmtBonos1->execute();
+										  $stmtBonos1->bindColumn('monto',$monto1);
+										  while ($row = $stmtBonos1->fetch()) 
+										  {
+										    $total_bonos1=$total_bonos1+$monto1;
+										  }
+										    $sqlBonos2 = "SELECT bpm.monto
+										  from bonos_personal_mes bpm,bonos b
+										  where bpm.cod_bono=b.codigo and bpm.cod_personal=$cod_personalcargo and bpm.cod_gestion=$cod_gestion and bpm.cod_mes=$cod_mes and bpm.cod_estadoreferencial=1 and b.cod_tipocalculobono=2";
+										  $stmtBonos2 = $dbh->prepare($sqlBonos2);
+										  $stmtBonos2->execute();
+										  $stmtBonos2->bindColumn('monto',$monto2);
+										  while ($row = $stmtBonos2->fetch()) 
+										  {
+										    $porcen_monto=$dias_trabajados_asistencia*100/$dias_trabajados;
+										    $monto2_aux=$porcen_monto*$monto2/100;
+										    $total_bonos2=$total_bonos2+$monto2_aux;
+										  }
+										  $sumaBono_otros=$total_bonos1+$total_bonos2;
+
+				                      $sumaBono_otros_tp=$sumaBono_otros*$porcentaje/100;
 				                      $sum_total_o_bonos+=$sumaBono_otros_tp;
 				                
 
@@ -277,16 +300,21 @@
 				                      set_time_limit(300);
 				                      for ($j=0; $j <count($arrayBonos);$j++){ 
 				                          $cod_bono_aux=$arrayBonos[$j];                          
-				                          $sqlBonosOtrs = "SELECT cod_bono,monto
-				                                from bonos_personal_mes 
-				                                where  cod_personal=$cod_personalcargo and cod_gestion=$cod_gestion and cod_mes=$cod_mes and  cod_bono=$cod_bono_aux and cod_estadoreferencial=1";
+				                          $sqlBonosOtrs = "SELECT bpm.cod_bono,bpm.monto,b.cod_tipocalculobono
+				                                from bonos_personal_mes bpm,bonos b 
+				                                where   bpm.cod_bono=b.codigo and bpm.cod_personal=$cod_personalcargo and bpm.cod_gestion=$cod_gestion and bpm.cod_mes=$cod_mes and  bpm.cod_bono=$cod_bono_aux and bpm.cod_estadoreferencial=1";
 				                          $stmtBonosOtrs = $dbh->prepare($sqlBonosOtrs);
 				                          $stmtBonosOtrs->execute();
 				                          $resultBonosOtros=$stmtBonosOtrs->fetch();
 				                          $cod_bonosX=$resultBonosOtros['cod_bono'];
 				                          $montoX=$resultBonosOtros['monto'];
+				                          $tipoBonoX=$resultBonosOtros['cod_tipocalculobono'];
+				                          if($tipoBonoX==2){
+				                          	$porcen_monto=30*100/$dias_trabajados;
+										    $montoX_aux=$porcen_monto*$montoX/100;
+				                          }else $montoX_aux=$montoX;
 
-				                          $montoX_tp=$montoX;
+				                          $montoX_tp=$montoX_aux*$porcentaje/100;
 
 				                          if($cod_bonosX==$cod_bono_aux){ ?>
 				                            <td  class="bonosDet small" style="display:none"><?=formatNumberDec($montoX_tp);?></td>  
@@ -302,12 +330,12 @@
 				                      <?php
 				                    }                                          
 				                      
-				                    	$afp_1_tp=$afp_1;
-				                    	$afp_2_tp=$afp_2;
-				                    	$a_solidario_13000_tp=$a_solidario_13000;
-				                    	$a_solidario_25000_tp=$a_solidario_25000;
-				                    	$a_solidario_35000_tp=$a_solidario_35000;
-				                    	$rc_iva_tp=$rc_iva;
+				                    	$afp_1_tp=$afp_1*$porcentaje/100;
+				                    	$afp_2_tp=$afp_2*$porcentaje/100;
+				                    	$a_solidario_13000_tp=$a_solidario_13000*$porcentaje/100;
+				                    	$a_solidario_25000_tp=$a_solidario_25000*$porcentaje/100;
+				                    	$a_solidario_35000_tp=$a_solidario_35000*$porcentaje/100;
+				                    	$rc_iva_tp=$rc_iva*$porcentaje/100;
 
 
 			                      		$monto_aportes_tp = $afp_1_tp+$afp_2_tp+$a_solidario_13000_tp+$a_solidario_25000_tp+$a_solidario_35000_tp+$rc_iva_tp;
@@ -340,7 +368,7 @@
 				                      $resultDescuentosOtros=$stmtDescuentosOtros->fetch();
 				                      $sumaDescuentos_otros=$resultDescuentosOtros['suma_descuentos'];
 
-				                      $sumaDescuentos_otros_tp=$sumaDescuentos_otros;
+				                      $sumaDescuentos_otros_tp=$sumaDescuentos_otros*$porcentaje/100;
 
 				                      $sum_total_o_descuentos+=$sumaDescuentos_otros_tp;
 
@@ -359,7 +387,7 @@
 				                          $resultDescOtros=$stmtDescuentos->fetch();
 				                          $cod_descuentosX=$resultDescOtros['cod_descuento'];
 				                          $montoX=$resultDescOtros['monto'];
-				                          $montoX_tp=$montoX;
+				                          $montoX_tp=$montoX*$porcentaje/100;
 
 				                          if($cod_descuentosX==$cod_descuento_aux){ ?>
 				                            <td  class="DescuentosOtros small" style="display:none"><?=formatNumberDec($montoX_tp);?></td>  

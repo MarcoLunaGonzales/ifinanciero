@@ -1,0 +1,463 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"no",
+				"nombre_uo"
+			],
+			[
+				"Nombre",
+				"primer_nombre"
+			],
+			[
+				"unidad",
+				"unidades_organizacionales"
+			],
+			[
+				"cod_",
+				"cod_area"
+			],
+			[
+				"fec",
+				"fecha_evaluacioncontrato"
+			],
+			[
+				"bg-",
+				"badge-warning"
+			],
+			[
+				"a",
+				"anio_a"
+			],
+			[
+				"mes",
+				"mes"
+			],
+			[
+				"dura",
+				"duracion_meses"
+			],
+			[
+				"otro",
+				"otros_b"
+			],
+			[
+				"ha",
+				"haber_basico_x"
+			],
+			[
+				"cod_uo",
+				"cod_uo_x"
+			],
+			[
+				"global",
+				"globalCodUnidad"
+			],
+			[
+				"nomb",
+				"nombre_uo_admin"
+			],
+			[
+				"ex",
+				"execute"
+			],
+			[
+				"st",
+				"stmtTCargos"
+			],
+			[
+				"conte",
+				"contenedor_tutor"
+			],
+			[
+				"contenedor",
+				"contenedor_padre"
+			],
+			[
+				"select",
+				"selectVar"
+			],
+			[
+				"con",
+				"contenedor_personal_dis"
+			],
+			[
+				"cod_tipo_",
+				"cod_tipo_persona_discapacitado"
+			],
+			[
+				"fecha",
+				"fecha_nac_persona_dis"
+			],
+			[
+				"nro",
+				"nro_carnet_discapacidad"
+			],
+			[
+				"tipo",
+				"tipo_persona_discapacitado"
+			],
+			[
+				"ema",
+				"email_empresa"
+			],
+			[
+				"haber",
+				"haber_basico"
+			],
+			[
+				"S",
+				"SELECT"
+			],
+			[
+				"cod",
+				"cod_estadoreferencial"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"Package Control: install",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 0.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/C/xampp/htdocs/ifinanciero/planillas/planillasSueldoList.php",
+		"/C/xampp/htdocs/ifinanciero/planillas/savePlanillaMes.php",
+		"/C/xampp/htdocs/ifinanciero/planillas/planillaSueldoPersonalReporte.php",
+		"/C/xampp/htdocs/ifinanciero/assets/alerts/functionsGeneral.js",
+		"/C/xampp/htdocs/ifinanciero/functions.php",
+		"/C/xampp/htdocs/ifinanciero/rrhh/configModule.php",
+		"/C/xampp/htdocs/ifinanciero/routing.php",
+		"/C/xampp/htdocs/ifinanciero/personal/personalLista.php",
+		"/C/xampp/htdocs/ifinanciero/personal/rptCambiosPersonalPrint.php",
+		"/C/xampp/htdocs/ifinanciero/personal/rptCambiosPersonal.php",
+		"/C/xampp/htdocs/ifinanciero/activosFijos/afPrintActivosFijosAsignados.php",
+		"/C/xampp/htdocs/ifinanciero/activosFijos/rptactivosfijosxunidad.php",
+		"/C/xampp/htdocs/ifinanciero/activosFijos/afPrintActivosFijosxunidad.php",
+		"/C/xampp/htdocs/ifinanciero/layouts/menu.php",
+		"/C/xampp/htdocs/ifinanciero/personal/personal_edit_otros.php",
+		"/C/xampp/htdocs/ifinanciero/personal/savePersonalcontrato.php",
+		"/C/xampp/htdocs/ifinanciero/personal/PersonalContratosForm.php",
+		"/C/xampp/htdocs/ifinanciero/personal/personalForm.php",
+		"/C/xampp/htdocs/ifinanciero/personal/personal_save_otros.php",
+		"/C/xampp/htdocs/ifinanciero/functionsGeneral.php",
+		"/C/xampp/htdocs/ifinanciero/personal/personalPrintFicha.php",
+		"/C/xampp/htdocs/ifinanciero/planillas/savePlanillaMesNA.php",
+		"/C/xampp/htdocs/ifinanciero/planillas/executeComprobantePlanillaSueldos.php",
+		"/C/xampp/htdocs/ifinanciero/layouts/layout.php",
+		"/C/xampp/htdocs/ifinanciero/session.php",
+		"/C/xampp/htdocs/ifinanciero/activosFijos/activosfijosLista.php",
+		"/C/xampp/htdocs/ifinanciero/planillas/generarPlanillaSueldo.php",
+		"/C/xampp/htdocs/ifinanciero/layouts/head.php",
+		"/C/xampp/htdocs/ifinanciero/conexion.php",
+		"/C/xampp/htdocs/ifinanciero/planillas/reportePlanillasSueldos.php",
+		"/C/xampp/htdocs/ifinanciero/rrhh/cargosSave.php",
+		"/C/xampp/htdocs/ifinanciero/rrhh/cargosForm.php",
+		"/C/xampp/htdocs/ifinanciero/rrhh/cargosLista.php",
+		"/C/xampp/htdocs/ifinanciero/rrhh/areasForm.php",
+		"/C/xampp/htdocs/ifinanciero/rrhh/areasSave.php",
+		"/C/xampp/htdocs/ifinanciero/personal/tiposCargosLista.php",
+		"/C/xampp/htdocs/ifinanciero/personal/TiposCargosForm.php",
+		"/C/xampp/htdocs/ifinanciero/personal/tiposCargosSave.php",
+		"/C/xampp/htdocs/ifinanciero/personal/tiposCargosDelete.php",
+		"/C/xampp/htdocs/ifinanciero/personal/tiposContratoDelete.php",
+		"/C/xampp/htdocs/ifinanciero/personal/tiposContratosLista.php",
+		"/C/xampp/htdocs/ifinanciero/personal/TiposContratosForm.php",
+		"/C/xampp/htdocs/ifinanciero/personal/personalSave.php",
+		"/C/xampp/htdocs/ifinanciero/planillas/planillaSueldoPersonalActual.php",
+		"/C/xampp/htdocs/ifinanciero/assets/css/style.css",
+		"/C/xampp/htdocs/ifinanciero/layouts/bodylogin2.php",
+		"/C/xampp/htdocs/ifinanciero/personal/personal_discapacidad_ajax.php",
+		"/C/xampp/htdocs/ifinanciero/rrhh/area_contabilizacion_detalle_ajax.php",
+		"/C/xampp/htdocs/ifinanciero/personal/cargarPersonalWS.php",
+		"/C/xampp/htdocs/ifinanciero/planillas/detallePlanillaPrerequisitos.php",
+		"/C/xampp/htdocs/ifinanciero/personal/PersonalAreaDistribucionForm.php",
+		"/C/xampp/htdocs/ifinanciero/personal/tipos_contratosSave.php",
+		"/C/xampp/htdocs/ifinanciero/rrhh/deleteCargos.php",
+		"/C/xampp/htdocs/ifinanciero/rrhh/areasLista.php",
+		"/C/Users/Bolivia2/Downloads/Sublime Text Build 3211 x64/Data/Packages/Sublimerge 3/Sublimerge 3.sublime-settings"
+	],
+	"find":
+	{
+		"height": 23.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"th",
+			"nombre_grado",
+			"nombre_carg",
+			"td",
+			"nombre_area",
+			"th",
+			"                            \n",
+			"cod_area",
+			"cod_uo",
+			"materno",
+			"paterno",
+			"codigo",
+			"stmtPersonal",
+			"sqlPersonal",
+			"codigo",
+			"stmtuo",
+			"sqlUO",
+			"stmtActivos",
+			"sqlActivos",
+			"reportesConta",
+			"valor_configuracion",
+			"cod_contrato",
+			"stmtU",
+			"dias_alerta",
+			"stmtContrato",
+			"cod_contrato",
+			"fecha_Eva",
+			"agregaformPCE",
+			"i",
+			"meses_alerta",
+			"dbhIPD",
+			"cod_grado_academico",
+			"cod_cargo",
+			"stmtInsertPlanillas",
+			"stmtInsertPlanillaDetalle",
+			"cod_cargo",
+			"sqlInsertPlanillaDetalle",
+			"ing_contr",
+			"cod_gestion_x",
+			"obtenerAporteAFP",
+			"obtener",
+			"obteme+++++",
+			"haber_basico",
+			"cargaP",
+			"cargaR",
+			"codigo_planillaRPNA",
+			"porcentaje",
+			"ing_contr",
+			"nombre_uo_x",
+			"agregaformPre",
+			"codigo_planilla",
+			"cod_uo",
+			"mes",
+			"stmtAdmnin",
+			"stmt",
+			"cod_estadoreferencial",
+			"abreviatura",
+			"cod_tipoafp",
+			"abreviatura",
+			"cod_tipo_cargo",
+			"cod_estadoreferencial",
+			"urlListTiposContratos",
+			"tipos_contrato_personal",
+			"duracion_meses",
+			"contenedor_padre",
+			"div_contenedor_area",
+			"codigo_UO",
+			"discapacitado",
+			"email_empresa",
+			"nombre_area",
+			"celular_tutor",
+			"tutor_discapacitado",
+			"discapacitado",
+			"ing_contr",
+			"fecha_nac_persona_dis",
+			"nro_carnet_discapacidad",
+			"cod_discapacidad",
+			"ing_planilla",
+			"celularTutor",
+			"parentescotutor",
+			"nro_carnet_discapacidad",
+			"discapacitado",
+			"ing_planilla",
+			"3",
+			"2",
+			"1",
+			"ing_contr",
+			"parentescotutor",
+			"cantidad_bonosX",
+			"total_bonos",
+			"detallePlanillaPrerequisitos",
+			"primer_nombre",
+			"urlListCargos",
+			"grado_academico",
+			"cod_cargo",
+			"cod_uo",
+			"abreviatura",
+			"nombre",
+			"codigo_personal",
+			"codigo_item",
+			"urlSaveAreas",
+			"h2",
+			"codigo_personal",
+			"cod_area",
+			"codigo_personal",
+			"codigo_item",
+			"codigo",
+			"nombre",
+			"codigo",
+			"codigo_item",
+			"reporte_sueldos",
+			"cod_area",
+			"cod_cargo",
+			"grado_academico",
+			"nombre_grado_academico",
+			"ga",
+			"nombre_uo",
+			"nombre_grado_academico",
+			"ga",
+			"nombre_grado_academico",
+			"ga",
+			"cod_grado_academico",
+			"fecha_nacimiento",
+			"prueba",
+			"ing_planilla",
+			"urlListCargos",
+			"created_by",
+			"abreviatura"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 23.0
+	},
+	"input":
+	{
+		"height": 36.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "planillasSueldoList.sublime-project",
+	"replace":
+	{
+		"height": 42.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 380.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 282.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

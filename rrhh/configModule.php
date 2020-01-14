@@ -86,11 +86,7 @@ $urlFormTipos_genero="index.php?opcion=tipos_generoForm";
 $urlDeleteTipos_genero="index.php?opcion=deletetipos_genero";
 
 
-//tipos de contratos
-$urlListTiposContratos="?opcion=tiposContratosLista";
-$urlFormTiposContratos="?opcion=formContratosLista";
-$urlSaveTiposContrato="?opcion=saveTiposContrato";
-$urlDeleteTiposContrato="?opcion=deleteTiposContrato";
+
 //tipos de cargos
 $urlListTiposCargos="?opcion=tiposCargosLista";
 $urlFormTiposCargos="?opcion=formCargosLista";
