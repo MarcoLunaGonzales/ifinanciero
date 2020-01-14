@@ -1854,7 +1854,7 @@ function obtenerBonoAntiguedad($minino_salarial,$ing_contr){
 
 }
 
-function obtenerTotalBonos($codigo_personal)
+function obtenerTotalBonos($codigo_personal,$dias_trabajados_asistencia,$dias_trabajados_por_defecto)
 {  
   $mes=date('m');
   $gestion=date('Y');
@@ -1870,14 +1870,41 @@ function obtenerTotalBonos($codigo_personal)
   $cod_gestion = $resultGestion['codigo'];
 
 
-  $sqlBonos = "SELECT SUM(monto) as total_bonos from bonos_personal_mes 
-  where cod_personal = $codigo_personal and cod_gestion=$cod_gestion and cod_mes=$mes and cod_estadoreferencial=1";
-  $stmtBonos = $dbh->prepare($sqlBonos);
-  $stmtBonos->execute();
-  $resultBonos=$stmtBonos->fetch();
-  $total_bonos = $resultBonos['total_bonos'];
+  // $sqlBonos = "SELECT SUM(monto) as total_bonos from bonos_personal_mes 
+  // where cod_personal = $codigo_personal and cod_gestion=$cod_gestion and cod_mes=$mes and cod_estadoreferencial=1";
+  // $stmtBonos = $dbh->prepare($sqlBonos);
+  // $stmtBonos->execute();
+  // $resultBonos=$stmtBonos->fetch();
+  // $total_bonos = $resultBonos['total_bonos'];
+  $total_bonos1=0;
+  $total_bonos2=0;
+
+  $sqlBonos1 = "SELECT bpm.monto
+  from bonos_personal_mes bpm,bonos b
+  where bpm.cod_bono=b.codigo and bpm.cod_personal=$codigo_personal and bpm.cod_gestion=$cod_gestion and bpm.cod_mes=$cod_mes and bpm.cod_estadoreferencial=1 and b.cod_tipocalculobono=1";
+  $stmtBonos1 = $dbh->prepare($sqlBonos1);
+  $stmtBonos1->execute();
+  $stmtBonos1->bindColumn('monto',$monto1);
+  while ($row = $stmtBonos1->fetch()) 
+  {
+    $total_bonos1=$total_bonos1+$monto1;
+  }
+    $sqlBonos2 = "SELECT bpm.monto
+  from bonos_personal_mes bpm,bonos b
+  where bpm.cod_bono=b.codigo and bpm.cod_personal=$codigo_personal and bpm.cod_gestion=$cod_gestion and bpm.cod_mes=$cod_mes and bpm.cod_estadoreferencial=1 and b.cod_tipocalculobono=2";
+  $stmtBonos2 = $dbh->prepare($sqlBonos2);
+  $stmtBonos2->execute();
+  $stmtBonos2->bindColumn('monto',$monto2);
+  while ($row = $stmtBonos2->fetch()) 
+  {
+    $porcen_monto=$dias_trabajados_asistencia*100/$dias_trabajados_por_defecto;
+    $monto2_aux=$porcen_monto*$monto2/100;
+    $total_bonos2=$total_bonos2+$monto2_aux;
+  }
+  $total_bonos=$total_bonos1+$total_bonos2;
+
   $stmtGestion = null;
-  $stmtBonos = null;
+  $stmtBonos1 = null;
   $dbh = null;
   return $total_bonos;
 }

@@ -463,21 +463,21 @@
 		if ($_GET['opcion']=='areasuoSave') {
 			require_once('rrhh/areas_organizacionSave.php');
 		}
-		//tipos contratos
-		if ($_GET['opcion']=='tiposContratosLista') {
-			require_once('personal/tiposContratosLista.php');
+		// reporte cambios personal rrhh
+		if ($_GET['opcion']=='rptCambiosPersonal') {
+			require_once('personal/rptCambiosPersonal.php');
 		}		
-		if ($_GET['opcion']=='formContratosLista') {
-			$codigo=$_GET['codigo'];
-			require_once('personal/TiposContratosForm.php');
+		if ($_GET['opcion']=='rptCambiosPersonalPrint') {
+		$codigo=$_GET['codigo'];
+		require_once('personal/rptCambiosPersonalPrint.php');
 		}
-		if ($_GET['opcion']=='saveTiposContrato') {
-			require_once('personal/tipos_contratosSave.php');
-		}
-		if ($_GET['opcion']=='deleteTiposContrato') {
-			$codigo=$_GET['codigo'];
-			require_once('personal/tiposContratoDelete.php');
-		}
+		// if ($_GET['opcion']=='saveTiposContrato') {
+		// 	require_once('personal/tipos_contratosSave.php');
+		// }
+		// if ($_GET['opcion']=='deleteTiposContrato') {
+		// 	$codigo=$_GET['codigo'];
+		// 	require_once('personal/tiposContratoDelete.php');
+		// }
 		//tipos cargos
 		if ($_GET['opcion']=='tiposCargosLista') {
 			require_once('personal/tiposCargosLista.php');

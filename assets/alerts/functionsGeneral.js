@@ -2323,6 +2323,13 @@ function agregaformPCB(datos){
   document.getElementById("codigo_contratoB").value=d[1];
 
 }
+function agregaformEditEva(datos){
+  //console.log("datos: "+datos);
+  var d=datos.split('/');
+  document.getElementById("codigo_personalEv").value=d[0];
+  document.getElementById("codigo_contratoEv").value=d[1];
+  document.getElementById("fecha_EvaluacionEv").value=d[3];
+}
 
 function RegistrarContratoPersonal(cod_personal,cod_tipocontrato,fecha_inicio){
   $.ajax({
@@ -2349,6 +2356,21 @@ function EditarContratoPersonal(codigo_contratoE,codigo_personalE,cod_tipocontra
         //$('#tabla1').load('index.php');
         // alertify.success("agregado");
         alerts.showSwal('success-message','index.php?opcion=FormPersonalContratos&codigo='+codigo_personalE);
+      }
+    }
+  });
+}
+function EditarEvaluacionPersonal(codigo_contratoEv,codigo_personalEv,fecha_EvaluacionEv){
+  $.ajax({
+    type:"POST",
+
+    data:"cod_contrato="+codigo_contratoEv+"&cod_personal=0&cod_tipocontrato=0&cod_estadoreferencial=4&fecha_inicio="+fecha_EvaluacionEv,
+    url:"personal/savePersonalcontrato.php",
+    success:function(r){
+      if(r==1){
+        //$('#tabla1').load('index.php');
+        // alertify.success("agregado");
+        alerts.showSwal('success-message','index.php?opcion=FormPersonalContratos&codigo='+codigo_personalEv);
       }
     }
   });
@@ -2532,14 +2554,17 @@ function CerrarPlanilla(cod_planilla){
 function agregaformPreNA(datos){
   var d=datos.split('-');
   document.getElementById("codigo_planillaNA").value=d[0];
+  document.getElementById("codigo_uoNA").value=d[1];
 }
 function agregaformRPNA(datos){
   var d=datos.split('-');
   document.getElementById("codigo_planillaRPNA").value=d[0];
+  document.getElementById("codigo_uoRPNA").value=d[1];
 }
 function agregaformCPNA(datos){
   var d=datos.split('-');
   document.getElementById("codigo_planillaCPNA").value=d[0];
+  document.getElementById("codigo_uoCPNA").value=d[1];
 }
 function ProcesarPlanillaNA(cod_planilla){  
   $.ajax({
@@ -2563,10 +2588,10 @@ function ProcesarPlanillaNA(cod_planilla){
     }
   });
 }
-function ReprocesarPlanillaNA(cod_planilla){
+function ReprocesarPlanillaNA(cod_planilla,cod_uo){
   $.ajax({
     type:"POST",
-    data:"cod_planilla="+cod_planilla+"&sw=1",
+    data:"cod_planilla="+cod_planilla+"&sw=1&cod_uo="+cod_uo,
     url:"planillas/savePlanillaMesNA.php",
     beforeSend:function(objeto){ 
       $('#cargaRNA').css({display:'block'});
@@ -2587,7 +2612,7 @@ function ReprocesarPlanillaNA(cod_planilla){
 function CerrarPlanillaNA(cod_planilla){
   $.ajax({
     type:"POST",
-    data:"cod_planilla="+cod_planilla+"&sw=3",
+    data:"cod_planilla="+cod_planilla+"&sw=3&cod_uo="+cod_uo,
     url:"planillas/savePlanillaMesNA.php",
     success:function(r){
       if(r==1){

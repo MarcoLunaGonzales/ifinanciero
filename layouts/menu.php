@@ -180,12 +180,7 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
                     <span class="sidebar-normal"> Tipos Cargos</span>
                   </a>
                 </li>
-                <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=tiposContratosLista">
-                    <span class="sidebar-mini"> TCO </span>
-                    <span class="sidebar-normal"> Tipos Contratos</span>
-                  </a>
-                </li>
+        
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=tipospersonalLista">
                     <span class="sidebar-mini"> TP </span>
@@ -502,6 +497,25 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
                   <a class="nav-link" href="?opcion=reportesMayores">
                     <span class="sidebar-mini"> LM </span>
                     <span class="sidebar-normal"> Libro Mayor</span>
+                  </a>
+                </li>                           
+              </ul>
+            </div>
+          </li>
+          <!--REPORTES RRHH-->
+          <li class="nav-item ">
+            <a class="nav-link" data-toggle="collapse" href="#reportesRRHH">
+              <i class="material-icons">assessment</i>
+              <p> Reportes RRHH
+                <b class="caret"></b>
+              </p>
+            </a>
+            <div class="collapse" id="reportesRRHH">
+              <ul class="nav">                
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=rptCambiosPersonal">
+                    <span class="sidebar-mini"> R </span>
+                    <span class="sidebar-normal"> Cambios Del Personal</span>
                   </a>
                 </li>                           
               </ul>

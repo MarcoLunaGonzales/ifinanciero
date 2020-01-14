@@ -85,9 +85,6 @@ $imagen = $resultIMG['imagen'];
 $archivo = "personal/imagenes/".$imagen;//sale mal
 
 
-
-
-
 //COMBOS...
 $queryTPersonal = "SELECT codigo,nombre from tipos_personal where cod_estadoreferencial=1";
 $statementTPersonal = $dbh->query($queryTPersonal);
@@ -98,11 +95,8 @@ $statementtipos_afp = $dbh->query($querytipos_afp);
 $querytipos_aporteafp = "SELECT codigo,nombre from tipos_aporteafp where cod_estadoreferencial=1";
 $statementtipos_aporteafp = $dbh->query($querytipos_aporteafp);
 
-
 $queryestados_personal = "SELECT codigo,nombre from estados_personal where cod_estadoreferencial=1";
 $statementestados_personal = $dbh->query($queryestados_personal);
-
-
 ?>
 
 <div class="content">

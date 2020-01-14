@@ -42,7 +42,8 @@ if($sw==2){//procesar planilla
 	$flagSuccess=$stmtU->execute();
 
 	//=========================creando la planilla previa con valores ininciales
-	$dias_trabajados = 30; //por defecto
+	$dias_trabajados_por_defecto = 30; //por defecto
+	$dias_trabajados_asistencia = 30; //por asistencia
 	$horas_pagadas = 0; //buscar datos
 	$minimo_salarial=0;
 	$valor_conf_x65_90=0;
@@ -117,7 +118,7 @@ if($sw==2){//procesar planilla
 	$stmtPersonal->bindColumn('ing_contr', $ing_contr);
 	while ($rowC = $stmtPersonal->fetch()) 
 	{
-		$otros_b = obtenerTotalBonos($codigo_personal);
+		$otros_b = obtenerTotalBonos($codigo_personal,$dias_trabajados_asistencia,$dias_trabajados_por_defecto);
 		//calculado otros bonos		
 		if($p_grado_academico==0)$bono_academico = 0;
 		else $bono_academico = $p_grado_academico/100*$minimo_salarial;
@@ -127,7 +128,7 @@ if($sw==2){//procesar planilla
 		//$total_bonos=$bono_academico+$bono_antiguedad+$otros_b;	
 		$total_bonos=$bono_antiguedad+$otros_b;	
 
-		$total_ganado = ($haber_basico/30*$dias_trabajados)+$total_bonos;	
+		$total_ganado = ($haber_basico/30*$dias_trabajados_por_defecto)+$total_bonos;	
 		//calculamos descuentos
 		if($cod_tipoafp==1){
 		  $afp_futuro =obtenerAporteAFP($total_ganado);
@@ -181,7 +182,7 @@ if($sw==2){//procesar planilla
 		$stmtInsertPlanillas->bindParam(':cod_planilla', $cod_planilla);
 		$stmtInsertPlanillas->bindParam(':codigo_personal',$codigo_personal);
 		$stmtInsertPlanillas->bindParam(':cod_gradoacademico',$cod_gradoacademico);
-		$stmtInsertPlanillas->bindParam(':dias_trabajados',$dias_trabajados);
+		$stmtInsertPlanillas->bindParam(':dias_trabajados',$dias_trabajados_por_defecto);
 		$stmtInsertPlanillas->bindParam(':horas_pagadas',$horas_pagadas);
 		$stmtInsertPlanillas->bindParam(':haber_basico',$haber_basico);	
 		$stmtInsertPlanillas->bindParam(':bono_academico',$bono_academico);		
@@ -259,7 +260,8 @@ if($sw==2){//procesar planilla
 {//reporcesar planilla
 	//=========================creando la planilla previa
 	$flagSuccessIPMD=0;
-	$dias_trabajados = 30; //por defecto
+	$dias_trabajados_por_defecto = 30; //por defecto
+	$dias_trabajados_asistencia = 28; //por asistencia
 	$horas_pagadas = 0; //buscar datos
 	$minimo_salarial=0;
 	$valor_conf_x65_90=0;
@@ -344,7 +346,7 @@ if($sw==2){//procesar planilla
 	$stmtPersonal->bindColumn('ing_contr', $ing_contr);
 	while ($rowC = $stmtPersonal->fetch()) 
 	{
-		$otros_b = obtenerTotalBonos($codigo_personal);
+		$otros_b = obtenerTotalBonos($codigo_personal,$dias_trabajados_asistencia,$dias_trabajados_por_defecto);
 		//calculado otros bonos		
 		if($p_grado_academico==0)$bono_academico = 0;
 		else $bono_academico = $p_grado_academico/100*$minimo_salarial;
@@ -354,7 +356,7 @@ if($sw==2){//procesar planilla
 		//$total_bonos=$bono_academico+$bono_antiguedad+$otros_b;	
 		$total_bonos=$bono_antiguedad+$otros_b;	
 
-		$total_ganado = ($haber_basico/30*$dias_trabajados)+$total_bonos;	
+		$total_ganado = ($haber_basico/30*$dias_trabajados_por_defecto)+$total_bonos;	
 		//calculamos descuentos
 		if($cod_tipoafp==1){
 		  $afp_futuro =obtenerAporteAFP($total_ganado);
@@ -418,7 +420,7 @@ if($sw==2){//procesar planilla
 			$stmtInsertPlanillas->bindParam(':cod_planilla', $cod_planilla);
 			$stmtInsertPlanillas->bindParam(':codigo_personal',$codigo_personal);
 			$stmtInsertPlanillas->bindParam(':cod_gradoacademico',$cod_gradoacademico);
-			$stmtInsertPlanillas->bindParam(':dias_trabajados',$dias_trabajados);
+			$stmtInsertPlanillas->bindParam(':dias_trabajados',$dias_trabajados_por_defecto);
 			$stmtInsertPlanillas->bindParam(':horas_pagadas',$horas_pagadas);
 			$stmtInsertPlanillas->bindParam(':haber_basico',$haber_basico);	
 			$stmtInsertPlanillas->bindParam(':bono_academico',$bono_academico);		
@@ -466,7 +468,7 @@ if($sw==2){//procesar planilla
 			$stmtInsertPlanillas->bindParam(':cod_planilla', $cod_planilla);
 			$stmtInsertPlanillas->bindParam(':cod_personal_cargo',$codigo_personal);
 			$stmtInsertPlanillas->bindParam(':cod_grado_academico',$cod_gradoacademico);
-			$stmtInsertPlanillas->bindParam(':dias_trabajados',$dias_trabajados);
+			$stmtInsertPlanillas->bindParam(':dias_trabajados',$dias_trabajados_por_defecto);
 			$stmtInsertPlanillas->bindParam(':horas_pagadas',$horas_pagadas);
 			$stmtInsertPlanillas->bindParam(':haber_basico',$haber_basico);
 			$stmtInsertPlanillas->bindParam(':bono_academico',$bono_academico);

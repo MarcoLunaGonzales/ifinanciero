@@ -75,7 +75,7 @@ $fecha_actual=date("Y-m-d");
                           <th>Duración Contrato(Mes)</th>
               						<th>F. Ini. Contrato</th>
                           <th>F. Fin. Contrato</th>
-                          <th>F. Eval. Contrato</th>
+                          <th>F. Revisión</th>
               						<th></th>                                                   
                         </tr>
                       </thead>
@@ -83,7 +83,7 @@ $fecha_actual=date("Y-m-d");
                         <?php $index=1;                      
                         $datos=$cod_personal_1;
                         while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {                       	
-                        	$datos=$cod_personal_1."/".$codigo_contrato."/".$fecha_iniciocontrato;
+                        	$datos=$cod_personal_1."/".$codigo_contrato."/".$fecha_iniciocontrato."/".$fecha_evaluacioncontrato;
                         	?>
                             <tr>
                                 <td><?=$index;?></td>                                
@@ -92,14 +92,10 @@ $fecha_actual=date("Y-m-d");
                                 <td><?=$fecha_iniciocontrato;?></td>
                                 
                                 <?php
-                                  
                                   $porcionesActual = explode("-", $fecha_actual);
                                   $anioActual= $porcionesActual[0]; // porción1
                                   $mesActual= $porcionesActual[1]; // porción2                                  
                                   $diaActual= $porcionesActual[2]; // porción2 
-
-
-  
                                   // $cadena = "uno,dos,tres,cuatro,cinco";
                                   // $array = explode(",", $fecha_fincontrato);
                                   if($fecha_fincontrato=="INDEFINIDO"){
@@ -180,7 +176,11 @@ $fecha_actual=date("Y-m-d");
                                   }                                                                    
                                 ?>
                                 <td><?=$label.$fecha_fincontrato."</span>";?></td>
-                                <td><?=$labelEvaluacion.$fecha_evaluacioncontrato."</span>";?></td>
+                                <td class="td-actions text-right"><?=$labelEvaluacion.$fecha_evaluacioncontrato."</span>";?>
+                                  <button type="button" style="background-color: #ffffff;border: none;" data-toggle="modal" data-target="#modalEditarEva" onclick="agregaformEditEva('<?=$datos;?>')">
+                                    <i class="material-icons" style="color:#464f55" title="Editar Fecha">notifications</i>
+                                  </button>
+                                </td>
                                 <td class="td-actions text-right">
                                 	<button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalEditar" onclick="agregaformPCE('<?=$datos;?>')">
                                 		<i class="material-icons" title="Editar"><?=$iconEdit;?></i>                             
@@ -269,7 +269,7 @@ $fecha_actual=date("Y-m-d");
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Edita Contrato Personal </h4>
+        <h4 class="modal-title" id="myModalLabel">Editar Contrato Personal </h4>
       </div>
       <div class="modal-body">
         <input type="hidden" name="codigo_personalE" id="codigo_personalE" value="0">
@@ -290,6 +290,27 @@ $fecha_actual=date("Y-m-d");
     </div>
   </div>
 </div>
+<!-- Editar evaluacion-->
+<div class="modal fade" id="modalEditarEva" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Editar Fecha de Evaluación</h4>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" name="codigo_personalEv" id="codigo_personalEv" value="0">
+        <input type="hidden" name="codigo_contratoEv" id="codigo_contratoEv" value="0">                
+        <h6> Fecha Evaluación : </h6>
+        <input class="form-control" type="date" name="fecha_EvaluacionEv" id="fecha_EvaluacionEv" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" id="EditarEva"  data-dismiss="modal">Aceptar</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script type="text/javascript">
   $(document).ready(function(){
@@ -305,6 +326,12 @@ $fecha_actual=date("Y-m-d");
       cod_tipocontratoE=$('#cod_tipocontratoE').val();
       fecha_inicioE=$('#fecha_inicioE').val();
       EditarContratoPersonal(codigo_contratoE,codigo_personalE,cod_tipocontratoE,fecha_inicioE);
+    });
+    $('#EditarEva').click(function(){
+      codigo_contratoEv=document.getElementById("codigo_contratoEv").value;
+      codigo_personalEv=document.getElementById("codigo_personalEv").value;      
+      fecha_EvaluacionEv=$('#fecha_EvaluacionEv').val();
+      EditarEvaluacionPersonal(codigo_contratoEv,codigo_personalEv,fecha_EvaluacionEv);
     });
     $('#EliminarPC').click(function(){    
       codigo_contratoB=document.getElementById("codigo_contratoB").value; 
