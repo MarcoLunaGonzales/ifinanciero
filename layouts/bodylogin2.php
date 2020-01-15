@@ -261,7 +261,7 @@
       var mensaje="";
       if($("#cantidad_filas").val()==0){
         mensaje+="<p></p>";
-        alertaModal('Debe registrar al menos un grupo','bg-secondary','text-white');
+        Swal.fire("Informativo!", "Debe registrar al menos un GRUPO", "warning");
         return false;
       }else{
           $('<input />').attr('type', 'hidden')

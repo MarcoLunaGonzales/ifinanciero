@@ -28,16 +28,22 @@ if(isset($_GET['nombre'])){
   $area=$_GET['area'];
   $utilidadLocal=$_GET['utilidad_local'];
   $utilidadExterno=$_GET['utilidad_externo'];
+  $alumnosLocal=$_GET['alumnos_local'];
+  $alumnosExterno=$_GET['alumnos_externo'];
+  $precioLocal=$_GET['precio_local'];
+  $precioExterno=$_GET['precio_externo'];
   $codPlanCosto=obtenerCodigoPlanCosto();
   $dbh = new Conexion();
-  $sqlInsert="INSERT INTO plantillas_costo (codigo, nombre, abreviatura, cod_unidadorganizacional, cod_area,utilidad_minimalocal,utilidad_minimaexterno) VALUES ('".$codPlanCosto."','".$nombre."','".$abrev."', '".$unidad."', '".$area."','".$utilidadLocal."','".$utilidadExterno."')";
+  $sqlInsert="INSERT INTO plantillas_costo (codigo, nombre, abreviatura, cod_unidadorganizacional, cod_area,utilidad_minimalocal,utilidad_minimaexterno,cantidad_alumnoslocal,cantidad_alumnosexterno) 
+  VALUES ('".$codPlanCosto."','".$nombre."','".$abrev."', '".$unidad."', '".$area."','".$utilidadLocal."','".$utilidadExterno."','".$alumnosLocal."','".$alumnosExterno."')";
   $stmtInsert = $dbh->prepare($sqlInsert);
   $stmtInsert->execute();
 
-  ?>
-  <script>window.location.href="../plantillas_costos/registerGrupos.php?cod="+<?=$codPlanCosto?></script>
-  <?php
-  echo "Registro Satisfactorio";
+  $dbh2 = new Conexion();
+  $sqlInsert2="INSERT INTO precios_plantillacosto (venta_local, venta_externo, cod_plantillacosto) VALUES ('".$precioLocal."','".$precioExterno."', '".$codPlanCosto."')";
+  $stmtInsert2 = $dbh2->prepare($sqlInsert2);
+  $stmtInsert2->execute();
+  echo $codPlanCosto;
 }
 
 ?>

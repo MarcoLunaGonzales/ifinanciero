@@ -269,3 +269,36 @@
   </div>
 </div>
 <!-- end notice modal -->
+
+<!-- notice modal -->
+<div class="modal fade" id="modalPrecio" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-notice modal-lg">
+    <div class="modal-content card">
+                <div class="card-header card-header-success card-header-text">
+                  <div class="card-text">
+                    <h4>Lista de Precios</h4>
+                  </div>
+                  <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">close</i>
+                  </button>
+                </div>
+                <div class="card-body">
+                   <table class="table table-condensed table-bordered bg-info text-dark">
+                     <thead>
+                       <tr>
+                         <th>Nº</th>
+                         <th>EN IBNORCA</th>
+                         <th>FUERA DE IBNORCA</th>
+                         <th>Actions</th>
+                       </tr>
+                     </thead>
+                     <tbody id="lista_preciosplantilla">
+                       
+                     </tbody>
+                   </table>
+
+               </div>   
+      </div>
+  </div>
+</div>
+<!-- end notice modal -->

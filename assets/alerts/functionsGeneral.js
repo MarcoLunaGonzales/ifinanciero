@@ -507,6 +507,9 @@ function modalPlantilla(){
   $('#modalPlantilla').modal('show');
   }
 }
+function ayudaPlantilla(){
+  alertaModal("<h5><b>AYUDA</b></h5>Los campos en la sección 'REGISTRAR PLANTILLA DE COSTO' son modificables y cuando se presione en el botón 'GUARDAR' ubicado en la parte inferior. También se guardaran los cambios realizados en dicha sección",'bg-secondary','text-white');
+}
 //plantilla guardar
 function guardarPlantilla(){
   var cod=$("#codigo_comprobante").val();
@@ -861,22 +864,26 @@ function guardarPlantillaCosto(){
   var area=$("#area").val();
   var utilidadLocal=$("#utilidad_minibnorca").val();
   var utilidadExterna=$("#utilidad_minfuera").val();
-  var area=$("#area").val();
-  if(utilidadLocal==""||utilidadExterna==""||nombre==""||abrev==""||!(unidad>0)||!(area>0)){
-   $("#mensaje").html("<center><p class='text-danger'>Todos los campos son requeridos.</p></center>");
+  var alumnosLocal=$("#cantidad_alumnosibnorca").val();
+  var alumnosExterno=$("#cantidad_alumnosfuera").val();
+  var precioLocal=$("#precio_ventaibnorca").val();
+  var precioExterno=$("#precio_ventafuera").val();
+
+  if(alumnosLocal==""||alumnosExterno==""||precioLocal==""||precioExterno==""||utilidadLocal==""||utilidadExterna==""||nombre==""||abrev==""||!(unidad>0)||!(area>0)){
+    Swal.fire("Informativo!", "Todos los campos son requeridos", "warning");
   }else{
-     var parametros={"nombre":nombre,"abrev":abrev,"unidad":unidad,"area":area,"utilidad_local":utilidadLocal,"utilidad_externo":utilidadExterna};
+     var parametros={"nombre":nombre,"abrev":abrev,"unidad":unidad,"area":area,"utilidad_local":utilidadLocal,"utilidad_externo":utilidadExterna,"alumnos_local":alumnosLocal,"alumnos_externo":alumnosExterno,"precio_local":precioLocal,"precio_externo":precioExterno};
      $.ajax({
         type: "GET",
         dataType: 'html',
-        url: "ajaxRegistrarPlantilla.php",
+        url: "plantillas_costos/ajaxRegistrarPlantilla.php",
         data: parametros,
         beforeSend: function () { 
-         $("#mensaje").html("<center><p class='text-warning'>Procesando. Espere...</p></center>");
+         Swal.fire("Informativo!", "Procesando datos! espere...", "warning");
           
         },
         success:  function (resp) {
-         $("#mensaje").html("<center><p class='text-success'>"+resp+"</p></center>");
+         alerts.showSwal('success-message','plantillas_costos/registerGrupos.php?cod='+resp);
         }
     });
   }
@@ -890,7 +897,19 @@ function listDetalle(id){
    listarDet(id);
    $("#modalDet").modal("show");
  }
-
+function mostrarPreciosPlantilla(){
+  $("#modalPrecio").modal("show");
+  var parametros={"codigo":$("#cod_plantilla").val()};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxListPrecioPlantilla.php",
+        data: parametros,
+        success:  function (resp) {
+         $("#lista_preciosplantilla").html(resp);
+        }
+    });
+}
  function listarDet(id){
   var div=$('<div>').addClass('table-responsive');
   var table = $('<table>').addClass('table table-condensed');
@@ -1408,20 +1427,20 @@ function guardarSimulacionCosto(){
       var ibnorca=2;
   }
   if(nombre==""||!(plantilla_costo>0)){
-   $("#mensaje").html("<center><p class='text-danger'>Todos los campos son requeridos.</p></center>");
+   Swal.fire('Informativo!','Debe llenar los campos!','warning'); 
   }else{
      var parametros={"nombre":nombre,"plantilla_costo":plantilla_costo,"precio":precio,"ibnorca":ibnorca};
      $.ajax({
         type: "GET",
         dataType: 'html',
-        url: "ajaxRegistrarSimulacion.php",
+        url: "simulaciones_costos/ajaxRegistrarSimulacion.php",
         data: parametros,
         beforeSend: function () { 
-         $("#mensaje").html("<center><p class='text-warning'>Procesando. Espere...</p></center>");
+         Swal.fire("Informativo!", "Procesando datos! espere...", "warning");
           
         },
         success:  function (resp) {
-         $("#mensaje").html("<center><p class='text-success'>"+resp+"</p></center>");
+         alerts.showSwal('success-message','simulaciones_costos/registerSimulacion.php?cod='+resp);
         }
     });
   }
@@ -1745,15 +1764,21 @@ $(document).on("shown.bs.modal","#modalRetencion",function(){
   var precioLocal=$("#precio_venta_ibnorca").val();
   var precioExterno=$("#precio_venta_fuera").val();
   if(precioLocal==""||precioExterno==""){
-   alertaModal("Debe ingresar los precios","bg-warning","text-dark");
+   Swal.fire('Informativo!','Debe llenar los campos!','warning');  
   }else{
     ajax=nuevoAjax();
     ajax.open("GET","ajaxRegistrarPrecio.php?local="+precioLocal+"&externo="+precioExterno+"&codigo="+codigo,true);
     ajax.onreadystatechange=function(){
     if (ajax.readyState==4) {
-      var fi=$("#contenido_precio");
+      if($("#contenido_precio").length){
+        var fi = $("#contenido_precio");
       fi.html(ajax.responseText);
       fi.bootstrapMaterialDesign();
+      }else{
+         mostrarPreciosPlantilla();
+         Swal.fire('Correcto!','La transaccion tuvo exito!','success'); 
+      }
+      
       $("#precio_venta_ibnorca").val("");
       $("#precio_venta_fuera").val("");
     }
@@ -1766,9 +1791,15 @@ $(document).on("shown.bs.modal","#modalRetencion",function(){
     ajax.open("GET","ajaxDeletePrecio.php?cod="+cod+"&codigo="+codigo,true);
     ajax.onreadystatechange=function(){
     if (ajax.readyState==4) {
+      if($("#contenido_precio").length){
       var fi=$("#contenido_precio");
       fi.html(ajax.responseText);
       fi.bootstrapMaterialDesign();
+      }else{
+        mostrarPreciosPlantilla();
+         Swal.fire('Borrado!','Se borraron los datos exitosamente!','success');
+      }
+      
       $("#precio_venta_ibnorca").val("");
       $("#precio_venta_fuera").val("");
     }
@@ -1795,7 +1826,25 @@ $(document).on("shown.bs.modal","#modalRetencion",function(){
    }
     ajax.send(null);
  }
-
+function listarPreciosPlantillaSim(codigo,label,ibnorca){
+  var url="";
+  if(label=="sin"){
+   url="simulaciones_costos/listComboPrecio.php";
+  }else{
+   url="plantillas_costos/ajaxListaComboPrecio.php";
+  }
+  ajax=nuevoAjax();
+    ajax.open("GET",url+"?codigo="+codigo+"&ibnorca="+ibnorca,true);
+    ajax.onreadystatechange=function(){
+    if (ajax.readyState==4) {
+      var fi=$("#lista_precios");
+      fi.html(ajax.responseText);
+      fi.bootstrapMaterialDesign();
+       $('.selectpicker').selectpicker("refresh");
+    }
+   }
+    ajax.send(null);
+ }
  //////////////////////reporte mayores desde comprobante////////////
 function mayorReporteComprobante(fila){
  if($("#cuenta"+fila).val()==""){

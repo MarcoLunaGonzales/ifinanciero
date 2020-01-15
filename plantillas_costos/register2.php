@@ -1,12 +1,8 @@
 <?php
-session_start();
-require_once '../layouts/bodylogin2.php';
-require_once '../conexion.php';
-require_once '../styles.php';
-require_once '../functions.php';
-require_once '../functionsGeneral.php';
-require_once 'configModule.php';
 
+require_once 'conexion.php';
+require_once 'styles.php';
+require_once 'configModule.php';
 
 setlocale(LC_TIME, "Spanish");
 $dbh = new Conexion();
@@ -35,36 +31,40 @@ $contadorRegistros=0;
 $fechaActual=date("Y-m-d");
 $dbh = new Conexion();
 ?>
-<form id="formRegComp" class="form-horizontal" action="save.php" method="post" enctype="multipart/form-data">
+
 <div class="content">
-	<div id="contNuevaPlantilla">
-		<div class="fondo-imagen"></div>
-	<center><div class="card col-sm-6">
-                <div class="card-header <?=$colorCard;?> card-header-text">
-                  <div class="card-text">
-                    <h6 class="card-title">Nueva Plantilla</h6>
-                  </div>
-                </div>
-                <div class="card-body ">
-                    <div class="row">
-                       <label class="col-sm-3 col-form-label">Nombre de plantilla:</label>
-                       <div class="col-sm-9">
+	<div class="container-fluid">
+
+		<div class="col-md-12">
+		  <form id="formRegComp" class="form-horizontal" action="save.php" method="post" enctype="multipart/form-data">
+			<div class="card">
+			  <div class="card-header <?=$colorCard;?> card-header-text">
+				<div class="card-text">
+				  <h4 class="card-title">Registrar Plantilla de Costos</h4>
+				</div>
+			  </div>
+			  <div class="card-body ">
+				
+
+				<div class="row">
+                       <label class="col-sm-2 col-form-label">Nombre de plantilla:</label>
+                       <div class="col-sm-7">
                         <div class="form-group">
                           <input class="form-control" type="text" name="nombre" id="nombre" autocomplete="off" autofocus/>
                         </div>
                         </div>
-                      </div>
-                      <div class="row">
-                       <label class="col-sm-3 col-form-label">Abreviatura :</label>
-                       <div class="col-sm-9">
+                 </div>
+                 <div class="row">
+                       <label class="col-sm-2 col-form-label">Abreviatura</label>
+                       <div class="col-sm-7">
                         <div class="form-group">
                           <input class="form-control" type="text" name="abreviatura" id="abreviatura" autocomplete="off"/>
                         </div>
                         </div>
                       </div>
                       <div class="row">
-                       <label class="col-sm-3 col-form-label">Utilidad Ibnorca :</label>
-                       <div class="col-sm-9">
+                       <label class="col-sm-2 col-form-label">Utilidad Ibnorca</label>
+                       <div class="col-sm-7">
                         <div class="row">
                           <div class="col-sm-4">
                             <div class="form-group has-success">
@@ -74,7 +74,7 @@ $dbh = new Conexion();
                           </div>
                           <div class="col-sm-8">
                             <div class="row">
-                            <label class="col-sm-7 col-form-label">Utilidad Fuera Ibnorca :</label>
+                            <label class="col-sm-7 col-form-label">Utilidad Fuera Ibnorca</label>
                             <div class="col-sm-5">
                               <div class="form-group has-success">
                                 <input class="form-control" type="number" step="0.001" name="utilidad_minfuera" id="utilidad_minfuera"/>
@@ -87,8 +87,56 @@ $dbh = new Conexion();
                        </div>
                       </div><!--row-->
                       <div class="row">
-                       <label class="col-sm-3 col-form-label">Unidad :</label>
-                       <div class="col-sm-9">
+                       <label class="col-sm-2 col-form-label">Alumnos en Ibnorca</label>
+                       <div class="col-sm-7">
+                        <div class="row">
+                          <div class="col-sm-4">
+                            <div class="form-group">
+                                <input class="form-control" type="number" name="cantidad_alumnosibnorca" id="cantidad_alumnosibnorca"/>
+                               
+                              </div>
+                          </div>
+                          <div class="col-sm-8">
+                            <div class="row">
+                            <label class="col-sm-7 col-form-label">Alumnos Fuera de Ibrnoca</label>
+                            <div class="col-sm-5">
+                              <div class="form-group">
+                                <input class="form-control" type="number" name="cantidad_alumnosfuera" id="cantidad_alumnosfuera"/>
+                               
+                              </div>
+                            </div>
+                           </div><!--row--> 
+                          </div> 
+                        </div>
+                       </div>
+                      </div><!--row-->
+                      <div class="row">
+                       <label class="col-sm-2 col-form-label">Precio de Venta Ibnorca</label>
+                       <div class="col-sm-7">
+                        <div class="row">
+                          <div class="col-sm-4">
+                            <div class="form-group">
+                                <input class="form-control" type="number" step="0.001" name="precio_ventaibnorca" id="precio_ventaibnorca"/>
+                                
+                              </div>
+                          </div>
+                          <div class="col-sm-8">
+                            <div class="row">
+                            <label class="col-sm-7 col-form-label">Precio de venta Fuera</label>
+                            <div class="col-sm-5">
+                              <div class="form-group">
+                                <input class="form-control" type="number" step="0.001" name="precio_ventafuera" id="precio_ventafuera"/>
+                                
+                              </div>
+                            </div>
+                           </div><!--row--> 
+                          </div> 
+                        </div>
+                       </div>
+                      </div><!--row-->
+                      <div class="row">
+                       <label class="col-sm-2 col-form-label">Unidad</label>
+                       <div class="col-sm-7">
                         <div class="row">
                           <div class="col-sm-5">
                             <div class="form-group">
@@ -112,7 +160,7 @@ $dbh = new Conexion();
                           </div>
                           <div class="col-sm-7">
                             <div class="row">
-                            <label class="col-sm-2 col-form-label">Area :</label>
+                            <label class="col-sm-2 col-form-label">Area</label>
                             <div class="col-sm-10">
                               <div class="form-group">
                                 <select class="selectpicker form-control" name="area" id="area" data-style="btn btn-info"  required>
@@ -138,15 +186,17 @@ $dbh = new Conexion();
                         </div>
                        </div>
                       </div><!--row-->
-                      <hr>
-                      <div class="form-group float-right">
-                        <a href="../index.php?opcion=listPlantillasCostos" class="btn btn-default btn-round">Cerrar</a>
-                        <button type="button" class="btn btn-primary btn-round" onclick="guardarPlantillaCosto()">Guardar</button>
-                      </div>
-                 <div id="mensaje"></div>
-      </div>  
-    </div></center>
-   </div><!--div nueva plantilla-->
+				
+			  </div>
+			  <br>
+			  <div id="mensaje"></div>
+			  <div class="card-footer  ml-auto mr-auto">
+				<button type="button" class="<?=$buttonNormal;?>" onclick="guardarPlantillaCosto()">Guardar</button>
+				<a href="<?=$urlList?>" class="<?=$buttonCancel;?>">Volver</a>
+			  </div>
+			</div>
+		  </form>
+		</div>
+	    
+	</div>
 </div>
-</form>
-

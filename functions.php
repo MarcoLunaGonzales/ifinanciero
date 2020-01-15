@@ -1805,7 +1805,19 @@ function obtenerCuentaPlantillaCostos($codigo){
    return $stmt;
 }
 
-
+function obtenerCantidadPreciosPlantilla($codPlantilla){
+  $dbh = new Conexion();
+  $sql="";
+  $sql="SELECT count(*) as num FROM precios_plantillacosto where cod_plantillacosto=$codPlantilla";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute(); 
+   $num=0;
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
+  {
+   $num=$row['num'];
+  }
+  return $num;
+}
 
 //================ ========== PARA  planilla sueldos
 

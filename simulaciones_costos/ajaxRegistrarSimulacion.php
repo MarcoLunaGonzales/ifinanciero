@@ -69,10 +69,7 @@ if(isset($_GET['nombre'])){
      }
   }
   
-  ?>
-  <script>window.location.href="../simulaciones_costos/registerSimulacion.php?cod="+<?=$codSimCosto?></script>
-  <?php
-  echo "Registro Satisfactorio";
+  echo $codSimCosto;
 }
 
 ?>

@@ -298,7 +298,7 @@ echo $html;
 
                 </div> 
                 <br><br>
-                <div class="row">
+                <!--<div class="row">
                   <div class="col-sm-6 div-center">
                     <table class="table table-condensed table-striped table-bordered">
                         <thead>
@@ -344,7 +344,7 @@ echo $html;
                         </tbody>
                      </table>
                   </div>
-                </div>                 
+                </div> -->                
                 </div>
                 <div class="card-footer bg-white col-sm-12">
                    <div class="row col-sm-12">
@@ -352,11 +352,11 @@ echo $html;
                        <div class="form-group">
                         <input class="form-control" type="hidden" name="grupo_area" value="<?=$grupoArea?>" id="grupo_area">
                         <input class="form-control" type="hidden" name="grupo_unidad" value="<?=$grupoUnidad?>" id="grupo_unidad"> 
-                           <button type="submit" class="btn btn-info">Guardar</button>
-                           <a href="../<?=$urlList;?>" class="btn btn-default">Cancelar</a>
+                          <!-- <button type="submit" class="btn btn-info">Guardar</button>-->
+                           <a href="../<?=$urlList;?>" class="btn btn-danger">Volver</a>
                        </div>
                      </div>
-                     <div class="col-sm-3">
+                    <!-- <div class="col-sm-3">
                        <div class="form-group">
                            <label class="bmd-label-static">Cantidad de Alumnos Ibnorca</label>
                            <input class="form-control" type="number" name="cantidad_alumnos" value="<?=$detallePlantilla[2]?>" id="cantidad_alumnos" required/>
@@ -368,7 +368,7 @@ echo $html;
                            <input class="form-control" type="number" name="cantidad_alumnos_fuera" value="<?=$detallePlantilla[3]?>" id="cantidad_alumnos_fuera" required/>
                        </div>
                      </div>
-                   </div>
+                   </div>-->
                 </div>
                 
               </div><!--fin DIV card-->
