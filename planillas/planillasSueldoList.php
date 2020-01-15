@@ -9,7 +9,6 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $globalCodUnidad=$_SESSION["globalUnidad"];
 $globalNombreUnidad=$_SESSION["globalNombreUnidad"];
 
-
 $dbh = new Conexion();
 
 if($globalAdmin==1){//para personal admin
@@ -68,10 +67,10 @@ if($globalAdmin==1){//para personal admin
                     if($cod_estadoplanilla==2){
                       $label='<span class="badge badge-warning">';
                       $estadoplanilla='';
-                      $stmtAdmninUOAux = $dbh->prepare("SELECT codigo,abreviatura from unidades_organizacionales where cod_estado=1
-                      GROUP BY 2");
+                      $stmtAdmninUOAux = $dbh->prepare("SELECT cod_uo,abreviatura from configuraciones_planilla_sueldo
+                      GROUP BY abreviatura");
                       $stmtAdmninUOAux->execute();
-                      $stmtAdmninUOAux->bindColumn('codigo', $cod_uo_aux);
+                      $stmtAdmninUOAux->bindColumn('cod_uo', $cod_uo_aux);
                       $stmtAdmninUOAux->bindColumn('abreviatura', $nombre_uo_aux);
                       while ($row = $stmtAdmninUOAux->fetch(PDO::FETCH_BOUND)) {
                         $stmtAdmninUOAux2 = $dbh->prepare("SELECT cod_uo
@@ -200,16 +199,17 @@ if($globalAdmin==1){//para personal admin
                                 <?php 
                               }
                             }
-                          ?>      
-                          </ul>
-                        </div>                                                                 
-                        <?php }?>                          
-                      </td>
-                      <td class="text-center">
-                        <a href="<?=$urlPlanillaContabilizacion;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>">
-                          <i class="material-icons" title="Generar Comprobante" style="color:red">input</i>
-                        </a>
-                      </td>
+                          ?>                          
+                        </ul>
+                      </div>                                                                 
+                      <?php }?>                          
+                    </td>
+            
+                    <td class="text-center">
+                      <a href="<?=$urlPlanillaContabilizacion;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>" target="_blank" > 
+                        <i class="material-icons" title="Generar Comprobante" style="color:red">input</i>
+                      </a>
+                    </td>
 
                     </tr>
                   <?php $index++; } ?>
@@ -531,7 +531,7 @@ if($globalAdmin==1){//para personal admin
     </div>
   </div>
   <!--modal procesar-->
-  <div class="modal fade" id="modalProcesarNA" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <!-- <div class="modal fade" id="modalProcesarNA" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog modal-sm" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -552,7 +552,7 @@ if($globalAdmin==1){//para personal admin
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
   <!--modal Reprocesar-->
   <div class="modal fade" id="modalreProcesarNA" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog modal-sm" role="document">
@@ -563,7 +563,7 @@ if($globalAdmin==1){//para personal admin
         </div>
         <div class="modal-body">
           <input type="hidden" name="codigo_planillaRPNA" id="codigo_planillaRPNA" value="0">        
-          <input type="hidden" name="codigo_cpRPNA" id="codigo_cpRPNA" value="0">        
+          <input type="hidden" name="codigo_uoRPNA" id="codigo_uoRPNA" value="0">        
           Esta acción ReProcesará La planilla Del Mes En Curso. ¿Deseas Continuar?
           <div id="cargaRNA" style="display:none">
             <h3><b>Por favor espere...</b></h3>

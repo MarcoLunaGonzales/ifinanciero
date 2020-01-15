@@ -3090,7 +3090,38 @@ function ajaxAreaContabilizacionDetalle(combo){
     }
   }
   ajax.send(null)  
-}
+}//unidad_area-cargo
+function ajaxAreaCargos(codigo_uo,combo){
+  var contenedor;
+  //var codigo_uo=document.getElementById("cod_uo").value;
+  var codigo_area=combo.value;
+  //alert(codigo_uo+'-'+codigo_area);
+
+  contenedor = document.getElementById('div_contenedor_cargo');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'personal/personal_area_cargos_ajax.php?codigo_uo='+codigo_uo+'&codigo_area='+codigo_area,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);          
+    }
+  }
+  ajax.send(null)  
+}//ajax unidad - personal
+function ajaxOficinaPersonal(combo){
+  var contenedor;
+  var codigo_UO=combo.value;
+  contenedor = document.getElementById('div_contenedor_personal');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'personal/personal_unidad_ajax.php?codigo_UO='+codigo_UO,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);          
+    }
+  }
+  ajax.send(null)  
+}//unidad_area-cargo
 
 var montos_personal=[]; 
 function registrarMontoPersonal(index){

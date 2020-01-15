@@ -79,7 +79,7 @@ $nombreGestion=$_SESSION['globalNombreGestion'];
 				  <label class="col-sm-2 col-form-label">Monto</label>
 				  <div class="col-sm-7">
 					<div class="form-group">
-					  <input class="form-control" type="number" step="any" min="0" name="monto" id="monto" required="true" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+					  <input class="form-control" type="number" step="0.01" min="0" name="monto" id="monto" required="true"/>
 					</div>
 				  </div>
 				</div>
