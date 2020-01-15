@@ -14,10 +14,9 @@ where cod_estadoreferencial=1 and cod_unidad=:cod_UO order by nombre_area";
 $stmt = $db->prepare($sqlUO);
 $stmt->bindParam(':cod_UO', $codigo_UO);
 $stmt->execute();
-
 ?>
-
-<select name="cod_area" id="cod_area" class="selectpicker" data-style="btn btn-primary">
+<select name="cod_area" id="cod_area" class="selectpicker" data-style="btn btn-primary" onchange="ajaxAreaCargos(<?=$codigo_UO;?>,this);" >
+	<option ></option>
     <?php 
     	while ($row = $stmt->fetch()){ 
 	?>

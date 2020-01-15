@@ -1825,8 +1825,8 @@ function obtenerNombrePersonal($cod_personal){
 
 
 function obtenerBonoAntiguedad($minino_salarial,$ing_contr){  
-  $anio_actual= date('Y');
-  //$anio_actual=2019;
+  // $anio_actual= date('Y');
+  $anio_actual=2019;
   $fechaComoEntero = strtotime($ing_contr);
   $anio_inicio = date("Y", $fechaComoEntero);
   $diferencia_anios=$anio_actual-$anio_inicio;
@@ -1856,11 +1856,11 @@ function obtenerBonoAntiguedad($minino_salarial,$ing_contr){
 
 function obtenerTotalBonos($codigo_personal,$dias_trabajados_asistencia,$dias_trabajados_por_defecto)
 {  
-  $mes=date('m');
-  $gestion=date('Y');
+  // $mes=date('m');
+  // $gestion=date('Y');
 
-  // $mes=11;
-  // $gestion=2019;
+  $mes=11;
+  $gestion=2019;
 
   $dbh = new Conexion();
   $sqlGestion = "SELECT codigo from gestiones where nombre=$gestion";
@@ -1881,7 +1881,7 @@ function obtenerTotalBonos($codigo_personal,$dias_trabajados_asistencia,$dias_tr
 
   $sqlBonos1 = "SELECT bpm.monto
   from bonos_personal_mes bpm,bonos b
-  where bpm.cod_bono=b.codigo and bpm.cod_personal=$codigo_personal and bpm.cod_gestion=$cod_gestion and bpm.cod_mes=$cod_mes and bpm.cod_estadoreferencial=1 and b.cod_tipocalculobono=1";
+  where bpm.cod_bono=b.codigo and bpm.cod_personal=$codigo_personal and bpm.cod_gestion=$cod_gestion and bpm.cod_mes=$mes and bpm.cod_estadoreferencial=1 and b.cod_tipocalculobono=1";
   $stmtBonos1 = $dbh->prepare($sqlBonos1);
   $stmtBonos1->execute();
   $stmtBonos1->bindColumn('monto',$monto1);
@@ -1891,7 +1891,7 @@ function obtenerTotalBonos($codigo_personal,$dias_trabajados_asistencia,$dias_tr
   }
     $sqlBonos2 = "SELECT bpm.monto
   from bonos_personal_mes bpm,bonos b
-  where bpm.cod_bono=b.codigo and bpm.cod_personal=$codigo_personal and bpm.cod_gestion=$cod_gestion and bpm.cod_mes=$cod_mes and bpm.cod_estadoreferencial=1 and b.cod_tipocalculobono=2";
+  where bpm.cod_bono=b.codigo and bpm.cod_personal=$codigo_personal and bpm.cod_gestion=$cod_gestion and bpm.cod_mes=$mes and bpm.cod_estadoreferencial=1 and b.cod_tipocalculobono=2";
   $stmtBonos2 = $dbh->prepare($sqlBonos2);
   $stmtBonos2->execute();
   $stmtBonos2->bindColumn('monto',$monto2);
@@ -1997,10 +1997,10 @@ function obtenerAtrasoPersonal($id_personal,$haber_basico){
   $dbh = new Conexion();
   set_time_limit(300);
   //capturando fecha
-  $mes=date('m');
-  $gestion=date('Y');
-  // $mes=11;
-  // $gestion=2019;
+  // $mes=date('m');
+  // $gestion=date('Y');
+  $mes=11;
+  $gestion=2019;
 
   $dbh = new Conexion();
   $sqlGestion = "SELECT codigo from gestiones where nombre=$gestion";
@@ -2037,11 +2037,11 @@ function obtenerAtrasoPersonal($id_personal,$haber_basico){
 }
 function obtenerOtrosDescuentos($codigo_personal)
 {  
-  $mes=date('m');
-  $gestion=date('Y');
+  // $mes=date('m');
+  // $gestion=date('Y');
 
-  // $mes=11;
-  // $gestion=2019;
+  $mes=11;
+  $gestion=2019;
 
   $dbh = new Conexion();
   $sqlGestion = "SELECT codigo from gestiones where nombre=$gestion";
@@ -2078,8 +2078,10 @@ function obtenerAnticipo($id_personal)
 {
   $anticipo=0;
   
-  $mes=date('m');
-  $gestion=date('Y');
+  // $mes=date('m');
+  // $gestion=date('Y');
+  $mes=11;
+  $gestion=2019;
 
   $dbh = new Conexion();
   $sqlGestion = "SELECT codigo from gestiones where nombre=$gestion";

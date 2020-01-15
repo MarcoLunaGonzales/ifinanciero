@@ -337,14 +337,18 @@ $statementestados_personal = $dbh->query($queryestados_personal);
                                     <label class="col-sm-2 col-form-label">Cargo</label>
                                     <div class="col-sm-4">
                                         <div class="form-group">
-                                            <select name="cod_cargo"  class="selectpicker" data-style="btn btn-info" required>
-                                                <?php 
-                                                $queryCargos = "SELECT codigo,nombre,abreviatura from cargos where cod_estadoreferencial=1";
-                                                $statementCargos = $dbh->query($queryCargos);
-                                                while ($row = $statementCargos->fetch()) { ?>
-                                                    <option <?php if($cod_cargo == $row["codigo"]) echo "selected"; ?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
-                                                <?php } ?>
-                                            </select>
+                                            <div id="div_contenedor_cargo">
+                                                <select name="cod_cargo"  class="selectpicker" data-style="btn btn-info" required>
+                                                    <option value=""></option>
+                                                    <?php 
+                                                    $queryCargos = "SELECT codigo,nombre,abreviatura from cargos where cod_estadoreferencial=1";
+                                                    $statementCargos = $dbh->query($queryCargos);
+                                                    while ($row = $statementCargos->fetch()) { ?>
+                                                        <option <?php if($cod_cargo == $row["codigo"]) echo "selected"; ?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                                                    <?php } ?>
+                                                </select>    
+                                            </div>
+                                            
                                         </div>                    
                                     </div>                
                                     <label class="col-sm-2 col-form-label">Grado Académico</label>
@@ -362,7 +366,7 @@ $statementestados_personal = $dbh->query($queryestados_personal);
                                     </div>                                           
                                 </div><!--fin campo cargo -->
                                 <div class="row">
-                                    <label class="col-sm-2 col-form-label">Haber Basico</label>
+                                    <label class="col-sm-2 col-form-label">Haber Basico (Bs)</label>
                                     <div class="col-sm-4">
                                         <div class="form-group">
                                             <input class="form-control" type="text" name="haber_basico" id="haber_basico" value="<?=$haber_basico;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" required/>
@@ -413,10 +417,10 @@ $statementestados_personal = $dbh->query($queryestados_personal);
                                     </div>                                           
                                 </div><!--fin campo cargo -->
                                 <div class="row">
-                                    <label class="col-sm-2 col-form-label">Haber Basico</label>
+                                    <label class="col-sm-2 col-form-label">Haber Basico (Bs)</label>
                                     <div class="col-sm-4">
                                         <div class="form-group">
-                                            <input class="form-control" type="text" name="haber_basico" id="haber_basico" value="<?=$haber_basico;?> Bs." readonly="readonly"/>
+                                            <input class="form-control" type="text" name="haber_basico" id="haber_basico" value="<?=$haber_basico;?>" readonly="readonly"/>
                                         </div>
                                     </div> 
                                     <label class="col-sm-2 col-form-label">Email Empresarial</label>

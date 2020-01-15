@@ -26,7 +26,7 @@ $dbh = new Conexion();
     $haber_basico=$result['haber_basico'];
     $fecha_cambio='0000-00-00';
 
-if($codigo_item==1){?>
+if($codigo_item==1){?><!--oficina - area-->
     <div class="content">
         <div class="container-fluid">
             <div class="col-md-12">
@@ -95,7 +95,7 @@ if($codigo_item==1){?>
         </div>
     </div>
 <?php }
-if($codigo_item==2){?>
+if($codigo_item==2){?> <!--cargo-->
     <div class="content">
         <div class="container-fluid">
             <div class="col-md-12">
@@ -116,10 +116,13 @@ if($codigo_item==2){?>
                                     <div class="form-group">
                                         <select name="cod_cargo"  class="selectpicker" data-style="btn btn-info" required>
                                             <?php 
-                                            $queryCargos = "SELECT codigo,nombre,abreviatura from cargos where cod_estadoreferencial=1";
+                                            $queryCargos = "SELECT ca.cod_cargo,
+                                            (select c.nombre from cargos c where c.codigo=ca.cod_cargo) as nombre_cargo
+                                            from cargos_areasorganizacion ca,areas_organizacion ao
+                                            where ca.cod_estadoreferencial=1 and ca.cod_areaorganizacion=ao.codigo and ao.cod_unidad=$cod_unidadorganizacional and ao.cod_area=$cod_area";
                                             $statementCargos = $dbh->query($queryCargos);
                                             while ($row = $statementCargos->fetch()) { ?>
-                                                <option <?php if($cod_cargo == $row["codigo"]) echo "selected"; ?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                                                <option <?php if($cod_cargo == $row["cod_cargo"]) echo "selected"; ?> value="<?=$row["cod_cargo"];?>"><?=$row["nombre_cargo"];?></option>
                                             <?php } ?>
                                         </select>
                                     </div>                    
@@ -145,7 +148,7 @@ if($codigo_item==2){?>
         </div>
     </div>
 <?php }
-if($codigo_item==3){?>
+if($codigo_item==3){?><!--Grado academico-->
     <div class="content">
         <div class="container-fluid">
             <div class="col-md-12">
@@ -195,7 +198,7 @@ if($codigo_item==3){?>
         </div>
     </div>
 <?php }
-if($codigo_item==4){?>
+if($codigo_item==4){?><!--haber basico-->
     <div class="content">
         <div class="container-fluid">
             <div class="col-md-12">
