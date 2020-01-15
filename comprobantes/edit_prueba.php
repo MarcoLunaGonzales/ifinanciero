@@ -80,7 +80,6 @@ while ($row = $cont->fetch(PDO::FETCH_BOUND)) {
 			 <script>estado_cuentas.push({codigo:<?=$codigoX?>,cod_cuenta:<?=$codPlanCuentaX?>,cod_cuentaaux:<?=$codCuentaAuxX?>,tipo:<?=$tipoX?>});</script>
 		    <?php
 			 }
-		    ?>
 		    
 			$stmt = $dbh->prepare("SELECT codigo, cod_unidadorganizacional, porcentaje FROM distribucion_gastosporcentaje");
 			$stmt->execute();

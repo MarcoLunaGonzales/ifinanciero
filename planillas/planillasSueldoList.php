@@ -199,16 +199,17 @@ if($globalAdmin==1){//para personal admin
                                 <?php 
                               }
                             }
-                          ?>      
-                          </ul>
-                        </div>                                                                 
-                        <?php }?>                          
-                      </td>
-                      <td class="text-center">
-                        <a href="<?=$urlPlanillaContabilizacion;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>">
-                          <i class="material-icons" title="Generar Comprobante" style="color:red">input</i>
-                        </a>
-                      </td>
+                          ?>                          
+                        </ul>
+                      </div>                                                                 
+                      <?php }?>                          
+                    </td>
+            
+                    <td class="text-center">
+                      <a href="<?=$urlPlanillaContabilizacion;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>" target="_blank" > 
+                        <i class="material-icons" title="Generar Comprobante" style="color:red">input</i>
+                      </a>
+                    </td>
 
                     </tr>
                   <?php $index++; } ?>

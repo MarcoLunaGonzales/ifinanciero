@@ -224,30 +224,22 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
                   </a>
                 </li>
                 <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=aportes_patronalesLista">
-                    <span class="sidebar-mini"> AP </span>
-                    <span class="sidebar-normal"> Aportes Patronales</span>
-                  </a>
-                </li>
-                <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=aportes_laboralesLista">
-                    <span class="sidebar-mini"> AL </span>
-                    <span class="sidebar-normal"> Aportes Laborales</span>
-                  </a>
-                </li>
-
-                <li class="nav-item ">
                     <a class="nav-link" href="?opcion=listEscalaAntiguedad">
                       <span class="sidebar-mini"> E </span>
                       <span class="sidebar-normal"> Escalas Antiguedad </span>
                     </a>
                 </li>
-
                 <li class="nav-item ">
                     <a class="nav-link" href="?opcion=listPoliticaDescuento">
                       <span class="sidebar-mini"> PDR </span>
                       <span class="sidebar-normal"> Politicas de Descuento por retrasos </span>
                     </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=personalFinExterna">
+                    <span class="sidebar-mini"> PFE </span>
+                    <span class="sidebar-normal"> Personal Financiaci&oacute;n Externa </span>
+                  </a>
                 </li>
 
 
@@ -398,12 +390,6 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
                   <a class="nav-link" href="?opcion=planillasSueldoPersonal">
                     <span class="sidebar-mini"> PS </span>
                     <span class="sidebar-normal"> Planilla de Sueldos </span>
-                  </a>
-                </li>
-                <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=personalFinExterna">
-                    <span class="sidebar-mini"> PE </span>
-                    <span class="sidebar-normal"> Personal Financiaci&oacute;n Externa </span>
                   </a>
                 </li>
                 
