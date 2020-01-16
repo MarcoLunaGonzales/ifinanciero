@@ -14,7 +14,7 @@ $dbh = new Conexion();
 			<div class="card">
 			  <div class="card-header <?=$colorCard;?> card-header-text">
   				<div class="card-text">
-  				  <h4 class="card-title">Historico De Cambios Del Personal</h4>
+  				  <h4 class="card-title">Histórico De Cambios Del Personal</h4>
   				</div>
 			  </div>
 			  <div class="card-body ">
@@ -23,7 +23,7 @@ $dbh = new Conexion();
             <label class="col-sm-2 col-form-label">Oficina</label>
             <div class="col-sm-7">
               <div class="form-group">
-                <select name="cod_uo" id="cod_uo" class="selectpicker" data-style="btn btn-info" onChange="ajaxOficinaPersonal(this);">
+                <select name="cod_uo" id="cod_uo" class="selectpicker form-control" data-style="btn btn-info" onChange="ajaxOficinaPersonal(this);">
                     <option value=""></option>
                     <?php 
                     $queryUO = "SELECT codigo,nombre from unidades_organizacionales where cod_estado=1 order by nombre";
@@ -32,17 +32,15 @@ $dbh = new Conexion();
                         <option value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
                     <?php } ?>
                 </select>
-
-                
               </div>
             </div>
           </div>
           <div class="row">
             <label class="col-sm-2 col-form-label">Personal</label>
-              <div class="col-sm-4">
+              <div class="col-sm-7">
                 <div class="form-group" >
                     <div id="div_contenedor_personal">
-                        <select class="selectpicker" data-style="btn btn-info">
+                        <select class="selectpicker form-control" data-style="btn btn-info">
                           <option value=""></option>
                         </select>
                     </div>                    

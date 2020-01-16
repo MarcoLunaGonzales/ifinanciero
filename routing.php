@@ -562,12 +562,20 @@
 			require_once('rrhh/deleteestadosplanilla.php');
 		}
 
-		//planillas
+		//planillas sueldos
 		if ($_GET['opcion']=='planillasSueldoPersonal') {
 			require_once('planillas/planillasSueldoList.php'); //ok
 		}
-		if ($_GET['opcion']=='generarPlanillaSueldoPrevia') {
+		if ($_GET['opcion']=='generarPlanillaAguinaldosPrevia') {
 			require_once('planillas/generarPlanillaSueldo.php'); //ok
+		}
+		//planillas aguinaldos
+
+		if ($_GET['opcion']=='planillasAguinaldosPersonal') {
+			require_once('planillas/planillasAguinaldosList.php'); //ok
+		}
+		if ($_GET['opcion']=='generarPlanillaAguinaldosPrevia') {
+			require_once('planillas/generarPlanillaAguinaldos.php'); //ok
 		}
 
 		

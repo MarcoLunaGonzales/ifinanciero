@@ -16,7 +16,7 @@ $stmt = $db->prepare($sqlUO);
 $stmt->bindParam(':cod_UO', $codigo_UO);
 $stmt->execute();
 ?>
-<select name="cod_personal" id="cod_personal" class="selectpicker" data-style="btn btn-primary" >
+<select name="cod_personal" id="cod_personal" class="selectpicker form-control" data-style="btn btn-primary" >
 	<option ></option>
     <?php 
     	while ($row = $stmt->fetch()){ 

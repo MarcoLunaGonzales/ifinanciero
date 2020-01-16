@@ -1560,7 +1560,6 @@ function calculaBonoProfesion($codGrado){
   return($bonoProf);
 }
 
-
 function insertarDotacionPersonaMes($codDotacionPersona,$monto,$nro_meses, $fecha,$codGestion)
 {
   
@@ -1809,24 +1808,9 @@ function obtenerCuentaPlantillaCostos($codigo){
 
 //================ ========== PARA  planilla sueldos
 
-function obtenerNombrePersonal($cod_personal){
-  $dbh = new Conexion();
-  $sqlNombrePersonal =" SELECT primer_nombre, paterno, materno from personal where codigo=$cod_personal";
-  $stmt = $dbh->prepare($sqlNombrePersonal);
-  $stmt->execute();
-  $resultNombrePersonal=$stmt->fetch();
-  $nombre_personal=$resultNombrePersonal['primer_nombre'];
-  $paterno=$resultNombrePersonal['paterno'];
-  $materno=$resultNombrePersonal['materno'];
-  $nombre_completo = $paterno." ".$materno." ".$nombre_personal;
-   return $nombre_completo;
-}
-
-
-
 function obtenerBonoAntiguedad($minino_salarial,$ing_contr){  
-  // $anio_actual= date('Y');
-  $anio_actual=2019;
+  $anio_actual= date('Y');
+  // $anio_actual=2019;
   $fechaComoEntero = strtotime($ing_contr);
   $anio_inicio = date("Y", $fechaComoEntero);
   $diferencia_anios=$anio_actual-$anio_inicio;
@@ -1853,14 +1837,13 @@ function obtenerBonoAntiguedad($minino_salarial,$ing_contr){
   return $total_bono_antiguedad_x;
 
 }
-
 function obtenerTotalBonos($codigo_personal,$dias_trabajados_asistencia,$dias_trabajados_por_defecto)
 {  
-  // $mes=date('m');
-  // $gestion=date('Y');
+  $mes=date('m');
+  $gestion=date('Y');
 
-  $mes=11;
-  $gestion=2019;
+  // $mes=11;
+  // $gestion=2019;
 
   $dbh = new Conexion();
   $sqlGestion = "SELECT codigo from gestiones where nombre=$gestion";
@@ -1969,7 +1952,6 @@ function obtenerAporteSolidario35000($total_ganado){
 }
 function obtenerRC_IVA($total_ganado,$apf_f,$afp_p,$ap_sol_13000,$ap_sol_25000,$ap_sol_35000)
 {
-
   $sueldo=$total_ganado-$apf_f-$afp_p-$ap_sol_13000-$ap_sol_25000-$ap_sol_35000;
   $sueldo_neto=number_format($sueldo);
   $minimo_no_imponible=4244; // no definido m10
@@ -1993,14 +1975,15 @@ function obtenerRC_IVA($total_ganado,$apf_f,$afp_p,$ap_sol_13000,$ap_sol_25000,$
   $dbh = null;
   return ($aporte_rc_iva_neto);
 }
+
 function obtenerAtrasoPersonal($id_personal,$haber_basico){
   $dbh = new Conexion();
   set_time_limit(300);
   //capturando fecha
-  // $mes=date('m');
-  // $gestion=date('Y');
-  $mes=11;
-  $gestion=2019;
+  $mes=date('m');
+  $gestion=date('Y');
+  // $mes=11;
+  // $gestion=2019;
 
   $dbh = new Conexion();
   $sqlGestion = "SELECT codigo from gestiones where nombre=$gestion";
@@ -2037,11 +2020,11 @@ function obtenerAtrasoPersonal($id_personal,$haber_basico){
 }
 function obtenerOtrosDescuentos($codigo_personal)
 {  
-  // $mes=date('m');
-  // $gestion=date('Y');
+  $mes=date('m');
+  $gestion=date('Y');
 
-  $mes=11;
-  $gestion=2019;
+  // $mes=11;
+  // $gestion=2019;
 
   $dbh = new Conexion();
   $sqlGestion = "SELECT codigo from gestiones where nombre=$gestion";
@@ -2078,10 +2061,10 @@ function obtenerAnticipo($id_personal)
 {
   $anticipo=0;
   
-  // $mes=date('m');
-  // $gestion=date('Y');
-  $mes=11;
-  $gestion=2019;
+  $mes=date('m');
+  $gestion=date('Y');
+  // $mes=11;
+  // $gestion=2019;
 
   $dbh = new Conexion();
   $sqlGestion = "SELECT codigo from gestiones where nombre=$gestion";
@@ -2123,6 +2106,44 @@ function obtener_aporte_patronal_general($cod_config_planilla,$total_ganado){
   $stmt = null;
   $dbh = null;
   return($aporte_p_seguro_medico_X);
+}
+//planillas aguinaldos
+function Verificar_si_corresponde_Aguinaldo($ing_contr){
+  //$anio_actual= date('Y');
+  $anio_actual=2019;
+  $fechaComoEntero = strtotime($ing_contr);
+  $anio_ingreso = date("Y", $fechaComoEntero);
+  $mes_ingreso = date("m", $fechaComoEntero);
+  $diferencia_anios=$anio_actual-$anio_ingreso;
+  $diferencia_meses=12-$mes_ingreso;
+  if($diferencia_anios>0){
+    $sw=1;
+  }elseif($diferencia_meses>2){
+    $sw=1;
+  }else $sw=0;
+}
+function obtner_id_planilla($cod_gestion,$cod_mes){
+  $dbh = new Conexion();
+  $stmt = $dbh->prepare("SELECT codigo from planillas
+  where cod_gestion=$cod_gestion and cod_mes=$cod_mes");
+  $stmt->execute();
+  $result=$stmt->fetch();
+  $codigo=$result['codigo'];
+  $dbh = '';
+  $stmt = '';
+  return ($codigo);
+}
+function obtnerSueldomes($cod_personal,$cod_planilla){
+  $dbh = new Conexion();
+  set_time_limit(300);
+  $stmt = $dbh->prepare("SELECT liquido_pagable from planillas_personal_mes
+  where cod_planilla=$cod_planilla and cod_personalcargo=$cod_personal");
+  $stmt->execute();
+  $result=$stmt->fetch();
+  $liquido_pagable=$result['liquido_pagable'];
+  $dbh = '';
+  $stmt = '';
+  return ($liquido_pagable);
 }
 
 //=======

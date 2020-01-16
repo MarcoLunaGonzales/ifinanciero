@@ -389,7 +389,13 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=planillasSueldoPersonal">
                     <span class="sidebar-mini"> PS </span>
-                    <span class="sidebar-normal"> Planilla de Sueldos </span>
+                    <span class="sidebar-normal"> Planilla De Sueldos </span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=planillasAguinaldosPersonal">
+                    <span class="sidebar-mini"> PS </span>
+                    <span class="sidebar-normal"> Planilla De Aguinaldos </span>
                   </a>
                 </li>
                 

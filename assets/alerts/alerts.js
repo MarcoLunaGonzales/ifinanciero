@@ -33,11 +33,16 @@ alerts = {
         })
     }
     else if(type == 'error-message3'){
-      swal("Informativo!", "La planilla previa del mes ya fue registrada. Reprosesar planilla.", "warning")
+      swal("Informativo!", "La planilla del mes ya fue registrada. Por favor Prosesar/Reprosesar planilla.", "warning")
           .then((value) => {
           location.href=url;
       });
-
+    }
+    else if(type == 'error-message4'){
+      swal("Informativo!", "La planilla del año en curso ya fue registrada. Por favor Prosesar/Reprosesar planilla.", "warning")
+          .then((value) => {
+          location.href=url;
+      });
     }
   },
 

@@ -2487,7 +2487,6 @@ function agregaformPreTrib(datos,plan,mes,tiempo,user){
   document.getElementById("codigo_planilla_trib").value=datos;
 }
 function ProcesarPlanilla(cod_planilla){
-  alert(cod_planilla)
   $.ajax({
     type:"POST",
     data:"cod_planilla="+cod_planilla+"&sw=2",
@@ -2639,6 +2638,101 @@ function CerrarPlanillaNA(cod_planilla){
     }
   });
 }
+//funciones par planilla aguinaldos
+function ProcesarPlanillaAguinaldos(cod_planilla){
+  $.ajax({
+    type:"POST",
+    data:"cod_planilla="+cod_planilla+"&sw=2",
+    url:"planillas/savePlanillaAguinaldos.php",
+    beforeSend:function(objeto){ 
+      $('#cargaP').css({display:'block'});
+      $('#AceptarProceso').css({display:'none'});
+      $('#CancelarProceso').css({display:'none'});  
+    },
+    success:function(r){
+      if(r==1){
+        //$('#tabla1').load('activosFijos/afEnCustodia.php');
+        $('#cargaP').css('display','none');
+        alerts.showSwal('success-message','index.php?opcion=planillasAguinaldosPersonal');
+      }else{
+        $('#cargaP').css('display','none');
+        alerts.showSwal('error-message','index.php?opcion=planillasAguinaldosPersonal');
+      }
+    }
+  });
+}
+function ReprocesarPlanillaAguinaldos(cod_planilla){
+  $.ajax({
+    type:"POST",
+    data:"cod_planilla="+cod_planilla+"&sw=1",
+    url:"planillas/savePlanillaAguinaldos.php",
+    beforeSend:function(objeto){ 
+      $('#cargaR').css({display:'block'});
+      $('#AceptarReProceso').css({display:'none'});
+      $('#CancelarReProceso').css({display:'none'});  
+    },
+    success:function(r){
+      if(r==1){
+        $('#cargaR').css('display','none');
+        alerts.showSwal('success-message','index.php?opcion=planillasAguinaldosPersonal');
+      }else{
+        $('#cargaR').css('display','none');
+        alerts.showSwal('error-message','index.php?opcion=planillasAguinaldosPersonal');
+      }
+    }
+  });
+}
+function CerrarPlanillaAguinaldos(cod_planilla){
+  $.ajax({
+    type:"POST",
+    data:"cod_planilla="+cod_planilla+"&sw=3",
+    url:"planillas/savePlanillaAguinaldos.php",
+    success:function(r){
+      if(r==1){
+        //$('#tabla1').load('activosFijos/afEnCustodia.php');
+        //alertify.success("agregado");
+        alerts.showSwal('success-message','index.php?opcion=planillasAguinaldosPersonal');
+      }
+    }
+  });
+}
+function ReprocesarPlanillaAguialdosNA(cod_planilla,cod_uo){
+  $.ajax({
+    type:"POST",
+    data:"cod_planilla="+cod_planilla+"&sw=1&cod_uo="+cod_uo,
+    url:"planillas/savePlanillaAguialdosNA.php",
+    beforeSend:function(objeto){ 
+      $('#cargaRNA').css({display:'block'});
+      $('#AceptarReProcesoNA').css({display:'none'});
+      $('#CancelarReProcesoNA').css({display:'none'});  
+    },
+    success:function(r){
+      if(r==1){
+        $('#cargaRNA').css('display','none');
+        alerts.showSwal('success-message','index.php?opcion=planillasAguinaldosPersonal');
+      }else{
+        $('#cargaRNA').css('display','none');
+        alerts.showSwal('error-message','index.php?opcion=planillasAguinaldosPersonal');
+      }
+    }
+  });
+}
+function CerrarPlanillaAguinaldosNA(cod_planilla){
+  $.ajax({
+    type:"POST",
+    data:"cod_planilla="+cod_planilla+"&sw=3&cod_uo="+cod_uo,
+    url:"planillas/savePlanillaAguialdosNA.php",
+    success:function(r){
+      if(r==1){
+        //$('#tabla1').load('activosFijos/afEnCustodia.php');
+        //alertify.success("agregado");
+        alerts.showSwal('success-message','index.php?opcion=planillasAguinaldosPersonal');
+      }
+    }
+  });
+}
+
+
 //=======
 function calcularTotalPartida(){
   var suma=0;

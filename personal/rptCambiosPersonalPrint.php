@@ -32,7 +32,6 @@ $stmtuo->execute();
 $resultUO=$stmtuo->fetch();
 $nombre_uo=$resultUO['nombre'];
 $abreviatura_uo=$resultUO['abreviatura'];
-
 ?>
 
 
@@ -45,14 +44,13 @@ $abreviatura_uo=$resultUO['abreviatura'];
                   <div class="float-right col-sm-2">
                     <!-- <h6 class="card-title">Exportar como:</h6> -->
                   </div>
-                  <h4 class="card-title"> <img  class="card-img-top"  src="../marca.png" style="width:100%; max-width:250px;">  Reporte De Cambios Del Personal</h4>
+                  <h4 class="card-title"> <img  class="card-img-top"  src="../marca.png" style="width:100%; max-width:250px;">Histórico De Cambios Del Personal</h4>
                   <!--<h6 class="card-title">Gestion: <?=$nameGestion;?></h6>  -->
                 </div>
                 
                 <div class="card-body">
                   <div class="table-responsive">
                     <?php
-                      
                         $sqlPersonal="SELECT codigo,primer_nombre,paterno,materno,haber_basico,
                         (select c.nombre from cargos c where c.codigo=cod_cargo) as nombre_cargo,
                         (SELECT ga.nombre from personal_grado_academico ga where ga.codigo = cod_grado_academico)as nombre_grado 
@@ -87,17 +85,18 @@ $abreviatura_uo=$resultUO['abreviatura'];
                               </thead>
                               <tbody>
                                 <?php 
-                                $sqlPersonaluo="SELECT tipo,descripcion,fecha_cambio
+                                $sqlPersonaluo="SELECT descripcion,fecha_cambio,
+                                      (SELECT th.nombre from tipos_historico_personal th where th.codigo=tipo)as nombre_tipo
                                       from historico_cambios_personal where cod_personal=$codigo_personal order by fecha_cambio desc";
                                   $stmtPersonaluo = $dbh->prepare($sqlPersonaluo);
                                   $stmtPersonaluo->execute();
-                                  $stmtPersonaluo->bindColumn('tipo', $tipo);
+                                  $stmtPersonaluo->bindColumn('nombre_tipo', $nombre_tipo);
                                   $stmtPersonaluo->bindColumn('descripcion', $descripcion);
                                   $stmtPersonaluo->bindColumn('fecha_cambio', $fecha_cambio);
                                   while ($row = $stmtPersonaluo->fetch(PDO::FETCH_ASSOC)) {?>
                                     <tr>
                                       <td class="text-left small"><?=$fecha_cambio;?></td>
-                                      <td class="text-left small"><?=$tipo?></td>
+                                      <td class="text-left small"><?=$nombre_tipo?></td>
                                       <td class="text-left small"><?=$descripcion?></td>
                                     </tr>
                                     <?php
