@@ -10,7 +10,8 @@ $urlList2="index.php?opcion=listPlantillasCostosAdmin";
 
 $urlReporte="plantillas_costos/reportePlanCosto.php";
 $urlRegister="plantillas_costos/registerGrupos.php";
-$urlRegister2="plantillas_costos/register.php";
+//$urlRegister2="plantillas_costos/register.php";
+$urlRegister2="index.php?opcion=registerPlantillaCosto";
 $urlEdit="index.php?opcion=editComprobante";
 $urlEdit2="plantillas_costos/edit.php";
 $urlArchivo="comprobantes/archivoComprobante.php";

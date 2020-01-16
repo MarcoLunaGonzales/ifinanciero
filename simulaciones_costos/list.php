@@ -102,16 +102,16 @@ $stmt->bindColumn('estado', $estado);
                             <?php    
                               }else{
                               ?>
-                            <!--<a href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=4&admin=0' rel="tooltip" itle="Enviar Solicitud" class="btn btn-warning">
+                            <!--<a href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=4&admin=0' itle="Enviar Solicitud" class="btn btn-warning">
                               <i class="material-icons">send</i>
                             </a>-->  
-                            <a title="Editar Simulación - Detalle" href='<?=$urlRegister;?>?cod=<?=$codigo;?>' rel="tooltip" class="btn btn-info">
+                            <a title="Editar Simulación - Detalle" href='<?=$urlRegister;?>?cod=<?=$codigo;?>' class="btn btn-primary">
                               <i class="material-icons">list</i>
                             </a>
-                            <a title="Editar Simulación" href='<?=$urlEdit;?>&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonEdit;?>">
+                            <a title="Editar Simulación" href='<?=$urlEdit;?>&codigo=<?=$codigo;?>' class="<?=$buttonEdit;?>">
                               <i class="material-icons"><?=$iconEdit;?></i>
                             </a>
-                            <button title="Eliminar Simulación" rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')">
+                            <button title="Eliminar Simulación" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')">
                               <i class="material-icons"><?=$iconDelete;?></i>
                             </button>
                               <?php  
@@ -128,7 +128,7 @@ $stmt->bindColumn('estado', $estado);
                 </div>
               </div>
               <div class="card-footer fixed-bottom">
-                <a href="#" onclick="javascript:window.open('<?=$urlRegister2;?>')" class="<?=$buttonNormal;?>">Nueva Simulacion</a>
+                <a href="#" onclick="javascript:window.open('<?=$urlRegister2;?>')" class="<?=$buttonNormal;?>">Registrar</a>
               </div>      
             </div>
           </div>  

@@ -1219,18 +1219,20 @@ function obtenerMontoPorCuenta($numero,$unidad,$area,$fecha){
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       $numero=trim($row['numero']);
       $cuenta=$row['cod_cuenta'];
-      $sum+= ejecutadoEgresosMes($unidad, $fecha, $mes, $area, 0, $numero);
+      $tipoSim=obtenerValorConfiguracion(13);
+      if($tipoSim==1){
+       $sum+= ejecutadoEgresosMes($unidad, $fecha, $mes, $area, 1, $numero);
+       $sum=$sum/12; 
+      }else{
+       $sum+= ejecutadoEgresosMes($unidad, $fecha, $mes, $area, 0, $numero);
+      }
+      
       //$sum+=(float)obtenerMontoPorCuenta($numero,$unidad,$area,$fecha);      
     }
-    /*$sql="SELECT * from configuraciones where id_configuracion=6";
-    $dbh = new Conexion(); 
-    $stmt = $dbh->prepare($sql);
-    $stmt->execute();
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-      $valor=trim($row['valor_configuracion']);
-    }
-    return redondearDecimal($sum/(int)$valor);*/
-    return $sum;
+    
+      $valor=obtenerValorConfiguracion(6);
+    return redondearDecimal($sum/(int)$valor);
+    //return $sum;
   }
     function calcularCostosPres($id,$unidad,$area,$fecha){
      $sql="SELECT p.cod_partidapresupuestaria,p.cod_cuenta,c.numero FROM partidaspresupuestarias_cuentas p join plan_cuentas c on p.cod_cuenta=c.codigo where p.cod_partidapresupuestaria=$id";
@@ -1272,6 +1274,17 @@ function obtenerMontoPorCuenta($numero,$unidad,$area,$fecha){
         $alumnosExternoX=$row['cantidad_alumnosexterno'];
      }
      return array($precioLocalX,$precioExternoX,$alumnosX,$alumnosExternoX);
+   } 
+
+   function obtenerPreciosPorCodigo($codigo){
+     $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT * FROM precios_plantillacosto where codigo=$codigo");
+     $stmt->execute();
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $precioLocalX=$row['venta_local'];
+        $precioExternoX=$row['venta_externo'];
+     }
+     return array($precioLocalX,$precioExternoX);
    }  
 
    //FUNCION DE SIMULACION OBTENER VALORES TOTALES TIPO FIJO O VARIABLE
@@ -1804,7 +1817,19 @@ function obtenerCuentaPlantillaCostos($codigo){
    return $stmt;
 }
 
-
+function obtenerCantidadPreciosPlantilla($codPlantilla){
+  $dbh = new Conexion();
+  $sql="";
+  $sql="SELECT count(*) as num FROM precios_plantillacosto where cod_plantillacosto=$codPlantilla";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute(); 
+   $num=0;
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
+  {
+   $num=$row['num'];
+  }
+  return $num;
+}
 
 //================ ========== PARA  planilla sueldos
 

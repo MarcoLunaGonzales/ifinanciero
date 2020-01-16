@@ -507,6 +507,9 @@ function modalPlantilla(){
   $('#modalPlantilla').modal('show');
   }
 }
+function ayudaPlantilla(){
+  alertaModal("<h5><b>AYUDA</b></h5>Los campos en la sección 'REGISTRAR PLANTILLA DE COSTO' son modificables y cuando se presione en el botón 'GUARDAR' ubicado en la parte inferior. También se guardaran los cambios realizados en dicha sección",'bg-secondary','text-white');
+}
 //plantilla guardar
 function guardarPlantilla(){
   var cod=$("#codigo_comprobante").val();
@@ -861,22 +864,26 @@ function guardarPlantillaCosto(){
   var area=$("#area").val();
   var utilidadLocal=$("#utilidad_minibnorca").val();
   var utilidadExterna=$("#utilidad_minfuera").val();
-  var area=$("#area").val();
-  if(utilidadLocal==""||utilidadExterna==""||nombre==""||abrev==""||!(unidad>0)||!(area>0)){
-   $("#mensaje").html("<center><p class='text-danger'>Todos los campos son requeridos.</p></center>");
+  var alumnosLocal=$("#cantidad_alumnosibnorca").val();
+  var alumnosExterno=$("#cantidad_alumnosfuera").val();
+  var precioLocal=$("#precio_ventaibnorca").val();
+  var precioExterno=$("#precio_ventafuera").val();
+
+  if(alumnosLocal==""||alumnosExterno==""||precioLocal==""||precioExterno==""||utilidadLocal==""||utilidadExterna==""||nombre==""||abrev==""||!(unidad>0)||!(area>0)){
+    Swal.fire("Informativo!", "Todos los campos son requeridos", "warning");
   }else{
-     var parametros={"nombre":nombre,"abrev":abrev,"unidad":unidad,"area":area,"utilidad_local":utilidadLocal,"utilidad_externo":utilidadExterna};
+     var parametros={"nombre":nombre,"abrev":abrev,"unidad":unidad,"area":area,"utilidad_local":utilidadLocal,"utilidad_externo":utilidadExterna,"alumnos_local":alumnosLocal,"alumnos_externo":alumnosExterno,"precio_local":precioLocal,"precio_externo":precioExterno};
      $.ajax({
         type: "GET",
         dataType: 'html',
-        url: "ajaxRegistrarPlantilla.php",
+        url: "plantillas_costos/ajaxRegistrarPlantilla.php",
         data: parametros,
         beforeSend: function () { 
-         $("#mensaje").html("<center><p class='text-warning'>Procesando. Espere...</p></center>");
+         Swal.fire("Informativo!", "Procesando datos! espere...", "warning");
           
         },
         success:  function (resp) {
-         $("#mensaje").html("<center><p class='text-success'>"+resp+"</p></center>");
+         alerts.showSwal('success-message','plantillas_costos/registerGrupos.php?cod='+resp);
         }
     });
   }
@@ -890,7 +897,19 @@ function listDetalle(id){
    listarDet(id);
    $("#modalDet").modal("show");
  }
-
+function mostrarPreciosPlantilla(){
+  $("#modalPrecio").modal("show");
+  var parametros={"codigo":$("#cod_plantilla").val()};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxListPrecioPlantilla.php",
+        data: parametros,
+        success:  function (resp) {
+         $("#lista_preciosplantilla").html(resp);
+        }
+    });
+}
  function listarDet(id){
   var div=$('<div>').addClass('table-responsive');
   var table = $('<table>').addClass('table table-condensed');
@@ -1408,24 +1427,25 @@ function guardarSimulacionCosto(){
       var ibnorca=2;
   }
   if(nombre==""||!(plantilla_costo>0)){
-   $("#mensaje").html("<center><p class='text-danger'>Todos los campos son requeridos.</p></center>");
+   Swal.fire('Informativo!','Debe llenar los campos!','warning'); 
   }else{
      var parametros={"nombre":nombre,"plantilla_costo":plantilla_costo,"precio":precio,"ibnorca":ibnorca};
      $.ajax({
         type: "GET",
         dataType: 'html',
-        url: "ajaxRegistrarSimulacion.php",
+        url: "simulaciones_costos/ajaxRegistrarSimulacion.php",
         data: parametros,
         beforeSend: function () { 
-         $("#mensaje").html("<center><p class='text-warning'>Procesando. Espere...</p></center>");
+         Swal.fire("Informativo!", "Procesando datos! espere...", "warning");
           
         },
         success:  function (resp) {
-         $("#mensaje").html("<center><p class='text-success'>"+resp+"</p></center>");
+         alerts.showSwal('success-message','simulaciones_costos/registerSimulacion.php?cod='+resp);
         }
     });
   }
 }
+
 function cargarPlantillaSimulacion(mes,ibnorca){
   var plantilla_costo=$("#plantilla_costo").val();
   var precio=$("#precio_venta").val();
@@ -1467,6 +1487,25 @@ function presioneBoton(){
 }
 
 function guardarSimulacion(valor){
+  Swal.fire({
+        title: '¿Esta Seguro?',
+        text: "La simulación se enviará para su posterior revisión",
+         type: 'warning',
+        showCancelButton: true,
+        confirmButtonClass: 'btn btn-info',
+        cancelButtonClass: 'btn btn-danger',
+        confirmButtonText: 'Si',
+        cancelButtonText: 'No',
+        buttonsStyling: false
+       }).then((result) => {
+          if (result.value) {
+               enviarSimulacionAjax();            
+            return(true);
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            return(false);
+          }
+        });
+/*
   var nombre=$("#nombre").val();
   var plantilla_costo=$("#plantilla_costo").val();
   var plantilla_costo_actual=$("#cod_plantilla").val();  
@@ -1502,7 +1541,7 @@ function guardarSimulacion(valor){
         }
       }           
     }
-  }
+  }*/
 }
 function guardarSimulacionAjax(valor){
   var codigo=$("#cod_simulacion").val();
@@ -1549,8 +1588,12 @@ function enviarSimulacionAjax(){
         },
         success:  function (resp) {
          $("#logo_carga").hide();
-         $('#msgError4').html("<p class='text-dark font-weight-bold'>"+resp+"Se envio la Simulacion</p>");
-         $('#modalSend').modal('show');
+         Swal.fire("Envío Existoso!", "Se registradon los datos exitosamente!", "success")
+             .then((value) => {
+             location.href="../index.php?opcion=listSimulacionesCostos";
+         });
+         /*$('#msgError4').html("<p class='text-dark font-weight-bold'>"+resp+"Se envio la Simulacion</p>");
+         $('#modalSend').modal('show');*/
         }
     });
 }
@@ -1745,15 +1788,21 @@ $(document).on("shown.bs.modal","#modalRetencion",function(){
   var precioLocal=$("#precio_venta_ibnorca").val();
   var precioExterno=$("#precio_venta_fuera").val();
   if(precioLocal==""||precioExterno==""){
-   alertaModal("Debe ingresar los precios","bg-warning","text-dark");
+   Swal.fire('Informativo!','Debe llenar los campos!','warning');  
   }else{
     ajax=nuevoAjax();
     ajax.open("GET","ajaxRegistrarPrecio.php?local="+precioLocal+"&externo="+precioExterno+"&codigo="+codigo,true);
     ajax.onreadystatechange=function(){
     if (ajax.readyState==4) {
-      var fi=$("#contenido_precio");
+      if($("#contenido_precio").length){
+        var fi = $("#contenido_precio");
       fi.html(ajax.responseText);
       fi.bootstrapMaterialDesign();
+      }else{
+         mostrarPreciosPlantilla();
+         Swal.fire('Correcto!','La transaccion tuvo exito!','success'); 
+      }
+      
       $("#precio_venta_ibnorca").val("");
       $("#precio_venta_fuera").val("");
     }
@@ -1766,9 +1815,15 @@ $(document).on("shown.bs.modal","#modalRetencion",function(){
     ajax.open("GET","ajaxDeletePrecio.php?cod="+cod+"&codigo="+codigo,true);
     ajax.onreadystatechange=function(){
     if (ajax.readyState==4) {
+      if($("#contenido_precio").length){
       var fi=$("#contenido_precio");
       fi.html(ajax.responseText);
       fi.bootstrapMaterialDesign();
+      }else{
+        mostrarPreciosPlantilla();
+         Swal.fire('Borrado!','Se borraron los datos exitosamente!','success');
+      }
+      
       $("#precio_venta_ibnorca").val("");
       $("#precio_venta_fuera").val("");
     }
@@ -1795,7 +1850,25 @@ $(document).on("shown.bs.modal","#modalRetencion",function(){
    }
     ajax.send(null);
  }
-
+function listarPreciosPlantillaSim(codigo,label,ibnorca){
+  var url="";
+  if(label=="sin"){
+   url="simulaciones_costos/listComboPrecio.php";
+  }else{
+   url="plantillas_costos/ajaxListaComboPrecio.php";
+  }
+  ajax=nuevoAjax();
+    ajax.open("GET",url+"?codigo="+codigo+"&ibnorca="+ibnorca,true);
+    ajax.onreadystatechange=function(){
+    if (ajax.readyState==4) {
+      var fi=$("#lista_precios");
+      fi.html(ajax.responseText);
+      fi.bootstrapMaterialDesign();
+       $('.selectpicker').selectpicker("refresh");
+    }
+   }
+    ajax.send(null);
+ }
  //////////////////////reporte mayores desde comprobante////////////
 function mayorReporteComprobante(fila){
  if($("#cuenta"+fila).val()==""){
@@ -2091,15 +2164,18 @@ function agregarRetencionSolicitud(){
 //perosnal area distribucion
 }
 function modificarMontos(){
+  $('#modalEditPlantilla').modal('hide');
   $('#modalSimulacionCuentas').modal('show');
 }
 function cargarCuentasSimulacion(cods,ib){
   var fi = $('#cuentas_simulacion');
   var codp=$("#partida_presupuestaria").val();
   var codpar=$("#cod_plantilla").val();
+  var al_i=$("#alumnos_plan").val();
+  var al_f=$("#alumnos_plan_fuera").val();
   if(codp!=""){
   ajax=nuevoAjax();
-  ajax.open("GET","ajaxCargarCuentas.php?codigo="+codp+"&codSim="+cods+"&ibnorca="+ib+"&codPar="+codpar,true);
+  ajax.open("GET","ajaxCargarCuentas.php?codigo="+codp+"&codSim="+cods+"&ibnorca="+ib+"&codPar="+codpar+"&al_i="+al_i+"&al_f="+al_f,true);
   ajax.onreadystatechange=function(){
         if (ajax.readyState==4) {
           fi.html("");
@@ -2739,6 +2815,11 @@ function calcularTotalPartida(){
   var total= $("#numero_cuentas").val();
   var monto_anterior=parseFloat($("#monto_designado").val());
   for (var i=1;i<=(total-1);i++){
+    if($("#cod_ibnorca").val()==1){
+    $("#monto_mod"+i).val(parseFloat($("#monto_modal"+i).val())*parseInt($("#alumnos_plan").val()));
+    }else{
+     $("#monto_mod"+i).val(parseFloat($("#monto_modal"+i).val())*parseInt($("#alumnos_plan_fuera").val()));
+    }
     suma+=parseFloat($("#monto_mod"+i).val());
   }
   const rest=Math.abs(suma-monto_anterior);
@@ -3341,7 +3422,125 @@ function mandarDatosBonoIndefinido(){
   $("#obs").val(respuesta[2]);
 }
 
+function editarDatosSimulacion(){
+  var cod_i=$("#cod_ibnorca").val();
+  var nombre_s=$("#nombre").val();
+  $("#modal_nombresim").val(nombre_s);
+  $("#modal_tiposim").val(cod_i);
+  $('.selectpicker').selectpicker("refresh");
 
+  $("#modalEditSimulacion").modal("show");
+}
+function guardarDatosSimulacion(btn_id){
+  var codigo_s=$("#cod_simulacion").val();
+   var nombre_s=$("#modal_nombresim").val();
+   var cod_i=$("#modal_tiposim").val();   
+   var parametros={"codigo":codigo_s,"nombre":nombre_s,"ibnorca":cod_i};
+
+  if(nombre_s!=""){
+  $("#"+btn_id).attr("disabled",true); 
+  $.ajax({
+    url: "ajaxSaveDatosSimulacion.php",
+    type: "GET",
+    data: parametros,
+    dataType: "html",
+    success: function (resp) {   
+     Swal.fire("Correcto!", "El proceso fue satisfactorio!", "success");
+     $("#"+btn_id).removeAttr("disabled"); 
+     $("#nombre").val(nombre_s);
+     $("#cod_ibnorca").val(cod_i);
+     if(cod_i==1){
+       $("#ibnorca").val("IBNORCA"); 
+     }else{
+       $("#ibnorca").val("FUERA DE IBNORCA"); 
+     } 
+     $("#modalEditSimulacion").modal("hide");        
+    },
+    error: function (xhr, ajaxOptions, thrownError) {
+     Swal.fire("Error de envio!", "Verifique los datos e intentelo de nuevo", "error");
+      $("#"+btn_id).removeAttr("disabled"); 
+    }
+  });    
+  }else{
+    Swal.fire("Informativo!", "Debe llenar todos los campos", "warning");
+  }
+}
+function editarDatosPlantilla(){
+  $("#modal_utibnorca").val($("#utilidad_minlocal").val());
+  $("#modal_utifuera").val($("#utilidad_minext").val());
+  $("#modal_alibnorca").val($("#alumnos_plan").val());
+  $("#modal_alfuera").val($("#alumnos_plan_fuera").val());
+  $("#modal_importeplan").val($("#cod_precioplantilla").val());
+
+  $('.selectpicker').selectpicker("refresh");
+ $("#modalEditPlantilla").modal("show"); 
+}
+function guardarDatosPlantilla(btn_id){
+  var codigo_p=$("#cod_plantilla").val();
+  var cod_sim=$("#cod_simulacion").val();
+   var ut_i=$("#modal_utibnorca").val();
+   var ut_f=$("#modal_utifuera").val();
+   var al_i=$("#modal_alibnorca").val();
+   var al_f=$("#modal_alfuera").val(); 
+   var precio_p=$("#modal_importeplan").val(); 
+
+   var parametros={"cod_sim":cod_sim,"codigo":codigo_p,"ut_i":ut_i,"ut_f":ut_f,"al_i":al_i,"al_f":al_f,"precio_p":precio_p};
+
+  if(!(ut_i==""||ut_f==""||al_i==""||al_f=="")){
+  $("#"+btn_id).attr("disabled",true); 
+  $.ajax({
+    url: "ajaxSaveDatosPlantilla.php",
+    type: "GET",
+    data: parametros,
+    dataType: "html",
+    success: function (resp) {   
+     Swal.fire("Correcto!", "El proceso fue satisfactorio!", "success");
+     $("#"+btn_id).removeAttr("disabled"); 
+      var precios=resp.split('$$$');
+      $("#precio_local").val(precios[0].trim());
+      $("#precio_externo").val(precios[1].trim());
+      $("#cod_precioplantilla").val(precio_p);
+
+      $("#utilidad_minlocal").val(ut_i);
+      $("#utilidad_minext").val(ut_f);
+      $("#alumnos_plan").val(al_i);
+      $("#alumnos_plan_fuera").val(al_f);    
+
+     $("#modalEditPlantilla").modal("hide");
+     $("#narch").addClass("estado");        
+    },
+    error: function (xhr, ajaxOptions, thrownError) {
+     Swal.fire("Error de envio!", "Verifique los datos e intentelo de nuevo", "error");
+      $("#"+btn_id).removeAttr("disabled"); 
+    }
+  });    
+  }else{
+    Swal.fire("Informativo!", "Debe llenar todos los campos", "warning");
+  }
+}
+
+function actualizarSimulacion(){
+  var codigo=$("#cod_simulacion").val();
+   Swal.fire({
+        title: '¿Esta Seguro?',
+        text: "Los datos de la simulación se actualizarán!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonClass: 'btn btn-info',
+        cancelButtonClass: 'btn btn-danger',
+        confirmButtonText: 'Si',
+        cancelButtonText: 'No',
+        buttonsStyling: false
+      }).then((result) => {           
+         if (result.value) {
+            location.href='registerSimulacion.php?cod='+codigo;
+            $("#narch").removeClass("estado");
+            return(true);
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            return(false);
+          }
+         });
+}
 //funciones despues de cargar pantalla
 
 $(document).ready(function() {

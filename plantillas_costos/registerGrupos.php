@@ -52,6 +52,8 @@ if(isset($_GET['cod'])){
             $stmt->bindColumn('estado_plantilla', $estadoX);
             $stmt->bindColumn('utilidad_minimalocal', $utilidadIbnorcaX);
             $stmt->bindColumn('utilidad_minimaexterno', $utilidadFueraX);
+            $stmt->bindColumn('cantidad_alumnoslocal', $alumnosLocalX);
+            $stmt->bindColumn('cantidad_alumnosexterno', $alumnosExternoX);
 ?>
 <form id="formRegDet" class="form-horizontal" action="saveEdit.php" method="post" enctype="multipart/form-data">
 <div class="content">
@@ -116,6 +118,33 @@ if(isset($_GET['cod'])){
 						  		<input class="form-control" type="text" name="area" value="<?=$areaX?>" id="area" readonly/>
 							</div>
 				      	</div>
+				      </div>
+				      <div class="row">
+				      	<div class="col-sm-2">
+							<div class="form-group">
+						  		<label class="bmd-label-static">Alumnos IBNORCA</label>
+						  		<input class="form-control" type="number" name="alumnos_ibnorca" value="<?=$alumnosLocalX?>" id="alumnos_ibnorca"/>
+						  		
+							</div>
+						</div>
+						<div class="col-sm-2">
+							<div class="form-group">
+						  		<label class="bmd-label-static">Alumnos FUERA IBNORCA</label>
+						  		<input class="form-control" type="number" name="alumnos_fuera" value="<?=$alumnosExternoX?>" id="alumnos_fuera"/>
+						  		
+							</div>
+						</div>
+						<div class="col-sm-2 float-right">
+							<div class="">
+						  		<button type="button" class="btn btn-success" onclick="mostrarPreciosPlantilla()"><span class="material-icons">attach_money</span> Lista de Precios</button>
+							</div>
+						</div>
+						<div class="col-sm-1 float-right">
+							<div class="">
+						  		<a href="#" title="Ayuda" class="btn btn-default btn-fab btn-round" onclick="ayudaPlantilla()"><span class="material-icons">help_outline</span></a>
+							</div>
+						</div>
+						
 				      	<?php } ?>
 					</div>
 
@@ -234,7 +263,7 @@ if(isset($_GET['cod'])){
 
 				  	<div class="card-footer fixed-bottom">
 						<button type="submit" class="<?=$buttonMorado;?>">Guardar</button>
-						<a href="../<?=$urlList;?>" class="<?=$buttonCancel;?>">Cancelar</a>
+						<a href="../<?=$urlList;?>" class="<?=$buttonCancel;?>">Volver</a>
 
 				  	</div>
 				 </div>

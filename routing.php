@@ -104,6 +104,9 @@
 		if ($_GET['opcion']=='listPlantillasCostos') {
 			require_once('plantillas_costos/list.php');
 		}
+		if ($_GET['opcion']=='registerPlantillaCosto') {
+			require_once('plantillas_costos/register2.php');
+		}
 		if ($_GET['opcion']=='deletePlantillaCosto') {
 			require_once('plantillas_costos/saveDelete.php');
 		}
@@ -123,6 +126,9 @@
 		}
 		if ($_GET['opcion']=='deleteSimulacion') {
 			require_once('simulaciones_costos/saveDelete.php');
+		}
+        if ($_GET['opcion']=='registerSimulacion') {
+			require_once('simulaciones_costos/registerSimulaciones.php');
 		}
 
         //MES EN CURSO

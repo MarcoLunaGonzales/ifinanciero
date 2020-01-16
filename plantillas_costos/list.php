@@ -58,13 +58,13 @@ $stmt->bindColumn('estado_plantilla', $estadoPlantilla);
                       	while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                           switch ($codEstado) {
                             case 1:
-                             $textEstado="text-info";//$estadoIcon="how_to_vote";
+                             $textEstado="text-info";$btnEstilo="btn-warning";//$estadoIcon="how_to_vote";
                             break;
                             case 2:
-                            $textEstado="text-danger";//$estadoIcon="thumb_down";
+                            $textEstado="text-danger";$btnEstilo="btn-danger";//$estadoIcon="thumb_down";
                             break;
                             case 3:
-                              $textEstado="text-warning";//$estadoIcon="thumb_up";
+                              $textEstado="text-warning";$btnEstilo="btn-success";//$estadoIcon="thumb_up";
                             break;
                           }
 ?>
@@ -76,17 +76,22 @@ $stmt->bindColumn('estado_plantilla', $estadoPlantilla);
                           <td><?=$area;?></td>
                           <td><?=$utilidadLocal;?> %</td> 
                           <td><?=$utilidadExterno;?> %</td>
-                           <td class="<?=$textEstado?>"><?=$estadoPlantilla;?></td>
+                           <td class="<?=$textEstado?>"><button class="btn <?=$btnEstilo?> btn-sm"><?=$estadoPlantilla;?></button></td>
                           <td class="td-actions text-right">
-                            <a href='<?=$urlReporte;?>?cod=<?=$codigo;?>' rel="tooltip" class="btn btn-info">
+                            <a href='<?=$urlReporte;?>?cod=<?=$codigo;?>' rel="tooltip" class="btn btn-primary">
                               <i class="material-icons" title="Registrar Cuentas">list</i>
                             </a>
+                            <?php if($codEstado!=3){
+                              ?>
+                            
                             <a href='<?=$urlRegister;?>?cod=<?=$codigo;?>' rel="tooltip" class="<?=$buttonEdit;?>">
                               <i class="material-icons"><?=$iconEdit;?></i>
                             </a>
                             <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')">
                               <i class="material-icons"><?=$iconDelete;?></i>
                             </button>
+                            <?php
+                            }?>
                           </td>
                         </tr>
 <?php

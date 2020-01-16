@@ -15,10 +15,10 @@ if(isset($_GET["codigo"])){
  $codigo=$_GET["codigo"];
  $query="SELECT * FROM precios_plantillacosto where cod_plantillacosto=$codigo order by codigo";
   ?>
-  <label class="col-sm-3 col-form-label">Precio Venta:</label>
-  <div class="col-sm-9">
+  <label class="col-sm-2 col-form-label">Precio Venta:</label>
+  <div class="col-sm-7">
      <div class="form-group">
-          <select class="selectpicker form-control" name="precio_venta" id="precio_venta" data-style="<?=$comboColor;?>" required>
+          <select class="selectpicker form-control" name="precio_venta" id="precio_venta" data-style="btn btn-info" required>
            <?php 
            $stmt = $dbh->prepare($query);
            $stmt->execute();

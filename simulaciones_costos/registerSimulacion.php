@@ -59,7 +59,8 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
             $stmt->bindColumn('unidad', $unidadX);
             $stmt->bindColumn('utilidad_minimalocal', $utilidadIbnorcaX);
             $stmt->bindColumn('utilidad_minimaexterno', $utilidadFueraX);
-
+           
+           $nombreSimulacion=$nombreX;
       }
   if($ibnorcaC==1){
   	$checkIbnorca="checked";
@@ -74,83 +75,76 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
 	<div id="contListaGrupos" class="container-fluid">
 			<input type="hidden" name="cod_simulacion" id="cod_simulacion" value="<?=$codigo?>">
       <input type="hidden" name="cod_precioplantilla" id="cod_precioplantilla" value="<?=$codPrecioPlan?>">
-            <div class="row"><div class="card col-sm-6">
-				<div class="card-header card-header-warning card-header-text">
+      <input type="hidden" name="cod_ibnorca" id="cod_ibnorca" value="<?=$ibnorcaC?>">
+            <div class="row"><div class="card col-sm-5">
+				<div class="card-header card-header-success card-header-text">
 					<div class="card-text">
-					  <h4 class="card-title">Datos de la Simulacion</h4>
+					  <h4 class="card-title">Datos de la Simulaci&oacute;n</h4>
 					</div>
+          <button type="button" onclick="editarDatosSimulacion()" class="btn btn-success btn-sm btn-fab float-right">
+             <i class="material-icons" title="Editar Simulación">edit</i>
+          </button>
 				</div>
 				<div class="card-body ">
 					<div class="row">
 					<?php
                     $responsable=namePersonal($codResponsableX);
 						?>
-						<div class="col-sm-4">
+						<div class="col-sm-6">
 							<div class="form-group">
 						  		<label class="bmd-label-static">Nombre</label>
-					  			<input class="form-control" type="text" name="nombre" value="<?=$nombreX?>" id="nombre"/>
+					  			<input class="form-control" type="text" name="nombre" readonly value="<?=$nombreX?>" id="nombre"/>
 							</div>
 						</div>
 
-						<div class="col-sm-4">
+						<div class="col-sm-6">
 							<div class="form-group">
 						  		<label class="bmd-label-static">Responsable</label>
 						  		<input class="form-control" type="text" name="responsable" readonly value="<?=$responsable?>" id="responsable"/>
 							</div>
 						</div>
-
-						<div class="col-sm-2">
+          </div>
+          <div class="row">
+						<div class="col-sm-4">
 							<div class="form-group">
 						  		<label class="bmd-label-static">Fecha</label>
 						  		<input class="form-control" type="text" name="fecha" value="<?=$fechaX?>" id="fecha" readonly/>
 							</div>
 						</div>
 
-						<div class="col-sm-2">
+						<div class="col-sm-4">
 				        	<div class="form-group">
 						  		<label class="bmd-label-static">Estado</label>
 						  		<input class="form-control" type="text" name="estado" value="<?=$estadoX?>" id="estado" readonly/>
 							</div>
-				      	</div>
-					</div>
-					<div class="row">
+				    </div>
 						<div class="col-sm-4">
 							<div class="form-group">
 						  		<label class="bmd-label-static">Simulaci&oacute;n en</label>
 					  			<input class="form-control" type="text" readonly name="ibnorca" value="<?=$simulacionEn?>" id="ibnorca"/>
 							</div>
 						</div>
-						<!--<div class="col-sm-8" id="check_ibnorca">
-                          <div class="row">
-                           <label class="col-sm-4 col-form-label">En IBNORCA</label>
-                           <div class="col-sm-8">	
-                    	       <div class="form-group">
-      	             	          <div class="form-check">
-                                    <label class="form-check-label">
-                                      <input class="form-check-input" type="checkbox" id="ibnorca_check" name="ibnorca_check" <?=$checkIbnorca?> value="1">
-                                      <span class="form-check-sign">
-                                        <span class="check"></span>
-                                      </span>
-                                    </label>
-                                  </div>
-                               </div>
-                             </div>  		
-                          </div>
-                        </div>-->
 					</div>
 				</div>
 			</div>
-			<div class="card col-sm-6">
+			<div class="card col-sm-7">
 				<div class="card-header card-header-info card-header-text">
 					<div class="card-text">
 					  <h4 class="card-title">Datos de la Plantilla</h4>
 					</div>
+          <button type="button" onclick="editarDatosPlantilla()" class="btn btn-success btn-sm btn-fab float-right">
+             <i class="material-icons" title="Editar Plantilla">edit</i>
+          </button>
+          <button type="button" onclick="actualizarSimulacion()" class="btn btn-default btn-sm btn-fab float-right">
+             <i class="material-icons" title="Actualizar la Simulación">refresh</i><span id="narch" class="bg-warning"></span>
+          </button>
 				</div>
 				<div class="card-body ">
                      <div class="row">
 					<?php while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {?>
 					<input type="hidden" name="cod_plantilla" id="cod_plantilla" value="<?=$codigoPX?>">
-						<div class="col-sm-4">
+
+						<div class="col-sm-6">
 							<div class="form-group">
 						  		<label class="bmd-label-static">Nombre Plantilla</label>
 					  			<input class="form-control" type="text" name="nombre_plan" value="<?=$nombreX?>" id="nombre_plan" READONLY />
@@ -163,18 +157,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
 						  		<input class="form-control" type="text" name="abreviatura_plan" value="<?=$abreviaturaX?>" READONLY id="abreviatura_plan"/>
 							</div>
 						</div>
-						<div class="col-sm-1">
-							<div class="form-group">
-						  		<label class="bmd-label-static">I</label>
-						  		<input class="form-control" type="text" name="alumnos_plan" value="<?=$alumnosX?>" READONLY id="alumnos_plan"/>
-							</div>
-						</div>
-                        <div class="col-sm-1">
-							<div class="form-group">
-						  		<label class="bmd-label-static">FI</label>
-						  		<input class="form-control" type="text" name="alumnos_plan_fuera" value="<?=$alumnosExternoX?>" READONLY id="alumnos_plan_fuera"/>
-							</div>
-						</div>
+						
 						<div class="col-sm-2">
 							<div class="form-group">
 						  		<label class="bmd-label-static">Unidad</label>
@@ -187,10 +170,48 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
 						  		<label class="bmd-label-static">Area</label>
 						  		<input class="form-control" type="text" name="area_plan" value="<?=$areaX?>" id="area_plan" readonly/>
 							</div>
-				      	</div>
+				    </div>
+          </div>
+           <div class="row">                
+          <div class="col-sm-2">
+              <div class="form-group">
+                  <label class="bmd-label-static">Alumnos Ib</label>
+                  <input class="form-control" type="text" name="alumnos_plan" readonly value="<?=$alumnosX?>" id="alumnos_plan"/>
+              </div>
+            </div>
+            <div class="col-sm-2">
+              <div class="form-group">
+                  <label class="bmd-label-static">Alumnos Fu</label>
+                  <input class="form-control" type="text" name="alumnos_plan_fuera" readonly value="<?=$alumnosExternoX?>" id="alumnos_plan_fuera"/>
+              </div>
+            </div>
+            <div class="col-sm-2">
+              <div class="form-group">
+                  <label class="bmd-label-static">UT. Min Ib %</label>
+                  <input class="form-control" type="text" name="utilidad_minlocal" readonly value="<?=$utilidadIbnorcaX?>" id="utilidad_minlocal"/>
+              </div>
+            </div>
+            <div class="col-sm-2">
+              <div class="form-group">
+                  <label class="bmd-label-static">UT. Min Fu %</label>
+                  <input class="form-control" type="text" name="utilidad_minext" readonly value="<?=$utilidadFueraX?>" id="utilidad_minext"/>
+              </div>
+            </div>
+            <div class="col-sm-2">
+              <div class="form-group">
+                  <label class="bmd-label-static">Importe Ib</label>
+                  <input class="form-control" type="number" name="precio_local" readonly value="<?=$precioLocalX?>" id="precio_local"/>
+              </div>
+            </div>
+            <div class="col-sm-2">
+              <div class="form-group">
+                  <label class="bmd-label-static">Importe Fu</label>
+                  <input class="form-control" type="number" name="precio_externo" readonly value="<?=$precioExternoX?>" id="precio_externo"/>
+              </div>
+            </div>
 				      	<?php } ?>
 					</div>
-                    <div class="row">
+                   <!-- <div class="row">
                     	<div class="col-sm-6">
                     		 <div class="form-group">
                                 <select class="selectpicker form-control" onchange="presioneBoton();listarPreciosPlantilla(this.value,'sin',<?=$ibnorcaC?>);" name="plantilla_costo" id="plantilla_costo" data-style="<?=$comboColor;?>"  data-live-search="true" title="-- Elija una plantilla --" data-style="select-with-transition" data-actions-box="true"required>
@@ -214,9 +235,9 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
                     	</div>
                     	<div class="col-sm-6" id="lista_precios">
                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-8 d-none" id="check_simular">
+                    </div>-->
+                    <!--<div class="row">
+                        <div class="col-sm-8" id="check_simular">
                           <div class="row">
                            <label class="col-sm-4 col-form-label">Cantidad Alumnos Autom&aacute;ticos</label>
                            <div class="col-sm-8">	
@@ -238,7 +259,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
                     		<a href="#" onclick="cargarPlantillaSimulacion(18,<?=$ibnorcaC?>); return false;" class="btn btn-warning text-dark btn-block">Simular Plantilla</a>
                     	  </div>
                         </div>
-                    </div>
+                    </div>-->
                       
              
 				</div>
@@ -247,9 +268,9 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
            <div class="row">
              <div class="col-sm-12">
 			  <div class="card">
-				<div class="card-header card-header-deafult card-header-text text-center">
+				<div class="card-header card-header-warning card-header-text text-center">
 					<div class="card-text">
-					  <h4 class="card-title"><b>SIMULACION</b></h4>
+					  <h4 class="card-title"><b><?=$nombreSimulacion?></b></h4>
 					</div>
 				</div>
 				<div class="card-body" id="div_simulacion">
@@ -261,12 +282,13 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
 				//valores de la simulacion
 
                   //total desde la plantilla  
-                 $totalFijo=obtenerTotalesPlantilla($codigoPX,1,18); //tipo de costo 1:fijo,2:variable desde la plantilla
+                 $totalFijo=obtenerTotalesPlantilla($codigoPX,1,obtenerValorConfiguracion(6)); //tipo de costo 1:fijo,2:variable desde la plantilla
                   //total variable desde la plantilla
                  //$totalVariable=obtenerTotalesPlantilla($codigoPX,2,18);
                  //total variable desde simulacion cuentas
                   $totalVariable=obtenerTotalesSimulacion($codigo);
-                
+                $totalVariable[2]=$totalVariable[2]/$alumnosX;
+                $totalVariable[3]=$totalVariable[3]/$alumnosExternoX;
                  //calcular cantidad alumnos si no esta registrado
                if($alumnosX==0||$alumnosX==""||$alumnosX==null||$alumnosExternoX==0||$alumnosExternoX==""||$alumnosExternoX==null){
                  	$porcentajeFinalLocal=0;$alumnosX=0;$alumnosExternoX=0;$porcentajeFinalExterno=0;
@@ -404,11 +426,12 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
 					</div>
 				  </div>
 				  	<div class="card-footer fixed-bottom">
-            <a href="../<?=$urlList;?>" class="btn btn-default">Cancelar</a>
-						<a onclick="guardarSimulacion()" class="btn btn-info text-white">Guardar</a>	
-            <a onclick="guardarSimulacion('enviar')" class="btn btn-info text-white"><i class="material-icons">send</i> Enviar Simulacion</a>
-            <a onclick="modificarMontos()" class="btn btn-info text-white"><i class="material-icons">vertical_split</i> Montos por Partidas</a>
-				  	</div>
+            
+						<!--<a onclick="guardarSimulacion()" class="btn btn-info text-white">Guardar</a>-->	
+            <a onclick="guardarSimulacion()" class="btn btn-success text-white"><i class="material-icons">send</i> Enviar Simulacion</a>
+            <!--<a onclick="modificarMontos()" class="btn btn-default text-white"><i class="material-icons">vertical_split</i> Montos por Partidas</a>-->
+				  	<a href="../<?=$urlList;?>" class="btn btn-danger">Volver</a> 
+            </div>
 				 </div>
 			    </div><!--div end card-->			
                </div>
