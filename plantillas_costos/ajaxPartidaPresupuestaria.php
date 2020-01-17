@@ -22,7 +22,7 @@ $idp=$_GET['idp'];
 $unidad=$_GET['unidad'];
 $area=$_GET['area'];
 $anio=date("Y");
-$anio_pasado=((int)$anio)-1;
+$anio_pasado=(int)$anio-1;
  
 $monto = calcularCostosPresupuestarios($idp,$unidad,$area,$anio_pasado);
 echo trim($monto);

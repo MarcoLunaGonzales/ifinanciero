@@ -1221,8 +1221,9 @@ function obtenerMontoPorCuenta($numero,$unidad,$area,$fecha){
       $cuenta=$row['cod_cuenta'];
       $tipoSim=obtenerValorConfiguracion(13);
       if($tipoSim==1){
-       $sum+= ejecutadoEgresosMes($unidad, $fecha, $mes, $area, 1, $numero);
-       $sum=$sum/12; 
+       $saux= ejecutadoEgresosMes($unidad, $fecha, $mes, $area, 1, $numero);
+       $saux=$saux/12;
+       $sum+=$saux; 
       }else{
        $sum+= ejecutadoEgresosMes($unidad, $fecha, $mes, $area, 0, $numero);
       }

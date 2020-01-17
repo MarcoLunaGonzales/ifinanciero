@@ -178,11 +178,12 @@ where pc.codigo=$codigo";
             $stmt_cuentas->execute();
             while ($row_cuentas = $stmt_cuentas->fetch(PDO::FETCH_ASSOC)) {
                $tipoSim=obtenerValorConfiguracion(13);
+               $mesActual=date("m");
                if($tipoSim==1){
-                $monto=ejecutadoEgresosMes($grupoUnidad,((int)$anio-1),$mes,$grupoArea,1,$row_cuentas['numero']);
+                $monto=ejecutadoEgresosMes($grupoUnidad,((int)$anio-1),$mesActual,$grupoArea,1,$row_cuentas['numero']);
                 $monto=($monto/12);
                }else{
-                $monto=ejecutadoEgresosMes($grupoUnidad,((int)$anio-1),$mes,$grupoArea,0,$row_cuentas['numero']);
+                $monto=ejecutadoEgresosMes($grupoUnidad,((int)$anio-1),$mesActual,$grupoArea,0,$row_cuentas['numero']);
                }
                 
                 if($monto==null){$monto=0;}
@@ -267,11 +268,12 @@ $html.='<tr class="bg-table-primary text-white">'.
             $stmt_cuentas->execute();
             while ($row_cuentas = $stmt_cuentas->fetch(PDO::FETCH_ASSOC)) {
                  $tipoSim=obtenerValorConfiguracion(13);
+                 $mesActual=date("m");
                if($tipoSim==1){
-                $monto=ejecutadoEgresosMes($grupoUnidad,((int)$anio-1),$mes,$grupoArea,1,$row_cuentas['numero']);
+                $monto=ejecutadoEgresosMes($grupoUnidad,((int)$anio-1),$mesActual,$grupoArea,1,$row_cuentas['numero']);
                 $monto=($monto/12);
                }else{
-                $monto=ejecutadoEgresosMes($grupoUnidad,((int)$anio-1),$mes,$grupoArea,0,$row_cuentas['numero']);
+                $monto=ejecutadoEgresosMes($grupoUnidad,((int)$anio-1),$mesActual,$grupoArea,0,$row_cuentas['numero']);
                }
                 if($monto==null){$monto=0;}
                 $montoCal=costoModulo($monto,$mes);
