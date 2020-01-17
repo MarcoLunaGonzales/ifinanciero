@@ -51,6 +51,7 @@ $stmt->bindColumn('email_empresa', $emailX);
 <?php
 						     $index=1;
                       	while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+                          $valor="";
 ?>
                         <tr>
                           <td class=""align="center"><?=$index;?></td>
