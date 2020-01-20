@@ -46,10 +46,10 @@ if(isset($_GET["codigo"])){
          <tr class="text-dark bg-plomo">
         <th>Cuenta</th>
         <th>Porcentaje</th>
-        <th>Ibnorca</th>
-        <th>Fuera</th>
-        <th>Alum Ib.</th>
-        <th>Alum Fu.</th>     
+        <th>Modulo (I)</th>
+        <th>Modulo (FI)</th>
+        <th>POR ALUMNO (I)</th>
+        <th>POR ALUMNO (FI)</th>     
         </tr>
       </thead>
       <tbody>

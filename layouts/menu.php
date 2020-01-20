@@ -8,14 +8,37 @@ $globalNameUserX=$_SESSION['globalNameUser'];
 $globalNombreUnidadX=$_SESSION['globalNombreUnidad'];
 $globalNombreAreaX=$_SESSION['globalNombreArea'];
 
+$menuModulo=$_SESSION['modulo'];
+switch ($menuModulo) {
+  case 1:
+   $nombreModulo="Remuneración";
+   $estiloMenu="rojo";
+  break;
+  case 2:
+  $nombreModulo="Activos Fijos";
+   $estiloMenu="amarillo";
+  break;
+  case 3:
+  $nombreModulo="Contabilidad";
+   $estiloMenu="celeste";
+  break;
+  case 4:
+  $nombreModulo="Presupuestos y Solicitudes";
+   $estiloMenu="verde";
+  break;
+}
+
+if($menuModulo==0){
+ ?><script>window.location.href="index.php";</script><?php
+}
 ?>
 
-<div class="sidebar" data-color="purple" data-background-color="red" data-image="assets/img/scz.jpg">
+<div class="sidebar" data-color="purple" data-background-color="<?=$estiloMenu?>" data-image="assets/img/scz.jpg">
       <div class="logo">
         <a href="http://www.creative-tim.com" class="simple-text logo-mini">
           <img src="assets/img/logo_ibnorca1.fw.png" width="30" />
         </a>
-        <a href="http://www.creative-tim.com" class="simple-text logo-normal">
+        <a href="index.php" class="simple-text logo-normal">
           ADM & FIN & OP
         </a>
       </div>
@@ -35,111 +58,17 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
         </div>
 
         <ul class="nav">
-
-          <!--TABLAS ACTIVOS FIJOS-->          
           <li class="nav-item ">
-            <a class="nav-link" data-toggle="collapse" href="#tablasAF">
-              <i class="material-icons">fullscreen</i>
-              <p> Tablas Activos Fijos
-                <b class="caret"></b>
+            <a class="nav-link" href="index.php?opcion=homeModulo">
+              <i class="material-icons">home</i>
+              <p> <?=$nombreModulo?>
               </p>
             </a>
-
-            <div class="collapse" id="tablasAF">
-              <ul class="nav">              
-                 <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=listUbicaciones">
-                    <span class="sidebar-mini"> UAF </span>
-                    <span class="sidebar-normal"> Ubicaciones</span>
-                  </a>
-                </li>
-                <li class="nav-item ">
-                 <a class="nav-link" href="?opcion=provLista">
-                   <span class="sidebar-mini"> UAF </span>
-                   <span class="sidebar-normal"> Proveedores</span>
-                 </a>
-               </li>
-                <li class="nav-item ">
-                    <a class="nav-link" href="?opcion=listDepreciaciones">
-                      <span class="sidebar-mini"> DAF </span>
-                      <span class="sidebar-normal"> Rubros/Depreciaciones</span>
-                    </a>
-                </li>
-                <li class="nav-item ">
-                    <a class="nav-link" href="?opcion=listaTiposBienes">
-                      <span class="sidebar-mini"> DAF </span>
-                      <span class="sidebar-normal"> Tipos de Bienes</span>
-                    </a>
-                </li>
-                <li class="nav-item ">
-                    <a class="nav-link" href="?opcion=activosfijosLista">
-                      <span class="sidebar-mini"> DAF </span>
-                      <span class="sidebar-normal"> Activos Fijos</span>
-                    </a>
-                </li>
-              </ul>
-            </div>
-          </li>
-
-          <!--TABLAS CONTABILIDAD-->
-          <li class="nav-item ">
-            <a class="nav-link" data-toggle="collapse" href="#tablesConta">
-              <i class="material-icons">fullscreen</i>
-              <p> Tablas Contabilidad
-                <b class="caret"></b>
-              </p>
-            </a>
-
-            <div class="collapse" id="tablesConta">
-              <ul class="nav">
-                
-                <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=listConfigCuentas">
-                    <span class="sidebar-mini"> CC </span>
-                    <span class="sidebar-normal"> Configuracion de Cuentas </span>
-                  </a>
-                </li>
-
-                <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=listPlanCuentas">
-                    <span class="sidebar-mini"> PC </span>
-                    <span class="sidebar-normal"> Plan de Cuentas </span>
-                  </a>
-                </li>
-
-                <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=listPartidasPres">
-                    <span class="sidebar-mini"> PP </span>
-                    <span class="sidebar-normal"> Partidas Presupuestarias </span>
-                  </a>
-                </li>
-                <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=tipoDeCambio">
-                    <span class="sidebar-mini"> TC </span>
-                    <span class="sidebar-normal"> Tipo de Cambio de Monedas </span>
-                  </a>
-                </li>
-                <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=listPlantillasCostos">
-                    <span class="sidebar-mini"> PTC </span>
-                    <span class="sidebar-normal"> Plantillas de Costo </span>
-                  </a>
-                </li>
-                <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=listPlantillasCostosAdmin">
-                    <span class="sidebar-mini"> GPT </span>
-                    <span class="sidebar-normal"> Gesti&oacute;n de Plantillas de Costo </span>
-                  </a>
-                </li>
-                <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=listDistribucionGasto">
-                    <span class="sidebar-mini"> DGP </span>
-                    <span class="sidebar-normal"> Distribucion de Gastos</span>
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </li>
+          </li>  
+          <?php 
+          switch ($menuModulo) {
+              case 1:
+              ?>
           <!-- TABLAS RRHH-->
           <li class="nav-item ">
             <a class="nav-link" data-toggle="collapse" href="#pagesExamples">
@@ -248,95 +177,7 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
           </li>
 
 
-          <!--TRANSACCIONES ACTIVOS FIJOS-->          
-          <li class="nav-item ">
-            <a class="nav-link" data-toggle="collapse" href="#transaccAF">
-              <i class="material-icons">menu</i>
-              <p> Transacciones Activos Fijos
-                <b class="caret"></b>
-              </p>
-            </a>
-            <div class="collapse" id="transaccAF">
-              <ul class="nav">
 
-                <li class="nav-item ">
-                    <a class="nav-link" href="?opcion=ejecutarDepreciacionLista">
-                      <span class="sidebar-mini"> D </span>
-                      <span class="sidebar-normal"> Depreciaciones</span>
-                    </a>
-                </li>
-
-                <li class="nav-item ">
-                    <a class="nav-link" href="?opcion=afEnCustodia">
-                      <span class="sidebar-mini"> D </span>
-                      <span class="sidebar-normal"> AF En Custodia</span>
-                    </a>
-                </li>
-
-                
-                <?php
-                $valor=8;
-                $VariableConf=obtieneValorConfig($valor);
-                  if($globalUserX==$VariableConf){
-                ?>
-                <li class="nav-item ">
-                    <a class="nav-link" href="?opcion=aftransaccion">
-                      <span class="sidebar-mini"> D </span>
-                      <span class="sidebar-normal"> Transacción De AF</span>
-                    </a>
-                </li>
-                <?php
-                  }
-                ?>
-                
-
-              </ul>
-            </div>
-          </li>
-
-          <!--TRANSACCIONES CONTABILIDAD-->
-          <li class="nav-item ">
-            <a class="nav-link" data-toggle="collapse" href="#transaccConta">
-              <i class="material-icons">menu</i>
-              <p> Transacciones Contabilidad
-                <b class="caret"></b>
-              </p>
-            </a>
-            <div class="collapse" id="transaccConta">
-              <ul class="nav">
-                
-                <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=listComprobantes">
-                    <span class="sidebar-mini"> C </span>
-                    <span class="sidebar-normal"> Comprobantes </span>
-                  </a>
-                </li>
-                <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=listComprobantesRegistrados">
-                    <span class="sidebar-mini"> A </span>
-                    <span class="sidebar-normal"> Aprobaciones de comprobantes </span>
-                  </a>
-
-                </li> 
-
-
-            
-                <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=listSimulacionesCostos">
-                    <span class="sidebar-mini"> SC </span>
-                    <span class="sidebar-normal"> Simulaciones de Costos</span>
-                  </a>
-                </li>
-                <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=listSimulacionesCostosAdmin">
-                    <span class="sidebar-mini"> GS </span>
-                    <span class="sidebar-normal"> Gesti&oacute;n de Simulaciones</span>
-                  </a>
-                </li>                 
-
-              </ul>
-            </div>
-          </li>
           <!--TRANSACCIONES RRHH-->
           <li class="nav-item ">
             <a class="nav-link" data-toggle="collapse" href="#transaccHHRR">
@@ -402,33 +243,119 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
               </ul>
             </div>
           </li>
-          <!--Solicitud de recursos-->
+
+          <!--REPORTES RRHH-->
           <li class="nav-item ">
-            <a class="nav-link" data-toggle="collapse" href="#solicitudes">
-              <i class="material-icons">content_paste</i>
-              <p> Solicitudes de Recursos
+            <a class="nav-link" data-toggle="collapse" href="#reportesRRHH">
+              <i class="material-icons">assessment</i>
+              <p> Reportes RRHH
                 <b class="caret"></b>
               </p>
             </a>
-            <div class="collapse" id="solicitudes">
-              <ul class="nav">
+            <div class="collapse" id="reportesRRHH">
+              <ul class="nav">                
                 <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=listSolicitudRecursos">
-                    <span class="sidebar-mini"> SR </span>
-                    <span class="sidebar-normal"> Solicitudes de Recursos</span>
+                  <a class="nav-link" href="?opcion=rptCambiosPersonal">
+                    <span class="sidebar-mini"> R </span>
+                    <span class="sidebar-normal"> Cambios Del Personal</span>
                   </a>
-                </li>
-                <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=listSolicitudRecursosAdmin">
-                    <span class="sidebar-mini"> GSR </span>
-                    <span class="sidebar-normal"> Gesti&oacute;n Solicitudes Recursos</span>
-                  </a>
-                </li>                          
+                </li>                           
               </ul>
             </div>
           </li>
-          <!--REPORTES CONTABILIDAD-->
 
+              <?php
+              break;
+              case 2:
+          ?><!--TABLAS ACTIVOS FIJOS-->          
+          <li class="nav-item ">
+            <a class="nav-link" data-toggle="collapse" href="#tablasAF">
+              <i class="material-icons">fullscreen</i>
+              <p> Tablas Activos Fijos
+                <b class="caret"></b>
+              </p>
+            </a>
+
+            <div class="collapse" id="tablasAF">
+              <ul class="nav">              
+                 <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listUbicaciones">
+                    <span class="sidebar-mini"> UAF </span>
+                    <span class="sidebar-normal"> Ubicaciones</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                 <a class="nav-link" href="?opcion=provLista">
+                   <span class="sidebar-mini"> UAF </span>
+                   <span class="sidebar-normal"> Proveedores</span>
+                 </a>
+               </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=listDepreciaciones">
+                      <span class="sidebar-mini"> DAF </span>
+                      <span class="sidebar-normal"> Rubros/Depreciaciones</span>
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=listaTiposBienes">
+                      <span class="sidebar-mini"> DAF </span>
+                      <span class="sidebar-normal"> Tipos de Bienes</span>
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=activosfijosLista">
+                      <span class="sidebar-mini"> DAF </span>
+                      <span class="sidebar-normal"> Activos Fijos</span>
+                    </a>
+                </li>
+              </ul>
+            </div>
+          </li>
+          <!--TRANSACCIONES ACTIVOS FIJOS-->          
+          <li class="nav-item ">
+            <a class="nav-link" data-toggle="collapse" href="#transaccAF">
+              <i class="material-icons">menu</i>
+              <p> Transacciones Activos Fijos
+                <b class="caret"></b>
+              </p>
+            </a>
+            <div class="collapse" id="transaccAF">
+              <ul class="nav">
+
+                <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=ejecutarDepreciacionLista">
+                      <span class="sidebar-mini"> D </span>
+                      <span class="sidebar-normal"> Depreciaciones</span>
+                    </a>
+                </li>
+
+                <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=afEnCustodia">
+                      <span class="sidebar-mini"> D </span>
+                      <span class="sidebar-normal"> AF En Custodia</span>
+                    </a>
+                </li>
+
+                
+                <?php
+                $valor=8;
+                $VariableConf=obtieneValorConfig($valor);
+                  if($globalUserX==$VariableConf){
+                ?>
+                <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=aftransaccion">
+                      <span class="sidebar-mini"> D </span>
+                      <span class="sidebar-normal"> Transacción De AF</span>
+                    </a>
+                </li>
+                <?php
+                  }
+                ?>
+                
+
+              </ul>
+            </div>
+          </li>
           <!--REPORTES AF-->
           <li class="nav-item ">
             <a class="nav-link" data-toggle="collapse" href="#reportesAF">
@@ -468,7 +395,112 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
               </ul>
             </div>
           </li>
+          <?php
+              break;
+              case 3:
+              ?>
+          <!--TABLAS CONTABILIDAD-->
+          <li class="nav-item ">
+            <a class="nav-link" data-toggle="collapse" href="#tablesConta">
+              <i class="material-icons">fullscreen</i>
+              <p> Tablas Contabilidad
+                <b class="caret"></b>
+              </p>
+            </a>
 
+            <div class="collapse" id="tablesConta">
+              <ul class="nav">
+                
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listConfigCuentas">
+                    <span class="sidebar-mini"> CC </span>
+                    <span class="sidebar-normal"> Configuracion de Cuentas </span>
+                  </a>
+                </li>
+
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listPlanCuentas">
+                    <span class="sidebar-mini"> PC </span>
+                    <span class="sidebar-normal"> Plan de Cuentas </span>
+                  </a>
+                </li>
+
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listPartidasPres">
+                    <span class="sidebar-mini"> PP </span>
+                    <span class="sidebar-normal"> Partidas Presupuestarias </span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=tipoDeCambio">
+                    <span class="sidebar-mini"> TC </span>
+                    <span class="sidebar-normal"> Tipo de Cambio de Monedas </span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listPlantillasCostos">
+                    <span class="sidebar-mini"> PTC </span>
+                    <span class="sidebar-normal"> Plantillas de Costo </span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listPlantillasCostosAdmin">
+                    <span class="sidebar-mini"> GPT </span>
+                    <span class="sidebar-normal"> Gesti&oacute;n de Plantillas de Costo </span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listDistribucionGasto">
+                    <span class="sidebar-mini"> DGP </span>
+                    <span class="sidebar-normal"> Distribucion de Gastos</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </li>
+          <!--TRANSACCIONES CONTABILIDAD-->
+          <li class="nav-item ">
+            <a class="nav-link" data-toggle="collapse" href="#transaccConta">
+              <i class="material-icons">menu</i>
+              <p> Transacciones Contabilidad
+                <b class="caret"></b>
+              </p>
+            </a>
+            <div class="collapse" id="transaccConta">
+              <ul class="nav">
+                
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listComprobantes">
+                    <span class="sidebar-mini"> C </span>
+                    <span class="sidebar-normal"> Comprobantes </span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listComprobantesRegistrados">
+                    <span class="sidebar-mini"> A </span>
+                    <span class="sidebar-normal"> Aprobaciones de comprobantes </span>
+                  </a>
+
+                </li> 
+
+
+            
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listSimulacionesCostos">
+                    <span class="sidebar-mini"> SC </span>
+                    <span class="sidebar-normal"> Simulaciones de Costos</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listSimulacionesCostosAdmin">
+                    <span class="sidebar-mini"> GS </span>
+                    <span class="sidebar-normal"> Gesti&oacute;n de Simulaciones</span>
+                  </a>
+                </li>                 
+
+              </ul>
+            </div>
+          </li>
           <!--REPORTES CONTABILIDAD-->
           <li class="nav-item ">
             <a class="nav-link" data-toggle="collapse" href="#reportesConta">
@@ -494,25 +526,42 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
               </ul>
             </div>
           </li>
-          <!--REPORTES RRHH-->
+
+              <?php
+              break;
+              case 4:
+              ?>
+          <!--Solicitud de recursos-->
           <li class="nav-item ">
-            <a class="nav-link" data-toggle="collapse" href="#reportesRRHH">
-              <i class="material-icons">assessment</i>
-              <p> Reportes RRHH
+            <a class="nav-link" data-toggle="collapse" href="#solicitudes">
+              <i class="material-icons">content_paste</i>
+              <p> Solicitudes de Recursos
                 <b class="caret"></b>
               </p>
             </a>
-            <div class="collapse" id="reportesRRHH">
-              <ul class="nav">                
+            <div class="collapse" id="solicitudes">
+              <ul class="nav">
                 <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=rptCambiosPersonal">
-                    <span class="sidebar-mini"> R </span>
-                    <span class="sidebar-normal"> Cambios Del Personal</span>
+                  <a class="nav-link" href="?opcion=listSolicitudRecursos">
+                    <span class="sidebar-mini"> SR </span>
+                    <span class="sidebar-normal"> Solicitudes de Recursos</span>
                   </a>
-                </li>                           
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listSolicitudRecursosAdmin">
+                    <span class="sidebar-mini"> GSR </span>
+                    <span class="sidebar-normal"> Gesti&oacute;n Solicitudes Recursos</span>
+                  </a>
+                </li>                          
               </ul>
             </div>
           </li>
+
+              <?php
+              break;
+          }
+          ?>
+
 
 
           

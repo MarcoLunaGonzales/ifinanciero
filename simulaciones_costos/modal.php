@@ -81,7 +81,7 @@
 
 <!-- small modal -->
 <div class="modal fade modal-primary" id="modalSimulacionCuentas" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog modal-lg col-sm-12">
     <div class="modal-content card">
                 <div class="card-header card-header-danger card-header-text">
                   <div class="card-text">
@@ -230,7 +230,7 @@
                         </div>
                       </div>
                       <hr>
-                      <a href="#" onclick="modificarMontos()" class="btn btn-sm btn-danger"><i class="material-icons">edit</i> Editar COSTOS VARIABLES</a>
+                     
                       <div class="form-group float-right">
                         <button type="button" id="boton_guardarplan" class="btn btn-default" onclick="guardarDatosPlantilla(this.id)">Guardar</button>
                       </div> 

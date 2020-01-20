@@ -63,6 +63,8 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
             $stmt->bindColumn('utilidad_minimalocal', $utilidadIbnorcaX);
             $stmt->bindColumn('utilidad_minimaexterno', $utilidadFueraX);
 
+            $nombreSimulacion=$nombreX;
+
       }
      while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
 
@@ -73,16 +75,21 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
   	  $simulacionEn="FUERA DE IBNORCA";
      }
 ?>
-<div id="logo_carga" class="logo-carga" style="display:none;"></div>
+<div class="cargar">
+  <div class="div-loading text-center">
+     <h4 class="text-warning font-weight-bold">Procesando Datos</h4>
+     <p class="text-white">Aguard&aacute; un momento por favor</p>  
+  </div>
+</div>
 <div class="content">
 	<div id="contListaGrupos" class="container-fluid">
 			<input type="hidden" name="cod_simulacion" id="cod_simulacion" value="<?=$codigo?>">
            <div class="row">
              <div class="col-sm-12">
 			  <div class="card">
-				<div class="card-header card-header-deafult card-header-text text-center">
+				<div class="card-header card-header-warning card-header-text text-center">
 					<div class="card-text">
-					  <h4 class="card-title"><b>SIMULACION</b></h4>
+					  <h4 class="card-title"><b><?=$nombreSimulacion?></b></h4>
 					</div>
 				</div>
 				<div class="card-body">
@@ -173,10 +180,10 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
 									<td class="text-left small bg-table-primary text-white">TOTAL COSTO FIJO+OTROS GASTOS</td><td class="text-right font-weight-bold"><?=number_format($totalFijo[2], 2, '.', ',')?></td><td class="text-right font-weight-bold"><?=number_format($totalFijo[3], 2, '.', ',')?></td>
 								</tr>
 								<tr>
-									<td class="text-left small bg-table-primary text-white">COSTO VARIABLE UNITARIO</td><td class="text-right font-weight-bold"><?=number_format($totalVariable[2], 2, '.', ',')?></td><td class="text-right font-weight-bold"><?=number_format($totalVariable[3], 2, '.', ',')?></td>
+									<td class="text-left small bg-table-primary text-white">COSTO VARIABLE PERSONA</td><td class="text-right font-weight-bold"><?=number_format($totalVariable[2], 2, '.', ',')?></td><td class="text-right font-weight-bold"><?=number_format($totalVariable[3], 2, '.', ',')?></td>
 								</tr>
 								<tr>
-									<td class="text-left small bg-table-primary text-white">COSTO VARIABLE TOTAL</td><td class="text-right font-weight-bold"><?=number_format(($totalVariable[2]*$alumnosX), 2, '.', ',')?></td><td class="text-right font-weight-bold"><?=number_format(($totalVariable[3]*$alumnosExternoX), 2, '.', ',')?></td>
+									<td class="text-left small bg-table-primary text-white">COSTO VARIABLE MODULO</td><td class="text-right font-weight-bold"><?=number_format(($totalVariable[2]*$alumnosX), 2, '.', ',')?></td><td class="text-right font-weight-bold"><?=number_format(($totalVariable[3]*$alumnosExternoX), 2, '.', ',')?></td>
 								</tr>
 								<tr class="bg-secondary text-white">
 									<td class="text-left small">COSTO TOTAL</td><td class="text-right font-weight-bold"><?=number_format($costoTotalLocal, 2, '.', ',')?></td><td class="text-right font-weight-bold"><?=number_format($costoTotalExterno, 2, '.', ',')?></td>
@@ -207,10 +214,10 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
 									<td class="text-left small bg-table-primary text-white">INGRESOS POR VENTAS</td><td class="text-right font-weight-bold"><?=number_format($ingresoLocal, 2, '.', ',')?></td><td class="text-right font-weight-bold">100 %</td><td class="text-right font-weight-bold"><?=number_format($ingresoExterno, 2, '.', ',')?></td><td class="text-right font-weight-bold">100 %</td>
 								</tr>
 								<tr>
-									<td class="text-left small bg-table-primary text-white">COSTO DEL SERVICIO</td><td class="text-right font-weight-bold"><?=number_format(($totalVariable[2]*$alumnosX), 2, '.', ',')?></td><td class="text-right font-weight-bold"><?=number_format($pCostoLocal, 2, '.', ',')?> %</td><td class="text-right font-weight-bold"><?=number_format(($totalVariable[3]*$alumnosExternoX), 2, '.', ',')?></td><td class="text-right font-weight-bold"><?=number_format($pCostoExterno, 2, '.', ',')?> %</td>
+									<td class="text-left small bg-table-primary text-white">COSTO VARIABLE MODULO</td><td class="text-right font-weight-bold"><?=number_format(($totalVariable[2]*$alumnosX), 2, '.', ',')?></td><td class="text-right font-weight-bold"><?=number_format($pCostoLocal, 2, '.', ',')?> %</td><td class="text-right font-weight-bold"><?=number_format(($totalVariable[3]*$alumnosExternoX), 2, '.', ',')?></td><td class="text-right font-weight-bold"><?=number_format($pCostoExterno, 2, '.', ',')?> %</td>
 								</tr>
 								<tr>
-									<td class="text-left small bg-table-primary text-white">GASTOS OPERATIVOS</td><td class="text-right font-weight-bold"><?=number_format($costoOperLocal, 2, '.', ',')?></td><td class="text-right font-weight-bold"><?=number_format($pCostoOperLocal, 2, '.', ',')?> %</td><td class="text-right font-weight-bold"><?=number_format($costoOperExterno, 2, '.', ',')?></td><td class="text-right font-weight-bold"><?=number_format($pCostoOperExterno, 2, '.', ',')?> %</td>
+									<td class="text-left small bg-table-primary text-white">TOTAL COSTO FIJO (87%)</td><td class="text-right font-weight-bold"><?=number_format($costoOperLocal, 2, '.', ',')?></td><td class="text-right font-weight-bold"><?=number_format($pCostoOperLocal, 2, '.', ',')?> %</td><td class="text-right font-weight-bold"><?=number_format($costoOperExterno, 2, '.', ',')?></td><td class="text-right font-weight-bold"><?=number_format($pCostoOperExterno, 2, '.', ',')?> %</td>
 								</tr>
 								<tr>
 									<td class="text-left small bg-table-primary text-white">UTILIDAD ANTES DE IMPUESTOS</td><td class="text-right font-weight-bold"><?=number_format($utilidadLocal, 2, '.', ',')?></td><td class="text-right font-weight-bold"></td><td class="text-right font-weight-bold"><?=number_format($utilidadExterno, 2, '.', ',')?></td><td class="text-right font-weight-bold"></td>

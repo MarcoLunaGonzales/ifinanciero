@@ -6,15 +6,23 @@
 
   include("librerias.php");// se debe cambiar a la parte posterior
 
-  include("layouts/menu.php");
+ 
   // include("functionsGeneral.php");
 ?>    
     <div class="main-panel">
       <div class="content">
 
       <?php 
-          include("cabecera.php");
-          require_once('routing.php');
+          
+          if(!isset($_GET['opcion'])){
+            $_SESSION['modulo']=0;
+            include("cabecera.php");
+            include("home.php");
+          }else{
+            include("layouts/menu.php");
+            include("cabecera.php");
+            require_once('routing.php');
+          }       
       ?>
 
       </div>      
@@ -24,4 +32,13 @@
 
   //poner aqui librerias
 
+
+if(!isset($_GET['opcion'])){
+  ?><script type="text/javascript">
+           $(document).ready(function(e) { 
+               $("#minimizeSidebar").click()
+               $("#minimizeSidebar").addClass("d-none");
+             });
+    </script><?php
+}
 ?>

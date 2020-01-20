@@ -228,7 +228,7 @@
                        <label class="col-sm-2 col-form-label">Tipo</label>
                        <div class="col-sm-10">
                         <div class="form-group">
-                             <select class="selectpicker form-control" name="tipo_dato" id="tipo_dato" data-style="<?=$comboColor;?>" onchange="limpiarMontos()">
+                             <select class="selectpicker form-control" name="tipo_dato" id="tipo_dato" data-style="btn btn-info" onchange="limpiarMontos()">
                                <option value="1">Mensual</option>
                                <option value="2">Manual</option> 
                              </select>
@@ -239,24 +239,48 @@
                       <div class="row">
                         <div class="col-sm-4">                     
                          <div class="form-group">
-                          <label class="bmd-label-static">Monto en Ibnorca</label>
-                          <input type="number" class="form-control" name="monto_ibnorca" id="monto_ibnorca" value="0" step="0.001">
+                          <label class="bmd-label-static">Monto GENERADO</label>
+                          <input type="number" class="form-control" name="monto_ibnorca" id="monto_ibnorca" value="0" step="0.01" readonly>
                          </div> 
                         </div>
                         <div class="col-sm-4">
                          <div class="form-group">
-                          <label class="bmd-label-static">Monto fuera Ibnorca</label>
-                          <input type="number" class="form-control" name="monto_f_ibnorca" id="monto_f_ibnorca" value="0" step="0.001">
+                          <label class="bmd-label-static">Monto MODULO</label>
+                          <input type="number" class="form-control" name="monto_f_ibnorca" id="monto_f_ibnorca" value="0" step="0.01" readonly>
                          </div>
                         </div>
                         <div class="col-sm-4">
                          <div class="form-group">
-                          <label class="bmd-label-static">Monto calculado</label>
-                          <input type="number" class="form-control" name="monto_calculado" id="monto_calculado" value="0" step="0.001" readonly>
+                          <label class="bmd-label-static">Monto ALUMNO</label>
+                          <input type="number" class="form-control" name="monto_alumno" id="monto_alumno" value="0" step="0.01" readonly>
+                          <input type="hidden" class="form-control" name="monto_calculado" id="monto_calculado" value="0" step="0.001" readonly>
                          </div>
                         </div>
-
                       </div>
+                      <div class="row d-none" id="montos_editables">
+                        <div class="col-sm-4">
+                        <a href="#" class="btn btn-danger btn-sm btn-round" onclick="mostrarInputMonto('monto_ibnorca1')"> Editar</a>                     
+                         <div class="form-group d-none" id="monto_ibnorca1">
+                          <label class="bmd-label-static">Monto GENERADO</label>
+                          <input type="number" class="form-control" name="monto_ibnorca_edit" id="monto_ibnorca_edit" value="0" step="0.01">
+                         </div> 
+                        </div>
+                        <div class="col-sm-4">
+                          <a href="#" class="btn btn-danger btn-sm btn-round" onclick="mostrarInputMonto('monto_ibnorca2')"> Editar</a> 
+                         <div class="form-group d-none" id="monto_ibnorca2">
+                          <label class="bmd-label-static">Monto MODULO</label>
+                          <input type="number" class="form-control" name="monto_f_ibnorca_edit" id="monto_f_ibnorca_edit" value="0" step="0.01">
+                         </div>
+                        </div>
+                        <div class="col-sm-4 d-none" id="columna_edit_alumno">
+                          <a href="#" class="btn btn-danger btn-sm btn-round" onclick="mostrarInputMonto('monto_ibnorca3')"> Editar</a> 
+                         <div class="form-group d-none" id="monto_ibnorca3">
+                          <label class="bmd-label-static">Monto ALUMNO</label>
+                          <input type="number" class="form-control" name="monto_alumno_edit" id="monto_alumno_edit" value="0" step="0.01"> 
+                         </div>
+                        </div>
+                      </div>
+
                       <div id="mensajeDetalle"></div>
                       <div class="form-group float-right">
                         <button type="button" class="btn btn-info btn-round" onclick="savePlantillaDetalle()">Guardar</button>
