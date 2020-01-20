@@ -1,6 +1,7 @@
 <?php
 	require_once __DIR__.'/../conexion.php';
 	require_once __DIR__.'/../functionsGeneral.php';
+	require_once '../functions.php';
 	require_once '../layouts/bodylogin2.php';
 	$dbh = new Conexion();
 
@@ -9,17 +10,8 @@
 	$cod_mes = $_GET["cod_mes"];//
 	$cod_uo = $_GET["codigo_uo"];//
 	
-
-	$sqlGestion="SELECT nombre from gestiones where codigo=$cod_gestion";
-	$stmtGestion=$dbh->prepare($sqlGestion);
-	$stmtGestion->execute();
-	$resultGestion=$stmtGestion->fetch();
-	$nombre_gestion=$resultGestion['nombre'];
-	
-	$stmtUO=$dbh->prepare("SELECT nombre from unidades_organizacionales where codigo=$cod_uo");
-	$stmtUO->execute();
-	$resultUO=$stmtUO->fetch();
-	$nombre_uo=$resultUO['nombre'];
+	$nombre_gestion=nameGestion($cod_gestion);
+	$nombre_uo=nameUnidad($cod_uo);
 
 
 	$stmtArea = $dbh->prepare("SELECT cod_area,(SELECT a.abreviatura from areas a where a.codigo=cod_area) as nombre_area
@@ -29,8 +21,6 @@
   $stmtArea->execute();
   $stmtArea->bindColumn('cod_area', $cod_area_x);
   $stmtArea->bindColumn('nombre_area', $nombre_area_x);
-
-	
 ?>
 
 <div class="content">
@@ -68,6 +58,7 @@
 		                    <th><small>Bono Antiguedad</small></th>
 		                    <th class="bg-success text-white"><button id="botonBonos" style="border:none;" class="bg-success text-white small">Otros Bonos</button> </th>
 		                    <?php
+		                    	$swBonosOtro=false;
 		                      $sqlBonos = "SELECT cod_bono,(select b.nombre from bonos b where b.codigo=cod_bono) as nombre_bono
 		                              from bonos_personal_mes 
 		                              where  cod_gestion=$cod_gestion and cod_mes=$cod_mes and cod_estadoreferencial=1 GROUP BY (cod_bono)
@@ -81,11 +72,11 @@
 		                        <th class="bonosDet bg-success text-white" style="display:none"><small><?=$nombre_bono;?></small></th>                      
 		                        <?php
 		                        $arrayBonos[] = $cod_bono;
+		                        $swBonosOtro=true;
 		                      }
 		                    ?>
 		                    <th><small>Monto Bonos</small></th>                            
 		                    <th class="bg-primary text-white"><small>Total Ganado</small></th>
-
 		                    <th class="bg-success text-white"><button id="botonAportes" style="border:none;" class="bg-success text-white small">Monto Aportes</button></th>
 		                    <th class="aportesDet bg-success text-white" style="display:none"><small>AFP.Fut</small></th>
 		                    <th class="aportesDet bg-success text-white" style="display:none"><small>AFP.Prev</small></th>
@@ -93,8 +84,6 @@
 		                    <th class="aportesDet bg-success text-white" style="display:none"><small>A.Solidario(25)</small></th>
 		                    <th class="aportesDet bg-success text-white" style="display:none"><small>A.Solidario(35)</small></th>
 		                    <th class="aportesDet bg-success text-white" style="display:none"><small>RC-IVA</small></th>
-
-		                    
 		                    <th><small>Atrasos</small></th>
 		                    <th><small>Anticipos</small></th>
 		                    <th><small>Dotaciones</small></th>
@@ -142,6 +131,8 @@
 						$sum_total_m_descuentos=0;
 						$sum_total_l_pagable=0;
 						$sum_total_a_patronal=0;
+
+						$dias_trabajados_asistencia=30;//ver datos
 						while ($row = $stmtArea->fetch(PDO::FETCH_BOUND)) 
 						{
 							$sql = "SELECT ppm.cod_personalcargo,ppm.cod_gradoacademico,ppm.dias_trabajados,ppm.horas_pagadas,ppm.haber_basico,
@@ -259,12 +250,12 @@
 				                    <td class="text-center small"><?=formatNumberDec($haber_basico_tp);?></td>
 				                    <td class="text-center small"><?=$dias_trabajados;?></td>                
 				                    <td class="text-center small"><?=formatNumberDec($bono_antiguedad_tp);?></td>
-				                    <?php                    
-				                    if(count($arrayBonos)>0)
+				                    <?php
+
+				                    if($swBonosOtro)
 				                    {
 				                        $total_bonos1=0;
 										  $total_bonos2=0;
-
 										  $sqlBonos1 = "SELECT bpm.monto
 										  from bonos_personal_mes bpm,bonos b
 										  where bpm.cod_bono=b.codigo and bpm.cod_personal=$cod_personalcargo and bpm.cod_gestion=$cod_gestion and bpm.cod_mes=$cod_mes and bpm.cod_estadoreferencial=1 and b.cod_tipocalculobono=1";
@@ -291,8 +282,6 @@
 
 				                      $sumaBono_otros_tp=$sumaBono_otros*$porcentaje/100;
 				                      $sum_total_o_bonos+=$sumaBono_otros_tp;
-				                
-
 				                      if($sumaBono_otros==null){ $sumaBono_otros_tp=0;}
 				                      ?> 
 				                      <td class="text-center small"><?=formatNumberDec($sumaBono_otros_tp);?></td>
@@ -324,23 +313,26 @@
 				                          <?php                            
 				                          }
 				                      	}
-				                    }else{$sumabonos_otros=0;
+					                    
+				                                            
+				                    }else{
+				                      $sumabonos_otros=0;
 				                      ?>
 				                      <td class="small"><?=formatNumberDec($sumabonos_otros);?></td>
 				                      <?php
 				                    }                                          
 				                      
-				                    	$afp_1_tp=$afp_1*$porcentaje/100;
-				                    	$afp_2_tp=$afp_2*$porcentaje/100;
-				                    	$a_solidario_13000_tp=$a_solidario_13000*$porcentaje/100;
-				                    	$a_solidario_25000_tp=$a_solidario_25000*$porcentaje/100;
-				                    	$a_solidario_35000_tp=$a_solidario_35000*$porcentaje/100;
-				                    	$rc_iva_tp=$rc_iva*$porcentaje/100;
+			                    	$afp_1_tp=$afp_1*$porcentaje/100;
+			                    	$afp_2_tp=$afp_2*$porcentaje/100;
+			                    	$a_solidario_13000_tp=$a_solidario_13000*$porcentaje/100;
+			                    	$a_solidario_25000_tp=$a_solidario_25000*$porcentaje/100;
+			                    	$a_solidario_35000_tp=$a_solidario_35000*$porcentaje/100;
+			                    	$rc_iva_tp=$rc_iva*$porcentaje/100;
 
 
-			                      		$monto_aportes_tp = $afp_1_tp+$afp_2_tp+$a_solidario_13000_tp+$a_solidario_25000_tp+$a_solidario_35000_tp+$rc_iva_tp;
+		                      		$monto_aportes_tp = $afp_1_tp+$afp_2_tp+$a_solidario_13000_tp+$a_solidario_25000_tp+$a_solidario_35000_tp+$rc_iva_tp;
 
-			                      		$sum_total_m_aportes+=$monto_aportes_tp;                    
+		                      		$sum_total_m_aportes+=$monto_aportes_tp;                    
 				                          
 				                    ?>  
 				                    <td class="small"><?=formatNumberDec($monto_bonos_tp);?></td>
