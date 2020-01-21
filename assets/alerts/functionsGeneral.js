@@ -943,19 +943,41 @@ function mostrarPreciosPlantilla(){
   if($("#monto_ibnorca").val()==""||$("#monto_f_ibnorca").val()==""||str_cuenta.length==1){
     $("#mensajeDetalle").html("<center><p class='text-danger'>Todos los campos son requeridos</p></center>");
   }else{
+    var tiDato=$('#tipo_dato').val();
+    var monto_calc=$('#monto_calculado').val();
+    if(tiDato==1){
+      var monto_ib=$('#monto_ibnorca').val();
+      var monto_fib=$('#monto_f_ibnorca').val();   
+    }else{
+      if($("#monto_ibnorca1").hasClass("d-none")){
+         if($("#monto_ibnorca2").hasClass("d-none")){
+          if($('#tipo_costo'+index).val()==2){
+            var monto_ib=$("#monto_alumno_edit").val()*$("#alumnos_ibnorca").val();
+            var monto_fib=$("#monto_alumno_edit").val()*$("#alumnos_ibnorca").val();
+          }else{
+            var monto_ib=$("#monto_f_ibnorca_edit").val();
+            var monto_fib=$("#monto_f_ibnorca_edit").val();
+          }
+         }else{
+           var monto_ib=$("#monto_f_ibnorca_edit").val();
+           var monto_fib=$("#monto_f_ibnorca_edit").val();
+         }
+      }else{
+        var monto_ib=$("#monto_ibnorca_edit").val()/$("#cod_mescurso").val();
+        var monto_fib=$("#monto_ibnorca_edit").val()/$("#cod_mescurso").val();
+      }
+    }
   var detalle={
     codigo_cuenta:str_cuenta[0],
     cuenta:str_cuenta[1],
     tipo: $('#tipo_dato').val(),
-    monto_i: $('#monto_ibnorca').val(),
-    monto_fi: $('#monto_f_ibnorca').val(),
-    monto_cal: $('#monto_calculado').val()
+    monto_i: monto_ib,
+    monto_fi: monto_fib,
+    monto_cal: monto_calc
     }
   itemDetalle[index-1].push(detalle);
   $('#cuenta').val("");
   $('#tipo').val("");
-  $('#monto_ibnorca').val("");
-  $('#monto_f_ibnorca').val("");
 
   listarDet(index);
   mostrarDetalle(index);
@@ -1033,10 +1055,23 @@ function removeDet(item,fila){
 
 function limpiarMontos(){
     if($("#tipo_dato").val()==2){
-         $("#monto_ibnorca").val("0");
-         $("#monto_f_ibnorca").val("0");
+         //$("#monto_ibnorca").val("0");
+         //$("#monto_f_ibnorca").val("0");
+         var fila=$("#codGrupo").val();
+         var tipoGrupo=$("#tipo_costo"+fila).val();
+         $("#montos_editables").removeClass("d-none");
+         if(tipoGrupo==2){
+          if($("#columna_edit_alumno").hasClass("d-none")){
+            $("#columna_edit_alumno").removeClass("d-none");
+          }
+         }else{
+          if(!($("#columna_edit_alumno").hasClass("d-none"))){
+            $("#columna_edit_alumno").addClass("d-none");
+          }
+         }   
     }else{
-      calcularMontos();
+        $("#montos_editables").addClass("d-none");
+      //calcularMontos();
     }
 }
  function calcularMontos(){
@@ -1054,24 +1089,65 @@ function limpiarMontos(){
          $("#mensajeDetalle").html("<center><p class='text-muted'>Cálculando espere porfavor...</p></center>"); 
         },
         success:  function (resp) {
-          if($("#tipo_dato").val()==1){
-            $("#monto_ibnorca").val(parseFloat(resp));
+          //if($("#tipo_dato").val()==1){
+            $("#monto_ibnorca").val(parseFloat(resp)*$("#cod_mescurso").val());
             $("#monto_f_ibnorca").val(parseFloat(resp));
-          }else{
+            $("#monto_alumno").val(Math.round(parseFloat(resp)/$("#alumnos_ibnorca").val()));
+
+            $("#monto_calculado").val(parseFloat(resp));
+            
+            $("#monto_ibnorca_edit").val(parseFloat(resp)*$("#cod_mescurso").val());
+            $("#monto_f_ibnorca_edit").val(parseFloat(resp));
+            $("#monto_alumno_edit").val(Math.round(parseFloat(resp)/$("#alumnos_ibnorca").val()));
+
+         /* }else{
             $("#monto_ibnorca").val("0");
             $("#monto_f_ibnorca").val("0");
-          }
+          }*/
            var momentoActual = new Date()
                 var hora = momentoActual.getHours();
                 var minuto = momentoActual.getMinutes();
                 var segundo = momentoActual.getSeconds();
                 var horaImprimible = hora + ":" + minuto + ":" + segundo;
-          $("#monto_calculado").val(parseFloat(resp));
+          
           $("#mensajeDetalle").html("<center><p class='text-info'>Cálculo realizado Hoy "+horaImprimible+"</p></center>");
         }
     });
  }
+function mostrarInputMonto(id){
+  if($("#"+id).hasClass("d-none")){
+     $("#"+id).removeClass("d-none");
+  switch (id){
+    case 'monto_ibnorca1':
+     if(!($("#monto_ibnorca2").hasClass("d-none"))){
+       $("#monto_ibnorca2").addClass("d-none");   
+     }
+     if(!($("#monto_ibnorca3").hasClass("d-none"))){
+       $("#monto_ibnorca3").addClass("d-none");   
+     }
+    break;
+    case 'monto_ibnorca2':
+     if(!($("#monto_ibnorca1").hasClass("d-none"))){
+       $("#monto_ibnorca1").addClass("d-none");   
+     }
+     if(!($("#monto_ibnorca3").hasClass("d-none"))){
+       $("#monto_ibnorca3").addClass("d-none");   
+     }
+    break;
+    case 'monto_ibnorca3':
+     if(!($("#monto_ibnorca2").hasClass("d-none"))){
+       $("#monto_ibnorca2").addClass("d-none");   
+     }
+     if(!($("#monto_ibnorca1").hasClass("d-none"))){
+       $("#monto_ibnorca1").addClass("d-none");   
+     }
+    break;
+  }
+  }else{
+     $("#"+id).addClass("d-none");
+  }
 
+}
 
 //PARTIDAS PRESUPUESTARIAS FUNCION DE BUSCAR CUENTA//
  var cuentas_tabla=[]; 
@@ -3494,8 +3570,9 @@ function guardarDatosPlantilla(btn_id){
     type: "GET",
     data: parametros,
     dataType: "html",
-    success: function (resp) {   
-     Swal.fire("Correcto!", "El proceso fue satisfactorio!", "success");
+    success: function (resp) { 
+      alerts.showSwal('success-message','registerSimulacion.php?cod='+cod_sim);
+     //Swal.fire("Correcto!", "El proceso fue satisfactorio!", "success");
      $("#"+btn_id).removeAttr("disabled"); 
       var precios=resp.split('$$$');
       $("#precio_local").val(precios[0].trim());
@@ -3557,5 +3634,19 @@ $(document).ready(function() {
       ReprocesarPlanillaTrib(cod_planillaTrib,cod_planilla);
     });    
   }  
-  
+  //datepickers
+  $('.datepicker').datetimepicker({
+      format: 'DD/MM/YYYY',
+      icons: {
+        time: "fa fa-clock-o",
+        date: "fa fa-calendar",
+        up: "fa fa-chevron-up",
+        down: "fa fa-chevron-down",
+        previous: 'fa fa-chevron-left',
+        next: 'fa fa-chevron-right',
+        today: 'fa fa-screenshot',
+        clear: 'fa fa-trash',
+        close: 'fa fa-remove'
+      }
+    });
 });

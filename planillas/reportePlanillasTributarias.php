@@ -18,6 +18,10 @@ $fechaActual=date("Y-m-d");
 $mes=strtoupper(nameMes($_GET['cod_mes']));
 $gestion=nameGestion($_GET['cod_gestion']);
 $codPlanilla=$_GET['codigo_trib'];
+
+// echo "mes:".$_GET['cod_mes']."-";
+// echo "cod_gestion:".$_GET['cod_gestion']."-";
+// echo "codigo_trib:".$_GET['codigo_trib']."-";
 //html del reporte
 $html = '';
 $html.='<html>'.

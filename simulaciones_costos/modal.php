@@ -230,7 +230,7 @@
                         </div>
                       </div>
                       <hr>
-                      <a href="#" onclick="modificarMontos()" class="btn btn-sm btn-danger"><i class="material-icons">edit</i> Editar COSTOS VARIABLES</a>
+                     
                       <div class="form-group float-right">
                         <button type="button" id="boton_guardarplan" class="btn btn-default" onclick="guardarDatosPlantilla(this.id)">Guardar</button>
                       </div> 

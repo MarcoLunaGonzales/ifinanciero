@@ -13,8 +13,10 @@ if(!isset($_GET['comp'])){
     $nombreMonedaG=nameMoneda($moneda);
 }
 
-
 $dbh = new Conexion();
+$sqlX="SET NAMES 'utf8'";
+$stmtX = $dbh->prepare($sqlX);
+$stmtX->execute();
 // Preparamos
 $stmt = $dbh->prepare("SELECT (select u.nombre from unidades_organizacionales u where u.codigo=c.cod_unidadorganizacional)unidad,
 (select u.abreviatura from unidades_organizacionales u where u.codigo=c.cod_unidadorganizacional)cod_unidad,c.cod_gestion, 
@@ -53,6 +55,7 @@ $data = obtenerComprobantesDetImp($codigo);
 $tc=obtenerValorTipoCambio($moneda,strftime('%Y-%m-%d',strtotime($fechaC)));
 if($tc==0){$tc=1;}
 $fechaActual=date("Y-m-d");
+header('Content-type: text/html; charset=ISO-8859-1');
 $html = '';
 $html.='<html>'.
          '<head>'.
@@ -78,7 +81,7 @@ $html.=  '<header class="header">'.
             '<tr class="bold table-title">'.
               '<td width="22%">Fecha: '.strftime('%d/%m/%Y',strtotime($fechaC)).'</td>'.
               '<td width="33%">t/c: '.$abrevMon.': '.$tc.'</td>'.
-              '<td width="45%" class="text-right">'.$tipoC.' '.strtoupper(abrevMes(strftime('%m',strtotime($fechaC)))).' Número: '.generarNumeroCeros(6,$numeroC).'</td>'.
+              '<td width="45%" class="text-right">'.$tipoC.' '.strtoupper(abrevMes(strftime('%m',strtotime($fechaC)))).' N&uacute;mero: '.generarNumeroCeros(6,$numeroC).'</td>'.
             '</tr>'.
             '<tr>'.
             '<td colspan="3">CONCEPTO: '.$glosaC.'</td>'.
@@ -111,7 +114,7 @@ $html.=  '<header class="header">'.
             $html.='</tr>'.
             '<tr class="bold table-title text-center">'.
               '<td>Cuenta</td>'.
-              '<td>Nombre de la cuenta / Descripción</td>'.
+              '<td>Nombre de la cuenta / Descripci&oacute;n</td>'.
               '<td>Debe</td>'.
               '<td>Haber</td>';
               if($moneda!=1){
@@ -123,6 +126,7 @@ $html.=  '<header class="header">'.
            '<tbody>';
             $index=1;
             while ($row = $data->fetch(PDO::FETCH_ASSOC)) {
+              print_r($row['nombre']);
              $html.='<tr>'.
                       '<td>'.$row['numero'].'<br>'.$row['unidadAbrev'].'<br>'.$row['abreviatura'].'</td>'.
                       '<td>'.$row['nombre'].'<br>'.$row['glosa'].'</td>';
@@ -158,6 +162,10 @@ $html.=  '<header class="header">'.
 $html.=    '</table>';
 $html.='<p class="bold table-title">Son: '.ucfirst(CifrasEnLetras::convertirNumeroEnLetras($entero)).'      '.$centavos.'/100 Bolivianos</p>';         
 $html.='</body>'.
-      '</html>';           
+      '</html>';
+
+$html = mb_convert_encoding($html,'UTF-8', 'ISO-8859-1');
+
+ //echo $html;           
 descargarPDF("IBNORCA - ".$unidadC." (".$tipoC.", ".$numeroC.")",$html);
 ?>

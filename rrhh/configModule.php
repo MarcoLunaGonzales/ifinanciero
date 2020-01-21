@@ -114,9 +114,11 @@ $urlPersonalOtrosSave="?opcion=personalOtrosSave";
 //planilla sueldo
 $urlPlanillasSueldoList="?opcion=planillasSueldoPersonal";
 $urlGenerarPlanillaSueldoPrevia="?opcion=generarPlanillaSueldoPrevia";
-
 $urlPlanillaSueldoPersonalActual="planillas/planillaSueldoPersonalActual.php";
+
 $urlPlanillaSueldoPersonalActualPDF="planillas/reportePlanillasSueldos.php";
+$urlPlanillaTribPersonalReport="planillas/reportePlanillasTributarias2.php";
+
 $urlPlanillaTribPersonalPDF="planillas/reportePlanillasTributarias.php";
 $urlDetallePlanillaPrerequisitos="planillas/detallePlanillaPrerequisitos.php";
 $urlPlanillaSueldoPersonalReporte="planillas/planillaSueldoPersonalReporte.php";
@@ -127,14 +129,6 @@ $urlPlanillaContabilizacion="planillas/executeComprobantePlanillaSueldos.php";
 $urlPlanillasAguinaldosList="?opcion=planillasAguinaldosPersonal";
 $urlGenerarPlanillaAguinaldosPrevia="?opcion=generarPlanillaAguinaldosPrevia";
 $urlPlanillaAguinaldoPersonalReporte="planillas/planillaAguinaldoPersonalReporte.php";
-
-$urlPlanillaSueldoPersonalActual="planillas/planillaSueldoPersonalActual.php";
-$urlPlanillaSueldoPersonalActualPDF="planillas/reportePlanillasSueldos.php";
-$urlPlanillaTribPersonalPDF="planillas/reportePlanillasTributarias.php";
-$urlDetallePlanillaPrerequisitos="planillas/detallePlanillaPrerequisitos.php";
-
-$urlPlanillaContabilizacion="planillas/executeComprobantePlanillaSueldos.php";
-
 
 
 

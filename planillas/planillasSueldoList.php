@@ -11,6 +11,7 @@ $globalNombreUnidad=$_SESSION["globalNombreUnidad"];
 
 $dbh = new Conexion();
 
+
 if($globalAdmin==1){//para personal admin
   $stmtAdmnin = $dbh->prepare("SELECT codigo,cod_gestion,cod_mes,cod_estadoplanilla,
   (select m.nombre from meses m where m.codigo=cod_mes)as mes,
@@ -26,12 +27,6 @@ if($globalAdmin==1){//para personal admin
   $stmtAdmnin->bindColumn('mes', $mes);
   $stmtAdmnin->bindColumn('cod_estadoplanilla', $cod_estadoplanilla);
   $stmtAdmnin->bindColumn('estadoplanilla', $estadoplanilla);
-
-  $stmtAdmninUO = $dbh->prepare("SELECT cod_uo,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_uo) as nombre_uo from personal_area_distribucion where cod_estadoreferencial=1
-  GROUP BY cod_uo");
-  $stmtAdmninUO->execute();
-  $stmtAdmninUO->bindColumn('cod_uo', $cod_uo_x);
-  $stmtAdmninUO->bindColumn('nombre_uo', $nombre_uo_x);
   ?>
   <div class="content">
     <div class="container-fluid">
@@ -59,6 +54,35 @@ if($globalAdmin==1){//para personal admin
                   <?php $index=1;                  
                   $datosX="";
                   while ($row = $stmtAdmnin->fetch(PDO::FETCH_BOUND)) {
+                    //para planilla tributaria
+                    $stmtAdmninTrib=$dbh->prepare("SELECT codigo,modified_at,modified_by from planillas_tributarias where cod_mes=$cod_mes and cod_gestion=$cod_gestion");
+                    $stmtAdmninTrib->execute();
+                    $sinTrib=0;$codigoTrib=0;
+                    setlocale(LC_TIME, "Spanish");
+                    while ($rowTrib = $stmtAdmninTrib->fetch(PDO::FETCH_ASSOC)) {
+                      $sinTrib++;
+                      $codigoTrib=$rowTrib['codigo'];
+                      $modified_at=strftime('%d de %B de %Y %H:%M:%S',strtotime($rowTrib['modified_at']));
+                      $modified_by=nombrePersona($rowTrib['modified_by']);
+                      if($modified_by==null){
+                        $modified_by="No se encontró";
+                      }
+                    }
+                    //==termina planilla tributaria
+
+                    //para los dropdows de planillas
+                    $stmtAdmninUO = $dbh->prepare("SELECT cod_uo,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_uo) as nombre_uo from personal_area_distribucion where cod_estadoreferencial=1
+                    GROUP BY cod_uo");
+                    $stmtAdmninUO->execute();
+                    $stmtAdmninUO->bindColumn('cod_uo', $cod_uo_x);
+                    $stmtAdmninUO->bindColumn('nombre_uo', $nombre_uo_x);
+                    $stmtAdmninUOPDF = $dbh->prepare("SELECT cod_uo,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_uo) as nombre_uo from personal_area_distribucion where cod_estadoreferencial=1
+                    GROUP BY cod_uo");
+                    $stmtAdmninUOPDF->execute();
+                    $stmtAdmninUOPDF->bindColumn('cod_uo', $cod_uo_x);
+                    $stmtAdmninUOPDF->bindColumn('nombre_uo', $nombre_uo_x);
+                    //termina las consultas de dropdows
+
                     $label_uo_aux='';
                     $datosX =$codigo_planilla."-";
                     if($cod_estadoplanilla==1){
@@ -97,43 +121,26 @@ if($globalAdmin==1){//para personal admin
                       <td class="td-actions text-right">
                         <?php
                         if($cod_estadoplanilla==1){    ?>
-             
-                        <button type="button" class="btn" style="background-color:#3b83bd;color:#ffffff;" data-toggle="modal" data-target="#modalProcesar" onclick="agregaformPre('<?=$datosX;?>')">
-                          <i class="material-icons" title="Procesar Planilla">perm_data_setting</i>
-                        </button>                      
-                        <?php }                                                                          
+                          <button type="button" class="btn" style="background-color:#3b83bd;color:#ffffff;" data-toggle="modal" data-target="#modalProcesar" onclick="agregaformPre('<?=$datosX;?>')">
+                            <i class="material-icons" title="Procesar Planilla Sueldos">perm_data_setting</i>
+                          </button>                      
+                          <?php 
+                        }                                                                          
                         if($cod_estadoplanilla==2){    ?>
                         <a href='<?=$urlDetallePlanillaPrerequisitos;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>' target="_blank" rel="tooltip" class="btn btn-warning">
                           <i class="material-icons" title="Prerequisitos">chrome_reader_mode</i>
                         </a>
                                             
                         <button type="button" class="btn" style="background-color:#3b83bd;color:#ffffff;" data-toggle="modal" data-target="#modalreProcesar" onclick="agregaformRP('<?=$datosX;?>')">
-                          <i class="material-icons" title="Reprocesar Planilla">autorenew</i>                   
+                          <i class="material-icons" title="Reprocesar Planilla Sueldos">autorenew</i>                   
                         </button>                                                                            
                       
                         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalCerrar" onclick="agregaformCP('<?=$datosX;?>')">
-                          <i class="material-icons" title="Cerrar Planilla">assignment_returned</i>
+                          <i class="material-icons" title="Cerrar Planilla Sueldos">assignment_returned</i>
                         </button>                        
-                        <a href='<?=$urlPlanillaSueldoPersonalActualPDF;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>' target="_blank" rel="tooltip" class="btn btn-danger">            
-                          <i class="material-icons" title="Ver Planilla Sueldos PDF">remove_red_eye</i>
-                        </a>                      
                         <label class="text-danger">|</label>
                         <?php 
-                        $stmtAdmninTrib=$dbh->prepare("SELECT codigo,modified_at,modified_by from planillas_tributarias where cod_mes=$cod_mes and cod_gestion=$cod_gestion");
-                           //ejecutamos
-                        $stmtAdmninTrib->execute();
-                        $sinTrib=0;$codigoTrib=0;
-                        setlocale(LC_TIME, "Spanish");
-                        while ($rowTrib = $stmtAdmninTrib->fetch(PDO::FETCH_ASSOC)) {
-                          $sinTrib++;
-                          $codigoTrib=$rowTrib['codigo'];
-                          $modified_at=strftime('%d de %B de %Y %H:%M:%S',strtotime($rowTrib['modified_at']));
-                          $modified_by=nombrePersona($rowTrib['modified_by']);
-                          if($modified_by==null){
-                            $modified_by="No se encontró";
-                          }
-
-                        }
+                        
                         if($sinTrib==0){
                            ?>
                           <button type="button" class="btn btn-info"  data-toggle="modal" data-target="#modalreProcesarPlanillaTributaria" onclick="agregaformPreTrib('<?=$codigoTrib;?>','<?=$datosX;?>','<?=$mes?>','<?=$modified_at?>','<?=$modified_by?>')">
@@ -145,21 +152,24 @@ if($globalAdmin==1){//para personal admin
                           <button type="button" class="btn"  style="background-color:#3b83bd;color:#ffffff;" data-toggle="modal" data-target="#modalreProcesarPlanillaTributaria" onclick="agregaformPreTrib('<?=$codigoTrib;?>','<?=$datosX;?>','<?=$mes?>','<?=$modified_at?>','<?=$modified_by?>')">
                             <i class="material-icons" title="ReProcesar Planilla Tributaria">autorenew</i> PT                       
                           </button> 
-                          <a href='<?=$urlPlanillaTribPersonalPDF;?>?codigo_trib=<?=$codigoTrib;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>' target="_blank" rel="tooltip" class="btn btn-success">
+                          <!-- <a href='<?=$urlPlanillaTribPersonalPDF;?>?codigo_trib=<?=$codigoTrib;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>' target="_blank" rel="tooltip" class="btn btn-success">
+                            <i class="material-icons" title="Ver Planilla Triburaria">remove_red_eye</i> PT                       
+                          </a> -->
+                          <a href='<?=$urlPlanillaTribPersonalReport;?>?codigo_trib=<?=$codigoTrib;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>' target="_blank" rel="tooltip" class="btn btn-success">
                             <i class="material-icons" title="Ver Planilla Triburaria">remove_red_eye</i> PT                       
                           </a>
                            <?php
                         }
                         ?>
                         <?php }?>
+
                         <?php if($cod_estadoplanilla==3){    ?>  
-                                             
-                        <a href='<?=$urlPlanillaSueldoPersonalActualPDF;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>' target="_blank" rel="tooltip" class="btn btn-danger">            
-                          <i class="material-icons" title="Ver Planilla Sueldos PDF">remove_red_eye</i>                        
-                        </a>
-                        <a href='<?=$urlPlanillaTribPersonalPDF;?>?codigo_trib=<?=$codigoTrib;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>' target="_blank" rel="tooltip" class="btn btn-success">            
+                        <!-- <a href='<?=$urlPlanillaTribPersonalPDF;?>?codigo_trib=<?=$codigoTrib;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>' target="_blank" rel="tooltip" class="btn btn-success">            
                             <i class="material-icons" title="Ver Planilla Triburaria">remove_red_eye</i> PT                       
-                        </a>
+                        </a> -->
+                        <a href='<?=$urlPlanillaTribPersonalReport;?>?codigo_trib=<?=$codigoTrib;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>' target="_blank" rel="tooltip" class="btn btn-success">
+                            <i class="material-icons" title="Ver Planilla Triburaria">remove_red_eye</i> PT                       
+                          </a>
                         <?php }?>                                                                
                       </td>
                       <td class="td-actions text-right">
@@ -167,7 +177,7 @@ if($globalAdmin==1){//para personal admin
                         if($cod_estadoplanilla==2){    ?>                                                                                                                                 
                         <div class="dropdown">
                           <button class="btn btn-primary dropdown-toggle" type="button" id="reporte_sueldos" data-toggle="dropdown" aria-extended="true">
-                            <i class="material-icons" title="Ver Planilla sueldos">remove_red_eye</i>                        
+                            <i class="material-icons" title="Ver Planilla sueldos">remove_red_eye</i>
                             <span class="caret"></span>
                           </button>
                           <ul class="dropdown-menu" role="menu" aria-labelledby="reporte_sueldos">
@@ -182,12 +192,30 @@ if($globalAdmin==1){//para personal admin
                           ?>                              
                           </ul>
                         </div>
+                        <div class="dropdown">
+                          <button class="btn btn-danger dropdown-toggle" type="button" id="reporte_sueldos" data-toggle="dropdown" aria-extended="true">
+                            <i class="material-icons" title="Ver Planilla sueldos PDF">remove_red_eye</i>
+                            <span class="caret"></span>
+                          </button>
+                          <ul class="dropdown-menu" role="menu" aria-labelledby="reporte_sueldos">
+                            <li role="presentation" class="dropdown-header"><small>OFICINA</small></li>
+                            <?php
+                            while ($row = $stmtAdmninUOPDF->fetch(PDO::FETCH_BOUND)) {
+                              if($cod_uo_x>0){?>                                                                
+                                  <li role="presentation"><a role="item" href="<?=$urlPlanillaSueldoPersonalActualPDF;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>&codigo_uo=<?=$cod_uo_x;?>" target="_blank"><small><?=$nombre_uo_x;?></small></a>
+                                  </li>
+                                <?php 
+                              }
+                            }
+                          ?>                              
+                          </ul>
+                        </div>
 
                         <?php }?>
                         <?php if($cod_estadoplanilla==3){    ?>      
                         <div class="dropdown">
                           <button class="btn btn-primary dropdown-toggle" type="button" id="reporte_sueldos" data-toggle="dropdown" aria-extended="true">
-                            <i class="material-icons" title="Ver Planilla por OF">remove_red_eye</i>                        
+                            <i class="material-icons" title="Ver Planilla por OF">remove_red_eye</i>
                             <span class="caret"></span>
                           </button>
                           <ul class="dropdown-menu" role="menu" aria-labelledby="reporte_sueldos">
@@ -201,6 +229,24 @@ if($globalAdmin==1){//para personal admin
                             }
                           ?>                          
                         </ul>
+                        <div class="dropdown">
+                          <button class="btn btn-danger dropdown-toggle" type="button" id="reporte_sueldos" data-toggle="dropdown" aria-extended="true">
+                            <i class="material-icons" title="Ver Planilla sueldos PDF">remove_red_eye</i>
+                            <span class="caret"></span>
+                          </button>
+                          <ul class="dropdown-menu" role="menu" aria-labelledby="reporte_sueldos">
+                            <li role="presentation" class="dropdown-header"><small>OFICINA</small></li>
+                            <?php
+                            while ($row = $stmtAdmninUOPDF->fetch(PDO::FETCH_BOUND)) {
+                              if($cod_uo_x>0){?>                                                                
+                                  <li role="presentation"><a role="item" href="<?=$urlPlanillaSueldoPersonalActualPDF;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>&codigo_uo=<?=$cod_uo_x;?>" target="_blank"><small><?=$nombre_uo_x;?></small></a>
+                                  </li>
+                                <?php 
+                              }
+                            }
+                          ?>                              
+                          </ul>
+                        </div>
                       </div>                                                                 
                       <?php }?>                          
                     </td>
@@ -335,12 +381,10 @@ if($globalAdmin==1){//para personal admin
       });
       $('#AceptarReProceso').click(function(){      
         cod_planilla=document.getElementById("codigo_planillaRP").value;      
-
         ReprocesarPlanilla(cod_planilla);
       });
       $('#AceptarCerrar').click(function(){      
-        cod_planilla=document.getElementById("codigo_planillaCP").value;      
-
+        cod_planilla=document.getElementById("codigo_planillaCP").value;
         CerrarPlanilla(cod_planilla);
       });
       
@@ -370,6 +414,11 @@ if($globalAdmin==1){//para personal admin
   $stmtAdmninUO->execute();
   $stmtAdmninUO->bindColumn('cod_uo', $cod_uo_x);
   $stmtAdmninUO->bindColumn('nombre_uo', $nombre_uo_x);
+  $stmtAdmninUOPDF = $dbh->prepare("SELECT cod_uo,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_uo) as nombre_uo from personal_area_distribucion where cod_estadoreferencial=1
+  GROUP BY cod_uo");
+  $stmtAdmninUOPDF->execute();
+  $stmtAdmninUOPDF->bindColumn('cod_uo', $cod_uo_x);
+  $stmtAdmninUOPDF->bindColumn('nombre_uo', $nombre_uo_x);
   ?>
   <div class="content">
     <div class="container-fluid">
@@ -451,29 +500,11 @@ if($globalAdmin==1){//para personal admin
                         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalCerrarNA" onclick="agregaformCPNA('<?=$datosX;?>')">
                           <i class="material-icons" title="Cerrar Planilla Sueldos">assignment_returned</i>
                         </button>                        
-                        <a href='<?=$urlPlanillaSueldoPersonalActualPDF;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>' target="_blank" rel="tooltip" class="btn btn-danger">            
-                          <i class="material-icons" title="Ver Planilla Sueldos PDF">remove_red_eye</i>                 
-                        </a>                      
                         
-                        <?php }else{?>
-                        <a href='<?=$urlPlanillaSueldoPersonalActualPDF;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>' target="_blank" rel="tooltip" class="btn btn-danger">            
-                          <i class="material-icons" title="Ver Planilla Sueldos PDF">remove_red_eye</i>                 
-                        </a>                      
-                        
-                        <?php
-
+                        <?php }
                         }
-
-                        }?>
-                        <?php if($cod_estadoplanilla==3){    ?>
-                        <!-- <a href='<?=$urlPlanillaSueldoPersonalActual;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>' target="_blank" rel="tooltip" class="btn btn-success">            
-                          <i class="material-icons" title="Ver Planilla">remove_red_eye</i>                        
-                        </a> -->
-                        <a href='<?=$urlPlanillaSueldoPersonalActualPDF;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>' target="_blank" rel="tooltip" class="btn btn-danger">  
-                          <i class="material-icons" title="Ver Planilla sueldos PDF">remove_red_eye</i>               
-                        </a>
-                        
-                        <?php }?>                                                                
+                        ?>
+                                                                                        
                       </td>
 
                       <td class="td-actions text-right">
@@ -481,7 +512,7 @@ if($globalAdmin==1){//para personal admin
                         if($cod_estadoplanilla==2){    ?>                                                                                                                                 
                         <div class="dropdown">
                           <button class="btn btn-primary dropdown-toggle" type="button" id="reporte_sueldos" data-toggle="dropdown" aria-extended="true">
-                            <i class="material-icons" title="Ver Planilla sueldos">remove_red_eye</i>                        
+                            <i class="material-icons" title="Ver Planilla sueldos">remove_red_eye</i>   
                             <span class="caret"></span>
                           </button>
                           <ul class="dropdown-menu" role="menu" aria-labelledby="reporte_sueldos">
@@ -496,12 +527,30 @@ if($globalAdmin==1){//para personal admin
                           ?>                              
                           </ul>
                         </div>
+                        <div class="dropdown">
+                          <button class="btn btn-danger dropdown-toggle" type="button" id="reporte_sueldos" data-toggle="dropdown" aria-extended="true">
+                            <i class="material-icons" title="Ver Planilla sueldos PDF">remove_red_eye</i>
+                            <span class="caret"></span>
+                          </button>
+                          <ul class="dropdown-menu" role="menu" aria-labelledby="reporte_sueldos">
+                            <li role="presentation" class="dropdown-header"><small>OFICINA</small></li>
+                            <?php
+                            while ($row = $stmtAdmninUOPDF->fetch(PDO::FETCH_BOUND)) {
+                              if($cod_uo_x>0){?>                                                                
+                                  <li role="presentation"><a role="item" href="<?=$urlPlanillaSueldoPersonalActualPDF;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>&codigo_uo=<?=$cod_uo_x;?>" target="_blank"><small><?=$nombre_uo_x;?></small></a>
+                                  </li>
+                                <?php 
+                              }
+                            }
+                          ?>                              
+                          </ul>
+                        </div>
 
                         <?php }?>
                         <?php if($cod_estadoplanilla==3){    ?>      
                         <div class="dropdown">
                           <button class="btn btn-primary dropdown-toggle" type="button" id="reporte_sueldos" data-toggle="dropdown" aria-extended="true">
-                            <i class="material-icons" title="Ver Planilla por OF">remove_red_eye</i>                        
+                            <i class="material-icons" title="Ver Planilla por OF">remove_red_eye</i>
                             <span class="caret"></span>
                           </button>
                           <ul class="dropdown-menu" role="menu" aria-labelledby="reporte_sueldos">
@@ -514,6 +563,24 @@ if($globalAdmin==1){//para personal admin
                               }
                             }
                           ?>      
+                          </ul>
+                        </div>
+                        <div class="dropdown">
+                          <button class="btn btn-danger dropdown-toggle" type="button" id="reporte_sueldos" data-toggle="dropdown" aria-extended="true">
+                            <i class="material-icons" title="Ver Planilla sueldos PDF">remove_red_eye</i>
+                            <span class="caret"></span>
+                          </button>
+                          <ul class="dropdown-menu" role="menu" aria-labelledby="reporte_sueldos">
+                            <li role="presentation" class="dropdown-header"><small>OFICINA</small></li>
+                            <?php
+                            while ($row = $stmtAdmninUOPDF->fetch(PDO::FETCH_BOUND)) {
+                              if($cod_uo_x>0){?>                                                                
+                                  <li role="presentation"><a role="item" href="<?=$urlPlanillaSueldoPersonalActualPDF;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>&codigo_uo=<?=$cod_uo_x;?>" target="_blank"><small><?=$nombre_uo_x;?></small></a>
+                                  </li>
+                                <?php 
+                              }
+                            }
+                          ?>                              
                           </ul>
                         </div>                                                                 
                         <?php }?>                          
@@ -592,45 +659,6 @@ if($globalAdmin==1){//para personal admin
         <div class="modal-footer">
           <button type="button" class="btn btn-success" id="AceptarCerrarNA" data-dismiss="modal">Aceptar</button>
           <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!--Modal planilla tributarua-->
-  <div class="modal fade" id="modalreProcesarPlanillaTributariaNA" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog modal-lg" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title text-danger font-weight-bold" id="myModalLabel">PLANILLA TRIBUTARIA</h4>
-        </div>
-        <div class="modal-body">
-          <input type="hidden" name="codigo_planilla2" id="codigo_planilla2" value="0">
-          <input type="hidden" name="codigo_planilla_trib" id="codigo_planilla_trib" value="0">        
-          
-          <table class="table table-condensed">
-            <thead>
-              <tr class="text-danger">
-                <th>Ultimo Proceso Realizado</th>
-                <th>Usuario</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td id="modified_at">No hay datos</td>
-                <td id="modified_by">No hay datos</td>
-              </tr>
-            </tbody>
-          </table>
-          <hr>
-          Esta acción Procesará La planilla TRIBUTARIA Del Mes <b class="font-weight-bold" id="mes_cursotitulo">En Curso</b>. ¿Deseas Continuar?
-          <div id="cargaR2" style="display:none">
-            <h3><b>Por favor espere...</b></h3>
-          </div>
-        </div>   
-        <div class="modal-footer">
-          <button type="button" class="btn btn-success" id="AceptarReProcesoTrib" >Aceptar</button>
-          <button type="button" class="btn btn-danger" data-dismiss="modal" id="CancelarReProcesoTrib">Cancelar</button>
         </div>
       </div>
     </div>

@@ -1,5 +1,4 @@
 <?php
-require_once 'layouts/bodylogin2.php';
 require_once 'conexion.php';
 require_once 'comprobantes/configModule.php';
 require_once 'styles.php';
@@ -85,7 +84,7 @@ $dbh = new Conexion();
 			                 <label class="col-sm-4 col-form-label">Desde</label>
 			                 <div class="col-sm-8">
 			                	<div class="form-group">
-	                                <input type="text" class="form-control datepicker" name="fecha_desde" id="fecha_desde" value="<?=$fechaDesde?>">
+	                                <input type="text" class="form-control datepicker " autocomplete="off" name="fecha_desde" id="fecha_desde" value="<?=$fechaDesde?>">
 			                     </div>
 			                  </div>
 			             </div>
@@ -95,7 +94,7 @@ $dbh = new Conexion();
 			                 <label class="col-sm-4 col-form-label">Hasta</label>
 			                 <div class="col-sm-8">
 			                	<div class="form-group">
-	                               <input type="text" class="form-control datepicker" name="fecha_hasta" id="fecha_hasta" value="<?=$fechaHasta?>">
+	                               <input type="text" class="form-control datepicker " autocomplete="off" name="fecha_hasta" id="fecha_hasta" value="<?=$fechaHasta?>">
 			                    </div>
 			                  </div>
 			              </div>

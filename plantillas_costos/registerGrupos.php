@@ -60,7 +60,7 @@ if(isset($_GET['cod'])){
 	<div id="contListaGrupos" class="container-fluid">
 			<input type="hidden" name="cantidad_filas" id="cantidad_filas" value="<?=$contadorRegistros;?>">
 			<input type="hidden" name="cod_plantilla" id="cod_plantilla" value="<?=$codigo?>">
-
+            <input type="hidden" name="cod_mescurso" id="cod_mescurso" value="<?=obtenerValorConfiguracion(6)?>">
 			<div class="card">
 				<div class="card-header <?=$colorCard;?> card-header-text">
 					<div class="card-text">
@@ -87,14 +87,14 @@ if(isset($_GET['cod'])){
 						</div>
 						<div class="col-sm-2">
 							<div class="form-group has-success">
-						  		<label class="bmd-label-static">Utilidad IBNORCA</label>
+						  		<label class="bmd-label-static">Utilidad Min I</label>
 						  		<input class="form-control" type="number" step="0.001" name="utilidad_ibnorca" value="<?=$utilidadIbnorcaX?>" id="utilidad_ibnorca"/>
 						  		<span class="form-control-feedback">%</span>
 							</div>
 						</div>
 						<div class="col-sm-2">
 							<div class="form-group has-success">
-						  		<label class="bmd-label-static">Utilidad FUERA IBNORCA</label>
+						  		<label class="bmd-label-static">Utilidad Min FI</label>
 						  		<input class="form-control" type="number" step="0.001" name="utilidad_fuera" value="<?=$utilidadFueraX?>" id="utilidad_fuera"/>
 						  		<span class="form-control-feedback">%</span>
 							</div>
