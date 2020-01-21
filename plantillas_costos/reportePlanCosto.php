@@ -1,4 +1,5 @@
 <?php
+set_time_limit(0);
 session_start();
 require_once '../layouts/bodylogin2.php';
 require_once '../conexion.php';
