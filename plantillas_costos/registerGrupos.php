@@ -273,7 +273,7 @@ if(isset($_GET['cod'])){
             	<div class="card">
 				<div class="card-header <?=$colorCard;?> card-header-text">
 					<div class="card-text" id="cabezadetalle">
-					  <h6 class="card-title">Detale</h6>
+					  <h6 class="card-title">Detalle</h6>
 					</div>
 				</div>
 				<div class="card-body">
