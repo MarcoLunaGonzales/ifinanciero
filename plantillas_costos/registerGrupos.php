@@ -282,9 +282,9 @@ if(isset($_GET['cod'])){
 							<tr>
 								<th>Partida</th>
 								<th>Tipo</th>
-								<th class="text-right">Monto I</th>
-								<th class="text-right">Monto FI</th>
-								<th class="text-right">Monto CAL</th>
+								<th class="text-right">M x Mes</th>
+								<th class="text-right">M x Modulo</th>
+								<th class="text-right">M x Persona</th>
 							</tr>
 						</thead>
 						<tbody id="cuerpoDetalle">

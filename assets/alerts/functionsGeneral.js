@@ -917,9 +917,9 @@ function mostrarPreciosPlantilla(){
      titulos.append($('<th>').addClass('').text('#'));
      titulos.append($('<th>').addClass('').text('PARTIDA'));
      titulos.append($('<th>').addClass('').text('TIPO'));
-     titulos.append($('<th>').addClass('').text('IBNORCA'));
-     titulos.append($('<th>').addClass('').text('FUERA IBNORCA'));
-     titulos.append($('<th>').addClass('').text('MONTO CALCULADO'));
+     titulos.append($('<th>').addClass('').text('M x MES'));
+     titulos.append($('<th>').addClass('').text('M x MODULO'));
+     titulos.append($('<th>').addClass('').text('M x PERSONA'));
      titulos.append($('<th>').addClass('').text('OPCION'));
      table.append(titulos);
    for (var i = 0; i < itemDetalle[id-1].length; i++) {
@@ -927,9 +927,9 @@ function mostrarPreciosPlantilla(){
      row.append($('<td>').addClass('').text(i+1));
      row.append($('<td>').addClass('').text(" Partida: "+itemDetalle[id-1][i].cuenta));
      row.append($('<td>').addClass('').text(itemDetalle[id-1][i].tipo));
-     row.append($('<td>').addClass('').text(itemDetalle[id-1][i].monto_i));
+     row.append($('<td>').addClass('').text(itemDetalle[id-1][i].monto_i*$("#cod_mescurso").val()));
      row.append($('<td>').addClass('').text(itemDetalle[id-1][i].monto_fi));
-     row.append($('<td>').addClass('').text(itemDetalle[id-1][i].monto_cal));
+     row.append($('<td>').addClass('').text(Math.round(itemDetalle[id-1][i].monto_cal/$("#alumnos_ibnorca").val())));
      row.append($('<td>').addClass('').html('<button class="btn btn-danger btn-link" onclick="removeDet('+id+','+i+');"><i class="material-icons">remove_circle</i></button>'));
      table.append(row);
    }
@@ -946,8 +946,8 @@ function mostrarPreciosPlantilla(){
     var tiDato=$('#tipo_dato').val();
     var monto_calc=$('#monto_calculado').val();
     if(tiDato==1){
-      var monto_ib=$('#monto_ibnorca').val();
-      var monto_fib=$('#monto_f_ibnorca').val();   
+      var monto_ib=$('#monto_calculado').val();
+      var monto_fib=$('#monto_calculado').val();   
     }else{
       if($("#monto_ibnorca1").hasClass("d-none")){
          if($("#monto_ibnorca2").hasClass("d-none")){
@@ -986,7 +986,7 @@ function mostrarPreciosPlantilla(){
   $("#nav_boton2").addClass("active");$("#nav_boton1").removeClass("active");*/
   $("#mensajeDetalle").html("<center><p class='text-success'>Registro satisfactorio</p></center>");
   $.notify({message: 'Partida '+str_cuenta[1]+' registrada' },{type: 'success'});
-  
+  $("#modalDet").modal("hide");
   }
   
  }
@@ -999,7 +999,7 @@ function mostrarPreciosPlantilla(){
 function mostrarDetalle(id){
   var html="";
   for (var i = 0; i < itemDetalle[id-1].length; i++) {
-    html+="<tr><td>"+itemDetalle[id-1][i].cuenta+"</td><td>"+itemDetalle[id-1][i].tipo+"</td><td class='text-right'>"+itemDetalle[id-1][i].monto_i+"</td><td class='text-right'>"+itemDetalle[id-1][i].monto_fi+"</td><td class='text-right'>"+itemDetalle[id-1][i].monto_cal+"</td></tr>";
+    html+="<tr><td>"+itemDetalle[id-1][i].cuenta+"</td><td>"+itemDetalle[id-1][i].tipo+"</td><td class='text-right'>"+(itemDetalle[id-1][i].monto_i*$("#cod_mescurso").val())+"</td><td class='text-right'>"+itemDetalle[id-1][i].monto_fi+"</td><td class='text-right'>"+Math.round(itemDetalle[id-1][i].monto_cal/$("#alumnos_ibnorca").val())+"</td></tr>";
   };
   $("#cuerpoDetalle").html(html);
   $("#cabezadetalle").html('<h6 class="card-title">Detale "'+$("#nombre_grupo"+id).val()+'"</h6>');
