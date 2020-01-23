@@ -1,3 +1,7 @@
+.modal-arriba {
+   top: -80px !important;
+}
+
 .after-loop{
   padding:3rem 0 5rem
   }
@@ -182,6 +186,16 @@
   height: 100%;
   z-index: 9999;
   background: url('../img/loading.gif') 50% 50% no-repeat rgba(6, 2, 7,0.8);
+  opacity: .95;
+}
+.cargar-ajax{
+  position: fixed;
+  left:0px;
+  top:0px;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  background: url('../img/load.gif') 50% 50% no-repeat rgba(6, 2, 7,0.8);
   opacity: .95;
 }
 .div-loading{

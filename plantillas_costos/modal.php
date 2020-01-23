@@ -170,7 +170,7 @@
 <!--  End Modal -->
 
 <!-- notice modal -->
-<div class="modal fade" id="modalDet" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade modal-arriba" id="modalDet" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-notice modal-lg">
     <div class="modal-content card">
                 <div class="card-header <?=$colorCard;?> card-header-text">
@@ -203,7 +203,27 @@
                     <div class="tab-pane active" id="link111">
                       <form name="form2">
                      <input class="form-control" type="hidden" name="codGrupo" id="codGrupo"/>
-                           <div class="row">
+                     <div class="row">
+                       <table class="table table-condensed table-bordered">
+                         <tbody>
+                           <tr class="bg-info text-white">
+                             <td>Cursos</td>
+                             <td>Alumnos I</td>
+                             <td>Alumnos FI</td>
+                             <td>Ut Min I</td>
+                             <td>Ut Min FI</td>
+                           </tr>                         
+                           <tr>
+                             <td class="text-right small"><?=obtenerValorConfiguracion(6)?></td>
+                             <td class="text-right small"><?=$alumnosLocalX?></td>
+                             <td class="text-right small"><?=$alumnosExternoX?></td>
+                             <td class="text-right small"><?=$utilidadIbnorcaX?> %</td>
+                             <td class="text-right small"><?=$utilidadFueraX?> %</td>
+                           </tr>
+                         </tbody>
+                       </table>
+                     </div>
+                     <div class="row">
                        <label class="col-sm-2 col-form-label">Partidas</label>
                        <div class="col-sm-10">
                         <div class="form-group">
@@ -249,7 +269,7 @@
                           <input type="number" class="form-control" name="monto_f_ibnorca" id="monto_f_ibnorca" value="0" step="0.01" readonly>
                          </div>
                         </div>
-                        <div class="col-sm-4">
+                        <div class="col-sm-4 d-none" id="columna_alumno">
                          <div class="form-group">
                           <label class="bmd-label-static">Monto x Persona</label>
                           <input type="number" class="form-control" name="monto_alumno" id="monto_alumno" value="0" step="0.01" readonly>

@@ -895,7 +895,27 @@ function listDetalle(id){
    $("#divTituloGrupo").html('<h4 class="card-title">'+nombreGrupo+'</h4>');
    $("#codGrupo").val(id);
    listarDet(id);
+   if($("#tipo_costo"+id).val()!=""){
+    if($("#tipo_costo"+id).val()==2){
+       $("#columna_alumno").removeClass("d-none");
+    }else{
+       $("#columna_alumno").addClass("d-none");
+    }  
+   }
+    limpiarDatosDetalleModal();  
    $("#modalDet").modal("show");
+ }
+function limpiarDatosDetalleModal(){
+  //$("#tipo_dato").val("1");
+  $("#cuenta_detalle").val("");
+  $('.selectpicker').selectpicker("refresh");
+  $("#monto_ibnorca").val(0);
+  $("#monto_f_ibnorca").val(0);
+  $("#monto_alumno").val(0);
+  $("#monto_calculado").val(0);
+  $("#monto_ibnorca_edit").val(0);
+  $("#monto_f_ibnorca_edit").val(0);
+  $("#monto_alumno_edit").val(0);
  }
 function mostrarPreciosPlantilla(){
   $("#modalPrecio").modal("show");
@@ -927,9 +947,9 @@ function mostrarPreciosPlantilla(){
      row.append($('<td>').addClass('').text(i+1));
      row.append($('<td>').addClass('').text(" Partida: "+itemDetalle[id-1][i].cuenta));
      row.append($('<td>').addClass('').text(itemDetalle[id-1][i].tipo));
-     row.append($('<td>').addClass('').text(itemDetalle[id-1][i].monto_i*$("#cod_mescurso").val()));
-     row.append($('<td>').addClass('').text(itemDetalle[id-1][i].monto_fi));
-     row.append($('<td>').addClass('').text(Math.round(itemDetalle[id-1][i].monto_cal/$("#alumnos_ibnorca").val())));
+     row.append($('<td>').addClass('').text(redondeo(itemDetalle[id-1][i].monto_i*$("#cod_mescurso").val())));
+     row.append($('<td>').addClass('').text(redondeo(itemDetalle[id-1][i].monto_fi)));
+     row.append($('<td>').addClass('').text(redondeo(itemDetalle[id-1][i].monto_cal/$("#alumnos_ibnorca").val())));
      row.append($('<td>').addClass('').html('<button class="btn btn-danger btn-link" onclick="removeDet('+id+','+i+');"><i class="material-icons">remove_circle</i></button>'));
      table.append(row);
    }
@@ -999,7 +1019,7 @@ function mostrarPreciosPlantilla(){
 function mostrarDetalle(id){
   var html="";
   for (var i = 0; i < itemDetalle[id-1].length; i++) {
-    html+="<tr><td>"+itemDetalle[id-1][i].cuenta+"</td><td>"+itemDetalle[id-1][i].tipo+"</td><td class='text-right'>"+(itemDetalle[id-1][i].monto_i*$("#cod_mescurso").val())+"</td><td class='text-right'>"+itemDetalle[id-1][i].monto_fi+"</td><td class='text-right'>"+Math.round(itemDetalle[id-1][i].monto_cal/$("#alumnos_ibnorca").val())+"</td></tr>";
+    html+="<tr><td>"+itemDetalle[id-1][i].cuenta+"</td><td>"+itemDetalle[id-1][i].tipo+"</td><td class='text-right'>"+redondeo(itemDetalle[id-1][i].monto_i*$("#cod_mescurso").val())+"</td><td class='text-right'>"+redondeo(itemDetalle[id-1][i].monto_fi)+"</td><td class='text-right'>"+redondeo(itemDetalle[id-1][i].monto_cal/$("#alumnos_ibnorca").val())+"</td></tr>";
   };
   $("#cuerpoDetalle").html(html);
   $("#cabezadetalle").html('<h6 class="card-title">Detale "'+$("#nombre_grupo"+id).val()+'"</h6>');
@@ -1074,6 +1094,13 @@ function limpiarMontos(){
       //calcularMontos();
     }
 }
+function iniciarCargaAjax(){
+  $(".cargar-ajax").removeClass("d-none");
+}
+function detectarCargaAjax(){
+  $(".cargar-ajax").addClass("d-none");
+  $(".cargar-ajax").fadeOut("slow");
+}
  function calcularMontos(){
   var str_cuenta=dividirCadena($('#cuenta_detalle').val(),"@");
   var idp=str_cuenta[0];
@@ -1086,19 +1113,21 @@ function limpiarMontos(){
         url: "ajaxPartidaPresupuestaria.php",
         data: parametros,
         beforeSend: function () { 
-         $("#mensajeDetalle").html("<center><p class='text-muted'>Cálculando espere porfavor...</p></center>"); 
+          iniciarCargaAjax();
+         $("#mensajeDetalle").html("<center><p class='text-muted'></p></center>"); 
         },
         success:  function (resp) {
+           detectarCargaAjax();
           //if($("#tipo_dato").val()==1){
-            $("#monto_ibnorca").val(parseFloat(resp)*$("#cod_mescurso").val());
-            $("#monto_f_ibnorca").val(parseFloat(resp));
-            $("#monto_alumno").val(Math.round(parseFloat(resp)/$("#alumnos_ibnorca").val()));
+            $("#monto_ibnorca").val(redondeo(parseFloat(resp)*$("#cod_mescurso").val()));
+            $("#monto_f_ibnorca").val(redondeo(parseFloat(resp)));
+            $("#monto_alumno").val(redondeo(parseFloat(resp)/$("#alumnos_ibnorca").val()));
 
             $("#monto_calculado").val(parseFloat(resp));
             
-            $("#monto_ibnorca_edit").val(parseFloat(resp)*$("#cod_mescurso").val());
-            $("#monto_f_ibnorca_edit").val(parseFloat(resp));
-            $("#monto_alumno_edit").val(Math.round(parseFloat(resp)/$("#alumnos_ibnorca").val()));
+            $("#monto_ibnorca_edit").val(redondeo(parseFloat(resp)*$("#cod_mescurso").val()));
+            $("#monto_f_ibnorca_edit").val(redondeo(parseFloat(resp)));
+            $("#monto_alumno_edit").val(redondeo(parseFloat(resp)/$("#alumnos_ibnorca").val()));
 
          /* }else{
             $("#monto_ibnorca").val("0");
@@ -2927,6 +2956,20 @@ function calcularTotalPartida(){
     }
   }
 }
+
+function redondeo(num, decimales = 2) {
+    var signo = (num >= 0 ? 1 : -1);
+    num = num * signo;
+    if (decimales === 0) //con 0 decimales
+        return signo * Math.round(num);
+    // round(x * 10 ^ decimales)
+    num = num.toString().split('e');
+    num = Math.round(+(num[0] + 'e' + (num[1] ? (+num[1] + decimales) : decimales)));
+    // x * 10 ^ (-decimales)
+    num = num.toString().split('e');
+    return signo * (num[0] + 'e' + (num[1] ? (+num[1] - decimales) : -decimales));
+}
+
 function guardarCuentasSimulacion(ib){
   var total= $("#numero_cuentas").val();
   var cosSim=$("#cod_simulacion").val();

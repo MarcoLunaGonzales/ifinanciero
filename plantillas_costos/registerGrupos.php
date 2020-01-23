@@ -55,6 +55,12 @@ if(isset($_GET['cod'])){
             $stmt->bindColumn('cantidad_alumnoslocal', $alumnosLocalX);
             $stmt->bindColumn('cantidad_alumnosexterno', $alumnosExternoX);
 ?>
+<div class="cargar-ajax d-none">
+  <div class="div-loading text-center">
+     <h4 class="text-warning font-weight-bold">Procesando Datos</h4>
+     <p class="text-white">Aguard&aacute; un momento por favor</p>  
+  </div>
+</div>
 <form id="formRegDet" class="form-horizontal" action="saveEdit.php" method="post" enctype="multipart/form-data">
 <div class="content">
 	<div id="contListaGrupos" class="container-fluid">
