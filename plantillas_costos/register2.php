@@ -30,6 +30,16 @@ $contadorRegistros=0;
 <?php
 $fechaActual=date("Y-m-d");
 $dbh = new Conexion();
+ $stmt = $dbh->prepare("SELECT * FROM configuraciones_cursos where codigo=1");
+ $stmt->execute();
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $utilidadMinLocal=$row['utilidad_minlocal'];
+    $utilidadMinExterno=$row['utilidad_minexterno'];
+    $alumnosLocal=$row['alumnos_local'];
+    $alumnosExterno=$row['alumnos_externo'];
+    $precioVentaLocal=$row['precio_ventalocal'];
+    $precioVentaExterno=$row['precio_ventaexterno'];
+    }
 ?>
 
 <div class="content">
@@ -68,7 +78,7 @@ $dbh = new Conexion();
                         <div class="row">
                           <div class="col-sm-4">
                             <div class="form-group has-success">
-                                <input class="form-control" type="number" step="0.001" name="utilidad_minibnorca" id="utilidad_minibnorca"/>
+                                <input class="form-control" type="number" step="0.001" name="utilidad_minibnorca" id="utilidad_minibnorca" value="<?=$utilidadMinLocal?>"/>
                                 <span class="form-control-feedback">%</span>
                               </div>
                           </div>
@@ -77,7 +87,7 @@ $dbh = new Conexion();
                             <label class="col-sm-7 col-form-label">Utilidad Fuera Ibnorca</label>
                             <div class="col-sm-5">
                               <div class="form-group has-success">
-                                <input class="form-control" type="number" step="0.001" name="utilidad_minfuera" id="utilidad_minfuera"/>
+                                <input class="form-control" type="number" step="0.001" name="utilidad_minfuera" id="utilidad_minfuera" value="<?=$utilidadMinExterno?>"/>
                                 <span class="form-control-feedback">%</span>
                               </div>
                             </div>
@@ -92,7 +102,7 @@ $dbh = new Conexion();
                         <div class="row">
                           <div class="col-sm-4">
                             <div class="form-group">
-                                <input class="form-control" type="number" name="cantidad_alumnosibnorca" id="cantidad_alumnosibnorca"/>
+                                <input class="form-control" type="number" name="cantidad_alumnosibnorca" id="cantidad_alumnosibnorca" value="<?=$alumnosLocal?>"/>
                                
                               </div>
                           </div>
@@ -101,7 +111,7 @@ $dbh = new Conexion();
                             <label class="col-sm-7 col-form-label">Alumnos Fuera de Ibrnoca</label>
                             <div class="col-sm-5">
                               <div class="form-group">
-                                <input class="form-control" type="number" name="cantidad_alumnosfuera" id="cantidad_alumnosfuera"/>
+                                <input class="form-control" type="number" name="cantidad_alumnosfuera" id="cantidad_alumnosfuera" value="<?=$alumnosExterno?>"/>
                                
                               </div>
                             </div>
@@ -116,7 +126,7 @@ $dbh = new Conexion();
                         <div class="row">
                           <div class="col-sm-4">
                             <div class="form-group">
-                                <input class="form-control" type="number" step="0.001" name="precio_ventaibnorca" id="precio_ventaibnorca"/>
+                                <input class="form-control" type="number" step="0.001" name="precio_ventaibnorca" id="precio_ventaibnorca" value="<?=$precioVentaLocal?>"/>
                                 
                               </div>
                           </div>
@@ -125,7 +135,7 @@ $dbh = new Conexion();
                             <label class="col-sm-7 col-form-label">Precio de venta Fuera</label>
                             <div class="col-sm-5">
                               <div class="form-group">
-                                <input class="form-control" type="number" step="0.001" name="precio_ventafuera" id="precio_ventafuera"/>
+                                <input class="form-control" type="number" step="0.001" name="precio_ventafuera" id="precio_ventafuera" value="<?=$precioVentaExterno?>"/>
                                 
                               </div>
                             </div>

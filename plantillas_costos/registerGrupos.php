@@ -55,6 +55,12 @@ if(isset($_GET['cod'])){
             $stmt->bindColumn('cantidad_alumnoslocal', $alumnosLocalX);
             $stmt->bindColumn('cantidad_alumnosexterno', $alumnosExternoX);
 ?>
+<div class="cargar-ajax d-none">
+  <div class="div-loading text-center">
+     <h4 class="text-warning font-weight-bold">Procesando Datos</h4>
+     <p class="text-white">Aguard&aacute; un momento por favor</p>  
+  </div>
+</div>
 <form id="formRegDet" class="form-horizontal" action="saveEdit.php" method="post" enctype="multipart/form-data">
 <div class="content">
 	<div id="contListaGrupos" class="container-fluid">
@@ -273,7 +279,7 @@ if(isset($_GET['cod'])){
             	<div class="card">
 				<div class="card-header <?=$colorCard;?> card-header-text">
 					<div class="card-text" id="cabezadetalle">
-					  <h6 class="card-title">Detale</h6>
+					  <h6 class="card-title">Detalle</h6>
 					</div>
 				</div>
 				<div class="card-body">
@@ -282,9 +288,9 @@ if(isset($_GET['cod'])){
 							<tr>
 								<th>Partida</th>
 								<th>Tipo</th>
-								<th class="text-right">Monto I</th>
-								<th class="text-right">Monto FI</th>
-								<th class="text-right">Monto CAL</th>
+								<th class="text-right">M x Mes</th>
+								<th class="text-right">M x Curso</th>
+								<th class="text-right">M x Persona</th>
 							</tr>
 						</thead>
 						<tbody id="cuerpoDetalle">

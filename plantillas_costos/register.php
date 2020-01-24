@@ -34,6 +34,18 @@ $contadorRegistros=0;
 <?php
 $fechaActual=date("Y-m-d");
 $dbh = new Conexion();
+
+
+ $stmt = $dbh->prepare("SELECT * FROM configuraciones_cursos where codigo=1");
+ $stmt->execute();
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $utilidadMinLocal=$row['utilidad_minlocal'];
+    $utilidadMinExterno=$row['utilidad_minexterno'];
+    $alumnosLocal=$row['alumnos_local'];
+    $alumnosExterno=$row['alumnos_externo'];
+    $precioVentaLocal=$row['precio_ventalocal'];
+    $precioVentaExterno=$row['precio_ventaexterno'];
+    }
 ?>
 <form id="formRegComp" class="form-horizontal" action="save.php" method="post" enctype="multipart/form-data">
 <div class="content">
@@ -68,7 +80,7 @@ $dbh = new Conexion();
                         <div class="row">
                           <div class="col-sm-4">
                             <div class="form-group has-success">
-                                <input class="form-control" type="number" step="0.001" name="utilidad_minibnorca" id="utilidad_minibnorca"/>
+                                <input class="form-control" type="number" step="0.001" name="utilidad_minibnorca" id="utilidad_minibnorca" value="<?=$utilidadMinLocal?>"/>
                                 <span class="form-control-feedback">%</span>
                               </div>
                           </div>
@@ -77,7 +89,7 @@ $dbh = new Conexion();
                             <label class="col-sm-7 col-form-label">Utilidad Fuera Ibnorca :</label>
                             <div class="col-sm-5">
                               <div class="form-group has-success">
-                                <input class="form-control" type="number" step="0.001" name="utilidad_minfuera" id="utilidad_minfuera"/>
+                                <input class="form-control" type="number" step="0.001" name="utilidad_minfuera" id="utilidad_minfuera" value="<?=$utilidadMinExterno?>"/>
                                 <span class="form-control-feedback">%</span>
                               </div>
                             </div>

@@ -11,7 +11,7 @@ $globalNombreAreaX=$_SESSION['globalNombreArea'];
 $menuModulo=$_SESSION['modulo'];
 switch ($menuModulo) {
   case 1:
-   $nombreModulo="Remuneración";
+   $nombreModulo="RRHH";
    $estiloMenu="rojo";
   break;
   case 2:
@@ -23,7 +23,7 @@ switch ($menuModulo) {
    $estiloMenu="celeste";
   break;
   case 4:
-  $nombreModulo="Presupuestos y Solicitudes";
+  $nombreModulo="Presupuestos / Solicitudes";
    $estiloMenu="verde";
   break;
 }
@@ -444,18 +444,6 @@ if($menuModulo==0){
                   </a>
                 </li>
                 <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=listPlantillasCostos">
-                    <span class="sidebar-mini"> PTC </span>
-                    <span class="sidebar-normal"> Plantillas de Costo </span>
-                  </a>
-                </li>
-                <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=listPlantillasCostosAdmin">
-                    <span class="sidebar-mini"> GPT </span>
-                    <span class="sidebar-normal"> Gesti&oacute;n de Plantillas de Costo </span>
-                  </a>
-                </li>
-                <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listDistribucionGasto">
                     <span class="sidebar-mini"> DGP </span>
                     <span class="sidebar-normal"> Distribucion de Gastos</span>
@@ -486,23 +474,7 @@ if($menuModulo==0){
                     <span class="sidebar-mini"> A </span>
                     <span class="sidebar-normal"> Aprobaciones de comprobantes </span>
                   </a>
-
                 </li> 
-
-
-            
-                <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=listSimulacionesCostos">
-                    <span class="sidebar-mini"> SC </span>
-                    <span class="sidebar-normal"> Simulaciones de Costos</span>
-                  </a>
-                </li>
-                <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=listSimulacionesCostosAdmin">
-                    <span class="sidebar-mini"> GS </span>
-                    <span class="sidebar-normal"> Gesti&oacute;n de Simulaciones</span>
-                  </a>
-                </li>                 
 
               </ul>
             </div>
@@ -532,68 +504,8 @@ if($menuModulo==0){
               </ul>
             </div>
           </li>
-
-              <?php
-              break;
-              case 4:
-              ?>
-          <!--Solicitud de recursos-->
-          <li class="nav-item ">
-            <a class="nav-link" data-toggle="collapse" href="#solicitudes">
-              <i class="material-icons">content_paste</i>
-              <p> Solicitudes de Recursos
-                <b class="caret"></b>
-              </p>
-            </a>
-            <div class="collapse" id="solicitudes">
-              <ul class="nav">
-                <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=listSolicitudRecursos">
-                    <span class="sidebar-mini"> SR </span>
-                    <span class="sidebar-normal"> Solicitudes de Recursos</span>
-                  </a>
-                </li>
-                <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=listSolicitudRecursosAdmin">
-                    <span class="sidebar-mini"> GSR </span>
-                    <span class="sidebar-normal"> Gesti&oacute;n Solicitudes Recursos</span>
-                  </a>
-                </li>                          
-              </ul>
-            </div>
-          </li>
-
-              <?php
-              break;
-          }
-          ?>
-
-
-
           
-
-          <!--RECURSOS HUMANOS>          
-          <li class="nav-item ">
-            <a class="nav-link" data-toggle="collapse" href="#bono">
-              <i class="material-icons">menu</i>
-              <p> Recursos Humanos 2
-                <b class="caret"></b>
-              </p>
-            </a>
-            <div class="collapse" id="bono">
-              <ul class="nav">
-
-                
-
-              </ul>
-            </div>
-          </li-->
-
-
-
-
           <!--UTILITARIOS-->
-
           <li class="nav-item ">
             <a class="nav-link" data-toggle="collapse" href="#utilitarios">
               <i class="material-icons">build</i>
@@ -630,6 +542,69 @@ if($menuModulo==0){
               </ul>
             </div>
           </li>
+          
+
+              <?php
+              break;
+              case 4:
+              ?>
+          <!--Solicitud de recursos-->
+          <li class="nav-item ">
+            <a class="nav-link" data-toggle="collapse" href="#solicitudes">
+              <i class="material-icons">content_paste</i>
+              <p> Transacciones P / S
+                <b class="caret"></b>
+              </p>
+            </a>
+            <div class="collapse" id="solicitudes">
+              <ul class="nav">
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listPlantillasCostos">
+                    <span class="sidebar-mini"> PTC </span>
+                    <span class="sidebar-normal"> Plantillas de Presupuesto </span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listPlantillasCostosAdmin">
+                    <span class="sidebar-mini"> GPT </span>
+                    <span class="sidebar-normal"> Gesti&oacute;n de Plantillas Presupuesto </span>
+                  </a>
+                </li>
+
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listSimulacionesCostos">
+                    <span class="sidebar-mini"> SC </span>
+                    <span class="sidebar-normal"> Simulaciones de Presupuesto</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listSimulacionesCostosAdmin">
+                    <span class="sidebar-mini"> GS </span>
+                    <span class="sidebar-normal"> Gesti&oacute;n de Simulaciones</span>
+                  </a>
+                </li>                 
+
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listSolicitudRecursos">
+                    <span class="sidebar-mini"> SR </span>
+                    <span class="sidebar-normal"> Solicitudes de Recursos</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listSolicitudRecursosAdmin">
+                    <span class="sidebar-mini"> GSR </span>
+                    <span class="sidebar-normal"> Gesti&oacute;n Solicitudes Recursos</span>
+                  </a>
+                </li>                          
+              </ul>
+            </div>
+          </li>
+
+              <?php
+              break;
+          }
+          ?>
+
         </ul>
       </div>
     </div>

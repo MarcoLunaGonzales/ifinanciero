@@ -622,6 +622,7 @@ function obtenerComprobantesDet($codigo){
 //funcion nueva obtener detalle de comprobante
 function obtenerComprobantesDetImp($codigo){
    $dbh = new Conexion();
+   
    $sql="";
    $sql="SELECT d.codigo as cod_det,d.cod_area,d.cod_unidadorganizacional,p.codigo,p.numero,p.nombre,d.glosa,d.debe,d.haber,a.abreviatura,p.cuenta_auxiliar,u.abreviatura as unidadAbrev,(select 1 from comprobantes_detalle cdd where cdd.debe=0 and d.codigo=cdd.codigo) as haber_order 
 FROM plan_cuentas p join comprobantes_detalle d on p.codigo=d.cod_cuenta join areas a on d.cod_area=a.codigo join unidades_organizacionales u on u.codigo=d.cod_unidadorganizacional where d.cod_comprobante=$codigo order by haber_order, d.codigo";
@@ -643,7 +644,17 @@ function obtenerPlantillaCosto($codigo){
    //$stmt->bindColumn('cod_comprobante', $codigoC);
    return $stmt;
 }
-
+function obtenerPlantillaCostoAlumnos($codigo){
+  $dbh = new Conexion();
+   $valor=0;
+   $sql="SELECT cantidad_alumnoslocal from plantillas_costo where codigo=$codigo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['cantidad_alumnoslocal'];
+  }
+  return $valor;
+}
 //funcion nueva obtener tipo cambio monedas
 function obtenerTipoCambio($codigo,$fi,$fa){
    $dbh = new Conexion();
@@ -680,6 +691,11 @@ function obtenerValorTipoCambio($codigo,$fecha){
   return($valor);
   }
 
+/*function reemplazarTildesUTF8($texto){
+$chars = array("Ã¡", "Ã©", "Ã*","Ã³","Ãº","Ã","Ã‰","Ã","Ã“","Ãš","Ã±","Ã‘","Âº","Âª","Â¿");
+$tildes= array("á", "é", "í","ó","ú","Á","É","Í","Ó","Ú","ñ","Ñ","º","ª","¿");
+return str_replace($chars, $tildes, $texto);
+}*/
 //funcion para descargar con dompdf
 function descargarPDF($nom,$html){
   //aumentamos la memoria  
@@ -1812,12 +1828,27 @@ join plantillas_costo pc on pc.codigo=pg.cod_plantillacosto where pc.codigo=$cod
 function obtenerCuentaPlantillaCostos($codigo){
   $dbh = new Conexion();
   $sql="";
-  $sql="SELECT p.cod_partidapresupuestaria,p.cod_cuenta,c.numero FROM partidaspresupuestarias_cuentas p join plan_cuentas c on p.cod_cuenta=c.codigo where p.cod_partidapresupuestaria=$codigo";
+  $sql="SELECT p.cod_partidapresupuestaria,p.cod_cuenta,c.numero,c.nombre FROM partidaspresupuestarias_cuentas p join plan_cuentas c on p.cod_cuenta=c.codigo where p.cod_partidapresupuestaria=$codigo";
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
    return $stmt;
 }
-
+function obtenerDetallePlantillaCostosPartida($plantilla,$codigo){
+  $dbh = new Conexion();
+  $sql="";
+  $sql="SELECT c.numero,c.nombre,p.* FROM plantillas_tcpdetalle p join plan_cuentas c on p.cod_cuenta=c.codigo where p.cod_partidapresupuestaria=$codigo and p.cod_plantillacosto=$plantilla";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+}
+function obtenerMontosCuentasDetallePlantillaCostosPartida($plantilla,$codigo){
+  $dbh = new Conexion();
+  $sql="";
+  $sql="SELECT p.cod_partidapresupuestaria,p.cod_cuenta,c.numero,c.nombre,sum(p.monto_total) as monto FROM plantillas_tcpdetalle p join plan_cuentas c on p.cod_cuenta=c.codigo where p.cod_partidapresupuestaria=$codigo and p.cod_plantillacosto=$plantilla group by cod_cuenta";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+}
 function obtenerCantidadPreciosPlantilla($codPlantilla){
   $dbh = new Conexion();
   $sql="";
@@ -1831,7 +1862,19 @@ function obtenerCantidadPreciosPlantilla($codPlantilla){
   }
   return $num;
 }
-
+function obtenerCantidadPlantillaDetallesPartida($codPlantilla,$codPartida){
+  $dbh = new Conexion();
+  $sql="";
+  $sql="SELECT count(*) as num FROM plantillas_tcpdetalle where cod_plantillacosto=$codPlantilla and cod_partidapresupuestaria=$codPartida";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute(); 
+   $num=0;
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
+  {
+   $num=$row['num'];
+  }
+  return $num;
+}
 //================ ========== PARA  planilla sueldos
 
 function obtenerBonoAntiguedad($minino_salarial,$ing_contr){  
