@@ -12,8 +12,9 @@ where cod_estadoreferencial=1 ORDER BY paterno
 ";
 $stmtpersonal = $dbh->prepare($sqlpersonal);
 $stmtpersonal->execute();
-                        
-
+     //tipo de retiro                   
+$querytiporetiro = "SELECT codigo,nombre from tipos_retiro_personal where cod_estadoreferencial=1 order by 2";
+$stmtTipoRetiro = $dbh->query($querytiporetiro);
 //por is es edit
 if ($codigo > 0){
     //EDIT GET1 no guardar, sino obtener
@@ -83,8 +84,12 @@ if ($codigo > 0){
                     <div class="row">
                         <label class="col-sm-2 col-form-label">Motivo Retiro</label>
                         <div class="col-sm-7">
-                        <div class="form-group">
-                            <input class="form-control" type="text" name="motivo_retiro" id="motivo_retiro" value="<?=$motivo_retiro;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+                        <div class="form-group">                            
+                            <select name="motivo_retiro" id="motivo_retiro" class="selectpicker " data-style="btn btn-info" required>
+                                            <?php while ($row = $stmtTipoRetiro->fetch()) { ?>
+                                                <option <?php if($cod_tiporetiro == $row["codigo"]) echo "selected"; ?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                                            <?php } ?>
+                                        </select>
                         </div>
                         </div>
                     </div><!--fin campo motivo_retiro -->

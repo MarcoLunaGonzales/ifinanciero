@@ -5,10 +5,12 @@ require_once 'configModule.php';
 $codigo_UO=$_GET["codigo_UO"];
 $db = new Conexion();
 
+if($codigo_UO=3000) $codigo_UO=829;
+
 
 $stmt = $db->prepare("SELECT p.codigo, p.paterno,p.materno,p.primer_nombre
 from personal p, ubicaciones u, unidades_organizacionales uo 
-where u.cod_unidades_organizacionales=uo.codigo and uo.codigo=p.cod_unidadorganizacional and u.codigo=:codigo_UO order by 2");
+where u.cod_unidades_organizacionales=uo.codigo and uo.codigo=p.cod_unidadorganizacional and uo.codigo=:codigo_UO order by 2");
 $stmt->bindParam(':codigo_UO', $codigo_UO);
 $stmt->execute();
 
