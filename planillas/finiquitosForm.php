@@ -1,0 +1,101 @@
+<?php
+
+require_once 'conexion.php';
+require_once 'styles.php';
+require_once 'rrhh/configModule.php';
+
+//$dbh = new Conexion();
+$dbh = new Conexion();
+$sqlpersonal="SELECT codigo,paterno,materno,primer_nombre
+from personal
+where cod_estadoreferencial=1 ORDER BY paterno
+";
+$stmtpersonal = $dbh->prepare($sqlpersonal);
+$stmtpersonal->execute();
+                        
+
+//por is es edit
+if ($codigo > 0){
+    //EDIT GET1 no guardar, sino obtener
+    $codigo=$codigo;
+    $stmt = $dbh->prepare("SELECT * FROM finiquitos where codigo =:codigo");
+    //Ejecutamos;
+    $stmt->bindParam(':codigo',$codigo);
+    $stmt->execute();
+    $result = $stmt->fetch();
+    $codigo = $result['codigo'];
+    $cod_personal = $result['cod_personal'];
+    $fecha_retiro = $result['fecha_retiro'];
+    $motivo_retiro = $result['motivo_retiro'];
+
+}else {
+    $codigo = 0;
+    $cod_personal = 0;
+    $fecha_retiro = ' ';
+    $motivo_retiro = ' ';
+}
+?>
+
+<div class="content">
+	<div class="container-fluid">
+        <div style="overflow-y:scroll;">
+            <div class="col-md-12">
+              <form id="form1" class="form-horizontal" action="<?=$urlSaveFiniquitos;?>" method="post">
+                <input type="hidden" name="codigo" id="codigo" value="<?=$codigo;?>"/>
+                <div class="card">
+                  <div class="card-header <?=$colorCard;?> card-header-text">
+                    <div class="card-text">
+                      <h4 class="card-title"><?php if ($codigo == 0) echo "Registrar"; else echo "Editar";?>  <?=$nombreSingularfiniquito;?></h4>
+                    </div>
+                  </div>
+                  <div class="card-body ">
+                    
+
+                  <input type="hidden" name="codigo" id="codigo" value="<?=$codigo;?>"/>
+                  <div class="row">
+                        <label class="col-sm-2 col-form-label">Personal</label>
+                        <div class="col-sm-7">
+                        <div class="form-group">
+
+                            <select name="cod_personal" id="cod_personal" class="selectpicker form-control" data-style="btn btn-primary" >
+                                <option ></option>
+                                <?php 
+                                    while ($row = $stmtpersonal->fetch()){ 
+                                ?>
+                                     <option <?=($cod_personal==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>"><?=$row["paterno"];?> <?=$row["materno"];?> <?=$row["primer_nombre"];?></option>
+                                 <?php 
+                                    } 
+                                ?>
+                             </select>
+                            
+                        </div>
+                        </div>
+                    </div><!--fin campo nombre -->
+                    <div class="row">
+                        <label class="col-sm-2 col-form-label">Fecha Retiro</label>
+                        <div class="col-sm-7">
+                        <div class="form-group">
+                            <input class="form-control" type="date" name="fecha_retiro" id="fecha_retiro" required="true" value="<?=$fecha_retiro;?>" />
+
+                        </div>
+                        </div>
+                    </div><!--fin campo abreviatura -->
+                    <div class="row">
+                        <label class="col-sm-2 col-form-label">Motivo Retiro</label>
+                        <div class="col-sm-7">
+                        <div class="form-group">
+                            <input class="form-control" type="text" name="motivo_retiro" id="motivo_retiro" value="<?=$motivo_retiro;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+                        </div>
+                        </div>
+                    </div><!--fin campo motivo_retiro -->
+                  </div>
+                  <div class="card-footer ml-auto mr-auto">
+                    <button type="submit" class="<?=$buttonNormal;?>">Guardar</button>
+                    <a href="<?=$urlListAreas;?>" class="<?=$buttonCancel;?>">Volver</a>
+                  </div>
+                </div>
+              </form>
+            </div>
+        </div>		
+	</div>
+</div>

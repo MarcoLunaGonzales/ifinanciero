@@ -94,7 +94,7 @@ $stmt->bindColumn('nombre_area', $nombreArea);
                                   <i class="material-icons">print</i>
                                 </a>
                               </td>
-                              <td class="text-center small"><?=$codigoactivo;?></td>
+                              <td class="text-center small"><?=$codigo;?></td>
                               <td class="text-center small"><?=$nombreUnidad;?>-<?=$nombreArea;?></td>
                               <td class="text-left small"><?=$activo;?></td>
                               <td class="text-center small"><?=$fechalta;?></td>

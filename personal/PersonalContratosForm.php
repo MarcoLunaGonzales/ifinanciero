@@ -49,6 +49,10 @@ $statementTiposContrato = $dbh->query($query_contrato);
 //listado de editar areas
 $query_contratoE = "select * from tipos_contrato_personal where cod_estadoreferencial=1 order by 1";
 $statementTiposContratoE = $dbh->query($query_contratoE);
+//listado de retiro personal
+$query_retiro = "select * from tipos_retiro_personal where cod_estadoreferencial=1 order by 2";
+$statementTiposRetiro = $dbh->query($query_retiro);
+
 $fecha_actual=date("Y-m-d");
 ?>
 
@@ -202,13 +206,16 @@ $fecha_actual=date("Y-m-d");
                 if($globalAdmin==1){
                 ?>            
                   <button type="button" class="btn btn-warning btn-round btn-fab" data-toggle="modal" data-target="#modalAgregarC" onclick="agregaformPC('<?=$datos;?>')">
-                      <i class="material-icons" title="Agregar">add</i>
-  		             </button>		                           
+                      <i class="material-icons" title="Agregar Contrato">add</i>
+  		             </button>
+                   <button type="button" class="btn btn-primary btn-round btn-fab" data-toggle="modal" data-target="#modalRetirarPersonal" onclick="agregaformRetiroPersonal('<?=$datos;?>')">
+                      <i class="material-icons" title="Retirar Personal">play_for_work</i>
+                   </button>		                           
                 <?php
                 }
                 ?>
                 <a href="<?=$urlListPersonal;?>" class="btn btn-danger btn-round btn-fab">
-                  <i class="material-icons" title="Retornar">keyboard_return</i>
+                  <i class="material-icons" title="Volver">keyboard_return</i>
                 </a> 
               </div>
             </div>
@@ -228,7 +235,7 @@ $fecha_actual=date("Y-m-d");
       <div class="modal-body">
         <input type="hidden" name="codigo_personalA" id="codigo_personalA" value="0">              
         <h6> Tipo Contrato : </h6>
-        <select name="cod_tipocontrato" id="cod_tipocontratoA" class="selectpicker" data-style="btn btn-primary">
+        <select name="cod_tipocontratoA" id="cod_tipocontratoA" class="selectpicker" data-style="btn btn-primary">
           <?php while ($row = $statementTiposContrato->fetch()){ ?>
               <option value="<?=$row["codigo"];?>"><?=$row["nombre"];?> - <?=$row["duracion_meses"];?> meses</option>
           <?php } ?>
@@ -312,6 +319,35 @@ $fecha_actual=date("Y-m-d");
   </div>
 </div>
 
+<!-- Modal retirar personal-->
+<div class="modal fade" id="modalRetirarPersonal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Retirar Personal</h4>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" name="codigo_personalR" id="codigo_personalR" value="0">              
+        <h6> Tipo De Retiro : </h6>
+        <select name="cod_tiporetiro" id="cod_tiporetiro" class="selectpicker" data-style="btn btn-primary">
+          <?php while ($row = $statementTiposRetiro->fetch()){ ?>
+              <option value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+          <?php } ?>
+        </select>
+        <h6> Fecha Retiro : </h6>
+        <input class="form-control" type="date" name="fecha_retiro" id="fecha_retiro" required="true" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+        <h6> Observación : </h6>
+        <input class="form-control" type="text" name="observaciones" id="observaciones" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" id="registraRetiro" name="registraRetiro" data-dismiss="modal">Aceptar</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script type="text/javascript">
   $(document).ready(function(){
     $('#registrarPC').click(function(){    
@@ -336,8 +372,15 @@ $fecha_actual=date("Y-m-d");
     $('#EliminarPC').click(function(){    
       codigo_contratoB=document.getElementById("codigo_contratoB").value; 
       codigo_personalB=document.getElementById("codigo_personalB").value;
-      EliminarContratoPersonal(codigo_contratoB,codigo_personalB);
-    }); 
+      EliminarContratoPersonal(codigo_contratoB,codigo_personalB);      
+    });
+    $('#registraRetiro').click(function(){    
+      cod_personal=document.getElementById("codigo_personalR").value;
+      cod_tiporetiro=$('#cod_tiporetiro').val();
+      fecha_Retiro=$('#fecha_retiro').val();
+      observaciones=$('#observaciones').val();
+      RetirarPersonal(cod_personal,cod_tiporetiro,fecha_Retiro,observaciones);
+    });
     
 
   });

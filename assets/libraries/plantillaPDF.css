@@ -14,9 +14,20 @@ footer { position: fixed; bottom: -40px; left: 0px; right: 0px; height: 50px; }
   width:70px;
   height:70px;
 }
+.imagen-logo-der{
+  position: absolute;
+  /*float: right;*/
+  padding-left: 50px;
+  padding-top: -25px;
+  left: 550px;
+  top: 20px;
+  width:70px;
+  height:70px;
+}
 #header_titulo_texto{text-align: center; font-size: 16px; font-weight: bold;}
 #header_titulo_texto_des{text-align: left; font-size: 12px; font-weight: bold; border-top: 1px solid #000;}
 #header_titulo_texto_inf{text-align: center; font-size: 11px;padding-top: 20px;}
+#header_titulo_texto_inf_2{text-align: left; font-size: 11px;padding-left:80px;}
 
 
 .table-inf{

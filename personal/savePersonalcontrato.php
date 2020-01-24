@@ -15,6 +15,7 @@ $cod_personal=$_POST['cod_personal'];
 $cod_tipocontrato=$_POST['cod_tipocontrato'];
 $fecha_inicio=$_POST['fecha_inicio'];
 $cod_estadoreferencial=$_POST['cod_estadoreferencial'];
+$observaciones=$_POST['observaciones'];
 
 
 $stmtContrato = $dbhU->prepare("SELECT * from tipos_contrato_personal where codigo=:codigo");
@@ -42,9 +43,6 @@ while ($row = $stmtConfig->fetch(PDO::FETCH_BOUND)) {
 			break;
 	}
 }
-
-
-
 
 if($nombre_tipo_contrato=="CONTRATO INDEFINIDO"){
 	//dividimos la fecha de inicio
@@ -171,6 +169,16 @@ if($cod_estadoreferencial==1){//insertar
 	$stmtU = $dbhU->prepare($sql);
 	$stmtU->bindParam(':cod_contrato', $cod_contrato);	
 	$stmtU->bindParam(':fecha_evaluacioncontrato', $fecha_inicio);	
+}elseif ($cod_estadoreferencial==5) {//retirar personal
+	//echo "personal:".$cod_personal."- fecha :".$fecha_inicio."-cod_tipocontrato :".$cod_tipocontrato."-ober:".$observaciones;
+	
+	$cod_estadoreferencial=1;
+	$cod_estadopersonal=3;
+	$sqlpersonal="UPDATE personal set cod_estadopersonal=$cod_estadopersonal where codigo=$cod_personal";
+	$stmtUP = $dbhU->prepare($sqlpersonal);
+
+	$sql="INSERT INTO personal_retiros(cod_personal,cod_tiporetiro,fecha_retiro,observaciones,cod_estadoreferencial) values($cod_personal,$cod_tipocontrato,'$fecha_inicio','$observaciones',$cod_estadoreferencial)";
+	$stmtU = $dbhU->prepare($sql);
 }
 if($stmtU->execute()){
       $result =1;

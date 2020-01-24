@@ -22,23 +22,23 @@ $queryUO = "SELECT u.*, uo.nombre as xuo FROM ubicaciones u, unidades_organizaci
 order by 3";
 $statementUO = $dbh->query($queryUO);//uo
 
-$query = "select * from personal2 order by 2";
-$statementPersonal = $dbh->query($query);
+$query = "select codigo,paterno,materno,primer_nombre from personal where cod_estadoreferencial=1 order by paterno ";
+// $statementPersonal = $dbh->query($query);
 $statementPersonal2 = $dbh->query($query);
 
 $query_prov = "select * from af_proveedores order by 2";
 $statementprov = $dbh->query($query_prov);
 
-$query_tiposbienes = "select * from tiposbienes order by 2";
+$query_tiposbienes = "select * from tiposbienes order by 3";
 $statementTIPOSBIENES = $dbh->query($query_tiposbienes);
 
-$query_unidadesOrganizacionales = "select * from unidades_organizacionales";
+$query_unidadesOrganizacionales = "select * from unidades_organizacionales where cod_estado=1";
 $statementUNIDADESORGANIZACIONALES = $dbh->query($query_unidadesOrganizacionales);
 
-$query_areas = "select * from areas order by 2";
+$query_areas = "select * from areas where cod_estado=1 order by 2";
 $statementAREAS = $dbh->query($query_areas);
 
-$query_proy_financiacion = "select * from proyectos_financiacionexterna order by 2";
+$query_proy_financiacion = "select * from proyectos_financiacionexterna where cod_estadoreferencial=1 order by 2";
 $statementProyFinanciacion = $dbh->query($query_proy_financiacion);
 
 //------------------------------------------------------------------- principal
@@ -351,7 +351,9 @@ if ($codigo > 0){
                                 <div class="form-group">
                                     <div id="div_personal_UO">
                                         <?php
-                                        $stmt = $dbh->prepare("SELECT p.codigo, p.nombre from personal2 p, ubicaciones u, unidades_organizacionales uo where u.cod_unidades_organizacionales=uo.codigo and uo.codigo=p.cod_unidad and u.codigo='$cod_ubicaciones' order by 2");
+                                        $stmt = $dbh->prepare("SELECT p.codigo, p.paterno,p.materno,p.primer_nombre
+                                        from personal p, ubicaciones u, unidades_organizacionales uo 
+                                        where u.cod_unidades_organizacionales=uo.codigo and uo.codigo=p.cod_unidadorganizacional and u.codigo='$cod_ubicaciones' order by 2");
                                         $stmt->execute();
                                         ?>
                                         <select id="cod_responsables_responsable" name="cod_responsables_responsable" class="form-control" 
@@ -361,7 +363,7 @@ if ($codigo > 0){
                                                     $codPersonal=$row['codigo'];
                                                ?>
                                                <option value="<?=$row["codigo"];?>" <?=($codPersonal==$cod_responsables_responsable)?"selected":"";?> <?=($codigo>0)?"disabled":"";?> >
-                                                    <?=$row["nombre"];?>
+                                                    <?=$row["paterno"].' '.$row["materno"].' '.$row["primer_nombre"];?>
                                                 </option>
                                                 <?php 
                                                 } ?>
@@ -377,7 +379,7 @@ if ($codigo > 0){
                                     <select id="cod_responsables_autorizadopor" name="cod_responsables_autorizadopor" class="form-control" data-style="btn btn-primary">
                                         <?php while ($row = $statementPersonal2->fetch()){ ?>
                                             <option <?=($cod_responsables_autorizadopor==$row["codigo"])?"selected":"";?>  <?=($codigo>0)?"disabled":"";?> value="<?=$row["codigo"];?>">
-                                                <?=$row["nombre"];?>
+                                                <?=$row["paterno"].' '.$row["materno"].' '.$row["primer_nombre"];?>
                                             </option>
                                         <?php } ?>
                                     </select>
@@ -440,7 +442,7 @@ if ($codigo > 0){
                         </div>
                         <div class="card-footer fixed-bottom">
                             <button type="submit" class="<?=$buttonNormal;?>">Guardar</button>
-                            <a href="?opcion=activosfijosLista" class="<?=$buttonCancel;?>">Cancelar</a>
+                            <a href="?opcion=activosfijosLista" class="<?=$buttonCancel;?>">Volver</a>
                         </div>
         			</div>
                 </form>

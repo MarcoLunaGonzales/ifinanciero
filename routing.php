@@ -576,16 +576,29 @@
 			require_once('planillas/generarPlanillaSueldo.php'); //ok
 		}
 		//planillas aguinaldos
-
 		if ($_GET['opcion']=='planillasAguinaldosPersonal') {
 			require_once('planillas/planillasAguinaldosList.php'); //ok
 		}
 		if ($_GET['opcion']=='generarPlanillaAguinaldosPrevia') {
 			require_once('planillas/generarPlanillaAguinaldos.php'); //ok
 		}
-
+		//finiquitos
+		if ($_GET['opcion']=='finiquitos_list') {
+			require_once('planillas/finiquitosList.php'); //ok
+		}
+		if ($_GET['opcion']=='finiquitos_form') {
+			$codigo=$_GET['codigo'];
+			require_once('planillas/finiquitosForm.php');
+		}
+		if ($_GET['opcion']=='saveFiniquitos') {
+			require_once('planillas/FiniquitosSave.php');
+		}
+		if ($_GET['opcion']=='deleteFiniquito') {
+			$codigo=$_GET['codigo'];
+			require_once('planillas/finiquitosDelete.php');
+		}
 		
-		//planillaSueldoPersonalRpt
+		
 		
 		
 		//tipo aporte afp
