@@ -80,7 +80,7 @@
 <!--    end small modal -->
 
 <!-- small modal -->
-<div class="modal fade modal-primary" id="modalSimulacionCuentas" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade modal-arriba modal-primary" id="modalSimulacionCuentas" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg col-sm-12">
     <div class="modal-content card">
                 <div class="card-header card-header-danger card-header-text">
@@ -234,6 +234,27 @@
                       <div class="form-group float-right">
                         <button type="button" id="boton_guardarplan" class="btn btn-default" onclick="guardarDatosPlantilla(this.id)">Guardar</button>
                       </div> 
+                </div>
+      </div>  
+    </div>
+  </div>
+<!--    end small modal -->
+
+<!-- small modal -->
+<div class="modal fade modal-arriba modal-primary" id="modalCargarDetalleCosto" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg col-sm-12">
+    <div class="modal-content card">
+                <div class="card-header card-header-info card-header-text">
+                  <div class="card-text">
+                    <h4>LISTA DE DETALLES</h4>
+                  </div>
+                  <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">close</i>
+                  </button>
+                </div>
+                <div class="card-body">
+                 <div class="card" id="lista_detallecosto">
+                 </div>   
                 </div>
       </div>  
     </div>

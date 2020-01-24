@@ -644,7 +644,17 @@ function obtenerPlantillaCosto($codigo){
    //$stmt->bindColumn('cod_comprobante', $codigoC);
    return $stmt;
 }
-
+function obtenerPlantillaCostoAlumnos($codigo){
+  $dbh = new Conexion();
+   $valor=0;
+   $sql="SELECT cantidad_alumnoslocal from plantillas_costo where codigo=$codigo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['cantidad_alumnoslocal'];
+  }
+  return $valor;
+}
 //funcion nueva obtener tipo cambio monedas
 function obtenerTipoCambio($codigo,$fi,$fa){
    $dbh = new Conexion();
@@ -1818,12 +1828,27 @@ join plantillas_costo pc on pc.codigo=pg.cod_plantillacosto where pc.codigo=$cod
 function obtenerCuentaPlantillaCostos($codigo){
   $dbh = new Conexion();
   $sql="";
-  $sql="SELECT p.cod_partidapresupuestaria,p.cod_cuenta,c.numero FROM partidaspresupuestarias_cuentas p join plan_cuentas c on p.cod_cuenta=c.codigo where p.cod_partidapresupuestaria=$codigo";
+  $sql="SELECT p.cod_partidapresupuestaria,p.cod_cuenta,c.numero,c.nombre FROM partidaspresupuestarias_cuentas p join plan_cuentas c on p.cod_cuenta=c.codigo where p.cod_partidapresupuestaria=$codigo";
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
    return $stmt;
 }
-
+function obtenerDetallePlantillaCostosPartida($plantilla,$codigo){
+  $dbh = new Conexion();
+  $sql="";
+  $sql="SELECT c.numero,c.nombre,p.* FROM plantillas_tcpdetalle p join plan_cuentas c on p.cod_cuenta=c.codigo where p.cod_partidapresupuestaria=$codigo and p.cod_plantillacosto=$plantilla";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+}
+function obtenerMontosCuentasDetallePlantillaCostosPartida($plantilla,$codigo){
+  $dbh = new Conexion();
+  $sql="";
+  $sql="SELECT p.cod_partidapresupuestaria,p.cod_cuenta,c.numero,c.nombre,sum(p.monto_total) as monto FROM plantillas_tcpdetalle p join plan_cuentas c on p.cod_cuenta=c.codigo where p.cod_partidapresupuestaria=$codigo and p.cod_plantillacosto=$plantilla group by cod_cuenta";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+}
 function obtenerCantidadPreciosPlantilla($codPlantilla){
   $dbh = new Conexion();
   $sql="";
@@ -1837,7 +1862,19 @@ function obtenerCantidadPreciosPlantilla($codPlantilla){
   }
   return $num;
 }
-
+function obtenerCantidadPlantillaDetallesPartida($codPlantilla,$codPartida){
+  $dbh = new Conexion();
+  $sql="";
+  $sql="SELECT count(*) as num FROM plantillas_tcpdetalle where cod_plantillacosto=$codPlantilla and cod_partidapresupuestaria=$codPartida";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute(); 
+   $num=0;
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
+  {
+   $num=$row['num'];
+  }
+  return $num;
+}
 //================ ========== PARA  planilla sueldos
 
 function obtenerBonoAntiguedad($minino_salarial,$ing_contr){  

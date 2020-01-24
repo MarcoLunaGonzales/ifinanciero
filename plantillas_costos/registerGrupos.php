@@ -289,7 +289,7 @@ if(isset($_GET['cod'])){
 								<th>Partida</th>
 								<th>Tipo</th>
 								<th class="text-right">M x Mes</th>
-								<th class="text-right">M x Modulo</th>
+								<th class="text-right">M x Curso</th>
 								<th class="text-right">M x Persona</th>
 							</tr>
 						</thead>

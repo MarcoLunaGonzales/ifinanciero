@@ -24,6 +24,7 @@ $fechaActual=date("Y-m-d");
 $anio=date("Y");
 $codigo=$_GET['cod'];
 $detallePlantilla=obtenerPreciosPlantillaCosto($codigo);
+$alumnosPlantilla=obtenerPlantillaCostoAlumnos($codigo);
 $query1="select pgd.cod_plantillagrupocosto,pc.cod_unidadorganizacional,pc.cod_area,pgc.nombre,pgc.cod_tipocosto,sum(pgd.monto_local) as local,sum(pgd.monto_externo) as externo,sum(pgd.monto_calculado) as calculado from plantillas_grupocostodetalle pgd join partidas_presupuestarias pp on pgd.cod_partidapresupuestaria=pp.codigo
 join plantillas_gruposcosto pgc on pgd.cod_plantillagrupocosto=pgc.codigo
 join plantillas_costo pc on pgc.cod_plantillacosto=pc.codigo 
@@ -41,20 +42,21 @@ where pc.codigo=$codigo";
                   </div>
                   <div class="float-right col-sm-2"><h6 class="card-title">Exportar como:</h6></div>
                   <h4 class="card-title text-center"><strong>PLANTILLA</strong></h4>
-                  <h4 class="card-title text-center"><b>CALCULO DE PRESUPUESTO PARA EVENTOS IBNORCA</b></h4>
+                  <h4 class="card-title text-center"><b>CALCULO DE PRESUPUESTO PARA PLANTILLAS DE COSTOS</b></h4>
                 </div>    
                 <div class="card-body">
                   <div class="col-sm-4 float-right">
                      <table class="table table-bordered table-condensed text-small">
                            <thead>
-                               <tr>
-                                 <th>A&ntilde;o</th>
-                                 <th>Mes</th>
-                                 <th>Semana</th>
+                               <tr class="bg-info text-white">
+                                 <th>Cantidad Alumnos</th>
+                                 <th>Cantidad Cursos</th>
+                                 <!--<th>Semana</th>-->
                                </tr>
                            </thead>
                            <tbody>
                             <tr>
+                              <td><?=$alumnosPlantilla?></td>
                               <?php 
                               $mes=obtenerValorConfiguracion(6);
                               ?><td><?=$mes?></td>
@@ -114,16 +116,21 @@ where pc.codigo=$codigo";
   $totalImporte=0;$totalModulo=0;$totalLocal=0;$totalExterno=0;
   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $codGrupo=$row['cod_plantillagrupocosto'];$grupoUnidad=$row['cod_unidadorganizacional'];$grupoArea=$row['cod_area'];
-    $importe_grupo=(float)$row['calculado']*$mes;
-    $totalImporte+=$importe_grupo;;
-    $totalModulo+=$row['calculado'];
+    if($row['calculado']==$row['local']){
+      $montoCalculadoTit=$row['calculado'];
+    }else{
+      $montoCalculadoTit=$row['local'];
+    }
+    $importe_grupo=(float)$montoCalculadoTit*$mes;
+    $totalImporte+=$importe_grupo;
+    $totalModulo+=$montoCalculadoTit;
     $totalLocal+=$row['local'];
     $totalExterno+=$row['externo'];
     
      $html.='<tr class="bg-plomo">'.
                       '<td class="font-weight-bold text-left">'.$row['nombre'].'</td>'.
                       '<td class="text-right font-weight-bold">'.number_format($importe_grupo, 2, '.', ',').'</td>'.
-                      '<td class="text-right font-weight-bold">'.number_format($row['calculado'], 2, '.', ',').'</td>'.
+                      '<td class="text-right font-weight-bold">'.number_format($montoCalculadoTit, 2, '.', ',').'</td>'.
                       '<td class="text-right font-weight-bold">'.number_format($row['local'], 2, '.', ',').'</td>'.
                       '<td class="text-right font-weight-bold">'.number_format($row['externo'], 2, '.', ',').'</td>';
       $html.='</tr>';
@@ -136,23 +143,26 @@ where pc.codigo=$codigo";
 
          $codPartida=$row_partidas['cod_partidapresupuestaria'];
          $numeroCuentas=contarPresupuestoCuentas($codPartida);
+
         if($row_partidas['tipo_calculo']!=1){
           $numeroCuentas="(Manual)";
           $signoClass="block";
           $estiloFila="text-muted";
-          $funcionOnclick="";
-          $importe_partida=(float)$row_partidas['monto_calculado']*$mes;
+          $funcionOnclick='filasPresupuesto('.$codPartida.')';
+          $importe_partida=(float)$row_partidas['monto_local']*$mes;
+          $montoCalculado=$row_partidas['monto_local'];
         }else{
           $numeroCuentas="(".$numeroCuentas.")";
           $signoClass="add_circle";
           $estiloFila="fila-button";
           $funcionOnclick='filasPresupuesto('.$codPartida.')';
           $importe_partida=(float)$row_partidas['monto_calculado']*$mes;
+          $montoCalculado=$row_partidas['monto_calculado'];
         }
           $html.='<tr onclick="'.$funcionOnclick.'" class="'.$estiloFila.'">'.
                       '<td class="font-weight-bold text-left">&nbsp;&nbsp;<i class="material-icons icon-sm simbolo'.$codPartida.'">'.$signoClass.'</i> '.$row_partidas['nombre'].' '.$numeroCuentas.'</td>'.
                       '<td class="text-right font-weight-bold">'.number_format($importe_partida, 2, '.', ',').'</td>'.
-                      '<td class="text-right font-weight-bold">'.number_format($row_partidas['monto_calculado'], 2, '.', ',').'</td>'.
+                      '<td class="text-right font-weight-bold">'.number_format($montoCalculado, 2, '.', ',').'</td>'.
                       '<td class="text-right font-weight-bold">'.number_format($row_partidas['monto_local'], 2, '.', ',').'</td>'.
                       '<td class="text-right font-weight-bold">'.number_format($row_partidas['monto_externo'], 2, '.', ',').'</td>';
           $html.='</tr>';
@@ -182,6 +192,22 @@ where pc.codigo=$codigo";
                       '<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>';
                 $html.='</tr>';
             }
+          }else{
+            // mostrar el detalle por de la plantilla cuando sea manual
+
+            $query_cuentas=obtenerDetallePlantillaCostosPartida($codigo,$codPartida);
+            while ($row_cuentas = $query_cuentas->fetch(PDO::FETCH_ASSOC)) {
+              $monto=$row_cuentas['monto_total']*$mes;
+              $montoCal=$row_cuentas['monto_total'];
+
+                $html.='<tr class="cuenta'.$codPartida.'" style="display:none">'.
+                      '<td class="font-weight-bold text-left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$row_cuentas['nombre'].' / '.$row_cuentas['glosa'].'</td>'.
+                      '<td class="text-right text-muted">'.number_format($monto, 2, '.', ',').'</td>'.
+                      '<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>'.
+                      '<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>'.
+                      '<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>';
+                $html.='</tr>';
+            }
           }
 
      } 
@@ -205,15 +231,20 @@ $html.='<tr class="bg-table-primary text-white">'.
   $totalImporte2=0;$totalModulo2=0;$totalLocal2=0;$totalExterno2=0;
   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $codGrupo=$row['cod_plantillagrupocosto'];$grupoUnidad=$row['cod_unidadorganizacional'];$grupoArea=$row['cod_area'];
-    $importe_grupo=(float)$row['calculado']*$mes;
+    if($row['calculado']==$row['local']){
+      $montoCalculadoTit=$row['calculado'];
+    }else{
+      $montoCalculadoTit=$row['local'];
+    }
+    $importe_grupo=(float)$montoCalculadoTit*$mes;
     $totalImporte2+=$importe_grupo;
-    $totalModulo2+=$row['calculado'];
+    $totalModulo2+=$montoCalculadoTit;
     $totalLocal2+=$row['local'];
     $totalExterno2+=$row['externo'];   
      $html.='<tr class="bg-plomo">'.
                       '<td class="font-weight-bold text-left">'.$row['nombre'].'</td>'.
                       '<td class="text-right font-weight-bold">'.number_format($importe_grupo, 2, '.', ',').'</td>'.
-                      '<td class="text-right font-weight-bold">'.number_format($row['calculado'], 2, '.', ',').'</td>'.
+                      '<td class="text-right font-weight-bold">'.number_format($montoCalculadoTit, 2, '.', ',').'</td>'.
                       '<td class="text-right font-weight-bold">'.number_format($row['local'], 2, '.', ',').'</td>'.
                       '<td class="text-right font-weight-bold">'.number_format($row['externo'], 2, '.', ',').'</td>';
       $html.='</tr>';
@@ -230,19 +261,21 @@ $html.='<tr class="bg-table-primary text-white">'.
           $numeroCuentas="(Manual)";
           $signoClass="block";
           $estiloFila="text-muted";
-          $funcionOnclick="";
-          $importe_partida=(float)$row_partidas['monto_calculado']*$mes;
+          $funcionOnclick='filasPresupuesto('.$codPartida.')';
+          $importe_partida=(float)$row_partidas['monto_local']*$mes;
+          $montoCalculado=$row_partidas['monto_local'];
         }else{
           $numeroCuentas="(".$numeroCuentas.")";
           $signoClass="add_circle";
           $estiloFila="fila-button";
           $funcionOnclick='filasPresupuesto('.$codPartida.')';
           $importe_partida=(float)$row_partidas['monto_calculado']*$mes;
+          $montoCalculado=$row_partidas['monto_calculado'];
         }
           $html.='<tr onclick="'.$funcionOnclick.'" class="'.$estiloFila.'">'.
                       '<td class="font-weight-bold text-left">&nbsp;&nbsp;<i class="material-icons icon-sm simbolo'.$codPartida.'">'.$signoClass.'</i> '.$row_partidas['nombre'].' '.$numeroCuentas.'</td>'.
                       '<td class="text-right font-weight-bold">'.number_format($importe_partida, 2, '.', ',').'</td>'.
-                      '<td class="text-right font-weight-bold">'.number_format($row_partidas['monto_calculado'], 2, '.', ',').'</td>'.
+                      '<td class="text-right font-weight-bold">'.number_format($montoCalculado, 2, '.', ',').'</td>'.
                       '<td class="text-right font-weight-bold">'.number_format($row_partidas['monto_local'], 2, '.', ',').'</td>'.
                       '<td class="text-right font-weight-bold">'.number_format($row_partidas['monto_externo'], 2, '.', ',').'</td>';
           $html.='</tr>';
@@ -265,6 +298,34 @@ $html.='<tr class="bg-table-primary text-white">'.
                 $montoCal=costoModulo($monto,$mes);
                 $html.='<tr class="cuenta'.$codPartida.'" style="display:none">'.
                       '<td class="font-weight-bold text-left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$row_cuentas['nombre'].'</td>'.
+                      '<td class="text-right text-muted">'.number_format($monto, 2, '.', ',').'</td>'.
+                      '<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>'.
+                      '<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>'.
+                      '<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>';
+                $html.='</tr>';
+            }
+          }else{
+            // mostrar el detalle por de la plantilla cuando sea manual
+
+            $query_cuentas=obtenerDetallePlantillaCostosPartida($codigo,$codPartida);
+            $montoSimulacion=0;
+            while ($row_cuentas = $query_cuentas->fetch(PDO::FETCH_ASSOC)) {
+              $monto=$row_cuentas['monto_total']*$mes;
+              $montoCal=$row_cuentas['monto_total'];
+              $montoSimulacion+=$row_cuentas['monto_total'];
+                $html.='<tr class="cuenta'.$codPartida.'" style="display:none">'.
+                      '<td class="font-weight-bold text-left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$row_cuentas['nombre'].' / '.$row_cuentas['glosa'].'</td>'.
+                      '<td class="text-right text-muted">'.number_format($monto, 2, '.', ',').'</td>'.
+                      '<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>'.
+                      '<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>'.
+                      '<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>';
+                $html.='</tr>';
+            }
+            if($montoSimulacion<$montoCalculado){
+              $monto=($montoCalculado-$montoSimulacion)*$mes;
+              $montoCal=($montoCalculado-$montoSimulacion);
+              $html.='<tr class="cuenta'.$codPartida.' bg-warning text-dark" style="display:none">'.
+                      '<td class="font-weight-bold text-left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Monto alterado desde la simulación</td>'.
                       '<td class="text-right text-muted">'.number_format($monto, 2, '.', ',').'</td>'.
                       '<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>'.
                       '<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>'.

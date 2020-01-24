@@ -1,6 +1,9 @@
 .modal-arriba {
    top: -80px !important;
 }
+.modal-gris{
+   background: rgba(18, 15, 6, 0.8) !important;
+}
 
 .after-loop{
   padding:3rem 0 5rem
