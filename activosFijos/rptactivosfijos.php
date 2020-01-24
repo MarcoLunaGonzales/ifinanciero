@@ -11,7 +11,7 @@ $statement = $dbh->query($query);
 <div class="content">
 	<div class="container-fluid">
 		<div class="col-md-12">
-		  <form id="form1" class="form-horizontal" action="activosfijos/afPrintActivosFijos.php" method="post" target="_blank">
+		  <form id="form1" class="form-horizontal" action="activosFijos/afPrintActivosFijos.php" method="post" target="_blank">
 			<div class="card">
 			  <div class="card-header <?=$colorCard;?> card-header-text">
   				<div class="card-text">
