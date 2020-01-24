@@ -13,7 +13,7 @@ $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//para mostrar err
 
 try {
     // $codigo = $_POST["codigo"];
-    
+    $codigo = $_POST["codigo"];  
     $cod_cargo = $_POST["cod_cargo"];
     $cod_unidadorganizacional = $_POST["cod_uo"];
     $cod_area = $_POST["cod_area"];
@@ -56,7 +56,20 @@ try {
     $cod_estadoreferencial=1;
     $porcentaje=100;
 
-    $codigo = $_POST["codigo"];                
+
+    $stmtRetiros = $dbh->prepare("SELECT codigo,cod_personal from personal_retiros where cod_personal=$codigo");
+    $stmtRetiros->execute();
+    $resultsRetiros=$stmtRetiros->fetch();
+    $cod_retiro_x=$resultsRetiros['codigo'];
+    $cod_personal_x=$resultsRetiros['cod_personal'];
+    //preguntamos si hay registros de retirors del personal
+    if($codigo==$cod_personal_x){
+        $stmtUR = $dbh->prepare("UPDATE personal_retiros set cod_estadoreferencial=2 where codigo = $cod_retiro_x");
+        $stmtUR->execute();
+    }
+
+
+                  
     $stmt = $dbh->prepare("UPDATE personal set cod_cargo=:cod_cargo,cod_unidadorganizacional=:cod_unidadorganizacional,cod_area=:cod_area,jubilado=:jubilado,
     cod_tipopersonal=:cod_tipopersonal,haber_basico=:haber_basico,apellido_casada=:apellido_casada,otros_nombres=:otros_nombres,
     nua_cua_asignado=:nua_cua_asignado,ing_contr=:ing_contr,ing_planilla=:ing_planilla,
