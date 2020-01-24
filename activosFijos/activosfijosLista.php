@@ -20,7 +20,7 @@ $sql="SELECT af.*, d.abreviatura as dep_nombre, tb.tipo_bien tb_tipo, u.edificio
  (select p.paterno from personal p where p.codigo=af.cod_responsables_responsable)as paterno_responsable,
  (select p.materno from personal p where p.codigo=af.cod_responsables_responsable)as materno_responsable
 from activosfijos af, depreciaciones d, tiposbienes tb, ubicaciones u 
-where af.cod_depreciaciones = d.codigo and af.cod_tiposbienes = tb.codigo and af.cod_ubicaciones  = u.codigo 
+where af.cod_depreciaciones = d.codigo and af.cod_tiposbienes = tb.codigo and af.cod_ubicaciones  = u.codigo
 and af.cod_estadoactivofijo = 1";
 $stmt = $dbh->prepare($sql);
 //ejecutamos
@@ -87,7 +87,7 @@ $stmt->bindColumn('nombre_area', $nombreArea);
                             <th>Activo</th>
                             <th>F. Alta</th>
                             <th>Rubro/TipoBien</th>
-                            <th>Estado bien</th>
+                            
                             <th>Ubicacion</th>
                             <th>Responsable</th>
                             <th>Acc/Eventos</th>
