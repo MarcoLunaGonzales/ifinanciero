@@ -16,7 +16,9 @@ $sql="SELECT af.*, d.abreviatura as dep_nombre, tb.tipo_bien tb_tipo, u.edificio
 (select afi.imagen from activosfijosimagen afi where af.codigo = afi.codigo) as imagen,
  (select uo.abreviatura from unidades_organizacionales uo where uo.codigo=af.cod_unidadorganizacional)as nombre_unidad, 
  (select a.abreviatura from areas a where a.codigo=af.cod_area)as nombre_area,
- (select p.nombre from personal p where p.codigo=af.cod_responsables_responsable)as nombre_responsable
+ (select p.primer_nombre from personal p where p.codigo=af.cod_responsables_responsable)as nombre_responsable,
+ (select p.paterno from personal p where p.codigo=af.cod_responsables_responsable)as paterno_responsable,
+ (select p.materno from personal p where p.codigo=af.cod_responsables_responsable)as materno_responsable
 from activosfijos af, depreciaciones d, tiposbienes tb, ubicaciones u 
 where af.cod_depreciaciones = d.codigo and af.cod_tiposbienes = tb.codigo and af.cod_ubicaciones  = u.codigo 
 and af.cod_estadoactivofijo = 1";
@@ -45,6 +47,8 @@ $stmt->bindColumn('activo', $activo);
 $stmt->bindColumn('cod_responsables_responsable', $cod_responsables_responsable);
 $stmt->bindColumn('cod_responsables_autorizadopor', $cod_responsables_autorizadopor);
 $stmt->bindColumn('nombre_responsable', $nombre_responsable);
+$stmt->bindColumn('paterno_responsable', $paterno_responsable);
+$stmt->bindColumn('materno_responsable', $materno_responsable);
 
 $stmt->bindColumn('dep_nombre', $dep_nombre);
 $stmt->bindColumn('tb_tipo', $tb_tipo);
@@ -106,7 +110,7 @@ $stmt->bindColumn('nombre_area', $nombreArea);
                               <td class="text-left small"><?=$dep_nombre;?>/<?=$tb_tipo;?></td>
                               
                               <td class="text-left small"><?=$u_oficina;?> <?=$u_edificio;?></td>
-                              <td class="text-left small"><?=$nombre_responsable?></td>
+                              <td class="text-left small"><?=$paterno_responsable?> <?=$materno_responsable?><?=$nombre_responsable?></td>
                               
                               <td class="td-actions text-right">
                               <?php
