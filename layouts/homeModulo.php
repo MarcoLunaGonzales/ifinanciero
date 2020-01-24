@@ -1,7 +1,7 @@
 <?php
 switch ($codModulo) {
   case 1:
-   $nombreModulo="Remuneración";
+   $nombreModulo="RRHH";
    $cardTema="card-themes";
    $iconoTitulo="local_atm";
   break;
@@ -16,7 +16,7 @@ switch ($codModulo) {
    $iconoTitulo="insert_chart_outlined";
   break;
   case 4:
-   $nombreModulo="Presupuestos y Solicitudes";
+   $nombreModulo="Presupuestos / Solicitudes";
    $cardTema="card-guides";
    $iconoTitulo="list_alt";
   break;
