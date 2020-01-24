@@ -103,6 +103,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $montoSimulacion=0;
             while ($row_cuentas = $query_cuentas->fetch(PDO::FETCH_ASSOC)) {
               $montoCal=$row_cuentas['monto_total'];
+              $montoSimulacion+=$row_cuentas['monto_total'];
 
                 $html.='<tr class="">'.
                       '<td class="font-weight-bold text-left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$row_cuentas['nombre'].' / '.$row_cuentas['glosa'].'</td>'.
