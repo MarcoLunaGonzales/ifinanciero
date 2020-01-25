@@ -301,10 +301,9 @@
                          </div>
                         </div>
                       </div>
-
                       <div id="mensajeDetalle"></div>
                       <div class="form-group float-right">
-                        <button type="button" class="btn btn-info btn-round" onclick="savePlantillaDetalle()">Guardar</button>
+                        <a href="#" class="btn btn-info btn-round" id="boton_guardardetalle"onclick="savePlantillaDetalle('mensual')">Guardar</a>
                       </div>
                          </form>
                     </div>
@@ -323,9 +322,10 @@
                   <div class="card-text">
                     <h4>Lista de Precios</h4>
                   </div>
-                  <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
+                  
+                  <a href="#" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
                     <i class="material-icons">close</i>
-                  </button>
+                  </a>
                 </div>
                 <div class="card-body">
                    <table class="table table-condensed table-bordered bg-info text-white">
@@ -356,9 +356,12 @@
                   <div class="card-text">
                     <h4>DETALLES <b id="titulo_partidadetalle"></b></h4>
                   </div>
-                  <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
+                  <a href="#" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
                     <i class="material-icons">close</i>
-                  </button>
+                  </a>
+                  <a class="btn btn-success btn-sm btn-fab float-right" href="#" onclick="cambiarModalDetalle()">
+                    <i class="material-icons">keyboard_backspace</i>
+                  </a>
                 </div>
                 <div class="card-body">
                   <div class="row" id="lista_detallespartidacuenta">

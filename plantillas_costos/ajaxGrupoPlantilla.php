@@ -45,13 +45,13 @@ $idFila=$_GET['idFila'];
       	</div>
 		<div class="col-sm-2">
 		  <div class="btn-group">
-		  	<a href="#" id="boton_det<?=$idFila;?>" onclick="listDetalle(<?=$idFila;?>);" class="btn btn-just-icon btn-primary btn-link">
+		  	<a title="Agregar Detalles" href="#" id="boton_det<?=$idFila;?>" onclick="listDetalle(<?=$idFila;?>);" class="btn btn-just-icon btn-primary btn-link">
                <i class="material-icons">view_list</i><span id="ndet<?=$idFila;?>" class="count bg-warning">0</span>
              </a>
-			<a rel="tooltip" href="#" class="btn btn-just-icon btn-danger btn-link" id="boton_remove<?=$idFila;?>" onclick="minusGrupoPlantilla('<?=$idFila;?>');">
+			<a title="Eliminar Registro" href="#" class="btn btn-just-icon btn-danger btn-link" id="boton_remove<?=$idFila;?>" onclick="minusGrupoPlantilla('<?=$idFila;?>');">
             	<i class="material-icons">remove_circle</i>
 	        </a>
-	        <a rel="tooltip" href="#" id="boton_det_list<?=$idFila;?>" class="btn btn-just-icon btn-info btn-link" onclick="mostrarDetalle('<?=$idFila;?>');">
+	        <a title="Ver Detalles" href="#" id="boton_det_list<?=$idFila;?>" class="btn btn-just-icon btn-info btn-link" onclick="mostrarDetalle('<?=$idFila;?>');">
             	<i class="material-icons">remove_red_eye</i>
 	        </a>
 	      </div>  

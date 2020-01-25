@@ -64,7 +64,7 @@ where pc.codigo=$codigo";
                            </tbody>
                         </table>    
                   </div>
-                  <div class="row">
+                  <!--<div class="row">
                     <div class="col-sm-4">
                     <div class="form-group">
                         <label class="bmd-label-static">Valor Mes</label>
@@ -83,8 +83,8 @@ where pc.codigo=$codigo";
                          <a href="" class="btn btn-default btn-sm">Restaurar</a>
                     </div>
                   </div>
-                  </div>
-                  <h5 class="card-title"><strong>COSTOS DEL EVENTO DE CAPACITACION</strong></h5>
+                  </div>-->
+                  <!--<h5 class="card-title"><strong>COSTOS DEL EVENTO DE CAPACITACION</strong></h5>-->
                   <div class="table-responsive" id="datos_pantilla_costo">
                         
                        
@@ -243,7 +243,7 @@ $html.='<tr class="bg-table-primary text-white">'.
     $totalExterno2+=$row['externo'];   
      $html.='<tr class="bg-plomo">'.
                       '<td class="font-weight-bold text-left">'.$row['nombre'].'</td>'.
-                      '<td class="text-right font-weight-bold">'.number_format($importe_grupo, 2, '.', ',').'</td>'.
+                      '<td class="font-weight-bold text-left">-</td>'.//'<td class="text-right font-weight-bold">'.number_format($importe_grupo, 2, '.', ',').'</td>'.
                       '<td class="text-right font-weight-bold">'.number_format($montoCalculadoTit, 2, '.', ',').'</td>'.
                       '<td class="text-right font-weight-bold">'.number_format($row['local'], 2, '.', ',').'</td>'.
                       '<td class="text-right font-weight-bold">'.number_format($row['externo'], 2, '.', ',').'</td>';
@@ -274,7 +274,7 @@ $html.='<tr class="bg-table-primary text-white">'.
         }
           $html.='<tr onclick="'.$funcionOnclick.'" class="'.$estiloFila.'">'.
                       '<td class="font-weight-bold text-left">&nbsp;&nbsp;<i class="material-icons icon-sm simbolo'.$codPartida.'">'.$signoClass.'</i> '.$row_partidas['nombre'].' '.$numeroCuentas.'</td>'.
-                      '<td class="text-right font-weight-bold">'.number_format($importe_partida, 2, '.', ',').'</td>'.
+                      '<td class="font-weight-bold text-left">-</td>'.//'<td class="text-right font-weight-bold">'.number_format($importe_partida, 2, '.', ',').'</td>'.
                       '<td class="text-right font-weight-bold">'.number_format($montoCalculado, 2, '.', ',').'</td>'.
                       '<td class="text-right font-weight-bold">'.number_format($row_partidas['monto_local'], 2, '.', ',').'</td>'.
                       '<td class="text-right font-weight-bold">'.number_format($row_partidas['monto_externo'], 2, '.', ',').'</td>';
@@ -298,7 +298,7 @@ $html.='<tr class="bg-table-primary text-white">'.
                 $montoCal=costoModulo($monto,$mes);
                 $html.='<tr class="cuenta'.$codPartida.'" style="display:none">'.
                       '<td class="font-weight-bold text-left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$row_cuentas['nombre'].'</td>'.
-                      '<td class="text-right text-muted">'.number_format($monto, 2, '.', ',').'</td>'.
+                      '<td class="font-weight-bold text-left">-</td>'.//'<td class="text-right text-muted">'.number_format($monto, 2, '.', ',').'</td>'.
                       '<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>'.
                       '<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>'.
                       '<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>';
@@ -315,7 +315,7 @@ $html.='<tr class="bg-table-primary text-white">'.
               $montoSimulacion+=$row_cuentas['monto_total'];
                 $html.='<tr class="cuenta'.$codPartida.'" style="display:none">'.
                       '<td class="font-weight-bold text-left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$row_cuentas['nombre'].' / '.$row_cuentas['glosa'].'</td>'.
-                      '<td class="text-right text-muted">'.number_format($monto, 2, '.', ',').'</td>'.
+                      '<td class="font-weight-bold text-left">-</td>'.//'<td class="text-right text-muted">'.number_format($monto, 2, '.', ',').'</td>'.
                       '<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>'.
                       '<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>'.
                       '<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>';
@@ -326,7 +326,7 @@ $html.='<tr class="bg-table-primary text-white">'.
               $montoCal=($montoCalculado-$montoSimulacion);
               $html.='<tr class="cuenta'.$codPartida.' bg-warning text-dark" style="display:none">'.
                       '<td class="font-weight-bold text-left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Monto alterado desde la simulación</td>'.
-                      '<td class="text-right text-muted">'.number_format($monto, 2, '.', ',').'</td>'.
+                      '<td class="font-weight-bold text-left">-</td>'.//'<td class="text-right text-muted">'.number_format($monto, 2, '.', ',').'</td>'.
                       '<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>'.
                       '<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>'.
                       '<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>';
@@ -340,7 +340,7 @@ $html.='<tr class="bg-table-primary text-white">'.
 
 $html.='<tr class="bg-table-primary text-white">'.
                       '<td class="font-weight-bold text-left">TOTAL COSTO VARIABLE</td>'.
-                      '<td class="text-right" id="fijo_importe">'.number_format($totalImporte2, 2, '.', ',').'</td>'.
+                      '<td class="font-weight-bold text-left"></td>'.//'<td class="text-right" id="fijo_importe">'.number_format($totalImporte2, 2, '.', ',').'</td>'.
                       '<td class="text-right" id="fijo_modulo">'.number_format($totalModulo2, 2, '.', ',').'</td>'.
                       '<td class="text-right" id="fijo_ibnorca">'.number_format($totalLocal2, 2, '.', ',').'</td>'.
                       '<td class="text-right" id="fijo_fuera">'.number_format($totalExterno2, 2, '.', ',').'</td>';

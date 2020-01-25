@@ -136,7 +136,12 @@ $alumnos=$_GET['alumnos'];
                            ?>
 
                      </tbody>
-                   </table>     
+                   </table>  
+                <div class="row">
+                   <div class="form-group col-sm-12">
+                        <a href="#" class="btn btn-info btn-round float-right" onclick="savePlantillaDetalle('<?=$nombreInput?>')">Guardar</a>
+                    </div>   
+                </div>
   <script>
   $("#monto_totalplantilladetallecal").val($("#<?=$nombreInputCal?>").val());
   $("#titulo_montototalcal").text("<?=$tituloMonto?>");
