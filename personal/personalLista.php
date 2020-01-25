@@ -9,8 +9,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $dbh = new Conexion();
 
 
-$stmt = $dbh->prepare(" SELECT p.codigo,p.identificacion,p.cod_lugar_emision,p.paterno,p.materno,p.primer_nombre,p.bandera,
-  p.ing_contr,
+$stmt = $dbh->prepare("SELECT p.codigo,p.identificacion,p.cod_lugar_emision,p.paterno,p.materno,p.primer_nombre,p.bandera,p.ing_contr,p.cod_estadopersonal,
   (select c.nombre from cargos c where c.codigo=cod_cargo)as xcargo,
  (select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional)as xuonombre,
  (select a.abreviatura from areas a where a.codigo=cod_area)as xarea,
@@ -18,7 +17,8 @@ $stmt = $dbh->prepare(" SELECT p.codigo,p.identificacion,p.cod_lugar_emision,p.p
  (select tp.nombre from tipos_personal tp where tp.codigo=cod_tipopersonal)as xcod_tipopersonal
  
  from personal p
- where p.cod_estadoreferencial=1 order by p.paterno, p.materno, p.primer_nombre
+ where p.cod_estadoreferencial=1
+ order by p.paterno, p.materno, p.primer_nombre
  ");
 //ejecutamos
 $stmt->execute();
@@ -30,6 +30,7 @@ $stmt->bindColumn('paterno', $paterno);
 $stmt->bindColumn('materno', $materno);
 $stmt->bindColumn('primer_nombre', $primer_nombre);
 $stmt->bindColumn('bandera', $bandera);
+$stmt->bindColumn('cod_estadopersonal', $cod_estadopersonal);
 
 $stmt->bindColumn('ing_contr', $fecha_ingreso);
 $stmt->bindColumn('xcargo', $xcargo);
@@ -72,7 +73,13 @@ $stmt->bindColumn('xcod_tipopersonal', $xcod_tipopersonal);
                   </thead>
                   <tbody>
                     <?php $index=1;
-                    while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { ?>
+                    while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { 
+                      if ($cod_estadopersonal==3) {
+                        
+                      }elseif ($cod_estadopersonal==1) {
+                        $labelestadoPersonal='';
+                      }else $labelestadoPersonal='<span class="badge badge-warning">';
+                      ?>
                       <tr>
                         <td  class="td-actions text-right">    
                           <a href='<?=$urlprintPersonal;?>?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="<?=$buttonEdit;?>">
@@ -86,10 +93,10 @@ $stmt->bindColumn('xcod_tipopersonal', $xcod_tipopersonal);
                         <td><?=$xuonombre;?>-<?=$xarea;?></td>                        
                         <td><?=$xcod_tipopersonal;?></td>                                              
                         <td><?=$fecha_ingreso;?></td>
-                        <td><?=$xestado;?></td>
+                        <td><?=$labelestadoPersonal.$xestado."</span>";?></td>
                         <td class="td-actions text-right">
                           <?php
-                            if($globalAdmin==1){
+                            if($globalAdmin==1 and $cod_estadopersonal!=3){
                           ?>
                             <a href='<?=$urlFormPersonalContratos;?>&codigo=<?=$codigo;?>' rel="tooltip" class="btn btn-info">
                               <i class="material-icons" title="Contratos">assignment</i>
@@ -118,7 +125,7 @@ $stmt->bindColumn('xcod_tipopersonal', $xcod_tipopersonal);
                         </td>
                         <td class="td-actions text-right">
                           <?php
-                            if($globalAdmin==1 and $bandera==1){
+                            if($globalAdmin==1 and $bandera==1 and $cod_estadopersonal!=3){
                           ?>
                             <div class="dropdown">
                               <button class="btn btn-primary dropdown-toggle" type="button" id="editar_otros" data-toggle="dropdown" aria-extended="true">

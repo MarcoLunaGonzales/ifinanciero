@@ -14,8 +14,8 @@ alerts = {
     }
     else if (type == 'warning-message-and-confirmation') {
       swal({
-        title: 'Esta Seguro?',
-        text: "No podra revertir el borrado!",
+        title: '¿Estás Seguro?',
+        text: "¡No podra revertir el borrado!",
         type: 'warning',
         showCancelButton: true,
         confirmButtonClass: 'btn btn-success',

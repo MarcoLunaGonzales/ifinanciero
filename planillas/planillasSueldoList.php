@@ -11,7 +11,6 @@ $globalNombreUnidad=$_SESSION["globalNombreUnidad"];
 
 $dbh = new Conexion();
 
-
 if($globalAdmin==1){//para personal admin
   $stmtAdmnin = $dbh->prepare("SELECT codigo,cod_gestion,cod_mes,cod_estadoplanilla,
   (select m.nombre from meses m where m.codigo=cod_mes)as mes,

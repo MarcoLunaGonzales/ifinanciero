@@ -2177,21 +2177,68 @@ function obtener_aporte_patronal_general($cod_config_planilla,$total_ganado){
   return($aporte_p_seguro_medico_X);
 }
 //planillas aguinaldos
-function Verificar_si_corresponde_Aguinaldo($ing_contr){
+// function Verificar_si_corresponde_Aguinaldo($ing_contr){
+//   $anio_actual= date('Y');
+//   // $anio_actual=2019;
+//   $fechaComoEntero = strtotime($ing_contr);
+//   $anio_ingreso = date("Y", $fechaComoEntero);
+//   $mes_ingreso = date("m", $fechaComoEntero);
+//   $diferencia_anios=$anio_actual-$anio_ingreso;
+//   $diferencia_meses=12-$mes_ingreso;
+//   if($diferencia_anios>0){
+//     $sw=1;
+//   }elseif($diferencia_meses>2){
+//     $sw=1;
+//   }else $sw=0;
+//   return $sw;
+// }
+function obtener_anios_trabajados($ing_contr){
   $anio_actual= date('Y');
   // $anio_actual=2019;
   $fechaComoEntero = strtotime($ing_contr);
   $anio_ingreso = date("Y", $fechaComoEntero);
-  $mes_ingreso = date("m", $fechaComoEntero);
+  // $mes_ingreso = date("m", $fechaComoEntero);
   $diferencia_anios=$anio_actual-$anio_ingreso;
-  $diferencia_meses=12-$mes_ingreso;
-  if($diferencia_anios>0){
-    $sw=1;
-  }elseif($diferencia_meses>2){
-    $sw=1;
-  }else $sw=0;
+  // $diferencia_meses=12-$mes_ingreso;
+  // if($diferencia_anios>0){
+  //   $sw=1;
+  // }elseif($diferencia_meses>2){
+  //   $sw=1;
+  // }else $sw=0;
+  return $diferencia_anios;
 }
-function obtner_id_planilla($cod_gestion,$cod_mes){
+function obtener_meses_trabajados($ing_contr){
+  // $anio_actual= date('Y');
+  // $anio_actual=2019;
+  $fechaComoEntero = strtotime($ing_contr);
+  // $anio_ingreso = date("Y", $fechaComoEntero);
+  $mes_ingreso = date("m", $fechaComoEntero);
+  // $diferencia_anios=$anio_actual-$anio_ingreso;
+  $diferencia_meses=12-$mes_ingreso;
+  // if($diferencia_anios>0){
+  //   $sw=1;
+  // }elseif($diferencia_meses>2){
+  //   $sw=1;
+  // }else $sw=0;
+  return $diferencia_meses;
+}
+function obtener_dias_trabajados($ing_contr){
+  // $anio_actual= date('Y');
+  // $anio_actual=2019;
+  $fechaComoEntero = strtotime($ing_contr);
+  // $anio_ingreso = date("Y", $fechaComoEntero);
+  $dia_ingreso = date("d", $fechaComoEntero);
+  // $diferencia_anios=$anio_actual-$anio_ingreso;
+  $diferencia_dias=31-$dia_ingreso;
+  // if($diferencia_anios>0){
+  //   $sw=1;
+  // }elseif($diferencia_meses>2){
+  //   $sw=1;
+  // }else $sw=0;
+  return $diferencia_dias;
+}
+
+function obtener_id_planilla($cod_gestion,$cod_mes){
   $dbh = new Conexion();
   $stmt = $dbh->prepare("SELECT codigo from planillas
   where cod_gestion=$cod_gestion and cod_mes=$cod_mes");
@@ -2202,7 +2249,7 @@ function obtner_id_planilla($cod_gestion,$cod_mes){
   $stmt = '';
   return ($codigo);
 }
-function obtnerSueldomes($cod_personal,$cod_planilla){
+function obtenerSueldomes($cod_personal,$cod_planilla){
   $dbh = new Conexion();
   set_time_limit(300);
   $stmt = $dbh->prepare("SELECT liquido_pagable from planillas_personal_mes

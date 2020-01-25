@@ -239,6 +239,12 @@ if($menuModulo==0){
                     <span class="sidebar-normal"> Planilla De Aguinaldos </span>
                   </a>
                 </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=finiquitos_list">
+                    <span class="sidebar-mini"> F </span>
+                    <span class="sidebar-normal"> Finiquitos </span>
+                  </a>
+                </li>
                 
               </ul>
             </div>
@@ -257,7 +263,7 @@ if($menuModulo==0){
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=rptCambiosPersonal">
                     <span class="sidebar-mini"> R </span>
-                    <span class="sidebar-normal"> Cambios Del Personal</span>
+                    <span class="sidebar-normal"> Histórico Del Personal</span>
                   </a>
                 </li>                           
               </ul>

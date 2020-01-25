@@ -50,22 +50,38 @@ if($sw==2){//procesar planilla
 	$stmtPersonal->bindColumn('ing_contr', $ing_contr);	
 	while ($rowC = $stmtPersonal->fetch()) 
 	{
-		$sw_Aguinaldo=Verificar_si_corresponde_Aguinaldo($ing_contr);
-		if($sw_Aguinaldo=1){
+
+		$anios_trabajados=obtener_anios_trabajados($ing_contr);
+		$meses_trabajados=obtener_meses_trabajados($ing_contr);
+		//$dias_trabajados=obtener_dias_trabajados($ing_contr);
+		// $sw_Aguinaldo=Verificar_si_corresponde_Aguinaldo($ing_contr);
+		if($anios_trabajados>0){
 			$meses_trabajados_del_anio=12;
-			$dias_trabajados_del_anio=30;
-			// $cod_planilla_1=obtner_id_planilla($cod_gestion_x,9);
-			// $cod_planilla_2=obtner_id_planilla($cod_gestion_x,10);			
-			$cod_planilla_3=obtner_id_planilla($cod_gestion_x,11);
-			// $liquido_mes1=obtnerSueldomes($codigo_personal,$cod_planilla_1);
-			// $liquido_mes2=obtnerSueldomes($codigo_personal,$cod_planilla_2);
-			$liquido_mes1=obtnerSueldomes($codigo_personal,$cod_planilla_3);//cambiar
-			$liquido_mes2=obtnerSueldomes($codigo_personal,$cod_planilla_3);//cambiar
-			$liquido_mes3=obtnerSueldomes($codigo_personal,$cod_planilla_3);
+			$dias_trabajados_del_anio=0;
+			$cod_planilla_1=obtener_id_planilla($cod_gestion_x,9);
+			$cod_planilla_2=obtener_id_planilla($cod_gestion_x,10);
+			$cod_planilla_3=obtener_id_planilla($cod_gestion_x,11);
+			$liquido_mes1=obtenerSueldomes($codigo_personal,$cod_planilla_1);
+			$liquido_mes2=obtenerSueldomes($codigo_personal,$cod_planilla_2);
+			// $liquido_mes1=obtenerSueldomes($codigo_personal,$cod_planilla_3);//cambiar
+			// $liquido_mes2=obtenerSueldomes($codigo_personal,$cod_planilla_3);//cambiar
+			$liquido_mes3=obtenerSueldomes($codigo_personal,$cod_planilla_3);
 			$promedio_sueldos=($liquido_mes1+$liquido_mes2+$liquido_mes3)/3;
 			$dias_sueldo=$promedio_sueldos/360*$dias_trabajados_del_anio;
 			$meses_sueldo=$promedio_sueldos/12*$meses_trabajados_del_anio;
 			$total_pago_aguinaldo=$dias_sueldo+$meses_sueldo;
+		}elseif($meses_trabajados>2){
+			$meses_trabajados_del_anio=$meses_trabajados;
+			$dias_trabajados_del_anio=obtener_dias_trabajados($ing_contr);
+			$cod_planilla_1=obtener_id_planilla($cod_gestion_x,9);//no generado
+			$cod_planilla_2=obtener_id_planilla($cod_gestion_x,10);//no generado
+			$cod_planilla_3=obtener_id_planilla($cod_gestion_x,11);
+			$liquido_mes1=obtenerSueldomes($codigo_personal,$cod_planilla_1);
+			$liquido_mes2=obtenerSueldomes($codigo_personal,$cod_planilla_2);
+			$liquido_mes3=obtenerSueldomes($codigo_personal,$cod_planilla_3);
+			$promedio_sueldos=($liquido_mes1+$liquido_mes2+$liquido_mes3)/3;
+			$dias_sueldo=$promedio_sueldos/360*$dias_trabajados_del_anio;
+			$meses_sueldo=$promedio_sueldos/12*$meses_trabajados_del_anio;
 		}else{
 			$meses_trabajados_del_anio=2;
 			$dias_trabajados_del_anio=26;
@@ -75,6 +91,7 @@ if($sw==2){//procesar planilla
 			$dias_sueldo=0;
 			$meses_sueldo=0;
 			$total_pago_aguinaldo=0;
+
 		}		
 		//==== insert de panillas de  personal mes
 		$sqlInsertPlanillas="INSERT into planillas_aguinaldos_detalle(cod_planilla,cod_personal,sueldo_1,sueldo_2,sueldo_3,
@@ -124,14 +141,14 @@ if($sw==2){//procesar planilla
 		if($sw_Aguinaldo=1){
 			$meses_trabajados_del_anio=12;
 			$dias_trabajados_del_anio=30;
-			// $cod_planilla_1=obtner_id_planilla($cod_gestion_x,9);
-			// $cod_planilla_2=obtner_id_planilla($cod_gestion_x,10);			
-			$cod_planilla_3=obtner_id_planilla($cod_gestion_x,11);
-			// $liquido_mes1=obtnerSueldomes($codigo_personal,$cod_planilla_1);
-			// $liquido_mes2=obtnerSueldomes($codigo_personal,$cod_planilla_2);
-			$liquido_mes1=obtnerSueldomes($codigo_personal,$cod_planilla_3);//cambiar
-			$liquido_mes2=obtnerSueldomes($codigo_personal,$cod_planilla_3);//cambiar
-			$liquido_mes3=obtnerSueldomes($codigo_personal,$cod_planilla_3);
+			// $cod_planilla_1=obtener_id_planilla($cod_gestion_x,9);
+			// $cod_planilla_2=obtener_id_planilla($cod_gestion_x,10);			
+			$cod_planilla_3=obtener_id_planilla($cod_gestion_x,11);
+			// $liquido_mes1=obtenerSueldomes($codigo_personal,$cod_planilla_1);
+			// $liquido_mes2=obtenerSueldomes($codigo_personal,$cod_planilla_2);
+			$liquido_mes1=obtenerSueldomes($codigo_personal,$cod_planilla_3);//cambiar
+			$liquido_mes2=obtenerSueldomes($codigo_personal,$cod_planilla_3);//cambiar
+			$liquido_mes3=obtenerSueldomes($codigo_personal,$cod_planilla_3);
 			$promedio_sueldos=($liquido_mes1+$liquido_mes2+$liquido_mes3)/3;
 			$dias_sueldo=$promedio_sueldos/360*$dias_trabajados_del_anio;
 			$meses_sueldo=$promedio_sueldos/12*$meses_trabajados_del_anio;

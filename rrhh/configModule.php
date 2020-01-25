@@ -130,10 +130,16 @@ $urlPlanillasAguinaldosList="?opcion=planillasAguinaldosPersonal";
 $urlGenerarPlanillaAguinaldosPrevia="?opcion=generarPlanillaAguinaldosPrevia";
 $urlPlanillaAguinaldoPersonalReporte="planillas/planillaAguinaldoPersonalReporte.php";
 
-
+//finiquitos
+$nombreSingularfiniquito="Finiquito";
+$urlFiniquitosList="?opcion=finiquitos_list";
+$urlFormFiniquitos="?opcion=finiquitos_form";
+$urlSaveFiniquitos="?opcion=saveFiniquitos";
+$urlDeleteFiniquito="index.php?opcion=deleteFiniquito";
+$urlprintFiniquitos="planillas/finiquitosPrint.php";
 
 //tipos_afps
-$nombreSingularTipos_afp="Tipos Afp";
+$nombreSingularTipos_afp="Tipo Afp";
 $nombrePluralTipos_afp="Tipos Afp";
 $urlListTipos_afp="?opcion=tipos_afpLista";
 $urlSaveTipos_afp="?opcion=tipos_afpSave";
