@@ -30,13 +30,13 @@ if(isset($_GET["codigo"])){
     $i=1;
     ?>
       <div class="row">
-        <label class="col-sm-3 col-form-label">Monto x Curso Plantilla:</label>
+        <label class="col-sm-3 col-form-label">Monto x Modulo Plantilla:</label>
         <div class="col-sm-3">
          <div class="form-group">
            <input class="form-control text-right" type="number" name="monto_designado" id="monto_designado" value="<?=$montoTotal?>" readonly/>
          </div>
          </div>
-         <label class="col-sm-3 col-form-label">Monto x Curso Simulaci&oacute;n:</label>
+         <label class="col-sm-3 col-form-label">Monto x Modulo Simulaci&oacute;n:</label>
         <div class="col-sm-3">
          <div class="form-group">
            <input class="form-control text-right" type="number" name="monto_editable" id="monto_editable" value="<?=$montoEditado?>" readonly/>
@@ -47,9 +47,9 @@ if(isset($_GET["codigo"])){
          <tr class="text-white bg-info">
         <td>Cuenta</td>
         <td>Detalle</td>
-        <td>Monto x Curso</td>
+        <td>Monto x Modulo</td>
         <td>Monto x Persona</td>
-        <td>Actions</td>
+        <td class="small">Habilitar / Deshabilitar</td>
         </tr>
     <?php
     $totalMontoDetalle=0;$totalMontoDetalleAl=0;
@@ -59,6 +59,7 @@ if(isset($_GET["codigo"])){
     $numeroX=$row['numero'];
     $detallesPlantilla=obtenerDetallePlantillaCostosPartida($codPar,$codigo);
      while ($rowDetalles = $detallesPlantilla->fetch(PDO::FETCH_ASSOC)) {
+      $bandera=$rowDetalles['habilitado'];
         if($rowDetalles['cod_cuenta']==$row['cod_plancuenta']){
           $codigoCuenta=$rowDetalles['cod_cuenta'];
           $codigoDetalle=$rowDetalles['codigo'];
@@ -67,15 +68,25 @@ if(isset($_GET["codigo"])){
           $montoDetalleAl=number_format($montoDetalle/$al_i, 2, '.', '');       
           }else{
           $montoDetalleAl=number_format($montoModX/$al_f, 2, '.', '');        
-          }   
+          } 
+         if($bandera==1){
           $totalMontoDetalle+=$montoDetalle;
-          $totalMontoDetalleAl+=$montoDetalleAl;
+          $totalMontoDetalleAl+=$montoDetalleAl;        
+         }   
           ?><tr>
               <td class="text-left small font-weight-bold"><input type="hidden" id="codigo_cuenta<?=$i?>" value="<?=$codigoCuenta?>"><input type="hidden" id="codigo_fila<?=$i?>" value="<?=$codigoX?>">[<?=$numeroX?>] - <?=$nombreX?></td>
               <td class="text-left small font-weight-bold"><?=$rowDetalles['glosa']?></td>
-              <td class="text-right"><input type="number" id="monto_mod<?=$i?>" name="monto_mod<?=$i?>" class="form-control text-info text-right" onchange="calcularTotalPartida(1)" onkeyUp="calcularTotalPartida(1)" value="<?=$montoDetalle?>" step="0.01"></td>
-              <td class="text-right"><input type="number" id="monto_modal<?=$i?>" name="monto_modal<?=$i?>" class="form-control text-info text-right" onchange="calcularTotalPartida(2)" onkeyUp="calcularTotalPartida(2)" value="<?=$montoDetalleAl?>" step="0.01"></td>
-              <td><input type="hidden" id="codigo<?=$i?>" value="<?=$codigoDetalle?>"><a href="#" class="btn btn-sm btn-warning" onclick="activarInputMonto(<?=$i?>)">habilitar / deshabilitar</a></td>
+              <td class="text-right"><input type="number" id="monto_mod<?=$i?>" name="monto_mod<?=$i?>" <?=($bandera==0)?"readonly":"";?> class="form-control text-info text-right" onchange="calcularTotalPartida(1)" onkeyUp="calcularTotalPartida(1)" value="<?=$montoDetalle?>" step="0.01"></td>
+              <td class="text-right"><input type="number" id="monto_modal<?=$i?>" name="monto_modal<?=$i?>" <?=($bandera==0)?"readonly":"";?> class="form-control text-info text-right" onchange="calcularTotalPartida(2)" onkeyUp="calcularTotalPartida(2)" value="<?=$montoDetalleAl?>" step="0.01"></td>
+              <td><input type="hidden" id="codigo<?=$i?>" value="<?=$codigoDetalle?>">
+                <div class="togglebutton">
+                        <label>
+                          <input type="checkbox" <?=($bandera==1)?"checked":"";?> onchange="activarInputMonto(<?=$i?>)">
+                          <span class="toggle"></span>
+                        </label>
+                </div>
+                <!--<a href="#" class="btn btn-sm btn-warning" onclick="activarInputMonto(<?=$i?>)">habilitar / deshabilitar</a>-->
+              </td>
              </tr> 
            <?php
            $i++;         

@@ -3157,14 +3157,15 @@ function guardarCuentasSimulacionAjax(ib){
   var partida =$("#partida_presupuestaria").val();
   
     for (var i=1;i<=(total-1);i++){
+      var habilitado=1;
       var codigo = $("#codigo"+i).val();
       var monto = $("#monto_mod"+i).val();
       if($("#monto_mod"+i).is("[readonly]")){
-        monto=0;
+        habilitado=0;
       }
       var cuenta =$("#codigo_cuenta"+i).val();
       var simulacion =$("#codigo_fila"+i).val();
-      var parametros = {"codigo":codigo,"monto":monto,"ibnorca":ib,"simulacion":simulacion,"plantilla":plantilla,"partida":partida,"cuenta":cuenta};
+      var parametros = {"codigo":codigo,"monto":monto,"ibnorca":ib,"simulacion":simulacion,"plantilla":plantilla,"partida":partida,"cuenta":cuenta,"habilitado":habilitado};
       $.ajax({
         type:"GET",
         data:parametros,

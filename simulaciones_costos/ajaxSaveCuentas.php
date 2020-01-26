@@ -13,13 +13,14 @@ $simulacion=$_GET["simulacion"];
 $plantilla=$_GET["plantilla"];
 $partida=$_GET["partida"];
 $cuenta=$_GET["cuenta"];
+$habilitado=$_GET["habilitado"];
 
 session_start();
-$sqlUpdateDetalle="UPDATE plantillas_tcpdetalle SET  monto_unitario='$monto',monto_total='$monto' where codigo=$codigo";
+$sqlUpdateDetalle="UPDATE plantillas_tcpdetalle SET  monto_unitario='$monto',monto_total='$monto',habilitado=$habilitado where codigo=$codigo";
 $stmtUpdateDetalle = $dbh->prepare($sqlUpdateDetalle);
 $stmtUpdateDetalle->execute();
 
-$detallesMontos=obtenerMontosCuentasDetallePlantillaCostosPartida($plantilla,$partida);
+$detallesMontos=obtenerMontosCuentasDetallePlantillaCostosPartidaHabilitado($plantilla,$partida);
 while ($row = $detallesMontos->fetch(PDO::FETCH_ASSOC)) {
 	if($row['cod_cuenta']==$cuenta){
 		$montoTotal=$row['monto'];
