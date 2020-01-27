@@ -13,10 +13,10 @@ $urlEdit2="tipos_cambios/historial.php";
 
 $urlRegister="index.php?opcion=registrarEventoSistemaNot";
 $urlRegister2="index.php?opcion=registrarEventoSistema";
-$urlDelete="index.php?opcion=deleteComprobante";
+$urlDelete="index.php?opcion=deleteNotificacionesSistema";
 $urlSave="";
 $urlSaveEdit="comprobantes/saveEdit.php";
-$urlSaveDelete="";
+$urlSaveDelete="notificaciones_sistema/saveDelete.php";
 
 $urlImpReporteDiario="reportes/impDiario.php";
 ?>

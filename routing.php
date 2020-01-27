@@ -154,6 +154,9 @@
         if ($_GET['opcion']=='registrarEventoSistemaNot') {
 			require_once('notificaciones_sistema/registerEvento.php');
 		}
+		if ($_GET['opcion']=='deleteNotificacionesSistema') {
+			require_once('notificaciones_sistema/saveDelete.php');
+		}
 
 		//RETENCIONES
         if ($_GET['opcion']=='configuracionDeRetenciones') {

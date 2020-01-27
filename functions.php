@@ -2548,20 +2548,22 @@ function bonosIndefinidos(){
 }
 
 function enviarNotificacionesSistema($tipoContrato){
+
   $mesActual=date("m");
+  $fechaActual=date("Y-m-d");
  $dbh = new Conexion();
   $sql = "SELECT es.*,p.email_empresa,concat(p.primer_nombre,' ',p.otros_nombres,' ',p.paterno,' ',p.materno) as personal,e.nombre,
-  pc.fecha_iniciocontrato,pc.fecha_fincontrato
+  pc.fecha_iniciocontrato,pc.fecha_fincontrato,pc.codigo as contrato
   FROM eventos_sistemapersonal es 
   join personal_contratos pc on es.cod_personal=pc.cod_personal
   join personal p on es.cod_personal=p.codigo
   join eventos_sistema e on e.codigo=es.cod_eventosistema ";
   if($tipoContrato==1){
    $dias=obtenerValorConfiguracion(12); 
-   $sql.="where pc.cod_tipocontrato=1";  
+   $sql.="where pc.cod_tipocontrato=1 and pc.fecha_evaluacioncontrato='$fechaActual' and pc.bandera_notificacion=0";  
   }else{
    $dias=obtenerValorConfiguracion(11);
-   $sql.="where pc.cod_tipocontrato!=1";
+   $sql.="where pc.cod_tipocontrato!=1 and pc.fecha_evaluacioncontrato='$fechaActual' and pc.bandera_notificacion=0";
   }
   
     $stmt = $dbh->prepare($sql);
@@ -2573,6 +2575,7 @@ function enviarNotificacionesSistema($tipoContrato){
     $codigo=$row['codigo'];
     $correo=$row['email_empresa'];
     $titulo=$row['nombre'];
+    $codContrato=$row['contrato'];
     $personal=strtoupper($row['personal']);
     $fechaInicio=strftime('%d/%m/%Y',strtotime($row['fecha_iniciocontrato']));
     if(trim($row['fecha_fincontrato'])!="INDEFINIDO"){
@@ -2596,9 +2599,13 @@ function enviarNotificacionesSistema($tipoContrato){
      $mail_setFromName="IBNORCA";
      $txt_message=$mensaje;
      $mail_subject=$titulo; //el subject del mensaje
-
      $flag=sendemail($mail_username,$mail_userpassword,$mail_setFromEmail,$mail_setFromName,$mail_addAddress,$txt_message,$mail_subject,$template,$i);      
     $i++;
+    $dbhUpdate = new Conexion();
+     $sqlUpdate="UPDATE personal_contratos SET bandera_notificacion=1 where codigo=$codContrato";
+     $stmtUpdate = $dbhUpdate->prepare($sqlUpdate);
+     $stmtUpdate->execute();
+
   }
 
 }
