@@ -265,7 +265,7 @@
                         </div>
                         <div class="col-sm-4">
                          <div class="form-group">
-                          <label class="bmd-label-static">Monto x Curso</label>
+                          <label class="bmd-label-static">Monto x Modulo</label>
                           <input type="number" class="form-control" name="monto_f_ibnorca" id="monto_f_ibnorca" value="0" step="0.01" readonly>
                          </div>
                         </div>
@@ -289,7 +289,7 @@
                           <a href="#" class="btn btn-warning btn-sm btn-round" onclick="mostrarInputMonto('monto_ibnorca2')"> Editar</a>
                           <!--<a href="#" class="btn btn-warning btn-sm btn-round" onclick="mostrarInputDetalle('monto_ibnorca2')"> Detalles</a>-->  
                          <div class="form-group d-none" id="monto_ibnorca2">
-                          <label class="bmd-label-static">Monto x Curso</label>
+                          <label class="bmd-label-static">Monto x Modulo</label>
                           <input type="number" class="form-control" name="monto_f_ibnorca_edit" id="monto_f_ibnorca_edit" value="0" step="0.01">
                          </div>
                         </div>

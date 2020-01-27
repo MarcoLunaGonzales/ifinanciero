@@ -28,7 +28,7 @@ $query2=$query1." and pgc.cod_tipocosto=1 GROUP BY pgd.cod_plantillagrupocosto o
 $bgClase="bg-info";
 }else{
   $query2=$query1." and pgc.cod_tipocosto=2 GROUP BY pgd.cod_plantillagrupocosto order by pgd.cod_plantillagrupocosto";
-  $bgClase="bg-danger";
+  $bgClase="bg-success";
 }
   $stmt = $dbh->prepare($query2);
   $stmt->execute();
@@ -89,7 +89,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                       '<td class="text-right font-weight-bold">'.number_format($montoCalculado, 2, '.', ',').'</td>';
           $html.='</tr>';
          }else{
-           $html.='<tr class="bg-danger text-white">'.
+           $html.='<tr class="bg-success text-white">'.
                       '<td class="font-weight-bold text-left">&nbsp;&nbsp; '.$row_partidas['nombre'].' '.$numeroCuentas.'</td>'.
                       '<td class="text-right font-weight-bold"></td>';
           $html.='</tr>';

@@ -325,8 +325,8 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
                  }
 
                  //cambios para la nueva acortar la simulacion 
-                 $utilidadNetaLocal=$ingresoLocal-((($iva+$it)/100)*$ingresoLocal);
-                 $utilidadNetaExterno=$ingresoExterno-((($iva+$it)/100)*$ingresoExterno);
+                 $utilidadNetaLocal=$ingresoLocal-((($iva+$it)/100)*$ingresoLocal)-$totalFijo[2]-($totalVariable[2]*$alumnosX);
+                 $utilidadNetaExterno=$ingresoExterno-((($iva+$it)/100)*$ingresoExterno)-$totalFijo[3]-($totalVariable[3]*$alumnosExternoX);
 
                  $pUtilidadLocal=($utilidadNetaLocal*100)/$ingresoLocal;
                  $pUtilidadExterno=($utilidadNetaExterno*100)/$ingresoExterno;

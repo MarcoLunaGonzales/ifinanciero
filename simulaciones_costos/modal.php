@@ -92,10 +92,11 @@
                   </button>
                 </div>
                 <div class="card-body">
-                <div class="row col-sm-12">
+                <!--<div class="row col-sm-12">
                     <div class="form-group col-sm-12">
                        <label class="bmd-label-static">Seleccione una Partida Presupuestaria</label>
                        <select class="selectpicker form-control" onchange="cargarCuentasSimulacion(<?=$codigo?>,<?=$ibnorcaC?>)" name="partida_presupuestaria" id="partida_presupuestaria" data-style="btn btn-danger" title="-- Elija una partida --">
+                                <option value="0" selected>Todas Las Partidas</option> 
                                 <?php
                                  $stmt = $dbh->prepare("SELECT distinct c.cod_partidapresupuestaria as codPartida, p.nombre from cuentas_simulacion c,partidas_presupuestarias p where p.codigo=c.cod_partidapresupuestaria and c.cod_simulacioncostos=$codigo");
                                  $stmt->execute();
@@ -111,8 +112,11 @@
                      </div>
                       <div class="col-sm-6" id="lista_precios">
                        </div>
-                </div>
+                </div>-->
                  <div class="card" id="cuentas_simulacion">
+                   <?php 
+                    include "cargarDetallePlantillaPartida.php";
+                   ?>
                  </div>   
                 </div>
       </div>  

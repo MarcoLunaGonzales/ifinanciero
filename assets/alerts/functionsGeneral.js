@@ -3137,6 +3137,57 @@ function calcularTotalPartida(valor){
   }
 }
 
+//lista de partidas simulaciones
+function activarInputMontoGenerico(matriz){
+  if(!($("#monto_mod"+matriz).is("[readonly]"))){
+    $("#monto_mod"+matriz).attr("readonly",true);
+    $("#monto_modal"+matriz).attr("readonly",true);
+  }else{
+    $("#monto_mod"+matriz).removeAttr("readonly");
+    $("#monto_modal"+matriz).removeAttr("readonly");
+  }
+  var respu= matriz.split('RRR');
+  calcularTotalPartidaGenerico(respu[0],1);
+}
+function calcularTotalPartidaGenerico(fila,valor){
+  var suma=0;
+  var total= $("#numero_cuentas"+fila).val();
+  var monto_anterior=parseFloat($("#monto_designado"+fila).val());
+  for (var i=1;i<=(total-1);i++){
+    if(!($("#monto_mod"+fila+"RRR"+i).is("[readonly]"))){
+    if(valor==1){
+      suma+=parseFloat($("#monto_mod"+fila+"RRR"+i).val());
+    }else{
+     if($("#cod_ibnorca").val()==1){
+         $("#monto_mod"+fila+"RRR"+i).val(parseFloat($("#monto_modal"+fila+"RRR"+i).val())*parseInt($("#alumnos_plan").val()));
+       }else{
+          $("#monto_mod"+fila+"RRR"+i).val(parseFloat($("#monto_modal"+fila+"RRR"+i).val())*parseInt($("#alumnos_plan_fuera").val()));
+       }
+     suma+=parseFloat($("#monto_mod"+fila+"RRR"+i).val());  
+    }
+    }
+   
+  }
+  const rest=Math.abs(suma-monto_anterior);
+  const porcent=(rest*100)/monto_anterior; 
+  var resultPorcent= Math.round(porcent*100)/100;  
+  var result=redondeo((suma*100)/100);
+  document.getElementById("monto_editable"+fila).value=result;
+
+
+  if(result<monto_anterior){
+    $("#monto_editable"+fila).addClass("text-danger");
+    $("#monto_editable"+fila).removeClass("text-success");
+  }else{
+    if(result>monto_anterior){
+       $("#monto_editable"+fila).addClass("text-success");
+       $("#monto_editable"+fila).removeClass("text-danger");
+    }else{
+       $("#monto_editable"+fila).removeClass("text-success");
+       $("#monto_editable"+fila).removeClass("text-danger");
+    }
+  }
+}
 function redondeo(num, decimales = 2) {
     var signo = (num >= 0 ? 1 : -1);
     num = num * signo;
@@ -3186,6 +3237,49 @@ function guardarCuentasSimulacionAjax(ib){
     }
     actualizarSimulacion();
 }
+function guardarCuentasSimulacionAjaxGenerico(ib){
+  var supertotal=$("#numero_cuentaspartida").val();
+  for (var j = 1; j <=(supertotal-1); j++) {
+  var total= $("#numero_cuentas"+j).val();
+  //var simulacion=$("#cod_simulacion").val();
+  var plantilla =$("#cod_plantilla").val();
+  var partida =$("#codigo_partida_presupuestaria"+j).val();
+  
+    for (var i=1;i<=(total-1);i++){
+      var habilitado=1;
+      var codigo = $("#codigo"+j+"RRR"+i).val();
+      var monto = $("#monto_mod"+j+"RRR"+i).val();
+      if($("#monto_mod"+j+"RRR"+i).is("[readonly]")){
+        habilitado=0;
+      }
+      var cuenta =$("#codigo_cuenta"+j+"RRR"+i).val();
+      var simulacion =$("#codigo_fila"+j+"RRR"+i).val();
+      var parametros = {"codigo":codigo,"monto":monto,"ibnorca":ib,"simulacion":simulacion,"plantilla":plantilla,"partida":partida,"cuenta":cuenta,"habilitado":habilitado};
+      $.ajax({
+        type:"GET",
+        data:parametros,
+        url:"ajaxSaveCuentas.php",
+        beforeSend: function () { 
+          $("#guardar_cuenta").text("espere.."); 
+          $("#guardar_cuenta").attr("disabled",true);
+          $("#mensaje_cuenta").html("");
+          iniciarCargaAjax();
+        },
+        success:function(resp){
+          $("#guardar_cuenta").text("Guardar");
+          $("#guardar_cuenta").removeAttr("disabled");
+          $("#mensaje_cuenta").html("<p class='text-success'>Se insertaron los datos correctamente! </p>");//<a class='btn btn-warning btn-sm' href='#' onclick='actualizarSimulacion();'>aplicar cambios a la simulación</a>
+        },complete : function(xhr, status) {
+        
+         }
+      });
+    }   
+  };
+    actualizarSimulacion();
+}
+$(document).ajaxStop(function(){
+  detectarCargaAjax();
+});
 function listarCostosFijos(){
   cargarListaCostosDetalle(1);
 }
@@ -3212,6 +3306,51 @@ function cargarListaCostosDetalle(valor){
         }
       });
  
+}
+function guardarCuentasSimulacionGenerico(ib){
+  var conta=0; var contaRead=0;
+  var supertotal= $("#numero_cuentaspartida").val();
+  var cosSim=$("#cod_simulacion").val();
+  for (var j = 1; j <=(supertotal-1); j++) {
+  var total= $("#numero_cuentas"+j).val();
+  
+  if((total-1)!=0){
+    for (var i=1;i<=(total-1);i++){
+      if($("#monto_mod"+j+"RRR"+i).val()==""||$("#monto_modal"+j+"RRR"+i).val()==""){
+        conta++
+      }
+      if($("#monto_mod"+j+"RRR"+i).is("[readonly]")){
+        contaRead++
+      }
+    }    
+  }    
+  };
+  if(conta==0){
+    if(contaRead==0){
+      guardarCuentasSimulacionAjaxGenerico(ib);
+    }else{
+        Swal.fire({
+         title: 'Advertencia!',
+         text: "Hay uno o más registros deshabilitados ¿Desea Continuar?",
+         type: 'warning',
+         showCancelButton: true,
+         confirmButtonClass: 'btn btn-info',
+         cancelButtonClass: 'btn btn-danger',
+         confirmButtonText: 'Si',
+         cancelButtonText: 'No',
+         buttonsStyling: false
+       }).then((result) => {
+          if (result.value) {
+               guardarCuentasSimulacionAjaxGenerico(ib);            
+            return(true);
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            return(false);
+          }
+        });
+    }
+   }else{
+    Swal.fire('Informativo!','Todos los campos son requeridos!','warning'); 
+   } 
 }
 function guardarCuentasSimulacion(ib){
   var total= $("#numero_cuentas").val();
