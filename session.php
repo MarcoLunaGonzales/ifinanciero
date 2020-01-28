@@ -11,8 +11,6 @@ $password=$_POST["password"];
 $sql="SELECT p.codigo,CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre)as nombre, p.cod_area, p.cod_unidadorganizacional, pd.perfil, pd.usuario_pon 
 			from personal p, personal_datosadicionales pd 
 			where p.codigo=pd.cod_personal and pd.usuario='$user' and pd.contrasena='$password'";
-
-			CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre)as
 //echo $sql;
 $stmt = $dbh->prepare($sql);
 $stmt->execute();
