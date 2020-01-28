@@ -29,7 +29,7 @@ $estadoAsigAFString=implode(",", $estado_asignacion_af);
 
 
 
-$sqlActivos="SELECT cod_activosfijos,(select af.activo from activosfijos af where af.codigo=cod_activosfijos) as activo,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional)as cod_unidadorganizacional,(select a.abreviatura from areas a where a.codigo=cod_area)as cod_area,fechaasignacion,estadobien_asig,(select p.nombre from personal2 p where p.codigo=cod_personal)as cod_personal,cod_estadoasignacionaf,(select eaf.nombre from estados_asignacionaf eaf where eaf.codigo=cod_estadoasignacionaf) as estadoAsigAF,fecha_recepcion,observaciones_recepcion,fecha_devolucion,observaciones_devolucion
+$sqlActivos="SELECT cod_activosfijos,(select af.activo from activosfijos af where af.codigo=cod_activosfijos) as activo,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional)as cod_unidadorganizacional,(select a.abreviatura from areas a where a.codigo=cod_area)as cod_area,fechaasignacion,estadobien_asig,(select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=cod_personal)as cod_personal,cod_estadoasignacionaf,(select eaf.nombre from estados_asignacionaf eaf where eaf.codigo=cod_estadoasignacionaf) as estadoAsigAF,fecha_recepcion,observaciones_recepcion,fecha_devolucion,observaciones_devolucion
 from activofijos_asignaciones
 where cod_estadoasignacionaf in ($estadoAsigAFString)";  
 
@@ -80,7 +80,7 @@ $stmtActivos->bindColumn('observaciones_devolucion', $observacion_devolucion);
                         <tr >
                           <th class="text-center">-</th>
                           <th class="font-weight-bold">Codigo Activo</th>
-                          <th class="font-weight-bold">U. O.</th>
+                          <th class="font-weight-bold">Oficina</th>
                           <th class="font-weight-bold">Area</th>
                           <th class="font-weight-bold">Activo</th>
 

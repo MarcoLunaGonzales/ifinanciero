@@ -103,7 +103,7 @@ if($nombre_tipo_contrato=="CONTRATO INDEFINIDO"){
 			$anio=$anio+1;
 		}
 	}
-	$fecha_fincontrato_x=$anio."-".$mes."-01";
+	$fecha_fincontrato=$anio."-".$mes."-01";
 	switch ($mes) {
 		case 2:
 			if($dia==29||$dia==30||$dia==31){
@@ -173,9 +173,24 @@ if($cod_estadoreferencial==1){//insertar
 	//echo "personal:".$cod_personal."- fecha :".$fecha_inicio."-cod_tipocontrato :".$cod_tipocontrato."-ober:".$observaciones;
 	
 	$cod_estadoreferencial=1;
+	$cod_estadoreferencialPersonal=2;
 	$cod_estadopersonal=3;
-	$sqlpersonal="UPDATE personal set cod_estadopersonal=$cod_estadopersonal where codigo=$cod_personal";
+	$sqlpersonal="UPDATE personal set cod_estadopersonal=$cod_estadopersonal,cod_estadoreferencial=$cod_estadoreferencialPersonal where codigo=$cod_personal";
 	$stmtUP = $dbhU->prepare($sqlpersonal);
+	$stmtUP->execute();
+
+	//finalizamos todos sus contratos
+	$sqlBPC="SELECT codigo from personal_contratos where cod_personal=$cod_personal ORDER BY codigo desc";
+	$stmtBPC = $dbhU->prepare($sqlBPC);
+	$stmtBPC->execute();
+	$resultBPC=$stmtBPC->fetch();
+	$codigo_contrato=$resultBPC['codigo'];
+
+	$sqlUPC="UPDATE personal_contratos set fecha_fincontrato='$fecha_inicio',fecha_evaluacioncontrato='$fecha_inicio' where codigo=$codigo_contrato";
+	$stmtUPC = $dbhU->prepare($sqlUPC);
+	$stmtUPC->execute();
+
+	//insertamos el codigo de personal retirado
 
 	$sql="INSERT INTO personal_retiros(cod_personal,cod_tiporetiro,fecha_retiro,observaciones,cod_estadoreferencial) values($cod_personal,$cod_tipocontrato,'$fecha_inicio','$observaciones',$cod_estadoreferencial)";
 	$stmtU = $dbhU->prepare($sql);

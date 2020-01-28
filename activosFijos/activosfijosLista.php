@@ -12,13 +12,11 @@ $sqlX="SET NAMES 'utf8'";
 $stmtX = $dbh->prepare($sqlX);
 $stmtX->execute();
 
-$sql="SELECT af.*, d.abreviatura as dep_nombre, tb.tipo_bien tb_tipo, u.edificio u_edificio, u.oficina u_oficina, 
-(select afi.imagen from activosfijosimagen afi where af.codigo = afi.codigo) as imagen,
+$sql="SELECT af.codigo,af.codigoactivo,af.activo,af.fechalta, d.abreviatura as dep_nombre, tb.tipo_bien tb_tipo,
+(select pr.abreviatura from proyectos_financiacionexterna pr where pr.codigo=af.cod_proy_financiacion)as proy_financiacion,
  (select uo.abreviatura from unidades_organizacionales uo where uo.codigo=af.cod_unidadorganizacional)as nombre_unidad, 
  (select a.abreviatura from areas a where a.codigo=af.cod_area)as nombre_area,
- (select p.primer_nombre from personal p where p.codigo=af.cod_responsables_responsable)as nombre_responsable,
- (select p.paterno from personal p where p.codigo=af.cod_responsables_responsable)as paterno_responsable,
- (select p.materno from personal p where p.codigo=af.cod_responsables_responsable)as materno_responsable
+ (select concat_ws(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=af.cod_responsables_responsable)as nombre_responsable
 from activosfijos af, depreciaciones d, tiposbienes tb, ubicaciones u 
 where af.cod_depreciaciones = d.codigo and af.cod_tiposbienes = tb.codigo and af.cod_ubicaciones  = u.codigo
 and af.cod_estadoactivofijo = 1";
@@ -28,39 +26,16 @@ $stmt->execute();
 //bindColumn
 $stmt->bindColumn('codigo', $codigo);
 $stmt->bindColumn('codigoactivo', $codigoactivo);
-$stmt->bindColumn('tipoalta', $tipoalta);
 $stmt->bindColumn('fechalta', $fechalta);
-$stmt->bindColumn('indiceufv', $indiceufv);
-$stmt->bindColumn('tipocambio', $tipocambio);
-$stmt->bindColumn('moneda', $moneda);
-$stmt->bindColumn('valorinicial', $valorinicial);
-$stmt->bindColumn('depreciacionacumulada', $depreciacionacumulada);
-$stmt->bindColumn('valorresidual', $valorresidual);
-$stmt->bindColumn('cod_depreciaciones', $cod_depreciaciones);//rubro
-$stmt->bindColumn('cod_tiposbienes', $cod_tiposbienes);//tipo bien
-$stmt->bindColumn('vidautilmeses', $vidautilmeses);
-
-$stmt->bindColumn('otrodato', $otrodato);
-$stmt->bindColumn('cod_ubicaciones', $cod_ubicaciones);//ubicacion
-$stmt->bindColumn('cod_empresa', $cod_empresa);//empresa
 $stmt->bindColumn('activo', $activo);
-$stmt->bindColumn('cod_responsables_responsable', $cod_responsables_responsable);
-$stmt->bindColumn('cod_responsables_autorizadopor', $cod_responsables_autorizadopor);
 $stmt->bindColumn('nombre_responsable', $nombre_responsable);
-$stmt->bindColumn('paterno_responsable', $paterno_responsable);
-$stmt->bindColumn('materno_responsable', $materno_responsable);
 
 $stmt->bindColumn('dep_nombre', $dep_nombre);
 $stmt->bindColumn('tb_tipo', $tb_tipo);
-$stmt->bindColumn('u_edificio', $u_edificio);
-$stmt->bindColumn('u_oficina', $u_oficina);
-$stmt->bindColumn('imagen', $imagen);
 
-$stmt->bindColumn('cod_unidadorganizacional', $cod_unidadorganizacional);
-$stmt->bindColumn('cod_area', $cod_area);
-$stmt->bindColumn('cod_estadoactivofijo', $cod_estadoactivofijo);
 $stmt->bindColumn('nombre_unidad', $nombreUnidad);
 $stmt->bindColumn('nombre_area', $nombreArea);
+$stmt->bindColumn('proy_financiacion', $proy_financiacion);
 
 ?>
 
@@ -83,13 +58,12 @@ $stmt->bindColumn('nombre_area', $nombreArea);
                         <tr>
                           <th></th>
                             <th>Codigo</th>
-                            <th>Unidad/Area</th>
+                            <th>Oficina/Area</th>
                             <th>Activo</th>
                             <th>F. Alta</th>
                             <th>Rubro/TipoBien</th>
-                            
-                            <th>Ubicacion</th>
                             <th>Responsable</th>
+                            <th>Proyecto</th>
                             <th>Acc/Eventos</th>
                             <th></th>
                         </tr>
@@ -103,15 +77,13 @@ $stmt->bindColumn('nombre_area', $nombreArea);
                                   <i class="material-icons">print</i>
                                 </a>
                               </td>
-                              <td class="text-center small"><?=$codigo;?></td>
+                              <td class="text-center small"><?=$codigoactivo;?></td>
                               <td class="text-center small"><?=$nombreUnidad;?>-<?=$nombreArea;?></td>
                               <td class="text-left small"><?=$activo;?></td>
                               <td class="text-center small"><?=$fechalta;?></td>
                               <td class="text-left small"><?=$dep_nombre;?>/<?=$tb_tipo;?></td>
-                              
-                              <td class="text-left small"><?=$u_oficina;?> <?=$u_edificio;?></td>
-                              <td class="text-left small"><?=$paterno_responsable?> <?=$materno_responsable?><?=$nombre_responsable?></td>
-                              
+                              <td class="text-left small"><?=strtoupper($nombre_responsable)?></td>
+                              <td class="text-left small"><?=$proy_financiacion;?></td>
                               <td class="td-actions text-right">
                               <?php
                                 if($globalAdmin==1){

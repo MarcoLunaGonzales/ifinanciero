@@ -68,7 +68,7 @@ $statement = $dbh->query($query);
           </div><!--fin campo mes -->
 
           <div class="row">
-            <label class="col-sm-2 col-form-label">Unidad Organizacional</label>
+            <label class="col-sm-2 col-form-label">Oficina</label>
             <div class="col-sm-7">
               <div class="form-group">
                 <select class="selectpicker form-control" title="Seleccione una opcion" 

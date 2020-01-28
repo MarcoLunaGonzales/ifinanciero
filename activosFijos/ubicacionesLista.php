@@ -11,7 +11,9 @@ $dbh = new Conexion();
 
 // Preparamos
 //echo $table;
-$stmt = $dbh->prepare("SELECT uo.nombre,  u.*, a.nombre as area FROM ubicaciones u, unidades_organizacionales uo, areas a where u.cod_estado=1 and uo.codigo = u.cod_unidades_organizacionales and a.codigo = u.cod_areas;");
+$stmt = $dbh->prepare("SELECT uo.nombre,  u.* 
+FROM ubicaciones u, unidades_organizacionales uo
+where u.cod_estado=1 and u.cod_unidades_organizacionales=uo.codigo");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -22,7 +24,6 @@ $stmt->bindColumn('nombre', $nombre);
 $stmt->bindColumn('edificio', $edificio);
 $stmt->bindColumn('oficina', $oficina);
 
-$stmt->bindColumn('area', $area);
 ?>
 
 <div class="content">
@@ -42,17 +43,17 @@ $stmt->bindColumn('area', $area);
                       <thead>
                         <tr>
                           <th class="text-center">#</th>
-                          <th>Unidad</th>
-                          <th>Edificio</th>
                           <th>Oficina</th>
+                          <th>Edificio</th>
+                          <th>Dirección Oficina</th>
                           <th class="text-right">Acciones</th>
                         </tr>
                       </thead>
                       <tbody>
-<?php
-						$index=1;
-                      	while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
-?>
+                        <?php
+                        						$index=1;
+                                              	while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+                        ?>
                         <tr>
                           <td align="center"><?=$index;?></td>
                           <td><?=$nombre;?></td>

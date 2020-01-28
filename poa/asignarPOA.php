@@ -155,7 +155,7 @@ while ($rowClasificador = $stmtClasificador->fetch(PDO::FETCH_ASSOC)) {
 		                        	<input type="hidden" name="codigo<?=$index;?>" id="codigo<?=$index;?>" value="<?=$codigo;?>">
 			                        <select class="selectpicker" name="personal<?=$index;?>" id="personal<?=$index;?>" data-style="<?=$comboColor;?>" data-live-search="true">
 			                        	<?php
-									  	$sql="SELECT codigo, nombre FROM personal2 p, personal_unidadesorganizacionales pu, personal_datosadicionales pd where p.codigo=pd.cod_personal and pd.cod_estado=1 and p.codigo=pu.cod_personal and pu.cod_unidad='$codUnidad' order by 2";
+									  	$sql="SELECT p.codigo,CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre)as nombre FROM personal p, personal_unidadesorganizacionales pu, personal_datosadicionales pd where p.codigo=pd.cod_personal and pd.cod_estado=1 and p.codigo=pu.cod_personal and pu.cod_unidad='$codUnidad' order by 2";
 										  	?>
 								  		<option value="">Personal</option>
 									  	<?php

@@ -14,7 +14,7 @@ try{
     $stmt = $dbh->prepare("SELECT afa.cod_activosfijos,(SELECT activo from activosfijos where codigo=afa.cod_activosfijos) as nombre_af,
         afa.fechaasignacion,(SELECT abreviatura from unidades_organizacionales where codigo=afa.cod_unidadorganizacional)as cod_unidadorganizacional,
         (SELECT abreviatura from areas where codigo=afa.cod_area) as cod_area,
-        (SELECT nombre from personal2 where codigo=afa.cod_personal)as cod_personal,afa.estadobien_asig,
+        (SELECT CONCAT_WS(' ',paterno,materno,primer_nombre) from personal where codigo=afa.cod_personal)as cod_personal,afa.estadobien_asig,
         (SELECT nombre from estados_asignacionaf where codigo=afa.cod_estadoasignacionaf)as cod_estadoasignacionaf,
         afa.fecha_recepcion,afa.observaciones_recepcion,afa.fecha_devolucion,afa.observaciones_devolucion
         from activofijos_asignaciones afa
@@ -88,7 +88,7 @@ $html.=  '<header class="header">'.
                                                 '<td class="text-left" >'.$fecha_asignacion.'</td>'.
                                             '</tr>'.
                                             '<tr>'.
-                                                '<td class="text-left" >Unidad Organizacional :</td>'.
+                                                '<td class="text-left" >Oficina :</td>'.
                                                 '<td class="text-left" >'.$cod_unidadorganizacional.'</td>'.
                                             '</tr>'.
                                             '<tr>'.

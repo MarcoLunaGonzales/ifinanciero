@@ -46,7 +46,7 @@ $stmt->bindColumn('fecha_recepcion', $fecha_recepcion);
                   <div class="card-icon">
                     <i class="material-icons"><?=$iconCard;?></i>
                   </div>
-                  <h4 class="card-title">AF En Custodia</h4>
+                  <h4 class="card-title">Activos Fijos En Custodia</h4>
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
@@ -56,7 +56,7 @@ $stmt->bindColumn('fecha_recepcion', $fecha_recepcion);
                             <th></th>
                             <th>Nro.</th>
                             <th>Código</th>
-                            <th>Unidad O</th>
+                            <th>Oficina</th>
                             <th>Area</th>
                             <th>Activo</th>
                             <th>F. Asignación</th>
