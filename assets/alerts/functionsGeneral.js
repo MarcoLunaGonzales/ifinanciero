@@ -1053,7 +1053,7 @@ function mostrarDetalle(id){
    
   };
   $("#cuerpoDetalle").html(html);
-  $("#cabezadetalle").html('<h6 class="card-title">Detale "'+$("#nombre_grupo"+id).val()+'"</h6>');
+  $("#cabezadetalle").html('<h6 class="card-title">Detalle "'+$("#nombre_grupo"+id).val()+'"</h6>');
 }
 
 function abrirDetalleCosto(index,cod_pr,nombre_pr,tipo_n,monto_local,monto_externo,monto_calculado){
