@@ -44,21 +44,21 @@ $stmt->bindColumn('email_empresa', $emailX);
                           <th>Evento</th>
                           <th>Personal</th>
                           <th>Correo</th>
-                          <th class="text-right" width="10%">Estado</th>
+                          <th class="text-right" width="10%">Quitar</th>
                         </tr>
                       </thead>
                       <tbody>
 <?php
 						     $index=1;
                       	while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
-                          $valor="";
+                          $valor="Eliminar";
 ?>
                         <tr>
                           <td class=""align="center"><?=$index;?></td>
                           <td class=""><?=$eventoX;?></td>
                           <td class=""><?=$personalX;?></td>
                           <td class=""><?=$emailX;?></td>
-                          <td class="text-right"><a href="<?=$actionButton?>" class="<?=$estiloTipo?> btn-sm"><?=$valor?></a></td>
+                          <td class="text-right"><a onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete?>&cod=<?=$codigoX?>')" href="#" title="Eliminar" class="btn btn-danger btn-fab btn-sm"><i class="material-icons">delete</i></a></td>
                         </tr>
 <?php
 							$index++;

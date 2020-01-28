@@ -13,7 +13,7 @@ try {
     $codigo = $_POST["codigo"];
     $cod_personal = $_POST["cod_personal"];
     $fecha_retiro = $_POST["fecha_retiro"];
-    $motivo_retiro = $_POST["motivo_retiro"];
+    //$motivo_retiro = $_POST["motivo_retiro"];
     $cod_estadoreferencial =   1;    
     $created_by = 1;//$_POST["created_by"];
     $modified_by = 1;//$_POST["modified_by"];
@@ -21,6 +21,12 @@ try {
     $anio_retiro = date("Y", strtotime($fecha_retiro));
     $mes_retiro = date("m", strtotime($fecha_retiro));
     $dia_retiro = date("d", strtotime($fecha_retiro));
+    //tipo_retiro
+    $stmtTipoRetiro = $dbh->prepare("SELECT cod_tiporetiro from personal_retiros where cod_personal=$cod_personal");
+    $stmttipoRetiro->execute();
+    $resultRetiro =  $stmttipoRetiro->fetch();
+    $motivo_retiro = $resultRetiro['cod_tiporetiro'];
+    
     $stmtGestion = $dbh->prepare("SELECT codigo from gestiones where nombre=$anio_retiro");
     $stmtGestion->execute();
     $resultGestion =  $stmtGestion->fetch();
@@ -103,7 +109,7 @@ try {
 
     
     if ($_POST["codigo"] == 0){
-        $stmt = $dbh->prepare("INSERT INTO finiquitos(cod_personal,fecha_ingreso,fecha_retiro,motivo_retiro,sueldo_promedio,sueldo_3_atras,sueldo_2_atras,sueldo_1_atras,indemnizacion_anios_monto,indemnizacion_meses_monto,indemnizacion_dias_monto,aguinaldo_anios_monto,aguinaldo_meses_monto,aguinaldo_dias_monto,vacaciones_dias_monto,vacaciones_duodecimas_monto,desahucio_monto,servicios_adicionales,subsidios_meses,finiquitos_a_cuenta,deducciones_total,total_a_pagar,observaciones,cod_estadoreferencial,created_by,modified_by) 
+        $stmt = $dbh->prepare("INSERT INTO finiquitos(cod_personal,fecha_ingreso,fecha_retiro,cod_tiporetiro,sueldo_promedio,sueldo_3_atras,sueldo_2_atras,sueldo_1_atras,indemnizacion_anios_monto,indemnizacion_meses_monto,indemnizacion_dias_monto,aguinaldo_anios_monto,aguinaldo_meses_monto,aguinaldo_dias_monto,vacaciones_dias_monto,vacaciones_duodecimas_monto,desahucio_monto,servicios_adicionales,subsidios_meses,finiquitos_a_cuenta,deducciones_total,total_a_pagar,observaciones,cod_estadoreferencial,created_by,modified_by) 
         values (:cod_personal,:ing_contr,:fecha_retiro,:motivo_retiro,:sueldo_promedio,:sueldo_3_atras,:sueldo_2_atras,:sueldo_1_atras,:indemnizacion_anios_monto,:indemnizacion_meses_monto,:indemnizacion_dias_monto,:aguinaldo_anios_monto,:aguinaldo_meses_monto,:aguinaldo_dias_monto,:vacaciones_dias_monto,:vacaciones_duodecimas_monto,:desahucio_monto,:servicios_adicionales,:subsidios_meses,:finiquitos_a_cuenta,:deducciones_total,:total_a_pagar,:observaciones,:cod_estadoreferencial,:created_by,:modified_by)");
         //Bind
         $stmt->bindParam(':cod_personal', $cod_personal);

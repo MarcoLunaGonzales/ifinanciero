@@ -10,7 +10,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $dbh = new Conexion();
 
 
-  $stmt = $dbh->prepare("SELECT * from finiquitos where cod_estadoreferencial=1");
+  $stmt = $dbh->prepare("SELECT *,(Select t.nombre from tipos_retiro_personal t where t.codigo=cod_tiporetiro) as motivo_retiro from finiquitos where cod_estadoreferencial=1");
   //ejecutamos
   $stmt->execute();
   //bindColumn

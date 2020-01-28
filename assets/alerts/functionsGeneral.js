@@ -919,6 +919,9 @@ function limpiarDatosDetalleModal(){
   if(!($("#montos_editables").hasClass("d-none"))){
     $("#montos_editables").addClass("d-none");
   }
+  if(($("#boton_guardardetalle").hasClass("d-none"))){
+    $("#boton_guardardetalle").removeClass("d-none");
+  }
  }
 function mostrarPreciosPlantilla(){
   $("#modalPrecio").modal("show");
@@ -941,7 +944,7 @@ function mostrarPreciosPlantilla(){
      titulos.append($('<td>').addClass('').text('PARTIDA'));
      titulos.append($('<td>').addClass('').text('TIPO'));
      titulos.append($('<td>').addClass('').text('M x MES'));
-     titulos.append($('<td>').addClass('').text('M x CURSO'));
+     titulos.append($('<td>').addClass('').text('M x MODULO'));
      titulos.append($('<td>').addClass('').text('M x PERSONA'));
      titulos.append($('<td>').addClass('').text('OPCION'));
      table.append(titulos);
@@ -953,16 +956,31 @@ function mostrarPreciosPlantilla(){
      row.append($('<td>').addClass('text-right small').text(redondeo(itemDetalle[id-1][i].monto_i*$("#cod_mescurso").val())));
      row.append($('<td>').addClass('text-right small').text(redondeo(itemDetalle[id-1][i].monto_fi)));
      row.append($('<td>').addClass('text-right small').text(redondeo(itemDetalle[id-1][i].monto_fi/$("#alumnos_ibnorca").val())));
-     row.append($('<td>').addClass('text-right small').html('<button class="btn btn-danger btn-link" onclick="removeDet('+id+','+i+');"><i class="material-icons">remove_circle</i></button>'));
+     var htmlBoton="";
+     if(itemDetalle[id-1][i].tipo==2){
+       htmlBoton='<button class="btn btn-info btn-fab btn-sm" onclick="listarDetPlantilla('+id+','+i+');"><i class="material-icons">list</i></button>';
+     }
+     row.append($('<td>').addClass('text-right small').html(htmlBoton+'<button class="btn btn-danger btn-link" onclick="removeDet('+id+','+i+');"><i class="material-icons">remove_circle</i></button>'));
      table.append(row);
    }
    div.append(table);
    $('#divResultadoListaDet').html(div);
  }
 
- function savePlantillaDetalle(){
+ function savePlantillaDetalle(nombreInput){
   var index=$('#codGrupo').val();
   var str_cuenta=dividirCadena($('#cuenta_detalle').val(),"@");
+  var existeFila=0;
+   for (var i = 0; i < itemDetalle[index-1].length; i++) {
+     if(itemDetalle[index-1][i].codigo_cuenta==str_cuenta[0]){
+       existeFila=1;
+       break;
+     }
+   };
+
+   if(existeFila==1){
+     Swal.fire('Informativo!','La Partida '+str_cuenta[1]+ ' Ya esta agregada!','warning'); 
+   }else{
   if($("#monto_ibnorca").val()==""||$("#monto_f_ibnorca").val()==""||str_cuenta.length==1){
     $("#mensajeDetalle").html("<center><p class='text-danger'>Todos los campos son requeridos</p></center>");
   }else{
@@ -972,23 +990,21 @@ function mostrarPreciosPlantilla(){
       var monto_ib=$('#monto_calculado').val();
       var monto_fib=$('#monto_calculado').val();   
     }else{
-      if($("#monto_ibnorca1").hasClass("d-none")){
-         if($("#monto_ibnorca2").hasClass("d-none")){
-          if($('#tipo_costo'+index).val()==2){
-            var monto_ib=$("#monto_alumno_edit").val()*$("#alumnos_ibnorca").val();
-            var monto_fib=$("#monto_alumno_edit").val()*$("#alumnos_ibnorca").val();
-          }else{
-            var monto_ib=$("#monto_f_ibnorca_edit").val();
-            var monto_fib=$("#monto_f_ibnorca_edit").val();
-          }
-         }else{
+      switch (nombreInput){
+        case 'monto_ibnorca_edit':
+           var monto_ib=$("#monto_ibnorca_edit").val()/$("#cod_mescurso").val();
+           var monto_fib=$("#monto_ibnorca_edit").val()/$("#cod_mescurso").val();
+        break;
+        case 'monto_f_ibnorca_edit':
            var monto_ib=$("#monto_f_ibnorca_edit").val();
            var monto_fib=$("#monto_f_ibnorca_edit").val();
-         }
-      }else{
-        var monto_ib=$("#monto_ibnorca_edit").val()/$("#cod_mescurso").val();
-        var monto_fib=$("#monto_ibnorca_edit").val()/$("#cod_mescurso").val();
+        break;
+        case 'monto_alumno_edit':
+           var monto_ib=$("#monto_alumno_edit").val()*$("#alumnos_ibnorca").val();
+           var monto_fib=$("#monto_alumno_edit").val()*$("#alumnos_ibnorca").val();
+        break;
       }
+
     }
   var detalle={
     codigo_cuenta:str_cuenta[0],
@@ -1009,8 +1025,14 @@ function mostrarPreciosPlantilla(){
   $("#nav_boton2").addClass("active");$("#nav_boton1").removeClass("active");*/
   $("#mensajeDetalle").html("<center><p class='text-success'>Registro satisfactorio</p></center>");
   $.notify({message: 'Partida '+str_cuenta[1]+' registrada' },{type: 'success'});
-  $("#modalDet").modal("hide");
+   if(nombreInput=="mensual"){
+     $("#modalDet").modal("hide");
+   }else{
+     $("#modalDetallesPartida").modal("hide");
+   }
   }
+    
+   }
   
  }
 
@@ -1022,7 +1044,13 @@ function mostrarPreciosPlantilla(){
 function mostrarDetalle(id){
   var html="";
   for (var i = 0; i < itemDetalle[id-1].length; i++) {
-    html+="<tr><td>"+itemDetalle[id-1][i].cuenta+"</td><td>"+itemDetalle[id-1][i].tipo+"</td><td class='text-right'>"+redondeo(itemDetalle[id-1][i].monto_i*$("#cod_mescurso").val())+"</td><td class='text-right'>"+redondeo(itemDetalle[id-1][i].monto_fi)+"</td><td class='text-right'>"+redondeo(itemDetalle[id-1][i].monto_fi/$("#alumnos_ibnorca").val())+"</td></tr>";
+    if(itemDetalle[id-1][i].tipo==1){
+      html+="<tr class=\"small\"><td>"+itemDetalle[id-1][i].cuenta+"</td><td>"+itemDetalle[id-1][i].tipo+"</td><td class='text-right'>"+redondeo(itemDetalle[id-1][i].monto_i*$("#cod_mescurso").val())+"</td><td class='text-right'>"+redondeo(itemDetalle[id-1][i].monto_fi)+"</td><td class='text-right'>"+redondeo(itemDetalle[id-1][i].monto_fi/$("#alumnos_ibnorca").val())+"</td></tr>";
+    }else{
+      html+="<tr class=\"small\"><td><a title=\"Detalles\" href=\"#\" onclick=\"listarDetPlantilla("+id+","+i+")\" class=\"btn btn-info btn-sm\">"+itemDetalle[id-1][i].cuenta+"</a></td><td>"+itemDetalle[id-1][i].tipo+"</td><td class='text-right'>"+redondeo(itemDetalle[id-1][i].monto_i*$("#cod_mescurso").val())+"</td><td class='text-right'>"+redondeo(itemDetalle[id-1][i].monto_fi)+"</td><td class='text-right'>"+redondeo(itemDetalle[id-1][i].monto_fi/$("#alumnos_ibnorca").val())+"</td></tr>";
+
+    }
+   
   };
   $("#cuerpoDetalle").html(html);
   $("#cabezadetalle").html('<h6 class="card-title">Detale "'+$("#nombre_grupo"+id).val()+'"</h6>');
@@ -1075,7 +1103,14 @@ function removeDet(item,fila){
   listarDet(item);
   $("#ndet"+item).html(itemDetalle[item-1].length);
  }
+function listarDetPlantilla(item,fila){
 
+  $("#cuenta_detalle").val(itemDetalle[item-1][fila].codigo_cuenta+"@"+itemDetalle[item-1][fila].cuenta);
+  $("#tipo_dato").val(2);
+  $('.selectpicker').selectpicker("refresh");
+
+  mostrarInputMonto('monto_ibnorca2');
+}
 function limpiarMontos(){
     if($("#tipo_dato").val()==2){
          //$("#monto_ibnorca").val("0");
@@ -1091,9 +1126,16 @@ function limpiarMontos(){
           if(!($("#columna_edit_alumno").hasClass("d-none"))){
             $("#columna_edit_alumno").addClass("d-none");
           }
-         }   
+         } 
+
+       if(!($("#boton_guardardetalle").hasClass("d-none"))){
+         $("#boton_guardardetalle").addClass("d-none");
+        }    
     }else{
         $("#montos_editables").addClass("d-none");
+        if(($("#boton_guardardetalle").hasClass("d-none"))){
+         $("#boton_guardardetalle").removeClass("d-none");
+        }
       //calcularMontos();
     }
 }
@@ -1171,6 +1213,7 @@ function listarDetallesPartidaCuenta(tipo){
            $("#lista_detallespartidacuenta").html(resp);
            $('.selectpicker').selectpicker("refresh");
            $("#modalDetallesPartida").modal("show");
+           $("#modalDet").modal("hide");
         },
         error: function (xhr, ajaxOptions, thrownError) {
         Swal.fire("Error de proceso!", "Contactese con el administrador", "error");
@@ -1178,6 +1221,10 @@ function listarDetallesPartidaCuenta(tipo){
     });
    }
 } 
+function cambiarModalDetalle(){
+$("#modalDetallesPartida").modal("hide");
+$("#modalDet").modal("show");
+}
 function calcularMontoRegistrado(monto,valor){
   switch (valor){
     case "1":
@@ -1231,6 +1278,9 @@ function mostrarInputMonto(id){
      $("#"+id).removeClass("d-none");*/
 
      $("#titulo_partidadetalle").text($('#cuenta_detalle option:selected').text());
+     if(!($("#boton_guardardetalle").hasClass("d-none"))){
+         $("#boton_guardardetalle").addClass("d-none");
+     }
   switch (id){
     case 'monto_ibnorca1':
     listarDetallesPartidaCuenta(1);
@@ -3087,6 +3137,57 @@ function calcularTotalPartida(valor){
   }
 }
 
+//lista de partidas simulaciones
+function activarInputMontoGenerico(matriz){
+  if(!($("#monto_mod"+matriz).is("[readonly]"))){
+    $("#monto_mod"+matriz).attr("readonly",true);
+    $("#monto_modal"+matriz).attr("readonly",true);
+  }else{
+    $("#monto_mod"+matriz).removeAttr("readonly");
+    $("#monto_modal"+matriz).removeAttr("readonly");
+  }
+  var respu= matriz.split('RRR');
+  calcularTotalPartidaGenerico(respu[0],1);
+}
+function calcularTotalPartidaGenerico(fila,valor){
+  var suma=0;
+  var total= $("#numero_cuentas"+fila).val();
+  var monto_anterior=parseFloat($("#monto_designado"+fila).val());
+  for (var i=1;i<=(total-1);i++){
+    if(!($("#monto_mod"+fila+"RRR"+i).is("[readonly]"))){
+    if(valor==1){
+      suma+=parseFloat($("#monto_mod"+fila+"RRR"+i).val());
+    }else{
+     if($("#cod_ibnorca").val()==1){
+         $("#monto_mod"+fila+"RRR"+i).val(parseFloat($("#monto_modal"+fila+"RRR"+i).val())*parseInt($("#alumnos_plan").val()));
+       }else{
+          $("#monto_mod"+fila+"RRR"+i).val(parseFloat($("#monto_modal"+fila+"RRR"+i).val())*parseInt($("#alumnos_plan_fuera").val()));
+       }
+     suma+=parseFloat($("#monto_mod"+fila+"RRR"+i).val());  
+    }
+    }
+   
+  }
+  const rest=Math.abs(suma-monto_anterior);
+  const porcent=(rest*100)/monto_anterior; 
+  var resultPorcent= Math.round(porcent*100)/100;  
+  var result=redondeo((suma*100)/100);
+  document.getElementById("monto_editable"+fila).value=result;
+
+
+  if(result<monto_anterior){
+    $("#monto_editable"+fila).addClass("text-danger");
+    $("#monto_editable"+fila).removeClass("text-success");
+  }else{
+    if(result>monto_anterior){
+       $("#monto_editable"+fila).addClass("text-success");
+       $("#monto_editable"+fila).removeClass("text-danger");
+    }else{
+       $("#monto_editable"+fila).removeClass("text-success");
+       $("#monto_editable"+fila).removeClass("text-danger");
+    }
+  }
+}
 function redondeo(num, decimales = 2) {
     var signo = (num >= 0 ? 1 : -1);
     num = num * signo;
@@ -3107,14 +3208,15 @@ function guardarCuentasSimulacionAjax(ib){
   var partida =$("#partida_presupuestaria").val();
   
     for (var i=1;i<=(total-1);i++){
+      var habilitado=1;
       var codigo = $("#codigo"+i).val();
       var monto = $("#monto_mod"+i).val();
       if($("#monto_mod"+i).is("[readonly]")){
-        monto=0;
+        habilitado=0;
       }
       var cuenta =$("#codigo_cuenta"+i).val();
       var simulacion =$("#codigo_fila"+i).val();
-      var parametros = {"codigo":codigo,"monto":monto,"ibnorca":ib,"simulacion":simulacion,"plantilla":plantilla,"partida":partida,"cuenta":cuenta};
+      var parametros = {"codigo":codigo,"monto":monto,"ibnorca":ib,"simulacion":simulacion,"plantilla":plantilla,"partida":partida,"cuenta":cuenta,"habilitado":habilitado};
       $.ajax({
         type:"GET",
         data:parametros,
@@ -3135,6 +3237,49 @@ function guardarCuentasSimulacionAjax(ib){
     }
     actualizarSimulacion();
 }
+function guardarCuentasSimulacionAjaxGenerico(ib){
+  var supertotal=$("#numero_cuentaspartida").val();
+  for (var j = 1; j <=(supertotal-1); j++) {
+  var total= $("#numero_cuentas"+j).val();
+  //var simulacion=$("#cod_simulacion").val();
+  var plantilla =$("#cod_plantilla").val();
+  var partida =$("#codigo_partida_presupuestaria"+j).val();
+  
+    for (var i=1;i<=(total-1);i++){
+      var habilitado=1;
+      var codigo = $("#codigo"+j+"RRR"+i).val();
+      var monto = $("#monto_mod"+j+"RRR"+i).val();
+      if($("#monto_mod"+j+"RRR"+i).is("[readonly]")){
+        habilitado=0;
+      }
+      var cuenta =$("#codigo_cuenta"+j+"RRR"+i).val();
+      var simulacion =$("#codigo_fila"+j+"RRR"+i).val();
+      var parametros = {"codigo":codigo,"monto":monto,"ibnorca":ib,"simulacion":simulacion,"plantilla":plantilla,"partida":partida,"cuenta":cuenta,"habilitado":habilitado};
+      $.ajax({
+        type:"GET",
+        data:parametros,
+        url:"ajaxSaveCuentas.php",
+        beforeSend: function () { 
+          $("#guardar_cuenta").text("espere.."); 
+          $("#guardar_cuenta").attr("disabled",true);
+          $("#mensaje_cuenta").html("");
+          iniciarCargaAjax();
+        },
+        success:function(resp){
+          $("#guardar_cuenta").text("Guardar");
+          $("#guardar_cuenta").removeAttr("disabled");
+          $("#mensaje_cuenta").html("<p class='text-success'>Se insertaron los datos correctamente! </p>");//<a class='btn btn-warning btn-sm' href='#' onclick='actualizarSimulacion();'>aplicar cambios a la simulación</a>
+        },complete : function(xhr, status) {
+        
+         }
+      });
+    }   
+  };
+    actualizarSimulacion();
+}
+$(document).ajaxStop(function(){
+  detectarCargaAjax();
+});
 function listarCostosFijos(){
   cargarListaCostosDetalle(1);
 }
@@ -3161,6 +3306,51 @@ function cargarListaCostosDetalle(valor){
         }
       });
  
+}
+function guardarCuentasSimulacionGenerico(ib){
+  var conta=0; var contaRead=0;
+  var supertotal= $("#numero_cuentaspartida").val();
+  var cosSim=$("#cod_simulacion").val();
+  for (var j = 1; j <=(supertotal-1); j++) {
+  var total= $("#numero_cuentas"+j).val();
+  
+  if((total-1)!=0){
+    for (var i=1;i<=(total-1);i++){
+      if($("#monto_mod"+j+"RRR"+i).val()==""||$("#monto_modal"+j+"RRR"+i).val()==""){
+        conta++
+      }
+      if($("#monto_mod"+j+"RRR"+i).is("[readonly]")){
+        contaRead++
+      }
+    }    
+  }    
+  };
+  if(conta==0){
+    if(contaRead==0){
+      guardarCuentasSimulacionAjaxGenerico(ib);
+    }else{
+        Swal.fire({
+         title: 'Advertencia!',
+         text: "Hay uno o más registros deshabilitados ¿Desea Continuar?",
+         type: 'warning',
+         showCancelButton: true,
+         confirmButtonClass: 'btn btn-info',
+         cancelButtonClass: 'btn btn-danger',
+         confirmButtonText: 'Si',
+         cancelButtonText: 'No',
+         buttonsStyling: false
+       }).then((result) => {
+          if (result.value) {
+               guardarCuentasSimulacionAjaxGenerico(ib);            
+            return(true);
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            return(false);
+          }
+        });
+    }
+   }else{
+    Swal.fire('Informativo!','Todos los campos son requeridos!','warning'); 
+   } 
 }
 function guardarCuentasSimulacion(ib){
   var total= $("#numero_cuentas").val();

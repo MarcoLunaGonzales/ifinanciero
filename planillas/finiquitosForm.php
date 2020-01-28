@@ -6,10 +6,9 @@ require_once 'rrhh/configModule.php';
 
 //$dbh = new Conexion();
 $dbh = new Conexion();
-$sqlpersonal="SELECT codigo,paterno,materno,primer_nombre
-from personal
-where cod_estadoreferencial=1 ORDER BY paterno
-";
+$sqlpersonal="SELECT r.codigo,r.cod_personal,p.primer_nombre,p.paterno,p.materno
+from personal_retiros r,personal p
+where r.cod_personal=p.codigo and r.cod_estadoreferencial=1";
 $stmtpersonal = $dbh->prepare($sqlpersonal);
 $stmtpersonal->execute();
      //tipo de retiro                   
@@ -27,13 +26,13 @@ if ($codigo > 0){
     $codigo = $result['codigo'];
     $cod_personal = $result['cod_personal'];
     $fecha_retiro = $result['fecha_retiro'];
-    $motivo_retiro = $result['motivo_retiro'];
+    $cod_tiporetiro = $result['cod_tiporetiro'];
 
 }else {
     $codigo = 0;
     $cod_personal = 0;
     $fecha_retiro = ' ';
-    $motivo_retiro = ' ';
+    $cod_tiporetiro = ' ';
 }
 ?>
 
@@ -81,22 +80,22 @@ if ($codigo > 0){
                         </div>
                         </div>
                     </div><!--fin campo abreviatura -->
-                    <div class="row">
+                    <!-- <div class="row">
                         <label class="col-sm-2 col-form-label">Motivo Retiro</label>
                         <div class="col-sm-7">
                         <div class="form-group">                            
                             <select name="motivo_retiro" id="motivo_retiro" class="selectpicker " data-style="btn btn-info" required>
-                                            <?php while ($row = $stmtTipoRetiro->fetch()) { ?>
-                                                <option <?php if($cod_tiporetiro == $row["codigo"]) echo "selected"; ?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                                            <?php while ($rowRetiro = $stmtTipoRetiro->fetch()) { ?>
+                                                <option <?php if($cod_tiporetiro == $rowRetiro["codigo"]) echo "selected"; ?> value="<?=$rowRetiro["codigo"];?>"><?=$rowRetiro["nombre"];?></option>
                                             <?php } ?>
                                         </select>
                         </div>
                         </div>
-                    </div><!--fin campo motivo_retiro -->
+                    </div><!--fin campo motivo_retiro --> -->
                   </div>
                   <div class="card-footer ml-auto mr-auto">
                     <button type="submit" class="<?=$buttonNormal;?>">Guardar</button>
-                    <a href="<?=$urlListAreas;?>" class="<?=$buttonCancel;?>">Volver</a>
+                    <a href="<?=$urlFiniquitosList;?>" class="<?=$buttonCancel;?>">Volver</a>
                   </div>
                 </div>
               </form>

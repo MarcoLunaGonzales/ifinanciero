@@ -75,7 +75,7 @@ $alumnos=$_GET['alumnos'];
                           </tr>
                            <?php
                            $cantidad=obtenerCantidadPlantillaDetallesPartida($codigo,$codPartida);
-                           $stmt = $dbh->prepare("SELECT c.*,p.nombre,p.numero FROM plantillas_tcpdetalle c,plan_cuentas p where p.codigo=c.cod_cuenta and c.cod_plantillacosto=$codigo and c.cod_partidapresupuestaria=$codPartida order by c.codigo");
+                           $stmt = $dbh->prepare("SELECT c.*,p.nombre,p.numero FROM plantillas_servicios_detalle c,plan_cuentas p where p.codigo=c.cod_cuenta and c.cod_plantillacosto=$codigo and c.cod_partidapresupuestaria=$codPartida order by c.codigo");
                            $stmt->execute();
                            $indexDetalle=1;
                            $totalMontoPlantilla=0;
@@ -136,7 +136,12 @@ $alumnos=$_GET['alumnos'];
                            ?>
 
                      </tbody>
-                   </table>     
+                   </table>  
+                <div class="row">
+                   <div class="form-group col-sm-12">
+                        <a href="#" class="btn btn-info btn-round float-right" onclick="savePlantillaDetalle('<?=$nombreInput?>')">Guardar</a>
+                    </div>   
+                </div>
   <script>
   $("#monto_totalplantilladetallecal").val($("#<?=$nombreInputCal?>").val());
   $("#titulo_montototalcal").text("<?=$tituloMonto?>");
