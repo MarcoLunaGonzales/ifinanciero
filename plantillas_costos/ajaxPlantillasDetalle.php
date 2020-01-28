@@ -75,7 +75,7 @@ $alumnos=$_GET['alumnos'];
                           </tr>
                            <?php
                            $cantidad=obtenerCantidadPlantillaDetallesPartida($codigo,$codPartida);
-                           $stmt = $dbh->prepare("SELECT c.*,p.nombre,p.numero FROM plantillas_tcpdetalle c,plan_cuentas p where p.codigo=c.cod_cuenta and c.cod_plantillacosto=$codigo and c.cod_partidapresupuestaria=$codPartida order by c.codigo");
+                           $stmt = $dbh->prepare("SELECT c.*,p.nombre,p.numero FROM plantillas_servicios_detalle c,plan_cuentas p where p.codigo=c.cod_cuenta and c.cod_plantillacosto=$codigo and c.cod_partidapresupuestaria=$codPartida order by c.codigo");
                            $stmt->execute();
                            $indexDetalle=1;
                            $totalMontoPlantilla=0;

@@ -16,7 +16,7 @@ $cuenta=$_GET["cuenta"];
 $habilitado=$_GET["habilitado"];
 
 session_start();
-$sqlUpdateDetalle="UPDATE plantillas_tcpdetalle SET  monto_unitario='$monto',monto_total='$monto',habilitado=$habilitado where codigo=$codigo";
+$sqlUpdateDetalle="UPDATE plantillas_servicios_detalle SET  monto_unitario='$monto',monto_total='$monto',habilitado=$habilitado where codigo=$codigo";
 $stmtUpdateDetalle = $dbh->prepare($sqlUpdateDetalle);
 $stmtUpdateDetalle->execute();
 

@@ -17,7 +17,7 @@ $stmtX->execute();
 if(isset($_GET['cod'])){
 	$cod=$_GET['cod'];
   $dbh = new Conexion();
-  $sqlInsert="DELETE FROM plantillas_tcpdetalle WHERE codigo=$cod";
+  $sqlInsert="DELETE FROM plantillas_servicios_detalle WHERE codigo=$cod";
   $stmtInsert = $dbh->prepare($sqlInsert);
   $stmtInsert->execute();
 }

@@ -1836,7 +1836,7 @@ function obtenerCuentaPlantillaCostos($codigo){
 function obtenerDetallePlantillaCostosPartida($plantilla,$codigo){
   $dbh = new Conexion();
   $sql="";
-  $sql="SELECT c.numero,c.nombre,p.* FROM plantillas_tcpdetalle p join plan_cuentas c on p.cod_cuenta=c.codigo where p.cod_partidapresupuestaria=$codigo and p.cod_plantillacosto=$plantilla";
+  $sql="SELECT c.numero,c.nombre,p.* FROM plantillas_servicios_detalle p join plan_cuentas c on p.cod_cuenta=c.codigo where p.cod_partidapresupuestaria=$codigo and p.cod_plantillacosto=$plantilla";
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
    return $stmt;
@@ -1844,7 +1844,7 @@ function obtenerDetallePlantillaCostosPartida($plantilla,$codigo){
 function obtenerMontosCuentasDetallePlantillaCostosPartida($plantilla,$codigo){
   $dbh = new Conexion();
   $sql="";
-  $sql="SELECT p.cod_partidapresupuestaria,p.cod_cuenta,c.numero,c.nombre,sum(p.monto_total) as monto FROM plantillas_tcpdetalle p join plan_cuentas c on p.cod_cuenta=c.codigo where p.cod_partidapresupuestaria=$codigo and p.cod_plantillacosto=$plantilla group by cod_cuenta";
+  $sql="SELECT p.cod_partidapresupuestaria,p.cod_cuenta,c.numero,c.nombre,sum(p.monto_total) as monto FROM plantillas_servicios_detalle p join plan_cuentas c on p.cod_cuenta=c.codigo where p.cod_partidapresupuestaria=$codigo and p.cod_plantillacosto=$plantilla group by cod_cuenta";
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
    return $stmt;
@@ -1852,7 +1852,7 @@ function obtenerMontosCuentasDetallePlantillaCostosPartida($plantilla,$codigo){
 function obtenerMontosCuentasDetallePlantillaCostosPartidaHabilitado($plantilla,$codigo){
   $dbh = new Conexion();
   $sql="";
-  $sql="SELECT p.cod_partidapresupuestaria,p.cod_cuenta,c.numero,c.nombre,sum(p.monto_total) as monto FROM plantillas_tcpdetalle p join plan_cuentas c on p.cod_cuenta=c.codigo where p.cod_partidapresupuestaria=$codigo and p.cod_plantillacosto=$plantilla and p.habilitado=1 group by cod_cuenta";
+  $sql="SELECT p.cod_partidapresupuestaria,p.cod_cuenta,c.numero,c.nombre,sum(p.monto_total) as monto FROM plantillas_servicios_detalle p join plan_cuentas c on p.cod_cuenta=c.codigo where p.cod_partidapresupuestaria=$codigo and p.cod_plantillacosto=$plantilla and p.habilitado=1 group by cod_cuenta";
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
    return $stmt;
@@ -1873,7 +1873,7 @@ function obtenerCantidadPreciosPlantilla($codPlantilla){
 function obtenerCantidadPlantillaDetallesPartida($codPlantilla,$codPartida){
   $dbh = new Conexion();
   $sql="";
-  $sql="SELECT count(*) as num FROM plantillas_tcpdetalle where cod_plantillacosto=$codPlantilla and cod_partidapresupuestaria=$codPartida";
+  $sql="SELECT count(*) as num FROM plantillas_servicios_detalle where cod_plantillacosto=$codPlantilla and cod_partidapresupuestaria=$codPartida";
    $stmt = $dbh->prepare($sql);
    $stmt->execute(); 
    $num=0;
