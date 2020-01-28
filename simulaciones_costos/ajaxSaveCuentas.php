@@ -23,11 +23,15 @@ $stmtUpdateDetalle->execute();
 $detallesMontos=obtenerMontosCuentasDetallePlantillaCostosPartidaHabilitado($plantilla,$partida);
 while ($row = $detallesMontos->fetch(PDO::FETCH_ASSOC)) {
 	if($row['cod_cuenta']==$cuenta){
-		$montoTotal=$row['monto'];
+    if($row['habilitado']==0){
+      $montoTotal=0;
+    }else{
+		$montoTotal=$row['monto'];    
+    }
       if($ibnorca==1){
-       $sqlUpdate="UPDATE cuentas_simulacion SET  monto_local='$montoTotal' where codigo=$simulacion";	
+       $sqlUpdate="UPDATE cuentas_simulacion SET  monto_local='$montoTotal' where codigo=$simulacion and cod_plancuenta=$cuenta";	
       }else{
-       $sqlUpdate="UPDATE cuentas_simulacion SET  monto_externo='$montoTotal' where codigo=$simulacion";
+       $sqlUpdate="UPDATE cuentas_simulacion SET  monto_externo='$montoTotal' where codigo=$simulacion and cod_plancuenta=$cuenta";
       }
       $stmtUpdate = $dbh->prepare($sqlUpdate);
       $flagSuccess=$stmtUpdate->execute();

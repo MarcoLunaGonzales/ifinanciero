@@ -16,6 +16,7 @@ if(isset($_GET["simulacion"])){
  $codigo=$_GET["simulacion"];
  $codPlan=$_GET["plantilla"];
  $tipoCosto=$_GET["tipo"];
+ $alumnos=$_GET["al"];
 $anio=date("Y");
 $mes=obtenerValorConfiguracion(6);
 $query1="select pgd.cod_plantillagrupocosto,pc.cod_unidadorganizacional,pc.cod_area,pgc.nombre,pgc.cod_tipocosto,sum(pgd.monto_local) as local,sum(pgd.monto_externo) as externo,sum(pgd.monto_calculado) as calculado from plantillas_grupocostodetalle pgd join partidas_presupuestarias pp on pgd.cod_partidapresupuestaria=pp.codigo
@@ -32,7 +33,7 @@ $bgClase="bg-info";
 }
   $stmt = $dbh->prepare($query2);
   $stmt->execute();
-  $html='';$montoTotales=0;$montoTotales2=0;
+  $html='';$montoTotales=0;$montoTotales2=0;$montoTotales2Alumno=0;
 ?>
        <div class="row">
          
@@ -41,6 +42,10 @@ $bgClase="bg-info";
          <tr class="text-white <?=$bgClase?>">
         <td>Cuenta / Detalle</td>
         <td>Monto x Modulo</td>
+        <?php if($tipoCosto!=1){
+        ?> <td>Monto x Alumno</td><?php 
+        }
+        ?>
         </tr>
 <?php
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -61,7 +66,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
      }else{
        $html.='<tr class="bg-plomo">'.
                       '<td class="font-weight-bold text-left">'.$row['nombre'].'</td>'.
-                      '<td class="text-right font-weight-bold"></td>';
+                      '<td class="text-right font-weight-bold"></td><td></td>';
       $html.='</tr>';
     }
      
@@ -91,7 +96,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
          }else{
            $html.='<tr class="bg-success text-white">'.
                       '<td class="font-weight-bold text-left">&nbsp;&nbsp; '.$row_partidas['nombre'].' '.$numeroCuentas.'</td>'.
-                      '<td class="text-right font-weight-bold"></td>';
+                      '<td class="text-right font-weight-bold"></td><td></td>';
           $html.='</tr>';
          } 
         if($row_partidas['tipo_calculo']==1){
@@ -127,14 +132,21 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
               $bgFila="";
               if($bandera==0){
                  $bgFila="text-danger";   
+                $html.='<tr class="'.$bgFila.'">'.
+                      '<td class="font-weight-bold text-left"><strike>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$row_cuentas['nombre'].' / '.$row_cuentas['glosa'].'</strike></td>'.
+                      '<td class="text-right text-muted">'.number_format(0, 2, '.', ',').'</td>'.
+                      '<td class="text-right text-muted">'.number_format(0, 2, '.', ',').'</td>';
+                $html.='</tr>';
               }else{
                 $montoTotales2+=$row_cuentas['monto_total'];
-              }
-
+                $montoTotales2Alumno+=$montoCal/$alumnos;
                 $html.='<tr class="'.$bgFila.'">'.
                       '<td class="font-weight-bold text-left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$row_cuentas['nombre'].' / '.$row_cuentas['glosa'].'</td>'.
-                      '<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>';
+                      '<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>'.
+                      '<td class="text-right text-muted">'.number_format($montoCal/$alumnos, 2, '.', ',').'</td>';
                 $html.='</tr>';
+              }
+
             }
           }  
      }
@@ -147,7 +159,8 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
          }else{
            $html.='<tr class="bg-plomo">'.
                       '<td class="font-weight-bold text-left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Total </td>'.
-                      '<td class="text-right text-muted font-weight-bold">'.number_format($montoTotales2, 2, '.', ',').'</td>';
+                      '<td class="text-right text-muted font-weight-bold">'.number_format($montoTotales2, 2, '.', ',').'</td>'.
+                      '<td class="text-right text-muted font-weight-bold">'.number_format($montoTotales2Alumno, 2, '.', ',').'</td>';
                 $html.='</tr>';
          } 
 

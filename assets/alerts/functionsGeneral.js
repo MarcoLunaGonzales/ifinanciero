@@ -2732,8 +2732,6 @@ function EliminarContratoPersonal(codigo_contratoB,codigo_personalB){
         //$('#tabla1').load('index.php');
         // alertify.success("agregado");
         alerts.showSwal('success-message','index.php?opcion=FormPersonalContratos&codigo='+codigo_personalB);    
-      }else{
-        alerts.showSwal('error-message','index.php?opcion=personalLista');
       }
     }
   });
@@ -2747,9 +2745,7 @@ function RetirarPersonal(cod_personal,cod_tiporetiro,fecha_Retiro,observaciones)
       if(r==1){
         //$('#tabla1').load('index.php');
         // alertify.success("agregado");
-        alerts.showSwal('success-message','index.php?opcion=personalLista');
-      }else{
-        alerts.showSwal('error-message','index.php?opcion=personalLista');
+        alerts.showSwal('success-message','index.php?opcion=FormPersonalContratos&codigo='+cod_personal);
       }
     }
   });
@@ -3295,7 +3291,13 @@ function cargarListaCostosDetalle(valor){
   var simulacion=$("#cod_simulacion").val();
   var plantilla =$("#cod_plantilla").val();
   var url="ajaxCargarDetalleCostosSimulacion.php";
-  var parametros = {"simulacion":simulacion,"plantilla":plantilla,"tipo":tipo};
+  var ibnorca=$("#cod_ibnorca").val();
+    if(ibnorca==1){
+      var alumnos=$("#alumnos_plan").val();
+    }else{
+      var alumnos=$("#alumnos_plan_fuera").val();
+    }
+  var parametros = {"simulacion":simulacion,"plantilla":plantilla,"tipo":tipo,"al":alumnos};
       $.ajax({
         type:"GET",
         data:parametros,

@@ -20,18 +20,18 @@ $j=1;
     <input type="hidden" name="codigo_partida_presupuestaria<?=$j?>" id="codigo_partida_presupuestaria<?=$j?>" value="<?=$codigoPartida?>" readonly/>
     <h4 class="font-weight-bold"><center>PARTIDA: <?=$nombrePartida?></center></h4>
       <div class="row">
-        <label class="col-sm-3 col-form-label">Monto x Modulo Plantilla:</label>
+        <!--<label class="col-sm-3 col-form-label">Monto x Modulo Plantilla:</label>
         <div class="col-sm-3">
-         <div class="form-group">
-           <input class="form-control text-right" type="number" name="monto_designado<?=$j?>" id="monto_designado<?=$j?>" value="<?=$montoTotal?>" readonly/>
-         </div>
-         </div>
-         <label class="col-sm-3 col-form-label">Monto x Modulo Simulaci&oacute;n:</label>
+         <div class="form-group">-->
+           <input class="form-control text-right" type="hidden" name="monto_designado<?=$j?>" id="monto_designado<?=$j?>" value="<?=$montoTotal?>" readonly/>
+         <!--</div>
+         </div>-->
+         <!--<label class="col-sm-3 col-form-label">Monto x Modulo Simulaci&oacute;n:</label>
         <div class="col-sm-3">
-         <div class="form-group">
-           <input class="form-control text-right" type="number" name="monto_editable<?=$j?>" id="monto_editable<?=$j?>" value="<?=$montoEditado?>" readonly/>
-         </div>
-         </div>
+         <div class="form-group">-->
+           <input class="form-control text-right" type="hidden" name="monto_editable<?=$j?>" id="monto_editable<?=$j?>" value="<?=$montoEditado?>" readonly/>
+         <!--</div>
+         </div>-->
        </div>
    <table class="table table-condensed table-bordered">
          <tr class="text-white bg-info">

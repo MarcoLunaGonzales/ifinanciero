@@ -1829,7 +1829,7 @@ function obtenerMontosCuentasDetallePlantillaCostosPartida($plantilla,$codigo){
 function obtenerMontosCuentasDetallePlantillaCostosPartidaHabilitado($plantilla,$codigo){
   $dbh = new Conexion();
   $sql="";
-  $sql="SELECT p.cod_partidapresupuestaria,p.cod_cuenta,c.numero,c.nombre,sum(p.monto_total) as monto FROM plantillas_servicios_detalle p join plan_cuentas c on p.cod_cuenta=c.codigo where p.cod_partidapresupuestaria=$codigo and p.cod_plantillacosto=$plantilla and p.habilitado=1 group by cod_cuenta";
+  $sql="SELECT p.cod_partidapresupuestaria,p.cod_cuenta,c.numero,c.nombre,sum(p.monto_total) as monto,p.habilitado FROM plantillas_servicios_detalle p join plan_cuentas c on p.cod_cuenta=c.codigo where p.cod_partidapresupuestaria=$codigo and p.cod_plantillacosto=$plantilla group by cod_cuenta";
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
    return $stmt;
