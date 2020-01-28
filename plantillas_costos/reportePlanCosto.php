@@ -64,7 +64,7 @@ where pc.codigo=$codigo";
                            </tbody>
                         </table>    
                   </div>
-                  <div class="row">
+                  <!--<div class="row">
                     <div class="col-sm-4">
                     <div class="form-group">
                         <label class="bmd-label-static">Valor Mes</label>
@@ -83,8 +83,8 @@ where pc.codigo=$codigo";
                          <a href="" class="btn btn-default btn-sm">Restaurar</a>
                     </div>
                   </div>
-                  </div>
-                  <h5 class="card-title"><strong>COSTOS DEL EVENTO DE CAPACITACION</strong></h5>
+                  </div>-->
+                  <!--<h5 class="card-title"><strong>COSTOS DEL EVENTO DE CAPACITACION</strong></h5>-->
                   <div class="table-responsive" id="datos_pantilla_costo">
                         
                        
@@ -93,22 +93,15 @@ where pc.codigo=$codigo";
     $html='<table id="libro_mayor_rep" class="table table-bordered table-condensed" style="width:100%">'.
             '<thead class="bg-table-primary text-white">'.
             '<tr class="text-center">'.
-              '<th colspan="3" class=""></th>'.
-              '<th class="">EN IBNORCA</th>'.
-              '<th class="">FUERA IBNORCA</th>'.
-            '</tr>'.
-            '<tr class="text-center">'.
               '<th class="text-left"><small>DETALLE</small></th>'.
               '<th><small>IMPORTE TOTAL MENSUAL</small></th>'.
               '<th><small>COSTO POR CURSO</small></th>'.
-              '<th><small>BOB</small></th>'.
-              '<th><small>BOB</small></th>'.
             '</tr>'.
            '</thead>'.
            '<tbody>'; 
 
          $html.='<tr class="bg-table-primary text-white">'.
-               '<td>COSTO FIJO</td><td></td><td></td><td></td><td></td>'.
+               '<td>COSTO FIJO</td><td></td><td></td>'.
                '</tr>';  
   $query2=$query1." and pgc.cod_tipocosto=1 GROUP BY pgd.cod_plantillagrupocosto order by pgd.cod_plantillagrupocosto";
   $stmt = $dbh->prepare($query2);
@@ -130,9 +123,9 @@ where pc.codigo=$codigo";
      $html.='<tr class="bg-plomo">'.
                       '<td class="font-weight-bold text-left">'.$row['nombre'].'</td>'.
                       '<td class="text-right font-weight-bold">'.number_format($importe_grupo, 2, '.', ',').'</td>'.
-                      '<td class="text-right font-weight-bold">'.number_format($montoCalculadoTit, 2, '.', ',').'</td>'.
-                      '<td class="text-right font-weight-bold">'.number_format($row['local'], 2, '.', ',').'</td>'.
-                      '<td class="text-right font-weight-bold">'.number_format($row['externo'], 2, '.', ',').'</td>';
+                      '<td class="text-right font-weight-bold">'.number_format($montoCalculadoTit, 2, '.', ',').'</td>';
+                      /*'<td class="text-right font-weight-bold">'.number_format($row['local'], 2, '.', ',').'</td>'.
+                      '<td class="text-right font-weight-bold">'.number_format($row['externo'], 2, '.', ',').'</td>';*/
       $html.='</tr>';
      $query_partidas="select pgd.cod_plantillagrupocosto,pp.nombre,pgd.cod_partidapresupuestaria,pgd.tipo_calculo,pgd.monto_local,pgd.monto_externo,pgd.monto_calculado from plantillas_grupocostodetalle pgd join partidas_presupuestarias pp on pgd.cod_partidapresupuestaria=pp.codigo join plantillas_gruposcosto pgc on pgd.cod_plantillagrupocosto=pgc.codigo where pgd.cod_plantillagrupocosto=$codGrupo";
 
@@ -146,7 +139,7 @@ where pc.codigo=$codigo";
 
         if($row_partidas['tipo_calculo']!=1){
           $numeroCuentas="(Manual)";
-          $signoClass="block";
+          $signoClass="add_circle";
           $estiloFila="text-muted";
           $funcionOnclick='filasPresupuesto('.$codPartida.')';
           $importe_partida=(float)$row_partidas['monto_local']*$mes;
@@ -162,9 +155,9 @@ where pc.codigo=$codigo";
           $html.='<tr onclick="'.$funcionOnclick.'" class="'.$estiloFila.'">'.
                       '<td class="font-weight-bold text-left">&nbsp;&nbsp;<i class="material-icons icon-sm simbolo'.$codPartida.'">'.$signoClass.'</i> '.$row_partidas['nombre'].' '.$numeroCuentas.'</td>'.
                       '<td class="text-right font-weight-bold">'.number_format($importe_partida, 2, '.', ',').'</td>'.
-                      '<td class="text-right font-weight-bold">'.number_format($montoCalculado, 2, '.', ',').'</td>'.
-                      '<td class="text-right font-weight-bold">'.number_format($row_partidas['monto_local'], 2, '.', ',').'</td>'.
-                      '<td class="text-right font-weight-bold">'.number_format($row_partidas['monto_externo'], 2, '.', ',').'</td>';
+                      '<td class="text-right font-weight-bold">'.number_format($montoCalculado, 2, '.', ',').'</td>';
+                      /*'<td class="text-right font-weight-bold">'.number_format($row_partidas['monto_local'], 2, '.', ',').'</td>'.
+                      '<td class="text-right font-weight-bold">'.number_format($row_partidas['monto_externo'], 2, '.', ',').'</td>';*/
           $html.='</tr>';
           
           if($row_partidas['tipo_calculo']==1){
@@ -187,9 +180,9 @@ where pc.codigo=$codigo";
                 $html.='<tr class="cuenta'.$codPartida.'" style="display:none">'.
                       '<td class="font-weight-bold text-left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$row_cuentas['nombre'].'</td>'.
                       '<td class="text-right text-muted">'.number_format($monto, 2, '.', ',').'</td>'.
-                      '<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>'.
-                      '<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>'.
                       '<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>';
+                     /*'<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>'.
+                      '<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>';*/
                 $html.='</tr>';
             }
           }else{
@@ -203,9 +196,9 @@ where pc.codigo=$codigo";
                 $html.='<tr class="cuenta'.$codPartida.'" style="display:none">'.
                       '<td class="font-weight-bold text-left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$row_cuentas['nombre'].' / '.$row_cuentas['glosa'].'</td>'.
                       '<td class="text-right text-muted">'.number_format($monto, 2, '.', ',').'</td>'.
-                      '<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>'.
-                      '<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>'.
                       '<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>';
+                      /*'<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>'.
+                      '<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>';*/
                 $html.='</tr>';
             }
           }
@@ -217,13 +210,13 @@ where pc.codigo=$codigo";
 $html.='<tr class="bg-table-primary text-white">'.
                       '<td class="font-weight-bold text-left">TOTAL COSTO FIJO</td>'.
                       '<td class="text-right" id="fijo_importe">'.number_format($totalImporte, 2, '.', ',').'</td>'.
-                      '<td class="text-right" id="fijo_modulo">'.number_format($totalModulo, 2, '.', ',').'</td>'.
-                      '<td class="text-right" id="fijo_ibnorca">'.number_format($totalLocal, 2, '.', ',').'</td>'.
-                      '<td class="text-right" id="fijo_fuera">'.number_format($totalExterno, 2, '.', ',').'</td>';
+                      '<td class="text-right" id="fijo_modulo">'.number_format($totalModulo, 2, '.', ',').'</td>';
+                      /*'<td class="text-right" id="fijo_ibnorca">'.number_format($totalLocal, 2, '.', ',').'</td>'.
+                      '<td class="text-right" id="fijo_fuera">'.number_format($totalExterno, 2, '.', ',').'</td>';*/
                     $html.='</tr>';
 
   $html.='<tr class="bg-table-primary text-white">'.
-               '<td>COSTO VARIABLE</td><td></td><td></td><td></td><td></td>'.
+               '<td>COSTO VARIABLE</td><td></td><td></td>'.
                '</tr>';  
   $query2=$query1." and pgc.cod_tipocosto=2 GROUP BY pgd.cod_plantillagrupocosto order by pgd.cod_plantillagrupocosto";
   $stmt = $dbh->prepare($query2);
@@ -243,10 +236,10 @@ $html.='<tr class="bg-table-primary text-white">'.
     $totalExterno2+=$row['externo'];   
      $html.='<tr class="bg-plomo">'.
                       '<td class="font-weight-bold text-left">'.$row['nombre'].'</td>'.
-                      '<td class="text-right font-weight-bold">'.number_format($importe_grupo, 2, '.', ',').'</td>'.
-                      '<td class="text-right font-weight-bold">'.number_format($montoCalculadoTit, 2, '.', ',').'</td>'.
-                      '<td class="text-right font-weight-bold">'.number_format($row['local'], 2, '.', ',').'</td>'.
-                      '<td class="text-right font-weight-bold">'.number_format($row['externo'], 2, '.', ',').'</td>';
+                      '<td class="font-weight-bold text-left">-</td>'.//'<td class="text-right font-weight-bold">'.number_format($importe_grupo, 2, '.', ',').'</td>'.
+                      '<td class="text-right font-weight-bold">'.number_format($montoCalculadoTit, 2, '.', ',').'</td>';
+                      /*'<td class="text-right font-weight-bold">'.number_format($row['local'], 2, '.', ',').'</td>'.
+                      '<td class="text-right font-weight-bold">'.number_format($row['externo'], 2, '.', ',').'</td>';*/
       $html.='</tr>';
      $query_partidas="select pgd.cod_plantillagrupocosto,pp.nombre,pgd.cod_partidapresupuestaria,pgd.tipo_calculo,pgd.monto_local,pgd.monto_externo,pgd.monto_calculado from plantillas_grupocostodetalle pgd join partidas_presupuestarias pp on pgd.cod_partidapresupuestaria=pp.codigo join plantillas_gruposcosto pgc on pgd.cod_plantillagrupocosto=pgc.codigo where pgd.cod_plantillagrupocosto=$codGrupo";
 
@@ -259,7 +252,7 @@ $html.='<tr class="bg-table-primary text-white">'.
          $numeroCuentas=contarPresupuestoCuentas($codPartida);
         if($row_partidas['tipo_calculo']!=1){
           $numeroCuentas="(Manual)";
-          $signoClass="block";
+          $signoClass="add_circle";
           $estiloFila="text-muted";
           $funcionOnclick='filasPresupuesto('.$codPartida.')';
           $importe_partida=(float)$row_partidas['monto_local']*$mes;
@@ -274,10 +267,10 @@ $html.='<tr class="bg-table-primary text-white">'.
         }
           $html.='<tr onclick="'.$funcionOnclick.'" class="'.$estiloFila.'">'.
                       '<td class="font-weight-bold text-left">&nbsp;&nbsp;<i class="material-icons icon-sm simbolo'.$codPartida.'">'.$signoClass.'</i> '.$row_partidas['nombre'].' '.$numeroCuentas.'</td>'.
-                      '<td class="text-right font-weight-bold">'.number_format($importe_partida, 2, '.', ',').'</td>'.
-                      '<td class="text-right font-weight-bold">'.number_format($montoCalculado, 2, '.', ',').'</td>'.
-                      '<td class="text-right font-weight-bold">'.number_format($row_partidas['monto_local'], 2, '.', ',').'</td>'.
-                      '<td class="text-right font-weight-bold">'.number_format($row_partidas['monto_externo'], 2, '.', ',').'</td>';
+                      '<td class="font-weight-bold text-left">-</td>'.//'<td class="text-right font-weight-bold">'.number_format($importe_partida, 2, '.', ',').'</td>'.
+                      '<td class="text-right font-weight-bold">'.number_format($montoCalculado, 2, '.', ',').'</td>';
+                      /*'<td class="text-right font-weight-bold">'.number_format($row_partidas['monto_local'], 2, '.', ',').'</td>'.
+                      '<td class="text-right font-weight-bold">'.number_format($row_partidas['monto_externo'], 2, '.', ',').'</td>';*/
           $html.='</tr>';
           
           if($row_partidas['tipo_calculo']==1){
@@ -298,10 +291,10 @@ $html.='<tr class="bg-table-primary text-white">'.
                 $montoCal=costoModulo($monto,$mes);
                 $html.='<tr class="cuenta'.$codPartida.'" style="display:none">'.
                       '<td class="font-weight-bold text-left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$row_cuentas['nombre'].'</td>'.
-                      '<td class="text-right text-muted">'.number_format($monto, 2, '.', ',').'</td>'.
-                      '<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>'.
-                      '<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>'.
+                      '<td class="font-weight-bold text-left">-</td>'.//'<td class="text-right text-muted">'.number_format($monto, 2, '.', ',').'</td>'.
                       '<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>';
+                      /*'<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>'.
+                      '<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>';*/
                 $html.='</tr>';
             }
           }else{
@@ -315,21 +308,10 @@ $html.='<tr class="bg-table-primary text-white">'.
               $montoSimulacion+=$row_cuentas['monto_total'];
                 $html.='<tr class="cuenta'.$codPartida.'" style="display:none">'.
                       '<td class="font-weight-bold text-left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$row_cuentas['nombre'].' / '.$row_cuentas['glosa'].'</td>'.
-                      '<td class="text-right text-muted">'.number_format($monto, 2, '.', ',').'</td>'.
-                      '<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>'.
-                      '<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>'.
+                      '<td class="font-weight-bold text-left">-</td>'.//'<td class="text-right text-muted">'.number_format($monto, 2, '.', ',').'</td>'.
                       '<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>';
-                $html.='</tr>';
-            }
-            if($montoSimulacion<$montoCalculado){
-              $monto=($montoCalculado-$montoSimulacion)*$mes;
-              $montoCal=($montoCalculado-$montoSimulacion);
-              $html.='<tr class="cuenta'.$codPartida.' bg-warning text-dark" style="display:none">'.
-                      '<td class="font-weight-bold text-left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Monto alterado desde la simulación</td>'.
-                      '<td class="text-right text-muted">'.number_format($monto, 2, '.', ',').'</td>'.
-                      '<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>'.
-                      '<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>'.
-                      '<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>';
+                      /*'<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>'.
+                      '<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>';*/
                 $html.='</tr>';
             }
           }
@@ -340,19 +322,18 @@ $html.='<tr class="bg-table-primary text-white">'.
 
 $html.='<tr class="bg-table-primary text-white">'.
                       '<td class="font-weight-bold text-left">TOTAL COSTO VARIABLE</td>'.
-                      '<td class="text-right" id="fijo_importe">'.number_format($totalImporte2, 2, '.', ',').'</td>'.
-                      '<td class="text-right" id="fijo_modulo">'.number_format($totalModulo2, 2, '.', ',').'</td>'.
-                      '<td class="text-right" id="fijo_ibnorca">'.number_format($totalLocal2, 2, '.', ',').'</td>'.
-                      '<td class="text-right" id="fijo_fuera">'.number_format($totalExterno2, 2, '.', ',').'</td>';
+                      '<td class="font-weight-bold text-left"></td>'.//'<td class="text-right" id="fijo_importe">'.number_format($totalImporte2, 2, '.', ',').'</td>'.
+                      '<td class="text-right" id="fijo_modulo">'.number_format($totalModulo2, 2, '.', ',').'</td>';
+                      /*'<td class="text-right" id="fijo_ibnorca">'.number_format($totalLocal2, 2, '.', ',').'</td>'.
+                      '<td class="text-right" id="fijo_fuera">'.number_format($totalExterno2, 2, '.', ',').'</td>';*/
                     $html.='</tr>';
 $totalIbnorca=$totalLocal+$totalLocal2;
 $totalFuera=$totalExterno+$totalExterno2;
 $html.='<tr class="bg-table-total">'.
                       '<td class="font-weight-bold text-left">COSTO TOTAL</td>'.
                       '<td></td>'.
-                      '<td></td>'.
-                      '<td class="text-right font-weight-bold" id="ibnorca">'.number_format($totalIbnorca, 2, '.', ',').'</td>'.
-                      '<td class="text-right font-weight-bold" id="fuera">'.number_format($totalFuera, 2, '.', ',').'</td>';
+                      '<td class="text-right font-weight-bold" id="ibnorca">'.number_format($totalIbnorca, 2, '.', ',').'</td>';
+                      /*'<td class="text-right font-weight-bold" id="fuera">'.number_format($totalFuera, 2, '.', ',').'</td>'*/
                     $html.='</tr>';
 $html.='</tbody>';
 $html.=    '</table>';

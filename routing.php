@@ -130,6 +130,13 @@
         if ($_GET['opcion']=='registerSimulacion') {
 			require_once('simulaciones_costos/registerSimulaciones.php');
 		}
+        //PLANTILLAS TCP
+        if ($_GET['opcion']=='listPlantillasTcp') {
+			require_once('plantillas_tcp/list.php');
+		}
+		if ($_GET['opcion']=='registerPlantillaTcp') {
+			require_once('plantillas_tcp/register.php');
+		}
 
         //MES EN CURSO
         if ($_GET['opcion']=='mesCurso') {
@@ -146,6 +153,9 @@
        
         if ($_GET['opcion']=='registrarEventoSistemaNot') {
 			require_once('notificaciones_sistema/registerEvento.php');
+		}
+		if ($_GET['opcion']=='deleteNotificacionesSistema') {
+			require_once('notificaciones_sistema/saveDelete.php');
 		}
 
 		//RETENCIONES
