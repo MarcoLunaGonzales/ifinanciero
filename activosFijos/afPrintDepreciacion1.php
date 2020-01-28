@@ -111,7 +111,7 @@ try{
     //asignaciones
     $query2 = "SELECT (select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional)as u_o,
     (select a.abreviatura from areas a where a.codigo=cod_area)as area,fechaasignacion,estadobien_asig,
-    (select p.nombre from personal2 p where p.codigo=cod_personal)as nombre_personal,cod_estadoasignacionaf,
+    (select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=cod_personal)as nombre_personal,cod_estadoasignacionaf,
     (select eaf.nombre from estados_asignacionaf eaf where eaf.codigo=cod_estadoasignacionaf) as estadoAsigAF,
     fecha_recepcion,observaciones_recepcion,fecha_devolucion,observaciones_devolucion
     from activofijos_asignaciones
@@ -152,7 +152,7 @@ $html.=  '<header class="header">'.
                             '<p>'.
                                 '<b>Código Activo : </b>'.$codigoactivo.'<br>'.
                                 '<b>Descripción : </b>'.$activo.'<br>'.
-                                '<b>Unidad Organizacional : </b>'.$nombre_uo2.' <br>'.
+                                '<b>Oficina : </b>'.$nombre_uo2.' <br>'.
                                 '<b>Rubro : </b>'.$nombre_depreciaciones.' <br>'.
                                 '<b>Responsable : </b>'.$nombre_personal.' <br>'.
                                 '<b>Tipo alta : </b>'.$tipoalta.'<br>'.
@@ -165,19 +165,19 @@ $html.=  '<header class="header">'.
                                 '<b>Proyecto Financiación : </b>'.$nom_proy_financiacion.
                             '</p>'.
                         '</td>'.
-                        '<td class="text-right small">'.
-                            '<img src="imagenes/'.$imagen.'" style="width: 150px; height: 150px;"><br>';
+                        '<td class="text-right small">';
                             
+                            '<img src="imagenes/'.$imagen.'" style="width: 150px; height: 150px;"><br>';
                                 $dir = 'qr_temp/';
                                 if(!file_exists($dir)){
                                     mkdir ($dir);}
-                                $fileName = $dir.'test.png';
+                                $fileName = $dir.$codigoactivo.'.png';
                                 $tamanio = 4; //tamaño de imagen que se creará
                                 $level = 'Q'; //tipo de precicion Baja L, mediana M, alta Q, maxima H
                                 $frameSize = 1; //marco de qr
                                 $contenido = $codigoactivo;
                                 QRcode::png($contenido, $fileName, $level, $tamanio,$frameSize);
-                                echo '<img src="'.$fileName.'"/>';
+                                $html.='<img src="'.$fileName.'"/>';
                         $html.='</td>'.
                     '</tr>'.
                     '<hr>'.
@@ -202,7 +202,7 @@ $html.=  '<header class="header">'.
                         '<th class="font-weight-bold">Fecha Asig.</th>'.
                         '<th class="font-weight-bold">Estado bien Asig.</th>'.
                         '<th class="font-weight-bold">Personal</th>'.
-                        '<th class="font-weight-bold">UO</th>'.
+                        '<th class="font-weight-bold">Oficina</th>'.
                         '<th class="font-weight-bold">Area</th>'.
 
                         '<th class="font-weight-bold">Estado Asignación</th>'.

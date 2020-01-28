@@ -14,7 +14,7 @@ $stmtX->execute();
 
 // $codigo = $_GET["codigo"];//codigoactivofijo
 
-$sql="SELECT codigo,activo,(select p.nombre from personal2 p where p.codigo=cod_responsables_responsable)as cod_responsables_responsable,
+$sql="SELECT codigo,activo,(select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=cod_responsables_responsable)as cod_responsables_responsable,
 (select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional)as cod_unidadorganizacional,
 (select a.abreviatura from areas a where a.codigo=cod_area)as cod_area,
 (select d.nombre from depreciaciones d where d.codigo = cod_depreciaciones)as cod_depreciaciones
@@ -34,8 +34,9 @@ $cod_area = $result['cod_area'];
 $cod_depreciaciones = $result['cod_depreciaciones'];
 
 
-$sql2="SELECT codigo as codigoEve,cod_activofijo,nombre,fecha,cod_estadoreferencial,cod_personalresponsable,
-(select p.nombre from personal2 p where p.codigo=cod_personalresponsable)as nombre_personal
+$sql2="
+SELECT codigo as codigoEve,cod_activofijo,nombre,fecha,cod_estadoreferencial,cod_personalresponsable,
+(select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=cod_personalresponsable)as nombre_personal
 from eventos_af
 where cod_activofijo = :codigo and cod_estadoreferencial=1";
 $stmt2 = $dbh->prepare($sql2);
@@ -52,7 +53,7 @@ $stmt2->bindColumn('cod_personalresponsable', $cod_personalresponsable);
 $stmt2->bindColumn('nombre_personal', $nombre_personal);
 
 
-$query = "select * from personal2 order by 2";
+$query = "SELECT p.codigo,CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre)as nombre from personal p where cod_estadoreferencial=1 order by nombre";
 $statementPersonal = $dbh->query($query);
 $statementPersonal2 = $dbh->query($query);
 ?>

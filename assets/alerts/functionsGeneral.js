@@ -2682,6 +2682,8 @@ function EliminarContratoPersonal(codigo_contratoB,codigo_personalB){
         //$('#tabla1').load('index.php');
         // alertify.success("agregado");
         alerts.showSwal('success-message','index.php?opcion=FormPersonalContratos&codigo='+codigo_personalB);    
+      }else{
+        alerts.showSwal('error-message','index.php?opcion=personalLista');
       }
     }
   });
@@ -2695,7 +2697,9 @@ function RetirarPersonal(cod_personal,cod_tiporetiro,fecha_Retiro,observaciones)
       if(r==1){
         //$('#tabla1').load('index.php');
         // alertify.success("agregado");
-        alerts.showSwal('success-message','index.php?opcion=FormPersonalContratos&codigo='+cod_personal);
+        alerts.showSwal('success-message','index.php?opcion=personalLista');
+      }else{
+        alerts.showSwal('error-message','index.php?opcion=personalLista');
       }
     }
   });

@@ -34,7 +34,8 @@ $personalString=implode(",", $personal);
 
 $sqlActivos="SELECT codigoactivo,activo,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional)as cod_unidadorganizacional,
 (select a.abreviatura from areas a where a.codigo=cod_area) as cod_area,
-(select d.nombre from depreciaciones d where d.codigo=cod_depreciaciones) as cod_depreciaciones,(select r.nombre from personal2 r where r.codigo=cod_responsables_responsable) as cod_responsables_responsable
+(select d.nombre from depreciaciones d where d.codigo=cod_depreciaciones) as cod_depreciaciones,
+(select CONCAT_WS(' ',r.paterno,r.materno,r.primer_nombre) from personal r where r.codigo=cod_responsables_responsable) as cod_responsables_responsable
 from activosfijos 
 where cod_estadoactivofijo = 1 and cod_unidadorganizacional in ($unidadOrgString) and cod_area in ($areaString) and cod_responsables_responsable in ($personalString)";  
 
@@ -64,7 +65,7 @@ $stmtActivos->bindColumn('cod_responsables_responsable', $responsables_responsab
                   </div>
                   <h4 class="card-title"> 
                     <img  class="card-img-top"  src="../marca.png" style="width:100%; max-width:250px;">
-                      Reporte De Activos Fijos Por Unidad
+                      Reporte De Activos Fijos Por Oficina
                   </h4>
 
                   <!-- <h4 class="card-title text-center">Reporte De Activos Fijos Por Unidad</h4> -->
@@ -81,7 +82,7 @@ $stmtActivos->bindColumn('cod_responsables_responsable', $responsables_responsab
                         '<tr >'.
                           '<th class="font-weight-bold">-</th>'.
                           '<th class="font-weight-bold">Codigo Activo</th>'.
-                          '<th class="font-weight-bold">Unidad O.</th>'.
+                          '<th class="font-weight-bold">Oficina</th>'.
                           '<th class="font-weight-bold">Area</th>'.
                           '<th class="font-weight-bold">Rubro</th>'.
                           '<th class="font-weight-bold">Activo</th>'.

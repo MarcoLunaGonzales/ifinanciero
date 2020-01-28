@@ -16,7 +16,7 @@ try{
         $codigoX = $_POST["codigoactivo"];    
 
     $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $stmt = $dbh->prepare("select * from v_activosfijos where codigoactivo = :codigoactivo");
+    $stmt = $dbh->prepare("select * from activofijos where codigoactivo = :codigoactivo");
     //$stmt = $dbh->prepare("select * from v_activosfijos where codigo = :codigoactivo");
     //echo "...".$codigoX;
 
@@ -129,18 +129,17 @@ try{
     <label class="col-sm-2 col-form-label">Oficina</label>
     <div class="col-sm-4">
     <div class="form-group">
+        <input class="form-control" type="text" readonly name="nombre_uo" id="nombre_uo" value="<?=$nombre_uo;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+    </div>
+    </div>
+    
+    <label class="col-sm-2 col-form-label">Dirección de Oficina</label>
+    <div class="col-sm-4">
+    <div class="form-group">
         <input class="form-control" type="text" readonly name="oficina" id="oficina" value="<?=$oficina;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
     </div>
     </div>
 
-
-
-    <label class="col-sm-2 col-form-label">UO</label>
-    <div class="col-sm-4">
-    <div class="form-group">
-        <input class="form-control" type="text" readonly name="nombre_uo" id="nombre_uo" value="<?=$nombre_uo;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
-    </div>
-    </div>
 </div><!--fin campo oficina -->
 <div class="row">
     <label class="col-sm-2 col-form-label">Activo</label>
@@ -184,8 +183,9 @@ try{
                      
                       
                         <th>Edificio</th>
+                        
                         <th>Oficina</th>
-                        <th>UO</th>
+                        <th>Direccion de Oficina</th>
                         <th></th>
                     </tr>
                         </thead>
@@ -201,8 +201,9 @@ try{
                                 <td><?=$row["tipo_bien"];?></td>
                                 
                                 <td><?=$row["edificio"];?></td>
-                                <td><?=$row["oficina"];?></td>
+                                
                                 <td><?=$row["nombre_uo"];?></td>
+                                <td><?=$row["oficina"];?></td>
                                 <td></td>
                             </tr>
                         <?php $index++; } ?>

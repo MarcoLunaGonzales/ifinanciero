@@ -57,19 +57,17 @@ try {
     $porcentaje=100;
 
 
-    $stmtRetiros = $dbh->prepare("SELECT codigo,cod_personal from personal_retiros where cod_personal=$codigo");
-    $stmtRetiros->execute();
-    $resultsRetiros=$stmtRetiros->fetch();
-    $cod_retiro_x=$resultsRetiros['codigo'];
-    $cod_personal_x=$resultsRetiros['cod_personal'];
-    //preguntamos si hay registros de retirors del personal
-    if($codigo==$cod_personal_x){
-        $stmtUR = $dbh->prepare("UPDATE personal_retiros set cod_estadoreferencial=2 where codigo = $cod_retiro_x");
-        $stmtUR->execute();
-    }
+    // $stmtRetiros = $dbh->prepare("SELECT codigo,cod_personal from personal_retiros where cod_personal=$codigo and cod_estadoreferencial=1");
+    // $stmtRetiros->execute();
+    // $resultsRetiros=$stmtRetiros->fetch();
+    // $cod_retiro_x=$resultsRetiros['codigo'];
+    // $cod_personal_x=$resultsRetiros['cod_personal'];
+    // //preguntamos si hay registros de retirors del personal
+    // if($codigo==$cod_personal_x){
+    //     $stmtUR = $dbh->prepare("UPDATE personal_retiros set cod_estadoreferencial=2 where codigo = $cod_retiro_x");
+    //     $stmtUR->execute();
+    // }
 
-
-                  
     $stmt = $dbh->prepare("UPDATE personal set cod_cargo=:cod_cargo,cod_unidadorganizacional=:cod_unidadorganizacional,cod_area=:cod_area,jubilado=:jubilado,
     cod_tipopersonal=:cod_tipopersonal,haber_basico=:haber_basico,apellido_casada=:apellido_casada,otros_nombres=:otros_nombres,
     nua_cua_asignado=:nua_cua_asignado,ing_contr=:ing_contr,ing_planilla=:ing_planilla,
@@ -121,7 +119,6 @@ try {
         // }                
         $stmtDistribucion = $dbh->prepare("UPDATE personal_area_distribucion 
             set cod_uo=:cod_uo,cod_area=:cod_area,porcentaje=:porcentaje where codigo=:codigo_areaDP");
-        //Bind
         $stmtDistribucion->bindParam(':codigo_areaDP', $codigo_areaDP);
         $stmtDistribucion->bindParam(':cod_uo', $cod_unidadorganizacional); 
         $stmtDistribucion->bindParam(':cod_area', $cod_area); 

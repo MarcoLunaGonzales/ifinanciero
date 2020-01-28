@@ -95,7 +95,7 @@ try{
                                             
                                             <b>Descripcion : </b><?php echo $activo; ?><br>
                                             <b>Personal Asignacion : </b><?php echo $nombre_personal; ?> <br>
-                                            <b>Unidad Organizacional : </b> <?php echo  $nombre_uo; ?><br>
+                                            <b>Oficina : </b> <?php echo  $nombre_uo; ?><br>
                                             <b>Fecha Asignacion : </b><?php echo $fechaasignacion; ?><br>
                                             <b>Estado Bien Inicial : </b><?php echo $estadobien; ?><br>
                                             <b>Estado en Asignacion : </b><?php echo  $estadobien_asig; ?>

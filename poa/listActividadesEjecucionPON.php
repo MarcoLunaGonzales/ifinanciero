@@ -45,7 +45,7 @@ $nombreMes=nameMes($codMesX);
 
 // Preparamos
 $sql="SELECT a.codigo, a.orden, a.nombre, (SELECT s.abreviatura from comites c, sectores s where c.cod_sector=s.codigo and c.codigo=a.cod_comite)as sector, (SELECT c.nombre from comites c where c.codigo=a.cod_comite)as comite,
-(SELECT n.abreviatura from normas n where n.codigo=a.cod_norma)as norma, a.cod_unidadorganizacional, a.cod_area, (SELECT ep.nombre from estados_pon ep where ep.codigo=a.cod_estadopon)as estadopon, (select mg.nombre from modos_generacionpon mg where mg.codigo=a.cod_modogeneracionpon)as modogeneracionpon, (SELECT p.nombre from personal2 p where p.codigo=a.cod_personal) as personal
+(SELECT n.abreviatura from normas n where n.codigo=a.cod_norma)as norma, a.cod_unidadorganizacional, a.cod_area, (SELECT ep.nombre from estados_pon ep where ep.codigo=a.cod_estadopon)as estadopon, (select mg.nombre from modos_generacionpon mg where mg.codigo=a.cod_modogeneracionpon)as modogeneracionpon, (SELECT CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=a.cod_personal) as personal
  from actividades_poa a where a.cod_indicador='$codigoIndicador' and a.cod_estado=1 "; 
 if($globalAdmin==0){
   $sql.=" and a.cod_area='$globalArea' and a.cod_unidadorganizacional='$globalUnidad' and a.cod_personal='$globalUser'";
@@ -53,7 +53,7 @@ if($globalAdmin==0){
 if($globalUserPON==1){  
   $sql.=" union ";
   $sql.="SELECT a.codigo, a.orden, a.nombre, (SELECT s.abreviatura from comites c, sectores s where c.cod_sector=s.codigo and c.codigo=a.cod_comite)as sector, (SELECT c.nombre from comites c where c.codigo=a.cod_comite)as comite,
-(SELECT n.abreviatura from normas n where n.codigo=a.cod_norma)as norma, a.cod_unidadorganizacional, a.cod_area, (SELECT ep.nombre from estados_pon ep where ep.codigo=a.cod_estadopon)as estadopon, (select mg.nombre from modos_generacionpon mg where mg.codigo=a.cod_modogeneracionpon)as modogeneracionpon, (SELECT p.nombre from personal2 p where p.codigo=a.cod_personal) as personal
+(SELECT n.abreviatura from normas n where n.codigo=a.cod_norma)as norma, a.cod_unidadorganizacional, a.cod_area, (SELECT ep.nombre from estados_pon ep where ep.codigo=a.cod_estadopon)as estadopon, (select mg.nombre from modos_generacionpon mg where mg.codigo=a.cod_modogeneracionpon)as modogeneracionpon, (SELECT CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=a.cod_personal) as personal
  from actividades_poa a where a.cod_indicador='$codigoIndicador' and a.cod_estado=1 and a.cod_personal='$globalUser' ";
 }
 $sql.=" order by cod_unidadorganizacional, cod_area, orden";

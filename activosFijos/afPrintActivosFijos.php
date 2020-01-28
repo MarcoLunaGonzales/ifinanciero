@@ -11,6 +11,7 @@ require_once '../layouts/bodylogin2.php';
 
 
 $dbh = new Conexion();
+set_time_limit(300);
 
 
 $sqlX="SET NAMES 'utf8'";
@@ -31,14 +32,13 @@ $unidadOrgString=implode(",", $unidadOrganizacional);
 $areaString=implode(",", $areas);
 $rubrosString=implode(",", $rubros);
 
-
-
-
 $sqlActivos="SELECT codigoactivo,activo,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional)as cod_unidadorganizacional,
 (select a.abreviatura from areas a where a.codigo=cod_area) as cod_area,
 (select d.nombre from depreciaciones d where d.codigo=cod_depreciaciones) as cod_depreciaciones,
 tipoalta,
-fechalta,valorinicial,valorresidual,(select r.nombre from personal2 r where r.codigo=cod_responsables_responsable) as cod_responsables_responsable,(select e.nombre from estados_activofijo e where e.codigo=cod_estadoactivofijo) as estado_af
+fechalta,valorinicial,valorresidual,
+(select CONCAT_WS(' ',r.paterno,r.materno,r.primer_nombre) from personal r where r.codigo=cod_responsables_responsable) as cod_responsables_responsable,
+(select e.nombre from estados_activofijo e where e.codigo=cod_estadoactivofijo) as estado_af
 from activosfijos 
 where cod_estadoactivofijo = 1 and cod_unidadorganizacional in ($unidadOrgString) and cod_area in ($areaString) and cod_depreciaciones in ($rubrosString)";  
 
@@ -84,7 +84,7 @@ $stmtActivos->bindColumn('estado_af', $estado_af);
                         <tr >
                           <th class="text-center">-</th>
                           <th class="font-weight-bold">Codigo Activo</th>
-                          <th class="font-weight-bold">U. O.</th>
+                          <th class="font-weight-bold">Oficina</th>
                           <th class="font-weight-bold">Area</th>
                           <th class="font-weight-bold">Rubro</th>
                           <th class="font-weight-bold">Activo</th>

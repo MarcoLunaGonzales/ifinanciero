@@ -403,6 +403,11 @@
 		if ($_GET['opcion']=='actualizarAsignacion') {
 			require_once('activosFijos/saveAsignacion.php');
 		}
+
+		//impresion etiquetas activos fijos
+		if ($_GET['opcion']=='afEtiquetasFiltro') {
+			require_once('activosFijos/afEtiquetasFiltro.php');
+		}
         
 
 
@@ -727,6 +732,18 @@
 		if ($_GET['opcion']=='deletepersonal') {
 			$codigo=$_GET['codigo'];
 			require_once('personal/deletepersonal.php');
+		}
+
+		//personal retrirado
+		if ($_GET['opcion']=='personalListaRetirado') {
+			require_once('personal/personalListaRetirado.php'); //ok
+		}
+		if ($_GET['opcion']=='personalFormRetirado') {			
+			$codigo=$_GET['codigo'];
+			require_once('personal/personalFormRetirado.php');
+		}
+		if ($_GET['opcion']=='personalSaveRetirado') {
+			require_once('personal/personalSaveRetirado.php');
 		}
 
 		//tipos_afpLista AFP PREVISION, BBVA

@@ -197,7 +197,7 @@ if ($codigo > 0){
                                 </div>
                             </div>
                             <div class="row">
-                                <label class="col-sm-2 col-form-label">Unidad</label>
+                                <label class="col-sm-2 col-form-label">Oficina</label>
                                 <div class="col-sm-4">
                                 <div class="form-group">
                                     <div id="div_contenedor_UO">

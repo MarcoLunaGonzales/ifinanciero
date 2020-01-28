@@ -14,13 +14,13 @@ $dbh = new Conexion();
 			<div class="card">
 			  <div class="card-header <?=$colorCard;?> card-header-text">
   				<div class="card-text">
-  				  <h4 class="card-title">Activos Fijos Por Unidad, Area y Responsable</h4>
+  				  <h4 class="card-title">Activos Fijos Por Oficina, Area y Responsable</h4>
   				</div>
 			  </div>
 			  <div class="card-body ">
 
           <div class="row">
-            <label class="col-sm-2 col-form-label">Unidad Organizacional</label>
+            <label class="col-sm-2 col-form-label">Oficina</label>
             <div class="col-sm-7">
               <div class="form-group">
                 <select class="selectpicker form-control" title="Seleccione una opcion" 
@@ -72,11 +72,11 @@ $dbh = new Conexion();
             <div class="form-group">
               <select class="selectpicker form-control" title="Seleccione una opcion" name="personal[]" id="personal" data-style="select-with-transition" data-size="5" data-actions-box="true" multiple required>
                 <?php
-                $stmt = $dbh->prepare("SELECT * FROM personal2 order by 2");
+                $stmt = $dbh->prepare("SELECT codigo,(CONCAT_WS(' ',paterno,materno,primer_nombre)) as nombre_personal FROM personal where cod_estadoreferencial=1 order by nombre_personal");
               $stmt->execute();
               while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $codigoX=$row['codigo'];
-                $nombreX=$row['nombre'];
+                $nombreX=$row['nombre_personal'];
               ?>
               <option value="<?=$codigoX;?>"><?=$nombreX;?></option>
               <?php 

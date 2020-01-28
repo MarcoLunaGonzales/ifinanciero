@@ -59,7 +59,7 @@ $sql="SELECT a.codigo, a.orden, a.nombre, (SELECT n.abreviatura from normas n wh
 (a.cod_tiposeguimiento)as tipodato, 
 a.producto_esperado, a.cod_unidadorganizacional, a.cod_area,
 (a.cod_datoclasificador)as datoclasificador, 
-(select p.nombre from personal2 p where p.codigo=a.cod_personal) as personal, actividad_extra, clave_indicador
+(select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=a.cod_personal) as personal, actividad_extra, clave_indicador
  from actividades_poa a where a.cod_indicador='$codigoIndicador' and a.cod_estado=1 "; 
 if($globalAdmin==0){
   $sql.=" and a.cod_area in ($globalArea) and a.cod_unidadorganizacional in ($globalUnidad) ";

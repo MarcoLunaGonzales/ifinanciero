@@ -160,8 +160,7 @@ $codUnidadHijosX=buscarHijosUO($codUnidad);
 	        <select class="selectpicker" name="personal<?=$codigo;?>" id="personal<?=$codigo;?>" data-style="<?=$comboColor;?>">
 			  	<option value="">Responsable</option>
 			  	<?php
-			  	$stmt = $dbh->prepare("SELECT distinct(codigo) as codigo, nombre FROM personal2 p, personal_datosadicionales pd where p.codigo=pd.cod_personal and pd.cod_estado=1 order by 2;
-");
+			  	$stmt = $dbh->prepare("SELECT distinct(p.codigo) as codigo, CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre)as nombre FROM personal p, personal_datosadicionales pd where p.codigo=pd.cod_personal and pd.cod_estado=1 order by 2");
 				$stmt->execute();
 				while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 					$codigoX=$row['codigo'];

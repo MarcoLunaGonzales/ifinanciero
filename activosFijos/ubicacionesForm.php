@@ -49,7 +49,7 @@ if ($codigo > 0){
 			  <div class="card-body ">
 			  <input type="hidden" name="codigo" id="codigo" value="<?=$codigo;?>"/>
 				<div class="row">
-				  <label class="col-sm-2 col-form-label">Unidad</label>
+				  <label class="col-sm-2 col-form-label">Oficina</label>
 				  <div class="col-sm-7">
 					<div class="form-group">
 					<select name="cod_unidades_organizacionales" class="selectpicker " data-style="btn btn-info">
@@ -83,7 +83,7 @@ if ($codigo > 0){
 				  </div>
 				</div>
                               <div class="row">
-				  <label class="col-sm-2 col-form-label">Oficina</label>
+				  <label class="col-sm-2 col-form-label">Dirección de Oficina</label>
 				  <div class="col-sm-7">
 					<div class="form-group">
 					  <input class="form-control" value="<?=$oficina;?>" type="text" name="oficina" id="oficina" required="true" onkeyup="javascript:this.value=this.value.toUpperCase();"/>

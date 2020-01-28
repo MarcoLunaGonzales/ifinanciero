@@ -6,8 +6,8 @@ $codigo_UO=$_GET["codigo_UO"];
 $db = new Conexion();
 
 
-$stmt = $db->prepare("SELECT p.codigo, p.nombre from personal2 p, unidades_organizacionales uo 
-where uo.codigo=p.cod_unidad and uo.codigo=:codigo_UO order by 2");
+$stmt = $db->prepare("SELECT p.codigo,(CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre))as nombre from personal p, unidades_organizacionales uo 
+where uo.codigo=p.cod_unidadorganizacional and uo.codigo=:codigo_UO order by nombre");
 $stmt->bindParam(':codigo_UO', $codigo_UO);
 $stmt->execute();
 

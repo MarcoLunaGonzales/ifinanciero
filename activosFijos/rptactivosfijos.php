@@ -21,7 +21,7 @@ $statement = $dbh->query($query);
 			  <div class="card-body ">
 
           <div class="row">
-            <label class="col-sm-2 col-form-label">Unidad Organizacional</label>
+            <label class="col-sm-2 col-form-label">Oficina</label>
             <div class="col-sm-7">
               <div class="form-group">
                 <select class="selectpicker form-control" title="Seleccione una opcion" 

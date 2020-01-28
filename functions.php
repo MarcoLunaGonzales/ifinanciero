@@ -385,7 +385,7 @@ function namesArea($codigo){
 
 function namesPersonal($codigo){
   $dbh = new Conexion();
-  $sqlPersonal = "SELECT nombre FROM personal2 where codigo in ($codigo)";
+  $sqlPersonal = "SELECT CONCAT_WS(' ',paterno,materno,primer_nombre)as nombre FROM personal where codigo in ($codigo)";
   $stmtPersonal = $dbh->prepare($sqlPersonal);
   $stmtPersonal->execute();
   $nombrePersonal="";
@@ -420,7 +420,7 @@ function nameUnidad($codigo){
 
 function namePersonal($codigo){
    $dbh = new Conexion();
-   $stmt = $dbh->prepare("SELECT nombre FROM personal2 where codigo=:codigo");
+   $stmt = $dbh->prepare("SELECT CONCAT_WS(' ',paterno,materno,primer_nombre)as nombre FROM personal where codigo=:codigo");
    $stmt->bindParam(':codigo',$codigo);
    $stmt->execute();
    $nombreX="";
@@ -697,30 +697,7 @@ $tildes= array("á", "é", "í","ó","ú","Á","É","Í","Ó","Ú","ñ","Ñ","º
 return str_replace($chars, $tildes, $texto);
 }*/
 //funcion para descargar con dompdf
-function descargarPDF($nom,$html){
-  //aumentamos la memoria  
-  ini_set("memory_limit", "128M");
-  // Cargamos DOMPDF
-  require_once 'assets/libraries/dompdf/dompdf_config.inc.php';
-  $mydompdf = new DOMPDF();
-  ob_clean();
-  $mydompdf->load_html($html);
-  $mydompdf->render();
-  $canvas = $mydompdf->get_canvas();
-       /* if ( isset($canvas) ) {
-          $numero="{PAGE_NUM}";$numeroF="{PAGE_COUNT}"; 
-          if ((int)$numero==(int)$numeroF) {
-            $font = Font_Metrics::get_font("helvetica", "normal");
-                $size = 9;
-                $y = 50;
-                $x = 100;
-                $canvas->page_text($x, $y, "pie de pagina en la ultima hoja".$numero.$numeroF, $font, $size);
-            }
-        }*/
-  $canvas->page_text(500, 25, "Página:            {PAGE_NUM}", Font_Metrics::get_font("sans-serif"), 10, array(0,0,0)); 
-  $mydompdf->set_base_path('assets/libraries/plantillaPDF.css');
-  $mydompdf->stream($nom.".pdf", array("Attachment" => false));
-  }
+
   
 function obtenerComprobante($codigo){
    $dbh = new Conexion();
@@ -2462,6 +2439,44 @@ function descargarPDFHorizontal($nom,$html){
   $mydompdf->set_base_path('assets/libraries/plantillaPDF.css');
   $mydompdf->stream($nom.".pdf", array("Attachment" => false));
 } 
+function descargarPDF($nom,$html){
+  //aumentamos la memoria  
+  ini_set("memory_limit", "128M");
+  // Cargamos DOMPDF
+  require_once 'assets/libraries/dompdf/dompdf_config.inc.php';
+  $mydompdf = new DOMPDF();
+  ob_clean();
+  $mydompdf->load_html($html);
+  $mydompdf->render();
+  $canvas = $mydompdf->get_canvas();
+       /* if ( isset($canvas) ) {
+          $numero="{PAGE_NUM}";$numeroF="{PAGE_COUNT}"; 
+          if ((int)$numero==(int)$numeroF) {
+            $font = Font_Metrics::get_font("helvetica", "normal");
+                $size = 9;
+                $y = 50;
+                $x = 100;
+                $canvas->page_text($x, $y, "pie de pagina en la ultima hoja".$numero.$numeroF, $font, $size);
+            }
+        }*/
+  $canvas->page_text(500, 25, "Página:            {PAGE_NUM}", Font_Metrics::get_font("sans-serif"), 10, array(0,0,0)); 
+  $mydompdf->set_base_path('assets/libraries/plantillaPDF.css');
+  $mydompdf->stream($nom.".pdf", array("Attachment" => false));
+}
+function descargarPDF1($nom,$html){
+  //aumentamos la memoria  
+  ini_set("memory_limit", "128M");
+  // Cargamos DOMPDF
+  require_once 'assets/libraries/dompdf/dompdf_config.inc.php';
+  $mydompdf = new DOMPDF();
+  ob_clean();
+  $mydompdf->load_html($html);
+  $mydompdf->render();
+  $canvas = $mydompdf->get_canvas();
+  $canvas->page_text(500, 25, "", Font_Metrics::get_font("sans-serif"), 10, array(0,0,0)); 
+  $mydompdf->set_base_path('assets/libraries/plantillaPDF.css');
+  $mydompdf->stream($nom.".pdf", array("Attachment" => false));
+}
 
 function obtenerSueldoMinimo(){
   $dbh = new Conexion();

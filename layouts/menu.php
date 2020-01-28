@@ -87,8 +87,8 @@ if($menuModulo==0){
                 </li>
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=uoLista">
-                    <span class="sidebar-mini"> UO </span>
-                    <span class="sidebar-normal"> Unidades Organizacionales</span>
+                    <span class="sidebar-mini"> OF </span>
+                    <span class="sidebar-normal"> Oficinas</span>
                   </a>
                 </li>
                 <li class="nav-item ">
@@ -337,7 +337,7 @@ if($menuModulo==0){
 
                 <li class="nav-item ">
                     <a class="nav-link" href="?opcion=afEnCustodia">
-                      <span class="sidebar-mini"> D </span>
+                      <span class="sidebar-mini"> AFC </span>
                       <span class="sidebar-normal"> AF En Custodia</span>
                     </a>
                 </li>
@@ -350,13 +350,14 @@ if($menuModulo==0){
                 ?>
                 <li class="nav-item ">
                     <a class="nav-link" href="?opcion=aftransaccion">
-                      <span class="sidebar-mini"> D </span>
+                      <span class="sidebar-mini"> TAF </span>
                       <span class="sidebar-normal"> Transacción De AF</span>
                     </a>
                 </li>
                 <?php
                   }
                 ?>
+                
                 
 
               </ul>
@@ -395,6 +396,12 @@ if($menuModulo==0){
                     <a class="nav-link" href="?opcion=rptactivosfijosxunidad">
                       <span class="sidebar-mini"> R </span>
                       <span class="sidebar-normal"> Por Unidad, Area y Responsable</span>
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=afEtiquetasFiltro">
+                      <span class="sidebar-mini"> EI </span>
+                      <span class="sidebar-normal"> Etiquetas Impresión</span>
                     </a>
                 </li>
 

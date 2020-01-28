@@ -109,7 +109,10 @@ $urlprintPersonal="personal/personalPrintFicha.php";
 
 $urledit_uo_area_personal="index.php?opcion=edit_uo_area_personal";
 $urlPersonalOtrosSave="?opcion=personalOtrosSave";
-
+//personal retirado
+$urlListPersonalRetirado="?opcion=personalListaRetirado";
+$urlFormPersonalRetiros="index.php?opcion=personalFormRetirado";
+$urlSavePersonalRetirado="?opcion=personalSaveRetirado";
 
 //planilla sueldo
 $urlPlanillasSueldoList="?opcion=planillasSueldoPersonal";

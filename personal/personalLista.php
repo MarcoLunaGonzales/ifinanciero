@@ -50,7 +50,15 @@ $stmt->bindColumn('xcod_tipopersonal', $xcod_tipopersonal);
               <div class="card-icon">
                 <i class="material-icons"><?=$iconCard;?></i>
               </div>
-              <h4 class="card-title"><?=$nombrePluralPersonal?></h4>
+              
+              <h4 class="card-title" ><?=$nombrePluralPersonal?> </h4>
+              <h4 align="right" >
+                <a  style="height:10px;width: 10px;"  href='<?=$urlListPersonalRetirado;?>' >
+                <i class="material-icons" title="Lista Personal Retirado">rowing</i>
+              </a>  
+              </h4>
+              
+
             </div>
             <div class="card-body">
               <div class="table-responsive">
@@ -75,7 +83,7 @@ $stmt->bindColumn('xcod_tipopersonal', $xcod_tipopersonal);
                     <?php $index=1;
                     while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { 
                       if ($cod_estadopersonal==3) {
-                        
+                          $labelestadoPersonal='<span class="badge badge-danger">';
                       }elseif ($cod_estadopersonal==1) {
                         $labelestadoPersonal='';
                       }else $labelestadoPersonal='<span class="badge badge-warning">';
@@ -105,7 +113,11 @@ $stmt->bindColumn('xcod_tipopersonal', $xcod_tipopersonal);
                               <i class="material-icons" title="Area-Distribución" style="color:black;">call_split</i>
                             </a>
                             <?php
-                              }
+                              }else{?>
+                                  <a href='<?=$urlFormPersonalContratos;?>&codigo=<?=$codigo;?>' rel="tooltip" class="btn btn-info">
+                                <i class="material-icons" title="Contratos">assignment</i>
+                            </a>
+                              <?php }
                             ?>        
                         </td>
                           

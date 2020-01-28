@@ -127,7 +127,7 @@ $stmtUO->bindColumn('cod_unidadorganizacional', $cod_unidadorganizacional);
                                             $ultimorubro = "";
                                             ?>
                                             <tr class="bg-dark text-white">
-                                                <th colspan="11" >Unidad Organizacional : <?php echo $nombre_unidadO; ?></th>
+                                                <th colspan="11" >Oficina : <?php echo $nombre_unidadO; ?></th>
                                             </tr>
                                             <?php
                                         }

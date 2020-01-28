@@ -15,7 +15,7 @@ $sqlX="SET NAMES 'utf8'";
 $stmtX = $dbh->prepare($sqlX);
 $stmtX->execute();
 
-$sql="SELECT afa.cod_activosfijos,(select activo from activosfijos where codigo=afa.cod_activosfijos)as activo,afa.fechaasignacion,(select abreviatura from unidades_organizacionales where codigo=afa.cod_unidadorganizacional)as cod_unidadorganizacional,(select abreviatura from areas where codigo=afa.cod_area)as cod_area,(select nombre from personal2 where codigo=afa.cod_personal)as nom_personal,afa.cod_personal,afa.estadobien_asig,(select nombre from estados_asignacionaf where codigo=afa.cod_estadoasignacionaf)as estado_asignacionaf,afa.cod_estadoasignacionaf,afa.fecha_recepcion,afa.observaciones_recepcion,afa.fecha_devolucion,afa.observaciones_devolucion
+$sql="SELECT afa.cod_activosfijos,(select activo from activosfijos where codigo=afa.cod_activosfijos)as activo,afa.fechaasignacion,(select abreviatura from unidades_organizacionales where codigo=afa.cod_unidadorganizacional)as cod_unidadorganizacional,(select abreviatura from areas where codigo=afa.cod_area)as cod_area,(select CONCAT_WS(' ',paterno,materno,primer_nombre) from personal where codigo=afa.cod_personal)as nom_personal,afa.cod_personal,afa.estadobien_asig,(select nombre from estados_asignacionaf where codigo=afa.cod_estadoasignacionaf)as estado_asignacionaf,afa.cod_estadoasignacionaf,afa.fecha_recepcion,afa.observaciones_recepcion,afa.fecha_devolucion,afa.observaciones_devolucion
 FROM activofijos_asignaciones afa
 order by 2";
 
@@ -59,7 +59,7 @@ $stmt->bindColumn('observaciones_devolucion', $observaciones_devolucion);
                         <tr>
                             <th></th>
                             <th>Codigo</th>
-                            <th>U_O</th>
+                            <th>OF.</th>
                             <th>Area</th>
                             <th>Activo</th>
                             <th>Personal</th>

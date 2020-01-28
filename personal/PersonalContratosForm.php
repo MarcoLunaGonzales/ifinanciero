@@ -209,7 +209,7 @@ $fecha_actual=date("Y-m-d");
                       <i class="material-icons" title="Agregar Contrato">add</i>
   		             </button>
                    <button type="button" class="btn btn-primary btn-round btn-fab" data-toggle="modal" data-target="#modalRetirarPersonal" onclick="agregaformRetiroPersonal('<?=$datos;?>')">
-                      <i class="material-icons" title="Retirar Personal">play_for_work</i>
+                      <i class="material-icons" title="Finalizar Contrato">play_for_work</i>
                    </button>		                           
                 <?php
                 }

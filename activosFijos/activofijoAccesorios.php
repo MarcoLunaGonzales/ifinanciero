@@ -14,7 +14,7 @@ $stmtX->execute();
 
 // $codigo = $_GET["codigo"];//codigoactivofijo
 
-$sql="SELECT codigo,activo,(select p.nombre from personal2 p where p.codigo=cod_responsables_responsable)as cod_responsables_responsable,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional)as cod_unidadorganizacional,(select a.abreviatura from areas a where a.codigo=cod_area)as cod_area,(select d.nombre from depreciaciones d where d.codigo = cod_depreciaciones)as cod_depreciaciones
+$sql="SELECT codigo,activo,(select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=cod_responsables_responsable)as cod_responsables_responsable,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional)as cod_unidadorganizacional,(select a.abreviatura from areas a where a.codigo=cod_area)as cod_area,(select d.nombre from depreciaciones d where d.codigo = cod_depreciaciones)as cod_depreciaciones
 from activosfijos
 where codigo = :codigo";
 $stmt = $dbh->prepare($sql);
