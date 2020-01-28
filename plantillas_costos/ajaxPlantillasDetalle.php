@@ -17,16 +17,26 @@ $cursos=$_GET['cursos'];
 $alumnos=$_GET['alumnos'];
 ?>
 <div class="row col-sm-12">
-                    <div class="col-sm-6">
+                    <div class="col-sm-4">
                          <div class="form-group">
                           <label class="bmd-label-static"><b id="titulo_montototalcal"></b> Calculado</label>
                           <input type="number" class="form-control" name="monto_totalplantilladetallecal" id="monto_totalplantilladetallecal" value="0" step="0.01" value="" readonly>
                          </div>
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-sm-4">
                          <div class="form-group">
                           <label class="bmd-label-static" id="titulo_montototal">Monto</label>
                           <input type="number" class="form-control" name="monto_totalplantilladetalle" id="monto_totalplantilladetalle" value="0" step="0.01" readonly>
+                         </div>
+                    </div>
+                    <div class="col-sm-4">
+                         <div class="form-group">
+                          <label class="bmd-label-static" id="titulo_montototal">Filtro</label>
+                             <select class="selectpicker form-control form-control-sm" onchange="mostrarInputMonto(this.value)" name="tipoMontoDetalle" id="tipoMontoDetalle" data-style="btn btn-info">
+                                    <option value="monto_ibnorca1">x Mes</option>
+                                    <option value="monto_ibnorca2">x Modulo</option>
+                                    <option value="monto_ibnorca3">x Persona</option>
+                              </select>                   
                          </div>
                     </div>
   </div>
@@ -83,16 +93,19 @@ $alumnos=$_GET['alumnos'];
                             case '1':
                                $nombreInput="monto_ibnorca_edit";
                                $nombreInputCal="monto_ibnorca";
+                               $nombreSelect="monto_ibnorca1";
                                $tituloMonto="Monto x Mes";
                             break;
                             case '2':
                                $nombreInput="monto_f_ibnorca_edit";
                                $nombreInputCal="monto_f_ibnorca";
+                               $nombreSelect="monto_ibnorca2";
                                $tituloMonto="Monto x Modulo";
                             break;
                             case '3':
                                $nombreInput="monto_alumno_edit";
                                $nombreInputCal="monto_alumno";
+                               $nombreSelect="monto_ibnorca3";
                                $tituloMonto="Monto x Persona";
                             break;
                           }
@@ -144,6 +157,7 @@ $alumnos=$_GET['alumnos'];
                 </div>
   <script>
   $("#monto_totalplantilladetallecal").val($("#<?=$nombreInputCal?>").val());
+  $("#tipoMontoDetalle").val("<?=$nombreSelect?>");
   $("#titulo_montototalcal").text("<?=$tituloMonto?>");
   $("#titulo_montototal").text("<?=$tituloMonto?>");
   $("#monto_totalplantilladetalle").val(<?=$totalMontoPlantilla?>);
