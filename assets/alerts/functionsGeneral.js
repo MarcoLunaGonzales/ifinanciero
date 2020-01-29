@@ -970,16 +970,91 @@ function mostrarPreciosPlantilla(){
  function savePlantillaDetalle(nombreInput){
   var index=$('#codGrupo').val();
   var str_cuenta=dividirCadena($('#cuenta_detalle').val(),"@");
-  var existeFila=0;
+  var existeFila=0; var filae=0; var pose=0;
    for (var i = 0; i < itemDetalle[index-1].length; i++) {
      if(itemDetalle[index-1][i].codigo_cuenta==str_cuenta[0]){
        existeFila=1;
+       filae=index;
+       pose=i;
        break;
      }
    };
 
    if(existeFila==1){
+    if(nombreInput=='mensual'){
      Swal.fire('Informativo!','La Partida '+str_cuenta[1]+ ' Ya esta agregada!','warning'); 
+    }else{
+      Swal.fire({
+        title: '¿Guardar Cambios?',
+        text: "Se sobreescribirá el monto registrado",
+         type: 'warning',
+        showCancelButton: true,
+        confirmButtonClass: 'btn btn-info',
+        cancelButtonClass: 'btn btn-danger',
+        confirmButtonText: 'Si, Guardar',
+        cancelButtonText: 'No',
+        buttonsStyling: false
+       }).then((result) => {
+          if (result.value) {
+            //aqui poner para el listado
+               removeDet(filae,pose);
+               if($("#monto_ibnorca").val()==""||$("#monto_f_ibnorca").val()==""||str_cuenta.length==1){
+                  $("#mensajeDetalle").html("<center><p class='text-danger'>Todos los campos son requeridos</p></center>");
+                }else{
+                 var tiDato=$('#tipo_dato').val();
+                 var monto_calc=$('#monto_calculado').val();
+                 if(tiDato==1){
+                   var monto_ib=$('#monto_calculado').val();
+                   var monto_fib=$('#monto_calculado').val();   
+                 }else{
+                   switch (nombreInput){
+                     case 'monto_ibnorca_edit':
+                        var monto_ib=$("#monto_ibnorca_edit").val()/$("#cod_mescurso").val();
+                        var monto_fib=$("#monto_ibnorca_edit").val()/$("#cod_mescurso").val();
+                     break;
+                     case 'monto_f_ibnorca_edit':
+                        var monto_ib=$("#monto_f_ibnorca_edit").val();
+                        var monto_fib=$("#monto_f_ibnorca_edit").val();
+                     break;
+                     case 'monto_alumno_edit':
+                        var monto_ib=$("#monto_alumno_edit").val()*$("#alumnos_ibnorca").val();
+                        var monto_fib=$("#monto_alumno_edit").val()*$("#alumnos_ibnorca").val();
+                     break;
+                   }
+
+                 }
+                var detalle={
+                  codigo_cuenta:str_cuenta[0],
+                  cuenta:str_cuenta[1],
+                  tipo: $('#tipo_dato').val(),
+                  monto_i: monto_ib,
+                  monto_fi: monto_fib,
+                  monto_cal: monto_calc
+                  }
+                  itemDetalle[index-1].push(detalle);
+                  $('#cuenta').val("");
+                  $('#tipo').val("");
+
+                   listarDet(index);
+                   mostrarDetalle(index);
+                   $("#ndet"+index).html(itemDetalle[index-1].length);
+                   /*$("#link110").addClass("active");$("#link111").removeClass("active");
+                   $("#nav_boton2").addClass("active");$("#nav_boton1").removeClass("active");*/
+                   $("#mensajeDetalle").html("<center><p class='text-success'>Registro satisfactorio</p></center>");
+                   $.notify({message: 'Partida '+str_cuenta[1]+' registrada' },{type: 'success'});
+                    if(nombreInput=="mensual"){
+                      $("#modalDet").modal("hide");
+                    }else{
+                      $("#modalDetallesPartida").modal("hide");
+                    }
+                   }           
+            return(true);
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            return(false);
+          }
+        });
+    }
+     
    }else{
   if($("#monto_ibnorca").val()==""||$("#monto_f_ibnorca").val()==""||str_cuenta.length==1){
     $("#mensajeDetalle").html("<center><p class='text-danger'>Todos los campos son requeridos</p></center>");
@@ -1104,7 +1179,7 @@ function removeDet(item,fila){
   $("#ndet"+item).html(itemDetalle[item-1].length);
  }
 function listarDetPlantilla(item,fila){
-
+  $('#codGrupo').val(item);
   $("#cuenta_detalle").val(itemDetalle[item-1][fila].codigo_cuenta+"@"+itemDetalle[item-1][fila].cuenta);
   $("#tipo_dato").val(2);
   $('.selectpicker').selectpicker("refresh");
@@ -2758,8 +2833,6 @@ function EliminarContratoPersonal(codigo_contratoB,codigo_personalB){
         //$('#tabla1').load('index.php');
         // alertify.success("agregado");
         alerts.showSwal('success-message','index.php?opcion=FormPersonalContratos&codigo='+codigo_personalB);    
-      }else{
-        alerts.showSwal('error-message','index.php?opcion=personalLista');
       }
     }
   });
@@ -2795,6 +2868,9 @@ function FinalizarContratoPersonal(codigo_contratoCF,codigo_personalCf){
         alerts.showSwal('success-message','index.php?opcion=FormPersonalContratos&codigo='+codigo_personalCf);
       }else{
         alerts.showSwal('error-message','index.php?opcion=FormPersonalContratos&codigo='+codigo_personalCf);
+        //$('#tabla1').load('index.php');
+        // alertify.success("agregado");
+        alerts.showSwal('success-message','index.php?opcion=FormPersonalContratos&codigo='+cod_personal);
       }
     }
   });
@@ -3340,7 +3416,13 @@ function cargarListaCostosDetalle(valor){
   var simulacion=$("#cod_simulacion").val();
   var plantilla =$("#cod_plantilla").val();
   var url="ajaxCargarDetalleCostosSimulacion.php";
-  var parametros = {"simulacion":simulacion,"plantilla":plantilla,"tipo":tipo};
+  var ibnorca=$("#cod_ibnorca").val();
+    if(ibnorca==1){
+      var alumnos=$("#alumnos_plan").val();
+    }else{
+      var alumnos=$("#alumnos_plan_fuera").val();
+    }
+  var parametros = {"simulacion":simulacion,"plantilla":plantilla,"tipo":tipo,"al":alumnos};
       $.ajax({
         type:"GET",
         data:parametros,
