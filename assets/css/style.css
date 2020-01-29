@@ -231,7 +231,15 @@
     width:8px;
     border-radius: 50%;   
 }
-
+.estado2{
+    position: absolute;
+    height:11px;
+    top:8px;
+    right:0.6rem;
+    width:11px;
+    border-radius: 50%;
+    border:1px solid white !important;   
+}
 .text-small{
   font-size: 10 !important;
 }

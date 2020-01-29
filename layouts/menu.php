@@ -592,9 +592,9 @@ if($menuModulo==0){
                 </li> 
 
                  <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=listPlantillasTcp">
-                    <span class="sidebar-mini"> PTCP </span>
-                    <span class="sidebar-normal"> Plantillas TCP </span>
+                  <a class="nav-link" href="?opcion=listPlantillasServicios">
+                    <span class="sidebar-mini"> PSR </span>
+                    <span class="sidebar-normal"> Plantillas  de Servicios</span>
                   </a>
                 </li>
                 <li class="nav-item ">

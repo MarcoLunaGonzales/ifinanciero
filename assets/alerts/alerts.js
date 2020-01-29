@@ -14,7 +14,7 @@ alerts = {
     }
     else if (type == 'warning-message-and-confirmation') {
       swal({
-        title: '¿Estás Seguro?',
+        title: '¿Est&aacute;s Seguro?',
         text: "¡No podra revertir el borrado!",
         type: 'warning',
         showCancelButton: true,
@@ -51,7 +51,7 @@ alerts = {
       });
     }
     else if(type == 'error-message6'){
-      swal("ERROR!", "No puedes retirar Al personal. Por favor cierre el último contrato. Gracias!.", "error")
+      swal("ERROR!", "No puedes retirar Al personal. Por favor cierre el &uacute;ltimo contrato. Gracias!.", "error")
           .then((value) => {
           location.href=url;
       });

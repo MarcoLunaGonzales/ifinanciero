@@ -1,3 +1,4 @@
+<?php //header('Content-Type: text/html; charset=iso-8859-1');?>
 <!DOCTYPE html>
 <html lang="en">
 <!--ESTE ES EL DOCUMENTO DEL BODYLOGIN -->
@@ -268,6 +269,26 @@
             .attr('name', 'detalles')
             .attr('value', JSON.stringify(itemDetalle))
             .appendTo('#formRegDet');
+      }     
+    });
+    $("#formDetTcp").submit(function(e) {
+      var mensaje="";
+      if($("#cantidad_filas").val()==0){
+        mensaje+="<p></p>";
+        Swal.fire("Informativo!", "Debe registrar al menos un detalle", "warning");
+        return false;
+      }else{
+        var cont=0;
+        for (var i = 0; i < $("#cantidad_filas").val(); i++) {
+           if($('#codigo_cuentadetalle'+(i+1)).val()==""||$('#codigo_cuentadetalle'+(i+1)).val()==null){
+             cont++; 
+             break;
+           }                  
+        }
+        if(cont!=0){
+           Swal.fire("Informativo!", "No esta asignada la cuenta en uno o m&aacute; detalles <a href='#' class='btn btn-just-icon btn-primary btn-link'><i class='material-icons'>view_list</i><span class='bg-danger estado2'></span></a>", "warning"); 
+           return false;
+        }
       }     
     });
     $("#formSolDet").submit(function(e) {

@@ -134,16 +134,21 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                  $bgFila="text-danger";   
                 $html.='<tr class="'.$bgFila.'">'.
                       '<td class="font-weight-bold text-left"><strike>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$row_cuentas['nombre'].' / '.$row_cuentas['glosa'].'</strike></td>'.
-                      '<td class="text-right text-muted">'.number_format(0, 2, '.', ',').'</td>'.
                       '<td class="text-right text-muted">'.number_format(0, 2, '.', ',').'</td>';
+                      if($tipoCosto!=1){
+                        $html.='<td class="text-right text-muted">'.number_format(0, 2, '.', ',').'</td>';
+                      }
                 $html.='</tr>';
               }else{
                 $montoTotales2+=$row_cuentas['monto_total'];
                 $montoTotales2Alumno+=$montoCal/$alumnos;
                 $html.='<tr class="'.$bgFila.'">'.
                       '<td class="font-weight-bold text-left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$row_cuentas['nombre'].' / '.$row_cuentas['glosa'].'</td>'.
-                      '<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>'.
-                      '<td class="text-right text-muted">'.number_format($montoCal/$alumnos, 2, '.', ',').'</td>';
+                      '<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>';
+                      if($tipoCosto!=1){
+                        $html.='<td class="text-right text-muted">'.number_format($montoCal/$alumnos, 2, '.', ',').'</td>';
+                      }
+                      
                 $html.='</tr>';
               }
 
