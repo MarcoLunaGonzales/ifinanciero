@@ -508,7 +508,7 @@ function modalPlantilla(){
   }
 }
 function ayudaPlantilla(){
-  alertaModal("<h5><b>AYUDA</b></h5>Los campos en la sección 'REGISTRAR PLANTILLA DE COSTO' son modificables y cuando se presione en el botón 'GUARDAR' ubicado en la parte inferior. También se guardaran los cambios realizados en dicha sección",'bg-secondary','text-white');
+  alertaModal("<h5><b>AYUDA</b></h5>Los campos en la secci&oacute;n 'REGISTRAR PLANTILLA' son modificables y cuando se presione en el bot&oacute;n 'GUARDAR' ubicado en la parte inferior. Tambi&eacute;n se guardaran los cambios realizados en dicha secci&oacute;n",'bg-secondary','text-white');
 }
 //plantilla guardar
 function guardarPlantilla(){
@@ -3232,11 +3232,17 @@ function calcularTotalPartidaGenerico(fila,valor){
     if(!($("#monto_mod"+fila+"RRR"+i).is("[readonly]"))){
     if(valor==1){
       suma+=parseFloat($("#monto_mod"+fila+"RRR"+i).val());
+      if($("#cod_ibnorca").val()==1){
+         $("#monto_modal"+fila+"RRR"+i).val(redondeo(parseFloat($("#monto_mod"+fila+"RRR"+i).val())/parseInt($("#alumnos_plan").val())));
+       }else{
+          $("#monto_modal"+fila+"RRR"+i).val(redondeo(parseFloat($("#monto_mod"+fila+"RRR"+i).val())/parseInt($("#alumnos_plan_fuera").val())));
+       } 
+      
     }else{
      if($("#cod_ibnorca").val()==1){
-         $("#monto_mod"+fila+"RRR"+i).val(parseFloat($("#monto_modal"+fila+"RRR"+i).val())*parseInt($("#alumnos_plan").val()));
+         $("#monto_mod"+fila+"RRR"+i).val(redondeo(parseFloat($("#monto_modal"+fila+"RRR"+i).val())*parseInt($("#alumnos_plan").val())));
        }else{
-          $("#monto_mod"+fila+"RRR"+i).val(parseFloat($("#monto_modal"+fila+"RRR"+i).val())*parseInt($("#alumnos_plan_fuera").val()));
+          $("#monto_mod"+fila+"RRR"+i).val(redondeo(parseFloat($("#monto_modal"+fila+"RRR"+i).val())*parseInt($("#alumnos_plan_fuera").val())));
        }
      suma+=parseFloat($("#monto_mod"+fila+"RRR"+i).val());  
     }
@@ -3248,8 +3254,13 @@ function calcularTotalPartidaGenerico(fila,valor){
   var resultPorcent= Math.round(porcent*100)/100;  
   var result=redondeo((suma*100)/100);
   document.getElementById("monto_editable"+fila).value=result;
-
-
+  $("#total_tabladetalle"+fila).text(result); 
+  if($("#cod_ibnorca").val()==1){
+       $("#total_tabladetalleAl"+fila).text(redondeo(result/parseInt($("#alumnos_plan").val())));
+     
+       }else{
+       $("#total_tabladetalleAl"+fila).text(redondeo(result/parseInt($("#alumnos_plan").val())));
+       } 
   if(result<monto_anterior){
     $("#monto_editable"+fila).addClass("text-danger");
     $("#monto_editable"+fila).removeClass("text-success");
@@ -4132,6 +4143,146 @@ function actualizarSimulacion(){
           }
          });
 }
+
+/**********************************PLANTILLA TCP********************************/
+function addDetallePlantilla(obj) {
+      numFilas++;
+      cantidadItems++;
+      filaActiva=numFilas;
+      //aumentar un itemfactura
+      var ndet=[];
+      itemDetalle.push(ndet);
+      document.getElementById("cantidad_filas").value=numFilas;
+      console.log("num: "+numFilas+" cantidadItems: "+cantidadItems);
+      fi = document.getElementById('fiel');
+      contenedor = document.createElement('div');
+      contenedor.id = 'div'+numFilas;  
+      fi.type="style";
+      fi.appendChild(contenedor);
+      var divDetalle;
+      divDetalle=$("#div"+numFilas);
+      //document.getElementById('nro_cuenta').focus();
+      ajax=nuevoAjax();
+      ajax.open("GET","ajaxDetallePlantilla.php?idFila="+numFilas,true);
+      ajax.onreadystatechange=function(){
+        if (ajax.readyState==4) {
+          divDetalle.html(ajax.responseText);
+          divDetalle.bootstrapMaterialDesign();
+          $('.selectpicker').selectpicker("refresh");
+          return false;
+       }
+      }   
+      ajax.send(null);
+}
+function minusDetallePlantilla(idF){
+      var elem = document.getElementById('div'+idF);
+      elem.parentNode.removeChild(elem);
+      if(idF<numFilas){
+      for (var i = parseInt(idF); i < (numFilas+1); i++) {
+        var nuevoId=i+1;
+       $("#div"+nuevoId).attr("id","div"+i);
+       $("#tipo_costo"+nuevoId).attr("onchange","mostrarUnidadDetalle("+i+")");
+       $("#tipo_costo"+nuevoId).attr("name","tipo_costo"+i);
+       $("#tipo_costo"+nuevoId).attr("id","tipo_costo"+i);
+       $("#detalle_plantilla"+nuevoId).attr("name","detalle_plantilla"+i);
+       $("#detalle_plantilla"+nuevoId).attr("id","detalle_plantilla"+i);
+       $("#cantidad_detalleplantilla"+nuevoId).attr("onchange","calcularTotalFilaDetalle("+i+")");
+       $("#cantidad_detalleplantilla"+nuevoId).attr("onchange","calcularTotalFilaDetalle("+i+")");
+       $("#cantidad_detalleplantilla"+nuevoId).attr("name","cantidad_detalleplantilla"+i);
+       $("#cantidad_detalleplantilla"+nuevoId).attr("id","cantidad_detalleplantilla"+i);
+       $("#unidad_detalleplantilla"+nuevoId).attr("name","unidad_detalleplantilla"+i);
+       $("#unidad_detalleplantilla"+nuevoId).attr("id","unidad_detalleplantilla"+i);
+       $("#monto_detalleplantilla"+nuevoId).attr("onchange","calcularTotalFilaDetalle("+i+")");
+       $("#monto_detalleplantilla"+nuevoId).attr("onchange","calcularTotalFilaDetalle("+i+")");
+       $("#monto_detalleplantilla"+nuevoId).attr("name","monto_detalleplantilla"+i);
+       $("#monto_detalleplantilla"+nuevoId).attr("id","monto_detalleplantilla"+i);
+       $("#monto_total_detalleplantilla"+nuevoId).attr("name","monto_total_detalleplantilla"+i);
+       $("#monto_total_detalleplantilla"+nuevoId).attr("id","monto_total_detalleplantilla"+i);
+
+       $("#boton_remove"+nuevoId).attr("onclick","minusDetallePlantilla('"+i+"')");
+       $("#boton_remove"+nuevoId).attr("id","boton_remove"+i);
+
+       $("#boton_det"+nuevoId).attr("onclick","listDetallePlantilla('"+i+"')");
+       $("#boton_det"+nuevoId).attr("id","boton_det"+i);
+       $("#ndet"+nuevoId).attr("id","ndet"+i);
+       $("#codigo_cuentadetalle"+nuevoId).attr("name","codigo_cuentadetalle"+i);
+       $("#codigo_cuentadetalle"+nuevoId).attr("id","codigo_cuentadetalle"+i);
+       $("#codigo_partidadetalle"+nuevoId).attr("name","codigo_partidadetalle"+i);
+       $("#codigo_partidadetalle"+nuevoId).attr("id","codigo_partidadetalle"+i);
+      }
+     } 
+     itemDetalle.splice((idF-1), 1);
+      numFilas=numFilas-1;
+      cantidadItems=cantidadItems-1;
+      filaActiva=numFilas;
+      document.getElementById("cantidad_filas").value=numFilas;  
+}
+function mostrarUnidadDetalle(fila){
+  if($("#tipo_costo"+fila).val()==2){
+    if(($("#unidad_detalleplantilla"+fila).is("[readonly]"))){
+      $("#unidad_detalleplantilla"+fila).removeAttr("readonly");
+    }
+  }else{
+    if(!($("#unidad_detalleplantilla"+fila).is("[readonly]"))){
+      $("#unidad_detalleplantilla"+fila).attr("readonly",true);
+    }
+  }
+}
+function calcularTotalFilaDetalle(fila){
+ var total = redondeo($("#cantidad_detalleplantilla"+fila).val()*$("#monto_detalleplantilla"+fila).val());
+ $("#monto_total_detalleplantilla"+fila).val(total);
+}
+function listDetallePlantilla(id){
+  var nombreDetalle=$("#detalle_plantilla"+id).val();
+  if(nombreDetalle==""){nombreDetalle="Sin Detalle";}
+   $("#divTituloGrupo").html('<h4 class="card-title">'+nombreDetalle+'</h4>');
+   $("#codGrupo").val(id);
+   if($("#codigo_cuentadetalle"+id).val()!=""){
+     $("#partida_detalle").val($("#codigo_partidadetalle"+id).val());
+     mostrarCuentasPartida();
+     $("#cuenta_plantilladetalle").val($("#codigo_cuentadetalle"+id).val());
+     $('.selectpicker').selectpicker("refresh");
+   }else{
+   $("#partida_detalle").val("");
+   $("#combo_cuentas").html("");  
+   }
+   $('.selectpicker').selectpicker("refresh");
+    //limpiarDatosDetalleModal();  
+   $("#modalDetalle").modal("show");
+ }
+
+   function mostrarCuentasPartida(){
+  var partida=$("#partida_detalle").val();
+  var parametros={"cod_partida":partida};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxPartidaPresupuestaria.php",
+        data: parametros,
+        beforeSend: function () { 
+          iniciarCargaAjax();
+        },
+        success:  function (resp) {
+           detectarCargaAjax();
+           $("#combo_cuentas").html(resp);
+           $('.selectpicker').selectpicker("refresh");
+        }
+    });
+ }
+ function savePlantillaDetalleTcp(){
+  if($("#partida_detalle").val()==""||$("#cuenta_plantilladetalle").val()==""){
+    Swal.fire("Informativo!", "Todos los campos son requeridos", "warning");
+  }else{
+    var fila=$("#codGrupo").val();
+    $("#codigo_cuentadetalle"+fila).val($("#cuenta_plantilladetalle").val());
+    $("#codigo_partidadetalle"+fila).val($("#partida_detalle").val());
+    $("#boton_det"+fila).attr("title",$('select[name="cuenta_plantilladetalle"] option:selected').text());
+    $("#ndet"+fila).removeClass("bg-danger");
+    $("#ndet"+fila).addClass("bg-success");
+    $("#modalDetalle").modal("hide");
+  }
+ }
+
 //funciones despues de cargar pantalla
 window.onload = detectarCarga;
   function detectarCarga(){

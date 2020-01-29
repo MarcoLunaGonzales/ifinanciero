@@ -1179,6 +1179,16 @@ function obtenerCodigoPlanCosto(){
    }
    return($codigoComprobante);
 }
+function obtenerCodigoPlanServ(){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT IFNULL(max(c.codigo)+1,1)as codigo from plantillas_servicios c");
+   $stmt->execute();
+   $codigoPlan=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $codigoPlan=$row['codigo'];
+   }
+   return($codigoPlan);
+}
 function obtenerCodigoSimCosto(){
    $dbh = new Conexion();
    $stmt = $dbh->prepare("SELECT IFNULL(max(c.codigo)+1,1)as codigo from simulaciones_costos c");

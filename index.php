@@ -6,6 +6,6 @@ session_start();
 if(isset($_SESSION['logueado'])){
 	require_once('layouts/layout.php');	
 }else{
-	header("location:error.html");
+	header("location:login.html");
 }
  ?>

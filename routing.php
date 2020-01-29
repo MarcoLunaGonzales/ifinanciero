@@ -131,11 +131,11 @@
 			require_once('simulaciones_costos/registerSimulaciones.php');
 		}
         //PLANTILLAS TCP
-        if ($_GET['opcion']=='listPlantillasTcp') {
-			require_once('plantillas_tcp/list.php');
+        if ($_GET['opcion']=='listPlantillasServicios') {
+			require_once('plantillas_servicios/list.php');
 		}
-		if ($_GET['opcion']=='registerPlantillaTcp') {
-			require_once('plantillas_tcp/register.php');
+		if ($_GET['opcion']=='registerPlantillaServicio') {
+			require_once('plantillas_servicios/register.php');
 		}
 
         //MES EN CURSO

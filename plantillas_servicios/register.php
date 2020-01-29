@@ -1,5 +1,4 @@
 <?php
-
 require_once 'conexion.php';
 require_once 'styles.php';
 require_once 'configModule.php';
@@ -46,7 +45,7 @@ $dbh = new Conexion();
 	<div class="container-fluid">
 
 		<div class="col-md-12">
-		  <form id="formRegComp" class="form-horizontal" action="save.php" method="post" enctype="multipart/form-data">
+		  <form class="form-horizontal" action="<?=$urlSave?>" method="post">
 			<div class="card">
 			  <div class="card-header <?=$colorCard;?> card-header-text">
 				<div class="card-text">
@@ -60,11 +59,11 @@ $dbh = new Conexion();
                        <label class="col-sm-2 col-form-label">Nombre de plantilla:</label>
                        <div class="col-sm-7">
                         <div class="form-group">
-                          <input class="form-control" type="text" name="nombre" id="nombre" autocomplete="off" autofocus/>
+                          <input class="form-control" type="text" name="nombre" id="nombre" autocomplete="off" required autofocus/>
                         </div>
                         </div>
                  </div>
-                 <div class="row">
+                     <div class="row">
                        <label class="col-sm-2 col-form-label">Abreviatura</label>
                        <div class="col-sm-7">
                         <div class="form-group">
@@ -73,21 +72,21 @@ $dbh = new Conexion();
                         </div>
                       </div>
                       <div class="row">
-                       <label class="col-sm-2 col-form-label">Empresa</label>
+                       <label class="col-sm-2 col-form-label">Cliente</label>
                        <div class="col-sm-7">
                         <div class="row">
                           <div class="col-sm-5">
                             <div class="form-group">
-                                <select class="selectpicker form-control" name="empresa" id="empresa" data-style="btn btn-info"  required>
+                                <select class="selectpicker form-control" name="cliente" id="cliente" data-style="btn btn-info"  required>
           
-                                <option disabled selected="selected" value="">Empresa</option>
+                                <option disabled selected="selected" value="">Cliente</option>
                                 <?php
-                                 $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM empresas where cod_estadoreferencial=1 order by 2");
+                                 $stmt = $dbh->prepare("SELECT codigo, nombre FROM clientes where cod_estadoreferencial=1 order by 2");
                                  $stmt->execute();
                                   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                   $codigoX=$row['codigo'];
                                   $nombreX=$row['nombre'];
-                                  $abrevX=$row['abreviatura'];
+                                  //$abrevX=$row['abreviatura'];
                                    ?>
                                   <option value="<?=$codigoX;?>"><?=$nombreX;?></option> 
                                   <?php
@@ -98,47 +97,24 @@ $dbh = new Conexion();
                           </div>
                           <div class="col-sm-7">
                             <div class="row">
-                            <label class="col-sm-6 col-form-label">Planta de Producci&oacute;n</label>
-                            <div class="col-sm-6">
+                            <label class="col-sm-2 col-form-label">Servicio</label>
+                            <div class="col-sm-10">
                               <div class="form-group">
-                                <input class="form-control" type="text" name="planta_produccion" id="planta_produccion" value=""/>
-                              </div>
-                            </div>
-                           </div><!--row--> 
-                          </div> 
-                        </div>
-                       </div>
-                      </div><!--row-->
-                      <div class="row">
-                       <label class="col-sm-2 col-form-label">Tipo de Auditoria</label>
-                       <div class="col-sm-7">
-                        <div class="row">
-                          <div class="col-sm-5">
-                            <div class="form-group">
-                               <select class="selectpicker form-control" name="tipo_auditoria" id="tipo_auditoria" data-style="btn btn-info"  required>
-                                <option disabled selected="selected" value="">Auditoria</option>
+                                <select class="selectpicker form-control" name="cod_servicio[]" id="cod_servicio" multiple data-style="btn btn-info"  required>
+        
                                 <?php
-                                 $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM tipos_auditoria where cod_estadoreferencial=1 order by 1");
+                                 $stmt = $dbh->prepare("SELECT codigo,descripcion from claservicios where (idArea=38 or idArea=39) and vigente=1");
                                  $stmt->execute();
                                   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                   $codigoX=$row['codigo'];
-                                  $nombreX=$row['nombre'];
-                                  $abrevX=$row['abreviatura'];
+                                  $nombreX=$row['descripcion'];
+                                  //$abrevX=$row['abreviatura'];
                                    ?>
                                   <option value="<?=$codigoX;?>"><?=$nombreX;?></option> 
                                   <?php
                                     }
                                     ?>
-                                </select>                               
-                              </div>
-                          </div>
-                          <div class="col-sm-7">
-                            <div class="row">
-                            <label class="col-sm-6 col-form-label">Productos</label>
-                            <div class="col-sm-6">
-                              <div class="form-group">
-                                <input class="form-control" type="text" name="productos" id="productos" value=""/>
-                               
+                                </select>
                               </div>
                             </div>
                            </div><!--row--> 
@@ -146,22 +122,40 @@ $dbh = new Conexion();
                         </div>
                        </div>
                       </div><!--row-->
+
+                      <div class="row">
+                       <label class="col-sm-2 col-form-label">Productos</label>
+                       <div class="col-sm-7">
+                        <div class="form-group" style="border-bottom: 1px solid #CACFD2">
+                          <input type="text" value="" class="form-control tagsinput" name="productos" data-role="tagsinput" required data-color="primary">
+                        </div>
+                        </div>
+                      </div>
                       <div class="row">
                        <label class="col-sm-2 col-form-label">Norma</label>
                        <div class="col-sm-7">
+                        <div class="form-group">
+                          <input class="form-control" type="text" name="norma" id="norma" required autocomplete="off"/>
+                        </div>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                       <label class="col-sm-2 col-form-label">D&iacute;as</label>
+                       <div class="col-sm-7">
                         <div class="row">
-                          <div class="col-sm-4">
+                          <div class="col-sm-5">
                             <div class="form-group">
-                                <input class="form-control" type="text" name="norma" id="norma" value=""/>
+                                <input class="form-control" type="number" min="1" name="dias" required id="dias" value="1"/>
                                 
                               </div>
                           </div>
-                          <div class="col-sm-8">
+                          <div class="col-sm-7">
                             <div class="row">
-                            <label class="col-sm-7 col-form-label">Fecha</label>
-                            <div class="col-sm-5">
+                            <label class="col-sm-2 col-form-label">Fecha</label>
+                            <div class="col-sm-10">
                               <div class="form-group">
-                                <input class="form-control datepicker" type="text" name="fecha_auditoria" id="fecha_auditoria" value="<?=date('d/m/Y')?>"/>
+                                <input class="form-control datepicker" type="text" name="fecha_auditoria" id="fecha_auditoria" value="<?=date('d/m/Y')?>" required/>
                                 
                               </div>
                             </div>
@@ -227,7 +221,7 @@ $dbh = new Conexion();
 			  <br>
 			  <div id="mensaje"></div>
 			  <div class="card-footer  ml-auto mr-auto">
-				<button type="button" class="<?=$buttonNormal;?>" onclick="guardarPlantillaCosto()">Guardar</button>
+				<button type="submit" class="<?=$buttonNormal;?>">Guardar</button>
 				<a href="<?=$urlList?>" class="<?=$buttonCancel;?>">Volver</a>
 			  </div>
 			</div>
