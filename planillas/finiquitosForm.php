@@ -48,50 +48,40 @@ if ($codigo > 0){
                       <h4 class="card-title"><?php if ($codigo == 0) echo "Registrar"; else echo "Editar";?>  <?=$nombreSingularfiniquito;?></h4>
                     </div>
                   </div>
+                  <h4 align="center"> Seleccione al personal Retirado Por favor.</h4>
                   <div class="card-body ">
                     
 
-                  <input type="hidden" name="codigo" id="codigo" value="<?=$codigo;?>"/>
-                  <div class="row">
-                        <label class="col-sm-2 col-form-label">Personal</label>
-                        <div class="col-sm-7">
-                        <div class="form-group">
+                    <input type="hidden" name="codigo" id="codigo" value="<?=$codigo;?>"/>
+                    <div class="row">
+                          <label class="col-sm-2 col-form-label">Personal</label>
+                          <div class="col-sm-7">
+                          <div class="form-group">
 
-                            <select name="cod_personal" id="cod_personal" class="selectpicker form-control" data-style="btn btn-primary" >
-                                <option ></option>
-                                <?php 
-                                    while ($row = $stmtpersonal->fetch()){ 
-                                ?>
-                                     <option <?=($cod_personal==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>"><?=$row["paterno"];?> <?=$row["materno"];?> <?=$row["primer_nombre"];?></option>
-                                 <?php 
-                                    } 
-                                ?>
-                             </select>
-                            
-                        </div>
-                        </div>
+                              <select name="cod_personal" id="cod_personal" class="selectpicker form-control" data-style="btn btn-primary" >
+                                  <option ></option>
+                                  <?php 
+                                      while ($row = $stmtpersonal->fetch()){ 
+                                  ?>
+                                       <option <?=($cod_personal==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>"><?=$row["paterno"];?> <?=$row["materno"];?> <?=$row["primer_nombre"];?></option>
+                                   <?php 
+                                      } 
+                                  ?>
+                               </select>
+                              
+                          </div>
+                          </div>
                     </div><!--fin campo nombre -->
                     <div class="row">
-                        <label class="col-sm-2 col-form-label">Fecha Retiro</label>
+                        <label class="col-sm-2 col-form-label">Años pagados de trabajo</label>
                         <div class="col-sm-7">
                         <div class="form-group">
-                            <input class="form-control" type="date" name="fecha_retiro" id="fecha_retiro" required="true" value="<?=$fecha_retiro;?>" />
+                            <input class="form-control" type="number" name="anios_trabajados_pagados" id="anios_trabajados_pagados" required="true" value="0" />
 
                         </div>
                         </div>
-                    </div><!--fin campo abreviatura -->
-                    <!-- <div class="row">
-                        <label class="col-sm-2 col-form-label">Motivo Retiro</label>
-                        <div class="col-sm-7">
-                        <div class="form-group">                            
-                            <select name="motivo_retiro" id="motivo_retiro" class="selectpicker " data-style="btn btn-info" required>
-                                            <?php while ($rowRetiro = $stmtTipoRetiro->fetch()) { ?>
-                                                <option <?php if($cod_tiporetiro == $rowRetiro["codigo"]) echo "selected"; ?> value="<?=$rowRetiro["codigo"];?>"><?=$rowRetiro["nombre"];?></option>
-                                            <?php } ?>
-                                        </select>
-                        </div>
-                        </div>
-                    </div><!--fin campo motivo_retiro --> -->
+                    </div>
+                    
                   </div>
                   <div class="card-footer ml-auto mr-auto">
                     <button type="submit" class="<?=$buttonNormal;?>">Guardar</button>

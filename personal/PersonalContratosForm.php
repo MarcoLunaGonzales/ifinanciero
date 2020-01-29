@@ -22,6 +22,7 @@ $paterno=$result['paterno'];
 $materno=$result['materno'];
 //SELECT
 $stmt = $dbh->prepare("SELECT *,
+  (select ec.nombre from estados_contrato ec where ec.codigo=cod_estadocontrato)as estado_contrato,
 (select c.nombre from tipos_contrato_personal c where c.codigo=cod_tipocontrato)as nombre_contrato,
 (select ct.duracion_meses from tipos_contrato_personal ct where ct.codigo=cod_tipocontrato)as meses_contrato
 from personal_contratos 
@@ -36,7 +37,9 @@ $stmt->bindColumn('cod_tipocontrato', $cod_tipocontrato);
 $stmt->bindColumn('fecha_iniciocontrato', $fecha_iniciocontrato);
 $stmt->bindColumn('fecha_fincontrato', $fecha_fincontrato);
 $stmt->bindColumn('fecha_evaluacioncontrato', $fecha_evaluacioncontrato);
-
+$stmt->bindColumn('cod_estadocontrato', $cod_estadocontrato);
+$stmt->bindColumn('estado_contrato', $estado_contrato);
+$stmt->bindColumn('fecha_finalizado', $fecha_finalizado);
 $stmt->bindColumn('nombre_contrato', $nombre_contrato);
 $stmt->bindColumn('meses_contrato', $meses_contrato);
 
@@ -76,10 +79,12 @@ $fecha_actual=date("Y-m-d");
                         <tr class="bg-dark text-white">
                         	<th>#</th>                          
               						<th>Tipo Contrato</th>
-                          <th>Duración Contrato(Mes)</th>
+                          <th>Duración(mes)</th>
               						<th>F. Ini. Contrato</th>
                           <th>F. Fin. Contrato</th>
                           <th>F. Revisión</th>
+                          <th>Estado</th>
+                          <th>F.Cerrado</th>
               						<th></th>                                                   
                         </tr>
                       </thead>
@@ -153,6 +158,7 @@ $fecha_actual=date("Y-m-d");
                                     }else{
                                       $label='<span class="badge badge-danger">';
                                     }
+
                                     //para la evaluacion de contrato
                                     $porcionesEvaluacion = explode("-", $fecha_evaluacioncontrato);
                                     $anioEvaluacion= $porcionesEvaluacion[0]; // porción1
@@ -177,7 +183,13 @@ $fecha_actual=date("Y-m-d");
                                     }else{
                                       $labelEvaluacion='<span class="badge badge-danger">';
                                     }
-                                  }                                                                    
+                                  }
+                                  if($cod_estadocontrato==1){
+                                      $labelEstado='<span class="badge badge-success">';
+                                    }else{
+                                      $labelEstado='<span class="badge badge-danger">';
+                                      $label='<span class="badge badge-danger">';
+                                    }                                                                    
                                 ?>
                                 <td><?=$label.$fecha_fincontrato."</span>";?></td>
                                 <td class="td-actions text-right"><?=$labelEvaluacion.$fecha_evaluacioncontrato."</span>";?>
@@ -185,9 +197,14 @@ $fecha_actual=date("Y-m-d");
                                     <i class="material-icons" style="color:#464f55" title="Editar Fecha">notifications</i>
                                   </button>
                                 </td>
+                                <td><?=$labelEstado.$estado_contrato."</span>";?></td>
+                                <td><?=$fecha_finalizado;?></td>
                                 <td class="td-actions text-right">
-                                	<button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalEditar" onclick="agregaformPCE('<?=$datos;?>')">
-                                		<i class="material-icons" title="Editar"><?=$iconEdit;?></i>                             
+                                	<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalContratoFin" onclick="agregaContratoFin('<?=$datos;?>')">
+                                    <i class="material-icons" title="Finalizar Contrato">play_for_work</i>
+                                  </button>
+                                  <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalEditar" onclick="agregaformPCE('<?=$datos;?>')">
+                                		<i class="material-icons" title="Editar"><?=$iconEdit;?></i>
                                   </button>
                                   <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalEliminar" onclick="agregaformPCB('<?=$datos;?>')">
                                     <i class="material-icons" title="Eliminar"><?=$iconDelete;?></i>
@@ -209,7 +226,7 @@ $fecha_actual=date("Y-m-d");
                       <i class="material-icons" title="Agregar Contrato">add</i>
   		             </button>
                    <button type="button" class="btn btn-primary btn-round btn-fab" data-toggle="modal" data-target="#modalRetirarPersonal" onclick="agregaformRetiroPersonal('<?=$datos;?>')">
-                      <i class="material-icons" title="Finalizar Contrato">play_for_work</i>
+                      <i class="material-icons" title="Retirar Personal">play_for_work</i>
                    </button>		                           
                 <?php
                 }
@@ -318,6 +335,26 @@ $fecha_actual=date("Y-m-d");
     </div>
   </div>
 </div>
+<!-- finalizar contrato-->
+<div class="modal fade" id="modalContratoFin" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Finalizar Contrato de Personal </h4>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" name="cod_personalCF" id="cod_personalCF" value="0">
+        <input type="hidden" name="cod_contratoCf" id="cod_contratoCf" value="0">        
+        Esta acción Finalizará El contrato Del Personal. ¿Deseas Continuar?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" id="Finalizar_contrato"  data-dismiss="modal">Aceptar</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- Modal retirar personal-->
 <div class="modal fade" id="modalRetirarPersonal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -381,6 +418,13 @@ $fecha_actual=date("Y-m-d");
       observaciones=$('#observaciones').val();
       RetirarPersonal(cod_personal,cod_tiporetiro,fecha_Retiro,observaciones);
     });
+
+    $('#Finalizar_contrato').click(function(){
+      codigo_contratoCF=document.getElementById("cod_contratoCf").value;
+      codigo_personalCf=document.getElementById("cod_personalCF").value;      
+      FinalizarContratoPersonal(codigo_contratoCF,codigo_personalCf);
+    });
+    
     
 
   });
