@@ -1204,12 +1204,16 @@ function obtenerMontoPorCuenta($numero,$unidad,$area,$fecha){
  //funcion para calcular costos
   function calcularCostosPresupuestarios($id,$unidad,$area,$fecha){
      $sql="SELECT p.cod_partidapresupuestaria,p.cod_cuenta,c.numero FROM partidaspresupuestarias_cuentas p join plan_cuentas c on p.cod_cuenta=c.codigo where p.cod_partidapresupuestaria=$id";
+
+     //echo $sql;
+
      $dbh = new Conexion(); 
      $stmt = $dbh->prepare($sql);
      $stmt->execute();
      $sum=0;
      $mes=date("m");
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      //$sum=33333;
       $numero=trim($row['numero']);
       $cuenta=$row['cod_cuenta'];
       $tipoSim=obtenerValorConfiguracion(13);
@@ -1225,8 +1229,7 @@ function obtenerMontoPorCuenta($numero,$unidad,$area,$fecha){
     }
     
       $valor=obtenerValorConfiguracion(6);
-    return redondearDecimal($sum/(int)$valor);
-    //return $sum;
+      return redondearDecimal($sum/(int)$valor);
   }
     function calcularCostosPres($id,$unidad,$area,$fecha){
      $sql="SELECT p.cod_partidapresupuestaria,p.cod_cuenta,c.numero FROM partidaspresupuestarias_cuentas p join plan_cuentas c on p.cod_cuenta=c.codigo where p.cod_partidapresupuestaria=$id";

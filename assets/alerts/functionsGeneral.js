@@ -1237,6 +1237,7 @@ function detectarCargaAjax(){
          $("#mensajeDetalle").html("<center><p class='text-muted'></p></center>"); 
         },
         success:  function (resp) {
+          
            detectarCargaAjax();
           //if($("#tipo_dato").val()==1){
             $("#monto_ibnorca").val(redondeo(parseFloat(resp)*$("#cod_mescurso").val()));
