@@ -50,7 +50,7 @@ $dbh = new Conexion();
 			<div class="card">
 			  <div class="card-header <?=$colorCard;?> card-header-text">
 				<div class="card-text">
-				  <h4 class="card-title">Registrar Plantilla de Costos</h4>
+				  <h4 class="card-title">Registrar Plantilla de Presupuesto</h4>
 				</div>
 			  </div>
 			  <div class="card-body ">
@@ -73,16 +73,16 @@ $dbh = new Conexion();
                         </div>
                       </div>
                       <div class="row">
-                       <label class="col-sm-2 col-form-label">Utilidad Ibnorca</label>
+                       <label class="col-sm-2 col-form-label">Utilidad M&iacute;nima</label>
                        <div class="col-sm-7">
                         <div class="row">
-                          <div class="col-sm-4">
+                          <div class="col-sm-12">
                             <div class="form-group has-success">
                                 <input class="form-control" type="number" step="0.001" name="utilidad_minibnorca" id="utilidad_minibnorca" value="<?=$utilidadMinLocal?>"/>
                                 <span class="form-control-feedback">%</span>
                               </div>
                           </div>
-                          <div class="col-sm-8">
+                          <!--<div class="col-sm-8">
                             <div class="row">
                             <label class="col-sm-7 col-form-label">Utilidad Fuera Ibnorca</label>
                             <div class="col-sm-5">
@@ -91,22 +91,22 @@ $dbh = new Conexion();
                                 <span class="form-control-feedback">%</span>
                               </div>
                             </div>
-                           </div><!--row--> 
-                          </div> 
+                           </div>
+                          </div>--> 
                         </div>
                        </div>
                       </div><!--row-->
                       <div class="row">
-                       <label class="col-sm-2 col-form-label">Alumnos en Ibnorca</label>
+                       <label class="col-sm-2 col-form-label">Numero de Alumnos</label>
                        <div class="col-sm-7">
                         <div class="row">
-                          <div class="col-sm-4">
+                          <div class="col-sm-12">
                             <div class="form-group">
                                 <input class="form-control" type="number" name="cantidad_alumnosibnorca" id="cantidad_alumnosibnorca" value="<?=$alumnosLocal?>"/>
                                
                               </div>
                           </div>
-                          <div class="col-sm-8">
+                          <!--<div class="col-sm-8">
                             <div class="row">
                             <label class="col-sm-7 col-form-label">Alumnos Fuera de Ibrnoca</label>
                             <div class="col-sm-5">
@@ -115,22 +115,22 @@ $dbh = new Conexion();
                                
                               </div>
                             </div>
-                           </div><!--row--> 
-                          </div> 
+                           </div>
+                          </div>--> 
                         </div>
                        </div>
                       </div><!--row-->
                       <div class="row">
-                       <label class="col-sm-2 col-form-label">Precio de Venta Ibnorca</label>
+                       <label class="col-sm-2 col-form-label">Precio</label>
                        <div class="col-sm-7">
                         <div class="row">
-                          <div class="col-sm-4">
+                          <div class="col-sm-12">
                             <div class="form-group">
                                 <input class="form-control" type="number" step="0.001" name="precio_ventaibnorca" id="precio_ventaibnorca" value="<?=$precioVentaLocal?>"/>
                                 
                               </div>
                           </div>
-                          <div class="col-sm-8">
+                          <!--<div class="col-sm-8">
                             <div class="row">
                             <label class="col-sm-7 col-form-label">Precio de venta Fuera</label>
                             <div class="col-sm-5">
@@ -139,8 +139,8 @@ $dbh = new Conexion();
                                 
                               </div>
                             </div>
-                           </div><!--row--> 
-                          </div> 
+                           </div>
+                          </div>--> 
                         </div>
                        </div>
                       </div><!--row-->

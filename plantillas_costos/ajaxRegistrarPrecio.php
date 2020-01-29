@@ -17,7 +17,7 @@ $stmtX->execute();
 if(isset($_GET['codigo'])){
 	$codigo=$_GET['codigo'];
   $local=$_GET['local'];
-  $externo=$_GET['externo'];
+  $externo="";
   $dbh = new Conexion();
   $sqlInsert="INSERT INTO precios_plantillacosto (venta_local, venta_externo, cod_plantillacosto) VALUES ('".$local."','".$externo."', '".$codigo."')";
   $stmtInsert = $dbh->prepare($sqlInsert);

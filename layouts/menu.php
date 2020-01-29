@@ -598,6 +598,12 @@ if($menuModulo==0){
                   </a>
                 </li>
                 <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listPlantillasServiciosAdmin">
+                    <span class="sidebar-mini"> GPS </span>
+                    <span class="sidebar-normal"> Gesti&oacute;n de Plantillas Servicios </span>
+                  </a>
+                </li>
+                <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listSolicitudRecursos">
                     <span class="sidebar-mini"> SR </span>
                     <span class="sidebar-normal"> Solicitudes de Recursos</span>

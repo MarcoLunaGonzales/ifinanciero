@@ -205,7 +205,7 @@ if(isset($_GET['cod'])){
 		<div class="col-sm-1">
             <div class="form-group">
             	<label for="cantidad_detalleplantilla<?=$idFila;?>" class="bmd-label-floating">Cantidad</label>			
-          		<input class="form-control" type="number" min="0" value="<?=$cantidadCostoX?>" name="cantidad_detalleplantilla<?=$idFila;?>" id="cantidad_detalleplantilla<?=$idFila;?>" onchange="calcularTotalFilaDetalle(<?=$idFila?>)" onkeypress"calcularTotalFilaDetalle(<?=$idFila?>)" id="cantidad_detalleplantilla<?=$idFila;?>" required> 	
+          		<input class="form-control" type="number" min="0" value="<?=$cantidadCostoX?>" name="cantidad_detalleplantilla<?=$idFila;?>" id="cantidad_detalleplantilla<?=$idFila;?>" onkeyup="calcularTotalFilaDetalle(1,<?=$idFila?>)" id="cantidad_detalleplantilla<?=$idFila;?>" required> 	
 			</div>
       	</div>
       	<div class="col-sm-2">
@@ -217,13 +217,13 @@ if(isset($_GET['cod'])){
       	<div class="col-sm-1">
             <div class="form-group">
             	<label for="monto_detalleplantilla<?=$idFila;?>" class="bmd-label-floating">Precio Unit.</label>			
-          		<input class="form-control" type="number" step="0.1" min="0" value="<?=$montoUnitarioCostoX?>" name="monto_detalleplantilla<?=$idFila;?>" onchange="calcularTotalFilaDetalle(<?=$idFila?>)" onkeypress"calcularTotalFilaDetalle(<?=$idFila?>)" id="monto_detalleplantilla<?=$idFila;?>" required> 	
+          		<input class="form-control" type="number" step="0.01" min="0" value="<?=$montoUnitarioCostoX?>" name="monto_detalleplantilla<?=$idFila;?>" onkeyup="calcularTotalFilaDetalle(1,<?=$idFila?>)" id="monto_detalleplantilla<?=$idFila;?>" required> 	
 			</div>
       	</div>
       	<div class="col-sm-1">
             <div class="form-group">
             	<label for="monto_total_detalleplantilla<?=$idFila;?>" class="bmd-label-floating">Precio Total</label>			
-          		<input class="form-control" type="number" readonly step="0.1" min="0" value="<?=$montoTotalCostoX?>" name="monto_total_detalleplantilla<?=$idFila;?>" id="monto_total_detalleplantilla<?=$idFila;?>" required> 	
+          		<input class="form-control" type="number" onkeyup="calcularTotalFilaDetalle(2,<?=$idFila?>)"  step="0.01" min="0" value="<?=$montoTotalCostoX?>" name="monto_total_detalleplantilla<?=$idFila;?>" id="monto_total_detalleplantilla<?=$idFila;?>" required> 	
 			</div>
       	</div>
 

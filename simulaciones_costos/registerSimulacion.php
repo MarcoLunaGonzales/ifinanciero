@@ -117,25 +117,25 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
 						</div>
           </div>
           <div class="row">
-						<div class="col-sm-4">
+						<div class="col-sm-6">
 							<div class="form-group">
 						  		<label class="bmd-label-static">Fecha</label>
 						  		<input class="form-control" type="text" name="fecha" value="<?=$fechaX?>" id="fecha" readonly/>
 							</div>
 						</div>
 
-						<div class="col-sm-4">
+						<div class="col-sm-6">
 				        	<div class="form-group">
 						  		<label class="bmd-label-static">Estado</label>
 						  		<input class="form-control" type="text" name="estado" value="<?=$estadoX?>" id="estado" readonly/>
 							</div>
 				    </div>
-						<div class="col-sm-4 bg-warning text-dark">
+						<!--<div class="col-sm-4 bg-warning text-dark">
               <label class="">Simulaci&oacute;n para</label>
-							<h4><b id="tipo_ibnorca"><?=$simulacionEn?></b></h4>
+							<h4><b id="tipo_ibnorca"><?=$simulacionEn?></b></h4>-->
 					  			<input class="form-control" type="hidden" readonly name="ibnorca" value="<?=$simulacionEn?>" id="ibnorca"/>
 							
-						</div>
+						<!--</div>-->
 					</div>
 				</div>
 			</div>
@@ -185,42 +185,42 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
 				    </div>
           </div>
            <div class="row">                
-          <div class="col-sm-2">
+          <div class="col-sm-4">
               <div class="form-group">
-                  <label class="bmd-label-static">Alumnos Ib</label>
+                  <label class="bmd-label-static">N&uacute;mero de Alumnos</label>
                   <input class="form-control" type="text" name="alumnos_plan" readonly value="<?=$alumnosX?>" id="alumnos_plan"/>
               </div>
             </div>
-            <div class="col-sm-2">
+            <!--<div class="col-sm-2">
               <div class="form-group">
-                  <label class="bmd-label-static">Alumnos Fu</label>
-                  <input class="form-control" type="text" name="alumnos_plan_fuera" readonly value="<?=$alumnosExternoX?>" id="alumnos_plan_fuera"/>
-              </div>
-            </div>
-            <div class="col-sm-2">
+                  <label class="bmd-label-static">Alumnos Fu</label>-->
+                  <input class="form-control" type="hidden" name="alumnos_plan_fuera" readonly value="<?=$alumnosExternoX?>" id="alumnos_plan_fuera"/>
+              <!--</div>
+            </div>-->
+            <div class="col-sm-4">
               <div class="form-group">
-                  <label class="bmd-label-static">UT. Min Ib %</label>
+                  <label class="bmd-label-static">Utilidad M&iacute;nima %</label>
                   <input class="form-control" type="text" name="utilidad_minlocal" readonly value="<?=$utilidadIbnorcaX?>" id="utilidad_minlocal"/>
               </div>
             </div>
-            <div class="col-sm-2">
+            <!--<div class="col-sm-2">
               <div class="form-group">
-                  <label class="bmd-label-static">UT. Min Fu %</label>
-                  <input class="form-control" type="text" name="utilidad_minext" readonly value="<?=$utilidadFueraX?>" id="utilidad_minext"/>
-              </div>
-            </div>
-            <div class="col-sm-2">
+                  <label class="bmd-label-static">UT. Min Fu %</label>-->
+                  <input class="form-control" type="hidden" name="utilidad_minext" readonly value="<?=$utilidadFueraX?>" id="utilidad_minext"/>
+              <!--</div>
+            </div>-->
+            <div class="col-sm-4">
               <div class="form-group">
-                  <label class="bmd-label-static">Importe Ib</label>
+                  <label class="bmd-label-static">Precio</label>
                   <input class="form-control" type="number" name="precio_local" readonly value="<?=$precioLocalX?>" id="precio_local"/>
               </div>
             </div>
-            <div class="col-sm-2">
+            <!--<div class="col-sm-2">
               <div class="form-group">
-                  <label class="bmd-label-static">Importe Fu</label>
-                  <input class="form-control" type="number" name="precio_externo" readonly value="<?=$precioExternoX?>" id="precio_externo"/>
-              </div>
-            </div>
+                  <label class="bmd-label-static">Importe Fu</label>-->
+                  <input class="form-control" type="hidden" name="precio_externo" readonly value="<?=$precioExternoX?>" id="precio_externo"/>
+              <!--</div>
+            </div>-->
 				      	<?php } ?>
 					</div>
                    <!-- <div class="row">
@@ -318,10 +318,10 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
  
                  if($ibnorcaC==1){
                  	$utilidadReferencial=$utilidadIbnorcaX;
-                 	$ibnorca_title="EN IBNORCA";
+                 	$ibnorca_title=""; // EN IBNORCA
                  }else{
                  	$utilidadReferencial=$utilidadFueraX;
-                 	$ibnorca_title="FUERA DE IBNORCA";
+                 	$ibnorca_title=""; //FUERA DE IBNORCA
                  }
 
                  //cambios para la nueva acortar la simulacion 
@@ -334,35 +334,35 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
                  $codEstadoSimulacion=4; 
                  if($pUtilidadLocal>=$utilidadIbnorcaX&&$pUtilidadExterno>=$utilidadFueraX){
                     $estiloUtilidad="bg-success text-white";
-                    $mensajeText="La simulación SI CUMPLE con la UTILIDAD NETA REQUERIDA DEL ".$utilidadReferencial." % ".$ibnorca_title;
+                    $mensajeText="La simulación SI CUMPLE con la UTILIDAD MINIMA REQUERIDA DEL ".$utilidadReferencial." % ".$ibnorca_title;
                     $estiloMensaje="text-success font-weight-bold";
                     $codEstadoSimulacion=3;  
                  }else{
                     if($pUtilidadLocal>=$utilidadIbnorcaX){
                         $estiloUtilidadIbnorca="bg-success text-white";
                         if($ibnorcaC==1){
-                         $mensajeText="La simulación SI CUMPLE con la UTILIDAD NETA REQUERIDA DEL ".$utilidadReferencial." % ".$ibnorca_title;
+                         $mensajeText="La simulación SI CUMPLE con la UTILIDAD MINIMA REQUERIDA DEL ".$utilidadReferencial." % ".$ibnorca_title;
                          $estiloMensaje="text-success font-weight-bold";
                          $codEstadoSimulacion=3;
                         }                 
                     }else{
                         $estiloUtilidadIbnorca="bg-danger text-white";
                         if($ibnorcaC==1){
-                         $mensajeText="La simulación NO CUMPLE con la UTILIDAD NETA REQUERIDA DEL ".$utilidadReferencial." % ".$ibnorca_title;
+                         $mensajeText="La simulación NO CUMPLE con la UTILIDAD MINIMA REQUERIDA DEL ".$utilidadReferencial." % ".$ibnorca_title;
                          $estiloMensaje="text-danger font-weight-bold";
                         }                      
                     }
                     if($pUtilidadExterno>=$utilidadFueraX){
                         $estiloUtilidadFuera="bg-success text-white";
                         if($ibnorcaC!=1){
-                         $mensajeText="La simulación SI CUMPLE con la UTILIDAD NETA REQUERIDA DEL ".$utilidadReferencial." % ".$ibnorca_title;
+                         $mensajeText="La simulación SI CUMPLE con la UTILIDAD MINIMA REQUERIDA DEL ".$utilidadReferencial." % ".$ibnorca_title;
                          $estiloMensaje="text-success font-weight-bold";
                          $codEstadoSimulacion=3;
                         }
                     }else{
                         $estiloUtilidadFuera="bg-danger text-white";
                         if($ibnorcaC!=1){
-                         $mensajeText="La simulación NO CUMPLE con la UTILIDAD NETA REQUERIDA DEL ".$utilidadReferencial." % ".$ibnorca_title;
+                         $mensajeText="La simulación NO CUMPLE con la UTILIDAD MINIMA REQUERIDA DEL ".$utilidadReferencial." % ".$ibnorca_title;
                          $estiloMensaje="text-danger font-weight-bold";
                         }                      
                     }
@@ -382,34 +382,48 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
 								<tr class="">
 									<th  style="font-size:12px !important;">-</th>
 									<th class="bg-table-primary text-white" style="font-size:12px !important;">EN IBNORCA</th>
-									<th class="bg-table-total text-white" style="font-size:12px !important;">FUERA DE IBNORCA</th>
+									<!--<th class="bg-table-total text-white" style="font-size:12px !important;">FUERA DE IBNORCA</th>-->
 								</tr>
 							</thead>
 							<tbody>
 								<tr>
-									<td class="text-left small bg-table-primary text-white">TOTAL COSTO FIJO</td><td class="text-right font-weight-bold"><?=number_format($totalFijo[2], 2, '.', ',')?></td><td class="text-right font-weight-bold"><?=number_format($totalFijo[3], 2, '.', ',')?></td>
+									<td class="text-left small bg-table-primary text-white">TOTAL COSTO FIJO</td>
+                  <td class="text-right font-weight-bold"><?=number_format($totalFijo[2], 2, '.', ',')?></td>
+                  <!--<td class="text-right font-weight-bold"><?=number_format($totalFijo[3], 2, '.', ',')?></td>-->
 								</tr>
 								
 								<tr>
-									<td class="text-left small bg-table-primary text-white">TOTAL COSTO VARIABLE</td><td class="text-right font-weight-bold"><?=number_format(($totalVariable[2]*$alumnosX), 2, '.', ',')?></td><td class="text-right font-weight-bold"><?=number_format(($totalVariable[3]*$alumnosExternoX), 2, '.', ',')?></td>
+									<td class="text-left small bg-table-primary text-white">TOTAL COSTO VARIABLE</td>
+                  <td class="text-right font-weight-bold"><?=number_format(($totalVariable[2]*$alumnosX), 2, '.', ',')?></td>
+                  <!--<td class="text-right font-weight-bold"><?=number_format(($totalVariable[3]*$alumnosExternoX), 2, '.', ',')?></td>-->
 								</tr>
 								<tr class="bg-secondary text-white">
-									<td class="text-left small">COSTO TOTAL</td><td class="text-right font-weight-bold"><?=number_format($costoTotalLocal, 2, '.', ',')?></td><td class="text-right font-weight-bold"><?=number_format($costoTotalExterno, 2, '.', ',')?></td>
+									<td class="text-left small">COSTO TOTAL</td>
+                  <td class="text-right font-weight-bold"><?=number_format($costoTotalLocal, 2, '.', ',')?></td>
+                  <!--<td class="text-right font-weight-bold"><?=number_format($costoTotalExterno, 2, '.', ',')?></td>-->
 								</tr>
                 <tr>
                   <td class="text-center" colspan="3"> Datos Complementarios</td>
                 </tr>
                 <tr>
-                  <td class="text-left small bg-primary text-white">COSTO VARIABLE x PERSONA</td><td class="text-right font-weight-bold"><?=number_format($totalVariable[2], 2, '.', ',')?></td><td class="text-right font-weight-bold"><?=number_format($totalVariable[3], 2, '.', ',')?></td>
+                  <td class="text-left small bg-primary text-white">COSTO VARIABLE x PERSONA</td>
+                  <td class="text-right font-weight-bold"><?=number_format($totalVariable[2], 2, '.', ',')?></td>
+                  <!--<td class="text-right font-weight-bold"><?=number_format($totalVariable[3], 2, '.', ',')?></td>-->
                 </tr>
 								<tr>
-									<td class="text-left small bg-primary text-white">UTILIDAD MINIMA</td><td class="text-right font-weight-bold"><?=number_format($utilidadIbnorcaX, 2, '.', ',')?> %</td><td class="text-right font-weight-bold"><?=number_format($utilidadFueraX, 2, '.', ',')?> %</td>
+									<td class="text-left small bg-primary text-white">UTILIDAD MINIMA</td>
+                  <td class="text-right font-weight-bold"><?=number_format($utilidadIbnorcaX, 2, '.', ',')?> %</td>
+                  <!--<td class="text-right font-weight-bold"><?=number_format($utilidadFueraX, 2, '.', ',')?> %</td>-->
 								</tr>
 								<tr class="bg-primary text-white">
-									<td class="text-left small">PRECIO DE VENTA (IMPORTE)</td><td class="text-right font-weight-bold"><?=number_format($precioLocalX, 2, '.', ',')?></td><td class="text-right font-weight-bold"><?=number_format($precioExternoX, 2, '.', ',')?></td>
+									<td class="text-left small">PRECIO DE VENTA (IMPORTE)</td>
+                  <td class="text-right font-weight-bold"><?=number_format($precioLocalX, 2, '.', ',')?></td>
+                  <!--<td class="text-right font-weight-bold"><?=number_format($precioExternoX, 2, '.', ',')?></td>-->
 								</tr>
 								<tr class="bg-primary text-white">
-									<td class="text-left small">ALUMNOS</td><td class="text-right font-weight-bold"><?=$alumnosX?></td><td class="text-right font-weight-bold"><?=$alumnosExternoX?></td>
+									<td class="text-left small">ALUMNOS</td>
+                  <td class="text-right font-weight-bold"><?=$alumnosX?></td>
+                  <!--<td class="text-right font-weight-bold"><?=$alumnosExternoX?></td>-->
 								</tr>
 							</tbody>
 						</table>
@@ -420,24 +434,44 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
 								<tr class="">
 									<th>-</th>
 									<th colspan="2" class="bg-table-primary text-white">EN IBNORCA</th>
-									<th colspan="2" class="bg-table-total text-white">FUERA DE IBNORCA</th>
+									<!--<th colspan="2" class="bg-table-total text-white">FUERA DE IBNORCA</th>-->
 								</tr>
 							</thead>
 							<tbody>
                 <tr>
-                  <td class="text-left small bg-table-primary text-white">INGRESOS POR VENTAS</td><td class="text-right font-weight-bold"><?=number_format($ingresoLocal, 2, '.', ',')?></td><td class="text-right font-weight-bold">100 %</td><td class="text-right font-weight-bold"><?=number_format($ingresoExterno, 2, '.', ',')?></td><td class="text-right font-weight-bold">100 %</td>
+                  <td class="text-left small bg-table-primary text-white">INGRESOS POR VENTAS</td>
+                  <td class="text-right font-weight-bold"><?=number_format($ingresoLocal, 2, '.', ',')?></td>
+                  <td class="text-right font-weight-bold">100 %</td>
+                  <!--<td class="text-right font-weight-bold"><?=number_format($ingresoExterno, 2, '.', ',')?></td>
+                  <td class="text-right font-weight-bold">100 %</td>-->
                 </tr>
                 <tr>
-                  <td class="text-left small bg-table-primary text-white">TOTAL COSTO FIJO</td><td class="text-right font-weight-bold"><?=number_format($totalFijo[2], 2, '.', ',')?></td><td class="text-right font-weight-bold"><?=number_format(($totalFijo[2]/$ingresoLocal)*100, 2, '.', ',')?> %</td><td class="text-right font-weight-bold"><?=number_format($totalFijo[3], 2, '.', ',')?></td><td class="text-right font-weight-bold"><?=number_format(($totalFijo[3]/$ingresoExterno)*100, 2, '.', ',')?> %</td>
+                  <td class="text-left small bg-table-primary text-white">TOTAL COSTO FIJO</td>
+                  <td class="text-right font-weight-bold"><?=number_format($totalFijo[2], 2, '.', ',')?></td>
+                  <td class="text-right font-weight-bold"><?=number_format(($totalFijo[2]/$ingresoLocal)*100, 2, '.', ',')?> %</td>
+                  <!--<td class="text-right font-weight-bold"><?=number_format($totalFijo[3], 2, '.', ',')?></td>
+                  <td class="text-right font-weight-bold"><?=number_format(($totalFijo[3]/$ingresoExterno)*100, 2, '.', ',')?> %</td>-->
                 </tr>
                 <tr>
-                  <td class="text-left small bg-table-primary text-white">TOTAL COSTO VARIABLE</td><td class="text-right font-weight-bold"><?=number_format(($totalVariable[2]*$alumnosX), 2, '.', ',')?></td><td class="text-right font-weight-bold"><?=number_format($pCostoLocal, 2, '.', ',')?> %</td><td class="text-right font-weight-bold"><?=number_format(($totalVariable[3]*$alumnosExternoX), 2, '.', ',')?></td><td class="text-right font-weight-bold"><?=number_format($pCostoExterno, 2, '.', ',')?> %</td>
+                  <td class="text-left small bg-table-primary text-white">TOTAL COSTO VARIABLE</td>
+                  <td class="text-right font-weight-bold"><?=number_format(($totalVariable[2]*$alumnosX), 2, '.', ',')?></td>
+                  <td class="text-right font-weight-bold"><?=number_format($pCostoLocal, 2, '.', ',')?> %</td>
+                  <!--<td class="text-right font-weight-bold"><?=number_format(($totalVariable[3]*$alumnosExternoX), 2, '.', ',')?></td>
+                  <td class="text-right font-weight-bold"><?=number_format($pCostoExterno, 2, '.', ',')?> %</td>-->
                 </tr>
                 <tr>
-                  <td class="text-left small bg-table-primary text-white">PAGO IMPUESTOS (IVA  <?=$iva?> % + IT <?=$it?> % = <?=$iva+$it?> %)</td><td class="text-right font-weight-bold"><?=number_format((($iva+$it)/100)*$ingresoLocal, 2, '.', ',')?></td><td class="text-right font-weight-bold"><?=number_format($iva+$it, 2, '.', ',')?> %</td><td class="text-right font-weight-bold"><?=number_format((($iva+$it)/100)*$ingresoExterno, 2, '.', ',')?></td><td class="text-right font-weight-bold"><?=number_format($iva+$it, 2, '.', ',')?> %</td>
+                  <td class="text-left small bg-table-primary text-white">PAGO IMPUESTOS (IVA  <?=$iva?> % + IT <?=$it?> % = <?=$iva+$it?> %)</td>
+                  <td class="text-right font-weight-bold"><?=number_format((($iva+$it)/100)*$ingresoLocal, 2, '.', ',')?></td>
+                  <td class="text-right font-weight-bold"><?=number_format($iva+$it, 2, '.', ',')?> %</td>
+                  <!--<td class="text-right font-weight-bold"><?=number_format((($iva+$it)/100)*$ingresoExterno, 2, '.', ',')?></td>
+                  <td class="text-right font-weight-bold"><?=number_format($iva+$it, 2, '.', ',')?> %</td>-->
                 </tr>
                 <tr class="<?=$estiloUtilidad?>">
-                  <td class="text-left small bg-table-primary text-white">UTILIDAD NETA</td><td class="text-right font-weight-bold <?=$estiloUtilidadIbnorca?>"><?=number_format($utilidadNetaLocal, 2, '.', ',')?></td><td class="text-right font-weight-bold <?=$estiloUtilidadIbnorca?>"><?=number_format($pUtilidadLocal, 2, '.', ',')?> %</td><td class="text-right font-weight-bold <?=$estiloUtilidadFuera?>"><?=number_format($utilidadNetaExterno, 2, '.', ',')?></td><td class="text-right font-weight-bold <?=$estiloUtilidadFuera?>"><?=number_format($pUtilidadExterno, 2, '.', ',')?> %</td>
+                  <td class="text-left small bg-table-primary text-white">UTILIDAD NETA</td>
+                  <td class="text-right font-weight-bold <?=$estiloUtilidadIbnorca?>"><?=number_format($utilidadNetaLocal, 2, '.', ',')?></td>
+                  <td class="text-right font-weight-bold <?=$estiloUtilidadIbnorca?>"><?=number_format($pUtilidadLocal, 2, '.', ',')?> %</td>
+                  <!--<td class="text-right font-weight-bold <?=$estiloUtilidadFuera?>"><?=number_format($utilidadNetaExterno, 2, '.', ',')?></td>
+                  <td class="text-right font-weight-bold <?=$estiloUtilidadFuera?>"><?=number_format($pUtilidadExterno, 2, '.', ',')?> %</td>-->
                 </tr>
 								<!--<tr>
 									<td class="text-left small bg-table-primary text-white">INGRESOS POR VENTAS</td><td class="text-right font-weight-bold"><?=number_format($ingresoLocal, 2, '.', ',')?></td><td class="text-right font-weight-bold">100 %</td><td class="text-right font-weight-bold"><?=number_format($ingresoExterno, 2, '.', ',')?></td><td class="text-right font-weight-bold">100 %</td>

@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once '../layouts/bodylogin2.php';
 require_once '../conexion.php';
 require_once '../functions.php';
@@ -7,7 +8,7 @@ require_once 'configModule.php';
 
 $dbh = new Conexion();
 
-session_start();
+
 
 $globalUser=$_SESSION["globalUser"];
 
@@ -41,7 +42,7 @@ for ($i=0; $i < cantidadF($servicio); $i++) {
 }
 
 if($flagSuccess==true){
-	showAlertSuccessError(true,"../".$urlList);	
+	showAlertSuccessError(true,"../".$urlRegister."?cod=".$codPlanServ);	
 }else{
 	showAlertSuccessError(false,"../".$urlList);
 }

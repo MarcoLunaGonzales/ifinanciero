@@ -6,14 +6,13 @@ $moduleNamePlural="Plantillas de Servicios";
 
 //$moduleNameSingular="Comprobantes";
 $urlList="index.php?opcion=listPlantillasServicios";
-$urlList2="index.php?opcion=listPlantillasCostosAdmin";
+$urlList2="index.php?opcion=listPlantillasServiciosAdmin";
 
 $urlReporte="plantillas_costos/reportePlanCosto.php";
 $urlRegister="plantillas_servicios/registerDetalle.php";
 //$urlRegister2="plantillas_costos/register.php";
 $urlRegister2="index.php?opcion=registerPlantillaServicio";
-$urlEdit="index.php?opcion=editComprobante";
-$urlEdit2="plantillas_costos/edit.php";
+$urlEdit2="plantillas_servicios/edit.php";
 $urlArchivo="comprobantes/archivoComprobante.php";
 $urlImp="comprobantes/imp.php";
 $urlDelete="index.php?opcion=deletePlantillaServicios";

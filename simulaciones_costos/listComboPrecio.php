@@ -25,11 +25,12 @@ if(isset($_GET["codigo"])){
               $codigoPrecio=$row['codigo'];
               $precioLocal=number_format($row['venta_local'], 2, '.', ',');
               $precioExterno=number_format($row['venta_externo'], 2, '.', ',');
-              if($ibnorca==1){
+              $labelText=$precioLocal;
+              /*if($ibnorca==1){
                 $labelText="Ibnorca: ".$precioLocal;
               }else{
                 $labelText="Fuera: ".$precioExterno;
-              }    
+              } */   
               ?><option value="<?=$codigoPrecio?>" class="text-right"><?=$labelText?></option>
              <?php 
              } ?> 
