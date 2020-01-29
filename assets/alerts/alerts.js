@@ -44,6 +44,18 @@ alerts = {
           location.href=url;
       });
     }
+    else if(type == 'error-message5'){
+      swal("ERROR!", "No puedes registrar un nuevo contrato. Por favor cierre el contrato anterior. Gracias!.", "error")
+          .then((value) => {
+          location.href=url;
+      });
+    }
+    else if(type == 'error-message6'){
+      swal("ERROR!", "No puedes retirar Al personal. Por favor cierre el último contrato. Gracias!.", "error")
+          .then((value) => {
+          location.href=url;
+      });
+    }
   },
 
   

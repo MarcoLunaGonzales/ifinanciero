@@ -48,6 +48,7 @@ if ($codigo > 0){
                       <h4 class="card-title"><?php if ($codigo == 0) echo "Registrar"; else echo "Editar";?>  <?=$nombreSingularfiniquito;?></h4>
                     </div>
                   </div>
+                  <h4 align="center"> Seleccione al personal Retirado Por favor.</h4>
                   <div class="card-body ">
                     
 
@@ -72,14 +73,14 @@ if ($codigo > 0){
                         </div>
                     </div><!--fin campo nombre -->
                     <div class="row">
-                        <label class="col-sm-2 col-form-label">Fecha Retiro</label>
+                        <label class="col-sm-2 col-form-label">Años pagados de trabajo</label>
                         <div class="col-sm-7">
                         <div class="form-group">
-                            <input class="form-control" type="date" name="fecha_retiro" id="fecha_retiro" required="true" value="<?=$fecha_retiro;?>" />
+                            <input class="form-control" type="date" name="anios_trabajados_pagados" id="anios_trabajados_pagados" required="true" value="0" />
 
                         </div>
                         </div>
-                    </div><!--fin campo abreviatura -->
+                    </div>
                     <!-- <div class="row">
                         <label class="col-sm-2 col-form-label">Motivo Retiro</label>
                         <div class="col-sm-7">
@@ -91,7 +92,7 @@ if ($codigo > 0){
                                         </select>
                         </div>
                         </div>
-                    </div><!--fin campo motivo_retiro --> -->
+                    </div><!--fin campo motivo_retiro
                   </div>
                   <div class="card-footer ml-auto mr-auto">
                     <button type="submit" class="<?=$buttonNormal;?>">Guardar</button>

@@ -1391,6 +1391,22 @@ function ajaxPersonalUbicacion(codigo_UO){
   ajax.send(null)
   
 }
+// function ajaxEtiquetasAFPersonal(combo){
+//   var contenedor;
+//   var codigo_UO=combo.value;
+//   contenedor = document.getElementById('div_contenedor_UO');
+//   ajax=nuevoAjax();
+//   ajax.open('GET', 'activosFijos/EtiquetasAFAjax.php?codigo_UO='+codigo_UO,true);
+//   ajax.onreadystatechange=function() {
+//     if (ajax.readyState==4) {
+//       contenedor.innerHTML = ajax.responseText;
+//       $('.selectpicker').selectpicker(["refresh"]);
+      
+//       ajaxPersonalUbicacion(codigo_UO);
+//     }
+//   }
+//   ajax.send(null)  
+// }
 
 function ajaxPersonalUbicacionTrasfer(combo){
   var contenedor;
@@ -2656,6 +2672,14 @@ function agregaformPCE(datos){
   // document.getElementById("cod_areaE").value=d[2];
   // document.getElementById("porcentajeE").value=d[3];
 }
+function agregaContratoFin(datos){
+  //console.log("datos: "+datos);
+  var d=datos.split('/');
+  
+  // alert("d1: "+d[0]+"-d2: "+d[1]);
+  document.getElementById("cod_personalCF").value=d[0];
+  document.getElementById("cod_contratoCf").value=d[1];
+}
 function agregaformPCB(datos){
   //console.log("datos: "+datos);
   var d=datos.split('/');
@@ -2685,10 +2709,12 @@ function RegistrarContratoPersonal(cod_personal,cod_tipocontrato,fecha_inicio){
     url:"personal/savePersonalcontrato.php",
     success:function(r){
       if(r==1){
-        //$('#tabla1').load('index.php');
-        // alertify.success("agregado");
         alerts.showSwal('success-message','index.php?opcion=FormPersonalContratos&codigo='+cod_personal);
-      }
+      }else{
+        if(r==2){
+          alerts.showSwal('error-message5','index.php?opcion=FormPersonalContratos&codigo='+cod_personal);
+        }
+      } 
     }
   });
 }
@@ -2714,10 +2740,10 @@ function EditarEvaluacionPersonal(codigo_contratoEv,codigo_personalEv,fecha_Eval
     data:"cod_contrato="+codigo_contratoEv+"&cod_personal=0&cod_tipocontrato=0&cod_estadoreferencial=4&fecha_inicio="+fecha_EvaluacionEv+"&observaciones=''",
     url:"personal/savePersonalcontrato.php",
     success:function(r){
-      if(r==1){
-        //$('#tabla1').load('index.php');
-        // alertify.success("agregado");
+      if(r==1){        
         alerts.showSwal('success-message','index.php?opcion=FormPersonalContratos&codigo='+codigo_personalEv);
+      }else{
+        alerts.showSwal('error-message','index.php?opcion=FormPersonalContratos&codigo='+codigo_personalEv);
       }
     }
   });
@@ -2745,11 +2771,30 @@ function RetirarPersonal(cod_personal,cod_tiporetiro,fecha_Retiro,observaciones)
     url:"personal/savePersonalcontrato.php",
     success:function(r){
       if(r==1){
-        //$('#tabla1').load('index.php');
-        // alertify.success("agregado");
         alerts.showSwal('success-message','index.php?opcion=personalLista');
       }else{
-        alerts.showSwal('error-message','index.php?opcion=personalLista');
+        if(r==2){
+          alerts.showSwal('error-message6','index.php?opcion=FormPersonalContratos&codigo='+cod_personal);
+        }else{
+          alerts.showSwal('error-message','index.php?opcion=personalLista');
+        }
+        
+      }
+    }
+  });
+}
+
+function FinalizarContratoPersonal(codigo_contratoCF,codigo_personalCf){
+  $.ajax({
+    type:"POST",
+
+    data:"cod_contrato="+codigo_contratoCF+"&cod_personal=0&cod_tipocontrato=0&cod_estadoreferencial=6&fecha_inicio='0000-00-00'&observaciones=''",
+    url:"personal/savePersonalcontrato.php",
+    success:function(r){
+      if(r==1){   
+        alerts.showSwal('success-message','index.php?opcion=FormPersonalContratos&codigo='+codigo_personalCf);
+      }else{
+        alerts.showSwal('error-message','index.php?opcion=FormPersonalContratos&codigo='+codigo_personalCf);
       }
     }
   });
