@@ -83,7 +83,7 @@ function addCuentaContable(obj) {
           $('#nro_cuenta').val("");
           $('#cuenta').val("");//
           $('#padre').val("");
-          $("#divResultadoBusqueda").html("<div class='form-group col-sm-8'>Resultados de la Búsqueda</div>");
+          $("#divResultadoBusqueda").html("<div class='form-group col-sm-8'>Resultados de la B&uacute;squeda</div>");
           $('.selectpicker').selectpicker("refresh");
           $('#myModal').modal('show');
           if($("#add_boton").length){
@@ -277,15 +277,15 @@ function updateSelect(valor,id){
     }else{
       $("#copiar_sel_msg").append("<small class='text-warning'>"+idn+" fila de @"+id+" no copiada</small><br>");
     }
-    //$("#copiar_sel_msg").append("<small class='text-success'>Explicación: Existe un valor por defecto en @"+id+"</small><br>");
+    //$("#copiar_sel_msg").append("<small class='text-success'>Explicaci&oacute;n: Existe un valor por defecto en @"+id+"</small><br>");
    }else{
     //$("#modalCopySel").modal("hide");
    }
    var exito=numFilas-idn;
    if(exito==1){
-      $("#copiar_sel_msg").append("<small class='text-success'>"+exito+" filas de @"+id+" copiada con éxito</small><br>");
+      $("#copiar_sel_msg").append("<small class='text-success'>"+exito+" filas de @"+id+" copiada con &eacute;xito</small><br>");
     }else{
-      $("#copiar_sel_msg").append("<small class='text-success'>"+exito+" filas de @"+id+" copiadas con éxito</small><br>");
+      $("#copiar_sel_msg").append("<small class='text-success'>"+exito+" filas de @"+id+" copiadas con &eacute;xito</small><br>");
     }
    
    $('.selectpicker').selectpicker('refresh');
@@ -610,11 +610,11 @@ function abrirPlantilla(id,n,glosa,tipo){
 function nuevaDistribucionPonerFila(fila){
  var glosa = $("#glosa_detalle"+fila).val();
  if(glosa==""){
-   $("#mensajeDist").html("<p>La glosa se encuentra vacía!</p>");
+   $("#mensajeDist").html("<p>La glosa se encuentra vac&iacute;a!</p>");
  }else{
   var area=$("#area"+fila).val();
    if(area==""||area==null||area==0){
-     $("#mensajeDist").html("<p>El area esta vacía</p>");
+     $("#mensajeDist").html("<p>El area esta vac&iacute;a</p>");
    }else{
     if($("#debe"+fila).val()==""&& $("#haber"+fila).val()==""){
        $("#mensajeDist").html("<p>Debe ingresar El Debe o el Haber que corresponda distribuir</p>");
@@ -986,7 +986,7 @@ function mostrarPreciosPlantilla(){
     }else{
       Swal.fire({
         title: '¿Guardar Cambios?',
-        text: "Se sobreescribirá el monto registrado",
+        text: "Se sobreescribir&aacute; el monto registrado",
          type: 'warning',
         showCancelButton: true,
         confirmButtonClass: 'btn btn-info',
@@ -1259,7 +1259,7 @@ function detectarCargaAjax(){
                 var segundo = momentoActual.getSeconds();
                 var horaImprimible = hora + ":" + minuto + ":" + segundo;
           
-          $("#mensajeDetalle").html("<center><p class='text-info'>Cálculo realizado Hoy "+horaImprimible+"</p></center>");
+          $("#mensajeDetalle").html("<center><p class='text-info'>C&aacute;lculo realizado Hoy "+horaImprimible+"</p></center>");
         }
     });
  }
@@ -1724,7 +1724,7 @@ function calcularDatosPlantilla(){
         url: "ajaxCalcularDatosPlantilla.php",
         data: parametros,
         beforeSend: function () { 
-         $("#mensaje_process").html("<center><p class='text-muted'>Cálculando espere porfavor...</p></center>"); 
+         $("#mensaje_process").html("<center><p class='text-muted'>C&aacute;lculando espere porfavor...</p></center>"); 
          $("#calcular").attr("disabled","disabled");
         },
         success:  function (resp) {
@@ -1734,7 +1734,7 @@ function calcularDatosPlantilla(){
           var minuto = momentoActual.getMinutes();
           var segundo = momentoActual.getSeconds();
           var horaImprimible = hora + ":" + minuto + ":" + segundo;
-          $("#mensaje_process").html("<center><p class='text-info'>Cálculo realizado Hoy "+horaImprimible+"</p></center>");
+          $("#mensaje_process").html("<center><p class='text-info'>C&aacute;lculo realizado Hoy "+horaImprimible+"</p></center>");
           $("#calcular").removeAttr("disabled");
           contenedor.bootstrapMaterialDesign();
         }
@@ -1824,7 +1824,7 @@ function presioneBoton(){
 function guardarSimulacion(valor){
   Swal.fire({
         title: '¿Esta Seguro?',
-        text: "La simulación se enviará para su posterior revisión",
+        text: "La simulaci&oacute;n se enviar&aacute; para su posterior revisi&oacute;n",
          type: 'warning',
         showCancelButton: true,
         confirmButtonClass: 'btn btn-info',
@@ -1923,7 +1923,7 @@ function enviarSimulacionAjax(){
         },
         success:  function (resp) {
          $("#logo_carga").hide();
-         Swal.fire("Envío Existoso!", "Se registradon los datos exitosamente!", "success")
+         Swal.fire("Env&iacute;o Existoso!", "Se registradon los datos exitosamente!", "success")
              .then((value) => {
              location.href="../index.php?opcion=listSimulacionesCostos";
          });
@@ -1968,7 +1968,7 @@ function borrarRetencionDetalle(cod){
         data: parametros,
         success:  function (resp) {
          contenedor.html(resp);
-         $("#msgError").html("<p class='text-success'><small>Se eliminó el registro exitosamente!</small></p>");
+         $("#msgError").html("<p class='text-success'><small>Se elimin&oacute; el registro exitosamente!</small></p>");
          $('#modalAlert').modal('show');
         }
     });
@@ -1977,7 +1977,7 @@ function editarRetencionNombre(){
   var nombre=$("#nombre_retencion").val();
   var porcentaje=$("#cuenta_origen").val();
   if(nombre==""){
-    $("#msgError").html("<p class='text-danger'><small>No se puede poner un nombre vacío a la retención</small></p>");
+    $("#msgError").html("<p class='text-danger'><small>No se puede poner un nombre vac&iacute;o a la retenci&oacute;n</small></p>");
     $('#modalAlert').modal('show'); 
   }else{
     var codigo=$("#codigo").val();
@@ -2043,7 +2043,7 @@ function listRetencion(id){
    }
    
    abrirModal('modalRetencion');
-   $("#mensaje_retencion").html("<p class='text-info'>Seleccione una retención</p>");
+   $("#mensaje_retencion").html("<p class='text-info'>Seleccione una retenci&oacute;n</p>");
  }
 //inicializar el puntero el el primer input modal Buscar Cuenta...
 $(document).on("shown.bs.modal","#modalRetencion",function(){
@@ -2065,7 +2065,7 @@ $(document).on("shown.bs.modal","#modalRetencion",function(){
       agregarRetencionCuenta(listaRet); 
     }  
   }else{
-    $("#mensaje_retencion").html("<p class='text-danger'>Debe seleccionar al menos una retención</p>");
+    $("#mensaje_retencion").html("<p class='text-danger'>Debe seleccionar al menos una retenci&oacute;n</p>");
   }
   
  }
@@ -2465,7 +2465,7 @@ function agregarRetencionSolicitud(){
      $('#modalRetencion').modal('hide');
      $("#importe_label"+fila).text("Importe - "+respuesta[1].substr(0,3)+"...");
   }else{
-    $("#mensaje_retencion").html("<p class='text-danger'>Debe seleccionar al menos una retención</p>");
+    $("#mensaje_retencion").html("<p class='text-danger'>Debe seleccionar al menos una retenci&oacute;n</p>");
   }
   
  }
@@ -3367,7 +3367,7 @@ function guardarCuentasSimulacionAjax(ib){
           detectarCargaAjax();
           $("#guardar_cuenta").text("Guardar");
           $("#guardar_cuenta").removeAttr("disabled");
-          $("#mensaje_cuenta").html("<p class='text-success'>Se insertaron los datos correctamente! </p>");//<a class='btn btn-warning btn-sm' href='#' onclick='actualizarSimulacion();'>aplicar cambios a la simulación</a>
+          $("#mensaje_cuenta").html("<p class='text-success'>Se insertaron los datos correctamente! </p>");//<a class='btn btn-warning btn-sm' href='#' onclick='actualizarSimulacion();'>aplicar cambios a la simulaci&oacute;n</a>
         }
       });
     }
@@ -3404,7 +3404,7 @@ function guardarCuentasSimulacionAjaxGenerico(ib){
         success:function(resp){
           $("#guardar_cuenta").text("Guardar");
           $("#guardar_cuenta").removeAttr("disabled");
-          $("#mensaje_cuenta").html("<p class='text-success'>Se insertaron los datos correctamente! </p>");//<a class='btn btn-warning btn-sm' href='#' onclick='actualizarSimulacion();'>aplicar cambios a la simulación</a>
+          $("#mensaje_cuenta").html("<p class='text-success'>Se insertaron los datos correctamente! </p>");//<a class='btn btn-warning btn-sm' href='#' onclick='actualizarSimulacion();'>aplicar cambios a la simulaci&oacute;n</a>
         },complete : function(xhr, status) {
         
          }
@@ -3473,7 +3473,7 @@ function guardarCuentasSimulacionGenerico(ib){
     }else{
         Swal.fire({
          title: 'Advertencia!',
-         text: "Hay uno o más registros deshabilitados ¿Desea Continuar?",
+         text: "Hay uno o m&aacute;s registros deshabilitados ¿Desea Continuar?",
          type: 'warning',
          showCancelButton: true,
          confirmButtonClass: 'btn btn-info',
@@ -3513,7 +3513,7 @@ function guardarCuentasSimulacion(ib){
     }else{
         Swal.fire({
          title: 'Advertencia!',
-         text: "Hay uno o más registros deshabilitados ¿Desea Continuar?",
+         text: "Hay uno o m&aacute;s registros deshabilitados ¿Desea Continuar?",
          type: 'warning',
          showCancelButton: true,
          confirmButtonClass: 'btn btn-info',
@@ -3964,7 +3964,7 @@ function ponerCorreoPersona(){
 
 function enviarCorreoEvento(){
    if($("#correo").val()==""||$("#correo").val()=="NN"){
-        Swal.fire('Informativo!','El correo no debe estar vacío','warning');  
+        Swal.fire('Informativo!','El correo no debe estar vac&iacute;o','warning');  
    }else{
      if($("#evento").val()==""||$("#personal").val()==""){
         Swal.fire('Informativo!','Debe completar los datos','warning');  
@@ -3989,7 +3989,7 @@ function enviarCorreoEvento(){
 }
 function registrarCorreoEvento(){
    if($("#correo").val()==""||$("#correo").val()=="NN"){
-        Swal.fire('Informativo!','El correo no debe estar vacío','warning');  
+        Swal.fire('Informativo!','El correo no debe estar vac&iacute;o','warning');  
    }else{
      if($("#evento").val()==""||$("#personal").val()==""){
         Swal.fire('Informativo!','Debe completar los datos','warning');  
@@ -4175,7 +4175,7 @@ function actualizarSimulacion(){
   var codigo=$("#cod_simulacion").val();
    Swal.fire({
         title: '¿Esta Seguro?',
-        text: "Los datos de la simulación se actualizarán!",
+        text: "Los datos de la simulaci&oacute;n se actualizar&aacute;n!",
         type: 'warning',
         showCancelButton: true,
         confirmButtonClass: 'btn btn-info',

@@ -95,7 +95,7 @@ where pc.codigo=$codigo";
             '<tr class="text-center">'.
               '<th class="text-left"><small>DETALLE</small></th>'.
               '<th><small>IMPORTE TOTAL MENSUAL</small></th>'.
-              '<th><small>COSTO POR CURSO</small></th>'.
+              '<th><small>COSTO POR MODULO</small></th>'.
             '</tr>'.
            '</thead>'.
            '<tbody>'; 

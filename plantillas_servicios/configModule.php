@@ -1,6 +1,6 @@
 <?php
 //AQUI SE DEFINEN LAS VARIABLES PARA EL ABM
-$table="plantillas_costo";
+$table="plantillas_servicios";
 $moduleNameSingular="Plantilla Servicio";
 $moduleNamePlural="Plantillas de Servicios";
 
@@ -16,7 +16,7 @@ $urlEdit="index.php?opcion=editComprobante";
 $urlEdit2="plantillas_costos/edit.php";
 $urlArchivo="comprobantes/archivoComprobante.php";
 $urlImp="comprobantes/imp.php";
-$urlDelete="index.php?opcion=deletePlantillaCosto";
+$urlDelete="index.php?opcion=deletePlantillaServicios";
 $urlSave="plantillas_servicios/save.php";
 $urlSaveEdit="comprobantes/saveEdit.php";
 $urlSaveDelete="";

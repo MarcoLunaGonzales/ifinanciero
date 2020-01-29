@@ -137,7 +137,10 @@
 		if ($_GET['opcion']=='registerPlantillaServicio') {
 			require_once('plantillas_servicios/register.php');
 		}
-
+		if ($_GET['opcion']=='deletePlantillaServicios') {
+			require_once('plantillas_servicios/saveDelete.php');
+		}
+         
         //MES EN CURSO
         if ($_GET['opcion']=='mesCurso') {
 			require_once('mes_curso/list.php');
