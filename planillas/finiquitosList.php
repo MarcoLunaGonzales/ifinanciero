@@ -10,12 +10,15 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $dbh = new Conexion();
 
 
-  $stmt = $dbh->prepare("SELECT *,(Select t.nombre from tipos_retiro_personal t where t.codigo=cod_tiporetiro) as motivo_retiro from finiquitos where cod_estadoreferencial=1");
+  $stmt = $dbh->prepare("SELECT codigo,cod_personal,fecha_ingreso,fecha_retiro,
+(select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=cod_personal) as nombre_personal,
+(Select t.nombre from tipos_retiro_personal t where t.codigo=cod_tiporetiro) as motivo_retiro from finiquitos where cod_estadoreferencial=1");
   //ejecutamos
   $stmt->execute();
   //bindColumn
   $stmt->bindColumn('codigo', $codigo);
   $stmt->bindColumn('cod_personal', $cod_personal);
+  $stmt->bindColumn('nombre_personal', $nombre_personal);
   $stmt->bindColumn('fecha_ingreso', $fecha_ingreso);
   $stmt->bindColumn('fecha_retiro', $fecha_retiro);
   $stmt->bindColumn('motivo_retiro', $motivo_retiro);
@@ -35,9 +38,8 @@ $dbh = new Conexion();
                 <thead>
                     <tr>                    
                       <th>#</th>
-                      <th>Código Personal</th>      
-                      <th>Apellidos</th>      
-                      <th>Nombres</th>      
+                      <th>Cód. Personal</th>      
+                      <th>Nombre Personal</th>      
                       <th>Fecha Ingreso</th>                      
                       <th>Fecha Retiro</th>                      
                       <th>Motivo Retiro</th> 
@@ -56,9 +58,8 @@ $dbh = new Conexion();
                     <tr>                    
                       
                       <td><?=$index?></td>
-                      <td><?=$cod_personal;?></td>                  
-                      <td><?=$cod_personal;?></td>
-                      <td><?=$cod_personal;?></td>
+                      <td><?=$cod_personal;?></td>                      
+                      <td><?=strtoupper($nombre_personal);?></td>
                       <td><?=$fecha_ingreso;?></td>
                       <td><?=$fecha_retiro;?></td>
                       <td><?=$motivo_retiro;?></td>

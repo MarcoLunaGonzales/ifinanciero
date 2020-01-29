@@ -12,8 +12,9 @@ $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//para mostrar err
 try {
     $codigo = $_POST["codigo"];
     $cod_personal = $_POST["cod_personal"];
-    $fecha_retiro = $_POST["fecha_retiro"];
-    //$motivo_retiro = $_POST["motivo_retiro"];
+    $anios_trabajados_pagados = $_POST["anios_trabajados_pagados"];
+    //$fecha_retiro = $_POST["fecha_retiro"];
+    
     $cod_estadoreferencial =   1;    
     $created_by = 1;//$_POST["created_by"];
     $modified_by = 1;//$_POST["modified_by"];
@@ -22,10 +23,11 @@ try {
     $mes_retiro = date("m", strtotime($fecha_retiro));
     $dia_retiro = date("d", strtotime($fecha_retiro));
     //tipo_retiro
-    $stmtTipoRetiro = $dbh->prepare("SELECT cod_tiporetiro from personal_retiros where cod_personal=$cod_personal");
+    $stmtTipoRetiro = $dbh->prepare("SELECT cod_tiporetiro,fecha_retiro from personal_retiros where cod_personal=$cod_personal");
     $stmttipoRetiro->execute();
     $resultRetiro =  $stmttipoRetiro->fetch();
     $motivo_retiro = $resultRetiro['cod_tiporetiro'];
+    $fecha_retiro=$resultRetiro['fecha_retiro'];
     
     $stmtGestion = $dbh->prepare("SELECT codigo from gestiones where nombre=$anio_retiro");
     $stmtGestion->execute();
@@ -36,17 +38,16 @@ try {
     $stmtPersonal->execute();
     $resultPersonal =  $stmtPersonal->fetch();
     $ing_contr_x = $resultPersonal['ing_contr'];
+    $anio_ingreso = date("Y", strtotime($ing_contr_x));
+    $mes_ingreso = date("m", strtotime($ing_contr_x));
+    $dia_ingreso = date("d", strtotime($ing_contr_x));
+    //$anios_trabajados_pagados=5;//cambiar
 
-    $anios_trabajados_pagados=5;//cambiar
-    $ing_contr = '2015/07/26';//cambiar
-
-    $anio_ingreso = date("Y", strtotime($ing_contr));
-    $mes_ingreso = date("m", strtotime($ing_contr));
-    $dia_ingreso = date("d", strtotime($ing_contr));
-     // echo "mes_retiro".($mes_retiro-3);
-    // echo "-cod_personal".$cod_personal;
-    // echo "-fecha_retiro".$fecha_retiro;
-    // echo "-motivo_retiro".$motivo_retiro;
+    $anios_aux=$anio_ingreso+$anios_trabajados_pagados;
+    $ing_contr = '$anios_aux/$mes_ingreso/$dia_ingreso';//cambiar
+    $anio_ingreso2 = date("Y", strtotime($ing_contr));
+    $mes_ingreso2 = date("m", strtotime($ing_contr));
+    $dia_ingreso2 = date("d", strtotime($ing_contr));
     //aun no hay datos de planillas
     // $cod_planilla_3_atras=obtener_id_planilla($cod_gestion,($mes_retiro-3));
     // $cod_planilla_2_atras=obtener_id_planilla($cod_gestion,($mes_retiro-2));
@@ -62,13 +63,13 @@ try {
     //desahucio 3 meses
     $desahucio_3_meses=0;//buscar valor
     //indemnizacion
-    $indemnizacion_anios_diferencia=$anio_retiro-$anio_ingreso;
-    if($mes_retiro>$mes_ingreso) 
-        $indemnizacion_meses_diferencia=$mes_retiro-$mes_ingreso;
-    else $indemnizacion_meses_diferencia=$mes_ingreso-$mes_retiro;
-    if($dia_retiro>$dia_ingreso) 
-        $indemnizacion_dias_diferencia=$dia_retiro-$dia_ingreso;
-    else $indemnizacion_dias_diferencia=$dia_ingreso-$dia_retiro;
+    $indemnizacion_anios_diferencia=$anio_retiro-$anio_ingreso2;
+    if($mes_retiro>$mes_ingreso2) 
+        $indemnizacion_meses_diferencia=$mes_retiro-$mes_ingreso2;
+    else $indemnizacion_meses_diferencia=$mes_ingreso2-$mes_retiro;
+    if($dia_retiro>$dia_ingreso2) 
+        $indemnizacion_dias_diferencia=$dia_retiro-$dia_ingreso2;
+    else $indemnizacion_dias_diferencia=$dia_ingreso2-$dia_retiro;
     $indemnizacion_anios_monto=$indemnizacion_anios_diferencia*$sueldo_promedio;
     $indemnizacion_meses_monto=$sueldo_promedio/12*$indemnizacion_meses_diferencia;
     $indemnizacion_dias_monto=($sueldo_promedio/12/30)*$indemnizacion_dias_diferencia;//preguntar

@@ -6,6 +6,7 @@ require '../assets/phpqrcode/qrlib.php';
 //require_once 'configModule.php';
 require_once __DIR__.'/../functions.php';
 $dbh = new Conexion();
+set_time_limit(300);
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//try
 //RECIBIMOS LAS VARIABLES
 
@@ -68,8 +69,8 @@ $html.='<table class="table">'.
                     $cont=0;
                     while ($rowActivos = $stmtActivos->fetch(PDO::FETCH_ASSOC)) {
                        if($cont<3){
-                        $html.='<td style="border-bottom: 1px solid black;" height="2,5cm" width="6,7cm">
-                                    <table align="center" style="border:hidden">
+                        $html.='<td style="border-bottom: 0px solid black;" height="2,5cm" width="6,7cm">
+                                    <table class="tabla" align="center" style="border:hidden">
                                         <tr>
                                         <td style="border: hidden">';
                                             $dir = 'qr_temp/';
@@ -99,7 +100,7 @@ $html.='<table class="table">'.
                                 $cont++;
                        }else{;
                         $html.='</tr><tr>'.
-                                    '<td style="border-bottom: 1px solid black;"  height="2,5cm" width="6,7cm">
+                                    '<td style="border-bottom: 0px solid black;"  height="2,5cm" width="6,7cm">
                                         <table align="center" style="border:hidden">
                                             <tr>
                                             <td style="border: hidden">';
@@ -130,14 +131,14 @@ $html.='<table class="table">'.
                        
                     }
                     if($cont==2){
-                        $html.='<td style="border-bottom: 1px solid black;" height="2,5cm" width="6,7cm">
+                        $html.='<td style="border-bottom: 0px solid black;" height="2,5cm" width="6,7cm">
                                 </td>';
 
                     }if($cont==1){
-                        $html.='<td style="border-bottom: 1px solid black;" height="2,5cm" width="6,7cm">
+                        $html.='<td style="border-bottom: 0px solid black;" height="2,5cm" width="6,7cm">
                                 </td>
                                 <td style="border-top: hidden;border-bottom: hidden;" height=",2,5cm" width="0,3cm"></td>
-                                <td style="border-bottom: 1px solid black;" height="2,5cm" width="6,7cm">
+                                <td style="border-bottom: 0px solid black;" height="2,5cm" width="6,7cm">
                                 </td>';
                     }
 
@@ -148,7 +149,7 @@ $html.='<table class="table">'.
                                
         '</body>'.
       '</html>';           
-descargarPDF1("IBNORCA - ".$unidadC." (".$tipoC.", ".$numeroC.")",$html);
+descargarPDF1("IBNORCA-ETIQUETAS-AF",$html);
 
 ?>
 
