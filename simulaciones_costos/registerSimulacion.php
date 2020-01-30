@@ -384,11 +384,11 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
 									<td class="bg-table-primary text-white">IMPORTE</td>
 								</tr>
 								<tr>
-									<td class="text-left small bg-table-primary text-white">COSTOS FIJOS TOTAL</td>
+									<td class="text-left small bg-table-primary text-white">COSTO FIJO TOTAL</td>
                   <td class="text-right font-weight-bold"><?=number_format($totalFijo[2], 2, '.', ',')?></td>
 								</tr>
 								<tr>
-                  <td class="text-left small bg-table-primary text-white">COSTOS VARIABLES UNITARIOS</td>
+                  <td class="text-left small bg-table-primary text-white">COSTO VARIABLE UNITARIO</td>
                   <td class="text-right font-weight-bold"><?=number_format($totalVariable[2], 2, '.', ',')?></td>
                 </tr>
                 <tr class="">
@@ -422,11 +422,11 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
                   <td class="bg-table-primary text-white">IMPORTE</td>
                 </tr>
                 <tr>
-                  <td class="text-left small bg-table-primary text-white">COSTOS FIJOS TOTAL</td>
+                  <td class="text-left small bg-table-primary text-white">COSTO FIJO TOTAL</td>
                   <td class="text-right font-weight-bold"><?=number_format($totalFijo[2], 2, '.', ',')?></td>
                 </tr>
                 <tr>
-                  <td class="text-left small bg-table-primary text-white">COSTOS VARIABLES TOTAL</td>
+                  <td class="text-left small bg-table-primary text-white">COSTO VARIABLE TOTAL</td>
                   <td class="text-right font-weight-bold"><?=number_format(($totalVariable[2]*$alumnosX), 2, '.', ',')?></td>
                 </tr>
                 <tr class="bg-warning text-dark">

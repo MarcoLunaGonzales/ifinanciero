@@ -219,12 +219,12 @@ function configuracionEstadosCuenta(fila,codigoCuenta,codigoCuentaAux){
       $("#tipo_estadocuentas"+fila).val(estado_cuentas[i].tipo);
        if(estado_cuentas[i].tipo==1){
          //$("#debe"+fila).removeAttr("readonly");
-         $("#haber"+fila).val("");
+         //$("#haber"+fila).val("");
          //$("#haber"+fila).attr("readonly","readonly");
        }else{
          //$("#haber"+fila).removeAttr("readonly");
          //$("#debe"+fila).attr("readonly","readonly");
-         $("#debe"+fila).val("");
+         //$("#debe"+fila).val("");
        }     
       break;  
     }else{
@@ -233,12 +233,12 @@ function configuracionEstadosCuenta(fila,codigoCuenta,codigoCuentaAux){
          $("#tipo_estadocuentas"+fila).val(estado_cuentas[i].tipo);
         if(estado_cuentas[i].tipo==1){
          //$("#debe"+fila).removeAttr("readonly");
-         $("#haber"+fila).val("");
+         //$("#haber"+fila).val("");
          //$("#haber"+fila).attr("readonly","readonly");
        }else{
          //$("#haber"+fila).removeAttr("readonly");
          //$("#debe"+fila).attr("readonly","readonly");
-         $("#debe"+fila).val("");
+         //$("#debe"+fila).val("");
        }     
       break;
       }else{
@@ -1967,10 +1967,15 @@ function borrarRetencionDetalle(cod){
         dataType: 'html',
         url: "ajaxDeleteDetalle.php",
         data: parametros,
+        beforeSend:function(){
+          iniciarCargaAjax();
+        },
         success:  function (resp) {
+           detectarCargaAjax();
          contenedor.html(resp);
-         $("#msgError").html("<p class='text-success'><small>Se eliminó el registro exitosamente!</small></p>");
-         $('#modalAlert').modal('show');
+          Swal.fire('Correcto!','La transaccion tuvo exito!','success'); 
+          /*$("#msgError").html("<p class='text-success'><small>Se eliminó el registro exitosamente!</small></p>");
+         $('#modalAlert').modal('show');*/
         }
     });
 }
