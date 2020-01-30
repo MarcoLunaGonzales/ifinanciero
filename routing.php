@@ -139,7 +139,10 @@
 		}
 		if ($_GET['opcion']=='deletePlantillaServicios') {
 			require_once('plantillas_servicios/saveDelete.php');
+		}if ($_GET['opcion']=='listPlantillasServiciosAdmin') {
+			require_once('plantillas_servicios/listAdmin.php');
 		}
+        
          
         //MES EN CURSO
         if ($_GET['opcion']=='mesCurso') {

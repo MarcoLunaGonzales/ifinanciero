@@ -83,7 +83,7 @@ function addCuentaContable(obj) {
           $('#nro_cuenta').val("");
           $('#cuenta').val("");//
           $('#padre').val("");
-          $("#divResultadoBusqueda").html("<div class='form-group col-sm-8'>Resultados de la B&uacute;squeda</div>");
+          $("#divResultadoBusqueda").html("<div class='form-group col-sm-8'>Resultados de la Búsqueda</div>");
           $('.selectpicker').selectpicker("refresh");
           $('#myModal').modal('show');
           if($("#add_boton").length){
@@ -277,15 +277,15 @@ function updateSelect(valor,id){
     }else{
       $("#copiar_sel_msg").append("<small class='text-warning'>"+idn+" fila de @"+id+" no copiada</small><br>");
     }
-    //$("#copiar_sel_msg").append("<small class='text-success'>Explicaci&oacute;n: Existe un valor por defecto en @"+id+"</small><br>");
+    //$("#copiar_sel_msg").append("<small class='text-success'>Explicación: Existe un valor por defecto en @"+id+"</small><br>");
    }else{
     //$("#modalCopySel").modal("hide");
    }
    var exito=numFilas-idn;
    if(exito==1){
-      $("#copiar_sel_msg").append("<small class='text-success'>"+exito+" filas de @"+id+" copiada con &eacute;xito</small><br>");
+      $("#copiar_sel_msg").append("<small class='text-success'>"+exito+" filas de @"+id+" copiada con éxito</small><br>");
     }else{
-      $("#copiar_sel_msg").append("<small class='text-success'>"+exito+" filas de @"+id+" copiadas con &eacute;xito</small><br>");
+      $("#copiar_sel_msg").append("<small class='text-success'>"+exito+" filas de @"+id+" copiadas con éxito</small><br>");
     }
    
    $('.selectpicker').selectpicker('refresh');
@@ -508,7 +508,7 @@ function modalPlantilla(){
   }
 }
 function ayudaPlantilla(){
-  alertaModal("<h5><b>AYUDA</b></h5>Los campos en la secci&oacute;n 'REGISTRAR PLANTILLA' son modificables y cuando se presione en el bot&oacute;n 'GUARDAR' ubicado en la parte inferior. Tambi&eacute;n se guardaran los cambios realizados en dicha secci&oacute;n",'bg-secondary','text-white');
+  alertaModal("<h5><b>AYUDA</b></h5>Los campos en la sección 'REGISTRAR PLANTILLA' son modificables y cuando se presione en el botón 'GUARDAR' ubicado en la parte inferior. También se guardaran los cambios realizados en dicha sección",'bg-secondary','text-white');
 }
 //plantilla guardar
 function guardarPlantilla(){
@@ -610,11 +610,11 @@ function abrirPlantilla(id,n,glosa,tipo){
 function nuevaDistribucionPonerFila(fila){
  var glosa = $("#glosa_detalle"+fila).val();
  if(glosa==""){
-   $("#mensajeDist").html("<p>La glosa se encuentra vac&iacute;a!</p>");
+   $("#mensajeDist").html("<p>La glosa se encuentra vacía!</p>");
  }else{
   var area=$("#area"+fila).val();
    if(area==""||area==null||area==0){
-     $("#mensajeDist").html("<p>El area esta vac&iacute;a</p>");
+     $("#mensajeDist").html("<p>El area esta vacía</p>");
    }else{
     if($("#debe"+fila).val()==""&& $("#haber"+fila).val()==""){
        $("#mensajeDist").html("<p>Debe ingresar El Debe o el Haber que corresponda distribuir</p>");
@@ -863,16 +863,16 @@ function guardarPlantillaCosto(){
   var unidad=$("#unidad").val();
   var area=$("#area").val();
   var utilidadLocal=$("#utilidad_minibnorca").val();
-  var utilidadExterna=$("#utilidad_minfuera").val();
+  //var utilidadExterna=$("#utilidad_minfuera").val();
   var alumnosLocal=$("#cantidad_alumnosibnorca").val();
-  var alumnosExterno=$("#cantidad_alumnosfuera").val();
+  //var alumnosExterno=$("#cantidad_alumnosfuera").val();
   var precioLocal=$("#precio_ventaibnorca").val();
-  var precioExterno=$("#precio_ventafuera").val();
+  //var precioExterno=$("#precio_ventafuera").val();
 
-  if(alumnosLocal==""||alumnosExterno==""||precioLocal==""||precioExterno==""||utilidadLocal==""||utilidadExterna==""||nombre==""||abrev==""||!(unidad>0)||!(area>0)){
+  if(alumnosLocal==""||precioLocal==""||utilidadLocal==""||nombre==""||abrev==""||!(unidad>0)||!(area>0)){
     Swal.fire("Informativo!", "Todos los campos son requeridos", "warning");
   }else{
-     var parametros={"nombre":nombre,"abrev":abrev,"unidad":unidad,"area":area,"utilidad_local":utilidadLocal,"utilidad_externo":utilidadExterna,"alumnos_local":alumnosLocal,"alumnos_externo":alumnosExterno,"precio_local":precioLocal,"precio_externo":precioExterno};
+     var parametros={"nombre":nombre,"abrev":abrev,"unidad":unidad,"area":area,"utilidad_local":utilidadLocal,"alumnos_local":alumnosLocal,"precio_local":precioLocal};
      $.ajax({
         type: "GET",
         dataType: 'html',
@@ -986,7 +986,7 @@ function mostrarPreciosPlantilla(){
     }else{
       Swal.fire({
         title: '¿Guardar Cambios?',
-        text: "Se sobreescribir&aacute; el monto registrado",
+        text: "Se sobreescribirá el monto registrado",
          type: 'warning',
         showCancelButton: true,
         confirmButtonClass: 'btn btn-info',
@@ -1260,7 +1260,7 @@ function detectarCargaAjax(){
                 var segundo = momentoActual.getSeconds();
                 var horaImprimible = hora + ":" + minuto + ":" + segundo;
           
-          $("#mensajeDetalle").html("<center><p class='text-info'>C&aacute;lculo realizado Hoy "+horaImprimible+"</p></center>");
+          $("#mensajeDetalle").html("<center><p class='text-info'>Cálculo realizado Hoy "+horaImprimible+"</p></center>");
         }
     });
  }
@@ -1725,7 +1725,7 @@ function calcularDatosPlantilla(){
         url: "ajaxCalcularDatosPlantilla.php",
         data: parametros,
         beforeSend: function () { 
-         $("#mensaje_process").html("<center><p class='text-muted'>C&aacute;lculando espere porfavor...</p></center>"); 
+         $("#mensaje_process").html("<center><p class='text-muted'>Cálculando espere porfavor...</p></center>"); 
          $("#calcular").attr("disabled","disabled");
         },
         success:  function (resp) {
@@ -1735,7 +1735,7 @@ function calcularDatosPlantilla(){
           var minuto = momentoActual.getMinutes();
           var segundo = momentoActual.getSeconds();
           var horaImprimible = hora + ":" + minuto + ":" + segundo;
-          $("#mensaje_process").html("<center><p class='text-info'>C&aacute;lculo realizado Hoy "+horaImprimible+"</p></center>");
+          $("#mensaje_process").html("<center><p class='text-info'>Cálculo realizado Hoy "+horaImprimible+"</p></center>");
           $("#calcular").removeAttr("disabled");
           contenedor.bootstrapMaterialDesign();
         }
@@ -1757,11 +1757,12 @@ function guardarSimulacionCosto(){
   var nombre=$("#nombre").val();
   var precio=$("#precio_venta").val();
   var plantilla_costo=$("#plantilla_costo").val();
-  if( $("#ibnorca_check").is(':checked') ) {
+  var ibnorca = 1;
+  /*if( $("#ibnorca_check").is(':checked') ) {
       var ibnorca=1;
   }else{
       var ibnorca=2;
-  }
+  }*/
   if(nombre==""||!(plantilla_costo>0)){
    Swal.fire('Informativo!','Debe llenar los campos!','warning'); 
   }else{
@@ -1825,7 +1826,7 @@ function presioneBoton(){
 function guardarSimulacion(valor){
   Swal.fire({
         title: '¿Esta Seguro?',
-        text: "La simulaci&oacute;n se enviar&aacute; para su posterior revisi&oacute;n",
+        text: "La simulación se enviará para su posterior revisión",
          type: 'warning',
         showCancelButton: true,
         confirmButtonClass: 'btn btn-info',
@@ -1924,7 +1925,7 @@ function enviarSimulacionAjax(){
         },
         success:  function (resp) {
          $("#logo_carga").hide();
-         Swal.fire("Env&iacute;o Existoso!", "Se registradon los datos exitosamente!", "success")
+         Swal.fire("Envío Existoso!", "Se registradon los datos exitosamente!", "success")
              .then((value) => {
              location.href="../index.php?opcion=listSimulacionesCostos";
          });
@@ -1969,7 +1970,7 @@ function borrarRetencionDetalle(cod){
         data: parametros,
         success:  function (resp) {
          contenedor.html(resp);
-         $("#msgError").html("<p class='text-success'><small>Se elimin&oacute; el registro exitosamente!</small></p>");
+         $("#msgError").html("<p class='text-success'><small>Se eliminó el registro exitosamente!</small></p>");
          $('#modalAlert').modal('show');
         }
     });
@@ -1978,7 +1979,7 @@ function editarRetencionNombre(){
   var nombre=$("#nombre_retencion").val();
   var porcentaje=$("#cuenta_origen").val();
   if(nombre==""){
-    $("#msgError").html("<p class='text-danger'><small>No se puede poner un nombre vac&iacute;o a la retenci&oacute;n</small></p>");
+    $("#msgError").html("<p class='text-danger'><small>No se puede poner un nombre vacío a la retención</small></p>");
     $('#modalAlert').modal('show'); 
   }else{
     var codigo=$("#codigo").val();
@@ -2044,7 +2045,7 @@ function listRetencion(id){
    }
    
    abrirModal('modalRetencion');
-   $("#mensaje_retencion").html("<p class='text-info'>Seleccione una retenci&oacute;n</p>");
+   $("#mensaje_retencion").html("<p class='text-info'>Seleccione una retención</p>");
  }
 //inicializar el puntero el el primer input modal Buscar Cuenta...
 $(document).on("shown.bs.modal","#modalRetencion",function(){
@@ -2066,7 +2067,7 @@ $(document).on("shown.bs.modal","#modalRetencion",function(){
       agregarRetencionCuenta(listaRet); 
     }  
   }else{
-    $("#mensaje_retencion").html("<p class='text-danger'>Debe seleccionar al menos una retenci&oacute;n</p>");
+    $("#mensaje_retencion").html("<p class='text-danger'>Debe seleccionar al menos una retención</p>");
   }
   
  }
@@ -2122,12 +2123,12 @@ $(document).on("shown.bs.modal","#modalRetencion",function(){
 
  function agregarPrecioPlantilla(codigo){
   var precioLocal=$("#precio_venta_ibnorca").val();
-  var precioExterno=$("#precio_venta_fuera").val();
-  if(precioLocal==""||precioExterno==""){
+  //var precioExterno=$("#precio_venta_fuera").val();
+  if(precioLocal==""){
    Swal.fire('Informativo!','Debe llenar los campos!','warning');  
   }else{
     ajax=nuevoAjax();
-    ajax.open("GET","ajaxRegistrarPrecio.php?local="+precioLocal+"&externo="+precioExterno+"&codigo="+codigo,true);
+    ajax.open("GET","ajaxRegistrarPrecio.php?local="+precioLocal+"&codigo="+codigo,true);
     ajax.onreadystatechange=function(){
     if (ajax.readyState==4) {
       if($("#contenido_precio").length){
@@ -2140,7 +2141,7 @@ $(document).on("shown.bs.modal","#modalRetencion",function(){
       }
       
       $("#precio_venta_ibnorca").val("");
-      $("#precio_venta_fuera").val("");
+     // $("#precio_venta_fuera").val("");
     }
    }
     ajax.send(null);
@@ -2158,6 +2159,24 @@ $(document).on("shown.bs.modal","#modalRetencion",function(){
     ajax.send(null);
  }
  function removePrecioPlantilla(cod,codigo){
+   ajax=nuevoAjax();
+    ajax.open("GET","ajaxDeletePrecio.php?cod="+cod+"&codigo="+codigo,true);
+    ajax.onreadystatechange=function(){
+    if (ajax.readyState==4) {
+      if($("#contenido_precio").length){
+      var fi=$("#contenido_precio");
+      fi.html(ajax.responseText);
+      fi.bootstrapMaterialDesign();
+      }else{
+        mostrarPreciosPlantilla();
+         Swal.fire('Borrado!','Se borraron los datos exitosamente!','success');
+      }
+      
+      $("#precio_venta_ibnorca").val("");
+      //$("#precio_venta_fuera").val("");
+    }
+   }
+    ajax.send(null);
  }
 
  function listarPreciosPlantilla(codigo,label,ibnorca){
@@ -2466,7 +2485,7 @@ function agregarRetencionSolicitud(){
      $('#modalRetencion').modal('hide');
      $("#importe_label"+fila).text("Importe - "+respuesta[1].substr(0,3)+"...");
   }else{
-    $("#mensaje_retencion").html("<p class='text-danger'>Debe seleccionar al menos una retenci&oacute;n</p>");
+    $("#mensaje_retencion").html("<p class='text-danger'>Debe seleccionar al menos una retención</p>");
   }
   
  }
@@ -3368,7 +3387,7 @@ function guardarCuentasSimulacionAjax(ib){
           detectarCargaAjax();
           $("#guardar_cuenta").text("Guardar");
           $("#guardar_cuenta").removeAttr("disabled");
-          $("#mensaje_cuenta").html("<p class='text-success'>Se insertaron los datos correctamente! </p>");//<a class='btn btn-warning btn-sm' href='#' onclick='actualizarSimulacion();'>aplicar cambios a la simulaci&oacute;n</a>
+          $("#mensaje_cuenta").html("<p class='text-success'>Se insertaron los datos correctamente! </p>");//<a class='btn btn-warning btn-sm' href='#' onclick='actualizarSimulacion();'>aplicar cambios a la simulación</a>
         }
       });
     }
@@ -3405,7 +3424,7 @@ function guardarCuentasSimulacionAjaxGenerico(ib){
         success:function(resp){
           $("#guardar_cuenta").text("Guardar");
           $("#guardar_cuenta").removeAttr("disabled");
-          $("#mensaje_cuenta").html("<p class='text-success'>Se insertaron los datos correctamente! </p>");//<a class='btn btn-warning btn-sm' href='#' onclick='actualizarSimulacion();'>aplicar cambios a la simulaci&oacute;n</a>
+          $("#mensaje_cuenta").html("<p class='text-success'>Se insertaron los datos correctamente! </p>");//<a class='btn btn-warning btn-sm' href='#' onclick='actualizarSimulacion();'>aplicar cambios a la simulación</a>
         },complete : function(xhr, status) {
         
          }
@@ -3474,7 +3493,7 @@ function guardarCuentasSimulacionGenerico(ib){
     }else{
         Swal.fire({
          title: 'Advertencia!',
-         text: "Hay uno o m&aacute;s registros deshabilitados ¿Desea Continuar?",
+         text: "Hay uno o más registros deshabilitados ¿Desea Continuar?",
          type: 'warning',
          showCancelButton: true,
          confirmButtonClass: 'btn btn-info',
@@ -3514,7 +3533,7 @@ function guardarCuentasSimulacion(ib){
     }else{
         Swal.fire({
          title: 'Advertencia!',
-         text: "Hay uno o m&aacute;s registros deshabilitados ¿Desea Continuar?",
+         text: "Hay uno o más registros deshabilitados ¿Desea Continuar?",
          type: 'warning',
          showCancelButton: true,
          confirmButtonClass: 'btn btn-info',
@@ -3925,7 +3944,7 @@ function calcularHaberBasico(){
 }
 function montoNoMayor(){
   if($("#monto").val()>$("#haber_basico2").val()){
-    $("#mensaje").html("<p class='text-danger'>El monto no puede ser mayor al 50% del haber b&aacute;sico</p>");
+    $("#mensaje").html("<p class='text-danger'>El monto no puede ser mayor al 50% del haber básico</p>");
   }else{
     $("#mensaje").html("");
   }
@@ -3965,7 +3984,7 @@ function ponerCorreoPersona(){
 
 function enviarCorreoEvento(){
    if($("#correo").val()==""||$("#correo").val()=="NN"){
-        Swal.fire('Informativo!','El correo no debe estar vac&iacute;o','warning');  
+        Swal.fire('Informativo!','El correo no debe estar vacío','warning');  
    }else{
      if($("#evento").val()==""||$("#personal").val()==""){
         Swal.fire('Informativo!','Debe completar los datos','warning');  
@@ -3990,7 +4009,7 @@ function enviarCorreoEvento(){
 }
 function registrarCorreoEvento(){
    if($("#correo").val()==""||$("#correo").val()=="NN"){
-        Swal.fire('Informativo!','El correo no debe estar vac&iacute;o','warning');  
+        Swal.fire('Informativo!','El correo no debe estar vacío','warning');  
    }else{
      if($("#evento").val()==""||$("#personal").val()==""){
         Swal.fire('Informativo!','Debe completar los datos','warning');  
@@ -4075,15 +4094,16 @@ function editarDatosSimulacion(){
   var cod_i=$("#cod_ibnorca").val();
   var nombre_s=$("#nombre").val();
   $("#modal_nombresim").val(nombre_s);
-  $("#modal_tiposim").val(cod_i);
-  $('.selectpicker').selectpicker("refresh");
+  //$("#modal_tiposim").val(cod_i);
+  //$('.selectpicker').selectpicker("refresh");
 
   $("#modalEditSimulacion").modal("show");
 }
 function guardarDatosSimulacion(btn_id){
   var codigo_s=$("#cod_simulacion").val();
    var nombre_s=$("#modal_nombresim").val();
-   var cod_i=$("#modal_tiposim").val();   
+   //var cod_i=$("#modal_tiposim").val();
+   var cod_i=1;   
    var parametros={"codigo":codigo_s,"nombre":nombre_s,"ibnorca":cod_i};
 
   if(nombre_s!=""){
@@ -4101,11 +4121,11 @@ function guardarDatosSimulacion(btn_id){
      $("#cod_ibnorca").val(cod_i);
      if(cod_i==1){
        $("#ibnorca").val("IBNORCA");
-       $("#tipo_ibnorca").text("IBNORCA");  
+       //$("#tipo_ibnorca").text("IBNORCA");  
      }else{
        $("#ibnorca").val("FUERA DE IBNORCA");
-       $("#tipo_ibnorca").text("FUERA DE IBNORCA");  
-     } 
+       //$("#tipo_ibnorca").text("FUERA DE IBNORCA");  
+     }
      $("#modalEditSimulacion").modal("hide");        
     },
     error: function (xhr, ajaxOptions, thrownError) {
@@ -4176,7 +4196,7 @@ function actualizarSimulacion(){
   var codigo=$("#cod_simulacion").val();
    Swal.fire({
         title: '¿Esta Seguro?',
-        text: "Los datos de la simulaci&oacute;n se actualizar&aacute;n!",
+        text: "Los datos de la simulación se actualizarán!",
         type: 'warning',
         showCancelButton: true,
         confirmButtonClass: 'btn btn-info',
@@ -4237,29 +4257,37 @@ function minusDetallePlantilla(idF){
        $("#tipo_costo"+nuevoId).attr("id","tipo_costo"+i);
        $("#detalle_plantilla"+nuevoId).attr("name","detalle_plantilla"+i);
        $("#detalle_plantilla"+nuevoId).attr("id","detalle_plantilla"+i);
-       $("#cantidad_detalleplantilla"+nuevoId).attr("onchange","calcularTotalFilaDetalle("+i+")");
-       $("#cantidad_detalleplantilla"+nuevoId).attr("onchange","calcularTotalFilaDetalle("+i+")");
+       //$("#cantidad_detalleplantilla"+nuevoId).attr("onchange","calcularTotalFilaDetalle(1,"+i+")");
+       $("#cantidad_detalleplantilla"+nuevoId).attr("onkeyup","calcularTotalFilaDetalle(1,"+i+")");
        $("#cantidad_detalleplantilla"+nuevoId).attr("name","cantidad_detalleplantilla"+i);
        $("#cantidad_detalleplantilla"+nuevoId).attr("id","cantidad_detalleplantilla"+i);
        $("#unidad_detalleplantilla"+nuevoId).attr("name","unidad_detalleplantilla"+i);
        $("#unidad_detalleplantilla"+nuevoId).attr("id","unidad_detalleplantilla"+i);
-       $("#monto_detalleplantilla"+nuevoId).attr("onchange","calcularTotalFilaDetalle("+i+")");
-       $("#monto_detalleplantilla"+nuevoId).attr("onchange","calcularTotalFilaDetalle("+i+")");
+       //$("#monto_detalleplantilla"+nuevoId).attr("onchange","calcularTotalFilaDetalle(1,"+i+")");
+       $("#monto_detalleplantilla"+nuevoId).attr("onkeyup","calcularTotalFilaDetalle(1,"+i+")");
        $("#monto_detalleplantilla"+nuevoId).attr("name","monto_detalleplantilla"+i);
        $("#monto_detalleplantilla"+nuevoId).attr("id","monto_detalleplantilla"+i);
+       //$("#monto_total_detalleplantilla"+nuevoId).attr("onchange","calcularTotalFilaDetalle(2,"+i+")");
+       $("#monto_total_detalleplantilla"+nuevoId).attr("onkeyup","calcularTotalFilaDetalle(2,"+i+")");
        $("#monto_total_detalleplantilla"+nuevoId).attr("name","monto_total_detalleplantilla"+i);
        $("#monto_total_detalleplantilla"+nuevoId).attr("id","monto_total_detalleplantilla"+i);
 
+       $("#partida_presupuestaria"+nuevoId).attr("onchange","mostrarCuentasPartida2("+i+")");
+       $("#partida_presupuestaria"+nuevoId).attr("name","partida_presupuestaria"+i);
+       $("#partida_presupuestaria"+nuevoId).attr("id","partida_presupuestaria"+i);
+       $("#cuenta_plantilladetalle"+nuevoId).attr("name","cuenta_plantilladetalle"+i);
+       $("#cuenta_plantilladetalle"+nuevoId).attr("id","cuenta_plantilladetalle"+i);
+       $("#cuenta_plantilladetalle"+nuevoId).attr("id","cuenta_plantilladetalle"+i);
        $("#boton_remove"+nuevoId).attr("onclick","minusDetallePlantilla('"+i+"')");
        $("#boton_remove"+nuevoId).attr("id","boton_remove"+i);
 
-       $("#boton_det"+nuevoId).attr("onclick","listDetallePlantilla('"+i+"')");
-       $("#boton_det"+nuevoId).attr("id","boton_det"+i);
-       $("#ndet"+nuevoId).attr("id","ndet"+i);
+       //$("#boton_det"+nuevoId).attr("onclick","listDetallePlantilla('"+i+"')");
+       //$("#boton_det"+nuevoId).attr("id","boton_det"+i);
+       //$("#ndet"+nuevoId).attr("id","ndet"+i);
        $("#codigo_cuentadetalle"+nuevoId).attr("name","codigo_cuentadetalle"+i);
        $("#codigo_cuentadetalle"+nuevoId).attr("id","codigo_cuentadetalle"+i);
        $("#codigo_partidadetalle"+nuevoId).attr("name","codigo_partidadetalle"+i);
-       $("#codigo_partidadetalle"+nuevoId).attr("id","codigo_partidadetalle"+i);
+       $("#cuentas_div"+nuevoId).attr("id","cuentas_div"+i);
       }
      } 
      itemDetalle.splice((idF-1), 1);
@@ -4279,9 +4307,17 @@ function mostrarUnidadDetalle(fila){
     }
   }
 }
-function calcularTotalFilaDetalle(fila){
+function calcularTotalFilaDetalle(valor,fila){
+  if(valor==1){
  var total = redondeo($("#cantidad_detalleplantilla"+fila).val()*$("#monto_detalleplantilla"+fila).val());
- $("#monto_total_detalleplantilla"+fila).val(total);
+ $("#monto_total_detalleplantilla"+fila).val(total);   
+  }else{
+    var unitario = redondeo($("#monto_total_detalleplantilla"+fila).val()/$("#cantidad_detalleplantilla"+fila).val());
+    if($("#cantidad_detalleplantilla"+fila).val()==""||$("#cantidad_detalleplantilla"+fila).val()==0){
+     //unitario=0;
+    } 
+   $("#monto_detalleplantilla"+fila).val(unitario); 
+  }
 }
 function listDetallePlantilla(id){
   var nombreDetalle=$("#detalle_plantilla"+id).val();
@@ -4320,6 +4356,24 @@ function listDetallePlantilla(id){
         }
     });
  }
+ function mostrarCuentasPartida2(fila){
+  var partida=$("#partida_presupuestaria"+fila).val();
+  var parametros={"cod_partida":partida,"fila":fila};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxPartidaPresupuestariaCuentas.php",
+        data: parametros,
+        beforeSend: function () { 
+          iniciarCargaAjax();
+        },
+        success:  function (resp) {
+           detectarCargaAjax();
+           $("#cuentas_div"+fila).html(resp);
+           $('.selectpicker').selectpicker("refresh");
+        }
+    });
+ }
  function savePlantillaDetalleTcp(){
   if($("#partida_detalle").val()==""||$("#cuenta_plantilladetalle").val()==""){
     Swal.fire("Informativo!", "Todos los campos son requeridos", "warning");
@@ -4333,7 +4387,80 @@ function listDetallePlantilla(id){
     $("#modalDetalle").modal("hide");
   }
  }
-
+ function guardarServicioPlantilla(){
+  var plantilla=$("#cod_plantilla").val();
+  var codigo=$("#servicios_codigo").val();
+  var observacion=$("#observacion_servicio").val();
+  var cantidad=$("#cantidad_servicio").val();
+  var monto=$("#monto_servicio").val();
+  if(codigo==""||cantidad==""||monto==""){
+       Swal.fire("Informativo!", "Debe llenar todos los campos", "warning");
+  }else{
+  var parametros={"plantilla":plantilla,"codigo":codigo,"obs":observacion,"cant":cantidad,"monto":monto};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxSaveTipoServicio.php",
+        data: parametros,
+        beforeSend: function () { 
+          iniciarCargaAjax();
+        },
+        success:  function (resp) {
+           detectarCargaAjax();
+           if(resp.trim()=="1"){
+             Swal.fire("Encontrado!", "El servicio ya se encuentra registrado.", "warning");
+           }else{
+            $("#servicios_codigo").val("");
+            $("#observacion_servicio").val("");
+            $("#cantidad_servicio").val("");
+            $("#monto_servicio").val("");
+            $('.selectpicker').selectpicker("refresh");
+            listarServiciosPlantilla();
+             Swal.fire("Correcto!", "Se agrego el registro exitosamente.", "success");
+             
+           }
+        }
+    });
+    
+  }
+ }
+function listarServiciosPlantilla(){
+   var plantilla=$("#cod_plantilla").val();
+   var parametros={"plantilla":plantilla};
+   $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxListTipoServicio.php",
+        data: parametros,
+        success:  function (resp) {
+         $("#tabla_servicios").html(resp);
+        }
+    }); 
+}
+function removeServicioPlantilla(cod){
+  var parametros={"cod":cod};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxDeleteServicio.php",
+        data: parametros,
+        beforeSend: function () { 
+          iniciarCargaAjax();
+        },
+        success:  function (resp) {
+           detectarCargaAjax();
+           listarServiciosPlantilla();
+        }
+    });
+}
+function cambiarDivPlantilla(div,div2){
+  if(!($("#"+div2).hasClass("d-none"))){
+    $("#"+div2).addClass("d-none");
+    $("#"+div).removeClass("d-none");
+    $("#button_"+div2).removeClass("fondo-boton-active");
+    $("#button_"+div).addClass("fondo-boton-active");
+  }
+}
 //funciones despues de cargar pantalla
 window.onload = detectarCarga;
   function detectarCarga(){

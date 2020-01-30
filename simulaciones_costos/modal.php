@@ -148,7 +148,7 @@
                              </div>
                            </div>  
                       </div> 
-                      <div class="row">
+                      <!--<div class="row">
                        <label class="col-sm-2 col-form-label">Simulaci&oacute;n</label>
                        <div class="col-sm-10">
                         <div class="form-group">
@@ -158,7 +158,7 @@
                              </select>
                          </div>
                         </div>
-                      </div>
+                      </div>-->
                       <hr>
                       <div class="form-group float-right">
                         <button type="button" id="boton_guardarsim" class="btn btn-default" onclick="guardarDatosSimulacion(this.id)">Guardar</button>
@@ -184,38 +184,38 @@
                 <div class="card-body">
 
                       <div class="row">
-                          <label class="col-sm-2 col-form-label">UT Min. Iborca %</label>
-                           <div class="col-sm-4">                     
+                          <label class="col-sm-3 col-form-label">Utilidad M&iacute;nima %</label>
+                           <div class="col-sm-8">                     
                              <div class="form-group">
                                <input type="number" step="0.01" class="form-control" name="modal_utibnorca" id="modal_utibnorca" value="">
                              </div>
                            </div>  
 
-                          <label class="col-sm-2 col-form-label">UT Min. Fuera %</label>
+                          <!--<label class="col-sm-2 col-form-label">UT Min. Fuera %</label>
                            <div class="col-sm-4">                     
-                             <div class="form-group">
-                               <input type="number" step="0.01" class="form-control" name="modal_utifuera" id="modal_utifuera" value="">
-                             </div>
-                           </div>  
+                             <div class="form-group">-->
+                               <input type="hidden" step="0.01" class="form-control" name="modal_utifuera" id="modal_utifuera" value="">
+                             <!--</div>
+                           </div>--> 
                       </div>
                       <div class="row">
-                          <label class="col-sm-2 col-form-label">Alumnos Ibnorca</label>
-                           <div class="col-sm-4">                     
+                          <label class="col-sm-3 col-form-label">N&uacute;mero de Alumnos</label>
+                           <div class="col-sm-8">                     
                              <div class="form-group">
                                <input type="number" class="form-control" min="1" name="modal_alibnorca" id="modal_alibnorca" value="">
                              </div>
                            </div>  
 
-                          <label class="col-sm-2 col-form-label">Alumnos Fuera</label>
+                          <!--<label class="col-sm-2 col-form-label">Alumnos Fuera</label>
                            <div class="col-sm-4">                     
-                             <div class="form-group">
-                               <input type="number" class="form-control" min="1" name="modal_alfuera" id="modal_alfuera" value="">
-                             </div>
-                           </div>  
+                             <div class="form-group">-->
+                               <input type="hidden" class="form-control" min="1" name="modal_alfuera" id="modal_alfuera" value="">
+                             <!--</div>
+                           </div>--> 
                       </div> 
                       <div class="row">
-                       <label class="col-sm-2 col-form-label">Importe</label>
-                       <div class="col-sm-10">
+                       <label class="col-sm-3 col-form-label">Precio</label>
+                       <div class="col-sm-8">
                         <div class="form-group">
                              <select class="selectpicker form-control" name="modal_importeplan" id="modal_importeplan" data-style="btn btn-info">
                                <?php 
@@ -226,7 +226,7 @@
                                   $codigoPrecio=$row['codigo'];
                                   $precioLocal=number_format($row['venta_local'], 2, '.', ',');
                                   $precioExterno=number_format($row['venta_externo'], 2, '.', ',');
-                                   ?><option value="<?=$codigoPrecio?>" class="text-right">Ibnorca: <?=$precioLocal?>, Fuera: <?=$precioExterno?></option>
+                                   ?><option value="<?=$codigoPrecio?>" class="text-right"><?=$precioLocal?></option>
                                   <?php 
                                   } ?> 
                              </select>

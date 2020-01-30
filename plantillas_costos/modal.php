@@ -208,17 +208,17 @@
                          <tbody>
                            <tr class="bg-info text-white">
                              <td>Cursos</td>
-                             <td>Alumnos I</td>
-                             <td>Alumnos FI</td>
-                             <td>Ut Min I</td>
-                             <td>Ut Min FI</td>
+                             <td>N&uacute;mero de Alumnos</td>
+                             <!--<td>Alumnos FI</td>-->
+                             <td>Utilidad M&iacute;nima</td>
+                             <!--<td>Ut Min FI</td>-->
                            </tr>                         
                            <tr>
                              <td class="text-right small"><?=obtenerValorConfiguracion(6)?></td>
                              <td class="text-right small"><?=$alumnosLocalX?></td>
-                             <td class="text-right small"><?=$alumnosExternoX?></td>
+                             <!--<td class="text-right small"><?=$alumnosExternoX?></td>-->
                              <td class="text-right small"><?=$utilidadIbnorcaX?> %</td>
-                             <td class="text-right small"><?=$utilidadFueraX?> %</td>
+                             <!--<td class="text-right small"><?=$utilidadFueraX?> %</td>-->
                            </tr>
                          </tbody>
                        </table>
@@ -332,8 +332,8 @@
                      <thead>
                        <tr>
                          <th>Nº</th>
-                         <th>EN IBNORCA</th>
-                         <th>FUERA DE IBNORCA</th>
+                         <th>PRECIO</th>
+                         <!--<th>FUERA DE IBNORCA</th>-->
                          <th>Actions</th>
                        </tr>
                      </thead>

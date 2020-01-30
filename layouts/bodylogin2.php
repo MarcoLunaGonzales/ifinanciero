@@ -280,7 +280,7 @@
       }else{
         var cont=0;
         for (var i = 0; i < $("#cantidad_filas").val(); i++) {
-           if($('#codigo_cuentadetalle'+(i+1)).val()==""||$('#codigo_cuentadetalle'+(i+1)).val()==null){
+           if($('#cuenta_plantilladetalle'+(i+1)).val()==""||$('#cuenta_plantilladetalle'+(i+1)).val()==null){
              cont++; 
              break;
            }                  

@@ -19,11 +19,11 @@ $codigo=$_GET['codigo'];
                                 <input class="form-control text-right" type="number" name="precio_venta_ibnorca" value="" placeholder="Precio de venta"  id="precio_venta_ibnorca" step="0.01"/>
                               </div>
                             </td>
-                            <td>
+                            <!--<td>
                                <div class="form-group">                    
                                  <input class="form-control text-right" type="number" name="precio_venta_fuera" value="" placeholder="Precio de venta" id="precio_venta_fuera" step="0.01"/>
                                </div>
-                             </td>
+                             </td>-->
                              <td><a href="#" class="btn btn-success btn-sm" onclick="agregarPrecioPlantilla(<?=$codigo?>); return false;">
                               Agregar
                             </a></td>
@@ -36,12 +36,12 @@ $codigo=$_GET['codigo'];
                          while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                           $codigoPrecio=$row['codigo'];
                           $precioLocal=number_format($row['venta_local'], 2, '.', ',');
-                          $precioExterno=number_format($row['venta_externo'], 2, '.', ',');
+                          //$precioExterno=number_format($row['venta_externo'], 2, '.', ',');
                           ?>
-                          <tr class="bg-white">
+                          <tr class="bg-white text-dark">
                              <td><?=$indexPrecio?></td>
                              <td class="text-right"><?=$precioLocal?></td>
-                             <td class="text-right"><?=$precioExterno?></td>
+                             <!--<td class="text-right"></td>-->
                              <td>
                               <?php 
                               if($cantidad>1){

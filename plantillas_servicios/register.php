@@ -6,7 +6,7 @@ require_once 'configModule.php';
 setlocale(LC_TIME, "Spanish");
 $dbh = new Conexion();
 
-$sqlX="SET NAMES 'utf8'";
+$sqlX="SET NAMES utf8";
 $stmtX = $dbh->prepare($sqlX);
 $stmtX->execute();
 
@@ -75,7 +75,7 @@ $dbh = new Conexion();
                        <label class="col-sm-2 col-form-label">Cliente</label>
                        <div class="col-sm-7">
                         <div class="row">
-                          <div class="col-sm-5">
+                          <div class="col-sm-12">
                             <div class="form-group">
                                 <select class="selectpicker form-control" name="cliente" id="cliente" data-style="btn btn-info"  required>
           
@@ -95,7 +95,7 @@ $dbh = new Conexion();
                                 </select>
                               </div>
                           </div>
-                          <div class="col-sm-7">
+                          <!--<div class="col-sm-7">
                             <div class="row">
                             <label class="col-sm-2 col-form-label">Servicio</label>
                             <div class="col-sm-10">
@@ -103,22 +103,22 @@ $dbh = new Conexion();
                                 <select class="selectpicker form-control" name="cod_servicio[]" id="cod_servicio" multiple data-style="btn btn-info"  required>
         
                                 <?php
-                                 $stmt = $dbh->prepare("SELECT codigo,descripcion from claservicios where (idArea=38 or idArea=39) and vigente=1");
+                                 /*$stmt = $dbh->prepare("SELECT codigo,descripcion from claservicios where (idArea=38 or idArea=39) and vigente=1");
                                  $stmt->execute();
                                   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                   $codigoX=$row['codigo'];
                                   $nombreX=$row['descripcion'];
-                                  //$abrevX=$row['abreviatura'];
+                                  //$abrevX=$row['abreviatura'];*/
                                    ?>
-                                  <option value="<?=$codigoX;?>"><?=$nombreX;?></option> 
+                                  <!--<option value="<?=$codigoX;?>"><?=$nombreX;?></option> -->
                                   <?php
-                                    }
+                                    //}
                                     ?>
-                                </select>
+                                <!--</select>
                               </div>
                             </div>
-                           </div><!--row--> 
-                          </div> 
+                           </div>
+                          </div>--> 
                         </div>
                        </div>
                       </div><!--row-->
@@ -150,7 +150,7 @@ $dbh = new Conexion();
                                 
                               </div>
                           </div>
-                          <div class="col-sm-7">
+                          <!--<div class="col-sm-7">
                             <div class="row">
                             <label class="col-sm-2 col-form-label">Fecha</label>
                             <div class="col-sm-10">
@@ -159,8 +159,8 @@ $dbh = new Conexion();
                                 
                               </div>
                             </div>
-                           </div><!--row--> 
-                          </div> 
+                           </div> 
+                          </div>--> 
                         </div>
                        </div>
                       </div><!--row-->

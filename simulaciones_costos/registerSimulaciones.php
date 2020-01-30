@@ -76,7 +76,7 @@ $dbh = new Conexion();
                       </div>
                       <div class="row" id="lista_precios">
                       </div>
-                      <div class="row">
+                      <!--<div class="row">
                            <label class="col-sm-2 col-form-label">En IBNORCA:</label>
                            <div class="col-sm-1"> 
                              <div class="form-group">
@@ -90,7 +90,7 @@ $dbh = new Conexion();
                                   </div>
                                </div>
                              </div>     
-                          </div>
+                          </div>-->
         
         </div>
         <br>
