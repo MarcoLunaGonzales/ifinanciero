@@ -21,25 +21,25 @@ $cliente=$_POST['cliente'];
 $productos=$_POST['productos'];
 $norma=$_POST['norma'];
 $dias=$_POST['dias'];
-$pFecha = explode("/", $_POST['fecha_auditoria']);
-$fecha_auditoria=$pFecha[2]."-".$pFecha[1]."-".$pFecha[0];
+//$pFecha = explode("/", $_POST['fecha_auditoria']);
+//$fecha_auditoria=$pFecha[2]."-".$pFecha[1]."-".$pFecha[0];
 $unidad=$_POST['unidad'];
 $area=$_POST['area'];
-$servicio=$_POST['cod_servicio'];
+//$servicio=$_POST['cod_servicio'];
 
   $codPlanServ=obtenerCodigoPlanServ();
   $dbh = new Conexion();
-  $sqlInsert="INSERT INTO plantillas_servicios (codigo, nombre, abreviatura, cod_unidadorganizacional, cod_area,cod_cliente,productos,norma,fecha_auditoria,cod_personal_registro,fecha_registro,dias_auditoria,cod_estadoplantilla,cod_estadoreferencial) 
-  VALUES ('".$codPlanServ."','".$nombre."','".$abrev."', '".$unidad."', '".$area."','".$cliente."','".$productos."','".$norma."','".$fecha_auditoria."','".$globalUser."','".$fechaHoraActual."','".$dias."',1,1)";
+  $sqlInsert="INSERT INTO plantillas_servicios (codigo, nombre, abreviatura, cod_unidadorganizacional, cod_area,cod_cliente,productos,norma,cod_personal_registro,fecha_registro,dias_auditoria,cod_estadoplantilla,cod_estadoreferencial) 
+  VALUES ('".$codPlanServ."','".$nombre."','".$abrev."', '".$unidad."', '".$area."','".$cliente."','".$productos."','".$norma."','".$globalUser."','".$fechaHoraActual."','".$dias."',1,1)";
   $stmtInsert = $dbh->prepare($sqlInsert);
   $flagSuccess=$stmtInsert->execute();
 
-for ($i=0; $i < cantidadF($servicio); $i++) { 
+/*for ($i=0; $i < cantidadF($servicio); $i++) { 
     $sql="INSERT INTO plantillas_servicios_tiposervicio (cod_plantillaservicio, cod_claservicio,cod_estadoreferencial) 
        VALUES ('".$codPlanServ."','".$servicio[$i]."', 1)";
     $stmt = $dbh->prepare($sql);
     $stmt->execute();   
-}
+}*/
 
 if($flagSuccess==true){
 	showAlertSuccessError(true,"../".$urlRegister."?cod=".$codPlanServ);	

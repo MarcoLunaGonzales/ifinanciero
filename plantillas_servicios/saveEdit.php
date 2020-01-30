@@ -37,8 +37,10 @@ $stmtDelete->execute();
 for ($i=1;$i<=$cantidadFilas;$i++){
 	$tipo_costo=$_POST["tipo_costo".$i];
 
-	$partida=$_POST['codigo_partidadetalle'.$i];
-	$cuenta=$_POST['codigo_cuentadetalle'.$i];
+	//$partida=$_POST['codigo_partidadetalle'.$i];
+	//$cuenta=$_POST['codigo_cuentadetalle'.$i];
+	$partida=$_POST['partida_presupuestaria'.$i];
+	$cuenta=$_POST['cuenta_plantilladetalle'.$i];
 	$glosa=$_POST['detalle_plantilla'.$i];
 	$monto_unitario=$_POST['monto_detalleplantilla'.$i];
 	$cantidad=$_POST['cantidad_detalleplantilla'.$i];

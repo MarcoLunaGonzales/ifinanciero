@@ -20,9 +20,9 @@ $idFila=$_GET['idFila'];
 <div id="div<?=$idFila?>"class="col-md-12">
 	<div class="row">
 
-		<div class="col-sm-2">
+		<div class="col-sm-1">
         	<div class="form-group">
-	        <select class="selectpicker form-control form-control-sm" name="tipo_costo<?=$idFila;?>" id="tipo_costo<?=$idFila;?>" data-style="<?=$comboColor;?>" onchange="mostrarUnidadDetalle(<?=$idFila;?>)" required>
+	        <select class="selectpicker form-control form-control-sm" name="tipo_costo<?=$idFila;?>" id="tipo_costo<?=$idFila;?>" data-style="fondo-boton-active" onchange="mostrarUnidadDetalle(<?=$idFila;?>)" required>
 			  	
 			  	<option disabled selected="selected" value="">Tipo</option>
 				<option value="1">Fijo</option>
@@ -30,20 +30,41 @@ $idFila=$_GET['idFila'];
 			</select>
 			</div>
       	</div>
-		<div class="col-sm-4">
+		<div class="col-sm-2">
             <div class="form-group">
             	<label for="detalle_plantilla<?=$idFila;?>" class="bmd-label-floating">Detalle</label>			
           		<input class="form-control" type="text" name="detalle_plantilla<?=$idFila;?>" id="detalle_plantilla<?=$idFila;?>" required>	
 			</div>
       	</div>
-
+       <div class="col-sm-2">
+          <div class="form-group">
+          <select class="selectpicker form-control form-control-sm" name="partida_presupuestaria<?=$idFila;?>" id="partida_presupuestaria<?=$idFila;?>" data-style="fondo-boton" onchange="mostrarCuentasPartida2(<?=$idFila?>);" required>
+                 <option disabled selected value="">Partidas</option>
+                        <?php
+                           $stmt = $dbh->prepare("SELECT p.codigo, p.nombre, p.observaciones from partidas_presupuestarias p where p.cod_estadoreferencial=1 order by p.codigo");
+                         $stmt->execute();
+                         while ($rowPartida = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                          $codigoParX=$rowPartida['codigo'];
+                          $obsX=$rowPartida['observaciones'];
+                          $nombreParX=$rowPartida['nombre'];
+                          ?><option value="<?=$codigoParX;?>"><?=$nombreParX?></option><?php
+                       } 
+                         ?>  
+          
+      </select>
+      </div>
+        </div>
+        <div class="col-sm-2">
+          <div class="form-group" id="cuentas_div<?=$idFila?>">
+         </div>
+        </div>
       	<div class="col-sm-1">
             <div class="form-group">
             	<label for="cantidad_detalleplantilla<?=$idFila;?>" class="bmd-label-floating">Cantidad</label>			
           		<input class="form-control" type="number" min="0" name="cantidad_detalleplantilla<?=$idFila;?>" onkeyup="calcularTotalFilaDetalle(1,<?=$idFila?>)" id="cantidad_detalleplantilla<?=$idFila;?>" value="1" required> 	
 			</div>
       	</div>
-      	<div class="col-sm-2">
+      	<div class="col-sm-1">
             <div class="form-group">
             	<label for="unidad_detalleplantilla<?=$idFila;?>" class="bmd-label-floating">Unidad</label>			
           		<input class="form-control" type="text" name="unidad_detalleplantilla<?=$idFila;?>" id="unidad_detalleplantilla<?=$idFila;?>" required> 	
@@ -63,9 +84,9 @@ $idFila=$_GET['idFila'];
       	</div>
 		<div class="col-sm-1">
 		   <div class="btn-group">
-		  	<a title="No hay cuenta asociada" href="#" id="boton_det<?=$idFila;?>" onclick="listDetallePlantilla(<?=$idFila;?>);" class="btn btn-just-icon btn-primary btn-link">
+		  	<!--<a title="No hay cuenta asociada" href="#" id="boton_det<?=$idFila;?>" onclick="listDetallePlantilla(<?=$idFila;?>);" class="btn btn-just-icon btn-primary btn-link">
                <i class="material-icons">view_list</i><span id="ndet<?=$idFila;?>" class="bg-danger estado2"></span>
-             </a>
+             </a>-->
              <input type="hidden" name="codigo_cuentadetalle<?=$idFila;?>" id="codigo_cuentadetalle<?=$idFila;?>">
              <input type="hidden" name="codigo_partidadetalle<?=$idFila;?>" id="codigo_partidadetalle<?=$idFila;?>"> 	
 			<a title="Eliminar Registro" href="#" class="btn btn-just-icon btn-danger btn-link" id="boton_remove<?=$idFila;?>" onclick="minusDetallePlantilla('<?=$idFila;?>');">

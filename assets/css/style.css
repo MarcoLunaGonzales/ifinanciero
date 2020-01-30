@@ -1,3 +1,15 @@
+.fondo-boton{
+  background: #2B3054 !important;
+  color:#F9A60C !important;
+}
+.fondo-boton:hover{
+  background:#F5870A !important;
+  color:#2B3054 !important;
+}
+.fondo-boton-active{
+  background:#F9A60C !important;
+  color:#2B3054 !important;
+}
 .modal-arriba {
    top: -80px !important;
 }

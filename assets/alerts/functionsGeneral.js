@@ -4271,16 +4271,22 @@ function minusDetallePlantilla(idF){
        $("#monto_total_detalleplantilla"+nuevoId).attr("name","monto_total_detalleplantilla"+i);
        $("#monto_total_detalleplantilla"+nuevoId).attr("id","monto_total_detalleplantilla"+i);
 
+       $("#partida_presupuestaria"+nuevoId).attr("onchange","mostrarCuentasPartida2("+i+")");
+       $("#partida_presupuestaria"+nuevoId).attr("name","partida_presupuestaria"+i);
+       $("#partida_presupuestaria"+nuevoId).attr("id","partida_presupuestaria"+i);
+       $("#cuenta_plantilladetalle"+nuevoId).attr("name","cuenta_plantilladetalle"+i);
+       $("#cuenta_plantilladetalle"+nuevoId).attr("id","cuenta_plantilladetalle"+i);
+       $("#cuenta_plantilladetalle"+nuevoId).attr("id","cuenta_plantilladetalle"+i);
        $("#boton_remove"+nuevoId).attr("onclick","minusDetallePlantilla('"+i+"')");
        $("#boton_remove"+nuevoId).attr("id","boton_remove"+i);
 
-       $("#boton_det"+nuevoId).attr("onclick","listDetallePlantilla('"+i+"')");
-       $("#boton_det"+nuevoId).attr("id","boton_det"+i);
-       $("#ndet"+nuevoId).attr("id","ndet"+i);
+       //$("#boton_det"+nuevoId).attr("onclick","listDetallePlantilla('"+i+"')");
+       //$("#boton_det"+nuevoId).attr("id","boton_det"+i);
+       //$("#ndet"+nuevoId).attr("id","ndet"+i);
        $("#codigo_cuentadetalle"+nuevoId).attr("name","codigo_cuentadetalle"+i);
        $("#codigo_cuentadetalle"+nuevoId).attr("id","codigo_cuentadetalle"+i);
        $("#codigo_partidadetalle"+nuevoId).attr("name","codigo_partidadetalle"+i);
-       $("#codigo_partidadetalle"+nuevoId).attr("id","codigo_partidadetalle"+i);
+       $("#cuentas_div"+nuevoId).attr("id","cuentas_div"+i);
       }
      } 
      itemDetalle.splice((idF-1), 1);
@@ -4349,6 +4355,24 @@ function listDetallePlantilla(id){
         }
     });
  }
+ function mostrarCuentasPartida2(fila){
+  var partida=$("#partida_presupuestaria"+fila).val();
+  var parametros={"cod_partida":partida,"fila":fila};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxPartidaPresupuestariaCuentas.php",
+        data: parametros,
+        beforeSend: function () { 
+          iniciarCargaAjax();
+        },
+        success:  function (resp) {
+           detectarCargaAjax();
+           $("#cuentas_div"+fila).html(resp);
+           $('.selectpicker').selectpicker("refresh");
+        }
+    });
+ }
  function savePlantillaDetalleTcp(){
   if($("#partida_detalle").val()==""||$("#cuenta_plantilladetalle").val()==""){
     Swal.fire("Informativo!", "Todos los campos son requeridos", "warning");
@@ -4362,7 +4386,80 @@ function listDetallePlantilla(id){
     $("#modalDetalle").modal("hide");
   }
  }
-
+ function guardarServicioPlantilla(){
+  var plantilla=$("#cod_plantilla").val();
+  var codigo=$("#servicios_codigo").val();
+  var observacion=$("#observacion_servicio").val();
+  var cantidad=$("#cantidad_servicio").val();
+  var monto=$("#monto_servicio").val();
+  if(codigo==""||cantidad==""||monto==""){
+       Swal.fire("Informativo!", "Debe llenar todos los campos", "warning");
+  }else{
+  var parametros={"plantilla":plantilla,"codigo":codigo,"obs":observacion,"cant":cantidad,"monto":monto};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxSaveTipoServicio.php",
+        data: parametros,
+        beforeSend: function () { 
+          iniciarCargaAjax();
+        },
+        success:  function (resp) {
+           detectarCargaAjax();
+           if(resp.trim()=="1"){
+             Swal.fire("Encontrado!", "El servicio ya se encuentra registrado.", "warning");
+           }else{
+            $("#servicios_codigo").val("");
+            $("#observacion_servicio").val("");
+            $("#cantidad_servicio").val("");
+            $("#monto_servicio").val("");
+            $('.selectpicker').selectpicker("refresh");
+            listarServiciosPlantilla();
+             Swal.fire("Correcto!", "Se agrego el registro exitosamente.", "success");
+             
+           }
+        }
+    });
+    
+  }
+ }
+function listarServiciosPlantilla(){
+   var plantilla=$("#cod_plantilla").val();
+   var parametros={"plantilla":plantilla};
+   $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxListTipoServicio.php",
+        data: parametros,
+        success:  function (resp) {
+         $("#tabla_servicios").html(resp);
+        }
+    }); 
+}
+function removeServicioPlantilla(cod){
+  var parametros={"cod":cod};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxDeleteServicio.php",
+        data: parametros,
+        beforeSend: function () { 
+          iniciarCargaAjax();
+        },
+        success:  function (resp) {
+           detectarCargaAjax();
+           listarServiciosPlantilla();
+        }
+    });
+}
+function cambiarDivPlantilla(div,div2){
+  if(!($("#"+div2).hasClass("d-none"))){
+    $("#"+div2).addClass("d-none");
+    $("#"+div).removeClass("d-none");
+    $("#button_"+div2).removeClass("fondo-boton-active");
+    $("#button_"+div).addClass("fondo-boton-active");
+  }
+}
 //funciones despues de cargar pantalla
 window.onload = detectarCarga;
   function detectarCarga(){
