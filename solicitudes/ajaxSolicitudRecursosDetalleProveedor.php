@@ -27,7 +27,7 @@ $fechaf=$porcionesFechaHasta[2]."-".$porcionesFechaHasta[1]."-".$porcionesFechaH
 $codPlan=$_GET['cod_cuenta'];
 $codigo=$_GET['codigo'];
 
-$detalle=obtenerDetalleSolicitudProveedor($codPlan,$fechai,$fechaf,3,$globalUser);
+$detalle=obtenerDetalleSolicitudProveedorPlantilla($codPlan,$fechai,$fechaf,3,$globalUser);
 $centros=[];
 $centros=obtenerCentroSolicitud($codigo);
 $unidadSol=$centros[0];
@@ -36,19 +36,20 @@ $idFila=1;
 ?><script>numFilas=0;cantidadItems=0;itemFacturas=[];</script><?php
 $cuentasCodigos=[];$conta=0;
             while ($row = $detalle->fetch(PDO::FETCH_ASSOC)) {
+              $cod_plantilladetalle=$row['codigo_detalle'];
               $codCuentaX=$row['codigo'];
               $codSimulacionX=$row['cod_simulacion'];
               $codDetalleX=0;
               $ibnorca=obtenerIbnorcaCheck($codSimulacionX);
-              $solicitudDetalle=obtenerSolicitudRecursosDetalleCuenta($codigo,$codCuentaX);
-              $detalleX="";
+              $solicitudDetalle=obtenerSolicitudRecursosDetallePlantilla($codigo,$cod_plantilladetalle);
+              $detalleX=$row['glosa'];
               $importeX="";
               $proveedorX="";
               $retencionX="";
               $tituloImporte="Importe";
               if($ibnorca==1){
-                $importeX=$row['monto_local'];
-                $importeSolX=$row['monto_local'];
+                $importeX=$row['monto_total'];
+                $importeSolX=$row['monto_total'];
               }else{
                 $importeX=$row['monto_externo'];
                 $importeSolX=$row['monto_externo'];

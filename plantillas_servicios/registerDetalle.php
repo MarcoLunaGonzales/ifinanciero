@@ -53,6 +53,12 @@ if(isset($_GET['cod'])){
             $stmt->bindColumn('dias_auditoria', $diasAuditoriaX);
             $stmt->bindColumn('fecha_registro', $fechaRegistro);
 ?>
+<div class="cargar">
+  <div class="div-loading text-center">
+     <h4 class="text-warning font-weight-bold">Procesando Datos</h4>
+     <p class="text-white">Aguard&aacute; un momento por favor</p>  
+  </div>
+</div>
 <div class="cargar-ajax d-none">
   <div class="div-loading text-center">
      <h4 class="text-warning font-weight-bold">Procesando Datos</h4>
@@ -321,7 +327,7 @@ if(isset($_GET['cod'])){
                                   <label class="col-sm-3 col-form-label">Lista de Servicios</label>
                                       <div class="col-sm-7">
         	                            <div class="form-group">
-	                                   <select class="selectpicker form-control" name="servicios_codigo" id="servicios_codigo" data-style="fondo-boton" required>
+	                                   <select class="selectpicker form-control" name="servicios_codigo" id="servicios_codigo" data-style="fondo-boton">
 	        	                          <option disabled selected value="">--Seleccione--</option>
 			  	              <?php
                            $stmt3 = $dbh->prepare("SELECT idclaservicio,descripcion from claservicios where (idArea=38 or idArea=39) and vigente=1");
