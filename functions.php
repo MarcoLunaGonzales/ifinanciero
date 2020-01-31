@@ -2338,7 +2338,7 @@ function obtenerMontoSimulacionCuenta($codigo,$codigoPar,$ib){
 }
 function obtenerTotalesSimulacion($codigo){
   $dbh = new Conexion();
-    $montoI=0;$montoF=0;
+    $montoI=1;$montoF=1;
    $stmt = $dbh->prepare("SELECT sum(monto_local) as total_local, sum(monto_externo) as total_externo 
     FROM cuentas_simulacion where cod_simulacioncostos=:codSim");
    $stmt->bindParam(':codSim',$codigo);
