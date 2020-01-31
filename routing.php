@@ -1196,6 +1196,8 @@
 		if ($_GET['opcion']=='deleteCajaChica') {
 			$codigo=$_GET['codigo'];
 			$cod_tcc=$_GET['cod_tcc'];
+			$cod_a=$_GET['cod_a'];
+
 			require_once('caja_chica/cajachica_delete.php');
 		}
 		//detalle caja chica 

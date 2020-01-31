@@ -108,7 +108,7 @@ if ($codigo > 0){
                         <label class="col-sm-2 col-form-label">Monto</label>
                         <div class="col-sm-4">
                             <div class="form-group">
-                                <input class="form-control" type="number" step="any" name="monto" id="monto" value="<?=$monto;?>" required/>
+                                <input class="form-control" type="text" step="any" name="monto" id="monto" value="<?=$monto;?>" required/>
                             </div>
                         </div>
                         <label class="col-sm-2 col-form-label">Fecha</label>
@@ -137,7 +137,7 @@ if ($codigo > 0){
 
 
                     <div class="row">
-                        <label class="col-sm-2 col-form-label">Observaciones</label>
+                        <label class="col-sm-2 col-form-label">Descripción</label>
                         <div class="col-sm-7">
                         <div class="form-group">
                             <textarea class="form-control rounded-0" name="observaciones" id="observaciones" rows="3" onkeyup="javascript:this.value=this.value.toUpperCase();"><?=$observaciones;?></textarea>

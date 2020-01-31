@@ -66,7 +66,7 @@ if($cod_estadoreferencial==1){//insertar
 }elseif($cod_estadoreferencial==4){
 
 	//actualizamos estado en cajachjicadetalle
-	$sqlCCD="UPDATE caja_chicadetalle set cod_estado=2 where codigo=$codigo_detRendicionE";
+	$sqlCCD="UPDATE caja_chicadetalle set cod_estado=2,monto_rendicion=$monto_A where codigo=$codigo_detRendicionE";
 	$stmtCCD = $dbhU->prepare($sqlCCD);
 	$stmtCCD->execute();
 	//estado de rendicion 
