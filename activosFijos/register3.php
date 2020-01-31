@@ -38,7 +38,7 @@ $dbh = new Conexion();
 			  </div>
 			  <div class="card-footer ml-auto mr-auto">
 				<button type="submit" class="<?=$buttonNormal;?>">Guardar</button>
-				<a href="?opcion=listResponsables" class="<?=$buttonCancel;?>">Cancelar</a>
+				<a href="?opcion=listResponsables" class="<?=$buttonCancel;?>"> <-- Volver </a>
 			  </div>
 			</div>
 		  </form>

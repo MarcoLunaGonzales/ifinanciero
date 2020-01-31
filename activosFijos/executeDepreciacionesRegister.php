@@ -5,7 +5,7 @@ require_once 'styles.php';
 require_once 'configModule.php';
 
 $dbh = new Conexion();
-$sql="SELECT *from gestiones";
+$sql="SELECT * from gestiones order by 1 desc";
 $stmtGestiones = $dbh->query($sql);
 
 
@@ -69,7 +69,7 @@ $stmtGestiones = $dbh->query($sql);
 			  </div>
 			  <div class="card-footer ml-auto mr-auto">
   				<button type="submit" class="<?=$buttonNormal;?>">Guardar</button>
-  				<a href="?opcion=ejecutarDepreciacionLista" class="<?=$buttonCancel;?>">Cancelar</a>
+  				<a href="?opcion=ejecutarDepreciacionLista" class="<?=$buttonCancel;?>"> <-- Volver </a>
 			  </div>
 			</div>
 		  </form>

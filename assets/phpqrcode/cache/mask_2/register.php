@@ -264,7 +264,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
 
 				  	<div class="card-footer fixed-bottom">
 						<button type="submit" class="<?=$buttonMorado;?>">Guardar</button>
-						<a href="../<?=$urlList;?>" class="<?=$buttonCancel;?>">Cancelar</a>
+						<a href="../<?=$urlList;?>" class="<?=$buttonCancel;?>"> <-- Volver </a>
 
 				  	</div>
  	 <?php

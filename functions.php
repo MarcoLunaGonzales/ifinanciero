@@ -2691,6 +2691,20 @@ function obtenerPlantillaCodigoSimulacion($codigo){
   }
   return $valor;
 }
+
+function obtenerNombrePersonal($codigo){
+  $dbh = new Conexion();
+   $valor=0;
+   $sql="SELECT concat(p.paterno, ' ',p.materno, ' ', p.primer_nombre)as nombre from personal p where p.codigo=$codigo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['nombre'];
+  }
+  return $valor;
+}
+
+
 ?>
 
 

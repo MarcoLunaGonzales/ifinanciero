@@ -96,7 +96,7 @@ $nombreDescuento="Formularios 110";
               if($globalAdmin==1){
               ?>
       				<div class="card-footer fixed-bottom">
-                    <!--<button class="<?=$buttonCancel;?>" onClick="location.href='<?=$urlList;?>'">Cancelar</button>-->
+                    <!--<button class="<?=$buttonCancel;?>" onClick="location.href='<?=$urlList;?>'"> <-- Volver </button>-->
               </div>
               
 

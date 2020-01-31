@@ -192,7 +192,7 @@ while ($rowClasificador = $stmtClasificador->fetch(PDO::FETCH_ASSOC)) {
 						<a href="#" class="btn" data-toggle="modal" data-target="#myModal">
                         	Cambiar Area
 	                    </a>
-						<a href="?opcion=listPOA" class="<?=$buttonCancel;?>">Cancelar</a>
+						<a href="?opcion=listPOA" class="<?=$buttonCancel;?>"> <-- Volver </a>
 
 				  	</div>
 

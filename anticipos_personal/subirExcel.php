@@ -71,7 +71,7 @@ while ($row = $stmtc->fetch(PDO::FETCH_BOUND)) {
 
 					<div class="card-footer ml-auto mr-auto">
 						<button type="submit" class="<?= $buttonNormal; ?>" name="enviar">Guardar</button>
-						<a href="<?=$urlListMesPersona;?>&cod_mes=<?=$codMes;?>" class="<?= $buttonCancel; ?>">Cancelar</a>
+						<a href="<?=$urlListMesPersona;?>&cod_mes=<?=$codMes;?>" class="<?= $buttonCancel; ?>"> <-- Volver </a>
 						<a href="<?=$urlAyudaCSV;?>" target="_blank" class="btn btn-info"><span class="material-icons">help_outline</span> Ayuda</a>
 					</div>
 

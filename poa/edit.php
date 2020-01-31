@@ -340,7 +340,7 @@ while ($row = $stmtX->fetch(PDO::FETCH_ASSOC)) {
 
 				  	<div class="card-body">
 						<button type="submit" class="<?=$button;?>">Guardar</button>
-						<a href="?opcion=listPOA" class="<?=$buttonCancel;?>">Cancelar</a>
+						<a href="?opcion=listPOA" class="<?=$buttonCancel;?>"> <-- Volver </a>
 
 				  	</div>
 

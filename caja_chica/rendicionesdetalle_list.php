@@ -219,7 +219,7 @@ $statementTipoDocRendicionE = $dbh->query("SELECT * from tipos_doc_rendicion ord
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-success" id="registrarDetalleRendicionA" name="registrarDetalleRendicionA" data-dismiss="modal">Aceptar</button>
-        <!-- <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button> -->
+        <!-- <button type="button" class="btn btn-danger" data-dismiss="modal"> <-- Volver </button> -->
       </div>
     </div>
   </div>
@@ -279,7 +279,7 @@ $statementTipoDocRendicionE = $dbh->query("SELECT * from tipos_doc_rendicion ord
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-success" id="EditasDetalleRendicionA" name="EditasDetalleRendicionA" data-dismiss="modal">Aceptar</button>
-        <!-- <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button> -->
+        <!-- <button type="button" class="btn btn-danger" data-dismiss="modal"> <-- Volver </button> -->
       </div>
     </div>
   </div>
@@ -300,7 +300,7 @@ $statementTipoDocRendicionE = $dbh->query("SELECT * from tipos_doc_rendicion ord
       </div>       
       <div class="modal-footer">
         <button type="button" class="btn btn-success" id="EliminarDetRendicion" data-dismiss="modal">Aceptar</button>
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal"> <-- Volver </button>
       </div>
     </div>
   </div>
@@ -322,7 +322,7 @@ $statementTipoDocRendicionE = $dbh->query("SELECT * from tipos_doc_rendicion ord
       </div>       
       <div class="modal-footer">
         <button type="button" class="btn btn-success" id="GuardarRendicion" data-dismiss="modal">Aceptar</button>
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal"> <-- Volver </button>
       </div>
     </div>
   </div>

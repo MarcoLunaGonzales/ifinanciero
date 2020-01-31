@@ -40,7 +40,7 @@ $dbh = new Conexion();
 			  </div>
 			  <div  class="card-footer fixed-bottom">
 				<button type="submit" class="<?=$buttonNormal;?>">Guardar</button>
-				<a href="<?=$urlList2;?>" class="<?=$buttonCancel;?>">Cancelar</a>
+				<a href="<?=$urlList2;?>" class="<?=$buttonCancel;?>"> <-- Volver </a>
 			  </div>
 			</div>
 		  </form>

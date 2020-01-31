@@ -60,7 +60,7 @@ if(isset($_GET['codigo'])){
 
 				</div>
 				<div class="card-footer fixed-bottom">
-						<a href="../<?=$urlListReg;?>" class="<?=$buttonCancel;?>">Cancelar</a>
+						<a href="../<?=$urlListReg;?>" class="<?=$buttonCancel;?>"> <-- Volver </a>
 
 				  	</div>
 			</div>	

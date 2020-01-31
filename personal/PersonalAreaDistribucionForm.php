@@ -186,7 +186,7 @@ $statementAREASE = $dbh->query($query_areas);
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-success" id="aceptarPAD"  data-dismiss="modal">Aceptar</button>
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal"> <-- Volver </button>
       </div>
     </div>
   </div>
@@ -206,7 +206,7 @@ $statementAREASE = $dbh->query($query_areas);
       </div>       
       <div class="modal-footer">
         <button type="button" class="btn btn-success" id="eliminarPAD" data-dismiss="modal">Aceptar</button>
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal"> <-- Volver </button>
       </div>
     </div>
   </div>
@@ -244,7 +244,7 @@ $statementAREASE = $dbh->query($query_areas);
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-success" id="EditarPAD"  data-dismiss="modal">Aceptar</button>
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal"> <-- Volver </button>
       </div>
     </div>
   </div>

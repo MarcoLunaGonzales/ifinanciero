@@ -288,7 +288,7 @@ if(isset($_GET['cod'])){
           </fieldset>
             <div class="card-footer fixed-bottom">
                <button type="submit" class="<?=$buttonMorado;?>">Guardar</button>
-               <a href="../<?=$urlList;?>" class="<?=$buttonCancel;?>">Cancelar</a>
+               <a href="../<?=$urlList;?>" class="<?=$buttonCancel;?>"> <-- Volver </a>
 
             </div>
         </div>
