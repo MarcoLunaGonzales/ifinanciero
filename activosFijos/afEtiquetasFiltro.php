@@ -15,7 +15,7 @@ $statement = $dbh->query($query);
 			<div class="card">
 			  <div class="card-header <?=$colorCard;?> card-header-text">
   				<div class="card-text">
-  				  <h4 class="card-title">Etiquetas de Impresión de AF</h4>
+  				  <h4 class="card-title">Impresión de Etiquetas</h4>
   				</div>
 			  </div>
 			  <div class="card-body ">

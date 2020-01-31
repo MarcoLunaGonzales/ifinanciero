@@ -6,7 +6,6 @@ require '../assets/phpqrcode/qrlib.php';
 //require_once 'configModule.php';
 require_once __DIR__.'/../functions.php';
 $dbh = new Conexion();
-set_time_limit(300);
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//try
 //RECIBIMOS LAS VARIABLES
 
@@ -69,10 +68,10 @@ $html.='<table class="table">'.
                     $cont=0;
                     while ($rowActivos = $stmtActivos->fetch(PDO::FETCH_ASSOC)) {
                        if($cont<3){
-                        $html.='<td style="border-bottom: 0px solid black;" height="2,5cm" width="6,7cm">
-                                    <table class="tabla" align="center" style="border:hidden">
-                                        <tr>
-                                        <td style="border: hidden">';
+                        $html.='<td style="border-bottom: 0px solid black;" height="2,5cm" width="6,7cm">'.
+                                    '<table class="tabla" align="center" style="border:hidden">'.
+                                        '<tr>'.
+                                        '<td style="border: hidden">';
                                             $dir = 'qr_temp/';
                                             if(!file_exists($dir)){
                                                 mkdir ($dir);}
@@ -85,20 +84,20 @@ $html.='<table class="table">'.
                                             QRcode::png($contenido, $fileName, $level, $tamanio,$frameSize);
                                             $html.= '<img src="'.$fileName.'"/>';
 
-                                        $html.='</td>
-                                        <td style="border: hidden"><small><p align="left">Codigo: '.$codigoActivoX.' <br>Oficina: '.$abr_uoX.' <br>Area: '.$abr_areaX.' <br>Responsable: '.$nombre_responsableX.'</p></small></td>
-                                        <td style="border: hidden"><img src="../assets/img/logo_ibnorca1.fw.png" width="30" /></td>
-                                        </tr>
-                                        <tr>
-                                        <td align="center" style="border: hidden" colspan=3><small>'.$activoX.'</small></td>                            
-                                        </tr>
-                                    </table>
-                                </td>';
+                                        $html.='</td>'.
+                                        '<td style="border: hidden"><small><p align="left">Codigo: '.$codigoActivoX.' <br>Oficina: '.$abr_uoX.' <br>Area: '.$abr_areaX.' <br>Responsable: '.$nombre_responsableX.'</p></small></td>'.
+                                        '<td style="border: hidden"><img src="../assets/img/logo_ibnorca1.fw.png" width="30" /></td>'.
+                                        '</tr>'.
+                                        '<tr>'.
+                                        '<td align="center" style="border: hidden" colspan=3><small>'.$activoX.'</small></td>'.                            
+                                        '</tr>'.
+                                    '</table>'.
+                                '</td>';
                                 if($cont<2){
                                     $html.='<td style="border-top: hidden;border-bottom: hidden;" height="2,5cm" width="0,3cm"></td>';
                                 }
                                 $cont++;
-                       }else{;
+                       }else{
                         $html.='</tr><tr>'.
                                     '<td style="border-bottom: 0px solid black;"  height="2,5cm" width="6,7cm">
                                         <table align="center" style="border:hidden">
@@ -130,21 +129,9 @@ $html.='<table class="table">'.
                        }
                        
                     }
-                    if($cont==2){
-                        $html.='<td style="border-bottom: 0px solid black;" height="2,5cm" width="6,7cm">
-                                </td>';
-
-                    }if($cont==1){
-                        $html.='<td style="border-bottom: 0px solid black;" height="2,5cm" width="6,7cm">
-                                </td>
-                                <td style="border-top: hidden;border-bottom: hidden;" height=",2,5cm" width="0,3cm"></td>
-                                <td style="border-bottom: 0px solid black;" height="2,5cm" width="6,7cm">
-                                </td>';
-                    }
-
-                     
-                $html.='</tr>
-                </tbody>'.
+                    
+                $html.='</tr>'.
+                '</tbody>'.
             '</table>'. 
                                
         '</body>'.

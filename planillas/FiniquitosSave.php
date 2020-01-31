@@ -15,19 +15,22 @@ try {
     $anios_trabajados_pagados = $_POST["anios_trabajados_pagados"];
     //$fecha_retiro = $_POST["fecha_retiro"];
     
+
+    // echo $cod_personal."-".$codigo."-".$anios_trabajados_pagados;
+
     $cod_estadoreferencial =   1;    
     $created_by = 1;//$_POST["created_by"];
-    $modified_by = 1;//$_POST["modified_by"];
-    
-    $anio_retiro = date("Y", strtotime($fecha_retiro));
-    $mes_retiro = date("m", strtotime($fecha_retiro));
-    $dia_retiro = date("d", strtotime($fecha_retiro));
+    $modified_by = 1;//$_POST["modified_by"];    
     //tipo_retiro
-    $stmtTipoRetiro = $dbh->prepare("SELECT cod_tiporetiro,fecha_retiro from personal_retiros where cod_personal=$cod_personal");
+    $stmttipoRetiro = $dbh->prepare("SELECT cod_tiporetiro,fecha_retiro from personal_retiros where cod_personal=$cod_personal");
     $stmttipoRetiro->execute();
     $resultRetiro =  $stmttipoRetiro->fetch();
     $motivo_retiro = $resultRetiro['cod_tiporetiro'];
     $fecha_retiro=$resultRetiro['fecha_retiro'];
+
+    $anio_retiro = date("Y", strtotime($fecha_retiro));
+    $mes_retiro = date("m", strtotime($fecha_retiro));
+    $dia_retiro = date("d", strtotime($fecha_retiro));
     
     $stmtGestion = $dbh->prepare("SELECT codigo from gestiones where nombre=$anio_retiro");
     $stmtGestion->execute();
@@ -38,13 +41,15 @@ try {
     $stmtPersonal->execute();
     $resultPersonal =  $stmtPersonal->fetch();
     $ing_contr_x = $resultPersonal['ing_contr'];
+
     $anio_ingreso = date("Y", strtotime($ing_contr_x));
     $mes_ingreso = date("m", strtotime($ing_contr_x));
     $dia_ingreso = date("d", strtotime($ing_contr_x));
     //$anios_trabajados_pagados=5;//cambiar
 
     $anios_aux=$anio_ingreso+$anios_trabajados_pagados;
-    $ing_contr = '$anios_aux/$mes_ingreso/$dia_ingreso';//cambiar
+    $ing_contr = $anios_aux.'/'.$mes_ingreso.'/'.$dia_ingreso;
+    // echo $ing_contr."-".$ing_contr_x;
     $anio_ingreso2 = date("Y", strtotime($ing_contr));
     $mes_ingreso2 = date("m", strtotime($ing_contr));
     $dia_ingreso2 = date("d", strtotime($ing_contr));

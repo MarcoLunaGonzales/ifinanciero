@@ -3901,6 +3901,38 @@ function ajaxAreaContabilizacionDetalle(combo){
   }
   ajax.send(null)  
 }//unidad_area-cargo
+function ajaxUOArea_personal_tipocajachica(combo){
+  var contenedor;
+  var codigo_UO=combo.value;
+  contenedor = document.getElementById('div_contenedor_area_tcc');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'caja_chica/uo_area_personal_ajax.php?codigo_UO='+codigo_UO,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);
+
+      ajaxPersonalUOCajaChica(codigo_UO);          
+    }
+  }
+  ajax.send(null)  
+}//personal - uo-area tipo caja chica
+function ajaxPersonalUOCajaChica(codigo_UO){
+  var contenedor;
+  contenedor = document.getElementById('div_personal_UO_tcc');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'caja_chica/uoPersonalAjax.php?codigo_UO='+codigo_UO,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);
+    }
+  }
+  ajax.send(null)
+  
+}
+
+
 function ajaxAreaCargos(codigo_uo,combo){
   var contenedor;
   //var codigo_uo=document.getElementById("cod_uo").value;
@@ -4508,3 +4540,124 @@ $(document).ready(function() {
       }
     });
 });
+
+//rendiciones
+function agregarRendicionDetalle(datos){
+  //console.log("datos: "+datos);
+  var d=datos.split('/');
+  
+  // alert("d1: "+d[0]+"-d2: "+d[1]);
+  document.getElementById("codigo_rendicionA").value=d[0];
+  // document.getElementById("cod_contratoCf").value=d[1];
+}
+
+function RegistrarDetalleRendicion(codigo_rendicionA,cod_tipo_documentoA,numero_doc,fecha_doc,monto_A,observacionesA){
+  $.ajax({
+    type:"POST",
+    data:"codigo_detRendicionE=0&codigo_rendicionA="+codigo_rendicionA+"&cod_tipo_documentoA="+cod_tipo_documentoA+"&numero_doc="+numero_doc+"&monto_A="+monto_A+"&cod_estadoreferencial=1&fecha_doc="+fecha_doc+"&observacionesA="+observacionesA,
+    url:"caja_chica/rendicionesdetalle_save.php",
+    success:function(r){
+      if(r==1){
+        alerts.showSwal('success-message','index.php?opcion=ListaRendicionesDetalle&codigo='+codigo_rendicionA);
+      }else{
+        alerts.showSwal('error-message','index.php?opcion=ListaRendicionesDetalle&codigo='+codigo_rendicionA);
+        // if(r==2){
+        //   alerts.showSwal('error-message5','index.php?opcion=FormPersonalContratos&codigo='+codigo_rendiciondetalleA);
+        // }
+      } 
+    }
+  });
+}
+function clickEditarRendicionDetalle(datos){
+  //console.log("datos: "+datos);
+  var d=datos.split('/');
+  
+  document.getElementById("codigo_rendicionE").value=d[0];
+  document.getElementById("codigo_detRendicionE").value=d[1];
+  document.getElementById("cod_tipo_documentoE").value=d[2];
+  document.getElementById("numero_docE").value=d[3];
+  document.getElementById("fecha_docE").value=d[4];
+  document.getElementById("monto_E").value=d[5];
+  document.getElementById("observacionesE").value=d[6];
+  
+
+  // document.getElementById("cod_areaE").value=d[2];
+  // document.getElementById("porcentajeE").value=d[3];
+}
+function EditarDetalleRendicion(codigo_detRendicionE,codigo_rendicionE,cod_tipo_documentoE,numero_docE,fecha_docE,monto_E,observacionesE){
+  $.ajax({
+    type:"POST",
+    data:"codigo_detRendicionE="+codigo_detRendicionE+"&codigo_rendicionA="+codigo_rendicionE+"&cod_tipo_documentoA="+cod_tipo_documentoE+"&numero_doc="+numero_docE+"&monto_A="+monto_E+"&cod_estadoreferencial=2&fecha_doc="+fecha_docE+"&observacionesA="+observacionesE,
+    url:"caja_chica/rendicionesdetalle_save.php",
+    success:function(r){
+      if(r==1){
+        alerts.showSwal('success-message','index.php?opcion=ListaRendicionesDetalle&codigo='+codigo_rendicionE);
+      }else{
+        alerts.showSwal('error-message','index.php?opcion=ListaRendicionesDetalle&codigo='+codigo_rendicionE);
+        // if(r==2){
+        //   alerts.showSwal('error-message5','index.php?opcion=FormPersonalContratos&codigo='+codigo_rendiciondetalleA);
+        // }
+      } 
+    }
+  });
+}
+
+
+function clickBorrarRendicionDetalle(datos){
+  //console.log("datos: "+datos);
+  var d=datos.split('/');
+  
+  document.getElementById("codigo_rendicionB").value=d[0];
+  document.getElementById("codigo_detRendicionB").value=d[1];
+  
+  
+
+  // document.getElementById("cod_areaE").value=d[2];
+  // document.getElementById("porcentajeE").value=d[3];
+}
+
+function EliminarDetalleRendicion(codigo_detRendicionB,codigo_rendicionB){
+  $.ajax({
+    type:"POST",
+    data:"codigo_detRendicionE="+codigo_detRendicionB+"&codigo_rendicionA="+codigo_rendicionB+"&cod_tipo_documentoA=0&numero_doc=0&monto_A=0&cod_estadoreferencial=3&fecha_doc=''&observacionesA=''",
+    url:"caja_chica/rendicionesdetalle_save.php",
+    success:function(r){
+      if(r==1){
+        alerts.showSwal('success-message','index.php?opcion=ListaRendicionesDetalle&codigo='+codigo_rendicionB);
+      }else{
+        alerts.showSwal('error-message','index.php?opcion=ListaRendicionesDetalle&codigo='+codigo_rendicionB);
+        // if(r==2){
+        //   alerts.showSwal('error-message5','index.php?opcion=FormPersonalContratos&codigo='+codigo_rendiciondetalleA);
+        // }
+      } 
+    }
+  });
+}
+
+
+function clickGuardarRendicion(datos){
+  //console.log("datos: "+datos);
+  var d=datos.split('/');
+  
+  document.getElementById("codigo_rendicionG").value=d[0];
+  document.getElementById("monto_rendicionG").value=d[1];
+  document.getElementById("cod_cajachicaDetG").value=d[2];
+}
+
+function GuardarRendicion(codigo_rendicionG,monto_rendicionG,cod_cajachicaDetG){
+  $.ajax({
+    type:"POST",
+    data:"codigo_detRendicionE="+cod_cajachicaDetG+"&codigo_rendicionA="+codigo_rendicionG+"&cod_tipo_documentoA=0&numero_doc=0&monto_A="+monto_rendicionG+"&cod_estadoreferencial=4&fecha_doc=''&observacionesA=''",
+    url:"caja_chica/rendicionesdetalle_save.php",
+    success:function(r){
+      if(r==1){
+        alerts.showSwal('success-message','index.php?opcion=ListaRendiciones');
+      }else{
+        alerts.showSwal('error-message','index.php?opcion=ListaRendiciones');
+        // if(r==2){
+        //   alerts.showSwal('error-message5','index.php?opcion=FormPersonalContratos&codigo='+codigo_rendiciondetalleA);
+        // }
+      } 
+    }
+  });
+}
