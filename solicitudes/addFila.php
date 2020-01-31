@@ -19,7 +19,8 @@
 			                          </div>
                                    </div>
                                <input type="hidden" id="unidad<?=$idFila;?>" name="unidad<?=$idFila;?>" value="<?=$unidadSol?>">
-                               <input type="hidden" id="area<?=$idFila;?>" name="area<?=$idFila;?>" value="<?=$areaSol?>">    
+                               <input type="hidden" id="area<?=$idFila;?>" name="area<?=$idFila;?>" value="<?=$areaSol?>">
+                               <input type="hidden" id="cod_detalleplantilla<?=$idFila;?>" name="cod_detalleplantilla<?=$idFila;?>" value="<?=$cod_plantilladetalle?>">    
 		
       	                              <div class="col-sm-4">
                                           <div class="form-group">

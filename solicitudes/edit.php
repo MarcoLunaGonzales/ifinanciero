@@ -19,7 +19,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 
 $fechaHoraActual=date("Y-m-d H:i:s");
 
-$sqlUpdate="UPDATE solicitud_recursos SET  cod_estadosolicitudrecursos=$estado where codigo=$codigo";
+$sqlUpdate="UPDATE solicitud_recursos SET  cod_estadosolicitudrecurso=$estado where codigo=$codigo";
 $stmtUpdate = $dbh->prepare($sqlUpdate);
 $flagSuccess=$stmtUpdate->execute();
 

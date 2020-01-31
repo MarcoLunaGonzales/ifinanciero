@@ -63,7 +63,8 @@ for ($i=1;$i<=$cantidadFilas;$i++){
     $data[$fila][4]=0; 
     $data[$fila][5]="";
     $data[$fila][6]=$_POST["proveedor".$i];
-    $data[$fila][7]=$_POST["cod_retencion".$i];
+    $data[$fila][7]=$_POST["cod_detalleplantilla".$i];
+    $data[$fila][8]=$_POST["cod_retencion".$i];
     //$dataInsert  
     $fila++;
       foreach($_FILES["archivos".$i]['tmp_name'] as $key => $tmp_name)
@@ -101,7 +102,8 @@ $cab[3]="importe";
 $cab[4]="numero_factura";
 $cab[5]="archivo";
 $cab[6]="cod_proveedor";
-$cab[7]="cod_confretencion";
+$cab[7]="cod_detalleplantilla";
+$cab[8]="cod_confretencion";
 $solDet=contarSolicitudDetalle($codSolicitud);
 $solDet->bindColumn('total', $contador);
 while ($row = $solDet->fetch(PDO::FETCH_BOUND)) {

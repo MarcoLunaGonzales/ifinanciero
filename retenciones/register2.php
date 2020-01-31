@@ -60,6 +60,18 @@ $dbh = new Conexion();
   }
 
 ?>
+<div class="cargar">
+  <div class="div-loading text-center">
+     <h4 class="text-warning font-weight-bold">Procesando Datos</h4>
+     <p class="text-white">Aguard&aacute; un momento por favor</p>  
+  </div>
+</div>
+<div class="cargar-ajax d-none">
+  <div class="div-loading text-center">
+     <h4 class="text-warning font-weight-bold">Procesando Datos</h4>
+     <p class="text-white">Aguard&aacute; un momento por favor</p>  
+  </div>
+</div>
 <div class="content">
 	<div id="">
 		<div class="fondo-imagen2"></div>
@@ -127,7 +139,7 @@ $dbh = new Conexion();
                        <label class="col-sm-3 col-form-label">Cuenta</label>
                        <div class="col-sm-9">
                          <div class="form-group has-success">
-                           <input class="form-control" type="text" name="cuenta_auto_num" id="cuenta_auto_num" placeholder="[numero] y nombre de cuenta (defecto:Cuenta vacía)"/>
+                           <input class="form-control" type="text" name="cuenta_auto_num" id="cuenta_auto_num" onkeypress="if(event.keyCode==13) return false;" placeholder="[numero] y nombre de cuenta (defecto:Cuenta vacía)"/>
                            <input class="form-control" type="hidden" name="cuenta_auto_num_id" id="cuenta_auto_num_id"/>
                          </div>
                         </div>
@@ -137,7 +149,7 @@ $dbh = new Conexion();
                         <a href="#" class="btn btn-info btn-round" onclick="editarRetencionNombre()">Editar Retencion</a>                        
                       </div>-->
                       <div class="form-group float-right">
-                        <a href="../index.php?opcion=configuracionDeRetenciones" class="btn btn-default btn-round">Atras</a>      
+                        <a href="../index.php?opcion=configuracionDeRetenciones" class="btn btn-danger btn-round">Volver</a>      
                         <button type="submit" class="btn btn-info btn-round" onclick="">Guardar</button>
                       </div>
              </form>    

@@ -219,12 +219,12 @@ function configuracionEstadosCuenta(fila,codigoCuenta,codigoCuentaAux){
       $("#tipo_estadocuentas"+fila).val(estado_cuentas[i].tipo);
        if(estado_cuentas[i].tipo==1){
          //$("#debe"+fila).removeAttr("readonly");
-         $("#haber"+fila).val("");
+         //$("#haber"+fila).val("");
          //$("#haber"+fila).attr("readonly","readonly");
        }else{
          //$("#haber"+fila).removeAttr("readonly");
          //$("#debe"+fila).attr("readonly","readonly");
-         $("#debe"+fila).val("");
+         //$("#debe"+fila).val("");
        }     
       break;  
     }else{
@@ -233,12 +233,12 @@ function configuracionEstadosCuenta(fila,codigoCuenta,codigoCuentaAux){
          $("#tipo_estadocuentas"+fila).val(estado_cuentas[i].tipo);
         if(estado_cuentas[i].tipo==1){
          //$("#debe"+fila).removeAttr("readonly");
-         $("#haber"+fila).val("");
+         //$("#haber"+fila).val("");
          //$("#haber"+fila).attr("readonly","readonly");
        }else{
          //$("#haber"+fila).removeAttr("readonly");
          //$("#debe"+fila).attr("readonly","readonly");
-         $("#debe"+fila).val("");
+         //$("#debe"+fila).val("");
        }     
       break;
       }else{
@@ -1968,10 +1968,15 @@ function borrarRetencionDetalle(cod){
         dataType: 'html',
         url: "ajaxDeleteDetalle.php",
         data: parametros,
+        beforeSend:function(){
+          iniciarCargaAjax();
+        },
         success:  function (resp) {
+           detectarCargaAjax();
          contenedor.html(resp);
-         $("#msgError").html("<p class='text-success'><small>Se eliminó el registro exitosamente!</small></p>");
-         $('#modalAlert').modal('show');
+          Swal.fire('Correcto!','La transaccion tuvo exito!','success'); 
+          /*$("#msgError").html("<p class='text-success'><small>Se eliminó el registro exitosamente!</small></p>");
+         $('#modalAlert').modal('show');*/
         }
     });
 }
@@ -2384,6 +2389,8 @@ function minusDetalleSolicitud(idF){
        $("#unidad"+nuevoId).attr("id","unidad"+i);
        $("#area"+nuevoId).attr("name","area"+i);
        $("#area"+nuevoId).attr("id","area"+i);
+       $("#cod_detalleplantilla"+nuevoId).attr("name","cod_detalleplantilla"+i);
+       $("#cod_detalleplantilla"+nuevoId).attr("id","cod_detalleplantilla"+i);
        $("#habilitar"+nuevoId).attr("name","habilitar"+i);
        $("#habilitar"+nuevoId).attr("id","habilitar"+i);
        $("#habilitar"+nuevoId).attr("onchange","habilitarFila('"+i+"')");
@@ -2496,19 +2503,28 @@ function agregarRetencionSolicitud(){
     var fechai=$("#fecha_desde").val();
     var fechaf=$("#fecha_hasta").val();
      var fi = $('#solicitud_proveedor');
-      ajax=nuevoAjax();
-      ajax.open("GET","ajaxSolicitudRecursosDetalleProveedor.php?codigo="+codigoSol+"&fecha_i="+fechai+"&fecha_f="+fechaf+"&cod_cuenta="+codCuenta,true);
-      ajax.onreadystatechange=function(){
-        if (ajax.readyState==4) {
+     var parametros={"codigo":codigoSol,"fecha_i":fechai,"fecha_f":fechaf,"cod_cuenta":codCuenta};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxSolicitudRecursosDetalleProveedor.php",
+        data: parametros,
+        beforeSend: function (){
+            iniciarCargaAjax();
+        },
+        success:  function (resp) {
+           detectarCargaAjax();
           itemFacturas=[];
           fi.html("");
-          fi.html(ajax.responseText);
+          fi.html(resp);
           fi.bootstrapMaterialDesign();
           $('.selectpicker').selectpicker("refresh");
           return false;
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+        Swal.fire("Error de proceso!", "Contactese con el administrador", "error");
        }
-      }   
-      ajax.send(null);
+    });
 //perosnal area distribucion
 }
 function modificarMontos(){

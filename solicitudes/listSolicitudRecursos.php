@@ -7,7 +7,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $dbh = new Conexion();
 
 // Preparamos
-$stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecursos=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo where sr.cod_estadoreferencial=1 order by sr.codigo");
+$stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo where sr.cod_estadoreferencial=1 order by sr.codigo");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -18,7 +18,7 @@ $stmt->bindColumn('fecha', $fecha);
 $stmt->bindColumn('cod_personal', $codPersonal);
 $stmt->bindColumn('cod_simulacion', $codSimulacion);
 $stmt->bindColumn('cod_proveedor', $codProveedor);
-$stmt->bindColumn('cod_estadosolicitudrecursos', $codEstado);
+$stmt->bindColumn('cod_estadosolicitudrecurso', $codEstado);
 $stmt->bindColumn('estado', $estado);
 
 ?>
@@ -105,16 +105,16 @@ $stmt->bindColumn('estado', $estado);
                             <?php    
                               }else{
                               ?>
-                            <a title="Enviar solicitud" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=4&admin=0' rel="tooltip" itle="Enviar Solicitud" class="btn btn-warning">
+                            <a title="Enviar solicitud" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=4&admin=0'  itle="Enviar Solicitud" class="btn btn-warning">
                               <i class="material-icons">send</i>
                             </a> 
-                            <a title="Editar solicitud - detalle" href='<?=$urlRegister;?>?cod=<?=$codigo;?>' rel="tooltip" class="btn btn-info">
+                            <a title="Editar solicitud - detalle" href='<?=$urlRegister;?>?cod=<?=$codigo;?>'  class="btn btn-info">
                               <i class="material-icons"><?=$iconEdit;?></i>
                             </a>
-                            <!--<a title="Editar solicitud" href='<?=$urlEdit;?>&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonEdit;?>">
+                            <!--<a title="Editar solicitud" href='<?=$urlEdit;?>&codigo=<?=$codigo;?>'  class="<?=$buttonEdit;?>">
                               <i class="material-icons"><?=$iconEdit;?></i>
                             </a>-->
-                            <button title="Eliminar solicitud" rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')">
+                            <button title="Eliminar solicitud"  class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')">
                               <i class="material-icons"><?=$iconDelete;?></i>
                             </button>
                               <?php  

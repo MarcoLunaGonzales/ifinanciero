@@ -17,7 +17,7 @@ $stmt->execute();
 $stmt->bindColumn('codigo', $codigo);
 $stmt->bindColumn('nombre', $nombre);
 $stmt->bindColumn('cod_area', $codArea);
-$stmt->bindColumn('cod_unidad', $codUnidad);
+$stmt->bindColumn('cod_unidadorganizacional', $codUnidad);
 $stmt->bindColumn('perfil', $perfil);
 
 while ($rowDetalle = $stmt->fetch(PDO::FETCH_BOUND)) {
