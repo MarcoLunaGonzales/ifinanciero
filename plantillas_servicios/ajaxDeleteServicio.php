@@ -14,15 +14,12 @@ $stmtX = $dbh->prepare($sqlX);
 $stmtX->execute();
 
 
-if(isset($_GET['codigo'])){
-	$codigo=$_GET['codigo'];
-  $local=$_GET['local'];
-  $externo="";
+if(isset($_GET['cod'])){
+	$cod=$_GET['cod'];
   $dbh = new Conexion();
-  $sqlInsert="INSERT INTO precios_plantillacosto (venta_local, venta_externo, cod_plantillacosto) VALUES ('".$local."','".$externo."', '".$codigo."')";
+  $sqlInsert="DELETE FROM plantillas_servicios_tiposervicio WHERE codigo=$cod";
   $stmtInsert = $dbh->prepare($sqlInsert);
   $stmtInsert->execute();
-  include "ajaxListPrecio.php";
 }
 
 ?>

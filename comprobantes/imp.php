@@ -164,7 +164,7 @@ $html.='<p class="bold table-title">Son: '.ucfirst(CifrasEnLetras::convertirNume
 $html.='</body>'.
       '</html>';
 
-$html = mb_convert_encoding($html,'UTF-8', 'ISO-8859-1');
+//$html = mb_convert_encoding($html,'UTF-8', 'ISO-8859-1');
 
  //echo $html;           
 descargarPDF("IBNORCA - ".$unidadC." (".$tipoC.", ".$numeroC.")",$html);

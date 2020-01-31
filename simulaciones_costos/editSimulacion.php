@@ -42,7 +42,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 					</div>
 				  </div>
 				</div>   
-				<div class="row">
+				<!--<div class="row">
                      <label class="col-sm-2 col-form-label">En IBNORCA</label>
                       <div class="col-sm-1"> 
                              <div class="form-group">
@@ -56,7 +56,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                   </div>
                                </div>
                              </div>     
-                          </div>
+                          </div>-->
 			  </div>
 			  <div  class="card-footer fixed-bottom">
 				<button type="submit" class="<?=$buttonNormal;?>">Guardar</button>

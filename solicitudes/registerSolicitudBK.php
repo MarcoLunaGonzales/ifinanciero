@@ -93,18 +93,6 @@ if(isset($_GET['cod'])){
             $stmt->bindColumn('cod_simulacion', $codSimulacionX);
             $stmt->bindColumn('cod_proveedor', $codProveedorX);
 ?>
-<div class="cargar">
-  <div class="div-loading text-center">
-     <h4 class="text-warning font-weight-bold">Procesando Datos</h4>
-     <p class="text-white">Aguard&aacute; un momento por favor</p>  
-  </div>
-</div>
-<div class="cargar-ajax d-none">
-  <div class="div-loading text-center">
-     <h4 class="text-warning font-weight-bold">Procesando Datos</h4>
-     <p class="text-white">Aguard&aacute; un momento por favor</p>  
-  </div>
-</div>
 <form id="formSolDet" class="form-horizontal" action="saveEdit.php" method="post" enctype="multipart/form-data">
 <div class="content">
   <div id="contListaGrupos" class="container-fluid">
@@ -290,7 +278,7 @@ if(isset($_GET['cod'])){
                         }
             
             if($tipoSolicitud==1){
-               include "solicitudDetalleSimulacion2.php";
+               include "solicitudDetalleSimulacion.php";
             }else{
               ?><div id="solicitud_proveedor"></div><?php
                //include "solicitudDetalleProveedor.php";
@@ -300,7 +288,7 @@ if(isset($_GET['cod'])){
           </fieldset>
             <div class="card-footer fixed-bottom">
                <button type="submit" class="<?=$buttonMorado;?>">Guardar</button>
-               <a href="../<?=$urlList;?>" class="<?=$buttonCancel;?>">Volver</a>
+               <a href="../<?=$urlList;?>" class="<?=$buttonCancel;?>">Cancelar</a>
 
             </div>
         </div>

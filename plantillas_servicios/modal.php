@@ -170,7 +170,7 @@
 <!--  End Modal -->
 
 <!-- notice modal -->
-<div class="modal fade modal-arriba" id="modalDet" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade modal-arriba" id="modalDetalle" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-notice modal-lg">
     <div class="modal-content card">
                 <div class="card-header <?=$colorCard;?> card-header-text">
@@ -182,52 +182,13 @@
                   </button>
                 </div>
                 <div class="card-body ">
-                  <ul class="nav nav-pills nav-pills-warning" role="tablist">
-                    <li class="nav-item">
-                          <a id="nav_boton1"class="nav-link active" data-toggle="tab" href="#link111" role="tablist">
-                            <span class="material-icons">add</span> Nuevo
-                          </a>
-                        </li>
-                        <li class="nav-item">
-                          <a id="nav_boton2"class="nav-link" data-toggle="tab" href="#link110" role="tablist">
-                           <span class="material-icons">view_list</span> Lista 
-                          </a>
-                        </li>
-                  </ul>
-                  <div class="tab-content tab-space">
-                    <div class="tab-pane" id="link110">
-                      <div id="divResultadoListaDet">
-            
-                       </div>
-                    </div>
-                    <div class="tab-pane active" id="link111">
                       <form name="form2">
                      <input class="form-control" type="hidden" name="codGrupo" id="codGrupo"/>
-                     <div class="row">
-                       <table class="table table-condensed table-bordered">
-                         <tbody>
-                           <tr class="bg-info text-white">
-                             <td>Cursos</td>
-                             <td>N&uacute;mero de Alumnos</td>
-                             <!--<td>Alumnos FI</td>-->
-                             <td>Utilidad M&iacute;nima</td>
-                             <!--<td>Ut Min FI</td>-->
-                           </tr>                         
-                           <tr>
-                             <td class="text-right small"><?=obtenerValorConfiguracion(6)?></td>
-                             <td class="text-right small"><?=$alumnosLocalX?></td>
-                             <!--<td class="text-right small"><?=$alumnosExternoX?></td>-->
-                             <td class="text-right small"><?=$utilidadIbnorcaX?> %</td>
-                             <!--<td class="text-right small"><?=$utilidadFueraX?> %</td>-->
-                           </tr>
-                         </tbody>
-                       </table>
-                     </div>
                      <div class="row">
                        <label class="col-sm-2 col-form-label">Partidas</label>
                        <div class="col-sm-10">
                         <div class="form-group">
-                                <select class="selectpicker form-control" onchange="calcularMontos();" data-style="btn btn-info" data-live-search="true" title="-- Elija una partida --" name="cuenta_detalle" id="cuenta_detalle" data-style="select-with-transition" data-actions-box="true" required>
+                                <select class="selectpicker form-control" onchange="mostrarCuentasPartida();" data-style="btn btn-info" data-live-search="true" title="-- Elija una partida --" name="partida_detalle" id="partida_detalle" data-style="select-with-transition" data-actions-box="true" required>
                                   <?php
                            $stmt = $dbh->prepare("SELECT p.codigo, p.nombre, p.observaciones from partidas_presupuestarias p where p.cod_estadoreferencial=1 order by p.codigo");
                          $stmt->execute();
@@ -237,7 +198,7 @@
                           $nombreX=$row['nombre'];
 
                           ?>
-                         <option value="<?=$codigoX;?>@<?=$nombreX?>"><?=$nombreX?></option>
+                         <option value="<?=$codigoX;?>"><?=$nombreX?></option>
                          <?php } 
                          ?>  
                        </select>
@@ -245,69 +206,18 @@
                         </div>
                       </div>
                       <div class="row">
-                       <label class="col-sm-2 col-form-label">Tipo</label>
+                       <label class="col-sm-2 col-form-label">Cuentas</label>
                        <div class="col-sm-10">
-                        <div class="form-group">
-                             <select class="selectpicker form-control" name="tipo_dato" id="tipo_dato" data-style="btn btn-info" onchange="limpiarMontos()">
-                               <option value="1">Mensual</option>
-                               <option value="2">Manual</option> 
-                             </select>
+                        <div class="form-group" id="combo_cuentas">
                          </div>
                         </div>
                       </div>
                       <br><br>
-                      <div class="row">
-                        <div class="col-sm-4">                     
-                         <div class="form-group">
-                          <label class="bmd-label-static">Monto x Mes</label>
-                          <input type="number" class="form-control" name="monto_ibnorca" id="monto_ibnorca" value="0" step="0.01" readonly>
-                         </div> 
-                        </div>
-                        <div class="col-sm-4">
-                         <div class="form-group">
-                          <label class="bmd-label-static">Monto x Modulo</label>
-                          <input type="number" class="form-control" name="monto_f_ibnorca" id="monto_f_ibnorca" value="0" step="0.01" readonly>
-                         </div>
-                        </div>
-                        <div class="col-sm-4 d-none" id="columna_alumno">
-                         <div class="form-group">
-                          <label class="bmd-label-static">Monto x Persona</label>
-                          <input type="number" class="form-control" name="monto_alumno" id="monto_alumno" value="0" step="0.01" readonly>
-                          <input type="hidden" class="form-control" name="monto_calculado" id="monto_calculado" value="0" step="0.001" readonly>
-                         </div>
-                        </div>
-                      </div>
-                      <div class="row d-none" id="montos_editables">
-                        <div class="col-sm-4">
-                        <a href="#" class="btn btn-warning btn-sm btn-round" onclick="mostrarInputMonto('monto_ibnorca1')"> Editar</a>                     
-                         <div class="form-group d-none" id="monto_ibnorca1">
-                          <label class="bmd-label-static">Monto x Mes</label>
-                          <input type="number" class="form-control" name="monto_ibnorca_edit" id="monto_ibnorca_edit" value="0" step="0.01">
-                         </div> 
-                        </div>
-                        <div class="col-sm-4">
-                          <a href="#" class="btn btn-warning btn-sm btn-round" onclick="mostrarInputMonto('monto_ibnorca2')"> Editar</a>
-                          <!--<a href="#" class="btn btn-warning btn-sm btn-round" onclick="mostrarInputDetalle('monto_ibnorca2')"> Detalles</a>-->  
-                         <div class="form-group d-none" id="monto_ibnorca2">
-                          <label class="bmd-label-static">Monto x Modulo</label>
-                          <input type="number" class="form-control" name="monto_f_ibnorca_edit" id="monto_f_ibnorca_edit" value="0" step="0.01">
-                         </div>
-                        </div>
-                        <div class="col-sm-4 d-none" id="columna_edit_alumno">
-                          <a href="#" class="btn btn-warning btn-sm btn-round" onclick="mostrarInputMonto('monto_ibnorca3')"> Editar</a> 
-                         <div class="form-group d-none" id="monto_ibnorca3">
-                          <label class="bmd-label-static">Monto x Persona</label>
-                          <input type="number" class="form-control" name="monto_alumno_edit" id="monto_alumno_edit" value="0" step="0.01"> 
-                         </div>
-                        </div>
-                      </div>
                       <div id="mensajeDetalle"></div>
                       <div class="form-group float-right">
-                        <a href="#" class="btn btn-info btn-round" id="boton_guardardetalle"onclick="savePlantillaDetalle('mensual')">Guardar</a>
+                        <a href="#" class="btn btn-info btn-round" id="boton_guardardetalle"onclick="savePlantillaDetalleTcp()">Guardar</a>
                       </div>
-                         </form>
-                    </div>
-                  </div>
+                    </form>
                 </div>
     </div>
   </div>
@@ -332,8 +242,8 @@
                      <thead>
                        <tr>
                          <th>Nº</th>
-                         <th>PRECIO</th>
-                         <!--<th>FUERA DE IBNORCA</th>-->
+                         <th>EN IBNORCA</th>
+                         <th>FUERA DE IBNORCA</th>
                          <th>Actions</th>
                        </tr>
                      </thead>

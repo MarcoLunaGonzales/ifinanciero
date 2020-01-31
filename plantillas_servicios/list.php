@@ -7,7 +7,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $dbh = new Conexion();
 
 // Preparamos
-$stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_plantilla, u.abreviatura as unidad,a.abreviatura as area from plantillas_costo p,unidades_organizacionales u, areas a, estados_plantillascosto e 
+$stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_plantilla, u.abreviatura as unidad,a.abreviatura as area from plantillas_servicios p,unidades_organizacionales u, areas a, estados_plantillascosto e 
   where p.cod_unidadorganizacional=u.codigo and p.cod_area=a.codigo and e.codigo=p.cod_estadoplantilla and p.cod_estadoreferencial!=2 order by codigo");
 // Ejecutamos
 $stmt->execute();
@@ -19,8 +19,8 @@ $stmt->bindColumn('cod_unidadorganizacional', $codUnidad);
 $stmt->bindColumn('cod_area', $codArea);
 $stmt->bindColumn('unidad', $unidad);
 $stmt->bindColumn('area', $area);
-$stmt->bindColumn('utilidad_minimalocal', $utilidadLocal);
-$stmt->bindColumn('utilidad_minimaexterno', $utilidadExterno);
+$stmt->bindColumn('fecha_auditoria', $fechaAuditoria);
+$stmt->bindColumn('dias_auditoria', $diasAuditoria);
 $stmt->bindColumn('cod_estadoplantilla', $codEstado);
 $stmt->bindColumn('estado_plantilla', $estadoPlantilla);
 ?>
@@ -46,8 +46,8 @@ $stmt->bindColumn('estado_plantilla', $estadoPlantilla);
                           <th>Abreviatura</th>
                           <th>Unidad</th>
                           <th>Area</th>
-                          <th>Utilidad Ibnorca</th>
-                          <th>Utilidad Fuera Ibnorca</th>
+                          <th>Fecha Auditor&iacute;a</th>
+                          <th>D&iacute;as Audiror&iacute;a</th>
                           <th>Estado</th>
                           <th class="text-right">Actions</th>
                         </tr>
@@ -74,13 +74,13 @@ $stmt->bindColumn('estado_plantilla', $estadoPlantilla);
                           <td><?=$abreviatura;?></td>
                           <td><?=$unidad;?></td>
                           <td><?=$area;?></td>
-                          <td><?=$utilidadLocal;?> %</td> 
-                          <td><?=$utilidadExterno;?> %</td>
+                          <td><?=strftime('%d/%m/%Y',strtotime($fechaAuditoria));?></td> 
+                          <td><?=$diasAuditoria;?></td>
                            <td class="<?=$textEstado?>"><button class="btn <?=$btnEstilo?> btn-sm"><?=$estadoPlantilla;?></button></td>
                           <td class="td-actions text-right">
-                            <a href='<?=$urlReporte;?>?cod=<?=$codigo;?>' rel="tooltip" class="btn btn-primary">
+                            <!--<a href='<?=$urlReporte;?>?cod=<?=$codigo;?>' rel="tooltip" class="btn btn-primary">
                               <i class="material-icons" title="Registrar Cuentas">list</i>
-                            </a>
+                            </a>-->
                             <?php if($codEstado!=3){
                               ?>
                             

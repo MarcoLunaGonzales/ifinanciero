@@ -86,8 +86,8 @@ $j=1;
   ?>
       <tr>
         <td colspan="2" class="text-center font-weight-bold">Total</td>
-        <td class="text-right font-weight-bold"><?=$totalMontoDetalle?></td>
-        <td class="text-right"><?=$totalMontoDetalleAl?></td>
+        <td id="total_tabladetalle<?=$j?>" class="text-right font-weight-bold"><?=$totalMontoDetalle?></td>
+        <td id="total_tabladetalleAl<?=$j?>" class="text-right"><?=$totalMontoDetalleAl?></td>
         <td></td>
       </tr>
   </table>

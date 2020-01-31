@@ -37,7 +37,7 @@ if(isset($_GET['admin'])){
 
 $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as unidad,a.abreviatura as area 
         from solicitud_recursos p,unidades_organizacionales u, areas a,estados_solicitudrecursos e
-  where p.cod_unidadorganizacional=u.codigo and p.cod_area=a.codigo and e.codigo=p.cod_estadosolicitudrecursos and p.codigo='$codigo' order by codigo");
+  where p.cod_unidadorganizacional=u.codigo and p.cod_area=a.codigo and e.codigo=p.cod_estadosolicitudrecurso and p.codigo='$codigo' order by codigo");
       $stmt->execute();
       $stmt->bindColumn('codigo', $codigoX);
             $stmt->bindColumn('cod_personal', $codPersonalX);
@@ -47,7 +47,7 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
             $stmt->bindColumn('area', $areaX);
             $stmt->bindColumn('unidad', $unidadX);
             $stmt->bindColumn('estado_solicitud', $estadoX);
-            $stmt->bindColumn('cod_estadosolicitudrecursos', $codEstadoX);
+            $stmt->bindColumn('cod_estadosolicitudrecurso', $codEstadoX);
             $stmt->bindColumn('numero', $numeroX);
             $stmt->bindColumn('cod_simulacion', $codSimulacionX);
             $stmt->bindColumn('cod_proveedor', $codProveedorX);
@@ -153,7 +153,7 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
 						</table>
 					</div>		
 				  	<div class="card-footer fixed-bottom">
-						<a href="../<?=$urlList;?>" class="btn btn-default">Atras</a>
+						<a href="../<?=$urlList;?>" class="btn btn-danger">Volver</a>
 						<?php 
                         if(isset($_GET['admin'])){
                           if($codEstadoX==4){

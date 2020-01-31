@@ -7,7 +7,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $dbh = new Conexion();
 
 // Preparamos
-$stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecursos=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo where sr.cod_estadoreferencial=1 and sr.cod_estadosolicitudrecursos!=1 order by sr.codigo");
+$stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo where sr.cod_estadoreferencial=1 and sr.cod_estadosolicitudrecurso!=1 order by sr.codigo");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -18,7 +18,7 @@ $stmt->bindColumn('fecha', $fecha);
 $stmt->bindColumn('cod_personal', $codPersonal);
 $stmt->bindColumn('cod_simulacion', $codSimulacion);
 $stmt->bindColumn('cod_proveedor', $codProveedor);
-$stmt->bindColumn('cod_estadosolicitudrecursos', $codEstado);
+$stmt->bindColumn('cod_estadosolicitudrecurso', $codEstado);
 $stmt->bindColumn('estado', $estado);
 
 ?>

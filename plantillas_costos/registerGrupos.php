@@ -93,53 +93,55 @@ if(isset($_GET['cod'])){
 						</div>
 						<div class="col-sm-2">
 							<div class="form-group has-success">
-						  		<label class="bmd-label-static">Utilidad Min I</label>
+						  		<label class="bmd-label-static">Utilidad M&iacute;nima</label>
 						  		<input class="form-control" type="number" step="0.001" name="utilidad_ibnorca" value="<?=$utilidadIbnorcaX?>" id="utilidad_ibnorca"/>
 						  		<span class="form-control-feedback">%</span>
 							</div>
 						</div>
 						<div class="col-sm-2">
-							<div class="form-group has-success">
-						  		<label class="bmd-label-static">Utilidad Min FI</label>
-						  		<input class="form-control" type="number" step="0.001" name="utilidad_fuera" value="<?=$utilidadFueraX?>" id="utilidad_fuera"/>
-						  		<span class="form-control-feedback">%</span>
+							<div class="form-group">
+						  		<label class="bmd-label-static">N&uacute;mero de Alumnos</label>
+						  		<input class="form-control" type="number" name="alumnos_ibnorca" value="<?=$alumnosLocalX?>" id="alumnos_ibnorca"/>
+						  		
 							</div>
 						</div>
+						<!--<div class="col-sm-2">
+							<div class="form-group has-success">
+						  		<label class="bmd-label-static">Utilidad Min FI</label>-->
+						  		<input class="form-control" type="hidden" step="0.001" name="utilidad_fuera" value="<?=$utilidadFueraX?>" id="utilidad_fuera"/>
+						  		<!--<span class="form-control-feedback">%</span>
+							</div>
+						</div>-->
                         <div class="col-sm-2">
 							<div class="form-group">
 						  		<label class="bmd-label-static">Estado</label>
 						  		<input class="form-control" type="text" readonly name="estado_plan" value="<?=$estadoX?>" id="estado_plan"/>
 							</div>
 						</div>
-						<div class="col-sm-2">
+						<div class="col-sm-1">
 							<div class="form-group">
 						  		<label class="bmd-label-static">Unidad</label>
 						  		<input class="form-control" type="text" name="unidad" value="<?=$unidadX?>" id="unidad" readonly/>
 							</div>
 						</div>
 
-						<div class="col-sm-1">
+						<div class="col-sm-2">
 				        	<div class="form-group">
 						  		<label class="bmd-label-static">Area</label>
 						  		<input class="form-control" type="text" name="area" value="<?=$areaX?>" id="area" readonly/>
 							</div>
 				      	</div>
+				      	
 				      </div>
 				      <div class="row">
-				      	<div class="col-sm-2">
+				      	
+						<!--<div class="col-sm-2">
 							<div class="form-group">
-						  		<label class="bmd-label-static">Alumnos IBNORCA</label>
-						  		<input class="form-control" type="number" name="alumnos_ibnorca" value="<?=$alumnosLocalX?>" id="alumnos_ibnorca"/>
+						  		<label class="bmd-label-static">Alumnos FUERA IBNORCA</label>-->
+						  		<input class="form-control" type="hidden" name="alumnos_fuera" value="<?=$alumnosExternoX?>" id="alumnos_fuera"/>
 						  		
-							</div>
-						</div>
-						<div class="col-sm-2">
-							<div class="form-group">
-						  		<label class="bmd-label-static">Alumnos FUERA IBNORCA</label>
-						  		<input class="form-control" type="number" name="alumnos_fuera" value="<?=$alumnosExternoX?>" id="alumnos_fuera"/>
-						  		
-							</div>
-						</div>
+							<!--</div>
+						</div>-->
 						<div class="col-sm-2 float-right">
 							<div class="">
 						  		<button type="button" class="btn btn-success" onclick="mostrarPreciosPlantilla()"><span class="material-icons">attach_money</span> Lista de Precios</button>

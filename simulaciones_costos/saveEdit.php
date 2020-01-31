@@ -10,11 +10,12 @@ $dbh = new Conexion();
 //RECIBIMOS LAS VARIABLES
 $codigo=$_POST['codigo'];
 $nombre=$_POST['nombre'];
-if (isset($_POST['ibnorca_check']) && $_POST['ibnorca_check'] == 1){
+/*if (isset($_POST['ibnorca_check']) && $_POST['ibnorca_check'] == 1){
 	$ibnorca=$_POST['ibnorca_check'];
 }else{
 	$ibnorca=2;
-}
+}*/
+$ibnorca=1;
 // Prepare
 $stmt = $dbh->prepare("UPDATE $table set nombre='$nombre',ibnorca='$ibnorca' where codigo=:codigo");
 // Bind

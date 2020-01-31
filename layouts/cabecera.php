@@ -24,7 +24,7 @@
               $fechaSistema=date("d/m/Y");
               $horaSistema=date("H:i");
             ?>
-            <h6>Gestión Trabajo: </h6>&nbsp;<h4 class="text-danger font-weight-bold">[<?=$globalNombreGestion;?>]</h4>&nbsp;&nbsp;&nbsp;
+            <h6>Gesti&oacute;n Trabajo: </h6>&nbsp;<h4 class="text-danger font-weight-bold">[<?=$globalNombreGestion;?>]</h4>&nbsp;&nbsp;&nbsp;
             <h6>Mes Trabajo: </h6>&nbsp;<h4 class="text-danger font-weight-bold">[<?=$globalMes;?>]</h4>&nbsp;&nbsp;&nbsp;
             <h6>Unidad: </h6>&nbsp;<h4 class="text-danger font-weight-bold">[ <?=$globalNombreUnidad;?> ]</h4> &nbsp;&nbsp; <h6>Area: </h6>&nbsp;<h4 class="text-danger font-weight-bold">[ <?=$globalNombreArea;?> ]</h4>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

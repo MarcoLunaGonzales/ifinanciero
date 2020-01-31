@@ -1,3 +1,15 @@
+.fondo-boton{
+  background: #2B3054 !important;
+  color:#F9A60C !important;
+}
+.fondo-boton:hover{
+  background:#F5870A !important;
+  color:#2B3054 !important;
+}
+.fondo-boton-active{
+  background:#F9A60C !important;
+  color:#2B3054 !important;
+}
 .modal-arriba {
    top: -80px !important;
 }
@@ -231,7 +243,15 @@
     width:8px;
     border-radius: 50%;   
 }
-
+.estado2{
+    position: absolute;
+    height:11px;
+    top:8px;
+    right:0.6rem;
+    width:11px;
+    border-radius: 50%;
+    border:1px solid white !important;   
+}
 .text-small{
   font-size: 10 !important;
 }
