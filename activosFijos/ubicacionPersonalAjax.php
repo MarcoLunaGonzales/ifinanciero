@@ -16,7 +16,7 @@ $codigo_sis=$result1['valor_configuracion'];
 
 
 //personal SN controla SIS
-if($codigo_UO=$codigo_sis) $codigo_UO=$codigo_dn;
+if($codigo_UO==$codigo_sis) $codigo_UO=$codigo_dn;
 
 $stmt = $db->prepare("SELECT p.codigo, p.paterno,p.materno,p.primer_nombre
 from personal p, ubicaciones u, unidades_organizacionales uo 

@@ -200,6 +200,9 @@ $fecha_actual=date("Y-m-d");
                                 <td><?=$labelEstado.$estado_contrato."</span>";?></td>
                                 <td><?=$fecha_finalizado;?></td>
                                 <td class="td-actions text-right">
+                                  <?php
+                                    if($cod_estadocontrato==1){
+                                  ?>
                                 	<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalContratoFin" onclick="agregaContratoFin('<?=$datos;?>')">
                                     <i class="material-icons" title="Finalizar Contrato">play_for_work</i>
                                   </button>
@@ -209,6 +212,7 @@ $fecha_actual=date("Y-m-d");
                                   <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalEliminar" onclick="agregaformPCB('<?=$datos;?>')">
                                     <i class="material-icons" title="Eliminar"><?=$iconDelete;?></i>
                                   </button>
+                                <?php } ?>
                                 </td>
                             </tr>
                         <?php $index++; } ?>            				

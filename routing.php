@@ -422,11 +422,11 @@
 
 
 		//*************************************************************************************************************/
-//*************************************************************************************************************/
-//*************************************************************************************************************/
-//*************************************************************************************************************/
-		//***************************************************/
-		//A PARTIR DE AQUI ES RECURSOS HUMANOS
+		//*************************************************************************************************************/
+		//*************************************************************************************************************/
+		//*************************************************************************************************************/
+				//***************************************************/
+				//A PARTIR DE AQUI ES RECURSOS HUMANOS
 
 		//areas
 		if ($_GET['opcion']=='areasLista') {
@@ -1155,6 +1155,75 @@
 			$codModulo=$menuModulo;
 			require_once('layouts/homeModulo.php');
 		}
+
+		//tipo caja chica
+		if ($_GET['opcion']=='ListaTipoCajaChica') {
+			require_once('caja_chica/tipocajachica_list.php');
+		}
+		if ($_GET['opcion']=='tipoCajaChicaForm') {
+			$codigo=$_GET['codigo'];
+			require_once('caja_chica/tipocajachica_form.php');
+		}
+		if ($_GET['opcion']=='tiposCajaChicaSave') {
+			require_once('caja_chica/tipocajachica_save.php');
+		}
+		if ($_GET['opcion']=='deleteTiposCajaChica') {
+			$codigo=$_GET['codigo'];
+			require_once('caja_chica/tipocajachica_delete.php');
+		}
+		//caja chica
+		if ($_GET['opcion']=='principal_CajaChica') {
+			require_once('caja_chica/principal_cajachica.php');
+		}
+		if ($_GET['opcion']=='ListaCajaChica') {
+			$codigo=$_GET['codigo'];
+			require_once('caja_chica/cajachica_list.php');
+		}
+		if ($_GET['opcion']=='CajaChicaForm') {
+			$codigo=$_GET['codigo'];
+			$cod_tcc=$_GET['cod_tcc'];
+			require_once('caja_chica/cajachica_form.php');
+		}
+		if ($_GET['opcion']=='CajaChicaSave') {
+			require_once('caja_chica/cajachica_save.php');
+		}
+		if ($_GET['opcion']=='deleteCajaChica') {
+			$codigo=$_GET['codigo'];
+			$cod_tcc=$_GET['cod_tcc'];
+			require_once('caja_chica/cajachica_delete.php');
+		}
+		//detalle caja chica 
+		if ($_GET['opcion']=='ListaDetalleCajaChica') {
+			$codigo=$_GET['codigo'];
+			$cod_tcc=$_GET['cod_tcc'];
+			require_once('caja_chica/detallecajachica_list.php');
+		}
+		if ($_GET['opcion']=='DetalleCajaChicaForm') {
+			$codigo=$_GET['codigo'];
+			$cod_tcc=$_GET['cod_tcc'];
+			$cod_cc=$_GET['cod_cc'];
+			require_once('caja_chica/detallecajachica_form.php');
+		}
+		if ($_GET['opcion']=='DetalleCajaChicaSave') {
+			require_once('caja_chica/detallecajachica_save.php');
+		}
+		if ($_GET['opcion']=='deleteDetalleCajaChica') {
+			$codigo=$_GET['codigo'];
+			$cod_tcc=$_GET['cod_tcc'];
+			$cod_cc=$_GET['cod_cc'];
+			require_once('caja_chica/detallecajachica_delete.php');
+		}
+
+		//renidicones		
+		if ($_GET['opcion']=='ListaRendiciones') {
+			require_once('caja_chica/rendiciones_list.php');
+		}
+		if ($_GET['opcion']=='ListaRendicionesDetalle') {
+			$codigo=$_GET['codigo'];
+			require_once('caja_chica/rendicionesdetalle_list.php');
+		}
+		
+
 	}else{
 		//require("paginaprincipal.php");
 	}
