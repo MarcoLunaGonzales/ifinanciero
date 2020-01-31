@@ -102,7 +102,7 @@ $responsable='';
                   </div><!--card body-->
                   <div class="card-footer fixed-bottom">
                       <button type="submit" class="<?=$buttonNormal;?>">guardar</button>
-                      <a href="?opcion=activosfijosLista" class="<?=$buttonCancel;?>">Cancelar</a>
+                      <a href="?opcion=activosfijosLista" class="<?=$buttonCancel;?>"> <-- Volver </a>
                   </div>
                 </div> 
 

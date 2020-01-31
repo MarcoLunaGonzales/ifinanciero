@@ -202,7 +202,8 @@ function ejecutadoEgresosMes($agencia, $anio, $mes, $organismo, $acumulado, $cue
             $sqlMayor="SELECT sum(p.monto)as monto from po_mayores p where p.fondo in ($agenciaX) and p.cuenta='$codPlanCuenta' and p.anio='$anio' and p.mes<='$mes' and p.organismo in ($organismo)";
           }else{
             $sqlMayor="SELECT sum(p.monto)as monto from po_mayores p where p.fondo in ($agenciaX) and p.cuenta='$codPlanCuenta' and p.anio='$anio' and p.mes='$mes' and p.organismo in ($organismo)";
-          }          
+          }         
+          //echo $sqlMayor; 
           $stmtMayor=$dbh->prepare($sqlMayor);
           $stmtMayor->execute();
           while ($rowMayor = $stmtMayor->fetch(PDO::FETCH_ASSOC)) {

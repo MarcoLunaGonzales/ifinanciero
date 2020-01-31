@@ -186,7 +186,7 @@ $moduleName="Registro de Ejecucion PON";
 	            
 				  <div class="card-footer ml-auto mr-auto">
 					<button type="submit" class="<?=$button;?>">Guardar</button>
-					<a href="?opcion=listActividadesPOAEjecucion&codigo=<?=$codigoIndicador;?>&codigoPON=<?=$codigoIndicadorPON?>&unidad=0&area=0" class="<?=$buttonCancel;?>">Cancelar</a>
+					<a href="?opcion=listActividadesPOAEjecucion&codigo=<?=$codigoIndicador;?>&codigoPON=<?=$codigoIndicadorPON?>&unidad=0&area=0" class="<?=$buttonCancel;?>"> <-- Volver </a>
 				  </div>
 			</div>
 		  </form>

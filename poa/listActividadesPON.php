@@ -167,7 +167,7 @@ $stmt->bindColumn('solicitante', $solicitante);
         				<div class="card-body">
                     <button class="<?=$button;?>" onClick="location.href='index.php?opcion=registerPOAPONGroup&codigo=<?=$codigoIndicador?>&areaUnidad=0'">Registrar</button>
                     <button class="<?=$button;?>" onClick="location.href='index.php?opcion=registerPOAPONPlan&codigo=<?=$codigoIndicador?>'">Planificar</button>  
-                    <a href="?opcion=listPOA" class="<?=$buttonCancel;?>">Cancelar</a> 
+                    <a href="?opcion=listPOA" class="<?=$buttonCancel;?>"> <-- Volver </a> 
                 </div>
             </div>
           </div>  

@@ -150,7 +150,7 @@ $stmt->bindColumn('observaciones_devolucion', $observaciones_devolucion);
       </div>       
       <div class="modal-footer">
         <button type="button" class="btn btn-success" id="AceptarAFD" data-dismiss="modal">Aceptar</button>
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal"> <-- Volver </button>
       </div>
     </div>
   </div>
@@ -170,7 +170,7 @@ $stmt->bindColumn('observaciones_devolucion', $observaciones_devolucion);
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-success" id="RechazarAFD"  data-dismiss="modal">Aceptar</button>
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal"> <-- Volver </button>
       </div>
     </div>
   </div>

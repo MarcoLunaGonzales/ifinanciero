@@ -188,7 +188,7 @@ if($globalAdmin==1){//para personal admin
         </div>       
         <div class="modal-footer">
           <button type="button" class="btn btn-success" id="AceptarProceso">Aceptar</button>
-          <button type="button" class="btn btn-danger" id="CancelarProceso" data-dismiss="modal" >Cancelar</button>
+          <button type="button" class="btn btn-danger" id="CancelarProceso" data-dismiss="modal" > <-- Volver </button>
         </div>
       </div>
     </div>
@@ -210,7 +210,7 @@ if($globalAdmin==1){//para personal admin
         </div>    
         <div class="modal-footer">
           <button type="button" class="btn btn-success" id="AceptarReProceso" >Aceptar</button>
-          <button type="button" class="btn btn-danger" data-dismiss="modal" id="CancelarReProceso">Cancelar</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal" id="CancelarReProceso"> <-- Volver </button>
         </div>
       </div>
     </div>
@@ -229,7 +229,7 @@ if($globalAdmin==1){//para personal admin
         </div>       
         <div class="modal-footer">
           <button type="button" class="btn btn-success" id="AceptarCerrar" data-dismiss="modal">Aceptar</button>
-          <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal"> <-- Volver </button>
         </div>
       </div>
     </div>
@@ -440,7 +440,7 @@ if($globalAdmin==1){//para personal admin
         </div>       
         <div class="modal-footer">
           <button type="button" class="btn btn-success" id="AceptarProcesoNA">Aceptar</button>
-          <button type="button" class="btn btn-danger" id="CancelarProcesoNA" data-dismiss="modal" >Cancelar</button>
+          <button type="button" class="btn btn-danger" id="CancelarProcesoNA" data-dismiss="modal" > <-- Volver </button>
         </div>
       </div>
     </div>
@@ -463,7 +463,7 @@ if($globalAdmin==1){//para personal admin
         </div>    
         <div class="modal-footer">
           <button type="button" class="btn btn-success" id="AceptarReProcesoNA" >Aceptar</button>
-          <button type="button" class="btn btn-danger" data-dismiss="modal" id="CancelarReProcesoNA">Cancelar</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal" id="CancelarReProcesoNA"> <-- Volver </button>
         </div>
       </div>
     </div>
@@ -483,7 +483,7 @@ if($globalAdmin==1){//para personal admin
         </div>       
         <div class="modal-footer">
           <button type="button" class="btn btn-success" id="AceptarCerrarNA" data-dismiss="modal">Aceptar</button>
-          <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal"> <-- Volver </button>
         </div>
       </div>
     </div>

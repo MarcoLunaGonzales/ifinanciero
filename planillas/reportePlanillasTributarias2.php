@@ -44,7 +44,7 @@
           </div>
           <div class="card-body">
             <div class="table-responsive">                  
-				<table class="table table-bordered table-condensed table-hover" id="tablePaginatorFixed2">
+				<table class="table table-bordered table-condensed table-hover" id="tablePaginatorFixedTributaria">
                 	<thead>
 		                <tr class="bg-dark text-white">                  
 		                    <td><small>Año</td> 

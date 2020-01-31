@@ -92,7 +92,7 @@ $stmt->bindColumn('total_mensual', $total_mensual);
         ?>
           <div class="card-footer fixed-bottom">
               <button class="<?=$buttonNormal;?>" data-toggle="modal" data-target="#modalGenerar">Generar</button>
-              <button class="<?= $buttonCancel; ?>" onClick="location.href='<?= $urlList; ?>'">Cancelar</button>
+              <button class="<?= $buttonCancel; ?>" onClick="location.href='<?= $urlList; ?>'"> <-- Volver </button>
               </div>
         <?php
         }

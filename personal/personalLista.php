@@ -90,8 +90,8 @@ $stmt->bindColumn('xcod_tipopersonal', $xcod_tipopersonal);
                       ?>
                       <tr>
                         <td  class="td-actions text-right">    
-                          <a href='<?=$urlprintPersonal;?>?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="<?=$buttonEdit;?>">
-                            <i class="material-icons">print</i>
+                          <a href='<?=$urlprintPersonal;?>?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="btn btn-info">
+                            <i class="material-icons" style="color:black" title="Ficha de Personal">print</i>
                           </a>
                         </td>
                         <td><?=$codigo?></td>

@@ -148,7 +148,7 @@ if($cod_estadoreferencial==1){//insertar
 	$resultControlador=$stmtControlador->fetch();
 	$cod_contrato_aux=$resultControlador['codigo'];
 	$cod_estadocontrato_aux=$resultControlador['cod_estadocontrato'];
-	if($cod_estadocontrato_aux==2){
+	if($cod_estadocontrato_aux==2 || $cod_estadocontrato_aux==null){
 		$cod_estadocontrato=1;
 		$sql="INSERT INTO personal_contratos(cod_personal,cod_tipocontrato,fecha_iniciocontrato,fecha_fincontrato,fecha_evaluacioncontrato,cod_estadoreferencial,cod_estadocontrato) values(:cod_personal,:cod_tipocontrato,:fecha_iniciocontrato,:fecha_fincontrato,:fecha_evaluacioncontrato,:cod_estadoreferencial,:cod_estadocontrato) ";
 		$stmtU = $dbhU->prepare($sql);

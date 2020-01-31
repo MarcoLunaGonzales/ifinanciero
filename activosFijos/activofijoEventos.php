@@ -146,7 +146,7 @@ $statementPersonal2 = $dbh->query($query);
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-success" id="registrarEveAF"  data-dismiss="modal">Registrar</button>
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal"> <-- Volver </button>
       </div>
     </div>
   </div>
@@ -173,7 +173,7 @@ $statementPersonal2 = $dbh->query($query);
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-success" id="saveEditEveAF"  data-dismiss="modal">Guardar</button>
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal"> <-- Volver </button>
       </div>
     </div>
   </div>
@@ -192,7 +192,7 @@ $statementPersonal2 = $dbh->query($query);
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-success" id="saveDeleteEveAF"  data-dismiss="modal">Aceptar</button>
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal"> <-- Volver </button>
       </div>
     </div>
   </div>

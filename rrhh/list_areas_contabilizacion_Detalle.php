@@ -98,7 +98,7 @@ $stmtb->bindColumn('nombre', $nombreContabilizacion);
 
                 <button class="<?=$buttonNormal;?>" onClick="location.href='<?=$urlFormAreas_contabilizacion_detalle;?>&codigo=<?=$codigo_area_contabilizacion?>'">Registrar</button>
 
-                <button class="<?=$buttonCancel;?>" onClick="location.href='<?=$urlListAreas_contabilizacion;?>'">Cancelar</button>
+                <button class="<?=$buttonCancel;?>" onClick="location.href='<?=$urlListAreas_contabilizacion;?>'"> <-- Volver </button>
               </div>
               
 

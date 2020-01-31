@@ -49,7 +49,7 @@ $codGestion=$_SESSION['globalGestion'];
 			  </div>
 			  <div class="card-footer ml-auto mr-auto">
 				<button type="submit" class="<?=$buttonNormal;?>">Guardar</button>
-				<a href="<?=$urlList;?>" class="<?=$buttonCancel;?>">Cancelar</a>
+				<a href="<?=$urlList;?>" class="<?=$buttonCancel;?>"> <-- Volver </a>
 			  </div>
 			</div>
 		  </form>

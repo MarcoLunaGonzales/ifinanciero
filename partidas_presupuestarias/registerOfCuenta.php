@@ -104,7 +104,7 @@ $stmt->bindColumn('bandera', $bandera);
               </div>
         				<div class="card-footer fixed-bottom">
                     <button class="btn" type="submit">Guardar</button>
-                    <a href="<?=$urlList2;?>" class="<?=$buttonCancel;?>">Cancelar</a>
+                    <a href="<?=$urlList2;?>" class="<?=$buttonCancel;?>"> <-- Volver </a>
                     <a href="#" onclick="filaTabla($('#tablas_registradas'));" id="boton_registradas" class="btn btn-warning text-dark">Cuentas Registradas <span class='badge bg-white text-warning'> <?=$nc?></span></a>
                 </div>
 			     </form>

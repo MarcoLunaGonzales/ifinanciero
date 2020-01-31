@@ -30,7 +30,7 @@
         <p>¿Desea copiar la glosa a todos los detalles?.</p> 
       </div>
       <div class="modal-footer">
-      	<button type="button" class="btn btn-link" data-dismiss="modal">Cancelar</button>
+      	<button type="button" class="btn btn-link" data-dismiss="modal"> <-- Volver </button>
         <button type="button" onclick="copiarGlosa()" class="btn btn-white btn-link" data-dismiss="modal">Aceptar
           <div class="ripple-container"></div>
         </button>

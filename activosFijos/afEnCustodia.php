@@ -153,7 +153,7 @@ $stmt->bindColumn('fecha_recepcion', $fecha_recepcion);
       </div>       
       <div class="modal-footer">
         <button type="button" class="btn btn-success" id="RecepcionarAF" data-dismiss="modal">Aceptar</button>
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal"> <-- Volver </button>
       </div>
     </div>
   </div>
@@ -174,7 +174,7 @@ $stmt->bindColumn('fecha_recepcion', $fecha_recepcion);
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-success" id="RechazarAF"  data-dismiss="modal">Aceptar</button>
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal"> <-- Volver </button>
       </div>
     </div>
   </div>
@@ -196,7 +196,7 @@ $stmt->bindColumn('fecha_recepcion', $fecha_recepcion);
       <div class="modal-footer">
         
         <button type="button" class="btn btn-success" id="DevolverAF"  data-dismiss="modal">Aceptar</button>
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal"> <-- Volver </button>
       </div>
     </div>
   </div>
@@ -236,7 +236,7 @@ $stmt->bindColumn('fecha_recepcion', $fecha_recepcion);
         <div class="modal-footer">
           <!-- <button type="button" class="btn btn-success" id="DevolverAFAll" data-dismiss="modal">Aceptar</button> -->
           <button type="submit" class="btn btn-success" >Guardar</button>
-          <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal"> <-- Volver </button>
         </div>
       </form>
     </div>

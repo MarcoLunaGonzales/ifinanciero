@@ -65,7 +65,7 @@ $statementArea = $dbh->query($queryArea);//uo
 			  </div>
 			  <div class="card-footer ml-auto mr-auto">
 				<button type="submit" class="<?=$buttonNormal;?>">Guardar</button>
-				<a href="<?=$list_areas_contabilizacion_Detalle;?>&codigo=<?=$codigo?>" class="<?=$buttonCancel;?>">Cancelar</a>
+				<a href="<?=$list_areas_contabilizacion_Detalle;?>&codigo=<?=$codigo?>" class="<?=$buttonCancel;?>"> <-- Volver </a>
 			  </div>
 			</div>
 		  </form>

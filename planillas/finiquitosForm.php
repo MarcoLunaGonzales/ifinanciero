@@ -50,9 +50,6 @@ if ($codigo > 0){
                   </div>
                   <h4 align="center"> Seleccione al personal Retirado Por favor.</h4>
                   <div class="card-body ">
-                    
-
-                    <input type="hidden" name="codigo" id="codigo" value="<?=$codigo;?>"/>
                     <div class="row">
                           <label class="col-sm-2 col-form-label">Personal</label>
                           <div class="col-sm-7">
@@ -63,7 +60,7 @@ if ($codigo > 0){
                                   <?php 
                                       while ($row = $stmtpersonal->fetch()){ 
                                   ?>
-                                       <option <?=($cod_personal==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>"><?=$row["paterno"];?> <?=$row["materno"];?> <?=$row["primer_nombre"];?></option>
+                                       <option <?=($cod_personal==$row["cod_personal"])?"selected":"";?> value="<?=$row["cod_personal"];?>"><?=$row["paterno"];?> <?=$row["materno"];?> <?=$row["primer_nombre"];?></option>
                                    <?php 
                                       } 
                                   ?>
