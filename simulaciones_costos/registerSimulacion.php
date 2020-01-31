@@ -310,7 +310,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
                   $porl=($uti*100)/$il;*/
                   //
                   $alumnosX=round((100*(-$totalFijo[2]-$totalVariable[2]))/(($utilidadIbnorcaX*$precioLocalX)-(100*$precioLocalX)+(($iva+$it)*$precioLocalX)));                    
-                $totalVariable[2]=$totalVariable[2]/$mesConf;
+                $totalVariable[2]=$totalVariable[2]/$alumnosX;
                 $totalVariable[3]=$totalVariable[3]/$alumnosExternoX;
                  //calcular cantidad alumnos si no esta registrado
                if($alumnosX==0){
@@ -436,7 +436,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
                 </tr>
                 <tr>
                   <td class="text-left small bg-table-primary text-white">COSTO VARIABLE TOTAL</td>
-                  <td class="text-right font-weight-bold"><?=number_format(($totalVariable[2]*$mesConf), 2, '.', ',')?></td>
+                  <td class="text-right font-weight-bold"><?=number_format(($totalVariable[2]*$alumnosX), 2, '.', ',')?></td>
                 </tr>
                 <tr class="bg-warning text-dark">
                   <td class="text-left small">COSTO TOTAL</td>
