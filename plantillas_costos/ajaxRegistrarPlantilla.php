@@ -27,11 +27,11 @@ if(isset($_GET['nombre'])){
   $unidad=$_GET['unidad'];
   $area=$_GET['area'];
   $utilidadLocal=$_GET['utilidad_local'];
-  $utilidadExterno="";
+  $utilidadExterno=1;
   $alumnosLocal=$_GET['alumnos_local'];
-  $alumnosExterno="";
+  $alumnosExterno=1;
   $precioLocal=$_GET['precio_local'];
-  $precioExterno="";
+  $precioExterno=1;
   $codPlanCosto=obtenerCodigoPlanCosto();
   $dbh = new Conexion();
   $sqlInsert="INSERT INTO plantillas_costo (codigo, nombre, abreviatura, cod_unidadorganizacional, cod_area,utilidad_minimalocal,utilidad_minimaexterno,cantidad_alumnoslocal,cantidad_alumnosexterno) 

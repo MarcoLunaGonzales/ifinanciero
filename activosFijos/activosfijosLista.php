@@ -73,8 +73,8 @@ $stmt->bindColumn('proy_financiacion', $proy_financiacion);
                       while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { ?>
                           <tr>
                             <td  class="td-actions text-right">    
-                                <a href='<?=$printDepreciacion1;?>?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="<?=$buttonEdit;?>">
-                                  <i class="material-icons">print</i>
+                                <a href='<?=$printDepreciacion1;?>?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="btn btn-info">
+                                  <i class="material-icons" title="Ficha Activo Fijo" style="color:black">print</i>
                                 </a>
                               </td>
                               <td class="text-center small"><?=$codigoactivo;?></td>

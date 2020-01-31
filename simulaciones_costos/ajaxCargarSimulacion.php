@@ -220,6 +220,6 @@ $alumnosExternoX=$_GET['alumnos_fuera'];
                     <div class="card-footer fixed-bottom">
                         <a onclick="guardarSimulacion()" class="btn btn-info">Guardar</a>
                         <a onclick="guardarSimulacion('enviar')" class="btn btn-warning text-dark"><i class="material-icons">send</i> Enviar Simulacion</a>
-                        <a href="../<?=$urlList;?>" class="btn btn-default">Cancelar</a>
+                        <a href="../<?=$urlList;?>" class="btn btn-default"> <-- Volver </a>
 
                     </div>

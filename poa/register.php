@@ -145,7 +145,7 @@ $moduleName="Actividades POA";
 			  </div>
 			  <div class="card-footer ml-auto mr-auto">
 				<button type="submit" class="<?=$button;?>">Guardar</button>
-				<a href="?opcion=listPOA" class="<?=$buttonCancel;?>">Cancelar</a>
+				<a href="?opcion=listPOA" class="<?=$buttonCancel;?>"> <-- Volver </a>
 			  </div>
 			</div>
 		  </form>

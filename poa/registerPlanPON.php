@@ -182,7 +182,7 @@ $codEstadoPOAGestion=estadoPOAGestion($globalGestion);
 	            
 				  <div class="card-footer ml-auto mr-auto">
 					<button type="submit" class="<?=$button;?>">Guardar</button>
-					<a href="?opcion=listActividadesPOA&codigo=<?=$codigoIndicador;?>&codigoPON=<?=$codigoIndicadorPON?>&area=0&unidad=0" class="<?=$buttonCancel;?>">Cancelar</a>
+					<a href="?opcion=listActividadesPOA&codigo=<?=$codigoIndicador;?>&codigoPON=<?=$codigoIndicadorPON?>&area=0&unidad=0" class="<?=$buttonCancel;?>"> <-- Volver </a>
 				  </div>
 			</div>
 		  </form>

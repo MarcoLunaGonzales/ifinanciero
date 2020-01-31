@@ -149,7 +149,7 @@ $dbh = new Conexion();
                 </div><!--card body-->
                 <div class="card-footer fixed-bottom">
                 	<button type="submit" class="<?=$buttonNormal;?>">Ver Reporte</button>
-				   <a href="?opcion=listComprobantes" class="<?=$buttonCancel;?>">Cancelar</a>
+				   <a href="?opcion=listComprobantes" class="<?=$buttonCancel;?>"> <-- Volver </a>
 			  </div>
                </form> 
               </div>	  

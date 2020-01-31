@@ -139,7 +139,7 @@ $stmt2->bindColumn('cod_estadoaccesorioaf', $cod_estadoAcceAF);
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-success" id="registrarAccAF"  data-dismiss="modal">Registrar</button>
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal"> <-- Volver </button>
       </div>
     </div>
   </div>
@@ -169,7 +169,7 @@ $stmt2->bindColumn('cod_estadoaccesorioaf', $cod_estadoAcceAF);
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-success" id="saveEditAccAF"  data-dismiss="modal">Guardar</button>
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal"> <-- Volver </button>
       </div>
     </div>
   </div>
@@ -188,7 +188,7 @@ $stmt2->bindColumn('cod_estadoaccesorioaf', $cod_estadoAcceAF);
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-success" id="saveDeleteAccAF"  data-dismiss="modal">Aceptar</button>
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal"> <-- Volver </button>
       </div>
     </div>
   </div>

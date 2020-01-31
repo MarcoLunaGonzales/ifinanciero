@@ -1,12 +1,12 @@
 <?php 
- class Conexion extends PDO { 
-   
-  /*private $tipo_de_base = 'mysql';
-   private $host = 'localhost';
-    private $nombre_de_base = 'ibno_conta';
-    private $usuario = 'root';
-    private $contrasena = '';
-    private $port = '3307';*/
+class Conexion extends PDO {    
+/*    private $tipo_de_base = 'mysql';
+    private $host = '192.168.30.20';
+    private $nombre_de_base = 'ibnfinanciero';
+    private $usuario = 'ingresobd';
+    private $contrasena = 'ingresoibno';
+    private $port = '3306';
+*/
   private $tipo_de_base = 'mysql';
    private $host = 'www.minkasoftware.com';
    private $nombre_de_base = 'ibno_conta';

@@ -201,7 +201,7 @@ if($nombreTablaClasificador==""){$nombreTablaClasificador="areas";}//ESTO PARA Q
 	            
 				  <div class="card-footer ml-auto mr-auto">
 					<button type="submit" class="<?=$button;?>">Guardar</button>
-					<a href="?opcion=listActividadesPOA&codigo=<?=$codigoIndicador;?>&codigoPON=<?=$codigoIndicadorPON?>&unidad=0&area=0" class="<?=$buttonCancel;?>">Cancelar</a>
+					<a href="?opcion=listActividadesPOA&codigo=<?=$codigoIndicador;?>&codigoPON=<?=$codigoIndicadorPON?>&unidad=0&area=0" class="<?=$buttonCancel;?>"> <-- Volver </a>
 				  </div>
 			</div>
 		  </form>

@@ -70,7 +70,7 @@ if ($codigo > 0){
 			  </div>
 			  <div class="card-footer ml-auto mr-auto">
 				<button type="submit" class="<?=$buttonNormal;?>">Guardar</button>
-				<a href="<?=$urlListEstados_planilla;?>" class="<?=$buttonCancel;?>">Cancelar</a>
+				<a href="<?=$urlListEstados_planilla;?>" class="<?=$buttonCancel;?>"> <-- Volver </a>
 			  </div>
 			</div>
 		  </form>

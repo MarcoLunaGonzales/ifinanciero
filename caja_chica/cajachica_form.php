@@ -132,7 +132,7 @@ if ($codigo > 0){
 			  </div>
 			  <div class="card-footer ml-auto mr-auto">
 				<button type="submit" class="<?=$buttonNormal;?>">Guardar</button>
-				<a href="<?=$urlListCajaChica;?>&codigo=<?=$cod_tcc?>" class="<?=$buttonCancel;?>">Cancelar</a>
+				<a href="<?=$urlListCajaChica;?>&codigo=<?=$cod_tcc?>" class="<?=$buttonCancel;?>"> <-- Volver </a>
 			  </div>
 			</div>
 		  </form>

@@ -260,13 +260,13 @@
                         <div class="col-sm-4">                     
                          <div class="form-group">
                           <label class="bmd-label-static">Monto x Mes</label>
-                          <input type="number" class="form-control" name="monto_ibnorca" id="monto_ibnorca" value="0" step="0.01" readonly>
+                          <input type="text" class="form-control" name="monto_ibnorca" id="monto_ibnorca" value="0" step="0.01" readonly>
                          </div> 
                         </div>
                         <div class="col-sm-4">
                          <div class="form-group">
                           <label class="bmd-label-static">Monto x Modulo</label>
-                          <input type="number" class="form-control" name="monto_f_ibnorca" id="monto_f_ibnorca" value="0" step="0.01" readonly>
+                          <input type="text" class="form-control" name="monto_f_ibnorca" id="monto_f_ibnorca" value="0" step="0.01" readonly>
                          </div>
                         </div>
                         <div class="col-sm-4 d-none" id="columna_alumno">

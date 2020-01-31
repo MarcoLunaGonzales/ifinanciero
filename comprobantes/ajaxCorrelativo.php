@@ -23,9 +23,13 @@ while ($row1= $stmt1->fetch(PDO::FETCH_ASSOC)) {
 }
 
 $fechaInicio=$anio."-".$mesActivo."-01";
-$fechaFin=$anio."-".$mesActivo."-31";
 
-$sql="SELECT IFNULL(max(c.codigo)+1,1)as codigo from comprobantes c where c.cod_tipocomprobante='$tipoComprobante' and c.cod_unidadorganizacional=$unidad and c.fecha between '$fechaInicio' and '$fechaFin'";
+$fechaFin=date('Y-m-d',strtotime($fechaInicio.'+1 month'));
+$fechaFin=date('Y-m-d',strtotime($fechaFin.'-1 day'));
+
+
+$sql="SELECT IFNULL(max(c.numero)+1,1)as codigo from comprobantes c where c.cod_tipocomprobante='$tipoComprobante' and c.cod_unidadorganizacional=$unidad and c.fecha between '$fechaInicio 00:00:00' and '$fechaFin 23:59:59'";
+//echo $sql;
 $stmt = $dbh->prepare($sql);
 $stmt->execute();
 $nroCorrelativo=0;

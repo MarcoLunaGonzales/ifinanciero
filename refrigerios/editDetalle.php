@@ -55,7 +55,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 			  </div>
 			  <div class="card-footer ml-auto mr-auto">
 				<button type="submit" class="<?=$buttonNormal;?>">Guardar</button>
-				<a href="<?= $urlDetalle; ?>&cod_ref=<?= $codRef; ?>&cod_mes=<?=$codMes;?>" class="<?=$buttonCancel;?>">Cancelar</a>
+				<a href="<?= $urlDetalle; ?>&cod_ref=<?= $codRef; ?>&cod_mes=<?=$codMes;?>" class="<?=$buttonCancel;?>"> <-- Volver </a>
 			  </div>
 			</div>
 		  </form>

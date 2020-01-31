@@ -1214,12 +1214,16 @@ function obtenerMontoPorCuenta($numero,$unidad,$area,$fecha){
  //funcion para calcular costos
   function calcularCostosPresupuestarios($id,$unidad,$area,$fecha){
      $sql="SELECT p.cod_partidapresupuestaria,p.cod_cuenta,c.numero FROM partidaspresupuestarias_cuentas p join plan_cuentas c on p.cod_cuenta=c.codigo where p.cod_partidapresupuestaria=$id";
+
+     //echo $sql;
+
      $dbh = new Conexion(); 
      $stmt = $dbh->prepare($sql);
      $stmt->execute();
      $sum=0;
      $mes=date("m");
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      //$sum=33333;
       $numero=trim($row['numero']);
       $cuenta=$row['cod_cuenta'];
       $tipoSim=obtenerValorConfiguracion(13);
@@ -1235,8 +1239,7 @@ function obtenerMontoPorCuenta($numero,$unidad,$area,$fecha){
     }
     
       $valor=obtenerValorConfiguracion(6);
-    return redondearDecimal($sum/(int)$valor);
-    //return $sum;
+      return redondearDecimal($sum/(int)$valor);
   }
     function calcularCostosPres($id,$unidad,$area,$fecha){
      $sql="SELECT p.cod_partidapresupuestaria,p.cod_cuenta,c.numero FROM partidaspresupuestarias_cuentas p join plan_cuentas c on p.cod_cuenta=c.codigo where p.cod_partidapresupuestaria=$id";
@@ -2338,7 +2341,7 @@ function obtenerMontoSimulacionCuenta($codigo,$codigoPar,$ib){
 }
 function obtenerTotalesSimulacion($codigo){
   $dbh = new Conexion();
-    $montoI=0;$montoF=0;
+    $montoI=1;$montoF=1;
    $stmt = $dbh->prepare("SELECT sum(monto_local) as total_local, sum(monto_externo) as total_externo 
     FROM cuentas_simulacion where cod_simulacioncostos=:codSim");
    $stmt->bindParam(':codSim',$codigo);
@@ -2688,6 +2691,20 @@ function obtenerPlantillaCodigoSimulacion($codigo){
   }
   return $valor;
 }
+
+function obtenerNombrePersonal($codigo){
+  $dbh = new Conexion();
+   $valor=0;
+   $sql="SELECT concat(p.paterno, ' ',p.materno, ' ', p.primer_nombre)as nombre from personal p where p.codigo=$codigo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['nombre'];
+  }
+  return $valor;
+}
+
+
 ?>
 
 

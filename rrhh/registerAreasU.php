@@ -138,7 +138,7 @@ $stmtArea->bindColumn('cod_area_padre', $codAreaPadre);
               </div>
         				<div class="card-footer fixed-bottom">
                     <button class="btn" type="submit">Guardar</button>
-                    <a href="<?=$urlListUO;?>" class="<?=$buttonCancel;?>">Cancelar</a>
+                    <a href="<?=$urlListUO;?>" class="<?=$buttonCancel;?>"> <-- Volver </a>
 
                     <a href="#" id="boton_registradasA" class="btn btn-warning text-dark">Areas Registradas <span class='badge bg-white text-warning'> <?=$nc?></span></a>
                 </div>

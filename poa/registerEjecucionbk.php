@@ -217,7 +217,7 @@ $moduleName="Registro de Ejecucion POA";
 	            
 				  <div class="card-footer ml-auto mr-auto">
 					<button type="submit" class="<?=$button;?>">Guardar</button>
-					<a href="?opcion=listActividadesPOAEjecucion&codigo=<?=$codigoIndicador;?>" class="<?=$buttonCancel;?>">Cancelar</a>
+					<a href="?opcion=listActividadesPOAEjecucion&codigo=<?=$codigoIndicador;?>" class="<?=$buttonCancel;?>"> <-- Volver </a>
 				  </div>
 			</div>
 		  </form>

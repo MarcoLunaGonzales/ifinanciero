@@ -121,7 +121,7 @@ while ($rowUnidades = $stmtUnidades->fetch(PDO::FETCH_BOUND)) {
                }
                $indice++;
             }
-            $codAreaSA="874";
+            $codAreaSA="502";
             $glosaDetalle1="Actualizacion Valor Anterior".$nombreUnidadCabecera." ".$nombreRubro." ".$codMes."/".$codAnio;
             $glosaDetalle2="Actualizacion Dep. Acumulada ".$nombreUnidadCabecera." ".$nombreRubro." ".$codMes."/".$codAnio;
 

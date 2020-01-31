@@ -201,7 +201,7 @@ $stmt->bindColumn('clave_indicador', $actividadCMI);
 
                     <button class="<?=$button;?>" onClick="location.href='index.php?opcion=asignarPOAI&codigo=<?=$codigoIndicador?>&areaUnidad=0'">Asignar POAI</button-->
 
-                    <a href="?opcion=listPOA" class="<?=$buttonCancel;?>">Cancelar</a> 
+                    <a href="?opcion=listPOA" class="<?=$buttonCancel;?>"> <-- Volver </a> 
                 </div>
             </div>
           </div>  

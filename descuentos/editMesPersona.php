@@ -146,7 +146,7 @@ while ($row = $stmtc->fetch(PDO::FETCH_BOUND)) {
 
           <button type="submit" class="<?=$buttonCeleste;?>">Guardar</button>
 
-          <a href="<?=$urlListMesPersona;?>&cod_descuento=<?= $codDescuento; ?>&cod_mes=<?= $codMes; ?>" class="<?=$buttonCancel;?>">Cancelar</a>
+          <a href="<?=$urlListMesPersona;?>&cod_descuento=<?= $codDescuento; ?>&cod_mes=<?= $codMes; ?>" class="<?=$buttonCancel;?>"> <-- Volver </a>
 
 
 
