@@ -309,7 +309,8 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
                   $uti=$il-((($iva+$it)/100)*$il)-$totalFijo[2]-($totalVariable[2]);
                   $porl=($uti*100)/$il;*/
                   //
-                  $alumnosX=round((100*(-$totalFijo[2]-$totalVariable[2]))/(($utilidadIbnorcaX*$precioLocalX)-(100*$precioLocalX)+(($iva+$it)*$precioLocalX)));                    
+                  $alumnosX=ceil((100*(-$totalFijo[2]-$totalVariable[2]))/(($utilidadIbnorcaX*$precioLocalX)-(100*$precioLocalX)+(($iva+$it)*$precioLocalX)));                    
+                  //if($alumnosX)
                 $totalVariable[2]=$totalVariable[2]/$alumnosX;
                 $totalVariable[3]=$totalVariable[3]/$alumnosExternoX;
                  //calcular cantidad alumnos si no esta registrado
