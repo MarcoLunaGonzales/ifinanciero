@@ -105,7 +105,7 @@ $stmt->bindColumn('estado', $estado);
                             <!--<a href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=4&admin=0' itle="Enviar Solicitud" class="btn btn-warning">
                               <i class="material-icons">send</i>
                             </a>-->  
-                            <a title="Editar Simulación - Detalle" href='<?=$urlRegister;?>?cod=<?=$codigo;?>' class="btn btn-info">
+                            <a title="Editar Simulación - Detalle" target="_blank" href='<?=$urlRegister;?>?cod=<?=$codigo;?>' class="btn btn-info">
                               <i class="material-icons"><?=$iconEdit;?></i>
                             </a>
                             <!--<a title="Editar Simulación" href='<?=$urlEdit;?>&codigo=<?=$codigo;?>' class="<?=$buttonEdit;?>">

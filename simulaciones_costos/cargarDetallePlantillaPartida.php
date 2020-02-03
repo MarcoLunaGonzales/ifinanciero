@@ -47,7 +47,7 @@ $j=1;
     $codX=$row['codigo'];
     $nomX=$row['nombre'];
     $numX=$row['numero'];
-    $detallesPlantilla=obtenerDetallePlantillaCostosPartida($codigoPX,$codigoPartida);
+    $detallesPlantilla=obtenerDetalleSimulacionCostosPartida($codigo,$codigoPartida);
      while ($rowDetalles = $detallesPlantilla->fetch(PDO::FETCH_ASSOC)) {
       $bandera=$rowDetalles['habilitado'];
         if($rowDetalles['cod_cuenta']==$row['cod_plancuenta']){

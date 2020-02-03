@@ -291,6 +291,11 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
 				//IVA y IT
 				$iva=obtenerValorConfiguracion(1);
 				$it=obtenerValorConfiguracion(2);
+        $alumnosExternoX=1; 
+        //modificar costos por alumnos
+
+
+
 
 				//valores de la simulacion
 
@@ -309,7 +314,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
                   $uti=$il-((($iva+$it)/100)*$il)-$totalFijo[2]-($totalVariable[2]);
                   $porl=($uti*100)/$il;*/
                   //
-                  $alumnosX=ceil((100*(-$totalFijo[2]-$totalVariable[2]))/(($utilidadIbnorcaX*$precioLocalX)-(100*$precioLocalX)+(($iva+$it)*$precioLocalX)));                    
+                  $alumnosRecoX=ceil((100*(-$totalFijo[2]-$totalVariable[2]))/(($utilidadIbnorcaX*$precioLocalX)-(100*$precioLocalX)+(($iva+$it)*$precioLocalX)));                    
                   //if($alumnosX)
                 $totalVariable[2]=$totalVariable[2]/$alumnosX;
                 $totalVariable[3]=$totalVariable[3]/$alumnosExternoX;
@@ -409,9 +414,14 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
                   <td class="text-left small bg-table-primary text-white">CANTIDAD DE PARTICIPANTES MINIMA "UTILIZADO"</td>
                   <td class="text-right font-weight-bold"><?=$alumnosX?></td>
                 </tr>-->
+                
+                <tr class="">
+                  <td class="text-left small bg-table-primary text-white">CANTIDAD DE PARTICIPANTES</td>
+                  <td class="text-right font-weight-bold"><?=$alumnosX?></td>
+                </tr>
                 <tr class="bg-warning text-dark">
                   <td class="text-left small">CANTIDAD DE PARTICIPANTES MINIMA</td>
-                  <td class="text-right font-weight-bold"><?=$alumnosX?></td>
+                  <td class="text-right font-weight-bold"><?=$alumnosRecoX?></td>
                 </tr>
                 <?php
                 $puntoEquilibrio=($totalFijo[2]/($precioLocalX-$totalVariable[2]));

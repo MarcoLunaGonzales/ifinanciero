@@ -47,7 +47,7 @@ $stmt->bindColumn('estado_plantilla', $estadoPlantilla);
                           <th>Unidad</th>
                           <th>Area</th>
                           <th>Utilidad Ibnorca</th>
-                          <th>Utilidad Fuera Ibnorca</th>
+                          <!--<th>Utilidad Fuera Ibnorca</th>-->
                           <!--<th>Estado</th>-->
                           <th class="text-right">Actions</th>
                         </tr>
@@ -75,7 +75,7 @@ $stmt->bindColumn('estado_plantilla', $estadoPlantilla);
                           <td><?=$unidad;?></td>
                           <td><?=$area;?></td>
                           <td><?=$utilidadLocal;?> %</td> 
-                          <td><?=$utilidadExterno;?> %</td>
+                          <!--<td> %</td>-->
                            <!--<td class="<?=$textEstado?>"><?=$estadoPlantilla;?></td>-->
                           <td class="td-actions text-right">
                             <div class="btn-group dropdown">
