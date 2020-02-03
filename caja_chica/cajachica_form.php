@@ -30,7 +30,7 @@ if ($codigo > 0){
        
 } else {
     //para el numero correlativo
-    $stmtCC = $dbh->prepare("SELECT numero from caja_chica where cod_estadoreferencial=1 order by codigo desc");
+    $stmtCC = $dbh->prepare("SELECT numero from caja_chica where cod_estadoreferencial=1 and cod_tipocajachica=$cod_tcc order by codigo desc");
     $stmtCC->execute();
     $resultCC = $stmtCC->fetch();
     $numero_caja_chica_aux = $resultCC['numero'];

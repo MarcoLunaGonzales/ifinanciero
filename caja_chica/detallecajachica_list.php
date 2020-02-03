@@ -89,6 +89,7 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                           <th>Entregado a</th>
                           <th>Monto</th>                          
                           <th>Monto Rendición</th> 
+                          <th>Monto Devuelto</th>
                           <th>Descripción</th>
                           <th>Estado</th>
                           <th></th>
@@ -97,6 +98,8 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                       <tbody>
                         <?php $index=1;
                         while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+                          if($monto_rendicion == 0 || $monto_rendicion ==null) $monto_devuelto=0;
+                          else $monto_devuelto=$monto-$monto_rendicion;
                           if($cod_estado==1)
                             $label='<span class="badge badge-danger">';
                           else
@@ -111,6 +114,7 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                               <td><?=$cod_personal;?></td>        
                               <td><?=$monto;?></td>        
                               <td><?=$monto_rendicion;?></td>        
+                              <td><?=$monto_devuelto;?></td>
                               <td><?=$observaciones;?></td>
                               <td><?=$label.$nombre_estado."</span>";?></td>
 

@@ -593,7 +593,7 @@
 		if ($_GET['opcion']=='planillasSueldoPersonal') {
 			require_once('planillas/planillasSueldoList.php'); //ok
 		}
-		if ($_GET['opcion']=='generarPlanillaAguinaldosPrevia') {
+		if ($_GET['opcion']=='generarPlanillaSueldoPrevia') {
 			require_once('planillas/generarPlanillaSueldo.php'); //ok
 		}
 		//planillas aguinaldos

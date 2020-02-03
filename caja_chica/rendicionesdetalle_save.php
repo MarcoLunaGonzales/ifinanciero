@@ -34,7 +34,7 @@ $cod_estadoreferencial=$_POST['cod_estadoreferencial'];
 // $fecha_recepcion=date("Y-m-d H:i:s");
 	//cuando devuelve AF
 	// Prepare
-if($cod_estadoreferencial==1){//insertar	
+if($cod_estadoreferencial==1){//insertar	rendicion
 	$sql="INSERT INTO rendiciones_detalle(cod_rendicion,cod_tipodoccajachica,fecha_doc,nro_doc,monto,observaciones,cod_estadoreferencial) values(:cod_rendicion,:cod_tipodoccajachica,:fecha_doc,:nro_doc,:monto,:observaciones,:cod_estadoreferencial)";
 	$stmtU = $dbhU->prepare($sql);
 	// Bind
@@ -46,7 +46,7 @@ if($cod_estadoreferencial==1){//insertar
 	$stmtU->bindParam(':observaciones', $observacionesA);
 	$stmtU->bindParam(':cod_estadoreferencial', $cod_estadoreferencial);
 	
-}elseif($cod_estadoreferencial==2){//actualizar
+}elseif($cod_estadoreferencial==2){//actualizar rendicion
 	$sql="UPDATE rendiciones_detalle set cod_tipodoccajachica=:cod_tipodoccajachica,fecha_doc=:fecha_doc,nro_doc=:nro_doc,monto=:monto,observaciones=:observaciones where codigo=:codigo";
 	$stmtU = $dbhU->prepare($sql);
 	// Bind
@@ -58,12 +58,30 @@ if($cod_estadoreferencial==1){//insertar
 	$stmtU->bindParam(':observaciones', $observacionesA);
 
 
-}elseif ($cod_estadoreferencial==3) {//eliminar
+}elseif ($cod_estadoreferencial==3) {//eliminar rendicion
 	$sql="UPDATE rendiciones_detalle set cod_estadoreferencial=2 where codigo=:codigo";
 	$stmtU = $dbhU->prepare($sql);
 	// Bind	
 	$stmtU->bindParam(':codigo', $codigo_detRendicionE);	
-}elseif($cod_estadoreferencial==4){
+}elseif($cod_estadoreferencial==4){ //guardar rendiciones
+
+	//obtenemos codigo caja chica y monto reembolso
+	$stmtCC = $dbhU->prepare("SELECT cc.codigo,cc.monto_reembolso,ccd.monto
+	from  caja_chicadetalle ccd,caja_chica cc
+	where ccd.cod_cajachica=cc.codigo and ccd.codigo=$codigo_detRendicionE");
+	$stmtCC->execute();
+	$resultCC=$stmtCC->fetch();
+	$cod_cajachica=$resultCC['codigo'];
+	$monto_reembolso=$resultCC['monto_reembolso'];
+	$monto_a_rendir=$resultCC['monto'];
+	$monto_aux=$monto_a_rendir-$monto_A;
+	//------
+	
+	$monto_reembolso=$monto_reembolso+$monto_aux;
+
+	//actualizamos el monto de reeembolso de caja chica
+	$stmtCCUpdate = $dbhU->prepare("UPDATE caja_chica set monto_reembolso=$monto_reembolso where codigo=$cod_cajachica");
+	$stmtCCUpdate->execute();
 
 	//actualizamos estado en cajachjicadetalle
 	$sqlCCD="UPDATE caja_chicadetalle set cod_estado=2,monto_rendicion=$monto_A where codigo=$codigo_detRendicionE";

@@ -157,6 +157,9 @@ if($globalAdmin==1){//para personal admin
                           <a href='<?=$urlPlanillaTribPersonalReport;?>?codigo_trib=<?=$codigoTrib;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>' target="_blank" rel="tooltip" class="btn btn-success">
                             <i class="material-icons" title="Ver Planilla Triburaria">remove_red_eye</i> PT                       
                           </a>
+                          <a href='<?=$urlPlanillaTribPersonalPDF;?>?codigo_trib=<?=$codigoTrib;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>' target="_blank" rel="tooltip" class="btn btn-danger">
+                            <i class="material-icons" title="Ver Planilla Triburaria PDF">remove_red_eye</i> PT                       
+                          </a>
                            <?php
                         }
                         ?>
@@ -168,6 +171,9 @@ if($globalAdmin==1){//para personal admin
                         </a> -->
                         <a href='<?=$urlPlanillaTribPersonalReport;?>?codigo_trib=<?=$codigoTrib;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>' target="_blank" rel="tooltip" class="btn btn-success">
                             <i class="material-icons" title="Ver Planilla Triburaria">remove_red_eye</i> PT                       
+                          </a>
+                          <a href='<?=$urlPlanillaTribPersonalPDF;?>?codigo_trib=<?=$codigoTrib;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>' target="_blank" rel="tooltip" class="btn btn-danger">
+                            <i class="material-icons" title="Ver Planilla Triburaria PDF">remove_red_eye</i> PT                       
                           </a>
                         <?php }?>                                                                
                       </td>

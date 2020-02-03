@@ -36,7 +36,7 @@ try {
         $stmtControlador->execute();
         $resultControlador=$stmtControlador->fetch();
         $cod_estado_aux=$resultControlador['cod_estado'];
-        if($cod_estado_aux==2){
+        if($cod_estado_aux==2 || $cod_estado_aux==null){
             $stmt = $dbh->prepare("INSERT INTO caja_chica(cod_tipocajachica,fecha,numero,monto_inicio,monto_reembolso,observaciones,cod_personal,cod_estado,cod_estadoreferencial) 
             values ($cod_tipocajachica,'$fecha',$numero,$monto_inicio,$monto_reembolso,'$observaciones',$cod_personal,$cod_estado,$cod_estadoreferencial)");
             $flagSuccess=$stmt->execute();

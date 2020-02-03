@@ -30,7 +30,7 @@ if ($codigo > 0){
     
 } else {
     //para el numero correlativo
-    $stmtCC = $dbh->prepare("SELECT nro_documento from caja_chicadetalle where cod_estadoreferencial=1 order by codigo desc");
+    $stmtCC = $dbh->prepare("SELECT nro_documento from caja_chicadetalle where cod_estadoreferencial=1 and cod_cajachica=$cod_cc order by codigo desc");
     $stmtCC->execute();
     $resultCC = $stmtCC->fetch();
     $numero_caja_chica_aux = $resultCC['nro_documento'];
@@ -149,7 +149,7 @@ if ($codigo > 0){
 			  </div>
 			  <div class="card-footer ml-auto mr-auto">
 				<button type="submit" class="<?=$buttonNormal;?>">Guardar</button>
-				<a href="<?=$urlListDetalleCajaChica;?>&codigo=<?=$cod_cc;?>&cod_tcc=<?=$cod_tcc?>" class="<?=$buttonCancel;?>"> <-- Volver </a>
+				<a href="<?=$urlListDetalleCajaChica;?>&codigo=<?=$cod_cc;?>&cod_tcc=<?=$cod_tcc?>" class="<?=$buttonCancel;?>"> Volver </a>
 			  </div>
 			</div>
 		  </form>
