@@ -172,5 +172,8 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 echo $html;
 ?>      
   </table>
-  <?php      
+  <?php  
+   if($tipoCosto!=1){
+        ?><div class="row div-center"><h4 class="font-weight-bold"><small>N&uacute;mero de alumnos registrado:</small> <small class="text-success"><?=$alumnos?></small></h4></div><?php 
+    }   
 }     
