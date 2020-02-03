@@ -30,7 +30,7 @@ if ($codigo > 0){
     
 } else {
     //para el numero correlativo
-    $stmtCC = $dbh->prepare("SELECT nro_documento from caja_chicadetalle where cod_estadoreferencial=1 order by codigo desc");
+    $stmtCC = $dbh->prepare("SELECT nro_documento from caja_chicadetalle where cod_estadoreferencial=1 and cod_cajachica=$cod_cc order by codigo desc");
     $stmtCC->execute();
     $resultCC = $stmtCC->fetch();
     $numero_caja_chica_aux = $resultCC['nro_documento'];
@@ -108,7 +108,7 @@ if ($codigo > 0){
                         <label class="col-sm-2 col-form-label">Monto</label>
                         <div class="col-sm-4">
                             <div class="form-group">
-                                <input class="form-control" type="number" step="any" name="monto" id="monto" value="<?=$monto;?>" required/>
+                                <input class="form-control" type="text" step="any" name="monto" id="monto" value="<?=$monto;?>" required/>
                             </div>
                         </div>
                         <label class="col-sm-2 col-form-label">Fecha</label>
@@ -137,7 +137,7 @@ if ($codigo > 0){
 
 
                     <div class="row">
-                        <label class="col-sm-2 col-form-label">Observaciones</label>
+                        <label class="col-sm-2 col-form-label">Descripción</label>
                         <div class="col-sm-7">
                         <div class="form-group">
                             <textarea class="form-control rounded-0" name="observaciones" id="observaciones" rows="3" onkeyup="javascript:this.value=this.value.toUpperCase();"><?=$observaciones;?></textarea>
@@ -149,7 +149,7 @@ if ($codigo > 0){
 			  </div>
 			  <div class="card-footer ml-auto mr-auto">
 				<button type="submit" class="<?=$buttonNormal;?>">Guardar</button>
-				<a href="<?=$urlListDetalleCajaChica;?>&codigo=<?=$cod_cc;?>&cod_tcc=<?=$cod_tcc?>" class="<?=$buttonCancel;?>"> <-- Volver </a>
+				<a href="<?=$urlListDetalleCajaChica;?>&codigo=<?=$cod_cc;?>&cod_tcc=<?=$cod_tcc?>" class="<?=$buttonCancel;?>"> Volver </a>
 			  </div>
 			</div>
 		  </form>

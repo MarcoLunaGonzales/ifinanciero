@@ -30,7 +30,7 @@ if ($codigo > 0){
        
 } else {
     //para el numero correlativo
-    $stmtCC = $dbh->prepare("SELECT numero from caja_chica where cod_estadoreferencial=1 order by codigo desc");
+    $stmtCC = $dbh->prepare("SELECT numero from caja_chica where cod_estadoreferencial=1 and cod_tipocajachica=$cod_tcc order by codigo desc");
     $stmtCC->execute();
     $resultCC = $stmtCC->fetch();
     $numero_caja_chica_aux = $resultCC['numero'];
@@ -83,7 +83,7 @@ if ($codigo > 0){
                         <label class="col-sm-2 col-form-label">Número</label>
                         <div class="col-sm-4">
                         <div class="form-group">
-                            <input class="form-control" type="numbre" name="numero" id="numero" value="<?=$numero;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"  readonly="readonly"/>
+                            <input class="form-control" type="number" name="numero" id="numero" value="<?=$numero;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"  readonly="readonly"/>
                         </div>
                         </div>
                     </div> <!--fin campo fecha numero-->
@@ -94,12 +94,12 @@ if ($codigo > 0){
                                 <input class="form-control" type="text" name="monto_inicio" id="monto_inicio" value="<?=$monto_inicio;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" required/>
                             </div>
                         </div>
-                        <label class="col-sm-2 col-form-label">Monto Reembolso</label>
+                        <!-- <label class="col-sm-2 col-form-label">Monto Reembolso</label>
                         <div class="col-sm-4">
                             <div class="form-group">
                                 <input class="form-control" type="text" name="monto_reembolso" id="monto_reembolso" value="<?=$monto_reembolso;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
                             </div>
-                        </div>
+                        </div> -->
                     </div><!--monto inicio y reembolso-->
                     <div class="row">
                       <label class="col-sm-2 col-form-label">Responsable</label>

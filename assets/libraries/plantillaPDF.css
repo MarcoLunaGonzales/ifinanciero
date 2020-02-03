@@ -30,6 +30,16 @@ footer { position: fixed; bottom: -40px; left: 0px; right: 0px; height: 50px; }
 #header_titulo_texto_inf_2{text-align: left; font-size: 11px;padding-left:80px;}
 
 
+#info_izq{
+  
+  /*float: right;*/
+  padding-left: 50px;
+  padding-top: 15px;
+  
+}
+
+
+
 .table-inf{
 width: 100%;  
 }

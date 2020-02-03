@@ -2516,6 +2516,8 @@ function descargarPDFHorizontal($nom,$html){
   $mydompdf->set_base_path('assets/libraries/plantillaPDF.css');
   $mydompdf->stream($nom.".pdf", array("Attachment" => false));
 } 
+
+
 function descargarPDF($nom,$html){
   //aumentamos la memoria  
   ini_set("memory_limit", "128M");
