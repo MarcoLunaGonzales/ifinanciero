@@ -1,6 +1,7 @@
 <?php
+                 $alumnosExternoX=1;
                  $ingresoLocal=$precioLocalX*$alumnosX;                 
-                 $ingresoExterno=$precioExternoX*$alumnosExternoX;
+                 $ingresoExterno=1;
                  
                  //porcentajes costo servicio
                  $costoLocal=($totalVariable[2]*$alumnosX)/($ingresoLocal);
