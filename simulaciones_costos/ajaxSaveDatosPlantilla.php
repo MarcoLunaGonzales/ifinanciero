@@ -25,6 +25,48 @@ $sqlUpdatePlantilla="UPDATE simulaciones_costos SET  cod_precioplantilla='$preci
 $stmtUpdatePlantilla = $dbh->prepare($sqlUpdatePlantilla);
 $stmtUpdatePlantilla->execute();
 
+
+$sqlDetalles="SELECT * FROM simulaciones_detalle where cod_simulacioncosto=$codSimulacion and editado_alumno!=0";
+$stmtDetalles = $dbh->prepare($sqlDetalles);
+$stmtDetalles->execute();
+
+ while ($rowDet = $stmtDetalles->fetch(PDO::FETCH_ASSOC)) {
+    $codDet=$rowDet['codigo'];
+    $partida=$rowDet['cod_partidapresupuestaria'];
+    $montoDet=$rowDet['editado_alumno']*$al_i;
+    $cuenta=$rowDet['cod_cuenta'];
+    $dbhDet = new Conexion();
+    $sqlUpdateDetalle="UPDATE simulaciones_detalle SET  monto_unitario='$montoDet',monto_total='$montoDet' where codigo=$codDet";
+    $stmtUpdateDetalle = $dbhDet->prepare($sqlUpdateDetalle);
+    $stmtUpdateDetalle->execute();
+
+//insertar en cuentas_simulacion
+    $dbhC = new Conexion();
+$sqlCuentas="SELECT * FROM cuentas_simulacion where cod_simulacioncostos=$codSimulacion";
+$stmtCuentas = $dbhC->prepare($sqlCuentas);
+$stmtCuentas->execute();
+ 
+ while ($rowCuentas = $stmtCuentas->fetch(PDO::FETCH_ASSOC)) {
+    $simulacion=$rowCuentas['codigo'];  
+   $detallesMontos=obtenerMontosCuentasDetalleSimulacionCostosPartidaHabilitado($codSimulacion,$partida);
+while ($row = $detallesMontos->fetch(PDO::FETCH_ASSOC)) {
+	if($row['cod_cuenta']==$cuenta){
+    if($row['habilitado']==0){
+      $montoTotal=0;
+    }else{
+		$montoTotal=$row['monto'];    
+    }
+    $dbh2 = new Conexion();
+    $sqlUpdate="UPDATE cuentas_simulacion SET  monto_local='$montoTotal' where codigo=$simulacion and cod_plancuenta=$cuenta";	
+      $stmtUpdate = $dbh2->prepare($sqlUpdate);
+      $stmtUpdate->execute();
+     }
+ }
+}
+
+}
+
+
 $precios=obtenerPreciosPorCodigo($precio_p);
 echo $precios[0]."$$$".$precios[1];
 ?>

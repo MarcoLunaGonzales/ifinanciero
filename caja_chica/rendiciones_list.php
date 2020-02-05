@@ -50,6 +50,7 @@ $stmt->bindColumn('nombre_estado', $nombre_estado);
                           <th>Tipo</th>
                           <th>Monto a Rendir</th>
                           <th>Monto Rendición</th>
+                          <th>Monto devuelto</th>
                           <th>Descripción</th>
                           <th>Estado</th>
                           <th></th>
@@ -58,6 +59,9 @@ $stmt->bindColumn('nombre_estado', $nombre_estado);
                       <tbody>
                         <?php $index=1;
                         while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { 
+                          if($monto_rendicion == 0 || $monto_rendicion ==null) $monto_devuelto=0;
+                          else $monto_devuelto=$monto_a_rendir-$monto_rendicion;
+                          
                           if($fecha==null){
                             $fecha="Sin Definir";
                           }
@@ -72,7 +76,8 @@ $stmt->bindColumn('nombre_estado', $nombre_estado);
                               <td><?=$fecha;?></td>
                               <td><?=$tipo_documento;?></td>
                               <td><?=$monto_a_rendir;?></td>        
-                              <td><?=$monto_rendicion;?></td>        
+                              <td><?=$monto_rendicion;?></td>
+                              <td><?=$monto_devuelto;?></td>        
                               <td><?=$observaciones;?></td>        
                               <td><?=$label.$nombre_estado."</span>";?></td>
                               

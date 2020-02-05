@@ -8,9 +8,18 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $cod_cajachica=$codigo;
 $cod_tcc=$cod_tcc;
 $dbh = new Conexion();
+//sacamos monto de caja chica
+$stmtMCC = $dbh->prepare("SELECT monto_inicio,monto_reembolso from caja_chica where  codigo =$cod_cajachica");
+$stmtMCC->execute();
+$resultMCC=$stmtMCC->fetch();
+$monto_cajachica=$resultMCC['monto_inicio'];
+$monto_reembolso=$resultMCC['monto_reembolso'];
+//monto de rendiciones
+
+
 
 $stmt = $dbh->prepare("SELECT codigo,cod_cuenta,fecha,
-  (select td.nombre from tipos_documentocajachica td where td.codigo=cod_tipodoccajachica) as cod_tipodoccajachica,nro_documento,(select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=cod_personal)as cod_personal,monto,observaciones,cod_estado,
+  (select td.nombre from tipos_documentocajachica td where td.codigo=cod_tipodoccajachica) as cod_tipodoccajachica,nro_documento,(select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=cod_personal)as cod_personal,monto,monto_rendicion,observaciones,cod_estado,
   (select e.nombre from estados_rendiciones e where e.codigo=cod_estado) as nombre_estado 
 from caja_chicadetalle
 where cod_cajachica=$cod_cajachica and cod_estadoreferencial=1");
@@ -23,6 +32,7 @@ $stmt->bindColumn('fecha', $fecha);
 $stmt->bindColumn('cod_tipodoccajachica', $cod_tipodoccajachica);
 $stmt->bindColumn('nro_documento', $nro_documento);
 $stmt->bindColumn('monto', $monto);
+$stmt->bindColumn('monto_rendicion', $monto_rendicion);
 $stmt->bindColumn('observaciones', $observaciones);
 $stmt->bindColumn('cod_estado', $cod_estado);
 $stmt->bindColumn('cod_personal', $cod_personal);
@@ -48,6 +58,22 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                   </div>
                   <h4 class="card-title">DETALLE</h4>
                   <h4 class="card-title" align="center"><?=$nombre_caja_chica?></h4>
+                  
+                  <div class="row">
+                      <label class="col-sm-2 col-form-label text-right"><b>Monto Inicial</b></label>
+                      <div class="col-sm-3">
+                          <div class="form-group">
+                              <input style="background-color:#ffffff;border: 2px solid #7f0000;" class="form-control" readonly="readonly" value="<?=$monto_cajachica?>" />
+                          </div>
+                      </div>
+                      <label class="col-sm-2 col-form-label text-right"><b>Saldo</b></label>
+                      <div class="col-sm-3">
+                      <div class="form-group">
+                          <input style="background-color:#ffffff;border: 2px solid #005662;" class="form-control" name="numero" id="numero" value="<?=$monto_reembolso?>"  readonly="readonly"/>
+                      </div>
+                      </div>
+                  </div> <!--fin campo fecha numero-->
+
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
@@ -62,7 +88,9 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                           <th>N. Doc</th>
                           <th>Entregado a</th>
                           <th>Monto</th>                          
-                          <th>Observaciones</th>
+                          <th>Monto Rendición</th> 
+                          <th>Monto Devuelto</th>
+                          <th>Descripción</th>
                           <th>Estado</th>
                           <th></th>
                         </tr>
@@ -70,6 +98,8 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                       <tbody>
                         <?php $index=1;
                         while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+                          if($monto_rendicion == 0 || $monto_rendicion ==null) $monto_devuelto=0;
+                          else $monto_devuelto=$monto-$monto_rendicion;
                           if($cod_estado==1)
                             $label='<span class="badge badge-danger">';
                           else
@@ -83,6 +113,8 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                               <td><?=$nro_documento;?></td>        
                               <td><?=$cod_personal;?></td>        
                               <td><?=$monto;?></td>        
+                              <td><?=$monto_rendicion;?></td>        
+                              <td><?=$monto_devuelto;?></td>
                               <td><?=$observaciones;?></td>
                               <td><?=$label.$nombre_estado."</span>";?></td>
 

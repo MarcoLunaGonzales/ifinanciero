@@ -1329,7 +1329,7 @@ function agregarPlantillaDetalle(partida){
     Swal.fire('Informativo!','Todos los campos son requeridos!','warning'); 
   }else{
    var n_monto=calcularMontoRegistrado(parseFloat(monto),$("#tipo_calculomonto").val());
-     var parametros={"detalle":detalle,"monto":n_monto,"cuenta":cuenta,"cod_plantillacosto":plantilla,"cod_partida":partida};
+     var parametros={"detalle":detalle,"monto":n_monto,"cuenta":cuenta,"cod_plantillacosto":plantilla,"cod_partida":partida,"tipo":$("#tipo_calculomonto").val(),"monto_al":monto};
      $.ajax({
         type: "GET",
         dataType: 'html',
@@ -3413,7 +3413,7 @@ function guardarCuentasSimulacionAjaxGenerico(ib){
   var supertotal=$("#numero_cuentaspartida").val();
   for (var j = 1; j <=(supertotal-1); j++) {
   var total= $("#numero_cuentas"+j).val();
-  //var simulacion=$("#cod_simulacion").val();
+  var simulaciones=$("#cod_simulacion").val();
   var plantilla =$("#cod_plantilla").val();
   var partida =$("#codigo_partida_presupuestaria"+j).val();
   
@@ -3426,7 +3426,7 @@ function guardarCuentasSimulacionAjaxGenerico(ib){
       }
       var cuenta =$("#codigo_cuenta"+j+"RRR"+i).val();
       var simulacion =$("#codigo_fila"+j+"RRR"+i).val();
-      var parametros = {"codigo":codigo,"monto":monto,"ibnorca":ib,"simulacion":simulacion,"plantilla":plantilla,"partida":partida,"cuenta":cuenta,"habilitado":habilitado};
+      var parametros = {"codigo":codigo,"monto":monto,"ibnorca":ib,"simulacion":simulacion,"simulaciones":simulaciones,"plantilla":plantilla,"partida":partida,"cuenta":cuenta,"habilitado":habilitado};
       $.ajax({
         type:"GET",
         data:parametros,

@@ -23,7 +23,17 @@ try {
     $cod_personal = $_POST["cod_personal"];
     $observaciones = $_POST["observaciones"];    
     
+
+    //sacamos monto de caja chica
+    $stmtMCC = $dbh->prepare("SELECT monto_reembolso from caja_chica where  codigo =$cod_cc");
+    $stmtMCC->execute();
+    $resultMCC=$stmtMCC->fetch();
+    $monto_reembolso_x=$resultMCC['monto_reembolso'];
+
     if ($codigo == 0){//insertamos
+        $monto_reembolso=$monto_reembolso_x-$monto;
+        $stmtReembolso = $dbh->prepare("UPDATE caja_chica set monto_reembolso=$monto_reembolso where codigo=$cod_cc");
+        $stmtReembolso->execute();
 
         //para el codigo del detalle
         $stmtCC = $dbh->prepare("SELECT codigo from caja_chicadetalle where cod_estadoreferencial=1 order by codigo desc");
@@ -49,6 +59,18 @@ try {
 
         //$stmt->debugDumpParams();
     } else {//update
+        //actualizamos monto reeembolso
+        //sacamos monto anterior de detalle
+        $stmtMontoAnterior = $dbh->prepare("SELECT monto from caja_chicadetalle where codigo=$codigo");
+        $stmtMontoAnterior->execute();
+        $resultMontoAnterior = $stmtMontoAnterior->fetch();
+        $monto_anterior = $resultMontoAnterior['monto'];
+        
+        $monto_reembolso=$monto_reembolso_x+$monto_anterior-$monto;
+        //acctualiazmos reembolso
+        $stmtReembolso = $dbh->prepare("UPDATE caja_chica set monto_reembolso=$monto_reembolso where codigo=$cod_cc");
+        $stmtReembolso->execute();
+        //================================================================
         $monto_rendicion=0;
         $stmt = $dbh->prepare("UPDATE caja_chicadetalle set cod_cuenta=$cod_cuenta,fecha='$fecha',cod_tipodoccajachica=$cod_tipo_documento,nro_documento=$numero,cod_personal=$cod_personal,monto=$monto,observaciones='$observaciones'
          where codigo = $codigo");      

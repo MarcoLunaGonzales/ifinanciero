@@ -4,6 +4,7 @@
 	require_once '../functions.php';
 	require_once '../layouts/bodylogin2.php';
 	$dbh = new Conexion();
+	set_time_limit(300);
 
 	$total_1=0;$total_2=0;$total_3=0;$total_4=0;$total_5=0;$total_6=0;$total_7=0;$total_8=0;$total_9=0;
 	$total_10=0;$total_11=0;$total_12=0;$total_13=0;$total_14=0;$total_15=0;

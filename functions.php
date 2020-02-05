@@ -1871,6 +1871,14 @@ function obtenerDetallePlantillaCostosPartida($plantilla,$codigo){
    $stmt->execute();
    return $stmt;
 }
+function obtenerDetalleSimulacionCostosPartida($sim,$codigo){
+  $dbh = new Conexion();
+  $sql="";
+  $sql="SELECT c.numero,c.nombre,p.* FROM simulaciones_detalle p join plan_cuentas c on p.cod_cuenta=c.codigo where p.cod_partidapresupuestaria=$codigo and p.cod_simulacioncosto=$sim";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+}
 function obtenerMontosCuentasDetallePlantillaCostosPartida($plantilla,$codigo){
   $dbh = new Conexion();
   $sql="";
@@ -1883,6 +1891,14 @@ function obtenerMontosCuentasDetallePlantillaCostosPartidaHabilitado($plantilla,
   $dbh = new Conexion();
   $sql="";
   $sql="SELECT p.cod_partidapresupuestaria,p.cod_cuenta,c.numero,c.nombre,sum(p.monto_total) as monto,p.habilitado FROM plantillas_servicios_detalle p join plan_cuentas c on p.cod_cuenta=c.codigo where p.cod_partidapresupuestaria=$codigo and p.cod_plantillacosto=$plantilla group by cod_cuenta";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+}
+function obtenerMontosCuentasDetalleSimulacionCostosPartidaHabilitado($sim,$codigo){
+  $dbh = new Conexion();
+  $sql="";
+  $sql="SELECT p.cod_partidapresupuestaria,p.cod_cuenta,c.numero,c.nombre,sum(p.monto_total) as monto,p.habilitado FROM simulaciones_detalle p join plan_cuentas c on p.cod_cuenta=c.codigo where p.cod_partidapresupuestaria=$codigo and p.cod_simulacioncosto=$sim group by cod_cuenta";
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
    return $stmt;
@@ -2341,7 +2357,7 @@ function obtenerMontoSimulacionCuenta($codigo,$codigoPar,$ib){
 }
 function obtenerTotalesSimulacion($codigo){
   $dbh = new Conexion();
-    $montoI=0;$montoF=0;
+    $montoI=1;$montoF=1;
    $stmt = $dbh->prepare("SELECT sum(monto_local) as total_local, sum(monto_externo) as total_externo 
     FROM cuentas_simulacion where cod_simulacioncostos=:codSim");
    $stmt->bindParam(':codSim',$codigo);
@@ -2500,6 +2516,8 @@ function descargarPDFHorizontal($nom,$html){
   $mydompdf->set_base_path('assets/libraries/plantillaPDF.css');
   $mydompdf->stream($nom.".pdf", array("Attachment" => false));
 } 
+
+
 function descargarPDF($nom,$html){
   //aumentamos la memoria  
   ini_set("memory_limit", "128M");

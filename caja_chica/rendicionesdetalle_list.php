@@ -209,10 +209,10 @@ $statementTipoDocRendicionE = $dbh->query("SELECT * from tipos_doc_rendicion ord
             </div>
         </div><!--montos -->
         <div class="row">
-            <label class="col-sm-2 col-form-label">Observaciones</label>
+            <label class="col-sm-2 col-form-label">Descripción</label>
             <div class="col-sm-8">
                 <div class="form-group">
-                    <input class="form-control" type="text" name="observacionesA" id="observacionesA" value=""/>
+                    <input class="form-control" type="text" name="DescripciónA" id="observacionesA" value="" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
                 </div>
             </div>
         </div><!--detalle -->
@@ -269,10 +269,10 @@ $statementTipoDocRendicionE = $dbh->query("SELECT * from tipos_doc_rendicion ord
             </div>
         </div><!--montos -->
         <div class="row">
-            <label class="col-sm-2 col-form-label">Observaciones</label>
+            <label class="col-sm-2 col-form-label">Descripción</label>
             <div class="col-sm-8">
                 <div class="form-group">
-                    <input class="form-control" type="text" name="observacionesE" id="observacionesE" value=""/>
+                    <input class="form-control" type="text" name="observacionesE" id="observacionesE" value="" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
                 </div>
             </div>
         </div><!--detalle -->

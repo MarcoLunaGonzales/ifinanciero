@@ -32,6 +32,7 @@ if(isset($_GET['cod'])){
 }else{
 	$codigo=0;
 }
+$mesConf=obtenerValorConfiguracion(6);
 $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_externo from simulaciones_costos sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo join precios_plantillacosto pa on sc.cod_precioplantilla=pa.codigo where sc.cod_estadoreferencial=1 and sc.codigo='$codigo'");
 			$stmt1->execute();
 			$stmt1->bindColumn('codigo', $codigoX);
@@ -290,6 +291,11 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
 				//IVA y IT
 				$iva=obtenerValorConfiguracion(1);
 				$it=obtenerValorConfiguracion(2);
+        $alumnosExternoX=1; 
+        //modificar costos por alumnos
+
+
+
 
 				//valores de la simulacion
 
@@ -299,19 +305,28 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
                  //$totalVariable=obtenerTotalesPlantilla($codigoPX,2,18);
                  //total variable desde simulacion cuentas
                   $totalVariable=obtenerTotalesSimulacion($codigo);
+                  //$alumnosX=round((100*($totalFijo[2]*(0.87+($iva/100))))/((100*(($precioLocalX*(1-($it/100)))-($totalVariable[2]*(1+($iva/100)))))-($utilidadIbnorcaX*$precioLocalX)));  
+                
+               // $alumnosX=($utilidadIbnorcaX+($totalFijo[2]+))
+                  
+                  //
+                  /*$il=$precioLocalX*$alumnosX; 
+                  $uti=$il-((($iva+$it)/100)*$il)-$totalFijo[2]-($totalVariable[2]);
+                  $porl=($uti*100)/$il;*/
+                  //
+                  $alumnosRecoX=ceil((100*(-$totalFijo[2]-$totalVariable[2]))/(($utilidadIbnorcaX*$precioLocalX)-(100*$precioLocalX)+(($iva+$it)*$precioLocalX)));                    
+                  //if($alumnosX)
                 $totalVariable[2]=$totalVariable[2]/$alumnosX;
                 $totalVariable[3]=$totalVariable[3]/$alumnosExternoX;
                  //calcular cantidad alumnos si no esta registrado
-               if($alumnosX==0||$alumnosX==""||$alumnosX==null||$alumnosExternoX==0||$alumnosExternoX==""||$alumnosExternoX==null){
+               if($alumnosX==0){
                  	$porcentajeFinalLocal=0;$alumnosX=0;$alumnosExternoX=0;$porcentajeFinalExterno=0;
                  	while ($porcentajeFinalLocal < $utilidadIbnorcaX || $porcentajeFinalExterno<$utilidadFueraX) {
                  		$alumnosX++;
                  		include "calculoSimulacion.php";
                         $porcentajeFinalLocal=$pUtilidadLocal;
                         $porcentajeFinalExterno=$pUtilidadExterno;
-
-                 	}              
-                   //$alumnosX=round((100*($totalFijo[2]*(0.87+($iva/100))))/((100*(($precioLocalX*(1-($it/100)))-($totalVariable[2]*(1+($iva/100)))))-($utilidadIbnorcaX*$precioLocalX)));  
+                 	}                                 
                 }else{
                 	include "calculoSimulacion.php";
                 }
@@ -399,9 +414,14 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
                   <td class="text-left small bg-table-primary text-white">CANTIDAD DE PARTICIPANTES MINIMA "UTILIZADO"</td>
                   <td class="text-right font-weight-bold"><?=$alumnosX?></td>
                 </tr>-->
+                
+                <tr class="">
+                  <td class="text-left small bg-table-primary text-white">CANTIDAD DE PARTICIPANTES</td>
+                  <td class="text-right font-weight-bold"><?=$alumnosX?></td>
+                </tr>
                 <tr class="bg-warning text-dark">
                   <td class="text-left small">CANTIDAD DE PARTICIPANTES MINIMA</td>
-                  <td class="text-right font-weight-bold"><?=$alumnosX?></td>
+                  <td class="text-right font-weight-bold"><?=$alumnosRecoX?></td>
                 </tr>
                 <?php
                 $puntoEquilibrio=($totalFijo[2]/($precioLocalX-$totalVariable[2]));

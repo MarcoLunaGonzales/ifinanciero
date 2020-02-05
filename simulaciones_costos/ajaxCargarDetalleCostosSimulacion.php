@@ -122,7 +122,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $html.='</tr>';
             }
           }else{ 
-            $query_cuentas=obtenerDetallePlantillaCostosPartida($codPlan,$codPartida);
+            $query_cuentas=obtenerDetalleSimulacionCostosPartida($codigo,$codPartida);
             $montoSimulacion=0;
             while ($row_cuentas = $query_cuentas->fetch(PDO::FETCH_ASSOC)) {
               $montoCal=$row_cuentas['monto_total'];
@@ -172,5 +172,8 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 echo $html;
 ?>      
   </table>
-  <?php      
+  <?php  
+   if($tipoCosto!=1){
+        ?><div class="row div-center"><h4 class="font-weight-bold"><small>N&uacute;mero de alumnos registrado:</small> <small class="text-success"><?=$alumnos?></small></h4></div><?php 
+    }   
 }     

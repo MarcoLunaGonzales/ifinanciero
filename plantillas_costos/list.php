@@ -47,7 +47,7 @@ $stmt->bindColumn('estado_plantilla', $estadoPlantilla);
                           <th>Unidad</th>
                           <th>Area</th>
                           <th>Utilidad Ibnorca</th>
-                          <th>Utilidad Fuera Ibnorca</th>
+                          <!--<th>Utilidad Fuera Ibnorca</th>-->
                           <th>Estado</th>
                           <th class="text-right">Actions</th>
                         </tr>
@@ -75,7 +75,7 @@ $stmt->bindColumn('estado_plantilla', $estadoPlantilla);
                           <td><?=$unidad;?></td>
                           <td><?=$area;?></td>
                           <td><?=$utilidadLocal;?> %</td> 
-                          <td><?=$utilidadExterno;?> %</td>
+                          <!--<td> %</td>-->
                            <td class="<?=$textEstado?>"><button class="btn <?=$btnEstilo?> btn-sm"><?=$estadoPlantilla;?></button></td>
                           <td class="td-actions text-right">
                             <a href='<?=$urlReporte;?>?cod=<?=$codigo;?>' rel="tooltip" class="btn btn-primary">
@@ -84,7 +84,7 @@ $stmt->bindColumn('estado_plantilla', $estadoPlantilla);
                             <?php if($codEstado!=3){
                               ?>
                             
-                            <a href='<?=$urlRegister;?>?cod=<?=$codigo;?>' rel="tooltip" class="<?=$buttonEdit;?>">
+                            <a target="_blank" href='<?=$urlRegister;?>?cod=<?=$codigo;?>' rel="tooltip" class="<?=$buttonEdit;?>">
                               <i class="material-icons"><?=$iconEdit;?></i>
                             </a>
                             <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')">
