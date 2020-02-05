@@ -34,6 +34,11 @@ if(isset($_GET['nombre'])){
   $stmtInsert = $dbh->prepare($sqlInsert);
   $stmtInsert->execute();
 
+  $dbhD = new Conexion();
+  $sqlD="DELETE FROM simulaciones_detalle where cod_simulacioncosto=$codSimCosto";
+  $stmtD = $dbhD->prepare($sqlD);
+  $stmtD->execute();
+
   //insertar datos en la tabla cuentas_simulacion
   $anio=date("Y");
   $anio_pasado=((int)$anio)-1;
@@ -51,6 +56,7 @@ if(isset($_GET['nombre'])){
      if($montoTotal==0){
       $montoTotal=1;
      }*/
+     
 
      $cuentasPlan=obtenerMontosCuentasDetallePlantillaCostosPartida($plantilla_costo,$idp);
 
@@ -76,6 +82,21 @@ if(isset($_GET['nombre'])){
       VALUES ('".$codCuenta."','".$montoCuenta."','".$montoCuenta."', '".$porcentaje."', '".$idp."','".$codSimCosto."')";
       $stmtInsertPorcentaje = $dbh->prepare($sqlInsertPorcentaje);
       $stmtInsertPorcentaje->execute();
+     }
+     $detallesPlan=obtenerDetallePlantillaCostosPartida($plantilla_costo,$idp);
+     while ($rowDetallesPlan = $detallesPlan->fetch(PDO::FETCH_ASSOC)) {
+
+      $codPC=$rowDetallesPlan['cod_plantillacosto'];
+      $codPP=$rowDetallesPlan['cod_partidapresupuestaria'];
+      $codC=$rowDetallesPlan['cod_cuenta'];
+      $glosaD=$rowDetallesPlan['glosa'];
+      $montoD=$rowDetallesPlan['monto_total'];
+      $editD=$rowDetallesPlan['editado_alumno'];
+      $dbhID = new Conexion();
+      $sqlID="INSERT INTO simulaciones_detalle (cod_simulacioncosto,cod_plantillacosto, cod_partidapresupuestaria, cod_cuenta,glosa,monto_unitario,cantidad,monto_total,cod_estadoreferencial,editado_alumno) 
+      VALUES ('".$codSimCosto."','".$codPC."','".$codPP."','".$codC."', '".$glosaD."','".$montoD."','1','".$montoD."',1,'".$editD."')";
+      $stmtID = $dbhID->prepare($sqlID);
+      $stmtID->execute();
      }
   }
   

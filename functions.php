@@ -1871,6 +1871,14 @@ function obtenerDetallePlantillaCostosPartida($plantilla,$codigo){
    $stmt->execute();
    return $stmt;
 }
+function obtenerDetalleSimulacionCostosPartida($sim,$codigo){
+  $dbh = new Conexion();
+  $sql="";
+  $sql="SELECT c.numero,c.nombre,p.* FROM simulaciones_detalle p join plan_cuentas c on p.cod_cuenta=c.codigo where p.cod_partidapresupuestaria=$codigo and p.cod_simulacioncosto=$sim";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+}
 function obtenerMontosCuentasDetallePlantillaCostosPartida($plantilla,$codigo){
   $dbh = new Conexion();
   $sql="";
@@ -1883,6 +1891,14 @@ function obtenerMontosCuentasDetallePlantillaCostosPartidaHabilitado($plantilla,
   $dbh = new Conexion();
   $sql="";
   $sql="SELECT p.cod_partidapresupuestaria,p.cod_cuenta,c.numero,c.nombre,sum(p.monto_total) as monto,p.habilitado FROM plantillas_servicios_detalle p join plan_cuentas c on p.cod_cuenta=c.codigo where p.cod_partidapresupuestaria=$codigo and p.cod_plantillacosto=$plantilla group by cod_cuenta";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+}
+function obtenerMontosCuentasDetalleSimulacionCostosPartidaHabilitado($sim,$codigo){
+  $dbh = new Conexion();
+  $sql="";
+  $sql="SELECT p.cod_partidapresupuestaria,p.cod_cuenta,c.numero,c.nombre,sum(p.monto_total) as monto,p.habilitado FROM simulaciones_detalle p join plan_cuentas c on p.cod_cuenta=c.codigo where p.cod_partidapresupuestaria=$codigo and p.cod_simulacioncosto=$sim group by cod_cuenta";
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
    return $stmt;
