@@ -15,13 +15,15 @@ try {
     $cod_tcc = $_POST["cod_tcc"];
     $cod_cc = $_POST["cod_cc"];
 
-    $cod_cuenta = $_POST["cod_cuenta"];
+    $cod_cuenta=$_POST["cuenta_auto_id"];    
+    // $cod_cuenta = $_POST["cod_cuenta"];
     $cod_tipo_documento = $_POST["tipo_documento"];
     $numero = $_POST["numero"];
     $monto = $_POST["monto"];
     $fecha = $_POST["fecha"];
     $cod_personal = $_POST["cod_personal"];
-    $observaciones = $_POST["observaciones"];    
+    $observaciones = $_POST["observaciones"];
+
     
 
     //sacamos monto de caja chica

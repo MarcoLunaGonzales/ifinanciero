@@ -1,46 +1,54 @@
-body{font-family:  sans-serif; font-size: 10px;}
-@page { margin-top: 180px; margin-left: 40px; margin-right: 40px; margin-bottom: 140px;}
+body{font-family:  sans-serif; font-size: 12px;}
+@page { margin-top: 40px; margin-left: 40px; margin-right: 40px; margin-bottom: 40px;}
 
 
-header { position: fixed; top: -125px; left: 0px; right: 0px; height: 70px;}
+header { position: fixed; top: -125px; left: 0px; right: 0px; height: 10px;}
 footer { position: fixed; bottom: -40px; left: 0px; right: 0px; height: 50px; }
 
-.imagen-logo-izq{
+/*.imagen-logo-izq{
   position: absolute;
-  /*float: right;*/
   padding-left: 50px;
   padding-top: -25px;
-  left: 0px;
+  left: 30px;
   width:70px;
   height:70px;
 }
 .imagen-logo-der{
   position: absolute;
-  /*float: right;*/
   padding-left: 50px;
   padding-top: -25px;
-  left: 550px;
-  top: 20px;
+  left: 520px;  
+  width:70px;
+  height:70px;
+}*/
+.imagen_izq{
+  padding-left: 50px;
   width:70px;
   height:70px;
 }
-#header_titulo_texto{text-align: center; font-size: 16px; font-weight: bold;}
-#header_titulo_texto_des{text-align: left; font-size: 12px; font-weight: bold; border-top: 1px solid #000;}
-#header_titulo_texto_inf{text-align: center; font-size: 11px;padding-top: 20px;}
-#header_titulo_texto_inf_2{text-align: left; font-size: 11px;padding-left:80px;}
+.imagen_der{
+  padding-right:50px;
+  width:70px;
+  height:70px;
+}
 
-#header_titulo_texto_inf_der{text-align: right; font-size: 11px;padding-left:80px;}
+.header_titulo_texto{text-align: center; font-size: 30px; font-weight: bold;}
+
+.header_texto_inf{text-align: center; font-size: 11px;}
+.titulo_texto{text-align: center; font-size: 20px; font-weight: bold;padding:20px;}
 
 
-
+/*
 #info_izq{
   
-  /*float: right;*/
+
   padding-left: 50px;
   padding-top: 15px;
   
+}*/
+.table_hijo{
+  width: 100%; border-collapse: collapse;padding: 3px;
 }
-
 
 
 .table-inf{

@@ -92,8 +92,8 @@ if ($codigo > 0){
                             <div id="div_personal_UO_tcc">
                                 <?php
                                 $stmtPersonal = $dbh->prepare("SELECT p.codigo, p.paterno,p.materno,p.primer_nombre
-                                from personal p, ubicaciones u, unidades_organizacionales uo 
-                                where u.cod_unidades_organizacionales=uo.codigo and uo.codigo=p.cod_unidadorganizacional and u.codigo='$cod_uo' order by 2");
+                                from personal p, unidades_organizacionales uo 
+                                where uo.codigo=p.cod_unidadorganizacional and uo.codigo=$cod_uo order by 2");
                                 $stmtPersonal->execute();
                                 ?>
                                 <select id="cod_personal" name="cod_personal" class="selectpicker form-control" data-style="btn btn-info" data-size="5">

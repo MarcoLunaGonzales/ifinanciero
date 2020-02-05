@@ -10,9 +10,41 @@ $dbh = new Conexion();
 $cod_cc=$cod_cc;
 $cod_tcc=$cod_tcc;
 $cod_dcc=$codigo;
+
+
+
+$i=0;
+  echo "<script>var array_cuenta=[],imagen_cuenta=[];</script>";
+   $stmtCuenta = $dbh->prepare("SELECT p.codigo, p.numero, p.nombre from plan_cuentas p where p.nivel=5
+UNION
+SELECT p.codigo as codigo, p.nro_cuenta AS numero, p.nombre from cuentas_auxiliares p");
+   $stmtCuenta->execute();
+   while ($rowCuenta = $stmtCuenta->fetch(PDO::FETCH_ASSOC)) {
+    $codigoX=$rowCuenta['codigo'];
+    $numeroX=$rowCuenta['numero'];
+    $nombreX=$rowCuenta['nombre'];
+
+    ?>
+    <script>
+     var obtejoLista={
+       label:'<?=trim($numeroX)?> - <?=trim($nombreX)?>',
+       value:'<?=$codigoX?>'};
+       array_cuenta[<?=$i?>]=obtejoLista;
+       imagen_cuenta[<?=$i?>]='../assets/img/calc.jpg';
+    </script> 
+    <?php
+    $i=$i+1;  
+  }
+
+
+
+
+
 if ($codigo > 0){
     
-    $stmt = $dbh->prepare("SELECT codigo,cod_cuenta,fecha,cod_tipodoccajachica,nro_documento,cod_personal,monto,observaciones
+    $stmt = $dbh->prepare("SELECT codigo,cod_cuenta,fecha,cod_tipodoccajachica,nro_documento,cod_personal,monto,observaciones,
+        (select c.nombre from plan_cuentas c where c.codigo=cod_cuenta) as nombre_cuenta,
+        (select c.numero from plan_cuentas c where c.codigo=cod_cuenta) as nro_cuenta
     from caja_chicadetalle
     where codigo =:codigo");
     
@@ -26,7 +58,11 @@ if ($codigo > 0){
     $nro_documento = $result['nro_documento'];    
     $cod_personal = $result['cod_personal'];    
     $observaciones = $result['observaciones'];    
-    $monto = $result['monto'];    
+    $monto = $result['monto'];
+    $nombre_cuenta = $result['nombre_cuenta'];    
+    $nro_cuenta = $result['nro_cuenta']; 
+
+    $cuenta_aux=$nro_cuenta." - ".$nombre_cuenta;   
     
 } else {
     //para el numero correlativo
@@ -38,16 +74,19 @@ if ($codigo > 0){
         $numero_caja_chica_aux=0;
     }
 
-
     $codigo=0;
-    $cod_cuenta = 0;
-    $fecha = "";
+    // $cod_cuenta = 0;
+    
+    $fecha = date('Y-m-d');
     $cod_tipodoccajachica = 0;
     $nro_documento = $numero_caja_chica_aux+1;    
     $cod_personal = 0;    
-    $observaciones = " ";    
+    $observaciones = "";    
     $monto = 0;    
     $cod_estado = 1;
+
+    $cuenta_aux="";
+
 }
 ?>
 
@@ -70,7 +109,10 @@ if ($codigo > 0){
                       <label class="col-sm-2 col-form-label">Cuenta</label>
                       <div class="col-sm-8">
                         <div class="form-group">
-                            <select name="cod_cuenta" id="cod_cuenta" class="selectpicker form-control" data-style="btn btn-info">
+
+                            <input class="form-control" type="text" name="cuenta_auto" id="cuenta_auto" value="<?=$cuenta_aux?>" placeholder="[numero] y nombre de cuenta"/>
+                            <input class="form-control" type="hidden" name="cuenta_auto_id" id="cuenta_auto_id"/>
+                            <!-- <select name="cod_cuenta" id="cod_cuenta" class="selectpicker form-control" placeholder="[numero] y nombre de cuenta" data-style="btn btn-info" required="true">
                                 <option ></option>
                                 <?php 
                                 $querytipos_caja = "SELECT codigo,nombre from plan_cuentas where cod_estadoreferencial=1 order by nombre";
@@ -78,7 +120,7 @@ if ($codigo > 0){
                                 while ($row = $stmtTcajaChica->fetch()){ ?>
                                     <option <?=($cod_cuenta==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
                                 <?php } ?>
-                            </select>
+                            </select> -->
                         </div>
                       </div>
                     </div><!-- cuenta-->
@@ -87,10 +129,9 @@ if ($codigo > 0){
                         <label class="col-sm-2 col-form-label">Tipo Doc.</label>
                         <div class="col-sm-4">
                             <div class="form-group">
-                                <select name="tipo_documento" id="tipo_documento" class="selectpicker form-control" data-style="btn btn-info">
-                                    <option ></option>
+                                <select name="tipo_documento" id="tipo_documento" class="selectpicker form-control" data-style="btn btn-info">                                    
                                     <?php                                     
-                                    $stmtTipoDoc = $dbh->query("SELECT codigo,nombre from tipos_doc_cajachica");
+                                    $stmtTipoDoc = $dbh->query("SELECT td.codigo,td.nombre from tipos_documentocajachica td where td.tipo=1");
                                     while ($row = $stmtTipoDoc->fetch()){ ?>
                                         <option <?=($cod_tipodoccajachica==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
                                     <?php } ?>
@@ -114,7 +155,7 @@ if ($codigo > 0){
                         <label class="col-sm-2 col-form-label">Fecha</label>
                         <div class="col-sm-4">
                             <div class="form-group">
-                                <input class="form-control" type="date" name="fecha" id="fecha" value="<?=$fecha;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+                                <input class="form-control" type="date" name="fecha" id="fecha" readonly="true" value="<?=$fecha;?>" />
                             </div>
                         </div>
                     </div><!--monto inicio y reembolso-->
@@ -122,7 +163,7 @@ if ($codigo > 0){
                       <label class="col-sm-2 col-form-label">Personal</label>
                       <div class="col-sm-8">
                         <div class="form-group">
-                            <select name="cod_personal" id="cod_personal" class="selectpicker form-control" data-style="btn btn-info">
+                            <select name="cod_personal" id="cod_personal" class="selectpicker form-control" data-style="btn btn-info" required="true" data-show-subtext="true" data-live-search="true">
                                 <option value=""></option>
                                 <?php 
                                 $querypersonal = "SELECT codigo,CONCAT_WS(' ',paterno,materno,primer_nombre)AS nombre from personal where cod_estadoreferencial=1 order by nombre";
@@ -137,10 +178,10 @@ if ($codigo > 0){
 
 
                     <div class="row">
-                        <label class="col-sm-2 col-form-label">Descripción</label>
+                        <label class="col-sm-2 col-form-label">Detalle</label>
                         <div class="col-sm-7">
                         <div class="form-group">
-                            <textarea class="form-control rounded-0" name="observaciones" id="observaciones" rows="3" onkeyup="javascript:this.value=this.value.toUpperCase();"><?=$observaciones;?></textarea>
+                            <input class="form-control rounded-0" name="observaciones" id="observaciones" rows="3" required onkeyup="javascript:this.value=this.value.toUpperCase();" value="<?=$observaciones;?>"/>
 
                             <!-- <input class="form-control" type="text" name="observaciones" id="observaciones" required="true" value="<?=$observaciones;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/> -->
                         </div>

@@ -71,7 +71,7 @@ while ($rowDetalle = $stmt->fetch(PDO::FETCH_BOUND)) {
 	$_SESSION['globalPerfil']=$perfil;
 
 
-	if($codigo==90 || $codigo==89 || $codigo==227){
+	if($codigo==90 || $codigo==89 || $codigo==227 || $codigo==195){
 		$_SESSION['globalAdmin']=1;			
 	}else{
 		$_SESSION['globalAdmin']=0;	

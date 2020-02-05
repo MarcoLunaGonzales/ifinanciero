@@ -282,12 +282,29 @@
     });
     } );
   </script>
+
+
   <script type="text/javascript">
     $(document).ready(function() {
         $('#tablePaginator50').DataTable( {
             "pageLength": 50,
             "language": {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            }
+        } );
+    } );
+  </script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+        $('#tablePaginator50_2').DataTable( {
+            "pageLength": 50,
+
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            fixedHeader: {
+              header: true,
+              footer: true
             }
         } );
     } );
