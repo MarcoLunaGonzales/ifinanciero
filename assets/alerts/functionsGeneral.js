@@ -936,6 +936,7 @@ function mostrarPreciosPlantilla(){
         }
     });
 }
+
  function listarDet(id){
   var div=$('<div>').addClass('table-responsive');
   var table = $('<table>').addClass('table table-condensed');
@@ -943,8 +944,13 @@ function mostrarPreciosPlantilla(){
      titulos.append($('<td>').addClass('').text('#'));
      titulos.append($('<td>').addClass('').text('PARTIDA'));
      titulos.append($('<td>').addClass('').text('TIPO'));
-     titulos.append($('<td>').addClass('').text('M x MES'));
-     titulos.append($('<td>').addClass('').text('M x MODULO'));
+     if($("#codValor").length){
+       titulos.append($('<td>').addClass('').text('M GLOBAL'));
+       titulos.append($('<td>').addClass('').text('M x AUDITORIA'));
+     }else{
+       titulos.append($('<td>').addClass('').text('M x MES'));
+       titulos.append($('<td>').addClass('').text('M x MODULO'));
+     }    
      titulos.append($('<td>').addClass('').text('M x PERSONA'));
      titulos.append($('<td>').addClass('').text('OPCION'));
      table.append(titulos);
@@ -1226,7 +1232,8 @@ function detectarCargaAjax(){
   var idp=str_cuenta[0];
   var unidad=$("#cod_unidad").val();
   var area=$("#cod_area").val();
-  var parametros={"idp":idp,"unidad":unidad,"area":area};
+  var valor=$("#codValor").val();
+  var parametros={"idp":idp,"unidad":unidad,"area":area,"valor":valor};
      $.ajax({
         type: "GET",
         dataType: 'html',
@@ -1264,7 +1271,9 @@ function detectarCargaAjax(){
         }
     });
  }
-
+function agregarPersonalPlantillaDetalle(plantilla){
+  
+}
 function listarDetallesPartidaCuenta(tipo){
    var codPartida=$("#cuenta_detalle").val().split('@'); 
    var partida = codPartida[0];
@@ -1783,6 +1792,31 @@ function guardarSimulacionCosto(){
   }
 }
 
+function guardarSimulacionServicio(){
+  var nombre=$("#nombre").val();
+  var dias=$("#dias_auditoria").val();
+  var utilidad=$("#utilidad_minima").val();
+  var plantilla_servicio=$("#plantilla_servicio").val();
+  if(dias==""||nombre==""||!(plantilla_servicio>0)){
+   Swal.fire('Informativo!','Debe llenar los campos!','warning'); 
+  }else{
+     var parametros={"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "simulaciones_servicios/ajaxRegistrarSimulacion.php",
+        data: parametros,
+        beforeSend: function () { 
+         Swal.fire("Informativo!", "Procesando datos! espere...", "warning");
+          
+        },
+        success:  function (resp) {
+         alerts.showSwal('success-message','simulaciones_servicios/registerSimulacion.php?cod='+resp);
+        }
+    });
+  }
+}
+
 function cargarPlantillaSimulacion(mes,ibnorca){
   var plantilla_costo=$("#plantilla_costo").val();
   var precio=$("#precio_venta").val();
@@ -2212,6 +2246,21 @@ function listarPreciosPlantillaSim(codigo,label,ibnorca){
   }
   ajax=nuevoAjax();
     ajax.open("GET",url+"?codigo="+codigo+"&ibnorca="+ibnorca,true);
+    ajax.onreadystatechange=function(){
+    if (ajax.readyState==4) {
+      var fi=$("#lista_precios");
+      fi.html(ajax.responseText);
+      fi.bootstrapMaterialDesign();
+       $('.selectpicker').selectpicker("refresh");
+    }
+   }
+    ajax.send(null);
+ }
+
+ function listarDatosPlantillaSim(codigo){
+  var url="simulaciones_servicios/listPreciosDias.php";
+  ajax=nuevoAjax();
+    ajax.open("GET",url+"?codigo="+codigo,true);
     ajax.onreadystatechange=function(){
     if (ajax.readyState==4) {
       var fi=$("#lista_precios");
@@ -3310,6 +3359,59 @@ function activarInputMontoGenerico(matriz){
   var respu= matriz.split('RRR');
   calcularTotalPartidaGenerico(respu[0],1);
 }
+function activarInputMontoGenericoServicio(matriz){
+  if(!($("#monto_mod"+matriz).is("[readonly]"))){
+    $("#monto_mod"+matriz).attr("readonly",true);
+    $("#monto_modal"+matriz).attr("readonly",true);
+  }else{
+    $("#monto_mod"+matriz).removeAttr("readonly");
+    $("#monto_modal"+matriz).removeAttr("readonly");
+  }
+  var respu= matriz.split('RRR');
+  calcularTotalPartidaGenericoServicio(respu[0],1);
+}
+function cambiarCantidadMontoGenericoServicio(matriz){
+  var respu= matriz.split('RRR');
+  calcularTotalPartidaGenericoServicio(respu[0],2);
+}
+function calcularTotalPartidaGenericoServicio(fila,valor){
+  var suma=0; var sumal=0;
+  var total= $("#numero_cuentas"+fila).val();
+  var monto_anterior=parseFloat($("#monto_designado"+fila).val());
+  for (var i=1;i<=(total-1);i++){
+    if(!($("#monto_mod"+fila+"RRR"+i).is("[readonly]"))){
+    if(valor==1){
+      suma+=parseFloat($("#monto_mod"+fila+"RRR"+i).val());
+      $("#monto_modal"+fila+"RRR"+i).val(redondeo(parseFloat($("#monto_mod"+fila+"RRR"+i).val())/parseInt($("#cantidad_personal"+fila+"RRR"+i).val())));
+    }else{
+      $("#monto_mod"+fila+"RRR"+i).val(redondeo(parseFloat($("#monto_modal"+fila+"RRR"+i).val())*parseInt($("#cantidad_personal"+fila+"RRR"+i).val())));
+     suma+=parseFloat($("#monto_mod"+fila+"RRR"+i).val());  
+    }
+     sumal+=parseFloat($("#monto_modal"+fila+"RRR"+i).val());
+    }
+   
+  }
+  const rest=Math.abs(suma-monto_anterior);
+  const porcent=(rest*100)/monto_anterior; 
+  var resultPorcent= Math.round(porcent*100)/100;  
+  var result=redondeo((suma*100)/100);
+  var resulta=redondeo((sumal*100)/100);
+  document.getElementById("monto_editable"+fila).value=result;
+  $("#total_tabladetalle"+fila).text(result);
+  $("#total_tabladetalleAl"+fila).text(redondeo(resulta)); 
+  if(result<monto_anterior){
+    $("#monto_editable"+fila).addClass("text-danger");
+    $("#monto_editable"+fila).removeClass("text-success");
+  }else{
+    if(result>monto_anterior){
+       $("#monto_editable"+fila).addClass("text-success");
+       $("#monto_editable"+fila).removeClass("text-danger");
+    }else{
+       $("#monto_editable"+fila).removeClass("text-success");
+       $("#monto_editable"+fila).removeClass("text-danger");
+    }
+  }
+}
 function calcularTotalPartidaGenerico(fila,valor){
   var suma=0;
   var total= $("#numero_cuentas"+fila).val();
@@ -3409,6 +3511,48 @@ function guardarCuentasSimulacionAjax(ib){
     }
     actualizarSimulacion();
 }
+function guardarCuentasSimulacionAjaxGenericoServicio(ib){
+  var supertotal=$("#numero_cuentaspartida").val();
+  for (var j = 1; j <=(supertotal-1); j++) {
+  var total= $("#numero_cuentas"+j).val();
+  var simulaciones=$("#cod_simulacion").val();
+  var plantilla =$("#cod_plantilla").val();
+  var partida =$("#codigo_partida_presupuestaria"+j).val();
+  
+    for (var i=1;i<=(total-1);i++){
+      var habilitado=1;
+      var codigo = $("#codigo"+j+"RRR"+i).val();
+      var monto = $("#monto_mod"+j+"RRR"+i).val();
+      var cantidad = $("#cantidad_personal"+j+"RRR"+i).val();
+      if($("#monto_mod"+j+"RRR"+i).is("[readonly]")){
+        habilitado=0;
+      }
+      var cuenta =$("#codigo_cuenta"+j+"RRR"+i).val();
+      var simulacion =$("#codigo_fila"+j+"RRR"+i).val();
+      var parametros = {"codigo":codigo,"monto":monto,"ibnorca":ib,"simulacion":simulacion,"simulaciones":simulaciones,"plantilla":plantilla,"partida":partida,"cuenta":cuenta,"habilitado":habilitado,"cantidad":cantidad};
+      $.ajax({
+        type:"GET",
+        data:parametros,
+        url:"ajaxSaveCuentas.php",
+        beforeSend: function () { 
+          $("#guardar_cuenta").text("espere.."); 
+          $("#guardar_cuenta").attr("disabled",true);
+          $("#mensaje_cuenta").html("");
+          iniciarCargaAjax();
+        },
+        success:function(resp){
+          $("#guardar_cuenta").text("Guardar");
+          $("#guardar_cuenta").removeAttr("disabled");
+          $("#mensaje_cuenta").html("<p class='text-success'>Se insertaron los datos correctamente! </p>");//<a class='btn btn-warning btn-sm' href='#' onclick='actualizarSimulacion();'>aplicar cambios a la simulación</a>
+        },complete : function(xhr, status) {
+        
+         }
+      });
+    }   
+  };
+    actualizarSimulacion();
+}
+
 function guardarCuentasSimulacionAjaxGenerico(ib){
   var supertotal=$("#numero_cuentaspartida").val();
   for (var j = 1; j <=(supertotal-1); j++) {
@@ -3520,6 +3664,51 @@ function guardarCuentasSimulacionGenerico(ib){
        }).then((result) => {
           if (result.value) {
                guardarCuentasSimulacionAjaxGenerico(ib);            
+            return(true);
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            return(false);
+          }
+        });
+    }
+   }else{
+    Swal.fire('Informativo!','Todos los campos son requeridos!','warning'); 
+   } 
+}
+function guardarCuentasSimulacionGenericoServicio(ib){
+  var conta=0; var contaRead=0;
+  var supertotal= $("#numero_cuentaspartida").val();
+  var cosSim=$("#cod_simulacion").val();
+  for (var j = 1; j <=(supertotal-1); j++) {
+  var total= $("#numero_cuentas"+j).val();
+  
+  if((total-1)!=0){
+    for (var i=1;i<=(total-1);i++){
+      if($("#monto_mod"+j+"RRR"+i).val()==""||$("#monto_modal"+j+"RRR"+i).val()==""){
+        conta++
+      }
+      if($("#monto_mod"+j+"RRR"+i).is("[readonly]")){
+        contaRead++
+      }
+    }    
+  }    
+  };
+  if(conta==0){
+    if(contaRead==0){
+      guardarCuentasSimulacionAjaxGenericoServicio(ib);
+    }else{
+        Swal.fire({
+         title: 'Advertencia!',
+         text: "Hay uno o más registros deshabilitados ¿Desea Continuar?",
+         type: 'warning',
+         showCancelButton: true,
+         confirmButtonClass: 'btn btn-info',
+         cancelButtonClass: 'btn btn-danger',
+         confirmButtonText: 'Si',
+         cancelButtonText: 'No',
+         buttonsStyling: false
+       }).then((result) => {
+          if (result.value) {
+               guardarCuentasSimulacionAjaxGenericoServicio(ib);            
             return(true);
           } else if (result.dismiss === Swal.DismissReason.cancel) {
             return(false);
@@ -4472,6 +4661,55 @@ function listDetallePlantilla(id){
     
   }
  }
+
+  function guardarAuditorPlantilla(){
+  var plantilla=$("#cod_plantilla").val();
+  var codigo=$("#personal_codigo").val();
+  var cantidad=$("#cantidad_auditor").val();
+  var monto=$("#monto_auditor").val();
+  if(codigo==""||cantidad==""||monto==""){
+       Swal.fire("Informativo!", "Debe llenar todos los campos", "warning");
+  }else{
+  var parametros={"plantilla":plantilla,"codigo":codigo,"cant":cantidad,"monto":monto};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxSavePersonal.php",
+        data: parametros,
+        beforeSend: function () { 
+          iniciarCargaAjax();
+        },
+        success:  function (resp) {
+           detectarCargaAjax();
+           if(resp.trim()=="1"){
+             Swal.fire("Encontrado!", "El personal ya se encuentra registrado.", "warning");
+           }else{
+            $("#personal_codigo").val("");
+            $("#cantidad_auditor").val("");
+            $("#monto_auditor").val("");
+            $('.selectpicker').selectpicker("refresh");
+            listarPersonalPlantilla();
+             Swal.fire("Correcto!", "Se agrego el registro exitosamente.", "success");
+             
+           }
+        }
+    });
+    
+  }
+ }
+function listarPersonalPlantilla(){
+   var plantilla=$("#cod_plantilla").val();
+   var parametros={"plantilla":plantilla};
+   $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxListPersonal.php",
+        data: parametros,
+        success:  function (resp) {
+         $("#tabla_personal").html(resp);
+        }
+    }); 
+}
 function listarServiciosPlantilla(){
    var plantilla=$("#cod_plantilla").val();
    var parametros={"plantilla":plantilla};
@@ -4501,11 +4739,33 @@ function removeServicioPlantilla(cod){
         }
     });
 }
-function cambiarDivPlantilla(div,div2){
+function removeAuditorPlantilla(cod){
+  var parametros={"cod":cod};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxDeletePersonal.php",
+        data: parametros,
+        beforeSend: function () { 
+          iniciarCargaAjax();
+        },
+        success:  function (resp) {
+           detectarCargaAjax();
+           listarPersonalPlantilla();
+        }
+    });
+}
+function cambiarDivPlantilla(div,div2,div3){
   if(!($("#"+div2).hasClass("d-none"))){
-    $("#"+div2).addClass("d-none");
+    $("#"+div2).addClass("d-none");  
+    $("#button_"+div2).removeClass("fondo-boton-active"); 
+  }
+  if(!($("#"+div3).hasClass("d-none"))){
+      $("#"+div3).addClass("d-none");
+      $("#button_"+div3).removeClass("fondo-boton-active");  
+    }
+  if(($("#"+div).hasClass("d-none"))){
     $("#"+div).removeClass("d-none");
-    $("#button_"+div2).removeClass("fondo-boton-active");
     $("#button_"+div).addClass("fondo-boton-active");
   }
 }

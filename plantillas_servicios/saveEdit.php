@@ -1,4 +1,5 @@
 <?php
+
 require_once '../layouts/bodylogin.php';
 require_once '../conexion.php';
 require_once '../functions.php';
@@ -8,6 +9,7 @@ require_once 'configModule.php';
 $dbh = new Conexion();
 
 $cantidadFilas=$_POST["cantidad_filas"];
+$detalles= json_decode($_POST['detalles']);
 session_start();
 
 $globalUser=$_SESSION["globalUser"];
@@ -18,44 +20,45 @@ $globalAdmin=$_SESSION["globalAdmin"];
 
 $fechaHoraActual=date("Y-m-d H:i:s");
 
-$codPlantillaCosto=$_POST["cod_plantilla"];
-
+$codPlantillaServicio=$_POST["cod_plantilla"];
 $nombrePlan=$_POST['nombre'];
 $abrevPlan=$_POST['abreviatura'];
-$dias=$_POST['dias_auditoria'];
+//$utilidadIbrnocaPlan=$_POST['utilidad_ibnorca'];
+//$utilidadFueraPlan=$_POST['utilidad_fuera'];
+$cantidadPersonal=$_POST['alumnos_ibnorca'];
+$utMinima=$_POST['utilidad_minima'];
 
-$sqlUpdate="UPDATE plantillas_servicios SET  nombre='$nombrePlan',abreviatura='$abrevPlan',dias_auditoria='$dias' where codigo=$codPlantillaCosto";
-
+$sqlUpdate="UPDATE plantillas_servicios SET  nombre='$nombrePlan',abreviatura='$abrevPlan',cantidad_personal='$cantidadPersonal',utilidad_minima='$utMinima' where codigo=$codPlantillaServicio";
+echo $sqlUpdate;
 $stmtUpdate = $dbh->prepare($sqlUpdate);
 $flagSuccess=$stmtUpdate->execute();
-
-$sqlDelete="DELETE FROM plantillas_servicios_detalle where cod_plantillatcp=$codPlantillaCosto";
-$stmtDelete = $dbh->prepare($sqlDelete);
-$stmtDelete->execute();
-
 //guardar las ediciones
 for ($i=1;$i<=$cantidadFilas;$i++){
+
 	$tipo_costo=$_POST["tipo_costo".$i];
 
-	//$partida=$_POST['codigo_partidadetalle'.$i];
-	//$cuenta=$_POST['codigo_cuentadetalle'.$i];
-	$partida=$_POST['partida_presupuestaria'.$i];
-	$cuenta=$_POST['cuenta_plantilladetalle'.$i];
-	$glosa=$_POST['detalle_plantilla'.$i];
-	$monto_unitario=$_POST['monto_detalleplantilla'.$i];
-	$cantidad=$_POST['cantidad_detalleplantilla'.$i];
-	$monto_total=$_POST['monto_total_detalleplantilla'.$i];
-	$unidad=$_POST['unidad_detalleplantilla'.$i];
-	if($tipo_costo==1){
-		$unidad="";
-	}
-	if($tipo_costo!=0 || $tipo_costo!=""){  
-	   $sqlInsert="INSERT INTO plantillas_servicios_detalle (cod_plantillatcp,cod_partidapresupuestaria,cod_cuenta,cod_tipo,glosa,monto_unitario,cantidad,monto_total,unidad,cod_estadoreferencial,habilitado)
-	   VALUES('$codPlantillaCosto','$partida','$cuenta','$tipo_costo','$glosa','$monto_unitario','$cantidad','$monto_total','$unidad',1,1)";
-       $stmtInsert = $dbh->prepare($sqlInsert);
-       $stmtInsert->execute();
+	if($tipo_costo!=0 || $tipo_costo!=""){
+	$nombreGrupo=$_POST["nombre_grupo".$i];
+	$abreviaturaGrupo=$_POST["abreviatura_grupo".$i];
+	$data[$i-1][0]=$tipo_costo;
+    $data[$i-1][1]=$_POST["nombre_grupo".$i]; 
+    $data[$i-1][2]=$_POST["abreviatura_grupo".$i]; 
+    //$dataInsert 	
 	}
 } 
+$cab[0]="cod_tiposervicio";
+$cab[1]="nombre";
+$cab[2]="abreviatura";
+
+//$codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
+$comDet=contarPlantillaServicio($codPlantillaServicio);
+$comDet->bindColumn('total', $contador);
+while ($row = $comDet->fetch(PDO::FETCH_BOUND)) {
+ $cont1=$contador;
+}
+
+$stmt1 = obtenerPlantillaServicio($codPlantillaServicio);
+editarPlantillaServicio($codPlantillaServicio,'cod_plantillaservicio',$cont1,$cantidadFilas,$stmt1,'plantillas_gruposervicio',$cab,$data,$detalles); 
 
 if($flagSuccess==true){
 	showAlertSuccessError(true,"../".$urlList);	

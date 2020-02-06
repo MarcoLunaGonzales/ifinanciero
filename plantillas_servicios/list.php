@@ -19,7 +19,7 @@ $stmt->bindColumn('cod_unidadorganizacional', $codUnidad);
 $stmt->bindColumn('cod_area', $codArea);
 $stmt->bindColumn('unidad', $unidad);
 $stmt->bindColumn('area', $area);
-$stmt->bindColumn('fecha_auditoria', $fechaAuditoria);
+$stmt->bindColumn('fecha_registro', $fechaAuditoria);
 $stmt->bindColumn('dias_auditoria', $diasAuditoria);
 $stmt->bindColumn('cod_estadoplantilla', $codEstado);
 $stmt->bindColumn('estado_plantilla', $estadoPlantilla);
@@ -46,8 +46,8 @@ $stmt->bindColumn('estado_plantilla', $estadoPlantilla);
                           <th>Abreviatura</th>
                           <th>Unidad</th>
                           <th>Area</th>
-                          <th>Fecha Auditor&iacute;a</th>
-                          <th>D&iacute;as Audiror&iacute;a</th>
+                          <th>Fecha Registro</th>
+                          <!--<th>D&iacute;as Audiror&iacute;a</th>-->
                           <th>Estado</th>
                           <th class="text-right">Actions</th>
                         </tr>
@@ -75,12 +75,12 @@ $stmt->bindColumn('estado_plantilla', $estadoPlantilla);
                           <td><?=$unidad;?></td>
                           <td><?=$area;?></td>
                           <td><?=strftime('%d/%m/%Y',strtotime($fechaAuditoria));?></td> 
-                          <td><?=$diasAuditoria;?></td>
+                          <!--<td><?=$diasAuditoria;?></td>-->
                            <td class="<?=$textEstado?>"><button class="btn <?=$btnEstilo?> btn-sm"><?=$estadoPlantilla;?></button></td>
                           <td class="td-actions text-right">
-                            <!--<a href='<?=$urlReporte;?>?cod=<?=$codigo;?>' rel="tooltip" class="btn btn-primary">
-                              <i class="material-icons" title="Registrar Cuentas">list</i>
-                            </a>-->
+                            <a href='<?=$urlReporte;?>?cod=<?=$codigo;?>' class="btn btn-primary">
+                              <i class="material-icons" title="Ver Reporte">list</i>
+                            </a>
                             <?php if($codEstado!=3){
                               ?>
                             

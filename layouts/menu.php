@@ -637,6 +637,12 @@ if($menuModulo==0){
                   </a>
                 </li>
                 <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listSimulacionesServicios">
+                    <span class="sidebar-mini"> SS </span>
+                    <span class="sidebar-normal"> Simulaciones de Servicios</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listSolicitudRecursos">
                     <span class="sidebar-mini"> SR </span>
                     <span class="sidebar-normal"> Solicitudes de Recursos</span>
