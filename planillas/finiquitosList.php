@@ -67,7 +67,9 @@ $dbh = new Conexion();
                         <?php
                           if($globalAdmin==1){
                         ?>
-                          
+                          <a href='<?=$urlprintFiniquitosOficial;?>?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="btn btn-danger">
+                            <i class="material-icons" title="Imprimir Oficial">print</i>
+                          </a>
                           <a href='<?=$urlprintFiniquitos;?>?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="<?=$buttonEdit;?>">
                             <i class="material-icons" title="Imprimir">print</i>
                           </a>

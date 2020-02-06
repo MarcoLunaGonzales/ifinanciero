@@ -9,11 +9,13 @@ $cod_cajachica=$codigo;
 $cod_tcc=$cod_tcc;
 $dbh = new Conexion();
 //sacamos monto de caja chica
-$stmtMCC = $dbh->prepare("SELECT monto_inicio,monto_reembolso from caja_chica where  codigo =$cod_cajachica");
+$stmtMCC = $dbh->prepare("SELECT monto_inicio,monto_reembolso,fecha,numero from caja_chica where  codigo =$cod_cajachica");
 $stmtMCC->execute();
 $resultMCC=$stmtMCC->fetch();
 $monto_cajachica=$resultMCC['monto_inicio'];
 $monto_reembolso=$resultMCC['monto_reembolso'];
+$fecha_cc=$resultMCC['fecha'];
+$numero_cc=$resultMCC['numero'];
 //monto de rendiciones
 
 
@@ -60,16 +62,28 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                   <h4 class="card-title" align="center"><?=$nombre_caja_chica?></h4>
                   
                   <div class="row">
-                      <label class="col-sm-2 col-form-label text-right"><b>Monto Inicial</b></label>
-                      <div class="col-sm-3">
+                      <label class="col-sm-1 col-form-label text-right"><b>Monto Inicial</b></label>
+                      <div class="col-sm-2">
                           <div class="form-group">
-                              <input style="background-color:#ffffff;border: 2px solid #7f0000;" class="form-control" readonly="readonly" value="<?=$monto_cajachica?>" />
+                              <input style="background-color:#ffffff;" class="form-control" readonly="readonly" value="<?=number_format($monto_cajachica, 2, '.', ',')?>" />
                           </div>
                       </div>
-                      <label class="col-sm-2 col-form-label text-right"><b>Saldo</b></label>
-                      <div class="col-sm-3">
+                      <label class="col-sm-1 col-form-label text-right"><b>Saldo</b></label>
+                      <div class="col-sm-2">
                       <div class="form-group">
-                          <input style="background-color:#ffffff;border: 2px solid #005662;" class="form-control" name="numero" id="numero" value="<?=$monto_reembolso?>"  readonly="readonly"/>
+                          <input style="background-color:#ffffff;" class="form-control" name="numero" id="numero" value="<?=number_format($monto_reembolso, 2, '.', ',')?>"  readonly="readonly"/>
+                      </div>
+                      </div>
+                      <label class="col-sm-1 col-form-label text-right"><b>Fecha</b></label>
+                      <div class="col-sm-2">
+                      <div class="form-group">
+                          <input style="background-color:#ffffff;" class="form-control" name="numero" id="numero" value="<?=$fecha_cc?>"  readonly="readonly"/>
+                      </div>
+                      </div>
+                      <label class="col-sm-1 col-form-label text-right"><b>Número</b></label>
+                      <div class="col-sm-2">
+                      <div class="form-group">
+                          <input style="background-color:#ffffff;" class="form-control" name="numero" id="numero" value="<?=$numero_cc?>"  readonly="readonly"/>
                       </div>
                       </div>
                   </div> <!--fin campo fecha numero-->
@@ -77,7 +91,7 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
-                    <table class="table" id="tablePaginator">
+                    <table class="table" id="tablePaginator50_2">
 
                       <thead>
                         <tr>
@@ -89,8 +103,8 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                           <th>Entregado a</th>
                           <th>Monto</th>                          
                           <th>Monto Rendición</th> 
-                          <th>Monto Devuelto</th>
-                          <th>Descripción</th>
+                          <th>Monto Devolución</th>
+                          <th>Detalle</th>
                           <th>Estado</th>
                           <th></th>
                         </tr>
@@ -112,9 +126,10 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                               <td><?=$cod_tipodoccajachica;?></td>        
                               <td><?=$nro_documento;?></td>        
                               <td><?=$cod_personal;?></td>        
-                              <td><?=$monto;?></td>        
-                              <td><?=$monto_rendicion;?></td>        
-                              <td><?=$monto_devuelto;?></td>
+                              
+                              <td><?=number_format($monto, 2, '.', ',');?></td>        
+                              <td><?=number_format($monto_rendicion, 2, '.', ',');?></td>        
+                              <td><?=number_format($monto_devuelto, 2, '.', ',');?></td>
                               <td><?=$observaciones;?></td>
                               <td><?=$label.$nombre_estado."</span>";?></td>
 

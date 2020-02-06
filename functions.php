@@ -3003,6 +3003,32 @@ function descargarPDF1($nom,$html){
   $mydompdf->stream($nom.".pdf", array("Attachment" => false));
 }
 
+function descargarPDFFiniquito($nom,$html){
+  //aumentamos la memoria  
+  ini_set("memory_limit", "128M");
+  // Cargamos DOMPDF
+  require_once 'assets/libraries/dompdf/dompdf_config.inc.php';
+  $mydompdf = new DOMPDF();
+  ob_clean();
+  $mydompdf->load_html($html);
+  $mydompdf->render();
+  $canvas = $mydompdf->get_canvas();
+       /* if ( isset($canvas) ) {
+          $numero="{PAGE_NUM}";$numeroF="{PAGE_COUNT}"; 
+          if ((int)$numero==(int)$numeroF) {
+            $font = Font_Metrics::get_font("helvetica", "normal");
+                $size = 9;
+                $y = 50;
+                $x = 100;
+                $canvas->page_text($x, $y, "pie de pagina en la ultima hoja".$numero.$numeroF, $font, $size);
+            }
+        }*/
+  $canvas->page_text(500, 25, "", Font_Metrics::get_font("sans-serif"), 10, array(0,0,0)); 
+  $mydompdf->set_base_path('assets/libraries/plantillaPDF.css');
+  $mydompdf->stream($nom.".pdf", array("Attachment" => false));
+}
+
+
 function obtenerSueldoMinimo(){
   $dbh = new Conexion();
   $stmt = $dbh->prepare("SELECT * from configuraciones_planillas where id_configuracion=1");

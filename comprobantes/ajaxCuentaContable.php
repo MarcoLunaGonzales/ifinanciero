@@ -11,15 +11,11 @@ $stmtX->execute();
 
 
 $globalAdmin=$_SESSION["globalAdmin"];
-$globalGestion=$_SESSION["globalGestion"];
-$globalUnidad=$_SESSION["globalUnidad"];
-$globalArea=$_SESSION["globalArea"];
+
 
 $idFila=$_GET['idFila'];
 $glosaDet="";
-if(isset($_GET['glosa'])){
-	$glosaDet=$_GET['glosa'];
-}
+
 
 ?>
 <div id="comp_row" class="col-md-12">

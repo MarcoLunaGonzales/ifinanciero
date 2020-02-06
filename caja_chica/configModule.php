@@ -24,6 +24,9 @@
 	//rendiciones
 	$urlListaRendiciones="?opcion=ListaRendiciones";
 
+
+	$urlListaRendiciones2="index.php?opcion=ListaRendiciones";
+
 	$urlListaRendicionesDetalle="?opcion=ListaRendicionesDetalle";
 
 

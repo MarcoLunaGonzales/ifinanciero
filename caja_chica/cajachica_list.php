@@ -59,7 +59,7 @@ $stmt->bindColumn('nombre_estado', $nombre_estado);
                           <th>Responsable</th>
                           <th>Monto Inicio</th>
                           <th>Reembolso</th>
-                          <th>Observaciones</th>
+                          <th>Detalle</th>
                           <th>estado</th>
                           <th></th>
                         </tr>
@@ -78,8 +78,8 @@ $stmt->bindColumn('nombre_estado', $nombre_estado);
                               <td><?=$fecha;?></td>
                               <td><?=$numero;?></td>        
                               <td><?=$personal;?></td>        
-                              <td><?=$monto_inicio;?></td>        
-                              <td><?=$monto_reembolso;?></td>        
+                              <td><?=number_format($monto_inicio, 2, '.', ',');?></td>        
+                              <td><?=number_format($monto_reembolso, 2, '.', ',');?></td>        
                               <td><?=$observaciones;?></td>        
                               <td><?=$label.$nombre_estado."</span>";?></td>
 
@@ -92,7 +92,7 @@ $stmt->bindColumn('nombre_estado', $nombre_estado);
                                   <i class="material-icons" title="Cerrar Caja Chica">assignment_returned</i>
                                 </a>
                                 <a href='<?=$urlListDetalleCajaChica;?>&codigo=<?=$cod_cajachica;?>&cod_tcc=<?=$codigo_tipo_caja_Chica?>' rel="tooltip" class="btn btn-warning">
-                                  <i class="material-icons" title="Ver Detalle">playlist_add</i>
+                                  <i class="material-icons" title="Agregar Detalle">playlist_add</i>
                                 </a>
                                 <a href='<?=$urlFormCajaChica;?>&codigo=<?=$codigo;?>&cod_tcc=<?=$codigo_tipo_caja_Chica?>' rel="tooltip" class="<?=$buttonEdit;?>">
                                   <i class="material-icons" title="Editar"><?=$iconEdit;?></i>
