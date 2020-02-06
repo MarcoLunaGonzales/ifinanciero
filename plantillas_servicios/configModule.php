@@ -20,7 +20,7 @@ $urlDelete="index.php?opcion=deletePlantillaServicios";
 $urlSave="plantillas_servicios/save.php";
 $urlSaveEdit="comprobantes/saveEdit.php";
 $urlSaveDelete="";
-
+$urlClonar="index.php?opcion=clonarPlantillaServicio";
 $urlReporteDiario="reportes/reporteDiario.php";
 $urlReporteMayor="reportes/reporteMayor.php";
 ?>

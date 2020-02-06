@@ -21,24 +21,28 @@ $sqlUpdateDetalle="UPDATE simulaciones_detalle SET  monto_unitario='$monto',mont
 $stmtUpdateDetalle = $dbh->prepare($sqlUpdateDetalle);
 $stmtUpdateDetalle->execute();
 
+$montoTotal=0;
 $detallesMontos=obtenerMontosCuentasDetalleSimulacionCostosPartidaHabilitado($simulaciones,$partida);
 while ($row = $detallesMontos->fetch(PDO::FETCH_ASSOC)) {
 	if($row['cod_cuenta']==$cuenta){
     if($row['habilitado']==0){
-      $montoTotal=0;
+      //$montoTotal=0;
+      $montoTotal+=0;
     }else{
-		$montoTotal=$row['monto'];    
+		//$montoTotal=$row['monto'];
+      $montoTotal+=$row['monto'];    
     }
-    $dbh2 = new Conexion();
+    //el dbh2
+	}
+}
+$dbh2 = new Conexion();
       if($ibnorca==1){
-       $sqlUpdate="UPDATE cuentas_simulacion SET  monto_local='$montoTotal' where codigo=$simulacion and cod_plancuenta=$cuenta";	
+       $sqlUpdate="UPDATE cuentas_simulacion SET  monto_local='$montoTotal' where codigo=$simulacion and cod_plancuenta=$cuenta"; 
       }else{
        $sqlUpdate="UPDATE cuentas_simulacion SET  monto_externo='$montoTotal' where codigo=$simulacion and cod_plancuenta=$cuenta";
       }
       $stmtUpdate = $dbh2->prepare($sqlUpdate);
       $flagSuccess=$stmtUpdate->execute();
-	}
-}
 /*
 if($ibnorca==1){
   $sqlUpdate="UPDATE cuentas_simulacion SET  monto_local='$monto' where codigo=$codigo";	

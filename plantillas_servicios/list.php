@@ -82,6 +82,7 @@ $stmt->bindColumn('estado_plantilla', $estadoPlantilla);
                               <i class="material-icons" title="Ver Reporte">list</i>
                             </a>
                             <?php if($codEstado!=3){
+                              if($globalAdmin==1){
                               ?>
                             
                             <a href='<?=$urlRegister;?>?cod=<?=$codigo;?>' rel="tooltip" class="<?=$buttonEdit;?>">
@@ -90,7 +91,11 @@ $stmt->bindColumn('estado_plantilla', $estadoPlantilla);
                             <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')">
                               <i class="material-icons"><?=$iconDelete;?></i>
                             </button>
+                            <button title="Duplicar Registro" class="btn btn-primary" onclick="alerts.showSwal('warning-message-and-confirmation-clonar','<?=$urlClonar;?>&codigo=<?=$codigo;?>')">
+                              <i class="material-icons"><?=$iconCopy?></i>
+                            </button>
                             <?php
+                              }
                             }?>
                           </td>
                         </tr>

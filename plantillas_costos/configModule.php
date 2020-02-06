@@ -20,7 +20,7 @@ $urlDelete="index.php?opcion=deletePlantillaCosto";
 $urlSave="comprobantes/save.php";
 $urlSaveEdit="comprobantes/saveEdit.php";
 $urlSaveDelete="";
-
+$urlClonar="index.php?opcion=clonarPlantillaCosto";
 $urlReporteDiario="reportes/reporteDiario.php";
 $urlReporteMayor="reportes/reporteMayor.php";
 ?>

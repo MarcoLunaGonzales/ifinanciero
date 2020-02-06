@@ -45,25 +45,24 @@ $stmtDetalles->execute();
 $sqlCuentas="SELECT * FROM cuentas_simulacion where cod_simulacioncostos=$codSimulacion";
 $stmtCuentas = $dbhC->prepare($sqlCuentas);
 $stmtCuentas->execute();
- 
  while ($rowCuentas = $stmtCuentas->fetch(PDO::FETCH_ASSOC)) {
     $simulacion=$rowCuentas['codigo'];  
+    $montoTotal=0;
    $detallesMontos=obtenerMontosCuentasDetalleSimulacionCostosPartidaHabilitado($codSimulacion,$partida);
 while ($row = $detallesMontos->fetch(PDO::FETCH_ASSOC)) {
 	if($row['cod_cuenta']==$cuenta){
     if($row['habilitado']==0){
-      $montoTotal=0;
+      $montoTotal+=0;
     }else{
-		$montoTotal=$row['monto'];    
+		$montoTotal+=$row['monto'];    
     }
-    $dbh2 = new Conexion();
-    $sqlUpdate="UPDATE cuentas_simulacion SET  monto_local='$montoTotal' where codigo=$simulacion and cod_plancuenta=$cuenta";	
+  }
+ }
+  $dbh2 = new Conexion();
+    $sqlUpdate="UPDATE cuentas_simulacion SET  monto_local='$montoTotal' where codigo=$simulacion and cod_plancuenta=$cuenta";  
       $stmtUpdate = $dbh2->prepare($sqlUpdate);
       $stmtUpdate->execute();
-     }
  }
-}
-
 }
 
 
