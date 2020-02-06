@@ -175,39 +175,7 @@ if($menuModulo==0){
               </ul>
             </div>
           </li>
-          <!--TABLAS CAJA CHICA-->
-          <li class="nav-item ">
-            <a class="nav-link" data-toggle="collapse" href="#pagesExamplesCC">
-              <i class="material-icons">fullscreen</i>
-              <p> Tablas CAJA CHICA
-                <b class="caret"></b>
-              </p>
-            </a>
-            <div class="collapse" id="pagesExamplesCC">
-              <ul class="nav">              
-                <li class="nav-item ">
-                    <a class="nav-link" href="?opcion=ListaTipoCajaChica">
-                      <span class="sidebar-mini"> TCC </span>
-                      <span class="sidebar-normal"> Tipos Caja Chica </span>
-                    </a>
-                </li>
-                <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=principal_CajaChica">
-                    <span class="sidebar-mini"> CC </span>
-                    <span class="sidebar-normal"> Caja Chica </span>
-                  </a>
-                </li>
-                <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=ListaRendiciones">
-                    <span class="sidebar-mini"> MR </span>
-                    <span class="sidebar-normal"> Mis Rendiciones </span>
-                  </a>
-                </li>
-
-
-              </ul>
-            </div>
-          </li>
+         
 
 
 
@@ -489,6 +457,12 @@ if($menuModulo==0){
                     <span class="sidebar-normal"> Distribucion de Gastos</span>
                   </a>
                 </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=ListaTipoCajaChica">
+                      <span class="sidebar-mini"> TCC </span>
+                      <span class="sidebar-normal"> Tipos Caja Chica </span>
+                    </a>
+                </li>
               </ul>
             </div>
           </li>
@@ -515,6 +489,18 @@ if($menuModulo==0){
                     <span class="sidebar-normal"> Aprobaciones de comprobantes </span>
                   </a>
                 </li> 
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=principal_CajaChica">
+                    <span class="sidebar-mini"> CC </span>
+                    <span class="sidebar-normal"> Caja Chica </span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=ListaRendiciones">
+                    <span class="sidebar-mini"> MR </span>
+                    <span class="sidebar-normal"> Mis Rendiciones </span>
+                  </a>
+                </li>
 
               </ul>
             </div>
@@ -634,6 +620,12 @@ if($menuModulo==0){
                   <a class="nav-link" href="?opcion=listPlantillasServiciosAdmin">
                     <span class="sidebar-mini"> GPS </span>
                     <span class="sidebar-normal"> Gesti&oacute;n de Plantillas Servicios </span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listSimulacionesServicios">
+                    <span class="sidebar-mini"> SS </span>
+                    <span class="sidebar-normal"> Simulaciones de Servicios</span>
                   </a>
                 </li>
                 <li class="nav-item ">

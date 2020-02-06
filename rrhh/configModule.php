@@ -141,6 +141,8 @@ $urlSaveFiniquitos="?opcion=saveFiniquitos";
 $urlDeleteFiniquito="index.php?opcion=deleteFiniquito";
 $urlprintFiniquitos="planillas/finiquitosPrint.php";
 
+$urlprintFiniquitosOficial="planillas/finiquitosPrintOficial.php";
+
 //tipos_afps
 $nombreSingularTipos_afp="Tipo Afp";
 $nombrePluralTipos_afp="Tipos Afp";

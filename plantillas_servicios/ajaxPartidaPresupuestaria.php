@@ -2,6 +2,7 @@
 session_start();
 require_once '../conexion.php';
 require_once '../functionsGeneral.php';
+require_once '../functionsPOSIS.php';
 require_once '../functions.php';
 require_once '../styles.php';
 
@@ -17,18 +18,14 @@ $globalGestion=$_SESSION["globalGestion"];
 $globalUnidad=$_SESSION["globalUnidad"];
 $globalArea=$_SESSION["globalArea"];
 
-$codigo=$_GET['cod_partida'];
+$idp=$_GET['idp'];
+$unidad=$_GET['unidad'];
+$area=$_GET['area'];
+$valor=$_GET['valor'];
+$anio=date("Y");
+$anio_pasado=(int)$anio-1;
+ 
+$monto = calcularCostosPresupuestariosAuditoria($idp,$unidad,$area,$anio_pasado,$valor);
+echo trim($monto);
+?>
 
-                                $cuentasPartida=obtenerCuentaPlantillaCostos($codigo);
-                                ?>
-                                  <select class="selectpicker form-control" name="cuenta_plantilladetalle" id="cuenta_plantilladetalle" data-style="<?=$comboColor;?>" required>
-                                 
-                                    <?php 
-                                     while ($rowCuenta = $cuentasPartida->fetch(PDO::FETCH_ASSOC)) {
-                                      $codigoCuentaX=$rowCuenta['cod_cuenta'];
-                                      $nombreCuentaX=trim($rowCuenta['nombre']);
-                                      ?><option value="<?=$codigoCuentaX?>"><?=$nombreCuentaX?></option><?php
-                                     }
-                                    ?>
-                                  </select>
-                             

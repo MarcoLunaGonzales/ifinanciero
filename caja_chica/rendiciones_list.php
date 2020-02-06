@@ -10,7 +10,7 @@ $globalUser=$_SESSION["globalUser"];
 $dbh = new Conexion();
 
 $stmt = $dbh->prepare("SELECT *,
-  (select t.nombre from tipos_doc_cajachica t where t.codigo=cod_tipodoc) as tipo_documento,
+  (select t.nombre from tipos_documentocajachica t where t.codigo=cod_tipodoc) as tipo_documento,
   (select e.nombre from estados_rendiciones e where e.codigo=cod_estado) as nombre_estado
 from rendiciones 
 where cod_estadoreferencial=1 and cod_personal=$globalUser");
@@ -41,17 +41,17 @@ $stmt->bindColumn('nombre_estado', $nombre_estado);
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
-                    <table class="table" id="tablePaginator">
+                    <table class="table" id="tablePaginator50_2">
 
                       <thead>
                         <tr>
                           <th>#</th>                        
-                          <th>F de rendición</th>
-                          <th>Tipo</th>
+                          <th>Fecha</th>
+                          <th>Tipo doc.</th>
                           <th>Monto a Rendir</th>
                           <th>Monto Rendición</th>
-                          <th>Monto devuelto</th>
-                          <th>Descripción</th>
+                          <th>Monto devolución</th>
+                          <th>Detalle</th>
                           <th>Estado</th>
                           <th></th>
                         </tr>
@@ -75,9 +75,9 @@ $stmt->bindColumn('nombre_estado', $nombre_estado);
                             <td><?=$index;?></td>                            
                               <td><?=$fecha;?></td>
                               <td><?=$tipo_documento;?></td>
-                              <td><?=$monto_a_rendir;?></td>        
-                              <td><?=$monto_rendicion;?></td>
-                              <td><?=$monto_devuelto;?></td>        
+                              <td><?=number_format($monto_a_rendir, 2, '.', ',');?></td>        
+                              <td><?=number_format($monto_rendicion, 2, '.', ',');?></td>
+                              <td><?=number_format($monto_devuelto, 2, '.', ',');?></td>        
                               <td><?=$observaciones;?></td>        
                               <td><?=$label.$nombre_estado."</span>";?></td>
                               
@@ -86,7 +86,7 @@ $stmt->bindColumn('nombre_estado', $nombre_estado);
                                 if($cod_estado==1){
                               ?>
                                 <a href='<?=$urlListaRendicionesDetalle;?>&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonEdit;?>">
-                                  <i class="material-icons" title="Rendición Detalle">add</i>
+                                  <i class="material-icons" title="Agregar Rendición">add</i>
                                 </a>
                                 <?php
                                   }

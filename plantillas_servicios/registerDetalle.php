@@ -139,14 +139,19 @@ if(isset($_GET['cod'])){
              <div class="col-sm-12">
 			  <div class="card">
 				<div class="card-header <?=$colorCard;?> card-header-text">
-					<a href="#" onclick="cambiarDivPlantilla('fiel','list_servicios')">
+					<a href="#" onclick="cambiarDivPlantilla('fiel','list_servicios','list_personal')">
 					<div id="button_fiel" class="card-text fondo-boton fondo-boton-active">
 					  <h4 class="font-weight-bold">Detalles</h4>
 					</div>
 				    </a>
-					<a href="#" onclick="cambiarDivPlantilla('list_servicios','fiel')">
+					<a href="#" onclick="cambiarDivPlantilla('list_servicios','fiel','list_personal')">
 					 <div id="button_list_servicios" class="card-text fondo-boton">
 					    <h4 class="font-weight-bold">Servicios</h4>
+					</div>
+				    </a>
+				    <a href="#" onclick="cambiarDivPlantilla('list_personal','list_servicios','fiel')">
+					 <div id="button_list_personal" class="card-text fondo-boton">
+					    <h4 class="font-weight-bold">Personal</h4>
 					</div>
 				    </a>
 				</div>
@@ -419,7 +424,8 @@ if(isset($_GET['cod'])){
       	                  </div>   
 		            	</center>
 		            </fieldset>
-
+                    <fieldset id="list_personal" class="d-none col-sm-12">
+                    </fieldset>
 				  	<div class="card-footer fixed-bottom">
 						<button type="submit" class="<?=$buttonMorado;?> fondo-boton fondo-boton-active">Guardar</button>
 						<a href="../<?=$urlList;?>" class="<?=$buttonCancel;?> fondo-boton">Volver</a>

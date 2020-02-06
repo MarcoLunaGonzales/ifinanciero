@@ -106,7 +106,7 @@ try {
     $deducciones_total=-($suma_vacaciones*$porcentaje_deducciones_por_vacaciones/100);
     //total
     $total_a_pagar=$desahucio_3_meses+$suma_indemnizacion+$suma_aguinaldo+$suma_vacaciones+$desahucio_monto+$suma_otros+$deducciones_total;
-    $observaciones="OBS. Fecha de ingreso ".$ing_contr_x.", se pagó Quinquenio por los primeros ".$anios_trabajados_pagados." años trabajados.";
+    $observaciones="OBS. Fecha de ingreso ".$ing_contr_x.", se pagó indemnización por los primeros ".$anios_trabajados_pagados." años trabajados.";
     // echo "vacaciones_duodecimas_monto:".$vacaciones_duodecimas_monto."<br>";
     // echo "suma_aguinaldo:".$suma_aguinaldo."<br>";
     // echo "suma_vacaciones:".$suma_vacaciones."<br>";

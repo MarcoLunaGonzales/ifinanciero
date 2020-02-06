@@ -19,7 +19,7 @@ $stmt->bindColumn('cod_unidadorganizacional', $codUnidad);
 $stmt->bindColumn('cod_area', $codArea);
 $stmt->bindColumn('unidad', $unidad);
 $stmt->bindColumn('area', $area);
-$stmt->bindColumn('fecha_auditoria', $fechaAuditoria);
+$stmt->bindColumn('fecha_registro', $fechaAuditoria);
 $stmt->bindColumn('dias_auditoria', $diasAuditoria);
 $stmt->bindColumn('cod_estadoplantilla', $codEstado);
 $stmt->bindColumn('estado_plantilla', $estadoPlantilla);
@@ -46,8 +46,8 @@ $stmt->bindColumn('estado_plantilla', $estadoPlantilla);
                           <th>Abreviatura</th>
                           <th>Unidad</th>
                           <th>Area</th>
-                          <th>Fecha Auditor&iacute;a</th>
-                          <th>D&iacute;as Audiror&iacute;a</th>
+                          <th>Fecha Registro</th>
+                          <!--<th>D&iacute;as Audiror&iacute;a</th>-->
                           <th class="text-right">Actions</th>
                         </tr>
                       </thead>
@@ -74,7 +74,7 @@ $stmt->bindColumn('estado_plantilla', $estadoPlantilla);
                           <td><?=$unidad;?></td>
                           <td><?=$area;?></td>
                           <td><?=strftime('%d/%m/%Y',strtotime($fechaAuditoria));?></td> 
-                          <td><?=$diasAuditoria;?></td>
+                          <!--<td><?=$diasAuditoria;?></td>-->
                           <td class="td-actions text-right">
                             <div class="btn-group dropdown">
                               <button type="button" class="btn <?=$btnEstado?> dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

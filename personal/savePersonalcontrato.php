@@ -141,7 +141,7 @@ if($nombre_tipo_contrato=="CONTRATO INDEFINIDO"){
 }
 	// Prepare
 if($cod_estadoreferencial==1){//insertar
-
+	//verificamos que no exita un contrato abierto
 	$sqlControlador="SELECT codigo,cod_estadocontrato from personal_contratos where cod_personal=$cod_personal ORDER BY codigo desc";
 	$stmtControlador = $dbhU->prepare($sqlControlador);
 	$stmtControlador->execute();

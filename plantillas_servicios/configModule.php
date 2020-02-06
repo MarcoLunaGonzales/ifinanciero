@@ -8,8 +8,9 @@ $moduleNamePlural="Plantillas de Servicios";
 $urlList="index.php?opcion=listPlantillasServicios";
 $urlList2="index.php?opcion=listPlantillasServiciosAdmin";
 
-$urlReporte="plantillas_costos/reportePlanCosto.php";
-$urlRegister="plantillas_servicios/registerDetalle.php";
+$urlReporte="plantillas_servicios/reportePlanCosto.php";
+//$urlRegister="plantillas_servicios/registerDetalle.php";
+$urlRegister="plantillas_servicios/registerGrupos.php";
 //$urlRegister2="plantillas_costos/register.php";
 $urlRegister2="index.php?opcion=registerPlantillaServicio";
 $urlEdit2="plantillas_servicios/edit.php";

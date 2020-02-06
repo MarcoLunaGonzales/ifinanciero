@@ -29,6 +29,9 @@ footer { position: fixed; bottom: -40px; left: 0px; right: 0px; height: 50px; }
 #header_titulo_texto_inf{text-align: center; font-size: 11px;padding-top: 20px;}
 #header_titulo_texto_inf_2{text-align: left; font-size: 11px;padding-left:80px;}
 
+#header_titulo_texto_inf_der{text-align: right; font-size: 11px;padding-left:80px;}
+
+
 
 #info_izq{
   

@@ -260,9 +260,9 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
 					*/
 					?>
 					<fieldset id="fiel" style="width:100%;border:0;">
-							<button title="Agregar (alt+a)" type="button" id="add_boton" name="add" class="btn btn-warning btn-round btn-fab" onClick="addCuentaContable(this)">
-                      		  <i class="material-icons">add</i>
-		                    </button>
+						<button title="Agregar (alt+a)" type="button" id="add_boton" name="add" class="btn btn-warning btn-round btn-fab" onClick="addCuentaContable(this)">
+                  		  <i class="material-icons">add</i>
+	                    </button>
 
 		                <div class="col-sm-1 float-right">
 							<a title="Copiar Unidad - Area (shift+u)" href="#modalCopySel" data-toggle="modal" data-target="#modalCopySel" class="<?=$buttonDelete?> btn-fab">

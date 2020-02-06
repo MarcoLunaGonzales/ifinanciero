@@ -48,6 +48,8 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
             $stmt1->bindColumn('venta_externo', $precioExternoX);
             $stmt1->bindColumn('cod_precioplantilla', $codPrecioPlan);
             $stmt1->bindColumn('ibnorca', $ibnorcaC);
+            $stmt1->bindColumn('cantidad_alumnoslocal', $alumnosX);
+            $stmt1->bindColumn('utilidad_minimalocal', $utilidadIbnorcaX);
 
       while ($row1 = $stmt1->fetch(PDO::FETCH_BOUND)) {
          //plantilla datos      
@@ -57,12 +59,12 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
             $stmt->bindColumn('nombre', $nombreX);
             $stmt->bindColumn('abreviatura', $abreviaturaX);
             $stmt->bindColumn('cod_unidadorganizacional', $codUnidadX);        
-            $stmt->bindColumn('cantidad_alumnoslocal', $alumnosX);
+            //$stmt->bindColumn('cantidad_alumnoslocal', $alumnosX);
             $stmt->bindColumn('cantidad_alumnosexterno', $alumnosExternoX);
             $stmt->bindColumn('cod_area', $codAreaX);
             $stmt->bindColumn('area', $areaX);
             $stmt->bindColumn('unidad', $unidadX);
-            $stmt->bindColumn('utilidad_minimalocal', $utilidadIbnorcaX);
+            //$stmt->bindColumn('utilidad_minimalocal', $utilidadIbnorcaX);
             $stmt->bindColumn('utilidad_minimaexterno', $utilidadFueraX);
            
            $nombreSimulacion=$nombreX;

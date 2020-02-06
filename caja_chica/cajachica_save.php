@@ -30,7 +30,7 @@ try {
     if ($codigo == 0){//insertamos
         
         $cod_estado=1;
-        //verificamos si todos sus contratos estan fina,izados
+        //verificamos si todos sus contratos estan finalizados
         $sqlControlador="SELECT cod_estado from caja_chica where cod_tipocajachica=$cod_tipocajachica ORDER BY codigo desc";
         $stmtControlador = $dbh->prepare($sqlControlador);
         $stmtControlador->execute();

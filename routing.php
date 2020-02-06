@@ -139,10 +139,21 @@
 		}
 		if ($_GET['opcion']=='deletePlantillaServicios') {
 			require_once('plantillas_servicios/saveDelete.php');
-		}if ($_GET['opcion']=='listPlantillasServiciosAdmin') {
+		}
+		if ($_GET['opcion']=='listPlantillasServiciosAdmin') {
 			require_once('plantillas_servicios/listAdmin.php');
 		}
         
+        //SIMULACIONES PLANTILLA SERVICIO
+        if ($_GET['opcion']=='listSimulacionesServicios') {
+			require_once('simulaciones_servicios/list.php');
+		}
+        if ($_GET['opcion']=='registerSimulacionServicio') {
+			require_once('simulaciones_servicios/registerSimulaciones.php');
+		}
+		if ($_GET['opcion']=='listSimulacionesServ') {
+			require_once('simulaciones_servicios/list.php');
+		}
          
         //MES EN CURSO
         if ($_GET['opcion']=='mesCurso') {

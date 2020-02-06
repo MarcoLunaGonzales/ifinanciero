@@ -285,9 +285,30 @@ function obtenerCodigoPlantillaGrupo(){
    }
    return($codigoPlantillaGrupo);
 }
+function obtenerCodigoPlantillaGrupoServicio(){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT IFNULL(max(c.codigo)+1,1)as codigo from plantillas_gruposervicio c");
+   $stmt->execute();
+   $codigoPlantillaGrupo=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $codigoPlantillaGrupo=$row['codigo'];
+   }
+   return($codigoPlantillaGrupo);
+}
 function obtenerCodigoPlantillaGrupoDetalle(){
    $dbh = new Conexion();
    $stmt = $dbh->prepare("SELECT IFNULL(max(c.codigo)+1,1)as codigo from plantillas_grupocostodetalle c");
+   $stmt->execute();
+   $codigoPlantillaGrupo=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $codigoPlantillaGrupo=$row['codigo'];
+   }
+   return($codigoPlantillaGrupo);
+}
+
+function obtenerCodigoPlantillaGrupoDetalleServicio(){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT IFNULL(max(c.codigo)+1,1)as codigo from plantillas_gruposerviciodetalle c");
    $stmt->execute();
    $codigoPlantillaGrupo=0;
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -644,6 +665,17 @@ function obtenerPlantillaCosto($codigo){
    //$stmt->bindColumn('cod_comprobante', $codigoC);
    return $stmt;
 }
+//funcion nueva obtener detalle de servicio plantilla
+function obtenerPlantillaServicio($codigo){
+   $dbh = new Conexion();
+   $sql="";
+   $sql="SELECT  * from plantillas_gruposervicio where cod_plantillaservicio=$codigo order by codigo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   // bindColumn
+   //$stmt->bindColumn('cod_comprobante', $codigoC);
+   return $stmt;
+}
 function obtenerPlantillaCostoAlumnos($codigo){
   $dbh = new Conexion();
    $valor=0;
@@ -652,6 +684,17 @@ function obtenerPlantillaCostoAlumnos($codigo){
    $stmt->execute();
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       $valor=$row['cantidad_alumnoslocal'];
+  }
+  return $valor;
+}
+function obtenerPlantillaCostoUtilidad($codigo){
+  $dbh = new Conexion();
+   $valor=0;
+   $sql="SELECT utilidad_minimalocal from plantillas_costo where codigo=$codigo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['utilidad_minimalocal'];
   }
   return $valor;
 }
@@ -725,6 +768,15 @@ function obtenerComprobante($codigo){
    $stmt->execute();
    return $stmt;
   }
+   //funcion contar plantillaServicio
+ function contarPlantillaServicio($codigo){
+   $dbh = new Conexion();
+   $sql="";
+   $sql="select count(*) as total from plantillas_gruposervicio where cod_plantillaservicio=$codigo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+  }
     //funcion nueva obtener factura de comprobantesdetalle
 function obtenerFacturasCompro($codigo){
    $dbh = new Conexion();
@@ -747,6 +799,14 @@ function obtenerPlantillasDetalle($codigo){
    $dbh = new Conexion();
    $sql="";
    $sql="SELECT * from plantillas_grupocostodetalle  where cod_plantillagrupocosto=$codigo order by codigo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+}
+function obtenerPlantillasDetalleServicio($codigo){
+   $dbh = new Conexion();
+   $sql="";
+   $sql="SELECT * from plantillas_gruposerviciodetalle  where cod_plantillagruposervicio=$codigo order by codigo";
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
    return $stmt;
@@ -781,6 +841,18 @@ function obtenerPlantillasDetalle($codigo){
    $dbh = new Conexion();
    $sql="";
    $sql="select count(*) as total from plantillas_grupocostodetalle where cod_plantillagrupocosto=$codigo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   $stmt->bindColumn('total', $contador);
+   while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+    $cont1=$contador;
+   }
+   return $cont1;
+  } 
+  function contarPlantillaServicioDetalle($codigo){
+   $dbh = new Conexion();
+   $sql="";
+   $sql="select count(*) as total from plantillas_gruposerviciodetalle where cod_plantillagruposervicio=$codigo";
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
    $stmt->bindColumn('total', $contador);
@@ -1137,6 +1209,83 @@ function editarPlantillaCosto($codComp,$title,$cant1,$cant2,$stmt,$tabla,$cabece
     }
   }
 
+//plantillas SERVICIOS
+  function editarPlantillaServicio($codComp,$title,$cant1,$cant2,$stmt,$tabla,$cabecera,$valores,$fact){
+    $dbh = new Conexion();
+    $i=0;$cab=cantidadF($cabecera);$codigo=0;
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $codigo=$row['codigo'];
+      if($i<$cant2){
+        //update
+        $sets="";
+        for ($k=0; $k < $cab; $k++) { 
+          if($k==($cab-1)){
+            $sets.=$cabecera[$k]."='".$valores[$i][$k]."'";
+          }else{
+            $sets.=$cabecera[$k]."='".$valores[$i][$k]."', ";
+          }
+        } 
+         $query="UPDATE $tabla set $sets where codigo=$codigo";       
+      }else{
+        //delete
+        $query="DELETE from $tabla where codigo=$codigo";
+      }
+      $crud = $dbh->prepare($query);
+      $crud->execute();
+      if($fact!=null){
+        //recoger valores del array en un array general para enviar los datos
+        for($h=0;$h<cantidadF($fact[$i]);$h++){
+          $valFac[$h][0]=$fact[$i][$h]->codigo_cuenta;
+          $valFac[$h][1]=$fact[$i][$h]->tipo;
+          $valFac[$h][2]=$fact[$i][$h]->monto_i;
+          $valFac[$h][3]=$fact[$i][$h]->monto_fi;
+          $valFac[$h][4]=$fact[$i][$h]->monto_cal;
+        }
+        $sql = obtenerPlantillasDetalleServicio($codigo);
+        $cabeceraFac[0]="cod_partidapresupuestaria";$cabeceraFac[1]="tipo_calculo";$cabeceraFac[2]="monto_local";$cabeceraFac[3]="monto_externo";$cabeceraFac[4]="monto_calculado";
+        editarPlantillaServicio($codigo,'cod_plantillagruposervicio',contarPlantillaServicioDetalle($codigo),cantidadF($fact[$i]),$sql,'plantillas_gruposerviciodetalle',$cabeceraFac,$valFac,null);
+      }
+      $i++;
+    }
+    if($cant2>$cant1){
+       for ($j=$i; $j < $cant2; $j++) { 
+         //insert
+        $into=$title.",";$values=$codComp.",";
+        for ($l=0; $l < $cab; $l++) { 
+          if($l==($cab-1)){
+          $into.=$cabecera[$l]."";
+          $values.="'".$valores[$j][$l]."'";
+          }else{
+           $into.=$cabecera[$l].",";
+          $values.="'".$valores[$j][$l]."',";
+          }          
+        }
+        if($fact==null){
+          $codPlantillaDetalle=obtenerCodigoPlantillaGrupoDetalleServicio();
+          $dbh = new Conexion();
+          $query2="INSERT INTO $tabla (codigo, ".$into.") values ($codPlantillaDetalle, ".$values.")";
+        }else{
+          $codPlantillaGrupo=obtenerCodigoPlantillaGrupoServicio();
+          $dbh = new Conexion();
+          $query2="INSERT INTO $tabla (codigo, ".$into.") values ($codPlantillaGrupo, ".$values.")";
+          //recoger valores del array en un array general para enviar los datos
+        for($r=0;$r<cantidadF($fact[$j]);$r++){
+          $valFac[$r][0]=$fact[$j][$r]->codigo_cuenta;  
+          $valFac[$r][1]=$fact[$j][$r]->tipo;
+          $valFac[$r][2]=$fact[$j][$r]->monto_i;
+          $valFac[$r][3]=$fact[$j][$r]->monto_fi;
+          $valFac[$r][4]=$fact[$j][$r]->monto_cal;
+        }
+        $sql = obtenerPlantillasDetalleServicio($codPlantillaGrupo);
+        $cabeceraFac[0]="cod_partidapresupuestaria";$cabeceraFac[1]="tipo_calculo";$cabeceraFac[2]="monto_local";$cabeceraFac[3]="monto_externo";$cabeceraFac[4]="monto_calculado";
+        editarPlantillaServicio($codPlantillaGrupo,'cod_plantillagruposervicio',contarPlantillaServicioDetalle($codPlantillaGrupo),cantidadF($fact[$j]),$sql,'plantillas_gruposerviciodetalle',$cabeceraFac,$valFac,null);
+        }
+       
+        $crud2 = $dbh->prepare($query2);
+        $crud2->execute();
+       }
+    }
+  }
 
 function obtenerDirectorios($ruta){
     // Se comprueba que realmente sea la ruta de un directorio
@@ -1199,6 +1348,16 @@ function obtenerCodigoSimCosto(){
    }
    return($codigoComprobante);
 }
+function obtenerCodigoSimServicio(){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT IFNULL(max(c.codigo)+1,1)as codigo from simulaciones_servicios c");
+   $stmt->execute();
+   $codigoComprobante=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $codigoComprobante=$row['codigo'];
+   }
+   return($codigoComprobante);
+}
 function obtenerMontoPorCuenta($numero,$unidad,$area,$fecha){
    $fecha_i=$fecha."-01-01";
    $fecha_f=$fecha."-12-31";
@@ -1240,6 +1399,28 @@ function obtenerMontoPorCuenta($numero,$unidad,$area,$fecha){
     
       $valor=obtenerValorConfiguracion(6);
       return redondearDecimal($sum/(int)$valor);
+  }
+  function calcularCostosPresupuestariosAuditoria($id,$unidad,$area,$fecha,$valor){
+     $sql="SELECT p.cod_partidapresupuestaria,p.cod_cuenta,c.numero FROM partidaspresupuestarias_cuentas p join plan_cuentas c on p.cod_cuenta=c.codigo where p.cod_partidapresupuestaria=$id";
+     $dbh = new Conexion(); 
+     $stmt = $dbh->prepare($sql);
+     $stmt->execute();
+     $sum=0;
+     $mes=date("m");
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $numero=trim($row['numero']);
+      $cuenta=$row['cod_cuenta'];
+      $tipoSim=obtenerValorConfiguracion(13);
+      if($tipoSim==1){
+       $saux= ejecutadoEgresosMes($unidad, $fecha, 12, $area, 1, $numero);
+       $saux=$saux/12;
+       $sum+=$saux; 
+      }else{
+       $sum+= ejecutadoEgresosMes($unidad, $fecha, $mes, $area, 0, $numero);
+      }     
+    }
+    $valorD=obtenerValorConfiguracion($valor);
+      return redondearDecimal($sum/(int)$valorD);
   }
     function calcularCostosPres($id,$unidad,$area,$fecha){
      $sql="SELECT p.cod_partidapresupuestaria,p.cod_cuenta,c.numero FROM partidaspresupuestarias_cuentas p join plan_cuentas c on p.cod_cuenta=c.codigo where p.cod_partidapresupuestaria=$id";
@@ -1318,6 +1499,60 @@ where pc.codigo=$codigo and pgc.cod_tipocosto=$tipo GROUP BY pgd.cod_plantillagr
 
   //partidas
     $query_partidas="select pgd.cod_plantillagrupocosto,pp.nombre,pgd.cod_partidapresupuestaria,pgd.tipo_calculo,pgd.monto_local,pgd.monto_externo,pgd.monto_calculado from plantillas_grupocostodetalle pgd join partidas_presupuestarias pp on pgd.cod_partidapresupuestaria=pp.codigo join plantillas_gruposcosto pgc on pgd.cod_plantillagrupocosto=pgc.codigo where pgd.cod_plantillagrupocosto=$codGrupo";
+
+     $stmt_partidas = $dbh->prepare($query_partidas);
+     $stmt_partidas->execute();
+
+     while ($row_partidas = $stmt_partidas->fetch(PDO::FETCH_ASSOC)) {
+
+         $codPartida=$row_partidas['cod_partidapresupuestaria'];
+         $numeroCuentas=contarPresupuestoCuentas($codPartida);
+
+        if($row_partidas['tipo_calculo']!=1){
+          $importe_partida=(float)$row_partidas['monto_calculado']*$mes;
+        }else{
+          $importe_partida=(float)$row_partidas['monto_calculado']*$mes;
+        }
+
+        if($row_partidas['tipo_calculo']==1){
+            $query_cuentas="SELECT pc.*,pp.cod_partidapresupuestaria FROM plan_cuentas pc join partidaspresupuestarias_cuentas pp on pc.codigo=pp.cod_cuenta where pp.cod_partidapresupuestaria=$codPartida order by pc.codigo";       
+            $stmt_cuentas = $dbh->prepare($query_cuentas);
+            $stmt_cuentas->execute();
+            while ($row_cuentas = $stmt_cuentas->fetch(PDO::FETCH_ASSOC)) {
+                $monto=obtenerMontoPorCuenta($row_cuentas['numero'],$grupoUnidad,$grupoArea,((int)$anio-1));
+                if($monto==null){$monto=0;}
+                $montoCal=costoModulo($monto,$mes);
+            }
+          }
+
+      }  
+    }
+  return array($totalImporte,$totalModulo,$totalLocal,$totalExterno);
+   }
+   
+   function obtenerTotalesPlantillaServicio($codigo,$tipo,$mes){
+    $anio=date("Y");
+    $dbh = new Conexion();
+    $query2="select pgd.cod_plantillagruposervicio,pc.cod_unidadorganizacional,pc.cod_area,pgc.nombre,pgc.cod_tiposervicio,sum(pgd.monto_local) as local,sum(pgd.monto_externo) as externo,sum(pgd.monto_calculado) as calculado from plantillas_gruposerviciodetalle pgd join partidas_presupuestarias pp on pgd.cod_partidapresupuestaria=pp.codigo
+join plantillas_gruposervicio pgc on pgd.cod_plantillagruposervicio=pgc.codigo
+join plantillas_servicios pc on pgc.cod_plantillaservicio=pc.codigo 
+where pc.codigo=$codigo and pgc.cod_tiposervicio=$tipo GROUP BY pgd.cod_plantillagruposervicio order by pgd.cod_plantillagruposervicio";
+
+
+  $stmt = $dbh->prepare($query2);
+  $stmt->execute();
+
+  $totalImporte=0;$totalModulo=0;$totalLocal=0;$totalExterno=0;
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $codGrupo=$row['cod_plantillagruposervicio'];$grupoUnidad=$row['cod_unidadorganizacional'];$grupoArea=$row['cod_area'];
+    $importe_grupo=(float)$row['calculado']*$mes;
+    $totalImporte+=$importe_grupo;;
+    $totalModulo+=$row['calculado'];
+    $totalLocal+=$row['local'];
+    $totalExterno+=$row['externo'];
+
+  //partidas
+    $query_partidas="select pgd.cod_plantillagruposervicio,pp.nombre,pgd.cod_partidapresupuestaria,pgd.tipo_calculo,pgd.monto_local,pgd.monto_externo,pgd.monto_calculado from plantillas_gruposerviciodetalle pgd join partidas_presupuestarias pp on pgd.cod_partidapresupuestaria=pp.codigo join plantillas_gruposervicio pgc on pgd.cod_plantillagruposervicio=pgc.codigo where pgd.cod_plantillagruposervicio=$codGrupo";
 
      $stmt_partidas = $dbh->prepare($query_partidas);
      $stmt_partidas->execute();
@@ -1855,6 +2090,17 @@ join plantillas_costo pc on pc.codigo=pg.cod_plantillacosto where pc.codigo=$cod
    $stmt->execute();
    return $stmt;
 }
+function obtenerPartidasPlantillaServicio($codigo,$tipo){
+  $dbh = new Conexion();
+  $sql="";
+  $sql="SELECT DISTINCT p.cod_partidapresupuestaria,pc.cod_unidadorganizacional,pc.cod_area,pc.codigo as codPlantilla,pd.tipo_calculo,pd.monto_local,pd.monto_externo FROM partidaspresupuestarias_cuentas p join plan_cuentas c on p.cod_cuenta=c.codigo
+join plantillas_gruposerviciodetalle pd on pd.cod_partidapresupuestaria=p.cod_partidapresupuestaria
+join plantillas_gruposervicio pg on pg.codigo=pd.cod_plantillagruposervicio
+join plantillas_servicios pc on pc.codigo=pg.cod_plantillaservicio where pc.codigo=$codigo and pg.cod_tiposervicio=$tipo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+}
 function obtenerCuentaPlantillaCostos($codigo){
   $dbh = new Conexion();
   $sql="";
@@ -1871,6 +2117,30 @@ function obtenerDetallePlantillaCostosPartida($plantilla,$codigo){
    $stmt->execute();
    return $stmt;
 }
+function obtenerDetallePlantillaServicioPartida($plantilla,$codigo){
+  $dbh = new Conexion();
+  $sql="";
+  $sql="SELECT c.numero,c.nombre,p.* FROM plantillas_servicios_detalle p join plan_cuentas c on p.cod_cuenta=c.codigo where p.cod_partidapresupuestaria=$codigo and p.cod_plantillatcp=$plantilla";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+}
+function obtenerDetallePlantillaServicioAuditores($plantilla){
+  $dbh = new Conexion();
+  $sql="";
+  $sql="SELECT p.* FROM plantillas_servicios_auditores p where p.cod_estadoreferencial=1 and p.cod_plantillaservicio=$plantilla";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+}
+function obtenerDetallePlantillaServicioTipoServicio($plantilla){
+  $dbh = new Conexion();
+  $sql="";
+  $sql="SELECT p.* FROM plantillas_servicios_tiposervicio p where p.cod_estadoreferencial=1 and p.cod_plantillaservicio=$plantilla";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+}
 function obtenerDetalleSimulacionCostosPartida($sim,$codigo){
   $dbh = new Conexion();
   $sql="";
@@ -1879,10 +2149,26 @@ function obtenerDetalleSimulacionCostosPartida($sim,$codigo){
    $stmt->execute();
    return $stmt;
 }
+function obtenerDetalleSimulacionCostosPartidaServicio($sim,$codigo){
+  $dbh = new Conexion();
+  $sql="";
+  $sql="SELECT c.numero,c.nombre,p.* FROM simulaciones_serviciodetalle p join plan_cuentas c on p.cod_cuenta=c.codigo where p.cod_partidapresupuestaria=$codigo and p.cod_simulacionservicio=$sim";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+}
 function obtenerMontosCuentasDetallePlantillaCostosPartida($plantilla,$codigo){
   $dbh = new Conexion();
   $sql="";
   $sql="SELECT p.cod_partidapresupuestaria,p.cod_cuenta,c.numero,c.nombre,sum(p.monto_total) as monto FROM plantillas_servicios_detalle p join plan_cuentas c on p.cod_cuenta=c.codigo where p.cod_partidapresupuestaria=$codigo and p.cod_plantillacosto=$plantilla group by cod_cuenta";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+}
+function obtenerMontosCuentasDetallePlantillaServicioPartida($plantilla,$codigo){
+  $dbh = new Conexion();
+  $sql="";
+  $sql="SELECT p.cod_partidapresupuestaria,p.cod_cuenta,c.numero,c.nombre,sum(p.monto_total) as monto FROM plantillas_servicios_detalle p join plan_cuentas c on p.cod_cuenta=c.codigo where p.cod_partidapresupuestaria=$codigo and p.cod_plantillatcp=$plantilla group by cod_cuenta";
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
    return $stmt;
@@ -1899,6 +2185,14 @@ function obtenerMontosCuentasDetalleSimulacionCostosPartidaHabilitado($sim,$codi
   $dbh = new Conexion();
   $sql="";
   $sql="SELECT p.cod_partidapresupuestaria,p.cod_cuenta,c.numero,c.nombre,sum(p.monto_total) as monto,p.habilitado FROM simulaciones_detalle p join plan_cuentas c on p.cod_cuenta=c.codigo where p.cod_partidapresupuestaria=$codigo and p.cod_simulacioncosto=$sim group by cod_cuenta";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+}
+function obtenerMontosCuentasDetalleSimulacionServicioPartidaHabilitado($sim,$codigo){
+  $dbh = new Conexion();
+  $sql="";
+  $sql="SELECT p.cod_partidapresupuestaria,p.cod_cuenta,c.numero,c.nombre,sum(p.monto_total) as monto,p.habilitado FROM simulaciones_serviciodetalle p join plan_cuentas c on p.cod_cuenta=c.codigo where p.cod_partidapresupuestaria=$codigo and p.cod_simulacionservicio=$sim group by cod_cuenta";
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
    return $stmt;
@@ -1926,6 +2220,106 @@ function obtenerCantidadPlantillaDetallesPartida($codPlantilla,$codPartida){
   while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
   {
    $num=$row['num'];
+  }
+  return $num;
+}
+function obtenerCantidadPlantillaDetallesPartidaServicio($codPlantilla,$codPartida){
+  $dbh = new Conexion();
+  $sql="";
+  $sql="SELECT count(*) as num FROM plantillas_servicios_detalle where cod_plantillatcp=$codPlantilla and cod_partidapresupuestaria=$codPartida";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute(); 
+   $num=0;
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
+  {
+   $num=$row['num'];
+  }
+  return $num;
+}
+function obtenerPrecioServiciosSimulacion($codigo){
+  $dbh = new Conexion();
+  $sql="";
+  $sql="SELECT * from simulaciones_servicios_tiposervicio where cod_simulacionservicio=$codigo and habilitado!=0";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute(); 
+   $num=0;
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
+  {
+    $cantidad=$row['cantidad'];
+    $monto=$row['monto'];
+    $num+=$cantidad*$monto;
+  }
+  return $num;
+}
+function obtenerCantidadPersonalSimulacion($codigo){
+  $dbh = new Conexion();
+  $sql="";
+  $sql="SELECT * from simulaciones_servicios_auditores where cod_simulacionservicio=$codigo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute(); 
+   $num=0;
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
+  {
+    $cantidad=$row['cantidad'];
+    //$monto=$row['monto'];
+    $num+=$cantidad;
+  }
+  return $num;
+}
+function obtenerCantidadPersonalSimulacionEditado($codigo){
+  $dbh = new Conexion();
+  $sql="";
+  $sql="SELECT * from simulaciones_servicios_auditores where cod_simulacionservicio=$codigo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute(); 
+   $num=0;
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
+  {
+    $cantidad=$row['cantidad_editado'];
+    //$monto=$row['monto'];
+    $num+=$cantidad;
+  }
+  return $num;
+}
+function obtenerCantidadPersonalSimulacionDetalle($codigo){
+  $dbh = new Conexion();
+  $sql="";
+  $sql="SELECT * from simulaciones_serviciodetalle where cod_simulacionservicio=$codigo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute(); 
+   $num=0;
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
+  {
+    $cantidad=$row['cantidad'];
+    //$monto=$row['monto'];
+    $num+=$cantidad;
+  }
+  return $num;
+}
+
+function obtenerCantidadPersonalPlantilla($codPlantilla){
+  $dbh = new Conexion();
+  $sql="";
+  $sql="SELECT sum(cantidad) as num FROM plantillas_servicios_auditores where cod_plantillaservicio=$codPlantilla";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute(); 
+   $num=0;
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
+  {
+   $num=$row['num'];
+  }
+  return $num;
+}
+function obtenerCodigoAreaPlantillaServicio($codigo){
+   $dbh = new Conexion();
+  $sql="";
+  $sql="SELECT cod_area FROM plantillas_servicios where codigo=$codigo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute(); 
+   $num=0;
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
+  {
+   $num=$row['cod_area'];
   }
   return $num;
 }
@@ -2337,11 +2731,49 @@ function obtenerMontoPlantillaDetalle($codigoPar,$codigo,$ib){
      return($montoF);
    }
 }
+function obtenerMontoPlantillaDetalleServicio($codigoPar,$codigo,$ib){
+  $dbh = new Conexion();
+  $montoI=0;$montoF=0;
+   $stmt = $dbh->prepare("SELECT pd.monto_local,pd.monto_externo FROM plantillas_gruposerviciodetalle pd 
+    join plantillas_gruposervicio pg on pg.codigo=pd.cod_plantillagruposervicio
+    join plantillas_servicio p on p.codigo=pg.cod_plantillaservicio
+    where pd.cod_partidapresupuestaria=:codigo and p.codigo=:codPlan");
+   $stmt->bindParam(':codigo',$codigo);
+   $stmt->bindParam(':codPlan',$codigoPar);
+   $stmt->execute();
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $montoI=$row['monto_local'];
+      $montoF=$row['monto_externo'];
+   }
+   if($ib==1){
+     return($montoI);
+   }else{
+     return($montoF);
+   }
+}
 function obtenerMontoSimulacionCuenta($codigo,$codigoPar,$ib){
   $dbh = new Conexion();
   $montoI=0;$montoF=0;
    $stmt = $dbh->prepare("SELECT sum(monto_local) as total_local, sum(monto_externo) as total_externo 
     FROM cuentas_simulacion where cod_simulacioncostos=:codSim and cod_partidapresupuestaria=:codPar");
+   $stmt->bindParam(':codSim',$codigo);
+   $stmt->bindParam(':codPar',$codigoPar);
+   $stmt->execute();
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $montoI=$row['total_local'];
+      $montoF=$row['total_externo'];
+   }
+   if($ib==1){
+     return($montoI);
+   }else{
+     return($montoF);
+   }
+}
+function obtenerMontoSimulacionCuentaServicio($codigo,$codigoPar,$ib){
+  $dbh = new Conexion();
+  $montoI=0;$montoF=0;
+   $stmt = $dbh->prepare("SELECT sum(monto_local) as total_local, sum(monto_externo) as total_externo 
+    FROM cuentas_simulacion where cod_simulacionservicios=:codSim and cod_partidapresupuestaria=:codPar");
    $stmt->bindParam(':codSim',$codigo);
    $stmt->bindParam(':codPar',$codigoPar);
    $stmt->execute();
@@ -2367,8 +2799,22 @@ function obtenerTotalesSimulacion($codigo){
       $montoF=$row['total_externo'];
    }
   return array(0,0,$montoI,$montoF);
+}
+function obtenerTotalesSimulacionServicio($codigo){
+  $dbh = new Conexion();
+    $montoI=1;$montoF=1;
+   $stmt = $dbh->prepare("SELECT sum(monto_local) as total_local, sum(monto_externo) as total_externo 
+    FROM cuentas_simulacion where cod_simulacionservicios=:codSim");
+   $stmt->bindParam(':codSim',$codigo);
+   $stmt->execute();
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $montoI=$row['total_local'];
+      $montoF=$row['total_externo'];
    }
-   function obtenerIbnorcaCheck($codigo){
+  return array(0,0,$montoI,$montoF);
+}
+
+function obtenerIbnorcaCheck($codigo){
    $dbh = new Conexion();
    $stmt = $dbh->prepare("SELECT ibnorca FROM simulaciones_costos where codigo=:codigo");
    $stmt->bindParam(':codigo',$codigo);
@@ -2556,6 +3002,32 @@ function descargarPDF1($nom,$html){
   $mydompdf->set_base_path('assets/libraries/plantillaPDF.css');
   $mydompdf->stream($nom.".pdf", array("Attachment" => false));
 }
+
+function descargarPDFFiniquito($nom,$html){
+  //aumentamos la memoria  
+  ini_set("memory_limit", "128M");
+  // Cargamos DOMPDF
+  require_once 'assets/libraries/dompdf/dompdf_config.inc.php';
+  $mydompdf = new DOMPDF();
+  ob_clean();
+  $mydompdf->load_html($html);
+  $mydompdf->render();
+  $canvas = $mydompdf->get_canvas();
+       /* if ( isset($canvas) ) {
+          $numero="{PAGE_NUM}";$numeroF="{PAGE_COUNT}"; 
+          if ((int)$numero==(int)$numeroF) {
+            $font = Font_Metrics::get_font("helvetica", "normal");
+                $size = 9;
+                $y = 50;
+                $x = 100;
+                $canvas->page_text($x, $y, "pie de pagina en la ultima hoja".$numero.$numeroF, $font, $size);
+            }
+        }*/
+  $canvas->page_text(500, 25, "", Font_Metrics::get_font("sans-serif"), 10, array(0,0,0)); 
+  $mydompdf->set_base_path('assets/libraries/plantillaPDF.css');
+  $mydompdf->stream($nom.".pdf", array("Attachment" => false));
+}
+
 
 function obtenerSueldoMinimo(){
   $dbh = new Conexion();
