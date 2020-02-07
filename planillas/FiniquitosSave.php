@@ -45,7 +45,6 @@ try {
     $anio_ingreso = date("Y", strtotime($ing_contr_x));
     $mes_ingreso = date("m", strtotime($ing_contr_x));
     $dia_ingreso = date("d", strtotime($ing_contr_x));
-    //$anios_trabajados_pagados=5;//cambiar
 
     $anios_aux=$anio_ingreso+$anios_trabajados_pagados;
     $ing_contr = $anios_aux.'/'.$mes_ingreso.'/'.$dia_ingreso;
@@ -84,12 +83,14 @@ try {
     $aguinaldo_meses=$mes_retiro-1;
     $aguinaldo_dias=$dia_retiro;
     $aguinaldo_anios_monto=0;//preguntar
+
     $aguinaldo_meses_monto=$sueldo_promedio/12*$aguinaldo_meses;
     $aguinaldo_dias_monto=($sueldo_promedio/12/30)*$aguinaldo_dias;
     $suma_aguinaldo=$aguinaldo_meses_monto+$aguinaldo_dias_monto;
     //vacaciones
     $vacaciones_dias=20;//ver datos
     $vacaciones_doudecimas=6.89;//ver datos
+
     $vacaciones_dias_monto=$sueldo_promedio/30*$vacaciones_dias;
     $vacaciones_duodecimas_monto=$sueldo_promedio/30*$vacaciones_doudecimas;
     $suma_vacaciones=$vacaciones_dias_monto+$vacaciones_duodecimas_monto;

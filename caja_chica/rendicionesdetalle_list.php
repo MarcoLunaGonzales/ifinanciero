@@ -159,7 +159,7 @@ $contadorRegistros=0;
                                        
                   <div class="card-footer fixed-bottom">
                   <button type="submit" class="<?=$buttonMorado;?>">Guardar</button>
-                  <a href="<?=$urlListaRendiciones;?>" class="<?=$buttonCancel;?>"> <-- Volver </a>
+                  <a href="<?=$urlListaRendiciones;?>" class="<?=$buttonCancel;?>"> <i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
                   <!-- <button class="btn btn-danger" onClick="location.href='<?=$urlListaRendiciones;?>'">Volver</button> -->
 
                   </div>

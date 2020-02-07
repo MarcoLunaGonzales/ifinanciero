@@ -489,6 +489,31 @@
 			require_once('rrhh/deleteCargos.php');
 		}
 
+		if ($_GET['opcion']=='cargosFunciones') {
+			$codigo=$_GET['codigo'];
+			require_once('rrhh/cargosFunciones.php');
+		}
+		if ($_GET['opcion']=='cargosEscalaSalarial') {
+			$codigo=$_GET['codigo'];
+			require_once('rrhh/cargosEscalaSalarial.php');
+		}
+		if ($_GET['opcion']=='cargosEscalaSalarialForm') {
+			$codigo=$_GET['codigo'];
+			require_once('rrhh/cargosEscalaSalarialForm.php');
+		}
+		if ($_GET['opcion']=='cargosEscalaSalarialSave') {
+			require_once('rrhh/cargosEscalaSalarialSave.php');
+		}
+		if ($_GET['opcion']=='cargoEscalaSalarialGeneral') {
+			require_once('rrhh/cargoEscalaSalarialGeneral.php');
+		}
+
+		if ($_GET['opcion']=='cargoEscalaSalarialGeneralDelete') {
+			$codigo=$_GET['codigo'];
+			require_once('rrhh/cargoEscalaSalarialGeneralDelete.php');
+		}
+
+
 		//unidades organizacionales
 		if ($_GET['opcion']=='uoLista') {
 			require_once('rrhh/uoLista.php'); //ok
@@ -520,6 +545,16 @@
 		$codigo=$_GET['codigo'];
 		require_once('personal/rptCambiosPersonalPrint.php');
 		}
+		//reporte distribucion
+		if ($_GET['opcion']=='rptDistribucionSueldos') {
+			require_once('personal/rptDistribucionSueldosFiltro.php');
+		}
+		//reporte ingresos y descuentos
+		if ($_GET['opcion']=='rptIngresos_Descuentos') {
+			require_once('personal/rptrptIngresosDescuentosFiltro.php');
+		}
+
+
 		// if ($_GET['opcion']=='saveTiposContrato') {
 		// 	require_once('personal/tipos_contratosSave.php');
 		// }

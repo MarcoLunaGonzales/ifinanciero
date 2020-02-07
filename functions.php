@@ -2691,23 +2691,12 @@ function obtener_anios_trabajados($ing_contr){
   // $anio_actual=2019;
   $fechaComoEntero = strtotime($ing_contr);
   $anio_ingreso = date("Y", $fechaComoEntero);
-  // $mes_ingreso = date("m", $fechaComoEntero);
   $diferencia_anios=$anio_actual-$anio_ingreso;
-  // $diferencia_meses=12-$mes_ingreso;
-  // if($diferencia_anios>0){
-  //   $sw=1;
-  // }elseif($diferencia_meses>2){
-  //   $sw=1;
-  // }else $sw=0;
   return $diferencia_anios;
 }
 function obtener_meses_trabajados($ing_contr){
-  // $anio_actual= date('Y');
-  // $anio_actual=2019;
-  $fechaComoEntero = strtotime($ing_contr);
-  // $anio_ingreso = date("Y", $fechaComoEntero);
+  $fechaComoEntero = strtotime($ing_contr);  
   $mes_ingreso = date("m", $fechaComoEntero);
-  // $diferencia_anios=$anio_actual-$anio_ingreso;
   $diferencia_meses=12-$mes_ingreso;
   // if($diferencia_anios>0){
   //   $sw=1;
@@ -2717,13 +2706,13 @@ function obtener_meses_trabajados($ing_contr){
   return $diferencia_meses;
 }
 function obtener_dias_trabajados($ing_contr){
-  // $anio_actual= date('Y');
-  // $anio_actual=2019;
   $fechaComoEntero = strtotime($ing_contr);
-  // $anio_ingreso = date("Y", $fechaComoEntero);
-  $dia_ingreso = date("d", $fechaComoEntero);
-  // $diferencia_anios=$anio_actual-$anio_ingreso;
-  $diferencia_dias=31-$dia_ingreso;
+  $dia_ingreso = date("d", $fechaComoEntero);  
+  $diferencia_dias=30-$dia_ingreso;
+  if($diferencia_dias<0){
+    $diferencia_dias=0;
+  }
+
   // if($diferencia_anios>0){
   //   $sw=1;
   // }elseif($diferencia_meses>2){
@@ -3229,7 +3218,7 @@ function obtenerPlantillaCodigoSimulacion($codigo){
 }
 
 function obtenerNombrePersonal($codigo){
-  $dbh = new Conexion();
+    $dbh = new Conexion();
    $valor=0;
    $sql="SELECT concat(p.paterno, ' ',p.materno, ' ', p.primer_nombre)as nombre from personal p where p.codigo=$codigo";
    $stmt = $dbh->prepare($sql);
@@ -3238,6 +3227,26 @@ function obtenerNombrePersonal($codigo){
       $valor=$row['nombre'];
   }
   return $valor;
+}
+function obtenerValorConfiguracionEmpresa($codigo){
+  $dbh = new Conexion();
+  $valor="";
+  $stmtConfiguracion = $dbh->prepare("SELECT valor_configuracion from configuraciones_empresa where id_configuracion=$codigo");
+  $stmtConfiguracion->execute();
+  $resultConfiguracion = $stmtConfiguracion->fetch();
+  $valor=$resultConfiguracion['valor_configuracion'];
+  return $valor; 
+}
+
+function obtenerTiempoDosFechas($fechaInicio,$fechafin){
+  $datetime1=date_create($fechaInicio);
+  $datetime2=date_create($fechaFin);
+  $intervalo=date_diff($datetime1,$datetime2);
+  $tiempo=array();
+  foreach ($intervalo as $valor ) {
+    $tiempo[]=$valor;
+  }
+  return $tiempo;
 }
 
 function obtenerPaisesServicioIbrnorca(){

@@ -62,10 +62,10 @@ $html.=  '<header class="header">'.
             
             '<div id="info_izq">
               <h4 >
-              <b>NIT:</b>1020745020<br>
+              <b>NIT:</b>'.obtenerValorConfiguracionEmpresa(4).'<br>
               Mes de declaración: '.$cod_mes.'<br>
               Año de declaración: '.$nombre_gestion.'<br>
-              SMN Actual: 2122<br>
+              SMN Actual: '.obtenerValorConfiguracionEmpresa(5).'<br>
                                 
               </h4> 
             </div>'.
