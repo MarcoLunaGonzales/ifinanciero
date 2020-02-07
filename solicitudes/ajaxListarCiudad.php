@@ -20,4 +20,4 @@ $lista= obtenerCiudadServicioIbrnorca($codigo);
                                   foreach ($lista->lista as $listas) {
                                       echo "<option value=".$listas->idCiudad.">".$listas->nomCiudad."</opction>";
                                   }?>
-                             <option value="NN">OTRO</option>     
+                             <!--<option value="NN">OTRO</option>-->     
