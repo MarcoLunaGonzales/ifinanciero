@@ -113,6 +113,9 @@
 		if ($_GET['opcion']=='listPlantillasCostosAdmin') {
 			require_once('plantillas_costos/listAdmin.php');
 		}
+		if ($_GET['opcion']=='clonarPlantillaCosto') {
+			require_once('plantillas_costos/saveClonar.php');
+		}
         
         //SIMULACIONES DE COSTO
 		if ($_GET['opcion']=='listSimulacionesCostos') {
@@ -139,10 +142,27 @@
 		}
 		if ($_GET['opcion']=='deletePlantillaServicios') {
 			require_once('plantillas_servicios/saveDelete.php');
-		}if ($_GET['opcion']=='listPlantillasServiciosAdmin') {
+		}
+		if ($_GET['opcion']=='listPlantillasServiciosAdmin') {
 			require_once('plantillas_servicios/listAdmin.php');
 		}
+		if ($_GET['opcion']=='clonarPlantillaServicio') {
+			require_once('plantillas_servicios/saveClonar.php');
+		}
         
+        //SIMULACIONES PLANTILLA SERVICIO
+        if ($_GET['opcion']=='listSimulacionesServicios') {
+			require_once('simulaciones_servicios/list.php');
+		}
+        if ($_GET['opcion']=='registerSimulacionServicio') {
+			require_once('simulaciones_servicios/registerSimulaciones.php');
+		}
+		if ($_GET['opcion']=='listSimulacionesServ') {
+			require_once('simulaciones_servicios/list.php');
+		}
+		if ($_GET['opcion']=='listSimulacionesServAdmin') {
+			require_once('simulaciones_servicios/listAdmin.php');
+		}
          
         //MES EN CURSO
         if ($_GET['opcion']=='mesCurso') {

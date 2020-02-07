@@ -32,6 +32,26 @@ alerts = {
           }
         })
     }
+    else if (type == 'warning-message-and-confirmation-clonar') {
+      swal({
+        title: 'Duplicar Registro',
+        text: "¿Está seguro de realizar el duplicado?",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonClass: 'btn btn-info',
+        cancelButtonClass: 'btn btn-danger',
+        confirmButtonText: 'Si',
+        cancelButtonText: 'No',
+        buttonsStyling: false
+      }).then((result) => {
+          if (result.value) {
+            location.href=url; 
+            return(true);
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            return(false);
+          }
+        })
+    }
     else if (type == 'warning-message-and-confirmationGeneral') {
       swal({
         title: '¿Estás Seguro?',

@@ -52,6 +52,7 @@ if(isset($_GET['cod'])){
             $stmt->bindColumn('estado_plantilla', $estadoX);
             $stmt->bindColumn('dias_auditoria', $diasAuditoriaX);
             $stmt->bindColumn('fecha_registro', $fechaRegistro);
+            $stmt->bindColumn('utilidad_minima', $utilidadMinima);
 ?>
 <div class="cargar">
   <div class="div-loading text-center">
@@ -65,7 +66,7 @@ if(isset($_GET['cod'])){
      <p class="text-white">Aguard&aacute; un momento por favor</p>  
   </div>
 </div>
-<form id="formDetTcp" class="form-horizontal" action="saveEdit.php" method="post">
+<form id="formRegDet" class="form-horizontal" action="saveEdit.php" method="post">
 <div class="content">
 	<div id="contListaGrupos" class="container-fluid">
 			<input type="hidden" name="cantidad_filas" id="cantidad_filas" value="<?=$contadorRegistros;?>">
@@ -81,6 +82,7 @@ if(isset($_GET['cod'])){
 					<?php while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {?>
 					<input class="form-control" type="hidden" name="cod_unidad" value="<?=$codUnidadX?>" id="cod_unidad" readonly/>
 					<input class="form-control" type="hidden" name="cod_area" value="<?=$codAreaX?>" id="cod_area" readonly/>
+					<input class="form-control" type="hidden" name="alumnos_ibnorca" value="<?=obtenerCantidadPersonalPlantilla($codigo)?>" id="alumnos_ibnorca"/>
 						<div class="col-sm-2">
 							<div class="form-group">
 						  		<label class="bmd-label-static">Nombre</label>
@@ -94,12 +96,12 @@ if(isset($_GET['cod'])){
 						  		<input class="form-control" type="text" name="abreviatura" value="<?=$abreviaturaX?>" id="abreviatura"/>
 							</div>
 						</div>
-						<div class="col-sm-2">
+						<!--<div class="col-sm-2">
 							<div class="form-group has-success">
-						  		<label class="bmd-label-static">D&iacute;as Auditor&iacute;a</label>
-						  		<input class="form-control" type="number" min="1" name="dias_auditoria" value="<?=$diasAuditoriaX?>" id="dias_auditoria"/>
-							</div>
-						</div>
+						  		<label class="bmd-label-static">D&iacute;as Auditor&iacute;a</label>-->
+						  		<input class="form-control" type="hidden" min="1" name="dias_auditoria" value="<?=$diasAuditoriaX?>" id="dias_auditoria"/>
+							<!--</div>
+						</div>-->
 						<div class="col-sm-2">
 							<div class="form-group has-success">
 						  		<label class="bmd-label-static">Fecha Registro</label>
@@ -113,6 +115,12 @@ if(isset($_GET['cod'])){
 							</div>
 						</div>
 						<div class="col-sm-1">
+				        	<div class="form-group">
+						  		<label class="bmd-label-static">UT. M&iacute;n %</label>
+						  		<input class="form-control" type="text" name="utilidad_minima" value="<?=$utilidadMinima?>" id="utilidad_minima" readonly/>
+							</div>
+				      	</div>
+						<div class="col-sm-1">
 							<div class="form-group">
 						  		<label class="bmd-label-static">Unidad</label>
 						  		<input class="form-control" type="text" name="unidad" value="<?=$unidadX?>" id="unidad" readonly/>
@@ -125,6 +133,17 @@ if(isset($_GET['cod'])){
 						  		<input class="form-control" type="text" name="area" value="<?=$areaX?>" id="area" readonly/>
 							</div>
 				      	</div>
+				      	<?php
+                          if($codAreaX==39){
+                           $valConf=17;
+                          }else{
+                            if($codAreaX==38){
+                              $valConf=18;
+                           }else{
+                           	  $valConf=17;
+                           }	
+                          }
+				      	 ?>
 				      	<div class="col-sm-1 float-right">
 							<div class="">
 						  		<a href="#" title="Ayuda" class="btn btn-default btn-fab btn-round" onclick="ayudaPlantilla()"><span class="material-icons">help_outline</span></a>
@@ -135,8 +154,9 @@ if(isset($_GET['cod'])){
 				      	<?php } ?>
 				</div>
 			</div>
+			<input type="hidden" name="cod_mescurso" id="cod_mescurso" value="<?=obtenerValorConfiguracion($valConf)?>">
            <div class="row">
-             <div class="col-sm-12">
+             <div class="col-sm-8">
 			  <div class="card">
 				<div class="card-header <?=$colorCard;?> card-header-text">
 					<a href="#" onclick="cambiarDivPlantilla('fiel','list_servicios','list_personal')">
@@ -158,7 +178,7 @@ if(isset($_GET['cod'])){
 
 				<div class="card-body">
 					<fieldset id="fiel" class="" style="width:100%;border:0;">
-							<button title="Agregar (shift+n)" type="button" name="add" class="btn btn-warning btn-round btn-fab" onClick="addDetallePlantilla(this)">
+							<button title="Agregar (shift+n)" type="button" name="add" class="btn btn-warning btn-round btn-fab" onClick="addGrupoPlantilla(this)">
                       		  <i class="material-icons">add</i>
 		                    </button>  
 						<div id="div">	
@@ -168,26 +188,20 @@ if(isset($_GET['cod'])){
 		 					
 	 					</div>
 	 					<?php
-                       $stmt = $dbh->prepare("SELECT c.codigo as codCuenta,p.cod_partidapresupuestaria,p.codigo, p.cod_tipo, p.glosa,p.cantidad,p.unidad,p.monto_unitario,p.monto_total,p.cod_plantillatcp,c.nombre from plantillas_servicios_detalle p,plan_cuentas c where p.cod_plantillatcp=$codigo and p.cod_cuenta=c.codigo order by p.codigo");
+                       $stmt = $dbh->prepare("SELECT p.codigo, p.cod_tiposervicio, p.nombre,p.abreviatura,p.cod_plantillaservicio from plantillas_gruposervicio p where p.cod_plantillaservicio=$codigo order by p.codigo");
                          $stmt->execute();
                          $idFila=1;
                          while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                          $codigoCostoX=$row['codigo'];
-                          $codTipoCostoX=$row['cod_tipo'];
-                          $nombreCostoX=$row['glosa'];
-                          $cantidadCostoX=$row['cantidad'];
-                          $unidadCostoX=$row['unidad'];
-                          $montoTotalCostoX=$row['monto_total'];
-                          $montoUnitarioCostoX=$row['monto_unitario'];
-                          $codPlantillaCostoX=$row['cod_plantillatcp'];
-                          $nombreCuentaX=trim($row['nombre']);
-                          $codCuentaX=$row['codCuenta'];
-                          $codPartidaX=$row['cod_partidapresupuestaria'];
+                           $codigoCostoX=$row['codigo'];
+                          $codTipoCostoX=$row['cod_tiposervicio'];
+                          $nombreCostoX=$row['nombre'];
+                          $abreviaturaCostoX=$row['abreviatura'];
+                          $codPlantillaCostoX=$row['cod_plantillaservicio'];
                           ?>
                           <script>numFilas++;cantidadItems++;</script>
                           <script>var ndet=[];itemDetalle.push(ndet);</script>
 						 <?php
-						      $stmt2 = $dbh->prepare("SELECT * FROM plantillas_grupocostodetalle where cod_plantillagrupocosto=$codigoCostoX");
+						      $stmt2 = $dbh->prepare("SELECT * FROM plantillas_gruposerviciodetalle where cod_plantillagruposervicio=$codigoCostoX");
 				              $stmt2->execute();
 				              $idFilas=0;
 				           
@@ -195,9 +209,9 @@ if(isset($_GET['cod'])){
                           <div id="div<?=$idFila?>" class="col-md-12">
 	<div class="row">
 
-		<div class="col-sm-1">
+		<div class="col-sm-3">
         	<div class="form-group">
-	        <select class="selectpicker form-control form-control-sm" name="tipo_costo<?=$idFila;?>" id="tipo_costo<?=$idFila;?>" data-style="fondo-boton-active" onchange="mostrarUnidadDetalle(<?=$idFila;?>)" required>
+	        <select class="selectpicker form-control form-control-sm" name="tipo_costo<?=$idFila;?>" id="tipo_costo<?=$idFila;?>" data-style="<?=$comboColor;?>" required>
 	        	                <option disabled value="">Tipo</option>
 			  	              <?php        
                                 if($codTipoCostoX==1){
@@ -214,89 +228,29 @@ if(isset($_GET['cod'])){
 			</select>
 			</div>
       	</div>
+		<div class="col-sm-5">
+            <div class="form-group">
+            	<label for="nombre_grupo<?=$idFila;?>" class="bmd-label-floating">Nombre de grupo</label>			
+          		<input class="form-control" type="text" value="<?=$nombreCostoX?>" name="nombre_grupo<?=$idFila;?>" id="nombre_grupo<?=$idFila;?>" onkeyup="mostrarDetalle(<?=$idFila;?>);" required>	
+			</div>
+      	</div>
+
 		<div class="col-sm-2">
             <div class="form-group">
-            	<label for="detalle_plantilla<?=$idFila;?>" class="bmd-label-floating">Detalle</label>			
-          		<input class="form-control" type="text" value="<?=$nombreCostoX?>" name="detalle_plantilla<?=$idFila;?>" id="detalle_plantilla<?=$idFila;?>" required>	
+            	<label for="abreviatura_grupo<?=$idFila;?>" class="bmd-label-floating">Abreviatura</label>			
+          		<input class="form-control" type="text" value="<?=$abreviaturaCostoX?>" name="abreviatura_grupo<?=$idFila;?>" id="abreviatura_grupo<?=$idFila;?>" required> 	
 			</div>
       	</div>
-        <div class="col-sm-2">
-        	<div class="form-group">
-	        <select class="selectpicker form-control form-control-sm" name="partida_presupuestaria<?=$idFila;?>" id="partida_presupuestaria<?=$idFila;?>" data-style="fondo-boton" onchange="mostrarCuentasPartida2(<?=$idFila?>);" required>
-	        	     <option disabled value="">Partidas</option>
-			  	              <?php
-                           $stmt2 = $dbh->prepare("SELECT p.codigo, p.nombre, p.observaciones from partidas_presupuestarias p where p.cod_estadoreferencial=1 order by p.codigo");
-                         $stmt2->execute();
-                         while ($rowPartida = $stmt2->fetch(PDO::FETCH_ASSOC)) {
-                          $codigoParX=$rowPartida['codigo'];
-                          $obsX=$rowPartida['observaciones'];
-                          $nombreParX=$rowPartida['nombre'];
-                          if($codPartidaX==$codigoParX){
-                          ?><option selected value="<?=$codigoParX;?>"><?=$nombreParX?></option><?php 
-
-                          }else{
-                          ?><option value="<?=$codigoParX;?>"><?=$nombreParX?></option><?php
-                          }
-                       } 
-                         ?>  
-					
-			</select>
-			</div>
-      	</div>
-      	<div class="col-sm-2">
-        	<div class="form-group" id="cuentas_div<?=$idFila?>">
-        		<?php $cuentasPartida=obtenerCuentaPlantillaCostos($codPartidaX);
-                                ?>
-                                  <select class="selectpicker form-control form-control-sm" name="cuenta_plantilladetalle<?=$idFila?>" id="cuenta_plantilladetalle<?=$idFila?>" data-style="fondo-boton-active" required>
-                                   <option disabled value="">Cuentas</option>
-                                    <?php 
-                                     while ($rowCuenta = $cuentasPartida->fetch(PDO::FETCH_ASSOC)) {
-                                      $codigoCuentaX=$rowCuenta['cod_cuenta'];
-                                      $nombreCuentaX=trim($rowCuenta['nombre']);
-                                      if($codCuentaX==$codigoCuentaX){
-                                        ?><option selected value="<?=$codigoCuentaX?>"><?=$nombreCuentaX?></option><?php
-                                        }else{
-                                       ?><option value="<?=$codigoCuentaX?>"><?=$nombreCuentaX?></option><?php
-                                        }
-                                     }
-                                    ?>
-                                  </select>
-			</div>
-      	</div>
-		<div class="col-sm-1">
-            <div class="form-group">
-            	<label for="cantidad_detalleplantilla<?=$idFila;?>" class="bmd-label-floating">Cantidad</label>			
-          		<input class="form-control" type="number" min="0" value="<?=$cantidadCostoX?>" name="cantidad_detalleplantilla<?=$idFila;?>" id="cantidad_detalleplantilla<?=$idFila;?>" onkeyup="calcularTotalFilaDetalle(1,<?=$idFila?>)" id="cantidad_detalleplantilla<?=$idFila;?>" required> 	
-			</div>
-      	</div>
-      	<div class="col-sm-1">
-            <div class="form-group">
-            	<label for="unidad_detalleplantilla<?=$idFila;?>" class="bmd-label-floating">Unidad</label>			
-          		<input class="form-control" type="text" value="<?=$unidadCostoX?>" <?=($codTipoCostoX==1)?"readonly":"";?> name="unidad_detalleplantilla<?=$idFila;?>" id="unidad_detalleplantilla<?=$idFila;?>" required> 	
-			</div>
-      	</div>
-      	<div class="col-sm-1">
-            <div class="form-group">
-            	<label for="monto_detalleplantilla<?=$idFila;?>" class="bmd-label-floating">Precio Unit.</label>			
-          		<input class="form-control" type="number" step="0.01" min="0" value="<?=$montoUnitarioCostoX?>" name="monto_detalleplantilla<?=$idFila;?>" onkeyup="calcularTotalFilaDetalle(1,<?=$idFila?>)" id="monto_detalleplantilla<?=$idFila;?>" required> 	
-			</div>
-      	</div>
-      	<div class="col-sm-1">
-            <div class="form-group">
-            	<label for="monto_total_detalleplantilla<?=$idFila;?>" class="bmd-label-floating">Precio Total</label>			
-          		<input class="form-control" type="number" onkeyup="calcularTotalFilaDetalle(2,<?=$idFila?>)"  step="0.01" min="0" value="<?=$montoTotalCostoX?>" name="monto_total_detalleplantilla<?=$idFila;?>" id="monto_total_detalleplantilla<?=$idFila;?>" required> 	
-			</div>
-      	</div>
-
-		<div class="col-sm-1">
-		   <div class="btn-group">
-		  	<!--<a title="<?=$nombreCuentaX?>" href="#" id="boton_det<?=$idFila;?>" onclick="listDetallePlantilla(<?=$idFila;?>);" class="btn btn-just-icon btn-primary btn-link">
-               <i class="material-icons">view_list</i><span id="ndet<?=$idFila;?>" class="bg-success estado2"></span>
-             </a>-->
-             <input type="hidden" value="<?=$codPartidaX?>" name="codigo_partidadetalle<?=$idFila;?>" id="codigo_partidadetalle<?=$idFila;?>">
-             <input type="hidden" name="codigo_cuentadetalle<?=$idFila;?>" value="<?=$codCuentaX?>" id="codigo_cuentadetalle<?=$idFila;?>"> 	
-			<a title="Eliminar Registro" href="#" class="btn btn-just-icon btn-danger btn-link" id="boton_remove<?=$idFila;?>" onclick="minusDetallePlantilla('<?=$idFila;?>');">
+		<div class="col-sm-2">
+		  <div class="btn-group">
+		  	<a href="#" id="boton_det<?=$idFila;?>" onclick="listDetalle(<?=$idFila;?>);" class="btn btn-just-icon btn-primary btn-link">
+               <i class="material-icons">view_list</i><span id="ndet<?=$idFila;?>" class="count bg-warning">0</span>
+             </a>
+			<a rel="tooltip" href="#" class="btn btn-just-icon btn-danger btn-link" id="boton_remove<?=$idFila;?>" onclick="minusGrupoPlantilla('<?=$idFila;?>');">
             	<i class="material-icons">remove_circle</i>
+	        </a>
+	        <a rel="tooltip" id="boton_det_list<?=$idFila;?>" href="#" class="btn btn-just-icon btn-info btn-link" onclick="mostrarDetalle('<?=$idFila;?>');">
+            	<i class="material-icons">remove_red_eye</i>
 	        </a>
 	      </div>  
 		</div>
@@ -327,7 +281,7 @@ if(isset($_GET['cod'])){
 
 		            <fieldset id="list_servicios" class="d-none col-sm-12">
 		            	<center>
-		            	<div class="col-sm-8">	
+		            	<div class="col-sm-12">	
 		            		<div class="row">
                                   <label class="col-sm-3 col-form-label">Lista de Servicios</label>
                                       <div class="col-sm-7">
@@ -386,6 +340,7 @@ if(isset($_GET['cod'])){
       	                     				<th>Observaciones</th>
       	                     				<th>Cantidad</th>
       	                     				<th>Monto</th>
+      	                     				<th>Total</th>
       	                     				<th>Action</th>
       	                     			</tr>
       	                     		</thead>
@@ -394,7 +349,7 @@ if(isset($_GET['cod'])){
       	                     			$sql11="SELECT s.*,c.descripcion,c.codigo as servicio_cod from plantillas_servicios_tiposervicio s,claservicios c where s.cod_plantillaservicio=$codigo and s.cod_claservicio=c.idclaservicio";
                                         $stmt11 = $dbh->prepare($sql11);
                                         $stmt11->execute();
-                                        $index11=1;
+                                        $index11=1;$total11=0;
  while ($rowServ = $stmt11->fetch(PDO::FETCH_ASSOC)) {
     $descripcion11=$rowServ['descripcion'];
     $servicio_cod11=$rowServ['servicio_cod'];
@@ -402,6 +357,8 @@ if(isset($_GET['cod'])){
     $cantidad11=$rowServ['cantidad'];
     $monto11=$rowServ['monto'];
     $codigo11=$rowServ['codigo'];
+    $montoTotal11=$cantidad11*$monto11;
+    $total11+=$montoTotal11;
     ?>
   <tr>
     <td><?=$index11?></td>
@@ -410,6 +367,7 @@ if(isset($_GET['cod'])){
     <td><?=$observaciones11?></td>
     <td class="text-right"><?=$cantidad11?></td>
     <td class="text-right"><?=number_format($monto11, 2, '.', ',');?></td>
+    <td class="text-right"><?=number_format($montoTotal11, 2, '.', ',');?></td>
     <td><a href="#" class="<?=$buttonDelete;?> btn-link btn-sm" onclick="removeServicioPlantilla(<?=$codigo11?>); return false;">
                               <i class="material-icons"><?=$iconDelete;?></i>
                             </a>
@@ -418,6 +376,12 @@ if(isset($_GET['cod'])){
     <?php
     $index11++;
 }?>
+  <tr class="font-weight-bold">
+    <td colspan="6" class="text-center">TOTAL</td>
+    <td class="text-right"><?=number_format($total11, 2, '.', ',');?></td>
+    <td></td>
+  </tr>
+
       	                     		</tbody>
       	                     	</table>
       	                     </div>
@@ -425,6 +389,110 @@ if(isset($_GET['cod'])){
 		            	</center>
 		            </fieldset>
                     <fieldset id="list_personal" class="d-none col-sm-12">
+                    	<center>
+		            	<div class="col-sm-12">	
+		            		<div class="row">
+                                  <label class="col-sm-3 col-form-label">Lista de Auditores</label>
+                                      <div class="col-sm-7">
+        	                            <div class="form-group">
+	                                   <select class="selectpicker form-control" name="personal_codigo" id="personal_codigo" data-style="fondo-boton">
+	        	                          <option disabled selected value="">--Seleccione--</option>
+			  	              <?php
+                                          $stmt3 = $dbh->prepare("SELECT codigo,nombre,abreviatura from tipos_auditor where cod_estadoreferencial=1");
+                                          $stmt3->execute();
+                                          while ($rowServ = $stmt3->fetch(PDO::FETCH_ASSOC)) {
+                                             $codigoServX=$rowServ['codigo'];
+                                             $nombreServX=$rowServ['nombre'];
+                                              ?><option value="<?=$codigoServX;?>"><?=$nombreServX?></option><?php 
+                                           } 
+                                   ?>  
+					
+			                         </select>
+			                      </div>
+			                     </div>
+			                     <div class="col-sm-2">
+			                     	<div class="form-group">
+			                     <a href="#" class="btn btn-danger fondo-boton fondo-boton-active" onclick="guardarAuditorPlantilla()">Agregar</a> 
+			                         </div>   
+			                     </div>
+      	                     </div>
+      	                     <!--<div class="row">
+                                <label class="col-sm-3 col-form-label">Observacion</label>
+                                <div class="col-sm-9">
+                                  <div class="form-group">
+                                  	<textarea type="text" id="observacion_servicio" class="form-control"></textarea>
+                                  </div>
+                                 </div>
+                              </div>-->
+                              <div class="row">
+                                <label class="col-sm-3 col-form-label">Cantidad</label>
+                                <div class="col-sm-3">
+                                  <div class="form-group">
+                                  	<input type="number" id="cantidad_auditor" min="1" class="form-control">
+                                  </div>
+                                 </div>
+                                 <label class="col-sm-2 col-form-label">Monto</label>
+                                <div class="col-sm-4">
+                                  <div class="form-group">
+                                  	<input type="number" id="monto_auditor" min="0" step="0.001" class="form-control">
+                                  </div>
+                                 </div>
+                              </div>
+                             <br>
+      	                     <div class="row">
+      	                     	<table class="table table-bordered table-condensed">
+      	                     		<thead>
+      	                     			<tr class="fondo-boton">
+      	                     				<th>#</th>
+      	                     				<th>Descripci&oacute;n</th>
+      	                     				<!--<th>Observaciones</th>-->
+      	                     				<th>Cantidad</th>
+      	                     				<th>Monto</th>
+      	                     				<th>Total</th>
+      	                     				<th>Action</th>
+      	                     			</tr>
+      	                     		</thead>
+      	                     		<tbody id="tabla_personal">
+      	                     			<?php 
+      	                     			$sql11="SELECT s.*,c.nombre,c.codigo as auditor_cod from plantillas_servicios_auditores s,tipos_auditor c where s.cod_plantillaservicio=$codigo and s.cod_tipoauditor=c.codigo";
+                                        $stmt11 = $dbh->prepare($sql11);
+                                        $stmt11->execute();
+                                        $index11=1;$total11=0;
+                                       while ($rowServ = $stmt11->fetch(PDO::FETCH_ASSOC)) {
+                                          $descripcion11=$rowServ['nombre'];
+                                          $servicio_cod11=$rowServ['auditor_cod'];
+                
+                                          $cantidad11=$rowServ['cantidad'];
+                                          $monto11=$rowServ['monto'];
+                                          $codigo11=$rowServ['codigo'];
+                                          $montoTotal11=$cantidad11*$monto11;
+                                          $total11+=$montoTotal11;
+                                          ?>
+                                       <tr>
+                                         <td><?=$index11?></td>
+                                         <td><?=$descripcion11?></td>
+                                         
+                                         <td class="text-right"><?=$cantidad11?></td>
+                                         <td class="text-right"><?=number_format($monto11, 2, '.', ',');?></td>
+                                         <td class="text-right"><?=number_format($montoTotal11, 2, '.', ',');?></td>
+                                         <td><a href="#" class="<?=$buttonDelete;?> btn-link btn-sm" onclick="removeAuditorPlantilla(<?=$codigo11?>); return false;">
+                                                                    <i class="material-icons"><?=$iconDelete;?></i>
+                                              </a>
+                                          </td>
+                                        </tr>
+                                          <?php
+                                          $index11++;
+                                      }?>
+                                      <tr class="font-weight-bold">
+                                         <td colspan="4" class="text-center">TOTAL</td>
+                                         <td class="text-right"><?=number_format($total11, 2, '.', ',');?></td>
+                                         <td></td>
+                                       </tr>
+      	                     		</tbody>
+      	                     	</table>
+      	                     </div>
+      	                  </div>   
+		            	</center>
                     </fieldset>
 				  	<div class="card-footer fixed-bottom">
 						<button type="submit" class="<?=$buttonMorado;?> fondo-boton fondo-boton-active">Guardar</button>
@@ -433,6 +501,31 @@ if(isset($_GET['cod'])){
 				  	</div>
 				 </div>
 			    </div>			
+               </div>
+               <div class="col-sm-4">
+            	<div class="card">
+				<div class="card-header <?=$colorCard;?> card-header-text">
+					<div class="card-text" id="cabezadetalle">
+					  <h6 class="card-title">Detalle</h6>
+					</div>
+				</div>
+				<div class="card-body">
+					<table class="table table-condensed table-striped text-small">
+						<thead>
+							<tr>
+								<th>Partida</th>
+								<th>Tipo</th>
+								<th class="text-right">M Global</th>
+								<th class="text-right">M x Auditoria</th>
+								<th class="text-right">M x Persona</th>
+							</tr>
+						</thead>
+						<tbody id="cuerpoDetalle">
+						</tbody>
+
+					</table>
+				 </div>
+			    </div>	
                </div>
             </div>
 	</div>
