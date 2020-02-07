@@ -1856,6 +1856,26 @@ function presioneBoton(){
   $("#check_simular").removeClass("d-none");
   $("#mensaje").html("<center><p class='text-muted'><small>Presione en SIMULAR PLANTILLA</small></p></center>");
 }
+function guardarServicioSimulacion(valor){
+  Swal.fire({
+        title: '¿Esta Seguro?',
+        text: "La simulación se enviará para su posterior revisión",
+         type: 'warning',
+        showCancelButton: true,
+        confirmButtonClass: 'btn btn-info',
+        cancelButtonClass: 'btn btn-danger',
+        confirmButtonText: 'Si',
+        cancelButtonText: 'No',
+        buttonsStyling: false
+       }).then((result) => {
+          if (result.value) {
+               enviarSimulacionAjaxServ();            
+            return(true);
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            return(false);
+          }
+        });
+}
 
 function guardarSimulacion(valor){
   Swal.fire({
@@ -1965,6 +1985,28 @@ function enviarSimulacionAjax(){
          });
          /*$('#msgError4').html("<p class='text-dark font-weight-bold'>"+resp+"Se envio la Simulacion</p>");
          $('#modalSend').modal('show');*/
+        }
+    });
+}
+
+function enviarSimulacionAjaxServ(){
+  var codigo=$("#cod_simulacion").val();
+  var aprobado=$("#aprobado").val();
+  var parametros={"codigo":codigo,"aprobado":aprobado};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxSendSimulacion.php",
+        data: parametros,
+        beforeSend: function () {
+         $("#logo_carga").show();        
+        },
+        success:  function (resp) {
+         $("#logo_carga").hide();
+         Swal.fire("Envío Existoso!", "Se registradon los datos exitosamente!", "success")
+             .then((value) => {
+             location.href="../index.php?opcion=listSimulacionesServ";
+         });
         }
     });
 }
@@ -3370,10 +3412,31 @@ function activarInputMontoGenericoServicio(matriz){
   var respu= matriz.split('RRR');
   calcularTotalPartidaGenericoServicio(respu[0],1);
 }
+function activarInputMontoPersonalServicio(fila){
+  if(!($("#modal_montopretotal"+fila).is("[readonly]"))){
+    $("#modal_montopretotal"+fila).attr("readonly",true);
+    $("#modal_montopre"+fila).attr("readonly",true);
+  }else{
+    $("#modal_montopretotal"+fila).removeAttr("readonly");
+    $("#modal_montopre"+fila).removeAttr("readonly");
+  }
+  calcularTotalPersonalServicio(1);
+}
+function activarInputMontoFilaServicio(fila){
+  if(!($("#modal_montoservtotal"+fila).is("[readonly]"))){
+    $("#modal_montoservtotal"+fila).attr("readonly",true);
+    $("#modal_montoserv"+fila).attr("readonly",true);
+  }else{
+    $("#modal_montoservtotal"+fila).removeAttr("readonly");
+    $("#modal_montoserv"+fila).removeAttr("readonly");
+  }
+  calcularTotalFilaServicio(1);
+}
 function cambiarCantidadMontoGenericoServicio(matriz){
   var respu= matriz.split('RRR');
   calcularTotalPartidaGenericoServicio(respu[0],2);
 }
+
 function calcularTotalPartidaGenericoServicio(fila,valor){
   var suma=0; var sumal=0;
   var total= $("#numero_cuentas"+fila).val();
@@ -3412,6 +3475,50 @@ function calcularTotalPartidaGenericoServicio(fila,valor){
     }
   }
 }
+
+function calcularTotalPersonalServicio(valor){
+  var suma=0; var sumal=0;
+  var total= $("#modal_numeropersonal").val();
+  for (var i=1;i<=(total-1);i++){
+    if(!($("#modal_montopretotal"+i).is("[readonly]"))){
+    if(valor==1){
+      suma+=parseFloat($("#modal_montopretotal"+i).val());
+      $("#modal_montopre"+i).val(redondeo(parseFloat($("#modal_montopretotal"+i).val())/parseInt($("#cantidad_personal"+i).val())));
+    }else{
+      $("#modal_montopretotal"+i).val(redondeo(parseFloat($("#modal_montopre"+i).val())*parseInt($("#cantidad_personal"+i).val())));
+     suma+=parseFloat($("#modal_montopretotal"+i).val());  
+    }
+     sumal+=parseFloat($("#modal_montopre"+i).val());
+    }
+   
+  } 
+  var result=redondeo(suma);
+  var resulta=redondeo(sumal);
+  $("#modal_totalmontopretotal").text(result);
+  $("#modal_totalmontopre").text(redondeo(resulta)); 
+}
+function calcularTotalFilaServicio(valor){
+  var suma=0; var sumal=0;
+  var total= $("#modal_numeroservicio").val();
+  for (var i=1;i<=(total-1);i++){
+    if(!($("#modal_montoservtotal"+i).is("[readonly]"))){
+    if(valor==1){
+      suma+=parseFloat($("#modal_montoservtotal"+i).val());
+      $("#modal_montoserv"+i).val(redondeo(parseFloat($("#modal_montoservtotal"+i).val())/parseInt($("#cantidad_servicios"+i).val())));
+    }else{
+      $("#modal_montoservtotal"+i).val(redondeo(parseFloat($("#modal_montoserv"+i).val())*parseInt($("#cantidad_servicios"+i).val())));
+     suma+=parseFloat($("#modal_montoservtotal"+i).val());  
+    }
+     sumal+=parseFloat($("#modal_montoserv"+i).val());
+    }
+   
+  } 
+  var result=redondeo(suma);
+  var resulta=redondeo(sumal);
+  $("#modal_totalmontoservtotal").text(result);
+  $("#modal_totalmontoserv").text(redondeo(resulta)); 
+}
+
 function calcularTotalPartidaGenerico(fila,valor){
   var suma=0;
   var total= $("#numero_cuentas"+fila).val();
@@ -4375,6 +4482,7 @@ function guardarDatosSimulacion(btn_id){
   }
 }
 function editarDatosPlantilla(){
+  $("#modal_diasauditoria").val($("#dias_plan").val());
   $("#modal_utibnorca").val($("#utilidad_minlocal").val());
   $("#modal_utifuera").val($("#utilidad_minext").val());
   $("#modal_alibnorca").val($("#alumnos_plan").val());
@@ -4427,6 +4535,127 @@ function guardarDatosPlantilla(btn_id){
   }else{
     Swal.fire("Informativo!", "Debe llenar todos los campos", "warning");
   }
+}
+
+function guardarDatosPlantillaServicio(ib){
+  var conta=0; var contaRead=0;
+  var cosSim=$("#cod_simulacion").val();
+
+  /*PARA PERSONAL*/
+  var total= $("#modal_numeropersonal").val(); 
+  if((total-1)!=0){
+    for (var i=1;i<=(total-1);i++){
+      if($("#modal_montopretotal"+i).val()==""||$("#modal_montopre"+i).val()==""){
+        conta++
+      }
+      if($("#modal_montopretotal"+i).is("[readonly]")){
+        contaRead++
+      }
+    }    
+   }
+  /* FIN PARA PERSONAL*/ 
+  /* PARA SERVICIOS*/
+   var total= $("#modal_numeroservicio").val(); 
+  if((total-1)!=0){
+    for (var i=1;i<=(total-1);i++){
+      if($("#modal_montoservtotal"+i).val()==""||$("#modal_montoserv"+i).val()==""){
+        conta++
+      }
+      if($("#modal_montoservtotal"+i).is("[readonly]")){
+        contaRead++
+      }
+    }    
+   }
+  /* FIN PARA SERVICIOS */    
+  if(conta==0){
+    if(contaRead==0){
+      guardarDatosPlantillaServicioAjax(ib);
+    }else{
+        Swal.fire({
+         title: 'Advertencia!',
+         text: "Hay uno o más registros deshabilitados ¿Desea Continuar?",
+         type: 'warning',
+         showCancelButton: true,
+         confirmButtonClass: 'btn btn-info',
+         cancelButtonClass: 'btn btn-danger',
+         confirmButtonText: 'Si',
+         cancelButtonText: 'No',
+         buttonsStyling: false
+       }).then((result) => {
+          if (result.value) {
+               guardarDatosPlantillaServicioAjax(ib);            
+            return(true);
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            return(false);
+          }
+        });
+    }
+   }else{
+    Swal.fire('Informativo!','Todos los campos son requeridos!','warning'); 
+   } 
+}
+
+function guardarDatosPlantillaServicioAjax(btn_id){
+  var codigo_p=$("#cod_plantilla").val();
+  var cod_sim=$("#cod_simulacion").val();
+  var ut_i=$("#modal_utibnorca").val();
+  var dia=$("#modal_diasauditoria").val();
+
+if(!(ut_i==""||dia==""||dia==0)){ 
+  /*PARA PERSONAL*/
+  var total=$("#modal_numeropersonal").val();
+  for (var i = 1; i <=(total-1); i++) {
+     var habilitado=1;
+      var codigo = $("#modal_codigopersonal"+i).val();
+      var monto = $("#modal_montopre"+i).val();
+      var cantidad = $("#cantidad_personal"+i).val();
+      if($("#modal_montopre"+i).is("[readonly]")){
+        habilitado=0;
+      }
+      var parametros = {"codigo":codigo,"monto":monto,"simulacion":cod_sim,"plantilla":codigo_p,"dia":dia,"utilidad":ut_i,"habilitado":habilitado,"cantidad":cantidad};
+      $.ajax({
+        type:"GET",
+        data:parametros,
+        url:"ajaxSaveDatosPlantilla.php",
+        beforeSend: function () { 
+          iniciarCargaAjax();
+        },
+        success:function(resp){
+          detectarCargaAjax();
+          //alerts.showSwal('success-message','registerSimulacion.php?cod='+cod_sim);
+        }
+      });
+  };  
+  /* FIN PARA PERSONAL*/ 
+  /*PARA SERVICIOS*/ 
+  var total=$("#modal_numeroservicio").val();
+  for (var i = 1; i <=(total-1); i++) {
+     var habilitado=1;
+      var codigo = $("#modal_codigoservicio"+i).val();
+      var monto = $("#modal_montoserv"+i).val();
+      var cantidad = $("#cantidad_servicios"+i).val();
+      if($("#modal_montoserv"+i).is("[readonly]")){
+        habilitado=0;
+      }
+      var parametros = {"codigo":codigo,"monto":monto,"simulacion":cod_sim,"plantilla":codigo_p,"dia":dia,"utilidad":ut_i,"habilitado":habilitado,"cantidad":cantidad};
+      $.ajax({
+        type:"GET",
+        data:parametros,
+        url:"ajaxSaveDatosPlantilla2.php",
+        beforeSend: function () { 
+          iniciarCargaAjax();
+        },
+        success:function(resp){
+          detectarCargaAjax();
+          
+        }
+      });
+  }; 
+  alerts.showSwal('success-message','registerSimulacion.php?cod='+cod_sim); 
+  /* FIN PARA PERSONAL*/
+ }else{
+    Swal.fire("Informativo!", "Debe llenar todos los campos", "warning");
+ }
 }
 
 function actualizarSimulacion(){

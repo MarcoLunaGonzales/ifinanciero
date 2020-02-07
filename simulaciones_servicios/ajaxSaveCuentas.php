@@ -22,25 +22,24 @@ session_start();
 $sqlUpdateDetalle="UPDATE simulaciones_serviciodetalle SET  monto_unitario='$monto',monto_total='$monto',habilitado=$habilitado,cantidad=$cantidad,editado_personal='$montoEditado' where codigo=$codigo";
 $stmtUpdateDetalle = $dbh->prepare($sqlUpdateDetalle);
 $stmtUpdateDetalle->execute();
-
+$montoTotal=0;
 $detallesMontos=obtenerMontosCuentasDetalleSimulacionServicioPartidaHabilitado($simulaciones,$partida);
 while ($row = $detallesMontos->fetch(PDO::FETCH_ASSOC)) {
 	if($row['cod_cuenta']==$cuenta){
     if($row['habilitado']==0){
-      $montoTotal=0;
+      $montoTotal+=0;
     }else{
-		$montoTotal=$row['monto'];    
-    }
-    $dbh2 = new Conexion();
-      if($ibnorca==1){
-       $sqlUpdate="UPDATE cuentas_simulacion SET  monto_local='$montoTotal' where codigo=$simulacion and cod_plancuenta=$cuenta";	
+		$montoTotal+=$row['monto'];    
+    }          
+	}
+}
+$dbh2 = new Conexion();
+     if($ibnorca==1){
+       $sqlUpdate="UPDATE cuentas_simulacion SET  monto_local='$montoTotal' where codigo=$simulacion and cod_plancuenta=$cuenta"; 
       }else{
        $sqlUpdate="UPDATE cuentas_simulacion SET  monto_externo='$montoTotal' where codigo=$simulacion and cod_plancuenta=$cuenta";
       }
       $stmtUpdate = $dbh2->prepare($sqlUpdate);
       $flagSuccess=$stmtUpdate->execute();
-	}
-}
-
 
 ?>

@@ -35,7 +35,10 @@ if(isset($_GET['cod'])){
 }
 
 $precioLocalX=obtenerPrecioServiciosSimulacion($codigo);
+$precioLocalInputX=number_format($precioLocalX, 2, '.', '');
 $alumnosX=obtenerCantidadPersonalSimulacionEditado($codigo);
+
+$costoVariablePersonal=obtenerCostosPersonalSimulacionEditado($codigo);
 $ibnorcaC=1;
 $utilidadFueraX=1;
 $mesConf=obtenerValorConfiguracion(6);
@@ -186,7 +189,19 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
           <div class="col-sm-4">
               <div class="form-group">
                   <label class="bmd-label-static">D&iacute;as Auditoria</label>
-                  <input class="form-control" type="text" name="dias_plan" readonly value="<?=$diasPlantilla?>" id="dias_plan"/>
+                  <input class="form-control" type="text" name="dias_plan" readonly value="<?=$diasSimulacion?>" id="dias_plan"/>
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="form-group">
+                  <label class="bmd-label-static">Utilidad M&iacute;n %</label>
+                  <input class="form-control" type="text" name="utilidad_minima_ibnorca" readonly value="<?=$utilidadIbnorcaX?>" id="utilidad_minima_ibnorca"/>
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="form-group">
+                  <label class="bmd-label-static">Precio Auditoria</label>
+                  <input class="form-control" type="text" name="precio_auditoria_ib" readonly value="<?=$precioLocalInputX?>" id="precio_auditoria_ib"/>
               </div>
             </div>
 				      	<?php } ?>
@@ -253,7 +268,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
 
                  //calculos en la simulacion SERVICIOS
                  $gastosOperacionNacional=($costoTotalLocal*(obtenerValorConfiguracion(19)/100));
-                 $utilidadBruta=($precioLocalX*$diasSimulacion)-($costoTotalLocal+$gastosOperacionNacional);   
+                 $utilidadBruta=($precioLocalX*$diasSimulacion)-($costoTotalLocal);   
                  $utilidadNetaLocal=$utilidadBruta-(($iva+$it)/100)*($precioLocalX*$diasSimulacion);
                  $pUtilidadLocal=($utilidadNetaLocal*100)/($precioLocalX*$diasSimulacion);
 
@@ -317,10 +332,10 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                   <td class="text-left small bg-table-primary text-white">COSTO VARIABLE TOTAL</td>
                   <td class="text-right font-weight-bold"><?=number_format(($totalVariable[2]*$alumnosX), 2, '.', ',')?></td>
                 </tr>
-								<!--<tr>
-                  <td class="text-left small bg-table-primary text-white">COSTO VARIABLE UNITARIO</td>
-                  <td class="text-right font-weight-bold"><?=number_format($totalVariable[2], 2, '.', ',')?></td>
-                </tr>-->
+								<tr class="bg-danger text-white">
+                  <td class="text-left small">COSTO VARIABLE TOTAL PERSONAL</td>
+                  <td class="text-right font-weight-bold"><?=number_format($costoVariablePersonal, 2, '.', ',')?></td>
+                </tr>
                 <tr class="">
                   <td  style="font-size:9px !important;"></td>
                   <td class="bg-table-primary text-white">CANTIDAD</td>
@@ -364,6 +379,10 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                   <td class="text-left small bg-table-primary text-white">COSTO VARIABLE TOTAL</td>
                   <td class="text-right font-weight-bold"><?=number_format(($totalVariable[2]*$alumnosX), 2, '.', ',')?></td>
                 </tr>
+                <tr class="bg-danger text-white">
+                  <td class="text-left small">COSTO VARIABLE TOTAL PERSONAL</td>
+                  <td class="text-right font-weight-bold"><?=number_format($costoVariablePersonal, 2, '.', ',')?></td>
+                </tr>
                 <tr class="bg-warning text-dark">
                   <td class="text-left small">COSTO TOTAL</td>
                   <td class="text-right font-weight-bold"><?=number_format($costoTotalLocal, 2, '.', ',')?></td>
@@ -371,14 +390,6 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                  <?php 
                   
                  ?>
-                <tr class="bg-danger text-white">
-                  <td class="text-left small">GASTOS DE OPERACION NACIONAL (<?=obtenerValorConfiguracion(19)?> %)</td>
-                  <td class="text-right font-weight-bold"><?=number_format($gastosOperacionNacional, 2, '.', ',')?></td>
-                </tr>
-                <tr class="bg-warning text-dark">
-                  <td class="text-left small">TOTAL COSTOS ex IMP + OVERHEAD</td>
-                  <td class="text-right font-weight-bold"><?=number_format($costoTotalLocal+$gastosOperacionNacional, 2, '.', ',')?></td>
-                </tr>
                 <tr>
                   <td class="text-left small bg-table-primary text-white">MARGEN DE GANANCIA ESPERADA</td>
                   <td class="text-right font-weight-bold"><?=number_format($utilidadIbnorcaX, 2, '.', ',')?> %</td>
@@ -421,8 +432,8 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                 </tr>
                 <tr>
                   <td class="text-left small bg-table-primary text-white">TOTAL COSTOS</td>
-                  <td class="text-right font-weight-bold"><?=number_format($costoTotalLocal+$gastosOperacionNacional, 2, '.', ',')?></td>
-                  <td class="text-right font-weight-bold"><?=number_format((($costoTotalLocal+$gastosOperacionNacional)*100)/($precioLocalX*$diasSimulacion), 2, '.', ',')?> %</td>
+                  <td class="text-right font-weight-bold"><?=number_format($costoTotalLocal, 2, '.', ',')?></td>
+                  <td class="text-right font-weight-bold"><?=number_format((($costoTotalLocal)*100)/($precioLocalX*$diasSimulacion), 2, '.', ',')?> %</td>
                 </tr>
                 <?php 
                   
@@ -464,7 +475,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
 				  </div>
 				  	<div class="card-footer fixed-bottom">
             
-            <a onclick="guardarSimulacion()" class="btn btn-success text-white"><i class="material-icons">send</i> Enviar Simulacion</a>
+            <a onclick="guardarServicioSimulacion()" class="btn btn-success text-white"><i class="material-icons">send</i> Enviar Simulacion</a>
 				  	<a href="../<?=$urlList;?>" class="btn btn-danger">Volver</a> 
             </div>
 				 </div>

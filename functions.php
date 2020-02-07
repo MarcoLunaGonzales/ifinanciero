@@ -653,6 +653,26 @@ FROM plan_cuentas p join comprobantes_detalle d on p.codigo=d.cod_cuenta join ar
    //$stmt->bindColumn('cod_comprobante', $codigoC);
    return $stmt;
 }
+function obtenerPlantillaCostoDatos($codigo){
+   $dbh = new Conexion();
+   $sql="";
+   $sql="SELECT  * from plantillas_costo where codigo=$codigo order by codigo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   // bindColumn
+   //$stmt->bindColumn('cod_comprobante', $codigoC);
+   return $stmt;
+}
+function obtenerPlantillaServicioDatos($codigo){
+   $dbh = new Conexion();
+   $sql="";
+   $sql="SELECT  * from plantillas_servicios where codigo=$codigo order by codigo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   // bindColumn
+   //$stmt->bindColumn('cod_comprobante', $codigoC);
+   return $stmt;
+}
 
 //funcion nueva obtener detalle de comprobante
 function obtenerPlantillaCosto($codigo){
@@ -2117,6 +2137,14 @@ function obtenerDetallePlantillaCostosPartida($plantilla,$codigo){
    $stmt->execute();
    return $stmt;
 }
+function obtenerDetallePlantillaCostos($plantilla){
+  $dbh = new Conexion();
+  $sql="";
+  $sql="SELECT c.numero,c.nombre,p.* FROM plantillas_servicios_detalle p join plan_cuentas c on p.cod_cuenta=c.codigo where p.cod_plantillacosto=$plantilla";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+}
 function obtenerDetallePlantillaServicioPartida($plantilla,$codigo){
   $dbh = new Conexion();
   $sql="";
@@ -2184,7 +2212,8 @@ function obtenerMontosCuentasDetallePlantillaCostosPartidaHabilitado($plantilla,
 function obtenerMontosCuentasDetalleSimulacionCostosPartidaHabilitado($sim,$codigo){
   $dbh = new Conexion();
   $sql="";
-  $sql="SELECT p.cod_partidapresupuestaria,p.cod_cuenta,c.numero,c.nombre,sum(p.monto_total) as monto,p.habilitado FROM simulaciones_detalle p join plan_cuentas c on p.cod_cuenta=c.codigo where p.cod_partidapresupuestaria=$codigo and p.cod_simulacioncosto=$sim group by cod_cuenta";
+  //$sql="SELECT p.cod_partidapresupuestaria,p.cod_cuenta,c.numero,c.nombre,sum(p.monto_total) as monto,p.habilitado FROM simulaciones_detalle p join plan_cuentas c on p.cod_cuenta=c.codigo where p.cod_partidapresupuestaria=$codigo and p.cod_simulacioncosto=$sim group by cod_cuenta";
+  $sql="SELECT p.cod_partidapresupuestaria,p.cod_cuenta,c.numero,c.nombre,p.monto_total as monto,p.habilitado FROM simulaciones_detalle p join plan_cuentas c on p.cod_cuenta=c.codigo where p.cod_partidapresupuestaria=$codigo and p.cod_simulacioncosto=$sim";
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
    return $stmt;
@@ -2192,7 +2221,7 @@ function obtenerMontosCuentasDetalleSimulacionCostosPartidaHabilitado($sim,$codi
 function obtenerMontosCuentasDetalleSimulacionServicioPartidaHabilitado($sim,$codigo){
   $dbh = new Conexion();
   $sql="";
-  $sql="SELECT p.cod_partidapresupuestaria,p.cod_cuenta,c.numero,c.nombre,sum(p.monto_total) as monto,p.habilitado FROM simulaciones_serviciodetalle p join plan_cuentas c on p.cod_cuenta=c.codigo where p.cod_partidapresupuestaria=$codigo and p.cod_simulacionservicio=$sim group by cod_cuenta";
+  $sql="SELECT p.cod_partidapresupuestaria,p.cod_cuenta,c.numero,c.nombre,p.monto_total as monto,p.habilitado FROM simulaciones_serviciodetalle p join plan_cuentas c on p.cod_cuenta=c.codigo where p.cod_partidapresupuestaria=$codigo and p.cod_simulacionservicio=$sim";
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
    return $stmt;
@@ -2245,7 +2274,7 @@ function obtenerPrecioServiciosSimulacion($codigo){
    $num=0;
   while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
   {
-    $cantidad=$row['cantidad'];
+    $cantidad=$row['cantidad_editado'];
     $monto=$row['monto'];
     $num+=$cantidad*$monto;
   }
@@ -2281,6 +2310,23 @@ function obtenerCantidadPersonalSimulacionEditado($codigo){
   }
   return $num;
 }
+function obtenerCostosPersonalSimulacionEditado($codigo){
+  $dbh = new Conexion();
+  $sql="";
+  $sql="SELECT * from simulaciones_servicios_auditores where cod_simulacionservicio=$codigo and habilitado=1";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute(); 
+   $num=0;
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
+  {
+    $cantidad=$row['cantidad_editado'];
+    $monto=$row['monto'];
+    $num+=$cantidad*$monto;
+  }
+  return $num;
+}
+
+
 function obtenerCantidadPersonalSimulacionDetalle($codigo){
   $dbh = new Conexion();
   $sql="";
@@ -2736,7 +2782,7 @@ function obtenerMontoPlantillaDetalleServicio($codigoPar,$codigo,$ib){
   $montoI=0;$montoF=0;
    $stmt = $dbh->prepare("SELECT pd.monto_local,pd.monto_externo FROM plantillas_gruposerviciodetalle pd 
     join plantillas_gruposervicio pg on pg.codigo=pd.cod_plantillagruposervicio
-    join plantillas_servicio p on p.codigo=pg.cod_plantillaservicio
+    join plantillas_servicios p on p.codigo=pg.cod_plantillaservicio
     where pd.cod_partidapresupuestaria=:codigo and p.codigo=:codPlan");
    $stmt->bindParam(':codigo',$codigo);
    $stmt->bindParam(':codPlan',$codigoPar);

@@ -122,8 +122,8 @@ if(isset($_GET['nombre'])){
       $cantidadS=$rowServPlan['cantidad'];
       $montoS=$rowServPlan['monto'];
       $dbhAU = new Conexion();
-      $sqlAU="INSERT INTO simulaciones_servicios_tiposervicio (cod_simulacionservicio,cod_claservicio, observaciones,cantidad, monto,cod_estadoreferencial) 
-      VALUES ('".$codSimServ."','".$codCS."','".$obsCS."','".$cantidadS."','".$montoS."',1)";
+      $sqlAU="INSERT INTO simulaciones_servicios_tiposervicio (cod_simulacionservicio,cod_claservicio, observaciones,cantidad, monto,cod_estadoreferencial,cantidad_editado) 
+      VALUES ('".$codSimServ."','".$codCS."','".$obsCS."','".$cantidadS."','".$montoS."',1,'".$cantidadS."')";
       $stmtAU = $dbhAU->prepare($sqlAU);
       $stmtAU->execute();
      }
