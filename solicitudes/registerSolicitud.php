@@ -101,7 +101,7 @@ if(isset($_GET['cod'])){
 </div>
 <div class="cargar-ajax d-none">
   <div class="div-loading text-center">
-     <h4 class="text-warning font-weight-bold">Procesando Datos</h4>
+     <h4 class="text-warning font-weight-bold" id="texto_ajax_titulo">Procesando Datos</h4>
      <p class="text-white">Aguard&aacute; un momento por favor</p>  
   </div>
 </div>
@@ -301,7 +301,8 @@ if(isset($_GET['cod'])){
             <div class="card-footer fixed-bottom">
                <button type="submit" class="<?=$buttonMorado;?>">Guardar</button>
                <a href="../<?=$urlList;?>" class="<?=$buttonCancel;?>">Volver</a>
-
+               <a href="#" onclick="cargarDatosRegistroProveedor()" class="btn btn-warning float-right">Agregar Proveedor</a>
+               <a href="#" onclick="actualizarRegistroProveedor()" class="btn btn-success float-right">Actualizar Proveedores</a>
             </div>
         </div>
       </div>      
