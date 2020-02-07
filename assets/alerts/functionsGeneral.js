@@ -2765,6 +2765,92 @@ function agregarCargoAreaOrganizacion(){
 //   }
 //   ajax.send(null)  
 // }
+//funciones cargos
+function agregaFuncionCargo(datos){
+  //console.log("datos: "+datos);
+  var d=datos.split('/');
+  document.getElementById("cod_cargoA").value=d[0];
+}
+function RegistrarCargoFuncion(cod_cargoA,nombre_funcionA,pesoA){
+  $.ajax({
+    type:"POST",
+    data:"cod_funcion=0&cod_cargo="+cod_cargoA+"&nombre_funcion="+nombre_funcionA+"&cod_estadoreferencial=1&peso="+pesoA,
+    url:"rrhh/cargoFuncionSave.php",
+    success:function(r){
+      if(r==1){
+        alerts.showSwal('success-message','index.php?opcion=cargosFunciones&codigo='+cod_cargoA);
+      }else{
+        alerts.showSwal('error-message','index.php?opcion=cargosFunciones&codigo='+cod_cargoE);
+      } 
+    }
+  });
+}
+function agregaFuncionCargoE(datos){
+  //console.log("datos: "+datos);
+  var d=datos.split('/');
+  document.getElementById("cod_cargoE").value=d[0];
+  document.getElementById("cod_cargo_funcionE").value=d[1];
+  document.getElementById("nombre_funcionE").value=d[2];
+  document.getElementById("pesoE").value=d[3];
+}
+function EditarCargoFuncion(cod_cargoE,cod_cargo_funcionE,nombre_funcionE,pesoE){
+  $.ajax({
+    type:"POST",
+    data:"cod_funcion="+cod_cargo_funcionE+"&cod_cargo="+cod_cargoE+"&nombre_funcion="+nombre_funcionE+"&cod_estadoreferencial=2&peso="+pesoE,
+    url:"rrhh/cargoFuncionSave.php",
+    success:function(r){
+      if(r==1){
+        alerts.showSwal('success-message','index.php?opcion=cargosFunciones&codigo='+cod_cargoE);
+      }else{
+        alerts.showSwal('error-message','index.php?opcion=cargosFunciones&codigo='+cod_cargoE);
+      } 
+    }
+  });
+}
+function agregaFuncionCargoB(datos){
+  //console.log("datos: "+datos);
+  var d=datos.split('/');
+  document.getElementById("cod_cargoB").value=d[0];
+  document.getElementById("cod_cargo_funcionB").value=d[1];
+}
+function EliminarCargoFuncion(cod_cargoB,cod_cargo_funcionB){
+  $.ajax({
+    type:"POST",
+    data:"cod_funcion="+cod_cargo_funcionB+"&cod_cargo="+cod_cargoB+"&nombre_funcion=''&cod_estadoreferencial=3&peso=0",
+    url:"rrhh/cargoFuncionSave.php",
+    success:function(r){
+      if(r==1){
+        alerts.showSwal('success-message','index.php?opcion=cargosFunciones&codigo='+cod_cargoB);
+      }else{      
+          alerts.showSwal('error-message','index.php?opcion=cargosFunciones&codigo='+cod_cargoB);
+      } 
+    }
+  });
+}
+
+//cargos escalas salarial
+
+function agregaCargoEscalaSalarialE(datos){
+  var d=datos.split('/');
+  document.getElementById("cod_cargoE").value=d[0];
+  document.getElementById("cod_cargo_escala_salarialE").value=d[1];
+  document.getElementById("nombre_nivel_escalaE").value=d[2];
+  document.getElementById("montoE").value=d[3];
+}
+function EditarCargoEscalaSalarial(cod_cargoE,cod_cargo_escala_salarialE,montoE){
+  $.ajax({
+    type:"POST",
+    data:"cod_escala="+cod_cargo_escala_salarialE+"&monto="+montoE,
+    url:"rrhh/cargosEscalaSalarialEdit.php",
+    success:function(r){
+      if(r==1){
+        alerts.showSwal('success-message','index.php?opcion=cargosEscalaSalarial&codigo='+cod_cargoE);
+      }else{
+        alerts.showSwal('error-message','index.php?opcion=cargosEscalaSalarial&codigo='+cod_cargoE);
+      } 
+    }
+  });
+}
 
 
 //contratos de personal
@@ -3928,10 +4014,8 @@ function ajaxPersonalUOCajaChica(codigo_UO){
       $('.selectpicker').selectpicker(["refresh"]);
     }
   }
-  ajax.send(null)
-  
+  ajax.send(null)  
 }
-
 
 function ajaxAreaCargos(codigo_uo,combo){
   var contenedor;

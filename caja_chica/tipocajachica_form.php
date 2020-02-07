@@ -53,9 +53,9 @@ if ($codigo > 0){
                     </div><!--fin campo nombre -->
                     <div class="row">
                       <label class="col-sm-2 col-form-label">Oficina</label>
-                      <div class="col-sm-4">
+                      <div class="col-sm-8">
                         <div class="form-group">
-                            <select name="cod_uo" id="cod_uo" class="selectpicker" data-style="btn btn-info" onChange="ajaxUOArea_personal_tipocajachica(this);">
+                            <select name="cod_uo" id="cod_uo" class="selectpicker form-control" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" onChange="ajaxUOArea_personal_tipocajachica(this);">
                                 <option value=""></option>
                                 <?php 
                                 $queryUO = "SELECT codigo,nombre from unidades_organizacionales where cod_estado=1 order by nombre";
@@ -65,29 +65,30 @@ if ($codigo > 0){
                                 <?php } ?>
                             </select>
                         </div>
-                      </div>
-                   
-                      <label class="col-sm-2 col-form-label">Area</label>
-                      <div class="col-sm-4">
-                        <div class="form-group" >
-                            <div id="div_contenedor_area_tcc">
-                                <select name="cod_area" id="cod_area" class="selectpicker" data-style="btn btn-info" >
-                                    <option value=""></option>
-                                    <?php 
-                                    $queryArea = "SELECT codigo,nombre FROM  areas WHERE cod_estado=1 order by nombre";
-                                    $statementArea = $dbh->query($queryArea);
-                                    while ($row = $statementArea->fetch()){ ?>
-                                        <option <?=($cod_area==$row["codigo"])?"selected":"";?>  value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
-                                    <?php } ?>
-                                </select>
-                            </div>                    
-                        </div>
-                      </div>
+                      </div>                
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-2 col-form-label">Area</label>
+                          <div class="col-sm-8">
+                            <div class="form-group" >
+                                <div id="div_contenedor_area_tcc">
+                                    <select name="cod_area" id="cod_area" class="selectpicker form-control" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" >
+                                        <option value=""></option>
+                                        <?php 
+                                        $queryArea = "SELECT codigo,nombre FROM  areas WHERE cod_estado=1 order by nombre";
+                                        $statementArea = $dbh->query($queryArea);
+                                        while ($row = $statementArea->fetch()){ ?>
+                                            <option <?=($cod_area==$row["codigo"])?"selected":"";?>  value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>                    
+                            </div>
+                          </div>
                     </div>
 
                     <div class="row">
                         <label class="col-sm-2 col-form-label">Responsable</label>
-                        <div class="col-sm-4">
+                        <div class="col-sm-8">
                         <div class="form-group">
                             <div id="div_personal_UO_tcc">
                                 <?php
@@ -96,7 +97,7 @@ if ($codigo > 0){
                                 where uo.codigo=p.cod_unidadorganizacional and uo.codigo=$cod_uo order by 2");
                                 $stmtPersonal->execute();
                                 ?>
-                                <select id="cod_personal" name="cod_personal" class="selectpicker form-control" data-style="btn btn-info" data-size="5">
+                                <select id="cod_personal" name="cod_personal" class="selectpicker form-control" data-style="btn btn-info" data-size="5" data-show-subtext="true" data-live-search="true">
                                     <?php 
                                         while ($row = $stmtPersonal->fetch()){                                             
                                        ?>
@@ -115,7 +116,7 @@ if ($codigo > 0){
 			  </div>
 			  <div class="card-footer ml-auto mr-auto">
 				<button type="submit" class="<?=$buttonNormal;?>">Guardar</button>
-				<a href="<?=$urlListTiposCajaChica;?>" class="<?=$buttonCancel;?>"> <-- Volver </a>
+				<a href="<?=$urlListTiposCajaChica;?>" class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
 			  </div>
 			</div>
 		  </form>

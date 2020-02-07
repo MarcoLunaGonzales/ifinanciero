@@ -36,10 +36,10 @@
                 <b>PLANILLA TRIBUTARIA V2</b>
             </h4>                  
             <h6 class="card-title"><small>
-              <b>NIT:</b>1020745020<br>
+              <b>NIT:</b><?=obtenerValorConfiguracionEmpresa(4)?><br>
               Mes de declaración: <?=$cod_mes;?><br>
               Año de declaración: <?=$nombre_gestion; ?><br>
-              SMN Actual: 2122<br>
+              SMN Actual: <?=obtenerValorConfiguracionEmpresa(5)?><br>
               </small>                    
             </h6>             
           </div>

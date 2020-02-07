@@ -23,8 +23,8 @@ $dbh = new Conexion();
             <label class="col-sm-2 col-form-label">Oficina</label>
             <div class="col-sm-7">
               <div class="form-group">
-                <select name="cod_uo" id="cod_uo" class="selectpicker form-control" data-style="btn btn-info" onChange="ajaxOficinaPersonal(this);">
-                    <option value=""></option>
+                <select name="cod_uo" id="cod_uo" class="selectpicker form-control" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" onChange="ajaxOficinaPersonal(this);">
+                    <option ></option>
                     <?php 
                     $queryUO = "SELECT codigo,nombre from unidades_organizacionales where cod_estado=1 order by nombre";
                     $statementUO = $dbh->query($queryUO);

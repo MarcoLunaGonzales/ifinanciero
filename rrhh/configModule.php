@@ -17,6 +17,16 @@ $urlListCargos="?opcion=cargosLista";
 $urlSaveCargos="?opcion=cargosSave";
 $urlFormCargos="index.php?opcion=cargosForm";
 $urlDeleteCargos="index.php?opcion=deleteCargos";
+$urlCargosFunciones="index.php?opcion=cargosFunciones";
+$urlCargosEscalaSalarial="index.php?opcion=cargosEscalaSalarial";
+$urlCargosEscalaSalarialForm="index.php?opcion=cargosEscalaSalarialForm";
+$urlCargosEscalaSalarialSave="?opcion=cargosEscalaSalarialSave";
+$urlCargoEscalaSalarialGeneral="?opcion=cargoEscalaSalarialGeneral";
+
+$urlCargoEscalaSalarialGeneralDelete="index.php?opcion=cargoEscalaSalarialGeneralDelete";
+
+
+
 
 //unidades organizacionales
 $nombreSingularUO="Unidad Organizacional";
@@ -40,8 +50,6 @@ $urlFormAreas_contabilizacion_detalle="index.php?opcion=FormAreas_contabilizacio
 $urlSaveAreas_contabilizacion_detalle="?opcion=saveAreas_contabilizacion_detalle";
 $urlDeleteAreaContabilizacionDetalle="index.php?opcion=delete_areas_conta_detalle";
 $urlSaveAreas_organizacion="?opcion=areasuoSave";
-
-
 
 
 //tipos personal

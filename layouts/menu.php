@@ -176,9 +176,6 @@ if($menuModulo==0){
             </div>
           </li>
          
-
-
-
           <!--TRANSACCIONES RRHH-->
           <li class="nav-item ">
             <a class="nav-link" data-toggle="collapse" href="#transaccHHRR">
@@ -266,7 +263,20 @@ if($menuModulo==0){
                     <span class="sidebar-mini"> R </span>
                     <span class="sidebar-normal"> Histórico Del Personal</span>
                   </a>
-                </li>                           
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=rptDistribucionSueldos">
+                    <span class="sidebar-mini"> R </span>
+                    <span class="sidebar-normal"> Distribución De Sueldos</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=rptIngresos_Descuentos">
+                    <span class="sidebar-mini"> R </span>
+                    <span class="sidebar-normal"> Ingresos & Descuentos </span>
+                  </a>
+                </li>
+
               </ul>
             </div>
           </li>

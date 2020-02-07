@@ -121,7 +121,7 @@ $stmt->bindColumn('nombre_estado', $nombre_estado);
                 <?php
                 }
                 ?>
-                <button class="btn btn-danger" onClick="location.href='<?=$urlprincipal_CajaChica;?>'">Volver</button>
+                <button class="btn btn-danger" onClick="location.href='<?=$urlprincipal_CajaChica;?>'"><i class="material-icons" title="Volver">keyboard_return</i>Volver</button>
               </div>
             </div>
           </div>  

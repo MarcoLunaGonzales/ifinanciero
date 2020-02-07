@@ -142,7 +142,7 @@ if($cod_estado_aux==2 || $cod_estado_aux==null){
     			  </div>
     			  <div class="card-footer ml-auto mr-auto">
     				<button type="submit" class="<?=$buttonNormal;?>">Guardar</button>
-    				<a href="<?=$urlListCajaChica;?>&codigo=<?=$cod_tcc?>" class="<?=$buttonCancel;?>"> <-- Volver </a>
+    				<a href="<?=$urlListCajaChica;?>&codigo=<?=$cod_tcc?>" class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
     			  </div>
     			</div>
     		  </form>

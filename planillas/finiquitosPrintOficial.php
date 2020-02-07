@@ -10,15 +10,38 @@ $dbh = new Conexion();
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//try
 //RECIBIMOS LAS VARIABLES
 
-$codigo = $_GET["codigo"];//codigoactivofijo
+$codigo = $_GET["codigo"];//
 try{
-
     //====================================
     //
-    $stmt = $dbh->prepare("SELECT f.*,p.primer_nombre,p.paterno,p.materno FROM finiquitos f,personal p where f.cod_personal=p.codigo and f.codigo =:codigo");
+    $stmt = $dbh->prepare("SELECT f.*,CONCAT_WS(' ',p.primer_nombre,p.paterno,p.materno)as nombre_personal,cod_estadocivil,fecha_nacimiento,direccion,cod_grado_academico,identificacion,cod_lugar_emision,lugar_emision_otro
+    FROM finiquitos f,personal p where f.cod_personal=p.codigo and f.codigo =:codigo");
     $stmt->bindParam(':codigo',$codigo);
     $stmt->execute();
     $result = $stmt->fetch();
+    //edad de personal
+    $fecha_nac=$result["fecha_nacimiento"];
+    if($fecha_nac=='0000-00-00'){
+        $edad_personal="";
+    }else{
+        $fechaComoEntero = strtotime($fecha_nac);
+        $anio = date("Y", $fechaComoEntero);
+        $anioActual=date('Y');
+        $edad_personal=$anioActual-$anio;
+    }
+    $vacacion_total=$result['vacaciones_dias_monto']+$result['vacaciones_duodecimas_monto'];
+    $aguinaldo_total=$result['aguinaldo_anios_monto']+$result['aguinaldo_meses_monto']+$result['aguinaldo_dias_monto'];
+    //cantidad de dias,meses y años trabajados
+    $datos=obtenerTiempoDosFechas($result['fecha_ingreso'],$result['fecha_retiro'])
+    
+
+    $anios_servicio=$datos[0];
+    $meses_servicio=$datos[1];
+    $dias_servicio=$datos[2];
+
+    $total_beneficios_sociales=$aguinaldo_total+$vacacion_total+$result['indemnización_anios_monto']+$result['indemnización_meses_monto']+$result['indemnización_dias_monto']+$result['desahucio_monto'];
+    
+
 
 $html = '';
 $html.='<html>'.
@@ -51,9 +74,9 @@ $html.='<body>'.
                                             '<td style="text-align: right;"><img class="imagen_der" src="../assets/img/ministerio.jpg"></td>'.
                                         '</tr>'.
                                         '<tr>'.
-                                            '<td><p class="header_texto_inf">ESTADO PLURINACIONAL DE BOLIVIA</p></td>'.
+                                            '<td><p class="header_texto_inf">'.obtenerValorConfiguracionEmpresa(1).'</p></td>'.
                                             '<td width="40%"><p  class="header_titulo_texto">FINIQUITO</p></td>'.
-                                            '<td><p class="header_texto_inf">MINISTERIO DE TRABAJO, EMPLEO Y PREVISIÓN SOCIAL</p></td>'.
+                                            '<td><p class="header_texto_inf">'.obtenerValorConfiguracionEmpresa(2).'</p></td>'.
                                         '</tr>'.
                                     '</tbody>'.
                                 '</table>'.
@@ -68,7 +91,7 @@ $html.='<body>'.
                                 
                                     <tr>
                                         <td colspan="4">RAZÓN SOCIAL O NOMBRE DE LA EMPRESA</td>                                    
-                                        <td colspan="7"></td>
+                                        <td colspan="7" align="center">'.strtoupper(obtenerValorConfiguracionEmpresa(3)).'</td>
                                         <td style="width: 3%">1</td>
                                         <td style="width: 3%">2</td>
                                     </tr>
@@ -77,52 +100,52 @@ $html.='<body>'.
                                         <td></td>
                                         <td></td>
                                         <td colspan="2">DOMICILIO</td>
-                                        <td colspan="5"></td>                                    
+                                        <td colspan="5" align="center">'.obtenerValorConfiguracionEmpresa(6).'</td>                                    
                                     </tr>
                                     <tr>
                                         <td colspan="4">NOMBRE DEL TRABAJADOR</td>
-                                        <td colspan="7"></td>
+                                        <td colspan="7" align="center">'.strtoupper($result["nombre_personal"]).'</td>
                                         <td>1</td>
                                         <td>2</td>
                                     </tr>
                                     <tr>
                                         <td >ESTADO CIVIL</td>
-                                        <td colspan="2"></td>
+                                        <td colspan="2" align="center">'.$result["cod_estadocivil"].'</td>
                                         <td></td>
                                         <td colspan="2">EDAD</td>
-                                        <td></td>
-                                        <td></td>
+                                        <td align="center">'.$edad_personal.'</td>
+                                        <td align="center">años</td>
                                         <td colspan="2">DOMICILIO</td>
-                                        <td colspan="3"></td>                                
+                                        <td align="center" colspan="3">'.$result["direccion"].'</td>                                
                                     </tr>
                                     <tr>
                                         <td colspan="2">PROFESION U OCUPACIÓN</td>
-                                        <td colspan="9"></td>
+                                        <td colspan="9" align="center">'.$result["cod_grado_academico"].'</td>
                                         <td></td>
                                         <td></td>                                                                    
                                     </tr>
                                     <tr>
                                         <td>CI</td>
-                                        <td colspan="3"></td>
+                                        <td colspan="3" align="center">'.$result["identificacion"].' '.$result['cod_lugar_emision'].' '.$result['lugar_emision_otro'].'</td>
                                         <td colspan="2">FECHA INGRESO</td>
-                                        <td colspan="2"></td>                                                                    
+                                        <td colspan="2" align="center">'.$result["fecha_ingreso"].'</td>
                                         <td colspan="2">FECHA RETIRO</td>
-                                        <td colspan="3"></td>
+                                        <td colspan="3" align="center">'.$result["fecha_retiro"].'</td>
                                     </tr>
                                     <tr>
                                         <td colspan="2">MOTIVO DEL RETIRO</td>
-                                        <td colspan="3"></td>
+                                        <td colspan="3" align="center">'.$result["cod_tiporetiro"].'</td>
                                         <td ></td>
                                         <td colspan="4">REMUNERACION MENSUAL Bs</td>
-                                        <td colspan="3"></td>
+                                        <td colspan="3" align="center">'.$result["sueldo_promedio"].'</td>
                                     </tr>
                                     <tr>
                                         <td colspan="2" >TIEMPO DE SERVICIO</td>
-                                        <td ></td>
+                                        <td >'.$anios_servicio.'</td>
                                         <td >AÑOS</td>
-                                        <td colspan="2"></td>
+                                        <td colspan="2">'.$meses_servicio.'</td>
                                         <td colspan="2">MESES</td>
-                                        <td ></td>
+                                        <td >'.$dias_servicio.'</td>
                                         <td >DIAS</td>
                                         <td ></td>
                                         <td ></td>
@@ -139,21 +162,21 @@ $html.='<body>'.
                                 <table border="1" class="table_hijo">
                                     <tr>
                                         <td>A) MESES</td>
-                                        <td colspan="2"></td>
-                                        <td colspan="2"></td>
-                                        <td colspan="2"></td>
-                                        <td colspan="2">TOTALES</td>                                    
+                                        <td align="center" colspan="2"></td>
+                                        <td align="center" colspan="2"></td>
+                                        <td align="center" colspan="2"></td>
+                                        <td align="center" colspan="2">TOTALES</td>                                    
                                     </tr>
                                     <tr>
                                         <td>REMUNERACIÓN MENSUAL</td>
                                         <td style="width: 3%">Bs</td>
-                                        <td ></td>
+                                        <td align="center">'.$result["sueldo_3_atras"].'</td>
                                         <td style="width: 3%">Bs</td>
-                                        <td ></td>
+                                        <td align="center">'.$result["sueldo_2_atras"].'</td>
                                         <td style="width: 3%">Bs</td>
-                                        <td ></td>
+                                        <td align="center">'.$result["sueldo_1_atras"].'</td>
                                         <td style="width: 3%">Bs</td>
-                                        <td ></td>
+                                        <td align="center">'.$result["sueldo_promedio"].'</td>
                                     </tr>
                                     <tr>
                                         <td>B) OTROS CONCEPTOS PERCIBIDOS EN EL MES</td>
@@ -222,7 +245,7 @@ $html.='<body>'.
                         </tr>'.
                         '<tr>'.
                             '<td>III .- TOTAL REMUNERACIÓN PROMEDIO INDEMNIZABLE (A + B) DIVIDIDO ENTRE 3:</td>'.
-                            '<td style="width: 20%">Bs</td>'.
+                            '<td style="width: 20%">Bs '.$result["sueldo_promedio"].'</td>'.
                         '</tr>'.
                         '<tr>
                             <td colspan="2">
@@ -230,15 +253,15 @@ $html.='<body>'.
                                     <tr>
                                         <td colspan="11">C) DESAHUCIO  TRES MESES (EN CASO DE RETIRO FORZOSO)</td>
                                         <td style="width: 3%">Bs</td>
-                                        <td ></td>
+                                        <td align="center">'.$result["desahucio_monto"].'</td>
                                     </tr>
                                     <tr>
                                         <td colspan="4">D) INDEMNIZACIÓN POR TIEMPO DE TRABAJO:</td>
                                         <td style="width: 3%">DE</td>
                                         <td ></td>
                                         <td colspan="2">AÑOS</td>
-                                        <td style="width: 3%">Bs</td>
-                                        <td colspan="2"></td>
+                                        <td style="width: 3%">Bs </td>
+                                        <td colspan="2" align="center">'.$result["indemnización_anios_monto"].'</td>
                                         <td style="width: 3%"></td>
                                         <td ></td>
                                     </tr>
@@ -248,7 +271,7 @@ $html.='<body>'.
                                         <td ></td>
                                         <td colspan="2">MESES</td>
                                         <td style="width: 3%">Bs</td>
-                                        <td colspan="2"></td>
+                                        <td colspan="2" align="center">'.$result["indemnización_meses_monto"].'</td>
                                         <td style="width: 3%"></td>
                                         <td ></td>
                                     </tr>
@@ -258,7 +281,7 @@ $html.='<body>'.
                                         <td ></td>
                                         <td colspan="2">DIAS</td>
                                         <td style="width: 3%">Bs</td>
-                                        <td colspan="2"></td>
+                                        <td colspan="2" align="center"> '.$result["indemnización_dias_monto"].'</td>
                                         <td style="width: 3%"></td>
                                         <td ></td>
                                     </tr>
@@ -270,7 +293,7 @@ $html.='<body>'.
                                         <td colspan="2"></td>
                                         <td >DIAS</td>
                                         <td style="width: 3%">Bs</td>
-                                        <td ></td>
+                                        <td align="center">'.$aguinaldo_total.'</td>
                                     </tr>
                                     <tr>
                                         <td colspan="4">VACACIÓN</td>
@@ -280,7 +303,7 @@ $html.='<body>'.
                                         <td colspan="2"></td>
                                         <td >DIAS</td>
                                         <td style="width: 3%">Bs</td>
-                                        <td ></td>
+                                        <td align="center">'.$vacacion_total.'</td>
                                     </tr>
                                     <tr>
                                         <td colspan="4">PRIMA LEGAL (SI CORRESPONDE)</td>
@@ -314,7 +337,7 @@ $html.='<body>'.
                         </tr>'.
                         '<tr>'.
                             '<td>IV .- TOTAL BENEFICIOS SOCIALES: C + D</td>'.
-                            '<td style="width: 20%">Bs</td>'.
+                            '<td style="width: 20%">Bs '.$total_beneficios_sociales.'</td>'.
                         '</tr>'.
                         '<tr>
                             <td colspan="2">
@@ -323,7 +346,7 @@ $html.='<body>'.
                                         <td style="width: 20%">E) DEDUCCIONES:</td>
                                         <td style="width: 35%"></td>
                                         <td style="width: 3%">Bs</td>
-                                        <td ></td>
+                                        <td align="center">'.$result['deducciones_total'].'</td>
                                         <td style="width: 12%"></td>
                                         <td ></td>                                    
                                     </tr>
@@ -372,17 +395,17 @@ $html.='<body>'.
                         </tr>'.
                         '<tr>'.
                             '<td>V. IMPORTE LÍQUIDO A PAGAR C + D - E =</td>'.
-                            '<td style="width: 20%">Bs</td>'.
+                            '<td style="width: 20%">Bs '.$result["total_a_pagar"].'</td>'.
                         '</tr>'.
                         
                     '</tbody>
                 </table>'.            
             
 
-            '<hr style="page-break-after: always;
-                border: none;
-                margin: 0;
-                padding: 0;">'.
+                '<hr style="page-break-after: always;
+                    border: none;
+                    margin: 0;
+                    padding: 0;">'.
             
                 '<table border="1" align="center" style="width: 100%;">
                     <tbody>

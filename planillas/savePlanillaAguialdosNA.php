@@ -35,7 +35,7 @@ if($sw==3)
 	$stmtU->bindParam(':modified_by', $modified_by);
 	$flagSuccessIP=$stmtU->execute();
 }elseif($sw==1)
-{//reporcesar planilla
+{//reprocesar planilla
 	$created_by=1;
 	$modified_by=1;
 	$sqlUO="SELECT cpsd.cod_uo
@@ -55,28 +55,27 @@ if($sw==3)
 		{
 			$anios_trabajados=obtener_anios_trabajados($ing_contr);
 			$meses_trabajados=obtener_meses_trabajados($ing_contr);
-			//$dias_trabajados=obtener_dias_trabajados($ing_contr);
-			// $sw_Aguinaldo=Verificar_si_corresponde_Aguinaldo($ing_contr);
+			$dias_trabajados=obtener_dias_trabajados($ing_contr);
 			if($anios_trabajados>0){
 				$meses_trabajados_del_anio=12;
 				$dias_trabajados_del_anio=0;
 				$cod_planilla_1=obtener_id_planilla($cod_gestion_x,9);
 				$cod_planilla_2=obtener_id_planilla($cod_gestion_x,10);
 				$cod_planilla_3=obtener_id_planilla($cod_gestion_x,11);
-				$liquido_mes1=obtenerSueldomes($codigo_personal,$cod_planilla_1);
-				$liquido_mes2=obtenerSueldomes($codigo_personal,$cod_planilla_2);
+				$liquido_mes1=obtenerSueldomes($codigo_personal,$cod_planilla_1);//obtener sueldo de sept
+				$liquido_mes2=obtenerSueldomes($codigo_personal,$cod_planilla_2);//obtener sueldo de octub
 				// $liquido_mes1=obtenerSueldomes($codigo_personal,$cod_planilla_3);//cambiar
 				// $liquido_mes2=obtenerSueldomes($codigo_personal,$cod_planilla_3);//cambiar
-				$liquido_mes3=obtenerSueldomes($codigo_personal,$cod_planilla_3);
+				$liquido_mes3=obtenerSueldomes($codigo_personal,$cod_planilla_3);//obtener sueldo de nov
 				$promedio_sueldos=($liquido_mes1+$liquido_mes2+$liquido_mes3)/3;
 				$dias_sueldo=$promedio_sueldos/360*$dias_trabajados_del_anio;
 				$meses_sueldo=$promedio_sueldos/12*$meses_trabajados_del_anio;
 				$total_pago_aguinaldo=$dias_sueldo+$meses_sueldo;
 			}elseif($meses_trabajados>2){
 				$meses_trabajados_del_anio=$meses_trabajados;
-				$dias_trabajados_del_anio=obtener_dias_trabajados($ing_contr);
-				$cod_planilla_1=obtener_id_planilla($cod_gestion_x,9);//no generado
-				$cod_planilla_2=obtener_id_planilla($cod_gestion_x,10);//no generado
+				$dias_trabajados_del_anio=$dias_trabajados;
+				$cod_planilla_1=obtener_id_planilla($cod_gestion_x,9);
+				$cod_planilla_2=obtener_id_planilla($cod_gestion_x,10);
 				$cod_planilla_3=obtener_id_planilla($cod_gestion_x,11);
 				$liquido_mes1=obtenerSueldomes($codigo_personal,$cod_planilla_1);
 				$liquido_mes2=obtenerSueldomes($codigo_personal,$cod_planilla_2);
@@ -84,9 +83,22 @@ if($sw==3)
 				$promedio_sueldos=($liquido_mes1+$liquido_mes2+$liquido_mes3)/3;
 				$dias_sueldo=$promedio_sueldos/360*$dias_trabajados_del_anio;
 				$meses_sueldo=$promedio_sueldos/12*$meses_trabajados_del_anio;
+			}elseif($meses_trabajados==2 && $dias_trabajados==29){//si entra el 1 octubre
+				$meses_trabajados_del_anio=3;
+				$dias_trabajados_del_anio=0;
+				// $cod_planilla_1=obtener_id_planilla($cod_gestion_x,9);//no generado para sep en este caso
+				$cod_planilla_2=obtener_id_planilla($cod_gestion_x,10);//
+				$cod_planilla_3=obtener_id_planilla($cod_gestion_x,11);
+				$liquido_mes1=0;//no se egenero en este caso
+				$liquido_mes2=obtenerSueldomes($codigo_personal,$cod_planilla_2);
+				$liquido_mes3=obtenerSueldomes($codigo_personal,$cod_planilla_3);
+				$promedio_sueldos=($liquido_mes1+$liquido_mes2+$liquido_mes3)/3;
+				$dias_sueldo=$promedio_sueldos/360*$dias_trabajados_del_anio;
+				$meses_sueldo=$promedio_sueldos/12*$meses_trabajados_del_anio;
+
 			}else{
-				$meses_trabajados_del_anio=2;
-				$dias_trabajados_del_anio=26;
+				$meses_trabajados_del_anio=$meses_trabajados;
+				$dias_trabajados_del_anio=$dias_trabajados;
 				$liquido_mes1=0;
 				$liquido_mes2=0;
 				$liquido_mes3=0;
@@ -101,7 +113,7 @@ if($sw==3)
 			$resultPersonalVerificacion=$stmtPersonalVerificacion->fetch();
 			$cod_personalVerificacion=$resultPersonalVerificacion['cod_personal'];
 
-			if($cod_personalVerificacion==null){//insert de personal
+			if($cod_personalVerificacion==null){//insertamos datos de pesonal si no esta en planilla
 				$sqlInsertPlanillas="INSERT into planillas_aguinaldos_detalle(cod_planilla,cod_personal,sueldo_1,sueldo_2,sueldo_3,
 				  meses_trabajados,dias_trabajados,total_aguinaldo,created_by,modified_by)
 				 values(:cod_planilla,:codigo_personal,:sueldo1,:sueldo2,:sueldo3,:meses_trabajados,:dias_trabajados,

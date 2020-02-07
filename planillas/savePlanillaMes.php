@@ -50,12 +50,10 @@ if($sw==2){//procesar planilla
 	$valor_conf_x90_120=0;
 	$valor_conf_x120_150=0;
 	$valor_conf_x150=0;
-	
 	$bono_antiguedad=0;
 	$otros_b=0;
 	$total_bonos=0;
 	$total_ganado=0;
-
 	$haber_basico=0;//del personal
 	// $horas_extra = 0; //buscar datos
 	// $comisiones=0;//buscar datos
@@ -160,10 +158,10 @@ if($sw==2){//procesar planilla
 		
 		$liquido_pagable=$total_ganado-$total_descuentos;
 
-		$cod_config_planilla_seguro_medico=16;
-		$cod_config_planilla_riesgo_prof=17;
-		$cod_config_planilla_provivienda=18;
-		$cod_config_planilla_solidario=19;		
+		$cod_config_planilla_seguro_medico=16;//estatico
+		$cod_config_planilla_riesgo_prof=17;//estatico
+		$cod_config_planilla_provivienda=18;//estatico
+		$cod_config_planilla_solidario=19;//estatico
 		
 		$seguro_de_salud=obtener_aporte_patronal_general($cod_config_planilla_seguro_medico,$total_ganado);
 		$riesgo_profesional=obtener_aporte_patronal_general($cod_config_planilla_riesgo_prof,$total_ganado);
