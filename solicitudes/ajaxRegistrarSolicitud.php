@@ -23,14 +23,27 @@ $globalAdmin=$_SESSION["globalAdmin"];
 
 if(isset($_GET['numero'])){
 	$numero=$_GET['numero'];
-  $codSim=$_GET['cod_sim'];
   $codProv=$_GET['cod_prov'];
+  if($codProv==0){
+    $simu=explode("$$$",$_GET['cod_sim']);
+    if($simu[1]=="TCP"){
+      $codSim=0;
+      $codSimServ=$simu[0];
+    }else{
+      $codSim=$simu[0];
+      $codSimServ=0;
+    }
+  }else{
+    $codSim=$_GET['cod_sim'];
+    $codSimServ="";
+  }
+  
   $codCont=0;//CODIGO DE CONTRATO
   $fecha= date("Y-m-d h:m:s");
   $codSolicitud=obtenerCodigoSolicitudRecursos();
   $dbh = new Conexion();
-  $sqlInsert="INSERT INTO solicitud_recursos (codigo, cod_personal,cod_unidadorganizacional,cod_area,fecha,numero,cod_simulacion,cod_proveedor,cod_contrato) 
-  VALUES ('".$codSolicitud."','".$globalUser."','".$globalUnidad."', '".$globalArea."', '".$fecha."','".$numero."','".$codSim."','".$codProv."','".$codCont."')";
+  $sqlInsert="INSERT INTO solicitud_recursos (codigo, cod_personal,cod_unidadorganizacional,cod_area,fecha,numero,cod_simulacion,cod_proveedor,cod_simulacionservicio,cod_contrato) 
+  VALUES ('".$codSolicitud."','".$globalUser."','".$globalUnidad."', '".$globalArea."', '".$fecha."','".$numero."','".$codSim."','".$codProv."','".$codSimServ."','".$codCont."')";
   $stmtInsert = $dbh->prepare($sqlInsert);
   $stmtInsert->execute();
 

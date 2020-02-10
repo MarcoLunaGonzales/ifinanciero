@@ -2482,6 +2482,8 @@ function minusDetalleSolicitud(idF){
        $("#area"+nuevoId).attr("id","area"+i);
        $("#cod_detalleplantilla"+nuevoId).attr("name","cod_detalleplantilla"+i);
        $("#cod_detalleplantilla"+nuevoId).attr("id","cod_detalleplantilla"+i);
+       $("#cod_servicioauditor"+nuevoId).attr("name","cod_servicioauditor"+i);
+       $("#cod_servicioauditor"+nuevoId).attr("id","cod_servicioauditor"+i);
        $("#habilitar"+nuevoId).attr("name","habilitar"+i);
        $("#habilitar"+nuevoId).attr("id","habilitar"+i);
        $("#habilitar"+nuevoId).attr("onchange","habilitarFila('"+i+"')");

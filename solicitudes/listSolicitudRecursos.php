@@ -86,6 +86,9 @@ $stmt->bindColumn('estado', $estado);
                             <?php
                               if($codEstado==4||$codEstado==3){
                             ?>
+                            <a title="Imprimir" href='#' onclick="javascript:window.open('<?=$urlImp;?>?sol=<?=$codigo;?>&mon=1')" class="<?=$buttonEdit;?>">
+                              <i class="material-icons"><?=$iconImp;?></i>
+                            </a>
                             <div class="btn-group dropdown">
                               <button type="button" class="btn <?=$btnEstado?> dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="material-icons">list</i> <?=$estado;?>
@@ -105,15 +108,15 @@ $stmt->bindColumn('estado', $estado);
                             <?php    
                               }else{
                               ?>
+                            <a title="Imprimir" href='#' onclick="javascript:window.open('<?=$urlImp;?>?sol=<?=$codigo;?>&mon=1')" class="<?=$buttonEdit;?>">
+                              <i class="material-icons"><?=$iconImp;?></i>
+                            </a>
                             <a title="Enviar solicitud" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=4&admin=0'  itle="Enviar Solicitud" class="btn btn-warning">
                               <i class="material-icons">send</i>
                             </a> 
                             <a title="Editar solicitud - detalle" href='<?=$urlRegister;?>?cod=<?=$codigo;?>'  class="btn btn-info">
                               <i class="material-icons"><?=$iconEdit;?></i>
                             </a>
-                            <!--<a title="Editar solicitud" href='<?=$urlEdit;?>&codigo=<?=$codigo;?>'  class="<?=$buttonEdit;?>">
-                              <i class="material-icons"><?=$iconEdit;?></i>
-                            </a>-->
                             <button title="Eliminar solicitud"  class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')">
                               <i class="material-icons"><?=$iconDelete;?></i>
                             </button>

@@ -91,6 +91,7 @@ if(isset($_GET['cod'])){
             $stmt->bindColumn('estado_solicitud', $estadoX);
             $stmt->bindColumn('numero', $numeroX);
             $stmt->bindColumn('cod_simulacion', $codSimulacionX);
+            $stmt->bindColumn('cod_simulacionservicio', $codSimulacionServX);
             $stmt->bindColumn('cod_proveedor', $codProveedorX);
 ?>
 <div class="cargar">
@@ -185,6 +186,18 @@ if(isset($_GET['cod'])){
             </div>
               <?php
               }else{
+                if($codProveedorX==0){
+                  $tipoSolicitud=3;
+                $nombreSimulacion=nameSimulacionServicio($codSimulacionServX);
+              ?>
+            <div class="col-sm-2">
+              <div class="form-group">
+                  <label class="bmd-label-static">TCP / TCS</label>
+                  <input class="form-control" type="text" name="simulacion" value="<?=$nombreSimulacion?>" id="simulacion" readonly/>
+              </div>
+            </div>
+              <?php
+                }else{
                $tipoSolicitud=2;
                ?>
             <div class="col-sm-3">
@@ -247,6 +260,7 @@ if(isset($_GET['cod'])){
             </div>
               <?php
               }
+             }
              ?>
           </div>
           <?php } //fin del while de la cabecera?>
@@ -266,7 +280,7 @@ if(isset($_GET['cod'])){
           <div class="card-body">
              <fieldset id="fiel" style="width:100%;border:0;">
               <?php 
-              if($tipoSolicitud==1){
+              if($tipoSolicitud==1||$tipoSolicitud==3){
               ?><button title="Agregar (alt + n)" type="button" name="add" class="btn btn-warning btn-round btn-fab" onClick="addSolicitudDetalle(this,<?=$tipoSolicitud?>)"><i class="material-icons">add</i>
                   </button><?php
               }else{
@@ -292,8 +306,12 @@ if(isset($_GET['cod'])){
             if($tipoSolicitud==1){
                include "solicitudDetalleSimulacion2.php";
             }else{
+              if($tipoSolicitud==3){
+                include "solicitudDetalleSimulacion3.php";
+              }else{
               ?><div id="solicitud_proveedor"></div><?php
-               //include "solicitudDetalleProveedor.php";
+               //include "solicitudDetalleProveedor.php";     
+              }
             }
             ?>
             

@@ -1,18 +1,27 @@
 <?php
-						//$detalle=obtenerDetalleSolicitudSimulacion($codSimulacionX);
-                        $codigoPlantillaXX=obtenerPlantillaCodigoSimulacion($codSimulacionX);
-                        $detalle=obtenerDetalleSolicitudSimulacionCuentaPlantilla($codSimulacionX,$codigoPlantillaXX);
-                        $ibnorca=obtenerIbnorcaCheck($codSimulacionX);
+						//$detalle=obtenerDetalleSolicitudSimulacion($codSimulacionServX);
+                        $codigoPlantillaXX=obtenerPlantillaCodigoSimulacionServicio($codSimulacionServX);
+                        $detalle=obtenerDetalleSolicitudSimulacionCuentaPlantillaServicio($codSimulacionServX,$codigoPlantillaXX);
+                        $ibnorca=1;
                         $unidadSol=$codUnidadX;
                         $areaSol=$codAreaX;
 						$idFila=1;
 						$cuentasCodigos=[];$conta=0;
 						while ($row = $detalle->fetch(PDO::FETCH_ASSOC)) {
-							$cod_plantilladetalle=$row['codigo_detalle'];
-							$cod_plantillauditor="";
+							//$cod_plantilladetalle=$row['codigo_detalle'];
+							$codigo_fila=explode("###",$row['codigo_detalle']);
+							if($codigo_fila[1]=="DET-SIM"){
+                             $cod_plantilladetalle=$codigo_fila[0];
+                             $cod_plantillauditor="";
+                             $solicitudDetalle=obtenerSolicitudRecursosDetallePlantilla($codigo,$cod_plantilladetalle);
+							}else{
+                             $cod_plantilladetalle="";
+                             $cod_plantillauditor=$codigo_fila[0];
+                             $solicitudDetalle=obtenerSolicitudRecursosDetallePlantillaAud($codigo,$cod_plantillauditor);
+							}
 							$codCuentaX=$row['codigo'];
 							$codDetalleX=0;
-							$solicitudDetalle=obtenerSolicitudRecursosDetallePlantilla($codigo,$cod_plantilladetalle);
+							
 							$detalleX=$row['glosa'];
 							$proveedorX="";
 							$retencionX="";
