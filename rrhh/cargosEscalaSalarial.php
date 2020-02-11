@@ -48,9 +48,9 @@ $stmt->bindColumn('nombre_nivel_escala', $nombre_nivel_escala);
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
-                    <table class="table table-bordered table-condensed" id="tablePaginatorFixed">
+                    <table class="table" id="tablePaginator">
                       <thead>
-                        <tr class="bg-dark text-white">
+                        <tr >
                         	<th>#</th>                          
               						<th>Nombre </th>
                           <th>Monto</th>
@@ -71,9 +71,9 @@ $stmt->bindColumn('nombre_nivel_escala', $nombre_nivel_escala);
                                   <?php
                                     if($globalAdmin==1){
                                   ?>                                	
-                                  <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalEditar" onclick="agregaCargoEscalaSalarialE('<?=$datos;?>')">
+                                  <!-- <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalEditar" onclick="agregaCargoEscalaSalarialE('<?=$datos;?>')">
                                 		<i class="material-icons" title="Editar"><?=$iconEdit;?></i>
-                                  </button>                                  
+                                  </button>   -->                                
                                 <?php } ?>
                                 </td>
                             </tr>
@@ -89,7 +89,7 @@ $stmt->bindColumn('nombre_nivel_escala', $nombre_nivel_escala);
                 if($globalAdmin==1){
                 ?>                              
                    <a href="<?=$urlCargosEscalaSalarialForm;?>&codigo=<?=$cod_cargo?>" class="btn btn-warning ">
-                    Generar
+                    Editar en Grupo
                   </a>                                             
                 <?php
                 }
@@ -103,30 +103,6 @@ $stmt->bindColumn('nombre_nivel_escala', $nombre_nivel_escala);
         </div>
     </div>
 
-<!-- Editar -->
-<div class="modal fade" id="modalEditar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog modal-sm" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Editar Escala Salarial </h4>
-      </div>
-      <div class="modal-body">
-        <input type="hidden" name="cod_cargoE" id="cod_cargoE" value="0">
-        <input type="hidden" name="cod_cargo_escala_salarialE" id="cod_cargo_escala_salarialE" value="0">
-        <h6> Nombre</h6>
-        <input class="form-control" name="nombre_nivel_escalaE" id="nombre_nivel_escalaE" readonly="true" style=" text-align: center">
-
-        <h6> Monto </h6>        
-        <input class="form-control" type="text" name="montoE" id="montoE" required="true"/>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-success" id="EditarCEC"  data-dismiss="modal">Aceptar</button>
-        <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="material-icons" title="Volver">keyboard_return</i> Volver </button>
-      </div>
-    </div>
-  </div>
-</div>
 
 
 <script type="text/javascript">

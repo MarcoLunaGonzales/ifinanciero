@@ -28,27 +28,37 @@ $stmt->bindColumn('nombre', $nombre_nivel_escala);
 			<div class="card">
 			  <div class="card-header <?=$colorCard;?> card-header-text">
 				<div class="card-text">
-				  <h4 class="card-title">Registrar  Escala Salarial</h4>
+				  <h4 class="card-title">Registrar  Escala Salarial</h4>                
 				</div>
+                <h4 class="card-title" align="center"><?=$nombre_cargo;?></h4>
 			  </div>
 			  <div class="card-body ">                    
                 <?php 
                     $idFila=0;
                     while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { 
                         $idFila++;
+                        $montoX="";
+                        $sqlMontoNivel = "SELECT monto from cargos_escala_salarial
+                        where cod_cargo=$cod_cargo and cod_nivel_escala_salarial=$codigo_nivel_escala and cod_estadoreferencial=1";
+                        $stmtMontoNivel = $dbh->prepare($sqlMontoNivel);
+                        $stmtMontoNivel->execute();
+                        $resultMontoNivel=$stmtMontoNivel->fetch();                        
+                        $montoX=$resultMontoNivel['monto'];
+                
+
                     ?>
                     <div class="row">
-                        <label class="col-sm-2 col-form-label">Nombre</label>
+                        <!-- <label class="col-sm-2 col-form-label">Nombre</label> -->
                         <div class="col-sm-2">
                         <div class="form-group">
                             <input class="form-control"  value="<?=$nombre_nivel_escala?>" readonly="true" style=" text-align: center">
                             <input class="form-control" type="hidden" name="cod_nivel_escala<?=$idFila;?>" id="cod_nivel_escala<?=$idFila;?>" value="<?=$codigo_nivel_escala?>"/>
                         </div>
                         </div>
-                        <label class="col-sm-2 col-form-label">monto</label>
+                        <label class="col-sm-2 col-form-label">Monto</label>
                         <div class="col-sm-2">
                         <div class="form-group">                        
-                            <input class="form-control" type="text" placeholder="Ejemplo 000.00" name="monto<?=$idFila;?>" id="monto<?=$idFila;?>" required="true"/>
+                            <input class="form-control" type="text" name="monto<?=$idFila;?>" id="monto<?=$idFila;?>" value="<?=$montoX;?>" required="true"/>
                         </div>
                         </div>
                     </div><!--fin campo nombre --> 

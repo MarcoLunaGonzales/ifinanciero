@@ -32,17 +32,17 @@ $stmt->bindColumn('nombre_tipo', $nombre_tipo);
                   <div class="card-icon">
                     <i class="material-icons"><?=$iconCard;?></i>
                   </div>
-                  <h4 class="card-title">Funciones Cargo</h4>
+                  <h4 class="card-title">Escala Salarial en General</h4>
                   <h4 class="card-title" align="center"><?=$nombre_cargo;?></h4>                  
                   
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
-                    <table class="table table-bordered table-condensed" id="tablePaginatorFixed">
+                    <table class="table" id="tablePaginator">
                       <thead>
-                        <tr class="bg-dark text-white">
+                        <tr >
                           <th>#</th>                          
-                          <th>Cod Categoria</th>
+                          <!-- <th>Cod Categoria</th> -->
                           <th>Nivel</th>
                           <th>Cargo</th>                          
                           <?php
@@ -70,7 +70,7 @@ $stmt->bindColumn('nombre_tipo', $nombre_tipo);
                           ?>
                             <tr>
                                 <td><?=$index;?></td>
-                                <td>Categoria</td>
+                                <!-- <td>Categoria</td> -->
                                 <td><?=$nombre_tipo;?></td>
                                 <td><?=$nombre_cargo;?></td>
                                 <?php
@@ -99,12 +99,12 @@ $stmt->bindColumn('nombre_tipo', $nombre_tipo);
                                   <?php
                                     if($globalAdmin==1){
                                   ?>                                  
-                                  <a href='<?=$urlCargosEscalaSalarial;?>&codigo=<?=$cod_cargo;?>' rel="tooltip" class="<?=$buttonEdit;?>">
+                                  <!-- <a href='<?=$urlCargosEscalaSalarial;?>&codigo=<?=$cod_cargo;?>' rel="tooltip" class="<?=$buttonEdit;?>">
                                     <i class="material-icons"><?=$iconEdit;?></i>
                                   </a>
                                   <button rel="tooltip" class="<?= $buttonDelete; ?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlCargoEscalaSalarialGeneralDelete;?>&codigo=<?=$cod_cargo; ?>')">
                                     <i class="material-icons"><?=$iconDelete; ?></i>
-                                  </button>
+                                  </button> -->
                                 <?php } ?>
                                 </td>
                             </tr>

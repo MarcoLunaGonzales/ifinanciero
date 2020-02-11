@@ -48,7 +48,7 @@ $stmtActivos->bindColumn('nombre_uo', $nombre_uo);
                   
                   <h4 class="card-title"> 
                     <img  class="card-img-top"  src="../marca.png" style="width:100%; max-width:250px;">
-                      Reporte De Distribución Planilla Para Area
+                      Reporte De Distribución Planilla Por Area
                   </h4>
 
                   <!-- <h4 class="card-title text-center">Reporte De Activos Fijos Por Unidad</h4> -->

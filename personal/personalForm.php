@@ -66,6 +66,7 @@ $nombre_cargo = $result['nombre_cargo'];
 $nombre_uo = $result['nombre_uo'];
 $nombre_area = $result['nombre_area'];
 $email_empresa = $result['email_empresa'];
+$personal_confianza = $result['personal_confianza'];
 
 //personal discapacitado
 $stmtDiscapacitado = $dbh->prepare("SELECT * FROM personal_discapacitado where codigo =:codigo and cod_estadoreferencial=1");
@@ -277,14 +278,25 @@ $statementestados_personal = $dbh->query($queryestados_personal);
                                         <input class="form-control" type="date" name="ing_contr" id="ing_contr" required="true" value="<?=$ing_contr;?>" />                                    
                                     </div>
                                 </div>
-                            </div> <!--fin campo ing contrato y ing planilla-->
-                            <div class="row">
                                 <label class="col-sm-2 col-form-label">Apellido Casada</label>
                                 <div class="col-sm-4">
                                     <div class="form-group">
                                         <input class="form-control" type="text" name="apellido_casada" id="apellido_casada" value="<?=$apellido_casada;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
                                     </div>
                                 </div>
+                            </div> <!--fin campo ing contrato y ing planilla-->
+                            <div class="row">
+                                <label class="col-sm-2 col-form-label">Personal de Confianza</label>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <select name="personal_confianza" id="personal_confianza"  class="selectpicker " data-style="btn btn-info">
+                                            <option <?php if($personal_confianza == '0') echo "selected"; ?> value="0">NO</option>
+                                            <option <?php if($personal_confianza == '1') echo "selected"; ?> value="1">SI</option>
+                                        </select>           
+
+                                    </div>
+                                </div>
+                                
                                 <label class="col-sm-2 col-form-label">Tipo Personal</label>
                                 <div class="col-sm-4">
                                     <div class="form-group">

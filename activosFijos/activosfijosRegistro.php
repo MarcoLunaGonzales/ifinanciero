@@ -224,7 +224,7 @@ if ($codigo > 0){
                                 <label class="col-sm-2 col-form-label">Área</label>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                    <select name="cod_area" id="cod_area" class="selectpicker" data-style="btn btn-primary">
+                                    <select name="cod_area" id="cod_area" class="selectpicker" data-style="btn btn-primary" required="true">
                                         <?php while ($row = $statementAREAS->fetch()){ ?>
                                             <option <?=($cod_area==$row["codigo"])?"selected":"";?>  <?=($codigo>0)?"disabled":"";?>  value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
                                         <?php } ?>
@@ -305,7 +305,9 @@ if ($codigo > 0){
                                 <label class="col-sm-2 col-form-label">Vida Util Meses</label><!-- sel automaticamente -->
                                 <div class="col-sm-4">
                                 <div class="form-group">
-                                    <input class="form-control" type="text" name="vidautilmeses" id="vidautilmeses" required="true" value="<?=$vidautilmeses;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" readonly="true"/>
+                                    <div id="div_contenedor_valorR">
+                                        <input class="form-control" type="text" name="vidautilmeses" id="vidautilmeses" required="true" value="<?=$vidautilmeses;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" readonly="true"/>
+                                    </div>
                                 </div>
                                 </div>
                             </div><!--fin campo vidautilmeses -->
