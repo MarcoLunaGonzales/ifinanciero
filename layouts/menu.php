@@ -267,7 +267,7 @@ if($menuModulo==0){
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=rptDistribucionSueldos">
                     <span class="sidebar-mini"> R </span>
-                    <span class="sidebar-normal"> Distribución De Sueldos</span>
+                    <span class="sidebar-normal"> Distribución Planilla Por Area</span>
                   </a>
                 </li>
                 <li class="nav-item ">

@@ -1443,7 +1443,38 @@ function filaTablaGeneral(tabla,index){
   };
   tabla.html(html);
   $("#modalCuentas").modal("show");
-}   
+}  
+
+function ajaxCodigoActivo(combo){
+  var contenedor;
+  var codigo_UO=combo.value;
+  contenedor = document.getElementById('divCodigoAF');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'activosFijos/ajaxCodigoActivoFijo.php?codigo='+codigo_UO,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);
+      ajaxDepreciacion(codigo_UO);
+    }
+  }
+  ajax.send(null)  
+
+}
+function ajaxDepreciacion(codigo_UO){
+  var contenedor;
+  contenedor = document.getElementById('div_contenedor_valorR');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'activosFijos/AFDepreciacionVidaUtilAjax.php?codigo='+codigo_UO,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);
+    }
+  }
+  ajax.send(null)
+}
+
 
 function ajaxAFunidadorganizacional(combo){
   var contenedor;
@@ -2930,21 +2961,6 @@ function agregaCargoEscalaSalarialE(datos){
   document.getElementById("nombre_nivel_escalaE").value=d[2];
   document.getElementById("montoE").value=d[3];
 }
-function EditarCargoEscalaSalarial(cod_cargoE,cod_cargo_escala_salarialE,montoE){
-  $.ajax({
-    type:"POST",
-    data:"cod_escala="+cod_cargo_escala_salarialE+"&monto="+montoE,
-    url:"rrhh/cargosEscalaSalarialEdit.php",
-    success:function(r){
-      if(r==1){
-        alerts.showSwal('success-message','index.php?opcion=cargosEscalaSalarial&codigo='+cod_cargoE);
-      }else{
-        alerts.showSwal('error-message','index.php?opcion=cargosEscalaSalarial&codigo='+cod_cargoE);
-      } 
-    }
-  });
-}
-
 
 //contratos de personal
 function agregaformPC(datos){

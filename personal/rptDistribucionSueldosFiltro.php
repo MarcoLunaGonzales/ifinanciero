@@ -14,7 +14,7 @@ $dbh = new Conexion();
 			<div class="card">
 			  <div class="card-header <?=$colorCard;?> card-header-text">
   				<div class="card-text">
-  				  <h4 class="card-title">Distribución Planilla Para Area</h4>
+  				  <h4 class="card-title">Distribución Planilla Por Area</h4>
   				</div>
 			  </div>
 			  <div class="card-body ">
