@@ -315,3 +315,26 @@
     </div>
   </div>
 <!--    end small modal -->
+<!-- small modal -->
+<div class="modal fade modal-arriba modal-primary" id="modalAgregarProveedor" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content card">
+            <div class="card-header card-header-warning card-header-icon">
+                <div class="card-icon">
+                    <i class="material-icons text-dark">ballot</i>
+                 </div>
+                  <h4 class="card-title">Proveedor</h4>
+            </div>
+            <div class="card-body">
+                 <div id="datosProveedorNuevo">
+                   
+                 </div> 
+                <div class="form-group float-right">
+                        <button type="button" onclick="guardarDatosProveedor()" class="btn btn-info btn-round">Agregar</button>
+                </div>
+          </div>
+      </div>  
+    </div>
+  </div>
+<!--    end small modal -->
+<script>$('.selectpicker').selectpicker("refresh");</script>

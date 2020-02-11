@@ -66,7 +66,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                        <div class="col-sm-9">
                         <div class="form-group">
                                 <select class="selectpicker form-control" onchange="listarTipoSolicitud(this.value)" name="tipo_solicitud" id="tipo_solicitud" data-style="<?=$comboColor;?>" title="-- Elija un tipo --" data-style="select-with-transition" data-actions-box="true"required>
-                                  <option value="1">POR SIMULACION</option> 
+                                  <option value="1">POR PLANTILLA</option> 
                                   <option value="2">POR PROVEEDOR</option> 
                                 </select>
                               </div>
@@ -76,7 +76,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                       </div>
                       <hr>
                       <div class="form-group float-right">
-                        <a href="../index.php?opcion=listSolicitudSimulacion" class="btn btn-default btn-round">Cerrar</a>
+                        <a href="../index.php?opcion=listSolicitudRecursos" class="btn btn-default btn-round">Cerrar</a>
                         <button type="button" class="btn btn-warning btn-round" onclick="guardarSolicitudRecursos()">Guardar</button>
                       </div>
                  <div id="mensaje"></div>
