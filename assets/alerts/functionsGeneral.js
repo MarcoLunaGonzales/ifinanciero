@@ -5364,8 +5364,11 @@ function cargarDatosRegistroProveedor(){
         success:  function (resp) {
            detectarCargaAjax();
            $("#datosProveedorNuevo").html(resp);
+           $("#pais_empresa").val("26"); //para el pais de BOLIVIA
+           seleccionarDepartamentoServicio();
            $('.selectpicker').selectpicker("refresh");
            $("#modalAgregarProveedor").modal("show");
+           
         }
     });
 }
@@ -5383,8 +5386,10 @@ function seleccionarDepartamentoServicio(){
         success:  function (resp) {
            detectarCargaAjax();
            $("#departamento_empresa").html(resp);
+           $("#departamento_empresa").val("480"); // departamento de LA PAZ
+           seleccionarCiudadServicio();
            $("#ciudad_empresa").val("");
-           $('.selectpicker').selectpicker("refresh");
+           $('.selectpicker').selectpicker("refresh");          
         }
     }); 
 }
@@ -5403,6 +5408,7 @@ function seleccionarCiudadServicio(){
         success:  function (resp) {
            detectarCargaAjax();
            $("#ciudad_empresa").html(resp);
+           $("#ciudad_empresa").val("62"); //PARA LA CIUDAD DE EL ALTO
            $('.selectpicker').selectpicker("refresh");
         }
     }); 
@@ -5491,7 +5497,7 @@ function actualizarRegistroProveedor(){
         url: "ajaxActualizarProveedores.php",
         data: parametros,
         beforeSend: function () {
-        $("#texto_ajax_titulo").html("Actualizando proveedores desde el Servicio..."); 
+        $("#texto_ajax_titulo").html("Actualizando proveedores desde el Servicio Web..."); 
           iniciarCargaAjax();
         },
         success:  function (resp) {
