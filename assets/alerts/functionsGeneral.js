@@ -2270,6 +2270,32 @@ $(document).on("shown.bs.modal","#modalRetencion",function(){
    }
     ajax.send(null);
  }
+ function mostrarEditPlantillaDetalle(cod,monto,glosa){
+  $("#codigo_plandet").val(cod);
+  $("#monto_plandet").val(monto);
+  $("#glosa_plandet").val(glosa);
+  $("#modalEditPlan").modal("show");
+ }
+ function editPlantillaDetalle(){
+  var cod=$("#codigo_plandet").val();
+  var glosa=$("#glosa_plandet").val();
+  var monto=$("#monto_plandet").val();
+  if(glosa==""||monto==""){
+    Swal.fire('Informativo!','Todos los campos son requeridos!','warning');
+  }else{
+   var n_monto=calcularMontoRegistrado(parseFloat(monto),$("#tipo_calculomonto").val());
+  ajax=nuevoAjax();
+    ajax.open("GET","ajaxEditPlantillasDetalle.php?cod="+cod+"&m="+monto+"&g="+glosa+"&nm="+n_monto,true);
+    ajax.onreadystatechange=function(){
+    if (ajax.readyState==4) {
+      $("#modalEditPlan").modal("hide");
+      listarDetallesPartidaCuenta(parseInt($("#tipo_calculomonto").val()));
+         //Swal.fire('Borrado!','Se borraron los datos exitosamente!','success');
+    }
+   }
+    ajax.send(null);   
+  }
+ }
  function removePrecioPlantilla(cod,codigo){
    ajax=nuevoAjax();
     ajax.open("GET","ajaxDeletePrecio.php?cod="+cod+"&codigo="+codigo,true);
@@ -3493,14 +3519,75 @@ function calcularTotalPartida(valor){
   }
 }
 
+function activarInputMontoGenericoPartida(j){
+  if($("#habilitar"+j).is("[checked]")){
+    $("#habilitar"+j).removeAttr("checked");
+    var valor=1;
+  }else{
+    $("#habilitar"+j).attr("checked",true);
+    var valor=0;
+  }
+  var ni=$("#numero_cuentas"+j).val();
+  for (var i = 1; i <= ni; i++) {
+    activarInputMontoGenericoPar(j+"RRR"+i,valor);
+  };
+}
+function activarInputMontoGenericoPartidaServicio(j){
+  if($("#habilitar"+j).is("[checked]")){
+    $("#habilitar"+j).removeAttr("checked");
+  }else{
+    $("#habilitar"+j).attr("checked",true);
+  }
+  var ni=$("#numero_cuentas"+j).val();
+  for (var i = 1; i <= ni; i++) {
+    activarInputMontoGenericoServicio(j+"RRR"+i);
+    if($("#habilitar"+j).is("[checked]")){
+      if(!($("#habilitar"+j+"RRR"+i).is("[checked]"))){
+        $("#habilitar"+j+"RRR"+i).attr("checked",true);
+      }
+    }else{
+      if(($("#habilitar"+j+"RRR"+i).is("[checked]"))){
+        $("#habilitar"+j+"RRR"+i).removeAttr("checked");
+      }
+    }
+  };
+}
 //lista de partidas simulaciones
+function activarInputMontoGenericoPar(matriz,valor){
+  if(valor==1){
+    $("#monto_mod"+matriz).attr("readonly",true);
+    $("#monto_modal"+matriz).attr("readonly",true);
+    if(($("#habilitar"+matriz).is("[checked]"))){
+        $("#habilitar"+matriz).removeAttr("checked");
+        alert("des");
+      }
+  }else{
+    $("#monto_mod"+matriz).removeAttr("readonly");
+    $("#monto_modal"+matriz).removeAttr("readonly");
+    if(!($("#habilitar"+matriz).is("[checked]"))){
+        $("#habilitar"+matriz).attr("checked",true);
+        alert("hab");
+      }
+  }
+  var respu= matriz.split('RRR');
+  calcularTotalPartidaGenerico(respu[0],1);
+}
+
 function activarInputMontoGenerico(matriz){
   if(!($("#monto_mod"+matriz).is("[readonly]"))){
     $("#monto_mod"+matriz).attr("readonly",true);
     $("#monto_modal"+matriz).attr("readonly",true);
+    if(($("#habilitar"+matriz).is("[checked]"))){
+        $("#habilitar"+matriz).removeAttr("checked");
+        alert("des1")
+      }
   }else{
     $("#monto_mod"+matriz).removeAttr("readonly");
     $("#monto_modal"+matriz).removeAttr("readonly");
+    if(!($("#habilitar"+matriz).is("[checked]"))){
+        $("#habilitar"+matriz).attr("checked",true);
+        alert("hab1")
+      }
   }
   var respu= matriz.split('RRR');
   calcularTotalPartidaGenerico(respu[0],1);
