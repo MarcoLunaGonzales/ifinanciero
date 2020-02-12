@@ -8,17 +8,13 @@ $moduleNamePlural="Solicitudes de Recursos";
 $urlList="index.php?opcion=listSolicitudRecursos";
 $urlList2="index.php?opcion=listSolicitudRecursosAdmin";
 
-$urlReporte="simulaciones_costos/reportePlanCosto.php";
+$urlImp="solicitudes/imp.php";
 $urlRegister="solicitudes/registerSolicitud.php";
 $urlVer="solicitudes/verSolicitudRecursos.php";
 $urlRegister2="solicitudes/register.php";
 $urlEdit="index.php?opcion=editSolicitudRecursos";
 $urlEdit2="solicitudes/edit.php";
 $urlDelete="index.php?opcion=deleteSolicitudRecursos";
-$urlSave="comprobantes/save.php";
-$urlSaveEdit="simulaciones_costos/saveEdit.php";
 $urlSaveDelete="";
 
-$urlReporteDiario="reportes/reporteDiario.php";
-$urlReporteMayor="reportes/reporteMayor.php";
 ?>

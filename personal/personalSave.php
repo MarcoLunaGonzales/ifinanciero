@@ -38,12 +38,13 @@ try {
     $grado_academico=$_POST['grado_academico'];
     $ing_contr=$_POST['ing_contr'];
     $ing_planilla=$_POST['ing_contr'];
-
     $bandera=1;
     $email_empresa=$_POST['email_empresa'];
     $tipo_persona_discapacitado=$_POST['tipo_persona_discapacitado'];
     $nro_carnet_discapacidad=$_POST['nro_carnet_discapacidad'];
     $fecha_nac_persona_dis =$_POST['fecha_nac_persona_dis'];
+
+    $personal_confianza=$_POST['personal_confianza'];
 
     // if($nro_carnet_discapacidad==null)$nro_carnet_discapacidad=0;
     // if($fecha_nac_persona_dis==null)$fecha_nac_persona_dis="0000-00-00";
@@ -72,7 +73,7 @@ try {
     cod_tipopersonal=:cod_tipopersonal,haber_basico=:haber_basico,apellido_casada=:apellido_casada,otros_nombres=:otros_nombres,
     nua_cua_asignado=:nua_cua_asignado,ing_contr=:ing_contr,ing_planilla=:ing_planilla,
     cod_tipoafp=:cod_tipoafp,nro_seguro=:nro_seguro,cod_grado_academico=:grado_academico,
-    cod_estadopersonal=:cod_estadopersonal,persona_contacto=:persona_contacto,cod_tipoaporteafp = :cod_tipoaporteafp,email_empresa=:email_empresa,bandera=:bandera  
+    cod_estadopersonal=:cod_estadopersonal,persona_contacto=:persona_contacto,cod_tipoaporteafp = :cod_tipoaporteafp,email_empresa=:email_empresa,bandera=:bandera,personal_confianza=:personal_confianza  
     where codigo = :codigo");
     //bind
     $stmt->bindParam(':codigo', $codigo);
@@ -96,6 +97,7 @@ try {
     $stmt->bindParam(':ing_planilla', $ing_planilla);
     $stmt->bindParam(':email_empresa', $email_empresa);
     $stmt->bindParam(':bandera', $bandera);
+    $stmt->bindParam(':personal_confianza', $personal_confianza);
     $flagSuccess=$stmt->execute();
 
     //sacmos el id de area distribucion area distribucion

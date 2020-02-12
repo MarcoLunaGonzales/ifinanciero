@@ -91,6 +91,7 @@ if(isset($_GET['cod'])){
             $stmt->bindColumn('estado_solicitud', $estadoX);
             $stmt->bindColumn('numero', $numeroX);
             $stmt->bindColumn('cod_simulacion', $codSimulacionX);
+            $stmt->bindColumn('cod_simulacionservicio', $codSimulacionServX);
             $stmt->bindColumn('cod_proveedor', $codProveedorX);
 ?>
 <div class="cargar">
@@ -101,7 +102,7 @@ if(isset($_GET['cod'])){
 </div>
 <div class="cargar-ajax d-none">
   <div class="div-loading text-center">
-     <h4 class="text-warning font-weight-bold">Procesando Datos</h4>
+     <h4 class="text-warning font-weight-bold" id="texto_ajax_titulo">Procesando Datos</h4>
      <p class="text-white">Aguard&aacute; un momento por favor</p>  
   </div>
 </div>
@@ -185,6 +186,18 @@ if(isset($_GET['cod'])){
             </div>
               <?php
               }else{
+                if($codProveedorX==0){
+                  $tipoSolicitud=3;
+                $nombreSimulacion=nameSimulacionServicio($codSimulacionServX);
+              ?>
+            <div class="col-sm-2">
+              <div class="form-group">
+                  <label class="bmd-label-static">TCP / TCS</label>
+                  <input class="form-control" type="text" name="simulacion" value="<?=$nombreSimulacion?>" id="simulacion" readonly/>
+              </div>
+            </div>
+              <?php
+                }else{
                $tipoSolicitud=2;
                ?>
             <div class="col-sm-3">
@@ -247,6 +260,7 @@ if(isset($_GET['cod'])){
             </div>
               <?php
               }
+             }
              ?>
           </div>
           <?php } //fin del while de la cabecera?>
@@ -266,7 +280,7 @@ if(isset($_GET['cod'])){
           <div class="card-body">
              <fieldset id="fiel" style="width:100%;border:0;">
               <?php 
-              if($tipoSolicitud==1){
+              if($tipoSolicitud==1||$tipoSolicitud==3){
               ?><button title="Agregar (alt + n)" type="button" name="add" class="btn btn-warning btn-round btn-fab" onClick="addSolicitudDetalle(this,<?=$tipoSolicitud?>)"><i class="material-icons">add</i>
                   </button><?php
               }else{
@@ -292,8 +306,12 @@ if(isset($_GET['cod'])){
             if($tipoSolicitud==1){
                include "solicitudDetalleSimulacion2.php";
             }else{
+              if($tipoSolicitud==3){
+                include "solicitudDetalleSimulacion3.php";
+              }else{
               ?><div id="solicitud_proveedor"></div><?php
-               //include "solicitudDetalleProveedor.php";
+               //include "solicitudDetalleProveedor.php";     
+              }
             }
             ?>
             
@@ -301,7 +319,8 @@ if(isset($_GET['cod'])){
             <div class="card-footer fixed-bottom">
                <button type="submit" class="<?=$buttonMorado;?>">Guardar</button>
                <a href="../<?=$urlList;?>" class="<?=$buttonCancel;?>">Volver</a>
-
+               <a href="#" onclick="cargarDatosRegistroProveedor()" class="btn btn-warning float-right">Agregar Proveedor</a>
+               <a href="#" onclick="actualizarRegistroProveedor()" class="btn btn-success float-right">Actualizar Proveedores</a>
             </div>
         </div>
       </div>      

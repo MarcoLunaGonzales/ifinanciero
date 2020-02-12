@@ -9,6 +9,7 @@
 						$cuentasCodigos=[];$conta=0;
 						while ($row = $detalle->fetch(PDO::FETCH_ASSOC)) {
 							$cod_plantilladetalle=$row['codigo_detalle'];
+							$cod_plantillauditor="";
 							$codCuentaX=$row['codigo'];
 							$codDetalleX=0;
 							$solicitudDetalle=obtenerSolicitudRecursosDetallePlantilla($codigo,$cod_plantilladetalle);

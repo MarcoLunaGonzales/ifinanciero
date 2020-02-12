@@ -1887,6 +1887,16 @@ function nameSimulacion($codigo){
    }
    return($nombreX);
 }
+function nameSimulacionServicio($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT nombre FROM simulaciones_servicios where codigo=:codigo");
+   $stmt->bindParam(':codigo',$codigo);
+   $stmt->execute();
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $nombreX=$row['nombre'];
+   }
+   return($nombreX);
+}
 function obtenerDetalleSolicitud($codigo){
    $dbh = new Conexion();
    $sql="";
@@ -1926,7 +1936,28 @@ function obtenerDetalleSolicitudSimulacionCuentaPlantilla($codigo,$codigoPlan){
    $sql="SELECT tablap.codigo as codigo_detalle,tablap.glosa,tablap.monto_total,tablap.habilitado,tabla_uno.* FROM (SELECT pc.codigo,pc.numero,pc.nombre,pp.nombre as partida, pp.codigo as cod_partida,sc.monto_local,sc.monto_externo from cuentas_simulacion sc 
 join partidas_presupuestarias pp on pp.codigo=sc.cod_partidapresupuestaria 
 join plan_cuentas pc on sc.cod_plancuenta=pc.codigo where sc.cod_simulacioncostos=$codigo order by pp.codigo) tabla_uno,
-plantillas_servicios_detalle tablap where tablap.cod_cuenta=tabla_uno.codigo and (tablap.cod_plantillacosto!='' or tablap.cod_plantillacosto!=NULL) and cod_plantillacosto=$codigoPlan and tablap.habilitado=1 and tablap.cod_estadoreferencial=1 order by tabla_uno.codigo;";
+simulaciones_detalle tablap where tablap.cod_cuenta=tabla_uno.codigo and (tablap.cod_plantillacosto!='' or tablap.cod_plantillacosto!=NULL) and cod_plantillacosto=$codigoPlan and tablap.habilitado=1 and tablap.cod_estadoreferencial=1 order by tabla_uno.codigo;";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+}
+
+function obtenerDetalleSolicitudSimulacionCuentaPlantillaServicio($codigo,$codigoPlan){
+   $dbh = new Conexion();
+   $sql="";
+   $sql="(SELECT CONCAT(tablap.codigo,'###DET-SIM') as codigo_detalle,tablap.glosa,tablap.monto_total,tablap.habilitado,tabla_uno.* 
+   FROM (SELECT pc.codigo,pc.numero,pc.nombre,pp.nombre as partida, pp.codigo as cod_partida,sc.monto_local,sc.monto_externo from cuentas_simulacion sc 
+join partidas_presupuestarias pp on pp.codigo=sc.cod_partidapresupuestaria 
+join plan_cuentas pc on sc.cod_plancuenta=pc.codigo where sc.cod_simulacionservicios=$codigo order by pp.codigo) tabla_uno,
+simulaciones_serviciodetalle tablap where tablap.cod_cuenta=tabla_uno.codigo and (tablap.cod_plantillatcp!='' or tablap.cod_plantillatcp!=NULL) and cod_plantillatcp=$codigoPlan and tablap.habilitado=1 and tablap.cod_estadoreferencial=1 order by tabla_uno.codigo)
+UNION (select CONCAT(ss.codigo,'###DET-AUD') as codigo_detalle,t.nombre as glosa,(cantidad * monto) as monto_total,ss.habilitado,c.cod_plancuenta as codigo,c.numero,
+p.nombre,pp.nombre as partida,pp.codigo as cod_partida,1 as monto_local,1 as monto_externo
+ from simulaciones_servicios_auditores ss,tipos_auditor t 
+ join configuraciones_solicitudes_auditores c on c.cod_tipoauditor=t.codigo  
+ join plan_cuentas p on p.codigo=c.cod_plancuenta 
+join partidaspresupuestarias_cuentas pc on pc.cod_cuenta=p.codigo
+join partidas_presupuestarias pp on pp.codigo=pc.cod_partidapresupuestaria
+ where ss.cod_tipoauditor=t.codigo and ss.cod_simulacionservicio=$codigo and ss.habilitado=1);";
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
    return $stmt;
@@ -2087,6 +2118,14 @@ function obtenerSolicitudRecursosDetallePlantilla($codSol,$codigo){
    $dbh = new Conexion();
    $sql="";
    $sql="SELECT sd.*,pc.numero,pc.nombre from solicitud_recursosdetalle sd join plan_cuentas pc on sd.cod_plancuenta=pc.codigo where sd.cod_detalleplantilla=$codigo and sd.cod_solicitudrecurso=$codSol";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+}
+function obtenerSolicitudRecursosDetallePlantillaAud($codSol,$codigo){
+   $dbh = new Conexion();
+   $sql="";
+   $sql="SELECT sd.*,pc.numero,pc.nombre from solicitud_recursosdetalle sd join plan_cuentas pc on sd.cod_plancuenta=pc.codigo where sd.cod_servicioauditor=$codigo and sd.cod_solicitudrecurso=$codSol";
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
    return $stmt;
@@ -2691,23 +2730,12 @@ function obtener_anios_trabajados($ing_contr){
   // $anio_actual=2019;
   $fechaComoEntero = strtotime($ing_contr);
   $anio_ingreso = date("Y", $fechaComoEntero);
-  // $mes_ingreso = date("m", $fechaComoEntero);
   $diferencia_anios=$anio_actual-$anio_ingreso;
-  // $diferencia_meses=12-$mes_ingreso;
-  // if($diferencia_anios>0){
-  //   $sw=1;
-  // }elseif($diferencia_meses>2){
-  //   $sw=1;
-  // }else $sw=0;
   return $diferencia_anios;
 }
 function obtener_meses_trabajados($ing_contr){
-  // $anio_actual= date('Y');
-  // $anio_actual=2019;
-  $fechaComoEntero = strtotime($ing_contr);
-  // $anio_ingreso = date("Y", $fechaComoEntero);
+  $fechaComoEntero = strtotime($ing_contr);  
   $mes_ingreso = date("m", $fechaComoEntero);
-  // $diferencia_anios=$anio_actual-$anio_ingreso;
   $diferencia_meses=12-$mes_ingreso;
   // if($diferencia_anios>0){
   //   $sw=1;
@@ -2717,13 +2745,13 @@ function obtener_meses_trabajados($ing_contr){
   return $diferencia_meses;
 }
 function obtener_dias_trabajados($ing_contr){
-  // $anio_actual= date('Y');
-  // $anio_actual=2019;
   $fechaComoEntero = strtotime($ing_contr);
-  // $anio_ingreso = date("Y", $fechaComoEntero);
-  $dia_ingreso = date("d", $fechaComoEntero);
-  // $diferencia_anios=$anio_actual-$anio_ingreso;
-  $diferencia_dias=31-$dia_ingreso;
+  $dia_ingreso = date("d", $fechaComoEntero);  
+  $diferencia_dias=30-$dia_ingreso;
+  if($diferencia_dias<0){
+    $diferencia_dias=0;
+  }
+
   // if($diferencia_anios>0){
   //   $sw=1;
   // }elseif($diferencia_meses>2){
@@ -3227,9 +3255,20 @@ function obtenerPlantillaCodigoSimulacion($codigo){
   }
   return $valor;
 }
+function obtenerPlantillaCodigoSimulacionServicio($codigo){
+  $dbh = new Conexion();
+   $valor=0;
+   $sql="SELECT cod_plantillaservicio from simulaciones_servicios where codigo=$codigo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['cod_plantillaservicio'];
+  }
+  return $valor;
+}
 
 function obtenerNombrePersonal($codigo){
-  $dbh = new Conexion();
+    $dbh = new Conexion();
    $valor=0;
    $sql="SELECT concat(p.paterno, ' ',p.materno, ' ', p.primer_nombre)as nombre from personal p where p.codigo=$codigo";
    $stmt = $dbh->prepare($sql);
@@ -3239,8 +3278,99 @@ function obtenerNombrePersonal($codigo){
   }
   return $valor;
 }
+function obtenerValorConfiguracionEmpresa($codigo){
+  $dbh = new Conexion();
+  $valor="";
+  $stmtConfiguracion = $dbh->prepare("SELECT valor_configuracion from configuraciones_empresa where id_configuracion=$codigo");
+  $stmtConfiguracion->execute();
+  $resultConfiguracion = $stmtConfiguracion->fetch();
+  $valor=$resultConfiguracion['valor_configuracion'];
+  return $valor; 
+}
 
+function obtenerTiempoDosFechas($fechaInicio,$fechafin){
+  $datetime1=date_create($fechaInicio);
+  $datetime2=date_create($fechaFin);
+  $intervalo=date_diff($datetime1,$datetime2);
+  $tiempo=array();
+  foreach ($intervalo as $valor ) {
+    $tiempo[]=$valor;
+  }
+  return $tiempo;
+}
 
+function obtenerPaisesServicioIbrnorca(){
+  $sIde = "ifinanciero";
+  $sKey = "ce94a8dabdf0b112eafa27a5aa475751";
+  $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "TipoLista"=>"paises"); //Lista todos los paises
+  $parametros=json_encode($parametros);
+    $ch = curl_init();
+    // definimos la URL a la que hacemos la petición
+    //curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibno/clasificador/ws-paises.php"); // OFICIAL
+    curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibnob/clasificador/ws-paises.php"); // PRUEBA
+    // indicamos el tipo de petición: POST
+    curl_setopt($ch, CURLOPT_POST, TRUE);
+    // definimos cada uno de los parámetros
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);
+    // recibimos la respuesta y la guardamos en una variable
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $remote_server_output = curl_exec ($ch);
+    curl_close ($ch);
+    
+    // imprimir en formato JSON  
+    //print_r($remote_server_output);
+    return json_decode($remote_server_output);
+}
+function obtenerDepartamentoServicioIbrnorca($cod){
+  $sIde = "ifinanciero";
+  $sKey = "ce94a8dabdf0b112eafa27a5aa475751";
+  $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "TipoLista"=>"estados", "IdPais"=>$cod);
+  $parametros=json_encode($parametros);
+    $ch = curl_init();
+    //curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibno/clasificador/ws-paises.php"); // OFICIAL
+    curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibnob/clasificador/ws-paises.php"); // PRUEBA
+    curl_setopt($ch, CURLOPT_POST, TRUE);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $remote_server_output = curl_exec ($ch);
+    curl_close ($ch);
+    return json_decode($remote_server_output);
+}
+function obtenerCiudadServicioIbrnorca($cod){
+  $sIde = "ifinanciero";
+  $sKey = "ce94a8dabdf0b112eafa27a5aa475751";
+  $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "TipoLista"=>"ciudades", "IdEstado"=>$cod);
+  $parametros=json_encode($parametros);
+    $ch = curl_init();
+    //curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibno/clasificador/ws-paises.php"); // OFICIAL
+    curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibnob/clasificador/ws-paises.php"); // PRUEBA
+    curl_setopt($ch, CURLOPT_POST, TRUE);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $remote_server_output = curl_exec ($ch);
+    curl_close ($ch);
+    return json_decode($remote_server_output);
+}
+function obtenerListaProveedoresDelServicio(){
+  $sIde = "irrhh";
+  $sKey = "c066ffc2a049cf11f9ee159496089a15";
+  $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ListarProveedor"); 
+    $parametros=json_encode($parametros);
+    // abrimos la sesión cURL
+    $ch = curl_init();
+    // definimos la URL a la que hacemos la petición
+    curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibnob/rrhh/ws-personal-listas.php"); 
+    // indicamos el tipo de petición: POST
+    curl_setopt($ch, CURLOPT_POST, TRUE);
+    // definimos cada uno de los parámetros
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);
+    // recibimos la respuesta y la guardamos en una variable
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $remote_server_output = curl_exec ($ch);
+    // cerramos la sesión cURL
+    curl_close ($ch);  
+    return json_decode($remote_server_output);       
+}
 ?>
 
 

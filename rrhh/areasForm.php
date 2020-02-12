@@ -41,8 +41,7 @@ if ($codigo > 0){
 	<div class="container-fluid">
 
 		<div class="col-md-12">
-		  <form id="form1" class="form-horizontal" action="<?=$urlSaveAreas;?>" method="post">
-            <input type="hidden" name="codigo" id="codigo" value="<?=$codigo;?>"/>
+		  <form id="form1" class="form-horizontal" action="<?=$urlSaveAreas;?>" method="post">            
 			<div class="card">
 			  <div class="card-header <?=$colorCard;?> card-header-text">
 				<div class="card-text">

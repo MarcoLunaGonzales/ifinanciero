@@ -168,7 +168,7 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                     <?php
               }
               ?>
-              <button class="btn btn-danger" onClick="location.href='<?=$urlListCajaChica;?>&codigo=<?=$cod_tcc?>'">Volver</button>
+              <button class="btn btn-danger" onClick="location.href='<?=$urlListCajaChica;?>&codigo=<?=$cod_tcc?>'"><i class="material-icons" title="Volver">keyboard_return</i>Volver</button>
               </div>              
             </div>
           </div>  

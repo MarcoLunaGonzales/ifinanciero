@@ -75,6 +75,9 @@ $stmt->bindColumn('estado', $estado);
                           </td>
                           <td><?=strftime('%d/%m/%Y',strtotime($fecha));?></td>
                           <td class="td-actions text-right">
+                            <a title="Imprimir" href='#' onclick="javascript:window.open('<?=$urlImp;?>?sol=<?=$codigo;?>&mon=1')" class="<?=$buttonEdit;?>">
+                              <i class="material-icons"><?=$iconImp;?></i>
+                            </a>
                             <div class="btn-group dropdown">
                               <button type="button" class="btn <?=$btnEstado?> dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="material-icons">list</i> <?=$estado;?>

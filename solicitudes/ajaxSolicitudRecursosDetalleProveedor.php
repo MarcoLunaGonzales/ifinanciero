@@ -37,6 +37,7 @@ $idFila=1;
 $cuentasCodigos=[];$conta=0;
             while ($row = $detalle->fetch(PDO::FETCH_ASSOC)) {
               $cod_plantilladetalle=$row['codigo_detalle'];
+              $cod_plantillauditor="";
               $codCuentaX=$row['codigo'];
               $codSimulacionX=$row['cod_simulacion'];
               $codDetalleX=0;
