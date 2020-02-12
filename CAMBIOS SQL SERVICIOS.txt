@@ -1,0 +1,87 @@
+DROP TABLE IF EXISTS `plantillas_gruposervicio`;
+CREATE TABLE `plantillas_gruposervicio` (
+  `codigo` int(11) NOT NULL DEFAULT '0',
+  `cod_tiposervicio` int(11) DEFAULT NULL,
+  `nombre` varchar(255) DEFAULT NULL,
+  `abreviatura` varchar(50) DEFAULT NULL,
+  `cod_plantillaservicio` int(11) DEFAULT NULL,
+  PRIMARY KEY (`codigo`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+DROP TABLE IF EXISTS `plantillas_gruposerviciodetalle`;
+CREATE TABLE `plantillas_gruposerviciodetalle` (
+  `codigo` int(11) NOT NULL DEFAULT '0',
+  `cod_plantillagruposervicio` int(11) DEFAULT NULL,
+  `cod_partidapresupuestaria` int(11) DEFAULT NULL,
+  `tipo_calculo` int(11) DEFAULT NULL,
+  `monto_local` double DEFAULT NULL,
+  `monto_externo` double DEFAULT NULL,
+  `monto_calculado` double DEFAULT NULL,
+  PRIMARY KEY (`codigo`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+
+DROP TABLE IF EXISTS `simulaciones_serviciodetalle`;
+CREATE TABLE `simulaciones_serviciodetalle` (
+  `codigo` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Correlativo Id de la tabla',
+  `cod_simulacionservicio` int(11) DEFAULT NULL,
+  `cod_plantillatcp` int(11) DEFAULT NULL COMMENT 'Referencia a la tabla plantillas_servicio',
+  `cod_plantillacosto` int(11) DEFAULT NULL,
+  `cod_partidapresupuestaria` int(11) DEFAULT NULL COMMENT 'FK Plantilla Presupuestaria',
+  `cod_cuenta` int(11) DEFAULT NULL COMMENT 'Codigo de la cuenta contable',
+  `cod_tipo` int(11) DEFAULT NULL,
+  `glosa` text COMMENT 'Descripcion adicional para el detalle',
+  `monto_unitario` double DEFAULT NULL COMMENT 'Monto detalle',
+  `cantidad` int(11) DEFAULT NULL COMMENT 'Cantidad',
+  `monto_total` double DEFAULT NULL,
+  `unidad` varchar(255) DEFAULT NULL,
+  `cod_estadoreferencial` int(11) DEFAULT NULL COMMENT 'Estado referencial 1: activo, 2: inactivo',
+  `habilitado` int(11) DEFAULT '1',
+  `editado_personal` double DEFAULT '0',
+  PRIMARY KEY (`codigo`)
+) ENGINE=MyISAM AUTO_INCREMENT=121 DEFAULT CHARSET=utf8;
+
+
+DROP TABLE IF EXISTS `simulaciones_servicios`;
+CREATE TABLE `simulaciones_servicios` (
+  `codigo` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(255) DEFAULT NULL,
+  `observacion` varchar(255) DEFAULT NULL,
+  `fecha` date DEFAULT NULL,
+  `cod_plantillaservicio` int(11) DEFAULT NULL,
+  `cod_estadosimulacion` int(11) DEFAULT '1',
+  `cod_responsable` int(11) DEFAULT NULL,
+  `cod_estadoreferencial` int(11) DEFAULT '1',
+  `ibnorca` int(11) DEFAULT '1',
+  `dias_auditoria` int(11) DEFAULT NULL,
+  `utilidad_minima` double DEFAULT NULL,
+  PRIMARY KEY (`codigo`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+
+DROP TABLE IF EXISTS `simulaciones_servicios_auditores`;
+CREATE TABLE `simulaciones_servicios_auditores` (
+  `codigo` int(11) NOT NULL AUTO_INCREMENT COMMENT 'codigo unico correlativo',
+  `cod_simulacionservicio` int(11) DEFAULT NULL COMMENT 'Hace referencia a la tabla plantillas_servicios',
+  `cod_tipoauditor` int(11) DEFAULT NULL COMMENT 'Se relaciona con el clasificador de servicios',
+  `cantidad` double(11,0) DEFAULT NULL COMMENT 'Cantidad de la clase del servicio',
+  `monto` double(11,0) DEFAULT NULL COMMENT 'Monto de la Clase del servicio.',
+  `cod_estadoreferencial` int(11) DEFAULT NULL COMMENT 'Estado referencial 1: activo, 2: inactivo',
+  `habilitado` int(11) DEFAULT '1',
+  `cantidad_editado` int(11) DEFAULT NULL,
+  PRIMARY KEY (`codigo`)
+) ENGINE=MyISAM AUTO_INCREMENT=85 DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `simulaciones_servicios_tiposervicio`;
+CREATE TABLE `simulaciones_servicios_tiposervicio` (
+  `codigo` int(11) NOT NULL AUTO_INCREMENT COMMENT 'codigo unico correlativo',
+  `cod_simulacionservicio` int(11) DEFAULT NULL COMMENT 'Hace referencia a la tabla simulaciones_servicios',
+  `cod_claservicio` int(11) DEFAULT NULL COMMENT 'Se relaciona con el clasificador de servicios',
+  `observaciones` varchar(500) DEFAULT NULL COMMENT 'Observaciones que describan mejor la clase del servicio',
+  `cantidad` double(11,0) DEFAULT NULL COMMENT 'Cantidad de la clase del servicio',
+  `monto` double(11,0) DEFAULT NULL COMMENT 'Monto de la Clase del servicio.',
+  `cod_estadoreferencial` int(11) DEFAULT NULL COMMENT 'Estado referencial 1: activo, 2: inactivo',
+  `habilitado` int(11) DEFAULT '1',
+  `cantidad_editado` int(11) DEFAULT NULL,
+  PRIMARY KEY (`codigo`)
+) ENGINE=MyISAM AUTO_INCREMENT=84 DEFAULT CHARSET=utf8;
