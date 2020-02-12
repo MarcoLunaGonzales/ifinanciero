@@ -5380,6 +5380,7 @@ function cargarDatosRegistroProveedor(){
         success:  function (resp) {
            detectarCargaAjax();
            $("#datosProveedorNuevo").html(resp);
+           $("#texto_ajax_titulo").html("Procesando Datos"); 
            $("#pais_empresa").val("26"); //para el pais de BOLIVIA
            seleccionarDepartamentoServicio();
            $('.selectpicker').selectpicker("refresh");
@@ -5401,6 +5402,7 @@ function seleccionarDepartamentoServicio(){
         },
         success:  function (resp) {
            detectarCargaAjax();
+           $("#texto_ajax_titulo").html("Procesando Datos"); 
            $("#departamento_empresa").html(resp);
            $("#departamento_empresa").val("480"); // departamento de LA PAZ
            seleccionarCiudadServicio();
@@ -5423,6 +5425,7 @@ function seleccionarCiudadServicio(){
         },
         success:  function (resp) {
            detectarCargaAjax();
+           $("#texto_ajax_titulo").html("Procesando Datos"); 
            $("#ciudad_empresa").html(resp);
            $("#ciudad_empresa").val("62"); //PARA LA CIUDAD DE EL ALTO
            $('.selectpicker').selectpicker("refresh");
@@ -5489,6 +5492,7 @@ function guardarDatosProveedor(){
                success:  function (resp) {
                   actualizarRegistroProveedor();
                   detectarCargaAjax();
+                  $("#texto_ajax_titulo").html("Procesando Datos"); 
                   if(resp.trim()=="1"){
                     alerts.showSwal('success-message','registerSolicitud.php?cod='+codigo);
                   }else{
@@ -5504,6 +5508,25 @@ function guardarDatosProveedor(){
      Swal.fire("Informativo!", "Todos los campos son requeridos", "warning");
    }
 }
+function actualizarTablaClaServicios(){
+  var codigo = $("#cod_plantilla").val();
+   var parametros={"codigo":"none"};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxActualizarTablaServicios.php",
+        data: parametros,
+        beforeSend: function () {
+        $("#texto_ajax_titulo").html("Actualizando lista desde el Servicio Web..."); 
+          iniciarCargaAjax();
+        },
+        success:  function (resp) {
+           detectarCargaAjax();
+           $("#texto_ajax_titulo").html("Procesando Datos"); 
+           alerts.showSwal('success-message','registerGrupos.php?cod='+codigo);
+        }
+    });
+}
 function actualizarRegistroProveedor(){
   var codigo = $("#cod_solicitud").val();
  var parametros={"codigo":"none"};
@@ -5518,6 +5541,7 @@ function actualizarRegistroProveedor(){
         },
         success:  function (resp) {
            detectarCargaAjax();
+           $("#texto_ajax_titulo").html("Procesando Datos"); 
            alerts.showSwal('success-message','registerSolicitud.php?cod='+codigo);
         }
     });  
