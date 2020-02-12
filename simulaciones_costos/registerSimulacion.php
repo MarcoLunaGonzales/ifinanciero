@@ -392,11 +392,12 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
 				<input type="hidden" id="cantidad_alibnorca" name="cantidad_alibnorca" readonly value="<?=$alumnosX?>">
 				<input type="hidden" id="cantidad_alfuera" name="cantidad_alfuera" readonly value="<?=$alumnosExternoX?>">
 				<input type="hidden" id="aprobado" name="aprobado" readonly value="<?=$codEstadoSimulacion?>">
-				  <div class="row"> 	
-					<div class="col-sm-4">
-           <a href="#" title="Editar Variables de Costo" onclick="modificarMontos()" class="btn btn-sm btn-danger btn-fab"><i class="material-icons">edit</i></a>	
-					 <a href="#" title="Listar Detalle Costo Fijo" onclick="listarCostosFijos()" class="btn btn-sm btn-info"><i class="material-icons">list</i> CF</a>
-           <a href="#" title="Listar Detalle Costo Variable" onclick="listarCostosVaribles()" class="btn btn-sm btn-info"><i class="material-icons">list</i> CV</a>  	
+        <a href="#" title="Editar Variables de Costo" onclick="modificarMontos()" class="btn btn-sm btn-danger btn-fab"><i class="material-icons">edit</i></a>  
+           <a href="#" title="Listar Detalle Costo Fijo" onclick="listarCostosFijos()" class="btn btn-sm btn-info"><i class="material-icons">list</i> CF</a>
+           <a href="#" title="Listar Detalle Costo Variable" onclick="listarCostosVaribles()" class="btn btn-sm btn-info"><i class="material-icons">list</i> CV</a>   
+          <div class="row"> 	
+					<div class="col-sm-3">
+            <p class="font-weight-bold float-right">DATOS ADICIONALES PARA EL CALCULO</p>
             <table class="table table-bordered table-condensed">
               <tbody>
 								<tr class="">
@@ -439,7 +440,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
             </table>
 					</div>
 					<div class="col-sm-4">
-            <br>
+            <p class="font-weight-bold float-left">&nbsp;</p>
             <table class="table table-bordered table-condensed">
               <tbody>
                 <tr class="">
@@ -467,7 +468,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
              $precioVentaRecomendado=$precioVentaUnitario/(1-(($iva+$it)/100));
                 ?>
                 <tr>
-                  <td class="text-left small bg-table-primary text-white">PRECIO DE VENTA UNITARIO</td>
+                  <td class="text-left small bg-table-primary text-white">PRECIO DE VENTA UNITARIO MINIMO</td>
                   <td class="text-right font-weight-bold"><?=number_format($precioVentaUnitario, 2, '.', ',')?></td>
                 </tr>
                 <tr class="bg-danger text-white">
@@ -481,39 +482,39 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
               </tbody>
             </table>
            </div>
-          <div class="col-sm-4">
-          <br> 
-
+          <div class="col-sm-5 bg-blanco2">
+            <p class="font-weight-bold float-left">DATOS DEL CALCULO</p>
+            <img src="../assets/img/f_abajo2.gif" alt="" height="30px" class="float-right">
 						<table class="table table-bordered table-condensed">
 							<thead>
 								<tr class="">
 									<td></td>
-									<td colspan="2" class="bg-table-primary text-white">EN IBNORCA</td>
+									<td colspan="2" class="bg-table-primary2 text-white">EN IBNORCA</td>
 								</tr>
 							</thead>
 							<tbody>
                 <tr>
-                  <td class="text-left small bg-table-primary text-white">INGRESOS POR VENTAS</td>
+                  <td class="text-left small bg-table-primary2 text-white">INGRESOS POR VENTAS</td>
                   <td class="text-right font-weight-bold"><?=number_format($ingresoLocal, 2, '.', ',')?></td>
                   <td class="text-right font-weight-bold">100 %</td>
                 </tr>
                 <tr>
-                  <td class="text-left small bg-table-primary text-white">TOTAL COSTO FIJO</td>
+                  <td class="text-left small bg-table-primary2 text-white">TOTAL COSTO FIJO</td>
                   <td class="text-right font-weight-bold"><?=number_format($totalFijo[2], 2, '.', ',')?></td>
                   <td class="text-right font-weight-bold"><?=number_format(($totalFijo[2]/$ingresoLocal)*100, 2, '.', ',')?> %</td>
                 </tr>
                 <tr>
-                  <td class="text-left small bg-table-primary text-white">TOTAL COSTO VARIABLE</td>
+                  <td class="text-left small bg-table-primary2 text-white">TOTAL COSTO VARIABLE</td>
                   <td class="text-right font-weight-bold"><?=number_format(($totalVariable[2]*$alumnosX), 2, '.', ',')?></td>
                   <td class="text-right font-weight-bold"><?=number_format($pCostoLocal, 2, '.', ',')?> %</td>
                 </tr>
                 <tr>
-                  <td class="text-left small bg-table-primary text-white">PAGO IMPUESTOS (IVA  <?=$iva?> % + IT <?=$it?> % = <?=$iva+$it?> %)</td>
+                  <td class="text-left small bg-table-primary2 text-white">PAGO IMPUESTOS (IVA  <?=$iva?> % + IT <?=$it?> % = <?=$iva+$it?> %)</td>
                   <td class="text-right font-weight-bold"><?=number_format((($iva+$it)/100)*$ingresoLocal, 2, '.', ',')?></td>
                   <td class="text-right font-weight-bold"><?=number_format($iva+$it, 2, '.', ',')?> %</td>
                 </tr>
                 <tr class="<?=$estiloUtilidad?>">
-                  <td class="text-left small bg-table-primary text-white">UTILIDAD NETA</td>
+                  <td class="text-left small bg-table-primary2 text-white">UTILIDAD NETA</td>
                   <td class="text-right font-weight-bold <?=$estiloUtilidadIbnorca?>"><?=number_format($utilidadNetaLocal, 2, '.', ',')?></td>
                   <td class="text-right font-weight-bold <?=$estiloUtilidadIbnorca?>"><?=number_format($pUtilidadLocal, 2, '.', ',')?> %</td>
                 </tr>

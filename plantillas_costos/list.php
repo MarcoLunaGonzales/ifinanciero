@@ -79,7 +79,7 @@ $stmt->bindColumn('estado_plantilla', $estadoPlantilla);
                            <td class="<?=$textEstado?>"><button class="btn <?=$btnEstilo?> btn-sm"><?=$estadoPlantilla;?></button></td>
                           <td class="td-actions text-right">
                             <a href='<?=$urlReporte;?>?cod=<?=$codigo;?>' rel="tooltip" class="btn btn-primary">
-                              <i class="material-icons" title="Registrar Cuentas">list</i>
+                              <i class="material-icons" title="Ver Detalle">list</i>
                             </a>
                             <?php if($codEstado!=3){
                               if($globalAdmin==1){

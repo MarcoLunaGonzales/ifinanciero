@@ -18,7 +18,17 @@ $j=1;
     $i=1;
     ?>
     <input type="hidden" name="codigo_partida_presupuestaria<?=$j?>" id="codigo_partida_presupuestaria<?=$j?>" value="<?=$codigoPartida?>" readonly/>
-    <h4 class="font-weight-bold"><center>PARTIDA: <?=$nombrePartida?></center></h4>
+    <h4 class="font-weight-bold"><center>PARTIDA: <?=$nombrePartida?></center>
+      <div class="row col-sm-4 float-right">
+        <small class="col-sm-6">Hab/Des</small>
+        <div class="togglebutton col-sm-6">
+              <label>
+                 <input type="checkbox" checked id="habilitar<?=$j?>" onchange="activarInputMontoGenericoPartidaServicio('<?=$j?>')">
+                 <span class="toggle"></span>
+              </label>
+        </div>    
+      </div>
+    </h4>
       <div class="row">
         <!--<label class="col-sm-3 col-form-label">Monto x Modulo Plantilla:</label>
         <div class="col-sm-3">
@@ -87,7 +97,7 @@ $j=1;
               <td><input type="hidden" id="codigo<?=$j?>RRR<?=$i?>" value="<?=$codigoDetalle?>">
                 <div class="togglebutton">
                         <label>
-                          <input type="checkbox" <?=($bandera==1)?"checked":"";?> onchange="activarInputMontoGenericoServicio('<?=$j?>RRR<?=$i?>')">
+                          <input type="checkbox" <?=($bandera==1)?"checked":"";?> id="habilitar<?=$j?>RRR<?=$i?>" onchange="activarInputMontoGenericoServicio('<?=$j?>RRR<?=$i?>')">
                           <span class="toggle"></span>
                         </label>
                 </div>
