@@ -1334,7 +1334,7 @@ function agregarPlantillaDetalle(partida){
   var detalle=$("#glosa_plantilladetalle").val();
   var monto=$("#monto_plantilladetalle").val();
   var cuenta=$("#cuenta_plantilladetalle").val();
-  if(detalle==""||monto==""||monto==0||cuenta==""){
+  if(detalle==""||monto==""||monto==0||!(cuenta>0)){
     Swal.fire('Informativo!','Todos los campos son requeridos!','warning'); 
   }else{
    var n_monto=calcularMontoRegistrado(parseFloat(monto),$("#tipo_calculomonto").val());
@@ -1826,12 +1826,15 @@ function guardarSimulacionCosto(){
 function guardarSimulacionServicio(){
   var nombre=$("#nombre").val();
   var dias=$("#dias_auditoria").val();
+  var cliente=$("#cliente").val();
+  var producto=$("#productos").val();
+  var norma=$("#norma").val();
   var utilidad=$("#utilidad_minima").val();
   var plantilla_servicio=$("#plantilla_servicio").val();
-  if(dias==""||nombre==""||!(plantilla_servicio>0)){
+  if(norma==""||producto==""||dias==""||nombre==""||!(plantilla_servicio>0)){
    Swal.fire('Informativo!','Debe llenar los campos!','warning'); 
   }else{
-     var parametros={"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad};
+     var parametros={"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"producto":producto,"norma":norma};
      $.ajax({
         type: "GET",
         dataType: 'html',
@@ -3559,14 +3562,11 @@ function activarInputMontoGenericoPar(matriz,valor){
     $("#monto_modal"+matriz).attr("readonly",true);
     if(($("#habilitar"+matriz).is("[checked]"))){
         $("#habilitar"+matriz).removeAttr("checked");
-        alert("des");
       }
   }else{
     $("#monto_mod"+matriz).removeAttr("readonly");
     $("#monto_modal"+matriz).removeAttr("readonly");
     if(!($("#habilitar"+matriz).is("[checked]"))){
-        $("#habilitar"+matriz).attr("checked",true);
-        alert("hab");
       }
   }
   var respu= matriz.split('RRR');
@@ -3579,14 +3579,14 @@ function activarInputMontoGenerico(matriz){
     $("#monto_modal"+matriz).attr("readonly",true);
     if(($("#habilitar"+matriz).is("[checked]"))){
         $("#habilitar"+matriz).removeAttr("checked");
-        alert("des1")
+      
       }
   }else{
     $("#monto_mod"+matriz).removeAttr("readonly");
     $("#monto_modal"+matriz).removeAttr("readonly");
     if(!($("#habilitar"+matriz).is("[checked]"))){
         $("#habilitar"+matriz).attr("checked",true);
-        alert("hab1")
+     
       }
   }
   var respu= matriz.split('RRR');

@@ -27,12 +27,16 @@ if(isset($_GET['nombre'])){
   $plantilla_servicio=$_GET['plantilla_servicio'];
   $dias=$_GET['dias'];
   $utilidad=$_GET['utilidad'];
+  $cliente=$_GET['cliente'];
+  $productos=$_GET['producto'];
+  $norma=$_GET['norma'];
+
   $fecha= date("Y-m-d");
 
   $codSimServ=obtenerCodigoSimServicio();
   $dbh = new Conexion();
-  $sqlInsert="INSERT INTO simulaciones_servicios (codigo, nombre, fecha, cod_plantillaservicio, cod_responsable,dias_auditoria,utilidad_minima) 
-  VALUES ('".$codSimServ."','".$nombre."','".$fecha."', '".$plantilla_servicio."', '".$globalUser."','".$dias."','".$utilidad."')";
+  $sqlInsert="INSERT INTO simulaciones_servicios (codigo, nombre, fecha, cod_plantillaservicio, cod_responsable,dias_auditoria,utilidad_minima,cod_cliente,productos,norma) 
+  VALUES ('".$codSimServ."','".$nombre."','".$fecha."', '".$plantilla_servicio."', '".$globalUser."','".$dias."','".$utilidad."','".$cliente."','".$productos."','".$norma."')";
   $stmtInsert = $dbh->prepare($sqlInsert);
   $stmtInsert->execute();
 

@@ -15,9 +15,9 @@ $fechaHoraActual=date("Y-m-d H:i:s");
 if(isset($_POST['nombre'])){
 $nombre=$_POST['nombre'];
 $abrev=$_POST['abreviatura'];
-$cliente=$_POST['cliente'];
-$productos=$_POST['productos'];
-$norma=$_POST['norma'];
+$cliente="";
+$productos="";
+$norma="";
 $dias=$_POST['dias'];
 $utmin=$_POST['utilidad_minima'];
 //$pFecha = explode("/", $_POST['fecha_auditoria']);

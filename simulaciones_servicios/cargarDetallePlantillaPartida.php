@@ -19,7 +19,7 @@ $j=1;
     ?>
     <input type="hidden" name="codigo_partida_presupuestaria<?=$j?>" id="codigo_partida_presupuestaria<?=$j?>" value="<?=$codigoPartida?>" readonly/>
     <h4 class="font-weight-bold"><center>PARTIDA: <?=$nombrePartida?></center>
-      <div class="row col-sm-4 float-right">
+      <!--<div class="row col-sm-4 float-right">
         <small class="col-sm-6">Hab/Des</small>
         <div class="togglebutton col-sm-6">
               <label>
@@ -27,7 +27,7 @@ $j=1;
                  <span class="toggle"></span>
               </label>
         </div>    
-      </div>
+      </div>-->
     </h4>
       <div class="row">
         <!--<label class="col-sm-3 col-form-label">Monto x Modulo Plantilla:</label>

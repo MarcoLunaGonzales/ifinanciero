@@ -76,6 +76,51 @@ $dbh = new Conexion();
                       </div>
                       <div class="row" id="lista_precios">
                       </div>
+
+                      <div class="row">
+                       <label class="col-sm-2 col-form-label">Cliente</label>
+                       <div class="col-sm-7">
+                        <div class="row">
+                          <div class="col-sm-12">
+                            <div class="form-group">
+                                <select class="selectpicker form-control" name="cliente" id="cliente" data-style="btn btn-info"  required>
+          
+                                <!--<option disabled selected="selected" value="">Cliente</option>-->
+                                <?php
+                                 $stmt = $dbh->prepare("SELECT codigo, nombre FROM clientes where cod_estadoreferencial=1 order by 2");
+                                 $stmt->execute();
+                                  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                  $codigoX=$row['codigo'];
+                                  $nombreX=$row['nombre'];
+                                  //$abrevX=$row['abreviatura'];
+                                   ?>
+                                  <option value="<?=$codigoX;?>"><?=$nombreX;?></option> 
+                                  <?php
+                                    }
+                                    ?>
+                                </select>
+                              </div>
+                          </div> 
+                        </div>
+                       </div>
+                      </div><!--row-->
+
+                      <div class="row">
+                       <label class="col-sm-2 col-form-label">Productos</label>
+                       <div class="col-sm-7">
+                        <div class="form-group" style="border-bottom: 1px solid #CACFD2">
+                          <input type="text" value="" class="form-control tagsinput" name="productos" id="productos" data-role="tagsinput" required data-color="primary">
+                        </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                       <label class="col-sm-2 col-form-label">Norma</label>
+                       <div class="col-sm-7">
+                        <div class="form-group">
+                          <input class="form-control" type="text" name="norma" id="norma" required autocomplete="off"/>
+                        </div>
+                        </div>
+                      </div>
                       
         
         </div>

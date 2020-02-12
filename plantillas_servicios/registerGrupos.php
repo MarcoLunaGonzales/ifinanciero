@@ -289,12 +289,13 @@ if(isset($_GET['cod'])){
 	                                   <select class="selectpicker form-control" name="servicios_codigo" id="servicios_codigo" data-style="fondo-boton">
 	        	                          <option disabled selected value="">--Seleccione--</option>
 			  	              <?php
-                           $stmt3 = $dbh->prepare("SELECT idclaservicio,descripcion from cla_servicios where (codigo_n1=108 or codigo_n1=109) and vigente=1");
+                           $stmt3 = $dbh->prepare("SELECT idclaservicio,descripcion,codigo from cla_servicios where (codigo_n1=108 or codigo_n1=109) and vigente=1");
                          $stmt3->execute();
                          while ($rowServ = $stmt3->fetch(PDO::FETCH_ASSOC)) {
                           $codigoServX=$rowServ['idclaservicio'];
                           $nombreServX=$rowServ['descripcion'];
-                          ?><option value="<?=$codigoServX;?>"><?=$nombreServX?></option><?php 
+                          $abrevServX=$rowServ['codigo'];
+                          ?><option value="<?=$codigoServX;?>"><?=$abrevServX?> - <?=$nombreServX?></option><?php 
                        } 
                          ?>  
 					
