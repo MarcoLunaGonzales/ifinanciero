@@ -126,6 +126,7 @@ $alumnos=$_GET['alumnos'];
                           }
                           $montoTotal=number_format($montoFila, 2, '.', ',');
                           $totalMontoPlantilla+=$montoFila;
+                          $glosaD=$row['glosa'];
                           ?>
                           <tr class="bg-white">
                              <td><?=$indexDetalle?></td>
@@ -133,6 +134,9 @@ $alumnos=$_GET['alumnos'];
                              <td class="text-right"><?=$montoTotal?></td>
                              <td class="text-left font-weight-bold small">[<?=$numeroCuenta?>] <?=$nombreCuenta?></td>
                              <td>
+                              <a href="#" class="btn btn-success btn-sm btn-fab" onclick="mostrarEditPlantillaDetalle(<?=$codigoDetalle?>,'<?=$montoFila?>','<?=$glosaD?>'); return false;">
+                                <i class="material-icons"><?=$iconEdit;?></i>
+                              </a>
                               <?php 
                               if($cantidad>1){
                               ?>

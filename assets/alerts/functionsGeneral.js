@@ -2369,6 +2369,32 @@ $(document).on("shown.bs.modal","#modalRetencion",function(){
    }
     ajax.send(null);
  }
+ function mostrarEditPlantillaDetalle(cod,monto,glosa){
+  $("#codigo_plandet").val(cod);
+  $("#monto_plandet").val(monto);
+  $("#glosa_plandet").val(glosa);
+  $("#modalEditPlan").modal("show");
+ }
+ function editPlantillaDetalle(){
+  var cod=$("#codigo_plandet").val();
+  var glosa=$("#glosa_plandet").val();
+  var monto=$("#monto_plandet").val();
+  if(glosa==""||monto==""){
+    Swal.fire('Informativo!','Todos los campos son requeridos!','warning');
+  }else{
+   var n_monto=calcularMontoRegistrado(parseFloat(monto),$("#tipo_calculomonto").val());
+  ajax=nuevoAjax();
+    ajax.open("GET","ajaxEditPlantillasDetalle.php?cod="+cod+"&m="+monto+"&g="+glosa+"&nm="+n_monto,true);
+    ajax.onreadystatechange=function(){
+    if (ajax.readyState==4) {
+      $("#modalEditPlan").modal("hide");
+      listarDetallesPartidaCuenta(parseInt($("#tipo_calculomonto").val()));
+         //Swal.fire('Borrado!','Se borraron los datos exitosamente!','success');
+    }
+   }
+    ajax.send(null);   
+  }
+ }
  function removePrecioPlantilla(cod,codigo){
    ajax=nuevoAjax();
     ajax.open("GET","ajaxDeletePrecio.php?cod="+cod+"&codigo="+codigo,true);
@@ -3592,14 +3618,75 @@ function calcularTotalPartida(valor){
   }
 }
 
+function activarInputMontoGenericoPartida(j){
+  if($("#habilitar"+j).is("[checked]")){
+    $("#habilitar"+j).removeAttr("checked");
+    var valor=1;
+  }else{
+    $("#habilitar"+j).attr("checked",true);
+    var valor=0;
+  }
+  var ni=$("#numero_cuentas"+j).val();
+  for (var i = 1; i <= ni; i++) {
+    activarInputMontoGenericoPar(j+"RRR"+i,valor);
+  };
+}
+function activarInputMontoGenericoPartidaServicio(j){
+  if($("#habilitar"+j).is("[checked]")){
+    $("#habilitar"+j).removeAttr("checked");
+  }else{
+    $("#habilitar"+j).attr("checked",true);
+  }
+  var ni=$("#numero_cuentas"+j).val();
+  for (var i = 1; i <= ni; i++) {
+    activarInputMontoGenericoServicio(j+"RRR"+i);
+    if($("#habilitar"+j).is("[checked]")){
+      if(!($("#habilitar"+j+"RRR"+i).is("[checked]"))){
+        $("#habilitar"+j+"RRR"+i).attr("checked",true);
+      }
+    }else{
+      if(($("#habilitar"+j+"RRR"+i).is("[checked]"))){
+        $("#habilitar"+j+"RRR"+i).removeAttr("checked");
+      }
+    }
+  };
+}
 //lista de partidas simulaciones
+function activarInputMontoGenericoPar(matriz,valor){
+  if(valor==1){
+    $("#monto_mod"+matriz).attr("readonly",true);
+    $("#monto_modal"+matriz).attr("readonly",true);
+    if(($("#habilitar"+matriz).is("[checked]"))){
+        $("#habilitar"+matriz).removeAttr("checked");
+        alert("des");
+      }
+  }else{
+    $("#monto_mod"+matriz).removeAttr("readonly");
+    $("#monto_modal"+matriz).removeAttr("readonly");
+    if(!($("#habilitar"+matriz).is("[checked]"))){
+        $("#habilitar"+matriz).attr("checked",true);
+        alert("hab");
+      }
+  }
+  var respu= matriz.split('RRR');
+  calcularTotalPartidaGenerico(respu[0],1);
+}
+
 function activarInputMontoGenerico(matriz){
   if(!($("#monto_mod"+matriz).is("[readonly]"))){
     $("#monto_mod"+matriz).attr("readonly",true);
     $("#monto_modal"+matriz).attr("readonly",true);
+    if(($("#habilitar"+matriz).is("[checked]"))){
+        $("#habilitar"+matriz).removeAttr("checked");
+        alert("des1")
+      }
   }else{
     $("#monto_mod"+matriz).removeAttr("readonly");
     $("#monto_modal"+matriz).removeAttr("readonly");
+    if(!($("#habilitar"+matriz).is("[checked]"))){
+        $("#habilitar"+matriz).attr("checked",true);
+        alert("hab1")
+      }
   }
   var respu= matriz.split('RRR');
   calcularTotalPartidaGenerico(respu[0],1);
@@ -5526,8 +5613,12 @@ function cargarDatosRegistroProveedor(){
         success:  function (resp) {
            detectarCargaAjax();
            $("#datosProveedorNuevo").html(resp);
+           $("#texto_ajax_titulo").html("Procesando Datos"); 
+           $("#pais_empresa").val("26"); //para el pais de BOLIVIA
+           seleccionarDepartamentoServicio();
            $('.selectpicker').selectpicker("refresh");
            $("#modalAgregarProveedor").modal("show");
+           
         }
     });
 }
@@ -5544,9 +5635,12 @@ function seleccionarDepartamentoServicio(){
         },
         success:  function (resp) {
            detectarCargaAjax();
+           $("#texto_ajax_titulo").html("Procesando Datos"); 
            $("#departamento_empresa").html(resp);
+           $("#departamento_empresa").val("480"); // departamento de LA PAZ
+           seleccionarCiudadServicio();
            $("#ciudad_empresa").val("");
-           $('.selectpicker').selectpicker("refresh");
+           $('.selectpicker').selectpicker("refresh");          
         }
     }); 
 }
@@ -5564,7 +5658,9 @@ function seleccionarCiudadServicio(){
         },
         success:  function (resp) {
            detectarCargaAjax();
+           $("#texto_ajax_titulo").html("Procesando Datos"); 
            $("#ciudad_empresa").html(resp);
+           $("#ciudad_empresa").val("62"); //PARA LA CIUDAD DE EL ALTO
            $('.selectpicker').selectpicker("refresh");
         }
     }); 
@@ -5629,6 +5725,7 @@ function guardarDatosProveedor(){
                success:  function (resp) {
                   actualizarRegistroProveedor();
                   detectarCargaAjax();
+                  $("#texto_ajax_titulo").html("Procesando Datos"); 
                   if(resp.trim()=="1"){
                     alerts.showSwal('success-message','registerSolicitud.php?cod='+codigo);
                   }else{
@@ -5644,6 +5741,25 @@ function guardarDatosProveedor(){
      Swal.fire("Informativo!", "Todos los campos son requeridos", "warning");
    }
 }
+function actualizarTablaClaServicios(){
+  var codigo = $("#cod_plantilla").val();
+   var parametros={"codigo":"none"};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxActualizarTablaServicios.php",
+        data: parametros,
+        beforeSend: function () {
+        $("#texto_ajax_titulo").html("Actualizando lista desde el Servicio Web..."); 
+          iniciarCargaAjax();
+        },
+        success:  function (resp) {
+           detectarCargaAjax();
+           $("#texto_ajax_titulo").html("Procesando Datos"); 
+           alerts.showSwal('success-message','registerGrupos.php?cod='+codigo);
+        }
+    });
+}
 function actualizarRegistroProveedor(){
   var codigo = $("#cod_solicitud").val();
  var parametros={"codigo":"none"};
@@ -5653,11 +5769,12 @@ function actualizarRegistroProveedor(){
         url: "ajaxActualizarProveedores.php",
         data: parametros,
         beforeSend: function () {
-        $("#texto_ajax_titulo").html("Actualizando proveedores desde el Servicio..."); 
+        $("#texto_ajax_titulo").html("Actualizando proveedores desde el Servicio Web..."); 
           iniciarCargaAjax();
         },
         success:  function (resp) {
            detectarCargaAjax();
+           $("#texto_ajax_titulo").html("Procesando Datos"); 
            alerts.showSwal('success-message','registerSolicitud.php?cod='+codigo);
         }
     });  

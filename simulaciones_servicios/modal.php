@@ -318,7 +318,7 @@
                               <tbody>
                                 <?php 
                                 $iii=1;
-                               $queryPr="SELECT s.*,t.descripcion as nombre_serv FROM simulaciones_servicios_tiposervicio s, claservicios t where s.cod_simulacionservicio=$codigoSimulacionSuper and s.cod_claservicio=t.idclaservicio order by s.codigo";
+                               $queryPr="SELECT s.*,t.descripcion as nombre_serv FROM simulaciones_servicios_tiposervicio s, cla_servicios t where s.cod_simulacionservicio=$codigoSimulacionSuper and s.cod_claservicio=t.idclaservicio order by s.codigo";
                                $stmt = $dbh->prepare($queryPr);
                                $stmt->execute();
                                $modal_totalmontopre=0;$modal_totalmontopretotal=0;

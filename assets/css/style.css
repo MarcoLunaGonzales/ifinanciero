@@ -331,6 +331,9 @@ z-index: 20;
 .bg-plomo{
  background: #D7DBDD; 
 }
+.bg-blanco2{
+ background: #F5FAC0; 
+}
 .bg-principal{
   background:#8E4583;
 }
@@ -387,6 +390,9 @@ filter: grayscale(100%);
 
 .bg-table-primary{
   background: #0D5F7C;
+}
+.bg-table-primary2{
+  background: #FF7000;
 }
 .icon-sm{
   font-size: 16px !important;

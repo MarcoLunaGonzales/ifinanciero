@@ -420,3 +420,38 @@
   </div>
 </div>
 <!-- end notice modal -->
+
+<!-- notice modal -->
+<div class="modal fade modal-gris modal-arriba" id="modalEditPlan" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-notice modal-lg">
+    <div class="modal-content card">
+                <div class="card-header card-header-info card-header-text">
+                  <div class="card-text">
+                    <h4>EDITAR DETALLE<b id="titulo_partidadetalle"></b></h4>
+                  </div>
+                  <a href="#" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">close</i>
+                  </a>
+                </div>
+                <input type="hidden" id="codigo_plandet">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-sm-8">                     
+                         <div class="form-group">
+                          <label class="bmd-label-static">GLOSA</label>
+                          <input type="text" class="form-control" id="glosa_plandet">
+                         </div> 
+                    </div>
+                    <div class="col-sm-4">                     
+                         <div class="form-group">
+                          <label class="bmd-label-static">MONTO</label>
+                          <input type="number" class="form-control" id="monto_plandet">
+                         </div> 
+                    </div> 
+                  </div>
+                  <a class="btn btn-success btn-round" href="#" onclick="editPlantillaDetalle()">Guardar</a>
+               </div>   
+      </div>
+  </div>
+</div>
+<!-- end notice modal -->
