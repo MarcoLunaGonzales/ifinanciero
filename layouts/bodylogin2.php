@@ -171,7 +171,13 @@
        //autocomplete("nro_cuenta","nro_cuenta_id", array_cuenta_numeros, imagen_cuenta);
       // autocomplete("cuenta","cuenta_id", array_cuenta_nombres, imagen_cuenta);
      }
-
+    $("#formRegFactCajaChica").submit(function(e) {
+      $('<input />').attr('type', 'hidden')
+            .attr('name', 'facturas')
+            .attr('value', JSON.stringify(itemFacturasDCC))
+            .appendTo('#formRegFactCajaChica');
+      
+    });
     $("#formRegComp").submit(function(e) {
       var envio=0;
       var mensaje=""; var debehaber=0;

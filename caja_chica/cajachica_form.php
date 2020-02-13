@@ -90,7 +90,7 @@ if($cod_estado_aux==2 || $cod_estado_aux==null){
                                     <input class="form-control" type="date" name="fecha" id="fecha" required="true" value="<?=$fecha;?>" />                                    
                                 </div>
                             </div>
-                            <label class="col-sm-2 col-form-label">Número</label>
+                            <label class="col-sm-2 col-form-label">Nro. Correlativo</label>
                             <div class="col-sm-4">
                             <div class="form-group">
                                 <input class="form-control" type="number" name="numero" id="numero" value="<?=$numero;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"  readonly="readonly"/>

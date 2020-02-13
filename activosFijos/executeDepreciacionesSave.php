@@ -22,25 +22,52 @@ $fecha_ultimodia = date('Y-m-t', strtotime($fecha));
 //$cod_empresa=$_POST["cod_empresa"];
 $mes=$_POST["mes"];
 $gestion=$_POST["gestion"];
-//$ufvinicio=$_POST["ufvinicio"];
-$ufvinicio=obtenerUFV($fecha_primerdia);
-//$ufvfinal=$_POST["ufvfinal"];
-$ufvfinal=obtenerUFV($fecha_ultimodia);
-$estado=1;
-//Prepare
-$stmt = $dbh->prepare("call crear_depreciacion_mensual(:mes, :gestion, :ufvinicio, :ufvfinal)");
+//verificamos si esa fecha no se registro aun
 
-//$stmt = $dbh->prepare("INSERT INTO depreciaciones(cod_empresa,nombre,vida_util,coeficiente,deprecia,actualiza,cod_estado) 
-//values (:cod_empresa, :nombre, :vida_util, :coeficiente, :deprecia, :actualiza, :cod_estado);");
-//Bind
-//$stmt->bindParam(':codigo', $codigo);
-$stmt->bindParam(':mes', $mes);
-$stmt->bindParam(':gestion', $gestion);
-$stmt->bindParam(':ufvinicio', $ufvinicio);
-$stmt->bindParam(':ufvfinal', $ufvfinal);
+$stmt = $dbh->prepare("SELECT codigo from mesdepreciaciones where gestion=$gestion and mes=$mes");
+	//ejecutamos
+	$stmt->execute();
+	//bindColumn
+	$result=$stmt->fetch();
+	$codigo_aux=$result['codigo'];
+	if($codigo_aux==null)
+	{
+		//verificamos si se salta algun mes
+		$stmt2 = $dbh->prepare("SELECT mes,gestion from mesdepreciaciones  order by codigo desc limit 1");
+		$stmt2->execute();
+		$result2=$stmt2->fetch();
+		$mes_aux=$result2['mes'];
+		$gestion_aux=$result2['gestion'];
+		if($mes_aux==12){
+			$mes_aux=1;
+		}else{
+			$mes_aux=$mes_aux+1;
+		}
+		if($mes_aux==$mes){//no se salto ningun mes
+			//$ufvinicio=$_POST["ufvinicio"];
+		$ufvinicio=obtenerUFV($fecha_primerdia);
+		//$ufvfinal=$_POST["ufvfinal"];
+		$ufvfinal=obtenerUFV($fecha_ultimodia);
+		$estado=1;
+		//Prepare
+		$stmt = $dbh->prepare("call crear_depreciacion_mensual(:mes, :gestion, :ufvinicio, :ufvfinal)");
+		$stmt->bindParam(':mes', $mes);
+		$stmt->bindParam(':gestion', $gestion);
+		$stmt->bindParam(':ufvinicio', $ufvinicio);
+		$stmt->bindParam(':ufvfinal', $ufvfinal);
+		$flagSuccess=$stmt->execute();
+		showAlertSuccessErrorDepreciaciones($flagSuccess,$urlList7);
 
-$flagSuccess=$stmt->execute();
-//$tabla_id = $dbh->lastInsertId();;
+		}else{//se esta saltando un mes de depreciacion
+			$flagSuccess=false;
+			showAlertSuccessErrorDepreciaciones2($flagSuccess,$urlList7);
+		}
+		
+		
+	}else{
+		$flagSuccess=false;
+		showAlertSuccessErrorDepreciaciones($flagSuccess,$urlRegistrar7);
+	}
+	
 
-showAlertSuccessError($flagSuccess,$urlList7);
 ?>

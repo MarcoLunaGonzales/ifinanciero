@@ -24,6 +24,11 @@ try {
     $cod_personal = $_POST["cod_personal"];
     $observaciones = $_POST["observaciones"];
 
+    $cod_uo = $_POST["cod_uo"];
+    $cod_area = $_POST["cod_area"];
+    $nro_recibo = $_POST["nro_recibo"];
+    
+
     
 
     //sacamos monto de caja chica
@@ -49,8 +54,8 @@ try {
         $cod_estado=1;        
         $cod_estadoreferencial=1;
         $monto_rendicion=0;
-        $stmt = $dbh->prepare("INSERT INTO caja_chicadetalle(codigo,cod_cajachica,cod_cuenta,fecha,cod_tipodoccajachica,nro_documento,cod_personal,monto,observaciones,cod_estado,cod_estadoreferencial) 
-        values ($codigo,$cod_cc,$cod_cuenta,'$fecha',$cod_tipo_documento,$numero,$cod_personal,$monto,'$observaciones',$cod_estado,$cod_estadoreferencial)");
+        $stmt = $dbh->prepare("INSERT INTO caja_chicadetalle(codigo,cod_cajachica,cod_cuenta,fecha,cod_tipodoccajachica,nro_documento,cod_personal,monto,observaciones,cod_estado,cod_estadoreferencial,cod_area,cod_uo,nro_recibo) 
+        values ($codigo,$cod_cc,$cod_cuenta,'$fecha',$cod_tipo_documento,$numero,$cod_personal,$monto,'$observaciones',$cod_estado,$cod_estadoreferencial,$cod_area,$cod_uo,$nro_recibo)");
         $flagSuccess=$stmt->execute();
         if($flagSuccess){//registramos rendiciones
             $stmtrendiciones = $dbh->prepare("INSERT INTO rendiciones(codigo,numero,cod_tipodoc,monto_a_rendir,monto_rendicion,cod_personal,observaciones,cod_estado,cod_cajachicadetalle,cod_estadoreferencial) 
@@ -74,7 +79,7 @@ try {
         $stmtReembolso->execute();
         //================================================================
         $monto_rendicion=0;
-        $stmt = $dbh->prepare("UPDATE caja_chicadetalle set cod_cuenta=$cod_cuenta,fecha='$fecha',cod_tipodoccajachica=$cod_tipo_documento,nro_documento=$numero,cod_personal=$cod_personal,monto=$monto,observaciones='$observaciones'
+        $stmt = $dbh->prepare("UPDATE caja_chicadetalle set cod_cuenta=$cod_cuenta,fecha='$fecha',cod_tipodoccajachica=$cod_tipo_documento,nro_documento=$numero,cod_personal=$cod_personal,monto=$monto,observaciones='$observaciones',cod_area=$cod_area,cod_uo=$cod_uo,nro_recibo=$nro_recibo
          where codigo = $codigo");      
         $flagSuccess=$stmt->execute();        
         if($flagSuccess){

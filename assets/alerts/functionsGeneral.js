@@ -480,11 +480,11 @@ function saveFactura(){
   $("#nfac"+item).html(itemFacturas[item-1].length);
  }
  function limpiarFormFac(){
-  $('#nit_fac').val('');$('#nro_fac').val('');$('#fecha_fac').val('');$('#razon_fac').val('');$('#imp_fac').val('');
-  $('#exe_fac').val('');$('#aut_fac').val('');$('#con_fac').val('');
+    $('#nit_fac').val('');$('#nro_fac').val('');$('#fecha_fac').val('');$('#razon_fac').val('');$('#imp_fac').val('');
+    $('#exe_fac').val('');$('#aut_fac').val('');$('#con_fac').val('');
  }
  function cargarDetalles(fila,un,ar,de,ha,gl){
-  var divDetalle;
+    var divDetalle;
       divDetalle=document.getElementById("div"+fila);
       ajax=nuevoAjax();
       ajax.open("GET","ajaxCuentaContable.php?idFila="+fila+'&un='+un+'&ar='+ar+'&de='+de+'&ha='+ha+'&gl='+gl,true);
@@ -496,6 +496,105 @@ function saveFactura(){
       }
       ajax.send(null);
  }
+
+var itemFacturasDCC =[];
+ function listFacDCC(id){
+   $("#divTituloCuentaDetalle").html($("#divCuentaDetalle"+id).html());
+   $("#codCuenta").val(id);
+   listarFactDCC(id);
+   abrirModalDCC('modalFac');
+ }
+  function abrirModalDCC(id){
+  $('#'+id).modal('show');
+ }
+function listarFactDCC(id){
+  var div=$('<div>').addClass('table-responsive');
+  var table = $('<table>').addClass('table table-condensed');
+  var titulos = $('<tr>').addClass('');
+     titulos.append($('<th>').addClass('').text('#'));
+     titulos.append($('<th>').addClass('').text('NIT'));
+     titulos.append($('<th>').addClass('').text('FACTURA'));
+     titulos.append($('<th>').addClass('').text('FECHA'));
+     titulos.append($('<th>').addClass('').text('RAZON SOCIAL'));
+     titulos.append($('<th>').addClass('').text('IMPORTE'));
+     //titulos.append($('<th>').addClass('').text('EXCENTOS'));
+     titulos.append($('<th>').addClass('').text('AUTORIZACION'));
+     titulos.append($('<th>').addClass('').text('CONTROL'));
+     titulos.append($('<th>').addClass('').text('OPCION'));
+     table.append(titulos);
+   
+   for (var i = 0; i < itemFacturasDCC[id-1].length; i++) {
+     var row = $('<tr>').addClass('');
+     row.append($('<td>').addClass('').text(i+1));
+     row.append($('<td>').addClass('').text(itemFacturasDCC[id-1][i].nit));
+     row.append($('<td>').addClass('').text(itemFacturasDCC[id-1][i].nroFac));
+     row.append($('<td>').addClass('').text(itemFacturasDCC[id-1][i].fechaFac));
+     row.append($('<td>').addClass('').text(itemFacturasDCC[id-1][i].razonFac));
+     row.append($('<td>').addClass('').text(itemFacturasDCC[id-1][i].impFac));
+     //row.append($('<td>').addClass('').text(itemFacturasDCC[id-1][i].exeFac));
+     row.append($('<td>').addClass('').text(itemFacturasDCC[id-1][i].autFac));
+     row.append($('<td>').addClass('').text(itemFacturasDCC[id-1][i].conFac));
+     row.append($('<td>').addClass('').html('<button class="btn btn-danger btn-link" onclick="removeFacDCC('+id+','+i+');"><i class="material-icons">remove_circle</i></button>'));
+     table.append(row);
+   }
+   div.append(table);
+   $('#divResultadoListaFac').html(div);
+}
+function saveFacturaDCC(){
+  var index=$('#codCuenta').val();
+  var factura={
+    nit: $('#nit_fac').val(),
+    nroFac: $('#nro_fac').val(),
+    fechaFac: $('#fecha_fac').val(),
+    razonFac: $('#razon_fac').val(),
+    impFac: $('#imp_fac').val(),
+    exeFac: $('#exe_fac').val(),
+    autFac: $('#aut_fac').val(),
+    conFac: $('#con_fac').val(),
+    }
+    
+  //cargar el credito fiscal
+  //var iva=configuraciones[0].valor;
+  //var importeIva=parseFloat($('#imp_fac').val())*(iva/100);
+  //var anterior= obtenerImportesFacturaIva(index);
+  itemFacturasDCC[index-1].push(factura);
+  limpiarFormFacDCC();
+  listarFactDCC(index);
+  //$("#debe"+index).val(anterior+importeIva);
+  // if($("#debe"+index).length){
+  //  calcularTotalesComprobante();  
+  // } 
+  $("#nfac"+index).html(itemFacturasDCC[index-1].length);
+  $("#link110").addClass("active");$("#link111").removeClass("active");$("#link112").removeClass("active");
+  $("#nav_boton1").addClass("active");$("#nav_boton2").removeClass("active");$("#nav_boton3").removeClass("active");
+}
+function limpiarFormFacDCC(){
+    $('#nit_fac').val('');$('#nro_fac').val('');$('#fecha_fac').val('');$('#razon_fac').val('');$('#imp_fac').val('');
+    $('#exe_fac').val('');$('#aut_fac').val('');$('#con_fac').val('');
+}
+ function abrirFacturaDCC(index,nit,nro,fecha,razon,imp,exe,aut,con){
+   var factura={
+    nit: nit,
+    nroFac: nro,
+    fechaFac: fecha,
+    razonFac:razon,
+    impFac: imp,
+    exeFac: exe,
+    autFac: aut,
+    conFac: con
+    }
+    itemFacturasDCC[index-1].push(factura);
+    //listarFact(index);
+    $("#nfac"+(index)).html(itemFacturasDCC[index-1].length);
+ }
+
+function removeFacDCC(item,fila){
+  itemFacturasDCC[item-1].splice(fila, 1);
+  listarFactDCC(item);
+  $("#nfac"+item).html(itemFacturasDCC[item-1].length);
+ }
+
+
 
 
 function modalPlantilla(){
@@ -1507,22 +1606,22 @@ function ajaxPersonalUbicacion(codigo_UO){
   ajax.send(null)
   
 }
-// function ajaxEtiquetasAFPersonal(combo){
-//   var contenedor;
-//   var codigo_UO=combo.value;
-//   contenedor = document.getElementById('div_contenedor_UO');
-//   ajax=nuevoAjax();
-//   ajax.open('GET', 'activosFijos/EtiquetasAFAjax.php?codigo_UO='+codigo_UO,true);
-//   ajax.onreadystatechange=function() {
-//     if (ajax.readyState==4) {
-//       contenedor.innerHTML = ajax.responseText;
-//       $('.selectpicker').selectpicker(["refresh"]);
+function ajaxCajaCPersonalArea(combo){
+  var contenedor;
+  var codigo_personal=combo.value;
+  contenedor = document.getElementById('div_contenedor_area');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'caja_chica/personalAreaAjax.php?codigo_personal='+codigo_personal,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);
       
-//       ajaxPersonalUbicacion(codigo_UO);
-//     }
-//   }
-//   ajax.send(null)  
-// }
+      // ajaxPersonalUbicacion(codigo_personal);
+    }
+  }
+  ajax.send(null)  
+}
 
 function ajaxPersonalUbicacionTrasfer(combo){
   var contenedor;
@@ -5280,7 +5379,54 @@ function sumartotalmontoRendicion(id){
   $("#monto_faltante").val(monto_faltante);  
 }
 
+function addCajaChicaDetalleADD(obj) {
+  if($("#add_boton").length){
+    $("#add_boton").attr("disabled",true);
+  }
+      numFilas++;
+      cantidadItems++;
+      filaActiva=numFilas;      
+      document.getElementById("cantidad_filas").value=numFilas;
+      console.log("num: "+numFilas+" cantidadItems: "+cantidadItems);
+      fi = document.getElementById('fiel');
+      contenedor = document.createElement('div');
+      contenedor.id = 'div'+numFilas;  
+      fi.type="style";
+      fi.appendChild(contenedor);
+      var divDetalle;
+      divDetalle=$("#div"+numFilas);
+      //document.getElementById('nro_cuenta').focus();
+      ajax=nuevoAjax();
+      ajax.open("GET","caja_chica/ajax_cajachica_add_facturas.php?idFila="+numFilas,true);
+      ajax.onreadystatechange=function(){
+        if (ajax.readyState==4) {
+          divDetalle.html(ajax.responseText);
+          divDetalle.bootstrapMaterialDesign();   
+          $('#codigo_rendicionA').val("");
+          $('#cod_tipo_documentoA').val("");//
+          $('#numero_doc').val("");
+          $('#fecha_doc').val("");
+          $('#monto_A').val("");
+          $('#observacionesA').val("");
+    
+          $('.selectpicker').selectpicker("refresh");
+          // $('#modalAgregarDR').modal('show');
+          // if(numFilas!=1){
+          //   //alert((numFilas-1)+"-"+$("#monto_A"+(numFilas-1)).val());
+          //   sumartotalprueba2(numFilas-1);
+          // }
+          
 
+
+          if($("#add_boton").length){
+            $("#add_boton").removeAttr("disabled");
+          }
+          return false;
+       }
+      }   
+      ajax.send(null);
+  
+}
 function addRendicionDetalle(obj) {
   if($("#add_boton").length){
     $("#add_boton").attr("disabled",true);

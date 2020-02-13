@@ -1267,6 +1267,14 @@
 			$cod_cc=$_GET['cod_cc'];
 			require_once('caja_chica/detallecajachica_form.php');
 		}
+
+		if ($_GET['opcion']=='formAgregarFacturas') {
+			$codigo=$_GET['codigo'];
+			$cod_tcc=$_GET['cod_tcc'];
+			$cod_cc=$_GET['cod_cc'];
+			require_once('caja_chica/agregarFacturas.php');
+		}
+
 		if ($_GET['opcion']=='DetalleCajaChicaSave') {
 			require_once('caja_chica/detallecajachica_save.php');
 		}

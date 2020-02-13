@@ -41,6 +41,8 @@ $statementAREAS = $dbh->query($query_areas);
 $query_proy_financiacion = "select * from proyectos_financiacionexterna where cod_estadoreferencial=1 order by 2";
 $statementProyFinanciacion = $dbh->query($query_proy_financiacion);
 
+$statementTIPOSAF = $dbh->query("select * from tipos_activos_fijos order by 2");
+
 //------------------------------------------------------------------- principal
 if ($codigo > 0){
     $stmt = $dbh->prepare("SELECT * FROM activosfijos where codigo =:codigo");
@@ -78,6 +80,7 @@ if ($codigo > 0){
 
     $cod_unidadorganizacional = $result['cod_unidadorganizacional'];
     $cod_area = $result['cod_area'];
+    $tipo_af = $result['tipo_af'];
 
 
     //IMAGEN
@@ -139,6 +142,7 @@ if ($codigo > 0){
     $cod_unidadorganizacional = '';
     $cod_area = '';
     $variableDisabled="false";
+    $tipo_af='';
 }
 //echo $variableDisabled;
 ?>
@@ -248,7 +252,7 @@ if ($codigo > 0){
                                 <label class="col-sm-2 col-form-label">Rubro</label>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                            		<select name="cod_depreciaciones" id="cod_depreciaciones" class="selectpicker" data-style="btn btn-primary" onchange="ajaxCodigoActivo(this);">
+                            		<select name="cod_depreciaciones" id="cod_depreciaciones" class="selectpicker" data-style="btn btn-primary" onchange="ajaxCodigoActivo(this);" required="true">
                             			<option disabled selected value="">-</option>
                                 		<?php while ($row = $statementDepre->fetch()){ ?>
                             				<option <?php if($cod_depreciaciones == $row["codigo"]) echo "selected"; ?>  value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
@@ -325,6 +329,16 @@ if ($codigo > 0){
                             				</select>
                                 </div>
                                 </div><!--fin campo estadobien -->
+                                <label class="col-sm-2 col-form-label">Tipo Activo</label>
+                                <div class="col-sm-4">
+                                <div class="form-group">
+                                    <select name="cod_tiposactivos" id="cod_tiposactivos" class="selectpicker" data-style="btn btn-primary">
+                                        <?php while ($row = $statementTIPOSAF->fetch()){ ?>
+                                            <option <?php if($tipo_af == $row["codigo"]) echo "selected"; ?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                                </div>
 
                                 
                             </div><!--fin campo cod_ubicaciones -->
@@ -353,22 +367,19 @@ if ($codigo > 0){
                                 <div class="form-group">
                                     <div id="div_personal_UO">
                                         <?php
-                                        $stmt = $dbh->prepare("SELECT p.codigo, p.paterno,p.materno,p.primer_nombre
+                                        $stmtRR = $dbh->prepare("SELECT p.codigo, p.paterno,p.materno,p.primer_nombre
                                         from personal p, ubicaciones u, unidades_organizacionales uo 
-                                        where u.cod_unidades_organizacionales=uo.codigo and uo.codigo=p.cod_unidadorganizacional and u.codigo='$cod_ubicaciones' order by 2");
-                                        $stmt->execute();
+                                        where u.cod_unidades_organizacionales=uo.codigo and uo.codigo=p.cod_unidadorganizacional and uo.codigo=$cod_unidadorganizacional order by 2");
+                                        $stmtRR->execute();
                                         ?>
                                         <select id="cod_responsables_responsable" name="cod_responsables_responsable" class="form-control" 
                                         data-style="btn btn-info" data-size="5">
-                                            <?php 
-                                                while ($row = $stmt->fetch()){ 
-                                                    $codPersonal=$row['codigo'];
-                                               ?>
-                                               <option value="<?=$row["codigo"];?>" <?=($codPersonal==$cod_responsables_responsable)?"selected":"";?> <?=($codigo>0)?"disabled":"";?> >
+                                            <?php while ($row = $stmtRR->fetch()){ ?>
+                                                <option <?=($cod_responsables_responsable==$row["codigo"])?"selected":"";?>  <?=($codigo>0)?"disabled":"";?> value="<?=$row["codigo"];?>">
                                                     <?=$row["paterno"].' '.$row["materno"].' '.$row["primer_nombre"];?>
                                                 </option>
-                                                <?php 
-                                                } ?>
+                                            <?php } ?>
+
                                         </select>
 
                                     </div>
