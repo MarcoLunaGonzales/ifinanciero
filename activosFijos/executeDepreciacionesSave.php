@@ -38,12 +38,15 @@ $stmt = $dbh->prepare("SELECT codigo from mesdepreciaciones where gestion=$gesti
 		$result2=$stmt2->fetch();
 		$mes_aux=$result2['mes'];
 		$gestion_aux=$result2['gestion'];
+		
 		if($mes_aux==12){
 			$mes_aux=1;
 		}else{
-			$mes_aux=$mes_aux+1;
+			if($mes_aux==null)
+				$mes_aux=0;
+			else $mes_aux=$mes_aux+1;
 		}
-		if($mes_aux==$mes){//no se salto ningun mes
+		if($mes_aux==$mes || $mes_aux==0){//no se salto ningun mes
 			//$ufvinicio=$_POST["ufvinicio"];
 		$ufvinicio=obtenerUFV($fecha_primerdia);
 		//$ufvfinal=$_POST["ufvfinal"];

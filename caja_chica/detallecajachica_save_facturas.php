@@ -10,8 +10,13 @@ $dbh = new Conexion();
 
 // $codGestion=$_POST["gestion"];
 // $codUnidad=$_POST["unidad_organizacional"];
-$cod_cajachica=$_POST["cod_cajachica"];
+$cod_cc=$_POST["cod_cajachica"];
 $cod_tcc=$_POST["cod_tcc"];
+$cod_ccd=$_POST["cod_ccd"];
+
+
+// $monto_total_rendido=$_POST["monto_total"];
+// $monto_faltante=$_POST["monto_faltante"];
 
 // $cantidadFilas=$_POST["cantidad_filas"];
 // $tipoComprobante=$_POST["tipo_comprobante"];
@@ -28,12 +33,6 @@ session_start();
 // $globalAdmin=$_SESSION["globalAdmin"];
 
 $fechaHoraActual=date("Y-m-d H:i:s");
-
-// $codComprobante=$_POST['codigo_comprobante'];
-// $sqlUpdate="UPDATE comprobantes SET  glosa='$glosa', modified_at='$fechaHoraActual', modified_by='$globalUser' where codigo=$codComprobante";
-// echo $sqlUpdate;
-// $stmtUpdate = $dbh->prepare($sqlUpdate);
-// $flagSuccess=$stmtUpdate->execute();	
 
 //subir archivos al servidor
 //Como el elemento es un arreglos utilizamos foreach para extraer todos los valores
@@ -64,83 +63,82 @@ $fechaHoraActual=date("Y-m-d H:i:s");
     //     }
     // }
 
-  //   $stmt1 = obtenerComprobantesDet($codComprobante);
-  //   while ($row1 = $stmt1->fetch(PDO::FETCH_ASSOC)) {
-  //     $codigo=$row1['cod_det'];
-  //     $sqlDeleteEstado="";
-  //     $sqlDeleteEstado="DELETE from estados_cuenta where cod_comprobantedetalle='$codigo'";
-  //     $stmtDelEstado = $dbh->prepare($sqlDeleteEstado);
-  //     $stmtDelEstado->execute();
-  //     $sqlDeleteFactura="";
-  //     $sqlDeleteFactura="DELETE from facturas_compra where cod_comprobantedetalle='$codigo'";
-  //     $stmtDelFactura = $dbh->prepare($sqlDeleteFactura);
-  //     $stmtDelFactura->execute();
-  //   }
-  //      //BORRAMOS LA TABLA
-		// $sqlDelete="";
-		// $sqlDelete="DELETE from comprobantes_detalle where cod_comprobante='$codComprobante'";
-		// $stmtDel = $dbh->prepare($sqlDelete);
-		// $flagSuccess=$stmtDel->execute();
 
-// for ($i=1;$i<=$cantidadFilas;$i++){ 	    	
-// 	$cuenta=$_POST["cuenta".$i];
+      $sqlDeleteFactura="DELETE from facturas_detalle_cajachica where cod_cajachicadetalle=$cod_ccd";
+      $stmtDelFactura = $dbh->prepare($sqlDeleteFactura);
+      $stmtDelFactura->execute();
+      $nF=cantidadF($facturas[$cod_ccd-1]);
+        //echo $nF;
+        $suma_importe_fac=0;
+         for($j=0;$j<$nF;$j++){
+         	  $nit=$facturas[$cod_ccd-1][$j]->nit;
+         	  $nroFac=$facturas[$cod_ccd-1][$j]->nroFac;
+         	  
+         	  $fecha=$facturas[$cod_ccd-1][$j]->fechaFac;
+         	  $porciones = explode("/", $fecha);
+         	  $fechaFac=$porciones[2]."-".$porciones[1]."-".$porciones[0];
+         	  
+         	  $razonFac=$facturas[$cod_ccd-1][$j]->razonFac;
+         	  $impFac=$facturas[$cod_ccd-1][$j]->impFac;
+         	  $exeFac=0;
+         	  $autFac=$facturas[$cod_ccd-1][$j]->autFac;
+         	  $conFac=$facturas[$cod_ccd-1][$j]->conFac;
 
-// 	if($cuenta!=0 || $cuenta!=""){
-// 		$cuentaAuxiliar=$_POST["cuenta_auxiliar".$i];
-// 		$unidadDetalle=$_POST["unidad".$i];
-// 		$area=$_POST["area".$i];
-// 		$debe=$_POST["debe".$i];
-// 		$haber=$_POST["haber".$i];
-// 		$glosaDetalle=$_POST["glosa_detalle".$i];
+            $suma_importe_fac=$suma_importe_fac+$impFac;
 
-		
-//         $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
-// 		$sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobanteDetalle','$codComprobante', '$cuenta', '$cuentaAuxiliar', '$unidadDetalle', '$area', '$debe', '$haber', '$glosaDetalle', '$i')";
-// 		$stmtDetalle = $dbh->prepare($sqlDetalle);
-// 		$flagSuccessDetalle=$stmtDetalle->execute();	
+            // echo "nit:".$nit."<br>";
+            // echo "nroFac:".$nroFac."<br>";
+            // echo "fecha:".$fecha."<br>";
+            // echo "fechaFac:".$fechaFac."<br>";
+            // echo "razonFac:".$razonFac."<br>";
+            // echo "exeFac:".$exeFac."<br>";
+            // echo "autFac:".$autFac."<br>";
+            // echo "conFac:".$conFac."<br>";
 
-//         $nF=cantidadF($facturas[$i-1]);
+		        $sqlDetalle2="INSERT INTO facturas_detalle_cajachica (cod_cajachicadetalle, nit, nro_factura, fecha, razon_social, importe, exento, nro_autorizacion, codigo_control) VALUES ('$cod_ccd', '$nit', '$nroFac', '$fechaFac', '$razonFac', '$impFac', '$exeFac', '$autFac', '$conFac')";
+  		      $stmtDetalle2 = $dbh->prepare($sqlDetalle2);
+  		      $flagSuccessDetalle2=$stmtDetalle2->execute();
+         }
+
+
+
+
+         
+
+         $stmtCC = $dbh->prepare("SELECT cc.codigo,cc.monto_reembolso,ccd.monto
+        from  caja_chicadetalle ccd,caja_chica cc
+        where ccd.cod_cajachica=cc.codigo and ccd.codigo=$cod_ccd");
+        $stmtCC->execute();
+        $resultCC=$stmtCC->fetch();
+        $cod_cajachica=$resultCC['codigo'];
+        $monto_reembolso=$resultCC['monto_reembolso'];
+        $monto_a_rendir=$resultCC['monto'];
+        $monto_faltante=$monto_a_rendir-$suma_importe_fac;
+      
+      //  //------
         
-//          for($j=0;$j<$nF;$j++){
-//          	  $nit=$facturas[$i-1][$j]->nit;
-//          	  $nroFac=$facturas[$i-1][$j]->nroFac;
-         	  
-//          	  $fecha=$facturas[$i-1][$j]->fechaFac;
-//          	  $porciones = explode("/", $fecha);
-//          	  $fechaFac=$porciones[2]."-".$porciones[1]."-".$porciones[0];
-         	  
-//          	  $razonFac=$facturas[$i-1][$j]->razonFac;
-//          	  $impFac=$facturas[$i-1][$j]->impFac;
-//          	  $exeFac=$facturas[$i-1][$j]->exeFac;
-//          	  $autFac=$facturas[$i-1][$j]->autFac;
-//          	  $conFac=$facturas[$i-1][$j]->conFac;
+        $monto_reembolso=$monto_reembolso+$monto_faltante;
 
-// 		      $sqlDetalle2="INSERT INTO facturas_compra (cod_comprobantedetalle, nit, nro_factura, fecha, razon_social, importe, exento, nro_autorizacion, codigo_control) VALUES ('$codComprobanteDetalle', '$nit', '$nroFac', '$fechaFac', '$razonFac', '$impFac', '$exeFac', '$autFac', '$conFac')";
-// 		      $stmtDetalle2 = $dbh->prepare($sqlDetalle2);
-// 		      $flagSuccessDetalle2=$stmtDetalle2->execute();
-//          }
+        //actualizamos el monto de reeembolso de caja chica
+        $stmtCCUpdate = $dbh->prepare("UPDATE caja_chica set monto_reembolso=$monto_reembolso where codigo=$cod_cc");
+        $stmtCCUpdate->execute();
 
-//          //itemEstadosCuenta
-//           $nC=cantidadF($estadosCuentas[$i-1]);
-//           for($j=0;$j<$nC;$j++){
-//               $fecha=date("Y-m-d H:i:s");
-//               $codPlanCuenta=$estadosCuentas[$i-1][$j]->cod_plancuenta;
-//               $monto=$estadosCuentas[$i-1][$j]->monto;
-//               $codProveedor=$estadosCuentas[$i-1][$j]->cod_proveedor;
-//               $codComprobanteDetalleOrigen=$estadosCuentas[$i-1][$j]->cod_comprobantedetalle;
-//               $fecha=$fecha;
-//               $sqlDetalle3="INSERT INTO estados_cuenta (cod_comprobantedetalle, cod_plancuenta, monto, cod_proveedor, fecha,cod_comprobantedetalleorigen) VALUES ('$codComprobanteDetalle', '$codPlanCuenta', '$monto', '$codProveedor', '$fecha','$codComprobanteDetalleOrigen')";
-//               $stmtDetalle3 = $dbh->prepare($sqlDetalle3);
-//               $flagSuccessDetalle3=$stmtDetalle3->execute();
-//          }        
-// 	}
-// } 
+        //actualizamos estado en cajachjicadetalle
+        $sqlCCD="UPDATE caja_chicadetalle set cod_estado=2,monto_rendicion=$suma_importe_fac where codigo=$cod_ccd";
+        $stmtCCD = $dbh->prepare($sqlCCD);
+        $stmtCCD->execute();
+        //estado de rendicion 
+        $fecha_recepcion=date("Y-m-d H:i:s");
+        $sql="UPDATE rendiciones set fecha='$fecha_recepcion',cod_estado=2,monto_rendicion=$suma_importe_fac where codigo=$cod_ccd";
+        $stmtUR = $dbh->prepare($sql);
+        $flagSuccess=$stmtUR->execute();
 
-// if($flagSuccessDetalle==true){
-// 	showAlertSuccessError(true,"../".$urlList);	
-// }else{
-// 	showAlertSuccessError(false,"../".$urlList);
-// }
+
+if($flagSuccess==true){
+	showAlertSuccessError(true,"../".$urlListDetalleCajaChica.'&codigo='.$cod_cc.'&cod_tcc='.$cod_ccd);	
+}else{
+	showAlertSuccessError(false,"../".$urlListDetalleCajaChica.'&codigo='.$cod_cc.'&cod_tcc='.$cod_ccd);
+}
 
 
 ?>

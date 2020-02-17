@@ -286,6 +286,30 @@
 
   <script type="text/javascript">
     $(document).ready(function() {
+      $("#formRegFactCajaChica").submit(function(e) {
+      $('<input />').attr('type', 'hidden')
+            .attr('name', 'facturas')
+            .attr('value', JSON.stringify(itemFacturasDCC))
+            .appendTo('#formRegFactCajaChica');
+      
+      });
+      document.getElementById('qrquincho').addEventListener('change', readSingleFileDCC, false);
+
+       $("#formRegFactRendiciones").submit(function(e) {
+      $('<input />').attr('type', 'hidden')
+            .attr('name', 'facturas')
+            .attr('value', JSON.stringify(itemFacturasDRC))
+            .appendTo('#formRegFactRendiciones');
+      
+      });
+      document.getElementById('qrquincho').addEventListener('change', readSingleFileDRC, false);
+    // document.getElementById('archivos').addEventListener('change', archivosPreviewDCC, false);
+    // document.getElementById('archivosDetalle').addEventListener('change', archivosPreviewDetalleDCC, false);
+
+
+
+
+      
         $('#tablePaginator50').DataTable( {
             "pageLength": 50,
             "language": {

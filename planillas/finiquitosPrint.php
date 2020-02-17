@@ -38,9 +38,14 @@ $html.='<body>'.
         '</script>';
 $html.=  '<header class="header">'.        
             '<img class="imagen-logo-der" src="../assets/img/ibnorca2.jpg">'.
-            
-            '<div id="header_titulo_texto_inf_2">Instituto Boliviano de Normalización y Calidad</div>'.
-            '<div id="header_titulo_texto_inf_2">NIT 1020745020</div>'.
+                
+            '<div id="info_izq">
+              <h4 >
+              '.obtenerValorConfiguracionEmpresa(3).'<br>
+              <b>NIT:</b>'.obtenerValorConfiguracionEmpresa(4).'<br>            
+              </h4> 
+            </div>'.
+
             '<br>'.'<br>'.
             '<div id="header_titulo_texto">LIQUIDACIÓN DE BENEFICIOS SOCIALES</div>'.
             '<br>'.'<br>'.

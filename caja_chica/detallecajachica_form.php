@@ -15,7 +15,9 @@ $cod_dcc=$codigo;
 
 $i=0;
   echo "<script>var array_cuenta=[],imagen_cuenta=[];</script>";
-   $stmtCuenta = $dbh->prepare("SELECT p.codigo, p.numero, p.nombre from plan_cuentas_cajachica p where p.cod_estadoreferencial=1");
+   $stmtCuenta = $dbh->prepare("SELECT p.codigo, p.numero, p.nombre from plan_cuentas_cajachica p where p.cod_estadoreferencial=1
+            UNION
+        SELECT p.codigo as codigo, p.nro_cuenta AS numero, p.nombre from cuentas_auxiliares_cajachica p");
    $stmtCuenta->execute();
    while ($rowCuenta = $stmtCuenta->fetch(PDO::FETCH_ASSOC)) {
     $codigoX=$rowCuenta['codigo'];
@@ -40,7 +42,7 @@ $i=0;
 
 if ($codigo > 0){
     
-    $stmt = $dbh->prepare("SELECT codigo,cod_cuenta,fecha,cod_tipodoccajachica,nro_documento,cod_personal,monto,observaciones,nro_recibo,
+    $stmt = $dbh->prepare("SELECT codigo,cod_cuenta,fecha,cod_tipodoccajachica,nro_documento,cod_personal,monto,observaciones,nro_recibo,cod_area,cod_uo,
         (select c.nombre from plan_cuentas c where c.codigo=cod_cuenta) as nombre_cuenta,
         (select c.numero from plan_cuentas c where c.codigo=cod_cuenta) as nro_cuenta
     from caja_chicadetalle
@@ -60,6 +62,8 @@ if ($codigo > 0){
     $nombre_cuenta = $result['nombre_cuenta'];    
     $nro_cuenta = $result['nro_cuenta']; 
     $nro_recibo= $result['nro_recibo'];
+    $cod_area= $result['cod_area'];
+    $cod_uo= $result['cod_uo'];
 
     $cuenta_aux=$nro_cuenta." - ".$nombre_cuenta;   
     
@@ -86,6 +90,7 @@ if ($codigo > 0){
 
     $cuenta_aux="";
     $nro_recibo=0;
+    $cod_cuenta=0;
 
 }
 ?>
@@ -111,7 +116,7 @@ if ($codigo > 0){
                         <div class="form-group">
 
                             <input class="form-control" type="text" name="cuenta_auto" id="cuenta_auto" value="<?=$cuenta_aux?>" placeholder="[numero] y nombre de cuenta"/>
-                            <input class="form-control" type="hidden" name="cuenta_auto_id" id="cuenta_auto_id"/>
+                            <input class="form-control" type="hidden" name="cuenta_auto_id" id="cuenta_auto_id" value="<?=$cod_cuenta?>" />
                             <!-- <select name="cod_cuenta" id="cod_cuenta" class="selectpicker form-control" placeholder="[numero] y nombre de cuenta" data-style="btn btn-info" required="true">
                                 <option ></option>
                                 <?php 
@@ -187,8 +192,28 @@ if ($codigo > 0){
                       <div class="col-sm-8">
                         <div class="form-group">
                             <div id="div_contenedor_area">
-                                    <input type="hidden" name="cod_area" id="cod_area" value="0">
-                                    <input type="hidden" name="cod_uo" id="cod_uo" value="0">
+                                        <input type="hidden" name="cod_uo" id="cod_uo" value="<?=$cod_uo;?>">
+                                        <?php
+                                        if($codigo>0){
+                                            $sqlUO="SELECT cod_area,(select a.nombre from areas a where a.codigo=cod_area )as nombre_areas from areas_organizacion where cod_estadoreferencial=1 and cod_unidad=$cod_uo order by nombre_areas";
+                                            $stmt = $dbh->prepare($sqlUO);
+                                            $stmt->execute();
+                                            ?>
+                                            <select name="cod_area" id="cod_area" class="selectpicker form-control" data-style="btn btn-primary" data-show-subtext="true" data-live-search="true" >
+                                                <?php 
+                                                    while ($row = $stmt->fetch()){ 
+                                                ?>
+                                                     <option <?=($cod_area==$row["cod_area"])?"selected":"";?> value="<?=$row["cod_area"];?>"><?=$row["nombre_areas"];?></option>
+                                                 <?php 
+                                                    } 
+                                                ?>
+                                             </select>
+                                       <?php }else{?>
+
+                                        <input type="hidden" name="cod_area" id="cod_area" value="0">
+                                        <input type="hidden" name="cod_uo" id="cod_uo" value="0">
+                                    <?php }
+                                     ?>
                             </div>
                             
                         </div>

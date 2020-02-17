@@ -378,7 +378,7 @@ while ($row = $cont->fetch(PDO::FETCH_BOUND)) {
                            <div class="h-divider"></div>
                          </div>
 
-                       <script>var nfac=[];itemFacturas.push(nfac);var nest=[];itemEstadosCuentas.push(nest);</script>
+                       
 						 <?php
 						      $stmt = $dbh->prepare("SELECT * FROM facturas_compra where cod_comprobantedetalle=$codDet");
 				              $stmt->execute();

@@ -2,7 +2,7 @@
 require_once 'conexion.php';
 require_once 'configModule.php'; //configuraciones
 require_once 'styles.php';
-require_once 'layouts/bodylogin2.php';
+// require_once 'layouts/bodylogin2.php';
 
 require_once 'functionsGeneral.php';
 require_once 'functions.php';
@@ -28,10 +28,9 @@ $numero_cc=$resultMCC['numero'];
 
 
 $stmt = $dbh->prepare("SELECT codigo,cod_cuenta,fecha,
-  (select td.nombre from tipos_documentocajachica td where td.codigo=cod_tipodoccajachica) as cod_tipodoccajachica,nro_documento,(select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=cod_personal)as cod_personal,monto,monto_rendicion,observaciones,cod_estado,
-  (select e.nombre from estados_rendiciones e where e.codigo=cod_estado) as nombre_estado 
+  (select td.nombre from tipos_documentocajachica td where td.codigo=cod_tipodoccajachica) as cod_tipodoccajachica,nro_documento,(select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=cod_personal)as cod_personal,monto,monto_rendicion,observaciones,cod_estado
 from caja_chicadetalle
-where cod_cajachica=$cod_cajachica and cod_estadoreferencial=1");
+where cod_cajachica=$cod_cajachica and cod_estadoreferencial=1 ORDER BY codigo desc");
 //ejecutamos
 $stmt->execute();
 //bindColumn
@@ -45,7 +44,6 @@ $stmt->bindColumn('monto_rendicion', $monto_rendicion);
 $stmt->bindColumn('observaciones', $observaciones);
 $stmt->bindColumn('cod_estado', $cod_estado);
 $stmt->bindColumn('cod_personal', $cod_personal);
-$stmt->bindColumn('nombre_estado', $nombre_estado);
 
 
 $stmtb = $dbh->prepare("SELECT (select a.nombre from tipos_caja_chica a where a.codigo=cod_tipocajachica) as nombre_caja_chica FROM caja_chica WHERE codigo=$cod_cajachica");
@@ -109,22 +107,23 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                           <th>N. Doc</th>
                           <th>Entregado a</th>
                           <th>Monto</th>                          
-                          <th>Monto Rendición</th> 
-                          <th>Monto Devolución</th>
+                          <th>Monto Facturas</th> 
+                          <!-- <th>Monto Devolución</th> -->
                           <th>Detalle</th>
-                          <th>Estado</th>
+                          
                           <th></th>
                         </tr>
                       </thead>
                       <tbody>
                         <?php $index=1;
                         while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
-                          if($monto_rendicion == 0 || $monto_rendicion ==null) $monto_devuelto=0;
-                          else $monto_devuelto=$monto-$monto_rendicion;
-                          if($cod_estado==1)
-                            $label='<span class="badge badge-danger">';
+                          
+                          
+                          if($monto==$monto_rendicion)
+                            $labelM='<span class="badge badge-success">';                            
                           else
-                            $label='<span class="badge badge-success">';
+                            $labelM='<span class="badge badge-danger">';
+                            
                          ?>
                           <tr>
                             <td><?=$index;?></td>                            
@@ -135,16 +134,12 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                               <td><?=$cod_personal;?></td>        
                               
                               <td><?=number_format($monto, 2, '.', ',');?></td>        
-                              <td><?=number_format($monto_rendicion, 2, '.', ',');?></td>        
-                              <td><?=number_format($monto_devuelto, 2, '.', ',');?></td>
-                              <td><?=$observaciones;?></td>
-                              <td><?=$label.$nombre_estado."</span>";?></td>
+                              <td><?=$labelM.number_format($monto_rendicion, 2, '.', ',')."</span>";?></td>                                      
+                              <td><?=$observaciones;?></td>                              
                               <td class="td-actions text-right">
                                 <script>var nfac=[];itemFacturasDCC.push(nfac);var nest=[];itemEstadosCuentas.push(nest);</script>
                               <?php
-                                if($globalAdmin==1 and $cod_estado==1){
-
-
+                                if($globalAdmin==1){
                                   $stmtFCCD = $dbh->prepare("SELECT * FROM facturas_detalle_cajachica where cod_cajachicadetalle=$codigo_detalle_Cajachica");
                                   $stmtFCCD->execute();
                                   while ($row = $stmtFCCD->fetch(PDO::FETCH_ASSOC)) {
@@ -165,9 +160,9 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                                   <i class="material-icons">featured_play_list</i>
                                 </a> -->
                                
-                                <a href='#' title="Facturas" id="boton_fac<?=$codigo_detalle_Cajachica;?>" class="btn btn-info btn-sm btn-fab" onclick="listFacDCC(<?=$codigo_detalle_Cajachica;?>);">
+                                <a href='#' title="Facturas" id="boton_fac<?=$codigo_detalle_Cajachica;?>" class="btn btn-info btn-sm btn-fab" onclick="listFacDCC(<?=$codigo_detalle_Cajachica;?>,'<?=$fecha;?>','<?=$observaciones;?>',<?=$monto;?>,<?=$nro_documento;?>);">
                                   <i class="material-icons">featured_play_list</i>
-                                  <span id="nfac<?=$codigo_detalle_Cajachica;?>" class="count bg-warning">0</span>
+                                  <span id="nfac<?=$codigo_detalle_Cajachica;?>" class="count bg-warning"></span>
                                 </a>
                                 
                                 <a href='<?=$urlFormDetalleCajaChica;?>&codigo=<?=$codigo_detalle_Cajachica;?>&cod_tcc=<?=$cod_tcc?>&cod_cc=<?=$cod_cajachica?>' rel="tooltip" class="<?=$buttonEdit;?>">
@@ -207,7 +202,7 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
     </div>
 <!-- modal facturas -->
 <div class="modal fade" id="modalFac" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-notice modal-lg">
+  <div class="modal-dialog modal-notice" style="max-width: 80% !important;">
     <div class="modal-content">
       <div class="modal-body">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
@@ -215,11 +210,40 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
         </button>
               <div class="card ">
                 <div class="card-header" id="divTituloCuentaDetalle">
-                  <h4 class="card-title">Facturas 
-                    <!-- <small class="description">Cuenta :</small> -->
+                  <h4 class="card-title">DETALLE FACTURAS
+
+                    <!-- <small class="description"><input type="text" name="observaciones_dcc" id="observaciones_dcc" readonly="readonly"><input type="text" name="fecha_dcc" id="fecha_dcc" readonly="readonly"></small> -->
                   </h4>
+                  <div class="row" >
+                      <label class="col-sm-1 col-form-label text-right"><b>Nro. Doc.</b></label>
+                      <div class="col-sm-2">
+                      <div class="form-group">
+                          <input style="background-color:#ffffff;" class="form-control" name="nro_dcc" id="nro_dcc"  readonly="readonly"/>
+                      </div>
+                      </div>
+
+                      <label class="col-sm-1 col-form-label text-right"><b>Detalle</b></label>
+                      <div class="col-sm-2">
+                      <div class="form-group">
+                          <input style="background-color:#ffffff;" class="form-control" name="observaciones_dcc" id="observaciones_dcc"  readonly="readonly"/>
+                      </div>
+                      </div>
+                      <label class="col-sm-1 col-form-label text-right"><b>Monto</b></label>
+                      <div class="col-sm-2">
+                      <div class="form-group">
+                          <input style="background-color:#ffffff;" class="form-control" name="monto_dcc" id="monto_dcc"  readonly="readonly"/>
+                      </div>
+                      </div>
+                      <label class="col-sm-1 col-form-label text-right"><b>Fecha</b></label>
+                      <div class="col-sm-2">
+                      <div class="form-group">
+                          <input style="background-color:#ffffff;" class="form-control" name="fecha_dcc" id="fecha_dcc"  readonly="readonly"/>
+                      </div>
+                      </div>
+                      
+                    </div>
                 </div>
-                <div class="card-body ">
+                <div class="card-body">
                   <ul class="nav nav-pills nav-pills-warning" role="tablist">
                     <li class="nav-item">
                           <a id="nav_boton1"class="nav-link active" data-toggle="tab" href="#link110" role="tablist">
@@ -242,9 +266,15 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                       <form id="formRegFactCajaChica" class="form-horizontal" action="caja_chica/detallecajachica_save_facturas.php" method="post" enctype="multipart/form-data">
                         <input type="hidden" name="cod_cajachica" id="cod_cajachica" value="<?=$cod_cajachica;?>">
                         <input type="hidden" name="cod_tcc" id="cod_tcc" value="<?=$cod_tcc;?>">
-                        <div id="divResultadoListaFac">
+                        <input class="form-control" type="hidden" name="cod_ccd" id="cod_ccd"/>
+                        <div class="card" style="background: #e0e0e0">
+                          <div class="card-body">
+                            <div id="divResultadoListaFac">
             
+                            </div>
+                          </div>                      
                         </div>
+                        
                         <div class="form-group float-left">
                           <button type="submit" class="btn btn-info btn-round">Guardar</button>
                         </div>  
@@ -253,60 +283,64 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                     </div>
                     <div class="tab-pane" id="link111">
                       <form name="form2">
-                           <input class="form-control" type="hidden" name="codCuenta" id="codCuenta"/>
-                      <div class="row">
-                       <label class="col-sm-2 col-form-label">NIT</label>
-                       <div class="col-sm-4">
-                        <div class="form-group">
-                          <input class="form-control" type="text" name="nit_fac" id="nit_fac" required="true"/>
+                        <input class="form-control" type="hidden" name="codCuenta" id="codCuenta"/>
+                        <div class="card" style="background: #e0e0e0">
+                          <div class="card-body">
+                            <div class="row">
+                             <label class="col-sm-2 col-form-label">NIT</label>
+                             <div class="col-sm-4">
+                              <div class="form-group">
+                                <input class="form-control" type="text" name="nit_fac" id="nit_fac" required="true"/>
+                              </div>
+                              </div>
+                              <label class="col-sm-2 col-form-label">Nro. Factura</label>
+                             <div class="col-sm-4">
+                              <div class="form-group">
+                                <input class="form-control" type="number" name="nro_fac" id="nro_fac" required="true"/>
+                              </div>
+                              </div>
+                            </div>
+                            <div class="row">
+                             <label class="col-sm-2 col-form-label">Fecha</label>
+                             <div class="col-sm-4">
+                              <div class="form-group">
+                                <input type="text" class="form-control datepicker" name="fecha_fac" id="fecha_fac" value="<?=$fechaActualModal?>">
+                              </div>
+                              </div>
+                              <label class="col-sm-2 col-form-label">Importe</label>
+                             <div class="col-sm-4">
+                              <div class="form-group">
+                                <input class="form-control" type="number" name="imp_fac" id="imp_fac" required="true"/>
+                              </div>
+                              </div>
+                            </div>
+                            <!-- Exento oculto-->
+                            <input class="form-control" type="hidden" name="exe_fac" id="exe_fac" required="true"/>
+                            <!--No tiene funcion este campo-->
+                            <div class="row">
+                             <label class="col-sm-2 col-form-label">Nro. Autorizaci&oacute;n</label>
+                             <div class="col-sm-4">
+                              <div class="form-group">
+                                <input class="form-control" type="text" name="aut_fac" id="aut_fac" required="true"/>
+                              </div>
+                              </div>
+                              <label class="col-sm-2 col-form-label">Cod. Control</label>
+                             <div class="col-sm-4">
+                              <div class="form-group">
+                                <input class="form-control" type="text" name="con_fac" id="con_fac" required="true"/>
+                              </div>
+                             </div>
+                            </div>
+                            <div class="row">
+                             <label class="col-sm-2 col-form-label">Razon Social</label>
+                             <div class="col-sm-10">
+                              <div class="form-group">
+                                <textarea class="form-control" name="razon_fac" id="razon_fac" value=""></textarea>
+                              </div>
+                              </div>
+                            </div>
+                          </div>
                         </div>
-                        </div>
-                        <label class="col-sm-2 col-form-label">Nro. Factura</label>
-                       <div class="col-sm-4">
-                        <div class="form-group">
-                          <input class="form-control" type="number" name="nro_fac" id="nro_fac" required="true"/>
-                        </div>
-                        </div>
-                      </div>
-                      <div class="row">
-                       <label class="col-sm-2 col-form-label">Fecha</label>
-                       <div class="col-sm-4">
-                        <div class="form-group">
-                          <input type="text" class="form-control datepicker" name="fecha_fac" id="fecha_fac" value="<?=$fechaActualModal?>">
-                        </div>
-                        </div>
-                        <label class="col-sm-2 col-form-label">Importe</label>
-                       <div class="col-sm-4">
-                        <div class="form-group">
-                          <input class="form-control" type="number" name="imp_fac" id="imp_fac" required="true"/>
-                        </div>
-                        </div>
-                      </div>
-                      <!-- Exento oculto-->
-                      <input class="form-control" type="hidden" name="exe_fac" id="exe_fac" required="true"/>
-                      <!--No tiene funcion este campo-->
-                      <div class="row">
-                       <label class="col-sm-2 col-form-label">Nro. Autorizaci&oacute;n</label>
-                       <div class="col-sm-4">
-                        <div class="form-group">
-                          <input class="form-control" type="text" name="aut_fac" id="aut_fac" required="true"/>
-                        </div>
-                        </div>
-                        <label class="col-sm-2 col-form-label">Cod. Control</label>
-                       <div class="col-sm-4">
-                        <div class="form-group">
-                          <input class="form-control" type="text" name="con_fac" id="con_fac" required="true"/>
-                        </div>
-                       </div>
-                      </div>
-                      <div class="row">
-                       <label class="col-sm-2 col-form-label">Razon Social</label>
-                       <div class="col-sm-10">
-                        <div class="form-group">
-                          <textarea class="form-control" name="razon_fac" id="razon_fac" value=""></textarea>
-                        </div>
-                        </div>
-                      </div>
                       <div class="form-group float-right">
                         <button type="button" class="btn btn-info btn-round" onclick="saveFacturaDCC()">Guardar</button>
                       </div>

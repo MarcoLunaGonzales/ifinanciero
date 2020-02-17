@@ -82,9 +82,12 @@ $stmt->bindColumn('nombre_estado', $nombre_estado);
                               <td><?=number_format($monto_reembolso, 2, '.', ',');?></td>        
                               <td><?=$observaciones;?></td>        
                               <td><?=$label.$nombre_estado."</span>";?></td>
-
-                              
+                                
+                              <!-- href='<?=$urlprintFiniquitosOficial;?>?codigo=<?=$codigo;?>' -->
                               <td class="td-actions text-right">
+                                <a href='<?=$urlprint_cajachica;?>?codigo=<?=$cod_cajachica;?>' target="_blank" rel="tooltip" class="btn btn-primary">
+                              <i class="material-icons" title="Imprimir">print</i>
+                          </a>
                               <?php
                                 if($globalAdmin==1 and $cod_estado==1){
                               ?>

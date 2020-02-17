@@ -496,17 +496,24 @@ function saveFactura(){
       }
       ajax.send(null);
  }
-
+//modal desde caja chica
 var itemFacturasDCC =[];
- function listFacDCC(id){
+function listFacDCC(id,fecha,observaciones,monto,nro_dcc){
+  document.getElementById("cod_ccd").value=id;
+
+  document.getElementById("fecha_dcc").value=fecha;
+  document.getElementById("observaciones_dcc").value=observaciones;
+  document.getElementById("monto_dcc").value=monto;
+  document.getElementById("nro_dcc").value=nro_dcc;
+  // alert(id);
    $("#divTituloCuentaDetalle").html($("#divCuentaDetalle"+id).html());
    $("#codCuenta").val(id);
    listarFactDCC(id);
    abrirModalDCC('modalFac');
- }
-  function abrirModalDCC(id){
+}
+function abrirModalDCC(id){
   $('#'+id).modal('show');
- }
+}
 function listarFactDCC(id){
   var div=$('<div>').addClass('table-responsive');
   var table = $('<table>').addClass('table table-condensed');
@@ -592,7 +599,218 @@ function removeFacDCC(item,fila){
   itemFacturasDCC[item-1].splice(fila, 1);
   listarFactDCC(item);
   $("#nfac"+item).html(itemFacturasDCC[item-1].length);
+}
+
+var numArchivos=0;
+function archivosPreviewDCC(send) {
+    var inp=document.getElementById("archivos");
+    if(send!=1){
+      $("#lista_archivos").html("<p class='text-success text-center'>Lista de Archivos</p>");
+      for (var i = 0; i < inp.files.length; ++i) {
+        numArchivos++;
+        var name = inp.files.item(i).name;
+        $("#lista_archivos").append("<div class='text-left'><label>"+name+"</label></div>");
+       }
+       $("#narch").addClass("estado");
+     }else{
+      numArchivos=0;
+        $("#lista_archivos").html("Ningun archivo seleccionado");
+        $("#narch").removeClass("estado");
+     }
+
+    
+}
+function readSingleFileDCC(evt) {
+    var f = evt.target.files[0];
+      if (f) {
+          var r = new FileReader();
+          r.onload = function(e) { 
+              var contents = e.target.result;
+              const lines = contents.split('\n').map(function (line){
+                return line.split(',')
+              })
+              var index=$('#codCuenta').val();
+              for (var i = 0; i < lines.length; i++) {
+                if(String(lines[i]).trim()!=""){
+                  lines[i]=String(lines[i]).split("\t");
+                console.log(lines[i])
+                   $('#nit_fac').val(lines[i][0]);
+                   $('#nro_fac').val(lines[i][1]);
+                   $('#fecha_fac').val(lines[i][3]);
+                   $('#razon_fac').val("-");
+                   $('#imp_fac').val(lines[i][4]);
+                   $('#exe_fac').val("-");
+                   $('#aut_fac').val(lines[i][2]);
+                   $('#con_fac').val(lines[i][5]);
+                   saveFacturaDCC();
+                 } 
+                }
+               $("#qrquincho").val(""); 
+          }
+         r.readAsText(f);
+      } else {
+                    alert("Failed to load file");
+      }
+  
+}
+
+//modal desde rebdiciones
+var itemFacturasDRC=[];
+function listFacDRC(id,fecha,observaciones,monto,nro_dcc){
+  document.getElementById("cod_rd").value=id;
+
+  document.getElementById("fecha_dcc").value=fecha;
+  document.getElementById("observaciones_dcc").value=observaciones;
+  document.getElementById("monto_dcc").value=monto;
+  document.getElementById("nro_dcc").value=nro_dcc;
+  // alert(id);
+   $("#divTituloCuentaDetalle").html($("#divCuentaDetalle"+id).html());
+   $("#codCuenta").val(id);
+   listarFactDRC(id);
+   abrirModalDRC('modalFac');
+}
+function abrirModalDRC(id){
+  $('#'+id).modal('show');
+}
+function listarFactDRC(id){
+  var div=$('<div>').addClass('table-responsive');
+  var table = $('<table>').addClass('table table-condensed');
+  var titulos = $('<tr>').addClass('');
+     titulos.append($('<th>').addClass('').text('#'));
+     titulos.append($('<th>').addClass('').text('NIT'));
+     titulos.append($('<th>').addClass('').text('FACTURA'));
+     titulos.append($('<th>').addClass('').text('FECHA'));
+     titulos.append($('<th>').addClass('').text('RAZON SOCIAL'));
+     titulos.append($('<th>').addClass('').text('IMPORTE'));
+     //titulos.append($('<th>').addClass('').text('EXCENTOS'));
+     titulos.append($('<th>').addClass('').text('AUTORIZACION'));
+     titulos.append($('<th>').addClass('').text('CONTROL'));
+     titulos.append($('<th>').addClass('').text('OPCION'));
+     table.append(titulos);
+   
+   for (var i = 0; i < itemFacturasDRC[id-1].length; i++) {
+     var row = $('<tr>').addClass('');
+     row.append($('<td>').addClass('').text(i+1));
+     row.append($('<td>').addClass('').text(itemFacturasDRC[id-1][i].nit));
+     row.append($('<td>').addClass('').text(itemFacturasDRC[id-1][i].nroFac));
+     row.append($('<td>').addClass('').text(itemFacturasDRC[id-1][i].fechaFac));
+     row.append($('<td>').addClass('').text(itemFacturasDRC[id-1][i].razonFac));
+     row.append($('<td>').addClass('').text(itemFacturasDRC[id-1][i].impFac));
+     //row.append($('<td>').addClass('').text(itemFacturasDRC[id-1][i].exeFac));
+     row.append($('<td>').addClass('').text(itemFacturasDRC[id-1][i].autFac));
+     row.append($('<td>').addClass('').text(itemFacturasDRC[id-1][i].conFac));
+     row.append($('<td>').addClass('').html('<button class="btn btn-danger btn-link" onclick="removeFacDRC('+id+','+i+');"><i class="material-icons">remove_circle</i></button>'));
+     table.append(row);
+   }
+   div.append(table);
+   $('#divResultadoListaFac').html(div);
+}
+function saveFacturaDRC(){
+  var index=$('#codCuenta').val();
+  var factura={
+    nit: $('#nit_fac').val(),
+    nroFac: $('#nro_fac').val(),
+    fechaFac: $('#fecha_fac').val(),
+    razonFac: $('#razon_fac').val(),
+    impFac: $('#imp_fac').val(),
+    exeFac: $('#exe_fac').val(),
+    autFac: $('#aut_fac').val(),
+    conFac: $('#con_fac').val(),
+    }
+    
+  //cargar el credito fiscal
+  //var iva=configuraciones[0].valor;
+  //var importeIva=parseFloat($('#imp_fac').val())*(iva/100);
+  //var anterior= obtenerImportesFacturaIva(index);
+  itemFacturasDRC[index-1].push(factura);
+  limpiarFormFacDRC();
+  listarFactDRC(index);
+  //$("#debe"+index).val(anterior+importeIva);
+  // if($("#debe"+index).length){
+  //  calcularTotalesComprobante();  
+  // } 
+  $("#nfac"+index).html(itemFacturasDRC[index-1].length);
+  $("#link110").addClass("active");$("#link111").removeClass("active");$("#link112").removeClass("active");
+  $("#nav_boton1").addClass("active");$("#nav_boton2").removeClass("active");$("#nav_boton3").removeClass("active");
+}
+function limpiarFormFacDRC(){
+    $('#nit_fac').val('');$('#nro_fac').val('');$('#fecha_fac').val('');$('#razon_fac').val('');$('#imp_fac').val('');
+    $('#exe_fac').val('');$('#aut_fac').val('');$('#con_fac').val('');
+}
+ function abrirFacturaDRC(index,nit,nro,fecha,razon,imp,exe,aut,con){
+   var factura={
+    nit: nit,
+    nroFac: nro,
+    fechaFac: fecha,
+    razonFac:razon,
+    impFac: imp,
+    exeFac: exe,
+    autFac: aut,
+    conFac: con
+    }
+    itemFacturasDRC[index-1].push(factura);
+    //listarFact(index);
+    $("#nfac"+(index)).html(itemFacturasDRC[index-1].length);
  }
+
+function removeFacDRC(item,fila){
+  itemFacturasDRC[item-1].splice(fila, 1);
+  listarFactDRC(item);
+  $("#nfac"+item).html(itemFacturasDRC[item-1].length);
+}
+
+var numArchivos=0;
+function archivosPreviewDRC(send) {
+    var inp=document.getElementById("archivos");
+    if(send!=1){
+      $("#lista_archivos").html("<p class='text-success text-center'>Lista de Archivos</p>");
+      for (var i = 0; i < inp.files.length; ++i) {
+        numArchivos++;
+        var name = inp.files.item(i).name;
+        $("#lista_archivos").append("<div class='text-left'><label>"+name+"</label></div>");
+       }
+       $("#narch").addClass("estado");
+     }else{
+      numArchivos=0;
+        $("#lista_archivos").html("Ningun archivo seleccionado");
+        $("#narch").removeClass("estado");
+     }
+
+    
+}
+function readSingleFileDRC(evt) {
+    var f = evt.target.files[0];
+      if (f) {
+          var r = new FileReader();
+          r.onload = function(e) { 
+              var contents = e.target.result;
+              const lines = contents.split('\n').map(function (line){
+                return line.split(',')
+              })
+              var index=$('#codCuenta').val();
+              for (var i = 0; i < lines.length; i++) {
+                if(String(lines[i]).trim()!=""){
+                  lines[i]=String(lines[i]).split("\t");
+                console.log(lines[i])
+                   $('#nit_fac').val(lines[i][0]);
+                   $('#nro_fac').val(lines[i][1]);
+                   $('#fecha_fac').val(lines[i][3]);
+                   $('#razon_fac').val("-");
+                   $('#imp_fac').val(lines[i][4]);
+                   $('#exe_fac').val("-");
+                   $('#aut_fac').val(lines[i][2]);
+                   $('#con_fac').val(lines[i][5]);
+                   saveFacturaDRC();
+                 } 
+                }
+               $("#qrquincho").val(""); 
+          }
+         r.readAsText(f);
+      } else {
+                    alert("Failed to load file");
+      }
+  
+  }
 
 
 
