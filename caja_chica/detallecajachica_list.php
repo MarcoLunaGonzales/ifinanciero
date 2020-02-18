@@ -137,7 +137,7 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                               <td><?=$labelM.number_format($monto_rendicion, 2, '.', ',')."</span>";?></td>                                      
                               <td><?=$observaciones;?></td>                              
                               <td class="td-actions text-right">
-                                <script>var nfac=[];itemFacturasDCC.push(nfac);var nest=[];itemEstadosCuentas.push(nest);</script>
+                                <script>var nfac=[];itemFacturasDCC.push(nfac);</script>
                               <?php
                                 if($globalAdmin==1){
                                   $stmtFCCD = $dbh->prepare("SELECT * FROM facturas_detalle_cajachica where cod_cajachicadetalle=$codigo_detalle_Cajachica");
