@@ -14,7 +14,7 @@ $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//try
 $codigo = $_GET["codigo"];//codigoactivofijo
 try{
     $stmt = $dbh->prepare("SELECT * from caja_chicadetalle where cod_estadoreferencial=1 and cod_cajachica=$codigo");
-    $stmt->execute();
+    $stmt->execute();    
         //==================================================================================================================
     //datos caja chica
     $stmtInfo = $dbh->prepare("SELECT tc.nombre,c.monto_inicio,c.observaciones from caja_chica c,tipos_caja_chica tc where c.cod_tipocajachica=tc.codigo and c.codigo=$codigo");
@@ -98,20 +98,32 @@ $html.=  '<header class="header">'.
                 '<td class="text-center small"></td>'.
                 '<td class="text-right small">'.formatNumberDec($monto_inicio_cc).'</td>
             </tr>';
+            $ingresos='';
             $total_ingresos=0;
             $total_egresos=0;
             while ($row = $stmt->fetch()) 
             {
-                $saldo_inicial=$saldo_inicial-$row['monto'];
+              //nro factura
+              $cod_cajachicadetalle=$row['codigo'];
+              $stmtFactura = $dbh->prepare("SELECT nro_factura from facturas_detalle_cajachica where cod_cajachicadetalle=cod_cajachicadetalle");
+              $stmtFactura->execute();
+              $cont_facturas=0;
+              while ($rowFacturas = $stmtFactura->fetch()) 
+              {
+                $nro_factura=$rowFacturas['nro_factura'];
+              }
+              if($cont_facturas>1)$nro_factura="VARIOS";
+
+              $saldo_inicial=$saldo_inicial-$row['monto'];
                 // $total_1+=$row['monto_ingreso_neto'];
                 $total_egresos+=$row['monto'];
-             $html.='<tr>'.                      
+              $html.='<tr>'.                      
                             '<td class="text-center small">'.$row['fecha'].'</td>'.
                             '<td class="text-center small">'.$row['cod_area'].'</td>'.
                             '<td class="text-left small">'.$row['observaciones'].'</td>'.
                             '<td class="text-center small">'.$row['nro_recibo'].'</td>'.
-                            '<td class="text-center small"></td>'.
-                            '<td class="text-right small">Ingreso</td>'.
+                            '<td class="text-center small">'.$nro_factura.'</td>'.
+                            '<td class="text-right small">'.formatNumberDec($ingresos).'</td>'.
                             '<td class="text-right small">'.formatNumberDec($row['monto']).'</td>'.
                             '<td class="text-right small">'.formatNumberDec($saldo_inicial).'</td>
                     </tr>';

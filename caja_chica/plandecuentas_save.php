@@ -8,34 +8,27 @@ require_once 'configModule.php';
 
 $dbh = new Conexion();
 
-$numero=$_POST["numero"];
-$padre=$_POST["padre"];
-$nombre=$_POST["nombre"];
-$tipoCuenta=$_POST["tipocuenta"];
-$moneda=$_POST["moneda"];
-$codEstado="1";
-$observaciones="";
-$cuentaAuxiliar=$_POST["cuenta_auxiliar"];
+session_start();
 
-$nivelCuenta=buscarNivelCuentaCC($numero);
+//$cuentasX=$_POST["cuentas"];
+$cuentasX=json_decode($_POST["cuentas2"]);;
+$codPartida=$_POST["cod_partida"];
 
-$numero=str_replace(".", "", $numero);
+$stmtDel = $dbh->prepare("DELETE FROM plan_cuentas_cajachica ");
+$stmtDel->execute();
+$flagSuccessDetail=true;
+for ($i=0;$i<count($cuentasX);$i++){ 	    
+	$stmt = $dbh->prepare("INSERT INTO plan_cuentas_cajachica(cod_cuenta) VALUES (:cod_cuenta)");
+	$stmt->bindParam(':cod_cuenta', $cuentasX[$i]);
+	$flagSuccess2=$stmt->execute();
+	if($flagSuccess2==false){
+		$flagSuccessDetail=false;
+	}
+}
 
-
-// Prepare
-$stmt = $dbh->prepare("INSERT INTO plan_cuentas_cajachica (numero, cod_padre, nombre, cod_moneda, cod_estadoreferencial, nivel, cod_tipocuenta, observaciones, cuenta_auxiliar) VALUES (:numero, :cod_padre, :nombre ,:cod_moneda, :cod_estado,:nivel,:cod_tipocuenta, :observaciones, :cuenta_auxiliar)");
-// Bind
-$stmt->bindParam(':numero', $numero);
-$stmt->bindParam(':cod_padre', $padre);
-$stmt->bindParam(':nombre', $nombre);
-$stmt->bindParam(':cod_moneda', $moneda);
-$stmt->bindParam(':cod_estado', $codEstado);
-$stmt->bindParam(':nivel', $nivelCuenta);
-$stmt->bindParam(':cod_tipocuenta', $tipoCuenta);
-$stmt->bindParam(':observaciones', $observaciones);
-$stmt->bindParam(':cuenta_auxiliar', $cuentaAuxiliar);
-
-$flagSuccess=$stmt->execute();
-showAlertSuccessError($flagSuccess,$urlListCC);
-
+if($flagSuccessDetail==true){
+	showAlertSuccessError(true,$urlListCC);	
+}else{
+	showAlertSuccessError(false,$urlListCC);
+}
 ?>

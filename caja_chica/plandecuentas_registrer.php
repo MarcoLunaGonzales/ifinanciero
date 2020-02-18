@@ -1,142 +1,122 @@
 <?php
 
 require_once 'conexion.php';
-require_once 'styles.php';
 require_once 'configModule.php';
+require_once 'styles.php';
 require_once 'functions.php';
 
 $dbh = new Conexion();
 
-$codigo=$codigo;
+$sqlX="SET NAMES 'utf8'";
+$stmtX = $dbh->prepare($sqlX);
+$stmtX->execute();
 
-//echo $codigo;
-$cuentaPadre="";
-$nuevaCuenta="";
-$nivelCuenta=0;
-if($codigo>0){
-	$cuentaPadre=obtieneNumeroCuentaCC($codigo);
-	$nuevaCuentaFormateada=formateaPuntosPlanCuenta($cuentaPadre);
-	$nivelCuenta=buscarNivelCuentaCC($nuevaCuentaFormateada);
-	$nuevaCuenta=obtieneNuevaCuentaCC($nuevaCuentaFormateada);
-}
+$table="plan_cuentas_cajachica";
+$moduleName="Configurar Cuentas por Partida Presupuestaria";
+
+$codPartida=$codigo;
+// Preparamos
+$sql="SELECT c.codigo, c.numero, c.nombre, c.nivel,
+(select count(*) from plan_cuentas_cajachica pc where c.codigo=pc.cod_cuenta)as bandera 
+FROM plan_cuentas c where c.cod_estadoreferencial=1 order by 2";
+
+//echo $sql;
+
+$stmt = $dbh->prepare($sql);
+
+// Ejecutamos
+$stmt->execute(); 
+// bindColumn
+$stmt->bindColumn('codigo', $codigo);
+$stmt->bindColumn('numero', $numero);
+$stmt->bindColumn('nombre', $nombre);
+$stmt->bindColumn('nivel', $nivel);
+$stmt->bindColumn('bandera', $bandera);
 
 ?>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.11/jquery.mask.min.js"></script>
-
-
-<script type="text/javascript">
-    $("#numero").mask("0.00.00.00.000");
-</script>
-
-
 
 <div class="content">
 	<div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+              <div class="card">
+                <div class="card-header card-header-primary card-header-icon">
+                  <div class="card-icon">
+                    <i class="material-icons">assignment</i>
+                  </div>
+                  <h4 class="card-title"><?=$moduleName?></h4>
+                  <h6 class="card-title">Partida: Caja Chica</h6>
+                  <h6 class="card-title">Por favor active la casilla para registrar la cuenta</h6>
+                </div>
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <form id="form_partidaspresupuestariasCC" method="post" action="caja_chica/plandecuentas_save.php">
+                    <table class="table" id="data_cuentas">
+                      <thead>
+                        <tr>
+                          <th class="text-center">-</th>
+                          <th>Codigo</th>
+                          <th>Nombre</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <?php
+                				$index=1;$nc=0;
+                      	while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+                          $nombreX=trim($nombre);$numeroX=trim($numero);
+                          if($bandera>0){
+                          $data[$nc][0]=$index;
+                          $data[$nc][1]=$nombreX;
+                          $data[$nc][2]=$numeroX;                           
+                          $nc++;
+                          }
+                          $nombre=formateaPlanCuenta($nombre,$nivel);
+                          ?>
+                        <tr>
+                          <td align="center">
+                          <div class="form-check">
+                            <label class="form-check-label">
+                              <input class="form-check-input" type="checkbox" id="cuentas<?=$index?>" onclick="sendCheked(<?=$index?>,'<?=$nombreX?>','<?=$numeroX?>')" name="cuentas[]" value="<?=$codigo?>" <?=($bandera>0)?"checked":"";?> >
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                            </label>
+                          </div>
+                          </td>
+                          <td><?=$numero;?></td>
+                          <td><?=$nombre;?></td>
+                        </tr>
 
-		<div class="col-md-12">
-		  <form id="form1" class="form-horizontal" action="<?=$urlSaveCC;?>" method="post">
-			<div class="card">
-			  <div class="card-header <?=$colorCard;?> card-header-text">
-				<div class="card-text">
-				  <h4 class="card-title">Registrar Cuenta</h4>
-				</div>
-			  </div>
-			  <div class="card-body ">
+                          <?php
+              							$index++;
+              						}
+                          ?>
 
-				<div class="row">
-				  <label class="col-sm-2 col-form-label">Codigo</label>
-				  <div class="col-sm-7">
-					<div class="form-group">
-					  <input class="form-control" type="text" name="numero" id="numero" required="true" minLength="10" maxLength="10" onChange="ajaxObtienePadre(this);" value="<?=$nuevaCuenta;?>"/>
-					</div>
-				  </div>
-				</div>
+                      </tbody>
+                    </table>
 
-				<div class="row">
-				  <label class="col-sm-2 col-form-label">Cuenta Padre</label>
-				  <div class="col-sm-7">
-					<div class="form-group">
-					  <input class="form-control" type="text" name="padre" id="padre" required="true" readonly="true" value="<?=$cuentaPadre;?>"/>
-					</div>
-				  </div>
-				</div>
 
-				<div class="row">
-				  <label class="col-sm-2 col-form-label">Nombre</label>
-				  <div class="col-sm-7">
-					<div class="form-group">
-					  <input class="form-control" type="text" name="nombre" id="nombre" required="true" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
-					</div>
-				  </div>
-				</div>
+                  </div>
+                </div>
+              </div>
+        				<div class="card-footer fixed-bottom">
+                    <button class="btn" type="submit">Guardar</button>
+                    <a href="<?=$urlListCC2;?>" class="<?=$buttonCancel;?>"> <-- Volver </a>
+                    <a href="#" onclick="filaTabla($('#tablas_registradas'));" id="boton_registradas" class="btn btn-warning text-dark">Cuentas Registradas <span class='badge bg-white text-warning'> <?=$nc?></span></a>
+                </div>
+			     </form>
+            </div>
+          </div>  
+        </div>
+    </div>
+<?php 
+for ($i=0; $i < $nc; $i++) { 
+  ?><script>cuentas_tabla.push({codigo:<?=$data[$i][0]?>,nombre:'<?=$data[$i][1]?>',numero:'<?=$data[$i][2]?>'});</script><?php
+}
 
-				<div class="row">
-				  <label class="col-sm-2 col-form-label">Tipo de Cuenta</label>
-						<div class="col-sm-4">
-				        	<div class="form-group">
-					        <select class="selectpicker form-control" name="tipocuenta" id="tipocuenta" data-style="<?=$comboColor;?>">
-							  	<option disabled selected value="">Tipo de Cuenta</option>
-							  	<?php
-							  	$stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM tipos_cuenta order by 2");
-								$stmt->execute();
-								while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-									$codigoX=$row['codigo'];
-									$nombreX=$row['nombre'];
-									$abrevX=$row['abreviatura'];
-								?>
-								<option value="<?=$codigoX;?>"><?=$nombreX;?></option>	
-								<?php
-							  	}
-							  	?>
-							</select>
-							</div>
-				      	</div>
-				</div>
+?>
 
-				<div class="row">
-				  <label class="col-sm-2 col-form-label">Moneda</label>
-						<div class="col-sm-4">
-				        	<div class="form-group">
-					        <select class="selectpicker form-control" name="moneda" id="moneda" data-style="<?=$comboColor;?>">
-							  	<option disabled selected value="">Moneda</option>
-							  	<?php
-							  	$stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM monedas order by 2");
-								$stmt->execute();
-								while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-									$codigoX=$row['codigo'];
-									$nombreX=$row['nombre'];
-									$abrevX=$row['abreviatura'];
-								?>
-								<option value="<?=$codigoX;?>"><?=$nombreX;?></option>	
-								<?php
-							  	}
-							  	?>
-							</select>
-							</div>
-				      	</div>
-				</div>
-				<div class="row">
-					<label class="col-sm-2 col-form-label">Cuentas Auxiliares</label>
-					<div class="col-sm-4">
-					<div class="form-group form-check">
-                        <label class="form-check-label">
-                      		<input class="form-check-input" type="checkbox" name="cuenta_auxiliar" value="1">
-                          		<span class="form-check-sign">
-                            		<span class="check"></span>
-                              	</span>
-                        </label>
-                    </div>
-                	</div>
-				</div>
-			  </div>
-			  <div  class="card-footer fixed-bottom">
-				<button type="submit" class="<?=$buttonNormal;?>">Guardar</button>
-				<a href="<?=$urlListCC2;?>" class="<?=$buttonCancel;?>"> <-- Volver </a>
-			  </div>
-			</div>
-		  </form>
-		</div>
-	
-	</div>
-</div>
+   <script>numFilas=<?=$nc?>;</script> 
+<?php 
+require_once 'caja_chica/modal.php';
+?>
