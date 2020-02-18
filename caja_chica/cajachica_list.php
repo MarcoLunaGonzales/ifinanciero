@@ -84,18 +84,25 @@ $stmt->bindColumn('nombre_estado', $nombre_estado);
                               <td><?=$label.$nombre_estado."</span>";?></td>
                                 
                               <!-- href='<?=$urlprintFiniquitosOficial;?>?codigo=<?=$codigo;?>' -->
+
+
                               <td class="td-actions text-right">
+                                <?php
+                                if($globalAdmin==1 and $cod_estado==1){
+                              ?>
+                              <a href='<?=$urlListDetalleCajaChica;?>&codigo=<?=$cod_cajachica;?>&cod_tcc=<?=$codigo_tipo_caja_Chica?>' rel="tooltip" class="btn btn-warning">
+                                  <i class="material-icons" title="Agregar Detalle">playlist_add</i>
+                              </a>
+                              <label class="text-danger"> | </label>
+                              <?php }?>
                                 <a href='<?=$urlprint_cajachica;?>?codigo=<?=$cod_cajachica;?>' target="_blank" rel="tooltip" class="btn btn-primary">
-                              <i class="material-icons" title="Imprimir">print</i>
-                          </a>
+                                  <i class="material-icons" title="Imprimir">print</i>
+                              </a>
                               <?php
                                 if($globalAdmin==1 and $cod_estado==1){
                               ?>
                                 <a  rel="tooltip" class="btn" style="background-color:#3b83bd;color:#ffffff;" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlDeleteCajaChica;?>&codigo=<?=$cod_cajachica;?>&cod_tcc=<?=$codigo_tipo_caja_Chica?>&cod_a=1')">
                                   <i class="material-icons" title="Cerrar Caja Chica">assignment_returned</i>
-                                </a>
-                                <a href='<?=$urlListDetalleCajaChica;?>&codigo=<?=$cod_cajachica;?>&cod_tcc=<?=$codigo_tipo_caja_Chica?>' rel="tooltip" class="btn btn-warning">
-                                  <i class="material-icons" title="Agregar Detalle">playlist_add</i>
                                 </a>
                                 <a href='<?=$urlFormCajaChica;?>&codigo=<?=$codigo;?>&cod_tcc=<?=$codigo_tipo_caja_Chica?>' rel="tooltip" class="<?=$buttonEdit;?>">
                                   <i class="material-icons" title="Editar"><?=$iconEdit;?></i>

@@ -15,12 +15,11 @@ $cod_dcc=$codigo;
 
 $i=0;
   echo "<script>var array_cuenta=[],imagen_cuenta=[];</script>";
-   $stmtCuenta = $dbh->prepare("SELECT p.codigo, p.numero, p.nombre from plan_cuentas_cajachica p where p.cod_estadoreferencial=1
-            UNION
-        SELECT p.codigo as codigo, p.nro_cuenta AS numero, p.nombre from cuentas_auxiliares_cajachica p");
+   $stmtCuenta = $dbh->prepare("SELECT pcc.cod_cuenta,pc.numero,pc.nombre from plan_cuentas_cajachica pcc,plan_cuentas pc 
+where pcc.cod_cuenta=pc.codigo");
    $stmtCuenta->execute();
    while ($rowCuenta = $stmtCuenta->fetch(PDO::FETCH_ASSOC)) {
-    $codigoX=$rowCuenta['codigo'];
+    $codigoX=$rowCuenta['cod_cuenta'];
     $numeroX=$rowCuenta['numero'];
     $nombreX=$rowCuenta['nombre'];
 
