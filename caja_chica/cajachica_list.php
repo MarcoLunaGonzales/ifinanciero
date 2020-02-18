@@ -62,6 +62,7 @@ $stmt->bindColumn('nombre_estado', $nombre_estado);
                           <th>Detalle</th>
                           <th>estado</th>
                           <th></th>
+                          <th></th>
                         </tr>
                       </thead>
                       <tbody>
@@ -94,16 +95,18 @@ $stmt->bindColumn('nombre_estado', $nombre_estado);
                                   <i class="material-icons" title="Agregar Detalle">playlist_add</i>
                               </a>
                               <label class="text-danger"> | </label>
+                              <a  rel="tooltip" class="btn" style="background-color:#3b83bd;color:#ffffff;" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlDeleteCajaChica;?>&codigo=<?=$cod_cajachica;?>&cod_tcc=<?=$codigo_tipo_caja_Chica?>&cod_a=1')">
+                                  <i class="material-icons" title="Cerrar Caja Chica">assignment_returned</i>
+                                </a>
                               <?php }?>
                                 <a href='<?=$urlprint_cajachica;?>?codigo=<?=$cod_cajachica;?>' target="_blank" rel="tooltip" class="btn btn-primary">
                                   <i class="material-icons" title="Imprimir">print</i>
                               </a>
+
                               <?php
                                 if($globalAdmin==1 and $cod_estado==1){
                               ?>
-                                <a  rel="tooltip" class="btn" style="background-color:#3b83bd;color:#ffffff;" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlDeleteCajaChica;?>&codigo=<?=$cod_cajachica;?>&cod_tcc=<?=$codigo_tipo_caja_Chica?>&cod_a=1')">
-                                  <i class="material-icons" title="Cerrar Caja Chica">assignment_returned</i>
-                                </a>
+                                
                                 <a href='<?=$urlFormCajaChica;?>&codigo=<?=$codigo;?>&cod_tcc=<?=$codigo_tipo_caja_Chica?>' rel="tooltip" class="<?=$buttonEdit;?>">
                                   <i class="material-icons" title="Editar"><?=$iconEdit;?></i>
                                 </a>
@@ -114,6 +117,11 @@ $stmt->bindColumn('nombre_estado', $nombre_estado);
                                   }
                                 ?>
                               
+                              </td>
+                              <td class="text-center">
+                                <a href="<?=$urlPlanillaContabilizacion;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>" target="_blank" > 
+                                  <i class="material-icons" title="Generar Comprobante" style="color:red">input</i>
+                                </a>
                               </td>
                           </tr>
                         <?php $index++; } ?>
