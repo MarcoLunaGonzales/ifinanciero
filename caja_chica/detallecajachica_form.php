@@ -3,6 +3,8 @@
 require_once 'conexion.php';
 require_once 'styles.php';
 require_once 'configModule.php';
+require_once 'functions.php';
+require_once 'functionsGeneral.php';
 
 //$dbh = new Conexion();
 $dbh = new Conexion();
@@ -41,7 +43,7 @@ where pcc.cod_cuenta=pc.codigo");
 
 if ($codigo > 0){
     
-    $stmt = $dbh->prepare("SELECT codigo,cod_cuenta,fecha,cod_tipodoccajachica,nro_documento,cod_personal,monto,observaciones,nro_recibo,cod_area,cod_uo,
+    $stmt = $dbh->prepare("SELECT codigo,cod_cuenta,fecha,cod_tipodoccajachica,nro_documento,cod_personal,monto,observaciones,nro_recibo,cod_area,cod_uo,cod_proveedores,
         (select c.nombre from plan_cuentas c where c.codigo=cod_cuenta) as nombre_cuenta,
         (select c.numero from plan_cuentas c where c.codigo=cod_cuenta) as nro_cuenta
     from caja_chicadetalle
@@ -63,6 +65,7 @@ if ($codigo > 0){
     $nro_recibo= $result['nro_recibo'];
     $cod_area= $result['cod_area'];
     $cod_uo= $result['cod_uo'];
+    $cod_proveedores= $result['cod_proveedores'];
 
     $cuenta_aux=$nro_cuenta." - ".$nombre_cuenta;   
     
@@ -236,6 +239,35 @@ if ($codigo > 0){
                       </div>
                     </div>
 
+                    <!-- proveedor -->
+                    <div class="row">
+                      <label class="col-sm-2 col-form-label">Proveedores :</label>
+                       <div class="col-sm-8">
+                         <div class="form-group">                        
+                              <select class="selectpicker form-control form-control-sm" name="proveedores" id="proveedores" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" title="Seleccione Proveedor">
+                               <?php 
+                               $query="SELECT * FROM af_proveedores order by codigo";
+                               $stmt = $dbh->prepare($query);
+                               $stmt->execute();
+                               while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                  $codigoProv=$row['codigo'];    
+                                  ?><option <?=($cod_proveedores==$codigoProv)?"selected":"";?> value="<?=$codigoProv?>" class="text-right"><?=$row['nombre']?></option>
+                                 <?php 
+                                 } ?> 
+                               </select>
+                          </div>
+                        </div>      
+                        <div class="col-sm-2">
+                            <div class="form-group">                                
+                                <a href="#" class="btn btn-warning btn-round btn-fab btn-sm" onclick="cargarDatosRegistroProveedorCajaChica(<?=$cod_tcc?>,<?=$cod_cc?>,<?=$cod_dcc?>)">
+                                  <i class="material-icons" title="Add Proveedor">add</i>
+                                </a>
+                                <a href="#" class="btn btn-success btn-round btn-fab btn-sm" onclick="actualizarRegistroProveedorCajaChica(<?=$cod_tcc?>,<?=$cod_cc?>,<?=$cod_dcc?>)">
+                                  <i class="material-icons" title="Actualizar">update</i>
+                                </a> 
+                            </div>
+                        </div>                        
+                    </div>
 
                     <div class="row">
                         <label class="col-sm-2 col-form-label">Detalle</label>
@@ -258,3 +290,39 @@ if ($codigo > 0){
 	
 	</div>
 </div>
+
+
+<div class="cargar">
+  <div class="div-loading text-center">
+     <h4 class="text-warning font-weight-bold">Procesando Datos</h4>
+     <p class="text-white">Aguard&aacute; un momento por favor</p>  
+  </div>
+</div>
+<div class="cargar-ajax d-none">
+  <div class="div-loading text-center">
+     <h4 class="text-warning font-weight-bold" id="texto_ajax_titulo">Procesando Datos</h4>
+     <p class="text-white">Aguard&aacute; un momento por favor</p>  
+  </div>
+</div>
+<div class="modal fade modal-arriba modal-primary" id="modalAgregarProveedor" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content card">
+            <div class="card-header card-header-warning card-header-icon">
+                <div class="card-icon">
+                    <i class="material-icons text-dark">ballot</i>
+                 </div>
+                  <h4 class="card-title">Proveedor</h4>
+            </div>
+            <div class="card-body">
+                 <div id="datosProveedorNuevo">
+                   
+                 </div> 
+                <div class="form-group float-right">
+                        <button type="button" onclick="guardarDatosProveedorCajaChica()" class="btn btn-info btn-round">Agregar</button>
+                </div>
+          </div>
+      </div>  
+    </div>
+  </div>
+  <!--    end small modal -->
+<script>$('.selectpicker').selectpicker("refresh");</script>

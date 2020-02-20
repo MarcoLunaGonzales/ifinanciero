@@ -40,6 +40,7 @@ from caja_chicadetalle where cod_estadoreferencial=1 and cod_cajachica=$cod_caja
     $fechaCCD = $resultCCD['fecha'];
     $numeroCC = $resultCCD['numero'];
     $monto_inicio = $resultCCD['monto_inicio'];
+    $monto_reembolso = $resultCCD['monto_reembolso'];
     $observacionesCC = $resultCCD['observaciones'];
     $cod_personalCCD = $resultCCD['cod_personal'];
     $name_personalCC = $resultCCD['name_personal'];
@@ -64,11 +65,17 @@ from caja_chicadetalle where cod_estadoreferencial=1 and cod_cajachica=$cod_caja
     $cod_cuenta_IT=obtenerValorConfiguracion(25);
     $nro_cuenta_IT=obtieneNumeroCuenta($cod_cuenta_IT);
     $nombre_cuenta_IT=nameCuenta($cod_cuenta_IT);
+    //CONTRA CUENTA
+    $cod_contra_cuenta=obtenerValorConfiguracion(28);
+    $nro_contra_cuenta=obtieneNumeroCuenta($cod_contra_cuenta);
+    $nombre_contra_cuenta=nameCuenta($cod_contra_cuenta);
+    $monto_contra_cuenta=$monto_inicio-$monto_reembolso;
 
     $IUE_compras_IT=$porcentajeIUE_compras+$porcentajeIT;
     $IUE_servicios_IT=$porcentajeIUE_servicios+$porcentajeIT;
     $fecha_actual=date('Y/m/d');
-    $concepto_contabilizacion=strtoupper($name_personalCC)." rendición de ".$observacionesCC." ".$name_tipoccCC."( - - - - )";
+    // $concepto_contabilizacion=strtoupper($name_personalCC)." rendición de ".$observacionesCC." ".$name_tipoccCC."( - - - - )";
+    $concepto_contabilizacion="CONTABILIZACIÓN CAJA CHICA N° ".$numeroCC." DE FECHA ( - - - - )";
 
 $html = '';
 $html.='<html>'.
@@ -278,6 +285,21 @@ $html.=  '<header class="header">'.
 
                         } 
                     }
+                    $descripcionIVA=$nombre_uo.' F/'.$nro_factura.' '.$personal.', '.$razon_social;
+                                $montoIVA=$importe*$porcentajeIVA/100;
+                                $monto_restante=$importe-$montoIVA;
+
+
+                    $descripcion_contra_cuenta='CONTRA CUENTA';                    
+                    $sumaTotalHaberBolivianos+=$monto_contra_cuenta;
+                    $html.='<tr>
+                        <td class="text-left small">'.$nro_contra_cuenta.'</td>
+                        <td class="text-left small"><p>'.$nombre_contra_cuenta.'<br>'.$descripcion_contra_cuenta.' </p></td>
+                        <td class="text-right small"></td>
+                        <td class="text-right small">'.formatNumberDec($monto_contra_cuenta).'</td>
+                        <td class="text-right small">Debe</td>
+                        <td class="text-right small">Haber</td>
+                    </tr>';
                     $html.='<tr>
                             <td class="text-left small"></td>
                             <td class="text-center small"><b>TOTAL</b></td>

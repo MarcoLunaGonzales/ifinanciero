@@ -2787,6 +2787,27 @@ function mayorReporteComprobante(fila){
    }
     ajax.send(null);
  }
+
+ // function listarTipoSolicitudCajaChica(tipo){
+ //  var url="";
+ //  if(tipo==1){
+ //   url="caja_chica/ajaxListPersonal.php";
+ //  }else{
+ //   url="caja_chica/ajaxListProveedor.php";
+ //  }
+ //  ajax=nuevoAjax();
+ //    ajax.open("GET",url,true);
+ //    ajax.onreadystatechange=function(){
+ //    if (ajax.readyState==4) {
+ //      var fi=$("#lista_tipoCC");
+ //      fi.html(ajax.responseText);
+ //      fi.bootstrapMaterialDesign();
+ //       $('.selectpicker').selectpicker("refresh");
+ //    }
+ //   }
+ //    ajax.send(null);
+ // }
+
  function guardarSolicitudRecursos(){
   var numero=$("#numero").val();
   var tipo=$("#tipo_solicitud").val();
@@ -6200,6 +6221,166 @@ function guardarDatosProveedor(){
      Swal.fire("Informativo!", "Todos los campos son requeridos", "warning");
    }
 }
+function cargarDatosRegistroProveedorCajaChica(cod_tcc,cod_cc,cod_dcc){
+  var parametros={"cod":"none"};
+  // $('#cod_tcc').val(cod_tcc);
+  // $('#cod_cc').val(cod_cc);
+  // $('#cod_dcc').val(cod_dcc);
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "caja_chica/ajaxListarDatosRegistroProveedor.php?cod_tcc="+cod_tcc+"&cod_cc="+cod_cc+"&cod_dcc="+cod_dcc,
+        data: parametros,
+        beforeSend: function () {
+        $("#texto_ajax_titulo").html("Obteniendo datos del servicio..."); 
+          iniciarCargaAjax();
+        },
+        success:  function (resp) {
+           detectarCargaAjax();
+           $("#datosProveedorNuevo").html(resp);
+           $("#texto_ajax_titulo").html("Procesando Datos"); 
+           $("#pais_empresa").val("26"); //para el pais de BOLIVIA
+           seleccionarDepartamentoServicioCajaChica();
+           $('.selectpicker').selectpicker("refresh");
+           $("#modalAgregarProveedor").modal("show");
+           
+        }
+    });
+}
+function seleccionarDepartamentoServicioCajaChica(){
+ var parametros={"codigo":$("#pais_empresa").val()};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "solicitudes/ajaxListarDepto.php",
+        data: parametros,
+        beforeSend: function () {
+        $("#texto_ajax_titulo").html("Pais: "+$("#pais_empresa option:selected" ).text()); 
+          iniciarCargaAjax();
+        },
+        success:  function (resp) {
+           detectarCargaAjax();
+           $("#texto_ajax_titulo").html("Procesando Datos"); 
+           $("#departamento_empresa").html(resp);
+           $("#departamento_empresa").val("480"); // departamento de LA PAZ
+           seleccionarCiudadServicioCajaChica();
+           $("#ciudad_empresa").val("");
+           $('.selectpicker').selectpicker("refresh");          
+        }
+    }); 
+}
+function seleccionarCiudadServicioCajaChica(){
+  var parametros={"codigo":$("#departamento_empresa").val()};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "solicitudes/ajaxListarCiudad.php",
+        data: parametros,
+        beforeSend: function () {
+        $("#texto_ajax_titulo").html("Estado / Departamento: "+$("#departamento_empresa option:selected" ).text()); 
+          iniciarCargaAjax();
+        },
+        success:  function (resp) {
+           detectarCargaAjax();
+           $("#texto_ajax_titulo").html("Procesando Datos"); 
+           $("#ciudad_empresa").html(resp);
+           $("#ciudad_empresa").val("62"); //PARA LA CIUDAD DE EL ALTO
+           $('.selectpicker').selectpicker("refresh");
+        }
+    }); 
+}
+function guardarDatosProveedorCajaChica(){
+  var nombre =$("#nombre_empresa").val();
+  var nit =$("#nit_empresa").val();
+  var pais =$("#pais_empresa").val();
+  var estado =$("#departamento_empresa").val();
+  var ciudad =$("#ciudad_empresa").val();
+  var direccion =$("#direccion_empresa").val();
+  var telefono =$("#telefono_empresa").val();
+  var correo =$("#correo_empresa").val();
+  var nombre_contacto =$("#nombre_contacto").val();
+  var apellido_contacto =$("#apellido_contacto").val();
+  var cargo_contacto =$("#cargo_contacto").val();
+  var correo_contacto =$("#correo_contacto").val();
+
+  var cod_tcc =$("#cod_tcc").val();
+  var cod_cc =$("#cod_cc").val();
+  var cod_dcc =$("#cod_dcc").val();
+
+  // alert("cod_tcc:"+cod_tcc+"-cod_cc:"+cod_cc+"-cod_dcc:"+cod_dcc);
+
+   var ciudad_true=0;
+  // validaciones de campos
+   if(nombre!=""&&nit!=""&&(pais>0)&&(estado>0)&&direccion!=""&&telefono!=""&&correo!=""&&nombre_contacto!=""&&apellido_contacto!=""&&cargo_contacto!=""&&correo_contacto!=""){
+     if(ciudad>0){
+       ciudad_true=1;
+     }else{
+      if(ciudad=="NN"){
+         ciudad_true=2;
+         ciudad="";
+      }
+     }
+     if(ciudad_true>0){
+        if(ciudad_true==1){
+          var otra="";
+        }else{
+          var otra=$("#otra_ciudad").val();
+        }
+        if(otra==""&&ciudad_true==2){
+          Swal.fire("Informativo!", "Ingrese el nombre de la Ciudad", "warning");
+        }else{
+          //proceso de guardado de informacion
+           var parametros={"tipo":$("#tipo_empresa").val(),"nacional":$("#nacional_empresa").val(),"nombre":nombre,"nit":nit,"pais":pais,"estado":estado,"ciudad":ciudad,"otra":otra,"direccion":direccion,"telefono":telefono,"correo":correo,"nombre_contacto":nombre_contacto,"apellido_contacto":apellido_contacto,"cargo_contacto":cargo_contacto,"correo_contacto":correo_contacto};
+            $.ajax({
+               type: "GET",
+               dataType: 'html',
+               url: "solicitudes/ajaxAgregarNuevoProveedor.php",
+               data: parametros,
+               beforeSend: function () {
+                $("#texto_ajax_titulo").html("Enviando datos al servidor..."); 
+                  iniciarCargaAjax();
+                },
+               success:  function (resp) {
+                  actualizarRegistroProveedor();
+                  detectarCargaAjax();
+                  $("#texto_ajax_titulo").html("Procesando Datos"); 
+                  if(resp.trim()=="1"){
+                    alerts.showSwal('success-message','index.php?opcion=DetalleCajaChicaForm&codigo='+cod_dcc+'&cod_tcc='+cod_tcc+'&cod_cc='+cod_cc);
+                  }else{
+                    Swal.fire("Error!", "Ocurrio un error de envio", "warning");
+                  }
+               }
+             });  
+        }       
+     }else{
+        Swal.fire("Informativo!", "Todos los campos son requeridos", "warning");
+     }
+   }else{
+     Swal.fire("Informativo!", "Todos los campos son requeridos", "warning");
+   }
+}
+
+function actualizarRegistroProveedorCajaChica(cod_tcc,cod_cc,cod_dcc){
+  var codigo = $("#cod_solicitud").val();
+ var parametros={"codigo":"none"};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "solicitudes/ajaxActualizarProveedores.php",
+        data: parametros,
+        beforeSend: function () {
+        $("#texto_ajax_titulo").html("Actualizando proveedores desde el Servicio Web..."); 
+          iniciarCargaAjax();
+        },
+        success:  function (resp) {
+           detectarCargaAjax();
+           $("#texto_ajax_titulo").html("Procesando Datos"); 
+           alerts.showSwal('success-message','index.php?opcion=DetalleCajaChicaForm&codigo='+cod_dcc+'&cod_tcc='+cod_tcc+'&cod_cc='+cod_cc);
+        }
+    });  
+}
+
+
 function actualizarTablaClaServicios(){
   var codigo = $("#cod_plantilla").val();
    var parametros={"codigo":"none"};
