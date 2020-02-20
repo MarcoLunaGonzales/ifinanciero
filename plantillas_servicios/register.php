@@ -117,7 +117,7 @@ $dbh = new Conexion();
                       </div>-->
 
                       <div class="row">
-                       <label class="col-sm-2 col-form-label">D&iacute;as</label>
+                       <label class="col-sm-2 col-form-label">D&iacute;as de Auditoria</label>
                        <div class="col-sm-7">
                         <div class="row">
                           <div class="col-sm-5">

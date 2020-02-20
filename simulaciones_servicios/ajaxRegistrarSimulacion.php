@@ -87,32 +87,48 @@ if(isset($_GET['nombre'])){
      $detallesPlan=obtenerDetallePlantillaServicioPartida($plantilla_servicio,$idp);
      $cantidadPersonal=obtenerCantidadPersonalPlantilla($plantilla_servicio);
      while ($rowDetallesPlan = $detallesPlan->fetch(PDO::FETCH_ASSOC)) {
-
+      $codigoDetalleSimulacion=obtenerCodigoSimulacionServicioDetalle();
       $codPC=$rowDetallesPlan['cod_plantillatcp'];
       $codPP=$rowDetallesPlan['cod_partidapresupuestaria'];
       $codC=$rowDetallesPlan['cod_cuenta'];
       $glosaD=$rowDetallesPlan['glosa'];
       $montoD=$rowDetallesPlan['monto_total'];
       $editD=$rowDetallesPlan['editado_alumno'];
+      $monto_generado=0;
+
+       $auditoresPlantilla=obtenerDetallePlantillaServicioAuditores($plantilla_servicio);
+       while ($rowAudPlantilla = $auditoresPlantilla->fetch(PDO::FETCH_ASSOC)) {
+         $codigoAuditorSimulacion=$rowAudPlantilla['cod_tipoauditor'];
+         $codigoAuditorSimulacionDias=$rowAudPlantilla['dias'];
+         $codigoAuditorSimulacionCantidad=$rowAudPlantilla['cantidad'];
+         $monto_generado+=$codigoAuditorSimulacionDias*$codigoAuditorSimulacionCantidad;
+         $dbhSS = new Conexion();
+         $sqlSS="INSERT INTO simulaciones_ssd_ssa (cod_simulacionservicio,cod_simulacionserviciodetalle,cod_simulacionservicioauditor,monto,dias,cantidad) 
+                  VALUES ('".$codSimServ."','".$codigoDetalleSimulacion."','".$codigoAuditorSimulacion."','".$editD."','".$codigoAuditorSimulacionDias."', '".$codigoAuditorSimulacionCantidad."')";
+         $stmtSS = $dbhSS->prepare($sqlSS);
+         $stmtSS->execute(); 
+       }
+       $cantidadPersonal=$monto_generado;
       $dbhID = new Conexion();
-      $sqlID="INSERT INTO simulaciones_serviciodetalle (cod_simulacionservicio,cod_plantillatcp, cod_partidapresupuestaria, cod_cuenta,glosa,monto_unitario,cantidad,monto_total,cod_estadoreferencial,editado_personal) 
-      VALUES ('".$codSimServ."','".$codPC."','".$codPP."','".$codC."', '".$glosaD."','".$montoD."','".$cantidadPersonal."','".$montoD."',1,'".$editD."')";
+      $sqlID="INSERT INTO simulaciones_serviciodetalle (codigo,cod_simulacionservicio,cod_plantillatcp, cod_partidapresupuestaria, cod_cuenta,glosa,monto_unitario,cantidad,monto_total,cod_estadoreferencial,editado_personal) 
+      VALUES ('".$codigoDetalleSimulacion."','".$codSimServ."','".$codPC."','".$codPP."','".$codC."', '".$glosaD."','".$montoD."','".$cantidadPersonal."','".$montoD."',1,'".$editD."')";
       $stmtID = $dbhID->prepare($sqlID);
       $stmtID->execute();
      }
-
      
   }
   //volcado de datos a la tabla simulaciones_servicios_auditores
      $auditoresPlan=obtenerDetallePlantillaServicioAuditores($plantilla_servicio);
+     $cantidadAuditoriaPlan=obtenerDetallePlantillaServicioAuditoresCantidad($plantilla_servicio);
      while ($rowAudPlan = $auditoresPlan->fetch(PDO::FETCH_ASSOC)) {
-
+      
       $codTIPA=$rowAudPlan['cod_tipoauditor'];
       $cantidadS=$rowAudPlan['cantidad'];
       $montoS=$rowAudPlan['monto'];
+      $diasS=$rowAudPlan['dias'];
       $dbhAU = new Conexion();
-      $sqlAU="INSERT INTO simulaciones_servicios_auditores (cod_simulacionservicio,cod_tipoauditor, cantidad, monto,cod_estadoreferencial,cantidad_editado) 
-      VALUES ('".$codSimServ."','".$codTIPA."','".$cantidadS."','".$montoS."',1,'".$cantidadS."')";
+      $sqlAU="INSERT INTO simulaciones_servicios_auditores (cod_simulacionservicio,cod_tipoauditor, cantidad, monto,cod_estadoreferencial,cantidad_editado,dias) 
+      VALUES ('".$codSimServ."','".$codTIPA."','".$cantidadS."','".$montoS."',1,'".$cantidadS."','".$diasS."')";
       $stmtAU = $dbhAU->prepare($sqlAU);
       $stmtAU->execute();
      }
@@ -125,13 +141,33 @@ if(isset($_GET['nombre'])){
       $obsCS=$rowServPlan['observaciones'];
       $cantidadS=$rowServPlan['cantidad'];
       $montoS=$rowServPlan['monto'];
+      $codTipoUnidad=1;
+
+      //insertar valores pre definidos a los servicios de sello seleccionados
+      $suma=0;$aux=0;$aux2=0;
+      if(obtenerConfiguracionValorServicio($codCS)==true){
+        $productosLista=explode(",", $productos);
+        $codTC=obtenerTipoCliente($cliente);
+        $nacional=obtenerTipoNacionalCliente($cliente);
+        for ($i=0; $i < count($productosLista); $i++) {
+          $aux=obtenerCostoTipoClienteSello(($i+1),$codTC,$nacional);
+           if($aux==0){
+            $aux=$aux2;
+           }else{            
+            $aux2=$aux;
+           }
+           $suma+=$aux;          
+        }
+       $cantidadS=1;
+       $montoS=$suma;        
+      }
       $dbhAU = new Conexion();
-      $sqlAU="INSERT INTO simulaciones_servicios_tiposervicio (cod_simulacionservicio,cod_claservicio, observaciones,cantidad, monto,cod_estadoreferencial,cantidad_editado) 
-      VALUES ('".$codSimServ."','".$codCS."','".$obsCS."','".$cantidadS."','".$montoS."',1,'".$cantidadS."')";
+      $sqlAU="INSERT INTO simulaciones_servicios_tiposervicio (cod_simulacionservicio,cod_claservicio, observaciones,cantidad, monto,cod_estadoreferencial,cantidad_editado,cod_tipounidad) 
+      VALUES ('".$codSimServ."','".$codCS."','".$obsCS."','".$cantidadS."','".$montoS."',1,'".$cantidadS."','".$codTipoUnidad."')";
       $stmtAU = $dbhAU->prepare($sqlAU);
       $stmtAU->execute();
-     }
-  
+     }  
+
   echo $codSimServ;
 }
 

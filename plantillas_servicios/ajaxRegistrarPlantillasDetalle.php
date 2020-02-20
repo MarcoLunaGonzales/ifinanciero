@@ -28,7 +28,7 @@ if(isset($_GET['cod_plantillacosto'])){
   	$alumno=0;
   }
   $dbh = new Conexion();
-  $sqlInsert="INSERT INTO plantillas_servicios_detalle (cod_plantillatcp, cod_partidapresupuestaria, cod_cuenta,glosa,monto_unitario,cantidad,monto_total,cod_estadoreferencial,editado_alumno) VALUES ('".$codigo."','".$codPartida."','".$cuenta."', '".$detalle."','".$monto."','1','".$monto."',1,'".$alumno."')";
+  $sqlInsert="INSERT INTO plantillas_servicios_detalle (cod_plantillatcp, cod_partidapresupuestaria, cod_cuenta,glosa,monto_unitario,cantidad,monto_total,cod_estadoreferencial,editado_alumno,tipo_registro) VALUES ('".$codigo."','".$codPartida."','".$cuenta."', '".$detalle."','".$monto."','1','".$monto."',1,'".$alumno."','".$tipo."')";
   $stmtInsert = $dbh->prepare($sqlInsert);
   $stmtInsert->execute();
 

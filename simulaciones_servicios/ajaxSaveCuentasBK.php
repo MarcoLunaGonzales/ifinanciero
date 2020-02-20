@@ -1,5 +1,4 @@
 <?php
-session_start();
 require_once '../conexion.php';
 require_once '../functions.php';
 require_once '../functionsGeneral.php';
@@ -17,14 +16,10 @@ $partida=$_GET["partida"];
 $cuenta=$_GET["cuenta"];
 $habilitado=$_GET["habilitado"];
 $cantidad=$_GET["cantidad"];
-
-
-$cantidad=obtenerCantidadTotalSimulacionesServiciosDetalleAuditor($simulaciones,$codigo);
-$monto=obtenerMontoTotalSimulacionesServiciosDetalleAuditor($simulaciones,$codigo);
 $montoEditado=$monto/$cantidad;
 
-
-$sqlUpdateDetalle="UPDATE simulaciones_serviciodetalle SET  monto_unitario='$monto',monto_total='$monto',habilitado=$habilitado,cantidad=$cantidad where codigo=$codigo";
+session_start();
+$sqlUpdateDetalle="UPDATE simulaciones_serviciodetalle SET  monto_unitario='$monto',monto_total='$monto',habilitado=$habilitado,cantidad=$cantidad,editado_personal='$montoEditado' where codigo=$codigo";
 $stmtUpdateDetalle = $dbh->prepare($sqlUpdateDetalle);
 $stmtUpdateDetalle->execute();
 $montoTotal=0;

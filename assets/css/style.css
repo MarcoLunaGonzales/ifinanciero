@@ -1,3 +1,10 @@
+.modal-fullscreen {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
 .fondo-boton{
   background: #2B3054 !important;
   color:#F9A60C !important;

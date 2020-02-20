@@ -92,6 +92,27 @@
                   </button>
                 </div>
                 <div class="card-body">
+                <!--<div class="row col-sm-12">
+                    <div class="form-group col-sm-12">
+                       <label class="bmd-label-static">Seleccione una Partida Presupuestaria</label>
+                       <select class="selectpicker form-control" onchange="cargarCuentasSimulacion(<?=$codigo?>,<?=$ibnorcaC?>)" name="partida_presupuestaria" id="partida_presupuestaria" data-style="btn btn-danger" title="-- Elija una partida --">
+                                <option value="0" selected>Todas Las Partidas</option> 
+                                <?php
+                                 $stmt = $dbh->prepare("SELECT distinct c.cod_partidapresupuestaria as codPartida, p.nombre from cuentas_simulacion c,partidas_presupuestarias p where p.codigo=c.cod_partidapresupuestaria and c.cod_simulacioncostos=$codigo");
+                                 $stmt->execute();
+                                  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                  $codigoX=$row['codPartida'];
+                                  $nombreX=$row['nombre'];
+                                   ?>
+                                  <option value="<?=$codigoX;?>"><?=$nombreX;?></option> 
+                                  <?php
+                                    }
+                                    ?>
+                        </select>
+                     </div>
+                      <div class="col-sm-6" id="lista_precios">
+                       </div>
+                </div>-->
                  <div class="card" id="cuentas_simulacion">
                    <?php 
                     include "cargarDetallePlantillaPartida.php";
@@ -105,18 +126,21 @@
 
 <!-- small modal -->
 <div class="modal fade modal-arriba modal-primary" id="modalSimulacionCuentasPersonal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog modal-lg col-sm-12">
     <div class="modal-content card">
-                <div class="card-header card-header-warning card-header-text">
+                <div class="card-header card-header-danger card-header-text">
                   <div class="card-text">
-                    <h4>Costos Variables Detalle</h4>
+                    <h4>Costos Variables Personal</h4>
                   </div>
                   <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
                     <i class="material-icons">close</i>
                   </button>
                 </div>
                 <div class="card-body">
-                 <div class="card" id="cuentas_simulacionpersonal">
+                 <div class="card">
+                   <?php 
+                    include "cargarDetallePlantillaPartidaPersonal.php";
+                   ?>
                  </div>   
                 </div>
       </div>  
@@ -361,7 +385,7 @@
                                $queryPr="SELECT s.*,t.nombre as tipo_personal FROM simulaciones_servicios_auditores s, tipos_auditor t where s.cod_simulacionservicio=$codigoSimulacionSuper and s.cod_tipoauditor=t.codigo order by s.codigo";
                                $stmt = $dbh->prepare($queryPr);
                                $stmt->execute();
-                               $modal_totalmontopre=0;$modal_totalmontopretotal=0;$sumaCantidadPre=0;
+                               $modal_totalmontopre=0;$modal_totalmontopretotal=0;
                                while ($rowPre = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                   $codigoPre=$rowPre['codigo'];
                                   $tipoPre=$rowPre['tipo_personal'];
@@ -384,7 +408,6 @@
                                           <?php 
                                              for ($hf=1; $hf<=$cantidadPre; $hf++) {
                                               if($hf==$cantidadEPre){
-                                                $sumaCantidadPre+=$cantidadPre;
                                                 ?><option value="<?=$hf?>" selected><?=$hf?></option><?php
                                               }else{
                                                   ?><option value="<?=$hf?>"><?=$hf?></option><?php
@@ -434,7 +457,6 @@
                               </tbody>
                            </table>
                            <input type="hidden" id="modal_numeropersonal" value="<?=$iii?>">
-                           <input type="hidden" id="modal_cantidadpersonal" value="<?=$sumaCantidadPre?>">
                       </div>
                       <hr>
                        

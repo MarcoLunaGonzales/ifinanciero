@@ -54,7 +54,7 @@ $dbh = new Conexion();
                         </div>
                       </div>
                   <div class="row">
-                       <label class="col-sm-2 col-form-label">Plantilla de costos :</label>
+                       <label class="col-sm-2 col-form-label">Plantilla de Servicios :</label>
                        <div class="col-sm-7">
                         <div class="form-group">
                                 <select class="selectpicker form-control" name="plantilla_servicio" onchange="listarDatosPlantillaSim(this.value)" id="plantilla_servicio" data-style="<?=$comboColor;?>"  data-live-search="true" title="-- Elija una plantilla --" data-style="select-with-transition" data-actions-box="true"required>
@@ -87,14 +87,15 @@ $dbh = new Conexion();
           
                                 <!--<option disabled selected="selected" value="">Cliente</option>-->
                                 <?php
-                                 $stmt = $dbh->prepare("SELECT codigo, nombre FROM clientes where cod_estadoreferencial=1 order by 2");
+                                 $stmt = $dbh->prepare("SELECT c.codigo, c.nombre, t.nombre as tipo FROM clientes c join tipos_clientes t on c.cod_tipocliente=t.codigo where c.cod_estadoreferencial=1 order by 2");
                                  $stmt->execute();
                                   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                   $codigoX=$row['codigo'];
                                   $nombreX=$row['nombre'];
+                                  $tipoX=$row['tipo'];
                                   //$abrevX=$row['abreviatura'];
                                    ?>
-                                  <option value="<?=$codigoX;?>"><?=$nombreX;?></option> 
+                                  <option value="<?=$codigoX;?>"><?=$nombreX;?> - <?=$tipoX?></option> 
                                   <?php
                                     }
                                     ?>
@@ -106,7 +107,7 @@ $dbh = new Conexion();
                       </div><!--row-->
 
                       <div class="row">
-                       <label class="col-sm-2 col-form-label">Productos</label>
+                       <label class="col-sm-2 col-form-label">Productos (producto1,producto2)</label>
                        <div class="col-sm-7">
                         <div class="form-group" style="border-bottom: 1px solid #CACFD2">
                           <input type="text" value="" class="form-control tagsinput" name="productos" id="productos" data-role="tagsinput" required data-color="primary">

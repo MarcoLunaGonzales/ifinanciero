@@ -25,14 +25,16 @@ $globalAdmin=$_SESSION["globalAdmin"];
 if(isset($_GET['nombre'])){
 	$nombre=$_GET['nombre'];
   $plantilla_costo=$_GET['plantilla_costo'];
+  $cantidad_modulos=$_GET['cantidad_modulos'];
   $codPrecio=$_GET['precio'];
   $ibnorca=1;
   $cantidadAlumnos=obtenerPlantillaCostoAlumnos($plantilla_costo);
   $utilidadMin=obtenerPlantillaCostoUtilidad($plantilla_costo);
+  $cantidadCursosMes=obtenerPlantillaCostoCursosMes($plantilla_costo);
   $fecha= date("Y-m-d");
   $codSimCosto=obtenerCodigoSimCosto();
   $dbh = new Conexion();
-  $sqlInsert="INSERT INTO simulaciones_costos (codigo, nombre, fecha, cod_plantillacosto, cod_responsable,cod_precioplantilla,ibnorca,cantidad_alumnoslocal,utilidad_minimalocal) VALUES ('".$codSimCosto."','".$nombre."','".$fecha."', '".$plantilla_costo."', '".$globalUser."','".$codPrecio."','".$ibnorca."','".$cantidadAlumnos."','".$utilidadMin."')";
+  $sqlInsert="INSERT INTO simulaciones_costos (codigo, nombre, fecha, cod_plantillacosto, cod_responsable,cod_precioplantilla,ibnorca,cantidad_alumnoslocal,utilidad_minimalocal,cantidad_cursosmes,cantidad_modulos) VALUES ('".$codSimCosto."','".$nombre."','".$fecha."', '".$plantilla_costo."', '".$globalUser."','".$codPrecio."','".$ibnorca."','".$cantidadAlumnos."','".$utilidadMin."','".$cantidadCursosMes."','".$cantidad_modulos."')";
   $stmtInsert = $dbh->prepare($sqlInsert);
   $stmtInsert->execute();
 
@@ -101,7 +103,32 @@ if(isset($_GET['nombre'])){
       $stmtID->execute();
      }
   }
-  
+   //volcado de datos a la tabla simulaciones_costos
+
+    $preciosPlan=obtenerListaPreciosPlantillaCosto($plantilla_costo,$codPrecio);
+     while ($rowPrePlan = $preciosPlan->fetch(PDO::FETCH_ASSOC)) {
+      $codCS=$rowPrePlan['codigo'];
+      $venCS=$rowPrePlan['venta_local'];
+      $veneS=$rowPrePlan['venta_externo'];
+      $codPS=$rowPrePlan['cod_plantillacosto'];
+      $dbhAU = new Conexion();
+      $sqlAU="INSERT INTO precios_simulacioncosto (venta_local, venta_externo,cod_simulacioncosto) 
+      VALUES ('".$venCS."','".$veneS."','".$codSimCosto."')";
+      $stmtAU = $dbhAU->prepare($sqlAU);
+      $stmtAU->execute();
+
+      $porcentajesPrecios=obtenerPorcentajesPreciosPlantillaCosto();
+      while ($rowPreConf = $porcentajesPrecios->fetch(PDO::FETCH_ASSOC)) {
+         $valorPor=$rowPreConf['valor'];
+         $precioA=$venCS*($valorPor/100);
+         $precioN=$venCS+$precioA;
+         $dbhAUC = new Conexion();
+         $sqlAUC="INSERT INTO precios_simulacioncosto (venta_local, venta_externo,cod_simulacioncosto) 
+         VALUES ('".$precioN."','".$precioN."','".$codSimCosto."')";
+         $stmtAUC = $dbhAUC->prepare($sqlAUC);
+         $stmtAUC->execute();
+      }
+     }
   echo $codSimCosto;
 }
 

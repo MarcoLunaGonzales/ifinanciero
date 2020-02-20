@@ -214,7 +214,7 @@
                              <!--<td>Ut Min FI</td>-->
                            </tr>                         
                            <tr>
-                             <td class="text-right small"><?=obtenerValorConfiguracion(6)?></td>
+                             <td class="text-right small"><?=$cantidadCursosMesX?></td>
                              <td class="text-right small"><?=$alumnosLocalX?></td>
                              <!--<td class="text-right small"><?=$alumnosExternoX?></td>-->
                              <td class="text-right small"><?=$utilidadIbnorcaX?> %</td>

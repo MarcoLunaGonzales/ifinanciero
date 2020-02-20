@@ -1232,6 +1232,7 @@ function detectarCargaAjax(){
   var idp=str_cuenta[0];
   var unidad=$("#cod_unidad").val();
   var area=$("#cod_area").val();
+  //var valor2=$("#cod_mescurso").val();
   var valor=$("#codValor").val();
   var parametros={"idp":idp,"unidad":unidad,"area":area,"valor":valor};
      $.ajax({
@@ -1797,16 +1798,17 @@ function guardarSimulacionCosto(){
   var nombre=$("#nombre").val();
   var precio=$("#precio_venta").val();
   var plantilla_costo=$("#plantilla_costo").val();
+  var cantidad_modulos=$("#cantidad_modulos").val();
   var ibnorca = 1;
   /*if( $("#ibnorca_check").is(':checked') ) {
       var ibnorca=1;
   }else{
       var ibnorca=2;
   }*/
-  if(nombre==""||!(plantilla_costo>0)){
+  if(nombre==""||!(plantilla_costo>0)||cantidad_modulos==""){
    Swal.fire('Informativo!','Debe llenar los campos!','warning'); 
   }else{
-     var parametros={"nombre":nombre,"plantilla_costo":plantilla_costo,"precio":precio,"ibnorca":ibnorca};
+     var parametros={"nombre":nombre,"plantilla_costo":plantilla_costo,"precio":precio,"ibnorca":ibnorca,"cantidad_modulos":cantidad_modulos};
      $.ajax({
         type: "GET",
         dataType: 'html',
@@ -1817,6 +1819,7 @@ function guardarSimulacionCosto(){
           
         },
         success:  function (resp) {
+          
          alerts.showSwal('success-message','simulaciones_costos/registerSimulacion.php?cod='+resp);
         }
     });
@@ -2683,6 +2686,10 @@ function agregarRetencionSolicitud(){
 function modificarMontos(){
   $('#modalEditPlantilla').modal('hide');
   $('#modalSimulacionCuentas').modal('show');
+}
+function modificarMontosPersonal(){
+  $('#modalEditPlantilla').modal('hide');
+  $('#modalSimulacionCuentasPersonal').modal('show');
 }
 function cargarCuentasSimulacion(cods,ib){
   var fi = $('#cuentas_simulacion');
@@ -3668,25 +3675,48 @@ function calcularTotalPartidaGenericoServicio(fila,valor){
 }
 
 function calcularTotalPersonalServicio(valor){
-  var suma=0; var sumal=0;
+  var suma=0; var sumal=0; var sumaC=0;
   var total= $("#modal_numeropersonal").val();
   for (var i=1;i<=(total-1);i++){
     if(!($("#modal_montopretotal"+i).is("[readonly]"))){
     if(valor==1){
       suma+=parseFloat($("#modal_montopretotal"+i).val());
-      $("#modal_montopre"+i).val(redondeo(parseFloat($("#modal_montopretotal"+i).val())/parseInt($("#cantidad_personal"+i).val())));
+      $("#modal_montopre"+i).val(redondeo(parseFloat($("#modal_montopretotal"+i).val())/parseInt($("#cantidad_personal"+i).val())/parseInt($("#dias_personal"+i).val())));
     }else{
-      $("#modal_montopretotal"+i).val(redondeo(parseFloat($("#modal_montopre"+i).val())*parseInt($("#cantidad_personal"+i).val())));
+      $("#modal_montopretotal"+i).val(redondeo(parseFloat($("#modal_montopre"+i).val())*parseInt($("#cantidad_personal"+i).val())*parseInt($("#dias_personal"+i).val())));
      suma+=parseFloat($("#modal_montopretotal"+i).val());  
     }
      sumal+=parseFloat($("#modal_montopre"+i).val());
+     sumaC+=parseInt($("#cantidad_personal"+i).val());
     }
    
   } 
   var result=redondeo(suma);
   var resulta=redondeo(sumal);
   $("#modal_totalmontopretotal").text(result);
+  $("#modal_cantidadpersonal").val(sumaC);
   $("#modal_totalmontopre").text(redondeo(resulta)); 
+}
+
+function calcularTotalPersonalServicioAuditor(){
+  var suma=0; var sumal=0; var sumaC=0;
+  var total= $("#modal_numeropersonalauditor").val();
+  for (var i=1;i<=(total-1);i++){
+    var columnas =$("#cantidad_columnas"+i).val();
+    var montos=0;
+    for (var j = 1; j <=columnas; j++) {
+     montos+=parseFloat($("#monto"+j+"RRR"+i).val()); 
+    };
+     suma=parseFloat($("#modal_cantidad_personal"+i).val()*$("#modal_dias_personal"+i).val()*montos);
+
+     $("#total_auditor"+i).text(redondeo(suma));
+     $("#total_unitarioauditor"+i).text(redondeo(suma/($("#modal_cantidad_personal"+i).val()*$("#modal_dias_personal"+i).val()))); 
+     sumal+=suma;
+     sumaC+=suma/(($("#modal_cantidad_personal"+i).val()*$("#modal_dias_personal"+i).val())); 
+  } 
+  var resulta=redondeo(sumal);
+  $("#total_auditor").text(resulta);
+  $("#total_unitarioauditor").text(redondeo(sumaC));
 }
 function calcularTotalFilaServicio(valor){
   var suma=0; var sumal=0;
@@ -3850,7 +3880,73 @@ function guardarCuentasSimulacionAjaxGenericoServicio(ib){
   };
     actualizarSimulacion();
 }
+function guardarCuentasSimulacionAjaxGenericoServicioAuditor(){
+  var ib=1;
+  var supertotal=$("#numero_cuentaspartida").val();
+  for (var j = 1; j <=(supertotal-1); j++) {
+  var total= $("#numero_cuentas"+j).val();
+  var simulaciones=$("#cod_simulacion").val();
+  var plantilla =$("#cod_plantilla").val();
+  var partida =$("#codigo_partida_presupuestaria"+j).val();
+  
+    for (var i=1;i<=(total-1);i++){
+      
 
+      var personalCuenta=$("#modal_numeropersonalauditor").val();
+      for (var l = 1; l <=(personalCuenta-1); l++) {
+         var tipoAu=$("#codigo_filaauditor"+l).val();
+         var columnas= $("#cantidad_columnas"+l).val();
+         var diasn=$("#modal_dias_personal"+l).val();
+         var cantidadn=$("#modal_cantidad_personal"+l).val();
+         for (var k = 1; k <=columnas; k++) {
+           var codigoDetalle= $("#codigo_columnas"+k+"RRR"+l).val();
+           var montoDetalle= $("#monto"+k+"RRR"+l).val();
+        
+           var parametros = {"simulaciones":simulaciones,"cod_detalle":codigoDetalle,"cod_tipoau":tipoAu,"monto":montoDetalle,"dias":diasn,"cantidad":cantidadn};
+            $.ajax({
+            type:"GET",
+            data:parametros,
+            url:"ajaxSaveCuentasAuditor.php",
+            beforeSend: function () { 
+              iniciarCargaAjax();
+            },
+            success:function(resp){         
+            }
+          });
+         };
+      };
+      var habilitado=1;
+      var cantidad = $("#cantidad_personal"+j+"RRR"+i).val();
+      if($("#monto_mod"+j+"RRR"+i).is("[readonly]")){
+        habilitado=0;
+      }
+      var codigo = $("#codigo"+j+"RRR"+i).val();
+      var monto = $("#monto_mod"+j+"RRR"+i).val();
+      var cuenta =$("#codigo_cuenta"+j+"RRR"+i).val();
+      var simulacion =$("#codigo_fila"+j+"RRR"+i).val();
+      var parametros = {"codigo":codigo,"monto":monto,"ibnorca":ib,"simulacion":simulacion,"simulaciones":simulaciones,"plantilla":plantilla,"partida":partida,"cuenta":cuenta,"habilitado":habilitado,"cantidad":cantidad};
+      $.ajax({
+        type:"GET",
+        data:parametros,
+        url:"ajaxSaveCuentas.php",
+        beforeSend: function () { 
+          $("#guardar_cuenta").text("espere.."); 
+          $("#guardar_cuenta").attr("disabled",true);
+          $("#mensaje_cuenta").html("");
+          iniciarCargaAjax();
+        },
+        success:function(resp){
+          $("#guardar_cuenta").text("Guardar");
+          $("#guardar_cuenta").removeAttr("disabled");
+          $("#mensaje_cuenta").html("<p class='text-success'>Se insertaron los datos correctamente! </p>");//<a class='btn btn-warning btn-sm' href='#' onclick='actualizarSimulacion();'>aplicar cambios a la simulación</a>
+        },complete : function(xhr, status) {
+        
+         }
+      });
+    }   
+  };
+    actualizarSimulacion();
+}
 function guardarCuentasSimulacionAjaxGenerico(ib){
   var supertotal=$("#numero_cuentaspartida").val();
   for (var j = 1; j <=(supertotal-1); j++) {
@@ -4017,6 +4113,42 @@ function guardarCuentasSimulacionGenericoServicio(ib){
     Swal.fire('Informativo!','Todos los campos son requeridos!','warning'); 
    } 
 }
+function guardarCuentasSimulacionGenericoServicioPrevio(ib){
+  var conta=0; var contaRead=0;
+  var supertotal= $("#numero_cuentaspartida").val();
+  var cosSim=$("#cod_simulacion").val();
+  var codigosFilas="";
+  for (var j = 1; j <=(supertotal-1); j++) {
+  var total= $("#numero_cuentas"+j).val();  
+  if((total-1)!=0){
+    for (var i=1;i<=(total-1);i++){
+      var codigoF=$("#codigo"+j+"RRR"+i).val();
+      if(!($("#monto_mod"+j+"RRR"+i).is("[readonly]"))){
+        codigosFilas+=codigoF+"###";
+      }
+    }    
+   }    
+  };
+  //ajax estado de cuentas
+    var parametros={"cod_simulacion":cosSim,"codigo_filas":codigosFilas};
+    $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxCargarDetalleSimulacionAuditor.php",
+        data: parametros,
+        beforeSend:function(){
+         iniciarCargaAjax();
+        },
+        success:  function (resp) {
+          detectarCargaAjax();
+          $("#cuentas_simulacionpersonal").html(resp);
+          $('.selectpicker').selectpicker("refresh");
+          $("#modalSimulacionCuentasPersonal").modal("show");
+          $("#modalSimulacionCuentas").modal("hide");           
+        }
+    });
+}
+
 function guardarCuentasSimulacion(ib){
   var total= $("#numero_cuentas").val();
   var cosSim=$("#cod_simulacion").val();
@@ -4677,7 +4809,17 @@ function editarDatosPlantilla(){
   $("#modal_alibnorca").val($("#alumnos_plan").val());
   $("#modal_alfuera").val($("#alumnos_plan_fuera").val());
   $("#modal_importeplan").val($("#cod_precioplantilla").val());
-
+  if($("#modal_productos").length){ 
+     $("#modal_productos").val($("#productos_sim").val());
+     $("#modal_productos").tagsinput('removeAll');
+     $("#modal_productos").tagsinput('add', $("#productos_sim").val());
+  }
+  if($("#num_tituloservicios").length){
+     $("#num_tituloservicios").html("("+($("#modal_numeroservicio").val()-1)+")");
+  }
+  if($("#num_titulopersonal").length){
+     $("#num_titulopersonal").html("("+($("#modal_numeropersonal").val()-1)+")");
+  }
   $('.selectpicker').selectpicker("refresh");
  $("#modalEditPlantilla").modal("show"); 
 }
@@ -4789,8 +4931,10 @@ function guardarDatosPlantillaServicioAjax(btn_id){
   var cod_sim=$("#cod_simulacion").val();
   var ut_i=$("#modal_utibnorca").val();
   var dia=$("#modal_diasauditoria").val();
-
-if(!(ut_i==""||dia==""||dia==0)){ 
+  var productos=$("#modal_productos").val();
+  var respuesta=productos.split(',');
+  var num_prod=respuesta.length;
+if(!(ut_i==""||dia==""||dia==0||productos==""||num_prod<1)){ 
   /*PARA PERSONAL*/
   var total=$("#modal_numeropersonal").val();
   for (var i = 1; i <=(total-1); i++) {
@@ -4798,10 +4942,12 @@ if(!(ut_i==""||dia==""||dia==0)){
       var codigo = $("#modal_codigopersonal"+i).val();
       var monto = $("#modal_montopre"+i).val();
       var cantidad = $("#cantidad_personal"+i).val();
+      var cantidadTotal = $("#modal_cantidadpersonal").val();
+      var dias = $("#dias_personal"+i).val();
       if($("#modal_montopre"+i).is("[readonly]")){
         habilitado=0;
       }
-      var parametros = {"codigo":codigo,"monto":monto,"simulacion":cod_sim,"plantilla":codigo_p,"dia":dia,"utilidad":ut_i,"habilitado":habilitado,"cantidad":cantidad};
+      var parametros = {"codigo":codigo,"monto":monto,"simulacion":cod_sim,"productos":productos,"plantilla":codigo_p,"dia":dia,"utilidad":ut_i,"habilitado":habilitado,"cantidad":cantidad,"dias":dias,"cantidadT":cantidadTotal};
       $.ajax({
         type:"GET",
         data:parametros,
@@ -4823,10 +4969,12 @@ if(!(ut_i==""||dia==""||dia==0)){
       var codigo = $("#modal_codigoservicio"+i).val();
       var monto = $("#modal_montoserv"+i).val();
       var cantidad = $("#cantidad_servicios"+i).val();
+      var unidad = $("#unidad_servicios"+i).val();
+      var precio_fijo=$("#precio_fijo"+i).val();
       if($("#modal_montoserv"+i).is("[readonly]")){
         habilitado=0;
       }
-      var parametros = {"codigo":codigo,"monto":monto,"simulacion":cod_sim,"plantilla":codigo_p,"dia":dia,"utilidad":ut_i,"habilitado":habilitado,"cantidad":cantidad};
+      var parametros = {"codigo":codigo,"monto":monto,"simulacion":cod_sim,"productos":productos,"precio_fijo":precio_fijo,"unidad":unidad,"plantilla":codigo_p,"dia":dia,"utilidad":ut_i,"habilitado":habilitado,"cantidad":cantidad};
       $.ajax({
         type:"GET",
         data:parametros,
@@ -5046,10 +5194,10 @@ function listDetallePlantilla(id){
   var plantilla=$("#cod_plantilla").val();
   var codigo=$("#servicios_codigo").val();
   var observacion=$("#observacion_servicio").val();
-  var cantidad=$("#cantidad_servicio").val();
-  var monto=$("#monto_servicio").val();
-  if(codigo==""||cantidad==""||monto==""){
-       Swal.fire("Informativo!", "Debe llenar todos los campos", "warning");
+  var cantidad="1";   //var cantidad=$("#cantidad_servicio").val();
+  var monto="0" ;//var monto=$("#monto_servicio").val();
+  if(!(codigo>0)){ //||cantidad==""||monto==""
+       Swal.fire("Informativo!", "Debe seleccionar un servicio", "warning");
   }else{
   var parametros={"plantilla":plantilla,"codigo":codigo,"obs":observacion,"cant":cantidad,"monto":monto};
      $.ajax({
@@ -5067,8 +5215,8 @@ function listDetallePlantilla(id){
            }else{
             $("#servicios_codigo").val("");
             $("#observacion_servicio").val("");
-            $("#cantidad_servicio").val("");
-            $("#monto_servicio").val("");
+            //$("#cantidad_servicio").val("");
+            //$("#monto_servicio").val("");
             $('.selectpicker').selectpicker("refresh");
             listarServiciosPlantilla();
              Swal.fire("Correcto!", "Se agrego el registro exitosamente.", "success");
@@ -5107,13 +5255,45 @@ function listDetallePlantilla(id){
             $("#monto_auditor").val("");
             $('.selectpicker').selectpicker("refresh");
             listarPersonalPlantilla();
-             Swal.fire("Correcto!", "Se agrego el registro exitosamente.", "success");
+             
              
            }
         }
     });
     
   }
+ }
+ function guardarAuditoresPlantilla(){
+  var plantilla=$("#cod_plantilla").val();
+
+  var n=$("#cantidad_filaspersonal").val();
+
+  for (var i = 1; i < n; i++) {
+    var cantidad=$("#cantidad_personal"+i).val();
+    var monto=$("#monto_personal"+i).val();
+    var dias=$("#dias_personal"+i).val();
+    var codigo = $("#codigo_personal"+i).val();
+    if(cantidad==""||monto==""||parseFloat(monto)==0){
+      
+    }else{
+     var parametros={"plantilla":plantilla,"codigo":codigo,"cant":cantidad,"monto":monto,"dias":dias};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxSavePersonales.php",
+        data: parametros,
+        beforeSend: function () { 
+          iniciarCargaAjax();
+        },
+        success:  function (resp) {
+           detectarCargaAjax();
+          
+        }
+     });
+     
+    }
+  };
+  listarPersonalesPlantilla();
  }
 function listarPersonalPlantilla(){
    var plantilla=$("#cod_plantilla").val();
@@ -5125,6 +5305,25 @@ function listarPersonalPlantilla(){
         data: parametros,
         success:  function (resp) {
          $("#tabla_personal").html(resp);
+        }
+    }); 
+}
+function listarPersonalesPlantilla(){
+   var plantilla=$("#cod_plantilla").val();
+   var dias_auditoria=$("#dias_auditoria").val();
+   var parametros={"plantilla":plantilla,"dias_auditoria":dias_auditoria};
+   $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxListPersonales.php",
+        data: parametros,
+        beforeSend: function () { 
+          iniciarCargaAjax();
+        },
+        success:  function (resp) {
+          detectarCargaAjax();
+         $("#tabla_personal").html(resp);
+         Swal.fire("Correcto!", "Se agrego el registro exitosamente.", "success");
         }
     }); 
 }
@@ -5169,7 +5368,7 @@ function removeAuditorPlantilla(cod){
         },
         success:  function (resp) {
            detectarCargaAjax();
-           listarPersonalPlantilla();
+           listarPersonalesPlantilla();
         }
     });
 }
@@ -5632,4 +5831,21 @@ function actualizarRegistroProveedor(){
            alerts.showSwal('success-message','registerSolicitud.php?cod='+codigo);
         }
     });  
+}
+function calcularMontoFilaPersonalServicio(fila){
+  var cantidad =$("#cantidad_personal"+fila).val();
+  var dias =$("#dias_personal"+fila).val();
+  var monto =$("#monto_personal"+fila).val();
+  $("#total_personal"+fila).val(redondeo(cantidad*monto*dias));
+
+  var n =$("#cantidad_filaspersonal").val();
+  var suma=0;
+  for (var i = 1; i < n; i++) {
+    suma+=parseFloat($("#total_personal"+i).val());
+  };
+  $("#total_personalservicio").text(redondeo(suma));
+}
+
+function cambiarCantidadProductoSimulacion(){
+  alert($("#modal_productos").val())
 }

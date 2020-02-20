@@ -20,25 +20,24 @@ $productos="";
 $norma="";
 $dias=$_POST['dias'];
 $utmin=$_POST['utilidad_minima'];
-//$pFecha = explode("/", $_POST['fecha_auditoria']);
-//$fecha_auditoria=$pFecha[2]."-".$pFecha[1]."-".$pFecha[0];
 $unidad=$_POST['unidad'];
 $area=$_POST['area'];
-//$servicio=$_POST['cod_servicio'];
+
+if($area==39){
+  $cantidadAuditorias=obtenerValorConfiguracion(17);
+  $ingresoPresupuestado=obtenerValorConfiguracion(21);
+}else{
+  $cantidadAuditorias=obtenerValorConfiguracion(18);
+  $ingresoPresupuestado=obtenerValorConfiguracion(22);
+}
 
   $codPlanServ=obtenerCodigoPlanServ();
   $dbh = new Conexion();
-  $sqlInsert="INSERT INTO plantillas_servicios (codigo, nombre, abreviatura, cod_unidadorganizacional, cod_area,cod_cliente,productos,norma,cod_personal_registro,fecha_registro,dias_auditoria,cod_estadoplantilla,cod_estadoreferencial,utilidad_minima) 
-  VALUES ('".$codPlanServ."','".$nombre."','".$abrev."', '".$unidad."', '".$area."','".$cliente."','".$productos."','".$norma."','".$globalUser."','".$fechaHoraActual."','".$dias."',1,1,'".$utmin."')";
+  $sqlInsert="INSERT INTO plantillas_servicios (codigo, nombre, abreviatura, cod_unidadorganizacional, cod_area,cod_cliente,productos,norma,cod_personal_registro,fecha_registro,dias_auditoria,cod_estadoplantilla,cod_estadoreferencial,utilidad_minima,cantidad_auditorias,ingreso_presupuestado) 
+  VALUES ('".$codPlanServ."','".$nombre."','".$abrev."', '".$unidad."', '".$area."','".$cliente."','".$productos."','".$norma."','".$globalUser."','".$fechaHoraActual."','".$dias."',1,1,'".$utmin."','".$cantidadAuditorias."','".$ingresoPresupuestado."')";
   $stmtInsert = $dbh->prepare($sqlInsert);
   $flagSuccess=$stmtInsert->execute();
 
-/*for ($i=0; $i < cantidadF($servicio); $i++) { 
-    $sql="INSERT INTO plantillas_servicios_tiposervicio (cod_plantillaservicio, cod_claservicio,cod_estadoreferencial) 
-       VALUES ('".$codPlanServ."','".$servicio[$i]."', 1)";
-    $stmt = $dbh->prepare($sql);
-    $stmt->execute();   
-}*/
 
   if($flagSuccess==true){
 	  showAlertSuccessError(true,"../".$urlRegister."?cod=".$codPlanServ);	
