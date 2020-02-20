@@ -120,7 +120,7 @@ $stmt->bindColumn('nombre_estado', $nombre_estado);
                               </td>
                               <td class="text-center">
                                 <a href="<?=$urlPlanillaContabilizacion;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>" target="_blank" > 
-                                  <i class="material-icons" title="Generar Comprobante" style="color:red">input</i>
+                                  <i class="material-icons" title="Generar Contabilización" style="color:red">input</i>
                                 </a>
                               </td>
                           </tr>
