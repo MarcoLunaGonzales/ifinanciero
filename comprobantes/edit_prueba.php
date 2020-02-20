@@ -1,5 +1,6 @@
 <?php
 session_start();
+set_time_limit(0);
 require_once '../layouts/bodylogin2.php';
 require_once '../conexion.php';
 require_once '../styles.php';
@@ -9,6 +10,7 @@ require_once '../functions.php';
 require_once 'configModule.php';
 
 $dbh = new Conexion();
+
 
 $sqlX="SET NAMES 'utf8'";
 $stmtX = $dbh->prepare($sqlX);
@@ -376,7 +378,7 @@ while ($row = $cont->fetch(PDO::FETCH_BOUND)) {
                            <div class="h-divider"></div>
                          </div>
 
-                       <script>var nfac=[];itemFacturas.push(nfac);var nest=[];itemEstadosCuentas.push(nest);</script>
+                       
 						 <?php
 						      $stmt = $dbh->prepare("SELECT * FROM facturas_compra where cod_comprobantedetalle=$codDet");
 				              $stmt->execute();

@@ -68,6 +68,7 @@ try {
     if(isset($_POST['cod_area'])){
         $cod_area = $_POST['cod_area'];
     }
+    $cod_tiposactivos=$_POST['cod_tiposactivos'];
     $cod_estadoactivofijo = 1;
 
 
@@ -75,11 +76,11 @@ try {
         $stmt = $dbh->prepare("INSERT INTO activosfijos(codigoactivo,tipoalta,fechalta,indiceufv,tipocambio,moneda,valorinicial,
         depreciacionacumulada,valorresidual,cod_depreciaciones,cod_tiposbienes,vidautilmeses, vidautilmeses_restante,estadobien,otrodato,cod_ubicaciones,
         cod_empresa,activo,cod_responsables_responsable,cod_responsables_autorizadopor, cod_af_proveedores, numerofactura,
-        bandera_depreciar, cod_unidadorganizacional,cod_area, cod_estadoactivofijo,cod_proy_financiacion,reevaluo,bandera_depreciado) values
+        bandera_depreciar, cod_unidadorganizacional,cod_area, cod_estadoactivofijo,cod_proy_financiacion,reevaluo,tipo_af) values
         (:codigoactivo, :tipoalta, :fechalta, :indiceufv, :tipocambio, :moneda, :valorinicial, :depreciacionacumulada, :valorresidual,
         :cod_depreciaciones, :cod_tiposbienes, :vidautilmeses, :vidautilmeses_restante, :estadobien, :otrodato, :cod_ubicaciones, :cod_empresa, :activo,
         :cod_responsables_responsable, :cod_responsables_autorizadopor, :cod_af_proveedores, :numerofactura,
-        :bandera_depreciar, :cod_unidadorganizacional, :cod_area ,:cod_estadoactivofijo,:cod_proy_financiacion,:reevaluo,:bandera_depreciar)");
+        :bandera_depreciar, :cod_unidadorganizacional, :cod_area ,:cod_estadoactivofijo,:cod_proy_financiacion,:reevaluo,:cod_tiposactivos)");
 
         //necesito guardar en una segunda tabla: activofijos_asignaciones
 
@@ -120,6 +121,8 @@ try {
         $stmt->bindParam(':cod_estadoactivofijo', $cod_estadoactivofijo);
         $stmt->bindParam(':cod_proy_financiacion', $cod_proy_finan);
         $stmt->bindParam(':reevaluo', $reevaluo);
+        $stmt->bindParam(':cod_tiposactivos', $cod_tiposactivos);
+        
         
         //$stmt->bindParam(':created_at', $created_at);
         //$stmt->bindParam(':created_by', $created_by);
@@ -167,7 +170,7 @@ try {
         if (move_uploaded_file($_FILES['image']['tmp_name'], $archivo))
             echo "correcto";
         else
-            echo "error".$_FILES["image"]["error"];//sale error 0
+            echo "Sin imagen".$_FILES["image"]["error"];//sale error 0
 
         $flagSuccess=$stmt3->execute();
         //$stmt3->debugDumpParams();
@@ -204,7 +207,7 @@ try {
         cod_depreciaciones=:cod_depreciaciones,cod_tiposbienes=:cod_tiposbienes,
         vidautilmeses=:vidautilmeses,estadobien=:estadobien,otrodato=:otrodato,cod_empresa=:cod_empresa,activo=:activo,
         vidautilmeses_restante=:vidautilmeses_restante,cod_af_proveedores=:cod_af_proveedores,
-        numerofactura=:numerofactura, bandera_depreciar = :bandera_depreciar,cod_proy_financiacion=:cod_proy_financiacion where codigo = :codigo");
+        numerofactura=:numerofactura, bandera_depreciar = :bandera_depreciar,cod_proy_financiacion=:cod_proy_financiacion,tipo_af=:cod_tiposactivos where codigo = :codigo");
         //bind
         //created_at=:created_at,created_by=:created_by,modified_at=:modified_at,modified_by=:modified_by,
        
@@ -230,6 +233,7 @@ try {
         $stmt->bindParam(':numerofactura', $numerofactura);
         $stmt->bindParam(':bandera_depreciar', $bandera_depreciar);
         $stmt->bindParam(':cod_proy_financiacion', $cod_proy_finan);
+        $stmt->bindParam(':cod_tiposactivos', $cod_tiposactivos);
 
         $flagSuccess=$stmt->execute();
 

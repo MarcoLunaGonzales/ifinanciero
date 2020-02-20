@@ -63,7 +63,30 @@ function showAlertSuccessErrorCajachica($bandera, $url){
       </script>";
    }
 }
-
+function showAlertSuccessErrorDepreciaciones($bandera, $url){
+   if($bandera==true){
+      echo "<script>
+         alerts.showSwal('success-message','$url');
+      </script>";
+   }
+   if ($bandera==false){
+      echo "<script>
+         alerts.showSwal('error-messageDepreciaciones','$url');
+      </script>";
+   }
+}
+function showAlertSuccessErrorDepreciaciones2($bandera, $url){
+   if($bandera==true){
+      echo "<script>
+         alerts.showSwal('success-message','$url');
+      </script>";
+   }
+   if ($bandera==false){
+      echo "<script>
+         alerts.showSwal('error-messageDepreciaciones2','$url');
+      </script>";
+   }
+}
 function clean_string($string)
 {
  

@@ -209,7 +209,7 @@ $stmt1->bindColumn('nombre_unidadO', $nombre_unidadO);
                                     <td class="text-center small"><?=formatNumberDec($d8_depreciacionperiodo); ?></td>
                                     <td class="text-center small"><?=formatNumberDec($d9_depreciacionacumuladaactual); ?></td>
                                     <td class="text-center small"><?=formatNumberDec($d10_valornetobs); ?></td>
-                                    <td class="text-center small"><?=formatNumberDec($d11_vidarestante); ?></td>
+                                    <td class="text-center small"><?=$d11_vidarestante; ?></td>
                                 </tr>
                         <?php } ?>
                                   <!-- el ultimo no sale -->

@@ -101,7 +101,7 @@ if ($codigo > 0){
                                     <?php 
                                         while ($row = $stmtPersonal->fetch()){                                             
                                        ?>
-                                       <option value="<?=$row["codigo"];?>" <?=($cod_personal==$row['codigo'])?"selected":"";?> <?=($codigo>0)?"disabled":"";?> >
+                                       <option value="<?=$row["codigo"];?>" <?=($cod_personal==$row['codigo'])?"selected":"";?> >
                                             <?=$row["paterno"].' '.$row["materno"].' '.$row["primer_nombre"];?>
                                         </option>
                                         <?php 

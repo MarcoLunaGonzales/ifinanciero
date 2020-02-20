@@ -49,6 +49,20 @@ function abrevMes($month){
   if($month==11){    return ("Nov");  }         
   if($month==12){    return ("Dic");  }             
 }
+function nombreMes($month){
+  if($month==1){    return ("Enero");   }
+  if($month==2){    return ("Febrero");  }
+  if($month==3){    return ("Marzo");  }
+  if($month==4){    return ("Abril");  }
+  if($month==5){    return ("Mayo");  }
+  if($month==6){    return ("Junio");  } 
+  if($month==7){    return ("Julio");  }
+  if($month==8){    return ("Agosto");  }
+  if($month==9){    return ("Septiembre");  }
+  if($month==10){    return ("Octubre");  }         
+  if($month==11){    return ("Noviembre");  }         
+  if($month==12){    return ("Diciembre");  }             
+}
 
 function nameGestion($codigo){
    $dbh = new Conexion();
@@ -92,6 +106,17 @@ function nameCuenta($codigo){
    }
    return($nombreX);
 }
+function nameCuentaCC($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT nombre FROM plan_cuentas_cajachica where codigo=:codigo");
+   $stmt->bindParam(':codigo',$codigo);
+   $stmt->execute();
+   $nombreX=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $nombreX=$row['nombre'];
+   }
+   return($nombreX);
+}
 function nameCuentaAux($codigo){
    $dbh = new Conexion();
    $stmt = $dbh->prepare("SELECT nombre FROM cuentas_auxiliares where codigo=:codigo");
@@ -106,6 +131,16 @@ function nameCuentaAux($codigo){
 function obtieneNumeroCuenta($codigo){
    $dbh = new Conexion();
    $stmt = $dbh->prepare("SELECT numero FROM plan_cuentas where codigo=:codigo");
+   $stmt->bindParam(':codigo',$codigo);
+   $stmt->execute();
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $nombreX=$row['numero'];
+   }
+   return($nombreX);
+}
+function obtieneNumeroCuentaCC($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT numero FROM plan_cuentas_cajachica where codigo=:codigo");
    $stmt->bindParam(':codigo',$codigo);
    $stmt->execute();
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -165,7 +200,56 @@ function obtieneNuevaCuenta($codigo){//ESTA FUNCION TRABAJA CON UNA CUENTA FORMA
   //echo $nuevaCuenta;
   return($nuevaCuenta);
 }
+function obtieneNuevaCuentaCC($codigo){//ESTA FUNCION TRABAJA CON UNA CUENTA FORMATEADA CON PUNTOS
+   $dbh = new Conexion();
+   $nivelCuenta=buscarNivelCuentacc($codigo);
+   $cuentaSinFormato=str_replace(".","",$codigo);
+   $nivelCuentaBuscado=$nivelCuenta+1;
+   
+   //echo "nivel cta: ".$nivelCuentaBuscado; 
 
+   list($nivel1, $nivel2, $nivel3, $nivel4, $nivel5) = explode('.', $codigo);
+   
+   $stmt = $dbh->prepare("SELECT (max(numero))numero FROM plan_cuentas_cajachica where cod_padre=:codigo");
+   $stmt->bindParam(':codigo',$cuentaSinFormato);
+   $stmt->execute();
+   $cuentaHijoMaxima="";
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $cuentaHijoMaxima=$row['numero'];
+   }
+   //echo "max:".$cuentaHijoMaxima;
+   //ACA SACAMOS EL NUMERO DEL NIVEL MAXIMO
+   $numeroIncrementar=0;
+   if($nivelCuentaBuscado==2){
+      $numeroIncrementar=substr($cuentaHijoMaxima, 1,2);
+   }
+   if($nivelCuentaBuscado==3){
+      $numeroIncrementar=substr($cuentaHijoMaxima, 3,2);
+   }
+   if($nivelCuentaBuscado==4){
+      $numeroIncrementar=substr($cuentaHijoMaxima, 5,2);
+   }
+   if($nivelCuentaBuscado==5){
+      $numeroIncrementar=substr($cuentaHijoMaxima, 7,3);
+   }
+   $numeroIncrementar=($numeroIncrementar*1)+1;
+
+  $nuevaCuenta="";
+  if($nivelCuentaBuscado==3){
+    $numeroIncremetarConCeros = str_pad($numeroIncrementar, 2, "0", STR_PAD_LEFT);
+    $nuevaCuenta=$nivel1.$nivel2.$numeroIncremetarConCeros."00"."000";
+  }
+  if($nivelCuentaBuscado==4){
+    $numeroIncremetarConCeros = str_pad($numeroIncrementar, 2, "0", STR_PAD_LEFT);
+    $nuevaCuenta=$nivel1.$nivel2.$nivel3.$numeroIncremetarConCeros."000";
+  }
+  if($nivelCuentaBuscado==5){
+    $numeroIncremetarConCeros = str_pad($numeroIncrementar, 3, "0", STR_PAD_LEFT);
+    $nuevaCuenta=$nivel1.$nivel2.$nivel3.$nivel4.$numeroIncremetarConCeros;
+  }
+  //echo $nuevaCuenta;
+  return($nuevaCuenta);
+}
 function formateaPlanCuenta($cuenta, $nivel){
   $tabs="";
   for($i=1;$i<=$nivel;$i++){
@@ -245,6 +329,51 @@ function buscarNivelCuenta($cuenta){
     } 
   }
   return $nivelCuenta;
+}
+
+function buscarNivelCuentaCC($cuenta){
+  list($nivel1, $nivel2, $nivel3, $nivel4, $nivel5) = explode('.', $cuenta);
+  $nivelCuenta=0;
+  if($nivel5!="000"){
+    $cuentaPadre=$nivel1.$nivel2.$nivel3.$nivel4."000";
+    $cuentaBuscar=buscarCuentaPadreCC($cuentaPadre);
+    if($cuentaBuscar!=""){
+      $nivelCuenta=5;
+    }
+  }
+  if($nivel5=="000" && $nivel4!="00"){
+    $cuentaPadre=$nivel1.$nivel2.$nivel3."00"."000";
+    $cuentaBuscar=buscarCuentaPadreCC($cuentaPadre);
+    if($cuentaBuscar!=""){
+      $nivelCuenta=4;
+    } 
+  }
+  if($nivel5=="000" && $nivel4=="00" && $nivel3!="00"){
+    $cuentaPadre=$nivel1.$nivel2."00"."00"."000";
+    $cuentaBuscar=buscarCuentaPadreCC($cuentaPadre);
+    if($cuentaBuscar!=""){
+      $nivelCuenta=3;
+    } 
+  }
+  if($nivel5=="000" && $nivel4=="00" && $nivel3=="00" && $nivel2!="00"){
+    $cuentaPadre=$nivel1."00"."00"."00"."000";
+    $cuentaBuscar=buscarCuentaPadreCC($cuentaPadre);
+    if($cuentaBuscar!=""){
+      $nivelCuenta=2;
+    } 
+  }
+  return $nivelCuenta;
+}
+
+function buscarCuentaPadreCC($cuenta){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT nombre FROM plan_cuentas_cajachica where numero='$cuenta'");
+   $stmt->execute();
+   $nombreX="";
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $nombreX=$row['nombre'];
+   }
+   return($nombreX);
 }
 
 function obtenerCodigoComprobante(){
@@ -3183,6 +3312,20 @@ function descargarPDF1($nom,$html){
   $canvas = $mydompdf->get_canvas();
   $canvas->page_text(500, 25, "", Font_Metrics::get_font("sans-serif"), 10, array(0,0,0)); 
   $mydompdf->set_base_path('assets/libraries/plantillaPDF.css');
+  $mydompdf->stream($nom.".pdf", array("Attachment" => false));
+}
+function descargarPDFCajaChica($nom,$html){
+  //aumentamos la memoria  
+  ini_set("memory_limit", "128M");
+  // Cargamos DOMPDF
+  require_once 'assets/libraries/dompdf/dompdf_config.inc.php';
+  $mydompdf = new DOMPDF();
+  ob_clean();
+  $mydompdf->load_html($html);
+  $mydompdf->render();
+  $canvas = $mydompdf->get_canvas();
+  $canvas->page_text(500, 25, "", Font_Metrics::get_font("sans-serif"), 10, array(0,0,0)); 
+  $mydompdf->set_base_path('assets/libraries/plantillaPDFCajaChica.css');
   $mydompdf->stream($nom.".pdf", array("Attachment" => false));
 }
 

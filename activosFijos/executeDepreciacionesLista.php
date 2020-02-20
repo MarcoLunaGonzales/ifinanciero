@@ -41,8 +41,8 @@ $stmt->bindColumn('estado', $estado);
     <tr>
         <th>Mes</th>
         <th>Gestion</th>
-        <th>Ufv Inicio</th>
-        <th>Ufv Final</th>
+        <!-- <th>Ufv Inicio</th>
+        <th>Ufv Final</th> -->
         <th class="text-center">Detalle</th>
         <th class="text-center">Generar Comprobante</th>
     </tr>
@@ -51,10 +51,10 @@ $stmt->bindColumn('estado', $estado);
 <?php $index=1;
 while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { ?>
     <tr>
-        <td><?=$mes;?></td>
+        <td><?=nombreMes($mes);?></td>
         <td><?=$gestion;?></td>
-        <td><?=$ufvinicio;?></td>
-        <td><?=$ufvfinal;?></td>
+        <!-- <td><?=$ufvinicio;?></td>
+        <td><?=$ufvfinal;?></td> -->
         <td class="text-center">
           <a target="_blank" href="<?=$printDepreciacionMes;?>?codigo=<?=$codigo;?>">
             <i class="material-icons" title='Ver Detalle' style="color:blue">assignment</i></a>

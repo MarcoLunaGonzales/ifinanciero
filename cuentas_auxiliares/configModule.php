@@ -17,4 +17,15 @@ $urlSave="cuentas_auxiliares/save.php";
 $urlSaveEdit="cuentas_auxiliares/saveEdit.php";
 $urlSaveDelete="";
 
+
+$urlListCC="../index.php?opcion=listCuentasAuxCC&codigo=$codigo";
+$urlList2CC="index.php?opcion=listCuentasAuxCC&codigo=$codigo";
+$urlRegisterCC="index.php?opcion=registerCuentaAuxCC";
+$urlRegister2CC="index.php?opcion=registerCuentaAuxCC";
+$urlEditCC="index.php?opcion=editCuentaAuxCC";
+$urlDeleteCC="index.php?opcion=deleteCuentaAuxCC";
+$urlSaveCC="cuentas_auxiliares/saveCC.php";
+$urlSaveEditCC="cuentas_auxiliares/saveEditCC.php";
+$urlSaveDeleteCC="";
+
 ?>

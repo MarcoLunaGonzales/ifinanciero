@@ -102,6 +102,20 @@ alerts = {
           location.href=url;
       });
     }
+    else if(type == 'error-messageDepreciaciones'){
+      swal("INFORMACION!", "La depreciación de éste mes ya fue realizada. Gracias!.", "warning")
+          .then((value) => {
+          location.href=url;
+      });
+    }
+    else if(type == 'error-messageDepreciaciones2'){
+      swal("LO SIENTO! :(", "Al parecer estás obviando algún mes. Por favor verifique los meses depreciados. Gracias!.", "warning")
+          .then((value) => {
+          location.href=url;
+      });
+    }
+
+    
 
 
   },

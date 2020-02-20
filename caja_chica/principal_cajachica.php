@@ -41,10 +41,10 @@ $stmt->bindColumn('nombre_area', $nombre_area);
                 </div>
                 <div class="card-body">
                   <h4 class="text-center">Seleccionar una Caja Chica</h4>
-
+                  <div class="row div-center text-center">
                   <?php
                   while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {?>
-                    <div class="row div-center text-center">
+                    
             
                        <div class="card text-white mx-auto" style="background-color:#d32f2f; width: 18rem;">
                          <a href="?opcion=ListaCajaChica&codigo=<?=$codigo?>" >

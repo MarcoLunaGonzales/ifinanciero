@@ -1267,6 +1267,7 @@
 			$cod_cc=$_GET['cod_cc'];
 			require_once('caja_chica/detallecajachica_form.php');
 		}
+
 		if ($_GET['opcion']=='DetalleCajaChicaSave') {
 			require_once('caja_chica/detallecajachica_save.php');
 		}
@@ -1284,6 +1285,46 @@
 		if ($_GET['opcion']=='ListaRendicionesDetalle') {
 			$codigo=$_GET['codigo'];
 			require_once('caja_chica/rendicionesdetalle_list.php');
+		}
+		//plan de cuentas caja chica
+		if ($_GET['opcion']=='listPlanCuentasCajaChica') {
+			require_once('caja_chica/plandecuentas_list.php');
+		}
+		if ($_GET['opcion']=='registerPlanCuentaCC') {
+			$codigo=$_GET['codigo'];
+			require_once('caja_chica/plandecuentas_registrer.php');
+		}
+		if ($_GET['opcion']=='editPlanCuentaCC') {
+			$codigo=$_GET['codigo'];
+			require_once('caja_chica/plandecuentas_edit.php');
+		}
+		if ($_GET['opcion']=='deletePlanCuentaCC') {
+			$codigo=$_GET['codigo'];
+			require_once('caja_chica/plandecuentas_delete.php');
+		}
+
+		if ($_GET['opcion']=='listConfigCuentas') {
+			require_once('configuracion_cuentas/list.php');
+		}
+
+
+		if ($_GET['opcion']=='listCuentasAuxCC') {
+			$codigo=$_GET['codigo'];
+			require_once('cuentas_auxiliares/listCC.php');
+		}
+		if ($_GET['opcion']=='registerCuentaAuxCC') {
+			$codigo=$_GET['codigo'];
+			require_once('cuentas_auxiliares/registerCC.php');
+		}
+		if ($_GET['opcion']=='editCuentaAuxCC') {
+			$codigo=$_GET['codigo'];
+			$codigo_padre=$_GET['codigo_padre'];
+			require_once('cuentas_auxiliares/editCC.php');
+		}
+		if ($_GET['opcion']=='deleteCuentaAuxCC') {
+			$codigo=$_GET['codigo'];
+			$codigo_padre=$_GET['codigo_padre'];
+			require_once('cuentas_auxiliares/saveDeleteCC.php');
 		}
 		
 

@@ -14,11 +14,11 @@ $codigo=$codigoPadre;
 require_once 'configModule.php';
 
 // Prepare
-$stmt = $dbh->prepare("UPDATE $table set cod_estadoreferencial=2 where codigo=:codigo");
+$stmt = $dbh->prepare("UPDATE cuentas_auxiliares_cajachica set cod_estadoreferencial=2 where codigo=:codigo");
 // Bind
 $stmt->bindParam(':codigo', $codigoX);
 
 $flagSuccess=$stmt->execute();
-showAlertSuccessError($flagSuccess,$urlList2);
+showAlertSuccessError($flagSuccess,$urlListCC2);
 
 ?>

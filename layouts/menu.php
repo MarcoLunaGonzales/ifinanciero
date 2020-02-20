@@ -448,6 +448,12 @@ if($menuModulo==0){
                     <span class="sidebar-normal"> Plan de Cuentas </span>
                   </a>
                 </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listPlanCuentasCajaChica">
+                    <span class="sidebar-mini"> PCCC </span>
+                    <span class="sidebar-normal"> Plan de Cuentas Caja Chica </span>
+                  </a>
+                </li>
 
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listPartidasPres">

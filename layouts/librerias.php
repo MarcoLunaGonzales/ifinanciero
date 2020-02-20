@@ -1,5 +1,6 @@
   <!--   Core JS Files   -->
 <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.7.0/css/all.css' integrity='sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ' crossorigin='anonymous'>
+
   <script src="assets/js/core/jquery.min.js"></script>
   <script src="assets/js/core/popper.min.js"></script>
   <script src="assets/js/core/bootstrap-material-design.min.js"></script>
@@ -42,7 +43,6 @@
   <script src="assets/js/plugins/bootstrap-notify.js"></script>
   <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
   <script src="assets/js/material-dashboard.js?v=2.1.0"></script>
-
   <script src="assets/autocomplete/awesomplete.min.js"></script>
   <!-- Material Dashboard DEMO methods, don't include it in your project! -->
   <script src="assets/alerts/alerts.js"></script>
@@ -50,6 +50,9 @@
   <script src="assets/alerts/functionsGeneral.js"></script>
 
   <script src="assets/demo/demo.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.11/jquery.mask.min.js"></script>
+
 
 
   <script>
@@ -260,12 +263,20 @@
           "pageLength": 50
          }
         );
+     
      $("#form_partidaspresupuestarias").submit(function(e) {
           var datos=alertDatosTabla();
           $('<input />').attr('type', 'hidden')
             .attr('name', 'cuentas2')
             .attr('value', JSON.stringify(datos))
             .appendTo('#form_partidaspresupuestarias');     
+     });
+     $("#form_partidaspresupuestariasCC").submit(function(e) {
+          var datos=alertDatosTabla();
+          $('<input />').attr('type', 'hidden')
+            .attr('name', 'cuentas2')
+            .attr('value', JSON.stringify(datos))
+            .appendTo('#form_partidaspresupuestariasCC');     
      });
 
      $("#form_bonosgrupos").submit(function(e) {
@@ -283,9 +294,37 @@
     } );
   </script>
 
-
+  
   <script type="text/javascript">
+
+
+
     $(document).ready(function() {
+      $("#con_fac").mask("AA-AA-AA-AA-AA-AA-AA");
+      $("#formRegFactCajaChica").submit(function(e) {
+      $('<input />').attr('type', 'hidden')
+            .attr('name', 'facturas')
+            .attr('value', JSON.stringify(itemFacturasDCC))
+            .appendTo('#formRegFactCajaChica');
+      
+      });
+      document.getElementById('qrquincho').addEventListener('change', readSingleFileDCC, false);
+
+       $("#formRegFactRendiciones").submit(function(e) {
+      $('<input />').attr('type', 'hidden')
+            .attr('name', 'facturas')
+            .attr('value', JSON.stringify(itemFacturasDRC))
+            .appendTo('#formRegFactRendiciones');
+      
+      });
+      document.getElementById('qrquincho').addEventListener('change', readSingleFileDRC, false);
+    // document.getElementById('archivos').addEventListener('change', archivosPreviewDCC, false);
+    // document.getElementById('archivosDetalle').addEventListener('change', archivosPreviewDetalleDCC, false);
+
+
+
+
+      
         $('#tablePaginator50').DataTable( {
             "pageLength": 50,
             "language": {
