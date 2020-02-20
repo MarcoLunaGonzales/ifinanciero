@@ -20,7 +20,7 @@ SELECT cod_area,(select a.nombre from areas a where a.codigo=cod_area )as nombre
 $stmt = $db->prepare($sqlUO);
 $stmt->execute();
 ?>
-<select name="cod_area" id="cod_area" class="selectpicker form-control" data-style="btn btn-primary" data-show-subtext="true" data-live-search="true">
+<select name="cod_area" id="cod_area" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" data-show-subtext="true" data-live-search="true">
     <?php 
     	while ($row = $stmt->fetch()){ 
 	?>

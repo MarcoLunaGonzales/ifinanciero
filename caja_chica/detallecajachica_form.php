@@ -125,7 +125,7 @@ if ($codigo > 0){
                         <label class="col-sm-2 col-form-label">Tipo Doc.</label>
                         <div class="col-sm-4">
                             <div class="form-group">
-                                <select name="tipo_documento" id="tipo_documento" class="selectpicker form-control" data-style="btn btn-info">                                    
+                                <select name="tipo_documento" id="tipo_documento" class="selectpicker form-control form-control-sm" data-style="btn btn-info">                                    
                                     <?php                                     
                                     $stmtTipoDoc = $dbh->query("SELECT td.codigo,td.nombre from tipos_documentocajachica td where td.tipo=1 order by nombre");
                                     while ($row = $stmtTipoDoc->fetch()){ ?>
@@ -165,7 +165,7 @@ if ($codigo > 0){
                       <label class="col-sm-2 col-form-label">Personal</label>
                       <div class="col-sm-8">
                         <div class="form-group">
-                            <select name="cod_personal" id="cod_personal" class="selectpicker form-control" data-style="btn btn-info" required="true" data-show-subtext="true" data-live-search="true" onChange="ajaxCajaCPersonalUO(this);">
+                            <select name="cod_personal" id="cod_personal" class="selectpicker form-control form-control-sm" data-style="btn btn-info" required="true" data-show-subtext="true" data-live-search="true" onChange="ajaxCajaCPersonalUO(this);">
                                 <option value=""></option>
                                 <?php 
                                 $querypersonal = "SELECT codigo,CONCAT_WS(' ',paterno,materno,primer_nombre)AS nombre from personal where cod_estadoreferencial=1 order by nombre";
@@ -189,7 +189,7 @@ if ($codigo > 0){
                                             $stmt = $dbh->prepare($sqlUO);
                                             $stmt->execute();
                                             ?>
-                                            <select name="cod_uo" id="cod_uo" class="selectpicker form-control" data-style="btn btn-primary" data-show-subtext="true" data-live-search="true"  >
+                                            <select name="cod_uo" id="cod_uo" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" data-show-subtext="true" data-live-search="true"  >
                                                 <?php 
                                                     while ($row = $stmt->fetch()){ 
                                                 ?>
@@ -217,7 +217,7 @@ if ($codigo > 0){
                                             $stmt = $dbh->prepare($sqlUO);
                                             $stmt->execute();
                                             ?>
-                                            <select name="cod_area" id="cod_area" class="selectpicker form-control" data-style="btn btn-primary" data-show-subtext="true" data-live-search="true" >
+                                            <select name="cod_area" id="cod_area" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" data-show-subtext="true" data-live-search="true" >
                                                 <?php 
                                                     while ($row = $stmt->fetch()){ 
                                                 ?>
