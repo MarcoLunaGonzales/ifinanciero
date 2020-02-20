@@ -13,7 +13,7 @@ $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//try
 
 $codigo = $_GET["codigo"];//codigoactivofijo
 try{
-    $stmt = $dbh->prepare("SELECT * from caja_chicadetalle where cod_estadoreferencial=1 and cod_cajachica=$codigo");
+    $stmt = $dbh->prepare("SELECT * from caja_chicadetalle where cod_estadoreferencial=1 and cod_cajachica=$codigo  ORDER BY 1");
     $stmt->execute();    
         //==================================================================================================================
     //datos caja chica
@@ -105,12 +105,14 @@ $html.=  '<header class="header">'.
             {
               //nro factura
               $cod_cajachicadetalle=$row['codigo'];
-              $stmtFactura = $dbh->prepare("SELECT nro_factura from facturas_detalle_cajachica where cod_cajachicadetalle=cod_cajachicadetalle");
+              $stmtFactura = $dbh->prepare("SELECT nro_factura from facturas_detalle_cajachica where cod_cajachicadetalle=$cod_cajachicadetalle");
               $stmtFactura->execute();
               $cont_facturas=0;
+              $nro_factura='';
               while ($rowFacturas = $stmtFactura->fetch()) 
               {
                 $nro_factura=$rowFacturas['nro_factura'];
+                $cont_facturas++;
               }
               if($cont_facturas>1)$nro_factura="VARIOS";
 
@@ -138,7 +140,6 @@ $html.=  '<header class="header">'.
                             '<td class="text-right small"></td>'.
                             '<td class="text-right small">'.formatNumberDec($saldo_inicial).'</td>
                     </tr>';
-
       $html.='</tbody>';
 $html.=    '</table>';
             
@@ -174,8 +175,7 @@ $html.=    '</table>';
                           <td width="8%" class="text-right small"><b>'.formatNumberDec($total_egresos).'</b></td>
                           <td width="8%"></td>
                         </tr>'.
-                       '</tbody>'.
-                        
+                       '</tbody>'.                        
                     '</table>'; 
 
 $html.='</body>'.

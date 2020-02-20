@@ -115,10 +115,8 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                         </tr>
                       </thead>
                       <tbody>
-                        <?php $index=1;
+                        <?php $index=1;$idFila=1;
                         while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
-                          
-                          
                           if($monto==$monto_rendicion)
                             $labelM='<span class="badge badge-success">';                            
                           else
@@ -151,18 +149,18 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                                         $exento=$row['exento'];
                                         $autorizacion=$row['nro_autorizacion'];
                                         $control=$row['codigo_control'];
-                                        ?><script>abrirFacturaDCC(<?=$codigo_detalle_Cajachica?>,'<?=$nit?>',<?=$factura?>,'<?=$fechaFac?>','<?=$razon?>',<?=$importe?>,<?=$exento?>,'<?=$autorizacion?>','<?=$control?>');</script><?php
+                                        ?><script>abrirFacturaDCC(<?=$idFila?>,'<?=$nit?>',<?=$factura?>,'<?=$fechaFac?>','<?=$razon?>',<?=$importe?>,<?=$exento?>,'<?=$autorizacion?>','<?=$control?>');</script><?php
                                     }
                               ?> 
                                 
 
-                               <!--  <a href='<?=$urlFormAgregarFacturas;?>&codigo=<?=$codigo_detalle_Cajachica;?>&cod_tcc=<?=$cod_tcc?>&cod_cc=<?=$cod_cajachica?>' title="Facturas" id="boton_fac<?=$codigo_detalle_Cajachica;?>" class="btn btn-info btn-sm btn-fab">
+                               <!--  <a href='<?=$urlFormAgregarFacturas;?>&codigo=<?=$idFila;?>&cod_tcc=<?=$cod_tcc?>&cod_cc=<?=$cod_cajachica?>' title="Facturas" id="boton_fac<?=$idFila;?>" class="btn btn-info btn-sm btn-fab">
                                   <i class="material-icons">featured_play_list</i>
                                 </a> -->
                                
-                                <a href='#' title="Facturas" id="boton_fac<?=$codigo_detalle_Cajachica;?>" class="btn btn-info btn-sm btn-fab" onclick="listFacDCC(<?=$codigo_detalle_Cajachica;?>,'<?=$fecha;?>','<?=$observaciones;?>',<?=$monto;?>,<?=$nro_documento;?>);">
+                                <a href='#' title="Facturas" id="boton_fac<?=$idFila;?>" class="btn btn-info btn-sm btn-fab" onclick="listFacDCC(<?=$idFila;?>,'<?=$fecha;?>','<?=$observaciones;?>',<?=$monto;?>,<?=$nro_documento;?>,<?=$codigo_detalle_Cajachica?>);">
                                   <i class="material-icons">featured_play_list</i>
-                                  <span id="nfac<?=$codigo_detalle_Cajachica;?>" class="count bg-warning"></span>
+                                  <span id="nfac<?=$idFila;?>" class="count bg-warning"></span>
                                 </a>
                                 
                                 <a href='<?=$urlFormDetalleCajaChica;?>&codigo=<?=$codigo_detalle_Cajachica;?>&cod_tcc=<?=$cod_tcc?>&cod_cc=<?=$cod_cajachica?>' rel="tooltip" class="<?=$buttonEdit;?>">
@@ -177,7 +175,7 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                               
                               </td>
                           </tr>
-                        <?php $index++; } ?>
+                        <?php $index++;$idFila=$idFila+1; } ?>
                       </tbody>
                     
                     </table>
@@ -267,6 +265,7 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                         <input type="hidden" name="cod_cajachica" id="cod_cajachica" value="<?=$cod_cajachica;?>">
                         <input type="hidden" name="cod_tcc" id="cod_tcc" value="<?=$cod_tcc;?>">
                         <input class="form-control" type="hidden" name="cod_ccd" id="cod_ccd"/>
+                        <input type="hidden" name="cantidad_filas_ccd" id="cantidad_filas_ccd">
                         <div class="card" style="background: #e0e0e0">
                           <div class="card-body">
                             <div id="divResultadoListaFac">
@@ -287,13 +286,13 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                         <div class="card" style="background: #e0e0e0">
                           <div class="card-body">
                             <div class="row">
-                             <label class="col-sm-2 col-form-label">NIT</label>
+                             <label class="col-sm-2 col-form-label" style="color:#000000;">NIT</label>
                              <div class="col-sm-4">
                               <div class="form-group">
                                 <input class="form-control" type="text" name="nit_fac" id="nit_fac" required="true"/>
                               </div>
                               </div>
-                              <label class="col-sm-2 col-form-label">Nro. Factura</label>
+                              <label class="col-sm-2 col-form-label" style="color:#000000;">Nro. Factura</label>
                              <div class="col-sm-4">
                               <div class="form-group">
                                 <input class="form-control" type="number" name="nro_fac" id="nro_fac" required="true"/>
@@ -301,13 +300,13 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                               </div>
                             </div>
                             <div class="row">
-                             <label class="col-sm-2 col-form-label">Fecha</label>
+                             <label class="col-sm-2 col-form-label" style="color:#000000;">Fecha</label>
                              <div class="col-sm-4">
                               <div class="form-group">
                                 <input type="text" class="form-control datepicker" name="fecha_fac" id="fecha_fac" value="<?=$fechaActualModal?>">
                               </div>
                               </div>
-                              <label class="col-sm-2 col-form-label">Importe</label>
+                              <label class="col-sm-2 col-form-label" style="color:#000000;">Importe</label>
                              <div class="col-sm-4">
                               <div class="form-group">
                                 <input class="form-control" type="number" name="imp_fac" id="imp_fac" required="true"/>
@@ -318,13 +317,13 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                             <input class="form-control" type="hidden" name="exe_fac" id="exe_fac" required="true"/>
                             <!--No tiene funcion este campo-->
                             <div class="row">
-                             <label class="col-sm-2 col-form-label">Nro. Autorizaci&oacute;n</label>
+                             <label class="col-sm-2 col-form-label" style="color:#000000;">Nro. Autorizaci&oacute;n</label>
                              <div class="col-sm-4">
                               <div class="form-group">
                                 <input class="form-control" type="text" name="aut_fac" id="aut_fac" required="true"/>
                               </div>
                               </div>
-                              <label class="col-sm-2 col-form-label">Cod. Control</label>
+                              <label class="col-sm-2 col-form-label" style="color:#000000;">Cod. Control</label>
                              <div class="col-sm-4">
                               <div class="form-group">
                                 <input class="form-control" type="text" name="con_fac" id="con_fac" required="true"/>
@@ -332,7 +331,7 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                              </div>
                             </div>
                             <div class="row">
-                             <label class="col-sm-2 col-form-label">Razon Social</label>
+                             <label class="col-sm-2 col-form-label" style="color:#000000;">Razon Social</label>
                              <div class="col-sm-10">
                               <div class="form-group">
                                 <textarea class="form-control" name="razon_fac" id="razon_fac" value=""></textarea>

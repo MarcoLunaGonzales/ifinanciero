@@ -62,6 +62,7 @@ $stmt->bindColumn('fecha_dcc', $fecha_dcc);
                       </thead>
                       <tbody>
                         <?php $index=1;
+                        $idFila=1;
                         while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { 
                           
                           
@@ -85,7 +86,7 @@ $stmt->bindColumn('fecha_dcc', $fecha_dcc);
                               <td><?=$label.$nombre_estado."</span>";?></td>
                               
                               <td class="td-actions text-right">
-                                <script>var nfac=[];itemFacturasDRC.push(nfac);var nest=[];itemEstadosCuentas.push(nest);</script>
+                                <script>var nfac=[];itemFacturasDRC.push(nfac);</script>
                               <?php
                                 if($cod_estado==1){
                                   $stmtFCCD = $dbhU->prepare("SELECT * FROM facturas_detalle_cajachica where cod_cajachicadetalle=$codigo");
@@ -99,12 +100,12 @@ $stmt->bindColumn('fecha_dcc', $fecha_dcc);
                                         $exento=$row['exento'];
                                         $autorizacion=$row['nro_autorizacion'];
                                         $control=$row['codigo_control'];
-                                        ?><script>abrirFacturaDRC(<?=$codigo?>,'<?=$nit?>',<?=$factura?>,'<?=$fechaFac?>','<?=$razon?>',<?=$importe?>,<?=$exento?>,'<?=$autorizacion?>','<?=$control?>');</script><?php
+                                        ?><script>abrirFacturaDRC(<?=$idFila?>,'<?=$nit?>',<?=$factura?>,'<?=$fechaFac?>','<?=$razon?>',<?=$importe?>,<?=$exento?>,'<?=$autorizacion?>','<?=$control?>');</script><?php
                                     }
                               ?>
-                                <a href='#' title="Facturas" id="boton_fac<?=$codigo;?>" class="btn btn-success btn-sm btn-fab" onclick="listFacDRC(<?=$codigo;?>,'<?=$fecha_dcc;?>','<?=$observaciones;?>',<?=$monto_a_rendir;?>,0);">
+                                <a href='#' title="Facturas" id="boton_fac<?=$idFila;?>" class="btn btn-success btn-sm btn-fab" onclick="listFacDRC(<?=$idFila;?>,'<?=$fecha_dcc;?>','<?=$observaciones;?>',<?=$monto_a_rendir;?>,0,<?=$codigo?>);">
                                   <i class="material-icons">add</i>
-                                  <span id="nfac<?=$codigo;?>" class="count bg-warning"></span>
+                                  <span id="nfac<?=$idFila;?>" class="count bg-warning"></span>
                                 </a>
 
 
@@ -117,7 +118,7 @@ $stmt->bindColumn('fecha_dcc', $fecha_dcc);
                               
                               </td>
                           </tr>
-                        <?php $index++; } ?>
+                        <?php $index++;$idFila=$idFila+1; } ?>
                       </tbody>
                     
                     </table>
@@ -193,6 +194,7 @@ $stmt->bindColumn('fecha_dcc', $fecha_dcc);
                     <div class="tab-pane active" id="link110">
                       <form id="formRegFactRendiciones" class="form-horizontal" action="caja_chica/rendicionesdetalle_save.php" method="post" enctype="multipart/form-data">                        
                         <input class="form-control" type="hidden" name="cod_rd" id="cod_rd"/>
+                        <input type="hidden" name="cantidad_filas" id="cantidad_filas">
                         <div class="card" style="background: #e0e0e0">
                           <div class="card-body">
                             <div id="divResultadoListaFac">

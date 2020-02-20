@@ -498,8 +498,9 @@ function saveFactura(){
  }
 //modal desde caja chica
 var itemFacturasDCC =[];
-function listFacDCC(id,fecha,observaciones,monto,nro_dcc){
-  document.getElementById("cod_ccd").value=id;
+function listFacDCC(id,fecha,observaciones,monto,nro_dcc,codigo){
+  document.getElementById("cod_ccd").value=codigo;
+  document.getElementById("cantidad_filas_ccd").value=id;
 
   document.getElementById("fecha_dcc").value=fecha;
   document.getElementById("observaciones_dcc").value=observaciones;
@@ -559,21 +560,44 @@ function saveFacturaDCC(){
     autFac: $('#aut_fac').val(),
     conFac: $('#con_fac').val(),
     }
+  if($('#nit_fac').val()!=''){
+    if($('#nro_fac').val()!=''){
+      if($('#fecha_fac').val()!=''){        
+          if($('#imp_fac').val()!=''){
+            if($('#aut_fac').val()!=''){
+              if($('#con_fac').val()!=''){
+                if($('#razon_fac').val()!=''){
+                  itemFacturasDCC[index-1].push(factura);
+                  limpiarFormFacDCC();
+                  listarFactDCC(index);                
+                  $("#nfac"+index).html(itemFacturasDCC[index-1].length);
+                  $("#link110").addClass("active");$("#link111").removeClass("active");$("#link112").removeClass("active");
+                  $("#nav_boton1").addClass("active");$("#nav_boton2").removeClass("active");$("#nav_boton3").removeClass("active");                 
+                }else{
+                  alert('Campo "Razón Social" Vacío.');
+                }
+              }else{
+                alert('Campo "Cod. Control" Vacío.');
+              }
+            }else{
+              alert('Campo "Nro. Autorización" Vacío.');
+            }
+          }else{
+            alert('Campo "Importe" Vacío.');
+          }
+      }else{
+        alert('Campo "Fecha" Vacío.');
+      }  
+    }else{
+      alert('Campo "Nro. Factura" Vacío.');
+    }
     
-  //cargar el credito fiscal
-  //var iva=configuraciones[0].valor;
-  //var importeIva=parseFloat($('#imp_fac').val())*(iva/100);
-  //var anterior= obtenerImportesFacturaIva(index);
-  itemFacturasDCC[index-1].push(factura);
-  limpiarFormFacDCC();
-  listarFactDCC(index);
-  //$("#debe"+index).val(anterior+importeIva);
-  // if($("#debe"+index).length){
-  //  calcularTotalesComprobante();  
-  // } 
-  $("#nfac"+index).html(itemFacturasDCC[index-1].length);
-  $("#link110").addClass("active");$("#link111").removeClass("active");$("#link112").removeClass("active");
-  $("#nav_boton1").addClass("active");$("#nav_boton2").removeClass("active");$("#nav_boton3").removeClass("active");
+  }else{
+    alert('Campo "NIT" Vacío.');
+  }
+
+    
+  
 }
 function limpiarFormFacDCC(){
     $('#nit_fac').val('');$('#nro_fac').val('');$('#fecha_fac').val('');$('#razon_fac').val('');$('#imp_fac').val('');
@@ -656,9 +680,9 @@ function readSingleFileDCC(evt) {
 
 //modal desde rebdiciones
 var itemFacturasDRC=[];
-function listFacDRC(id,fecha,observaciones,monto,nro_dcc){
-  document.getElementById("cod_rd").value=id;
-
+function listFacDRC(id,fecha,observaciones,monto,nro_dcc,codigo){  
+  document.getElementById("cod_rd").value=codigo;
+  document.getElementById("cantidad_filas").value=id;
   document.getElementById("fecha_dcc").value=fecha;
   document.getElementById("observaciones_dcc").value=observaciones;
   document.getElementById("monto_dcc").value=monto;
@@ -1824,9 +1848,27 @@ function ajaxPersonalUbicacion(codigo_UO){
   ajax.send(null)
   
 }
-function ajaxCajaCPersonalArea(combo){
+
+function ajaxCajaCPersonalUO(combo){
   var contenedor;
   var codigo_personal=combo.value;
+  contenedor = document.getElementById('div_contenedor_uo');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'caja_chica/personalUOAjax.php?codigo_personal='+codigo_personal,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);
+      ajaxCajaCPersonalArea(codigo_personal);
+      
+      // ajaxPersonalUbicacion(codigo_personal);
+    }
+  }
+  ajax.send(null)  
+}
+function ajaxCajaCPersonalArea(codigo_personal){
+  var contenedor;
+  // var codigo_personal=combo.value;
   contenedor = document.getElementById('div_contenedor_area');
   ajax=nuevoAjax();
   ajax.open('GET', 'caja_chica/personalAreaAjax.php?codigo_personal='+codigo_personal,true);

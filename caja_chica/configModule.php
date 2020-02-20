@@ -43,6 +43,8 @@
 
 	$urlprint_cajachica="caja_chica/print_cajachica.php";
 
+	$urlprint_contabilizacion_cajachica="caja_chica/print_contabilizacion_cajachica.php";
+
 
 
 	

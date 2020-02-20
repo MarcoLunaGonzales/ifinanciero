@@ -15,18 +15,19 @@ $result=$stmtPersonal->fetch();
 $cod_uo=$result['cod_unidadorganizacional'];
 $cod_area=$result['cod_area'];
 
-$sqlUO="
-SELECT cod_area,(select a.nombre from areas a where a.codigo=cod_area )as nombre_areas from areas_organizacion where cod_estadoreferencial=1 and cod_unidad=$cod_uo";
+$sqlUO="SELECT codigo,nombre from unidades_organizacionales where cod_estado=1";
 $stmt = $db->prepare($sqlUO);
 $stmt->execute();
 ?>
-<select name="cod_area" id="cod_area" class="selectpicker form-control" data-style="btn btn-primary" data-show-subtext="true" data-live-search="true">
+<select name="cod_uo" id="cod_uo" class="selectpicker form-control" data-style="btn btn-primary" data-show-subtext="true" data-live-search="true">
     <?php 
     	while ($row = $stmt->fetch()){ 
 	?>
-      	 <option <?=($cod_area==$row["cod_area"])?"selected":"";?> value="<?=$row["cod_area"];?>"><?=$row["nombre_areas"];?></option>
+      	 <option <?=($cod_uo==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
      <?php 
  		} 
  	?>
  </select>
+
+
 

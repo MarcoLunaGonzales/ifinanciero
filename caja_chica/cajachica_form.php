@@ -20,7 +20,7 @@ $stmtControlador = $dbh->prepare($sqlControlador);
 $stmtControlador->execute();
 $resultControlador=$stmtControlador->fetch();
 $cod_estado_aux=$resultControlador['cod_estado'];
-if($cod_estado_aux==2 || $cod_estado_aux==null){
+if($cod_estado_aux==2 || $cod_estado_aux==null || $codigo>0){
     //por is es edit
     if ($codigo > 0){
         $codigo=$codigo;
