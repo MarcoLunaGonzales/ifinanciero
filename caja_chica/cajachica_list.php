@@ -96,7 +96,7 @@ $stmt->bindColumn('nombre_estado', $nombre_estado);
                               </a>
                               <label class="text-danger"> | </label>
                               <a  rel="tooltip" class="btn btn-danger" style="color:#ffffff;" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlDeleteCajaChica;?>&codigo=<?=$cod_cajachica;?>&cod_tcc=<?=$codigo_tipo_caja_Chica?>&cod_a=1')">
-                                  <i class="material-icons" title="Cerrar Caja Chica">network_locked</i>                                
+                                  <i class="material-icons" title="Cerrar Caja Chica">lock</i>                                
                                 </a>
                               <?php }?>
                                 <a href='<?=$urlprint_cajachica;?>?codigo=<?=$cod_cajachica;?>' target="_blank" rel="tooltip" class="btn btn-primary">
