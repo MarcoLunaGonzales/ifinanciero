@@ -272,6 +272,16 @@ function obtenerCodigoComprobante(){
    }
    return($codigoComprobante);
 }
+function obtenerCodigoSimulacionServicioDetalle(){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT IFNULL(max(c.codigo)+1,1)as codigo from simulaciones_serviciodetalle c");
+   $stmt->execute();
+   $codigoComprobante=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $codigoComprobante=$row['codigo'];
+   }
+   return($codigoComprobante);
+}
 function generarNumeroCeros($n,$num){
  $nr =strlen($num);
  $nnum="";
@@ -730,6 +740,17 @@ function obtenerPlantillaCostoUtilidad($codigo){
    $stmt->execute();
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       $valor=$row['utilidad_minimalocal'];
+  }
+  return $valor;
+}
+function obtenerPlantillaCostoCursosMes($codigo){
+  $dbh = new Conexion();
+   $valor=0;
+   $sql="SELECT cantidad_cursosmes from plantillas_costo where codigo=$codigo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['cantidad_cursosmes'];
   }
   return $valor;
 }
@@ -1435,6 +1456,35 @@ function obtenerMontoPorCuenta($numero,$unidad,$area,$fecha){
       $valor=obtenerValorConfiguracion(6);
       return redondearDecimal($sum/(int)$valor);
   }
+  function calcularCostosPresupuestariosValor($id,$unidad,$area,$fecha,$valor){
+     $sql="SELECT p.cod_partidapresupuestaria,p.cod_cuenta,c.numero FROM partidaspresupuestarias_cuentas p join plan_cuentas c on p.cod_cuenta=c.codigo where p.cod_partidapresupuestaria=$id";
+
+     //echo $sql;
+
+     $dbh = new Conexion(); 
+     $stmt = $dbh->prepare($sql);
+     $stmt->execute();
+     $sum=0;
+     $mes=date("m");
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      //$sum=33333;
+      $numero=trim($row['numero']);
+      $cuenta=$row['cod_cuenta'];
+      $tipoSim=obtenerValorConfiguracion(13);
+      if($tipoSim==1){
+       $saux= ejecutadoEgresosMes($unidad, $fecha, 12, $area, 1, $numero);
+       $saux=$saux/12;
+       $sum+=$saux; 
+      }else{
+       $sum+= ejecutadoEgresosMes($unidad, $fecha, $mes, $area, 0, $numero);
+      }
+      
+      //$sum+=(float)obtenerMontoPorCuenta($numero,$unidad,$area,$fecha);      
+    }
+    
+      return redondearDecimal($sum/(int)$valor);
+  }
+
   function calcularCostosPresupuestariosAuditoria($id,$unidad,$area,$fecha,$valor){
      $sql="SELECT p.cod_partidapresupuestaria,p.cod_cuenta,c.numero FROM partidaspresupuestarias_cuentas p join plan_cuentas c on p.cod_cuenta=c.codigo where p.cod_partidapresupuestaria=$id";
      $dbh = new Conexion(); 
@@ -1619,6 +1669,7 @@ where pc.codigo=$codigo and pgc.cod_tiposervicio=$tipo GROUP BY pgd.cod_plantill
   return array($totalImporte,$totalModulo,$totalLocal,$totalExterno);
    }
 
+
   function obtenerValorConfiguracion($id){
    $dbh = new Conexion();
    $stmt = $dbh->prepare("SELECT valor_configuracion from configuraciones c where id_configuracion=$id");
@@ -1630,6 +1681,16 @@ where pc.codigo=$codigo and pgc.cod_tiposervicio=$tipo GROUP BY pgd.cod_plantill
    return($codigoComprobante);
   }
 
+  function obtenerConfiguracionValorServicio($id){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT cod_claservicio from configuraciones_servicios c where cod_claservicio=$id");
+   $stmt->execute();
+   $retorno=false;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $retorno=true;
+   }
+   return $retorno;
+  }
 
   function nameTipoComprobante($codigo){
    $dbh = new Conexion();
@@ -2224,6 +2285,24 @@ function obtenerDetallePlantillaServicioTipoServicio($plantilla){
    $stmt->execute();
    return $stmt;
 }
+function obtenerListaPreciosPlantillaCosto($plantilla,$codigo){
+  $dbh = new Conexion();
+  $sql="";
+  $sql="SELECT p.* FROM precios_plantillacosto p where p.cod_plantillacosto=$plantilla and codigo=$codigo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+}
+
+function obtenerPorcentajesPreciosPlantillaCosto(){
+  $dbh = new Conexion();
+  $sql="";
+  $sql="SELECT p.* FROM configuraciones_precioscosto p ";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+}
+
 function obtenerDetalleSimulacionCostosPartida($sim,$codigo){
   $dbh = new Conexion();
   $sql="";
@@ -2365,6 +2444,21 @@ function obtenerCantidadPersonalSimulacionEditado($codigo){
   }
   return $num;
 }
+function obtenerCantidadTotalPersonalSimulacionEditado($codigo){
+  $dbh = new Conexion();
+  $sql="";
+  $sql="SELECT * from simulaciones_servicios_auditores where cod_simulacionservicio=$codigo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute(); 
+   $num=0;
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
+  {
+    $cantidad=$row['cantidad_editado']*$row['dias'];
+    //$monto=$row['monto'];
+    $num+=$cantidad;
+  }
+  return $num;
+}
 function obtenerCostosPersonalSimulacionEditado($codigo){
   $dbh = new Conexion();
   $sql="";
@@ -2375,8 +2469,9 @@ function obtenerCostosPersonalSimulacionEditado($codigo){
   while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
   {
     $cantidad=$row['cantidad_editado'];
+    $dias=$row['dias'];
     $monto=$row['monto'];
-    $num+=$cantidad*$monto;
+    $num+=$cantidad*$monto*$dias;
   }
   return $num;
 }
@@ -2402,6 +2497,19 @@ function obtenerCantidadPersonalPlantilla($codPlantilla){
   $dbh = new Conexion();
   $sql="";
   $sql="SELECT sum(cantidad) as num FROM plantillas_servicios_auditores where cod_plantillaservicio=$codPlantilla";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute(); 
+   $num=0;
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
+  {
+   $num=$row['num'];
+  }
+  return $num;
+}
+function obtenerCantidadTotalPersonalPlantilla($codPlantilla){
+  $dbh = new Conexion();
+  $sql="";
+  $sql="SELECT sum(cantidad*dias) as num FROM plantillas_servicios_auditores where cod_plantillaservicio=$codPlantilla";
    $stmt = $dbh->prepare($sql);
    $stmt->execute(); 
    $num=0;
@@ -3308,6 +3416,18 @@ function obtenerNombrePersonal($codigo){
   }
   return $valor;
 }
+function obtenerNombreDetalleSimulacionVariables($codigo){
+    $dbh = new Conexion();
+   $valor=0;
+   $sql="SELECT glosa from simulaciones_serviciodetalle p where p.codigo=$codigo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['glosa'];
+  }
+  return $valor;
+}
+
 function obtenerValorConfiguracionEmpresa($codigo){
   $dbh = new Conexion();
   $valor="";
@@ -3400,6 +3520,146 @@ function obtenerListaProveedoresDelServicio(){
     // cerramos la sesión cURL
     curl_close ($ch);  
     return json_decode($remote_server_output);       
+}
+function obtenerTipodeCalculoRegistradoDetalle($codPlan,$codPar,$tp){
+   $dbh = new Conexion();
+  if($tp==1){
+     $stmt = $dbh->prepare("SELECT tipo_registro from plantillas_servicios_detalle where cod_plantillacosto=$codPlan and cod_partidapresupuestaria=$codPar limit 1");
+  }else{
+     $stmt = $dbh->prepare("SELECT tipo_registro from plantillas_servicios_detalle where cod_plantillatcp=$codPlan and cod_partidapresupuestaria=$codPar limit 1");  
+  }  
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['tipo_registro'];
+   }
+   return($valor);
+
+}
+function obtenerCostoTipoClienteSello($codSello,$codTipoC,$nacional){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT monto from costos_servicios_tipocliente where cod_configuracionserviciosello=$codSello and cod_tipocliente=$codTipoC and cod_tipoclientenacionalidad=$nacional");  
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['monto'];
+   }
+   return($valor);
+}
+function obtenerTipoCliente($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT cod_tipocliente from clientes where codigo=$codigo");  
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['cod_tipocliente'];
+   }
+   return($valor);
+}
+function obtenerTipoNacionalCliente($codigo){
+  $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT cod_tipoclientenacionalidad from clientes where codigo=$codigo");  
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['cod_tipoclientenacionalidad'];
+   }
+   return($valor);
+}
+function obtenerCodigoClienteSimulacion($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT cod_cliente from simulaciones_servicios where codigo=$codigo");  
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['cod_cliente'];
+   }
+   return($valor);
+}
+function obtenerDetallePlantillaServicioAuditoresCantidad($plantilla){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT p.* FROM plantillas_servicios_auditores p where p.cod_estadoreferencial=1 and p.cod_plantillaservicio=$plantilla");  
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor++;
+   }
+   return($valor);
+}
+function obtenerCantidadAuditoriasPlantilla($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT cantidad_auditorias from plantillas_servicios where codigo=$codigo");  
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['cantidad_auditorias'];
+   }
+   return($valor);
+}
+function obtenerPrecioRegistradoPlantilla($codigo){
+  $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT ingreso_presupuestado from plantillas_servicios where codigo=$codigo");  
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['ingreso_presupuestado'];
+   }
+   return($valor);
+}
+function obtenerCantidadSimulacionDetalleAuditor($codigo,$codAuditor){
+    $dbh = new Conexion();
+   $valor=0;
+   $sql="SELECT cantidad from simulaciones_ssd_ssa p where p.cod_simulacionservicio=$codigo and cod_simulacionservicioauditor=$codAuditor limit 1";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['cantidad'];
+  }
+  return $valor;
+}
+function obtenerDiasSimulacionDetalleAuditor($codigo,$codAuditor){
+    $dbh = new Conexion();
+   $valor=0;
+   $sql="SELECT dias from simulaciones_ssd_ssa p where p.cod_simulacionservicio=$codigo and cod_simulacionservicioauditor=$codAuditor limit 1";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['dias'];
+  }
+  return $valor;
+}
+function obtenerMontoSimulacionDetalleAuditor($codigo,$tipo,$codAuditor){
+    $dbh = new Conexion();
+   $valor=0;
+   $sql="SELECT monto from simulaciones_ssd_ssa p where p.cod_simulacionservicio=$codigo and cod_simulacionserviciodetalle=$tipo and cod_simulacionservicioauditor=$codAuditor";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['monto'];
+  }
+  return $valor;
+}
+function obtenerCantidadTotalSimulacionesServiciosDetalleAuditor($codigo,$tipo){
+    $dbh = new Conexion();
+   $valor=0;
+   $sql="SELECT cantidad,dias from simulaciones_ssd_ssa p where p.cod_simulacionservicio=$codigo and cod_simulacionserviciodetalle=$tipo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor+=$row['cantidad']*$row['dias'];
+  }
+  return $valor;
+}
+function obtenerMontoTotalSimulacionesServiciosDetalleAuditor($codigo,$tipo){
+    $dbh = new Conexion();
+   $valor=0;
+   $sql="SELECT cantidad,dias,monto from simulaciones_ssd_ssa p where p.cod_simulacionservicio=$codigo and cod_simulacionserviciodetalle=$tipo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor+=$row['cantidad']*$row['dias']*$row['monto'];
+  }
+  return $valor;
 }
 ?>
 

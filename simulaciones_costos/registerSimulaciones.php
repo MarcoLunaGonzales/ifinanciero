@@ -76,21 +76,14 @@ $dbh = new Conexion();
                       </div>
                       <div class="row" id="lista_precios">
                       </div>
-                      <!--<div class="row">
-                           <label class="col-sm-2 col-form-label">En IBNORCA:</label>
-                           <div class="col-sm-1"> 
+                      <div class="row">
+                           <label class="col-sm-2 col-form-label">Cantidad de M&oacute;dulos:</label>
+                           <div class="col-sm-7"> 
                              <div class="form-group">
-                                <div class="form-check">
-                                    <label class="form-check-label">
-                                      <input class="form-check-input" type="checkbox" id="ibnorca_check" name="ibnorca_check" value="1">
-                                      <span class="form-check-sign">
-                                        <span class="check"></span>
-                                      </span>
-                                    </label>
-                                  </div>
+                                 <input class="form-control" type="number" id="cantidad_modulos" name="cantidad_modulos" min="1" max="12" value="1">
                                </div>
                              </div>     
-                          </div>-->
+                      </div>
         
         </div>
         <br>

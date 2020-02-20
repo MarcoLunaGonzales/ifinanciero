@@ -13,6 +13,12 @@ $sqlX="SET NAMES 'utf8'";
 $codigo=$_GET['cod_plantillacosto'];
 $codPartida=$_GET['cod_partida'];
 $tipoCalculo=$_GET['tipo_calculomonto'];
+if($tipoCalculo==2){
+  $tipoCal=obtenerTipodeCalculoRegistradoDetalle($codigo,$codPartida,1);
+  if($tipoCal!=0){
+    $tipoCalculo=$tipoCal;
+  }
+}
 $cursos=$_GET['cursos'];
 $alumnos=$_GET['alumnos'];
 ?>

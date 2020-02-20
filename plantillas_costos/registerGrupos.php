@@ -56,6 +56,7 @@ if(isset($_GET['cod'])){
             $stmt->bindColumn('utilidad_minimaexterno', $utilidadFueraX);
             $stmt->bindColumn('cantidad_alumnoslocal', $alumnosLocalX);
             $stmt->bindColumn('cantidad_alumnosexterno', $alumnosExternoX);
+            $stmt->bindColumn('cantidad_cursosmes', $cantidadCursosMesX);
 ?>
 <div class="cargar-ajax d-none">
   <div class="div-loading text-center">
@@ -68,7 +69,7 @@ if(isset($_GET['cod'])){
 	<div id="contListaGrupos" class="container-fluid">
 			<input type="hidden" name="cantidad_filas" id="cantidad_filas" value="<?=$contadorRegistros;?>">
 			<input type="hidden" name="cod_plantilla" id="cod_plantilla" value="<?=$codigo?>">
-            <input type="hidden" name="cod_mescurso" id="cod_mescurso" value="<?=obtenerValorConfiguracion(6)?>">
+            
 			<div class="card">
 				<div class="card-header <?=$colorCard;?> card-header-text">
 					<div class="card-text">
@@ -78,6 +79,7 @@ if(isset($_GET['cod'])){
 				<div class="card-body ">
                      <div class="row">
 					<?php while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {?>
+					<input type="hidden" name="cod_mescurso" id="cod_mescurso" value="<?=$cantidadCursosMesX?>">
 					<input class="form-control" type="hidden" name="cod_unidad" value="<?=$codUnidadX?>" id="cod_unidad" readonly/>
 					<input class="form-control" type="hidden" name="cod_area" value="<?=$codAreaX?>" id="cod_area" readonly/>
 						<div class="col-sm-2">
