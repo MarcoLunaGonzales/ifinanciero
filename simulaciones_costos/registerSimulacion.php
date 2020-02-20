@@ -50,6 +50,9 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
             $stmt1->bindColumn('ibnorca', $ibnorcaC);
             $stmt1->bindColumn('cantidad_alumnoslocal', $alumnosX);
             $stmt1->bindColumn('utilidad_minimalocal', $utilidadIbnorcaX);
+            $stmt1->bindColumn('cantidad_modulos', $cantidadModuloX);
+            $stmt1->bindColumn('monto_norma', $montoNormaX);
+            $stmt1->bindColumn('habilitado_norma', $habilitadoNormaX);
 
       while ($row1 = $stmt1->fetch(PDO::FETCH_BOUND)) {
          //plantilla datos      
@@ -321,6 +324,9 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
                   //
                   $alumnosRecoX=ceil((100*(-$totalFijo[2]-$totalVariable[2]))/(($utilidadIbnorcaX*$precioLocalX)-(100*$precioLocalX)+(($iva+$it)*$precioLocalX)));                    
                   //if($alumnosX)
+                 if($habilitadoNormaX==1){
+                  $totalVariable[2]=$totalVariable[2]+$montoNormaX;
+                 } 
                 $totalVariable[2]=$totalVariable[2]/$alumnosX;
                 $totalVariable[3]=$totalVariable[3]/$alumnosExternoX;
                  //calcular cantidad alumnos si no esta registrado
@@ -525,6 +531,50 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
 					</div>	
 					</div>
 				  </div>
+          <div class="col-sm-5 bg-blanco2">
+            <p class="font-weight-bold float-left">DATOS DEL CALCULO PARA <?=$cantidadModuloX?> <?php if($cantidadModuloX>1){ echo "MODULOS";}else{ echo "MODULO";} ?></p>
+            <img src="../assets/img/f_abajo2.gif" alt="" height="30px" class="float-right">
+            <table class="table table-bordered table-condensed">
+              <thead>
+                <tr class="">
+                  <td></td>
+                  <td colspan="2" class="bg-table-primary2 text-white">EN IBNORCA</td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="text-left small bg-table-primary2 text-white">MODULOS</td>
+                  <td class="text-right font-weight-bold"><?=$cantidadModuloX?></td>
+                  <td class="text-right font-weight-bold <?=$estiloUtilidadIbnorca?>"></td>
+                </tr>
+                <tr>
+                  <td class="text-left small bg-table-primary2 text-white">INGRESOS POR VENTAS</td>
+                  <td class="text-right font-weight-bold"><?=number_format($ingresoLocal*$cantidadModuloX, 2, '.', ',')?></td>
+                  <td class="text-right font-weight-bold">100 %</td>
+                </tr>
+                <tr>
+                  <td class="text-left small bg-table-primary2 text-white">TOTAL COSTO FIJO</td>
+                  <td class="text-right font-weight-bold"><?=number_format($totalFijo[2]*$cantidadModuloX, 2, '.', ',')?></td>
+                  <td class="text-right font-weight-bold"><?=number_format((($totalFijo[2]*$cantidadModuloX)/($ingresoLocal*$cantidadModuloX))*100, 2, '.', ',')?> %</td>
+                </tr>
+                <tr>
+                  <td class="text-left small bg-table-primary2 text-white">TOTAL COSTO VARIABLE</td>
+                  <td class="text-right font-weight-bold"><?=number_format(($totalVariable[2]*$alumnosX)*$cantidadModuloX, 2, '.', ',')?></td>
+                  <td class="text-right font-weight-bold"><?=number_format($pCostoLocalTotal, 2, '.', ',')?> %</td>
+                </tr>
+                <tr>
+                  <td class="text-left small bg-table-primary2 text-white">PAGO IMPUESTOS (IVA  <?=$iva?> % + IT <?=$it?> % = <?=$iva+$it?> %)</td>
+                  <td class="text-right font-weight-bold"><?=number_format(((($iva+$it)/100)*$ingresoLocal*$cantidadModuloX), 2, '.', ',')?></td>
+                  <td class="text-right font-weight-bold"><?=number_format($iva+$it, 2, '.', ',')?> %</td>
+                </tr>
+                <tr class="<?=$estiloUtilidad?>">
+                  <td class="text-left small bg-table-primary2 text-white">UTILIDAD NETA</td>
+                  <td class="text-right font-weight-bold <?=$estiloUtilidadIbnorca?>"><?=number_format($utilidadNetaLocal*$cantidadModuloX, 2, '.', ',')?></td>
+                  <td class="text-right font-weight-bold <?=$estiloUtilidadIbnorca?>"><?=number_format($pUtilidadLocal, 2, '.', ',')?> %</td>
+                </tr>
+              </tbody>
+            </table>
+          <div class="row div-center">
 				  	<div class="card-footer fixed-bottom">
             
             <a onclick="guardarSimulacion()" class="btn btn-success text-white"><i class="material-icons">send</i> Enviar Simulacion</a>

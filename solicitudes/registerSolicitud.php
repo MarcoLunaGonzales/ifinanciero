@@ -196,6 +196,7 @@ if(isset($_GET['cod'])){
                   <input class="form-control" type="text" name="simulacion" value="<?=$nombreSimulacion?>" id="simulacion" readonly/>
               </div>
             </div>
+
               <?php
                 }else{
                $tipoSolicitud=2;
@@ -224,25 +225,7 @@ if(isset($_GET['cod'])){
                     </select>
                 </div>
             </div>   
-            <div class="col-sm-3">
-                  <div class="form-group">
-                    <select class="selectpicker form-control form-control-sm" name="proveedores" id="proveedores" data-style="<?=$comboColor;?>" onChange="cargarDatosCuenta()">
-                    <option disabled selected value="">Proveedores</option>
-                  <?php
-                  $stmt = $dbh->prepare("SELECT * FROM af_proveedores order by codigo");
-                $stmt->execute();
-                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                  $codigoX=$row['codigo'];
-                  $nombreX=$row['nombre'];
-                ?>
-                <option value="<?=$codigoX;?>"><?=$nombreX;?></option>  
-                <?php
-                  }
-                  ?>
-              </select>
-              </div>
-              
-            </div> 
+            
             <div class="col-sm-2">
                <p class="text-muted">Se muestran los curso en fechas</p> 
             </div>  
@@ -262,6 +245,25 @@ if(isset($_GET['cod'])){
               }
              }
              ?>
+             <div class="col-sm-3">
+                  <div class="form-group">
+                    <select class="selectpicker form-control form-control-sm" name="proveedores" id="proveedores" data-style="<?=$comboColor;?>" onChange="cargarDatosCuenta()">
+                    <option disabled selected value="">Proveedores</option>
+                  <?php
+                  $stmt = $dbh->prepare("SELECT * FROM af_proveedores order by codigo");
+                $stmt->execute();
+                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                  $codigoX=$row['codigo'];
+                  $nombreX=$row['nombre'];
+                ?>
+                <option value="<?=$codigoX;?>"><?=$nombreX;?></option>  
+                <?php
+                  }
+                  ?>
+              </select>
+              </div>
+              
+            </div> 
           </div>
           <?php } //fin del while de la cabecera?>
         </div>

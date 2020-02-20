@@ -52,9 +52,9 @@ $alumnos=$_GET['alumnos'];
                          <td>Detalle</td>
                          <td width="12%">Monto</td>
                          <?php 
-                          if($tipoCalculo==3){
-                           ?><td>Personal</td><?php
-                          }
+                         // if($tipoCalculo==3){
+                           ?><!--<td>Personal x D&iacute;as Aud.</td>--><?php
+                          //}
                          ?>                         
                          <td>Cuentas de la Partida</td>
                          <td>Actions</td>
@@ -75,30 +75,11 @@ $alumnos=$_GET['alumnos'];
                                </div>
                              </td>
                              <?php 
-                          if($tipoCalculo==3){
-                           ?><td id="cantidad_personaltabla">
-                             <?=$alumnos?>/<?=$alumnos?>
-                               <!--<select class="selectpicker form-control form-control-sm" name="cuenta_plantilladetalleauditor[]" id="cuenta_plantilladetalleauditor" multiple data-style="btn btn-warning text-dark btn-sm" data-actions-box="true" title="Todos">
-                   
-                                    <?php 
-                                    $sql11="SELECT s.*,c.nombre,c.codigo as auditor_cod from plantillas_servicios_auditores s,tipos_auditor c where s.cod_plantillaservicio=$codigo and s.cod_tipoauditor=c.codigo";
-                                        $stmt11 = $dbh->prepare($sql11);
-                                        $stmt11->execute();
-                                        $index11=1;
-                                       while ($rowServ = $stmt11->fetch(PDO::FETCH_ASSOC)) {
-                                          $descripcion11=$rowServ['nombre'];
-                                          $servicio_cod11=$rowServ['auditor_cod'];
-                
-                                          $cantidad11=$rowServ['cantidad'];
-                                          $monto11=$rowServ['monto'];
-                                          $codigo11=$rowServ['codigo'];
-
-                                          ?><option value="<?=$codigo11?>" selected><?=$descripcion11?></option><?php
-                                        }
-                                      ?>
-                                  </select>-->
-                             </td><?php
-                            }
+                          //if($tipoCalculo==3){
+                           ?><!--<td id="cantidad_personaltabla">-->
+                             <?php //$alumnos ?>
+                             <!--</td>--><?php
+                            //}
                            ?>                       
                              <td>
                               <?php 
@@ -180,9 +161,9 @@ $alumnos=$_GET['alumnos'];
                              <td class="text-left"><?=$row['glosa']?></td>
                              <td class="text-right"><?=$montoTotal?></td>
                              <?php 
-                            if($tipoCalculo==3){
-                           ?><td>P: <?=$alumnos?></td><?php
-                            }
+                            //if($tipoCalculo==3){
+                           ?><!--<td>C: --><?php //$alumnos ?><!--</td>--><?php
+                            //}
                             ?> 
                              <td class="text-left font-weight-bold small">[<?=$numeroCuenta?>] <?=$nombreCuenta?></td>
                              <td>

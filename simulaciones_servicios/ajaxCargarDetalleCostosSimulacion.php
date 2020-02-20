@@ -48,9 +48,25 @@ $bgClase="bg-info";
   $stmt->execute();
   $html='';$montoTotales=0;$montoTotales2=0;$montoTotales2Alumno=0;
 ?>
-       <div class="row">
-         
-       </div>
+       <div class=""><center>
+        <?php if($tipoCosto==1){
+         ?>
+          <table class="table table-condensed table-bordered">
+            <tr class="text-white <?=$bgClase?>">
+              <td colspan="6">DATOS</td>
+            </tr>
+            <tr>
+              <td class="bg-plomo">Precio General</td>
+              <td class="text-right"><?=number_format($precioRegistrado, 2, '.', ',')?></td>
+              <td class="bg-plomo">Precio</td>
+              <td class="text-right"><?=number_format($precioLocalX, 2, '.', ',')?></td>
+              <td class="bg-plomo">Porcentaje</td>
+              <td class="text-right"><?=number_format($porcentPrecios, 2, '.', ',')?> %</td>
+            </tr>
+          </table>
+       <?php
+        }?>
+       </center></div>
    <table class="table table-condensed table-bordered">
          <tr class="text-white <?=$bgClase?>">
         <td>Cuenta / Detalle</td>

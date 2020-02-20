@@ -29,7 +29,7 @@ if(isset($_GET["cod_simulacion"])){
          <td class="fondo-boton"><?=$nombreColumna?></td>
          <?php
         }?>
-        <td width="15%" class="fondo-boton">TOTAL UNIT.</td>
+        <!--<td width="15%" class="fondo-boton">TOTAL UNIT.</td>-->
         <td width="15%" class="fondo-boton">TOTAL</td>
     </tr>
     <?php 
@@ -85,20 +85,22 @@ if(isset($_GET["cod_simulacion"])){
          for ($i=0; $i < $nroColumnas; $i++) {
           $codigoCol=$codigos[$i];
           $ncol=$i+1;
-          $montoPre=obtenerMontoSimulacionDetalleAuditor($codSimulacion,$codigoCol,$codigoTipo);
+          $montoPre=obtenerMontoSimulacionDetalleAuditor($codSimulacion,$codigoCol,$codigoTipo)*$cantPre*$diasPre;
+          $montoPres=obtenerMontoSimulacionDetalleAuditor($codSimulacion,$codigoCol,$codigoTipo);
           $totalFilaUnitario+=$montoPre;
           
          ?>
           <td class="text-right">
             <input type="hidden" id="codigo_columnas<?=$ncol?>RRR<?=$iii?>" value="<?=$codigoCol?>">
-            <input type="number" id="monto<?=$ncol?>RRR<?=$iii?>" name="monto<?=$ncol?>RRR<?=$iii?>" class="form-control text-info text-right" onchange="calcularTotalPersonalServicioAuditor()" onkeyUp="calcularTotalPersonalServicioAuditor()" value="<?=$montoPre?>" step="0.01">
+            <input type="number" id="monto_mult<?=$ncol?>RRR<?=$iii?>" readonly name="monto_mult<?=$ncol?>RRR<?=$iii?>" class="form-control text-info text-right" onchange="calcularTotalPersonalServicioAuditor()" onkeyUp="calcularTotalPersonalServicioAuditor()" value="<?=$montoPre?>" step="0.01">
+            <input type="hidden" id="monto<?=$ncol?>RRR<?=$iii?>" readonly name="monto<?=$ncol?>RRR<?=$iii?>" class="form-control text-info text-right" onchange="calcularTotalPersonalServicioAuditor()" onkeyUp="calcularTotalPersonalServicioAuditor()" value="<?=$montoPres?>" step="0.01">
           </td>
          <?php
 
          }
-         $totalFila+=$totalFilaUnitario*$diasPre*$cantPre;
+         $totalFila+=$totalFilaUnitario; //*$diasPre*$cantPre
          ?>
-         <td class="text-right font-weight-bold" id="total_unitarioauditor<?=$iii?>"><?=number_format($totalFilaUnitario, 2, '.', ',')?></td>
+         <!--<td class="text-right font-weight-bold" id="total_unitarioauditor<?=$iii?>"><?=number_format($totalFilaUnitario, 2, '.', ',')?></td>-->
          <td class="text-right font-weight-bold fondo-boton" id="total_auditor<?=$iii?>"><?=number_format($totalFila, 2, '.', ',')?></td>
        </tr>
        <?php
@@ -110,7 +112,7 @@ if(isset($_GET["cod_simulacion"])){
     ?>
     <tr>
       <td colspan="<?=$colSpan?>" class="font-weight-bold">SUMA TOTAL</td>
-      <td class="text-right font-weight-bold" id="total_unitarioauditor"><?=number_format($totalTablaUnitario, 2, '.', ',')?></td>
+      <!--<td class="text-right font-weight-bold" id="total_unitarioauditor"><?=number_format($totalTablaUnitario, 2, '.', ',')?></td>-->
       <td class="text-right font-weight-bold fondo-boton" id="total_auditor"><?=number_format($totalTabla, 2, '.', ',')?></td>
     </tr>
   </table>
