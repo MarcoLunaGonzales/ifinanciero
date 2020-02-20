@@ -55,7 +55,7 @@ if ($codigo > 0){
                       <label class="col-sm-2 col-form-label">Oficina</label>
                       <div class="col-sm-8">
                         <div class="form-group">
-                            <select name="cod_uo" id="cod_uo" class="selectpicker form-control" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" onChange="ajaxUOArea_personal_tipocajachica(this);">
+                            <select name="cod_uo" id="cod_uo" class="selectpicker form-control form-control-sm" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" onChange="ajaxUOArea_personal_tipocajachica(this);">
                                 <option value=""></option>
                                 <?php 
                                 $queryUO = "SELECT codigo,nombre from unidades_organizacionales where cod_estado=1 order by nombre";
@@ -72,7 +72,7 @@ if ($codigo > 0){
                           <div class="col-sm-8">
                             <div class="form-group" >
                                 <div id="div_contenedor_area_tcc">
-                                    <select name="cod_area" id="cod_area" class="selectpicker form-control" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" >
+                                    <select name="cod_area" id="cod_area" class="selectpicker form-control form-control-sm" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" >
                                         <option value=""></option>
                                         <?php 
                                         $queryArea = "SELECT codigo,nombre FROM  areas WHERE cod_estado=1 order by nombre";
@@ -97,7 +97,7 @@ if ($codigo > 0){
                                 where uo.codigo=p.cod_unidadorganizacional and uo.codigo=$cod_uo order by 2");
                                 $stmtPersonal->execute();
                                 ?>
-                                <select id="cod_personal" name="cod_personal" class="selectpicker form-control" data-style="btn btn-info" data-size="5" data-show-subtext="true" data-live-search="true">
+                                <select id="cod_personal" name="cod_personal" class="selectpicker form-control form-control-sm" data-style="btn btn-info" data-size="5" data-show-subtext="true" data-live-search="true">
                                     <?php 
                                         while ($row = $stmtPersonal->fetch()){                                             
                                        ?>

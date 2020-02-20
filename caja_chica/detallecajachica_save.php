@@ -27,6 +27,10 @@ try {
     $cod_uo = $_POST["cod_uo"];
     $cod_area = $_POST["cod_area"];
     $nro_recibo = $_POST["nro_recibo"];
+    $cod_proveedores = $_POST["proveedores"];
+    if($cod_area=='')$cod_area=0;
+    if($cod_uo=='')$cod_uo=0;
+    if($cod_proveedores=='')$cod_proveedores=0;
     
 
     
@@ -39,11 +43,10 @@ try {
 
     if ($codigo == 0){//insertamos
         $monto_reembolso=$monto_reembolso_x-$monto;
-        $stmtReembolso = $dbh->prepare("UPDATE caja_chica set monto_reembolso=$monto_reembolso where codigo=$cod_cc");
-        $stmtReembolso->execute();
+        
 
         //para el codigo del detalle
-        $stmtCC = $dbh->prepare("SELECT codigo from caja_chicadetalle where cod_estadoreferencial=1 order by codigo desc");
+        $stmtCC = $dbh->prepare("SELECT codigo from caja_chicadetalle order by codigo desc LIMIT 1");
         $stmtCC->execute();
         $resultCC = $stmtCC->fetch();
         $codigo_caja_chica_aux = $resultCC['codigo'];
@@ -54,10 +57,13 @@ try {
         $cod_estado=1;        
         $cod_estadoreferencial=1;
         $monto_rendicion=0;
-        $stmt = $dbh->prepare("INSERT INTO caja_chicadetalle(codigo,cod_cajachica,cod_cuenta,fecha,cod_tipodoccajachica,nro_documento,cod_personal,monto,observaciones,cod_estado,cod_estadoreferencial,cod_area,cod_uo,nro_recibo) 
-        values ($codigo,$cod_cc,$cod_cuenta,'$fecha',$cod_tipo_documento,$numero,$cod_personal,$monto,'$observaciones',$cod_estado,$cod_estadoreferencial,$cod_area,$cod_uo,$nro_recibo)");
+        $stmt = $dbh->prepare("INSERT INTO caja_chicadetalle(codigo,cod_cajachica,cod_cuenta,fecha,cod_tipodoccajachica,nro_documento,cod_personal,monto,observaciones,cod_estado,cod_estadoreferencial,cod_area,cod_uo,nro_recibo,cod_proveedores) 
+        values ($codigo,$cod_cc,$cod_cuenta,'$fecha',$cod_tipo_documento,$numero,$cod_personal,$monto,'$observaciones',$cod_estado,$cod_estadoreferencial,$cod_area,$cod_uo,$nro_recibo,$cod_proveedores)");
         $flagSuccess=$stmt->execute();
         if($flagSuccess){//registramos rendiciones
+            $stmtReembolso = $dbh->prepare("UPDATE caja_chica set monto_reembolso=$monto_reembolso where codigo=$cod_cc");
+            $stmtReembolso->execute();
+
             $stmtrendiciones = $dbh->prepare("INSERT INTO rendiciones(codigo,numero,cod_tipodoc,monto_a_rendir,monto_rendicion,cod_personal,observaciones,cod_estado,cod_cajachicadetalle,cod_estadoreferencial,fecha_dcc) 
             values ($codigo,$numero,$cod_tipo_documento,$monto,$monto_rendicion,$cod_personal,'$observaciones',$cod_estado,$codigo,$cod_estadoreferencial,'$fecha')");
             $flagSuccess=$stmtrendiciones->execute();
@@ -74,9 +80,7 @@ try {
         $monto_anterior = $resultMontoAnterior['monto'];
         
         $monto_reembolso=$monto_reembolso_x+$monto_anterior-$monto;
-        //acctualiazmos reembolso
-        $stmtReembolso = $dbh->prepare("UPDATE caja_chica set monto_reembolso=$monto_reembolso where codigo=$cod_cc");
-        $stmtReembolso->execute();
+       
         //================================================================
         $monto_rendicion=0;
 
@@ -90,11 +94,15 @@ try {
         // echo 'cod_area:'.$cod_area."<br>";
         // echo 'nro_recibo:'.$nro_recibo."<br>";
 
-        $stmtCCD = $dbh->prepare("UPDATE caja_chicadetalle set cod_cuenta=$cod_cuenta,fecha='$fecha',cod_tipodoccajachica=$cod_tipo_documento,nro_documento=$numero,cod_personal=$cod_personal,monto=$monto,observaciones='$observaciones',cod_area=$cod_area,cod_uo=$cod_uo,nro_recibo=$nro_recibo
+        $stmtCCD = $dbh->prepare("UPDATE caja_chicadetalle set cod_cuenta=$cod_cuenta,fecha='$fecha',cod_tipodoccajachica=$cod_tipo_documento,nro_documento=$numero,cod_personal=$cod_personal,monto=$monto,observaciones='$observaciones',cod_area=$cod_area,cod_uo=$cod_uo,nro_recibo=$nro_recibo,cod_proveedores=$cod_proveedores
          where codigo = $codigo");      
         $flagSuccess=$stmtCCD->execute();        
         
         if($flagSuccess){
+             //acctualiazmos reembolso
+            $stmtReembolso = $dbh->prepare("UPDATE caja_chica set monto_reembolso=$monto_reembolso where codigo=$cod_cc");
+            $stmtReembolso->execute();
+            
             $stmtrendiciones = $dbh->prepare("UPDATE rendiciones set cod_tipodoc=$cod_tipo_documento,monto_a_rendir=$monto,monto_rendicion=$monto_rendicion,cod_personal=$cod_personal,observaciones='$observaciones',fecha_dcc='$fecha'
             where codigo = $codigo");   
             $flagSuccess=$stmtrendiciones->execute(); 

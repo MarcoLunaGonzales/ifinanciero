@@ -10,6 +10,8 @@ $dbh = new Conexion();
 
 // $codGestion=$_POST["gestion"];
 // $codUnidad=$_POST["unidad_organizacional"];
+
+$cantidad_filas_ccd=$_POST["cantidad_filas_ccd"];
 $cod_cc=$_POST["cod_cajachica"];
 $cod_tcc=$_POST["cod_tcc"];
 $cod_ccd=$_POST["cod_ccd"];
@@ -67,22 +69,22 @@ $fechaHoraActual=date("Y-m-d H:i:s");
       $sqlDeleteFactura="DELETE from facturas_detalle_cajachica where cod_cajachicadetalle=$cod_ccd";
       $stmtDelFactura = $dbh->prepare($sqlDeleteFactura);
       $stmtDelFactura->execute();
-      $nF=cantidadF($facturas[$cod_ccd-1]);
+      $nF=cantidadF($facturas[$cantidad_filas_ccd-1]);
         //echo $nF;
         $suma_importe_fac=0;
          for($j=0;$j<$nF;$j++){
-         	  $nit=$facturas[$cod_ccd-1][$j]->nit;
-         	  $nroFac=$facturas[$cod_ccd-1][$j]->nroFac;
+         	  $nit=$facturas[$cantidad_filas_ccd-1][$j]->nit;
+         	  $nroFac=$facturas[$cantidad_filas_ccd-1][$j]->nroFac;
          	  
-         	  $fecha=$facturas[$cod_ccd-1][$j]->fechaFac;
+         	  $fecha=$facturas[$cantidad_filas_ccd-1][$j]->fechaFac;
          	  $porciones = explode("/", $fecha);
          	  $fechaFac=$porciones[2]."-".$porciones[1]."-".$porciones[0];
          	  
-         	  $razonFac=$facturas[$cod_ccd-1][$j]->razonFac;
-         	  $impFac=$facturas[$cod_ccd-1][$j]->impFac;
+         	  $razonFac=$facturas[$cantidad_filas_ccd-1][$j]->razonFac;
+         	  $impFac=$facturas[$cantidad_filas_ccd-1][$j]->impFac;
          	  $exeFac=0;
-         	  $autFac=$facturas[$cod_ccd-1][$j]->autFac;
-         	  $conFac=$facturas[$cod_ccd-1][$j]->conFac;
+         	  $autFac=$facturas[$cantidad_filas_ccd-1][$j]->autFac;
+         	  $conFac=$facturas[$cantidad_filas_ccd-1][$j]->conFac;
 
             $suma_importe_fac=$suma_importe_fac+$impFac;
 

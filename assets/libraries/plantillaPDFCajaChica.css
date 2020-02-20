@@ -45,6 +45,13 @@ footer { position: fixed; bottom: -40px; left: 0px; right: 0px; height: 50px; }
 }
 
 
+#info_izq2{
+  
+  /*float: right;*/
+  padding-left: 40px;
+  padding-top: 15px;
+  
+}
 
 .table-inf{
 width: 100%;  

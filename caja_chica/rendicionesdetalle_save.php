@@ -16,29 +16,29 @@ $stmtX = $dbh->prepare($sqlX);
 $stmtX->execute();
 
 
-
+$cantidad_filas=$_POST["cantidad_filas"];
 $cod_rd=$_POST["cod_rd"];
 $facturas= json_decode($_POST['facturas']);
 session_start();
     $sqlDeleteFactura="DELETE from facturas_detalle_cajachica where cod_cajachicadetalle=$cod_rd";
       $stmtDelFactura = $dbh->prepare($sqlDeleteFactura);
       $stmtDelFactura->execute();
-      $nF=cantidadF($facturas[$cod_rd-1]);
+      $nF=cantidadF($facturas[$cantidad_filas-1]);
         //echo $nF;
         $suma_importe_fac=0;
          for($j=0;$j<$nF;$j++){
-         	  $nit=$facturas[$cod_rd-1][$j]->nit;
-         	  $nroFac=$facturas[$cod_rd-1][$j]->nroFac;
+         	  $nit=$facturas[$cantidad_filas-1][$j]->nit;
+         	  $nroFac=$facturas[$cantidad_filas-1][$j]->nroFac;
          	  
-         	  $fecha=$facturas[$cod_rd-1][$j]->fechaFac;
+         	  $fecha=$facturas[$cantidad_filas-1][$j]->fechaFac;
          	  $porciones = explode("/", $fecha);
          	  $fechaFac=$porciones[2]."-".$porciones[1]."-".$porciones[0];
          	  
-         	  $razonFac=$facturas[$cod_rd-1][$j]->razonFac;
-         	  $impFac=$facturas[$cod_rd-1][$j]->impFac;
+         	  $razonFac=$facturas[$cantidad_filas-1][$j]->razonFac;
+         	  $impFac=$facturas[$cantidad_filas-1][$j]->impFac;
          	  $exeFac=0;
-         	  $autFac=$facturas[$cod_rd-1][$j]->autFac;
-         	  $conFac=$facturas[$cod_rd-1][$j]->conFac;
+         	  $autFac=$facturas[$cantidad_filas-1][$j]->autFac;
+         	  $conFac=$facturas[$cantidad_filas-1][$j]->conFac;
 
             	$suma_importe_fac=$suma_importe_fac+$impFac;
 		      $sqlDetalle2="INSERT INTO facturas_detalle_cajachica (cod_cajachicadetalle, nit, nro_factura, fecha, razon_social, importe, exento, nro_autorizacion, codigo_control) VALUES ('$cod_rd', '$nit', '$nroFac', '$fechaFac', '$razonFac', '$impFac', '$exeFac', '$autFac', '$conFac')";

@@ -42,10 +42,21 @@ footer { position: fixed; bottom: -40px; left: 0px; right: 0px; height: 50px; }
 }
 
 
+#info_izq2{
+  
+  /*float: right;*/
+  padding-left: 40px;
+  padding-top: 15px;
+  
+}
+
+
 
 .table-inf{
 width: 100%;  
 }
+
+
 
 .table{
 width: 100%;  
@@ -66,7 +77,7 @@ border-collapse: collapse;
     border-left: 0px;
 }
 .table tr td{
-   padding: 5px;
+   
     border: 1px solid black;
 }
 .td-border-none{
@@ -75,6 +86,38 @@ border-collapse: collapse;
 .table .table-title{
  font-size: 12px;
 }
+.table2{
+width: 100%;  
+border-collapse: collapse;
+}
+.table2 .fila-primary td{
+   padding: 2px;
+    border-top: 0px;
+    border-right: 0px;
+    border-bottom: 1px solid black;
+    border-left: 0px;
+}
+.table2 .fila-totales td{
+   padding: 2px;
+    border-bottom: 0px;
+    border-right: 0px;
+    border-top: 1px solid black;
+    border-left: 0px;
+}
+.table2 tr td{
+   padding: 2px;
+    border: 1px solid black;
+}
+.td-border-none{
+  border: none !important;
+}
+.table2 .table-title{
+ font-size: 12px;
+}
+
+
+
+
 .pt-1{
   margin-top: 10px;
 }
