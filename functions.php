@@ -777,6 +777,7 @@ function obtenerValorTipoCambio($codigo,$fecha){
   }
   return $valor;
 }
+
 //funcion contar comprobanteDetalle
  function contarTipoCambio($codigo,$fi,$fa){
    $dbh = new Conexion();

@@ -74,6 +74,9 @@ from caja_chicadetalle where cod_estadoreferencial=1 and cod_cajachica=$cod_caja
     $IUE_compras_IT=$porcentajeIUE_compras+$porcentajeIT;
     $IUE_servicios_IT=$porcentajeIUE_servicios+$porcentajeIT;
     $fecha_actual=date('Y/m/d');
+    
+    $USD_actual=obtenerValorTipoCambio(2,$fecha_actual);
+    if($USD_actual=='')$USD_actual=0;
     // $concepto_contabilizacion=strtoupper($name_personalCC)." rendición de ".$observacionesCC." ".$name_tipoccCC."( - - - - )";
     $concepto_contabilizacion="CONTABILIZACIÓN CAJA CHICA N° ".$numeroCC." DE FECHA ( - - - - )";
 
@@ -107,7 +110,7 @@ $html.=  '<header class="header">'.
                 '<tbody>
                     <tr>
                         <td>Fecha: '.$fecha_actual.'</td>
-                        <td>t/c: USD:</td>
+                        <td>t/c: USD: '.$USD_actual.'</td>
                         <td>Traspaso Ene Número: '.$numeroCC.'</td>
                     </tr>
                     <tr>
@@ -136,6 +139,8 @@ $html.=  '<header class="header">'.
                 '<tbody>';
                     $sumaTotalDebeBolivianos=0;
                     $sumaTotalHaberBolivianos=0;
+                    $sumaTotalDebeDolares=0;
+                    $sumaTotalHaberDolares=0;
                     while ($rowCajaChicaDet = $stmtCajaChicaDet->fetch()) 
                     {
                         if($cod_tipodoccajachica==6){//6 compra con factura
@@ -149,16 +154,20 @@ $html.=  '<header class="header">'.
                             {
                                 $descripcionIVA=$nombre_uo.' F/'.$nro_factura.' '.$personal.', '.$razon_social;
                                 $montoIVA=$importe*$porcentajeIVA/100;
+                                if($USD_actual!=0)
+                                    $montoIVA_dolares=$montoIVA/$USD_actual;
+                                else $montoIVA_dolares=0;
                                 $monto_restante=$importe-$montoIVA;
                                 $html.='<tr>
                                     <td class="text-left small">'.$nro_cuenta_iva.'</td>
                                     <td class="text-left small"><p>'.$nombre_cuenta_iva.'<br>'.$descripcionIVA.' </p></td>
                                     <td class="text-right small">'.formatNumberDec($montoIVA).'</td>
                                     <td class="text-right small"></td>
-                                    <td class="text-right small">Debe</td>
-                                    <td class="text-right small">Haber</td>
+                                    <td class="text-right small">'.formatNumberDec($montoIVA_dolares).'</td>
+                                    <td class="text-right small"></td>
                                 </tr>';
                                 $sumaTotalDebeBolivianos+=$montoIVA;
+                                $sumaTotalDebeDolares+=$montoIVA_dolares;
                                 $stmtOficina = $dbh->prepare("SELECT cod_unidadorganizacional,porcentaje,
                                 (select u.abreviatura from unidades_organizacionales u where u.codigo=cod_unidadorganizacional)as oficina
                                 from distribucion_gastosporcentaje where porcentaje>0");
@@ -170,14 +179,18 @@ $html.=  '<header class="header">'.
                                 {                                    
                                     $descripcion_of=$oficinaFac.'/'.$nombre_uo.' F/'.$nro_factura.' '.$personal.', '.$razon_social;
                                     $monto_of=$monto_restante*$porcentaje/100;
+                                    if($USD_actual!=0)
+                                        $monto_of_dolares=$monto_of/$USD_actual;
+                                    else $monto_of_dolares=0;
                                     $sumaTotalDebeBolivianos+=$monto_of;
+                                    $sumaTotalDebeDolares+=$monto_of_dolares;
                                     $html.='<tr>
                                         <td class="text-left small">'.$numero_cuenta.'</td>
                                         <td class="text-left small"><p>'.$nombre_cuenta.'<br>'.$descripcion_of.' </p></td>
                                         <td class="text-right small">'.formatNumberDec($monto_of).'</td>
                                         <td class="text-right small"></td>
-                                        <td class="text-right small">Debe</td>
-                                        <td class="text-right small">Haber</td>
+                                        <td class="text-right small">'.formatNumberDec($monto_of_dolares).'</td>
+                                        <td class="text-right small"></td>
                                     </tr>';
                                 }
                                 $sw_facturas++;
@@ -188,27 +201,35 @@ $html.=  '<header class="header">'.
                                 //para retencion it 3%
                                 $descripcionIT=$nombre_uo.' SF '.$personal.', '.$observaciones_dcc;
                                 $monto_it=$monto_recalculado*$porcentajeIT/100;
+                                if($USD_actual!=0)
+                                    $monto_it_dolares=$monto_it/$USD_actual;
+                                else $monto_it_dolares=0;
                                 $html.='<tr>
                                     <td class="text-left small">'.$nro_cuenta_IT.'</td>
                                     <td class="text-left small"><p>'.$nombre_cuenta_IT.'<br>'.$descripcionIT.' </p></td>
                                     <td class="text-right small"></td>
                                     <td class="text-right small">'.formatNumberDec($monto_it).'</td>
-                                    <td class="text-right small">Debe</td>
-                                    <td class="text-right small">Haber</td>
+                                    <td class="text-right small"></td>
+                                    <td class="text-right small">'.formatNumberDec($monto_it_dolares).'</td>
                                 </tr>';
                                 $sumaTotalHaberBolivianos+=$monto_it;
+                                $sumaTotalHaberDolares+=$monto_it_dolares;
                                 //retencion iue 5%
                                 $descripcioniue_c=$nombre_uo.' SF '.$personal.', '.$observaciones_dcc;
                                 $monto_iue=$monto_recalculado*$porcentajeIUE_compras/100;
+                                if($USD_actual!=0)
+                                    $monto_iue_dolares=$monto_iue/$USD_actual;
+                                else $monto_iue_dolares=0;
                                  $html.='<tr>
                                     <td class="text-left small">'.$nro_cuenta_IUE_C.'</td>
                                     <td class="text-left small"><p>'.$nombre_cuenta_IUE_C.'<br>'.$descripcioniue_c.' </p></td>
                                     <td class="text-right small"></td>
                                     <td class="text-right small">'.formatNumberDec($monto_iue).'</td>
-                                    <td class="text-right small">Debe</td>
-                                    <td class="text-right small">Haber</td>
+                                    <td class="text-right small"></td>
+                                    <td class="text-right small">'.formatNumberDec($monto_iue_dolares).'</td>
                                 </tr>';
                                 $sumaTotalHaberBolivianos+=$monto_iue;
+                                $sumaTotalHaberDolares+=$monto_iue_dolares;
                                 $stmtOficina = $dbh->prepare("SELECT cod_unidadorganizacional,porcentaje,
                                 (select u.abreviatura from unidades_organizacionales u where u.codigo=cod_unidadorganizacional)as oficina
                                 from distribucion_gastosporcentaje where porcentaje>0");
@@ -220,14 +241,18 @@ $html.=  '<header class="header">'.
                                 {                                    
                                     $descripcion_of=$oficinaFac.'/'.$nombre_uo.' SF '.$personal.', '.$observaciones_dcc;
                                     $monto_of=$monto_recalculado*$porcentaje/100;
+                                    if($USD_actual!=0)
+                                        $monto_of_dolares=$monto_of/$USD_actual;
+                                    else $monto_of_dolares=0;
                                     $sumaTotalDebeBolivianos+=$monto_of;
+                                    $sumaTotalDebeDolares+=$monto_of_dolares;
                                     $html.='<tr>
                                         <td class="text-left small">'.$numero_cuenta.'</td>
                                         <td class="text-left small"><p>'.$nombre_cuenta.'<br>'.$descripcion_of.' </p></td>
                                         <td class="text-right small">'.formatNumberDec($monto_of).'</td>
                                         <td class="text-right small"></td>
-                                        <td class="text-right small">Debe</td>
-                                        <td class="text-right small">Haber</td>
+                                        <td class="text-right small">'.formatNumberDec($monto_of_dolares).'</td>
+                                        <td class="text-right small"></td>
                                     </tr>';
                                 }                                
                             } 
@@ -240,27 +265,35 @@ $html.=  '<header class="header">'.
                             //$prueba="monto rec: ".$monto_recalculado." monto:".$monto_dcc." iue_s_it:".$IUE_servicios_IT;
 
                             $monto_it=$monto_recalculado*$porcentajeIT/100;
+                            if($USD_actual!=0)
+                                $monto_it_dolares=$monto_it/$USD_actual;
+                            else $monto_it_dolares=0;
                             $html.='<tr>
                                 <td class="text-left small">'.$nro_cuenta_IT.'</td>
                                 <td class="text-left small"><p>'.$nombre_cuenta_IT.'<br>'.$descripcionIT.' </p></td>
                                 <td class="text-right small"> </td>
                                 <td class="text-right small">'.formatNumberDec($monto_it).'</td>
-                                <td class="text-right small">Debe</td>
-                                <td class="text-right small">Haber</td>
+                                <td class="text-right small"></td>
+                                <td class="text-right small">'.formatNumberDec($monto_it_dolares).'</td>
                             </tr>';
                             $sumaTotalHaberBolivianos+=$monto_it;
+                            $sumaTotalHaberDolares+=$monto_it_dolares;
                             //retencion iue 12,5%
                             $descripcioniue_c=$nombre_uo.' SF '.$personal.', '.$observaciones_dcc;
                             $monto_iue=$monto_recalculado*$porcentajeIUE_servicios/100;
+                            if($USD_actual!=0)
+                                $monto_iue_dolares=$monto_iue/$USD_actual;
+                            else $monto_iue_dolares=0;
                              $html.='<tr>
                                 <td class="text-left small">'.$nro_cuenta_IUE_S.'</td>
                                 <td class="text-left small"><p>'.$nombre_cuenta_IUE_s.'<br>'.$descripcioniue_c.' </p></td>
                                 <td class="text-right small"></td>
                                 <td class="text-right small">'.formatNumberDec($monto_iue).'</td>
-                                <td class="text-right small">Debe</td>
-                                <td class="text-right small">Haber</td>
+                                <td class="text-right small"></td>
+                                <td class="text-right small">'.formatNumberDec($monto_iue_dolares).'</td>
                             </tr>';
                             $sumaTotalHaberBolivianos+=$monto_iue;
+                            $sumaTotalHaberDolares+=$monto_iue_dolares;
                             $stmtOficina = $dbh->prepare("SELECT cod_unidadorganizacional,porcentaje,
                             (select u.abreviatura from unidades_organizacionales u where u.codigo=cod_unidadorganizacional)as oficina
                             from distribucion_gastosporcentaje where porcentaje>0");
@@ -272,41 +305,49 @@ $html.=  '<header class="header">'.
                             {                                    
                                 $descripcion_of=$oficinaFac.'/'.$nombre_uo.' SF '.$personal.', '.$observaciones_dcc;
                                 $monto_of=$monto_recalculado*$porcentaje/100;
+                                if($USD_actual!=0)
+                                    $monto_of_dolares=$monto_of/$USD_actual;
+                                else $monto_of_dolares=0;
+                                $sumaTotalDebeDolares+=$monto_of_dolares;
                                 $sumaTotalDebeBolivianos+=$monto_of;
                                 $html.='<tr>
                                     <td class="text-left small">'.$numero_cuenta.'</td>
                                     <td class="text-left small"><p>'.$nombre_cuenta.'<br>'.$descripcion_of.' </p></td>
                                     <td class="text-right small">'.formatNumberDec($monto_of).'</td>
                                     <td class="text-right small"></td>
-                                    <td class="text-right small">Debe</td>
-                                    <td class="text-right small">Haber</td>
+                                    <td class="text-right small">'.formatNumberDec($monto_of_dolares).'</td>
+                                    <td class="text-right small"></td>
                                 </tr>';
                             }
 
                         } 
                     }
-                    $descripcionIVA=$nombre_uo.' F/'.$nro_factura.' '.$personal.', '.$razon_social;
-                                $montoIVA=$importe*$porcentajeIVA/100;
-                                $monto_restante=$importe-$montoIVA;
+                    // $descripcionIVA=$nombre_uo.' F/'.$nro_factura.' '.$personal.', '.$razon_social;
+                    // $montoIVA=$importe*$porcentajeIVA/100;
+                    // $monto_restante=$importe-$montoIVA;
 
 
-                    $descripcion_contra_cuenta='CONTRA CUENTA';                    
+                    $descripcion_contra_cuenta='CONTRA CUENTA';
+                    if($USD_actual!=0)
+                        $monto_contra_cuenta_dolares=$monto_contra_cuenta/$USD_actual;
+                    else $monto_contra_cuenta_dolares=0;
                     $sumaTotalHaberBolivianos+=$monto_contra_cuenta;
+                    $sumaTotalHaberDolares+=$monto_contra_cuenta_dolares;
                     $html.='<tr>
                         <td class="text-left small">'.$nro_contra_cuenta.'</td>
                         <td class="text-left small"><p>'.$nombre_contra_cuenta.'<br>'.$descripcion_contra_cuenta.' </p></td>
                         <td class="text-right small"></td>
                         <td class="text-right small">'.formatNumberDec($monto_contra_cuenta).'</td>
-                        <td class="text-right small">Debe</td>
-                        <td class="text-right small">Haber</td>
+                        <td class="text-right small"></td>
+                        <td class="text-right small">'.formatNumberDec($monto_contra_cuenta_dolares).'</td>
                     </tr>';
                     $html.='<tr>
                             <td class="text-left small"></td>
                             <td class="text-center small"><b>TOTAL</b></td>
                             <td class="text-right small">'.formatNumberDec($sumaTotalDebeBolivianos).'</td>
                             <td class="text-right small">'.formatNumberDec($sumaTotalHaberBolivianos).'</td>
-                            <td class="text-right small"></td>
-                            <td class="text-right small"></td>
+                            <td class="text-right small">'.formatNumberDec($sumaTotalDebeDolares).'</td>
+                            <td class="text-right small">'.formatNumberDec($sumaTotalHaberDolares).'</td>
                         </tr>';
 
 

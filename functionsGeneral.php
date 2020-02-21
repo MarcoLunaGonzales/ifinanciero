@@ -87,6 +87,18 @@ function showAlertSuccessErrorDepreciaciones2($bandera, $url){
       </script>";
    }
 }
+function showAlertSuccessErrorFacturas($bandera, $url){
+   if($bandera==true){
+      echo "<script>
+         alerts.showSwal('success-message','$url');
+      </script>";
+   }
+   if ($bandera==false){
+      echo "<script>
+         alerts.showSwal('error-messageFacturas','$url');
+      </script>";
+   }
+}
 function clean_string($string)
 {
  

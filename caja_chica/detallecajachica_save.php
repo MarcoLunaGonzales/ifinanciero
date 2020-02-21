@@ -31,9 +31,6 @@ try {
     if($cod_area=='')$cod_area=0;
     if($cod_uo=='')$cod_uo=0;
     if($cod_proveedores=='')$cod_proveedores=0;
-    
-
-    
 
     //sacamos monto de caja chica
     $stmtMCC = $dbh->prepare("SELECT monto_reembolso from caja_chica where  codigo =$cod_cc");
@@ -43,8 +40,6 @@ try {
 
     if ($codigo == 0){//insertamos
         $monto_reembolso=$monto_reembolso_x-$monto;
-        
-
         //para el codigo del detalle
         $stmtCC = $dbh->prepare("SELECT codigo from caja_chicadetalle order by codigo desc LIMIT 1");
         $stmtCC->execute();
@@ -54,7 +49,10 @@ try {
             $codigo_caja_chica_aux=0;
         }
         $codigo=$codigo_caja_chica_aux+1;
-        $cod_estado=1;        
+        if($cod_tipo_documento==5){
+            $cod_estado=2;
+        }else $cod_estado=1;
+        
         $cod_estadoreferencial=1;
         $monto_rendicion=0;
         $stmt = $dbh->prepare("INSERT INTO caja_chicadetalle(codigo,cod_cajachica,cod_cuenta,fecha,cod_tipodoccajachica,nro_documento,cod_personal,monto,observaciones,cod_estado,cod_estadoreferencial,cod_area,cod_uo,nro_recibo,cod_proveedores) 
