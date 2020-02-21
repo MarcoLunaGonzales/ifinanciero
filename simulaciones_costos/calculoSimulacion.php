@@ -5,7 +5,9 @@
                  
                  //porcentajes costo servicio
                  $costoLocal=($totalVariable[2]*$alumnosX)/($ingresoLocal);
+                 $costoLocalTotal=(($totalVariable[2]*$alumnosX)*$cantidadModuloX)/($ingresoLocal*$cantidadModuloX);
                  $pCostoLocal=$costoLocal*100;
+                 $pCostoLocalTotal=$costoLocalTotal*100;
                  $costoExterno=($totalVariable[3]*$alumnosExternoX)/($ingresoExterno);
                  $pCostoExterno=$costoExterno*100;
 

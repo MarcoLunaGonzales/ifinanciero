@@ -114,6 +114,9 @@
                   <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
                     <i class="material-icons">close</i>
                   </button>
+                  <a class="btn btn-success btn-sm btn-fab float-right" href="#" onclick="cambiarModalDetalleVariable()">
+                    <i class="material-icons">keyboard_backspace</i>
+                  </a>
                 </div>
                 <div class="card-body">
                  <div class="card" id="cuentas_simulacionpersonal">

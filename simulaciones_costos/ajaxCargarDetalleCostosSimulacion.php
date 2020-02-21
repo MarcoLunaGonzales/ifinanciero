@@ -14,6 +14,9 @@ $stmtX->execute();
 
 if(isset($_GET["simulacion"])){
  $codigo=$_GET["simulacion"];
+ $montoNorma=obtenerMontoNormaSimulacion($codigo);
+ $habNorma=obtenerHabilitadoNormaSimulacion($codigo);
+
  $codPlan=$_GET["plantilla"];
  $tipoCosto=$_GET["tipo"];
  $alumnos=$_GET["al"];
@@ -132,13 +135,6 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
               $bgFila="";
               if($bandera==0){
                  $bgFila="text-danger";   
-                $html.='<tr class="'.$bgFila.'">'.
-                      '<td class="font-weight-bold text-left"><strike>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$row_cuentas['nombre'].' / '.$row_cuentas['glosa'].'</strike></td>'.
-                      '<td class="text-right text-muted">'.number_format(0, 2, '.', ',').'</td>';
-                      if($tipoCosto!=1){
-                        $html.='<td class="text-right text-muted">'.number_format(0, 2, '.', ',').'</td>';
-                      }
-                $html.='</tr>';
               }else{
                 $montoTotales2+=$row_cuentas['monto_total'];
                 $montoTotales2Alumno+=$montoCal/$alumnos;
@@ -156,6 +152,18 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
           }  
      }
 }
+         if($tipoCosto!=1){
+            if($habNorma==1){
+               $html.='<tr class="bg-warning text-dark">'.
+                      '<td class="font-weight-bold text-left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NORMA </td>'.
+                      '<td class="text-right font-weight-bold">'.number_format($montoNorma, 2, '.', ',').'</td>'.
+                      '<td class="text-right font-weight-bold">'.number_format($montoNorma/$alumnos, 2, '.', ',').'</td>';
+                $html.='</tr>';
+                $montoTotales2+=$montoNorma;
+                $montoTotales2Alumno+=($montoNorma/$alumnos); 
+            }
+                
+         } 
     if($tipoCosto==1){
            $html.='<tr class="bg-plomo">'.
                       '<td class="font-weight-bold text-left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Total </td>'.

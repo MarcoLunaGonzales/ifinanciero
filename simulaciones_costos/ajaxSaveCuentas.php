@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once '../conexion.php';
 require_once '../functions.php';
 require_once '../functionsGeneral.php';
@@ -15,8 +16,15 @@ $plantilla=$_GET["plantilla"];
 $partida=$_GET["partida"];
 $cuenta=$_GET["cuenta"];
 $habilitado=$_GET["habilitado"];
+$montoNorma=$_GET["monto_norma"];
+$habNorma=$_GET["habilitado_norma"];
 
-session_start();
+$sqlUpdateDetalleGlobal="UPDATE simulaciones_costos SET  monto_norma='$montoNorma',habilitado_norma='$habNorma' where codigo=$simulaciones";
+$stmtUpdateDetalleGlobal = $dbh->prepare($sqlUpdateDetalleGlobal);
+$stmtUpdateDetalleGlobal->execute();
+
+
+
 $sqlUpdateDetalle="UPDATE simulaciones_detalle SET  monto_unitario='$monto',monto_total='$monto',habilitado=$habilitado where codigo=$codigo";
 $stmtUpdateDetalle = $dbh->prepare($sqlUpdateDetalle);
 $stmtUpdateDetalle->execute();

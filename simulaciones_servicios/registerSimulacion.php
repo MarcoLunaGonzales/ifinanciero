@@ -349,10 +349,10 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                   <td class="bg-table-primary text-white">CANTIDAD</td>
                 </tr>
                 
-                <tr class="">
+                <!--<tr class="">
                   <td class="text-left small bg-table-primary text-white">CANTIDAD DE PERSONAL x DIAS AUD.</td>
                   <td class="text-right font-weight-bold"><?=$alumnosX?></td>
-                </tr>
+                </tr>-->
                 <tr class="bg-warning text-dark">
                   <td class="text-left small">DIAS AUDITORIA</td>
                   <td class="text-right font-weight-bold"><?=$diasSimulacion?></td>

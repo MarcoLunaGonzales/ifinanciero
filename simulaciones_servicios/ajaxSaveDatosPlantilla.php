@@ -37,7 +37,7 @@ $sqlDet="SELECT * FROM simulaciones_serviciodetalle where cod_simulacionservicio
 $stmtDet = $dbh->prepare($sqlDet);
 $stmtDet->execute();
 
- while ($rowPre = $stmtDet->fetch(PDO::FETCH_ASSOC)) {
+/* while ($rowPre = $stmtDet->fetch(PDO::FETCH_ASSOC)) {
  	$cantidadDet=$rowPre['cantidad'];
  	$codigoDet=$rowPre['codigo'];
  	$montoDet=$rowPre['editado_personal'];
@@ -71,7 +71,7 @@ $stmtDet->execute();
          $stmtUpdate->execute();
        }
  	}   
-}
+}*/
 
 echo "OK";
 ?>
