@@ -27,8 +27,8 @@ $numero_cc=$resultMCC['numero'];
 
 
 
-$stmt = $dbh->prepare("SELECT codigo,cod_cuenta,fecha,
-  (select td.nombre from tipos_documentocajachica td where td.codigo=cod_tipodoccajachica) as cod_tipodoccajachica,nro_documento,(select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=cod_personal)as cod_personal,monto,monto_rendicion,observaciones,cod_estado
+$stmt = $dbh->prepare("SELECT codigo,cod_cuenta,fecha,cod_tipodoccajachica,
+  (select td.nombre from tipos_documentocajachica td where td.codigo=cod_tipodoccajachica) as nombre_tipodoccajachica,nro_documento,(select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=cod_personal)as cod_personal,monto,monto_rendicion,observaciones,cod_estado
 from caja_chicadetalle
 where cod_cajachica=$cod_cajachica and cod_estadoreferencial=1 ORDER BY codigo desc");
 //ejecutamos
@@ -38,6 +38,7 @@ $stmt->bindColumn('codigo', $codigo_detalle_Cajachica);
 $stmt->bindColumn('cod_cuenta', $cod_cuenta);
 $stmt->bindColumn('fecha', $fecha);
 $stmt->bindColumn('cod_tipodoccajachica', $cod_tipodoccajachica);
+$stmt->bindColumn('nombre_tipodoccajachica', $nombre_tipodoccajachica);
 $stmt->bindColumn('nro_documento', $nro_documento);
 $stmt->bindColumn('monto', $monto);
 $stmt->bindColumn('monto_rendicion', $monto_rendicion);
@@ -127,7 +128,7 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                             <td><?=$index;?></td>                            
                               <td><?=$cod_cuenta;?></td>
                               <td><?=$fecha;?></td>
-                              <td><?=$cod_tipodoccajachica;?></td>        
+                              <td><?=$nombre_tipodoccajachica;?></td>        
                               <td><?=$nro_documento;?></td>        
                               <td><?=$cod_personal;?></td>        
                               
@@ -151,6 +152,7 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                                         $control=$row['codigo_control'];
                                         ?><script>abrirFacturaDCC(<?=$idFila?>,'<?=$nit?>',<?=$factura?>,'<?=$fechaFac?>','<?=$razon?>',<?=$importe?>,<?=$exento?>,'<?=$autorizacion?>','<?=$control?>');</script><?php
                                     }
+                                    if($cod_tipodoccajachica!=5){
                               ?> 
                                 
 
@@ -162,6 +164,7 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                                   <i class="material-icons">featured_play_list</i>
                                   <span id="nfac<?=$idFila;?>" class="count bg-warning"></span>
                                 </a>
+                              <?php }?>
                                 
                                 <a href='<?=$urlFormDetalleCajaChica;?>&codigo=<?=$codigo_detalle_Cajachica;?>&cod_tcc=<?=$cod_tcc?>&cod_cc=<?=$cod_cajachica?>' rel="tooltip" class="<?=$buttonEdit;?>">
                                   <i class="material-icons" title="Editar"><?=$iconEdit;?></i>

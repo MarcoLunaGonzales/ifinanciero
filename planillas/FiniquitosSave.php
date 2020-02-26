@@ -53,15 +53,29 @@ try {
     $mes_ingreso2 = date("m", strtotime($ing_contr));
     $dia_ingreso2 = date("d", strtotime($ing_contr));
     //aun no hay datos de planillas
-    // $cod_planilla_3_atras=obtener_id_planilla($cod_gestion,($mes_retiro-3));
-    // $cod_planilla_2_atras=obtener_id_planilla($cod_gestion,($mes_retiro-2));
-    // $cod_planilla_1_atras=obtener_id_planilla($cod_gestion,($mes_retiro-1));
-    // $sueldo_3_atras=obtenerSueldomes($codigo_personal,$cod_planilla_3_atras);
-    // $sueldo_2_atras=obtenerSueldomes($codigo_personal,$cod_planilla_2_atras);    
-    // $sueldo_1_atras=obtenerSueldomes($codigo_personal,$cod_planilla_1_atras);
-    $sueldo_3_atras=5843.18;//cambiar
-    $sueldo_2_atras=5843.18;//cambiar
-    $sueldo_1_atras=5843.18;//cambiar
+    $cod_planilla_3_atras=obtener_id_planilla($cod_gestion,($mes_retiro-3));
+    $cod_planilla_2_atras=obtener_id_planilla($cod_gestion,($mes_retiro-2));
+    $cod_planilla_1_atras=obtener_id_planilla($cod_gestion,($mes_retiro-1));
+    if($cod_planilla_3_atras==0 || $cod_planilla_3_atras=='')
+        $sueldo_3_atras=0;
+    else
+        $sueldo_3_atras=obtenerSueldomes($codigo_personal,$cod_planilla_3_atras);   
+    if($cod_planilla_2_atras==0 || $cod_planilla_2_atras=='')
+        $sueldo_2_atras=0;
+    else
+        $sueldo_2_atras=obtenerSueldomes($codigo_personal,$cod_planilla_2_atras);    
+    if($cod_planilla_1_atras==0 || $cod_planilla_1_atras=='')
+        $sueldo_1_atras=0;
+    else
+        $sueldo_1_atras=obtenerSueldomes($codigo_personal,$cod_planilla_1_atras);
+
+
+    
+    
+    
+    // $sueldo_3_atras=5843.18;//cambiar
+    // $sueldo_2_atras=5843.18;//cambiar
+    // $sueldo_1_atras=5843.18;//cambiar
 
     $sueldo_promedio=($sueldo_3_atras+$sueldo_2_atras+$sueldo_1_atras)/3;
     //desahucio 3 meses
@@ -95,12 +109,13 @@ try {
     $vacaciones_duodecimas_monto=$sueldo_promedio/30*$vacaciones_doudecimas;
     $suma_vacaciones=$vacaciones_dias_monto+$vacaciones_duodecimas_monto;
     //desahucio
-    $desahucio=0;
+    $desahucio=0;//buscar datos
     $desahucio_monto=$sueldo_promedio*$desahucio;
     //otros
-    $servicios_adicionales=0;
-    $subsidios_meses=0;
-    $finiquitos_a_cuenta=0;
+    $servicios_adicionales=0;//buscar datos
+    $subsidios_meses=0;//buscar datos
+    $finiquitos_a_cuenta=0;//buscar datos
+
     $suma_otros=$servicios_adicionales+$subsidios_meses+$finiquitos_a_cuenta;
     //deducciones
     $porcentaje_deducciones_por_vacaciones=obtenerValorConfiguracion(14);
