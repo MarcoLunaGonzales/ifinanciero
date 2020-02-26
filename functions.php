@@ -2470,12 +2470,33 @@ function obtenerCostosPersonalSimulacionEditado($codigo){
   {
     $cantidad=$row['cantidad_editado'];
     $dias=$row['dias'];
-    $monto=$row['monto'];
+    $extlocal=$row['cod_externolocal'];
+    if($extlocal==1){
+      $monto=$row['monto'];
+    }else{
+      $monto=$row['monto_externo'];
+    }   
     $num+=$cantidad*$monto*$dias;
   }
   return $num;
 }
 
+function obtenerCostosPersonalSimulacionEditadoBK($codigo){
+  $dbh = new Conexion();
+  $sql="";
+  $sql="SELECT * from simulaciones_servicios_auditores where cod_simulacionservicio=$codigo and habilitado=1";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute(); 
+   $num=0;
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
+  {
+    $cantidad=$row['cantidad_editado'];
+    $dias=$row['dias'];
+    $monto=$row['monto'];
+    $num+=$cantidad*$monto*$dias;
+  }
+  return $num;
+}
 
 function obtenerCantidadPersonalSimulacionDetalle($codigo){
   $dbh = new Conexion();
@@ -3639,6 +3660,17 @@ function obtenerMontoSimulacionDetalleAuditor($codigo,$tipo,$codAuditor){
   }
   return $valor;
 }
+function obtenerMontoSimulacionDetalleAuditorExterno($codigo,$tipo,$codAuditor){
+    $dbh = new Conexion();
+   $valor=0;
+   $sql="SELECT monto_externo from simulaciones_ssd_ssa p where p.cod_simulacionservicio=$codigo and cod_simulacionserviciodetalle=$tipo and cod_simulacionservicioauditor=$codAuditor";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['monto_externo'];
+  }
+  return $valor;
+}
 function obtenerCantidadTotalSimulacionesServiciosDetalleAuditor($codigo,$tipo){
     $dbh = new Conexion();
    $valor=0;
@@ -3653,11 +3685,15 @@ function obtenerCantidadTotalSimulacionesServiciosDetalleAuditor($codigo,$tipo){
 function obtenerMontoTotalSimulacionesServiciosDetalleAuditor($codigo,$tipo){
     $dbh = new Conexion();
    $valor=0;
-   $sql="SELECT cantidad,dias,monto from simulaciones_ssd_ssa p where p.cod_simulacionservicio=$codigo and cod_simulacionserviciodetalle=$tipo";
+   $sql="SELECT p.cantidad,p.dias,p.monto,s.cod_externolocal,p.monto_externo from simulaciones_ssd_ssa p join simulaciones_servicios_auditores s on p.cod_simulacionservicioauditor=s.cod_tipoauditor where p.cod_simulacionservicio=$codigo and s.cod_simulacionservicio=$codigo and cod_simulacionserviciodetalle=$tipo";
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-      $valor+=$row['cantidad']*$row['dias']*$row['monto'];
+      if($row['cod_externolocal']==1){
+        $valor+=$row['cantidad']*$row['dias']*$row['monto'];
+      }else{
+        $valor+=$row['cantidad']*$row['dias']*$row['monto_externo'];
+      }     
   }
   return $valor;
 }

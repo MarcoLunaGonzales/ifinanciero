@@ -1679,12 +1679,18 @@ function agregarPlantillaDetalle(partida){
   //datos complementarios
   var detalle=$("#glosa_plantilladetalle").val();
   var monto=$("#monto_plantilladetalle").val();
+  if($("#monto_plantilladetalleext").length){
+   var montoe= $("#monto_plantilladetalleext").val();
+  }else{
+    var montoe=9999;
+  }
   var cuenta=$("#cuenta_plantilladetalle").val();
-  if(detalle==""||monto==""||monto==0||!(cuenta>0)){
+  if(detalle==""||monto==""||monto==0||!(cuenta>0)||montoe==""||montoe==0){
     Swal.fire('Informativo!','Todos los campos son requeridos!','warning'); 
   }else{
    var n_monto=calcularMontoRegistrado(parseFloat(monto),$("#tipo_calculomonto").val());
-     var parametros={"detalle":detalle,"monto":n_monto,"cuenta":cuenta,"cod_plantillacosto":plantilla,"cod_partida":partida,"tipo":$("#tipo_calculomonto").val(),"monto_al":monto};
+   var n_montoe=calcularMontoRegistrado(parseFloat(montoe),$("#tipo_calculomonto").val());
+     var parametros={"detalle":detalle,"monto":n_monto,"montoe":n_montoe,"cuenta":cuenta,"cod_plantillacosto":plantilla,"cod_partida":partida,"tipo":$("#tipo_calculomonto").val(),"monto_al":monto,"monto_ale":montoe};
      $.ajax({
         type: "GET",
         dataType: 'html',
@@ -2640,9 +2646,12 @@ $(document).on("shown.bs.modal","#modalRetencion",function(){
    }
     ajax.send(null);
  }
- function mostrarEditPlantillaDetalle(cod,monto,glosa){
+ function mostrarEditPlantillaDetalle(cod,monto,montoExt,glosa){
   $("#codigo_plandet").val(cod);
   $("#monto_plandet").val(monto);
+  if(montoExt!="NONE"){
+    $("#monto_plandetExt").val(montoExt);
+  }
   $("#glosa_plandet").val(glosa);
   $("#modalEditPlan").modal("show");
  }
@@ -2650,12 +2659,19 @@ $(document).on("shown.bs.modal","#modalRetencion",function(){
   var cod=$("#codigo_plandet").val();
   var glosa=$("#glosa_plandet").val();
   var monto=$("#monto_plandet").val();
-  if(glosa==""||monto==""){
+  if($("#monto_plandetExt").length){
+    var montoExt=$("#monto_plandetExt").val();
+  }else{
+    var montoExt=9999;
+  }
+  
+  if(glosa==""||monto==""||montoExt==""){
     Swal.fire('Informativo!','Todos los campos son requeridos!','warning');
   }else{
    var n_monto=calcularMontoRegistrado(parseFloat(monto),$("#tipo_calculomonto").val());
+   var n_montoExt=calcularMontoRegistrado(parseFloat(montoExt),$("#tipo_calculomonto").val());
   ajax=nuevoAjax();
-    ajax.open("GET","ajaxEditPlantillasDetalle.php?cod="+cod+"&m="+monto+"&g="+glosa+"&nm="+n_monto,true);
+    ajax.open("GET","ajaxEditPlantillasDetalle.php?cod="+cod+"&m="+monto+"&me="+montoExt+"&g="+glosa+"&nm="+n_monto+"&nme="+n_montoExt,true);
     ajax.onreadystatechange=function(){
     if (ajax.readyState==4) {
       $("#modalEditPlan").modal("hide");
@@ -4014,9 +4030,13 @@ function activarInputMontoPersonalServicio(fila){
   if(!($("#modal_montopretotal"+fila).is("[readonly]"))){
     $("#modal_montopretotal"+fila).attr("readonly",true);
     $("#modal_montopre"+fila).attr("readonly",true);
+    /*$("#modal_montopretotalext"+fila).attr("readonly",true);
+    $("#modal_montopreext"+fila).attr("readonly",true);*/
   }else{
     $("#modal_montopretotal"+fila).removeAttr("readonly");
     $("#modal_montopre"+fila).removeAttr("readonly");
+    /*$("#modal_montopretotalext"+fila).removeAttr("readonly");
+    $("#modal_montopreext"+fila).removeAttr("readonly");*/
   }
   calcularTotalPersonalServicio(1);
 }
@@ -4076,43 +4096,64 @@ function calcularTotalPartidaGenericoServicio(fila,valor){
 
 function calcularTotalPersonalServicio(valor){
   var suma=0; var sumal=0; var sumaC=0;
+  var sumae=0; var sumale=0;
   var total= $("#modal_numeropersonal").val();
   for (var i=1;i<=(total-1);i++){
     if(!($("#modal_montopretotal"+i).is("[readonly]"))){
     if(valor==1){
       suma+=parseFloat($("#modal_montopretotal"+i).val());
+      /*sumae+=parseFloat($("#modal_montopretotalext"+i).val());*/
       $("#modal_montopre"+i).val(redondeo(parseFloat($("#modal_montopretotal"+i).val())/parseInt($("#cantidad_personal"+i).val())/parseInt($("#dias_personal"+i).val())));
+      //$("#modal_montopreext"+i).val(redondeo(parseFloat($("#modal_montopretotalext"+i).val())/parseInt($("#cantidad_personal"+i).val())/parseInt($("#dias_personal"+i).val())));
     }else{
+      //$("#modal_montopretotalext"+i).val(redondeo(parseFloat($("#modal_montopreext"+i).val())*parseInt($("#cantidad_personal"+i).val())*parseInt($("#dias_personal"+i).val())));
       $("#modal_montopretotal"+i).val(redondeo(parseFloat($("#modal_montopre"+i).val())*parseInt($("#cantidad_personal"+i).val())*parseInt($("#dias_personal"+i).val())));
      suma+=parseFloat($("#modal_montopretotal"+i).val());  
+     //sumae+=parseFloat($("#modal_montopretotalext"+i).val());  
     }
      sumal+=parseFloat($("#modal_montopre"+i).val());
+     //sumale+=parseFloat($("#modal_montopreext"+i).val());
      sumaC+=parseInt($("#cantidad_personal"+i).val());
     }
    
   } 
   var result=redondeo(suma);
   var resulta=redondeo(sumal);
+  /*var resulte=redondeo(sumae);
+  var resultae=redondeo(sumale);*/
   $("#modal_totalmontopretotal").text(result);
   $("#modal_cantidadpersonal").val(sumaC);
-  $("#modal_totalmontopre").text(redondeo(resulta)); 
+  $("#modal_totalmontopre").text(redondeo(resulta));
+
+ /* $("#modal_totalmontopretotalext").text(resulte);
+  $("#modal_totalmontopreext").text(redondeo(resultae)); */
 }
 
 function calcularTotalPersonalServicioAuditor(){
   var suma=0; var sumal=0; var sumaC=0;
+  var sumae=0; var sumale=0;
   var total= $("#modal_numeropersonalauditor").val();
   for (var i=1;i<=(total-1);i++){
     var columnas =$("#cantidad_columnas"+i).val();
-    var montos=0;
+    var montos=0;var montose=0;
+    var extlocal=$("#modal_local_extranjero"+i).val();
     for (var j = 1; j <=columnas; j++) {
-     $("#monto_mult"+j+"RRR"+i).val(redondeo(($("#modal_cantidad_personal"+i).val()*$("#modal_dias_personal"+i).val())*parseFloat($("#monto"+j+"RRR"+i).val()))); 
-     montos+=parseFloat($("#monto_mult"+j+"RRR"+i).val()); 
+      if(extlocal==1){
+       $("#monto_mult"+j+"RRR"+i).val(redondeo(($("#modal_cantidad_personal"+i).val()*$("#modal_dias_personal"+i).val())*parseFloat($("#monto"+j+"RRR"+i).val())));     
+        montos+=parseFloat($("#monto_mult"+j+"RRR"+i).val());
+      }else{
+       $("#monto_mult"+j+"RRR"+i).val(redondeo(($("#modal_cantidad_personal"+i).val()*$("#modal_dias_personal"+i).val())*parseFloat($("#montoext"+j+"RRR"+i).val())));     
+        montos+=parseFloat($("#monto_mult"+j+"RRR"+i).val());
+      }   
+     //montose+=parseFloat($("#monto_multext"+j+"RRR"+i).val());  
     };
      //suma=parseFloat($("#modal_cantidad_personal"+i).val()*$("#modal_dias_personal"+i).val()*montos);
      suma=montos;
+     //sumae=montose;
      $("#total_auditor"+i).text(redondeo(suma));
      //$("#total_unitarioauditor"+i).text(redondeo(suma/($("#modal_cantidad_personal"+i).val()*$("#modal_dias_personal"+i).val()))); 
      sumal+=suma;
+     //sumale+=sumae;
      sumaC+=suma/(($("#modal_cantidad_personal"+i).val()*$("#modal_dias_personal"+i).val())); 
   } 
   var resulta=redondeo(sumal);
@@ -4299,12 +4340,14 @@ function guardarCuentasSimulacionAjaxGenericoServicioAuditor(){
          var tipoAu=$("#codigo_filaauditor"+l).val();
          var columnas= $("#cantidad_columnas"+l).val();
          var diasn=$("#modal_dias_personal"+l).val();
+         var extlocal=$("#modal_local_extranjero"+l).val();
          var cantidadn=$("#modal_cantidad_personal"+l).val();
          for (var k = 1; k <=columnas; k++) {
            var codigoDetalle= $("#codigo_columnas"+k+"RRR"+l).val();
            var montoDetalle= $("#monto"+k+"RRR"+l).val();
+           var montoDetalleext= $("#montoext"+k+"RRR"+l).val();
         
-           var parametros = {"simulaciones":simulaciones,"cod_detalle":codigoDetalle,"cod_tipoau":tipoAu,"monto":montoDetalle,"dias":diasn,"cantidad":cantidadn};
+           var parametros = {"simulaciones":simulaciones,"cod_detalle":codigoDetalle,"cod_tipoau":tipoAu,"extlocal":extlocal,"monto":montoDetalle,"montoe":montoDetalleext,"dias":diasn,"cantidad":cantidadn};
             $.ajax({
             type:"GET",
             data:parametros,
@@ -5348,13 +5391,16 @@ if(!(ut_i==""||dia==""||dia==0||productos==""||num_prod<1)){
      var habilitado=1;
       var codigo = $("#modal_codigopersonal"+i).val();
       var monto = $("#modal_montopre"+i).val();
+      var montol = $("#modal_montopreloc"+i).val();
+      var montoe = $("#modal_montopreext"+i).val();
+      var extlocal = $("#local_extranjero"+i).val();
       var cantidad = $("#cantidad_personal"+i).val();
       var cantidadTotal = $("#modal_cantidadpersonal").val();
       var dias = $("#dias_personal"+i).val();
       if($("#modal_montopre"+i).is("[readonly]")){
         habilitado=0;
       }
-      var parametros = {"codigo":codigo,"monto":monto,"simulacion":cod_sim,"productos":productos,"plantilla":codigo_p,"dia":dia,"utilidad":ut_i,"habilitado":habilitado,"cantidad":cantidad,"dias":dias,"cantidadT":cantidadTotal};
+      var parametros = {"codigo":codigo,"extlocal":extlocal,"montoe":montoe,"montol":montol,"monto":monto,"simulacion":cod_sim,"productos":productos,"plantilla":codigo_p,"dia":dia,"utilidad":ut_i,"habilitado":habilitado,"cantidad":cantidad,"dias":dias,"cantidadT":cantidadTotal};
       $.ajax({
         type:"GET",
         data:parametros,
@@ -5678,12 +5724,13 @@ function listDetallePlantilla(id){
   for (var i = 1; i < n; i++) {
     var cantidad=$("#cantidad_personal"+i).val();
     var monto=$("#monto_personal"+i).val();
+    var montoExt=$("#monto_personalext"+i).val();
     var dias=$("#dias_personal"+i).val();
     var codigo = $("#codigo_personal"+i).val();
-    if(cantidad==""||monto==""||parseFloat(monto)==0){
+    if(cantidad==""||monto==""||parseFloat(monto)==0||montoExt==""||parseFloat(montoExt)==0){
       
     }else{
-     var parametros={"plantilla":plantilla,"codigo":codigo,"cant":cantidad,"monto":monto,"dias":dias};
+     var parametros={"plantilla":plantilla,"codigo":codigo,"cant":cantidad,"monto":monto,"montoe":montoExt,"dias":dias};
      $.ajax({
         type: "GET",
         dataType: 'html',
@@ -6450,16 +6497,44 @@ function calcularMontoFilaPersonalServicio(fila){
   var cantidad =$("#cantidad_personal"+fila).val();
   var dias =$("#dias_personal"+fila).val();
   var monto =$("#monto_personal"+fila).val();
+  var montoExt =$("#monto_personalext"+fila).val();
   $("#total_personal"+fila).val(redondeo(cantidad*monto*dias));
-
+  $("#total_personalext"+fila).val(redondeo(cantidad*montoExt*dias));
   var n =$("#cantidad_filaspersonal").val();
-  var suma=0;
+  var suma=0; 
+  var sumaExt=0;
   for (var i = 1; i < n; i++) {
     suma+=parseFloat($("#total_personal"+i).val());
+    sumaExt+=parseFloat($("#total_personalext"+i).val());
   };
   $("#total_personalservicio").text(redondeo(suma));
+  $("#total_personalservicioext").text(redondeo(sumaExt));
 }
 
 function cambiarCantidadProductoSimulacion(){
-  alert($("#modal_productos").val())
+  alert($("#modal_productos").val());
+}
+
+function montarMontoLocalExternoTabla(fila){
+  var region=$("#local_extranjero"+fila).val();
+  if(region==1){
+    $("#modal_montopre"+fila).val($("#modal_montopreloc"+fila).val());
+  }else{
+    $("#modal_montopre"+fila).val($("#modal_montopreext"+fila).val()); 
+  }
+  calcularTotalPersonalServicio(2);
+}
+function montarMontoLocalExternoTablaAuditor(fila){
+  var region=$("#modal_local_extranjero"+fila).val();
+  var columnas =$("#cantidad_columnas"+fila).val();
+  if(region==1){ 
+    for (var j = 1; j <=columnas; j++) {
+     $("#monto_mult"+j+"RRR"+fila).val(redondeo(($("#modal_cantidad_personal"+fila).val()*$("#modal_dias_personal"+fila).val())*parseFloat($("#monto"+j+"RRR"+fila).val())));   
+    };    
+  }else{
+    for (var j = 1; j <=columnas; j++) {
+     $("#monto_mult"+j+"RRR"+fila).val(redondeo(($("#modal_cantidad_personal"+fila).val()*$("#modal_dias_personal"+fila).val())*parseFloat($("#montoext"+j+"RRR"+fila).val()))); 
+    };   
+  }
+  calcularTotalPersonalServicioAuditor();
 }

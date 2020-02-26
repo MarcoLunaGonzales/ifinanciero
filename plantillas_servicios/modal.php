@@ -434,16 +434,22 @@
                 <input type="hidden" id="codigo_plandet">
                 <div class="card-body">
                   <div class="row">
-                    <div class="col-sm-8">                     
+                    <div class="col-sm-6">                     
                          <div class="form-group">
                           <label class="bmd-label-static">GLOSA</label>
                           <input type="text" class="form-control" id="glosa_plandet">
                          </div> 
                     </div>
-                    <div class="col-sm-4">                     
+                    <div class="col-sm-3">                     
                          <div class="form-group">
-                          <label class="bmd-label-static">MONTO</label>
+                          <label class="bmd-label-static">MONTO BOLIVIA</label>
                           <input type="number" class="form-control" id="monto_plandet">
+                         </div> 
+                    </div>
+                    <div class="col-sm-3">                     
+                         <div class="form-group">
+                          <label class="bmd-label-static">MONTO EXTRAJERO</label>
+                          <input type="number" class="form-control" id="monto_plandetExt">
                          </div> 
                     </div> 
                   </div>
