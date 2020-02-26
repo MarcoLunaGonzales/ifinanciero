@@ -20,8 +20,6 @@
 <!--    end small modal -->
 
 
-
-
 <!-- small modal -->
 <div class="modal fade modal-primary" id="modalAbrirPlantilla" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
@@ -320,11 +318,11 @@
                        <table class="table table-condensed table-bordered">
                          <tbody>
                            <tr class="bg-info text-white">
-                             <td class="rexr-right"># Auditorias x Gesti&oacute;n</td>
+                             <td class="rexr-right">IMPORTE PRESUPUESTADO</td>
                              <td class="rexr-right">PERSONAL REGISTRADO</td>
                            </tr>                         
                            <tr>
-                             <td class="text-right small"><?=obtenerValorConfiguracion($valConf)?></td>
+                             <td class="text-right small"><?=obtenerValorConfiguracion($valConf2)?></td>
                              <td class="text-right small" id="cantidad_personal"><?=obtenerCantidadPersonalPlantilla($codigo)?></td>
                            </tr>
                          </tbody>
@@ -373,7 +371,7 @@
                         <div class="col-sm-4">
                          <div class="form-group">
                           <label class="bmd-label-static">Monto x Auditoria</label>
-                          <input type="text" class="form-control" name="monto_f_ibnorca" id="monto_f_ibnorca" value="0" step="0.01" readonly>
+                          <input type="number" class="form-control" name="monto_f_ibnorca" id="monto_f_ibnorca" value="0" step="0.01" readonly>
                          </div>
                         </div>
                         <div class="col-sm-4 d-none" id="columna_alumno">
@@ -394,9 +392,9 @@
                         </div>
                         <div class="col-sm-4">
                           <a href="#" class="btn btn-warning btn-sm btn-round" onclick="mostrarInputMonto('monto_ibnorca2')"> Editar</a>
-                          <!--<a href="#" class="btn btn-warning btn-sm btn-round" onclick="mostrarInputDetalle('monto_ibnorca2')"> Detalles</a>-->  
+                          
                          <div class="form-group d-none" id="monto_ibnorca2">
-                          <label class="bmd-label-static">Monto x Auditoria</label>
+                          <label class="bmd-label-static">Monto x Auditoria (Referencial)</label>
                           <input type="number" class="form-control" name="monto_f_ibnorca_edit" id="monto_f_ibnorca_edit" value="0" step="0.01">
                          </div>
                         </div>
@@ -436,16 +434,22 @@
                 <input type="hidden" id="codigo_plandet">
                 <div class="card-body">
                   <div class="row">
-                    <div class="col-sm-8">                     
+                    <div class="col-sm-6">                     
                          <div class="form-group">
                           <label class="bmd-label-static">GLOSA</label>
                           <input type="text" class="form-control" id="glosa_plandet">
                          </div> 
                     </div>
-                    <div class="col-sm-4">                     
+                    <div class="col-sm-3">                     
                          <div class="form-group">
-                          <label class="bmd-label-static">MONTO</label>
+                          <label class="bmd-label-static">MONTO BOLIVIA</label>
                           <input type="number" class="form-control" id="monto_plandet">
+                         </div> 
+                    </div>
+                    <div class="col-sm-3">                     
+                         <div class="form-group">
+                          <label class="bmd-label-static">MONTO EXTRAJERO</label>
+                          <input type="number" class="form-control" id="monto_plandetExt">
                          </div> 
                     </div> 
                   </div>

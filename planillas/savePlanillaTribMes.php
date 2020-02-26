@@ -267,9 +267,16 @@ function ReprocesarPlanillaTribNuevo($codigo,$codPlan){
     // $saldo_mes_anterior= 6543;
     //MANTENIMIENTO DE VALOR DEL SALDO A FAVOR DEL DEPENDIENTE DEL PERIODO ANTERIOR
     
+
       //UFV Anterior
-      $ufv_anterior=2.32586;//buscar datos
-      $ufv_actual=2.33166;//budsar datos
+      $fecha_inicio=date("Y-m-01");
+      $fecha_actual=date("Y-m-d");
+
+      $ufv_anterior=obtenerUFV($fecha_inicio);
+      $ufv_actual=obtenerUFV($fecha_actual);
+
+       
+
       $mantenimiento_saldo_mes_anterior=($saldo_mes_anterior*$ufv_actual/$ufv_anterior-$saldo_mes_anterior);
       //SALDO DEL PERIODO ANTERIOR ACTUALIZADO
       $saldo_mes_anterior_actualizado=$saldo_mes_anterior+$mantenimiento_saldo_mes_anterior;

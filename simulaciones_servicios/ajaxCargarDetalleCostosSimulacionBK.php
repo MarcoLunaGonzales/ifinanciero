@@ -14,24 +14,27 @@ $stmtX->execute();
 
 if(isset($_GET["simulacion"])){
  $codigo=$_GET["simulacion"];
- $montoNorma=obtenerMontoNormaSimulacion($codigo);
- $habNorma=obtenerHabilitadoNormaSimulacion($codigo);
-
  $codPlan=$_GET["plantilla"];
+ $codArea=obtenerCodigoAreaPlantillaServicio($codPlan);
+ if($codArea==39){
+   $mes=obtenerCantidadAuditoriasPlantilla($codPlan);
+ }else{
+   $mes=obtenerCantidadAuditoriasPlantilla($codPlan);
+ }
  $tipoCosto=$_GET["tipo"];
- $alumnos=$_GET["al"];
+ $alumnos=obtenerCantidadPersonalSimulacionEditado($codigo);
 $anio=date("Y");
-$mes=obtenerValorConfiguracion(6);
-$query1="select pgd.cod_plantillagrupocosto,pc.cod_unidadorganizacional,pc.cod_area,pgc.nombre,pgc.cod_tipocosto,sum(pgd.monto_local) as local,sum(pgd.monto_externo) as externo,sum(pgd.monto_calculado) as calculado from plantillas_grupocostodetalle pgd join partidas_presupuestarias pp on pgd.cod_partidapresupuestaria=pp.codigo
-join plantillas_gruposcosto pgc on pgd.cod_plantillagrupocosto=pgc.codigo
-join plantillas_costo pc on pgc.cod_plantillacosto=pc.codigo 
+
+$query1="select pgd.cod_plantillagruposervicio,pc.cod_unidadorganizacional,pc.cod_area,pgc.nombre,pgc.cod_tiposervicio,sum(pgd.monto_local) as local,sum(pgd.monto_externo) as externo,sum(pgd.monto_calculado) as calculado from plantillas_gruposerviciodetalle pgd join partidas_presupuestarias pp on pgd.cod_partidapresupuestaria=pp.codigo
+join plantillas_gruposervicio pgc on pgd.cod_plantillagruposervicio=pgc.codigo
+join plantillas_servicios pc on pgc.cod_plantillaservicio=pc.codigo 
 where pc.codigo=$codPlan";
 
 if($tipoCosto==1){
-$query2=$query1." and pgc.cod_tipocosto=1 GROUP BY pgd.cod_plantillagrupocosto order by pgd.cod_plantillagrupocosto";
+$query2=$query1." and pgc.cod_tiposervicio=1 GROUP BY pgd.cod_plantillagruposervicio order by pgd.cod_plantillagruposervicio";
 $bgClase="bg-info";
 }else{
-  $query2=$query1." and pgc.cod_tipocosto=2 GROUP BY pgd.cod_plantillagrupocosto order by pgd.cod_plantillagrupocosto";
+  $query2=$query1." and pgc.cod_tiposervicio=2 GROUP BY pgd.cod_plantillagruposervicio order by pgd.cod_plantillagruposervicio";
   $bgClase="bg-success";
 }
   $stmt = $dbh->prepare($query2);
@@ -44,15 +47,15 @@ $bgClase="bg-info";
    <table class="table table-condensed table-bordered">
          <tr class="text-white <?=$bgClase?>">
         <td>Cuenta / Detalle</td>
-        <td>Monto x Modulo</td>
+        <td>Monto x Servicio</td>
         <?php if($tipoCosto!=1){
-        ?> <td>Monto x Alumno</td><?php 
+        ?> <td>Monto x Persona</td><td>Cantidad</td><?php 
         }
         ?>
         </tr>
 <?php
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-  $codGrupo=$row['cod_plantillagrupocosto'];
+  $codGrupo=$row['cod_plantillagruposervicio'];
   $grupoUnidad=$row['cod_unidadorganizacional'];
   $grupoArea=$row['cod_area'];
     if($row['calculado']==$row['local']){
@@ -69,12 +72,12 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
      }else{
        $html.='<tr class="bg-plomo">'.
                       '<td class="font-weight-bold text-left">'.$row['nombre'].'</td>'.
-                      '<td class="text-right font-weight-bold"></td><td></td>';
+                      '<td class="text-right font-weight-bold"></td><td></td><td></td>';
       $html.='</tr>';
     }
      
 
-     $query_partidas="select pgd.cod_plantillagrupocosto,pp.nombre,pgd.cod_partidapresupuestaria,pgd.tipo_calculo,pgd.monto_local,pgd.monto_externo,pgd.monto_calculado from plantillas_grupocostodetalle pgd join partidas_presupuestarias pp on pgd.cod_partidapresupuestaria=pp.codigo join plantillas_gruposcosto pgc on pgd.cod_plantillagrupocosto=pgc.codigo where pgd.cod_plantillagrupocosto=$codGrupo";
+     $query_partidas="select pgd.cod_plantillagruposervicio,pp.nombre,pgd.cod_partidapresupuestaria,pgd.tipo_calculo,pgd.monto_local,pgd.monto_externo,pgd.monto_calculado from plantillas_gruposerviciodetalle pgd join partidas_presupuestarias pp on pgd.cod_partidapresupuestaria=pp.codigo join plantillas_gruposervicio pgc on pgd.cod_plantillagruposervicio=pgc.codigo where pgd.cod_plantillagruposervicio=$codGrupo";
 
      $stmt_partidas = $dbh->prepare($query_partidas);
      $stmt_partidas->execute();
@@ -99,7 +102,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
          }else{
            $html.='<tr class="bg-success text-white">'.
                       '<td class="font-weight-bold text-left">&nbsp;&nbsp; '.$row_partidas['nombre'].' '.$numeroCuentas.'</td>'.
-                      '<td class="text-right font-weight-bold"></td><td></td>';
+                      '<td class="text-right font-weight-bold"></td><td></td><td></td>';
           $html.='</tr>';
          } 
         if($row_partidas['tipo_calculo']==1){
@@ -125,24 +128,32 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $html.='</tr>';
             }
           }else{ 
-            $query_cuentas=obtenerDetalleSimulacionCostosPartida($codigo,$codPartida);
+            $query_cuentas=obtenerDetalleSimulacionCostosPartidaServicio($codigo,$codPartida);
             $montoSimulacion=0;
             while ($row_cuentas = $query_cuentas->fetch(PDO::FETCH_ASSOC)) {
               $montoCal=$row_cuentas['monto_total'];
               $montoSimulacion+=$row_cuentas['monto_total'];
               
               $bandera=$row_cuentas['habilitado'];
+              $cantidadDetalle=$row_cuentas['cantidad'];
               $bgFila="";
               if($bandera==0){
                  $bgFila="text-danger";   
+                $html.='<tr class="'.$bgFila.'">'.
+                      '<td class="font-weight-bold text-left"><strike>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$row_cuentas['nombre'].' / '.$row_cuentas['glosa'].'</strike></td>'.
+                      '<td class="text-right text-muted">'.number_format(0, 2, '.', ',').'</td>';
+                      if($tipoCosto!=1){
+                        $html.='<td class="text-right text-muted">'.number_format(0, 2, '.', ',').'</td><td>'.$cantidadDetalle.'</td>';
+                      }
+                $html.='</tr>';
               }else{
                 $montoTotales2+=$row_cuentas['monto_total'];
-                $montoTotales2Alumno+=$montoCal/$alumnos;
+                $montoTotales2Alumno+=$montoCal/$cantidadDetalle;
                 $html.='<tr class="'.$bgFila.'">'.
                       '<td class="font-weight-bold text-left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$row_cuentas['nombre'].' / '.$row_cuentas['glosa'].'</td>'.
                       '<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>';
                       if($tipoCosto!=1){
-                        $html.='<td class="text-right text-muted">'.number_format($montoCal/$alumnos, 2, '.', ',').'</td>';
+                        $html.='<td class="text-right text-muted">'.number_format($montoCal/$cantidadDetalle, 2, '.', ',').'</td><td class="text-right text-muted">'.$cantidadDetalle.'</td>';
                       }
                       
                 $html.='</tr>';
@@ -152,18 +163,6 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
           }  
      }
 }
-         if($tipoCosto!=1){
-            if($habNorma==1){
-               $html.='<tr class="bg-warning text-dark">'.
-                      '<td class="font-weight-bold text-left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NORMA </td>'.
-                      '<td class="text-right font-weight-bold">'.number_format($montoNorma, 2, '.', ',').'</td>'.
-                      '<td class="text-right font-weight-bold">'.number_format($montoNorma/$alumnos, 2, '.', ',').'</td>';
-                $html.='</tr>';
-                $montoTotales2+=$montoNorma;
-                $montoTotales2Alumno+=($montoNorma/$alumnos); 
-            }
-                
-         } 
     if($tipoCosto==1){
            $html.='<tr class="bg-plomo">'.
                       '<td class="font-weight-bold text-left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Total </td>'.
@@ -173,7 +172,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
            $html.='<tr class="bg-plomo">'.
                       '<td class="font-weight-bold text-left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Total </td>'.
                       '<td class="text-right text-muted font-weight-bold">'.number_format($montoTotales2, 2, '.', ',').'</td>'.
-                      '<td class="text-right text-muted font-weight-bold">'.number_format($montoTotales2Alumno, 2, '.', ',').'</td>';
+                      '<td class="text-right text-muted font-weight-bold">'.number_format($montoTotales2Alumno, 2, '.', ',').'</td><td class="text-right text-muted font-weight-bold"></td>';
                 $html.='</tr>';
          } 
 
@@ -182,6 +181,6 @@ echo $html;
   </table>
   <?php  
    if($tipoCosto!=1){
-        ?><div class="row div-center"><h4 class="font-weight-bold"><small>N&uacute;mero de alumnos registrado:</small> <small class="text-success"><?=$alumnos?></small></h4></div><?php 
+        ?><div class="row div-center"><h4 class="font-weight-bold"><small>N&uacute;mero de personal registrado:</small> <small class="text-success"><?=$alumnos?></small></h4></div><?php 
     }   
 }     

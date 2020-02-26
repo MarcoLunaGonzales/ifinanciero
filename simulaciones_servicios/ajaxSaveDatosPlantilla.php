@@ -14,17 +14,29 @@ $codSimulacion=$_GET["simulacion"];
 $ut_i=$_GET['utilidad'];
 $dia=$_GET['dia'];
 
+$extlocal=$_GET['extlocal'];
+if($extlocal==1){
+  $monto=$_GET['monto'];
+  $montoe=$_GET['montoe'];
+}else{
+  $monto=$_GET['montol'];
+  $montoe=$_GET['monto'];
+}
 
-$monto=$_GET['monto'];
 $cantidad=$_GET['cantidad'];
+$cantidadT=$_GET['cantidadT'];
+$dias_aud=$_GET['dias'];
 $habilitado=$_GET['habilitado'];
-
-$sqlUpdatePlantilla="UPDATE simulaciones_servicios SET  utilidad_minima='$ut_i',dias_auditoria='$dia' where codigo=$codSimulacion";
+$productos=$_GET['productos'];
+if($dia<$dias_aud){
+  $dias_aud=$dia;
+}
+$sqlUpdatePlantilla="UPDATE simulaciones_servicios SET  utilidad_minima='$ut_i',dias_auditoria='$dia',productos='$productos' where codigo=$codSimulacion";
 $stmtUpdatePlantilla = $dbh->prepare($sqlUpdatePlantilla);
 $stmtUpdatePlantilla->execute();
 
 
-$sqlDetalles="UPDATE simulaciones_servicios_auditores SET cantidad_editado=$cantidad,monto=$monto,habilitado=$habilitado where codigo=$codigo";
+$sqlDetalles="UPDATE simulaciones_servicios_auditores SET cantidad_editado=$cantidad,monto=$monto,habilitado=$habilitado,dias=$dias_aud,monto_externo='$montoe',cod_externolocal='$extlocal' where codigo=$codigo";
 $stmtDetalles = $dbh->prepare($sqlDetalles);
 $stmtDetalles->execute();
 
@@ -32,15 +44,15 @@ $sqlDet="SELECT * FROM simulaciones_serviciodetalle where cod_simulacionservicio
 $stmtDet = $dbh->prepare($sqlDet);
 $stmtDet->execute();
 
- while ($rowPre = $stmtDet->fetch(PDO::FETCH_ASSOC)) {
+/* while ($rowPre = $stmtDet->fetch(PDO::FETCH_ASSOC)) {
  	$cantidadDet=$rowPre['cantidad'];
  	$codigoDet=$rowPre['codigo'];
  	$montoDet=$rowPre['editado_personal'];
  	$partidaDet=$rowPre['cod_partidapresupuestaria'];
  	$cuenta=$rowPre['cod_cuenta'];
- 	if($cantidadDet>$cantidad){
- 		$montoTotalDet=$montoDet*$cantidad;
- 		$sqlDetalles="UPDATE simulaciones_serviciodetalle SET cantidad=$cantidad,monto_total=$montoTotalDet,monto_unitario=$montoTotalDet where codigo=$codigoDet";
+ 	if($cantidadDet>($cantidadT*$dias_aud)){
+ 		$montoTotalDet=$montoDet*$cantidadT*$dias_aud;
+ 		$sqlDetalles="UPDATE simulaciones_serviciodetalle SET cantidad=$cantidadT,monto_total=$montoTotalDet,monto_unitario=$montoTotalDet where codigo=$codigoDet";
         $stmtDetalles = $dbh->prepare($sqlDetalles);
         $stmtDetalles->execute();
         $dbhC = new Conexion();
@@ -66,7 +78,7 @@ $stmtDet->execute();
          $stmtUpdate->execute();
        }
  	}   
-}
+}*/
 
 echo "OK";
 ?>

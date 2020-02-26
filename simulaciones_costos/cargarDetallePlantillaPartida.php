@@ -19,7 +19,7 @@ $j=1;
     ?>
     <input type="hidden" name="codigo_partida_presupuestaria<?=$j?>" id="codigo_partida_presupuestaria<?=$j?>" value="<?=$codigoPartida?>" readonly/>
     <h4 class="font-weight-bold"><center>PARTIDA: <?=$nombrePartida?></center>
-      <div class="row col-sm-4 float-right">
+      <!--<div class="row col-sm-4 float-right">
         <small class="col-sm-6">Hab/Des</small>
         <div class="togglebutton col-sm-6">
               <label>
@@ -27,7 +27,7 @@ $j=1;
                  <span class="toggle"></span>
               </label>
         </div>    
-      </div>
+      </div>-->
     </h4>
       <div class="row">
         <!--<label class="col-sm-3 col-form-label">Monto x Modulo Plantilla:</label>
@@ -94,6 +94,8 @@ $j=1;
      }
     }
   ?>
+      
+
       <tr>
         <td colspan="2" class="text-center font-weight-bold">Total</td>
         <td id="total_tabladetalle<?=$j?>" class="text-right font-weight-bold"><?=$totalMontoDetalle?></td>
@@ -107,6 +109,22 @@ $j=1;
   $j++; 
   }
   ?>
+  <table class="table table-condensed table-bordered">
+    <tr>
+              <td class="text-left font-weight-bold text-white bg-info" width="50%">Norma</td>
+              <td class="text-right"><input type="number" id="monto_norma<?=$j?>" name="monto_norma<?=$j?>" <?=($habilitadoNormaX==0)?"readonly":"";?> class="form-control text-info text-right" value="<?=$montoNormaX?>" step="0.01"></td>
+              <td class="text-right"></td>
+              <td>
+                <div class="togglebutton">
+                        <label>
+                          <input type="checkbox" <?=($habilitadoNormaX==1)?"checked":"";?> id="habilitar_norma<?=$j?>" onchange="activarInputMontoGenericoNorma('<?=$j?>')">
+                          <span class="toggle"></span>
+                        </label>
+                </div>
+               
+              </td>
+             </tr> 
+  </table>
    <div id="mensaje_cuenta"></div>
   <input type="hidden" id="numero_cuentaspartida" value="<?=$j?>">
   <div class="form-group float-right">

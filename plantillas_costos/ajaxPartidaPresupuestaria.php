@@ -21,10 +21,11 @@ $globalArea=$_SESSION["globalArea"];
 $idp=$_GET['idp'];
 $unidad=$_GET['unidad'];
 $area=$_GET['area'];
+$valor=$_GET['valor'];
 $anio=date("Y");
 $anio_pasado=(int)$anio-1;
  
-$monto = calcularCostosPresupuestarios($idp,$unidad,$area,$anio_pasado);
+$monto = calcularCostosPresupuestariosValor($idp,$unidad,$area,$anio_pasado,$valor);
 echo trim($monto);
 ?>
 

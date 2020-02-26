@@ -20,7 +20,7 @@ $stmtControlador = $dbh->prepare($sqlControlador);
 $stmtControlador->execute();
 $resultControlador=$stmtControlador->fetch();
 $cod_estado_aux=$resultControlador['cod_estado'];
-if($cod_estado_aux==2 || $cod_estado_aux==null){
+if($cod_estado_aux==2 || $cod_estado_aux==null || $codigo>0){
     //por is es edit
     if ($codigo > 0){
         $codigo=$codigo;
@@ -115,7 +115,7 @@ if($cod_estado_aux==2 || $cod_estado_aux==null){
                           <label class="col-sm-2 col-form-label">Responsable</label>
                           <div class="col-sm-8">
                             <div class="form-group">
-                                <select name="cod_personal" id="cod_personal" class="selectpicker form-control" data-style="btn btn-info">
+                                <select name="cod_personal" id="cod_personal" class="selectpicker form-control form-control-sm" data-style="btn btn-info">
                                     <option value=""></option>
                                     <?php 
                                     $querypersonal = "SELECT codigo,CONCAT_WS(' ',paterno,materno,primer_nombre)AS nombre from personal where cod_estadoreferencial=1 order by nombre";

@@ -71,7 +71,7 @@ $dbh = new Conexion();
                         </div>
                         </div>
                       </div>
-                      <div class="row">
+                      <!--<div class="row">
                        <label class="col-sm-2 col-form-label">Cliente</label>
                        <div class="col-sm-7">
                         <div class="row">
@@ -94,36 +94,12 @@ $dbh = new Conexion();
                                     ?>
                                 </select>
                               </div>
-                          </div>
-                          <!--<div class="col-sm-7">
-                            <div class="row">
-                            <label class="col-sm-2 col-form-label">Servicio</label>
-                            <div class="col-sm-10">
-                              <div class="form-group">
-                                <select class="selectpicker form-control" name="cod_servicio[]" id="cod_servicio" multiple data-style="btn btn-info"  required>
-        
-                                <?php
-                                 /*$stmt = $dbh->prepare("SELECT codigo,descripcion from claservicios where (idArea=38 or idArea=39) and vigente=1");
-                                 $stmt->execute();
-                                  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                                  $codigoX=$row['codigo'];
-                                  $nombreX=$row['descripcion'];
-                                  //$abrevX=$row['abreviatura'];*/
-                                   ?>
-                                  <!--<option value="<?=$codigoX;?>"><?=$nombreX;?></option> -->
-                                  <?php
-                                    //}
-                                    ?>
-                                <!--</select>
-                              </div>
-                            </div>
-                           </div>
-                          </div>--> 
+                          </div> 
                         </div>
                        </div>
-                      </div><!--row-->
+                      </div>--><!--row-->
 
-                      <div class="row">
+                      <!--<div class="row">
                        <label class="col-sm-2 col-form-label">Productos</label>
                        <div class="col-sm-7">
                         <div class="form-group" style="border-bottom: 1px solid #CACFD2">
@@ -138,10 +114,10 @@ $dbh = new Conexion();
                           <input class="form-control" type="text" name="norma" id="norma" required autocomplete="off"/>
                         </div>
                         </div>
-                      </div>
+                      </div>-->
 
                       <div class="row">
-                       <label class="col-sm-2 col-form-label">D&iacute;as</label>
+                       <label class="col-sm-2 col-form-label">D&iacute;as de Auditoria</label>
                        <div class="col-sm-7">
                         <div class="row">
                           <div class="col-sm-5">

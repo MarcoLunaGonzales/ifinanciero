@@ -13,6 +13,12 @@ $sqlX="SET NAMES 'utf8'";
 $codigo=$_GET['cod_plantillacosto'];
 $codPartida=$_GET['cod_partida'];
 $tipoCalculo=$_GET['tipo_calculomonto'];
+if($tipoCalculo==2){
+  $tipoCal=obtenerTipodeCalculoRegistradoDetalle($codigo,$codPartida,1);
+  if($tipoCal!=0){
+    $tipoCalculo=$tipoCal;
+  }
+}
 $cursos=$_GET['cursos'];
 $alumnos=$_GET['alumnos'];
 ?>
@@ -134,7 +140,7 @@ $alumnos=$_GET['alumnos'];
                              <td class="text-right"><?=$montoTotal?></td>
                              <td class="text-left font-weight-bold small">[<?=$numeroCuenta?>] <?=$nombreCuenta?></td>
                              <td>
-                              <a href="#" class="btn btn-success btn-sm btn-fab" onclick="mostrarEditPlantillaDetalle(<?=$codigoDetalle?>,'<?=$montoFila?>','<?=$glosaD?>'); return false;">
+                              <a href="#" class="btn btn-success btn-sm btn-fab" onclick="mostrarEditPlantillaDetalle(<?=$codigoDetalle?>,'<?=$montoFila?>','NONE','<?=$glosaD?>'); return false;">
                                 <i class="material-icons"><?=$iconEdit;?></i>
                               </a>
                               <?php 

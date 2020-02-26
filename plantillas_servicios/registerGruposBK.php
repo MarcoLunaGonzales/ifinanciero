@@ -82,7 +82,7 @@ if(isset($_GET['cod'])){
 					<?php while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {?>
 					<input class="form-control" type="hidden" name="cod_unidad" value="<?=$codUnidadX?>" id="cod_unidad" readonly/>
 					<input class="form-control" type="hidden" name="cod_area" value="<?=$codAreaX?>" id="cod_area" readonly/>
-					<input class="form-control" type="hidden" name="alumnos_ibnorca" value="<?=obtenerCantidadTotalPersonalPlantilla($codigo)?>" id="alumnos_ibnorca"/>
+					<input class="form-control" type="hidden" name="alumnos_ibnorca" value="<?=obtenerCantidadPersonalPlantilla($codigo)?>" id="alumnos_ibnorca"/>
 						<div class="col-sm-2">
 							<div class="form-group">
 						  		<label class="bmd-label-static">Nombre</label>
@@ -135,15 +135,12 @@ if(isset($_GET['cod'])){
 				      	</div>
 				      	<?php
                           if($codAreaX==39){
-                           $valConf=17;
-                           $valConf2=21;
+                           $valConf=21;
                           }else{
                             if($codAreaX==38){
-                              $valConf=18;
-                              $valConf2=22;
+                              $valConf=22;
                            }else{
-                           	  $valConf=17;
-                           	  $valConf2=21;
+                           	  $valConf=21;
                            }	
                           }
 				      	 ?>
@@ -312,7 +309,7 @@ if(isset($_GET['cod'])){
 			                         </div>   
 			                     </div>
       	                     </div>
-      	                     <div class="row">
+      	                     <!--<div class="row">
                                 <label class="col-sm-3 col-form-label">Observacion</label>
                                 <div class="col-sm-9">
                                   <div class="form-group">
@@ -320,7 +317,7 @@ if(isset($_GET['cod'])){
                                   </div>
                                  </div>
                               </div>
-                              <!--<div class="row">
+                              <div class="row">
                                 <label class="col-sm-3 col-form-label">Cantidad</label>
                                 <div class="col-sm-3">
                                   <div class="form-group">
@@ -342,8 +339,8 @@ if(isset($_GET['cod'])){
       	                     				<th>#</th>
       	                     				<th>Codigo</th>
       	                     				<th>Descripci&oacute;n</th>
-      	                     				<th>Observaciones</th>
-      	                     				<!--<th>Cantidad</th>
+      	                     				<!--<th>Observaciones</th>
+      	                     				<th>Cantidad</th>
       	                     				<th>Monto</th>
       	                     				<th>Total</th>-->
       	                     				<th>Action</th>
@@ -369,8 +366,8 @@ if(isset($_GET['cod'])){
     <td><?=$index11?></td>
     <td><?=$servicio_cod11?></td>
     <td><?=$descripcion11?></td>
-    <td><?=$observaciones11?></td>
-    <!--<td class="text-right"><?=$cantidad11?></td>
+    <!--<td><?=$observaciones11?></td>
+    <td class="text-right"><?=$cantidad11?></td>
     <td class="text-right"><?=number_format($monto11, 2, '.', ',');?></td>
     <td class="text-right"><?=number_format($montoTotal11, 2, '.', ',');?></td>-->
     <td><a href="#" class="<?=$buttonDelete;?> btn-link btn-sm" onclick="removeServicioPlantilla(<?=$codigo11?>); return false;">
@@ -396,87 +393,105 @@ if(isset($_GET['cod'])){
                     <fieldset id="list_personal" class="d-none col-sm-12">
                     	<center>
 		            	<div class="col-sm-12">	
-                             <div class="row" id="tabla_personal">
+		            		<div class="row">
+                                  <label class="col-sm-3 col-form-label">Lista de Auditores</label>
+                                      <div class="col-sm-7">
+        	                            <div class="form-group">
+	                                   <select class="selectpicker form-control" name="personal_codigo" id="personal_codigo" data-style="fondo-boton">
+	        	                          <option disabled selected value="">--Seleccione--</option>
+			  	              <?php
+                                          $stmt3 = $dbh->prepare("SELECT codigo,nombre,abreviatura from tipos_auditor where cod_estadoreferencial=1");
+                                          $stmt3->execute();
+                                          while ($rowServ = $stmt3->fetch(PDO::FETCH_ASSOC)) {
+                                             $codigoServX=$rowServ['codigo'];
+                                             $nombreServX=$rowServ['nombre'];
+                                              ?><option value="<?=$codigoServX;?>"><?=$nombreServX?></option><?php 
+                                           } 
+                                   ?>  
+					
+			                         </select>
+			                      </div>
+			                     </div>
+			                     <div class="col-sm-2">
+			                     	<div class="form-group">
+			                     <a href="#" class="btn btn-danger fondo-boton fondo-boton-active" onclick="guardarAuditorPlantilla()">Agregar</a> 
+			                         </div>   
+			                     </div>
+      	                     </div>
+      	                     <!--<div class="row">
+                                <label class="col-sm-3 col-form-label">Observacion</label>
+                                <div class="col-sm-9">
+                                  <div class="form-group">
+                                  	<textarea type="text" id="observacion_servicio" class="form-control"></textarea>
+                                  </div>
+                                 </div>
+                              </div>-->
+                              <div class="row">
+                                <label class="col-sm-3 col-form-label">Cantidad</label>
+                                <div class="col-sm-3">
+                                  <div class="form-group">
+                                  	<input type="number" id="cantidad_auditor" min="1" class="form-control">
+                                  </div>
+                                 </div>
+                                 <label class="col-sm-2 col-form-label">Monto</label>
+                                <div class="col-sm-4">
+                                  <div class="form-group">
+                                  	<input type="number" id="monto_auditor" min="0" step="0.001" class="form-control">
+                                  </div>
+                                 </div>
+                              </div>
+                             <br>
+      	                     <div class="row">
       	                     	<table class="table table-bordered table-condensed">
       	                     		<thead>
       	                     			<tr class="fondo-boton">
       	                     				<th>#</th>
       	                     				<th>Descripci&oacute;n</th>
+      	                     				<!--<th>Observaciones</th>-->
       	                     				<th>Cantidad</th>
-      	                     				<th>D&iacute;as</th>
-      	                     				<th>Monto Bolivia</th>
-      	                     				<th>Total Bolivia</th>
-      	                     				<th>Monto Extranjero</th>
-      	                     				<th>Total Extranjero</th>
-      	                     				<th>Quitar</th>
+      	                     				<th>Monto</th>
+      	                     				<th>Total</th>
+      	                     				<th>Action</th>
       	                     			</tr>
       	                     		</thead>
-      	                     		<tbody>
-      	                     			<?php $index11=1;$total11=0; $total11Ext=0;
-      	                     			 $stmt3 = $dbh->prepare("SELECT codigo,nombre,abreviatura from tipos_auditor where cod_estadoreferencial=1");
-                                          $stmt3->execute();
-                                          while ($rowServ = $stmt3->fetch(PDO::FETCH_ASSOC)) {
-                                          $codigo11=$rowServ['codigo'];		
-                                          $descripcion11=$rowServ['nombre'];
-
-                                        $sql11="SELECT s.*,c.nombre,c.codigo as auditor_cod from plantillas_servicios_auditores s,tipos_auditor c where s.cod_plantillaservicio=$codigo and s.cod_tipoauditor=c.codigo and c.codigo=$codigo11";
+      	                     		<tbody id="tabla_personal">
+      	                     			<?php 
+      	                     			$sql11="SELECT s.*,c.nombre,c.codigo as auditor_cod from plantillas_servicios_auditores s,tipos_auditor c where s.cod_plantillaservicio=$codigo and s.cod_tipoauditor=c.codigo";
                                         $stmt11 = $dbh->prepare($sql11);
                                         $stmt11->execute();
-                                        
-                                        $cantidad11=1;$dias11=$diasAuditoriaX;$monto11=0;$monto11Ext=0;
-                                        $bgFila="";$idRemove=0;
-                                       while ($rowServ11 = $stmt11->fetch(PDO::FETCH_ASSOC)) {
-                                       	     $idRemove=$rowServ11['codigo'];
-                                             $cantidad11=$rowServ11['cantidad'];
-                                             $dias11=$rowServ11['dias'];
-                                             $monto11=$rowServ11['monto'];
-                                             $monto11Ext=$rowServ11['monto_externo'];
-                                             $bgFila="bg-warning";
-                                       }
-                                          $montoTotal11=$cantidad11*$monto11*$dias11;
-                                          $montoTotal11Ext=$cantidad11*$monto11Ext*$dias11;
+                                        $index11=1;$total11=0;
+                                       while ($rowServ = $stmt11->fetch(PDO::FETCH_ASSOC)) {
+                                          $descripcion11=$rowServ['nombre'];
+                                          $servicio_cod11=$rowServ['auditor_cod'];
+                
+                                          $cantidad11=$rowServ['cantidad'];
+                                          $monto11=$rowServ['monto'];
+                                          $codigo11=$rowServ['codigo'];
+                                          $montoTotal11=$cantidad11*$monto11;
                                           $total11+=$montoTotal11;
-                                          $total11Ext+=$montoTotal11Ext;
                                           ?>
-                                       <tr class="<?=$bgFila?>">
-                                         <td><input type="hidden" id="codigo_personal<?=$index11?>" value="<?=$codigo11?>"><?=$index11?></td>
-                                         <td><?=$descripcion11?></td>                                         
-                                         <td class="text-right"><input type="number" min="1" id="cantidad_personal<?=$index11?>" class="form-control text-right" value="<?=$cantidad11?>" onkeyup="calcularMontoFilaPersonalServicio(<?=$index11?>)" onkeydown="calcularMontoFilaPersonalServicio(<?=$index11?>)" onchange="calcularMontoFilaPersonalServicio(<?=$index11?>)"></td>
-                                         <td class="text-right"><input type="number" min="1" max="<?=$diasAuditoriaX?>" id="dias_personal<?=$index11?>" class="form-control text-right" value="<?=$dias11?>" onkeyup="calcularMontoFilaPersonalServicio(<?=$index11?>)" onkeydown="calcularMontoFilaPersonalServicio(<?=$index11?>)" onchange="calcularMontoFilaPersonalServicio(<?=$index11?>)"></td>
-                                         <td class="text-right"><input type="number" min="0" id="monto_personal<?=$index11?>" class="form-control text-right" value="<?=number_format($monto11, 2, '.', '');?>" onkeyup="calcularMontoFilaPersonalServicio(<?=$index11?>)" onkeydown="calcularMontoFilaPersonalServicio(<?=$index11?>)" onchange="calcularMontoFilaPersonalServicio(<?=$index11?>)"></td>
-                                         <td class="text-right"><input type="number" readonly min="1" id="total_personal<?=$index11?>" class="form-control text-right" value="<?=number_format($montoTotal11, 2, '.', '');?>"></td>
-                                         <td class="text-right"><input type="number" min="0" id="monto_personalext<?=$index11?>" class="form-control text-right" value="<?=number_format($monto11Ext, 2, '.', '');?>" onkeyup="calcularMontoFilaPersonalServicio(<?=$index11?>)" onkeydown="calcularMontoFilaPersonalServicio(<?=$index11?>)" onchange="calcularMontoFilaPersonalServicio(<?=$index11?>)"></td>
-                                         <td class="text-right"><input type="number" readonly min="1" id="total_personalext<?=$index11?>" class="form-control text-right" value="<?=number_format($montoTotal11Ext, 2, '.', '');?>"></td>
-                                         <td>
-                                           <?php 
-                                           if($idRemove!=0){
-                                             ?>
-                                            <a href="#" class="<?=$buttonDelete;?> btn-link btn-sm" onclick="removeAuditorPlantilla(<?=$idRemove?>); return false;">
+                                       <tr>
+                                         <td><?=$index11?></td>
+                                         <td><?=$descripcion11?></td>
+                                         
+                                         <td class="text-right"><?=$cantidad11?></td>
+                                         <td class="text-right"><?=number_format($monto11, 2, '.', ',');?></td>
+                                         <td class="text-right"><?=number_format($montoTotal11, 2, '.', ',');?></td>
+                                         <td><a href="#" class="<?=$buttonDelete;?> btn-link btn-sm" onclick="removeAuditorPlantilla(<?=$codigo11?>); return false;">
                                                                     <i class="material-icons"><?=$iconDelete;?></i>
                                               </a>
-                                             <?php
-                                           }
-                                           ?>                                         	
                                           </td>
                                         </tr>
                                           <?php
                                           $index11++;
                                       }?>
                                       <tr class="font-weight-bold">
-                                         <td colspan="5" class="text-center">TOTAL</td>
-                                         <td class="text-right" id="total_personalservicio"><?=number_format($total11, 2, '.', ',');?></td>
-                                         <td></td>
-                                         <td class="text-right" id="total_personalservicioext"><?=number_format($total11Ext, 2, '.', ',');?></td>
+                                         <td colspan="4" class="text-center">TOTAL</td>
+                                         <td class="text-right"><?=number_format($total11, 2, '.', ',');?></td>
                                          <td></td>
                                        </tr>
       	                     		</tbody>
       	                     	</table>
-      	                     	<input type="hidden" id="cantidad_filaspersonal" value="<?=$index11?>">
-      	                     </div>
-      	                     <div class="row float-right">
-			                     	<div class="form-group">
-			                           <a href="#" class="btn btn-danger fondo-boton fondo-boton-active" onclick="guardarAuditoresPlantilla()">Guardar cambios de la tabla</a> 
-			                         </div>   
       	                     </div>
       	                  </div>   
 		            	</center>

@@ -37,9 +37,9 @@ $index=1;$total=0;
     <td><?=$servicio_cod?></td>
     <td><?=$descripcion?></td>
     <td><?=$observaciones?></td>
-    <td class="text-right"><?=$cantidad?></td>
+    <!--<td class="text-right"><?=$cantidad?></td>
     <td class="text-right"><?=number_format($monto, 2, '.', ',');?></td>
-    <td class="text-right"><?=number_format($montoTotal, 2, '.', ',');?></td>
+    <td class="text-right"><?=number_format($montoTotal, 2, '.', ',');?></td>-->
     <td><a href="#" class="<?=$buttonDelete;?> btn-link btn-sm" onclick="removeServicioPlantilla(<?=$codigo?>); return false;">
             <i class="material-icons"><?=$iconDelete;?></i>
         </a>
@@ -49,8 +49,8 @@ $index=1;$total=0;
     $index++;
 }
 ?>
-<tr class="font-weight-bold">
+<!--<tr class="font-weight-bold">
     <td colspan="6" class="text-center">TOTAL</td>
     <td class="text-right"><?=number_format($total, 2, '.', ',');?></td>
     <td></td>
-  </tr>
+  </tr>-->

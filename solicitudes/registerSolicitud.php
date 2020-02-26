@@ -42,7 +42,7 @@ $fechaHasta=$d."/".$m."/".$y;
 $dbh = new Conexion();
 echo "<script>var array_cuenta=[];</script>";
 $i=0;
-  $cuentaLista=obtenerCuentasLista(5,[5,4]); //null para todas las iniciales del numero de cuenta
+  $cuentaLista=obtenerCuentasListaSolicitud(); //null para todas las iniciales del numero de cuenta obtenerCuentasLista(5,[5,4]);
    while ($rowCuenta = $cuentaLista->fetch(PDO::FETCH_ASSOC)) {
     $codigoX=$rowCuenta['codigo'];
     $numeroX=$rowCuenta['numero'];
@@ -187,6 +187,9 @@ if(isset($_GET['cod'])){
               <?php
               }else{
                 if($codProveedorX==0){
+                  if($codSimulacionServX==0){
+                    $tipoSolicitud=4;
+                  }else{
                   $tipoSolicitud=3;
                 $nombreSimulacion=nameSimulacionServicio($codSimulacionServX);
               ?>
@@ -196,7 +199,10 @@ if(isset($_GET['cod'])){
                   <input class="form-control" type="text" name="simulacion" value="<?=$nombreSimulacion?>" id="simulacion" readonly/>
               </div>
             </div>
+
               <?php
+                    
+                  }
                 }else{
                $tipoSolicitud=2;
                ?>
@@ -224,25 +230,7 @@ if(isset($_GET['cod'])){
                     </select>
                 </div>
             </div>   
-            <div class="col-sm-3">
-                  <div class="form-group">
-                    <select class="selectpicker form-control form-control-sm" name="proveedores" id="proveedores" data-style="<?=$comboColor;?>" onChange="cargarDatosCuenta()">
-                    <option disabled selected value="">Proveedores</option>
-                  <?php
-                  $stmt = $dbh->prepare("SELECT * FROM af_proveedores order by codigo");
-                $stmt->execute();
-                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                  $codigoX=$row['codigo'];
-                  $nombreX=$row['nombre'];
-                ?>
-                <option value="<?=$codigoX;?>"><?=$nombreX;?></option>  
-                <?php
-                  }
-                  ?>
-              </select>
-              </div>
-              
-            </div> 
+            
             <div class="col-sm-2">
                <p class="text-muted">Se muestran los curso en fechas</p> 
             </div>  
@@ -262,6 +250,25 @@ if(isset($_GET['cod'])){
               }
              }
              ?>
+             <div class="col-sm-3">
+                  <div class="form-group">
+                    <select class="selectpicker form-control form-control-sm" name="proveedores" id="proveedores" data-style="<?=$comboColor;?>" onChange="cargarDatosCuenta()">
+                    <option disabled selected value="">Proveedores</option>
+                  <?php
+                  $stmt = $dbh->prepare("SELECT * FROM af_proveedores order by codigo");
+                $stmt->execute();
+                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                  $codigoX=$row['codigo'];
+                  $nombreX=$row['nombre'];
+                ?>
+                <option value="<?=$codigoX;?>"><?=$nombreX;?></option>  
+                <?php
+                  }
+                  ?>
+              </select>
+              </div>
+              
+            </div> 
           </div>
           <?php } //fin del while de la cabecera?>
         </div>
@@ -280,7 +287,7 @@ if(isset($_GET['cod'])){
           <div class="card-body">
              <fieldset id="fiel" style="width:100%;border:0;">
               <?php 
-              if($tipoSolicitud==1||$tipoSolicitud==3){
+              if($tipoSolicitud==1||$tipoSolicitud==3||$tipoSolicitud==4){
               ?><button title="Agregar (alt + n)" type="button" name="add" class="btn btn-warning btn-round btn-fab" onClick="addSolicitudDetalle(this,<?=$tipoSolicitud?>)"><i class="material-icons">add</i>
                   </button><?php
               }else{
@@ -309,8 +316,11 @@ if(isset($_GET['cod'])){
               if($tipoSolicitud==3){
                 include "solicitudDetalleSimulacion3.php";
               }else{
-              ?><div id="solicitud_proveedor"></div><?php
-               //include "solicitudDetalleProveedor.php";     
+                if($tipoSolicitud==2){
+                 ?><div id="solicitud_proveedor"></div><?php                
+                }else{
+                 include "solicitudDetalleSimulacion4.php";
+                }    
               }
             }
             ?>

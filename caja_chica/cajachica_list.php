@@ -58,7 +58,7 @@ $stmt->bindColumn('nombre_estado', $nombre_estado);
                           <th>Núm.</th>
                           <th>Responsable</th>
                           <th>Monto Inicio</th>
-                          <th>Reembolso</th>
+                          <th>Saldo</th>
                           <th>Detalle</th>
                           <th>estado</th>
                           <th></th>
@@ -107,7 +107,7 @@ $stmt->bindColumn('nombre_estado', $nombre_estado);
                                 if($globalAdmin==1 and $cod_estado==1){
                               ?>
                                 
-                                <a href='<?=$urlFormCajaChica;?>&codigo=<?=$codigo;?>&cod_tcc=<?=$codigo_tipo_caja_Chica?>' rel="tooltip" class="<?=$buttonEdit;?>">
+                                <a href='<?=$urlFormCajaChica;?>&codigo=<?=$cod_cajachica;?>&cod_tcc=<?=$codigo_tipo_caja_Chica?>' rel="tooltip" class="<?=$buttonEdit;?>">
                                   <i class="material-icons" title="Editar"><?=$iconEdit;?></i>
                                 </a>
                                 <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDeleteCajaChica;?>&codigo=<?=$cod_cajachica;?>&cod_tcc=<?=$codigo_tipo_caja_Chica?>&cod_a=2')">
@@ -119,8 +119,8 @@ $stmt->bindColumn('nombre_estado', $nombre_estado);
                               
                               </td>
                               <td class="text-center">
-                                <a href="<?=$urlPlanillaContabilizacion;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>" target="_blank" > 
-                                  <i class="material-icons" title="Generar Contabilización" style="color:red">input</i>
+                                <a href="<?=$urlprint_contabilizacion_cajachica;?>?cod_cajachica=<?=$cod_cajachica;?>" target="_blank" > 
+                                  <i class="material-icons" title="Generar Conrpobante" style="color:red">input</i>
                                 </a>
                               </td>
                           </tr>

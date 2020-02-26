@@ -1,5 +1,4 @@
 <?php
-session_start();
 require_once '../conexion.php';
 require_once '../functions.php';
 require_once '../functionsGeneral.php';
@@ -16,48 +15,31 @@ $plantilla=$_GET["plantilla"];
 $partida=$_GET["partida"];
 $cuenta=$_GET["cuenta"];
 $habilitado=$_GET["habilitado"];
-$montoNorma=$_GET["monto_norma"];
-$habNorma=$_GET["habilitado_norma"];
+$cantidad=$_GET["cantidad"];
+$montoEditado=$monto/$cantidad;
 
-$sqlUpdateDetalleGlobal="UPDATE simulaciones_costos SET  monto_norma='$montoNorma',habilitado_norma='$habNorma' where codigo=$simulaciones";
-$stmtUpdateDetalleGlobal = $dbh->prepare($sqlUpdateDetalleGlobal);
-$stmtUpdateDetalleGlobal->execute();
-
-
-
-$sqlUpdateDetalle="UPDATE simulaciones_detalle SET  monto_unitario='$monto',monto_total='$monto',habilitado=$habilitado where codigo=$codigo";
+session_start();
+$sqlUpdateDetalle="UPDATE simulaciones_serviciodetalle SET  monto_unitario='$monto',monto_total='$monto',habilitado=$habilitado,cantidad=$cantidad,editado_personal='$montoEditado' where codigo=$codigo";
 $stmtUpdateDetalle = $dbh->prepare($sqlUpdateDetalle);
 $stmtUpdateDetalle->execute();
-
 $montoTotal=0;
-$detallesMontos=obtenerMontosCuentasDetalleSimulacionCostosPartidaHabilitado($simulaciones,$partida);
+$detallesMontos=obtenerMontosCuentasDetalleSimulacionServicioPartidaHabilitado($simulaciones,$partida);
 while ($row = $detallesMontos->fetch(PDO::FETCH_ASSOC)) {
 	if($row['cod_cuenta']==$cuenta){
     if($row['habilitado']==0){
-      //$montoTotal=0;
       $montoTotal+=0;
     }else{
-		//$montoTotal=$row['monto'];
-      $montoTotal+=$row['monto'];    
-    }
-    //el dbh2
+		$montoTotal+=$row['monto'];    
+    }          
 	}
 }
 $dbh2 = new Conexion();
-      if($ibnorca==1){
+     if($ibnorca==1){
        $sqlUpdate="UPDATE cuentas_simulacion SET  monto_local='$montoTotal' where codigo=$simulacion and cod_plancuenta=$cuenta"; 
       }else{
        $sqlUpdate="UPDATE cuentas_simulacion SET  monto_externo='$montoTotal' where codigo=$simulacion and cod_plancuenta=$cuenta";
       }
       $stmtUpdate = $dbh2->prepare($sqlUpdate);
       $flagSuccess=$stmtUpdate->execute();
-/*
-if($ibnorca==1){
-  $sqlUpdate="UPDATE cuentas_simulacion SET  monto_local='$monto' where codigo=$codigo";	
-}else{
-  $sqlUpdate="UPDATE cuentas_simulacion SET  monto_externo='$monto' where codigo=$codigo";
-}
-$stmtUpdate = $dbh->prepare($sqlUpdate);
-$flagSuccess=$stmtUpdate->execute();*/
 
 ?>

@@ -19,15 +19,35 @@ $j=1;
     ?>
     <input type="hidden" name="codigo_partida_presupuestaria<?=$j?>" id="codigo_partida_presupuestaria<?=$j?>" value="<?=$codigoPartida?>" readonly/>
     <h4 class="font-weight-bold"><center>PARTIDA: <?=$nombrePartida?></center>
+      <!--<div class="row col-sm-4 float-right">
+        <small class="col-sm-6">Hab/Des</small>
+        <div class="togglebutton col-sm-6">
+              <label>
+                 <input type="checkbox" checked id="habilitar<?=$j?>" onchange="activarInputMontoGenericoPartidaServicio('<?=$j?>')">
+                 <span class="toggle"></span>
+              </label>
+        </div>    
+      </div>-->
     </h4>
       <div class="row">
+        <!--<label class="col-sm-3 col-form-label">Monto x Modulo Plantilla:</label>
+        <div class="col-sm-3">
+         <div class="form-group">-->
            <input class="form-control text-right" type="hidden" name="monto_designado<?=$j?>" id="monto_designado<?=$j?>" value="<?=$montoTotal?>" readonly/>
+         <!--</div>
+         </div>-->
+         <!--<label class="col-sm-3 col-form-label">Monto x Modulo Simulaci&oacute;n:</label>
+        <div class="col-sm-3">
+         <div class="form-group">-->
            <input class="form-control text-right" type="hidden" name="monto_editable<?=$j?>" id="monto_editable<?=$j?>" value="<?=$montoEditado?>" readonly/>
+         <!--</div>
+         </div>-->
        </div>
    <table class="table table-condensed table-bordered">
          <tr class="text-white bg-info">
         <td>Cuenta</td>
-        <td width="50%">Detalle</td>
+        <td>Detalle</td>
+        <td>Cantidad Personal(<?=$alumnosX?>)</td>
         <td>Monto x Servicio</td>
         <td>Monto x Persona</td>
         <td class="small">Habilitar / Deshabilitar</td>
@@ -59,18 +79,29 @@ $j=1;
           ?><tr>
               <td class="text-left small font-weight-bold"><input type="hidden" id="codigo_cuenta<?=$j?>RRR<?=$i?>" value="<?=$codigoCuenta?>"><input type="hidden" id="codigo_fila<?=$j?>RRR<?=$i?>" value="<?=$codX?>">[<?=$numX?>] - <?=$nomX?></td>
               <td class="text-left small font-weight-bold"><?=$rowDetalles['glosa']?></td>
+              <td class="text-center small font-weight-bold">
+                 <select class="form-control selectpicker form-control-sm" onchange="cambiarCantidadMontoGenericoServicio('<?=$j?>RRR<?=$i?>')" data-style="fondo-boton fondo-boton-active" name="cantidad_personal<?=$j?>RRR<?=$i?>" id="cantidad_personal<?=$j?>RRR<?=$i?>">
+                      <?php 
+                         for ($hf=1; $hf<=$cantidadPersonalDetalle; $hf++) {
+                          if($hf==$cantidadPersonalDetalleE){
+                            ?><option value="<?=$hf?>" selected><?=$hf?></option><?php
+                          }else{
+                               ?><option value="<?=$hf?>"><?=$hf?></option><?php
+                           }      
+                         }
+                         ?>
+                    </select>
+              </td>
               <td class="text-right"><input type="number" id="monto_mod<?=$j?>RRR<?=$i?>" name="monto_mod<?=$j?>RRR<?=$i?>" <?=($bandera==0)?"readonly":"";?> class="form-control text-info text-right" onchange="calcularTotalPartidaGenericoServicio(<?=$j?>,1)" onkeyUp="calcularTotalPartidaGenericoServicio(<?=$j?>,1)" value="<?=$montoDetalle?>" step="0.01"></td>
-              <td class="text-right"><input type="number" id="monto_modal<?=$j?>RRR<?=$i?>" name="monto_modal<?=$j?>RRR<?=$i?>" <?=($bandera==0)?"readonly":"";?> class="form-control text-info text-right" onchange="calcularTotalPartidaGenericoServicio(<?=$j?>,2)" onkeyUp="calcularTotalPartidaGenericoServicio(<?=$j?>,2)" value="<?=$montoDetalleAl?>" step="0.01"></td> 
-              <td>
-                <input type="hidden" id="cantidad_personal<?=$j?>RRR<?=$i?>" name="cantidad_personal<?=$j?>RRR<?=$i?>" value="<?=$cantidadPersonalDetalleE?>">
-                <input type="hidden" id="codigo<?=$j?>RRR<?=$i?>" value="<?=$codigoDetalle?>">
+              <td class="text-right"><input type="number" id="monto_modal<?=$j?>RRR<?=$i?>" name="monto_modal<?=$j?>RRR<?=$i?>" <?=($bandera==0)?"readonly":"";?> class="form-control text-info text-right" onchange="calcularTotalPartidaGenericoServicio(<?=$j?>,2)" onkeyUp="calcularTotalPartidaGenericoServicio(<?=$j?>,2)" value="<?=$montoDetalleAl?>" step="0.01"></td>
+              <td><input type="hidden" id="codigo<?=$j?>RRR<?=$i?>" value="<?=$codigoDetalle?>">
                 <div class="togglebutton">
                         <label>
-                          <input type="checkbox" data-style="btn btn-primary" <?=($bandera==1)?"checked":"";?> id="habilitar<?=$j?>RRR<?=$i?>" onchange="activarInputMontoGenericoServicio('<?=$j?>RRR<?=$i?>')">
+                          <input type="checkbox" <?=($bandera==1)?"checked":"";?> id="habilitar<?=$j?>RRR<?=$i?>" onchange="activarInputMontoGenericoServicio('<?=$j?>RRR<?=$i?>')">
                           <span class="toggle"></span>
                         </label>
                 </div>
-              
+                <!--<a href="#" class="btn btn-sm btn-warning" onclick="activarInputMonto(<?=$j?>RRR<?=$i?>)">habilitar / deshabilitar</a>-->
               </td>
              </tr> 
            <?php
@@ -79,6 +110,12 @@ $j=1;
      }
     }
   ?>
+      <tr>
+        <td colspan="3" class="text-center font-weight-bold">Total</td>
+        <td id="total_tabladetalle<?=$j?>" class="text-right font-weight-bold"><?=$totalMontoDetalle?></td>
+        <td id="total_tabladetalleAl<?=$j?>" class="text-right"><?=$totalMontoDetalleAl?></td>
+        <td></td>
+      </tr>
   </table>
  
   <input type="hidden" id="numero_cuentas<?=$j?>" value="<?=$i?>">
@@ -89,5 +126,5 @@ $j=1;
    <div id="mensaje_cuenta"></div>
   <input type="hidden" id="numero_cuentaspartida" value="<?=$j?>">
   <div class="form-group float-right">
-    <button class="btn btn-success" id="guardar_cuenta" onclick="guardarCuentasSimulacionGenericoServicioPrevio(<?=$ibnorcaC?>)">Mostrar Costos</button>
+    <button class="btn btn-default" id="guardar_cuenta" onclick="guardarCuentasSimulacionGenericoServicio(<?=$ibnorcaC?>)">Guardar</button>
   </div>

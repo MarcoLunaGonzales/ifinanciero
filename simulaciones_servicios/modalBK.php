@@ -92,6 +92,27 @@
                   </button>
                 </div>
                 <div class="card-body">
+                <!--<div class="row col-sm-12">
+                    <div class="form-group col-sm-12">
+                       <label class="bmd-label-static">Seleccione una Partida Presupuestaria</label>
+                       <select class="selectpicker form-control" onchange="cargarCuentasSimulacion(<?=$codigo?>,<?=$ibnorcaC?>)" name="partida_presupuestaria" id="partida_presupuestaria" data-style="btn btn-danger" title="-- Elija una partida --">
+                                <option value="0" selected>Todas Las Partidas</option> 
+                                <?php
+                                 $stmt = $dbh->prepare("SELECT distinct c.cod_partidapresupuestaria as codPartida, p.nombre from cuentas_simulacion c,partidas_presupuestarias p where p.codigo=c.cod_partidapresupuestaria and c.cod_simulacioncostos=$codigo");
+                                 $stmt->execute();
+                                  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                  $codigoX=$row['codPartida'];
+                                  $nombreX=$row['nombre'];
+                                   ?>
+                                  <option value="<?=$codigoX;?>"><?=$nombreX;?></option> 
+                                  <?php
+                                    }
+                                    ?>
+                        </select>
+                     </div>
+                      <div class="col-sm-6" id="lista_precios">
+                       </div>
+                </div>-->
                  <div class="card" id="cuentas_simulacion">
                    <?php 
                     include "cargarDetallePlantillaPartida.php";
@@ -105,21 +126,21 @@
 
 <!-- small modal -->
 <div class="modal fade modal-arriba modal-primary" id="modalSimulacionCuentasPersonal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog modal-lg col-sm-12">
     <div class="modal-content card">
-                <div class="card-header card-header-warning card-header-text">
+                <div class="card-header card-header-danger card-header-text">
                   <div class="card-text">
-                    <h4>Costos Variables Detalle</h4>
+                    <h4>Costos Variables Personal</h4>
                   </div>
                   <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
                     <i class="material-icons">close</i>
                   </button>
-                  <a class="btn btn-success btn-sm btn-fab float-right" href="#" onclick="cambiarModalDetalleVariable()">
-                    <i class="material-icons">keyboard_backspace</i>
-                  </a>
                 </div>
                 <div class="card-body">
-                 <div class="card" id="cuentas_simulacionpersonal">
+                 <div class="card">
+                   <?php 
+                    include "cargarDetallePlantillaPartidaPersonal.php";
+                   ?>
                  </div>   
                 </div>
       </div>  
@@ -350,13 +371,12 @@
                              <thead>
                                   <tr class="fondo-boton">
                                     <td>#</td>
-                                    <td width="25%">Tipo de Personal</td>
-                                    <!--<td width="14%" class="text-center">Regi&oacute;n</td>-->
-                                    <td width="8%" class="text-center">Cantidad</td>                                   
-                                    <td width="8%">D&iacute;as Aud.</td>
+                                    <td width="30%">Tipo de Personal</td>
+                                    <td width="14%" class="text-center">Cantidad</td>
+                                    <td width="17%">D&iacute;as Aud.</td>
                                     <td>Monto</td>
                                     <td>Total</td>
-                                    <td width="10%" class="small">Hab/Des</td>
+                                    <td class="small">Habilitar/Deshabilitar</td>
                                   </tr>
                               </thead>
                               <tbody>
@@ -365,8 +385,7 @@
                                $queryPr="SELECT s.*,t.nombre as tipo_personal FROM simulaciones_servicios_auditores s, tipos_auditor t where s.cod_simulacionservicio=$codigoSimulacionSuper and s.cod_tipoauditor=t.codigo order by s.codigo";
                                $stmt = $dbh->prepare($queryPr);
                                $stmt->execute();
-                               $modal_totalmontopre=0;$modal_totalmontopretotal=0;$sumaCantidadPre=0;
-                               $modal_totalmontopreext=0;$modal_totalmontopretotalext=0;
+                               $modal_totalmontopre=0;$modal_totalmontopretotal=0;
                                while ($rowPre = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                   $codigoPre=$rowPre['codigo'];
                                   $tipoPre=$rowPre['tipo_personal'];
@@ -374,49 +393,21 @@
                                   $diasPre=$rowPre['dias'];
                                   $cantidadEPre=$rowPre['cantidad_editado'];
                                   $montoPre=$rowPre['monto'];
-                                  $montoPreext=$rowPre['monto_externo'];
-
-                                  $codExtLoc=$rowPre['cod_externolocal'];
-                                  if($codExtLoc==1){
-                                    $montoPreSi=$montoPre;
-                                  }else{
-                                    $montoPreSi=$montoPreext;
-                                  }
-
-                                  $montoPreTotal=$montoPreSi*$cantidadEPre*$diasPre;
-                                  //$montoPreTotalext=$montoPreext*$cantidadEPre*$diasPre;
+                                  $montoPreTotal=$montoPre*$cantidadEPre*$diasPre;
                                   $banderaHab=$rowPre['habilitado'];
                                   if($banderaHab!=0){
-                                    $modal_totalmontopre+=$montoPreSi;
+                                    $modal_totalmontopre+=$montoPre;
                                     $modal_totalmontopretotal+=$montoPreTotal;
-                                    //$modal_totalmontopreext+=$montoPreext;
-                                    //$modal_totalmontopretotalext+=$montoPreTotalext;
                                   }
                                    ?>
                                    <tr>
                                      <td><?=$iii?></td>
-                                     <td class="small"><?=$tipoPre?><input type="hidden" id="local_extranjero<?=$iii?>" value="<?=$codExtLoc?>"></td>
-                                     <!--<td>
-                                      <select class="form-control selectpicker form-control-sm" data-style="fondo-boton fondo-boton-active" name="local_extranjero<?=$iii?>" id="local_extranjero<?=$iii?>" onchange="montarMontoLocalExternoTabla(<?=$iii?>)">
-                                          <?php 
-                                              if($codExtLoc==1){                  
-                                                ?><option value="1" selected>BOLIVIA</option>
-                                                  <option value="0">EXTRANJERO</option>
-                                                <?php
-                                              }else{
-                                                ?><option value="1">BOLIVIA</option>
-                                                  <option value="0" selected>EXTRANJERO</option>
-                                                <?php
-                                              }
-                                          ?>
-                                      </select>
-                                     </td>-->
+                                     <td><?=$tipoPre?></td>
                                      <td>
                                       <select class="form-control selectpicker form-control-sm" data-style="fondo-boton fondo-boton-active" name="cantidad_personal<?=$iii?>" id="cantidad_personal<?=$iii?>" onchange="calcularTotalPersonalServicio(2)">
                                           <?php 
                                              for ($hf=1; $hf<=$cantidadPre; $hf++) {
                                               if($hf==$cantidadEPre){
-                                                $sumaCantidadPre+=$cantidadPre;
                                                 ?><option value="<?=$hf?>" selected><?=$hf?></option><?php
                                               }else{
                                                   ?><option value="<?=$hf?>"><?=$hf?></option><?php
@@ -439,9 +430,7 @@
                                       </select>
                                      </td>
                                      <td class="text-right">
-                                       <input type="number" id="modal_montopre<?=$iii?>" name="modal_montopre<?=$iii?>" <?=($banderaHab==0)?"readonly":"";?> class="form-control text-info text-right" onchange="calcularTotalPersonalServicio(2)" onkeyUp="calcularTotalPersonalServicio(2)" value="<?=$montoPreSi?>" step="0.01">
-                                       <input type="hidden" id="modal_montopreext<?=$iii?>" value="<?=$montoPreext?>">
-                                       <input type="hidden" id="modal_montopreloc<?=$iii?>" value="<?=$montoPre?>">
+                                       <input type="number" id="modal_montopre<?=$iii?>" name="modal_montopre<?=$iii?>" <?=($banderaHab==0)?"readonly":"";?> class="form-control text-info text-right" onchange="calcularTotalPersonalServicio(2)" onkeyUp="calcularTotalPersonalServicio(2)" value="<?=$montoPre?>" step="0.01">
                                      </td>
                                      <td class="text-right">
                                        <input type="hidden" id="modal_codigopersonal<?=$iii?>" value="<?=$codigoPre?>">
@@ -463,14 +452,11 @@
                                      <td colspan="4" class="text-center font-weight-bold">Total</td>
                                      <td id="modal_totalmontopre" class="text-right"><?=$modal_totalmontopre?></td>
                                      <td id="modal_totalmontopretotal" class="text-right font-weight-bold"><?=$modal_totalmontopretotal?></td>
-                                     <!--<td id="modal_totalmontopreext" class="text-right"><?=$modal_totalmontopreext?></td>
-                                     <td id="modal_totalmontopretotalext" class="text-right font-weight-bold"><?=$modal_totalmontopretotalext?></td>-->
                                      <td></td>
                                    </tr>
                               </tbody>
                            </table>
                            <input type="hidden" id="modal_numeropersonal" value="<?=$iii?>">
-                           <input type="hidden" id="modal_cantidadpersonal" value="<?=$sumaCantidadPre?>">
                       </div>
                       <hr>
                        

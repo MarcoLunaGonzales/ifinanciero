@@ -114,6 +114,12 @@ alerts = {
           location.href=url;
       });
     }
+    else if(type == 'error-messageFacturas'){
+      swal("LO SIENTO! :(", "Al parecer No registraste Ninguna Factura. Por favor Registre faturas. Gracias!.", "warning")
+          .then((value) => {
+          location.href=url;
+      });
+    }
 
     
 
