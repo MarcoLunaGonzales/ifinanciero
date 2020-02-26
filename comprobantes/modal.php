@@ -285,12 +285,12 @@
                         </li>
                   </ul>
                   <div class="tab-content tab-space">
-                    <div class="tab-pane active" id="link110">
+                    <div class="tab-pane active" id="link110" style="background: #e0e0e0">
                       <div id="divResultadoListaFac">
         	  
                        </div>
                     </div>
-                    <div class="tab-pane" id="link111">
+                    <div class="tab-pane" id="link111" style="background: #e0e0e0">
                       <form name="form2">
 			                     <input class="form-control" type="hidden" name="codCuenta" id="codCuenta"/>
                       <div class="row">

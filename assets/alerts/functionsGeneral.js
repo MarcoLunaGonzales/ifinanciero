@@ -2202,12 +2202,13 @@ function guardarSimulacionServicio(){
   var cliente=$("#cliente").val();
   var producto=$("#productos").val();
   var norma=$("#norma").val();
+  var local_extranjero=$("#local_extranjero").val();
   var utilidad=$("#utilidad_minima").val();
   var plantilla_servicio=$("#plantilla_servicio").val();
   if(norma==""||producto==""||dias==""||nombre==""||!(plantilla_servicio>0)){
    Swal.fire('Informativo!','Debe llenar los campos!','warning'); 
   }else{
-     var parametros={"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"producto":producto,"norma":norma};
+     var parametros={"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"producto":producto,"norma":norma};
      $.ajax({
         type: "GET",
         dataType: 'html',
@@ -2648,9 +2649,9 @@ $(document).on("shown.bs.modal","#modalRetencion",function(){
  }
  function mostrarEditPlantillaDetalle(cod,monto,montoExt,glosa){
   $("#codigo_plandet").val(cod);
-  $("#monto_plandet").val(monto);
+  $("#monto_plandet").val(redondeo(monto));
   if(montoExt!="NONE"){
-    $("#monto_plandetExt").val(montoExt);
+    $("#monto_plandetExt").val(redondeo(montoExt));
   }
   $("#glosa_plandet").val(glosa);
   $("#modalEditPlan").modal("show");
@@ -2796,7 +2797,8 @@ function mayorReporteComprobante(fila){
   }else{
    url="ajaxListProveedor.php";
   }
-  ajax=nuevoAjax();
+  if(tipo!=3){
+   ajax=nuevoAjax();
     ajax.open("GET",url,true);
     ajax.onreadystatechange=function(){
     if (ajax.readyState==4) {
@@ -2807,6 +2809,7 @@ function mayorReporteComprobante(fila){
     }
    }
     ajax.send(null);
+  }
  }
 
  // function listarTipoSolicitudCajaChica(tipo){
@@ -2836,8 +2839,13 @@ function mayorReporteComprobante(fila){
     var codSim=$("#simulaciones").val();
     var codProv=0;
   }else{
-    var codProv=$("#proveedores").val();
-    var codSim=0;
+    if(tipo==2){
+      var codProv=$("#proveedores").val();
+      var codSim=0;
+    }else{
+      var codProv=0;
+      var codSim=0;
+    }   
   }
   if(numero==""||tipo==""){
    $("#mensaje").html("<center><p class='text-danger'>Todos los campos son requeridos.</p></center>");

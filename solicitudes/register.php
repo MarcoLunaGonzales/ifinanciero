@@ -49,7 +49,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 	<center><div class="card col-sm-6">
                 <div class="card-header card-header-danger card-header-text">
                   <div class="card-text">
-                    <h6 class="card-title">Nueva Solicitud</h6>
+                    <h6 class="card-title">Nueva Solicitud de Recursos</h6>
                   </div>
                 </div>
                 <div class="card-body ">
@@ -66,8 +66,9 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                        <div class="col-sm-9">
                         <div class="form-group">
                                 <select class="selectpicker form-control" onchange="listarTipoSolicitud(this.value)" name="tipo_solicitud" id="tipo_solicitud" data-style="<?=$comboColor;?>" title="-- Elija un tipo --" data-style="select-with-transition" data-actions-box="true"required>
-                                  <option value="1">POR PLANTILLA</option> 
-                                  <option value="2">POR PROVEEDOR</option> 
+                                  <option value="1">POR PROPUESTA</option> 
+                                  <option value="2">POR PROVEEDOR</option>
+                                  <option value="3">MANUAL</option>  
                                 </select>
                               </div>
                         </div>
@@ -76,8 +77,8 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                       </div>
                       <hr>
                       <div class="form-group float-right">
-                        <a href="../index.php?opcion=listSolicitudRecursos" class="btn btn-default btn-round">Cerrar</a>
-                        <button type="button" class="btn btn-warning btn-round" onclick="guardarSolicitudRecursos()">Guardar</button>
+                        <a href="../index.php?opcion=listSolicitudRecursos" class="btn btn-default btn-round">Volver</a>
+                        <button type="button" class="btn btn-warning btn-round" onclick="guardarSolicitudRecursos()">Siguiente</button>
                       </div>
                  <div id="mensaje"></div>
       </div>  

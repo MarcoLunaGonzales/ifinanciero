@@ -106,7 +106,7 @@
 <!--    end small modal -->
 
 <!-- notice modal -->
-<div class="modal fade" id="modalFac" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade modal-arriba" id="modalFac" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-notice modal-lg">
     <div class="modal-content">
       <div class="modal-body">
@@ -138,12 +138,12 @@
                         </li>
                   </ul>
                   <div class="tab-content tab-space">
-                    <div class="tab-pane active" id="link110">
+                    <div class="tab-pane active" id="link110" style="background: #e0e0e0">
                       <div id="divResultadoListaFac">
             
                        </div>
                     </div>
-                    <div class="tab-pane" id="link111">
+                    <div class="tab-pane" id="link111" style="background: #e0e0e0">
                       <form name="form2">
                      <input class="form-control" type="hidden" name="codCuenta" id="codCuenta"/>
                            <div class="row">
@@ -166,7 +166,8 @@
                        <label class="col-sm-2 col-form-label">Fecha</label>
                        <div class="col-sm-10">
                         <div class="form-group">
-                          <input type="text" class="form-control datepicker" name="fecha_fac" id="fecha_fac" value="10/06/2018">
+                          <?php $fechaActualMod=date("d/m/Y")?>
+                          <input type="text" class="form-control datepicker" name="fecha_fac" id="fecha_fac" value="<?=$fechaActualMod?>">
                         </div>
                              </div>
                       </div>

@@ -351,7 +351,7 @@
                                   <tr class="fondo-boton">
                                     <td>#</td>
                                     <td width="25%">Tipo de Personal</td>
-                                    <td width="14%" class="text-center">Regi&oacute;n</td>
+                                    <!--<td width="14%" class="text-center">Regi&oacute;n</td>-->
                                     <td width="8%" class="text-center">Cantidad</td>                                   
                                     <td width="8%">D&iacute;as Aud.</td>
                                     <td>Monto</td>
@@ -395,8 +395,8 @@
                                    ?>
                                    <tr>
                                      <td><?=$iii?></td>
-                                     <td class="small"><?=$tipoPre?></td>
-                                     <td>
+                                     <td class="small"><?=$tipoPre?><input type="hidden" id="local_extranjero<?=$iii?>" value="<?=$codExtLoc?>"></td>
+                                     <!--<td>
                                       <select class="form-control selectpicker form-control-sm" data-style="fondo-boton fondo-boton-active" name="local_extranjero<?=$iii?>" id="local_extranjero<?=$iii?>" onchange="montarMontoLocalExternoTabla(<?=$iii?>)">
                                           <?php 
                                               if($codExtLoc==1){                  
@@ -410,7 +410,7 @@
                                               }
                                           ?>
                                       </select>
-                                     </td>
+                                     </td>-->
                                      <td>
                                       <select class="form-control selectpicker form-control-sm" data-style="fondo-boton fondo-boton-active" name="cantidad_personal<?=$iii?>" id="cantidad_personal<?=$iii?>" onchange="calcularTotalPersonalServicio(2)">
                                           <?php 
@@ -460,7 +460,7 @@
                                   $iii++; 
                                   } ?>
                                   <tr>
-                                     <td colspan="5" class="text-center font-weight-bold">Total</td>
+                                     <td colspan="4" class="text-center font-weight-bold">Total</td>
                                      <td id="modal_totalmontopre" class="text-right"><?=$modal_totalmontopre?></td>
                                      <td id="modal_totalmontopretotal" class="text-right font-weight-bold"><?=$modal_totalmontopretotal?></td>
                                      <!--<td id="modal_totalmontopreext" class="text-right"><?=$modal_totalmontopreext?></td>

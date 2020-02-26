@@ -30,7 +30,7 @@ if(isset($_GET['nombre'])){
   $cliente=$_GET['cliente'];
   $productos=$_GET['producto'];
   $norma=$_GET['norma'];
-
+  $cod_region=$_GET['local_extranjero'];
   $fecha= date("Y-m-d");
 
   $codSimServ=obtenerCodigoSimServicio();
@@ -76,7 +76,12 @@ if(isset($_GET['nombre'])){
       $codCuenta=$rowCuenta['cod_cuenta'];
       $numero=trim($rowCuenta['numero']);
       $tipoSim=obtenerValorConfiguracion(13);
-      $montoCuenta=$rowCuenta['monto'];
+      if($cod_region==1){
+        $montoCuenta=$rowCuenta['monto'];
+      }else{
+        $montoCuenta=$rowCuenta['montoext'];
+      }
+      
       $porcentaje=((float)$montoCuenta*100)/(float)$montoLocal;
 
       $sqlInsertPorcentaje="INSERT INTO cuentas_simulacion (cod_plancuenta, monto_local, monto_externo, porcentaje,cod_partidapresupuestaria,cod_simulacionservicios) 
@@ -96,7 +101,7 @@ if(isset($_GET['nombre'])){
       $montoDE=$rowDetallesPlan['monto_totalext'];
       $editD=$rowDetallesPlan['editado_alumno'];
       $editDE=$rowDetallesPlan['editado_alumnoext'];
-      $codBolLoc=$rowDetallesPlan['cod_externolocal'];
+      $codBolLoc=$cod_region;
       $monto_generado=0;
 
        $auditoresPlantilla=obtenerDetallePlantillaServicioAuditores($plantilla_servicio);
@@ -129,7 +134,7 @@ if(isset($_GET['nombre'])){
       $cantidadS=$rowAudPlan['cantidad'];
       $montoS=$rowAudPlan['monto'];
       $montoSE=$rowAudPlan['monto_externo'];
-      $codBolLocSE=$rowAudPlan['cod_externolocal'];
+      $codBolLocSE=$cod_region;
       $diasS=$rowAudPlan['dias'];
       $dbhAU = new Conexion();
       $sqlAU="INSERT INTO simulaciones_servicios_auditores (cod_simulacionservicio,cod_tipoauditor, cantidad, monto,cod_estadoreferencial,cantidad_editado,dias,monto_externo,cod_externolocal) 

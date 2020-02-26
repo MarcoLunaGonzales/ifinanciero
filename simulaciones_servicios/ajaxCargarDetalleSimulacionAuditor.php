@@ -20,7 +20,7 @@ if(isset($_GET["cod_simulacion"])){
   <table class="table table-condensed table-bordered">
     <tr class="text-white bg-info">
         <td width="25%">Tipo Auditor</td>
-        <td width="12%">Regi&oacute;n</td>
+        <!--<td width="12%">Regi&oacute;n</td>-->
         <td width="8%">Cantidad</td>
         <td width="8%">D&iacute;as Aud.</td>
         <?php 
@@ -54,8 +54,8 @@ if(isset($_GET["cod_simulacion"])){
       }
        ?>
        <tr>
-         <td class="text-left small"><input type="hidden" id="codigo_filaauditor<?=$iii?>" value="<?=$codigoTipo?>"><?=$nombreTipo?></td>
-         <td>
+         <td class="text-left small"><input type="hidden" id="modal_local_extranjero<?=$iii?>" value="<?=$codExtLoc?>"><input type="hidden" id="codigo_filaauditor<?=$iii?>" value="<?=$codigoTipo?>"><?=$nombreTipo?></td>
+         <!--<td>
            <select class="form-control selectpicker form-control-sm" data-style="fondo-boton fondo-boton-active" name="modal_local_extranjero<?=$iii?>" id="modal_local_extranjero<?=$iii?>" onchange="montarMontoLocalExternoTablaAuditor(<?=$iii?>)">
                <?php 
                    if($codExtLoc==1){                  
@@ -69,7 +69,7 @@ if(isset($_GET["cod_simulacion"])){
                     }
                 ?>
             </select>
-         </td>
+         </td>-->
          <td>
            <select class="form-control selectpicker form-control-sm" data-style="fondo-boton fondo-boton-active" name="modal_cantidad_personal<?=$iii?>" id="modal_cantidad_personal<?=$iii?>" onchange="calcularTotalPersonalServicioAuditor()">
               <?php 
@@ -133,7 +133,7 @@ if(isset($_GET["cod_simulacion"])){
        $totalTablaUnitario+=$totalFilaUnitario;
        $iii++;
      }
-     $colSpan=$nroColumnas+4;
+     $colSpan=$nroColumnas+3;
     ?>
     <tr>
       <td colspan="<?=$colSpan?>" class="font-weight-bold">SUMA TOTAL</td>

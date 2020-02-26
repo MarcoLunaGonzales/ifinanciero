@@ -63,7 +63,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     <div class="col-sm-1">
             <div class="form-group">
                <label for="importe_presupuesto<?=$idFila;?>" class="bmd-label-floating">Imp Pres</label>      
-               <input class="form-control" type="number" required name="importe_presupuesto<?=$idFila;?>" id="importe_presupuesto<?=$idFila;?>" step="0.001" required>  
+               <input class="form-control" type="number" required name="importe_presupuesto<?=$idFila;?>" id="importe_presupuesto<?=$idFila;?>" step="0.001" value="0" readonly>  
       </div>
     </div>
 		<div class="col-sm-1">
