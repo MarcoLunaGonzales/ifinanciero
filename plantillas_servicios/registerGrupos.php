@@ -432,7 +432,7 @@ if(isset($_GET['cod'])){
                                         $stmt11 = $dbh->prepare($sql11);
                                         $stmt11->execute();
                                         
-                                        $cantidad11=1;$dias11=$diasAuditoriaX;$monto11=0;$monto11Ext=0;
+                                        $cantidad11=0;$dias11=$diasAuditoriaX;$monto11=0;$monto11Ext=0;
                                         $bgFila="";$idRemove=0;
                                        while ($rowServ11 = $stmt11->fetch(PDO::FETCH_ASSOC)) {
                                        	     $idRemove=$rowServ11['codigo'];

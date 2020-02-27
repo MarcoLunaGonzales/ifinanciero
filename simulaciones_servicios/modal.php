@@ -344,7 +344,7 @@
                            </table>
                            <input type="hidden" id="modal_numeroservicio" value="<?=$iii?>">
                       </div>
-                      <h4 class="font-weight-bold"><center>PERSONAL <b id="num_titulopersonal"></b></center></h4>
+                      <h4 class="font-weight-bold"><center>HONORARIOS PERSONAL <b id="num_titulopersonal"></b></center></h4>
                       <div class="row">
                         <table class="table table-bordered table-condensed table-striped table-sm">
                              <thead>

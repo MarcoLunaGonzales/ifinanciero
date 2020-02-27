@@ -8,7 +8,7 @@ class Conexion extends PDO {
      private $port = '3307';
 
 
-   /*
+  /* 
    private $tipo_de_base = 'mysql';
    private $host = 'www.minkasoftware.com';
    private $nombre_de_base = 'ibno_conta';

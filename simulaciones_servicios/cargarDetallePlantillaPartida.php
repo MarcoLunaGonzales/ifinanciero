@@ -89,5 +89,5 @@ $j=1;
    <div id="mensaje_cuenta"></div>
   <input type="hidden" id="numero_cuentaspartida" value="<?=$j?>">
   <div class="form-group float-right">
-    <button class="btn btn-success" id="guardar_cuenta" onclick="guardarCuentasSimulacionGenericoServicioPrevio(<?=$ibnorcaC?>)">Mostrar Costos</button>
+    <button class="btn btn-success" id="guardar_cuenta" onclick="guardarCuentasSimulacionGenericoServicioPrevio(<?=$ibnorcaC?>)">Editar Detalle por Persona</button>
   </div>
