@@ -163,6 +163,9 @@
 		if ($_GET['opcion']=='listSimulacionesServAdmin') {
 			require_once('simulaciones_servicios/listAdmin.php');
 		}
+		if ($_GET['opcion']=='deleteSimulacionServicio') {
+			require_once('simulaciones_servicios/saveDelete.php');
+		}
          
         //MES EN CURSO
         if ($_GET['opcion']=='mesCurso') {
