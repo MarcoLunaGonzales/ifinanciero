@@ -140,7 +140,7 @@ $alumnos=$_GET['alumnos'];
                              <td class="text-right"><?=$montoTotal?></td>
                              <td class="text-left font-weight-bold small">[<?=$numeroCuenta?>] <?=$nombreCuenta?></td>
                              <td>
-                              <a href="#" class="btn btn-success btn-sm btn-fab" onclick="mostrarEditPlantillaDetalle(<?=$codigoDetalle?>,'<?=$montoFila?>','<?=$glosaD?>'); return false;">
+                              <a href="#" class="btn btn-success btn-sm btn-fab" onclick="mostrarEditPlantillaDetalle(<?=$codigoDetalle?>,'<?=$montoFila?>','NONE','<?=$glosaD?>'); return false;">
                                 <i class="material-icons"><?=$iconEdit;?></i>
                               </a>
                               <?php 

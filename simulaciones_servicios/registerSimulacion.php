@@ -8,14 +8,12 @@ require_once '../functions.php';
 require_once '../functionsGeneral.php';
 require_once 'configModule.php';
 
-
 setlocale(LC_TIME, "Spanish");
-$dbh = new Conexion();
 
+$dbh = new Conexion();
 $sqlX="SET NAMES 'utf8'";
 $stmtX = $dbh->prepare($sqlX);
 $stmtX->execute();
-
 
 $globalNombreGestion=$_SESSION["globalNombreGestion"];
 $globalUser=$_SESSION["globalUser"];
@@ -274,9 +272,9 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
 
                  //calculos en la simulacion SERVICIOS
                  $gastosOperacionNacional=($costoTotalLocal*(obtenerValorConfiguracion(19)/100));
-                 $utilidadBruta=($precioLocalX*$diasSimulacion)-($costoTotalLocal);   
-                 $utilidadNetaLocal=$utilidadBruta-(($iva+$it)/100)*($precioLocalX*$diasSimulacion);
-                 $pUtilidadLocal=($utilidadNetaLocal*100)/($precioLocalX*$diasSimulacion);
+                 $utilidadBruta=($precioLocalX)-($costoTotalLocal);   
+                 $utilidadNetaLocal=$utilidadBruta-(($iva+$it)/100)*($precioLocalX);
+                 $pUtilidadLocal=($utilidadNetaLocal*100)/($precioLocalX);
 
                  $codEstadoSimulacion=4; 
                  if($pUtilidadLocal>=$utilidadIbnorcaX&&$pUtilidadExterno>=$utilidadFueraX){
@@ -340,8 +338,8 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                   <td class="text-left small bg-table-primary text-white">COSTO VARIABLE TOTAL</td>
                   <td class="text-right font-weight-bold"><?=number_format(($totalVariable[2]*$alumnosX), 2, '.', ',')?></td>
                 </tr>
-								<tr class="bg-danger text-white">
-                  <td class="text-left small">COSTO VARIABLE TOTAL PERSONAL</td>
+								<tr>
+                  <td class="text-left small bg-table-primary text-white">COSTO HONORARIOS PERSONAL</td>
                   <td class="text-right font-weight-bold"><?=number_format($costoVariablePersonal, 2, '.', ',')?></td>
                 </tr>
                 <tr class="">
@@ -387,8 +385,8 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                   <td class="text-left small bg-table-primary text-white">COSTO VARIABLE TOTAL</td>
                   <td class="text-right font-weight-bold"><?=number_format(($totalVariable[2]*$alumnosX), 2, '.', ',')?></td>
                 </tr>
-                <tr class="bg-danger text-white">
-                  <td class="text-left small">COSTO VARIABLE TOTAL PERSONAL</td>
+                <tr>
+                  <td class="text-left small bg-table-primary text-white">COSTO HONORARIOS PERSONAL</td>
                   <td class="text-right font-weight-bold"><?=number_format($costoVariablePersonal, 2, '.', ',')?></td>
                 </tr>
                 <tr class="bg-warning text-dark">
@@ -435,14 +433,14 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                 
                 <tr>
                   <td class="text-left small bg-table-primary2 text-white">TOTAL INGRESOS</td>
-                 <!-- <td class="text-right font-weight-bold"><?=number_format($precioLocalX*$diasSimulacion, 2, '.', ',')?></td>-->
-                  <td class="text-right font-weight-bold"><?=number_format($precioLocalX*$diasSimulacion, 2, '.', ',')?></td>
+                 <!-- <td class="text-right font-weight-bold"><?=number_format($precioLocalX, 2, '.', ',')?></td>-->
+                  <td class="text-right font-weight-bold"><?=number_format($precioLocalX, 2, '.', ',')?></td>
                   <td class="text-right font-weight-bold">100 %</td>
                 </tr>
                 <tr>
                   <td class="text-left small bg-table-primary2 text-white">TOTAL COSTOS</td>
                   <td class="text-right font-weight-bold"><?=number_format($costoTotalLocal, 2, '.', ',')?></td>
-                  <td class="text-right font-weight-bold"><?=number_format((($costoTotalLocal)*100)/($precioLocalX*$diasSimulacion), 2, '.', ',')?> %</td>
+                  <td class="text-right font-weight-bold"><?=number_format((($costoTotalLocal)*100)/($precioLocalX), 2, '.', ',')?> %</td>
                 </tr>
                 <?php 
                   
@@ -450,7 +448,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                 <tr class="bg-warning text-dark">
                   <td class="text-left small">UTILIDAD BRUTA</td>
                   <td class="text-right font-weight-bold"><?=number_format($utilidadBruta, 2, '.', ',')?></td>
-                  <td class="text-right font-weight-bold"><?=number_format(($utilidadBruta/($precioLocalX*$diasSimulacion))*100, 2, '.', ',')?> %</td>
+                  <td class="text-right font-weight-bold"><?=number_format(($utilidadBruta/($precioLocalX))*100, 2, '.', ',')?> %</td>
                 </tr>
                 <!--<tr>
                   <td class="text-left small bg-table-primary2 text-white">TOTAL COSTO FIJO</td>
@@ -464,7 +462,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                 </tr>-->
                 <tr>
                   <td class="text-left small bg-table-primary2 text-white">PAGO IMPUESTOS ( <?=$iva+$it?> %)</td>
-                  <td class="text-right font-weight-bold"><?=number_format((($iva+$it)/100)*($precioLocalX*$diasSimulacion), 2, '.', ',')?></td>
+                  <td class="text-right font-weight-bold"><?=number_format((($iva+$it)/100)*($precioLocalX), 2, '.', ',')?></td>
                   <td class="text-right font-weight-bold"><?=number_format($iva+$it, 2, '.', ',')?> %</td>
                 </tr>
                 <?php
@@ -484,7 +482,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
 				  </div>
 				  	<div class="card-footer fixed-bottom">
             
-            <a onclick="guardarServicioSimulacion()" class="btn btn-success text-white"><i class="material-icons">send</i> Enviar Simulacion</a>
+            <a onclick="guardarServicioSimulacion()" class="btn btn-success text-white"><i class="material-icons">send</i> Enviar Propuesta</a>
 				  	<a href="../<?=$urlList;?>" class="btn btn-danger">Volver</a> 
             </div>
 				 </div>

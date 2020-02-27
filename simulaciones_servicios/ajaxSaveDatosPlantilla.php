@@ -14,8 +14,15 @@ $codSimulacion=$_GET["simulacion"];
 $ut_i=$_GET['utilidad'];
 $dia=$_GET['dia'];
 
+$extlocal=$_GET['extlocal'];
+if($extlocal==1){
+  $monto=$_GET['monto'];
+  $montoe=$_GET['montoe'];
+}else{
+  $monto=$_GET['montol'];
+  $montoe=$_GET['monto'];
+}
 
-$monto=$_GET['monto'];
 $cantidad=$_GET['cantidad'];
 $cantidadT=$_GET['cantidadT'];
 $dias_aud=$_GET['dias'];
@@ -29,7 +36,7 @@ $stmtUpdatePlantilla = $dbh->prepare($sqlUpdatePlantilla);
 $stmtUpdatePlantilla->execute();
 
 
-$sqlDetalles="UPDATE simulaciones_servicios_auditores SET cantidad_editado=$cantidad,monto=$monto,habilitado=$habilitado,dias=$dias_aud where codigo=$codigo";
+$sqlDetalles="UPDATE simulaciones_servicios_auditores SET cantidad_editado=$cantidad,monto=$monto,habilitado=$habilitado,dias=$dias_aud,monto_externo='$montoe',cod_externolocal='$extlocal' where codigo=$codigo";
 $stmtDetalles = $dbh->prepare($sqlDetalles);
 $stmtDetalles->execute();
 

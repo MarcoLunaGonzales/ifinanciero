@@ -39,7 +39,7 @@ $dbh = new Conexion();
       <div class="card">
         <div class="card-header <?=$colorCard;?> card-header-text">
         <div class="card-text">
-          <h4 class="card-title">Registrar Simulacion</h4>
+          <h4 class="card-title">Registrar Propuesta</h4>
         </div>
         </div>
         <div class="card-body ">
@@ -114,16 +114,25 @@ $dbh = new Conexion();
                         </div>
                         </div>
                       </div>
-                      <div class="row">
+                      <!--<div class="row">
                        <label class="col-sm-2 col-form-label">Norma</label>
                        <div class="col-sm-7">
-                        <div class="form-group">
-                          <input class="form-control" type="text" name="norma" id="norma" required autocomplete="off"/>
+                        <div class="form-group">-->
+                          <input class="form-control" type="hidden" name="norma" id="norma" required value="NINGUNA" autocomplete="off"/>
+                        <!--</div>
                         </div>
+                      </div>-->
+                      <div class="row">
+                       <label class="col-sm-2 col-form-label">Regi&oacute;n</label>
+                       <div class="col-sm-7">
+                         <div class="form-group">
+                           <select class="form-control selectpicker" data-style="btn btn-info" name="local_extranjero" id="local_extranjero">
+                                 <option value="1" selected>BOLIVIA</option>
+                                 <option value="0">EXTRANJERO</option>        
+                                </select>
+                         </div>
                         </div>
-                      </div>
-                      
-        
+                     </div>  
         </div>
         <br>
         <div id="mensaje"></div>

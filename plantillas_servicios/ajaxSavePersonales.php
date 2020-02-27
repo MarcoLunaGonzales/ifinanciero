@@ -21,6 +21,7 @@ $plantilla=$_GET['plantilla'];
 $codigo=$_GET['codigo'];
 $cant=$_GET['cant'];
 $monto=$_GET['monto'];
+$montoe=$_GET['montoe'];
 $dias=$_GET['dias'];
 
 $sql1="SELECT * from plantillas_servicios_auditores where cod_plantillaservicio=$plantilla and cod_tipoauditor=$codigo";
@@ -34,13 +35,13 @@ $existe=0;$codigoFila=0;
 }
 
 if($existe==0){
-    $sql="INSERT INTO plantillas_servicios_auditores (cod_plantillaservicio, cod_tipoauditor,cantidad,monto,cod_estadoreferencial,dias) 
-       VALUES ('".$plantilla."','".$codigo."','".$cant."','".$monto."', 1,'".$dias."')";
+    $sql="INSERT INTO plantillas_servicios_auditores (cod_plantillaservicio, cod_tipoauditor,cantidad,monto,cod_estadoreferencial,dias,monto_externo,cod_externolocal) 
+       VALUES ('".$plantilla."','".$codigo."','".$cant."','".$monto."', 1,'".$dias."','".$montoe."',1)";
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
    echo "0"; 
 }else{
-	$sql="UPDATE plantillas_servicios_auditores SET cantidad='".$cant."',monto='".$monto."' WHERE codigo=$codigoFila ";
+	$sql="UPDATE plantillas_servicios_auditores SET cantidad='".$cant."',dias='".$dias."',monto='".$monto."',monto_externo='".$montoe."' WHERE codigo=$codigoFila ";
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
   echo "1"; 

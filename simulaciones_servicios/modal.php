@@ -344,18 +344,19 @@
                            </table>
                            <input type="hidden" id="modal_numeroservicio" value="<?=$iii?>">
                       </div>
-                      <h4 class="font-weight-bold"><center>PERSONAL <b id="num_titulopersonal"></b></center></h4>
+                      <h4 class="font-weight-bold"><center>HONORARIOS PERSONAL <b id="num_titulopersonal"></b></center></h4>
                       <div class="row">
                         <table class="table table-bordered table-condensed table-striped table-sm">
                              <thead>
                                   <tr class="fondo-boton">
                                     <td>#</td>
-                                    <td width="30%">Tipo de Personal</td>
-                                    <td width="14%" class="text-center">Cantidad</td>
-                                    <td width="17%">D&iacute;as Aud.</td>
+                                    <td width="25%">Tipo de Personal</td>
+                                    <!--<td width="14%" class="text-center">Regi&oacute;n</td>-->
+                                    <td width="8%" class="text-center">Cantidad</td>                                   
+                                    <td width="8%">D&iacute;as Aud.</td>
                                     <td>Monto</td>
                                     <td>Total</td>
-                                    <td class="small">Habilitar/Deshabilitar</td>
+                                    <td width="10%" class="small">Hab/Des</td>
                                   </tr>
                               </thead>
                               <tbody>
@@ -365,6 +366,7 @@
                                $stmt = $dbh->prepare($queryPr);
                                $stmt->execute();
                                $modal_totalmontopre=0;$modal_totalmontopretotal=0;$sumaCantidadPre=0;
+                               $modal_totalmontopreext=0;$modal_totalmontopretotalext=0;
                                while ($rowPre = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                   $codigoPre=$rowPre['codigo'];
                                   $tipoPre=$rowPre['tipo_personal'];
@@ -372,16 +374,43 @@
                                   $diasPre=$rowPre['dias'];
                                   $cantidadEPre=$rowPre['cantidad_editado'];
                                   $montoPre=$rowPre['monto'];
-                                  $montoPreTotal=$montoPre*$cantidadEPre*$diasPre;
+                                  $montoPreext=$rowPre['monto_externo'];
+
+                                  $codExtLoc=$rowPre['cod_externolocal'];
+                                  if($codExtLoc==1){
+                                    $montoPreSi=$montoPre;
+                                  }else{
+                                    $montoPreSi=$montoPreext;
+                                  }
+
+                                  $montoPreTotal=$montoPreSi*$cantidadEPre*$diasPre;
+                                  //$montoPreTotalext=$montoPreext*$cantidadEPre*$diasPre;
                                   $banderaHab=$rowPre['habilitado'];
                                   if($banderaHab!=0){
-                                    $modal_totalmontopre+=$montoPre;
+                                    $modal_totalmontopre+=$montoPreSi;
                                     $modal_totalmontopretotal+=$montoPreTotal;
+                                    //$modal_totalmontopreext+=$montoPreext;
+                                    //$modal_totalmontopretotalext+=$montoPreTotalext;
                                   }
                                    ?>
                                    <tr>
                                      <td><?=$iii?></td>
-                                     <td><?=$tipoPre?></td>
+                                     <td class="small"><?=$tipoPre?><input type="hidden" id="local_extranjero<?=$iii?>" value="<?=$codExtLoc?>"></td>
+                                     <!--<td>
+                                      <select class="form-control selectpicker form-control-sm" data-style="fondo-boton fondo-boton-active" name="local_extranjero<?=$iii?>" id="local_extranjero<?=$iii?>" onchange="montarMontoLocalExternoTabla(<?=$iii?>)">
+                                          <?php 
+                                              if($codExtLoc==1){                  
+                                                ?><option value="1" selected>BOLIVIA</option>
+                                                  <option value="0">EXTRANJERO</option>
+                                                <?php
+                                              }else{
+                                                ?><option value="1">BOLIVIA</option>
+                                                  <option value="0" selected>EXTRANJERO</option>
+                                                <?php
+                                              }
+                                          ?>
+                                      </select>
+                                     </td>-->
                                      <td>
                                       <select class="form-control selectpicker form-control-sm" data-style="fondo-boton fondo-boton-active" name="cantidad_personal<?=$iii?>" id="cantidad_personal<?=$iii?>" onchange="calcularTotalPersonalServicio(2)">
                                           <?php 
@@ -410,7 +439,9 @@
                                       </select>
                                      </td>
                                      <td class="text-right">
-                                       <input type="number" id="modal_montopre<?=$iii?>" name="modal_montopre<?=$iii?>" <?=($banderaHab==0)?"readonly":"";?> class="form-control text-info text-right" onchange="calcularTotalPersonalServicio(2)" onkeyUp="calcularTotalPersonalServicio(2)" value="<?=$montoPre?>" step="0.01">
+                                       <input type="number" id="modal_montopre<?=$iii?>" name="modal_montopre<?=$iii?>" <?=($banderaHab==0)?"readonly":"";?> class="form-control text-info text-right" onchange="calcularTotalPersonalServicio(2)" onkeyUp="calcularTotalPersonalServicio(2)" value="<?=$montoPreSi?>" step="0.01">
+                                       <input type="hidden" id="modal_montopreext<?=$iii?>" value="<?=$montoPreext?>">
+                                       <input type="hidden" id="modal_montopreloc<?=$iii?>" value="<?=$montoPre?>">
                                      </td>
                                      <td class="text-right">
                                        <input type="hidden" id="modal_codigopersonal<?=$iii?>" value="<?=$codigoPre?>">
@@ -432,6 +463,8 @@
                                      <td colspan="4" class="text-center font-weight-bold">Total</td>
                                      <td id="modal_totalmontopre" class="text-right"><?=$modal_totalmontopre?></td>
                                      <td id="modal_totalmontopretotal" class="text-right font-weight-bold"><?=$modal_totalmontopretotal?></td>
+                                     <!--<td id="modal_totalmontopreext" class="text-right"><?=$modal_totalmontopreext?></td>
+                                     <td id="modal_totalmontopretotalext" class="text-right font-weight-bold"><?=$modal_totalmontopretotalext?></td>-->
                                      <td></td>
                                    </tr>
                               </tbody>

@@ -2,7 +2,6 @@
 session_start();
 require_once '../conexion.php';
 require_once '../styles.php';
-
 require_once '../functionsGeneral.php';
 require_once '../functions.php';
 require_once 'configModule.php';
@@ -25,17 +24,22 @@ if(isset($_GET['numero'])){
 	$numero=$_GET['numero'];
   $codProv=$_GET['cod_prov'];
   if($codProv==0){
-    $simu=explode("$$$",$_GET['cod_sim']);
-    if($simu[1]=="TCP"){
+    if($_GET['cod_sim']==0){
+      $codSim=0;
+      $codSimServ=0;
+    }else{
+     $simu=explode("$$$",$_GET['cod_sim']);
+     if($simu[1]=="TCP"){
       $codSim=0;
       $codSimServ=$simu[0];
-    }else{
+     }else{
       $codSim=$simu[0];
       $codSimServ=0;
+     }     
     }
   }else{
-    $codSim=$_GET['cod_sim'];
-    $codSimServ="";
+    $codSim=0;
+    $codSimServ=0;
   }
   
   $codCont=0;//CODIGO DE CONTRATO

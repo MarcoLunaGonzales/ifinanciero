@@ -50,7 +50,8 @@ $alumnos=$_GET['alumnos'];
                        <tr class="bg-danger text-white">
                          <td>Nº</td>
                          <td>Detalle</td>
-                         <td width="12%">Monto</td>
+                         <td width="12%">Monto Bol</td>
+                         <td width="12%">Monto Ext</td>
                          <?php 
                          // if($tipoCalculo==3){
                            ?><!--<td>Personal x D&iacute;as Aud.</td>--><?php
@@ -71,7 +72,12 @@ $alumnos=$_GET['alumnos'];
                             </td>
                             <td width="12%">
                                <div class="form-group">                    
-                                 <input class="form-control text-right" type="number" name="monto_plantilladetalle" value="" placeholder="Monto" id="monto_plantilladetalle" step="0.01"/>
+                                 <input class="form-control text-right" type="number" name="monto_plantilladetalle" value="" placeholder="Monto Bol" id="monto_plantilladetalle" step="0.01"/>
+                               </div>
+                             </td>
+                             <td width="12%">
+                               <div class="form-group">                    
+                                 <input class="form-control text-right" type="number" name="monto_plantilladetalleext" value="" placeholder="Monto Ext" id="monto_plantilladetalleext" step="0.01"/>
                                </div>
                              </td>
                              <?php 
@@ -144,15 +150,19 @@ $alumnos=$_GET['alumnos'];
                           switch ($tipoCalculo) {
                             case '1':
                                $montoFila=$row['monto_total']*$cursos;
+                               $montoFilaExt=$row['monto_totalext']*$cursos;
                             break;
                             case '2':
                                $montoFila=$row['monto_total'];
+                               $montoFilaExt=$row['monto_totalext'];
                             break;
                             case '3':
                                $montoFila=$row['monto_total']/$alumnos;
+                               $montoFilaExt=$row['monto_totalext']/$alumnos;
                             break;
                           }
                           $montoTotal=number_format($montoFila, 2, '.', ',');
+                          $montoTotalExt=number_format($montoFilaExt, 2, '.', ',');
                           $glosaD=$row['glosa'];
                           $totalMontoPlantilla+=$montoFila;
                           ?>
@@ -160,6 +170,7 @@ $alumnos=$_GET['alumnos'];
                              <td><?=$indexDetalle?></td>
                              <td class="text-left"><?=$row['glosa']?></td>
                              <td class="text-right"><?=$montoTotal?></td>
+                             <td class="text-right"><?=$montoTotalExt?></td>
                              <?php 
                             //if($tipoCalculo==3){
                            ?><!--<td>C: --><?php //$alumnos ?><!--</td>--><?php
@@ -167,7 +178,7 @@ $alumnos=$_GET['alumnos'];
                             ?> 
                              <td class="text-left font-weight-bold small">[<?=$numeroCuenta?>] <?=$nombreCuenta?></td>
                              <td>
-                              <a href="#" class="btn btn-success btn-sm btn-fab" onclick="mostrarEditPlantillaDetalle(<?=$codigoDetalle?>,'<?=$montoFila?>','<?=$glosaD?>'); return false;">
+                              <a href="#" class="btn btn-success btn-sm btn-fab" onclick="mostrarEditPlantillaDetalle(<?=$codigoDetalle?>,'<?=$montoFila?>','<?=$montoFilaExt?>','<?=$glosaD?>'); return false;">
                                 <i class="material-icons"><?=$iconEdit;?></i>
                               </a>
                               <?php 

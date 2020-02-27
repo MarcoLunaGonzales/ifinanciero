@@ -616,13 +616,13 @@ if($menuModulo==0){
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listSimulacionesCostos">
                     <span class="sidebar-mini"> SC </span>
-                    <span class="sidebar-normal"> Simulaciones de Presupuesto</span>
+                    <span class="sidebar-normal"> Propuestas de Presupuesto</span>
                   </a>
                 </li>
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listSimulacionesCostosAdmin">
                     <span class="sidebar-mini"> GS </span>
-                    <span class="sidebar-normal"> Gesti&oacute;n de Simulaciones</span>
+                    <span class="sidebar-normal"> Gesti&oacute;n de Propuestas</span>
                   </a>
                 </li> 
 
@@ -641,13 +641,13 @@ if($menuModulo==0){
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listSimulacionesServicios">
                     <span class="sidebar-mini"> SS </span>
-                    <span class="sidebar-normal"> Simulaciones de Servicios</span>
+                    <span class="sidebar-normal"> Propuestas de Servicios</span>
                   </a>
                 </li>
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listSimulacionesServAdmin">
                     <span class="sidebar-mini"> GSS </span>
-                    <span class="sidebar-normal"> Gesti&oacute;n de Simulaciones Servicios</span>
+                    <span class="sidebar-normal"> Gesti&oacute;n de Propuestas Servicios</span>
                   </a>
                 </li>
                 <li class="nav-item ">

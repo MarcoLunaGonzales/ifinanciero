@@ -292,7 +292,16 @@ if(isset($_GET['cod'])){
 	                                   <select class="selectpicker form-control" data-live-search="true" name="servicios_codigo" id="servicios_codigo" data-style="fondo-boton">
 	        	                          <option disabled selected value="">--Seleccione--</option>
 			  	              <?php
-                           $stmt3 = $dbh->prepare("SELECT idclaservicio,descripcion,codigo from cla_servicios where (codigo_n1=108 or codigo_n1=109) and vigente=1");
+			  	              if($codAreaX==39){
+			  	              	$codigoAreaServ=108;
+			  	              }else{
+			  	              	if($codAreaX==38){
+			  	              		$codigoAreaServ=109;
+			  	              	}else{
+			  	              		$codigoAreaServ=0;
+			  	              	}
+			  	              }
+                           $stmt3 = $dbh->prepare("SELECT idclaservicio,descripcion,codigo from cla_servicios where (codigo_n1=108 or codigo_n1=109) and vigente=1 and codigo_n1=$codigoAreaServ");
                          $stmt3->execute();
                          while ($rowServ = $stmt3->fetch(PDO::FETCH_ASSOC)) {
                           $codigoServX=$rowServ['idclaservicio'];
@@ -404,13 +413,15 @@ if(isset($_GET['cod'])){
       	                     				<th>Descripci&oacute;n</th>
       	                     				<th>Cantidad</th>
       	                     				<th>D&iacute;as</th>
-      	                     				<th>Monto</th>
-      	                     				<th>Total</th>
+      	                     				<th>Monto Bolivia</th>
+      	                     				<th>Total Bolivia</th>
+      	                     				<th>Monto Extranjero</th>
+      	                     				<th>Total Extranjero</th>
       	                     				<th>Quitar</th>
       	                     			</tr>
       	                     		</thead>
       	                     		<tbody>
-      	                     			<?php $index11=1;$total11=0;
+      	                     			<?php $index11=1;$total11=0; $total11Ext=0;
       	                     			 $stmt3 = $dbh->prepare("SELECT codigo,nombre,abreviatura from tipos_auditor where cod_estadoreferencial=1");
                                           $stmt3->execute();
                                           while ($rowServ = $stmt3->fetch(PDO::FETCH_ASSOC)) {
@@ -421,25 +432,30 @@ if(isset($_GET['cod'])){
                                         $stmt11 = $dbh->prepare($sql11);
                                         $stmt11->execute();
                                         
-                                        $cantidad11=1;$dias11=$diasAuditoriaX;$monto11=0;
+                                        $cantidad11=0;$dias11=$diasAuditoriaX;$monto11=0;$monto11Ext=0;
                                         $bgFila="";$idRemove=0;
                                        while ($rowServ11 = $stmt11->fetch(PDO::FETCH_ASSOC)) {
                                        	     $idRemove=$rowServ11['codigo'];
                                              $cantidad11=$rowServ11['cantidad'];
                                              $dias11=$rowServ11['dias'];
                                              $monto11=$rowServ11['monto'];
+                                             $monto11Ext=$rowServ11['monto_externo'];
                                              $bgFila="bg-warning";
                                        }
                                           $montoTotal11=$cantidad11*$monto11*$dias11;
+                                          $montoTotal11Ext=$cantidad11*$monto11Ext*$dias11;
                                           $total11+=$montoTotal11;
+                                          $total11Ext+=$montoTotal11Ext;
                                           ?>
                                        <tr class="<?=$bgFila?>">
                                          <td><input type="hidden" id="codigo_personal<?=$index11?>" value="<?=$codigo11?>"><?=$index11?></td>
                                          <td><?=$descripcion11?></td>                                         
-                                         <td class="text-right"><input type="number" min="1" id="cantidad_personal<?=$index11?>" class="form-control text-right" value="<?=$cantidad11?>" onkeyup="calcularMontoFilaPersonalServicio(<?=$index11?>)" onkeydown="calcularMontoFilaPersonalServicio(<?=$index11?>)"></td>
-                                         <td class="text-right"><input type="number" min="1" max="<?=$diasAuditoriaX?>" id="dias_personal<?=$index11?>" class="form-control text-right" value="<?=$dias11?>" onkeyup="calcularMontoFilaPersonalServicio(<?=$index11?>)" onkeydown="calcularMontoFilaPersonalServicio(<?=$index11?>)"></td>
-                                         <td class="text-right"><input type="number" min="0" id="monto_personal<?=$index11?>" class="form-control text-right" value="<?=number_format($monto11, 2, '.', '');?>" onkeyup="calcularMontoFilaPersonalServicio(<?=$index11?>)" onkeydown="calcularMontoFilaPersonalServicio(<?=$index11?>)"></td>
-                                         <td class="text-right"><input type="number" readonly min="1" id="total_personal<?=$index11?>" class="form-control text-right" value="<?=number_format($montoTotal11, 2, '.', '');?>"></td>
+                                         <td class="text-right"><input type="number" min="0" id="cantidad_personal<?=$index11?>" class="form-control text-right" value="<?=$cantidad11?>" onkeyup="calcularMontoFilaPersonalServicio(<?=$index11?>)" onkeydown="calcularMontoFilaPersonalServicio(<?=$index11?>)" onchange="calcularMontoFilaPersonalServicio(<?=$index11?>)"></td>
+                                         <td class="text-right"><input type="number" min="0" max="<?=$diasAuditoriaX?>" id="dias_personal<?=$index11?>" class="form-control text-right" value="<?=$dias11?>" onkeyup="calcularMontoFilaPersonalServicio(<?=$index11?>)" onkeydown="calcularMontoFilaPersonalServicio(<?=$index11?>)" onchange="calcularMontoFilaPersonalServicio(<?=$index11?>)"></td>
+                                         <td class="text-right"><input type="number" min="0" id="monto_personal<?=$index11?>" class="form-control text-right" value="<?=number_format($monto11, 2, '.', '');?>" onkeyup="calcularMontoFilaPersonalServicio(<?=$index11?>)" onkeydown="calcularMontoFilaPersonalServicio(<?=$index11?>)" onchange="calcularMontoFilaPersonalServicio(<?=$index11?>)"></td>
+                                         <td class="text-right"><input type="number" readonly min="0" id="total_personal<?=$index11?>" class="form-control text-right" value="<?=number_format($montoTotal11, 2, '.', '');?>"></td>
+                                         <td class="text-right"><input type="number" min="0" id="monto_personalext<?=$index11?>" class="form-control text-right" value="<?=number_format($monto11Ext, 2, '.', '');?>" onkeyup="calcularMontoFilaPersonalServicio(<?=$index11?>)" onkeydown="calcularMontoFilaPersonalServicio(<?=$index11?>)" onchange="calcularMontoFilaPersonalServicio(<?=$index11?>)"></td>
+                                         <td class="text-right"><input type="number" readonly min="0" id="total_personalext<?=$index11?>" class="form-control text-right" value="<?=number_format($montoTotal11Ext, 2, '.', '');?>"></td>
                                          <td>
                                            <?php 
                                            if($idRemove!=0){
@@ -458,6 +474,8 @@ if(isset($_GET['cod'])){
                                       <tr class="font-weight-bold">
                                          <td colspan="5" class="text-center">TOTAL</td>
                                          <td class="text-right" id="total_personalservicio"><?=number_format($total11, 2, '.', ',');?></td>
+                                         <td></td>
+                                         <td class="text-right" id="total_personalservicioext"><?=number_format($total11Ext, 2, '.', ',');?></td>
                                          <td></td>
                                        </tr>
       	                     		</tbody>
