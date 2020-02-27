@@ -2535,8 +2535,8 @@ function obtenerCodigoAreaPlantillaServicio($codigo){
 }
 //================ ========== PARA  planilla sueldos
 
-function obtenerBonoAntiguedad($minino_salarial,$ing_contr){  
-  $anio_actual= date('Y');
+function obtenerBonoAntiguedad($minino_salarial,$ing_contr,$anio_actual){  
+  // $anio_actual= date('Y');
   // $anio_actual=2019;
   $fechaComoEntero = strtotime($ing_contr);
   $anio_inicio = date("Y", $fechaComoEntero);
@@ -2564,20 +2564,20 @@ function obtenerBonoAntiguedad($minino_salarial,$ing_contr){
   return $total_bono_antiguedad_x;
 
 }
-function obtenerTotalBonos($codigo_personal,$dias_trabajados_asistencia,$dias_trabajados_por_defecto)
+function obtenerTotalBonos($codigo_personal,$dias_trabajados_asistencia,$dias_trabajados_por_defecto,$cod_gestion,$mes)
 {  
-  $mes=date('m');
-  $gestion=date('Y');
+  // $mes=date('m');
+  // $gestion=date('Y');
 
   // $mes=11;
   // $gestion=2019;
 
   $dbh = new Conexion();
-  $sqlGestion = "SELECT codigo from gestiones where nombre=$gestion";
-  $stmtGestion = $dbh->prepare($sqlGestion);
-  $stmtGestion->execute();
-  $resultGestion=$stmtGestion->fetch();
-  $cod_gestion = $resultGestion['codigo'];
+  // $sqlGestion = "SELECT codigo from gestiones where nombre=$gestion";
+  // $stmtGestion = $dbh->prepare($sqlGestion);
+  // $stmtGestion->execute();
+  // $resultGestion=$stmtGestion->fetch();
+  // $cod_gestion = $resultGestion['codigo'];
 
 
   // $sqlBonos = "SELECT SUM(monto) as total_bonos from bonos_personal_mes 
@@ -2703,21 +2703,21 @@ function obtenerRC_IVA($total_ganado,$apf_f,$afp_p,$ap_sol_13000,$ap_sol_25000,$
   return ($aporte_rc_iva_neto);
 }
 
-function obtenerAtrasoPersonal($id_personal,$haber_basico){
+function obtenerAtrasoPersonal($id_personal,$haber_basico,$cod_gestion,$mes){
   $dbh = new Conexion();
   set_time_limit(300);
   //capturando fecha
-  $mes=date('m');
-  $gestion=date('Y');
+  // $mes=date('m');
+  // $gestion=date('Y');
   // $mes=11;
   // $gestion=2019;
 
-  $dbh = new Conexion();
-  $sqlGestion = "SELECT codigo from gestiones where nombre=$gestion";
-  $stmtGestion = $dbh->prepare($sqlGestion);
-  $stmtGestion->execute();
-  $resultGestion=$stmtGestion->fetch();
-  $cod_gestion = $resultGestion['codigo'];
+   $dbh = new Conexion();
+  // $sqlGestion = "SELECT codigo from gestiones where nombre=$gestion";
+  // $stmtGestion = $dbh->prepare($sqlGestion);
+  // $stmtGestion->execute();
+  // $resultGestion=$stmtGestion->fetch();
+  // $cod_gestion = $resultGestion['codigo'];
 
   $porcentaje_diahaber_x=0;
   $stmt = $dbh->prepare("SELECT minutos_retraso from retrasos_personal 
@@ -2745,20 +2745,20 @@ function obtenerAtrasoPersonal($id_personal,$haber_basico){
   $dbh = null;
   return ($descuentos_neto);
 }
-function obtenerOtrosDescuentos($codigo_personal)
+function obtenerOtrosDescuentos($codigo_personal,$cod_gestion,$mes)
 {  
-  $mes=date('m');
-  $gestion=date('Y');
+  // $mes=date('m');
+  // $gestion=date('Y');
 
   // $mes=11;
   // $gestion=2019;
 
   $dbh = new Conexion();
-  $sqlGestion = "SELECT codigo from gestiones where nombre=$gestion";
-  $stmtGestion = $dbh->prepare($sqlGestion);
-  $stmtGestion->execute();
-  $resultGestion=$stmtGestion->fetch();
-  $cod_gestion = $resultGestion['codigo'];
+  // $sqlGestion = "SELECT codigo from gestiones where nombre=$gestion";
+  // $stmtGestion = $dbh->prepare($sqlGestion);
+  // $stmtGestion->execute();
+  // $resultGestion=$stmtGestion->fetch();
+  // $cod_gestion = $resultGestion['codigo'];
 
 
   $sqlBonos = "SELECT SUM(monto) as total_descuentos_otros from descuentos_personal_mes 
@@ -2784,21 +2784,21 @@ function obtenerDotaciones($codigo_personal,$cod_gestion_x,$cod_mes_x){
     $monto_mes_dotacion_x=number_format($monto_mes_dotacion,2,'.','');
     return $monto_mes_dotacion_x;
 }
-function obtenerAnticipo($id_personal)
+function obtenerAnticipo($id_personal,$cod_gestion,$mes)
 {
   $anticipo=0;
   
-  $mes=date('m');
-  $gestion=date('Y');
+  // $mes=date('m');
+  // $gestion=date('Y');
   // $mes=11;
   // $gestion=2019;
 
   $dbh = new Conexion();
-  $sqlGestion = "SELECT codigo from gestiones where nombre=$gestion";
-  $stmtGestion = $dbh->prepare($sqlGestion);
-  $stmtGestion->execute();
-  $resultGestion=$stmtGestion->fetch();
-  $cod_gestion = $resultGestion['codigo'];
+  // $sqlGestion = "SELECT codigo from gestiones where nombre=$gestion";
+  // $stmtGestion = $dbh->prepare($sqlGestion);
+  // $stmtGestion->execute();
+  // $resultGestion=$stmtGestion->fetch();
+  // $cod_gestion = $resultGestion['codigo'];
 
   // $fecha_inicio=$gestion."-".$mes."-01 00:00:00";
   // $fecha_actual=date('Y-m-d G:i:s');
