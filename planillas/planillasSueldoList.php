@@ -417,16 +417,7 @@ if($globalAdmin==1){//para personal admin
   $stmt->bindColumn('cod_estadoplanilla', $cod_estadoplanilla);
   $stmt->bindColumn('estadoplanilla', $estadoplanilla);
 
-  $stmtAdmninUO = $dbh->prepare("SELECT cod_uo,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_uo) as nombre_uo from personal_area_distribucion where cod_estadoreferencial=1
-  GROUP BY cod_uo");
-  $stmtAdmninUO->execute();
-  $stmtAdmninUO->bindColumn('cod_uo', $cod_uo_x);
-  $stmtAdmninUO->bindColumn('nombre_uo', $nombre_uo_x);
-  $stmtAdmninUOPDF = $dbh->prepare("SELECT cod_uo,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_uo) as nombre_uo from personal_area_distribucion where cod_estadoreferencial=1
-  GROUP BY cod_uo");
-  $stmtAdmninUOPDF->execute();
-  $stmtAdmninUOPDF->bindColumn('cod_uo', $cod_uo_x);
-  $stmtAdmninUOPDF->bindColumn('nombre_uo', $nombre_uo_x);
+
   ?>
   <div class="content">
     <div class="container-fluid">
@@ -457,6 +448,19 @@ if($globalAdmin==1){//para personal admin
                   // $cont= array();
                   $datosX="";
                   while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+                    //para los dropdows de planillas
+                      $stmtAdmninUO = $dbh->prepare("SELECT cod_uo,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_uo) as nombre_uo from personal_area_distribucion where cod_estadoreferencial=1
+                      GROUP BY cod_uo");
+                      $stmtAdmninUO->execute();
+                      $stmtAdmninUO->bindColumn('cod_uo', $cod_uo_x);
+                      $stmtAdmninUO->bindColumn('nombre_uo', $nombre_uo_x);
+                      
+                      $stmtAdmninUOPDF = $dbh->prepare("SELECT cod_uo,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_uo) as nombre_uo from personal_area_distribucion where cod_estadoreferencial=1
+                      GROUP BY cod_uo");
+                      $stmtAdmninUOPDF->execute();
+                      $stmtAdmninUOPDF->bindColumn('cod_uo', $cod_uo_x);
+                      $stmtAdmninUOPDF->bindColumn('nombre_uo', $nombre_uo_x);
+
                     $datosX =$codigo_planilla."-".$globalCodUnidad;
                     $sw_aux=false;
                     $label_uo_aux='';
