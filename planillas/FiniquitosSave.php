@@ -96,7 +96,7 @@ try {
     
     $aguinaldo_meses=$mes_retiro-1;
     $aguinaldo_dias=$dia_retiro;
-    $aguinaldo_anios_monto=0;//preguntar
+    $aguinaldo_anios_monto=0;//Buscar datos
 
     $aguinaldo_meses_monto=$sueldo_promedio/12*$aguinaldo_meses;
     $aguinaldo_dias_monto=($sueldo_promedio/12/30)*$aguinaldo_dias;
