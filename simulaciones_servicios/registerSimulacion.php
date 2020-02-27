@@ -8,14 +8,12 @@ require_once '../functions.php';
 require_once '../functionsGeneral.php';
 require_once 'configModule.php';
 
-
 setlocale(LC_TIME, "Spanish");
-$dbh = new Conexion();
 
+$dbh = new Conexion();
 $sqlX="SET NAMES 'utf8'";
 $stmtX = $dbh->prepare($sqlX);
 $stmtX->execute();
-
 
 $globalNombreGestion=$_SESSION["globalNombreGestion"];
 $globalUser=$_SESSION["globalUser"];

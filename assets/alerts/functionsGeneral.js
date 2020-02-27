@@ -5735,7 +5735,7 @@ function listDetallePlantilla(id){
     var montoExt=$("#monto_personalext"+i).val();
     var dias=$("#dias_personal"+i).val();
     var codigo = $("#codigo_personal"+i).val();
-    if(cantidad==""||monto==""||parseFloat(monto)==0||montoExt==""||parseFloat(montoExt)==0){
+    if(cantidad==""||monto==""||parseFloat(monto)==0||montoExt==""||parseFloat(montoExt)==0||cantidad==0){
       
     }else{
      var parametros={"plantilla":plantilla,"codigo":codigo,"cant":cantidad,"monto":monto,"montoe":montoExt,"dias":dias};
@@ -5748,14 +5748,14 @@ function listDetallePlantilla(id){
           iniciarCargaAjax();
         },
         success:  function (resp) {
-           detectarCargaAjax();
-          
+           detectarCargaAjax(); 
+           listarPersonalesPlantillaBucle();        
         }
      });
      
     }
   };
-  listarPersonalesPlantilla();
+ // listarPersonalesPlantilla();
  }
 function listarPersonalPlantilla(){
    var plantilla=$("#cod_plantilla").val();
@@ -5786,6 +5786,24 @@ function listarPersonalesPlantilla(){
           detectarCargaAjax();
          $("#tabla_personal").html(resp);
          Swal.fire("Correcto!", "Se agrego el registro exitosamente.", "success");
+        }
+    }); 
+}
+function listarPersonalesPlantillaBucle(){
+   var plantilla=$("#cod_plantilla").val();
+   var dias_auditoria=$("#dias_auditoria").val();
+   var parametros={"plantilla":plantilla,"dias_auditoria":dias_auditoria};
+   $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxListPersonales.php",
+        data: parametros,
+        beforeSend: function () { 
+          iniciarCargaAjax();
+        },
+        success:  function (resp) {
+          detectarCargaAjax();
+         $("#tabla_personal").html(resp);
         }
     }); 
 }

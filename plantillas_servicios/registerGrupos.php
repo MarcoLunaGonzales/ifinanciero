@@ -292,7 +292,16 @@ if(isset($_GET['cod'])){
 	                                   <select class="selectpicker form-control" data-live-search="true" name="servicios_codigo" id="servicios_codigo" data-style="fondo-boton">
 	        	                          <option disabled selected value="">--Seleccione--</option>
 			  	              <?php
-                           $stmt3 = $dbh->prepare("SELECT idclaservicio,descripcion,codigo from cla_servicios where (codigo_n1=108 or codigo_n1=109) and vigente=1");
+			  	              if($codAreaX==39){
+			  	              	$codigoAreaServ=108;
+			  	              }else{
+			  	              	if($codAreaX==38){
+			  	              		$codigoAreaServ=109;
+			  	              	}else{
+			  	              		$codigoAreaServ=0;
+			  	              	}
+			  	              }
+                           $stmt3 = $dbh->prepare("SELECT idclaservicio,descripcion,codigo from cla_servicios where (codigo_n1=108 or codigo_n1=109) and vigente=1 and codigo_n1=$codigoAreaServ");
                          $stmt3->execute();
                          while ($rowServ = $stmt3->fetch(PDO::FETCH_ASSOC)) {
                           $codigoServX=$rowServ['idclaservicio'];
@@ -441,12 +450,12 @@ if(isset($_GET['cod'])){
                                        <tr class="<?=$bgFila?>">
                                          <td><input type="hidden" id="codigo_personal<?=$index11?>" value="<?=$codigo11?>"><?=$index11?></td>
                                          <td><?=$descripcion11?></td>                                         
-                                         <td class="text-right"><input type="number" min="1" id="cantidad_personal<?=$index11?>" class="form-control text-right" value="<?=$cantidad11?>" onkeyup="calcularMontoFilaPersonalServicio(<?=$index11?>)" onkeydown="calcularMontoFilaPersonalServicio(<?=$index11?>)" onchange="calcularMontoFilaPersonalServicio(<?=$index11?>)"></td>
-                                         <td class="text-right"><input type="number" min="1" max="<?=$diasAuditoriaX?>" id="dias_personal<?=$index11?>" class="form-control text-right" value="<?=$dias11?>" onkeyup="calcularMontoFilaPersonalServicio(<?=$index11?>)" onkeydown="calcularMontoFilaPersonalServicio(<?=$index11?>)" onchange="calcularMontoFilaPersonalServicio(<?=$index11?>)"></td>
+                                         <td class="text-right"><input type="number" min="0" id="cantidad_personal<?=$index11?>" class="form-control text-right" value="<?=$cantidad11?>" onkeyup="calcularMontoFilaPersonalServicio(<?=$index11?>)" onkeydown="calcularMontoFilaPersonalServicio(<?=$index11?>)" onchange="calcularMontoFilaPersonalServicio(<?=$index11?>)"></td>
+                                         <td class="text-right"><input type="number" min="0" max="<?=$diasAuditoriaX?>" id="dias_personal<?=$index11?>" class="form-control text-right" value="<?=$dias11?>" onkeyup="calcularMontoFilaPersonalServicio(<?=$index11?>)" onkeydown="calcularMontoFilaPersonalServicio(<?=$index11?>)" onchange="calcularMontoFilaPersonalServicio(<?=$index11?>)"></td>
                                          <td class="text-right"><input type="number" min="0" id="monto_personal<?=$index11?>" class="form-control text-right" value="<?=number_format($monto11, 2, '.', '');?>" onkeyup="calcularMontoFilaPersonalServicio(<?=$index11?>)" onkeydown="calcularMontoFilaPersonalServicio(<?=$index11?>)" onchange="calcularMontoFilaPersonalServicio(<?=$index11?>)"></td>
-                                         <td class="text-right"><input type="number" readonly min="1" id="total_personal<?=$index11?>" class="form-control text-right" value="<?=number_format($montoTotal11, 2, '.', '');?>"></td>
+                                         <td class="text-right"><input type="number" readonly min="0" id="total_personal<?=$index11?>" class="form-control text-right" value="<?=number_format($montoTotal11, 2, '.', '');?>"></td>
                                          <td class="text-right"><input type="number" min="0" id="monto_personalext<?=$index11?>" class="form-control text-right" value="<?=number_format($monto11Ext, 2, '.', '');?>" onkeyup="calcularMontoFilaPersonalServicio(<?=$index11?>)" onkeydown="calcularMontoFilaPersonalServicio(<?=$index11?>)" onchange="calcularMontoFilaPersonalServicio(<?=$index11?>)"></td>
-                                         <td class="text-right"><input type="number" readonly min="1" id="total_personalext<?=$index11?>" class="form-control text-right" value="<?=number_format($montoTotal11Ext, 2, '.', '');?>"></td>
+                                         <td class="text-right"><input type="number" readonly min="0" id="total_personalext<?=$index11?>" class="form-control text-right" value="<?=number_format($montoTotal11Ext, 2, '.', '');?>"></td>
                                          <td>
                                            <?php 
                                            if($idRemove!=0){

@@ -41,7 +41,7 @@ if($existe==0){
     $stmt->execute();
    echo "0"; 
 }else{
-	$sql="UPDATE plantillas_servicios_auditores SET cantidad='".$cant."',monto='".$monto."',monto_externo='".$montoe."' WHERE codigo=$codigoFila ";
+	$sql="UPDATE plantillas_servicios_auditores SET cantidad='".$cant."',dias='".$dias."',monto='".$monto."',monto_externo='".$montoe."' WHERE codigo=$codigoFila ";
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
   echo "1"; 
