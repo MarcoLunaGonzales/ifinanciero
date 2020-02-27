@@ -1619,10 +1619,10 @@ where pc.codigo=$codigo and pgc.cod_tipocosto=$tipo GROUP BY pgd.cod_plantillagr
    function obtenerTotalesPlantillaServicio($codigo,$tipo,$mes){
     $anio=date("Y");
     $dbh = new Conexion();
-    $query2="select pgd.cod_plantillagruposervicio,pc.cod_unidadorganizacional,pc.cod_area,pgc.nombre,pgc.cod_tiposervicio,sum(pgd.monto_local) as local,sum(pgd.monto_externo) as externo,sum(pgd.monto_calculado) as calculado from plantillas_gruposerviciodetalle pgd join partidas_presupuestarias pp on pgd.cod_partidapresupuestaria=pp.codigo
+    $query2="select pgd.cod_plantillagruposervicio,pc.cod_unidadorganizacional,pc.cod_area,pgc.nombre,pgc.cod_tiposervicio,sum(pgd.monto_local) as local,sum(pgd.monto_externo) as externo,sum(pgd.monto_calculado) as calculado,pgd.tipo_calculo from plantillas_gruposerviciodetalle pgd join partidas_presupuestarias pp on pgd.cod_partidapresupuestaria=pp.codigo
 join plantillas_gruposervicio pgc on pgd.cod_plantillagruposervicio=pgc.codigo
 join plantillas_servicios pc on pgc.cod_plantillaservicio=pc.codigo 
-where pc.codigo=$codigo and pgc.cod_tiposervicio=$tipo GROUP BY pgd.cod_plantillagruposervicio order by pgd.cod_plantillagruposervicio";
+where pc.codigo=$codigo and pgc.cod_tiposervicio=1 GROUP BY pgd.cod_plantillagruposervicio order by pgd.cod_plantillagruposervicio";
 
 
   $stmt = $dbh->prepare($query2);
@@ -1631,9 +1631,16 @@ where pc.codigo=$codigo and pgc.cod_tiposervicio=$tipo GROUP BY pgd.cod_plantill
   $totalImporte=0;$totalModulo=0;$totalLocal=0;$totalExterno=0;
   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $codGrupo=$row['cod_plantillagruposervicio'];$grupoUnidad=$row['cod_unidadorganizacional'];$grupoArea=$row['cod_area'];
-    $importe_grupo=(float)$row['calculado']*$mes;
-    $totalImporte+=$importe_grupo;;
-    $totalModulo+=$row['calculado'];
+      
+    $tipoCalculoPadre=$row['tipo_calculo'];
+    if($tipoCalculoPadre==1){
+      $totalModulo+=$row['calculado'];
+      $importe_grupo=(float)$row['calculado']*$mes;
+    }else{
+      $totalModulo+=$row['local'];
+      $importe_grupo=(float)$row['local']*$mes;
+    }
+    $totalImporte+=$importe_grupo;
     $totalLocal+=$row['local'];
     $totalExterno+=$row['externo'];
 
