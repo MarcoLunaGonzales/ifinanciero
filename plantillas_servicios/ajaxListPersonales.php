@@ -46,7 +46,7 @@ $diasAuditoriaX=$_GET['dias_auditoria'];
                                         $stmt11 = $dbh->prepare($sql11);
                                         $stmt11->execute();
                                         
-                                        $cantidad11=1;$dias11=$diasAuditoriaX;$monto11=0;
+                                        $cantidad11=0;$dias11=$diasAuditoriaX;$monto11=0;
                                         $bgFila="";$idRemove=0;$monto11Ext=0;
                                        while ($rowServ11 = $stmt11->fetch(PDO::FETCH_ASSOC)) {
                                              $idRemove=$rowServ11['codigo'];
