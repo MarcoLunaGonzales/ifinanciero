@@ -8,11 +8,12 @@ require_once 'configModule.php';
 //$dbh = new Conexion();
 $dbh = new Conexion();
 $cod_tcc=$cod_tcc;
-$stmtTCC = $dbh->prepare("SELECT nombre,(SELECT CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=cod_personal) as responsable from tipos_caja_chica where  codigo= $cod_tcc");
+$stmtTCC = $dbh->prepare("SELECT nombre,cod_personal,(SELECT CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=cod_personal) as responsable from tipos_caja_chica where  codigo= $cod_tcc");
 $stmtTCC->execute();
 $resultTCC=$stmtTCC->fetch();
 $nombre_tipoCC=$resultTCC['nombre'];
 $responsable_tipoCC=$resultTCC['responsable'];
+$cod_personal_tipoCC=$resultTCC['cod_personal'];
 
 
 //verificamos si todos sus contratos estan finalizados
@@ -116,7 +117,8 @@ if($cod_estado_aux==2 || $cod_estado_aux==null || $codigo>0){
                           <label class="col-sm-2 col-form-label">Responsable</label>
                           <div class="col-sm-8">
                             <div class="form-group">
-                                <input class="form-control" type="text" name="cod_personal" id="cod_personal" value="<?=$responsable_tipoCC?>" readonly="readonly">
+                                <input class="form-control" type="text"  value="<?=$responsable_tipoCC?>" readonly="readonly">
+                                <input class="form-control" type="text" name="cod_personal" id="cod_personal" value="<?=$cod_personal_tipoCC?>" hidden="hidden">
                                 <!-- <select name="cod_personal" id="cod_personal" class="selectpicker form-control form-control-sm" data-style="btn btn-info">
                                     <option value=""></option>
                                     <?php 
