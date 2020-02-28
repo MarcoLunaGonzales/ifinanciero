@@ -28,7 +28,7 @@ $numero_cc=$resultMCC['numero'];
 
 
 $stmt = $dbh->prepare("SELECT codigo,cod_cuenta,fecha,cod_tipodoccajachica,
-  (select td.nombre from tipos_documentocajachica td where td.codigo=cod_tipodoccajachica) as nombre_tipodoccajachica,nro_documento,(select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=cod_personal)as cod_personal,monto,monto_rendicion,observaciones,cod_estado
+  (select td.nombre from tipos_documentocajachica td where td.codigo=cod_tipodoccajachica) as nombre_tipodoccajachica,nro_documento,(select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=cod_personal)as cod_personal,monto,monto_rendicion,observaciones,cod_estado,(select c.nombre from af_proveedores c where c.codigo=cod_proveedores)as cod_proveedores
 from caja_chicadetalle
 where cod_cajachica=$cod_cajachica and cod_estadoreferencial=1 ORDER BY codigo desc");
 //ejecutamos
@@ -45,6 +45,7 @@ $stmt->bindColumn('monto_rendicion', $monto_rendicion);
 $stmt->bindColumn('observaciones', $observaciones);
 $stmt->bindColumn('cod_estado', $cod_estado);
 $stmt->bindColumn('cod_personal', $cod_personal);
+$stmt->bindColumn('cod_proveedores', $cod_proveedores);
 
 
 $stmtb = $dbh->prepare("SELECT (select a.nombre from tipos_caja_chica a where a.codigo=cod_tipocajachica) as nombre_caja_chica FROM caja_chica WHERE codigo=$cod_cajachica");
@@ -130,7 +131,7 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                               <td><?=$fecha;?></td>
                               <td><?=$nombre_tipodoccajachica;?></td>        
                               <td><?=$nro_documento;?></td>        
-                              <td><?=$cod_personal;?></td>        
+                              <td><?=$cod_personal;?><?=$cod_proveedores?></td>        
                               
                               <td><?=number_format($monto, 2, '.', ',');?></td>        
                               <td><?=$labelM.number_format($monto_rendicion, 2, '.', ',')."</span>";?></td>                                      
