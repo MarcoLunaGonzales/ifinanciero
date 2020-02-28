@@ -120,7 +120,7 @@ $stmt->bindColumn('nombre_estado', $nombre_estado);
                               </td>
                               <td class="text-center">
                                 <a href="<?=$urlprint_contabilizacion_cajachica;?>?cod_cajachica=<?=$cod_cajachica;?>" target="_blank" > 
-                                  <i class="material-icons" title="Generar Conrpobante" style="color:red">input</i>
+                                  <i class="material-icons" title="Generar Conprobante" style="color:red">input</i>
                                 </a>
                               </td>
                           </tr>
