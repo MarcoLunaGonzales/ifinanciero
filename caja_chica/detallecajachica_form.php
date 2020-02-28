@@ -103,7 +103,7 @@ if ($codigo > 0){
 <div class="content">
 	<div class="container-fluid">
 		<div class="col-md-12">
-		  <form id="form1" class="form-horizontal" action="<?=$urlSaveDetalleCajaChica;?>" method="post">
+		  <form id="form1" class="form-horizontal" action="<?=$urlSaveDetalleCajaChica;?>" method="post" onsubmit="return valida(this)">
             <input type="hidden" name="codigo" id="codigo" value="<?=$codigo;?>"/>
             <input type="hidden" name="cod_cc" id="cod_cc" value="<?=$cod_cc;?>"/>
             <input type="hidden" name="cod_tcc" id="cod_tcc" value="<?=$cod_tcc;?>"/>
@@ -325,3 +325,18 @@ if ($codigo > 0){
   </div>
   <!--    end small modal -->
 <script>$('.selectpicker').selectpicker("refresh");</script>
+
+<script type="text/javascript">
+function valida(f) {
+  var ok = true;
+  var msg = "Rellene el campo 'personal' o 'proveedor'\n";
+  if(f.elements["cod_personal"].value == "" && f.elements["proveedores"].value == "")
+  {    
+    ok = false;
+  }
+
+  if(ok == false)
+    alert(msg);
+  return ok;
+}
+</script>
