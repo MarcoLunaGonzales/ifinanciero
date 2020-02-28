@@ -153,7 +153,7 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                                         $control=$row['codigo_control'];
                                         ?><script>abrirFacturaDCC(<?=$idFila?>,'<?=$nit?>',<?=$factura?>,'<?=$fechaFac?>','<?=$razon?>',<?=$importe?>,<?=$exento?>,'<?=$autorizacion?>','<?=$control?>');</script><?php
                                     }
-                                    if($cod_tipodoccajachica!=5){
+                                    
                               ?> 
                                 
 
@@ -165,7 +165,7 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                                   <i class="material-icons">featured_play_list</i>
                                   <span id="nfac<?=$idFila;?>" class="count bg-warning"></span>
                                 </a>
-                              <?php }?>
+                              
                                 
                                 <a href='<?=$urlFormDetalleCajaChica;?>&codigo=<?=$codigo_detalle_Cajachica;?>&cod_tcc=<?=$cod_tcc?>&cod_cc=<?=$cod_cajachica?>' rel="tooltip" class="<?=$buttonEdit;?>">
                                   <i class="material-icons" title="Editar"><?=$iconEdit;?></i>

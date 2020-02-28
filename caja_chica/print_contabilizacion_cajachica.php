@@ -9,7 +9,7 @@ require_once __DIR__.'/../functionsGeneral.php';
 $dbh = new Conexion();
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//try
 //RECIBIMOS LAS VARIABLES
-
+set_time_limit(3000);
 $cod_cajachica = $_GET["cod_cajachica"];//codigoactivofijo
 try{
     $stmtCajaChicaDet = $dbh->prepare("SELECT codigo,cod_tipodoccajachica,observaciones,monto,(select c.nombre from plan_cuentas c where c.codigo=cod_cuenta)nombre_cuenta,
