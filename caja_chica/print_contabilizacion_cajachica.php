@@ -327,7 +327,7 @@ $html.=  '<header class="header">'.
                     // $monto_restante=$importe-$montoIVA;
 
 
-                    $descripcion_contra_cuenta='CONTRA CUENTA';
+                    $descripcion_contra_cuenta=$concepto_contabilizacion;
                     if($USD_actual!=0)
                         $monto_contra_cuenta_dolares=$monto_contra_cuenta/$USD_actual;
                     else $monto_contra_cuenta_dolares=0;
