@@ -119,6 +119,8 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                       <tbody>
                         <?php $index=1;$idFila=1;
                         while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+                          // echo $monto."-".$monto_rendicion."/";
+                          if($monto_rendicion=='')$monto_rendicion=0;
                           if($monto==$monto_rendicion)
                             $labelM='<span class="badge badge-success">';                            
                           else
