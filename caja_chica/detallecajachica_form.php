@@ -38,6 +38,7 @@ where pcc.cod_cuenta=pc.codigo");
   }
 
 
+$cod_proveedores=0;
 
 
 
@@ -241,12 +242,12 @@ if ($codigo > 0){
 
                     <!-- proveedor -->
                     <div class="row">
-                      <label class="col-sm-2 col-form-label">Proveedores :</label>
+                      <label class="col-sm-2 col-form-label">Proveedor :</label>
                        <div class="col-sm-8">
                          <div class="form-group">                        
                               <select class="selectpicker form-control form-control-sm" name="proveedores" id="proveedores" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" title="Seleccione Proveedor">
                                <?php 
-                               $query="SELECT * FROM af_proveedores order by codigo";
+                               $query="SELECT * FROM af_proveedores order by nombre";
                                $stmt = $dbh->prepare($query);
                                $stmt->execute();
                                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
