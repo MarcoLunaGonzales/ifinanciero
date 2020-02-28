@@ -8,10 +8,11 @@ require_once 'configModule.php';
 //$dbh = new Conexion();
 $dbh = new Conexion();
 $cod_tcc=$cod_tcc;
-$stmtTCC = $dbh->prepare("SELECT nombre from tipos_caja_chica where  codigo = $cod_tcc");
+$stmtTCC = $dbh->prepare("SELECT nombre,(SELECT CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=cod_personal) as responsable from tipos_caja_chica where  codigo= $cod_tcc");
 $stmtTCC->execute();
 $resultTCC=$stmtTCC->fetch();
 $nombre_tipoCC=$resultTCC['nombre'];
+$responsable_tipoCC=$resultTCC['responsable'];
 
 
 //verificamos si todos sus contratos estan finalizados
@@ -115,7 +116,8 @@ if($cod_estado_aux==2 || $cod_estado_aux==null || $codigo>0){
                           <label class="col-sm-2 col-form-label">Responsable</label>
                           <div class="col-sm-8">
                             <div class="form-group">
-                                <select name="cod_personal" id="cod_personal" class="selectpicker form-control form-control-sm" data-style="btn btn-info">
+                                <input class="form-control" type="text" name="cod_personal" id="cod_personal" value="<?=$responsable_tipoCC?>" readonly="readonly">
+                                <!-- <select name="cod_personal" id="cod_personal" class="selectpicker form-control form-control-sm" data-style="btn btn-info">
                                     <option value=""></option>
                                     <?php 
                                     $querypersonal = "SELECT codigo,CONCAT_WS(' ',paterno,materno,primer_nombre)AS nombre from personal where cod_estadoreferencial=1 order by nombre";
@@ -123,7 +125,7 @@ if($cod_estado_aux==2 || $cod_estado_aux==null || $codigo>0){
                                     while ($row = $stmtPersonal->fetch()){ ?>
                                         <option <?=($cod_personal==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>"><?=strtoupper($row["nombre"]);?></option>
                                     <?php } ?>
-                                </select>
+                                </select> -->
                             </div>
                           </div>
                         </div>

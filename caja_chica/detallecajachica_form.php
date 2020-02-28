@@ -82,6 +82,8 @@ if ($codigo > 0){
 
     $codigo=0;
     // $cod_cuenta = 0;
+    $cod_uo=0;
+    $cod_area=0;
     
     $fecha = date('Y-m-d');
     $cod_tipodoccajachica = 0;
@@ -186,26 +188,22 @@ if ($codigo > 0){
                       <div class="col-sm-8">
                         <div class="form-group">
                             <div id="div_contenedor_uo">                                        
-                                        <?php
-                                        if($codigo>0){
+                              <?php
+                              
 
-                                            $sqlUO="SELECT codigo,nombre from unidades_organizacionales where cod_estado=1";
-                                            $stmt = $dbh->prepare($sqlUO);
-                                            $stmt->execute();
-                                            ?>
-                                            <select name="cod_uo" id="cod_uo" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" data-show-subtext="true" data-live-search="true"  >
-                                                <?php 
-                                                    while ($row = $stmt->fetch()){ 
-                                                ?>
-                                                     <option <?=($cod_uo==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
-                                                 <?php 
-                                                    } 
-                                                ?>
-                                             </select>                   
-                                       <?php }else{?>                                        
-                                        <input type="hidden" name="cod_uo" id="cod_uo" value="0">
-                                    <?php }
-                                     ?>
+                                  $sqlUO="SELECT codigo,nombre from unidades_organizacionales where cod_estado=1";
+                                  $stmt = $dbh->prepare($sqlUO);
+                                  $stmt->execute();
+                                  ?>
+                                  <select name="cod_uo" id="cod_uo" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" data-show-subtext="true" data-live-search="true" onChange="ajaxAreaUOCAJACHICA(this);" title="Elija una opción">
+                                      <?php 
+                                          while ($row = $stmt->fetch()){ 
+                                      ?>
+                                           <option <?=($cod_uo==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                                       <?php 
+                                          } 
+                                      ?>
+                                   </select>                                              
                             </div>                                                        
                         </div>
                       </div>
