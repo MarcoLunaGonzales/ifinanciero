@@ -14,6 +14,7 @@ $stmtX->execute();
 
 if(isset($_GET["cod_simulacion"])){
   $codSimulacion=$_GET["cod_simulacion"];
+  $anio=$_GET["anio"];
  $codigos=explode("###",$_GET["codigo_filas"]);
  $nroColumnas=(count($codigos)-1);
  ?>
@@ -25,7 +26,7 @@ if(isset($_GET["cod_simulacion"])){
         <td width="8%">D&iacute;as Aud.</td>
         <?php 
         for ($i=0; $i < $nroColumnas; $i++) {
-        $nombreColumna=obtenerNombreDetalleSimulacionVariables($codigos[$i]);
+        $nombreColumna=obtenerNombreDetalleSimulacionVariablesPeriodo($codigos[$i],$anio);
          ?>
          <td class="fondo-boton"><?=$nombreColumna?></td>
          <?php
@@ -34,7 +35,7 @@ if(isset($_GET["cod_simulacion"])){
         <td width="8%" class="fondo-boton">TOTAL</td>
     </tr>
     <?php 
-    $sql="SELECT s.*,t.nombre as tipo FROM simulaciones_servicios_auditores s join tipos_auditor t on s.cod_tipoauditor=t.codigo where cod_simulacionservicio=$codSimulacion";
+    $sql="SELECT s.*,t.nombre as tipo FROM simulaciones_servicios_auditores s join tipos_auditor t on s.cod_tipoauditor=t.codigo where s.cod_simulacionservicio=$codSimulacion and s.cod_anio=$anio";
     $stmt=$dbh->prepare($sql);
     $stmt->execute();
     $iii=1;$totalTabla=0;$totalTablaUnitario=0;
@@ -44,8 +45,8 @@ if(isset($_GET["cod_simulacion"])){
       $cantidadTipo=$row['cantidad_editado'];
       $diasTipo=$row['dias'];
       $codExtLoc=$row['cod_externolocal'];
-      $cantPre=obtenerCantidadSimulacionDetalleAuditor($codSimulacion,$codigoTipo);
-      $diasPre=obtenerDiasSimulacionDetalleAuditor($codSimulacion,$codigoTipo);
+      $cantPre=obtenerCantidadSimulacionDetalleAuditorPeriodo($codSimulacion,$codigoTipo,$anio);
+      $diasPre=obtenerDiasSimulacionDetalleAuditorPeriodo($codSimulacion,$codigoTipo,$anio);
       if($cantidadTipo<$cantPre){
         $cantPre=$cantidadTipo;
       }
@@ -55,21 +56,6 @@ if(isset($_GET["cod_simulacion"])){
        ?>
        <tr>
          <td class="text-left small"><input type="hidden" id="modal_local_extranjero<?=$iii?>" value="<?=$codExtLoc?>"><input type="hidden" id="codigo_filaauditor<?=$iii?>" value="<?=$codigoTipo?>"><?=$nombreTipo?></td>
-         <!--<td>
-           <select class="form-control selectpicker form-control-sm" data-style="fondo-boton fondo-boton-active" name="modal_local_extranjero<?=$iii?>" id="modal_local_extranjero<?=$iii?>" onchange="montarMontoLocalExternoTablaAuditor(<?=$iii?>)">
-               <?php 
-                   if($codExtLoc==1){                  
-                     ?><option value="1" selected>BOLIVIA</option>
-                       <option value="0">EXTRANJERO</option>
-                     <?php
-                   }else{
-                      ?><option value="1">BOLIVIA</option>
-                        <option value="0" selected>EXTRANJERO</option>
-                      <?php
-                    }
-                ?>
-            </select>
-         </td>-->
          <td>
            <select class="form-control selectpicker form-control-sm" data-style="fondo-boton fondo-boton-active" name="modal_cantidad_personal<?=$iii?>" id="modal_cantidad_personal<?=$iii?>" onchange="calcularTotalPersonalServicioAuditor()">
               <?php 
@@ -103,8 +89,8 @@ if(isset($_GET["cod_simulacion"])){
           $codigoCol=$codigos[$i];
           $ncol=$i+1;
 
-          $montoPres=obtenerMontoSimulacionDetalleAuditor($codSimulacion,$codigoCol,$codigoTipo);
-          $montoPresext=obtenerMontoSimulacionDetalleAuditorExterno($codSimulacion,$codigoCol,$codigoTipo);
+          $montoPres=obtenerMontoSimulacionDetalleAuditorPeriodo($codSimulacion,$codigoCol,$codigoTipo,$anio);
+          $montoPresext=obtenerMontoSimulacionDetalleAuditorExternoPeriodo($codSimulacion,$codigoCol,$codigoTipo,$anio);
           if($codExtLoc==1){
             $montoPre=$montoPres*$cantPre*$diasPre;
           }else{
@@ -143,7 +129,7 @@ if(isset($_GET["cod_simulacion"])){
   </table>
   <input type="hidden" id="modal_numeropersonalauditor" value="<?=$iii?>">  
 <div class="form-group float-right">
-    <button class="btn btn-default" id="guardar_cuenta" onclick="guardarCuentasSimulacionAjaxGenericoServicioAuditor()">Guardar</button>
+    <button class="btn btn-default" id="guardar_cuenta" onclick="guardarCuentasSimulacionAjaxGenericoServicioAuditor('<?=$anio?>')">Guardar</button>
   </div>
  <?php
  }

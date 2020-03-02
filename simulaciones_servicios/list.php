@@ -2,12 +2,20 @@
 require_once 'conexion.php';
 require_once 'configModule.php';
 require_once 'styles.php';
+if(isset($_GET['q'])){
+  $q=$_GET['q'];
+}
 $globalAdmin=$_SESSION["globalAdmin"];
 
 $dbh = new Conexion();
 
 // Preparamos
-$stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servicios sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo where sc.cod_estadoreferencial=1 order by sc.codigo");
+if(isset($_GET['q'])){
+  $stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servicios sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo where sc.cod_estadoreferencial=1 and sc.idServicio=$q order by sc.codigo");
+}else{
+  $stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servicios sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo where sc.cod_estadoreferencial=1 order by sc.codigo");
+}
+
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -128,7 +136,15 @@ $stmt->bindColumn('estado', $estado);
                 </div>
               </div>
               <div class="card-footer fixed-bottom">
-                <a href="#" onclick="javascript:window.open('<?=$urlRegister2;?>')" class="<?=$buttonNormal;?>">Registrar</a>
+               <?php 
+              if($globalAdmin==1){
+                if(isset($_GET['q'])){
+                  ?><a href="<?=$urlRegister2;?>&q=<?=$q?>" target="_self" class="<?=$buttonNormal;?>">Registrar</a><?php
+                }else{
+                  ?><a href="#" onclick="javascript:window.open('<?=$urlRegister2;?>')" class="<?=$buttonNormal;?>">Registrar</a><?php
+                }  
+              } 
+               ?>
               </div>      
             </div>
           </div>  

@@ -17,18 +17,19 @@ $partida=$_GET["partida"];
 $cuenta=$_GET["cuenta"];
 $habilitado=$_GET["habilitado"];
 $cantidad=$_GET["cantidad"];
+$anio=$_GET["anio"];
 
 
-$cantidad=obtenerCantidadTotalSimulacionesServiciosDetalleAuditor($simulaciones,$codigo);
-$monto=obtenerMontoTotalSimulacionesServiciosDetalleAuditor($simulaciones,$codigo);
+$cantidad=obtenerCantidadTotalSimulacionesServiciosDetalleAuditorPeriodo($simulaciones,$codigo,$anio);
+$monto=obtenerMontoTotalSimulacionesServiciosDetalleAuditorPeriodo($simulaciones,$codigo,$anio);
 $montoEditado=$monto/$cantidad;
 
 
-$sqlUpdateDetalle="UPDATE simulaciones_serviciodetalle SET  monto_unitario='$monto',monto_total='$monto',habilitado=$habilitado,cantidad=$cantidad where codigo=$codigo";
+$sqlUpdateDetalle="UPDATE simulaciones_serviciodetalle SET  monto_unitario='$monto',monto_total='$monto',habilitado=$habilitado,cantidad=$cantidad where codigo=$codigo and cod_anio=$anio";
 $stmtUpdateDetalle = $dbh->prepare($sqlUpdateDetalle);
 $stmtUpdateDetalle->execute();
 $montoTotal=0;
-$detallesMontos=obtenerMontosCuentasDetalleSimulacionServicioPartidaHabilitado($simulaciones,$partida);
+$detallesMontos=obtenerMontosCuentasDetalleSimulacionServicioPartidaHabilitadoPeriodo($simulaciones,$partida,$anio);
 while ($row = $detallesMontos->fetch(PDO::FETCH_ASSOC)) {
 	if($row['cod_cuenta']==$cuenta){
     if($row['habilitado']==0){
@@ -40,9 +41,9 @@ while ($row = $detallesMontos->fetch(PDO::FETCH_ASSOC)) {
 }
 $dbh2 = new Conexion();
      if($ibnorca==1){
-       $sqlUpdate="UPDATE cuentas_simulacion SET  monto_local='$montoTotal' where codigo=$simulacion and cod_plancuenta=$cuenta"; 
+       $sqlUpdate="UPDATE cuentas_simulacion SET  monto_local='$montoTotal' where codigo=$simulacion and cod_plancuenta=$cuenta and cod_anio=$anio"; 
       }else{
-       $sqlUpdate="UPDATE cuentas_simulacion SET  monto_externo='$montoTotal' where codigo=$simulacion and cod_plancuenta=$cuenta";
+       $sqlUpdate="UPDATE cuentas_simulacion SET  monto_externo='$montoTotal' where codigo=$simulacion and cod_plancuenta=$cuenta and cod_anio=$anio";
       }
       $stmtUpdate = $dbh2->prepare($sqlUpdate);
       $flagSuccess=$stmtUpdate->execute();

@@ -51,6 +51,8 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
             $stmt1->bindColumn('dias_auditoria', $diasSimulacion);
             $stmt1->bindColumn('utilidad_minima', $utilidadIbnorcaX);
             $stmt1->bindColumn('productos', $productosX);
+            $stmt1->bindColumn('idServicio', $idServicioX);
+            $stmt1->bindColumn('anios', $anioX);
 
       while ($row1 = $stmt1->fetch(PDO::FETCH_BOUND)) {
          //plantilla datos      
@@ -64,7 +66,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
             $stmt->bindColumn('cod_area', $codAreaX);
             $stmt->bindColumn('area', $areaX);
             $stmt->bindColumn('unidad', $unidadX);
-           
+           $anioGeneral=$anioX;
            $nombreSimulacion=$nombreX;
            if($codAreaX==39){
             $valorC=17;
@@ -85,7 +87,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
 </div>
 <div class="cargar-ajax d-none">
   <div class="div-loading text-center">
-     <h4 class="text-warning font-weight-bold">Procesando Datos</h4>
+     <h4 class="text-warning font-weight-bold" id="texto_ajax_titulo">Procesando Datos</h4>
      <p class="text-white">Aguard&aacute; un momento por favor</p>  
   </div>
 </div>
@@ -96,7 +98,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
       <div class="row"><div class="card col-sm-5">
 				<div class="card-header card-header-success card-header-text">
 					<div class="card-text">
-					  <h4 class="card-title">Datos de la Simulaci&oacute;n</h4>
+					  <h4 class="card-title">Informaci&oacute;n general de la Propuesta</h4>
 					</div>
           <button type="button" onclick="editarDatosSimulacion()" class="btn btn-success btn-sm btn-fab float-right">
              <i class="material-icons" title="Editar Simulación">edit</i>
@@ -142,7 +144,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
 			<div class="card col-sm-7">
 				<div class="card-header card-header-info card-header-text">
 					<div class="card-text">
-					  <h4 class="card-title">Datos de la Plantilla</h4>
+					  <h4 class="card-title">Informaci&oacute;n a detalle de la Propuesta</h4>
 					</div>
           <button type="button" onclick="editarDatosPlantilla()" class="btn btn-success btn-sm btn-fab float-right">
              <i class="material-icons" title="Editar Plantilla">edit</i>
@@ -192,10 +194,16 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                   <input class="form-control" type="hidden" name="productos_sim" readonly value="<?=$productosX?>" id="productos_sim"/>
               </div>
             </div>
-            <div class="col-sm-4">
+            <div class="col-sm-2">
               <div class="form-group">
                   <label class="bmd-label-static">Utilidad M&iacute;n %</label>
                   <input class="form-control" type="text" name="utilidad_minima_ibnorca" readonly value="<?=$utilidadIbnorcaX?>" id="utilidad_minima_ibnorca"/>
+              </div>
+            </div>
+            <div class="col-sm-2">
+              <div class="form-group">
+                  <label class="bmd-label-static">A&ntilde;os</label>
+                  <input class="form-control" type="text" name="anio_simulacion" readonly value="<?=$anioGeneral?>" id="anio_simulacion"/>
               </div>
             </div>
             <div class="col-sm-4">
@@ -317,10 +325,229 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
 				<input type="hidden" id="cantidad_alibnorca" name="cantidad_alibnorca" readonly value="<?=$alumnosX?>">
 				<input type="hidden" id="cantidad_alfuera" name="cantidad_alfuera" readonly value="<?=$alumnosExternoX?>">
 				<input type="hidden" id="aprobado" name="aprobado" readonly value="<?=$codEstadoSimulacion?>">
-           <a href="#" title="Editar Variables de Costo" onclick="modificarMontos()" class="btn btn-sm btn-danger btn-fab"><i class="material-icons">edit</i></a>
+                          <div class="btn-group dropdown">
+                              <button type="button" title="Editar Variables de Costo" class="btn btn-sm btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="material-icons">edit</i>
+                              </button>
+                              <div class="dropdown-menu">
+                                <?php
+                                  for ($an=1; $an<=$anioGeneral; $an++) { 
+                                      ?>
+                                       <a href="#" onclick="modificarMontosPeriodo(<?=$an?>)" class="dropdown-item">
+                                           <i class="material-icons">keyboard_arrow_right</i> A&ntilde;o <?=$an?>
+                                       </a> 
+                                     <?php
+                                  }
+                                  ?>
+                              </div>
+                            </div>
+           
            
            <a href="#" title="Listar Detalle Costo Fijo" onclick="listarCostosFijos()" class="btn btn-sm btn-info"><i class="material-icons">list</i> CF</a>
-           <a href="#" title="Listar Detalle Costo Variable" onclick="listarCostosVaribles()" class="btn btn-sm btn-info"><i class="material-icons">list</i> CV</a>   
+                           <div class="btn-group dropdown">
+                              <button type="button" title="Listar Detalle Costo Variable" class="btn btn-sm btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="material-icons">list</i> CV
+                              </button>
+                              <div class="dropdown-menu">
+                                <?php
+                                  for ($an=1; $an<=$anioGeneral; $an++) { 
+                                      ?>
+                                       <a href="#" onclick="listarCostosVariblesPeriodo(<?=$an?>)" class="dropdown-item">
+                                           <i class="material-icons">keyboard_arrow_right</i> A&ntilde;o <?=$an?>
+                                       </a> 
+                                     <?php
+                                  }
+                                  ?>
+                              </div>
+                            </div>
+          <br>
+          <div class="row">
+            <p class="font-weight-bold float-left">PRESUPUESTO POR PERIODO DE CERTIFICACION</p>
+           <?php 
+           $usd=6.96;
+           for ($an=1; $an<=$anioGeneral; $an++) { 
+            $totalIngresoUsd=0;$totalIngreso=0;
+            $totalCostoTotalUsd=0;$totalCostoTotal=0;
+            $totalUtilidadBrutaUsd=0;$totalUtilidadBruta=0;
+            $totalImpuestosUsd=0;$totalImpuestos=0;
+            $totalUtilidadNetaUsd=0;$totalUtilidadNeta=0;
+                ?>
+            <table class="table table-condensed table-bordered">
+               <tr>
+                <?php 
+               if($codAreaX==39){
+                  $rospanAnio="6";
+                }else{
+                  $rospanAnio="5";
+                }
+                ?>
+                 <td rowspan="<?=$rospanAnio?>" width="6%" class="bg-table-primary text-white font-weight-bold">Año <?=$an?></td>    <!--ROWSPAN = CANTIDAD DE SERVICIOS + 2 -->
+                 <td rowspan="2" width="14%" class="bg-table-primary text-white font-weight-bold"></td>
+                 <td colspan="2" class="bg-table-primary text-white font-weight-bold">INGRESO</td>
+                 <td colspan="2" class="bg-table-primary text-white font-weight-bold">COSTO TOTAL</td>
+                 <td colspan="2" class="bg-table-primary text-white font-weight-bold">UTILIDAD BRUTA</td>
+                 <td colspan="2" class="bg-table-primary text-white font-weight-bold">IMPUESTOS</td>
+                 <td colspan="2" class="bg-table-primary text-white font-weight-bold">UTILIDAD NETA</td>
+                 <td rowspan="2"  width="8%" class="bg-table-primary text-white font-weight-bold">% UTILIDAD</td>
+               </tr>
+               <tr class="bg-table-primary text-white font-weight-bold">
+                 <td>USD</td>
+                 <td>BOB</td>
+                 <td>USD</td>
+                 <td>BOB</td>
+                 <td>USD</td>
+                 <td>BOB</td>
+                 <td>USD</td>
+                 <td>BOB</td>
+                 <td>USD</td>
+                 <td>BOB</td>
+               </tr>
+               <?php 
+
+               
+
+               if($codAreaX==39){
+                  $codigoAreaServ=108;
+                  $costoTotalAuditoriaUsd=0;
+                  $costoTotalAuditoria=0;
+                }else{
+                  $costoTotalAuditoriaUsd=$costoTotalLocal/$usd;
+                  $costoTotalAuditoria=$costoTotalLocal;
+                }
+                $precioAuditoriaUsd=$precioLocalX/$usd;
+                $precioAuditoria=$precioLocalX;
+
+                $utilidadAuditoriaUsd=$precioAuditoriaUsd-$costoTotalAuditoriaUsd;
+                $utilidadAuditoria=$precioAuditoria-$costoTotalAuditoria;
+
+                $impuestosAuditoriaUsd=(($iva+$it)/100)*$precioAuditoriaUsd;
+                $impuestosAuditoria=(($iva+$it)/100)*$precioAuditoria;
+
+                $utilidadNetaAuditoriaUsd=$utilidadAuditoriaUsd-$impuestosAuditoriaUsd;
+                $utilidadNetaAuditoria=$utilidadAuditoria-$impuestosAuditoria;
+
+                //suma de totales
+                $totalIngresoUsd+=$precioAuditoriaUsd;
+                $totalIngreso+=$precioAuditoria;
+                $totalCostoTotalUsd+=$costoTotalAuditoriaUsd;
+                $totalCostoTotal+=$costoTotalAuditoria;
+                $totalUtilidadBrutaUsd+=$utilidadAuditoriaUsd;
+                $totalUtilidadBruta+=$utilidadAuditoria;
+                $totalImpuestosUsd+=$impuestosAuditoriaUsd;
+                $totalImpuestos+=$impuestosAuditoria;
+                $totalUtilidadNetaUsd+=$utilidadNetaAuditoriaUsd;
+                $totalUtilidadNeta+=$utilidadNetaAuditoria;
+                ?>
+                 <tr>
+                 <td class="small text-left">Precio de la Auditor&iacute;a</td>
+                 <td class="small text-right"><?=number_format($precioAuditoriaUsd, 2, ',', '.')?></td>
+                 <td class="small text-right"><?=number_format($precioAuditoria, 2, ',', '.')?></td>
+
+                 <td class="small text-right"><?=number_format($costoTotalAuditoriaUsd, 2, ',', '.')?></td>
+                 <td class="small text-right"><?=number_format($costoTotalAuditoria, 2, ',', '.')?></td>
+
+                 <td class="small text-right"><?=number_format($utilidadAuditoriaUsd, 2, ',', '.')?></td>
+                 <td class="small text-right"><?=number_format($utilidadAuditoria, 2, ',', '.')?></td>
+                 <td class="small text-right"><?=number_format($impuestosAuditoriaUsd, 2, ',', '.')?></td>
+                 <td class="small text-right"><?=number_format($impuestosAuditoria, 2, ',', '.')?></td>
+                 <td class="small text-right"><?=number_format($utilidadNetaAuditoriaUsd, 2, ',', '.')?></td>
+                 <td class="small text-right"><?=number_format($utilidadNetaAuditoria, 2, ',', '.')?></td>
+                 
+               </tr>
+               <?php 
+               if($codAreaX==39){
+                  $codigoAreaServ=108;
+                 if($an<=3){
+                   $queryPr="SELECT s.*,t.descripcion as nombre_serv,c.descripcion,c.numero_anio FROM simulaciones_servicios_tiposervicio s, cla_servicios t JOIN configuraciones_servicios c on c.cod_claservicio=t.idclaservicio where s.cod_simulacionservicio=$codigoSimulacionSuper and s.cod_claservicio=t.idclaservicio and c.numero_anio=$an order by c.numero_anio";
+                 }else{
+                   $queryPr="SELECT s.*,t.descripcion as nombre_serv,c.descripcion,c.numero_anio FROM simulaciones_servicios_tiposervicio s, cla_servicios t JOIN configuraciones_servicios c on c.cod_claservicio=t.idclaservicio where s.cod_simulacionservicio=$codigoSimulacionSuper and s.cod_claservicio=t.idclaservicio and c.numero_anio=4 order by c.numero_anio";
+                 } 
+                
+                $stmtCalculo = $dbh->prepare($queryPr);
+                $stmtCalculo->execute();
+                while ($rowCal = $stmtCalculo->fetch(PDO::FETCH_ASSOC)) {
+                  $nombreServicioCal=$rowCal['nombre_serv'];
+
+                  $costoTotalAuditoriaUsd=$costoTotalLocal/$usd;
+                  $costoTotalAuditoria=$costoTotalLocal;
+
+                  $precioAuditoriaUsd=$rowCal['monto']/$usd;
+                  $precioAuditoria=$rowCal['monto'];
+
+                  $utilidadAuditoriaUsd=$precioAuditoriaUsd-$costoTotalAuditoriaUsd;
+                  $utilidadAuditoria=$precioAuditoria-$costoTotalAuditoria;
+
+                  $impuestosAuditoriaUsd=(($iva+$it)/100)*$precioAuditoriaUsd;
+                  $impuestosAuditoria=(($iva+$it)/100)*$precioAuditoria;
+
+                  $utilidadNetaAuditoriaUsd=$utilidadAuditoriaUsd-$impuestosAuditoriaUsd;
+                  $utilidadNetaAuditoria=$utilidadAuditoria-$impuestosAuditoria;
+
+                  //suma de totales
+                $totalIngresoUsd+=$precioAuditoriaUsd;
+                $totalIngreso+=$precioAuditoria;
+                $totalCostoTotalUsd+=$costoTotalAuditoriaUsd;
+                $totalCostoTotal+=$costoTotalAuditoria;
+                $totalUtilidadBrutaUsd+=$utilidadAuditoriaUsd;
+                $totalUtilidadBruta+=$utilidadAuditoria;
+                $totalImpuestosUsd+=$impuestosAuditoriaUsd;
+                $totalImpuestos+=$impuestosAuditoria;
+                $totalUtilidadNetaUsd+=$utilidadNetaAuditoriaUsd;
+                $totalUtilidadNeta+=$utilidadNetaAuditoria;
+                 ?>
+                 <tr>
+                 <td class="small text-left"><?=$nombreServicioCal?></td>
+                 <td class="small text-right"><?=number_format($precioAuditoriaUsd, 2, ',', '.')?></td>
+                 <td class="small text-right"><?=number_format($precioAuditoria, 2, ',', '.')?></td>
+
+                 <td class="small text-right"><?=number_format($costoTotalAuditoriaUsd, 2, ',', '.')?></td>
+                 <td class="small text-right"><?=number_format($costoTotalAuditoria, 2, ',', '.')?></td>
+
+                 <td class="small text-right"><?=number_format($utilidadAuditoriaUsd, 2, ',', '.')?></td>
+                 <td class="small text-right"><?=number_format($utilidadAuditoria, 2, ',', '.')?></td>
+                 <td class="small text-right"><?=number_format($impuestosAuditoriaUsd, 2, ',', '.')?></td>
+                 <td class="small text-right"><?=number_format($impuestosAuditoria, 2, ',', '.')?></td>
+                 <td class="small text-right"><?=number_format($utilidadNetaAuditoriaUsd, 2, ',', '.')?></td>
+                 <td class="small text-right"><?=number_format($utilidadNetaAuditoria, 2, ',', '.')?></td>
+               </tr>
+                 <?php
+                 }
+                }
+                ?>
+               <tr>
+                 <td class="small text-left">Otros</td>
+                 <td class="small text-right">-</td>
+                 <td class="small text-right">-</td>
+                 <td class="small text-right">-</td>
+                 <td class="small text-right">-</td>
+                 <td class="small text-right">-</td>
+                 <td class="small text-right">-</td>
+                 <td class="small text-right">-</td>
+                 <td class="small text-right">-</td>
+                 <td class="small text-right">-</td>
+                 <td class="small text-right">-</td>
+               </tr>
+               <tr class="bg-plomo">
+                 <td class="font-weight-bold small text-left">TOTAL</td>
+                 <td class="font-weight-bold small text-right <?=$estiloUtilidadIbnorca?>"><?=number_format($totalIngresoUsd, 2, ',', '.')?></td>
+                 <td class="font-weight-bold small text-right <?=$estiloUtilidadIbnorca?>"><?=number_format($totalIngreso, 2, ',', '.')?></td>
+                 <td class="font-weight-bold small text-right <?=$estiloUtilidadIbnorca?>"><?=number_format($totalCostoTotalUsd, 2, ',', '.')?></td>
+                 <td class="font-weight-bold small text-right <?=$estiloUtilidadIbnorca?>"><?=number_format($totalCostoTotal, 2, ',', '.')?></td>
+                 <td class="font-weight-bold small text-right <?=$estiloUtilidadIbnorca?>"><?=number_format($totalUtilidadBrutaUsd, 2, ',', '.')?></td>
+                 <td class="font-weight-bold small text-right <?=$estiloUtilidadIbnorca?>"><?=number_format($totalUtilidadBruta, 2, ',', '.')?></td>
+                 <td class="font-weight-bold small text-right <?=$estiloUtilidadIbnorca?>"><?=number_format($totalImpuestosUsd, 2, ',', '.')?></td>
+                 <td class="font-weight-bold small text-right <?=$estiloUtilidadIbnorca?>"><?=number_format($totalImpuestos, 2, ',', '.')?></td>
+                 <td class="font-weight-bold small text-right <?=$estiloUtilidadIbnorca?>"><?=number_format($totalUtilidadNetaUsd, 2, ',', '.')?></td>
+                 <td class="font-weight-bold small text-right <?=$estiloUtilidadIbnorca?>"><?=number_format($totalUtilidadNeta, 2, ',', '.')?></td>
+                 <td rowspan="<?=$rospanAnio-2?>" class="font-weight-bold small text-right <?=$estiloUtilidadIbnorca?>"><?=number_format(($totalUtilidadNetaUsd*100)/$totalIngresoUsd, 2, ',', '.')?> %</td>
+               </tr>
+                
+            </table>
+                <?php
+            }
+           ?> 
+          </div>
+          <br>
 				  <div class="row"> 	
 					<div class="col-sm-3">
             <p class="font-weight-bold float-right">DATOS ADICIONALES PARA EL CALCULO</p>
@@ -475,15 +702,23 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                 </tr>
 							</tbody>
 						</table>
-					<div class="row div-center">
-						<h5><p class="<?=$estiloMensaje?>"><?=$mensajeText?></p></h5>
-					</div>	
+					  <div class="row div-center">
+						   <h5><p class="<?=$estiloMensaje?>"><?=$mensajeText?></p></h5>
+					  </div>	
 					</div>
 				  </div>
+          
 				  	<div class="card-footer fixed-bottom">
-            
-            <a onclick="guardarServicioSimulacion()" class="btn btn-success text-white"><i class="material-icons">send</i> Enviar Propuesta</a>
-				  	<a href="../<?=$urlList;?>" class="btn btn-danger">Volver</a> 
+            <?php 
+            if($idServicioX==0||$idServicioX==""){
+             ?><a onclick="guardarServicioSimulacion()" class="btn btn-success text-white"><i class="material-icons">send</i> Enviar Propuesta</a>
+            <a href="../<?=$urlList;?>" class="btn btn-danger">Volver</a><?php
+            }else{
+            ?><a onclick="guardarServicioSimulacion()" class="btn btn-success text-white"><i class="material-icons">send</i> Enviar Propuesta</a>
+            <a href="../<?=$urlList;?>&q=<?=$idServicioX?>" class="btn btn-danger">Volver</a><?php
+            }
+            ?>
+             
             </div>
 				 </div>
 			 </div>

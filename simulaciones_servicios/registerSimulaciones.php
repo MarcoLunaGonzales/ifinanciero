@@ -5,6 +5,15 @@ require_once 'styles.php';
 require_once 'configModule.php';
 
 setlocale(LC_TIME, "Spanish");
+if(isset($_GET['q'])){
+  $q=$_GET['q'];
+  $numeroServicio=(int)obtenerCantidadSimulacionServicio($q)+1;
+  $nombreServicioIbnorca="SERVICIO DE PRUEBA COD : ".$q;
+  $nombreInputPropuesta=$nombreServicioIbnorca." - PROPUESTA(".$numeroServicio.")";
+}else{
+  $nombreInputPropuesta="";
+}
+
 $dbh = new Conexion();
 
 $sqlX="SET NAMES 'utf8'";
@@ -31,7 +40,12 @@ $contadorRegistros=0;
 $fechaActual=date("Y-m-d");
 $dbh = new Conexion();
 ?>
-
+<div class="cargar-ajax d-none">
+  <div class="div-loading text-center">
+     <h4 class="text-warning font-weight-bold">Procesando Datos</h4>
+     <p class="text-white">Aguard&aacute; un momento por favor</p>  
+  </div>
+</div>
 <div class="content">
   <div class="container-fluid">
 
@@ -43,13 +57,18 @@ $dbh = new Conexion();
         </div>
         </div>
         <div class="card-body ">
-        
+              <?php 
+                  if(isset($_GET['q'])){
+                    echo "<center><h5><b>".$nombreServicioIbnorca."</b></h5></center>";
+                    ?><input class="form-control col-sm-4" type="hidden" name="codigo_servicioibnorca" id="codigo_servicioibnorca" value="<?=$q?>"/><?php
+                  }
+              ?>
 
                  <div class="row">
                        <label class="col-sm-2 col-form-label">Nombre:</label>
                        <div class="col-sm-7">
                         <div class="form-group">
-                          <input class="form-control" type="text" name="nombre" id="nombre" autocomplete="off" autofocus/>
+                          <input class="form-control" type="text" name="nombre" id="nombre" value="<?=$nombreInputPropuesta?>" autocomplete="off" autofocus/>
                         </div>
                         </div>
                       </div>
@@ -137,8 +156,15 @@ $dbh = new Conexion();
         <br>
         <div id="mensaje"></div>
         <div class="card-footer  ml-auto mr-auto">
-        <button type="button" class="<?=$buttonNormal;?>" onclick="guardarSimulacionServicio()">Guardar</button>
-        <a href="<?=$urlList?>" class="<?=$buttonCancel;?>">Volver</a>
+        <?php 
+          if(isset($_GET['q'])){
+            ?><button type="button" class="<?=$buttonNormal;?>" onclick="guardarSimulacionServicio()">Guardar</button>
+              <a href="<?=$urlList?>&q=<?=$q?>" class="<?=$buttonCancel;?>">Volver</a><?php
+          }else{
+            ?><button type="button" class="<?=$buttonNormal;?>" onclick="guardarSimulacionServicio()">Guardar</button>
+              <a href="<?=$urlList?>" class="<?=$buttonCancel;?>">Volver</a><?php
+          }
+        ?>
         </div>
       </div>
     </div>
