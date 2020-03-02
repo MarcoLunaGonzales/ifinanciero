@@ -24,11 +24,27 @@ $cod_estadoplanilla=$_POST['sw'];
 $sw=$_POST['sw'];
 $cod_uo_x=$_POST['cod_uo'];
 
-$stmtDatosPlanilla = $dbh->prepare("SELECT cod_gestion,cod_mes from planillas where codigo=$cod_planilla");
-$stmtDatosPlanilla->execute();
-$resultDatosPlanilla =  $stmtDatosPlanilla->fetch();
-$cod_gestion_x = $resultDatosPlanilla['cod_gestion'];
-$cod_mes_x = $resultDatosPlanilla['cod_mes'];	
+if($sw==2){
+  	$nombre_gestion_x=date('Y');
+	$cod_mes_x = date('m');
+	$sqlGestion = "SELECT codigo from gestiones where nombre=$nombre_gestion_x";
+	$stmtGestion = $dbh->prepare($sqlGestion);
+	$stmtGestion->execute();
+	$resultGestion=$stmtGestion->fetch();
+	$cod_gestion_x = $resultGestion['codigo'];
+}else{
+	$stmtDatosPlanilla = $dbh->prepare("SELECT cod_gestion,cod_mes from planillas where codigo=$cod_planilla");
+	$stmtDatosPlanilla->execute();
+	$resultDatosPlanilla =  $stmtDatosPlanilla->fetch();
+	$cod_gestion_x = $resultDatosPlanilla['cod_gestion'];
+	$cod_mes_x = $resultDatosPlanilla['cod_mes'];
+
+	$sqlGestion = "SELECT nombre from gestiones where codigo=$cod_gestion_x";
+	$stmtGestion = $dbh->prepare($sqlGestion);
+	$stmtGestion->execute();
+	$resultGestion=$stmtGestion->fetch();
+	$nombre_gestion_x = $resultGestion['nombre'];
+}
 
 
 //echo "llega ".$cod_estadoasignacionaf;
@@ -114,7 +130,7 @@ if($sw==2){//procesar planilla
 		$sql = "SELECT codigo,haber_basico,cod_grado_academico,
 		(Select pga.porcentaje from personal_grado_academico pga where pga.codigo=cod_grado_academico) as p_grado_academico,  
 		cod_tipoafp,ing_contr
-		from personal where cod_estadoreferencial=1 and cod_unidadorganizacional=$cod_uo_2";
+		from personal where cod_estadoreferencial=1 and cod_unidadorganizacional=$cod_uo_2 and cod_estadopersonal=1";
 
 		$stmtPersonal = $dbh->prepare($sql);
 		$stmtPersonal->execute();
@@ -126,17 +142,17 @@ if($sw==2){//procesar planilla
 		$stmtPersonal->bindColumn('ing_contr', $ing_contr);
 		while ($rowC = $stmtPersonal->fetch()) 
 		{
-			$otros_b = obtenerTotalBonos($codigo_personal,$dias_trabajados_asistencia,$dias_trabajados_por_defecto);
+			$otros_b = obtenerTotalBonos($codigo_personal,$dias_trabajados_asistencia,$dias_trabajados_por_defecto,$cod_gestion_x,$cod_mes_x);//ee
 			//calculado otros bonos		
 			if($p_grado_academico==0)$bono_academico = 0;
 			else $bono_academico = $p_grado_academico/100*$minimo_salarial;
-			$bono_antiguedad= obtenerBonoAntiguedad($minimo_salarial,$ing_contr);//ok	
+			$bono_antiguedad= obtenerBonoAntiguedad($minimo_salarial,$ing_contr,$nombre_gestion_x);//ok	
 
 			//$otros_b = 0 ;//buscar datos
 			//$total_bonos=$bono_academico+$bono_antiguedad+$otros_b;	
 			$total_bonos=$bono_antiguedad+$otros_b;	
 
-			$total_ganado = ($haber_basico/30*$dias_trabajados_asistencia)+$total_bonos;	
+			$total_ganado = ($haber_basico/30*$dias_trabajados_por_defecto)+$total_bonos;	
 			//calculamos descuentos
 			if($cod_tipoafp==1){
 			  $afp_futuro =obtenerAporteAFP($total_ganado);
@@ -155,22 +171,22 @@ if($sw==2){//procesar planilla
 
 			$RC_IVA = obtenerRC_IVA($total_ganado,$afp_futuro,$afp_prevision,$aporte_solidario_13000,$aporte_solidario_25000,$aporte_solidario_35000);
 
-			$atrasos = obtenerAtrasoPersonal($codigo_personal,$haber_basico);
-			$anticipo = obtenerAnticipo($codigo_personal);
+			$atrasos = obtenerAtrasoPersonal($codigo_personal,$haber_basico,$cod_gestion_x,$cod_mes_x);//ee
+			$anticipo = obtenerAnticipo($codigo_personal,$cod_gestion_x,$cod_mes_x);//ee
 			$dotaciones = obtenerDotaciones($codigo_personal,$cod_gestion_x,$cod_mes_x);
 
 			// echo "personal: ".$codigo_personal."<br>";
 			// echo "dotaciones : ".$dotaciones."<br>";
 
-			$otros_descuentos=obtenerOtrosDescuentos($codigo_personal);
+			$otros_descuentos=obtenerOtrosDescuentos($codigo_personal,$cod_gestion_x,$cod_mes_x);//ee
 			$total_descuentos = $afp_futuro+$afp_prevision+$aporte_solidario_13000+$aporte_solidario_25000+$aporte_solidario_35000+$RC_IVA+$atrasos+$anticipo+$dotaciones+$otros_descuentos;
 			
 			$liquido_pagable=$total_ganado-$total_descuentos;
 
-			$cod_config_planilla_seguro_medico=16;
-			$cod_config_planilla_riesgo_prof=17;
-			$cod_config_planilla_provivienda=18;
-			$cod_config_planilla_solidario=19;		
+			$cod_config_planilla_seguro_medico=16;//estatico
+			$cod_config_planilla_riesgo_prof=17;//estatico
+			$cod_config_planilla_provivienda=18;//estatico
+			$cod_config_planilla_solidario=19;//estatico
 			
 			$seguro_de_salud=obtener_aporte_patronal_general($cod_config_planilla_seguro_medico,$total_ganado);
 			$riesgo_profesional=obtener_aporte_patronal_general($cod_config_planilla_riesgo_prof,$total_ganado);
@@ -338,7 +354,7 @@ if($sw==2){//procesar planilla
 		$sql = "SELECT codigo,haber_basico,cod_grado_academico,
 		(Select pga.porcentaje from personal_grado_academico pga where pga.codigo=cod_grado_academico) as p_grado_academico,  
 		cod_tipoafp,ing_contr
-		from personal where cod_estadoreferencial=1 and cod_unidadorganizacional=$cod_uo_2";
+		from personal where cod_estadoreferencial=1 and cod_unidadorganizacional=$cod_uo_2 and cod_estadopersonal=1";
 		$stmtPersonal = $dbh->prepare($sql);
 		$stmtPersonal->execute();
 		$stmtPersonal->bindColumn('codigo', $codigo_personal);
@@ -349,17 +365,17 @@ if($sw==2){//procesar planilla
 		$stmtPersonal->bindColumn('ing_contr', $ing_contr);
 		while ($rowC = $stmtPersonal->fetch()) 
 		{
-			$otros_b = obtenerTotalBonos($codigo_personal,$dias_trabajados_asistencia,$dias_trabajados_por_defecto);
+			$otros_b = obtenerTotalBonos($codigo_personal,$dias_trabajados_asistencia,$dias_trabajados_por_defecto,$cod_gestion_x,$cod_mes_x);//ee
 			//calculado otros bonos		
 			if($p_grado_academico==0)$bono_academico = 0;
 			else $bono_academico = $p_grado_academico/100*$minimo_salarial;
-			$bono_antiguedad= obtenerBonoAntiguedad($minimo_salarial,$ing_contr);//ok	
+			$bono_antiguedad= obtenerBonoAntiguedad($minimo_salarial,$ing_contr,$nombre_gestion_x);//ok	
 
 			//$otros_b = 0 ;//buscar datos
 			//$total_bonos=$bono_academico+$bono_antiguedad+$otros_b;	
 			$total_bonos=$bono_antiguedad+$otros_b;	
 
-			$total_ganado = ($haber_basico/30*$dias_trabajados_asistencia)+$total_bonos;	
+			$total_ganado = ($haber_basico/30*$dias_trabajados_por_defecto)+$total_bonos;	
 			//calculamos descuentos
 			if($cod_tipoafp==1){
 			  $afp_futuro =obtenerAporteAFP($total_ganado);
@@ -378,22 +394,22 @@ if($sw==2){//procesar planilla
 
 			$RC_IVA = obtenerRC_IVA($total_ganado,$afp_futuro,$afp_prevision,$aporte_solidario_13000,$aporte_solidario_25000,$aporte_solidario_35000);
 
-			$atrasos = obtenerAtrasoPersonal($codigo_personal,$haber_basico);
-			$anticipo = obtenerAnticipo($codigo_personal);
+			$atrasos = obtenerAtrasoPersonal($codigo_personal,$haber_basico,$cod_gestion_x,$cod_mes_x);//ee
+			$anticipo = obtenerAnticipo($codigo_personal,$cod_gestion_x,$cod_mes_x);//ee
 			$dotaciones = obtenerDotaciones($codigo_personal,$cod_gestion_x,$cod_mes_x);
 
 			// echo "personal: ".$codigo_personal."<br>";
 			// echo "dotaciones : ".$dotaciones."<br>";
 
-			$otros_descuentos=obtenerOtrosDescuentos($codigo_personal);
+			$otros_descuentos=obtenerOtrosDescuentos($codigo_personal,$cod_gestion_x,$cod_mes_x);//ee
 			$total_descuentos = $afp_futuro+$afp_prevision+$aporte_solidario_13000+$aporte_solidario_25000+$aporte_solidario_35000+$RC_IVA+$atrasos+$anticipo+$dotaciones+$otros_descuentos;
 			
 			$liquido_pagable=$total_ganado-$total_descuentos;
 
-			$cod_config_planilla_seguro_medico=16;
-			$cod_config_planilla_riesgo_prof=17;
-			$cod_config_planilla_provivienda=18;
-			$cod_config_planilla_solidario=19;		
+			$cod_config_planilla_seguro_medico=16;//estatico
+			$cod_config_planilla_riesgo_prof=17;//estatico
+			$cod_config_planilla_provivienda=18;//estatico
+			$cod_config_planilla_solidario=19;//estatico
 			
 			$seguro_de_salud=obtener_aporte_patronal_general($cod_config_planilla_seguro_medico,$total_ganado);
 			$riesgo_profesional=obtener_aporte_patronal_general($cod_config_planilla_riesgo_prof,$total_ganado);

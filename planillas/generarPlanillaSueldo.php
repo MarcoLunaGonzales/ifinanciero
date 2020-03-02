@@ -27,6 +27,7 @@ $modified_by=1;
 // echo "mes ".$mes_actual;
 //$fecha_actual=date('Y-m-d');
 $cont=0;
+$comprobante=0;
 //verificamos si exite registro de planilla en este mes
 $stmtPlanillas = $dbh->prepare("SELECT codigo from planillas where cod_gestion=$cod_gestion and cod_mes=$cod_mes");
 $stmtPlanillas->execute();
@@ -36,13 +37,14 @@ while ($row = $stmtPlanillas->fetch())
   $cont+=1; 
 }
 if($cont==0){//insert - cuando no existe planilla
-  $sqlInsert="INSERT into planillas(cod_gestion,cod_mes,cod_estadoplanilla,created_by,modified_by) values(:cod_gestion,:cod_mes,:cod_estadoplanilla,:created_by,:modified_by)";
+  $sqlInsert="INSERT into planillas(cod_gestion,cod_mes,cod_estadoplanilla,created_by,modified_by,comprobante) values(:cod_gestion,:cod_mes,:cod_estadoplanilla,:created_by,:modified_by,:comprobante)";
   $stmtInsert = $dbhI->prepare($sqlInsert);
   $stmtInsert->bindParam(':cod_gestion', $cod_gestion);
   $stmtInsert->bindParam(':cod_mes',$cod_mes);
   $stmtInsert->bindParam(':cod_estadoplanilla',$cod_estadoplanilla);
   $stmtInsert->bindParam(':created_by',$created_by);
   $stmtInsert->bindParam(':modified_by',$modified_by);
+  $stmtInsert->bindParam(':comprobante',$comprobante);
   $flagSuccess=$stmtInsert->execute();
 }else{
   $flagSuccess=0;//alerta indicando que ya existe planilla del mes

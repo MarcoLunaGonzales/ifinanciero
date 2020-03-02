@@ -9,7 +9,7 @@ require_once __DIR__.'/../functionsGeneral.php';
 $dbh = new Conexion();
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//try
 //RECIBIMOS LAS VARIABLES
-
+set_time_limit(3000);
 $cod_cajachica = $_GET["cod_cajachica"];//codigoactivofijo
 try{
     $stmtCajaChicaDet = $dbh->prepare("SELECT codigo,cod_tipodoccajachica,observaciones,monto,(select c.nombre from plan_cuentas c where c.codigo=cod_cuenta)nombre_cuenta,
@@ -327,7 +327,7 @@ $html.=  '<header class="header">'.
                     // $monto_restante=$importe-$montoIVA;
 
 
-                    $descripcion_contra_cuenta='CONTRA CUENTA';
+                    $descripcion_contra_cuenta=$concepto_contabilizacion;
                     if($USD_actual!=0)
                         $monto_contra_cuenta_dolares=$monto_contra_cuenta/$USD_actual;
                     else $monto_contra_cuenta_dolares=0;

@@ -12,7 +12,7 @@ $dbh = new Conexion();
 $stmt = $dbh->prepare("SELECT (select u.nombre from unidades_organizacionales u where u.codigo=c.cod_unidadorganizacional)unidad, c.cod_gestion, 
 (select m.nombre from monedas m where m.codigo=c.cod_moneda)moneda, 
 (select t.nombre from tipos_comprobante t where t.codigo=c.cod_tipocomprobante)tipo_comprobante, c.fecha, c.numero,c.codigo, c.glosa,ec.nombre,c.cod_estadocomprobante
-from comprobantes c join estados_comprobantes ec on c.cod_estadocomprobante=ec.codigo where c.cod_estadocomprobante!=2 and c.cod_unidadorganizacional=$globalUnidad order by c.fecha desc, c.numero desc");
+from comprobantes c join estados_comprobantes ec on c.cod_estadocomprobante=ec.codigo where c.cod_estadocomprobante!=2 and c.cod_unidadorganizacional=$globalUnidad  order by c.fecha desc, c.numero desc");
 // Ejecutamos
 $stmt->execute();
 // bindColumn

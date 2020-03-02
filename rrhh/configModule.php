@@ -124,6 +124,10 @@ $urlSavePersonalRetirado="?opcion=personalSaveRetirado";
 
 //planilla sueldo
 $urlPlanillasSueldoList="?opcion=planillasSueldoPersonal";
+$urlPlanillasSueldoList2="../index.php?opcion=planillasSueldoPersonal";
+$urlComprobantesLista2="../index.php?opcion=listComprobantes";
+$urlPersonalLista2="../index.php?opcion=personalLista";
+
 $urlGenerarPlanillaSueldoPrevia="?opcion=generarPlanillaSueldoPrevia";
 $urlPlanillaSueldoPersonalActual="planillas/planillaSueldoPersonalActual.php";
 

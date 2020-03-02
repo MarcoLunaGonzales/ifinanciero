@@ -31,6 +31,7 @@ try {
     if($cod_area=='')$cod_area=0;
     if($cod_uo=='')$cod_uo=0;
     if($cod_proveedores=='')$cod_proveedores=0;
+    if($cod_personal=='')$cod_personal=0;
 
     //sacamos monto de caja chica
     $stmtMCC = $dbh->prepare("SELECT monto_reembolso from caja_chica where  codigo =$cod_cc");
@@ -55,6 +56,20 @@ try {
         
         $cod_estadoreferencial=1;
         $monto_rendicion=0;
+
+        //     echo 'cod_cuenta:'.$cod_cuenta."<br>";
+        // echo 'fecha:'.$fecha."<br>";
+        // echo 'cod_tipo_documento:'.$cod_tipo_documento."<br>";
+        // echo 'numero:'.$numero."<br>";
+        // echo 'cod_personal:'.$cod_personal."<br>";
+        // echo 'cod_area:'.$cod_area."<br>";
+        // echo 'cod_uo:'.$cod_uo."<br>";
+        // echo 'monto:'.$monto."<br>";
+        // echo 'observaciones:'.$observaciones."<br>";
+        // echo 'cod_area:'.$cod_area."<br>";
+        // echo 'nro_recibo:'.$nro_recibo."<br>";
+
+
         $stmt = $dbh->prepare("INSERT INTO caja_chicadetalle(codigo,cod_cajachica,cod_cuenta,fecha,cod_tipodoccajachica,nro_documento,cod_personal,monto,observaciones,cod_estado,cod_estadoreferencial,cod_area,cod_uo,nro_recibo,cod_proveedores) 
         values ($codigo,$cod_cc,$cod_cuenta,'$fecha',$cod_tipo_documento,$numero,$cod_personal,$monto,'$observaciones',$cod_estado,$cod_estadoreferencial,$cod_area,$cod_uo,$nro_recibo,$cod_proveedores)");
         $flagSuccess=$stmt->execute();

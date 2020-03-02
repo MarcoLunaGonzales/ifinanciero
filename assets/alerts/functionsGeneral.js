@@ -5076,6 +5076,21 @@ function ajaxAreaContabilizacionDetalle(combo){
   }
   ajax.send(null)  
 }//unidad_area-cargo
+
+function ajaxAreaUOCAJACHICA(combo){
+  var contenedor;
+  var codigo_UO=combo.value;
+  contenedor = document.getElementById('div_contenedor_area');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'caja_chica/area_uo_ajax.php?codigo_UO='+codigo_UO,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);          
+    }
+  }
+  ajax.send(null)  
+}//unidad_area-cargo
 function ajaxUOArea_personal_tipocajachica(combo){
   var contenedor;
   var codigo_UO=combo.value;

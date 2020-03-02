@@ -38,6 +38,7 @@ where pcc.cod_cuenta=pc.codigo");
   }
 
 
+$cod_proveedores=0;
 
 
 
@@ -81,6 +82,8 @@ if ($codigo > 0){
 
     $codigo=0;
     // $cod_cuenta = 0;
+    $cod_uo=0;
+    $cod_area=0;
     
     $fecha = date('Y-m-d');
     $cod_tipodoccajachica = 0;
@@ -100,7 +103,7 @@ if ($codigo > 0){
 <div class="content">
 	<div class="container-fluid">
 		<div class="col-md-12">
-		  <form id="form1" class="form-horizontal" action="<?=$urlSaveDetalleCajaChica;?>" method="post">
+		  <form id="form1" class="form-horizontal" action="<?=$urlSaveDetalleCajaChica;?>" method="post" onsubmit="return valida(this)">
             <input type="hidden" name="codigo" id="codigo" value="<?=$codigo;?>"/>
             <input type="hidden" name="cod_cc" id="cod_cc" value="<?=$cod_cc;?>"/>
             <input type="hidden" name="cod_tcc" id="cod_tcc" value="<?=$cod_tcc;?>"/>
@@ -117,8 +120,8 @@ if ($codigo > 0){
                       <div class="col-sm-8">
                         <div class="form-group">
 
-                            <input class="form-control" type="text" name="cuenta_auto" id="cuenta_auto" value="<?=$cuenta_aux?>" placeholder="[numero] y nombre de cuenta"/>
-                            <input class="form-control" type="hidden" name="cuenta_auto_id" id="cuenta_auto_id" value="<?=$cod_cuenta?>" />
+                            <input class="form-control" type="text" name="cuenta_auto" id="cuenta_auto" value="<?=$cuenta_aux?>" placeholder="[numero] y nombre de cuenta" required/>
+                            <input class="form-control" type="hidden" name="cuenta_auto_id" id="cuenta_auto_id" value="<?=$cod_cuenta?>" required/>
                             
                         </div>
                       </div>
@@ -128,7 +131,7 @@ if ($codigo > 0){
                         <label class="col-sm-2 col-form-label">Tipo Doc.</label>
                         <div class="col-sm-4">
                             <div class="form-group">
-                                <select name="tipo_documento" id="tipo_documento" class="selectpicker form-control form-control-sm" data-style="btn btn-info">                                    
+                                <select name="tipo_documento" id="tipo_documento" class="selectpicker form-control form-control-sm" data-style="btn btn-info" required>                                    
                                     <?php                                     
                                     $stmtTipoDoc = $dbh->query("SELECT td.codigo,td.nombre from tipos_documentocajachica td where td.tipo=1 order by nombre");
                                     while ($row = $stmtTipoDoc->fetch()){ ?>
@@ -146,7 +149,7 @@ if ($codigo > 0){
                         <label class="col-sm-2 col-form-label">Nro. Recibo</label>
                         <div class="col-sm-4">
                         <div class="form-group">
-                            <input class="form-control" type="number" name="nro_recibo" id="nro_recibo" value="<?=$nro_recibo;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+                            <input class="form-control" type="number" name="nro_recibo" id="nro_recibo" value="<?=$nro_recibo;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" required/>
                         </div>
                         </div>
                     </div> <!--fin campo fecha numero-->
@@ -160,7 +163,7 @@ if ($codigo > 0){
                         <label class="col-sm-2 col-form-label">Fecha</label>
                         <div class="col-sm-4">
                             <div class="form-group">
-                                <input class="form-control" type="date" name="fecha" id="fecha" readonly="true" value="<?=$fecha;?>" />
+                                <input class="form-control" type="date" name="fecha" id="fecha" readonly="true" value="<?=$fecha;?>" required/>
                             </div>
                         </div>
                     </div><!--monto inicio y reembolso-->
@@ -168,7 +171,7 @@ if ($codigo > 0){
                       <label class="col-sm-2 col-form-label">Personal</label>
                       <div class="col-sm-8">
                         <div class="form-group">
-                            <select name="cod_personal" id="cod_personal" class="selectpicker form-control form-control-sm" data-style="btn btn-info" required="true" data-show-subtext="true" data-live-search="true" onChange="ajaxCajaCPersonalUO(this);">
+                            <select name="cod_personal" id="cod_personal" class="selectpicker form-control form-control-sm" data-style="btn btn-info"  data-show-subtext="true" data-live-search="true" onChange="ajaxCajaCPersonalUO(this);">
                                 <option value=""></option>
                                 <?php 
                                 $querypersonal = "SELECT codigo,CONCAT_WS(' ',paterno,materno,primer_nombre)AS nombre from personal where cod_estadoreferencial=1 order by nombre";
@@ -185,26 +188,22 @@ if ($codigo > 0){
                       <div class="col-sm-8">
                         <div class="form-group">
                             <div id="div_contenedor_uo">                                        
-                                        <?php
-                                        if($codigo>0){
+                              <?php
+                              
 
-                                            $sqlUO="SELECT codigo,nombre from unidades_organizacionales where cod_estado=1";
-                                            $stmt = $dbh->prepare($sqlUO);
-                                            $stmt->execute();
-                                            ?>
-                                            <select name="cod_uo" id="cod_uo" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" data-show-subtext="true" data-live-search="true"  >
-                                                <?php 
-                                                    while ($row = $stmt->fetch()){ 
-                                                ?>
-                                                     <option <?=($cod_uo==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
-                                                 <?php 
-                                                    } 
-                                                ?>
-                                             </select>                   
-                                       <?php }else{?>                                        
-                                        <input type="hidden" name="cod_uo" id="cod_uo" value="0">
-                                    <?php }
-                                     ?>
+                                  $sqlUO="SELECT codigo,nombre from unidades_organizacionales where cod_estado=1";
+                                  $stmt = $dbh->prepare($sqlUO);
+                                  $stmt->execute();
+                                  ?>
+                                  <select name="cod_uo" id="cod_uo" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" data-show-subtext="true" data-live-search="true" onChange="ajaxAreaUOCAJACHICA(this);" title="Elija una opción">
+                                      <?php 
+                                          while ($row = $stmt->fetch()){ 
+                                      ?>
+                                           <option <?=($cod_uo==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                                       <?php 
+                                          } 
+                                      ?>
+                                   </select>                                              
                             </div>                                                        
                         </div>
                       </div>
@@ -241,12 +240,12 @@ if ($codigo > 0){
 
                     <!-- proveedor -->
                     <div class="row">
-                      <label class="col-sm-2 col-form-label">Proveedores :</label>
+                      <label class="col-sm-2 col-form-label">Proveedor :</label>
                        <div class="col-sm-8">
                          <div class="form-group">                        
                               <select class="selectpicker form-control form-control-sm" name="proveedores" id="proveedores" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" title="Seleccione Proveedor">
                                <?php 
-                               $query="SELECT * FROM af_proveedores order by codigo";
+                               $query="SELECT * FROM af_proveedores order by nombre";
                                $stmt = $dbh->prepare($query);
                                $stmt->execute();
                                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -273,7 +272,7 @@ if ($codigo > 0){
                         <label class="col-sm-2 col-form-label">Detalle</label>
                         <div class="col-sm-7">
                         <div class="form-group">
-                            <input class="form-control rounded-0" name="observaciones" id="observaciones" rows="3" required onkeyup="javascript:this.value=this.value.toUpperCase();" value="<?=$observaciones;?>"/>
+                            <input class="form-control rounded-0" name="observaciones" id="observaciones" rows="3" required onkeyup="javascript:this.value=this.value.toUpperCase();" value="<?=$observaciones;?>" required/>
 
                             <!-- <input class="form-control" type="text" name="observaciones" id="observaciones" required="true" value="<?=$observaciones;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/> -->
                         </div>
@@ -326,3 +325,18 @@ if ($codigo > 0){
   </div>
   <!--    end small modal -->
 <script>$('.selectpicker').selectpicker("refresh");</script>
+
+<script type="text/javascript">
+function valida(f) {
+  var ok = true;
+  var msg = "Rellene el campo 'personal' o 'proveedor'\n";
+  if(f.elements["cod_personal"].value == "" && f.elements["proveedores"].value == "")
+  {    
+    ok = false;
+  }
+
+  if(ok == false)
+    alert(msg);
+  return ok;
+}
+</script>

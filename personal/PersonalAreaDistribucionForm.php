@@ -155,7 +155,7 @@ $statementAREASE = $dbh->query($query_areas);
 
 <!-- Modal agregar distrbucion-->
 <div class="modal fade" id="modalAgregarD" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog modal-sm" role="document">
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -165,24 +165,41 @@ $statementAREASE = $dbh->query($query_areas);
         <input type="hidden" name="codigo_personal" id="codigo_personal" value="0">
         <input type="hidden" name="codigo_distribucion" id="codigo_distribucion" value="0">
         
-        <h6> Unidad Organizacional : </h6>
-        <select name="cod_uo" id="cod_uo" class="selectpicker" data-style="btn btn-primary" onChange="ajaxPersonal_area_distribucion(this);">            
-            <?php while ($row = $statementUO->fetch()){ ?>
-                <option value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
-            <?php } ?>
-        </select>
-
-        <h6> Area : </h6>
-        <div id="div_contenedor_area">
-          <select name="cod_area" id="cod_area" class="selectpicker" data-style="btn btn-primary" >            
-            <?php while ($row = $statementAREAS->fetch()){ ?>
-                <option value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
-            <?php } ?>
-          </select>
+        <div class="row">
+          <label class="col-sm-2 col-form-label" style="color:#424242">Oficina :</label>
+          <div class="col-sm-8">
+            <div class="form-group">
+              <select name="cod_uo" id="cod_uo" class="selectpicker form-control" data-style="btn btn-primary" onChange="ajaxPersonal_area_distribucion(this);">            
+                  <?php while ($row = $statementUO->fetch()){ ?>
+                      <option value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                  <?php } ?>
+              </select>
+            </div>
+          </div>
         </div>
-        
-        <h6> Porcentaje : </h6>
-        <input type="number" name="porcentaje" id="porcentaje" class="form-control input-sm">
+
+        <div class="row">
+          <label class="col-sm-2 col-form-label" style="color:#424242">Area :</label>
+          <div class="col-sm-8">
+            <div class="form-group">
+              <div id="div_contenedor_area">
+                <select name="cod_area" id="cod_area" class="selectpicker form-control" data-style="btn btn-primary" >            
+                  <?php while ($row = $statementAREAS->fetch()){ ?>
+                      <option value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                  <?php } ?>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <label class="col-sm-2 col-form-label" style="color:#424242">Porcentaje :</label>
+          <div class="col-sm-8">
+            <div class="form-group">
+              <input type="number" name="porcentaje" id="porcentaje" class="form-control input-sm">
+            </div>
+          </div>
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-success" id="aceptarPAD"  data-dismiss="modal">Aceptar</button>
@@ -193,7 +210,7 @@ $statementAREASE = $dbh->query($query_areas);
 </div>
 <!--eliminar Distribucion-->
 <div class="modal fade" id="modalEliminar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog modal-sm" role="document">
+  <div class="modal-dialog modal-md" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -213,7 +230,7 @@ $statementAREASE = $dbh->query($query_areas);
 </div>
 <!-- Editar Distribucion-->
 <div class="modal fade" id="modalEditar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog modal-sm" role="document">
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -223,24 +240,44 @@ $statementAREASE = $dbh->query($query_areas);
         <input type="hidden" name="codigo_personalE" id="codigo_personalE" value="0">
         <input type="hidden" name="codigo_distribucionE" id="codigo_distribucionE" value="0">             
 
-        <h6> Unidad Organizacional : </h6>
-        <select name="cod_uoE" id="cod_uoE" class="selectpicker" data-style="btn btn-primary" onChange="ajaxPersonal_area_distribucionE(this);">
-            <?php while ($rowUOE = $statementUOE->fetch()){ ?>
-                <option <?=($cod_uo==$rowUOE["codigo"])?"selected":"";?> value="<?=$rowUOE["codigo"];?>"><?=$rowUOE["nombre"];?></option>
-            <?php } ?>
-        </select>
+        <div class="row">
+          <label class="col-sm-2 col-form-label" style="color:#424242">Oficina :</label>
+          <div class="col-sm-8">
+            <div class="form-group">
+              <select name="cod_uoE" id="cod_uoE" class="selectpicker form-control" data-style="btn btn-primary" onChange="ajaxPersonal_area_distribucionE(this);">
+                  <?php while ($rowUOE = $statementUOE->fetch()){ ?>
+                      <option <?=($cod_uo==$rowUOE["codigo"])?"selected":"";?> value="<?=$rowUOE["codigo"];?>"><?=$rowUOE["nombre"];?></option>
+                  <?php } ?>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <label class="col-sm-2 col-form-label" style="color:#424242">Area :</label>
+          <div class="col-sm-8">
+            <div class="form-group">
+              <div id="div_contenedor_areaE">
+                <select name="cod_areaE" id="cod_areaE" class="selectpicker form-control" data-style="btn btn-primary" >            
+                  <?php while ($row = $statementAREASE->fetch()){ ?>
+                      <option <?=($cod_area==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                  <?php } ?>
+                </select>   
+              </div>  
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <label class="col-sm-2 col-form-label" style="color:#424242">Porcentaje :</label>
+          <div class="col-sm-8">
+            <div class="form-group">
+              <input type="number" name="porcentajeE" id="porcentajeE" class="form-control input-sm">
+            </div>
+          </div>
+        </div>
 
-        <h6> Area : </h6>
-        <div id="div_contenedor_areaE">
-          <select name="cod_areaE" id="cod_areaE" class="selectpicker" data-style="btn btn-primary" >            
-            <?php while ($row = $statementAREASE->fetch()){ ?>
-                <option <?=($cod_area==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
-            <?php } ?>
-          </select>   
-        </div>      
+        
 
-        <h6> Porcentaje : </h6><br>
-        <input type="number" name="porcentajeE" id="porcentajeE" class="form-control input-sm">
+        
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-success" id="EditarPAD"  data-dismiss="modal">Aceptar</button>
