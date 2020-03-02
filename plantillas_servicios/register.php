@@ -131,11 +131,24 @@ $dbh = new Conexion();
                             <label class="col-sm-2 col-form-label">UT. M&iacute;n</label>
                             <div class="col-sm-10">
                               <div class="form-group has-success">
-                                <input class="form-control" type="number" step="0.001" min="0" name="utilidad_minima" id="utilidad_minima" value="" required/>
+                                <input class="form-control" type="number" step="0.01" min="0" value="0.01" name="utilidad_minima" id="utilidad_minima" value="" required/>
                                 <span class="form-control-feedback">%</span>
                               </div>
                             </div>
                            </div> 
+                          </div>
+                        </div>
+                       </div>
+                      </div><!--row-->
+                      <div class="row">
+                       <label class="col-sm-2 col-form-label">Periodo (Años)</label>
+                       <div class="col-sm-7">
+                        <div class="row">
+                          <div class="col-sm-5">
+                            <div class="form-group">
+                                <input class="form-control" type="number" min="0" name="anio" required id="anio" value="1"/>
+                                
+                              </div>
                           </div>
                         </div>
                        </div>

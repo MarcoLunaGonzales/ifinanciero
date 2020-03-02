@@ -53,6 +53,7 @@ if(isset($_GET['cod'])){
             $stmt->bindColumn('dias_auditoria', $diasAuditoriaX);
             $stmt->bindColumn('fecha_registro', $fechaRegistro);
             $stmt->bindColumn('utilidad_minima', $utilidadMinima);
+            $stmt->bindColumn('anios', $anios);
 ?>
 <div class="cargar">
   <div class="div-loading text-center">
@@ -79,10 +80,15 @@ if(isset($_GET['cod'])){
 				</div>
 				<div class="card-body ">
                      <div class="row">
-					<?php while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {?>
+					<?php while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+                        $alumnos_ibnorcaPlan=obtenerCantidadTotalPersonalPlantilla($codigo);
+                        if($alumnos_ibnorcaPlan==0||$alumnos_ibnorcaPlan==""||$alumnos_ibnorcaPlan==NULL){
+                        	$alumnos_ibnorcaPlan=1;
+                        }
+						?>
 					<input class="form-control" type="hidden" name="cod_unidad" value="<?=$codUnidadX?>" id="cod_unidad" readonly/>
 					<input class="form-control" type="hidden" name="cod_area" value="<?=$codAreaX?>" id="cod_area" readonly/>
-					<input class="form-control" type="hidden" name="alumnos_ibnorca" value="<?=obtenerCantidadTotalPersonalPlantilla($codigo)?>" id="alumnos_ibnorca"/>
+					<input class="form-control" type="hidden" name="alumnos_ibnorca" value="<?=$alumnos_ibnorcaPlan?>" id="alumnos_ibnorca"/>
 						<div class="col-sm-2">
 							<div class="form-group">
 						  		<label class="bmd-label-static">Nombre</label>
@@ -118,6 +124,12 @@ if(isset($_GET['cod'])){
 				        	<div class="form-group">
 						  		<label class="bmd-label-static">UT. M&iacute;n %</label>
 						  		<input class="form-control" type="text" name="utilidad_minima" value="<?=$utilidadMinima?>" id="utilidad_minima" readonly/>
+							</div>
+				      	</div>
+				      	<div class="col-sm-1">
+				        	<div class="form-group">
+						  		<label class="bmd-label-static">A&ntilde;os</label>
+						  		<input class="form-control" type="text" name="anios_plan" value="<?=$anios?>" id="anios_plan" readonly/>
 							</div>
 				      	</div>
 						<div class="col-sm-1">
@@ -360,7 +372,7 @@ if(isset($_GET['cod'])){
       	                     		</thead>
       	                     		<tbody id="tabla_servicios">
       	                     			<?php 
-      	                     			$sql11="SELECT s.*,c.descripcion,c.codigo as servicio_cod from plantillas_servicios_tiposervicio s,cla_servicios c where s.cod_plantillaservicio=$codigo and s.cod_claservicio=c.idclaservicio";
+      	                     			$sql11="SELECT s.*,c.descripcion,c.codigo as servicio_cod from plantillas_servicios_tiposervicio s,cla_servicios c where s.cod_plantillaservicio=$codigo and s.cod_claservicio=c.idclaservicio order by c.codigo";
                                         $stmt11 = $dbh->prepare($sql11);
                                         $stmt11->execute();
                                         $index11=1;$total11=0;
@@ -512,7 +524,6 @@ if(isset($_GET['cod'])){
 								<th>Partida</th>
 								<th>Tipo</th>
 								<th class="text-right">M Global</th>
-								<th class="text-right">M x Auditoria</th>
 								<th class="text-right">M x Persona</th>
 							</tr>
 						</thead>

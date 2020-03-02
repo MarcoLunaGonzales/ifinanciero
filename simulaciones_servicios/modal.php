@@ -79,20 +79,23 @@
 </div>
 <!--    end small modal -->
 
+<?php
+for ($ann=0; $ann <=$anioGeneral ; $ann++) { 
+  ?>
 <!-- small modal -->
-<div class="modal fade modal-arriba modal-primary" id="modalSimulacionCuentas" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade modal-arriba modal-primary" id="modalSimulacionCuentas<?=$ann?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg col-sm-12">
     <div class="modal-content card">
                 <div class="card-header card-header-danger card-header-text">
                   <div class="card-text">
-                    <h4>Costos Variables</h4>
+                    <h4>Costos Variables A&ntilde;o <?=$ann?></h4>
                   </div>
                   <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
                     <i class="material-icons">close</i>
                   </button>
                 </div>
                 <div class="card-body">
-                 <div class="card" id="cuentas_simulacion">
+                 <div class="card" id="cuentas_simulacion<?=$ann?>">
                    <?php 
                     include "cargarDetallePlantillaPartida.php";
                    ?>
@@ -102,10 +105,14 @@
     </div>
   </div>
 <!--    end small modal -->
+  <?php
+}
+?>
+
 
 <!-- small modal -->
 <div class="modal fade modal-arriba modal-primary" id="modalSimulacionCuentasPersonal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog modal-notice" style="max-width: 80% !important;">
     <div class="modal-content card">
                 <div class="card-header card-header-warning card-header-text">
                   <div class="card-text">
@@ -133,7 +140,7 @@
     <div class="modal-content card">
                <div class="card-header card-header-success card-header-text">
                   <div class="card-text">
-                    <h4>Editar Simulaci&oacute;n</h4>
+                    <h4>Editar Propuesta</h4>
                   </div>
                   <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
                     <i class="material-icons">close</i>
@@ -150,7 +157,7 @@
                            </div>  
                       </div> 
                       <!--<div class="row">
-                       <label class="col-sm-2 col-form-label">Simulaci&oacute;n</label>
+                       <label class="col-sm-2 col-form-label">Propuesta</label>
                        <div class="col-sm-10">
                         <div class="form-group">
                              <select class="selectpicker form-control" name="modal_tiposim" id="modal_tiposim" data-style="btn btn-success">
@@ -171,12 +178,12 @@
 <!--    end small modal -->
 
 <!-- small modal -->
-<div class="modal fade modal-primary modal-arriba" id="modalEditPlantilla" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
+<div class="modal fade modal-primary" id="modalEditPlantilla" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-notice" style="max-width: 90% !important;">
     <div class="modal-content card">
                <div class="card-header card-header-info card-header-text">
                   <div class="card-text">
-                    <h4>Editar Plantilla</h4>
+                    <h4>Editar Propuesta</h4>
                   </div>
                   <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
                     <i class="material-icons">close</i>
@@ -239,12 +246,12 @@
                        
                       ?>
                       <h4 class="font-weight-bold"><center>SERVICIOS <b id="num_tituloservicios"></b></center></h4>
-                      <div class="row">
+                      <div class="row" id="modal_contenidoservicios">
                         <table class="table table-bordered table-condensed table-striped table-sm">
                              <thead>
                                   <tr class="fondo-boton">
                                     <td>#</td>
-                                    <td width="30%">Descipci&oacute;n</td>
+                                    <td width="30%">Descripci&oacute;n</td>
                                     <td>Cantidad</td>
                                     <td width="17%">Unidad</td>
                                     <td>Monto</td>
@@ -253,6 +260,64 @@
                                   </tr>
                               </thead>
                               <tbody>
+                                <tr class="bg-plomo">
+                                  <td>N</td>
+                                  <td><?php 
+                                  if($codAreaX==39){
+                                    $codigoAreaServ=108;
+                                  }else{
+                                    if($codAreaX==38){
+                                      $codigoAreaServ=109;
+                                    }else{
+                                      $codigoAreaServ=0;
+                                    }
+                                  }
+                                ?>
+                                  <select class="selectpicker form-control form-control-sm" data-live-search="true" name="modal_editservicio" id="modal_editservicio" data-style="fondo-boton">
+                                    <option disabled selected="selected" value="">--SERVICIOS--</option>
+                                    <?php 
+                                     $stmt3 = $dbh->prepare("SELECT idclaservicio,descripcion,codigo from cla_servicios where (codigo_n1=108 or codigo_n1=109) and vigente=1 and codigo_n1=$codigoAreaServ");
+                                     $stmt3->execute();
+                                     while ($rowServ = $stmt3->fetch(PDO::FETCH_ASSOC)) {
+                                      $codigoServX=$rowServ['idclaservicio'];
+                                      $nombreServX=$rowServ['descripcion'];
+                                      $abrevServX=$rowServ['codigo'];
+                                      ?><option value="<?=$codigoServX;?>"><?=$abrevServX?> - <?=$nombreServX?></option><?php 
+                                     }
+                                    ?>
+                                  </select>
+                                  </td>
+                                  <td class="text-right">
+                                       <input type="number" min="1" id="cantidad_servicios0" name="cantidad_servicios0" class="form-control text-primary text-right" onchange="calcularTotalFilaServicioNuevo(2)" onkeyUp="calcularTotalFilaServicioNuevo(2)" value="1">
+                                  </td>
+                                  <td>
+                                      <select class="form-control selectpicker form-control-sm" data-style="fondo-boton fondo-boton-active" name="unidad_servicios0" id="unidad_servicios0" onchange="calcularTotalFilaServicioNuevo(2)">
+                                          <?php 
+                                              $queryUnidad="SELECT * FROM tipos_unidad where cod_estadoreferencial=1 order by codigo";
+                                              $stmtUnidad = $dbh->prepare($queryUnidad);
+                                              $stmtUnidad->execute();
+                                              while ($rowUnidad = $stmtUnidad->fetch(PDO::FETCH_ASSOC)) {
+                                                $codigoUnidad=$rowUnidad['codigo'];
+                                                $nomUnidad=$rowUnidad['nombre'];
+                                                ?><option value="<?=$codigoUnidad?>"><?=$nomUnidad?></option><?php    
+                                              }
+                                          ?>
+                                      </select>
+                                     </td>
+                                    <td class="text-right">
+                                       <input type="number" id="modal_montoserv0" name="modal_montoserv0" class="form-control text-primary text-right" onchange="calcularTotalFilaServicioNuevo(2)" onkeyUp="calcularTotalFilaServicioNuevo(2)" value="0" step="0.01">
+                                    </td>
+                                     <td class="text-right">
+                                       <input type="number" id="modal_montoservtotal0" name="modal_montoservtotal0" class="form-control text-primary text-right" onchange="calcularTotalFilaServicioNuevo(1)" onkeyUp="calcularTotalFilaServicioNuevo(1)" value="0" step="0.01">
+                                     </td>
+                                  <td>
+                                    <div class="btn-group">
+                                       <a href="#" class="btn btn-primary btn-sm" id="boton_modalnuevoservicio" onclick="agregarNuevoServicioSimulacion(<?=$codigoSimulacionSuper?>,<?=$codAreaX?>); return false;">
+                                         Agregar
+                                       </a>
+                                     </div>
+                                  </td>
+                                </tr>
                                 <?php 
                                 $iii=1;
                                $queryPr="SELECT s.*,t.descripcion as nombre_serv FROM simulaciones_servicios_tiposervicio s, cla_servicios t where s.cod_simulacionservicio=$codigoSimulacionSuper and s.cod_claservicio=t.idclaservicio order by s.codigo";
@@ -344,14 +409,41 @@
                            </table>
                            <input type="hidden" id="modal_numeroservicio" value="<?=$iii?>">
                       </div>
-                      <h4 class="font-weight-bold"><center>HONORARIOS PERSONAL <b id="num_titulopersonal"></b></center></h4>
+                      <div>
+                        <ul class="nav nav-pills nav-pills-warning" role="tablist">
+                        <?php
+                          for ($an=1; $an<=$anioGeneral; $an++) { 
+                            $active="";
+                            if($an==1){
+                              $active="active";
+                            }
+                                ?>
+                          <li class="nav-item">
+                            <a class="nav-link <?=$active?>" data-toggle="tab" href="#link<?=$an?>" onclick="cambiarTituloPersonalModal(<?=$an?>)" role="tablist">
+                              Año <?=$an?>
+                            </a>
+                          </li>
+                        <?php
+                            }
+                        ?>
+                         </ul>
+                         <div class="tab-content tab-space">
+                         <?php
+                          for ($an=1; $an<=$anioGeneral; $an++) { 
+                            $active="";
+                            if($an==1){
+                              $active="active";
+                            }
+                                ?>
+                          <div class="tab-pane <?=$active?>" id="link<?=$an?>">
+                   <!--INICION DE PERSONAL-->         
+                      <h4 class="font-weight-bold"><center>AÑO <?=$an?> HONORARIOS PERSONAL <b id="num_titulopersonal<?=$an?>"></b></center></h4>
                       <div class="row">
                         <table class="table table-bordered table-condensed table-striped table-sm">
                              <thead>
                                   <tr class="fondo-boton">
                                     <td>#</td>
                                     <td width="25%">Tipo de Personal</td>
-                                    <!--<td width="14%" class="text-center">Regi&oacute;n</td>-->
                                     <td width="8%" class="text-center">Cantidad</td>                                   
                                     <td width="8%">D&iacute;as Aud.</td>
                                     <td>Monto</td>
@@ -362,7 +454,7 @@
                               <tbody>
                                 <?php 
                                 $iii=1;
-                               $queryPr="SELECT s.*,t.nombre as tipo_personal FROM simulaciones_servicios_auditores s, tipos_auditor t where s.cod_simulacionservicio=$codigoSimulacionSuper and s.cod_tipoauditor=t.codigo order by s.codigo";
+                               $queryPr="SELECT s.*,t.nombre as tipo_personal FROM simulaciones_servicios_auditores s, tipos_auditor t where s.cod_simulacionservicio=$codigoSimulacionSuper and s.cod_tipoauditor=t.codigo and s.cod_anio=$an order by s.codigo";
                                $stmt = $dbh->prepare($queryPr);
                                $stmt->execute();
                                $modal_totalmontopre=0;$modal_totalmontopretotal=0;$sumaCantidadPre=0;
@@ -395,24 +487,9 @@
                                    ?>
                                    <tr>
                                      <td><?=$iii?></td>
-                                     <td class="small"><?=$tipoPre?><input type="hidden" id="local_extranjero<?=$iii?>" value="<?=$codExtLoc?>"></td>
-                                     <!--<td>
-                                      <select class="form-control selectpicker form-control-sm" data-style="fondo-boton fondo-boton-active" name="local_extranjero<?=$iii?>" id="local_extranjero<?=$iii?>" onchange="montarMontoLocalExternoTabla(<?=$iii?>)">
-                                          <?php 
-                                              if($codExtLoc==1){                  
-                                                ?><option value="1" selected>BOLIVIA</option>
-                                                  <option value="0">EXTRANJERO</option>
-                                                <?php
-                                              }else{
-                                                ?><option value="1">BOLIVIA</option>
-                                                  <option value="0" selected>EXTRANJERO</option>
-                                                <?php
-                                              }
-                                          ?>
-                                      </select>
-                                     </td>-->
+                                     <td class="small"><?=$tipoPre?><input type="hidden" id="local_extranjero<?=$an?>FFF<?=$iii?>" value="<?=$codExtLoc?>"></td>
                                      <td>
-                                      <select class="form-control selectpicker form-control-sm" data-style="fondo-boton fondo-boton-active" name="cantidad_personal<?=$iii?>" id="cantidad_personal<?=$iii?>" onchange="calcularTotalPersonalServicio(2)">
+                                      <select class="form-control selectpicker form-control-sm" data-style="fondo-boton fondo-boton-active" name="cantidad_personal<?=$an?>FFF<?=$iii?>" id="cantidad_personal<?=$an?>FFF<?=$iii?>" onchange="calcularTotalPersonalServicio('<?=$an?>',2)">
                                           <?php 
                                              for ($hf=1; $hf<=$cantidadPre; $hf++) {
                                               if($hf==$cantidadEPre){
@@ -426,7 +503,7 @@
                                       </select>
                                      </td>
                                      <td class="text-center">
-                                       <select class="form-control selectpicker form-control-sm" data-style="fondo-boton fondo-boton-active" name="dias_personal<?=$iii?>" id="dias_personal<?=$iii?>" onchange="calcularTotalPersonalServicio(2)">
+                                       <select class="form-control selectpicker form-control-sm" data-style="fondo-boton fondo-boton-active" name="dias_personal<?=$an?>FFF<?=$iii?>" id="dias_personal<?=$an?>FFF<?=$iii?>" onchange="calcularTotalPersonalServicio('<?=$an?>',2)">
                                           <?php 
                                              for ($hf=1; $hf<=$diasSimulacion; $hf++) {
                                               if($hf==$diasPre){
@@ -439,18 +516,18 @@
                                       </select>
                                      </td>
                                      <td class="text-right">
-                                       <input type="number" id="modal_montopre<?=$iii?>" name="modal_montopre<?=$iii?>" <?=($banderaHab==0)?"readonly":"";?> class="form-control text-info text-right" onchange="calcularTotalPersonalServicio(2)" onkeyUp="calcularTotalPersonalServicio(2)" value="<?=$montoPreSi?>" step="0.01">
-                                       <input type="hidden" id="modal_montopreext<?=$iii?>" value="<?=$montoPreext?>">
-                                       <input type="hidden" id="modal_montopreloc<?=$iii?>" value="<?=$montoPre?>">
+                                       <input type="number" id="modal_montopre<?=$an?>FFF<?=$iii?>" name="modal_montopre<?=$an?>FFF<?=$iii?>" <?=($banderaHab==0)?"readonly":"";?> class="form-control text-info text-right" onchange="calcularTotalPersonalServicio('<?=$an?>',2)" onkeyUp="calcularTotalPersonalServicio('<?=$an?>',2)" value="<?=$montoPreSi?>" step="0.01">
+                                       <input type="hidden" id="modal_montopreext<?=$an?>FFF<?=$iii?>" value="<?=$montoPreext?>">
+                                       <input type="hidden" id="modal_montopreloc<?=$an?>FFF<?=$iii?>" value="<?=$montoPre?>">
                                      </td>
                                      <td class="text-right">
-                                       <input type="hidden" id="modal_codigopersonal<?=$iii?>" value="<?=$codigoPre?>">
-                                       <input type="number" id="modal_montopretotal<?=$iii?>" name="modal_montopretotal<?=$iii?>" <?=($banderaHab==0)?"readonly":"";?> class="form-control text-info text-right" onchange="calcularTotalPersonalServicio(1)" onkeyUp="calcularTotalPersonalServicio(1)" value="<?=$montoPreTotal?>" step="0.01">
+                                       <input type="hidden" id="modal_codigopersonal<?=$an?>FFF<?=$iii?>" value="<?=$codigoPre?>">
+                                       <input type="number" id="modal_montopretotal<?=$an?>FFF<?=$iii?>" name="modal_montopretotal<?=$an?>FFF<?=$iii?>" <?=($banderaHab==0)?"readonly":"";?> class="form-control text-info text-right" onchange="calcularTotalPersonalServicio('<?=$an?>',1)" onkeyUp="calcularTotalPersonalServicio('<?=$an?>',1)" value="<?=$montoPreTotal?>" step="0.01">
                                      </td>
                                      <td>
                                        <div class="togglebutton">
                                                <label>
-                                                 <input type="checkbox" <?=($banderaHab==1)?"checked":"";?> onchange="activarInputMontoPersonalServicio('<?=$iii?>')">
+                                                 <input type="checkbox" <?=($banderaHab==1)?"checked":"";?> onchange="activarInputMontoPersonalServicio('<?=$an?>','<?=$iii?>')">
                                                  <span class="toggle"></span>
                                                </label>
                                        </div>
@@ -461,16 +538,23 @@
                                   } ?>
                                   <tr>
                                      <td colspan="4" class="text-center font-weight-bold">Total</td>
-                                     <td id="modal_totalmontopre" class="text-right"><?=$modal_totalmontopre?></td>
-                                     <td id="modal_totalmontopretotal" class="text-right font-weight-bold"><?=$modal_totalmontopretotal?></td>
-                                     <!--<td id="modal_totalmontopreext" class="text-right"><?=$modal_totalmontopreext?></td>
-                                     <td id="modal_totalmontopretotalext" class="text-right font-weight-bold"><?=$modal_totalmontopretotalext?></td>-->
+                                     <td id="modal_totalmontopre<?=$an?>" class="text-right"><?=$modal_totalmontopre?></td>
+                                     <td id="modal_totalmontopretotal<?=$an?>" class="text-right font-weight-bold"><?=$modal_totalmontopretotal?></td>
+                                     
                                      <td></td>
                                    </tr>
                               </tbody>
                            </table>
-                           <input type="hidden" id="modal_numeropersonal" value="<?=$iii?>">
-                           <input type="hidden" id="modal_cantidadpersonal" value="<?=$sumaCantidadPre?>">
+                           <input type="hidden" id="modal_numeropersonal<?=$an?>" value="<?=$iii?>">
+                           <input type="hidden" id="modal_cantidadpersonal<?=$an?>" value="<?=$sumaCantidadPre?>">
+                      </div>
+                       <!--FIN DE PERSONAL-->
+                          </div>
+                        <?php
+                            }
+                        ?>  
+
+                         </div>
                       </div>
                       <hr>
                        

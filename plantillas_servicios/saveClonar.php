@@ -35,10 +35,11 @@ $plantillaAntigua=obtenerPlantillaServicioDatos($plantilla_costo);
     $utilidadMin=$row['utilidad_minima'];
     $cantidadAuditorias=$row['cantidad_auditorias'];
     $ingresoPresupuestado=$row['ingreso_presupuestado'];
+    $anios=$row['anios'];
 
    $dbh = new Conexion();
-  $sqlInsert="INSERT INTO plantillas_servicios (codigo, nombre, abreviatura, cod_unidadorganizacional, cod_area,cod_cliente,cod_tipoauditoria,cantidad_personal,productos,norma,cod_servicio,fecha_auditoria,cod_personal_registro,fecha_registro,fecha_aprobacion,dias_auditoria,cod_estadoplantilla,cod_estadoreferencial,utilidad_minima,cantidad_auditorias,ingreso_presupuestado) 
-  VALUES ('".$codPlanCosto."','".$nombre."','".$abrev."', '".$unidad."', '".$area."','".$codCliente."','".$codTipoAu."','".$cantidadPersonal."','".$productos."','".$norma."','".$codServicio."','".$fechaAu."','".$codPersonalR."','".$fechaReg."','".$fechaAp."','".$diasAu."','".$codEstadoPlan."','".$codEstadoRef."','".$utilidadMin."','".$cantidadAuditorias."','".$ingresoPresupuestado."')";
+  $sqlInsert="INSERT INTO plantillas_servicios (codigo, nombre, abreviatura, cod_unidadorganizacional, cod_area,cod_cliente,cod_tipoauditoria,cantidad_personal,productos,norma,cod_servicio,fecha_auditoria,cod_personal_registro,fecha_registro,fecha_aprobacion,dias_auditoria,cod_estadoplantilla,cod_estadoreferencial,utilidad_minima,cantidad_auditorias,ingreso_presupuestado,anios) 
+  VALUES ('".$codPlanCosto."','".$nombre."','".$abrev."', '".$unidad."', '".$area."','".$codCliente."','".$codTipoAu."','".$cantidadPersonal."','".$productos."','".$norma."','".$codServicio."','".$fechaAu."','".$codPersonalR."','".$fechaReg."','".$fechaAp."','".$diasAu."','".$codEstadoPlan."','".$codEstadoRef."','".$utilidadMin."','".$cantidadAuditorias."','".$ingresoPresupuestado."','".$anios."')";
   $stmtInsert = $dbh->prepare($sqlInsert);
   $flagSuccess=$stmtInsert->execute();
 
@@ -81,24 +82,24 @@ $plantillaAntigua=obtenerPlantillaServicioDatos($plantilla_costo);
     //DETALLES PLANTILLA SERVICIOS
 
       $dbhID = new Conexion();
-      $sqlID="INSERT INTO plantillas_servicios_detalle (cod_plantillatcp,cod_plantillacosto, cod_partidapresupuestaria, cod_cuenta,glosa,monto_unitario,cantidad,monto_total,cod_estadoreferencial,habilitado,editado_alumno) 
-        SELECT $codPlanCosto as cod_plantillatcp,cod_plantillacosto,cod_partidapresupuestaria,cod_cuenta,glosa,monto_unitario,cantidad,monto_total,cod_estadoreferencial,habilitado,editado_alumno FROM plantillas_servicios_detalle where cod_plantillatcp=$plantilla_costo";
+      $sqlID="INSERT INTO plantillas_servicios_detalle (cod_plantillatcp,cod_plantillacosto, cod_partidapresupuestaria, cod_cuenta,glosa,monto_unitario,cantidad,monto_total,cod_estadoreferencial,habilitado,editado_alumno,tipo_registro,editado_alumnoext,monto_totalext,cod_externolocal) 
+        SELECT $codPlanCosto as cod_plantillatcp,cod_plantillacosto,cod_partidapresupuestaria,cod_cuenta,glosa,monto_unitario,cantidad,monto_total,cod_estadoreferencial,habilitado,editado_alumno,tipo_registro,editado_alumnoext,monto_totalext,cod_externolocal FROM plantillas_servicios_detalle where cod_plantillatcp=$plantilla_costo";
       $stmtID = $dbhID->prepare($sqlID);
       $stmtID->execute();
 
       //AUDITORES PLANTILLA SERVICIOS
 
       $dbhID = new Conexion();
-      $sqlID="INSERT INTO plantillas_servicios_auditores (cod_plantillaservicio,cod_tipoauditor, cantidad, monto,cod_estadoreferencial,dias) 
-        SELECT $codPlanCosto as cod_plantillaservicio,cod_tipoauditor,cantidad,monto,cod_estadoreferencial,dias FROM plantillas_servicios_auditores where cod_plantillaservicio=$plantilla_costo";
+      $sqlID="INSERT INTO plantillas_servicios_auditores (cod_plantillaservicio,cod_tipoauditor, cantidad, monto,cod_estadoreferencial,dias,monto_externo,cod_externolocal) 
+        SELECT $codPlanCosto as cod_plantillaservicio,cod_tipoauditor,cantidad,monto,cod_estadoreferencial,dias,monto_externo,cod_externolocal FROM plantillas_servicios_auditores where cod_plantillaservicio=$plantilla_costo";
       $stmtID = $dbhID->prepare($sqlID);
       $stmtID->execute();
 
       //SERVICIOS PLANTILLA SERVICIOS
 
       $dbhID = new Conexion();
-      $sqlID="INSERT INTO plantillas_servicios_tiposervicio (cod_plantillaservicio,cod_claservicio,observaciones, cantidad, monto,cod_estadoreferencial) 
-        SELECT $codPlanCosto as cod_plantillaservicio,cod_claservicio,observaciones,cantidad,monto,cod_estadoreferencial FROM plantillas_servicios_tiposervicio where cod_plantillaservicio=$plantilla_costo";
+      $sqlID="INSERT INTO plantillas_servicios_tiposervicio (cod_plantillaservicio,cod_claservicio,observaciones, cantidad, monto,cod_estadoreferencial,unidad) 
+        SELECT $codPlanCosto as cod_plantillaservicio,cod_claservicio,observaciones,cantidad,monto,cod_estadoreferencial,unidad FROM plantillas_servicios_tiposervicio where cod_plantillaservicio=$plantilla_costo";
       $stmtID = $dbhID->prepare($sqlID);
       $stmtID->execute();   
 

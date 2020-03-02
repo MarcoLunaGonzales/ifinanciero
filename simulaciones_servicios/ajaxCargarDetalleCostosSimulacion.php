@@ -15,6 +15,8 @@ $stmtX->execute();
 if(isset($_GET["simulacion"])){
  $codigo=$_GET["simulacion"];
  $codPlan=$_GET["plantilla"];
+
+ //$cod_anio=$_GET["anio"];
  /* DATOS PARA PRECIO EN LUGAR DE CANTIDAD AUDITORIAS*/
  $precioLocalX=obtenerPrecioServiciosSimulacion($codigo);
  $nAuditorias=obtenerCantidadAuditoriasPlantilla($codPlan); 
@@ -41,6 +43,7 @@ if($tipoCosto==1){
 $query2=$query1." and pgc.cod_tiposervicio=1 GROUP BY pgd.cod_plantillagruposervicio order by pgd.cod_plantillagruposervicio";
 $bgClase="bg-info";
 }else{
+  $cod_anio=$_GET["anio"];
   $query2=$query1." and pgc.cod_tiposervicio=2 GROUP BY pgd.cod_plantillagruposervicio order by pgd.cod_plantillagruposervicio";
   $bgClase="bg-success";
 }
@@ -151,8 +154,13 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                       '<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>';
                 $html.='</tr>';
             }
-          }else{ 
+          }else{
+          if(!isset($_GET['anio'])){
             $query_cuentas=obtenerDetalleSimulacionCostosPartidaServicio($codigo,$codPartida);
+          }else{
+           $query_cuentas=obtenerDetalleSimulacionCostosPartidaServicioPeriodo($codigo,$codPartida,$cod_anio); 
+          } 
+            
             $montoSimulacion=0;
             while ($row_cuentas = $query_cuentas->fetch(PDO::FETCH_ASSOC)) {
               $montoCal=$row_cuentas['monto_total'];
@@ -168,7 +176,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $montoTotales2+=$row_cuentas['monto_total'];
                 $montoTotales2Alumno+=$montoCal/$cantidadDetalle;
                 $html.='<tr class="'.$bgFila.'">'.
-                      '<td class="font-weight-bold text-left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$row_cuentas['nombre'].' / '.$row_cuentas['glosa'].'</td>'.
+                      '<td class="font-weight-bold text-left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$row_cuentas['nombre'].' / '.$row_cuentas['glosa'].' (año '.$cod_anio.')</td>'.
                       '<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>';
                       if($tipoCosto!=1){
                         $html.='<td class="text-right text-muted">'.number_format($montoCal/$cantidadDetalle, 2, '.', ',').'</td><td class="text-right text-muted">'.$cantidadDetalle.'</td>';

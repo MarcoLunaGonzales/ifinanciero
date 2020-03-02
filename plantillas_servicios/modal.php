@@ -353,8 +353,8 @@
                        <label class="col-sm-2 col-form-label">Tipo</label>
                        <div class="col-sm-10">
                         <div class="form-group">
-                             <select class="selectpicker form-control" name="tipo_dato" id="tipo_dato" data-style="btn btn-info" onchange="limpiarMontos()">
-                               <option value="1">Mensual</option>
+                             <select class="selectpicker form-control" name="tipo_dato" id="tipo_dato" data-style="btn btn-info" onchange="limpiarMontosServicios()">
+                               <option value="1">Autom&aacute;tico</option>
                                <option value="2">Manual</option> 
                              </select>
                          </div>
@@ -369,10 +369,10 @@
                          </div> 
                         </div>
                         <div class="col-sm-4">
-                         <div class="form-group">
-                          <label class="bmd-label-static">Monto x Auditoria</label>
-                          <input type="number" class="form-control" name="monto_f_ibnorca" id="monto_f_ibnorca" value="0" step="0.01" readonly>
-                         </div>
+                         <!--<div class="form-group">
+                          <label class="bmd-label-static">Monto x Auditoria</label>-->
+                          <input type="hidden" class="form-control" name="monto_f_ibnorca" id="monto_f_ibnorca" value="0" step="0.01" readonly>
+                         <!--</div>-->
                         </div>
                         <div class="col-sm-4 d-none" id="columna_alumno">
                          <div class="form-group">
@@ -391,12 +391,12 @@
                          </div> 
                         </div>
                         <div class="col-sm-4">
-                          <a href="#" class="btn btn-warning btn-sm btn-round" onclick="mostrarInputMonto('monto_ibnorca2')"> Editar</a>
+                          <!--<a href="#" class="btn btn-warning btn-sm btn-round" onclick="mostrarInputMonto('monto_ibnorca2')"> Editar</a>
                           
                          <div class="form-group d-none" id="monto_ibnorca2">
-                          <label class="bmd-label-static">Monto x Auditoria (Referencial)</label>
-                          <input type="number" class="form-control" name="monto_f_ibnorca_edit" id="monto_f_ibnorca_edit" value="0" step="0.01">
-                         </div>
+                          <label class="bmd-label-static">Monto x Auditoria (Referencial)</label>-->
+                          <input type="hidden" class="form-control" name="monto_f_ibnorca_edit" id="monto_f_ibnorca_edit" value="0" step="0.01">
+                         <!--</div>-->
                         </div>
                         <div class="col-sm-4 d-none" id="columna_edit_alumno">
                           <a href="#" class="btn btn-warning btn-sm btn-round" onclick="mostrarInputMonto('monto_ibnorca3')"> Editar</a> 

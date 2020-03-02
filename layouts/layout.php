@@ -1,18 +1,12 @@
 <?php 
 //header('Content-Type: text/html; charset=iso-8859-1');
 	include("head.php");
-
 	//include("menuService.php");
-
-
   include("librerias.php");// se debe cambiar a la parte posterior
-
- 
   // include("functionsGeneral.php");
 ?>    
     <div class="main-panel">
       <div class="content">
-
       <?php 
           
           if(!isset($_GET['opcion'])){
@@ -20,20 +14,21 @@
             include("cabecera.php");
             include("home.php");
           }else{
-            include("layouts/menu.php");
-            include("cabecera.php");
-            require_once('routing.php');
+            if(isset($_GET['q'])){
+              include("cabecera.php");
+              require_once('routing.php');
+            }else{
+              include("layouts/menu.php");
+              include("cabecera.php");
+              require_once('routing.php');
+            }           
           }       
       ?>
 
       </div>      
     </div>
-
 <?php 
-
   //poner aqui librerias
-
-
 if(!isset($_GET['opcion'])){
   ?><script type="text/javascript">
            $(document).ready(function(e) { 
@@ -41,5 +36,14 @@ if(!isset($_GET['opcion'])){
                $("#minimizeSidebar").addClass("d-none");
              });
     </script><?php
+}else{
+  if(isset($_GET['q'])){
+    ?><script type="text/javascript">
+           $(document).ready(function(e) { 
+               $("#minimizeSidebar").click()
+               $("#minimizeSidebar").addClass("d-none");
+             });
+    </script><?php
+  }
 }
 ?>

@@ -93,7 +93,10 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
  }else{
  $numeroNot='<span class="notification">'.$contMonedas.'</span>'; 
  }
+ 
+            if(!isset($_GET['q'])){
  ?>
+
               <li class="nav-item dropdown">
                 <a class="nav-link" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   <i class="material-icons">notifications</i>
@@ -118,6 +121,8 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                   <a class="dropdown-item" href="logout.php">Salir</a>
                 </div>
               </li>
+              <?php
+               } ?>
             </ul>
           </div>
         </div>
