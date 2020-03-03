@@ -22,7 +22,8 @@
                  $utilidadExterno=$ingresoExterno-($totalVariable[3]*$alumnosExternoX)-$costoOperExterno;
 
                  // impuesto iva
-                 $costoTotalLocal=$totalFijo[2]+($totalVariable[2]*$alumnosX)+$costoVariablePersonal;
+                 //$costoTotalLocal=$totalFijo[2]+($totalVariable[2]*$alumnosX)+$costoVariablePersonal;
+                 $costoTotalLocal=$totalFijoPlan+($totalVariable[2]*$alumnosX)+$costoVariablePersonal;
                  $costoTotalExterno=$totalFijo[3]+($totalVariable[3]*$alumnosExternoX);
 
                  $impuestoIvaLocal=$costoTotalLocal*($iva/100);

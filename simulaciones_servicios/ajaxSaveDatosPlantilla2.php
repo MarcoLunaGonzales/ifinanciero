@@ -36,6 +36,7 @@ if($fijo!=""){
 	$productosLista=explode(",", $productos);
         $codTC=obtenerTipoCliente($cliente);
         $nacional=obtenerTipoNacionalCliente($cliente);
+        $suma=0;
         for ($i=0; $i < count($productosLista); $i++) {
           $aux=obtenerCostoTipoClienteSello(($i+1),$codTC,$nacional);
            if($aux==0){
