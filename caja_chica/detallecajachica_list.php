@@ -28,6 +28,7 @@ $numero_cc=$resultMCC['numero'];
 
 
 $stmt = $dbh->prepare("SELECT codigo,cod_cuenta,fecha,cod_tipodoccajachica,
+  (select pc.nombre from plan_cuentas pc where pc.codigo=cod_cuenta) as nombre_cuenta,
   (select td.nombre from tipos_documentocajachica td where td.codigo=cod_tipodoccajachica) as nombre_tipodoccajachica,nro_documento,(select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=cod_personal)as cod_personal,monto,monto_rendicion,observaciones,cod_estado,(select c.nombre from af_proveedores c where c.codigo=cod_proveedores)as cod_proveedores
 from caja_chicadetalle
 where cod_cajachica=$cod_cajachica and cod_estadoreferencial=1 ORDER BY codigo desc");
@@ -36,6 +37,7 @@ $stmt->execute();
 //bindColumn
 $stmt->bindColumn('codigo', $codigo_detalle_Cajachica);
 $stmt->bindColumn('cod_cuenta', $cod_cuenta);
+$stmt->bindColumn('nombre_cuenta', $nombre_cuenta);
 $stmt->bindColumn('fecha', $fecha);
 $stmt->bindColumn('cod_tipodoccajachica', $cod_tipodoccajachica);
 $stmt->bindColumn('nombre_tipodoccajachica', $nombre_tipodoccajachica);
@@ -129,7 +131,7 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                          ?>
                           <tr>
                             <td><?=$index;?></td>                            
-                              <td><?=$cod_cuenta;?></td>
+                              <td><?=$nombre_cuenta;?></td>
                               <td><?=$fecha;?></td>
                               <td><?=$nombre_tipodoccajachica;?></td>        
                               <td><?=$nro_documento;?></td>        

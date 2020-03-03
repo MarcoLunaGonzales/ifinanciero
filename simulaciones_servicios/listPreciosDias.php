@@ -42,12 +42,12 @@ if(isset($_GET["codigo"])){
                                </div>
                              </div>
                           <label class="col-sm-2 col-form-label">Utilidad Minima:</label>
-                           <div class="col-sm-2"> 
+                           <div class="col-sm-1"> 
                              <div class="form-group">
                                   <input type="text" class="form-control" value="<?=$utilidad?>" id="utilidad_minima" name="utilidad_minima">
                              </div>    
                           </div>
-                          <label class="col-sm-2 col-form-label">Años:</label>
+                          <label class="col-sm-1 col-form-label">Años:</label>
                            <div class="col-sm-2"> 
                              <div class="form-group">
                                   <input type="text" class="form-control" value="<?=$anios?>" id="anios" name="anios">
