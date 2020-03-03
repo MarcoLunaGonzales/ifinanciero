@@ -29,9 +29,10 @@ if(isset($_GET["codigo"])){
  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
    $dias=$row['dias_auditoria'];
    $utilidad=$row['utilidad_minima'];
+   $anios=$row['anios'];
  }
-  ?>                           <label class="col-sm-2 col-form-label">Dias Auditoria:</label>
-                           <div class="col-sm-3"> 
+  ?>                      <label class="col-sm-2 col-form-label">Dias Auditoria:</label>
+                           <div class="col-sm-1"> 
                              <div class="form-group">
                                 <div class="form-check">
                                   <div class="form-group">
@@ -40,10 +41,16 @@ if(isset($_GET["codigo"])){
                                   </div>
                                </div>
                              </div>
-                              <label class="col-sm-2 col-form-label">Utilidad Minima:</label>
-                           <div class="col-sm-2"> 
+                          <label class="col-sm-2 col-form-label">Utilidad Minima:</label>
+                           <div class="col-sm-1"> 
                              <div class="form-group">
                                   <input type="text" class="form-control" value="<?=$utilidad?>" id="utilidad_minima" name="utilidad_minima">
+                             </div>    
+                          </div>
+                          <label class="col-sm-1 col-form-label">Años:</label>
+                           <div class="col-sm-2"> 
+                             <div class="form-group">
+                                  <input type="text" class="form-control" value="<?=$anios?>" id="anios" name="anios">
                              </div>    
                           </div> 
 <?php   

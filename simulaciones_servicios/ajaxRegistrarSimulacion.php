@@ -32,7 +32,8 @@ if(isset($_GET['nombre'])){
   $norma=$_GET['norma'];
   $id_servicio=$_GET['id_servicio'];
   $cod_region=$_GET['local_extranjero'];
-  $anios=obtenerAnioPlantillaServicio($plantilla_servicio);
+  $anios=$_GET['anios'];
+  //$anios=obtenerAnioPlantillaServicio($plantilla_servicio);
   $fecha= date("Y-m-d");
 
   $codSimServ=obtenerCodigoSimServicio();
