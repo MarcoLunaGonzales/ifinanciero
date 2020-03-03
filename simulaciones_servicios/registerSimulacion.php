@@ -242,6 +242,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                  $totalFijo=obtenerTotalesPlantillaServicio($codigoPX,1,$nAuditorias); //tipo de costo 1:fijo,2:variable desde la plantilla
                  $porcentPrecios=($precioLocalX*100)/$precioRegistrado;
                  $totalFijoPlan=$totalFijo[0]*($porcentPrecios/100);
+                 $totalFijoPlan=$totalFijoPlan*$anioGeneral;
                  //total variable desde simulacion cuentas
                   $totalVariable=obtenerTotalesSimulacionServicio($codigo);
                   //
@@ -376,9 +377,9 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                <tr>
                 <?php 
                if($codAreaX==39){
-                  $rospanAnio="6";
+                  $rospanAnio="4";
                 }else{
-                  $rospanAnio="5";
+                  $rospanAnio="4";
                 }
                 ?>
                  <td rowspan="<?=$rospanAnio?>" width="6%" class="bg-table-primary text-white font-weight-bold">Año <?=$an?></td>    <!--ROWSPAN = CANTIDAD DE SERVICIOS + 2 -->
@@ -414,11 +415,20 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                   $costoTotalAuditoriaUsd=$costoTotalLocal/$usd;
                   $costoTotalAuditoria=$costoTotalLocal;
                 }*/
-                $costoTotalAuditoriaUsd=$costoTotalLocal/$usd;
-                $costoTotalAuditoria=$costoTotalLocal;
+                $precioLocalXPeriodo=obtenerPrecioServiciosSimulacionPeriodo($codigo,$an);
+                $costoVariablePersonalPeriodo=obtenerCostosPersonalSimulacionEditadoPeriodo($codigo,$an);
+                $totalVariablePeriodo=obtenerTotalesSimulacionServicioPeriodo($codigo,$an);
+                
+                if($anioGeneral==0){
+                  $anioGeneral=1;
+                } 
+                $costoTotalLocalPeriodo=($totalFijoPlan/$anioGeneral)+($totalVariablePeriodo[2])+$costoVariablePersonalPeriodo;
 
-                $precioAuditoriaUsd=$precioLocalX/$usd;
-                $precioAuditoria=$precioLocalX;
+                $costoTotalAuditoriaUsd=$costoTotalLocalPeriodo/$usd;
+                $costoTotalAuditoria=$costoTotalLocalPeriodo;
+
+                $precioAuditoriaUsd=$precioLocalXPeriodo/$usd;
+                $precioAuditoria=$precioLocalXPeriodo;
 
                 $utilidadAuditoriaUsd=$precioAuditoriaUsd-$costoTotalAuditoriaUsd;
                 $utilidadAuditoria=$precioAuditoria-$costoTotalAuditoria;
@@ -487,7 +497,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                   $utilidadNetaAuditoria=$utilidadAuditoria-$impuestosAuditoria;
 
                   //suma de totales
-                $totalIngresoUsd+=$precioAuditoriaUsd;
+               /* $totalIngresoUsd+=$precioAuditoriaUsd;
                 $totalIngreso+=$precioAuditoria;
                 $totalCostoTotalUsd+=$costoTotalAuditoriaUsd;
                 $totalCostoTotal+=$costoTotalAuditoria;
@@ -496,7 +506,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                 $totalImpuestosUsd+=$impuestosAuditoriaUsd;
                 $totalImpuestos+=$impuestosAuditoria;
                 $totalUtilidadNetaUsd+=$utilidadNetaAuditoriaUsd;
-                $totalUtilidadNeta+=$utilidadNetaAuditoria;
+                $totalUtilidadNeta+=$utilidadNetaAuditoria;*/
                  ?>
                 <!-- <tr>
                  <td class="small text-left"><?=$nombreServicioCal?></td>
@@ -517,7 +527,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                  }
                 }
                 ?>
-               <tr>
+               <!--<tr>
                  <td class="small text-left">Otros</td>
                  <td class="small text-right">-</td>
                  <td class="small text-right">-</td>
@@ -529,7 +539,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                  <td class="small text-right">-</td>
                  <td class="small text-right">-</td>
                  <td class="small text-right">-</td>
-               </tr>
+               </tr>-->
                <tr class="bg-plomo">
                  <td class="font-weight-bold small text-left">TOTAL</td>
                  <td class="font-weight-bold small text-right <?=$estiloUtilidadIbnorca?>"><?=number_format($totalIngresoUsd, 2, ',', '.')?></td>

@@ -1,4 +1,5 @@
 <?php
+set_time_limit (600);
 session_start();
 require_once '../conexion.php';
 require_once '../styles.php';
@@ -131,7 +132,7 @@ if(isset($_GET['nombre'])){
    } 
   }
   
-  for ($i=1; $i<=$anios; $i++) {  
+  for ($iiii=1; $iiii<=$anios; $iiii++) {  
   //volcado de datos a la tabla simulaciones_servicios_auditores
      $auditoresPlan=obtenerDetallePlantillaServicioAuditores($plantilla_servicio);
      $cantidadAuditoriaPlan=obtenerDetallePlantillaServicioAuditoresCantidad($plantilla_servicio);
@@ -145,12 +146,13 @@ if(isset($_GET['nombre'])){
       $diasS=$rowAudPlan['dias'];
       $dbhAU = new Conexion();
       $sqlAU="INSERT INTO simulaciones_servicios_auditores (cod_simulacionservicio,cod_tipoauditor, cantidad, monto,cod_estadoreferencial,cantidad_editado,dias,monto_externo,cod_externolocal,cod_anio) 
-      VALUES ('".$codSimServ."','".$codTIPA."','".$cantidadS."','".$montoS."',1,'".$cantidadS."','".$diasS."','".$montoSE."','".$codBolLocSE."','".$i."')";
+      VALUES ('".$codSimServ."','".$codTIPA."','".$cantidadS."','".$montoS."',1,'".$cantidadS."','".$diasS."','".$montoSE."','".$codBolLocSE."','".$iiii."')";
       $stmtAU = $dbhAU->prepare($sqlAU);
       $stmtAU->execute();
      }
-  } //fin de for anios
-
+  
+    }
+    for ($jjjj=1; $jjjj<=$anios; $jjjj++) { 
      //volcado de datos a la tabla simulaciones_servicios_tiposervicio
      $serviciosPlan=obtenerDetallePlantillaServicioTipoServicio($plantilla_servicio);
      while ($rowServPlan = $serviciosPlan->fetch(PDO::FETCH_ASSOC)) {
@@ -183,11 +185,13 @@ if(isset($_GET['nombre'])){
        $montoS=$suma;        
       }
       $dbhAU = new Conexion();
-      $sqlAU="INSERT INTO simulaciones_servicios_tiposervicio (cod_simulacionservicio,cod_claservicio, observaciones,cantidad, monto,cod_estadoreferencial,cantidad_editado,cod_tipounidad) 
-      VALUES ('".$codSimServ."','".$codCS."','".$obsCS."','".$cantidadS."','".$montoS."',1,'".$cantidadS."','".$codTipoUnidad."')";
+      $sqlAU="INSERT INTO simulaciones_servicios_tiposervicio (cod_simulacionservicio,cod_claservicio, observaciones,cantidad, monto,cod_estadoreferencial,cantidad_editado,cod_tipounidad,cod_anio) 
+      VALUES ('".$codSimServ."','".$codCS."','".$obsCS."','".$cantidadS."','".$montoS."',1,'".$cantidadS."','".$codTipoUnidad."','".$jjjj."')";
       $stmtAU = $dbhAU->prepare($sqlAU);
       $stmtAU->execute();
-     }  
+     }
+
+   } //fin de for anios  
 
   echo $codSimServ;
 }
