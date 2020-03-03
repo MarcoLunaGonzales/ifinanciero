@@ -7,7 +7,7 @@ class Conexion extends PDO {
  private $usuario = 'root';
  private $contrasena = '';
  private $port = '3307';
-<<<<<<< HEAD
+
 */
 
   private $tipo_de_base = 'mysql';

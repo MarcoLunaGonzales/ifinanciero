@@ -5542,7 +5542,7 @@ if(!(ut_i==""||dia==""||dia==0||productos==""||num_prod<1)){
           iniciarCargaAjax();
         },
         success:function(resp){
-          detectarCargaAjax();
+          //detectarCargaAjax();
           //alerts.showSwal('success-message','registerSimulacion.php?cod='+cod_sim);
         }
       });
@@ -5562,23 +5562,26 @@ if(!(ut_i==""||dia==""||dia==0||productos==""||num_prod<1)){
       if($("#modal_montoserv"+anio+"SSS"+i).is("[readonly]")){
         habilitado=0;
       }
-      var parametros = {"codigo":codigo,"monto":monto,"simulacion":cod_sim,"productos":productos,"precio_fijo":precio_fijo,"unidad":unidad,"plantilla":codigo_p,"dia":dia,"utilidad":ut_i,"habilitado":habilitado,"cantidad":cantidad};
+      var parametros = {"codigo":codigo,"monto":monto,"simulacion":cod_sim,"productos":productos,"precio_fijo":precio_fijo,"unidad":unidad,"plantilla":codigo_p,"dia":dia,"utilidad":ut_i,"habilitado":habilitado,"cantidad":cantidad,"anio":anio,"iteracion":i};
       $.ajax({
         type:"GET",
         data:parametros,
         url:"ajaxSaveDatosPlantilla2.php",
         beforeSend: function () { 
-          iniciarCargaAjax();
+          //iniciarCargaAjax();
         },
         success:function(resp){
-          detectarCargaAjax();
-          
+          var respu=resp.split('WWW');
+          if(parseInt(respu[0])==anios&&parseInt(respu[1])==(total-1)){
+            detectarCargaAjax();
+            alerts.showSwal('success-message','registerSimulacion.php?cod='+cod_sim); 
+          }   
         }
       });
   }; 
     
   }
-  alerts.showSwal('success-message','registerSimulacion.php?cod='+cod_sim); 
+  //poner un script aqui
   /* FIN PARA PERSONAL*/
  }else{
     Swal.fire("Informativo!", "Debe llenar todos los campos", "warning");
@@ -6745,10 +6748,10 @@ function listarServiciosSimulacion(anio,cod_area){
     });
 }
 function cambiarTituloPersonalModal(anio){
-  if($("#num_titulopersonal"+anio).length){
+  /*if($("#num_titulopersonal"+anio).length){
      $("#num_titulopersonal"+anio).html("("+($("#modal_numeropersonal"+anio).val()-1)+")");
   }
   if($("#num_tituloservicios"+anio).length){
      $("#num_tituloservicios"+anio).html("("+($("#modal_numeroservicio"+anio).val()-1)+")");
-  }
+  }*/
 }

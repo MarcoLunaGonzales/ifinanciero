@@ -277,7 +277,7 @@ for ($ann=0; $ann <=$anioGeneral ; $ann++) {
                           <div class="tab-pane <?=$active?>" id="link<?=$an?>">
 
                     <!--INICIO DE SERVICIOS-->
-                    <h4 class="font-weight-bold"><center>AÑO <?=$an?> SERVICIOS <b id="num_tituloservicios<?=$an?>"></b></center></h4>
+                    <h4 class="font-weight-bold"><center>AÑO <?=$an?> SERVICIOS</center></h4>
                       <div class="row" id="modal_contenidoservicios<?=$an?>">
                         <table class="table table-bordered table-condensed table-striped table-sm">
                              <thead>
@@ -431,7 +431,7 @@ for ($ann=0; $ann <=$anioGeneral ; $ann++) {
                     <!--FIN DE SERVICIOS-->
 
                    <!--INICION DE PERSONAL-->         
-                      <h4 class="font-weight-bold"><center>AÑO <?=$an?> HONORARIOS PERSONAL <b id="num_titulopersonal<?=$an?>"></b></center></h4>
+                      <h4 class="font-weight-bold"><center>AÑO <?=$an?> HONORARIOS PERSONAL</center></h4>
                       <div class="row">
                         <table class="table table-bordered table-condensed table-striped table-sm">
                              <thead>

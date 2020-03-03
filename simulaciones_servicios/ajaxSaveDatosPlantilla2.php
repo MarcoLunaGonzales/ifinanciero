@@ -22,6 +22,8 @@ $habilitado=$_GET['habilitado'];
 $unidad=$_GET['unidad'];
 $fijo=$_GET['precio_fijo'];
 $productos=$_GET['productos'];
+$anio=$_GET['anio'];
+$iteracion=$_GET['iteracion'];
 
 $sqlUpdatePlantilla="UPDATE simulaciones_servicios SET  utilidad_minima='$ut_i',dias_auditoria='$dia',productos='$productos' where codigo=$codSimulacion";
 $stmtUpdatePlantilla = $dbh->prepare($sqlUpdatePlantilla);
@@ -52,5 +54,5 @@ if($fijo!=""){
 $sqlDetalles="UPDATE simulaciones_servicios_tiposervicio SET cantidad_editado=$cantidad,monto=$monto,habilitado=$habilitado,cod_tipounidad=$unidad where codigo=$codigo";
 $stmtDetalles = $dbh->prepare($sqlDetalles);
 $stmtDetalles->execute();
-echo "OK";
+echo $anio."WWW".$iteracion;
 ?>
