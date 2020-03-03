@@ -2242,11 +2242,12 @@ function guardarSimulacionServicio(){
   var norma=$("#norma").val();
   var local_extranjero=$("#local_extranjero").val();
   var utilidad=$("#utilidad_minima").val();
+  var anios=$("#anios").val();
   var plantilla_servicio=$("#plantilla_servicio").val();
   if(norma==""||producto==""||dias==""||nombre==""||!(plantilla_servicio>0)){
    Swal.fire('Informativo!','Debe llenar los campos!','warning'); 
   }else{
-     var parametros={"id_servicio":idServicio,"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"producto":producto,"norma":norma};
+     var parametros={"id_servicio":idServicio,"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"producto":producto,"norma":norma,"anios":anios};
      $.ajax({
         type: "GET",
         dataType: 'html',

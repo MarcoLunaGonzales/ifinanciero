@@ -406,17 +406,14 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
 
                
 
-               /*if($codAreaX==39){
+               if($codAreaX==39){
                   $codigoAreaServ=108;
                   $costoTotalAuditoriaUsd=0;
                   $costoTotalAuditoria=0;
                 }else{
                   $costoTotalAuditoriaUsd=$costoTotalLocal/$usd;
                   $costoTotalAuditoria=$costoTotalLocal;
-                }*/
-                $costoTotalAuditoriaUsd=$costoTotalLocal/$usd;
-                $costoTotalAuditoria=$costoTotalLocal;
-
+                }
                 $precioAuditoriaUsd=$precioLocalX/$usd;
                 $precioAuditoria=$precioLocalX;
 
@@ -442,7 +439,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                 $totalUtilidadNeta+=$utilidadNetaAuditoria;
                 ?>
                  <tr>
-                 <td class="small text-left">Precio del Servicio</td>
+                 <td class="small text-left">Precio de la Auditor&iacute;a</td>
                  <td class="small text-right"><?=number_format($precioAuditoriaUsd, 2, ',', '.')?></td>
                  <td class="small text-right"><?=number_format($precioAuditoria, 2, ',', '.')?></td>
 
@@ -498,7 +495,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                 $totalUtilidadNetaUsd+=$utilidadNetaAuditoriaUsd;
                 $totalUtilidadNeta+=$utilidadNetaAuditoria;
                  ?>
-                <!-- <tr>
+                 <tr>
                  <td class="small text-left"><?=$nombreServicioCal?></td>
                  <td class="small text-right"><?=number_format($precioAuditoriaUsd, 2, ',', '.')?></td>
                  <td class="small text-right"><?=number_format($precioAuditoria, 2, ',', '.')?></td>
@@ -512,7 +509,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                  <td class="small text-right"><?=number_format($impuestosAuditoria, 2, ',', '.')?></td>
                  <td class="small text-right"><?=number_format($utilidadNetaAuditoriaUsd, 2, ',', '.')?></td>
                  <td class="small text-right"><?=number_format($utilidadNetaAuditoria, 2, ',', '.')?></td>
-               </tr>-->
+               </tr>
                  <?php
                  }
                 }
@@ -552,7 +549,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
           </div>
           <br>
 				  <div class="row"> 	
-					<!--<div class="col-sm-3">
+					<div class="col-sm-3">
             <p class="font-weight-bold float-right">DATOS ADICIONALES PARA EL CALCULO</p>
             <table class="table table-bordered table-condensed">
               <tbody>
@@ -576,18 +573,30 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                   <td  style="font-size:9px !important;"></td>
                   <td class="bg-table-primary text-white">CANTIDAD</td>
                 </tr>
-              
+                
+                <!--<tr class="">
+                  <td class="text-left small bg-table-primary text-white">CANTIDAD DE PERSONAL x DIAS AUD.</td>
+                  <td class="text-right font-weight-bold"><?=$alumnosX?></td>
+                </tr>-->
                 <tr class="bg-warning text-dark">
                   <td class="text-left small">DIAS AUDITORIA</td>
                   <td class="text-right font-weight-bold"><?=$diasSimulacion?></td>
                 </tr>
+                <!--<tr class="bg-warning text-dark">
+                  <td class="text-left small">CANTIDAD DE PERSONAL MINIMA</td>
+                  <td class="text-right font-weight-bold"><?=$alumnosRecoX?></td>
+                </tr>-->
                 <?php
-               // $puntoEquilibrio=($totalFijoPlan/($precioLocalX-$totalVariable[2]));
+                $puntoEquilibrio=($totalFijoPlan/($precioLocalX-$totalVariable[2]));
                  ?>
+                <!--<tr class="bg-danger text-white">
+                  <td class="text-left small">PUNTO DE EQUILIBRIO FINANCIERO</td>
+                  <td class="text-right font-weight-bold"><?=number_format($puntoEquilibrio, 2, '.', ',')?></td>
+                </tr>-->
               </tbody>
             </table>
-					</div>-->
-					<div class="col-sm-6">
+					</div>
+					<div class="col-sm-4">
             <p class="font-weight-bold float-left">&nbsp;</p>
             <table class="table table-bordered table-condensed">
               <tbody>
@@ -637,7 +646,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
               </tbody>
             </table>
            </div>
-          <div class="col-sm-6 bg-blanco2">
+          <div class="col-sm-5 bg-blanco2">
             <p class="font-weight-bold float-left">DATOS DEL CALCULO</p>
             <img src="../assets/img/f_abajo2.gif" alt="" height="30px" class="float-right">
 						<table class="table table-bordered table-condensed">
