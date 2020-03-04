@@ -25,7 +25,12 @@ $productos=$_GET['productos'];
 $anio=$_GET['anio'];
 $iteracion=$_GET['iteracion'];
 
-$sqlUpdatePlantilla="UPDATE simulaciones_servicios SET  utilidad_minima='$ut_i',dias_auditoria='$dia',productos='$productos' where codigo=$codSimulacion";
+if($_GET['tcs']==0){
+  $sqlUpdatePlantilla="UPDATE simulaciones_servicios SET  utilidad_minima='$ut_i',dias_auditoria='$dia',productos='$productos' where codigo=$codSimulacion";
+}else{
+  $sqlUpdatePlantilla="UPDATE simulaciones_servicios SET  utilidad_minima='$ut_i',dias_auditoria='$dia',sitios='$productos' where codigo=$codSimulacion";
+}
+
 $stmtUpdatePlantilla = $dbh->prepare($sqlUpdatePlantilla);
 $stmtUpdatePlantilla->execute();
 

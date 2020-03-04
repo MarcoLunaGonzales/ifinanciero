@@ -93,9 +93,43 @@ $dbh = new Conexion();
                               </div>
                         </div>
                       </div>
-                      <div class="row" id="lista_precios">
+                      <div class="" id="lista_precios">
                       </div>
-
+                      <div id="productos_div" class="d-none">
+                      <div class="row">
+                       <label class="col-sm-2 col-form-label">Productos (producto1,producto2)</label>
+                       <div class="col-sm-7">
+                        <div class="form-group" style="border-bottom: 1px solid #CACFD2">
+                          <input type="text" value="" class="form-control tagsinput" name="productos" id="productos" data-role="tagsinput" required data-color="warning">
+                        </div>
+                      </div>
+                    </div>
+                      </div>
+                      <div id="sitios_div" class="d-none">
+                      <div class="row">
+                       <label class="col-sm-2 col-form-label">Sitios (sitio1,sitio2)</label>
+                       <div class="col-sm-7">
+                        <div class="form-group" style="border-bottom: 1px solid #CACFD2">
+                          <input type="text" value="" class="form-control tagsinput" name="sitios" id="sitios" data-role="tagsinput" required data-color="success">
+                        </div>
+                        </div>
+                     </div> 
+                    </div>
+                      <div class="row">
+                     <label class="col-sm-2 col-form-label">AFNOR</label>
+                           <div class="col-sm-7">
+                        <div class="form-group">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                      <input class="form-check-input" type="checkbox" id="afnor" name="afnor[]" value="1">
+                                      <span class="form-check-sign">
+                                        <span class="check"></span>
+                                      </span>
+                                    </label>
+                                  </div>
+                                </div>  
+                             </div>     
+                        </div>
                       <div class="row">
                        <label class="col-sm-2 col-form-label">Cliente</label>
                        <div class="col-sm-7">
@@ -125,14 +159,7 @@ $dbh = new Conexion();
                        </div>
                       </div><!--row-->
 
-                      <div class="row">
-                       <label class="col-sm-2 col-form-label">Productos (producto1,producto2)</label>
-                       <div class="col-sm-7">
-                        <div class="form-group" style="border-bottom: 1px solid #CACFD2">
-                          <input type="text" value="" class="form-control tagsinput" name="productos" id="productos" data-role="tagsinput" required data-color="primary">
-                        </div>
-                        </div>
-                      </div>
+                      
                       <!--<div class="row">
                        <label class="col-sm-2 col-form-label">Norma</label>
                        <div class="col-sm-7">

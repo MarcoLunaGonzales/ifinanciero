@@ -30,6 +30,8 @@ if(isset($_GET['nombre'])){
   $utilidad=$_GET['utilidad'];
   $cliente=$_GET['cliente'];
   $productos=$_GET['producto'];
+  $sitios=$_GET['sitio'];
+  $afnor=$_GET['afnor'];
   $norma=$_GET['norma'];
   $id_servicio=$_GET['id_servicio'];
   $cod_region=$_GET['local_extranjero'];
@@ -39,11 +41,10 @@ if(isset($_GET['nombre'])){
 
   $codSimServ=obtenerCodigoSimServicio();
   $dbh = new Conexion();
-  $sqlInsert="INSERT INTO simulaciones_servicios (codigo, nombre, fecha, cod_plantillaservicio, cod_responsable,dias_auditoria,utilidad_minima,cod_cliente,productos,norma,idServicio,anios) 
-  VALUES ('".$codSimServ."','".$nombre."','".$fecha."', '".$plantilla_servicio."', '".$globalUser."','".$dias."','".$utilidad."','".$cliente."','".$productos."','".$norma."','".$id_servicio."','".$anios."')";
+  $sqlInsert="INSERT INTO simulaciones_servicios (codigo, nombre, fecha, cod_plantillaservicio, cod_responsable,dias_auditoria,utilidad_minima,cod_cliente,productos,norma,idServicio,anios,porcentaje_fijo,sitios,afnor,porcentaje_afnor) 
+  VALUES ('".$codSimServ."','".$nombre."','".$fecha."', '".$plantilla_servicio."', '".$globalUser."','".$dias."','".$utilidad."','".$cliente."','".$productos."','".$norma."','".$id_servicio."','".$anios."','".obtenerValorConfiguracion(32)."','".$sitios."','".$afnor."','".obtenerValorConfiguracion(33)."')";
   $stmtInsert = $dbh->prepare($sqlInsert);
   $stmtInsert->execute();
-
   $dbhD = new Conexion();
   $sqlD="DELETE FROM simulaciones_serviciodetalle where cod_simulacionservicio=$codSimServ";
   $stmtD = $dbhD->prepare($sqlD);

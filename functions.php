@@ -2448,6 +2448,19 @@ function obtenerPrecioServiciosSimulacion($codigo){
   }
   return $num;
 }
+function obtenerNombreClienteSimulacion($codigo){
+  $dbh = new Conexion();
+  $sql="";
+  $sql="SELECT c.nombre from simulaciones_servicios s join clientes c on s.cod_cliente=c.codigo where s.codigo=$codigo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute(); 
+   $valor="";
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
+  {
+    $valor=$row['nombre'];
+  }
+  return $valor;
+}
 function obtenerPrecioServiciosSimulacionPeriodo($codigo,$anio){
   $dbh = new Conexion();
   $sql="";

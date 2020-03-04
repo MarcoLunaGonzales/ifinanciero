@@ -20,7 +20,7 @@ $globalArea=$_SESSION["globalArea"];
 $codAreaX=$_GET['cod_area'];
 $codigoSimulacionSuper=$_GET['cod_sim'];
 $anio=$_GET['anio'];
-
+$usd=$_GET['usd'];
 ?>
 
                        <table class="table table-bordered table-condensed table-striped table-sm">
@@ -30,8 +30,10 @@ $anio=$_GET['anio'];
                                     <td width="30%">Descripci&oacute;n</td>
                                     <td>Cantidad</td>
                                     <td width="17%">Unidad</td>
-                                    <td>Monto</td>
-                                    <td>Total</td>
+                                    <td>Monto BOB</td>
+                                    <td>Total BOB</td>
+                                    <td>Monto USD</td>
+                                    <td>Total USD</td>
                                     <td class="small">Habilitar/Deshabilitar</td>
                                   </tr>
                               </thead>
@@ -86,9 +88,15 @@ $anio=$_GET['anio'];
                                      <td class="text-right">
                                        <input type="number" id="modal_montoservtotal<?=$anio?>SSS0" name="modal_montoservtotal<?=$anio?>SSS0" class="form-control text-primary text-right" onchange="calcularTotalFilaServicioNuevo(<?=$anio?>,1)" onkeyUp="calcularTotalFilaServicioNuevo(<?=$anio?>,1)" value="0" step="0.01">
                                      </td>
+                                     <td class="text-right">
+                                       <input type="number" id="modal_montoservUSD<?=$anio?>SSS0" name="modal_montoservUSD<?=$anio?>SSS0" class="form-control text-primary text-right" onchange="calcularTotalFilaServicioNuevo(<?=$anio?>,4)" onkeyUp="calcularTotalFilaServicioNuevo(<?=$anio?>,4)" value="0" step="0.01">
+                                    </td>
+                                     <td class="text-right">
+                                       <input type="number" id="modal_montoservtotalUSD<?=$anio?>SSS0" name="modal_montoservtotalUSD<?=$anio?>SSS0" class="form-control text-primary text-right" onchange="calcularTotalFilaServicioNuevo(<?=$anio?>,3)" onkeyUp="calcularTotalFilaServicioNuevo(<?=$anio?>,3)" value="0" step="0.01">
+                                     </td>
                                   <td>
                                     <div class="btn-group">
-                                       <a href="#" class="btn btn-primary btn-sm" id="boton_modalnuevoservicio<?=$anio?>" onclick="agregarNuevoServicioSimulacion(<?=$anio?>,<?=$codigoSimulacionSuper?>); return false;">
+                                       <a href="#" class="btn btn-primary btn-sm" id="boton_modalnuevoservicio<?=$anio?>" onclick="agregarNuevoServicioSimulacion(<?=$anio?>,<?=$codigoSimulacionSuper?>,<?=$codAreaX?>); return false;">
                                          Agregar
                                        </a>
                                      </div>
@@ -118,6 +126,10 @@ $anio=$_GET['anio'];
                                   if(obtenerConfiguracionValorServicio($codCS)==true){
                                     $iconServ="check_circle";
                                   }
+                                  $montoPreUSD=number_format($montoPre/$usd,2,".","");
+                                  $montoPreTotalUSD=number_format($montoPreTotal/$usd,2,".","");
+                                  $montoPre=number_format($montoPre,2,".","");
+                                  $montoPreTotal=number_format($montoPreTotal,2,".","");
                                    ?>
                                    <tr>
                                      <td><?=$iii?></td>
@@ -125,19 +137,6 @@ $anio=$_GET['anio'];
                                      <td class="text-right">
                                        <input type="number" min="1" id="cantidad_servicios<?=$anio?>SSS<?=$iii?>" name="cantidad_servicios<?=$anio?>SSS<?=$iii?>" class="form-control text-info text-right" onchange="calcularTotalFilaServicio(<?=$anio?>,2)" onkeyUp="calcularTotalFilaServicio(<?=$anio?>,2)" value="<?=$cantidadEPre?>">
                                      </td>
-                                     <!--<td>
-                                      <select class="form-control selectpicker form-control-sm" data-style="fondo-boton fondo-boton-active" name="cantidad_servicios<?=$iii?>" id="cantidad_servicios<?=$iii?>" onchange="calcularTotalFilaServicio(<?=$anio?>,2)">
-                                          <?php 
-                                             for ($hf=1; $hf<=$cantidadPre; $hf++) {
-                                              if($hf==$cantidadEPre){
-                                                ?><option value="<?=$hf?>" selected><?=$hf?></option><?php
-                                              }else{
-                                                  ?><option value="<?=$hf?>"><?=$hf?></option><?php
-                                              }      
-                                             }
-                                          ?>
-                                      </select>
-                                     </td>-->
                                      <td>
                                       <select class="form-control selectpicker form-control-sm" data-style="fondo-boton fondo-boton-active" name="unidad_servicios<?=$anio?>SSS<?=$iii?>" id="unidad_servicios<?=$anio?>SSS<?=$iii?>" onchange="calcularTotalFilaServicio(<?=$anio?>,2)">
                                           <?php 
@@ -163,6 +162,12 @@ $anio=$_GET['anio'];
                                        <input type="hidden" id="modal_codigoservicio<?=$anio?>SSS<?=$iii?>" value="<?=$codigoPre?>">
                                        <input type="number" id="modal_montoservtotal<?=$anio?>SSS<?=$iii?>" name="modal_montoservtotal<?=$anio?>SSS<?=$iii?>" <?=($banderaHab==0)?"readonly":"";?> class="form-control text-info text-right" onchange="calcularTotalFilaServicio(<?=$anio?>,1)" onkeyUp="calcularTotalFilaServicio(<?=$anio?>,1)" value="<?=$montoPreTotal?>" step="0.01">
                                      </td>
+                                     <td class="text-right">
+                                       <input type="number" id="modal_montoservUSD<?=$anio?>SSS<?=$iii?>" name="modal_montoservUSD<?=$anio?>SSS<?=$iii?>" <?=($banderaHab==0)?"readonly":"";?> class="form-control text-info text-right" onchange="calcularTotalFilaServicio(<?=$anio?>,4)" onkeyUp="calcularTotalFilaServicio(<?=$anio?>,4)" value="<?=$montoPreUSD?>" step="0.01">
+                                     </td>
+                                     <td class="text-right">
+                                       <input type="number" id="modal_montoservtotalUSD<?=$anio?>SSS<?=$iii?>" name="modal_montoservtotalUSD<?=$anio?>SSS<?=$iii?>" <?=($banderaHab==0)?"readonly":"";?> class="form-control text-info text-right" onchange="calcularTotalFilaServicio(<?=$anio?>,3)" onkeyUp="calcularTotalFilaServicio(<?=$anio?>,3)" value="<?=$montoPreTotalUSD?>" step="0.01">
+                                     </td>
                                      <td>
                                        <div class="togglebutton">
                                                <label>
@@ -177,8 +182,10 @@ $anio=$_GET['anio'];
                                   } ?>
                                   <tr>
                                      <td colspan="4" class="text-center font-weight-bold">Total</td>
-                                     <td id="modal_totalmontoserv<?=$anio?>" class="text-right"><?=$modal_totalmontopre?></td>
-                                     <td id="modal_totalmontoservtotal<?=$anio?>" class="text-right font-weight-bold"><?=$modal_totalmontopretotal?></td>
+                                     <td id="modal_totalmontoserv<?=$anio?>" class="text-right"><?=number_format($modal_totalmontopre,2, ',', '')?></td>
+                                     <td id="modal_totalmontoservtotal<?=$anio?>" class="text-right font-weight-bold"><?=number_format($modal_totalmontopretotal,2, ',', '')?></td>
+                                     <td id="modal_totalmontoservUSD<?=$anio?>" class="text-right"><?=number_format($modal_totalmontopre/$usd,2,', ','')?></td>
+                                     <td id="modal_totalmontoservtotalUSD<?=$anio?>" class="text-right font-weight-bold"><?=number_format($modal_totalmontopretotal/$usd,2, ',', '')?></td>
                                      <td></td>
                                    </tr>
                               </tbody>

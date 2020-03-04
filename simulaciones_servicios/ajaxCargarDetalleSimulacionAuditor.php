@@ -15,6 +15,7 @@ $stmtX->execute();
 if(isset($_GET["cod_simulacion"])){
   $codSimulacion=$_GET["cod_simulacion"];
   $anio=$_GET["anio"];
+  $usd=$_GET["usd"];
  $codigos=explode("###",$_GET["codigo_filas"]);
  $nroColumnas=(count($codigos)-1);
  ?>
@@ -32,7 +33,8 @@ if(isset($_GET["cod_simulacion"])){
          <?php
         }?>
         <!--<td width="15%" class="fondo-boton">TOTAL UNIT.</td>-->
-        <td width="8%" class="fondo-boton">TOTAL</td>
+        <td width="8%" class="fondo-boton">TOTAL BOB</td>
+        <td width="8%" class="fondo-boton">TOTAL USD</td>
     </tr>
     <?php 
     $sql="SELECT s.*,t.nombre as tipo FROM simulaciones_servicios_auditores s join tipos_auditor t on s.cod_tipoauditor=t.codigo where s.cod_simulacionservicio=$codSimulacion and s.cod_anio=$anio";
@@ -113,6 +115,7 @@ if(isset($_GET["cod_simulacion"])){
          ?>
          <!--<td class="text-right font-weight-bold" id="total_unitarioauditor<?=$iii?>"><?=number_format($totalFilaUnitario, 2, '.', ',')?></td>-->
          <td class="text-right font-weight-bold fondo-boton" id="total_auditor<?=$iii?>"><?=number_format($totalFila, 2, '.', ',')?></td>
+         <td class="text-right font-weight-bold fondo-boton" id="total_auditorUSD<?=$iii?>"><?=number_format($totalFila/$usd, 2, '.', ',')?></td>
        </tr>
        <?php
        $totalTabla+=$totalFila;
@@ -125,6 +128,7 @@ if(isset($_GET["cod_simulacion"])){
       <td colspan="<?=$colSpan?>" class="font-weight-bold">SUMA TOTAL</td>
       <!--<td class="text-right font-weight-bold" id="total_unitarioauditor"><?=number_format($totalTablaUnitario, 2, '.', ',')?></td>-->
       <td class="text-right font-weight-bold fondo-boton" id="total_auditor"><?=number_format($totalTabla, 2, '.', ',')?></td>
+      <td class="text-right font-weight-bold fondo-boton" id="total_auditorUSD"><?=number_format($totalTabla/$usd, 2, '.', ',')?></td>
     </tr>
   </table>
   <input type="hidden" id="modal_numeropersonalauditor" value="<?=$iii?>">  

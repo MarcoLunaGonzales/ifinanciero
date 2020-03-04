@@ -84,7 +84,7 @@ for ($ann=0; $ann <=$anioGeneral ; $ann++) {
   ?>
 <!-- small modal -->
 <div class="modal fade modal-arriba modal-primary" id="modalSimulacionCuentas<?=$ann?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg col-sm-12">
+  <div class="modal-dialog modal-notice" style="max-width: 80% !important;">
     <div class="modal-content card">
                 <div class="card-header card-header-danger card-header-text">
                   <div class="card-text">
@@ -213,16 +213,44 @@ for ($ann=0; $ann <=$anioGeneral ; $ann++) {
                            </div>--> 
                       </div>
                       <?php 
-                        $cantidadProductos=explode(",",$productosX);
-                      ?>
-                      <div class="row">
+                        if($codAreaX==39){
+                          $cantidadProductos=explode(",",$productosX);
+                         ?>
+                     <div class="row">
                        <label class="col-sm-2 col-form-label">Productos <small class="text-muted">(<?=count($cantidadProductos)?>)</small></label>
                        <div class="col-sm-10">
                         <div class="form-group" style="border-bottom: 1px solid #CACFD2">
                           <input type="text" value="" class="form-control tagsinput" name="modal_productos" id="modal_productos" data-role="tagsinput" data-color="warning">                          
                         </div>
                         </div>
-                        <!--<label for="">La cantidad m&iacute;nima de productos es 1</label>-->
+                      </div>
+                         <?php
+                        }else{
+                            if($codAreaX==38){
+                              $cantidadSitios=explode(",",$sitiosX);
+                         ?>
+                     <div class="row">
+                       <label class="col-sm-2 col-form-label">Sitios <small class="text-muted">(<?=count($cantidadSitios)?>)</small></label>
+                       <div class="col-sm-10">
+                        <div class="form-group" style="border-bottom: 1px solid #CACFD2">
+                          <input type="text" value="" class="form-control tagsinput" name="modal_sitios" id="modal_sitios" data-role="tagsinput" data-color="warning">                          
+                        </div>
+                        </div>
+                      </div>
+                         <?php
+                            }else{
+                             //otro servicio
+                            }
+                          }
+                        ?>
+                      
+                      <div class="row">
+                       <label class="col-sm-2 col-form-label">Cliente</label>
+                       <div class="col-sm-10">
+                        <div class="form-group">
+                          <input type="text" readonly value="<?=$nombreClienteX?>" class="form-control" name="modal_nombrecliente" id="modal_nombrecliente">                          
+                        </div>
+                        </div>
                       </div>
                       <!--<div class="row">
                           <label class="col-sm-3 col-form-label">N&uacute;mero de Personal</label>
@@ -286,8 +314,10 @@ for ($ann=0; $ann <=$anioGeneral ; $ann++) {
                                     <td width="30%">Descripci&oacute;n</td>
                                     <td>Cantidad</td>
                                     <td width="17%">Unidad</td>
-                                    <td>Monto</td>
-                                    <td>Total</td>
+                                    <td>Monto BOB</td>
+                                    <td>Total BOB</td>
+                                    <td>Monto USD</td>
+                                    <td>Total USD</td>
                                     <td class="small">Habilitar/Deshabilitar</td>
                                   </tr>
                               </thead>
@@ -342,6 +372,12 @@ for ($ann=0; $ann <=$anioGeneral ; $ann++) {
                                      <td class="text-right">
                                        <input type="number" id="modal_montoservtotal<?=$an?>SSS0" name="modal_montoservtotal<?=$an?>SSS0" class="form-control text-primary text-right" onchange="calcularTotalFilaServicioNuevo(<?=$an?>,1)" onkeyUp="calcularTotalFilaServicioNuevo(<?=$an?>,1)" value="0" step="0.01">
                                      </td>
+                                     <td class="text-right">
+                                       <input type="number" id="modal_montoservUSD<?=$an?>SSS0" name="modal_montoservUSD<?=$an?>SSS0" class="form-control text-primary text-right" onchange="calcularTotalFilaServicioNuevo(<?=$an?>,4)" onkeyUp="calcularTotalFilaServicioNuevo(<?=$an?>,4)" value="0" step="0.01">
+                                    </td>
+                                     <td class="text-right">
+                                       <input type="number" id="modal_montoservtotalUSD<?=$an?>SSS0" name="modal_montoservtotalUSD<?=$an?>SSS0" class="form-control text-primary text-right" onchange="calcularTotalFilaServicioNuevo(<?=$an?>,3)" onkeyUp="calcularTotalFilaServicioNuevo(<?=$an?>,3)" value="0" step="0.01">
+                                     </td>
                                   <td>
                                     <div class="btn-group">
                                        <a href="#" class="btn btn-primary btn-sm" id="boton_modalnuevoservicio<?=$an?>" onclick="agregarNuevoServicioSimulacion(<?=$an?>,<?=$codigoSimulacionSuper?>,<?=$codAreaX?>); return false;">
@@ -374,6 +410,10 @@ for ($ann=0; $ann <=$anioGeneral ; $ann++) {
                                   if(obtenerConfiguracionValorServicio($codCS)==true){
                                     $iconServ="check_circle";
                                   }
+                                  $montoPreUSD=number_format($montoPre/$usd,2,".","");
+                                  $montoPreTotalUSD=number_format($montoPreTotal/$usd,2,".","");
+                                  $montoPre=number_format($montoPre,2,".","");
+                                  $montoPreTotal=number_format($montoPreTotal,2,".","");
                                    ?>
                                    <tr>
                                      <td><?=$iii?></td>
@@ -406,6 +446,12 @@ for ($ann=0; $ann <=$anioGeneral ; $ann++) {
                                        <input type="hidden" id="modal_codigoservicio<?=$an?>SSS<?=$iii?>" value="<?=$codigoPre?>">
                                        <input type="number" id="modal_montoservtotal<?=$an?>SSS<?=$iii?>" name="modal_montoservtotal<?=$an?>SSS<?=$iii?>" <?=($banderaHab==0)?"readonly":"";?> class="form-control text-info text-right" onchange="calcularTotalFilaServicio(<?=$an?>,1)" onkeyUp="calcularTotalFilaServicio(<?=$an?>,1)" value="<?=$montoPreTotal?>" step="0.01">
                                      </td>
+                                     <td class="text-right">
+                                       <input type="number" id="modal_montoservUSD<?=$an?>SSS<?=$iii?>" name="modal_montoservUSD<?=$an?>SSS<?=$iii?>" <?=($banderaHab==0)?"readonly":"";?> class="form-control text-info text-right" onchange="calcularTotalFilaServicio(<?=$an?>,4)" onkeyUp="calcularTotalFilaServicio(<?=$an?>,4)" value="<?=$montoPreUSD?>" step="0.01">
+                                     </td>
+                                     <td class="text-right">
+                                       <input type="number" id="modal_montoservtotalUSD<?=$an?>SSS<?=$iii?>" name="modal_montoservtotalUSD<?=$an?>SSS<?=$iii?>" <?=($banderaHab==0)?"readonly":"";?> class="form-control text-info text-right" onchange="calcularTotalFilaServicio(<?=$an?>,3)" onkeyUp="calcularTotalFilaServicio(<?=$an?>,3)" value="<?=$montoPreTotalUSD?>" step="0.01">
+                                     </td>
                                      <td>
                                        <div class="togglebutton">
                                                <label>
@@ -420,8 +466,10 @@ for ($ann=0; $ann <=$anioGeneral ; $ann++) {
                                   } ?>
                                   <tr>
                                      <td colspan="4" class="text-center font-weight-bold">Total</td>
-                                     <td id="modal_totalmontoserv<?=$an?>" class="text-right"><?=$modal_totalmontopre?></td>
-                                     <td id="modal_totalmontoservtotal<?=$an?>" class="text-right font-weight-bold"><?=$modal_totalmontopretotal?></td>
+                                     <td id="modal_totalmontoserv<?=$an?>" class="text-right"><?=number_format($modal_totalmontopre,2, ',', '')?></td>
+                                     <td id="modal_totalmontoservtotal<?=$an?>" class="text-right font-weight-bold"><?=number_format($modal_totalmontopretotal,2, ',', '')?></td>
+                                     <td id="modal_totalmontoservUSD<?=$an?>" class="text-right"><?=number_format($modal_totalmontopre/$usd,2,', ','')?></td>
+                                     <td id="modal_totalmontoservtotalUSD<?=$an?>" class="text-right font-weight-bold"><?=number_format($modal_totalmontopretotal/$usd,2, ',', '')?></td>
                                      <td></td>
                                    </tr>
                               </tbody>
@@ -440,8 +488,10 @@ for ($ann=0; $ann <=$anioGeneral ; $ann++) {
                                     <td width="25%">Tipo de Personal</td>
                                     <td width="8%" class="text-center">Cantidad</td>                                   
                                     <td width="8%">D&iacute;as Aud.</td>
-                                    <td>Monto</td>
-                                    <td>Total</td>
+                                    <td>Monto BOB</td>
+                                    <td>Total BOB</td>
+                                    <td>Monto USD</td>
+                                    <td>Total USD</td>
                                     <td width="10%" class="small">Hab/Des</td>
                                   </tr>
                               </thead>
@@ -471,6 +521,7 @@ for ($ann=0; $ann <=$anioGeneral ; $ann++) {
 
                                   $montoPreTotal=$montoPreSi*$cantidadEPre*$diasPre;
                                   //$montoPreTotalext=$montoPreext*$cantidadEPre*$diasPre;
+
                                   $banderaHab=$rowPre['habilitado'];
                                   if($banderaHab!=0){
                                     $modal_totalmontopre+=$montoPreSi;
@@ -478,6 +529,10 @@ for ($ann=0; $ann <=$anioGeneral ; $ann++) {
                                     //$modal_totalmontopreext+=$montoPreext;
                                     //$modal_totalmontopretotalext+=$montoPreTotalext;
                                   }
+                                  $montoPreSiUSD=number_format($montoPreSi/$usd,2,".","");
+                                  $montoPreTotalUSD=number_format($montoPreTotal/$usd,2,".","");
+                                  $montoPreSi=number_format($montoPreSi,2,".","");
+                                  $montoPreTotal=number_format($montoPreTotal,2,".","");
                                    ?>
                                    <tr>
                                      <td><?=$iii?></td>
@@ -518,6 +573,12 @@ for ($ann=0; $ann <=$anioGeneral ; $ann++) {
                                        <input type="hidden" id="modal_codigopersonal<?=$an?>FFF<?=$iii?>" value="<?=$codigoPre?>">
                                        <input type="number" id="modal_montopretotal<?=$an?>FFF<?=$iii?>" name="modal_montopretotal<?=$an?>FFF<?=$iii?>" <?=($banderaHab==0)?"readonly":"";?> class="form-control text-info text-right" onchange="calcularTotalPersonalServicio('<?=$an?>',1)" onkeyUp="calcularTotalPersonalServicio('<?=$an?>',1)" value="<?=$montoPreTotal?>" step="0.01">
                                      </td>
+                                     <td class="text-right">
+                                       <input type="number" id="modal_montopreUSD<?=$an?>FFF<?=$iii?>" name="modal_montopreUSD<?=$an?>FFF<?=$iii?>" <?=($banderaHab==0)?"readonly":"";?> class="form-control text-info text-right" onchange="calcularTotalPersonalServicio('<?=$an?>',4)" onkeyUp="calcularTotalPersonalServicio('<?=$an?>',4)" value="<?=$montoPreSiUSD?>" step="0.01">
+                                     </td>
+                                     <td class="text-right">
+                                       <input type="number" id="modal_montopretotalUSD<?=$an?>FFF<?=$iii?>" name="modal_montopretotalUSD<?=$an?>FFF<?=$iii?>" <?=($banderaHab==0)?"readonly":"";?> class="form-control text-info text-right" onchange="calcularTotalPersonalServicio('<?=$an?>',3)" onkeyUp="calcularTotalPersonalServicio('<?=$an?>',3)" value="<?=$montoPreTotalUSD?>" step="0.01">
+                                     </td>
                                      <td>
                                        <div class="togglebutton">
                                                <label>
@@ -532,9 +593,10 @@ for ($ann=0; $ann <=$anioGeneral ; $ann++) {
                                   } ?>
                                   <tr>
                                      <td colspan="4" class="text-center font-weight-bold">Total</td>
-                                     <td id="modal_totalmontopre<?=$an?>" class="text-right"><?=$modal_totalmontopre?></td>
-                                     <td id="modal_totalmontopretotal<?=$an?>" class="text-right font-weight-bold"><?=$modal_totalmontopretotal?></td>
-                                     
+                                     <td id="modal_totalmontopre<?=$an?>" class="text-right"><?=number_format($modal_totalmontopre,2, ',', '')?></td>
+                                     <td id="modal_totalmontopretotal<?=$an?>" class="text-right font-weight-bold"><?=number_format($modal_totalmontopretotal,2, ',', '')?></td>
+                                     <td id="modal_totalmontopreUSD<?=$an?>" class="text-right"><?=number_format($modal_totalmontopre/$usd,2, ',', '')?></td>
+                                     <td id="modal_totalmontopretotalUSD<?=$an?>" class="text-right font-weight-bold"><?=number_format($modal_totalmontopretotal/$usd,2, ',', '')?></td>
                                      <td></td>
                                    </tr>
                               </tbody>
