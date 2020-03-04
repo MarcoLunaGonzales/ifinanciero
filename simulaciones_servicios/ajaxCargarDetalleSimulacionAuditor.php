@@ -21,20 +21,30 @@ if(isset($_GET["cod_simulacion"])){
  ?>
   <table class="table table-condensed table-bordered">
     <tr class="text-white bg-info">
+        <td colspan="3"></td>
+        <?php 
+        for ($i=0; $i < $nroColumnas; $i++) {
+        $totalColumnaDetalle[$i]=0;
+        $nombreColumna=obtenerNombreDetalleSimulacionVariablesPeriodo($codigos[$i],$anio);
+         ?>
+         <td class="fondo-boton" colspan="2"><?=$nombreColumna?></td>
+         <?php
+        }?>
+        <td class="fondo-boton" colspan="2">TOTAL</td>
+    </tr>
+    <tr class="text-white bg-info">
         <td width="25%">Tipo Auditor</td>
-        <!--<td width="12%">Regi&oacute;n</td>-->
         <td width="8%">Cantidad</td>
         <td width="8%">D&iacute;as Aud.</td>
         <?php 
         for ($i=0; $i < $nroColumnas; $i++) {
-        $nombreColumna=obtenerNombreDetalleSimulacionVariablesPeriodo($codigos[$i],$anio);
          ?>
-         <td class="fondo-boton"><?=$nombreColumna?></td>
+         <td class="fondo-boton">BOB</td>
+         <td class="fondo-boton">USD</td>
          <?php
         }?>
-        <!--<td width="15%" class="fondo-boton">TOTAL UNIT.</td>-->
-        <td width="8%" class="fondo-boton">TOTAL BOB</td>
-        <td width="8%" class="fondo-boton">TOTAL USD</td>
+        <td width="8%" class="fondo-boton">BOB</td>
+        <td width="8%" class="fondo-boton">USD</td>
     </tr>
     <?php 
     $sql="SELECT s.*,t.nombre as tipo FROM simulaciones_servicios_auditores s join tipos_auditor t on s.cod_tipoauditor=t.codigo where s.cod_simulacionservicio=$codSimulacion and s.cod_anio=$anio";
@@ -90,7 +100,7 @@ if(isset($_GET["cod_simulacion"])){
          for ($i=0; $i < $nroColumnas; $i++) {
           $codigoCol=$codigos[$i];
           $ncol=$i+1;
-
+          
           $montoPres=obtenerMontoSimulacionDetalleAuditorPeriodo($codSimulacion,$codigoCol,$codigoTipo,$anio);
           $montoPresext=obtenerMontoSimulacionDetalleAuditorExternoPeriodo($codSimulacion,$codigoCol,$codigoTipo,$anio);
           if($codExtLoc==1){
@@ -98,7 +108,7 @@ if(isset($_GET["cod_simulacion"])){
           }else{
             $montoPre=$montoPresext*$cantPre*$diasPre;
           }
-
+          $totalColumnaDetalle[$i]+=$montoPre;
           $totalFilaUnitario+=$montoPre;          
          ?>
           <td class="text-right">
@@ -108,12 +118,14 @@ if(isset($_GET["cod_simulacion"])){
             <input type="hidden" id="monto<?=$ncol?>RRR<?=$iii?>" value="<?=$montoPres?>">
             <input type="hidden" id="montoext<?=$ncol?>RRR<?=$iii?>" value="<?=$montoPresext?>">
           </td>
+          <td class="text-right">
+            <input type="number" id="monto_multUSD<?=$ncol?>RRR<?=$iii?>" readonly name="monto_multUSD<?=$ncol?>RRR<?=$iii?>" class="form-control text-info text-right" value="<?=$montoPre/$usd?>" step="0.01">
+          </td>
          <?php
 
          }
          $totalFila+=$totalFilaUnitario; //*$diasPre*$cantPre
          ?>
-         <!--<td class="text-right font-weight-bold" id="total_unitarioauditor<?=$iii?>"><?=number_format($totalFilaUnitario, 2, '.', ',')?></td>-->
          <td class="text-right font-weight-bold fondo-boton" id="total_auditor<?=$iii?>"><?=number_format($totalFila, 2, '.', ',')?></td>
          <td class="text-right font-weight-bold fondo-boton" id="total_auditorUSD<?=$iii?>"><?=number_format($totalFila/$usd, 2, '.', ',')?></td>
        </tr>
@@ -122,10 +134,18 @@ if(isset($_GET["cod_simulacion"])){
        $totalTablaUnitario+=$totalFilaUnitario;
        $iii++;
      }
-     $colSpan=$nroColumnas+3;
+     $colSpan=($nroColumnas*2)+3;
     ?>
     <tr>
-      <td colspan="<?=$colSpan?>" class="font-weight-bold">SUMA TOTAL</td>
+      <td colspan="3" class="font-weight-bold">TOTAL</td>
+      <?php 
+       for ($i=0; $i < $nroColumnas; $i++) {
+        ?>
+        <td class="font-weight-bold" id="total_item<?=$i+1?>"><?=number_format($totalColumnaDetalle[$i], 2, '.', ',')?></td> 
+        <td class="font-weight-bold" id="total_itemUSD<?=$i+1?>"><?=number_format($totalColumnaDetalle[$i]/$usd, 2, '.', ',')?></td> 
+        <?php
+       }
+      ?>
       <!--<td class="text-right font-weight-bold" id="total_unitarioauditor"><?=number_format($totalTablaUnitario, 2, '.', ',')?></td>-->
       <td class="text-right font-weight-bold fondo-boton" id="total_auditor"><?=number_format($totalTabla, 2, '.', ',')?></td>
       <td class="text-right font-weight-bold fondo-boton" id="total_auditorUSD"><?=number_format($totalTabla/$usd, 2, '.', ',')?></td>

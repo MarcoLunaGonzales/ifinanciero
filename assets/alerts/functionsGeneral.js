@@ -4322,17 +4322,26 @@ function calcularTotalPersonalServicioAuditor(){
   var sumae=0; var sumale=0;
   var total= $("#modal_numeropersonalauditor").val();
   var usd= $("#cambio_moneda").val();
+  var totalesItem=[];
+  var columnas =$("#cantidad_columnas1").val();
+  for (var j = 1; j <=columnas; j++) {
+     totalesItem[j-1]=0; 
+  }
   for (var i=1;i<=(total-1);i++){
     var columnas =$("#cantidad_columnas"+i).val();
     var montos=0;var montose=0;
     var extlocal=$("#modal_local_extranjero"+i).val();
     for (var j = 1; j <=columnas; j++) {
       if(extlocal==1){
-       $("#monto_mult"+j+"RRR"+i).val(redondeo(($("#modal_cantidad_personal"+i).val()*$("#modal_dias_personal"+i).val())*parseFloat($("#monto"+j+"RRR"+i).val())));     
+       $("#monto_mult"+j+"RRR"+i).val(redondeo(($("#modal_cantidad_personal"+i).val()*$("#modal_dias_personal"+i).val())*parseFloat($("#monto"+j+"RRR"+i).val())));
+       $("#monto_multUSD"+j+"RRR"+i).val(redondeo($("#monto_mult"+j+"RRR"+i).val()/parseFloat(usd)));          
         montos+=parseFloat($("#monto_mult"+j+"RRR"+i).val());
+        totalesItem[j-1]+=redondeo($("#monto_mult"+j+"RRR"+i).val());
       }else{
        $("#monto_mult"+j+"RRR"+i).val(redondeo(($("#modal_cantidad_personal"+i).val()*$("#modal_dias_personal"+i).val())*parseFloat($("#montoext"+j+"RRR"+i).val())));     
         montos+=parseFloat($("#monto_mult"+j+"RRR"+i).val());
+        $("#monto_multUSD"+j+"RRR"+i).val(redondeo($("#monto_mult"+j+"RRR"+i).val()/parseFloat(usd)));
+        totalesItem[j-1]+=redondeo($("#monto_mult"+j+"RRR"+i).val());
       }   
      //montose+=parseFloat($("#monto_multext"+j+"RRR"+i).val());  
     };
@@ -4346,6 +4355,10 @@ function calcularTotalPersonalServicioAuditor(){
      //sumale+=sumae;
      sumaC+=suma/(($("#modal_cantidad_personal"+i).val()*$("#modal_dias_personal"+i).val())); 
   } 
+  for (var j = 1; j <=columnas; j++) {
+     $("#total_item"+j).text(redondeo(totalesItem[j-1]));
+     $("#total_itemUSD"+j).text(redondeo(totalesItem[j-1]/parseFloat(usd)));
+  }
   var resulta=redondeo(sumal);
   $("#total_auditor").text(resulta);
   $("#total_auditorUSD").text(redondeo(resulta/parseFloat(usd)));
