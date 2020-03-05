@@ -3920,6 +3920,19 @@ function obtenerAnioPlantillaServicio($codigo){
   }
   return $valor;
 }
+function obtenerMontoTarifarioSelloEmpresa($cod_sello,$cod_empresa,$cod_nacionalidad){
+   $dbh = new Conexion();
+   $valor=0;$codigo=0;
+   $sql="SELECT codigo,monto from costos_servicios_tipocliente p where p.cod_configuracionserviciosello=$cod_sello and p.cod_tipocliente=$cod_empresa and p.cod_tipoclientenacionalidad=$cod_nacionalidad";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['monto'];
+      $codigo=$row['codigo'];
+  }
+  return array($valor,$codigo);
+}
+
 ?>
 
 

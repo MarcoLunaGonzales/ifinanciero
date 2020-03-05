@@ -665,6 +665,13 @@ if($menuModulo==0){
               </ul>
             </div>
           </li>
+          <li class="nav-item ">
+            <a class="nav-link" href="index.php?opcion=listTarifarioServicios">
+              <i class="material-icons">assignment</i>
+              <p> Tarifario de Servicios
+              </p>
+            </a>
+          </li>
 
               <?php
               break;

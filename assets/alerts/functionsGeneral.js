@@ -7011,3 +7011,28 @@ function cambiarTituloPersonalModal(anio){
      $("#num_tituloservicios"+anio).html("("+($("#modal_numeroservicio"+anio).val()-1)+")");
   }*/
 }
+function calcularMontoTarifarioType(region,fila,valor,columna){
+  var usd=$("#cambio_moneda").val();
+  if(valor==1){
+    var monto = redondeo($("#monto_tarifario"+columna+"FFF"+region+"FFF"+fila).val());
+    $("#monto_tarifarioUSD"+columna+"FFF"+region+"FFF"+fila).val(redondeo(monto/usd));
+  }else{
+     var monto = redondeo($("#monto_tarifarioUSD"+columna+"FFF"+region+"FFF"+fila).val());
+    $("#monto_tarifario"+columna+"FFF"+region+"FFF"+fila).val(redondeo(monto*usd));
+  }
+}
+function editarTarifarioServicios(valor){
+ if(valor==1){
+  $("#boton_guardar").removeClass("d-none");
+  $("#boton_editar_cancelar").removeClass("d-none");
+  $("#boton_editar").addClass("d-none");
+
+  $(".input-tarifario").removeAttr("readonly");
+ }else{
+  $("#boton_guardar").addClass("d-none");
+  $("#boton_editar_cancelar").addClass("d-none");
+  $("#boton_editar").removeClass("d-none");
+
+  $(".input-tarifario").attr("readonly",true);
+ }
+}
