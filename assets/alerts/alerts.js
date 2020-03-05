@@ -34,13 +34,13 @@ alerts = {
     }
     else if (type == 'warning-message-and-confirmation-cambiar-estado') {
       swal({
-        title: '¿Quieres Cambiar el Activar de la Distribución?',
+        title: '¿Quieres Activar ésta Distribución?',
         text: "",
         type: 'warning',
         showCancelButton: true,
         confirmButtonClass: 'btn btn-success',
         cancelButtonClass: 'btn btn-danger',
-        confirmButtonText: 'Si, Cambiar!',
+        confirmButtonText: 'Si, Activar!',
         cancelButtonText: 'No, Cancelar!',
         buttonsStyling: false
       }).then((result) => {
