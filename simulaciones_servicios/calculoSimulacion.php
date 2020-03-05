@@ -22,7 +22,20 @@
                  $utilidadExterno=$ingresoExterno-($totalVariable[3]*$alumnosExternoX)-$costoOperExterno;
 
                  // impuesto iva
-                 $costoTotalLocal=$totalFijo[2]+($totalVariable[2]*$alumnosX)+$costoVariablePersonal;
+                 //$costoTotalLocal=$totalFijo[2]+($totalVariable[2]*$alumnosX)+$costoVariablePersonal;
+$costoFijoPrincipalPeriodo=0;
+for ($eee=1; $eee <=$anioGeneral; $eee++) { 
+                 //costos fijos porcentaje configuracion ***************************************************************************************
+                $porCreAn=($porcentajeFijoSim/100)*($eee-1);
+                $costoFijoInicio=$totalFijoPlan/$anioGeneral;
+                $costoFijoFinal=$costoFijoInicio+($costoFijoInicio*$porCreAn);
+                $costoFijoPrincipalPeriodo+=$costoFijoFinal;
+                //fin datos para costo fijo             ***************************************************************************************
+    
+}
+
+
+                 $costoTotalLocal=$costoFijoPrincipalPeriodo+($totalVariable[2]*$alumnosX)+$costoVariablePersonal;
                  $costoTotalExterno=$totalFijo[3]+($totalVariable[3]*$alumnosExternoX);
 
                  $impuestoIvaLocal=$costoTotalLocal*($iva/100);

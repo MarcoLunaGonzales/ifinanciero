@@ -2448,6 +2448,35 @@ function obtenerPrecioServiciosSimulacion($codigo){
   }
   return $num;
 }
+function obtenerNombreClienteSimulacion($codigo){
+  $dbh = new Conexion();
+  $sql="";
+  $sql="SELECT c.nombre from simulaciones_servicios s join clientes c on s.cod_cliente=c.codigo where s.codigo=$codigo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute(); 
+   $valor="";
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
+  {
+    $valor=$row['nombre'];
+  }
+  return $valor;
+}
+function obtenerPrecioServiciosSimulacionPeriodo($codigo,$anio){
+  $dbh = new Conexion();
+  $sql="";
+  $sql="SELECT * from simulaciones_servicios_tiposervicio where cod_simulacionservicio=$codigo and habilitado!=0 and cod_anio=$anio";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute(); 
+   $num=0;
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
+  {
+    $cantidad=$row['cantidad_editado'];
+    $monto=$row['monto'];
+    $num+=$cantidad*$monto;
+  }
+  return $num;
+}
+
 function obtenerCantidadPersonalSimulacion($codigo){
   $dbh = new Conexion();
   $sql="";
@@ -2497,6 +2526,27 @@ function obtenerCostosPersonalSimulacionEditado($codigo){
   $dbh = new Conexion();
   $sql="";
   $sql="SELECT * from simulaciones_servicios_auditores where cod_simulacionservicio=$codigo and habilitado=1";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute(); 
+   $num=0;
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
+  {
+    $cantidad=$row['cantidad_editado'];
+    $dias=$row['dias'];
+    $extlocal=$row['cod_externolocal'];
+    if($extlocal==1){
+      $monto=$row['monto'];
+    }else{
+      $monto=$row['monto_externo'];
+    }   
+    $num+=$cantidad*$monto*$dias;
+  }
+  return $num;
+}
+function obtenerCostosPersonalSimulacionEditadoPeriodo($codigo,$anio){
+  $dbh = new Conexion();
+  $sql="";
+  $sql="SELECT * from simulaciones_servicios_auditores where cod_simulacionservicio=$codigo and habilitado=1 and cod_anio=$anio";
    $stmt = $dbh->prepare($sql);
    $stmt->execute(); 
    $num=0;
@@ -3059,6 +3109,20 @@ function obtenerTotalesSimulacionServicio($codigo){
    $stmt = $dbh->prepare("SELECT sum(monto_local) as total_local, sum(monto_externo) as total_externo 
     FROM cuentas_simulacion where cod_simulacionservicios=:codSim");
    $stmt->bindParam(':codSim',$codigo);
+   $stmt->execute();
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $montoI=$row['total_local'];
+      $montoF=$row['total_externo'];
+   }
+  return array(0,0,$montoI,$montoF);
+}
+function obtenerTotalesSimulacionServicioPeriodo($codigo,$anio){
+  $dbh = new Conexion();
+    $montoI=1;$montoF=1;
+   $stmt = $dbh->prepare("SELECT sum(monto_local) as total_local, sum(monto_externo) as total_externo 
+    FROM cuentas_simulacion where cod_simulacionservicios=:codSim and cod_anio=:anio");
+   $stmt->bindParam(':codSim',$codigo);
+   $stmt->bindParam(':anio',$anio);
    $stmt->execute();
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       $montoI=$row['total_local'];

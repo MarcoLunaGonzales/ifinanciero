@@ -29,9 +29,15 @@ if(isset($_GET["codigo"])){
  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
    $dias=$row['dias_auditoria'];
    $utilidad=$row['utilidad_minima'];
+   $anios=$row['anios'];
+   $areaX=$row['cod_area'];
  }
-  ?>                           <label class="col-sm-2 col-form-label">Dias Auditoria:</label>
-                           <div class="col-sm-3"> 
+  ?>
+  <script>$("#productos_div").addClass("d-none");</script>
+  <script>$("#sitios_div").addClass("d-none");</script> 
+                      <div class="row">
+                        <label class="col-sm-2 col-form-label">Dias Servicio:</label>
+                           <div class="col-sm-1"> 
                              <div class="form-group">
                                 <div class="form-check">
                                   <div class="form-group">
@@ -40,11 +46,35 @@ if(isset($_GET["codigo"])){
                                   </div>
                                </div>
                              </div>
-                              <label class="col-sm-2 col-form-label">Utilidad Minima:</label>
-                           <div class="col-sm-2"> 
+                          <label class="col-sm-2 col-form-label">Utilidad Minima:</label>
+                           <div class="col-sm-1"> 
                              <div class="form-group">
                                   <input type="text" class="form-control" value="<?=$utilidad?>" id="utilidad_minima" name="utilidad_minima">
                              </div>    
+                          </div>
+                          <label class="col-sm-1 col-form-label">Años:</label>
+                           <div class="col-sm-2"> 
+                             <div class="form-group">
+                                  <input type="text" class="form-control" value="<?=$anios?>" id="anios" name="anios">
+                             </div>    
                           </div> 
+
+                    </div>
+            <?php 
+            if($areaX==39){
+               ?>
+               <script>$("#productos_div").removeClass("d-none");</script>  
+               <?php
+            }else{
+              if($areaX==38){
+                ?>
+                <script>$("#sitios_div").removeClass("d-none");</script> 
+                <?php
+              }else{
+
+              }
+            }
+            ?>       
+                              
 <?php   
 }     

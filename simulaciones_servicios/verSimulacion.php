@@ -1,6 +1,5 @@
 <?php
 session_start();
-set_time_limit(0);
 require_once '../layouts/bodylogin2.php';
 require_once '../conexion.php';
 require_once '../styles.php';
@@ -8,12 +7,14 @@ require_once '../functions.php';
 require_once '../functionsGeneral.php';
 require_once 'configModule.php';
 
-setlocale(LC_TIME, "Spanish");
 
+setlocale(LC_TIME, "Spanish");
 $dbh = new Conexion();
+
 $sqlX="SET NAMES 'utf8'";
 $stmtX = $dbh->prepare($sqlX);
 $stmtX->execute();
+
 
 $globalNombreGestion=$_SESSION["globalNombreGestion"];
 $globalUser=$_SESSION["globalUser"];
@@ -30,6 +31,9 @@ if(isset($_GET['cod'])){
   $codigoSimulacionSuper=$_GET['cod'];
 }else{
 	$codigo=0;
+}
+if(isset($_GET['admin'])){
+	$urlList=$urlList2;
 }
 
 /*VARIABLE DE CONVERSION A MODEDA USD*/
@@ -48,8 +52,8 @@ $ibnorcaC=1;
 $utilidadFueraX=1;
 $mesConf=obtenerValorConfiguracion(6);
 $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servicios sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo where sc.cod_estadoreferencial=1 and sc.codigo='$codigo'");
-			$stmt1->execute();
-			$stmt1->bindColumn('codigo', $codigoX);
+      $stmt1->execute();
+      $stmt1->bindColumn('codigo', $codigoX);
             $stmt1->bindColumn('nombre', $nombreX);
             $stmt1->bindColumn('fecha', $fechaX);
             $stmt1->bindColumn('cod_responsable', $codResponsableX);
@@ -58,18 +62,15 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
             $stmt1->bindColumn('dias_auditoria', $diasSimulacion);
             $stmt1->bindColumn('utilidad_minima', $utilidadIbnorcaX);
             $stmt1->bindColumn('productos', $productosX);
-            $stmt1->bindColumn('sitios', $sitiosX);
             $stmt1->bindColumn('idServicio', $idServicioX);
             $stmt1->bindColumn('anios', $anioX);
-            $stmt1->bindColumn('porcentaje_fijo', $porcentajeFijoX);
-            $stmt1->bindColumn('afnor', $afnorX);
-            $stmt1->bindColumn('porcentaje_afnor', $porcentajeAfnorX);
+            $stmt1->bindColumn('porcenjate_fijo', $porcentajeFijoX);
 
       while ($row1 = $stmt1->fetch(PDO::FETCH_BOUND)) {
          //plantilla datos      
-			      $stmt = $dbh->prepare("SELECT p.*, u.abreviatura as unidad,a.abreviatura as area from plantillas_servicios p,unidades_organizacionales u, areas a where p.cod_unidadorganizacional=u.codigo and p.cod_area=a.codigo and p.codigo='$codigoPlan' order by codigo");
-			      $stmt->execute();
-			      $stmt->bindColumn('codigo', $codigoPX);
+            $stmt = $dbh->prepare("SELECT p.*, u.abreviatura as unidad,a.abreviatura as area from plantillas_servicios p,unidades_organizacionales u, areas a where p.cod_unidadorganizacional=u.codigo and p.cod_area=a.codigo and p.codigo='$codigoPlan' order by codigo");
+            $stmt->execute();
+            $stmt->bindColumn('codigo', $codigoPX);
             $stmt->bindColumn('nombre', $nombreX);
             $stmt->bindColumn('abreviatura', $abreviaturaX);
             $stmt->bindColumn('cod_unidadorganizacional', $codUnidadX);        
@@ -80,198 +81,49 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
            $anioGeneral=$anioX;
            $nombreSimulacion=$nombreX;
            $porcentajeFijoSim=$porcentajeFijoX;
-
-           $porcentajeAfnor=$porcentajeAfnorX;
-           if($afnorX==0){
-            $precioAfnorX=0;
-            $tituloAfnor="SIN AFNOR";
-           }else{
-            $precioAfnorX=$precioLocalX*($porcentajeAfnorX/100);
-            $tituloAfnor=$porcentajeAfnorX." %";
-           }
-
+           
            if($codAreaX==39){
             $valorC=17;
            }else{
             $valorC=18;
            }
       
-      }    
+      } 
+      while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+            $codigoPXSS=$codigoPX;
+    }
 ?>
-<input type="hidden" name="porcentaje_fijo" readonly value="<?=$porcentajeFijoSim?>" id="porcentaje_fijo"/>
-<input type="hidden" name="cambio_moneda" readonly value="<?=$usd?>" id="cambio_moneda"/>
-<input type="hidden" name="alumnos_plan" readonly value="<?=$alumnosX?>" id="alumnos_plan"/>
-<input type="hidden" name="utilidad_minlocal" readonly value="<?=$utilidadIbnorcaX?>" id="utilidad_minlocal"/>
-
 <div class="cargar">
   <div class="div-loading text-center">
      <h4 class="text-warning font-weight-bold">Procesando Datos</h4>
      <p class="text-white">Aguard&aacute; un momento por favor</p>  
   </div>
 </div>
-<div class="cargar-ajax d-none">
-  <div class="div-loading text-center">
-     <h4 class="text-warning font-weight-bold" id="texto_ajax_titulo">Procesando Datos</h4>
-     <p class="text-white">Aguard&aacute; un momento por favor</p>  
-  </div>
-</div>
 <div class="content">
 	<div id="contListaGrupos" class="container-fluid">
 			<input type="hidden" name="cod_simulacion" id="cod_simulacion" value="<?=$codigo?>">
-      <input type="hidden" name="cod_ibnorca" id="cod_ibnorca" value="1">
-      <div class="row"><div class="card col-sm-5">
-				<div class="card-header card-header-success card-header-text">
-					<div class="card-text">
-					  <h4 class="card-title">Informaci&oacute;n general de la Propuesta</h4>
-					</div>
-          <button type="button" onclick="editarDatosSimulacion()" class="btn btn-success btn-sm btn-fab float-right">
-             <i class="material-icons" title="Editar Simulación">edit</i>
-          </button>
-				</div>
-				<div class="card-body ">
-					<div class="row">
-					<?php
-                    $responsable=namePersonal($codResponsableX);
-						?>
-						<div class="col-sm-6">
-							<div class="form-group">
-						  		<label class="bmd-label-static">Nombre</label>
-					  			<input class="form-control" type="text" name="nombre" readonly value="<?=$nombreX?>" id="nombre"/>
-							</div>
-						</div>
-
-						<div class="col-sm-6">
-							<div class="form-group">
-						  		<label class="bmd-label-static">Responsable</label>
-						  		<input class="form-control" type="text" name="responsable" readonly value="<?=$responsable?>" id="responsable"/>
-							</div>
-						</div>
-          </div>
-          <div class="row">
-						<div class="col-sm-6">
-							<div class="form-group">
-						  		<label class="bmd-label-static">Fecha</label>
-						  		<input class="form-control" type="text" name="fecha" value="<?=$fechaX?>" id="fecha" readonly/>
-							</div>
-						</div>
-
-						<div class="col-sm-6">
-				        	<div class="form-group">
-						  		<label class="bmd-label-static">Estado</label>
-						  		<input class="form-control" type="text" name="estado" value="<?=$estadoX?>" id="estado" readonly/>
-							</div>
-				    </div>
-					  			<input class="form-control" type="hidden" readonly name="ibnorca" value="<?=$simulacionEn?>" id="ibnorca"/>
-					</div>
-				</div>
-			</div>
-			<div class="card col-sm-7">
-				<div class="card-header card-header-info card-header-text">
-					<div class="card-text">
-					  <h4 class="card-title">Informaci&oacute;n a detalle de la Propuesta</h4>
-					</div>
-          <button type="button" onclick="editarDatosPlantilla()" class="btn btn-success btn-sm btn-fab float-right">
-             <i class="material-icons" title="Editar Plantilla">edit</i>
-          </button>
-          <button type="button" onclick="actualizarSimulacion()" class="btn btn-default btn-sm btn-fab float-right">
-             <i class="material-icons" title="Actualizar la Simulación">refresh</i><span id="narch" class="bg-warning"></span>
-          </button>
-				</div>
-				<div class="card-body ">
-                     <div class="row">
-					<?php while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {?>
-					<input type="hidden" name="cod_plantilla" id="cod_plantilla" value="<?=$codigoPX?>">
-
-						<div class="col-sm-6">
-							<div class="form-group">
-						  		<label class="bmd-label-static">Nombre Plantilla</label>
-					  			<input class="form-control" type="text" name="nombre_plan" value="<?=$nombreX?>" id="nombre_plan" READONLY />
-							</div>
-						</div>
-             
-						<div class="col-sm-2">
-							<div class="form-group">
-						  		<label class="bmd-label-static">Abreviatura</label>
-						  		<input class="form-control" type="text" name="abreviatura_plan" value="<?=$abreviaturaX?>" READONLY id="abreviatura_plan"/>
-							</div>
-						</div>
-						
-						<div class="col-sm-2">
-							<div class="form-group">
-						  		<label class="bmd-label-static">Unidad</label>
-						  		<input class="form-control" type="text" name="unidad_plan" value="<?=$unidadX?>" id="unidad_plan" readonly/>
-							</div>
-						</div>
-
-						<div class="col-sm-2">
-				        	<div class="form-group">
-						  		<label class="bmd-label-static">Area</label>
-						  		<input class="form-control" type="text" name="area_plan" value="<?=$areaX?>" id="area_plan" readonly/>
-							</div>
-				    </div>
-
-          </div>
-           <div class="row">                
-            <div class="col-sm-2">
-              <div class="form-group">
-                  <label class="bmd-label-static">D&iacute;as Servicio</label>
-                  <input class="form-control" type="text" name="dias_plan" readonly value="<?=$diasSimulacion?>" id="dias_plan"/>
-                  <input class="form-control" type="hidden" name="productos_sim" readonly value="<?=$productosX?>" id="productos_sim"/>
-                  <input class="form-control" type="hidden" name="sitios_sim" readonly value="<?=$sitiosX?>" id="sitios_sim"/>
-              </div>
-            </div>
-            <div class="col-sm-2">
-              <div class="form-group">
-                  <label class="bmd-label-static">AFNOR</label>
-                  <input class="form-control" type="text" name="afnor_titulo" readonly value="<?=$tituloAfnor?>" id="afnor_titulo"/>
-              </div>
-            </div>
-            <div class="col-sm-2">
-              <div class="form-group">
-                  <label class="bmd-label-static">Utilidad M&iacute;n %</label>
-                  <input class="form-control" type="text" name="utilidad_minima_ibnorca" readonly value="<?=$utilidadIbnorcaX?>" id="utilidad_minima_ibnorca"/>
-              </div>
-            </div>
-            <div class="col-sm-2">
-              <div class="form-group">
-                  <label class="bmd-label-static">A&ntilde;os</label>
-                  <input class="form-control" type="text" name="anio_simulacion" readonly value="<?=$anioGeneral?>" id="anio_simulacion"/>
-              </div>
-            </div>
-            <div class="col-sm-4">
-              <div class="form-group">
-                  <label class="bmd-label-static">Precio Servicio</label>
-                  <input class="form-control" type="text" name="precio_auditoria_ib" readonly value="<?=$precioLocalInputX?>" id="precio_auditoria_ib"/>
-              </div>
-            </div>
-				      	<?php } ?>
-					</div>      
-             
-				</div>
-			</div>
-		   </div>
            <div class="row">
              <div class="col-sm-12">
 			  <div class="card">
 				<div class="card-header card-header-warning card-header-text text-center">
 					<div class="card-text">
-					  <h4 class="card-title"><b id="titulo_curso"><?=$nombreSimulacion?></b></h4>
+					  <h4 class="card-title"><b><?=$nombreSimulacion?></b></h4>
 					</div>
 				</div>
-				<div class="card-body" id="div_simulacion">
+				<div class="card-body">
 			<?php
-				//IVA y IT
-				$iva=obtenerValorConfiguracion(1);
-				$it=obtenerValorConfiguracion(2);
+        //IVA y IT
+        $iva=obtenerValorConfiguracion(1);
+        $it=obtenerValorConfiguracion(2);
         $alumnosExternoX=1; 
         //modificar costos por alumnos
 
-				//valores de la simulacion
+        //valores de la simulacion
 
                   //total desde la plantilla 
-                 $nAuditorias=obtenerCantidadAuditoriasPlantilla($codigoPX); 
-                 $precioRegistrado=obtenerPrecioRegistradoPlantilla($codigoPX);  
-                 $totalFijo=obtenerTotalesPlantillaServicio($codigoPX,1,$nAuditorias); //tipo de costo 1:fijo,2:variable desde la plantilla
+                 $nAuditorias=obtenerCantidadAuditoriasPlantilla($codigoPXSS); 
+                 $precioRegistrado=obtenerPrecioRegistradoPlantilla($codigoPXSS);  
+                 $totalFijo=obtenerTotalesPlantillaServicio($codigoPXSS,1,$nAuditorias); //tipo de costo 1:fijo,2:variable desde la plantilla
                  $porcentPrecios=($precioLocalX*100)/$precioRegistrado;
                  $totalFijoPlan=$totalFijo[0]*($porcentPrecios/100);
                  $totalFijoPlan=$totalFijoPlan*$anioGeneral;
@@ -284,23 +136,23 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                 $totalVariable[3]=$totalVariable[3]/$alumnosExternoX;
                  //calcular cantidad alumnos si no esta registrado
                if($alumnosX==0){
-                 	$porcentajeFinalLocal=0;$alumnosX=0;$alumnosExternoX=0;$porcentajeFinalExterno=0;
-                 	while ($porcentajeFinalLocal < $utilidadIbnorcaX || $porcentajeFinalExterno<$utilidadFueraX) {
-                 		$alumnosX++;
-                 		include "calculoSimulacion.php";
+                  $porcentajeFinalLocal=0;$alumnosX=0;$alumnosExternoX=0;$porcentajeFinalExterno=0;
+                  while ($porcentajeFinalLocal < $utilidadIbnorcaX || $porcentajeFinalExterno<$utilidadFueraX) {
+                    $alumnosX++;
+                    include "calculoSimulacion.php";
                         $porcentajeFinalLocal=$pUtilidadLocal;
                         $porcentajeFinalExterno=$pUtilidadExterno;
-                 	}                                 
+                  }                                 
                 }else{
-                	include "calculoSimulacion.php";
+                  include "calculoSimulacion.php";
                 }
  
                  if($ibnorcaC==1){
-                 	$utilidadReferencial=$utilidadIbnorcaX;
-                 	$ibnorca_title=""; // EN IBNORCA
+                  $utilidadReferencial=$utilidadIbnorcaX;
+                  $ibnorca_title=""; // EN IBNORCA
                  }else{
-                 	$utilidadReferencial=$utilidadFueraX;
-                 	$ibnorca_title=""; //FUERA DE IBNORCA
+                  $utilidadReferencial=$utilidadFueraX;
+                  $ibnorca_title=""; //FUERA DE IBNORCA
                  }
 
                  //cambios para la nueva acortar la simulacion 
@@ -314,7 +166,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                  //calculos en la simulacion SERVICIOS
                  $gastosOperacionNacional=($costoTotalLocal*(obtenerValorConfiguracion(19)/100));
                  $utilidadBruta=($precioLocalX)-($costoTotalLocal);   
-                 $utilidadNetaLocal=$utilidadBruta-((($iva+$it)/100)*($precioLocalX))-($precioAfnorX);
+                 $utilidadNetaLocal=$utilidadBruta-(($iva+$it)/100)*($precioLocalX);
                  $pUtilidadLocal=($utilidadNetaLocal*100)/($precioLocalX);
 
                  $codEstadoSimulacion=4; 
@@ -354,60 +206,11 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                     }
                  }
 
-				?>	
-				<input type="hidden" id="cantidad_alibnorca" name="cantidad_alibnorca" readonly value="<?=$alumnosX?>">
-				<input type="hidden" id="cantidad_alfuera" name="cantidad_alfuera" readonly value="<?=$alumnosExternoX?>">
-				<input type="hidden" id="aprobado" name="aprobado" readonly value="<?=$codEstadoSimulacion?>">
-                          <div class="btn-group dropdown">
-                              <button type="button" title="Editar Variables de Costo" class="btn btn-sm btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="material-icons">edit</i>
-                              </button>
-                              <div class="dropdown-menu">
-                                <?php
-                                  for ($an=1; $an<=$anioGeneral; $an++) { 
-                                      ?>
-                                       <a href="#" onclick="modificarMontosPeriodo(<?=$an?>)" class="dropdown-item">
-                                           <i class="material-icons">keyboard_arrow_right</i> A&ntilde;o <?=$an?>
-                                       </a> 
-                                     <?php
-                                  }
-                                  ?>
-                              </div>
-                            </div>
-           
-                            <div class="btn-group dropdown">
-                              <button type="button" title="Listar Detalle Costo Fijo" class="btn btn-sm btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="material-icons">list</i> CF
-                              </button>
-                              <div class="dropdown-menu">
-                                <?php
-                                  for ($an=1; $an<=$anioGeneral; $an++) { 
-                                      ?>
-                                       <a href="#" onclick="listarCostosFijosPeriodo(<?=$an?>)" class="dropdown-item">
-                                           <i class="material-icons">keyboard_arrow_right</i> A&ntilde;o <?=$an?>
-                                       </a> 
-                                     <?php
-                                  }
-                                  ?>
-                              </div>
-                            </div>
-           <!--<a href="#" title="Listar Detalle Costo Fijo" onclick="listarCostosFijos()" class="btn btn-sm btn-info"><i class="material-icons">list</i> CF</a>-->
-                           <div class="btn-group dropdown">
-                              <button type="button" title="Listar Detalle Costo Variable" class="btn btn-sm btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="material-icons">list</i> CV
-                              </button>
-                              <div class="dropdown-menu">
-                                <?php
-                                  for ($an=1; $an<=$anioGeneral; $an++) { 
-                                      ?>
-                                       <a href="#" onclick="listarCostosVariblesPeriodo(<?=$an?>)" class="dropdown-item">
-                                           <i class="material-icons">keyboard_arrow_right</i> A&ntilde;o <?=$an?>
-                                       </a> 
-                                     <?php
-                                  }
-                                  ?>
-                              </div>
-                            </div>
+        ?>  
+        <input type="hidden" id="cantidad_alibnorca" name="cantidad_alibnorca" readonly value="<?=$alumnosX?>">
+        <input type="hidden" id="cantidad_alfuera" name="cantidad_alfuera" readonly value="<?=$alumnosExternoX?>">
+        <input type="hidden" id="aprobado" name="aprobado" readonly value="<?=$codEstadoSimulacion?>">
+
           <br>
           <div class="row">
             <p class="font-weight-bold float-left">PRESUPUESTO POR PERIODO DE CERTIFICACION</p>
@@ -615,24 +418,24 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
            ?> 
           </div>
           <br>
-				  <div class="row"> 	
-					<!--<div class="col-sm-3">
+          <div class="row">   
+          <!--<div class="col-sm-3">
             <p class="font-weight-bold float-right">DATOS ADICIONALES PARA EL CALCULO</p>
             <table class="table table-bordered table-condensed">
               <tbody>
-								<tr class="">
-									<td  style="font-size:9px !important;"></td>
-									<td class="bg-table-primary text-white">IMPORTE</td>
-								</tr>
-								<tr>
-									<td class="text-left small bg-table-primary text-white">COSTO FIJO TOTAL</td>
+                <tr class="">
+                  <td  style="font-size:9px !important;"></td>
+                  <td class="bg-table-primary text-white">IMPORTE</td>
+                </tr>
+                <tr>
+                  <td class="text-left small bg-table-primary text-white">COSTO FIJO TOTAL</td>
                   <td class="text-right font-weight-bold"><?=number_format($totalFijoPlan, 2, '.', ',')?></td>
-								</tr>
+                </tr>
                 <tr>
                   <td class="text-left small bg-table-primary text-white">COSTO VARIABLE TOTAL</td>
                   <td class="text-right font-weight-bold"><?=number_format(($totalVariable[2]*$alumnosX), 2, '.', ',')?></td>
                 </tr>
-								<tr>
+                <tr>
                   <td class="text-left small bg-table-primary text-white">COSTO HONORARIOS PERSONAL</td>
                   <td class="text-right font-weight-bold"><?=number_format($costoVariablePersonal, 2, '.', ',')?></td>
                 </tr>
@@ -650,19 +453,15 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                  ?>
               </tbody>
             </table>
-					</div>-->
-					<div class="col-sm-6">
+          </div>-->
+          <div class="col-sm-6">
             <p class="font-weight-bold float-left">RESUMEN DE LA PROPUESTA</p>
             <table class="table table-bordered table-condensed">
               <tbody>
                 <tr class="">
                   <td  style="font-size:9px !important;"></td>
-                  <td class="bg-table-primary text-white" colspan="2">IMPORTE</td>
-                </tr>
-                <tr class="">
-                  <td  style="font-size:9px !important;"></td>
-                  <td class="bg-table-primary text-white">BOB</td>
-                  <td class="bg-table-primary text-white">USD</td>
+                  <td class="bg-table-primary text-white">IMPORTE BOB</td>
+                  <td class="bg-table-primary text-white">IMPORTE USD</td>
                 </tr>
                 <tr>
                   <td class="text-left small bg-table-primary text-white">COSTO FIJO TOTAL</td>
@@ -707,21 +506,16 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
           <div class="col-sm-6 bg-blanco2">
             <p class="font-weight-bold float-left">DATOS DEL CALCULO</p>
             <img src="../assets/img/f_abajo2.gif" alt="" height="30px" class="float-right">
-						<table class="table table-bordered table-condensed">
-							<thead>
-								<tr class="">
-									<td></td>
-                  <td class="bg-table-primary2 text-white" colspan="2">EN IBNORCA</td>
-                  <td class="bg-table-primary2 text-white"></td>
-								</tr>
+            <table class="table table-bordered table-condensed">
+              <thead>
                 <tr class="">
                   <td></td>
-                  <td class="bg-table-primary2 text-white">BOB</td>
-                  <td class="bg-table-primary2 text-white">USD</td>
+                  <td class="bg-table-primary2 text-white">EN IBNORCA BOB</td>
+                  <td class="bg-table-primary2 text-white">EN IBNORCA USD</td>
                   <td class="bg-table-primary2 text-white"></td>
                 </tr>
-							</thead>
-							<tbody>
+              </thead>
+              <tbody>
                 
                 <tr>
                   <td class="text-left small bg-table-primary2 text-white">TOTAL INGRESOS</td>
@@ -751,45 +545,26 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                   <td class="text-right font-weight-bold"><?=number_format(((($iva+$it)/100)*($precioLocalX))/$usd, 2, '.', ',')?></td>
                   <td class="text-right font-weight-bold"><?=number_format($iva+$it, 2, '.', ',')?> %</td>
                 </tr>
-                <tr>
-                  <td class="text-left small bg-table-primary2 text-white">PORCENTAJE A AFNOR (<?=$porcentajeAfnor?> %)</td>
-                  <td class="text-right font-weight-bold"><?=number_format($precioAfnorX, 2, '.', ',')?></td>
-                  <td class="text-right font-weight-bold"><?=number_format($precioAfnorX/$usd, 2, '.', ',')?></td>
-                  <td class="text-right font-weight-bold"><?=number_format($porcentajeAfnor, 2, '.', ',')?> %</td>
-                </tr>
                 <tr class="<?=$estiloUtilidad?>">
                   <td class="text-left small bg-table-primary2 text-white">UTILIDAD NETA</td>
                   <td class="text-right font-weight-bold <?=$estiloUtilidadIbnorca?>"><?=number_format($utilidadNetaLocal, 2, '.', ',')?></td>
                   <td class="text-right font-weight-bold <?=$estiloUtilidadIbnorca?>"><?=number_format($utilidadNetaLocal/$usd, 2, '.', ',')?></td>
                   <td class="text-right font-weight-bold <?=$estiloUtilidadIbnorca?>"><?=number_format($pUtilidadLocal, 2, '.', ',')?> %</td>
                 </tr>
-							</tbody>
-						</table>
-					  <div class="row div-center">
-						   <h5><p class="<?=$estiloMensaje?>"><?=$mensajeText?></p></h5>
-					  </div>	
-					</div>
-				  </div>
-          
-				  	<div class="card-footer fixed-bottom">
-            <?php 
-            if($idServicioX==0||$idServicioX==""){
-             ?><a onclick="guardarServicioSimulacion()" class="btn btn-success text-white"><i class="material-icons">send</i> Enviar Propuesta</a>
-            <a href="../<?=$urlList;?>" class="btn btn-danger">Volver</a><?php
-            }else{
-            ?><a onclick="guardarServicioSimulacion()" class="btn btn-success text-white"><i class="material-icons">send</i> Enviar Propuesta</a>
-            <a href="../<?=$urlList;?>&q=<?=$idServicioX?>" class="btn btn-danger">Volver</a><?php
-            }
-            ?>
-             
+              </tbody>
+            </table>
+            <div class="row div-center">
+               <h5><p class="<?=$estiloMensaje?>"><?=$mensajeText?></p></h5>
             </div>
+					</div>
+
+				  	<div class="card-footer fixed-bottom">
+						<a href="../<?=$urlList;?>" class="btn btn-danger">Volver</a>
+
+				  	</div>
 				 </div>
-			 </div>
-      </div>
-    </div>
+			    </div><!--div end card-->			
+               </div>
+            </div>
 	</div>
 </div>
-
-<?php
-require_once 'modal.php';
-?>

@@ -10,7 +10,7 @@ $urlList2="index.php?opcion=listSimulacionesServAdmin";
 
 $urlReporte="simulaciones_costos/reportePlanCosto.php";
 $urlRegister="simulaciones_servicios/registerSimulacion.php";
-$urlVer="simulaciones_costos/verSimulacion.php";
+$urlVer="simulaciones_servicios/verSimulacion.php";
 $urlRegister2="index.php?opcion=registerSimulacionServicio";
 $urlEdit="index.php?opcion=editSimulacion";
 $urlEdit2="simulaciones_servicios/edit.php";

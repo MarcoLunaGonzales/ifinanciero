@@ -22,8 +22,15 @@ $habilitado=$_GET['habilitado'];
 $unidad=$_GET['unidad'];
 $fijo=$_GET['precio_fijo'];
 $productos=$_GET['productos'];
+$anio=$_GET['anio'];
+$iteracion=$_GET['iteracion'];
 
-$sqlUpdatePlantilla="UPDATE simulaciones_servicios SET  utilidad_minima='$ut_i',dias_auditoria='$dia',productos='$productos' where codigo=$codSimulacion";
+if($_GET['tcs']==0){
+  $sqlUpdatePlantilla="UPDATE simulaciones_servicios SET  utilidad_minima='$ut_i',dias_auditoria='$dia',productos='$productos' where codigo=$codSimulacion";
+}else{
+  $sqlUpdatePlantilla="UPDATE simulaciones_servicios SET  utilidad_minima='$ut_i',dias_auditoria='$dia',sitios='$productos' where codigo=$codSimulacion";
+}
+
 $stmtUpdatePlantilla = $dbh->prepare($sqlUpdatePlantilla);
 $stmtUpdatePlantilla->execute();
 
@@ -36,6 +43,7 @@ if($fijo!=""){
 	$productosLista=explode(",", $productos);
         $codTC=obtenerTipoCliente($cliente);
         $nacional=obtenerTipoNacionalCliente($cliente);
+        $suma=0;
         for ($i=0; $i < count($productosLista); $i++) {
           $aux=obtenerCostoTipoClienteSello(($i+1),$codTC,$nacional);
            if($aux==0){
@@ -51,5 +59,5 @@ if($fijo!=""){
 $sqlDetalles="UPDATE simulaciones_servicios_tiposervicio SET cantidad_editado=$cantidad,monto=$monto,habilitado=$habilitado,cod_tipounidad=$unidad where codigo=$codigo";
 $stmtDetalles = $dbh->prepare($sqlDetalles);
 $stmtDetalles->execute();
-echo "OK";
+echo $anio."WWW".$iteracion;
 ?>
