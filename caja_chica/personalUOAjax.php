@@ -19,7 +19,7 @@ $sqlUO="SELECT codigo,nombre from unidades_organizacionales where cod_estado=1";
 $stmt = $db->prepare($sqlUO);
 $stmt->execute();
 ?>
-<select name="cod_uo" id="cod_uo" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" data-show-subtext="true" data-live-search="true">
+<select name="cod_uo" id="cod_uo" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" data-show-subtext="true" data-live-search="true" onChange="ajaxAreaUOCAJACHICA(this);">
     <?php 
     	while ($row = $stmt->fetch()){ 
 	?>

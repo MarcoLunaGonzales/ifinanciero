@@ -7,11 +7,11 @@ require_once '../functions.php';
 $codigo_UO = $_GET["codigo_UO"];
 //ini_set("display_errors", "1");
 $db = new Conexion();
-$cod_uo_proy_fin=obtenerCodOUProyFinanciacion();
-// $lista= obtenerPaisesServicioIbrnorca();
-$lista= obtenerActividadesServicioImonitoreo();
-if($codigo_UO==$cod_uo_proy_fin){ ?>
+$cod_uo_proy_fin=VerificarProyFinanciacion($codigo_UO);//verificamos si el codigo pertenece a algun proyecto, de ser asi obtenemos el codigo
 
+if($cod_uo_proy_fin!=null){ 
+	$lista= obtenerActividadesServicioImonitoreo($cod_uo_proy_fin);
+	?>
 	<select name="cod_actividad" id="cod_actividad" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" data-show-subtext="true" data-live-search="true">
 	<option disabled selected value="">--SELECCIONE--</option>
 	 <?php

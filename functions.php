@@ -3935,30 +3935,28 @@ function obtener_diashsbiles_atras($dias_atras,$fecha)
   }
   return $fecha_dias_atras;
 }
-function obtenerCodOUProyFinanciacion(){
+
+function VerificarProyFinanciacion($codigo_UO){
    $dbh = new Conexion();
-   $valor=0;
-   $sql="SELECT p.cod_unidadorganizacional from proyectos_financiacionexterna p where p.abreviatura in ('sis','SIS')";
+   $valor=null;
+   $sql="SELECT p.codigo from proyectos_financiacionexterna p where p.cod_unidadorganizacional=$codigo_UO";
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-      $valor=$row['cod_unidadorganizacional'];
+      $valor=$row['codigo'];
   }
   return $valor;
 }
 
-function obtenerActividadesServicioImonitoreo(){
-
-
+function obtenerActividadesServicioImonitoreo($codigo_proyecto){
   $sIde = "";
   $sKey = "";
-  $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ListarPersonal");
-  //Lista todos los paises
+  $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ListarComponentes","codigo_proyecto"=>$codigo_proyecto);
+  //Lista todos los componentes
   $parametros=json_encode($parametros);
     $ch = curl_init();
-    // definimos la URL a la que hacemos la petición
-    //curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibno/clasificador/ws-paises.php"); // OFICIAL
-    curl_setopt($ch, CURLOPT_URL,"http://localhost/imonitoreo/componentesSIS/compartir_servicio.php"); // PRUEBA
+    // definimos la URL a la que hacemos la petición    
+    curl_setopt($ch, CURLOPT_URL,"http://localhost/imonitoreo/componentesSIS/compartir_servicio.php");
     // indicamos el tipo de petición: POST
     curl_setopt($ch, CURLOPT_POST, TRUE);
     // definimos cada uno de los parámetros
@@ -3971,29 +3969,12 @@ function obtenerActividadesServicioImonitoreo(){
     // imprimir en formato JSON  
     //print_r($remote_server_output);
     $obj= json_decode($remote_server_output);
-    $detalle=$obj->lstPersonal;
+    $detalle=$obj->lstComponentes;
     return $detalle;
     // foreach ($detalle as $objDet){
     //   echo $objDet->codigo."<br>";
     // }
-  // echo json_encode(file_get_contents("http://localhost/imonitoreo/componentesSIS/compartir_servicio.php"));
-  // echo $data;
-  // return $data;
-// $sIde = ""; 
-// $sKey = "";
-
-// //SERVICIOS TLQ
-// $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ListarPersonal");
-// $url="http://localhost/imonitoreo/componentesSIS/compartir_servicio.php";
-
-// $json=callService($parametros, $url);
-// $obj=json_decode($json);//decodificando json
-// echo $obj;
-// $i=0;
-// $j=0;
-// $detalle=$obj->lstPersonal;
-
-}
+  }
 ?>
 
 

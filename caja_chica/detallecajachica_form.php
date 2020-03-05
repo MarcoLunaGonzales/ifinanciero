@@ -144,9 +144,6 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
                                 </select>                                  
                             </div>
                         </div>
-                        <!-- <label class="col-sm-2 col-form-label">Nro. Doc.</label> -->
-                        <!-- <div class="col-sm-4">
-                        <div class="form-group"> -->
                             <input class="form-control" type="hidden" name="numero" id="numero" value="<?=$nro_documento;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" readonly="readonly"/>
                         <!-- </div>
                         </div> -->
@@ -156,7 +153,7 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
                             <input class="form-control" type="number" name="nro_recibo" id="nro_recibo" value="<?=$nro_recibo;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" required/>
                         </div>
                         </div>
-                    </div> <!--fin campo fecha numero-->
+                    </div> 
                     <div class="row">
                         <label class="col-sm-2 col-form-label">Monto</label>
                         <div class="col-sm-4">
@@ -170,10 +167,10 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
                                 
                                 <input class="form-control" name="fecha" id="fecha" type="date" min="<?=$fecha_dias_atras?>" max="<?=$fecha?>" required="true" value="<?=$fecha?>" />
                                 </select>
-                               <!--  <input class="form-control" type="date" name="fecha" id="fecha" value="<?=$fecha;?>" required/> -->
+                               
                             </div>
                         </div>
-                    </div><!--monto inicio y reembolso-->
+                    </div>
                     <div class="row">
                       <label class="col-sm-2 col-form-label">Personal</label>
                       <div class="col-sm-8">
@@ -218,40 +215,39 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
                       <div class="col-sm-8">
                         <div class="form-group">
                             <div id="div_contenedor_area">                                        
-                                        <?php
-                                        if($codigo>0){
-                                            $sqlUO="SELECT cod_area,(select a.nombre from areas a where a.codigo=cod_area )as nombre_areas from areas_organizacion where cod_estadoreferencial=1 and cod_unidad=$cod_uo order by nombre_areas";
-                                            $stmt = $dbh->prepare($sqlUO);
-                                            $stmt->execute();
-                                            ?>
-                                            <select name="cod_area" id="cod_area" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" data-show-subtext="true" data-live-search="true" >
-                                                <?php 
-                                                    while ($row = $stmt->fetch()){ 
-                                                ?>
-                                                     <option <?=($cod_area==$row["cod_area"])?"selected":"";?> value="<?=$row["cod_area"];?>"><?=$row["nombre_areas"];?></option>
-                                                 <?php 
-                                                    } 
-                                                ?>
-                                             </select>
-                                       <?php }else{?>
+                                <?php
+                                if($codigo>0){
+                                    $sqlUO="SELECT cod_area,(select a.nombre from areas a where a.codigo=cod_area )as nombre_areas from areas_organizacion where cod_estadoreferencial=1 and cod_unidad=$cod_uo order by nombre_areas";
+                                    $stmt = $dbh->prepare($sqlUO);
+                                    $stmt->execute();
+                                    ?>
+                                    <select name="cod_area" id="cod_area" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" data-show-subtext="true" data-live-search="true" >
+                                        <?php 
+                                            while ($row = $stmt->fetch()){ 
+                                        ?>
+                                             <option <?=($cod_area==$row["cod_area"])?"selected":"";?> value="<?=$row["cod_area"];?>"><?=$row["nombre_areas"];?></option>
+                                         <?php 
+                                            } 
+                                        ?>
+                                     </select>
+                               <?php }else{?>
 
-                                        <input type="hidden" name="cod_area" id="cod_area" value="0">                                        
-                                    <?php }
+                                <input type="hidden" name="cod_area" id="cod_area" value="0">                                        
+                                <?php }
                                      ?>
                             </div>
                         </div>
                       </div>
                     </div>
-                                        <div class="row">
+                    <div class="row">
                       <label class="col-sm-2 col-form-label">Actividad</label>
                       <div class="col-sm-8">
                         <div class="form-group">
                             <div id="div_contenedor_actividad">
                               <?php
-                              $cod_uo_proy_fin=obtenerCodOUProyFinanciacion();
-                              // $lista= obtenerPaisesServicioIbrnorca();
-                              $lista= obtenerActividadesServicioImonitoreo();
-                              if($cod_uo==$cod_uo_proy_fin){ ?>
+                              $cod_uo_proy_fin=VerificarProyFinanciacion($cod_uo);//verificamos si el codigo pertenece a algun proyecto, de ser asi obtenemos el codigo                              
+                              if($cod_uo_proy_fin!=null){
+                                $lista= obtenerActividadesServicioImonitoreo($cod_uo_proy_fin); ?>
 
                                 <select name="cod_actividad" id="cod_actividad" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" data-show-subtext="true" data-live-search="true">
                                 <option disabled selected value="">--SELECCIONE--</option>
@@ -307,7 +303,7 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
                             <!-- <input class="form-control" type="text" name="observaciones" id="observaciones" required="true" value="<?=$observaciones;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/> -->
                         </div>
                         </div>
-                    </div><!--fin campo nombre -->              
+                    </div>              
 			  </div>
 			  <div class="card-footer ml-auto mr-auto">
 				<button type="submit" class="<?=$buttonNormal;?>">Guardar</button>
