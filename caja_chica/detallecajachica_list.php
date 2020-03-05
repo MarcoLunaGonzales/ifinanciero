@@ -71,28 +71,28 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                   <h4 class="card-title" align="center"><?=$nombre_caja_chica?></h4>
                   
                   <div class="row">
-                      <label class="col-sm-1 col-form-label text-right"><b>Monto Inicial</b></label>
+                      <label class="col-sm-1 col-form-label text-right" style="color:#0B2161;font-size: 16px"><b>Monto Inicial</b></label>
                       <div class="col-sm-2">
                           <div class="form-group">
-                              <input style="background-color:#ffffff;" class="form-control" readonly="readonly" value="<?=number_format($monto_cajachica, 2, '.', ',')?>" />
+                              <input style="background-color:#F3F781;text-align: center" class="form-control" readonly="readonly" value="<?=number_format($monto_cajachica, 2, '.', ',')?>" />
                           </div>
                       </div>
-                      <label class="col-sm-1 col-form-label text-right"><b>Saldo</b></label>
+                      <label class="col-sm-1 col-form-label text-right" style="color:#0B2161;font-size: 16px"><b>Saldo</b></label>
                       <div class="col-sm-2">
                       <div class="form-group">
-                          <input style="background-color:#ffffff;" class="form-control" name="numero" id="numero" value="<?=number_format($monto_reembolso, 2, '.', ',')?>"  readonly="readonly"/>
+                          <input style="background-color:#F3F781;text-align: center" class="form-control" name="numero" id="numero" value="<?=number_format($monto_reembolso, 2, '.', ',')?>"  readonly="readonly"/>
                       </div>
                       </div>
-                      <label class="col-sm-1 col-form-label text-right"><b>Fecha</b></label>
+                      <label class="col-sm-1 col-form-label text-right" style="color:#0B2161;font-size: 16px"><b>Fecha</b></label>
                       <div class="col-sm-2">
                       <div class="form-group">
-                          <input style="background-color:#ffffff;" class="form-control" name="numero" id="numero" value="<?=$fecha_cc?>"  readonly="readonly"/>
+                          <input style="background-color:#F3F781;text-align: center" class="form-control" name="numero" id="numero" value="<?=$fecha_cc?>"  readonly="readonly"/>
                       </div>
                       </div>
-                      <label class="col-sm-1 col-form-label text-right"><b>Número</b></label>
+                      <label class="col-sm-1 col-form-label text-right" style="color:#0B2161;font-size: 16px"><b>Nro. Caja Chica</b></label>
                       <div class="col-sm-2">
                       <div class="form-group">
-                          <input style="background-color:#ffffff;" class="form-control" name="numero" id="numero" value="<?=$numero_cc?>"  readonly="readonly"/>
+                          <input style="background-color:#F3F781;text-align: center" class="form-control" name="numero" id="numero" value="<?=$numero_cc?>"  readonly="readonly"/>
                       </div>
                       </div>
                   </div> <!--fin campo fecha numero-->
@@ -107,8 +107,7 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                           <th>#</th>                        
                           <th>Cuenta</th>
                           <th>Fecha</th>
-                          <th>Tipo</th>
-                          <th>N. Doc</th>
+                          <th>Tipo</th>                          
                           <th>Entregado a</th>
                           <th>Monto</th>                          
                           <th>Monto Facturas</th> 
@@ -130,11 +129,11 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                             
                          ?>
                           <tr>
-                            <td><?=$index;?></td>                            
-                              <td><?=$nombre_cuenta;?></td>
-                              <td><?=$fecha;?></td>
-                              <td><?=$nombre_tipodoccajachica;?></td>        
-                              <td><?=$nro_documento;?></td>        
+                            <td><?=$index;?></td>
+                            <td><?=$nombre_cuenta;?></td>
+                            <td><?=$fecha;?></td>
+                            <td><?=$nombre_tipodoccajachica;?></td>
+                              
                               <td><?=$cod_personal;?><?=$cod_proveedores?></td>        
                               
                               <td><?=number_format($monto, 2, '.', ',');?></td>        

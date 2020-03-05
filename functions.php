@@ -3856,6 +3856,80 @@ function obtenerAnioPlantillaServicio($codigo){
   }
   return $valor;
 }
+function obtener_diashsbiles_atras($dias_atras,$fecha)
+{
+  $cont=1;
+  $i=0;
+  $fecha_dias_atras='';
+  while ( $i< $dias_atras) {
+    $fecha_dias_atras=date("Y-m-d",strtotime($fecha."- ".($cont)." days"));
+    if(date("w",strtotime($fecha_dias_atras)) != 0 && date("w",strtotime($fecha_dias_atras)) != 6 )
+    {
+      $i++;
+    }
+    $cont++;  
+  }
+  return $fecha_dias_atras;
+}
+function obtenerCodOUProyFinanciacion(){
+   $dbh = new Conexion();
+   $valor=0;
+   $sql="SELECT p.cod_unidadorganizacional from proyectos_financiacionexterna p where p.abreviatura in ('sis','SIS')";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['cod_unidadorganizacional'];
+  }
+  return $valor;
+}
+
+function obtenerActividadesServicioImonitoreo(){
+
+
+  $sIde = "";
+  $sKey = "";
+  $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ListarPersonal");
+  //Lista todos los paises
+  $parametros=json_encode($parametros);
+    $ch = curl_init();
+    // definimos la URL a la que hacemos la petición
+    //curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibno/clasificador/ws-paises.php"); // OFICIAL
+    curl_setopt($ch, CURLOPT_URL,"http://localhost/imonitoreo/componentesSIS/compartir_servicio.php"); // PRUEBA
+    // indicamos el tipo de petición: POST
+    curl_setopt($ch, CURLOPT_POST, TRUE);
+    // definimos cada uno de los parámetros
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);
+    // recibimos la respuesta y la guardamos en una variable
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $remote_server_output = curl_exec ($ch);
+    curl_close ($ch);
+    
+    // imprimir en formato JSON  
+    //print_r($remote_server_output);
+    $obj= json_decode($remote_server_output);
+    $detalle=$obj->lstPersonal;
+    return $detalle;
+    // foreach ($detalle as $objDet){
+    //   echo $objDet->codigo."<br>";
+    // }
+  // echo json_encode(file_get_contents("http://localhost/imonitoreo/componentesSIS/compartir_servicio.php"));
+  // echo $data;
+  // return $data;
+// $sIde = ""; 
+// $sKey = "";
+
+// //SERVICIOS TLQ
+// $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ListarPersonal");
+// $url="http://localhost/imonitoreo/componentesSIS/compartir_servicio.php";
+
+// $json=callService($parametros, $url);
+// $obj=json_decode($json);//decodificando json
+// echo $obj;
+// $i=0;
+// $j=0;
+// $detalle=$obj->lstPersonal;
+
+}
 ?>
 
 

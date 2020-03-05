@@ -85,7 +85,10 @@ if($sw_auxiliar==0){//sin  distribucion de sueldos pendientes
 
       $ordenDetalle=1;//<--
       if($codigo_x_defecto_dn==$globalUnidadX){
-         $sqlDistribucion="SELECT d.cod_unidadorganizacional, d.porcentaje from distribucion_gastosporcentaje d where d.porcentaje>0 order by d.porcentaje desc";
+         $sqlDistribucion="SELECT dgd.cod_unidadorganizacional,dgd.porcentaje,
+              (SELECT uo.nombre FROM unidades_organizacionales uo WHERE uo.codigo=dgd.cod_unidadorganizacional) as oficina
+            from distribucion_gastosporcentaje_detalle dgd,distribucion_gastosporcentaje dg
+            where dgd.cod_distribucion_gastos=dg.codigo and dg.estado=1 and porcentaje>0 order by dgd.porcentaje desc";
          $stmtDistribucion = $dbh->prepare($sqlDistribucion);
          $stmtDistribucion->execute();
          $centroCostosDN=obtenerValorConfiguracion(29);//DN 

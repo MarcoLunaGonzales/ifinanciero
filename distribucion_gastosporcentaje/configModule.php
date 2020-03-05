@@ -16,5 +16,12 @@ $urlList2="../index.php?opcion=listEscalaAntiguedad";
 
 $urlEditarDistribucionGastos = "index.php?opcion=editDistribucionGastos";
 $urlSaveEditDistribucionGasto ="distribucion_gastosporcentaje/saveEditDistribucionGastos.php";
+$urlRegisterDistribucionGastos= "index.php?opcion=registerDistribucionGastos";
+$urlSaveRegisterDistribucionGastos ="distribucion_gastosporcentaje/saveRegisterDistribucionGastos.php";
+
+
+$urlDistribucionGastosDetalle = "index.php?opcion=DistribucionGastosDetalle";
+$urlCambiarEstado="index.php?opcion=saveCambiarDistribucionGastos";
+$urlDeleteDistribucion="index.php?opcion=deleteDistribucion";
 
 ?>

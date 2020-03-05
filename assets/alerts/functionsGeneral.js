@@ -5086,11 +5086,26 @@ function ajaxAreaUOCAJACHICA(combo){
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
       contenedor.innerHTML = ajax.responseText;
-      $('.selectpicker').selectpicker(["refresh"]);          
+      $('.selectpicker').selectpicker(["refresh"]);   
+      ajaxUOProyFinanciacion(codigo_UO);       
     }
   }
   ajax.send(null)  
 }//unidad_area-cargo
+
+function ajaxUOProyFinanciacion(codigo_UO){
+  var contenedor;
+  contenedor = document.getElementById('div_contenedor_actividad');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'caja_chica/ajax_uo_proyfinanciacion.php?codigo_UO='+codigo_UO,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);
+    }
+  }
+  ajax.send(null)  
+}
 function ajaxUOArea_personal_tipocajachica(combo){
   var contenedor;
   var codigo_UO=combo.value;

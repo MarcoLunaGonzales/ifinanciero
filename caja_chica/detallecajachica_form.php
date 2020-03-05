@@ -17,8 +17,7 @@ $cod_dcc=$codigo;
 
 $i=0;
   echo "<script>var array_cuenta=[],imagen_cuenta=[];</script>";
-   $stmtCuenta = $dbh->prepare("SELECT pcc.cod_cuenta,pc.numero,pc.nombre from plan_cuentas_cajachica pcc,plan_cuentas pc 
-where pcc.cod_cuenta=pc.codigo");
+   $stmtCuenta = $dbh->prepare("SELECT pcc.cod_cuenta,pc.numero,pc.nombre from plan_cuentas_cajachica pcc,plan_cuentas pc where pcc.cod_cuenta=pc.codigo");
    $stmtCuenta->execute();
    while ($rowCuenta = $stmtCuenta->fetch(PDO::FETCH_ASSOC)) {
     $codigoX=$rowCuenta['cod_cuenta'];
@@ -36,15 +35,15 @@ where pcc.cod_cuenta=pc.codigo");
     <?php
     $i=$i+1;  
   }
-
-
+//sacmos el valor de fechas hacia atrás
+$dias_atras=obtenerValorConfiguracion(31);
 $cod_proveedores=0;
 
 
 
 if ($codigo > 0){
     
-    $stmt = $dbh->prepare("SELECT codigo,cod_cuenta,fecha,cod_tipodoccajachica,nro_documento,cod_personal,monto,observaciones,nro_recibo,cod_area,cod_uo,cod_proveedores,
+    $stmt = $dbh->prepare("SELECT codigo,cod_cuenta,fecha,cod_tipodoccajachica,nro_documento,cod_personal,monto,observaciones,nro_recibo,cod_area,cod_uo,cod_proveedores,cod_actividad_sw,
         (select c.nombre from plan_cuentas c where c.codigo=cod_cuenta) as nombre_cuenta,
         (select c.numero from plan_cuentas c where c.codigo=cod_cuenta) as nro_cuenta
     from caja_chicadetalle
@@ -67,17 +66,20 @@ if ($codigo > 0){
     $cod_area= $result['cod_area'];
     $cod_uo= $result['cod_uo'];
     $cod_proveedores= $result['cod_proveedores'];
+    $cod_actividad_sw= $result['cod_actividad_sw'];
 
     $cuenta_aux=$nro_cuenta." - ".$nombre_cuenta;   
     
 } else {
     //para el numero correlativo
-    $stmtCC = $dbh->prepare("SELECT nro_documento from caja_chicadetalle where cod_estadoreferencial=1 and cod_cajachica=$cod_cc order by codigo desc");
+    $stmtCC = $dbh->prepare("SELECT nro_documento,nro_recibo from caja_chicadetalle where cod_estadoreferencial=1 and cod_cajachica=$cod_cc order by codigo desc limit 1");
     $stmtCC->execute();
     $resultCC = $stmtCC->fetch();
     $numero_caja_chica_aux = $resultCC['nro_documento'];
+    $numero_recibo_aux = $resultCC['nro_recibo'];
     if($numero_caja_chica_aux==null){
         $numero_caja_chica_aux=0;
+        $numero_recibo_aux=0;
     }
 
     $codigo=0;
@@ -87,17 +89,19 @@ if ($codigo > 0){
     
     $fecha = date('Y-m-d');
     $cod_tipodoccajachica = 0;
-    $nro_documento = $numero_caja_chica_aux+1;    
+    $nro_documento = $numero_caja_chica_aux+1;
+    $nro_recibo=$numero_recibo_aux+1;
     $cod_personal = 0;    
     $observaciones = "";    
     $monto = 0;    
     $cod_estado = 1;
 
     $cuenta_aux="";
-    $nro_recibo=0;
     $cod_cuenta=0;
 
 }
+
+$fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
 ?>
 
 <div class="content">
@@ -163,7 +167,10 @@ if ($codigo > 0){
                         <label class="col-sm-2 col-form-label">Fecha</label>
                         <div class="col-sm-4">
                             <div class="form-group">
-                                <input class="form-control" type="date" name="fecha" id="fecha" readonly="true" value="<?=$fecha;?>" required/>
+                                
+                                <input class="form-control" name="fecha" id="fecha" type="date" min="<?=$fecha_dias_atras?>" max="<?=$fecha?>" required="true" value="<?=$fecha?>" />
+                                </select>
+                               <!--  <input class="form-control" type="date" name="fecha" id="fecha" value="<?=$fecha;?>" required/> -->
                             </div>
                         </div>
                     </div><!--monto inicio y reembolso-->
@@ -189,8 +196,6 @@ if ($codigo > 0){
                         <div class="form-group">
                             <div id="div_contenedor_uo">                                        
                               <?php
-                              
-
                                   $sqlUO="SELECT codigo,nombre from unidades_organizacionales where cod_estado=1";
                                   $stmt = $dbh->prepare($sqlUO);
                                   $stmt->execute();
@@ -237,6 +242,30 @@ if ($codigo > 0){
                         </div>
                       </div>
                     </div>
+                                        <div class="row">
+                      <label class="col-sm-2 col-form-label">Actividad</label>
+                      <div class="col-sm-8">
+                        <div class="form-group">
+                            <div id="div_contenedor_actividad">
+                              <?php
+                              $cod_uo_proy_fin=obtenerCodOUProyFinanciacion();
+                              // $lista= obtenerPaisesServicioIbrnorca();
+                              $lista= obtenerActividadesServicioImonitoreo();
+                              if($cod_uo==$cod_uo_proy_fin){ ?>
+
+                                <select name="cod_actividad" id="cod_actividad" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" data-show-subtext="true" data-live-search="true">
+                                <option disabled selected value="">--SELECCIONE--</option>
+                                 <?php
+                                      foreach ($lista as $listas) { ?>
+                                        <option <?=($cod_actividad_sw==$listas->codigo)?"selected":"";?> value="<?=$listas->codigo?>" class="text-right"><?=substr($listas->nombre, 0, 85)?></option>
+
+                                      <?php }?>
+                                </select>        
+                              <?php } ?>                                                                               
+                            </div>
+                        </div>
+                      </div>
+                    </div>
 
                     <!-- proveedor -->
                     <div class="row">
@@ -267,6 +296,7 @@ if ($codigo > 0){
                             </div>
                         </div>                        
                     </div>
+
 
                     <div class="row">
                         <label class="col-sm-2 col-form-label">Detalle</label>

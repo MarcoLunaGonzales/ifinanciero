@@ -28,10 +28,12 @@ try {
     $cod_area = $_POST["cod_area"];
     $nro_recibo = $_POST["nro_recibo"];
     $cod_proveedores = $_POST["proveedores"];
-    if($cod_area=='')$cod_area=0;
-    if($cod_uo=='')$cod_uo=0;
-    if($cod_proveedores=='')$cod_proveedores=0;
-    if($cod_personal=='')$cod_personal=0;
+    $cod_actividad_sw = $_POST["cod_actividad"];
+    if($cod_area=='')$cod_area=null;
+    if($cod_uo=='')$cod_uo=null;
+    if($cod_proveedores=='')$cod_proveedores=null;
+    if($cod_personal=='')$cod_personal=null;
+    if($cod_actividad_sw=='')$cod_actividad_sw=null;
 
     //sacamos monto de caja chica
     $stmtMCC = $dbh->prepare("SELECT monto_reembolso from caja_chica where  codigo =$cod_cc");
@@ -70,15 +72,15 @@ try {
         // echo 'nro_recibo:'.$nro_recibo."<br>";
 
 
-        $stmt = $dbh->prepare("INSERT INTO caja_chicadetalle(codigo,cod_cajachica,cod_cuenta,fecha,cod_tipodoccajachica,nro_documento,cod_personal,monto,observaciones,cod_estado,cod_estadoreferencial,cod_area,cod_uo,nro_recibo,cod_proveedores) 
-        values ($codigo,$cod_cc,$cod_cuenta,'$fecha',$cod_tipo_documento,$numero,$cod_personal,$monto,'$observaciones',$cod_estado,$cod_estadoreferencial,$cod_area,$cod_uo,$nro_recibo,$cod_proveedores)");
+        $stmt = $dbh->prepare("INSERT INTO caja_chicadetalle(codigo,cod_cajachica,cod_cuenta,fecha,cod_tipodoccajachica,nro_documento,cod_personal,monto,observaciones,cod_estado,cod_estadoreferencial,cod_area,cod_uo,nro_recibo,cod_proveedores,cod_actividad_sw) 
+        values ($codigo,$cod_cc,$cod_cuenta,'$fecha',$cod_tipo_documento,$numero,'$cod_personal',$monto,'$observaciones',$cod_estado,$cod_estadoreferencial,'$cod_area','$cod_uo',$nro_recibo,'$cod_proveedores','$cod_actividad_sw')");
         $flagSuccess=$stmt->execute();
         if($flagSuccess){//registramos rendiciones
             $stmtReembolso = $dbh->prepare("UPDATE caja_chica set monto_reembolso=$monto_reembolso where codigo=$cod_cc");
             $stmtReembolso->execute();
 
             $stmtrendiciones = $dbh->prepare("INSERT INTO rendiciones(codigo,numero,cod_tipodoc,monto_a_rendir,monto_rendicion,cod_personal,observaciones,cod_estado,cod_cajachicadetalle,cod_estadoreferencial,fecha_dcc) 
-            values ($codigo,$numero,$cod_tipo_documento,$monto,$monto_rendicion,$cod_personal,'$observaciones',$cod_estado,$codigo,$cod_estadoreferencial,'$fecha')");
+            values ($codigo,$numero,$cod_tipo_documento,$monto,$monto_rendicion,'$cod_personal','$observaciones',$cod_estado,$codigo,$cod_estadoreferencial,'$fecha')");
             $flagSuccess=$stmtrendiciones->execute();
         }
         showAlertSuccessError($flagSuccess,$urlListDetalleCajaChica.'&codigo='.$cod_cc.'&cod_tcc='.$cod_tcc);
@@ -107,7 +109,7 @@ try {
         // echo 'cod_area:'.$cod_area."<br>";
         // echo 'nro_recibo:'.$nro_recibo."<br>";
 
-        $stmtCCD = $dbh->prepare("UPDATE caja_chicadetalle set cod_cuenta=$cod_cuenta,fecha='$fecha',cod_tipodoccajachica=$cod_tipo_documento,nro_documento=$numero,cod_personal=$cod_personal,monto=$monto,observaciones='$observaciones',cod_area=$cod_area,cod_uo=$cod_uo,nro_recibo=$nro_recibo,cod_proveedores=$cod_proveedores
+        $stmtCCD = $dbh->prepare("UPDATE caja_chicadetalle set cod_cuenta=$cod_cuenta,fecha='$fecha',cod_tipodoccajachica=$cod_tipo_documento,nro_documento=$numero,cod_personal=$cod_personal,monto=$monto,observaciones='$observaciones',cod_area='$cod_area',cod_uo='$cod_uo',nro_recibo=$nro_recibo,cod_proveedores='$cod_proveedores',cod_actividad_sw='$cod_actividad_sw'
          where codigo = $codigo");      
         $flagSuccess=$stmtCCD->execute();        
         

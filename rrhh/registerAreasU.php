@@ -12,7 +12,7 @@ $stmtX = $dbh->prepare($sqlX);
 $stmtX->execute();
 
 $table="partidaspresupuestarias_cuentas";
-$moduleName="Configurar Areas por Unidad Organizacional";
+$moduleName="Configurar Areas por Oficina";
 
 $codUnidad=$codigo;
 
@@ -60,7 +60,7 @@ $stmtArea->bindColumn('cod_area_padre', $codAreaPadre);
                     <i class="material-icons">assignment</i>
                   </div>
                   <h4 class="card-title"><?=$moduleName?></h4>
-                  <h6 class="card-title">Unidad Organizacional: <?=$nombreUnidad;?></h6>
+                  <h6 class="card-title">Oficina: <?=$nombreUnidad;?></h6>
                   <h6 class="card-title">Por favor active la casilla para registrar el Area</h6>
                 </div>
                 <div class="card-body">
