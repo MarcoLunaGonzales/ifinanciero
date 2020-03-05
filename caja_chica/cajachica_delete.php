@@ -15,7 +15,8 @@ if($cod_a==2){
 	$stmt = $dbh->prepare("UPDATE caja_chica set cod_estadoreferencial=2 where codigo=$codigo");
 	$flagSuccess=$stmt->execute();
 }else{
-	$stmt = $dbh->prepare("UPDATE caja_chica set cod_estado=2 where codigo=$codigo");
+	$fecha_cierre=date('Y-m-d');
+	$stmt = $dbh->prepare("UPDATE caja_chica set cod_estado=2,fecha_cierre='$fecha_cierre'  where codigo=$codigo");
 	$flagSuccess=$stmt->execute();
 }
 showAlertSuccessError($flagSuccess,$urlListCajaChica."&codigo=".$cod_tcc);

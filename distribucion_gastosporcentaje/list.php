@@ -8,18 +8,11 @@ $globalAdmin = $_SESSION["globalAdmin"];
 
 $dbh = new Conexion();
 
-$stmt = $dbh->prepare("SELECT dgp.codigo as codDistribucion,
-(SELECT uo.nombre FROM unidades_organizacionales uo WHERE uo.codigo=dgp.cod_unidadorganizacional) as unidad_nomb,
-(SELECT uo.abreviatura FROM unidades_organizacionales uo WHERE uo.codigo=dgp.cod_unidadorganizacional) as unidad_abrev,
-porcentaje
-FROM $table_distribucion dgp");
-
-$stmt->execute();
-
-$stmt->bindColumn('codDistribucion', $cod_distribucion);
-$stmt->bindColumn('unidad_nomb', $unidad_nombre);
-$stmt->bindColumn('unidad_abrev', $unidad_abreviatura);
-$stmt->bindColumn('porcentaje', $porcentaje);
+$stmt = $dbh->prepare("SELECT * from distribucion_gastosporcentaje where cod_estadoreferencial=1");
+$stmt->execute();          
+$stmt->bindColumn('codigo', $codigo_distribucion);
+$stmt->bindColumn('nombre', $nombre_distribucion);
+$stmt->bindColumn('estado', $estado_distribucion);
 
 ?>
 
@@ -40,9 +33,10 @@ $stmt->bindColumn('porcentaje', $porcentaje);
                 <thead>
                   <tr>
                     <th class="text-left">#</th>
-                    <th class="text-center">Unidad</th>
-                    <th class="text-center">Abreviatura</th>
-                    <th class="text-center">Porcentaje</th>
+                    <th class="text-center">Nombre</th>
+                    <th class="text-center">Estado</th>
+                    <th>Actions</th>
+                    <!-- <th class="text-center">Abreviatura</th>      -->               
                     <!--th class="text-right">Actions</th-->
                   </tr>
                 </thead>
@@ -51,42 +45,44 @@ $stmt->bindColumn('porcentaje', $porcentaje);
                      $index = 1;
                      $sum=0;
                       while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+                        if($estado_distribucion==1){
+                          $label='<span class="badge badge-success">Activo</span>';
+                        }else
+                          $label='<span class="badge badge-danger">Inactivo</span>';
                   ?>
                     <tr>
                       <td class="text-center"><?= $index; ?></td>
-                      <td class="text-left"><?= $unidad_nombre; ?></td>
-                      <td class="text-center"><?= $unidad_abreviatura; ?></td>
-                      <td class="text-center"><?= $porcentaje." %"; ?></td>
-                      <!--td class="td-actions text-right">
+                      <td class="text-left"><?= $nombre_distribucion; ?></td>
+                      <td class="text-left"><?= $label; ?></td>                                    
+                      <td class="td-actions text-right">
                         <?php
                         if ($globalAdmin == 1) {
-                        ?>
-                          <a href='<?= $urlEdit; ?>&cod_esc_ant=<?= $cod_escala_antiguedad; ?>' rel="tooltip" class="<?= $buttonEdit; ?>">
+                        ?>                         
+                          <a href='<?= $urlDistribucionGastosDetalle; ?>&codigo=<?=$codigo_distribucion?>' rel="tooltip" class="btn btn-primary">
+                            <i class="material-icons" title="Detalle">playlist_add</i>
+                          </a>
+                          <a href='<?=$urlRegisterDistribucionGastos; ?>&codigo=<?=$codigo_distribucion?>' rel="tooltip" class="<?= $buttonEdit; ?>">
                             <i class="material-icons"><?= $iconEdit; ?></i>
                           </a>
-                          <button rel="tooltip" class="<?= $buttonDelete; ?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?= $urlDelete; ?>&cod_esc_ant=<?= $cod_escala_antiguedad; ?>')">
+                          <button rel="tooltip" class="<?= $buttonDelete; ?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?= $urlDeleteDistribucion; ?>&codigo=<?=$codigo_distribucion?>')">
                             <i class="material-icons"><?= $iconDelete; ?></i>
                           </button>
+                          <button rel="tooltip" class="btn btn-warning" onclick="alerts.showSwal('warning-message-and-confirmation-cambiar-estado','<?= $urlCambiarEstado; ?>&codigo=<?=$codigo_distribucion?>')">
+                            <i class="material-icons" title="Activar Distribución">settings_ethernet</i>
+
+                          </button>                          
+
                         <?php
         }
                         ?>
-                      </td-->
+                      </td>
                     </tr>
                   <?php
-                          $index++;
-                          $sum=$sum+$porcentaje;
+                          $index++;                        
                          }
                   ?>
                 </tbody>
-                <tfoot>
-                <tr></tr>
-                <tr>
-                <td class="text-center"></td>
-                <td class="text-center"></td>
-                <th class="text-center">Total : </th>
-                <th class="text-center"><?= $sum; ?> %</th>
-              </tr>
-                </tfoot>
+     
               </table>
             </div>
           </div>
@@ -96,7 +92,10 @@ $stmt->bindColumn('porcentaje', $porcentaje);
         ?>
           <div class="card-footer fixed-bottom">
             <!--button class="<?=$buttonNormal;?>" onClick="location.href='<?=$urlRegister;?>'">Registrar</button-->
-            <button class="<?= $buttonCeleste; ?>" onClick="location.href='<?= $urlEditarDistribucionGastos; ?>'">Editar en Grupo</button>
+            <!-- <button class="<?= $buttonCeleste; ?>" onClick="location.href='<?= $urlEditarDistribucionGastos; ?>'">Editar Porcentajes en Grupo</button> -->
+            <button class="btn btn-success" onClick="location.href='<?=$urlRegisterDistribucionGastos; ?>&codigo=0'">Registrar</button>
+
+           
 
           </div>
         <?php
@@ -108,3 +107,6 @@ $stmt->bindColumn('porcentaje', $porcentaje);
     </div>
   </div>
 </div>
+
+
+

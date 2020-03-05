@@ -13,18 +13,22 @@ $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//try
 
 $codigo = $_GET["codigo"];//codigoactivofijo
 try{
-    $stmt = $dbh->prepare("SELECT * from caja_chicadetalle where cod_estadoreferencial=1 and cod_cajachica=$codigo  ORDER BY 1");
+    $stmt = $dbh->prepare("SELECT *,(select a.abreviatura from areas a where a.codigo=cod_area) as nombre_area from caja_chicadetalle where cod_estadoreferencial=1 and cod_cajachica=$codigo  ORDER BY 1");
     $stmt->execute();    
         //==================================================================================================================
     //datos caja chica
-    $stmtInfo = $dbh->prepare("SELECT tc.nombre,c.monto_inicio,c.observaciones from caja_chica c,tipos_caja_chica tc where c.cod_tipocajachica=tc.codigo and c.codigo=$codigo");
+    $stmtInfo = $dbh->prepare("SELECT tc.nombre,c.monto_inicio,c.observaciones,c.numero,c.fecha,c.fecha_cierre from caja_chica c,tipos_caja_chica tc where c.cod_tipocajachica=tc.codigo and c.codigo=$codigo");
     $stmtInfo->execute();
     $resultInfo = $stmtInfo->fetch();
     //$codigo = $result['codigo'];
     $nombre_tcc = $resultInfo['nombre'];
     $monto_inicio_cc = $resultInfo['monto_inicio'];
     $detalle_cc = $resultInfo['observaciones'];
-    
+    $numero_cc = $resultInfo['numero'];
+    $fecha_inicio_cc = $resultInfo['fecha'];
+    $fecha_cierre_cc = $resultInfo['fecha_cierre'];
+
+    $contenido='CAJA CHICA N° '.$numero_cc." De Fecha: ".$fecha_inicio_cc." a ".$fecha_cierre_cc;
 
 
 $html = '';
@@ -62,7 +66,7 @@ $html.=  '<header class="header">'.
               '<td colspan="8"><small>'.$nombre_tcc.'</td>
             </tr>'.
             '<tr class="bold table-title text-center">'.
-              '<td colspan="8"><small>'.$detalle_cc.'</td>
+              '<td colspan="8"><small>'.$contenido.'</td>
             </tr>'.
             '<tr class="bold table-title text-center">'.
               '<td width="10%"><small>Fecha</small</td> 
@@ -121,7 +125,7 @@ $html.=  '<header class="header">'.
                 $total_egresos+=$row['monto'];
               $html.='<tr>'.                      
                             '<td class="text-center small">'.$row['fecha'].'</td>'.
-                            '<td class="text-center small">'.$row['cod_area'].'</td>'.
+                            '<td class="text-center small">'.$row['nombre_area'].'</td>'.
                             '<td class="text-left small">'.$row['observaciones'].'</td>'.
                             '<td class="text-center small">'.$row['nro_recibo'].'</td>'.
                             '<td class="text-center small">'.$nro_factura.'</td>'.

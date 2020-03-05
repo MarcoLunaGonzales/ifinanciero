@@ -53,7 +53,7 @@ $responsable='';
                                 <th>Fecha Asignación</th>
                                 <th>Estado</th>
                                 <th>Responsable</th>
-                                <th>UO</th>
+                                <th>Oficina</th>
                                  
                               </tr>
                           </thead>
@@ -125,7 +125,7 @@ $responsable='';
                     </div>
     
                     <div class="row">
-                      <label class="col-sm-2 col-form-label">Unidad Organizacional</label>
+                      <label class="col-sm-2 col-form-label">Oficina</label>
                       <div class="col-sm-7">
                         <div class="form-group">
                             <select id="cod_uo" name="cod_uo" class="selectpicker " data-style="btn btn-info" onChange="ajaxPersonalUbicacionTrasfer(this);">

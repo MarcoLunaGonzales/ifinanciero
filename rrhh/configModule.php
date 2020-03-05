@@ -29,15 +29,15 @@ $urlCargoEscalaSalarialGeneralDelete="index.php?opcion=cargoEscalaSalarialGenera
 
 
 //unidades organizacionales
-$nombreSingularUO="Unidad Organizacional";
-$nombrePluralUO="Unidades Organizacionales";
+$nombreSingularUO="Oficina";
+$nombrePluralUO="Oficinas";
 $urlListUO="?opcion=uoLista";
 $urlSaveUO="?opcion=uoSave";
 $urlFormUO="index.php?opcion=uoForm";
 $urlDeleteUO="index.php?opcion=deleteUO";
 $urlRegisterAreasU="index.php?opcion=registerAreasU";
 
-$nombrePluralAreas_organizacion="Areas de Unidad Organizacional";
+$nombrePluralAreas_organizacion="Areas de Oficina";
 //areas_contabilizacion
 $nombreSingularAreas_contabilizacion="Areas Contabilización";
 $nombreSingularAreas_contabilizacion_detalle="Areas Contabilización Detalle";

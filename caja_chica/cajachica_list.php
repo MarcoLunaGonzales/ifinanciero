@@ -53,9 +53,9 @@ $stmt->bindColumn('nombre_estado', $nombre_estado);
 
                       <thead>
                         <tr>
-                          <th>#</th>                                                  
+                          <th>Nro. Caja Chica</th>
                           <th>Fecha</th>
-                          <th>Núm.</th>
+                          
                           <th>Responsable</th>
                           <th>Monto Inicio</th>
                           <th>Saldo</th>
@@ -69,15 +69,14 @@ $stmt->bindColumn('nombre_estado', $nombre_estado);
                         <?php $index=1;
                         while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { 
                              if($cod_estado==1)
-                              $label='<span class="badge badge-danger">';
+                                $label='<span class="badge badge-success">';
                             else
-                              $label='<span class="badge badge-success">';
+                              $label='<span class="badge badge-danger">';                              
                            
                           ?>
                           <tr>
-                            <td><?=$index;?></td>                            
+                            <td><?=$numero;?></td>    
                               <td><?=$fecha;?></td>
-                              <td><?=$numero;?></td>        
                               <td><?=$personal;?></td>        
                               <td><?=number_format($monto_inicio, 2, '.', ',');?></td>        
                               <td><?=number_format($monto_reembolso, 2, '.', ',');?></td>        

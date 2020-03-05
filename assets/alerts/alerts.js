@@ -32,6 +32,26 @@ alerts = {
           }
         })
     }
+    else if (type == 'warning-message-and-confirmation-cambiar-estado') {
+      swal({
+        title: '¿Quieres Activar ésta Distribución?',
+        text: "",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonClass: 'btn btn-success',
+        cancelButtonClass: 'btn btn-danger',
+        confirmButtonText: 'Si, Activar!',
+        cancelButtonText: 'No, Cancelar!',
+        buttonsStyling: false
+      }).then((result) => {
+          if (result.value) {
+            location.href=url; 
+            return(true);
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            return(false);
+          }
+        })
+    }
     else if (type == 'warning-message-and-confirmation-clonar') {
       swal({
         title: 'Duplicar Registro',

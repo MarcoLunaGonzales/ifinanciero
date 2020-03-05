@@ -1166,7 +1166,12 @@
 		}
 
 		if ($_GET['opcion']=='editDistribucionGastos') {
+			$codigo=$_GET['codigo'];
 			require_once('distribucion_gastosporcentaje/editDistribucionGastos.php');
+		}
+		if ($_GET['opcion']=='registerDistribucionGastos') {
+			$codigo=$_GET['codigo'];
+			require_once('distribucion_gastosporcentaje/registerDistribucionGastos.php');
 		}
 
 		if ($_GET['opcion']=='registerEscalaAntiguedad') {
@@ -1177,6 +1182,7 @@
 			$cod_esc_ant=$_GET['cod_esc_ant'];
 			require_once('escalas_antiguedad/saveDelete.php');
 		}
+
 
 		//refrigerios
 
@@ -1334,6 +1340,20 @@
 			$codigo_padre=$_GET['codigo_padre'];
 			require_once('cuentas_auxiliares/saveDeleteCC.php');
 		}
+
+		if ($_GET['opcion']=='saveCambiarDistribucionGastos') {
+			$codigo=$_GET['codigo'];
+			require_once('distribucion_gastosporcentaje/saveCambiarDistribucionGastos.php');
+		}
+		if ($_GET['opcion']=='DistribucionGastosDetalle') {
+			$codigo=$_GET['codigo'];
+			require_once('distribucion_gastosporcentaje/list_distribucion_detalle.php');
+		}
+		if ($_GET['opcion']=='deleteDistribucion') {
+			$codigo=$_GET['codigo'];
+			require_once('distribucion_gastosporcentaje/saveDeleteDistribucion.php');
+		}
+		
 		
 
 	}else{

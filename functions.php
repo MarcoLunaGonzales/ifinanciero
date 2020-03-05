@@ -3920,6 +3920,7 @@ function obtenerAnioPlantillaServicio($codigo){
   }
   return $valor;
 }
+
 function obtenerMontoTarifarioSelloEmpresa($cod_sello,$cod_empresa,$cod_nacionalidad){
    $dbh = new Conexion();
    $valor=0;$codigo=0;
@@ -3932,6 +3933,63 @@ function obtenerMontoTarifarioSelloEmpresa($cod_sello,$cod_empresa,$cod_nacional
   }
   return array($valor,$codigo);
 }
+
+
+function obtener_diashsbiles_atras($dias_atras,$fecha)
+{
+  $cont=1;
+  $i=0;
+  $fecha_dias_atras='';
+  while ( $i< $dias_atras) {
+    $fecha_dias_atras=date("Y-m-d",strtotime($fecha."- ".($cont)." days"));
+    if(date("w",strtotime($fecha_dias_atras)) != 0 && date("w",strtotime($fecha_dias_atras)) != 6 )
+    {
+      $i++;
+    }
+    $cont++;  
+  }
+  return $fecha_dias_atras;
+}
+
+function VerificarProyFinanciacion($codigo_UO){
+   $dbh = new Conexion();
+   $valor=null;
+   $sql="SELECT p.codigo from proyectos_financiacionexterna p where p.cod_unidadorganizacional=$codigo_UO";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['codigo'];
+  }
+  return $valor;
+}
+
+function obtenerActividadesServicioImonitoreo($codigo_proyecto){
+  $sIde = "";
+  $sKey = "";
+  $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ListarComponentes","codigo_proyecto"=>$codigo_proyecto);
+  //Lista todos los componentes
+  $parametros=json_encode($parametros);
+    $ch = curl_init();
+    // definimos la URL a la que hacemos la petición    
+    curl_setopt($ch, CURLOPT_URL,"http://localhost/imonitoreo/componentesSIS/compartir_servicio.php");
+    // indicamos el tipo de petición: POST
+    curl_setopt($ch, CURLOPT_POST, TRUE);
+    // definimos cada uno de los parámetros
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);
+    // recibimos la respuesta y la guardamos en una variable
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $remote_server_output = curl_exec ($ch);
+    curl_close ($ch);
+    
+    // imprimir en formato JSON  
+    //print_r($remote_server_output);
+    $obj= json_decode($remote_server_output);
+    $detalle=$obj->lstComponentes;
+    return $detalle;
+    // foreach ($detalle as $objDet){
+    //   echo $objDet->codigo."<br>";
+    // }
+  }
 
 ?>
 
