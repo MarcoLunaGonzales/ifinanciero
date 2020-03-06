@@ -708,7 +708,6 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
             <p class="font-weight-bold float-left">DATOS DEL CALCULO</p>
             <img src="../assets/img/f_abajo2.gif" alt="" height="30px" class="float-right">
 						<table class="table table-bordered table-condensed">
-							<thead>
 								<tr class="">
 									<td></td>
                   <td class="bg-table-primary2 text-white" colspan="2">EN IBNORCA</td>
@@ -720,7 +719,6 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                   <td class="bg-table-primary2 text-white">USD</td>
                   <td class="bg-table-primary2 text-white"></td>
                 </tr>
-							</thead>
 							<tbody>
                 
                 <tr>

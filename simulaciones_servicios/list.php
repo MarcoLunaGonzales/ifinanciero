@@ -11,9 +11,9 @@ $dbh = new Conexion();
 
 // Preparamos
 if(isset($_GET['q'])){
-  $stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servicios sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo where sc.cod_estadoreferencial=1 and sc.idServicio=$q order by sc.codigo");
+  $stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado,c.nombre as cliente from simulaciones_servicios sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo join clientes c on c.codigo=sc.cod_cliente where sc.cod_estadoreferencial=1 and sc.idServicio=$q order by sc.codigo");
 }else{
-  $stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servicios sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo where sc.cod_estadoreferencial=1 order by sc.codigo");
+  $stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado,c.nombre as cliente from simulaciones_servicios sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo join clientes c on c.codigo=sc.cod_cliente where sc.cod_estadoreferencial=1 order by sc.codigo");
 }
 
 // Ejecutamos
@@ -27,6 +27,7 @@ $stmt->bindColumn('cod_plantillaservicio', $codPlantilla);
 $stmt->bindColumn('cod_estadosimulacion', $codEstado);
 $stmt->bindColumn('cod_responsable', $codResponsable);
 $stmt->bindColumn('estado', $estado);
+$stmt->bindColumn('cliente', $cliente);
 
 ?>
 
@@ -47,6 +48,7 @@ $stmt->bindColumn('estado', $estado);
                         <tr>
                           <th class="text-center">#</th>
                           <th>Nombre</th>
+                          <th>Cliente</th>
                           <th>Responsable</th>
                           <th>Fecha</th>
                           <th>Estado</th>
@@ -76,6 +78,7 @@ $stmt->bindColumn('estado', $estado);
                         <tr>
                           <td align="center"><?=$index;?></td>
                           <td><?=$nombre;?></td>
+                          <td><?=$cliente?></td>
                           <td>
                                  <img src="assets/img/faces/persona1.png" width="20" height="20"/><?=$responsable;?>
                           </td>

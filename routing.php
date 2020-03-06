@@ -183,6 +183,11 @@
 			require_once('simulaciones_servicios/saveDelete.php');
 		}
          
+
+        //tarifario servicios
+        if ($_GET['opcion']=='listTarifarioServicios') {
+			require_once('tarifario_servicios/list.php');
+		}       
         //MES EN CURSO
         if ($_GET['opcion']=='mesCurso') {
 			require_once('mes_curso/list.php');

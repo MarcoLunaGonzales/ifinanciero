@@ -503,17 +503,29 @@
                            <select class="selectpicker form-control form-control-sm" onchange="verEstadosCuentasCred()" name="cuentas_origen" id="cuentas_origen" data-style="<?=$comboColor;?>">
                              <option disabled selected value="">Seleccione una Cuenta</option>
                              <?php
-                              $stmt = $dbh->prepare("SELECT p.* FROM plan_cuentas p, configuracion_estadocuentas c where c.cod_plancuenta=p.codigo and c.tipo=1 order by codigo");
+                              $stmt = $dbh->prepare("SELECT p.* FROM plan_cuentas p, configuracion_estadocuentas c where c.cod_plancuenta=p.codigo and c.tipo=1 and c.cod_cuentaaux=0 order by codigo");
                               $stmt->execute();
                               while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                 $codigoX=$row['codigo'];
                                 $nombreX=$row['nombre'];
                                 $numeroX=$row['numero'];
                                 ?>
-                                <option value="<?=$codigoX;?>"><?=trim($numeroX);?> - <?=trim($nombreX);?></option>  
+                                <option value="<?=$codigoX;?>###NNN"><?=trim($numeroX);?> - <?=trim($nombreX);?></option>  
                                 <?php
                                   }
                                   ?>
+                                <?php
+                              $stmt = $dbh->prepare("SELECT p.* FROM cuentas_auxiliares p, configuracion_estadocuentas c where c.cod_cuentaaux=p.codigo and c.tipo=1 and c.cod_plancuenta=0 order by codigo");
+                              $stmt->execute();
+                              while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                $codigoX=$row['codigo'];
+                                $nombreX=$row['nombre'];
+                                $numeroX=$row['nro_cuenta'];
+                                ?>
+                                <option value="<?=$codigoX;?>###AUX"><?=trim($numeroX);?> - <?=trim($nombreX);?></option>  
+                                <?php
+                                  }
+                                  ?>  
                              </select>
                           </div> 
                        </div>      

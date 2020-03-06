@@ -26,13 +26,19 @@ $j=1;
        </div>
    <table class="table table-condensed table-bordered">
          <tr class="text-white bg-info">
+           <td colspan="2"></td>
+           <td colspan="2">Monto x Servicio</td>
+           <td colspan="2">Monto x Persona</td>
+           <td></td>
+         </tr>
+         <tr class="text-white bg-info">
         <td width="30%">Cuenta</td>
         <td width="25%">Detalle</td>
-        <td>Monto x Servicio BOB</td>
-        <td>Monto x Persona BOB</td>
-        <td>Monto x Servicio USD</td>
-        <td>Monto x Persona USD</td>
-        <td class="small">Habilitar / Deshabilitar</td>
+        <td>BOB</td>
+        <td>USD</td>
+        <td>BOB</td>
+        <td>USD</td>
+        <td class="small" width="13%">Habilitar / Deshabilitar</td>
         </tr>
     <?php
     $totalMontoDetalle=0;$totalMontoDetalleAl=0;
@@ -64,8 +70,8 @@ $j=1;
               <td class="text-left small font-weight-bold"><input type="hidden" id="codigo_cuenta<?=$ann?>QQQ<?=$j?>RRR<?=$i?>" value="<?=$codigoCuenta?>"><input type="hidden" id="codigo_fila<?=$ann?>QQQ<?=$j?>RRR<?=$i?>" value="<?=$codX?>">[<?=$numX?>] - <?=$nomX?></td>
               <td class="text-left small font-weight-bold"><?=$rowDetalles['glosa']?></td>
               <td class="text-right"><input type="number" id="monto_mod<?=$ann?>QQQ<?=$j?>RRR<?=$i?>" name="monto_mod<?=$ann?>QQQ<?=$j?>RRR<?=$i?>" <?=($bandera==0)?"readonly":"";?> class="form-control text-info text-right" onchange="calcularTotalPartidaGenericoServicio('<?=$ann?>',<?=$j?>,1)" onkeyUp="calcularTotalPartidaGenericoServicio('<?=$ann?>',<?=$j?>,1)" value="<?=$montoDetalle?>" step="0.01"></td>
-              <td class="text-right"><input type="number" id="monto_modal<?=$ann?>QQQ<?=$j?>RRR<?=$i?>" name="monto_modal<?=$ann?>QQQ<?=$j?>RRR<?=$i?>" <?=($bandera==0)?"readonly":"";?> class="form-control text-info text-right" onchange="calcularTotalPartidaGenericoServicio('<?=$ann?>',<?=$j?>,2)" onkeyUp="calcularTotalPartidaGenericoServicio('<?=$ann?>',<?=$j?>,2)" value="<?=$montoDetalleAl?>" step="0.01"></td>
               <td class="text-right"><input type="number" id="monto_modUSD<?=$ann?>QQQ<?=$j?>RRR<?=$i?>" name="monto_modUSD<?=$ann?>QQQ<?=$j?>RRR<?=$i?>" <?=($bandera==0)?"readonly":"";?> class="form-control text-info text-right" onchange="calcularTotalPartidaGenericoServicio('<?=$ann?>',<?=$j?>,1)" onkeyUp="calcularTotalPartidaGenericoServicio('<?=$ann?>',<?=$j?>,3)" value="<?=$montoDetalleUSD?>" step="0.01"></td>
+              <td class="text-right"><input type="number" id="monto_modal<?=$ann?>QQQ<?=$j?>RRR<?=$i?>" name="monto_modal<?=$ann?>QQQ<?=$j?>RRR<?=$i?>" <?=($bandera==0)?"readonly":"";?> class="form-control text-info text-right" onchange="calcularTotalPartidaGenericoServicio('<?=$ann?>',<?=$j?>,2)" onkeyUp="calcularTotalPartidaGenericoServicio('<?=$ann?>',<?=$j?>,2)" value="<?=$montoDetalleAl?>" step="0.01"></td>              
               <td class="text-right"><input type="number" id="monto_modalUSD<?=$ann?>QQQ<?=$j?>RRR<?=$i?>" name="monto_modalUSD<?=$ann?>QQQ<?=$j?>RRR<?=$i?>" <?=($bandera==0)?"readonly":"";?> class="form-control text-info text-right" onchange="calcularTotalPartidaGenericoServicio('<?=$ann?>',<?=$j?>,2)" onkeyUp="calcularTotalPartidaGenericoServicio('<?=$ann?>',<?=$j?>,4)" value="<?=$montoDetalleAlUSD?>" step="0.01"></td>  
               <td>
                 <input type="hidden" id="cantidad_personal<?=$ann?>QQQ<?=$j?>RRR<?=$i?>" name="cantidad_personal<?=$ann?>QQQ<?=$j?>RRR<?=$i?>" value="<?=$cantidadPersonalDetalleE?>">

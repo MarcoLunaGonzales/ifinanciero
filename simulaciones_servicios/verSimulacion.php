@@ -64,7 +64,9 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
             $stmt1->bindColumn('productos', $productosX);
             $stmt1->bindColumn('idServicio', $idServicioX);
             $stmt1->bindColumn('anios', $anioX);
-            $stmt1->bindColumn('porcenjate_fijo', $porcentajeFijoX);
+            $stmt1->bindColumn('porcentaje_fijo', $porcentajeFijoX);
+            $stmt1->bindColumn('afnor', $afnorX);
+            $stmt1->bindColumn('porcentaje_afnor', $porcentajeAfnorX);
 
       while ($row1 = $stmt1->fetch(PDO::FETCH_BOUND)) {
          //plantilla datos      
@@ -81,7 +83,16 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
            $anioGeneral=$anioX;
            $nombreSimulacion=$nombreX;
            $porcentajeFijoSim=$porcentajeFijoX;
-           
+
+           $porcentajeAfnor=$porcentajeAfnorX;
+           if($afnorX==0){
+            $precioAfnorX=0;
+            $tituloAfnor="SIN AFNOR";
+           }else{
+            $precioAfnorX=$precioLocalX*($porcentajeAfnorX/100);
+            $tituloAfnor=$porcentajeAfnorX." %";
+           }
+
            if($codAreaX==39){
             $valorC=17;
            }else{
@@ -121,9 +132,9 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
         //valores de la simulacion
 
                   //total desde la plantilla 
-                 $nAuditorias=obtenerCantidadAuditoriasPlantilla($codigoPXSS); 
-                 $precioRegistrado=obtenerPrecioRegistradoPlantilla($codigoPXSS);  
-                 $totalFijo=obtenerTotalesPlantillaServicio($codigoPXSS,1,$nAuditorias); //tipo de costo 1:fijo,2:variable desde la plantilla
+                 $nAuditorias=obtenerCantidadAuditoriasPlantilla($codigoPX); 
+                 $precioRegistrado=obtenerPrecioRegistradoPlantilla($codigoPX);  
+                 $totalFijo=obtenerTotalesPlantillaServicio($codigoPX,1,$nAuditorias); //tipo de costo 1:fijo,2:variable desde la plantilla
                  $porcentPrecios=($precioLocalX*100)/$precioRegistrado;
                  $totalFijoPlan=$totalFijo[0]*($porcentPrecios/100);
                  $totalFijoPlan=$totalFijoPlan*$anioGeneral;
@@ -166,7 +177,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                  //calculos en la simulacion SERVICIOS
                  $gastosOperacionNacional=($costoTotalLocal*(obtenerValorConfiguracion(19)/100));
                  $utilidadBruta=($precioLocalX)-($costoTotalLocal);   
-                 $utilidadNetaLocal=$utilidadBruta-(($iva+$it)/100)*($precioLocalX);
+                 $utilidadNetaLocal=$utilidadBruta-((($iva+$it)/100)*($precioLocalX))-($precioAfnorX);
                  $pUtilidadLocal=($utilidadNetaLocal*100)/($precioLocalX);
 
                  $codEstadoSimulacion=4; 
@@ -460,8 +471,12 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
               <tbody>
                 <tr class="">
                   <td  style="font-size:9px !important;"></td>
-                  <td class="bg-table-primary text-white">IMPORTE BOB</td>
-                  <td class="bg-table-primary text-white">IMPORTE USD</td>
+                  <td class="bg-table-primary text-white" colspan="2">IMPORTE</td>
+                </tr>
+                <tr class="">
+                  <td  style="font-size:9px !important;"></td>
+                  <td class="bg-table-primary text-white">BOB</td>
+                  <td class="bg-table-primary text-white">USD</td>
                 </tr>
                 <tr>
                   <td class="text-left small bg-table-primary text-white">COSTO FIJO TOTAL</td>
@@ -507,14 +522,17 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
             <p class="font-weight-bold float-left">DATOS DEL CALCULO</p>
             <img src="../assets/img/f_abajo2.gif" alt="" height="30px" class="float-right">
             <table class="table table-bordered table-condensed">
-              <thead>
                 <tr class="">
                   <td></td>
-                  <td class="bg-table-primary2 text-white">EN IBNORCA BOB</td>
-                  <td class="bg-table-primary2 text-white">EN IBNORCA USD</td>
+                  <td class="bg-table-primary2 text-white" colspan="2">EN IBNORCA</td>
                   <td class="bg-table-primary2 text-white"></td>
                 </tr>
-              </thead>
+                <tr class="">
+                  <td></td>
+                  <td class="bg-table-primary2 text-white">BOB</td>
+                  <td class="bg-table-primary2 text-white">USD</td>
+                  <td class="bg-table-primary2 text-white"></td>
+                </tr>
               <tbody>
                 
                 <tr>
@@ -544,6 +562,12 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                   <td class="text-right font-weight-bold"><?=number_format((($iva+$it)/100)*($precioLocalX), 2, '.', ',')?></td>
                   <td class="text-right font-weight-bold"><?=number_format(((($iva+$it)/100)*($precioLocalX))/$usd, 2, '.', ',')?></td>
                   <td class="text-right font-weight-bold"><?=number_format($iva+$it, 2, '.', ',')?> %</td>
+                </tr>
+                <tr>
+                  <td class="text-left small bg-table-primary2 text-white">PORCENTAJE A AFNOR (<?=$porcentajeAfnor?> %)</td>
+                  <td class="text-right font-weight-bold"><?=number_format($precioAfnorX, 2, '.', ',')?></td>
+                  <td class="text-right font-weight-bold"><?=number_format($precioAfnorX/$usd, 2, '.', ',')?></td>
+                  <td class="text-right font-weight-bold"><?=number_format($porcentajeAfnor, 2, '.', ',')?> %</td>
                 </tr>
                 <tr class="<?=$estiloUtilidad?>">
                   <td class="text-left small bg-table-primary2 text-white">UTILIDAD NETA</td>

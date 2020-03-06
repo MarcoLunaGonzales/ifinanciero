@@ -35,7 +35,17 @@ $mes=$_GET['mes'];
 	<tbody id="tabla_estadocuenta">
 <?php
   /*$stmt = $dbh->prepare("SELECT e.* FROM estados_cuenta e,comprobantes_detalle d where e.cod_comprobantedetalle=d.codigo and d.cod_cuenta=$codCuenta");*/
-  $stmt = $dbh->prepare("SELECT e.*,d.glosa,d.haber,d.debe FROM estados_cuenta e,comprobantes_detalle d where e.cod_comprobantedetalle=d.codigo and (d.cod_cuenta=$codCuenta or e.cod_plancuenta=$codCuenta) order by e.fecha");
+  if(isset($_GET['auxi'])){
+    if($_GET['auxi']=="SI"){
+      $stmt = $dbh->prepare("SELECT e.*,d.glosa,d.haber,d.debe FROM estados_cuenta e,comprobantes_detalle d where e.cod_comprobantedetalle=d.codigo and (d.cod_cuentaauxiliar=$codCuenta or e.cod_cuentaaux=$codCuenta) order by e.fecha");
+    }else{
+      $stmt = $dbh->prepare("SELECT e.*,d.glosa,d.haber,d.debe FROM estados_cuenta e,comprobantes_detalle d where e.cod_comprobantedetalle=d.codigo and (d.cod_cuenta=$codCuenta or e.cod_plancuenta=$codCuenta) and d.cod_cuentaauxiliar=0 order by e.fecha");
+    }
+    
+  }else{
+    $stmt = $dbh->prepare("SELECT e.*,d.glosa,d.haber,d.debe FROM estados_cuenta e,comprobantes_detalle d where e.cod_comprobantedetalle=d.codigo and (d.cod_cuenta=$codCuenta or e.cod_plancuenta=$codCuenta) order by e.fecha");
+  }
+  
   $stmt->execute();
   $i=0;$saldo=0;
   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -52,7 +62,7 @@ $mes=$_GET['mes'];
 
 	 if($haberX==0||$haberX==""){
        ?>
-  	   <tr class="bg-white det-estados" style="display:none"><td>
+  	   <tr class="bg-white det-estados"><td><!-- style="display:none"-->
   	   	<?php if($tipo==2){ 
             ?>
             <div class="form-check">
@@ -70,10 +80,10 @@ $mes=$_GET['mes'];
   	   <?php
 	 }else{
         ?>
-  	   <tr class="bg-white det-estados" style="display:none"><td>
+  	   <tr class="bg-white det-estados"><td>
   	   	<?php if($tipo==2){ 
             ?>
-            <div class="form-check">
+            <!--<div class="form-check">
                <label class="form-check-label">
                      <input type="radio" class="form-check-input" id="cuentas_origen_detalle<?=$i?>" name="cuentas_origen_detalle" value="<?=$codCompDetX?>">
                      
@@ -82,7 +92,7 @@ $mes=$_GET['mes'];
                     </span>
                  
                </label>
-             </div>
+             </div>-->
             <?php    
   	   } ?>
   	   </td><td class="text-left font-weight-bold"><?=$fechaX?></td><td class="text-left"><?=$glosaX?></td><td class="text-right"></td><td class="text-right"><?=number_format($montoX, 2, '.', ',')?></td><td class="text-right font-weight-bold"><?=number_format($saldo, 2, '.', ',');?></td></tr>
