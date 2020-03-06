@@ -213,41 +213,31 @@ function configuracionCentros(fila,inicio){
   };
 }
 function configuracionEstadosCuenta(fila,codigoCuenta,codigoCuentaAux){
+  var contador=0;
   for (var i = 0; i < estado_cuentas.length; i++) {
     if(estado_cuentas[i].cod_cuenta==codigoCuenta){
       $("#estados_cuentas"+fila).removeClass("d-none"); 
       $("#tipo_estadocuentas"+fila).val(estado_cuentas[i].tipo);
-       if(estado_cuentas[i].tipo==1){
-         //$("#debe"+fila).removeAttr("readonly");
-         //$("#haber"+fila).val("");
-         //$("#haber"+fila).attr("readonly","readonly");
-       }else{
-         //$("#haber"+fila).removeAttr("readonly");
-         //$("#debe"+fila).attr("readonly","readonly");
-         //$("#debe"+fila).val("");
-       }     
+      contador++;   
       break;  
     }else{
+      $("#estados_cuentas"+fila).removeClass("d-none"); 
+      $("#estados_cuentas"+fila).addClass("d-none");  
+    }
+  };
+  if(contador==0){
+    for (var i = 0; i < estados_cuentas.length; i++) {
       if(estado_cuentas[i].cod_cuentaaux==codigoCuentaAux){
          $("#estados_cuentas"+fila).removeClass("d-none"); 
          $("#tipo_estadocuentas"+fila).val(estado_cuentas[i].tipo);
-        if(estado_cuentas[i].tipo==1){
-         //$("#debe"+fila).removeAttr("readonly");
-         //$("#haber"+fila).val("");
-         //$("#haber"+fila).attr("readonly","readonly");
-       }else{
-         //$("#haber"+fila).removeAttr("readonly");
-         //$("#debe"+fila).attr("readonly","readonly");
-         //$("#debe"+fila).val("");
-       }     
+         contador++;     
       break;
       }else{
-      $("#estados_cuentas"+fila).removeClass("d-none"); 
-      $("#estados_cuentas"+fila).addClass("d-none");
-        
+        $("#estados_cuentas"+fila).removeClass("d-none"); 
+        $("#estados_cuentas"+fila).addClass("d-none");
       }
-    }
-  };
+    };   
+  }
 }
 function copiarGlosa(){
   if(numFilas!=0){
