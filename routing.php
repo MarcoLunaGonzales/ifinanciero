@@ -133,6 +133,22 @@
         if ($_GET['opcion']=='registerSimulacion') {
 			require_once('simulaciones_costos/registerSimulaciones.php');
 		}
+		
+		
+		//solicitud factorizacion
+		if ($_GET['opcion']=='solicitud_facturacion') {
+			$cod=$_GET['cod'];
+			require_once('simulaciones_servicios/solicitud_facturacion.php');
+		}
+		if ($_GET['opcion']=='registerSolicitud_facturacion') {
+			$cod_s=$_GET['cod_s'];
+			$cod_f=$_GET['cod_f'];
+			require_once('simulaciones_servicios/registerSolicitud_facturacion.php');
+		}
+		if ($_GET['opcion']=='save_solicitud_facturacion') {
+			require_once('simulaciones_servicios/save_solicitud_facturacion.php');
+		}
+
         //PLANTILLAS TCP
         if ($_GET['opcion']=='listPlantillasServicios') {
 			require_once('plantillas_servicios/list.php');

@@ -56,8 +56,8 @@ $stmt->bindColumn('cliente', $cliente);
                         </tr>
                       </thead>
                       <tbody>
-<?php
-            $index=1;
+                      <?php
+                        $index=1;
                         while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                           $responsable=namePersonal($codResponsable);
                           switch ($codEstado) {
@@ -129,15 +129,18 @@ $stmt->bindColumn('cliente', $cliente);
                             <button title="Eliminar Simulación" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')">
                               <i class="material-icons"><?=$iconDelete;?></i>
                             </button>
+                            <a class="btn btn-warning" title="Solicitud de Facturación" href='<?=$urlSolicitudfactura;?>&cod=<?=$codigo;?>'>
+                              <i class="material-icons" >description</i>
+                            </a>
                               <?php  
                               }
                             ?>
                           </td>
                         </tr>
-<?php
-              $index++;
-            }
-?>
+                        <?php
+                            $index++;
+                          }
+                        ?>
                       </tbody>
                     </table>
                 </div>
