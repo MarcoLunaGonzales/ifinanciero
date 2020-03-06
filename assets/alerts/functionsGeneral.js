@@ -225,7 +225,7 @@ function configuracionEstadosCuenta(fila,codigoCuenta,codigoCuentaAux){
       $("#estados_cuentas"+fila).addClass("d-none");  
     }
   };
-  if(contador==0){
+  if(contador==0&&codigoCuentaAux!=0){
     for (var i = 0; i < estado_cuentas.length; i++) {
       if(estado_cuentas[i].cod_cuentaaux==codigoCuentaAux){
          $("#estados_cuentas"+fila).removeClass("d-none"); 
@@ -237,6 +237,10 @@ function configuracionEstadosCuenta(fila,codigoCuenta,codigoCuentaAux){
         $("#estados_cuentas"+fila).addClass("d-none");
       }
     };   
+  }
+  if(contador==0){
+     $("#estados_cuentas"+fila).removeClass("d-none"); 
+      $("#estados_cuentas"+fila).addClass("d-none");
   }
 }
 function copiarGlosa(){
