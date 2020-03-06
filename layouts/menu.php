@@ -603,51 +603,51 @@ if($menuModulo==0){
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listPlantillasCostos">
                     <span class="sidebar-mini"> PTC </span>
-                    <span class="sidebar-normal"> Plantillas de Presupuesto </span>
+                    <span class="sidebar-normal"> Plantillas de Presupuesto SEC</span>
                   </a>
                 </li>
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listPlantillasCostosAdmin">
                     <span class="sidebar-mini"> GPT </span>
-                    <span class="sidebar-normal"> Gesti&oacute;n de Plantillas Presupuesto </span>
+                    <span class="sidebar-normal"> Gesti&oacute;n de Plantillas Presupuesto SEC</span>
                   </a>
                 </li>
 
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listSimulacionesCostos">
                     <span class="sidebar-mini"> SC </span>
-                    <span class="sidebar-normal"> Propuestas de Presupuesto</span>
+                    <span class="sidebar-normal"> Propuestas de Presupuesto SEC</span>
                   </a>
                 </li>
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listSimulacionesCostosAdmin">
                     <span class="sidebar-mini"> GS </span>
-                    <span class="sidebar-normal"> Gesti&oacute;n de Propuestas</span>
+                    <span class="sidebar-normal"> Gesti&oacute;n de Propuestas SEC</span>
                   </a>
                 </li> 
 
                  <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listPlantillasServicios">
                     <span class="sidebar-mini"> PSR </span>
-                    <span class="sidebar-normal"> Plantillas  de Servicios</span>
+                    <span class="sidebar-normal"> Plantillas  de Servicios TCP - TCS</span>
                   </a>
                 </li>
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listPlantillasServiciosAdmin">
                     <span class="sidebar-mini"> GPS </span>
-                    <span class="sidebar-normal"> Gesti&oacute;n de Plantillas Servicios </span>
+                    <span class="sidebar-normal"> Gesti&oacute;n de Plantillas Servicios TCP - TCS</span>
                   </a>
                 </li>
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listSimulacionesServicios">
                     <span class="sidebar-mini"> SS </span>
-                    <span class="sidebar-normal"> Propuestas de Servicios</span>
+                    <span class="sidebar-normal"> Propuestas de Servicios TCP - TCS</span>
                   </a>
                 </li>
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listSimulacionesServAdmin">
                     <span class="sidebar-mini"> GSS </span>
-                    <span class="sidebar-normal"> Gesti&oacute;n de Propuestas Servicios</span>
+                    <span class="sidebar-normal"> Gesti&oacute;n de Propuestas Servicios TCP - TCS</span>
                   </a>
                 </li>
                 <li class="nav-item ">
@@ -668,7 +668,7 @@ if($menuModulo==0){
           <li class="nav-item ">
             <a class="nav-link" href="index.php?opcion=listTarifarioServicios">
               <i class="material-icons">assignment</i>
-              <p> Tarifario de Servicios
+              <p> Tarifario de Servicios TCP
               </p>
             </a>
           </li>

@@ -103,10 +103,14 @@ $stmt->bindColumn('cliente', $cliente);
                                  if($codEstado==4){
                                  ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1&admin=0" class="dropdown-item">
                                     <i class="material-icons text-danger">clear</i> Cancelar solicitud
-                                 </a><?php 
+                                 </a>
+                                 <?php 
                                  }?>
                                  <a href="<?=$urlVer;?>?cod=<?=$codigo;?>" class="dropdown-item">
                                     <i class="material-icons text-warning">bar_chart</i> Ver simulacion
+                                 </a>
+                                 <a href="<?=$urlSolicitudRecursos?>?cod=<?=$codigo?>" class="dropdown-item">
+                                    <i class="material-icons text-info">list</i> Solicitud de Recursos
                                  </a> 
                               </div>
                             </div>                           

@@ -1,8 +1,8 @@
 <?php
 //AQUI SE DEFINEN LAS VARIABLES PARA EL ABM
 $table="simulaciones_costos";
-$moduleNameSingular="Propuesta de Presupuesto";
-$moduleNamePlural="Propuestas de Presupuesto";
+$moduleNameSingular="Propuesta de Presupuesto SEC";
+$moduleNamePlural="Propuestas de Presupuesto SEC";
 
 //$moduleNameSingular="Comprobantes";
 $urlList="index.php?opcion=listSimulacionesCostos";
