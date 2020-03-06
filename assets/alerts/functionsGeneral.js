@@ -215,7 +215,7 @@ function configuracionCentros(fila,inicio){
 function configuracionEstadosCuenta(fila,codigoCuenta,codigoCuentaAux){
   var contador=0;
   for (var i = 0; i < estado_cuentas.length; i++) {
-    if(estado_cuentas[i].cod_cuenta==codigoCuenta){
+    if(estado_cuentas[i].cod_cuenta==codigoCuenta&&codigoCuentaAux==0){
       $("#estados_cuentas"+fila).removeClass("d-none"); 
       $("#tipo_estadocuentas"+fila).val(estado_cuentas[i].tipo);
       contador++;   
@@ -5046,8 +5046,21 @@ function verEstadosCuentas(fila,cuenta){
      $("#modalAlert").modal("show");
   }else{
     if(cuenta==0){
-      var cod_cuenta=$("#cuenta"+fila).val();
+      if($("#cuenta_auxiliar"+fila).val()==0){
+        var cod_cuenta=$("#cuenta"+fila).val();
+        var auxi="NO";
+      }else{
+        var cod_cuenta=$("#cuenta_auxiliar"+fila).val();
+        var auxi="SI";
+      }      
     }else{
+      if($("#cuenta_auxiliar"+fila).val()==0){
+        var cod_cuenta=cuenta;
+        var auxi="NO";
+      }else{
+        var cod_cuenta=cuenta;
+        var auxi="SI";
+      }
       var cod_cuenta=cuenta;
     }
     var tipo=$("#tipo_estadocuentas"+fila).val();
@@ -5063,10 +5076,21 @@ function verEstadosCuentas(fila,cuenta){
         $("#div_cuentasorigen").removeClass("d-none");
         $("#div_cuentasorigendetalle").removeClass("d-none");
       } 
-      var cod_cuenta = $("#cuentas_origen").val();
+      if($("#cuentas_origen").val()==""||$("#cuentas_origen").val()==null){
+        var cod_cuenta="";      
+      }else{
+        var resp = $("#cuentas_origen").val().split('###');
+        var cod_cuenta = resp[0];
+        if(resp[1]=="AUX"){
+          var auxi="SI";
+        }else{
+          var auxi="NO";
+        }
+      }
+      
     }
     //ajax estado de cuentas
-    var parametros={"cod_cuenta":cod_cuenta,"tipo":tipo,"mes":12};
+    var parametros={"cod_cuenta":cod_cuenta,"tipo":tipo,"mes":12,"auxi":auxi};
     $.ajax({
         type: "GET",
         dataType: 'html',
@@ -5117,15 +5141,28 @@ function agregarEstadoCuenta(){
     $("#nestado"+fila).addClass("estado");
     verEstadosCuentas(fila,cuenta);
   }else{
-    var cuenta=$("#cuentas_origen").val();
+    var resp = $("#cuentas_origen").val().split('###');
+    var cuenta = resp[0];
     var codComproDet=$('input:radio[name=cuentas_origen_detalle]:checked').val();
     if(codComproDet!=null){
+      if(resp[1]=="AUX"){
     var nfila={
-    cod_plancuenta:cuenta,
+    cod_plancuenta:0,
+    cod_plancuentaaux:cuenta,
     cod_comprobantedetalle:codComproDet,
     cod_proveedor:0,//$("#proveedores").val(),
     monto:$("#monto_estadocuenta").val()
     }
+
+      }else{
+    var nfila={
+    cod_plancuenta:cuenta,
+    cod_plancuentaaux:0,
+    cod_comprobantedetalle:codComproDet,
+    cod_proveedor:0,//$("#proveedores").val(),
+    monto:$("#monto_estadocuenta").val()
+    }    
+      }
     itemEstadosCuentas[fila-1]=[];
     itemEstadosCuentas[fila-1].push(nfila);
     $("#nestado"+fila).addClass("estado");
@@ -5192,7 +5229,8 @@ function listarEstadosCuentasDebito(id,saldo){
  }
  function verEstadosCuentasCred(){
   var fila = $("#estFila").val();
-  var cuenta = $("#cuentas_origen").val();
+  var resp = $("#cuentas_origen").val().split('###');
+  var cuenta = resp[0];
   verEstadosCuentas(fila,cuenta);
   /*if(cuenta!=""){
     var parametros={"cod_cuenta":cuenta};

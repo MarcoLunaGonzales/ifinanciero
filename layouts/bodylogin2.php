@@ -238,6 +238,19 @@
                      if(debehaber==1){
                        envio=1;
                      }else{
+                      var contEstadoDebito=0;
+                      for (var i = 0; i < numFilas; i++) {
+                      if($("#tipo_estadocuentas"+(i+1)).val()=="1"&&(!($("#nestado"+(i+1)).hasClass("estado")))){
+                         contEstadoDebito=1;
+                        mensaje+="<p>Una o más cuentas, No estan relacionadas a un estado de cuenta</p>";
+                        $('#msgError').html(mensaje);
+                        $('#modalAlert').modal('show');
+                        contEstadoDebito=1;
+                       }          
+                     }
+                     if(contEstadoDebito==1){
+                       envio=1;
+                     }else{
                         for (var i = 0; i < numFilas; i++) {
                             if($("#debe"+(i+1)).val()==""){
                              $("#debe"+(i+1)).val("0");
@@ -245,7 +258,8 @@
                             if($("#haber"+(i+1)).val()==""){
                              $("#haber"+(i+1)).val("0");
                             }
-                       }
+                       }     
+                      }
                      }               
                       
                      } 

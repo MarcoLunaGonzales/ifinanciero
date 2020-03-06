@@ -109,11 +109,12 @@ for ($i=1;$i<=$cantidadFilas;$i++){
           for($j=0;$j<$nC;$j++){
               $fecha=date("Y-m-d H:i:s");
               $codPlanCuenta=$estadosCuentas[$i-1][$j]->cod_plancuenta;
+              $codPlanCuentaAux=$estadosCuentas[$i-1][$j]->cod_plancuentaaux;
               $monto=$estadosCuentas[$i-1][$j]->monto;
               $codProveedor=$estadosCuentas[$i-1][$j]->cod_proveedor;
               $codComprobanteDetalleOrigen=$estadosCuentas[$i-1][$j]->cod_comprobantedetalle;
               $fecha=$fecha;
-              $sqlDetalle3="INSERT INTO estados_cuenta (cod_comprobantedetalle, cod_plancuenta, monto, cod_proveedor, fecha,cod_comprobantedetalleorigen) VALUES ('$codComprobanteDetalle', '$codPlanCuenta', '$monto', '$codProveedor', '$fecha','$codComprobanteDetalleOrigen')";
+              $sqlDetalle3="INSERT INTO estados_cuenta (cod_comprobantedetalle, cod_plancuenta, monto, cod_proveedor, fecha,cod_comprobantedetalleorigen,cod_cuentaaux) VALUES ('$codComprobanteDetalle', '$codPlanCuenta', '$monto', '$codProveedor', '$fecha','$codComprobanteDetalleOrigen','$codPlanCuentaAux')";
               $stmtDetalle3 = $dbh->prepare($sqlDetalle3);
               $flagSuccessDetalle3=$stmtDetalle3->execute();
          }
