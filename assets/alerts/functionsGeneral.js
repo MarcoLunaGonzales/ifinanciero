@@ -4157,6 +4157,42 @@ function activarInputMontoFilaServicio(anio,fila){
   }
   calcularTotalFilaServicio(anio,1);
 }
+function activarInputMontoFilaServicio2(fila){
+
+  calcularTotalFilaServicio2(fila);
+}
+function calcularTotalFilaServicio2(valor){
+  var sumal=0;
+  var total= $("#modal_numeroservicio").val();
+  var comprobante_auxiliar=0;
+  for (var i=1;i<=(total-1);i++){          
+    var check=document.getElementById("modal_check"+i).checked;
+       if(check) {
+        comprobante_auxiliar=comprobante_auxiliar+1;
+        //sumanos los importes
+        sumal+=parseFloat($("#modal_importe"+i).text());
+
+        var servicio = document.getElementById("servicio"+i).value;
+        var cantidad=document.getElementById("cantidad"+i).value;
+        var importe=document.getElementById("importe"+i).value;
+        document.getElementById("servicio_a"+i).value=servicio;
+        document.getElementById("cantidad_a"+i).value=cantidad;
+        document.getElementById("importe_a"+i).value=importe;        
+        // alert(sumal);
+      }
+
+  } 
+  
+  var resulta=sumal;
+  
+  $("#modal_totalmontoserv").text(resulta);   
+  document.getElementById("modal_totalmontos").value=resulta;
+  document.getElementById("comprobante_auxiliar").value=comprobante_auxiliar;
+
+}
+
+
+
 function cambiarCantidadMontoGenericoServicio(matriz){
   var respu= matriz.split('RRR');
   calcularTotalPartidaGenericoServicio(respu[0],2);
@@ -5573,6 +5609,7 @@ function editarDatosSimulacion(){
 
   $("#modalEditSimulacion").modal("show");
 }
+
 function guardarDatosSimulacion(btn_id){
   var codigo_s=$("#cod_simulacion").val();
    var nombre_s=$("#modal_nombresim").val();
@@ -7013,3 +7050,20 @@ function cambiarTituloPersonalModal(anio){
      $("#num_tituloservicios"+anio).html("("+($("#modal_numeroservicio"+anio).val()-1)+")");
   }*/
 }
+
+
+
+function ajax_Cliente_razonsocial(combo){
+  var contenedor;
+  var codigo_cliente=combo.value;
+  contenedor = document.getElementById('contenedor_razonsocial');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'simulaciones_servicios/ajax_cliente_razonsocial.php?codigo_cliente='+codigo_cliente,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);
+    }
+  }
+  ajax.send(null)  
+}//personal - uo-area tipo caja chica

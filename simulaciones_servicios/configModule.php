@@ -21,4 +21,10 @@ $urlSaveDelete="";
 
 $urlReporteDiario="reportes/reporteDiario.php";
 $urlReporteMayor="reportes/reporteMayor.php";
+$urlSolicitudfactura="?opcion=solicitud_facturacion";
+$urlRegisterSolicitudfactura="?opcion=registerSolicitud_facturacion";
+$urlSaveSolicitudfactura="?opcion=save_solicitud_facturacion";
+
+
+// $urlSolicitudfactura="simulaciones_servicios/solicitud_facturacion.php";
 ?>
