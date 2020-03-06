@@ -88,7 +88,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
            }else{
             $iva=obtenerValorConfiguracion(1);
             $it=obtenerValorConfiguracion(2);
-            $precioAfnorX=(((($iva+$it)/100)*$precioLocalX)*($porcentajeAfnorX/100);
+            $precioAfnorX=((($iva+$it)/100)*$precioLocalX)*($porcentajeAfnorX/100);
             $tituloAfnor=$porcentajeAfnorX." %";
            }
 
