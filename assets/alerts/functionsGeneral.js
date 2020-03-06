@@ -226,7 +226,7 @@ function configuracionEstadosCuenta(fila,codigoCuenta,codigoCuentaAux){
     }
   };
   if(contador==0){
-    for (var i = 0; i < estados_cuentas.length; i++) {
+    for (var i = 0; i < estado_cuentas.length; i++) {
       if(estado_cuentas[i].cod_cuentaaux==codigoCuentaAux){
          $("#estados_cuentas"+fila).removeClass("d-none"); 
          $("#tipo_estadocuentas"+fila).val(estado_cuentas[i].tipo);
