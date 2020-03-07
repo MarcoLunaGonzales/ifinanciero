@@ -95,7 +95,7 @@ $stmt->bindColumn('estado', $estado);
                                  </a><?php 
                                  }?>
                                  <a href="<?=$urlVer;?>?cod=<?=$codigo;?>" class="dropdown-item">
-                                    <i class="material-icons text-warning">bar_chart</i> Ver simulacion
+                                    <i class="material-icons text-warning">bar_chart</i> Ver Propuesta
                                  </a> 
                               </div>
                             </div>                           

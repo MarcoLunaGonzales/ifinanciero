@@ -89,7 +89,7 @@ $stmt->bindColumn('cliente', $cliente);
                               </button>
                               <div class="dropdown-menu">
                                 <a href="<?=$urlVer;?>?cod=<?=$codigo;?>&admin=0" class="dropdown-item">
-                                    <i class="material-icons text-info">bar_chart</i> Ver simulacion
+                                    <i class="material-icons text-info">bar_chart</i> Ver Propuesta
                                  </a>
                               
                                 <?php 
