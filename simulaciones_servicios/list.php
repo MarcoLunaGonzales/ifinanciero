@@ -115,8 +115,12 @@ $stmt->bindColumn('cliente', $cliente);
                             </div>                           
                             <?php
                              if($codEstado==3){
+                              $anteriorCod=obtenerCodigoSolicitudRecursosSimulacion(2,$codigo);
                                   ?><a href="<?=$urlSolicitudRecursos?>?cod=<?=$codigo?>" target="_blank" title="Solicitud De Recursos"class="btn btn-danger">
                                     <i class="material-icons">content_paste</i>
+                                 </a>
+                                 <a title="Imprimir Solicitud de Recursos" href='#' onclick="javascript:window.open('solicitudes/imp.php?sol=<?=$anteriorCod;?>&mon=1')" class="btn btn-primary">
+                                     <i class="material-icons"><?=$iconImp;?></i>
                                  </a> <?php
                                 }    
                               }else{
