@@ -32,6 +32,9 @@
                               $importeX=$row['monto_externo'];
                               $importeSolX=$row['monto_externo'];
 							}
+							$nombrePartidaX="<b class='text-warning'>".$row['partida']."</b>";
+							$nombrePartidaDetalleX="<b class='text-warning'>Cuenta</b> - <b class='text-dark'>Año ".$row['cod_anio']."</b>";
+                            
 							?><script>var nfac=[];itemFacturas.push(nfac);</script><?php
                             while ($rowDetalles = $solicitudDetalle->fetch(PDO::FETCH_ASSOC)) {
                                $cuentasCodigos[$conta]=$rowDetalles["codigo"];	
@@ -47,13 +50,14 @@
                                    $tituloImporte=substr($tituloImporte,0,13)."...";
                                  }
 							   }
-							 $conta++;  							   
+							 $conta++;
+							 $nombrePartidaX="<b class='text-success'>".$row['partida']."</b>";
+							$nombrePartidaDetalleX="<b class='text-success'>Cuenta</b> - <b class='text-primary'>Año ".$row['cod_anio']."</b>";
+                              							   
                             }
 							$numeroCuentaX=trim($row['numero']);
 							$nombreCuentaX=trim($row['nombre']);
-							$nombrePartidaX="<b class='text-success'>".$row['partida']."</b>";
-							$nombrePartidaDetalleX="<b class='text-success'>Cuenta</b> - <b class='text-primary'>Año ".$row['cod_anio']."</b>";
-                            
+							
 							include "addFila.php";
                          			 
 						 $idFila=$idFila+1;
