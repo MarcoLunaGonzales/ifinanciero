@@ -7,7 +7,8 @@ require_once 'configModule.php';
 $dbh = new Conexion();
 
 $codigo=$_GET["codigo"];
-$aprobado=$_GET["aprobado"];
+//$aprobado=$_GET["aprobado"];
+$aprobado=4;
 session_start();
 
 $globalUser=$_SESSION["globalUser"];

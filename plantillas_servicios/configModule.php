@@ -1,8 +1,8 @@
 <?php
 //AQUI SE DEFINEN LAS VARIABLES PARA EL ABM
 $table="plantillas_servicios";
-$moduleNameSingular="Plantilla Servicio";
-$moduleNamePlural="Plantillas de Servicios";
+$moduleNameSingular="Plantilla Servicio TCS - TCS";
+$moduleNamePlural="Plantillas de Servicios TCS - TCS";
 
 //$moduleNameSingular="Comprobantes";
 $urlList="index.php?opcion=listPlantillasServicios";

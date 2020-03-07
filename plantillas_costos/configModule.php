@@ -1,8 +1,8 @@
 <?php
 //AQUI SE DEFINEN LAS VARIABLES PARA EL ABM
 $table="plantillas_costo";
-$moduleNameSingular="Plantilla de Presupuesto";
-$moduleNamePlural="Plantillas de Presupuesto";
+$moduleNameSingular="Plantilla de Presupuesto SEC";
+$moduleNamePlural="Plantillas de Presupuesto SEC";
 
 //$moduleNameSingular="Comprobantes";
 $urlList="index.php?opcion=listPlantillasCostos";

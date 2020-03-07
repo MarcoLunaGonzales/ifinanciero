@@ -1,8 +1,8 @@
 <?php
 //AQUI SE DEFINEN LAS VARIABLES PARA EL ABM
 $table="simulaciones_servicios";
-$moduleNameSingular="Propuesta de Servicio";
-$moduleNamePlural="Propuestas de Servicios";
+$moduleNameSingular="Propuesta de Servicio TCP - TCS";
+$moduleNamePlural="Propuestas de Servicios TCP - TCS";
 
 //$moduleNameSingular="Comprobantes";
 $urlList="index.php?opcion=listSimulacionesServ";
@@ -11,6 +11,7 @@ $urlList2="index.php?opcion=listSimulacionesServAdmin";
 $urlReporte="simulaciones_costos/reportePlanCosto.php";
 $urlRegister="simulaciones_servicios/registerSimulacion.php";
 $urlVer="simulaciones_servicios/verSimulacion.php";
+$urlSolicitudRecursos="simulaciones_servicios/saveSolicitudRecursos.php";
 $urlRegister2="index.php?opcion=registerSimulacionServicio";
 $urlEdit="index.php?opcion=editSimulacion";
 $urlEdit2="simulaciones_servicios/edit.php";

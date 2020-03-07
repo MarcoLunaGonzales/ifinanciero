@@ -46,6 +46,14 @@ $bgClase="bg-info";
   $stmt = $dbh->prepare($query2);
   $stmt->execute();
   $html='';$montoTotales=0;$montoTotales2=0;$montoTotales2Alumno=0;
+
+  $precioLocalX=obtenerPrecioServiciosSimulacion($codigo);
+          if($cod_anio!=1){
+           $precioLocalX=($precioLocalX*$porCre)+$precioLocalX;
+          }
+  $nAuditorias=obtenerCantidadAuditoriasPlantilla($codPlan); 
+          $precioRegistrado=obtenerPrecioRegistradoPlantilla($codPlan);
+          $porcentPrecios=($precioLocalX*100)/$precioRegistrado;
 ?>
        <div class=""><center>
         <?php if($tipoCosto==1){

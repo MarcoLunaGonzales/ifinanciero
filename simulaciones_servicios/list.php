@@ -93,6 +93,7 @@ $stmt->bindColumn('cliente', $cliente);
                           <td class="td-actions text-right">
                             <?php
                               if($codEstado==4||$codEstado==3){
+                               
                             ?>
                             <div class="btn-group dropdown">
                               <button type="button" class="btn <?=$btnEstado?> dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -103,14 +104,25 @@ $stmt->bindColumn('cliente', $cliente);
                                  if($codEstado==4){
                                  ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1&admin=0" class="dropdown-item">
                                     <i class="material-icons text-danger">clear</i> Cancelar solicitud
-                                 </a><?php 
+                                 </a>
+                                 <?php 
                                  }?>
                                  <a href="<?=$urlVer;?>?cod=<?=$codigo;?>" class="dropdown-item">
-                                    <i class="material-icons text-warning">bar_chart</i> Ver simulacion
-                                 </a> 
+                                    <i class="material-icons text-warning">bar_chart</i> Ver Propuesta
+                                 </a>
+                  
                               </div>
                             </div>                           
-                            <?php    
+                            <?php
+                             if($codEstado==3){
+                              $anteriorCod=obtenerCodigoSolicitudRecursosSimulacion(2,$codigo);
+                                  ?><a href="<?=$urlSolicitudRecursos?>?cod=<?=$codigo?>" target="_blank" title="Solicitud De Recursos"class="btn btn-danger">
+                                    <i class="material-icons">content_paste</i>
+                                 </a>
+                                 <a title="Imprimir Solicitud de Recursos" href='#' onclick="javascript:window.open('solicitudes/imp.php?sol=<?=$anteriorCod;?>&mon=1')" class="btn btn-primary">
+                                     <i class="material-icons"><?=$iconImp;?></i>
+                                 </a> <?php
+                                }    
                               }else{
                               ?>
                             <!--<a href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=4&admin=0' itle="Enviar Solicitud" class="btn btn-warning">
