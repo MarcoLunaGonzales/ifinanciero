@@ -21,7 +21,6 @@
 							}
 							$codCuentaX=$row['codigo'];
 							$codDetalleX=0;
-							
 							$detalleX=$row['glosa'];
 							$proveedorX="";
 							$retencionX="";
@@ -52,8 +51,8 @@
                             }
 							$numeroCuentaX=trim($row['numero']);
 							$nombreCuentaX=trim($row['nombre']);
-							$nombrePartidaX=$row['partida'];
-							$nombrePartidaDetalleX="Cuenta";
+							$nombrePartidaX="<b class='text-success'>".$row['partida']."</b>";
+							$nombrePartidaDetalleX="<b class='text-success'>Cuenta</b> - <b class='text-primary'>Año ".$row['cod_anio']."</b>";
                             
 							include "addFila.php";
                          			 

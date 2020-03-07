@@ -24,7 +24,37 @@ $globalNombreUnidad=$_SESSION['globalNombreUnidad'];
 $globalArea=$_SESSION["globalArea"];
 $globalAdmin=$_SESSION["globalAdmin"];
 
-$fechaActual=date("Y-m-d");
 $dbh = new Conexion();
-echo "SOLICITUD DE RECURSOS---------------------------------"
+
+$anteriorCod=obtenerCodigoSolicitudRecursosSimulacion(2,$_GET['cod']);
+if($anteriorCod==0){
+$unidad=$_SESSION['globalUnidad'];
+$sql="SELECT IFNULL(max(c.codigo)+1,1)as codigo from solicitud_recursos c where c.cod_unidadorganizacional=$unidad";
+$stmt = $dbh->prepare($sql);
+$stmt->execute();
+$numero=0;
+while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+  $numero=$row['codigo'];
+}
+
+$codProv=0;
+$codSim=0;
+$codSimServ=$_GET['cod'];
+
+
+$codCont=0;//CODIGO DE CONTRATO
+  $fecha= date("Y-m-d h:m:s");
+  $codSolicitud=obtenerCodigoSolicitudRecursos();
+  $dbh = new Conexion();
+  $sqlInsert="INSERT INTO solicitud_recursos (codigo, cod_personal,cod_unidadorganizacional,cod_area,fecha,numero,cod_simulacion,cod_proveedor,cod_simulacionservicio,cod_contrato) 
+  VALUES ('".$codSolicitud."','".$globalUser."','".$globalUnidad."', '".$globalArea."', '".$fecha."','".$numero."','".$codSim."','".$codProv."','".$codSimServ."','".$codCont."')";
+  $stmtInsert = $dbh->prepare($sqlInsert);
+  $stmtInsert->execute();
+
+}else{
+  $codSolicitud=$anteriorCod;	
+}
+?>
+  <script>window.location.href="../solicitudes/registerSolicitud.php?cod="+<?=$codSolicitud?></script>
+  <?php
 ?>

@@ -43,8 +43,8 @@
                             }
 							$numeroCuentaX=trim($row['numero']);
 							$nombreCuentaX=trim($row['nombre']);
-							$nombrePartidaX=$row['partida'];
-							$nombrePartidaDetalleX="Cuenta";
+							$nombrePartidaX="<b class='text-success'>".$row['partida']."</b>";
+							$nombrePartidaDetalleX="<b class='text-success'>Cuenta</b>";
                             
 							include "addFila.php";
                          			 

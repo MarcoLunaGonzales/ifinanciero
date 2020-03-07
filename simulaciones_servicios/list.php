@@ -93,6 +93,7 @@ $stmt->bindColumn('cliente', $cliente);
                           <td class="td-actions text-right">
                             <?php
                               if($codEstado==4||$codEstado==3){
+                               
                             ?>
                             <div class="btn-group dropdown">
                               <button type="button" class="btn <?=$btnEstado?> dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -109,12 +110,15 @@ $stmt->bindColumn('cliente', $cliente);
                                  <a href="<?=$urlVer;?>?cod=<?=$codigo;?>" class="dropdown-item">
                                     <i class="material-icons text-warning">bar_chart</i> Ver simulacion
                                  </a>
-                                 <a href="<?=$urlSolicitudRecursos?>?cod=<?=$codigo?>" class="dropdown-item">
-                                    <i class="material-icons text-info">list</i> Solicitud de Recursos
-                                 </a> 
+                  
                               </div>
                             </div>                           
-                            <?php    
+                            <?php
+                             if($codEstado==3){
+                                  ?><a href="<?=$urlSolicitudRecursos?>?cod=<?=$codigo?>" target="_blank" title="Solicitud De Recursos"class="btn btn-danger">
+                                    <i class="material-icons">content_paste</i>
+                                 </a> <?php
+                                }    
                               }else{
                               ?>
                             <!--<a href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=4&admin=0' itle="Enviar Solicitud" class="btn btn-warning">
