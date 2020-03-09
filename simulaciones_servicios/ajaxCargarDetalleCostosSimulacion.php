@@ -16,7 +16,6 @@ if(isset($_GET["simulacion"])){
  $codigo=$_GET["simulacion"];
  $codPlan=$_GET["plantilla"];
  $usd=(float)$_GET["usd"];
-
  $cod_anio=$_GET["anio"];
 
 
@@ -52,11 +51,11 @@ $bgClase="bg-info";
         <?php if($tipoCosto==1){
           $porCre=($_GET['porcentaje_fijo']/100)*($cod_anio-1);
           /* DATOS PARA PRECIO EN LUGAR DE CANTIDAD AUDITORIAS*/
-          $precioLocalX=obtenerPrecioServiciosSimulacion($codigo);
+          $precioLocalX=obtenerPrecioServiciosSimulacionPorAnio($codigo);
           $precioRegistrado=obtenerPrecioRegistradoPlantilla($codPlan);
           $sumaPrecioRegistrado=0;
           if($cod_anio!=1){
-           $precioLocalX=($precioLocalX*$porCre)+$precioLocalX;
+           //$precioLocalX=($precioLocalX*$porCre)+$precioLocalX;
            $sumaPrecioRegistrado=$precioRegistrado*$porCre;
           }
           $nAuditorias=obtenerCantidadAuditoriasPlantilla($codPlan); 
