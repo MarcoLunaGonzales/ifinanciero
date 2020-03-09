@@ -315,8 +315,8 @@ for ($ann=0; $ann <=$anioGeneral ; $ann++) {
                                     <td>Cantidad</td>
                                     <td width="17%">Unidad</td>
                                     <td>Monto BOB</td>
-                                    <td>Total BOB</td>
                                     <td>Monto USD</td>
+                                    <td>Total BOB</td>         
                                     <td>Total USD</td>
                                     <td class="small">Habilitar/Deshabilitar</td>
                                   </tr>
@@ -369,12 +369,13 @@ for ($ann=0; $ann <=$anioGeneral ; $ann++) {
                                     <td class="text-right">
                                        <input type="number" id="modal_montoserv<?=$an?>SSS0" name="modal_montoserv<?=$an?>SSS0" class="form-control text-primary text-right" onchange="calcularTotalFilaServicioNuevo(<?=$an?>,2)" onkeyUp="calcularTotalFilaServicioNuevo(<?=$an?>,2)" value="0" step="0.01">
                                     </td>
+                                    <td class="text-right">
+                                       <input type="number" id="modal_montoservUSD<?=$an?>SSS0" name="modal_montoservUSD<?=$an?>SSS0" class="form-control text-primary text-right" onchange="calcularTotalFilaServicioNuevo(<?=$an?>,4)" onkeyUp="calcularTotalFilaServicioNuevo(<?=$an?>,4)" value="0" step="0.01">
+                                    </td>
                                      <td class="text-right">
                                        <input type="number" id="modal_montoservtotal<?=$an?>SSS0" name="modal_montoservtotal<?=$an?>SSS0" class="form-control text-primary text-right" onchange="calcularTotalFilaServicioNuevo(<?=$an?>,1)" onkeyUp="calcularTotalFilaServicioNuevo(<?=$an?>,1)" value="0" step="0.01">
                                      </td>
-                                     <td class="text-right">
-                                       <input type="number" id="modal_montoservUSD<?=$an?>SSS0" name="modal_montoservUSD<?=$an?>SSS0" class="form-control text-primary text-right" onchange="calcularTotalFilaServicioNuevo(<?=$an?>,4)" onkeyUp="calcularTotalFilaServicioNuevo(<?=$an?>,4)" value="0" step="0.01">
-                                    </td>
+                                     
                                      <td class="text-right">
                                        <input type="number" id="modal_montoservtotalUSD<?=$an?>SSS0" name="modal_montoservtotalUSD<?=$an?>SSS0" class="form-control text-primary text-right" onchange="calcularTotalFilaServicioNuevo(<?=$an?>,3)" onkeyUp="calcularTotalFilaServicioNuevo(<?=$an?>,3)" value="0" step="0.01">
                                      </td>
@@ -475,8 +476,8 @@ for ($ann=0; $ann <=$anioGeneral ; $ann++) {
                                   <tr>
                                      <td colspan="4" class="text-center font-weight-bold">Total</td>
                                      <td id="modal_totalmontoserv<?=$an?>" class="text-right"><?=number_format($modal_totalmontopre,2, ',', '')?></td>
-                                     <td id="modal_totalmontoservtotal<?=$an?>" class="text-right font-weight-bold"><?=number_format($modal_totalmontopretotal,2, ',', '')?></td>
                                      <td id="modal_totalmontoservUSD<?=$an?>" class="text-right"><?=number_format($modal_totalmontopre/$usd,2,', ','')?></td>
+                                     <td id="modal_totalmontoservtotal<?=$an?>" class="text-right font-weight-bold"><?=number_format($modal_totalmontopretotal,2, ',', '')?></td>    
                                      <td id="modal_totalmontoservtotalUSD<?=$an?>" class="text-right font-weight-bold"><?=number_format($modal_totalmontopretotal/$usd,2, ',', '')?></td>
                                      <td></td>
                                    </tr>
@@ -497,8 +498,8 @@ for ($ann=0; $ann <=$anioGeneral ; $ann++) {
                                     <td width="8%" class="text-center">Cantidad</td>                                   
                                     <td width="8%">D&iacute;as Aud.</td>
                                     <td>Monto BOB</td>
-                                    <td>Total BOB</td>
                                     <td>Monto USD</td>
+                                    <td>Total BOB</td>           
                                     <td>Total USD</td>
                                     <td width="10%" class="small">Hab/Des</td>
                                   </tr>
@@ -608,9 +609,9 @@ for ($ann=0; $ann <=$anioGeneral ; $ann++) {
                                   } ?>
                                   <tr>
                                      <td colspan="4" class="text-center font-weight-bold">Total</td>
-                                     <td id="modal_totalmontopre<?=$an?>" class="text-right"><?=number_format($modal_totalmontopre,2, ',', '')?></td>
-                                     <td id="modal_totalmontopretotal<?=$an?>" class="text-right font-weight-bold"><?=number_format($modal_totalmontopretotal,2, ',', '')?></td>
+                                     <td id="modal_totalmontopre<?=$an?>" class="text-right"><?=number_format($modal_totalmontopre,2, ',', '')?></td>                                  
                                      <td id="modal_totalmontopreUSD<?=$an?>" class="text-right"><?=number_format($modal_totalmontopre/$usd,2, ',', '')?></td>
+                                     <td id="modal_totalmontopretotal<?=$an?>" class="text-right font-weight-bold"><?=number_format($modal_totalmontopretotal,2, ',', '')?></td>
                                      <td id="modal_totalmontopretotalUSD<?=$an?>" class="text-right font-weight-bold"><?=number_format($modal_totalmontopretotal/$usd,2, ',', '')?></td>
                                      <td></td>
                                    </tr>

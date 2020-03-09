@@ -188,6 +188,10 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 
               }else{
                 $montoTotales2+=$row_cuentas['monto_total'];
+                if($cantidadDetalle==0){
+                  $cantidadDetalle=1;
+                }
+                
                 $montoTotales2Alumno+=$montoCal/$cantidadDetalle;
                 $html.='<tr class="'.$bgFila.'">'.
                       '<td class="font-weight-bold text-left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$row_cuentas['nombre'].' / '.$row_cuentas['glosa'].' (año '.$cod_anio.')</td>'.
