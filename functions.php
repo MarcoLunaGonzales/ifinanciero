@@ -106,6 +106,17 @@ function nameCuenta($codigo){
    }
    return($nombreX);
 }
+function nameCliente($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT nombre FROM clientes where codigo=:codigo");
+   $stmt->bindParam(':codigo',$codigo);
+   $stmt->execute();
+   $nombreX=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $nombreX=$row['nombre'];
+   }
+   return($nombreX);
+}
 
 function nameCuentaAux($codigo){
    $dbh = new Conexion();

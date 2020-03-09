@@ -143,6 +143,7 @@
 		if ($_GET['opcion']=='registerSolicitud_facturacion') {
 			$cod_s=$_GET['cod_s'];
 			$cod_f=$_GET['cod_f'];
+			$cod_sw=$_GET['cod_sw'];
 			require_once('simulaciones_servicios/registerSolicitud_facturacion.php');
 		}
 		if ($_GET['opcion']=='save_solicitud_facturacion') {
