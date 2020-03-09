@@ -125,9 +125,13 @@ $usd=$_GET['usd'];
                                   $montoPreTotal=$montoPre*$cantidadEPre;
                                   $banderaHab=$rowPre['habilitado'];
                                   $codTipoUnidad=$rowPre['cod_tipounidad'];
+                                  $claseDeshabilitado="hidden";
+                                  $claseDeshabilitadoOFF="number";
                                   if($banderaHab!=0){
                                     $modal_totalmontopre+=$montoPre;
                                     $modal_totalmontopretotal+=$montoPreTotal;
+                                    $claseDeshabilitado="number";
+                                    $claseDeshabilitadoOFF="hidden";
                                   }
                                   $iconServ="";
                                   if(obtenerConfiguracionValorServicio($codCS)==true){
@@ -163,17 +167,21 @@ $usd=$_GET['usd'];
                                       </select>
                                      </td>
                                      <td class="text-right">
-                                       <input type="number" id="modal_montoserv<?=$anio?>SSS<?=$iii?>" name="modal_montoserv<?=$anio?>SSS<?=$iii?>" <?=($banderaHab==0)?"readonly":"";?> class="form-control text-info text-right" onchange="calcularTotalFilaServicio(<?=$anio?>,2)" onkeyUp="calcularTotalFilaServicio(<?=$anio?>,2)" value="<?=$montoPre?>" step="0.01">
+                                       <input type="<?=$claseDeshabilitado?>" id="modal_montoserv<?=$anio?>SSS<?=$iii?>" name="modal_montoserv<?=$anio?>SSS<?=$iii?>" <?=($banderaHab==0)?"readonly":"";?> class="form-control text-info text-right" onchange="calcularTotalFilaServicio(<?=$anio?>,2)" onkeyUp="calcularTotalFilaServicio(<?=$anio?>,2)" value="<?=$montoPre?>" step="0.01">
+                                       <input type="<?=$claseDeshabilitadoOFF?>" id="modal_montoservOFF<?=$anio?>SSS<?=$iii?>" name="modal_montoservOFF<?=$anio?>SSS<?=$iii?>" readonly class="form-control text-info text-right" value="0" step="0.01">
                                      </td>
                                      <td class="text-right">
-                                       <input type="number" id="modal_montoservUSD<?=$anio?>SSS<?=$iii?>" name="modal_montoservUSD<?=$anio?>SSS<?=$iii?>" <?=($banderaHab==0)?"readonly":"";?> class="form-control text-info text-right" onchange="calcularTotalFilaServicio(<?=$anio?>,4)" onkeyUp="calcularTotalFilaServicio(<?=$anio?>,4)" value="<?=$montoPreUSD?>" step="0.01">
+                                       <input type="<?=$claseDeshabilitado?>" id="modal_montoservUSD<?=$anio?>SSS<?=$iii?>" name="modal_montoservUSD<?=$anio?>SSS<?=$iii?>" <?=($banderaHab==0)?"readonly":"";?> class="form-control text-info text-right" onchange="calcularTotalFilaServicio(<?=$anio?>,4)" onkeyUp="calcularTotalFilaServicio(<?=$anio?>,4)" value="<?=$montoPreUSD?>" step="0.01">
+                                       <input type="<?=$claseDeshabilitadoOFF?>" id="modal_montoservUSDOFF<?=$anio?>SSS<?=$iii?>" name="modal_montoservUSDOFF<?=$anio?>SSS<?=$iii?>" readonly class="form-control text-info text-right" value="0" step="0.01">
                                      </td>
                                      <td class="text-right">
                                        <input type="hidden" id="modal_codigoservicio<?=$anio?>SSS<?=$iii?>" value="<?=$codigoPre?>">
-                                       <input type="number" id="modal_montoservtotal<?=$anio?>SSS<?=$iii?>" name="modal_montoservtotal<?=$anio?>SSS<?=$iii?>" <?=($banderaHab==0)?"readonly":"";?> class="form-control text-info text-right" onchange="calcularTotalFilaServicio(<?=$anio?>,1)" onkeyUp="calcularTotalFilaServicio(<?=$anio?>,1)" value="<?=$montoPreTotal?>" step="0.01">
+                                       <input type="<?=$claseDeshabilitado?>" id="modal_montoservtotal<?=$anio?>SSS<?=$iii?>" name="modal_montoservtotal<?=$anio?>SSS<?=$iii?>" <?=($banderaHab==0)?"readonly":"";?> class="form-control text-info text-right" onchange="calcularTotalFilaServicio(<?=$anio?>,1)" onkeyUp="calcularTotalFilaServicio(<?=$anio?>,1)" value="<?=$montoPreTotal?>" step="0.01">
+                                       <input type="<?=$claseDeshabilitadoOFF?>" id="modal_montoservtotalOFF<?=$anio?>SSS<?=$iii?>" name="modal_montoservtotalOFF<?=$anio?>SSS<?=$iii?>" readonly class="form-control text-info text-right" value="0" step="0.01">
                                      </td>        
                                      <td class="text-right">
-                                       <input type="number" id="modal_montoservtotalUSD<?=$anio?>SSS<?=$iii?>" name="modal_montoservtotalUSD<?=$anio?>SSS<?=$iii?>" <?=($banderaHab==0)?"readonly":"";?> class="form-control text-info text-right" onchange="calcularTotalFilaServicio(<?=$anio?>,3)" onkeyUp="calcularTotalFilaServicio(<?=$anio?>,3)" value="<?=$montoPreTotalUSD?>" step="0.01">
+                                       <input type="<?=$claseDeshabilitado?>" id="modal_montoservtotalUSD<?=$anio?>SSS<?=$iii?>" name="modal_montoservtotalUSD<?=$anio?>SSS<?=$iii?>" <?=($banderaHab==0)?"readonly":"";?> class="form-control text-info text-right" onchange="calcularTotalFilaServicio(<?=$anio?>,3)" onkeyUp="calcularTotalFilaServicio(<?=$anio?>,3)" value="<?=$montoPreTotalUSD?>" step="0.01">
+                                       <input type="<?=$claseDeshabilitadoOFF?>" id="modal_montoservtotalUSDOFF<?=$anio?>SSS<?=$iii?>" name="modal_montoservtotalUSDOFF<?=$anio?>SSS<?=$iii?>" readonly class="form-control text-info text-right" value="0" step="0.01">
                                      </td>
                                      <td>
                                        <div class="togglebutton">

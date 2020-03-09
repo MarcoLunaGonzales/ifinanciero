@@ -21,13 +21,13 @@ if(isset($_GET["cod_simulacion"])){
  ?>
   <table class="table table-condensed table-bordered">
     <tr class="text-white bg-info">
-        <td colspan="3"></td>
+        <td colspan="2"></td>
         <?php 
         for ($i=0; $i < $nroColumnas; $i++) {
         $totalColumnaDetalle[$i]=0;
         $nombreColumna=obtenerNombreDetalleSimulacionVariablesPeriodo($codigos[$i],$anio);
          ?>
-         <td class="fondo-boton" colspan="2"><?=$nombreColumna?></td>
+         <td class="fondo-boton" colspan="3"><?=$nombreColumna?></td>
          <?php
         }?>
         <td class="fondo-boton" colspan="2">TOTAL</td>
@@ -35,10 +35,11 @@ if(isset($_GET["cod_simulacion"])){
     <tr class="text-white bg-info">
         <td width="25%">Tipo Auditor</td>
         <td width="8%">Cantidad</td>
-        <td width="8%">D&iacute;as Aud.</td>
+        <!--<td width="8%">D&iacute;as Aud.</td>-->
         <?php 
         for ($i=0; $i < $nroColumnas; $i++) {
          ?>
+         <td class="fondo-boton">DIAS</td>
          <td class="fondo-boton">BOB</td>
          <td class="fondo-boton">USD</td>
          <?php
@@ -80,8 +81,9 @@ if(isset($_GET["cod_simulacion"])){
                 }
                ?>
            </select>
+           <input type="hidden" id="cantidad_columnas<?=$iii?>" value="<?=$nroColumnas?>">
          </td>
-         <td>
+         <!--<td>
            <select class="form-control selectpicker form-control-sm" data-style="fondo-boton fondo-boton-active" name="modal_dias_personal<?=$iii?>" id="modal_dias_personal<?=$iii?>" onchange="calcularTotalPersonalServicioAuditor()">
               <?php 
                  for ($hf=1; $hf<=$diasTipo; $hf++) {
@@ -93,15 +95,16 @@ if(isset($_GET["cod_simulacion"])){
                 }
                ?>
            </select>
-           <input type="hidden" id="cantidad_columnas<?=$iii?>" value="<?=$nroColumnas?>">
-         </td>
+           
+         </td>-->
          <?php
          $totalFilaUnitario=0;$totalFila=0;
          for ($i=0; $i < $nroColumnas; $i++) {
           $codigoCol=$codigos[$i];
-          $ncol=$i+1;
+          
           
           $montoPres=obtenerMontoSimulacionDetalleAuditorPeriodo($codSimulacion,$codigoCol,$codigoTipo,$anio);
+          $diasPres=obtenerDiasEspecificoSimulacionDetalleAuditorPeriodo($codSimulacion,$codigoCol,$codigoTipo,$anio);
           $montoPresext=obtenerMontoSimulacionDetalleAuditorExternoPeriodo($codSimulacion,$codigoCol,$codigoTipo,$anio);
           if($codExtLoc==1){
             $montoPre=$montoPres*$cantPre*$diasPre;
@@ -109,8 +112,22 @@ if(isset($_GET["cod_simulacion"])){
             $montoPre=$montoPresext*$cantPre*$diasPre;
           }
           $totalColumnaDetalle[$i]+=$montoPre;
-          $totalFilaUnitario+=$montoPre;          
+          $totalFilaUnitario+=$montoPre;  
+          $ncol=$i+1;        
          ?>
+         <td class="text-right">
+           <select class="form-control selectpicker form-control-sm" data-style="fondo-boton fondo-boton-active" name="modal_dias_personalItem<?=$ncol?>RRR<?=$iii?>" id="modal_dias_personalItem<?=$ncol?>RRR<?=$iii?>" onchange="calcularTotalPersonalServicioAuditor()">
+              <?php 
+                 for ($hf=0; $hf<=$diasTipo; $hf++) {
+                   if($hf==$diasPres){
+                     ?><option value="<?=$hf?>" selected><?=$hf?></option><?php
+                   }else{
+                        ?><option value="<?=$hf?>"><?=$hf?></option><?php
+                   }      
+                }
+               ?>
+           </select>
+         </td> 
           <td class="text-right">
             <input type="hidden" id="codigo_columnas<?=$ncol?>RRR<?=$iii?>" value="<?=$codigoCol?>">
 
@@ -137,12 +154,13 @@ if(isset($_GET["cod_simulacion"])){
      $colSpan=($nroColumnas*2)+3;
     ?>
     <tr>
-      <td colspan="3" class="font-weight-bold">TOTAL</td>
+      <td colspan="2" class="font-weight-bold">TOTAL</td>
       <?php 
        for ($i=0; $i < $nroColumnas; $i++) {
         ?>
-        <td class="font-weight-bold" id="total_item<?=$i+1?>"><?=number_format($totalColumnaDetalle[$i], 2, '.', ',')?></td> 
-        <td class="font-weight-bold" id="total_itemUSD<?=$i+1?>"><?=number_format($totalColumnaDetalle[$i]/$usd, 2, '.', ',')?></td> 
+        <td></td>
+        <td class="text-right font-weight-bold" id="total_item<?=$i+1?>"><?=number_format($totalColumnaDetalle[$i], 2, '.', ',')?></td> 
+        <td class="text-right font-weight-bold" id="total_itemUSD<?=$i+1?>"><?=number_format($totalColumnaDetalle[$i]/$usd, 2, '.', ',')?></td> 
         <?php
        }
       ?>

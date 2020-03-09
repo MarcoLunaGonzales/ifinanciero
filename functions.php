@@ -3812,6 +3812,17 @@ function obtenerMontoSimulacionDetalleAuditorPeriodo($codigo,$tipo,$codAuditor,$
   }
   return $valor;
 }
+function obtenerDiasEspecificoSimulacionDetalleAuditorPeriodo($codigo,$tipo,$codAuditor,$anio){
+    $dbh = new Conexion();
+   $valor=0;
+   $sql="SELECT dias from simulaciones_ssd_ssa p where p.cod_simulacionservicio=$codigo and p.cod_simulacionserviciodetalle=$tipo and p.cod_simulacionservicioauditor=$codAuditor and p.cod_anio=$anio";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['dias'];
+  }
+  return $valor;
+}
 function obtenerMontoSimulacionDetalleAuditorExterno($codigo,$tipo,$codAuditor){
     $dbh = new Conexion();
    $valor=0;

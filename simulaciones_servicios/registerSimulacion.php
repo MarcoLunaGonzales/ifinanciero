@@ -41,6 +41,8 @@ $nombreClienteX=obtenerNombreClienteSimulacion($codigo);
 
 $precioLocalX=obtenerPrecioServiciosSimulacion($codigo);
 $precioLocalInputX=number_format($precioLocalX, 2, '.', '');
+
+$precioLocalInputXUSD=number_format($precioLocalX/$usd, 2, '.', '');
 $alumnosX=obtenerCantidadTotalPersonalSimulacionEditado($codigo);
 
 $costoVariablePersonal=obtenerCostosPersonalSimulacionEditado($codigo);
@@ -240,10 +242,16 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                   <input class="form-control" type="text" name="anio_simulacion" readonly value="<?=$anioGeneral?>" id="anio_simulacion"/>
               </div>
             </div>
-            <div class="col-sm-4">
+            <div class="col-sm-2">
               <div class="form-group">
-                  <label class="bmd-label-static">Precio Servicio</label>
+                  <label class="bmd-label-static">Precio BOB</label>
                   <input class="form-control" type="text" name="precio_auditoria_ib" readonly value="<?=$precioLocalInputX?>" id="precio_auditoria_ib"/>
+              </div>
+            </div>
+            <div class="col-sm-2">
+              <div class="form-group">
+                  <label class="bmd-label-static">Precio USD</label>
+                  <input class="form-control" type="text" name="precio_auditoria_ibUSD" readonly value="<?=$precioLocalInputXUSD?>" id="precio_auditoria_ibUSD"/>
               </div>
             </div>
 				      	<?php } ?>

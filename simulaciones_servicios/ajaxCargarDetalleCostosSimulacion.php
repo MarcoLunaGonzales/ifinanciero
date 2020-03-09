@@ -46,25 +46,21 @@ $bgClase="bg-info";
   $stmt = $dbh->prepare($query2);
   $stmt->execute();
   $html='';$montoTotales=0;$montoTotales2=0;$montoTotales2Alumno=0;
-
   $precioLocalX=obtenerPrecioServiciosSimulacion($codigo);
-          if($cod_anio!=1){
-           $precioLocalX=($precioLocalX*$porCre)+$precioLocalX;
-          }
-  $nAuditorias=obtenerCantidadAuditoriasPlantilla($codPlan); 
-          $precioRegistrado=obtenerPrecioRegistradoPlantilla($codPlan);
-          $porcentPrecios=($precioLocalX*100)/$precioRegistrado;
 ?>
        <div class=""><center>
         <?php if($tipoCosto==1){
           $porCre=($_GET['porcentaje_fijo']/100)*($cod_anio-1);
           /* DATOS PARA PRECIO EN LUGAR DE CANTIDAD AUDITORIAS*/
           $precioLocalX=obtenerPrecioServiciosSimulacion($codigo);
+          $precioRegistrado=obtenerPrecioRegistradoPlantilla($codPlan);
+          $sumaPrecioRegistrado=0;
           if($cod_anio!=1){
            $precioLocalX=($precioLocalX*$porCre)+$precioLocalX;
+           $sumaPrecioRegistrado=$precioRegistrado*$porCre;
           }
           $nAuditorias=obtenerCantidadAuditoriasPlantilla($codPlan); 
-          $precioRegistrado=obtenerPrecioRegistradoPlantilla($codPlan);
+          
           $porcentPrecios=($precioLocalX*100)/$precioRegistrado;  
           /* fin de datos */
          ?>
@@ -74,7 +70,7 @@ $bgClase="bg-info";
             </tr>
             <tr>
               <td class="bg-plomo">PRESUPUESTO <?=$_GET['area_nombre']?>, <?=$_GET['unidad_nombre']?> GESTION</td>
-              <td class="text-right"><?=number_format($precioRegistrado, 2, '.', ',')?></td>
+              <td class="text-right"><?=number_format($precioRegistrado+$sumaPrecioRegistrado, 2, '.', ',')?></td>
               <td class="bg-plomo">Precio</td>
               <td class="text-right"><?=number_format($precioLocalX, 2, '.', ',')?></td>
               <td class="bg-plomo">Porcentaje</td>
@@ -99,13 +95,14 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
   $codGrupo=$row['cod_plantillagruposervicio'];
   $grupoUnidad=$row['cod_unidadorganizacional'];
   $grupoArea=$row['cod_area'];
-    if($row['calculado']==$row['local']){
+    
+    if($tipoCosto==1){
+      if($row['calculado']==$row['local']){
       $montoCalculadoTit=($row['calculado']*$nAuditorias)*($porcentPrecios/100);
     }else{
       $montoCalculadoTit=($row['local']*$nAuditorias)*($porcentPrecios/100);
     }
       $montoTotales+=$montoCalculadoTit;
-    if($tipoCosto==1){
        $html.='<tr class="bg-plomo">'.
                       '<td class="font-weight-bold text-left">'.$row['nombre'].'</td>'.
                       '<td class="text-right font-weight-bold">'.number_format($montoCalculadoTit, 2, '.', ',').'</td>'.
@@ -128,6 +125,8 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
        $codPartida=$row_partidas['cod_partidapresupuestaria'];
          $numeroCuentas=contarPresupuestoCuentas($codPartida);
 
+        
+         if($tipoCosto==1){
         if($row_partidas['tipo_calculo']!=1){
           $numeroCuentas="(Manual)";
           $montoCalculado=($row_partidas['monto_local']*$nAuditorias)*($porcentPrecios/100);
@@ -135,8 +134,6 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
           $numeroCuentas="(".$numeroCuentas.")";
           $montoCalculado=($row_partidas['monto_calculado']*$nAuditorias)*($porcentPrecios/100);
         }
-        
-         if($tipoCosto==1){
            $html.='<tr class="bg-info text-white">'.
                       '<td class="font-weight-bold text-left">&nbsp;&nbsp; '.$row_partidas['nombre'].' '.$numeroCuentas.'</td>'.
                       '<td class="text-right font-weight-bold">'.number_format($montoCalculado, 2, '.', ',').'</td>'.
