@@ -101,7 +101,7 @@ if(isset($_GET["cod_simulacion"])){
          $totalFilaUnitario=0;$totalFila=0;
          for ($i=0; $i < $nroColumnas; $i++) {
           $codigoCol=$codigos[$i];
-          $ncol=$i+1;
+          
           
           $montoPres=obtenerMontoSimulacionDetalleAuditorPeriodo($codSimulacion,$codigoCol,$codigoTipo,$anio);
           $diasPres=obtenerDiasEspecificoSimulacionDetalleAuditorPeriodo($codSimulacion,$codigoCol,$codigoTipo,$anio);
@@ -112,12 +112,13 @@ if(isset($_GET["cod_simulacion"])){
             $montoPre=$montoPresext*$cantPre*$diasPre;
           }
           $totalColumnaDetalle[$i]+=$montoPre;
-          $totalFilaUnitario+=$montoPre;          
+          $totalFilaUnitario+=$montoPre;  
+          $ncol=$i+1;        
          ?>
          <td class="text-right">
            <select class="form-control selectpicker form-control-sm" data-style="fondo-boton fondo-boton-active" name="modal_dias_personalItem<?=$ncol?>RRR<?=$iii?>" id="modal_dias_personalItem<?=$ncol?>RRR<?=$iii?>" onchange="calcularTotalPersonalServicioAuditor()">
               <?php 
-                 for ($hf=1; $hf<=$diasTipo; $hf++) {
+                 for ($hf=0; $hf<=$diasTipo; $hf++) {
                    if($hf==$diasPres){
                      ?><option value="<?=$hf?>" selected><?=$hf?></option><?php
                    }else{

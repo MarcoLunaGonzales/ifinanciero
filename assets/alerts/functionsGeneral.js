@@ -2458,7 +2458,7 @@ function enviarSimulacionAjax(){
         },
         success:  function (resp) {
          $("#logo_carga").hide();
-         Swal.fire("Envío Existoso!", "Se registradon los datos exitosamente!", "success")
+         Swal.fire("Envío Exitoso!", "Se registradon los datos exitosamente!", "success")
              .then((value) => {
              location.href="../index.php?opcion=listSimulacionesCostos";
          });
@@ -2482,7 +2482,7 @@ function enviarSimulacionAjaxServ(){
         },
         success:  function (resp) {
          $("#logo_carga").hide();
-         Swal.fire("Envío Existoso!", "Se registradon los datos exitosamente!", "success")
+         Swal.fire("Envío Exitoso!", "Se registradon los datos exitosamente!", "success")
              .then((value) => {
              location.href="../index.php?opcion=listSimulacionesServ";
          });
@@ -4401,6 +4401,11 @@ function calcularTotalPersonalServicioAuditor(){
   var sumae=0; var sumale=0;
   var total= $("#modal_numeropersonalauditor").val();
   var usd= $("#cambio_moneda").val();
+  var totalesItem=[];
+  var columnas =$("#cantidad_columnas1").val();
+  for (var j = 1; j <=columnas; j++) {
+     totalesItem[j-1]=0; 
+  }
   for (var i=1;i<=(total-1);i++){
     var columnas =$("#cantidad_columnas"+i).val();
     var montos=0;var montose=0;
@@ -4410,6 +4415,7 @@ function calcularTotalPersonalServicioAuditor(){
        $("#monto_mult"+j+"RRR"+i).val(redondeo(($("#modal_cantidad_personal"+i).val()*$("#modal_dias_personalItem"+j+"RRR"+i).val())*parseFloat($("#monto"+j+"RRR"+i).val())));
        $("#monto_multUSD"+j+"RRR"+i).val(redondeo($("#monto_mult"+j+"RRR"+i).val()/parseFloat(usd)));          
         montos+=parseFloat($("#monto_mult"+j+"RRR"+i).val());
+        totalesItem[j-1]+=redondeo($("#monto_mult"+j+"RRR"+i).val());
       }else{
        $("#monto_mult"+j+"RRR"+i).val(redondeo(($("#modal_cantidad_personal"+i).val()*$("#modal_dias_personalItem"+j+"RRR"+i).val())*parseFloat($("#montoext"+j+"RRR"+i).val())));     
         montos+=parseFloat($("#monto_mult"+j+"RRR"+i).val());
@@ -4417,16 +4423,19 @@ function calcularTotalPersonalServicioAuditor(){
         totalesItem[j-1]+=redondeo($("#monto_mult"+j+"RRR"+i).val());
       }     
     };
-    
      suma=montos;
      //sumae=montose;
      $("#total_auditor"+i).text(redondeo(suma));
      $("#total_auditorUSD"+i).text(redondeo(suma/parseFloat(usd)));
-  
+     //$("#total_unitarioauditor"+i).text(redondeo(suma/($("#modal_cantidad_personal"+i).val()*$("#modal_dias_personal"+i).val()))); 
      sumal+=suma;
      //sumale+=sumae;
      //sumaC+=suma/(($("#modal_cantidad_personal"+i).val()*$("#modal_dias_personal"+i).val())); 
   } 
+  for (var j = 1; j <=columnas; j++) {
+     $("#total_item"+j).text(redondeo(totalesItem[j-1]));
+     $("#total_itemUSD"+j).text(redondeo(totalesItem[j-1]/parseFloat(usd)));
+  }
   var resulta=redondeo(sumal);
   $("#total_auditor").text(resulta);
   $("#total_auditorUSD").text(redondeo(resulta/parseFloat(usd)));
@@ -5590,7 +5599,7 @@ function registrarCorreoEventoAjax(){
     success: function (resp) {
       var envio=resp.split('$$$');
       if(parseInt(envio[0])==1){
-         Swal.fire("Registro Existoso!", "Se registradon los datos exitosamente!", "success")
+         Swal.fire("Registro Exitoso!", "Se registradon los datos exitosamente!", "success")
              .then((value) => {
              location.href="index.php?opcion=listNotificacionesSistema";
          });
