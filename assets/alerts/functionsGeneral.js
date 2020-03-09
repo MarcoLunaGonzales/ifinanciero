@@ -4125,6 +4125,16 @@ function activarInputMontoPersonalServicio(anio,fila){
     $("#modal_montopre"+anio+"FFF"+fila).attr("readonly",true);
     $("#modal_montopretotalUSD"+anio+"FFF"+fila).attr("readonly",true);
     $("#modal_montopreUSD"+anio+"FFF"+fila).attr("readonly",true);
+
+    $("#modal_montopretotalOFF"+anio+"FFF"+fila).attr("type","number");
+    $("#modal_montopreOFF"+anio+"FFF"+fila).attr("type","number");
+    $("#modal_montopretotalUSDOFF"+anio+"FFF"+fila).attr("type","number");
+    $("#modal_montopreUSDOFF"+anio+"FFF"+fila).attr("type","number");
+
+    $("#modal_montopretotal"+anio+"FFF"+fila).attr("type","hidden");
+    $("#modal_montopre"+anio+"FFF"+fila).attr("type","hidden");
+    $("#modal_montopretotalUSD"+anio+"FFF"+fila).attr("type","hidden");
+    $("#modal_montopreUSD"+anio+"FFF"+fila).attr("type","hidden");
     /*$("#modal_montopretotalext"+fila).attr("readonly",true);
     $("#modal_montopreext"+fila).attr("readonly",true);*/
   }else{
@@ -4132,6 +4142,16 @@ function activarInputMontoPersonalServicio(anio,fila){
     $("#modal_montopre"+anio+"FFF"+fila).removeAttr("readonly");
     $("#modal_montopretotalUSD"+anio+"FFF"+fila).removeAttr("readonly");
     $("#modal_montopreUSD"+anio+"FFF"+fila).removeAttr("readonly");
+
+    $("#modal_montopretotalOFF"+anio+"FFF"+fila).attr("type","hidden");
+    $("#modal_montopreOFF"+anio+"FFF"+fila).attr("type","hidden");
+    $("#modal_montopretotalUSDOFF"+anio+"FFF"+fila).attr("type","hidden");
+    $("#modal_montopreUSDOFF"+anio+"FFF"+fila).attr("type","hidden");
+
+    $("#modal_montopretotal"+anio+"FFF"+fila).attr("type","number");
+    $("#modal_montopre"+anio+"FFF"+fila).attr("type","number");
+    $("#modal_montopretotalUSD"+anio+"FFF"+fila).attr("type","number");
+    $("#modal_montopreUSD"+anio+"FFF"+fila).attr("type","number");
     /*$("#modal_montopretotalext"+fila).removeAttr("readonly");
     $("#modal_montopreext"+fila).removeAttr("readonly");*/
   }
@@ -4143,11 +4163,32 @@ function activarInputMontoFilaServicio(anio,fila){
     $("#modal_montoserv"+anio+"SSS"+fila).attr("readonly",true);
     $("#modal_montoservtotalUSD"+anio+"SSS"+fila).attr("readonly",true);
     $("#modal_montoservUSD"+anio+"SSS"+fila).attr("readonly",true);
+
+    $("#modal_montoservtotalOFF"+anio+"SSS"+fila).attr("type","number");
+    $("#modal_montoservOFF"+anio+"SSS"+fila).attr("type","number");
+    $("#modal_montoservtotalUSDOFF"+anio+"SSS"+fila).attr("type","number");
+    $("#modal_montoservUSDOFF"+anio+"SSS"+fila).attr("type","number");
+
+    $("#modal_montoservtotal"+anio+"SSS"+fila).attr("type","hidden");
+    $("#modal_montoserv"+anio+"SSS"+fila).attr("type","hidden");
+    $("#modal_montoservtotalUSD"+anio+"SSS"+fila).attr("type","hidden");
+    $("#modal_montoservUSD"+anio+"SSS"+fila).attr("type","hidden");
+
   }else{
     $("#modal_montoservtotal"+anio+"SSS"+fila).removeAttr("readonly");
     $("#modal_montoserv"+anio+"SSS"+fila).removeAttr("readonly");
     $("#modal_montoservtotalUSD"+anio+"SSS"+fila).removeAttr("readonly");
     $("#modal_montoservUSD"+anio+"SSS"+fila).removeAttr("readonly");
+
+    $("#modal_montoservtotalOFF"+anio+"SSS"+fila).attr("type","hidden");
+    $("#modal_montoservOFF"+anio+"SSS"+fila).attr("type","hidden");
+    $("#modal_montoservtotalUSDOFF"+anio+"SSS"+fila).attr("type","hidden");
+    $("#modal_montoservUSDOFF"+anio+"SSS"+fila).attr("type","hidden");
+
+    $("#modal_montoservtotal"+anio+"SSS"+fila).attr("type","number");
+    $("#modal_montoserv"+anio+"SSS"+fila).attr("type","number");
+    $("#modal_montoservtotalUSD"+anio+"SSS"+fila).attr("type","number");
+    $("#modal_montoservUSD"+anio+"SSS"+fila).attr("type","number");
   }
   calcularTotalFilaServicio(anio,1);
 }
@@ -4363,27 +4404,26 @@ function calcularTotalPersonalServicioAuditor(){
     var extlocal=$("#modal_local_extranjero"+i).val();
     for (var j = 1; j <=columnas; j++) {
       if(extlocal==1){
-       $("#monto_mult"+j+"RRR"+i).val(redondeo(($("#modal_cantidad_personal"+i).val()*$("#modal_dias_personal"+i).val())*parseFloat($("#monto"+j+"RRR"+i).val())));
+       $("#monto_mult"+j+"RRR"+i).val(redondeo(($("#modal_cantidad_personal"+i).val()*$("#modal_dias_personalItem"+j+"RRR"+i).val())*parseFloat($("#monto"+j+"RRR"+i).val())));
        $("#monto_multUSD"+j+"RRR"+i).val(redondeo($("#monto_mult"+j+"RRR"+i).val()/parseFloat(usd)));          
         montos+=parseFloat($("#monto_mult"+j+"RRR"+i).val());
         totalesItem[j-1]+=redondeo($("#monto_mult"+j+"RRR"+i).val());
       }else{
-       $("#monto_mult"+j+"RRR"+i).val(redondeo(($("#modal_cantidad_personal"+i).val()*$("#modal_dias_personal"+i).val())*parseFloat($("#montoext"+j+"RRR"+i).val())));     
+       $("#monto_mult"+j+"RRR"+i).val(redondeo(($("#modal_cantidad_personal"+i).val()*$("#modal_dias_personalItem"+j+"RRR"+i).val())*parseFloat($("#montoext"+j+"RRR"+i).val())));     
         montos+=parseFloat($("#monto_mult"+j+"RRR"+i).val());
         $("#monto_multUSD"+j+"RRR"+i).val(redondeo($("#monto_mult"+j+"RRR"+i).val()/parseFloat(usd)));
         totalesItem[j-1]+=redondeo($("#monto_mult"+j+"RRR"+i).val());
-      }   
-     //montose+=parseFloat($("#monto_multext"+j+"RRR"+i).val());  
+      }     
     };
-     //suma=parseFloat($("#modal_cantidad_personal"+i).val()*$("#modal_dias_personal"+i).val()*montos);
+    
      suma=montos;
      //sumae=montose;
      $("#total_auditor"+i).text(redondeo(suma));
      $("#total_auditorUSD"+i).text(redondeo(suma/parseFloat(usd)));
-     //$("#total_unitarioauditor"+i).text(redondeo(suma/($("#modal_cantidad_personal"+i).val()*$("#modal_dias_personal"+i).val()))); 
+  
      sumal+=suma;
      //sumale+=sumae;
-     sumaC+=suma/(($("#modal_cantidad_personal"+i).val()*$("#modal_dias_personal"+i).val())); 
+     //sumaC+=suma/(($("#modal_cantidad_personal"+i).val()*$("#modal_dias_personal"+i).val())); 
   } 
   for (var j = 1; j <=columnas; j++) {
      $("#total_item"+j).text(redondeo(totalesItem[j-1]));
@@ -4636,10 +4676,11 @@ function guardarCuentasSimulacionAjaxGenericoServicioAuditor(anio){
       for (var l = 1; l <=(personalCuenta-1); l++) {
          var tipoAu=$("#codigo_filaauditor"+l).val();
          var columnas= $("#cantidad_columnas"+l).val();
-         var diasn=$("#modal_dias_personal"+l).val();
+         //var diasn=$("#modal_dias_personal"+l).val();
          var extlocal=$("#modal_local_extranjero"+l).val();
          var cantidadn=$("#modal_cantidad_personal"+l).val();
          for (var k = 1; k <=columnas; k++) {
+          var diasn=$("#modal_dias_personalItem"+k+"RRR"+l).val();
            var codigoDetalle= $("#codigo_columnas"+k+"RRR"+l).val();
            var montoDetalle= $("#monto"+k+"RRR"+l).val();
            var montoDetalleext= $("#montoext"+k+"RRR"+l).val();
