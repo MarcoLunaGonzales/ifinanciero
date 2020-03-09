@@ -55,7 +55,7 @@ if ($cod_facturacion > 0){
 $name_uo=nameUnidad($cod_uo);
 $name_area=abrevArea($cod_area);
 
-
+$contadorRegistros=0;
 ?>
 <script>
   numFilas=<?=$contadorRegistros;?>;
@@ -411,12 +411,6 @@ $name_area=abrevArea($cod_area);
     </div>
 </div>
 <!--    end small modal -->
-
-
-
-
-
-
 
 
 <script type="text/javascript">

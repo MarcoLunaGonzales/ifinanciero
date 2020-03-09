@@ -121,7 +121,10 @@ $stmt->bindColumn('cliente', $cliente);
                                  </a>
                                  <a title="Imprimir Solicitud de Recursos" href='#' onclick="javascript:window.open('solicitudes/imp.php?sol=<?=$anteriorCod;?>&mon=1')" class="btn btn-primary">
                                      <i class="material-icons"><?=$iconImp;?></i>
-                                 </a> <?php
+                                 </a> 
+                                 <a class="btn btn-warning" title="Solicitud de Facturación" href='<?=$urlSolicitudfactura;?>&cod=<?=$codigo;?>'>
+                              <i class="material-icons" >receipt</i>                              
+                            </a><?php
                                 }    
                               }else{
                               ?>
@@ -137,9 +140,7 @@ $stmt->bindColumn('cliente', $cliente);
                             <button title="Eliminar Simulación" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')">
                               <i class="material-icons"><?=$iconDelete;?></i>
                             </button>
-                            <a class="btn btn-warning" title="Solicitud de Facturación" href='<?=$urlSolicitudfactura;?>&cod=<?=$codigo;?>'>
-                              <i class="material-icons" >receipt</i>                              
-                            </a>
+                            
                               <?php  
                               }
                             ?>

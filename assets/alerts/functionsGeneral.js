@@ -4198,41 +4198,41 @@ function activarInputMontoFilaServicio(anio,fila){
   }
   calcularTotalFilaServicio(anio,1);
 }
-function activarInputMontoFilaServicio2(){
+// function activarInputMontoFilaServicio2(){
 
-  calcularTotalFilaServicio2();
-}
-function calcularTotalFilaServicio2(){
-  var sumal=0;
-  var total= $("#modal_numeroservicio").val();
-  var comprobante_auxiliar=0;
-  for (var i=1;i<=(total-1);i++){          
-    var check=document.getElementById("modal_check"+i).checked;
-       if(check) {
-        comprobante_auxiliar=comprobante_auxiliar+1;
-        //sumanos los importes
-        sumal+=parseFloat($("#modal_importe"+i).text());
+//   calcularTotalFilaServicio2();
+// }
+// function calcularTotalFilaServicio2(){
+//   var sumal=0;
+//   var total= $("#modal_numeroservicio").val();
+//   var comprobante_auxiliar=0;
+//   for (var i=1;i<=(total-1);i++){          
+//     var check=document.getElementById("modal_check"+i).checked;
+//        if(check) {
+//         comprobante_auxiliar=comprobante_auxiliar+1;
+//         //sumanos los importes
+//         sumal+=parseFloat($("#modal_importe"+i).text());
 
-        var servicio = document.getElementById("servicio"+i).value;
-        var cantidad=document.getElementById("cantidad"+i).value;
-        var importe=document.getElementById("importe"+i).value;
+//         var servicio = document.getElementById("servicio"+i).value;
+//         var cantidad=document.getElementById("cantidad"+i).value;
+//         var importe=document.getElementById("importe"+i).value;
         
-        document.getElementById("servicio_a"+i).value=servicio;
-        document.getElementById("cantidad_a"+i).value=cantidad;
-        document.getElementById("importe_a"+i).value=importe;        
-        // alert(servicio);
-      }
+//         document.getElementById("servicio_a"+i).value=servicio;
+//         document.getElementById("cantidad_a"+i).value=cantidad;
+//         document.getElementById("importe_a"+i).value=importe;        
+//         // alert(servicio);
+//       }
 
-  } 
+//   } 
   
-  var resulta=sumal;
+//   var resulta=sumal;
   
-  $("#modal_totalmontoserv").text(resulta);
+//   $("#modal_totalmontoserv").text(resulta);
 
-  document.getElementById("modal_totalmontos").value=resulta;
-  document.getElementById("comprobante_auxiliar").value=comprobante_auxiliar;
+//   document.getElementById("modal_totalmontos").value=resulta;
+//   document.getElementById("comprobante_auxiliar").value=comprobante_auxiliar;
 
-}
+// }
 
 
 
@@ -7134,8 +7134,12 @@ function calcularTotalFilaServicio2(){
   var resulta=sumal;
   //sumamos la parte que se adiciona
 
-  
+  nro_items = document.getElementById("cantidad_filas").value;
+  if(nro_items==0){
+    $("#monto_total").val(resulta);
+  }
   document.getElementById("modal_totalmontoserv").value=resulta;
+  //   $("#modal_totalmontoserv").text(resulta);
   document.getElementById("modal_totalmontos").value=resulta;
   document.getElementById("comprobante_auxiliar").value=comprobante_auxiliar;
 }
