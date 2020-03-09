@@ -296,8 +296,7 @@ $contadorRegistros=0;
                                     <label class="col-sm-5 col-form-label" style="color:#000000">Monto Total</label>
                                     <div class="col-sm-4">
                                         <div class="form-group">                                        
-                                            <input  type="hidden" name="modal_totalmontoserv" id="modal_totalmontoserv"/>
-                                            <input style="background:#ffffff" class="form-control"  name="monto_total" id="monto_total"  readonly="readonly" value="0" />
+                                            <input style="background:#ffffff" class="form-control" type="text" value="0" name="modal_totalmontoserv" id="modal_totalmontoserv"/>                                            
                                         </div>
                                     </div>
                                         
@@ -314,6 +313,14 @@ $contadorRegistros=0;
                                     
 
                                 </fieldset>
+                                <div class="row">
+                                    <label class="col-sm-5 col-form-label" style="color:#000000">Monto Total + Nuevos Servicios</label>
+                                    <div class="col-sm-4">
+                                        <div class="form-group">                                            
+                                            <input style="background:#ffffff" class="form-control"  name="monto_total" id="monto_total"  readonly="readonly" value="0" />
+                                        </div>
+                                    </div>
+                                </div>
       
                             </div>
                         </div>                    
