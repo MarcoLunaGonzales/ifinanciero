@@ -4186,7 +4186,8 @@ function calcularTotalFilaServicio2(){
   
   var resulta=sumal;
   
-  $("#modal_totalmontoserv").text(resulta);   
+  $("#modal_totalmontoserv").text(resulta);
+
   document.getElementById("modal_totalmontos").value=resulta;
   document.getElementById("comprobante_auxiliar").value=comprobante_auxiliar;
 
@@ -4296,7 +4297,7 @@ function calcularTotalPersonalServicio(anio,valor){
   $("#modal_totalmontopretotal"+anio).text(result);
   $("#modal_cantidadpersonal"+anio).val(sumaC);
   $("#modal_totalmontopre"+anio).text(redondeo(resulta));
-*/
+  */
 
 
  var usd=$("#cambio_moneda").val();
@@ -6569,7 +6570,6 @@ function addRendicionDetalle(obj) {
       ajax.send(null);
   
 }
-
 function borrarItemRendicionDetalle(idF){
  // alert(idF+"_"+cantidadItems);
       //$('#div'+idF).remove();
@@ -7053,7 +7053,39 @@ function cambiarTituloPersonalModal(anio){
 }
 
 
+function activarInputMontoFilaServicio2(){
 
+  calcularTotalFilaServicio2();
+}
+function calcularTotalFilaServicio2(){
+  var sumal=0;
+  var total= $("#modal_numeroservicio").val();
+  var comprobante_auxiliar=0;
+  for (var i=1;i<=(total-1);i++){          
+    var check=document.getElementById("modal_check"+i).checked;
+       if(check) {
+        comprobante_auxiliar=comprobante_auxiliar+1;
+        //sumanos los importes
+        sumal+=parseFloat($("#modal_importe"+i).text());
+
+        var servicio = document.getElementById("servicio"+i).value;
+        var cantidad=document.getElementById("cantidad"+i).value;
+        var importe=document.getElementById("importe"+i).value;
+        
+        document.getElementById("servicio_a"+i).value=servicio;
+        document.getElementById("cantidad_a"+i).value=cantidad;
+        document.getElementById("importe_a"+i).value=importe;        
+        // alert(servicio);
+      }
+  } 
+  var resulta=sumal;
+  //sumamos la parte que se adiciona
+
+  
+  document.getElementById("modal_totalmontoserv").value=resulta;
+  document.getElementById("modal_totalmontos").value=resulta;
+  document.getElementById("comprobante_auxiliar").value=comprobante_auxiliar;
+}
 function ajax_Cliente_razonsocial(combo){
   var contenedor;
   var codigo_cliente=combo.value;
@@ -7108,4 +7140,118 @@ function agregarNuevoServicioSimulacion2(cod_sim,cod_area){
         }
     });      
   }
+}
+function AgregarSeviciosFacturacion(){//por anora no se usa
+  // var cod_i=$("#cod_ibnorca").val();
+  // var nombre_s=$("#nombre").val();
+  // $("#modal_nombresim").val(nombre_s);
+  //$("#modal_tiposim").val(cod_i);
+  //$('.selectpicker').selectpicker("refresh");
+
+  $("#modalAgregarServicioFacturacion").modal("show");
+}
+function AgregarSeviciosFacturacion2(obj) {
+  if($("#add_boton").length){
+    $("#add_boton").attr("disabled",true);
+  }
+  var cod_area=document.getElementById("cod_area").value;
+  // alert(cod_area);
+      numFilas++;
+      cantidadItems++;
+      
+      filaActiva=numFilas;
+      document.getElementById("cantidad_filas").value=numFilas;
+      console.log("num: "+numFilas+" cantidadItems: "+cantidadItems);
+      fi = document.getElementById('fiel');
+      contenedor = document.createElement('div');
+      contenedor.id = 'div'+numFilas;  
+      fi.type="style";
+      fi.appendChild(contenedor);
+      var divDetalle;
+      divDetalle=$("#div"+numFilas);
+      //document.getElementById('nro_cuenta').focus();
+      ajax=nuevoAjax();
+      ajax.open("GET","simulaciones_servicios/ajax_addserviciosfacturacion.php?idFila="+numFilas+"&cod_area="+cod_area,true);
+      ajax.onreadystatechange=function(){
+        if (ajax.readyState==4) {
+          divDetalle.html(ajax.responseText);
+          divDetalle.bootstrapMaterialDesign();   
+          // $('#codigo_rendicionA').val("");
+          // $('#cod_tipo_documentoA').val("");//
+          $('#modal_editservicio').val("");
+          $('#cantidad_servicios').val("");
+          $('#modal_montoserv').val("");
+
+          $('.selectpicker').selectpicker("refresh");
+          // $('#modalAgregarDR').modal('show');
+          // if(numFilas!=1){
+          //   //alert((numFilas-1)+"-"+$("#monto_A"+(numFilas-1)).val());
+          //   sumartotalprueba2(numFilas-1);
+          // }        
+          if($("#add_boton").length){
+            $("#add_boton").removeAttr("disabled");
+          }
+          return false;
+       }
+      }   
+      ajax.send(null);
+}
+function sumartotalAddServiciosFacturacion(id){
+  var sumatotal=0;
+  var formulariop = document.getElementById("form1");
+  // alert(formulariop.elements.length);
+  for (var i=0;i<formulariop.elements.length;i++){
+    if (formulariop.elements[i].id.indexOf("modal_montoserv") !== -1 ){    
+      //console.log("debe "+formulariop.elements[i].value);    
+      sumatotal += parseFloat((formulariop.elements[i].value) * 1);
+    }
+  }
+  
+  modalmonto_total=parseFloat(document.getElementById("modal_totalmontoserv").value);
+  if (modalmonto_total==''){modalmonto_total=0;}
+
+  monto_Total= modalmonto_total+sumatotal;
+
+  $("#monto_total").val(monto_Total);  
+  // $("#monto_faltante").val(monto_faltante);  
+}
+function borrarItemSeriviciosFacturacion(idF){ 
+  var elem = document.getElementById('div'+idF);
+  elem.parentNode.removeChild(elem);
+  if(idF<numFilas){
+    for (var i = parseInt(idF); i < (numFilas+1); i++) {
+      var nuevoId=i+1;
+      $("#div"+nuevoId).attr("id","div"+i);
+      $("#modal_editservicio"+nuevoId).attr("name","modal_editservicio"+i);
+      $("#modal_editservicio"+nuevoId).attr("id","modal_editservicio"+i);
+      $("#cantidad_servicios"+nuevoId).attr("name","cantidad_servicios"+i);
+      $("#cantidad_servicios"+nuevoId).attr("id","cantidad_servicios"+i);
+
+      $("#modal_montoserv"+nuevoId).attr("name","modal_montoserv"+i);
+      $("#modal_montoserv"+nuevoId).attr("id","modal_montoserv"+i);
+      $("#descripcion"+nuevoId).attr("name","descripcion"+i);
+      $("#descripcion"+nuevoId).attr("id","descripcion"+i);       
+    }
+  } 
+  numFilas=numFilas-1;
+  cantidadItems=cantidadItems-1;
+  filaActiva=numFilas;
+  document.getElementById("cantidad_filas").value=numFilas;
+  // document.getElementById("totalhab").value=numFilas;
+  $("#monto_total").val(numFilas);
+  console.log("num: "+numFilas+" cantidadItems: "+cantidadItems); 
+  sumartotalAddServiciosFacturacion("null");   
+}
+
+// var areas_tabla=[]; 
+var detalle_tabla_general=[];
+var numFilasA=0;
+function filaTablaAGeneral(tabla,index){
+  var html="";
+  for (var i = 0; i < detalle_tabla_general[index-1].length; i++) {
+    //alert(detalle_tabla_general[index-1][i].nombre);
+    html+="<tr><td>"+(i+1)+"</td><td>"+detalle_tabla_general[index-1][i].serviciox+"</td><td>"+detalle_tabla_general[index-1][i].cantidadX+"</td><td>"+detalle_tabla_general[index-1][i].precioX+"</td><td>"+detalle_tabla_general[index-1][i].descripcion_alternaX+"</td></tr>";
+  }
+  tabla.html(html);
+  $("#modalDetalleFac").modal("show");  
 }

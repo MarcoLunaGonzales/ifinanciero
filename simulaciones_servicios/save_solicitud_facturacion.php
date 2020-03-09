@@ -27,13 +27,15 @@ try {
 
     $modal_totalmontos = $_POST["modal_totalmontos"];
     $modal_numeroservicio = $_POST["modal_numeroservicio"];
+
+ 
     
     
     if ($cod_facturacion == 0){//insertamos        
         $stmt = $dbh->prepare("INSERT INTO solicitudes_facturacion(cod_simulacion_servicio,cod_unidadorganizacional,cod_area,fecha_registro,fecha_solicitudfactura,cod_tipoobjeto,cod_tipopago,cod_cliente,cod_personal,razon_social,nit,observaciones) 
         values ('$cod_simulacion','$cod_unidadorganizacional','$cod_area','$fecha_registro','$fecha_solicitudfactura','$cod_tipoobjeto','$cod_tipopago','$cod_cliente','$cod_personal','$razon_social','$nit','$observaciones')");
         $flagSuccess=$stmt->execute();
-        $flagSuccess=true;
+        // $flagSuccess=true;
         if($flagSuccess){
             //sacamos el codigo insertado
            $stmt = $dbh->prepare("SELECT codigo from solicitudes_facturacion where cod_simulacion_servicio=$cod_simulacion ORDER BY codigo desc LIMIT 1");
@@ -64,31 +66,39 @@ try {
                     $flagSuccess=$stmt->execute();
                 }
             }
-
-
-            
+            //los agregados con  ajax
+            $cantidad_filas = $_POST["cantidad_filas"];
+            for ($i=1;$i<=$cantidad_filas;$i++){                
+                $servicioInsert_ajax=$_POST["modal_editservicio".$i];
+                $CantidadInsert_ajax=$_POST["cantidad_servicios".$i];
+                $importeInsert_ajax=$_POST["modal_montoserv".$i];
+                $DescricpionInsert_ajax=$_POST["descripcion".$i];                
+                // echo " servicio:".$servicioInsert_ajax."<br>";
+                // echo " cantida:".$CantidadInsert_ajax."<br>";
+                // echo " importe:".$importeInsert_ajax."<br>";
+                // echo " Descricpion:".$DescricpionInsert_ajax."<br>";
+                $stmt = $dbh->prepare("INSERT INTO solicitudes_facturaciondetalle(cod_solicitudfacturacion,cod_claservicio,cantidad,precio,descripcion_alterna) 
+                values ('$codigo_facturacion','$servicioInsert_ajax','$CantidadInsert_ajax','$importeInsert_ajax','$DescricpionInsert_ajax')");
+                $flagSuccess=$stmt->execute();                
+            }
         }
         showAlertSuccessError($flagSuccess,$urlSolicitudfactura."&cod=".$cod_simulacion);
 
         //$stmt->debugDumpParams();
     } else {//update
-
+        //actualizamos los campos estaticos
         $stmt = $dbh->prepare("UPDATE solicitudes_facturacion set cod_unidadorganizacional='$cod_unidadorganizacional',cod_area='$cod_area',fecha_registro='$fecha_registro',fecha_solicitudfactura='$fecha_solicitudfactura',cod_tipoobjeto='$cod_tipoobjeto',cod_tipopago='$cod_tipopago',cod_cliente='$cod_cliente',cod_personal='$cod_personal',razon_social='$razon_social',nit='$nit',observaciones='$observaciones'
          where codigo = $cod_facturacion");      
         $flagSuccess=$stmt->execute();
         if($flagSuccess){
-
-
-            //boerramos los datos y insertados
+            //borramos los datos y insertados en detalle
             $stmtDelete = $dbh->prepare("DELETE from solicitudes_facturaciondetalle where cod_solicitudfacturacion= $cod_facturacion");      
             $stmtDelete->execute();
             for ($i=1;$i<=$modal_numeroservicio-1;$i++){
                 $servicioInsert="";
                 $CantidadInsert="";
                 $importeInsert="";
-                $DescricpionInsert="";
-                // echo "i:".$i;
-
+                $DescricpionInsert="";                
                 if(isset($_POST["servicio".$i])){
                     $servicioInsert=$_POST["servicio_a".$i];
                     $CantidadInsert=$_POST["cantidad_a".$i];
@@ -96,17 +106,23 @@ try {
                     $DescricpionInsert=$_POST["descripcion_alterna".$i];
                 }
                 if($servicioInsert!=0 || $servicioInsert!=""){
-                    // echo " servicio:".$servicioInsert."<br>";
-                    // echo " cantida:".$CantidadInsert."<br>";
-                    // echo " importe:".$importeInsert."<br>";
-                    // echo " Descricpion:".$DescricpionInsert."<br>";
                     $stmt = $dbh->prepare("INSERT INTO solicitudes_facturaciondetalle(cod_solicitudfacturacion,cod_claservicio,cantidad,precio,descripcion_alterna) 
                     values ('$cod_facturacion','$servicioInsert','$CantidadInsert','$importeInsert','$DescricpionInsert')");
                     $flagSuccess=$stmt->execute();
                 }
             }
+            //los agregados con  ajax
+            $cantidad_filas = $_POST["cantidad_filas"];
+            for ($i=1;$i<=$cantidad_filas;$i++){                
+                $servicioInsert_ajax=$_POST["modal_editservicio".$i];
+                $CantidadInsert_ajax=$_POST["cantidad_servicios".$i];
+                $importeInsert_ajax=$_POST["modal_montoserv".$i];
+                $DescricpionInsert_ajax=$_POST["descripcion".$i];                
+                $stmt = $dbh->prepare("INSERT INTO solicitudes_facturaciondetalle(cod_solicitudfacturacion,cod_claservicio,cantidad,precio,descripcion_alterna) 
+                values ('$cod_facturacion','$servicioInsert_ajax','$CantidadInsert_ajax','$importeInsert_ajax','$DescricpionInsert_ajax')");
+                $flagSuccess=$stmt->execute();                
+            }
         }
-
         showAlertSuccessError($flagSuccess,$urlSolicitudfactura."&cod=".$cod_simulacion);
 
     }//si es insert o update

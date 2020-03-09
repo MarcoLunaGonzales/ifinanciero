@@ -8,9 +8,9 @@ require_once 'configModule.php';
 $dbh = new Conexion();
 $cod_simulacion=$cod_s;
 $cod_facturacion=$cod_f;
+$cod_sw=$cod_sw;
 //sacamos datos para la facturacion
-
-$sql="SELECT sc.anios,sc.cod_responsable,sc.cod_cliente,ps.cod_area,ps.cod_unidadorganizacional
+$sql="SELECT sc.nombre,sc.anios,sc.cod_responsable,sc.cod_cliente,ps.cod_area,ps.cod_unidadorganizacional
 from simulaciones_servicios sc,plantillas_servicios ps
 where sc.cod_plantillaservicio=ps.codigo and sc.cod_estadoreferencial=1 and sc.codigo=$cod_simulacion order by sc.codigo";
 $stmtServicio = $dbh->prepare($sql);
@@ -32,19 +32,19 @@ if ($cod_facturacion > 0){
     $razon_social = $result['razon_social'];
     $nit = $result['nit'];
     $observaciones = $result['observaciones'];
-    $anios_servicio = $resultServicio['anios'];
+    // $anios_servicio = $resultServicio['anios'];
+    $nombre_simulacion = $resultServicio['nombre'];
     $name_cliente=nameCliente($cod_cliente);
 }else {
-    
-    
+    $nombre_simulacion = $resultServicio['nombre'];
     $cod_personal = $resultServicio['cod_responsable'];
     $cod_uo = $resultServicio['cod_unidadorganizacional'];
     $cod_area = $resultServicio['cod_area'];
     $cod_cliente = $resultServicio['cod_cliente'];
-    $anios_servicio = $resultServicio['anios'];
+    // $anios_servicio = $resultServicio['anios'];
 
     $fecha_registro =date('Y-m-d');
-    $fecha_solicitudfactura =null;
+    $fecha_solicitudfactura =$fecha_registro;
     $cod_tipoobjeto=obtenerValorConfiguracion(34);//por defecto
     $cod_tipopago = null;
     $name_cliente=nameCliente($cod_cliente);    
@@ -52,14 +52,15 @@ if ($cod_facturacion > 0){
     $nit = 0;
     $observaciones = null;
 }
-
-
 $name_uo=nameUnidad($cod_uo);
-$name_area=nameArea($cod_area);
+$name_area=abrevArea($cod_area);
 
 
 ?>
-
+<script>
+  numFilas=<?=$contadorRegistros;?>;
+  cantidadItems=<?=$contadorRegistros;?>;
+</script>
 <div class="content">
     <div class="container-fluid">
         <div style="overflow-y:scroll;">
@@ -67,11 +68,13 @@ $name_area=nameArea($cod_area);
               <form id="form1" class="form-horizontal" action="<?=$urlSaveSolicitudfactura;?>" method="post" onsubmit="return valida(this)">
                 <input type="hidden" name="cod_simulacion" id="cod_simulacion" value="<?=$cod_simulacion;?>"/>
                 <input type="hidden" name="cod_facturacion" id="cod_facturacion" value="<?=$cod_facturacion;?>"/>
+                <input type="hidden" name="cantidad_filas" id="cantidad_filas" value="<?=$contadorRegistros;?>">
                 <div class="card">
                   <div class="card-header <?=$colorCard;?> card-header-text">
                     <div class="card-text">
-                      <h4 class="card-title"><?php if ($cod_simulacion == 0) echo "Registrar"; else echo "Editar";?> Solicutd de Facturación</h4>
+                      <h4 class="card-title"><?php if ($cod_simulacion == 0) echo "Registrar "; else echo "Editar ";?>Solicitud de Facturación</h4>                      
                     </div>
+                    <h4 class="card-title" align="center"><b><?=$nombre_simulacion?> - <?=$name_area?></b></h4>
                   </div>
                   <div class="card-body ">
                         <div class="row">
@@ -80,16 +83,7 @@ $name_area=nameArea($cod_area);
                             <div class="form-group">
                                 <input class="form-control" type="hidden" name="cod_uo" id="cod_uo" required="true" value="<?=$cod_uo;?>" required="true" readonly/>
                                  <input class="form-control" type="text" required="true" value="<?=$name_uo;?>" required="true" readonly/>
-
-                                <!-- <select name="cod_uo" id="cod_uo" class="selectpicker form-control form-control-sm" data-style="btn btn-info" required="true">
-                                    <option value=""></option>
-                                    <?php 
-                                    $queryUO = "SELECT codigo,nombre from unidades_organizacionales where cod_estado=1 order by nombre";
-                                    $statementUO = $dbh->query($queryUO);
-                                    while ($row = $statementUO->fetch()){ ?>
-                                        <option <?=($cod_uo==$row["codigo"])?"selected":"";?><?=($cod_uo!=$row["codigo"])?"disabled":"";?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
-                                    <?php } ?>
-                                </select> -->
+                               
                             </div>
                           </div>
                           <label class="col-sm-2 col-form-label">Area</label>
@@ -99,28 +93,20 @@ $name_area=nameArea($cod_area);
                                         <input class="form-control" type="hidden" name="cod_area" id="cod_area" required="true" value="<?=$cod_area;?>" required="true" readonly/>
 
                                         <input class="form-control" type="text" required="true" value="<?=$name_area;?>" required="true" readonly/>
-                                        <!-- <select name="cod_area" id="cod_area" class="selectpicker form-control form-control-sm" data-style="btn btn-info" >
-                                            <option value=""></option>
-                                            <?php 
-                                            $queryArea = "SELECT codigo,nombre FROM  areas WHERE cod_estado=1 order by nombre";
-                                            $statementArea = $dbh->query($queryArea);
-                                            while ($row = $statementArea->fetch()){ ?>
-                                                <option <?=($cod_area==$row["codigo"])?"selected":"";?><?=($cod_area!=$row["codigo"])?"disabled":"";?>  value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
-                                            <?php } ?>
-                                        </select> -->
+                                       
                                     </div>                    
                                 </div>
                             </div>
                         </div>
                             <!--fin ofician y area -->
                         <div class="row">
-                            <label class="col-sm-2 col-form-label">Fecha R.</label>
+                            <label class="col-sm-2 col-form-label">F. Registro</label>
                             <div class="col-sm-4">
                                 <div class="form-group">
                                     <input class="form-control" type="date" name="fecha_registro" id="fecha_registro" required="true" value="<?=$fecha_registro;?>" required="true"/>
                                 </div>
                             </div>
-                            <label class="col-sm-2 col-form-label">Fecha Soliciutd</label>
+                            <label class="col-sm-2 col-form-label">F. A Facturar</label>
                             <div class="col-sm-4">
                                 <div class="form-group">
                                     <input class="form-control" type="date" name="fecha_solicitudfactura" id="fecha_solicitudfactura" required="true" value="<?=$fecha_solicitudfactura;?>" required="true"/>
@@ -169,15 +155,7 @@ $name_area=nameArea($cod_area);
                                      <input class="form-control" type="hidden" name="cod_cliente" id="cod_cliente" required="true" value="<?=$cod_cliente;?>" required="true" readonly/>
 
                                         <input class="form-control" type="text" required="true" value="<?=$name_cliente;?>" required="true" readonly/>
-                                        <!-- <select name="cod_cliente" id="cod_cliente" class="selectpicker form-control form-control-sm" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" onchange="ajax_Cliente_razonsocial(this)" required="true">
-                                            <option value=""></option>
-                                            <?php 
-                                            $querycliente = "SELECT codigo,nombre FROM  clientes WHERE cod_estadoreferencial=1 order by nombre";
-                                            $statementCliente = $dbh->query($querycliente);
-                                            while ($row = $statementCliente->fetch()){ ?>
-                                                <option <?=($cod_cliente==$row["codigo"])?"selected":"";?><?=($cod_cliente!=$row["codigo"])?"disabled":"";?>  value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
-                                            <?php } ?>
-                                        </select>                                 -->
+                                        
                                 </div>
                             </div>
                             <label class="col-sm-2 col-form-label">Responsable</label>
@@ -221,9 +199,13 @@ $name_area=nameArea($cod_area);
                         <div class="card">
                             <div class="card-header <?=$colorCard;?> card-header-text">
                                 <div class="card-text">
-                                  <h6 class="card-title">Detalle Soliciutd Facturación</h6>
+                                  <h6 class="card-title">Detalle Solicitud Facturación</h6>
                                 </div>
                             </div>
+                            <!-- <button type="button" onclick="AgregarSeviciosFacturacion()" class="btn btn-success btn-sm btn-fab float-right">
+                                 <i class="material-icons" title="Registrar Servicios">edit</i>
+                            </button> -->
+
                             <div class="card-body ">
                                 <table class="table table-bordered table-condensed table-striped table-sm">
                                      <thead>
@@ -233,9 +215,9 @@ $name_area=nameArea($cod_area);
                                             <th>Servicio</th>
                                             <th>Cantidad</th>
                                             <th>Importe</th>
-                                            <th>Total</th>                                    
-                                            <th>Descripcion</th>  
+                                            <th>Total</th>                                            
                                             <th class="small">Habilitar/Deshabilitar</th>
+                                            <th>Descripción</th>  
                                           </tr>
                                       </thead>
                                       <tbody>                                
@@ -293,166 +275,161 @@ $name_area=nameArea($cod_area);
                                           <?php   $iii++;  }
                                                                                                                     
                                           // $montoPreTotal=number_format($montoPreTotal,2,".","");
-                                           ?>
-                                           
-
-                                           
+                                           ?>                                           
                                           <?php
                                         
                                           } ?>
-                                          <tr>
+                                          <!-- <tr>
                                              <td colspan="4" class="text-center font-weight-bold">Total</td>
                                              <td></td>
                                              <td id="modal_totalmontoserv" class="text-right"><?=number_format($modal_totalmontopre,2, ',', '')?></td>
                                              <td></td>
-                                           </tr>
+                                           </tr> -->
                                       </tbody>
                                 </table>
+
                                 <input type="hidden" id="modal_numeroservicio" name="modal_numeroservicio" value="<?=$iii?>">                    
                                 <input type="hidden" id="modal_totalmontos" name="modal_totalmontos">
                                 <!-- <script>activarInputMontoFilaServicio2();</script>   -->
                                 <input type="hidden" id="comprobante_auxiliar" name="comprobante_auxiliar">
+                                <div class="row">
+                                    <label class="col-sm-5 col-form-label" style="color:#000000">Monto Total</label>
+                                    <div class="col-sm-4">
+                                        <div class="form-group">                                        
+                                            <input  type="hidden" name="modal_totalmontoserv" id="modal_totalmontoserv"/>
+                                            <input style="background:#ffffff" class="form-control"  name="monto_total" id="monto_total"  readonly="readonly" value="0" />
+                                        </div>
+                                    </div>
+                                        
+                                </div>
+                                <fieldset id="fiel" style="width:100%;border:0;">
+                                    <button title="Agregar Servicios" type="button" id="add_boton" name="add" class="btn btn-warning btn-round btn-fab" onClick="AgregarSeviciosFacturacion2(this)">
+                                        <i class="material-icons">add</i>
+                                    </button>
+                                    <div id="div<?=$index;?>">  
+                                        <div class="h-divider">
+                                        
+                                        </div>
+                                    </div>
+                                    
+
+                                </fieldset>
       
                             </div>
                         </div>                    
                   </div>
                   <div class="card-footer ml-auto mr-auto">
-                    <button type="submit" class="<?=$buttonNormal;?>">Guardar</button>
-                    <a href='<?=$urlSolicitudfactura;?>&cod=<?=$cod_simulacion;?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
+                    <button type="submit" class="<?=$buttonNormal;?>">Guardar</button><?php
+                    if($cod_sw==1){?>
+                        <a href='<?=$urlSolicitudfactura;?>&cod=<?=$cod_simulacion;?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
+                    <?php }else{?>
+                        <a href='<?=$urlListSimulacionesServ?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
+                    <?php }
+                    ?>
+                    
                   </div>
                 </div>
-              </form>
-              <div class="card">
-                            <div class="card-header <?=$colorCard;?> card-header-text">
-                                <div class="card-text">
-                                  <h6 class="card-title">Agregar Servicios</h6>
-                                </div>
-                            </div>
-                            <div class="card-body ">
-                                <table class="table table-bordered table-condensed table-striped table-sm">
-                                 <thead>
-                                      <tr class="fondo-boton">
-                                        <td colspan="4"></td>
-                                        <td colspan="2">MONTO</td>
-                                        <td colspan="2">TOTAL</td>
-                                        <td></td>
-                                      </tr>
-                                      <tr class="fondo-boton">
-                                        <td>#</td>
-                                        <td width="4%">Año</td>
-                                        <td width="30%">Descripci&oacute;n</td>
-                                        <td>Cantidad</td>
-                                        <td width="15%">Unidad</td>
-                                        <td>BOB</td>
-                                        <td>USD</td>
-                                        <td>BOB</td>
-                                        <td>USD</td>
-                                        <td class="small">Habilitar/Deshabilitar</td>
-                                      </tr>
-                                  </thead>
-                                  <tbody>
-                                    <tr class="bg-plomo">
-                                      <td>N</td>
-                                      <td>
-                                        <select class="form-control selectpicker form-control-sm" data-style="fondo-boton fondo-boton-active" name="anio_servicio" id="anio_servicio">
-                                            <option disabled selected="selected" value="">Año</option>
-                                              <?php 
-                                                  for ($i=1; $i <=$anios_servicio ; $i++) {
-                                                    ?><option value="<?=$i?>"><?=$i?></option><?php    
-                                                  }
-                                              ?>
-                                        </select>
-                                      </td>
-                                      <td><?php 
-                                      if($cod_area==39){
-                                        $codigoAreaServ=108;
-                                      }else{
-                                        if($cod_area==38){
-                                          $codigoAreaServ=109;
-                                        }else{
-                                          $codigoAreaServ=0;
-                                        }
-                                      }
-                                    ?>
-                                      <select class="selectpicker form-control form-control-sm" data-live-search="true" name="modal_editservicio" id="modal_editservicio" data-style="fondo-boton">
-                                        <option disabled selected="selected" value="">--SERVICIOS--</option>
-                                        <?php 
-                                         $stmt3 = $dbh->prepare("SELECT idclaservicio,descripcion,codigo from cla_servicios where (codigo_n1=108 or codigo_n1=109) and vigente=1 and codigo_n1=$codigoAreaServ");
-                                         $stmt3->execute();
-                                         while ($rowServ = $stmt3->fetch(PDO::FETCH_ASSOC)) {
-                                          $codigoServX=$rowServ['idclaservicio'];
-                                          $nombreServX=$rowServ['descripcion'];
-                                          $abrevServX=$rowServ['codigo'];
-                                          ?><option value="<?=$codigoServX;?>"><?=$abrevServX?> - <?=$nombreServX?></option><?php 
-                                         }
-                                        ?>
-                                      </select>
-                                      </td>
-                                      <td class="text-right">
-                                           <input type="number" min="1" id="cantidad_servicios" name="cantidad_servicios" class="form-control text-primary text-right" value="1">
-                                      </td>
-                                      <td>
-                                          <select class="form-control selectpicker form-control-sm" data-style="fondo-boton fondo-boton-active" name="unidad_servicios" id="unidad_servicios">
-                                              <?php 
-                                                  $queryUnidad="SELECT * FROM tipos_unidad where cod_estadoreferencial=1 order by codigo";
-                                                  $stmtUnidad = $dbh->prepare($queryUnidad);
-                                                  $stmtUnidad->execute();
-                                                  while ($rowUnidad = $stmtUnidad->fetch(PDO::FETCH_ASSOC)) {
-                                                    $codigoUnidad=$rowUnidad['codigo'];
-                                                    $nomUnidad=$rowUnidad['nombre'];
-                                                    ?><option value="<?=$codigoUnidad?>"><?=$nomUnidad?></option><?php    
-                                                  }
-                                              ?>
-                                          </select>
-                                         </td>
-                                        <td class="text-right">
-                                           <input type="number" id="modal_montoserv" name="modal_montoserv" class="form-control text-primary text-right"  value="0" step="0.01">
-                                        </td>
-                                        <td class="text-right">
-                                           <input type="number" id="modal_montoservUSD" name="modal_montoservUSD" class="form-control text-primary text-right"  value="0" step="0.01">
-                                        </td>
-                                         <td class="text-right">
-                                           <input type="number" id="modal_montoservtotal" name="modal_montoservtotal" class="form-control text-primary text-right"  value="0" step="0.01">
-                                         </td>
-                                         
-                                         <td class="text-right">
-                                           <input type="number" id="modal_montoservtotalUSD" name="modal_montoservtotalUSD" class="form-control text-primary text-right" value="0" step="0.01">
-                                         </td>
-                                      <td>
-                                        <div class="btn-group">
-                                           <a href="#" class="btn btn-primary btn-sm" id="boton_modalnuevoservicio<?=$an?>" onclick="agregarNuevoServicioSimulacion2(<?=$cod_simulacion?>,<?=$cod_area?>); return false;">
-                                             Agregar
-                                           </a>
-                                         </div>
-                                      </td>
-                                    </tr>
-                                    
-                                      <!-- <tr>
-                                         <td colspan="4" class="text-center font-weight-bold">Total</td>
-                                         <td id="modal_totalmontoserv<?=$an?>" class="text-right"><?=number_format($modal_totalmontopre,2, ',', '')?></td>
-                                         <td id="modal_totalmontoservUSD<?=$an?>" class="text-right"><?=number_format($modal_totalmontopre/$usd,2,', ','')?></td>
-                                         <td id="modal_totalmontoservtotal<?=$an?>" class="text-right font-weight-bold"><?=number_format($modal_totalmontopretotal,2, ',', '')?></td>
-                                         <td id="modal_totalmontoservtotalUSD<?=$an?>" class="text-right font-weight-bold"><?=number_format($modal_totalmontopretotal/$usd,2, ',', '')?></td>
-                                         <td></td>
-                                       </tr>
-                                  </tbody> -->
-                               </table>
-
-
-
-                            </div>
-                        </div>
+              </form>                  
             </div>
         </div>
     </div>
 </div>
+<!-- small modal -->
+<div class="modal fade modal-primary" id="modalAgregarServicioFacturacion" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content card">
+           <div class="card-header card-header-success card-header-text">
+              <div class="card-text">
+                <h4>Agregar Servicio</h4>
+              </div>
+              <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
+                <i class="material-icons">close</i>
+              </button>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered table-condensed table-striped table-sm">
+                    <thead>
+                        <tr class="fondo-boton">
+                            <td width="30%">Descripci&oacute;n</td>
+                            <td>Cantidad</td>                            
+                            <td>Importe</td>                            
+                            <td>Action</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="bg-plomo">                        
+                            <td><?php 
+                                if($cod_area==39){
+                                    $codigoAreaServ=108;
+                                }else{
+                                    if($cod_area==38){
+                                      $codigoAreaServ=109;
+                                    }else{
+                                      $codigoAreaServ=0;
+                                    }
+                                }
+                                ?>
+                                <select class="selectpicker form-control form-control-sm" data-live-search="true" name="modal_editservicio" id="modal_editservicio" data-style="fondo-boton">
+                                    <option disabled selected="selected" value="">--SERVICIOS--</option>
+                                    <?php 
+                                     $stmt3 = $dbh->prepare("SELECT idclaservicio,descripcion,codigo from cla_servicios where (codigo_n1=108 or codigo_n1=109) and vigente=1 and codigo_n1=$codigoAreaServ");
+                                     $stmt3->execute();
+                                     while ($rowServ = $stmt3->fetch(PDO::FETCH_ASSOC)) {
+                                      $codigoServX=$rowServ['idclaservicio'];
+                                      $nombreServX=$rowServ['descripcion'];
+                                      $abrevServX=$rowServ['codigo'];
+                                      ?><option value="<?=$codigoServX;?>"><?=$abrevServX?> - <?=$nombreServX?></option><?php 
+                                     }
+                                    ?>
+                                </select>
+                            </td>
+                            <td class="text-right">
+                               <input type="number" min="1" id="cantidad_servicios" name="cantidad_servicios" class="form-control text-primary text-right" value="1">
+                            </td>                        
+                            <td class="text-right">
+                               <input type="number" id="modal_montoserv" name="modal_montoserv" class="form-control text-primary text-right"  value="0" step="0.01">
+                            </td>
+                            
+                          <td>
+                            <div class="btn-group">                            
+                               <button id="add_boton" name="add" class="btn btn-primary btn-sm" onClick="agregarNuevoServicioSimulacion2(this); return false;">
+                                 Agregar
+                               </button>
+                             </div>
+                          </td>
+                        </tr>
+                    </tbody>
+               </table>
+                  
+                  
+                <!-- <hr>
+                <div class="form-group float-right">
+                    <button type="button" id="boton_guardarsim" class="btn btn-default" onclick="guardarDatosSimulacion(this.id)">Guardar</button>
+                </div>  -->
+            </div>
+        </div>  
+    </div>
+</div>
+<!--    end small modal -->
+
+
+
+
+
+
+
+
 <script type="text/javascript">
 function valida(f) {
   var ok = true;
-  var msg = "Habilite los servicios a facturar...\n";
-  if(f.elements["comprobante_auxiliar"].value == 0 || f.elements["comprobante_auxiliar"].value == '' )
+  var msg = "Habilite los servicios que se desee facturar...\n";  
+  if(f.elements["comprobante_auxiliar"].value == 0 || f.elements["comprobante_auxiliar"].value == '')
   {    
     ok = false;
+  }
+  if(f.elements["monto_total"].value>0)
+  {    
+    ok = true;
   }
 
   if(ok == false)

@@ -138,7 +138,7 @@ $stmt->bindColumn('cliente', $cliente);
                               <i class="material-icons"><?=$iconDelete;?></i>
                             </button>
                             <a class="btn btn-warning" title="Solicitud de Facturación" href='<?=$urlSolicitudfactura;?>&cod=<?=$codigo;?>'>
-                              <i class="material-icons" >description</i>
+                              <i class="material-icons" >receipt</i>                              
                             </a>
                               <?php  
                               }
