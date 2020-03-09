@@ -2459,6 +2459,21 @@ function obtenerPrecioServiciosSimulacion($codigo){
   }
   return $num;
 }
+function obtenerPrecioServiciosSimulacionPorAnio($codigo,$anio){
+  $dbh = new Conexion();
+  $sql="";
+  $sql="SELECT * from simulaciones_servicios_tiposervicio where cod_simulacionservicio=$codigo and cod_anio=$anio and habilitado!=0";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute(); 
+   $num=0;
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
+  {
+    $cantidad=$row['cantidad_editado'];
+    $monto=$row['monto'];
+    $num+=$cantidad*$monto;
+  }
+  return $num;
+}
 function obtenerNombreClienteSimulacion($codigo){
   $dbh = new Conexion();
   $sql="";
