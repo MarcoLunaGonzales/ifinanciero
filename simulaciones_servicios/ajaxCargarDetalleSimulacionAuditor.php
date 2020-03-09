@@ -107,9 +107,9 @@ if(isset($_GET["cod_simulacion"])){
           $diasPres=obtenerDiasEspecificoSimulacionDetalleAuditorPeriodo($codSimulacion,$codigoCol,$codigoTipo,$anio);
           $montoPresext=obtenerMontoSimulacionDetalleAuditorExternoPeriodo($codSimulacion,$codigoCol,$codigoTipo,$anio);
           if($codExtLoc==1){
-            $montoPre=$montoPres*$cantPre*$diasPre;
+            $montoPre=$montoPres*$cantPre*$diasPres;
           }else{
-            $montoPre=$montoPresext*$cantPre*$diasPre;
+            $montoPre=$montoPresext*$cantPre*$diasPres;
           }
           $totalColumnaDetalle[$i]+=$montoPre;
           $totalFilaUnitario+=$montoPre;  
