@@ -582,7 +582,6 @@ for ($ann=0; $ann <=$anioGeneral ; $ann++) {
                                        <input type="hidden" id="modal_montopreloc<?=$an?>FFF<?=$iii?>" value="<?=$montoPre?>">
                                      </td>
                                      <td class="text-right">
-<<<<<<< HEAD
                                        <input type="<?=$claseDeshabilitado?>" id="modal_montopreUSD<?=$an?>FFF<?=$iii?>" name="modal_montopreUSD<?=$an?>FFF<?=$iii?>" <?=($banderaHab==0)?"readonly":"";?> class="form-control text-info text-right" onchange="calcularTotalPersonalServicio('<?=$an?>',4)" onkeyUp="calcularTotalPersonalServicio('<?=$an?>',4)" value="<?=$montoPreSiUSD?>" step="0.01">
                                        <input type="<?=$claseDeshabilitadoOFF?>" id="modal_montopreUSDOFF<?=$an?>FFF<?=$iii?>" name="modal_montopreUSDOFF<?=$an?>FFF<?=$iii?>" readonly class="form-control text-info text-right" value="0" step="0.01">
                                      </td>
@@ -591,14 +590,6 @@ for ($ann=0; $ann <=$anioGeneral ; $ann++) {
                                        <input type="<?=$claseDeshabilitado?>" id="modal_montopretotal<?=$an?>FFF<?=$iii?>" name="modal_montopretotal<?=$an?>FFF<?=$iii?>" <?=($banderaHab==0)?"readonly":"";?> class="form-control text-info text-right" onchange="calcularTotalPersonalServicio('<?=$an?>',1)" onkeyUp="calcularTotalPersonalServicio('<?=$an?>',1)" value="<?=$montoPreTotal?>" step="0.01">
                                        <input type="<?=$claseDeshabilitadoOFF?>" id="modal_montopretotalOFF<?=$an?>FFF<?=$iii?>" name="modal_montopretotalOFF<?=$an?>FFF<?=$iii?>" readonly class="form-control text-info text-right" value="0" step="0.01">
                                      </td>   
-=======
-                                       <input type="hidden" id="modal_codigopersonal<?=$an?>FFF<?=$iii?>" value="<?=$codigoPre?>">
-                                       <input type="number" id="modal_montopretotal<?=$an?>FFF<?=$iii?>" name="modal_montopretotal<?=$an?>FFF<?=$iii?>" <?=($banderaHab==0)?"readonly":"";?> class="form-control text-info text-right" onchange="calcularTotalPersonalServicio('<?=$an?>',1)" onkeyUp="calcularTotalPersonalServicio('<?=$an?>',1)" value="<?=$montoPreTotal?>" step="0.01">
-                                     </td>
-                                     <td class="text-right">
-                                       <input type="number" id="modal_montopreUSD<?=$an?>FFF<?=$iii?>" name="modal_montopreUSD<?=$an?>FFF<?=$iii?>" <?=($banderaHab==0)?"readonly":"";?> class="form-control text-info text-right" onchange="calcularTotalPersonalServicio('<?=$an?>',4)" onkeyUp="calcularTotalPersonalServicio('<?=$an?>',4)" value="<?=$montoPreSiUSD?>" step="0.01">
-                                     </td>
->>>>>>> f9fc29f6608c115c754a12258bc45cc79a6875b0
                                      <td class="text-right">
                                        <input type="<?=$claseDeshabilitado?>" id="modal_montopretotalUSD<?=$an?>FFF<?=$iii?>" name="modal_montopretotalUSD<?=$an?>FFF<?=$iii?>" <?=($banderaHab==0)?"readonly":"";?> class="form-control text-info text-right" onchange="calcularTotalPersonalServicio('<?=$an?>',3)" onkeyUp="calcularTotalPersonalServicio('<?=$an?>',3)" value="<?=$montoPreTotalUSD?>" step="0.01">
                                        <input type="<?=$claseDeshabilitadoOFF?>" id="modal_montopretotalUSDOFF<?=$an?>FFF<?=$iii?>" name="modal_montopretotalUSDOFF<?=$an?>FFF<?=$iii?>" readonly class="form-control text-info text-right" value="0" step="0.01">
