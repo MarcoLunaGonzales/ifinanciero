@@ -130,10 +130,12 @@ function nameCuentaAux($codigo){
    return($nombreX);
 }
 function obtieneNumeroCuenta($codigo){
+   
    $dbh = new Conexion();
    $stmt = $dbh->prepare("SELECT numero FROM plan_cuentas where codigo=:codigo");
    $stmt->bindParam(':codigo',$codigo);
    $stmt->execute();
+   $nombreX='';
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       $nombreX=$row['numero'];
    }

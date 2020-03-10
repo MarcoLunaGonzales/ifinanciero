@@ -47,5 +47,11 @@
 
 
 
+	$urlFormreembolsoCajaChica="index.php?opcion=ReembolsoCajaChicaForm";
+	$urlSavereembolsoCajaChica="?opcion=ReembolsoCajaChicaSave";
+	$urlDeleteReembolsoCajaChica="index.php?opcion=deleteReembolsoCajaChica";
+
+
+
 	
 ?>

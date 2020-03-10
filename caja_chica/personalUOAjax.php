@@ -23,7 +23,7 @@ $stmt->execute();
     <?php 
     	while ($row = $stmt->fetch()){ 
 	?>
-      	 <option <?=($cod_uo==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+      	 <option <?=($cod_uo==$row["codigo"])?"selected":"";?> data-subtext="<?=$row["codigo"];?>" value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
      <?php 
  		} 
  	?>
