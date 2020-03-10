@@ -45,13 +45,13 @@ $bgClase="bg-info";
   $stmt = $dbh->prepare($query2);
   $stmt->execute();
   $html='';$montoTotales=0;$montoTotales2=0;$montoTotales2Alumno=0;
-  $precioLocalX=obtenerPrecioServiciosSimulacion($codigo);
+  $precioLocalX=obtenerPrecioServiciosSimulacionPorAnio($codigo,$cod_anio);
 ?>
        <div class=""><center>
         <?php if($tipoCosto==1){
           $porCre=($_GET['porcentaje_fijo']/100)*($cod_anio-1);
           /* DATOS PARA PRECIO EN LUGAR DE CANTIDAD AUDITORIAS*/
-          $precioLocalX=obtenerPrecioServiciosSimulacionPorAnio($codigo);
+          $precioLocalX=obtenerPrecioServiciosSimulacionPorAnio($codigo,$cod_anio);
           $precioRegistrado=obtenerPrecioRegistradoPlantilla($codPlan);
           $sumaPrecioRegistrado=0;
           if($cod_anio!=1){
@@ -188,6 +188,10 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 
               }else{
                 $montoTotales2+=$row_cuentas['monto_total'];
+                if($cantidadDetalle==0){
+                  $cantidadDetalle=1;
+                }
+                
                 $montoTotales2Alumno+=$montoCal/$cantidadDetalle;
                 $html.='<tr class="'.$bgFila.'">'.
                       '<td class="font-weight-bold text-left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$row_cuentas['nombre'].' / '.$row_cuentas['glosa'].' (año '.$cod_anio.')</td>'.
