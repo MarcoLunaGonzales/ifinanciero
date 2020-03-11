@@ -51,7 +51,7 @@ $stmt->bindColumn('bandera', $bandera);
                 <div class="card-body">
                   <div class="table-responsive">
                     <form id="form_partidaspresupuestariasCC" method="post" action="caja_chica/plandecuentas_save.php">
-                    <table class="table" id="data_cuentas">
+                    <table class="table" id="data_cuentas_2">
                       <thead>
                         <tr>
                           <th class="text-center">-</th>
