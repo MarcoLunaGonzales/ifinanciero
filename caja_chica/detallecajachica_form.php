@@ -256,8 +256,7 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
 
                               <?php }?>
                         </select>        
-                      <?php }else{
-                        ?>
+                      <?php }else{ ?>
                           <input type="hidden" name="cod_actividad" id="cod_actividad" value="<?=$cod_actividad_sw?>">
 
                       <?php } ?>                                                                               

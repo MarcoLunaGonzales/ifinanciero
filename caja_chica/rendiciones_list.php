@@ -13,7 +13,7 @@ $globalUser=$_SESSION["globalUser"];
 $dbhU = new Conexion();
 
 $stmt = $dbhU->prepare("SELECT *,
-  (select t.nombre from tipos_documentocajachica t where t.codigo=cod_tipodoc) as tipo_documento,
+  (select t.nombre from configuracion_retenciones t where t.codigo=cod_tipodoc) as tipo_documento,
   (select e.nombre from estados_rendiciones e where e.codigo=cod_estado) as nombre_estado
 from rendiciones 
 where cod_estadoreferencial=1 and cod_personal=$globalUser ORDER BY codigo desc");

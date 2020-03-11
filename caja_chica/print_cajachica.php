@@ -28,7 +28,8 @@ try{
     $fecha_inicio_cc = $resultInfo['fecha'];
     $fecha_cierre_cc = $resultInfo['fecha_cierre'];
 
-    $contenido='CAJA CHICA N° '.$numero_cc." De Fecha: ".$fecha_inicio_cc." a ".$fecha_cierre_cc;
+    // $contenido='CAJA CHICA N° '.$numero_cc." De Fecha: ".$fecha_inicio_cc." a ".$fecha_cierre_cc;
+    $contenido='CAJA CHICA N° '.$numero_cc;
 
 
 $html = '';

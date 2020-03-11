@@ -429,6 +429,18 @@ function abrevArea($codigo){
    }
    return($cadenaAreas);
 }
+function abrevArea_solo($codigo){
+   $dbh = new Conexion();
+   $sql="SELECT abreviatura FROM areas where codigo in ($codigo)";
+   $stmt = $dbh->prepare($sql);
+   //echo $sql;
+   $stmt->execute();
+   $cadenaAreas="";
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $cadenaAreas=$row['abreviatura'];
+   }
+   return($cadenaAreas);
+}
 
 function namesArea($codigo){
   $dbh = new Conexion();
@@ -507,6 +519,16 @@ function abrevUnidad($codigo){
    $nombreX="";
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       $nombreX.=$row['abreviatura']." - ";
+   }
+   return($nombreX);
+}
+function abrevUnidad_solo($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT abreviatura FROM unidades_organizacionales where codigo in ($codigo)");
+   $stmt->execute();
+   $nombreX="";
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $nombreX=$row['abreviatura'];
    }
    return($nombreX);
 }

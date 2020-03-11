@@ -29,11 +29,11 @@ try {
     $nro_recibo = $_POST["nro_recibo"];
     $cod_proveedores = $_POST["proveedores"];
     $cod_actividad_sw = $_POST["cod_actividad"];
-    if($cod_area=='')$cod_area=null;
-    if($cod_uo=='')$cod_uo=null;
-    if($cod_proveedores=='')$cod_proveedores=null;
-    if($cod_personal=='')$cod_personal=null;
-    if($cod_actividad_sw=='')$cod_actividad_sw=null;
+    if($cod_area=='' || $cod_area==0)$cod_area=null;
+    if($cod_uo=='' || $cod_uo==0)$cod_uo=null;
+    if($cod_proveedores=='' || $cod_proveedores==0)$cod_proveedores=null;
+    if($cod_personal=='' || $cod_personal==0)$cod_personal=null;
+    if($cod_actividad_sw=='' || $cod_actividad_sw==0)$cod_actividad_sw=null;
 
     //sacamos monto de caja chica
     $stmtMCC = $dbh->prepare("SELECT monto_reembolso from caja_chica where  codigo =$cod_cc");
@@ -53,10 +53,10 @@ try {
         }
         $codigo=$codigo_caja_chica_aux+1;
         
-        if($cod_retencion==5){
-            $cod_estado=2;
-        }else $cod_estado=1;
-        
+        // if($cod_retencion==5){
+        //     $cod_estado=2;
+        // }else $cod_estado=1;
+        $cod_estado=1;
         $cod_estadoreferencial=1;
         $monto_rendicion=0;
 

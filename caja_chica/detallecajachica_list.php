@@ -31,7 +31,7 @@ $numero_cc=$resultMCC['numero'];
 //listamos los gastos de caja chica
 $stmt = $dbh->prepare("SELECT codigo,cod_cuenta,fecha,cod_tipodoccajachica,cod_uo,cod_area,
   (select pc.nombre from plan_cuentas pc where pc.codigo=cod_cuenta) as nombre_cuenta,
-  (select td.nombre from tipos_documentocajachica td where td.codigo=cod_tipodoccajachica) as nombre_tipodoccajachica,nro_documento,(select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=cod_personal)as cod_personal,monto,monto_rendicion,observaciones,cod_estado,(select c.nombre from af_proveedores c where c.codigo=cod_proveedores)as cod_proveedores
+  (select td.nombre from configuracion_retenciones td where td.codigo=cod_tipodoccajachica) as nombre_tipodoccajachica,nro_documento,(select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=cod_personal)as cod_personal,monto,monto_rendicion,observaciones,cod_estado,(select c.nombre from af_proveedores c where c.codigo=cod_proveedores)as cod_proveedores
 from caja_chicadetalle
 where cod_cajachica=$cod_cajachica and cod_estadoreferencial=1 ORDER BY codigo desc");
 $stmt->execute();
@@ -118,19 +118,18 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                 <div class="card-body">
                   <div class="table-responsive">
                     <table class="table" id="tablePaginator50_2">
-
                       <thead>
                         <tr>
-                          <th>#</th>                        
-                          <th>Cuenta</th>
-                          <th >Fecha</th>
-                          <!-- <th>Tipo</th>      -->                     
-                          <th>Entregado a</th>
-                          <th>Monto</th>                          
-                          <th>Monto Facturas</th> 
-                          <!-- <th>Monto Devolución</th> -->
-                          <th>Detalle</th>
-                          <th>OF/Area</th>
+                          <th><small>#</small></th>
+                          <th><small>Cuenta</small></th>
+                          <th >Fecha</small></th>
+                          <th><small>Tipo</small></th>
+                          <th><small>Entregado a</small></th>
+                          <th><small>Monto</small></th>                          
+                          <th><small>Monto Facturas</small></th> 
+                          <!-- <th><small>Monto Devolución</small></th> -->
+                          <th><small>Detalle</small></th>
+                          <th><small>OF/Area</small></th>
                           
                           <th></th>
                         </tr>
@@ -138,21 +137,23 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                       <tbody>
                         <?php  
                         $index=1;
+                        //listamos los reembolsos
                         while ($row = $stmtReembolso->fetch(PDO::FETCH_BOUND)) {
                           $nombre_personal_reembolso=namePersonal($cod_personal_reembolso);
                           ?>
                           <tr>
-                            <td><?=$index;?></td>
+                            <td><small><?=$index;?></small></td>
                             <td>-</td>
-                            <td width="6%"><?=$fecha_reembolso;?></td>                                                          
-                            <td><?=$nombre_personal_reembolso;?></td>
-                            <td><?=number_format($monto_reembolso, 2, '.', ',');?></td>
+                            <td width="6%"><?=$fecha_reembolso;?></small></td>
+                            <td>-</td>
+                            <td><small><?=$nombre_personal_reembolso;?></small></td>
+                            <td><small><?=number_format($monto_reembolso, 2, '.', ',');?></small></td>
                             <td>-</td>                                      
-                            <td><?=$observaciones_reembolso;?></td>
+                            <td><small><?=$observaciones_reembolso;?></small></td>
                             <td>-</td>     
                             <td class="td-actions text-right">                                
                               <?php
-                                if($globalAdmin==1){                                                                      
+                                if($globalAdmin==1){                                              
                               ?>                                                         
                                 <a href='<?=$urlFormreembolsoCajaChica;?>&codigo=<?=$codigo_reembolso;?>&cod_tcc=<?=$cod_tcc?>&cod_cc=<?=$cod_cajachica?>' rel="tooltip" class="<?=$buttonEdit;?>">
                                   <i class="material-icons" title="Editar"><?=$iconEdit;?></i>
@@ -170,9 +171,8 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                         <?php $idFila=1;
                         // listamos gastos
                         while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
-                          $abrevUnidad=abrevUnidad($cod_uo);
-                          $abrevArea=abrevArea($cod_area);
-
+                          $abrevUnidad=abrevUnidad_solo($cod_uo);
+                          $abrevArea=abrevArea_solo($cod_area);
                           // echo $monto."-".$monto_rendicion."/";
                           if($monto_rendicion=='')$monto_rendicion=0;
                           if($monto==$monto_rendicion)
@@ -182,15 +182,15 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                             
                          ?>
                           <tr>
-                            <td><?=$index;?></td>
-                            <td><?=$nombre_cuenta;?></td>
-                            <td width="6%"><?=$fecha;?></td>
-                            <!-- <td><?=$nombre_tipodoccajachica;?></td> -->
-                              <td><?=$cod_personal;?>/<?=$cod_proveedores?></td>        
-                              <td><?=number_format($monto, 2, '.', ',');?></td>        
-                              <td><?=$labelM.number_format($monto_rendicion, 2, '.', ',')."</span>";?></td>                                      
-                              <td><?=$observaciones;?></td>                              
-                              <td><?=$abrevUnidad;?><?=$abrevArea;?></td>     
+                            <td><small><?=$index;?></small></td>
+                            <td><small><?=$nombre_cuenta;?></small></td>
+                            <td width="6%"><small><?=$fecha;?></small></td>
+                              <td width="5%"><small><?=strtolower($nombre_tipodoccajachica);?></small></td>
+                              <td><small><?=$cod_personal;?>/<?=$cod_proveedores?></small></td>        
+                              <td><small><?=number_format($monto, 2, '.', ',');?></small></td>        
+                              <td><small><?=$labelM.number_format($monto_rendicion, 2, '.', ',')."</span>";?></small></td>                                      
+                              <td><small><?=$observaciones;?></small></td>                              
+                              <td><small><?=$abrevUnidad;?>/<?=$abrevArea;?></small></td>     
                               <td class="td-actions text-right">
                                 <script>var nfac=[];itemFacturasDCC.push(nfac);</script>
                               <?php
@@ -395,7 +395,7 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                              <label class="col-sm-2 col-form-label" style="color:#000000;">Razon Social</label>
                              <div class="col-sm-10">
                               <div class="form-group">
-                                <textarea class="form-control" name="razon_fac" id="razon_fac" value=""></textarea>
+                                <textarea class="form-control" name="razon_fac" id="razon_fac" value="" onkeyup="javascript:this.value=this.value.toUpperCase();"></textarea>
                               </div>
                               </div>
                             </div>
