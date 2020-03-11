@@ -16,25 +16,25 @@ $cod_cajachica=$codigo;
 $cod_tcc=$cod_tcc;
 $dbh = new Conexion();
 //sacamos monto de caja chica
-$stmtMCC = $dbh->prepare("SELECT monto_inicio,monto_reembolso,fecha,numero from caja_chica where  codigo =$cod_cajachica");
+$stmtMCC = $dbh->prepare("SELECT monto_inicio,monto_reembolso,fecha,numero,monto_reembolso_nuevo from caja_chica where  codigo =$cod_cajachica");
 $stmtMCC->execute();
 $resultMCC=$stmtMCC->fetch();
 $monto_cajachica=$resultMCC['monto_inicio'];
-$monto_reembolso=$resultMCC['monto_reembolso'];
+$monto_saldo=$resultMCC['monto_reembolso'];
 $fecha_cc=$resultMCC['fecha'];
+$monto_reembolso_nuevo=$resultMCC['monto_reembolso_nuevo'];
+if($monto_reembolso_nuevo==null || $monto_reembolso_nuevo== '')$monto_reembolso_nuevo=0;
 $numero_cc=$resultMCC['numero'];
 //monto de rendiciones
 
 
-
-$stmt = $dbh->prepare("SELECT codigo,cod_cuenta,fecha,cod_tipodoccajachica,
+//listamos los gastos de caja chica
+$stmt = $dbh->prepare("SELECT codigo,cod_cuenta,fecha,cod_tipodoccajachica,cod_uo,cod_area,
   (select pc.nombre from plan_cuentas pc where pc.codigo=cod_cuenta) as nombre_cuenta,
   (select td.nombre from tipos_documentocajachica td where td.codigo=cod_tipodoccajachica) as nombre_tipodoccajachica,nro_documento,(select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=cod_personal)as cod_personal,monto,monto_rendicion,observaciones,cod_estado,(select c.nombre from af_proveedores c where c.codigo=cod_proveedores)as cod_proveedores
 from caja_chicadetalle
 where cod_cajachica=$cod_cajachica and cod_estadoreferencial=1 ORDER BY codigo desc");
-//ejecutamos
 $stmt->execute();
-//bindColumn
 $stmt->bindColumn('codigo', $codigo_detalle_Cajachica);
 $stmt->bindColumn('cod_cuenta', $cod_cuenta);
 $stmt->bindColumn('nombre_cuenta', $nombre_cuenta);
@@ -48,12 +48,23 @@ $stmt->bindColumn('observaciones', $observaciones);
 $stmt->bindColumn('cod_estado', $cod_estado);
 $stmt->bindColumn('cod_personal', $cod_personal);
 $stmt->bindColumn('cod_proveedores', $cod_proveedores);
-
+$stmt->bindColumn('cod_area', $cod_area);
+$stmt->bindColumn('cod_uo', $cod_uo);
+//listamos los reembolso de caja chica en curso
+$stmtReembolso = $dbh->prepare("SELECT * from caja_chicareembolsos where cod_estadoreferencial=1 and cod_cajachica =$cod_cajachica");
+$stmtReembolso->execute();
+$stmtReembolso->bindColumn('codigo', $codigo_reembolso);
+$stmtReembolso->bindColumn('monto', $monto_reembolso);
+$stmtReembolso->bindColumn('fecha', $fecha_reembolso);
+$stmtReembolso->bindColumn('cod_personal', $cod_personal_reembolso);
+$stmtReembolso->bindColumn('observaciones', $observaciones_reembolso);
 
 $stmtb = $dbh->prepare("SELECT (select a.nombre from tipos_caja_chica a where a.codigo=cod_tipocajachica) as nombre_caja_chica FROM caja_chica WHERE codigo=$cod_cajachica");
 $stmtb->execute();
 $resulttb=$stmtb->fetch();
 $nombre_caja_chica=$resulttb['nombre_caja_chica'];
+
+
 
 
 ?>
@@ -77,18 +88,24 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                               <input style="background-color:#F3F781;text-align: center" class="form-control" readonly="readonly" value="<?=number_format($monto_cajachica, 2, '.', ',')?>" />
                           </div>
                       </div>
+                      <label class="col-sm-1 col-form-label text-right" style="color:#0B2161;font-size: 16px"><b>Monto Reemb.</b></label>
+                      <div class="col-sm-2">
+                      <div class="form-group">
+                          <input style="background-color:#F3F781;text-align: center" class="form-control" name="numero" id="numero" value="<?=number_format($monto_reembolso_nuevo, 2, '.', ',')?>"  readonly="readonly"/>
+                      </div>
+                      </div>
                       <label class="col-sm-1 col-form-label text-right" style="color:#0B2161;font-size: 16px"><b>Saldo</b></label>
                       <div class="col-sm-2">
                       <div class="form-group">
-                          <input style="background-color:#F3F781;text-align: center" class="form-control" name="numero" id="numero" value="<?=number_format($monto_reembolso, 2, '.', ',')?>"  readonly="readonly"/>
+                          <input style="background-color:#F3F781;text-align: center" class="form-control" name="numero" id="numero" value="<?=number_format($monto_saldo, 2, '.', ',')?>"  readonly="readonly"/>
                       </div>
                       </div>
-                      <label class="col-sm-1 col-form-label text-right" style="color:#0B2161;font-size: 16px"><b>Fecha</b></label>
+                      <!-- <label class="col-sm-1 col-form-label text-right" style="color:#0B2161;font-size: 16px"><b>Fecha</b></label>
                       <div class="col-sm-2">
                       <div class="form-group">
                           <input style="background-color:#F3F781;text-align: center" class="form-control" name="numero" id="numero" value="<?=$fecha_cc?>"  readonly="readonly"/>
                       </div>
-                      </div>
+                      </div> -->
                       <label class="col-sm-1 col-form-label text-right" style="color:#0B2161;font-size: 16px"><b>Nro. Caja Chica</b></label>
                       <div class="col-sm-2">
                       <div class="form-group">
@@ -106,20 +123,56 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                         <tr>
                           <th>#</th>                        
                           <th>Cuenta</th>
-                          <th>Fecha</th>
-                          <th>Tipo</th>                          
+                          <th >Fecha</th>
+                          <!-- <th>Tipo</th>      -->                     
                           <th>Entregado a</th>
                           <th>Monto</th>                          
                           <th>Monto Facturas</th> 
                           <!-- <th>Monto Devolución</th> -->
                           <th>Detalle</th>
+                          <th>OF/Area</th>
                           
                           <th></th>
                         </tr>
                       </thead>
                       <tbody>
-                        <?php $index=1;$idFila=1;
+                        <?php  
+                        $index=1;
+                        while ($row = $stmtReembolso->fetch(PDO::FETCH_BOUND)) {
+                          $nombre_personal_reembolso=namePersonal($cod_personal_reembolso);
+                          ?>
+                          <tr>
+                            <td><?=$index;?></td>
+                            <td>-</td>
+                            <td width="6%"><?=$fecha_reembolso;?></td>                                                          
+                            <td><?=$nombre_personal_reembolso;?></td>
+                            <td><?=number_format($monto_reembolso, 2, '.', ',');?></td>
+                            <td>-</td>                                      
+                            <td><?=$observaciones_reembolso;?></td>
+                            <td>-</td>     
+                            <td class="td-actions text-right">                                
+                              <?php
+                                if($globalAdmin==1){                                                                      
+                              ?>                                                         
+                                <a href='<?=$urlFormreembolsoCajaChica;?>&codigo=<?=$codigo_reembolso;?>&cod_tcc=<?=$cod_tcc?>&cod_cc=<?=$cod_cajachica?>' rel="tooltip" class="<?=$buttonEdit;?>">
+                                  <i class="material-icons" title="Editar"><?=$iconEdit;?></i>
+                                </a>
+                                <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDeleteReembolsoCajaChica;?>&codigo=<?=$codigo_reembolso;?>&cod_tcc=<?=$cod_tcc?>&cod_cc=<?=$cod_cajachica?>')">
+                                  <i class="material-icons" title="Borrar"><?=$iconDelete;?></i>
+                                </button> 
+                                <?php
+                                  }
+                                ?>
+                              
+                              </td>
+                          </tr>
+                        <?php $index++; } ?>
+                        <?php $idFila=1;
+                        // listamos gastos
                         while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+                          $abrevUnidad=abrevUnidad($cod_uo);
+                          $abrevArea=abrevArea($cod_area);
+
                           // echo $monto."-".$monto_rendicion."/";
                           if($monto_rendicion=='')$monto_rendicion=0;
                           if($monto==$monto_rendicion)
@@ -131,14 +184,13 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                           <tr>
                             <td><?=$index;?></td>
                             <td><?=$nombre_cuenta;?></td>
-                            <td><?=$fecha;?></td>
-                            <td><?=$nombre_tipodoccajachica;?></td>
-                              
-                              <td><?=$cod_personal;?><?=$cod_proveedores?></td>        
-                              
+                            <td width="6%"><?=$fecha;?></td>
+                            <!-- <td><?=$nombre_tipodoccajachica;?></td> -->
+                              <td><?=$cod_personal;?>/<?=$cod_proveedores?></td>        
                               <td><?=number_format($monto, 2, '.', ',');?></td>        
                               <td><?=$labelM.number_format($monto_rendicion, 2, '.', ',')."</span>";?></td>                                      
                               <td><?=$observaciones;?></td>                              
+                              <td><?=$abrevUnidad;?><?=$abrevArea;?></td>     
                               <td class="td-actions text-right">
                                 <script>var nfac=[];itemFacturasDCC.push(nfac);</script>
                               <?php
@@ -155,8 +207,7 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                                         $autorizacion=$row['nro_autorizacion'];
                                         $control=$row['codigo_control'];
                                         ?><script>abrirFacturaDCC(<?=$idFila?>,'<?=$nit?>',<?=$factura?>,'<?=$fechaFac?>','<?=$razon?>',<?=$importe?>,<?=$exento?>,'<?=$autorizacion?>','<?=$control?>');</script><?php
-                                    }
-                                    
+                                    }                                    
                               ?> 
                                 
 
@@ -183,6 +234,8 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                               </td>
                           </tr>
                         <?php $index++;$idFila=$idFila+1; } ?>
+                        <!-- listamos remmbolsos -->
+                        
                       </tbody>
                     
                     </table>
@@ -195,7 +248,8 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
 
               if($globalAdmin==1){
               ?>
-                    <button class="<?=$buttonNormal;?>" onClick="location.href='<?=$urlFormDetalleCajaChica;?>&codigo=0&cod_tcc=<?=$cod_tcc?>&cod_cc=<?=$cod_cajachica?>'">Registrar</button>
+                <button class="btn btn-success" onClick="location.href='<?=$urlFormDetalleCajaChica;?>&codigo=0&cod_tcc=<?=$cod_tcc?>&cod_cc=<?=$cod_cajachica?>'">Registrar Gastos</button>
+                <button class="<?=$buttonNormal;?>" onClick="location.href='<?=$urlFormreembolsoCajaChica;?>&codigo=0&cod_tcc=<?=$cod_tcc?>&cod_cc=<?=$cod_cajachica?>'">Registrar Reembolso</button>
                     <?php
               }
               ?>

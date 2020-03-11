@@ -245,9 +245,13 @@ $contadorRegistros=0;
                                             // $modal_totalmontopretotal+=$montoPreTotal;
                                             ?>
                                             <!-- guardamos las varialbles en un input -->
+                                            <input type="hidden" id="cod_serv_tiposerv<?=$iii?>" name="cod_serv_tiposerv<?=$iii?>" value="<?=$codigoPre?>">
                                             <input type="hidden" id="servicio<?=$iii?>" name="servicio<?=$iii?>" value="<?=$codCS?>">
                                             <input type="hidden" id="cantidad<?=$iii?>" name="cantidad<?=$iii?>" value="<?=$cantidadPre?>">
                                             <input type="hidden" id="importe<?=$iii?>" name="importe<?=$iii?>" value="<?=$montoPre?>">
+
+                                            <!-- aqui se captura los servicios activados -->
+                                            <input type="hidden" id="cod_serv_tiposerv_a<?=$iii?>" name="cod_serv_tiposerv_a<?=$iii?>">
                                             <input type="hidden" id="servicio_a<?=$iii?>" name="servicio_a<?=$iii?>">
                                             <input type="hidden" id="cantidad_a<?=$iii?>" name="cantidad_a<?=$iii?>">
                                             <input type="hidden" id="importe_a<?=$iii?>" name="importe_a<?=$iii?>">
@@ -296,8 +300,7 @@ $contadorRegistros=0;
                                     <label class="col-sm-5 col-form-label" style="color:#000000">Monto Total</label>
                                     <div class="col-sm-4">
                                         <div class="form-group">                                        
-                                            <input  type="hidden" name="modal_totalmontoserv" id="modal_totalmontoserv"/>
-                                            <input style="background:#ffffff" class="form-control"  name="monto_total" id="monto_total"  readonly="readonly" value="0" />
+                                            <input style="background:#ffffff" class="form-control" type="text" value="0" name="modal_totalmontoserv" id="modal_totalmontoserv"/>                                            
                                         </div>
                                     </div>
                                         
@@ -314,7 +317,14 @@ $contadorRegistros=0;
                                     
 
                                 </fieldset>
-      
+                                <div class="row">
+                                    <label class="col-sm-5 col-form-label" style="color:#000000">Monto Total + Nuevos Servicios</label>
+                                    <div class="col-sm-4">
+                                        <div class="form-group">                                            
+                                            <input style="background:#ffffff" class="form-control"  name="monto_total" id="monto_total"  readonly="readonly" value="0" />
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>                    
                   </div>

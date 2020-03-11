@@ -263,6 +263,22 @@
           "pageLength": 50
          }
         );
+
+
+      data_cuentas_ver= $('#data_cuentas_2').DataTable({
+            
+          "pageLength": 1000,
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            }
+         }
+        );
+
+
+
+
+
+
      
      $("#form_partidaspresupuestarias").submit(function(e) {
           var datos=alertDatosTabla();
