@@ -13,10 +13,12 @@ $stmtTCC->execute();
 $resultTCC=$stmtTCC->fetch();
 $nombre_tipoCC=$resultTCC['nombre'];
 
-$stmt = $dbh->prepare("SELECT *,
+$sql="SELECT *,
   (select e.nombre from estados_contrato e where e.codigo=cod_estado) as nombre_estado,
 (select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=cod_personal) as personal
- from caja_chica where cod_estadoreferencial=1 and cod_tipocajachica = $codigo_tipo_caja_Chica");
+ from caja_chica where cod_estadoreferencial=1 and cod_tipocajachica = $codigo_tipo_caja_Chica";
+//echo $sql;
+$stmt = $dbh->prepare($sql);
 //ejecutamos
 $stmt->execute();
 //bindColumn

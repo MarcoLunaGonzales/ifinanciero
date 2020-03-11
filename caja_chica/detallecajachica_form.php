@@ -12,9 +12,6 @@ $dbh = new Conexion();
 $cod_cc=$cod_cc;
 $cod_tcc=$cod_tcc;
 $cod_dcc=$codigo;
-
-
-
 $i=0;
   echo "<script>var array_cuenta=[],imagen_cuenta=[];</script>";
    $stmtCuenta = $dbh->prepare("SELECT pcc.cod_cuenta,pc.numero,pc.nombre from plan_cuentas_cajachica pcc,plan_cuentas pc where pcc.cod_cuenta=pc.codigo");
@@ -55,7 +52,7 @@ if ($codigo > 0){
 
     $cod_cuenta = $result['cod_cuenta'];
     $fecha = $result['fecha'];
-    $cod_tipodoccajachica = $result['cod_tipodoccajachica'];    
+    $cod_retencion = $result['cod_tipodoccajachica'];    
     $nro_documento = $result['nro_documento'];    
     $cod_personal = $result['cod_personal'];    
     $observaciones = $result['observaciones'];    
@@ -88,16 +85,17 @@ if ($codigo > 0){
     $cod_area=0;
     
     $fecha = date('Y-m-d');
-    $cod_tipodoccajachica = 0;
+    $cod_retencion = null;
     $nro_documento = $numero_caja_chica_aux+1;
     $nro_recibo=$numero_recibo_aux+1;
-    $cod_personal = 0;    
-    $observaciones = "";    
+    $cod_personal = null;    
+    $observaciones = null;    
     $monto = 0;    
     $cod_estado = 1;
 
     $cuenta_aux="";
     $cod_cuenta=0;
+    $cod_actividad_sw=null;
 
 }
 
@@ -107,209 +105,211 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
 <div class="content">
 	<div class="container-fluid">
 		<div class="col-md-12">
-		  <form id="form1" class="form-horizontal" action="<?=$urlSaveDetalleCajaChica;?>" method="post" onsubmit="return valida(this)">
-            <input type="hidden" name="codigo" id="codigo" value="<?=$codigo;?>"/>
-            <input type="hidden" name="cod_cc" id="cod_cc" value="<?=$cod_cc;?>"/>
-            <input type="hidden" name="cod_tcc" id="cod_tcc" value="<?=$cod_tcc;?>"/>
-			<div class="card">
-			  <div class="card-header <?=$colorCard;?> card-header-text">
-				<div class="card-text">
-				  <h4 class="card-title"><?php if ($codigo == 0) echo "Registrar Nuevo"; else echo "Editar";?>  Detalle</h4>
-				</div>
-			  </div>
-			  <div class="card-body ">			
-                   
-                    <div class="row">
-                      <label class="col-sm-2 col-form-label">Cuenta</label>
-                      <div class="col-sm-8">
-                        <div class="form-group">
+		  <form id="form1" class="form-horizontal" action="<?=$urlSaveDetalleCajaChica;?>" method="post" onsubmit="return valida(this)"> 
+        <input type="hidden" name="codigo" id="codigo" value="<?=$codigo;?>"/>
+        <input type="hidden" name="cod_cc" id="cod_cc" value="<?=$cod_cc;?>"/>
+        <input type="hidden" name="cod_tcc" id="cod_tcc" value="<?=$cod_tcc;?>"/>
+  			<div class="card">
+  			  <div class="card-header <?=$colorCard;?> card-header-text">
+    				<div class="card-text">
+    				  <h4 class="card-title"><?php if ($codigo == 0) echo "Registrar Nuevo"; else echo "Editar";?>  Detalle</h4>
+    				</div>
+  			  </div>
+  			  <div class="card-body ">			
+            <div class="row">
+              <label class="col-sm-2 col-form-label">Cuenta</label>
+              <div class="col-sm-8">
+                <div class="form-group">
 
-                            <input class="form-control" type="text" name="cuenta_auto" id="cuenta_auto" value="<?=$cuenta_aux?>" placeholder="[numero] y nombre de cuenta" required/>
-                            <input class="form-control" type="hidden" name="cuenta_auto_id" id="cuenta_auto_id" value="<?=$cod_cuenta?>" required/>
-                            
-                        </div>
-                      </div>
-                    </div><!-- cuenta-->
+                    <input class="form-control" type="text" name="cuenta_auto" id="cuenta_auto" value="<?=$cuenta_aux?>" placeholder="[numero] y nombre de cuenta" required/>
+                    <input class="form-control" type="hidden" name="cuenta_auto_id" id="cuenta_auto_id" value="<?=$cod_cuenta?>" required/>
+                    
+                </div>
+              </div>
+            </div><!-- cuenta-->
 
-                    <div class="row">
-                        <label class="col-sm-2 col-form-label">Tipo Doc.</label>
-                        <div class="col-sm-4">
-                            <div class="form-group">
-                                <select name="tipo_documento" id="tipo_documento" class="selectpicker form-control form-control-sm" data-style="btn btn-info" required>                                    
-                                    <?php                                     
-                                    $stmtTipoDoc = $dbh->query("SELECT td.codigo,td.nombre from tipos_documentocajachica td where td.tipo=1 order by nombre");
-                                    while ($row = $stmtTipoDoc->fetch()){ ?>
-                                        <option <?=($cod_tipodoccajachica==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
-                                    <?php } ?>
-                                </select>                                  
-                            </div>
-                        </div>
-                            <input class="form-control" type="hidden" name="numero" id="numero" value="<?=$nro_documento;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" readonly="readonly"/>
-                        <!-- </div>
-                        </div> -->
-                        <label class="col-sm-2 col-form-label">Nro. Recibo</label>
-                        <div class="col-sm-4">
-                        <div class="form-group">
-                            <input class="form-control" type="number" name="nro_recibo" id="nro_recibo" value="<?=$nro_recibo;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" required/>
-                        </div>
-                        </div>
-                    </div> 
-                    <div class="row">
-                        <label class="col-sm-2 col-form-label">Monto</label>
-                        <div class="col-sm-4">
-                            <div class="form-group">
-                                <input class="form-control" type="text" step="any" name="monto" id="monto" value="<?=$monto;?>" required/>
-                            </div>
-                        </div>
-                        <label class="col-sm-2 col-form-label">Fecha</label>
-                        <div class="col-sm-4">
-                            <div class="form-group">
-                                
-                                <input class="form-control" name="fecha" id="fecha" type="date" min="<?=$fecha_dias_atras?>" max="<?=$fecha?>" required="true" value="<?=$fecha?>" />
-                                </select>
-                               
-                            </div>
-                        </div>
+            <div class="row">
+                <label class="col-sm-2 col-form-label">Tipo Retención</label>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <select name="tipo_retencion" id="tipo_retencion" class="selectpicker form-control form-control-sm" data-style="btn btn-info" required>                                    
+                          <option value="" disabled selected="selected">-Retenciones-</option>
+                            <?php                                     
+                            $stmtTipoRet = $dbh->query("SELECT * from configuracion_retenciones where cod_estadoreferencial=1 order by 2");
+                            while ($row = $stmtTipoRet->fetch()){ ?>
+                                <option <?=($cod_retencion==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                            <?php } ?>
+                        </select>                                  
                     </div>
-                    <div class="row">
-                      <label class="col-sm-2 col-form-label">Personal</label>
-                      <div class="col-sm-8">
-                        <div class="form-group">
-                            <select name="cod_personal" id="cod_personal" class="selectpicker form-control form-control-sm" data-style="btn btn-info"  data-show-subtext="true" data-live-search="true" onChange="ajaxCajaCPersonalUO(this);">
-                                <option value=""></option>
-                                <?php 
-                                $querypersonal = "SELECT codigo,CONCAT_WS(' ',paterno,materno,primer_nombre)AS nombre from personal where cod_estadoreferencial=1 order by nombre";
-                                $stmtPersonal = $dbh->query($querypersonal);
-                                while ($row = $stmtPersonal->fetch()){ ?>
-                                    <option <?=($cod_personal==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>"><?=strtoupper($row["nombre"]);?></option>
-                                <?php } ?>
-                            </select>
-                        </div>
-                      </div>
+                </div>
+                    <input class="form-control" type="hidden" name="numero" id="numero" value="<?=$nro_documento;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" readonly="readonly"/>
+                <!-- </div>
+                </div> -->
+                <label class="col-sm-2 col-form-label">Nro. Recibo</label>
+                <div class="col-sm-4">
+                <div class="form-group">
+                    <input class="form-control" type="number" name="nro_recibo" id="nro_recibo" value="<?=$nro_recibo;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" required/>
+                </div>
+                </div>
+            </div> 
+            <div class="row">
+                <label class="col-sm-2 col-form-label">Monto</label>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <input class="form-control" type="text" step="any" name="monto" id="monto" value="<?=$monto;?>" required/>
                     </div>
-                    <div class="row">
-                      <label class="col-sm-2 col-form-label">Oficina</label>
-                      <div class="col-sm-8">
-                        <div class="form-group">
-                            <div id="div_contenedor_uo">                                        
-                              <?php
-                                  $sqlUO="SELECT codigo,nombre from unidades_organizacionales where cod_estado=1";
-                                  $stmt = $dbh->prepare($sqlUO);
-                                  $stmt->execute();
-                                  ?>
-                                  <select name="cod_uo" id="cod_uo" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" data-show-subtext="true" data-live-search="true" onChange="ajaxAreaUOCAJACHICA(this);" title="Elija una opción">
-                                      <?php 
-                                          while ($row = $stmt->fetch()){ 
-                                      ?>
-                                           <option <?=($cod_uo==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
-                                       <?php 
-                                          } 
-                                      ?>
-                                   </select>                                              
-                            </div>                                                        
-                        </div>
-                      </div>
+                </div>
+                <label class="col-sm-2 col-form-label">Fecha</label>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        
+                        <input class="form-control" name="fecha" id="fecha" type="date" min="<?=$fecha_dias_atras?>" max="<?=$fecha?>" required="true" value="<?=$fecha?>" />
+                        </select>
+                       
                     </div>
-                    <div class="row">
-                      <label class="col-sm-2 col-form-label">Area</label>
-                      <div class="col-sm-8">
-                        <div class="form-group">
-                            <div id="div_contenedor_area">                                        
-                                <?php
-                                if($codigo>0){
-                                    $sqlUO="SELECT cod_area,(select a.nombre from areas a where a.codigo=cod_area )as nombre_areas from areas_organizacion where cod_estadoreferencial=1 and cod_unidad=$cod_uo order by nombre_areas";
-                                    $stmt = $dbh->prepare($sqlUO);
-                                    $stmt->execute();
-                                    ?>
-                                    <select name="cod_area" id="cod_area" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" data-show-subtext="true" data-live-search="true" >
-                                        <?php 
-                                            while ($row = $stmt->fetch()){ 
-                                        ?>
-                                             <option <?=($cod_area==$row["cod_area"])?"selected":"";?> value="<?=$row["cod_area"];?>"><?=$row["nombre_areas"];?></option>
-                                         <?php 
-                                            } 
-                                        ?>
-                                     </select>
-                               <?php }else{?>
-
-                                <input type="hidden" name="cod_area" id="cod_area" value="0">                                        
-                                <?php }
-                                     ?>
-                            </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <label class="col-sm-2 col-form-label">Actividad</label>
-                      <div class="col-sm-8">
-                        <div class="form-group">
-                            <div id="div_contenedor_actividad">
-                              <?php
-                              $cod_uo_proy_fin=VerificarProyFinanciacion($cod_uo);//verificamos si el codigo pertenece a algun proyecto, de ser asi obtenemos el codigo                              
-                              if($cod_uo_proy_fin!=null){
-                                $lista= obtenerActividadesServicioImonitoreo($cod_uo_proy_fin); ?>
-
-                                <select name="cod_actividad" id="cod_actividad" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" data-show-subtext="true" data-live-search="true">
-                                <option disabled selected value="">--SELECCIONE--</option>
-                                 <?php
-                                      foreach ($lista as $listas) { ?>
-                                        <option <?=($cod_actividad_sw==$listas->codigo)?"selected":"";?> value="<?=$listas->codigo?>" class="text-right"><?=substr($listas->nombre, 0, 85)?></option>
-
-                                      <?php }?>
-                                </select>        
-                              <?php } ?>                                                                               
-                            </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <!-- proveedor -->
-                    <div class="row">
-                      <label class="col-sm-2 col-form-label">Proveedor :</label>
-                       <div class="col-sm-8">
-                         <div class="form-group">                        
-                              <select class="selectpicker form-control form-control-sm" name="proveedores" id="proveedores" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" title="Seleccione Proveedor">
+                </div>
+            </div>
+            <div class="row">
+              <label class="col-sm-2 col-form-label">Personal</label>
+              <div class="col-sm-8">
+                <div class="form-group">
+                    <select name="cod_personal" id="cod_personal" class="selectpicker form-control form-control-sm" data-style="btn btn-info"  data-show-subtext="true" data-live-search="true" onChange="ajaxCajaCPersonalUO(this);">
+                        <option value=""></option>
+                        <?php 
+                        $querypersonal = "SELECT codigo,CONCAT_WS(' ',paterno,materno,primer_nombre)AS nombre from personal where cod_estadoreferencial=1 order by nombre";
+                        $stmtPersonal = $dbh->query($querypersonal);
+                        while ($row = $stmtPersonal->fetch()){ ?>
+                            <option <?=($cod_personal==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>"><?=strtoupper($row["nombre"]);?></option>
+                        <?php } ?>
+                    </select>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <label class="col-sm-2 col-form-label">Oficina</label>
+              <div class="col-sm-8">
+                <div class="form-group">
+                    <div id="div_contenedor_uo">                                        
+                      <?php
+                          $sqlUO="SELECT codigo,nombre from unidades_organizacionales where cod_estado=1";
+                          $stmt = $dbh->prepare($sqlUO);
+                          $stmt->execute();
+                          ?>
+                          <select name="cod_uo" id="cod_uo" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" data-show-subtext="true" data-live-search="true" onChange="ajaxAreaUOCAJACHICA(this);" title="Elija una opción">
+                              <?php 
+                                  while ($row = $stmt->fetch()){ 
+                              ?>
+                                   <option <?=($cod_uo==$row["codigo"])?"selected":"";?> data-subtext="<?=$row["codigo"];?>" value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
                                <?php 
-                               $query="SELECT * FROM af_proveedores order by nombre";
-                               $stmt = $dbh->prepare($query);
-                               $stmt->execute();
-                               while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                                  $codigoProv=$row['codigo'];    
-                                  ?><option <?=($cod_proveedores==$codigoProv)?"selected":"";?> value="<?=$codigoProv?>" class="text-right"><?=$row['nombre']?></option>
+                                  } 
+                              ?>
+                           </select>                                              
+                    </div>                                                        
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <label class="col-sm-2 col-form-label">Area</label>
+              <div class="col-sm-8">
+                <div class="form-group">
+                    <div id="div_contenedor_area">                                        
+                        <?php
+                        if($codigo>0){
+                            $sqlUO="SELECT cod_area,(select a.nombre from areas a where a.codigo=cod_area )as nombre_areas from areas_organizacion where cod_estadoreferencial=1 and cod_unidad=$cod_uo order by nombre_areas";
+                            $stmt = $dbh->prepare($sqlUO);
+                            $stmt->execute();
+                            ?>
+                            <select name="cod_area" id="cod_area" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" data-show-subtext="true" data-live-search="true" >
+                                <?php 
+                                    while ($row = $stmt->fetch()){ 
+                                ?>
+                                     <option value="<?=$row["cod_area"];?>" data-subtext="<?=$row["cod_area"];?>" <?=($cod_area==$row["cod_area"])?"selected":"";?> ><?=$row["nombre_areas"];?></option>
                                  <?php 
-                                 } ?> 
-                               </select>
-                          </div>
-                        </div>      
-                        <div class="col-sm-2">
-                            <div class="form-group">                                
-                                <a href="#" class="btn btn-warning btn-round btn-fab btn-sm" onclick="cargarDatosRegistroProveedorCajaChica(<?=$cod_tcc?>,<?=$cod_cc?>,<?=$cod_dcc?>)">
-                                  <i class="material-icons" title="Add Proveedor">add</i>
-                                </a>
-                                <a href="#" class="btn btn-success btn-round btn-fab btn-sm" onclick="actualizarRegistroProveedorCajaChica(<?=$cod_tcc?>,<?=$cod_cc?>,<?=$cod_dcc?>)">
-                                  <i class="material-icons" title="Actualizar">update</i>
-                                </a> 
-                            </div>
-                        </div>                        
+                                    } 
+                                ?>
+                             </select>
+                       <?php }else{?>
+
+                        <input type="hidden" name="cod_area" id="cod_area" value="0">                                        
+                        <?php }
+                             ?>
                     </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <label class="col-sm-2 col-form-label">Actividad</label>
+              <div class="col-sm-8">
+                <div class="form-group">
+                  
+                    <div id="div_contenedor_actividad">
+                      <?php
+                      $cod_uo_proy_fin=VerificarProyFinanciacion($cod_uo);//verificamos si el codigo pertenece a algun proyecto, de ser asi obtenemos el codigo                              
+                      if($cod_uo_proy_fin!=null){
+                        $lista= obtenerActividadesServicioImonitoreo($cod_uo_proy_fin); ?>
 
+                        <select name="cod_actividad" id="cod_actividad" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" data-show-subtext="true" data-live-search="true">
+                        <option disabled selected value="">--SELECCIONE--</option>
+                         <?php
+                              foreach ($lista as $listas) { ?>
+                                <option <?=($cod_actividad_sw==$listas->codigo)?"selected":"";?> value="<?=$listas->codigo?>" class="text-right"><?=substr($listas->nombre, 0, 85)?></option>
 
-                    <div class="row">
-                        <label class="col-sm-2 col-form-label">Detalle</label>
-                        <div class="col-sm-7">
-                        <div class="form-group">
-                            <input class="form-control rounded-0" name="observaciones" id="observaciones" rows="3" required onkeyup="javascript:this.value=this.value.toUpperCase();" value="<?=$observaciones;?>" required/>
+                              <?php }?>
+                        </select>        
+                      <?php }else{ ?>
+                          <input type="hidden" name="cod_actividad" id="cod_actividad" value="<?=$cod_actividad_sw?>">
 
-                            <!-- <input class="form-control" type="text" name="observaciones" id="observaciones" required="true" value="<?=$observaciones;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/> -->
-                        </div>
-                        </div>
-                    </div>              
-			  </div>
-			  <div class="card-footer ml-auto mr-auto">
-				<button type="submit" class="<?=$buttonNormal;?>">Guardar</button>
-				<a href="<?=$urlListDetalleCajaChica;?>&codigo=<?=$cod_cc;?>&cod_tcc=<?=$cod_tcc?>" class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
-			  </div>
-			</div>
+                      <?php } ?>                                                                               
+                    </div>
+                </div>
+              </div>
+            </div>
+            <!-- proveedor -->
+            <div class="row">
+              <label class="col-sm-2 col-form-label">Proveedor :</label>
+               <div class="col-sm-8">
+                 <div class="form-group">                        
+                      <select class="selectpicker form-control form-control-sm" name="proveedores" id="proveedores" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" title="Seleccione Proveedor">
+                        <option value=""></option>
+                       <?php 
+                       $query="SELECT * FROM af_proveedores order by nombre";
+                       $stmt = $dbh->prepare($query);
+                       $stmt->execute();
+                       while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                          $codigoProv=$row['codigo'];    
+                          ?><option <?=($cod_proveedores==$codigoProv)?"selected":"";?> value="<?=$codigoProv?>" class="text-right"><?=$row['nombre']?></option>
+                         <?php 
+                         } ?> 
+                       </select>
+                  </div>
+                </div>      
+                <div class="col-sm-2">
+                    <div class="form-group">                                
+                        <a href="#" class="btn btn-warning btn-round btn-fab btn-sm" onclick="cargarDatosRegistroProveedorCajaChica(<?=$cod_tcc?>,<?=$cod_cc?>,<?=$cod_dcc?>)">
+                          <i class="material-icons" title="Add Proveedor">add</i>
+                        </a>
+                        <a href="#" class="btn btn-success btn-round btn-fab btn-sm" onclick="actualizarRegistroProveedorCajaChica(<?=$cod_tcc?>,<?=$cod_cc?>,<?=$cod_dcc?>)">
+                          <i class="material-icons" title="Actualizar Proveedor">update</i>
+                        </a> 
+                    </div>
+                </div>                        
+            </div>
+            <div class="row">
+                <label class="col-sm-2 col-form-label">Detalle</label>
+                <div class="col-sm-7">
+                <div class="form-group">
+                    <input class="form-control rounded-0" name="observaciones" id="observaciones" rows="3" onkeyup="javascript:this.value=this.value.toUpperCase();" value="<?=$observaciones;?>" required/>
+
+                    <!-- <input class="form-control" type="text" name="observaciones" id="observaciones" required="true" value="<?=$observaciones;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/> -->
+                </div>
+                </div>
+            </div>              
+  			  </div>
+  			  <div class="card-footer ml-auto mr-auto">
+  				<button type="submit" class="<?=$buttonNormal;?>">Guardar</button>
+  				<a href="<?=$urlListDetalleCajaChica;?>&codigo=<?=$cod_cc;?>&cod_tcc=<?=$cod_tcc?>" class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
+  			  </div>
+  			</div>
 		  </form>
 		</div>
 	
@@ -355,12 +355,18 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
 <script type="text/javascript">
 function valida(f) {
   var ok = true;
-  var msg = "Rellene el campo 'personal' o 'proveedor'\n";
+  
   if(f.elements["cod_personal"].value == "" && f.elements["proveedores"].value == "")
-  {    
+  {
+    var msg = "Rellene el campo 'personal' o 'proveedor'\n";
     ok = false;
+  }else{
+    if(f.elements["monto"].value == 0)
+    {    
+          var msg = "El Monto no debe ser menor a '0'...\n";
+          ok = false;
+    }
   }
-
   if(ok == false)
     alert(msg);
   return ok;

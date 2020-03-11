@@ -7100,11 +7100,13 @@ function calcularTotalFilaServicio2(){
         comprobante_auxiliar=comprobante_auxiliar+1;
         //sumanos los importes
         sumal+=parseFloat($("#modal_importe"+i).text());
-
+        //sacamos los datos de los servicios que se activaron
+        var cod_serv_tiposerv = document.getElementById("cod_serv_tiposerv"+i).value;
         var servicio = document.getElementById("servicio"+i).value;
         var cantidad=document.getElementById("cantidad"+i).value;
         var importe=document.getElementById("importe"+i).value;
-        
+        // aqui se guardan los servicios activados
+        document.getElementById("cod_serv_tiposerv_a"+i).value=cod_serv_tiposerv;
         document.getElementById("servicio_a"+i).value=servicio;
         document.getElementById("cantidad_a"+i).value=cantidad;
         document.getElementById("importe_a"+i).value=importe;        

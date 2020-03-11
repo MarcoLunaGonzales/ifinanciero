@@ -24,7 +24,7 @@ $stmt->execute();
     <?php 
     	while ($row = $stmt->fetch()){ 
 	?>
-      	 <option <?=($cod_area==$row["cod_area"])?"selected":"";?> value="<?=$row["cod_area"];?>"><?=$row["nombre_areas"];?></option>
+      	 <option <?=($cod_area==$row["cod_area"])?"selected":"";?> data-subtext="<?=$row["cod_area"];?>" value="<?=$row["cod_area"];?>"><?=$row["nombre_areas"];?></option>
      <?php 
  		} 
  	?>

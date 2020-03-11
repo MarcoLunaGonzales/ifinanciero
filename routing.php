@@ -1331,6 +1331,21 @@
 			$cod_cc=$_GET['cod_cc'];
 			require_once('caja_chica/detallecajachica_delete.php');
 		}
+		if ($_GET['opcion']=='ReembolsoCajaChicaForm') {
+			$codigo=$_GET['codigo'];
+			$cod_tcc=$_GET['cod_tcc'];
+			$cod_cc=$_GET['cod_cc'];
+			require_once('caja_chica/reembolso_cajachica_form.php');
+		}
+		if ($_GET['opcion']=='ReembolsoCajaChicaSave') {
+			require_once('caja_chica/reembolso_cajachica_save.php');
+		}
+		if ($_GET['opcion']=='deleteReembolsoCajaChica') {
+			$codigo=$_GET['codigo'];
+			$cod_tcc=$_GET['cod_tcc'];
+			$cod_cc=$_GET['cod_cc'];
+			require_once('caja_chica/reembolsocajachica_delete.php');
+		}
 
 		//renidicones		
 		if ($_GET['opcion']=='ListaRendiciones') {
@@ -1392,6 +1407,10 @@
 		if ($_GET['opcion']=='deleteDistribucion') {
 			$codigo=$_GET['codigo'];
 			require_once('distribucion_gastosporcentaje/saveDeleteDistribucion.php');
+		}
+		//REPORTES
+		if ($_GET['opcion']=='reportesProveedores') {
+			require_once('caja_chica/rpt_proveedores_print.php');
 		}
 		
 		

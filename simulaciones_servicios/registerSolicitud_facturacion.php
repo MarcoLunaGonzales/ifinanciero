@@ -245,9 +245,13 @@ $contadorRegistros=0;
                                             // $modal_totalmontopretotal+=$montoPreTotal;
                                             ?>
                                             <!-- guardamos las varialbles en un input -->
+                                            <input type="hidden" id="cod_serv_tiposerv<?=$iii?>" name="cod_serv_tiposerv<?=$iii?>" value="<?=$codigoPre?>">
                                             <input type="hidden" id="servicio<?=$iii?>" name="servicio<?=$iii?>" value="<?=$codCS?>">
                                             <input type="hidden" id="cantidad<?=$iii?>" name="cantidad<?=$iii?>" value="<?=$cantidadPre?>">
                                             <input type="hidden" id="importe<?=$iii?>" name="importe<?=$iii?>" value="<?=$montoPre?>">
+
+                                            <!-- aqui se captura los servicios activados -->
+                                            <input type="hidden" id="cod_serv_tiposerv_a<?=$iii?>" name="cod_serv_tiposerv_a<?=$iii?>">
                                             <input type="hidden" id="servicio_a<?=$iii?>" name="servicio_a<?=$iii?>">
                                             <input type="hidden" id="cantidad_a<?=$iii?>" name="cantidad_a<?=$iii?>">
                                             <input type="hidden" id="importe_a<?=$iii?>" name="importe_a<?=$iii?>">
@@ -321,7 +325,6 @@ $contadorRegistros=0;
                                         </div>
                                     </div>
                                 </div>
-      
                             </div>
                         </div>                    
                   </div>

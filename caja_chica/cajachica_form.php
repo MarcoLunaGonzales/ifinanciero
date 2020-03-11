@@ -36,27 +36,27 @@ if($cod_estado_aux==2 || $cod_estado_aux==null || $codigo>0){
         $fecha = $result['fecha'];
         $numero = $result['numero'];    
         $monto_inicio = $result['monto_inicio'];    
-        $monto_reembolso = $result['monto_reembolso'];    
+        // $monto_reembolso = $result['monto_reembolso'];    
         $observaciones = $result['observaciones'];    
         $cod_personal = $result['cod_personal']; 
            
     } else {
-        //para el numero correlativo
-        $stmtCC = $dbh->prepare("SELECT numero from caja_chica where cod_estadoreferencial=1 and cod_tipocajachica=$cod_tcc order by codigo desc");
+        //para el numero correlativo y el monto anterior
+        $stmtCC = $dbh->prepare("SELECT numero,monto_reembolso from caja_chica where cod_estadoreferencial=1 and cod_tipocajachica=$cod_tcc order by codigo desc LIMIT 1");
         $stmtCC->execute();
         $resultCC = $stmtCC->fetch();
         $numero_caja_chica_aux = $resultCC['numero'];
+        $monto_amterior = $resultCC['monto_reembolso'];//sacamos el monto anterior de caja chica
         if($numero_caja_chica_aux==null){
             $numero_caja_chica_aux=0;
         }
-
         //$codigo=$codigo_caja_chica_aux+1;
         $cod_tipocajachica = 0;
         $fecha = "";
-        $numero = $numero_caja_chica_aux+1;    
-        $monto_inicio = 0;    
-        $monto_reembolso = 0;    
-        $observaciones = " ";    
+        $numero = $numero_caja_chica_aux+1;
+        $monto_inicio = $monto_amterior;    
+        // $monto_reembolso = 0;    
+        $observaciones = null;    
         $cod_personal = 0;    
         $cod_estadoreferencial = 1;
     }
@@ -66,7 +66,7 @@ if($cod_estado_aux==2 || $cod_estado_aux==null || $codigo>0){
     <div class="content">
     	<div class="container-fluid">
     		<div class="col-md-12">
-    		  <form id="form1" class="form-horizontal" action="<?=$urlSaveCajaChica;?>" method="post">
+    		  <form id="form1" class="form-horizontal" action="<?=$urlSaveCajaChica;?>" method="post" onsubmit="return valida(this)">
                 <input type="hidden" name="codigo" id="codigo" value="<?=$codigo;?>"/>
     			<div class="card">
     			  <div class="card-header <?=$colorCard;?> card-header-text">
@@ -89,7 +89,7 @@ if($cod_estado_aux==2 || $cod_estado_aux==null || $codigo>0){
                             <label class="col-sm-2 col-form-label">Fecha</label>
                             <div class="col-sm-4">
                                 <div class="form-group">
-                                    <input class="form-control" type="date" name="fecha" id="fecha" required="true" value="<?=$fecha;?>" />                                    
+                                    <input class="form-control" type="date" name="fecha" id="fecha" required="true" value="<?=$fecha;?>" />
                                 </div>
                             </div>
                             <label class="col-sm-2 col-form-label">Nro. Correlativo</label>
@@ -118,16 +118,7 @@ if($cod_estado_aux==2 || $cod_estado_aux==null || $codigo>0){
                           <div class="col-sm-8">
                             <div class="form-group">
                                 <input class="form-control" type="text"  value="<?=$responsable_tipoCC?>" readonly="readonly">
-                                <input class="form-control" type="text" name="cod_personal" id="cod_personal" value="<?=$cod_personal_tipoCC?>" hidden="hidden">
-                                <!-- <select name="cod_personal" id="cod_personal" class="selectpicker form-control form-control-sm" data-style="btn btn-info">
-                                    <option value=""></option>
-                                    <?php 
-                                    $querypersonal = "SELECT codigo,CONCAT_WS(' ',paterno,materno,primer_nombre)AS nombre from personal where cod_estadoreferencial=1 order by nombre";
-                                    $stmtPersonal = $dbh->query($querypersonal);
-                                    while ($row = $stmtPersonal->fetch()){ ?>
-                                        <option <?=($cod_personal==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>"><?=strtoupper($row["nombre"]);?></option>
-                                    <?php } ?>
-                                </select> -->
+                                <input class="form-control" type="text" name="cod_personal" id="cod_personal" value="<?=$cod_personal_tipoCC?>" hidden="hidden">                                
                             </div>
                           </div>
                         </div>
@@ -137,7 +128,7 @@ if($cod_estado_aux==2 || $cod_estado_aux==null || $codigo>0){
                             <label class="col-sm-2 col-form-label">Detalle</label>
                             <div class="col-sm-7">
                             <div class="form-group">
-                                <textarea class="form-control rounded-0" name="observaciones" id="observaciones" rows="3" onkeyup="javascript:this.value=this.value.toUpperCase();"><?=$observaciones;?></textarea>
+                                <textarea class="form-control rounded-0" name="observaciones" id="observaciones" rows="3" onkeyup="javascript:this.value=this.value.toUpperCase();" required="true"><?=$observaciones;?></textarea>
 
                                 <!-- <input class="form-control" type="text" name="observaciones" id="observaciones" required="true" value="<?=$observaciones;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/> -->
                             </div>
@@ -154,6 +145,26 @@ if($cod_estado_aux==2 || $cod_estado_aux==null || $codigo>0){
     	
     	</div>
     </div>
+    <script type="text/javascript">
+        function valida(f) {
+          var ok = true;
+          
+            if(f.elements["monto_inicio"].value == 0)
+            {    
+                var msg = "El Monto de 'Inicio' no debe ser menor a '0'...\n";
+                ok = false;
+            }else{
+                if(f.elements["observaciones"].value == null)
+                {    
+                    var msg = "El Campo 'Detalle' no debe ir vacío...\n";
+                    ok = false;
+                }    
+            }            
+            if(ok == false)
+                alert(msg);
+            return ok;
+        }
+    </script>
 <?php 
 }else{
     $flagSuccess=false;

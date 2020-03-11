@@ -19,7 +19,7 @@ $stmt->execute();
     <?php 
         while ($row = $stmt->fetch()){ 
     ?>
-         <option value="<?=$row["cod_area"];?>"><?=$row["nombre_area"];?></option>
+         <option value="<?=$row["cod_area"];?>" data-subtext="<?=$row["cod_area"];?>"><?=$row["nombre_area"];?></option>
      <?php 
         } 
     ?>
