@@ -99,6 +99,12 @@ $stmt->bindColumn('estado', $estado);
                                  ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1&admin=0" class="dropdown-item">
                                     <i class="material-icons text-danger">clear</i> Cancelar solicitud
                                  </a><?php 
+                                 }else{
+                                   ?>
+                                   <a href="<?=$urlPagos;?>&codigo=<?=$codigo;?>" class="dropdown-item">
+                                    <i class="material-icons text-success">attach_money</i> PAGOS
+                                   </a> 
+                                   <?php
                                  }?>
                                  <a href="<?=$urlVer;?>?cod=<?=$codigo;?>" class="dropdown-item">
                                     <i class="material-icons text-danger">bar_chart</i> Ver Solicitud

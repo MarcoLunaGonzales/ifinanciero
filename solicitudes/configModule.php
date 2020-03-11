@@ -17,4 +17,6 @@ $urlEdit2="solicitudes/edit.php";
 $urlDelete="index.php?opcion=deleteSolicitudRecursos";
 $urlSaveDelete="";
 
+$urlPagos="index.php?opcion=listSolicitudPagosProveedores";
+
 ?>

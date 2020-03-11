@@ -1,4 +1,5 @@
 <?php
+set_time_limit(0);
 session_start();
 require_once '../conexion.php';
 require_once '../functionsGeneral.php';
@@ -19,6 +20,35 @@ if(isset($_GET["simulacion"])){
  $cod_anio=$_GET["anio"];
 
 
+ ?>
+   <ul class="nav nav-pills nav-pills-warning" role="tablist">
+    <?php
+      for ($an=1; $an<=$cod_anio; $an++) { 
+        $active="";
+        if($an==1){
+          $active="active";
+        }
+            ?>
+      <li class="nav-item">
+        <a class="nav-link <?=$active?>" data-toggle="tab" href="#link_detalle<?=$an?>" role="tablist">
+           Año <?=$an?>
+         </a>
+       </li>
+    <?php
+    }
+    ?>
+    </ul>
+    <div class="tab-content tab-space">
+ <?php
+ for ($yyyy=1; $yyyy <=$cod_anio; $yyyy++) { 
+    $active="";
+    if($yyyy==1){
+      $active="active";
+    }
+  ?>
+   <div class="tab-pane <?=$active?>" id="link_detalle<?=$yyyy?>">
+    <h4 class="font-weight-bold"><center>COSTOS AÑO <?=$yyyy?> </center></h4>
+  <?php
  $codArea=obtenerCodigoAreaPlantillaServicio($codPlan);
  if($codArea==39){
    $mes=obtenerCantidadAuditoriasPlantilla($codPlan);
@@ -45,22 +75,22 @@ $bgClase="bg-info";
   $stmt = $dbh->prepare($query2);
   $stmt->execute();
   $html='';$montoTotales=0;$montoTotales2=0;$montoTotales2Alumno=0;
-  $precioLocalX=obtenerPrecioServiciosSimulacionPorAnio($codigo,$cod_anio);
+  $precioLocalX=obtenerPrecioServiciosSimulacionPorAnio($codigo,$yyyy);
 ?>
        <div class=""><center>
         <?php if($tipoCosto==1){
-          $porCre=($_GET['porcentaje_fijo']/100)*($cod_anio-1);
+          $porCre=($_GET['porcentaje_fijo']/100)*($yyyy-1);
           /* DATOS PARA PRECIO EN LUGAR DE CANTIDAD AUDITORIAS*/
-          $precioLocalX=obtenerPrecioServiciosSimulacionPorAnio($codigo,$cod_anio);
+          $precioLocalX=obtenerPrecioServiciosSimulacionPorAnio($codigo,$yyyy);
           $precioRegistrado=obtenerPrecioRegistradoPlantilla($codPlan);
           $sumaPrecioRegistrado=0;
-          if($cod_anio!=1){
+          if($yyyy!=1){
            //$precioLocalX=($precioLocalX*$porCre)+$precioLocalX;
            $sumaPrecioRegistrado=$precioRegistrado*$porCre;
           }
           $nAuditorias=obtenerCantidadAuditoriasPlantilla($codPlan); 
           
-          $porcentPrecios=($precioLocalX*100)/$precioRegistrado;  
+          $porcentPrecios=($precioLocalX*100)/($precioRegistrado+$sumaPrecioRegistrado);  
           /* fin de datos */
          ?>
           <table class="table table-condensed table-bordered">
@@ -172,7 +202,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
           if(!isset($_GET['anio'])){
             $query_cuentas=obtenerDetalleSimulacionCostosPartidaServicio($codigo,$codPartida);
           }else{
-           $query_cuentas=obtenerDetalleSimulacionCostosPartidaServicioPeriodo($codigo,$codPartida,$cod_anio); 
+           $query_cuentas=obtenerDetalleSimulacionCostosPartidaServicioPeriodo($codigo,$codPartida,$yyyy); 
           } 
             
             $montoSimulacion=0;
@@ -194,7 +224,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 
                 $montoTotales2Alumno+=$montoCal/$cantidadDetalle;
                 $html.='<tr class="'.$bgFila.'">'.
-                      '<td class="font-weight-bold text-left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$row_cuentas['nombre'].' / '.$row_cuentas['glosa'].' (año '.$cod_anio.')</td>'.
+                      '<td class="font-weight-bold text-left small">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$row_cuentas['nombre'].' / '.$row_cuentas['glosa'].' (año '.$yyyy.')</td>'.
                       '<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>'.
                       '<td class="text-right text-muted">'.number_format($montoCal/$usd, 2, '.', ',').'</td>';
                       if($tipoCosto!=1){
@@ -229,5 +259,8 @@ echo $html;
   <?php  
    if($tipoCosto!=1){
         ?><div class="row div-center"><h4 class="font-weight-bold"><small>N&uacute;mero de personal registrado:</small> <small class="text-success"><?=$alumnos?></small></h4></div><?php 
-    }   
-}     
+    }
+   ?></div><?php    
+ }     
+
+}

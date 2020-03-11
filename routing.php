@@ -235,6 +235,10 @@
 		if ($_GET['opcion']=='editSolicitudRecursos') {
 			require_once('solicitudes/editSolicitudRecursos.php');
 		}
+        if ($_GET['opcion']=='listSolicitudPagosProveedores') {
+			require_once('solicitudes/listPagos.php');
+		}
+
 		//ESTADOS DE CUENTAS
 		if ($_GET['opcion']=='configuracionEstadosCuenta') {
 			require_once('estados_cuenta/list.php');
@@ -245,8 +249,27 @@
 		if ($_GET['opcion']=='deleteConfiguracionEstadoCuenta') {
 			require_once('estados_cuenta/saveDelete.php');
 		}
-		
 
+		//OBLIGACIONES DE PAGO
+        
+		if ($_GET['opcion']=='listDiasCreditoProveedores') {
+			require_once('dias_credito/list.php');
+		}
+		if ($_GET['opcion']=='registerDiasCreditoProveedor') {
+			require_once('dias_credito/register.php');
+		}
+		if ($_GET['opcion']=='editDiasCredito') {
+			require_once('dias_credito/edit.php');
+		}
+		if ($_GET['opcion']=='deleteDiasCredito') {
+			require_once('dias_credito/saveDelete.php');
+		}
+
+
+		if ($_GET['opcion']=='listObligacionesPago') {
+			require_once('obligaciones_pago/list.php');
+		}
+  
 		//******************************ACTIVOS FIJOS***********************************************************
 		if ($_GET['opcion']=='listUbicaciones') {
 			require_once('activosFijos/ubicacionesLista.php');

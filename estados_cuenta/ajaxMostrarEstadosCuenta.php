@@ -62,7 +62,7 @@ $mes=$_GET['mes'];
 
 	 if($haberX==0||$haberX==""){
        ?>
-  	   <tr class="bg-white det-estados"><td><!-- style="display:none"-->
+  	   <tr class="bg-white det-estados" style="display:none"><td><!-- -->
   	   	<?php if($tipo==2){ 
             ?>
             <div class="form-check">

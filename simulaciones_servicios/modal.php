@@ -641,7 +641,7 @@ for ($ann=0; $ann <=$anioGeneral ; $ann++) {
 
 <!-- small modal -->
 <div class="modal fade modal-arriba modal-primary" id="modalCargarDetalleCosto" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg col-sm-12">
+  <div class="modal-dialog modal-notice" style="max-width: 90% !important;">
     <div class="modal-content card">
                 <div class="card-header card-header-info card-header-text">
                   <div class="card-text">

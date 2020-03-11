@@ -4360,17 +4360,26 @@ function calcularTotalPersonalServicioAuditor(){
   var sumae=0; var sumale=0;
   var total= $("#modal_numeropersonalauditor").val();
   var usd= $("#cambio_moneda").val();
+  var totalesItem=[];
+  var columnas =$("#cantidad_columnas1").val();
+  for (var j = 1; j <=columnas; j++) {
+     totalesItem[j-1]=0; 
+  }
   for (var i=1;i<=(total-1);i++){
     var columnas =$("#cantidad_columnas"+i).val();
     var montos=0;var montose=0;
     var extlocal=$("#modal_local_extranjero"+i).val();
     for (var j = 1; j <=columnas; j++) {
       if(extlocal==1){
-       $("#monto_mult"+j+"RRR"+i).val(redondeo(($("#modal_cantidad_personal"+i).val()*$("#modal_dias_personal"+i).val())*parseFloat($("#monto"+j+"RRR"+i).val())));     
+       $("#monto_mult"+j+"RRR"+i).val(redondeo(($("#modal_cantidad_personal"+i).val()*$("#modal_dias_personalItem"+j+"RRR"+i).val())*parseFloat($("#monto"+j+"RRR"+i).val())));
+       $("#monto_multUSD"+j+"RRR"+i).val(redondeo($("#monto_mult"+j+"RRR"+i).val()/parseFloat(usd)));          
         montos+=parseFloat($("#monto_mult"+j+"RRR"+i).val());
+        totalesItem[j-1]+=redondeo($("#monto_mult"+j+"RRR"+i).val());
       }else{
-       $("#monto_mult"+j+"RRR"+i).val(redondeo(($("#modal_cantidad_personal"+i).val()*$("#modal_dias_personal"+i).val())*parseFloat($("#montoext"+j+"RRR"+i).val())));     
+       $("#monto_mult"+j+"RRR"+i).val(redondeo(($("#modal_cantidad_personal"+i).val()*$("#modal_dias_personalItem"+j+"RRR"+i).val())*parseFloat($("#montoext"+j+"RRR"+i).val())));     
         montos+=parseFloat($("#monto_mult"+j+"RRR"+i).val());
+        $("#monto_multUSD"+j+"RRR"+i).val(redondeo($("#monto_mult"+j+"RRR"+i).val()/parseFloat(usd)));
+        totalesItem[j-1]+=redondeo($("#monto_mult"+j+"RRR"+i).val());
       }   
      //montose+=parseFloat($("#monto_multext"+j+"RRR"+i).val());  
     };
@@ -4382,8 +4391,12 @@ function calcularTotalPersonalServicioAuditor(){
      //$("#total_unitarioauditor"+i).text(redondeo(suma/($("#modal_cantidad_personal"+i).val()*$("#modal_dias_personal"+i).val()))); 
      sumal+=suma;
      //sumale+=sumae;
-     sumaC+=suma/(($("#modal_cantidad_personal"+i).val()*$("#modal_dias_personal"+i).val())); 
+     //sumaC+=suma/(($("#modal_cantidad_personal"+i).val()*$("#modal_dias_personal"+i).val())); 
   } 
+  for (var j = 1; j <=columnas; j++) {
+     $("#total_item"+j).text(redondeo(totalesItem[j-1]));
+     $("#total_itemUSD"+j).text(redondeo(totalesItem[j-1]/parseFloat(usd)));
+  }
   var resulta=redondeo(sumal);
   $("#total_auditor").text(resulta);
   $("#total_auditorUSD").text(redondeo(resulta/parseFloat(usd)));
@@ -4791,19 +4804,29 @@ function cargarListaCostosDetallePeriodoFijo(valor,anio){
   }else{
     var parametros = {"simulacion":simulacion,"plantilla":plantilla,"tipo":tipo,"al":alumnos};
   }  
+
+  //para que solo cargue la primera vez inicio_fijomodal=0
+  var inicioModal= $("#inicio_fijomodal").val(); 
+  if(inicioModal==0){
       $.ajax({
         type:"GET",
         data:parametros,
         url:url,
         beforeSend: function () { 
           iniciarCargaAjax();
+          $("#texto_ajax_titulo").html("Obteniendo Costos Fijos (Esto demorará una sola vez)");        
         },
         success:function(resp){
           detectarCargaAjax();
+          $("#texto_ajax_titulo").html("Procesando Datos"); 
            $("#lista_detallecosto").html(resp);
-          $("#modalCargarDetalleCosto").modal("show");          
+          $("#modalCargarDetalleCosto").modal("show");
+          $("#inicio_fijomodal").val(1);
         }
-      });
+      }); 
+  }else{
+    $("#modalCargarDetalleCosto").modal("show");
+  }
  
 }
 function cargarListaCostosDetallePeriodo(valor,anio){
@@ -4822,21 +4845,28 @@ function cargarListaCostosDetallePeriodo(valor,anio){
   }else{
     var parametros = {"simulacion":simulacion,"plantilla":plantilla,"tipo":tipo,"al":alumnos,"anio":anio};
   }  
-  
+  //para que solo cargue la primera vez inicio_fijomodal=0
+  var inicioModal= $("#inicio_variablemodal").val(); 
+  if(inicioModal==0){
       $.ajax({
         type:"GET",
         data:parametros,
         url:url,
         beforeSend: function () { 
           iniciarCargaAjax();
+          $("#texto_ajax_titulo").html("Obteniendo Costos Variables (Esto demorará una sola vez)");        
         },
         success:function(resp){
           detectarCargaAjax();
            $("#lista_detallecosto").html(resp);
-          $("#modalCargarDetalleCosto").modal("show");          
+          $("#modalCargarDetalleCosto").modal("show");
+          $("#texto_ajax_titulo").html("Procesando Datos"); 
+          $("#inicio_variablemodal").val(1);          
         }
       });
- 
+    }else{
+      $("#modalCargarDetalleCosto").modal("show");
+    }
 }
 function guardarCuentasSimulacionGenerico(ib){
   var conta=0; var contaRead=0;
@@ -4934,19 +4964,22 @@ function guardarCuentasSimulacionGenericoServicioPrevio(anio,ib){
   var cosSim=$("#cod_simulacion").val();
   var usd=$("#cambio_moneda").val();
   var codigosFilas="";
+  var montoFilasPersonal="";
   for (var j = 1; j <=(supertotal-1); j++) {
   var total= $("#numero_cuentas"+anio+"QQQ"+j).val();  
   if((total-1)!=0){
     for (var i=1;i<=(total-1);i++){
       var codigoF=$("#codigo"+anio+"QQQ"+j+"RRR"+i).val();
+      var montoF=$("#monto_modal"+anio+"QQQ"+j+"RRR"+i).val();
       if(!($("#monto_mod"+anio+"QQQ"+j+"RRR"+i).is("[readonly]"))){
         codigosFilas+=codigoF+"###";
+        montoFilasPersonal+=montoF+"###";
       }
     }    
    }    
   };
   //ajax estado de cuentas
-    var parametros={"cod_simulacion":cosSim,"codigo_filas":codigosFilas,"anio":anio,"usd":usd};
+    var parametros={"cod_simulacion":cosSim,"codigo_filas":codigosFilas,"anio":anio,"usd":usd,"monto_filas":montoFilasPersonal};
     $.ajax({
         type: "GET",
         dataType: 'html',
@@ -7249,4 +7282,78 @@ function filaTablaAGeneral(tabla,index){
   }
   tabla.html(html);
   $("#modalDetalleFac").modal("show");  
+}
+
+
+function filtrarSolicitudRecursosServicios(cod_sim,cod_solicitud,unidad,area){
+  var anio =$("#anio_solicitud").val();
+  var itemDetalle =$('select[id="item_detalle_solicitud"] option:selected').text();
+  var codigoDetalle =$("#item_detalle_solicitud").val();
+   var parametros={"cod_sim":cod_sim,"cod_solicitud":cod_solicitud,"anio":anio,"item_detalle":itemDetalle,"unidad":unidad,"area":area,"codigo_detalle":codigoDetalle};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxSolicitudDetalleSimulacion3.php",
+        data: parametros,
+        beforeSend: function () {
+        $("#texto_ajax_titulo").html("Filtrando datos..."); 
+          iniciarCargaAjax();
+        },        
+        success:  function (resp) {
+           detectarCargaAjax();
+           $("#texto_ajax_titulo").html("Procesando Datos");
+           $("#detalles_solicitud").html(resp);
+           $('.selectpicker').selectpicker("refresh");
+        }
+    });      
+}
+
+function nuevoPagoSolicitudRecursos(){
+  $("#modalRegistrarPago").modal("show");
+}
+function mandarValorTitulo(){
+  var monto = $("#monto_pago").val();
+  if(monto==""){
+    monto=0;
+  }
+
+  $("#montoTitulo").html(monto);
+}
+function pagarSolicitudRecursos(){
+  var cod_solicitud = $("#cod_solicitud").val();
+  var cod_pagoproveedor = $("#cod_pagoproveedor").val();
+
+  var monto = $("#monto_pago").val();
+  var saldo = $("#saldo_pago").val();
+  var tipo_pago= $("#tipo_pago").val();
+  var observaciones_pago= $("#observaciones_pago").val();
+  var proveedores_pago= $("#proveedores_pago").val();
+  if(monto==""||monto==0||!(tipo_pago>0)||!(proveedores_pago>0)){
+    Swal.fire("Informativo!", "Debe llenar los campos requeridos", "warning");
+  }else{
+    if(parseFloat(monto)>parseFloat(saldo)){
+      Swal.fire("Informativo!", "El Monto no debe ser Menor al Saldo", "warning");
+    }else{
+    var parametros={"cod_solicitud":cod_solicitud,"cod_pagoproveedor":cod_pagoproveedor,"monto":monto,"saldo":saldo,"tipo_pago":tipo_pago,"proveedores_pago":proveedores_pago,"observaciones_pago":observaciones_pago};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "solicitudes/ajaxSavePagoDetalleSolicitudRecurso.php",
+        data: parametros,
+        beforeSend: function () {
+        $("#texto_ajax_titulo").html("Realizando el Pago de "+redondeo(monto)+ " Bs."); 
+          iniciarCargaAjax();
+        },        
+        success:  function (resp) {
+           detectarCargaAjax();
+           $("#texto_ajax_titulo").html("Procesando Datos");
+           alerts.showSwal('success-message','index.php?opcion=listSolicitudPagosProveedores&codigo='+cod_solicitud);
+        }
+    });  
+      
+    }
+  }
+}
+function historialPagoSolicitudRecursos(){
+  $("#modalHistorialPago").modal("show");
 }

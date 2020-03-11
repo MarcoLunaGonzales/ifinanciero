@@ -103,6 +103,8 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
       }    
 ?>
 <input type="hidden" name="porcentaje_fijo" readonly value="<?=$porcentajeFijoSim?>" id="porcentaje_fijo"/>
+<input type="hidden" name="inicio_fijomodal" readonly value="0" id="inicio_fijomodal"/>
+<input type="hidden" name="inicio_variablemodal" readonly value="0" id="inicio_variablemodal"/>
 <input type="hidden" name="cambio_moneda" readonly value="<?=$usd?>" id="cambio_moneda"/>
 <input type="hidden" name="alumnos_plan" readonly value="<?=$alumnosX?>" id="alumnos_plan"/>
 <input type="hidden" name="utilidad_minlocal" readonly value="<?=$utilidadIbnorcaX?>" id="utilidad_minlocal"/>
@@ -384,40 +386,13 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                                   ?>
                               </div>
                             </div>
-           
-                            <div class="btn-group dropdown">
-                              <button type="button" title="Listar Detalle Costo Fijo" class="btn btn-sm btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="material-icons">list</i> CF
-                              </button>
-                              <div class="dropdown-menu">
-                                <?php
-                                  for ($an=1; $an<=$anioGeneral; $an++) { 
-                                      ?>
-                                       <a href="#" onclick="listarCostosFijosPeriodo(<?=$an?>)" class="dropdown-item">
-                                           <i class="material-icons">keyboard_arrow_right</i> A&ntilde;o <?=$an?>
-                                       </a> 
-                                     <?php
-                                  }
-                                  ?>
-                              </div>
-                            </div>
+                          <a href="#" onclick="listarCostosFijosPeriodo(<?=$anioGeneral?>)" class="btn btn-sm btn-info">
+                                           <i class="material-icons">list</i> CF
+                          </a>
+                          <a href="#" onclick="listarCostosVariblesPeriodo(<?=$anioGeneral?>)" class="btn btn-sm btn-info">
+                                           <i class="material-icons">list</i> CV
+                          </a> 
            <!--<a href="#" title="Listar Detalle Costo Fijo" onclick="listarCostosFijos()" class="btn btn-sm btn-info"><i class="material-icons">list</i> CF</a>-->
-                           <div class="btn-group dropdown">
-                              <button type="button" title="Listar Detalle Costo Variable" class="btn btn-sm btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="material-icons">list</i> CV
-                              </button>
-                              <div class="dropdown-menu">
-                                <?php
-                                  for ($an=1; $an<=$anioGeneral; $an++) { 
-                                      ?>
-                                       <a href="#" onclick="listarCostosVariblesPeriodo(<?=$an?>)" class="dropdown-item">
-                                           <i class="material-icons">keyboard_arrow_right</i> A&ntilde;o <?=$an?>
-                                       </a> 
-                                     <?php
-                                  }
-                                  ?>
-                              </div>
-                            </div>
           <br>
           <div class="row">
             <p class="font-weight-bold float-left">PRESUPUESTO POR PERIODO DE CERTIFICACION</p>
@@ -480,9 +455,16 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                   $anioGeneral=1;
                 } 
                 //costos fijos porcentaje configuracion ***************************************************************************************
-                $porCreAn=($porcentajeFijoSim/100)*($an-1);
+
+                  $sumPrecioRegistrado=$precioRegistrado*(($porcentajeFijoX/100)*($an-1));                  
+
+                 $porcentPreciosPeriodo=($precioLocalXPeriodo*100)/($precioRegistrado+$sumPrecioRegistrado);
+                 $costoFijoFinal=$totalFijo[0]*($porcentPreciosPeriodo/100);
+                 //$totalFijoFinal=$totalFijoPlan*$anioGeneral;
+
+                /*$porCreAn=($porcentajeFijoSim/100)*($an-1);
                 $costoFijoInicio=$totalFijoPlan/$anioGeneral;
-                $costoFijoFinal=$costoFijoInicio+($costoFijoInicio*$porCreAn);
+                $costoFijoFinal=$costoFijoInicio+($costoFijoInicio*$porCreAn);*/
                 $costoFijoPrincipalPeriodo+=$costoFijoFinal;
                 //fin datos para costo fijo             ***************************************************************************************
 

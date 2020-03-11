@@ -1,13 +1,36 @@
 <?php
+session_start();
+require_once '../conexion.php';
+require_once '../functionsGeneral.php';
+require_once '../functions.php';
+require_once '../styles.php';
+
+$dbh = new Conexion();
+
+$codigo=$_GET['cod_solicitud'];
+$codSimulacionServX=$_GET['cod_sim'];
+
+$anio=$_GET['anio'];
+$item_detalle=$_GET['item_detalle'];
+
+$codUnidadX=$_GET['unidad'];
+$codAreaX=$_GET['area'];
+
+$codigo_detalle=$_GET['codigo_detalle'];
+
 						//$detalle=obtenerDetalleSolicitudSimulacion($codSimulacionServX);
                         $codigoPlantillaXX=obtenerPlantillaCodigoSimulacionServicio($codSimulacionServX);
-                        $detalle=obtenerDetalleSolicitudSimulacionCuentaPlantillaServicio($codSimulacionServX,$codigoPlantillaXX);
+                        if($anio=="all"){
+
+                        }
+                        $detalle=obtenerDetalleSolicitudSimulacionCuentaPlantillaServicioFiltro($codSimulacionServX,$codigoPlantillaXX,$anio,$item_detalle,$codigo_detalle);
+                        
                         $ibnorca=1;
                         $unidadSol=$codUnidadX;
                         $areaSol=$codAreaX;
 						$idFila=1;
 						$cuentasCodigos=[];$conta=0;$auxAnio=0;$detalleAux="";$contAux=0;
-					?><div id="detalles_solicitud"><?php
+
 						while ($row = $detalle->fetch(PDO::FETCH_ASSOC)) {
 							//$cod_plantilladetalle=$row['codigo_detalle'];
 							$codigo_fila=explode("###",$row['codigo_detalle']);
@@ -58,23 +81,6 @@
                             }
 							$numeroCuentaX=trim($row['numero']);
 							$nombreCuentaX=trim($row['nombre']);
-							if((int)$row['cod_anio']!=$auxAnio){
-								$anioSelect=(int)$row['cod_anio'];
-                         ?>
-                         <script>
-                            $('#anio_solicitud').append("<option value='<?=$anioSelect?>' >AÑO <?=$anioSelect?></option>");
-                            $('.selectpicker').selectpicker("refresh");
-                          </script>
-						 <?php  				 
-						    }
-							$auxAnio=(int)$row['cod_anio'];
-
-							if($detalleX!=$detalleAux){
-								$listaDetalles[$contAux]=$detalleX;
-								$contAux++;
-							}
-                         		
-							$detalleAux=$detalleX;
 							
 							include "addFila.php";
                          			 
@@ -118,15 +124,5 @@
                        }
 						
 
-$resultado = array_unique($listaDetalles);						
-for ($i=0; $i < count($resultado); $i++) { 
-                       ?>
-                         <script>
-                            $('#item_detalle_solicitud').append("<option value='<?=$i?>'><?=$resultado[$i]?></option>");
-                            $('.selectpicker').selectpicker("refresh");
-                          </script>
-						 <?php  	
-}
 ?>
-                   </div>
 	<script>$("#cantidad_filas").val(<?=($idFila-1)?>)</script>					
