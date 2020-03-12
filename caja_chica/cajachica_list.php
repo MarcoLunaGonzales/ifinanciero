@@ -28,6 +28,7 @@ $stmt->bindColumn('fecha', $fecha);
 $stmt->bindColumn('numero', $numero);
 $stmt->bindColumn('monto_inicio', $monto_inicio);
 $stmt->bindColumn('monto_reembolso', $monto_reembolso);
+$stmt->bindColumn('monto_reembolso_nuevo', $monto_reembolso_nuevo);
 $stmt->bindColumn('observaciones', $observaciones);
 $stmt->bindColumn('cod_personal', $cod_personal);
 $stmt->bindColumn('personal', $personal);
@@ -61,6 +62,7 @@ $stmt->bindColumn('nombre_estado', $nombre_estado);
                           <th>Responsable</th>
                           <th>Monto Inicio</th>
                           <th>Saldo</th>
+                          <th>Reembolso</th>
                           <th>Detalle</th>
                           <th>estado</th>
                           <th></th>
@@ -81,7 +83,8 @@ $stmt->bindColumn('nombre_estado', $nombre_estado);
                               <td><?=$fecha;?></td>
                               <td><?=$personal;?></td>        
                               <td><?=number_format($monto_inicio, 2, '.', ',');?></td>        
-                              <td><?=number_format($monto_reembolso, 2, '.', ',');?></td>        
+                              <td><?=number_format($monto_reembolso, 2, '.', ',');?></td><!-- el saldo -->        
+                              <td><?=number_format($monto_reembolso_nuevo, 2, '.', ',');?></td> <!-- el remmbolso registrado -->
                               <td><?=$observaciones;?></td>        
                               <td><?=$label.$nombre_estado."</span>";?></td>
                                 

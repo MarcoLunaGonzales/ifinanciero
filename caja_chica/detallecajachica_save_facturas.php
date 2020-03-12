@@ -94,9 +94,9 @@ if($flagSuccessDetalle2)
 
 }
 if($flagSuccess==true){
-	showAlertSuccessError(true,"../".$urlListDetalleCajaChica.'&codigo='.$cod_cc.'&cod_tcc='.$cod_ccd);	
+	showAlertSuccessError(true,"../".$urlListDetalleCajaChica.'&codigo='.$cod_cc.'&cod_tcc='.$cod_tcc);	
 }else{
-	showAlertSuccessErrorFacturas(false,"../".$urlListDetalleCajaChica.'&codigo='.$cod_cc.'&cod_tcc='.$cod_ccd);
+	showAlertSuccessErrorFacturas(false,"../".$urlListDetalleCajaChica.'&codigo='.$cod_cc.'&cod_tcc='.$cod_tcc);
 }
 
 
