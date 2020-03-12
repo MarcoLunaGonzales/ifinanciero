@@ -17,6 +17,7 @@ if(isset($_GET["cod_simulacion"])){
   $anio=$_GET["anio"];
   $usd=$_GET["usd"];
  $codigos=explode("###",$_GET["codigo_filas"]);
+ $montos_filas=explode("###",$_GET["monto_filas"]);
  $nroColumnas=(count($codigos)-1);
  ?>
   <table class="table table-condensed table-bordered">
@@ -33,8 +34,8 @@ if(isset($_GET["cod_simulacion"])){
         <td class="fondo-boton" colspan="2">TOTAL</td>
     </tr>
     <tr class="text-white bg-info">
-        <td width="25%">Tipo Auditor</td>
-        <td width="8%">Cantidad</td>
+        <td width="13%">Tipo Auditor</td>
+        <td width="4%">Cantidad</td>
         <!--<td width="8%">D&iacute;as Aud.</td>-->
         <?php 
         for ($i=0; $i < $nroColumnas; $i++) {
@@ -44,8 +45,8 @@ if(isset($_GET["cod_simulacion"])){
          <td class="fondo-boton">USD</td>
          <?php
         }?>
-        <td width="8%" class="fondo-boton">BOB</td>
-        <td width="8%" class="fondo-boton">USD</td>
+        <td width="6%" class="fondo-boton">BOB</td>
+        <td width="6%" class="fondo-boton">USD</td>
     </tr>
     <?php 
     $sql="SELECT s.*,t.nombre as tipo FROM simulaciones_servicios_auditores s join tipos_auditor t on s.cod_tipoauditor=t.codigo where s.cod_simulacionservicio=$codSimulacion and s.cod_anio=$anio";
@@ -100,10 +101,14 @@ if(isset($_GET["cod_simulacion"])){
          <?php
          $totalFilaUnitario=0;$totalFila=0;
          for ($i=0; $i < $nroColumnas; $i++) {
+
           $codigoCol=$codigos[$i];
           
           
           $montoPres=obtenerMontoSimulacionDetalleAuditorPeriodo($codSimulacion,$codigoCol,$codigoTipo,$anio);
+          //montoPres
+          $montoPres=$montos_filas[$i];
+
           $diasPres=obtenerDiasEspecificoSimulacionDetalleAuditorPeriodo($codSimulacion,$codigoCol,$codigoTipo,$anio);
           $montoPresext=obtenerMontoSimulacionDetalleAuditorExternoPeriodo($codSimulacion,$codigoCol,$codigoTipo,$anio);
           if($codExtLoc==1){
@@ -113,7 +118,9 @@ if(isset($_GET["cod_simulacion"])){
           }
           $totalColumnaDetalle[$i]+=$montoPre;
           $totalFilaUnitario+=$montoPre;  
-          $ncol=$i+1;        
+          $ncol=$i+1; 
+          $montoPreUSD=number_format($montoPre/$usd,2,".","");
+          $montoPre=number_format($montoPre,2,".","");       
          ?>
          <td class="text-right">
            <select class="form-control selectpicker form-control-sm" data-style="fondo-boton fondo-boton-active" name="modal_dias_personalItem<?=$ncol?>RRR<?=$iii?>" id="modal_dias_personalItem<?=$ncol?>RRR<?=$iii?>" onchange="calcularTotalPersonalServicioAuditor()">
@@ -136,7 +143,7 @@ if(isset($_GET["cod_simulacion"])){
             <input type="hidden" id="montoext<?=$ncol?>RRR<?=$iii?>" value="<?=$montoPresext?>">
           </td>
           <td class="text-right">
-            <input type="number" id="monto_multUSD<?=$ncol?>RRR<?=$iii?>" readonly name="monto_multUSD<?=$ncol?>RRR<?=$iii?>" class="form-control text-info text-right" value="<?=$montoPre/$usd?>" step="0.01">
+            <input type="number" id="monto_multUSD<?=$ncol?>RRR<?=$iii?>" readonly name="monto_multUSD<?=$ncol?>RRR<?=$iii?>" class="form-control text-info text-right" value="<?=$montoPreUSD?>" step="0.01">
           </td>
          <?php
 

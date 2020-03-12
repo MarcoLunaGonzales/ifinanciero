@@ -199,6 +199,17 @@ if(isset($_GET['cod'])){
                   <input class="form-control" type="text" name="simulacion" value="<?=$nombreSimulacion?>" id="simulacion" readonly/>
               </div>
             </div>
+               <div class="form-group col-sm-1">
+                    <select class="selectpicker form-control form-control-sm" data-style="<?=$comboColor;?>" name="anio_solicitud" id="anio_solicitud">
+                     <option value="all" selected>TODOS</option>
+                    </select>
+                </div>
+                <div class="form-group col-sm-2">
+                    <select class="selectpicker form-control form-control-sm" data-style="select-with-transition" data-live-search="true" title="-- Elija el detalle --" name="item_detalle_solicitud" id="item_detalle_solicitud"  data-style="select-with-transition" required>
+                     <option value="all" selected>TODOS</option>
+                    </select>
+                </div>
+                <a href="#" class="btn btn-info" onclick="filtrarSolicitudRecursosServicios(<?=$codigo?>,<?=$codSimulacionServX?>,<?=$codUnidadX?>,<?=$codAreaX?>)">FILTRAR LA SOLICITUD</a>
 
               <?php
                     

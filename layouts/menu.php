@@ -596,6 +596,31 @@ if($menuModulo==0){
               break;
               case 4:
               ?>
+          <li class="nav-item ">
+            <a class="nav-link" data-toggle="collapse" href="#tablasPresSol">
+              <i class="material-icons">fullscreen</i>
+              <p> Tablas P / S
+                <b class="caret"></b>
+              </p>
+            </a>
+
+            <div class="collapse" id="tablasPresSol">
+              <ul class="nav">              
+                 <li class="nav-item ">
+                  <a class="nav-link" href="index.php?opcion=listTarifarioServicios">
+                    <span class="sidebar-mini"> TF </span>
+                    <span class="sidebar-normal"> Tarifario de Servicios TCP</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listDiasCreditoProveedores">
+                    <span class="sidebar-mini"> DC </span>
+                    <span class="sidebar-normal"> D&iacute;as de Cr&eacute;dito</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </li>    
           <!--Solicitud de recursos-->
           <li class="nav-item ">
             <a class="nav-link" data-toggle="collapse" href="#solicitudes">
@@ -671,12 +696,24 @@ if($menuModulo==0){
               </ul>
             </div>
           </li>
+          <!--REPORTES RRHH-->
           <li class="nav-item ">
-            <a class="nav-link" href="index.php?opcion=listTarifarioServicios">
-              <i class="material-icons">assignment</i>
-              <p> Tarifario de Servicios TCP
+            <a class="nav-link" data-toggle="collapse" href="#reportesPresupuestoSol">
+              <i class="material-icons">assessment</i>
+              <p> Reportes P / S
+                <b class="caret"></b>
               </p>
             </a>
+            <div class="collapse" id="reportesPresupuestoSol">
+              <ul class="nav">                
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listObligacionesPago">
+                    <span class="sidebar-mini"> OP </span>
+                    <span class="sidebar-normal"> Obligaciones de Pago</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
           </li>
 
               <?php

@@ -26,12 +26,11 @@
 $costoFijoPrincipalPeriodo=0;
 for ($eee=1; $eee <=$anioGeneral; $eee++) { 
                  //costos fijos porcentaje configuracion ***************************************************************************************
-                $porCreAn=($porcentajeFijoSim/100)*($eee-1);
-                $costoFijoInicio=$totalFijoPlan/$anioGeneral;
-                $costoFijoFinal=$costoFijoInicio+($costoFijoInicio*$porCreAn);
+               $precioLocalXPeriodo=obtenerPrecioServiciosSimulacionPeriodo($codigo,$eee);
+               $sumPrecioRegistrado=$precioRegistrado*(($porcentajeFijoX/100)*($eee-1));                  
+                 $porcentPreciosPeriodo=($precioLocalXPeriodo*100)/($precioRegistrado+$sumPrecioRegistrado);
+                 $costoFijoFinal=$totalFijo[0]*($porcentPreciosPeriodo/100);
                 $costoFijoPrincipalPeriodo+=$costoFijoFinal;
-                //fin datos para costo fijo             ***************************************************************************************
-    
 }
 
 
