@@ -189,7 +189,7 @@ $html.=  '<header class="header">'.
                             $stmtRetenciones->bindColumn('debe_haber', $debe_haber);
                             while ($rowFac = $stmtRetenciones->fetch()) 
                             {                            
-                                $descripcion=$nombre_uo.' F/'.$nro_factura.' '.$personal.', '.$razon_social;
+                                $descripcion=$nombre_uo.' F/'.$nro_factura.' '.$personal.', '.$observaciones_dcc;
                                 $monto=$importe*$porcentaje_retencion/100;
                                 if($USD_actual!=0)
                                     $monto_dolares=$monto/$USD_actual;
@@ -235,7 +235,7 @@ $html.=  '<header class="header">'.
                                     $stmtOficina->bindColumn('oficina', $oficinaFac);
                                     while ($rowOf = $stmtOficina->fetch()) 
                                     {                                    
-                                        $descripcion_of=$oficinaFac.'/'.$nombre_uo.' F/'.$nro_factura.' '.$personal.', '.$razon_social;
+                                        $descripcion_of=$oficinaFac.'/'.$nombre_uo.' F/'.$nro_factura.' '.$personal.', '.$observaciones_dcc;
                                         $monto_of=$monto_restante*$porcentaje/100;
                                         if($USD_actual!=0)
                                             $monto_of_dolares=$monto_of/$USD_actual;

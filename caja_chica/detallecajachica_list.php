@@ -88,7 +88,7 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                               <input style="background-color:#F3F781;text-align: center" class="form-control" readonly="readonly" value="<?=number_format($monto_cajachica, 2, '.', ',')?>" />
                           </div>
                       </div>
-                      <label class="col-sm-1 col-form-label text-right" style="color:#0B2161;font-size: 16px"><b>Monto Reemb.</b></label>
+                      <label class="col-sm-1 col-form-label text-right" style="color:#0B2161;font-size: 16px"><b>Reembolso</b></label>
                       <div class="col-sm-2">
                       <div class="form-group">
                           <input style="background-color:#F3F781;text-align: center" class="form-control" name="numero" id="numero" value="<?=number_format($monto_reembolso_nuevo, 2, '.', ',')?>"  readonly="readonly"/>
@@ -188,7 +188,7 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                             <td><small><?=$nro_documento;?></small></td>
                             <td><small><?=$nombre_cuenta;?></small></td>
                             <td width="6%"><small><?=$fecha;?></small></td>
-                              <td width="5%"><small><?=strtolower($nombre_tipodoccajachica);?></small></td>
+                              <td width="5%"><small><?=$nombre_tipodoccajachica;?></small></td>
                               <td><small><?=$cod_personal;?>/<?=$cod_proveedores?></small></td>        
                               <td><small><?=number_format($monto, 2, '.', ',');?></small></td>        
                               <td><small><?=$labelM.number_format($monto_rendicion, 2, '.', ',')."</span>";?></small></td>                                      
