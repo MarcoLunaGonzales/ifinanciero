@@ -31,9 +31,9 @@ $numero_cc=$resultMCC['numero'];
 //listamos los gastos de caja chica
 $stmt = $dbh->prepare("SELECT codigo,cod_cuenta,fecha,cod_tipodoccajachica,cod_uo,cod_area,
   (select pc.nombre from plan_cuentas pc where pc.codigo=cod_cuenta) as nombre_cuenta,
-  (select td.nombre from configuracion_retenciones td where td.codigo=cod_tipodoccajachica) as nombre_tipodoccajachica,nro_documento,(select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=cod_personal)as cod_personal,monto,monto_rendicion,observaciones,cod_estado,(select c.nombre from af_proveedores c where c.codigo=cod_proveedores)as cod_proveedores
+  (select td.abreviatura from configuracion_retenciones td where td.codigo=cod_tipodoccajachica) as nombre_tipodoccajachica,nro_documento,(select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=cod_personal)as cod_personal,monto,monto_rendicion,observaciones,cod_estado,(select c.nombre from af_proveedores c where c.codigo=cod_proveedores)as cod_proveedores
 from caja_chicadetalle
-where cod_cajachica=$cod_cajachica and cod_estadoreferencial=1 ORDER BY codigo desc");
+where cod_cajachica=$cod_cajachica and cod_estadoreferencial=1 ORDER BY nro_documento desc");
 $stmt->execute();
 $stmt->bindColumn('codigo', $codigo_detalle_Cajachica);
 $stmt->bindColumn('cod_cuenta', $cod_cuenta);
@@ -120,6 +120,7 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                     <table class="table" id="tablePaginator50_2">
                       <thead>
                         <tr>
+                          <th></th>
                           <th><small>#</small></th>
                           <th><small>Cuenta</small></th>
                           <th >Fecha</small></th>
@@ -141,10 +142,11 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                         while ($row = $stmtReembolso->fetch(PDO::FETCH_BOUND)) {
                           $nombre_personal_reembolso=namePersonal($cod_personal_reembolso);
                           ?>
-                          <tr>
-                            <td><small><?=$index;?></small></td>
+                          <tr style="color: #b41010">
+                            <td><small></small></td>
+                            <td><small></small></td>
                             <td>-</td>
-                            <td width="6%"><?=$fecha_reembolso;?></small></td>
+                            <td width="6%"><small><?=$fecha_reembolso;?></small></td>
                             <td>-</td>
                             <td><small><?=$nombre_personal_reembolso;?></small></td>
                             <td><small><?=number_format($monto_reembolso, 2, '.', ',');?></small></td>
@@ -182,7 +184,8 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                             
                          ?>
                           <tr>
-                            <td><small><?=$index;?></small></td>
+                            <td></td>
+                            <td><small><?=$nro_documento;?></small></td>
                             <td><small><?=$nombre_cuenta;?></small></td>
                             <td width="6%"><small><?=$fecha;?></small></td>
                               <td width="5%"><small><?=strtolower($nombre_tipodoccajachica);?></small></td>

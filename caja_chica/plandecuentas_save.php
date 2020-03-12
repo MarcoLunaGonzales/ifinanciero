@@ -22,7 +22,7 @@ $flagSuccessDetail=true;
 
 
 for ($i=0;$i<count($cuentasX);$i++){ 	    
-	// echo $cuentasX[$i]."<br>";
+	 echo $cuentasX[$i]."<br>";
 	$stmt = $dbh->prepare("INSERT INTO plan_cuentas_cajachica(cod_cuenta) VALUES (:cod_cuenta)");
 	$stmt->bindParam(':cod_cuenta', $cuentasX[$i]);
 	$flagSuccess2=$stmt->execute();

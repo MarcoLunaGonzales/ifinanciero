@@ -13,7 +13,7 @@ $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//try
 
 $codigo = $_GET["codigo"];//codigoactivofijo
 try{
-    $stmt = $dbh->prepare("SELECT *,(select a.abreviatura from areas a where a.codigo=cod_area) as nombre_area from caja_chicadetalle where cod_estadoreferencial=1 and cod_cajachica=$codigo  ORDER BY 1");
+    $stmt = $dbh->prepare("SELECT *,(select u.abreviatura from unidades_organizacionales u where u.codigo=cod_uo) as nombre_uo,(select a.abreviatura from areas a where a.codigo=cod_area) as nombre_area from caja_chicadetalle where cod_estadoreferencial=1 and cod_cajachica=$codigo  ORDER BY 1");
     $stmt->execute();    
         //==================================================================================================================
     //datos caja chica
@@ -126,7 +126,7 @@ $html.=  '<header class="header">'.
                 $total_egresos+=$row['monto'];
               $html.='<tr>'.                      
                             '<td class="text-center small">'.$row['fecha'].'</td>'.
-                            '<td class="text-center small">'.$row['nombre_area'].'</td>'.
+                            '<td class="text-left small">'.$row['nombre_uo'].'/'.$row['nombre_area'].'</td>'.
                             '<td class="text-left small">'.$row['observaciones'].'</td>'.
                             '<td class="text-center small">'.$row['nro_recibo'].'</td>'.
                             '<td class="text-center small">'.$nro_factura.'</td>'.

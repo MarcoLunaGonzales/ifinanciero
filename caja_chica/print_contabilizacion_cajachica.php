@@ -87,7 +87,7 @@ try{
     $USD_actual=obtenerValorTipoCambio(2,strftime('%Y-%m-%d',strtotime($fecha_actual)));
     if($USD_actual=='')$USD_actual=0;
     // $concepto_contabilizacion=strtoupper($name_personalCC)." rendición de ".$observacionesCC." ".$name_tipoccCC."( - - - - )";
-    $concepto_contabilizacion="CONTABILIZACIÓN CAJA CHICA N° ".$numeroCC." DE FECHA ( ".$fecha_inicio_cc." a ".$fecha_cierre_cc." )";
+    $concepto_contabilizacion="CONTABILIZACIÓN CAJA CHICA N° ".$numeroCC." DE ".$nombre_uo_tcc;
 header('Content-type: text/html; charset=ISO-8859-1');
 $html = '';
 $html.='<html>'.
@@ -267,7 +267,7 @@ $html.=  '<header class="header">'.
                                     }
 
                                     // aqui la contra cuenta, invertimos el proceso
-                                    $descripcion_contra_cuenta='CONTABILIZACIÓN  '.$observaciones_dcc;
+                                    $descripcion_contra_cuenta='CONTABILIZACIÓN CAJA CHICA. '.$personal.', '.$observaciones_dcc;
                                     $monto_contracuenta=$importe;
                                     if($USD_actual!=0)
                                         $monto_contracuenta_dolares=$monto_contracuenta/$USD_actual;
@@ -389,7 +389,7 @@ $html.=  '<header class="header">'.
                                     }
 
                                     // aqui la contra cuenta, invertimos el proceso
-                                    $descripcion_contra_cuenta='CONTABILIZACIÓN  '.$observaciones_dcc;
+                                    $descripcion_contra_cuenta='CONTABILIZACIÓN CAJA CHICA.'.$personal.', '.$observaciones_dcc;
                                     $monto_contracuenta=$monto_dcc;
                                     if($USD_actual!=0)
                                         $monto_contracuenta_dolares=$monto_contracuenta/$USD_actual;
