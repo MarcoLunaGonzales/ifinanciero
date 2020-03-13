@@ -265,6 +265,27 @@
 			require_once('dias_credito/saveDelete.php');
 		}
 
+         //CHEQUES
+        if ($_GET['opcion']=='listCheques') {
+			require_once('cheques/list.php');
+		}
+        if ($_GET['opcion']=='registerChequePago') {
+			require_once('cheques/register.php');
+		}
+		if ($_GET['opcion']=='deleteChequePago') {
+			require_once('cheques/saveDelete.php');
+		}
+		if ($_GET['opcion']=='editChequePago') {
+			require_once('cheques/edit.php');
+		}
+        if ($_GET['opcion']=='listChequesEmitidos') {
+			require_once('cheques/listEmitidos.php');
+		}
+        
+        //PAGOS listPagoProveedor
+        if ($_GET['opcion']=='listPagoProveedor') {
+			require_once('obligaciones_pago/listPago.php');
+		}
 
 		if ($_GET['opcion']=='listObligacionesPago') {
 			require_once('obligaciones_pago/list.php');

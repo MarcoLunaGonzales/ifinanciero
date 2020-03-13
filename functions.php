@@ -4187,6 +4187,48 @@ function obtenerCodigoPagoProveedor(){
    }
    return($codigo);
 }
+
+function listaChequesPago(){
+  $dbh = new Conexion();
+  $sql="SELECT p.nombre,dc.* 
+FROM cheques dc join bancos p on dc.cod_banco=p.codigo
+WHERE dc.cod_estadoreferencial=1;";
+$stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  return $stmt;
+}
+function obtenerMontoPagadoDetalleSolicitud($codSol,$codDetalle){
+  $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT c.monto from pagos_proveedoresdetalle c where c.cod_solicitudrecursos=$codSol and c.cod_solicitudrecursosdetalle=$codDetalle");
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor+=$row['monto'];
+   }
+   return($valor);
+}
+function obtenerCodigoPagoProveedorDetalle(){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT IFNULL(max(c.codigo)+1,1)as codigo from pagos_proveedoresdetalle c");
+   $stmt->execute();
+   $codigo=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $codigo=$row['codigo'];
+   }
+   return($codigo);
+}
+
+function obtenerProveedorCuentaAux($codigo){
+  $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT p.nombre from cuentas_auxiliares c join af_proveedores p on c.cod_proveedorcliente=p.codigo 
+    where c.codigo=$codigo and c.cod_tipoauxiliar=1");
+   $stmt->execute();
+   $valor="";
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['nombre'];
+   }
+   return($valor);
+}
 ?>
 
 

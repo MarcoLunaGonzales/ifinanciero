@@ -34,7 +34,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 			  </div>
 			  <div class="card-body ">
 				<div class="row">
-				  <label class="col-sm-2 col-form-label">Nombre</label>
+				  <label class="col-sm-2 col-form-label">Cantidad D&iacute;as</label>
 				  <div class="col-sm-7">
 					<div class="form-group">
 					  <input class="form-control" type="number" name="dias" id="dias" required="true" value="<?=$diasX;?>"/>
