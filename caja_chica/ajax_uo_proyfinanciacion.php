@@ -20,5 +20,8 @@ if($cod_uo_proy_fin!=null){
 	          echo "<option  value=".$listas->codigo.">".substr($listas->nombre, 0, 85)."</opction>";
 	      }?>
 	</select>        
+<?php }else{ ?>
+	<input type="hidden" name="cod_actividad" id="cod_actividad" value="0">
+
 <?php } ?>
 
