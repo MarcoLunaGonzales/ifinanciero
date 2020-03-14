@@ -97,6 +97,9 @@ if ($codigo > 0){
     $cod_cuenta=0;
     $cod_actividad_sw=null;
 
+
+require_once 'modal.php';
+
 }
 
 $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
@@ -115,19 +118,7 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
     				  <h4 class="card-title"><?php if ($codigo == 0) echo "Registrar Nuevo"; else echo "Editar";?>  Detalle</h4>
     				</div>
   			  </div>
-  			  <div class="card-body ">			
-            <div class="row">
-              <label class="col-sm-2 col-form-label">Cuenta</label>
-              <div class="col-sm-8">
-                <div class="form-group">
-
-                    <input class="form-control" type="text" name="cuenta_auto" id="cuenta_auto" value="<?=$cuenta_aux?>" placeholder="[numero] y nombre de cuenta" required/>
-                    <input class="form-control" type="hidden" name="cuenta_auto_id" id="cuenta_auto_id" value="<?=$cod_cuenta?>" required/>
-                    
-                </div>
-              </div>
-            </div><!-- cuenta-->
-
+  			  <div class="card-body ">			           
             <div class="row">
                 <label class="col-sm-2 col-form-label">Tipo Retención</label>
                 <div class="col-sm-4">
@@ -168,7 +159,25 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
                        
                     </div>
                 </div>
-            </div>
+            </div><!-- monto y fecha -->
+            <div class="row">
+              <label class="col-sm-2 col-form-label">Cuenta</label>
+              <div class="col-sm-8">
+                <div class="form-group">
+                    <input class="form-control" type="text" name="cuenta_auto" id="cuenta_auto" value="<?=$cuenta_aux?>" placeholder="[numero] y nombre de cuenta" required />
+                    <input class="form-control" type="hidden" name="cuenta_auto_id" id="cuenta_auto_id" value="<?=$cod_cuenta?>" required/>
+                </div>
+              </div>
+              <div class="col-sm-2">
+                <div class="form-group">                                
+                  <div class="retencion_sin_gastos" style="display: none">
+                    <a href="#" class="btn btn-warning btn-round btn-fab btn-sm" onclick="cargarDatosRegistroProveedorCajaChica(<?=$cod_tcc?>,<?=$cod_cc?>,<?=$cod_dcc?>)">
+                      <i class="material-icons" title="Add Proveedor">add</i>
+                    </a>                        
+                  </div>
+                </div>
+                </div>
+            </div><!-- cuenta-->
             <div class="row">
               <label class="col-sm-2 col-form-label">Personal</label>
               <div class="col-sm-8">
@@ -191,7 +200,7 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
                 <div class="form-group">
                     <div id="div_contenedor_uo">                                        
                       <?php
-                          $sqlUO="SELECT codigo,nombre from unidades_organizacionales where cod_estado=1";
+                          $sqlUO="SELECT codigo,nombre,abreviatura from unidades_organizacionales where cod_estado=1";
                           $stmt = $dbh->prepare($sqlUO);
                           $stmt->execute();
                           ?>
@@ -199,7 +208,7 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
                               <?php 
                                   while ($row = $stmt->fetch()){ 
                               ?>
-                                   <option <?=($cod_uo==$row["codigo"])?"selected":"";?> data-subtext="<?=$row["codigo"];?>" value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                                   <option <?=($cod_uo==$row["codigo"])?"selected":"";?> data-subtext="<?=$row["codigo"];?>" value="<?=$row["codigo"];?>"><?=$row["nombre"];?>(<?=$row["abreviatura"];?>)</option>
                                <?php 
                                   } 
                               ?>
@@ -215,7 +224,7 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
                     <div id="div_contenedor_area">                                        
                         <?php
                         if($codigo>0){
-                            $sqlUO="SELECT cod_area,(select a.nombre from areas a where a.codigo=cod_area )as nombre_areas from areas_organizacion where cod_estadoreferencial=1 and cod_unidad=$cod_uo order by nombre_areas";
+                            $sqlUO="SELECT cod_area,(select a.nombre from areas a where a.codigo=cod_area )as nombre_areas,(select a.abreviatura from areas a where a.codigo=cod_area)as abrev_area from areas_organizacion where cod_estadoreferencial=1 and cod_unidad=$cod_uo order by nombre_areas";
                             $stmt = $dbh->prepare($sqlUO);
                             $stmt->execute();
                             ?>
@@ -223,7 +232,7 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
                                 <?php 
                                     while ($row = $stmt->fetch()){ 
                                 ?>
-                                     <option value="<?=$row["cod_area"];?>" data-subtext="<?=$row["cod_area"];?>" <?=($cod_area==$row["cod_area"])?"selected":"";?> ><?=$row["nombre_areas"];?></option>
+                                     <option value="<?=$row["cod_area"];?>" data-subtext="<?=$row["cod_area"];?>" <?=($cod_area==$row["cod_area"])?"selected":"";?> ><?=$row["nombre_areas"];?>(<?=$row["abrev_area"];?>)</option>
                                  <?php 
                                     } 
                                 ?>
@@ -349,26 +358,42 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
       </div>  
     </div>
   </div>
+
+<script>
+      $( "#cuenta_auto" ).blur(function() {
+      var variable = document.getElementById("cuenta_auto").value; 
+      
+      if(variable.substr(0,1)==5){
+        // alert("es 5");
+        $(".retencion_sin_gastos").show();
+      }else{
+        $(".retencion_sin_gastos").hide();
+      }
+      
+
+    });  
+
+</script>
   <!--    end small modal -->
 <script>$('.selectpicker').selectpicker("refresh");</script>
 
 <script type="text/javascript">
-function valida(f) {
-  var ok = true;
-  
-  if(f.elements["cod_personal"].value == "" && f.elements["proveedores"].value == "")
-  {
-    var msg = "Rellene el campo 'personal' o 'proveedor'\n";
-    ok = false;
-  }else{
-    if(f.elements["monto"].value == 0)
-    {    
-          var msg = "El Monto no debe ser menor a '0'...\n";
-          ok = false;
+  function valida(f) {
+    var ok = true;
+    
+    if(f.elements["cod_personal"].value == "" && f.elements["proveedores"].value == "")
+    {
+      var msg = "Rellene el campo 'personal' o 'proveedor'\n";
+      ok = false;
+    }else{
+      if(f.elements["monto"].value == 0)
+      {    
+            var msg = "El Monto no debe ser menor a '0'...\n";
+            ok = false;
+      }
     }
+    if(ok == false)
+      alert(msg);
+    return ok;
   }
-  if(ok == false)
-    alert(msg);
-  return ok;
-}
 </script>

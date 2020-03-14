@@ -8,7 +8,7 @@ $codigo_UO = $_GET["codigo_UO"];
 //ini_set("display_errors", "1");
 $db = new Conexion();
 
-$sqlUO="SELECT cod_unidad,cod_area,(select a.nombre from areas a where a.codigo=cod_area) as nombre_area
+$sqlUO="SELECT cod_unidad,cod_area,(select a.nombre from areas a where a.codigo=cod_area) as nombre_area,(select a.abreviatura from areas a where a.codigo=cod_area) as abreviatura_area
 FROM areas_organizacion
 where cod_estadoreferencial=1 and cod_unidad=:cod_UO order by nombre_area";
 $stmt = $db->prepare($sqlUO);
@@ -19,7 +19,7 @@ $stmt->execute();
     <?php 
         while ($row = $stmt->fetch()){ 
     ?>
-         <option value="<?=$row["cod_area"];?>" data-subtext="<?=$row["cod_area"];?>"><?=$row["nombre_area"];?></option>
+         <option value="<?=$row["cod_area"];?>" data-subtext="<?=$row["cod_area"];?>"><?=$row["nombre_area"];?>(<?=$row["abreviatura_area"];?>)</option>
      <?php 
         } 
     ?>
