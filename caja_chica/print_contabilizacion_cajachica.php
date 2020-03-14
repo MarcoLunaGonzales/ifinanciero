@@ -172,7 +172,7 @@ $html.=  '<header class="header">'.
                 $sumaTotalHaberDolares=0;
                 while ($rowCajaChicaDet = $stmtCajaChicaDet->fetch()) 
                 {
-                        //verificamos si tiene factura
+                        //verificamos si tiene factura y los que tienen procedemos con la contabilizacion
                         $sw_facturas=0;//contador de facturas
                         $stmtFacturas = $dbh->prepare("SELECT nro_factura,razon_social,importe from facturas_detalle_cajachica where cod_cajachicadetalle=$codigo_ccdetalle");
                         $stmtFacturas->execute();
@@ -309,10 +309,7 @@ $html.=  '<header class="header">'.
                             while ($rowFac = $stmtRetenciones->fetch()) 
                             {                            
                                 //recalculando monto
-                                // $monto_recalculado=$monto_dcc/(1-($IUE_compras_IT/100));
-                                //para retencion it 3%
-                                $descripcionIT=$nombre_uo.' SF '.$personal.', '.$observaciones_dcc;
-                                // $monto_it=$monto_recalculado*$porcentajeIT/100;
+                                $descripcionIT=$nombre_uo.' SF '.$personal.', '.$observaciones_dcc;                                
                                 $monto_it=$monto_dcc*$porcentaje_retencion/100;
                                 if($USD_actual!=0)
                                     $monto_it_dolares=$monto_it/$USD_actual;
@@ -347,48 +344,96 @@ $html.=  '<header class="header">'.
                                 }else{
                                     //necesitamos el monto obtenido despues de aplicar las retenciones                                
                                     $monto_restante=$monto_dcc*$porcentaje_retencion/100;
-                                    //desde aqui repartimos la contabilizacion a las oficinas 
-                                    $stmtOficina = $dbh->prepare("SELECT dgd.cod_unidadorganizacional,dgd.porcentaje,
-                                       (SELECT uo.nombre FROM unidades_organizacionales uo WHERE uo.codigo=dgd.cod_unidadorganizacional) as oficina
-                                    from distribucion_gastosporcentaje_detalle dgd,distribucion_gastosporcentaje dg
-                                    where dgd.cod_distribucion_gastos=dg.codigo and dg.estado=1 and porcentaje>0");
-                                    $stmtOficina->execute();
-                                    $stmtOficina->bindColumn('cod_unidadorganizacional', $cod_unidadorganizacional);
-                                    $stmtOficina->bindColumn('porcentaje', $porcentaje);
-                                    $stmtOficina->bindColumn('oficina', $oficinaFac);
-                                    while ($rowOf = $stmtOficina->fetch()) 
-                                    {                                                                            
-                                        $descripcion_of=$oficinaFac.'/'.$nombre_uo.' SF '.$personal.', '.$observaciones_dcc;
-                                        $monto_of=$monto_restante*$porcentaje/100;
+                                    //buscamos si tiene alguna contra cuenta registrada en estados_cuenta
+                                    $stmtContraCuenta = $dbh->prepare("SELECT cod_plancuenta from estados_cuenta where cod_cajachicadetalle=$codigo_ccdetalle");
+                                    $stmtContraCuenta->execute();
+                                    $resultContraCuenta = $stmtContraCuenta->fetch();
+                                    $cod_plancuenta = $resultContraCuenta['cod_plancuenta']; 
+                                    // echo "llego: ".$cod_plancuenta;
+                                    if($cod_plancuenta>0){
+                                        //buscamos el nombre y el numero de la contra cuenta
+                                        // $nro_contra_cuenta_sinGasto=obtieneNumeroCuenta($cod_plancuenta);
+                                        // $nombre_contra_cuenta_sinGasto=nameCuenta($cod_plancuenta);
+                                        $descripcionIT=$nombre_uo.' SF, '.$observaciones_dcc;                                        
                                         if($USD_actual!=0)
-                                            $monto_of_dolares=$monto_of/$USD_actual;
-                                        else $monto_of_dolares=0;
-                                        if($debe_haber==1){ //preguntamps si pertenece a la columna debe o haber
+                                            $monto_restante_dolares=$monto_restante/$USD_actual;
+                                        else $monto_restante_dolares=0;
+                                        if($debe_haber==1){ //debe=1
                                             $html.='<tr>'.
                                                 '<td class="text-left">'.$numero_cuenta.'</td>'.
-                                                '<td class="text-left">'.$nombre_cuenta.'<br>'.$descripcion_of.'</td>'.
-                                                '<td class="text-right">'.formatNumberDec($monto_of).'</td>'.
+                                                '<td class="text-left">'.$nombre_cuenta.'<br>'.$descripcionIT.'</td>'.
+                                                '<td class="text-right">'.formatNumberDec($monto_restante).'</td>'.
                                                 '<td class="text-right"></td>'.
-                                                '<td class="text-right">'.formatNumberDec($monto_of_dolares).'</td>'.
+                                                '<td class="text-right">'.formatNumberDec($monto_restante_dolares).'</td>'.
                                                 '<td class="text-right"></td>'.
                                             '</tr>';
-                                            $sumaTotalDebeBolivianos+=$monto_of;
-                                            $sumaTotalDebeDolares+=$monto_of_dolares;
-                                        }else{
+                                            $sumaTotalDebeBolivianos+=$monto_restante;
+                                            $sumaTotalDebeDolares+=$monto_restante_dolares;
+                                        }else{//haber=2
                                             $html.='<tr>'.
                                                 '<td class="text-left">'.$numero_cuenta.'</td>'.
-                                                '<td class="text-left">'.$nombre_cuenta.'<br>'.$descripcion_of.'</td>'.
+                                                '<td class="text-left">'.$nombre_cuenta.'<br>'.$descripcionIT.'</td>'.
                                                 '<td class="text-right"></td>'.
-                                                '<td class="text-right">'.formatNumberDec($monto_of).'</td>'.
+                                                '<td class="text-right">'.formatNumberDec($monto_restante).'</td>'.
                                                 '<td class="text-right"></td>'.
-                                                '<td class="text-right">'.formatNumberDec($monto_of_dolares).'</td>'.
+                                                '<td class="text-right">'.formatNumberDec($monto_restante_dolares).'</td>'.
                                             '</tr>';
-                                            $sumaTotalHaberBolivianos+=$monto_of;
-                                            $sumaTotalHaberDolares+=$monto_of_dolares;
+                                            $sumaTotalHaberBolivianos+=$monto_restante;
+                                            $sumaTotalHaberDolares+=$monto_restante_dolares;
+                                        }
+                                    }else{
+                                        //desde aqui repartimos la contabilizacion a las oficinas 
+                                        $stmtOficina = $dbh->prepare("SELECT dgd.cod_unidadorganizacional,dgd.porcentaje,
+                                           (SELECT uo.nombre FROM unidades_organizacionales uo WHERE uo.codigo=dgd.cod_unidadorganizacional) as oficina
+                                        from distribucion_gastosporcentaje_detalle dgd,distribucion_gastosporcentaje dg
+                                        where dgd.cod_distribucion_gastos=dg.codigo and dg.estado=1 and porcentaje>0");
+                                        $stmtOficina->execute();
+                                        $stmtOficina->bindColumn('cod_unidadorganizacional', $cod_unidadorganizacional);
+                                        $stmtOficina->bindColumn('porcentaje', $porcentaje);
+                                        $stmtOficina->bindColumn('oficina', $oficinaFac);
+                                        while ($rowOf = $stmtOficina->fetch()) 
+                                        {                                                                            
+                                            $descripcion_of=$oficinaFac.'/'.$nombre_uo.' SF '.$personal.', '.$observaciones_dcc;
+                                            $monto_of=$monto_restante*$porcentaje/100;
+                                            if($USD_actual!=0)
+                                                $monto_of_dolares=$monto_of/$USD_actual;
+                                            else $monto_of_dolares=0;
+                                            if($debe_haber==1){ //preguntamps si pertenece a la columna debe o haber
+                                                $html.='<tr>'.
+                                                    '<td class="text-left">'.$numero_cuenta.'</td>'.
+                                                    '<td class="text-left">'.$nombre_cuenta.'<br>'.$descripcion_of.'</td>'.
+                                                    '<td class="text-right">'.formatNumberDec($monto_of).'</td>'.
+                                                    '<td class="text-right"></td>'.
+                                                    '<td class="text-right">'.formatNumberDec($monto_of_dolares).'</td>'.
+                                                    '<td class="text-right"></td>'.
+                                                '</tr>';
+                                                $sumaTotalDebeBolivianos+=$monto_of;
+                                                $sumaTotalDebeDolares+=$monto_of_dolares;
+                                            }else{
+                                                $html.='<tr>'.
+                                                    '<td class="text-left">'.$numero_cuenta.'</td>'.
+                                                    '<td class="text-left">'.$nombre_cuenta.'<br>'.$descripcion_of.'</td>'.
+                                                    '<td class="text-right"></td>'.
+                                                    '<td class="text-right">'.formatNumberDec($monto_of).'</td>'.
+                                                    '<td class="text-right"></td>'.
+                                                    '<td class="text-right">'.formatNumberDec($monto_of_dolares).'</td>'.
+                                                '</tr>';
+                                                $sumaTotalHaberBolivianos+=$monto_of;
+                                                $sumaTotalHaberDolares+=$monto_of_dolares;
+                                            }
                                         }
                                     }
+                                    
 
                                     // aqui la contra cuenta, invertimos el proceso
+                                    if($cod_plancuenta>0){
+                                        $nro_contra_cuenta2=obtieneNumeroCuenta($cod_plancuenta);
+                                        $nombre_contra_cuenta2=nameCuenta($cod_plancuenta);
+                                    }else{
+                                        $nro_contra_cuenta2=$nro_contra_cuenta;
+                                        $nombre_contra_cuenta2=$nombre_contra_cuenta;
+                                    }
+
                                     $descripcion_contra_cuenta='CONTABILIZACIÓN CAJA CHICA.'.$personal.', '.$observaciones_dcc;
                                     $monto_contracuenta=$monto_dcc;
                                     if($USD_actual!=0)
@@ -398,8 +443,8 @@ $html.=  '<header class="header">'.
                                         $sumaTotalHaberBolivianos+=$monto_contracuenta;
                                         $sumaTotalHaberDolares+=$monto_contracuenta_dolares;
                                         $html.='<tr>'.
-                                            '<td class="text-left">'.$nro_contra_cuenta.'</td>'.
-                                            '<td class="text-left">'.$nombre_contra_cuenta.'<br>'.$descripcion_contra_cuenta.'</td>'.
+                                            '<td class="text-left">'.$nro_contra_cuenta2.'</td>'.
+                                            '<td class="text-left">'.$nombre_contra_cuenta2.'<br>'.$descripcion_contra_cuenta.'</td>'.
                                             '<td class="text-right"></td>'.
                                             '<td class="text-right">'.formatNumberDec($monto_contracuenta).'</td>'.
                                             '<td class="text-right"></td>'.
@@ -409,8 +454,8 @@ $html.=  '<header class="header">'.
                                         $sumaTotalDebeBolivianos+=$monto_contracuenta;
                                         $sumaTotalDebeDolares+=$monto_contracuenta_dolares;
                                         $html.='<tr>'.
-                                            '<td class="text-left">'.$nro_contra_cuenta.'</td>'.
-                                            '<td class="text-left">'.$nombre_contra_cuenta.'<br>'.$descripcion_contra_cuenta.'</td>'.
+                                            '<td class="text-left">'.$nro_contra_cuenta2.'</td>'.
+                                            '<td class="text-left">'.$nombre_contra_cuenta2.'<br>'.$descripcion_contra_cuenta.'</td>'.
                                             '<td class="text-right">'.formatNumberDec($monto_contracuenta).'</td>'.
                                             '<td class="text-right"></td>'.
                                             '<td class="text-right">'.formatNumberDec($monto_contracuenta_dolares).'</td>'.
@@ -420,6 +465,7 @@ $html.=  '<header class="header">'.
                                 }
                                 $sw_facturas++;//contador de facturas incrementa
                             }
+                            
                         }
                 }
                 // //contra cuenta

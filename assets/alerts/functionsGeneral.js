@@ -7469,3 +7469,89 @@ function ponerNumeroChequePago(){
   var valor= $("#emitidos_pago").val().split("####");
   $("#numero_cheque").val(valor[1]);
 }
+
+function AgregarContraCuentaCajaChica(){
+  $('#myModal').modal('show');
+}
+
+// contra cuentas caja chica
+var itemCuentasCajaChica=[];
+var itemCuentasAuxCajaChica=[];
+function buscarCuentaListCajaChica(campo){
+  var contenedor = document.getElementById('divResultadoBusqueda');
+
+  var nroCuenta=document.getElementById('nro_cuenta').value;
+  var nombreCuenta=document.getElementById('cuenta').value;
+  var padre=$("#padre").val();
+  switch (campo){
+   case "numero":
+     buscarCuentaNumeroCC(nroCuenta,1);
+   break;
+   case "nombre":
+     buscarCuentaNumeroCC(nombreCuenta,2);
+   break;
+  }     
+}
+
+function buscarCuentaNumeroCC(numeros,val){  
+  var contenedor = document.getElementById('divResultadoBusqueda');
+  //var str = numeros.replace(/^"(.*)"$/, '$1'); 
+  var html="<div class='col-md-12'>"+
+    "<div class='table-responsive'>"+
+    "<table class='table table-condensed'>"+
+      "<thead>"+
+        "<tr>"+
+          "<th>Nro. Cuenta</th>"+
+              "<th>Nombre</th>"+
+              "<th>Auxiliar</th>"+
+          "</tr>"+
+      "</thead>";
+  for (var i = 0; i < itemCuentasCajaChica.length; i++) { 
+    //var n = itemCuentasCajaChica[i].numero.search(/+str+/);
+    if(val==1){
+       var n = itemCuentasCajaChica[i].numero.indexOf(numeros);
+    }else{
+      var cadenaBuscar=itemCuentasCajaChica[i].nombre.toLowerCase();
+       var n = cadenaBuscar.indexOf(numeros.toLowerCase());
+    }
+    
+    if(n==0){
+      var textoAux="<table class='table table-condensed'>";
+        for (var j = 0; j < itemCuentasAuxCajaChica.length; j++) {
+          if(itemCuentasAuxCajaChica[j].codCuenta==itemCuentasCajaChica[i].codigo){
+            textoAux+="<tr>"+
+               "<td class='text-left small'>"+itemCuentasAuxCajaChica[j].codigo+"</td>"+
+               "<td class='text-left small'><a href=\"javascript:setBusquedaCuentaCajaChica(\'"+itemCuentasCajaChica[i].codigo+"\',\'"+itemCuentasCajaChica[i].numero+"\',\'"+itemCuentasCajaChica[i].nombre+"\',\'"+itemCuentasAuxCajaChica[j].codigo+"\',\'"+itemCuentasAuxCajaChica[j].nombre+"\');\">"+itemCuentasAuxCajaChica[j].nombre+"</a></td>"+
+             "</tr>";
+          }
+        };
+       textoAux+="</table>";
+      html+="<tr>"+
+      "<td class='text-left'>"+itemCuentasCajaChica[i].numero+"</td>"+
+          "<td class='text-left'><a href=\"javascript:setBusquedaCuentaCajaChica(\'"+itemCuentasCajaChica[i].codigo+"\',\'"+itemCuentasCajaChica[i].numero+"\',\'"+itemCuentasCajaChica[i].nombre+"\',\'0\',\'\');\">"+itemCuentasCajaChica[i].nombre+"</a></td>"+
+          "<td class='text-left'>"+textoAux+"</td>"+
+      "</tr>";
+    }
+  };
+  html+="</table>"+
+  "</div>"+
+  "</div>";
+   contenedor.innerHTML = html;
+}
+function setBusquedaCuentaCajaChica(codigoCuenta, numeroCuenta, nombreCuenta, codigoCuentaAux, nombreCuentaAux){
+  var fila=1;
+  var inicio=numeroCuenta.substr(0,1);
+  // console.log(fila);
+  var monto=0;
+  monto=document.getElementById('monto').value;//sacamos el monto
+
+  document.getElementById('contra_cuenta').value=codigoCuenta;
+  document.getElementById('contra_cuenta_auxiliar').value=codigoCuentaAux;
+  document.getElementById('divContraCuentaDetalle').innerHTML='<span class=\"text-danger font-weight-bold\">['+numeroCuenta+']-'+nombreCuenta+' </span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=\"text-danger font-weight-bold\"> Monto: '+monto+' </span><br><span class=\"text-primary font-weight-bold small\">'+nombreCuentaAux+'</span>';
+
+  // configuracionCentros(fila,inicio);
+  // configuracionEstadosCuenta(fila,codigoCuenta,codigoCuentaAux);
+  $('#myModal').modal('hide');
+  // $(".selectpicker").selectpicker('refresh');
+  // $("#debe"+fila).focus();
+}

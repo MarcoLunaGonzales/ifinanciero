@@ -20,7 +20,6 @@ $i=0;
     $codigoX=$rowCuenta['cod_cuenta'];
     $numeroX=$rowCuenta['numero'];
     $nombreX=$rowCuenta['nombre'];
-
     ?>
     <script>
      var obtejoLista={
@@ -45,11 +44,9 @@ if ($codigo > 0){
         (select c.numero from plan_cuentas c where c.codigo=cod_cuenta) as nro_cuenta
     from caja_chicadetalle
     where codigo =:codigo");
-    
     $stmt->bindParam(':codigo',$cod_dcc);
     $stmt->execute();
     $result = $stmt->fetch();
-
     $cod_cuenta = $result['cod_cuenta'];
     $fecha = $result['fecha'];
     $cod_retencion = $result['cod_tipodoccajachica'];    
@@ -66,6 +63,13 @@ if ($codigo > 0){
     $cod_actividad_sw= $result['cod_actividad_sw'];
 
     $cuenta_aux=$nro_cuenta." - ".$nombre_cuenta;   
+
+    // sacamos datos de la contra cuenta
+    $stmtContraCuentaForm = $dbh->prepare("SELECT cod_plancuenta,cod_cuentaaux from estados_cuenta where cod_cajachicadetalle=$cod_dcc");
+    $stmtContraCuentaForm->execute();
+    $resultContraCuentaForm = $stmtContraCuentaForm->fetch();
+    $cod_contra_cuenta = $resultContraCuentaForm['cod_plancuenta'];
+    $cod_contra_cuenta_aux = $resultContraCuentaForm['cod_cuentaaux'];
     
 } else {
     //para el numero correlativo
@@ -94,11 +98,16 @@ if ($codigo > 0){
     $cod_estado = 1;
 
     $cuenta_aux="";
+    
+    $cod_contra_cuenta=null;
+    $cod_contra_cuenta_aux=null;
+
+    $cuenta_aux="";
     $cod_cuenta=0;
     $cod_actividad_sw=null;
 
 
-require_once 'modal.php';
+// require_once 'modal.php';
 
 }
 
@@ -171,13 +180,45 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
               <div class="col-sm-2">
                 <div class="form-group">                                
                   <div class="retencion_sin_gastos" style="display: none">
-                    <a href="#" class="btn btn-warning btn-round btn-fab btn-sm" onclick="cargarDatosRegistroProveedorCajaChica(<?=$cod_tcc?>,<?=$cod_cc?>,<?=$cod_dcc?>)">
-                      <i class="material-icons" title="Add Proveedor">add</i>
-                    </a>                        
+                    <a href="#" class="btn btn-warning btn-round btn-fab btn-sm" onclick="AgregarContraCuentaCajaChica()">
+                      <i class="material-icons" title="Agregar Contra Cuenta">add</i>
+                    </a>
+
+                    <!-- <a title="Cambiar cuenta" href="#" id="cambiar_cuenta<?=$idFila?>" onclick="editarCuentaComprobante(<?=$idFila?>)" class="btn btn-sm btn-warning btn-fab"><span class="material-icons text-dark">edit</span></a> -->                        
                   </div>
                 </div>
                 </div>
             </div><!-- cuenta-->
+
+            <input type="hidden" name="contra_cuenta" id="contra_cuenta" value="<?=$cod_contra_cuenta?>">
+            <input type="hidden" name="contra_cuenta_auxiliar" id="contra_cuenta_auxiliar" value="<?=$cod_contra_cuenta_aux?>">
+            <div class="contenedor_contra_cuenta" style="display: none">
+              <div class="row">
+                <label class="col-sm-2 col-form-label"><small>Contra cuenta</small></label>
+                <div class="col-sm-8">
+                  <div class="form-group">
+                    <div class="form-group" id="divContraCuentaDetalle">
+                    <?php if($codigo>0){
+                      $stmtContraCuenta = $dbh->prepare("SELECT p.codigo, p.numero, p.nombre from plan_cuentas p where p.codigo=$cod_contra_cuenta");
+                      $stmtContraCuenta->execute();
+                      $result = $stmtContraCuenta->fetch();
+                      $numero_contracuenta = $result['numero'];
+                      $nombre_contracuenta = $result['nombre'];
+                      $stmtAuxiliar = $dbh->prepare("SELECT codigo, nombre FROM cuentas_auxiliares where cod_cuenta=$cod_contra_cuenta_aux");
+                      $stmtAuxiliar->execute();
+                      $result = $stmtAuxiliar->fetch();
+                      $numero_contracuenta_aux = $result['numero'];
+                      $nombre_contracuenta_aux = $result['nombre'];
+                      ?>
+                      <span class="text-danger font-weight-bold">[<?=$numero_contracuenta?>]-<?=$nombre_contracuenta?></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-danger font-weight-bold">Monto: <?=$monto?></span><br>
+                      <span class="text-primary font-weight-bold small"> <?=$nombre_contracuenta_aux?></span>
+                    <?php }?>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <div class="row">
               <label class="col-sm-2 col-form-label">Personal</label>
               <div class="col-sm-8">
@@ -360,40 +401,94 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
   </div>
 
 <script>
-      $( "#cuenta_auto" ).blur(function() {
-      var variable = document.getElementById("cuenta_auto").value; 
+  var codigo_detalle = <?=$codigo?>;
+  if(codigo_detalle>0){
+    var nro_cuenta = document.getElementById("cuenta_auto").value; 
+    if(nro_cuenta.substr(0,1)==5){//comprobamos el primer digito de la cuenta 
+      // alert("es 5");
+      $(".retencion_sin_gastos").show();
+      $(".contenedor_contra_cuenta").show();
+    }else{
+      $(".retencion_sin_gastos").hide();
+      $(".contenedor_contra_cuenta").hide();
+    }
+  }
+
+  $( "#cuenta_auto" ).blur(function() {
+      var nro_cuenta = document.getElementById("cuenta_auto").value; 
       
-      if(variable.substr(0,1)==5){
+      if(nro_cuenta.substr(0,1)==5){//comprobamos el primer digito de la cuenta 
         // alert("es 5");
         $(".retencion_sin_gastos").show();
+        $(".contenedor_contra_cuenta").show();
       }else{
         $(".retencion_sin_gastos").hide();
+        $(".contenedor_contra_cuenta").hide();
       }
-      
-
     });  
-
+  
 </script>
   <!--    end small modal -->
 <script>$('.selectpicker').selectpicker("refresh");</script>
 
 <script type="text/javascript">
   function valida(f) {
+    var nro_cuenta2 = document.getElementById("cuenta_auto").value; 
     var ok = true;
-    
-    if(f.elements["cod_personal"].value == "" && f.elements["proveedores"].value == "")
-    {
-      var msg = "Rellene el campo 'personal' o 'proveedor'\n";
-      ok = false;
+    if(nro_cuenta2.substr(0,1)!=5){//comprobamos el primer digito de la cuenta 
+      if(f.elements["cod_personal"].value == "" && f.elements["proveedores"].value == "")
+      {
+        var msg = "Rellene el campo 'personal' o 'proveedor'\n";
+        ok = false;
+      }else{
+        if(f.elements["monto"].value == 0)
+        {    
+              var msg = "El Monto no debe ser menor a '0'...\n";
+              ok = false;
+        }
+      }
     }else{
       if(f.elements["monto"].value == 0)
-      {    
-            var msg = "El Monto no debe ser menor a '0'...\n";
-            ok = false;
-      }
+        {    
+              var msg = "El Monto no debe ser menor a '0'...\n";
+              ok = false;
+        }
     }
+
+    
     if(ok == false)
       alert(msg);
     return ok;
   }
 </script>
+
+<?php 
+  $dbh = new Conexion();
+  $sqlBusqueda="SELECT p.codigo, p.numero, p.nombre from plan_cuentas p where p.nivel=5 ";
+  $sqlBusqueda.=" order by p.numero";
+  $stmt = $dbh->prepare($sqlBusqueda);
+  $stmt->execute();
+  $stmt->bindColumn('codigo', $codigoCuenta);
+  $stmt->bindColumn('numero', $numeroCuenta);
+  $stmt->bindColumn('nombre', $nombreCuenta);
+  $cont=0;$contAux=0;
+  while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+    $numeroCuenta=trim($numeroCuenta);
+    $nombreCuenta=trim($nombreCuenta);
+    $sqlCuentasAux="SELECT codigo, nombre FROM cuentas_auxiliares where cod_cuenta='$codigoCuenta' order by 2";
+    $stmtAux = $dbh->prepare($sqlCuentasAux);
+    $stmtAux->execute();
+    $stmtAux->bindColumn('codigo', $codigoCuentaAux);
+    $stmtAux->bindColumn('nombre', $nombreCuentaAux);
+    while ($rowAux = $stmtAux->fetch(PDO::FETCH_BOUND)) {
+      ?><script>itemCuentasAuxCajaChica.push({codigo:"<?=$codigoCuentaAux?>",nombre:"<?=$nombreCuentaAux?>",codCuenta:"<?=$codigoCuenta?>"});</script><?php
+      $contAux++;
+    }   
+   ?><script>
+      itemCuentasCajaChica.push({codigo:"<?=$codigoCuenta?>",numero:"<?=$numeroCuenta?>",nombre:"<?=$nombreCuenta?>",cod_aux:"0",nom_aux:""});
+   </script><?php 
+  $cont++;
+  }
+
+  require_once 'modal.php';
+?>

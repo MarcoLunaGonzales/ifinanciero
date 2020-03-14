@@ -45,12 +45,12 @@
               <div class="form-group col-sm-4">
                 <label for="nro_cuenta" class="bmd-label-floating">Nro. Cuenta:</label>
                 <input type="hidden" id="nro_cuenta_id" name="nro_cuenta_id">
-                <input type="number" class="form-control" id="nro_cuenta" name="nro_cuenta" onkeypress="buscarCuentaList('numero'); pulsar(event);" onkeyDown="buscarCuentaList('numero');" onkeyUp="buscarCuentaList('numero');" autofocus>
+                <input type="number" class="form-control" id="nro_cuenta" name="nro_cuenta" onkeypress="buscarCuentaListCajaChica('numero'); pulsar(event);" onkeyDown="buscarCuentaListCajaChica('numero');" onkeyUp="buscarCuentaListCajaChica('numero');" autofocus>
               </div>
               <div class="form-group col-sm-4">
                 <label for="cuenta" class="bmd-label-floating">Cuenta:</label>
                 <input type="hidden" id="cuenta_id" name="cuenta_id">
-                <input type="text" class="form-control" id="cuenta" name="cuenta" onkeypress="buscarCuentaList('nombre');pulsar(event)" onkeyDown="buscarCuentaList('nombre');" onkeyUp="buscarCuentaList('nombre');">
+                <input type="text" class="form-control" id="cuenta" name="cuenta" onkeypress="buscarCuentaListCajaChica('nombre');pulsar(event)" onkeyDown="buscarCuentaListCajaChica('nombre');" onkeyUp="buscarCuentaListCajaChica('nombre');">
               </div>
               <div class="form-group col-sm-3">
                 <select class="selectpicker form-control form-control-sm" name="padre" id="padre" data-style="<?=$comboColor;?>" onchange="buscarCuenta(form1);">
@@ -75,7 +75,7 @@
             <div class="row" id="divResultadoBusqueda">
               <?php 
               //include "pruebaBusqueda2.php"; 
-               include "pruebaBusqueda.php";
+               // include "pruebaBusqueda.php";
               ?>    
               <div class="form-group col-sm-8">
                 Resultados de la Búsqueda
