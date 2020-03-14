@@ -12,7 +12,7 @@ $fechaActual=date("Y-m-d");
 setlocale(LC_TIME, "Spanish");
 $dbh = new Conexion();
 
-$codSol=$_GET['codigo'];
+$codSol=1;
 // Preparamos
 $lista=listaObligacionesPagoDetalleSolicitudRecursosSolicitud($codSol);
 
@@ -52,130 +52,51 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
                   <div class="card-icon">
                     <i class="material-icons text-dark">attach_money</i>
                   </div>
-                  <h4 class="card-title">Pagos de la Solicitud</h4>
+                  <h4 class="card-title">Pagos por Proveedor</h4>
                 </div>
                 <div class="card-body">
                   <div class="row">
                     <table class="table table-bordered table-condensed">
-                      <?php
-                       while ($row2 = $stmtb->fetch(PDO::FETCH_BOUND)) {
-                        $solicitanteX=namePersonal($codPersonalX);
-                        ?>
                       <tr>
-                        <td class="text-left font-weight-bold">Solicitante</td>
-                        <td class="text-left"><img src="assets/img/faces/persona1.png" width="20" height="20"/><?=$solicitanteX;?></td>
-                        <td class="text-left font-weight-bold">Fecha de Solicitud</td>
-                        <td class="text-left"><?=strftime('%d/%m/%Y',strtotime($fechaSolicitudX));?></td>
+                        <td class="text-left font-weight-bold">Proveedor</td>
+                        <td class="text-left" width="26%">
+                        	<div class="form-group">
+
+                               <select class="selectpicker form-control form-control-sm" onchange="cargarDatosProveedorPagos()" data-live-search="true" name="proveedor" id="proveedor" data-style="btn btn-danger">
+                                    <option disabled selected="selected" value="">--PROVEEDOR--</option>
+                                    <?php 
+                                     $stmt3 = $dbh->prepare("SELECT DISTINCT p.codigo,p.nombre FROM solicitud_recursosdetalle s join af_proveedores p on s.cod_proveedor=p.codigo");
+                                     $stmt3->execute();
+                                     while ($rowSel = $stmt3->fetch(PDO::FETCH_ASSOC)) {
+                                      $codigoSel=$rowSel['codigo'];
+                                      $nombreSelX=$rowSel['nombre'];
+                                      ?><option value="<?=$codigoSel;?>"><?=$nombreSelX?></option><?php 
+                                     }
+                                    ?>
+                                  </select>
+                             </div>
+                        </td>
+                        <td class="text-left font-weight-bold">Fecha del pago</td>
+                        <td class="text-left">
+                        	<div class="form-group">
+                               <input type="text" class="form-control datepicker" name="fecha_pago" id="fecha_pago" value="<?=date('d/m/Y')?>">
+                             </div>
+                        </td>
                       </tr>
                       <tr>
-                        <td class="text-left font-weight-bold">Unidad</td>
-                        <td class="text-left"><?=$unidadX?></td>
-                        <td class="text-left font-weight-bold">Area</td>
-                        <td class="text-left"><?=$areaX?></td>
-                      </tr>
-                      <tr>
-                        <td class="text-left font-weight-bold">Total Importe</td>
-                        <td class="text-left" id="total_importe"></td>
-                        <td class="text-left font-weight-bold">Total Pagado</td>
-                        <td class="text-left"><?=number_format($totalPagadoX,2,".","")?></td>
-                      </tr>
-                      <tr>
-                        <td class="text-left font-weight-bold">Total Saldo</td>
-                        <td class="text-left" id="total_saldo"></td>
+                        <td class="text-left font-weight-bold">Observaciones</td>
+                        <td class="text-left" width="26%">
+                        	<div class="form-group">
+                               <textarea type="text" class="form-control" name="observaciones_pago" id="observaciones_pago" value=""></textarea>
+                             </div>
+                        </td>
                         <td class="text-left font-weight-bold"></td>
                         <td class="text-left"></td>
                       </tr>
-                      <?php
-                       }
-                      ?>
                     </table>
                   </div>
-                  <div class="table-responsive" id="data_comprobantes">
-                    <table id="tablePaginator" class="table table-condensed">
-                      <thead>
-                        <tr>
-                          <th class="text-center">#</th>
-                          <th>Unidad</th>
-                          <th>Area</th>
-                          <th>Nro Solicitud</th>
-                          <th>Fecha Solicitud</th>
-                          <th>Detalle</th>
-                          <th>Proveedor</th>
-                          <th class="bg-warning text-dark">Importe</th>
-                          <th class="" style="background:#07B46D; color:#F7FF5A;">Pagado</th>
-                          <th class="text-right">Saldo</th>
-                          <th class="text-right">Actions</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-<?php
-						     $index=1;$cont=0;$totalImporte=0;
-
-                      	while ($row = $lista->fetch(PDO::FETCH_ASSOC)) {
-                          $codDetalle=$row['codigo'];
-                          $unidad=$row['unidad'];
-                          $area=$row['area'];
-                          $solicitante=namePersonal($row['cod_personal']);
-                          $fecha=$row['fecha'];
-                          $numero=$row['numero'];
-                          $detalle=$row['detalle'];
-                          $importe=$row['importe'];
-                          $proveedor=$row['proveedor'];
-                          $codProveedor=$row['cod_proveedor'];
-
-                          $dias=obtenerCantidadDiasCredito($codProveedor);
-                          $pagadoFila=obtenerMontoPagadoDetalleSolicitud($codSol,$codDetalle);
-                          if($dias==0){
-                            $tituloDias="Sin Registro";
-                          }else{
-                            $tituloDias="".$dias;
-                          }
-                          $totalImporte+=$importe;
-                          $saldoImporte=abs($pagadoFila-$importe);
-                          $pagado=$importe-$saldoImporte;
-                          if($totalPagadoX==0){
-                            $pagado=0;
-                          }
-?>
-                        <tr>
-                          <td align="center"><?=$index;?></td>                          
-                          <td><?=$unidad;?></td>
-                          <td><?=$area;?></td>
-                          <td><?=$numero;?></td>
-                          <td><?=strftime('%d/%m/%Y',strtotime($fecha));?></td>
-                          <td class="text-left"><?=$detalle;?></td>
-                          <td class="text-left"><?=$proveedor;?></td>
-                          <td class="bg-warning text-dark text-right font-weight-bold" style="font-size:20px"><?=number_format($importe,2,".","")?></td>
-                          <td class="text-right font-weight-bold" style="font-size:20px; background:#07B46D; color:#F7FF5A;"><?=number_format($pagado,2,".","")?></td>
-                          <td class="text-right font-weight-bold" style="font-size:20px"><?=number_format($importe-$pagado,2,".","")?></td>
-                          <td class="text-right">
-                            <?php 
-                            if(($importe-$pagado)>0){
-                              ?>
-                              <a href="#" class="btn btn-warning btn-sm" onclick="nuevoPagoSolicitudRecursosDetalle(<?=$codDetalle?>,'<?=$proveedor?>','<?=$codProveedor?>','<?=$importe-$pagado?>')" >PAGAR</a>
-                              <?php
-                            }else{
-                              ?>
-                              <a href="#" class="btn btn-success btn-sm" onclick='Swal.fire("Correcto!", "Se cancelo el detalle en su totalidad", "success");' >CANCELADO</a>
-                              <?php
-                            } 
-                            ?>
-                            
-                          </td>
-                        </tr>
-<?php
-							$index++;
-                      }
-
-           $saldoX=$totalImporte-$totalPagadoX;
-           $saldoXInput=number_format($saldoX,2,".","");           
-?>
-                    <script>
-                       $("#total_importe").text(<?=number_format($totalImporte,2,".","")?>);
-                       $("#total_saldo").text(<?=number_format($saldoX,2,".","")?>);
-                    </script>
-                      </tbody>
-                    </table>
+                  <div class="row" id="data_pagosproveedores">
+                  	   <center><p>Tabla Vac&iacute;a</p></center>
                   </div>
                 </div>
               </div>
@@ -185,7 +106,7 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
               <div class="card-footer fixed-bottom">
                 <button class="<?=$buttonCancel;?>" onClick="location.href='<?=$urlList;?>'">Volver</button>
                 <!--<a href="#" onclick="nuevoPagoSolicitudRecursos()" class="btn btn-warning" >Registrar Nuevo Pago</a>-->
-                <a class="<?=$buttonNormal;?>" onclick="historialPagoSolicitudRecursos()"><i class="material-icons text-dark">history</i> Historial de Pagos</a>
+                <a class="<?=$buttonNormal;?>" onclick="historialPagoSolicitudRecursos()"><i class="material-icons text-dark">plus</i> Registar Pagos</a>
                 
               </div>
               

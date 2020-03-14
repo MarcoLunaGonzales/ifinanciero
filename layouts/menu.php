@@ -605,19 +605,25 @@ if($menuModulo==0){
             </a>
 
             <div class="collapse" id="tablasPresSol">
-              <ul class="nav">              
+              <ul class="nav">
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listCheques">
+                    <span class="sidebar-mini"> CH </span>
+                    <span class="sidebar-normal"> Cheques</span>
+                  </a>
+                </li> 
+               <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listDiasCreditoProveedores">
+                    <span class="sidebar-mini"> DC </span>
+                    <span class="sidebar-normal"> D&iacute;as de Cr&eacute;dito</span>
+                  </a>
+                </li>             
                  <li class="nav-item ">
                   <a class="nav-link" href="index.php?opcion=listTarifarioServicios">
                     <span class="sidebar-mini"> TF </span>
                     <span class="sidebar-normal"> Tarifario de Servicios TCP</span>
                   </a>
-                </li>
-                <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=listDiasCreditoProveedores">
-                    <span class="sidebar-mini"> DC </span>
-                    <span class="sidebar-normal"> D&iacute;as de Cr&eacute;dito</span>
-                  </a>
-                </li>
+                </li>    
               </ul>
             </div>
           </li>    
@@ -691,6 +697,12 @@ if($menuModulo==0){
                   <a class="nav-link" href="?opcion=listSolicitudRecursosAdmin">
                     <span class="sidebar-mini"> GSR </span>
                     <span class="sidebar-normal"> Gesti&oacute;n Solicitudes Recursos</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listPagoProveedor">
+                    <span class="sidebar-mini"> PP </span>
+                    <span class="sidebar-normal"> PAGOS PROVEEDOR</span>
                   </a>
                 </li>                          
               </ul>

@@ -213,41 +213,35 @@ function configuracionCentros(fila,inicio){
   };
 }
 function configuracionEstadosCuenta(fila,codigoCuenta,codigoCuentaAux){
+  var contador=0;
   for (var i = 0; i < estado_cuentas.length; i++) {
-    if(estado_cuentas[i].cod_cuenta==codigoCuenta){
+    if(estado_cuentas[i].cod_cuenta==codigoCuenta){ //&&codigoCuentaAux==0
       $("#estados_cuentas"+fila).removeClass("d-none"); 
       $("#tipo_estadocuentas"+fila).val(estado_cuentas[i].tipo);
-       if(estado_cuentas[i].tipo==1){
-         //$("#debe"+fila).removeAttr("readonly");
-         //$("#haber"+fila).val("");
-         //$("#haber"+fila).attr("readonly","readonly");
-       }else{
-         //$("#haber"+fila).removeAttr("readonly");
-         //$("#debe"+fila).attr("readonly","readonly");
-         //$("#debe"+fila).val("");
-       }     
+      contador++;   
       break;  
     }else{
+      $("#estados_cuentas"+fila).removeClass("d-none"); 
+      $("#estados_cuentas"+fila).addClass("d-none");  
+    }
+  };
+  /*if(contador==0&&codigoCuentaAux!=0){
+    for (var i = 0; i < estado_cuentas.length; i++) {
       if(estado_cuentas[i].cod_cuentaaux==codigoCuentaAux){
          $("#estados_cuentas"+fila).removeClass("d-none"); 
          $("#tipo_estadocuentas"+fila).val(estado_cuentas[i].tipo);
-        if(estado_cuentas[i].tipo==1){
-         //$("#debe"+fila).removeAttr("readonly");
-         //$("#haber"+fila).val("");
-         //$("#haber"+fila).attr("readonly","readonly");
-       }else{
-         //$("#haber"+fila).removeAttr("readonly");
-         //$("#debe"+fila).attr("readonly","readonly");
-         //$("#debe"+fila).val("");
-       }     
+         contador++;     
       break;
       }else{
-      $("#estados_cuentas"+fila).removeClass("d-none"); 
-      $("#estados_cuentas"+fila).addClass("d-none");
-        
+        $("#estados_cuentas"+fila).removeClass("d-none"); 
+        $("#estados_cuentas"+fila).addClass("d-none");
       }
-    }
-  };
+    };   
+  }*/
+  if(contador==0){
+     $("#estados_cuentas"+fila).removeClass("d-none"); 
+     $("#estados_cuentas"+fila).addClass("d-none");
+  }
 }
 function copiarGlosa(){
   if(numFilas!=0){
@@ -5110,8 +5104,21 @@ function verEstadosCuentas(fila,cuenta){
      $("#modalAlert").modal("show");
   }else{
     if(cuenta==0){
-      var cod_cuenta=$("#cuenta"+fila).val();
+      if($("#cuenta_auxiliar"+fila).val()==0){
+        var cod_cuenta=$("#cuenta"+fila).val();
+        var auxi="NO";
+      }else{
+        var cod_cuenta=$("#cuenta_auxiliar"+fila).val();
+        var auxi="SI";
+      }      
     }else{
+      if($("#cuenta_auxiliar"+fila).val()==0){
+        var cod_cuenta=cuenta;
+        var auxi="NO";
+      }else{
+        var cod_cuenta=cuenta;
+        var auxi="SI";
+      }
       var cod_cuenta=cuenta;
     }
     var tipo=$("#tipo_estadocuentas"+fila).val();
@@ -5127,10 +5134,21 @@ function verEstadosCuentas(fila,cuenta){
         $("#div_cuentasorigen").removeClass("d-none");
         $("#div_cuentasorigendetalle").removeClass("d-none");
       } 
-      var cod_cuenta = $("#cuentas_origen").val();
+      if($("#cuentas_origen").val()==""||$("#cuentas_origen").val()==null){
+        var cod_cuenta="";      
+      }else{
+        var resp = $("#cuentas_origen").val().split('###');
+        var cod_cuenta = resp[0];
+        if(resp[1]=="AUX"){
+          var auxi="SI";
+        }else{
+          var auxi="NO";
+        }
+      }
+      
     }
     //ajax estado de cuentas
-    var parametros={"cod_cuenta":cod_cuenta,"tipo":tipo,"mes":12};
+    var parametros={"cod_cuenta":cod_cuenta,"tipo":tipo,"mes":12,"auxi":auxi};
     $.ajax({
         type: "GET",
         dataType: 'html',
@@ -5156,6 +5174,7 @@ function verEstadosCuentas(fila,cuenta){
 
   }  
 }
+
 var itemEstadosCuentas=[];
 function quitarEstadoCuenta(){
   var fila=$("#estFila").val();
@@ -5172,6 +5191,7 @@ function agregarEstadoCuenta(){
     var codComproDet=0;
     var nfila={
     cod_plancuenta:cuenta,
+    cod_plancuentaaux:$("#cuenta_auxiliar"+fila).val(),
     cod_comprobantedetalle:codComproDet,
     cod_proveedor:0,//$("#proveedores").val(),
     monto:$("#monto_estadocuenta").val()
@@ -5181,15 +5201,30 @@ function agregarEstadoCuenta(){
     $("#nestado"+fila).addClass("estado");
     verEstadosCuentas(fila,cuenta);
   }else{
-    var cuenta=$("#cuentas_origen").val();
-    var codComproDet=$('input:radio[name=cuentas_origen_detalle]:checked').val();
+    var resp = $("#cuentas_origen").val().split('###');
+    var cuenta = resp[0];
+    var detalle_resp=$('input:radio[name=cuentas_origen_detalle]:checked').val();
+    var codComproDet=detalle_resp[0];
+    var cuenta_auxiliar=detalle_resp[1];
     if(codComproDet!=null){
+      if(resp[1]=="AUX"){
     var nfila={
-    cod_plancuenta:cuenta,
+    cod_plancuenta:0,
+    cod_plancuentaaux:cuenta,
     cod_comprobantedetalle:codComproDet,
     cod_proveedor:0,//$("#proveedores").val(),
     monto:$("#monto_estadocuenta").val()
     }
+
+      }else{
+    var nfila={
+    cod_plancuenta:cuenta,
+    cod_plancuentaaux:cuenta_auxiliar,
+    cod_comprobantedetalle:codComproDet,
+    cod_proveedor:0,//$("#proveedores").val(),
+    monto:$("#monto_estadocuenta").val()
+    }    
+      }
     itemEstadosCuentas[fila-1]=[];
     itemEstadosCuentas[fila-1].push(nfila);
     $("#nestado"+fila).addClass("estado");
@@ -5256,7 +5291,8 @@ function listarEstadosCuentasDebito(id,saldo){
  }
  function verEstadosCuentasCred(){
   var fila = $("#estFila").val();
-  var cuenta = $("#cuentas_origen").val();
+  var resp = $("#cuentas_origen").val().split('###');
+  var cuenta = resp[0];
   verEstadosCuentas(fila,cuenta);
   /*if(cuenta!=""){
     var parametros={"cod_cuenta":cuenta};
@@ -7323,21 +7359,48 @@ function mandarValorTitulo(){
 }
 function pagarSolicitudRecursos(){
   var cod_solicitud = $("#cod_solicitud").val();
+  var codigo_detalle = $("#codigo_detalle").val();
   var cod_pagoproveedor = $("#cod_pagoproveedor").val();
 
   var monto = $("#monto_pago").val();
   var saldo = $("#saldo_pago").val();
   var tipo_pago= $("#tipo_pago").val();
+  var pagar=0;
   var observaciones_pago= $("#observaciones_pago").val();
   var proveedores_pago= $("#proveedores_pago").val();
   if(monto==""||monto==0||!(tipo_pago>0)||!(proveedores_pago>0)){
     Swal.fire("Informativo!", "Debe llenar los campos requeridos", "warning");
   }else{
-    if(parseFloat(monto)>parseFloat(saldo)){
-      Swal.fire("Informativo!", "El Monto no debe ser Menor al Saldo", "warning");
+    if(tipo_pago==1){
+      var banco=$("#banco_pago").val();
+       if(!(banco>0)){
+         Swal.fire("Informativo!", "Debe llenar los campos requeridos", "warning");
+       }else{
+        
+         if(($("#emitidos_pago").val()=="####")){
+          Swal.fire("Informativo!", "Debe seleccionar un cheque", "warning");
+         }else{
+           if($("#numero_cheque").val()==""||$("#nombre_ben").val()==""){
+             Swal.fire("Informativo!", "Debe llenar los campos numero y nombre beneficiario", "warning");
+           }else{
+            var numero_cheque=$("#numero_cheque").val();
+            var nombre_ben=$("#nombre_ben").val();
+             var cheque=$("#emitidos_pago").val().split("####");
+             var parametros={"codigo_detalle":codigo_detalle,"cod_solicitud":cod_solicitud,"cod_pagoproveedor":cod_pagoproveedor,"monto":monto,"saldo":saldo,"tipo_pago":tipo_pago,"proveedores_pago":proveedores_pago,"observaciones_pago":observaciones_pago,"banco":banco,"cheque":cheque[0],"numero_cheque":numero_cheque,"nombre_ben":nombre_ben};
+             pago=1;
+           }
+         }
+       } 
     }else{
-    var parametros={"cod_solicitud":cod_solicitud,"cod_pagoproveedor":cod_pagoproveedor,"monto":monto,"saldo":saldo,"tipo_pago":tipo_pago,"proveedores_pago":proveedores_pago,"observaciones_pago":observaciones_pago};
-     $.ajax({
+      pago=1;
+         var parametros={"codigo_detalle":codigo_detalle,"cod_solicitud":cod_solicitud,"cod_pagoproveedor":cod_pagoproveedor,"monto":monto,"saldo":saldo,"tipo_pago":tipo_pago,"proveedores_pago":proveedores_pago,"observaciones_pago":observaciones_pago};
+    }
+
+    if(parseFloat(monto)>parseFloat(saldo)){
+      Swal.fire("Informativo!", "El Monto debe ser Menor al Saldo", "warning");
+    }else{
+     if(pago==1){
+       $.ajax({
         type: "GET",
         dataType: 'html',
         url: "solicitudes/ajaxSavePagoDetalleSolicitudRecurso.php",
@@ -7351,11 +7414,58 @@ function pagarSolicitudRecursos(){
            $("#texto_ajax_titulo").html("Procesando Datos");
            alerts.showSwal('success-message','index.php?opcion=listSolicitudPagosProveedores&codigo='+cod_solicitud);
         }
-    });  
+       });             
+     }
       
-    }
+    }//fin else
   }
 }
 function historialPagoSolicitudRecursos(){
   $("#modalHistorialPago").modal("show");
+}
+
+function nuevoPagoSolicitudRecursosDetalle(codigo,nombre,codProv,saldo){
+  $("#codigo_detalle").val(codigo);
+  $("#nombre_proveedor").val(nombre);
+  $("#proveedores_pago").val(codProv);
+  $("#saldo_pago").val(redondeo(saldo));
+  $("#modalRegistrarPago").modal("show");
+}
+function mostrarDatosCheque(){
+  var tipo =$("#tipo_pago").val();
+  if(tipo==1){
+     if(($("#div_cheques").hasClass("d-none"))){
+       $("#div_cheques").removeClass("d-none");
+    } 
+  }else{
+    if(!($("#div_cheques").hasClass("d-none"))){
+      $("#div_cheques").addClass("d-none");
+    }
+  }
+}
+function cargarChequesPago(){
+  var banco=$("#banco_pago").val();
+   var parametros={"banco":banco};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "solicitudes/ajaxListChequesBanco.php",
+        data: parametros,
+        beforeSend: function () {
+        $("#texto_ajax_titulo").html("Listando Cheques..."); 
+          iniciarCargaAjax();
+        },        
+        success:  function (resp) {
+           detectarCargaAjax();
+           $("#texto_ajax_titulo").html("Procesando Datos");
+           $("#div_chequesemitidos").html(resp);
+           $('.selectpicker').selectpicker("refresh");
+           $("#nombre_ben").val($("#nombre_proveedor").val());
+        }
+      }); 
+}
+
+function ponerNumeroChequePago(){
+  var valor= $("#emitidos_pago").val().split("####");
+  $("#numero_cheque").val(valor[1]);
 }

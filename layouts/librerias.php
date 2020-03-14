@@ -337,9 +337,17 @@
     // document.getElementById('archivos').addEventListener('change', archivosPreviewDCC, false);
     // document.getElementById('archivosDetalle').addEventListener('change', archivosPreviewDetalleDCC, false);
 
+       $("#formChequePago").submit(function(e) {
+          var inicioo =parseFloat($("#inicio").val());
+          var finall =parseFloat($("#final").val());
+          if(inicioo>finall){
+            return false;
+            Swal.fire("Informativo!", "El NRO Inicio no debe ser mayor al NRO Final", "warning");      
+          }
+       
+      });
 
-
-
+ 
       
         $('#tablePaginator50').DataTable( {
             "pageLength": 50,
