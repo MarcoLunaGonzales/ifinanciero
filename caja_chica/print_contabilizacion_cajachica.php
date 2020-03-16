@@ -227,7 +227,7 @@ $html.=  '<header class="header">'.
                                     $monto_restante=$importe*$porcentaje_retencion/100;
                                     //desde aqui repartimos la contabilizacion a las oficinas 
                                     $stmtOficina = $dbh->prepare("SELECT dgd.cod_unidadorganizacional,dgd.porcentaje,
-                                       (SELECT uo.nombre FROM unidades_organizacionales uo WHERE uo.codigo=dgd.cod_unidadorganizacional) as oficina
+                                       (SELECT uo.abreviatura FROM unidades_organizacionales uo WHERE uo.codigo=dgd.cod_unidadorganizacional) as oficina
                                     from distribucion_gastosporcentaje_detalle dgd,distribucion_gastosporcentaje dg
                                     where dgd.cod_distribucion_gastos=dg.codigo and dg.estado=1 and porcentaje>0");
                                     $stmtOficina->execute();
@@ -386,7 +386,7 @@ $html.=  '<header class="header">'.
                                     }else{
                                         //desde aqui repartimos la contabilizacion a las oficinas 
                                         $stmtOficina = $dbh->prepare("SELECT dgd.cod_unidadorganizacional,dgd.porcentaje,
-                                           (SELECT uo.nombre FROM unidades_organizacionales uo WHERE uo.codigo=dgd.cod_unidadorganizacional) as oficina
+                                           (SELECT uo.abreviatura FROM unidades_organizacionales uo WHERE uo.codigo=dgd.cod_unidadorganizacional) as oficina
                                         from distribucion_gastosporcentaje_detalle dgd,distribucion_gastosporcentaje dg
                                         where dgd.cod_distribucion_gastos=dg.codigo and dg.estado=1 and porcentaje>0");
                                         $stmtOficina->execute();
