@@ -65,12 +65,18 @@
       <!--<input class="form-control" type="text" name="est_codcuenta" id="est_codcuenta"/>
       <input class="form-control" type="text" name="est_codcuentaaux" id="est_codcuentaaux"/>-->
       <input class="form-control" type="hidden" name="estFila" id="estFila"/>
+      <input class="form-control" type="hidden" name="cuentas_formu" id="cuentas_formu"/>
+      <script>
+        var cod_cuenta_form=$("#cuentas_formu").val();
+        // alert(cod_cuenta_form);
+      </script>  
       <div class="card-title"><center><h6>Datos de la nueva transaccion</h6></center></div>
         <div class="row">
           <label class="col-sm-2 col-form-label">Monto</label>
           <div class="col-sm-3">
             <div class="form-group">
               <input class="form-control" type="number" step="0.001" readonly name="monto_estadocuenta" id="monto_estadocuenta"/>
+            
             </div>
           </div>
         </div>
@@ -78,9 +84,17 @@
               <label class="col-sm-2 col-form-label">Cuenta Origen</label>
               <div class="col-sm-10">
                 <div class="form-group">
+                  <?php
+                   // $codigo_cuenta_form="<script> document.write(cod_cuenta_form); </script>";
+                  $codigo_cuenta_form="<script> document.write(cod_cuenta_form); </script>";
+                   ?>
                  <select class="selectpicker form-control form-control-sm" onchange="verEstadosCuentasCred_cc()" name="cuentas_origen" id="cuentas_origen" data-style="<?=$comboColor;?>">
+                   <!-- <option disabled selected value=""><?=$codigo_cuenta_form?></option> -->
                    <option disabled selected value="">Seleccione una Cuenta</option>
                    <?php
+                   
+                   // echo $codigo_cuenta_form;
+
                     $stmt = $dbh->prepare("SELECT p.* FROM plan_cuentas p, configuracion_estadocuentas c where c.cod_plancuenta=p.codigo and c.tipo=1 and c.cod_cuentaaux=0 order by codigo");
                     $stmt->execute();
                     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -88,7 +102,7 @@
                       $nombreX=$row['nombre'];
                       $numeroX=$row['numero'];
                       ?>
-                      <option value="<?=$codigoX;?>###NNN"><?=trim($numeroX);?> - <?=trim($nombreX);?></option>  
+                      <option  <?=($codigo_cuenta_form==$codigoX)?"selected":"";?> value="<?=$codigoX;?>###NNN"><?=trim($numeroX);?> - <?=trim($nombreX);?></option>  
                       <?php
                         }
                         ?>

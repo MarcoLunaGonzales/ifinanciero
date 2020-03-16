@@ -197,7 +197,7 @@ require_once 'modal.php';
             <input type="hidden" name="cuenta_auxiliar1" id="cuenta_auxiliar1" value="<?=$cod_contra_cuenta_aux?>">
 
             <input type="hidden" name="comprobante" id="comprobante" value="<?=$cod_comprobante?>">
-            <input type="hidden" id="tipo_estadocuentas1">        
+            <input type="hidden" id="tipo_estadocuentas1" value="3">        
            <!--  <div class="contenedor_contra_cuenta" style="display: none">
               <div class="row">
                 <label class="col-sm-2 col-form-label"><small>Contra cuenta</small></label>
@@ -325,7 +325,7 @@ require_once 'modal.php';
               <label class="col-sm-2 col-form-label">Proveedor :</label>
               <div class="col-sm-8">
                 <div class="form-group">                        
-                  <div id="contenedor_proveedor">
+                  <div id="div_contenedor_proveedor">
                     <select class="selectpicker form-control form-control-sm" name="proveedores" id="proveedores" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" title="Seleccione Proveedor">
                       <option value=""></option>
                       <?php 

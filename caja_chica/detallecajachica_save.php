@@ -11,6 +11,8 @@ $dbh = new Conexion();
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//para mostrar errores en la ejecucion
 
 try {
+    $globalUser=$_SESSION["globalUser"];
+
     $codigo = $_POST["codigo"];
     $cod_tcc = $_POST["cod_tcc"];
     $cod_cc = $_POST["cod_cc"];
@@ -85,11 +87,47 @@ try {
             $stmtrendiciones = $dbh->prepare("INSERT INTO rendiciones(codigo,numero,cod_tipodoc,monto_a_rendir,monto_rendicion,cod_personal,observaciones,cod_estado,cod_cajachicadetalle,cod_estadoreferencial,fecha_dcc) 
             values ($codigo,$numero,$cod_retencion,$monto,$monto_rendicion,'$cod_personal','$observaciones',$cod_estado,$codigo,$cod_estadoreferencial,'$fecha')");
             $flagSuccess=$stmtrendiciones->execute();
-            //insertamos estado_de_cuentas para la contra cuenta.
+            //insertamos estado_de_cuentas y comprobantes
             if($cod_comprobante>0){
-                $stmtContraCuenta = $dbh->prepare("INSERT INTO estados_cuenta(cod_comprobantedetalle,cod_plancuenta,monto,cod_proveedor,fecha,cod_comprobantedetalleorigen,cod_cuentaaux,cod_cajachicadetalle)  
-                values ('$cod_comprobante','$cod_cuenta','$monto','$cod_proveedores','$fecha',0,'$cuenta_auxiliar1','$codigo')");
-                $flagSuccess=$stmtContraCuenta->execute();
+                //sacamos informacion del comprobante detalle
+                $stmtCompDet = $dbh->prepare("SELECT codigo,cod_comprobante From comprobantes_detalle where codigo=$cod_comprobante");                
+                $stmtCompDet->execute();
+                $resultCompDet = $stmtCompDet->fetch();                
+                $codigo_compr_x = $resultCompDet['codigo'];    
+                $cod_comprobante_x = $resultCompDet['cod_comprobante'];    
+
+                //sacamos informacion del comprobante
+                $stmtComprob = $dbh->prepare("SELECT cod_gestion,cod_tipocomprobante,numero,glosa from comprobantes where codigo=$cod_comprobante_x");                
+                $stmtComprob->execute();
+                $resultComprob = $stmtComprob->fetch();                
+                $cod_gestion_x = $resultComprob['cod_gestion'];                
+                $cod_tipocomprobante_x = $resultComprob['cod_tipocomprobante'];
+                $numero_x = $resultComprob['numero'];    
+                // $glosa_x = $resultComprob['glosa'];
+                // insertamos comprobante
+                $codComprobante=obtenerCodigoComprobante();
+                $sqlInsert="INSERT INTO comprobantes(codigo, cod_empresa, cod_unidadorganizacional, cod_gestion, cod_moneda, cod_estadocomprobante, cod_tipocomprobante, fecha, numero, glosa, created_at, created_by, modified_at, modified_by) VALUES ('$codComprobante', '1', '$cod_uo', '$cod_gestion_x', '1', '1', '$cod_tipocomprobante_x', '$fecha', '$numero_x', '$observaciones', '$fecha', '$globalUser', '$fecha', '$globalUser')";
+                // echo $sqlInsert;
+                $stmtInsertCompro = $dbh->prepare($sqlInsert);
+                $flagSuccess=$stmtInsertCompro->execute();
+                if($flagSuccess){
+                    $sqlDelete="DELETE from comprobantes_detalle where cod_comprobante='$codComprobante'";
+                    $stmtDel = $dbh->prepare($sqlDelete);
+                    $flagSuccess=$stmtDel->execute();
+
+                    $codComprobanteDetalle1=obtenerCodigoComprobanteDetalle();
+                    $sqlDetalle1="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobanteDetalle1','$codComprobante', '$cod_cuenta', '$cuenta_auxiliar1', '$cod_uo', '$cod_area', '0', '$monto', '$observaciones', '1')";
+                    $stmtDetalle2 = $dbh->prepare($sqlDetalle1);
+                    $flagSuccessDetalle=$stmtDetalle2->execute();    
+                    $codComprobanteDetalle2=obtenerCodigoComprobanteDetalle();
+                    $sqlDetalle2="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobanteDetalle2','$codComprobante', '$cod_cuenta', '$cuenta_auxiliar1', '$cod_uo', '$cod_area', '$monto', '0', '$observaciones', '2')";
+                    $stmtDetalle2 = $dbh->prepare($sqlDetalle2);
+                    $flagSuccessDetalle=$stmtDetalle2->execute(); 
+                    //insertamos estados de cuenta
+                    $stmtContraCuenta = $dbh->prepare("INSERT INTO estados_cuenta(cod_comprobantedetalle,cod_plancuenta,monto,cod_proveedor,fecha,cod_comprobantedetalleorigen,cod_cuentaaux,cod_cajachicadetalle)  
+                    values ('$codComprobanteDetalle1','$cod_cuenta','$monto','$cod_proveedores','$fecha',0,'$cuenta_auxiliar1','$codigo')");
+                    $flagSuccess=$stmtContraCuenta->execute();
+                } 
             }        
         }
         showAlertSuccessError($flagSuccess,$urlListDetalleCajaChica.'&codigo='.$cod_cc.'&cod_tcc='.$cod_tcc);
@@ -134,15 +172,54 @@ try {
             $flagSuccess=$stmtrendiciones->execute();
 
             //para la parte de la contra cuenta
-            //borramos la contra cuenta registrada
+            
+            // if($cod_comprobante>0){
+            //     $stmtDeleteContraCuenta = $dbh->prepare("DELETE from estados_cuenta where cod_cajachicadetalle = $codigo");
+            //     $flagSuccess=$stmtDeleteContraCuenta->execute();
+            //     //insertamos estado_de_cuentas para la contra cuenta.
+            //     $stmtContraCuenta = $dbh->prepare("INSERT INTO estados_cuenta(cod_comprobantedetalle,cod_plancuenta,monto,cod_proveedor,fecha,cod_comprobantedetalleorigen,cod_cuentaaux,cod_cajachicadetalle)  
+            //     values ('$cod_comprobante','$cod_cuenta','$monto','$cod_proveedores','$fecha',0,'$cuenta_auxiliar1','$codigo')");
+            //     $flagSuccess=$stmtContraCuenta->execute();
+            // }
+            //insertamos estado_de_cuentas y comprobantes
             if($cod_comprobante>0){
-                $stmtDeleteContraCuenta = $dbh->prepare("DELETE from estados_cuenta where cod_cajachicadetalle = $codigo");
-                $flagSuccess=$stmtDeleteContraCuenta->execute();
-                //insertamos estado_de_cuentas para la contra cuenta.
-                $stmtContraCuenta = $dbh->prepare("INSERT INTO estados_cuenta(cod_comprobantedetalle,cod_plancuenta,monto,cod_proveedor,fecha,cod_comprobantedetalleorigen,cod_cuentaaux,cod_cajachicadetalle)  
-                values ('$cod_comprobante','$cod_cuenta','$monto','$cod_proveedores','$fecha',0,'$cuenta_auxiliar1','$codigo')");
-                $flagSuccess=$stmtContraCuenta->execute();
-            }
+                //sacamos informacion del comprobante detalle
+                $stmtCompDet = $dbh->prepare("SELECT codigo,cod_comprobante From comprobantes_detalle where codigo=$cod_comprobante");                
+                $stmtCompDet->execute();
+                $resultCompDet = $stmtCompDet->fetch();                
+                $codigo_compr_x = $resultCompDet['codigo'];    
+                $cod_comprobante_x = $resultCompDet['cod_comprobante'];    
+                $cod_comprobante_x2=$cod_comprobante_x+1;
+                // //sacamos informacion del comprobante
+                // $stmtComprob = $dbh->prepare("SELECT cod_gestion,cod_tipocomprobante,numero,glosa from comprobantes where codigo=$cod_comprobante_x");                
+                // $stmtComprob->execute();
+                // $resultComprob = $stmtComprob->fetch();                
+                // $cod_gestion_x = $resultComprob['cod_gestion'];                
+                // $cod_tipocomprobante_x = $resultComprob['cod_tipocomprobante'];
+                // $numero_x = $resultComprob['numero'];    
+                // $glosa_x = $resultComprob['glosa'];
+                // insertamos comprobante
+                // $codComprobante=obtenerCodigoComprobante();
+                $sqlInsert="UPDATE comprobantes set cod_unidadorganizacional='$cod_uo',glosa='$observaciones' where codigo=$cod_comprobante_x";
+                $stmtInsertCompro = $dbh->prepare($sqlInsert);
+                $flagSuccess=$stmtInsertCompro->execute();
+                if($flagSuccess){                    
+                    $sqlDetalle1="UPDATE comprobantes_detalle set cod_cuenta='$cod_cuenta',cod_cuentaauxiliar='$cuenta_auxiliar1',cod_unidadorganizacional='$cod_uo',cod_area='$cod_area',haber='$monto',glosa='$observaciones' where codigo=$cod_comprobante_x";                    
+                    $stmtDetalle2 = $dbh->prepare($sqlDetalle1);
+                    $flagSuccessDetalle=$stmtDetalle2->execute();    
+
+                    $sqlDetalle2="UPDATE comprobantes_detalle set cod_cuenta='$cod_cuenta',cod_cuentaauxiliar='$cuenta_auxiliar1',cod_unidadorganizacional='$cod_uo',cod_area='$cod_area',debe='$monto',glosa='$observaciones' where codigo=$cod_comprobante_x2";
+                    $stmtDetalle2 = $dbh->prepare($sqlDetalle2);
+                    $flagSuccessDetalle=$stmtDetalle2->execute();
+                    ////borramos los estados de cuenta registrados
+                    $stmtDeleteContraCuenta = $dbh->prepare("DELETE from estados_cuenta where cod_cajachicadetalle = $codigo");
+                    $flagSuccess=$stmtDeleteContraCuenta->execute();
+                    //insertamos estados de cuenta
+                    $stmtContraCuenta = $dbh->prepare("INSERT INTO estados_cuenta(cod_comprobantedetalle,cod_plancuenta,monto,cod_proveedor,fecha,cod_comprobantedetalleorigen,cod_cuentaaux,cod_cajachicadetalle)  
+                    values ('$codComprobanteDetalle1','$cod_cuenta','$monto','$cod_proveedores','$fecha',0,'$cuenta_auxiliar1','$codigo')");
+                    $flagSuccess=$stmtContraCuenta->execute();
+                } 
+            } 
         }
         showAlertSuccessError($flagSuccess,$urlListDetalleCajaChica.'&codigo='.$cod_cc.'&cod_tcc='.$cod_tcc);
         
