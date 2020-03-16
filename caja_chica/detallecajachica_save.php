@@ -16,8 +16,8 @@ try {
     $cod_cc = $_POST["cod_cc"];
 
     $cod_cuenta=$_POST["cuenta_auto_id"];    
-    $cod_contra_cuenta=$_POST["contra_cuenta"];
-    $cod_contra_cuenta_aux=$_POST["contra_cuenta_auxiliar"];
+    $cod_comprobante=$_POST["comprobante"];
+    $cuenta_auxiliar1=$_POST["cuenta_auxiliar1"];
     // $cod_cuenta = $_POST["cod_cuenta"];
     $cod_retencion = $_POST["tipo_retencion"];
     $numero = $_POST["numero"];
@@ -62,7 +62,7 @@ try {
         $cod_estadoreferencial=1;
         $monto_rendicion=0;
 
-        //     echo 'cod_cuenta:'.$cod_cuenta."<br>";
+        // echo 'cod_cuenta:'.$cod_cuenta."<br>";
         // echo 'fecha:'.$fecha."<br>";
         // echo 'cod_retencion:'.$cod_retencion."<br>";
         // echo 'numero:'.$numero."<br>";
@@ -86,17 +86,14 @@ try {
             values ($codigo,$numero,$cod_retencion,$monto,$monto_rendicion,'$cod_personal','$observaciones',$cod_estado,$codigo,$cod_estadoreferencial,'$fecha')");
             $flagSuccess=$stmtrendiciones->execute();
             //insertamos estado_de_cuentas para la contra cuenta.
-            if($cod_contra_cuenta>0){
+            if($cod_comprobante>0){
                 $stmtContraCuenta = $dbh->prepare("INSERT INTO estados_cuenta(cod_comprobantedetalle,cod_plancuenta,monto,cod_proveedor,fecha,cod_comprobantedetalleorigen,cod_cuentaaux,cod_cajachicadetalle)  
-                values (0,'$cod_contra_cuenta','$monto',0,'$fecha',0,'$cod_contra_cuenta_aux','$codigo')");
+                values ('$cod_comprobante','$cod_cuenta','$monto','$cod_proveedores','$fecha',0,'$cuenta_auxiliar1','$codigo')");
                 $flagSuccess=$stmtContraCuenta->execute();
-            }
-            
-
+            }        
         }
         showAlertSuccessError($flagSuccess,$urlListDetalleCajaChica.'&codigo='.$cod_cc.'&cod_tcc='.$cod_tcc);
-
-        //$stmt->debugDumpParams();
+    
     } else {//update
         //actualizamos monto reeembolso
         //sacamos monto anterior de detalle
@@ -138,15 +135,14 @@ try {
 
             //para la parte de la contra cuenta
             //borramos la contra cuenta registrada
-            if($cod_contra_cuenta>0){
+            if($cod_comprobante>0){
                 $stmtDeleteContraCuenta = $dbh->prepare("DELETE from estados_cuenta where cod_cajachicadetalle = $codigo");
                 $flagSuccess=$stmtDeleteContraCuenta->execute();
                 //insertamos estado_de_cuentas para la contra cuenta.
                 $stmtContraCuenta = $dbh->prepare("INSERT INTO estados_cuenta(cod_comprobantedetalle,cod_plancuenta,monto,cod_proveedor,fecha,cod_comprobantedetalleorigen,cod_cuentaaux,cod_cajachicadetalle)  
-                values (0,'$cod_contra_cuenta','$monto',0,'$fecha',0,'$cod_contra_cuenta_aux','$codigo')");
+                values ('$cod_comprobante','$cod_cuenta','$monto','$cod_proveedores','$fecha',0,'$cuenta_auxiliar1','$codigo')");
                 $flagSuccess=$stmtContraCuenta->execute();
             }
-            
         }
         showAlertSuccessError($flagSuccess,$urlListDetalleCajaChica.'&codigo='.$cod_cc.'&cod_tcc='.$cod_tcc);
         

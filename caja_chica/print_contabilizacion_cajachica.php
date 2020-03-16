@@ -11,7 +11,7 @@ set_time_limit(3000);
 $cod_cajachica = $_GET["cod_cajachica"];//codigoactivofijo
 try{
     //lsitado de todo el detalle de caja chica en curso
-    $stmtCajaChicaDet = $dbh->prepare("SELECT codigo,cod_tipodoccajachica,observaciones,monto,(select c.nombre from plan_cuentas c where c.codigo=cod_cuenta)nombre_cuenta,
+    $stmtCajaChicaDet = $dbh->prepare("SELECT codigo,cod_tipodoccajachica,observaciones,monto,(select p.nombre from af_proveedores p where p.codigo=cod_proveedores)as proveedor,(select c.nombre from plan_cuentas c where c.codigo=cod_cuenta)nombre_cuenta,
     (select c2.numero from plan_cuentas c2 where c2.codigo=cod_cuenta)numero_cuenta,
     (select CONCAT_WS(' ',p.primer_nombre,p.paterno,p.materno) from personal p where p.codigo=cod_personal)as personal,
     (select u.abreviatura from unidades_organizacionales u where u.codigo=cod_uo)as nombre_uo,
@@ -22,6 +22,7 @@ try{
     $stmtCajaChicaDet->bindColumn('nombre_cuenta', $nombre_cuenta);
     $stmtCajaChicaDet->bindColumn('numero_cuenta', $numero_cuenta);    
     $stmtCajaChicaDet->bindColumn('personal', $personal);
+    $stmtCajaChicaDet->bindColumn('proveedor', $proveedor);
     $stmtCajaChicaDet->bindColumn('nombre_uo', $nombre_uo);
     $stmtCajaChicaDet->bindColumn('nombre_area', $nombre_area);
     $stmtCajaChicaDet->bindColumn('cod_tipodoccajachica', $cod_retencioncajachica);
@@ -352,16 +353,17 @@ $html.=  '<header class="header">'.
                                     // echo "llego: ".$cod_plancuenta;
                                     if($cod_plancuenta>0){
                                         //buscamos el nombre y el numero de la contra cuenta
-                                        // $nro_contra_cuenta_sinGasto=obtieneNumeroCuenta($cod_plancuenta);
-                                        // $nombre_contra_cuenta_sinGasto=nameCuenta($cod_plancuenta);
-                                        $descripcionIT=$nombre_uo.' SF, '.$observaciones_dcc;                                        
+                                        $nro_contra_cuenta_sinGasto=obtieneNumeroCuenta($cod_plancuenta);
+                                        $nombre_contra_cuenta_sinGasto=nameCuenta($cod_plancuenta);
+                                        
+                                        $descripcionIT=$nombre_uo.'/'.$nombre_area.' '.$proveedor.' SF, '.$observaciones_dcc;                                        
                                         if($USD_actual!=0)
                                             $monto_restante_dolares=$monto_restante/$USD_actual;
                                         else $monto_restante_dolares=0;
                                         if($debe_haber==1){ //debe=1
                                             $html.='<tr>'.
-                                                '<td class="text-left">'.$numero_cuenta.'</td>'.
-                                                '<td class="text-left">'.$nombre_cuenta.'<br>'.$descripcionIT.'</td>'.
+                                                '<td class="text-left">'.$nro_contra_cuenta_sinGasto.'</td>'.
+                                                '<td class="text-left">'.$nombre_contra_cuenta_sinGasto.'<br>'.$descripcionIT.'</td>'.
                                                 '<td class="text-right">'.formatNumberDec($monto_restante).'</td>'.
                                                 '<td class="text-right"></td>'.
                                                 '<td class="text-right">'.formatNumberDec($monto_restante_dolares).'</td>'.
@@ -371,8 +373,8 @@ $html.=  '<header class="header">'.
                                             $sumaTotalDebeDolares+=$monto_restante_dolares;
                                         }else{//haber=2
                                             $html.='<tr>'.
-                                                '<td class="text-left">'.$numero_cuenta.'</td>'.
-                                                '<td class="text-left">'.$nombre_cuenta.'<br>'.$descripcionIT.'</td>'.
+                                                '<td class="text-left">'.$nro_contra_cuenta_sinGasto.'</td>'.
+                                                '<td class="text-left">'.$nombre_contra_cuenta_sinGasto.'<br>'.$descripcionIT.'</td>'.
                                                 '<td class="text-right"></td>'.
                                                 '<td class="text-right">'.formatNumberDec($monto_restante).'</td>'.
                                                 '<td class="text-right"></td>'.
@@ -426,15 +428,15 @@ $html.=  '<header class="header">'.
                                     
 
                                     // aqui la contra cuenta, invertimos el proceso
-                                    if($cod_plancuenta>0){
-                                        $nro_contra_cuenta2=obtieneNumeroCuenta($cod_plancuenta);
-                                        $nombre_contra_cuenta2=nameCuenta($cod_plancuenta);
-                                    }else{
+                                    // if($cod_plancuenta>0){
+                                    //     $nro_contra_cuenta2=obtieneNumeroCuenta($cod_plancuenta);
+                                    //     $nombre_contra_cuenta2=nameCuenta($cod_plancuenta);
+                                    // }else{
                                         $nro_contra_cuenta2=$nro_contra_cuenta;
                                         $nombre_contra_cuenta2=$nombre_contra_cuenta;
-                                    }
+                                    // }
 
-                                    $descripcion_contra_cuenta='CONTABILIZACIÓN CAJA CHICA.'.$personal.', '.$observaciones_dcc;
+                                    $descripcion_contra_cuenta='CONTABILIZACIÓN CAJA CHICA.'.$personal.'/'.$proveedor.', '.$observaciones_dcc;
                                     $monto_contracuenta=$monto_dcc;
                                     if($USD_actual!=0)
                                         $monto_contracuenta_dolares=$monto_contracuenta/$USD_actual;

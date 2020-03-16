@@ -38,7 +38,6 @@ $cod_proveedores=0;
 
 
 if ($codigo > 0){
-    
     $stmt = $dbh->prepare("SELECT codigo,cod_cuenta,fecha,cod_tipodoccajachica,nro_documento,cod_personal,monto,observaciones,nro_recibo,cod_area,cod_uo,cod_proveedores,cod_actividad_sw,
         (select c.nombre from plan_cuentas c where c.codigo=cod_cuenta) as nombre_cuenta,
         (select c.numero from plan_cuentas c where c.codigo=cod_cuenta) as nro_cuenta
@@ -64,12 +63,11 @@ if ($codigo > 0){
 
     $cuenta_aux=$nro_cuenta." - ".$nombre_cuenta;   
 
-    // sacamos datos de la contra cuenta
-    $stmtContraCuentaForm = $dbh->prepare("SELECT cod_plancuenta,cod_cuentaaux from estados_cuenta where cod_cajachicadetalle=$cod_dcc");
-    $stmtContraCuentaForm->execute();
-    $resultContraCuentaForm = $stmtContraCuentaForm->fetch();
-    $cod_contra_cuenta = $resultContraCuentaForm['cod_plancuenta'];
-    $cod_contra_cuenta_aux = $resultContraCuentaForm['cod_cuentaaux'];
+    // sacamos datos del comprobante
+    $stmtComprobante = $dbh->prepare("SELECT cod_comprobantedetalle from estados_cuenta where cod_cajachicadetalle=$cod_dcc order by codigo asc LIMIT 1");
+    $stmtComprobante->execute();
+    $resultComprobante = $stmtComprobante->fetch();
+    $cod_comprobante = $resultComprobante['cod_comprobantedetalle'];    
     
 } else {
     //para el numero correlativo
@@ -99,8 +97,8 @@ if ($codigo > 0){
 
     $cuenta_aux="";
     
-    $cod_contra_cuenta=null;
-    $cod_contra_cuenta_aux=null;
+    $cod_comprobante=null;
+    // $cod_contra_cuenta_aux=null;
 
     $cuenta_aux="";
     $cod_cuenta=0;
@@ -112,6 +110,7 @@ if ($codigo > 0){
 }
 
 $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
+require_once 'modal.php';
 ?>
 
 <div class="content">
@@ -129,6 +128,24 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
   			  </div>
   			  <div class="card-body ">			           
             <div class="row">
+              <label class="col-sm-2 col-form-label">Monto</label>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <input class="form-control" type="text" step="any" name="monto" id="monto" value="<?=$monto;?>" required/>
+                    </div>
+                </div>
+                
+                    <input class="form-control" type="hidden" name="numero" id="numero" value="<?=$nro_documento;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" readonly="readonly"/>
+                <!-- </div>
+                </div> -->
+                <label class="col-sm-2 col-form-label">Nro. Recibo</label>
+                <div class="col-sm-4">
+                <div class="form-group">
+                    <input class="form-control" type="number" name="nro_recibo" id="nro_recibo" value="<?=$nro_recibo;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" required/>
+                </div>
+                </div>
+            </div> 
+            <div class="row">
                 <label class="col-sm-2 col-form-label">Tipo Retención</label>
                 <div class="col-sm-4">
                     <div class="form-group">
@@ -142,23 +159,7 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
                         </select>                                  
                     </div>
                 </div>
-                    <input class="form-control" type="hidden" name="numero" id="numero" value="<?=$nro_documento;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" readonly="readonly"/>
-                <!-- </div>
-                </div> -->
-                <label class="col-sm-2 col-form-label">Nro. Recibo</label>
-                <div class="col-sm-4">
-                <div class="form-group">
-                    <input class="form-control" type="number" name="nro_recibo" id="nro_recibo" value="<?=$nro_recibo;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" required/>
-                </div>
-                </div>
-            </div> 
-            <div class="row">
-                <label class="col-sm-2 col-form-label">Monto</label>
-                <div class="col-sm-4">
-                    <div class="form-group">
-                        <input class="form-control" type="text" step="any" name="monto" id="monto" value="<?=$monto;?>" required/>
-                    </div>
-                </div>
+
                 <label class="col-sm-2 col-form-label">Fecha</label>
                 <div class="col-sm-4">
                     <div class="form-group">
@@ -180,19 +181,24 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
               <div class="col-sm-2">
                 <div class="form-group">                                
                   <div class="retencion_sin_gastos" style="display: none">
-                    <a href="#" class="btn btn-warning btn-round btn-fab btn-sm" onclick="AgregarContraCuentaCajaChica()">
-                      <i class="material-icons" title="Agregar Contra Cuenta">add</i>
-                    </a>
+                   <!--  <a href="#" class="btn btn-warning btn-round btn-fab btn-sm" onclick="AgregarContraCuentaCajaChica()">
+                      <i class="material-icons" title="Estado de Cuentas">add</i>
+                    </a> -->
 
-                    <!-- <a title="Cambiar cuenta" href="#" id="cambiar_cuenta<?=$idFila?>" onclick="editarCuentaComprobante(<?=$idFila?>)" class="btn btn-sm btn-warning btn-fab"><span class="material-icons text-dark">edit</span></a> -->                        
+                    <a  href="#" onclick="verEstadosCuentas_cajachica(1,0);" class="btn btn-danger btn-fab btn-round btn-sm">
+                      <i class="material-icons text-dark" title="Estado de Cuentas">ballot</i>
+                    </a>
                   </div>
                 </div>
                 </div>
             </div><!-- cuenta-->
 
-            <input type="hidden" name="contra_cuenta" id="contra_cuenta" value="<?=$cod_contra_cuenta?>">
-            <input type="hidden" name="contra_cuenta_auxiliar" id="contra_cuenta_auxiliar" value="<?=$cod_contra_cuenta_aux?>">
-            <div class="contenedor_contra_cuenta" style="display: none">
+            <input type="hidden" name="cuenta1" id="cuenta1" value="<?=$cod_contra_cuenta?>">
+            <input type="hidden" name="cuenta_auxiliar1" id="cuenta_auxiliar1" value="<?=$cod_contra_cuenta_aux?>">
+
+            <input type="hidden" name="comprobante" id="comprobante" value="<?=$cod_comprobante?>">
+            <input type="hidden" id="tipo_estadocuentas1">        
+           <!--  <div class="contenedor_contra_cuenta" style="display: none">
               <div class="row">
                 <label class="col-sm-2 col-form-label"><small>Contra cuenta</small></label>
                 <div class="col-sm-8">
@@ -217,7 +223,7 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
                   </div>
                 </div>
               </div>
-            </div>
+            </div> -->
 
             <div class="row">
               <label class="col-sm-2 col-form-label">Personal</label>
@@ -317,32 +323,34 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
             <!-- proveedor -->
             <div class="row">
               <label class="col-sm-2 col-form-label">Proveedor :</label>
-               <div class="col-sm-8">
-                 <div class="form-group">                        
-                      <select class="selectpicker form-control form-control-sm" name="proveedores" id="proveedores" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" title="Seleccione Proveedor">
-                        <option value=""></option>
+              <div class="col-sm-8">
+                <div class="form-group">                        
+                  <div id="contenedor_proveedor">
+                    <select class="selectpicker form-control form-control-sm" name="proveedores" id="proveedores" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" title="Seleccione Proveedor">
+                      <option value=""></option>
+                      <?php 
+                      $query="SELECT * FROM af_proveedores order by nombre";
+                      $stmt = $dbh->prepare($query);
+                      $stmt->execute();
+                      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                        $codigoProv=$row['codigo'];    
+                        ?><option <?=($cod_proveedores==$codigoProv)?"selected":"";?> value="<?=$codigoProv?>" class="text-right"><?=$row['nombre']?></option>
                        <?php 
-                       $query="SELECT * FROM af_proveedores order by nombre";
-                       $stmt = $dbh->prepare($query);
-                       $stmt->execute();
-                       while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                          $codigoProv=$row['codigo'];    
-                          ?><option <?=($cod_proveedores==$codigoProv)?"selected":"";?> value="<?=$codigoProv?>" class="text-right"><?=$row['nombre']?></option>
-                         <?php 
-                         } ?> 
-                       </select>
+                       } ?> 
+                    </select>
                   </div>
-                </div>      
-                <div class="col-sm-2">
-                    <div class="form-group">                                
-                        <a href="#" class="btn btn-warning btn-round btn-fab btn-sm" onclick="cargarDatosRegistroProveedorCajaChica(<?=$cod_tcc?>,<?=$cod_cc?>,<?=$cod_dcc?>)">
-                          <i class="material-icons" title="Add Proveedor">add</i>
-                        </a>
-                        <a href="#" class="btn btn-success btn-round btn-fab btn-sm" onclick="actualizarRegistroProveedorCajaChica(<?=$cod_tcc?>,<?=$cod_cc?>,<?=$cod_dcc?>)">
-                          <i class="material-icons" title="Actualizar Proveedor">update</i>
-                        </a> 
-                    </div>
-                </div>                        
+                </div>
+              </div>      
+              <div class="col-sm-2">
+                  <div class="form-group">                                
+                      <a href="#" class="btn btn-warning btn-round btn-fab btn-sm" onclick="cargarDatosRegistroProveedorCajaChica(<?=$cod_tcc?>,<?=$cod_cc?>,<?=$cod_dcc?>)">
+                        <i class="material-icons" title="Add Proveedor">add</i>
+                      </a>
+                      <a href="#" class="btn btn-success btn-round btn-fab btn-sm" onclick="actualizarRegistroProveedorCajaChica(<?=$cod_tcc?>,<?=$cod_cc?>,<?=$cod_dcc?>)">
+                        <i class="material-icons" title="Actualizar Proveedor">update</i>
+                      </a> 
+                  </div>
+              </div>                          
             </div>
             <div class="row">
                 <label class="col-sm-2 col-form-label">Detalle</label>
@@ -366,7 +374,7 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
 	</div>
 </div>
 
-
+<!-- carga de proveedores -->
 <div class="cargar">
   <div class="div-loading text-center">
      <h4 class="text-warning font-weight-bold">Procesando Datos</h4>
@@ -401,36 +409,35 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
   </div>
 
 <script>
-  var codigo_detalle = <?=$codigo?>;
-  if(codigo_detalle>0){
-    var nro_cuenta = document.getElementById("cuenta_auto").value; 
-    if(nro_cuenta.substr(0,1)==5){//comprobamos el primer digito de la cuenta 
-      // alert("es 5");
-      $(".retencion_sin_gastos").show();
-      $(".contenedor_contra_cuenta").show();
-    }else{
-      $(".retencion_sin_gastos").hide();
-      $(".contenedor_contra_cuenta").hide();
-    }
-  }
-
+//  var codigo_detalle = <?=$codigo?>;
+  // if(codigo_detalle>0){ //para edit
+  //   var nro_cuenta = document.getElementById("cuenta_auto").value; 
+  //   if(nro_cuenta.substr(0,1)==2){
+  //     $(".retencion_sin_gastos").show();
+  //     $(".contenedor_contra_cuenta").show();
+  //   }else{
+  //     $(".retencion_sin_gastos").hide();
+  //     $(".contenedor_contra_cuenta").hide();
+  //   }
+  // }
+  //el numero de cuenta comporbamos si empieza con 2
   $( "#cuenta_auto" ).blur(function() {
       var nro_cuenta = document.getElementById("cuenta_auto").value; 
       
-      if(nro_cuenta.substr(0,1)==5){//comprobamos el primer digito de la cuenta 
+      if(nro_cuenta.substr(0,1)==2){//comprobamos el primer digito de la cuenta 
         // alert("es 5");
         $(".retencion_sin_gastos").show();
-        $(".contenedor_contra_cuenta").show();
+        // $(".contenedor_contra_cuenta").show();
       }else{
         $(".retencion_sin_gastos").hide();
-        $(".contenedor_contra_cuenta").hide();
+        // $(".contenedor_contra_cuenta").hide();
       }
     });  
   
 </script>
   <!--    end small modal -->
 <script>$('.selectpicker').selectpicker("refresh");</script>
-
+<!-- verifica que no vea campos vacios -->
 <script type="text/javascript">
   function valida(f) {
     var nro_cuenta2 = document.getElementById("cuenta_auto").value; 
@@ -454,41 +461,8 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
               ok = false;
         }
     }
-
-    
     if(ok == false)
       alert(msg);
     return ok;
   }
 </script>
-
-<?php 
-  $dbh = new Conexion();
-  $sqlBusqueda="SELECT p.codigo, p.numero, p.nombre from plan_cuentas p where p.nivel=5 ";
-  $sqlBusqueda.=" order by p.numero";
-  $stmt = $dbh->prepare($sqlBusqueda);
-  $stmt->execute();
-  $stmt->bindColumn('codigo', $codigoCuenta);
-  $stmt->bindColumn('numero', $numeroCuenta);
-  $stmt->bindColumn('nombre', $nombreCuenta);
-  $cont=0;$contAux=0;
-  while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
-    $numeroCuenta=trim($numeroCuenta);
-    $nombreCuenta=trim($nombreCuenta);
-    $sqlCuentasAux="SELECT codigo, nombre FROM cuentas_auxiliares where cod_cuenta='$codigoCuenta' order by 2";
-    $stmtAux = $dbh->prepare($sqlCuentasAux);
-    $stmtAux->execute();
-    $stmtAux->bindColumn('codigo', $codigoCuentaAux);
-    $stmtAux->bindColumn('nombre', $nombreCuentaAux);
-    while ($rowAux = $stmtAux->fetch(PDO::FETCH_BOUND)) {
-      ?><script>itemCuentasAuxCajaChica.push({codigo:"<?=$codigoCuentaAux?>",nombre:"<?=$nombreCuentaAux?>",codCuenta:"<?=$codigoCuenta?>"});</script><?php
-      $contAux++;
-    }   
-   ?><script>
-      itemCuentasCajaChica.push({codigo:"<?=$codigoCuenta?>",numero:"<?=$numeroCuenta?>",nombre:"<?=$nombreCuenta?>",cod_aux:"0",nom_aux:""});
-   </script><?php 
-  $cont++;
-  }
-
-  require_once 'modal.php';
-?>
