@@ -35,7 +35,9 @@ $mes=$_GET['mes'];
 	</thead>
 	<tbody id="tabla_estadocuenta">
 <?php
-  $stmt = $dbh->prepare("SELECT e.*,d.glosa,d.haber,d.debe FROM estados_cuenta e,comprobantes_detalle d where e.cod_comprobantedetalle=d.codigo and (d.cod_cuenta=$codCuenta or e.cod_plancuenta=$codCuenta) order by e.fecha");
+	$sqlEstadoCuenta="SELECT e.*,d.glosa,d.haber,d.debe FROM estados_cuenta e,comprobantes_detalle d where e.cod_comprobantedetalle=d.codigo and (d.cod_cuenta=$codCuenta or e.cod_plancuenta=$codCuenta) order by e.fecha";
+  //echo $sqlEstadoCuenta;
+  $stmt = $dbh->prepare($sqlEstadoCuenta);
   /*if($codCuenta==0){
    $stmt = $dbh->prepare("SELECT e.*,d.glosa,d.haber,d.debe FROM estados_cuenta e,comprobantes_detalle d where e.cod_comprobantedetalle=d.codigo and (d.cod_cuentaauxiliar=$codCuentaAux or e.cod_cuentaaux=$codCuentaAux) order by e.fecha");
   }else{
@@ -55,6 +57,9 @@ $mes=$_GET['mes'];
 	 $debeX=$row['debe'];
 	 $haberX=$row['haber'];
 	 $saldo=$saldo+$debeX-$haberX;
+	 $codProveedor=$row['cod_proveedor'];
+	 $nombreProveedorX=nameProveedor($codProveedor);
+
    $montoTit=number_format($montoX, 2, '.', ',');
    $saldoTit=number_format($saldo, 2, '.', ',');
    if(obtenerProveedorCuentaAux($row['cod_cuentaaux'])==""){
@@ -64,11 +69,11 @@ $mes=$_GET['mes'];
    }
 	 if($haberX==0||$haberX==""){
        ?>
-  	   <tr class="bg-white det-estados"><td class="text-left font-weight-bold"><?=$fechaX?></td><td class="text-left"><?=$proveedorX?></td><td class="text-left"><?=$glosaX?></td><td class="text-right"><?=$montoTit?></td><td class="text-right"></td><td class="text-right font-weight-bold"><?=$saldoTit?></td></tr>
+  	   <tr class="bg-white det-estados"><td class="text-left font-weight-bold"><?=$fechaX?></td><td class="text-left"><?=$nombreProveedorX;?></td><td class="text-left"><?=$glosaX?></td><td class="text-right"><?=$montoTit?></td><td class="text-right"></td><td class="text-right font-weight-bold"><?=$saldoTit?></td></tr>
   	   <?php
 	 }else{
         ?>
-  	   <tr class="bg-white det-estados"><td class="text-left font-weight-bold"><?=$fechaX?></td><td class="text-left"><?=$proveedorX?></td><td class="text-left"><?=$glosaX?></td><td class="text-right"></td><td class="text-right"><?=$montoTit?></td><td class="text-right font-weight-bold"><?=$saldoTit?></td></tr>
+  	   <tr class="bg-white det-estados"><td class="text-left font-weight-bold"><?=$fechaX?></td><td class="text-left"><?=$nombreProveedorX;?></td><td class="text-left"><?=$glosaX?></td><td class="text-right"></td><td class="text-right"><?=$montoTit?></td><td class="text-right font-weight-bold"><?=$saldoTit?></td></tr>
   	   <?php
 	 }
 	 
