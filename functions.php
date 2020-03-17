@@ -385,16 +385,19 @@ function nameCargo($codigo){
    }
    return($nombreX);
 }
+
 function nameProveedor($codigo){
    $dbh = new Conexion();
    $stmt = $dbh->prepare("SELECT nombre FROM af_proveedores where codigo=:codigo");
    $stmt->bindParam(':codigo',$codigo);
    $stmt->execute();
+   $nombreX="";
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       $nombreX=$row['nombre'];
    }
    return($nombreX);
 }
+
 function namePartidaPres($codigo){
    $dbh = new Conexion();
    $stmt = $dbh->prepare("SELECT nombre FROM partidas_presupuestarias where codigo=:codigo");
@@ -4229,6 +4232,28 @@ function obtenerProveedorCuentaAux($codigo){
    }
    return($valor);
 }
+
+function nameTipoCuentaAuxiliar($codigo){
+  $nombreTipoAuxiliar="";
+  if($codigo==1){
+    $nombreTipoAuxiliar="Proveedor";
+  }else{
+    $nombreTipoAuxiliar="Cliente";
+  }
+  return($nombreTipoAuxiliar);
+}
+
+function nameProveedorCliente($codTipo, $codigo){
+  $name="";
+  if($codTipo==1){
+    $name=nameProveedor($codigo);
+  }else{
+    $name=nameCliente($codigo);
+  }
+  return($name);
+}
+
+
 ?>
 
 
