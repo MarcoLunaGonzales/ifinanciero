@@ -7498,15 +7498,15 @@ function agregarEstadoCuenta_cajachica(){
     $("#nestado"+fila).addClass("estado");
     verEstadosCuentas_cajachica(fila,cuenta);
   }else{
-    var resp = $("#cuentas_origen").val().split('###');
+    var resp = $("#cuentas_origen").val().split('####');
     var cuenta = resp[0];
-    var detalle_resp=$('input:radio[name=cuentas_origen_detalle]:checked').val().split('###');
-    
+    var detalle_resp=$('input:radio[name=cuentas_origen_detalle]:checked').val().split('####');
+
     // alert(detalle_resp[0]);
 
-    var codComproDet=detalle_resp[0];
-    var cuenta_auxiliar=detalle_resp[1];
-    var cod_proveedorCompr=detalle_resp[2];
+    var codComproDet=detalle_resp[0].trim();
+    var cuenta_auxiliar=detalle_resp[1].trim();
+    var cod_proveedorCompr=detalle_resp[2].trim();
 
     // alert("prov:"+cod_proveedorCompr);
 
@@ -7552,10 +7552,10 @@ function verEstadosCuentas_cajachica(fila,cuenta){
       itemEstadosCuentas_cc.push(fila);
       var cod_cuenta_form=$("#cuenta_auto_id").val();
       document.getElementById('cuenta'+fila).value=cod_cuenta_form;
-      document.getElementById('cuenta_auxiliar'+fila).value=0;
-      document.getElementById('cuentas_formu').value=cod_cuenta_form;
+      document.getElementById('cuenta_auxiliar'+fila).value=0;      
+      // document.getElementById('cuentas_formu').value=cod_cuenta_form+"###NNN";
       // alert($("#cuenta_auto_id").val());
-      $("#cuentas_formu").val(cod_cuenta_form);
+      
 
     if(cuenta==0){
       if($("#cuenta_auxiliar"+fila).val()==0){
@@ -7592,7 +7592,7 @@ function verEstadosCuentas_cajachica(fila,cuenta){
         $("#div_cuentasorigen").removeClass("d-none");
         $("#div_cuentasorigendetalle").removeClass("d-none");
       }
-       
+
       if($("#cuentas_origen").val()==""||$("#cuentas_origen").val()==null){
         var cod_cuenta="";      
       }else{
@@ -7615,6 +7615,11 @@ function verEstadosCuentas_cajachica(fila,cuenta){
         url: "estados_cuenta/ajaxMostrarEstadosCuenta.php",
         data: parametros,
         success:  function (resp) {
+          // $("#cuentas_origen").val(cod_cuenta_form+"###NNN");
+          // $('.selectpicker').selectpicker("refresh");
+          // verEstadosCuentasCred_cc();
+
+
           var respuesta=resp.split('@');
           // alert(respuesta[0]);
           $("#div_estadocuentas").html(respuesta[0]);
@@ -7623,7 +7628,7 @@ function verEstadosCuentas_cajachica(fila,cuenta){
             listarEstadosCuentasDebito_cc(fila,rsaldo);
           }else{
             var rsaldo=listarEstadosCuentasCredito_cc(fila,respuesta[1]);
-            // listarEstadosCuentas_cc(fila,rsaldo);
+            listarEstadosCuentas_cc(fila,rsaldo);
           }           
         }
     });
@@ -7657,10 +7662,11 @@ function listarEstadosCuentas_cc(id,saldo){
       }else{
         var titulo_glosa="";
         if(itemEstadosCuentas_cc[id-1][i].cod_comprobantedetalle!=0){
-          titulo_glosa=obtieneDatosFilaEstadosCuenta(itemEstadosCuentas_cc[id-1][i].cod_comprobantedetalle);
+          // titulo_glosa=obtieneDatosFilaEstadosCuenta(itemEstadosCuentas_cc[id-1][i].cod_comprobantedetalle);
+          titulo_glosa="CAjA CHICA";
         }
 
-        row.append($('<td>').addClass('text-left').html($("#glosa_detalle"+id).val()+"<small class='text-success'>"+titulo_glosa+"</small>"));
+        row.append($('<td>').addClass('text-left').html("<small class='text-success'>"+titulo_glosa+"</small>"));
         var nsaldo=parseFloat(saldo)-parseFloat(itemEstadosCuentas_cc[id-1][i].monto);
         row.append($('<td>').addClass('text-right').text("")); 
         row.append($('<td>').addClass('text-right').text(numberFormat(itemEstadosCuentas_cc[id-1][i].monto,2)));  
@@ -7732,6 +7738,8 @@ function ajaxCajaCPersonalArea_cuentapasiva(codigo_comprobante,cod_proveedor){
 }
 function ajaxCajaCProveedor_cuentapasiva(codigo_proveedor){
   var contenedor_p;
+  // alert(codigo_proveedor);
+
   contenedor_p = document.getElementById('div_contenedor_proveedor');
   ajax=nuevoAjax();
   ajax.open('GET', 'caja_chica/proveedorAjax_cuentaPasiva.php?codigo_proveedor='+codigo_proveedor,true);
