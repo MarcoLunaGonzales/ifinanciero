@@ -7616,10 +7616,14 @@ function verEstadosCuentas_cajachica(fila,cuenta){
         data: parametros,
         success:  function (resp) {
           // $("#cuentas_origen").val(cod_cuenta_form+"###NNN");
-          // $('.selectpicker').selectpicker("refresh");
-          // verEstadosCuentasCred_cc();
-
-
+          // document.getElementById('cuentas_formu').value=cod_cuenta_form;
+          // alert(cod_cuenta_form);
+          if(cod_cuenta==0 || cod_cuenta==""){
+            $("#cuentas_origen").val(cod_cuenta_form+"###NNN");
+            $('.selectpicker').selectpicker("refresh");
+            verEstadosCuentasCred_cc();  
+          }
+          
           var respuesta=resp.split('@');
           // alert(respuesta[0]);
           $("#div_estadocuentas").html(respuesta[0]);

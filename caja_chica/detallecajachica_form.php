@@ -110,7 +110,7 @@ if ($codigo > 0){
 }
 
 $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
-require_once 'modal.php';
+
 ?>
 
 <div class="content">
@@ -466,3 +466,7 @@ require_once 'modal.php';
     return ok;
   }
 </script>
+
+<?php 
+  require_once 'modal.php';
+?>
