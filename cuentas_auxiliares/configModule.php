@@ -13,7 +13,7 @@ $urlRegister="index.php?opcion=registerCuentaAux";
 $urlRegister2="index.php?opcion=registerCuentaAux";
 $urlEdit="index.php?opcion=editCuentaAux";
 $urlDelete="index.php?opcion=deleteCuentaAux";
-$urlSave="cuentas_auxiliares/save.php";
+$urlSave="cuentas_auxiliares/save2.php";
 $urlSaveEdit="cuentas_auxiliares/saveEdit.php";
 $urlSaveDelete="";
 

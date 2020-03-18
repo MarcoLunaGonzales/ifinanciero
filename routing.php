@@ -32,7 +32,7 @@
 		}
 		if ($_GET['opcion']=='registerCuentaAux') {
 			$codigo=$_GET['codigo'];
-			require_once('cuentas_auxiliares/register.php');
+			require_once('cuentas_auxiliares/register2.php');
 		}
 		if ($_GET['opcion']=='editCuentaAux') {
 			$codigo=$_GET['codigo'];
