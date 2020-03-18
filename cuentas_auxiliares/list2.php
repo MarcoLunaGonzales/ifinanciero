@@ -74,9 +74,9 @@ $stmt->bindColumn('cod_proveedorcliente', $codProveedorCliente);
                             <?php
                             if($globalAdmin==1){
                             ?>
-                            <a href='<?=$urlEdit;?>&codigo=<?=$codigo;?>&codigo_padre=<?=$codigoCuentaPadre?>' rel="tooltip" class="<?=$buttonEdit;?>">
+                            <!--a href='<?=$urlEdit;?>&codigo=<?=$codigo;?>&codigo_padre=<?=$codigoCuentaPadre?>' rel="tooltip" class="<?=$buttonEdit;?>">
                               <i class="material-icons"><?=$iconEdit;?></i>
-                            </a>
+                            </a-->
                             <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>&codigo_padre=<?=$codigoCuentaPadre?>')">
                               <i class="material-icons"><?=$iconDelete;?></i>
                             </button>

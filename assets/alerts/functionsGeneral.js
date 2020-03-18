@@ -7740,6 +7740,8 @@ function ajaxCajaCPersonalArea_cuentapasiva(codigo_comprobante,cod_proveedor){
   }
   ajax.send(null)  
 }
+
+
 function ajaxCajaCProveedor_cuentapasiva(codigo_proveedor){
   var contenedor_p;
   // alert(codigo_proveedor);
@@ -7747,6 +7749,21 @@ function ajaxCajaCProveedor_cuentapasiva(codigo_proveedor){
   contenedor_p = document.getElementById('div_contenedor_proveedor');
   ajax=nuevoAjax();
   ajax.open('GET', 'caja_chica/proveedorAjax_cuentaPasiva.php?codigo_proveedor='+codigo_proveedor,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor_p.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);    
+    }
+  }
+  ajax.send(null)  
+}
+
+function ajaxTipoProveedorCliente(tipo){
+  var contenedor_p;
+  var tipoProveedorCliente=tipo.value;
+  contenedor_p = document.getElementById('divProveedorCliente');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'cuentas_auxiliares/ajaxProveedorCliente.php?tipo='+tipoProveedorCliente,true);
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
       contenedor_p.innerHTML = ajax.responseText;
