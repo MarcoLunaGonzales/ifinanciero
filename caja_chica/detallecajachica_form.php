@@ -64,10 +64,12 @@ if ($codigo > 0){
     $cuenta_aux=$nro_cuenta." - ".$nombre_cuenta;   
 
     // sacamos datos del comprobante
-    $stmtComprobante = $dbh->prepare("SELECT cod_comprobantedetalle from estados_cuenta where cod_cajachicadetalle=$cod_dcc order by codigo asc LIMIT 1");
+    $stmtComprobante = $dbh->prepare("SELECT cod_comprobantedetalle,cod_plancuenta,cod_cuentaaux from estados_cuenta where cod_cajachicadetalle=$cod_dcc order by codigo asc LIMIT 1");
     $stmtComprobante->execute();
     $resultComprobante = $stmtComprobante->fetch();
-    $cod_comprobante = $resultComprobante['cod_comprobantedetalle'];    
+    $cod_comprobante =  $resultComprobante['cod_comprobantedetalle'];
+    $cod_cuenta_compro=$resultComprobante['cod_plancuenta'];
+    $cod_cuenta_aux_compro=$resultComprobante['cod_cuentaaux'];   
     
 } else {
     //para el numero correlativo
@@ -93,10 +95,10 @@ if ($codigo > 0){
     $cod_personal = null;    
     $observaciones = null;    
     $monto = 0;    
-    $cod_estado = 1;
-
-    $cuenta_aux="";
+    $cod_estado = 1;    
     
+    $cod_cuenta_compro=null;
+    $cod_cuenta_aux_compro=null;
     $cod_comprobante=null;
     // $cod_contra_cuenta_aux=null;
 
@@ -185,7 +187,7 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
                       <i class="material-icons" title="Estado de Cuentas">add</i>
                     </a> -->
 
-                    <a  href="#" onclick="verEstadosCuentas_cajachica(1,0);" class="btn btn-danger btn-fab btn-round btn-sm">
+                    <a  href="#" onclick="verEstadosCuentas_cajachica(1,0,0);" class="btn btn-danger btn-fab btn-round btn-sm">
                       <i class="material-icons text-dark" title="Estado de Cuentas">ballot</i>
                     </a>
                   </div>
@@ -193,38 +195,11 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
                 </div>
             </div><!-- cuenta-->
 
-            <input type="hidden" name="cuenta1" id="cuenta1" value="<?=$cod_contra_cuenta?>">
-            <input type="hidden" name="cuenta_auxiliar1" id="cuenta_auxiliar1" value="<?=$cod_contra_cuenta_aux?>">
+            <input type="hidden" name="cuenta1" id="cuenta1" value="<?=$cod_cuenta_compro?>">
+            <input type="hidden" name="cuenta_auxiliar1" id="cuenta_auxiliar1" value="<?=$cod_cuenta_aux_compro?>">
 
             <input type="hidden" name="comprobante" id="comprobante" value="<?=$cod_comprobante?>">
-            <input type="hidden" id="tipo_estadocuentas1" value="3">        
-           <!--  <div class="contenedor_contra_cuenta" style="display: none">
-              <div class="row">
-                <label class="col-sm-2 col-form-label"><small>Contra cuenta</small></label>
-                <div class="col-sm-8">
-                  <div class="form-group">
-                    <div class="form-group" id="divContraCuentaDetalle">
-                    <?php if($codigo>0){
-                      $stmtContraCuenta = $dbh->prepare("SELECT p.codigo, p.numero, p.nombre from plan_cuentas p where p.codigo=$cod_contra_cuenta");
-                      $stmtContraCuenta->execute();
-                      $result = $stmtContraCuenta->fetch();
-                      $numero_contracuenta = $result['numero'];
-                      $nombre_contracuenta = $result['nombre'];
-                      $stmtAuxiliar = $dbh->prepare("SELECT codigo, nombre FROM cuentas_auxiliares where cod_cuenta=$cod_contra_cuenta_aux");
-                      $stmtAuxiliar->execute();
-                      $result = $stmtAuxiliar->fetch();
-                      $numero_contracuenta_aux = $result['numero'];
-                      $nombre_contracuenta_aux = $result['nombre'];
-                      ?>
-                      <span class="text-danger font-weight-bold">[<?=$numero_contracuenta?>]-<?=$nombre_contracuenta?></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-danger font-weight-bold">Monto: <?=$monto?></span><br>
-                      <span class="text-primary font-weight-bold small"> <?=$nombre_contracuenta_aux?></span>
-                    <?php }?>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div> -->
-
+            <input type="hidden" id="tipo_estadocuentas1" value="3">
             <div class="row">
               <label class="col-sm-2 col-form-label">Personal</label>
               <div class="col-sm-8">

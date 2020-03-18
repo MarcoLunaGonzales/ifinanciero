@@ -5330,6 +5330,13 @@ function obtieneDatosFilaEstadosCuenta(cod){
     $(".det-estados").show();
   }
 }
+function verDetalleEstadosCuenta2(i){
+  if($(".det-estados-"+i).is(":visible")){
+    $(".det-estados-"+i).hide();
+  }else{
+    $(".det-estados-"+i).show();
+  }
+}
 function verEstadosCuentasModal(cuenta,cod_cuenta,cod_cuentaaux,tipo){
    var parametros={"cod_cuenta":cod_cuenta,"cod_cuentaaux":cod_cuentaaux,"tipo":tipo,"mes":12};
     $.ajax({
@@ -7475,7 +7482,7 @@ var itemEstadosCuentas_cc=[];
 function quitarEstadoCuenta_cajachica(){
   var fila=$("#estFila").val();
   itemEstadosCuentas_cc[fila-1]=[];
-  verEstadosCuentas_cajachica(fila,0);
+  verEstadosCuentas_cajachica(fila,0,0);
   $("#nestado"+fila).removeClass("estado");
 }
 function agregarEstadoCuenta_cajachica(){
@@ -7484,31 +7491,30 @@ function agregarEstadoCuenta_cajachica(){
   // var tipo=$("#tipo_estadocuentas"+fila).val();
   var tipo=2;
   if(tipo==1){
-    var cuenta=0;
-    var codComproDet=0;
-    var nfila={
-    cod_plancuenta:cuenta,
-    cod_plancuentaaux:$("#cuenta_auxiliar"+fila).val(),
-    cod_comprobantedetalle:codComproDet,
-    cod_proveedor:0,//$("#proveedores").val(),
-    monto:$("#monto_estadocuenta").val()
-    }
-    itemEstadosCuentas_cc[fila-1]=[];
-    itemEstadosCuentas_cc[fila-1].push(nfila);
-    $("#nestado"+fila).addClass("estado");
-    verEstadosCuentas_cajachica(fila,cuenta);
+    // var cuenta=0;
+    // var codComproDet=0;
+    // var nfila={
+    // cod_plancuenta:cuenta,
+    // cod_plancuentaaux:$("#cuenta_auxiliar"+fila).val(),
+    // cod_comprobantedetalle:codComproDet,
+    // cod_proveedor:0,//$("#proveedores").val(),
+    // monto:$("#monto_estadocuenta").val()
+    // }
+    // itemEstadosCuentas_cc[fila-1]=[];
+    // itemEstadosCuentas_cc[fila-1].push(nfila);
+    // $("#nestado"+fila).addClass("estado");
+    // verEstadosCuentas_cajachica(fila,cuenta);
   }else{
     var resp = $("#cuentas_origen").val().split('####');
     var cuenta = resp[0];
     var detalle_resp=$('input:radio[name=cuentas_origen_detalle]:checked').val().split('####');
-
-    // alert(detalle_resp[0]);
-
+    //obtener dados del check
     var codComproDet=detalle_resp[0].trim();
     var cuenta_auxiliar=detalle_resp[1].trim();
     var cod_proveedorCompr=detalle_resp[2].trim();
-
-    // alert("prov:"+cod_proveedorCompr);
+    var saldo_comprob=detalle_resp[3].trim();
+    var nombre_proveedor_com=detalle_resp[4].trim();
+    // alert("saldo:"+saldo_comprob);
 
     if(codComproDet!=null){
       if(resp[1]=="AUX"){
@@ -7517,7 +7523,8 @@ function agregarEstadoCuenta_cajachica(){
         cod_plancuentaaux:cuenta,
         cod_comprobantedetalle:codComproDet,
         cod_proveedor:0,//$("#proveedores").val(),
-        monto:$("#monto_estadocuenta").val()
+        monto:$("#monto_estadocuenta").val(),
+        nombre_proveedor:nombre_proveedor_com
         }
       }else{
         var nfila={
@@ -7525,38 +7532,31 @@ function agregarEstadoCuenta_cajachica(){
         cod_plancuentaaux:cuenta_auxiliar,
         cod_comprobantedetalle:codComproDet,
         cod_proveedor:0,//$("#proveedores").val(),
-        monto:$("#monto_estadocuenta").val()
+        monto:$("#monto_estadocuenta").val(),//monto de caja chica a descontar
+        nombre_proveedor:nombre_proveedor_com
         }        
       }
     itemEstadosCuentas_cc[fila-1]=[];
     itemEstadosCuentas_cc[fila-1].push(nfila);
     $("#nestado"+fila).addClass("estado");
     document.getElementById('comprobante').value=codComproDet;
-    // $("#comprobante").val()=codComproDet;
+    ajaxCajaCPersonalUO_cuentapasiva(codComproDet,cod_proveedorCompr);//ponemos oficina  en el formulario,luego area y provee
 
-    // alert(codComproDet);
-
-    ajaxCajaCPersonalUO_cuentapasiva(codComproDet,cod_proveedorCompr);//ponemos oficina  en el formulario
-
-    verEstadosCuentas_cajachica(fila,cuenta);
+    verEstadosCuentas_cajachica(fila,cuenta,saldo_comprob);
     }else{
       $("#mensaje_estadoscuenta").html("<label class='text-danger'>Debe seleccionar un registro en la tabla</label>");
     }
   }
 }
-function verEstadosCuentas_cajachica(fila,cuenta){
+function verEstadosCuentas_cajachica(fila,cuenta,saldo_comprob){
   if($("#monto").val()=="" ||$("#monto").val()==0){
-     $('#msgError').html("<p>El monto debe de ser llenado</p>");
-     $("#modalAlert").modal("show");
+   $('#msgError').html("<p>El monto debe de ser llenado</p>");
+   $("#modalAlert").modal("show");
   }else{
-      itemEstadosCuentas_cc.push(fila);
-      var cod_cuenta_form=$("#cuenta_auto_id").val();
-      document.getElementById('cuenta'+fila).value=cod_cuenta_form;
-      document.getElementById('cuenta_auxiliar'+fila).value=0;      
-      // document.getElementById('cuentas_formu').value=cod_cuenta_form+"###NNN";
-      // alert($("#cuenta_auto_id").val());
-      
-
+    itemEstadosCuentas_cc.push(fila);
+    var cod_cuenta_form=$("#cuenta_auto_id").val();
+    document.getElementById('cuenta'+fila).value=cod_cuenta_form;
+    document.getElementById('cuenta_auxiliar'+fila).value=0;
     if(cuenta==0){
       if($("#cuenta_auxiliar"+fila).val()==0){
         var cod_cuenta=$("#cuenta"+fila).val();
@@ -7574,10 +7574,7 @@ function verEstadosCuentas_cajachica(fila,cuenta){
         var auxi="SI";
       }
       var cod_cuenta=cuenta;
-    }
-
-    
-    // var tipo=$("#tipo_estadocuentas"+fila).val();
+    }    
     var tipo=2;
 
     if(tipo==1){
@@ -7606,32 +7603,29 @@ function verEstadosCuentas_cajachica(fila,cuenta){
       } 
     }
     //ajax estado de cuentas
-    // alert("cod_cuenta"+cod_cuenta+"tipo"+tipo+"auxi"+auxi);
-    // alert("cod_cuenta:"+cod_cuenta);
     var parametros={"cod_cuenta":cod_cuenta,"tipo":tipo,"mes":12,"auxi":auxi};
     $.ajax({
         type: "GET",
         dataType: 'html',
-        url: "estados_cuenta/ajaxMostrarEstadosCuenta.php",
+        url: "estados_cuenta/ajaxMostrarEstadosCuenta2.php",
         data: parametros,
-        success:  function (resp) {
-          // $("#cuentas_origen").val(cod_cuenta_form+"###NNN");
-          // document.getElementById('cuentas_formu').value=cod_cuenta_form;
-          // alert(cod_cuenta_form);
+        success:  function (resp) {          
           if(cod_cuenta==0 || cod_cuenta==""){
             $("#cuentas_origen").val(cod_cuenta_form+"###NNN");
             $('.selectpicker').selectpicker("refresh");
             verEstadosCuentasCred_cc();  
           }
-          
-          var respuesta=resp.split('@');
-          // alert(respuesta[0]);
+
+          var respuesta=resp.split('@');          
           $("#div_estadocuentas").html(respuesta[0]);
           if(tipo==1){
-            var rsaldo=listarEstadosCuentas_cc(fila,respuesta[1]);
+            // var rsaldo=listarEstadosCuentas_cc(fila,respuesta[1]);
+            var rsaldo=listarEstadosCuentas_cc(fila,saldo_comprob);
+
             listarEstadosCuentasDebito_cc(fila,rsaldo);
           }else{
-            var rsaldo=listarEstadosCuentasCredito_cc(fila,respuesta[1]);
+            // var rsaldo=listarEstadosCuentasCredito_cc(fila,respuesta[1]);
+            var rsaldo=listarEstadosCuentasCredito_cc(fila,saldo_comprob);
             listarEstadosCuentas_cc(fila,rsaldo);
           }           
         }
@@ -7646,7 +7640,7 @@ function verEstadosCuentasCred_cc(){
   var fila = $("#estFila").val();
   var resp = $("#cuentas_origen").val().split('###');
   var cuenta = resp[0];
-  verEstadosCuentas_cajachica(fila,cuenta);
+  verEstadosCuentas_cajachica(fila,cuenta,0);
 }
 function listarEstadosCuentas_cc(id,saldo){
   var table = $('#tabla_estadocuenta');
@@ -7655,14 +7649,14 @@ function listarEstadosCuentas_cc(id,saldo){
      var row = $('<tr>').addClass('bg-white');
      row.append($('<td>').addClass('text-left').text(""));
      row.append($('<td>').addClass('text-left text-danger').text("Sin Guardar"));
-     row.append($('<td>').addClass('text-right').text(""));   
+     row.append($('<td>').addClass('text-left text-danger').text(itemEstadosCuentas_cc[id-1][i].nombre_proveedor));//nombre proveedor
      // var tipo=$("#tipo_estadocuentas"+id).val();
      var tipo=2;
       if(tipo==1){
-        row.append($('<td>').addClass('text-left').text($("#glosa_detalle"+id).val()));
-        var nsaldo=parseFloat(saldo)+parseFloat(itemEstadosCuentas_cc[id-1][i].monto);
-        row.append($('<td>').addClass('text-right').text(numberFormat(itemEstadosCuentas_cc[id-1][i].monto,2)));
-        row.append($('<td>').addClass('text-right').text(""));   
+        // row.append($('<td>').addClass('text-left').text($("#glosa_detalle"+id).val()));
+        // var nsaldo=parseFloat(saldo)+parseFloat(itemEstadosCuentas_cc[id-1][i].monto);
+        // row.append($('<td>').addClass('text-right').text(numberFormat(itemEstadosCuentas_cc[id-1][i].monto,2)));
+        // row.append($('<td>').addClass('text-right').text(""));   
       }else{
         var titulo_glosa="";
         if(itemEstadosCuentas_cc[id-1][i].cod_comprobantedetalle!=0){
@@ -7670,20 +7664,20 @@ function listarEstadosCuentas_cc(id,saldo){
           titulo_glosa="CAjA CHICA";
         }
 
-        row.append($('<td>').addClass('text-left').html("<small class='text-success'>"+titulo_glosa+"</small>"));
+        row.append($('<td>').addClass('text-left').html("<small class='text-danger'>"+titulo_glosa+"</small>"));
         var nsaldo=parseFloat(saldo)-parseFloat(itemEstadosCuentas_cc[id-1][i].monto);
         row.append($('<td>').addClass('text-right').text("")); 
-        row.append($('<td>').addClass('text-right').text(numberFormat(itemEstadosCuentas_cc[id-1][i].monto,2)));  
+        row.append($('<td>').addClass('text-right text-danger').text(numberFormat(itemEstadosCuentas_cc[id-1][i].monto,2)));  
       }
-      row.append($('<td>').addClass('text-right font-weight-bold').text(numberFormat(nsaldo,2)));
+      row.append($('<td>').addClass('text-right font-weight-bold text-danger').text(numberFormat(nsaldo,2)));
      table.append(row);
      return nsaldo;
    }
 }
 function listarEstadosCuentasDebito_cc(id,saldo){
-   var cuentaOrigen =$("#cuenta"+id).val();
-   var rsaldo = parseFloat(saldo);
-   for (var i = 0; i < 1; i++) {
+  var cuentaOrigen =$("#cuenta"+id).val();
+  var rsaldo = parseFloat(saldo);
+  for (var i = 0; i < 1; i++) {
     for (var j = 0; j < itemEstadosCuentas_cc[i].length; j++) {
        var cuenta = itemEstadosCuentas_cc[i][j].cod_plancuenta;
        if(cuentaOrigen==cuenta){

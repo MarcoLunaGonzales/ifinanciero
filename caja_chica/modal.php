@@ -102,7 +102,7 @@
                       $nombreX=$row['nombre'];
                       $numeroX=$row['numero'];
                       ?>
-                      <option  <?=($codigo_cuenta_form==$codigoX)?"selected":"";?> value="<?=$codigoX;?>###NNN"><?=trim($numeroX);?> - <?=trim($nombreX);?></option>  
+                      <option value="<?=$codigoX;?>###NNN"><?=trim($numeroX);?> - <?=trim($nombreX);?></option>  
                       <?php
                         }
                         ?>
