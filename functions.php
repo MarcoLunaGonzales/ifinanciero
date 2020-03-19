@@ -4322,7 +4322,7 @@ join af_proveedores p on sd.cod_proveedor=p.codigo where s.cod_estadosolicitudre
   $stmt = $dbh->prepare($sql);
   $stmt->execute();
   return $stmt;
-=======
+}
 function nameTipoCuentaAuxiliar($codigo){
   $nombreTipoAuxiliar="";
   if($codigo==1){
