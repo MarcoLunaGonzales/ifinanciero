@@ -6,7 +6,7 @@
 		//*********************************************   CONTABILIDAD BASICA         ********************************
 		//PLAN DE CUENTAS
 		if ($_GET['opcion']=='listPlanCuentas') {
-			require_once('plan_cuentas/list.php');
+			require_once('plan_cuentas/list_single.php');
 		}
 		if ($_GET['opcion']=='registerPlanCuenta') {
 			$codigo=$_GET['codigo'];
@@ -28,11 +28,11 @@
 
 		if ($_GET['opcion']=='listCuentasAux') {
 			$codigo=$_GET['codigo'];
-			require_once('cuentas_auxiliares/list.php');
+			require_once('cuentas_auxiliares/list2.php');
 		}
 		if ($_GET['opcion']=='registerCuentaAux') {
 			$codigo=$_GET['codigo'];
-			require_once('cuentas_auxiliares/register.php');
+			require_once('cuentas_auxiliares/register2.php');
 		}
 		if ($_GET['opcion']=='editCuentaAux') {
 			$codigo=$_GET['codigo'];

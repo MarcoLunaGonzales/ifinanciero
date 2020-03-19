@@ -385,16 +385,19 @@ function nameCargo($codigo){
    }
    return($nombreX);
 }
+
 function nameProveedor($codigo){
    $dbh = new Conexion();
    $stmt = $dbh->prepare("SELECT nombre FROM af_proveedores where codigo=:codigo");
    $stmt->bindParam(':codigo',$codigo);
    $stmt->execute();
+   $nombreX="";
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       $nombreX=$row['nombre'];
    }
    return($nombreX);
 }
+
 function namePartidaPres($codigo){
    $dbh = new Conexion();
    $stmt = $dbh->prepare("SELECT nombre FROM partidas_presupuestarias where codigo=:codigo");
@@ -4319,6 +4322,38 @@ join af_proveedores p on sd.cod_proveedor=p.codigo where s.cod_estadosolicitudre
   $stmt = $dbh->prepare($sql);
   $stmt->execute();
   return $stmt;
+=======
+function nameTipoCuentaAuxiliar($codigo){
+  $nombreTipoAuxiliar="";
+  if($codigo==1){
+    $nombreTipoAuxiliar="Proveedor";
+  }else{
+    $nombreTipoAuxiliar="Cliente";
+  }
+  return($nombreTipoAuxiliar);
+}
+
+function nameProveedorCliente($codTipo, $codigo){
+  $name="";
+  if($codTipo==1){
+    $name=nameProveedor($codigo);
+  }else{
+    $name=nameCliente($codigo);
+  }
+  return($name);
+}
+
+function ObtenerMontoTotalEstadoCuentas_hijos($codCuenta,$codigo_compDe)
+{ 
+  $saldo=0;
+  $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT e.monto FROM estados_cuenta e,comprobantes_detalle d where e.cod_comprobantedetalle=d.codigo and (d.cod_cuenta=$codCuenta or e.cod_plancuenta=$codCuenta) and cod_comprobantedetalleorigen=$codigo_compDe");
+   $stmt->execute();   
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $saldo=$saldo+$row['monto'];
+   }
+
+  return($saldo);
 }
 
 ?>

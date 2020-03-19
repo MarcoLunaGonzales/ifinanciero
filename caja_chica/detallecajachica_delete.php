@@ -31,6 +31,9 @@ $flagSuccess=$stmt->execute();
 if($flagSuccess){
 	$stmtRendicion = $dbh->prepare("UPDATE rendiciones set cod_estadoreferencial=2 where codigo=$cod_dcc");
 	$flagSuccess=$stmtRendicion->execute();
+	//si tiene algun estado de cuentas registrado, borrar
+	$stmtDeleteContraCuenta = $dbh->prepare("DELETE from estados_cuenta where cod_cajachicadetalle = $cod_dcc");
+    $flagSuccess=$stmtDeleteContraCuenta->execute();
 
 }
 

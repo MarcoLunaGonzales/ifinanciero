@@ -15,7 +15,7 @@ $result=$stmtPersonal->fetch();
 $cod_uo=$result['cod_unidadorganizacional'];
 $cod_area=$result['cod_area'];
 
-$sqlUO="SELECT codigo,nombre from unidades_organizacionales where cod_estado=1";
+$sqlUO="SELECT codigo,nombre,abreviatura from unidades_organizacionales where cod_estado=1";
 $stmt = $db->prepare($sqlUO);
 $stmt->execute();
 ?>
@@ -23,7 +23,7 @@ $stmt->execute();
     <?php 
     	while ($row = $stmt->fetch()){ 
 	?>
-      	 <option <?=($cod_uo==$row["codigo"])?"selected":"";?> data-subtext="<?=$row["codigo"];?>" value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+      	 <option <?=($cod_uo==$row["codigo"])?"selected":"";?> data-subtext="<?=$row["codigo"];?>" value="<?=$row["codigo"];?>"><?=$row["nombre"];?>(<?=$row["abreviatura"];?>)</option>
      <?php 
  		} 
  	?>

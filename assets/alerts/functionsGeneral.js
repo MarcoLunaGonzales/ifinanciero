@@ -5330,6 +5330,13 @@ function obtieneDatosFilaEstadosCuenta(cod){
     $(".det-estados").show();
   }
 }
+function verDetalleEstadosCuenta2(i){
+  if($(".det-estados-"+i).is(":visible")){
+    $(".det-estados-"+i).hide();
+  }else{
+    $(".det-estados-"+i).show();
+  }
+}
 function verEstadosCuentasModal(cuenta,cod_cuenta,cod_cuentaaux,tipo){
    var parametros={"cod_cuenta":cod_cuenta,"cod_cuentaaux":cod_cuentaaux,"tipo":tipo,"mes":12};
     $.ajax({
@@ -7308,7 +7315,6 @@ function borrarItemSeriviciosFacturacion(idF){
   console.log("num: "+numFilas+" cantidadItems: "+cantidadItems); 
   sumartotalAddServiciosFacturacion("null");   
 }
-
 // var areas_tabla=[]; 
 var detalle_tabla_general=[];
 var numFilasA=0;
@@ -7321,7 +7327,6 @@ function filaTablaAGeneral(tabla,index){
   tabla.html(html);
   $("#modalDetalleFac").modal("show");  
 }
-
 
 function filtrarSolicitudRecursosServicios(cod_sim,cod_solicitud,unidad,area){
   var anio =$("#anio_solicitud").val();
@@ -7470,6 +7475,7 @@ function ponerNumeroChequePago(){
   $("#numero_cheque").val(valor[1]);
 }
 
+
 function cargarDatosProveedorPagos(){
   var prov = $("#proveedor").val().split("####");
   var proveedor = prov[0];
@@ -7554,3 +7560,294 @@ function ponerNumeroChequePagoDetalle(fila){
     }
   }
 }
+
+
+var itemEstadosCuentas_cc=[];
+function quitarEstadoCuenta_cajachica(){
+  var fila=$("#estFila").val();
+  itemEstadosCuentas_cc[fila-1]=[];
+  verEstadosCuentas_cajachica(fila,0,0);
+  $("#nestado"+fila).removeClass("estado");
+}
+function agregarEstadoCuenta_cajachica(){
+  $("#mensaje_estadoscuenta").html("");
+  var fila=$("#estFila").val();
+  // var tipo=$("#tipo_estadocuentas"+fila).val();
+  var tipo=2;
+  if(tipo==1){
+    // var cuenta=0;
+    // var codComproDet=0;
+    // var nfila={
+    // cod_plancuenta:cuenta,
+    // cod_plancuentaaux:$("#cuenta_auxiliar"+fila).val(),
+    // cod_comprobantedetalle:codComproDet,
+    // cod_proveedor:0,//$("#proveedores").val(),
+    // monto:$("#monto_estadocuenta").val()
+    // }
+    // itemEstadosCuentas_cc[fila-1]=[];
+    // itemEstadosCuentas_cc[fila-1].push(nfila);
+    // $("#nestado"+fila).addClass("estado");
+    // verEstadosCuentas_cajachica(fila,cuenta);
+  }else{
+    var resp = $("#cuentas_origen").val().split('####');
+    var cuenta = resp[0];
+    var detalle_resp=$('input:radio[name=cuentas_origen_detalle]:checked').val().split('####');
+    //obtener dados del check
+    var codComproDet=detalle_resp[0].trim();
+    var cuenta_auxiliar=detalle_resp[1].trim();
+    var cod_proveedorCompr=detalle_resp[2].trim();
+    var saldo_comprob=detalle_resp[3].trim();
+    var nombre_proveedor_com=detalle_resp[4].trim();
+    // alert("saldo:"+saldo_comprob);
+
+    if(codComproDet!=null){
+      if(resp[1]=="AUX"){
+        var nfila={
+        cod_plancuenta:0,
+        cod_plancuentaaux:cuenta,
+        cod_comprobantedetalle:codComproDet,
+        cod_proveedor:0,//$("#proveedores").val(),
+        monto:$("#monto_estadocuenta").val(),
+        nombre_proveedor:nombre_proveedor_com
+        }
+      }else{
+        var nfila={
+        cod_plancuenta:cuenta,
+        cod_plancuentaaux:cuenta_auxiliar,
+        cod_comprobantedetalle:codComproDet,
+        cod_proveedor:0,//$("#proveedores").val(),
+        monto:$("#monto_estadocuenta").val(),//monto de caja chica a descontar
+        nombre_proveedor:nombre_proveedor_com
+        }        
+      }
+    itemEstadosCuentas_cc[fila-1]=[];
+    itemEstadosCuentas_cc[fila-1].push(nfila);
+    $("#nestado"+fila).addClass("estado");
+    document.getElementById('comprobante').value=codComproDet;
+    ajaxCajaCPersonalUO_cuentapasiva(codComproDet,cod_proveedorCompr);//ponemos oficina  en el formulario,luego area y provee
+
+    verEstadosCuentas_cajachica(fila,cuenta,saldo_comprob);
+    }else{
+      $("#mensaje_estadoscuenta").html("<label class='text-danger'>Debe seleccionar un registro en la tabla</label>");
+    }
+  }
+}
+function verEstadosCuentas_cajachica(fila,cuenta,saldo_comprob){
+  if($("#monto").val()=="" ||$("#monto").val()==0){
+   $('#msgError').html("<p>El monto debe de ser llenado</p>");
+   $("#modalAlert").modal("show");
+  }else{
+    itemEstadosCuentas_cc.push(fila);
+    var cod_cuenta_form=$("#cuenta_auto_id").val();
+    document.getElementById('cuenta'+fila).value=cod_cuenta_form;
+    document.getElementById('cuenta_auxiliar'+fila).value=0;
+    if(cuenta==0){
+      if($("#cuenta_auxiliar"+fila).val()==0){
+        var cod_cuenta=$("#cuenta"+fila).val();
+        var auxi="NO";
+      }else{
+        var cod_cuenta=$("#cuenta_auxiliar"+fila).val();
+        var auxi="SI";
+      }      
+    }else{
+      if($("#cuenta_auxiliar"+fila).val()==0){
+        var cod_cuenta=cuenta;
+        var auxi="NO";
+      }else{
+        var cod_cuenta=cuenta;
+        var auxi="SI";
+      }
+      var cod_cuenta=cuenta;
+    }    
+    var tipo=2;
+
+    if(tipo==1){
+      $("#monto_estadocuenta").val($("#monto").val());
+      if(!($("#div_cuentasorigen").hasClass("d-none"))){
+        $("#div_cuentasorigen").addClass("d-none");
+        $("#div_cuentasorigendetalle").addClass("d-none"); 
+      }      
+    }else{
+      $("#monto_estadocuenta").val($("#monto").val());
+      if($("#div_cuentasorigen").hasClass("d-none")){
+        $("#div_cuentasorigen").removeClass("d-none");
+        $("#div_cuentasorigendetalle").removeClass("d-none");
+      }
+
+      if($("#cuentas_origen").val()==""||$("#cuentas_origen").val()==null){
+        var cod_cuenta="";      
+      }else{
+        var resp = $("#cuentas_origen").val().split('###');
+        var cod_cuenta = resp[0];
+        if(resp[1]=="AUX"){
+          var auxi="SI";
+        }else{
+          var auxi="NO";
+        }
+      } 
+    }
+    //ajax estado de cuentas
+    var parametros={"cod_cuenta":cod_cuenta,"tipo":tipo,"mes":12,"auxi":auxi};
+    $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "estados_cuenta/ajaxMostrarEstadosCuenta2.php",
+        data: parametros,
+        success:  function (resp) {          
+          if(cod_cuenta==0 || cod_cuenta==""){
+            $("#cuentas_origen").val(cod_cuenta_form+"###NNN");
+            $('.selectpicker').selectpicker("refresh");
+            verEstadosCuentasCred_cc();  
+          }
+
+          var respuesta=resp.split('@');          
+          $("#div_estadocuentas").html(respuesta[0]);
+          if(tipo==1){
+            // var rsaldo=listarEstadosCuentas_cc(fila,respuesta[1]);
+            var rsaldo=listarEstadosCuentas_cc(fila,saldo_comprob);
+
+            listarEstadosCuentasDebito_cc(fila,rsaldo);
+          }else{
+            // var rsaldo=listarEstadosCuentasCredito_cc(fila,respuesta[1]);
+            var rsaldo=listarEstadosCuentasCredito_cc(fila,saldo_comprob);
+            listarEstadosCuentas_cc(fila,rsaldo);
+          }           
+        }
+    });
+    $("#estFila").val(fila);
+    $("#tituloCuentaModal").html($("#cuenta_auto").val());
+    $("#modalEstadosCuentas").modal("show");     
+  }  
+}
+
+function verEstadosCuentasCred_cc(){
+  var fila = $("#estFila").val();
+  var resp = $("#cuentas_origen").val().split('###');
+  var cuenta = resp[0];
+  verEstadosCuentas_cajachica(fila,cuenta,0);
+}
+function listarEstadosCuentas_cc(id,saldo){
+  var table = $('#tabla_estadocuenta');
+  // alert(itemEstadosCuentas_cc[id-1].length);
+   for (var i = 0; i < itemEstadosCuentas_cc[id-1].length; i++) {
+     var row = $('<tr>').addClass('bg-white');
+     row.append($('<td>').addClass('text-left').text(""));
+     row.append($('<td>').addClass('text-left text-danger').text("Sin Guardar"));
+     row.append($('<td>').addClass('text-left text-danger').text(itemEstadosCuentas_cc[id-1][i].nombre_proveedor));//nombre proveedor
+     // var tipo=$("#tipo_estadocuentas"+id).val();
+     var tipo=2;
+      if(tipo==1){
+        // row.append($('<td>').addClass('text-left').text($("#glosa_detalle"+id).val()));
+        // var nsaldo=parseFloat(saldo)+parseFloat(itemEstadosCuentas_cc[id-1][i].monto);
+        // row.append($('<td>').addClass('text-right').text(numberFormat(itemEstadosCuentas_cc[id-1][i].monto,2)));
+        // row.append($('<td>').addClass('text-right').text(""));   
+      }else{
+        var titulo_glosa="";
+        if(itemEstadosCuentas_cc[id-1][i].cod_comprobantedetalle!=0){
+          // titulo_glosa=obtieneDatosFilaEstadosCuenta(itemEstadosCuentas_cc[id-1][i].cod_comprobantedetalle);
+          titulo_glosa="CAjA CHICA";
+        }
+
+        row.append($('<td>').addClass('text-left').html("<small class='text-danger'>"+titulo_glosa+"</small>"));
+        var nsaldo=parseFloat(saldo)-parseFloat(itemEstadosCuentas_cc[id-1][i].monto);
+        row.append($('<td>').addClass('text-right').text("")); 
+        row.append($('<td>').addClass('text-right text-danger').text(numberFormat(itemEstadosCuentas_cc[id-1][i].monto,2)));  
+      }
+      row.append($('<td>').addClass('text-right font-weight-bold text-danger').text(numberFormat(nsaldo,2)));
+     table.append(row);
+     return nsaldo;
+   }
+}
+function listarEstadosCuentasDebito_cc(id,saldo){
+  var cuentaOrigen =$("#cuenta"+id).val();
+  var rsaldo = parseFloat(saldo);
+  for (var i = 0; i < 1; i++) {
+    for (var j = 0; j < itemEstadosCuentas_cc[i].length; j++) {
+       var cuenta = itemEstadosCuentas_cc[i][j].cod_plancuenta;
+       if(cuentaOrigen==cuenta){
+        rsaldo=rsaldo-parseFloat(itemEstadosCuentas_cc[i][j].monto);
+        listarEstadosCuentas_cc(i+1,saldo);
+       }
+     }                  
+  }
+  return rsaldo;
+}
+function listarEstadosCuentasCredito_cc(id,saldo){
+   var rsaldo = parseFloat(saldo);
+    for (var j = 0; j < itemEstadosCuentas_cc[id-1].length; j++) {
+      var cuentaOrigen =itemEstadosCuentas_cc[id-1][j].cod_plancuenta;
+       for (var i = 0; i < 1; i++) {
+         if($("#cuenta"+(i+1)).val()==cuentaOrigen){
+            rsaldo=rsaldo+parseFloat(itemEstadosCuentas_cc[i][0].monto); // 0 porque utilizamos solo un item
+            listarEstadosCuentas_cc(i+1,saldo);
+         }
+       }
+     }                  
+    return rsaldo;
+}
+
+
+function ajaxCajaCPersonalUO_cuentapasiva(codigo_comprobante,cod_proveedor){
+  var contenedor;
+  // var codigo_personal=combo.value;
+  contenedor = document.getElementById('div_contenedor_uo');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'caja_chica/personalUOAjax_cuentaPasiva.php?codigo_comprobante='+codigo_comprobante,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);
+      ajaxCajaCPersonalArea_cuentapasiva(codigo_comprobante,cod_proveedor);//ponemos area en el fromulario
+    
+    }
+  }
+  ajax.send(null)  
+}
+function ajaxCajaCPersonalArea_cuentapasiva(codigo_comprobante,cod_proveedor){
+  var contenedor;
+  // var codigo_personal=combo.value;
+  contenedor = document.getElementById('div_contenedor_area');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'caja_chica/personalAreaAjax_cuentaPasiva.php?codigo_comprobante='+codigo_comprobante,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);    
+      ajaxCajaCProveedor_cuentapasiva(cod_proveedor);//ponemos proveedor en el fromulario  
+    }
+  }
+  ajax.send(null)  
+}
+
+
+function ajaxCajaCProveedor_cuentapasiva(codigo_proveedor){
+  var contenedor_p;
+  // alert(codigo_proveedor);
+
+  contenedor_p = document.getElementById('div_contenedor_proveedor');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'caja_chica/proveedorAjax_cuentaPasiva.php?codigo_proveedor='+codigo_proveedor,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor_p.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);    
+    }
+  }
+  ajax.send(null)  
+}
+
+function ajaxTipoProveedorCliente(tipo){
+  var contenedor_p;
+  var tipoProveedorCliente=tipo.value;
+  contenedor_p = document.getElementById('divProveedorCliente');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'cuentas_auxiliares/ajaxProveedorCliente.php?tipo='+tipoProveedorCliente,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor_p.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);    
+    }
+  }
+  ajax.send(null)  
+}
+

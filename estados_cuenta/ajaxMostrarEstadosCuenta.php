@@ -53,6 +53,7 @@ $mes=$_GET['mes'];
 	 $codigoX=$row['codigo'];
 	 $codPlanCuentaX=$row['cod_plancuenta'];
 	 $codCompDetX=$row['cod_comprobantedetalle'];
+   $codProveedorX=$row['cod_proveedor'];
 	 $fechaX=$row['fecha'];
 	 $fechaX=strftime('%d/%m/%Y',strtotime($fechaX));
 	 $montoX=$row['monto'];
@@ -76,7 +77,7 @@ $mes=$_GET['mes'];
             ?>
             <div class="form-check">
                <label class="form-check-label">
-                     <input type="radio" class="form-check-input" id="cuentas_origen_detalle<?=$i?>" name="cuentas_origen_detalle" value="<?=$codCompDetX?>####<?=$codCuentaAuxX?>">
+                     <input type="radio" class="form-check-input" id="cuentas_origen_detalle<?=$i?>" name="cuentas_origen_detalle" value="<?=$codCompDetX?>####<?=$codCuentaAuxX?>####<?=$codProveedorX?>">
                      
                     <span class="form-check-sign">
                       <span class="check"></span>

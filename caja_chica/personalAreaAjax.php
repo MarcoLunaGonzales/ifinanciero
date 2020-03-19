@@ -16,7 +16,7 @@ $cod_uo=$result['cod_unidadorganizacional'];
 $cod_area=$result['cod_area'];
 
 $sqlUO="
-SELECT cod_area,(select a.nombre from areas a where a.codigo=cod_area )as nombre_areas from areas_organizacion where cod_estadoreferencial=1 and cod_unidad=$cod_uo";
+SELECT cod_area,(select a.nombre from areas a where a.codigo=cod_area )as nombre_areas,(select a.abreviatura from areas a where a.codigo=cod_area)as abreviatura_area from areas_organizacion where cod_estadoreferencial=1 and cod_unidad=$cod_uo";
 $stmt = $db->prepare($sqlUO);
 $stmt->execute();
 ?>
@@ -24,7 +24,7 @@ $stmt->execute();
     <?php 
     	while ($row = $stmt->fetch()){ 
 	?>
-      	 <option <?=($cod_area==$row["cod_area"])?"selected":"";?> data-subtext="<?=$row["cod_area"];?>" value="<?=$row["cod_area"];?>"><?=$row["nombre_areas"];?></option>
+      	 <option <?=($cod_area==$row["cod_area"])?"selected":"";?> data-subtext="<?=$row["cod_area"];?>" value="<?=$row["cod_area"];?>"><?=$row["nombre_areas"];?>(<?=$row["abreviatura_area"];?>)</option>
      <?php 
  		} 
  	?>
