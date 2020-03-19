@@ -126,7 +126,7 @@ $html.=  '<header class="header">'.
            '<tbody>';
             $index=1;
             while ($row = $data->fetch(PDO::FETCH_ASSOC)) {
-              print_r($row['nombre']);
+              // print_r($row['nombre']);
              $html.='<tr>'.
                       '<td>'.$row['numero'].'<br>'.$row['unidadAbrev'].'<br>'.$row['abreviatura'].'</td>'.
                       '<td>'.$row['nombre'].'<br>'.$row['glosa'].'</td>';
@@ -163,6 +163,14 @@ $html.=    '</table>';
 $html.='<p class="bold table-title">Son: '.ucfirst(CifrasEnLetras::convertirNumeroEnLetras($entero)).'      '.$centavos.'/100 Bolivianos</p>';         
 $html.='</body>'.
       '</html>';
+//detectando el error 
+// $f;
+// $l;
+// if(headers_sent($f,$l))
+// {
+//     echo $f,'<br/>',$l,'<br/>';
+//     die('now detect line');
+// }
 
 //$html = mb_convert_encoding($html,'UTF-8', 'ISO-8859-1');
 
