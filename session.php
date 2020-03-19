@@ -70,7 +70,6 @@ while ($rowDetalle = $stmt->fetch(PDO::FETCH_BOUND)) {
 	$_SESSION['logueado']=1;
 	$_SESSION['globalPerfil']=$perfil;
 
-
 	if($codigo==90 || $codigo==89 || $codigo==227 || $codigo==195){
 		$_SESSION['globalAdmin']=1;			
 	}else{
@@ -95,7 +94,6 @@ while ($rowDetalle = $stmt->fetch(PDO::FETCH_BOUND)) {
 	//print_r($remote_server_output);       
 	$obj=json_decode($remote_server_output);
 	$_SESSION['globalMenuJson']=$obj;*/
-
 }
 
 header("location:index.php");

@@ -89,8 +89,12 @@ $stmt->bindColumn('estado', $estado);
                               
                                 <?php 
                                 if($codEstado==4){
-                                 ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=3" class="dropdown-item">
+                                 ?>
+                                 <!--<a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=3" class="dropdown-item">
                                     <i class="material-icons text-success">offline_pin</i> Aprobar Solicitud
+                                 </a>-->
+                                 <a href="<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>" class="dropdown-item">
+                                    <i class="material-icons text-success">offline_pin</i> Verificar Solicitud
                                  </a>
                                  <a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1" class="dropdown-item">
                                     <i class="material-icons text-dark">report</i> Rechazar Solicitud

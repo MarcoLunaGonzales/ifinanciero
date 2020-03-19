@@ -11,6 +11,7 @@ $dbh = new Conexion();
 
 // Preparamos
 if(isset($_GET['q'])){
+  //cargarDatosSession();
   $stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado,c.nombre as cliente from simulaciones_servicios sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo join clientes c on c.codigo=sc.cod_cliente where sc.cod_estadoreferencial=1 and sc.idServicio=$q order by sc.codigo");
 }else{
   $stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado,c.nombre as cliente from simulaciones_servicios sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo join clientes c on c.codigo=sc.cod_cliente where sc.cod_estadoreferencial=1 order by sc.codigo");

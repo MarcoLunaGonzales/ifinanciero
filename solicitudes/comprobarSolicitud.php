@@ -40,37 +40,6 @@ $fechaDesde="01/".$m."/".$y;
 $fechaHasta=$d."/".$m."/".$y;
 
 $dbh = new Conexion();
-echo "<script>var array_cuenta=[];</script>";
-$i=0;
-  $cuentaLista=obtenerCuentasListaSolicitud(); //null para todas las iniciales del numero de cuenta obtenerCuentasLista(5,[5,4]);
-   while ($rowCuenta = $cuentaLista->fetch(PDO::FETCH_ASSOC)) {
-    $codigoX=$rowCuenta['codigo'];
-    $numeroX=$rowCuenta['numero'];
-    $nombreX=$rowCuenta['nombre'];
-    ?>
-    <script>
-     var obtejoLista={
-       label:'[<?=trim($numeroX)?>] - <?=trim($nombreX)?>',
-       value:'<?=$codigoX?>'};
-       array_cuenta[<?=$i?>]=obtejoLista;
-    </script> 
-    <?php
-    $i=$i+1;
-  }
-
-$cuentaCombo=obtenerCuentasSimulaciones(5,3,$globalUser);
-$i=0;
-  while ($rowCombo = $cuentaCombo->fetch(PDO::FETCH_ASSOC)) {
-   $codigoX=$rowCombo['codigo'];
-   $numeroX=$rowCombo['numero'];
-   $nombreX=$rowCombo['nombre'];
-   $nivelX=$rowCombo['nivel'];
-   $arrayNuevo[$i][0]=$codigoX;
-   $arrayNuevo[$i][1]=trim($numeroX);
-   $arrayNuevo[$i][2]=trim($nombreX);
-   $arrayNuevo[$i][3]=$nivelX;
-    $i++;
-  }
 
 if(isset($_GET['cod'])){
   $codigo=$_GET['cod'];
@@ -106,7 +75,7 @@ if(isset($_GET['cod'])){
      <p class="text-white">Aguard&aacute; un momento por favor</p>  
   </div>
 </div>
-<form id="formSolDet" class="form-horizontal" action="saveEdit.php" method="post" enctype="multipart/form-data">
+<form id="formSolDet" class="form-horizontal" action="saveEditAprobado.php" method="post" enctype="multipart/form-data">
 <div class="content">
   <div id="contListaGrupos" class="container-fluid">
       <input type="hidden" name="cantidad_filas" id="cantidad_filas" value="<?=$contadorRegistros;?>">
@@ -200,18 +169,7 @@ if(isset($_GET['cod'])){
                   <input class="form-control" type="text" name="simulacion" value="<?=$nombreSimulacion?>" id="simulacion" readonly/>
               </div>
             </div>
-               <div class="form-group col-sm-1">
-                    <select class="selectpicker form-control form-control-sm" data-style="<?=$comboColor;?>" name="anio_solicitud" id="anio_solicitud">
-                     <option value="all" selected>TODOS</option>
-                    </select>
-                </div>
-                <div class="form-group col-sm-2">
-                    <select class="selectpicker form-control form-control-sm" data-style="select-with-transition" data-live-search="true" title="-- Elija el detalle --" name="item_detalle_solicitud" id="item_detalle_solicitud"  data-style="select-with-transition" required>
-                     <option value="all" selected>TODOS</option>
-                    </select>
-                </div>
-                <a href="#" class="btn btn-info" onclick="filtrarSolicitudRecursosServicios(<?=$codigo?>,<?=$codSimulacionServX?>,<?=$codUnidadX?>,<?=$codAreaX?>)">FILTRAR LA SOLICITUD</a>
-
+               
               <?php
                     
                   }
@@ -323,15 +281,15 @@ if(isset($_GET['cod'])){
                         }
             
             if($tipoSolicitud==1){
-               include "solicitudDetalleSimulacion2.php";
+               include "solicitudDetalleSimulacionRegistrado2.php";
             }else{
               if($tipoSolicitud==3){
-                include "solicitudDetalleSimulacion3.php";
+                include "solicitudDetalleSimulacionRegistrado3.php";
               }else{
                 if($tipoSolicitud==2){
                  ?><div id="solicitud_proveedor"></div><?php                
                 }else{
-                 include "solicitudDetalleSimulacion4.php";
+                 include "solicitudDetalleSimulacionRegistrado4.php";
                 }    
               }
             }
@@ -339,7 +297,7 @@ if(isset($_GET['cod'])){
             
           </fieldset>
             <div class="card-footer fixed-bottom">
-               <button type="submit" class="<?=$buttonMorado;?>">Guardar</button>
+               <button type="submit" class="btn btn-success">Aprobar la Solicitud</button>
                <a href="../<?=$urlList;?>" class="<?=$buttonCancel;?>">Volver</a>
                <a href="#" onclick="cargarDatosRegistroProveedor()" class="btn btn-warning float-right">Agregar Proveedor</a>
                <a href="#" onclick="actualizarRegistroProveedor()" class="btn btn-success float-right">Actualizar Proveedores</a>

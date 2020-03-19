@@ -27,6 +27,7 @@ $abrevPlan=$_POST['abreviatura'];
 //$utilidadFueraPlan=$_POST['utilidad_fuera'];
 $cantidadPersonal=$_POST['alumnos_ibnorca'];
 $utMinima=$_POST['utilidad_minima'];
+$q=$_POST['q'];
 
 $sqlUpdate="UPDATE plantillas_servicios SET  nombre='$nombrePlan',abreviatura='$abrevPlan',cantidad_personal='$cantidadPersonal',utilidad_minima='$utMinima' where codigo=$codPlantillaServicio";
 echo $sqlUpdate;
@@ -60,11 +61,20 @@ while ($row = $comDet->fetch(PDO::FETCH_BOUND)) {
 $stmt1 = obtenerPlantillaServicio($codPlantillaServicio);
 editarPlantillaServicio($codPlantillaServicio,'cod_plantillaservicio',$cont1,$cantidadFilas,$stmt1,'plantillas_gruposervicio',$cab,$data,$detalles); 
 
-if($flagSuccess==true){
+if($q==0){
+ if($flagSuccess==true){
 	showAlertSuccessError(true,"../".$urlList);	
-}else{
+  }else{
 	showAlertSuccessError(false,"../".$urlList);
+  }	
+}else{
+  if($flagSuccess==true){
+	showAlertSuccessError(true,"../".$urlList."&q=".$q);	
+  }else{
+	showAlertSuccessError(false,"../".$urlList."&q=".$q);
+  }	
 }
+
 
 
 ?>

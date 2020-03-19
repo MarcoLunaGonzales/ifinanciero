@@ -54,11 +54,12 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
                   </div>
                   <h4 class="card-title">Pagos por Proveedor</h4>
                 </div>
+                <form id="form-pagos" action="<?=$urlSave?>" method="post">
                 <div class="card-body">
                   <div class="row">
-                    <table class="table table-bordered table-condensed">
+                    <table class="table table-condensed table-warning">
                       <tr>
-                        <td class="text-left font-weight-bold">Proveedor</td>
+                        <td class="text-right font-weight-bold">Proveedor</td>
                         <td class="text-left" width="26%">
                         	<div class="form-group">
 
@@ -70,13 +71,13 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
                                      while ($rowSel = $stmt3->fetch(PDO::FETCH_ASSOC)) {
                                       $codigoSel=$rowSel['codigo'];
                                       $nombreSelX=$rowSel['nombre'];
-                                      ?><option value="<?=$codigoSel;?>"><?=$nombreSelX?></option><?php 
+                                      ?><option value="<?=$codigoSel;?>####<?=$nombreSelX?>"><?=$nombreSelX?></option><?php 
                                      }
                                     ?>
                                   </select>
                              </div>
                         </td>
-                        <td class="text-left font-weight-bold">Fecha del pago</td>
+                        <td class="text-right font-weight-bold">Fecha del pago</td>
                         <td class="text-left">
                         	<div class="form-group">
                                <input type="text" class="form-control datepicker" name="fecha_pago" id="fecha_pago" value="<?=date('d/m/Y')?>">
@@ -84,18 +85,16 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
                         </td>
                       </tr>
                       <tr>
-                        <td class="text-left font-weight-bold">Observaciones</td>
-                        <td class="text-left" width="26%">
+                        <td class="text-right font-weight-bold">Observaciones</td>
+                        <td class="text-left" width="" colspan="3">
                         	<div class="form-group">
                                <textarea type="text" class="form-control" name="observaciones_pago" id="observaciones_pago" value=""></textarea>
                              </div>
                         </td>
-                        <td class="text-left font-weight-bold"></td>
-                        <td class="text-left"></td>
                       </tr>
                     </table>
                   </div>
-                  <div class="row" id="data_pagosproveedores">
+                  <div class="row col-sm-12" id="data_pagosproveedores">
                   	   <center><p>Tabla Vac&iacute;a</p></center>
                   </div>
                 </div>
@@ -104,13 +103,11 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
               if($globalAdmin==1){
               ?>
               <div class="card-footer fixed-bottom">
-                <button class="<?=$buttonCancel;?>" onClick="location.href='<?=$urlList;?>'">Volver</button>
-                <!--<a href="#" onclick="nuevoPagoSolicitudRecursos()" class="btn btn-warning" >Registrar Nuevo Pago</a>-->
-                <a class="<?=$buttonNormal;?>" onclick="historialPagoSolicitudRecursos()"><i class="material-icons text-dark">plus</i> Registar Pagos</a>
+                <button type="submit" class="btn btn-white" style="background:#F7FF5A; color:#07B46D;"><i class="material-icons">attach_money</i> PAGAR</button>
                 
               </div>
               
-
+              </form>  
               <?php
               }
               ?>

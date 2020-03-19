@@ -415,7 +415,7 @@
                    </thead>
                    <tbody>
                      <?php 
-                        $stmtRetencion = $dbh->prepare("SELECT * from configuracion_retenciones where cod_estadoreferencial=1 order BY codigo");
+                        $stmtRetencion = $dbh->prepare("SELECT * from configuracion_retenciones where cod_estadoreferencial=1 order BY nombre");
                         $stmtRetencion->execute();
                         $contRetencion=0;
                         while ($row = $stmtRetencion->fetch(PDO::FETCH_ASSOC)) {
