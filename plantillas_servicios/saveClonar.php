@@ -9,6 +9,11 @@ $dbh = new Conexion();
 
 //RECIBIMOS LAS VARIABLES
 $plantilla_costo=$_GET['codigo'];
+
+if(isset($_GET['q'])){
+  $q=$_GET['q'];
+}
+
 $codPlanCosto=obtenerCodigoPlanServ();
 
 $plantillaAntigua=obtenerPlantillaServicioDatos($plantilla_costo);
@@ -104,5 +109,10 @@ $plantillaAntigua=obtenerPlantillaServicioDatos($plantilla_costo);
       $stmtID->execute();   
 
   }
-showAlertSuccessError($flagSuccess,$urlList);
+  if(isset($_GET['q'])){
+   showAlertSuccessError($flagSuccess,$urlList."&q=".$q);
+  }else{
+   showAlertSuccessError($flagSuccess,$urlList);
+  }
+
 ?>

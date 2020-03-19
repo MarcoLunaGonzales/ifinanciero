@@ -23,6 +23,7 @@ $anios=$_POST['anio'];
 $utmin=$_POST['utilidad_minima'];
 $unidad=$_POST['unidad'];
 $area=$_POST['area'];
+$q=$_POST['q'];
 
 if($area==39){
   $cantidadAuditorias=obtenerValorConfiguracion(17);
@@ -90,11 +91,19 @@ if($anios<=3){
   
 }
 
+if($q==0){
   if($flagSuccess==true){
 	  showAlertSuccessError(true,"../".$urlRegister."?cod=".$codPlanServ);	
   }else{
 	  showAlertSuccessError(false,"../".$urlList);
+  } 
+}else{
+  if($flagSuccess==true){
+    showAlertSuccessError(true,"../".$urlRegister."?cod=".$codPlanServ."&q=".$q);  
+  }else{
+    showAlertSuccessError(false,"../".$urlList."&q=".$q);
   }
+}
 	
 }
 

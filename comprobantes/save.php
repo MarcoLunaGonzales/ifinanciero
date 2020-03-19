@@ -78,7 +78,7 @@ for ($i=1;$i<=$cantidadFilas;$i++){
 		$glosaDetalle=$_POST["glosa_detalle".$i];
 
 		
-        $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
+    $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
 		$sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobanteDetalle','$codComprobante', '$cuenta', '$cuentaAuxiliar', '$unidadDetalle', '$area', '$debe', '$haber', '$glosaDetalle', '$i')";
 		$stmtDetalle = $dbh->prepare($sqlDetalle);
 		$flagSuccessDetalle=$stmtDetalle->execute();	

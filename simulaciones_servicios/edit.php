@@ -25,6 +25,9 @@ $flagSuccess=$stmtUpdate->execute();
 
 if(isset($_GET['admin'])){
   $urlList2=$urlList;
+  //aprobar mediante servicio web
+  
+
 }
 if($flagSuccess==true){
 	showAlertSuccessError(true,"../".$urlList2);	

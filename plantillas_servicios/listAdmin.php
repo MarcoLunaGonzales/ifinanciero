@@ -5,7 +5,9 @@ require_once 'styles.php';
 $globalAdmin=$_SESSION["globalAdmin"];
 
 $dbh = new Conexion();
-
+if(isset($_GET['q'])){
+  $q=$_GET['q'];
+}
 // Preparamos
 $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_plantilla, u.abreviatura as unidad,a.abreviatura as area from plantillas_servicios p,unidades_organizacionales u, areas a, estados_plantillascosto e 
   where p.cod_unidadorganizacional=u.codigo and p.cod_area=a.codigo and e.codigo=p.cod_estadoplantilla and p.cod_estadoreferencial!=2 order by codigo");
@@ -83,17 +85,37 @@ $stmt->bindColumn('estado_plantilla', $estadoPlantilla);
                               <div class="dropdown-menu">    
                                 <?php 
                                 if($codEstado==1){
-                                 ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=3" class="dropdown-item">
+                                  if(isset($_GET['q'])){
+                                    ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=3&q=<?=$q?>" class="dropdown-item">
+                                    <i class="material-icons text-success">offline_pin</i> Aprobar Plantilla
+                                 </a>
+                                 <a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=2&q=<?=$q?>" class="dropdown-item">
+                                    <i class="material-icons text-danger">clear</i> Anular Plantilla
+                                 </a><?php 
+                                  }else{
+                                    ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=3" class="dropdown-item">
                                     <i class="material-icons text-success">offline_pin</i> Aprobar Plantilla
                                  </a>
                                  <a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=2" class="dropdown-item">
                                     <i class="material-icons text-danger">clear</i> Anular Plantilla
                                  </a><?php 
+                                  }
+                                 
                                 }else{
-                                ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1" class="dropdown-item">
+                                   if(isset($_GET['q'])){
+                                    ?>
+                                   <a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1&q=<?=$q?>" class="dropdown-item">
+                                    <i class="material-icons text-dark">reply</i> Deshacer Cambios
+                                   </a>
+                                    <?php
+                                   }else{
+                                    ?>
+                                <a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1" class="dropdown-item">
                                     <i class="material-icons text-dark">reply</i> Deshacer Cambios
                                  </a>
-                                 <?php 
+                                    <?php
+                                   }
+
                                 }
                                 ?>
                               </div>

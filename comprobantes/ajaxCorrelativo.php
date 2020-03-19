@@ -14,7 +14,7 @@ $codGestion=$_SESSION["globalGestion"];
 
 $unidad=$_SESSION['globalUnidad'];
 
-$sql1="SELECT * from meses_trabajo where cod_gestion='$codGestion' and cod_estadomesestrabajo=3";
+$sql1="SELECT m.*,g.nombre from meses_trabajo m join gestiones g on m.cod_gestion=g.codigo where cod_gestion='$codGestion' and cod_estadomesestrabajo=3";
 $stmt1 = $dbh->prepare($sql1);
 $stmt1->execute();
 

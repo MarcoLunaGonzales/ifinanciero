@@ -320,10 +320,38 @@
         alertaModal('Debe registrar al menos un grupo','bg-secondary','text-white');
         return false;*/
       //}else{
+    if($("#cantidad_filas").val()==0){
+        mensaje+="<p></p>";
+        Swal.fire("Informativo!", "Debe registrar al menos un detalle", "warning");
+        return false;
+      }else{
+        var cont=0;
+        for (var i = 0; i < $("#cantidad_filas").val(); i++) {
+           if(parseInt($('#cod_retencion'+(i+1)).val())==parseInt($('#cod_configuracioniva').val())){
+             if(itemFacturas[i].length==0){
+              cont++; 
+              break;
+             }      
+           }                  
+        }
+        if(cont!=0){
+           Swal.fire("Informativo!", "La Retencion IVA debe tener al menos una factura registrada", "warning"); 
+           return false;
+        }else{
+          //para poner la retencion iva si tiene al menos una factura..
+        for (var i = 0; i < $("#cantidad_filas").val(); i++) {
+             if(itemFacturas[i].length!=0){
+              $('#cod_retencion'+(i+1)).val($('#cod_configuracioniva').val()); 
+             }                       
+        }
+
           $('<input />').attr('type', 'hidden')
             .attr('name', 'facturas')
             .attr('value', JSON.stringify(itemFacturas))
             .appendTo('#formSolDet');
+        }
+      }  
+
       //}    
     });
    document.getElementById('qrquincho').addEventListener('change', readSingleFile, false);

@@ -10,6 +10,11 @@ $sqlX="SET NAMES utf8";
 $stmtX = $dbh->prepare($sqlX);
 $stmtX->execute();
 
+if(isset($_GET['q'])){
+  $q=$_GET['q'];
+}else{
+  $q=0; 
+}
 
 $globalNombreGestion=$_SESSION["globalNombreGestion"];
 $globalUser=$_SESSION["globalUser"];
@@ -60,6 +65,7 @@ $dbh = new Conexion();
                        <div class="col-sm-7">
                         <div class="form-group">
                           <input class="form-control" type="text" name="nombre" id="nombre" autocomplete="off" required autofocus/>
+                          <input type="hidden" name="q" id="q" value="<?=$q?>"/>
                         </div>
                         </div>
                  </div>
@@ -211,7 +217,14 @@ $dbh = new Conexion();
 			  <div id="mensaje"></div>
 			  <div class="card-footer  ml-auto mr-auto">
 				<button type="submit" class="<?=$buttonNormal;?>">Guardar</button>
-				<a href="<?=$urlList?>" class="<?=$buttonCancel;?>">Volver</a>
+        <?php 
+         if(isset($_GET['q'])){
+          ?><a href="<?=$urlList?>&q=<?=$q?>" class="<?=$buttonCancel;?>">Volver</a><?php
+         }else{
+          ?><a href="<?=$urlList?>" class="<?=$buttonCancel;?>">Volver</a><?php
+         }
+        ?>
+				
 			  </div>
 			</div>
 		  </form>

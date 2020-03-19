@@ -2,7 +2,12 @@
 require_once 'conexion.php';
 require_once 'configModule.php';
 require_once 'styles.php';
+if(isset($_GET['q'])){
+  $q=$_GET['q'];
+  //cargarNuevaSessionDatos($q);
+}
 $globalAdmin=$_SESSION["globalAdmin"];
+$globalUser=$_SESSION["globalUser"];
 
 $dbh = new Conexion();
 
@@ -78,26 +83,60 @@ $stmt->bindColumn('estado_plantilla', $estadoPlantilla);
                           <!--<td><?=$diasAuditoria;?></td>-->
                            <td class="<?=$textEstado?>"><button class="btn <?=$btnEstilo?> btn-sm"><?=$estadoPlantilla;?></button></td>
                           <td class="td-actions text-right">
-                            <a href='<?=$urlReporte;?>?cod=<?=$codigo;?>' class="btn btn-primary">
-                              <i class="material-icons" title="Ver Detalles">list</i>
-                            </a>
+                            <?php 
+                            if(isset($_GET['q'])){
+                              ?>
+                              <a href='<?=$urlReporte;?>?cod=<?=$codigo;?>&q=<?=$q?>' class="btn btn-primary">
+                                <i class="material-icons" title="Ver Detalles">list</i>
+                              </a>
+                              <?php
+                            }else{
+                              ?>
+                              <a href='<?=$urlReporte;?>?cod=<?=$codigo;?>' class="btn btn-primary">
+                                <i class="material-icons" title="Ver Detalles">list</i>
+                              </a>
+                              <?php 
+                            }
+                            ?>
+                            
                             <?php if($codEstado!=3){
                               if($globalAdmin==1){
-                              ?>
-                            
+                                if(isset($_GET['q'])){
+                                  ?>
+                            <a href='<?=$urlRegister;?>?cod=<?=$codigo;?>&q=<?=$q?>' rel="tooltip" class="<?=$buttonEdit;?>">
+                              <i class="material-icons"><?=$iconEdit;?></i>
+                            </a>
+                            <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>&q=<?=$q?>')">
+                              <i class="material-icons"><?=$iconDelete;?></i>
+                            </button>
+                                  <?php
+                                }else{
+                                  ?>
                             <a href='<?=$urlRegister;?>?cod=<?=$codigo;?>' rel="tooltip" class="<?=$buttonEdit;?>">
                               <i class="material-icons"><?=$iconEdit;?></i>
                             </a>
                             <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')">
                               <i class="material-icons"><?=$iconDelete;?></i>
                             </button>
-                            
-                            <?php
+                                  <?php
+                                }
                               }
-                            }?>
-                            <button title="Duplicar Registro" class="btn btn-primary" onclick="alerts.showSwal('warning-message-and-confirmation-clonar','<?=$urlClonar;?>&codigo=<?=$codigo;?>')">
+                            }
+                          if(isset($_GET['q'])){
+                            ?>
+                             <button title="Duplicar Registro" class="btn btn-primary" onclick="alerts.showSwal('warning-message-and-confirmation-clonar','<?=$urlClonar;?>&codigo=<?=$codigo;?>&q=<?=$q?>')">
                               <i class="material-icons"><?=$iconCopy?></i>
                             </button>
+                            <?php
+                          }else{
+                            ?>
+                            <button title="Duplicar Registro" class="btn btn-primary" onclick="alerts.showSwal('warning-message-and-confirmation-clonar','<?=$urlClonar;?>&codigo=<?=$codigo;?>')">
+                              <i class="material-icons"><?=$iconCopy?></i>
+                            </button> 
+                            <?php
+                          }
+                            ?>
+                            
                           </td>
                         </tr>
 <?php
@@ -110,7 +149,14 @@ $stmt->bindColumn('estado_plantilla', $estadoPlantilla);
                 </div>
               </div>
       				<div class="card-footer fixed-bottom">
-                <a href="#" onclick="javascript:window.open('<?=$urlRegister2;?>')" class="<?=$buttonNormal;?>">Registrar</a>
+                <?php 
+                 if(isset($_GET['q'])){
+                  ?><a href="<?=$urlRegister2;?>&q=<?=$q?>" target="_self" class="<?=$buttonNormal;?>">Registrar</a><?php
+                }else{
+                  ?><a href="#" onclick="javascript:window.open('<?=$urlRegister2;?>')" class="<?=$buttonNormal;?>">Registrar</a><?php
+                } 
+                ?>
+            
               </div>		  
             </div>
           </div>  
