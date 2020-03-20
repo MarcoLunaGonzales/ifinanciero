@@ -26,9 +26,19 @@ $flagSuccess=$stmtUpdate->execute();
 if(isset($_GET['admin'])){
   $urlList2=$urlList;
 }
-if($flagSuccess==true){
-	showAlertSuccessError(true,"../".$urlList2);	
+if(isset($_GET['q'])){
+	$q=$_GET['q'];
+	if($flagSuccess==true){
+	showAlertSuccessError(true,"../".$urlList2."&q=".$q);	
+    }else{
+	showAlertSuccessError(false,"../".$urlList2."&q=".$q);
+    }
 }else{
+	if($flagSuccess==true){
+	showAlertSuccessError(true,"../".$urlList2);	
+    }else{
 	showAlertSuccessError(false,"../".$urlList2);
+    }
 }
+
 ?>

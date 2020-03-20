@@ -94,6 +94,15 @@ $stmt->bindColumn('cliente', $cliente);
                               
                                 <?php 
                                 if($codEstado==4){
+                                 $stmt2=$dbh->prepare("SELECT * FROM ibnmonitoreo.estados_gestiones");
+                                 $stmt2->execute(); 
+                                 while ($row2 = $stmt2->fetch(PDO::FETCH_ASSOC)) {
+                                   ?>
+                                  <!--<a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=3" class="dropdown-item">
+                                    <i class="material-icons text-success">offline_pin</i> <?=$row2['nombre']?>
+                                   </a>-->
+                                   <?php
+                                 } 
                                  ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=3" class="dropdown-item">
                                     <i class="material-icons text-success">offline_pin</i> Aprobar Solicitud
                                  </a>
@@ -108,6 +117,14 @@ $stmt->bindColumn('cliente', $cliente);
                                     <i class="material-icons text-dark">reply</i> Deshacer Cambios
                                  </a>
                                  <?php 
+                                 $stmt2=$dbh->prepare("SELECT * FROM ibnmonitoreo.estados_gestiones"); 
+                                 while ($row2 = $stmt2->fetch(PDO::FETCH_ASSOC)) {
+                                   ?>
+                                  <a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=3" class="dropdown-item">
+                                    <i class="material-icons text-success">offline_pin</i> <?=$row2['nombre']?>
+                                   </a>
+                                   <?php
+                                 }
                                 }
                                 ?>
                               </div>

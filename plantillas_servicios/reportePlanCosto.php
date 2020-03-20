@@ -23,7 +23,9 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $fechaActual=date("Y-m-d");
 $anio=date("Y");
 $codigo=$_GET['cod'];
-
+if(isset($_GET['q'])){
+  $q=$_GET['q'];
+}
 $cantidadPersonal=obtenerCantidadPersonalPlantilla($codigo);
 $codArea=obtenerCodigoAreaPlantillaServicio($codigo);
 $query1="select pgd.cod_plantillagruposervicio,pc.cod_unidadorganizacional,pc.cod_area,pgc.nombre,pgc.cod_tiposervicio,sum(pgd.monto_local) as local,sum(pgd.monto_externo) as externo,sum(pgd.monto_calculado) as calculado from plantillas_gruposerviciodetalle pgd join partidas_presupuestarias pp on pgd.cod_partidapresupuestaria=pp.codigo
@@ -318,7 +320,14 @@ echo $html;
                         <input class="form-control" type="hidden" name="grupo_area" value="<?=$grupoArea?>" id="grupo_area">
                         <input class="form-control" type="hidden" name="grupo_unidad" value="<?=$grupoUnidad?>" id="grupo_unidad"> 
                           <!-- <button type="submit" class="btn btn-info">Guardar</button>-->
-                           <a href="../<?=$urlList;?>" class="btn btn-danger">Volver</a>
+                        <?php 
+                        if(isset($_GET['q'])){
+                         ?><a href="../<?=$urlList;?>&q=<?=$q?>" class="btn btn-danger">Volver</a><?php
+                        }else{
+                         ?><a href="../<?=$urlList;?>" class="btn btn-danger">Volver</a><?php
+                        }
+                        ?>   
+                           
                        </div>
                      </div>
                 </div>

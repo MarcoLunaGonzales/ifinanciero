@@ -7504,6 +7504,90 @@ function ponerNumeroChequePago(){
 }
 
 
+function cargarDatosProveedorPagos(){
+  var prov = $("#proveedor").val().split("####");
+  var proveedor = prov[0];
+  var parametros={"proveedor":proveedor};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "obligaciones_pago/ajaxListPagos.php",
+        data: parametros,
+        beforeSend: function () {
+        $("#texto_ajax_titulo").html("Listando Pagos  de "+prov[1]); 
+          iniciarCargaAjax();
+        },        
+        success:  function (resp) {
+           detectarCargaAjax();
+           $("#texto_ajax_titulo").html("Procesando Datos");
+           $("#data_pagosproveedores").html(resp);
+           $('.selectpicker').selectpicker("refresh");
+           //$("#nombre_ben").val($("#nombre_proveedor").val());
+        }
+      });
+}
+
+function mostrarDatosChequeDetalle(fila){
+  var tipo =$("#tipo_pago"+fila).val();
+  if(tipo==1){
+     if(($("#div_cheques"+fila).hasClass("d-none"))){
+       $("#div_cheques"+fila).removeClass("d-none");
+    } 
+  }else{
+    if(!($("#div_cheques"+fila).hasClass("d-none"))){
+      $("#div_cheques"+fila).addClass("d-none"); 
+    }
+    if(!($("#div_chequesemitidos"+fila).hasClass("d-none"))){
+      $("#div_chequesemitidos"+fila).addClass("d-none");
+    }
+    if(!($("#numero_cheque"+fila).is("[readonly]"))){
+      $("#numero_cheque"+fila).attr("readonly",true);
+      $("#numero_cheque"+fila).val("0");
+      $("#beneficiario"+fila).attr("readonly",true);
+    }
+  }
+}
+
+function cargarChequesPagoDetalle(fila){
+  var banco=$("#banco_pago"+fila).val();
+   var parametros={"banco":banco,"fila":fila};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "obligaciones_pago/ajaxListChequesBanco.php",
+        data: parametros,
+        beforeSend: function () {
+        $("#texto_ajax_titulo").html("Listando Cheques..."); 
+          iniciarCargaAjax();
+        },        
+        success:  function (resp) {
+           detectarCargaAjax();
+           if(($("#div_chequesemitidos"+fila).hasClass("d-none"))){
+             $("#div_chequesemitidos"+fila).removeClass("d-none");
+           }
+           $("#texto_ajax_titulo").html("Procesando Datos");
+           $("#div_chequesemitidos"+fila).html(resp);
+           $('.selectpicker').selectpicker("refresh");
+        }
+      }); 
+}
+
+function ponerNumeroChequePagoDetalle(fila){
+  var valor= $("#emitidos_pago"+fila).val().split("####");
+  $("#numero_cheque"+fila).val(valor[1]);
+  if(valor==""||valor==null){
+    if(!($("#numero_cheque"+fila).is("[readonly]"))){
+      $("#numero_cheque"+fila).attr("readonly",true);
+      $("#beneficiario"+fila).attr("readonly",true);
+      $("#numero_cheque"+fila).val("0");
+    }
+  }else{
+    if(($("#numero_cheque"+fila).is("[readonly]"))){
+      $("#numero_cheque"+fila).removeAttr("readonly");
+      $("#beneficiario"+fila).removeAttr("readonly");  
+    }
+  }
+}
 
 
 var itemEstadosCuentas_cc=[];
@@ -7794,5 +7878,4 @@ function ajaxTipoProveedorCliente(tipo){
   }
   ajax.send(null)  
 }
-
 

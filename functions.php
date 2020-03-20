@@ -4240,10 +4240,100 @@ function obtenerCodigoProveedorCuentaAux($codigo){
    $valor="";
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       $valor=$row['cod_proveedorcliente'];
+  }
+  return($valor);
+}  
+
+function obtenerDetalleSolicitudParaComprobante($codigo){
+  $dbh = new Conexion();
+  $sql="SELECT codigo,cod_plancuenta,importe as monto,cod_proveedor,detalle as glosa,cod_confretencion from solicitud_recursosdetalle where cod_solicitudrecurso=$codigo order by cod_proveedor";
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  return $stmt;
+}
+
+function numeroCorrelativoComprobante($codGestion,$unidad,$tipoComprobante){
+  $dbh = new Conexion();
+  $sql1="SELECT m.*,g.nombre from meses_trabajo m join gestiones g on m.cod_gestion=g.codigo where cod_gestion='$codGestion' and cod_estadomesestrabajo=3";
+  $stmt1 = $dbh->prepare($sql1);
+  $stmt1->execute();
+
+  while ($row1= $stmt1->fetch(PDO::FETCH_ASSOC)) {
+    $mesActivo=$row1['cod_mes'];
+    $anio=$row1['nombre'];
+  }
+
+  $fechaInicio=$anio."-".$mesActivo."-01";
+  $fechaFin=date('Y-m-d',strtotime($fechaInicio.'+1 month'));
+  $fechaFin=date('Y-m-d',strtotime($fechaFin.'-1 day'));
+
+  $sql="SELECT IFNULL(max(c.numero)+1,1)as codigo from comprobantes c where c.cod_tipocomprobante='$tipoComprobante' and c.cod_unidadorganizacional=$unidad and c.fecha between '$fechaInicio 00:00:00' and '$fechaFin 23:59:59'";
+  //echo $sql;
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  $nroCorrelativo=0;
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $nroCorrelativo=$row['codigo'];
+  }
+
+  return $nroCorrelativo;
+ }
+
+ function obtenerPersonalSolicitanteRecursos($codigo){
+  $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT cod_personal from solicitud_recursos where codigo=$codigo");
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['cod_personal'];
+   }
+   return($valor);
+}
+function obtenerUnidadSolicitanteRecursos($codigo){
+  $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT cod_unidadorganizacional from solicitud_recursos where codigo=$codigo");
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['cod_unidadorganizacional'];
+   }
+   return($valor);
+}
+function obtenerAreaSolicitanteRecursos($codigo){
+  $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT cod_area from solicitud_recursos where codigo=$codigo");
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['cod_area'];
    }
    return($valor);
 }
 
+function obtenerUnidadAreaCentrosdeCostos($codigo){
+  $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT cod_unidadorganizacional,cod_grupocuentas,fijo,cod_area FROM configuracion_centrocostoscomprobantes where cod_grupocuentas='$codigo'");
+   $stmt->execute();
+   $valor1=0;$valor2=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor1=$row['cod_unidadorganizacional'];
+      $valor2=$row['cod_area'];
+   }
+   return array($valor1,$valor2);
+}
+
+function listaObligacionesPagoDetalleSolicitudRecursosProveedor($codigo){
+  $dbh = new Conexion();
+  $sql="SELECT p.nombre as proveedor,u.nombre as nombre_unidad,u.abreviatura as unidad,a.nombre as nombre_area,a.abreviatura as area,
+s.cod_personal,s.cod_unidadorganizacional,s.cod_area,s.fecha,s.numero,s.cod_estadosolicitudrecurso,sd.* 
+  from solicitud_recursosdetalle sd join solicitud_recursos s on sd.cod_solicitudrecurso=s.codigo  
+join unidades_organizacionales u on s.cod_unidadorganizacional=u.codigo
+join areas a on s.cod_area=a.codigo
+join af_proveedores p on sd.cod_proveedor=p.codigo where s.cod_estadosolicitudrecurso=3 and sd.cod_proveedor=$codigo";
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  return $stmt;
+}
 
 function nameTipoCuentaAuxiliar($codigo){
   $nombreTipoAuxiliar="";

@@ -6,8 +6,6 @@ require_once '../styles.php';
 require_once '../functions.php';
 require_once '../functionsGeneral.php';
 require_once 'configModule.php';
-
-
 setlocale(LC_TIME, "Spanish");
 $dbh = new Conexion();
 
@@ -15,7 +13,11 @@ $sqlX="SET NAMES 'utf8'";
 $stmtX = $dbh->prepare($sqlX);
 $stmtX->execute();
 
-
+if(isset($_GET['q'])){
+	$q=$_GET['q'];
+}else{
+	$q=0;
+}
 $globalNombreGestion=$_SESSION["globalNombreGestion"];
 $globalUser=$_SESSION["globalUser"];
 $globalGestion=$_SESSION["globalGestion"];
@@ -23,7 +25,6 @@ $globalUnidad=$_SESSION["globalUnidad"];
 $globalNombreUnidad=$_SESSION['globalNombreUnidad'];
 $globalArea=$_SESSION["globalArea"];
 $globalAdmin=$_SESSION["globalAdmin"];
-
 $contadorRegistros=0;
 ?>
 <script>
@@ -72,6 +73,7 @@ if(isset($_GET['cod'])){
 	<div id="contListaGrupos" class="container-fluid">
 			<input type="hidden" name="cantidad_filas" id="cantidad_filas" value="<?=$contadorRegistros;?>">
 			<input type="hidden" name="cod_plantilla" id="cod_plantilla" value="<?=$codigo?>">
+			<input type="hidden" name="q" id="q" value="<?=$q?>">
 			<div class="card">
 				<div class="card-header <?=$colorCard;?> card-header-text">
 					<div class="card-text fondo-boton">
@@ -503,9 +505,16 @@ if(isset($_GET['cod'])){
 		            	</center>
                     </fieldset>
 				  	<div class="card-footer fixed-bottom">
-						<button type="submit" class="<?=$buttonMorado;?> fondo-boton fondo-boton-active">Guardar</button>
-						<a href="../<?=$urlList;?>" class="<?=$buttonCancel;?> fondo-boton">Volver</a>
 
+						<button type="submit" class="<?=$buttonMorado;?> fondo-boton fondo-boton-active">Guardar</button>
+						
+						<?php 
+                        if(isset($_GET['q'])){
+                         ?><a href="../<?=$urlList;?>&q=<?=$q?>" class="<?=$buttonCancel;?> fondo-boton">Volver</a><?php
+                        }else{
+                         ?><a href="../<?=$urlList;?>" class="<?=$buttonCancel;?> fondo-boton">Volver</a><?php
+                        }
+						?>				
 				  	</div>
 				 </div>
 			    </div>			

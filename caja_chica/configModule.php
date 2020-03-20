@@ -43,13 +43,16 @@
 
 	$urlprint_cajachica="caja_chica/print_cajachica.php";
 
-	$urlprint_contabilizacion_cajachica="caja_chica/print_contabilizacion_cajachica.php";
+	// $urlprint_contabilizacion_cajachica="caja_chica/print_contabilizacion_cajachica.php";
+	$urlprint_contabilizacion_cajachica="caja_chica/executeComprobanteCajaChica.php";
 
 
 
 	$urlFormreembolsoCajaChica="index.php?opcion=ReembolsoCajaChicaForm";
 	$urlSavereembolsoCajaChica="?opcion=ReembolsoCajaChicaSave";
 	$urlDeleteReembolsoCajaChica="index.php?opcion=deleteReembolsoCajaChica";
+
+	$urlImp="comprobantes/imp.php";
 
 
 
