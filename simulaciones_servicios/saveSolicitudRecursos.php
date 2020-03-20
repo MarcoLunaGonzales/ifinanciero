@@ -54,7 +54,14 @@ $codCont=0;//CODIGO DE CONTRATO
 }else{
   $codSolicitud=$anteriorCod;	
 }
-?>
+if(isset($_GET['q'])){
+  $q=$_GET['q'];
+  ?>
+  <script>window.location.href="../solicitudes/registerSolicitud.php?cod="+<?=$codSolicitud?>+"&q="+<?=$q?></script>
+  <?php
+}else{
+  ?>
   <script>window.location.href="../solicitudes/registerSolicitud.php?cod="+<?=$codSolicitud?></script>
   <?php
+}
 ?>

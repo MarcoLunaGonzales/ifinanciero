@@ -22,6 +22,38 @@ $fechaHoraActual=date("Y-m-d H:i:s");
 
 $codSolicitud=$_POST['cod_solicitud'];
 
+
+// Preparamos
+$stmtSolicitud = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo where sr.cod_estadoreferencial=1 and sr.codigo=$codSolicitud");
+// Ejecutamos
+$stmtSolicitud->execute();
+// bindColumn
+$stmtSolicitud->bindColumn('unidad', $unidadX);
+$stmtSolicitud->bindColumn('area', $areaX);
+$stmtSolicitud->bindColumn('cod_simulacion', $codSimulacion);
+$stmtSolicitud->bindColumn('cod_proveedor', $codProveedor);
+$stmtSolicitud->bindColumn('cod_simulacionservicio', $codSimulacionServicio);
+$stmtSolicitud->bindColumn('numero', $numeroSol);
+
+while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
+      $unidadX=$unidadX;
+      $areaX=$areaX;
+      $codSimulacion=$codSimulacion;
+      $codProveedor=$codProveedor;
+      $codSimulacionServicio=$codSimulacionServicio;
+      $numeroSol=$numeroSol;
+
+      if($codSimulacion!=0){
+        $nombreCliente="Sin Cliente";
+        $nombreSimulacion=nameSimulacion($codSimulacion);
+      }else{
+        $nombreCliente=nameClienteSimulacionServicio($codSimulacionServicio);
+        $nombreSimulacion=nameSimulacionServicio($codSimulacionServicio);
+      }
+}
+
+
+
 $flagSuccess=true;
 //subir archivos al servidor
 //Como el elemento es un arreglos utilizamos foreach para extraer todos los valores
@@ -123,7 +155,7 @@ if($flagSuccess==true){
     $tipoComprobante=3;
     $nroCorrelativo=numeroCorrelativoComprobante($globalGestion,$globalUnidad,3);
     $fechaHoraActual=date("Y-m-d H:i:s");
-    $glosa="PAGOS DEVENGADOS (SOLICITUD - RECURSOS)";
+    $glosa="SOL:".$numeroSol." - ".$areaX." - ".$nombreSimulacion." COMPROBANTE DEVENGADOS";
     $userSolicitud=obtenerPersonalSolicitanteRecursos($codSolicitud);
     $unidadSol=obtenerUnidadSolicitanteRecursos($codSolicitud);
     $areaSol=obtenerAreaSolicitanteRecursos($codSolicitud);
@@ -163,7 +195,7 @@ if($flagSuccess==true){
 
             $debeProv=0;
             $haberProv=$sumaDevengado;
-            $glosaDetalleProv="PROVEEDOR: ".nameProveedor($codProveedor);
+            $glosaDetalleProv=$glosa." - PROVEEDOR ".nameProveedor($codProveedor);
         
             $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
             $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) 
@@ -197,7 +229,10 @@ if($flagSuccess==true){
         
         $debe=$rowNuevo['monto'];
         $haber=0;
-        $glosaDetalle=$rowNuevo['glosa'];
+        /*if($facturaNueva==){
+          $detalleFac="F/";
+        }*/
+        $glosaDetalle=$glosa." D/".$rowNuevo['glosa'];
 
         if($rowNuevo['cod_confretencion']==0){
           $sumaDevengado+=$debe;
@@ -269,7 +304,7 @@ if($flagSuccess==true){
       $retenciones[$j]['area']=$areaRet;
       $retenciones[$j]['debe']=$debeRet;
       $retenciones[$j]['haber']=$haberRet;
-      $retenciones[$j]['glosa']=$glosaX;
+      $retenciones[$j]['glosa']=$glosaX." D/".$rowNuevo['glosa'];
       $retenciones[$j]['numero']=$ii; 
       $retenciones[$j]['debe_haber']=$debehaberX;
 
@@ -320,7 +355,7 @@ if($flagSuccess==true){
           $sumaDevengado+=$importeOriginal; 
           $debe=number_format($debe, 2, '.', ''); 
         }
-
+        
         $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
         $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) 
         VALUES ('$codComprobanteDetalle','$codComprobante', '$cuenta', '$cuentaAuxiliar', '$unidadDetalle', '$area', '$debe', '$haber', '$glosaDetalle', '$i')";
@@ -352,7 +387,7 @@ if($flagSuccess==true){
 
             $debeProv=0;
             $haberProv=$sumaDevengado;
-            $glosaDetalleProv="PROVEEDOR: ".nameProveedor($codProveedor);
+            $glosaDetalleProv=$glosa." - PROVEEDOR: ".nameProveedor($codProveedor);
         
             $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
             $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) 

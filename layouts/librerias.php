@@ -271,6 +271,31 @@
          }
         );
 
+      $("#form-pagos").submit(function(e) {
+      var mensaje="";
+    if($("#cantidad_filas").val()==0){
+        Swal.fire("Informativo!", "Debe registrar al menos un pago", "warning");
+        return false;
+      }else{
+        /*var cont=0;
+        for (var i = 0; i < $("#cantidad_filas").val(); i++) {
+           if(parseInt($('#cod_retencion'+(i+1)).val())==parseInt($('#cod_configuracioniva').val())){
+             if(itemFacturas[i].length==0){
+              cont++; 
+              break;
+             }      
+           }                  
+        }*/
+        /*if(cont!=0){
+           Swal.fire("Informativo!", "La Retencion IVA debe tener al menos una factura registrada", "warning"); 
+           return false;
+        }else{*/
+
+          /*aqui se ejecuta el submit*/
+        //}
+      }     
+    });
+
      $("#form_partidaspresupuestarias").submit(function(e) {
           var datos=alertDatosTabla();
           $('<input />').attr('type', 'hidden')

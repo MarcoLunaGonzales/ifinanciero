@@ -21,6 +21,8 @@ $stmt->bindColumn('cod_proveedor', $codProveedor);
 $stmt->bindColumn('cod_estadosolicitudrecurso', $codEstado);
 $stmt->bindColumn('estado', $estado);
 $stmt->bindColumn('cod_comprobante', $codComprobante);
+$stmt->bindColumn('cod_simulacionservicio', $codSimulacionServicio);
+$stmt->bindColumn('numero', $numeroSol);
 
 ?>
 
@@ -42,6 +44,9 @@ $stmt->bindColumn('cod_comprobante', $codComprobante);
                           <th class="text-center">#</th>
                           <th>Unidad</th>
                           <th>Area</th>
+                          <th>Nº Sol.</th>
+                          <th>Propuesta</th>
+                          <th>Cliente</th>
                           <th>Responsable</th>
                           <th>Fecha</th>
                           <th>Estado</th>
@@ -67,11 +72,21 @@ $stmt->bindColumn('cod_comprobante', $codComprobante);
                               $nEst=60;$barEstado="progress-bar-warning";$btnEstado="btn-warning";
                             break;
                           }
+                          if($codSimulacion!=0){
+                           $nombreCliente="Sin Cliente";
+                           $nombreSimulacion=nameSimulacion($codSimulacion);
+                          }else{
+                           $nombreCliente=nameClienteSimulacionServicio($codSimulacionServicio);
+                           $nombreSimulacion=nameSimulacionServicio($codSimulacionServicio);
+                          }
 ?>
                         <tr>
                           <td align="center"><?=$index;?></td>
                           <td><?=$unidad;?></td>
                           <td><?=$area;?></td>
+                          <td class="font-weight-bold"><?=$numeroSol;?></td>
+                          <td><?=$nombreSimulacion;?></td>
+                          <td><?=$nombreCliente;?></td>
                           <td>
                                  <img src="assets/img/faces/persona1.png" width="20" height="20"/><?=$solicitante;?>
                           </td>

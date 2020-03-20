@@ -7,9 +7,9 @@ require_once 'configModule.php';
 setlocale(LC_TIME, "Spanish");
 if(isset($_GET['q'])){
   $q=$_GET['q'];
-  $numeroServicio=(int)obtenerCantidadSimulacionServicio($q)+1;
-  $nombreServicioIbnorca="SERVICIO DE PRUEBA COD : ".$q;
-  $nombreInputPropuesta=$nombreServicioIbnorca." - PROPUESTA(".$numeroServicio.")";
+  //$numeroServicio=(int)obtenerCantidadSimulacionServicio($q)+1;
+  $nombreServicioIbnorca="";
+  $nombreInputPropuesta=$nombreServicioIbnorca."PROPUESTA";
 }else{
   $nombreInputPropuesta="";
 }

@@ -2007,6 +2007,7 @@ function nameSimulacion($codigo){
    $stmt = $dbh->prepare("SELECT nombre FROM simulaciones_costos where codigo=:codigo");
    $stmt->bindParam(':codigo',$codigo);
    $stmt->execute();
+   $nombreX="";
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       $nombreX=$row['nombre'];
    }
@@ -2017,11 +2018,25 @@ function nameSimulacionServicio($codigo){
    $stmt = $dbh->prepare("SELECT nombre FROM simulaciones_servicios where codigo=:codigo");
    $stmt->bindParam(':codigo',$codigo);
    $stmt->execute();
+   $nombreX="";
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       $nombreX=$row['nombre'];
    }
    return($nombreX);
 }
+
+function nameClienteSimulacionServicio($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT c.nombre FROM clientes c join simulaciones_servicios s on s.cod_cliente=c.codigo where s.codigo=:codigo");
+   $stmt->bindParam(':codigo',$codigo);
+   $stmt->execute();
+   $nombreX="";
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $nombreX=$row['nombre'];
+   }
+   return($nombreX);
+}
+
 function obtenerDetalleSolicitud($codigo){
    $dbh = new Conexion();
    $sql="";

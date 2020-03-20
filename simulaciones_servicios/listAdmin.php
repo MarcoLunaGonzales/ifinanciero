@@ -5,7 +5,9 @@ require_once 'styles.php';
 $globalAdmin=$_SESSION["globalAdmin"];
 
 $dbh = new Conexion();
-
+if(isset($_GET['q'])){
+  $q=$_GET['q'];
+}
 // Preparamos
 $stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado,c.nombre as cliente from simulaciones_servicios sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo join clientes c on c.codigo=sc.cod_cliente where sc.cod_estadoreferencial=1 and sc.cod_estadosimulacion!=1 order by codigo");
 // Ejecutamos
@@ -88,9 +90,22 @@ $stmt->bindColumn('cliente', $cliente);
                                 <i class="material-icons">list</i> <?=$estado;?>
                               </button>
                               <div class="dropdown-menu">
-                                <a href="<?=$urlVer;?>?cod=<?=$codigo;?>&admin=0" class="dropdown-item">
+                                <?php 
+                                if(isset($_GET['q'])){
+                                  ?>
+                                   <a href="<?=$urlVer;?>?cod=<?=$codigo;?>&admin=0&q=<?=$q?>" class="dropdown-item">
                                     <i class="material-icons text-info">bar_chart</i> Ver Propuesta
                                  </a>
+                                 <?php 
+                                }else{
+                                 ?>
+                                   <a href="<?=$urlVer;?>?cod=<?=$codigo;?>&admin=0" class="dropdown-item">
+                                    <i class="material-icons text-info">bar_chart</i> Ver Propuesta
+                                 </a>
+                                 <?php  
+                                }
+                                ?>
+                               
                               
                                 <?php 
                                 if($codEstado==4){
@@ -103,7 +118,18 @@ $stmt->bindColumn('cliente', $cliente);
                                    </a>-->
                                    <?php
                                  } 
-                                 ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=3" class="dropdown-item">
+                                 if(isset($_GET['q'])){
+                                  ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=3&q=<?=$q?>" class="dropdown-item">
+                                    <i class="material-icons text-success">offline_pin</i> Aprobar Solicitud
+                                 </a>
+                                 <a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1&q=<?=$q?>" class="dropdown-item">
+                                    <i class="material-icons text-dark">report</i> Rechazar Solicitud
+                                 </a>
+                                 <a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=2&q=<?=$q?>" class="dropdown-item">
+                                    <i class="material-icons text-danger">clear</i> Anular Solicitud
+                                 </a><?php 
+                               }else{
+                                ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=3" class="dropdown-item">
                                     <i class="material-icons text-success">offline_pin</i> Aprobar Solicitud
                                  </a>
                                  <a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1" class="dropdown-item">
@@ -112,19 +138,20 @@ $stmt->bindColumn('cliente', $cliente);
                                  <a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=2" class="dropdown-item">
                                     <i class="material-icons text-danger">clear</i> Anular Solicitud
                                  </a><?php 
+                                 }
                                 }else{
-                                ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=4" class="dropdown-item">
+                                  if(isset($_GET['q'])){
+                                     ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=4&q=<?=$q?>" class="dropdown-item">
                                     <i class="material-icons text-dark">reply</i> Deshacer Cambios
                                  </a>
                                  <?php 
-                                 $stmt2=$dbh->prepare("SELECT * FROM ibnmonitoreo.estados_gestiones"); 
-                                 while ($row2 = $stmt2->fetch(PDO::FETCH_ASSOC)) {
-                                   ?>
-                                  <a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=3" class="dropdown-item">
-                                    <i class="material-icons text-success">offline_pin</i> <?=$row2['nombre']?>
-                                   </a>
-                                   <?php
-                                 }
+                                  }else{
+                                    ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=4" class="dropdown-item">
+                                    <i class="material-icons text-dark">reply</i> Deshacer Cambios
+                                 </a>
+                                 <?php 
+                                  }
+                               
                                 }
                                 ?>
                               </div>
@@ -140,7 +167,14 @@ $stmt->bindColumn('cliente', $cliente);
                 </div>
               </div>
               <div class="card-footer fixed-bottom">
-                <a href="<?=$urlList2?>" class="btn btn-info"><i class="material-icons">refresh</i> Refrescar</a>
+                <?php 
+                if(isset($_GET['q'])){
+                ?><a href="<?=$urlList2?>&q=<?=$q?>" class="btn btn-info"><i class="material-icons">refresh</i> Refrescar</a><?php
+                }else{
+                 ?><a href="<?=$urlList2?>" class="btn btn-info"><i class="material-icons">refresh</i> Refrescar</a><?php
+                } 
+                ?>
+                
               </div>      
             </div>
           </div>  

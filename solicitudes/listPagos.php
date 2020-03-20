@@ -19,7 +19,7 @@ $lista=listaObligacionesPagoDetalleSolicitudRecursosSolicitud($codSol);
 $totalPagadoX=obtenerSaldoPagoProveedorDetallePorSolicitudRecurso($codSol);
 
 //Mostrar tipo bono
-$stmtb = $dbh->prepare("SELECT s.fecha,s.cod_personal,u.nombre as unidad,a.nombre as area FROM solicitud_recursos s 
+$stmtb = $dbh->prepare("SELECT s.*,u.nombre as unidad,a.nombre as area FROM solicitud_recursos s 
   join unidades_organizacionales u on s.cod_unidadorganizacional=u.codigo 
   join areas a on s.cod_area=a.codigo
   WHERE s.codigo=$codSol");
@@ -30,6 +30,9 @@ $stmtb->bindColumn('fecha', $fechaSolicitudX);
 $stmtb->bindColumn('cod_personal', $codPersonalX);
 $stmtb->bindColumn('unidad', $unidadX);
 $stmtb->bindColumn('area', $areaX);
+$stmtb->bindColumn('cod_simulacion', $codSimulacion);
+$stmtb->bindColumn('cod_simulacionservicio', $codSimulacionServicio);
+$stmtb->bindColumn('numero', $numeroSol);
 
 $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
 
@@ -62,7 +65,20 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
                       <?php
                        while ($row2 = $stmtb->fetch(PDO::FETCH_BOUND)) {
                         $solicitanteX=namePersonal($codPersonalX);
+                        if($codSimulacion!=0){
+                           $nombreCliente="Sin Cliente";
+                           $nombreSimulacion=nameSimulacion($codSimulacion);
+                          }else{
+                           $nombreCliente=nameClienteSimulacionServicio($codSimulacionServicio);
+                           $nombreSimulacion=nameSimulacionServicio($codSimulacionServicio);
+                          }
                         ?>
+                      <tr>
+                        <td class="text-left font-weight-bold">Propuesta</td>
+                        <td class="text-left"><?=$nombreSimulacion;?><input type="hidden" value="<?=$nombreSimulacion?>" name="nombre_solicitud" id="nombre_solicitud"></td>
+                        <td class="text-left font-weight-bold">Cliente</td>
+                        <td class="text-left"><?=$nombreCliente?></td>
+                      </tr>  
                       <tr>
                         <td class="text-left font-weight-bold">Solicitante</td>
                         <td class="text-left"><img src="assets/img/faces/persona1.png" width="20" height="20"/><?=$solicitanteX;?></td>
@@ -84,15 +100,15 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
                       <tr>
                         <td class="text-left font-weight-bold">Total Saldo</td>
                         <td class="text-left" id="total_saldo"></td>
-                        <td class="text-left font-weight-bold"></td>
-                        <td class="text-left"></td>
+                        <td class="text-left font-weight-bold">N&uacute;mero de Solicitud</td>
+                        <td class="text-left font-weight-bold"><?=$numeroSol?></td>
                       </tr>
                       <?php
                        }
                       ?>
                     </table>
                   </div>
-                  <div class="row col-sm-6">
+                  <div class="row col-sm-10">
                     <table class="table table-condensed table-warning">
                       <tr>
                         <td class="text-right font-weight-bold">Fecha del pago</td>
@@ -113,7 +129,7 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
                     </table>
                   </div>
                   <div class="table-responsive" id="data_comprobantes">
-                    <table id="" class="table table-condensed">
+                    <table id="" class="table table-condensed small">
                       <thead>
                         <tr>
                           <!--<th class="text-center">#</th>
@@ -173,7 +189,7 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
                           <td><?=$area;?></td>
                           <td><?=$numero;?></td>-->
                           <td>
-                            
+                            <input type="hidden" value="<?=$detalle?>" id="glosa_detalle<?=$index?>" name="glosa_detalle<?=$index?>">
                             <input type="hidden" value="<?=$codProveedor?>" id="codigo_proveedor<?=$index?>" name="codigo_proveedor<?=$index?>">
                             <input type="hidden" value="<?=$codSol?>" id="codigo_solicitud<?=$index?>" name="codigo_solicitud<?=$index?>">
                             <input type="hidden" value="<?=$codSolDet?>" id="codigo_solicitudDetalle<?=$index?>" name="codigo_solicitudDetalle<?=$index?>">

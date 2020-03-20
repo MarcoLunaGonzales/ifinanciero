@@ -16,7 +16,9 @@ where sc.cod_plantillaservicio=ps.codigo and sc.cod_estadoreferencial=1 and sc.c
 $stmtServicio = $dbh->prepare($sql);
 $stmtServicio->execute();
 $resultServicio = $stmtServicio->fetch();
-
+if(isset($_GET['q'])){
+  $q=$_GET['q'];
+}
 if ($cod_facturacion > 0){
     $stmt = $dbh->prepare("SELECT * FROM solicitudes_facturacion where codigo=$cod_facturacion");
     $stmt->execute();
@@ -66,6 +68,12 @@ $contadorRegistros=0;
         <div style="overflow-y:scroll;">
             <div class="col-md-12">
               <form id="form1" class="form-horizontal" action="<?=$urlSaveSolicitudfactura;?>" method="post" onsubmit="return valida(this)">
+                <?php 
+               if(isset($_GET['q'])){
+                 ?><input type="hidden" name="id_ibnored" id="id_ibnored" value="<?=$q;?>"/><?php 
+              }
+                ?>
+                
                 <input type="hidden" name="cod_simulacion" id="cod_simulacion" value="<?=$cod_simulacion;?>"/>
                 <input type="hidden" name="cod_facturacion" id="cod_facturacion" value="<?=$cod_facturacion;?>"/>
                 <input type="hidden" name="cantidad_filas" id="cantidad_filas" value="<?=$contadorRegistros;?>">
@@ -330,11 +338,20 @@ $contadorRegistros=0;
                   </div>
                   <div class="card-footer ml-auto mr-auto">
                     <button type="submit" class="<?=$buttonNormal;?>">Guardar</button><?php
+                    if(isset($_GET['q'])){
                     if($cod_sw==1){?>
+                        <a href='<?=$urlSolicitudfactura;?>&cod=<?=$cod_simulacion;?>&q=<?=$q?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
+                    <?php }else{?>
+                        <a href='<?=$urlListSimulacionesServ?>&q=<?=$q?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
+                    <?php }
+                    }else{
+                      if($cod_sw==1){?>
                         <a href='<?=$urlSolicitudfactura;?>&cod=<?=$cod_simulacion;?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
                     <?php }else{?>
                         <a href='<?=$urlListSimulacionesServ?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
-                    <?php }
+                    <?php }   
+                    }
+
                     ?>
                     
                   </div>

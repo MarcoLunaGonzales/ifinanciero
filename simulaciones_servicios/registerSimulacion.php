@@ -32,6 +32,15 @@ if(isset($_GET['cod'])){
 	$codigo=0;
 }
 
+if(isset($_GET['q'])){
+ $idServicioX=$_GET['q'];
+ ?>
+  <input type="hidden" name="id_servicioibnored" value="<?=$idServicioX?>" id="id_servicioibnored"/>
+ <?php
+}else{
+  $idServicioX=0; 
+}
+
 /*VARIABLE DE CONVERSION A MODEDA USD*/
 $usd=6.96;
 /*FIN*/
@@ -61,7 +70,6 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
             $stmt1->bindColumn('utilidad_minima', $utilidadIbnorcaX);
             $stmt1->bindColumn('productos', $productosX);
             $stmt1->bindColumn('sitios', $sitiosX);
-            $stmt1->bindColumn('idServicio', $idServicioX);
             $stmt1->bindColumn('anios', $anioX);
             $stmt1->bindColumn('porcentaje_fijo', $porcentajeFijoX);
             $stmt1->bindColumn('afnor', $afnorX);
