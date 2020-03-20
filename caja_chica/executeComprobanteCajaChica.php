@@ -236,12 +236,13 @@ try{
 		                    //buscamos el nombre y el numero de la contra cuenta                    
 		                    $descripcionIT=$nombre_uo.'/'.$nombre_area.' '.$proveedor.' SF, '.$observaciones_dcc;
 		                    if($debe_haber==1){ //debe=1
-		                    	$sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_plancuenta','0','$cod_uo','$cod_area','$monto_restante','0','$descripcionIT','$ordenDetalle')";
+		                    	$sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_plancuenta','0','$cod_uo','$cod_area','0','$monto_restante','$descripcionIT','$ordenDetalle')";
 					            $stmtInsertDet = $dbh->prepare($sqlInsertDet);
 					            $flagSuccessDet=$stmtInsertDet->execute();
 					            $ordenDetalle++;
 		                    }else{//haber=2
-		                    	$sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_plancuenta','0','$cod_uo','$cod_area','0','$monto_restante','$descripcionIT','$ordenDetalle')";
+		                    	
+					            $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_plancuenta','0','$cod_uo','$cod_area','$monto_restante','0','$descripcionIT','$ordenDetalle')";
 					            $stmtInsertDet = $dbh->prepare($sqlInsertDet);
 					            $flagSuccessDet=$stmtInsertDet->execute();
 					            $ordenDetalle++;
@@ -253,7 +254,7 @@ try{
 			                $resultEstadoCuenta = $stmtEstadoCuenta->fetch();
 			                $cod_compro_det = $resultEstadoCuenta['codigo'];
 			                //actualizamos el campo comporbante del estado_cuentas 
-			                $stmtUpdateEstadoCuenta = $dbh->prepare("UPDATE estados_cuenta set cod_comprobante=$cod_compro_det where cod_cajachicadetalle=$codigo_ccdetalle");
+			                $stmtUpdateEstadoCuenta = $dbh->prepare("UPDATE estados_cuenta set cod_comprobantedetalle=$cod_compro_det where cod_cajachicadetalle=$codigo_ccdetalle");
 			                $stmtUpdateEstadoCuenta->execute();
 
 		                }else{		                	
@@ -330,7 +331,7 @@ try{
 
 	}else{?>
     	<script>
-		    alert('El COMPROBANTE ya fue generado.');
+		    alert('El COMPROBANTE ya fue generado. Actualziar Sistema Por favor!');
 		</script><?php 
 	}
 

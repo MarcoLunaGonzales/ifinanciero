@@ -5177,7 +5177,7 @@ function verEstadosCuentas(fila,cuenta){
     $.ajax({
         type: "GET",
         dataType: 'html',
-        url: "../estados_cuenta/ajaxMostrarEstadosCuenta.php",
+        url: "../estados_cuenta/ajaxMostrarEstadosCuenta_cajachicaphp",
         data: parametros,
         success:  function (resp) {
           var respuesta=resp.split('@');
@@ -7722,7 +7722,7 @@ function verEstadosCuentas_cajachica(fila,cuenta,saldo_comprob){
     $.ajax({
         type: "GET",
         dataType: 'html',
-        url: "estados_cuenta/ajaxMostrarEstadosCuenta2.php",
+        url: "estados_cuenta/ajaxMostrarEstadosCuenta_cajachica.php",
         data: parametros,
         success:  function (resp) {          
           if(cod_cuenta==0 || cod_cuenta==""){
@@ -7730,13 +7730,11 @@ function verEstadosCuentas_cajachica(fila,cuenta,saldo_comprob){
             $('.selectpicker').selectpicker("refresh");
             verEstadosCuentasCred_cc();  
           }
-
           var respuesta=resp.split('@');          
           $("#div_estadocuentas").html(respuesta[0]);
           if(tipo==1){
             // var rsaldo=listarEstadosCuentas_cc(fila,respuesta[1]);
             var rsaldo=listarEstadosCuentas_cc(fila,saldo_comprob);
-
             listarEstadosCuentasDebito_cc(fila,rsaldo);
           }else{
             // var rsaldo=listarEstadosCuentasCredito_cc(fila,respuesta[1]);
@@ -7781,8 +7779,9 @@ function listarEstadosCuentas_cc(id,saldo){
 
         row.append($('<td>').addClass('text-left').html("<small class='text-danger'>"+titulo_glosa+"</small>"));
         var nsaldo=parseFloat(saldo)-parseFloat(itemEstadosCuentas_cc[id-1][i].monto);
-        row.append($('<td>').addClass('text-right').text("")); 
         row.append($('<td>').addClass('text-right text-danger').text(numberFormat(itemEstadosCuentas_cc[id-1][i].monto,2)));  
+        row.append($('<td>').addClass('text-right').text("")); 
+        
       }
       row.append($('<td>').addClass('text-right font-weight-bold text-danger').text(numberFormat(nsaldo,2)));
      table.append(row);
@@ -7861,7 +7860,8 @@ function ajaxCajaCProveedor_cuentapasiva(codigo_proveedor){
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
       contenedor_p.innerHTML = ajax.responseText;
-      $('.selectpicker').selectpicker(["refresh"]);    
+      $('.selectpicker').selectpicker(["refresh"]);  
+      $("#modalEstadosCuentas").modal("hide");//cerramos modal  
     }
   }
   ajax.send(null)  

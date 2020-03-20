@@ -4359,7 +4359,7 @@ function ObtenerMontoTotalEstadoCuentas_hijos($codCuenta,$codigo_compDe)
 { 
   $saldo=0;
   $dbh = new Conexion();
-   $stmt = $dbh->prepare("SELECT e.monto FROM estados_cuenta e,comprobantes_detalle d where e.cod_comprobantedetalle=d.codigo and (d.cod_cuenta=$codCuenta or e.cod_plancuenta=$codCuenta) and cod_comprobantedetalleorigen=$codigo_compDe");
+   $stmt = $dbh->prepare("SELECT e.monto FROM estados_cuenta e where e.cod_plancuenta=$codCuenta and cod_comprobantedetalleorigen=$codigo_compDe");
    $stmt->execute();   
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       $saldo=$saldo+$row['monto'];
