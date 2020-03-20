@@ -4233,6 +4233,17 @@ function obtenerProveedorCuentaAux($codigo){
    return($valor);
 }
 
+function obtenerCodigoProveedorCuentaAux($codigo){
+  $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT c.cod_proveedorcliente from cuentas_auxiliares c where c.codigo=$codigo");
+   $stmt->execute();
+   $valor="";
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['cod_proveedorcliente'];
+  }
+  return($valor);
+}  
+
 function obtenerDetalleSolicitudParaComprobante($codigo){
   $dbh = new Conexion();
   $sql="SELECT codigo,cod_plancuenta,importe as monto,cod_proveedor,detalle as glosa,cod_confretencion from solicitud_recursosdetalle where cod_solicitudrecurso=$codigo order by cod_proveedor";
@@ -4323,6 +4334,7 @@ join af_proveedores p on sd.cod_proveedor=p.codigo where s.cod_estadosolicitudre
   $stmt->execute();
   return $stmt;
 }
+
 function nameTipoCuentaAuxiliar($codigo){
   $nombreTipoAuxiliar="";
   if($codigo==1){
@@ -4355,6 +4367,8 @@ function ObtenerMontoTotalEstadoCuentas_hijos($codCuenta,$codigo_compDe)
 
   return($saldo);
 }
+
+
 
 ?>
 

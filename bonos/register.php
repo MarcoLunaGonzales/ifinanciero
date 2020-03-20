@@ -43,6 +43,7 @@ $dbh = new Conexion();
 					</div>
 				  </div>
 				</div>
+
 				<div class="row">
 				  <label class="col-sm-2 col-form-label">Tipo de calculo</label>
 				  <div class="col-sm-7">
@@ -63,6 +64,7 @@ $dbh = new Conexion();
 					</div>
 				  </div>
 				</div>
+				
 			  </div>
 			  <div class="card-footer ml-auto mr-auto">
 				<button type="submit" class="<?=$buttonNormal;?>">Guardar</button>

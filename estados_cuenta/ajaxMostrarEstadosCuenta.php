@@ -2,6 +2,7 @@
 
 require_once '../conexion.php';
 require_once '../functions.php';
+require_once '../functionsGeneral.php';
 require_once '../styles.php';
 
 $dbh = new Conexion();
@@ -19,6 +20,7 @@ $globalArea=$_SESSION["globalArea"];
 $fechaActual=date("d/m/Y");
 $codCuenta=$_GET['cod_cuenta'];
 $tipo=$_GET['tipo'];
+$tipoProveedorCliente=$_GET['tipo_proveedorcliente'];
 $mes=$_GET['mes'];
 ?>
 <table class="table table-bordered table-condensed table-warning">
@@ -35,18 +37,9 @@ $mes=$_GET['mes'];
 	</thead>
 	<tbody id="tabla_estadocuenta">
 <?php
-  //$stmt = $dbh->prepare("SELECT e.* FROM estados_cuenta e,comprobantes_detalle d where e.cod_comprobantedetalle=d.codigo and d.cod_cuenta=$codCuenta");
-  /*if(isset($_GET['auxi'])){
-    /*if($_GET['auxi']=="SI"){
-      $stmt = $dbh->prepare("SELECT e.*,d.glosa,d.haber,d.debe FROM estados_cuenta e,comprobantes_detalle d where e.cod_comprobantedetalle=d.codigo and (d.cod_cuentaauxiliar=$codCuenta or e.cod_cuentaaux=$codCuenta) order by e.fecha");
-    }else{
-      $stmt = $dbh->prepare("SELECT e.*,d.glosa,d.haber,d.debe FROM estados_cuenta e,comprobantes_detalle d where e.cod_comprobantedetalle=d.codigo and (d.cod_cuenta=$codCuenta or e.cod_plancuenta=$codCuenta) and d.cod_cuentaauxiliar=0 order by e.fecha");
-    }
-    
-  }else{
-    $stmt = $dbh->prepare("SELECT e.*,d.glosa,d.haber,d.debe FROM estados_cuenta e,comprobantes_detalle d where e.cod_comprobantedetalle=d.codigo and (d.cod_cuenta=$codCuenta or e.cod_plancuenta=$codCuenta) order by e.fecha");
-  }*/
-  $stmt = $dbh->prepare("SELECT e.*,d.glosa,d.haber,d.debe FROM estados_cuenta e,comprobantes_detalle d where e.cod_comprobantedetalle=d.codigo and (d.cod_cuenta=$codCuenta or e.cod_plancuenta=$codCuenta) order by e.fecha");
+  $sqlZ="SELECT e.*,d.glosa,d.haber,d.debe FROM estados_cuenta e,comprobantes_detalle d where e.cod_comprobantedetalle=d.codigo and (d.cod_cuenta=$codCuenta or e.cod_plancuenta=$codCuenta or e.cod_cuentaaux=$codCuenta) and e.cod_comprobantedetalleorigen=0 order by e.fecha";
+  
+  $stmt = $dbh->prepare($sqlZ);
   $stmt->execute();
   $i=0;$saldo=0;
   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -61,24 +54,37 @@ $mes=$_GET['mes'];
 	 $debeX=$row['debe'];
 	 $haberX=$row['haber'];
    $codCuentaAuxX=$row['cod_cuentaaux'];
-	 $saldo=$saldo+$debeX-$haberX;
+
+   //SACAMOS CUANTO SE PAGO DEL ESTADO DE CUENTA.
+    $sqlContra="SELECT sum(monto)as monto from estados_cuenta e where e.cod_comprobantedetalleorigen='$codCompDetX'";
+    $stmtContra = $dbh->prepare($sqlContra);
+    $stmtContra->execute();
+    $montoContra=0;
+    while ($rowContra = $stmtContra->fetch(PDO::FETCH_ASSOC)) {
+      $montoContra=$rowContra['monto'];
+    }
+    $debeX=$montoContra;
+
+    $saldo=$saldo+$haberX-$debeX;
+
 
    if(obtenerProveedorCuentaAux($row['cod_cuentaaux'])==""){
     $proveedorX="Sin Proveedor";
    }else{
     $proveedorX=obtenerProveedorCuentaAux($row['cod_cuentaaux']);
    }
-	 if($haberX==0||$haberX==""){
+	 if($haberX > 0){
        ?>
-  	   <tr class="bg-white det-estados"><td>
+  	   <tr class="bg-white det-estados">
+        <td>
         <input type="hidden" id="codigoCuentaAux<?=$i?>" value="<?=$codCuentaAuxX?>">
         <!-- style="display:none"-->
-  	   	<?php if($tipo==2){ 
-            ?>
+  	   	<?php 
+          if($tipo==1 && $tipoProveedorCliente==1){ 
+        ?>
             <div class="form-check">
                <label class="form-check-label">
                      <input type="radio" class="form-check-input" id="cuentas_origen_detalle<?=$i?>" name="cuentas_origen_detalle" value="<?=$codCompDetX?>####<?=$codCuentaAuxX?>####<?=$codProveedorX?>">
-                     
                     <span class="form-check-sign">
                       <span class="check"></span>
                     </span>       
@@ -86,48 +92,31 @@ $mes=$_GET['mes'];
              </div>
             <?php    
   	   } ?>
-  	   </td><td class="text-left font-weight-bold"><?=$fechaX?></td><td class="text-left"><?=$proveedorX?></td><td class="text-left"><?=$glosaX?></td><td class="text-right"><?=number_format($montoX, 2, '.', ',')?></td><td class="text-right"></td><td class="text-right font-weight-bold"><?=number_format($saldo, 2, '.', ',');?></td></tr>
+  	   </td>
+       <td class="text-left small font-weight-bold"><?=$fechaX?></td>
+       <td class="text-left small"><?=$proveedorX?></td>
+       <td class="text-left small"><?=$glosaX?></td>
+       <td class="text-right small"><?=formatNumberDec($montoContra)?></td>
+       <td class="text-right small"><?=formatNumberDec($montoX)?></td>
+       <td class="text-right small font-weight-bold"><?=formatNumberDec($saldo);?></td>
+     </tr>
   	   <?php
 	 }else{
         ?>
   	   <tr class="bg-white det-estados"><td>
   	   	<?php if($tipo==2){ 
-            ?>
-            <!--<div class="form-check">
-               <label class="form-check-label">
-                     <input type="radio" class="form-check-input" id="cuentas_origen_detalle<?=$i?>" name="cuentas_origen_detalle" value="<?=$codCompDetX?>">
-                     
-                    <span class="form-check-sign">
-                      <span class="check"></span>
-                    </span>
-                 
-               </label>
-             </div>-->
-            <?php    
   	   } ?>
-  	   </td><td class="text-left font-weight-bold"><?=$fechaX?></td><td class="text-left"><?=$proveedorX?></td><td class="text-left"><?=$glosaX?></td><td class="text-right"></td><td class="text-right"><?=number_format($montoX, 2, '.', ',')?></td><td class="text-right font-weight-bold"><?=number_format($saldo, 2, '.', ',');?></td></tr>
+  	   </td>
+       <td class="text-left font-weight-bold"><?=$fechaX?></td>
+       <td class="text-left"><?=$proveedorX?></td><td class="text-left"><?=$glosaX?></td>
+       <td class="text-right"><?=formatNumberDec($montoX)?></td>
+       <td class="text-right"></td>
+       <td class="text-right font-weight-bold"><?=formatNumberDec($saldo);?></td>
+     </tr>
   	   <?php
 	 }
-	 
 	 $i++;
   }
-  if($i==0){
-  	?>
-     <tr class="" onclick="verDetalleEstadosCuenta()"><td></td><td></td><td class="text-left font-weight-bold"></td><td class="text-left font-weight-bold">Saldo Inicial</td><td class="text-right"></td><td class="text-right"></td><td class="text-right font-weight-bold"><?=number_format(0, 2, '.', ',');?></td></tr>
-  	<?php
-  }else{
-
-  	if($haberX==0||$haberX==""){
-       ?>
-  	   <tr class="" onclick="verDetalleEstadosCuenta()"><td></td><td></td><td class="text-left font-weight-bold"><?=$fechaX?> Ult</td><td class="text-left font-weight-bold">Saldo Inicial</td><td class="text-right"><?=number_format($montoX, 2, '.', ',')?></td><td class="text-right"></td><td class="text-right font-weight-bold"><?=number_format($saldo, 2, '.', ',');?></td></tr>
-  	   <?php
-	 }else{
-        ?>
-  	   <tr class="" onclick="verDetalleEstadosCuenta()"><td></td><td></td><td class="text-left font-weight-bold"><?=$fechaX?> Ult</td><td class="text-left font-weight-bold">Saldo Inicial</td><td class="text-right"></td><td class="text-right"><?=number_format($montoX, 2, '.', ',')?></td><td class="text-right font-weight-bold"><?=number_format($saldo, 2, '.', ',');?></td></tr>
-  	   <?php
-	 }
-  }
-
 ?>
 	</tbody>
 </table>

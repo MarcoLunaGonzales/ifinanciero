@@ -8,7 +8,8 @@ require_once 'configModule.php';
 
 $dbh = new Conexion();
 $cuenta=$_POST["cuenta_auto_id"];
-$tipo=$_POST["credito"];
+$tipo=$_POST["tipo"];
+$credito=$_POST["credito"];
 
 $porciones = explode("$$", $cuenta);
 if($porciones[1]=="AUX"){
@@ -19,11 +20,12 @@ if($porciones[1]=="AUX"){
 	$codAux="";
 }
 // Prepare
-$stmt = $dbh->prepare("INSERT INTO $table (cod_plancuenta,cod_cuentaaux,tipo) VALUES ( :cod_plancuenta,:cod_cuentaaux,:tipo)");
+$stmt = $dbh->prepare("INSERT INTO $table (cod_plancuenta, cod_cuentaaux,tipo, cod_tipoestadocuenta) VALUES (:cod_plancuenta, :cod_cuentaaux, :tipo, :cod_tipoestadocuenta)");
 // Bind
 $stmt->bindParam(':cod_plancuenta', $codPlan);
 $stmt->bindParam(':cod_cuentaaux', $codAux);
-$stmt->bindParam(':tipo', $tipo);
+$stmt->bindParam(':tipo', $credito);
+$stmt->bindParam(':cod_tipoestadocuenta', $tipo);
 $flagSuccess=$stmt->execute();
 if($flagSuccess==true){
 	showAlertSuccessError(true,"../".$urlList2);	
