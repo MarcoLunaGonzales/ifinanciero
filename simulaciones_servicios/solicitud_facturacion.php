@@ -20,7 +20,9 @@ $stmtCantidad = $dbh->prepare("SELECT count(codigo) as cantidad FROM solicitudes
 $stmtCantidad->execute();
 $resutCanitdad = $stmtCantidad->fetch();
 $cantidad_items = $resutCanitdad['cantidad'];
-
+if(isset($_GET['q'])){
+  $q=$_GET['q'];
+}
 if($cantidad_items>0){
   //datos registrado de la simulacion en curso
   $stmt = $dbh->prepare("SELECT sf.*,t.nombre as nombre_cliente FROM solicitudes_facturacion sf,clientes t  where sf.cod_cliente=t.codigo and sf.cod_simulacion_servicio=$codigo_simulacion");
@@ -201,11 +203,23 @@ if($cantidad_items>0){
     }
     ?>
 
-<?php }else{?>
+<?php }else{
+  if(isset($_GET['q'])){
+    ?>
+      <script type="text/javascript">
+        location = "<?=$urlRegisterSolicitudfactura;?>&cod_s=<?=$codigo_simulacion?>&cod_f=0&cod_sw=0&q=<?=$q?>"
+      </script>
+   <?php
+  }else{
+   ?>
       <script type="text/javascript">
         location = "<?=$urlRegisterSolicitudfactura;?>&cod_s=<?=$codigo_simulacion?>&cod_f=0&cod_sw=0"
       </script>
-<?php }?>
+   <?php
+  }
+    
+  }
+ ?>
 
 
 

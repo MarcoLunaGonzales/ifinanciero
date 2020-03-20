@@ -700,9 +700,9 @@ if($menuModulo==0){
                   </a>
                 </li>
                 <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=listPagoProveedor">
+                  <a class="nav-link" href="?opcion=listPagoProveedores">
                     <span class="sidebar-mini"> PP </span>
-                    <span class="sidebar-normal"> PAGOS PROVEEDOR</span>
+                    <span class="sidebar-normal"> Pagos</span>
                   </a>
                 </li>                          
               </ul>

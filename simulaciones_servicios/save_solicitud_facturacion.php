@@ -82,7 +82,12 @@ try {
                 $flagSuccess=$stmt->execute();                
             }
         }
-        showAlertSuccessError($flagSuccess,$urlSolicitudfactura."&cod=".$cod_simulacion);
+        if(isset($_POST['id_ibnored'])){
+          showAlertSuccessError($flagSuccess,$urlSolicitudfactura."&cod=".$cod_simulacion."&q=".$_POST['id_ibnored']);
+        }else{
+          showAlertSuccessError($flagSuccess,$urlSolicitudfactura."&cod=".$cod_simulacion);  
+        }
+        
 
         //$stmt->debugDumpParams();
     } else {//update
@@ -123,7 +128,11 @@ try {
                 $flagSuccess=$stmt->execute();                
             }
         }
-        showAlertSuccessError($flagSuccess,$urlSolicitudfactura."&cod=".$cod_simulacion);
+        if(isset($_POST['id_ibnored'])){
+          showAlertSuccessError($flagSuccess,$urlSolicitudfactura."&cod=".$cod_simulacion."&q=".$_POST['id_ibnored']);
+        }else{
+          showAlertSuccessError($flagSuccess,$urlSolicitudfactura."&cod=".$cod_simulacion);
+        }      
 
     }//si es insert o update
     

@@ -18,7 +18,7 @@ $totalPagadoX=0;
 
 ?>
                 <div class="col-sm-12" id="">
-                    <table id="" class="table table-condensed">
+                    <table id="" class="table table-condensed small">
                       <thead>
                         <tr>
                           <!--<th class="text-center">#</th>
@@ -78,6 +78,7 @@ $totalPagadoX=0;
                           <td><?=$area;?></td>
                           <td><?=$numero;?></td>-->
                           <td>
+                            <input type="hidden" value="<?=$detalle?>" id="glosa_detalle<?=$index?>" name="glosa_detalle<?=$index?>">
                             <input type="hidden" value="<?=$codSol?>" id="codigo_solicitud<?=$index?>" name="codigo_solicitud<?=$index?>">
                             <input type="hidden" value="<?=$codSolDet?>" id="codigo_solicitudDetalle<?=$index?>" name="codigo_solicitudDetalle<?=$index?>">
                             <?php 

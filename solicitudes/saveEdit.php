@@ -114,9 +114,20 @@ while ($row = $solDet->fetch(PDO::FETCH_BOUND)) {
 
 $stmt1 = obtenerSolicitudesDet($codSolicitud);
 editarComprobanteDetalle($codSolicitud,'cod_solicitudrecurso',$cont1,$fila,$stmt1,'solicitud_recursosdetalle',$cab,$data,$facturas);
-if($flagSuccess==true){
-	showAlertSuccessError(true,"../".$urlList);	
+
+if(isset($_POST['usuario_ibnored'])){;
+    $q=$_POST['usuario_ibnored'];
+  if($flagSuccess==true){
+    showAlertSuccessError(true,"../".$urlList."&q=".$q); 
+  }else{
+    showAlertSuccessError(false,"../".$urlList."&q=".$q);
+  }
 }else{
-	showAlertSuccessError(false,"../".$urlList);
+  if($flagSuccess==true){
+    showAlertSuccessError(true,"../".$urlList); 
+  }else{
+    showAlertSuccessError(false,"../".$urlList);
+  }
 }
+  
 ?>

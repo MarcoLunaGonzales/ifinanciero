@@ -17,18 +17,44 @@ $globalAdmin=$_SESSION["globalAdmin"];
 
 //$fechaHoraActual=date("Y-m-d H:i:s");
 $cantidadFilas=$_POST['cantidad_filas'];
-
+$nombreSimulacion=$_POST["nombre_solicitud"];
 $porFecha = explode("/", $_POST['fecha_pago']);
 $fecha_pago=$porFecha[2]."-".$porFecha[1]."-".$porFecha[0];
 $observaciones_pago=$_POST['observaciones_pago'];
 
-   $cod_pagoproveedor=obtenerCodigoPagoProveedor();
-   $sqlInsert="INSERT INTO pagos_proveedores (codigo, fecha,observaciones) 
-  VALUES ('".$cod_pagoproveedor."','".$fecha_pago."','".$observaciones_pago."')";
-  $stmtInsert = $dbh->prepare($sqlInsert);
-  $stmtInsert->execute();
+  
 
 $totalPago=0;
+
+//creacion del comprobante de pago
+$codComprobante=obtenerCodigoComprobante();
+
+    $codGestion=date("Y");
+    $tipoComprobante=2;
+    $nroCorrelativo=numeroCorrelativoComprobante($globalGestion,$globalUnidad,3);
+    $fechaHoraActual=date("Y-m-d H:i:s");
+    $glosa="PAGOS ".$nombreSimulacion." COMPROBANTE (SOLICITUD - RECURSOS) ".$observaciones_pago;
+    $userSolicitud=$globalUser;
+    $unidadSol=$globalUnidad;
+    $areaSol=$globalArea;
+
+    $sqlInsert="INSERT INTO comprobantes (codigo, cod_empresa, cod_unidadorganizacional, cod_gestion, cod_moneda, cod_estadocomprobante, cod_tipocomprobante, fecha, numero, glosa, created_at, created_by, modified_at, modified_by) 
+    VALUES ('$codComprobante', '1', '$globalUnidad', '$codGestion', '1', '1', '$tipoComprobante', '$fechaHoraActual', '$nroCorrelativo', '$glosa', '$fechaHoraActual', '$userSolicitud', '$fechaHoraActual', '$userSolicitud')";
+    $stmtInsert = $dbh->prepare($sqlInsert);
+    $flagSuccessComprobante=$stmtInsert->execute();
+
+    $sqlDelete="";
+        $sqlDelete="DELETE from comprobantes_detalle where cod_comprobante='$codComprobante'";
+        $stmtDel = $dbh->prepare($sqlDelete);
+        $flagSuccess=$stmtDel->execute();
+
+    $cod_pagoproveedor=obtenerCodigoPagoProveedor();
+   $sqlInsert="INSERT INTO pagos_proveedores (codigo, fecha,observaciones,cod_comprobante) 
+  VALUES ('".$cod_pagoproveedor."','".$fecha_pago."','".$observaciones_pago."','".$codComprobante."')";
+  $stmtInsert = $dbh->prepare($sqlInsert);
+  $stmtInsert->execute();     
+//COMPROBANTE
+
 for ($i=1;$i<=$cantidadFilas;$i++){ 	
   $proveedor=$_POST['codigo_proveedor'.$i];    	
 	$monto_pago=$_POST["monto_pago".$i];
@@ -39,6 +65,7 @@ for ($i=1;$i<=$cantidadFilas;$i++){
     $porFecha2 = explode("/", $_POST["fecha_pago".$i]);
     $fecha_pagoDet=$porFecha2[2]."-".$porFecha2[1]."-".$porFecha2[0];
 		$tipo_pago=$_POST["tipo_pago".$i];
+    $glosa_detalle=$_POST["glosa_detalle".$i];
 
     $cod_pagoproveedordetalle=obtenerCodigoPagoProveedorDetalle();
     $sqlInsert2="INSERT INTO pagos_proveedoresdetalle (codigo,cod_pagoproveedor,cod_proveedor,cod_solicitudrecursos,cod_solicitudrecursosdetalle,cod_tipopagoproveedor,monto,observaciones,fecha) 
@@ -61,33 +88,9 @@ for ($i=1;$i<=$cantidadFilas;$i++){
      $stmtInsert4 = $dbh->prepare($sqlInsert4);
      $stmtInsert4->execute();
     }
-	}
-}
 
-
-//creacion del comprobante de pago
-$codComprobante=obtenerCodigoComprobante();
-
-    $codGestion=date("Y");
-    $tipoComprobante=2;
-    $nroCorrelativo=numeroCorrelativoComprobante($globalGestion,$globalUnidad,3);
-    $fechaHoraActual=date("Y-m-d H:i:s");
-    $glosa="PAGOS COMPROBANTE (SOLICITUD - RECURSOS) ".$observaciones_pago;
-    $userSolicitud=$globalUser;
-    $unidadSol=$globalUnidad;
-    $areaSol=$globalArea;
-
-    $sqlInsert="INSERT INTO comprobantes (codigo, cod_empresa, cod_unidadorganizacional, cod_gestion, cod_moneda, cod_estadocomprobante, cod_tipocomprobante, fecha, numero, glosa, created_at, created_by, modified_at, modified_by) 
-    VALUES ('$codComprobante', '1', '$globalUnidad', '$codGestion', '1', '1', '$tipoComprobante', '$fechaHoraActual', '$nroCorrelativo', '$glosa', '$fechaHoraActual', '$userSolicitud', '$fechaHoraActual', '$userSolicitud')";
-    $stmtInsert = $dbh->prepare($sqlInsert);
-    $flagSuccessComprobante=$stmtInsert->execute();
-    
-        $sqlDelete="";
-        $sqlDelete="DELETE from comprobantes_detalle where cod_comprobante='$codComprobante'";
-        $stmtDel = $dbh->prepare($sqlDelete);
-        $flagSuccess=$stmtDel->execute();
-        
-        $cuenta=obtenerValorConfiguracion(37);
+    //comprobantes Detalles
+    $cuenta=obtenerValorConfiguracion(37);
         $cuentaAuxiliar=0;
         $numeroCuenta=trim(obtieneNumeroCuenta($cuenta));
         $inicioNumero=$numeroCuenta[0];
@@ -100,9 +103,9 @@ $codComprobante=obtenerCodigoComprobante();
             $area=$unidadarea[1];
         }
 
-        $debe=$totalPago;
+        $debe=$monto_pago;
         $haber=0;
-        $glosaDetalle=$observaciones_pago;
+        $glosaDetalle=$glosa." - ".$glosa_detalle;
 
 
         $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
@@ -126,8 +129,8 @@ $codComprobante=obtenerCodigoComprobante();
         }
 
         $debe=0;
-        $haber=$totalPago;
-        $glosaDetalle=$observaciones_pago;
+        $haber=$monto_pago;
+        $glosaDetalle=$glosa." - ".$glosa_detalle;
 
 
         $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
@@ -135,6 +138,15 @@ $codComprobante=obtenerCodigoComprobante();
         VALUES ('$codComprobanteDetalle','$codComprobante', '$cuenta', '$cuentaAuxiliar', '$unidadDetalle', '$area', '$debe', '$haber', '$glosaDetalle', '2')";
         $stmtDetalle = $dbh->prepare($sqlDetalle);
         $flagSuccessDetalle=$stmtDetalle->execute(); 
+    //fin comprobantes detalles
+	}
+}
+
+
+
+    
+        
+        
 
 
 if($flagSuccess==true){

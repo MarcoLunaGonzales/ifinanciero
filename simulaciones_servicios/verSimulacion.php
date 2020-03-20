@@ -585,7 +585,18 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
 					</div>
 
 				  	<div class="card-footer fixed-bottom">
-						<a href="../<?=$urlList;?>" class="btn btn-danger">Volver</a>
+              <?php 
+            if(isset($_GET['q'])){
+              $q=$_GET['q'];
+              ?>
+              <a href="../<?=$urlList;?>&q=<?=$q?>" class="btn btn-danger">Volver</a>
+              <?php
+            }else{
+              ?>
+              <a href="../<?=$urlList;?>" class="btn btn-danger">Volver</a>
+              <?php
+            }
+              ?>
 
 				  	</div>
 				 </div>

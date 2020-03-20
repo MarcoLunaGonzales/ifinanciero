@@ -11,8 +11,9 @@ $dbh = new Conexion();
 
 // Preparamos
 if(isset($_GET['q'])){
+  $q=$_GET['q'];
   //cargarDatosSession();
-  $stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado,c.nombre as cliente from simulaciones_servicios sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo join clientes c on c.codigo=sc.cod_cliente where sc.cod_estadoreferencial=1 and sc.idServicio=$q order by sc.codigo");
+  $stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado,c.nombre as cliente from simulaciones_servicios sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo join clientes c on c.codigo=sc.cod_cliente where sc.cod_estadoreferencial=1 order by sc.codigo");
 }else{
   $stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado,c.nombre as cliente from simulaciones_servicios sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo join clientes c on c.codigo=sc.cod_cliente where sc.cod_estadoreferencial=1 order by sc.codigo");
 }
@@ -102,7 +103,19 @@ $stmt->bindColumn('cliente', $cliente);
                               </button>
                               <div class="dropdown-menu">
                                 <?php 
+                                if(isset($_GET['q'])){
                                  if($codEstado==4){
+                                 ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1&admin=0&q=<?=$q?>" class="dropdown-item">
+                                    <i class="material-icons text-danger">clear</i> Cancelar solicitud
+                                 </a>
+                                 <?php 
+                                 }?>
+                                 <a href="<?=$urlVer;?>?cod=<?=$codigo;?>&q=<?=$q?>" class="dropdown-item">
+                                    <i class="material-icons text-warning">bar_chart</i> Ver Propuesta
+                                 </a> 
+                                 <?php
+                               }else{
+                                if($codEstado==4){
                                  ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1&admin=0" class="dropdown-item">
                                     <i class="material-icons text-danger">clear</i> Cancelar solicitud
                                  </a>
@@ -111,36 +124,58 @@ $stmt->bindColumn('cliente', $cliente);
                                  <a href="<?=$urlVer;?>?cod=<?=$codigo;?>" class="dropdown-item">
                                     <i class="material-icons text-warning">bar_chart</i> Ver Propuesta
                                  </a>
+                                 <?php
+                               }?>
+                                 
                   
                               </div>
                             </div>                           
                             <?php
                              if($codEstado==3){
-                              $anteriorCod=obtenerCodigoSolicitudRecursosSimulacion(2,$codigo);
-                                  ?><a href="<?=$urlSolicitudRecursos?>?cod=<?=$codigo?>" target="_blank" title="Solicitud De Recursos"class="btn btn-danger">
+                               $anteriorCod=obtenerCodigoSolicitudRecursosSimulacion(2,$codigo);
+                               if(isset($_GET['q'])){
+                                  ?><a href="<?=$urlSolicitudRecursos?>?cod=<?=$codigo?>&q=<?=$q?>" target="_self" title="Solicitud De Recursos"class="btn btn-danger">
+                                    <i class="material-icons">content_paste</i>
+                                 </a>
+                                 <a title="Imprimir Solicitud de Recursos" href='#' onclick="javascript:window.open('solicitudes/imp.php?sol=<?=$anteriorCod;?>&mon=1')" class="btn btn-primary">
+                                     <i class="material-icons"><?=$iconImp;?></i>
+                                 </a> 
+                                 <a class="btn btn-warning" title="Solicitud de Facturación" href='<?=$urlSolicitudfactura;?>&cod=<?=$codigo;?>&q=<?=$q?>'>
+                                   <i class="material-icons" >receipt</i>                              
+                                 </a><?php  
+                                }else{
+                                ?><a href="<?=$urlSolicitudRecursos?>?cod=<?=$codigo?>" target="_blank" title="Solicitud De Recursos"class="btn btn-danger">
                                     <i class="material-icons">content_paste</i>
                                  </a>
                                  <a title="Imprimir Solicitud de Recursos" href='#' onclick="javascript:window.open('solicitudes/imp.php?sol=<?=$anteriorCod;?>&mon=1')" class="btn btn-primary">
                                      <i class="material-icons"><?=$iconImp;?></i>
                                  </a> 
                                  <a class="btn btn-warning" title="Solicitud de Facturación" href='<?=$urlSolicitudfactura;?>&cod=<?=$codigo;?>'>
-                              <i class="material-icons" >receipt</i>                              
-                            </a><?php
-                                }    
+                                   <i class="material-icons" >receipt</i>                              
+                                 </a><?php
+                                }
+                              }    
                               }else{
-                              ?>
-                            <!--<a href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=4&admin=0' itle="Enviar Solicitud" class="btn btn-warning">
-                              <i class="material-icons">send</i>
-                            </a>-->  
-                            <a title="Editar Simulación - Detalle" target="_blank" href='<?=$urlRegister;?>?cod=<?=$codigo;?>' class="btn btn-info">
-                              <i class="material-icons"><?=$iconEdit;?></i>
-                            </a>
-                            <!--<a title="Editar Simulación" href='<?=$urlEdit;?>&codigo=<?=$codigo;?>' class="<?=$buttonEdit;?>">
-                              <i class="material-icons"><?=$iconEdit;?></i>
-                            </a>-->
-                            <button title="Eliminar Simulación" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')">
-                              <i class="material-icons"><?=$iconDelete;?></i>
-                            </button>
+                                if(isset($_GET['q'])){
+                                 ?>
+                                  <a title="Editar Simulación - Detalle" target="_self" href='<?=$urlRegister;?>?cod=<?=$codigo;?>&q=<?=$q?>' class="btn btn-info">
+                                    <i class="material-icons"><?=$iconEdit;?></i>
+                                  </a>
+                                  <button title="Eliminar Simulación" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>&q=<?=$q?>')">
+                                    <i class="material-icons"><?=$iconDelete;?></i>
+                                  </button>
+                                 <?php 
+                                }else{
+                                 ?>
+                                  <a title="Editar Simulación - Detalle" target="_blank" href='<?=$urlRegister;?>?cod=<?=$codigo;?>' class="btn btn-info">
+                                    <i class="material-icons"><?=$iconEdit;?></i>
+                                  </a>
+                                  <button title="Eliminar Simulación" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')">
+                                    <i class="material-icons"><?=$iconDelete;?></i>
+                                  </button>
+                                 <?php  
+                                }
+                              ?>                            
                             
                               <?php  
                               }

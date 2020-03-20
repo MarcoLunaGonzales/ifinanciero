@@ -2260,8 +2260,12 @@ function guardarSimulacionServicio(){
         },
         success:  function (resp) {
           detectarCargaAjax();
-
-         alerts.showSwal('success-message','simulaciones_servicios/registerSimulacion.php?cod='+resp);
+         if(!($("#codigo_servicioibnorca").length)){
+            alerts.showSwal('success-message','simulaciones_servicios/registerSimulacion.php?cod='+resp);
+          }else{
+            alerts.showSwal('success-message','simulaciones_servicios/registerSimulacion.php?cod='+resp+'&q='+idServicio);
+          }
+         
         }
     });
   }
@@ -2281,7 +2285,11 @@ function guardarSimulacionServicio(){
         },
         success:  function (resp) {
           detectarCargaAjax();
-         alerts.showSwal('success-message','simulaciones_servicios/registerSimulacion.php?cod='+resp);
+         if(!($("#codigo_servicioibnorca").length)){
+            alerts.showSwal('success-message','simulaciones_servicios/registerSimulacion.php?cod='+resp);
+          }else{
+            alerts.showSwal('success-message','simulaciones_servicios/registerSimulacion.php?cod='+resp+'&q='+idServicio);
+          }
         }
     });
   }
@@ -2478,7 +2486,13 @@ function enviarSimulacionAjaxServ(){
          $("#logo_carga").hide();
          Swal.fire("Envío Existoso!", "Se registradon los datos exitosamente!", "success")
              .then((value) => {
-             location.href="../index.php?opcion=listSimulacionesServ";
+              if(!($("#id_servicioibnored").length)){
+               location.href="../index.php?opcion=listSimulacionesServ";
+              }else{
+                var q=$("#id_servicioibnored").val();
+                location.href="../index.php?opcion=listSimulacionesServ&q="+q;
+              }
+             
          });
         }
     });
@@ -5960,6 +5974,7 @@ if(!(ut_i==""||dia==""||dia==0||productos==""||num_prod<1)){
 }
 
 function actualizarSimulacion(){
+
   var codigo=$("#cod_simulacion").val();
    Swal.fire({
         title: '¿Esta Seguro?',
@@ -5973,7 +5988,13 @@ function actualizarSimulacion(){
         buttonsStyling: false
       }).then((result) => {           
          if (result.value) {
-            location.href='registerSimulacion.php?cod='+codigo;
+            if(!($("#id_servicioibnored").length)){
+               location.href='registerSimulacion.php?cod='+codigo;
+             }else{
+              var q=$("#id_servicioibnored").val();
+               location.href='registerSimulacion.php?cod='+codigo+'&q='+q;
+             } 
+            
             $("#narch").removeClass("estado");
             return(true);
           } else if (result.dismiss === Swal.DismissReason.cancel) {

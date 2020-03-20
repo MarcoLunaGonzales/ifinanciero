@@ -26,12 +26,19 @@ $flagSuccess=$stmtUpdate->execute();
 if(isset($_GET['admin'])){
   $urlList2=$urlList;
   //aprobar mediante servicio web
-  
-
 }
-if($flagSuccess==true){
-	showAlertSuccessError(true,"../".$urlList2);	
+
+if(isset($_GET['q'])){
+ if($flagSuccess==true){
+	showAlertSuccessError(true,"../".$urlList2."&q=".$_GET['q']);	
+ }else{
+	showAlertSuccessError(false,"../".$urlList2."&q=".$_GET['q']);
+ }
 }else{
+ if($flagSuccess==true){
+	showAlertSuccessError(true,"../".$urlList2);	
+ }else{
 	showAlertSuccessError(false,"../".$urlList2);
+ }
 }
 ?>
