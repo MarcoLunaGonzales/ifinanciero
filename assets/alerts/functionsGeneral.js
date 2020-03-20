@@ -218,6 +218,8 @@ function configuracionEstadosCuenta(fila,codigoCuenta,codigoCuentaAux){
     if(estado_cuentas[i].cod_cuenta==codigoCuenta){ //&&codigoCuentaAux==0
       $("#estados_cuentas"+fila).removeClass("d-none"); 
       $("#tipo_estadocuentas"+fila).val(estado_cuentas[i].tipo);
+      $("#tipo_proveedorcliente"+fila).val(estado_cuentas[i].tipo_estado_cuenta);
+
       contador++;   
       break;  
     }else{
@@ -5100,7 +5102,7 @@ function buscarCuentaNumero(numeros,val){
 
 function verEstadosCuentas(fila,cuenta){
   if(($("#debe"+fila).val()==""&&$("#haber"+fila).val()=="")||($("#debe"+fila).val()==0&&$("#haber"+fila).val()==0)){
-     $('#msgError').html("<p>El debe o el haber deben de ser llenados</p>");
+     $('#msgError').html("<p>El Debe o Haber deben de ser llenados</p>");
      $("#modalAlert").modal("show");
   }else{
     if(cuenta==0){
@@ -5121,34 +5123,54 @@ function verEstadosCuentas(fila,cuenta){
       }
       var cod_cuenta=cuenta;
     }
+
     var tipo=$("#tipo_estadocuentas"+fila).val();
-    if(tipo==1){
+    var tipo_proveedorcliente=$("#tipo_proveedorcliente"+fila).val();
+
+    if(tipo==1 && tipo_proveedorcliente==1){
+      $("#monto_estadocuenta").val($("#debe"+fila).val());
+      if(($("#div_cuentasorigen").hasClass("d-none"))){
+        $("#div_cuentasorigen").addClass("d-none");
+        $("#div_cuentasorigendetalle").addClass("d-none"); 
+      }      
+    }
+    if(tipo==2 && tipo_proveedorcliente==1){
+      $("#monto_estadocuenta").val($("#haber"+fila).val());
+      if(!($("#div_cuentasorigen").hasClass("d-none"))){
+        $("#div_cuentasorigen").addClass("d-none");
+        $("#div_cuentasorigendetalle").addClass("d-none"); 
+      }      
+    }
+    if(tipo==1 && tipo_proveedorcliente==2){
       $("#monto_estadocuenta").val($("#debe"+fila).val());
       if(!($("#div_cuentasorigen").hasClass("d-none"))){
         $("#div_cuentasorigen").addClass("d-none");
         $("#div_cuentasorigendetalle").addClass("d-none"); 
       }      
-    }else{
+    }
+    if(tipo==2 && tipo_proveedorcliente==2){
       $("#monto_estadocuenta").val($("#haber"+fila).val());
       if($("#div_cuentasorigen").hasClass("d-none")){
         $("#div_cuentasorigen").removeClass("d-none");
         $("#div_cuentasorigendetalle").removeClass("d-none");
-      } 
-      if($("#cuentas_origen").val()==""||$("#cuentas_origen").val()==null){
-        var cod_cuenta="";      
-      }else{
-        var resp = $("#cuentas_origen").val().split('###');
-        var cod_cuenta = resp[0];
-        if(resp[1]=="AUX"){
-          var auxi="SI";
-        }else{
-          var auxi="NO";
-        }
       }
-      
-    }
-    //ajax estado de cuentas
-    var parametros={"cod_cuenta":cod_cuenta,"tipo":tipo,"mes":12,"auxi":auxi};
+    } 
+    
+    if($("#cuentas_origen").val()=="" || $("#cuentas_origen").val()==null){
+      //Esto revisar si hay que descomentar.
+      //var cod_cuenta="";      
+    }else{
+      var resp = $("#cuentas_origen").val().split('###');
+      var cod_cuenta = resp[0];
+      if(resp[1]=="AUX"){
+        var auxi="SI";
+      }else{
+        var auxi="NO";
+      }
+    }  
+
+    //PASA Y MOSTRAMOS LOS ESTADOS DE CUENTA
+    var parametros={"cod_cuenta":cod_cuenta,"tipo":tipo,"tipo_proveedorcliente":tipo_proveedorcliente,"mes":12,"auxi":auxi};
     $.ajax({
         type: "GET",
         dataType: 'html',
@@ -5157,7 +5179,7 @@ function verEstadosCuentas(fila,cuenta){
         success:  function (resp) {
           var respuesta=resp.split('@');
           $("#div_estadocuentas").html(respuesta[0]);
-          if(tipo==1){
+          if(tipo==2 && tipo_proveedorcliente==1){
             var rsaldo=listarEstadosCuentas(fila,respuesta[1]);
             listarEstadosCuentasDebito(fila,rsaldo);
           }else{
@@ -5170,10 +5192,10 @@ function verEstadosCuentas(fila,cuenta){
     /*$("#est_codcuenta").val($("#cuenta"+fila).val());
     $("#est_codcuentaaux").val($("#cuenta_auxiliar"+fila).val());*/ 
     $("#tituloCuentaModal").html($("#divCuentaDetalle"+fila).html()); 
-    $("#modalEstadosCuentas").modal("show"); 
-
-  }  
-}
+    $("#modalEstadosCuentas").modal("show");   
+  }
+}  
+//}
 
 var itemEstadosCuentas=[];
 function quitarEstadoCuenta(){
@@ -5182,11 +5204,14 @@ function quitarEstadoCuenta(){
   verEstadosCuentas(fila,0);
   $("#nestado"+fila).removeClass("estado");
 }
+
 function agregarEstadoCuenta(){
   $("#mensaje_estadoscuenta").html("");
   var fila=$("#estFila").val();
   var tipo=$("#tipo_estadocuentas"+fila).val();
-  if(tipo==1){
+  var tipo_proveedorcliente=$("#tipo_proveedorcliente"+fila).val();
+  
+  if(tipo==2 && tipo_proveedorcliente==1){ //CUMPLE LA CONDICION DE TIPO: PROVEEDOR Y HABER 
     var cuenta=0;
     var codComproDet=0;
     var nfila={
@@ -5208,33 +5233,33 @@ function agregarEstadoCuenta(){
     var cuenta_auxiliar=detalle_resp[1];
     if(codComproDet!=null){
       if(resp[1]=="AUX"){
-    var nfila={
-    cod_plancuenta:0,
-    cod_plancuentaaux:cuenta,
-    cod_comprobantedetalle:codComproDet,
-    cod_proveedor:0,//$("#proveedores").val(),
-    monto:$("#monto_estadocuenta").val()
-    }
-
+        var nfila={
+          cod_plancuenta:0,
+          cod_plancuentaaux:cuenta,
+          cod_comprobantedetalle:codComproDet,
+          cod_proveedor:0,//$("#proveedores").val(),
+          monto:$("#monto_estadocuenta").val()
+        }
       }else{
-    var nfila={
-    cod_plancuenta:cuenta,
-    cod_plancuentaaux:cuenta_auxiliar,
-    cod_comprobantedetalle:codComproDet,
-    cod_proveedor:0,//$("#proveedores").val(),
-    monto:$("#monto_estadocuenta").val()
-    }    
+        var nfila={
+          cod_plancuenta:cuenta,
+          cod_plancuentaaux:cuenta_auxiliar,
+          cod_comprobantedetalle:codComproDet,
+          cod_proveedor:0,//$("#proveedores").val(),
+          monto:$("#monto_estadocuenta").val()
+        }    
       }
-    itemEstadosCuentas[fila-1]=[];
-    itemEstadosCuentas[fila-1].push(nfila);
-    $("#nestado"+fila).addClass("estado");
-    verEstadosCuentas(fila,cuenta);
+      itemEstadosCuentas[fila-1]=[];
+      itemEstadosCuentas[fila-1].push(nfila);
+      $("#nestado"+fila).addClass("estado");
+      verEstadosCuentas(fila,cuenta);
     }else{
       $("#mensaje_estadoscuenta").html("<label class='text-danger'>Debe seleccionar un registro en la tabla</label>");
     }
   }
-  
 }
+
+
 function listarEstadosCuentasCredito(id,saldo){
    var rsaldo = parseFloat(saldo);
     for (var j = 0; j < itemEstadosCuentas[id-1].length; j++) {
@@ -5266,25 +5291,28 @@ function listarEstadosCuentasDebito(id,saldo){
   var table = $('#tabla_estadocuenta');
    for (var i = 0; i < itemEstadosCuentas[id-1].length; i++) {
      var row = $('<tr>').addClass('bg-white');
-     row.append($('<td>').addClass('text-left').text(""));
-     row.append($('<td>').addClass('text-left text-danger').text("Sin Guardar"));
+     row.append($('<td>').addClass('text-left').text("-"));
+     row.append($('<td>').addClass('text-left').text("-"));
+     row.append($('<td>').addClass('text-left text-danger').text("---"));
+     
      var tipo=$("#tipo_estadocuentas"+id).val();
-      if(tipo==1){
-        row.append($('<td>').addClass('text-left').text($("#glosa_detalle"+id).val()));
+     var tipo_proveedorcliente=$("#tipo_proveedorcliente"+id).val();
+      if(tipo==2 && tipo_proveedorcliente==1){
+        row.append($('<td>').addClass('text-left text-danger').text($("#glosa_detalle"+id).val()));
         var nsaldo=parseFloat(saldo)+parseFloat(itemEstadosCuentas[id-1][i].monto);
-        row.append($('<td>').addClass('text-right').text(numberFormat(itemEstadosCuentas[id-1][i].monto,2)));
-        row.append($('<td>').addClass('text-right').text(""));   
+        row.append($('<td>').addClass('text-right text-danger').text(""));   
+        row.append($('<td>').addClass('text-right text-danger').text(numberFormat(itemEstadosCuentas[id-1][i].monto,2)));
       }else{
         var titulo_glosa="";
         if(itemEstadosCuentas[id-1][i].cod_comprobantedetalle!=0){
           titulo_glosa=obtieneDatosFilaEstadosCuenta(itemEstadosCuentas[id-1][i].cod_comprobantedetalle);
         }
-        row.append($('<td>').addClass('text-left').html($("#glosa_detalle"+id).val()+"<small class='text-success'>"+titulo_glosa+"</small>"));
+        row.append($('<td>').addClass('text-left text-danger').html($("#glosa_detalle"+id).val()+"<small class='text-success'>"+titulo_glosa+"</small>"));
         var nsaldo=parseFloat(saldo)-parseFloat(itemEstadosCuentas[id-1][i].monto);
-        row.append($('<td>').addClass('text-right').text("")); 
-        row.append($('<td>').addClass('text-right').text(numberFormat(itemEstadosCuentas[id-1][i].monto,2)));  
+        row.append($('<td>').addClass('text-right text-danger').text(numberFormat(itemEstadosCuentas[id-1][i].monto,2)));  
+        row.append($('<td>').addClass('text-right text-danger').text("")); 
       }
-      row.append($('<td>').addClass('text-right font-weight-bold').text(numberFormat(nsaldo,2)));
+      row.append($('<td>').addClass('text-right text-danger font-weight-bold').text(numberFormat(nsaldo,2)));
      table.append(row);
      return nsaldo;
    }
@@ -5337,8 +5365,8 @@ function verDetalleEstadosCuenta2(i){
     $(".det-estados-"+i).show();
   }
 }
-function verEstadosCuentasModal(cuenta,cod_cuenta,cod_cuentaaux,tipo){
-   var parametros={"cod_cuenta":cod_cuenta,"cod_cuentaaux":cod_cuentaaux,"tipo":tipo,"mes":12};
+function verEstadosCuentasModal(cuenta,cod_cuenta,cod_cuentaaux,tipo,tipo_proveedorcliente){
+   var parametros={"cod_cuenta":cod_cuenta,"cod_cuentaaux":cod_cuentaaux,"tipo":tipo,"tipo_proveedorcliente":tipo_proveedorcliente,"mes":12};
     $.ajax({
         type: "GET",
         dataType: 'html',
