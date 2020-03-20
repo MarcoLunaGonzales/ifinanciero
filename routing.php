@@ -355,6 +355,10 @@
     	if ($_GET['opcion']=='saveEditResponsables') {
                         require_once('activosFijos/saveEdit3.php');
 		}
+		if ($_GET['opcion']=='deleteDepr') {
+			$codigo=$_GET['codigo'];
+			require_once('activosFijos/saveDeleteDepr.php');
+		}
 
 		//TIPOS DE BIENES
 		if ($_GET['opcion']=='listaTiposBienes') {
@@ -458,6 +462,10 @@
 		if ($_GET['opcion']=='activofijoPrintAlta') {
 			$codigo=$_GET['codigo'];
 			require_once('activosFijos/afPrintAlta.php');
+		}
+		if ($_GET['opcion']=='deleteProv') {
+			$codigo=$_GET['codigo'];
+			require_once('activosFijos/saveDeleteProv.php');
 		}
 
 		//EJECUTAR DEPRECIACION

@@ -191,7 +191,7 @@ $stmt->bindColumn('fecha_recepcion', $fecha_recepcion);
         <input type="hidden" name="codigo_af_aceptar1" id="codigo_af_aceptar1" value="0">
         <input type="hidden" name="codigo_af_aceptar2" id="codigo_af_aceptar2" value="0">
         <h6> Observaciones : </h6><br>
-        <input type="text" name="observacionD" id="observacionD" class="form-control input-sm" required="true">
+        <input type="text" name="observacionD" id="observacionD" class="form-control input-sm" required="true" onkeyup="javascript:this.value=this.value.toUpperCase();">
       </div>
       <div class="modal-footer">
         
@@ -225,7 +225,7 @@ $stmt->bindColumn('fecha_recepcion', $fecha_recepcion);
                 while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { 
                   ?>
                         <h6>Observaciones Para El AF Con Código: <?=$cod_activosfijos?> </h6>
-                        <input type="text" name="observacionD<?=$cont_aux;?>" id="observacionD<?=$cont_aux;?>" class="form-control input-sm" required="true">
+                        <input type="text" name="observacionD<?=$cont_aux;?>" id="observacionD<?=$cont_aux;?>" class="form-control input-sm" required="true" onkeyup="javascript:this.value=this.value.toUpperCase();">
                 <?php
                   $cont_aux=$cont_aux+1;
                   }

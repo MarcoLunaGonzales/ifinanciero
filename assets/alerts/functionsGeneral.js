@@ -1857,26 +1857,29 @@ function ajaxDepreciacion(codigo_UO){
 
 function ajaxAFunidadorganizacional(combo){
   var contenedor;
-  var codigo_UO=combo.value;
+  var codigo_ub=combo.value;
   contenedor = document.getElementById('div_contenedor_UO');
   ajax=nuevoAjax();
-  ajax.open('GET', 'activosFijos/ubicacionesUnidadAjax.php?codigo_UO='+codigo_UO,true);
+  ajax.open('GET', 'activosFijos/ubicacionesUnidadAjax.php?codigo_UO='+codigo_ub,true);
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
       contenedor.innerHTML = ajax.responseText;
       $('.selectpicker').selectpicker(["refresh"]);
       
-      ajaxPersonalUbicacion(codigo_UO);
+      ajaxPersonalUbicacion();
     }
   }
   ajax.send(null)  
 }
 
-function ajaxPersonalUbicacion(codigo_UO){
-  var contenedor;
+function ajaxPersonalUbicacion(){
+  var cod_uo=$("#cod_unidadorganizacional").val();  
+  // alert(cod_uo);
+
+  var contenedor; 
   contenedor = document.getElementById('div_personal_UO');
   ajax=nuevoAjax();
-  ajax.open('GET', 'activosFijos/ubicacionPersonalAjax.php?codigo_UO='+codigo_UO,true);
+  ajax.open('GET', 'activosFijos/ubicacionPersonalAjax.php?codigo_UO='+cod_uo,true);
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
       contenedor.innerHTML = ajax.responseText;

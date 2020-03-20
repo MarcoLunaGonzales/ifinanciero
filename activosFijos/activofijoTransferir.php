@@ -116,7 +116,7 @@ $responsable='';
 
                     
                     <div class="row">
-                      <label class="col-sm-2 col-form-label">Codigo Activo</label>
+                      <label class="col-sm-2 col-form-label">Código Activo</label>
                       <div class="col-sm-4">
                           <div class="form-group">
                               <input type="text"  readonly="readonly" style="padding-left:20px" class="form-control" name="codigoactivo" id="codigoactivo" required="true"  value="<?=$codigo;?>"/>
@@ -129,6 +129,7 @@ $responsable='';
                       <div class="col-sm-7">
                         <div class="form-group">
                             <select id="cod_uo" name="cod_uo" class="selectpicker " data-style="btn btn-info" onChange="ajaxPersonalUbicacionTrasfer(this);">
+                            <option value=""></option>
                             <?php while ($row = $statementUO->fetch()){ ?>
                               <option  value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
 
@@ -144,6 +145,7 @@ $responsable='';
                       <div class="col-sm-7">
                         <div class="form-group">
                             <select id="cod_area" name="cod_area" class="selectpicker " data-style="btn btn-info">
+                            <option value=""></option>
                             <?php while ($row = $statementArea->fetch()){ ?>
                                 <option value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
                             <?php } ?> 
@@ -156,7 +158,7 @@ $responsable='';
                       <div class="col-sm-4">
                       <div class="form-group">
                           <div id="div_personal_UO">
-
+                            
                           </div>
                       </div>
                       </div><!--fin campo cod_responsables_responsable -->

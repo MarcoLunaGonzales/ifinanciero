@@ -19,7 +19,7 @@ $stmt->execute();
 
 ?>
 
-<select name="cod_unidadorganizacional" id="cod_unidadorganizacional" class="selectpicker" data-style="btn btn-primary">
+<select name="cod_unidadorganizacional" id="cod_unidadorganizacional" class="selectpicker" data-style="btn btn-primary" onChange="ajaxPersonalUbicacion();">
     <?php 
     	while ($row = $stmt->fetch()){ 
 	?>

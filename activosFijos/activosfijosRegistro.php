@@ -372,8 +372,8 @@ if ($codigo > 0){
                                         where u.cod_unidades_organizacionales=uo.codigo and uo.codigo=p.cod_unidadorganizacional and uo.codigo=$cod_unidadorganizacional order by 2");
                                         $stmtRR->execute();
                                         ?>
-                                        <select id="cod_responsables_responsable" name="cod_responsables_responsable" class="form-control" 
-                                        data-style="btn btn-info" data-size="5">
+                                        <select id="cod_responsables_responsable" name="cod_responsables_responsable" class="selectpicker form-control" 
+                                        data-style="btn btn-primary" data-size="5">
                                             <?php while ($row = $stmtRR->fetch()){ ?>
                                                 <option <?=($cod_responsables_responsable==$row["codigo"])?"selected":"";?>  <?=($codigo>0)?"disabled":"";?> value="<?=$row["codigo"];?>">
                                                     <?=$row["paterno"].' '.$row["materno"].' '.$row["primer_nombre"];?>
@@ -389,7 +389,7 @@ if ($codigo > 0){
                                 <label class="col-sm-2 col-form-label">Autorizado Por</label>
                                 <div class="col-sm-4">
                                 <div class="form-group">
-                                    <select id="cod_responsables_autorizadopor" name="cod_responsables_autorizadopor" class="form-control" data-style="btn btn-primary">
+                                    <select id="cod_responsables_autorizadopor" name="cod_responsables_autorizadopor" class="selectpicker form-control" data-style="btn btn-primary">
                                         <?php while ($row = $statementPersonal2->fetch()){ ?>
                                             <option <?=($cod_responsables_autorizadopor==$row["codigo"])?"selected":"";?>  <?=($codigo>0)?"disabled":"";?> value="<?=$row["codigo"];?>">
                                                 <?=$row["paterno"].' '.$row["materno"].' '.$row["primer_nombre"];?>
@@ -404,6 +404,7 @@ if ($codigo > 0){
                                 <div class="col-sm-4">
                                 <div class="form-group">
                                     <select id="cod_af_proveedores" name="cod_af_proveedores" class="selectpicker" data-style="btn btn-primary">
+                                        <option value=""></option>
                                         <?php while ($row = $statementprov->fetch()){ ?>
                                             <option <?php if($cod_af_proveedores == $row["codigo"]) echo "selected"; ?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
                                         <?php } ?>

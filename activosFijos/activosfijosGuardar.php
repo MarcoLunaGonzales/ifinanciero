@@ -56,6 +56,7 @@ try {
     //$modified_at=$_POST["modified_at"];
     //$modified_by=$_POST["modified_by"];
     $cod_af_proveedores=$_POST["cod_af_proveedores"];
+    if($cod_af_proveedores=='')$cod_af_proveedores=null;
     $numerofactura=$_POST["numerofactura"];
     $bandera_depreciar = 'NO';#LA PRIMERA VEZ LUEGO SE CAMBIA A SI Y DEPRECIA
 

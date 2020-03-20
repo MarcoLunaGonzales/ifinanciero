@@ -6,7 +6,7 @@ require_once 'configModule.php';
 
 $dbh = new Conexion();
 
-echo $codigo;
+// echo $codigo;
 
 if ($codigo > 0){
     //$codigo=$codigo;
@@ -57,7 +57,7 @@ if ($codigo > 0){
     </div>
 </div><!--fin campo nombre -->
 <div class="row">
-    <label class="col-sm-2 col-form-label">Direccion</label>
+    <label class="col-sm-2 col-form-label">Dirección</label>
     <div class="col-sm-7">
     <div class="form-group">
         <input class="form-control" type="text" name="direccion" id="direccion" required="true" value="<?=$direccion;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
@@ -65,7 +65,7 @@ if ($codigo > 0){
     </div>
 </div><!--fin campo direccion -->
 <div class="row">
-    <label class="col-sm-2 col-form-label">Telefono</label>
+    <label class="col-sm-2 col-form-label">Teléfono</label>
     <div class="col-sm-7">
     <div class="form-group">
         <input class="form-control" type="text" name="telefono" id="telefono" required="true" value="<?=$telefono;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
@@ -76,7 +76,7 @@ if ($codigo > 0){
     <label class="col-sm-2 col-form-label">Email</label>
     <div class="col-sm-7">
     <div class="form-group">
-        <input class="form-control" type="email" name="email" id="email" required="true" value="<?=$email;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+        <input class="form-control" type="email" name="email" id="email" required="true" value="<?=$email;?>"/>
     </div>
     </div>
 </div><!--fin campo email -->
