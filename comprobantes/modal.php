@@ -456,20 +456,21 @@
 <div class="modal fade modal-primary" id="modalEstadosCuentas" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content card">
-                <div class="card-header card-header-danger card-header-icon">
+                <div class="modal-header card-header">
                   <div class="card-icon">
                     <i class="material-icons text-dark">ballot</i>
                   </div>
-                  <h4 class="card-title">Estados de cuenta</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                      <i class="material-icons">close</i>
+                    </button>
                 </div>
-                <div class="card-body">
-                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                  <i class="material-icons">close</i>
-                </button>
+                
+                <div class="modal-body">
+                  
                 <!--<input class="form-control" type="text" name="est_codcuenta" id="est_codcuenta"/>
                 <input class="form-control" type="text" name="est_codcuentaaux" id="est_codcuentaaux"/>-->
                 <input class="form-control" type="hidden" name="estFila" id="estFila"/>
-                <div class="card-title"><center><h6>Datos de la nueva transaccion</h6></center></div>
+                <div class="card-title"><center><!--h6>Datos de la nueva transaccion</h6--></center></div>
                  <div class="row">
                        <label class="col-sm-2 col-form-label">Monto</label>
                        <div class="col-sm-3">
@@ -503,7 +504,7 @@
                            <select class="selectpicker form-control form-control-sm" onchange="verEstadosCuentasCred()" name="cuentas_origen" id="cuentas_origen" data-style="<?=$comboColor;?>">
                              <option disabled selected value="">Seleccione una Cuenta</option>
                              <?php
-                              $stmt = $dbh->prepare("SELECT p.* FROM plan_cuentas p, configuracion_estadocuentas c where c.cod_plancuenta=p.codigo and c.tipo=1 and c.cod_cuentaaux=0 order by codigo");
+                              $stmt = $dbh->prepare("SELECT p.* FROM plan_cuentas p, configuracion_estadocuentas c where c.cod_plancuenta=p.codigo and c.tipo=2 and c.cod_cuentaaux=0 order by codigo");
                               $stmt->execute();
                               while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                 $codigoX=$row['codigo'];

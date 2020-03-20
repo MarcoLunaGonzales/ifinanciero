@@ -156,7 +156,7 @@ $html.=  '<header class="header">'.
                                 '<b>Rubro : </b>'.$nombre_depreciaciones.' <br>'.
                                 '<b>Responsable : </b>'.$nombre_personal.' <br>'.
                                 '<b>Tipo alta : </b>'.$tipoalta.'<br>'.
-                                '<b>Ubicacion : </b>'.$edificio.'<br>'.
+                                '<b>Ubicación : </b>'.$edificio.'<br>'.
                                 '<b>Estado Bien : </b>'.$estadobien.' <br>'.
                                 '<b>Fecha alta : </b>'.$fechalta.'<br>'.
                                 '<b>Tipo Bien : </b>'.$tipo_bien.'<br>'.

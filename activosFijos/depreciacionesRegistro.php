@@ -83,7 +83,7 @@ if ($codigo > 0){
 </div><!--fin campo abreviatura -->
 
 <div class="row">
-    <label class="col-sm-2 col-form-label">Vida Util (Años)</label>
+    <label class="col-sm-2 col-form-label">Vida Útil (Meses)</label>
     <div class="col-sm-7">
     <div class="form-group">
         <input class="form-control"  type="number" step="1" name="vida_util" id="vida_util" required="true" value="<?=$vida_util;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
@@ -95,7 +95,7 @@ if ($codigo > 0){
         </div>
         <div class="card-footer ml-auto mr-auto">
         <button type="submit" class="<?=$buttonNormal;?>">Guardar</button>
-        <a href="<?=$urlList4;?>" class="<?=$buttonCancel;?>">Cancelar</a>
+        <a href="<?=$urlList4;?>" class="<?=$buttonCancel;?>">Volver</a>
         </div>
       </div>
       </form>

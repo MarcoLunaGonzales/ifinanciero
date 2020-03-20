@@ -28,7 +28,7 @@ $fechaHoraActual=date("Y-m-d H:i:s");
 
 $codComprobante=obtenerCodigoComprobante();
 $sqlInsert="INSERT INTO comprobantes (codigo, cod_empresa, cod_unidadorganizacional, cod_gestion, cod_moneda, cod_estadocomprobante, cod_tipocomprobante, fecha, numero, glosa, created_at, created_by, modified_at, modified_by) VALUES ('$codComprobante', '1', '$globalUnidad', '$codGestion', '1', '1', '$tipoComprobante', '$fechaHoraActual', '$nroCorrelativo', '$glosa', '$fechaHoraActual', '$globalUser', '$fechaHoraActual', '$globalUser')";
-echo $sqlInsert;
+//echo $sqlInsert;
 $stmtInsert = $dbh->prepare($sqlInsert);
 $flagSuccess=$stmtInsert->execute();	
 
@@ -111,7 +111,7 @@ for ($i=1;$i<=$cantidadFilas;$i++){
               $codPlanCuenta=$estadosCuentas[$i-1][$j]->cod_plancuenta;
               $codPlanCuentaAux=$estadosCuentas[$i-1][$j]->cod_plancuentaaux;
               $monto=$estadosCuentas[$i-1][$j]->monto;
-              $codProveedor=$estadosCuentas[$i-1][$j]->cod_proveedor;
+              $codProveedor=obtenerCodigoProveedorCuentaAux($codPlanCuentaAux);
               $codComprobanteDetalleOrigen=$estadosCuentas[$i-1][$j]->cod_comprobantedetalle;
               $fecha=$fecha;
               $sqlDetalle3="INSERT INTO estados_cuenta (cod_comprobantedetalle, cod_plancuenta, monto, cod_proveedor, fecha,cod_comprobantedetalleorigen,cod_cuentaaux) VALUES ('$codComprobanteDetalle', '$codPlanCuenta', '$monto', '$codProveedor', '$fecha','$codComprobanteDetalleOrigen','$codPlanCuentaAux')";

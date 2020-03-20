@@ -49,35 +49,10 @@ try{
     $nombre_uo_tcc = $resultCCD['nombre_uo_tcc'];
     $fecha_inicio_cc = $resultCCD['fecha'];
     $fecha_cierre_cc = $resultCCD['fecha_cierre'];
-
-    // $porcentajeIVA=obtenerValorConfiguracion(1);
-    // $cod_cuenta_iva=obtenerValorConfiguracion(3);
-    // $nro_cuenta_iva=obtieneNumeroCuenta($cod_cuenta_iva);
-    // $nombre_cuenta_iva=nameCuenta($cod_cuenta_iva);
-    
-    // $porcentajeIUE_servicios=obtenerValorConfiguracion(23);
-    // $cod_cuenta_IUE_S=obtenerValorConfiguracion(27);
-    // $nro_cuenta_IUE_S=obtieneNumeroCuenta($cod_cuenta_IUE_S);
-    // $nombre_cuenta_IUE_s=nameCuenta($cod_cuenta_IUE_S);
-
-    // $porcentajeIUE_compras=obtenerValorConfiguracion(24);
-    // $cod_cuenta_IUE_C=obtenerValorConfiguracion(26);
-    // $nro_cuenta_IUE_C=obtieneNumeroCuenta($cod_cuenta_IUE_C);
-    // $nombre_cuenta_IUE_C=nameCuenta($cod_cuenta_IUE_C);
-    
-    // $porcentajeIT=obtenerValorConfiguracion(2);
-    // $cod_cuenta_IT=obtenerValorConfiguracion(25);
-    // $nro_cuenta_IT=obtieneNumeroCuenta($cod_cuenta_IT);
-    // $nombre_cuenta_IT=nameCuenta($cod_cuenta_IT);
     //CONTRA CUENTA
     $cod_contra_cuenta=obtenerValorConfiguracion(28);
     $nro_contra_cuenta=obtieneNumeroCuenta($cod_contra_cuenta);
     $nombre_contra_cuenta=nameCuenta($cod_contra_cuenta);
-    // $monto_contra_cuenta=$monto_inicio-$monto_reembolso;
-
-    // $IUE_compras_IT=$porcentajeIUE_compras+$porcentajeIT;
-    // $IUE_servicios_IT=$porcentajeIUE_servicios+$porcentajeIT;
-
     $fecha_actual=date('Y/m/d');
     $tipoC="Traspaso";
 
@@ -111,14 +86,7 @@ $html.='<body>'.
 $html.=  '<header class="header">'.        
             '<img class="imagen-logo-izq" src="../assets/img/ibnorca2.jpg">'.
             '<div id="header_titulo_texto">Comprobante de Contabilidad</div>'.
-            '<div id="header_titulo_texto_inf">UNIDAD DE '.$nombre_uo_tcc.'</div>'.
-
-            // '<div id="info_izq2">
-            //   <h4 >
-            //   <b>Entidad:'.'10'.' &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'. obtenerValorConfiguracionEmpresa(7).' </b><br>
-            //   <b>Fondo:  1011'. ' &nbsp;&nbsp;&nbsp;'. 'OFICINA '.' </b><br>
-            //   </h4> 
-            // </div>'.            
+            '<div id="header_titulo_texto_inf">UNIDAD DE '.$nombre_uo_tcc.'</div>'.           
             '<table class="table pt-2">'.
                 '<tbody>
                     <tr lass="bold table-title">
@@ -174,7 +142,6 @@ $html.=  '<header class="header">'.
                 $sumaTotalHaberDolares=0;
                 while ($rowCajaChicaDet = $stmtCajaChicaDet->fetch()) 
                 {
-
                         //buscamos el tipo de retencion
                         $stmtRetencionOrigen = $dbh->prepare("SELECT porcentaje_cuentaorigen from configuracion_retenciones where codigo=$cod_retencioncajachica");
                         $stmtRetencionOrigen->execute();
@@ -567,28 +534,7 @@ $html.=  '<header class="header">'.
                             }
                             
                         }
-                }
-                // //contra cuenta
-                // $descripcion_contra_cuenta=$concepto_contabilizacion;
-                // if($USD_actual!=0)
-                //     $monto_contra_cuenta_dolares=$monto_contra_cuenta/$USD_actual;
-                // else $monto_contra_cuenta_dolares=0;
-                // $sumaTotalHaberBolivianos+=$monto_contra_cuenta;
-                // $sumaTotalHaberDolares+=$monto_contra_cuenta_dolares;
-                // $html.='<tr>
-                //     <td class="text-left">'.$nro_contra_cuenta.'</td>
-                //     <td class="text-left">'.$nombre_contra_cuenta.'<br>'.$descripcion_contra_cuenta.' </td>
-                //     <td class="text-right"></td>
-                //     <td class="text-right">'.formatNumberDec($monto_contra_cuenta).'</td>
-                //     <td class="text-right"></td>
-                //     <td class="text-right">'.formatNumberDec($monto_contra_cuenta_dolares).'</td>
-                // </tr>';
-                // $entero=floor($sumaTotalDebeBolivianos);
-                // $decimal=$sumaTotalDebeBolivianos-$entero;
-                // $centavos=round($decimal*100);
-                // if($centavos<10){
-                // $centavos="0".$centavos;
-                // }
+                }                
                 $html.='<tr>
                         <td class="text-left"></td>
                         <td class="text-center"><b>TOTAL</b></td>

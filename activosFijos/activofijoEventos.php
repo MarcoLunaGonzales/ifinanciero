@@ -135,7 +135,7 @@ $statementPersonal2 = $dbh->query($query);
       <div class="modal-body">
         
         <label> Nombre Del Evento</label><br>
-        <input type="text" name="nombreEve" id="nombreEve" class="form-control input-sm"><br>
+        <input type="text" name="nombreEve" id="nombreEve" class="form-control input-sm" onkeyup="javascript:this.value=this.value.toUpperCase();"><br>
         <label> Nombre Del Responsable</label><br>
         <select name="personalEve" id="personalEve" class="selectpicker" data-style="btn btn-primary" >
             <?php while ($row = $statementPersonal->fetch()){ ?>

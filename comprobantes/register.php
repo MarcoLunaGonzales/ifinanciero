@@ -82,8 +82,10 @@ $contadorRegistros=0;
 				$codPlanCuentaX=$row['cod_plancuenta'];
 				$codCuentaAuxX=$row['cod_cuentaaux'];
 				$tipoX=$row['tipo'];
+				$tipoEstadoCuentaX=$row['cod_tipoestadocuenta'];
+
 			 ?>
-			 <script>estado_cuentas.push({codigo:<?=$codigoX?>,cod_cuenta:<?=$codPlanCuentaX?>,cod_cuentaaux:<?=$codCuentaAuxX?>,tipo:<?=$tipoX?>});</script>
+			 <script>estado_cuentas.push({codigo:<?=$codigoX?>,cod_cuenta:<?=$codPlanCuentaX?>,cod_cuentaaux:<?=$codCuentaAuxX?>,tipo:<?=$tipoX?>,tipo_estado_cuenta:<?=$tipoEstadoCuentaX?>});</script>
 		    <?php
 			 }
 		    ?>

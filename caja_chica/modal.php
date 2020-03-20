@@ -95,7 +95,7 @@
                    
                    // echo $codigo_cuenta_form;
 
-                    $stmt = $dbh->prepare("SELECT p.* FROM plan_cuentas p, configuracion_estadocuentas c where c.cod_plancuenta=p.codigo and c.tipo=1 and c.cod_cuentaaux=0 order by codigo");
+                    $stmt = $dbh->prepare("SELECT p.* FROM plan_cuentas p, configuracion_estadocuentas c where c.cod_plancuenta=p.codigo and c.tipo=2 and c.cod_cuentaaux=0 order by codigo");
                     $stmt->execute();
                     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                       $codigoX=$row['codigo'];

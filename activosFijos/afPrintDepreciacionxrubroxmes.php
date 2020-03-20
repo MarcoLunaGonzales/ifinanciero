@@ -35,7 +35,16 @@ $stmtUO = $dbh->prepare($sql);
 $stmtUO->execute();
 $stmtUO->bindColumn('nombre_unidadO', $nombre_unidadO);
 $stmtUO->bindColumn('cod_unidadorganizacional', $cod_unidadorganizacional);
+$sumrubro_depreciacion = 0;
+$sumrubro_actualizacion=0;
+$sumrubro_actDepreciacionAcum=0;
+$sumrubro_depreciacionPeriodo=0;
 
+$sum_valorresidual =0;
+$sum_valoractualizado =0;
+$sum_depreciacionacumuladaanterior=0;
+$sum_valornetobs=0;
+$sum_vidarestante=0;
 ?>
 
 <div class="content">
@@ -62,7 +71,7 @@ $stmtUO->bindColumn('cod_unidadorganizacional', $cod_unidadorganizacional);
                   <div class="table-responsive">
                     <?php
                       while ($row = $stmtUO->fetch()) {
-
+                        
                       $stmt2 = $dbh->prepare("SELECT *
                                 from mesdepreciaciones m, mesdepreciaciones_detalle md, activosfijos af
                                 WHERE af.cod_estadoactivofijo=1 and m.codigo = md.cod_mesdepreciaciones and md.cod_activosfijos = af.codigo

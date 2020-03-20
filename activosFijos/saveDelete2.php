@@ -14,6 +14,6 @@ $stmt = $dbh->prepare("UPDATE activosfijos set cod_estadoactivofijo=2 where codi
 $stmt->bindParam(':codigo', $codigo);
 
 $flagSuccess=$stmt->execute();
-showAlertSuccessError($flagSuccess,$urlList6);
+showAlertSuccessError($flagSuccess,$urlList2);
 
 ?>

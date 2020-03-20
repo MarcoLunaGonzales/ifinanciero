@@ -34,6 +34,7 @@ $stmt->bindColumn('cod_personal', $cod_personal);
 $stmt->bindColumn('personal', $personal);
 $stmt->bindColumn('cod_estado', $cod_estado);
 $stmt->bindColumn('nombre_estado', $nombre_estado);
+$stmt->bindColumn('cod_comprobante', $cod_comprobante);
 
 
 ?>
@@ -104,7 +105,7 @@ $stmt->bindColumn('nombre_estado', $nombre_estado);
                                 </a>
                               <?php }?>
                                 <a href='<?=$urlprint_cajachica;?>?codigo=<?=$cod_cajachica;?>' target="_blank" rel="tooltip" class="btn btn-primary">
-                                  <i class="material-icons" title="Imprimir">print</i>
+                                  <i class="material-icons" title="Imprimir Detalle Gastos">print</i>
                               </a>
 
                               <?php
@@ -123,9 +124,19 @@ $stmt->bindColumn('nombre_estado', $nombre_estado);
                               
                               </td>
                               <td class="text-center">
-                                <a href="<?=$urlprint_contabilizacion_cajachica;?>?cod_cajachica=<?=$cod_cajachica;?>" target="_blank" > 
-                                  <i class="material-icons" title="Generar Comprobante" style="color:red">input</i>
-                                </a>
+                                <?php
+                                //si es mayo a cero, ya se genero el comprobante.
+                                  if($cod_comprobante>0){?>                                    
+                                    <a href="<?=$urlImp;?>?comp=<?=$cod_comprobante;?>&mon=1" target="_blank">
+                                           <i class="material-icons" title="Imprimir Comporbante" style="color:red">print</i>
+                                       </a> 
+                                  <?php }else{ ?>
+                                    <a href="<?=$urlprint_contabilizacion_cajachica;?>?cod_cajachica=<?=$cod_cajachica;?>" target="_blank" > 
+                                      <i class="material-icons" title="Generar Comprobante" style="color:red">input</i>
+                                    </a>
+                                  <?php }
+                                ?>
+
                               </td>
                           </tr>
                         <?php $index++; } ?>

@@ -13,8 +13,8 @@ $stmt->execute();
 
 ?>
 
-<select id="cod_responsables_responsable" name="cod_responsables_responsable" class="form-control" 
-data-style="btn btn-info" data-size="5">
+<select id="cod_responsables_responsable" name="cod_responsables_responsable" class="selectpicker form-control" 
+data-style="btn btn-primary" data-size="5">
     <?php 
         while ($row = $stmt->fetch()){ 
        ?>

@@ -126,7 +126,7 @@ $stmt2->bindColumn('cod_estadoaccesorioaf', $cod_estadoAcceAF);
       <div class="modal-body">
         
         <label> Nombre</label><br>
-        <input type="text" name="nombreAcc" id="nombreAcc" class="form-control input-sm"><br>
+        <input type="text" name="nombreAcc" id="nombreAcc" class="form-control input-sm" onkeyup="javascript:this.value=this.value.toUpperCase();"><br>
         <label> Estado Del Accesorio</label><br>
         <select name="estadoAcc" id="estadoAcc" class="selectpicker" data-style="btn btn-primary" >
             <option value="1">BUENO</option>

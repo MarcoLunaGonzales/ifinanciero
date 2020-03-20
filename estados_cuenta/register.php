@@ -50,12 +50,35 @@ SELECT CONCAT(p.codigo,'$$','AUX') as codigo, p.nro_cuenta AS numero, p.nombre f
 					</div>
 				  </div>
 				</div>
+
 				<div class="row">
-				  <label class="col-sm-2 col-form-label">Tipo</label>
+				  <label class="col-sm-2 col-form-label">Tipo de Estado de Cuenta</label>
 				  <div class="col-sm-7">
 					<div class="form-group">
-					  <select class="selectpicker form-control form-control-sm" name="credito" id="credito" data-style="<?=$comboColor;?>" required>
-                           <option value="">--seleccione--</option>
+					 <select class="selectpicker form-control" name="tipo" id="tipo" data-style="<?=$comboColor;?>" required>
+                       <option value=""></option>
+					 	<?php
+					 	$stmt = $dbh->prepare("select codigo,nombre from tipos_estado_cuenta order by codigo");
+								$stmt->execute();
+								while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+									$codigoX=$row['codigo'];
+									$nombreX=$row['nombre'];
+								?>
+								<option value="<?=$codigoX;?>"><?=$nombreX;?></option>	
+								<?php
+							  	}
+							  	?>
+					 </select>
+					</div>
+				  </div>
+				</div>
+
+				<div class="row">
+				  <label class="col-sm-2 col-form-label">Debe/Haber</label>
+				  <div class="col-sm-7">
+					<div class="form-group">
+					  <select class="selectpicker form-control" name="credito" id="credito" data-style="<?=$comboColor;?>" required>
+                           <option value=""></option>
                            <option value="1">Débito</option>
                            <option value="2">Crédito</option> 
                        </select>

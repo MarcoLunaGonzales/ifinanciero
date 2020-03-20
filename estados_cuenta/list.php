@@ -7,9 +7,11 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $dbh = new Conexion();
 
 // Preparamos
-$stmt = $dbh->prepare("SELECT c.*,p.numero,p.nombre from configuracion_estadocuentas c,plan_cuentas p where c.cod_plancuenta=p.codigo
+$sql="SELECT c.*,p.numero,p.nombre, (select tec.codigo from tipos_estado_cuenta tec where tec.codigo=c.cod_tipoestadocuenta)as codtipoestadocuenta, (select tec.nombre from tipos_estado_cuenta tec where tec.codigo=c.cod_tipoestadocuenta)as tipoestadocuenta from configuracion_estadocuentas c,plan_cuentas p where c.cod_plancuenta=p.codigo
 UNION
-SELECT c.*,p.nro_cuenta as numero,p.nombre from configuracion_estadocuentas c,cuentas_auxiliares p where c.cod_cuentaaux=p.codigo");
+SELECT c.*,p.nro_cuenta as numero,p.nombre, (select tec.codigo from tipos_estado_cuenta tec where tec.codigo=c.cod_tipoestadocuenta)as codtipoestadocuenta, (select tec.nombre from tipos_estado_cuenta tec where tec.codigo=c.cod_tipoestadocuenta)as tipoestadocuenta from configuracion_estadocuentas c,cuentas_auxiliares p where c.cod_cuentaaux=p.codigo";
+//echo $sql;
+$stmt = $dbh->prepare($sql);
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -19,6 +21,9 @@ $stmt->bindColumn('cod_cuentaaux', $codCuentaAux);
 $stmt->bindColumn('nombre', $nombre);
 $stmt->bindColumn('numero', $numero);
 $stmt->bindColumn('tipo', $tipo);
+$stmt->bindColumn('codtipoestadocuenta', $codTipoEstadoCuenta);
+$stmt->bindColumn('tipoestadocuenta', $tipoEstadoCuenta);
+
 ?>
 
 <div class="content">
@@ -39,7 +44,8 @@ $stmt->bindColumn('tipo', $tipo);
                         <tr>
                           <th class="text-center">#</th>
                           <th class="text-left">Cuenta</th>
-                          <th>Tipo</th>
+                          <th class="text-left">Tipo Estado Cuenta</th>
+                          <th>Debe/Haber</th>
                           <th class="text-right">Actions</th>
                         </tr>
                       </thead>
@@ -57,13 +63,16 @@ $stmt->bindColumn('tipo', $tipo);
                           <td align="center"><?=$index;?></td>
                           <td class="text-left">[<?=$numero;?>] - <?=$nombre;?></td>
                           <td>
-                                 <img src="assets/img/logoibnorca.png" width="20" height="20"/> <?=$tipoDes;?>
+                            <?=$tipoEstadoCuenta;?>
+                          </td>                 
+                          <td>
+                            <img src="assets/img/logoibnorca.png" width="20" height="20"/> <?=$tipoDes;?>
                           </td>
                           <td class="td-actions text-right">
                             <?php 
-                            if($tipo==1){
+                            if( ($tipo==1 && $codTipoEstadoCuenta==2) || ($tipo==2 && $codTipoEstadoCuenta==1)){
                               ?>
-                              <a title="Reporte" href='#' onclick="verEstadosCuentasModal('<?=$nombre?>',<?=$codCuenta?>,<?=$codCuentaAux?>,<?=$tipo?>)" class="btn btn-default">
+                              <a title="Reporte" href='#' onclick="verEstadosCuentasModal('<?=$nombre?>',<?=$codCuenta?>,<?=$codCuentaAux?>,<?=$tipo?>,<?=$codTipoEstadoCuenta?>)" class="btn btn-default">
                                <i class="material-icons">ballot</i>
                               </a>
                               <?php

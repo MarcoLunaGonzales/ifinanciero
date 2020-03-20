@@ -60,11 +60,14 @@ $stmt->bindColumn('nombre', $nombreCuenta);
 			$numeroCuenta=trim($numeroCuenta);
 			$nombreCuenta=trim($nombreCuenta);
 
-			$sqlCuentasAux="SELECT codigo, nombre FROM cuentas_auxiliares where cod_cuenta='$codigoCuenta' order by 2";
+			$sqlCuentasAux="SELECT codigo, nombre, cod_tipoauxiliar, cod_proveedorcliente FROM cuentas_auxiliares where cod_cuenta='$codigoCuenta' order by 2";
 			$stmtAux = $dbh->prepare($sqlCuentasAux);
 			$stmtAux->execute();
 			$stmtAux->bindColumn('codigo', $codigoCuentaAux);
 			$stmtAux->bindColumn('nombre', $nombreCuentaAux);
+			$stmtAux->bindColumn('cod_tipoauxiliar', $codTipoAuxiliar);
+			$stmtAux->bindColumn('cod_proveedorcliente', $codProveedorCliente);
+
 			$txtAuxiliarCuentas="<table class='table table-condensed'>";
 			while ($rowAux = $stmtAux->fetch(PDO::FETCH_BOUND)) {
 				$txtAuxiliarCuentas.="<tr>
