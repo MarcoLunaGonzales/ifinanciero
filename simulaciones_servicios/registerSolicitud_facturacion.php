@@ -221,11 +221,11 @@ $contadorRegistros=0;
                                             <th>#</th>
                                             <th >Año</th>
                                             <th>Servicio</th>
-                                            <th>Cantidad</th>
+                                            <th>Cant.</th>
                                             <th>Importe</th>
                                             <th>Total</th>                                            
-                                            <th class="small">Habilitar/Deshabilitar</th>
-                                            <th>Descripción</th>  
+                                            <th class="small">H/D</th>
+                                            <th width="30%">Descripción</th>  
                                           </tr>
                                       </thead>
                                       <tbody>                                
@@ -268,8 +268,10 @@ $contadorRegistros=0;
                                              <td class="text-left"><?=$cod_anio?> </td>
                                              <td class="text-right"><?=$tipoPre?></td>
                                              <td class="text-right"><?=$cantidadPre?></td>
-                                             <td id="modal_importe<?=$iii?>" class="text-right"><?=$montoPre?></td>
-                                             <td class="text-right"><?=$montoPre?></td>
+                                             <td class="text-right"><?=formatNumberDec($montoPre)?></td>
+                                             <td class="text-right">
+                                                <input type="number" id="modal_importe<?=$iii?>" name="modal_importe<?=$iii?>" class="form-control text-primary text-right"  value="<?=$montoPre?>" step="0.01">
+                                                </td>
                                              
                                              <td>
                                                <div class="togglebutton">
@@ -290,13 +292,7 @@ $contadorRegistros=0;
                                            ?>                                           
                                           <?php
                                         
-                                          } ?>
-                                          <!-- <tr>
-                                             <td colspan="4" class="text-center font-weight-bold">Total</td>
-                                             <td></td>
-                                             <td id="modal_totalmontoserv" class="text-right"><?=number_format($modal_totalmontopre,2, ',', '')?></td>
-                                             <td></td>
-                                           </tr> -->
+                                          } ?>                        
                                       </tbody>
                                 </table>
 
@@ -316,7 +312,7 @@ $contadorRegistros=0;
                                 <fieldset id="fiel" style="width:100%;border:0;">
                                     <button title="Agregar Servicios" type="button" id="add_boton" name="add" class="btn btn-warning btn-round btn-fab" onClick="AgregarSeviciosFacturacion2(this)">
                                         <i class="material-icons">add</i>
-                                    </button>
+                                    </button><span style="color:#084B8A;"><b> SERVICIOS ADICIONALES</b></span>
                                     <div id="div<?=$index;?>">  
                                         <div class="h-divider">
                                         
@@ -326,7 +322,7 @@ $contadorRegistros=0;
 
                                 </fieldset>
                                 <div class="row">
-                                    <label class="col-sm-5 col-form-label" style="color:#000000">Monto Total + Nuevos Servicios</label>
+                                    <label class="col-sm-5 col-form-label" style="color:#000000">Monto Total + Servicios Adicionales</label>
                                     <div class="col-sm-4">
                                         <div class="form-group">                                            
                                             <input style="background:#ffffff" class="form-control"  name="monto_total" id="monto_total"  readonly="readonly" value="0" />

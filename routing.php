@@ -171,6 +171,10 @@
         if ($_GET['opcion']=='listSimulacionesServicios') {
 			require_once('simulaciones_servicios/list.php');
 		}
+		if ($_GET['opcion']=='listFacturasServicios') {
+			require_once('simulaciones_servicios/listFacturas.php');
+		}
+
         if ($_GET['opcion']=='registerSimulacionServicio') {
 			require_once('simulaciones_servicios/registerSimulaciones.php');
 		}
