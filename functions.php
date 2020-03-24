@@ -3405,6 +3405,20 @@ function descargarPDFCajaChica($nom,$html){
   $mydompdf->set_base_path('assets/libraries/plantillaPDFCajaChica.css');
   $mydompdf->stream($nom.".pdf", array("Attachment" => false));
 }
+function descargarPDFFacturas($nom,$html){
+  //aumentamos la memoria  
+  ini_set("memory_limit", "128M");
+  // Cargamos DOMPDF
+  require_once 'assets/libraries/dompdf/dompdf_config.inc.php';
+  $mydompdf = new DOMPDF();
+  ob_clean();
+  $mydompdf->load_html($html);
+  $mydompdf->render();
+  $canvas = $mydompdf->get_canvas();
+  $canvas->page_text(500, 25, "", Font_Metrics::get_font("sans-serif"), 10, array(0,0,0)); 
+  $mydompdf->set_base_path('assets/libraries/plantillaPDFFactura.css');
+  $mydompdf->stream($nom.".pdf", array("Attachment" => false));
+}
 
 function descargarPDFFiniquito($nom,$html){
   //aumentamos la memoria  
@@ -3638,7 +3652,15 @@ function obtenerValorConfiguracionEmpresa($codigo){
   $valor=$resultConfiguracion['valor_configuracion'];
   return $valor; 
 }
-
+function obtenerValorConfiguracionFactura($codigo){
+  $dbh = new Conexion();
+  $valor="";
+  $stmtConfiguracion = $dbh->prepare("SELECT valor from configuracion_facturas where id=$codigo");
+  $stmtConfiguracion->execute();
+  $resultConfiguracion = $stmtConfiguracion->fetch();
+  $valor=$resultConfiguracion['valor'];
+  return $valor; 
+}
 function obtenerTiempoDosFechas($fechaInicio,$fechafin){
   $datetime1=date_create($fechaInicio);
   $datetime2=date_create($fechaFin);
@@ -4385,7 +4407,14 @@ function ObtenerMontoTotalEstadoCuentas_hijos($codCuenta,$codigo_compDe)
   return($saldo);
 }
 
-
+function obtenerFechaEnLetra($fecha){
+    // $dia= date("d", strtotime($fecha));
+    $num = date("j", strtotime($fecha));
+    $anno = date("Y", strtotime($fecha));
+    $mes = array('enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre');
+    $mes = $mes[(date('m', strtotime($fecha))*1)-1];
+    return $num.' de '.$mes.' del '.$anno;
+}
 
 ?>
 
