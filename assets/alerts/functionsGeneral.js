@@ -5191,7 +5191,7 @@ function verEstadosCuentas(fila,cuenta){
     $.ajax({
         type: "GET",
         dataType: 'html',
-        url: "../estados_cuenta/ajaxMostrarEstadosCuenta_cajachicaphp",
+        url: "../estados_cuenta/ajaxMostrarEstadosCuenta.php",
         data: parametros,
         success:  function (resp) {
           var respuesta=resp.split('@');
