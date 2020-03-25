@@ -4432,6 +4432,15 @@ function obtenerFechaEnLetra($fecha){
     return $num.' de '.$mes.' del '.$anno;
 }
 
+function listaCuentasAuxiliaresRelacionadasProveedoresClientes(){
+  $dbh = new Conexion();
+  $sql="SELECT p.*,a.nombre as nombre_proveedorcliente FROM cuentas_auxiliares p JOIN af_proveedores a on a.codigo=p.cod_proveedorcliente where p.cod_tipoauxiliar=1
+UNION 
+SELECT p.*,a.nombre as nombre_proveedorcliente FROM cuentas_auxiliares p JOIN clientes a on a.codigo=p.cod_proveedorcliente where p.cod_tipoauxiliar=2";
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  return $stmt;
+}
 
 ?>
 
