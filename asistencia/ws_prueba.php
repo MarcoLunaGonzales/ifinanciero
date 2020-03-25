@@ -2,8 +2,8 @@
 /*ACCESO A WEB SERVICE LISTA DE PERSONAS Y PROVEEDOR IBNORCA*/
 //21-01-2020
 //LLAVES DE ACCESO AL WS
-$sIde = "irrhh";
-$sKey = "c066ffc2a049cf11f9ee159496089a15";
+$sIde = "ifinanciero";
+$sKey = "ce94a8dabdf0b112eafa27a5aa475751";
 
 /*PARAMETROS PARA LA OBTENCION DE LISTAS DE PERSONAL
 	$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ListarPersonal"); //
@@ -22,15 +22,16 @@ $sKey = "c066ffc2a049cf11f9ee159496089a15";
 1622 	Consultor
 1623 	Empleado
 */
-	//$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ListarPersonaxAtributo", "IdAtributo"=>354); 
+	$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ListarPersonaxAtributo", "IdAtributo"=>354); 
 
 
 /*PARAMETROS PARA LA RECUPERACION Y OBTENCION DE DATOS DE PERSONA
 	$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"DatosPersona", "IdCliente"=>5); 
 */
 
-/*PARAMETROS PARA LA OBTENCION DE LISTA DE PROVEEDORES*/
+/*PARAMETROS PARA LA OBTENCION DE LISTA DE PROVEEDORES
 	$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ListarProveedor"); 
+*/
 
 /*PARAMETROS PARA LA RECUPERACION Y OBTENCION DE DATOS DE PROVEEDOR
 	$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"DatosProveedor", "IdCliente"=>123); 
@@ -40,7 +41,8 @@ $sKey = "c066ffc2a049cf11f9ee159496089a15";
 		// abrimos la sesión cURL
 		$ch = curl_init();
 		// definimos la URL a la que hacemos la petición
-		curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibno/rrhh/ws-personal-listas.php"); 
+		curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibno/rrhh/ws-personal-listas.php"); 	// OFICIAL
+		// curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibnob/rrhh/ws-personal-listas.php"); 	//PRUEBAS
 		// indicamos el tipo de petición: POST
 		curl_setopt($ch, CURLOPT_POST, TRUE);
 		// definimos cada uno de los parámetros
