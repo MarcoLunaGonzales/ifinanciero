@@ -5220,7 +5220,7 @@ function verEstadosCuentas(fila,cuenta){
     $.ajax({
         type: "GET",
         dataType: 'html',
-        url: "../estados_cuenta/ajaxMostrarEstadosCuenta_cajachicaphp",
+        url: "../estados_cuenta/ajaxMostrarEstadosCuenta.php",
         data: parametros,
         success:  function (resp) {
           var respuesta=resp.split('@');
@@ -7235,7 +7235,7 @@ function calcularTotalFilaServicio2(){
        if(check) {
         comprobante_auxiliar=comprobante_auxiliar+1;
         //sumanos los importes
-        sumal+=parseFloat($("#modal_importe"+i).text());
+        sumal+=parseFloat($("#modal_importe"+i).val());
         //sacamos los datos de los servicios que se activaron
         var cod_serv_tiposerv = document.getElementById("cod_serv_tiposerv"+i).value;
         var servicio = document.getElementById("servicio"+i).value;

@@ -708,8 +708,10 @@ function obtenerComprobantesDetImp($codigo){
    $dbh = new Conexion();
    
    $sql="";
+//    $sql="SELECT d.codigo as cod_det,d.cod_area,d.cod_unidadorganizacional,p.codigo,p.numero,p.nombre,d.glosa,d.debe,d.haber,a.abreviatura,p.cuenta_auxiliar,u.abreviatura as unidadAbrev,(select 1 from comprobantes_detalle cdd where cdd.debe=0 and d.codigo=cdd.codigo) as haber_order 
+// FROM plan_cuentas p join comprobantes_detalle d on p.codigo=d.cod_cuenta join areas a on d.cod_area=a.codigo join unidades_organizacionales u on u.codigo=d.cod_unidadorganizacional where d.cod_comprobante=$codigo order by haber_order, d.codigo";
    $sql="SELECT d.codigo as cod_det,d.cod_area,d.cod_unidadorganizacional,p.codigo,p.numero,p.nombre,d.glosa,d.debe,d.haber,a.abreviatura,p.cuenta_auxiliar,u.abreviatura as unidadAbrev,(select 1 from comprobantes_detalle cdd where cdd.debe=0 and d.codigo=cdd.codigo) as haber_order 
-FROM plan_cuentas p join comprobantes_detalle d on p.codigo=d.cod_cuenta join areas a on d.cod_area=a.codigo join unidades_organizacionales u on u.codigo=d.cod_unidadorganizacional where d.cod_comprobante=$codigo order by haber_order, d.codigo";
+FROM plan_cuentas p join comprobantes_detalle d on p.codigo=d.cod_cuenta join areas a on d.cod_area=a.codigo join unidades_organizacionales u on u.codigo=d.cod_unidadorganizacional where d.cod_comprobante=$codigo order by d.codigo";
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
    // bindColumn
@@ -3419,6 +3421,20 @@ function descargarPDFCajaChica($nom,$html){
   $mydompdf->set_base_path('assets/libraries/plantillaPDFCajaChica.css');
   $mydompdf->stream($nom.".pdf", array("Attachment" => false));
 }
+function descargarPDFFacturas($nom,$html){
+  //aumentamos la memoria  
+  ini_set("memory_limit", "128M");
+  // Cargamos DOMPDF
+  require_once 'assets/libraries/dompdf/dompdf_config.inc.php';
+  $mydompdf = new DOMPDF();
+  ob_clean();
+  $mydompdf->load_html($html);
+  $mydompdf->render();
+  $canvas = $mydompdf->get_canvas();
+  $canvas->page_text(500, 25, "", Font_Metrics::get_font("sans-serif"), 10, array(0,0,0)); 
+  $mydompdf->set_base_path('assets/libraries/plantillaPDFFactura.css');
+  $mydompdf->stream($nom.".pdf", array("Attachment" => false));
+}
 
 function descargarPDFFiniquito($nom,$html){
   //aumentamos la memoria  
@@ -3652,7 +3668,15 @@ function obtenerValorConfiguracionEmpresa($codigo){
   $valor=$resultConfiguracion['valor_configuracion'];
   return $valor; 
 }
-
+function obtenerValorConfiguracionFactura($codigo){
+  $dbh = new Conexion();
+  $valor="";
+  $stmtConfiguracion = $dbh->prepare("SELECT valor from configuracion_facturas where id=$codigo");
+  $stmtConfiguracion->execute();
+  $resultConfiguracion = $stmtConfiguracion->fetch();
+  $valor=$resultConfiguracion['valor'];
+  return $valor; 
+}
 function obtenerTiempoDosFechas($fechaInicio,$fechafin){
   $datetime1=date_create($fechaInicio);
   $datetime2=date_create($fechaFin);
@@ -4397,6 +4421,15 @@ function ObtenerMontoTotalEstadoCuentas_hijos($codCuenta,$codigo_compDe)
    }
 
   return($saldo);
+}
+
+function obtenerFechaEnLetra($fecha){
+    // $dia= date("d", strtotime($fecha));
+    $num = date("j", strtotime($fecha));
+    $anno = date("Y", strtotime($fecha));
+    $mes = array('enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre');
+    $mes = $mes[(date('m', strtotime($fecha))*1)-1];
+    return $num.' de '.$mes.' del '.$anno;
 }
 
 

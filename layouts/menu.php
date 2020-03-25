@@ -682,6 +682,12 @@ if($menuModulo==0){
                   </a>
                 </li>
                 <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listFacturasServicios">
+                    <span class="sidebar-mini"> LSF </span>
+                    <span class="sidebar-normal"> Listado de Solicitudes de Facturación TCP - TCS</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listSimulacionesServAdmin">
                     <span class="sidebar-mini"> GSS </span>
                     <span class="sidebar-normal"> Gesti&oacute;n de Propuestas Servicios TCP - TCS</span>

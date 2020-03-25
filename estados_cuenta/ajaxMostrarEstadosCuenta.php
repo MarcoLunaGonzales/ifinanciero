@@ -21,6 +21,7 @@ $fechaActual=date("d/m/Y");
 $codCuenta=$_GET['cod_cuenta'];
 $tipo=$_GET['tipo'];
 $tipoProveedorCliente=$_GET['tipo_proveedorcliente'];
+//echo "tipo: ".$tipo." tipoproveecli:".$tipoProveedorCliente."";
 $mes=$_GET['mes'];
 ?>
 <table class="table table-bordered table-condensed table-warning">
