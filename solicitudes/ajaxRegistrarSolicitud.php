@@ -51,9 +51,18 @@ if(isset($_GET['numero'])){
   $stmtInsert = $dbh->prepare($sqlInsert);
   $stmtInsert->execute();
 
-  ?>
-  <script>window.location.href="../solicitudes/registerSolicitud.php?cod="+<?=$codSolicitud?></script>
-  <?php
+
+  if(isset($_GET['q'])){
+    $q=$_GET['q'];
+    ?>
+    <script>window.location.href="../solicitudes/registerSolicitud.php?cod="+<?=$codSolicitud?>+"&q="+<?=$q?></script>
+    <?php
+  }else{
+    ?>
+    <script>window.location.href="../solicitudes/registerSolicitud.php?cod="+<?=$codSolicitud?></script>
+    <?php
+  }
+  
   echo "Registro Satisfactorio";
 }
 

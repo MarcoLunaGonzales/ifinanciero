@@ -10,6 +10,9 @@ require_once 'configModule.php';
 
 setlocale(LC_TIME, "Spanish");
 $dbh = new Conexion();
+if(isset($_GET['q'])){
+  $q=$_GET['q'];
+}
 
 $sqlX="SET NAMES 'utf8'";
 $stmtX = $dbh->prepare($sqlX);
@@ -57,6 +60,12 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                        <label class="col-sm-3 col-form-label">Numero:</label>
                        <div class="col-sm-3">
                         <div class="form-group">
+                          <?php 
+                          if(isset($_GET['q'])){
+                           ?><input type="hidden" name="id_ibnorca" id="id_ibnorca" value="<?=$q?>"/><?php
+                          } 
+                          ?>
+                          
                           <input class="form-control" type="text" readonly name="numero" id="numero" value="<?=$nroCorrelativo?>"/>
                         </div>
                         </div>
@@ -76,13 +85,44 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                       <div class="row" id="lista_tipo">
                       </div>
                       <hr>
-                      <div class="form-group float-right">
-                        <a href="../index.php?opcion=listSolicitudRecursos" class="btn btn-default btn-round">Volver</a>
+                <?php 
+                if(isset($_GET['q'])){
+                  $urlBack="../index.php?opcion=listSolicitudRecursos&q=".$q;
+                  if(isset($_GET['sim'])){
+                    $urlBack="../index.php?opcion=listSimulacionesServicios&q=".$q;
+                  }
+                ?><div class="form-group float-right">
+                        <a href="<?=$urlBack?>" class="btn btn-default btn-round">Volver</a>
                         <button type="button" class="btn btn-warning btn-round" onclick="guardarSolicitudRecursos()">Siguiente</button>
-                      </div>
+                  </div><?php
+                }else{
+                  $urlBack="../index.php?opcion=listSolicitudRecursos";
+                  if(isset($_GET['sim'])){
+                    $urlBack="../index.php?opcion=listSimulacionesServicios";
+                  }
+                 ?><div class="form-group float-right">
+                        <a href="<?=$urlBack?>" class="btn btn-default btn-round">Volver</a>
+                        <button type="button" class="btn btn-warning btn-round" onclick="guardarSolicitudRecursos()">Siguiente</button>
+                  </div><?php
+                } 
+                ?>
                  <div id="mensaje"></div>
       </div>  
     </div></center>
    </div><!--div nueva plantilla-->
 </div>
+<?php 
+ if(isset($_GET['sim'])){
+  $cod_sim=$_GET['sim'];
+  $det=$_GET['det'];
+  ?><script>
+  $(document).ready(function() {
+   $("#tipo_solicitud").val("1");
+   listarTipoSolicitudAjaxPropuesta("1","<?=$cod_sim?>$$$<?=$det?>");
+   $('.selectpicker').selectpicker("refresh"); 
+  });
+  </script><?php
+ }
+?>
+
 

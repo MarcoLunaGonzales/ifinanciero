@@ -34,6 +34,7 @@ $contadorRegistros=0;
 <script>
   numFilas=<?=$contadorRegistros;?>;
   cantidadItems=<?=$contadorRegistros;?>;
+  var itemAtributos=[];
 </script>
 
 <?php
@@ -97,20 +98,58 @@ $dbh = new Conexion();
                       </div>
                       <div id="productos_div" class="d-none">
                       <div class="row">
-                       <label class="col-sm-2 col-form-label">Productos (producto1,producto2)</label>
+                       <label class="col-sm-2 col-form-label">Productos</label>
                        <div class="col-sm-7">
-                        <div class="form-group" style="border-bottom: 1px solid #CACFD2">
-                          <input type="text" value="" class="form-control tagsinput" name="productos" id="productos" data-role="tagsinput" required data-color="warning">
+                        <div class="form-group">
+                          <!--<input type="text" value="" class="form-control tagsinput" name="productos" id="productos" data-role="tagsinput" required data-color="warning">-->
+                          <div id="divResultadoListaAtributosProd">
+                            <div class="">
+                              <center><h4><b>SIN REGISTROS</b></h4></center>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-sm-2">
+                           <button title="Agregar Sitio" type="button" name="add" class="btn btn-warning btn-round btn-fab" onClick="agregarAtributoAjax()"><i class="material-icons">add</i>
+                            </button>
                         </div>
                       </div>
                     </div>
                       </div>
                       <div id="sitios_div" class="d-none">
                       <div class="row">
-                       <label class="col-sm-2 col-form-label">Sitios (sitio1,sitio2)</label>
+                       <label class="col-sm-2 col-form-label">Sitios</label>
                        <div class="col-sm-7">
-                        <div class="form-group" style="border-bottom: 1px solid #CACFD2">
-                          <input type="text" value="" class="form-control tagsinput" name="sitios" id="sitios" data-role="tagsinput" required data-color="success">
+                        <div class="form-group">
+                          <!--<input type="readonly" value="" class="form-control tagsinput" name="sitios" id="sitios" data-role="tagsinput" required data-color="success">-->
+                          <div id="divResultadoListaAtributos">
+                            <div class="">
+                              <center><h4><b>SIN REGISTROS</b></h4></center>
+                            </div>
+                          </div>
+                        </div>
+                        </div>
+                        <div class="col-sm-2">
+                           <button title="Agregar Sitio" type="button" name="add" class="btn btn-warning btn-round btn-fab" onClick="agregarAtributoAjax()"><i class="material-icons">add</i>
+                            </button>
+                        </div>       
+                     </div>
+                     <div class="row">
+                       <label class="col-sm-2 col-form-label">Tipo de Servicio</label>
+                       <div class="col-sm-7">
+                        <div class="form-group">
+                          <select class="selectpicker form-control" name="tipo_servicio" id="tipo_servicio" data-style="btn btn-info"  required>       
+                                <?php
+                                 $stmt = $dbh->prepare("select DISTINCT codigo_n2,descripcion_n2 from cla_servicios where codigo_n1=109 order by 2");
+                                 $stmt->execute();
+                                  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                  $codigoX=$row['codigo_n2'];
+                                  $nombreX=$row['descripcion_n2'];
+                                   ?>
+                                  <option value="<?=$codigoX;?>"><?=$nombreX;?></option> 
+                                  <?php
+                                    }
+                                    ?>
+                            </select>
                         </div>
                         </div>
                      </div> 
@@ -198,3 +237,43 @@ $dbh = new Conexion();
       
   </div>
 </div> 
+
+<!-- small modal -->
+<div class="modal fade modal-primary" id="modal_atributo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content card">
+               <div class="card-header card-header-info card-header-text">
+                  <div class="card-text">
+                    <h4>Agregar Sitio</h4>
+                  </div>
+                  <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">close</i>
+                  </button>
+                </div>
+                <div class="card-body">
+                       <input type="hidden" class="form-control" name="modal_fila" id="modal_fila" value="-1">
+                      <div class="row">
+                          <label class="col-sm-2 col-form-label">Nombre</label>
+                           <div class="col-sm-10">                     
+                             <div class="form-group">
+                               <input type="text" class="form-control" name="modal_nombre" id="modal_nombre" value="">
+                             </div>
+                           </div>  
+                      </div>
+                      <div class="row" id="div_direccion">
+                          <label class="col-sm-2 col-form-label">Direccion</label>
+                           <div class="col-sm-10">                     
+                             <div class="form-group">
+                               <input type="text" class="form-control" name="modal_direccion" id="modal_direccion" value="">
+                             </div>
+                           </div>  
+                      </div> 
+                      <hr>
+                      <div class="form-group float-right">
+                        <button type="button" id="boton_guardarsim" class="btn btn-default" onclick="guardarAtributoItem()">Guardar</button>
+                      </div> 
+                </div>
+      </div>  
+    </div>
+  </div>
+<!--    end small modal -->

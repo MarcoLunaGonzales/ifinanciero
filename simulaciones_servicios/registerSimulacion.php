@@ -104,11 +104,33 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
 
            if($codAreaX==39){
             $valorC=17;
+            $inicioAnio=1;
            }else{
             $valorC=18;
+            $inicioAnio=0;
            }
-      
+           
       }    
+?>
+<script>
+  var itemAtributos=[];
+</script>
+<?php 
+  $stmtAtributos = $dbh->prepare("SELECT * from simulaciones_servicios_atributos where cod_simulacionservicio=$codigo");
+  $stmtAtributos->execute();
+  while ($rowAtributo = $stmtAtributos->fetch(PDO::FETCH_ASSOC)) {
+   $nombreXAtrib=$rowAtributo['nombre'];
+   $direccionXAtrib=$rowAtributo['direccion'];
+   ?>
+    <script>
+    var atributo={
+    nombre: '<?=$nombreXAtrib?>',
+    direccion: '<?=$direccionXAtrib?>'
+    }
+  itemAtributos.push(atributo);
+    </script>
+   <?php 
+  }
 ?>
 <input type="hidden" name="porcentaje_fijo" readonly value="<?=$porcentajeFijoSim?>" id="porcentaje_fijo"/>
 <input type="hidden" name="inicio_fijomodal" readonly value="0" id="inicio_fijomodal"/>
@@ -384,10 +406,14 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                               </button>
                               <div class="dropdown-menu">
                                 <?php
-                                  for ($an=1; $an<=$anioGeneral; $an++) { 
+                                  for ($an=$inicioAnio; $an<=$anioGeneral; $an++) {
+                                    $tituloItem="Año ".$an;
+                                    if(($an==0||$an==1)&&$codAreaX!=39){
+                                     $tituloItem="Año 1 (ETAPA ".($an+1).")";
+                                   }
                                       ?>
                                        <a href="#" onclick="modificarMontosPeriodo(<?=$an?>)" class="dropdown-item">
-                                           <i class="material-icons">keyboard_arrow_right</i> A&ntilde;o <?=$an?>
+                                           <i class="material-icons">keyboard_arrow_right</i><?=$tituloItem?>
                                        </a> 
                                      <?php
                                   }
@@ -406,7 +432,12 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
             <p class="font-weight-bold float-left">PRESUPUESTO POR PERIODO DE CERTIFICACION</p>
            <?php 
            $costoFijoPrincipalPeriodo=0;
-           for ($an=1; $an<=$anioGeneral; $an++) { 
+           for ($an=$inicioAnio; $an<=$anioGeneral; $an++) { 
+            $tituloItem="Año ".$an;
+            if(($an==0||$an==1)&&$codAreaX!=39){
+              $tituloItem="Año 1 (ETAPA ".($an+1).")";
+            }
+
             $totalIngresoUsd=0;$totalIngreso=0;
             $totalCostoTotalUsd=0;$totalCostoTotal=0;
             $totalUtilidadBrutaUsd=0;$totalUtilidadBruta=0;
@@ -422,7 +453,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                   $rospanAnio="4";
                 }
                 ?>
-                 <td rowspan="<?=$rospanAnio?>" width="6%" class="bg-table-primary text-white font-weight-bold">Año <?=$an?></td>    <!--ROWSPAN = CANTIDAD DE SERVICIOS + 2 -->
+                 <td rowspan="<?=$rospanAnio?>" width="6%" class="bg-table-primary text-white font-weight-bold"><?=$tituloItem?></td>    <!--ROWSPAN = CANTIDAD DE SERVICIOS + 2 -->
                  <td rowspan="2" width="14%" class="bg-table-primary text-white font-weight-bold"></td>
                  <td colspan="2" class="bg-table-primary text-white font-weight-bold">INGRESO</td>
                  <td colspan="2" class="bg-table-primary text-white font-weight-bold">COSTO TOTAL</td>
@@ -444,17 +475,6 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                  <td>BOB</td>
                </tr>
                <?php 
-
-               
-
-               /*if($codAreaX==39){
-                  $codigoAreaServ=108;
-                  $costoTotalAuditoriaUsd=0;
-                  $costoTotalAuditoria=0;
-                }else{
-                  $costoTotalAuditoriaUsd=$costoTotalLocal/$usd;
-                  $costoTotalAuditoria=$costoTotalLocal;
-                }*/
                 $precioLocalXPeriodo=obtenerPrecioServiciosSimulacionPeriodo($codigo,$an);
                 $costoVariablePersonalPeriodo=obtenerCostosPersonalSimulacionEditadoPeriodo($codigo,$an);
                 $totalVariablePeriodo=obtenerTotalesSimulacionServicioPeriodo($codigo,$an);
@@ -468,11 +488,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
 
                  $porcentPreciosPeriodo=($precioLocalXPeriodo*100)/($precioRegistrado+$sumPrecioRegistrado);
                  $costoFijoFinal=$totalFijo[0]*($porcentPreciosPeriodo/100);
-                 //$totalFijoFinal=$totalFijoPlan*$anioGeneral;
 
-                /*$porCreAn=($porcentajeFijoSim/100)*($an-1);
-                $costoFijoInicio=$totalFijoPlan/$anioGeneral;
-                $costoFijoFinal=$costoFijoInicio+($costoFijoInicio*$porCreAn);*/
                 $costoFijoPrincipalPeriodo+=$costoFijoFinal;
                 //fin datos para costo fijo             ***************************************************************************************
 
@@ -521,79 +537,6 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                  <td class="small text-right"><?=number_format($utilidadNetaAuditoria, 2, ',', '.')?></td>
                  
                </tr>
-               <?php 
-               /*if($codAreaX==39){
-                  $codigoAreaServ=108;
-                 if($an<=3){
-                   $queryPr="SELECT s.*,t.descripcion as nombre_serv,c.descripcion,c.numero_anio FROM simulaciones_servicios_tiposervicio s, cla_servicios t JOIN configuraciones_servicios c on c.cod_claservicio=t.idclaservicio where s.cod_simulacionservicio=$codigoSimulacionSuper and s.cod_claservicio=t.idclaservicio and c.numero_anio=$an order by c.numero_anio";
-                 }else{
-                   $queryPr="SELECT s.*,t.descripcion as nombre_serv,c.descripcion,c.numero_anio FROM simulaciones_servicios_tiposervicio s, cla_servicios t JOIN configuraciones_servicios c on c.cod_claservicio=t.idclaservicio where s.cod_simulacionservicio=$codigoSimulacionSuper and s.cod_claservicio=t.idclaservicio and c.numero_anio=4 order by c.numero_anio";
-                 } 
-                
-                $stmtCalculo = $dbh->prepare($queryPr);
-                $stmtCalculo->execute();
-                while ($rowCal = $stmtCalculo->fetch(PDO::FETCH_ASSOC)) {
-                  $nombreServicioCal=$rowCal['nombre_serv'];
-
-                  $costoTotalAuditoriaUsd=$costoTotalLocal/$usd;
-                  $costoTotalAuditoria=$costoTotalLocal;
-
-                  $precioAuditoriaUsd=$rowCal['monto']/$usd;
-                  $precioAuditoria=$rowCal['monto'];
-
-                  $utilidadAuditoriaUsd=$precioAuditoriaUsd-$costoTotalAuditoriaUsd;
-                  $utilidadAuditoria=$precioAuditoria-$costoTotalAuditoria;
-
-                  $impuestosAuditoriaUsd=(($iva+$it)/100)*$precioAuditoriaUsd;
-                  $impuestosAuditoria=(($iva+$it)/100)*$precioAuditoria;
-
-                  $utilidadNetaAuditoriaUsd=$utilidadAuditoriaUsd-$impuestosAuditoriaUsd;
-                  $utilidadNetaAuditoria=$utilidadAuditoria-$impuestosAuditoria;*/
-
-                  //suma de totales
-               /* $totalIngresoUsd+=$precioAuditoriaUsd;
-                $totalIngreso+=$precioAuditoria;
-                $totalCostoTotalUsd+=$costoTotalAuditoriaUsd;
-                $totalCostoTotal+=$costoTotalAuditoria;
-                $totalUtilidadBrutaUsd+=$utilidadAuditoriaUsd;
-                $totalUtilidadBruta+=$utilidadAuditoria;
-                $totalImpuestosUsd+=$impuestosAuditoriaUsd;
-                $totalImpuestos+=$impuestosAuditoria;
-                $totalUtilidadNetaUsd+=$utilidadNetaAuditoriaUsd;
-                $totalUtilidadNeta+=$utilidadNetaAuditoria;*/
-                 ?>
-                <!-- <tr>
-                 <td class="small text-left"><?=$nombreServicioCal?></td>
-                 <td class="small text-right"><?=number_format($precioAuditoriaUsd, 2, ',', '.')?></td>
-                 <td class="small text-right"><?=number_format($precioAuditoria, 2, ',', '.')?></td>
-
-                 <td class="small text-right"><?=number_format($costoTotalAuditoriaUsd, 2, ',', '.')?></td>
-                 <td class="small text-right"><?=number_format($costoTotalAuditoria, 2, ',', '.')?></td>
-
-                 <td class="small text-right"><?=number_format($utilidadAuditoriaUsd, 2, ',', '.')?></td>
-                 <td class="small text-right"><?=number_format($utilidadAuditoria, 2, ',', '.')?></td>
-                 <td class="small text-right"><?=number_format($impuestosAuditoriaUsd, 2, ',', '.')?></td>
-                 <td class="small text-right"><?=number_format($impuestosAuditoria, 2, ',', '.')?></td>
-                 <td class="small text-right"><?=number_format($utilidadNetaAuditoriaUsd, 2, ',', '.')?></td>
-                 <td class="small text-right"><?=number_format($utilidadNetaAuditoria, 2, ',', '.')?></td>
-               </tr>-->
-                 <?php
-                // }
-                //}
-                ?>
-               <!--<tr>
-                 <td class="small text-left">Otros</td>
-                 <td class="small text-right">-</td>
-                 <td class="small text-right">-</td>
-                 <td class="small text-right">-</td>
-                 <td class="small text-right">-</td>
-                 <td class="small text-right">-</td>
-                 <td class="small text-right">-</td>
-                 <td class="small text-right">-</td>
-                 <td class="small text-right">-</td>
-                 <td class="small text-right">-</td>
-                 <td class="small text-right">-</td>
-               </tr>-->
                <tr class="bg-plomo">
                  <td class="font-weight-bold small text-left">TOTAL</td>
                  <td class="font-weight-bold small text-right <?=$estiloUtilidadIbnorca?>"><?=number_format($totalIngresoUsd, 2, ',', '.')?></td>
@@ -791,3 +734,4 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
 <?php
 require_once 'modal.php';
 ?>
+

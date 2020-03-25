@@ -2238,8 +2238,8 @@ function guardarSimulacionServicio(){
   var nombre=$("#nombre").val();
   var dias=$("#dias_auditoria").val();
   var cliente=$("#cliente").val();
-  var producto=$("#productos").val();
-  var sitio=$("#sitios").val();
+  //var producto=$("#productos").val();
+  //var sitio=$("#sitios").val();
   var norma=$("#norma").val();
   var local_extranjero=$("#local_extranjero").val();
   var utilidad=$("#utilidad_minima").val();
@@ -2251,10 +2251,11 @@ function guardarSimulacionServicio(){
     var afnor=0;
   }
   if($("#productos_div").hasClass("d-none")){
-   if(norma==""||sitio==""||dias==""||nombre==""||!(plantilla_servicio>0)){
+   if(norma==""||itemAtributos.length==0||dias==""||nombre==""||!(plantilla_servicio>0)){
    Swal.fire('Informativo!','Debe llenar los campos!','warning'); 
   }else{
-     var parametros={"id_servicio":idServicio,"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"producto":producto,"norma":norma,"anios":anios,"afnor":afnor,"sitio":sitio};
+    var tipoServicio=$("#tipo_servicio").val();
+     var parametros={"tipo_servicio":tipoServicio,"id_servicio":idServicio,"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"atributos":JSON.stringify(itemAtributos),"norma":norma,"anios":anios,"afnor":afnor,"tipo_atributo":2};
      $.ajax({
         type: "GET",
         dataType: 'html',
@@ -2275,10 +2276,10 @@ function guardarSimulacionServicio(){
     });
   }
   }else{
-    if(norma==""||producto==""||dias==""||nombre==""||!(plantilla_servicio>0)){
+    if(norma==""||itemAtributos.length==0||dias==""||nombre==""||!(plantilla_servicio>0)){
    Swal.fire('Informativo!','Debe llenar los campos!','warning'); 
   }else{
-     var parametros={"id_servicio":idServicio,"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"producto":producto,"norma":norma,"anios":anios,"afnor":afnor,"sitios":sitios};
+     var parametros={"id_servicio":idServicio,"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"atributos":JSON.stringify(itemAtributos),"norma":norma,"anios":anios,"afnor":afnor,"tipo_atributo":1};
      $.ajax({
         type: "GET",
         dataType: 'html',
@@ -2465,7 +2466,7 @@ function enviarSimulacionAjax(){
         },
         success:  function (resp) {
          $("#logo_carga").hide();
-         Swal.fire("Envío Existoso!", "Se registradon los datos exitosamente!", "success")
+         Swal.fire("Envío Exitoso!", "Se registradon los datos exitosamente!", "success")
              .then((value) => {
              location.href="../index.php?opcion=listSimulacionesCostos";
          });
@@ -2489,7 +2490,7 @@ function enviarSimulacionAjaxServ(){
         },
         success:  function (resp) {
          $("#logo_carga").hide();
-         Swal.fire("Envío Existoso!", "Se registradon los datos exitosamente!", "success")
+         Swal.fire("Envío Exitoso!", "Se registradon los datos exitosamente!", "success")
              .then((value) => {
               if(!($("#id_servicioibnored").length)){
                location.href="../index.php?opcion=listSimulacionesServ";
@@ -2897,6 +2898,28 @@ function mayorReporteComprobante(fila){
   }
  }
 
+function listarTipoSolicitudAjaxPropuesta(tipo,id){
+  var url="";
+  if(tipo==1){
+   url="ajaxListSimulacion.php";
+  }else{
+   url="ajaxListProveedor.php";
+  }
+  if(tipo!=3){
+   ajax=nuevoAjax();
+    ajax.open("GET",url,true);
+    ajax.onreadystatechange=function(){
+    if (ajax.readyState==4) {
+      var fi=$("#lista_tipo");
+      fi.html(ajax.responseText);
+      fi.bootstrapMaterialDesign();
+      $("#simulaciones").val(id);
+       $('.selectpicker').selectpicker("refresh");
+    }
+   }
+    ajax.send(null);
+  }
+ }
  // function listarTipoSolicitudCajaChica(tipo){
  //  var url="";
  //  if(tipo==1){
@@ -2935,7 +2958,13 @@ function mayorReporteComprobante(fila){
   if(numero==""||tipo==""){
    $("#mensaje").html("<center><p class='text-danger'>Todos los campos son requeridos.</p></center>");
   }else{
-     var parametros={"numero":numero,"cod_sim":codSim,"cod_prov":codProv};
+    if($("#id_ibnorca").length){
+      var q=$("#id_ibnorca").val();
+      var parametros={"q":q,"numero":numero,"cod_sim":codSim,"cod_prov":codProv};
+    }else{
+      var parametros={"numero":numero,"cod_sim":codSim,"cod_prov":codProv};
+    }
+     
      $.ajax({
         type: "GET",
         dataType: 'html',
@@ -5667,7 +5696,7 @@ function registrarCorreoEventoAjax(){
     success: function (resp) {
       var envio=resp.split('$$$');
       if(parseInt(envio[0])==1){
-         Swal.fire("Registro Existoso!", "Se registradon los datos exitosamente!", "success")
+         Swal.fire("Registro Exitoso!", "Se registradon los datos exitosamente!", "success")
              .then((value) => {
              location.href="index.php?opcion=listNotificacionesSistema";
          });
@@ -5789,7 +5818,8 @@ function editarDatosPlantilla(){
      $("#modal_sitios").tagsinput('removeAll');
      $("#modal_sitios").tagsinput('add', $("#sitios_sim").val());
   }
-
+   //mostrar sitios y o productos
+   listarAtributo();
   if($("#num_tituloservicios1").length){
      $("#num_tituloservicios1").html("("+($("#modal_numeroservicio1").val()-1)+")");
   }
@@ -5847,10 +5877,14 @@ function guardarDatosPlantilla(btn_id){
 function guardarDatosPlantillaServicio(ib){
   var conta=0; var contaRead=0;
   var cosSim=$("#cod_simulacion").val();
-
+   if($("#divResultadoListaAtributos").length){
+    var inicioAnio=0;
+   }else{
+    var inicioAnio=1;
+   }
   /*PARA PERSONAL*/
   var anios=$("#anio_simulacion").val();
-  for (var anio=1; anio<=anios; anio++) {
+  for (var anio=inicioAnio; anio<=anios; anio++) {
   var total= $("#modal_numeropersonal"+anio).val(); 
   if((total-1)!=0){
     for (var i=1;i<=(total-1);i++){
@@ -5867,7 +5901,7 @@ function guardarDatosPlantillaServicio(ib){
 
 
   /* PARA SERVICIOS*/
-  for (var anio=1; anio<=anios; anio++) {
+  for (var anio=inicioAnio; anio<=anios; anio++) {
    var total= $("#modal_numeroservicio"+anio).val(); 
   if((total-1)!=0){
     for (var i=1;i<=(total-1);i++){
@@ -5921,20 +5955,26 @@ function guardarDatosPlantillaServicioAjax(btn_id){
   var ut_i=$("#modal_utibnorca").val();
   var dia=$("#modal_diasauditoria").val();
   if($("#modal_productos").length){
-   var productos=$("#modal_productos").val();
+   //var productos=$("#modal_productos").val();
    var tcs=0;
   }else{
-    var productos=$("#modal_sitios").val();
+    //var productos=$("#modal_sitios").val();
     var tcs=1;
   }
-  
-  var respuesta=productos.split(',');
-  var num_prod=respuesta.length;
+  var productos=itemAtributos;
 
-if(!(ut_i==""||dia==""||dia==0||productos==""||num_prod<1)){ 
+  //var respuesta=productos.split(',');
+  //var num_prod=respuesta.length;
+  if($("#divResultadoListaAtributos").length){
+    var inicioAnio=0;
+   }else{
+    var inicioAnio=1;
+   }
+
+if(!(ut_i==""||dia==""||dia==0||productos.length==0)){ 
   /*PARA PERSONAL*/
   var anios=$("#anio_simulacion").val();
-  for (var anio=1;anio<=anios; anio++) {
+  for (var anio=inicioAnio;anio<=anios; anio++) {
   var total=$("#modal_numeropersonal"+anio).val();
   for (var i = 1; i <=(total-1); i++) {
      var habilitado=1;
@@ -5949,7 +5989,7 @@ if(!(ut_i==""||dia==""||dia==0||productos==""||num_prod<1)){
       if($("#modal_montopre"+anio+"FFF"+i).is("[readonly]")){
         habilitado=0;
       }
-      var parametros = {"codigo":codigo,"extlocal":extlocal,"montoe":montoe,"montol":montol,"monto":monto,"simulacion":cod_sim,"productos":productos,"plantilla":codigo_p,"dia":dia,"utilidad":ut_i,"habilitado":habilitado,"cantidad":cantidad,"dias":dias,"cantidadT":cantidadTotal,"tcs":tcs};
+      var parametros = {"codigo":codigo,"extlocal":extlocal,"montoe":montoe,"montol":montol,"monto":monto,"simulacion":cod_sim,"productos":JSON.stringify(productos),"plantilla":codigo_p,"dia":dia,"utilidad":ut_i,"habilitado":habilitado,"cantidad":cantidad,"dias":dias,"cantidadT":cantidadTotal,"tcs":tcs};
       $.ajax({
         type:"GET",
         data:parametros,
@@ -5966,7 +6006,7 @@ if(!(ut_i==""||dia==""||dia==0||productos==""||num_prod<1)){
   };
   /* FIN PARA PERSONAL*/ 
   /*PARA SERVICIOS*/ 
-  for (var anio=1;anio<=anios; anio++) {
+  for (var anio=inicioAnio;anio<=anios; anio++) {
   var total=$("#modal_numeroservicio"+anio).val();
   for (var i = 1; i <=(total-1); i++) {
      var habilitado=1;
@@ -5978,7 +6018,7 @@ if(!(ut_i==""||dia==""||dia==0||productos==""||num_prod<1)){
       if($("#modal_montoserv"+anio+"SSS"+i).is("[readonly]")){
         habilitado=0;
       }
-      var parametros = {"codigo":codigo,"monto":monto,"simulacion":cod_sim,"productos":productos,"precio_fijo":precio_fijo,"unidad":unidad,"plantilla":codigo_p,"dia":dia,"utilidad":ut_i,"habilitado":habilitado,"cantidad":cantidad,"anio":anio,"iteracion":i,"tcs":tcs};
+      var parametros = {"codigo":codigo,"monto":monto,"simulacion":cod_sim,"productos":JSON.stringify(productos),"precio_fijo":precio_fijo,"unidad":unidad,"plantilla":codigo_p,"dia":dia,"utilidad":ut_i,"habilitado":habilitado,"cantidad":cantidad,"anio":anio,"iteracion":i,"tcs":tcs};
       $.ajax({
         type:"GET",
         data:parametros,
@@ -5990,13 +6030,14 @@ if(!(ut_i==""||dia==""||dia==0||productos==""||num_prod<1)){
           var respu=resp.split('WWW');
           if(parseInt(respu[0])==anios&&parseInt(respu[1])==(total-1)){
             detectarCargaAjax();
-            alerts.showSwal('success-message','registerSimulacion.php?cod='+cod_sim); 
+            
           }   
         }
       });
   }; 
     
   }
+  alerts.showSwal('success-message','registerSimulacion.php?cod='+cod_sim); 
   //poner un script aqui
   /* FIN PARA PERSONAL*/
  }else{
@@ -7903,3 +7944,86 @@ function ajaxTipoProveedorCliente(tipo){
   ajax.send(null)  
 }
 
+function agregarAtributoAjax(){
+  //listarAtributo();
+  $("#modal_fila").val("-1");
+  $("#modal_atributo").modal("show");
+  if($("#modalEditPlantilla").length){
+    $("#modalEditPlantilla").modal("hide");
+  }
+}
+
+function listarAtributo(){
+  var div=$('<div>').addClass('table-responsive');
+  var table = $('<table>').addClass('table');
+  table.addClass("table-bordered");
+  table.addClass("table-sm table-striped");
+  var titulos = $('<tr>').addClass('fondo-boton');
+     titulos.append($('<th>').addClass('').text('#'));
+     titulos.append($('<th>').addClass('').text('NOMBRE'));
+     if($("#productos_div").hasClass("d-none")){
+      titulos.append($('<th>').addClass('').text('DIRECCION'));
+     }
+     titulos.append($('<th>').addClass('text-right').text('OPCION'));
+     table.append(titulos);
+   for (var i = 0; i < itemAtributos.length; i++) {
+     var row = $('<tr>').addClass('');
+     row.append($('<td>').addClass('').text(i+1));
+     row.append($('<td>').addClass('').text(itemAtributos[i].nombre));
+     if($("#productos_div").hasClass("d-none")){
+      row.append($('<td>').addClass('').text(itemAtributos[i].direccion));
+     }  
+     row.append($('<td>').addClass('text-right').html('<button class="btn btn-success btn-link btn-sm" onclick="editarAtributo('+i+');"><i class="material-icons">edit</i></button><button class="btn btn-danger btn-link btn-sm" onclick="removeAtributo('+i+');"><i class="material-icons">remove_circle</i></button>'));
+     table.append(row);
+   }
+   div.append(table);
+     if($("#productos_div").hasClass("d-none")){
+      $('#divResultadoListaAtributos').html(div);
+      $('#divResultadoListaAtributos').bootstrapMaterialDesign(); 
+     }else{
+      $('#divResultadoListaAtributosProd').html(div);
+      $('#divResultadoListaAtributosProd').bootstrapMaterialDesign(); 
+     }
+     
+   
+}
+function guardarAtributoItem(){
+  if($('#modal_nombre').val()==""){
+   Swal.fire("Informativo!", "Debe ingresar el Nombre del sitio o producto", "warning");
+  }else{
+
+  var fila=$("#modal_fila").val();
+  if(fila<0){
+    var atributo={
+    nombre: $('#modal_nombre').val(),
+    direccion: $('#modal_direccion').val()
+    }
+  itemAtributos.push(atributo);
+  }else{
+    itemAtributos[fila].nombre=$('#modal_nombre').val();
+    itemAtributos[fila].direccion=$('#modal_direccion').val();
+  }
+  $("#modal_nombre").val("");
+  $("#modal_direccion").val("");
+  if($("#modalEditPlantilla").length){
+    editarDatosPlantilla();
+   }
+  listarAtributo();
+  $("#modal_atributo").modal("hide"); 
+  }
+  
+}
+function removeAtributo(fila){
+  itemAtributos.splice(fila, 1);
+  listarAtributo();
+ }
+
+function editarAtributo(fila){
+  $("#modal_fila").val(fila);
+  $('#modal_nombre').val(itemAtributos[fila].nombre);
+  $('#modal_direccion').val(itemAtributos[fila].direccion);  
+  $("#modal_atributo").modal("show");
+  if($("#modalEditPlantilla").length){
+    $("#modalEditPlantilla").modal("hide");
+  }
+}

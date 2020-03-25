@@ -3,7 +3,7 @@ require_once '../conexion.php';
 require_once '../functions.php';
 require_once '../functionsGeneral.php';
 require_once 'configModule.php';
-
+set_time_limit (0);
 $dbh = new Conexion();
 
 $codigo=$_GET["codigo"];
@@ -21,7 +21,8 @@ $cantidad=$_GET['cantidad'];
 $habilitado=$_GET['habilitado'];
 $unidad=$_GET['unidad'];
 $fijo=$_GET['precio_fijo'];
-$productos=$_GET['productos'];
+$productos="";
+$atributos= json_decode($_GET['productos']);
 $anio=$_GET['anio'];
 $iteracion=$_GET['iteracion'];
 
@@ -38,13 +39,36 @@ if($cantidad<1){
 	$cantidad=1;
 }
 
+//SITIOS 0 PRODUCTOS
+   $dbhA = new Conexion();
+  $sqlA="DELETE FROM simulaciones_servicios_atributos where cod_simulacionservicio=$codSimulacion";
+  $stmtA = $dbhA->prepare($sqlA);
+  $stmtA->execute();
+  
+  //simulaciones_serviciosauditores
+          $nC=cantidadF($atributos);
+          for($att=0;$att<$nC;$att++){
+              $nombreAtributo=$atributos[$att]->nombre;
+            if($_GET['tcs']==0){
+                $direccionAtributo="";
+              }else{
+                $direccionAtributo=$atributos[$att]->direccion;
+              }         
+              $sqlDetalleAtributos="INSERT INTO simulaciones_servicios_atributos (cod_simulacionservicio, nombre, direccion, cod_tipoatributo) 
+              VALUES ('$codSimulacion', '$nombreAtributo', '$direccionAtributo', '$tipo_atributo')";
+              $stmtDetalleAtributos = $dbh->prepare($sqlDetalleAtributos);
+              $stmtDetalleAtributos->execute();
+         }
+         //FIN simulaciones_serviciosauditores
+
+
 if($fijo!=""){
 	$cliente=obtenerCodigoClienteSimulacion($codSimulacion);
-	$productosLista=explode(",", $productos);
+	//$productosLista=explode(",", $productos);
         $codTC=obtenerTipoCliente($cliente);
         $nacional=obtenerTipoNacionalCliente($cliente);
         $suma=0;
-        for ($i=0; $i < count($productosLista); $i++) {
+        for ($i=0; $i < count($atributos); $i++) {
           $aux=obtenerCostoTipoClienteSello(($i+1),$codTC,$nacional);
            if($aux==0){
             $aux=$aux2;

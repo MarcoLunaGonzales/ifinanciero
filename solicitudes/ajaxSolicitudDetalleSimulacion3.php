@@ -8,6 +8,7 @@ require_once '../styles.php';
 $dbh = new Conexion();
 
 $codigo=$_GET['cod_solicitud'];
+$codigoSolicitud=$_GET['cod_solicitud'];
 $codSimulacionServX=$_GET['cod_sim'];
 
 $anio=$_GET['anio'];
@@ -29,6 +30,7 @@ $codigo_detalle=$_GET['codigo_detalle'];
                         $unidadSol=$codUnidadX;
                         $areaSol=$codAreaX;
 						$idFila=1;
+?><script>numFilas=0;cantidadItems=0;itemFacturas=[];</script><?php
 						$cuentasCodigos=[];$conta=0;$auxAnio=0;$detalleAux="";$contAux=0;
 
 						while ($row = $detalle->fetch(PDO::FETCH_ASSOC)) {
@@ -59,8 +61,10 @@ $codigo_detalle=$_GET['codigo_detalle'];
 							$nombrePartidaX="<b class='text-warning'>".$row['partida']."</b>";
 							$nombrePartidaDetalleX="<b class='text-warning'>Cuenta</b> - <b class='text-dark'>Año ".$row['cod_anio']."</b>";
                             
-							?><script>var nfac=[];itemFacturas.push(nfac);</script><?php
+							
+							$entro=0;
                             while ($rowDetalles = $solicitudDetalle->fetch(PDO::FETCH_ASSOC)) {
+                            	$entro=1;
                                $cuentasCodigos[$conta]=$rowDetalles["codigo"];	
                                $codDetalleX=$rowDetalles["codigo"];	
                                $detalleX=$rowDetalles["detalle"];
@@ -82,14 +86,18 @@ $codigo_detalle=$_GET['codigo_detalle'];
 							$numeroCuentaX=trim($row['numero']);
 							$nombreCuentaX=trim($row['nombre']);
 							
-							include "addFila.php";
-                         			 
-						 $idFila=$idFila+1;	 
+							
+                         	if($entro==0){
+                         		?><script>var nfac=[];itemFacturas.push(nfac);</script><?php
+                         		include "addFila.php";
+                         		$idFila=$idFila+1;
+                         	}		 
+						 	 
 						 
 						}
                         
                          
-                       $solicitudDetalle=obtenerSolicitudRecursosDetalle($codigo);
+                       $solicitudDetalle=obtenerSolicitudRecursosDetalle($codigoSolicitud);
                        while ($rowDetalles = $solicitudDetalle->fetch(PDO::FETCH_ASSOC)) {
                           $tituloImporte="Importe";
                           $codCuentaX=$rowDetalles['cod_plancuenta'];

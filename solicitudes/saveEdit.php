@@ -115,6 +115,11 @@ while ($row = $solDet->fetch(PDO::FETCH_BOUND)) {
 $stmt1 = obtenerSolicitudesDet($codSolicitud);
 editarComprobanteDetalle($codSolicitud,'cod_solicitudrecurso',$cont1,$fila,$stmt1,'solicitud_recursosdetalle',$cab,$data,$facturas);
 
+
+$stmt1 = obtenerSolicitudesDet($codSolicitud);
+//PARA registro de facturas
+editarComprobanteDetalle($codSolicitud,'cod_solicitudrecurso',$cont1,$fila,$stmt1,'solicitud_recursosdetalle',$cab,$data,$facturas);
+
 if(isset($_POST['usuario_ibnored'])){;
     $q=$_POST['usuario_ibnored'];
   if($flagSuccess==true){
