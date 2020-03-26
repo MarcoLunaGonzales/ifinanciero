@@ -38,8 +38,8 @@ $sKey = "ce94a8dabdf0b112eafa27a5aa475751";
 		// abrimos la sesión cURL
 		$ch = curl_init();
 		// definimos la URL a la que hacemos la petición
-		//curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibno/registro/ws-registro-proveedor.php"); // OFFICIAL
-		curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibnob/registro/ws-registro-proveedor.php"); // PRUEBA
+		curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibno/registro/ws-registro-proveedor.php"); // OFFICIAL
+		// curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibnob/registro/ws-registro-proveedor.php"); // PRUEBA
 		// indicamos el tipo de petición: POST
 		curl_setopt($ch, CURLOPT_POST, TRUE);
 		// definimos cada uno de los parámetros
