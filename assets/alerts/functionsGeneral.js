@@ -5172,6 +5172,10 @@ function verEstadosCuentas(fila,cuenta){
       }else{
         var cod_cuenta=$("#cuenta_auxiliar"+fila).val();
         var auxi="SI";
+      }
+      if($("#cuentas_auxiliaresorigen").length){
+        $("#cuentas_auxiliaresorigen").val("all");
+        $('.selectpicker').selectpicker("refresh"); 
       }      
     }else{
       if($("#cuenta_auxiliar"+fila).val()==0){
@@ -5229,14 +5233,27 @@ function verEstadosCuentas(fila,cuenta){
       }
     }  
 
+    if($("#cuentas_auxiliaresorigen").length){
+       var codigoAuxi=$("#cuentas_auxiliaresorigen").val();
+       var parametros={"cod_cuenta":cod_cuenta,"tipo":tipo,"tipo_proveedorcliente":tipo_proveedorcliente,"mes":12,"auxi":auxi,"cod_auxi":codigoAuxi};
+    }else{
+      var parametros={"cod_cuenta":cod_cuenta,"tipo":tipo,"tipo_proveedorcliente":tipo_proveedorcliente,"mes":12,"auxi":auxi};
+    }
+
     //PASA Y MOSTRAMOS LOS ESTADOS DE CUENTA
-    var parametros={"cod_cuenta":cod_cuenta,"tipo":tipo,"tipo_proveedorcliente":tipo_proveedorcliente,"mes":12,"auxi":auxi};
+    
     $.ajax({
         type: "GET",
         dataType: 'html',
         url: "../estados_cuenta/ajaxMostrarEstadosCuenta.php",
         data: parametros,
+        beforeSend: function () {
+        $("#texto_ajax_titulo").html("Consultando los estados de cuenta..."); 
+          iniciarCargaAjax();
+        },
         success:  function (resp) {
+          detectarCargaAjax();
+          $("#texto_ajax_titulo").html("Procesando Datos");
           var respuesta=resp.split('@');
           $("#div_estadocuentas").html(respuesta[0]);
           if(tipo==2 && tipo_proveedorcliente==1){
@@ -5245,7 +5262,8 @@ function verEstadosCuentas(fila,cuenta){
           }else{
             var rsaldo=listarEstadosCuentasCredito(fila,respuesta[1]);
             listarEstadosCuentas(fila,rsaldo);
-          }           
+          } 
+          //mostrarSelectProveedoresClientes()          
         }
     });
     $("#estFila").val(fila);
@@ -5271,16 +5289,20 @@ function agregarEstadoCuenta(){
   var tipo=$("#tipo_estadocuentas"+fila).val();
   var tipo_proveedorcliente=$("#tipo_proveedorcliente"+fila).val();
   
-  if(tipo==2 && tipo_proveedorcliente==1){ //CUMPLE LA CONDICION DE TIPO: PROVEEDOR Y HABER 
-    var cuenta=0;
-    var codComproDet=0;
-    var nfila={
-    cod_plancuenta:cuenta,
-    cod_plancuentaaux:$("#cuenta_auxiliar"+fila).val(),
-    cod_comprobantedetalle:codComproDet,
-    cod_proveedor:0,//$("#proveedores").val(),
-    monto:$("#monto_estadocuenta").val()
-    }
+  if((tipo==2 && tipo_proveedorcliente==1)||(tipo==1 && tipo_proveedorcliente==2)){ //CUMPLE LA CONDICION DE TIPO: PROVEEDOR Y HABER 
+    //if((tipo==2 && tipo_proveedorcliente==1)){
+      var cuenta=0;
+      var codComproDet=0;
+      var nfila={
+      cod_plancuenta:cuenta,
+      cod_plancuentaaux:$("#cuenta_auxiliar"+fila).val(),
+      cod_comprobantedetalle:codComproDet,
+      cod_proveedor:0,//$("#proveedores").val(),
+      monto:$("#monto_estadocuenta").val()
+     }    
+    //}else{ 
+    //}
+
     itemEstadosCuentas[fila-1]=[];
     itemEstadosCuentas[fila-1].push(nfila);
     $("#nestado"+fila).addClass("estado");
@@ -5353,6 +5375,9 @@ function listarEstadosCuentasDebito(id,saldo){
      var row = $('<tr>').addClass('bg-white');
      row.append($('<td>').addClass('text-left').text("-"));
      row.append($('<td>').addClass('text-left').text("-"));
+
+     row.append($('<td>').addClass('text-left').text("-"));
+     row.append($('<td>').addClass('text-left').text("-"));
      row.append($('<td>').addClass('text-left text-danger').text("---"));
      
      var tipo=$("#tipo_estadocuentas"+id).val();
@@ -5369,8 +5394,14 @@ function listarEstadosCuentasDebito(id,saldo){
         }
         row.append($('<td>').addClass('text-left text-danger').html($("#glosa_detalle"+id).val()+"<small class='text-success'>"+titulo_glosa+"</small>"));
         var nsaldo=parseFloat(saldo)-parseFloat(itemEstadosCuentas[id-1][i].monto);
-        row.append($('<td>').addClass('text-right text-danger').text(numberFormat(itemEstadosCuentas[id-1][i].monto,2)));  
-        row.append($('<td>').addClass('text-right text-danger').text("")); 
+        //para listar los estados de cliente nuevos en el campo de credito
+        if(tipo==2 && tipo_proveedorcliente==2){
+          row.append($('<td>').addClass('text-right text-danger').text(""));
+          row.append($('<td>').addClass('text-right text-danger').text(numberFormat(itemEstadosCuentas[id-1][i].monto,2)));  
+        }else{
+          row.append($('<td>').addClass('text-right text-danger').text(numberFormat(itemEstadosCuentas[id-1][i].monto,2)));  
+          row.append($('<td>').addClass('text-right text-danger').text(""));       
+        }
       }
       row.append($('<td>').addClass('text-right text-danger font-weight-bold').text(numberFormat(nsaldo,2)));
      table.append(row);
@@ -5432,7 +5463,13 @@ function verEstadosCuentasModal(cuenta,cod_cuenta,cod_cuentaaux,tipo,tipo_provee
         dataType: 'html',
         url: "estados_cuenta/ajaxListEstadoCuenta.php",
         data: parametros,
+        beforeSend: function () {
+        $("#texto_ajax_titulo").html("Consultando los estados de cuenta..."); 
+          iniciarCargaAjax();
+        },
         success:  function (resp) {
+          detectarCargaAjax();
+          $("#texto_ajax_titulo").html("Procesando Datos");
           var respuesta=resp.split('@');
           $("#div_estadocuentas").html(respuesta[0]);
           $("#titulo_cuenta").html(cuenta);
@@ -7958,42 +7995,6 @@ function ajaxTipoProveedorCliente(tipo){
   ajax.send(null)  
 }
 
-
-//enviar correo
-//contratos de personal
-function agregaformEnviarCorreo(datos){
-  //console.log("datos: "+datos);
-  var d=datos.split('/');
-  document.getElementById("codigo_facturacion").value=d[0];
-  document.getElementById("cod_solicitudfacturacion").value=d[1];
-  document.getElementById("nro_factura").value=d[2];
-}
-
-function EnviarCorreoAjax(codigo_facturacion,nro_factura,cod_solicitudfacturacion,correo_destino,asunto,mensaje){
-  $.ajax({
-    type:"POST",
-    data:"codigo_facturacion="+codigo_facturacion+"&nro_factura="+nro_factura+"&cod_solicitudfacturacion="+cod_solicitudfacturacion+"&correo_destino="+correo_destino+"&asunto="+asunto+"&mensaje="+mensaje,
-    url:"simulaciones_servicios/enviarCorreo.php",
-    success:function(r){
-      var resp = r.split('$$$');
-      var success = resp[0];
-
-      if(success==1){
-        alerts.showSwal('success-message','index.php?opcion=listFacturasGeneradas');
-      }
-      if(success==2){
-        alerts.showSwal('error-message','index.php?opcion=listFacturasGeneradas');
-      }
-      if(success==3){        
-        alerts.showSwal('error-messageEnviarCorreoAdjunto','index.php?opcion=listFacturasGeneradas');
-      }
-      if(success==0){
-        alerts.showSwal('error-messageCamposVacios','index.php?opcion=listFacturasGeneradas');
-      }
-    }
-  });
-}
-
 function agregarAtributoAjax(){
   //listarAtributo();
   $("#modal_fila").val("-1");
@@ -8076,4 +8077,30 @@ function editarAtributo(fila){
   if($("#modalEditPlantilla").length){
     $("#modalEditPlantilla").modal("hide");
   }
+}
+
+function verCuentasAuxiliaresSelect(){
+  var cuenta= $("#cuentas_origen").val().split("###");
+  if(cuenta[1]=="NNN"){
+    if($("#div_cuentasorigenaux").hasClass("d-none")){
+      $("#div_cuentasorigenaux").removeClass("d-none");
+    }
+    var fila = $("#estFila").val();
+    var tipo_proveedorcliente=$("#tipo_proveedorcliente"+fila).val();
+    var id="";
+     $("#cuentas_auxiliaresorigen option").each(function(){
+           if($(this).val()!="all"){
+              var codigoSelect=$(this).val().split("###");
+              if ((codigoSelect[1]==tipo_proveedorcliente&&codigoSelect[2]==cuenta[0])){
+               $(this).show();   
+              }else{
+                $(this).hide(); 
+              }   
+           }
+        }); 
+      $('.selectpicker').selectpicker("refresh");   
+  } 
+}
+function mostrarSelectProveedoresClientes(){
+  verEstadosCuentasCred();
 }

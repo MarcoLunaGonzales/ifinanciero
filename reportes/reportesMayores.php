@@ -135,7 +135,7 @@ $i=0;
       	             </div>
                   	<div class="col-sm-6">
                   		<div class="row">
-			                 <label class="col-sm-4 col-form-label">Area</label>
+			                 <label class="col-sm-4 col-form-label">Areax</label>
 			                 <div class="col-sm-8">
 			                	<div class="form-group">
 	                              <select class="selectpicker form-control form-control-sm" name="area_costo[]" id="area_costo" data-style="select-with-transition" multiple data-actions-box="true" required>
