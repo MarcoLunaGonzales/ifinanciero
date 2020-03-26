@@ -4540,6 +4540,7 @@ SELECT p.*,a.nombre as nombre_proveedorcliente FROM cuentas_auxiliares p JOIN cl
   return $stmt;
 }
 
+<<<<<<< HEAD
 function abrevTipoComprobante($codigo){
    $dbh = new Conexion();
    $stmt = $dbh->prepare("SELECT abreviatura FROM tipos_comprobante where codigo in ($codigo)");
@@ -4552,6 +4553,19 @@ function abrevTipoComprobante($codigo){
 }
 
 
+=======
+function obtenerClienteCuentaAux($codigo){
+  $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT p.nombre from cuentas_auxiliares c join clientes p on c.cod_proveedorcliente=p.codigo 
+    where c.codigo=$codigo and c.cod_tipoauxiliar=2");
+   $stmt->execute();
+   $valor="";
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['nombre'];
+   }
+   return($valor);
+}
+>>>>>>> cd8b0fa6d24f62049c2c7d4850fbe53cdc1a71ea
 ?>
 
 

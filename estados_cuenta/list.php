@@ -25,7 +25,12 @@ $stmt->bindColumn('codtipoestadocuenta', $codTipoEstadoCuenta);
 $stmt->bindColumn('tipoestadocuenta', $tipoEstadoCuenta);
 
 ?>
-
+<div class="cargar-ajax d-none">
+  <div class="div-loading text-center">
+     <h4 class="text-warning font-weight-bold" id="texto_ajax_titulo">Procesando Datos</h4>
+     <p class="text-white">Aguard&aacute; un momento por favor</p>  
+  </div>
+</div>
 <div class="content">
 	<div class="container-fluid">
         <div class="row">

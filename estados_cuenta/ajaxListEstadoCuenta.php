@@ -29,7 +29,7 @@ $mes=$_GET['mes'];
 	  <tr class="">
 	  	<th class="text-left">Fecha</th>
 	  	<th class="text-left">Comprobante</th>
-	  	<th class="text-left">Proveedor</th>
+	  	<th class="text-left">Proveedor/Cliente</th>
 	  	<th class="text-left">Glosa</th>
 	  	<th class="text-right">D&eacute;bito</th>
 	  	<th class="text-right">Cr&eacute;dito</th>
@@ -43,6 +43,8 @@ $mes=$_GET['mes'];
   	//echo $sqlEstadoCuenta;
 
   	$stmt = $dbh->prepare($sqlEstadoCuenta);
+	$sqlEstadoCuenta="SELECT e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar FROM estados_cuenta e,comprobantes_detalle d where e.cod_comprobantedetalle=d.codigo and (d.cod_cuenta=$codCuenta or e.cod_plancuenta=$codCuenta) and e.cod_comprobantedetalleorigen=0 order by e.fecha";
+  $stmt = $dbh->prepare($sqlEstadoCuenta);
   
   $stmt->execute();
   $i=0;$saldo=0;
@@ -81,14 +83,26 @@ $mes=$_GET['mes'];
 	 $saldo=$montoX-$montoContra;
 	 $totalSaldo=$totalSaldo+$saldo;
 	 $codProveedor=$row['cod_proveedor'];
+
 	 $nombreProveedorX=nameProveedor($codProveedor);
 
-
-   if(obtenerProveedorCuentaAux($row['cod_cuentaaux'])==""){
-    $proveedorX="Sin Proveedor";
-   }else{
-    $proveedorX=obtenerProveedorCuentaAux($row['cod_cuentaaux']);
+  if(($row['cod_cuentaaux']!=""||$row['cod_cuentaaux']!=0)){
+   if($tipoProveedorCliente==1){
+      $proveedorX=obtenerProveedorCuentaAux($row['cod_cuentaaux']);
+    }else{
+    if(($row['cod_cuentaauxiliar']!=0)){
+     $proveedorX=obtenerClienteCuentaAux($row['cod_cuentaauxiliar']);
+    }else{
+     $proveedorX="Sin Cliente";
+    }	    
    }
+  }else{
+    if($tipoProveedorCliente==1){
+         $proveedorX="Sin Proveedor";
+      }else{
+       $proveedorX="Sin Cliente";
+      }
+  }	
 	 if($haberX>0){
        ?>
 		<tr class="bg-white det-estados">
@@ -167,7 +181,7 @@ $mes=$_GET['mes'];
   	   	</tr>-->
   	   	<tr class="bg-white det-estados">
 	  	   	<td class="text-left small font-weight-bold"><?=$fechaX?></td>
-	  	   	<td class="text-left small"><?=$nombreProveedorX;?></td>
+	  	   	<td class="text-left small"><?=$proveedorX;?></td>
 	  	   	<td class="text-left small">
 
 		    <div id="accordion<?=$indice;?>" role="tablist">
