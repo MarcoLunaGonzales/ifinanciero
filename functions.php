@@ -1035,7 +1035,7 @@ function obtenerPlantilla($codigo){
         if($fact==null){
           $codFacturaCompra=obtenerCodigoFacturaCompra();
           $dbh = new Conexion();
-          $query2="INSERT INTO $tabla (codigo, ".$into.") values ($codFacturaCompra, ".$values.")";
+          $query2="INSERT INTO $tabla (codigo, ".$into.") values ($codFacturaCompra, ".$values.")";//
         }else{
           if($title=="cod_solicitudrecurso"){
             $codComprobanteDetalle=obtenerCodigoSolicitudDetalle();
@@ -2268,7 +2268,7 @@ function obtenerSolicitudRecursosDetalleCuenta($codSol,$codigo){
 function obtenerSolicitudRecursosDetallePlantilla($codSol,$codigo){
    $dbh = new Conexion();
    $sql="";
-   $sql="SELECT sd.*,pc.numero,pc.nombre from solicitud_recursosdetalle sd join plan_cuentas pc on sd.cod_plancuenta=pc.codigo where sd.cod_detalleplantilla=$codigo and sd.cod_solicitudrecurso=$codSol";
+   $sql="SELECT sd.*,pc.numero,pc.nombre from solicitud_recursosdetalle sd join plan_cuentas pc on sd.cod_plancuenta=pc.codigo where sd.cod_detalleplantilla=$codigo"; // and sd.cod_solicitudrecurso=$codSol
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
    return $stmt;
@@ -2276,7 +2276,23 @@ function obtenerSolicitudRecursosDetallePlantilla($codSol,$codigo){
 function obtenerSolicitudRecursosDetallePlantillaAud($codSol,$codigo){
    $dbh = new Conexion();
    $sql="";
-   $sql="SELECT sd.*,pc.numero,pc.nombre from solicitud_recursosdetalle sd join plan_cuentas pc on sd.cod_plancuenta=pc.codigo where sd.cod_servicioauditor=$codigo and sd.cod_solicitudrecurso=$codSol";
+   $sql="SELECT sd.*,pc.numero,pc.nombre from solicitud_recursosdetalle sd join plan_cuentas pc on sd.cod_plancuenta=pc.codigo where sd.cod_servicioauditor=$codigo"; //and sd.cod_solicitudrecurso=$codSol
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+}
+function obtenerSolicitudRecursosDetallePlantillaSol($codSol,$codigo){
+   $dbh = new Conexion();
+   $sql="";
+   $sql="SELECT sd.*,pc.numero,pc.nombre from solicitud_recursosdetalle sd join plan_cuentas pc on sd.cod_plancuenta=pc.codigo where sd.cod_detalleplantilla=$codigo and sd.cod_solicitudrecurso=$codSol"; // 
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+}
+function obtenerSolicitudRecursosDetallePlantillaAudSol($codSol,$codigo){
+   $dbh = new Conexion();
+   $sql="";
+   $sql="SELECT sd.*,pc.numero,pc.nombre from solicitud_recursosdetalle sd join plan_cuentas pc on sd.cod_plancuenta=pc.codigo where sd.cod_servicioauditor=$codigo and sd.cod_solicitudrecurso=$codSol"; //
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
    return $stmt;
@@ -4487,6 +4503,7 @@ function obtenerFechaEnLetra($fecha){
     $mes = $mes[(date('m', strtotime($fecha))*1)-1];
     return $num.' de '.$mes.' del '.$anno;
 }
+
 
 ?>
 

@@ -3,7 +3,7 @@ require_once '../conexion.php';
 require_once '../functions.php';
 require_once '../functionsGeneral.php';
 require_once 'configModule.php';
-
+set_time_limit (0);
 $dbh = new Conexion();
 
 $codigo=$_GET["codigo"];
@@ -27,7 +27,8 @@ $cantidad=$_GET['cantidad'];
 $cantidadT=$_GET['cantidadT'];
 $dias_aud=$_GET['dias'];
 $habilitado=$_GET['habilitado'];
-$productos=$_GET['productos'];
+$productos="";
+$atributos= json_decode($_GET['productos']);
 if($dia<$dias_aud){
   $dias_aud=$dia;
 }
@@ -48,6 +49,34 @@ $stmtDetalles->execute();
 $sqlDet="SELECT * FROM simulaciones_serviciodetalle where cod_simulacionservicio=$codSimulacion";
 $stmtDet = $dbh->prepare($sqlDet);
 $stmtDet->execute();
+
+//SITIOS 0 PRODUCTOS
+   $dbhA = new Conexion();
+  $sqlA="DELETE FROM simulaciones_servicios_atributos where cod_simulacionservicio=$codSimulacion";
+  $stmtA = $dbhA->prepare($sqlA);
+  $stmtA->execute();
+  
+  //simulaciones_serviciosauditores
+          $nC=cantidadF($atributos);
+          for($att=0;$att<$nC;$att++){
+              $nombreAtributo=$atributos[$att]->nombre;
+            if($_GET['tcs']==0){
+                $direccionAtributo="";
+              }else{
+                $direccionAtributo=$atributos[$att]->direccion;
+              }         
+              $sqlDetalleAtributos="INSERT INTO simulaciones_servicios_atributos (cod_simulacionservicio, nombre, direccion, cod_tipoatributo) 
+              VALUES ('$codSimulacion', '$nombreAtributo', '$direccionAtributo', '$tipo_atributo')";
+              $stmtDetalleAtributos = $dbh->prepare($sqlDetalleAtributos);
+              $stmtDetalleAtributos->execute();
+         }
+         //FIN simulaciones_serviciosauditores
+
+
+
+
+
+
 
 /* while ($rowPre = $stmtDet->fetch(PDO::FETCH_ASSOC)) {
  	$cantidadDet=$rowPre['cantidad'];

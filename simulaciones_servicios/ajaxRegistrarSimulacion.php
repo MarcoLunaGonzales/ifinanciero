@@ -1,5 +1,5 @@
 <?php
-set_time_limit (600);
+set_time_limit (0);
 session_start();
 require_once '../conexion.php';
 require_once '../styles.php';
@@ -29,8 +29,10 @@ if(isset($_GET['nombre'])){
   $dias=$_GET['dias'];
   $utilidad=$_GET['utilidad'];
   $cliente=$_GET['cliente'];
-  $productos=$_GET['producto'];
-  $sitios=$_GET['sitio'];
+  $productos="";//$productos=$_GET['producto'];
+  $sitios="";   // $sitios=$_GET['sitios'];
+  $atributos= json_decode($_GET['atributos']);
+  $tipo_atributo=$_GET['tipo_atributo'];
   $afnor=$_GET['afnor'];
   $norma=$_GET['norma'];
   $id_servicio=$_GET['id_servicio'];
@@ -41,8 +43,20 @@ if(isset($_GET['nombre'])){
 
   $codSimServ=obtenerCodigoSimServicio();
   $dbh = new Conexion();
-  $sqlInsert="INSERT INTO simulaciones_servicios (codigo, nombre, fecha, cod_plantillaservicio, cod_responsable,dias_auditoria,utilidad_minima,cod_cliente,productos,norma,idServicio,anios,porcentaje_fijo,sitios,afnor,porcentaje_afnor) 
-  VALUES ('".$codSimServ."','".$nombre."','".$fecha."', '".$plantilla_servicio."', '".$globalUser."','".$dias."','".$utilidad."','".$cliente."','".$productos."','".$norma."','".$id_servicio."','".$anios."','".obtenerValorConfiguracion(32)."','".$sitios."','".$afnor."','".obtenerValorConfiguracion(33)."')";
+  if(isset($_GET['tipo_servicio'])){
+    $idTipoServicio=$_GET['tipo_servicio'];
+  }else{
+    $idTipoServicio=0;
+  }
+
+   if($tipo_atributo==1){
+     $inicioAnio=1;
+   }else{
+     $inicioAnio=0;
+   }
+
+  $sqlInsert="INSERT INTO simulaciones_servicios (codigo, nombre, fecha, cod_plantillaservicio, cod_responsable,dias_auditoria,utilidad_minima,cod_cliente,productos,norma,idServicio,anios,porcentaje_fijo,sitios,afnor,porcentaje_afnor,id_tiposervicio) 
+  VALUES ('".$codSimServ."','".$nombre."','".$fecha."', '".$plantilla_servicio."', '".$globalUser."','".$dias."','".$utilidad."','".$cliente."','".$productos."','".$norma."','".$id_servicio."','".$anios."','".obtenerValorConfiguracion(32)."','".$sitios."','".$afnor."','".obtenerValorConfiguracion(33)."','".$idTipoServicio."')";
   $stmtInsert = $dbh->prepare($sqlInsert);
   $stmtInsert->execute();
   $dbhD = new Conexion();
@@ -66,6 +80,28 @@ if(isset($_GET['nombre'])){
   $anio_pasado=((int)$anio)-1;
   $mes=date("m");
   
+  //SITIOS 0 PRODUCTOS
+   $dbhA = new Conexion();
+  $sqlA="DELETE FROM simulaciones_servicios_atributos where cod_simulacionservicio=$codSimServ";
+  $stmtA = $dbhA->prepare($sqlA);
+  $stmtA->execute();
+
+  //simulaciones_serviciosauditores
+          $nC=cantidadF($atributos);
+          for($att=0;$att<$nC;$att++){
+              $nombreAtributo=$atributos[$att]->nombre;
+              if($tipo_atributo==1){
+                $direccionAtributo="";
+              }else{
+                $direccionAtributo=$atributos[$att]->direccion;
+              }         
+              $sqlDetalleAtributos="INSERT INTO simulaciones_servicios_atributos (cod_simulacionservicio, nombre, direccion, cod_tipoatributo) 
+              VALUES ('$codSimServ', '$nombreAtributo', '$direccionAtributo', '$tipo_atributo')";
+              $stmtDetalleAtributos = $dbh->prepare($sqlDetalleAtributos);
+              $stmtDetalleAtributos->execute();
+         }
+         //FIN simulaciones_serviciosauditores
+
   //seleccionar las partidas variables con montos_ibnorca y fuera
   $partidasPlan=obtenerPartidasPlantillaServicio($plantilla_servicio,2);
   while ($rowPartida = $partidasPlan->fetch(PDO::FETCH_ASSOC)) {
@@ -87,7 +123,7 @@ if(isset($_GET['nombre'])){
       }else{
         $montoCuenta=$rowCuenta['montoext'];
       }
-  for ($i=1; $i<=$anios; $i++) { 
+  for ($i=$inicioAnio; $i<=$anios; $i++) { 
       $porcentaje=((float)$montoCuenta*100)/(float)$montoLocal;
 
       $sqlInsertPorcentaje="INSERT INTO cuentas_simulacion (cod_plancuenta, monto_local, monto_externo, porcentaje,cod_partidapresupuestaria,cod_simulacionservicios,cod_anio) 
@@ -133,7 +169,7 @@ if(isset($_GET['nombre'])){
    } 
   }
   
-  for ($iiii=1; $iiii<=$anios; $iiii++) {  
+  for ($iiii=$inicioAnio; $iiii<=$anios; $iiii++) {  
   //volcado de datos a la tabla simulaciones_servicios_auditores
      $auditoresPlan=obtenerDetallePlantillaServicioAuditores($plantilla_servicio);
      $cantidadAuditoriaPlan=obtenerDetallePlantillaServicioAuditoresCantidad($plantilla_servicio);
@@ -153,7 +189,7 @@ if(isset($_GET['nombre'])){
      }
   
     }
-    for ($jjjj=1; $jjjj<=$anios; $jjjj++) { 
+    for ($jjjj=$inicioAnio; $jjjj<=$anios; $jjjj++) { 
      //volcado de datos a la tabla simulaciones_servicios_tiposervicio
      $serviciosPlan=obtenerDetallePlantillaServicioTipoServicio($plantilla_servicio);
      while ($rowServPlan = $serviciosPlan->fetch(PDO::FETCH_ASSOC)) {
@@ -170,10 +206,10 @@ if(isset($_GET['nombre'])){
       //insertar valores pre definidos a los servicios de sello seleccionados
       $suma=0;$aux=0;$aux2=0;
       if(obtenerConfiguracionValorServicio($codCS)==true){
-        $productosLista=explode(",", $productos);
+        //$productosLista=explode(",", $productos);
         $codTC=obtenerTipoCliente($cliente);
         $nacional=obtenerTipoNacionalCliente($cliente);
-        for ($i=0; $i < count($productosLista); $i++) {
+        for ($i=0; $i < count($atributos); $i++) {
           $aux=obtenerCostoTipoClienteSello(($i+1),$codTC,$nacional);
            if($aux==0){
             $aux=$aux2;

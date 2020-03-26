@@ -14,11 +14,11 @@
 							if($codigo_fila[1]=="DET-SIM"){
                              $cod_plantilladetalle=$codigo_fila[0];
                              $cod_plantillauditor="";
-                             $solicitudDetalle=obtenerSolicitudRecursosDetallePlantilla($codigo,$cod_plantilladetalle);
+                             $solicitudDetalle=obtenerSolicitudRecursosDetallePlantillaSol($codigo,$cod_plantilladetalle);
 							}else{
                              $cod_plantilladetalle="";
                              $cod_plantillauditor=$codigo_fila[0];
-                             $solicitudDetalle=obtenerSolicitudRecursosDetallePlantillaAud($codigo,$cod_plantillauditor);
+                             $solicitudDetalle=obtenerSolicitudRecursosDetallePlantillaAudSol($codigo,$cod_plantillauditor);
 							}
 							$codCuentaX=$row['codigo'];
 							$codDetalleX=0;

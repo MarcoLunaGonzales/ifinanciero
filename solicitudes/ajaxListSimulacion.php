@@ -14,7 +14,7 @@ $usuario=$_SESSION['globalUser'];
  $query="SELECT * FROM simulaciones_costos where cod_responsable=$usuario and cod_estadosimulacion=3 order by codigo";
  $query2="SELECT * FROM simulaciones_servicios where cod_responsable=$usuario and cod_estadosimulacion=3 order by codigo";
   ?>
-   <label class="col-sm-3 col-form-label">Simulacion :</label>
+   <label class="col-sm-3 col-form-label">Propuesta :</label>
    <div class="col-sm-9">
      <div class="form-group">
           <select class="selectpicker form-control" name="simulaciones" id="simulaciones" data-style="<?=$comboColor;?>" required>

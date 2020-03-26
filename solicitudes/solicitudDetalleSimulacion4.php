@@ -10,7 +10,7 @@
 						
 
 
-                       $solicitudDetalle=obtenerSolicitudRecursosDetalle($codigo);
+                       $solicitudDetalle=obtenerSolicitudRecursosDetalle($codigoSolicitud);
                        while ($rowDetalles = $solicitudDetalle->fetch(PDO::FETCH_ASSOC)) {
                           $tituloImporte="Importe";
                           $codCuentaX=$rowDetalles['cod_plancuenta'];

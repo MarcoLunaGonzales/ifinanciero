@@ -77,6 +77,7 @@ $i=0;
 
 if(isset($_GET['cod'])){
   $codigo=$_GET['cod'];
+  $codigoSolicitud=$_GET['cod'];
 }else{
   $codigo=0;
 }
@@ -131,6 +132,7 @@ if(isset($_GET['cod'])){
           <?php while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
             $solicitante=namePersonal($codPersonalX);
             $fechaSolicitud=strftime('%d/%m/%Y',strtotime($fechaX));
+            $codSimulacionServX=$codSimulacionServX;
             ?>
           <input class="form-control" type="hidden" name="cod_unidad" value="<?=$codUnidadX?>" id="cod_unidad" readonly/>
           <input class="form-control" type="hidden" name="cod_area" value="<?=$codAreaX?>" id="cod_area" readonly/>
@@ -217,7 +219,7 @@ if(isset($_GET['cod'])){
                      <option value="all" selected>TODOS</option>
                     </select>
                 </div>
-                <a href="#" class="btn btn-info" onclick="filtrarSolicitudRecursosServicios(<?=$codigo?>,<?=$codSimulacionServX?>,<?=$codUnidadX?>,<?=$codAreaX?>)">FILTRAR LA SOLICITUD</a>
+                <a href="#" class="btn btn-info" onclick="filtrarSolicitudRecursosServicios(<?=$codSimulacionServX?>,<?=$codigoSolicitud?>,<?=$codUnidadX?>,<?=$codAreaX?>)">FILTRAR LA SOLICITUD</a>
 
               <?php
                     
