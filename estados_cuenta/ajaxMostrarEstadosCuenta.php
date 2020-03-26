@@ -24,13 +24,13 @@ $tipoProveedorCliente=$_GET['tipo_proveedorcliente'];
 //echo "tipo: ".$tipo." tipoproveecli:".$tipoProveedorCliente."";
 $mes=$_GET['mes'];
 
-$sqlZ="SELECT t.nombre as tipo_comprobante,c.numero as numero_comprobante,e.*,d.glosa,d.haber,d.debe FROM estados_cuenta e,comprobantes_detalle d join comprobantes c on c.codigo=d.cod_comprobante join tipos_comprobante t on t.codigo=c.cod_tipocomprobante where e.cod_comprobantedetalle=d.codigo and (d.cod_cuenta=$codCuenta or e.cod_plancuenta=$codCuenta or e.cod_cuentaaux=$codCuenta) and e.cod_comprobantedetalleorigen=0 order by e.fecha";
+$sqlZ="SELECT t.nombre as tipo_comprobante,c.numero as numero_comprobante,e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar FROM estados_cuenta e,comprobantes_detalle d join comprobantes c on c.codigo=d.cod_comprobante join tipos_comprobante t on t.codigo=c.cod_tipocomprobante where e.cod_comprobantedetalle=d.codigo and (d.cod_cuenta=$codCuenta or e.cod_plancuenta=$codCuenta or e.cod_cuentaaux=$codCuenta) and e.cod_comprobantedetalleorigen=0 order by e.fecha";
 if(isset($_GET['cod_auxi'])){
   $codAuxi=$_GET['cod_auxi'];
   if($codAuxi!="all"){
     $codAuxiPar=explode("###", $codAuxi);
     $cuentaAuxi=$codAuxiPar[0];
-   $sqlZ="SELECT t.nombre as tipo_comprobante,c.numero as numero_comprobante,e.*,d.glosa,d.haber,d.debe FROM estados_cuenta e,comprobantes_detalle d join comprobantes c on c.codigo=d.cod_comprobante join tipos_comprobante t on t.codigo=c.cod_tipocomprobante where e.cod_comprobantedetalle=d.codigo and (d.cod_cuenta=$codCuenta or e.cod_plancuenta=$codCuenta or e.cod_cuentaaux=$codCuenta) and e.cod_comprobantedetalleorigen=0 and e.cod_cuentaaux=$cuentaAuxi order by e.fecha";
+   $sqlZ="SELECT t.nombre as tipo_comprobante,c.numero as numero_comprobante,e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar FROM estados_cuenta e,comprobantes_detalle d join comprobantes c on c.codigo=d.cod_comprobante join tipos_comprobante t on t.codigo=c.cod_tipocomprobante where e.cod_comprobantedetalle=d.codigo and (d.cod_cuenta=$codCuenta or e.cod_plancuenta=$codCuenta or e.cod_cuentaaux=$codCuenta) and e.cod_comprobantedetalleorigen=0 and e.cod_cuentaaux=$cuentaAuxi order by e.fecha";
   }
 }
 ?>
@@ -41,7 +41,7 @@ if(isset($_GET['cod_auxi'])){
       <th class="text-left">Tipo</th>
       <th class="text-left">Nº Comp</th>
 	  	<th class="text-left">Fecha</th>
-      <th class="text-left">Proveedor</th>
+      <th class="text-left">Proveedor/Cliente</th>
 	  	<th class="text-left">Glosa</th>
 	  	<th class="text-right">D&eacute;bito</th>
 	  	<th class="text-right">Cr&eacute;dito</th>
@@ -79,13 +79,25 @@ if(isset($_GET['cod_auxi'])){
     while ($rowContra = $stmtContra->fetch(PDO::FETCH_ASSOC)) {
       $montoContra=$rowContra['monto'];
     }
-
-    
-   if(obtenerProveedorCuentaAux($row['cod_cuentaaux'])==""){
-    $proveedorX="Sin Proveedor";
-   }else{
-    $proveedorX=obtenerProveedorCuentaAux($row['cod_cuentaaux']);
+ 
+ if(($row['cod_cuentaaux']!=""||$row['cod_cuentaaux']!=0)){
+   if($tipoProveedorCliente==1){
+      $proveedorX=obtenerProveedorCuentaAux($row['cod_cuentaaux']);
+    }else{
+    if(($row['cod_cuentaauxiliar']!=0)){
+     $proveedorX=obtenerClienteCuentaAux($row['cod_cuentaauxiliar']);
+    }else{
+     $proveedorX="Sin Cliente";
+    }     
    }
+  }else{
+    if($tipoProveedorCliente==1){
+         $proveedorX="Sin Proveedor";
+      }else{
+       $proveedorX="Sin Cliente";
+      }
+  }
+
 	 if($haberX > 0){
       $debeX=$montoContra;
       $saldo=$saldo+$haberX-$debeX;

@@ -4514,6 +4514,17 @@ SELECT p.*,a.nombre as nombre_proveedorcliente FROM cuentas_auxiliares p JOIN cl
   return $stmt;
 }
 
+function obtenerClienteCuentaAux($codigo){
+  $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT p.nombre from cuentas_auxiliares c join clientes p on c.cod_proveedorcliente=p.codigo 
+    where c.codigo=$codigo and c.cod_tipoauxiliar=2");
+   $stmt->execute();
+   $valor="";
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['nombre'];
+   }
+   return($valor);
+}
 ?>
 
 
