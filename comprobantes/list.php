@@ -5,19 +5,22 @@ require_once 'configModule.php';
 require_once 'styles.php';
 $globalAdmin=$_SESSION["globalAdmin"];
 $globalUnidad=$_SESSION['globalUnidad'];
+$globalGestion=$_SESSION['globalNombreGestion'];
 
 $dbh = new Conexion();
 
 // Preparamos
-$sql="SELECT (select u.nombre from unidades_organizacionales u where u.codigo=c.cod_unidadorganizacional)unidad, c.cod_gestion, 
+$sql="SELECT (select u.abreviatura from unidades_organizacionales u where u.codigo=c.cod_unidadorganizacional)unidad, c.cod_gestion, 
 (select m.nombre from monedas m where m.codigo=c.cod_moneda)moneda, 
-(select t.nombre from tipos_comprobante t where t.codigo=c.cod_tipocomprobante)tipo_comprobante, c.fecha, c.numero,c.codigo, c.glosa,ec.nombre,c.cod_estadocomprobante
+(select t.abreviatura from tipos_comprobante t where t.codigo=c.cod_tipocomprobante)tipo_comprobante, c.fecha, c.numero,c.codigo, c.glosa,ec.nombre,c.cod_estadocomprobante
 from comprobantes c join estados_comprobantes ec on c.cod_estadocomprobante=ec.codigo where c.cod_estadocomprobante!=2 ";
 if($globalAdmin!=1){
-  $sql.=" and c.cod_unidadorganizacional=$globalUnidad ";
+  $sql.=" and c.cod_unidadorganizacional='$globalUnidad' ";
 }
-$sql.=" order by c.fecha desc, c.numero desc";
+$sql.=" and c.cod_gestion='$globalGestion' order by c.fecha desc, unidad, tipo_comprobante, c.numero desc";
+
 //echo $sql;
+
 $stmt = $dbh->prepare($sql);
 // Ejecutamos
 $stmt->execute();
@@ -62,14 +65,13 @@ $stmt->bindColumn('cod_estadocomprobante', $estadoC);
                       <thead>
                         <tr>
                           <th class="text-center">#</th>
-                          <th>Gestion</th>
-                          <th>Fecha</th>
-                          <th>Tipo</th>
-                          <th>Correlativo</th>
-                          <!--th>Moneda</th-->
-                          <th>Glosa</th>
-                          <th>Estado</th>
-                          <th class="text-right" width="20%">Actions</th>
+                          <th class="text-center small">Gestion</th>
+                          <th class="text-center small">Oficina</th>
+                          <th class="text-center small">Fecha</th>
+                          <th class="text-center small">Tipo/#</th>
+                          <th class="text-left small">Glosa</th>
+                          <th class="text-center small">Estado</th>
+                          <th class="text-center small">Actions</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -89,13 +91,13 @@ $stmt->bindColumn('cod_estadocomprobante', $estadoC);
                           }
 ?>
                         <tr>
-                          <td align="center"><?=$index;?></td>
-                          <td><?=$nombreGestion;?></td>
-                          <td><?=strftime('%d/%m/%Y',strtotime($fechaComprobante));?></td>
-                          <td><?=$nombreTipoComprobante;?></td>
-                          <td><?=$nroCorrelativo;?></td>
+                          <td align="text-center small"><?=$index;?></td>
+                          <td class="text-center small"><?=$nombreGestion;?></td>
+                          <td class="text-center small"><?=$nombreUnidad;?></td>
+                          <td class="text-center small"><?=strftime('%d/%m/%Y',strtotime($fechaComprobante));?></td>
+                          <td class="text-center small"><?=$nombreTipoComprobante;?>-<?=$nroCorrelativo;?></td>
                           <!--td><?=$nombreMoneda;?></td-->
-                          <td><?=$glosaComprobante;?></td>
+                          <td class="text-left small"><?=$glosaComprobante;?></td>
                           <td><button class="btn <?=$btnEstado?> btn-sm btn-link"><?=$estadoComprobante;?>  <span class="material-icons small"><?=$estadoIcon?></span></button></td>
                           <td class="td-actions text-right">
                             <div class="btn-group dropdown">

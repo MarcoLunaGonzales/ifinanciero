@@ -563,6 +563,14 @@ if($menuModulo==0){
             </a>
             <div class="collapse" id="utilitarios">
               <ul class="nav">
+
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listGestionTrabajo">
+                    <span class="sidebar-mini"> CG </span>
+                    <span class="sidebar-normal"> Cambiar Gestion de Trabajo </span>
+                  </a>
+                </li>
+                
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listNotificacionesSistema">
                     <span class="sidebar-mini"> NT </span>

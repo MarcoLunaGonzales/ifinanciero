@@ -76,7 +76,7 @@ $html.='<body>'.
 $html.=  '<header class="header">'.            
             '<img class="imagen-logo-izq" src="../assets/img/ibnorca2.jpg">'.
             '<div id="header_titulo_texto">Comprobante de Contabilidad</div>'.
-         '<div id="header_titulo_texto_inf">UNIDAD DE '.$unidadC.'</div>'.
+         '<div id="header_titulo_texto_inf">OFICINA: '.$unidadC.'</div>'.
          '<table class="table pt-2">'.
             '<tr class="bold table-title">'.
               '<td width="22%">Fecha: '.strftime('%d/%m/%Y',strtotime($fechaC)).'</td>'.
