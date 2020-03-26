@@ -63,7 +63,7 @@ try{
     $totalFinalRedondeado=round($monto_total,0);
     echo "motno total:".$totalFinalRedondeado;
     //NUMERO CORRELATIVO DE FACTURA
-    $stmtNroFac = $dbh->prepare("SELECT IFNULL(nro_factura+1,1)as correlativo from facturas_venta where cod_solicitudfacturacion=$codigo order by codigo desc LIMIT 1");
+    $stmtNroFac = $dbh->prepare("SELECT IFNULL(nro_factura+1,1)as correlativo from facturas_venta where cod_sucursal=$cod_unidadorganizacional order by codigo desc LIMIT 1");
     $stmtNroFac->execute();
     $resultNroFact = $stmtNroFac->fetch();    
     $nro_correlativo = $resultNroFact['correlativo'];
@@ -100,7 +100,7 @@ try{
         values ('$cod_facturaVenta','$cod_claservicio_x','$cantidad_x','$precio_x','$descripcion_alterna_x')");
         $flagSuccess=$stmtInsertSoliFactDet->execute();
 
-        header('Location: ../simulaciones_servicios/generarFacturas.php?codigo='.$codigo);
+        header('Location: ../simulaciones_servicios/generarFacturasPrint.php?codigo='.$codigo.'&tipo=1');
       }  
     }
 
@@ -109,7 +109,7 @@ try{
 
 
     echo "ya se registró la factura.";
-    header('Location: ../simulaciones_servicios/generarFacturas.php?codigo='.$codigo);
+    header('Location: ../simulaciones_servicios/generarFacturasPrint.php?codigo='.$codigo.'&tipo=1');
   }
 
 

@@ -13,6 +13,7 @@ set_time_limit(300);
 //RECIBIMOS LAS VARIABLES
 
 $codigo = $_GET["codigo"];
+$tipo_impresion = $_GET["tipo"];
 try{
 
     $stmtInfo = $dbh->prepare("SELECT sf.*,t.nombre as nombre_cliente FROM facturas_venta sf,clientes t  where sf.cod_cliente=t.codigo and sf.cod_solicitudfacturacion=$codigo");
@@ -36,8 +37,8 @@ try{
     $importe = $resultInfo['importe'];
     $observaciones = $resultInfo['observaciones'];
     $nombre_cliente = $resultInfo['nombre_cliente'];
-
-
+    $cantidad=1;
+    //copia cliente
     $stmt = $dbh->prepare("SELECT sf.cantidad from facturas_ventadetalle sf where sf.cod_facturaventa=$cod_factura");
     $stmt->execute();
     $stmt2 = $dbh->prepare("SELECT sf.descripcion_alterna from facturas_ventadetalle sf
@@ -46,7 +47,7 @@ try{
      $stmt3 = $dbh->prepare("SELECT sf.precio from facturas_ventadetalle sf 
     where sf.cod_facturaventa=$cod_factura");
     $stmt3->execute();
-
+    //copia contabilidad
     $stmt_conta = $dbh->prepare("SELECT sf.cantidad from facturas_ventadetalle sf where sf.cod_facturaventa=$cod_factura");
     $stmt_conta->execute();
     $stmt_conta2 = $dbh->prepare("SELECT sf.descripcion_alterna from facturas_ventadetalle sf
@@ -54,7 +55,7 @@ try{
     $stmt_conta2->execute();
      $stmt_conta3 = $dbh->prepare("SELECT sf.precio from facturas_ventadetalle sf 
     where sf.cod_facturaventa=$cod_factura");
-    $stmt3->execute();
+    $stmt_conta3->execute();
 
 
   $nit_empresa=obtenerValorConfiguracionFactura(9);
@@ -131,8 +132,14 @@ $html.=  '<header class="header">'.
 
               $suma_total=0;
               $html.='<tbody>
-                <tr>'.
-                  '<td valign="top" height="8%" class="text-right"><h4>';
+                <tr>';
+                if($tipo_impresion==1){//tipo de impresion normal
+                  $html.='<td valign="top" height="8%" class="text-right"><h4>'.formatNumberDec($cantidad).'</h4></td>'.
+                  '<td valign="top" height="8%"><h4>'.$observaciones.'</h4></td>'.
+                  '<td valign="top" height="8%" class="text-right"><h4>'.formatNumberDec($importe).'</h4></td>';
+                  $suma_total+=$importe;
+                }else{//imporesion detallada
+                  $html.='<td valign="top" height="8%" class="text-right"><h4>';
                   while ($row = $stmt->fetch()) 
                   {
                     $html.=formatNumberDec($row["cantidad"]).'<br>';
@@ -150,8 +157,10 @@ $html.=  '<header class="header">'.
                     $html.=formatNumberDec($row["precio"]).'<br>';
                     $suma_total+=$row["precio"];
                   }
-                  $html.='</h4></td>
-                </tr>';
+                  $html.='</h4></td>';
+                } 
+                  
+                $html.='</tr>';
               
 
               $html.='<tr>'.
@@ -265,27 +274,34 @@ $html.=  '<header class="header">'.
 
               $suma_total=0;
               $html.='<tbody>
-                <tr>'.
-                  '<td valign="top" height="8%" class="text-right"><h4>';
-                  while ($row = $stmt_conta->fetch()) 
-                  {
-                    $html.=formatNumberDec($row["cantidad"]).'<br>';
-                  }
-                  $html.='</h4></td> 
-                  <td valign="top" height="8%"><h4>';
-                  while ($row = $stmt_conta2->fetch()) 
-                  {
-                    $html.=$row["descripcion_alterna"].'<br>';
-                  }
-                  $html.='</h4></td>                   
-                  <td valign="top" height="8%" class="text-right"><h4>';
-                  while ($row = $stmt_conta3->fetch()) 
-                  {
-                    $html.=formatNumberDec($row["precio"]).'<br>';
-                    $suma_total+=$row["precio"];
-                  }
-                  $html.='</h4></td>
-                </tr>';
+                <tr>';
+                  if($tipo_impresion==1){//tipo de impresion normal
+                    $html.='<td valign="top" height="8%" class="text-right"><h4>'.formatNumberDec($cantidad).'</h4></td>'.
+                    '<td valign="top" height="8%"><h4>'.$observaciones.'</h4></td>'.
+                    '<td valign="top" height="8%" class="text-right"><h4>'.formatNumberDec($importe).'</h4></td>';
+                    $suma_total+=$importe;
+                  }else{//imporesion detallada
+                    $html.='<td valign="top" height="8%" class="text-right"><h4>';
+                    while ($row = $stmt->fetch()) 
+                    {
+                      $html.=formatNumberDec($row["cantidad"]).'<br>';
+                    }
+                    $html.='</h4></td> 
+                    <td valign="top" height="8%"><h4>';
+                    while ($row = $stmt2->fetch()) 
+                    {
+                      $html.=$row["descripcion_alterna"].'<br>';
+                    }
+                    $html.='</h4></td>                   
+                    <td valign="top" height="8%" class="text-right"><h4>';
+                    while ($row = $stmt3->fetch()) 
+                    {
+                      $html.=formatNumberDec($row["precio"]).'<br>';
+                      $suma_total+=$row["precio"];
+                    }
+                    $html.='</h4></td>';
+                  } 
+                $html.='</tr>';
               $html.='<tr>'.
                 '<td height="8%" colspan="3">
                   <table class="table3">
@@ -348,7 +364,7 @@ $html.=  '<header class="header">'.
 
 $html.='</body>'.
       '</html>';           
-descargarPDFFacturas("IBNORCA - ".$unidadC." (".$tipoC.", ".$numeroC.")",$html);
+descargarPDFFacturas("IBNORCA-".$cod_factura."-".$nro_factura,$html);
 
 ?>
 

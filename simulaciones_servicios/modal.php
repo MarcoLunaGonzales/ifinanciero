@@ -1,4 +1,44 @@
 <!-- small modal -->
+<div class="modal fade modal-primary" id="modal_atributo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content card">
+               <div class="card-header card-header-info card-header-text">
+                  <div class="card-text">
+                    <h4>Agregar Sitio</h4>
+                  </div>
+                  <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">close</i>
+                  </button>
+                </div>
+                <div class="card-body">
+                       <input type="hidden" class="form-control" name="modal_fila" id="modal_fila" value="-1">
+                      <div class="row">
+                          <label class="col-sm-2 col-form-label">Nombre</label>
+                           <div class="col-sm-10">                     
+                             <div class="form-group">
+                               <input type="text" class="form-control" name="modal_nombre" id="modal_nombre" value="">
+                             </div>
+                           </div>  
+                      </div>
+                      <div class="row" id="div_direccion">
+                          <label class="col-sm-2 col-form-label">Direccion</label>
+                           <div class="col-sm-10">                     
+                             <div class="form-group">
+                               <input type="text" class="form-control" name="modal_direccion" id="modal_direccion" value="">
+                             </div>
+                           </div>  
+                      </div> 
+                      <hr>
+                      <div class="form-group float-right">
+                        <button type="button" id="boton_guardarsim" class="btn btn-default" onclick="guardarAtributoItem()">Guardar</button>
+                      </div> 
+                </div>
+      </div>  
+    </div>
+  </div>
+<!--    end small modal -->
+
+<!-- small modal -->
 <div class="modal fade modal-mini modal-primary" id="modalAlert" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-small">
     <div id="modalAlertStyle" class="modal-content">
@@ -80,7 +120,11 @@
 <!--    end small modal -->
 
 <?php
-for ($ann=0; $ann <=$anioGeneral ; $ann++) { 
+for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) { 
+  $tituloItem="Año ".$ann;
+  if(($ann==0||$ann==1)&&$codAreaX!=39){
+    $tituloItem="Año 1 (ETAPA ".($ann+1).")";
+   }
   ?>
 <!-- small modal -->
 <div class="modal fade modal-arriba modal-primary" id="modalSimulacionCuentas<?=$ann?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -88,7 +132,7 @@ for ($ann=0; $ann <=$anioGeneral ; $ann++) {
     <div class="modal-content card">
                 <div class="card-header card-header-danger card-header-text">
                   <div class="card-text">
-                    <h4>Costos Variables A&ntilde;o <?=$ann?></h4>
+                    <h4>Costos Variables <?=$tituloItem?></h4>
                   </div>
                   <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
                     <i class="material-icons">close</i>
@@ -217,11 +261,21 @@ for ($ann=0; $ann <=$anioGeneral ; $ann++) {
                           $cantidadProductos=explode(",",$productosX);
                          ?>
                      <div class="row">
-                       <label class="col-sm-2 col-form-label">Productos <small class="text-muted">(<?=count($cantidadProductos)?>)</small></label>
-                       <div class="col-sm-10">
+                       <label class="col-sm-2 col-form-label">Productos <!--<small class="text-muted">(<?=count($cantidadProductos)?>)</small>--></label>
+                       <div class="col-sm-8">
                         <div class="form-group" style="border-bottom: 1px solid #CACFD2">
-                          <input type="text" value="" class="form-control tagsinput" name="modal_productos" id="modal_productos" data-role="tagsinput" data-color="warning">                          
+                          <input type="hidden" value="" class="form-control tagsinput" name="modal_productos" id="modal_productos" data-role="tagsinput" data-color="warning">
+                          <div id="productos_div" class=""></div>
+                          <div id="divResultadoListaAtributosProd">
+                            <div class="">
+                              <center><h4><b>SIN REGISTROS</b></h4></center>
+                            </div>
+                          </div>                          
                         </div>
+                        </div>
+                        <div class="col-sm-2">
+                           <button title="Agregar Sitio" type="button" name="add" class="btn btn-warning btn-round btn-fab" onClick="agregarAtributoAjax()"><i class="material-icons">add</i>
+                            </button>
                         </div>
                       </div>
                          <?php
@@ -230,11 +284,21 @@ for ($ann=0; $ann <=$anioGeneral ; $ann++) {
                               $cantidadSitios=explode(",",$sitiosX);
                          ?>
                      <div class="row">
-                       <label class="col-sm-2 col-form-label">Sitios <small class="text-muted">(<?=count($cantidadSitios)?>)</small></label>
-                       <div class="col-sm-10">
+                       <label class="col-sm-2 col-form-label">Sitios <!--<small class="text-muted">(<?=count($cantidadSitios)?>)</small>--></label>
+                       <div class="col-sm-8">
                         <div class="form-group" style="border-bottom: 1px solid #CACFD2">
-                          <input type="text" value="" class="form-control tagsinput" name="modal_sitios" id="modal_sitios" data-role="tagsinput" data-color="warning">                          
+                          <div id="productos_div" class="d-none"></div>
+                          <input type="hidden" value="" class="form-control tagsinput" name="modal_sitios" id="modal_sitios" data-role="tagsinput" data-color="warning">                          
+                          <div id="divResultadoListaAtributos">
+                            <div class="">
+                              <center><h4><b>SIN REGISTROS</b></h4></center>
+                            </div>
+                          </div>
                         </div>
+                        </div>
+                        <div class="col-sm-2">
+                           <button title="Agregar Sitio" type="button" name="add" class="btn btn-warning btn-round btn-fab" onClick="agregarAtributoAjax()"><i class="material-icons">add</i>
+                            </button>
                         </div>
                       </div>
                          <?php
@@ -279,15 +343,29 @@ for ($ann=0; $ann <=$anioGeneral ; $ann++) {
                         <br>
                         <ul class="nav nav-pills nav-pills-warning" role="tablist">
                         <?php
-                          for ($an=1; $an<=$anioGeneral; $an++) { 
+                        if($codAreaX==39){
+                          $inicioAnio=1;
+                        }else{
+                          $inicioAnio=0;
+                        }
+
+                          for ($an=$inicioAnio; $an<=$anioGeneral; $an++) { 
                             $active="";
+                            $etapas="Año ".$an;
+
+                            if($codAreaX!=39){
+                              if($an==0||$an==1){
+                               $etapas="Año 1 (ETAPA ".($an+1).")"; 
+                              }
+                            }
+
                             if($an==1){
                               $active="active";
                             }
                                 ?>
                           <li class="nav-item">
                             <a class="nav-link <?=$active?>" data-toggle="tab" href="#link<?=$an?>" onclick="cambiarTituloPersonalModal(<?=$an?>)" role="tablist">
-                              Año <?=$an?>
+                              <?=$etapas?> 
                             </a>
                           </li>
                         <?php
@@ -296,8 +374,15 @@ for ($ann=0; $ann <=$anioGeneral ; $ann++) {
                          </ul>
                          <div class="tab-content tab-space">
                          <?php
-                          for ($an=1; $an<=$anioGeneral; $an++) { 
+                          for ($an=$inicioAnio; $an<=$anioGeneral; $an++) { 
                             $active="";
+                            $etapas="AÑO ".$an;
+
+                            if($codAreaX!=39){
+                              if($an==0||$an==1){
+                               $etapas="AÑO 1 (ETAPA ".($an+1).")"; 
+                              }
+                            }
                             if($an==1){
                               $active="active";
                             }
@@ -305,7 +390,7 @@ for ($ann=0; $ann <=$anioGeneral ; $ann++) {
                           <div class="tab-pane <?=$active?>" id="link<?=$an?>">
 
                     <!--INICIO DE SERVICIOS-->
-                    <h4 class="font-weight-bold"><center>AÑO <?=$an?> SERVICIOS</center></h4>
+                    <h4 class="font-weight-bold"><center><?=$etapas?> SERVICIOS</center></h4>
                       <div class="row" id="modal_contenidoservicios<?=$an?>">
                         <table class="table table-bordered table-condensed table-striped table-sm">
                              <thead>
@@ -488,7 +573,7 @@ for ($ann=0; $ann <=$anioGeneral ; $ann++) {
                     <!--FIN DE SERVICIOS-->
 
                    <!--INICION DE PERSONAL-->         
-                      <h4 class="font-weight-bold"><center>AÑO <?=$an?> HONORARIOS PERSONAL</center></h4>
+                      <h4 class="font-weight-bold"><center><?=$etapas?> HONORARIOS PERSONAL</center></h4>
                       <div class="row">
                         <table class="table table-bordered table-condensed table-striped table-sm">
                              <thead>

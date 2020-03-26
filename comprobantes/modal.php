@@ -453,16 +453,16 @@
 <!--    end small modal -->
 
 <!-- small modal -->
-<div class="modal fade modal-primary" id="modalEstadosCuentas" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
+<div class="modal fade modal-arriba modal-primary" id="modalEstadosCuentas" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-notice" style="max-width: 70% !important;">
     <div class="modal-content card">
-                <div class="modal-header card-header">
-                  <div class="card-icon">
-                    <i class="material-icons text-dark">ballot</i>
+                <div class="card-header card-header-danger card-header-text">
+                  <div class="card-text">
+                    <h4>ESTADOS DE CUENTA</h4>
                   </div>
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                      <i class="material-icons">close</i>
-                    </button>
+                  <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">close</i>
+                  </button>
                 </div>
                 
                 <div class="modal-body">
@@ -499,12 +499,15 @@
                   </div>
                   <div class="row" id="div_cuentasorigen">
                         <label class="col-sm-2 col-form-label">Cuenta Origen</label>
-                        <div class="col-sm-10">
+                        <div class="col-sm-4">
                           <div class="form-group">
-                           <select class="selectpicker form-control form-control-sm" onchange="verEstadosCuentasCred()" name="cuentas_origen" id="cuentas_origen" data-style="<?=$comboColor;?>">
+                           <select class="selectpicker form-control form-control-sm" onchange="verCuentasAuxiliaresSelect()" name="cuentas_origen" id="cuentas_origen" data-style="<?=$comboColor;?>">
                              <option disabled selected value="">Seleccione una Cuenta</option>
                              <?php
-                              $stmt = $dbh->prepare("SELECT p.* FROM plan_cuentas p, configuracion_estadocuentas c where c.cod_plancuenta=p.codigo and c.tipo=2 and c.cod_cuentaaux=0 order by codigo");
+                              $stmt = $dbh->prepare("SELECT p.* FROM plan_cuentas p, configuracion_estadocuentas c where c.cod_plancuenta=p.codigo and c.cod_tipoestadocuenta=1 and c.tipo=2 and c.cod_cuentaaux=0
+                                                   UNION
+                                                   SELECT p.* FROM plan_cuentas p, configuracion_estadocuentas c where c.cod_plancuenta=p.codigo and c.cod_tipoestadocuenta=2 and c.tipo=1 and c.cod_cuentaaux=0
+                                                   ORDER BY codigo");
                               $stmt->execute();
                               while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                 $codigoX=$row['codigo'];
@@ -529,10 +532,32 @@
                                   ?>  
                              </select>
                           </div> 
+                       </div>
+                       <div class="row col-sm-6 d-none" id="div_cuentasorigenaux">
+                          <label class="col-sm-3 col-form-label">Auxiliares</label>
+                            <div class="col-sm-7">
+                              <div class="form-group">
+                                <select class="selectpicker form-control form-control-sm" name="cuentas_auxiliaresorigen" id="cuentas_auxiliaresorigen" data-style="<?=$comboColor;?>">
+                                  <option selected value="all">TODOS</option>
+                                  <?php
+                              $listaAuxiliar = listaCuentasAuxiliaresRelacionadasProveedoresClientes();
+                              while ($row = $listaAuxiliar->fetch(PDO::FETCH_ASSOC)) {
+                                $codigoX=$row['codigo'];
+                                $codCuentaX=$row['cod_cuenta'];
+                                $nombreX=$row['nombre_proveedorcliente'];
+                                $tipoX=$row['cod_tipoauxiliar'];
+                                ?>
+                                <option value="<?=$codigoX;?>###<?=$tipoX?>###<?=$codCuentaX?>"><?=trim($nombreX);?></option>  
+                                <?php
+                                  }
+                                  ?> 
+                                </select>
+                              </div>    
+                           </div>
+                           <button class="btn btn-warning btn-round btn-fab col-sm-1" onclick="mostrarSelectProveedoresClientes()"><i class="material-icons">search</i></button>
                        </div>      
                   </div>
-                  <br>
-                  <div class="card-title"><center><h6>Estado de Cuenta</h6> <div id="tituloCuentaModal"></div></center></div>
+                  <div class="card-title"><center><div id="tituloCuentaModal"></div></center></div>
                   <br>
                  <div id="div_estadocuentas"></div>
                  <div id="mensaje_estadoscuenta"></div>

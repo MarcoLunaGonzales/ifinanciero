@@ -43,6 +43,7 @@ $dbh = new Conexion();
 
 if(isset($_GET['cod'])){
   $codigo=$_GET['cod'];
+  $codigoSolicitud=$_GET['cod'];
 }else{
   $codigo=0;
 }

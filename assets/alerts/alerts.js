@@ -140,7 +140,18 @@ alerts = {
           location.href=url;
       });
     }
-
+    else if(type == 'error-messageEnviarCorreoAdjunto'){
+      swal("ERROR AL ENVIAR CORREO! :(", "Antes de envíar correo, genere la factura. Gracias!.", "error")
+          .then((value) => {
+          location.href=url;
+      });
+    }
+    else if(type == 'error-messageCamposVacios'){
+      swal("ERROR AL ENVIAR CORREO! :(", "Los Campos marcados con * son obligatorios. Gracias!", "error")
+          .then((value) => {
+          location.href=url;
+      });
+    }
     
 
 

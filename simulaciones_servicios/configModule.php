@@ -28,7 +28,7 @@ $urlSaveSolicitudfactura="?opcion=save_solicitud_facturacion";
 
 $urlListSimulacionesServ="?opcion=listSimulacionesServicios";
 
-$urlGenerarFacturas="simulaciones_servicios/generarFacturas.php";
+$urlGenerarFacturasPrint="simulaciones_servicios/generarFacturasPrint.php";
 $urlGenerarFacturas2="simulaciones_servicios/generarFacturas2.php";
 
 // $urlSolicitudfactura="simulaciones_servicios/solicitud_facturacion.php";

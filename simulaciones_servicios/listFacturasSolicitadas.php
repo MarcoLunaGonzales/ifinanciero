@@ -92,14 +92,32 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             <td class="td-actions text-right">
                               <?php
                                 if($globalAdmin==1){ 
-                                  if($codigo_fact_x>0){?>
-                                    <a title="Ver Factura" href='<?=$urlGenerarFacturas;?>?codigo=<?=$codigo_facturacion;?>' target="_blank" class="btn btn-success">
+                                  if($codigo_fact_x>0){//print facturas
+                                    ?>
+                                    <div class="dropdown">
+                                      <button class="btn btn-success dropdown-toggle" type="button" id="reporte_sueldos" data-toggle="dropdown" aria-extended="true">
+                                        <i class="material-icons" title="Imprimir Facturas">description</i>
+                                        <span class="caret"></span>
+                                      </button>
+                                      <ul class="dropdown-menu" role="menu" aria-labelledby="reporte_sueldos">
+                                        <li role="presentation" class="dropdown-header"><small>IMPRIMIR</small></li>
+                                        <li role="presentation"><a role="item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=1' target="_blank"><small>Facturas</small></a>
+                                        </li>
+                                        <li role="presentation"><a role="item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=2' target="_blank"><small>Facturas Con Descripción  Alterna</small></a>
+                                        </li>
+                                                                     
+                                      </ul>
+                                    </div>
+                                    
+                                   <!--  <a title="Ver Factura" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>' target="_blank" class="btn btn-success">
                                       <i class="material-icons">description</i>
-                                    </a>
-                                  <?php }else{?>
-                                    <a title="Generar Factura" href='<?=$urlGenerarFacturas2;?>?codigo=<?=$codigo_facturacion;?>' target="_blank" class="btn btn-warning">
+                                    </a> -->
+                                  <?php }else{// generar facturas
+                                    ?>
+                                    <button title="Generar Factura"  ctarget="_blank" class="btn btn-warning" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlGenerarFacturas2;?>&codigo=<?=$codigo_facturacion;?>')">
                                       <i class="material-icons">description</i>
-                                    </a>
+                                    </button>
+                                  
                                   <?php }                           
                                   ?>
                                 <?php  

@@ -5,7 +5,9 @@ require_once 'styles.php';
 $globalAdmin=$_SESSION["globalAdmin"];
 
 $dbh = new Conexion();
-
+if(isset($_GET['q'])){
+  $q=$_GET['q'];
+}
 // Preparamos
 $stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo where sr.cod_estadoreferencial=1 order by sr.codigo");
 // Ejecutamos
@@ -184,7 +186,14 @@ $stmt->bindColumn('numero', $numeroSol);
                 </div>
               </div>
               <div class="card-footer fixed-bottom">
-                <a href="#" onclick="javascript:window.open('<?=$urlRegister2;?>')" class="<?=$buttonNormal;?>">Registrar</a>
+                <?php 
+                if(isset($_GET['q'])){
+                ?><a href="<?=$urlRegister2;?>?q=<?=$q?>" target="_self" class="<?=$buttonNormal;?>">Registrar</a><?php
+                }else{
+                 ?><a href="#" onclick="javascript:window.open('<?=$urlRegister2;?>')" class="<?=$buttonNormal;?>">Registrar</a><?php
+                } 
+                ?>
+                
               </div>      
             </div>
           </div>  

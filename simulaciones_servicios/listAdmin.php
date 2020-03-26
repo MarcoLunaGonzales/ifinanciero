@@ -109,16 +109,18 @@ $stmt->bindColumn('cliente', $cliente);
                               
                                 <?php 
                                 if($codEstado==4){
-                                 $stmt2=$dbh->prepare("SELECT * FROM ibnmonitoreo.estados_gestiones");
+                                 $stmt2=$dbh->prepare("SELECT * FROM ibnorca.estadoobjeto where ");
                                  $stmt2->execute(); 
                                  while ($row2 = $stmt2->fetch(PDO::FETCH_ASSOC)) {
                                    ?>
-                                  <!--<a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=3" class="dropdown-item">
+                                   <a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=3" class="dropdown-item">
                                     <i class="material-icons text-success">offline_pin</i> <?=$row2['nombre']?>
-                                   </a>-->
+                                   </a>
                                    <?php
-                                 } 
+                                 }
+                                  
                                  if(isset($_GET['q'])){
+
                                   ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=3&q=<?=$q?>" class="dropdown-item">
                                     <i class="material-icons text-success">offline_pin</i> Aprobar Solicitud
                                  </a>

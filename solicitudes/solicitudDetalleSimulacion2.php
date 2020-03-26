@@ -12,7 +12,7 @@
 							$cod_plantillauditor="";
 							$codCuentaX=$row['codigo'];
 							$codDetalleX=0;
-							$solicitudDetalle=obtenerSolicitudRecursosDetallePlantilla($codigo,$cod_plantilladetalle);
+							$solicitudDetalle=obtenerSolicitudRecursosDetallePlantilla($codigoSolicitud,$cod_plantilladetalle);
 							$detalleX=$row['glosa'];
 							$proveedorX="";
 							$retencionX="";
@@ -26,8 +26,10 @@
 							}
 							$nombrePartidaX="<b class='text-warning'>".$row['partida']."</b>";
 							$nombrePartidaDetalleX="<b class='text-warning'>Cuenta</b>";
-							?><script>var nfac=[];itemFacturas.push(nfac);</script><?php
+							
+							$entro=0;
                             while ($rowDetalles = $solicitudDetalle->fetch(PDO::FETCH_ASSOC)) {
+                            	$entro=1;
                                $cuentasCodigos[$conta]=$rowDetalles["codigo"];	
                                $codDetalleX=$rowDetalles["codigo"];	
                                $detalleX=$rowDetalles["detalle"];
@@ -48,13 +50,15 @@
 							$numeroCuentaX=trim($row['numero']);
 							$nombreCuentaX=trim($row['nombre']);
                             
-							include "addFila.php";
-                         			 
-						 $idFila=$idFila+1;
+							if($entro==0){
+								?><script>var nfac=[];itemFacturas.push(nfac);</script><?php
+                         		include "addFila.php";
+                         		$idFila=$idFila+1;
+                         	}	
 						}
 
 
-                       $solicitudDetalle=obtenerSolicitudRecursosDetalle($codigo);
+                       $solicitudDetalle=obtenerSolicitudRecursosDetalle($codigoSolicitud);
                        while ($rowDetalles = $solicitudDetalle->fetch(PDO::FETCH_ASSOC)) {
                           $tituloImporte="Importe";
                           $codCuentaX=$rowDetalles['cod_plancuenta'];

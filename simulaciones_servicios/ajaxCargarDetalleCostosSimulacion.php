@@ -18,20 +18,31 @@ if(isset($_GET["simulacion"])){
  $codPlan=$_GET["plantilla"];
  $usd=(float)$_GET["usd"];
  $cod_anio=$_GET["anio"];
+ $codArea=obtenerCodigoAreaPlantillaServicio($codPlan);
 
+ if($codArea==39){
+   $inicioAnio=1;
+ }else{
+   $inicioAnio=0;
+ }
 
  ?>
    <ul class="nav nav-pills nav-pills-warning" role="tablist">
     <?php
-      for ($an=1; $an<=$cod_anio; $an++) { 
+      for ($an=$inicioAnio; $an<=$cod_anio; $an++) { 
         $active="";
+        $tituloItem="Año ".$an;
+        if(($an==0||$an==1)&&$codArea!=39){
+              $tituloItem="Año 1 (ETAPA ".($an+1).")";
+        }
+
         if($an==1){
           $active="active";
         }
             ?>
       <li class="nav-item">
         <a class="nav-link <?=$active?>" data-toggle="tab" href="#link_detalle<?=$an?>" role="tablist">
-           Año <?=$an?>
+           <?=$tituloItem?>
          </a>
        </li>
     <?php
@@ -40,16 +51,20 @@ if(isset($_GET["simulacion"])){
     </ul>
     <div class="tab-content tab-space">
  <?php
- for ($yyyy=1; $yyyy <=$cod_anio; $yyyy++) { 
+ for ($yyyy=$inicioAnio; $yyyy <=$cod_anio; $yyyy++) { 
     $active="";
+    $tituloItem="AÑO ".$an;
+    if(($an==0||$an==1)&&$codArea!=39){
+              $tituloItem="AÑO 1 (ETAPA ".($an+1).")";
+    }
     if($yyyy==1){
       $active="active";
     }
   ?>
    <div class="tab-pane <?=$active?>" id="link_detalle<?=$yyyy?>">
-    <h4 class="font-weight-bold"><center>COSTOS AÑO <?=$yyyy?> </center></h4>
+    <h4 class="font-weight-bold"><center>COSTOS <?=$tituloItem?> </center></h4>
   <?php
- $codArea=obtenerCodigoAreaPlantillaServicio($codPlan);
+ 
  if($codArea==39){
    $mes=obtenerCantidadAuditoriasPlantilla($codPlan);
  }else{
@@ -224,7 +239,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 
                 $montoTotales2Alumno+=$montoCal/$cantidadDetalle;
                 $html.='<tr class="'.$bgFila.'">'.
-                      '<td class="font-weight-bold text-left small">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$row_cuentas['nombre'].' / '.$row_cuentas['glosa'].' (año '.$yyyy.')</td>'.
+                      '<td class="font-weight-bold text-left small">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$row_cuentas['nombre'].' / '.$row_cuentas['glosa'].' ('.$tituloItem.')</td>'.
                       '<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>'.
                       '<td class="text-right text-muted">'.number_format($montoCal/$usd, 2, '.', ',').'</td>';
                       if($tipoCosto!=1){

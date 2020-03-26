@@ -27,7 +27,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $dbh = new Conexion();
 
 $anteriorCod=obtenerCodigoSolicitudRecursosSimulacion(2,$_GET['cod']);
-if($anteriorCod==0){
+/*if($anteriorCod==0){
 $unidad=$_SESSION['globalUnidad'];
 $sql="SELECT IFNULL(max(c.codigo)+1,1)as codigo from solicitud_recursos c where c.cod_unidadorganizacional=$unidad";
 $stmt = $dbh->prepare($sql);
@@ -53,15 +53,17 @@ $codCont=0;//CODIGO DE CONTRATO
 
 }else{
   $codSolicitud=$anteriorCod;	
-}
+  $codSimServ=$_GET['cod'];
+}*/
+$codSimServ=$_GET['cod'];
 if(isset($_GET['q'])){
   $q=$_GET['q'];
   ?>
-  <script>window.location.href="../solicitudes/registerSolicitud.php?cod="+<?=$codSolicitud?>+"&q="+<?=$q?></script>
+  <script>window.location.href="../solicitudes/register.php?q="+<?=$q?>+"&sim="+<?=$codSimServ?>+"&det=TCP"</script>
   <?php
 }else{
   ?>
-  <script>window.location.href="../solicitudes/registerSolicitud.php?cod="+<?=$codSolicitud?></script>
+  <script>window.location.href="../solicitudes/register.php?sim="+<?=$codSimServ?>+"&det=TCP"</script>
   <?php
 }
 ?>

@@ -94,6 +94,33 @@ $stmt->bindColumn('numero', $numeroSol);
                             <a title="Imprimir" href='#' onclick="javascript:window.open('<?=$urlImp;?>?sol=<?=$codigo;?>&mon=1')" class="<?=$buttonEdit;?>">
                               <i class="material-icons"><?=$iconImp;?></i>
                             </a>
+                            <?php 
+                                   if($codComprobante!=0&&$codEstado==3){
+                                   ?>
+                                   <div class="btn-group dropdown">
+                                     <button type="button" class="btn btn-primary dropdown-toggle" title="COMPROBANTE - DEVENGADO" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                       <i class="material-icons"><?=$iconImp;?></i>
+                                     </button>
+                                    <div class="dropdown-menu">
+                                      <?php
+                                        $stmtMoneda = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM monedas where cod_estadoreferencial=1 order by 2");
+                                       $stmtMoneda->execute();
+                                       while ($row = $stmtMoneda->fetch(PDO::FETCH_ASSOC)) {
+                                         $codigoX=$row['codigo'];
+                                         $nombreX=$row['nombre'];
+                                         $abrevX=$row['abreviatura'];
+                                            ?>
+                                             <a href="#" onclick="javascript:window.open('<?=$urlImpComp;?>?comp=<?=$codComprobante;?>&mon=<?=$codigoX?>')" class="dropdown-item">
+                                                 <i class="material-icons">list_alt</i> <?=$abrevX?>
+                                             </a> 
+                                           <?php
+                                         }
+                                         ?>
+                                    </div>
+                                  </div> 
+                                   <?php       
+                                   }
+                              ?>
                             <div class="btn-group dropdown">
                               <button type="button" class="btn <?=$btnEstado?> dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="material-icons">list</i> <?=$estado;?>
