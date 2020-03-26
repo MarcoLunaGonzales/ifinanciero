@@ -18,7 +18,9 @@ $nombreCuentaPadre=nameCuenta($codigoCuentaPadre);
 
 // Preparamos
 $sql="SELECT p.codigo, p.nombre, p.cod_tipoauxiliar, p.cod_proveedorcliente FROM $table p where cod_estadoreferencial=1 and p.cod_cuenta='$codigoCuentaPadre' order by p.nombre";
+
 //echo $sql;
+
 $stmt = $dbh->prepare($sql);
 // Ejecutamos
 $stmt->execute();
