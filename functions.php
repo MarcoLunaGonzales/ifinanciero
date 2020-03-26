@@ -4504,6 +4504,32 @@ function obtenerFechaEnLetra($fecha){
     return $num.' de '.$mes.' del '.$anno;
 }
 
+function buscarCuentaAnterior($cuenta){
+   $dbh = new Conexion();
+   $sqlX="SELECT codigo FROM plan_cuentas where numero='$cuenta'";
+   //echo $sqlX;
+   $stmt = $dbh->prepare($sqlX);
+   $stmt->execute();
+   $codigoX=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $codigoX=$row['codigo'];
+   }
+   return($codigoX);
+}
+
+function buscarCuentaAuxiliarAnterior($cuentaaux){
+   $dbh = new Conexion();
+   $sqlX="SELECT codigo FROM cuentas_auxiliares where codigo_anterior='$cuentaaux'";
+   //echo $sqlX;
+   $stmt = $dbh->prepare($sqlX);
+   $stmt->execute();
+   $codigoX=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $codigoX=$row['codigo'];
+   }
+   return($codigoX);
+}
+
 function listaCuentasAuxiliaresRelacionadasProveedoresClientes(){
   $dbh = new Conexion();
   $sql="SELECT p.*,a.nombre as nombre_proveedorcliente FROM cuentas_auxiliares p JOIN af_proveedores a on a.codigo=p.cod_proveedorcliente where p.cod_tipoauxiliar=1
