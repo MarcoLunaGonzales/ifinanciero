@@ -58,7 +58,7 @@ foreach ($listaDocente->lstPersona as $listas) {
 	$email_personacontacto=$listas->Correo;
 	$cod_estado=$listas->Vigencia;
 
-	$nombre=$NombreRazon." ".$paterno." ".$materno;
+	$nombre=$NombreRazon." ".$paterno." ".$materno." (Docente)";
 
 	$sql="INSERT INTO af_proveedores (codigo,cod_empresa,nombre,nit,created_by,modified_by,direccion,telefono,email,personacontacto,email_personacontacto,cod_estado)
         VALUES ('$codigo','$cod_empresa','$nombre','$nit','$idUsuario','$idUsuario','$direccion','$telefono','$email','$personacontacto','$email_personacontacto','$cod_estado')";
@@ -86,7 +86,7 @@ foreach ($listaAuditor->lstPersona as $listas) {
 	$email_personacontacto=$listas->Correo;
 	$cod_estado=$listas->Vigencia;
 
-	$nombre=$NombreRazon." ".$paterno." ".$materno;
+	$nombre=$NombreRazon." ".$paterno." ".$materno." (Auditor)";
 
 	$sql="INSERT INTO af_proveedores (codigo,cod_empresa,nombre,nit,created_by,modified_by,direccion,telefono,email,personacontacto,email_personacontacto,cod_estado)
         VALUES ('$codigo','$cod_empresa','$nombre','$nit','$idUsuario','$idUsuario','$direccion','$telefono','$email','$personacontacto','$email_personacontacto','$cod_estado')";
@@ -114,7 +114,7 @@ foreach ($listaConsultor->lstPersona as $listas) {
 	$email_personacontacto=$listas->Correo;
 	$cod_estado=$listas->Vigencia;
 
-	$nombre=$NombreRazon." ".$paterno." ".$materno;
+	$nombre=$NombreRazon." ".$paterno." ".$materno." (Consultor)";
 
 	$sql="INSERT INTO af_proveedores (codigo,cod_empresa,nombre,nit,created_by,modified_by,direccion,telefono,email,personacontacto,email_personacontacto,cod_estado)
         VALUES ('$codigo','$cod_empresa','$nombre','$nit','$idUsuario','$idUsuario','$direccion','$telefono','$email','$personacontacto','$email_personacontacto','$cod_estado')";

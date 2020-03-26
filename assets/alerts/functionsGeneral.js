@@ -1024,6 +1024,20 @@ function buscarComprobantes(estado){
   ajax.send(null)
 }
 
+function buscarComprobantesFecha(){
+    var valor=$("#fechaBusqueda").val();
+    ajax=nuevoAjax();
+    ajax.open('GET', 'comprobantes/ajax_busquedaComprobanteUO.php?cod_uo=null&tipo=null&fecha='+valor,true);
+    ajax.onreadystatechange=function() {
+      if (ajax.readyState==4) {
+        var contenedor=$("#data_comprobantes");
+        contenedor.html(ajax.responseText);
+        $("#modalBuscador").modal("hide");
+      }
+    }
+    ajax.send(null)
+  }
+
 function sendAprobacion(cod,estado){
   if(estado==3){
     $("#modalAlertStyle").addClass("bg-info");
