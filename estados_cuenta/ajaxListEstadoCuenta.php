@@ -81,7 +81,7 @@ $mes=$_GET['mes'];
 	$fechaComprobante=strftime('%d/%m/%Y',strtotime($fechaComprobante));
 
 	//SACAMOS CUANTO SE PAGO DEL ESTADO DE CUENTA.
-    $sqlContra="SELECT sum(monto)as monto from estados_cuenta e where e.cod_comprobantedetalleorigen='$codCompDetX'";
+    $sqlContra="SELECT sum(monto)as monto from estados_cuenta e where e.cod_comprobantedetalleorigen='$codigoX'";
     $stmtContra = $dbh->prepare($sqlContra);
     $stmtContra->execute();
     $montoContra=0;

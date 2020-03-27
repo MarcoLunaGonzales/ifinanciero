@@ -6,6 +6,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 
 $dbh = new Conexion();
 
+//echo dirname(__DIR__)."/".basename(__DIR__);
 // Preparamos
 $sql="SELECT c.*,p.numero,p.nombre, (select tec.codigo from tipos_estado_cuenta tec where tec.codigo=c.cod_tipoestadocuenta)as codtipoestadocuenta, (select tec.nombre from tipos_estado_cuenta tec where tec.codigo=c.cod_tipoestadocuenta)as tipoestadocuenta from configuracion_estadocuentas c,plan_cuentas p where c.cod_plancuenta=p.codigo
 UNION
@@ -77,9 +78,12 @@ $stmt->bindColumn('tipoestadocuenta', $tipoEstadoCuenta);
                             <?php 
                             if( ($tipo==1 && $codTipoEstadoCuenta==2) || ($tipo==2 && $codTipoEstadoCuenta==1)){
                               ?>
-                              <a title="Reporte" href='#' onclick="verEstadosCuentasModal('<?=$nombre?>',<?=$codCuenta?>,<?=$codCuentaAux?>,<?=$tipo?>,<?=$codTipoEstadoCuenta?>)" class="btn btn-default">
+                              <a title="Detalle" href='#' onclick="verEstadosCuentasModal('<?=$nombre?>',<?=$codCuenta?>,<?=$codCuentaAux?>,<?=$tipo?>,<?=$codTipoEstadoCuenta?>)" class="btn btn-default">
                                <i class="material-icons">ballot</i>
                               </a>
+                              <!--a href='basename(__DIR__)/estados_cuenta/detalleEstadoCuentas.php?cod_cuenta=<?=$codCuenta?>&cod_cuentaaux=<?=$codCuentaAux?>&tipo=<?=$tipo?>&tipo_proveedorcliente=<?=$codTipoEstadoCuenta?>' target='_BLANK' class="btn btn-default">
+                               <i class="material-icons">ballot</i>
+                              </a-->
                               <?php
                             }
                             ?>
