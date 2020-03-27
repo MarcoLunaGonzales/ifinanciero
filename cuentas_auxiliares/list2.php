@@ -99,6 +99,7 @@ $stmt->bindColumn('cod_proveedorcliente', $codProveedorCliente);
               <!--div class="card-footer ml-auto mr-auto"-->
               <div class="card-footer fixed-bottom">
                     <button class="<?=$buttonNormal;?>" onClick="location.href='<?=$urlRegister;?>&codigo=<?=$codigoCuentaPadre;?>'">Registrar</button>
+                    <button class="<?=$buttonNormal;?>" onClick="location.href='<?=$urlActualizar;?>&codigo=<?=$codigoCuentaPadre;?>'">Actualizar</button>
               </div>		  
             </div>
           </div>  

@@ -116,7 +116,7 @@ if (!$conexión) {
       }elseif ($fondo==1060) {
         $unidadInsertar=8;
       }elseif ($fondo==1012) {
-        $unidadInsertar=3001;
+        $unidadInsertar=2692;
       }elseif ($fondo==1070) {
         $unidadInsertar=272;
       }elseif ($fondo==1070) {
