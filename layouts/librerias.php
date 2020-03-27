@@ -277,22 +277,45 @@
         Swal.fire("Informativo!", "Debe registrar al menos un pago", "warning");
         return false;
       }else{
-        /*var cont=0;
+        var cont=0;
         for (var i = 0; i < $("#cantidad_filas").val(); i++) {
-           if(parseInt($('#cod_retencion'+(i+1)).val())==parseInt($('#cod_configuracioniva').val())){
-             if(itemFacturas[i].length==0){
-              cont++; 
-              break;
-             }      
+           if(parseFloat($('#monto_pago'+(i+1)).val())>parseFloat($('#saldo_pago'+(i+1)).text())){
+             cont++;
+             break;   
            }                  
-        }*/
-        /*if(cont!=0){
-           Swal.fire("Informativo!", "La Retencion IVA debe tener al menos una factura registrada", "warning"); 
+        }
+        if(cont!=0){
+           Swal.fire("Informativo!", "Uno de los montos ingresados es mayor al saldo", "warning"); 
            return false;
-        }else{*/
+        }else{
+          var conta=0;
+          for (var i = 0; i < $("#cantidad_filas").val(); i++) {
+            if($("#monto_pago"+(i+1)).val()>0){
+             if(($('#tipo_pago'+(i+1)).val()>0)){
+              if(($('#tipo_pago'+(i+1)).val()==1)){
+                if($("#banco_pago"+(i+1)).val()>0){
+                 if(($('#emitidos_pago'+(i+1)).val()=="####")){
+                   conta++;
+                   break;
+                 }
+                }else{
+                  conta++;
+                  break;
+                }
+              }       
+             }else{
+              conta++;
+              break;
+             }
+            } 
+         }
+         if(conta!=0){
+           Swal.fire("Informativo!", "Faltan datos!", "warning"); 
+           return false;
+         }else{
 
-          /*aqui se ejecuta el submit*/
-        //}
+         }          
+        }
       }     
     });
 

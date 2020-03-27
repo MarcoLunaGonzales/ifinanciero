@@ -43,8 +43,8 @@ $mes=$_GET['mes'];
   	//echo $sqlEstadoCuenta;
 
   	$stmt = $dbh->prepare($sqlEstadoCuenta);
-	$sqlEstadoCuenta="SELECT e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar FROM estados_cuenta e,comprobantes_detalle d where e.cod_comprobantedetalle=d.codigo and (d.cod_cuenta=$codCuenta or e.cod_plancuenta=$codCuenta) and e.cod_comprobantedetalleorigen=0 order by e.fecha";
-  $stmt = $dbh->prepare($sqlEstadoCuenta);
+	//$sqlEstadoCuenta="SELECT e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar FROM estados_cuenta e,comprobantes_detalle d where e.cod_comprobantedetalle=d.codigo and (d.cod_cuenta=$codCuenta or e.cod_plancuenta=$codCuenta) and e.cod_comprobantedetalleorigen=0 order by e.fecha";
+  //$stmt = $dbh->prepare($sqlEstadoCuenta);
   
   $stmt->execute();
   $i=0;$saldo=0;

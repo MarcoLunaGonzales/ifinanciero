@@ -4384,7 +4384,8 @@ function numeroCorrelativoComprobante($codGestion,$unidad,$tipoComprobante){
   $sql1="SELECT m.*,g.nombre from meses_trabajo m join gestiones g on m.cod_gestion=g.codigo where cod_gestion='$codGestion' and cod_estadomesestrabajo=3";
   $stmt1 = $dbh->prepare($sql1);
   $stmt1->execute();
-
+  $anio=$_SESSION["globalNombreGestion"];
+  $mes=date('m');
   while ($row1= $stmt1->fetch(PDO::FETCH_ASSOC)) {
     $mesActivo=$row1['cod_mes'];
     $anio=$row1['nombre'];

@@ -111,7 +111,7 @@ if(isset($_GET['cod_auxi'])){
         ?>
             <div class="form-check">
                <label class="form-check-label">
-                     <input type="radio" class="form-check-input" id="cuentas_origen_detalle<?=$i?>" name="cuentas_origen_detalle" value="<?=$codCompDetX?>####<?=$codCuentaAuxX?>####<?=$codProveedorX?>">
+                     <input type="radio" class="form-check-input" id="cuentas_origen_detalle<?=$i?>" name="cuentas_origen_detalle" value="<?=$codigoX?>####<?=$codCuentaAuxX?>####<?=$codProveedorX?>">
                     <span class="form-check-sign">
                       <span class="check"></span>
                     </span>       
@@ -141,7 +141,7 @@ if(isset($_GET['cod_auxi'])){
         ?>
             <div class="form-check">
                <label class="form-check-label">
-                     <input type="radio" class="form-check-input" id="cuentas_origen_detalle<?=$i?>" name="cuentas_origen_detalle" value="<?=$codCompDetX?>####<?=$codCuentaAuxX?>####<?=$codProveedorX?>">
+                     <input type="radio" class="form-check-input" id="cuentas_origen_detalle<?=$i?>" name="cuentas_origen_detalle" value="<?=$codigoX?>####<?=$codCuentaAuxX?>####<?=$codProveedorX?>">
                     <span class="form-check-sign">
                       <span class="check"></span>
                     </span>       

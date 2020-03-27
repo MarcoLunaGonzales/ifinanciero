@@ -408,7 +408,7 @@ if($flagSuccess==true){
 
           //actualizamos con el codigo de comprobante detalle la solicitud recursos detalle
           
-          $sqlUpdateSolicitudRecursoDetalle="UPDATE solicitud_recursosdetalle SET cod_comprobantedetalle=$codComprobanteDetalle where codigo=$codSolicitudDetalle";
+          $sqlUpdateSolicitudRecursoDetalle="UPDATE solicitud_recursosdetalle SET cod_proveedor=$codProveedorEstado where codigo=$codSolicitudDetalle";
           $stmtUpdateSolicitudRecursoDetalle = $dbh->prepare($sqlUpdateSolicitudRecursoDetalle);
           $stmtUpdateSolicitudRecursoDetalle->execute();
 

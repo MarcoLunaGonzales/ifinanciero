@@ -53,9 +53,9 @@ if(isset($_GET["simulacion"])){
  <?php
  for ($yyyy=$inicioAnio; $yyyy <=$cod_anio; $yyyy++) { 
     $active="";
-    $tituloItem="AÑO ".$an;
-    if(($an==0||$an==1)&&$codArea!=39){
-              $tituloItem="AÑO 1 (ETAPA ".($an+1).")";
+    $tituloItem="AÑO ".$yyyy;
+    if(($yyyy==0||$yyyy==1)&&$codArea!=39){
+              $tituloItem="AÑO 1 (ETAPA ".($yyyy+1).")";
     }
     if($yyyy==1){
       $active="active";

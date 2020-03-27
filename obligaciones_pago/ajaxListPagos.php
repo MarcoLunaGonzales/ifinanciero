@@ -80,7 +80,7 @@ $totalPagadoX=0;
                           <td>
                             <input type="hidden" value="<?=$detalle?>" id="glosa_detalle<?=$index?>" name="glosa_detalle<?=$index?>">
                             <input type="hidden" value="<?=$codSol?>" id="codigo_solicitud<?=$index?>" name="codigo_solicitud<?=$index?>">
-                            <input type="hidden" value="<?=$codSolDet?>" id="codigo_solicitudDetalle<?=$index?>" name="codigo_solicitudDetalle<?=$index?>">
+                            <input type="text" value="<?=$codSolDet?>" id="codigo_solicitudDetalle<?=$index?>" name="codigo_solicitudDetalle<?=$index?>">
                             <?php 
                             if(($importe-$pagado)>0){
                              ?><img src="assets/img/progresa.jpg" alt="" width="80px" height="35px"><?php
@@ -94,7 +94,7 @@ $totalPagadoX=0;
                           <td class=""><?=$numero;?></td>
                           <td class="bg-warning text-dark text-right font-weight-bold"><?=number_format($importe,2,".","")?></td>
                           <td class="text-right font-weight-bold" style="background:#07B46D; color:#F7FF5A;"><?=number_format($pagado,2,".","")?></td>
-                          <td class="text-right font-weight-bold"><?=number_format($importe-$pagado,2,".","")?></td>
+                          <td id="saldo_pago<?=$index?>" class="text-right font-weight-bold"><?=number_format($importe-$pagado,2,".","")?></td>
                           <td class="text-right">
                             <?php 
                             if(($importe-$pagado)>0){
