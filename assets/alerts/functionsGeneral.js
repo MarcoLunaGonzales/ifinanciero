@@ -2943,7 +2943,10 @@ function mayorReporteComprobante(fila){
     }
    }
     ajax.send(null);
+  }else{
+    $("#lista_tipo").html("");
   }
+
  }
 
 function listarTipoSolicitudAjaxPropuesta(tipo,id){
@@ -5344,7 +5347,7 @@ function agregarEstadoCuenta(){
   }else{
     var resp = $("#cuentas_origen").val().split('###');
     var cuenta = resp[0];
-    var detalle_resp=$('input:radio[name=cuentas_origen_detalle]:checked').val();
+    var detalle_resp=$('input:radio[name=cuentas_origen_detalle]:checked').val().split('####');
     var codComproDet=detalle_resp[0];
     var cuenta_auxiliar=detalle_resp[1];
     if(codComproDet!=null){
@@ -8172,3 +8175,40 @@ function noSeleccionarTodosChecks(tagName) {
                 items[i].checked = false;
         }
     }   
+
+
+
+//enviar correo
+//contratos de personal
+function agregaformEnviarCorreo(datos){
+  //console.log("datos: "+datos);
+  var d=datos.split('/');
+  document.getElementById("codigo_facturacion").value=d[0];
+  document.getElementById("cod_solicitudfacturacion").value=d[1];
+  document.getElementById("nro_factura").value=d[2];
+}
+
+function EnviarCorreoAjax(codigo_facturacion,nro_factura,cod_solicitudfacturacion,correo_destino,asunto,mensaje){
+  $.ajax({
+    type:"POST",
+    data:"codigo_facturacion="+codigo_facturacion+"&nro_factura="+nro_factura+"&cod_solicitudfacturacion="+cod_solicitudfacturacion+"&correo_destino="+correo_destino+"&asunto="+asunto+"&mensaje="+mensaje,
+    url:"simulaciones_servicios/enviarCorreo.php",
+    success:function(r){
+      var resp = r.split('$$$');
+      var success = resp[0];
+
+      if(success==1){
+        alerts.showSwal('success-message','index.php?opcion=listFacturasGeneradas');
+      }
+      if(success==2){
+        alerts.showSwal('error-message','index.php?opcion=listFacturasGeneradas');
+      }
+      if(success==3){        
+        alerts.showSwal('error-messageEnviarCorreoAdjunto','index.php?opcion=listFacturasGeneradas');
+      }
+      if(success==0){
+        alerts.showSwal('error-messageCamposVacios','index.php?opcion=listFacturasGeneradas');
+      }
+    }
+  });
+}

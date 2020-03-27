@@ -331,7 +331,7 @@ try{
 
 	}else{?>
     	<script>
-		    alert('El COMPROBANTE ya fue generado. Actualziar Sistema Por favor!');
+		    alert('El COMPROBANTE ya fue generado. Actualice el Sistema Por favor!');
 		</script><?php 
 	}
 
