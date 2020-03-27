@@ -21,45 +21,36 @@ $globalArea=$_SESSION["globalArea"];
 
 $cod_uo=$_GET['cod_uo'];
 $tipo=$_GET['tipo'];
-$fecha=$_GET['fecha'];
-//  
-if($tipo==""&&$cod_uo==""&&$fecha==""){
-  // echo "entra1";
-  $query="SELECT (select u.abreviatura from unidades_organizacionales u where u.codigo=c.cod_unidadorganizacional)unidad, c.cod_gestion, 
-  (select m.nombre from monedas m where m.codigo=c.cod_moneda)moneda, 
-  (select t.nombre from tipos_comprobante t where t.codigo=c.cod_tipocomprobante)tipo_comprobante, c.fecha, c.numero,c.codigo, c.glosa,ec.nombre,c.cod_estadocomprobante
-  from comprobantes c join estados_comprobantes ec on c.cod_estadocomprobante=ec.codigo where c.cod_estadocomprobante!=2 order by c.fecha desc, c.numero desc;";
-  $cod_uo="";
-}elseif($cod_uo!="null"){
-  // echo "entra2-".$cod_uo;
+$fechaI=$_GET['fechaI'];
+$fechaF=$_GET['fechaF'];
+$glosa=$_GET['glosa'];
 
-  $query="SELECT (select u.abreviatura from unidades_organizacionales u where u.codigo=c.cod_unidadorganizacional)unidad, c.cod_gestion, 
+
+
+$sql="SELECT (select u.abreviatura from unidades_organizacionales u where u.codigo=c.cod_unidadorganizacional)unidad, c.cod_gestion, 
   (select m.nombre from monedas m where m.codigo=c.cod_moneda)moneda, 
-  (select t.nombre from tipos_comprobante t where t.codigo=c.cod_tipocomprobante)tipo_comprobante, c.fecha, c.numero,c.codigo, c.glosa,ec.nombre,c.cod_estadocomprobante
-  from comprobantes c join estados_comprobantes ec on c.cod_estadocomprobante=ec.codigo where c.cod_estadocomprobante!=2 and c.cod_unidadorganizacional=$cod_uo  order by c.fecha desc, c.numero desc;";
-}elseif($tipo!="null"){
-  // echo "entra3";
-  $query="SELECT (select u.abreviatura from unidades_organizacionales u where u.codigo=c.cod_unidadorganizacional)unidad, c.cod_gestion, 
-  (select m.nombre from monedas m where m.codigo=c.cod_moneda)moneda, 
-  (select t.nombre from tipos_comprobante t where t.codigo=c.cod_tipocomprobante)tipo_comprobante, c.fecha, c.numero,c.codigo, c.glosa,ec.nombre,c.cod_estadocomprobante
-  from comprobantes c join estados_comprobantes ec on c.cod_estadocomprobante=ec.codigo where c.cod_estadocomprobante!=2 and c.cod_tipocomprobante=$tipo  order by c.fecha desc, c.numero desc;";
-}elseif($fecha!="null"){
-  // echo "entra4";
-  $query="SELECT (select u.abreviatura from unidades_organizacionales u where u.codigo=c.cod_unidadorganizacional)unidad, c.cod_gestion, 
-  (select m.nombre from monedas m where m.codigo=c.cod_moneda)moneda, 
-  (select t.nombre from tipos_comprobante t where t.codigo=c.cod_tipocomprobante)tipo_comprobante, c.fecha, c.numero,c.codigo, c.glosa,ec.nombre,c.cod_estadocomprobante
-  from comprobantes c join estados_comprobantes ec on c.cod_estadocomprobante=ec.codigo where c.cod_estadocomprobante!=2 and c.fecha like '%$fecha%'  order by c.fecha desc, c.numero desc;";
-}else{
-  // echo "entra5";
-  $query="SELECT (select u.abreviatura from unidades_organizacionales u where u.codigo=c.cod_unidadorganizacional)unidad, c.cod_gestion, 
-  (select m.nombre from monedas m where m.codigo=c.cod_moneda)moneda, 
-  (select t.nombre from tipos_comprobante t where t.codigo=c.cod_tipocomprobante)tipo_comprobante, c.fecha, c.numero,c.codigo, c.glosa,ec.nombre,c.cod_estadocomprobante
-  from comprobantes c join estados_comprobantes ec on c.cod_estadocomprobante=ec.codigo where c.cod_estadocomprobante!=2 order by c.fecha desc, c.numero desc;";
+  (select t.abreviatura from tipos_comprobante t where t.codigo=c.cod_tipocomprobante)tipo_comprobante, c.fecha, c.numero,c.codigo, c.glosa,ec.nombre,c.cod_estadocomprobante
+  from comprobantes c join estados_comprobantes ec on c.cod_estadocomprobante=ec.codigo where c.cod_estadocomprobante!=2 ";  
+
+if($cod_uo!=""){
+  $sql.=" and c.cod_unidadorganizacional=$cod_uo";
 }
+if($tipo!=""){
+  $sql.=" and c.cod_tipocomprobante=$tipo";  
+}
+if($fechaI!="" && $fechaF!=""){
+  $sql.=" and c.fecha BETWEEN '$fechaI' and '$fechaF'";
+ 
+}
+if($glosa!=""){
+  $sql.=" and c.glosa like '%$glosa%'";
+}
+$sql.=" order by c.fecha desc, c.numero desc;";
+
 
 $dbh = new Conexion();
 
-$stmt = $dbh->prepare($query);
+$stmt = $dbh->prepare($sql);
 $stmt->execute();
 $stmt->bindColumn('unidad', $nombreUnidad);
 $stmt->bindColumn('cod_gestion', $nombreGestion);
@@ -75,21 +66,22 @@ $stmt->bindColumn('cod_estadocomprobante', $estadoC);
 <table id="tablePaginator" class="table table-condensed">
   <thead>
     <tr>
-      <th class="text-center">#</th>
-      <th>Oficina</th>
-      <th>Tipo</th>
-      <th>Fecha</th>      
-      <th>Correlativo</th>
-      <!--th>Moneda</th-->
-      <th>Glosa</th>
-      <th>Estado</th>
-      <th class="text-right" width="20%">Actions</th>
+      <th class="text-center">#</th>                          
+      <th class="text-center small">Oficina</th>
+      <th class="text-center small">Tipo</th>
+      <th class="text-center small">Corre.</th>
+      <th class="text-center small">Fecha</th>
+      <th class="text-left small">Glosa</th>
+      <th class="text-center small">Estado</th>
+      <th class="text-center small">Actions</th>
     </tr>
   </thead>
   <tbody>
   <?php
     $index=1;
     while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+      $mes=date('n',strtotime($fechaComprobante));
+      // $mes=date("j",$fechaComprobante);
       switch ($estadoC) {
         case 1:
          $btnEstado="btn-info";$estadoIcon="how_to_vote";
@@ -103,14 +95,15 @@ $stmt->bindColumn('cod_estadocomprobante', $estadoC);
       }
     ?>
     <tr>
-      <td align="center"><?=$index;?></td>
-      <td><?=$nombreUnidad;?></td>
-      <td><?=$nombreTipoComprobante;?></td>
-      <td><?=strftime('%Y/%m/%d',strtotime($fechaComprobante));?></td>
       
-      <td><?=$nroCorrelativo;?></td>
+      <td align="text-center small"><?=$index;?></td>                          
+      <td class="text-center small"><?=$nombreUnidad;?></td>
+      <td class="text-center small"><?=$nombreTipoComprobante;?>-<?=$mes;?></td>
+      <td class="text-center small"><?=$nroCorrelativo;?></td>
+      <td class="text-center small"><?=strftime('%Y/%m/%d',strtotime($fechaComprobante));?></td>
+      
       <!--td><?=$nombreMoneda;?></td-->
-      <td><?=$glosaComprobante;?></td>
+      <td class="text-left small"><?=$glosaComprobante;?></td>
       <td><button class="btn <?=$btnEstado?> btn-sm btn-link"><?=$estadoComprobante;?>  <span class="material-icons small"><?=$estadoIcon?></span></button></td>
       <td class="td-actions text-right">
         <div class="btn-group dropdown">

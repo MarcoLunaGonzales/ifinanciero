@@ -1024,19 +1024,41 @@ function buscarComprobantes(estado){
   ajax.send(null)
 }
 
-function buscarComprobantesFecha(){
-    var valor=$("#fechaBusqueda").val();
-    ajax=nuevoAjax();
-    ajax.open('GET', 'comprobantes/ajax_busquedaComprobanteUO.php?cod_uo=null&tipo=null&fecha='+valor,true);
-    ajax.onreadystatechange=function() {
-      if (ajax.readyState==4) {
-        var contenedor=$("#data_comprobantes");
-        contenedor.html(ajax.responseText);
-        $("#modalBuscador").modal("hide");
-      }
+// function buscarComprobantesFecha(){
+//     var valor1=$("#fechaBusquedaInicio").val();
+//     var valor2=$("#fechaBusquedaFin").val();
+    
+//     ajax=nuevoAjax();
+//     ajax.open('GET', 'comprobantes/ajax_busquedaComprobanteUO.php?cod_uo=null&tipo=null&fechaI='+valor1+'&fechaF='+valor2+'&glosa=null',true);
+//     ajax.onreadystatechange=function() {
+//       if (ajax.readyState==4) {
+//         var contenedor=$("#data_comprobantes");
+//         contenedor.html(ajax.responseText);
+//         $("#modalBuscador").modal("hide");
+//       }
+//     }
+//     ajax.send(null)
+// }
+function botonBuscarComprobante(){
+  var valor_uo=$("#OficinaBusqueda").val();
+  var valor_tipo=$("#tipoBusqueda").val();
+  var valor_fi=$("#fechaBusquedaInicio").val();
+  var valor_ff=$("#fechaBusquedaFin").val();
+  var valor_glosa=$("#glosaBusqueda").val();
+  
+  
+  ajax=nuevoAjax();
+  ajax.open('GET', 'comprobantes/ajax_busquedaComprobanteUO.php?cod_uo='+valor_uo+'&tipo='+valor_tipo+'&fechaI='+valor_fi+'&fechaF='+valor_ff+'&glosa='+valor_glosa,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      var contenedor=$("#data_comprobantes");
+      contenedor.html(ajax.responseText);
+      $("#modalBuscador").modal("hide");
     }
-    ajax.send(null)
   }
+  ajax.send(null)
+} 
+
 
 function sendAprobacion(cod,estado){
   if(estado==3){

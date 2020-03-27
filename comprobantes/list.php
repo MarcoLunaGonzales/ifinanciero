@@ -21,11 +21,11 @@ $sql="SELECT (select u.abreviatura from unidades_organizacionales u where u.codi
 (select t.abreviatura from tipos_comprobante t where t.codigo=c.cod_tipocomprobante)tipo_comprobante, c.fecha, c.numero,c.codigo, c.glosa,ec.nombre,c.cod_estadocomprobante
 from comprobantes c join estados_comprobantes ec on c.cod_estadocomprobante=ec.codigo where c.cod_estadocomprobante!=2 ";
 if($globalAdmin!=1){
-  $sql.=" and c.cod_unidadorganizacional='$globalUnidad' ";
+  $sql.=" and c.cod_unidadorganizacional='$globalUnidad' limit 100";
 }
-$sql.=" and c.cod_gestion='$globalGestion' order by c.fecha desc, unidad, tipo_comprobante, c.numero desc";
+$sql.=" and c.cod_gestion='$globalGestion' order by c.fecha desc, unidad, tipo_comprobante, c.numero desc limit 100";
 
-//echo $sql;
+// echo $sql;
 
 $stmt = $dbh->prepare($sql);
 
@@ -45,16 +45,19 @@ $stmt->bindColumn('cod_estadocomprobante', $estadoC);
 
 
 // busquena por Oficina
-$stmtUO = $dbh->prepare("SELECT codigo,nombre  from unidades_organizacionales where cod_estado=1");
+$stmtUO = $dbh->prepare("SELECT (select u.abreviatura from unidades_organizacionales u where u.codigo=c.cod_unidadorganizacional)unidad,(select u.codigo from unidades_organizacionales u where u.codigo=c.cod_unidadorganizacional)as codigo_uo
+from comprobantes c where c.cod_estadocomprobante!=2 GROUP BY unidad order by unidad");
 $stmtUO->execute();
-$stmtUO->bindColumn('nombre', $nombreUnidad_x);
-$stmtUO->bindColumn('codigo', $codigo_uo);
+$stmtUO->bindColumn('unidad', $nombreUnidad_x);
+$stmtUO->bindColumn('codigo_uo', $codigo_uo);
 
 // busquena por tipo de comprobante
-$stmtTipoComprobante = $dbh->prepare("SELECT codigo,nombre  from tipos_comprobante where cod_estadoreferencial=1");
+$stmtTipoComprobante = $dbh->prepare("SELECT (select t.nombre from tipos_comprobante t where t.codigo=c.cod_tipocomprobante)as tipo_comprobante,(select t.codigo from tipos_comprobante t where t.codigo=c.cod_tipocomprobante)as cod_tipo_comprobante
+from comprobantes c where c.cod_estadocomprobante!=2 GROUP BY tipo_comprobante order by tipo_comprobante
+");
 $stmtTipoComprobante->execute();
-$stmtTipoComprobante->bindColumn('nombre', $nombre_tipo_comprobante);
-$stmtTipoComprobante->bindColumn('codigo', $codigo_tipo_co);
+$stmtTipoComprobante->bindColumn('tipo_comprobante', $nombre_tipo_comprobante);
+$stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
 ?>
 
 <div class="content">
@@ -67,7 +70,12 @@ $stmtTipoComprobante->bindColumn('codigo', $codigo_tipo_co);
                     <i class="material-icons"><?=$iconCard;?></i>
                   </div>
                   <h4 class="card-title"><?=$moduleNamePlural?></h4>
-                </div>
+                  <h4 align="right">
+                    <button type="button" class="btn btn-primary btn-round btn-fab" data-toggle="modal" data-target="#modalBuscador">
+                      <i class="material-icons" title="Buscador">search</i>
+                    </button>                      
+                  </h4>
+                </div>      
                 <div class="card-body">
                   
                   <!-- //busqueda de comprobantes por cuenta -->
@@ -80,9 +88,7 @@ $stmtTipoComprobante->bindColumn('codigo', $codigo_tipo_co);
                         </a>
                       </div>
                   </div> -->             
-                  <button type="button" class="btn btn-white btn-round btn-just-icon" data-toggle="modal" data-target="#modalBuscador">
-                    <i class="material-icons" title="Buscador">search</i>
-                  </button>
+                  
 
 
                   <div class="" id="data_comprobantes">
@@ -91,8 +97,9 @@ $stmtTipoComprobante->bindColumn('codigo', $codigo_tipo_co);
                         <tr>
                           <th class="text-center">#</th>                          
                           <th class="text-center small">Oficina</th>
+                          <th class="text-center small">Tipo</th>
+                          <th class="text-center small">Corre.</th>
                           <th class="text-center small">Fecha</th>
-                          <th class="text-center small">Tipo/#</th>
                           <th class="text-left small">Glosa</th>
                           <th class="text-center small">Estado</th>
                           <th class="text-center small">Actions</th>
@@ -102,6 +109,8 @@ $stmtTipoComprobante->bindColumn('codigo', $codigo_tipo_co);
                       <?php
 						            $index=1;
                       	while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+                          $mes=date('n',strtotime($fechaComprobante));
+                          // $mes=date("j",$fechaComprobante);
                           switch ($estadoC) {
                             case 1:
                              $btnEstado="btn-info";$estadoIcon="how_to_vote";
@@ -118,8 +127,10 @@ $stmtTipoComprobante->bindColumn('codigo', $codigo_tipo_co);
                           
                           <td align="text-center small"><?=$index;?></td>                          
                           <td class="text-center small"><?=$nombreUnidad;?></td>
+                          <td class="text-center small"><?=$nombreTipoComprobante;?>-<?=$mes;?></td>
+                          <td class="text-center small"><?=$nroCorrelativo;?></td>
                           <td class="text-center small"><?=strftime('%Y/%m/%d',strtotime($fechaComprobante));?></td>
-                          <td class="text-center small"><?=$nombreTipoComprobante;?>-<?=$nroCorrelativo;?></td>
+                          
                           <!--td><?=$nombreMoneda;?></td-->
                           <td class="text-left small"><?=$glosaComprobante;?></td>
                           <td><button class="btn <?=$btnEstado?> btn-sm btn-link"><?=$estadoComprobante;?>  <span class="material-icons small"><?=$estadoIcon?></span></button></td>
@@ -182,33 +193,30 @@ $stmtTipoComprobante->bindColumn('codigo', $codigo_tipo_co);
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Buscador</h4>
+        <h4 class="modal-title" id="myModalLabel">Buscador de Comprobantes</h4>
       </div>
       <div class="modal-body ">
         <div class="row">
-            <label class="col-sm-4 col-form-label text-center">Buscar por Oficina</label> 
-            <label class="col-sm-4 col-form-label text-center">Buscar por Fecha</label>                  
-            <label class="col-sm-4 col-form-label text-center">Buscar por Tipo</label>                                
+            <label class="col-sm-3 col-form-label text-center">Oficina</label> 
+            <label class="col-sm-6 col-form-label text-center">Fechas</label>                  
+            <label class="col-sm-3 col-form-label text-center">Tipo</label>                                
         </div> 
         <div class="row">
-          <div class="form-group col-sm-4">
-            
-            <!-- <input class="form-control" type="text" name="OficinaBusqueda" id="OficinaBusqueda" onChange="buscarComprobantesUO()" OnKeyUp="buscarComprobantesUO()"> -->
-
+          <div class="form-group col-sm-3">
             <select id="OficinaBusqueda" class="selectpicker form-control form-control-sm" data-style="btn btn-info" data-show-subtext="true" data-live-search="true"> 
-              <option value="">Seleccione uno</option>
+              <option value="">Seleccione</option>
               <?php while ($rowUO = $stmtUO->fetch(PDO::FETCH_BOUND)) { ?>
                 <option value="<?=$codigo_uo;?>"> <?=$nombreUnidad_x;?></option>
               <?php }?>
             </select>
-
-
           </div>
-          <div class="form-group col-sm-4">
-              
-            <input class="form-control" type="date" name="fechaBusqueda" id="fechaBusqueda" onChange="buscarComprobantesFecha()" >
+          <div class="form-group col-sm-3">
+            <input class="form-control input-sm" type="date" name="fechaBusquedaInicio" id="fechaBusquedaInicio" value="<?=$globalGestion?>-01-01" min="<?=$globalGestion?>-01-01" max="<?=$globalGestion?>-12-31">
           </div>
-          <div class="form-group col-sm-4">            
+          <div class="form-group col-sm-3">
+            <input class="form-control input-sm" type="date" name="fechaBusquedaFin" id="fechaBusquedaFin" value="<?=$globalGestion?>-12-31" min="<?=$globalGestion?>-01-01" max="<?=$globalGestion?>-12-31"  >
+          </div>
+          <div class="form-group col-sm-3">            
             <select id="tipoBusqueda" class="selectpicker form-control form-control-sm" data-style="btn btn-info" data-show-subtext="true" data-live-search="true"> 
               <option value="">Seleccione</option>
               <?php while ($rowTC = $stmtTipoComprobante->fetch(PDO::FETCH_BOUND)) { ?>
@@ -216,46 +224,31 @@ $stmtTipoComprobante->bindColumn('codigo', $codigo_tipo_co);
               <?php }?>
             </select>
             
-          </div>
-
-          <!-- 
-                    <label class="col-sm-1 col-form-label text-right" style="color:#0B2161;font-size: 16px"><b>Oficina</b></label>
-                    <div class="col-sm-2">
-                        <div class="form-group">
-                            <input style="background-color:#F3F781;text-align: center" class="form-control"  />
-                        </div>
-                    </div>
-                    <label class="col-sm-1 col-form-label text-right" style="color:#0B2161;font-size: 16px"><b>Fecha</b></label>
-                    <div class="col-sm-2">
-                    <div class="form-group">
-                        <input style="background-color:#F3F781;text-align: center" class="form-control" name="numero" id="numero" />
-                    </div>
-                    </div>
-                    <label class="col-sm-1 col-form-label text-right" style="color:#0B2161;font-size: 16px"><b>Tipo</b></label>
-                    <div class="col-sm-2">
-                    <div class="form-group">
-                        <input style="background-color:#F3F781;text-align: center" class="form-control" name="numero" id="numero"/>
-                    </div>
-                    </div>      -->               
+          </div>              
+        </div> 
+        <div class="row">
+          <label class="col-sm-3 col-form-label text-center">Glosa</label> 
+          <div class="form-group col-sm-8">
+            <input class="form-control input-sm" type="text" name="glosaBusqueda" id="glosaBusqueda"  >
+          </div>           
         </div> 
 
       </div>
 
       <div class="modal-footer">
-        <!-- <button type="button" class="btn btn-success" id="EnviarCorreo" name="EnviarCorreo" data-dismiss="modal">Aceptar</button> -->
-        <button type="button" class="btn btn-danger" data-dismiss="modal"> Cerrar </button>
+        <button type="button" class="btn btn-success" id="botonBuscarComprobante" name="botonBuscarComprobante" onclick="botonBuscarComprobante()">Buscar</button>
+        <!-- <button type="button" class="btn btn-danger" data-dismiss="modal"> Cerrar </button> -->
       </div>
     </div>
   </div>
 </div>
 
-<script type="text/javascript">
-  
+<!-- <script type="text/javascript">
   $(document).ready(function(){
     $('#OficinaBusqueda').change(function(){
       var valor=$("#OficinaBusqueda").val();
       ajax=nuevoAjax();
-      ajax.open('GET', 'comprobantes/ajax_busquedaComprobanteUO.php?cod_uo='+valor+'&tipo=null&fecha=null',true);
+      ajax.open('GET', 'comprobantes/ajax_busquedaComprobanteUO.php?cod_uo='+valor+'&tipo=null&fechaI=null&fechaF=null&glosa=null',true);
       ajax.onreadystatechange=function() {
         if (ajax.readyState==4) {
           var contenedor=$("#data_comprobantes");
@@ -268,7 +261,7 @@ $stmtTipoComprobante->bindColumn('codigo', $codigo_tipo_co);
     $('#tipoBusqueda').change(function(){
       var valor=$("#tipoBusqueda").val();
       ajax=nuevoAjax();
-      ajax.open('GET', 'comprobantes/ajax_busquedaComprobanteUO.php?cod_uo=null&tipo='+valor+"&fecha=null",true);
+      ajax.open('GET', 'comprobantes/ajax_busquedaComprobanteUO.php?cod_uo=null&tipo='+valor+"&fechaI=null&fechaF=null&glosa=null",true);
       ajax.onreadystatechange=function() {
         if (ajax.readyState==4) {
           var contenedor=$("#data_comprobantes");
@@ -281,4 +274,4 @@ $stmtTipoComprobante->bindColumn('codigo', $codigo_tipo_co);
   });
 
 
-</script>
+</script> -->
