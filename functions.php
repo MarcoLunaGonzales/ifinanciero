@@ -4674,6 +4674,85 @@ function obtenerComprobantesDetCuenta($codigo,$cuenta){
    return($valor);
 }
 
+ function listaSumaMontosDebeHaberComprobantesDetalle($fechaFinal,$tipoBusqueda,$arrayUnidades,$arrayAreas,$padre){
+   $dbh = new Conexion();
+   $sql="";
+   $sqlAreas="";
+   $sqlUnidades="";
+
+  //formateando fecha
+  $fechaFinalMod=explode("/", $fechaFinal);
+  $fa=$fechaFinalMod[2]."-".$fechaFinalMod[1]."-".$fechaFinalMod[0];
+  $fi=$fechaFinalMod[2]."-01-01";
+
+   for ($i=0; $i < count($arrayAreas); $i++) {
+      if($i==0){
+        $sqlAreas.="and (";
+      }
+      if($i==(count($arrayAreas)-1)){
+        $sqlAreas.="d.cod_area='".$arrayAreas[$i]."')";
+       }else{
+        $sqlAreas.="d.cod_area='".$arrayAreas[$i]."' or ";
+       }  
+   }
+   //busqueda de unidades
+   for ($i=0; $i < count($arrayUnidades); $i++) {
+      if($i==0){
+        $sqlUnidades.="and (";
+      }
+      if($i==(count($arrayUnidades)-1)){
+        $sqlUnidades.="d.cod_unidadorganizacional='".$arrayUnidades[$i]."')";
+       }else{
+        $sqlUnidades.="d.cod_unidadorganizacional='".$arrayUnidades[$i]."' or ";
+       }  
+   }
+   
+   $sql="SELECT cuentas_monto.*,p.nombre,p.numero,p.nivel,p.cod_padre from plan_cuentas p join 
+           (select d.cod_cuenta,sum(debe) as total_debe,sum(haber) as total_haber 
+            from comprobantes_detalle d join comprobantes c on c.codigo=d.cod_comprobante 
+            where (c.fecha between '$fi' and '$fa') $sqlUnidades group by (d.cod_cuenta) order by d.cod_cuenta) cuentas_monto
+        on p.codigo=cuentas_monto.cod_cuenta where p.cod_padre=$padre order by p.numero";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+}
+
+function sumaMontosDebeHaberComprobantesDetalleNivel($fechaFinal,$tipoBusqueda,$arrayUnidades,$padre){
+   $dbh = new Conexion();
+   $sql="";
+   $sqlAreas="";
+   $sqlUnidades="";
+
+  //formateando fecha
+  $fechaFinalMod=explode("/", $fechaFinal);
+  $fa=$fechaFinalMod[2]."-".$fechaFinalMod[1]."-".$fechaFinalMod[0];
+  $fi=$fechaFinalMod[2]."-01-01";
+
+   //busqueda de unidades
+   for ($i=0; $i < count($arrayUnidades); $i++) {
+      if($i==0){
+        $sqlUnidades.="and (";
+      }
+      if($i==(count($arrayUnidades)-1)){
+        $sqlUnidades.="d.cod_unidadorganizacional='".$arrayUnidades[$i]."')";
+       }else{
+        $sqlUnidades.="d.cod_unidadorganizacional='".$arrayUnidades[$i]."' or ";
+       }  
+   }
+   
+   $sql="SELECT cuentas_monto.*,p.nombre,p.numero,p.nivel,p.cod_padre from plan_cuentas p join 
+           (select d.cod_cuenta,sum(debe) as total_debe,sum(haber) as total_haber 
+            from comprobantes_detalle d join comprobantes c on c.codigo=d.cod_comprobante 
+            where (c.fecha between '$fi' and '$fa') $sqlUnidades group by (d.cod_cuenta) order by d.cod_cuenta) cuentas_monto
+        on p.codigo=cuentas_monto.cod_cuenta where p.cod_padre=$padre order by p.numero";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+}
+
+function formatoNumeroCuenta($numero){
+ return $numero[0].".".$numero[1].$numero[2].".".$numero[3].$numero[4].".".$numero[5].$numero[6].".".$numero[7].$numero[8].$numero[9]; 
+}
 ?>
 
 
