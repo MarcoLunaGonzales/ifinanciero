@@ -4,6 +4,9 @@ $table="configuracion_estadocuentas";
 $moduleNameSingular="Configuracion Estado de Cuenta";
 $moduleNamePlural="Configuracion de Estados de Cuenta";
 
+
+$moduleNameDetalle="Detalle de Estados de Cuenta";
+
 //$moduleNameSingular="Comprobantes";
 $urlList="index.php?opcion=listSimulacionesCostos";
 $urlList2="index.php?opcion=configuracionEstadosCuenta";
