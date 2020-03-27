@@ -73,31 +73,48 @@ $flagSuccess=$stmtUpdate->execute();
       $stmtDelFactura = $dbh->prepare($sqlDeleteFactura);
       $stmtDelFactura->execute();
     }
+    if(!isset($_POST['incompleto'])){
+      $sqlDelete="";
+      $sqlDelete="DELETE from comprobantes_detalle where cod_comprobante='$codComprobante'";
+      $stmtDel = $dbh->prepare($sqlDelete);
+      $flagSuccess=$stmtDel->execute();
+    }
        //BORRAMOS LA TABLA
-		$sqlDelete="";
-		$sqlDelete="DELETE from comprobantes_detalle where cod_comprobante='$codComprobante'";
-		$stmtDel = $dbh->prepare($sqlDelete);
-		$flagSuccess=$stmtDel->execute();
+		/**/
 
 for ($i=1;$i<=$cantidadFilas;$i++){ 	    	
 	$cuenta=$_POST["cuenta".$i];
 
 	if($cuenta!=0 || $cuenta!=""){
+    
 		$cuentaAuxiliar=$_POST["cuenta_auxiliar".$i];
 		$unidadDetalle=$_POST["unidad".$i];
 		$area=$_POST["area".$i];
 		$debe=$_POST["debe".$i];
 		$haber=$_POST["haber".$i];
 		$glosaDetalle=$_POST["glosa_detalle".$i];
-
-		
-        $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
-		$sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobanteDetalle','$codComprobante', '$cuenta', '$cuentaAuxiliar', '$unidadDetalle', '$area', '$debe', '$haber', '$glosaDetalle', '$i')";
+   
+     if((isset($_POST['codigo_detalle'.$i]))&&(isset($_POST['incompleto']))){
+		    $codigoDetalle=$_POST["codigo_detalle".$i];
+        $codComprobanteDetalle=$codigoDetalle;
+        $sqlDetalle="UPDATE comprobantes_detalle SET cod_comprobante=$codComprobante , cod_cuenta= '$cuenta', cod_cuentaauxiliar= '$cuentaAuxiliar', cod_unidadorganizacional= '$unidadDetalle', cod_area= '$area', debe= '$debe', haber= '$haber', glosa= '$glosaDetalle', orden ='$i'  where codigo='$codComprobanteDetalle' ";
+		//$sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobanteDetalle','$codComprobante', '$cuenta', '$cuentaAuxiliar', '$unidadDetalle', '$area', '$debe', '$haber', '$glosaDetalle', '$i')";
 		$stmtDetalle = $dbh->prepare($sqlDetalle);
 		$flagSuccessDetalle=$stmtDetalle->execute();	
+      
+     }else{
+        $codigoDetalle=obtenerCodigoComprobanteDetalle();
+        $codComprobanteDetalle=$codigoDetalle;
+        $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobanteDetalle','$codComprobante', '$cuenta', '$cuentaAuxiliar', '$unidadDetalle', '$area', '$debe', '$haber', '$glosaDetalle', '$i')";
+        $stmtDetalle = $dbh->prepare($sqlDetalle);
+        $flagSuccessDetalle=$stmtDetalle->execute();
+     }
 
         $nF=cantidadF($facturas[$i-1]);
-        
+          $sqlDelete="";
+          $sqlDelete="DELETE from facturas_compra where cod_comprobantedetalle='$codComprobanteDetalle'";
+          $stmtDel = $dbh->prepare($sqlDelete);
+          $flagSuccess=$stmtDel->execute();
          for($j=0;$j<$nF;$j++){
          	  $nit=$facturas[$i-1][$j]->nit;
          	  $nroFac=$facturas[$i-1][$j]->nroFac;
@@ -118,6 +135,10 @@ for ($i=1;$i<=$cantidadFilas;$i++){
          }
 
          //itemEstadosCuenta
+          $sqlDelete="";
+          $sqlDelete="DELETE from estados_cuenta where cod_comprobantedetalle='$codComprobanteDetalle'";
+          $stmtDel = $dbh->prepare($sqlDelete);
+          $flagSuccess=$stmtDel->execute();
           $nC=cantidadF($estadosCuentas[$i-1]);
           for($j=0;$j<$nC;$j++){
               $fecha=date("Y-m-d H:i:s");

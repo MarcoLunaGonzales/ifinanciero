@@ -23,6 +23,7 @@ from comprobantes c join estados_comprobantes ec on c.cod_estadocomprobante=ec.c
 if($globalAdmin!=1){
   $sql.=" and c.cod_unidadorganizacional='$globalUnidad' limit 100";
 }
+
 $sql.=" and c.cod_gestion='$globalGestion' order by c.fecha desc, unidad, tipo_comprobante, c.numero desc limit 100";
 
 // echo $sql;
@@ -161,7 +162,7 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                             <a href='<?=$urlArchivo;?>?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="btn btn-default">
                               <i class="material-icons">attachment</i>
                             </a>
-                            <a href='<?=$urlEdit2;?>?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="<?=$buttonEdit;?>">
+                            <a href='<?=$urlEdit3;?>?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="<?=$buttonEdit;?>">
                               <i class="material-icons"><?=$iconEdit;?></i>
                             </a>
                             <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')">
