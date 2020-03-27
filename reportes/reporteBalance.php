@@ -42,7 +42,7 @@ $html.='<br><table class="table">'.
             '<thead>'.
             '<tr class="bold table-title text-center">'.
               '<td>Numero</td>'.
-              '<td>Cuenta</td>'.
+              '<td width="35%">Cuenta</td>'.
               '<td></td>'.
               '<td></td>'.
               '<td></td>'.
@@ -178,7 +178,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
             
           }
       }
-      
+
     $nombre=formateaPlanCuenta($nombre, $nivel);
     $monto=0;
     $html.='<tr class="bold table-title">'.
