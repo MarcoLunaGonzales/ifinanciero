@@ -98,6 +98,10 @@
 		if ($_GET['opcion']=='reportesMayores') {
 			require_once('reportes/reportesMayores.php');
 		}
+		//REPORTES
+		if ($_GET['opcion']=='reportesEstadoCuentas') {
+			require_once('reportes/reportesEstadoCuentas.php');
+		}
 
 		//TIPO DE CAMBIO
 		if ($_GET['opcion']=='tipoDeCambio') {
