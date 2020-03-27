@@ -4661,7 +4661,19 @@ function obtenerComprobantesDetCuenta($codigo,$cuenta){
    }
    return array($valor,$valor2);
 }
-  
+ 
+
+ function obtenerCodigoCuentaAuxiliarProveedorCliente($tipo,$codigo){
+  $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT c.codigo from cuentas_auxiliares c where c.cod_proveedorcliente=$codigo and c.cod_tipoauxiliar=$tipo");
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['codigo'];
+   }
+   return($valor);
+}
+
 ?>
 
 
