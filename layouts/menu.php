@@ -548,7 +548,13 @@ if($menuModulo==0){
                     <span class="sidebar-mini"> P </span>
                     <span class="sidebar-normal"> Proveedores</span>
                   </a>
-                </li>                           
+                </li>    
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=reportesEstadoCuentas">
+                    <span class="sidebar-mini"> P </span>
+                    <span class="sidebar-normal"> Estados de Cuentas</span>
+                  </a>
+                </li>                         
               </ul>
             </div>
           </li>
