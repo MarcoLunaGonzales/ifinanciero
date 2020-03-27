@@ -28,6 +28,7 @@ $mes=$_GET['mes'];
 	<thead>
 	  <tr class="">
 	  	<th class="text-left">Fecha</th>
+	  	<th class="text-left">Comprobante</th>
 	  	<th class="text-left">Proveedor/Cliente</th>
 	  	<th class="text-left">Glosa</th>
 	  	<th class="text-right">D&eacute;bito</th>
@@ -37,12 +38,18 @@ $mes=$_GET['mes'];
 	</thead>
 	<tbody id="tabla_estadocuenta">
 <?php
+	$sqlEstadoCuenta="SELECT e.*,d.glosa,d.haber,d.debe,(select concat(c.cod_tipocomprobante,'|',c.numero,'|',cd.cod_unidadorganizacional) from comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle)as extra FROM estados_cuenta e,comprobantes_detalle d where e.cod_comprobantedetalle=d.codigo and (d.cod_cuenta=$codCuenta or e.cod_cuentaaux=$codCuenta) and e.cod_comprobantedetalleorigen=0 order by e.fecha";
+  	
+  	//echo $sqlEstadoCuenta;
+
+  	$stmt = $dbh->prepare($sqlEstadoCuenta);
 	$sqlEstadoCuenta="SELECT e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar FROM estados_cuenta e,comprobantes_detalle d where e.cod_comprobantedetalle=d.codigo and (d.cod_cuenta=$codCuenta or e.cod_plancuenta=$codCuenta) and e.cod_comprobantedetalleorigen=0 order by e.fecha";
   $stmt = $dbh->prepare($sqlEstadoCuenta);
   
   $stmt->execute();
   $i=0;$saldo=0;
   $indice=0;
+  $totalSaldo=0;
   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 	 $codigoX=$row['codigo'];
 	 $codPlanCuentaX=$row['cod_plancuenta'];
@@ -53,6 +60,13 @@ $mes=$_GET['mes'];
 	 $glosaX=$row['glosa'];
 	 $debeX=$row['debe'];
 	 $haberX=$row['haber'];
+	 $codigoExtra=$row['extra'];
+
+	list($tipoComprobante, $numeroComprobante, $codUnidadOrganizacional)=explode("|", $codigoExtra);
+	$nombreTipoComprobante=abrevTipoComprobante($tipoComprobante);
+	$nombreUnidadO=abrevUnidad_solo($codUnidadOrganizacional);
+
+
 
 	//SACAMOS CUANTO SE PAGO DEL ESTADO DE CUENTA.
     $sqlContra="SELECT sum(monto)as monto from estados_cuenta e where e.cod_comprobantedetalleorigen='$codCompDetX'";
@@ -66,7 +80,8 @@ $mes=$_GET['mes'];
     //FIN SACAR LOS PAGOS
     
 
-	 $saldo=$saldo+$haberX-$debeX;
+	 $saldo=$montoX-$montoContra;
+	 $totalSaldo=$totalSaldo+$saldo;
 	 $codProveedor=$row['cod_proveedor'];
 
 	 $nombreProveedorX=nameProveedor($codProveedor);
@@ -92,6 +107,7 @@ $mes=$_GET['mes'];
        ?>
 		<tr class="bg-white det-estados">
 	  	   	<td class="text-left small font-weight-bold"><?=$fechaX?></td>
+	  	   	<td class="text-center small"><?=$nombreUnidadO;?>-<?=$nombreTipoComprobante;?>-<?=$numeroComprobante;?></td>
 	  	   	<td class="text-left small"><?=$nombreProveedorX;?></td>
 	  	   	<td class="text-left small">
 
@@ -232,6 +248,10 @@ $mes=$_GET['mes'];
 	 $indice++;
   }
 ?>
+		<tr>
+	  	   	<td class="text-right small" colspan="6">Total:</td>
+	  	   	<td class="text-right small font-weight-bold"><?=formatNumberDec($totalSaldo);?></td>
+	   	</tr>
 	</tbody>
 </table>
 <?php

@@ -201,6 +201,11 @@
 			require_once('mes_curso/list.php');
 		}
 
+		//CAMBIAR GESTION DE TRABAJO
+		if ($_GET['opcion']=='listGestionTrabajo') {
+			require_once('utilitarios/listGestionTrabajo.php');
+		}
+
 		//notificaciones SISTEMA
         if ($_GET['opcion']=='listNotificacionesSistema') {
 			require_once('notificaciones_sistema/list.php');
