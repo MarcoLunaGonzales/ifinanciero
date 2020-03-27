@@ -43,7 +43,7 @@ $default_timezone = 'Etc/GMT+8'; // UTC
 
 // Root url for links in file manager.Relative to $http_host. Variants: '', 'path/to/subfolder'
 // Will not working if $root_path will be outside of server document root
-$root_url = 'imonitoreo';
+$root_url = 'ifinanciero';
 
 // Root path for file manager
 $root_path = $_SERVER['DOCUMENT_ROOT'] . '/' . $root_url;
