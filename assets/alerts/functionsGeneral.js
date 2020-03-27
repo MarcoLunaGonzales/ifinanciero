@@ -2943,7 +2943,10 @@ function mayorReporteComprobante(fila){
     }
    }
     ajax.send(null);
+  }else{
+    $("#lista_tipo").html("");
   }
+
  }
 
 function listarTipoSolicitudAjaxPropuesta(tipo,id){
@@ -5344,7 +5347,7 @@ function agregarEstadoCuenta(){
   }else{
     var resp = $("#cuentas_origen").val().split('###');
     var cuenta = resp[0];
-    var detalle_resp=$('input:radio[name=cuentas_origen_detalle]:checked').val();
+    var detalle_resp=$('input:radio[name=cuentas_origen_detalle]:checked').val().split('####');
     var codComproDet=detalle_resp[0];
     var cuenta_auxiliar=detalle_resp[1];
     if(codComproDet!=null){
