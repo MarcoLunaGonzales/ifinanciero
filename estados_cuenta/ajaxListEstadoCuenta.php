@@ -24,11 +24,14 @@ $tipo=$_GET['tipo'];
 $tipoProveedorCliente=$_GET['tipo_proveedorcliente'];
 $mes=$_GET['mes'];
 ?>
-<table class="table table-bordered table-condensed table-warning">
+<table class="table table-condensed" id="tablePaginatorReport">
 	<thead>
 	  <tr class="">
-	  	<th class="text-left">Fecha</th>
-	  	<th class="text-left">Comprobante</th>
+	  	<th class="text-left">Of</th>
+	  	<th class="text-left">Tipo</th>
+	  	<th class="text-left">#</th>
+	  	<th class="text-left">FechaComp</th>
+	  	<th class="text-left">FechaEC</th>
 	  	<th class="text-left">Proveedor/Cliente</th>
 	  	<th class="text-left">Glosa</th>
 	  	<th class="text-right">D&eacute;bito</th>
@@ -38,13 +41,14 @@ $mes=$_GET['mes'];
 	</thead>
 	<tbody id="tabla_estadocuenta">
 <?php
-	$sqlEstadoCuenta="SELECT e.*,d.glosa,d.haber,d.debe,(select concat(c.cod_tipocomprobante,'|',c.numero,'|',cd.cod_unidadorganizacional) from comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle)as extra FROM estados_cuenta e,comprobantes_detalle d where e.cod_comprobantedetalle=d.codigo and (d.cod_cuenta=$codCuenta or e.cod_cuentaaux=$codCuenta) and e.cod_comprobantedetalleorigen=0 order by e.fecha";
+	$sqlEstadoCuenta="SELECT e.*,d.glosa,d.haber,d.debe,(select concat(c.cod_tipocomprobante,'|',c.numero,'|',cd.cod_unidadorganizacional,'|',MONTH(c.fecha),'|',c.fecha) from comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle)as extra FROM estados_cuenta e,comprobantes_detalle d where e.cod_comprobantedetalle=d.codigo and (d.cod_cuenta=$codCuenta or e.cod_cuentaaux=$codCuenta) and e.cod_comprobantedetalleorigen=0 order by e.fecha";
   	
   	//echo $sqlEstadoCuenta;
 
   	$stmt = $dbh->prepare($sqlEstadoCuenta);
 	//$sqlEstadoCuenta="SELECT e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar FROM estados_cuenta e,comprobantes_detalle d where e.cod_comprobantedetalle=d.codigo and (d.cod_cuenta=$codCuenta or e.cod_plancuenta=$codCuenta) and e.cod_comprobantedetalleorigen=0 order by e.fecha";
   //$stmt = $dbh->prepare($sqlEstadoCuenta);
+
   
   $stmt->execute();
   $i=0;$saldo=0;
@@ -61,12 +65,20 @@ $mes=$_GET['mes'];
 	 $debeX=$row['debe'];
 	 $haberX=$row['haber'];
 	 $codigoExtra=$row['extra'];
+	 $glosaAuxiliar=$row['glosa_auxiliar'];
 
-	list($tipoComprobante, $numeroComprobante, $codUnidadOrganizacional)=explode("|", $codigoExtra);
-	$nombreTipoComprobante=abrevTipoComprobante($tipoComprobante);
+	 $glosaMostrar="";
+	 if($glosaAuxiliar!=""){
+	 	$glosaMostrar=$glosaAuxiliar;
+	 }else{
+	 	$glosaMostrar=$glosaX;
+	 }
+
+	list($tipoComprobante, $numeroComprobante, $codUnidadOrganizacional, $mesComprobante, $fechaComprobante)=explode("|", $codigoExtra);
+	$nombreTipoComprobante=abrevTipoComprobante($tipoComprobante)."-".$mesComprobante;
 	$nombreUnidadO=abrevUnidad_solo($codUnidadOrganizacional);
 
-
+	$fechaComprobante=strftime('%d/%m/%Y',strtotime($fechaComprobante));
 
 	//SACAMOS CUANTO SE PAGO DEL ESTADO DE CUENTA.
     $sqlContra="SELECT sum(monto)as monto from estados_cuenta e where e.cod_comprobantedetalleorigen='$codCompDetX'";
@@ -106,8 +118,11 @@ $mes=$_GET['mes'];
 	 if($haberX>0){
        ?>
 		<tr class="bg-white det-estados">
-	  	   	<td class="text-left small font-weight-bold"><?=$fechaX?></td>
-	  	   	<td class="text-center small"><?=$nombreUnidadO;?>-<?=$nombreTipoComprobante;?>-<?=$numeroComprobante;?></td>
+	  	   	<td class="text-center small"><?=$nombreUnidadO;?></td>
+	  	   	<td class="text-center small"><?=$nombreTipoComprobante;?></td>
+	  	   	<td class="text-center small"><?=$numeroComprobante;?></td>
+	  	   	<td class="text-left small"><?=$fechaComprobante;?></td>
+	  	   	<td class="text-left small"><?=$fechaX;?></td>
 	  	   	<td class="text-left small"><?=$nombreProveedorX;?></td>
 	  	   	<td class="text-left small">
 
@@ -118,7 +133,7 @@ $mes=$_GET['mes'];
 		              <small>
 		              <a data-toggle="collapse" href="#collapse<?=$indice;?>" aria-expanded="false" aria-controls="collapse<?=$indice;?>" class="collapsed">
 
-				  	   	<?=$glosaX?>
+				  	   	<?=$glosaMostrar;?>
 	   	                
 	   	                <i class="material-icons">keyboard_arrow_down</i>
 		              </a>
@@ -249,7 +264,7 @@ $mes=$_GET['mes'];
   }
 ?>
 		<tr>
-	  	   	<td class="text-right small" colspan="6">Total:</td>
+	  	   	<td class="text-right small" colspan="9">Total:</td>
 	  	   	<td class="text-right small font-weight-bold"><?=formatNumberDec($totalSaldo);?></td>
 	   	</tr>
 	</tbody>

@@ -3435,8 +3435,31 @@ function descargarPDFFacturas($nom,$html){
   $mydompdf->set_base_path('assets/libraries/plantillaPDFFactura.css');
   $mydompdf->stream($nom.".pdf", array("Attachment" => false));
   //guardar pdf
-  $pdf = $mydompdf->output();
-  file_put_contents("../simulaciones_servicios/facturas/".$nom.".pdf", $pdf);
+  // $pdf = $mydompdf->output();
+  // file_put_contents("../simulaciones_servicios/facturas/".$nom.".pdf", $pdf);
+}
+function descargarPDFFacturasCopiaCliente($nom,$html){
+  //aumentamos la memoria  
+  ini_set("memory_limit", "128M");
+  // Cargamos DOMPDF
+  require_once 'assets/libraries/dompdf/dompdf_config.inc.php';
+  // $mydompdf = new DOMPDF();
+  // ob_clean();
+  // $mydompdf->load_html($html);
+  // $mydompdf->render();
+  // $canvas = $mydompdf->get_canvas();
+  // $canvas->page_text(500, 25, "", Font_Metrics::get_font("sans-serif"), 10, array(0,0,0)); 
+  // $mydompdf->set_base_path('assets/libraries/plantillaPDFFactura.css');
+  // $mydompdf->stream($nom.".pdf", array("Attachment" => false));
+  // //guardar pdf
+  // $pdf = $mydompdf->output();
+  // file_put_contents("../simulaciones_servicios/facturas/".$nom.".pdf", $pdf);
+    $dompdf = new DOMPDF();
+    $dompdf->set_paper("letter", "portrait");
+    $dompdf->load_html($html);    
+    $dompdf->render();
+    $pdf = $dompdf->output();
+    file_put_contents("../simulaciones_servicios/facturas/".$nom.".pdf", $pdf);
 }
 
 function descargarPDFFiniquito($nom,$html){

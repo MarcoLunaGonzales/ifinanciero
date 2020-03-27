@@ -34,6 +34,10 @@
 			$codigo=$_GET['codigo'];
 			require_once('cuentas_auxiliares/register2.php');
 		}
+		if ($_GET['opcion']=='actualizarCuentaAux') {
+			$codigo=$_GET['codigo'];
+			require_once('cuentas_auxiliares/actualizarCuentaAux.php');
+		}
 		if ($_GET['opcion']=='editCuentaAux') {
 			$codigo=$_GET['codigo'];
 			$codigo_padre=$_GET['codigo_padre'];

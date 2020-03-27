@@ -47,7 +47,7 @@ $i=0;
                   <div class="row">
                   	<div class="col-sm-6">
                   		<div class="row">
-			                 <label class="col-sm-4 col-form-label">Unidad Organizacional</label>
+			                 <label class="col-sm-4 col-form-label">Oficina</label>
 			                 <div class="col-sm-8">
 			                	<div class="form-group">
 	                              <select class="selectpicker form-control form-control-sm" name="unidad[]" id="unidad" data-style="select-with-transition" multiple data-actions-box="true" required>
@@ -112,7 +112,7 @@ $i=0;
                   <div class="row">
                   	<div class="col-sm-6">
                   		<div class="row">
-			                 <label class="col-sm-4 col-form-label">Unidad</label>
+			                 <label class="col-sm-4 col-form-label">Oficina</label>
 			                 <div class="col-sm-8">
 			                	<div class="form-group">
 	                              <select class="selectpicker form-control form-control-sm" name="unidad_costo[]" id="unidad_costo" data-style="select-with-transition" multiple data-actions-box="true" required>

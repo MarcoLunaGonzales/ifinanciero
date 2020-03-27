@@ -25,6 +25,8 @@ $fechaI=$_GET['fechaI'];
 $fechaF=$_GET['fechaF'];
 $glosa=$_GET['glosa'];
 
+// $unidadOrgString=implode(",", $cod_uo);
+
 
 
 $sql="SELECT (select u.abreviatura from unidades_organizacionales u where u.codigo=c.cod_unidadorganizacional)unidad, c.cod_gestion, 
@@ -33,14 +35,13 @@ $sql="SELECT (select u.abreviatura from unidades_organizacionales u where u.codi
   from comprobantes c join estados_comprobantes ec on c.cod_estadocomprobante=ec.codigo where c.cod_estadocomprobante!=2 ";  
 
 if($cod_uo!=""){
-  $sql.=" and c.cod_unidadorganizacional=$cod_uo";
+  $sql.=" and c.cod_unidadorganizacional in ($cod_uo)";
 }
 if($tipo!=""){
-  $sql.=" and c.cod_tipocomprobante=$tipo";  
+  $sql.=" and c.cod_tipocomprobante in ($tipo)";  
 }
 if($fechaI!="" && $fechaF!=""){
-  $sql.=" and c.fecha BETWEEN '$fechaI' and '$fechaF'";
- 
+  $sql.=" and c.fecha BETWEEN '$fechaI' and '$fechaF'"; 
 }
 if($glosa!=""){
   $sql.=" and c.glosa like '%$glosa%'";

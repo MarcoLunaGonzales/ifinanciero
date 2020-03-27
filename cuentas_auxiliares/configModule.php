@@ -17,6 +17,8 @@ $urlSave="cuentas_auxiliares/save2.php";
 $urlSaveEdit="cuentas_auxiliares/saveEdit.php";
 $urlSaveDelete="";
 
+$urlActualizar="index.php?opcion=actualizarCuentaAux";
+
 
 $urlListCC="../index.php?opcion=listCuentasAuxCC&codigo=$codigo";
 $urlList2CC="index.php?opcion=listCuentasAuxCC&codigo=$codigo";
