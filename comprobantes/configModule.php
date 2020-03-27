@@ -10,6 +10,7 @@ $urlRegister="index.php?opcion=registerComprobante";
 $urlRegister2="comprobantes/register.php";
 $urlEdit="index.php?opcion=editComprobante";
 $urlEdit2="comprobantes/edit_prueba.php";
+$urlEdit3="comprobantes/editar.php";
 $urlArchivo="comprobantes/archivoComprobante.php";
 $urlImp="comprobantes/imp.php";
 $urlDelete="index.php?opcion=deleteComprobante";

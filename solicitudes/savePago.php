@@ -138,7 +138,15 @@ for ($i=1;$i<=$cantidadFilas;$i++){
         VALUES ('$codComprobanteDetalle','$codComprobante', '$cuenta', '$cuentaAuxiliar', '$unidadDetalle', '$area', '$debe', '$haber', '$glosaDetalle', '2')";
         $stmtDetalle = $dbh->prepare($sqlDetalle);
         $flagSuccessDetalle=$stmtDetalle->execute(); 
-    //fin comprobantes detalles
+
+        //fin comprobantes detalles
+        $codComprobanteDetalleOrigen=obtenerCodigoComprobanteDetalleSolicitudRecursosDetalle($codigo_detalle);
+        //estado de cuentas devengado
+          $sqlDetalleEstadoCuenta="INSERT INTO estados_cuenta (cod_comprobantedetalle, cod_plancuenta, monto, cod_proveedor, fecha,cod_comprobantedetalleorigen,cod_cuentaaux) 
+              VALUES ('$codComprobanteDetalle', '$cuenta', '$haber', '0', '$fecha_pago','$codComprobanteDetalleOrigen','$cuentaAuxiliar')";
+          $stmtDetalleEstadoCuenta = $dbh->prepare($sqlDetalleEstadoCuenta);
+          $stmtDetalleEstadoCuenta->execute();           
+    
 	}
 }
 

@@ -205,6 +205,7 @@ if($flagSuccess==true){
            
             $sumaDevengado=0;
             $i++; 
+            
            } 
          $codProveedor=$rowNuevo['cod_proveedor'];
          /*if($cambio==1){
@@ -233,7 +234,7 @@ if($flagSuccess==true){
           $detalleFac="F/";
         }*/
         $glosaDetalle=$glosa." D/".$rowNuevo['glosa'];
-
+        $codSolicitudDetalle=$rowNuevo['codigo'];
         if($rowNuevo['cod_confretencion']==0){
           $sumaDevengado+=$debe;
           $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
@@ -394,6 +395,24 @@ if($flagSuccess==true){
             VALUES ('$codComprobanteDetalle','$codComprobante', '$cuentaProv', '$cuentaAuxiliarProv', '$unidadDetalleProv', '$areaProv', '$debeProv', '$haberProv', '$glosaDetalleProv', '$i')";
             $stmtDetalle = $dbh->prepare($sqlDetalle);
             $flagSuccessDetalle=$stmtDetalle->execute();
+
+            $codProveedorEstado=$codProveedor;
+            //estado de cuentas devengado
+              $sqlDetalleEstadoCuenta="INSERT INTO estados_cuenta (cod_comprobantedetalle, cod_plancuenta, monto, cod_proveedor, fecha,cod_comprobantedetalleorigen,cod_cuentaaux) 
+              VALUES ('$codComprobanteDetalle', '0', '$haberProv', '$codProveedorEstado', '$fechaHoraActual','0','$cuentaAuxiliarProv')";
+              $stmtDetalleEstadoCuenta = $dbh->prepare($sqlDetalleEstadoCuenta);
+              $stmtDetalleEstadoCuenta->execute();
+             
+             echo $sqlDetalleEstadoCuenta."";
+            //
+
+          //actualizamos con el codigo de comprobante detalle la solicitud recursos detalle
+          
+          $sqlUpdateSolicitudRecursoDetalle="UPDATE solicitud_recursosdetalle SET cod_comprobantedetalle=$codComprobanteDetalle where codigo=$codSolicitudDetalle";
+          $stmtUpdateSolicitudRecursoDetalle = $dbh->prepare($sqlUpdateSolicitudRecursoDetalle);
+          $stmtUpdateSolicitudRecursoDetalle->execute();
+
+          echo $sqlUpdateSolicitudRecursoDetalle."";
     }    
         
 

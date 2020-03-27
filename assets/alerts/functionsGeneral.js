@@ -137,8 +137,15 @@ function calcularTotalesComprobante(id,e){
     }
   }
   
-  document.getElementById("totaldeb").value=sumadebe;  
-  document.getElementById("totalhab").value=sumahaber;  
+    
+
+  if($("#totalhab_restante").length){
+    document.getElementById("totaldeb").value=sumadebe+parseFloat($("#totaldeb_restante").val());  
+    document.getElementById("totalhab").value=sumahaber+parseFloat($("#totalhab_restante").val());
+  }else{
+    document.getElementById("totaldeb").value=sumadebe;  
+    document.getElementById("totalhab").value=sumahaber; 
+  }
 }
 
 function ajaxCorrelativo(combo){
@@ -335,6 +342,11 @@ function minusCuentaContable(idF){
        $("#boton_ret"+nuevoId).attr("id","boton_ret"+i);
 
        $("#tipo_estadocuentas"+nuevoId).attr("id","tipo_estadocuentas"+i);
+       $("#tipo_proveedorcliente"+nuevoId).attr("id","tipo_proveedorcliente"+i);
+       $("#proveedorcliente"+nuevoId).attr("id","proveedorcliente"+i);
+       if($("#codigo_detalle"+i).length){
+         $("#codigo_detalle"+nuevoId).attr("id","codigo_detalle"+i);
+       }
        $("#estados_cuentas"+nuevoId).attr("onclick","verEstadosCuentas('"+i+"',0)");
        $("#estados_cuentas"+nuevoId).attr("id","estados_cuentas"+i);
        $("#nestado"+nuevoId).attr("id","nestado"+i);     
@@ -1023,6 +1035,42 @@ function buscarComprobantes(estado){
   }
   ajax.send(null)
 }
+
+// function buscarComprobantesFecha(){
+//     var valor1=$("#fechaBusquedaInicio").val();
+//     var valor2=$("#fechaBusquedaFin").val();
+    
+//     ajax=nuevoAjax();
+//     ajax.open('GET', 'comprobantes/ajax_busquedaComprobanteUO.php?cod_uo=null&tipo=null&fechaI='+valor1+'&fechaF='+valor2+'&glosa=null',true);
+//     ajax.onreadystatechange=function() {
+//       if (ajax.readyState==4) {
+//         var contenedor=$("#data_comprobantes");
+//         contenedor.html(ajax.responseText);
+//         $("#modalBuscador").modal("hide");
+//       }
+//     }
+//     ajax.send(null)
+// }
+function botonBuscarComprobante(){
+  var valor_uo=$("#OficinaBusqueda").val();
+  var valor_tipo=$("#tipoBusqueda").val();
+  var valor_fi=$("#fechaBusquedaInicio").val();
+  var valor_ff=$("#fechaBusquedaFin").val();
+  var valor_glosa=$("#glosaBusqueda").val();
+  
+  
+  ajax=nuevoAjax();
+  ajax.open('GET', 'comprobantes/ajax_busquedaComprobanteUO.php?cod_uo='+valor_uo+'&tipo='+valor_tipo+'&fechaI='+valor_fi+'&fechaF='+valor_ff+'&glosa='+valor_glosa,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      var contenedor=$("#data_comprobantes");
+      contenedor.html(ajax.responseText);
+      $("#modalBuscador").modal("hide");
+    }
+  }
+  ajax.send(null)
+} 
+
 
 function sendAprobacion(cod,estado){
   if(estado==3){
@@ -8090,3 +8138,37 @@ function verCuentasAuxiliaresSelect(){
 function mostrarSelectProveedoresClientes(){
   verEstadosCuentasCred();
 }
+
+function filtrarCuentaComprobanteDetalle(){
+  var codigos=[];
+  var indice=0;
+  var items = document.getElementsByName('lista_check');
+    for (var i = 0; i < items.length; i++) {
+        if (items[i].type == 'checkbox')
+          if(items[i].checked==true){
+            codigos[indice]=items[i].value;
+            indice++;
+          }
+    }
+  //var cod_cuenta=$("#cuenta_decomprobante").val();
+  var cod_comprobante=$("#codigo_comprobante").val();
+  window.location.href="edit_prueba.php?codigo="+cod_comprobante+"&cuentas="+JSON.stringify(codigos);
+}
+
+
+
+function seleccionarTodosChecks(tagName) {
+        var items = document.getElementsByName(tagName);
+        for (var i = 0; i < items.length; i++) {
+            if (items[i].type == 'checkbox')
+                items[i].checked = true;
+        }
+    }
+
+function noSeleccionarTodosChecks(tagName) {
+        var items = document.getElementsByName(tagName);
+        for (var i = 0; i < items.length; i++) {
+            if (items[i].type == 'checkbox')
+                items[i].checked = false;
+        }
+    }   
