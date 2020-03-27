@@ -125,13 +125,19 @@ for ($i=1;$i<=$cantidadFilas;$i++){
         $haber=$monto_pago;
         $glosaDetalle=$glosa." - ".$glosa_detalle;
 
-
         $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
         $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) 
         VALUES ('$codComprobanteDetalle','$codComprobante', '$cuenta', '$cuentaAuxiliar', '$unidadDetalle', '$area', '$debe', '$haber', '$glosaDetalle', '2')";
         $stmtDetalle = $dbh->prepare($sqlDetalle);
         $flagSuccessDetalle=$stmtDetalle->execute();
-    //fin comprobante detalle
+       //fin comprobante detalle
+        $codComprobanteDetalleOrigen=obtenerCodigoComprobanteDetalleSolicitudRecursosDetalle($codigo_detalle);
+            //estado de cuentas devengado
+              $sqlDetalleEstadoCuenta="INSERT INTO estados_cuenta (cod_comprobantedetalle, cod_plancuenta, monto, cod_proveedor, fecha,cod_comprobantedetalleorigen,cod_cuentaaux) 
+              VALUES ('$codComprobanteDetalle', '$cuenta', '$haber', '0', '$fecha_pago','$codComprobanteDetalleOrigen','$cuentaAuxiliar')";
+              $stmtDetalleEstadoCuenta = $dbh->prepare($sqlDetalleEstadoCuenta);
+              $stmtDetalleEstadoCuenta->execute();
+             
 	}
 }
 

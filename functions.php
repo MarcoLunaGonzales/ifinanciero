@@ -696,7 +696,7 @@ function obtenerMoneda($codigo){
 function obtenerComprobantesDet($codigo){
    $dbh = new Conexion();
    $sql="";
-   $sql="SELECT d.codigo as cod_det,d.cod_area,d.cod_unidadorganizacional,p.codigo,p.numero,p.nombre,d.glosa,d.debe,d.haber,a.abreviatura,p.cuenta_auxiliar,u.abreviatura as unidadAbrev FROM plan_cuentas p join comprobantes_detalle d on p.codigo=d.cod_cuenta join areas a on d.cod_area=a.codigo join unidades_organizacionales u on u.codigo=d.cod_unidadorganizacional where d.cod_comprobante=$codigo order by cod_det";
+   $sql="SELECT d.cod_cuentaauxiliar,d.codigo as cod_det,d.cod_area,d.cod_unidadorganizacional,p.codigo,p.numero,p.nombre,d.glosa,d.debe,d.haber,a.abreviatura,p.cuenta_auxiliar,u.abreviatura as unidadAbrev FROM plan_cuentas p join comprobantes_detalle d on p.codigo=d.cod_cuenta join areas a on d.cod_area=a.codigo join unidades_organizacionales u on u.codigo=d.cod_unidadorganizacional where d.cod_comprobante=$codigo order by cod_det";
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
    // bindColumn
@@ -710,7 +710,7 @@ function obtenerComprobantesDetImp($codigo){
    $sql="";
 //    $sql="SELECT d.codigo as cod_det,d.cod_area,d.cod_unidadorganizacional,p.codigo,p.numero,p.nombre,d.glosa,d.debe,d.haber,a.abreviatura,p.cuenta_auxiliar,u.abreviatura as unidadAbrev,(select 1 from comprobantes_detalle cdd where cdd.debe=0 and d.codigo=cdd.codigo) as haber_order 
 // FROM plan_cuentas p join comprobantes_detalle d on p.codigo=d.cod_cuenta join areas a on d.cod_area=a.codigo join unidades_organizacionales u on u.codigo=d.cod_unidadorganizacional where d.cod_comprobante=$codigo order by haber_order, d.codigo";
-   $sql="SELECT d.codigo as cod_det,d.cod_area,d.cod_unidadorganizacional,p.codigo,p.numero,p.nombre,d.glosa,d.debe,d.haber,a.abreviatura,p.cuenta_auxiliar,u.abreviatura as unidadAbrev,(select 1 from comprobantes_detalle cdd where cdd.debe=0 and d.codigo=cdd.codigo) as haber_order 
+   $sql="SELECT d.cod_cuentaauxiliar,d.codigo as cod_det,d.cod_area,d.cod_unidadorganizacional,p.codigo,p.numero,p.nombre,d.glosa,d.debe,d.haber,a.abreviatura,p.cuenta_auxiliar,u.abreviatura as unidadAbrev,(select 1 from comprobantes_detalle cdd where cdd.debe=0 and d.codigo=cdd.codigo) as haber_order 
 FROM plan_cuentas p join comprobantes_detalle d on p.codigo=d.cod_cuenta join areas a on d.cod_area=a.codigo join unidades_organizacionales u on u.codigo=d.cod_unidadorganizacional where d.cod_comprobante=$codigo order by d.codigo";
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
@@ -4551,6 +4551,80 @@ function obtenerClienteCuentaAux($codigo){
    }
    return($valor);
 }
+function obtenerCodigoComprobanteDetalleSolicitudRecursosDetalle($codigo){
+  $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT p.cod_comprobantedetalle from solicitud_recursosdetalle p where p.codigo=$codigo");
+   $stmt->execute();
+   $valor="";
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['cod_comprobantedetalle'];
+   }
+   return($valor);
+}
+
+function obtenerCuentasComprobantesDet($codigo){
+   $dbh = new Conexion();
+  $sql="select p.codigo,p.nombre,p.numero,count(*) as cantidad from comprobantes_detalle d join plan_cuentas p on d.cod_cuenta=p.codigo WHERE cod_comprobante=$codigo group by cod_cuenta";
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  return $stmt;
+}
+function obtenerComprobantesDetCuenta($codigo,$cuenta){
+   $dbh = new Conexion();
+   $sql="";
+   $sql2="";
+   for ($i=0; $i < count($cuenta); $i++) {
+      if($i==0){
+        $sql2.="and (";
+      }
+      if($i==(count($cuenta)-1)){
+        $sql2.="d.cod_cuenta='".$cuenta[$i]."')";
+       }else{
+        $sql2.="d.cod_cuenta='".$cuenta[$i]."' or ";
+       }  
+   }
+
+   $sql="SELECT d.cod_cuentaauxiliar,d.codigo as cod_det,d.cod_area,d.cod_unidadorganizacional,p.codigo,p.numero,p.nombre,d.glosa,d.debe,d.haber,a.abreviatura,p.cuenta_auxiliar,u.abreviatura as unidadAbrev FROM plan_cuentas p join comprobantes_detalle d on p.codigo=d.cod_cuenta join areas a on d.cod_area=a.codigo join unidades_organizacionales u on u.codigo=d.cod_unidadorganizacional where d.cod_comprobante=$codigo ".$sql2." order by cod_det";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   // bindColumn
+   //$stmt->bindColumn('cod_comprobante', $codigoC);
+   return $stmt;
+}
+
+ function contarComprobantesDetalleCuenta($codigo,$cuenta){
+   $dbh = new Conexion();
+   $sql="";
+   $sql2="";
+   for ($i=0; $i < count($cuenta); $i++) {
+      if($i==0){
+        $sql2.="and (";
+      }
+      if($i==(count($cuenta)-1)){
+        $sql2.="cod_cuenta='".$cuenta[$i]."')";
+       }else{
+        $sql2.="cod_cuenta='".$cuenta[$i]."' or ";
+       }  
+   }
+   
+   $sql="select count(*) as total from comprobantes_detalle where cod_comprobante=$codigo ".$sql2;
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+  }
+
+  function obtenerTotalesDebeHaberComprobante($codigo){
+  $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT sum(debe) as total_debe,sum(haber) as total_haber FROM comprobantes_detalle WHERE cod_comprobante=$codigo");
+   $stmt->execute();
+   $valor=0;$valor2=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['total_debe'];
+      $valor2=$row['total_haber'];
+   }
+   return array($valor,$valor2);
+}
+  
 ?>
 
 

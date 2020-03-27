@@ -39,95 +39,11 @@ if(isset($_GET['codigo'])){
 }else{
 	$globalCode=0;
 }
-
-if(isset($_GET['cuentas'])){
-   $cuenta_get=json_decode($_GET['cuentas']);
-
-   $cont=contarComprobantesDetalleCuenta($globalCode,$cuenta_get);
-}else{
- $cont=contarComprobantesDetalle($globalCode);
-}
-
+$cont=contarComprobantesDetalle($globalCode);
 $cont->bindColumn('total', $contReg);
 while ($row = $cont->fetch(PDO::FETCH_BOUND)) {
  $contadorRegistros=$contReg;
 }
-
-//totales debe haber 
-$totalesDebeHaber=obtenerTotalesDebeHaberComprobante($globalCode);
-
-//unidad organizacional
-//configuraciones
-$stmtUnidades = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM unidades_organizacionales where cod_estado=1 and centro_costos=1 order by 2");
-$stmtUnidades->execute();
-$un=0;
- while ($rowUnidades = $stmtUnidades->fetch(PDO::FETCH_ASSOC)) {
-	$codigoX=$rowUnidades['codigo'];
-	$nombreX=$rowUnidades['nombre'];
-	$abrevX=$rowUnidades['abreviatura'];
-    
-    $arrayUnidadOrganizacional[$un]['codigo']=$codigoX;
-    $arrayUnidadOrganizacional[$un]['nombre']=$nombreX;
-    $arrayUnidadOrganizacional[$un]['abreviatura']=$abrevX;
-    $un++; 
- }
-//areas 
-$stmtAreas = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM areas where cod_estado=1 and centro_costos=1 order by 2");
-$stmtAreas->execute();
-$un=0;
- while ($rowAreas = $stmtAreas->fetch(PDO::FETCH_ASSOC)) {
-	$codigoX=$rowAreas['codigo'];
-	$nombreX=$rowAreas['nombre'];
-	$abrevX=$rowAreas['abreviatura'];
-    
-    $arrayAreas[$un]['codigo']=$codigoX;
-    $arrayAreas[$un]['nombre']=$nombreX;
-    $arrayAreas[$un]['abreviatura']=$abrevX;
-    $un++; 
- }
-
-//cuentas auxliliares
- $un=0;
- $sqlCuentasAux="SELECT codigo, nombre,cod_cuenta FROM cuentas_auxiliares order by 2";
-	$stmtAux = $dbh->prepare($sqlCuentasAux);
-	$stmtAux->execute();
-	$stmtAux->bindColumn('codigo', $codigoCuentaAux);
-	$stmtAux->bindColumn('nombre', $nombreCuentaAux);
-	$stmtAux->bindColumn('cod_cuenta', $codigoCuentaPlan);
-  while ($rowAux = $stmtAux->fetch(PDO::FETCH_BOUND)) {  
-  	  $arrayCuentasAux[$un]['cod_cuenta']=$codigoCuentaPlan;
-      $arrayCuentasAux[$un]['codigo']=$codigoCuentaAux;
-      $arrayCuentasAux[$un]['nombre']=$nombreCuentaAux;
-      $un++;
-	}
-
-//facturas
- $un=0;
-$stmt = $dbh->prepare("SELECT * FROM facturas_compra");
-$stmt->execute();
-  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-  	 $arrayFacturasGenerales[$un]['cod_comprobantedetalle']=$row['cod_comprobantedetalle'];
-	 $arrayFacturasGenerales[$un]['nit']=$row['nit'];
-	 $arrayFacturasGenerales[$un]['nro_factura']=$row['nro_factura'];
-	 $arrayFacturasGenerales[$un]['fecha']=$row['fecha'];
-	 $arrayFacturasGenerales[$un]['razon_social']=$row['razon_social'];
-	 $arrayFacturasGenerales[$un]['importe']=$row['importe'];
-	 $arrayFacturasGenerales[$un]['exento']=$row['exento'];
-	 $arrayFacturasGenerales[$un]['nro_autorizacion']=$row['nro_autorizacion'];
-	 $arrayFacturasGenerales[$un]['codigo_control']=$row['codigo_control'];
-	$un++; 
-	}
-//estados de Cuentas
-$un=0;
-$stmt = $dbh->prepare("SELECT * FROM estados_cuenta");
-$stmt->execute();
-  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-  	 $arrayEstadosCuentas[$un]['cod_comprobantedetalle']=$row['cod_comprobantedetalle'];
-	 $arrayEstadosCuentas[$un]['cod_plancuenta']=$row['cod_plancuenta'];
-	 $arrayEstadosCuentas[$un]['cod_comprobantedetalleorigen']=$row['cod_comprobantedetalleorigen'];
-	 $arrayEstadosCuentas[$un]['monto']=$row['monto'];
-	$un++; 
-	}
 ?>
 <script>
 	numFilas=<?=$contadorRegistros;?>;
@@ -137,70 +53,7 @@ $stmt->execute();
 	var configuraciones=[];
 	var estado_cuentas=[];
 </script>
-<?php
-//configuraciones
-			$stmt = $dbh->prepare("SELECT id_configuracion, valor_configuracion, descripcion_configuracion FROM configuraciones");
-			$stmt->execute();
-			$i=0;
-			while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-				$codigoX=$row['id_configuracion'];
-				$valorX=$row['valor_configuracion'];
-				$descripcionX=$row['descripcion_configuracion'];
-			 ?>
-			 <script>configuraciones.push({codigo:<?=$codigoX?>,valor:<?=$valorX?>,descripcion:'<?=$descripcionX?>'});</script>
-		    <?php
-			 }
-
-            //ESTADO DE CUENTAS
-			$stmt = $dbh->prepare("SELECT * FROM configuracion_estadocuentas");
-			$stmt->execute();
-			$i=0;
-			while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-				$codigoX=$row['codigo'];
-				$codPlanCuentaX=$row['cod_plancuenta'];
-				$codCuentaAuxX=$row['cod_cuentaaux'];
-				$tipoX=$row['tipo'];
-				$tipoEstadoCuentaX=$row['cod_tipoestadocuenta'];
-
-			 ?>
-			 <script>estado_cuentas.push({codigo:<?=$codigoX?>,cod_cuenta:<?=$codPlanCuentaX?>,cod_cuentaaux:<?=$codCuentaAuxX?>,tipo:<?=$tipoX?>,tipo_estado_cuenta:<?=$tipoEstadoCuentaX?>});</script>
-		    <?php
-			 }
-		    ?>
-
-		  	<?php
-			$stmt = $dbh->prepare("SELECT codigo, cod_unidadorganizacional, porcentaje FROM distribucion_gastosporcentaje");
-			$stmt->execute();
-			$i=0;
-			while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-				$codigoX=$row['codigo'];
-				$unidadX=$row['cod_unidadorganizacional'];
-				$porcentajeX=$row['porcentaje'];
-			 ?>
-			 <script>distribucionPor.push({codigo:<?=$codigoX?>,cod_unidad:<?=$unidadX?>,porcent:<?=$porcentajeX?>});</script>
-		    <?php
-			 }
-		    ?>
-		    <?php
-			$stmt = $dbh->prepare("SELECT cod_unidadorganizacional,cod_grupocuentas,fijo,cod_area FROM configuracion_centrocostoscomprobantes");
-			$stmt->execute();
-			while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-				$codUnidadX=$row['cod_unidadorganizacional'];
-				$codGrupoX=$row['cod_grupocuentas'];
-				$fijoX=$row['fijo'];
-				$codAreaX=$row['cod_area'];
-			 ?>
-			 <script>configuracionCentro.push({cod_unidad:<?=$codUnidadX?>,cod_grupo:<?=$codGrupoX?>,fijo:<?=$fijoX?>,cod_area:<?=$codAreaX?>});</script>
-		    <?php
-			 }
-		    ?>
-
 <form id="formRegComp" class="form-horizontal" action="saveEdit.php" method="post" enctype="multipart/form-data">
-	<?php 
- if(isset($_GET['cuentas'])){
- 	?><input type="hidden" name="incompleto" id="incompleto" value="1"><?php
- }
-	?>
 <div class="content">
 	<div class="container-fluid">
 		<?php
@@ -376,12 +229,7 @@ $stmt->execute();
 		 					
 	 					</div>
 			            <?php
-			            if(isset($_GET['cuentas'])){	
-                         $detalle=obtenerComprobantesDetCuenta($globalCode,$cuenta_get); 
-			            }else{
-			             $detalle=obtenerComprobantesDet($globalCode);	
-			            }
-						
+						$detalle=obtenerComprobantesDet($globalCode);
 						$idFila=1;$totaldebDet=0;$totalhabDet=0;
 						while ($row = $detalle->fetch(PDO::FETCH_ASSOC)) {
 							?>
@@ -395,7 +243,6 @@ $stmt->execute();
 							$numeroDet=$row['numero'];
 							$nombreDet=$row['nombre'];
 							$cuentaAuxDet=$row['cuenta_auxiliar'];
-							$codCuentaAuxDet=$row['cod_cuentaauxiliar'];
 							$totaldebDet+=$row['debe'];$totalhabDet+=$row['haber'];
 							$codigoCuenta=$row['codigo'];
 
@@ -413,15 +260,18 @@ $stmt->execute();
 			  	                         }else{
 			  	                         	?><option disabled value="">Unidad</option><?php
 			  	                         }
-			  	                         for ($i=0; $i < count($arrayUnidadOrganizacional) ; $i++) {
-			  	                             $codigoX=$arrayUnidadOrganizacional[$i]['codigo'];
-			  	                             $abrevX=$arrayUnidadOrganizacional[$i]['abreviatura'];
-			  	                         	if($codigoX==$unidadDet){
+			  	                         $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM unidades_organizacionales where cod_estado=1 and centro_costos=1 order by 2");
+				                         $stmt->execute();
+				                           while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+				                           	$codigoX=$row['codigo'];
+				                           	$nombreX=$row['nombre'];
+				                           	$abrevX=$row['abreviatura'];
+				                           	if($codigoX==$unidadDet){
                                              ?><option value="<?=$codigoX;?>" selected><?=$abrevX;?></option><?php
 				                           	}else{
                                               ?><option value="<?=$codigoX;?>"><?=$abrevX;?></option><?php
 				                            }
-			  	                         }
+			  	                          }
 			  	                          ?>
 			                          </select>
 			                         </div>
@@ -438,10 +288,13 @@ $stmt->execute();
 			  	                         }else{
 			  	                         	?><option disabled value="">Area</option><?php
 			  	                         }
-			  	                         for ($i=0; $i < count($arrayAreas) ; $i++) {
-			  	                             $codigoX=$arrayAreas[$i]['codigo'];
-			  	                             $abrevX=$arrayAreas[$i]['abreviatura'];
-			  	                         	if($codigoX==$unidadDet){
+			  	                        $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM areas where cod_estado=1 and centro_costos=1 order by 2");
+				                        $stmt->execute();
+				                        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+				                        	$codigoX=$row['codigo'];
+				                        	$nombreX=$row['nombre'];
+				                        	$abrevX=$row['abreviatura'];
+				                        	if($codigoX==$areaDet){
                                              ?><option value="<?=$codigoX;?>" selected><?=$abrevX;?></option><?php
 				                           	}else{
                                               ?><option value="<?=$codigoX;?>"><?=$abrevX;?></option><?php
@@ -453,7 +306,6 @@ $stmt->execute();
       	                         </div>
       	                         <div class="col-sm-4">
       	                        	<input type="hidden" name="cuenta<?=$idFila;?>" id="cuenta<?=$idFila;?>" value="">
-      	                        	<input type="hidden" name="codigo_detalle<?=$idFila;?>" id="codigo_detalle<?=$idFila;?>" value="<?=$codDet?>">
     	                        	<input type="hidden" name="cuenta_auxiliar<?=$idFila;?>" id="cuenta_auxiliar<?=$idFila;?>" value="">
                                 	<div class="row">	
     			                        <div class="col-sm-8">
@@ -467,9 +319,6 @@ $stmt->execute();
     			                        	 <a title="Cambiar cuenta" href="#" id="cambiar_cuenta<?=$idFila?>" onclick="editarCuentaComprobante(<?=$idFila?>)" class="btn btn-sm btn-warning btn-fab"><span class="material-icons text-dark">edit</span></a>	  
     			                        	 <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion<?=$idFila?>" onclick="nuevaDistribucionPonerFila(<?=$idFila;?>);" class="btn btn-sm btn-default btn-fab"><span class="material-icons">scatter_plot</span></a>-->	  
     			                             <input type="hidden" id="tipo_estadocuentas<?=$idFila?>">
-    			                             <input type="hidden" id="tipo_proveedorcliente<?=$idFila?>">
-    			                             <input type="hidden" id="proveedorcliente<?=$idFila?>">
-
     			                             <a title="Estado de Cuentas" id="estados_cuentas<?=$idFila?>" href="#" onclick="verEstadosCuentas(<?=$idFila;?>,0);" class="btn btn-sm btn-danger btn-fab d-none"><span class="material-icons text-dark">ballot</span><span id="nestado<?=$idFila?>" class="bg-warning"></span></a>	  
     			                            </div>  
     			                        </div>
@@ -478,24 +327,20 @@ $stmt->execute();
                                 <?php
 		                          	$numeroCuenta=trim($numeroDet);
 		                          	$nombreCuenta=trim($nombreDet);
-		                          	$existeAux=0;
+			                        $sqlCuentasAux="SELECT codigo, nombre FROM cuentas_auxiliares where cod_cuenta='$codigoCuenta' order by 2";
+			                        $stmtAux = $dbh->prepare($sqlCuentasAux);
+			                        $stmtAux->execute();
+			                        $stmtAux->bindColumn('codigo', $codigoCuentaAux);
+			                        $stmtAux->bindColumn('nombre', $nombreCuentaAux);
                                     ?><script>filaActiva=<?=$idFila?>;</script><?php
-                                    for ($i=0; $i < count($arrayCuentasAux) ; $i++) {
-			  	                        $codigoCuentaAux=$arrayCuentasAux[$i]['codigo'];
-			  	                        $codX=$arrayCuentasAux[$i]['cod_cuenta'];
-			  	                        $nombreCuentaAux=$arrayCuentasAux[$i]['nombre'];
-			  	                        if($codCuentaAuxDet==$codigoCuentaAux){
-			  	                        	$existeAux=1;
-			  	                        	break;
-			  	                         
-			  	                        }
-			  	                     }
-			  	                     if($existeAux==0){
-                                       ?><script>setBusquedaCuenta('<?=$codigoCuenta;?>','<?=$numeroCuenta;?>','<?=$nombreCuenta;?>','0','');</script><?php		
-			  	                     }else{
-			  	                       ?><script>setBusquedaCuenta('<?=$codigoCuenta?>','<?=$numeroCuenta?>','<?=$nombreCuenta?>','<?=$codigoCuentaAux?>','<?=$nombreCuentaAux?>');</script><?php		
-			  	                     }
-                                  ?>
+			                       // $txtAuxiliarCuentas="<table class='table table-condensed'>";
+			                         while ($rowAux = $stmtAux->fetch(PDO::FETCH_BOUND)) {
+			                         	?><script>setBusquedaCuenta('<?=$codigoCuenta?>','<?=$numeroCuenta?>','<?=$nombreCuenta?>','<?=$codigoCuentaAux?>','<?=$nombreCuentaAux?>');</script><?php
+			                         }  	
+		                            ?>
+		                              <script>setBusquedaCuenta('<?=$codigoCuenta;?>','<?=$numeroCuenta;?>','<?=$nombreCuenta;?>','0','');</script>
+	                                 
+
 		                        <div class="col-sm-1">
                                     <div class="form-group">
                                     	<label class="bmd-label-static">Debe</label>			
@@ -533,35 +378,31 @@ $stmt->execute();
                            <div class="h-divider"></div>
                          </div>
 
-                       <script>var nfac=[];
-      itemFacturas.push(nfac);</script>
+                       
 						 <?php
-
-						      for ($i=0; $i < count($arrayFacturasGenerales) ; $i++) {
-						      	    $codX=$arrayFacturasGenerales[$i]['cod_comprobantedetalle'];
-			  	                    $nit=$arrayFacturasGenerales[$i]['nit'];
-				                    $factura=$arrayFacturasGenerales[$i]['nro_factura'];
-				                    $fechaFac=$arrayFacturasGenerales[$i]['fecha'];
-				                    $razon=$arrayFacturasGenerales[$i]['razon_social'];
-				                    $importe=$arrayFacturasGenerales[$i]['importe'];
-				                    $exento=$arrayFacturasGenerales[$i]['exento'];
-				                    $autorizacion=$arrayFacturasGenerales[$i]['nro_autorizacion'];
-				                    $control=$arrayFacturasGenerales[$i]['codigo_control'];
-			  	                   if($codX==$codDet){
-			  	                     ?><script>abrirFactura(<?=$idFila?>,'<?=$nit?>',<?=$factura?>,'<?=$fechaFac?>','<?=$razon?>',<?=$importe?>,<?=$exento?>,'<?=$autorizacion?>','<?=$control?>');</script><?php
-			  	                   }
-			                   } 	
-
+						      $stmt = $dbh->prepare("SELECT * FROM facturas_compra where cod_comprobantedetalle=$codDet");
+				              $stmt->execute();
+				              while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+				                    $nit=$row['nit'];
+				                    $factura=$row['nro_factura'];
+				                    $fechaFac=$row['fecha'];
+				                    $razon=$row['razon_social'];
+				                    $importe=$row['importe'];
+				                    $exento=$row['exento'];
+				                    $autorizacion=$row['nro_autorizacion'];
+				                    $control=$row['codigo_control'];
+				                    ?><script>abrirFactura(<?=$idFila?>,'<?=$nit?>',<?=$factura?>,'<?=$fechaFac?>','<?=$razon?>',<?=$importe?>,<?=$exento?>,'<?=$autorizacion?>','<?=$control?>');</script><?php
+			  	              }
+						      
 						      // estados de cuenta
-			                   for ($i=0; $i < count($arrayEstadosCuentas) ; $i++) {
-						      	    $codX=$arrayEstadosCuentas[$i]['cod_comprobantedetalle'];
-			  	                    $cuenta=$arrayEstadosCuentas[$i]['cod_plancuenta'];
-				                    $codComproDet=$arrayEstadosCuentas[$i]['cod_comprobantedetalleorigen'];
-				                    $monto=$arrayEstadosCuentas[$i]['monto'];
-			  	                   if($codX==$codDet){
-			  	                    ?><script>abrirEstado(<?=$idFila?>,'<?=$cuenta?>',<?=$codComproDet?>,'<?=$monto?>');</script><?php
-			  	                   }
-			                   } 
+						      $stmt = $dbh->prepare("SELECT * FROM estados_cuenta where cod_comprobantedetalle=$codDet");
+				              $stmt->execute();
+				              while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+				                    $cuenta=$row['cod_plancuenta'];
+				                    $codComproDet=$row['cod_comprobantedetalleorigen'];
+				                    $monto=$row['monto'];
+				                    ?><script>abrirEstado(<?=$idFila?>,'<?=$cuenta?>',<?=$codComproDet?>,'<?=$monto?>');</script><?php
+			  	              }
 						 $idFila=$idFila+1;
 						}
 						?>
@@ -571,16 +412,12 @@ $stmt->execute();
 						      	</div>
 								<div class="col-sm-1">
 						            <div class="form-group">	
-						          		<input class="form-control" type="hidden" name="totaldeb_restante" placeholder="0" id="totaldeb_restante" readonly="true">
-						          		<input class="form-control" type="hidden" name="totaldeb_total" placeholder="0" id="totaldeb_total" readonly="true">	
-						          		<input class="form-control" type="number" name="totaldeb" value="<?=$totalesDebeHaber[0]?>" placeholder="0" id="totaldeb" readonly="true">
+						          		<input class="form-control" type="number" name="totaldeb" placeholder="0" id="totaldeb" readonly="true">	
 									</div>
 						      	</div>
 								<div class="col-sm-1">
 						            <div class="form-group">
-						            	<input class="form-control" type="hidden" name="totalhab_restante" placeholder="0" id="totalhab_restante" readonly="true">
-						            	<input class="form-control" type="hidden" name="totalhab_total" placeholder="0" id="totalhab_total" readonly="true">
-						            	<input class="form-control" type="number" name="totalhab" value="<?=$totalesDebeHaber[1]?>" placeholder="0" id="totalhab" readonly="true">	
+						            	<input class="form-control" type="number" name="totalhab" placeholder="0" id="totalhab" readonly="true">	
 									</div>
 						      	</div>
 						      	<div class="col-sm-4">
@@ -588,13 +425,8 @@ $stmt->execute();
 							</div>
 				  	<div class="card-footer fixed-bottom">
 						<button type="submit" class="<?=$buttonMorado;?>">Guardar</button>
-						<?php 
-                        if(isset($_GET['cuentas'])){
-                         ?><a href="../<?=$urlEdit3;?>?codigo=<?=$globalCode;?>" class="<?=$buttonCancel;?>"> Volver a la Seleccion</a><?php
-			            }else{
-			            	?><a href="../<?=$urlList;?>" class="<?=$buttonCancel;?>"> Volver </a><?php	
-			             }  
-						?>
+						<a href="../<?=$urlList;?>" class="<?=$buttonCancel;?>"> Volver </a>
+
 				  	</div>
 
 				</div>
@@ -657,25 +489,20 @@ $stmt->bindColumn('nombre', $nombreCuenta);
 
 			$numeroCuenta=trim($numeroCuenta);
 			$nombreCuenta=trim($nombreCuenta);
-			for ($i=0; $i < count($arrayCuentasAux) ; $i++) {
-			  	 $codigoCuentaAux=$arrayCuentasAux[$i]['codigo'];
-			  	 $codX=$arrayCuentasAux[$i]['cod_cuenta'];
-			  	 $nombreCuentaAux=$arrayCuentasAux[$i]['nombre'];
-			  	 if($codX==$codigoCuenta){
-			  	  ?><script>itemCuentasAux.push({codigo:"<?=$codigoCuentaAux?>",nombre:"<?=$nombreCuentaAux?>",codCuenta:"<?=$codigoCuenta?>"});</script><?php
+
+			$sqlCuentasAux="SELECT codigo, nombre FROM cuentas_auxiliares where cod_cuenta='$codigoCuenta' order by 2";
+			$stmtAux = $dbh->prepare($sqlCuentasAux);
+			$stmtAux->execute();
+			$stmtAux->bindColumn('codigo', $codigoCuentaAux);
+			$stmtAux->bindColumn('nombre', $nombreCuentaAux);
+			while ($rowAux = $stmtAux->fetch(PDO::FETCH_BOUND)) {
+				?><script>itemCuentasAux.push({codigo:"<?=$codigoCuentaAux?>",nombre:"<?=$nombreCuentaAux?>",codCuenta:"<?=$codigoCuenta?>"});</script><?php
 				$contAux++;
-			  	 }
-			 } 	
+			}  	
 		 ?><script>
 		    itemCuentas.push({codigo:"<?=$codigoCuenta?>",numero:"<?=$numeroCuenta?>",nombre:"<?=$nombreCuenta?>",cod_aux:"0",nom_aux:""});
 		 </script><?php	
 		$cont++;
 		}
 require_once 'modal.php';?>
- <script>
- $("#totaldeb_total").val(<?=$totaldebDet?>);
- $("#totalhab_total").val(<?=$totalhabDet?>);
-
- $("#totaldeb_restante").val(<?=$totalesDebeHaber[0]-$totaldebDet?>);
- $("#totalhab_restante").val(<?=$totalesDebeHaber[1]-$totalhabDet?>);
- </script>
+ <script>$("#totaldeb").val(<?=$totaldebDet?>);$("#totalhab").val(<?=$totalhabDet?>);</script>
