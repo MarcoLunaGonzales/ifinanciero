@@ -67,7 +67,7 @@ if (!$conexión) {
     }*/
 
     // query modificado IBNORCA - INGE (se agrego el nombre de base de datos a la tabla del from ibnorca2019.dbo.vw_MayorContable
-    $sql = "SELECT forma.fondo, forma.clase, forma.numero, forma.fecha, forma.moneda, forma.glosa, forma.estado FROM ibnorca2019.dbo.forma where forma.clase not in ('FAC','I-ADM','POA','POA99','POE','POE99','PPC','4') order by forma.fecha, forma.clase, forma.numero";
+    $sql = "SELECT forma.fondo, forma.clase, forma.numero, forma.fecha, forma.moneda, forma.glosa, forma.estado FROM ibnorca2019.dbo.forma where forma.clase not in ('I-ADM','POA','POA99','POE','POE99','PPC','4') order by forma.fecha, forma.clase, forma.numero";
     // end modificado
 
     $rs = odbc_exec( $conexión, $sql );
@@ -134,6 +134,8 @@ if (!$conexión) {
         $tipoComprobanteInsertar=1;
       }elseif ($tipoComprobante=="E") {
         $tipoComprobanteInsertar=2;
+      }elseif ($tipoComprobante=="FAC"){
+        $tipoComprobanteInsertar=4;
       }
 
       $numeroComprobante=intval($numero);

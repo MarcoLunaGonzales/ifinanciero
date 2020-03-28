@@ -112,7 +112,7 @@ $stmt->bindColumn('tipoestadocuenta', $tipoEstadoCuenta);
 
     <!-- small modal -->
 <div class="modal fade modal-primary" id="modalCuentas" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog modal-xl">
     <div class="modal-content card">
                 <div class="card-header card-header-danger card-header-icon">
                   <div class="card-icon">
