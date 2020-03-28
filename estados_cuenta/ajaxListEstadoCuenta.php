@@ -208,7 +208,7 @@ $mes=$_GET['mes'];
 		              <small>
 		              <a data-toggle="collapse" href="#collapse<?=$indice;?>" aria-expanded="false" aria-controls="collapse<?=$indice;?>" class="collapsed">
 
-				  	   	<?=$glosaX?>
+				  	   	<?=$glosaMostrar?>
 	   	                
 	   	                <i class="material-icons">keyboard_arrow_down</i>
 		              </a>

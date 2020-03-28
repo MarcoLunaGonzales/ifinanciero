@@ -273,7 +273,7 @@ if(isset($_GET['cod'])){
              ?>
              <div class="col-sm-3">
                   <div class="form-group">
-                    <select class="selectpicker form-control form-control-sm" name="proveedores" id="proveedores" data-style="<?=$comboColor;?>" onChange="cargarDatosCuenta()">
+                    <select class="selectpicker form-control form-control-sm" data-live-search="true" name="proveedores" id="proveedores" data-style="<?=$comboColor;?>" onChange="cargarDatosCuenta()">
                     <option disabled selected value="">Proveedores</option>
                   <?php
                   $stmt = $dbh->prepare("SELECT * FROM af_proveedores order by codigo");
