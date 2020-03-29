@@ -53,7 +53,7 @@ $mes=$_GET['mes'];
   	 
 
 
-     $credito_padre=ObtenerMontoTotalEstadoCuentas_hijos($codCuenta,$codCompDetX);
+     $credito_padre=ObtenerMontoTotalEstadoCuentas_hijos($codCuenta,$codigoX);
      $saldo=$montoX-$credito_padre;
 
      if(obtenerProveedorCuentaAux($row['cod_cuentaaux'])==""){
@@ -70,7 +70,7 @@ $mes=$_GET['mes'];
               ?>
               <div class="form-check">
                  <label class="form-check-label">
-                       <input type="radio" class="form-check-input" id="cuentas_origen_detalle<?=$i?>" name="cuentas_origen_detalle" value="<?=$codCompDetX?>####<?=$codCuentaAuxX?>####<?=$codProveedorX?>####<?=$saldo?>####<?=$proveedorX?>">
+                       <input type="radio" class="form-check-input" id="cuentas_origen_detalle<?=$i?>" name="cuentas_origen_detalle" value="<?=$codCompDetX?>####<?=$codCuentaAuxX?>####<?=$codProveedorX?>####<?=$saldo?>####<?=$proveedorX?>####<?=$codigoX?>">
                        
                       <span class="form-check-sign">
                         <span class="check"></span>
@@ -88,7 +88,7 @@ $mes=$_GET['mes'];
           <td class="text-right font-weight-bold"><?=number_format($saldo, 2, '.', ',');?></td>
         </tr>
         <?php 
-          $stmtHijos = $dbh->prepare("SELECT e.* FROM estados_cuenta e where e.cod_plancuenta=$codCuenta and e.cod_comprobantedetalleorigen=$codCompDetX order by e.fecha");
+          $stmtHijos = $dbh->prepare("SELECT e.* FROM estados_cuenta e where e.cod_plancuenta=$codCuenta and e.cod_comprobantedetalleorigen=$codigoX order by e.fecha");
             $stmtHijos->execute();
             $j=0;$saldo_hijo=$montoX;
             while ($row = $stmtHijos->fetch(PDO::FETCH_ASSOC)) {
