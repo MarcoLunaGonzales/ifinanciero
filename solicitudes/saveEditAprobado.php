@@ -181,7 +181,7 @@ if($flagSuccess==true){
             //proveedor devengado
           
           $cuentaProv=obtenerValorConfiguracion(36);
-          $cuentaAuxiliarProv=0;
+          $cuentaAuxiliarProv=obtenerCodigoCuentaAuxiliarProveedorCliente(1,$codProveedor);
           $numeroCuentaProv=trim(obtieneNumeroCuenta($cuentaProv));
           $inicioNumeroProv=$numeroCuentaProv[0];
           $unidadareaProv=obtenerUnidadAreaCentrosdeCostos($inicioNumeroProv);
@@ -374,7 +374,7 @@ if($flagSuccess==true){
         //proveedor devengado
           $i++;
           $cuentaProv=obtenerValorConfiguracion(36);
-          $cuentaAuxiliarProv=0;
+          $cuentaAuxiliarProv=obtenerCodigoCuentaAuxiliarProveedorCliente(1,$codProveedor);
           $numeroCuentaProv=trim(obtieneNumeroCuenta($cuentaProv));
           $inicioNumeroProv=$numeroCuentaProv[0];
           $unidadareaProv=obtenerUnidadAreaCentrosdeCostos($inicioNumeroProv);

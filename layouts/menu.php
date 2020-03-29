@@ -554,6 +554,12 @@ if($menuModulo==0){
                     <span class="sidebar-mini"> P </span>
                     <span class="sidebar-normal"> Estados de Cuentas</span>
                   </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=reportesBalanceGeneral">
+                    <span class="sidebar-mini"> BG </span>
+                    <span class="sidebar-normal"> Balance General</span>
+                  </a>
                 </li>                         
               </ul>
             </div>

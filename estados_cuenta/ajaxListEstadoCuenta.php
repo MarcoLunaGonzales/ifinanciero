@@ -24,7 +24,9 @@ $tipo=$_GET['tipo'];
 $tipoProveedorCliente=$_GET['tipo_proveedorcliente'];
 $mes=$_GET['mes'];
 ?>
-<table class="table table-condensed" id="tablePaginatorReport">
+<div class="table-responsive">
+
+<table class="table table-condensed table-striped" id="tablePaginatorReport">
 	<thead>
 	  <tr class="">
 	  	<th class="text-left">Of</th>
@@ -121,8 +123,8 @@ $mes=$_GET['mes'];
 	  	   	<td class="text-center small"><?=$nombreUnidadO;?></td>
 	  	   	<td class="text-center small"><?=$nombreTipoComprobante;?></td>
 	  	   	<td class="text-center small"><?=$numeroComprobante;?></td>
-	  	   	<td class="text-left small"><?=$fechaComprobante;?></td>
-	  	   	<td class="text-left small"><?=$fechaX;?></td>
+	  	   	<td class="text-center small"><?=$fechaComprobante;?></td>
+	  	   	<td class="text-center small"><?=$fechaX;?></td>
 	  	   	<td class="text-left small"><?=$nombreProveedorX;?></td>
 	  	   	<td class="text-left small">
 
@@ -143,7 +145,7 @@ $mes=$_GET['mes'];
 		          <div id="collapse<?=$indice;?>" class="collapse" role="tabpanel" aria-labelledby="heading<?=$indice;?>" data-parent="#accordion<?=$indice;?>" style="">
 		            <div class="card-body">
 		            	<?php
-                  			$sqlDetalleX="SELECT e.fecha, e.monto, (select cd.glosa from comprobantes_detalle cd where cd.codigo=e.cod_comprobantedetalle)as glosa from estados_cuenta e where e.cod_comprobantedetalleorigen=$codCompDetX"; 	                                 
+                  			$sqlDetalleX="SELECT e.fecha, e.monto, (select cd.glosa from comprobantes_detalle cd where cd.codigo=e.cod_comprobantedetalle)as glosa from estados_cuenta e where e.cod_comprobantedetalleorigen=$codigoX"; 	                                 
 	                     	$stmtDetalleX = $dbh->prepare($sqlDetalleX);
 		                    $stmtDetalleX->execute();
 
@@ -162,7 +164,7 @@ $mes=$_GET['mes'];
                                 while ($rowDetalleX = $stmtDetalleX->fetch(PDO::FETCH_BOUND)) {
                                 ?>
                               	<tr>
-                                    <td class="text-left small"><?=$fechaDetalle;?></td>
+                                    <td class="text-center small"><?=$fechaDetalle;?></td>
                                     <td class="text-left small"><?=$glosaDetalle;?></td>
                                     <td class="text-left small"><?=$montoDetalle;?></td>
                               	</tr>
@@ -206,7 +208,7 @@ $mes=$_GET['mes'];
 		              <small>
 		              <a data-toggle="collapse" href="#collapse<?=$indice;?>" aria-expanded="false" aria-controls="collapse<?=$indice;?>" class="collapsed">
 
-				  	   	<?=$glosaX?>
+				  	   	<?=$glosaMostrar?>
 	   	                
 	   	                <i class="material-icons">keyboard_arrow_down</i>
 		              </a>
@@ -269,5 +271,6 @@ $mes=$_GET['mes'];
 	   	</tr>
 	</tbody>
 </table>
+</div>
 <?php
 echo "@".$saldo;

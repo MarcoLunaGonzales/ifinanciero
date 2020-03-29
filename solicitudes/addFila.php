@@ -50,7 +50,7 @@
       	                          </div>
       	                              <div class="col-sm-2">
                                           <div class="form-group">
-                                              <select class="selectpicker form-control form-control-sm" name="proveedor<?=$idFila?>" id="proveedor<?=$idFila?>" required data-style="<?=$comboColor;?>">
+                                              <select class="selectpicker form-control form-control-sm" name="proveedor<?=$idFila?>" data-live-search="true" id="proveedor<?=$idFila?>" required data-style="<?=$comboColor;?>">
                                                   <option disabled selected value="">Proveedor</option>
                                                    <?php
                                                    $stmt = $dbh->prepare("SELECT * FROM af_proveedores order by codigo");

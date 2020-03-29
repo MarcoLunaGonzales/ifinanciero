@@ -5347,7 +5347,7 @@ function agregarEstadoCuenta(){
     var detalle_resp=$('input:radio[name=cuentas_origen_detalle]:checked').val();
     var codComproDet=detalle_resp[0];
     var cuenta_auxiliar=detalle_resp[1];
-    if(codComproDet!=null){
+    if(detalle_resp[0]!=null){
       if(resp[1]=="AUX"){
         var nfila={
           cod_plancuenta:0,
@@ -5407,6 +5407,8 @@ function listarEstadosCuentasDebito(id,saldo){
   var table = $('#tabla_estadocuenta');
    for (var i = 0; i < itemEstadosCuentas[id-1].length; i++) {
      var row = $('<tr>').addClass('bg-white');
+     row.append($('<td>').addClass('text-left').text("-"));
+     row.append($('<td>').addClass('text-left').text("-"));
      row.append($('<td>').addClass('text-left').text("-"));
      row.append($('<td>').addClass('text-left').text("-"));
 
