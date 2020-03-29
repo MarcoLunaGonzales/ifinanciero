@@ -16,9 +16,9 @@ $fecha=$_POST["fecha"];
 
 $proveedoresString=implode(",", $proveedores);
 
-echo "fecha: ".$fecha."<br>";
-echo $proveedoresString."<br>" ;
-echo $cuenta."<br>" ;
+// echo "fecha: ".$fecha."<br>";
+// echo $proveedoresString."<br>" ;
+// echo $cuenta."<br>" ;
 
 
 $stmtG = $dbh->prepare("SELECT * from gestiones WHERE codigo=:codigo");
@@ -57,7 +57,7 @@ $totalDebito=0;
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-bordered table-condensed" id="tablePaginatorFixed">
+                            <table class="table table-bordered table-condensed" id="tablePaginatorFixedEstadoCuentas">
                                 <thead>
                                     <tr class="">
                                         <th class="text-left">Of</th>
