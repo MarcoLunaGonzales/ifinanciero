@@ -29,7 +29,7 @@ $statement = $dbh->query($query);
             <label class="col-sm-2 col-form-label">Gestion</label>
             <div class="col-sm-7">
               <div class="form-group">
-                <select name="gestion" id="gestion" class="selectpicker " data-style="btn btn-info"
+                <select name="gestion" id="gestion" class="selectpicker form-control" data-style="btn btn-info"
                     required>
                     <?php
                       $sql="SELECT * FROM gestiones order by 2 desc";
@@ -52,7 +52,7 @@ $statement = $dbh->query($query);
             <label class="col-sm-2 col-form-label">Cuenta</label>
             <div class="col-sm-7">
             <div class="form-group">
-                <select name="cuenta" id="cuenta" class="selectpicker " data-style="btn btn-info">
+                <select name="cuenta[]" id="cuenta" class="selectpicker form-control"  data-style="select-with-transition" data-size="5"  data-actions-box="true" multiple required>
         					<?php
                       $sql="SELECT p.codigo,p.nombre from configuracion_estadocuentas c,plan_cuentas p where c.cod_plancuenta=p.codigo";
                       $stmtg = $dbh->prepare($sql);

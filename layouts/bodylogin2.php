@@ -1169,7 +1169,7 @@
                 ]
               });
 
-    var table_afxEC=$('#tablePaginatorFixedEstadoCuentas').DataTable({
+    var table_afx=$('#tablePaginatorFixedEstadoCuentas').DataTable({
                 "paging":   false,
                   "info":     false,
                   "language": {
@@ -1250,6 +1250,7 @@
                   }
                 ]
               });
+    
       
      
       

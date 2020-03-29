@@ -15,6 +15,7 @@ $proveedores=$_POST["proveedores"];
 $fecha=$_POST["fecha"];
 
 $proveedoresString=implode(",", $proveedores);
+$StringCuenta=implode(",", $cuenta);
 
 // echo "fecha: ".$fecha."<br>";
 // echo $proveedoresString."<br>" ;
@@ -27,7 +28,7 @@ $stmtG->execute();
 $resultG = $stmtG->fetch();
 $NombreGestion = $resultG['nombre'];
 
-$sql="SELECT e.*,d.glosa,d.haber,d.debe,(select concat(c.cod_tipocomprobante,'|',c.numero,'|',cd.cod_unidadorganizacional,'|',MONTH(c.fecha),'|',c.fecha) from comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle)as extra FROM estados_cuenta e,comprobantes_detalle d where e.cod_comprobantedetalle=d.codigo and (d.cod_cuenta=$cuenta or e.cod_cuentaaux=$cuenta) and e.cod_comprobantedetalleorigen=0 and YEAR(e.fecha)= '$NombreGestion' and cod_proveedor in ($proveedoresString) and e.fecha<='$fecha' order by e.fecha";
+$sql="SELECT e.*,d.glosa,d.haber,d.debe,(select concat(c.cod_tipocomprobante,'|',c.numero,'|',cd.cod_unidadorganizacional,'|',MONTH(c.fecha),'|',c.fecha) from comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle)as extra FROM estados_cuenta e,comprobantes_detalle d, comprobantes cc where e.cod_comprobantedetalle=d.codigo and cc.codigo=d.cod_comprobante and (d.cod_cuenta in ($StringCuenta) or e.cod_cuentaaux in ($StringCuenta)) and e.cod_comprobantedetalleorigen=0 and cc.cod_gestion= '$NombreGestion' and cod_proveedor in ($proveedoresString) and e.fecha<='$fecha' order by e.fecha";
 $stmtUO = $dbh->prepare($sql);
 $stmtUO->execute();
 $i=0;$saldo=0;
@@ -42,9 +43,9 @@ $totalDebito=0;
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header <?=$colorCard;?> card-header-icon">
-                      <div class="float-right col-sm-2">
+                      <!-- <div class="float-right col-sm-2">
                         <h6 class="card-title">Exportar como:</h6>
-                      </div>
+                      </div> -->
                       <h4 class="card-title"> 
                         <img  class="card-img-top"  src="../marca.png" style="width:100%; max-width:250px;">
                           Estados de Cuentas
@@ -147,7 +148,7 @@ $totalDebito=0;
                                         // $stmt2->bindColumn('activo', $activo);
                                         ?>                            
                                             <tr class="bg-white det-estados">
-                                                <td class="text-center small"><?=$nombreUnidadO;?></td>
+                                                <td class="text-left small"><?=$nombreUnidadO;?></td>
                                                 <td class="text-center small"><?=$nombreTipoComprobante;?></td>
                                                 <td class="text-center small"><?=$numeroComprobante;?></td>
                                                 <td class="text-left small"><?=$fechaComprobante;?></td>
@@ -187,25 +188,14 @@ $totalDebito=0;
                                                 $nombreUnidadO_d=abrevUnidad_solo($codUnidadOrganizacional_d);
 
                                                 $fechaComprobante_d=strftime('%d/%m/%Y',strtotime($fechaComprobante_d));
-                                                //SACAMOS CUANTO SE PAGO DEL ESTADO DE CUENTA.
-                                                // $sqlContra_d="SELECT sum(monto)as monto from estados_cuenta e where e.cod_comprobantedetalleorigen='$codigoX_d'";
-                                                // $stmtContra_d = $dbh->prepare($sqlContra_d);
-                                                // $stmtContra_d->execute();
-                                                // // $montoContra_d=0;
-                                                // // while ($rowContra = $stmtContra_d->fetch(PDO::FETCH_ASSOC)) {
-                                                // //   $montoContra_d=$rowContra['monto'];
-                                                // // }
-                                                // $debeX_d=$montoContra_d;
-                                                //FIN SACAR LOS PAGOS
-                                                
                                                  $saldo=$saldo-$montoX_d;
                                                  $totalDebito=$totalDebito+$montoX_d;
                                                  $nombreProveedorX_d=nameProveedor($codProveedor_d);
                                                  
 
                                             ?>
-                                            <tr class="bg-white det-estados">
-                                                <td class="text-center small"><?=$nombreUnidadO_d;?></td>
+                                            <tr  style="background-color:#c5d9dc;">
+                                                <td class="text-left small">&nbsp;&nbsp;&nbsp;&nbsp;<?=$nombreUnidadO_d;?></td>
                                                 <td class="text-center small"><?=$nombreTipoComprobante_d;?></td>
                                                 <td class="text-center small"><?=$numeroComprobante_d;?></td>
                                                 <td class="text-left small"><?=$fechaComprobante_d;?></td>
