@@ -153,18 +153,34 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
 						</table>
 					</div>		
 				  	<div class="card-footer fixed-bottom">
-						<a href="../<?=$urlList;?>" class="btn btn-danger">Volver</a>
+						
 						<?php 
-                        if(isset($_GET['admin'])){
+					if(isset($_GET['q'])){
+	                 $q=$_GET['q'];
+	                 ?><a href="../<?=$urlList;?>&q=<?=$q?>" class="btn btn-danger">Volver</a><?php
+	                 if(isset($_GET['admin'])){
                           if($codEstadoX==4){
-                          	?><a href="../<?=$urlEdit2?>?cod=<?=$codigo?>&estado=3" class="btn btn-success">Aprobar Solicitud</a>
+                          	?><a href="../<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&q=<?=$q?>" class="btn btn-success">Verificar Solicitud</a>
+                            <a href="../<?=$urlEdit2?>?cod=<?=$codigo?>&estado=2&q=<?=$q?>" class="btn btn-danger">Anular Solicitud</a>
+                            <a href="../<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1&q=<?=$q?>" class="btn btn-default">Rechazar Solicitud</a> 
+                           <?php
+                          }else{
+                            ?><a href="../<?=$urlEdit2?>?cod=<?=$codigo?>&estado=2&q=<?=$q?>" class="btn btn-info">Deshacer Cambios</a><?php
+                          }	
+                        }
+	                }else{
+	                	?><a href="../<?=$urlList;?>" class="btn btn-danger">Volver</a><?php
+	                  if(isset($_GET['admin'])){
+                          if($codEstadoX==4){
+                          	?><a href="../<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&q=<?=$q?>" class="btn btn-success">Verificar Solicitud</a>
                             <a href="../<?=$urlEdit2?>?cod=<?=$codigo?>&estado=2" class="btn btn-danger">Anular Solicitud</a>
                             <a href="../<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1" class="btn btn-default">Rechazar Solicitud</a> 
                            <?php
                           }else{
                             ?><a href="../<?=$urlEdit2?>?cod=<?=$codigo?>&estado=2" class="btn btn-info">Deshacer Cambios</a><?php
                           }	
-                        }
+                        }	 
+	                }	   
 						?>
 				  	</div>
 				 </div>

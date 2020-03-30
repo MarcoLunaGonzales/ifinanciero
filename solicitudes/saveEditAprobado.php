@@ -423,10 +423,22 @@ if($flagSuccess==true){
        $stmtUpdateSolicitud = $dbh->prepare($sqlUpdateSolicitud);
        $stmtUpdateSolicitud->execute();
     }
-       
-	showAlertSuccessError(true,"../".$urlList2);	
+   
+  if(isset($_POST['usuario_ibnored'])){
+    $q=$_POST['usuario_ibnored'];
+    showAlertSuccessError(true,"../".$urlList2."&q=".$q);  
+  }else{
+  showAlertSuccessError(true,"../".$urlList2); 
+   }     
+	
 }else{
-	showAlertSuccessError(false,"../".$urlList2);
+  if(isset($_POST['usuario_ibnored'])){
+    $q=$_POST['usuario_ibnored'];
+   showAlertSuccessError(false,"../".$urlList2."&q=".$q);
+  }else{
+  showAlertSuccessError(false,"../".$urlList2);
+   } 
+	
 }
 
 ?>
