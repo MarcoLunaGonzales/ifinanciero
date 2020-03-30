@@ -11,6 +11,7 @@ $dbh = new Conexion();
 $query = "select * from depreciaciones";
 $statement = $dbh->query($query);
 
+$gestionGlobal=$_SESSION['globalGestion'];
 ?>
 
 <div class="content">
@@ -25,6 +26,30 @@ $statement = $dbh->query($query);
 				</div>
 			  </div>
 			  <div class="card-body ">
+          <div class="row">
+            <label class="col-sm-2 col-form-label">Gestion</label>
+            <div class="col-sm-7">
+              <div class="form-group">
+                <select name="gestion" id="gestion" class="selectpicker " data-style="btn btn-info"
+                    required>
+                    <?php
+                      $sql="SELECT * FROM gestiones order by 2 desc";
+                      $stmtg = $dbh->prepare($sql);
+                      $stmtg->execute();
+                      while ($rowg = $stmtg->fetch(PDO::FETCH_ASSOC)) {
+                        $codigog=$rowg['codigo'];
+                        $nombreg=$rowg['nombre'];
+                        if($codigog!=$gestionGlobal){
+                          ?>
+                      <option value="<?=$codigog;?>"><?=$nombreg;?></option>
+                      <?php 
+                        }     
+                      }
+                    ?>
+                </select>
+              </div>
+            </div>
+          </div><!--fin campo gestion -->
           <div class="row">
             <label class="col-sm-2 col-form-label">Oficina</label>
             <div class="col-sm-7">
