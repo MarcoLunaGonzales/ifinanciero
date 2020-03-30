@@ -582,7 +582,12 @@ if($menuModulo==0){
                     <span class="sidebar-normal"> Cambiar Gestion de Trabajo </span>
                   </a>
                 </li>
-                
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listUnidadOrganizacional">
+                    <span class="sidebar-mini"> CU </span>
+                    <span class="sidebar-normal"> Cambiar Unidad Organizacional </span>
+                  </a>
+                </li>
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listNotificacionesSistema">
                     <span class="sidebar-mini"> NT </span>
