@@ -25,4 +25,6 @@ $urlSaveDelete="";
 
 $urlReporteDiario="reportes/reporteDiario.php";
 $urlReporteMayor="reportes/reporteMayor.php";
+
+$rptEstadoCuentasprocesar="reportes/reportesEstadoCuentasPrint.php"
 ?>

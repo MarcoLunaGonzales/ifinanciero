@@ -2943,10 +2943,7 @@ function mayorReporteComprobante(fila){
     }
    }
     ajax.send(null);
-  }else{
-    $("#lista_tipo").html("");
   }
-
  }
 
 function listarTipoSolicitudAjaxPropuesta(tipo,id){
@@ -5347,7 +5344,7 @@ function agregarEstadoCuenta(){
   }else{
     var resp = $("#cuentas_origen").val().split('###');
     var cuenta = resp[0];
-    var detalle_resp=$('input:radio[name=cuentas_origen_detalle]:checked').val().split('####');
+    var detalle_resp=$('input:radio[name=cuentas_origen_detalle]:checked').val();
     var codComproDet=detalle_resp[0];
     var cuenta_auxiliar=detalle_resp[1];
     if(detalle_resp[0]!=null){
@@ -7781,6 +7778,7 @@ function agregarEstadoCuenta_cajachica(){
     var cod_proveedorCompr=detalle_resp[2].trim();
     var saldo_comprob=detalle_resp[3].trim();
     var nombre_proveedor_com=detalle_resp[4].trim();
+    var cod_estado_cuenta=detalle_resp[5].trim();
     // alert("saldo:"+saldo_comprob);
 
     if(codComproDet!=null){
@@ -7791,7 +7789,8 @@ function agregarEstadoCuenta_cajachica(){
         cod_comprobantedetalle:codComproDet,
         cod_proveedor:0,//$("#proveedores").val(),
         monto:$("#monto_estadocuenta").val(),
-        nombre_proveedor:nombre_proveedor_com
+        nombre_proveedor:nombre_proveedor_com,
+        cod_estado_cuenta:cod_estado_cuenta
         }
       }else{
         var nfila={
@@ -7800,13 +7799,14 @@ function agregarEstadoCuenta_cajachica(){
         cod_comprobantedetalle:codComproDet,
         cod_proveedor:0,//$("#proveedores").val(),
         monto:$("#monto_estadocuenta").val(),//monto de caja chica a descontar
-        nombre_proveedor:nombre_proveedor_com
+        nombre_proveedor:nombre_proveedor_com,
+        cod_estado_cuenta:cod_estado_cuenta
         }        
       }
     itemEstadosCuentas_cc[fila-1]=[];
     itemEstadosCuentas_cc[fila-1].push(nfila);
     $("#nestado"+fila).addClass("estado");
-    document.getElementById('comprobante').value=codComproDet;
+    document.getElementById('comprobante').value=cod_estado_cuenta;
     ajaxCajaCPersonalUO_cuentapasiva(codComproDet,cod_proveedorCompr);//ponemos oficina  en el formulario,luego area y provee
 
     verEstadosCuentas_cajachica(fila,cuenta,saldo_comprob);
