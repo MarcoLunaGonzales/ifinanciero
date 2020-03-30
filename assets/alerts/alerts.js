@@ -152,7 +152,26 @@ alerts = {
           location.href=url;
       });
     }
-    
+    else if (type == 'warning-message-change-user') {
+      swal({
+        title: '¿Estás Seguro?',
+        text: "¡Cambiaras la sesión del usuario!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonClass: 'btn btn-success',
+        cancelButtonClass: 'btn btn-danger',
+        confirmButtonText: 'Si, Cambiar!',
+        cancelButtonText: 'No, Cancelar!',
+        buttonsStyling: false
+      }).then((result) => {
+          if (result.value) {
+            location.href=url; 
+            return(true);
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            return(false);
+          }
+        })
+    } 
 
 
   },
@@ -161,3 +180,4 @@ alerts = {
 
 
 }
+

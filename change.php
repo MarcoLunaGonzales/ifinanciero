@@ -1,4 +1,69 @@
-<!DOCTYPE html>
+<?php
+session_start();
+require_once 'conexion.php';
+require_once 'functions.php';
+
+$q=$_GET['q'];
+$dbh = new Conexion();
+    $sql="SELECT p.codigo,CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre)as nombre, p.cod_area, p.cod_unidadorganizacional, pd.perfil, pd.usuario_pon 
+      from personal p, personal_datosadicionales pd 
+      where p.codigo=pd.cod_personal and p.codigo='$q'";
+//echo $sql;
+$stmt = $dbh->prepare($sql);
+$stmt->execute();
+$stmt->bindColumn('codigo', $codigo);
+$stmt->bindColumn('nombre', $nombre);
+$stmt->bindColumn('cod_area', $codArea);
+$stmt->bindColumn('cod_unidadorganizacional', $codUnidad);
+$stmt->bindColumn('perfil', $perfil);
+$loginU=0;
+while ($rowDetalle = $stmt->fetch(PDO::FETCH_BOUND)) {
+  $nombreUnidad=abrevUnidad($codUnidad);
+  $nombreArea=abrevArea($codArea);
+  //SACAMOS LA GESTION ACTIVA
+  $sqlGestion="SELECT cod_gestion FROM gestiones_datosadicionales where cod_estado=1";
+  $stmtGestion = $dbh->prepare($sqlGestion);
+  $stmtGestion->execute();
+  while ($rowGestion = $stmtGestion->fetch(PDO::FETCH_ASSOC)) {
+    $codGestionActiva=$rowGestion['cod_gestion'];
+
+    $sql1="SELECT cod_mes from meses_trabajo where cod_gestion='$codGestionActiva' and cod_estadomesestrabajo=3";
+        $stmt1 = $dbh->prepare($sql1);
+        $stmt1->execute();
+        while ($row1= $stmt1->fetch(PDO::FETCH_ASSOC)) {
+          $codMesActiva=$row1['cod_mes'];
+        }
+  }
+  $nombreGestion=nameGestion($codGestionActiva);
+
+  $_SESSION['globalUser']=$codigo;
+  $_SESSION['globalNameUser']=$nombre;
+  $_SESSION['globalGestion']=$codGestionActiva;
+  $_SESSION['globalMes']=$codMesActiva;
+  $_SESSION['globalNombreGestion']=$nombreGestion;
+
+
+  $_SESSION['globalUnidad']=$codUnidad;
+  $_SESSION['globalNombreUnidad']=$nombreUnidad;
+
+  $_SESSION['globalArea']=$codArea;
+  $_SESSION['globalNombreArea']=$nombreArea;
+  $_SESSION['logueado']=1;
+  $_SESSION['globalPerfil']=$perfil;
+
+  if($codigo==90 || $codigo==89 || $codigo==227 || $codigo==195){
+    $_SESSION['globalAdmin']=1;     
+  }else{
+    $_SESSION['globalAdmin']=0; 
+  }
+  
+  $_SESSION['globalServerArchivos']="http://ibnored.ibnorca.org/itranet/documentos/";
+  $_SESSION['modulo']=4;
+
+
+ $host= $_SERVER["HTTP_HOST"];
+  ?>
+   <!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -17,65 +82,65 @@
   <link href="assets/css/material-dashboard.css?v=2.1.0" rel="stylesheet" />
   <!-- CSS Just for demo purpose, don't include it in your project -->
   <link href="assets/demo/demo.css" rel="stylesheet" />
-  <link href="assets/css/style.css" rel="stylesheet" />
 </head>
 
 <body class="off-canvas-sidebar">
   <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top text-white">
     <div class="container">
-      <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="navbar-toggler-icon icon-bar"></span>
-        <span class="navbar-toggler-icon icon-bar"></span>
-        <span class="navbar-toggler-icon icon-bar"></span>
-      </button>
-      
+      <div class="navbar-wrapper">
+        <a class="navbar-brand" href="#pablo">Se cambio la sesión</a>
+      </div>
     </div>
   </nav>
   <!-- End Navbar -->
   <div class="wrapper wrapper-full-page">
-    <div class="page-header login-page header-filter" filter-color="black" style="background-image: url('assets/img/fondolpz.jpg'); background-size: cover; background-position: top center;">
-      <!--   you can change the color of the filter page using: data-color="blue | purple | green | orange | red | rose " -->
+    <div class="page-header lock-page header-filter" style="background-image: url('assets/img/lock.jpg')">
+      <!--   you can change the color of the filter page using: data-color="blue | green | orange | red | purple" -->
       <div class="container">
         <div class="row">
-          <div class="col-lg-4 col-md-6 col-sm-8 ml-auto mr-auto">
-            <form class="form" method="post" action="session.php">
-              <div class="card card-login card-hidden">
-                <div class="card-header card-header-primary text-center">
-                  <h4 class="card-title">Login</h4>
-                </div>
-                <div class="card-body ">
-                  <p class="card-description text-center">Sistema Adm&Fin - IBNORCA</p>
-                  <span class="bmd-form-group">
-                    <div class="input-group">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text">
-                          <i class="material-icons">face</i>
-                        </span>
-                      </div>
-                      <input type="text" name="user" class="form-control" placeholder="Nombre de Usuario..." aria-required="true" required="true">
-                    </div>
-                  </span>
-                  <span class="bmd-form-group">
-                    <div class="input-group">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text">
-                          <i class="material-icons">lock_outline</i>
-                        </span>
-                      </div>
-                      <input type="password" name="password" class="form-control" placeholder="Password..." aria-required="true" required="true">
-                    </div>
-                  </span>
-                </div>
-                <div class="card-footer justify-content-center">
-                  <button class="btn btn-fill btn-primary" type="submit">Ingresar</button>
+          <div class="col-md-4 ml-auto mr-auto">
+            <div class="card card-profile text-center card-hidden">
+              <div class="card-header ">
+                <div class="card-avatar">
+                  <a href="#pablo">
+                    <img class="img" src="assets/img/faces/persona1.png">
+                  </a>
                 </div>
               </div>
-            </form>
+              <div class="card-body ">
+                <h4 class="card-title"><?=$nombre?></h4>
+                <div class="form-group">
+                  <label for="exampleInput1" class="bmd-label-floating">Oficina - Area</label>
+                  <input type="text" readonly class="form-control" id="exampleInput1" value="<?=$nombreUnidad?> <?=$nombreArea?>">
+                </div>
+              </div>
+              <?php
+              if(isset($_GET['url'])){
+                  $url= $_GET['url'];
+                  $irURL="index.php?opcion=".$url."&q=".$q;
+                  //header("location:".$url."&q=".$q); 
+                  ?>
+                    <div class="card-footer justify-content-center">
+                     <a href="<?=$irURL?>" class="btn btn-warning btn-round">Sesión Cambiada / Ir al link</a>
+                   </div>
+                  <?php
+                }else{
+                  ?>
+                  <div class="card-footer justify-content-center">
+                   <a href="#" class="btn btn-rose btn-round">Sesión Cambiada</a>
+                 </div>
+                  <?php
+                }?>
+              
+            </div>
           </div>
         </div>
       </div>
+      <footer class="footer">
+        <div class="container">
+        </div>
+      </footer>
     </div>
   </div>
   <!--   Core JS Files   -->
@@ -84,7 +149,7 @@
   <script src="assets/js/core/bootstrap-material-design.min.js"></script>
   <script src="assets/js/plugins/perfect-scrollbar.jquery.min.js"></script>
   <!--  Google Maps Plugin    -->
-  <!--script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script-->
+  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
   <!-- Chartist JS -->
   <script src="assets/js/plugins/chartist.min.js"></script>
   <!--  Notifications Plugin    -->
@@ -275,4 +340,11 @@
   </script>
 </body>
 
-</html>
+</html> 
+<?php
+$loginU=1;
+}
+ 
+if($loginU==0){
+  header("location:error.html");
+} 

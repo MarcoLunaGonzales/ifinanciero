@@ -120,7 +120,7 @@ $stmt1 = obtenerSolicitudesDet($codSolicitud);
 //PARA registro de facturas
 editarComprobanteDetalle($codSolicitud,'cod_solicitudrecurso',$cont1,$fila,$stmt1,'solicitud_recursosdetalle',$cab,$data,$facturas);
 
-if(isset($_POST['usuario_ibnored'])){;
+if(isset($_POST['usuario_ibnored'])){
     $q=$_POST['usuario_ibnored'];
   if($flagSuccess==true){
     showAlertSuccessError(true,"../".$urlList."&q=".$q); 

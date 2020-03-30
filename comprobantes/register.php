@@ -25,7 +25,7 @@ $globalUnidad=$_SESSION["globalUnidad"];
 $globalNombreUnidad=$_SESSION['globalNombreUnidad'];
 $globalArea=$_SESSION["globalArea"];
 $globalAdmin=$_SESSION["globalAdmin"];
-
+$codMesActiva=$_SESSION['globalMes'];
 $contadorRegistros=0;
 ?>
 <script>
@@ -117,8 +117,28 @@ $contadorRegistros=0;
 			 }
 		    ?>
 <?php
-$fechaActual=date("Y-m-d");
-$fechaActualModal=date("d/m/Y");
+$anioActual=date("Y");
+$mesActual=date("m");
+$diaActual=date("d");
+
+$month = $globalNombreGestion."-".$codMesActiva;
+$aux = date('Y-m-d', strtotime("{$month} + 1 month"));
+$diaUltimo = date('d', strtotime("{$aux} - 1 day"));
+
+if((int)$globalNombreGestion<(int)$anioActual){
+  $fechaActual=$globalNombreGestion."-".$codMesActiva."-23";
+  $fechaActualModal=$diaUltimo."/".$codMesActiva."/".$globalNombreGestion;
+}else{
+	if((int)$mesActual==(int)$codMesActiva){
+      $fechaActual=date("Y-m-d");
+      $fechaActualModal=date("d/m/Y");
+	}else{
+	  $fechaActual=$globalNombreGestion."-".$codMesActiva."-23";
+      $fechaActualModal=$diaUltimo."/".$codMesActiva."/".$globalNombreGestion;     
+	}	
+}
+
+
 $dbh = new Conexion();
 
 // Preparamos
@@ -180,7 +200,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
 						<div class="col-sm-2">
 							<div class="form-group">
 						  		<label class="bmd-label-static">Fecha</label>
-						  		<input class="form-control" type="date" name="fecha" value="<?=$fechaActual;?>" id="fecha" readonly="true"/>
+						  		<input class="form-control datepicker" type="text" name="fecha" value="<?=$fechaActualModal?>" id="fecha" required/>
 							</div>
 						</div>
 
