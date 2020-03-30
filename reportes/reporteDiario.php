@@ -24,8 +24,9 @@ $nombreUnidad=nameUnidad($unidad);
 $tipo=$_POST["tipo_comprobante"];
 $porcionesFechaDesde = explode("/", $_POST["fecha_desde"]);
 $porcionesFechaHasta = explode("/", $_POST["fecha_hasta"]);
-$desde=$porcionesFechaDesde[2]."-".$porcionesFechaDesde[1]."-".$porcionesFechaDesde[0];
-$hasta=$porcionesFechaHasta[2]."-".$porcionesFechaHasta[1]."-".$porcionesFechaHasta[0];
+$desde=$porcionesFechaDesde[0]."-".$porcionesFechaDesde[1]."-".$porcionesFechaDesde[2];
+$hasta=$porcionesFechaHasta[0]."-".$porcionesFechaHasta[1]."-".$porcionesFechaHasta[2];
+
 //$desde=strftime('%Y-%m-%d',strtotime($_POST["fecha_desde"]));
 //$hasta=strftime('%Y-%m-%d',strtotime($_POST["fecha_hasta"]));
 $moneda=$_POST["moneda"];

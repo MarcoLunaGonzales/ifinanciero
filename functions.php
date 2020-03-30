@@ -4674,7 +4674,8 @@ function obtenerComprobantesDetCuenta($codigo,$cuenta){
    return($valor);
 }
 
- function listaSumaMontosDebeHaberComprobantesDetalle($fechaFinal,$tipoBusqueda,$arrayUnidades,$arrayAreas,$padre,$gestion){
+ function listaSumaMontosDebeHaberComprobantesDetalle($fechaFinal,$tipoBusqueda,$arrayUnidades,$arrayAreas,$padre,$gestion)
+ {
    $dbh = new Conexion();
    $sql="";
    $sqlAreas="";
@@ -4682,8 +4683,8 @@ function obtenerComprobantesDetCuenta($codigo,$cuenta){
 
   //formateando fecha
   $fechaFinalMod=explode("/", $fechaFinal);
-  $fa=$gestion."-".$fechaFinalMod[1]."-".$fechaFinalMod[0];
-  $fi=$gestion."-01-01";
+  $fa=$fechaFinalMod[2]."-".$fechaFinalMod[1]."-".$fechaFinalMod[0];
+  $fi=$fechaFinalMod[2]."-01-01";
 
    for ($i=0; $i < count($arrayAreas); $i++) {
       if($i==0){

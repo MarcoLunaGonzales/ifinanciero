@@ -8259,3 +8259,84 @@ function filaTablaUnidadEntidad(tabla){
   tabla.html(html);
   $("#modalUnidadesEntidad").modal("show");
 }
+
+//reportes
+function ajax_entidad_Oficina(combo){
+  var contenedor;
+  var codigo_entidad=combo.value;
+  contenedor = document.getElementById('div_contenedor_oficina1');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'reportes/entidadesOFAjax.php?codigo_entidad='+codigo_entidad,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);
+      
+      ajaxEntidadOficina2(codigo_entidad);
+    }
+  }
+  ajax.send(null)  
+}
+
+function ajaxEntidadOficina2(codigo_entidad){
+  // var cod_uo=$("#cod_unidadorganizacional").val();  
+  // alert(cod_uo);
+
+  var contenedor; 
+  contenedor = document.getElementById('div_contenedor_oficina_costo');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'reportes/entidadesOFAjax2.php?codigo_entidad='+codigo_entidad,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);
+    }
+  }
+  ajax.send(null)
+  
+}
+function AjaxGestionFechaDesde(combo){
+  var contenedor;
+  var cod_gestion=combo.value;
+  contenedor= document.getElementById('div_contenedor_fechaI');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'reportes/GestionDesdeAjax.php?cod_gestion='+cod_gestion,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      AjaxGestionFechaHasta(cod_gestion);
+    }
+  }
+  ajax.send(null)  
+
+}
+function AjaxGestionFechaHasta(cod_gestion){
+  // var cod_uo=$("#cod_unidadorganizacional").val();  
+  // alert(cod_uo);
+
+  var contenedor; 
+  contenedor = document.getElementById('div_contenedor_fechaH');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'reportes/GestionhastaAjax.php?cod_gestion='+cod_gestion,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;      
+    }
+  }
+  ajax.send(null)
+  
+}
+function AjaxGestionFechaDesdeBG(combo){
+  var contenedor;
+  var cod_gestion=combo.value;
+  contenedor= document.getElementById('div_contenedor_fechaH');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'reportes/GestionHastaAjax_Balance.php?cod_gestion='+cod_gestion,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;      
+    }
+  }
+  ajax.send(null)  
+
+}

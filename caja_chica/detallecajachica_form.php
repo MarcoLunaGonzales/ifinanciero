@@ -167,8 +167,6 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
                     <div class="form-group">
                         
                         <input class="form-control" name="fecha" id="fecha" type="date" min="<?=$fecha_dias_atras?>" max="<?=$fecha?>" required="true" value="<?=$fecha?>" />
-                        </select>
-                       
                     </div>
                 </div>
             </div><!-- monto y fecha -->
