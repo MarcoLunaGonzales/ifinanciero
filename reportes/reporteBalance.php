@@ -111,7 +111,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
             while ($row = $stmt4->fetch(PDO::FETCH_BOUND)) {
                $sumaNivel4=0;$html4="";           
               //listar los montos
-              $detallesReporte=listaSumaMontosDebeHaberComprobantesDetalle($fecha,1,$unidades,$areas,$codigo_4,$gestion);                   
+              $detallesReporte=listaSumaMontosDebeHaberComprobantesDetalle($fecha,1,$unidades,$areas,$codigo_3,$gestion);                   
                while ($rowComp = $detallesReporte->fetch(PDO::FETCH_ASSOC)) {
                    $numeroX=$rowComp['numero'];
                    $nombreX=formateaPlanCuenta($rowComp['nombre'], $rowComp['nivel']);
