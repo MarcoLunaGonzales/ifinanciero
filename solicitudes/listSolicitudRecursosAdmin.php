@@ -5,7 +5,9 @@ require_once 'styles.php';
 $globalAdmin=$_SESSION["globalAdmin"];
 
 $dbh = new Conexion();
-
+if(isset($_GET['q'])){
+  $q=$_GET['q'];
+}
 // Preparamos
 $stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo where sr.cod_estadoreferencial=1 and sr.cod_estadosolicitudrecurso!=1 order by sr.codigo");
 // Ejecutamos
@@ -126,7 +128,32 @@ $stmt->bindColumn('numero', $numeroSol);
                                 <i class="material-icons">list</i> <?=$estado;?>
                               </button>
                               <div class="dropdown-menu">
-                                <a href="<?=$urlVer;?>?cod=<?=$codigo;?>&admin=0" class="dropdown-item">
+                                <?php
+                              if(isset($_GET['q'])){
+                                ?><a href="<?=$urlVer;?>?cod=<?=$codigo;?>&admin=0&q=<?=$q?>" class="dropdown-item">
+                                    <i class="material-icons text-info">bar_chart</i> Ver Solicitud
+                                 </a>
+                              
+                                <?php 
+                                if($codEstado==4){
+                                 ?>
+                                 <a href="<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&q=<?=$q?>" class="dropdown-item">
+                                    <i class="material-icons text-success">offline_pin</i> Verificar Solicitud
+                                 </a>
+                                 <a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1&q=<?=$q?>" class="dropdown-item">
+                                    <i class="material-icons text-dark">report</i> Rechazar Solicitud
+                                 </a>
+                                 <a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=2&q=<?=$q?>" class="dropdown-item">
+                                    <i class="material-icons text-danger">clear</i> Anular Solicitud
+                                 </a><?php 
+                                }else{
+                                ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=4&q=<?=$q?>" class="dropdown-item">
+                                    <i class="material-icons text-dark">reply</i> Deshacer Cambios
+                                 </a>
+                                 <?php 
+                                }
+                              }else{
+                                ?><a href="<?=$urlVer;?>?cod=<?=$codigo;?>&admin=0" class="dropdown-item">
                                     <i class="material-icons text-info">bar_chart</i> Ver Solicitud
                                  </a>
                               
@@ -151,7 +178,10 @@ $stmt->bindColumn('numero', $numeroSol);
                                  </a>
                                  <?php 
                                 }
-                                ?>
+                                
+                              }
+                                 ?>
+                                
                               </div>
                              </div>
                           </td> 
@@ -164,9 +194,9 @@ $stmt->bindColumn('numero', $numeroSol);
                     </table>
                 </div>
               </div>
-              <div class="card-footer fixed-bottom">
+              <!--<div class="card-footer fixed-bottom">
                 <a href="#" onclick="javascript:window.open('<?=$urlRegister2;?>')" class="<?=$buttonNormal;?>">Registrar</a>
-              </div>      
+              </div>  -->    
             </div>
           </div>  
         </div>

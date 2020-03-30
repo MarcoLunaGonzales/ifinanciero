@@ -10,7 +10,9 @@ require_once 'configModule.php';
 
 setlocale(LC_TIME, "Spanish");
 $dbh = new Conexion();
-
+if(isset($_GET['q'])){
+  $q=$_GET['q'];
+}
 $sqlX="SET NAMES 'utf8'";
 $stmtX = $dbh->prepare($sqlX);
 $stmtX->execute();
@@ -82,7 +84,11 @@ if(isset($_GET['cod'])){
       <input type="hidden" name="cantidad_filas" id="cantidad_filas" value="<?=$contadorRegistros;?>">
       <input type="hidden" name="cod_solicitud" id="cod_solicitud" value="<?=$codigo?>">
       <input type="hidden" name="cod_configuracioniva" id="cod_configuracioniva" value="<?=obtenerValorConfiguracion(35)?>">
-
+      <?php 
+      if(isset($_GET['q'])){
+        ?><input type="hidden" name="usuario_ibnored" id="usuario_ibnored" value="<?=$q;?>"><?php
+      }
+      ?>
       <div class="card">
         <div class="card-header <?=$colorCard;?> card-header-text">
           <div class="card-text">
@@ -298,8 +304,20 @@ if(isset($_GET['cod'])){
             
           </fieldset>
             <div class="card-footer fixed-bottom">
-               <button type="submit" class="btn btn-success">Aprobar la Solicitud</button>
-               <a href="../<?=$urlList;?>" class="<?=$buttonCancel;?>">Volver</a>
+              <button type="submit" class="btn btn-success">Aprobar la Solicitud</button>
+              <?php 
+               if(isset($_GET['q'])){
+                ?>
+                 
+               <a href="../<?=$urlList2;?>&q=<?=$q?>" class="<?=$buttonCancel;?>">Volver</a> 
+                <?php
+               }else{
+                ?>
+               <a href="../<?=$urlList2;?>" class="<?=$buttonCancel;?>">Volver</a> 
+                <?php
+               }
+              ?>
+               
                <a href="#" onclick="cargarDatosRegistroProveedor()" class="btn btn-warning float-right">Agregar Proveedor</a>
                <a href="#" onclick="actualizarRegistroProveedor()" class="btn btn-success float-right">Actualizar Proveedores</a>
             </div>

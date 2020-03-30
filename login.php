@@ -21,6 +21,13 @@
 </head>
 
 <body class="off-canvas-sidebar">
+  <?php 
+if(isset($_GET['q'])){
+  $q=$_GET['q'];
+  $url="change.php?q=".$q;
+ ?><a href="<?=$url;?>" class='flotante' title="Cambiar la sesión" ><img src='assets/img/nuevoUser.svg' width="35" height="35" border="0"/></a><?php
+}
+?>
   <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top text-white">
     <div class="container">

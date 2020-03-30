@@ -117,7 +117,7 @@ $dbh = new Conexion();
                       </div>
                       <div id="sitios_div" class="d-none">
                       <div class="row">
-                       <label class="col-sm-2 col-form-label">Sitios</label>
+                       <label class="col-sm-2 col-form-label">Sitios/Productos</label>
                        <div class="col-sm-7">
                         <div class="form-group">
                           <!--<input type="readonly" value="" class="form-control tagsinput" name="sitios" id="sitios" data-role="tagsinput" required data-color="success">-->

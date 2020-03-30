@@ -591,7 +591,7 @@ if($menuModulo==0){
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listUnidadOrganizacional">
                     <span class="sidebar-mini"> CU </span>
-                    <span class="sidebar-normal"> Cambiar Unidad Organizacional </span>
+                    <span class="sidebar-normal"> Cambiar Oficina de Trabajo </span>
                   </a>
                 </li>
                 <li class="nav-item ">
@@ -713,6 +713,12 @@ if($menuModulo==0){
                   </a>
                 </li>
                 <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listSimulacionesServAdmin">
+                    <span class="sidebar-mini"> GSS </span>
+                    <span class="sidebar-normal"> Gesti&oacute;n de Propuestas Servicios TCP - TCS</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listFacturasServicios">
                     <span class="sidebar-mini"> SF </span>
                     <span class="sidebar-normal"> Solicitudes de Facturación TCP - TCS</span>
@@ -724,12 +730,7 @@ if($menuModulo==0){
                     <span class="sidebar-normal"> Facturas Generadas TCP - TCS</span>
                   </a>
                 </li>
-                <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=listSimulacionesServAdmin">
-                    <span class="sidebar-mini"> GSS </span>
-                    <span class="sidebar-normal"> Gesti&oacute;n de Propuestas Servicios TCP - TCS</span>
-                  </a>
-                </li>
+                
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listSolicitudRecursos">
                     <span class="sidebar-mini"> SR </span>

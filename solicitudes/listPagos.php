@@ -11,7 +11,9 @@ $nombreGestion=$_SESSION['globalNombreGestion'];
 $fechaActual=date("Y-m-d");
 setlocale(LC_TIME, "Spanish");
 $dbh = new Conexion();
-
+if(isset($_GET['q'])){
+  $q=$_GET['q'];
+}
 $codSol=$_GET['codigo'];
 // Preparamos
 $lista=listaObligacionesPagoDetalleSolicitudRecursosSolicitud($codSol);
@@ -189,6 +191,7 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
                           <td><?=$area;?></td>
                           <td><?=$numero;?></td>-->
                           <td>
+
                             <input type="hidden" value="<?=$detalle?>" id="glosa_detalle<?=$index?>" name="glosa_detalle<?=$index?>">
                             <input type="hidden" value="<?=$codProveedor?>" id="codigo_proveedor<?=$index?>" name="codigo_proveedor<?=$index?>">
                             <input type="hidden" value="<?=$codSol?>" id="codigo_solicitud<?=$index?>" name="codigo_solicitud<?=$index?>">
@@ -281,24 +284,41 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
                        $("#total_importe").text(<?=number_format($totalImporte,2,".","")?>);
                        $("#total_saldo").text(<?=number_format($saldoX,2,".","")?>);
                     </script>
+               <?php
+              if(isset($_GET['q'])){
+               
+              }else{
+                ?>     
                     <script type="text/javascript">
-        $(document).ready(function(e) {
-           if(!($("body").hasClass("sidebar-mini"))){
-             $("#minimizeSidebar").click()
-           } 
-        });
-    </script>  
+                      $(document).ready(function(e) {
+                         if(!($("body").hasClass("sidebar-mini"))){
+                           $("#minimizeSidebar").click()
+                         } 
+                      });
+                   </script> <?php
+              }  
+                 ?>
                       </tbody>
                     </table>
                   </div>
                   <input type="hidden" value="<?=$index-1?>" id="cantidad_filas" name="cantidad_filas">
+
                 </div>
               </div>
                <?php
               if($globalAdmin==1){
               ?>
               <div class="card-footer fixed-bottom">
-                <button class="<?=$buttonCancel;?>" onClick="location.href='<?=$urlList;?>'">Volver</button>
+               <?php 
+                if(isset($_GET['q'])){
+
+                  ?><input type="hidden" value="<?=$q?>" id="q" name="q">
+                  <a class="<?=$buttonCancel;?>" href="#" onClick="location.href='<?=$urlList;?>&q=<?=$q?>'">Volver</a><?php
+                }else{
+                  ?><a class="<?=$buttonCancel;?>" href="#" onClick="location.href='<?=$urlList;?>'">Volver</a><?php
+                }
+               ?> 
+                
                 <!--<a href="#" onclick="nuevoPagoSolicitudRecursos()" class="btn btn-warning" >Registrar Nuevo Pago</a>-->
                 <a class="<?=$buttonNormal;?>" onclick="historialPagoSolicitudRecursos()"><i class="material-icons text-dark">history</i> Historial de Pagos</a>
                 <button type="submit" class="btn btn-white" style="background:#F7FF5A; color:#07B46D;"><i class="material-icons">attach_money</i> PAGAR</button>

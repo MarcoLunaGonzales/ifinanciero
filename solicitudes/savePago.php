@@ -151,17 +151,21 @@ for ($i=1;$i<=$cantidadFilas;$i++){
 }
 
 
-
-    
-        
-        
-
-
-if($flagSuccess==true){
-	showAlertSuccessError(true,"../".$urlList);	
+if(isset($_POST['q'])){
+  $q=$_POST['q'];
+  if($flagSuccess==true){
+  showAlertSuccessError(true,"../".$urlList."&q=".$q); 
+  }else{
+  showAlertSuccessError(false,"../".$urlList."&q=".$q);
+  }
 }else{
-	showAlertSuccessError(false,"../".$urlList);
+  if($flagSuccess==true){
+  showAlertSuccessError(true,"../".$urlList); 
+  }else{
+  showAlertSuccessError(false,"../".$urlList);
+  }
 }
+
 
 
 ?>

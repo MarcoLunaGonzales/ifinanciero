@@ -4766,7 +4766,6 @@ function nameCuentaAuxiliar($cuentaaux){
    }
    return($nombreX);
 }
-
 ?>
 
 

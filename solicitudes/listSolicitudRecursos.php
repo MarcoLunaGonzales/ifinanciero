@@ -140,7 +140,25 @@ $stmt->bindColumn('numero', $numeroSol);
                               </button>
                               <div class="dropdown-menu">
                                 <?php 
-                                 if($codEstado==4){
+                            if(isset($_GET['q'])){
+                              if($codEstado==4){
+                                 ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1&admin=0&q=<?=$q?>" class="dropdown-item">
+                                    <i class="material-icons text-danger">clear</i> Cancelar solicitud
+                                 </a><?php 
+                                 }else{
+                                   ?>
+                                   <a href="<?=$urlPagos;?>&codigo=<?=$codigo;?>&q=<?=$q?>" class="dropdown-item">
+                                    <i class="material-icons text-success">attach_money</i> PAGOS
+                                   </a>
+                                   <?php 
+                                 }
+                                 ?>
+                                 <a href="<?=$urlVer;?>?cod=<?=$codigo;?>&q=<?=$q?>" class="dropdown-item">
+                                    <i class="material-icons text-danger">bar_chart</i> Ver Solicitud
+                                 </a>
+                             <?php
+                            }else{
+                               if($codEstado==4){
                                  ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1&admin=0" class="dropdown-item">
                                     <i class="material-icons text-danger">clear</i> Cancelar solicitud
                                  </a><?php 
@@ -154,11 +172,30 @@ $stmt->bindColumn('numero', $numeroSol);
                                  ?>
                                  <a href="<?=$urlVer;?>?cod=<?=$codigo;?>" class="dropdown-item">
                                     <i class="material-icons text-danger">bar_chart</i> Ver Solicitud
-                                 </a> 
+                                 </a>
+                             <?php  
+                            }    
+                           ?>       
                               </div>
                             </div>                           
                             <?php    
                               }else{
+                            if(isset($_GET['q'])){
+                              ?>
+                            <a title="Imprimir" href='#' onclick="javascript:window.open('<?=$urlImp;?>?sol=<?=$codigo;?>&mon=1')" class="<?=$buttonEdit;?>">
+                              <i class="material-icons"><?=$iconImp;?></i>
+                            </a>
+                            <a title="Enviar solicitud" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=4&admin=0&q=<?=$q?>'  itle="Enviar Solicitud" class="btn btn-warning">
+                              <i class="material-icons">send</i>
+                            </a> 
+                            <a title="Editar solicitud - detalle" href='<?=$urlRegister;?>?cod=<?=$codigo;?>&q=<?=$q?>'  class="btn btn-info">
+                              <i class="material-icons"><?=$iconEdit;?></i>
+                            </a>
+                            <button title="Eliminar solicitud"  class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>&q=<?=$q?>')">
+                              <i class="material-icons"><?=$iconDelete;?></i>
+                            </button>
+                              <?php  
+                            }else{
                               ?>
                             <a title="Imprimir" href='#' onclick="javascript:window.open('<?=$urlImp;?>?sol=<?=$codigo;?>&mon=1')" class="<?=$buttonEdit;?>">
                               <i class="material-icons"><?=$iconImp;?></i>
@@ -173,7 +210,9 @@ $stmt->bindColumn('numero', $numeroSol);
                               <i class="material-icons"><?=$iconDelete;?></i>
                             </button>
                               <?php  
-                              }
+                            }    
+                              
+                           }
                             ?>
                           </td>
                         </tr>
