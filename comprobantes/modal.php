@@ -453,8 +453,8 @@
 <!--    end small modal -->
 
 <!-- small modal -->
-<div class="modal fade modal-arriba modal-primary" id="modalEstadosCuentas" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-notice" style="max-width: 70% !important;">
+<div class="modal fade modal-primary" id="modalEstadosCuentas" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-notice" style="max-width: 90% !important;">
     <div class="modal-content card">
                 <div class="card-header card-header-danger card-header-text">
                   <div class="card-text">
@@ -501,13 +501,13 @@
                         <label class="col-sm-2 col-form-label">Cuenta Origen</label>
                         <div class="col-sm-4">
                           <div class="form-group">
-                           <select class="selectpicker form-control form-control-sm" onchange="verCuentasAuxiliaresSelect()" name="cuentas_origen" id="cuentas_origen" data-style="<?=$comboColor;?>">
+                           <select class="selectpicker form-control form-control-sm" data-live-search="true" onchange="verCuentasAuxiliaresSelect()" name="cuentas_origen" id="cuentas_origen" data-style="<?=$comboColor;?>">
                              <option disabled selected value="">Seleccione una Cuenta</option>
                              <?php
                               $stmt = $dbh->prepare("SELECT p.* FROM plan_cuentas p, configuracion_estadocuentas c where c.cod_plancuenta=p.codigo and c.cod_tipoestadocuenta=1 and c.tipo=2 and c.cod_cuentaaux=0
                                                    UNION
                                                    SELECT p.* FROM plan_cuentas p, configuracion_estadocuentas c where c.cod_plancuenta=p.codigo and c.cod_tipoestadocuenta=2 and c.tipo=1 and c.cod_cuentaaux=0
-                                                   ORDER BY codigo");
+                                                   ORDER BY nombre");
                               $stmt->execute();
                               while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                 $codigoX=$row['codigo'];
@@ -519,7 +519,7 @@
                                   }
                                   ?>
                                 <?php
-                              $stmt = $dbh->prepare("SELECT p.* FROM cuentas_auxiliares p, configuracion_estadocuentas c where c.cod_cuentaaux=p.codigo and c.tipo=1 and c.cod_plancuenta=0 order by codigo");
+                              $stmt = $dbh->prepare("SELECT p.* FROM cuentas_auxiliares p, configuracion_estadocuentas c where c.cod_cuentaaux=p.codigo and c.tipo=1 and c.cod_plancuenta=0 order by nombre");
                               $stmt->execute();
                               while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                 $codigoX=$row['codigo'];
@@ -537,7 +537,7 @@
                           <label class="col-sm-3 col-form-label">Auxiliares</label>
                             <div class="col-sm-7">
                               <div class="form-group">
-                                <select class="selectpicker form-control form-control-sm" name="cuentas_auxiliaresorigen" id="cuentas_auxiliaresorigen" data-style="<?=$comboColor;?>">
+                                <select class="selectpicker form-control form-control-sm" data-live-search="true" name="cuentas_auxiliaresorigen" id="cuentas_auxiliaresorigen" data-style="<?=$comboColor;?>">
                                   <option selected value="all">TODOS</option>
                                   <?php
                               $listaAuxiliar = listaCuentasAuxiliaresRelacionadasProveedoresClientes();
