@@ -41,7 +41,7 @@
 		if ($_GET['opcion']=='editCuentaAux') {
 			$codigo=$_GET['codigo'];
 			$codigo_padre=$_GET['codigo_padre'];
-			require_once('cuentas_auxiliares/edit.php');
+			require_once('cuentas_auxiliares/edit2.php');
 		}
 		if ($_GET['opcion']=='deleteCuentaAux') {
 			$codigo=$_GET['codigo'];

@@ -98,26 +98,10 @@ $mes=$_GET['mes'];
 	 $totalSaldo=$totalSaldo+$saldo;
 	 $codProveedor=$row['cod_proveedor'];
 
-	 $nombreProveedorX=nameProveedor($codProveedor);
 
-  if(($row['cod_cuentaaux']!=""||$row['cod_cuentaaux']!=0)){
-   if($tipoProveedorCliente==1){
-      $proveedorX=obtenerProveedorCuentaAux($row['cod_cuentaaux']);
-    }else{
-    if(($row['cod_cuentaauxiliar']!=0)){
-     $proveedorX=obtenerClienteCuentaAux($row['cod_cuentaauxiliar']);
-    }else{
-     $proveedorX="Sin Cliente";
-    }	    
-   }
-  }else{
-    if($tipoProveedorCliente==1){
-         $proveedorX="Sin Proveedor";
-      }else{
-       $proveedorX="Sin Cliente";
-      }
-  }	
-	 if($haberX>0){
+  	$nombreProveedorClienteX=nameProveedorCliente($tipoProveedorCliente,$codProveedor);
+ 
+
        ?>
 		<tr class="bg-white det-estados">
 	  	   	<td class="text-center small"><?=$nombreUnidadO;?></td>
@@ -125,7 +109,7 @@ $mes=$_GET['mes'];
 	  	   	<td class="text-center small"><?=$numeroComprobante;?></td>
 	  	   	<td class="text-center small"><?=$fechaComprobante;?></td>
 	  	   	<td class="text-center small"><?=$fechaX;?></td>
-	  	   	<td class="text-left small"><?=$nombreProveedorX;?></td>
+	  	   	<td class="text-left small"><?=$nombreProveedorClienteX;?></td>
 	  	   	<td class="text-left small">
 
 		    <div id="accordion<?=$indice;?>" role="tablist">
@@ -178,89 +162,24 @@ $mes=$_GET['mes'];
 	      	</div>
 
 	      	</td>
-	  	   	<td class="text-right small"><?=formatNumberDec($montoContra)?></td>
+	      	<?php
+	      	if($tipoProveedorCliente==1){
+	      	?>
+	      	<td class="text-right small"><?=formatNumberDec($montoContra)?></td>
 	  	   	<td class="text-right small"><?=formatNumberDec($montoX)?></td>
+	      	<?php	
+	      	}else{
+	      	?>
+	  	   	<td class="text-right small"><?=formatNumberDec($montoX)?></td>
+	      	<td class="text-right small"><?=formatNumberDec($montoContra)?></td>
+	      	<?php	
+	      		
+	      	}
+	      	?>
 	  	   	<td class="text-right small font-weight-bold"><?=formatNumberDec($saldo)?></td>
 	   	</tr>
 
   	   <?php
-	 }else{
-           //$saldo=$saldo+$debeX-$haberX;
-            
-        ?>
-  	   <!--<tr class="bg-white det-estados">
-  	   		<td class="text-left font-weight-bold"><?=$fechaX?></td>
-  	   		<td class="text-left"><?=$nombreProveedorX;?></td>
-  	   		<td class="text-left"><?=$glosaX?></td>
-  	   		<td class="text-right"></td>
-  	   		<td class="text-right"><?=formatNumberDec($montoX)?></td>
-  	   		<td class="text-right font-weight-bold"><?=formatNumberDec($saldo)?></td>
-  	   	</tr>-->
-  	   	<tr class="bg-white det-estados">
-	  	   	<td class="text-left small font-weight-bold"><?=$fechaX?></td>
-	  	   	<td class="text-left small"><?=$proveedorX;?></td>
-	  	   	<td class="text-left small">
-
-		    <div id="accordion<?=$indice;?>" role="tablist">
-		        <div class="card-collapse">
-		          <div class="card-header" role="tab" id="heading<?=$indice;?>">
-		            <p class="mb-0">
-		              <small>
-		              <a data-toggle="collapse" href="#collapse<?=$indice;?>" aria-expanded="false" aria-controls="collapse<?=$indice;?>" class="collapsed">
-
-				  	   	<?=$glosaMostrar?>
-	   	                
-	   	                <i class="material-icons">keyboard_arrow_down</i>
-		              </a>
-		          		</small>
-		            </p>
-		          </div>
-		          <div id="collapse<?=$indice;?>" class="collapse" role="tabpanel" aria-labelledby="heading<?=$indice;?>" data-parent="#accordion<?=$indice;?>" style="">
-		            <div class="card-body">
-		            	<?php
-                  			$sqlDetalleX="SELECT e.fecha, e.monto, (select cd.glosa from comprobantes_detalle cd where cd.codigo=e.cod_comprobantedetalle)as glosa from estados_cuenta e where e.cod_comprobantedetalleorigen=$codCompDetX"; 	                                 
-	                     	$stmtDetalleX = $dbh->prepare($sqlDetalleX);
-		                    $stmtDetalleX->execute();
-
-		                      $stmtDetalleX->bindColumn('fecha', $fechaDetalle);
-		                      $stmtDetalleX->bindColumn('monto', $montoDetalle);
-		                      $stmtDetalleX->bindColumn('glosa', $glosaDetalle);
-
-                      	?>
-                        	<table width="100%">
-                    	        <tr>
-                             		<th>Fecha</th>
-		                            <th>Glosa</th>
-		                            <th>Monto</th>
-                                </tr>
-                                <?php
-                                while ($rowDetalleX = $stmtDetalleX->fetch(PDO::FETCH_BOUND)) {
-                                ?>
-                              	<tr>
-                                    <td class="text-left small"><?=$fechaDetalle;?></td>
-                                    <td class="text-left small"><?=$glosaDetalle;?></td>
-                                    <td class="text-left small"><?=$montoDetalle;?></td>
-                              	</tr>
-                              	<?php    
-                              	}
-                              $haberX=$montoContra;
-                              $saldo=$montoX-$haberX;	
-                              	?>
-                            </table>
-		            </div>
-		          </div>
-		        </div>
-	      	</div>
-
-	      	</td>  	   	
-	  	   	<td class="text-right small"><?=formatNumberDec($montoX)?></td>
-	  	   	<td class="text-right small"><?=formatNumberDec($montoContra)?></td>
-	  	   	<td class="text-right small font-weight-bold"><?=formatNumberDec($saldo)?></td>
-	   	</tr>
-
-  	   <?php
-	 }
-	 
 	 $i++;
 	 $indice++;
   }
