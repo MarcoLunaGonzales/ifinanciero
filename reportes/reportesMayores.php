@@ -10,8 +10,12 @@ $fechaActual=date("m/d/Y");
 $m=date("m");
 $y=date("Y");
 $d=date("d",(mktime(0,0,0,$m+1,1,$y)-1));
-$fechaDesde="01/".$m."/".$y;
-$fechaHasta=$d."/".$m."/".$y;
+$fechaDesde=$y."-".$m."-01";
+$fechaHasta=$y."-".$m."-".$d;
+
+$fechaDesde2=$y."-01-01";
+$fechaHasta2=$y."-12-31";
+
 $dbh = new Conexion();
 $stmt = $dbh->prepare("SELECT p.codigo, p.numero, p.nombre, p.nivel from plan_cuentas p order by p.numero");
 $stmt->execute();
@@ -33,7 +37,8 @@ $i=0;
 
 <div class="content">
 	<div class="container-fluid">
-        <div class="row">
+		<div style="overflow-y:scroll; ">			 
+		<div class="row">
             <div class="col-md-12">
               <div class="card">
                 <div class="card-header <?=$colorCard;?> card-header-icon">
@@ -44,78 +49,121 @@ $i=0;
                 </div>
                 <form class="" action="<?=$urlReporteMayor?>" target="_blank" method="POST">
                 <div class="card-body">
-                  <div class="row">
-                  	<div class="col-sm-6">
-                  		<div class="row">
-			                 <label class="col-sm-4 col-form-label">Oficina</label>
-			                 <div class="col-sm-8">
-			                	<div class="form-group">
-	                              <select class="selectpicker form-control form-control-sm" name="unidad[]" id="unidad" data-style="select-with-transition" multiple data-actions-box="true" required>
-			  	   
-			  	                        <?php
-			  	                        $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM unidades_organizacionales where cod_estado=1 and centro_costos=1 order by 3");
-				                         $stmt->execute();
-				                          while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-				                          	$codigoX=$row['codigo'];
-				                          	$nombreX=$row['nombre'];
-				                          	$abrevX=$row['abreviatura'];
-				                          ?>
-				                       <option value="<?=$codigoX;?>"><?=$nombreX?></option>	
-				                         <?php
-			  	                         }
-			  	                         ?>
-			                         </select>
-			                      </div>
-			                  </div>
-			             </div>
-      	             </div>
-                  	<div class="col-sm-6">
-                  		<div class="row">
-			                 <label class="col-sm-4 col-form-label">Cuenta</label>
-			                 <div class="col-sm-8">
-			                	<div class="form-group">
-	                              <select class="selectpicker form-control form-control-sm" data-style="select-with-transition" data-live-search="true" title="-- Elija una cuenta --" name="cuenta[]" id="cuenta" multiple data-actions-box="true" data-style="select-with-transition" data-actions-box="true" required>
-			  	                        <?php
-			  	                        for ($i=0; $i < count($arrayNuevo); $i++) { 
-			  	                        	?><option value="<?=$arrayNuevo[$i][0];?>@normal"><?=$arrayNuevo[$i][2]?></option>	<?php
-			  	                        }
-							  	         ?>
-							         </select>
-			                      </div>
-			                  </div>
-			              </div>
-				      </div>
-                  </div><!--div row-->
+                  	<div class="row">
+	                  	<div class="col-sm-6">
+	                  		<div class="row">
+				                <label class="col-sm-4 col-form-label">Entidad</label>
+				                <div class="col-sm-8">
+				                	<div class="form-group">				                		
+		                                <select class="selectpicker form-control form-control-sm" name="entidad" id="entidad" data-style="<?=$comboColor;?>" required onChange="ajax_entidad_Oficina(this)">				  	   
+				  	                        <?php
+				  	                        $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM entidades where cod_estadoreferencial=1 order by 2");
+					                         $stmt->execute();
+					                          while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+					                          	$codigoX=$row['codigo'];
+					                          	$nombreX=$row['nombre'];
+					                          	$abrevX=$row['abreviatura'];
+					                          ?>
+					                       <option value="<?=$codigoX;?>"><?=$nombreX?></option>	
+					                         <?php
+				  	                         }
+				  	                         ?>
+				                        </select>
+				                    </div>
+				                </div>
+				            </div>
+	      	             </div>
+	                  	<div class="col-sm-6">
+	                  		<div class="row">
+				                 <label class="col-sm-4 col-form-label">Gestion</label>
+				                 <div class="col-sm-8">
+				                	<div class="form-group">
+		                               <select class="selectpicker form-control form-control-sm" name="gestion" id="gestion" data-style="<?=$comboColor;?>" required onChange="AjaxGestionFechaDesde(this)">				  	   
+				  	                        <?php
+				  	                        $stmt = $dbh->prepare("SELECT codigo, nombre FROM gestiones where cod_estado=1 order by 2 desc");
+					                         $stmt->execute();
+					                          while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+					                          	$codigoX=$row['codigo'];
+					                          	$nombreX=$row['nombre'];
+					                          ?>
+					                       <option value="<?=$codigoX;?>"><?=$nombreX?></option>	
+					                         <?php
+				  	                         }
+				  	                         ?>
+				                        </select>
+				                    </div>
+				                  </div>
+				              </div>
+					      </div>
+	                </div><!--div row-->
 
-                  <div class="row">
-                  	<div class="col-sm-6">
-                  		<div class="row">
-			                 <label class="col-sm-4 col-form-label">Desde</label>
-			                 <div class="col-sm-8">
-			                	<div class="form-group">
-	                                <input type="text" class="form-control datepicker" name="fecha_desde" id="fecha_desde" value="<?=$fechaDesde?>">
-			                     </div>
-			                  </div>
-			             </div>
-      	             </div>
-                  	<div class="col-sm-6">
-                  		<div class="row">
-			                 <label class="col-sm-4 col-form-label">Hasta</label>
-			                 <div class="col-sm-8">
-			                	<div class="form-group">
-	                               <input type="text" class="form-control datepicker" name="fecha_hasta" id="fecha_hasta" value="<?=$fechaHasta?>">
-			                    </div>
-			                  </div>
-			              </div>
-				      </div>
-                  </div><!--div row-->
+                  	<div class="row">
+	                  	<div class="col-sm-6">
+	                  		<div class="row">
+				                <label class="col-sm-4 col-form-label">Oficina</label>
+				                <div class="col-sm-8">
+				                	<div class="form-group">
+				                		<div id="div_contenedor_oficina1">				                			
+				                		</div>
+				                     </div>
+				                </div>
+				             </div>
+	      	             </div>
+	                  	<div class="col-sm-6">
+	                  		<div class="row">
+				                 <label class="col-sm-4 col-form-label">Cuenta</label>
+				                 <div class="col-sm-8">
+				                	<div class="form-group">
+		                              <select class="selectpicker form-control form-control-sm" data-style="select-with-transition" data-live-search="true" title="-- Elija una cuenta --" name="cuenta[]" id="cuenta" multiple data-actions-box="true" data-style="select-with-transition" data-actions-box="true" required>
+				  	                        <?php
+				  	                        for ($i=0; $i < count($arrayNuevo); $i++) { 
+				  	                        	?><option value="<?=$arrayNuevo[$i][0];?>@normal"><?=$arrayNuevo[$i][2]?></option>	<?php
+				  	                        }
+								  	         ?>
+								         </select>
+				                      </div>
+				                  </div>
+				              </div>
+					      </div>
+                  	</div><!--div row-->
+
+	                <div class="row">
+	                  	<div class="col-sm-6">
+	                  		<div class="row">
+				                 <label class="col-sm-4 col-form-label">Desde</label>
+				                 <div class="col-sm-8">
+				                	<div class="form-group">
+				                		<div id="div_contenedor_fechaI">				                			
+				                			<input type="date" class="form-control" autocomplete="off" name="fecha_desde" id="fecha_desde" min="<?=$fechaDesde2?>" max="<?=$fechaHasta2?>" value="<?=$fechaDesde?>">	
+				                		</div>		                                
+				                     </div>
+				                  </div>
+				             </div>
+	      	             </div>
+	                  	<div class="col-sm-6">
+	                  		<div class="row">
+				                 <label class="col-sm-4 col-form-label">Hasta</label>
+				                 <div class="col-sm-8">
+				                	<div class="form-group">
+				                		<div id="div_contenedor_fechaH">				                			
+				                			<input type="date" class="form-control" autocomplete="off" name="fecha_hasta" id="fecha_hasta" min="<?=$fechaDesde2?>" max="<?=$fechaHasta2?>" value="<?=$fechaHasta?>">
+				                		</div>
+		                               
+				                    </div>
+				                  </div>
+				              </div>
+					      </div>
+	                </div><!--div row-->
                   <div class="row">
                   	<div class="col-sm-6">
                   		<div class="row">
 			                 <label class="col-sm-4 col-form-label">Oficina</label>
 			                 <div class="col-sm-8">
 			                	<div class="form-group">
-	                              <select class="selectpicker form-control form-control-sm" name="unidad_costo[]" id="unidad_costo" data-style="select-with-transition" multiple data-actions-box="true" required>
+			                		<div id="div_contenedor_oficina_costo">
+			                			
+			                		</div>
+	                              <!-- <select class="selectpicker form-control form-control-sm" name="unidad_costo[]" id="unidad_costo" data-style="select-with-transition" multiple data-actions-box="true" required>
 			  	                          <?php
 			  	                          $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM unidades_organizacionales where cod_estado=1 and centro_costos=1 order by 2");
 				                          $stmt->execute();
@@ -128,7 +176,7 @@ $i=0;
 				                           <?php
 			  	                           }
 			  	                           ?>
-			                           </select>
+			                           </select> -->
 			                      </div>
 			                  </div>
 			             </div>
@@ -172,12 +220,9 @@ $i=0;
 				                          	$codigoX=$row['codigo'];
 				                          	$nombreX=$row['nombre'];
 				                          	$abrevX=$row['abreviatura'];
-				                          	if($codigoX!=1){
                                               ?>
 				                                 <option value="<?=$codigoX;?>"><?=$nombreX?> (<?=$abrevX;?>)</option>	
 				                             <?php
-				                          	}
-				                          
 			  	                         }
 			  	                         ?>
 			                         </select>
@@ -212,6 +257,8 @@ $i=0;
               </div>	  
             </div>
           </div>  
-        </div>
-    </div>
+        </div>	
+	</div>
+        
+</div>
 

@@ -9,7 +9,12 @@ $dbh = new Conexion();
 $fechaActual=date("Y-m-d");
 $gestion=nameGestion($_POST['gestion']);
 $fecha=$_POST['fecha'];
-$fechaTitulo= explode("/",$fecha);
+$fechaTitulo= explode("-",$fecha);
+
+$fechaFormateada=$fechaTitulo[0].'/'.$fechaTitulo[1].'/'.$gestion;
+
+
+
 $moneda=1; //$_POST["moneda"];
 $unidades=$_POST['unidad'];
 $tituloOficinas="";
@@ -102,7 +107,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
             while ($row = $stmt4->fetch(PDO::FETCH_BOUND)) {
                $sumaNivel4=0;$html4="";           
               //listar los montos
-              $detallesReporte=listaSumaMontosDebeHaberComprobantesDetalle($fecha,1,$unidades,$areas,$codigo_4,$gestion);                   
+              $detallesReporte=listaSumaMontosDebeHaberComprobantesDetalle($fechaFormateada,1,$unidades,$areas,$codigo_4,$gestion);                   
                while ($rowComp = $detallesReporte->fetch(PDO::FETCH_ASSOC)) {
                    $numeroX=$rowComp['numero'];
                    $nombreX=formateaPlanCuenta($rowComp['nombre'], $rowComp['nivel']);

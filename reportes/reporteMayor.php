@@ -20,13 +20,14 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $fechaActual=date("Y-m-d");
 if($_POST["fecha_desde"]==null){
   $y=date("Y");
-  $desde=strftime('%Y-%m-%d',strtotime("01/01/".$y));
-  $hasta=strftime('%Y-%m-%d',strtotime("12/31/".$y));
+  $desde=strftime('%Y-%m-%d',strtotime($y."/01/01"));
+  $hasta=strftime('%Y-%m-%d',strtotime($y."/31/12"));
 }else{
-  $porcionesFechaDesde = explode("/", $_POST["fecha_desde"]);
-  $porcionesFechaHasta = explode("/", $_POST["fecha_hasta"]);
-  $desde=$porcionesFechaDesde[2]."-".$porcionesFechaDesde[1]."-".$porcionesFechaDesde[0];
-  $hasta=$porcionesFechaHasta[2]."-".$porcionesFechaHasta[1]."-".$porcionesFechaHasta[0];
+  $porcionesFechaDesde = explode("-", $_POST["fecha_desde"]);
+  $porcionesFechaHasta = explode("-", $_POST["fecha_hasta"]);
+
+  $desde=$porcionesFechaDesde[0]."-".$porcionesFechaDesde[1]."-".$porcionesFechaDesde[2];
+  $hasta=$porcionesFechaHasta[0]."-".$porcionesFechaHasta[1]."-".$porcionesFechaHasta[2];
   //$desde=strftime('%Y-%m-%d',strtotime($_POST["fecha_desde"]));
   //$hasta=strftime('%Y-%m-%d',strtotime($_POST["fecha_hasta"]));
 }
@@ -38,6 +39,18 @@ $nombreMoneda=nameMoneda($moneda);
 $unidadCosto=$_POST['unidad_costo'];
 $areaCosto=$_POST['area_costo'];
 $unidad=$_POST['unidad'];
+
+$gestion= $_POST["gestion"];
+$entidad = $_POST["entidad"];
+
+$stmtG = $dbh->prepare("SELECT * from gestiones WHERE codigo=:codigo");
+$stmtG->bindParam(':codigo',$gestion);
+$stmtG->execute();
+$resultG = $stmtG->fetch();
+$NombreGestion = $resultG['nombre'];
+
+ 
+
 if(isset($_POST['glosa_len'])){
  $glosaLen=1; 
 }else{
@@ -92,7 +105,7 @@ for ($j=0; $j < cantidadF($areaCosto) ; $j++) {
 }
 $queryFin.=" and (";
 for ($k=0; $k < cantidadF($unidad) ; $k++) { 
-  $unidadGeneral.=" ".nameUnidad($unidad[$k]).", ";
+  $unidadGeneral.=" ".abrevUnidad($unidad[$k]).", ";
   if(($k+1)==cantidadF($unidad)){
     $queryFin.="c.cod_unidadorganizacional=".$unidad[$k].")";
   }else{
@@ -144,25 +157,25 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
                   <div class="table-responsive">
      <?php
     $html='<table id="libro_mayor_rep" class="table table-bordered table-condensed" style="width:100%">'.
-            '<thead class="bg-principal text-white">'.
+            '<thead class="bg-dark text-white">'.
             '<tr class="text-center">'.
               '<th colspan="5" class=""></th>'.
-              '<th colspan="3" class="">Bolivianos</th>'.
+              // '<th colspan="3" class="">Bolivianos</th>'.
               '<th colspan="3" class="">'.$nombreMoneda.'</th>'.
             '</tr>'.
             '<tr class="text-center">'.
               //'<th>Entidad</th>'.
-              '<th>Unidad</th>'.
-              '<th>Area</th>'.
-              '<th>Fecha</th>'.
-              '<th>Concepto</th>'.
-              '<th>t/c</th>'.
-              '<th>Debe</th>'.
-              '<th>Haber</th>'.
-              '<th>Saldos</th>'.
-              '<th>Debe</th>'.
-              '<th>Haber</th>'.
-              '<th>Saldos</th>'.
+              '<th width="5%">Unidad</th>'.
+              '<th width="5%">Area</th>'.
+              '<th width="7%">Fecha</th>'.
+              '<th width="60%">Concepto</th>'.
+              '<th width="3%">t/c</th>'.
+              // '<th>Debe</th>'.
+              // '<th>Haber</th>'.
+              // '<th>Saldos</th>'.
+              '<th width="5%">Debe</th>'.
+              '<th width="5%">Haber</th>'.
+              '<th width="5%">Saldos</th>'.
             '</tr>'.
            '</thead>'.
            '<tbody>'; 
@@ -180,7 +193,7 @@ join comprobantes_detalle d on p.codigo=d.cod_cuentaauxiliar
 join areas a on d.cod_area=a.codigo 
 join unidades_organizacionales u on u.codigo=d.cod_unidadorganizacional 
 join comprobantes c on d.cod_comprobante=c.codigo
-where p.codigo=$cuenta and c.fecha BETWEEN '$desde' and '$hasta' and ($queryFin";
+where c.cod_gestion=$NombreGestion and p.codigo=$cuenta and c.fecha BETWEEN '$desde' and '$hasta' and ($queryFin";
 }else{
   $nombreCuenta=nameCuenta($cuenta);
   $query1="SELECT d.codigo as cod_det,d.cod_area,d.cod_unidadorganizacional,d.glosa,d.debe,d.haber,
@@ -192,9 +205,9 @@ join comprobantes_detalle d on p.codigo=d.cod_cuenta
 join areas a on d.cod_area=a.codigo 
 join unidades_organizacionales u on u.codigo=d.cod_unidadorganizacional 
 join comprobantes c on d.cod_comprobante=c.codigo
-where p.codigo=$cuenta and c.fecha BETWEEN '$desde' and '$hasta' and ($queryFin";
+where c.cod_gestion=$NombreGestion and p.codigo=$cuenta and c.fecha BETWEEN '$desde' and '$hasta' and ($queryFin";
 }
-
+// echo $query1;
 $stmt = $dbh->prepare($query1);
 // Ejecutamos
 $stmt->execute();
@@ -205,16 +218,16 @@ while ($rowCount = $stmtCount->fetch(PDO::FETCH_ASSOC)) {
 $contador++;
 }
 if($contador!=0){
-$html.='<tr class="bg-table-primary text-white">'.
+$html.='<tr class="bg-secondary text-white">'.
                   '<td colspan="5" class="text-left font-weight-bold">Nombre de la Cuenta: '.$nombreCuenta.' </td>'.
                   '<td style="display: none;"></td>'.
                   '<td style="display: none;"></td>'.
                   '<td style="display: none;"></td>'.
                   '<td style="display: none;"></td>'.
                   //'<td style="display: none;"></td>'.
-                  '<td></td>'.
-                  '<td></td>'.
-                  '<td></td>'.
+                  // '<td></td>'.
+                  // '<td></td>'.
+                  // '<td></td>'.
                   '<td></td>'.
                   '<td></td>'.
                   '<td></td>'.      
@@ -240,7 +253,10 @@ while ($rowComp = $stmt->fetch(PDO::FETCH_ASSOC)) {
       }
     }
     $tc=obtenerValorTipoCambio($moneda,strftime('%Y-%m-%d',strtotime($fechaX)));
-    if($tc==0){$tc=1;}  
+    if($tc==0){$tc=1;}
+
+            $tDebeBol+=$debeX;$tHaberBol+=$haberX;
+            $tDebeTc+=$debeX/$tc;$tHaberTc+=$haberX/$tc;  
              $html.='<tr>'.
                       //'<td class="font-weight-bold">'.$nombreUnidad.'</td>'.
                       '<td class="font-weight-bold small">'.$unidadX.'</td>'.
@@ -248,12 +264,8 @@ while ($rowComp = $stmt->fetch(PDO::FETCH_ASSOC)) {
                       '<td class="font-weight-bold small">'.strftime('%d/%m/%Y',strtotime($fechaX)).'</td>'.
                       '<td class="text-left small">'.$glosaX.'</td>'.
                       '<td class="font-weight-bold small">'.$tc.'</td>';
-                      $tDebeBol+=$debeX;$tHaberBol+=$haberX;
-                      $tDebeTc+=$debeX/$tc;$tHaberTc+=$haberX/$tc;
-                       $html.='<td class="text-right font-weight-bold small">'.number_format($debeX, 2, '.', ',').'</td>'.
-                      '<td class="text-right font-weight-bold small">'.number_format($haberX, 2, '.', ',').'</td>'.
-                      '<td class="text-right font-weight-bold small">'.number_format(00000, 2, '.', ',').'</td>'.
-                      '<td class="text-right font-weight-bold small">'.number_format($debeX/$tc, 2, '.', ',').'</td>'.
+                      
+                       $html.='<td class="text-right font-weight-bold small">'.number_format($debeX/$tc, 2, '.', ',').'</td>'.
                       '<td class="text-right font-weight-bold small">'.number_format($haberX/$tc, 2, '.', ',').'</td>'.
                       '<td class="text-right font-weight-bold small">'.number_format(00000, 2, '.', ',').'</td>';        
                       
@@ -274,9 +286,9 @@ while ($rowComp = $stmt->fetch(PDO::FETCH_ASSOC)) {
                   '<td style="display: none;"></td>'.
                   '<td style="display: none;"></td>'.
                   //'<td style="display: none;"></td>'.
-                  '<td class="text-right font-weight-bold small">'.number_format($tDebeBol, 2, '.', ',').'</td>'.
-                  '<td class="text-right font-weight-bold small">'.number_format($tHaberBol, 2, '.', ',').'</td>'.
-                  '<td class="text-right font-weight-bold small">'.number_format(00000, 2, '.', ',').'</td>'. 
+                  // '<td class="text-right font-weight-bold small">'.number_format($tDebeBol, 2, '.', ',').'</td>'.
+                  // '<td class="text-right font-weight-bold small">'.number_format($tHaberBol, 2, '.', ',').'</td>'.
+                  // '<td class="text-right font-weight-bold small">'.number_format(00000, 2, '.', ',').'</td>'. 
                   '<td class="text-right font-weight-bold small">'.number_format($tDebeTc, 2, '.', ',').'</td>'. 
                   '<td class="text-right font-weight-bold small">'.number_format($tHaberTc, 2, '.', ',').'</td>'.
                   '<td class="text-right font-weight-bold small">'.number_format(00000, 2, '.', ',').'</td>'.       
@@ -288,9 +300,9 @@ while ($rowComp = $stmt->fetch(PDO::FETCH_ASSOC)) {
                   '<td style="display: none;"></td>'.
                   '<td style="display: none;"></td>'.
                   //'<td style="display: none;"></td>'.
-                  '<td class="text-right font-weight-bold small">'.number_format($tDebeBol, 2, '.', ',').'</td>'.
-                  '<td class="text-right font-weight-bold small">'.number_format($tHaberBol, 2, '.', ',').'</td>'.
-                  '<td class="text-right font-weight-bold small">'.number_format(00000, 2, '.', ',').'</td>'. 
+                  // '<td class="text-right font-weight-bold small">'.number_format($tDebeBol, 2, '.', ',').'</td>'.
+                  // '<td class="text-right font-weight-bold small">'.number_format($tHaberBol, 2, '.', ',').'</td>'.
+                  // '<td class="text-right font-weight-bold small">'.number_format(00000, 2, '.', ',').'</td>'. 
                   '<td class="text-right font-weight-bold small">'.number_format($tDebeTc, 2, '.', ',').'</td>'. 
                   '<td class="text-right font-weight-bold small">'.number_format($tHaberTc, 2, '.', ',').'</td>'.
                   '<td class="text-right font-weight-bold small">'.number_format(00000, 2, '.', ',').'</td>'.       

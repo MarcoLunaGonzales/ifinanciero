@@ -47,18 +47,16 @@ try {
         //$stmt->debugDumpParams();
     } else {//update
 
-        $stmt = $dbh->prepare("UPDATE unidades_organizacionales set nombre=:nombre,abreviatura=:abreviatura,cod_estado=:cod_estadoreferencial,
-        created_by=:created_by,modified_by=:modified_by where codigo = :codigo");
+        $stmt = $dbh->prepare("UPDATE entidades set nombre=:nombre,abreviatura=:abreviatura where codigo = :codigo");
         //bind
         $stmt->bindParam(':codigo', $codigo);
         $stmt->bindParam(':nombre', $nombre);
         $stmt->bindParam(':abreviatura', $abreviatura);
-        // $stmt->bindParam(':observaciones', $observaciones);
-        $stmt->bindParam(':cod_estadoreferencial', $cod_estadoreferencial);
-        //$stmt->bindParam(':created_at', $created_at);
-        $stmt->bindParam(':created_by', $created_by);
-        //$stmt->bindParam(':modified_at', $modified_at);
-        $stmt->bindParam(':modified_by', $modified_by);
+        // $stmt->bindParam(':observaciones', $observaciones);        
+        // //$stmt->bindParam(':created_at', $created_at);
+        // $stmt->bindParam(':created_by', $created_by);
+        // //$stmt->bindParam(':modified_at', $modified_at);
+        // $stmt->bindParam(':modified_by', $modified_by);
         $flagSuccess=$stmt->execute();
             
         showAlertSuccessError($flagSuccess,$urlListEntidades);

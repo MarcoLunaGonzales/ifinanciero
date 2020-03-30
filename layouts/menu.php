@@ -591,7 +591,7 @@ if($menuModulo==0){
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listUnidadOrganizacional">
                     <span class="sidebar-mini"> CU </span>
-                    <span class="sidebar-normal"> Cambiar Unidad Organizacional </span>
+                    <span class="sidebar-normal"> Cambiar Oficina de Trabajo </span>
                   </a>
                 </li>
                 <li class="nav-item ">

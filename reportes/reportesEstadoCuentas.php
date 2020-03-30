@@ -11,6 +11,12 @@ $dbh = new Conexion();
 $query = "select * from depreciaciones";
 $statement = $dbh->query($query);
 
+$m=date("m");
+$y=date("Y");
+$d=date("d",(mktime(0,0,0,$m+1,1,$y)-1));
+$fechaDesde=$y."-01-01";
+$fechaHasta=$y."-12-31";
+
 ?>
 
 <div class="content">
@@ -26,11 +32,41 @@ $statement = $dbh->query($query);
 			  </div>
 			  <div class="card-body ">
           <div class="row">
+            <label class="col-sm-2 col-form-label">Entidad</label>
+            <div class="col-sm-7">
+              <div class="form-group">                            
+                        <select class="selectpicker form-control form-control-sm" name="entidad" id="entidad" data-style="<?=$comboColor;?>" required onChange="ajax_entidad_Oficina(this)">               
+                        <?php
+                        $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM entidades where cod_estadoreferencial=1 order by 2");
+                       $stmt->execute();
+                        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                          $codigoX=$row['codigo'];
+                          $nombreX=$row['nombre'];
+                          $abrevX=$row['abreviatura'];
+                        ?>
+                     <option value="<?=$codigoX;?>"><?=$nombreX?></option>  
+                       <?php
+                         }
+                         ?>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+          <label class="col-sm-2 col-form-label">Oficina</label>
+          <div class="col-sm-7">
+            <div class="form-group">
+              <div id="div_contenedor_oficina1">                              
+              </div>
+               </div>
+          </div>
+       </div>
+          <div class="row">
             <label class="col-sm-2 col-form-label">Gestion</label>
             <div class="col-sm-7">
               <div class="form-group">
-                <select name="gestion" id="gestion" class="selectpicker form-control" data-style="btn btn-info"
-                    required>
+                <select name="gestion" id="gestion" class="selectpicker form-control form-control-sm" data-style="btn btn-info"
+                    required onChange="AjaxGestionFechaDesdeBG(this)">
                     <?php
                       $sql="SELECT * FROM gestiones order by 2 desc";
                       $stmtg = $dbh->prepare($sql);
@@ -76,7 +112,7 @@ $statement = $dbh->query($query);
               <div class="form-group">
                 <select class="selectpicker form-control" data-show-subtext="true" data-live-search="true" title="Seleccione una opcion" name="proveedores[]" id="proveedores" data-style="select-with-transition" data-size="5"  data-actions-box="true" multiple required>
                   <?php
-                    $sql="SELECT codigo,nombre from af_proveedores where cod_estado=1";
+                    $sql="SELECT codigo,nombre from af_proveedores where cod_estado=1 order by nombre";
                     $stmt = $dbh->prepare($sql);
                     $stmt->execute();
                     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -97,7 +133,10 @@ $statement = $dbh->query($query);
               <label class="col-sm-2 col-form-label">A Fecha:</label>
               <div class="col-sm-7">
                 <div class="form-group">
-                    <input type="date" name="fecha" id="fecha" class="form-control">
+                  <div id="div_contenedor_fechaH">                    
+                    <!-- <input type="text" class="form-control datepicker " autocomplete="off" name="fecha_hasta" id="fecha_hasta" min="<?=$fechaDesde?>" max="<?=$fechaHasta?>" value="<?=$fechaHasta?>">   -->
+                    <input type="date" name="fecha" id="fecha" class="form-control" min="<?=$fechaDesde?>" max="<?=$fechaHasta?>">
+                  </div>                    
                 </div>
               </div>
           </div><!--fin campo RUBRO -->
