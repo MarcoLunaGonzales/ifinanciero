@@ -64,7 +64,7 @@ $gestionGlobal=$_SESSION['globalGestion'];
                                     $nombreX=$row['nombre'];
                                     $abrevX=$row['abreviatura'];
                                   ?>
-                               <option value="<?=$codigoX;?>"><?=$nombreX?></option>  
+                               <option value="<?=$codigoX;?>"><?=$abrevX?></option>  
                                  <?php
                                    }
                                    ?>
