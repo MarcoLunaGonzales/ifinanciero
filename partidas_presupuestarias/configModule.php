@@ -14,4 +14,13 @@ $urlSaveEdit="partidas_presupuestarias/saveEdit.php";
 $urlSaveDelete="";
 $urlRegisterCuentas="index.php?opcion=registerOfCuenta";
 
+//entidades
+$urlListEntidades="?opcion=listEntidades";
+// $urlListEntidades2="index.php?opcion=listEntidades";
+$urlRegisterEntidades="index.php?opcion=registerEntidades";
+$urlSaveEntidades="?opcion=entidadesSave";
+$urlDeleteEntidad="index.php?opcion=deleteEntidad";
+
+$urlRegisterUnidadesEntidad="index.php?opcion=registerUnidadesEntidad";
+$urlSaveundiades_entidad="?opcion=saveUnidadesEntidad";
 ?>

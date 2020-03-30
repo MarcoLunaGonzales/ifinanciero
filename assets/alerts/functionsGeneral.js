@@ -8214,3 +8214,48 @@ function EnviarCorreoAjax(codigo_facturacion,nro_factura,cod_solicitudfacturacio
     }
   });
 }
+
+//entidades 
+var unidades_tabla=[]; 
+var unidades_tabla_general=[];
+var numFilasUE=0;
+function sendChekedUnidadesEntidad(id,nombres){
+  var check=document.getElementById("unidades"+id);
+    check.onchange = function() {
+     if(this.checked) {
+      unidades_tabla.push({codigo:id,nombre:nombres});
+      numFilasUE++;
+      
+     }else{
+      for (var i = 0; i < unidades_tabla.length; i++) {
+        if(unidades_tabla[i].codigo==id){
+            unidades_tabla.splice(i, 1);
+            break;
+        }      
+      };
+      
+      numFilasUE--;
+     }
+     $("#boton_registradasA").html("Unidades Registradas <span class='badge bg-white text-warning'>"+numFilasUE+"</span>");
+   }
+} 
+
+function filaTablaAGeneralEntidadOrganizacional(tabla,index){
+  var html="";
+  for (var i = 0; i < unidades_tabla_general[index-1].length; i++) {
+    //alert(unidades_tabla_general[index-1][i].nombre);
+    html+="<tr><td>"+(i+1)+"</td><td>"+unidades_tabla_general[index-1][i].nombreU+"</td></tr>";
+  }
+  tabla.html(html);
+  $("#modalUnidadesEntidad").modal("show");  
+}
+function filaTablaUnidadEntidad(tabla){
+  var html="";
+  for (var i = 0; i < unidades_tabla.length; i++) {
+    html+="<tr><td>"+(i+1)+"</td><td>"+unidades_tabla[i].nombre+"</td></tr>";
+
+    // alert(unidades_tabla[i].nombre);
+  };
+  tabla.html(html);
+  $("#modalUnidadesEntidad").modal("show");
+}
