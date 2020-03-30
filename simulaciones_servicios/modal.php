@@ -4,7 +4,7 @@
     <div class="modal-content card">
                <div class="card-header card-header-info card-header-text">
                   <div class="card-text">
-                    <h4>Agregar Sitio</h4>
+                    <h4>Agregar Sitio / Producto</h4>
                   </div>
                   <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
                     <i class="material-icons">close</i>

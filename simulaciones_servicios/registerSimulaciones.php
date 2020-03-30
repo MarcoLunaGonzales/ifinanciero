@@ -137,7 +137,7 @@ $dbh = new Conexion();
                        <label class="col-sm-2 col-form-label">Tipo de Servicio</label>
                        <div class="col-sm-7">
                         <div class="form-group">
-                          <select class="selectpicker form-control" name="tipo_servicio" id="tipo_servicio" data-style="btn btn-info"  required>       
+                          <select class="selectpicker form-control" data-live-search="true" name="tipo_servicio" id="tipo_servicio" data-style="btn btn-info"  required>       
                                 <?php
                                  $stmt = $dbh->prepare("select DISTINCT codigo_n2,descripcion_n2 from cla_servicios where codigo_n1=109 order by 2");
                                  $stmt->execute();
@@ -175,7 +175,7 @@ $dbh = new Conexion();
                         <div class="row">
                           <div class="col-sm-12">
                             <div class="form-group">
-                                <select class="selectpicker form-control" name="cliente" id="cliente" data-style="btn btn-info"  required>
+                                <select class="selectpicker form-control" data-live-search="true" name="cliente" id="cliente" data-style="btn btn-info"  required>
           
                                 <!--<option disabled selected="selected" value="">Cliente</option>-->
                                 <?php
@@ -244,7 +244,7 @@ $dbh = new Conexion();
     <div class="modal-content card">
                <div class="card-header card-header-info card-header-text">
                   <div class="card-text">
-                    <h4>Agregar Sitio</h4>
+                    <h4>Agregar Sitio / Producto</h4>
                   </div>
                   <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
                     <i class="material-icons">close</i>
