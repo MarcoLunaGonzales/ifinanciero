@@ -710,7 +710,7 @@ function obtenerComprobantesDetImp($codigo){
    $sql="";
 //    $sql="SELECT d.codigo as cod_det,d.cod_area,d.cod_unidadorganizacional,p.codigo,p.numero,p.nombre,d.glosa,d.debe,d.haber,a.abreviatura,p.cuenta_auxiliar,u.abreviatura as unidadAbrev,(select 1 from comprobantes_detalle cdd where cdd.debe=0 and d.codigo=cdd.codigo) as haber_order 
 // FROM plan_cuentas p join comprobantes_detalle d on p.codigo=d.cod_cuenta join areas a on d.cod_area=a.codigo join unidades_organizacionales u on u.codigo=d.cod_unidadorganizacional where d.cod_comprobante=$codigo order by haber_order, d.codigo";
-   $sql="SELECT d.cod_cuentaauxiliar,d.codigo as cod_det,d.cod_area,d.cod_unidadorganizacional,p.codigo,p.numero,p.nombre,d.glosa,d.debe,d.haber,a.abreviatura,p.cuenta_auxiliar,u.abreviatura as unidadAbrev,(select 1 from comprobantes_detalle cdd where cdd.debe=0 and d.codigo=cdd.codigo) as haber_order 
+   $sql="SELECT d.cod_cuentaauxiliar,d.codigo as cod_det,d.cod_area,d.cod_unidadorganizacional,p.codigo,p.numero,p.nombre,d.glosa,d.debe,d.haber,a.abreviatura,p.cuenta_auxiliar,u.abreviatura as unidadAbrev,(select 1 from comprobantes_detalle cdd where cdd.debe=0 and d.codigo=cdd.codigo) as haber_order, (select ca.nombre from cuentas_auxiliares ca where ca.codigo=d.cod_cuentaauxiliar)as nombrecuentaauxiliar
 FROM plan_cuentas p join comprobantes_detalle d on p.codigo=d.cod_cuenta join areas a on d.cod_area=a.codigo join unidades_organizacionales u on u.codigo=d.cod_unidadorganizacional where d.cod_comprobante=$codigo order by d.codigo";
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
@@ -4710,7 +4710,7 @@ function obtenerComprobantesDetCuenta($codigo,$cuenta){
    $sql="SELECT cuentas_monto.*,p.nombre,p.numero,p.nivel,p.cod_padre from plan_cuentas p join 
            (select d.cod_cuenta,sum(debe) as total_debe,sum(haber) as total_haber 
             from comprobantes_detalle d join comprobantes c on c.codigo=d.cod_comprobante 
-            where (c.fecha between '$fi' and '$fa') $sqlUnidades group by (d.cod_cuenta) order by d.cod_cuenta) cuentas_monto
+            where (c.fecha between '$fi' and '$fa') $sqlUnidades and c.cod_gestion='2020' group by (d.cod_cuenta) order by d.cod_cuenta) cuentas_monto
         on p.codigo=cuentas_monto.cod_cuenta where p.cod_padre=$padre order by p.numero";
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
@@ -4753,6 +4753,19 @@ function sumaMontosDebeHaberComprobantesDetalleNivel($fechaFinal,$tipoBusqueda,$
 function formatoNumeroCuenta($numero){
  return $numero[0].".".$numero[1].$numero[2].".".$numero[3].$numero[4].".".$numero[5].$numero[6].".".$numero[7].$numero[8].$numero[9]; 
 }
+
+function nameCuentaAuxiliar($cuentaaux){
+   $dbh = new Conexion();
+   $sqlX="SELECT nombre FROM cuentas_auxiliares where codigo='$cuentaaux'";
+   $stmt = $dbh->prepare($sqlX);
+   $stmt->execute();
+   $nombreX=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $nombreX=$row['nombre'];
+   }
+   return($nombreX);
+}
+
 ?>
 
 

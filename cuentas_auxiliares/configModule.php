@@ -15,6 +15,7 @@ $urlEdit="index.php?opcion=editCuentaAux";
 $urlDelete="index.php?opcion=deleteCuentaAux";
 $urlSave="cuentas_auxiliares/save2.php";
 $urlSaveEdit="cuentas_auxiliares/saveEdit.php";
+$urlSaveEdit2="cuentas_auxiliares/saveEdit2.php";
 $urlSaveDelete="";
 
 $urlActualizar="index.php?opcion=actualizarCuentaAux";
