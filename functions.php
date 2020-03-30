@@ -4710,7 +4710,7 @@ function obtenerComprobantesDetCuenta($codigo,$cuenta){
    $sql="SELECT cuentas_monto.*,p.nombre,p.numero,p.nivel,p.cod_padre from plan_cuentas p join 
            (select d.cod_cuenta,sum(debe) as total_debe,sum(haber) as total_haber 
             from comprobantes_detalle d join comprobantes c on c.codigo=d.cod_comprobante 
-            where (c.fecha between '$fi' and '$fa') $sqlUnidades and c.cod_gestion='2020' group by (d.cod_cuenta) order by d.cod_cuenta) cuentas_monto
+            where (c.fecha between '$fi' and '$fa') $sqlUnidades and c.cod_gestion='$gestion' group by (d.cod_cuenta) order by d.cod_cuenta) cuentas_monto
         on p.codigo=cuentas_monto.cod_cuenta where p.cod_padre=$padre order by p.numero";
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
