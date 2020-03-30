@@ -1,5 +1,5 @@
-body{font-family:  sans-serif; font-size: 10px;}
-@page { margin-top: 180px; margin-left: 40px; margin-right: 40px; margin-bottom: 140px;}
+body{font-family: serif; font-size: 10px;}
+@page { margin-top: 150px; margin-left: 40px; margin-right: 40px; margin-bottom: 140px;}
 
 
 header { position: fixed; top: -125px; left: 0px; right: 0px; height: 70px;}
@@ -24,10 +24,11 @@ footer { position: fixed; bottom: -40px; left: 0px; right: 0px; height: 50px; }
   width:70px;
   height:70px;
 }
-#header_titulo_texto{text-align: center; font-size: 16px; font-weight: bold;}
+#header_titulo_texto{text-align: center; font-size: 20px; font-weight: bold;}
 #header_titulo_texto_des{text-align: left; font-size: 12px; font-weight: bold; border-top: 1px solid #000;}
 #header_titulo_texto_inf{text-align: center; font-size: 11px;padding-top: 20px;}
 #header_titulo_texto_inf_pegado{text-align: center; font-size: 11px;padding-top: 5px;}
+#header_titulo_texto_inf_pegado_Max{text-align: center; font-size: 12px;padding-top: 2px;}
 #header_titulo_texto_inf_2{text-align: left; font-size: 11px;padding-left:80px;}
 
 #header_titulo_texto_inf_der{text-align: right; font-size: 11px;padding-left:80px;}
@@ -88,6 +89,24 @@ border-collapse: collapse;
 
 .td-border-none{
   border: none !important;
+}
+.td-border-derecha{
+ border-bottom: 1px solid black !important;
+ border-right: 1px solid black !important;
+ border-top: 1px solid black !important;
+ border-left: 0px !important;
+}
+.td-border-centro{
+ border-bottom: 1px solid black !important;
+ border-right: 0px !important;
+ border-top: 1px solid black !important;
+ border-left: 0px !important;
+}
+.td-border-izquierda{
+ border-bottom: 1px solid black !important;
+ border-right: 0px !important;
+ border-top: 1px solid black !important;
+ border-left: 1px solid black !important;
 }
 .table .table-title{
  font-size: 12px;

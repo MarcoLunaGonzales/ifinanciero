@@ -242,6 +242,10 @@
 		if ($_GET['opcion']=='listGestionTrabajo') {
 			require_once('utilitarios/listGestionTrabajo.php');
 		}
+		//CAMBIAR GESTION DE TRABAJO
+		if ($_GET['opcion']=='listUnidadOrganizacional') {
+			require_once('utilitarios/listUnidadOrganizacional.php');
+		}
 
 		//notificaciones SISTEMA
         if ($_GET['opcion']=='listNotificacionesSistema') {
