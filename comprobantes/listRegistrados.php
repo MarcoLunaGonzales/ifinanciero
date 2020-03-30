@@ -6,6 +6,8 @@ require_once 'styles.php';
 require_once 'functions.php';
 require_once 'functionsGeneral.php';
 $globalAdmin=$_SESSION["globalAdmin"];
+$globalUnidad=$_SESSION['globalUnidad'];
+$globalGestion=$_SESSION['globalNombreGestion'];
 
 
 $dbh = new Conexion();

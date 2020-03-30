@@ -69,8 +69,31 @@
 		if ($_GET['opcion']=='registerOfCuenta') {
 			$codigo=$_GET['codigo'];
 			require_once('partidas_presupuestarias/registerOfCuenta.php');
+		}
+		//entidades	
+		if ($_GET['opcion']=='listEntidades') {
+			require_once('partidas_presupuestarias/listEntidades.php');
+		}
+		if ($_GET['opcion']=='registerEntidades') {
+			$codigo=$_GET['codigo'];
+			require_once('partidas_presupuestarias/registerEntidades.php');
+		}
+		if ($_GET['opcion']=='entidadesSave') {
+			require_once('partidas_presupuestarias/saveEntidades.php');
+		}
+		if ($_GET['opcion']=='deleteEntidad') {
+			$codigo=$_GET['codigo'];
+			require_once('partidas_presupuestarias/saveDeleteEntidad.php');
+		}
+		if ($_GET['opcion']=='registerUnidadesEntidad') {
+			$codigo=$_GET['codigo'];
+			require_once('partidas_presupuestarias/registerUnidadesEntidad.php');
+		}
+		if ($_GET['opcion']=='saveUnidadesEntidad') {
+			require_once('partidas_presupuestarias/SaveUnidadesEntidad.php');
 		}	
 
+		
 		//COMPROBANTES
 		if ($_GET['opcion']=='listComprobantes') {
 			require_once('comprobantes/list.php');

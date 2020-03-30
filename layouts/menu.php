@@ -479,6 +479,12 @@ if($menuModulo==0){
                       <span class="sidebar-normal"> Tipos Caja Chica </span>
                     </a>
                 </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listEntidades">
+                    <span class="sidebar-mini"> E </span>
+                    <span class="sidebar-normal"> Entidades </span>
+                  </a>
+                </li>
               </ul>
             </div>
           </li>

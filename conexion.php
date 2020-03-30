@@ -10,16 +10,13 @@ class Conexion extends PDO {
 
 
 
-<<<<<<< HEAD
-/*
- private $tipo_de_base = 'mysql';
- private $host = 'localhost';
- private $nombre_de_base = 'ibno_conta2';
- private $usuario = 'root';
- private $contrasena = '';
- private $port = '3306';
-*/
-=======
+ // private $tipo_de_base = 'mysql';
+ // private $host = 'localhost';
+ // private $nombre_de_base = 'ibnfinanciero';
+ // private $usuario = 'root';
+ // private $contrasena = '';
+ // private $port = '3306';
+
 
   // private $tipo_de_base = 'mysql';
   // private $host = 'www.minkasoftware.com';
@@ -28,7 +25,6 @@ class Conexion extends PDO {
   // private $contrasena = 'ibnorca.2019';
   // private $port = '3306';
 
->>>>>>> e54ad1ac7f47bced1237d887a0e4eca610cf0a9d
    
    public function __construct() {
       //Sobreescribo el método constructor de la clase PDO.
