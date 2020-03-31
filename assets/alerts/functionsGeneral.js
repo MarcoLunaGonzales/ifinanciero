@@ -8073,9 +8073,7 @@ function listarAtributo(){
      }else{
       $('#divResultadoListaAtributosProd').html(div);
       $('#divResultadoListaAtributosProd').bootstrapMaterialDesign(); 
-     }
-     
-   
+     } 
 }
 function guardarAtributoItem(){
   if($('#modal_nombre').val()==""){

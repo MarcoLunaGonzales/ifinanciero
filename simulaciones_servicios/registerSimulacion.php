@@ -131,6 +131,8 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
     </script>
    <?php 
   }
+
+  
 ?>
 <input type="hidden" name="porcentaje_fijo" readonly value="<?=$porcentajeFijoSim?>" id="porcentaje_fijo"/>
 <input type="hidden" name="inicio_fijomodal" readonly value="0" id="inicio_fijomodal"/>
@@ -215,7 +217,13 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
 				</div>
 				<div class="card-body ">
                      <div class="row">
-					<?php while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {?>
+					<?php while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+               if($codAreaX==39){
+                $inicioAnio=1;
+                }else{
+                 $inicioAnio=0;
+                }
+            ?>
 					<input type="hidden" name="cod_plantilla" id="cod_plantilla" value="<?=$codigoPX?>">
 
 						<div class="col-sm-6">

@@ -13,23 +13,20 @@ class Conexion extends PDO {
 // >>>>>>> e16832f76f6d391ce2804f62354b732fec501207
 
 
- /*private $tipo_de_base = 'mysql';
+ private $tipo_de_base = 'mysql';
  private $host = 'localhost';
  private $nombre_de_base = 'ibno_conta2';
  private $usuario = 'root';
  private $contrasena = '';
- private $port = '3306';*/
+ private $port = '3306';
 
 
-
-
-
- private $tipo_de_base = 'mysql';
+ /*private $tipo_de_base = 'mysql';
   private $host = 'www.minkasoftware.com';
   private $nombre_de_base = 'ibno_conta';
   private $usuario = 'ibno_conta';
   private $contrasena = 'ibnorca.2019';
-  private $port = '3306';
+  private $port = '3306';*/
 
    
    public function __construct() {
