@@ -8,7 +8,7 @@ $codigo_entidad = $_GET["codigo_entidad"];
 //ini_set("display_errors", "1");
 $db = new Conexion();
 
-$sqlUO="SELECT uo.codigo, uo.nombre,uo.abreviatura from entidades_uo e, unidades_organizacionales uo where e.cod_uo=uo.codigo and e.cod_entidad=$codigo_entidad";
+$sqlUO="SELECT uo.codigo, uo.nombre,uo.abreviatura from entidades_uo e, unidades_organizacionales uo where e.cod_uo=uo.codigo and e.cod_entidad in ($codigo_entidad)";
 $stmt = $db->prepare($sqlUO);
 $stmt->execute();
 

@@ -10,7 +10,7 @@ $fechaActual=date("m/d/Y");
 $m=date("m");
 $y=date("Y");
 $d=date("d",(mktime(0,0,0,$m+1,1,$y)-1));
-$fechaDesde=$y."-".$m."-01";
+$fechaDesde=$y."-01-01";
 $fechaHasta=$y."-".$m."-".$d;
 
 $fechaDesde2=$y."-01-01";
@@ -55,7 +55,7 @@ $i=0;
 				                <label class="col-sm-4 col-form-label">Entidad</label>
 				                <div class="col-sm-8">
 				                	<div class="form-group">				                		
-		                                <select class="selectpicker form-control form-control-sm" name="entidad" id="entidad" data-style="<?=$comboColor;?>" required onChange="ajax_entidad_Oficina(this)">				  	   
+		                                <select class="selectpicker form-control form-control-sm" name="entidad[]" id="entidad" required onChange="ajax_entidad_Oficina()" multiple data-actions-box="true" data-style="select-with-transition" data-actions-box="true">				  	   
 				  	                        <?php
 				  	                        $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM entidades where cod_estadoreferencial=1 order by 2");
 					                         $stmt->execute();
@@ -114,7 +114,7 @@ $i=0;
 				                 <label class="col-sm-4 col-form-label">Cuenta</label>
 				                 <div class="col-sm-8">
 				                	<div class="form-group">
-		                              <select class="selectpicker form-control form-control-sm" data-style="select-with-transition" data-live-search="true" title="-- Elija una cuenta --" name="cuenta[]" id="cuenta" multiple data-actions-box="true" data-style="select-with-transition" data-actions-box="true" required>
+		                              <select class="selectpicker form-control form-control-sm" data-live-search="true" title="-- Elija una cuenta --" name="cuenta[]" id="cuenta" multiple data-actions-box="true" data-style="select-with-transition" data-actions-box="true" required>
 				  	                        <?php
 				  	                        for ($i=0; $i < count($arrayNuevo); $i++) { 
 				  	                        	?><option value="<?=$arrayNuevo[$i][0];?>@normal"><?=$arrayNuevo[$i][2]?></option>	<?php

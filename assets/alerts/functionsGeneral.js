@@ -8261,31 +8261,34 @@ function filaTablaUnidadEntidad(tabla){
 }
 
 //reportes
-function ajax_entidad_Oficina(combo){
+function ajax_entidad_Oficina(){
   var contenedor;
-  var codigo_entidad=combo.value;
+  // var codigo_entidad=combo.value;
+
+  var arrayEntidad = $("#entidad").val();
+
   contenedor = document.getElementById('div_contenedor_oficina1');
   ajax=nuevoAjax();
-  ajax.open('GET', 'reportes/entidadesOFAjax.php?codigo_entidad='+codigo_entidad,true);
+  ajax.open('GET', 'reportes/entidadesOFAjax.php?codigo_entidad='+arrayEntidad,true);
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
       contenedor.innerHTML = ajax.responseText;
       $('.selectpicker').selectpicker(["refresh"]);
       
-      ajaxEntidadOficina2(codigo_entidad);
+      ajaxEntidadOficina2(arrayEntidad);
     }
   }
   ajax.send(null)  
 }
 
-function ajaxEntidadOficina2(codigo_entidad){
+function ajaxEntidadOficina2(arrayEntidad){
   // var cod_uo=$("#cod_unidadorganizacional").val();  
   // alert(cod_uo);
 
   var contenedor; 
   contenedor = document.getElementById('div_contenedor_oficina_costo');
   ajax=nuevoAjax();
-  ajax.open('GET', 'reportes/entidadesOFAjax2.php?codigo_entidad='+codigo_entidad,true);
+  ajax.open('GET', 'reportes/entidadesOFAjax2.php?codigo_entidad='+arrayEntidad,true);
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
       contenedor.innerHTML = ajax.responseText;
