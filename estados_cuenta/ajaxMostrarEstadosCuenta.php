@@ -116,10 +116,11 @@ if(isset($_GET['cod_auxi'])){
        $proveedorX="Sin Cliente";
       }
   }
-
+$nombreProveedorClienteX=nameProveedorCliente($tipoProveedorCliente,$codProveedorX);
 	 if($haberX > 0){
       $debeX=$montoContra;
       $saldo=$saldo+$haberX-$debeX;
+
        ?>
   	   <tr class="bg-white det-estados">
         <td>
@@ -152,6 +153,7 @@ if(isset($_GET['cod_auxi'])){
      </tr>
   	   <?php
 	 }else{
+    
         ?>
   	   <tr class="bg-white det-estados"><td>
   	   	<?php 
@@ -176,7 +178,7 @@ if(isset($_GET['cod_auxi'])){
           <td class="text-center small"><?=$numeroComprobante;?></td>
           <td class="text-left small"><?=$fechaComprobante;?></td>
           <td class="text-left small"><?=$fechaX;?></td>
-       <td class="text-left"><?=$proveedorX?></td>
+       <td class="text-left"><?=$nombreProveedorClienteX?></td>
        <td class="text-left"><?=$glosaMostrar;?></td>
        <td class="text-right"><?=formatNumberDec($montoX)?></td>
        <td class="text-right"></td>

@@ -192,13 +192,13 @@ $stmt->bindColumn('cliente', $cliente);
               </div>
               <div class="card-footer fixed-bottom">
                <?php 
-              if($globalAdmin==1){
+              //if($globalAdmin==1){
                 if(isset($_GET['q'])){
                   ?><a href="<?=$urlRegister2;?>&q=<?=$q?>" target="_self" class="<?=$buttonNormal;?>">Registrar</a><?php
                 }else{
                   ?><a href="#" onclick="javascript:window.open('<?=$urlRegister2;?>')" class="<?=$buttonNormal;?>">Registrar</a><?php
                 }  
-              } 
+              //} 
                ?>
               </div>      
             </div>
