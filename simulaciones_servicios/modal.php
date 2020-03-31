@@ -637,7 +637,7 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                                      <td>
                                       <select class="form-control selectpicker form-control-sm" data-style="fondo-boton fondo-boton-active" name="cantidad_personal<?=$an?>FFF<?=$iii?>" id="cantidad_personal<?=$an?>FFF<?=$iii?>" onchange="calcularTotalPersonalServicio('<?=$an?>',2)">
                                           <?php 
-                                             for ($hf=1; $hf<=$cantidadPre; $hf++) {
+                                             for ($hf=0; $hf<=$cantidadPre; $hf++) {
                                               if($hf==$cantidadEPre){
                                                 $sumaCantidadPre+=$cantidadPre;
                                                 ?><option value="<?=$hf?>" selected><?=$hf?></option><?php
