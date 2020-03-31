@@ -11,7 +11,7 @@ $gestion=nameGestion($_POST['gestion']);
 $fecha=$_POST['fecha'];
 $fechaTitulo= explode("-",$fecha);
 
-$fechaFormateada=$fechaTitulo[0].'/'.$fechaTitulo[1].'/'.$gestion;
+$fechaFormateada=$fechaTitulo[2].'/'.$fechaTitulo[1].'/'.$fechaTitulo[0];
 
 
 
@@ -33,7 +33,7 @@ $html.='<body>';
 $html.=  '<header class="header">'.            
             '<img class="imagen-logo-izq" src="../assets/img/ibnorca2.jpg">'.
             '<div id="header_titulo_texto">Balance General</div>'.
-         '<div id="header_titulo_texto_inf_pegado">Practicado al '.$fechaTitulo[0].'/'.$fechaTitulo[1].'/'.$gestion.'</div>'.
+         '<div id="header_titulo_texto_inf_pegado">Practicado al '.$fechaTitulo[0].'/'.$fechaTitulo[1].'/'.$fechaTitulo[2].'</div>'.
          '<div id="header_titulo_texto_inf_pegado_Max">Expresado en Bolivianos</div>'.
          '<table class="table pt-2">'.
             '<tr class="bold table-title">'.
@@ -107,7 +107,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
             while ($row = $stmt4->fetch(PDO::FETCH_BOUND)) {
                $sumaNivel4=0;$html4="";           
               //listar los montos
-              $detallesReporte=listaSumaMontosDebeHaberComprobantesDetalle($fechaFormateada,1,$unidades,$areas,$codigo_4,$gestion);                   
+              $detallesReporte=listaSumaMontosDebeHaberComprobantesDetalle($fechaFormateada,1,$unidades,$areas,$codigo_4,$gestion);
                while ($rowComp = $detallesReporte->fetch(PDO::FETCH_ASSOC)) {
                    $numeroX=$rowComp['numero'];
                    $nombreX=formateaPlanCuenta($rowComp['nombre'], $rowComp['nivel']);

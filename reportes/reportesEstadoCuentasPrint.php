@@ -19,7 +19,24 @@ $proveedoresString=implode(",", $proveedores);
 $StringCuenta=implode(",", $cuenta);
 $StringUnidades=implode(",", $unidad);
 
+$stringGeneraCuentas="";
 
+foreach ($cuenta as $cuentai ) {    
+    $stringGeneraCuentas.=nameCuenta($cuentai).",";
+    # code...
+}
+$stringGeneraUnidades="";
+foreach ($unidad as $unidadi ) {    
+    $stringGeneraUnidades.=" ".abrevUnidad($unidadi)." ";
+    # code...
+}
+// for ($i=0; $i <cantidadF($cuenta) ; $i++) { 
+//     // $stringGeneraCuentas.=$cuenta[i].", ";
+// }
+// $stringGeneraUnidades="";
+// for ($i=0; $i <cantidadF($unidad) ; $i++) { 
+//     // $stringGeneraUnidades.=$unidad[i].",";
+// }
 // echo "fecha: ".$fecha."<br>";
 // echo $proveedoresString."<br>" ;
 // echo $cuenta."<br>" ;
@@ -53,11 +70,16 @@ $totalDebito=0;
                         <img  class="card-img-top"  src="../marca.png" style="width:100%; max-width:250px;">
                           Estados de Cuentas
                       </h4>
+                      
+                      <!-- <div class="row">
+                        <div class="col-sm-6"><h5 class="card-title"><b>Unidades:</b> <small><?=$unidadAbrev?></small></h6></div>
+                        <div class="col-sm-6"><h5 class="card-title"><b>Areas:</b> <small><?=$areaAbrev?></small></h6></div>
+                      </div>  -->
 
                       <!-- <h4 class="card-title text-center">Reporte De Activos Fijos Por Unidad</h4> -->
-                      <h6 class="card-title">
-                        Gestion: <?= $NombreGestion; ?><br>                    
-                      </h6>                
+                      <h6 class="card-title">Gestion: <?= $NombreGestion; ?></h6>                        
+                      <h6 class="card-title">Cuenta: <?=$stringGeneraCuentas;?></h6>
+                      <h6 class="card-title">Unidad:<?=$stringGeneraUnidades?></h6>             
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">

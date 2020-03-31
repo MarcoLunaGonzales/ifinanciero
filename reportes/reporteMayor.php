@@ -157,7 +157,7 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
                   <div class="table-responsive">
      <?php
     $html='<table id="libro_mayor_rep" class="table table-bordered table-condensed" style="width:100%">'.
-            '<thead class="bg-dark text-white">'.
+            '<thead >'.
             '<tr class="text-center">'.
               '<th colspan="5" class=""></th>'.
               // '<th colspan="3" class="">Bolivianos</th>'.
@@ -218,7 +218,7 @@ while ($rowCount = $stmtCount->fetch(PDO::FETCH_ASSOC)) {
 $contador++;
 }
 if($contador!=0){
-$html.='<tr class="bg-secondary text-white">'.
+$html.='<tr >'.
                   '<td colspan="5" class="text-left font-weight-bold">Nombre de la Cuenta: '.$nombreCuenta.' </td>'.
                   '<td style="display: none;"></td>'.
                   '<td style="display: none;"></td>'.
@@ -245,6 +245,7 @@ while ($rowComp = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $areaX=$rowComp['areaAbrev'];
     $debeX=$rowComp['debe'];
     $haberX=$rowComp['haber'];
+    $cuenta_auxiliarX=nameCuentaAuxiliar($rowComp['cuenta_auxiliar']);
     $nombreUnidad=nameUnidad($rowComp['unidad']);
     //INICIAR valores de las sumas
     if($glosaLen==0){      
@@ -262,7 +263,7 @@ while ($rowComp = $stmt->fetch(PDO::FETCH_ASSOC)) {
                       '<td class="font-weight-bold small">'.$unidadX.'</td>'.
                       '<td class="font-weight-bold small">'.$areaX.'</td>'.
                       '<td class="font-weight-bold small">'.strftime('%d/%m/%Y',strtotime($fechaX)).'</td>'.
-                      '<td class="text-left small">'.$glosaX.'</td>'.
+                      '<td class="text-left small">'.$cuenta_auxiliarX." - ".$glosaX.'</td>'.
                       '<td class="font-weight-bold small">'.$tc.'</td>';
                       
                        $html.='<td class="text-right font-weight-bold small">'.number_format($debeX/$tc, 2, '.', ',').'</td>'.
