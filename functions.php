@@ -4767,6 +4767,18 @@ function nameCuentaAuxiliar($cuentaaux){
    }
    return($nombreX);
 }
+
+function obtenerCodigoAreaPlantillasServicios($codigo){
+   $dbh = new Conexion();
+   $sqlX="SELECT cod_area FROM plantillas_servicios where codigo='$codigo'";
+   $stmt = $dbh->prepare($sqlX);
+   $stmt->execute();
+   $nombreX=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $nombreX=$row['cod_area'];
+   }
+   return($nombreX);
+}
 ?>
 
 
