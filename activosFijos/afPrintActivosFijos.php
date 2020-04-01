@@ -26,11 +26,23 @@ $nameGestion=nameGestion($gestion);
 $unidadOrganizacional=$_POST["unidad_organizacional"];
 $areas=$_POST["areas"];
 $rubros=$_POST["rubros"];
-
-
 $unidadOrgString=implode(",", $unidadOrganizacional);
 $areaString=implode(",", $areas);
 $rubrosString=implode(",", $rubros);
+
+// echo $areaString;
+$stringUnidades="";
+foreach ($unidadOrganizacional as $valor ) {    
+    $stringUnidades.=" ".abrevUnidad($valor)." ";
+}
+$stringAreas="";
+foreach ($areas as $valor ) {    
+    $stringAreas.=" ".abrevArea($valor)." ";
+}
+$stringRubros="";
+foreach ($rubros as $valor ) {    
+    $stringRubros.=" ".abrevDepreciacion($valor)." ";
+}
 
 $sqlActivos="SELECT codigoactivo,activo,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional)as cod_unidadorganizacional,
 (select a.abreviatura from areas a where a.codigo=cod_area) as cod_area,
@@ -73,7 +85,9 @@ $stmtActivos->bindColumn('estado_af', $estado_af);
                     <h6 class="card-title">Exportar como:</h6>
                   </div>
                   <h4 class="card-title"> <img  class="card-img-top"  src="../marca.png" style="width:100%; max-width:250px;">  Reporte De Activos Fijos</h4>
-                  <!--<h6 class="card-title">Gestion: <?=$nameGestion;?></h6>  -->
+                  <h6 class="card-title">Oficinas: <?=$stringUnidades; ?></h6>                        
+                  <h6 class="card-title">Areas: <?=$stringAreas;?></h6>
+                  <h6 class="card-title">Rubros: <?=$stringRubros?></h6>
                 </div>
                 
                 <div class="card-body">

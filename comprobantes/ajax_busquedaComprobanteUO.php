@@ -49,7 +49,6 @@ if($glosa!=""){
 $sql.=" order by c.fecha desc, c.numero desc;";
 
 
-$dbh = new Conexion();
 
 $stmt = $dbh->prepare($sql);
 $stmt->execute();

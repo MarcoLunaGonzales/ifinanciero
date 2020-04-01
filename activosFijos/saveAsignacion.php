@@ -36,48 +36,63 @@ if($cod_estadoasignacionaf==5){
 	$stmtU->bindParam(':observacion', $observacion);
 
 }elseif($cod_estadoasignacionaf==6){
-		//cuando se acepta devolucion de AF
-		
-		// Prepare
-		$stmtU = $dbhU->prepare("UPDATE activofijos_asignaciones 
-		set cod_estadoasignacionaf=4
-		where cod_activosfijos=:cod_af and cod_personal = :cod_personal");
-		// Bind
-		$stmtU->bindParam(':cod_af', $cod_af);
-		$stmtU->bindParam(':cod_personal', $cod_personal);
-		
+	//cuando se acepta devolucion de AF
+	
+	// Prepare
+	$stmtU = $dbhU->prepare("UPDATE activofijos_asignaciones 
+	set cod_estadoasignacionaf=4
+	where cod_activosfijos=:cod_af and cod_personal = :cod_personal");
+	// Bind
+	$stmtU->bindParam(':cod_af', $cod_af);
+	$stmtU->bindParam(':cod_personal', $cod_personal);
+	
 
 		
 	//$stmtU->execute();
 
-	}elseif($cod_estadoasignacionaf==7){
-		//cuando se rechaza devolucion AF
-		// Prepare
-		$stmtU = $dbhU->prepare("UPDATE activofijos_asignaciones 
-		set cod_estadoasignacionaf=2
-		where cod_activosfijos=:cod_af and cod_personal = :cod_personal");
-		// Bind
-		$stmtU->bindParam(':cod_af', $cod_af);
-		$stmtU->bindParam(':cod_personal', $cod_personal);
-		
-	//$stmtU->execute();
+}elseif($cod_estadoasignacionaf==7){
+	//cuando se rechaza devolucion AF
+	// Prepare
+	$stmtU = $dbhU->prepare("UPDATE activofijos_asignaciones 
+	set cod_estadoasignacionaf=2
+	where cod_activosfijos=:cod_af and cod_personal = :cod_personal");
+	// Bind
+	$stmtU->bindParam(':cod_af', $cod_af);
+	$stmtU->bindParam(':cod_personal', $cod_personal);
+	
+//$stmtU->execute();
 
-	}else{
-		// Prepare
-		$stmtU = $dbhU->prepare("UPDATE activofijos_asignaciones 
-		set cod_estadoasignacionaf=:cod_estadoasignacionaf,observaciones_recepcion=:observacion,fecha_recepcion=:fecha_recepcion
-		where cod_activosfijos=:cod_af and cod_personal = :cod_personal");
-		// Bind
-		$stmtU->bindParam(':cod_af', $cod_af);
-		$stmtU->bindParam(':cod_personal', $cod_personal);
-		$stmtU->bindParam(':cod_estadoasignacionaf', $cod_estadoasignacionaf);
-		$stmtU->bindParam(':fecha_recepcion', $fecha_recepcion);
-		$stmtU->bindParam(':observacion', $observacion);
-		//$stmtU->execute();
-
+}elseif($cod_estadoasignacionaf==2)//acepta recepcion de af
+{
+	$stmtU2 = $dbhU->prepare("UPDATE activofijos_asignaciones 
+	set cod_estadoasignacionaf=:cod_estadoasignacionaf,observaciones_recepcion=:observacion,fecha_recepcion=:fecha_recepcion
+	where cod_activosfijos=:cod_af and cod_personal = :cod_personal");
+	// Bind
+	$stmtU2->bindParam(':cod_af', $cod_af);
+	$stmtU2->bindParam(':cod_personal', $cod_personal);
+	$stmtU2->bindParam(':cod_estadoasignacionaf', $cod_estadoasignacionaf);
+	$stmtU2->bindParam(':fecha_recepcion', $fecha_recepcion);
+	$stmtU2->bindParam(':observacion', $observacion);
+	$succees=$stmtU2->execute();
+	if($succees){
+		$stmtU = $dbhU->prepare("UPDATE activosfijos 
+		set cod_responsables_responsable=$cod_personal
+		where codigo=$cod_af");	
+	}
 }
-
-
+else{
+	// Prepare
+	$stmtU = $dbhU->prepare("UPDATE activofijos_asignaciones 
+	set cod_estadoasignacionaf=:cod_estadoasignacionaf,observaciones_recepcion=:observacion,fecha_recepcion=:fecha_recepcion
+	where cod_activosfijos=:cod_af and cod_personal = :cod_personal");
+	// Bind
+	$stmtU->bindParam(':cod_af', $cod_af);
+	$stmtU->bindParam(':cod_personal', $cod_personal);
+	$stmtU->bindParam(':cod_estadoasignacionaf', $cod_estadoasignacionaf);
+	$stmtU->bindParam(':fecha_recepcion', $fecha_recepcion);
+	$stmtU->bindParam(':observacion', $observacion);
+	//$stmtU->execute();
+}
 if($stmtU->execute()){
       $result =1;
     }

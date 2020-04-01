@@ -26,8 +26,7 @@ $stmt->execute();
 
 ?>
 
-<select id="cod_responsables_responsable" name="cod_responsables_responsable" class="selectpicker form-control" 
-data-style="btn btn-primary" data-size="5">
+<select id="cod_responsables_responsable" name="cod_responsables_responsable" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true" required="true">
     <?php 
         while ($row = $stmt->fetch()){ 
        ?>

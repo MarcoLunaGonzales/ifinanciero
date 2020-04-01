@@ -54,9 +54,10 @@ try {
     //$created_at=$_POST["created_at"];
     //$created_by=$_POST["created_by"];
     //$modified_at=$_POST["modified_at"];
-    //$modified_by=$_POST["modified_by"];
-    $cod_af_proveedores=$_POST["cod_af_proveedores"];
-    if($cod_af_proveedores=='')$cod_af_proveedores=null;
+    //$modified_by=$_POST["modified_by"];    
+    if(isset($_POST["cod_af_proveedores"])){
+        $cod_af_proveedores=$_POST["cod_af_proveedores"];
+    }else $cod_af_proveedores=null;
     $numerofactura=$_POST["numerofactura"];
     $bandera_depreciar = 'NO';#LA PRIMERA VEZ LUEGO SE CAMBIA A SI Y DEPRECIA
 

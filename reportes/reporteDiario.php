@@ -20,10 +20,20 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $fechaActual=date("Y-m-d");
 
 $unidad=$_POST["unidad"];
-$nombreUnidad=nameUnidad($unidad);
+$stringUnidadesX=implode(",", $unidad);
+
+$stringUnidades="";
+foreach ($unidad as $unidadx) {
+  // $nombreUnidad=nameUnidad($unidadx);
+  // echo $nombreUnidad;
+  $stringUnidades.=AbrevUnidad($unidadx);
+}
+
+
 $tipo=$_POST["tipo_comprobante"];
-$porcionesFechaDesde = explode("/", $_POST["fecha_desde"]);
-$porcionesFechaHasta = explode("/", $_POST["fecha_hasta"]);
+$porcionesFechaDesde = explode("-", $_POST["fecha_desde"]);
+$porcionesFechaHasta = explode("-", $_POST["fecha_hasta"]);
+
 $desde=$porcionesFechaDesde[0]."-".$porcionesFechaDesde[1]."-".$porcionesFechaDesde[2];
 $hasta=$porcionesFechaHasta[0]."-".$porcionesFechaHasta[1]."-".$porcionesFechaHasta[2];
 
@@ -42,7 +52,7 @@ $query1="SELECT (select u.nombre from unidades_organizacionales u where u.codigo
 (select u.abreviatura from unidades_organizacionales u where u.codigo=c.cod_unidadorganizacional)cod_unidad,c.cod_gestion, 
 (select m.nombre from monedas m where m.codigo=c.cod_moneda)moneda, (select m.codigo from monedas m where m.codigo=c.cod_moneda)cod_moneda,
 (select t.nombre from tipos_comprobante t where t.codigo=c.cod_tipocomprobante)tipo_comprobante, c.fecha, c.numero,c.codigo, c.glosa
-from comprobantes c where c.cod_unidadorganizacional=$unidad and c.fecha BETWEEN '$desde' and '$hasta' and(";
+from comprobantes c where c.cod_unidadorganizacional in ($stringUnidadesX) and c.fecha BETWEEN '$desde' and '$hasta' and(";
 for ($i=0; $i < cantidadF($tipo); $i++) { 
   
   if($i==(cantidadF($tipo)-1)){
@@ -73,7 +83,7 @@ $stmt->execute();
                   <div class="float-right col-sm-2"><h6 class="card-title">Exportar como:</h6></div>
                   <h4 class="card-title text-center">Reporte Libro Diario</h4>
                   <h6 class="card-title">Gestion: <?=strftime('%Y',strtotime($hasta));?></h6>
-                  <h6 class="card-title">Unidad: <?=$nombreUnidad;?></h6>
+                  <h6 class="card-title">Unidad: <?=$stringUnidades;?></h6>
                   <div class="row">
                      <h6 class="card-title col-sm-3">Fecha: <?=$fechaTitulo?></h6>
                      <h6 class="card-title col-sm-3">Tipo: <?=$tiposTitulo?></h6>
@@ -84,7 +94,7 @@ $stmt->execute();
                   <div class="table-responsive">
      <?php
     $html='<table id="libro_diario_rep" class="table table-bordered table-condensed" style="width:100%">'.
-            '<thead class="bg-principal text-white">'.
+            '<thead >'.
             '<tr class="text-center">'.
               '<th colspan="5" class=""></th>'.
               '<th colspan="2" class="">Bolivianos</th>'.

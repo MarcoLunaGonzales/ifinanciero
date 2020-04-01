@@ -27,7 +27,7 @@ $statement = $dbh->query($query);
                 <select class="selectpicker form-control" title="Seleccione una opcion" 
                 name="unidad_organizacional[]" id="unidad_organizacional" 
                 data-style="select-with-transition" data-size="5" 
-                data-actions-box="true" multiple required>
+                data-actions-box="true" multiple required data-show-subtext="true" data-live-search="true>
                   <?php
                     $sql="SELECT * FROM unidades_organizacionales order by 2";
                     $stmt = $dbh->prepare($sql);
@@ -36,7 +36,7 @@ $statement = $dbh->query($query);
                       $codigoX=$row['codigo'];
                       $nombreX=$row['nombre'];
                     ?>
-                    <option value="<?=$codigoX;?>"><?=$nombreX;?></option>
+                    <option value="<?=$codigoX;?>"><?=$row['abreviatura'];?> - <?=$nombreX;?></option>
                     <?php 
                     }
                   ?>
@@ -49,7 +49,7 @@ $statement = $dbh->query($query);
             <label class="col-sm-2 col-form-label">Area</label>
             <div class="col-sm-7">
             <div class="form-group">
-              <select class="selectpicker form-control" title="Seleccione una opcion" name="areas[]" id="areas" data-style="select-with-transition" data-size="5" data-actions-box="true" multiple required>
+              <select class="selectpicker form-control" title="Seleccione una opcion" name="areas[]" id="areas" data-style="select-with-transition" data-size="5" data-actions-box="true" multiple required data-show-subtext="true" data-live-search="true>
                 <?php
                 $stmt = $dbh->prepare("SELECT * FROM areas order by 2");
               $stmt->execute();
@@ -57,7 +57,7 @@ $statement = $dbh->query($query);
                 $codigoX=$row['codigo'];
                 $nombreX=$row['nombre'];
               ?>
-              <option value="<?=$codigoX;?>"><?=$nombreX;?></option>
+              <option value="<?=$codigoX;?>"><?=$row['abreviatura'];?> - <?=$nombreX;?></option>
               <?php 
               }
                 ?>
@@ -70,9 +70,9 @@ $statement = $dbh->query($query);
               <label class="col-sm-2 col-form-label">Rubro</label>
               <div class="col-sm-7">
               <div class="form-group">
-                  <select class="selectpicker form-control" title="Seleccione una opcion" name="rubros[]" id="rubros" data-style="select-with-transition" data-size="5" data-actions-box="true" multiple required>
+                  <select class="selectpicker form-control" title="Seleccione una opcion" name="rubros[]" id="rubros" data-style="select-with-transition" data-size="5" data-actions-box="true" multiple required data-show-subtext="true" data-live-search="true>
                   <?php while ($row = $statement->fetch()){ ?>
-                      <option value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                      <option value="<?=$row["codigo"];?>"><?=$row['abreviatura'];?> - <?=$row["nombre"];?></option>
                   <?php } ?> 
                   </select>
               </div>

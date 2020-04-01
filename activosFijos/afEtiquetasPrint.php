@@ -7,8 +7,8 @@ require '../assets/phpqrcode/qrlib.php';
 require_once __DIR__.'/../functions.php';
 $dbh = new Conexion();
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//try
+set_time_limit(300);
 //RECIBIMOS LAS VARIABLES
-
 $unidadOrganizacional=$_POST["unidad_organizacional"];
 $areas=$_POST["areas"];
 $rubros=$_POST["rubros"];
