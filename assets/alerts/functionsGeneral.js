@@ -4738,6 +4738,7 @@ function guardarCuentasSimulacionAjaxGenericoServicioAuditor(anio){
          var extlocal=$("#modal_local_extranjero"+l).val();
          var cantidadn=$("#modal_cantidad_personal"+l).val();
          for (var k = 1; k <=columnas; k++) {
+          var diasn=$("#modal_dias_personalItem"+k+"RRR"+l).val();
            var codigoDetalle= $("#codigo_columnas"+k+"RRR"+l).val();
            var montoDetalle= $("#monto"+k+"RRR"+l).val();
            var montoDetalleext= $("#montoext"+k+"RRR"+l).val();
@@ -4760,7 +4761,7 @@ function guardarCuentasSimulacionAjaxGenericoServicioAuditor(anio){
       if($("#monto_mod"+anio+"QQQ"+j+"RRR"+i).is("[readonly]")){
         habilitado=0;
       }
-      var codigo = $("#codigo"+anio+"QQQ"+j+"RRR"+i).val();
+      var codigo = $("#codigo_columnas"+anio+"QQQ"+j+"RRR"+i).val();
       var monto = $("#monto_mod"+anio+"QQQ"+j+"RRR"+i).val();
       var cuenta =$("#codigo_cuenta"+anio+"QQQ"+j+"RRR"+i).val();
       var simulacion =$("#codigo_fila"+anio+"QQQ"+j+"RRR"+i).val();
