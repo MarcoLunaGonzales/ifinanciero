@@ -36,7 +36,7 @@ if(isset($_GET["codigo"])){
   <script>$("#productos_div").addClass("d-none");</script>
   <script>$("#sitios_div").addClass("d-none");</script> 
                       <div class="row">
-                        <label class="col-sm-2 col-form-label">Dias Servicio:</label>
+                        <label class="col-sm-2 col-form-label">Dias Auditor:</label>
                            <div class="col-sm-1"> 
                              <div class="form-group">
                                 <div class="form-check">

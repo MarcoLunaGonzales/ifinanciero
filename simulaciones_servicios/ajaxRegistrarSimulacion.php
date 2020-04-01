@@ -49,7 +49,9 @@ if(isset($_GET['nombre'])){
     $idTipoServicio=0;
   }
 
-   if($tipo_atributo==1){
+$areaGeneralPlantilla=obtenerCodigoAreaPlantillasServicios($plantilla_servicio);
+
+   if($areaGeneralPlantilla==39){
      $inicioAnio=1;
    }else{
      $inicioAnio=0;

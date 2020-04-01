@@ -108,16 +108,16 @@ $dbh = new Conexion();
                             </div>
                           </div>
                         </div>
-                        <div class="col-sm-2">
+                      </div>
+                      <div class="col-sm-2">
                            <button title="Agregar Sitio" type="button" name="add" class="btn btn-warning btn-round btn-fab" onClick="agregarAtributoAjax()"><i class="material-icons">add</i>
                             </button>
                         </div>
-                      </div>
                     </div>
                       </div>
                       <div id="sitios_div" class="d-none">
                       <div class="row">
-                       <label class="col-sm-2 col-form-label">Sitios/Productos</label>
+                       <label class="col-sm-2 col-form-label">Sitios</label>
                        <div class="col-sm-7">
                         <div class="form-group">
                           <!--<input type="readonly" value="" class="form-control tagsinput" name="sitios" id="sitios" data-role="tagsinput" required data-color="success">-->
@@ -244,7 +244,7 @@ $dbh = new Conexion();
     <div class="modal-content card">
                <div class="card-header card-header-info card-header-text">
                   <div class="card-text">
-                    <h4>Agregar Sitio / Producto</h4>
+                    <h4>Agregar Producto</h4>
                   </div>
                   <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
                     <i class="material-icons">close</i>
@@ -254,20 +254,44 @@ $dbh = new Conexion();
                        <input type="hidden" class="form-control" name="modal_fila" id="modal_fila" value="-1">
                       <div class="row">
                           <label class="col-sm-2 col-form-label">Nombre</label>
-                           <div class="col-sm-10">                     
+                           <div class="col-sm-4">                     
                              <div class="form-group">
                                <input type="text" class="form-control" name="modal_nombre" id="modal_nombre" value="">
+                             </div>
+                           </div> 
+                           <div class="row col-sm-6">
+                             <label class="col-sm-2 col-form-label">Marca</label>
+                             <div class="col-sm-10">                     
+                              <div class="form-group">
+                               <input type="text" class="form-control" name="modal_marca" id="modal_marca" value="">
+                               </div>
+                             </div>  
+                           </div> 
+                      </div>
+                      
+                      <div class="row">
+                          <label class="col-sm-2 col-form-label">Norma</label>
+                           <div class="col-sm-4">                     
+                             <div class="form-group">
+                               <input type="text" class="form-control" name="modal_norma" id="modal_norma" value="">
+                             </div>
+                           </div>
+                           <label class="col-sm-1 col-form-label">Nº Sello</label>
+                           <div class="col-sm-5">                     
+                             <div class="form-group">
+                               <input type="text" class="form-control" name="modal_sello" id="modal_sello" value="">
                              </div>
                            </div>  
                       </div>
                       <div class="row" id="div_direccion">
-                          <label class="col-sm-2 col-form-label">Direccion</label>
+                          <label class="col-sm-2 col-form-label">Direcci&oacute;n</label>
                            <div class="col-sm-10">                     
                              <div class="form-group">
                                <input type="text" class="form-control" name="modal_direccion" id="modal_direccion" value="">
                              </div>
                            </div>  
-                      </div> 
+                      </div>
+                     
                       <hr>
                       <div class="form-group float-right">
                         <button type="button" id="boton_guardarsim" class="btn btn-default" onclick="guardarAtributoItem()">Guardar</button>

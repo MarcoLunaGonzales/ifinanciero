@@ -27,6 +27,30 @@
                                <input type="text" class="form-control" name="modal_direccion" id="modal_direccion" value="">
                              </div>
                            </div>  
+                      </div>
+                      <div class="row">
+                          <label class="col-sm-2 col-form-label">Marca</label>
+                           <div class="col-sm-10">                     
+                             <div class="form-group">
+                               <input type="text" class="form-control" name="modal_marca" id="modal_marca" value="">
+                             </div>
+                           </div>  
+                      </div>
+                      <div class="row">
+                          <label class="col-sm-2 col-form-label">Norma</label>
+                           <div class="col-sm-10">                     
+                             <div class="form-group">
+                               <input type="text" class="form-control" name="modal_norma" id="modal_norma" value="">
+                             </div>
+                           </div>  
+                      </div>
+                      <div class="row">
+                          <label class="col-sm-2 col-form-label">Nº Sello</label>
+                           <div class="col-sm-10">                     
+                             <div class="form-group">
+                               <input type="text" class="form-control" name="modal_sello" id="modal_sello" value="">
+                             </div>
+                           </div>  
                       </div> 
                       <hr>
                       <div class="form-group float-right">
@@ -412,18 +436,21 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                                   <td><?php 
                                   if($codAreaX==39){
                                     $codigoAreaServ=108;
+                                    $idTipoServ=309;
                                   }else{
                                     if($codAreaX==38){
-                                      $codigoAreaServ=109;
+                                      $codigoAreaServ=109; //codigo 109 tcp
+                                      $idTipoServ=310;
                                     }else{
                                       $codigoAreaServ=0;
+                                      $idTipoServ=309;
                                     }
                                   }
                                 ?>
                                   <select class="selectpicker form-control form-control-sm" data-live-search="true" name="modal_editservicio<?=$an?>" id="modal_editservicio<?=$an?>" data-style="fondo-boton">
                                     <option disabled selected="selected" value="">--SERVICIOS--</option>
                                     <?php 
-                                     $stmt3 = $dbh->prepare("SELECT idclaservicio,descripcion,codigo from cla_servicios where (codigo_n1=108 or codigo_n1=109) and vigente=1 and codigo_n1=$codigoAreaServ");
+                                     $stmt3 = $dbh->prepare("SELECT idclaservicio,descripcion,codigo from cla_servicios where (codigo_n1=108 or codigo_n1=109) and vigente=1 and codigo_n1=$codigoAreaServ and idTipo=$idTipoServ");
                                      $stmt3->execute();
                                      while ($rowServ = $stmt3->fetch(PDO::FETCH_ASSOC)) {
                                       $codigoServX=$rowServ['idclaservicio'];
@@ -637,7 +664,7 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                                      <td>
                                       <select class="form-control selectpicker form-control-sm" data-style="fondo-boton fondo-boton-active" name="cantidad_personal<?=$an?>FFF<?=$iii?>" id="cantidad_personal<?=$an?>FFF<?=$iii?>" onchange="calcularTotalPersonalServicio('<?=$an?>',2)">
                                           <?php 
-                                             for ($hf=1; $hf<=$cantidadPre; $hf++) {
+                                             for ($hf=0; $hf<=$cantidadPre; $hf++) {
                                               if($hf==$cantidadEPre){
                                                 $sumaCantidadPre+=$cantidadPre;
                                                 ?><option value="<?=$hf?>" selected><?=$hf?></option><?php
