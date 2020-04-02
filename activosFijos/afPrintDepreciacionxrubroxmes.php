@@ -17,6 +17,15 @@ $cod_depreciaciones=$_POST["cod_depreciaciones"];
 $unidadOrgString=implode(",", $unidadOrganizacional);
 $depreciacionesString=implode(",", $cod_depreciaciones);
 
+// echo $areaString;
+$stringUnidades="";
+foreach ($unidadOrganizacional as $valor ) {    
+    $stringUnidades.=" ".abrevUnidad($valor)." ";
+}
+$stringDepreciaciones="";
+foreach ($cod_depreciaciones as $valor ) {    
+    $stringDepreciaciones.=" ".abrevDepreciacion($valor)." ";
+}
 
 
 $stmtG = $dbh->prepare("SELECT * from gestiones WHERE codigo=:codigo");
@@ -65,7 +74,9 @@ $sum_vidarestante=0;
                   <h6 class="card-title">
                     Gestion: <?php echo $gestion; ?><br>
                     Mes: <?php echo nameMes($mes2); ?><br>
-                  </h6>                
+                  </h6>
+                  <h6 class="card-title">Oficinas: <?=$stringUnidades; ?></h6>                                          
+                  <h6 class="card-title">Rubros: <?=$stringDepreciaciones?></h6>                
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">

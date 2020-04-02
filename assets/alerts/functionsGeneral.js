@@ -1905,31 +1905,47 @@ function ajaxDepreciacion(codigo_UO){
 }
 
 
-function ajaxAFunidadorganizacional(combo){
+// function ajaxAFunidadorganizacional(combo){
+//   var contenedor;
+//   var codigo_ub=combo.value;
+//   contenedor = document.getElementById('div_contenedor_UO');
+//   ajax=nuevoAjax();
+//   ajax.open('GET', 'activosFijos/ubicacionesUnidadAjax.php?codigo_UO='+codigo_ub,true);
+//   ajax.onreadystatechange=function() {
+//     if (ajax.readyState==4) {
+//       contenedor.innerHTML = ajax.responseText;
+//       $('.selectpicker').selectpicker(["refresh"]);
+      
+//       ajaxPersonalUbicacion();
+//     }
+//   }
+//   ajax.send(null)  
+// }
+
+function ajaxAFunidadorganizacionalArea(combo){
   var contenedor;
-  var codigo_ub=combo.value;
-  contenedor = document.getElementById('div_contenedor_UO');
+  var codigo_UO=combo.value;
+  contenedor = document.getElementById('div_contenedor_area');
   ajax=nuevoAjax();
-  ajax.open('GET', 'activosFijos/ubicacionesUnidadAjax.php?codigo_UO='+codigo_ub,true);
+  ajax.open('GET', 'activosFijos/ubicacionesUnidadAjax.php?codigo_UO='+codigo_UO,true);
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
       contenedor.innerHTML = ajax.responseText;
-      $('.selectpicker').selectpicker(["refresh"]);
-      
-      ajaxPersonalUbicacion();
+      $('.selectpicker').selectpicker(["refresh"]);   
+      ajaxPersonalUbicacion(codigo_UO);       
     }
   }
   ajax.send(null)  
-}
+}//unidad_area-cargo
 
-function ajaxPersonalUbicacion(){
-  var cod_uo=$("#cod_unidadorganizacional").val();  
+function ajaxPersonalUbicacion(codigo_UO){
+  // var cod_uo=$("#cod_unidadorganizacional").val();  
   // alert(cod_uo);
 
   var contenedor; 
   contenedor = document.getElementById('div_personal_UO');
   ajax=nuevoAjax();
-  ajax.open('GET', 'activosFijos/ubicacionPersonalAjax.php?codigo_UO='+cod_uo,true);
+  ajax.open('GET', 'activosFijos/ubicacionPersonalAjax.php?codigo_UO='+codigo_UO,true);
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
       contenedor.innerHTML = ajax.responseText;
@@ -7168,7 +7184,8 @@ function guardarDatosProveedorCajaChica(){
                   iniciarCargaAjax();
                 },
                success:  function (resp) {
-                  actualizarRegistroProveedor();
+                  // actualizarRegistroProveedor();
+                  actualizarRegistroProveedorCajaChica(cod_tcc,cod_cc,cod_dcc)
                   detectarCargaAjax();
                   $("#texto_ajax_titulo").html("Procesando Datos"); 
                   if(resp.trim()=="1"){
@@ -8566,4 +8583,200 @@ function AjaxGestionFechaDesdeBG(combo){
   }
   ajax.send(null)  
 
+}
+
+function cargarDatosRegistroProveedorActivoFijo(cod_activo){
+  var parametros={"cod":"none"};
+  // $('#cod_tcc').val(cod_tcc);
+  // $('#cod_cc').val(cod_cc);
+  // $('#cod_dcc').val(cod_dcc);
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "activosFijos/ajaxListarDatosRegistroProveedor.php?cod_activo="+cod_activo,
+        data: parametros,
+        beforeSend: function () {
+        $("#texto_ajax_titulo").html("Obteniendo datos del servicio..."); 
+          iniciarCargaAjax();
+        },
+        success:  function (resp) {
+           detectarCargaAjax();
+           $("#datosProveedorNuevo").html(resp);
+           $("#texto_ajax_titulo").html("Procesando Datos"); 
+           $("#pais_empresa").val("26"); //para el pais de BOLIVIA
+           seleccionarDepartamentoServicioCajaChica();
+           $('.selectpicker').selectpicker("refresh");
+           $("#modalAgregarProveedor").modal("show");
+           
+        }
+    });
+}
+function guardarDatosProveedorActivosFijos(){
+  var nombre =$("#nombre_empresa").val();
+  var nit =$("#nit_empresa").val();
+  var pais =$("#pais_empresa").val();
+  var estado =$("#departamento_empresa").val();
+  var ciudad =$("#ciudad_empresa").val();
+  var direccion =$("#direccion_empresa").val();
+  var telefono =$("#telefono_empresa").val();
+  var correo =$("#correo_empresa").val();
+  var nombre_contacto =$("#nombre_contacto").val();
+  var apellido_contacto =$("#apellido_contacto").val();
+  var cargo_contacto =$("#cargo_contacto").val();
+  var correo_contacto =$("#correo_contacto").val();
+
+  var cod_activo =$("#cod_activo").val();
+  // var cod_cc =$("#cod_cc").val();
+  // var cod_dcc =$("#cod_dcc").val();
+
+  // alert("cod_tcc:"+cod_tcc+"-cod_cc:"+cod_cc+"-cod_dcc:"+cod_dcc);
+
+   var ciudad_true=0;
+  // validaciones de campos
+   if(nombre!=""&&nit!=""&&(pais>0)&&(estado>0)&&direccion!=""&&telefono!=""&&correo!=""&&nombre_contacto!=""&&apellido_contacto!=""&&cargo_contacto!=""&&correo_contacto!=""){
+     if(ciudad>0){
+       ciudad_true=1;
+     }else{
+      if(ciudad=="NN"){
+         ciudad_true=2;
+         ciudad="";
+      }
+     }
+     if(ciudad_true>0){
+        if(ciudad_true==1){
+          var otra="";
+        }else{
+          var otra=$("#otra_ciudad").val();
+        }
+        if(otra==""&&ciudad_true==2){
+          Swal.fire("Informativo!", "Ingrese el nombre de la Ciudad", "warning");
+        }else{
+          //proceso de guardado de informacion
+           var parametros={"tipo":$("#tipo_empresa").val(),"nacional":$("#nacional_empresa").val(),"nombre":nombre,"nit":nit,"pais":pais,"estado":estado,"ciudad":ciudad,"otra":otra,"direccion":direccion,"telefono":telefono,"correo":correo,"nombre_contacto":nombre_contacto,"apellido_contacto":apellido_contacto,"cargo_contacto":cargo_contacto,"correo_contacto":correo_contacto};
+            $.ajax({
+               type: "GET",
+               dataType: 'html',
+               url: "solicitudes/ajaxAgregarNuevoProveedor.php",
+               data: parametros,
+               beforeSend: function () {
+                $("#texto_ajax_titulo").html("Enviando datos al servidor..."); 
+                  iniciarCargaAjax();
+                },
+               success:  function (resp) {
+                  // actualizarRegistroProveedor();
+                  actualizarRegistroProveedorActivoFijo(cod_activo)
+                  detectarCargaAjax();
+                  $("#texto_ajax_titulo").html("Procesando Datos"); 
+                  if(resp.trim()=="1"){
+                    alerts.showSwal('success-message','index.php?opcion=activofijoRegister&codigo='+cod_activo);
+                    // $('.selectpicker').selectpicker("refresh");
+                  }else{
+                    Swal.fire("Error!", "Ocurrio un error de envio", "warning");
+                  }
+               }
+             });  
+        }       
+     }else{
+        Swal.fire("Informativo!", "Todos los campos son requeridos", "warning");
+     }
+   }else{
+     Swal.fire("Informativo!", "Todos los campos son requeridos", "warning");
+   }
+}
+function actualizarRegistroProveedorActivoFijo(cod_activo){
+  // var codigo = $("#cod_solicitud").val();
+ var parametros={"codigo":"none"};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "solicitudes/ajaxActualizarProveedores.php",
+        data: parametros,
+        beforeSend: function () {
+        $("#texto_ajax_titulo").html("Actualizando proveedores desde el Servicio Web..."); 
+          iniciarCargaAjax();
+        },
+        success:  function (resp) {
+           detectarCargaAjax();
+           $("#texto_ajax_titulo").html("Procesando Datos"); 
+           // $('.selectpicker').selectpicker("refresh");
+           alerts.showSwal('success-message','index.php?opcion=activofijoRegister&codigo='+cod_activo);
+
+        }
+    });  
+}
+
+function botonBuscarActivoFijo(){
+  var valor_uo=$("#OficinaBusqueda").val();
+  var valor_rubro=$("#rubro").val();
+  var valor_fi=$("#fechaBusquedaInicio").val();
+  var valor_ff=$("#fechaBusquedaFin").val();
+  var valor_responsable=$("#responsable").val();
+  var valor_tipoAlta=$("#tipoAlta").val();
+  var valor_proyecto=$("#proyecto").val();
+  var valor_glosa=$("#glosaBusqueda").val();
+  
+  
+  ajax=nuevoAjax();
+  ajax.open('GET', 'activosFijos/ajax_busquedaAvanzadaAf.php?cod_uo='+valor_uo+'&rubro='+valor_rubro+'&fechaI='+valor_fi+'&fechaF='+valor_ff+
+    '&responsable='+valor_responsable+'&tipoAlta='+valor_tipoAlta+'&proyecto='+valor_proyecto+'&glosa='+valor_glosa,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      var contenedor=$("#data_activosFijos");
+      contenedor.html(ajax.responseText);
+      $("#modalBuscador").modal("hide");
+    }
+  }
+  ajax.send(null)
+} 
+
+function sacandoUFVDepreAF(){
+    var gestion=document.getElementById("gestion").value; 
+    var mes=document.getElementById("mes").value; 
+    jax=nuevoAjax();
+  ajax.open('GET', 'activosFijos/ajax_depreciaocionUFV.php?gestion='+gestion+'&mes='+mes,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      var contenedor=$("#data_activosFijos");
+      contenedor.html(ajax.responseText);
+      // $("#modalBuscador").modal("hide");
+    }
+  }
+  ajax.send(null)
+    
+  }
+
+function sacandoUFVDepreAF(){
+  
+  var gestion=document.getElementById("gestion").value; 
+  var mes=document.getElementById("mes").value; 
+
+  var contenedor;
+  contenedor = document.getElementById('div_contenedor_ufv_inicio');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'activosFijos/ajax_depreciaocionUFV.php?gestion='+gestion+'&mes='+mes,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      // $('.selectpicker').selectpicker(["refresh"]);   
+      ajax_ufv_fin();       
+    }
+  }
+  ajax.send(null)  
+}
+
+function ajax_ufv_fin(){  
+  var gestion=document.getElementById("gestion").value; 
+  var mes=document.getElementById("mes").value; 
+  var contenedor;
+  contenedor = document.getElementById('div_contenedor_ufv_fin');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'activosFijos/ajax_depreciacionUFVfin.php?gestion='+gestion+'&mes='+mes,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      // $('.selectpicker').selectpicker(["refresh"]);   
+      // ajaxPersonalUbicacion(codigo_UO);       
+    }
+  }
+  ajax.send(null)  
 }

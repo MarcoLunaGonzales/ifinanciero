@@ -514,7 +514,16 @@ function namesDepreciacion($codigo){
  }
  return($nombreX);
 }
-
+function abrevDepreciacion($codigo){
+ $dbh = new Conexion();
+ $stmt = $dbh->prepare("SELECT abreviatura FROM depreciaciones where codigo in ($codigo)");
+ $stmt->execute();
+ $nombreX="";
+ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+   $nombreX.=$row['abreviatura']." - ";
+ }
+ return($nombreX);
+}
 function abrevUnidad($codigo){
    $dbh = new Conexion();
    $stmt = $dbh->prepare("SELECT abreviatura FROM unidades_organizacionales where codigo in ($codigo)");
@@ -1728,6 +1737,18 @@ where pc.codigo=$codigo and pgc.cod_tiposervicio=1 GROUP BY pgd.cod_plantillagru
    }
    return($codigoComprobante);
   }
+
+  function obtenerCuentaContableDepre($id){
+    $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT cod_cuentacontable from depreciaciones c where codigo=$id");
+     $stmt->execute();
+     $codigoComprobante=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $codigoComprobante=$row['cod_cuentacontable'];
+     }
+     return($codigoComprobante);
+  }
+
 
   function obtenerConfiguracionValorServicio($id){
    $dbh = new Conexion();
@@ -4767,6 +4788,17 @@ function nameCuentaAuxiliar($cuentaaux){
    }
    return($nombreX);
 }
+function nameTipoAsignacion($valor){
+   $dbh = new Conexion();
+   $sqlX="SELECT nombre FROM estados_asignacionaf where codigo='$valor'";
+   $stmt = $dbh->prepare($sqlX);
+   $stmt->execute();
+   $nombreX=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $nombreX=$row['nombre'];
+   }
+   return($nombreX);
+}
 
 function obtenerCodigoAreaPlantillasServicios($codigo){
    $dbh = new Conexion();
@@ -4850,6 +4882,7 @@ function obtenerNumeroClienteSimulacion($codigo){
   }
   return $valor;
 }
+
 ?>
 
 

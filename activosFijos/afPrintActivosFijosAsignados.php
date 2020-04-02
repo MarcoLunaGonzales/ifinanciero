@@ -16,22 +16,38 @@ $dbh = new Conexion();
 $sqlX="SET NAMES 'utf8'";
 $stmtX = $dbh->prepare($sqlX);
 $stmtX->execute();
-
+set_time_limit(300);
 /*
-$gestion=$_POST["gestion"];
-$nameGestion=nameGestion($gestion);
 */
 //recibimos las variables
 $estado_asignacion_af=$_POST["estado_asignacion_af"];
-
 $estadoAsigAFString=implode(",", $estado_asignacion_af);
 
+$unidadOrganizacional=$_POST["unidad_organizacional"];
+$areas=$_POST["areas"];
+$unidadOrgString=implode(",", $unidadOrganizacional);
+$areaString=implode(",", $areas);
+
+
+// echo $areaString;
+$stringUnidades="";
+foreach ($unidadOrganizacional as $valor ) {    
+    $stringUnidades.=" ".abrevUnidad($valor)." ";
+}
+$stringAreas="";
+foreach ($areas as $valor ) {    
+    $stringAreas.=" ".abrevArea($valor)." ";
+}
+$stringEstados="";
+foreach ($estado_asignacion_af as $valor ) {    
+    $stringEstados.=nameTipoAsignacion($valor)." - ";
+}
 
 
 
 $sqlActivos="SELECT cod_activosfijos,(select af.activo from activosfijos af where af.codigo=cod_activosfijos) as activo,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional)as cod_unidadorganizacional,(select a.abreviatura from areas a where a.codigo=cod_area)as cod_area,fechaasignacion,estadobien_asig,(select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=cod_personal)as cod_personal,cod_estadoasignacionaf,(select eaf.nombre from estados_asignacionaf eaf where eaf.codigo=cod_estadoasignacionaf) as estadoAsigAF,fecha_recepcion,observaciones_recepcion,fecha_devolucion,observaciones_devolucion
 from activofijos_asignaciones
-where cod_estadoasignacionaf in ($estadoAsigAFString)";  
+where cod_estadoasignacionaf in ($estadoAsigAFString) and cod_unidadorganizacional in ($unidadOrgString) and cod_area in ($areaString)";  
 
 //echo $sqlActivos;
 
@@ -69,7 +85,9 @@ $stmtActivos->bindColumn('observaciones_devolucion', $observacion_devolucion);
                     <h6 class="card-title">Exportar como:</h6>
                   </div>
                   <h4 class="card-title"> <img  class="card-img-top"  src="../marca.png" style="width:100%; max-width:250px;">  Reporte De Activos Fijos Asignados</h4>
-                  <!--<h6 class="card-title">Gestion: <?=$nameGestion;?></h6>  -->
+                  <h6 class="card-title">Estados: <?=$stringEstados;?></h6>   
+                  <h6 class="card-title">Oficinas: <?=$stringUnidades; ?></h6>                        
+                  <h6 class="card-title">Areas: <?=$stringAreas;?></h6>  
                 </div>
                 
                 <div class="card-body">

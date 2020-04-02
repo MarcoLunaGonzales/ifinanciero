@@ -14,7 +14,8 @@ $stmtX->execute();
 $globalAdmin=$_SESSION["globalAdmin"];
 
 //asignaciones
-$query2 = "SELECT * FROM v_activosfijos_asignaciones where codigo = ".$codigo;
+$query2 = "SELECT afs.*,af.activo,
+(select CONCAT_WS(' ',p.primer_nombre,p.paterno,p.materno) from personal p where p.codigo=afs.cod_personal) as nombre_personal,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=afs.cod_unidadorganizacional)as nombre_uo FROM activofijos_asignaciones afs, activosfijos af where afs.cod_activosfijos=af.codigo and af.codigo = ".$codigo;
 $statement2 = $dbh->query($query2);
 //unidad
 $queryUO = "SELECT * from unidades_organizacionales order by 2";
@@ -128,10 +129,10 @@ $responsable='';
                       <label class="col-sm-2 col-form-label">Oficina</label>
                       <div class="col-sm-7">
                         <div class="form-group">
-                            <select id="cod_uo" name="cod_uo" class="selectpicker " data-style="btn btn-info" onChange="ajaxPersonalUbicacionTrasfer(this);">
+                            <select id="cod_uo" name="cod_uo" class="selectpicker form-control form-control-sm" data-style="btn btn-info" onChange="ajaxPersonalUbicacionTrasfer(this);" data-show-subtext="true" data-live-search="true" required="true">
                             <option value=""></option>
                             <?php while ($row = $statementUO->fetch()){ ?>
-                              <option  value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                              <option  value="<?=$row["codigo"];?>"><?=$row["abreviatura"];?> - <?=$row["nombre"];?></option>
 
                                 <!-- <option value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option> -->
                             <?php } ?> 
@@ -144,10 +145,10 @@ $responsable='';
                       <label class="col-sm-2 col-form-label">Area</label>
                       <div class="col-sm-7">
                         <div class="form-group">
-                            <select id="cod_area" name="cod_area" class="selectpicker " data-style="btn btn-info">
+                            <select id="cod_area" name="cod_area" class="selectpicker form-control form-control-sm" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" required="true">
                             <option value=""></option>
                             <?php while ($row = $statementArea->fetch()){ ?>
-                                <option value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                                <option value="<?=$row["codigo"];?>"><?=$row["abreviatura"];?> - <?=$row["nombre"];?></option>
                             <?php } ?> 
                             </select>
                         </div>
@@ -155,7 +156,7 @@ $responsable='';
                     </div><!--fin campo area -->
                     <div class="row">
                       <label class="col-sm-2 col-form-label">Responsable</label>
-                      <div class="col-sm-4">
+                      <div class="col-sm-7">
                       <div class="form-group">
                           <div id="div_personal_UO">
                             

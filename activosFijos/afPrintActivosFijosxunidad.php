@@ -29,6 +29,19 @@ $unidadOrgString=implode(",", $unidadOrganizacional);
 $areaString=implode(",", $areas);
 $personalString=implode(",", $personal);
 
+// echo $areaString;
+$stringUnidades="";
+foreach ($unidadOrganizacional as $valor ) {    
+    $stringUnidades.=" ".abrevUnidad($valor)." ";
+}
+$stringAreas="";
+foreach ($areas as $valor ) {    
+    $stringAreas.=" ".abrevArea($valor)." ";
+}
+// $stringPersonal="";
+// foreach ($personal as $valor ) {    
+//     $stringPersonal.=" ".namesPersonal($valor)." ";
+// }
 
 
 
@@ -67,10 +80,9 @@ $stmtActivos->bindColumn('cod_responsables_responsable', $responsables_responsab
                     <img  class="card-img-top"  src="../marca.png" style="width:100%; max-width:250px;">
                       Reporte De Activos Fijos Por Oficina
                   </h4>
-
-                  <!-- <h4 class="card-title text-center">Reporte De Activos Fijos Por Unidad</h4> -->
-                  
-                  <!--<h6 class="card-title">Gestion: <?=$nameGestion;?></h6>  -->              
+                  <h6 class="card-title">Oficinas: <?=$stringUnidades; ?></h6>                        
+                  <h6 class="card-title">Areas: <?=$stringAreas;?></h6>
+                  <!-- <h6 class="card-title">Personal: <?=$stringPersonal?></h6> -->
                 
                 </div>
                 <div class="card-body">

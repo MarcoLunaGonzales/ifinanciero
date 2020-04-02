@@ -40,6 +40,51 @@ $statement = $dbh->query($query);
             </div>
           </div>
           <!--  fin de seleccion -->
+          <div class="row">
+            <label class="col-sm-2 col-form-label">Oficina</label>
+            <div class="col-sm-7">
+              <div class="form-group">
+                <select class="selectpicker form-control" title="Seleccione una opcion" 
+                name="unidad_organizacional[]" id="unidad_organizacional" 
+                data-style="select-with-transition" data-size="5" 
+                data-actions-box="true" multiple required data-show-subtext="true" data-live-search="true"> 
+                  <?php
+                    $sql="SELECT * FROM unidades_organizacionales where cod_estado=1 order by 2";
+                    $stmt = $dbh->prepare($sql);
+                    $stmt->execute();
+                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                      $codigoX=$row['codigo'];
+                      $nombreX=$row['nombre'];
+                    ?>
+                    <option value="<?=$codigoX;?>"><?=$row['abreviatura'];?> - <?=$nombreX;?></option>
+                    <?php 
+                    }
+                  ?>
+                </select>
+              </div>
+            </div>
+          </div>
+          <!--  fin de seleccion unidad organizacional-->
+          <div class="row">
+            <label class="col-sm-2 col-form-label">Area</label>
+            <div class="col-sm-7">
+            <div class="form-group">
+              <select class="selectpicker form-control" title="Seleccione una opcion" name="areas[]" id="areas" data-style="select-with-transition" data-size="5" data-actions-box="true" multiple required data-show-subtext="true" data-live-search="true">
+                <?php
+                $stmt = $dbh->prepare("SELECT * FROM areas where cod_estado=1 order by 2");
+              $stmt->execute();
+              while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $codigoX=$row['codigo'];
+                $nombreX=$row['nombre'];
+              ?>
+              <option value="<?=$codigoX;?>"><?=$row['abreviatura'];?> - <?=$nombreX;?></option>
+              <?php 
+              }
+                ?>
+              </select>
+            </div>
+            </div>
+          </div>
   
 			  </div>
 			  <div class="card-footer ml-auto mr-auto">

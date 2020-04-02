@@ -37,8 +37,7 @@ $i=0;
 
 <div class="content">
 	<div class="container-fluid">
-		<div style="overflow-y:scroll; ">			 
-		<div class="row">
+		<div style="overflow-y:scroll; ">			 		
             <div class="col-md-12">
               <div class="card">
                 <div class="card-header <?=$colorCard;?> card-header-icon">
@@ -255,8 +254,7 @@ $i=0;
 			  </div>
                </form> 
               </div>	  
-            </div>
-          </div>  
+            </div>         
         </div>	
 	</div>
         

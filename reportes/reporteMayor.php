@@ -218,7 +218,7 @@ while ($rowCount = $stmtCount->fetch(PDO::FETCH_ASSOC)) {
 $contador++;
 }
 if($contador!=0){
-$html.='<tr >'.
+$html.='<tr class="bg-plomo">'.
                   '<td colspan="5" class="text-left font-weight-bold">Nombre de la Cuenta: '.$nombreCuenta.' </td>'.
                   '<td style="display: none;"></td>'.
                   '<td style="display: none;"></td>'.

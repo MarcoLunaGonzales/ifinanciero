@@ -295,12 +295,12 @@ if($menuModulo==0){
 
             <div class="collapse" id="tablasAF">
               <ul class="nav">              
-                 <li class="nav-item ">
+                 <!-- <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listUbicaciones">
                     <span class="sidebar-mini"> UAF </span>
                     <span class="sidebar-normal"> Ubicaciones</span>
                   </a>
-                </li>
+                </li> -->
                 <li class="nav-item ">
                  <a class="nav-link" href="?opcion=provLista">
                    <span class="sidebar-mini"> UAF </span>

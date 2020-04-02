@@ -247,6 +247,16 @@
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
             }
         } );
+        $('#tablePaginatorHead').DataTable( {
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            fixedHeader: {
+              header: true,
+              footer: true
+            }
+        } );
+
         if ($('#cuenta_auto').length) {
           autocompletar("cuenta_auto","cuenta_auto_id",array_cuenta);
         }

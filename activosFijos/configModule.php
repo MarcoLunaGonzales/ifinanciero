@@ -128,4 +128,7 @@ $rpt01procesar="activosFijos/afPrintDepreciacionxrubroxmes.php";
 //devolver AF all
 //$urldevolver_af_all="activosFijos/saveAsignacionAll.php";
 
+$urlprint_contabilizacion_af="activosfijos/executeComprobanteActivoFijo.php";
+$urlImp="comprobantes/imp.php";
+
 ?>
