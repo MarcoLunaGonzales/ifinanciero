@@ -652,6 +652,33 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                                    </tr>
                            </table>
                            <input type="hidden" id="modal_numeroservicio<?=$an?>" value="<?=$iii?>">
+                           <div class="row col-sm-12">
+                            <label class="col-sm-4 col-form-label">Copiar datos (SERVICIOS) de <?=$etapas?> a:</label>
+                             <div class="col-sm-2">
+                              <div class="form-group">
+                               <select class="form-control selectpicker" multiple data-style="btn btn-primary btn-sm btn-round" name="copiar_servicios<?=$an?>[]" id="copiar_servicios<?=$an?>">
+                                 <?php
+                                for ($kk=$inicioAnio; $kk<=$anioGeneral; $kk++) { 
+                                    $optionTit="Año ".$kk;
+                                     if($codAreaX!=39){
+                                       if($kk==0||$kk==1){
+                                        $optionTit="Año 1 (ETAPA ".($kk+1).")"; 
+                                       }
+                                     }
+                                    if($kk!=$an){
+                                        ?><option value="<?=$kk?>"><?=$optionTit?></option><?php
+                                    }
+                                }    
+                                  ?>       
+                                </select>
+                               </div> 
+                             </div>
+                             <div class="col-sm-2">
+                              <div class="form-group">
+                                <button onclick="copiarDatosServicios(<?=$an?>)" class="btn btn-info btn-sm" >COPIAR</button>
+                               </div> 
+                             </div>
+                           </div>          
                       </div>
                     <!--FIN DE SERVICIOS-->
 
@@ -856,6 +883,33 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                            </table>
                            <input type="hidden" id="modal_numeropersonal<?=$an?>" value="<?=$iii?>">
                            <input type="hidden" id="modal_cantidadpersonal<?=$an?>" value="<?=$sumaCantidadPre?>">
+                           <div class="row col-sm-12">
+                            <label class="col-sm-4 col-form-label">Copiar datos (PERSONAL) de <?=$etapas?> a:</label>
+                             <div class="col-sm-2">
+                              <div class="form-group">
+                               <select class="form-control selectpicker" multiple data-style="btn btn-primary btn-sm btn-round" name="copiar_personal<?=$an?>[]" id="copiar_personal<?=$an?>">
+                                 <?php
+                                for ($kk=$inicioAnio; $kk<=$anioGeneral; $kk++) { 
+                                    $optionTit="Año ".$kk;
+                                     if($codAreaX!=39){
+                                       if($kk==0||$kk==1){
+                                        $optionTit="Año 1 (ETAPA ".($kk+1).")"; 
+                                       }
+                                     }
+                                    if($kk!=$an){
+                                        ?><option value="<?=$kk?>"><?=$optionTit?></option><?php
+                                    }
+                                }    
+                                  ?>       
+                                </select>
+                               </div> 
+                             </div>
+                             <div class="col-sm-2">
+                              <div class="form-group">
+                                <button onclick="copiarDatosPersonal(<?=$an?>)" class="btn btn-info btn-sm" >COPIAR</button>
+                               </div> 
+                             </div>
+                           </div>
                       </div>
                        <!--FIN DE PERSONAL-->
                           </div>

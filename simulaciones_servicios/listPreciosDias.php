@@ -33,7 +33,7 @@ if(isset($_GET["codigo"])){
    $areaX=$row['cod_area'];
  }
  //CARGAR DIAS PORDEFECTO DE LA TABLA DE CONFIGURACION
- $dias=obtenerValorConfiguracion(39);
+ $dias=obtenerValorConfiguracion(40);
   ?>
   <script>$("#productos_div").addClass("d-none");</script>
   <script>$("#sitios_div").addClass("d-none");</script>
