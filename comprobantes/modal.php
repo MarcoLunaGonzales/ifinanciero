@@ -516,23 +516,12 @@
                                 ?>
                                 <option value="<?=$codigoX;?>###NNN"><?=trim($numeroX);?> - <?=trim($nombreX);?></option>  
                                 <?php
-                                  }
-                                  ?>
-                                <?php
-                              $stmt = $dbh->prepare("SELECT p.* FROM cuentas_auxiliares p, configuracion_estadocuentas c where c.cod_cuentaaux=p.codigo and c.tipo=1 and c.cod_plancuenta=0 order by nombre");
-                              $stmt->execute();
-                              while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                                $codigoX=$row['codigo'];
-                                $nombreX=$row['nombre'];
-                                $numeroX=$row['nro_cuenta'];
-                                ?>
-                                <option value="<?=$codigoX;?>###AUX"><?=trim($numeroX);?> - <?=trim($nombreX);?></option>  
-                                <?php
-                                  }
-                                  ?>  
+                              }   
+                                ?>  
                              </select>
                           </div> 
                        </div>
+
                        <div class="row col-sm-6 d-none" id="div_cuentasorigenaux">
                           <label class="col-sm-3 col-form-label">Auxiliares</label>
                             <div class="col-sm-7">
@@ -540,14 +529,19 @@
                                 <select class="selectpicker form-control form-control-sm" data-live-search="true" name="cuentas_auxiliaresorigen" id="cuentas_auxiliaresorigen" data-style="<?=$comboColor;?>">
                                   <option selected value="all">TODOS</option>
                                   <?php
-                              $listaAuxiliar = listaCuentasAuxiliaresRelacionadasProveedoresClientes();
-                              while ($row = $listaAuxiliar->fetch(PDO::FETCH_ASSOC)) {
-                                $codigoX=$row['codigo'];
-                                $codCuentaX=$row['cod_cuenta'];
-                                $nombreX=$row['nombre_proveedorcliente'];
-                                $tipoX=$row['cod_tipoauxiliar'];
+                              //$listaAuxiliar = listaCuentasAuxiliaresRelacionadasProveedoresClientes();
+                              $sqlAuxiliares="SELECT distinct(c.codigo)as codigo, c.cod_cuenta, e.cod_proveedor, (select af.nombre from af_proveedores af where af.codigo=e.cod_proveedor)as nombre from cuentas_auxiliares c, estados_cuenta e where e.cod_cuentaaux=c.codigo and c.cod_tipoauxiliar=1 
+                                  union
+                                  SELECT distinct(c.codigo), c.cod_cuenta, e.cod_proveedor, (select af.nombre from clientes af where af.codigo=e.cod_proveedor)as nombre from cuentas_auxiliares c, estados_cuenta e where e.cod_cuentaaux=c.codigo and c.cod_tipoauxiliar=2   ORDER BY nombre";
+                              $stmtAux = $dbh->prepare($sqlAuxiliares);    
+                              $stmtAux->execute();
+                              while ($rowAux = $stmtAux->fetch(PDO::FETCH_ASSOC)) {
+                                $codigoX=$rowAux['codigo'];
+                                $codCuentaX=$rowAux['cod_cuenta'];
+                                $codProveedorX=$rowAux['cod_proveedor'];
+                                $nombreX=$rowAux['nombre'];
                                 ?>
-                                <option value="<?=$codigoX;?>###<?=$tipoX?>###<?=$codCuentaX?>"><?=trim($nombreX);?></option>  
+                                <option value="<?=$codigoX;?>###<?=$codCuentaX?>"><?=trim($nombreX);?></option>  
                                 <?php
                                   }
                                   ?> 

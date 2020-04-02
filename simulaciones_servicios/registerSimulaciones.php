@@ -65,14 +65,14 @@ $dbh = new Conexion();
                   }
               ?>
 
-                 <div class="row">
+                 <!--<div class="row">
                        <label class="col-sm-2 col-form-label">Nombre:</label>
                        <div class="col-sm-7">
                         <div class="form-group">
-                          <input class="form-control" type="text" name="nombre" id="nombre" value="<?=$nombreInputPropuesta?>" autocomplete="off" autofocus/>
+                          --><input class="form-control" type="hidden" name="nombre" id="nombre" value="Sin Nombre"/><!--
                         </div>
                         </div>
-                      </div>
+                      </div>-->
                   <div class="row">
                        <label class="col-sm-2 col-form-label">Plantilla de Servicios :</label>
                        <div class="col-sm-7">
@@ -86,7 +86,7 @@ $dbh = new Conexion();
                                   $nombreX=$row['nombre'];
                                   $abrevX=$row['abreviatura'];
                                    ?>
-                                  <option value="<?=$codigoX;?>"><?=$nombreX;?> @<?=$abrevX?></option> 
+                                  <option value="<?=$codigoX;?>"><?=$nombreX;?></option> 
                                   <?php
                                     }
                                     ?>
@@ -152,9 +152,8 @@ $dbh = new Conexion();
                             </select>
                         </div>
                         </div>
-                     </div> 
-                    </div>
-                      <div class="row">
+                     </div>
+                     <div class="row">
                      <label class="col-sm-2 col-form-label">AFNOR</label>
                            <div class="col-sm-7">
                         <div class="form-group">
@@ -168,7 +167,9 @@ $dbh = new Conexion();
                                   </div>
                                 </div>  
                              </div>     
-                        </div>
+                        </div> 
+                    </div>
+                      
                       <div class="row">
                        <label class="col-sm-2 col-form-label">Cliente</label>
                        <div class="col-sm-7">
@@ -207,7 +208,7 @@ $dbh = new Conexion();
                         <!--</div>
                         </div>
                       </div>-->
-                      <div class="row">
+                      <!--<div class="row">
                        <label class="col-sm-2 col-form-label">Regi&oacute;n</label>
                        <div class="col-sm-7">
                          <div class="form-group">
@@ -217,7 +218,7 @@ $dbh = new Conexion();
                                 </select>
                          </div>
                         </div>
-                     </div>  
+                     </div>-->  
         </div>
         <br>
         <div id="mensaje"></div>
@@ -242,9 +243,9 @@ $dbh = new Conexion();
 <div class="modal fade modal-primary" id="modal_atributo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content card">
-               <div class="card-header card-header-info card-header-text">
+               <div class="card-header card-header-primary card-header-text">
                   <div class="card-text">
-                    <h4>Agregar Producto</h4>
+                    <h4 id="titulo_modal_atributo"></h4>
                   </div>
                   <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
                     <i class="material-icons">close</i>
@@ -259,7 +260,7 @@ $dbh = new Conexion();
                                <input type="text" class="form-control" name="modal_nombre" id="modal_nombre" value="">
                              </div>
                            </div> 
-                           <div class="row col-sm-6">
+                           <div class="row col-sm-6" id="div_marca">
                              <label class="col-sm-2 col-form-label">Marca</label>
                              <div class="col-sm-10">                     
                               <div class="form-group">
@@ -269,7 +270,7 @@ $dbh = new Conexion();
                            </div> 
                       </div>
                       
-                      <div class="row">
+                      <div class="row" id="div_norma">
                           <label class="col-sm-2 col-form-label">Norma</label>
                            <div class="col-sm-4">                     
                              <div class="form-group">

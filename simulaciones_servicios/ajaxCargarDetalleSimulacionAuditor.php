@@ -74,7 +74,7 @@ if(isset($_GET["cod_simulacion"])){
            <select class="form-control selectpicker form-control-sm" data-style="fondo-boton fondo-boton-active" name="modal_cantidad_personal<?=$iii?>" id="modal_cantidad_personal<?=$iii?>" onchange="calcularTotalPersonalServicioAuditor()">
               <?php 
                  for ($hf=0; $hf<=$cantidadTipo; $hf++) {
-                   if($hf==$cantPre){
+                   if($hf==$cantidadTipo){
                      ?><option value="<?=$hf?>" selected><?=$hf?></option><?php
                    }else{
                         ?><option value="<?=$hf?>"><?=$hf?></option><?php

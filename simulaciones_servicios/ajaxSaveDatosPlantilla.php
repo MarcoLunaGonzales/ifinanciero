@@ -33,8 +33,11 @@ if($dia<$dias_aud){
   $dias_aud=$dia;
 }
 if($_GET['tcs']==0){
+  $tipo_atributo=1;
   $sqlUpdatePlantilla="UPDATE simulaciones_servicios SET  utilidad_minima='$ut_i',dias_auditoria='$dia',productos='$productos' where codigo=$codSimulacion";
 }else{
+  $tipo_atributo=2;
+  $atributosDias= json_decode($_GET['sitios_dias']);
   $sqlUpdatePlantilla="UPDATE simulaciones_servicios SET  utilidad_minima='$ut_i',dias_auditoria='$dia',sitios='$productos' where codigo=$codSimulacion";
 }
 
@@ -46,11 +49,24 @@ $sqlDetalles="UPDATE simulaciones_servicios_auditores SET cantidad_editado=$cant
 $stmtDetalles = $dbh->prepare($sqlDetalles);
 $stmtDetalles->execute();
 
+
+
 $sqlDet="SELECT * FROM simulaciones_serviciodetalle where cod_simulacionservicio=$codSimulacion";
 $stmtDet = $dbh->prepare($sqlDet);
 $stmtDet->execute();
 
 //SITIOS 0 PRODUCTOS
+$sqlDetAt="SELECT * FROM simulaciones_servicios_atributos where cod_simulacionservicio=$codSimulacion";
+$stmtDetAt = $dbh->prepare($sqlDetAt);
+$stmtDetAt->execute();
+
+  while ($rowPreAt = $stmtDetAt->fetch(PDO::FETCH_ASSOC)) {
+    $codigoDetAt=$rowPreAt['codigo'];
+    $dbhA = new Conexion();
+    $sqlDel="DELETE FROM simulaciones_servicios_atributosdias where cod_simulacionservicioatributo=$codigoDetAt";
+    $stmtDel = $dbhA->prepare($sqlDel);
+    $stmtDel->execute();
+  }
    $dbhA = new Conexion();
   $sqlA="DELETE FROM simulaciones_servicios_atributos where cod_simulacionservicio=$codSimulacion";
   $stmtA = $dbhA->prepare($sqlA);
@@ -59,16 +75,36 @@ $stmtDet->execute();
   //simulaciones_serviciosauditores
           $nC=cantidadF($atributos);
           for($att=0;$att<$nC;$att++){
+              $codigoAtributo=$atributos[$att]->codigo;
               $nombreAtributo=$atributos[$att]->nombre;
-            if($_GET['tcs']==0){
-                $direccionAtributo="";
-              }else{
-                $direccionAtributo=$atributos[$att]->direccion;
-              }         
-              $sqlDetalleAtributos="INSERT INTO simulaciones_servicios_atributos (cod_simulacionservicio, nombre, direccion, cod_tipoatributo) 
-              VALUES ('$codSimulacion', '$nombreAtributo', '$direccionAtributo', '$tipo_atributo')";
+              $direccionAtributo=$atributos[$att]->direccion;
+              $marcaAtributo=$atributos[$att]->marca;
+              $normaAtributo=$atributos[$att]->norma;
+              $selloAtributo=$atributos[$att]->sello;
+
+              $codSimulacionServicioAtributo=obtenerCodigoSimulacionServicioAtributo();
+              $sqlDetalleAtributos="INSERT INTO simulaciones_servicios_atributos (codigo,cod_simulacionservicio, nombre, direccion, cod_tipoatributo,marca,norma,nro_sello) 
+              VALUES ('$codSimulacionServicioAtributo','$codSimulacion', '$nombreAtributo', '$direccionAtributo', '$tipo_atributo','$marcaAtributo','$normaAtributo','$selloAtributo')";
               $stmtDetalleAtributos = $dbh->prepare($sqlDetalleAtributos);
               $stmtDetalleAtributos->execute();
+
+            if($_GET['tcs']==0){
+                //$direccionAtributo="";
+              }else{
+                 $nCDias=cantidadF($atributosDias);
+                    for($jj=0;$jj<$nCDias;$jj++){
+                       $codigoAtributoDias=$atributosDias[$jj]->codigo_atributo;
+                       $anioAtributoDias=$atributosDias[$jj]->anio;
+                       $diasAtributoDias=$atributosDias[$jj]->dias;
+                       if($codigoAtributoDias==$codigoAtributo){
+                        $sqlDetalleAtributosDias="INSERT INTO simulaciones_servicios_atributosdias (cod_simulacionservicioatributo, dias, cod_anio) 
+                        VALUES ('$codSimulacionServicioAtributo', '$diasAtributoDias', '$anioAtributoDias')";
+                        $stmtDetalleAtributosDias = $dbh->prepare($sqlDetalleAtributosDias);
+                        $stmtDetalleAtributosDias->execute();
+                       }           
+                    }
+              }         
+              
          }
          //FIN simulaciones_serviciosauditores
 

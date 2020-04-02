@@ -234,22 +234,13 @@ function configuracionEstadosCuenta(fila,codigoCuenta,codigoCuentaAux){
       $("#estados_cuentas"+fila).addClass("d-none");  
     }
   };
-  /*if(contador==0&&codigoCuentaAux!=0){
-    for (var i = 0; i < estado_cuentas.length; i++) {
-      if(estado_cuentas[i].cod_cuentaaux==codigoCuentaAux){
-         $("#estados_cuentas"+fila).removeClass("d-none"); 
-         $("#tipo_estadocuentas"+fila).val(estado_cuentas[i].tipo);
-         contador++;     
-      break;
-      }else{
-        $("#estados_cuentas"+fila).removeClass("d-none"); 
-        $("#estados_cuentas"+fila).addClass("d-none");
-      }
-    };   
-  }*/
+  //SI EL ESTADO DE CUENTA NO ESTA EN LA TABLA LE PONEMOS UN CAMBIO DE COLOR
   if(contador==0){
+     //$("#estados_cuentas"+fila).removeClass("d-none"); 
+     //$("#estados_cuentas"+fila).addClass("d-none");
      $("#estados_cuentas"+fila).removeClass("d-none"); 
-     $("#estados_cuentas"+fila).addClass("d-none");
+     $("#estados_cuentas"+fila).removeClass("btn-danger"); 
+     $("#estados_cuentas"+fila).addClass("btn-success");
   }
 }
 function copiarGlosa(){
@@ -2309,8 +2300,12 @@ function guardarSimulacionServicio(){
   var utilidad=$("#utilidad_minima").val();
   var anios=$("#anios").val();
   var plantilla_servicio=$("#plantilla_servicio").val();
-  if($("#afnor").is(':checked')){
-    var afnor=1;
+  if($("#afnor").length){
+    if($("#afnor").is(':checked')){
+      var afnor=1;
+    }else{
+      var afnor=0;
+    }  
   }else{
     var afnor=0;
   }
@@ -2329,6 +2324,7 @@ function guardarSimulacionServicio(){
           iniciarCargaAjax();
         },
         success:  function (resp) {
+          //alert(resp);
           detectarCargaAjax();
          if(!($("#codigo_servicioibnorca").length)){
             alerts.showSwal('success-message','simulaciones_servicios/registerSimulacion.php?cod='+resp);
@@ -2342,7 +2338,7 @@ function guardarSimulacionServicio(){
   }else{
     if(norma==""||itemAtributos.length==0||dias==""||nombre==""||!(plantilla_servicio>0)){
    Swal.fire('Informativo!','Debe llenar los campos!','warning'); 
-  }else{
+     }else{
      var parametros={"id_servicio":idServicio,"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"atributos":JSON.stringify(itemAtributos),"norma":norma,"anios":anios,"afnor":afnor,"tipo_atributo":1};
      $.ajax({
         type: "GET",
@@ -4593,6 +4589,36 @@ function calcularTotalFilaServicioNuevo(anio,valor){
     } 
 }
 
+function calcularTotalPersonalServicioNuevo(anio,valor){
+  var i=0;
+  var usd=$("#cambio_moneda").val();
+  if(valor==1){
+      var montoPoner=redondeo(parseFloat($("#modal_montopretotal"+anio+"FFF"+i).val())/parseInt($("#dias_personal"+anio+"FFF"+i).val()));
+      $("#modal_montopre"+anio+"FFF"+i).val(montoPoner);
+      $("#modal_montopreUSD"+anio+"FFF"+i).val(redondeo(montoPoner/parseFloat(usd)));
+      $("#modal_montopretotalUSD"+anio+"FFF"+i).val(redondeo((parseFloat($("#modal_montopre"+anio+"FFF"+i).val()))/parseInt($("#dias_personal"+anio+"FFF"+i).val())/parseFloat(usd)));
+    }else{
+      if(valor==2){
+      var montoPoner=redondeo(parseFloat($("#modal_montopre"+anio+"FFF"+i).val())*parseInt($("#dias_personal"+anio+"FFF"+i).val()));
+      $("#modal_montopretotal"+anio+"FFF"+i).val(montoPoner);
+      $("#modal_montopretotalUSD"+anio+"FFF"+i).val(redondeo(montoPoner/parseFloat(usd)));
+      $("#modal_montopreUSD"+anio+"FFF"+i).val(redondeo(parseFloat($("#modal_montopre"+anio+"FFF"+i).val())/parseFloat(usd)));
+      }else{
+        if(valor==3){ 
+          var montoPoner=redondeo(parseFloat($("#modal_montopretotalUSD"+anio+"FFF"+i).val())/parseInt($("#dias_personal"+anio+"FFF"+i).val()));
+          $("#modal_montopreUSD"+anio+"FFF"+i).val(montoPoner);
+          $("#modal_montopre"+anio+"FFF"+i).val(redondeo(montoPoner*parseFloat(usd)));
+          $("#modal_montopretotal"+anio+"FFF"+i).val(redondeo((parseFloat($("#modal_montopre"+anio+"FFF"+i).val()))/parseInt($("#dias_personal"+anio+"FFF"+i).val())));
+        }else{
+          var montoPoner=redondeo(parseFloat($("#modal_montopreUSD"+anio+"FFF"+i).val())*parseInt($("#dias_personal"+anio+"FFF"+i).val()));
+          $("#modal_montopretotalUSD"+anio+"FFF"+i).val(montoPoner);
+          $("#modal_montopretotal"+anio+"FFF"+i).val(redondeo(montoPoner*parseFloat(usd)));
+          $("#modal_montopre"+anio+"FFF"+i).val(redondeo(parseFloat($("#modal_montopreUSD"+anio+"FFF"+i).val())*parseFloat(usd))); 
+        }
+      }
+    } 
+}
+
 function calcularTotalPartidaGenerico(fila,valor){
   var suma=0;
   var total= $("#numero_cuentas"+fila).val();
@@ -5099,7 +5125,11 @@ function guardarCuentasSimulacionGenericoServicioPrevio(anio,ib){
           detectarCargaAjax();
           $("#cuentas_simulacionpersonal").html(resp);
           $('.selectpicker').selectpicker("refresh");
-          $("#titulo_modaldetalleslista").html(anio);
+          var titulo="AÑO "+anio;
+          if((anio==0||anio==1)&&($("#codigo_area").val()!=39)){
+           titulo="AÑO 1 (ETAPA "+(parseInt(anio)+1)+")";
+          }
+          $("#titulo_modaldetalleslista").html(titulo);
           $("#modalSimulacionCuentasPersonal").modal("show");
           $("#modalSimulacionCuentas"+anio).modal("hide");           
         }
@@ -5218,9 +5248,11 @@ function verEstadosCuentas(fila,cuenta){
     if(cuenta==0){
       if($("#cuenta_auxiliar"+fila).val()==0){
         var cod_cuenta=$("#cuenta"+fila).val();
+        var cod_cuenta_auxiliar=0;
         var auxi="NO";
       }else{
-        var cod_cuenta=$("#cuenta_auxiliar"+fila).val();
+        var cod_cuenta=$("#cuenta"+fila).val();
+        var cod_cuenta_auxiliar=$("#cuenta_auxiliar"+fila).val();
         var auxi="SI";
       }
       if($("#cuentas_auxiliaresorigen").length){
@@ -5228,18 +5260,29 @@ function verEstadosCuentas(fila,cuenta){
         $('.selectpicker').selectpicker("refresh"); 
       }      
     }else{
-      if($("#cuenta_auxiliar"+fila).val()==0){
-        var cod_cuenta=cuenta;
-        var auxi="NO";
-      }else{
-        var cod_cuenta=cuenta;
-        var auxi="SI";
-      }
+      //aca entramos cuando se mata la cuenta
       var cod_cuenta=cuenta;
+      var vector_cod_cuenta_auxiliar=$("#cuentas_auxiliaresorigen").val().split('###');
+      var cod_cuenta_auxiliar=vector_cod_cuenta_auxiliar[0];
+      var auxi="NO";
     }
 
     var tipo=$("#tipo_estadocuentas"+fila).val();
     var tipo_proveedorcliente=$("#tipo_proveedorcliente"+fila).val();
+
+    /*console.log("tipo_proveedorcliente: "+$("#tipo_proveedorcliente"+fila).val());
+    console.log("debe: "+$("#debe"+fila).val());
+    console.log("haber: "+$("#haber"+fila).val());*/
+    if(tipo_proveedorcliente==-100){/*CASO MATAR CUENTAS*/
+        if($("#debe"+fila).val()>0){
+          tipo=1;
+          tipo_proveedorcliente=1;
+        }
+        if($("#haber"+fila).val()>0){
+          tipo=2;
+          tipo_proveedorcliente=2;
+        }
+    }
 
     if(tipo==1 && tipo_proveedorcliente==1){
       $("#monto_estadocuenta").val($("#debe"+fila).val());
@@ -5285,9 +5328,9 @@ function verEstadosCuentas(fila,cuenta){
 
     if($("#cuentas_auxiliaresorigen").length){
        var codigoAuxi=$("#cuentas_auxiliaresorigen").val();
-       var parametros={"cod_cuenta":cod_cuenta,"tipo":tipo,"tipo_proveedorcliente":tipo_proveedorcliente,"mes":12,"auxi":auxi,"cod_auxi":codigoAuxi};
+       var parametros={"cod_cuenta":cod_cuenta,"cod_cuenta_auxiliar":cod_cuenta_auxiliar,"tipo":tipo,"tipo_proveedorcliente":tipo_proveedorcliente,"mes":12,"auxi":auxi,"cod_auxi":codigoAuxi};
     }else{
-      var parametros={"cod_cuenta":cod_cuenta,"tipo":tipo,"tipo_proveedorcliente":tipo_proveedorcliente,"mes":12,"auxi":auxi};
+      var parametros={"cod_cuenta":cod_cuenta,"cod_cuenta_auxiliar":cod_cuenta_auxiliar,"tipo":tipo,"tipo_proveedorcliente":tipo_proveedorcliente,"mes":12,"auxi":auxi};
     }
 
     //PASA Y MOSTRAMOS LOS ESTADOS DE CUENTA
@@ -5308,9 +5351,11 @@ function verEstadosCuentas(fila,cuenta){
           $("#div_estadocuentas").html(respuesta[0]);
           if(tipo==2 && tipo_proveedorcliente==1){
             var rsaldo=listarEstadosCuentas(fila,respuesta[1]);
+            console.log("listarEstadoCuentasDebito;");
             listarEstadosCuentasDebito(fila,rsaldo);
           }else{
             var rsaldo=listarEstadosCuentasCredito(fila,respuesta[1]);
+            console.log("listarEstadoCuentas;");
             listarEstadosCuentas(fila,rsaldo);
           } 
           //mostrarSelectProveedoresClientes()          
@@ -5552,7 +5597,6 @@ function verEstadosCuentasModal(cuenta,cod_cuenta,cod_cuentaaux,tipo,tipo_provee
         amount_parts[0] = amount_parts[0].replace(regexp, '$1' + ',' + '$2');
 
     return  sign ? '-' + amount_parts.join('.') : amount_parts.join('.');  //amount_parts.join('.');
-//>>>>>>> 9665608161fbd74baa97b51d1230f7cda83c0916
 }
 
 
@@ -6071,8 +6115,10 @@ function guardarDatosPlantillaServicioAjax(btn_id){
   //var num_prod=respuesta.length;
   if($("#divResultadoListaAtributos").length){
     var inicioAnio=0;
+    var atributosDias=JSON.stringify(itemAtributosDias);
    }else{
     var inicioAnio=1;
+    var atributosDias="";
    }
 
 if(!(ut_i==""||dia==""||dia==0||productos.length==0)){ 
@@ -6093,7 +6139,7 @@ if(!(ut_i==""||dia==""||dia==0||productos.length==0)){
       if($("#modal_montopre"+anio+"FFF"+i).is("[readonly]")){
         habilitado=0;
       }
-      var parametros = {"codigo":codigo,"extlocal":extlocal,"montoe":montoe,"montol":montol,"monto":monto,"simulacion":cod_sim,"productos":JSON.stringify(productos),"plantilla":codigo_p,"dia":dia,"utilidad":ut_i,"habilitado":habilitado,"cantidad":cantidad,"dias":dias,"cantidadT":cantidadTotal,"tcs":tcs};
+      var parametros = {"codigo":codigo,"extlocal":extlocal,"montoe":montoe,"montol":montol,"monto":monto,"simulacion":cod_sim,"sitios_dias":atributosDias,"productos":JSON.stringify(productos),"plantilla":codigo_p,"dia":dia,"utilidad":ut_i,"habilitado":habilitado,"cantidad":cantidad,"dias":dias,"cantidadT":cantidadTotal,"tcs":tcs};
       $.ajax({
         type:"GET",
         data:parametros,
@@ -6122,7 +6168,7 @@ if(!(ut_i==""||dia==""||dia==0||productos.length==0)){
       if($("#modal_montoserv"+anio+"SSS"+i).is("[readonly]")){
         habilitado=0;
       }
-      var parametros = {"codigo":codigo,"monto":monto,"simulacion":cod_sim,"productos":JSON.stringify(productos),"precio_fijo":precio_fijo,"unidad":unidad,"plantilla":codigo_p,"dia":dia,"utilidad":ut_i,"habilitado":habilitado,"cantidad":cantidad,"anio":anio,"iteracion":i,"tcs":tcs};
+      var parametros = {"codigo":codigo,"monto":monto,"simulacion":cod_sim,"sitios_dias":atributosDias,"productos":JSON.stringify(productos),"precio_fijo":precio_fijo,"unidad":unidad,"plantilla":codigo_p,"dia":dia,"utilidad":ut_i,"habilitado":habilitado,"cantidad":cantidad,"anio":anio,"iteracion":i,"tcs":tcs};
       $.ajax({
         type:"GET",
         data:parametros,
@@ -7284,11 +7330,14 @@ function agregarNuevoServicioSimulacion(anio,cod_sim,cod_area){
         $("#texto_ajax_titulo").html("Agregando servicio..."); 
           iniciarCargaAjax();
         },
-        success:  function (resp) {
+        success:  function (respu) {
            detectarCargaAjax();
            $("#texto_ajax_titulo").html("Procesando Datos");
+           var respuesta=respu.split("###");
+           var resp=respuesta[0];
            if(resp==0){
-            listarServiciosSimulacion(anio,cod_area);
+              listarServiciosSimulacionSoloServicio(anio,cod_area,respuesta[1]);
+            //listarServiciosSimulacion(anio,cod_area);
            }else{
             Swal.fire("Informativo!", "El servicio ya existe!", "warning");
            } 
@@ -7296,6 +7345,99 @@ function agregarNuevoServicioSimulacion(anio,cod_sim,cod_area){
     });      
   }
 }
+
+function agregarNuevoPersonalSimulacion(anio,cod_sim,cod_area){
+  var cod_cla=$("#modal_editpersonal"+anio).val();
+  var cantidad=$("#cantidad_personal"+anio+"FFF0").val();
+  var monto=$("#modal_montopre"+anio+"FFF0").val();
+  var dias=$("#dias_personal"+anio+"FFF0").val();
+  
+  if(!(cod_cla>0)||cantidad==""||cantidad==0||monto==""){
+   Swal.fire("Informativo!", "Debe llenar los campos requeridos", "warning");
+  }else{
+  var parametros={"cod_sim":cod_sim,"cod_cla":cod_cla,"cantidad":cantidad,"monto":monto,"dias":dias,"anio":anio};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxSavePersonal.php",
+        data: parametros,
+        beforeSend: function () {
+        $("#texto_ajax_titulo").html("Agregando servicio..."); 
+          iniciarCargaAjax();
+        },
+        success:  function (respu) {
+           detectarCargaAjax();
+           $("#texto_ajax_titulo").html("Procesando Datos");
+           var respuesta=respu.split("###");
+           var resp=respuesta[0];
+           if(resp==0){
+              listarServiciosSimulacionSoloAuditor(anio,cod_area,respuesta[1]);
+           }else{
+            Swal.fire("Informativo!", "El personal ya existe!", "warning");
+           } 
+        }
+    });      
+  }
+}
+
+function  listarServiciosSimulacionSoloAuditor(anio,cod_area,codigo){
+  var cod_sim=$("#cod_simulacion").val();
+  var usd=$("#cambio_moneda").val();
+  var parametros={"cod_sim":cod_sim,"cod_area":cod_area,"anio":anio,"usd":usd,"codigo":codigo,"cantidad_filas":$("#modal_numeropersonal"+anio).val(),"cantidad_personal":$("#modal_cantidadpersonal"+anio).val(),"dias_simulacion":$("#dias_plan").val()};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxListAuditorSolo.php",
+        data: parametros,
+        beforeSend: function () {
+        $("#texto_ajax_titulo").html("Listando servicios..."); 
+          iniciarCargaAjax();
+        },
+        success:  function (resp) {
+           detectarCargaAjax();
+           $("#texto_ajax_titulo").html("Procesando Datos");
+           $("#modal_body_tabla_personal"+anio).append(resp);
+           $("#cantidad_personal"+anio+"FFF0").val("1");
+           $("#dias_personal"+anio+"FFF0").val("0");
+           $("#modal_montoper"+anio+"FFF0").val("0");
+           $("#modal_montoperUSD"+anio+"FFF0").val("0");
+           $("#modal_montopertotal"+anio+"FFF0").val("0");
+           $("#modal_montopertotalUSD"+anio+"FFF0").val("0");
+           
+           $('.selectpicker').selectpicker("refresh");
+        }
+    });
+}
+
+function listarServiciosSimulacionSoloServicio(anio,cod_area,codigo){
+  var cod_sim=$("#cod_simulacion").val();
+  var usd=$("#cambio_moneda").val();
+  var parametros={"cod_sim":cod_sim,"cod_area":cod_area,"anio":anio,"usd":usd,"codigo":codigo,"cantidad_filas":$("#modal_numeroservicio"+anio).val()};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxListTipoServicioSolo.php",
+        data: parametros,
+        beforeSend: function () {
+        $("#texto_ajax_titulo").html("Listando servicios..."); 
+          iniciarCargaAjax();
+        },
+        success:  function (resp) {
+           detectarCargaAjax();
+           $("#texto_ajax_titulo").html("Procesando Datos");
+           $("#modal_body_tabla_servicios"+anio).append(resp);
+           $("#cantidad_servicios"+anio+"SSS0").val("1");
+           $("#unidad_servicios"+anio+"SSS0").val("1");
+           $("#modal_montoserv"+anio+"SSS0").val("0");
+           $("#modal_montoservUSD"+anio+"SSS0").val("0");
+           $("#modal_montoservtotal"+anio+"SSS0").val("0");
+           $("#modal_montoservtotalUSD"+anio+"SSS0").val("0");
+           
+           $('.selectpicker').selectpicker("refresh");
+        }
+    });
+}
+
 function listarServiciosSimulacion(anio,cod_area){
   var cod_sim=$("#cod_simulacion").val();
   var usd=$("#cambio_moneda").val();
@@ -8056,8 +8198,27 @@ function agregarAtributoAjax(){
   //listarAtributo();
   $("#modal_fila").val("-1");
   $("#modal_atributo").modal("show");
+  if($("#modal_nombre").length){
+     $("#modal_nombre").val("");
+  }
+  if($("#modal_marca").length){
+     $("#modal_marca").val("");
+  }
+  if($("#modal_norma").length){
+     $("#modal_norma").val("");
+  }
+  if($("#modal_sello").length){
+     $("#modal_sello").val("");
+  }
+  if($("#modal_direccion").length){
+     $("#modal_direccion").val("");
+  }
   if($("#modalEditPlantilla").length){
     $("#modalEditPlantilla").modal("hide");
+    for (var i = 0; i <= parseInt($("#anio_servicio").val()); i++) {
+     $("#modal_dias_sitio"+i).val(""); 
+    };
+    //agregar campos a los inputs
   }
 }
 
@@ -8069,18 +8230,24 @@ function listarAtributo(){
   var titulos = $('<tr>').addClass('fondo-boton');
      titulos.append($('<th>').addClass('').text('#'));
      titulos.append($('<th>').addClass('').text('NOMBRE'));
-     if($("#productos_div").hasClass("d-none")){
-      titulos.append($('<th>').addClass('').text('DIRECCION'));
+     if(!($("#productos_div").hasClass("d-none"))){
+      titulos.append($('<th>').addClass('').text('MARCA'));
+      titulos.append($('<th>').addClass('').text('NORMA'));
+      titulos.append($('<th>').addClass('').text('SELLO'));
      }
+     titulos.append($('<th>').addClass('').text('DIRECCION'));
      titulos.append($('<th>').addClass('text-right').text('OPCION'));
      table.append(titulos);
    for (var i = 0; i < itemAtributos.length; i++) {
      var row = $('<tr>').addClass('');
      row.append($('<td>').addClass('').text(i+1));
      row.append($('<td>').addClass('').text(itemAtributos[i].nombre));
-     if($("#productos_div").hasClass("d-none")){
-      row.append($('<td>').addClass('').text(itemAtributos[i].direccion));
-     }  
+     if(!($("#productos_div").hasClass("d-none"))){
+      row.append($('<td>').addClass('').text(itemAtributos[i].marca));
+      row.append($('<td>').addClass('').text(itemAtributos[i].norma));
+      row.append($('<td>').addClass('').text(itemAtributos[i].sello));
+     }
+     row.append($('<td>').addClass('').text(itemAtributos[i].direccion));  
      row.append($('<td>').addClass('text-right').html('<button class="btn btn-success btn-link btn-sm" onclick="editarAtributo('+i+');"><i class="material-icons">edit</i></button><button class="btn btn-danger btn-link btn-sm" onclick="removeAtributo('+i+');"><i class="material-icons">remove_circle</i></button>'));
      table.append(row);
    }
@@ -8097,20 +8264,60 @@ function guardarAtributoItem(){
   if($('#modal_nombre').val()==""){
    Swal.fire("Informativo!", "Debe ingresar el Nombre del sitio o producto", "warning");
   }else{
-
+  if(($("#productos_div").hasClass("d-none"))){
+    var norma="";
+    var sello="";
+    var marca="";
+  }else{
+    var norma=$("#modal_norma").val();
+    var sello=$("#modal_sello").val();
+    var marca=$("#modal_marca").val();
+  }
   var fila=$("#modal_fila").val();
   if(fila<0){
+    var codigoNuevo=itemAtributos.length;
     var atributo={
+    codigo:codigoNuevo,  
     nombre: $('#modal_nombre').val(),
-    direccion: $('#modal_direccion').val()
+    direccion: $('#modal_direccion').val(),
+    norma:norma,
+    marca:marca,
+    sello:sello
     }
   itemAtributos.push(atributo);
+   if($("#modalEditPlantilla").length){
+    //agregar Nuevo dias sitios
+    for (var i = 0; i <= parseInt($("#anio_servicio").val()); i++) {
+         var atributoDias={
+         codigo_atributo: codigoNuevo,  
+         dias: $("#modal_dias_sitio"+i).val(),
+         anio: i
+         }
+       itemAtributosDias.push(atributoDias);
+     };   
+   }
   }else{
     itemAtributos[fila].nombre=$('#modal_nombre').val();
     itemAtributos[fila].direccion=$('#modal_direccion').val();
+    itemAtributos[fila].norma=$('#modal_norma').val();
+    itemAtributos[fila].marca=$('#modal_marca').val();
+    itemAtributos[fila].sello=$('#modal_sello').val();
+    if($("#modalEditPlantilla").length){
+    //editar dias sitios
+      for (var i = 0; i <= parseInt($("#anio_servicio").val()); i++) {
+        for (var j = 0; j < itemAtributosDias.length; j++) {
+           if(itemAtributosDias[j].codigo_atributo==itemAtributos[fila].codigo&&itemAtributosDias[j].anio==i){
+            itemAtributosDias[j].dias=$("#modal_dias_sitio"+i).val()
+           } 
+        };
+     };
+   }
   }
   $("#modal_nombre").val("");
   $("#modal_direccion").val("");
+  $("#modal_norma").val("");
+  $("#modal_marca").val("");
+  $("#modal_sello").val("");
   if($("#modalEditPlantilla").length){
     editarDatosPlantilla();
    }
@@ -8120,6 +8327,13 @@ function guardarAtributoItem(){
   
 }
 function removeAtributo(fila){
+  if($("#modalEditPlantilla").length){
+    for (var i = 0; i < itemAtributosDias.length; i++) {
+      if(itemAtributosDias[i].codigo_atributo==itemAtributos[fila].codigo){
+        itemAtributosDias.splice(i, 1);
+      }
+    };
+  }
   itemAtributos.splice(fila, 1);
   listarAtributo();
  }
@@ -8127,15 +8341,29 @@ function removeAtributo(fila){
 function editarAtributo(fila){
   $("#modal_fila").val(fila);
   $('#modal_nombre').val(itemAtributos[fila].nombre);
-  $('#modal_direccion').val(itemAtributos[fila].direccion);  
+  if($("#modal_marca").length){
+    $('#modal_marca').val(itemAtributos[fila].marca);
+    $('#modal_norma').val(itemAtributos[fila].norma);
+    $('#modal_sello').val(itemAtributos[fila].sello);
+  }
+  $('#modal_direccion').val(itemAtributos[fila].direccion); 
   $("#modal_atributo").modal("show");
   if($("#modalEditPlantilla").length){
+   
+    for (var i = 0; i <= parseInt($("#anio_servicio").val()); i++) {
+      for (var j= 0; j< itemAtributosDias.length; j++) {
+        if(itemAtributosDias[j].codigo_atributo==itemAtributos[fila].codigo&&itemAtributosDias[j].anio==i){
+         $("#modal_dias_sitio"+i).val(itemAtributosDias[j].dias);
+        } 
+      };  
+    };
     $("#modalEditPlantilla").modal("hide");
   }
 }
 
 function verCuentasAuxiliaresSelect(){
   var cuenta= $("#cuentas_origen").val().split("###");
+  console.log("CODIGO CUENTA ORIGEN: "+cuenta[0]);
   if(cuenta[1]=="NNN"){
     if($("#div_cuentasorigenaux").hasClass("d-none")){
       $("#div_cuentasorigenaux").removeClass("d-none");
@@ -8144,9 +8372,13 @@ function verCuentasAuxiliaresSelect(){
     var tipo_proveedorcliente=$("#tipo_proveedorcliente"+fila).val();
     var id="";
      $("#cuentas_auxiliaresorigen option").each(function(){
+            //console.log("entro select auxiliar:");
+            console.log("value: "+$(this).val());
            if($(this).val()!="all"){
               var codigoSelect=$(this).val().split("###");
-              if ((codigoSelect[1]==tipo_proveedorcliente&&codigoSelect[2]==cuenta[0])){
+              console.log("vector 0: "+codigoSelect[0]);
+              console.log("vector 1: "+codigoSelect[1]);
+              if ((codigoSelect[1]==cuenta[0])){
                $(this).show();   
               }else{
                 $(this).hide(); 

@@ -19,28 +19,27 @@ $globalArea=$_SESSION["globalArea"];
 
 $cod_sim=$_GET['cod_sim'];
 $cod_cla=$_GET['cod_cla'];
-$obs="";
 $cant=$_GET['cantidad'];
 $monto=$_GET['monto'];
-$unidad=$_GET['unidad'];
+$dias=$_GET['dias'];
 $anio=$_GET['anio'];
 
-$sql1="SELECT * from simulaciones_servicios_tiposervicio where cod_simulacionservicio=$cod_sim and cod_claservicio=$cod_cla";
+$sql1="SELECT * from simulaciones_servicios_auditores where cod_simulacionservicio=$cod_sim and cod_tipoauditor=$cod_cla";
 $stmt1 = $dbh->prepare($sql1);
 $stmt1->execute();
 
 $existe=0;
  while ($rowServ = $stmt1->fetch(PDO::FETCH_ASSOC)) {
-    $existe=1;
+    $existe=0; // valor 1 para habilitar que no se repitan los registros
 }
 
 if($existe==0){
-	$codSimulacionServicioTipo=obtenerCodigoSimulacionServicioTipoServicio();
-    $sql="INSERT INTO simulaciones_servicios_tiposervicio (codigo,cod_simulacionservicio, cod_claservicio,observaciones,cantidad,monto,cantidad_editado,cod_estadoreferencial,cod_tipounidad,cod_anio) 
-       VALUES ('".$codSimulacionServicioTipo."','".$cod_sim."','".$cod_cla."','".$obs."','".$cant."','".$monto."','".$cant."', 1,'".$unidad."','".$anio."')";
+	$codSimulacionServicioAuditor=obtenerCodigoSimulacionServicioAuditor();
+    $sql="INSERT INTO simulaciones_servicios_auditores (codigo,cod_simulacionservicio, cod_tipoauditor,cantidad,monto,cantidad_editado,cod_estadoreferencial,dias,cod_externolocal,cod_anio) 
+       VALUES ('".$codSimulacionServicioAuditor."','".$cod_sim."','".$cod_cla."','".$cant."','".$monto."','".$cant."', 1,'".$dias."',1,'".$anio."')";
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
-   echo "0###".$codSimulacionServicioTipo; 
+   echo "0###".$codSimulacionServicioAuditor; 
 }else{
   echo "1###NNN"; 
 }

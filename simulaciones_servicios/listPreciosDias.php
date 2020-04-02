@@ -32,27 +32,31 @@ if(isset($_GET["codigo"])){
    $anios=$row['anios'];
    $areaX=$row['cod_area'];
  }
+ //CARGAR DIAS PORDEFECTO DE LA TABLA DE CONFIGURACION
+ $dias=obtenerValorConfiguracion(39);
   ?>
   <script>$("#productos_div").addClass("d-none");</script>
-  <script>$("#sitios_div").addClass("d-none");</script> 
+  <script>$("#sitios_div").addClass("d-none");</script>
+  <script>$("#div_marca").addClass("d-none");</script>
+  <script>$("#div_norma").addClass("d-none");</script> 
                       <div class="row">
-                        <label class="col-sm-2 col-form-label">Dias Auditor:</label>
+                          <!--<label class="col-sm-2 col-form-label">Dias Auditor:</label>
                            <div class="col-sm-1"> 
                              <div class="form-group">
                                 <div class="form-check">
-                                  <div class="form-group">
-                                  <input type="number" min="1" class="form-control" value="<?=$dias?>" id="dias_auditoria" name="dias_auditoria">
-                                   </div>
+                                  <div class="form-group">-->
+                                  <input type="hidden" min="1" class="form-control" value="<?=$dias?>" id="dias_auditoria" name="dias_auditoria">
+                                   <!--</div>
                                   </div>
                                </div>
-                             </div>
+                             </div>-->
                           <label class="col-sm-2 col-form-label">Utilidad Minima:</label>
-                           <div class="col-sm-1"> 
+                           <div class="col-sm-3"> 
                              <div class="form-group">
                                   <input type="text" class="form-control" value="<?=$utilidad?>" id="utilidad_minima" name="utilidad_minima">
                              </div>    
                           </div>
-                          <label class="col-sm-1 col-form-label">Años:</label>
+                          <label class="col-sm-2 col-form-label">Años:</label>
                            <div class="col-sm-2"> 
                              <div class="form-group">
                                   <input type="text" class="form-control" value="<?=$anios?>" id="anios" name="anios">
@@ -63,12 +67,16 @@ if(isset($_GET["codigo"])){
             <?php 
             if($areaX==39){
                ?>
-               <script>$("#productos_div").removeClass("d-none");</script>  
+               <script>$("#productos_div").removeClass("d-none");</script>
+               <script>$("#div_marca").removeClass("d-none");</script>
+               <script>$("#div_norma").removeClass("d-none");</script>
+               <script>$("#titulo_modal_atributo").html("AGREGAR PRODUCTO");</script>  
                <?php
             }else{
               if($areaX==38){
                 ?>
-                <script>$("#sitios_div").removeClass("d-none");</script> 
+                <script>$("#sitios_div").removeClass("d-none");</script>
+                <script>$("#titulo_modal_atributo").html("AGREGAR SITIO");</script> 
                 <?php
               }else{
 

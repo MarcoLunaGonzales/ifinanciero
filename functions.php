@@ -4802,12 +4802,12 @@ function nameCuentaAuxiliar($cuentaaux){
 }
 function nameTipoAsignacion($valor){
    $dbh = new Conexion();
+   $nombreX=0;
    $sqlX="SELECT nombre FROM estados_asignacionaf where codigo='$valor'";
    $stmt = $dbh->prepare($sqlX);
    $stmt->execute();
-   $nombreX=0;
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-      $nombreX=$row['nombre'];
+      $nombreX=$row['nombre'];      
    }
    return($nombreX);
 }
@@ -4822,6 +4822,77 @@ function obtenerCodigoAreaPlantillasServicios($codigo){
       $nombreX=$row['cod_area'];
    }
    return($nombreX);
+}
+
+function obtenerCodigoSimulacionServicioAtributo(){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT IFNULL(max(c.codigo)+1,1)as codigo from simulaciones_servicios_atributos c");
+   $stmt->execute();
+   $codigoComprobante=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $codigoComprobante=$row['codigo'];
+   }
+   return($codigoComprobante);
+}
+function obtenerCodigoSimulacionServicioTipoServicio(){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT IFNULL(max(c.codigo)+1,1)as codigo from simulaciones_servicios_tiposervicio c");
+   $stmt->execute();
+   $codigoComprobante=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $codigoComprobante=$row['codigo'];
+   }
+   return($codigoComprobante);
+}
+
+function obtenerCodigoSimulacionServicioAuditor(){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT IFNULL(max(c.codigo)+1,1)as codigo from simulaciones_servicios_auditores c");
+   $stmt->execute();
+   $codigoComprobante=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $codigoComprobante=$row['codigo'];
+   }
+   return($codigoComprobante);
+}
+
+function verificarTipoAuditorMontosVariables($codSim,$codigo,$codDet,$anio){
+  $dbh = new Conexion();
+   $stmt = $dbh->prepare("select * from simulaciones_ssd_ssa where cod_simulacionservicio=$codSim and cod_simulacionservicioauditor=$codigo and cod_simulacionserviciodetalle=$codDet and cod_anio=$anio");
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor++;
+   }
+   return $valor;
+}
+
+function obtenerNombreCliente($codigo){
+  $dbh = new Conexion();
+  $sql="";
+  $sql="SELECT s.nombre from clientes s where s.codigo=$codigo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute(); 
+   $valor="";
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
+  {
+    $valor=$row['nombre'];
+  }
+  return $valor;
+}
+
+function obtenerNumeroClienteSimulacion($codigo){
+  $dbh = new Conexion();
+  $sql="";
+  $sql="SELECT c.nombre from simulaciones_servicios s join clientes c on s.cod_cliente=c.codigo where c.codigo=$codigo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute(); 
+   $valor=0;
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
+  {
+    $valor++;
+  }
+  return $valor;
 }
 
 ?>
