@@ -11,7 +11,9 @@ $password=$_POST["password"];
 $sql="SELECT p.codigo,CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre)as nombre, p.cod_area, p.cod_unidadorganizacional, pd.perfil, pd.usuario_pon 
 			from personal p, personal_datosadicionales pd 
 			where p.codigo=pd.cod_personal and pd.usuario='$user' and pd.contrasena='$password'";
+
 //echo $sql;
+
 $stmt = $dbh->prepare($sql);
 $stmt->execute();
 $stmt->bindColumn('codigo', $codigo);
@@ -71,7 +73,9 @@ while ($rowDetalle = $stmt->fetch(PDO::FETCH_BOUND)) {
 	$_SESSION['globalPerfil']=$perfil;
 
 	if($codigo==90 || $codigo==89 || $codigo==227 || $codigo==195){
-		$_SESSION['globalAdmin']=1;			
+		$_SESSION['globalAdmin']=1;
+		$_SESSION['globalUnidad']="5";
+		$_SESSION['globalNombreUnidad']="RLP";
 	}else{
 		$_SESSION['globalAdmin']=0;	
 	}

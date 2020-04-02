@@ -19,20 +19,25 @@ $globalArea=$_SESSION["globalArea"];
 
 $fechaActual=date("d/m/Y");
 $codCuenta=$_GET['cod_cuenta'];
+//verificar este dato
+$codCuentaAuxiliar=$_GET['cod_cuenta_auxiliar'];
+
 $tipo=$_GET['tipo'];
 $tipoProveedorCliente=$_GET['tipo_proveedorcliente'];
 //echo "tipo: ".$tipo." tipoproveecli:".$tipoProveedorCliente."";
 $mes=$_GET['mes'];
 
-$sqlZ="SELECT e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar,(select concat(c.cod_tipocomprobante,'|',c.numero,'|',cd.cod_unidadorganizacional,'|',MONTH(c.fecha),'|',c.fecha) from comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle)as extra FROM estados_cuenta e,comprobantes_detalle d where e.cod_comprobantedetalle=d.codigo and (d.cod_cuenta=$codCuenta or e.cod_plancuenta=$codCuenta) and e.cod_comprobantedetalleorigen=0 order by e.fecha";
-if(isset($_GET['cod_auxi'])){
-  $codAuxi=$_GET['cod_auxi'];
-  if($codAuxi!="all"){
-    $codAuxiPar=explode("###", $codAuxi);
-    $cuentaAuxi=$codAuxiPar[0];
-   $sqlZ="SELECT e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar,(select concat(c.cod_tipocomprobante,'|',c.numero,'|',cd.cod_unidadorganizacional,'|',MONTH(c.fecha),'|',c.fecha) from comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle)as extra FROM estados_cuenta e,comprobantes_detalle d where e.cod_comprobantedetalle=d.codigo and (d.cod_cuenta=$codCuenta or e.cod_plancuenta=$codCuenta) and e.cod_comprobantedetalleorigen=0 and e.cod_cuentaaux=$cuentaAuxi order by e.fecha";
-  }
+$sqlZ="SELECT e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar,(select concat(c.cod_tipocomprobante,'|',c.numero,'|',cd.cod_unidadorganizacional,'|',MONTH(c.fecha),'|',c.fecha) from comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle)as extra FROM estados_cuenta e,comprobantes_detalle d where e.cod_comprobantedetalle=d.codigo and (d.cod_cuenta=$codCuenta) and e.cod_comprobantedetalleorigen=0 order by e.fecha";
+
+if($codCuentaAuxiliar!=0){
+  //$codAuxi=$_GET['cod_auxi'];
+  //if($codAuxi!="all"){
+  //  $codAuxiPar=explode("###", $codAuxi);
+  //  $cuentaAuxi=$codAuxiPar[0];
+   $sqlZ="SELECT e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar,(select concat(c.cod_tipocomprobante,'|',c.numero,'|',cd.cod_unidadorganizacional,'|',MONTH(c.fecha),'|',c.fecha) from comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle)as extra FROM estados_cuenta e,comprobantes_detalle d where e.cod_comprobantedetalle=d.codigo and (d.cod_cuenta=$codCuenta) and e.cod_comprobantedetalleorigen=0 and e.cod_cuentaaux=$codCuentaAuxiliar order by e.fecha";
+  //}
 }
+//echo $sqlZ;
 
 ?>
 <table class="table table-bordered table-condensed table-warning">
@@ -178,11 +183,11 @@ $nombreProveedorClienteX=nameProveedorCliente($tipoProveedorCliente,$codProveedo
           <td class="text-center small"><?=$numeroComprobante;?></td>
           <td class="text-left small"><?=$fechaComprobante;?></td>
           <td class="text-left small"><?=$fechaX;?></td>
-       <td class="text-left"><?=$nombreProveedorClienteX?></td>
-       <td class="text-left"><?=$glosaMostrar;?></td>
-       <td class="text-right"><?=formatNumberDec($montoX)?></td>
-       <td class="text-right"></td>
-       <td class="text-right font-weight-bold"><?=formatNumberDec($saldo);?></td>
+       <td class="text-left small"><?=$nombreProveedorClienteX?></td>
+       <td class="text-left small"><?=$glosaMostrar;?></td>
+       <td class="text-right small"><?=formatNumberDec($montoX)?></td>
+       <td class="text-right small"></td>
+       <td class="text-right small"><?=formatNumberDec($saldo);?></td>
      </tr>
   	   <?php
 	 }

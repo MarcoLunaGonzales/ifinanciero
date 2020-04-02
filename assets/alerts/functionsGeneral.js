@@ -234,22 +234,13 @@ function configuracionEstadosCuenta(fila,codigoCuenta,codigoCuentaAux){
       $("#estados_cuentas"+fila).addClass("d-none");  
     }
   };
-  /*if(contador==0&&codigoCuentaAux!=0){
-    for (var i = 0; i < estado_cuentas.length; i++) {
-      if(estado_cuentas[i].cod_cuentaaux==codigoCuentaAux){
-         $("#estados_cuentas"+fila).removeClass("d-none"); 
-         $("#tipo_estadocuentas"+fila).val(estado_cuentas[i].tipo);
-         contador++;     
-      break;
-      }else{
-        $("#estados_cuentas"+fila).removeClass("d-none"); 
-        $("#estados_cuentas"+fila).addClass("d-none");
-      }
-    };   
-  }*/
+  //SI EL ESTADO DE CUENTA NO ESTA EN LA TABLA LE PONEMOS UN CAMBIO DE COLOR
   if(contador==0){
+     //$("#estados_cuentas"+fila).removeClass("d-none"); 
+     //$("#estados_cuentas"+fila).addClass("d-none");
      $("#estados_cuentas"+fila).removeClass("d-none"); 
-     $("#estados_cuentas"+fila).addClass("d-none");
+     $("#estados_cuentas"+fila).removeClass("btn-danger"); 
+     $("#estados_cuentas"+fila).addClass("btn-success");
   }
 }
 function copiarGlosa(){
@@ -5219,9 +5210,11 @@ function verEstadosCuentas(fila,cuenta){
     if(cuenta==0){
       if($("#cuenta_auxiliar"+fila).val()==0){
         var cod_cuenta=$("#cuenta"+fila).val();
+        var cod_cuenta_auxiliar=0;
         var auxi="NO";
       }else{
-        var cod_cuenta=$("#cuenta_auxiliar"+fila).val();
+        var cod_cuenta=$("#cuenta"+fila).val();
+        var cod_cuenta_auxiliar=$("#cuenta_auxiliar"+fila).val();
         var auxi="SI";
       }
       if($("#cuentas_auxiliaresorigen").length){
@@ -5229,18 +5222,29 @@ function verEstadosCuentas(fila,cuenta){
         $('.selectpicker').selectpicker("refresh"); 
       }      
     }else{
-      if($("#cuenta_auxiliar"+fila).val()==0){
-        var cod_cuenta=cuenta;
-        var auxi="NO";
-      }else{
-        var cod_cuenta=cuenta;
-        var auxi="SI";
-      }
+      //aca entramos cuando se mata la cuenta
       var cod_cuenta=cuenta;
+      var vector_cod_cuenta_auxiliar=$("#cuentas_auxiliaresorigen").val().split('###');
+      var cod_cuenta_auxiliar=vector_cod_cuenta_auxiliar[0];
+      var auxi="NO";
     }
 
     var tipo=$("#tipo_estadocuentas"+fila).val();
     var tipo_proveedorcliente=$("#tipo_proveedorcliente"+fila).val();
+
+    /*console.log("tipo_proveedorcliente: "+$("#tipo_proveedorcliente"+fila).val());
+    console.log("debe: "+$("#debe"+fila).val());
+    console.log("haber: "+$("#haber"+fila).val());*/
+    if(tipo_proveedorcliente==-100){/*CASO MATAR CUENTAS*/
+        if($("#debe"+fila).val()>0){
+          tipo=1;
+          tipo_proveedorcliente=1;
+        }
+        if($("#haber"+fila).val()>0){
+          tipo=2;
+          tipo_proveedorcliente=2;
+        }
+    }
 
     if(tipo==1 && tipo_proveedorcliente==1){
       $("#monto_estadocuenta").val($("#debe"+fila).val());
@@ -5283,12 +5287,12 @@ function verEstadosCuentas(fila,cuenta){
         var auxi="NO";
       }
     }  
-
+    //console.log("cuentas auxiliares origen: "+$("#cuentas_auxiliaresorigen").val());
     if($("#cuentas_auxiliaresorigen").length){
        var codigoAuxi=$("#cuentas_auxiliaresorigen").val();
-       var parametros={"cod_cuenta":cod_cuenta,"tipo":tipo,"tipo_proveedorcliente":tipo_proveedorcliente,"mes":12,"auxi":auxi,"cod_auxi":codigoAuxi};
+       var parametros={"cod_cuenta":cod_cuenta,"cod_cuenta_auxiliar":cod_cuenta_auxiliar,"tipo":tipo,"tipo_proveedorcliente":tipo_proveedorcliente,"mes":12,"auxi":auxi,"cod_auxi":codigoAuxi};
     }else{
-      var parametros={"cod_cuenta":cod_cuenta,"tipo":tipo,"tipo_proveedorcliente":tipo_proveedorcliente,"mes":12,"auxi":auxi};
+      var parametros={"cod_cuenta":cod_cuenta,"cod_cuenta_auxiliar":cod_cuenta_auxiliar,"tipo":tipo,"tipo_proveedorcliente":tipo_proveedorcliente,"mes":12,"auxi":auxi};
     }
 
     //PASA Y MOSTRAMOS LOS ESTADOS DE CUENTA
@@ -5309,9 +5313,11 @@ function verEstadosCuentas(fila,cuenta){
           $("#div_estadocuentas").html(respuesta[0]);
           if(tipo==2 && tipo_proveedorcliente==1){
             var rsaldo=listarEstadosCuentas(fila,respuesta[1]);
+            console.log("listarEstadoCuentasDebito;");
             listarEstadosCuentasDebito(fila,rsaldo);
           }else{
             var rsaldo=listarEstadosCuentasCredito(fila,respuesta[1]);
+            console.log("listarEstadoCuentas;");
             listarEstadosCuentas(fila,rsaldo);
           } 
           //mostrarSelectProveedoresClientes()          
@@ -8136,6 +8142,7 @@ function editarAtributo(fila){
 
 function verCuentasAuxiliaresSelect(){
   var cuenta= $("#cuentas_origen").val().split("###");
+  console.log("CODIGO CUENTA ORIGEN: "+cuenta[0]);
   if(cuenta[1]=="NNN"){
     if($("#div_cuentasorigenaux").hasClass("d-none")){
       $("#div_cuentasorigenaux").removeClass("d-none");
@@ -8144,9 +8151,13 @@ function verCuentasAuxiliaresSelect(){
     var tipo_proveedorcliente=$("#tipo_proveedorcliente"+fila).val();
     var id="";
      $("#cuentas_auxiliaresorigen option").each(function(){
+            //console.log("entro select auxiliar:");
+            console.log("value: "+$(this).val());
            if($(this).val()!="all"){
               var codigoSelect=$(this).val().split("###");
-              if ((codigoSelect[1]==tipo_proveedorcliente&&codigoSelect[2]==cuenta[0])){
+              console.log("vector 0: "+codigoSelect[0]);
+              console.log("vector 1: "+codigoSelect[1]);
+              if ((codigoSelect[1]==cuenta[0])){
                $(this).show();   
               }else{
                 $(this).hide(); 

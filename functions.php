@@ -4788,32 +4788,29 @@ function nameCuentaAuxiliar($cuentaaux){
    }
    return($nombreX);
 }
-<<<<<<< HEAD
 function nameTipoAsignacion($valor){
    $dbh = new Conexion();
+   $nombreX=0;
    $sqlX="SELECT nombre FROM estados_asignacionaf where codigo='$valor'";
-=======
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $nombreX=$row['cod_area'];
+   }
+   return($nombreX);
+}
+
 
 function obtenerCodigoAreaPlantillasServicios($codigo){
    $dbh = new Conexion();
    $sqlX="SELECT cod_area FROM plantillas_servicios where codigo='$codigo'";
->>>>>>> e45c5340968a2ee4fda709bee37c07285bc030ab
    $stmt = $dbh->prepare($sqlX);
    $stmt->execute();
    $nombreX=0;
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-<<<<<<< HEAD
       $nombreX=$row['nombre'];
    }
    return($nombreX);
 }
 
-=======
-      $nombreX=$row['cod_area'];
-   }
-   return($nombreX);
-}
->>>>>>> e45c5340968a2ee4fda709bee37c07285bc030ab
 ?>
 
 

@@ -20,9 +20,10 @@ $sql="SELECT (select u.abreviatura from unidades_organizacionales u where u.codi
 (select m.nombre from monedas m where m.codigo=c.cod_moneda)moneda, 
 (select t.abreviatura from tipos_comprobante t where t.codigo=c.cod_tipocomprobante)tipo_comprobante, c.fecha, c.numero,c.codigo, c.glosa,ec.nombre,c.cod_estadocomprobante
 from comprobantes c join estados_comprobantes ec on c.cod_estadocomprobante=ec.codigo where c.cod_estadocomprobante!=2 ";
-if($globalAdmin!=1){
-  $sql.=" and c.cod_unidadorganizacional='$globalUnidad' limit 100";
-}
+
+//if($globalAdmin!=1){
+  $sql.=" and c.cod_unidadorganizacional='$globalUnidad' ";
+//}
 
 $sql.=" and c.cod_gestion='$globalGestion' order by c.fecha desc, unidad, tipo_comprobante, c.numero desc limit 100";
 
@@ -207,7 +208,7 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
     <!--         <select class="selectpicker form-control" title="Seleccione una opcion" name="areas[]" id="areas" data-style="select-with-transition" data-size="5" data-actions-box="true" multiple required> -->
 
             <select  name="OficinaBusqueda[]" id="OficinaBusqueda" class="selectpicker form-control form-control-sm" data-style="btn btn-info select-with-transition" data-show-subtext="true" data-live-search="true" data-actions-box="true" multiple> 
-              <option value=""></option>
+              <option value="0"></option>
               <?php while ($rowUO = $stmtUO->fetch(PDO::FETCH_BOUND)) { ?>
                 <option value="<?=$codigo_uo;?>"> <?=$nombreUnidad_x;?></option>
               <?php }?>
@@ -221,7 +222,7 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
           </div>
           <div class="form-group col-sm-3">            
             <select name="tipoBusqueda[]" id="tipoBusqueda" class="selectpicker form-control form-control-sm" data-style="btn btn-info select-with-transition" data-show-subtext="true" data-live-search="true" data-actions-box="true" multiple> 
-              <option value=""></option>
+              <option value="0"></option>
               <?php while ($rowTC = $stmtTipoComprobante->fetch(PDO::FETCH_BOUND)) { ?>
                 <option value="<?=$codigo_tipo_co;?>"> <?=$nombre_tipo_comprobante;?></option>
               <?php }?>
