@@ -397,6 +397,18 @@ function nameProveedor($codigo){
    }
    return($nombreX);
 }
+function nameEntidad($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT abreviatura FROM entidades where codigo=:codigo");
+   $stmt->bindParam(':codigo',$codigo);
+   $stmt->execute();
+   $nombreX="";
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $nombreX=$row['abreviatura'];
+   }
+   return($nombreX);
+}
+
 
 function namePartidaPres($codigo){
    $dbh = new Conexion();

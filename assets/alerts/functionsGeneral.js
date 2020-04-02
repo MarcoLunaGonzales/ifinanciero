@@ -7,7 +7,7 @@ function number_format(amount, decimals) {
       return parseFloat(0).toFixed(decimals);
   // si es mayor o menor que cero retorno el valor formateado como numero
   amount = '' + amount.toFixed(decimals);
-  var amount_parts = amount.split('.'),
+  var amount_parts = amount.split('.');
       regexp = /(\d+)(\d{3})/;
   while (regexp.test(amount_parts[0]))
       amount_parts[0] = amount_parts[0].replace(regexp, '$1' + ',' + '$2');
@@ -151,7 +151,7 @@ function calcularTotalesComprobante(id,e){
 function ajaxCorrelativo(combo){
   var contenedor = document.getElementById('divnro_correlativo');
   var tipoComprobante=combo.value;
-  console.log(tipoComprobante);
+  // console.log(tipoComprobante);
   ajax=nuevoAjax();
   ajax.open('GET', 'ajaxCorrelativo.php?tipo_comprobante='+tipoComprobante,true);
   ajax.onreadystatechange=function() {
@@ -5240,7 +5240,6 @@ function buscarCuentaNumero(numeros,val){
 }
 
 // ESTADOS DE CUENTAS/////////////////////////////////////7
-
 function verEstadosCuentas(fila,cuenta){
   if(($("#debe"+fila).val()==""&&$("#haber"+fila).val()=="")||($("#debe"+fila).val()==0&&$("#haber"+fila).val()==0)){
      $('#msgError').html("<p>El Debe o Haber deben de ser llenados</p>");
@@ -5383,6 +5382,7 @@ function agregarEstadoCuenta(){
   $("#mensaje_estadoscuenta").html("");
   var fila=$("#estFila").val();
   var tipo=$("#tipo_estadocuentas"+fila).val();
+
   var tipo_proveedorcliente=$("#tipo_proveedorcliente"+fila).val();
   
   if((tipo==2 && tipo_proveedorcliente==1)||(tipo==1 && tipo_proveedorcliente==2)){ //CUMPLE LA CONDICION DE TIPO: PROVEEDOR Y HABER 
@@ -8736,21 +8736,21 @@ function botonBuscarActivoFijo(){
   ajax.send(null)
 } 
 
-function sacandoUFVDepreAF(){
-    var gestion=document.getElementById("gestion").value; 
-    var mes=document.getElementById("mes").value; 
-    jax=nuevoAjax();
-  ajax.open('GET', 'activosFijos/ajax_depreciaocionUFV.php?gestion='+gestion+'&mes='+mes,true);
-  ajax.onreadystatechange=function() {
-    if (ajax.readyState==4) {
-      var contenedor=$("#data_activosFijos");
-      contenedor.html(ajax.responseText);
-      // $("#modalBuscador").modal("hide");
-    }
-  }
-  ajax.send(null)
+// function sacandoUFVDepreAF(){
+//     var gestion=document.getElementById("gestion").value; 
+//     var mes=document.getElementById("mes").value; 
+//     jax=nuevoAjax();
+//   ajax.open('GET', 'activosFijos/ajax_depreciaocionUFV.php?gestion='+gestion+'&mes='+mes,true);
+//   ajax.onreadystatechange=function() {
+//     if (ajax.readyState==4) {
+//       var contenedor=$("#data_activosFijos");
+//       contenedor.html(ajax.responseText);
+//       // $("#modalBuscador").modal("hide");
+//     }
+//   }
+//   ajax.send(null)
     
-  }
+//   }
 
 function sacandoUFVDepreAF(){
   

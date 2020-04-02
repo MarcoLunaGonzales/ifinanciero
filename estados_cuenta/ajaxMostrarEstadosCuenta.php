@@ -41,22 +41,22 @@ if($codCuentaAuxiliar!=0){
 
 ?>
 <table class="table table-bordered table-condensed table-warning">
-	<thead>
-	  <tr class="">
-	  	<th class="text-left"></th>
+  <thead>
+    <tr class="">
+      <th class="text-left"></th>
       <th class="text-left">Of</th>
       <th class="text-left">Tipo</th>
       <th class="text-left">#</th>
-	  	<th class="text-left">FechaComp</th>
+      <th class="text-left">FechaComp</th>
       <th class="text-left">FechaEC</th>
       <th class="text-left">Proveedor/Cliente</th>
-	  	<th class="text-left">Glosa</th>
-	  	<th class="text-right">D&eacute;bito</th>
-	  	<th class="text-right">Cr&eacute;dito</th>
-	  	<th class="text-right">Saldo</th>
-	  </tr>
-	</thead>
-	<tbody id="tabla_estadocuenta">
+      <th class="text-left">Glosa</th>
+      <th class="text-right">D&eacute;bito</th>
+      <th class="text-right">Cr&eacute;dito</th>
+      <th class="text-right">Saldo</th>
+    </tr>
+  </thead>
+  <tbody id="tabla_estadocuenta">
 <?php
   
   
@@ -64,19 +64,19 @@ if($codCuentaAuxiliar!=0){
   $stmt->execute();
   $i=0;$saldo=0;
   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-	 $codigoX=$row['codigo'];
+   $codigoX=$row['codigo'];
    //$tipo_comprobanteX=$row['tipo_comprobante'];
    //$numero_comprobanteX=$row['numero_comprobante'];
 
-	 $codPlanCuentaX=$row['cod_plancuenta'];
-	 $codCompDetX=$row['cod_comprobantedetalle'];
+   $codPlanCuentaX=$row['cod_plancuenta'];
+   $codCompDetX=$row['cod_comprobantedetalle'];
    $codProveedorX=$row['cod_proveedor'];
-	 $fechaX=$row['fecha'];
-	 $fechaX=strftime('%d/%m/%Y',strtotime($fechaX));
-	 $montoX=$row['monto'];
-	 $glosaX=$row['glosa'];
-	 $debeX=$row['debe'];
-	 $haberX=$row['haber'];
+   $fechaX=$row['fecha'];
+   $fechaX=strftime('%d/%m/%Y',strtotime($fechaX));
+   $montoX=$row['monto'];
+   $glosaX=$row['glosa'];
+   $debeX=$row['debe'];
+   $haberX=$row['haber'];
    $codigoExtra=$row['extra'];
    $codCuentaAuxX=$row['cod_cuentaaux'];
    $glosaAuxiliar=$row['glosa_auxiliar'];
@@ -122,16 +122,16 @@ if($codCuentaAuxiliar!=0){
       }
   }
 $nombreProveedorClienteX=nameProveedorCliente($tipoProveedorCliente,$codProveedorX);
-	 if($haberX > 0){
+   if($haberX > 0){
       $debeX=$montoContra;
       $saldo=$saldo+$haberX-$debeX;
 
        ?>
-  	   <tr class="bg-white det-estados">
+       <tr class="bg-white det-estados">
         <td>
         <input type="hidden" id="codigoCuentaAux<?=$i?>" value="<?=$codCuentaAuxX?>">
         <!-- style="display:none"-->
-  	   	<?php 
+        <?php 
           if(($tipo==1 && $tipoProveedorCliente==1)){ 
         ?>
             <div class="form-check">
@@ -143,8 +143,8 @@ $nombreProveedorClienteX=nameProveedorCliente($tipoProveedorCliente,$codProveedo
                </label>
              </div>
             <?php    
-  	   } ?>
-  	   </td>
+       } ?>
+       </td>
           <td class="text-center small"><?=$nombreUnidadO;?></td>
           <td class="text-center small"><?=$nombreTipoComprobante;?></td>
           <td class="text-center small"><?=$numeroComprobante;?></td>
@@ -156,12 +156,12 @@ $nombreProveedorClienteX=nameProveedorCliente($tipoProveedorCliente,$codProveedo
        <td class="text-right small"><?=formatNumberDec($montoX)?></td>
        <td class="text-right small font-weight-bold"><?=formatNumberDec($saldo);?></td>
      </tr>
-  	   <?php
-	 }else{
+       <?php
+   }else{
     
         ?>
-  	   <tr class="bg-white det-estados"><td>
-  	   	<?php 
+       <tr class="bg-white det-estados"><td>
+        <?php 
           if(($tipo==2 && $tipoProveedorCliente==2)){
            //$saldo=$saldo+$debeX-$haberX;
            $haberX=$montoContra;
@@ -177,7 +177,7 @@ $nombreProveedorClienteX=nameProveedorCliente($tipoProveedorCliente,$codProveedo
              </div>
             <?php    
        } ?>
-  	   </td> 
+       </td> 
        <td class="text-center small"><?=$nombreUnidadO;?></td>
           <td class="text-center small"><?=$nombreTipoComprobante;?></td>
           <td class="text-center small"><?=$numeroComprobante;?></td>
@@ -189,12 +189,12 @@ $nombreProveedorClienteX=nameProveedorCliente($tipoProveedorCliente,$codProveedo
        <td class="text-right small"></td>
        <td class="text-right small"><?=formatNumberDec($saldo);?></td>
      </tr>
-  	   <?php
-	 }
-	 $i++;
+       <?php
+   }
+   $i++;
   }
 ?>
-	</tbody>
+  </tbody>
 </table>
 <?php
 echo "@".$saldo;
