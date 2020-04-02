@@ -114,26 +114,59 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
 ?>
 <script>
   var itemAtributos=[];
+  var itemAtributosDias=[];
 </script>
 <?php 
   $stmtAtributos = $dbh->prepare("SELECT * from simulaciones_servicios_atributos where cod_simulacionservicio=$codigo");
   $stmtAtributos->execute();
+  $codigoFilaAtrib=0;
   while ($rowAtributo = $stmtAtributos->fetch(PDO::FETCH_ASSOC)) {
+   $codigoXAtrib=$rowAtributo['codigo'];
    $nombreXAtrib=$rowAtributo['nombre'];
    $direccionXAtrib=$rowAtributo['direccion'];
+   $normaXAtrib=$rowAtributo['norma'];
+   $marcaXAtrib=$rowAtributo['marca'];
+   $selloXAtrib=$rowAtributo['nro_sello'];
+   $tipoXAtrib=$rowAtributo['cod_tipoatributo'];
+
    ?>
     <script>
     var atributo={
+    codigo: '<?=$codigoFilaAtrib?>',  
     nombre: '<?=$nombreXAtrib?>',
-    direccion: '<?=$direccionXAtrib?>'
+    direccion: '<?=$direccionXAtrib?>',
+    marca: '<?=$marcaXAtrib?>',
+    norma: '<?=$normaXAtrib?>',
+    sello: '<?=$selloXAtrib?>'
     }
   itemAtributos.push(atributo);
     </script>
-   <?php 
+   <?php
+   //DIAS DE LOS SITIOS
+   if($tipoXAtrib!=1){
+    $stmtAtributosDias = $dbh->prepare("SELECT * from simulaciones_servicios_atributosdias where cod_simulacionservicioatributo=$codigoXAtrib");
+    $stmtAtributosDias->execute();
+    while ($rowAtributoDias = $stmtAtributosDias->fetch(PDO::FETCH_ASSOC)) {
+      $nombreXAtribDias=$rowAtributoDias['dias'];
+      $anioXAtribDias=$rowAtributoDias['cod_anio'];
+      ?>
+      <script>
+      var atributoDias={
+         codigo_atributo: '<?=$codigoFilaAtrib?>',  
+         dias: '<?=$nombreXAtribDias?>',
+         anio: '<?=$anioXAtribDias?>'
+         }
+       itemAtributosDias.push(atributoDias);
+    </script>
+      <?php
+     } 
+   } 
+   $codigoFilaAtrib++;
   }
 
   
 ?>
+<input type="hidden" name="anio_servicio" readonly value="<?=$anioX?>" id="anio_servicio"/>
 <input type="hidden" name="porcentaje_fijo" readonly value="<?=$porcentajeFijoSim?>" id="porcentaje_fijo"/>
 <input type="hidden" name="inicio_fijomodal" readonly value="0" id="inicio_fijomodal"/>
 <input type="hidden" name="inicio_variablemodal" readonly value="0" id="inicio_variablemodal"/>
@@ -250,6 +283,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
 						<div class="col-sm-2">
 				        	<div class="form-group">
 						  		<label class="bmd-label-static">Area</label>
+                  <input class="form-control" type="hidden" name="codigo_area" value="<?=$codAreaX?>" id="codigo_area" readonly/>
 						  		<input class="form-control" type="text" name="area_plan" value="<?=$areaX?>" id="area_plan" readonly/>
 							</div>
 				    </div>

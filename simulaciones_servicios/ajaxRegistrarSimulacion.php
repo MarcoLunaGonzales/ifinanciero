@@ -32,16 +32,18 @@ if(isset($_GET['nombre'])){
   $productos="";//$productos=$_GET['producto'];
   $sitios="";   // $sitios=$_GET['sitios'];
   $atributos= json_decode($_GET['atributos']);
-  $tipo_atributo=$_GET['tipo_atributo'];
+  $tipo_atributo=$_GET['tipo_atributo'];   
   $afnor=$_GET['afnor'];
   $norma=$_GET['norma'];
   $id_servicio=$_GET['id_servicio'];
-  $cod_region=$_GET['local_extranjero'];
+  $cod_region=1; //$_GET['local_extranjero']
   $anios=$_GET['anios'];
   //$anios=obtenerAnioPlantillaServicio($plantilla_servicio);
   $fecha= date("Y-m-d");
 
   $codSimServ=obtenerCodigoSimServicio();
+  $numeroCorrelativoCliente=obtenerNumeroClienteSimulacion($cliente);
+  $nombre=obtenerNombreCliente($cliente)."(".($numeroCorrelativoCliente+1).")";
   $dbh = new Conexion();
   if(isset($_GET['tipo_servicio'])){
     $idTipoServicio=$_GET['tipo_servicio'];
@@ -92,15 +94,28 @@ $areaGeneralPlantilla=obtenerCodigoAreaPlantillasServicios($plantilla_servicio);
           $nC=cantidadF($atributos);
           for($att=0;$att<$nC;$att++){
               $nombreAtributo=$atributos[$att]->nombre;
-              if($tipo_atributo==1){
-                $direccionAtributo="";
-              }else{
-                $direccionAtributo=$atributos[$att]->direccion;
-              }         
-              $sqlDetalleAtributos="INSERT INTO simulaciones_servicios_atributos (cod_simulacionservicio, nombre, direccion, cod_tipoatributo) 
-              VALUES ('$codSimServ', '$nombreAtributo', '$direccionAtributo', '$tipo_atributo')";
+              $direccionAtributo=$atributos[$att]->direccion;
+              $marcaAtributo=$atributos[$att]->marca;
+              $normaAtributo=$atributos[$att]->norma;
+              $selloAtributo=$atributos[$att]->sello;
+
+              $codSimulacionServicioAtributo=obtenerCodigoSimulacionServicioAtributo();
+              $sqlDetalleAtributos="INSERT INTO simulaciones_servicios_atributos (codigo,cod_simulacionservicio, nombre, direccion, cod_tipoatributo,marca,norma,nro_sello) 
+              VALUES ('$codSimulacionServicioAtributo','$codSimServ', '$nombreAtributo', '$direccionAtributo', '$tipo_atributo','$marcaAtributo','$normaAtributo','$selloAtributo')";
               $stmtDetalleAtributos = $dbh->prepare($sqlDetalleAtributos);
               $stmtDetalleAtributos->execute();
+
+              if($tipo_atributo==1){
+               // $direccionAtributo="";
+              }else{   
+                for ($yyyy=$inicioAnio; $yyyy<=$anios; $yyyy++) {  
+                 $sqlDetalleAtributosDias="INSERT INTO simulaciones_servicios_atributosdias (cod_simulacionservicioatributo, dias, cod_anio) 
+                 VALUES ('$codSimulacionServicioAtributo', '$dias', '$yyyy')";
+                 $stmtDetalleAtributosDias = $dbh->prepare($sqlDetalleAtributosDias);
+                 $stmtDetalleAtributosDias->execute();     
+                }
+              }         
+              
          }
          //FIN simulaciones_serviciosauditores
 
@@ -185,7 +200,7 @@ $areaGeneralPlantilla=obtenerCodigoAreaPlantillasServicios($plantilla_servicio);
       $diasS=$rowAudPlan['dias'];
       $dbhAU = new Conexion();
       $sqlAU="INSERT INTO simulaciones_servicios_auditores (cod_simulacionservicio,cod_tipoauditor, cantidad, monto,cod_estadoreferencial,cantidad_editado,dias,monto_externo,cod_externolocal,cod_anio) 
-      VALUES ('".$codSimServ."','".$codTIPA."','".$cantidadS."','".$montoS."',1,'".$cantidadS."','".$diasS."','".$montoSE."','".$codBolLocSE."','".$iiii."')";
+      VALUES ('".$codSimServ."','".$codTIPA."','".$cantidadS."','".$montoS."',1,'".$cantidadS."','".$dias."','".$montoSE."','".$codBolLocSE."','".$iiii."')";
       $stmtAU = $dbhAU->prepare($sqlAU);
       $stmtAU->execute();
      }
