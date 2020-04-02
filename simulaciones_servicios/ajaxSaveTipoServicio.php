@@ -25,7 +25,7 @@ $monto=$_GET['monto'];
 $unidad=$_GET['unidad'];
 $anio=$_GET['anio'];
 
-$sql1="SELECT * from simulaciones_servicios_tiposervicio where cod_simulacionservicio=$cod_sim and cod_claservicio=$cod_cla";
+$sql1="SELECT * from simulaciones_servicios_tiposervicio where cod_simulacionservicio=$cod_sim and cod_claservicio=$cod_cla and cod_anio=$anio";
 $stmt1 = $dbh->prepare($sql1);
 $stmt1->execute();
 

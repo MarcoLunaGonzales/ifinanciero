@@ -30,6 +30,8 @@ $globalArea=$_SESSION["globalArea"];
 $globalAdmin=$_SESSION["globalAdmin"];
 
 $contadorRegistros=0;
+
+$codSimServ=obtenerCodigoSimServicio();
 ?>
 <script>
   numFilas=<?=$contadorRegistros;?>;
@@ -65,14 +67,42 @@ $dbh = new Conexion();
                   }
               ?>
 
-                 <!--<div class="row">
-                       <label class="col-sm-2 col-form-label">Nombre:</label>
+                 <div class="row">
+                       <label class="col-sm-2 col-form-label">Numero:</label>
                        <div class="col-sm-7">
                         <div class="form-group">
-                          --><input class="form-control" type="hidden" name="nombre" id="nombre" value="Sin Nombre"/><!--
+                          <input class="form-control" type="text" readonly name="nombre" id="nombre" value="<?=$codSimServ?>"/>
                         </div>
                         </div>
-                      </div>-->
+                      </div>
+                   <div class="row">
+                       <label class="col-sm-2 col-form-label">Cliente</label>
+                       <div class="col-sm-7">
+                        <div class="row">
+                          <div class="col-sm-12">
+                            <div class="form-group">
+                                <select class="selectpicker form-control" data-live-search="true" name="cliente" id="cliente" data-style="btn btn-info"  required>
+          
+                                <!--<option disabled selected="selected" value="">Cliente</option>-->
+                                <?php
+                                 $stmt = $dbh->prepare("SELECT c.codigo, c.nombre, t.nombre as tipo FROM clientes c join tipos_clientes t on c.cod_tipocliente=t.codigo where c.cod_estadoreferencial=1 order by 2");
+                                 $stmt->execute();
+                                  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                  $codigoX=$row['codigo'];
+                                  $nombreX=$row['nombre'];
+                                  $tipoX=$row['tipo'];
+                                  //$abrevX=$row['abreviatura'];
+                                   ?>
+                                  <option value="<?=$codigoX;?>"><?=$nombreX;?></option> 
+                                  <?php
+                                    }
+                                    ?>
+                                </select>
+                              </div>
+                          </div> 
+                        </div>
+                       </div>
+                      </div><!--row-->   
                   <div class="row">
                        <label class="col-sm-2 col-form-label">Plantilla de Servicios :</label>
                        <div class="col-sm-7">
@@ -134,7 +164,31 @@ $dbh = new Conexion();
                         </div>       
                      </div>
                      <div class="row">
-                       <label class="col-sm-2 col-form-label">Tipo de Servicio</label>
+                       <label class="col-sm-2 col-form-label">Objeto del Servicio</label>
+                       <div class="col-sm-7">
+                        <div class="row">
+                          <div class="col-sm-12">
+                            <div class="form-group">
+                                <select class="selectpicker form-control" name="objeto_servicio" id="objeto_servicio" data-style="btn btn-info"  required>
+                                <?php
+                                 $stmt = $dbh->prepare("SELECT c.codigo, c.nombre FROM objeto_servicio c where c.cod_estadoreferencial=1 order by 1");
+                                 $stmt->execute();
+                                  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                  $codigoX=$row['codigo'];
+                                  $nombreX=$row['nombre'];
+                                   ?>
+                                  <option value="<?=$codigoX;?>"><?=$nombreX;?></option> 
+                                  <?php
+                                    }
+                                    ?>
+                                </select>
+                              </div>
+                          </div> 
+                        </div>
+                       </div>
+                      </div><!--row-->
+                     <div class="row">
+                       <label class="col-sm-2 col-form-label">Tipo del Servicio</label>
                        <div class="col-sm-7">
                         <div class="form-group">
                           <select class="selectpicker form-control" data-live-search="true" name="tipo_servicio" id="tipo_servicio" data-style="btn btn-info"  required>       
@@ -170,34 +224,7 @@ $dbh = new Conexion();
                         </div> 
                     </div>
                       
-                      <div class="row">
-                       <label class="col-sm-2 col-form-label">Cliente</label>
-                       <div class="col-sm-7">
-                        <div class="row">
-                          <div class="col-sm-12">
-                            <div class="form-group">
-                                <select class="selectpicker form-control" data-live-search="true" name="cliente" id="cliente" data-style="btn btn-info"  required>
-          
-                                <!--<option disabled selected="selected" value="">Cliente</option>-->
-                                <?php
-                                 $stmt = $dbh->prepare("SELECT c.codigo, c.nombre, t.nombre as tipo FROM clientes c join tipos_clientes t on c.cod_tipocliente=t.codigo where c.cod_estadoreferencial=1 order by 2");
-                                 $stmt->execute();
-                                  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                                  $codigoX=$row['codigo'];
-                                  $nombreX=$row['nombre'];
-                                  $tipoX=$row['tipo'];
-                                  //$abrevX=$row['abreviatura'];
-                                   ?>
-                                  <option value="<?=$codigoX;?>"><?=$nombreX;?> - <?=$tipoX?></option> 
-                                  <?php
-                                    }
-                                    ?>
-                                </select>
-                              </div>
-                          </div> 
-                        </div>
-                       </div>
-                      </div><!--row-->
+                      
 
                       
                       <!--<div class="row">

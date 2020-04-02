@@ -49,7 +49,7 @@ if(isset($_GET["cod_simulacion"])){
         <td width="6%" class="fondo-boton">USD</td>
     </tr>
     <?php 
-    $sql="SELECT s.*,t.nombre as tipo FROM simulaciones_servicios_auditores s join tipos_auditor t on s.cod_tipoauditor=t.codigo where s.cod_simulacionservicio=$codSimulacion and s.cod_anio=$anio";
+    $sql="SELECT s.*,t.nombre as tipo FROM simulaciones_servicios_auditores s join tipos_auditor t on s.cod_tipoauditor=t.codigo where s.cod_simulacionservicio=$codSimulacion and s.cod_anio=$anio and s.habilitado=1";
     $stmt=$dbh->prepare($sql);
     $stmt->execute();
     $iii=1;$totalTabla=0;$totalTablaUnitario=0;
