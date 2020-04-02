@@ -4265,7 +4265,7 @@ function activarInputMontoPersonalServicio(anio,fila){
     /*$("#modal_montopretotalext"+fila).removeAttr("readonly");
     $("#modal_montopreext"+fila).removeAttr("readonly");*/
   }
-  calcularTotalPersonalServicio(anio,1);
+  calcularTotalPersonalServicio(anio,2);
 }
 function activarInputMontoFilaServicio(anio,fila){
   if(!($("#modal_montoservtotal"+anio+"SSS"+fila).is("[readonly]"))){
@@ -4299,7 +4299,7 @@ function activarInputMontoFilaServicio(anio,fila){
     $("#modal_montoservtotalUSDOFF"+anio+"SSS"+fila).attr("type","hidden");
     $("#modal_montoservUSDOFF"+anio+"SSS"+fila).attr("type","hidden");
   }
-  calcularTotalFilaServicio(anio,1);
+  calcularTotalFilaServicio(anio,2);
 }
 // function activarInputMontoFilaServicio2(){
 
