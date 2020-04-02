@@ -8736,21 +8736,21 @@ function botonBuscarActivoFijo(){
   ajax.send(null)
 } 
 
-function sacandoUFVDepreAF(){
-    var gestion=document.getElementById("gestion").value; 
-    var mes=document.getElementById("mes").value; 
-    jax=nuevoAjax();
-  ajax.open('GET', 'activosFijos/ajax_depreciaocionUFV.php?gestion='+gestion+'&mes='+mes,true);
-  ajax.onreadystatechange=function() {
-    if (ajax.readyState==4) {
-      var contenedor=$("#data_activosFijos");
-      contenedor.html(ajax.responseText);
-      // $("#modalBuscador").modal("hide");
-    }
-  }
-  ajax.send(null)
+// function sacandoUFVDepreAF(){
+//     var gestion=document.getElementById("gestion").value; 
+//     var mes=document.getElementById("mes").value; 
+//     jax=nuevoAjax();
+//   ajax.open('GET', 'activosFijos/ajax_depreciaocionUFV.php?gestion='+gestion+'&mes='+mes,true);
+//   ajax.onreadystatechange=function() {
+//     if (ajax.readyState==4) {
+//       var contenedor=$("#data_activosFijos");
+//       contenedor.html(ajax.responseText);
+//       // $("#modalBuscador").modal("hide");
+//     }
+//   }
+//   ajax.send(null)
     
-  }
+//   }
 
 function sacandoUFVDepreAF(){
   
