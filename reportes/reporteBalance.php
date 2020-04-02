@@ -6,6 +6,7 @@ require_once '../functions.php';
 require_once '../assets/libraries/CifrasEnLetras.php';
 
 $dbh = new Conexion();
+set_time_limit(300);
 $fechaActual=date("Y-m-d");
 $gestion=nameGestion($_POST['gestion']);
 $fecha=$_POST['fecha'];
@@ -17,6 +18,15 @@ $fechaFormateada=$fechaTitulo[2].'/'.$fechaTitulo[1].'/'.$fechaTitulo[0];
 
 $moneda=1; //$_POST["moneda"];
 $unidades=$_POST['unidad'];
+$entidades=$_POST['entidad'];
+// $StringEntidad=implode(",", $entidad);
+
+$stringEntidades="";
+foreach ($entidades as $valor ) {    
+    $stringEntidades.=nameEntidad($valor).",";
+}    
+
+
 $tituloOficinas="";
 for ($i=0; $i < count($unidades); $i++) { 
   $tituloOficinas.=abrevUnidad_solo($unidades[$i]).",";
@@ -37,7 +47,7 @@ $html.=  '<header class="header">'.
          '<div id="header_titulo_texto_inf_pegado_Max">Expresado en Bolivianos</div>'.
          '<table class="table pt-2">'.
             '<tr class="bold table-title">'.
-              '<td class="td-border-none" width="22%">Entidad: IBNORCA</td>'.
+              '<td class="td-border-none" width="22%">Entidad: '.$stringEntidades.'</td>'.
               '<td class="td-border-none" width="33%"></td>'.            
             '</tr>'.
             '<tr>'.
@@ -67,7 +77,7 @@ $stmt->bindColumn('cuenta_auxiliar', $cuentaAuxiliar);
 while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { 
      $sumaNivel1=0;$html1="";
      $stmt2 = $dbh->prepare("SELECT p.codigo, p.numero, p.nombre, p.cod_padre, p.nivel, 
-                            (select tc.nombre from tipos_cuenta tc where tc.codigo=p.cod_tipocuenta)cod_tipocuenta, p.cuenta_auxiliar FROM plan_cuentas p where cod_estadoreferencial=1 and p.nivel=2 and p.cod_padre='$codigo' ");
+                            (select tc.nombre from tipos_cuenta tc where tc.codigo=p.cod_tipocuenta)cod_tipocuenta, p.cuenta_auxiliar FROM plan_cuentas p where cod_estadoreferencial=1 and p.nivel=2 and p.cod_padre='$codigo' order by p.numero");
       $stmt2->execute();                      
       $stmt2->bindColumn('codigo', $codigo_2);
       $stmt2->bindColumn('numero', $numero_2);
@@ -81,7 +91,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
         
          $sumaNivel2=0;$html2="";
          $stmt3 = $dbh->prepare("SELECT p.codigo, p.numero, p.nombre, p.cod_padre, p.nivel, 
-                              (select tc.nombre from tipos_cuenta tc where tc.codigo=p.cod_tipocuenta)cod_tipocuenta, p.cuenta_auxiliar FROM plan_cuentas p where cod_estadoreferencial=1 and p.nivel=3 and p.cod_padre='$codigo_2' ");
+                              (select tc.nombre from tipos_cuenta tc where tc.codigo=p.cod_tipocuenta)cod_tipocuenta, p.cuenta_auxiliar FROM plan_cuentas p where cod_estadoreferencial=1 and p.nivel=3 and p.cod_padre='$codigo_2' order by p.numero");
          $stmt3->execute();                      
          $stmt3->bindColumn('codigo', $codigo_3);
          $stmt3->bindColumn('numero', $numero_3);
@@ -94,7 +104,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
          while ($row = $stmt3->fetch(PDO::FETCH_BOUND)) {            
             $sumaNivel3=0;$html3="";
             $stmt4 = $dbh->prepare("SELECT p.codigo, p.numero, p.nombre, p.cod_padre, p.nivel, 
-                                (select tc.nombre from tipos_cuenta tc where tc.codigo=p.cod_tipocuenta)cod_tipocuenta, p.cuenta_auxiliar FROM plan_cuentas p where cod_estadoreferencial=1 and p.nivel=4 and p.cod_padre='$codigo_3' ");
+                                (select tc.nombre from tipos_cuenta tc where tc.codigo=p.cod_tipocuenta)cod_tipocuenta, p.cuenta_auxiliar FROM plan_cuentas p where cod_estadoreferencial=1 and p.nivel=4 and p.cod_padre='$codigo_3' order by p.numero");
             $stmt4->execute();                      
             $stmt4->bindColumn('codigo', $codigo_4);
             $stmt4->bindColumn('numero', $numero_4);
@@ -130,7 +140,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                     $html4.='</tr>';              
                $index++;          
                }/* Fin del primer while*/
-              if($sumaNivel4!=0){
+              // if($sumaNivel4!=0){
               $sumaNivel3+=$sumaNivel4;  
               $nombre_4=formateaPlanCuenta($nombre_4, $nivel_4);
               $html3.='<tr class="bold">'.
@@ -142,7 +152,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                 '<td class=" td-border-none text-right"></td>';   
               $html3.='</tr>';
               $html3.=$html4;       
-              } 
+              // } 
             }
             if($sumaNivel3!=0){
             $sumaNivel2+=$sumaNivel3;
