@@ -305,21 +305,14 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
 
 <!-- small modal -->
 <div class="modal fade modal-primary" id="modalEditPlantilla" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-notice" style="max-width: 90% !important;">
-    <div class="modal-content card">
-               <div class="card-header card-header-info card-header-text">
-                  <div class="card-text">
-                    <h4>Editar Propuesta</h4>
-                  </div>
-                  <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
-                    <i class="material-icons">close</i>
-                  </button>
-                </div>
-                <div class="card-body">
+  <div class="modal-dialog modal-notice wizard-container" style="max-width: 90% !important;">
+    <div class="modal-content card card-wizard" data-color="rose" id="wizardProfile">
                     
 <!--      Wizard container        -->
-            <div class="wizard-container">
-              <div class="card card-wizard" data-color="rose" id="wizardProfile">
+                <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">close</i>
+                  </button>
+                 <form action="" method=""> 
                   <!--        You can switch " data-color="primary" "  with one of the next bright colors: "green", "orange", "red", "blue"       -->
                   <div class="card-header text-center">
                     <h3 class="card-title">
@@ -328,14 +321,14 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                     <h5 class="card-description">Cambia los valores del servicio.</h5>
                   </div>
                   <div class="wizard-navigation">
-                    <ul class="nav nav-pills">
+                    <ul class="nav nav-pills" role="tablistee">
                       <li class="nav-item">
-                        <a class="nav-link active" href="#servicios1" data-toggle="tab" role="tab">
+                        <a class="nav-link" href="#servicioswewe" data-toggle="tab" role="tablistee">
                           DATOS 1
                         </a>
                       </li>
                       <li class="nav-item">
-                        <a class="nav-link" href="#servicios2" data-toggle="tab" role="tab">
+                        <a class="nav-link" href="#servicioswewe2" data-toggle="tab" role="tablistee">
                           DATOS 2
                         </a>
                       </li>
@@ -343,18 +336,14 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                   </div>
                   <div class="card-body">
                     <div class="tab-content">
-                      <div class="tab-pane active" id="servicios1">
+                      <div class="tab-pane" id="servicioswewe">
                         <!--poner los servicios-->
-                     
-
                       <?php 
                        /*Aqui poner los servicios*/
                        
                       ?>
                       
                       <div>
-                        <hr>
-                        <br>
                         <ul class="nav nav-pills nav-pills-warning" role="tablist">
                         <?php
                         if($codAreaX==39){
@@ -854,14 +843,10 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
 
                          </div>
                       </div>
-                      <hr>
-
 
                       </div>
-                      <div class="tab-pane" id="servicios2">
+                      <div class="tab-pane" id="servicioswewe2">
                         <!--poner los servicios-->
-
-
 
                       <div class="row">
                           <label class="col-sm-2 col-form-label">Utilidad M&iacute;nima %</label>
@@ -976,15 +961,11 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                       <input type="button" class="btn btn-next btn-fill btn-rose btn-wd" name="next" value="Siguiente">
                       <input type="button" id="boton_guardarplan" class="btn btn-finish btn-fill btn-rose btn-wd" name="finish" value="Finalizar" onclick="guardarDatosPlantillaServicio(this.id)" style="display: none;">
                     </div>
-                    
+                    <div class="clearfix"></div>
                   </div>
-                
-              </div>
-            </div>
+                </form>
             <!-- wizard container -->
 
-
-                </div>
       </div>  
     </div>
   </div>

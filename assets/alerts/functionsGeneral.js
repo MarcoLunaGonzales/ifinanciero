@@ -4803,7 +4803,7 @@ function guardarCuentasSimulacionAjaxGenericoServicioAuditor(anio){
       if($("#monto_mod"+anio+"QQQ"+j+"RRR"+i).is("[readonly]")){
         habilitado=0;
       }
-      var codigo = $("#codigo_columnas"+anio+"QQQ"+j+"RRR"+i).val();
+      var codigo = $("#codigo"+anio+"QQQ"+j+"RRR"+i).val();
       var monto = $("#monto_mod"+anio+"QQQ"+j+"RRR"+i).val();
       var cuenta =$("#codigo_cuenta"+anio+"QQQ"+j+"RRR"+i).val();
       var simulacion =$("#codigo_fila"+anio+"QQQ"+j+"RRR"+i).val();
