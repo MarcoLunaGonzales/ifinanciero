@@ -4790,12 +4790,12 @@ function nameCuentaAuxiliar($cuentaaux){
 }
 function nameTipoAsignacion($valor){
    $dbh = new Conexion();
+   $nombreX=0;
    $sqlX="SELECT nombre FROM estados_asignacionaf where codigo='$valor'";
    $stmt = $dbh->prepare($sqlX);
    $stmt->execute();
-   $nombreX=0;
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-      $nombreX=$row['nombre'];
+      $nombreX=$row['nombre'];      
    }
    return($nombreX);
 }
