@@ -8248,7 +8248,7 @@ function listarAtributo(){
       row.append($('<td>').addClass('').text(itemAtributos[i].sello));
      }
      row.append($('<td>').addClass('').text(itemAtributos[i].direccion));  
-     row.append($('<td>').addClass('text-right').html('<button class="btn btn-success btn-link btn-sm" onclick="editarAtributo('+i+');"><i class="material-icons">edit</i></button><button class="btn btn-danger btn-link btn-sm" onclick="removeAtributo('+i+');"><i class="material-icons">remove_circle</i></button>'));
+     row.append($('<td>').addClass('text-right small').html('<i class="material-icons text-success" onclick="editarAtributo('+i+');">edit</i><i onclick="removeAtributo('+i+');" class="material-icons text-danger">remove_circle</i>'));
      table.append(row);
    }
    div.append(table);
@@ -8786,4 +8786,88 @@ function ajax_ufv_fin(){
     }
   }
   ajax.send(null)  
+}
+
+function copiarDatosServicios(anio){
+  var anios=$("#copiar_servicios"+anio).val();
+  if(anios.length>0){
+  Swal.fire({
+        title: '¿Esta Seguro?',
+        text: "Los datos se copiarán!",
+         type: 'warning',
+        showCancelButton: true,
+        confirmButtonClass: 'btn btn-info',
+        cancelButtonClass: 'btn btn-danger',
+        confirmButtonText: 'COPIAR',
+        cancelButtonText: 'CANCELAR',
+        buttonsStyling: false
+       }).then((result) => {
+          if (result.value) {
+               copiarDatosServiciosPorAnio(anio);            
+            return(true);
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            return(false);
+          }
+        });
+  }else{
+    Swal.fire("Informativo!", "Debe seleccionar al menos un Año", "warning");
+  }
+}
+
+function copiarDatosServiciosPorAnio(anio){
+ var anios=$("#copiar_servicios"+anio).val();
+  for (var i = 0; i < anios.length; i++) {
+    var items=$("#modal_numeroservicio"+anios[i]).val();
+      for (var k = 1; k <= items; k++) {
+          $("#cantidad_servicios"+anios[i]+"SSS"+k).val($("#cantidad_servicios"+anio+"SSS"+k).val());
+          $("#unidad_servicios"+anios[i]+"SSS"+k).val($("#unidad_servicios"+anio+"SSS"+k).val());
+          $("#modal_montoserv"+anios[i]+"SSS"+k).val($("#modal_montoserv"+anio+"SSS"+k).val());
+          $('.selectpicker').selectpicker("refresh");
+          calcularTotalFilaServicio(anios[i],2);
+       }; 
+  };
+ $("#copiar_servicios"+anio).val(""); 
+ $('.selectpicker').selectpicker("refresh");
+}
+
+function copiarDatosPersonal(anio){
+  var anios=$("#copiar_personal"+anio).val();
+  if(anios.length>0){
+  Swal.fire({
+        title: '¿Esta Seguro?',
+        text: "Los datos se copiarán!",
+         type: 'warning',
+        showCancelButton: true,
+        confirmButtonClass: 'btn btn-info',
+        cancelButtonClass: 'btn btn-danger',
+        confirmButtonText: 'COPIAR',
+        cancelButtonText: 'CANCELAR',
+        buttonsStyling: false
+       }).then((result) => {
+          if (result.value) {
+               copiarDatosPersonalPorAnio(anio);            
+            return(true);
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            return(false);
+          }
+        });
+  }else{
+    Swal.fire("Informativo!", "Debe seleccionar al menos un Año", "warning");
+  }
+}
+
+function copiarDatosPersonalPorAnio(anio){
+ var anios=$("#copiar_personal"+anio).val();
+  for (var i = 0; i < anios.length; i++) {
+    var items=$("#modal_numeropersonal"+anios[i]).val();
+      for (var k = 1; k <= items; k++) {
+          $("#cantidad_personal"+anios[i]+"FFF"+k).val($("#cantidad_personal"+anio+"FFF"+k).val());
+          $("#dias_personal"+anios[i]+"FFF"+k).val($("#dias_personal"+anio+"FFF"+k).val());
+          $("#modal_montopre"+anios[i]+"FFF"+k).val($("#modal_montopre"+anio+"FFF"+k).val());
+          $('.selectpicker').selectpicker("refresh");
+          calcularTotalPersonalServicio(anios[i],2);
+       }; 
+  };
+ $("#copiar_personal"+anio).val(""); 
+ $('.selectpicker').selectpicker("refresh");
 }
