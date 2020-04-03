@@ -117,14 +117,13 @@ $stmtActivos->bindColumn('observaciones_devolucion', $observacion_devolucion);
                           $contador = 0;
                           while ($rowActivos = $stmtActivos->fetch(PDO::FETCH_ASSOC)) {
                             //para el qr  
-                            $stmt = $dbh->prepare("SELECT (select d.nombre from depreciaciones d where d.codigo=cod_depreciaciones) as nombreRubro,
-                            (select t.tipo_bien from tiposbienes t where t.codigo=cod_tiposbienes)as tipo_bien
+                            $stmt = $dbh->prepare("SELECT (select d.nombre from depreciaciones d where d.codigo=cod_depreciaciones) as nombreRubro
                             from activosfijos where codigo=$codigoActivoX");
                             $stmt->execute();
                             $result = $stmt->fetch();
                             $nombreRubro = $result['nombreRubro'];
                             // $nombrePersonal = $result['nombrePersonal'];
-                            $tipo_bien = $result['tipo_bien'];
+                            // $tipo_bien = $result['tipo_bien'];
                             // $nombre_uo2 = $result['nombre_uo2'];
 
                             $contador++;
@@ -153,7 +152,7 @@ $stmtActivos->bindColumn('observaciones_devolucion', $observacion_devolucion);
                                   mkdir ($dir);}
                               $fileName = $dir.'test.png';
                               $tamanio = 1.5; //tamaño de imagen que se creará
-                              $level = 'Q'; //tipo de precicion Baja L, mediana M, alta Q, maxima H
+                              $level = 'L'; //tipo de precicion Baja L, mediana M, alta Q, maxima H
                               $frameSize = 1; //marco de qr                              
                               $contenido = "Cod:".$codigoActivoX."\nRubro:".$nombreRubro."\nTipo Bien:".$tipo_bien."\nOF:".$cod_unidadorganizacional."\nRespo.:".$personal;
                               QRcode::png($contenido, $fileName, $level,$tamanio,$frameSize);

@@ -173,10 +173,10 @@ $html.=  '<header class="header">'.
                                 if(!file_exists($dir)){
                                     mkdir ($dir);}
                                 $fileName = $dir.$codigoactivo.'.png';
-                                $tamanio = 3; //tamaño de imagen que se creará
-                                $level = 'Q'; //tipo de precicion Baja L, mediana M, alta Q, maxima H
+                                $tamanio = 2; //tamaño de imagen que se creará
+                                $level = 'L'; //tipo de precicion Baja L, mediana M, alta Q, maxima H
                                 $frameSize = 1; //marco de qr                                
-                                $contenido = "Cod:".$codigoactivo."\nRubro:".$nombre_depreciaciones."\nTipo Bien:".$tipo_bien."\nOF:".$abrev_uo2."\nRespo.:".$nombre_personal;
+                                $contenido = "Cod:".$codigoactivo."\nRubro:".$nombre_depreciaciones."\nDesc:".$activo."\nRespo.:".$abrev_uo2.' - '.$nombre_personal;
                                 QRcode::png($contenido, $fileName, $level, $tamanio,$frameSize);
                                 $html.='<img src="'.$fileName.'"/>';
                         $html.='</td>'.
