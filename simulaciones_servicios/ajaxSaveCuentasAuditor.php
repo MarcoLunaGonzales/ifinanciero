@@ -29,6 +29,27 @@ if(verificarTipoAuditorMontosVariables($simulaciones,$tipo,$codDet,$anio)==0){
     $stmtUpdateDetalle = $dbh->prepare($sqlUpdateDetalle);
     $stmtUpdateDetalle->execute();	
 }
-
+if(isset($_GET["otroanio"])){
+	$anios=json_decode($_GET["otroanio"]);
+	for ($i=0; $i < count($anios) ; $i++) {
+	$aniose=$anios[$i]; 
+	//obtenemos el codigo del auditor similar para el anio copiado
+	$listaAuditor=listarSimulacionServicioAuditorParaCopiar($simulaciones,$tipo,$aniose,obtenerGlosaSimulacionServicioDetalle($codDet));
+	 while ($row = $listaAuditor->fetch(PDO::FETCH_ASSOC)) {
+	   $codDet2=$row['codigo'];
+       $tipo2=$row['cod_simulacionservicioauditor']; //obtenemos el codigo de simulaciones_servicios_auditores
+	   if(verificarTipoAuditorMontosVariables($simulaciones,$tipo2,$codDet2,$aniose)==0){
+	    $sqlUpdateDetalle="INSERT INTO simulaciones_ssd_ssa (monto,monto_externo,dias,cantidad,cod_simulacionservicio,cod_simulacionserviciodetalle,cod_simulacionservicioauditor,cod_anio) 
+	    VALUES('$monto','$montoe','$dias',$cantidad,$simulaciones,'$codDet2','$tipo2',$aniose)";
+        $stmtUpdateDetalle = $dbh->prepare($sqlUpdateDetalle);
+        $stmtUpdateDetalle->execute();
+       }else{
+        $sqlUpdateDetalle="UPDATE simulaciones_ssd_ssa SET  monto='$monto',monto_externo='$montoe',dias='$dias',cantidad=$cantidad where cod_simulacionservicio=$simulaciones and cod_simulacionserviciodetalle='$codDet2' and cod_simulacionservicioauditor='$tipo2' and cod_anio=$aniose";
+        $stmtUpdateDetalle = $dbh->prepare($sqlUpdateDetalle);
+        $stmtUpdateDetalle->execute();	
+       }	
+	 }
+	}
+}
 
 ?>

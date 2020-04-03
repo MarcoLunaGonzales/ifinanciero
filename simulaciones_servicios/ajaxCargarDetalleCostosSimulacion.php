@@ -214,7 +214,9 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $html.='</tr>';
             }
           }else{
+            
           if(!isset($_GET['anio'])){
+            
             $query_cuentas=obtenerDetalleSimulacionCostosPartidaServicio($codigo,$codPartida);
           }else{
            $query_cuentas=obtenerDetalleSimulacionCostosPartidaServicioPeriodo($codigo,$codPartida,$yyyy); 
@@ -227,6 +229,8 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
               
               $bandera=$row_cuentas['habilitado'];
               $cantidadDetalle=$row_cuentas['cantidad'];
+
+              //obtener la cantidad real 
               $bgFila="";
               if($bandera==0){
                  $bgFila="text-danger";   
