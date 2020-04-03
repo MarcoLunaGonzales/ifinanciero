@@ -250,13 +250,23 @@
                      }else{
                       var contEstadoDebito=0;
                       for (var i = 0; i < numFilas; i++) {
-                      if($("#tipo_estadocuentas"+(i+1)).val()=="1"&&(!($("#nestado"+(i+1)).hasClass("estado")))){
-                         contEstadoDebito=1;
-                        mensaje+="<p>Una o más cuentas, No estan relacionadas a un estado de cuenta</p>";
-                        $('#msgError').html(mensaje);
-                        $('#modalAlert').modal('show');
-                        contEstadoDebito=1;
-                       }          
+                          var debeZ=parseFloat($("#debe"+(i+1)).val());
+                          var haberZ=parseFloat($("#haber"+(i+1)).val());
+                          //COMENTAMOS LA VALIDACION DE LOS ESTADOS DE CUENTA
+                          /*if($("#tipo_estadocuentas"+(i+1)).val()=="1" && haberZ>0  && (!($("#nestado"+(i+1)).hasClass("estado")))){
+                             contEstadoDebito=1;
+                            mensaje+="<p>Existen cuentas que deben estar relacionadas a un Estado de Cuentas</p>";
+                            $('#msgError').html(mensaje);
+                            $('#modalAlert').modal('show');
+                            contEstadoDebito=1;
+                          }
+                          if($("#tipo_estadocuentas"+(i+1)).val()=="2" && debeZ>0  && (!($("#nestado"+(i+1)).hasClass("estado")))){
+                             contEstadoDebito=1;
+                            mensaje+="<p>Existen cuentas que deben estar relacionadas a un Estado de Cuentas</p>";
+                            $('#msgError').html(mensaje);
+                            $('#modalAlert').modal('show');
+                            contEstadoDebito=1;
+                          }*/         
                      }
                      if(contEstadoDebito==1){
                        envio=1;
