@@ -4833,7 +4833,7 @@ function guardarCuentasSimulacionAjaxGenericoServicio(ib){
   };
     actualizarSimulacion();
 }
-function guardarCuentasSimulacionAjaxGenericoServicioAuditor(anio){
+function guardarCuentasSimulacionAjaxGenericoServicioAuditor(anio,copiar,otroanio){
   var ib=1;
   var supertotal=$("#numero_cuentaspartida"+anio).val();
   for (var j = 1; j <=(supertotal-1); j++) {
@@ -4844,7 +4844,6 @@ function guardarCuentasSimulacionAjaxGenericoServicioAuditor(anio){
   
     for (var i=1;i<=(total-1);i++){
       
-
       var personalCuenta=$("#modal_numeropersonalauditor").val();
       for (var l = 1; l <=(personalCuenta-1); l++) {
          var tipoAu=$("#codigo_filaauditor"+l).val();
@@ -4857,8 +4856,11 @@ function guardarCuentasSimulacionAjaxGenericoServicioAuditor(anio){
            var codigoDetalle= $("#codigo_columnas"+k+"RRR"+l).val();
            var montoDetalle= $("#monto"+k+"RRR"+l).val();
            var montoDetalleext= $("#montoext"+k+"RRR"+l).val();
-        
-           var parametros = {"simulaciones":simulaciones,"cod_detalle":codigoDetalle,"cod_tipoau":tipoAu,"extlocal":extlocal,"monto":montoDetalle,"montoe":montoDetalleext,"dias":diasn,"cantidad":cantidadn,"anio":anio};
+           if(copiar!=0){
+             var parametros = {"otroanio":JSON.stringify(otroanio),"simulaciones":simulaciones,"cod_detalle":codigoDetalle,"cod_tipoau":tipoAu,"extlocal":extlocal,"monto":montoDetalle,"montoe":montoDetalleext,"dias":diasn,"cantidad":cantidadn,"anio":anio};
+           }else{
+             var parametros = {"simulaciones":simulaciones,"cod_detalle":codigoDetalle,"cod_tipoau":tipoAu,"extlocal":extlocal,"monto":montoDetalle,"montoe":montoDetalleext,"dias":diasn,"cantidad":cantidadn,"anio":anio};
+           }
             $.ajax({
             type:"GET",
             data:parametros,
@@ -4866,7 +4868,8 @@ function guardarCuentasSimulacionAjaxGenericoServicioAuditor(anio){
             beforeSend: function () { 
               iniciarCargaAjax();
             },
-            success:function(resp){         
+            success:function(resp){ 
+                
             }
           });
          };
@@ -4880,7 +4883,12 @@ function guardarCuentasSimulacionAjaxGenericoServicioAuditor(anio){
       var monto = $("#monto_mod"+anio+"QQQ"+j+"RRR"+i).val();
       var cuenta =$("#codigo_cuenta"+anio+"QQQ"+j+"RRR"+i).val();
       var simulacion =$("#codigo_fila"+anio+"QQQ"+j+"RRR"+i).val();
-      var parametros = {"codigo":codigo,"monto":monto,"ibnorca":ib,"simulacion":simulacion,"simulaciones":simulaciones,"plantilla":plantilla,"partida":partida,"cuenta":cuenta,"habilitado":habilitado,"cantidad":cantidad,"anio":anio};
+      if(copiar!=0){
+          var parametros = {"otroanio":JSON.stringify(otroanio),"codigo":codigo,"monto":monto,"ibnorca":ib,"simulacion":simulacion,"simulaciones":simulaciones,"plantilla":plantilla,"partida":partida,"cuenta":cuenta,"habilitado":habilitado,"cantidad":cantidad,"anio":anio};
+       }else{
+           var parametros = {"codigo":codigo,"monto":monto,"ibnorca":ib,"simulacion":simulacion,"simulaciones":simulaciones,"plantilla":plantilla,"partida":partida,"cuenta":cuenta,"habilitado":habilitado,"cantidad":cantidad,"anio":anio};
+      }
+      
       $.ajax({
         type:"GET",
         data:parametros,
@@ -4901,7 +4909,10 @@ function guardarCuentasSimulacionAjaxGenericoServicioAuditor(anio){
       });
     }   
   };
+  //if(copiar==0){
     actualizarSimulacion();
+  //}//
+    
 }
 function guardarCuentasSimulacionAjaxGenerico(ib){
   var supertotal=$("#numero_cuentaspartida").val();
@@ -5185,7 +5196,7 @@ function guardarCuentasSimulacionGenericoServicioPrevio(anio,ib){
    }    
   };
   //ajax estado de cuentas
-    var parametros={"cod_simulacion":cosSim,"codigo_filas":codigosFilas,"anio":anio,"usd":usd,"monto_filas":montoFilasPersonal};
+    var parametros={"anios":$("#anio_simulacion").val(),"cod_area":$("#codigo_area").val(),"cod_simulacion":cosSim,"codigo_filas":codigosFilas,"anio":anio,"usd":usd,"monto_filas":montoFilasPersonal};
     $.ajax({
         type: "GET",
         dataType: 'html',
@@ -7096,6 +7107,30 @@ function seleccionarDepartamentoServicio(){
     }); 
 }
 
+
+function seleccionarDepartamentoServicioSitio(){
+ var parametros={"codigo":$("#pais_empresa").val()};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "solicitudes/ajaxListarDepto.php",
+        data: parametros,
+        beforeSend: function () {
+        $("#texto_ajax_titulo").html("Pais: "+$("#pais_empresa option:selected" ).text()); 
+          iniciarCargaAjax();
+        },
+        success:  function (resp) {
+           detectarCargaAjax();
+           $("#texto_ajax_titulo").html("Procesando Datos"); 
+           $("#departamento_empresa").html(resp);
+           $("#departamento_empresa").val("480"); // departamento de LA PAZ
+           seleccionarCiudadServicioSitio();
+           $("#ciudad_empresa").val("");
+           $('.selectpicker').selectpicker("refresh");          
+        }
+    }); 
+}
+
 function seleccionarCiudadServicio(){
   var parametros={"codigo":$("#departamento_empresa").val()};
      $.ajax({
@@ -7116,6 +7151,28 @@ function seleccionarCiudadServicio(){
         }
     }); 
 }
+
+function seleccionarCiudadServicioSitio(){
+  var parametros={"codigo":$("#departamento_empresa").val()};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "solicitudes/ajaxListarCiudad.php",
+        data: parametros,
+        beforeSend: function () {
+        $("#texto_ajax_titulo").html("Estado / Departamento: "+$("#departamento_empresa option:selected" ).text()); 
+          iniciarCargaAjax();
+        },
+        success:  function (resp) {
+           detectarCargaAjax();
+           $("#texto_ajax_titulo").html("Procesando Datos"); 
+           $("#ciudad_empresa").html(resp);
+           $("#ciudad_empresa").val("62"); //PARA LA CIUDAD DE EL ALTO
+           $('.selectpicker').selectpicker("refresh");
+        }
+    }); 
+}
+
 function mostrarOtraCiudadServicio(){
   var ciudad = $("#ciudad_empresa").val();
   if(ciudad=="NN"){
@@ -8346,6 +8403,7 @@ function agregarAtributoAjax(){
     };
     //agregar campos a los inputs
   }
+
 }
 
 function listarAtributo(){
@@ -8394,10 +8452,16 @@ function guardarAtributoItem(){
     var norma="";
     var sello="";
     var marca="";
+    var pais=$("#pais_empresa").val();
+    var estado=$("#departamento_empresa").val();
+    var ciudad=$("#ciudad_empresa").val();
   }else{
     var norma=$("#modal_norma").val();
     var sello=$("#modal_sello").val();
     var marca=$("#modal_marca").val();
+    var pais="";
+    var estado="";
+    var ciudad="";
   }
   var fila=$("#modal_fila").val();
   if(fila<0){
@@ -8408,7 +8472,10 @@ function guardarAtributoItem(){
     direccion: $('#modal_direccion').val(),
     norma:norma,
     marca:marca,
-    sello:sello
+    sello:sello,
+    pais:pais,
+    estado:estado,
+    ciudad:ciudad
     }
   itemAtributos.push(atributo);
    if($("#modalEditPlantilla").length){
@@ -8428,6 +8495,9 @@ function guardarAtributoItem(){
     itemAtributos[fila].norma=$('#modal_norma').val();
     itemAtributos[fila].marca=$('#modal_marca').val();
     itemAtributos[fila].sello=$('#modal_sello').val();
+    itemAtributos[fila].pais=$('#pais_empresa').val();
+    itemAtributos[fila].estado=$('#departamento_empresa').val();
+    itemAtributos[fila].ciudad=$('#ciudad_empresa').val();
     if($("#modalEditPlantilla").length){
     //editar dias sitios
       for (var i = 0; i <= parseInt($("#anio_servicio").val()); i++) {
@@ -8444,6 +8514,11 @@ function guardarAtributoItem(){
   $("#modal_norma").val("");
   $("#modal_marca").val("");
   $("#modal_sello").val("");
+if(($("#productos_div").hasClass("d-none"))){
+  $("#pais_empresa").val("26"); //para el pais de BOLIVIA
+  seleccionarDepartamentoServicioSitio();  
+}
+
   if($("#modalEditPlantilla").length){
     editarDatosPlantilla();
    }
@@ -8471,6 +8546,11 @@ function editarAtributo(fila){
     $('#modal_marca').val(itemAtributos[fila].marca);
     $('#modal_norma').val(itemAtributos[fila].norma);
     $('#modal_sello').val(itemAtributos[fila].sello);
+  }else{
+    $('#pais_empresa').val(itemAtributos[fila].pais);
+    $('#departamento_empresa').val(itemAtributos[fila].estado);
+    $('#ciudad_empresa').val(itemAtributos[fila].ciudad);
+    $('.selectpicker').selectpicker("refresh");
   }
   $('#modal_direccion').val(itemAtributos[fila].direccion); 
   $("#modal_atributo").modal("show");
@@ -8995,5 +9075,38 @@ function copiarDatosPersonalPorAnio(anio){
        }; 
   };
  $("#copiar_personal"+anio).val(""); 
+ $('.selectpicker').selectpicker("refresh");
+}
+
+function copiarCostosVariables(anio){
+  var anios=$("#copiar_variables"+anio).val();
+  if(anios.length>0){
+  Swal.fire({
+        title: '¿Esta Seguro?',
+        text: "Los datos se copiarán!",
+         type: 'warning',
+        showCancelButton: true,
+        confirmButtonClass: 'btn btn-info',
+        cancelButtonClass: 'btn btn-danger',
+        confirmButtonText: 'COPIAR',
+        cancelButtonText: 'CANCELAR',
+        buttonsStyling: false
+       }).then((result) => {
+          if (result.value) {
+               copiarCostosVariablesPorAnio(anio);            
+            return(true);
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            return(false);
+          }
+        });
+  }else{
+    Swal.fire("Informativo!", "Debe seleccionar al menos un Año", "warning");
+  }
+}
+
+function copiarCostosVariablesPorAnio(anio){
+ var anios=$("#copiar_variables"+anio).val();
+  guardarCuentasSimulacionAjaxGenericoServicioAuditor(anio,1,anios);
+ $("#copiar_variables"+anio).val(""); 
  $('.selectpicker').selectpicker("refresh");
 }

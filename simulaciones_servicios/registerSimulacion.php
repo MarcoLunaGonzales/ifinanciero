@@ -261,8 +261,8 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
 
 						<div class="col-sm-6">
 							<div class="form-group">
-						  		<label class="bmd-label-static">Nombre Plantilla</label>
-					  			<input class="form-control" type="text" name="nombre_plan" value="<?=$nombreX?>" id="nombre_plan" READONLY />
+						  		<label class="bmd-label-static">Cliente</label>
+					  			<input class="form-control" type="text" name="nombre_plan" value="<?=$nombreClienteX?>" id="nombre_plan" READONLY />
 							</div>
 						</div>
              
@@ -362,6 +362,9 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                  //total variable desde simulacion cuentas
                   $totalVariable=obtenerTotalesSimulacionServicio($codigo);
                   //
+                  if($precioLocalX==0){
+                    $precioLocalX=1;
+                  }
                   $alumnosRecoX=ceil((100*(-$totalFijoPlan-$totalVariable[2]))/(($utilidadIbnorcaX*$precioLocalX)-(100*$precioLocalX)+(($iva+$it)*$precioLocalX)));                    
                   //if($alumnosX)
                 $totalVariable[2]=$totalVariable[2]/$alumnosX;
@@ -479,7 +482,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
             if(($an==0||$an==1)&&$codAreaX!=39){
               $tituloItem="Año 1 (ETAPA ".($an+1).")";
             }
-
+            
             $totalIngresoUsd=0;$totalIngreso=0;
             $totalCostoTotalUsd=0;$totalCostoTotal=0;
             $totalUtilidadBrutaUsd=0;$totalUtilidadBruta=0;
@@ -562,6 +565,10 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                 $totalImpuestos+=$impuestosAuditoria;
                 $totalUtilidadNetaUsd+=$utilidadNetaAuditoriaUsd;
                 $totalUtilidadNeta+=$utilidadNetaAuditoria;
+
+                if($totalIngresoUsd==0){
+                  $totalIngresoUsd=1;
+                }
                 ?>
                  <tr>
                  <td class="small text-left">Precio del Servicio</td>

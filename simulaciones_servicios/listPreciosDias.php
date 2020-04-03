@@ -38,7 +38,8 @@ if(isset($_GET["codigo"])){
   <script>$("#productos_div").addClass("d-none");</script>
   <script>$("#sitios_div").addClass("d-none");</script>
   <script>$("#div_marca").addClass("d-none");</script>
-  <script>$("#div_norma").addClass("d-none");</script> 
+  <script>$("#div_norma").addClass("d-none");</script>
+  <script>$("#div_pais").addClass("d-none");</script> 
                       <div class="row">
                           <!--<label class="col-sm-2 col-form-label">Dias Auditor:</label>
                            <div class="col-sm-1"> 
@@ -75,6 +76,7 @@ if(isset($_GET["codigo"])){
             }else{
               if($areaX==38){
                 ?>
+                <script>$("#div_pais").removeClass("d-none");</script>
                 <script>$("#sitios_div").removeClass("d-none");</script>
                 <script>$("#titulo_modal_atributo").html("AGREGAR SITIO");</script> 
                 <?php

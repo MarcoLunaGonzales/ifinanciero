@@ -40,12 +40,13 @@ $codSimServ=obtenerCodigoSimServicio();
 </script>
 
 <?php
+$lista= obtenerPaisesServicioIbrnorca();
 $fechaActual=date("Y-m-d");
 $dbh = new Conexion();
 ?>
 <div class="cargar-ajax d-none">
   <div class="div-loading text-center">
-     <h4 class="text-warning font-weight-bold">Procesando Datos</h4>
+     <h4 class="text-warning font-weight-bold" id="texto_ajax_titulo">Procesando Datos</h4>
      <p class="text-white">Aguard&aacute; un momento por favor</p>  
   </div>
 </div>
@@ -311,6 +312,41 @@ $dbh = new Conexion();
                              </div>
                            </div>  
                       </div>
+                      
+                     <div class="row col-sm-12" id="div_pais">
+                          <div class="row col-sm-12">
+                       <label class="col-sm-2 col-form-label">Pais</label>
+                       <div class="col-sm-10">
+                        <div class="form-group">
+                          <select name="pais_empresa" id="pais_empresa" onchange="seleccionarDepartamentoServicioSitio()" class="form-control form-control-sm selectpicker" data-style="btn btn-info">
+                            <option disabled selected value="">--SELECCIONE--</option>
+                             <?php
+                                  foreach ($lista->lista as $listas) {
+                                      echo "<option value=".$listas->idPais.">".$listas->paisNombre."</opction>";
+                                  }?>
+                          </select>
+                        </div>
+                       </div>
+                      </div>
+                      <div class="row col-sm-12">
+                       <label class="col-sm-2 col-form-label">Dep / Est</label>
+                       <div class="col-sm-10">
+                        <div class="form-group">
+                          <select name="departamento_empresa" onchange="seleccionarCiudadServicioSitio()" id="departamento_empresa" class="form-control form-control-sm selectpicker" data-style="btn btn-info">
+                          </select>
+                        </div>
+                       </div>
+                      </div>
+                      <div class="row col-sm-12">
+                       <label class="col-sm-2 col-form-label">Ciudad</label>
+                       <div class="col-sm-10">
+                        <div class="form-group">
+                          <select name="ciudad_empresa" onchange="mostrarOtraCiudadServicioSitio()" id="ciudad_empresa" class="form-control form-control-sm selectpicker" data-style="btn btn-success">
+                          </select>
+                        </div>
+                       </div>
+                      </div>  
+                      </div>
                       <div class="row" id="div_direccion">
                           <label class="col-sm-2 col-form-label">Direcci&oacute;n</label>
                            <div class="col-sm-10">                     
@@ -319,7 +355,6 @@ $dbh = new Conexion();
                              </div>
                            </div>  
                       </div>
-                     
                       <hr>
                       <div class="form-group float-right">
                         <button type="button" id="boton_guardarsim" class="btn btn-default" onclick="guardarAtributoItem()">Guardar</button>
@@ -329,3 +364,9 @@ $dbh = new Conexion();
     </div>
   </div>
 <!--    end small modal -->
+
+<script>
+  $("#pais_empresa").val("26"); //para el pais de BOLIVIA
+  seleccionarDepartamentoServicioSitio();
+
+</script>
