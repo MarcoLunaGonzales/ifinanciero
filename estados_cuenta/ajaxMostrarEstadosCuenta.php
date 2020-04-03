@@ -124,7 +124,8 @@ if($codCuentaAuxiliar!=0){
 $nombreProveedorClienteX=nameProveedorCliente($tipoProveedorCliente,$codProveedorX);
    if($haberX > 0){
       $debeX=$montoContra;
-      $saldo=$saldo+$haberX-$debeX;
+
+      $saldo=$saldo+$montoX-$debeX;
 
        ?>
        <tr class="bg-white det-estados">
@@ -132,15 +133,19 @@ $nombreProveedorClienteX=nameProveedorCliente($tipoProveedorCliente,$codProveedo
         <input type="hidden" id="codigoCuentaAux<?=$i?>" value="<?=$codCuentaAuxX?>">
         <!-- style="display:none"-->
         <?php 
-          if(($tipo==1 && $tipoProveedorCliente==1)){ 
+          if(($tipo==1 && $tipoProveedorCliente==1)){ //CASO DEBE Y PROVEEDOR
         ?>
             <div class="form-check">
-               <label class="form-check-label">
+               <!--label class="form-check-label">
                      <input type="radio" class="form-check-input" id="cuentas_origen_detalle<?=$i?>" name="cuentas_origen_detalle" value="<?=$codigoX?>####<?=$codCuentaAuxX?>####<?=$codProveedorX?>">
                     <span class="form-check-sign">
                       <span class="check"></span>
                     </span>       
-               </label>
+               </label-->
+              <?php
+                $valorCerrarEC=$codigoX."####".$codCuentaAuxX."####".$codProveedorX;
+              ?>
+               <a title="Cerrar EC" id="cuentas_origen_detalle<?=$i?>" href="#" onclick="agregarEstadoCuentaCerrar(<?=$i;?>,'<?=$valorCerrarEC;?>');" class="btn btn-sm btn-success btn-fab"><span class="material-icons text-dark">double_arrow</span></a>
              </div>
             <?php    
        } ?>
@@ -165,15 +170,19 @@ $nombreProveedorClienteX=nameProveedorCliente($tipoProveedorCliente,$codProveedo
           if(($tipo==2 && $tipoProveedorCliente==2)){
            //$saldo=$saldo+$debeX-$haberX;
            $haberX=$montoContra;
-           $saldo=$saldo+$debeX-$haberX; 
+           $saldo=$saldo+$montoX-$haberX; 
         ?>
             <div class="form-check">
-               <label class="form-check-label">
+               <!--label class="form-check-label">
                      <input type="radio" class="form-check-input" id="cuentas_origen_detalle<?=$i?>" name="cuentas_origen_detalle" value="<?=$codigoX?>####<?=$codCuentaAuxX?>####<?=$codProveedorX?>">
                     <span class="form-check-sign">
                       <span class="check"></span>
                     </span>       
-               </label>
+               </label-->
+              <?php
+                $valorCerrarEC=$codigoX."####".$codCuentaAuxX."####".$codProveedorX;
+              ?>
+               <a title="Cerrar EC" id="cuentas_origen_detalle<?=$i?>" href="#" onclick="agregarEstadoCuentaCerrar(<?=$i;?>,'<?=$valorCerrarEC;?>');" class="btn btn-sm btn-success btn-fab"><span class="material-icons text-dark">double_arrow</span></a>
              </div>
             <?php    
        } ?>
