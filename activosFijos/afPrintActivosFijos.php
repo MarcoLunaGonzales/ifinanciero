@@ -50,7 +50,8 @@ $sqlActivos="SELECT codigoactivo,activo,(select uo.abreviatura from unidades_org
 tipoalta,
 fechalta,valorinicial,valorresidual,
 (select CONCAT_WS(' ',r.paterno,r.materno,r.primer_nombre) from personal r where r.codigo=cod_responsables_responsable) as cod_responsables_responsable,
-(select e.nombre from estados_activofijo e where e.codigo=cod_estadoactivofijo) as estado_af
+(select e.nombre from estados_activofijo e where e.codigo=cod_estadoactivofijo) as estado_af,
+(select t.tipo_bien from tiposbienes t where t.codigo=cod_tiposbienes)as tipo_bien
 from activosfijos 
 where cod_estadoactivofijo = 1 and cod_unidadorganizacional in ($unidadOrgString) and cod_area in ($areaString) and cod_depreciaciones in ($rubrosString)";  
 
@@ -71,6 +72,8 @@ $stmtActivos->bindColumn('valorinicial', $valor_inicial);
 $stmtActivos->bindColumn('valorresidual', $valor_residual);
 $stmtActivos->bindColumn('cod_responsables_responsable', $responsables_responsable);
 $stmtActivos->bindColumn('estado_af', $estado_af);
+// $stmtActivos->bindColumn('nombre_uo2', $nombre_uo2);
+$stmtActivos->bindColumn('tipo_bien', $tipo_bien);
 ?>
 
 <div class="content">
@@ -128,10 +131,10 @@ $stmtActivos->bindColumn('estado_af', $estado_af);
                               if(!file_exists($dir)){
                                   mkdir ($dir);}
                               $fileName = $dir.'test.png';
-                              $tamanio = 2; //tamaño de imagen que se creará
+                              $tamanio = 1.5; //tamaño de imagen que se creará
                               $level = 'Q'; //tipo de precicion Baja L, mediana M, alta Q, maxima H
-                              $frameSize = 1; //marco de qr
-                              $contenido = $codigoActivoX;
+                              $frameSize = 1; //marco de qr                            
+                              $contenido = "Cod:".$codigoActivoX."\nRubro:".$cod_depreciaciones."\nTipo Bien:".$tipo_bien."\nOF:".$cod_unidadorganizacional."\nRespo.:".$responsables_responsable;
                               QRcode::png($contenido, $fileName, $level,$tamanio,$frameSize);
                               echo '<img src="'.$fileName.'"/>';
                             ?>

@@ -88,20 +88,20 @@ $glosaDet="";
 
 		<div class="col-sm-1">
             <div class="form-group">
-            	<label for="debe<?=$idFila;?>" class="bmd-label-floating">Debe</label>			
+            	<!-- <label for="debe<?=$idFila;?>" class="bmd-label-floating">Debe</label>		 -->	
           		<input class="form-control" type="number" name="debe<?=$idFila;?>" id="debe<?=$idFila;?>" onChange="calcularTotalesComprobante(this.id,event);" OnKeyUp="calcularTotalesComprobante(this.id,event);" step="0.01">	
 			</div>
       	</div>
 
 		<div class="col-sm-1">
             <div class="form-group">
-            	<label for="haber<?=$idFila;?>" class="bmd-label-floating">Haber</label>			
+            	<!-- <label for="haber<?=$idFila;?>" class="bmd-label-floating">Haber</label>	 -->		
           		<input class="form-control" type="number" name="haber<?=$idFila;?>" id="haber<?=$idFila;?>" onChange="calcularTotalesComprobante(this.id,event);" OnKeyUp="calcularTotalesComprobante(this.id,event);" step="0.01"> 	
 			</div>
       	</div>
       	<div class="col-sm-3">
 		    <div class="form-group">
-          		<label for="glosa_detalle<?=$idFila;?>" class="bmd-label-static">GlosaDetalle</label>
+          		<!-- <label for="glosa_detalle<?=$idFila;?>" class="bmd-label-static">GlosaDetalle</label> -->
 				<textarea rows="1" class="form-control" name="glosa_detalle<?=$idFila;?>" id="glosa_detalle<?=$idFila;?>" value=""><?=$glosaDet?></textarea>
 			</div>
 		</div>

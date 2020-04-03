@@ -4,18 +4,17 @@ require_once 'configModule.php';
 
 //header('Content-Type: application/json');
 
-$codigo_UO = $_GET["codigo_UO"];
+$codigo = $_GET["codigo"];
 //ini_set("display_errors", "1");
 $db = new Conexion();
 
 $sqlUO="SELECT cod_unidad,cod_area,(select a.nombre from areas a where a.codigo=cod_area) as nombre_area,(select a.abreviatura from areas a where a.codigo=cod_area) as abrev_area
 FROM areas_organizacion
-where cod_estadoreferencial=1 and cod_unidad=:cod_UO order by nombre_area";
+where cod_estadoreferencial=1 and cod_unidad in ($codigo) GROUP BY cod_area order by nombre_area";
 $stmt = $db->prepare($sqlUO);
-$stmt->bindParam(':cod_UO', $codigo_UO);
 $stmt->execute();
 ?>
-<select name="cod_area" id="cod_area" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true" required="true">	
+<select class="selectpicker form-control" title="Seleccione una opcion" name="areas[]" id="areas" data-style="select-with-transition" data-size="5" data-actions-box="true" multiple required data-show-subtext="true" data-live-search="true">	
     <?php 
     	while ($row = $stmt->fetch()){ 
 	?>
@@ -23,4 +22,4 @@ $stmt->execute();
      <?php 
  		} 
  	?>
- </select>
+</select>

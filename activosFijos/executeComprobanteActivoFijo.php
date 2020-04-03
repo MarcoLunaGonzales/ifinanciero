@@ -92,7 +92,7 @@ try{
 				$stmtUdateAF = $dbh->prepare("UPDATE activosfijos set contabilizado=1, cod_comprobante=$codComprobante where codigo=$codigo_activo");
 				$stmtUdateAF->execute();	
 	        }
-			header('Location: ../comprobantes/imp.php?comp='.$codComprobante.'&mon=1');
+			header('Location: ../comprobantes/impActivosFijos.php?comp='.$codComprobante.'&mon=1');
 		}else{
 			echo "Hubo un error en el proceso...";
 		}
@@ -100,6 +100,7 @@ try{
 	}else{?>
     	<script>
 		    alert('El COMPROBANTE ya fue generado. Actualice el Sistema Por favor!');
+		    header('Location: ../comprobantes/impActivosFijos.php?comp='.$codComprobante.'&mon=1');
 		</script><?php 
 	}
 

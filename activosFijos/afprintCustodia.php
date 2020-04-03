@@ -18,7 +18,7 @@ try{
         (SELECT nombre from estados_asignacionaf where codigo=afa.cod_estadoasignacionaf)as cod_estadoasignacionaf,
         afa.fecha_recepcion,afa.observaciones_recepcion,afa.fecha_devolucion,afa.observaciones_devolucion
         from activofijos_asignaciones afa
-        where cod_activosfijos= :codigo");
+        where cod_activosfijos= :codigo ORDER BY codigo desc");
     //Ejecutamos;
     $stmt->bindParam(':codigo',$codigo);
     $stmt->execute();
@@ -68,73 +68,73 @@ $html.=  '<header class="header">'.
 
             '<br><br><br><br>'.
             '<table align="center">'.
-           '<tbody>'.
-            '<tr>'.
-                '<td  >'.
-                    '<table class="table table-condensed">'.
-                        '<tbody>'.
-                            '<tr>'.
-                                '<td  class="text-left" >Codigo af :</td>'.
-                                                '<td class="text-left" >'.$cod_activosfijos.'</td>'.
-                                            '</tr>'.
-                                            '<tr>'.
-                                                '<td class="text-left" >Activo Fijo :</td>'.
-                                                '<td  class="text-left" >'.$nombre_af.'</td>'.
-                                            '</tr>'.
+               '<tbody>'.
+                '<tr>'.
+                    '<td  >'.
+                        '<table class="table table-condensed">'.
+                            
+                                '<tr>'.
+                                    '<td  class="text-left" >Codigo AF :</td>'.
+                                    '<td class="text-left" >'.$cod_activosfijos.'</td>'.
+                                '</tr>'.
+                                '<tr>'.
+                                    '<td class="text-left" >Activo Fijo :</td>'.
+                                    '<td  class="text-left" >'.$nombre_af.'</td>'.
+                                '</tr>'.
 
-                                            '</tr>'.
-                                            '<tr>'.
-                                                '<td class="text-left" >Fecha Asignación :</td>'.
-                                                '<td class="text-left" >'.$fecha_asignacion.'</td>'.
-                                            '</tr>'.
-                                            '<tr>'.
-                                                '<td class="text-left" >Oficina :</td>'.
-                                                '<td class="text-left" >'.$cod_unidadorganizacional.'</td>'.
-                                            '</tr>'.
-                                            '<tr>'.
-                                                '<td class="text-left" >Area :</td>'.
-                                                '<td  class="text-left" >'.$cod_area.'</td>'.
-                                                
-                                            '</tr>'.
-                                            '<tr>'.
-                                                '<td class="text-left" >Personal Asignado :</td>'.
-                                                '<td class="text-left" >'.$cod_personal.'</td>'.
-                                            '</tr>'.
-                                            '<tr>'.
-                                                '<td class="text-left" >Estado Bien </td>'.
-                                                '<td class="text-left" >'.$estadobien_asig.'</td>'.
-                                            '</tr>'.
-                                            '<tr>'.
-                                                '<td class="text-left" >Estado En Asignación :</td>'.
-                                                '<td class="text-left" >'.$cod_estadoasignacionaf.'</td>'.
-                                            '</tr>'.
-                                            '<tr>'.
-                                                '<td class="text-left" >Fecha Recepcion : </td>'.
-                                                '<td class="text-left" >'.$fecha_recepcion.'</td>'.
-                                            '</tr>'.
-                                            '<tr>'.
-                                                '<td class="text-left" >Obervaciones Recepcion:</td>'.
-                                                '<td class="text-left" >'.$observaciones_recepcion.'</td>'.
-                                            '</tr>'.
-                                            '<tr>'.
-                                                '<td class="text-left" >Fecha Devolución : </td>'.
-                                                '<td class="text-left" >'.$fecha_devolucion.'</td>'.
-                                            '</tr>'.
-                                            '<tr>'.
-                                                '<td class="text-left" >Obervaciones Devolución:</td>'.
-                                                '<td class="text-left" >'.$observaciones_devolucion.'</td>'.
-                                            '</tr>'.
-                                                
-                                            '<hr>'.
-            '</tbody>'.
-        '</table>'.
+                                '</tr>'.
+                                '<tr>'.
+                                    '<td class="text-left" >Fecha Asignación :</td>'.
+                                    '<td class="text-left" >'.$fecha_asignacion.'</td>'.
+                                '</tr>'.
+                                '<tr>'.
+                                    '<td class="text-left" >Oficina :</td>'.
+                                    '<td class="text-left" >'.$cod_unidadorganizacional.'</td>'.
+                                '</tr>'.
+                                '<tr>'.
+                                    '<td class="text-left" >Area :</td>'.
+                                    '<td  class="text-left" >'.$cod_area.'</td>'.
+                                    
+                                '</tr>'.
+                                '<tr>'.
+                                    '<td class="text-left" >Personal Asignado :</td>'.
+                                    '<td class="text-left" >'.$cod_personal.'</td>'.
+                                '</tr>'.
+                                '<tr>'.
+                                    '<td class="text-left" >Estado Bien </td>'.
+                                    '<td class="text-left" >'.$estadobien_asig.'</td>'.
+                                '</tr>'.
+                                '<tr>'.
+                                    '<td class="text-left" >Estado En Asignación :</td>'.
+                                    '<td class="text-left" >'.$cod_estadoasignacionaf.'</td>'.
+                                '</tr>'.
+                                '<tr>'.
+                                    '<td class="text-left" >Fecha Recepcion : </td>'.
+                                    '<td class="text-left" >'.$fecha_recepcion.'</td>'.
+                                '</tr>'.
+                                '<tr>'.
+                                    '<td class="text-left" >Obervaciones Recepcion:</td>'.
+                                    '<td class="text-left" >'.$observaciones_recepcion.'</td>'.
+                                '</tr>'.
+                                '<tr>'.
+                                    '<td class="text-left" >Fecha Devolución : </td>'.
+                                    '<td class="text-left" >'.$fecha_devolucion.'</td>'.
+                                '</tr>'.
+                                '<tr>'.
+                                    '<td class="text-left" >Obervaciones Devolución:</td>'.
+                                    '<td class="text-left" >'.$observaciones_devolucion.'</td>'.
+                                '</tr>'.
+                                    
+                                '<hr>'.
+                        '</table>'.
 
-                                                '</td>'.
-                                                '<td class="text-center" >'.'<img src="imagenes/'.$imagen.'" style="width: 200px; height:200px;"><br>'.'</td>'.
-                                            '</tr>'.
-                                            
-            '</tbody>'.
-        '</table>'.        
+                    '</td>'.
+                    '<td class="text-center" >'.'<img src="imagenes/'.$imagen.'" style="width: 200px; height:200px;"><br>'.'</td>'.
+                '</tr>'.
+                
+                '</tbody>'.
+            '</table>'.  
+            '</header>'.      
     '</body>'.
       '</html>';           
 descargarPDF("IBNORCA - ",$html);

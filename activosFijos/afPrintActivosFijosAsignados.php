@@ -45,7 +45,7 @@ foreach ($estado_asignacion_af as $valor ) {
 
 
 
-$sqlActivos="SELECT cod_activosfijos,(select af.activo from activosfijos af where af.codigo=cod_activosfijos) as activo,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional)as cod_unidadorganizacional,(select a.abreviatura from areas a where a.codigo=cod_area)as cod_area,fechaasignacion,estadobien_asig,(select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=cod_personal)as cod_personal,cod_estadoasignacionaf,(select eaf.nombre from estados_asignacionaf eaf where eaf.codigo=cod_estadoasignacionaf) as estadoAsigAF,fecha_recepcion,observaciones_recepcion,fecha_devolucion,observaciones_devolucion
+$sqlActivos="SELECT cod_activosfijos,(select af.activo from activosfijos af where af.codigo=cod_activosfijos) as activo,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional)as cod_unidadorganizacional,(select a.abreviatura from areas a where a.codigo=cod_area)as cod_area,DATE_FORMAT(fechaasignacion ,'%d/%m/%Y')as fechaasignacion,estadobien_asig,(select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=cod_personal)as cod_personal,cod_estadoasignacionaf,(select eaf.nombre from estados_asignacionaf eaf where eaf.codigo=cod_estadoasignacionaf) as estadoAsigAF,DATE_FORMAT(fecha_recepcion,'%d/%m/%Y')as fecha_recepcion,observaciones_recepcion,DATE_FORMAT(fecha_devolucion,'%d/%m/%Y')as fecha_devolucion,observaciones_devolucion
 from activofijos_asignaciones
 where cod_estadoasignacionaf in ($estadoAsigAFString) and cod_unidadorganizacional in ($unidadOrgString) and cod_area in ($areaString)";  
 
@@ -116,6 +116,17 @@ $stmtActivos->bindColumn('observaciones_devolucion', $observacion_devolucion);
                         <?php  
                           $contador = 0;
                           while ($rowActivos = $stmtActivos->fetch(PDO::FETCH_ASSOC)) {
+                            //para el qr  
+                            $stmt = $dbh->prepare("SELECT (select d.nombre from depreciaciones d where d.codigo=cod_depreciaciones) as nombreRubro,
+                            (select t.tipo_bien from tiposbienes t where t.codigo=cod_tiposbienes)as tipo_bien
+                            from activosfijos where codigo=$codigoActivoX");
+                            $stmt->execute();
+                            $result = $stmt->fetch();
+                            $nombreRubro = $result['nombreRubro'];
+                            // $nombrePersonal = $result['nombrePersonal'];
+                            $tipo_bien = $result['tipo_bien'];
+                            // $nombre_uo2 = $result['nombre_uo2'];
+
                             $contador++;
                             if($cod_estadoasignacionaf==1){
                               $label='<span class="badge badge-warning">';
@@ -141,10 +152,10 @@ $stmtActivos->bindColumn('observaciones_devolucion', $observacion_devolucion);
                               if(!file_exists($dir)){
                                   mkdir ($dir);}
                               $fileName = $dir.'test.png';
-                              $tamanio = 2; //tamaño de imagen que se creará
+                              $tamanio = 1.5; //tamaño de imagen que se creará
                               $level = 'Q'; //tipo de precicion Baja L, mediana M, alta Q, maxima H
-                              $frameSize = 1; //marco de qr
-                              $contenido = $codigoActivoX;
+                              $frameSize = 1; //marco de qr                              
+                              $contenido = "Cod:".$codigoActivoX."\nRubro:".$nombreRubro."\nTipo Bien:".$tipo_bien."\nOF:".$cod_unidadorganizacional."\nRespo.:".$personal;
                               QRcode::png($contenido, $fileName, $level,$tamanio,$frameSize);
                               echo '<img src="'.$fileName.'"/>';
                             ?>

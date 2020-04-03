@@ -207,6 +207,17 @@
     </div>
   </div>
 </div>
+<script >
+  function ver_cuentasAuxiliares(index){ 
+    var label=index;
+    if($(".det-cuenta-"+label).is(":visible")){
+      $(".det-cuenta-"+label).hide();
+    }else{
+      $(".det-cuenta-"+label).show();
+    }
+  }
+</script>
+
 <!--  End Modal -->
 <!-- small modal -->
 <div class="modal fade modal-primary" id="modalPlantilla" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
