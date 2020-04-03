@@ -49,7 +49,7 @@ $stmt->bindColumn('cliente', $cliente);
                       <thead>
                         <tr>
                           <th class="text-center">#</th>
-                          <th>Nombre</th>
+                          <th>Numero</th>
                           <th>Cliente</th>
                           <th>Responsable</th>
                           <th>Fecha</th>

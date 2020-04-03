@@ -15,7 +15,9 @@ $stmtX->execute();
 if(isset($_GET["cod_simulacion"])){
   $codSimulacion=$_GET["cod_simulacion"];
   $anio=$_GET["anio"];
+  $anios=$_GET["anios"];
   $usd=$_GET["usd"];
+  $codAreaX=$_GET["cod_area"];
  $codigos=explode("###",$_GET["codigo_filas"]);
  $montos_filas=explode("###",$_GET["monto_filas"]);
  $nroColumnas=(count($codigos)-1);
@@ -54,7 +56,7 @@ if(isset($_GET["cod_simulacion"])){
     $stmt->execute();
     $iii=1;$totalTabla=0;$totalTablaUnitario=0;
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-      $codigoTipo=$row['cod_tipoauditor'];
+      $codigoTipo=$row['codigo'];
       $nombreTipo=$row['tipo'];
       $cantidadTipo=$row['cantidad_editado'];
       $diasTipo=$row['dias'];
@@ -137,7 +139,7 @@ if(isset($_GET["cod_simulacion"])){
          </td> 
           <td class="text-right">
             <input type="hidden" id="codigo_columnas<?=$ncol?>RRR<?=$iii?>" value="<?=$codigoCol?>">
-
+            <!--<input type="hidden" id="codigo_ssd_ssa<?=$ncol?>RRR<?=$iii?>" value="<?=$codigoCol?>">-->
             <input type="number" id="monto_mult<?=$ncol?>RRR<?=$iii?>" readonly name="monto_mult<?=$ncol?>RRR<?=$iii?>" class="form-control text-info text-right" onchange="calcularTotalPersonalServicioAuditor()" onkeyUp="calcularTotalPersonalServicioAuditor()" value="<?=$montoPre?>" step="0.01">
             <input type="hidden" id="monto<?=$ncol?>RRR<?=$iii?>" value="<?=$montoPres?>">
             <input type="hidden" id="montoext<?=$ncol?>RRR<?=$iii?>" value="<?=$montoPresext?>">
@@ -177,8 +179,50 @@ if(isset($_GET["cod_simulacion"])){
     </tr>
   </table>
   <input type="hidden" id="modal_numeropersonalauditor" value="<?=$iii?>">  
-<div class="form-group float-right">
-    <button class="btn btn-default" id="guardar_cuenta" onclick="guardarCuentasSimulacionAjaxGenericoServicioAuditor('<?=$anio?>')">Guardar</button>
-  </div>
+
+  <?php
+  $etapas="Año ".$anio;
+  if($codAreaX!=39){
+    $inicioAnio=0;
+    if($anio==0||$anio==1){
+     $etapas="Año 1 (ETAPA ".($anio+1).")"; 
+    }
+  }else{
+    $inicioAnio=1;
+  }
+  ?>
+  <div class="row col-sm-12">
+    
+            <label class="col-sm-2 col-form-label">Copiar de <?=$etapas?> a:</label>
+              <div class="col-sm-2">
+                  <div class="form-group">
+                    <select class="form-control selectpicker" multiple data-style="btn btn-primary btn-round" name="copiar_variables<?=$anio?>[]" id="copiar_variables<?=$anio?>">
+                                 <?php
+                                for ($kk=$inicioAnio; $kk<=$anios; $kk++) { 
+                                    $optionTit="Año ".$kk;
+                                     if($codAreaX!=39){
+                                       if($kk==0||$kk==1){
+                                        $optionTit="Año 1 (ETAPA ".($kk+1).")"; 
+                                       }
+                                     }
+                                    if($kk!=$anio){
+                                        ?><option value="<?=$kk?>"><?=$optionTit?></option><?php
+                                    }
+                                }    
+                                  ?>       
+                      </select>
+                      </div> 
+                    </div>
+          <div class="col-sm-2">
+           <div class="form-group">
+             <button onclick="copiarCostosVariables(<?=$anio?>)" class="btn btn-default" >GUARDAR Y COPIAR</button>
+            </div> 
+         </div> 
+         <div class="col-sm-6 text-right">
+           <div class="form-group">
+             <button class="btn btn-success" id="guardar_cuenta" onclick="guardarCuentasSimulacionAjaxGenericoServicioAuditor('<?=$anio?>',0,0)">Guardar Cambios</button>
+           </div> 
+          </div>                 
+      </div>
  <?php
  }
