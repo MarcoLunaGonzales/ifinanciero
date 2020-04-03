@@ -56,6 +56,43 @@
                            </div>  
                       </div>
                             <?php
+                                 }else{
+                              ?>
+                             <div class="row col-sm-12" id="div_pais">
+                          <div class="row col-sm-12">
+                       <label class="col-sm-2 col-form-label">Pais</label>
+                       <div class="col-sm-10">
+                        <div class="form-group">
+                          <select name="pais_empresa" id="pais_empresa" onchange="seleccionarDepartamentoServicioSitioModal()" class="form-control form-control-sm selectpicker" data-style="btn btn-info">
+                            <option disabled selected value="">--SELECCIONE--</option>
+                             <?php
+                                  foreach ($lista->lista as $listas) {
+                                      echo "<option value='".$listas->idPais."####".$listas->paisNombre."'>".$listas->paisNombre."</opction>";
+                                  }?>
+                          </select>
+                        </div>
+                       </div>
+                      </div>
+                      <div class="row col-sm-12">
+                       <label class="col-sm-2 col-form-label">Dep / Est</label>
+                       <div class="col-sm-10">
+                        <div class="form-group">
+                          <select name="departamento_empresa" onchange="seleccionarCiudadServicioSitioModal()" id="departamento_empresa" class="form-control form-control-sm selectpicker" data-style="btn btn-info">
+                          </select>
+                        </div>
+                       </div>
+                      </div>
+                      <div class="row col-sm-12">
+                       <label class="col-sm-2 col-form-label">Ciudad</label>
+                       <div class="col-sm-10">
+                        <div class="form-group">
+                          <select name="ciudad_empresa" onchange="" id="ciudad_empresa" class="form-control form-control-sm selectpicker" data-style="btn btn-success">
+                          </select>
+                        </div>
+                       </div>
+                      </div>  
+                      </div>  
+                              <?php    
                                  }
                             ?> 
                       <div class="row" id="div_direccion">

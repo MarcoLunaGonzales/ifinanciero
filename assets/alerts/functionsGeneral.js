@@ -7063,12 +7063,13 @@ function seleccionarDepartamentoServicio(){
 }
 
 
-function seleccionarDepartamentoServicioSitio(){
- var parametros={"codigo":$("#pais_empresa").val()};
+function seleccionarDepartamentoServicioSitio(setear,depto,ciudad){
+  var pais=$("#pais_empresa").val().split("####");
+ var parametros={"codigo":pais[0]};
      $.ajax({
         type: "GET",
         dataType: 'html',
-        url: "solicitudes/ajaxListarDepto.php",
+        url: "simulaciones_servicios/ajaxListarDepto.php",
         data: parametros,
         beforeSend: function () {
         $("#texto_ajax_titulo").html("Pais: "+$("#pais_empresa option:selected" ).text()); 
@@ -7078,14 +7079,49 @@ function seleccionarDepartamentoServicioSitio(){
            detectarCargaAjax();
            $("#texto_ajax_titulo").html("Procesando Datos"); 
            $("#departamento_empresa").html(resp);
-           $("#departamento_empresa").val("480"); // departamento de LA PAZ
-           seleccionarCiudadServicioSitio();
+           if(setear==1){
+            $("#departamento_empresa").val("480####La Paz"); // departamento de LA PAZ
+            seleccionarCiudadServicioSitio(1);
+           }else{
+             $("#departamento_empresa").val(depto); // departamento de LA PAZ
+            seleccionarCiudadServicioSitio(0,ciudad);
+           }  
+           
            $("#ciudad_empresa").val("");
            $('.selectpicker').selectpicker("refresh");          
         }
     }); 
 }
 
+function seleccionarDepartamentoServicioSitioModal(setear,depto,ciudad){
+  var pais=$("#pais_empresa").val().split("####");
+ var parametros={"codigo":pais[0]};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxListarDepto.php",
+        data: parametros,
+        beforeSend: function () {
+        $("#texto_ajax_titulo").html("Pais: "+$("#pais_empresa option:selected" ).text()); 
+          iniciarCargaAjax();
+        },
+        success:  function (resp) {
+           detectarCargaAjax();
+           $("#texto_ajax_titulo").html("Procesando Datos"); 
+           $("#departamento_empresa").html(resp);
+           if(setear==1){
+            $("#departamento_empresa").val("480####La Paz"); // departamento de LA PAZ
+            seleccionarCiudadServicioSitioModal(1);
+           }else{
+             $("#departamento_empresa").val(depto); // departamento de LA PAZ
+            seleccionarCiudadServicioSitioModal(0,ciudad);
+           }  
+           
+           $("#ciudad_empresa").val("");
+           $('.selectpicker').selectpicker("refresh");          
+        }
+    }); 
+}
 function seleccionarCiudadServicio(){
   var parametros={"codigo":$("#departamento_empresa").val()};
      $.ajax({
@@ -7107,12 +7143,13 @@ function seleccionarCiudadServicio(){
     }); 
 }
 
-function seleccionarCiudadServicioSitio(){
-  var parametros={"codigo":$("#departamento_empresa").val()};
+function seleccionarCiudadServicioSitio(setear,ciudad){
+  var depto=$("#departamento_empresa").val().split("####");
+  var parametros={"codigo":depto[0]};
      $.ajax({
         type: "GET",
         dataType: 'html',
-        url: "solicitudes/ajaxListarCiudad.php",
+        url: "simulaciones_servicios/ajaxListarCiudad.php",
         data: parametros,
         beforeSend: function () {
         $("#texto_ajax_titulo").html("Estado / Departamento: "+$("#departamento_empresa option:selected" ).text()); 
@@ -7122,12 +7159,43 @@ function seleccionarCiudadServicioSitio(){
            detectarCargaAjax();
            $("#texto_ajax_titulo").html("Procesando Datos"); 
            $("#ciudad_empresa").html(resp);
-           $("#ciudad_empresa").val("62"); //PARA LA CIUDAD DE EL ALTO
+           if(setear==1){
+            $("#ciudad_empresa").val("62####La Paz"); //PARA LA CIUDAD DE la paz
+           }else{
+            $("#ciudad_empresa").val(ciudad); //PARA LA CIUDAD DE la paz
+           }
+           
            $('.selectpicker').selectpicker("refresh");
         }
     }); 
 }
 
+function seleccionarCiudadServicioSitioModal(setear,ciudad){
+  var depto=$("#departamento_empresa").val().split("####");
+  var parametros={"codigo":depto[0]};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxListarCiudad.php",
+        data: parametros,
+        beforeSend: function () {
+        $("#texto_ajax_titulo").html("Estado / Departamento: "+$("#departamento_empresa option:selected" ).text()); 
+          iniciarCargaAjax();
+        },
+        success:  function (resp) {
+           detectarCargaAjax();
+           $("#texto_ajax_titulo").html("Procesando Datos"); 
+           $("#ciudad_empresa").html(resp);
+           if(setear==1){
+            $("#ciudad_empresa").val("62####La Paz"); //PARA LA CIUDAD DE la paz
+           }else{
+            $("#ciudad_empresa").val(ciudad); //PARA LA CIUDAD DE la paz
+           }
+           
+           $('.selectpicker').selectpicker("refresh");
+        }
+    }); 
+}
 function mostrarOtraCiudadServicio(){
   var ciudad = $("#ciudad_empresa").val();
   if(ciudad=="NN"){
@@ -8359,6 +8427,15 @@ function agregarAtributoAjax(){
     //agregar campos a los inputs
   }
 
+   if(($("#productos_div").hasClass("d-none"))){
+     $("#pais_empresa").val("26####Bolivia"); //para el pais de BOLIVIA
+    if($("#modalEditPlantilla").length){
+      seleccionarDepartamentoServicioSitioModal(1);  
+    }else{
+       seleccionarDepartamentoServicioSitio(1);  
+    }
+   }
+
 }
 
 function listarAtributo(){
@@ -8369,24 +8446,54 @@ function listarAtributo(){
   var titulos = $('<tr>').addClass('fondo-boton');
      titulos.append($('<th>').addClass('').text('#'));
      titulos.append($('<th>').addClass('').text('NOMBRE'));
+     titulos.append($('<th>').addClass('').text('DIRECCION')); 
      if(!($("#productos_div").hasClass("d-none"))){
       titulos.append($('<th>').addClass('').text('MARCA'));
       titulos.append($('<th>').addClass('').text('NORMA'));
       titulos.append($('<th>').addClass('').text('SELLO'));
+     }else{
+      titulos.append($('<th>').addClass('').text('PAIS'));
+      titulos.append($('<th>').addClass('').text('DEPTO'));
+      titulos.append($('<th>').addClass('').text('CIUDAD'));
+      if($("#modalEditPlantilla").length){
+        if($("#codigo_area").val()!=39){
+        for (var k = 0; k <= parseInt($("#anio_simulacion").val()); k++) {
+          var tituloTD="AÑO "+k;
+          if(k==0||k==1){
+            tituloTD="Año 1 (ETAPA "+(k+1)+")";
+          }
+          titulos.append($('<th>').addClass('').text(tituloTD));  
+        };
+       }
+      }
      }
-     titulos.append($('<th>').addClass('').text('DIRECCION'));
-     titulos.append($('<th>').addClass('text-right').text('OPCION'));
+      
+     titulos.append($('<th>').addClass('text-right').text('OPCION DETALLES'));
      table.append(titulos);
    for (var i = 0; i < itemAtributos.length; i++) {
      var row = $('<tr>').addClass('');
      row.append($('<td>').addClass('').text(i+1));
      row.append($('<td>').addClass('').text(itemAtributos[i].nombre));
+     row.append($('<td>').addClass('').text(itemAtributos[i].direccion)); 
      if(!($("#productos_div").hasClass("d-none"))){
       row.append($('<td>').addClass('').text(itemAtributos[i].marca));
       row.append($('<td>').addClass('').text(itemAtributos[i].norma));
       row.append($('<td>').addClass('').text(itemAtributos[i].sello));
+     }else{
+      row.append($('<td>').addClass('').text(itemAtributos[i].nom_pais));
+      row.append($('<td>').addClass('').text(itemAtributos[i].nom_estado));
+      row.append($('<td>').addClass('').text(itemAtributos[i].nom_ciudad));
+       if($("#codigo_area").val()!=39){
+        for (var k = 0; k <=parseInt($("#anio_simulacion").val()); k++) {
+          for (var j= 0; j< itemAtributosDias.length; j++) {
+           if(itemAtributosDias[j].codigo_atributo==itemAtributos[i].codigo&&itemAtributosDias[j].anio==k){
+            row.append($('<td>').addClass('').text(itemAtributosDias[j].dias));  
+           } 
+         };     
+        };
+      }
      }
-     row.append($('<td>').addClass('').text(itemAtributos[i].direccion));  
+      
      row.append($('<td>').addClass('text-right small').html('<button class="btn btn-sm btn-fab btn-info" onclick="editarAtributo('+i+');"><i class="material-icons" >edit</i></button><button class="btn btn-sm btn-fab btn-danger" onclick="removeAtributo('+i+');"><i class="material-icons">delete</i></button>'));
      table.append(row);
    }
@@ -8407,9 +8514,12 @@ function guardarAtributoItem(){
     var norma="";
     var sello="";
     var marca="";
-    var pais=$("#pais_empresa").val();
-    var estado=$("#departamento_empresa").val();
-    var ciudad=$("#ciudad_empresa").val();
+    var pais=$("#pais_empresa").val().split("####")[0];
+    var estado=$("#departamento_empresa").val().split("####")[0];
+    var ciudad=$("#ciudad_empresa").val().split("####")[0];
+    var nom_pais=$("#pais_empresa").val().split("####")[1];
+    var nom_estado=$("#departamento_empresa").val().split("####")[1];
+    var nom_ciudad=$("#ciudad_empresa").val().split("####")[1];
   }else{
     var norma=$("#modal_norma").val();
     var sello=$("#modal_sello").val();
@@ -8417,6 +8527,9 @@ function guardarAtributoItem(){
     var pais="";
     var estado="";
     var ciudad="";
+    var nom_pais="";
+    var nom_estado="";
+    var nom_ciudad="";
   }
   var fila=$("#modal_fila").val();
   if(fila<0){
@@ -8430,7 +8543,10 @@ function guardarAtributoItem(){
     sello:sello,
     pais:pais,
     estado:estado,
-    ciudad:ciudad
+    ciudad:ciudad,
+    nom_pais:nom_pais,
+    nom_estado:nom_estado,
+    nom_ciudad:nom_ciudad
     }
   itemAtributos.push(atributo);
    if($("#modalEditPlantilla").length){
@@ -8450,9 +8566,12 @@ function guardarAtributoItem(){
     itemAtributos[fila].norma=$('#modal_norma').val();
     itemAtributos[fila].marca=$('#modal_marca').val();
     itemAtributos[fila].sello=$('#modal_sello').val();
-    itemAtributos[fila].pais=$('#pais_empresa').val();
-    itemAtributos[fila].estado=$('#departamento_empresa').val();
-    itemAtributos[fila].ciudad=$('#ciudad_empresa').val();
+    itemAtributos[fila].pais=$('#pais_empresa').val().split("####")[0];
+    itemAtributos[fila].estado=$('#departamento_empresa').val().split("####")[0];
+    itemAtributos[fila].ciudad=$('#ciudad_empresa').val().split("####")[0];
+    itemAtributos[fila].nom_pais=$('#pais_empresa').val().split("####")[1];
+    itemAtributos[fila].nom_estado=$('#departamento_empresa').val().split("####")[1];
+    itemAtributos[fila].nom_ciudad=$('#ciudad_empresa').val().split("####")[1];
     if($("#modalEditPlantilla").length){
     //editar dias sitios
       for (var i = 0; i <= parseInt($("#anio_servicio").val()); i++) {
@@ -8469,10 +8588,6 @@ function guardarAtributoItem(){
   $("#modal_norma").val("");
   $("#modal_marca").val("");
   $("#modal_sello").val("");
-if(($("#productos_div").hasClass("d-none"))){
-  $("#pais_empresa").val("26"); //para el pais de BOLIVIA
-  seleccionarDepartamentoServicioSitio();  
-}
 
   if($("#modalEditPlantilla").length){
     editarDatosPlantilla();
@@ -8501,12 +8616,17 @@ function editarAtributo(fila){
     $('#modal_marca').val(itemAtributos[fila].marca);
     $('#modal_norma').val(itemAtributos[fila].norma);
     $('#modal_sello').val(itemAtributos[fila].sello);
-  }else{
-    $('#pais_empresa').val(itemAtributos[fila].pais);
-    $('#departamento_empresa').val(itemAtributos[fila].estado);
-    $('#ciudad_empresa').val(itemAtributos[fila].ciudad);
-    $('.selectpicker').selectpicker("refresh");
   }
+  if($("#pais_empresa").length){
+    $('#pais_empresa').val(itemAtributos[fila].pais+"####"+itemAtributos[fila].nom_pais);
+    if($("#modalEditPlantilla").length){
+       seleccionarDepartamentoServicioSitioModal(0,itemAtributos[fila].estado+"####"+itemAtributos[fila].nom_estado,itemAtributos[fila].ciudad+"####"+itemAtributos[fila].nom_ciudad);
+    }else{
+       seleccionarDepartamentoServicioSitio(0,itemAtributos[fila].estado+"####"+itemAtributos[fila].nom_estado,itemAtributos[fila].ciudad+"####"+itemAtributos[fila].nom_ciudad);  
+    }   
+    $('.selectpicker').selectpicker("refresh");  
+  }
+
   $('#modal_direccion').val(itemAtributos[fila].direccion); 
   $("#modal_atributo").modal("show");
   if($("#modalEditPlantilla").length){
@@ -8519,6 +8639,7 @@ function editarAtributo(fila){
       };  
     };
     $("#modalEditPlantilla").modal("hide");
+    
   }
 }
 
