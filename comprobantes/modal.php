@@ -207,7 +207,7 @@
     </div>
   </div>
 </div>
-<script >
+<!-- <script >
   function ver_cuentasAuxiliares(index){ 
     var label=index;
     if($(".det-cuenta-"+label).is(":visible")){
@@ -216,7 +216,7 @@
       $(".det-cuenta-"+label).show();
     }
   }
-</script>
+</script> -->
 
 <!--  End Modal -->
 <!-- small modal -->
