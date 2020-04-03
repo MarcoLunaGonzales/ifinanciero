@@ -287,8 +287,8 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
     if($sumaNivel1>0){
       $html.='<tr class="bold table-title">'.
                 '<td class="td-border-izquierda text-left">'.formatoNumeroCuenta($numero).'</td>'.
-                '<td class="td-border-centro text-left" width="60%">'.$nombre.'</td>'.
-                '<td class="td-border-centro text-right"></td>'.
+                '<td class="td-border-centro text-left" width="50%">'.$nombre.'</td>'.
+                '<td class="td-border-centro text-right" width="10%"></td>'.
                 '<td class="td-border-centro text-right"></td>'.
                 '<td class="td-border-centro text-right"></td>'.
                 '<td class="td-border-derecha text-right">'.number_format($sumaNivel1, 2, '.', ',').'</td>';   
@@ -297,8 +297,8 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
     }elseif($sumaNivel1<0){
       $html.='<tr class="bold table-title">'.
                 '<td class="td-border-izquierda text-left">'.formatoNumeroCuenta($numero).'</td>'.
-                '<td class="td-border-centro text-left" width="60%">'.$nombre.'</td>'.
-                '<td class="td-border-centro text-right"></td>'.
+                '<td class="td-border-centro text-left" width="50%">'.$nombre.'</td>'.
+                '<td class="td-border-centro text-right" width="10%"></td>'.
                 '<td class="td-border-centro text-right"></td>'.
                 '<td class="td-border-centro text-right"></td>'.
                 '<td class="td-border-derecha text-right">('.number_format($sumaNivel1, 2, '.', ',').')</td>';   

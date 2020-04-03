@@ -83,9 +83,9 @@ $responsable='';
                                       mkdir ($dir);}
                                   $fileName = $dir.'test.png';
                                   $tamanio = 2.5; //tamaño de imagen que se creará
-                                  $level = 'Q'; //tipo de precicion Baja L, mediana M, alta Q, maxima H
+                                  $level = 'L'; //tipo de precicion Baja L, mediana M, alta Q, maxima H
                                   $frameSize = 1; //marco de qr
-                                  $contenido = "Cod:".$codigo."\nRubro:".$nombreRubro."\nTipo Bien:".$nombreBien."\nOF:".$nombre_uo."\nRespo.:".$nombre_personal;
+                                  $contenido = "Cod:".$codigo."\nRubro:".$nombreRubro."\nDesc:".$nombreActivo."\nRespo.:".$nombre_uo.' - '.$nombre_personal;
                                   QRcode::png($contenido, $fileName, $level,$tamanio,$frameSize);
                                   echo '<img src="'.$fileName.'"/>';
                                   ?>

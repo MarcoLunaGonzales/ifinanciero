@@ -21,7 +21,7 @@ $rubrosString=implode(",", $rubros);
 $personalString=implode(",", $personal_x);
 
 try{
-    $sqlActivos="SELECT codigoactivo,activo,
+    $sqlActivos="SELECT codigo,codigoactivo,activo,
 (select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional)as abr_uo,
 (select a.abreviatura from areas a where a.codigo=cod_area) as abr_area,
 (select concat_ws(' ',r.paterno,r.materno,r.primer_nombre) from personal r where r.codigo=cod_responsables_responsable) as nombre_responsable
@@ -34,6 +34,7 @@ $stmtActivos = $dbh->prepare($sqlActivos);
 $stmtActivos->execute();
 
 // bindColumn
+$stmtActivos->bindColumn('codigo', $codigoX);
 $stmtActivos->bindColumn('codigoactivo', $codigoActivoX);
 $stmtActivos->bindColumn('activo', $activoX);
 $stmtActivos->bindColumn('abr_uo', $abr_uoX);
@@ -67,6 +68,12 @@ $html.='<table class="table">'.
                 '<tbody><tr>';
                     $cont=0;
                     while ($rowActivos = $stmtActivos->fetch(PDO::FETCH_ASSOC)) {
+                       $stmtRubro = $dbh->prepare("SELECT (select d.nombre from depreciaciones d where d.codigo=cod_depreciaciones) as nombreRubro
+                        from activosfijos where codigo=$codigoX");
+                        $stmtRubro->execute();
+                        $resultRubro = $stmtRubro->fetch();
+                        $nombreRubro = $resultRubro['nombreRubro'];
+
                        if($cont<3){
                         $html.='<td style="border-bottom: 0px solid black;" height="2,5cm" width="6,7cm">'.
                                     '<table class="tabla" align="center" style="border:hidden">'.
@@ -76,10 +83,11 @@ $html.='<table class="table">'.
                                             if(!file_exists($dir)){
                                                 mkdir ($dir);}
                                             $fileName = $dir.$codigoActivoX.'.png';
-                                            $tamanio = 2.5; //tamaño de imagen que se creará
+                                            $tamanio = 1; //tamaño de imagen que se creará
                                             $level = 'Q'; //tipo de precicion Baja L, mediana M, alta Q, maxima H
                                             $frameSize = 1; //marco de qr
-                                            $contenido = $codigoActivoX;
+                                            // $contenido = $codigoActivoX;
+                                            $contenido = "Cod:".$codigoX."\nRubro:".$nombreRubro."\nDesc:".$activoX."\nRespo.:".$abr_uoX.' - '.$nombre_responsableX;
                                             //QRcode::png($contenido, $fileName, $level, $tamanio,$frameSize);
                                             QRcode::png($contenido, $fileName, $level, $tamanio,$frameSize);
                                             $html.= '<img src="'.$fileName.'"/>';
@@ -107,10 +115,10 @@ $html.='<table class="table">'.
                                                 if(!file_exists($dir)){
                                                     mkdir ($dir);}
                                                 $fileName = $dir.$codigoActivoX.'.png';
-                                                $tamanio = 2.5; //tamaño de imagen que se creará
-                                                $level = 'Q'; //tipo de precicion Baja L, mediana M, alta Q, maxima H
+                                                $tamanio = 1; //tamaño de imagen que se creará
+                                                $level = 'L'; //tipo de precicion Baja L, mediana M, alta Q, maxima H
                                                 $frameSize = 1; //marco de qr
-                                                $contenido = $codigoActivoX;
+                                                $contenido = "Cod:".$codigoX."\nRubro:".$nombreRubro."\nDesc:".$activoX."\nRespo.:".$abr_uoX.' - '.$nombre_responsableX;
                                                 //QRcode::png($contenido, $fileName, $level, $tamanio,$frameSize);
                                                 QRcode::png($contenido, $fileName, $level, $tamanio,$frameSize);
                                                 $html.= '<img src="'.$fileName.'"/>';

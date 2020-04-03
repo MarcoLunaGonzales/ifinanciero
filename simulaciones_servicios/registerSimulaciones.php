@@ -322,7 +322,7 @@ $dbh = new Conexion();
                             <option disabled selected value="">--SELECCIONE--</option>
                              <?php
                                   foreach ($lista->lista as $listas) {
-                                      echo "<option value=".$listas->idPais.">".$listas->paisNombre."</opction>";
+                                      echo "<option value='".$listas->idPais."####".$listas->paisNombre."'>".$listas->paisNombre."</opction>";
                                   }?>
                           </select>
                         </div>
@@ -366,7 +366,6 @@ $dbh = new Conexion();
 <!--    end small modal -->
 
 <script>
-  $("#pais_empresa").val("26"); //para el pais de BOLIVIA
-  seleccionarDepartamentoServicioSitio();
+ 
 
 </script>
