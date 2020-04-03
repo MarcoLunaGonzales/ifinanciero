@@ -17,4 +17,4 @@ $unidad=$_SESSION['globalUnidad'];
 $nroCorrelativo=numeroCorrelativoComprobante($codGestion,$unidad,$tipoComprobante);
 ?>
 
-<input class="form-control" type="number" name="nro_correlativo" id="nro_correlativo" min="1" required="true" value="<?=$nroCorrelativo;?>"  readonly="true"/>
+<input class="form-control" type="number" name="nro_correlativo" id="nro_correlativo" min="1" required="true" value="<?=$nroCorrelativo;?>"  readonly="true" style="background-color:#E3CEF6;text-align: left"/>

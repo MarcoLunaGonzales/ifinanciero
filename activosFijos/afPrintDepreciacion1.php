@@ -19,7 +19,7 @@ try{
     $result = $stmtAF->fetch();
     $nom_proy_financiacion = $result['nom_proy_financiacion'];    
 
-    $stmt = $dbh->prepare("SELECT * from v_activosfijos WHERE codigo=:codigo");
+    $stmt = $dbh->prepare("SELECT codigo,codigoactivo,tipoalta,DATE_FORMAT(fechalta ,'%d/%m/%Y')as fechalta,activo,depreciacionacumulada,valorresidual,estadobien,(select d.nombre from depreciaciones d where d.codigo=cod_depreciaciones) as nombre_depreciaciones,(select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=cod_responsables_responsable) as nombre_personal,(select t.tipo_bien from tiposbienes t where t.codigo=cod_tiposbienes)as tipo_bien,(select uo.nombre from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional) as nombre_uo2,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional) as abrev_uo2 from activosfijos WHERE codigo=:codigo");
     //Ejecutamos;
     $stmt->bindParam(':codigo',$codigo);
     $stmt->execute();
@@ -30,35 +30,36 @@ try{
     $codigoactivo = $result['codigoactivo'];
     $tipoalta = $result['tipoalta'];
     $fechalta = $result['fechalta'];
-    $indiceufv = $result['indiceufv'];
-    $tipocambio = $result['tipocambio'];
-    $moneda = $result['moneda'];
-    $valorinicial = $result['valorinicial'];
+    // $indiceufv = $result['indiceufv'];
+    // $tipocambio = $result['tipocambio'];
+    // $moneda = $result['moneda'];
+    // $valorinicial = $result['valorinicial'];
     $depreciacionacumulada = $result['depreciacionacumulada'];
     $valorresidual = $result['valorresidual'];
-    $cod_depreciaciones = $result['cod_depreciaciones'];
-    $cod_tiposbienes = $result['cod_tiposbienes'];
-    $vidautilmeses = $result['vidautilmeses'];
+    // $cod_depreciaciones = $result['cod_depreciaciones'];
+    // $cod_tiposbienes = $result['cod_tiposbienes'];
+    // $vidautilmeses = $result['vidautilmeses'];
     $estadobien = $result['estadobien'];
-    $otrodato = $result['otrodato'];
-    $cod_ubicaciones = $result['cod_ubicaciones'];
-    $cod_empresa = $result['cod_empresa'];
+    // $otrodato = $result['otrodato'];
+    // $cod_ubicaciones = $result['cod_ubicaciones'];
+    // $cod_empresa = $result['cod_empresa'];
     $activo = $result['activo'];
-    $cod_responsables_responsable = $result['cod_responsables_responsable'];
-    $cod_responsables_autorizadopor = $result['cod_responsables_autorizadopor'];
-    $created_at = $result['created_at'];
-    $created_by = $result['created_by'];
-    $modified_at = $result['modified_at'];
-    $modified_by = $result['modified_by'];
-    $vidautilmeses_restante = $result['vidautilmeses_restante'];
-
+    // $cod_responsables_responsable = $result['cod_responsables_responsable'];
+    // $cod_responsables_autorizadopor = $result['cod_responsables_autorizadopor'];
+    // $created_at = $result['created_at'];
+    // $created_by = $result['created_by'];
+    // $modified_at = $result['modified_at'];
+    // $modified_by = $result['modified_by'];
+    // $vidautilmeses_restante = $result['vidautilmeses_restante'];
     $nombre_personal = $result['nombre_personal'];
     $nombre_depreciaciones = $result['nombre_depreciaciones'];
     $tipo_bien = $result['tipo_bien'];
-    $edificio = $result['edificio'];
-    $oficina = $result['oficina'];
-    $nombre_uo = $result['nombre_uo'];
+    $edificio = "";
+    $oficina = "";
+    // $nombre_uo = $result['nombre_uo'];
     $nombre_uo2 = $result['nombre_uo2'];
+    $abrev_uo2 = $result['abrev_uo2'];
+    
 
     //==================================================================================================================
     //imagen
@@ -156,7 +157,7 @@ $html.=  '<header class="header">'.
                                 '<b>Rubro : </b>'.$nombre_depreciaciones.' <br>'.
                                 '<b>Responsable : </b>'.$nombre_personal.' <br>'.
                                 '<b>Tipo alta : </b>'.$tipoalta.'<br>'.
-                                '<b>Ubicación : </b>'.$edificio.'<br>'.
+                                // '<b>Ubicación : </b>'.$edificio.'<br>'.
                                 '<b>Estado Bien : </b>'.$estadobien.' <br>'.
                                 '<b>Fecha alta : </b>'.$fechalta.'<br>'.
                                 '<b>Tipo Bien : </b>'.$tipo_bien.'<br>'.
@@ -172,10 +173,10 @@ $html.=  '<header class="header">'.
                                 if(!file_exists($dir)){
                                     mkdir ($dir);}
                                 $fileName = $dir.$codigoactivo.'.png';
-                                $tamanio = 4; //tamaño de imagen que se creará
+                                $tamanio = 3; //tamaño de imagen que se creará
                                 $level = 'Q'; //tipo de precicion Baja L, mediana M, alta Q, maxima H
-                                $frameSize = 1; //marco de qr
-                                $contenido = $codigoactivo;
+                                $frameSize = 1; //marco de qr                                
+                                $contenido = "Cod:".$codigoactivo."\nRubro:".$nombre_depreciaciones."\nTipo Bien:".$tipo_bien."\nOF:".$abrev_uo2."\nRespo.:".$nombre_personal;
                                 QRcode::png($contenido, $fileName, $level, $tamanio,$frameSize);
                                 $html.='<img src="'.$fileName.'"/>';
                         $html.='</td>'.

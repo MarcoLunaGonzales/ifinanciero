@@ -47,9 +47,9 @@ $statement = $dbh->query($query);
                 <select class="selectpicker form-control" title="Seleccione una opcion" 
                 name="unidad_organizacional[]" id="unidad_organizacional" 
                 data-style="select-with-transition" data-size="5" 
-                data-actions-box="true" multiple required data-show-subtext="true" data-live-search="true"> 
+                data-actions-box="true" multiple required data-show-subtext="true" data-live-search="true" onChange="ajaxRPTAF_oficina();">
                   <?php
-                    $sql="SELECT * FROM unidades_organizacionales where cod_estado=1 order by 2";
+                    $sql="SELECT * FROM unidades_organizacionales order by 2";
                     $stmt = $dbh->prepare($sql);
                     $stmt->execute();
                     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -69,9 +69,12 @@ $statement = $dbh->query($query);
             <label class="col-sm-2 col-form-label">Area</label>
             <div class="col-sm-7">
             <div class="form-group">
-              <select class="selectpicker form-control" title="Seleccione una opcion" name="areas[]" id="areas" data-style="select-with-transition" data-size="5" data-actions-box="true" multiple required data-show-subtext="true" data-live-search="true">
+              <div id="contenedor_areas_reporte">
+                
+              </div>
+              <!-- <select class="selectpicker form-control" title="Seleccione una opcion" name="areas[]" id="areas" data-style="select-with-transition" data-size="5" data-actions-box="true" multiple required data-show-subtext="true" data-live-search="true>
                 <?php
-                $stmt = $dbh->prepare("SELECT * FROM areas where cod_estado=1 order by 2");
+                $stmt = $dbh->prepare("SELECT * FROM areas order by 2");
               $stmt->execute();
               while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $codigoX=$row['codigo'];
@@ -81,10 +84,11 @@ $statement = $dbh->query($query);
               <?php 
               }
                 ?>
-              </select>
+              </select> -->
             </div>
             </div>
           </div>
+          <!--  fin de seleccion area-->
   
 			  </div>
 			  <div class="card-footer ml-auto mr-auto">

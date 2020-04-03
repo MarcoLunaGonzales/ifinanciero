@@ -130,65 +130,162 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                     $tBolPasivo+=$montoX;
                   }
                     $sumaNivel4+=$montoX;  
-                   $html4.='<tr>'.
+                    if($montoX>0){
+                      $html4.='<tr>'.
                            '<td class="td-border-none text-left">'.formatoNumeroCuenta($numeroX).'</td>'.
                            '<td class="td-border-none text-left">'.$nombreX.'</td>'.
                            '<td class="td-border-none text-right">'.number_format($montoX, 2, '.', ',').'</td>'.
                            '<td class="td-border-none text-right"></td>'.
                            '<td class="td-border-none text-right"></td>'.
                            '<td class="td-border-none text-right"></td>';   
-                    $html4.='</tr>';              
+                      $html4.='</tr>';      
+                    }elseif($montoX<0){
+                      $html4.='<tr>'.
+                           '<td class="td-border-none text-left">'.formatoNumeroCuenta($numeroX).'</td>'.
+                           '<td class="td-border-none text-left">'.$nombreX.'</td>'.
+                           '<td class="td-border-none text-right">('.number_format($montoX, 2, '.', ',').')</td>'.
+                           '<td class="td-border-none text-right"></td>'.
+                           '<td class="td-border-none text-right"></td>'.
+                           '<td class="td-border-none text-right"></td>';   
+                      $html4.='</tr>';      
+                    }elseif($montoX==0){
+                      $html4.='<tr>'.
+                           '<td class="td-border-none text-left">'.formatoNumeroCuenta($numeroX).'</td>'.
+                           '<td class="td-border-none text-left">'.$nombreX.'</td>'.
+                           '<td class="td-border-none text-right">-</td>'.
+                           '<td class="td-border-none text-right"></td>'.
+                           '<td class="td-border-none text-right"></td>'.
+                           '<td class="td-border-none text-right"></td>';   
+                     $html4.='</tr>';      
+                    }
+                            
                $index++;          
                }/* Fin del primer while*/
-              // if($sumaNivel4!=0){
-              $sumaNivel3+=$sumaNivel4;  
-              $nombre_4=formateaPlanCuenta($nombre_4, $nivel_4);
-              $html3.='<tr class="bold">'.
-                '<td class=" td-border-none text-left">'.formatoNumeroCuenta($numero_4).'</td>'.
-                '<td class=" td-border-none text-left">'.$nombre_4.'</td>'.
-                '<td class=" td-border-none text-right">'.number_format($sumaNivel4, 2, '.', ',').'</td>'.
-                '<td class=" td-border-none text-right"></td>'.
-                '<td class=" td-border-none text-right"></td>'.
-                '<td class=" td-border-none text-right"></td>';   
-              $html3.='</tr>';
-              $html3.=$html4;       
-              // } 
+              if($sumaNivel4>0){
+                $sumaNivel3+=$sumaNivel4;  
+                $nombre_4=formateaPlanCuenta($nombre_4, $nivel_4);
+                $html3.='<tr class="bold">'.
+                  '<td class=" td-border-none text-left">'.formatoNumeroCuenta($numero_4).'</td>'.
+                  '<td class=" td-border-none text-left">'.$nombre_4.'</td>'.
+                  '<td class=" td-border-none text-right">'.number_format($sumaNivel4, 2, '.', ',').'</td>'.
+                  '<td class=" td-border-none text-right"></td>'.
+                  '<td class=" td-border-none text-right"></td>'.
+                  '<td class=" td-border-none text-right"></td>';   
+                $html3.='</tr>';
+                $html3.=$html4;       
+              }elseif($sumaNivel4<0){
+                $sumaNivel3+=$sumaNivel4;  
+                $nombre_4=formateaPlanCuenta($nombre_4, $nivel_4);
+                $html3.='<tr class="bold">'.
+                  '<td class=" td-border-none text-left">'.formatoNumeroCuenta($numero_4).'</td>'.
+                  '<td class=" td-border-none text-left">'.$nombre_4.'</td>'.
+                  '<td class=" td-border-none text-right">('.number_format($sumaNivel4, 2, '.', ',').')</td>'.
+                  '<td class=" td-border-none text-right"></td>'.
+                  '<td class=" td-border-none text-right"></td>'.
+                  '<td class=" td-border-none text-right"></td>';   
+                $html3.='</tr>';
+                $html3.=$html4;       
+              }elseif($sumaNivel4==0){
+                $sumaNivel3+=$sumaNivel4;  
+                $nombre_4=formateaPlanCuenta($nombre_4, $nivel_4);
+                $html3.='<tr class="bold">'.
+                  '<td class=" td-border-none text-left">'.formatoNumeroCuenta($numero_4).'</td>'.
+                  '<td class=" td-border-none text-left">'.$nombre_4.'</td>'.
+                  '<td class=" td-border-none text-right">-</td>'.
+                  '<td class=" td-border-none text-right"></td>'.
+                  '<td class=" td-border-none text-right"></td>'.
+                  '<td class=" td-border-none text-right"></td>';   
+                $html3.='</tr>';
+                $html3.=$html4;       
+              } 
             }
-            if($sumaNivel3!=0){
-            $sumaNivel2+=$sumaNivel3;
-            $nombre_3=formateaPlanCuenta($nombre_3, $nivel_3);
-            $html2.='<tr class="bold">'.
-                '<td class=" td-border-none text-left">'.formatoNumeroCuenta($numero_3).'</td>'.
-                '<td class=" td-border-none text-left">'.$nombre_3.'</td>'.
-                '<td class=" td-border-none text-right"></td>'.
-                '<td class=" td-border-none text-right">'.number_format($sumaNivel3, 2, '.', ',').'</td>'.
-                '<td class=" td-border-none text-right"></td>'.
-                '<td class=" td-border-none text-right"></td>';   
-            $html2.='</tr>';
-            $html2.=$html3;
-              
+            if($sumaNivel3>0){
+              $sumaNivel2+=$sumaNivel3;
+              $nombre_3=formateaPlanCuenta($nombre_3, $nivel_3);
+              $html2.='<tr class="bold">'.
+                  '<td class=" td-border-none text-left">'.formatoNumeroCuenta($numero_3).'</td>'.
+                  '<td class=" td-border-none text-left">'.$nombre_3.'</td>'.
+                  '<td class=" td-border-none text-right"></td>'.
+                  '<td class=" td-border-none text-right">'.number_format($sumaNivel3, 2, '.', ',').'</td>'.
+                  '<td class=" td-border-none text-right"></td>'.
+                  '<td class=" td-border-none text-right"></td>';   
+              $html2.='</tr>';
+              $html2.=$html3;
+            }elseif($sumaNivel3<0){
+              $sumaNivel2+=$sumaNivel3;
+              $nombre_3=formateaPlanCuenta($nombre_3, $nivel_3);
+              $html2.='<tr class="bold">'.
+                  '<td class=" td-border-none text-left">'.formatoNumeroCuenta($numero_3).'</td>'.
+                  '<td class=" td-border-none text-left">'.$nombre_3.'</td>'.
+                  '<td class=" td-border-none text-right"></td>'.
+                  '<td class=" td-border-none text-right">('.number_format($sumaNivel3, 2, '.', ',').')</td>'.
+                  '<td class=" td-border-none text-right"></td>'.
+                  '<td class=" td-border-none text-right"></td>';   
+              $html2.='</tr>';
+              $html2.=$html3;
             }
+            // elseif($sumaNivel3==0){
+            //   $sumaNivel2+=$sumaNivel3;
+            //   $nombre_3=formateaPlanCuenta($nombre_3, $nivel_3);
+            //   $html2.='<tr class="bold">'.
+            //       '<td class=" td-border-none text-left">'.formatoNumeroCuenta($numero_3).'</td>'.
+            //       '<td class=" td-border-none text-left">'.$nombre_3.'</td>'.
+            //       '<td class=" td-border-none text-right"></td>'.
+            //       '<td class=" td-border-none text-right">-</td>'.
+            //       '<td class=" td-border-none text-right"></td>'.
+            //       '<td class=" td-border-none text-right"></td>';   
+            //   $html2.='</tr>';
+            //   $html2.=$html3;
+            // }
           }
-          if($sumaNivel2!=0){
-        $sumaNivel1+=$sumaNivel2;
-        $nombre_2=formateaPlanCuenta($nombre_2, $nivel_2);
-        $monto_2=0;
-        $html1.='<tr class="bold">'.
-                '<td class="td-border-none text-left">'.formatoNumeroCuenta($numero_2).'</td>'.
-                '<td class="td-border-none text-left">'.$nombre_2.'</td>'.
-                '<td class="td-border-none text-right"></td>'.
-                '<td class="td-border-none text-right"></td>'.
-                '<td class="td-border-none text-right">'.number_format($sumaNivel2, 2, '.', ',').'</td>'.
-                '<td class="td-border-none text-right"></td>';   
-         $html1.='</tr>';
-         $html1.=$html2; 
-            
+          if($sumaNivel2>0){
+            $sumaNivel1+=$sumaNivel2;
+            $nombre_2=formateaPlanCuenta($nombre_2, $nivel_2);
+            $monto_2=0;
+            $html1.='<tr class="bold">'.
+                    '<td class="td-border-none text-left">'.formatoNumeroCuenta($numero_2).'</td>'.
+                    '<td class="td-border-none text-left">'.$nombre_2.'</td>'.
+                    '<td class="td-border-none text-right"></td>'.
+                    '<td class="td-border-none text-right"></td>'.
+                    '<td class="td-border-none text-right">'.number_format($sumaNivel2, 2, '.', ',').'</td>'.
+                    '<td class="td-border-none text-right"></td>';   
+             $html1.='</tr>';
+             $html1.=$html2; 
           }
+          elseif($sumaNivel2<0){
+            $sumaNivel1+=$sumaNivel2;
+            $nombre_2=formateaPlanCuenta($nombre_2, $nivel_2);
+            $monto_2=0;
+            $html1.='<tr class="bold">'.
+                    '<td class="td-border-none text-left">'.formatoNumeroCuenta($numero_2).'</td>'.
+                    '<td class="td-border-none text-left">'.$nombre_2.'</td>'.
+                    '<td class="td-border-none text-right"></td>'.
+                    '<td class="td-border-none text-right"></td>'.
+                    '<td class="td-border-none text-right">('.number_format($sumaNivel2, 2, '.', ',').')</td>'.
+                    '<td class="td-border-none text-right"></td>';   
+             $html1.='</tr>';
+             $html1.=$html2; 
+          }
+          // elseif($sumaNivel2==0){
+          //   $sumaNivel1+=$sumaNivel2;
+          //   $nombre_2=formateaPlanCuenta($nombre_2, $nivel_2);
+          //   $monto_2=0;
+          //   $html1.='<tr class="bold">'.
+          //           '<td class="td-border-none text-left">'.formatoNumeroCuenta($numero_2).'</td>'.
+          //           '<td class="td-border-none text-left">'.$nombre_2.'</td>'.
+          //           '<td class="td-border-none text-right"></td>'.
+          //           '<td class="td-border-none text-right"></td>'.
+          //           '<td class="td-border-none text-right">-</td>'.
+          //           '<td class="td-border-none text-right"></td>';   
+          //    $html1.='</tr>';
+          //    $html1.=$html2; 
+          // }
       }
 
     $nombre=formateaPlanCuenta($nombre, $nivel);
     $monto=0;
-    $html.='<tr class="bold table-title">'.
+    if($sumaNivel1>0){
+      $html.='<tr class="bold table-title">'.
                 '<td class="td-border-izquierda text-left">'.formatoNumeroCuenta($numero).'</td>'.
                 '<td class="td-border-centro text-left" width="60%">'.$nombre.'</td>'.
                 '<td class="td-border-centro text-right"></td>'.
@@ -197,6 +294,29 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                 '<td class="td-border-derecha text-right">'.number_format($sumaNivel1, 2, '.', ',').'</td>';   
      $html.='</tr>';
      $html.=$html1;
+    }elseif($sumaNivel1<0){
+      $html.='<tr class="bold table-title">'.
+                '<td class="td-border-izquierda text-left">'.formatoNumeroCuenta($numero).'</td>'.
+                '<td class="td-border-centro text-left" width="60%">'.$nombre.'</td>'.
+                '<td class="td-border-centro text-right"></td>'.
+                '<td class="td-border-centro text-right"></td>'.
+                '<td class="td-border-centro text-right"></td>'.
+                '<td class="td-border-derecha text-right">('.number_format($sumaNivel1, 2, '.', ',').')</td>';   
+     $html.='</tr>';
+     $html.=$html1;
+    }
+    // elseif ($sumaNivel1==0) {
+    //   $html.='<tr class="bold table-title">'.
+    //             '<td class="td-border-izquierda text-left">'.formatoNumeroCuenta($numero).'</td>'.
+    //             '<td class="td-border-centro text-left" width="60%">'.$nombre.'</td>'.
+    //             '<td class="td-border-centro text-right"></td>'.
+    //             '<td class="td-border-centro text-right"></td>'.
+    //             '<td class="td-border-centro text-right"></td>'.
+    //             '<td class="td-border-derecha text-right">-</td>';   
+    //  $html.='</tr>';
+    //  $html.=$html1;
+    // }
+    
 }
 
  $html.=    '</tbody></table>';
