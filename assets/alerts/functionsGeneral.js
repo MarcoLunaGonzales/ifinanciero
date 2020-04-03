@@ -8514,12 +8514,27 @@ function guardarAtributoItem(){
     var norma="";
     var sello="";
     var marca="";
+    if($("#pais_empresa").val()!=null){
     var pais=$("#pais_empresa").val().split("####")[0];
-    var estado=$("#departamento_empresa").val().split("####")[0];
-    var ciudad=$("#ciudad_empresa").val().split("####")[0];
     var nom_pais=$("#pais_empresa").val().split("####")[1];
+    }else{
+      var pais="";
+      var nom_pais="SIN PAIS";
+    }
+    if($("#departamento_empresa").val()!=null){
+    var estado=$("#departamento_empresa").val().split("####")[0];
     var nom_estado=$("#departamento_empresa").val().split("####")[1];
+    }else{
+      var estado="";
+      var nom_estado="SIN DEPTO";
+    }
+    if($("#pais_empresa").val()!=null){
+    var ciudad=$("#ciudad_empresa").val().split("####")[0];
     var nom_ciudad=$("#ciudad_empresa").val().split("####")[1];
+    }else{
+      var ciudad="";
+      var nom_ciudad="SIN CIUDAD";
+    }  
   }else{
     var norma=$("#modal_norma").val();
     var sello=$("#modal_sello").val();
