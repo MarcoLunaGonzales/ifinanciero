@@ -132,9 +132,9 @@ $stmtActivos->bindColumn('tipo_bien', $tipo_bien);
                                   mkdir ($dir);}
                               $fileName = $dir.'test.png';
                               $tamanio = 1.5; //tamaño de imagen que se creará
-                              $level = 'Q'; //tipo de precicion Baja L, mediana M, alta Q, maxima H
+                              $level = 'L'; //tipo de precicion Baja L, mediana M, alta Q, maxima H
                               $frameSize = 1; //marco de qr                            
-                              $contenido = "Cod:".$codigoActivoX."\nRubro:".$cod_depreciaciones."\nTipo Bien:".$tipo_bien."\nOF:".$cod_unidadorganizacional."\nRespo.:".$responsables_responsable;
+                              $contenido = "Cod:".$codigoActivoX."\nRubro:".$cod_depreciaciones."\nDesc:".$activoX."\nRespo.:".$cod_unidadorganizacional.' - '.$responsables_responsable;                               
                               QRcode::png($contenido, $fileName, $level,$tamanio,$frameSize);
                               echo '<img src="'.$fileName.'"/>';
                             ?>

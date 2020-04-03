@@ -5304,7 +5304,7 @@ function buscarCuentaNumero(numeros,val){
       
         for (var j = 0; j < itemCuentasAux.length; j++) {
           if(itemCuentasAux[j].codCuenta==itemCuentas[i].codigo){
-            textoAux+="<tr class='det-cuenta-"+i+"' style='display:none'>"+
+            textoAux+="<tr >"+
                "<td class='text-left small'>"+itemCuentasAux[j].codigo+"</td>"+
                "<td class='text-left small'><a href=\"javascript:setBusquedaCuenta(\'"+itemCuentas[i].codigo+"\',\'"+itemCuentas[i].numero+"\',\'"+itemCuentas[i].nombre+"\',\'"+itemCuentasAux[j].codigo+"\',\'"+itemCuentasAux[j].nombre+"\');\">"+itemCuentasAux[j].nombre+"</a></td>"+
              "</tr>";
@@ -5319,7 +5319,7 @@ function buscarCuentaNumero(numeros,val){
         label='<span>';
        }
       html+="<tr>"+
-      "<td class='text-left' onclick='ver_cuentasAuxiliares("+i+")'>"+label+itemCuentas[i].numero+"</span></td>"+
+      "<td class='text-left'>"+label+itemCuentas[i].numero+"</span></td>"+
           "<td class='text-left'><a href=\"javascript:setBusquedaCuenta(\'"+itemCuentas[i].codigo+"\',\'"+itemCuentas[i].numero+"\',\'"+itemCuentas[i].nombre+"\',\'0\',\'\');\">"+itemCuentas[i].nombre+"</a></td>"+
           "<td class='text-left'>"+textoAux+"</td>"+
       "</tr>";
