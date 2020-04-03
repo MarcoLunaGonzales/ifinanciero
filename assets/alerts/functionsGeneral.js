@@ -5529,6 +5529,51 @@ function agregarEstadoCuenta(){
   }
 }
 
+function agregarEstadoCuentaCerrar(filaXXX,valor){
+  //console.log("entro:"+fila+" "+valor);
+
+  $("#mensaje_estadoscuenta").html("");
+  
+  var fila=$("#estFila").val();
+  var tipo=$("#tipo_estadocuentas"+fila).val();
+  var tipo_proveedorcliente=$("#tipo_proveedorcliente"+fila).val();
+
+  console.log(tipo+" "+tipo_proveedorcliente);
+  
+  var resp = $("#cuentas_origen").val().split('###');
+  var cuenta = resp[0];
+  //var detalle_resp=$('input:radio[name=cuentas_origen_detalle]:checked').val();
+  var detalle_resp=valor.split('###');
+  var codComproDet=detalle_resp[0];
+  var cuenta_auxiliar=detalle_resp[1];
+  if(detalle_resp[0]!=null){
+    if(resp[1]=="AUX"){
+      var nfila={
+        cod_plancuenta:0,
+        cod_plancuentaaux:cuenta,
+        cod_comprobantedetalle:codComproDet,
+        cod_proveedor:0,//$("#proveedores").val(),
+        monto:$("#monto_estadocuenta").val()
+      }
+    }else{
+      var nfila={
+        cod_plancuenta:cuenta,
+        cod_plancuentaaux:cuenta_auxiliar,
+        cod_comprobantedetalle:codComproDet,
+        cod_proveedor:0,//$("#proveedores").val(),
+        monto:$("#monto_estadocuenta").val()
+      }    
+    }
+    itemEstadosCuentas[fila-1]=[];
+    itemEstadosCuentas[fila-1].push(nfila);
+    $("#nestado"+fila).addClass("estado");
+    verEstadosCuentas(fila,cuenta);
+    $('#modalEstadosCuentas').modal('hide');
+  }else{
+    $("#mensaje_estadoscuenta").html("<label class='text-danger'>Debe seleccionar un registro en la tabla</label>");
+  }
+}
+
 
 function listarEstadosCuentasCredito(id,saldo){
    var rsaldo = parseFloat(saldo);
