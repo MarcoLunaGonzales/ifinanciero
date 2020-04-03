@@ -27,7 +27,7 @@ $statement = $dbh->query($query);
                 <select class="selectpicker form-control" title="Seleccione una opcion" 
                 name="unidad_organizacional[]" id="unidad_organizacional" 
                 data-style="select-with-transition" data-size="5" 
-                data-actions-box="true" multiple required data-show-subtext="true" data-live-search="true>
+                data-actions-box="true" multiple required data-show-subtext="true" data-live-search="true" onChange="ajaxRPTAF_oficina();">
                   <?php
                     $sql="SELECT * FROM unidades_organizacionales order by 2";
                     $stmt = $dbh->prepare($sql);
@@ -49,7 +49,10 @@ $statement = $dbh->query($query);
             <label class="col-sm-2 col-form-label">Area</label>
             <div class="col-sm-7">
             <div class="form-group">
-              <select class="selectpicker form-control" title="Seleccione una opcion" name="areas[]" id="areas" data-style="select-with-transition" data-size="5" data-actions-box="true" multiple required data-show-subtext="true" data-live-search="true>
+              <div id="contenedor_areas_reporte">
+                
+              </div>
+              <!-- <select class="selectpicker form-control" title="Seleccione una opcion" name="areas[]" id="areas" data-style="select-with-transition" data-size="5" data-actions-box="true" multiple required data-show-subtext="true" data-live-search="true>
                 <?php
                 $stmt = $dbh->prepare("SELECT * FROM areas order by 2");
               $stmt->execute();
@@ -61,7 +64,7 @@ $statement = $dbh->query($query);
               <?php 
               }
                 ?>
-              </select>
+              </select> -->
             </div>
             </div>
           </div>

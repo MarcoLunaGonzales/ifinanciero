@@ -14,8 +14,8 @@ $stmtX->execute();
 $globalAdmin=$_SESSION["globalAdmin"];
 
 //asignaciones
-$query2 = "SELECT afs.*,af.activo,
-(select CONCAT_WS(' ',p.primer_nombre,p.paterno,p.materno) from personal p where p.codigo=afs.cod_personal) as nombre_personal,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=afs.cod_unidadorganizacional)as nombre_uo FROM activofijos_asignaciones afs, activosfijos af where afs.cod_activosfijos=af.codigo and af.codigo = ".$codigo;
+$query2 = "SELECT afs.*,af.activo,(select d.nombre from depreciaciones d where d.codigo=af.cod_depreciaciones) as nombreRubro,(select d.tipo_bien from tiposbienes d where d.codigo=af.cod_tiposbienes) as nombreBien,
+(select CONCAT_WS(' ',p.primer_nombre,p.paterno,p.materno) from personal p where p.codigo=afs.cod_personal) as nombre_personal,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=afs.cod_unidadorganizacional)as nombre_uo FROM activofijos_asignaciones afs, activosfijos af where afs.cod_activosfijos=af.codigo and af.codigo  = ".$codigo;
 $statement2 = $dbh->query($query2);
 //unidad
 $queryUO = "SELECT * from unidades_organizacionales order by 2";
@@ -47,7 +47,7 @@ $responsable='';
                       <table class="table">
                           <thead>
                               <tr>
-                                <th>CódigoAF</th>
+                                <th>CodAF</th>
                                 <th>Nombre</th>
                                 <th>QR</th>
                                 <th>Imagen</th>
@@ -67,10 +67,14 @@ $responsable='';
                                   $nombre_personal=$row["nombre_personal"];
                                   $nombre_uo=$row["nombre_uo"];
                                   $nombreActivo=$row["activo"];
+                                  $nombreRubro=$row["nombreRubro"];
+                                  $nombreBien=$row["nombreBien"];
+                                  // $nombreUO=$row["nombreUO"];
+                                  
                                 }?>
                              <tr>
                                 <td><?=$codigo;?></td>
-                                <td><?=$nombreActivo;?></td>
+                                <td><small><?=$nombreActivo;?></small></td>
                                 <td>
                                   <?php
                                   require 'assets/phpqrcode/qrlib.php';
@@ -78,10 +82,10 @@ $responsable='';
                                   if(!file_exists($dir)){
                                       mkdir ($dir);}
                                   $fileName = $dir.'test.png';
-                                  $tamanio = 4; //tamaño de imagen que se creará
+                                  $tamanio = 2.5; //tamaño de imagen que se creará
                                   $level = 'Q'; //tipo de precicion Baja L, mediana M, alta Q, maxima H
                                   $frameSize = 1; //marco de qr
-                                  $contenido = $codigo;
+                                  $contenido = "Cod:".$codigo."\nRubro:".$nombreRubro."\nTipo Bien:".$nombreBien."\nOF:".$nombre_uo."\nRespo.:".$nombre_personal;
                                   QRcode::png($contenido, $fileName, $level,$tamanio,$frameSize);
                                   echo '<img src="'.$fileName.'"/>';
                                   ?>

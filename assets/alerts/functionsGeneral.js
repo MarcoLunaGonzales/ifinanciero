@@ -1867,25 +1867,39 @@ function filaTablaGeneral(tabla,index){
 
 function ajaxCodigoActivo(combo){
   var contenedor;
-  var codigo_UO=combo.value;
+  var codigo=combo.value;
   contenedor = document.getElementById('divCodigoAF');
   ajax=nuevoAjax();
-  ajax.open('GET', 'activosFijos/ajaxCodigoActivoFijo.php?codigo='+codigo_UO,true);
+  ajax.open('GET', 'activosFijos/ajaxCodigoActivoFijo.php?codigo='+codigo,true);
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
       contenedor.innerHTML = ajax.responseText;
       $('.selectpicker').selectpicker(["refresh"]);
-      ajaxDepreciacion(codigo_UO);
+      ajaxDepreciacion(codigo);
     }
   }
   ajax.send(null)  
 
 }
-function ajaxDepreciacion(codigo_UO){
+function ajaxDepreciacion(codigo){
   var contenedor;
   contenedor = document.getElementById('div_contenedor_valorR');
   ajax=nuevoAjax();
-  ajax.open('GET', 'activosFijos/AFDepreciacionVidaUtilAjax.php?codigo='+codigo_UO,true);
+  ajax.open('GET', 'activosFijos/AFDepreciacionVidaUtilAjax.php?codigo='+codigo,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);
+      ajaxTipoBien(codigo);
+    }
+  }
+  ajax.send(null)
+}
+function ajaxTipoBien(codigo){
+  var contenedor;
+  contenedor = document.getElementById('cod_tiposbienes_containers');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'activosFijos/ajaxTipoBien_AF.php?codigo='+codigo,true);
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
       contenedor.innerHTML = ajax.responseText;
@@ -1894,7 +1908,6 @@ function ajaxDepreciacion(codigo_UO){
   }
   ajax.send(null)
 }
-
 
 // function ajaxAFunidadorganizacional(combo){
 //   var contenedor;
@@ -1912,6 +1925,24 @@ function ajaxDepreciacion(codigo_UO){
 //   }
 //   ajax.send(null)  
 // }
+
+function ajaxRPTAF_oficina(){
+  var contenedor;
+  // var codigo_UO=combo.value;
+  contenedor = document.getElementById('contenedor_areas_reporte');
+  // var codigo = document.getElementById('unidad_organizacional');
+  var codigo = $("#unidad_organizacional").val() || [];
+  // alert(codigo);
+  ajax=nuevoAjax();
+  ajax.open('GET', 'activosFijos/ajax_rtpAF_uo.php?codigo='+codigo,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);         
+    }
+  }
+  ajax.send(null)  
+}//unidad_area-cargo
 
 function ajaxAFunidadorganizacionalArea(combo){
   var contenedor;
@@ -5216,18 +5247,26 @@ function buscarCuentaNumero(numeros,val){
     }
     
     if(n==0){
-      var textoAux="<table class='table table-condensed'>";
+      var textoAux="<table class='table table-condensed' style='overflow-y: scroll;display: block;height:210px;'>";
+      
         for (var j = 0; j < itemCuentasAux.length; j++) {
           if(itemCuentasAux[j].codCuenta==itemCuentas[i].codigo){
-            textoAux+="<tr>"+
+            textoAux+="<tr class='det-cuenta-"+i+"' style='display:none'>"+
                "<td class='text-left small'>"+itemCuentasAux[j].codigo+"</td>"+
                "<td class='text-left small'><a href=\"javascript:setBusquedaCuenta(\'"+itemCuentas[i].codigo+"\',\'"+itemCuentas[i].numero+"\',\'"+itemCuentas[i].nombre+"\',\'"+itemCuentasAux[j].codigo+"\',\'"+itemCuentasAux[j].nombre+"\');\">"+itemCuentasAux[j].nombre+"</a></td>"+
              "</tr>";
           }
         };
        textoAux+="</table>";
+       var label="";
+       if(textoAux!="<table class='table table-condensed' style='overflow-y: scroll;display: block;height:210px;'></table>"){
+        label='<span style="color: #0431B4;">';        
+       }else{
+        textoAux="<table class='table table-condensed'></table>";
+        label='<span>';
+       }
       html+="<tr>"+
-      "<td class='text-left'>"+itemCuentas[i].numero+"</td>"+
+      "<td class='text-left' onclick='ver_cuentasAuxiliares("+i+")'>"+label+itemCuentas[i].numero+"</span></td>"+
           "<td class='text-left'><a href=\"javascript:setBusquedaCuenta(\'"+itemCuentas[i].codigo+"\',\'"+itemCuentas[i].numero+"\',\'"+itemCuentas[i].nombre+"\',\'0\',\'\');\">"+itemCuentas[i].nombre+"</a></td>"+
           "<td class='text-left'>"+textoAux+"</td>"+
       "</tr>";

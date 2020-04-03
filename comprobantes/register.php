@@ -27,6 +27,7 @@ $globalArea=$_SESSION["globalArea"];
 $globalAdmin=$_SESSION["globalAdmin"];
 $codMesActiva=$_SESSION['globalMes'];
 $contadorRegistros=0;
+$nombreCompletoUnidad=nameUnidad($globalUnidad);
 ?>
 <script>
 	numFilas=<?=$contadorRegistros;?>;
@@ -182,18 +183,19 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
  }else{
  	 ?>
     <div class="row">
-					
+						<div class="col-sm-1">							
+						</div>
 						<div class="col-sm-1">
 							<div class="form-group">
 						  		<label class="bmd-label-static">Gestion</label>
-					  			<input class="form-control" type="text" name="gestion" value="<?=$globalNombreGestion;?>" id="gestion" readonly="true" />
+					  			<input class="form-control" type="text" name="gestion" value="<?=$globalNombreGestion;?>" id="gestion" readonly="true" style="background-color:#E3CEF6;text-align: left"/>
 							</div>
 						</div>
 
-						<div class="col-sm-1">
+						<div class="col-sm-3">
 							<div class="form-group">
 						  		<label class="bmd-label-static">Unidad</label>
-						  		<input class="form-control" type="text" name="unidad_organizacional" value="<?=$globalNombreUnidad;?>" id="unidad_organizacional" readonly="true" />
+						  		<input class="form-control" type="text" name="unidad_organizacional" value="<?=$globalNombreUnidad;?> - <?=$nombreCompletoUnidad;?>" id="unidad_organizacional" readonly="true" style="background-color:#E3CEF6;text-align: left"/>
 							</div>
 						</div>
 
@@ -227,16 +229,10 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
 						<div class="col-sm-1">
 							<div class="form-group">
 						  		<label for="nro_correlativo" class="bmd-label-static">#</label>
-						  		<div id="divnro_correlativo"><input class="form-control" type="number" name="nro_correlativo" id="nro_correlativo" min="1" required="true" readonly="true" /></div>
+						  		<div id="divnro_correlativo"><input class="form-control" type="number" name="nro_correlativo" id="nro_correlativo" min="1" required="true" readonly="true" style="background-color:#E3CEF6;text-align: left"/></div>
 							</div>
 						</div>
 						
-					    <div class="col-sm-3">
-						    <div class="form-group">
-				          		<label for="glosa" class="bmd-label-static">Glosa</label>
-								<textarea class="form-control" name="glosa" id="glosa" required="true" rows="2" value=""></textarea>
-							</div>
-						</div>
 						<div class="col-sm-2">
 							<div class="btn-group">
                               <a title="Copiar Glosa (shift+g)" href="#modalCopy" data-toggle="modal" data-target="#modalCopy" class="<?=$buttonCeleste?> btn-fab btn-sm">
@@ -263,8 +259,18 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
 					<div class="card-text">
 					  <h6 class="card-title">Detalle</h6>
 					</div>
+					<h4 class="card-title" align="right">
+						<div class="col-sm-8">
+						    <div class="form-group">
+				          		<label for="glosa" class="bmd-label-static">Glosa</label>
+								<input class="form-control" name="glosa" id="glosa" required="true" rows="1" value=""/>
+							</div>
+						</div>
+					</h4>
+
 				</div>
 				<div class="card-body ">
+
 
 					<?php
 					//$sqlDetalle="";
@@ -282,15 +288,26 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
 					*/
 					?>
 					<fieldset id="fiel" style="width:100%;border:0;">
-						<button title="Agregar (alt+a)" type="button" id="add_boton" name="add" class="btn btn-warning btn-round btn-fab" onClick="addCuentaContable(this)">
-                  		  <i class="material-icons">add</i>
-	                    </button>
-
-		                <div class="col-sm-1 float-right">
-							<a title="Copiar Unidad - Area (shift+u)" href="#modalCopySel" data-toggle="modal" data-target="#modalCopySel" class="<?=$buttonDelete?> btn-fab">
-                      		  <i class="material-icons"><?=$iconCopy?></i>
-		                    </a>
-		                </div>  
+	                    <div class="row">
+	                    	<div class="col-sm-1">
+	                    		<button title="Agregar (alt+a)" type="button" id="add_boton" name="add" class="btn btn-warning btn-round btn-fab " onClick="addCuentaContable(this)">
+	                  		  <i class="material-icons">add</i>
+		                    </button>	
+	                    	</div>
+	                    	
+		                    <label class="col-sm-1 col-form-label" style="text-align: center;">Centro Costos</label>
+		                    <label class="col-sm-4 col-form-label" style="text-align: center;">Cuenta</label>
+		                    <label class="col-sm-1 col-form-label" style="text-align: center;">Debe</label>
+		                    <label class="col-sm-1 col-form-label" style="text-align: center;">Haber</label>
+		                    <label class="col-sm-3 col-form-label" style="text-align: center;">Glosa</label>
+			                <div class="col-sm-1" align="right">
+								<a title="Copiar Unidad - Area (shift+u)" href="#modalCopySel" data-toggle="modal" data-target="#modalCopySel" class="<?=$buttonDelete?> btn-fab btn-sm">
+	                      		  <i class="material-icons"><?=$iconCopy?></i>
+			                    </a>
+			                </div>
+			             
+	                    </div>
+	                    
 		              						
 			        	<?php
     	                //$index=1;

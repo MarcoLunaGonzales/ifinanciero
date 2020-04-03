@@ -29,13 +29,13 @@ $query = "select codigo,paterno,materno,primer_nombre from personal where cod_es
 // $statementPersonal = $dbh->query($query);
 $statementPersonal2 = $dbh->query($query);
 
-$query_prov = "select * from af_proveedores order by 2";
+$query_prov = "select * from af_proveedores where cod_estado=1 order by 2";
 $statementprov = $dbh->query($query_prov);
 
-$query_tiposbienes = "select * from tiposbienes order by 3";
+$query_tiposbienes = "select * from tiposbienes where cod_estado=1 order by 3";
 $statementTIPOSBIENES = $dbh->query($query_tiposbienes);
 
-$query_unidadesOrganizacionales = "select * from unidades_organizacionales where cod_estado=1";
+$query_unidadesOrganizacionales = "select * from unidades_organizacionales where cod_estado=1 order by nombre";
 $statementUNIDADESORGANIZACIONALES = $dbh->query($query_unidadesOrganizacionales);
 
 $query_areas = "select * from areas where cod_estado=1 order by 2";
@@ -44,11 +44,11 @@ $statementAREAS = $dbh->query($query_areas);
 $query_proy_financiacion = "select * from proyectos_financiacionexterna where cod_estadoreferencial=1 order by 2";
 $statementProyFinanciacion = $dbh->query($query_proy_financiacion);
 
-$statementTIPOSAF = $dbh->query("select * from tipos_activos_fijos order by 2");
+$statementTIPOSAF = $dbh->query("select * from tipos_activos_fijos where cod_estadoreferencial=1 order by 2");
 
 //------------------------------------------------------------------- principal
 if ($codigo > 0){
-    $stmt = $dbh->prepare("SELECT * FROM activosfijos where codigo =:codigo");
+    $stmt = $dbh->prepare("SELECT * ,(select d.nombre from depreciaciones d where d.codigo=cod_depreciaciones) as nombreRubro,(select d.tipo_bien from tiposbienes d where d.codigo=cod_tiposbienes) as nombreBien,(select d.abreviatura from unidades_organizacionales d where d.codigo=cod_unidadorganizacional) as nombreUO,(select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=cod_responsables_responsable) as nombreResponsable FROM activosfijos where codigo =:codigo");
     //Ejecutamos;
     $stmt->bindParam(':codigo',$codigo);
     $stmt->execute();
@@ -84,6 +84,10 @@ if ($codigo > 0){
     $cod_unidadorganizacional = $result['cod_unidadorganizacional'];
     $cod_area = $result['cod_area'];
     $tipo_af = $result['tipo_af'];
+    $nombreRubro = $result['nombreRubro'];
+    $nombreUO = $result['nombreUO'];
+    $nombreResponsable = $result['nombreResponsable'];
+    $nombreBien = $result['nombreBien'];
 
 
     //IMAGEN
@@ -146,6 +150,9 @@ if ($codigo > 0){
     $cod_area = '';
     $variableDisabled="false";
     $tipo_af='';
+    $nombreRubro='';
+    $nombreUO='';
+    $nombreResponsable='';
 }
 //echo $variableDisabled;
 ?>
@@ -179,10 +186,11 @@ if ($codigo > 0){
                                             if(!file_exists($dir)){
                                                 mkdir ($dir);}
                                             $fileName = $dir.'test.png';
-                                            $tamanio = 6; //tamaño de imagen que se creará
+                                            $tamanio = 3; //tamaño de imagen que se creará
                                             $level = 'Q'; //tipo de precicion Baja L, mediana M, alta Q, maxima H
                                             $frameSize = 1; //marco de qr
-                                            $contenido = $codigoactivo;
+                                            $contenido = "Cod:".$codigoactivo."\nRubro:".$nombreRubro."\nTipo Bien:".$nombreBien."\nOF:".$nombreUO."\nRespo.:".$nombreResponsable;
+
                                             QRcode::png($contenido, $fileName, $level,$tamanio,$frameSize);
                                             echo '<img src="'.$fileName.'"/>';
                                         ?>
@@ -199,10 +207,10 @@ if ($codigo > 0){
                                         
                                             <option value=""></option>
                                             <?php 
-                                            $queryUO1 = "SELECT codigo,nombre from unidades_organizacionales where cod_estado=1 order by nombre";
+                                            $queryUO1 = "SELECT codigo,nombre,abreviatura from unidades_organizacionales where cod_estado=1 order by nombre";
                                             $statementUO1 = $dbh->query($queryUO1);
                                             while ($row = $statementUO1->fetch()){ ?>
-                                                <option <?=($cod_unidadorganizacional==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                                                <option <?=($cod_unidadorganizacional==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>" data-subtext="(<?=$row['codigo']?>)"><?=$row["abreviatura"];?> - <?=$row["nombre"];?></option>
                                             <?php } ?>
                                         </select>
                                     </div>
@@ -212,14 +220,21 @@ if ($codigo > 0){
                                   <div class="col-sm-4">
                                     <div class="form-group" >
                                         <div id="div_contenedor_area">
+                                            <?php
+                                                if($codigo>0){?>
+
+                                                <?php }else{
+
+                                                }
+                                            ?>
                                             <select name="cod_area" id="cod_area" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true" >
 
                                                 <option value=""></option>
                                                 <?php 
-                                                $queryArea = "SELECT codigo,nombre FROM  areas WHERE cod_estado=1 order by nombre";
+                                                $queryArea = "SELECT codigo,nombre,abreviatura FROM  areas WHERE cod_estado=1 order by nombre";
                                                 $statementArea = $dbh->query($queryArea);
                                                 while ($row = $statementArea->fetch()){ ?>
-                                                    <option <?=($cod_area==$row["codigo"])?"selected":"";?>  value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                                                    <option <?=($cod_area==$row["codigo"])?"selected":"";?>  value="<?=$row["codigo"];?>" data-subtext="(<?=$row['codigo']?>)"><?=$row["abreviatura"];?> - <?=$row["nombre"];?></option>
                                                 <?php } ?>
                                             </select>
                                         </div>                    
@@ -243,7 +258,7 @@ if ($codigo > 0){
                                 <div class="col-sm-4">
                                     <div class="form-group">
                             		<select name="cod_depreciaciones" id="cod_depreciaciones" onchange="ajaxCodigoActivo(this);" required="true" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true">
-                            			<option disabled selected value="">-</option>
+                            			<option disabled selected value=""></option>
                                 		<?php while ($row = $statementDepre->fetch()){ ?>
                             				<option <?php if($cod_depreciaciones == $row["codigo"]) echo "selected"; ?>  value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
                             			<?php } ?>
@@ -258,6 +273,7 @@ if ($codigo > 0){
                                 <div class="form-group">
                                     <div id="cod_tiposbienes_containers">
                             		<select name="cod_tiposbienes" id="cod_tiposbienes" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" required="true">
+                                        <option disabled selected value=""></option>
                             			<?php while ($row = $statementTIPOSBIENES->fetch()){ ?>
                             				<option <?php if($cod_tiposbienes == $row["codigo"]) echo "selected"; ?> value="<?=$row["codigo"];?>"><?=$row["tipo_bien"];?></option>
                             			<?php } ?>
@@ -398,7 +414,7 @@ if ($codigo > 0){
                                 <div class="col-sm-4">
                                 <div class="form-group">                        
                                     <div id="div_contenedor_proveedor">
-                                        <select class="selectpicker form-control form-control-sm" name="proveedores" id="proveedores" data-style="btn btn-primary" data-show-subtext="true" data-live-search="true" title="Seleccione Proveedor">
+                                        <select class="selectpicker form-control form-control-sm" name="proveedores" id="proveedores" data-style="btn btn-primary" data-show-subtext="true" data-live-search="true" title="Seleccione Proveedor" required="true">
                                           <option value=""></option>
                                           <?php 
                                           $query="SELECT * FROM af_proveedores order by nombre";
