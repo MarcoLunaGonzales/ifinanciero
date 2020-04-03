@@ -46,6 +46,7 @@
   <script src="../assets/js/core/popper.min.js"></script>
   <script src="../assets/js/core/bootstrap-material-design.min.js"></script>
   <script src="../assets/js/plugins/perfect-scrollbar.jquery.min.js"></script>
+  
   <!-- Forms Validations Plugin -->
   <script src="../assets/js/plugins/jquery.validate.min.js"></script>
   <!-- Plugin for the momentJs  -->
@@ -66,7 +67,7 @@
   <script src="../assets/js/plugins/bootstrap-selectpicker.js"></script>
   <script src="../assets/js/material-dashboard.js?v=2.1.0" type="text/javascript"></script>
   <script src="../assets/js/mousetrap.min.js"></script>
-
+   
   <script src="../assets/autocomplete/awesomplete.min.js"></script>
   <script src="../assets/autocomplete/autocomplete/autocomplete-img.js"></script>
   <script src="../assets/alerts/alerts.js"></script>
@@ -79,7 +80,16 @@
     });
   </script>
 
-  
+  <script>
+    $(document).ready(function() {
+      // Initialise the wizard
+      demo.initMaterialWizard();
+      setTimeout(function() {
+        $('.card.card-wizard').addClass('active');
+      }, 600);
+    });
+  </script>
+
   <script type="text/javascript">
     $(document).ready(function() {
         $('#tablePaginatorReport ').DataTable({

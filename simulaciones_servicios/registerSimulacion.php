@@ -195,9 +195,9 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
 					<div class="card-text">
 					  <h4 class="card-title">Informaci&oacute;n general de la Propuesta</h4>
 					</div>
-          <button type="button" onclick="editarDatosSimulacion()" class="btn btn-success btn-sm btn-fab float-right">
+          <!--<button type="button" onclick="editarDatosSimulacion()" class="btn btn-success btn-sm btn-fab float-right">
              <i class="material-icons" title="Editar Simulación">edit</i>
-          </button>
+          </button>-->
 				</div>
 				<div class="card-body ">
 					<div class="row">
@@ -206,8 +206,8 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
 						?>
 						<div class="col-sm-6">
 							<div class="form-group">
-						  		<label class="bmd-label-static">Nombre</label>
-					  			<input class="form-control" type="text" name="nombre" readonly value="<?=$nombreX?>" id="nombre"/>
+						  		<label class="bmd-label-static">Numero</label>
+					  			<input class="form-control" readonly type="text" name="nombre" readonly value="<?=$nombreX?>" id="nombre"/>
 							</div>
 						</div>
 
@@ -339,7 +339,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
 			  <div class="card">
 				<div class="card-header card-header-warning card-header-text text-center">
 					<div class="card-text">
-					  <h4 class="card-title"><b id="titulo_curso"><?=$nombreSimulacion?></b></h4>
+					  <h4 class="card-title"><b id="titulo_curso">N: <?=$nombreSimulacion?></b></h4>
 					</div>
 				</div>
 				<div class="card-body" id="div_simulacion">

@@ -505,13 +505,13 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                                   <select class="selectpicker form-control form-control-sm" data-live-search="true" name="modal_editservicio<?=$an?>" id="modal_editservicio<?=$an?>" data-style="fondo-boton">
                                     <option disabled selected="selected" value="">--SERVICIOS--</option>
                                     <?php 
-                                     $stmt3 = $dbh->prepare("SELECT idclaservicio,descripcion,codigo from cla_servicios where (codigo_n1=108 or codigo_n1=109) and vigente=1 and codigo_n1=$codigoAreaServ and idTipo=$idTipoServ");
+                                     $stmt3 = $dbh->prepare("SELECT idclaservicio,descripcion,codigo from cla_servicios where (codigo_n1=108 or codigo_n1=109) and vigente=1 and codigo_n1=$codigoAreaServ and idTipo=$idTipoServ order by 2");
                                      $stmt3->execute();
                                      while ($rowServ = $stmt3->fetch(PDO::FETCH_ASSOC)) {
                                       $codigoServX=$rowServ['idclaservicio'];
                                       $nombreServX=$rowServ['descripcion'];
                                       $abrevServX=$rowServ['codigo'];
-                                      ?><option value="<?=$codigoServX;?>"><?=$abrevServX?> - <?=$nombreServX?></option><?php 
+                                      ?><option value="<?=$codigoServX;?>"><?=$nombreServX?></option><?php 
                                      }
                                     ?>
                                   </select>

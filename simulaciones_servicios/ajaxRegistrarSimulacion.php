@@ -29,6 +29,7 @@ if(isset($_GET['nombre'])){
   $dias=$_GET['dias'];
   $utilidad=$_GET['utilidad'];
   $cliente=$_GET['cliente'];
+  $objeto_servicio=$_GET['objeto_servicio'];
   $productos="";//$productos=$_GET['producto'];
   $sitios="";   // $sitios=$_GET['sitios'];
   $atributos= json_decode($_GET['atributos']);
@@ -43,7 +44,7 @@ if(isset($_GET['nombre'])){
 
   $codSimServ=obtenerCodigoSimServicio();
   $numeroCorrelativoCliente=obtenerNumeroClienteSimulacion($cliente);
-  $nombre=obtenerNombreCliente($cliente)."(".($numeroCorrelativoCliente+1).")";
+  $nombreSecundario=obtenerNombreCliente($cliente)."(".($numeroCorrelativoCliente+1).")";
   $dbh = new Conexion();
   if(isset($_GET['tipo_servicio'])){
     $idTipoServicio=$_GET['tipo_servicio'];
@@ -59,8 +60,8 @@ $areaGeneralPlantilla=obtenerCodigoAreaPlantillasServicios($plantilla_servicio);
      $inicioAnio=0;
    }
 
-  $sqlInsert="INSERT INTO simulaciones_servicios (codigo, nombre, fecha, cod_plantillaservicio, cod_responsable,dias_auditoria,utilidad_minima,cod_cliente,productos,norma,idServicio,anios,porcentaje_fijo,sitios,afnor,porcentaje_afnor) 
-  VALUES ('".$codSimServ."','".$nombre."','".$fecha."', '".$plantilla_servicio."', '".$globalUser."','".$dias."','".$utilidad."','".$cliente."','".$productos."','".$norma."','".$id_servicio."','".$anios."','".obtenerValorConfiguracion(32)."','".$sitios."','".$afnor."','".obtenerValorConfiguracion(33)."')";
+  $sqlInsert="INSERT INTO simulaciones_servicios (codigo, nombre, fecha, cod_plantillaservicio, cod_responsable,dias_auditoria,utilidad_minima,cod_cliente,productos,norma,idServicio,anios,porcentaje_fijo,sitios,afnor,porcentaje_afnor,cod_objetoservicio) 
+  VALUES ('".$codSimServ."','".$nombre."','".$fecha."', '".$plantilla_servicio."', '".$globalUser."','".$dias."','".$utilidad."','".$cliente."','".$productos."','".$norma."','".$id_servicio."','".$anios."','".obtenerValorConfiguracion(32)."','".$sitios."','".$afnor."','".obtenerValorConfiguracion(33)."','".$objeto_servicio."')";
   $stmtInsert = $dbh->prepare($sqlInsert);
   $stmtInsert->execute();
   $dbhD = new Conexion();
