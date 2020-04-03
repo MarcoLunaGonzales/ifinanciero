@@ -8566,12 +8566,14 @@ function guardarAtributoItem(){
     itemAtributos[fila].norma=$('#modal_norma').val();
     itemAtributos[fila].marca=$('#modal_marca').val();
     itemAtributos[fila].sello=$('#modal_sello').val();
-    itemAtributos[fila].pais=$('#pais_empresa').val().split("####")[0];
+    if(($("#productos_div").hasClass("d-none"))){
+      itemAtributos[fila].pais=$('#pais_empresa').val().split("####")[0];
     itemAtributos[fila].estado=$('#departamento_empresa').val().split("####")[0];
     itemAtributos[fila].ciudad=$('#ciudad_empresa').val().split("####")[0];
     itemAtributos[fila].nom_pais=$('#pais_empresa').val().split("####")[1];
     itemAtributos[fila].nom_estado=$('#departamento_empresa').val().split("####")[1];
     itemAtributos[fila].nom_ciudad=$('#ciudad_empresa').val().split("####")[1];
+    }   
     if($("#modalEditPlantilla").length){
     //editar dias sitios
       for (var i = 0; i <= parseInt($("#anio_servicio").val()); i++) {
@@ -8617,7 +8619,7 @@ function editarAtributo(fila){
     $('#modal_norma').val(itemAtributos[fila].norma);
     $('#modal_sello').val(itemAtributos[fila].sello);
   }
-  if($("#pais_empresa").length){
+  if(($("#div_marca").hasClass("d-none"))){
     $('#pais_empresa').val(itemAtributos[fila].pais+"####"+itemAtributos[fila].nom_pais);
     if($("#modalEditPlantilla").length){
        seleccionarDepartamentoServicioSitioModal(0,itemAtributos[fila].estado+"####"+itemAtributos[fila].nom_estado,itemAtributos[fila].ciudad+"####"+itemAtributos[fila].nom_ciudad);

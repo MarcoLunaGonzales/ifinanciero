@@ -36,6 +36,8 @@
                              </div>  
                            </div> 
                             <?php
+                                 }else{
+                                  ?><div class="row col-sm-6 d-none" id="div_marca"></div><?php
                                  }
                             ?>           
                       </div>

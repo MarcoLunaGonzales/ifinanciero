@@ -131,7 +131,11 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
    $paisXAtrib=$rowAtributo['cod_pais'];
    $estadoXAtrib=$rowAtributo['cod_estado'];
    $ciudadXAtrib=$rowAtributo['cod_ciudad'];
-
+  if($paisXAtrib==0){
+    $nom_ciudadXAtrib="SIN REGISTRO";
+    $nom_estadoXAtrib="SIN REGISTRO";
+    $nom_paisXAtrib="SIN REGISTRO";
+  }else{
    $lista= obtenerPaisesServicioIbrnorca();
    foreach ($lista->lista as $listas) {
       if($listas->idPais==$paisXAtrib){
@@ -159,6 +163,8 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
        $nom_paisXAtrib="SIN REGISTRO";
      }
     }
+    
+  }
 
    ?>
     <script>
