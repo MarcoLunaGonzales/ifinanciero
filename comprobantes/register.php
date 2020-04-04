@@ -182,26 +182,35 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
  	<?php
  }else{
  	 ?>
+ 	<div class="row">
+	    <label class="col-sm-1 col-form-label" style="text-align: center;">-</label>
+	    <label class="col-sm-1 col-form-label" style="text-align: center;">Gestion</label>
+	    <label class="col-sm-2 col-form-label" style="text-align: center;">Oficina</label>
+	    <label class="col-sm-2 col-form-label" style="text-align: center;">Fecha</label>
+	    <label class="col-sm-2 col-form-label" style="text-align: center;">Tipo Comprobante</label>
+	    <label class="col-sm-2 col-form-label" style="text-align: center;">Nro. Comprobante</label>
+	    <label class="col-sm-1 col-form-label" style="text-align: center;">-</label>
+ 	</div>
     <div class="row">
 						<div class="col-sm-1">							
 						</div>
 						<div class="col-sm-1">
 							<div class="form-group">
-						  		<label class="bmd-label-static">Gestion</label>
+						  		<!--label class="bmd-label-static">Gestion</label-->
 					  			<input class="form-control" type="text" name="gestion" value="<?=$globalNombreGestion;?>" id="gestion" readonly="true" style="background-color:#E3CEF6;text-align: left"/>
-							</div>
-						</div>
-
-						<div class="col-sm-3">
-							<div class="form-group">
-						  		<label class="bmd-label-static">Unidad</label>
-						  		<input class="form-control" type="text" name="unidad_organizacional" value="<?=$globalNombreUnidad;?> - <?=$nombreCompletoUnidad;?>" id="unidad_organizacional" readonly="true" style="background-color:#E3CEF6;text-align: left"/>
 							</div>
 						</div>
 
 						<div class="col-sm-2">
 							<div class="form-group">
-						  		<label class="bmd-label-static">Fecha</label>
+						  		<!--label class="bmd-label-static">Oficina</label-->
+						  		<input class="form-control" type="text" name="unidad_organizacional" value="<?=$nombreCompletoUnidad;?> - <?=$globalNombreUnidad;?>" id="unidad_organizacional" readonly="true" style="background-color:#E3CEF6;text-align: left"/>
+							</div>
+						</div>
+
+						<div class="col-sm-2">
+							<div class="form-group">
+						  		<!--label class="bmd-label-static">Fecha</label-->
 						  		<input class="form-control datepicker" type="text" name="fecha" value="<?=$fechaActualModal?>" id="fecha" required/>
 							</div>
 						</div>
@@ -226,9 +235,9 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
 							</div>
 				      	</div>
 
-						<div class="col-sm-1">
+						<div class="col-sm-2">
 							<div class="form-group">
-						  		<label for="nro_correlativo" class="bmd-label-static">#</label>
+						  		<!--label for="nro_correlativo" class="bmd-label-static">Nro. Comprobante</label-->
 						  		<div id="divnro_correlativo"><input class="form-control" type="number" name="nro_correlativo" id="nro_correlativo" min="1" required="true" readonly="true" style="background-color:#E3CEF6;text-align: left"/></div>
 							</div>
 						</div>

@@ -128,6 +128,43 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
    $marcaXAtrib=$rowAtributo['marca'];
    $selloXAtrib=$rowAtributo['nro_sello'];
    $tipoXAtrib=$rowAtributo['cod_tipoatributo'];
+   $paisXAtrib=$rowAtributo['cod_pais'];
+   $estadoXAtrib=$rowAtributo['cod_estado'];
+   $ciudadXAtrib=$rowAtributo['cod_ciudad'];
+  if($paisXAtrib==0){
+    $nom_ciudadXAtrib="SIN REGISTRO";
+    $nom_estadoXAtrib="SIN REGISTRO";
+    $nom_paisXAtrib="SIN REGISTRO";
+  }else{
+   $lista= obtenerPaisesServicioIbrnorca();
+   foreach ($lista->lista as $listas) {
+      if($listas->idPais==$paisXAtrib){
+        $nom_paisXAtrib=$listas->paisNombre;
+        $lista2= obtenerDepartamentoServicioIbrnorca($paisXAtrib);
+        foreach ($lista2->lista as $listas2) {
+          if($listas2->idEstado==$estadoXAtrib){
+            $nom_estadoXAtrib=$listas2->estNombre;
+            $lista3= obtenerCiudadServicioIbrnorca($estadoXAtrib);
+            foreach ($lista3->lista as $listas3) {
+              if($listas3->idCiudad==$ciudadXAtrib){
+                $nom_ciudadXAtrib=$listas3->nomCiudad;
+                break;
+              }else{
+                $nom_ciudadXAtrib="SIN REGISTRO";
+              }     
+           }
+           break;
+          }else{
+            $nom_estadoXAtrib="SIN REGISTRO";
+          }
+        }
+       break; 
+      }else{
+       $nom_paisXAtrib="SIN REGISTRO";
+     }
+    }
+    
+  }
 
    ?>
     <script>
@@ -137,7 +174,13 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
     direccion: '<?=$direccionXAtrib?>',
     marca: '<?=$marcaXAtrib?>',
     norma: '<?=$normaXAtrib?>',
-    sello: '<?=$selloXAtrib?>'
+    sello: '<?=$selloXAtrib?>',
+    pais: '<?=$paisXAtrib?>',
+    estado: '<?=$estadoXAtrib?>',
+    ciudad: '<?=$ciudadXAtrib?>',
+    nom_pais: '<?=$nom_paisXAtrib?>',
+    nom_estado: '<?=$nom_estadoXAtrib?>',
+    nom_ciudad: '<?=$nom_ciudadXAtrib?>'
     }
   itemAtributos.push(atributo);
     </script>

@@ -40,7 +40,7 @@ $codSimServ=obtenerCodigoSimServicio();
 </script>
 
 <?php
-$lista= obtenerPaisesServicioIbrnorca();
+$lista= NULL;
 $fechaActual=date("Y-m-d");
 $dbh = new Conexion();
 ?>
@@ -319,10 +319,10 @@ $dbh = new Conexion();
                        <div class="col-sm-10">
                         <div class="form-group">
                           <select name="pais_empresa" id="pais_empresa" onchange="seleccionarDepartamentoServicioSitio()" class="form-control form-control-sm selectpicker" data-style="btn btn-info">
-                            <option disabled selected value="">--SELECCIONE--</option>
+                            <option disabled selected value="####">--SELECCIONE--</option>
                              <?php
                                   foreach ($lista->lista as $listas) {
-                                      echo "<option value=".$listas->idPais.">".$listas->paisNombre."</opction>";
+                                      echo "<option value='".$listas->idPais."####".$listas->paisNombre."'>".$listas->paisNombre."</opction>";
                                   }?>
                           </select>
                         </div>
@@ -366,7 +366,6 @@ $dbh = new Conexion();
 <!--    end small modal -->
 
 <script>
-  $("#pais_empresa").val("26"); //para el pais de BOLIVIA
-  seleccionarDepartamentoServicioSitio();
+ 
 
 </script>
