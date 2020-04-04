@@ -32,16 +32,16 @@ $statementestados_personal = $dbh->query($queryestados_personal);
                         </div>                        
                         <div class="card-body">                    
                             <div class="row">
-                                <label class="col-sm-2 col-form-label">Código Personal</label>
-                                <div class="col-sm-4">
+                                <label class="col-sm-3 col-form-label">Código Personal</label>
+                                <div class="col-sm-8">
                                     <div class="form-group">
                                         <input class="form-control" name="codigo" id="codigo" value="<?=$result['codigo'];?>" readonly="readonly"/>
                                     </div>
                                 </div>                            
                             </div><!--fin campo codigo --> 
                             <div class="row">
-                                <label class="col-sm-2 col-form-label">Nombre Personal</label>
-                                <div class="col-sm-4">
+                                <label class="col-sm-3 col-form-label">Nombre Personal</label>
+                                <div class="col-sm-8">
                                     <div class="form-group">
                                         <input class="form-control" name="nombre_personal" id="nombre_personal" value="<?=$result['nombre_personal'];?>" readonly="readonly"/>
                                     </div>
@@ -49,10 +49,10 @@ $statementestados_personal = $dbh->query($queryestados_personal);
                             </div><!--fin campo codigo --> 
                
                             <div class="row">
-                                <label class="col-sm-2 col-form-label">Estado</label>
-                                <div class="col-sm-4">
+                                <label class="col-sm-3 col-form-label">Estado</label>
+                                <div class="col-sm-8">
                                 <div class="form-group">
-                                <select name="cod_estadopersonal"  class="selectpicker " data-style="btn btn-info" required>
+                                <select name="cod_estadopersonal"  class="selectpicker form-control form-control-sm" data-style="btn btn-info" required>
                                 <?php while ($row = $statementestados_personal->fetch()) { ?>
                                     <option <?php if($result['cod_estadopersonal'] == $row["codigo"]) echo "selected"; ?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
                                 <?php } ?>

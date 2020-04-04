@@ -289,7 +289,7 @@ $statementestados_personal = $dbh->query($queryestados_personal);
                                 <label class="col-sm-2 col-form-label">Personal de Confianza</label>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <select name="personal_confianza" id="personal_confianza"  class="selectpicker " data-style="btn btn-info">
+                                        <select name="personal_confianza" id="personal_confianza"  class="selectpicker form-control form-control-sm" data-style="btn btn-info">
                                             <option <?php if($personal_confianza == '0') echo "selected"; ?> value="0">NO</option>
                                             <option <?php if($personal_confianza == '1') echo "selected"; ?> value="1">SI</option>
                                         </select>           
@@ -300,7 +300,7 @@ $statementestados_personal = $dbh->query($queryestados_personal);
                                 <label class="col-sm-2 col-form-label">Tipo Personal</label>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <select name="cod_tipopersonal"  class="selectpicker " data-style="btn btn-info" required>
+                                        <select name="cod_tipopersonal"  class="selectpicker form-control form-control-sm " data-style="btn btn-info" required>
                                             <?php while ($row = $statementTPersonal->fetch()) { ?>
                                                 <option <?php if($cod_tipopersonal == $row["codigo"]) echo "selected"; ?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
                                             <?php } ?>
@@ -316,7 +316,7 @@ $statementestados_personal = $dbh->query($queryestados_personal);
                                   <label class="col-sm-2 col-form-label">Oficina</label>
                                   <div class="col-sm-4">
                                     <div class="form-group">
-                                        <select name="cod_uo" id="cod_uo" class="selectpicker" data-style="btn btn-info" onChange="ajaxAreaContabilizacionDetalle(this);">
+                                        <select name="cod_uo" id="cod_uo" class="selectpicker form-control form-control-sm" data-style="btn btn-info" onChange="ajaxAreaContabilizacionDetalle(this);">
                                             <option value=""></option>
                                             <?php 
                                             $queryUO = "SELECT codigo,nombre from unidades_organizacionales where cod_estado=1 order by nombre";
@@ -332,7 +332,7 @@ $statementestados_personal = $dbh->query($queryestados_personal);
                                   <div class="col-sm-4">
                                     <div class="form-group" >
                                         <div id="div_contenedor_area">
-                                            <select name="cod_area" id="cod_area" class="selectpicker" data-style="btn btn-info" >
+                                            <select name="cod_area" id="cod_area" class="selectpicker form-control form-control-sm" data-style="btn btn-info" >
                                                 <option value=""></option>
                                                 <?php 
                                                 $queryArea = "SELECT codigo,nombre FROM  areas WHERE cod_estado=1 order by nombre";
@@ -350,7 +350,7 @@ $statementestados_personal = $dbh->query($queryestados_personal);
                                     <div class="col-sm-4">
                                         <div class="form-group">
                                             <div id="div_contenedor_cargo">
-                                                <select name="cod_cargo"  class="selectpicker" data-style="btn btn-info" required>
+                                                <select name="cod_cargo"  class="selectpicker form-control form-control-sm" data-style="btn btn-info" required>
                                                     <option value=""></option>
                                                     <?php 
                                                     $queryCargos = "SELECT codigo,nombre,abreviatura from cargos where cod_estadoreferencial=1";
@@ -366,7 +366,7 @@ $statementestados_personal = $dbh->query($queryestados_personal);
                                     <label class="col-sm-2 col-form-label">Grado Académico</label>
                                     <div class="col-sm-4">
                                         <div class="form-group">
-                                            <select name="grado_academico" id="grado_academico"  class="selectpicker" data-style="btn btn-info" required>
+                                            <select name="grado_academico" id="grado_academico"  class="selectpicker form-control form-control-sm" data-style="btn btn-info" required>
                                                 <?php 
                                                 $querygrado_academico = "SELECT codigo,nombre from personal_grado_academico where codestadoreferencial=1";
                                                 $statementgrado_academico = $dbh->query($querygrado_academico);
@@ -381,13 +381,13 @@ $statementestados_personal = $dbh->query($queryestados_personal);
                                     <label class="col-sm-2 col-form-label">Haber Basico (Bs)</label>
                                     <div class="col-sm-4">
                                         <div class="form-group">
-                                            <input class="form-control" type="text" name="haber_basico" id="haber_basico" value="<?=$haber_basico;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" required/>
+                                            <input class="form-control" type="text" name="haber_basico" id="haber_basico" value="<?=$haber_basico;?>" required/>
                                         </div>
                                     </div>
                                     <label class="col-sm-2 col-form-label">Email Empresarial</label>
                                     <div class="col-sm-4">
                                         <div class="form-group">
-                                            <input class="form-control" type="text" name="email_empresa" id="email_empresa" required="true" value="<?=$email_empresa;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" />
+                                            <input class="form-control" type="text" name="email_empresa" id="email_empresa" required="true" value="<?=$email_empresa;?>" />
                                         </div>
                                     </div> 
                                 </div><!--haber basico-->
@@ -432,13 +432,13 @@ $statementestados_personal = $dbh->query($queryestados_personal);
                                     <label class="col-sm-2 col-form-label">Haber Basico (Bs)</label>
                                     <div class="col-sm-4">
                                         <div class="form-group">
-                                            <input class="form-control" type="text" name="haber_basico" id="haber_basico" value="<?=$haber_basico;?>" readonly="readonly"/>
+                                            <input class="form-control" type="text" name="haber_basico" id="haber_basico" value="<?=formatNumberDec($haber_basico);?>" readonly="readonly"/>
                                         </div>
                                     </div> 
                                     <label class="col-sm-2 col-form-label">Email Empresarial</label>
                                     <div class="col-sm-4">
                                         <div class="form-group">
-                                            <input class="form-control" type="text" name="email_empresa" id="email_empresa" required="true" value="<?=$email_empresa;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" />
+                                            <input class="form-control" type="text" name="email_empresa" id="email_empresa" required="true" value="<?=$email_empresa;?>" />
                                         </div>
                                     </div> 
                                 </div><!--haber basico-->
@@ -448,7 +448,7 @@ $statementestados_personal = $dbh->query($queryestados_personal);
                                 <label class="col-sm-2 col-form-label">Jubilado</label>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <select name="jubilado"  class="selectpicker " data-style="btn btn-info">
+                                        <select name="jubilado"  class="selectpicker form-control form-control-sm " data-style="btn btn-info">
                                             <option <?php if($jubilado == '1') echo "selected"; ?> value="1">SI</option>
                                             <option <?php if($jubilado == '0') echo "selected"; ?> value="0">NO</option>
                                         </select>           
@@ -458,7 +458,7 @@ $statementestados_personal = $dbh->query($queryestados_personal);
                                 <label class="col-sm-2 col-form-label">Nua / Cua Asignado</label>
                                 <div class="col-sm-4">
                                 <div class="form-group">
-                                    <input class="form-control" type="text" name="nua_cua_asignado" id="nua_cua_asignado" value="<?=$nua_cua_asignado;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" required/>
+                                    <input class="form-control" type="text" name="nua_cua_asignado" id="nua_cua_asignado" value="<?=$nua_cua_asignado;?>" required/>
                                 </div>
                                 </div>
                             </div><!--fin campo nua_cua_asignado-->
@@ -466,7 +466,7 @@ $statementestados_personal = $dbh->query($queryestados_personal);
                                 <label class="col-sm-2 col-form-label">Afp</label>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <select name="cod_tipoafp" id="cod_tipoafp"  class="selectpicker " data-style="btn btn-info" required>
+                                        <select name="cod_tipoafp" id="cod_tipoafp"  class="selectpicker form-control form-control-sm " data-style="btn btn-info" required>
                                             <?php while ($row = $statementtipos_afp->fetch()) { ?>
                                                 <option <?php if($cod_tipoafp == $row["codigo"]) echo "selected"; ?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
                                             <?php } ?>
@@ -477,7 +477,7 @@ $statementestados_personal = $dbh->query($queryestados_personal);
                                 <label class="col-sm-2 col-form-label">Tipo de Aporte AFP</label>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <select name="cod_tipoaporteafp" id="cod_tipoaporteafp"  class="selectpicker " data-style="btn btn-info" required>
+                                        <select name="cod_tipoaporteafp" id="cod_tipoaporteafp"  class="selectpicker form-control form-control-sm " data-style="btn btn-info" required>
                                             <?php while ($row = $statementtipos_aporteafp->fetch()) { ?>
                                                 <option  value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
                                             <?php } ?>
@@ -489,14 +489,14 @@ $statementestados_personal = $dbh->query($queryestados_personal);
                                 <label class="col-sm-2 col-form-label">Nro seguro</label>
                                 <div class="col-sm-4">
                                 <div class="form-group">
-                                    <input class="form-control" type="number" name="nro_seguro" id="nro_seguro" required value="<?=$nro_seguro;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+                                    <input class="form-control" type="number" name="nro_seguro" id="nro_seguro" required value="<?=$nro_seguro;?>"/>
                                 </div>
                                 </div>
 
                                 <label class="col-sm-2 col-form-label">Estado</label>
                                 <div class="col-sm-4">
                                 <div class="form-group">
-                                <select name="cod_estadopersonal"  class="selectpicker " data-style="btn btn-info" required>
+                                <select name="cod_estadopersonal"  class="selectpicker form-control form-control-sm " data-style="btn btn-info" required>
                                 <?php while ($row = $statementestados_personal->fetch()) { ?>
                                     <option <?php if($cod_estadopersonal == $row["codigo"]) echo "selected"; ?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
                                 <?php } ?>
@@ -520,7 +520,7 @@ $statementestados_personal = $dbh->query($queryestados_personal);
                                 <label class="col-sm-2 col-form-label">Tipo De Persona Con Discapacidad</label>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <select name="tipo_persona_discapacitado" id="tipo_persona_discapacitado"  class="selectpicker " data-style="btn btn-info" >
+                                        <select name="tipo_persona_discapacitado" id="tipo_persona_discapacitado"  class="selectpicker form-control form-control-sm " data-style="btn btn-info" >
                                             <option <?php if($cod_tipo_persona_discapacitado == 0) echo "selected"; ?> value="0"> NINGUNO</option>
                                             <option <?php if($cod_tipo_persona_discapacitado == 1) echo "selected"; ?> value="1">PERSONA CON DISCAPACIDAD</option>
                                             <option <?php if($cod_tipo_persona_discapacitado == 2) echo "selected"; ?> value="2"> TUTOR DE PERSONA CON DISCAPACIDAD</option>                            
@@ -548,7 +548,7 @@ $statementestados_personal = $dbh->query($queryestados_personal);
                                         <label class="col-sm-2 col-form-label">Nro Carnet Discapacidad</label>
                                         <div class="col-sm-4">
                                         <div class="form-group">
-                                            <input class="form-control" type="number" name="nro_carnet_discapacidad" id="nro_carnet_discapacidad" value="<?=$nro_carnet_discapacidad;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+                                            <input class="form-control" type="number" name="nro_carnet_discapacidad" id="nro_carnet_discapacidad" value="<?=$nro_carnet_discapacidad;?>"/>
                                         </div>
                                         </div>
 

@@ -39,17 +39,17 @@ $paterno_personal=$result['paterno'];
 $materno_personal=$result['materno'];
 
 //listado para area registro de distribucion
-$query_areas = "select * from areas order by 2";
-$statementAREAS = $dbh->query($query_areas);
+// $query_areas = "SELECT * from areas where cod_estado=1 order by 2";
+// $statementAREAS = $dbh->query($query_areas);
 
 
-$query_uo = "select * from unidades_organizacionales order by 2";
+$query_uo = "SELECT * from unidades_organizacionales where cod_estado=1 order by 2";
 $statementUO = $dbh->query($query_uo);
-$query_uoE = "select * from unidades_organizacionales order by 2";
+$query_uoE = "SELECT * from unidades_organizacionales where cod_estado=1 order by 2";
 $statementUOE = $dbh->query($query_uoE);
 //listado para area Edicion de distribucion
-$query_areas = "select * from areas order by 2";
-$statementAREASE = $dbh->query($query_areas);
+// $query_areas = "SELECT * from areas where cod_estado=1 order by 2";
+// $statementAREASE = $dbh->query($query_areas);
 
 ?>
 
@@ -169,9 +169,9 @@ $statementAREASE = $dbh->query($query_areas);
           <label class="col-sm-2 col-form-label" style="color:#424242">Oficina :</label>
           <div class="col-sm-8">
             <div class="form-group">
-              <select name="cod_uo" id="cod_uo" class="selectpicker form-control" data-style="btn btn-primary" onChange="ajaxPersonal_area_distribucion(this);">            
+              <select name="cod_uo" id="cod_uo" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" onChange="ajaxPersonal_area_distribucion(this);" required data-show-subtext="true" data-live-search="true">            
                   <?php while ($row = $statementUO->fetch()){ ?>
-                      <option value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                      <option value="<?=$row["codigo"];?>" data-subtext="<?=$row["codigo"];?>"><?=$row["abreviatura"];?> - <?=$row["nombre"];?></option>
                   <?php } ?>
               </select>
             </div>
@@ -183,10 +183,8 @@ $statementAREASE = $dbh->query($query_areas);
           <div class="col-sm-8">
             <div class="form-group">
               <div id="div_contenedor_area">
-                <select name="cod_area" id="cod_area" class="selectpicker form-control" data-style="btn btn-primary" >            
-                  <?php while ($row = $statementAREAS->fetch()){ ?>
-                      <option value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
-                  <?php } ?>
+                <select name="cod_area" id="cod_area" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" >            
+                  <option value=""></option>
                 </select>
               </div>
             </div>
@@ -238,17 +236,15 @@ $statementAREASE = $dbh->query($query_areas);
       </div>
       <div class="modal-body">
         <input type="hidden" name="codigo_personalE" id="codigo_personalE" value="0">
-        <input type="hidden" name="codigo_distribucionE" id="codigo_distribucionE" value="0">             
-
+        <input type="hidden" name="codigo_distribucionE" id="codigo_distribucionE" value="0">     
+        <!-- <input type="hidden" name="cod_uoE" id="cod_uoE" value="0"> -->
         <div class="row">
           <label class="col-sm-2 col-form-label" style="color:#424242">Oficina :</label>
           <div class="col-sm-8">
             <div class="form-group">
-              <select name="cod_uoE" id="cod_uoE" class="selectpicker form-control" data-style="btn btn-primary" onChange="ajaxPersonal_area_distribucionE(this);">
-                  <?php while ($rowUOE = $statementUOE->fetch()){ ?>
-                      <option <?=($cod_uo==$rowUOE["codigo"])?"selected":"";?> value="<?=$rowUOE["codigo"];?>"><?=$rowUOE["nombre"];?></option>
-                  <?php } ?>
-              </select>
+              <div id="div_contenedor_uo_x">
+                
+              </div>
             </div>
           </div>
         </div>
@@ -257,11 +253,7 @@ $statementAREASE = $dbh->query($query_areas);
           <div class="col-sm-8">
             <div class="form-group">
               <div id="div_contenedor_areaE">
-                <select name="cod_areaE" id="cod_areaE" class="selectpicker form-control" data-style="btn btn-primary" >            
-                  <?php while ($row = $statementAREASE->fetch()){ ?>
-                      <option <?=($cod_area==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
-                  <?php } ?>
-                </select>   
+             
               </div>  
             </div>
           </div>

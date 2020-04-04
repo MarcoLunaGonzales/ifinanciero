@@ -6,7 +6,7 @@ require_once 'rrhh/configModule.php';
 
 //$dbh = new Conexion();
 $dbh = new Conexion();
-$sqlpersonal="SELECT r.codigo,r.cod_personal,p.primer_nombre,p.paterno,p.materno
+$sqlpersonal="SELECT r.codigo,r.cod_personal,p.primer_nombre,p.paterno,p.materno,r.fecha_retiro,p.ing_contr,DATEDIFF(r.fecha_retiro,p.ing_contr) as dias
 from personal_retiros r,personal p
 where r.cod_personal=p.codigo and r.cod_estadoreferencial=1";
 $stmtpersonal = $dbh->prepare($sqlpersonal);
@@ -52,26 +52,26 @@ if ($codigo > 0){
                   <div class="card-body ">
                     <div class="row">
                           <label class="col-sm-2 col-form-label">Personal</label>
-                          <div class="col-sm-7">
+                          <div class="col-sm-8">
                           <div class="form-group">
-
-                              <select name="cod_personal" id="cod_personal" class="selectpicker form-control" data-style="btn btn-primary" >
-                                  <option ></option>
+                           <select name="cod_personal" id="cod_personal" data-style="btn btn-primary" class="selectpicker form-control form-control-sm" required data-show-subtext="true" data-live-search="true">
+                                  <option value="" disabled="disabled"></option>
                                   <?php 
                                       while ($row = $stmtpersonal->fetch()){ 
-                                  ?>
-                                       <option <?=($cod_personal==$row["cod_personal"])?"selected":"";?> value="<?=$row["cod_personal"];?>"><?=$row["paterno"];?> <?=$row["materno"];?> <?=$row["primer_nombre"];?></option>
-                                   <?php 
-                                      } 
-                                  ?>
+                                        $dias=$row['dias'];                                        
+                                        ?>
+
+                                       <option <?=($cod_personal==$row["cod_personal"])?"selected":"";?><?=($dias<89)?"disabled":"";?>  value="<?=$row["cod_personal"];?>"><?=$row["paterno"];?> <?=$row["materno"];?> <?=$row["primer_nombre"];?> FI:<?=$row["ing_contr"];?> FF:<?=$row["fecha_retiro"];?> (<?=$row["dias"];?>)</option>
+                                   <?php } ?>
                                </select>
+                              
                               
                           </div>
                           </div>
                     </div><!--fin campo nombre -->
                     <div class="row">
                         <label class="col-sm-2 col-form-label">Años pagados de trabajo</label>
-                        <div class="col-sm-7">
+                        <div class="col-sm-8">
                         <div class="form-group">
                             <input class="form-control" type="number" name="anios_trabajados_pagados" id="anios_trabajados_pagados" required="true" value="0" />
 

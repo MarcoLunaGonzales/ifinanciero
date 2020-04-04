@@ -192,10 +192,13 @@ $fecha_actual=date("Y-m-d");
                                     }                                                                    
                                 ?>
                                 <td><?=$label.$fecha_fincontrato."</span>";?></td>
-                                <td class="td-actions text-right"><?=$labelEvaluacion.$fecha_evaluacioncontrato."</span>";?>
+                                <td class="td-actions text-left"><?=$labelEvaluacion.$fecha_evaluacioncontrato."</span>";?>
+                                <?php if($cod_estadocontrato==1){?>
                                   <button type="button" style="background-color: #ffffff;border: none;" data-toggle="modal" data-target="#modalEditarEva" onclick="agregaformEditEva('<?=$datos;?>')">
-                                    <i class="material-icons" style="color:#464f55" title="Editar Fecha">notifications</i>
+                                    <i class="material-icons" style="color:#464f55" title="Editar Fecha Revisión">notifications</i>
                                   </button>
+                                <?php }?>
+                                  
                                 </td>
                                 <td><?=$labelEstado.$estado_contrato."</span>";?></td>
                                 <td><?=$fecha_finalizado;?></td>
@@ -247,22 +250,38 @@ $fecha_actual=date("Y-m-d");
 
 <!-- Modal agregar contrato-->
 <div class="modal fade" id="modalAgregarC" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog modal-md" role="document">
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title" id="myModalLabel">Agregar Contrato a Personal</h4>
       </div>
       <div class="modal-body">
-        <input type="hidden" name="codigo_personalA" id="codigo_personalA" value="0">              
-        <h6> Tipo Contrato : </h6>
-        <select name="cod_tipocontratoA" id="cod_tipocontratoA" class="selectpicker" data-style="btn btn-primary">
-          <?php while ($row = $statementTiposContrato->fetch()){ ?>
-              <option value="<?=$row["codigo"];?>"><?=$row["nombre"];?> - <?=$row["duracion_meses"];?> meses</option>
-          <?php } ?>
-        </select>
-        <h6> Fecha Inicio : </h6>
-        <input class="form-control" type="date" name="fecha_inicioA" id="fecha_inicioA" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+        <input type="hidden" name="codigo_personalA" id="codigo_personalA" value="0">   
+
+
+        <div class="row">
+          <label class="col-sm-2 col-form-label" style="color:#424242">Tipo Contrato</label>
+          <div class="col-sm-8">
+            <div class="form-group">
+                <select name="cod_tipocontratoA" id="cod_tipocontratoA" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" required data-show-subtext="true" data-live-search="true">
+                  <?php while ($row = $statementTiposContrato->fetch()){ ?>
+                      <option value="<?=$row["codigo"];?>"><?=$row["nombre"];?> - <?=$row["duracion_meses"];?> meses</option>
+                  <?php } ?>
+                </select>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <label class="col-sm-2 col-form-label" style="color:#424242"> Fecha Inicio</label>
+          <div class="col-sm-8">
+            <div class="form-group">
+              <input class="form-control" type="date" name="fecha_inicioA" id="fecha_inicioA"/>
+            </div>
+          </div>
+        </div>
+
+        
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-success" id="registrarPC" name="registrarPC" data-dismiss="modal">Aceptar</button>
@@ -277,12 +296,15 @@ $fecha_actual=date("Y-m-d");
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">¿Estás Seguro?</h4>
+        <h4 class="modal-title" id="myModalLabel">Esta acción eliminará El contrato.</h4>
       </div>
       <div class="modal-body">
         <input type="hidden" name="codigo_personalB" id="codigo_personalB" value="0">
         <input type="hidden" name="codigo_contratoB" id="codigo_contratoB" value="0">
-        Esta acción eliminará El contrato. ¿Deseas Continuar?
+        <P align="center">
+             <b>POR FAVOR, VERIFIQUE QUE NO ESTÉ VIGENTE (Finalice Contrato).</b><br> ¿Deseas Continuar?
+        </P>
+        
       </div>       
       <div class="modal-footer">
         <button type="button" class="btn btn-success" id="EliminarPC" data-dismiss="modal">Aceptar</button>
@@ -293,7 +315,7 @@ $fecha_actual=date("Y-m-d");
 </div>
 <!-- Editar contrato-->
 <div class="modal fade" id="modalEditar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog modal-md" role="document">
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -302,14 +324,30 @@ $fecha_actual=date("Y-m-d");
       <div class="modal-body">
         <input type="hidden" name="codigo_personalE" id="codigo_personalE" value="0">
         <input type="hidden" name="codigo_contratoE" id="codigo_contratoE" value="0">        
-        <h6> Tipo Contrato : </h6>
-        <select name="cod_tipocontratoE" id="cod_tipocontratoE" class="selectpicker" data-style="btn btn-primary">
-          <?php while ($row = $statementTiposContratoE->fetch()){ ?>
-              <option value="<?=$row["codigo"];?>"><?=$row["nombre"];?> - <?=$row["duracion_meses"];?> meses</option>
-          <?php } ?>
-        </select>
-        <h6> Fecha Inicio : </h6>
-        <input class="form-control" type="date" name="fecha_inicioE" id="fecha_inicioE" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+        
+
+        <div class="row">
+          <label class="col-sm-2 col-form-label" style="color:#424242">Tipo Contrato</label>
+          <div class="col-sm-8">
+            <div class="form-group">
+              
+                <select name="cod_tipocontratoE" id="cod_tipocontratoE" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" required data-show-subtext="true" data-live-search="true">
+                  <?php while ($row = $statementTiposContratoE->fetch()){ ?>
+                      <option <?=($cod_tipocontrato==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?> - <?=$row["duracion_meses"];?> meses</option>
+                  <?php } ?>
+                </select>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <label class="col-sm-2 col-form-label" style="color:#424242"> Fecha Inicio</label>
+          <div class="col-sm-8">
+            <div class="form-group">
+              <input class="form-control" type="date" name="fecha_inicioE" id="fecha_inicioE"/>
+            </div>
+          </div>
+        </div>
+
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-success" id="EditarPC"  data-dismiss="modal">Aceptar</button>
@@ -330,7 +368,7 @@ $fecha_actual=date("Y-m-d");
         <input type="hidden" name="codigo_personalEv" id="codigo_personalEv" value="0">
         <input type="hidden" name="codigo_contratoEv" id="codigo_contratoEv" value="0">                
         <h6> Fecha Evaluación : </h6>
-        <input class="form-control" type="date" name="fecha_EvaluacionEv" id="fecha_EvaluacionEv" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+        <input class="form-control" type="date" name="fecha_EvaluacionEv" id="fecha_EvaluacionEv" />
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-success" id="EditarEva"  data-dismiss="modal">Aceptar</button>
@@ -362,24 +400,48 @@ $fecha_actual=date("Y-m-d");
 
 <!-- Modal retirar personal-->
 <div class="modal fade" id="modalRetirarPersonal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog modal-md" role="document">
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title" id="myModalLabel">Retirar Personal</h4>
       </div>
       <div class="modal-body">
-        <input type="hidden" name="codigo_personalR" id="codigo_personalR" value="0">              
-        <h6> Tipo De Retiro : </h6>
-        <select name="cod_tiporetiro" id="cod_tiporetiro" class="selectpicker" data-style="btn btn-primary">
-          <?php while ($row = $statementTiposRetiro->fetch()){ ?>
-              <option value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
-          <?php } ?>
-        </select>
-        <h6> Fecha Retiro : </h6>
-        <input class="form-control" type="date" name="fecha_retiro" id="fecha_retiro" required="true" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
-        <h6> Observación : </h6>
-        <input class="form-control" type="text" name="observaciones" id="observaciones" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+        <input type="hidden" name="codigo_personalR" id="codigo_personalR" value="0">
+
+
+
+
+
+        <div class="row">
+          <label class="col-sm-3 col-form-label" style="color:#424242">Tipo De Retiro : </label>
+          <div class="col-sm-8">
+            <div class="form-group">              
+                <select name="cod_tiporetiro" id="cod_tiporetiro" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" required data-show-subtext="true" data-live-search="true">
+                <?php while ($row = $statementTiposRetiro->fetch()){ ?>
+                    <option value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                <?php } ?>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <label class="col-sm-3 col-form-label" style="color:#424242"> Fecha De Retiro : </label>
+          <div class="col-sm-8">
+            <div class="form-group">
+              <input class="form-control" type="date" name="fecha_retiro" id="fecha_retiro" required="true"/>
+            </div>
+          </div>
+        </div>
+         <div class="row">
+          <label class="col-sm-3 col-form-label" style="color:#424242"> Observación : </label>
+          <div class="col-sm-8">
+            <div class="form-group">
+              <input class="form-control" type="text" name="observaciones" id="observaciones" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+            </div>
+          </div>
+        </div>
+
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-success" id="registraRetiro" name="registraRetiro" data-dismiss="modal">Aceptar</button>
