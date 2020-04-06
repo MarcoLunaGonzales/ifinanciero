@@ -10,7 +10,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 
 $dbh = new Conexion();
 //envio de correo automatico para indicar el vencimiento de contratos del personal
-$cod_respo=obtenerValorConfiguracion(40);
+$cod_respo=obtenerValorConfiguracion(41);
 $stmtEnvioCorreo = $dbh->prepare("SELECT email,CONCAT_WS(' ',primer_nombre,paterno) as nombre_encargado from personal where codigo=$cod_respo");
 $stmtEnvioCorreo->execute();
 $resultEC = $stmtEnvioCorreo->fetch();
