@@ -3,12 +3,71 @@
 require_once 'conexion.php';
 require_once 'rrhh/configModule.php'; //configuraciones
 require_once 'styles.php';
+// require 'notificaciones_sistema/PHPMailer/send.php';
 
 $globalAdmin=$_SESSION["globalAdmin"];
+// $globalUserX=$_SESSION['globalUser'];
 
 $dbh = new Conexion();
+//envio de correo automatico para indicar el vencimiento de contratos del personal
+$cod_respo=obtenerValorConfiguracion(40);
+$stmtEnvioCorreo = $dbh->prepare("SELECT email,CONCAT_WS(' ',primer_nombre,paterno) as nombre_encargado from personal where codigo=$cod_respo");
+$stmtEnvioCorreo->execute();
+$resultEC = $stmtEnvioCorreo->fetch();
+$nombre_encargado = $resultEC['nombre_encargado'];
+// $email_respo = $resultEC['email'];
+$email_respo="bsullcamani@gmail.com";//correo de prueba
+// $fecha_actual=date('Y-m-d');
+$fecha_actual="2020-09-27";
+//lista de contrado con evaluacion a la fecha o 5 dias antes
+$sqlContratos="SELECT codigo,(select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=cod_personal) as personal, fecha_fincontrato from personal_contratos where cod_estadoreferencial=1 and cod_estadocontrato=1 and alerta_enviada=0 and fecha_evaluacioncontrato BETWEEN DATE_SUB('$fecha_actual',INTERVAL 5 DAY) and '$fecha_actual'";
+$stmtContratosFecha = $dbh->prepare($sqlContratos);
+$stmtContratosFecha->execute();
+$stmtContratosFecha->bindColumn('codigo', $codigo_C);
+$stmtContratosFecha->bindColumn('personal', $personal);
+$stmtContratosFecha->bindColumn('fecha_fincontrato', $fecha_fincontrato);
+$cont=0;
+$MessgAdjunto="";
+$arrayCodContrato=array();
+while ($rowContratos = $stmtContratosFecha->fetch(PDO::FETCH_BOUND)) { 
+  $MessgAdjunto.=$personal.", Fecha: ".$fecha_fincontrato.".<br>\n";
+  array_push($arrayCodContrato,$codigo_C);
+  $cont++;  
+}
+// var_dump($arrayCodContrato);
+$stringCodCotrato=implode(",", $arrayCodContrato);
+if($cont>0){
+  $texto_cuerpo="Estimad@ ".$nombre_encargado.",<br>\n<br>\n queremos recordarle que el contrato del personal que se encuentra en la siguente lista, finalizará en la fecha adjunta:<br>\n<br>\n".$MessgAdjunto."<br>Saludos.";
+  $asunto="FIN CONTRATO PERSONAL ".date('Y-m-d');
+  $mail_username="noresponse@minkasoftware.com";//Correo electronico emisor
+  $mail_userpassword="minka@2019";// contraseña correo emisor
+  $mail_addAddress=$email_respo;//correo electronico destino
+  $template="notificaciones_sistema/PHPMailer/email_template.html";//Ruta de la plantilla HTML para enviar nuestro mensaje
+  /*Inicio captura de datos enviados por $_POST para enviar el correo */
+  $mail_setFromEmail=$mail_username;
+  $mail_setFromName="IBNORCA";
+  $txt_message=$texto_cuerpo;
+  $mail_subject=$asunto; //el subject del mensaje
 
-
+  // echo $mail_username."<br>";
+  // echo $mail_userpassword."<br>";
+  // echo $mail_setFromEmail."<br>";
+  // echo $mail_setFromName."<br>";
+  // echo $mail_addAddress."<br>";
+  // echo $mail_subject."<br>";
+  // echo $template."<br>";  
+  // echo $txt_message."<br>";  
+  
+  $flag=sendemail($mail_username,$mail_userpassword,$mail_setFromEmail,$mail_setFromName,$mail_addAddress,$txt_message,$mail_subject,$template,0);
+  if($flag!=0){//se envio correctamente
+    echo "CORREO ENVIADO";
+    $sqlContratos="UPDATE personal_contratos set alerta_enviada='1' where codigo in($stringCodCotrato)";
+    $stmtUpdate = $dbh->prepare($sqlContratos);
+    $stmtUpdate->execute();
+  }else{
+    echo "ERROR AL ENVIAR CORREO";
+  }
+}
 $stmt = $dbh->prepare("SELECT p.codigo,p.identificacion,p.cod_lugar_emision,p.paterno,p.materno,p.primer_nombre,p.bandera,p.ing_contr,p.cod_estadopersonal,
   (select c.nombre from cargos c where c.codigo=cod_cargo)as xcargo,
  (select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional)as xuonombre,
@@ -167,10 +226,7 @@ $stmt->bindColumn('xcod_tipopersonal', $xcod_tipopersonal);
 
           if($globalAdmin==1){
           ?>
-  				<div class="card-footer fixed-bottom">
-                <!--<button class="<?=$buttonNormal;?>" onClick="location.href='index.php?opcion=registerUbicacion'">Registrar</button>-->
-                <!--<button class="<?=$buttonNormal;?>" onClick="location.href='<?=$urlFormPersonal;?>&codigo=0'">Registrar</button>-->
-                <!--<button class="btn btn-success"  id="service">Web Service</button>-->
+  				<div class="card-footer fixed-bottom">               
                 <button class="btn btn-success"  onClick="location.href='<?=$urlsaveWSPersonal;?>'">Actualizar Datos</button>
           </div>
           <div id="resultados">

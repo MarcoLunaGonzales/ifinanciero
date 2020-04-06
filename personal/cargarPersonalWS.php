@@ -10,13 +10,13 @@ require_once 'cargarDatosWS.php';//tipos identificacion personal
 require_once 'cargarGeneroWS.php';
 require_once 'cargarEstadoCivilWS.php';
 $dbh = new Conexion();
-
+$direccion=obtenerValorConfiguracion(42);//direccion des servicio web
 $sIde = "monitoreo"; 
 $sKey = "837b8d9aa8bb73d773f5ef3d160c9b17";
 
 //SERVICIOS TLQ
 $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ListarPersonal");
-$url="http://ibnored.ibnorca.org/wsibno/rrhh/ws-personal-listas.php";
+$url=$direccion."rrhh/ws-personal-listas.php";
 
 $json=callService($parametros, $url);
 $obj=json_decode($json);//decodificando json

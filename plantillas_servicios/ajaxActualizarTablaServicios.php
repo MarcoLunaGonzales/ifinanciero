@@ -6,7 +6,7 @@ require_once '../functions.php';
 require_once '../styles.php';
 
 $dbh = new Conexion();
-
+$direccion=obtenerValorConfiguracion(42);
 $sqlX="SET NAMES 'utf8'";
 $stmtX = $dbh->prepare($sqlX);
 $stmtX->execute();
@@ -16,7 +16,7 @@ $sKey = "837b8d9aa8bb73d773f5ef3d160c9b17";
 
 //SERVICIOS TLQ
 $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "lista"=>"Niveles", "padre"=>"80");
-$url="http://ibnored.ibnorca.org/wsibno/clasificador/ws-clasificador-post.php";
+$url=$direccion."clasificador/ws-clasificador-post.php";
 
 $lista=json_decode(callService($parametros, $url));
 
