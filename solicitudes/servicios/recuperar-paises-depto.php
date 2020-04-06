@@ -1,4 +1,6 @@
 <?php 
+require_once '../../functions.php';
+$direccion=obtenerValorConfiguracion(42);//direccion des servicio web
 /*ACCESO AL SERVICIO WEB PAISES ESTADO CIUDAD*/
 //LLAVES DE ACCESO AL WS
 $sIde = "ifinanciero";
@@ -14,7 +16,7 @@ $sKey = "ce94a8dabdf0b112eafa27a5aa475751";
 		// abrimos la sesión cURL
 		$ch = curl_init();
 		// definimos la URL a la que hacemos la petición
-		curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibno/clasificador/ws-paises.php"); // OFICIAL
+		curl_setopt($ch, CURLOPT_URL,$direccion."clasificador/ws-paises.php"); // OFICIAL
 		// curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibnob/clasificador/ws-paises.php"); // PRUEBA
 		// indicamos el tipo de petición: POST
 		curl_setopt($ch, CURLOPT_POST, TRUE);

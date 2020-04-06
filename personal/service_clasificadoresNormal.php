@@ -1,4 +1,6 @@
 <?php 
+require_once '../functions.php';
+$direccion=obtenerValorConfiguracion(42);
 /*ACCESO A WEB SERVICE CLASIFICADORES*/
 //LLAVES DE ACCESO AL WS
 $sIde = "monitoreo"; // De acuerdo al sistema
@@ -20,8 +22,8 @@ $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "lista"=>"HijoPadre", 
 		// abrimos la sesión cURL
 		$ch = curl_init();
 		// definimos la URL a la que hacemos la petición
-		curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibno/clasificador/ws-clasificador-post.php");
-		//curl_setopt($ch, CURLOPT_URL,"http://localhost/wsibno/clasificador/ws-clasificador-post.php");
+		curl_setopt($ch, CURLOPT_URL,$direccion."clasificador/ws-clasificador-post.php");
+		//curl_setopt($ch, CURLOPT_URL,$direccion."clasificador/ws-clasificador-post.php");
 		// indicamos el tipo de petición: POST
 		curl_setopt($ch, CURLOPT_POST, TRUE);
 		// definimos cada uno de los parámetros

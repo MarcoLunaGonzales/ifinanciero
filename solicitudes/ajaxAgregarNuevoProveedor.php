@@ -6,7 +6,7 @@ require_once '../functions.php';
 require_once '../styles.php';
 
 $dbh = new Conexion();
-
+$direccion=obtenerValorConfiguracion(42);//direccion des servicio web
 $sqlX="SET NAMES 'utf8'";
 $stmtX = $dbh->prepare($sqlX);
 $stmtX->execute();
@@ -45,8 +45,8 @@ if($_GET['ciudad']==""){
 		$parametros=json_encode($parametros);
 		// abrimos la sesión cURL
 		$ch = curl_init();
-		//curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibno/registro/ws-registro-proveedor.php"); // OFFICIAL
-		curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibno/registro/ws-registro-proveedor.php"); // PRUEBA
+		//curl_setopt($ch, CURLOPT_URL,$direccion."registro/ws-registro-proveedor.php"); // OFFICIAL
+		curl_setopt($ch, CURLOPT_URL,$direccion."registro/ws-registro-proveedor.php"); // PRUEBA
 		// indicamos el tipo de petición: POST
 		curl_setopt($ch, CURLOPT_POST, TRUE);
 		// definimos cada uno de los parámetros

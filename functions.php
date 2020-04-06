@@ -3748,14 +3748,15 @@ function obtenerTiempoDosFechas($fechaInicio,$fechafin){
 }
 
 function obtenerPaisesServicioIbrnorca(){
+  $direccion=obtenerValorConfiguracion(42);//direccion des servicio web
   $sIde = "ifinanciero";
   $sKey = "ce94a8dabdf0b112eafa27a5aa475751";
   $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "TipoLista"=>"paises"); //Lista todos los paises
   $parametros=json_encode($parametros);
     $ch = curl_init();
     // definimos la URL a la que hacemos la petición
-    //curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibno/clasificador/ws-paises.php"); // OFICIAL
-    curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibno/clasificador/ws-paises.php"); // PRUEBA
+    //curl_setopt($ch, CURLOPT_URL,$direccion."clasificador/ws-paises.php"); // OFICIAL
+    curl_setopt($ch, CURLOPT_URL,$direccion."clasificador/ws-paises.php"); // PRUEBA
     // indicamos el tipo de petición: POST
     curl_setopt($ch, CURLOPT_POST, TRUE);
     // definimos cada uno de los parámetros
@@ -3770,13 +3771,14 @@ function obtenerPaisesServicioIbrnorca(){
     return json_decode($remote_server_output);
 }
 function obtenerDepartamentoServicioIbrnorca($cod){
+  $direccion=obtenerValorConfiguracion(42);//direccion des servicio web
   $sIde = "ifinanciero";
   $sKey = "ce94a8dabdf0b112eafa27a5aa475751";
   $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "TipoLista"=>"estados", "IdPais"=>$cod);
   $parametros=json_encode($parametros);
     $ch = curl_init();
-    //curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibno/clasificador/ws-paises.php"); // OFICIAL
-    curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibno/clasificador/ws-paises.php"); // PRUEBA
+    //curl_setopt($ch, CURLOPT_URL,$direccion."clasificador/ws-paises.php"); // OFICIAL
+    curl_setopt($ch, CURLOPT_URL,$direccion."clasificador/ws-paises.php"); // PRUEBA
     curl_setopt($ch, CURLOPT_POST, TRUE);
     curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -3785,13 +3787,14 @@ function obtenerDepartamentoServicioIbrnorca($cod){
     return json_decode($remote_server_output);
 }
 function obtenerCiudadServicioIbrnorca($cod){
+  $direccion=obtenerValorConfiguracion(42);//direccion des servicio web
   $sIde = "ifinanciero";
   $sKey = "ce94a8dabdf0b112eafa27a5aa475751";
   $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "TipoLista"=>"ciudades", "IdEstado"=>$cod);
   $parametros=json_encode($parametros);
     $ch = curl_init();
-    //curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibno/clasificador/ws-paises.php"); // OFICIAL
-    curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibno/clasificador/ws-paises.php"); // PRUEBA
+    //curl_setopt($ch, CURLOPT_URL,$direccion."clasificador/ws-paises.php"); // OFICIAL
+    curl_setopt($ch, CURLOPT_URL,$direccion."clasificador/ws-paises.php"); // PRUEBA
     curl_setopt($ch, CURLOPT_POST, TRUE);
     curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -3800,6 +3803,7 @@ function obtenerCiudadServicioIbrnorca($cod){
     return json_decode($remote_server_output);
 }
 function obtenerListaProveedoresDelServicio(){
+  $direccion=obtenerValorConfiguracion(42);//direccion des servicio web
   $sIde = "irrhh";
   $sKey = "c066ffc2a049cf11f9ee159496089a15";
   $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ListarProveedor"); 
@@ -3807,7 +3811,7 @@ function obtenerListaProveedoresDelServicio(){
     // abrimos la sesión cURL
     $ch = curl_init();
     // definimos la URL a la que hacemos la petición
-    curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibno/rrhh/ws-personal-listas.php"); 
+    curl_setopt($ch, CURLOPT_URL,$direccion."rrhh/ws-personal-listas.php"); 
     // indicamos el tipo de petición: POST
     curl_setopt($ch, CURLOPT_POST, TRUE);
     // definimos cada uno de los parámetros
@@ -3820,6 +3824,7 @@ function obtenerListaProveedoresDelServicio(){
     return json_decode($remote_server_output);       
 }
 function obtenerListaPersonalDocenteServicio(){
+  $direccion=obtenerValorConfiguracion(42);//direccion des servicio web
   // $sIde = "irrhh";
   // $sKey = "c066ffc2a049cf11f9ee159496089a15";  
   $sIde = "ifinanciero";
@@ -3829,7 +3834,7 @@ function obtenerListaPersonalDocenteServicio(){
   // abrimos la sesión cURL
   $ch = curl_init();
   // definimos la URL a la que hacemos la petición
-  curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibno/rrhh/ws-personal-listas.php"); 
+  curl_setopt($ch, CURLOPT_URL,$direccion."rrhh/ws-personal-listas.php"); 
 
   // indicamos el tipo de petición: POST
   curl_setopt($ch, CURLOPT_POST, TRUE);
@@ -3843,6 +3848,7 @@ function obtenerListaPersonalDocenteServicio(){
   return json_decode($remote_server_output);
 }
 function obtenerListaPersonalAuditorServicio(){
+  $direccion=obtenerValorConfiguracion(42);//direccion des servicio web
   // $sIde = "irrhh";
   // $sKey = "c066ffc2a049cf11f9ee159496089a15";  
   $sIde = "ifinanciero";
@@ -3852,7 +3858,7 @@ function obtenerListaPersonalAuditorServicio(){
   // abrimos la sesión cURL
   $ch = curl_init();
   // definimos la URL a la que hacemos la petición
-  curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibno/rrhh/ws-personal-listas.php"); 
+  curl_setopt($ch, CURLOPT_URL,$direccion."rrhh/ws-personal-listas.php"); 
 
   // indicamos el tipo de petición: POST
   curl_setopt($ch, CURLOPT_POST, TRUE);
@@ -3866,6 +3872,7 @@ function obtenerListaPersonalAuditorServicio(){
   return json_decode($remote_server_output);
 }
 function obtenerListaPersonalConsultorServicio(){
+  $direccion=obtenerValorConfiguracion(42);//direccion des servicio web
   // $sIde = "irrhh";
   // $sKey = "c066ffc2a049cf11f9ee159496089a15";  
   $sIde = "ifinanciero";
@@ -3875,7 +3882,7 @@ function obtenerListaPersonalConsultorServicio(){
   // abrimos la sesión cURL
   $ch = curl_init();
   // definimos la URL a la que hacemos la petición
-  curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibno/rrhh/ws-personal-listas.php"); 
+  curl_setopt($ch, CURLOPT_URL,$direccion."rrhh/ws-personal-listas.php"); 
 
   // indicamos el tipo de petición: POST
   curl_setopt($ch, CURLOPT_POST, TRUE);

@@ -4,12 +4,12 @@ require_once 'conexion.php';
 require_once 'functions.php';
 require_once 'rrhh/configModule.php';
 $dbh = new Conexion();
-
+$direccion=obtenerValorConfiguracion(42);//direccion des servicio web
 $sIde = "monitoreo"; 
 $sKey = "837b8d9aa8bb73d773f5ef3d160c9b17";
 
 $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "lista"=>"HijoPadre", "padre"=>"55");
-$url="http://ibnored.ibnorca.org/wsibno/clasificador/ws-clasificador-post.php";
+$url=$direccion."clasificador/ws-clasificador-post.php";
 
 $jsons=callService($parametros, $url);
 
