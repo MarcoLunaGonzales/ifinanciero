@@ -4962,6 +4962,42 @@ where d.glosa=e.glosa and d.cod_anio=$anio and d.cod_simulacionservicio=$simulac
   }
   return $valor;
   }
+
+  function verificarCuentaEstadosCuenta($cuenta){      
+    $dbh = new Conexion();
+    $valor=0;
+    $sql="select count(*)as contador from configuracion_estadocuentas c where c.cod_plancuenta='$cuenta'";
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['contador'];
+    }
+    return $valor;
+  }
+
+  function obtenerTipoEstadosCuenta($cuenta){      
+    $dbh = new Conexion();
+    $valor=0;
+    $sql="select c.cod_tipoestadocuenta from configuracion_estadocuentas c where c.cod_plancuenta='$cuenta'";
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['cod_tipoestadocuenta'];
+    }
+    return $valor;
+  }
+
+  function obtenerCodigoProveedorClienteEC($codigo){
+  $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT c.cod_proveedorcliente from cuentas_auxiliares c where c.codigo='$codigo'");
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['cod_proveedorcliente'];
+   }
+   return($valor);
+}
+
 ?>
 
 
