@@ -31,5 +31,8 @@ $urlListSimulacionesServ="?opcion=listSimulacionesServicios";
 $urlGenerarFacturasPrint="simulaciones_servicios/generarFacturasPrint.php";
 $urlGenerarFacturas2="simulaciones_servicios/generarFacturas2.php";
 
+
+$urlRegisterNewServicio="index.php?opcion=crearServicioIbnorca";
+
 // $urlSolicitudfactura="simulaciones_servicios/solicitud_facturacion.php";
 ?>

@@ -172,7 +172,27 @@ alerts = {
           }
         })
     } 
-
+    
+    else if (type == 'warning-message-crear-servicio') {
+      swal({
+        title: '¿Estás Seguro?',
+        text: "¡Se creará el servicio!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonClass: 'btn btn-warning',
+        cancelButtonClass: 'btn btn-danger',
+        confirmButtonText: 'Si',
+        cancelButtonText: 'No',
+        buttonsStyling: false
+      }).then((result) => {
+          if (result.value) {
+            location.href=url; 
+            return(true);
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            return(false);
+          }
+        })
+    }
 
   },
 

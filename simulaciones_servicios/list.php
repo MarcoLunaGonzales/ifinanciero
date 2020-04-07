@@ -30,6 +30,7 @@ $stmt->bindColumn('cod_estadosimulacion', $codEstado);
 $stmt->bindColumn('cod_responsable', $codResponsable);
 $stmt->bindColumn('estado', $estado);
 $stmt->bindColumn('cliente', $cliente);
+$stmt->bindColumn('idServicio', $idServicioX);
 
 ?>
 
@@ -148,7 +149,21 @@ $stmt->bindColumn('cliente', $cliente);
                                  </a> 
                                  <a class="btn btn-warning" title="Solicitud de Facturación" href='<?=$urlSolicitudfactura;?>&cod=<?=$codigo;?>&q=<?=$q?>'>
                                    <i class="material-icons" >receipt</i>                              
-                                 </a><?php  
+                                 </a>
+                                 <?php 
+                                 if($idServicioX>0){
+                                   ?>
+                                 <button title="Servicio Creado" class="btn btn-success" onclick="">
+                                    <i class="material-icons">check</i>
+                                  </button>
+                                  <?php  
+                                  }else{
+                                    ?>
+                                    <button title="Crear Servicio" class="btn btn-danger" onclick="alerts.showSwal('warning-message-crear-servicio','<?=$urlRegisterNewServicio;?>&codigo=<?=$codigo;?>&q=<?=$q?>')">
+                                    <i class="material-icons">add</i>
+                                  </button>                                 
+                                  <?php 
+                                  } 
                                 }else{
                                 ?><a href="<?=$urlSolicitudRecursos?>?cod=<?=$codigo?>" target="_blank" title="Solicitud De Recursos"class="btn btn-danger">
                                     <i class="material-icons">content_paste</i>
@@ -158,7 +173,22 @@ $stmt->bindColumn('cliente', $cliente);
                                  </a> 
                                  <a class="btn btn-warning" title="Solicitud de Facturación" href='<?=$urlSolicitudfactura;?>&cod=<?=$codigo;?>'>
                                    <i class="material-icons" >receipt</i>                              
-                                 </a><?php
+                                 </a>
+                                 <?php 
+                                 if($idServicioX>0){
+                                   ?>
+                                 <button title="Servicio Creado" class="btn btn-success" onclick="">
+                                    <i class="material-icons">check</i>
+                                  </button>
+                                  <?php  
+                                  }else{
+                                    ?>
+                                    <button title="Crear Servicio" class="btn btn-danger" onclick="alerts.showSwal('warning-message-crear-servicio','<?=$urlRegisterNewServicio;?>&codigo=<?=$codigo;?>')">
+                                    <i class="material-icons">add</i>
+                                  </button>                                
+                                  <?php 
+                                  } 
+                                
                                 }
                               }    
                               }else{
