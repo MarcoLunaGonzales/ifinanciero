@@ -236,13 +236,15 @@ function configuracionEstadosCuenta(fila,codigoCuenta,codigoCuentaAux){
   };
   //SI EL ESTADO DE CUENTA NO ESTA EN LA TABLA LE PONEMOS UN CAMBIO DE COLOR
   if(contador==0){
-     //$("#estados_cuentas"+fila).removeClass("d-none"); 
-     //$("#estados_cuentas"+fila).addClass("d-none");
      $("#estados_cuentas"+fila).removeClass("d-none"); 
-     $("#estados_cuentas"+fila).removeClass("btn-danger"); 
-     $("#estados_cuentas"+fila).addClass("btn-success");
+     $("#estados_cuentas"+fila).addClass("d-none");
+     //$("#estados_cuentas"+fila).removeClass("d-none"); 
+     //$("#estados_cuentas"+fila).removeClass("btn-danger"); 
+     //$("#estados_cuentas"+fila).addClass("btn-success");
   }
 }
+
+
 function copiarGlosa(){
   if(numFilas!=0){
    var gls=$('#glosa').val();
@@ -5367,12 +5369,13 @@ function buscarCuentaNumero(numeros,val){
    contenedor.innerHTML = html;
 }
 
-// ESTADOS DE CUENTAS/////////////////////////////////////7
+// ESTADOS DE CUENTAS/////////////////////////////////////
 function verEstadosCuentas(fila,cuenta){
   if(($("#debe"+fila).val()==""&&$("#haber"+fila).val()=="")||($("#debe"+fila).val()==0&&$("#haber"+fila).val()==0)){
      $('#msgError').html("<p>El Debe o Haber deben de ser llenados</p>");
      $("#modalAlert").modal("show");
   }else{
+    /*
     if(cuenta==0){
       if($("#cuenta_auxiliar"+fila).val()==0){
         var cod_cuenta=$("#cuenta"+fila).val();
@@ -5383,17 +5386,19 @@ function verEstadosCuentas(fila,cuenta){
         var cod_cuenta_auxiliar=$("#cuenta_auxiliar"+fila).val();
         var auxi="SI";
       }
+
       if($("#cuentas_auxiliaresorigen").length){
         $("#cuentas_auxiliaresorigen").val("all");
         $('.selectpicker').selectpicker("refresh"); 
       }      
     }else{
+    */
       //aca entramos cuando se mata la cuenta
       var cod_cuenta=cuenta;
       var vector_cod_cuenta_auxiliar=$("#cuentas_auxiliaresorigen").val().split('###');
       var cod_cuenta_auxiliar=vector_cod_cuenta_auxiliar[0];
       var auxi="NO";
-    }
+    //}
 
     var tipo=$("#tipo_estadocuentas"+fila).val();
     var tipo_proveedorcliente=$("#tipo_proveedorcliente"+fila).val();

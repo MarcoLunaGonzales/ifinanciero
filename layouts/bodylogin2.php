@@ -269,7 +269,7 @@
                             console.log("cuenta sin problemas; tipoComp:3");
                           }
 
-                          /*
+                          
                           //Validamos TipoC: Ingreso y cuando haya EC se registre obligatoriamente en el Haber
                           if( (tipoComprobante==1 && tipoEstadoCuenta==1) ){
                             if( haberZ <= 0 || estadoCuentaSelect==false){
@@ -280,7 +280,7 @@
                           }else{
                             console.log("cuenta sin problemas; tipoComp:3");
                           }
-                          */
+                          
 
 
                           //COMENTAMOS LA VALIDACION DE LOS ESTADOS DE CUENTA
