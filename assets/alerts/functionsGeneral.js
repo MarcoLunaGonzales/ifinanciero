@@ -236,13 +236,15 @@ function configuracionEstadosCuenta(fila,codigoCuenta,codigoCuentaAux){
   };
   //SI EL ESTADO DE CUENTA NO ESTA EN LA TABLA LE PONEMOS UN CAMBIO DE COLOR
   if(contador==0){
-     //$("#estados_cuentas"+fila).removeClass("d-none"); 
-     //$("#estados_cuentas"+fila).addClass("d-none");
      $("#estados_cuentas"+fila).removeClass("d-none"); 
-     $("#estados_cuentas"+fila).removeClass("btn-danger"); 
-     $("#estados_cuentas"+fila).addClass("btn-success");
+     $("#estados_cuentas"+fila).addClass("d-none");
+     //$("#estados_cuentas"+fila).removeClass("d-none"); 
+     //$("#estados_cuentas"+fila).removeClass("btn-danger"); 
+     //$("#estados_cuentas"+fila).addClass("btn-success");
   }
 }
+
+
 function copiarGlosa(){
   if(numFilas!=0){
    var gls=$('#glosa').val();
@@ -2585,7 +2587,7 @@ function enviarSimulacionAjaxServ(){
          $("#logo_carga").hide();
          Swal.fire("Envío Exitoso!", "Se registradon los datos exitosamente!", "success")
              .then((value) => {
-              if(!($("#id_servicioibnored").length>0)){
+              if(!($("#id_servicioibnored").length)){
                location.href="../index.php?opcion=listSimulacionesServ";
               }else{
                 var q=$("#id_servicioibnored").val();
@@ -5367,12 +5369,13 @@ function buscarCuentaNumero(numeros,val){
    contenedor.innerHTML = html;
 }
 
-// ESTADOS DE CUENTAS/////////////////////////////////////7
+// ESTADOS DE CUENTAS/////////////////////////////////////
 function verEstadosCuentas(fila,cuenta){
   if(($("#debe"+fila).val()==""&&$("#haber"+fila).val()=="")||($("#debe"+fila).val()==0&&$("#haber"+fila).val()==0)){
      $('#msgError').html("<p>El Debe o Haber deben de ser llenados</p>");
      $("#modalAlert").modal("show");
   }else{
+    /*
     if(cuenta==0){
       if($("#cuenta_auxiliar"+fila).val()==0){
         var cod_cuenta=$("#cuenta"+fila).val();
@@ -5383,11 +5386,13 @@ function verEstadosCuentas(fila,cuenta){
         var cod_cuenta_auxiliar=$("#cuenta_auxiliar"+fila).val();
         var auxi="SI";
       }
+
       if($("#cuentas_auxiliaresorigen").length){
         $("#cuentas_auxiliaresorigen").val("all");
         $('.selectpicker').selectpicker("refresh"); 
       }      
     }else{
+    */
       //aca entramos cuando se mata la cuenta
       var cod_cuenta=cuenta;
       var vector_cod_cuenta_auxiliar=$("#cuentas_auxiliaresorigen").val().split('###');
@@ -7686,10 +7691,10 @@ function  listarServiciosSimulacionSoloAuditor(anio,cod_area,codigo){
            $("#modal_body_tabla_personal"+anio).append(resp);
            $("#cantidad_personal"+anio+"FFF0").val("1");
            $("#dias_personal"+anio+"FFF0").val("0");
-           $("#modal_montopre"+anio+"FFF0").val("0");
-           $("#modal_montopreUSD"+anio+"FFF0").val("0");
-           $("#modal_montopretotal"+anio+"FFF0").val("0");
-           $("#modal_montopretotalUSD"+anio+"FFF0").val("0");
+           $("#modal_montoper"+anio+"FFF0").val("0");
+           $("#modal_montoperUSD"+anio+"FFF0").val("0");
+           $("#modal_montopertotal"+anio+"FFF0").val("0");
+           $("#modal_montopertotalUSD"+anio+"FFF0").val("0");
            calcularTotalPersonalServicio(anio,2);
            $('.selectpicker').selectpicker("refresh");
         }
@@ -8718,15 +8723,9 @@ function editarAtributo(fila){
   if(($("#div_marca").hasClass("d-none"))){
     $('#pais_empresa').val(itemAtributos[fila].pais+"####"+itemAtributos[fila].nom_pais);
     if($("#modalEditPlantilla").length){
-      if(itemAtributos[fila].nom_pais!="SIN REGISTRO"){
-        seleccionarDepartamentoServicioSitioModal(0,itemAtributos[fila].estado+"####"+itemAtributos[fila].nom_estado,itemAtributos[fila].ciudad+"####"+itemAtributos[fila].nom_ciudad);
-      }
-       
+       seleccionarDepartamentoServicioSitioModal(0,itemAtributos[fila].estado+"####"+itemAtributos[fila].nom_estado,itemAtributos[fila].ciudad+"####"+itemAtributos[fila].nom_ciudad);
     }else{
-      if(itemAtributos[fila].nom_pais!="SIN REGISTRO"){
-        seleccionarDepartamentoServicioSitio(0,itemAtributos[fila].estado+"####"+itemAtributos[fila].nom_estado,itemAtributos[fila].ciudad+"####"+itemAtributos[fila].nom_ciudad);  
-      }
-       
+       seleccionarDepartamentoServicioSitio(0,itemAtributos[fila].estado+"####"+itemAtributos[fila].nom_estado,itemAtributos[fila].ciudad+"####"+itemAtributos[fila].nom_ciudad);  
     }   
     $('.selectpicker').selectpicker("refresh");  
   }
@@ -9207,16 +9206,7 @@ function copiarDatosServiciosPorAnio(anio){
       for (var k = 1; k <= items; k++) {
           $("#cantidad_servicios"+anios[i]+"SSS"+k).val($("#cantidad_servicios"+anio+"SSS"+k).val());
           $("#unidad_servicios"+anios[i]+"SSS"+k).val($("#unidad_servicios"+anio+"SSS"+k).val());
-          $("#modal_montoserv"+anios[i]+"SSS"+k).val($("#modal_montoserv"+anio+"SSS"+k).val()); 
-          if(($("#modal_montoserv"+anios[i]+"SSS"+k).is("[readonly]"))&&($("#modal_montoserv"+anio+"SSS"+k).is("[readonly]"))){
-            
-          }else{
-            if((!($("#modal_montoserv"+anios[i]+"SSS"+k).is("[readonly]")))&&(!($("#modal_montoserv"+anio+"SSS"+k).is("[readonly]")))){
-            }else{
-              activarInputMontoFilaServicio(anios[i],k); //para cambiar los readonly
-              seleccionarEsteCheck('modal_checkserv'+anios[i]+"SSS"+k);
-            }
-          }        
+          $("#modal_montoserv"+anios[i]+"SSS"+k).val($("#modal_montoserv"+anio+"SSS"+k).val());
           $('.selectpicker').selectpicker("refresh");
           calcularTotalFilaServicio(anios[i],2);
        }; 
@@ -9259,15 +9249,6 @@ function copiarDatosPersonalPorAnio(anio){
           $("#cantidad_personal"+anios[i]+"FFF"+k).val($("#cantidad_personal"+anio+"FFF"+k).val());
           $("#dias_personal"+anios[i]+"FFF"+k).val($("#dias_personal"+anio+"FFF"+k).val());
           $("#modal_montopre"+anios[i]+"FFF"+k).val($("#modal_montopre"+anio+"FFF"+k).val());
-          if(($("#modal_montopre"+anios[i]+"FFF"+k).is("[readonly]"))&&($("#modal_montopre"+anio+"FFF"+k).is("[readonly]"))){
-            
-          }else{
-            if((!($("#modal_montopre"+anios[i]+"FFF"+k).is("[readonly]")))&&(!($("#modal_montopre"+anio+"FFF"+k).is("[readonly]")))){
-            }else{
-              activarInputMontoPersonalServicio(anios[i],k); //para cambiar los readonly
-              seleccionarEsteCheck('modal_checkpre'+anios[i]+"FFF"+k);
-            }
-          }     
           $('.selectpicker').selectpicker("refresh");
           calcularTotalPersonalServicio(anios[i],2);
        }; 
@@ -9309,202 +9290,6 @@ function copiarCostosVariablesPorAnio(anio){
  $('.selectpicker').selectpicker("refresh");
 }
 
-
-function mostrarCambioEstadoObjeto(codigo){
-  $("#modal_codigopropuesta").val(codigo);  
-  var item_1=$("#modal_tipoobjeto").val();
-  var item_2=codigo;
-  var item_3=$("#modal_rolpersona").val();
-
-  var parametros={"item_1":item_1,"item_2":item_2,"item_3":item_3};
-     $.ajax({
-        type: "GET",
-        dataType: 'html',
-        url: "simulaciones_servicios/ibnorca_ajaxListComboEstados.php",
-        data: parametros,
-        beforeSend: function () {
-        $("#texto_ajax_titulo").html("Cargando los estados disponibles de la propuesta"); 
-          iniciarCargaAjax();
-        },
-        success:  function (resp) {
-           detectarCargaAjax();
-           $("#texto_ajax_titulo").html("Procesando Datos");
-           $("#modal_codigoestado").html(resp); 
-           $('.selectpicker').selectpicker("refresh");
-           $("#modalEstadoObjeto").modal("show");
-        }
-    });
-}
-
-function cambiarEstadoObjeto(){
-  if($("#modal_codigoestado").val()>0){
-    Swal.fire({
-        title: '¿Esta Seguro?',
-        text: "Se cambiará el estado!",
-         type: 'warning',
-        showCancelButton: true,
-        confirmButtonClass: 'btn btn-warning',
-        cancelButtonClass: 'btn btn-danger',
-        confirmButtonText: 'SI',
-        cancelButtonText: 'NO',
-        buttonsStyling: false
-       }).then((result) => {
-          if (result.value) {
-               cambiarEstadoObjetoAjax();            
-            return(true);
-          } else if (result.dismiss === Swal.DismissReason.cancel) {
-            return(false);
-          }
-        });   
-  }else{
-    Swal.fire("Informativo!", "Debe Seleccionar Un estado", "warning");
-  }
-}
-
-function cambiarEstadoObjetoAjax(){
-  var codigo=$("#modal_codigopropuesta").val();
-  var estado=$("#modal_codigoestado").val();
-  var observaciones=$("#modal_observacionesestado").val();
-  var parametros={"obs":observaciones,"estado":estado,"codigo":codigo};
-     $.ajax({
-        type: "GET",
-        dataType: 'html',
-        url: "simulaciones_servicios/ibnorca_ajaxCambiarEstado.php",
-        data: parametros,
-        beforeSend: function () {
-        $("#texto_ajax_titulo").html("Actualizando estado..."); 
-          iniciarCargaAjax();
-        },
-        success:  function (resp) {
-           detectarCargaAjax();
-           $("#texto_ajax_titulo").html("Procesando Datos");
-           if($("#id_servicioibnored").length>0){
-            var q=$("#id_servicioibnored").val();
-            var r=$("#id_servicioibnored_rol").val();
-            alerts.showSwal('success-message','index.php?opcion=listSimulacionesServAdmin&q='+q+'&r='+r);   
-          }else{
-             alerts.showSwal('success-message','index.php?opcion=listSimulacionesServAdmin');
-          }
-        }
-    });
-}
-
-function cambiarEstadoObjetoSol(){
-  if($("#modal_codigoestado").val()>0){
-    Swal.fire({
-        title: '¿Esta Seguro?',
-        text: "Se cambiará el estado!",
-         type: 'warning',
-        showCancelButton: true,
-        confirmButtonClass: 'btn btn-warning',
-        cancelButtonClass: 'btn btn-danger',
-        confirmButtonText: 'SI',
-        cancelButtonText: 'NO',
-        buttonsStyling: false
-       }).then((result) => {
-          if (result.value) {
-               cambiarEstadoObjetoSolAjax();            
-            return(true);
-          } else if (result.dismiss === Swal.DismissReason.cancel) {
-            return(false);
-          }
-        });   
-  }else{
-    Swal.fire("Informativo!", "Debe Seleccionar Un estado", "warning");
-  }
-}
-
-function cambiarEstadoObjetoSolAjax(){
-  var codigo=$("#modal_codigopropuesta").val();
-  var estado=$("#modal_codigoestado").val();
-  var observaciones=$("#modal_observacionesestado").val();
-  var parametros={"obs":observaciones,"estado":estado,"codigo":codigo};
-     $.ajax({
-        type: "GET",
-        dataType: 'html',
-        url: "solicitudes/ibnorca_ajaxCambiarEstado.php",
-        data: parametros,
-        beforeSend: function () {
-        $("#texto_ajax_titulo").html("Actualizando estado..."); 
-          iniciarCargaAjax();
-        },
-        success:  function (resp) {
-           detectarCargaAjax();
-           $("#texto_ajax_titulo").html("Procesando Datos");
-           if($("#id_servicioibnored").length>0){
-            var q=$("#id_servicioibnored").val();
-            var r=$("#id_servicioibnored_rol").val();
-            alerts.showSwal('success-message','index.php?opcion=listSolicitudRecursosAdmin&q='+q+'&r='+r);   
-          }else{
-             alerts.showSwal('success-message','index.php?opcion=listSolicitudRecursosAdmin');
-          }
-        }
-    });
-}
-
-function cambiarEstadoObjetoPlan(){
-  if($("#modal_codigoestado").val()>0){
-    Swal.fire({
-        title: '¿Esta Seguro?',
-        text: "Se cambiará el estado!",
-         type: 'warning',
-        showCancelButton: true,
-        confirmButtonClass: 'btn btn-warning',
-        cancelButtonClass: 'btn btn-danger',
-        confirmButtonText: 'SI',
-        cancelButtonText: 'NO',
-        buttonsStyling: false
-       }).then((result) => {
-          if (result.value) {
-               cambiarEstadoObjetoPlanAjax();            
-            return(true);
-          } else if (result.dismiss === Swal.DismissReason.cancel) {
-            return(false);
-          }
-        });   
-  }else{
-    Swal.fire("Informativo!", "Debe Seleccionar Un estado", "warning");
-  }
-}
-
-function cambiarEstadoObjetoPlanAjax(){
-  var codigo=$("#modal_codigopropuesta").val();
-  var estado=$("#modal_codigoestado").val();
-  var observaciones=$("#modal_observacionesestado").val();
-  var parametros={"obs":observaciones,"estado":estado,"codigo":codigo};
-     $.ajax({
-        type: "GET",
-        dataType: 'html',
-        url: "plantillas_servicios/ibnorca_ajaxCambiarEstado.php",
-        data: parametros,
-        beforeSend: function () {
-        $("#texto_ajax_titulo").html("Actualizando estado..."); 
-          iniciarCargaAjax();
-        },
-        success:  function (resp) {
-           detectarCargaAjax();
-           $("#texto_ajax_titulo").html("Procesando Datos");
-           if($("#id_servicioibnored").length>0){
-            var q=$("#id_servicioibnored").val();
-            var r=$("#id_servicioibnored_rol").val();
-            alerts.showSwal('success-message','index.php?opcion=listPlantillasServiciosAdmin&q='+q+'&r='+r);   
-          }else{
-             alerts.showSwal('success-message','index.php?opcion=listPlantillasServiciosAdmin');
-          }
-        }
-    });
-}
-
-function seleccionarEsteCheck(id) {
-    var item = document.getElementById(id);
-     if(item.checked==true){
-      item.checked = false;
-    }else{
-      item.checked = true;
-    }       
-}
-
-
 // var distribucion_sueldos=[];
 // var numFilasA=0;
 // function filaTablaAGeneral_distibucion(tabla,index){
@@ -9516,4 +9301,3 @@ function seleccionarEsteCheck(id) {
 //   tabla.html(html);
 //   $("#modalDetalleFac").modal("show");  
 // }
-
