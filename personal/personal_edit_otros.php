@@ -43,15 +43,15 @@ if($codigo_item==1){?><!--oficina - area-->
                     <div class="card-body ">                        
                         <div class="row">
                           <label class="col-sm-2 col-form-label">Oficina</label>
-                          <div class="col-sm-4">
+                          <div class="col-sm-7">
                             <div class="form-group">
-                                <select name="cod_uo" id="cod_uo" class="selectpicker" data-style="btn btn-info" onChange="ajaxAreaContabilizacionDetalle(this);">
+                                <select name="cod_uo" id="cod_uo" data-style="btn btn-info" onChange="ajaxAreaContabilizacionDetalle(this);" class="selectpicker form-control form-control-sm" required data-show-subtext="true" data-live-search="true">
                                     <option value=""></option>
                                     <?php 
-                                    $queryUO = "SELECT codigo,nombre from unidades_organizacionales where cod_estado=1 order by nombre";
+                                    $queryUO = "SELECT codigo,nombre,abreviatura from unidades_organizacionales where cod_estado=1 order by nombre";
                                     $statementUO = $dbh->query($queryUO);
                                     while ($row = $statementUO->fetch()){ ?>
-                                        <option <?=($cod_unidadorganizacional==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                                        <option <?=($cod_unidadorganizacional==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>" data-subtext="<?=$row["codigo"];?>"><?=$row["abreviatura"];?> - <?=$row["nombre"];?></option>
                                     <?php } ?>
                                 </select>
                             </div>
@@ -59,17 +59,12 @@ if($codigo_item==1){?><!--oficina - area-->
                         </div>  
                         <div class="row">                                        
                           <label class="col-sm-2 col-form-label">Area</label>
-                          <div class="col-sm-4">
+                          <div class="col-sm-7">
                             <div class="form-group" >
                                 <div id="div_contenedor_area">
-                                    <select name="cod_area" id="cod_area" class="selectpicker" data-style="btn btn-info" >
+                                    <select name="cod_area" id="cod_area"  data-style="btn btn-info" class="selectpicker form-control form-control-sm" required data-show-subtext="true" data-live-search="true">
                                         <option value=""></option>
-                                        <?php 
-                                        $queryArea = "SELECT codigo,nombre FROM  areas WHERE cod_estado=1 order by nombre";
-                                        $statementArea = $dbh->query($queryArea);
-                                        while ($row = $statementArea->fetch()){ ?>
-                                            <option <?=($cod_area==$row["codigo"])?"selected":"";?>  value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
-                                        <?php } ?>
+                                        
                                     </select>
                                 </div>                    
                             </div>
@@ -112,9 +107,9 @@ if($codigo_item==2){?> <!--cargo-->
                         <div class="card-body ">            
                             <div class="row">
                                 <label class="col-sm-2 col-form-label">Cargo</label>
-                                <div class="col-sm-4">
+                                <div class="col-sm-7">
                                     <div class="form-group">
-                                        <select name="cod_cargo"  class="selectpicker" data-style="btn btn-info" required>
+                                        <select name="cod_cargo" data-style="btn btn-info" required class="selectpicker form-control form-control-sm" required data-show-subtext="true" data-live-search="true">
                                             <?php 
                                             $queryCargos = "SELECT ca.cod_cargo,
                                             (select c.nombre from cargos c where c.codigo=ca.cod_cargo) as nombre_cargo
@@ -165,9 +160,9 @@ if($codigo_item==3){?><!--Grado academico-->
                     <div class="card-body ">                                    
                         <div class="row">
                             <label class="col-sm-2 col-form-label">Grado Académico</label>
-                            <div class="col-sm-4">
+                            <div class="col-sm-7">
                                 <div class="form-group">
-                                    <select name="grado_academico" id="grado_academico"  class="selectpicker" data-style="btn btn-info" required>
+                                    <select name="grado_academico" id="grado_academico"  data-style="btn btn-info" required class="selectpicker form-control form-control-sm" required data-show-subtext="true" data-live-search="true">
                                         <?php 
                                         $querygrado_academico = "SELECT codigo,nombre from personal_grado_academico where codestadoreferencial=1";
                                         $statementgrado_academico = $dbh->query($querygrado_academico);
@@ -218,7 +213,7 @@ if($codigo_item==4){?><!--haber basico-->
                             <label class="col-sm-2 col-form-label">Haber Basico</label>
                             <div class="col-sm-4">
                                 <div class="form-group">
-                                    <input class="form-control" type="text" name="haber_basico" id="haber_basico" value="<?=$haber_basico;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" required/>
+                                    <input class="form-control" type="text" name="haber_basico" id="haber_basico" value="<?=$haber_basico;?>" required/>
                                 </div>
                             </div> 
                         </div><!--haber basico-->

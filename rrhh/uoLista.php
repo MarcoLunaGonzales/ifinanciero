@@ -100,7 +100,7 @@ $stmt->bindColumn('modified_by', $modified_by);
                               <!--<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalAreas" onclick="agregaListAreas_unidad('<?=$datos;?>')">
                                 <i class="material-icons" title="Listar Areas">settings_applications</i>
                               </button>-->
-                              <a href='#' rel="tooltip" class="btn btn-warning" onclick="filaTablaAGeneral($('#tablasA_registradas'),<?=$index?>)">
+                              <a href='#' rel="tooltip" class="btn btn-warning" onclick="filaTablaAGeneral_areas($('#tablasA_registradas'),<?=$index?>)">
                               <i class="material-icons" title="Ver Areas">settings_applications</i>
                             </a>
 

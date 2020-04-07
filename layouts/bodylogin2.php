@@ -204,29 +204,29 @@
          $('#modalAlert').modal('show'); 
          envio=1;
       }else{
-         if($("#totaldeb").val()==""||$("#totalhab").val()==""){
-             mensaje+="<p>La suma total no puede ser 0 (Debe - Haber)</p>";
-             $('#msgError').html(mensaje);
-             $('#modalAlert').modal('show'); 
-             envio=1;
+          if($("#totaldeb").val()==""||$("#totalhab").val()==""){
+               mensaje+="<p>La suma total no puede ser 0 (Debe - Haber)</p>";
+               $('#msgError').html(mensaje);
+               $('#modalAlert').modal('show'); 
+               envio=1;
           }else{
-             if($("#totaldeb").val()!=$("#totalhab").val()){
-                 mensaje+="<p>El total del DEBE y EL HABER no coinciden</p>";
-                 $('#msgError').html(mensaje);
-                 $('#modalAlert').modal('show'); 
-                 envio=1;
+              if($("#totaldeb").val()!=$("#totalhab").val()){
+                  mensaje+="<p>El total del DEBE y EL HABER no coinciden</p>";
+                  $('#msgError').html(mensaje);
+                  $('#modalAlert').modal('show'); 
+                  envio=1;
               }else{
-                var cont=0; var contcuenta=0;
-                for (var i = 0; i < numFilas; i++) {
-                  if($('select[name=area'+(i+1)+']').val()==null||$('select[name=unidad'+(i+1)+']').val()==null){
-                    cont++;
-                  }                  
-                }
-                if(cont!=0){
+                  var cont=0; var contcuenta=0;
+                  for (var i = 0; i < numFilas; i++) {
+                    if($('select[name=area'+(i+1)+']').val()==null||$('select[name=unidad'+(i+1)+']').val()==null){
+                      cont++;
+                    }                  
+                  }
+                  if(cont!=0){
                     mensaje+="<p>Debe seleccionar la Unidad y el Area</p>";
-                   $('#msgError').html(mensaje);
-                   $('#modalAlert').modal('show');
-                   envio=1;
+                    $('#msgError').html(mensaje);
+                    $('#modalAlert').modal('show');
+                    envio=1;
                   }else{
                     for (var i = 0; i < numFilas; i++) {
                       if($("#debe"+(i+1)).val()==""&&$("#haber"+(i+1)).val()==""){
@@ -234,24 +234,55 @@
                         $('#msgError').html(mensaje);
                         $('#modalAlert').modal('show');
                         debehaber=1;
-                       }
-                       if($('#cuenta'+(i+1)).val()==""||$('#cuenta'+(i+1)).val()==null||$('#cuenta'+(i+1)).val()==0){
-                            contcuenta++;
-                        }           
-                     }
-                     if(contcuenta!=0){
-                       mensaje+="<p>No puede existir cuentas vacías!</p>";
-                        $('#msgError').html(mensaje);
-                        $('#modalAlert').modal('show');
-                        envio=1; 
-                     }else{
-                     if(debehaber==1){
-                       envio=1;
-                     }else{
-                      var contEstadoDebito=0;
-                      for (var i = 0; i < numFilas; i++) {
+                      }
+                      if($('#cuenta'+(i+1)).val()==""||$('#cuenta'+(i+1)).val()==null||$('#cuenta'+(i+1)).val()==0){
+                        contcuenta++;
+                      }           
+                    }
+                    if(contcuenta!=0){
+                      mensaje+="<p>No puede existir cuentas vacías!</p>";
+                      $('#msgError').html(mensaje);
+                      $('#modalAlert').modal('show');
+                      envio=1; 
+                    }else{
+                      if(debehaber==1){
+                        envio=1;
+                      }else{
+                        var contEstadoDebito=0;
+                        for (var i = 0; i < numFilas; i++){
+                          console.log("entro al detalle");
                           var debeZ=parseFloat($("#debe"+(i+1)).val());
                           var haberZ=parseFloat($("#haber"+(i+1)).val());
+                          var tipoComprobante=parseFloat($("#tipo_comprobante").val());
+                          var tipoEstadoCuenta=$("#tipo_estadocuentas"+(i+1)).val();
+                          var cuentaAuxiliar=$("#cuenta_auxiliar"+(i+1)).val();  
+                          var estadoCuentaSelect=$("#nestado"+(i+1)).hasClass("estado");
+
+                          console.log("debe: "+debeZ+" haber: "+haberZ+" TC: "+tipoComprobante+" CA: "+cuentaAuxiliar+" TEC: "+tipoEstadoCuenta+" EEC: "+estadoCuentaSelect);
+
+                          //VALIDAMOS CUANDO LA CUENTA TENGA EC LA CUENTA AUXILIAR SIEMPRE ESTE SELECCIONADA.
+                          if(tipoComprobante==3 && tipoEstadoCuenta>0 && cuentaAuxiliar==0){  
+                            $('#msgError').html("La fila "+(i+1)+" debe estar asociada a una CUENTA AUXILIAR, ya que está configurada para llevar Estados de Cuenta.");
+                            $('#modalAlert').modal('show');
+                            return false;
+                          }else{
+                            console.log("cuenta sin problemas; tipoComp:3");
+                          }
+
+                          /*
+                          //Validamos TipoC: Ingreso y cuando haya EC se registre obligatoriamente en el Haber
+                          if( (tipoComprobante==1 && tipoEstadoCuenta==1) ){
+                            if( haberZ <= 0 || estadoCuentaSelect==false){
+                              $('#msgError').html("La fila "+(i+1)+" esta configurada para cerrar Estados de Cuenta.");
+                              $('#modalAlert').modal('show');
+                              return false;
+                            }
+                          }else{
+                            console.log("cuenta sin problemas; tipoComp:3");
+                          }
+                          */
+
+
                           //COMENTAMOS LA VALIDACION DE LOS ESTADOS DE CUENTA
                           /*if($("#tipo_estadocuentas"+(i+1)).val()=="1" && haberZ>0  && (!($("#nestado"+(i+1)).hasClass("estado")))){
                              contEstadoDebito=1;
@@ -267,22 +298,21 @@
                             $('#modalAlert').modal('show');
                             contEstadoDebito=1;
                           }*/         
-                     }
-                     if(contEstadoDebito==1){
-                       envio=1;
-                     }else{
-                        for (var i = 0; i < numFilas; i++) {
-                            if($("#debe"+(i+1)).val()==""){
-                             $("#debe"+(i+1)).val("0");
-                            }
-                            if($("#haber"+(i+1)).val()==""){
-                             $("#haber"+(i+1)).val("0");
-                            }
-                       }     
-                      }
-                     }               
-                      
-                     } 
+                        }
+                        if(contEstadoDebito==1){
+                          envio=1;
+                        }else{
+                          for (var i = 0; i < numFilas; i++) {
+                              if($("#debe"+(i+1)).val()==""){
+                                $("#debe"+(i+1)).val("0");
+                              }
+                              if($("#haber"+(i+1)).val()==""){
+                                $("#haber"+(i+1)).val("0");
+                              }
+                          }     
+                        }
+                      }               
+                    } 
                   }
               }
           }
@@ -300,6 +330,8 @@
             .appendTo('#formRegComp');
         }
     });
+
+
     $("#formRegDet").submit(function(e) {
       var mensaje="";
       if($("#cantidad_filas").val()==0){

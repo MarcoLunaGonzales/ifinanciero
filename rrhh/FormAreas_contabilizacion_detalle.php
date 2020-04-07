@@ -10,13 +10,13 @@ $dbh = new Conexion();
 //RECIBIMOS LAS VARIABLES
 $codigo=$codigo;
 
-$queryUO = "SELECT codigo,nombre FROM  unidades_organizacionales WHERE cod_estado=1
+$queryUO = "SELECT codigo,nombre,abreviatura FROM  unidades_organizacionales WHERE cod_estado=1
 order by nombre";
 $statementUO = $dbh->query($queryUO);//uo
 
-$queryArea = "SELECT codigo,nombre FROM  areas WHERE cod_estado=1
-order by nombre";
-$statementArea = $dbh->query($queryArea);//uo
+// $queryArea = "SELECT codigo,nombre FROM  areas WHERE cod_estado=1
+// order by nombre";
+// $statementArea = $dbh->query($queryArea);//uo
 
 ?>
 
@@ -33,28 +33,26 @@ $statementArea = $dbh->query($queryArea);//uo
 			  </div>
 			  <div class="card-body ">
 				<div class="row">
-				  <label class="col-sm-2 col-form-label">Unidad Organizacional</label>
+				  <label class="col-sm-3 col-form-label">Unidad Organizacional</label>
 				  <div class="col-sm-7">
 					<div class="form-group">
-						<select name="cod_uo" id="cod_uo" class="selectpicker" data-style="btn btn-primary" onChange="ajaxAreaContabilizacionDetalle(this);">
+						<select name="cod_uo" id="cod_uo" data-style="btn btn-primary" onChange="ajaxAreaContabilizacionDetalle(this);" onChange="ajaxPersonal_area_distribucionE(this);" class="selectpicker form-control form-control-sm" required data-show-subtext="true" data-live-search="true">
 	                        <option value=""></option>
 	                        <?php while ($row = $statementUO->fetch()){ ?>
-	                            <option value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+	                            <option value="<?=$row["codigo"];?>" data-subtext="<?=$row["codigo"];?>"><?=$row["abreviatura"];?> - <?=$row["nombre"];?></option>
 	                        <?php } ?>
 	                    </select>
 					</div>
 				  </div>
 				</div>
 				<div class="row">
-				  <label class="col-sm-2 col-form-label">Area</label>
+				  <label class="col-sm-3 col-form-label">Area</label>
 				  <div class="col-sm-7">
 					<div class="form-group" >
 						<div id="div_contenedor_area">
-							<select name="cod_area" id="cod_area" class="selectpicker" data-style="btn btn-primary" >
-		                        <option value=""></option>
-		                        <?php while ($row = $statementArea->fetch()){ ?>
-		                            <option value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
-		                        <?php } ?>
+							<select name="cod_area" id="cod_area" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" >
+		                        <option value="" disabled="disabled"></option>
+		                       
 	                    	</select>
 						</div>					  
 					</div>

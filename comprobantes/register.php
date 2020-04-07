@@ -299,8 +299,8 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
 					<fieldset id="fiel" style="width:100%;border:0;">
 	                    <div class="row">
 	                    	<div class="col-sm-1">
-	                    		<button title="Agregar (alt+a)" type="button" id="add_boton" name="add" class="btn btn-warning btn-round btn-fab " onClick="addCuentaContable(this)">
-	                  		  <i class="material-icons">add</i>
+	                    		<button title="Agregar (alt+a)" type="button" id="add_boton" name="add" class="btn btn-warning btn-fab btn-round btn-sm" onClick="addCuentaContable(this)">
+	                  		  <i class="material-icons x-s">add</i>
 		                    </button>	
 	                    	</div>
 	                    	

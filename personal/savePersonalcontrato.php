@@ -192,13 +192,11 @@ if($cod_estadoreferencial==1){//insertar
 }elseif ($cod_estadoreferencial==5) {//retirar personal
 	//echo "personal:".$cod_personal."- fecha :".$fecha_inicio."-cod_tipocontrato :".$cod_tipocontrato."-ober:".$observaciones;
 	
+	
 	$cod_estadoreferencial=1;
 	$cod_estadoreferencialPersonal=2;
 	$cod_estadopersonal=3;
-	$sqlpersonal="UPDATE personal set cod_estadopersonal=$cod_estadopersonal,cod_estadoreferencial=$cod_estadoreferencialPersonal where codigo=$cod_personal";
-	$stmtUP = $dbhU->prepare($sqlpersonal);
-	$stmtUP->execute();
-
+	
 	//verificamos si todos sus contratos estan fina,izados
 	$sqlControlador="SELECT codigo,cod_estadocontrato from personal_contratos where cod_personal=$cod_personal ORDER BY codigo desc";
 	$stmtControlador = $dbhU->prepare($sqlControlador);
@@ -207,9 +205,16 @@ if($cod_estadoreferencial==1){//insertar
 	$cod_contrato_aux=$resultControlador['codigo'];
 	$cod_estadocontrato_aux=$resultControlador['cod_estadocontrato'];
 	if($cod_estadocontrato_aux==2){
+		
+
 		$sql="INSERT INTO personal_retiros(cod_personal,cod_tiporetiro,fecha_retiro,observaciones,cod_estadoreferencial) values($cod_personal,$cod_tipocontrato,'$fecha_inicio','$observaciones',$cod_estadoreferencial)";
 		$stmtU = $dbhU->prepare($sql);
 		$flagsucces=$stmtU->execute();
+		if($flagsucces){
+			$sqlpersonal="UPDATE personal set cod_estadopersonal=$cod_estadopersonal,cod_estadoreferencial=$cod_estadoreferencialPersonal where codigo=$cod_personal";
+			$stmtUP = $dbhU->prepare($sqlpersonal);
+			$stmtUP->execute();
+		}
 	}else{
 		$flagsucces=false;
 		$result=2;

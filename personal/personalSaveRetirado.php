@@ -20,21 +20,22 @@ try {
     //$modified_at = $_POST["modified_at"];
     $modified_by = 1;//$_POST["modified_by"];
     $cod_estadoreferencial=2;
+    $cod_estadoreferencial_2=1;
     $bandera=1;
-    
-    $stmt = $dbh->prepare("UPDATE personal set 
-    cod_estadopersonal=:cod_estadopersonal,bandera=:bandera  
-    where codigo = :codigo");
+    $ing_contr=date('Y-m-d');
+    $sql="UPDATE personal set 
+    cod_estadopersonal='$cod_estadopersonal',bandera='$bandera',cod_estadoreferencial='$cod_estadoreferencial_2',ing_contr='$ing_contr'
+    where codigo = $codigo";
+    // echo $sql;
+    $stmt = $dbh->prepare($sql);
     //bind
-    $stmt->bindParam(':codigo', $codigo);
-    $stmt->bindParam(':cod_estadopersonal', $cod_estadopersonal);    
-    $stmt->bindParam(':bandera', $bandera);
     $flagSuccess=$stmt->execute();
-    $stmt2 = $dbh->prepare("UPDATE personal_retiros set 
-    cod_estadoreferencial=$cod_estadoreferencial
-    where cod_personal = $codigo");
-    $stmt2->execute();
-
+    if($flagSuccess){
+        $stmt2 = $dbh->prepare("UPDATE personal_retiros set 
+        cod_estadoreferencial=$cod_estadoreferencial
+        where cod_personal = $codigo");
+        $stmt2->execute();    
+    }
     showAlertSuccessError($flagSuccess,$urlListPersonalRetirado);
 
     

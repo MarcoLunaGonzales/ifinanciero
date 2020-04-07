@@ -64,7 +64,7 @@ $stmtTCargos=$dbh->query($sqlTiposCargos);
                     <label class="col-sm-2 col-form-label">Tipo De Cargo</label>
                     <div class="col-sm-7">
                     <div class="form-group">
-                        <select name="cod_tipo_cargo" id="cod_tipo_cargo"  class="selectpicker " data-style="btn btn-info" required>
+                        <select name="cod_tipo_cargo" id="cod_tipo_cargo" data-style="btn btn-info" required onChange="ajaxPersonal_area_distribucionE(this);" class="selectpicker form-control form-control-sm" required data-show-subtext="true" data-live-search="true">
                             <?php while ($row = $stmtTCargos->fetch()) { ?>
                                 <option <?php if($cod_tipo_cargo == $row["codigo"]) echo "selected"; ?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
                             <?php } ?>

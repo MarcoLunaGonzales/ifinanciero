@@ -84,6 +84,24 @@ for ($i=1;$i<=$cantidadFilas;$i++){
 		$stmtDetalle = $dbh->prepare($sqlDetalle);
 		$flagSuccessDetalle=$stmtDetalle->execute();	
 
+    /*ACA INSERTAMOS EL ESTADO DE CUENTAS DE FORMA AUTOMATICA TIPO TRASPASOS Y CUENTA AUXILIAR > 0*/
+    $verificaEC=verificarCuentaEstadosCuenta($cuenta);
+    if($tipoComprobante==3 && $verificaEC>0){
+      $codTipoEC=obtenerTipoEstadosCuenta($cuenta);
+      $codProveedorCliente=obtenerCodigoProveedorClienteEC($cuentaAuxiliar);
+      //Insertamos el estado de cuentas por el detalle
+      $montoEC=0;
+      if($debe>0){
+        $montoEC=$debe;
+      }else{
+        $montoEC=$haber;
+      }
+      $sqlInsertEC="INSERT INTO estados_cuenta (cod_comprobantedetalle, cod_plancuenta, monto, cod_proveedor, fecha,cod_comprobantedetalleorigen,cod_cuentaaux,glosa_auxiliar) VALUES ('$codComprobanteDetalle', '$cuenta', '$montoEC', '$codProveedorCliente', '$fechaHoraActual','0','$cuentaAuxiliar','$glosaDetalle')";
+      $stmtInsertEC = $dbh->prepare($sqlInsertEC);
+      $flagSuccessInsertEC=$stmtInsertEC->execute();      
+    }
+
+
         $nF=cantidadF($facturas[$i-1]);
         
          for($j=0;$j<$nF;$j++){

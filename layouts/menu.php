@@ -651,7 +651,7 @@ if($menuModulo==0){
                 </li>             
                  <li class="nav-item ">
                   <a class="nav-link" href="index.php?opcion=listTarifarioServicios">
-                    <span class="sidebar-mini"> TF </span>
+                    <span class="sidebar-mini"> TS </span>
                     <span class="sidebar-normal"> Tarifario de Servicios TCP</span>
                   </a>
                 </li>    
@@ -660,13 +660,13 @@ if($menuModulo==0){
           </li>    
           <!--Solicitud de recursos-->
           <li class="nav-item ">
-            <a class="nav-link" data-toggle="collapse" href="#solicitudes">
+            <a class="nav-link" data-toggle="collapse" href="#SMServiciosSEC">
               <i class="material-icons">content_paste</i>
-              <p> Transacciones P / S
+              <p> Propuestas Capacitación
                 <b class="caret"></b>
               </p>
             </a>
-            <div class="collapse" id="solicitudes">
+            <div class="collapse" id="SMServiciosSEC">
               <ul class="nav">
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listPlantillasCostos">
@@ -693,7 +693,19 @@ if($menuModulo==0){
                     <span class="sidebar-normal"> Gesti&oacute;n de Propuestas SEC</span>
                   </a>
                 </li> 
+              </ul>
+            </div>
+          </li>
 
+          <li class="nav-item ">
+            <a class="nav-link" data-toggle="collapse" href="#SMServiciosTCPTCS">
+              <i class="material-icons">content_paste</i>
+              <p> Propuestas TCP/TCS
+                <b class="caret"></b>
+              </p>
+            </a>
+            <div class="collapse" id="SMServiciosTCPTCS">
+              <ul class="nav">
                  <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listPlantillasServicios">
                     <span class="sidebar-mini"> PSR </span>
@@ -718,19 +730,21 @@ if($menuModulo==0){
                     <span class="sidebar-normal"> Gesti&oacute;n de Propuestas Servicios TCP - TCS</span>
                   </a>
                 </li>
-                <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=listFacturasServicios">
-                    <span class="sidebar-mini"> SF </span>
-                    <span class="sidebar-normal"> Solicitudes de Facturación TCP - TCS</span>
-                  </a>
-                </li>
-                <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=listFacturasGeneradas">
-                    <span class="sidebar-mini"> FG </span>
-                    <span class="sidebar-normal"> Facturas Generadas TCP - TCS</span>
-                  </a>
-                </li>
-                
+              </ul>
+            </div>
+          </li>
+
+          <li class="nav-item ">
+            <a class="nav-link" data-toggle="collapse" href="#SMSolicitudes">
+              <i class="material-icons">content_paste</i>
+              <p> Solicitudes
+                <b class="caret"></b>
+              </p>
+            </a>
+
+            <div class="collapse" id="SMSolicitudes">
+              <ul class="nav">
+
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listSolicitudRecursos">
                     <span class="sidebar-mini"> SR </span>
@@ -744,14 +758,28 @@ if($menuModulo==0){
                   </a>
                 </li>
                 <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listFacturasServicios">
+                    <span class="sidebar-mini"> SF </span>
+                    <span class="sidebar-normal"> Solicitudes de Facturación TCP - TCS</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listFacturasGeneradas">
+                    <span class="sidebar-mini"> FG </span>
+                    <span class="sidebar-normal"> Facturas Generadas TCP - TCS</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listPagoProveedores">
                     <span class="sidebar-mini"> PP </span>
                     <span class="sidebar-normal"> Pagos</span>
                   </a>
                 </li>                          
+
               </ul>
             </div>
-          </li>
+          </li>  
+
           <!--REPORTES RRHH-->
           <li class="nav-item ">
             <a class="nav-link" data-toggle="collapse" href="#reportesPresupuestoSol">

@@ -1,4 +1,6 @@
 <?php 
+require_once '../functions.php';
+$direccion=obtenerValorConfiguracion(42);//direccion des servicio web
 /*ACCESO A WEB SERVICE LISTA DE PERSONAS Y PROVEEDOR IBNORCA*/
 //21-01-2020
 //LLAVES DE ACCESO AL WS
@@ -41,7 +43,7 @@ $sKey = "ce94a8dabdf0b112eafa27a5aa475751";
 		// abrimos la sesión cURL
 		$ch = curl_init();
 		// definimos la URL a la que hacemos la petición
-		curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibno/rrhh/ws-personal-listas.php"); 	// OFICIAL
+		curl_setopt($ch, CURLOPT_URL,$direccion."rrhh/ws-personal-listas.php"); 	// OFICIAL
 		// curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibnob/rrhh/ws-personal-listas.php"); 	//PRUEBAS
 		// indicamos el tipo de petición: POST
 		curl_setopt($ch, CURLOPT_POST, TRUE);

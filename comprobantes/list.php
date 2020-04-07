@@ -64,7 +64,7 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
 
 <div class="content">
 	<div class="container-fluid">
-        <div class="row">
+        <div style="overflow-y: scroll;">
             <div class="col-md-12">
               <div class="card">
                 <div class="card-header <?=$colorCard;?> card-header-icon">
