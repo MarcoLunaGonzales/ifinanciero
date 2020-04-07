@@ -72,7 +72,7 @@ $dbh = new Conexion();
                        <label class="col-sm-2 col-form-label">Numero:</label>
                        <div class="col-sm-7">
                         <div class="form-group">
-                          <input class="form-control" type="text" readonly name="nombre" id="nombre" value="<?=$codSimServ?>"/>
+                          <input class="form-control" type="text" readonly name="nombre" id="nombre" value="-"/>
                         </div>
                         </div>
                       </div>
