@@ -125,7 +125,7 @@ $codigo=$_GET['codigo'];
                                      <td>
                                        <div class="togglebutton">
                                                <label>
-                                                 <input type="checkbox" <?=($banderaHab==1)?"checked":"";?> onchange="activarInputMontoPersonalServicio('<?=$anio?>','<?=$iii?>')">
+                                                 <input type="checkbox" <?=($banderaHab==1)?"checked":"";?> id="modal_checkpre<?=$anio?>FFF<?=$iii?>" onchange="activarInputMontoPersonalServicio('<?=$anio?>','<?=$iii?>')">
                                                  <span class="toggle"></span>
                                                </label>
                                        </div>
@@ -134,5 +134,5 @@ $codigo=$_GET['codigo'];
                                    <?php
                                   $iii++; 
                                   } ?>
-                                <script>$("#modal_numeropersonal"+<?=$anioio?>).val(<?=$iii?>)</script>
-                                <script>$("#modal_cantidadpersonal"+<?=$anioio?>).val(<?=$sumaCantidadPre?>)</script>  
+                                <script>$("#modal_numeropersonal"+<?=$anio?>).val(<?=$iii?>)</script>
+                                <script>$("#modal_cantidadpersonal"+<?=$anio?>).val(<?=$sumaCantidadPre?>)</script>  

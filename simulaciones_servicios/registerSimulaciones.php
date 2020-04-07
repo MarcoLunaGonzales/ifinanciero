@@ -40,7 +40,7 @@ $codSimServ=obtenerCodigoSimServicio();
 </script>
 
 <?php
-$lista= NULL;
+$lista= obtenerPaisesServicioIbrnorca();//null 
 $fechaActual=date("Y-m-d");
 $dbh = new Conexion();
 ?>

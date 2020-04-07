@@ -151,10 +151,10 @@ $item_1=2708;
                                  <a href="#" onclick="mostrarCambioEstadoObjeto(<?=$codigo?>)" class="dropdown-item">
                                     <i class="material-icons text-warning">dns</i> Cambiar Estado
                                  </a>
-                                 <!--<a href="<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&q=<?=$q?>" class="dropdown-item">
+                                 <a href="<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&q=<?=$q?>&r=<?=$item_3?>" class="dropdown-item">
                                     <i class="material-icons text-success">offline_pin</i> Verificar Solicitud
                                  </a>
-                                 <a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1&q=<?=$q?>" class="dropdown-item">
+                                 <!--<a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1&q=<?=$q?>" class="dropdown-item">
                                     <i class="material-icons text-dark">report</i> Rechazar Solicitud
                                  </a>
                                  <a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=2&q=<?=$q?>" class="dropdown-item">

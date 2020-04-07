@@ -7686,10 +7686,10 @@ function  listarServiciosSimulacionSoloAuditor(anio,cod_area,codigo){
            $("#modal_body_tabla_personal"+anio).append(resp);
            $("#cantidad_personal"+anio+"FFF0").val("1");
            $("#dias_personal"+anio+"FFF0").val("0");
-           $("#modal_montoper"+anio+"FFF0").val("0");
-           $("#modal_montoperUSD"+anio+"FFF0").val("0");
-           $("#modal_montopertotal"+anio+"FFF0").val("0");
-           $("#modal_montopertotalUSD"+anio+"FFF0").val("0");
+           $("#modal_montopre"+anio+"FFF0").val("0");
+           $("#modal_montopreUSD"+anio+"FFF0").val("0");
+           $("#modal_montopretotal"+anio+"FFF0").val("0");
+           $("#modal_montopretotalUSD"+anio+"FFF0").val("0");
            calcularTotalPersonalServicio(anio,2);
            $('.selectpicker').selectpicker("refresh");
         }
@@ -9201,7 +9201,16 @@ function copiarDatosServiciosPorAnio(anio){
       for (var k = 1; k <= items; k++) {
           $("#cantidad_servicios"+anios[i]+"SSS"+k).val($("#cantidad_servicios"+anio+"SSS"+k).val());
           $("#unidad_servicios"+anios[i]+"SSS"+k).val($("#unidad_servicios"+anio+"SSS"+k).val());
-          $("#modal_montoserv"+anios[i]+"SSS"+k).val($("#modal_montoserv"+anio+"SSS"+k).val());
+          $("#modal_montoserv"+anios[i]+"SSS"+k).val($("#modal_montoserv"+anio+"SSS"+k).val()); 
+          if(($("#modal_montoserv"+anios[i]+"SSS"+k).is("[readonly]"))&&($("#modal_montoserv"+anio+"SSS"+k).is("[readonly]"))){
+            
+          }else{
+            if((!($("#modal_montoserv"+anios[i]+"SSS"+k).is("[readonly]")))&&(!($("#modal_montoserv"+anio+"SSS"+k).is("[readonly]")))){
+            }else{
+              activarInputMontoFilaServicio(anios[i],k); //para cambiar los readonly
+              seleccionarEsteCheck('modal_checkserv'+anios[i]+"SSS"+k);
+            }
+          }        
           $('.selectpicker').selectpicker("refresh");
           calcularTotalFilaServicio(anios[i],2);
        }; 
@@ -9244,6 +9253,15 @@ function copiarDatosPersonalPorAnio(anio){
           $("#cantidad_personal"+anios[i]+"FFF"+k).val($("#cantidad_personal"+anio+"FFF"+k).val());
           $("#dias_personal"+anios[i]+"FFF"+k).val($("#dias_personal"+anio+"FFF"+k).val());
           $("#modal_montopre"+anios[i]+"FFF"+k).val($("#modal_montopre"+anio+"FFF"+k).val());
+          if(($("#modal_montopre"+anios[i]+"FFF"+k).is("[readonly]"))&&($("#modal_montopre"+anio+"FFF"+k).is("[readonly]"))){
+            
+          }else{
+            if((!($("#modal_montopre"+anios[i]+"FFF"+k).is("[readonly]")))&&(!($("#modal_montopre"+anio+"FFF"+k).is("[readonly]")))){
+            }else{
+              activarInputMontoPersonalServicio(anios[i],k); //para cambiar los readonly
+              seleccionarEsteCheck('modal_checkpre'+anios[i]+"FFF"+k);
+            }
+          }     
           $('.selectpicker').selectpicker("refresh");
           calcularTotalPersonalServicio(anios[i],2);
        }; 
@@ -9470,6 +9488,16 @@ function cambiarEstadoObjetoPlanAjax(){
         }
     });
 }
+
+function seleccionarEsteCheck(id) {
+    var item = document.getElementById(id);
+     if(item.checked==true){
+      item.checked = false;
+    }else{
+      item.checked = true;
+    }       
+}
+
 
 // var distribucion_sueldos=[];
 // var numFilasA=0;

@@ -670,7 +670,7 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                                      <td>
                                        <div class="togglebutton">
                                                <label>
-                                                 <input type="checkbox" <?=($banderaHab==1)?"checked":"";?> onchange="activarInputMontoFilaServicio(<?=$an?>,'<?=$iii?>')">
+                                                 <input type="checkbox" <?=($banderaHab==1)?"checked":"";?> id="modal_checkserv<?=$an?>SSS<?=$iii?>" onchange="activarInputMontoFilaServicio(<?=$an?>,'<?=$iii?>')">
                                                  <span class="toggle"></span>
                                                </label>
                                        </div>
@@ -900,7 +900,7 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                                      <td>
                                        <div class="togglebutton">
                                                <label>
-                                                 <input type="checkbox" <?=($banderaHab==1)?"checked":"";?> onchange="activarInputMontoPersonalServicio('<?=$an?>','<?=$iii?>')">
+                                                 <input type="checkbox" <?=($banderaHab==1)?"checked":"";?> id="modal_checkpre<?=$an?>FFF<?=$iii?>" onchange="activarInputMontoPersonalServicio('<?=$an?>','<?=$iii?>')">
                                                  <span class="toggle"></span>
                                                </label>
                                        </div>

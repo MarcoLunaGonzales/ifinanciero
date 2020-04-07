@@ -102,7 +102,7 @@ $codigo=$_GET['codigo'];
                                      <td>
                                        <div class="togglebutton">
                                                <label>
-                                                 <input type="checkbox" <?=($banderaHab==1)?"checked":"";?> onchange="activarInputMontoFilaServicio(<?=$anio?>,'<?=$iii?>')">
+                                                 <input type="checkbox" <?=($banderaHab==1)?"checked":"";?> id="modal_checkserv<?=$anio?>SSS<?=$iii?>" onchange="activarInputMontoFilaServicio(<?=$anio?>,'<?=$iii?>')">
                                                  <span class="toggle"></span>
                                                </label>
                                        </div>
