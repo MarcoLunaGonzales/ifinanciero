@@ -140,7 +140,7 @@ for ($i=1;$i<=$cantidadFilas;$i++){
         $flagSuccessDetalle=$stmtDetalle->execute(); 
 
         //fin comprobantes detalles
-        $codComprobanteDetalleOrigen=obtenerCodigoComprobanteDetalleSolicitudRecursosDetalle($codigo_detalle);
+        $codComprobanteDetalleOrigen=obtenerCodigoEstadoCuentaSolicitudRecursosDetalle($codigo_detalle); //obtenerCodigoComprobanteDetalleSolicitudRecursosDetalle(
         //estado de cuentas devengado
           $sqlDetalleEstadoCuenta="INSERT INTO estados_cuenta (cod_comprobantedetalle, cod_plancuenta, monto, cod_proveedor, fecha,cod_comprobantedetalleorigen,cod_cuentaaux) 
               VALUES ('$codComprobanteDetalle', '$cuenta', '$haber', '0', '$fecha_pago','$codComprobanteDetalleOrigen','$cuentaAuxiliar')";

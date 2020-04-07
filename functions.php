@@ -5115,6 +5115,16 @@ function obtenerCodigoSimServicioTCPTCS($cod){
    return($codigoComprobante);
 }
 
+function obtenerCodigoEstadoCuentaSolicitudRecursosDetalle($codigo){
+  $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT p.cod_estadocuenta from solicitud_recursosdetalle p where p.codigo=$codigo");
+   $stmt->execute();
+   $valor="";
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['cod_estadocuenta'];
+   }
+   return($valor);
+}
 ?>
 
 
