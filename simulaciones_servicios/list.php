@@ -70,10 +70,13 @@ $stmt->bindColumn('cliente', $cliente);
                               $nEst=10;$barEstado="progress-bar-danger";$btnEstado="btn-danger";
                             break;
                             case 3:
-                              $nEst=100;$barEstado="progress-bar-success";$btnEstado="btn-success";
+                              $nEst=80;$barEstado="progress-bar-primary";$btnEstado="btn-primary";
                             break;
                             case 4:
                               $nEst=60;$barEstado="progress-bar-warning";$btnEstado="btn-warning";
+                            break;
+                            case 5:
+                              $nEst=100;$barEstado="progress-bar-success";$btnEstado="btn-success";
                             break;
                           }
 ?>
@@ -94,7 +97,7 @@ $stmt->bindColumn('cliente', $cliente);
                           </td> 
                           <td class="td-actions text-right">
                             <?php
-                              if($codEstado==4||$codEstado==3){
+                              if($codEstado==4||$codEstado==3||$codEstado==5){
                                
                             ?>
                             <div class="btn-group dropdown">
@@ -112,7 +115,10 @@ $stmt->bindColumn('cliente', $cliente);
                                  }?>
                                  <a href="<?=$urlVer;?>?cod=<?=$codigo;?>&q=<?=$q?>" class="dropdown-item">
                                     <i class="material-icons text-warning">bar_chart</i> Ver Propuesta
-                                 </a> 
+                                 </a>
+                                 <!--<a href="#" class="dropdown-item">
+                                    <i class="material-icons text-warning">bar_chart</i> Anular propuesta
+                                 </a>--> 
                                  <?php
                                }else{
                                 if($codEstado==4){
@@ -131,7 +137,7 @@ $stmt->bindColumn('cliente', $cliente);
                               </div>
                             </div>                           
                             <?php
-                             if($codEstado==3){
+                             if($codEstado==5){
                                $anteriorCod=obtenerCodigoSolicitudRecursosSimulacion(2,$codigo);
                                if(isset($_GET['q'])){
                                   ?><a href="<?=$urlSolicitudRecursos?>?cod=<?=$codigo?>&q=<?=$q?>" target="_self" title="Solicitud De Recursos"class="btn btn-danger">
@@ -205,3 +211,6 @@ $stmt->bindColumn('cliente', $cliente);
           </div>  
         </div>
     </div>
+
+
+

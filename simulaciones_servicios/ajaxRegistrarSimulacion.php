@@ -64,6 +64,15 @@ $areaGeneralPlantilla=obtenerCodigoAreaPlantillasServicios($plantilla_servicio);
   VALUES ('".$codSimServ."','".$nombre."','".$fecha."', '".$plantilla_servicio."', '".$globalUser."','".$dias."','".$utilidad."','".$cliente."','".$productos."','".$norma."','".$id_servicio."','".$anios."','".obtenerValorConfiguracion(32)."','".$sitios."','".$afnor."','".obtenerValorConfiguracion(33)."','".$objeto_servicio."')";
   $stmtInsert = $dbh->prepare($sqlInsert);
   $stmtInsert->execute();
+
+  //enviar propuestas para la actualizacion de ibnorca
+  $fechaHoraActual=date("Y-m-d H:i:s");
+  $idTipoObjeto=2707;
+  $idObjeto=2715; //regristado
+  $obs="Registro de propuesta";
+  actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codSimServ,$fechaHoraActual,$obs);
+
+
   $dbhD = new Conexion();
   $sqlD="DELETE FROM simulaciones_serviciodetalle where cod_simulacionservicio=$codSimServ";
   $stmtD = $dbhD->prepare($sqlD);

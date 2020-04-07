@@ -3,10 +3,17 @@ require_once 'conexion.php';
 require_once 'configModule.php';
 require_once 'styles.php';
 $globalAdmin=$_SESSION["globalAdmin"];
-
+$globalUser=$_SESSION["globalUser"];
 $dbh = new Conexion();
 if(isset($_GET['q'])){
   $q=$_GET['q'];
+  $item_3=$_GET['r'];
+?>
+  <input type="hidden" name="id_servicioibnored" value="<?=$q?>" id="id_servicioibnored"/>
+  <input type="hidden" name="id_servicioibnored_rol" value="<?=$item_3?>" id="id_servicioibnored_rol"/>
+<?php
+}else{
+  $item_3=0;
 }
 // Preparamos
 $stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado,c.nombre as cliente from simulaciones_servicios sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo join clientes c on c.codigo=sc.cod_cliente where sc.cod_estadoreferencial=1 and sc.cod_estadosimulacion!=1 order by codigo");
@@ -23,8 +30,19 @@ $stmt->bindColumn('cod_responsable', $codResponsable);
 $stmt->bindColumn('estado', $estado);
 $stmt->bindColumn('cliente', $cliente);
 
-?>
 
+//datos para servidor ibnorca
+$item_1=2707;
+// $item_2 codigo propuesta
+//$item_3=obtenerRolPersonaIbnorcaSesion($globalUser);
+
+?>
+<div class="cargar-ajax d-none">
+  <div class="div-loading text-center">
+     <h4 class="text-warning font-weight-bold" id="texto_ajax_titulo">Procesando Datos</h4>
+     <p class="text-white">Aguard&aacute; un momento por favor</p>  
+  </div>
+</div>
 <div class="content">
   <div class="container-fluid">
         <div class="row">
@@ -62,10 +80,13 @@ $stmt->bindColumn('cliente', $cliente);
                               $nEst=10;$barEstado="progress-bar-danger";$btnEstado="btn-danger";
                             break;
                             case 3:
-                              $nEst=100;$barEstado="progress-bar-success";$btnEstado="btn-success";
+                              $nEst=80;$barEstado="progress-bar-primary";$btnEstado="btn-primary";
                             break;
                             case 4:
                               $nEst=60;$barEstado="progress-bar-info";$btnEstado="btn-info";
+                            break;
+                            case 5:
+                              $nEst=100;$barEstado="progress-bar-success";$btnEstado="btn-success";
                             break;
                           }
 ?>
@@ -93,7 +114,7 @@ $stmt->bindColumn('cliente', $cliente);
                                 <?php 
                                 if(isset($_GET['q'])){
                                   ?>
-                                   <a href="<?=$urlVer;?>?cod=<?=$codigo;?>&admin=0&q=<?=$q?>" class="dropdown-item">
+                                   <a href="<?=$urlVer;?>?cod=<?=$codigo;?>&admin=0&q=<?=$q?>&r=<?=$item_3?>" class="dropdown-item">
                                     <i class="material-icons text-info">bar_chart</i> Ver Propuesta
                                  </a>
                                  <?php 
@@ -109,19 +130,20 @@ $stmt->bindColumn('cliente', $cliente);
                               
                                 <?php 
                                 if($codEstado==4){
-                                 $stmt2=$dbh->prepare("SELECT * FROM ibnorca.estadoobjeto where ");
+                                 /*
+                                 $stmt2=$dbh->prepare("SELECT * FROM ibnorca.estadoobjeto ");
                                  $stmt2->execute(); 
-                                 while ($row2 = $stmt2->fetch(PDO::FETCH_ASSOC)) {
-                                   ?>
-                                   <a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=3" class="dropdown-item">
-                                    <i class="material-icons text-success">offline_pin</i> <?=$row2['nombre']?>
-                                   </a>
-                                   <?php
+                                 while ($row2 = $stmt2->fetch(PDO::FETCH_ASSOC)) {  
                                  }
+                                 */
                                   
-                                 if(isset($_GET['q'])){
-
-                                  ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=3&q=<?=$q?>" class="dropdown-item">
+                                 if(isset($_GET['q'])){      
+                                  ?>
+                                  <a href="#" onclick="mostrarCambioEstadoObjeto(<?=$codigo?>)" class="dropdown-item">
+                                    <i class="material-icons text-warning">dns</i> Cambiar Estado
+                                 </a>
+                                  <!--
+                                  <a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=3&q=<?=$q?>" class="dropdown-item">
                                     <i class="material-icons text-success">offline_pin</i> Aprobar Solicitud
                                  </a>
                                  <a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1&q=<?=$q?>" class="dropdown-item">
@@ -129,7 +151,7 @@ $stmt->bindColumn('cliente', $cliente);
                                  </a>
                                  <a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=2&q=<?=$q?>" class="dropdown-item">
                                     <i class="material-icons text-danger">clear</i> Anular Solicitud
-                                 </a><?php 
+                                 </a>--><?php 
                                }else{
                                 ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=3" class="dropdown-item">
                                     <i class="material-icons text-success">offline_pin</i> Aprobar Solicitud
@@ -142,10 +164,13 @@ $stmt->bindColumn('cliente', $cliente);
                                  </a><?php 
                                  }
                                 }else{
+                                  ?><a href="#" onclick="mostrarCambioEstadoObjeto(<?=$codigo?>)" class="dropdown-item">
+                                    <i class="material-icons text-warning">dns</i> Cambiar Estado
+                                 </a><?php
                                   if(isset($_GET['q'])){
-                                     ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=4&q=<?=$q?>" class="dropdown-item">
+                                     ?><!--<a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=4&q=<?=$q?>" class="dropdown-item">
                                     <i class="material-icons text-dark">reply</i> Deshacer Cambios
-                                 </a>
+                                 </a>-->
                                  <?php 
                                   }else{
                                     ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=4" class="dropdown-item">
@@ -171,7 +196,7 @@ $stmt->bindColumn('cliente', $cliente);
               <div class="card-footer fixed-bottom">
                 <?php 
                 if(isset($_GET['q'])){
-                ?><a href="<?=$urlList2?>&q=<?=$q?>" class="btn btn-info"><i class="material-icons">refresh</i> Refrescar</a><?php
+                ?><a href="<?=$urlList2?>&q=<?=$q?>&r=<?=$item_3?>" class="btn btn-info"><i class="material-icons">refresh</i> Refrescar</a><?php
                 }else{
                  ?><a href="<?=$urlList2?>" class="btn btn-info"><i class="material-icons">refresh</i> Refrescar</a><?php
                 } 
@@ -182,3 +207,48 @@ $stmt->bindColumn('cliente', $cliente);
           </div>  
         </div>
     </div>
+
+<!-- small modal -->
+<div class="modal fade modal-arriba modal-primary" id="modalEstadoObjeto" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-notice" style="max-width: 50% !important;">
+    <div class="modal-content card">
+                <div class="card-header card-header-warning card-header-text">
+                  <div class="card-text">
+                    <h4>Cambiar de Estado</h4>
+                  </div>
+                  <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">close</i>
+                  </button>
+                </div>
+                <input type="hidden" class="form-control" name="modal_codigopropuesta" id="modal_codigopropuesta" value="">
+                <input type="hidden" class="form-control" name="modal_tipoobjeto" id="modal_tipoobjeto" value="<?=$item_1?>">
+                <input type="hidden" class="form-control" name="modal_rolpersona" id="modal_rolpersona" value="<?=$item_3?>">
+                <div class="card-body">
+                 <div class="card-body">
+                      <div class="row">
+                       <label class="col-sm-2 col-form-label">Estado</label>
+                       <div class="col-sm-10">
+                        <div class="form-group">
+                             <select class="selectpicker form-control" name="modal_codigoestado" id="modal_codigoestado" data-style="btn btn-primary">
+                                  
+                             </select>
+                         </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                          <label class="col-sm-2 col-form-label">Observaciones</label>
+                           <div class="col-sm-10">                     
+                             <div class="form-group">
+                               <textarea type="text" class="form-control" name="modal_observacionesestado" id="modal_observacionesestado"></textarea>
+                             </div>
+                           </div>  
+                      </div> 
+                      <div class="form-group float-right">
+                        <button type="button" id="boton_guardarsim" class="btn btn-default" onclick="cambiarEstadoObjeto()">Cambiar Estado</button>
+                      </div> 
+                </div>   
+                </div>
+      </div>  
+    </div>
+  </div>
+<!--    end small modal -->

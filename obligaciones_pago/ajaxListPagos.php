@@ -80,7 +80,7 @@ $totalPagadoX=0;
                           <td>
                             <input type="hidden" value="<?=$detalle?>" id="glosa_detalle<?=$index?>" name="glosa_detalle<?=$index?>">
                             <input type="hidden" value="<?=$codSol?>" id="codigo_solicitud<?=$index?>" name="codigo_solicitud<?=$index?>">
-                            <input type="text" value="<?=$codSolDet?>" id="codigo_solicitudDetalle<?=$index?>" name="codigo_solicitudDetalle<?=$index?>">
+                            <input type="hidden" value="<?=$codSolDet?>" id="codigo_solicitudDetalle<?=$index?>" name="codigo_solicitudDetalle<?=$index?>">
                             <?php 
                             if(($importe-$pagado)>0){
                              ?><img src="assets/img/progresa.jpg" alt="" width="80px" height="35px"><?php

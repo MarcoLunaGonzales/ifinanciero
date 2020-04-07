@@ -4955,6 +4955,111 @@ where d.glosa=e.glosa and d.cod_anio=$anio and d.cod_simulacionservicio=$simulac
   }
   return $valor;
   }
+
+  function obtenerRolPersonaIbnorca($codPersona){
+    $dbh = new Conexion();
+   $valor=0;
+   $sql="select ibnorca.personarol($codPersona) as rol";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['rol'];
+    }
+    return $valor;
+  }
+
+  function actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$user,$objeto,$fechaHoraActual,$obs){
+    $dbh = new Conexion();
+    //enviar propuestas para la actualizacion de ibnorca
+    $sqlUpdateIbnorca="INSERT INTO ibnorca.estadoobjeto (idtipoobjeto,idestado,idresponsable,idobjeto,fechaestado,observaciones)
+   VALUES ('$idTipoObjeto','$idObjeto','$user','$objeto','$fechaHoraActual','$obs')";
+   $stmtUpdateIbnorca = $dbh->prepare($sqlUpdateIbnorca);
+   $stmtUpdateIbnorca->execute();
+  }
+
+  function obtenerEstadoIfinancieroPropuestas($estado){
+   switch ($estado) {
+     case 2715:
+       return 1;
+       break;
+     case 2716:
+       return 4;
+       break;
+     case 2717:
+       return 3;
+       break;
+     case 2718:
+       return 5;
+       break;
+     case 2719:
+       return 2;
+       break;      
+     default:
+       return 1;
+       break;
+   }
+  }
+  function obtenerEstadoIfinancieroSolicitudes($estado){
+   switch ($estado) {
+     case 2721:
+       return 1;
+       break;
+     case 2722:
+       return 4;
+       break;
+     case 2723:
+       return 3;
+       break;
+     case 2724:
+       return 2;
+       break;
+     case 2725:
+       return 5;
+       break;      
+     default:
+       return 1;
+       break;
+   }
+  }
+  function obtenerEstadoIfinancieroPlantillas($estado){
+   switch ($estado) {
+     case 2710:
+       return 1;
+       break;
+     case 2713:
+       return 2;
+       break;
+     case 2712:
+       return 3;
+       break;     
+     default:
+       return 1;
+       break;
+   }
+  }
+  function obtenerRolPersonaIbnorcaSesion($codPersona){
+    $dbh = new Conexion();
+   $valor=0;
+   $sql="SELECT idrol FROM ibnorca.personarol WHERE idpersona=$codPersona and pordefecto=1";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['idrol'];
+    }
+    return $valor;
+  }
+
+  function obtenerTodoPagoSolicitud($codigo){
+    $dbh = new Conexion();
+   $valor=9000;
+   $sql="select (SELECT sum(importe) as solicitado from solicitud_recursosdetalle where cod_solicitudrecurso=$codigo)-(select ifnull(sum(monto),0) as pagado from pagos_proveedoresdetalle where cod_solicitudrecursos=$codigo) as saldo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['saldo'];
+    }
+    return $valor;
+  }
 ?>
 
 

@@ -2585,7 +2585,7 @@ function enviarSimulacionAjaxServ(){
          $("#logo_carga").hide();
          Swal.fire("Envío Exitoso!", "Se registradon los datos exitosamente!", "success")
              .then((value) => {
-              if(!($("#id_servicioibnored").length)){
+              if(!($("#id_servicioibnored").length>0)){
                location.href="../index.php?opcion=listSimulacionesServ";
               }else{
                 var q=$("#id_servicioibnored").val();
@@ -9247,4 +9247,190 @@ function copiarCostosVariablesPorAnio(anio){
   guardarCuentasSimulacionAjaxGenericoServicioAuditor(anio,1,anios);
  $("#copiar_variables"+anio).val(""); 
  $('.selectpicker').selectpicker("refresh");
+}
+
+
+function mostrarCambioEstadoObjeto(codigo){
+  $("#modal_codigopropuesta").val(codigo);  
+  var item_1=$("#modal_tipoobjeto").val();
+  var item_2=codigo;
+  var item_3=$("#modal_rolpersona").val();
+
+  var parametros={"item_1":item_1,"item_2":item_2,"item_3":item_3};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "simulaciones_servicios/ibnorca_ajaxListComboEstados.php",
+        data: parametros,
+        beforeSend: function () {
+        $("#texto_ajax_titulo").html("Cargando los estados disponibles de la propuesta"); 
+          iniciarCargaAjax();
+        },
+        success:  function (resp) {
+           detectarCargaAjax();
+           $("#texto_ajax_titulo").html("Procesando Datos");
+           $("#modal_codigoestado").html(resp); 
+           $('.selectpicker').selectpicker("refresh");
+           $("#modalEstadoObjeto").modal("show");
+        }
+    });
+}
+
+function cambiarEstadoObjeto(){
+  if($("#modal_codigoestado").val()>0){
+    Swal.fire({
+        title: '¿Esta Seguro?',
+        text: "Se cambiará el estado!",
+         type: 'warning',
+        showCancelButton: true,
+        confirmButtonClass: 'btn btn-warning',
+        cancelButtonClass: 'btn btn-danger',
+        confirmButtonText: 'SI',
+        cancelButtonText: 'NO',
+        buttonsStyling: false
+       }).then((result) => {
+          if (result.value) {
+               cambiarEstadoObjetoAjax();            
+            return(true);
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            return(false);
+          }
+        });   
+  }else{
+    Swal.fire("Informativo!", "Debe Seleccionar Un estado", "warning");
+  }
+}
+
+function cambiarEstadoObjetoAjax(){
+  var codigo=$("#modal_codigopropuesta").val();
+  var estado=$("#modal_codigoestado").val();
+  var observaciones=$("#modal_observacionesestado").val();
+  var parametros={"obs":observaciones,"estado":estado,"codigo":codigo};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "simulaciones_servicios/ibnorca_ajaxCambiarEstado.php",
+        data: parametros,
+        beforeSend: function () {
+        $("#texto_ajax_titulo").html("Actualizando estado..."); 
+          iniciarCargaAjax();
+        },
+        success:  function (resp) {
+           detectarCargaAjax();
+           $("#texto_ajax_titulo").html("Procesando Datos");
+           if($("#id_servicioibnored").length>0){
+            var q=$("#id_servicioibnored").val();
+            var r=$("#id_servicioibnored_rol").val();
+            alerts.showSwal('success-message','index.php?opcion=listSimulacionesServAdmin&q='+q+'&r='+r);   
+          }else{
+             alerts.showSwal('success-message','index.php?opcion=listSimulacionesServAdmin');
+          }
+        }
+    });
+}
+
+function cambiarEstadoObjetoSol(){
+  if($("#modal_codigoestado").val()>0){
+    Swal.fire({
+        title: '¿Esta Seguro?',
+        text: "Se cambiará el estado!",
+         type: 'warning',
+        showCancelButton: true,
+        confirmButtonClass: 'btn btn-warning',
+        cancelButtonClass: 'btn btn-danger',
+        confirmButtonText: 'SI',
+        cancelButtonText: 'NO',
+        buttonsStyling: false
+       }).then((result) => {
+          if (result.value) {
+               cambiarEstadoObjetoSolAjax();            
+            return(true);
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            return(false);
+          }
+        });   
+  }else{
+    Swal.fire("Informativo!", "Debe Seleccionar Un estado", "warning");
+  }
+}
+
+function cambiarEstadoObjetoSolAjax(){
+  var codigo=$("#modal_codigopropuesta").val();
+  var estado=$("#modal_codigoestado").val();
+  var observaciones=$("#modal_observacionesestado").val();
+  var parametros={"obs":observaciones,"estado":estado,"codigo":codigo};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "solicitudes/ibnorca_ajaxCambiarEstado.php",
+        data: parametros,
+        beforeSend: function () {
+        $("#texto_ajax_titulo").html("Actualizando estado..."); 
+          iniciarCargaAjax();
+        },
+        success:  function (resp) {
+           detectarCargaAjax();
+           $("#texto_ajax_titulo").html("Procesando Datos");
+           if($("#id_servicioibnored").length>0){
+            var q=$("#id_servicioibnored").val();
+            var r=$("#id_servicioibnored_rol").val();
+            alerts.showSwal('success-message','index.php?opcion=listSolicitudRecursosAdmin&q='+q+'&r='+r);   
+          }else{
+             alerts.showSwal('success-message','index.php?opcion=listSolicitudRecursosAdmin');
+          }
+        }
+    });
+}
+
+function cambiarEstadoObjetoPlan(){
+  if($("#modal_codigoestado").val()>0){
+    Swal.fire({
+        title: '¿Esta Seguro?',
+        text: "Se cambiará el estado!",
+         type: 'warning',
+        showCancelButton: true,
+        confirmButtonClass: 'btn btn-warning',
+        cancelButtonClass: 'btn btn-danger',
+        confirmButtonText: 'SI',
+        cancelButtonText: 'NO',
+        buttonsStyling: false
+       }).then((result) => {
+          if (result.value) {
+               cambiarEstadoObjetoPlanAjax();            
+            return(true);
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            return(false);
+          }
+        });   
+  }else{
+    Swal.fire("Informativo!", "Debe Seleccionar Un estado", "warning");
+  }
+}
+
+function cambiarEstadoObjetoPlanAjax(){
+  var codigo=$("#modal_codigopropuesta").val();
+  var estado=$("#modal_codigoestado").val();
+  var observaciones=$("#modal_observacionesestado").val();
+  var parametros={"obs":observaciones,"estado":estado,"codigo":codigo};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "plantillas_servicios/ibnorca_ajaxCambiarEstado.php",
+        data: parametros,
+        beforeSend: function () {
+        $("#texto_ajax_titulo").html("Actualizando estado..."); 
+          iniciarCargaAjax();
+        },
+        success:  function (resp) {
+           detectarCargaAjax();
+           $("#texto_ajax_titulo").html("Procesando Datos");
+           if($("#id_servicioibnored").length>0){
+            var q=$("#id_servicioibnored").val();
+            var r=$("#id_servicioibnored_rol").val();
+            alerts.showSwal('success-message','index.php?opcion=listPlantillasServiciosAdmin&q='+q+'&r='+r);   
+          }else{
+             alerts.showSwal('success-message','index.php?opcion=listPlantillasServiciosAdmin');
+          }
+        }
+    });
 }

@@ -2,7 +2,7 @@
 if(isset($_GET['q'])){
        $q=$_GET['q'];
        $url= $_GET["opcion"];
- ?><a class='flotante' title="Cambiar la sesión" href='#'><img src='assets/img/nuevoUser.svg' width="35" height="35" border="0" onclick="alerts.showSwal('warning-message-change-user','change.php?q=<?=$q;?>&url=<?=$url?>')"/></a><?php
+ ?><!--<a class='flotante' title="Cambiar la sesión" href='#'><img src='assets/img/nuevoUser.svg' width="35" height="35" border="0" onclick="alerts.showSwal('warning-message-change-user','change.php?q=<?=$q;?>&url=<?=$url?>')"/></a>--><?php
 }
 ?>
 

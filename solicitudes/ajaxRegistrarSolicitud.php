@@ -51,6 +51,12 @@ if(isset($_GET['numero'])){
   $stmtInsert = $dbh->prepare($sqlInsert);
   $stmtInsert->execute();
 
+  //enviar propuestas para la actualizacion de ibnorca
+  $fechaHoraActual=date("Y-m-d H:i:s");
+  $idTipoObjeto=2708;
+  $idObjeto=2721; //regristado
+  $obs="Registro de Solicitud";
+  actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codSolicitud,$fechaHoraActual,$obs);
 
   if(isset($_GET['q'])){
     $q=$_GET['q'];
