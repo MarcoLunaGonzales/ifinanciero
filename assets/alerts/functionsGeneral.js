@@ -8718,9 +8718,15 @@ function editarAtributo(fila){
   if(($("#div_marca").hasClass("d-none"))){
     $('#pais_empresa').val(itemAtributos[fila].pais+"####"+itemAtributos[fila].nom_pais);
     if($("#modalEditPlantilla").length){
-       seleccionarDepartamentoServicioSitioModal(0,itemAtributos[fila].estado+"####"+itemAtributos[fila].nom_estado,itemAtributos[fila].ciudad+"####"+itemAtributos[fila].nom_ciudad);
+      if(itemAtributos[fila].nom_pais!="SIN REGISTRO"){
+        seleccionarDepartamentoServicioSitioModal(0,itemAtributos[fila].estado+"####"+itemAtributos[fila].nom_estado,itemAtributos[fila].ciudad+"####"+itemAtributos[fila].nom_ciudad);
+      }
+       
     }else{
-       seleccionarDepartamentoServicioSitio(0,itemAtributos[fila].estado+"####"+itemAtributos[fila].nom_estado,itemAtributos[fila].ciudad+"####"+itemAtributos[fila].nom_ciudad);  
+      if(itemAtributos[fila].nom_pais!="SIN REGISTRO"){
+        seleccionarDepartamentoServicioSitio(0,itemAtributos[fila].estado+"####"+itemAtributos[fila].nom_estado,itemAtributos[fila].ciudad+"####"+itemAtributos[fila].nom_ciudad);  
+      }
+       
     }   
     $('.selectpicker').selectpicker("refresh");  
   }

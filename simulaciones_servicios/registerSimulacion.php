@@ -31,7 +31,7 @@ if(isset($_GET['cod'])){
 }else{
 	$codigo=0;
 }
-
+$lista= obtenerPaisesServicioIbrnorca();
 if(isset($_GET['q'])){
  $idServicioX=$_GET['q'];
  ?>

@@ -42,7 +42,7 @@ if(isset($_GET["cod_simulacion"])){
         <?php 
         for ($i=0; $i < $nroColumnas; $i++) {
          ?>
-         <td class="fondo-boton">DIAS</td>
+         <td class="fondo-boton">CANT</td>
          <td class="fondo-boton">BOB</td>
          <td class="fondo-boton">USD</td>
          <?php
