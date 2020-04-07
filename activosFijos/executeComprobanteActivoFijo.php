@@ -16,7 +16,7 @@ try{
     $stmtVerifComprobante->execute();
     $resultVerifCompro = $stmtVerifComprobante->fetch();
     $cod_comprobante = $resultVerifCompro['cod_comprobante'];  
-    if($cod_comprobante==null){//generamos si aun no se registro    	
+    if($cod_comprobante==null || $cod_comprobante==0){//generamos si aun no se registro    	
 	    $stmtCajaChica = $dbh->prepare("SELECT af.codigo,af.codigoactivo,af.activo,af.fechalta, d.codigo as cod_depre,d.abreviatura as dep_nombre, tb.tipo_bien tb_tipo,af.contabilizado,af.cod_unidadorganizacional,af.cod_area,af.cod_responsables_responsable,af.numerofactura,af.valorinicial,
 		(select pr.abreviatura from proyectos_financiacionexterna pr where pr.codigo=af.cod_proy_financiacion)as proy_financiacion,
 		 (select uo.abreviatura from unidades_organizacionales uo where uo.codigo=af.cod_unidadorganizacional)as nombre_unidad, 

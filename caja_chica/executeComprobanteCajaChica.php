@@ -16,7 +16,7 @@ try{
     $stmtVerifComprobante->execute();
     $resultVerifCompro = $stmtVerifComprobante->fetch();
     $cod_tipocajachica = $resultVerifCompro['cod_comprobante'];  
-    if($cod_tipocajachica==null){//generamos si aun no se registro
+    if($cod_tipocajachica==null || $cod_tipocajachica==0){//generamos si aun no se registro
     	//Informacion caja chica en curso
 	    $stmtCajaChica = $dbh->prepare("SELECT *,(select CONCAT_WS(' ',p.primer_nombre,p.paterno,p.materno) from personal p where p.codigo=cod_personal) as name_personal,
 	        (select tc.nombre from tipos_caja_chica tc where tc.codigo=cod_tipocajachica) as name_tipocc,
