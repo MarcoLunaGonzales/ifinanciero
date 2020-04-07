@@ -91,7 +91,7 @@ $codigo=$_GET['codigo'];
                                      </td>
                                      <td class="text-center">
 
-                                       <select class="form-control selectpicker form-control-sm" data-style="fondo-boton fondo-boton-active" name="dias_personal<?=$anio?>FFF<?=$iii?>" id="dias_personal<?=$anio?>FFF<?=$iii?>" onchange="calcularTotalPersonalServicio('<?=$anio?>',2)">
+                                       <select class="form-control selectpicker form-control-sm" data-size="6" data-style="fondo-boton fondo-boton-active" name="dias_personal<?=$anio?>FFF<?=$iii?>" id="dias_personal<?=$anio?>FFF<?=$iii?>" onchange="calcularTotalPersonalServicio('<?=$anio?>',2)">
                                           <?php 
                                              for ($hf=0; $hf<=$diasSimulacion; $hf++) {
                                               if($hf==$diasPre){
