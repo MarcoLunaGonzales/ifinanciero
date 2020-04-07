@@ -23,6 +23,28 @@ $sqlUpdate="UPDATE solicitud_recursos SET  cod_estadosolicitudrecurso=$estado wh
 $stmtUpdate = $dbh->prepare($sqlUpdate);
 $flagSuccess=$stmtUpdate->execute();
 
+
+if($estado!=1){
+	//actualziar los estados del servidor ibnorca
+	if($estado==4){
+    //enviar propuestas para la actualizacion de ibnorca
+    $fechaHoraActual=date("Y-m-d H:i:s");
+    $idTipoObjeto=2708;
+    $idObjeto=2722; //regristado
+    $obs="En Aprobacion Solicitud";
+    actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);		
+	}
+	//fin de actulizar estados del servidor ibnorca
+}else{
+	//enviar propuestas para la actualizacion de ibnorca
+    $fechaHoraActual=date("Y-m-d H:i:s");
+    $idTipoObjeto=2708;
+    $idObjeto=2721; //regristado
+    $obs="Registro de Solicitud";
+    actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);
+}
+
+
 if(isset($_GET['admin'])){
   $urlList2=$urlList;
 }

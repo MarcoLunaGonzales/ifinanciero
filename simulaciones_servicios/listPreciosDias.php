@@ -66,12 +66,14 @@ if(isset($_GET["codigo"])){
 
                     </div>
             <?php 
+            $codSimServ=obtenerCodigoSimServicioTCPTCS($areaX);
             if($areaX==39){
+
                ?>
                <script>$("#productos_div").removeClass("d-none");</script>
                <script>$("#div_marca").removeClass("d-none");</script>
                <script>$("#div_norma").removeClass("d-none");</script>
-               <script>$("#titulo_modal_atributo").html("AGREGAR PRODUCTO");</script>  
+               <script>$("#titulo_modal_atributo").html("AGREGAR PRODUCTO");</script> 
                <?php
             }else{
               if($areaX==38){
@@ -85,6 +87,6 @@ if(isset($_GET["codigo"])){
               }
             }
             ?>       
-                              
+         <script>$("#nombre").val(<?=$codSimServ?>);</script>                      
 <?php   
 }     

@@ -42,7 +42,7 @@ if(isset($_GET["cod_simulacion"])){
         <?php 
         for ($i=0; $i < $nroColumnas; $i++) {
          ?>
-         <td class="fondo-boton">DIAS</td>
+         <td class="fondo-boton">CANT</td>
          <td class="fondo-boton">BOB</td>
          <td class="fondo-boton">USD</td>
          <?php
@@ -73,7 +73,7 @@ if(isset($_GET["cod_simulacion"])){
        <tr>
          <td class="text-left small"><input type="hidden" id="modal_local_extranjero<?=$iii?>" value="<?=$codExtLoc?>"><input type="hidden" id="codigo_filaauditor<?=$iii?>" value="<?=$codigoTipo?>"><?=$nombreTipo?></td>
          <td>
-           <select class="form-control selectpicker form-control-sm" data-style="fondo-boton fondo-boton-active" name="modal_cantidad_personal<?=$iii?>" id="modal_cantidad_personal<?=$iii?>" onchange="calcularTotalPersonalServicioAuditor()">
+           <select class="form-control selectpicker form-control-sm" data-size="6" data-style="fondo-boton fondo-boton-active" name="modal_cantidad_personal<?=$iii?>" id="modal_cantidad_personal<?=$iii?>" onchange="calcularTotalPersonalServicioAuditor()">
               <?php 
                  for ($hf=0; $hf<=$cantidadTipo; $hf++) {
                    if($hf==$cantidadTipo){
@@ -125,7 +125,7 @@ if(isset($_GET["cod_simulacion"])){
           $montoPre=number_format($montoPre,2,".","");       
          ?>
          <td class="text-right">
-           <select class="form-control selectpicker form-control-sm" data-style="fondo-boton fondo-boton-active" name="modal_dias_personalItem<?=$ncol?>RRR<?=$iii?>" id="modal_dias_personalItem<?=$ncol?>RRR<?=$iii?>" onchange="calcularTotalPersonalServicioAuditor()">
+           <select class="form-control selectpicker form-control-sm" data-size="6" data-style="fondo-boton fondo-boton-active" name="modal_dias_personalItem<?=$ncol?>RRR<?=$iii?>" id="modal_dias_personalItem<?=$ncol?>RRR<?=$iii?>" onchange="calcularTotalPersonalServicioAuditor()">
               <?php 
                  for ($hf=0; $hf<=$diasTipo; $hf++) {
                    if($hf==$diasPres){

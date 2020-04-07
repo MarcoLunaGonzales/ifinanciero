@@ -100,7 +100,7 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
                 </div>
               </div>
                <?php
-              if($globalAdmin==1){
+              //if($globalAdmin==1){
               ?>
               <div class="card-footer fixed-bottom">
                 <button type="submit" class="btn btn-white" style="background:#F7FF5A; color:#07B46D;"><i class="material-icons">attach_money</i> PAGAR</button>
@@ -109,7 +109,7 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
               
               </form>  
               <?php
-              }
+             // }
               ?>
             </div>
           </div>  

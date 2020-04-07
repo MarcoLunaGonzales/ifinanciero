@@ -7,6 +7,13 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $dbh = new Conexion();
 if(isset($_GET['q'])){
   $q=$_GET['q'];
+  $item_3=$_GET['r'];
+?>
+  <input type="hidden" name="id_servicioibnored" value="<?=$q?>" id="id_servicioibnored"/>
+  <input type="hidden" name="id_servicioibnored_rol" value="<?=$item_3?>" id="id_servicioibnored_rol"/>
+<?php
+}else{
+  $item_3=0;
 }
 // Preparamos
 $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_plantilla, u.abreviatura as unidad,a.abreviatura as area from plantillas_servicios p,unidades_organizacionales u, areas a, estados_plantillascosto e 
@@ -25,6 +32,8 @@ $stmt->bindColumn('fecha_registro', $fechaAuditoria);
 $stmt->bindColumn('dias_auditoria', $diasAuditoria);
 $stmt->bindColumn('cod_estadoplantilla', $codEstado);
 $stmt->bindColumn('estado_plantilla', $estadoPlantilla);
+
+$item_1=2706;
 ?>
 
 <div class="content">
@@ -86,12 +95,16 @@ $stmt->bindColumn('estado_plantilla', $estadoPlantilla);
                                 <?php 
                                 if($codEstado==1){
                                   if(isset($_GET['q'])){
-                                    ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=3&q=<?=$q?>" class="dropdown-item">
+                                    ?>
+                                   <a href="#" onclick="mostrarCambioEstadoObjeto(<?=$codigo?>)" class="dropdown-item">
+                                    <i class="material-icons text-warning">dns</i> Cambiar Estado
+                                  </a>
+                                    <!--<a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=3&q=<?=$q?>" class="dropdown-item">
                                     <i class="material-icons text-success">offline_pin</i> Aprobar Plantilla
                                  </a>
                                  <a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=2&q=<?=$q?>" class="dropdown-item">
                                     <i class="material-icons text-danger">clear</i> Anular Plantilla
-                                 </a><?php 
+                                 </a>--><?php 
                                   }else{
                                     ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=3" class="dropdown-item">
                                     <i class="material-icons text-success">offline_pin</i> Aprobar Plantilla
@@ -104,9 +117,12 @@ $stmt->bindColumn('estado_plantilla', $estadoPlantilla);
                                 }else{
                                    if(isset($_GET['q'])){
                                     ?>
-                                   <a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1&q=<?=$q?>" class="dropdown-item">
+                                    <a href="#" onclick="mostrarCambioEstadoObjeto(<?=$codigo?>)" class="dropdown-item">
+                                    <i class="material-icons text-warning">dns</i> Cambiar Estado
+                                  </a>
+                                   <!--<a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1&q=<?=$q?>" class="dropdown-item">
                                     <i class="material-icons text-dark">reply</i> Deshacer Cambios
-                                   </a>
+                                   </a>-->
                                     <?php
                                    }else{
                                     ?>
@@ -138,3 +154,48 @@ $stmt->bindColumn('estado_plantilla', $estadoPlantilla);
           </div>  
         </div>
     </div>
+
+    <!-- small modal -->
+<div class="modal fade modal-arriba modal-primary" id="modalEstadoObjeto" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-notice" style="max-width: 50% !important;">
+    <div class="modal-content card">
+                <div class="card-header card-header-warning card-header-text">
+                  <div class="card-text">
+                    <h4>Cambiar de Estado</h4>
+                  </div>
+                  <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">close</i>
+                  </button>
+                </div>
+                <input type="hidden" class="form-control" name="modal_codigopropuesta" id="modal_codigopropuesta" value="">
+                <input type="hidden" class="form-control" name="modal_tipoobjeto" id="modal_tipoobjeto" value="<?=$item_1?>">
+                <input type="hidden" class="form-control" name="modal_rolpersona" id="modal_rolpersona" value="<?=$item_3?>">
+                <div class="card-body">
+                 <div class="card-body">
+                      <div class="row">
+                       <label class="col-sm-2 col-form-label">Estado</label>
+                       <div class="col-sm-10">
+                        <div class="form-group">
+                             <select class="selectpicker form-control" name="modal_codigoestado" id="modal_codigoestado" data-style="btn btn-primary">
+                                  
+                             </select>
+                         </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                          <label class="col-sm-2 col-form-label">Observaciones</label>
+                           <div class="col-sm-10">                     
+                             <div class="form-group">
+                               <textarea type="text" class="form-control" name="modal_observacionesestado" id="modal_observacionesestado"></textarea>
+                             </div>
+                           </div>  
+                      </div> 
+                      <div class="form-group float-right">
+                        <button type="button" id="boton_guardarsim" class="btn btn-default" onclick="cambiarEstadoObjetoPlan()">Cambiar Estado</button>
+                      </div> 
+                </div>   
+                </div>
+      </div>  
+    </div>
+  </div>
+<!--    end small modal -->

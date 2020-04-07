@@ -65,7 +65,7 @@
                        <label class="col-sm-2 col-form-label">Pais</label>
                        <div class="col-sm-10">
                         <div class="form-group">
-                          <select name="pais_empresa" id="pais_empresa" onchange="seleccionarDepartamentoServicioSitioModal()" class="form-control form-control-sm selectpicker" data-style="btn btn-info">
+                          <select name="pais_empresa" id="pais_empresa" data-size="6" onchange="seleccionarDepartamentoServicioSitioModal()" class="form-control form-control-sm selectpicker" data-style="btn btn-info">
                             <option disabled selected value="">--SELECCIONE--</option>
                              <?php
                                   foreach ($lista->lista as $listas) {
@@ -79,7 +79,7 @@
                        <label class="col-sm-2 col-form-label">Dep / Est</label>
                        <div class="col-sm-10">
                         <div class="form-group">
-                          <select name="departamento_empresa" onchange="seleccionarCiudadServicioSitioModal()" id="departamento_empresa" class="form-control form-control-sm selectpicker" data-style="btn btn-info">
+                          <select name="departamento_empresa"  data-size="6" onchange="seleccionarCiudadServicioSitioModal()" id="departamento_empresa" class="form-control form-control-sm selectpicker" data-style="btn btn-info">
                           </select>
                         </div>
                        </div>
@@ -88,7 +88,7 @@
                        <label class="col-sm-2 col-form-label">Ciudad</label>
                        <div class="col-sm-10">
                         <div class="form-group">
-                          <select name="ciudad_empresa" onchange="" id="ciudad_empresa" class="form-control form-control-sm selectpicker" data-style="btn btn-success">
+                          <select name="ciudad_empresa" onchange="" data-size="6" id="ciudad_empresa" class="form-control form-control-sm selectpicker" data-style="btn btn-success">
                           </select>
                         </div>
                        </div>
@@ -541,7 +541,7 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                                     }
                                   }
                                 ?>
-                                  <select class="selectpicker form-control form-control-sm" data-live-search="true" name="modal_editservicio<?=$an?>" id="modal_editservicio<?=$an?>" data-style="fondo-boton">
+                                  <select class="selectpicker form-control form-control-sm" data-size="6" data-live-search="true" name="modal_editservicio<?=$an?>" id="modal_editservicio<?=$an?>" data-style="fondo-boton">
                                     <option disabled selected="selected" value="">--SERVICIOS--</option>
                                     <?php 
                                      $stmt3 = $dbh->prepare("SELECT idclaservicio,descripcion,codigo from cla_servicios where (codigo_n1=108 or codigo_n1=109) and vigente=1 and codigo_n1=$codigoAreaServ and idTipo=$idTipoServ order by 2");
@@ -670,7 +670,7 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                                      <td>
                                        <div class="togglebutton">
                                                <label>
-                                                 <input type="checkbox" <?=($banderaHab==1)?"checked":"";?> onchange="activarInputMontoFilaServicio(<?=$an?>,'<?=$iii?>')">
+                                                 <input type="checkbox" <?=($banderaHab==1)?"checked":"";?> id="modal_checkserv<?=$an?>SSS<?=$iii?>" onchange="activarInputMontoFilaServicio(<?=$an?>,'<?=$iii?>')">
                                                  <span class="toggle"></span>
                                                </label>
                                        </div>
@@ -755,7 +755,7 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                                     }
                                   }
                                 ?>
-                                  <select class="selectpicker form-control form-control-sm" data-live-search="true" name="modal_editpersonal<?=$an?>" id="modal_editpersonal<?=$an?>" data-style="fondo-boton">
+                                  <select class="selectpicker form-control form-control-sm" data-size="6" data-live-search="true" name="modal_editpersonal<?=$an?>" id="modal_editpersonal<?=$an?>" data-style="fondo-boton">
                                     <option disabled selected="selected" value="">--PERSONAL--</option>
                                     <?php 
                                      $stmt3 = $dbh->prepare("SELECT codigo,nombre,abreviatura from tipos_auditor where cod_estadoreferencial=1");
@@ -866,7 +866,7 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                                      </td>
                                      <td class="text-center">
 
-                                       <select class="form-control selectpicker form-control-sm" data-style="fondo-boton fondo-boton-active" name="dias_personal<?=$an?>FFF<?=$iii?>" id="dias_personal<?=$an?>FFF<?=$iii?>" onchange="calcularTotalPersonalServicio('<?=$an?>',2)">
+                                       <select class="form-control selectpicker form-control-sm" data-size="6" data-style="fondo-boton fondo-boton-active" name="dias_personal<?=$an?>FFF<?=$iii?>" id="dias_personal<?=$an?>FFF<?=$iii?>" onchange="calcularTotalPersonalServicio('<?=$an?>',2)">
                                           <?php 
                                              for ($hf=0; $hf<=$diasSimulacion; $hf++) {
                                               if($hf==$diasPre){
@@ -900,7 +900,7 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                                      <td>
                                        <div class="togglebutton">
                                                <label>
-                                                 <input type="checkbox" <?=($banderaHab==1)?"checked":"";?> onchange="activarInputMontoPersonalServicio('<?=$an?>','<?=$iii?>')">
+                                                 <input type="checkbox" <?=($banderaHab==1)?"checked":"";?> id="modal_checkpre<?=$an?>FFF<?=$iii?>" onchange="activarInputMontoPersonalServicio('<?=$an?>','<?=$iii?>')">
                                                  <span class="toggle"></span>
                                                </label>
                                        </div>
@@ -989,3 +989,4 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
     </div>
   </div>
 <!--    end small modal -->
+

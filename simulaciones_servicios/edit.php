@@ -23,6 +23,26 @@ $sqlUpdate="UPDATE simulaciones_servicios SET  cod_estadosimulacion=$estado wher
 $stmtUpdate = $dbh->prepare($sqlUpdate);
 $flagSuccess=$stmtUpdate->execute();
 
+if($estado!=1){
+	//actualziar los estados del servidor ibnorca
+	if($estado==4){
+    //enviar propuestas para la actualizacion de ibnorca
+    $fechaHoraActual=date("Y-m-d H:i:s");
+    $idTipoObjeto=2707;
+    $idObjeto=2716; //regristado
+    $obs="Registro de propuesta";
+    actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);		
+	}
+	//fin de actulizar estados del servidor ibnorca
+}else{
+	//enviar propuestas para la actualizacion de ibnorca
+    $fechaHoraActual=date("Y-m-d H:i:s");
+    $idTipoObjeto=2707;
+    $idObjeto=2715; //regristado
+    $obs="Registro de propuesta";
+    actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);
+}
+
 if(isset($_GET['admin'])){
   $urlList2=$urlList;
   //aprobar mediante servicio web

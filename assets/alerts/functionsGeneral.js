@@ -5398,7 +5398,7 @@ function verEstadosCuentas(fila,cuenta){
       var vector_cod_cuenta_auxiliar=$("#cuentas_auxiliaresorigen").val().split('###');
       var cod_cuenta_auxiliar=vector_cod_cuenta_auxiliar[0];
       var auxi="NO";
-    //}
+    }
 
     var tipo=$("#tipo_estadocuentas"+fila).val();
     var tipo_proveedorcliente=$("#tipo_proveedorcliente"+fila).val();

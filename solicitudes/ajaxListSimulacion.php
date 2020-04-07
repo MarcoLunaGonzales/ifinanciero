@@ -11,8 +11,8 @@ $sqlX="SET NAMES 'utf8'";
 $stmtX = $dbh->prepare($sqlX);
 $stmtX->execute();
 $usuario=$_SESSION['globalUser'];
- $query="SELECT * FROM simulaciones_costos where cod_responsable=$usuario and cod_estadosimulacion=3 order by codigo";
- $query2="SELECT * FROM simulaciones_servicios where cod_responsable=$usuario and cod_estadosimulacion=3 order by codigo";
+ $query="SELECT * FROM simulaciones_costos where cod_responsable=$usuario and cod_estadosimulacion=5 order by codigo";
+ $query2="SELECT * FROM simulaciones_servicios where  cod_estadosimulacion=5 order by codigo"; //cod_responsable=$usuario and
   ?>
    <label class="col-sm-3 col-form-label">Propuesta :</label>
    <div class="col-sm-9">
