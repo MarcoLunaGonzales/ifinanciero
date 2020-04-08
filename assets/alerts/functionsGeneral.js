@@ -219,6 +219,7 @@ function configuracionCentros(fila,inicio){
     }
   };
 }
+
 function configuracionEstadosCuenta(fila,codigoCuenta,codigoCuentaAux){
   var contador=0;
   for (var i = 0; i < estado_cuentas.length; i++) {
@@ -243,6 +244,7 @@ function configuracionEstadosCuenta(fila,codigoCuenta,codigoCuentaAux){
      $("#estados_cuentas"+fila).addClass("btn-success");
   }
 }
+
 function copiarGlosa(){
   if(numFilas!=0){
    var gls=$('#glosa').val();
@@ -1061,7 +1063,18 @@ function botonBuscarComprobante(){
   }
   ajax.send(null)
 } 
-
+function botonBuscarComprobanteIng(codigo){
+  ajax=nuevoAjax();
+  ajax.open('GET', 'comprobantes/ajax_filtrarComporbantes.php?codigo='+codigo,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      var contenedor=$("#data_comprobantes");
+      contenedor.html(ajax.responseText);
+      // $("#modalBuscador").modal("hide");
+    }
+  }
+  ajax.send(null)
+}
 
 function sendAprobacion(cod,estado){
   if(estado==3){
@@ -5596,9 +5609,14 @@ function verEstadosCuentas(fila,cuenta){
     $("#est_codcuentaaux").val($("#cuenta_auxiliar"+fila).val());*/ 
     $("#tituloCuentaModal").html($("#divCuentaDetalle"+fila).html()); 
     $("#modalEstadosCuentas").modal("show");   
+<<<<<<< HEAD
   }
 }  
 //}
+=======
+  }  
+}
+>>>>>>> 227198e025b2a3a0d2e39ac847f8a4aa16131ef6
 
 var itemEstadosCuentas=[];
 function quitarEstadoCuenta(){

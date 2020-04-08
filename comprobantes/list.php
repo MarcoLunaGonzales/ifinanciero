@@ -73,8 +73,18 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                   </div>
                   <h4 class="card-title"><?=$moduleNamePlural?></h4>
                   <h4 align="right">
-                    <button type="button" class="btn btn-warning btn-round btn-fab" data-toggle="modal" data-target="#modalBuscador">
-                      <i class="material-icons" title="Buscador">search</i>
+                    <?php
+                      $stmtTipoComprobante_x = $dbh->prepare("SELECT codigo,abreviatura,nombre from tipos_comprobante where cod_estadoreferencial=1");
+                      $stmtTipoComprobante_x->execute();
+                      $stmtTipoComprobante_x->bindColumn('codigo', $cod_tipo_comprobante_x);
+                      $stmtTipoComprobante_x->bindColumn('abreviatura', $abreviatura_x);
+                      $stmtTipoComprobante_x->bindColumn('nombre', $nombre_x);
+                      while ($rowTC = $stmtTipoComprobante_x->fetch(PDO::FETCH_BOUND)) {?>
+                        <button title="Filtrar por <?=$nombre_x?>" type="button" class="btn btn-success btn-sm btn-round " id="botonBuscarComprobanteIng" name="botonBuscarComprobanteIng" onclick="botonBuscarComprobanteIng(<?=$cod_tipo_comprobante_x?>)"><?=$abreviatura_x?></button>
+                      <?php }
+                    ?>                  
+                    <button type="button" class="btn btn-warning btn-round btn-fab btn-sm" data-toggle="modal" data-target="#modalBuscador">
+                      <i class="material-icons" title="Buscador Avanzado">search</i>
                     </button>                      
                   </h4>
                 </div>      
