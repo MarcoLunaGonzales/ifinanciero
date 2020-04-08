@@ -6,16 +6,16 @@ if(isset($_GET['q'])){
   $q=$_GET['q'];
 }
 $globalAdmin=$_SESSION["globalAdmin"];
-
+$globalUser=$_SESSION["globalUser"];
 $dbh = new Conexion();
 
 // Preparamos
 if(isset($_GET['q'])){
   $q=$_GET['q'];
   //cargarDatosSession();
-  $stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado,c.nombre as cliente from simulaciones_servicios sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo join clientes c on c.codigo=sc.cod_cliente where sc.cod_estadoreferencial=1 order by sc.codigo");
+  $stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado,c.nombre as cliente from simulaciones_servicios sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo join clientes c on c.codigo=sc.cod_cliente where sc.cod_estadoreferencial=1 and sc.cod_responsable=$globalUser order by sc.fecha desc");
 }else{
-  $stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado,c.nombre as cliente from simulaciones_servicios sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo join clientes c on c.codigo=sc.cod_cliente where sc.cod_estadoreferencial=1 order by sc.codigo");
+  $stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado,c.nombre as cliente from simulaciones_servicios sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo join clientes c on c.codigo=sc.cod_cliente where sc.cod_estadoreferencial=1 and sc.cod_responsable=$globalUser order by sc.fecha desc");
 }
 
 // Ejecutamos
@@ -30,6 +30,7 @@ $stmt->bindColumn('cod_estadosimulacion', $codEstado);
 $stmt->bindColumn('cod_responsable', $codResponsable);
 $stmt->bindColumn('estado', $estado);
 $stmt->bindColumn('cliente', $cliente);
+$stmt->bindColumn('idServicio', $idServicioX);
 
 ?>
 
@@ -45,7 +46,7 @@ $stmt->bindColumn('cliente', $cliente);
                   <h4 class="card-title"><b><?=$moduleNamePlural?></b></h4>
                 </div>
                 <div class="card-body">
-                    <table class="table" id="tablePaginator">
+                    <table class="table table-condensed table-striped" id="tablePaginator">
                       <thead>
                         <tr>
                           <th class="text-center">#</th>
@@ -54,6 +55,7 @@ $stmt->bindColumn('cliente', $cliente);
                           <th>Responsable</th>
                           <th>Fecha</th>
                           <th>Estado</th>
+                          <th>Servicio</th>
                           <th class="text-right">Actions</th>
                         </tr>
                       </thead>
@@ -61,6 +63,13 @@ $stmt->bindColumn('cliente', $cliente);
                       <?php
                         $index=1;
                         while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+                          $codigoServicio="SIN CODIGO";
+                          $sql="SELECT codigo FROM ibnorca.servicios where idServicio=$idServicioX";
+                          $stmt1=$dbh->prepare($sql);
+                          $stmt1->execute();
+                           while ($row1 = $stmt1->fetch(PDO::FETCH_ASSOC)) {
+                             $codigoServicio=$row1['codigo'];
+                           }
                           $responsable=namePersonal($codResponsable);
                           switch ($codEstado) {
                             case 1:
@@ -70,31 +79,40 @@ $stmt->bindColumn('cliente', $cliente);
                               $nEst=10;$barEstado="progress-bar-danger";$btnEstado="btn-danger";
                             break;
                             case 3:
-                              $nEst=100;$barEstado="progress-bar-success";$btnEstado="btn-success";
+                              $nEst=80;$barEstado="progress-bar-primary";$btnEstado="btn-primary";
                             break;
                             case 4:
                               $nEst=60;$barEstado="progress-bar-warning";$btnEstado="btn-warning";
                             break;
+                            case 5:
+                              $nEst=100;$barEstado="progress-bar-success";$btnEstado="btn-success";
+                            break;
+                          }
+                          $estiloFila="";$iconoAdjudicado="";
+                          if($codEstado==5){
+                            $estiloFila="bg-plomo";
+                            $iconoAdjudicado="check_circle";
                           }
 ?>
                         <tr>
                           <td align="center"><?=$index;?></td>
-                          <td><?=$nombre;?></td>
+                          <td class="font-weight-bold"><?=$nombre;?></td>
                           <td><?=$cliente?></td>
                           <td>
                                  <img src="assets/img/faces/persona1.png" width="20" height="20"/><?=$responsable;?>
                           </td>
-                          <td><?=$fecha;?></td>
-                          <td><?=$estado;?> <?=$nEst?> %
-                             <div class="progress">
+                          <td><?=strftime('%d/%m/%Y',strtotime($fecha));?></td>
+                          <td class="font-weight-bold"><i class="material-icons text-warning"><?=$iconoAdjudicado?></i> <?=$estado;?></td> 
+                             <!--<?=$nEst?> % <div class="progress">
                                <div class="progress-bar <?=$barEstado?>" role="progressbar" aria-valuenow="<?=$nEst?>" aria-valuemin="0" aria-valuemax="100" style="width:<?=$nEst?>%">
                                   <span class="sr-only"><?=$nEst?>% Complete</span>
                                </div>
                              </div>
-                          </td> 
+                          </td>--> 
+                          <td><?=$codigoServicio?></td>
                           <td class="td-actions text-right">
                             <?php
-                              if($codEstado==4||$codEstado==3){
+                              if($codEstado==4||$codEstado==3||$codEstado==5){
                                
                             ?>
                             <div class="btn-group dropdown">
@@ -112,7 +130,10 @@ $stmt->bindColumn('cliente', $cliente);
                                  }?>
                                  <a href="<?=$urlVer;?>?cod=<?=$codigo;?>&q=<?=$q?>" class="dropdown-item">
                                     <i class="material-icons text-warning">bar_chart</i> Ver Propuesta
-                                 </a> 
+                                 </a>
+                                 <!--<a href="#" class="dropdown-item">
+                                    <i class="material-icons text-warning">bar_chart</i> Anular propuesta
+                                 </a>--> 
                                  <?php
                                }else{
                                 if($codEstado==4){
@@ -131,7 +152,7 @@ $stmt->bindColumn('cliente', $cliente);
                               </div>
                             </div>                           
                             <?php
-                             if($codEstado==3){
+                             if($codEstado==5){
                                $anteriorCod=obtenerCodigoSolicitudRecursosSimulacion(2,$codigo);
                                if(isset($_GET['q'])){
                                   ?><a href="<?=$urlSolicitudRecursos?>?cod=<?=$codigo?>&q=<?=$q?>" target="_self" title="Solicitud De Recursos"class="btn btn-danger">
@@ -142,7 +163,21 @@ $stmt->bindColumn('cliente', $cliente);
                                  </a> 
                                  <a class="btn btn-warning" title="Solicitud de Facturación" href='<?=$urlSolicitudfactura;?>&cod=<?=$codigo;?>&q=<?=$q?>'>
                                    <i class="material-icons" >receipt</i>                              
-                                 </a><?php  
+                                 </a>
+                                 <?php 
+                                 if($idServicioX>0){
+                                   ?>
+                                 <button title="Servicio Creado C: <?=$codigoServicio?>" class="btn btn-success" onclick="">
+                                    <i class="material-icons">check</i>
+                                  </button>
+                                  <?php  
+                                  }else{
+                                    ?>
+                                    <button title="Crear Servicio" class="btn btn-danger" onclick="alerts.showSwal('warning-message-crear-servicio','<?=$urlRegisterNewServicio;?>&codigo=<?=$codigo;?>&q=<?=$q?>')">
+                                    <i class="material-icons">add</i>
+                                  </button>                                 
+                                  <?php 
+                                  } 
                                 }else{
                                 ?><a href="<?=$urlSolicitudRecursos?>?cod=<?=$codigo?>" target="_blank" title="Solicitud De Recursos"class="btn btn-danger">
                                     <i class="material-icons">content_paste</i>
@@ -152,7 +187,22 @@ $stmt->bindColumn('cliente', $cliente);
                                  </a> 
                                  <a class="btn btn-warning" title="Solicitud de Facturación" href='<?=$urlSolicitudfactura;?>&cod=<?=$codigo;?>'>
                                    <i class="material-icons" >receipt</i>                              
-                                 </a><?php
+                                 </a>
+                                 <?php 
+                                 if($idServicioX>0){
+                                   ?>
+                                 <button title="Servicio Creado C: <?=$codigoServicio?>" class="btn btn-success" onclick="">
+                                    <i class="material-icons">check</i>
+                                  </button>
+                                  <?php  
+                                  }else{
+                                    ?>
+                                    <button title="Crear Servicio" class="btn btn-danger" onclick="alerts.showSwal('warning-message-crear-servicio','<?=$urlRegisterNewServicio;?>&codigo=<?=$codigo;?>')">
+                                    <i class="material-icons">add</i>
+                                  </button>                                
+                                  <?php 
+                                  } 
+                                
                                 }
                               }    
                               }else{
@@ -205,3 +255,6 @@ $stmt->bindColumn('cliente', $cliente);
           </div>  
         </div>
     </div>
+
+
+

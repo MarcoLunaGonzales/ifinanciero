@@ -91,7 +91,7 @@ $codigo=$_GET['codigo'];
                                      </td>
                                      <td class="text-center">
 
-                                       <select class="form-control selectpicker form-control-sm" data-style="fondo-boton fondo-boton-active" name="dias_personal<?=$anio?>FFF<?=$iii?>" id="dias_personal<?=$anio?>FFF<?=$iii?>" onchange="calcularTotalPersonalServicio('<?=$anio?>',2)">
+                                       <select class="form-control selectpicker form-control-sm" data-size="6" data-style="fondo-boton fondo-boton-active" name="dias_personal<?=$anio?>FFF<?=$iii?>" id="dias_personal<?=$anio?>FFF<?=$iii?>" onchange="calcularTotalPersonalServicio('<?=$anio?>',2)">
                                           <?php 
                                              for ($hf=0; $hf<=$diasSimulacion; $hf++) {
                                               if($hf==$diasPre){
@@ -125,7 +125,7 @@ $codigo=$_GET['codigo'];
                                      <td>
                                        <div class="togglebutton">
                                                <label>
-                                                 <input type="checkbox" <?=($banderaHab==1)?"checked":"";?> onchange="activarInputMontoPersonalServicio('<?=$anio?>','<?=$iii?>')">
+                                                 <input type="checkbox" <?=($banderaHab==1)?"checked":"";?> id="modal_checkpre<?=$anio?>FFF<?=$iii?>" onchange="activarInputMontoPersonalServicio('<?=$anio?>','<?=$iii?>')">
                                                  <span class="toggle"></span>
                                                </label>
                                        </div>
@@ -134,5 +134,5 @@ $codigo=$_GET['codigo'];
                                    <?php
                                   $iii++; 
                                   } ?>
-                                <script>$("#modal_numeropersonal"+<?=$anioio?>).val(<?=$iii?>)</script>
-                                <script>$("#modal_cantidadpersonal"+<?=$anioio?>).val(<?=$sumaCantidadPre?>)</script>  
+                                <script>$("#modal_numeropersonal"+<?=$anio?>).val(<?=$iii?>)</script>
+                                <script>$("#modal_cantidadpersonal"+<?=$anio?>).val(<?=$sumaCantidadPre?>)</script>  

@@ -588,9 +588,23 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
               <?php 
             if(isset($_GET['q'])){
               $q=$_GET['q'];
+              if(isset($_GET['r'])){
+                $r=$_GET['r'];
+                if(isset($_GET['s'])){
+                 $s=$_GET['s']; 
+                 ?>
+              <a href="../<?=$urlList;?>&q=<?=$q?>&r=<?=$r?>&s=<?=$s?>" class="btn btn-danger">Volver</a>
+              <?php
+                }else{
               ?>
+              <a href="../<?=$urlList;?>&q=<?=$q?>&r=<?=$r?>" class="btn btn-danger">Volver</a>
+              <?php   
+                }
+              }else{
+                ?>
               <a href="../<?=$urlList;?>&q=<?=$q?>" class="btn btn-danger">Volver</a>
               <?php
+              }
             }else{
               ?>
               <a href="../<?=$urlList;?>" class="btn btn-danger">Volver</a>

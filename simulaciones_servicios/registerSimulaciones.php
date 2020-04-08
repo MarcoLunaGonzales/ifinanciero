@@ -40,7 +40,7 @@ $codSimServ=obtenerCodigoSimServicio();
 </script>
 
 <?php
-$lista= NULL;
+$lista= obtenerPaisesServicioIbrnorca();//null 
 $fechaActual=date("Y-m-d");
 $dbh = new Conexion();
 ?>
@@ -72,7 +72,7 @@ $dbh = new Conexion();
                        <label class="col-sm-2 col-form-label">Numero:</label>
                        <div class="col-sm-7">
                         <div class="form-group">
-                          <input class="form-control" type="text" readonly name="nombre" id="nombre" value="<?=$codSimServ?>"/>
+                          <input class="form-control" type="text" readonly name="nombre" id="nombre" value="-"/>
                         </div>
                         </div>
                       </div>
@@ -82,7 +82,7 @@ $dbh = new Conexion();
                         <div class="row">
                           <div class="col-sm-12">
                             <div class="form-group">
-                                <select class="selectpicker form-control" data-live-search="true" name="cliente" id="cliente" data-style="btn btn-info"  required>
+                                <select class="selectpicker form-control" data-size="6" data-live-search-placeholder="Buscar cliente..." data-live-search="true" name="cliente" id="cliente" data-style="btn btn-info"  required>
           
                                 <!--<option disabled selected="selected" value="">Cliente</option>-->
                                 <?php
@@ -192,7 +192,7 @@ $dbh = new Conexion();
                        <label class="col-sm-2 col-form-label">Tipo del Servicio</label>
                        <div class="col-sm-7">
                         <div class="form-group">
-                          <select class="selectpicker form-control" data-live-search="true" name="tipo_servicio" id="tipo_servicio" data-style="btn btn-info"  required>       
+                          <select class="selectpicker form-control" data-size="6" data-live-search="true" name="tipo_servicio" id="tipo_servicio" data-style="btn btn-info"  required>       
                                 <?php
                                  $stmt = $dbh->prepare("select DISTINCT codigo_n2,descripcion_n2 from cla_servicios where codigo_n1=109 order by 2");
                                  $stmt->execute();

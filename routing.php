@@ -1,7 +1,10 @@
 <?php 
 	
 	if(isset($_GET['opcion'])){
-
+         /*crear servicio en base de datos ibnorca*/
+         if ($_GET['opcion']=='crearServicioIbnorca') {
+			require_once('simulaciones_servicios/crearServicioIbnorca.php');
+		}
 
 		//*********************************************   CONTABILIDAD BASICA         ********************************
 		//PLAN DE CUENTAS

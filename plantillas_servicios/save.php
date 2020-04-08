@@ -40,6 +40,22 @@ if($area==39){
   $stmtInsert = $dbh->prepare($sqlInsert);
   $flagSuccess=$stmtInsert->execute();
 
+  //enviar plantillas para la actualizacion de ibnorca
+  $fechaHoraActual=date("Y-m-d H:i:s");
+  $idTipoObjeto=2706;
+  $idObjeto=2710; //regristado
+  $obs="Registro de Plantilla TCP/TCS";
+  actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codPlanServ,$fechaHoraActual,$obs);
+
+  //enviar plantillas para la actualizacion de ibnorca
+  $fechaHoraActual=date("Y-m-d H:i:s");
+  $idTipoObjeto=2706;
+  $idObjeto=2711; //regristado
+  $obs="Envio de Plantilla TCP/TCS";
+  actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codPlanServ,$fechaHoraActual,$obs);
+
+
+
 if($area==39){
 if($anios<=3){
   $sql1="SELECT * from configuraciones_servicios where numero_anio<=$anios";

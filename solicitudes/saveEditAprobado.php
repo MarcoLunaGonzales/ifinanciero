@@ -398,8 +398,9 @@ if($flagSuccess==true){
 
             $codProveedorEstado=$codProveedor;
             //estado de cuentas devengado
-              $sqlDetalleEstadoCuenta="INSERT INTO estados_cuenta (cod_comprobantedetalle, cod_plancuenta, monto, cod_proveedor, fecha,cod_comprobantedetalleorigen,cod_cuentaaux) 
-              VALUES ('$codComprobanteDetalle', '0', '$haberProv', '$codProveedorEstado', '$fechaHoraActual','0','$cuentaAuxiliarProv')";
+            $codEstadoCuenta=obtenerCodigoEstadosCuenta();
+              $sqlDetalleEstadoCuenta="INSERT INTO estados_cuenta (codigo,cod_comprobantedetalle, cod_plancuenta, monto, cod_proveedor, fecha,cod_comprobantedetalleorigen,cod_cuentaaux) 
+              VALUES ('$codEstadoCuenta','$codComprobanteDetalle', '0', '$haberProv', '$codProveedorEstado', '$fechaHoraActual','0','$cuentaAuxiliarProv')";
               $stmtDetalleEstadoCuenta = $dbh->prepare($sqlDetalleEstadoCuenta);
               $stmtDetalleEstadoCuenta->execute();
              
@@ -408,7 +409,7 @@ if($flagSuccess==true){
 
           //actualizamos con el codigo de comprobante detalle la solicitud recursos detalle
           
-          $sqlUpdateSolicitudRecursoDetalle="UPDATE solicitud_recursosdetalle SET cod_proveedor=$codProveedorEstado where codigo=$codSolicitudDetalle";
+          $sqlUpdateSolicitudRecursoDetalle="UPDATE solicitud_recursosdetalle SET cod_proveedor=$codProveedorEstado,cod_estadocuenta=$codEstadoCuenta where codigo=$codSolicitudDetalle";
           $stmtUpdateSolicitudRecursoDetalle = $dbh->prepare($sqlUpdateSolicitudRecursoDetalle);
           $stmtUpdateSolicitudRecursoDetalle->execute();
 
@@ -418,15 +419,16 @@ if($flagSuccess==true){
 
     //fin de crear comprobante 
 
-    if($flagSuccessComprobante==true){
+    /*if($flagSuccessComprobante==true){
        $sqlUpdateSolicitud="UPDATE solicitud_recursos SET  cod_estadosolicitudrecurso=3,cod_comprobante=$codComprobante where codigo=$codSolicitud";
        $stmtUpdateSolicitud = $dbh->prepare($sqlUpdateSolicitud);
        $stmtUpdateSolicitud->execute();
-    }
+    }*/
    
   if(isset($_POST['usuario_ibnored'])){
     $q=$_POST['usuario_ibnored'];
-    showAlertSuccessError(true,"../".$urlList2."&q=".$q);  
+    $r=$_POST['usuario_ibnored_rol'];
+    showAlertSuccessError(true,"../".$urlList2."&q=".$q."&r=".$r);  
   }else{
   showAlertSuccessError(true,"../".$urlList2); 
    }     
@@ -434,7 +436,8 @@ if($flagSuccess==true){
 }else{
   if(isset($_POST['usuario_ibnored'])){
     $q=$_POST['usuario_ibnored'];
-   showAlertSuccessError(false,"../".$urlList2."&q=".$q);
+    $r=$_POST['usuario_ibnored_rol'];
+   showAlertSuccessError(false,"../".$urlList2."&q=".$q."&r=".$r);
   }else{
   showAlertSuccessError(false,"../".$urlList2);
    } 
