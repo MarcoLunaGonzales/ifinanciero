@@ -36,7 +36,7 @@ if(isset($_GET['nombre'])){
   $tipo_atributo=$_GET['tipo_atributo'];   
   $afnor=$_GET['afnor'];
   $norma=$_GET['norma'];
-  $id_servicio=$_GET['id_servicio'];
+  $id_servicio=0; //$_GET['id_servicio']
   $cod_region=1; //$_GET['local_extranjero']
   $anios=$_GET['anios'];
   //$anios=obtenerAnioPlantillaServicio($plantilla_servicio);

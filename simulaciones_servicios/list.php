@@ -6,16 +6,16 @@ if(isset($_GET['q'])){
   $q=$_GET['q'];
 }
 $globalAdmin=$_SESSION["globalAdmin"];
-
+$globalUser=$_SESSION["globalUser"];
 $dbh = new Conexion();
 
 // Preparamos
 if(isset($_GET['q'])){
   $q=$_GET['q'];
   //cargarDatosSession();
-  $stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado,c.nombre as cliente from simulaciones_servicios sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo join clientes c on c.codigo=sc.cod_cliente where sc.cod_estadoreferencial=1 order by sc.codigo");
+  $stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado,c.nombre as cliente from simulaciones_servicios sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo join clientes c on c.codigo=sc.cod_cliente where sc.cod_estadoreferencial=1 and sc.cod_responsable=$globalUser order by sc.fecha desc");
 }else{
-  $stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado,c.nombre as cliente from simulaciones_servicios sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo join clientes c on c.codigo=sc.cod_cliente where sc.cod_estadoreferencial=1 order by sc.codigo");
+  $stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado,c.nombre as cliente from simulaciones_servicios sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo join clientes c on c.codigo=sc.cod_cliente where sc.cod_estadoreferencial=1 and sc.cod_responsable=$globalUser order by sc.fecha desc");
 }
 
 // Ejecutamos
@@ -46,7 +46,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
                   <h4 class="card-title"><b><?=$moduleNamePlural?></b></h4>
                 </div>
                 <div class="card-body">
-                    <table class="table" id="tablePaginator">
+                    <table class="table table-condensed table-striped" id="tablePaginator">
                       <thead>
                         <tr>
                           <th class="text-center">#</th>
@@ -55,6 +55,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
                           <th>Responsable</th>
                           <th>Fecha</th>
                           <th>Estado</th>
+                          <th>Servicio</th>
                           <th class="text-right">Actions</th>
                         </tr>
                       </thead>
@@ -62,6 +63,13 @@ $stmt->bindColumn('idServicio', $idServicioX);
                       <?php
                         $index=1;
                         while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+                          $codigoServicio="SIN CODIGO";
+                          $sql="SELECT codigo FROM ibnorca.servicios where idServicio=$idServicioX";
+                          $stmt1=$dbh->prepare($sql);
+                          $stmt1->execute();
+                           while ($row1 = $stmt1->fetch(PDO::FETCH_ASSOC)) {
+                             $codigoServicio=$row1['codigo'];
+                           }
                           $responsable=namePersonal($codResponsable);
                           switch ($codEstado) {
                             case 1:
@@ -80,22 +88,28 @@ $stmt->bindColumn('idServicio', $idServicioX);
                               $nEst=100;$barEstado="progress-bar-success";$btnEstado="btn-success";
                             break;
                           }
+                          $estiloFila="";$iconoAdjudicado="";
+                          if($codEstado==5){
+                            $estiloFila="bg-plomo";
+                            $iconoAdjudicado="check_circle";
+                          }
 ?>
                         <tr>
                           <td align="center"><?=$index;?></td>
-                          <td><?=$nombre;?></td>
+                          <td class="font-weight-bold"><?=$nombre;?></td>
                           <td><?=$cliente?></td>
                           <td>
                                  <img src="assets/img/faces/persona1.png" width="20" height="20"/><?=$responsable;?>
                           </td>
-                          <td><?=$fecha;?></td>
-                          <td><?=$estado;?> <?=$nEst?> %
-                             <div class="progress">
+                          <td><?=strftime('%d/%m/%Y',strtotime($fecha));?></td>
+                          <td class="font-weight-bold"><i class="material-icons text-warning"><?=$iconoAdjudicado?></i> <?=$estado;?></td> 
+                             <!--<?=$nEst?> % <div class="progress">
                                <div class="progress-bar <?=$barEstado?>" role="progressbar" aria-valuenow="<?=$nEst?>" aria-valuemin="0" aria-valuemax="100" style="width:<?=$nEst?>%">
                                   <span class="sr-only"><?=$nEst?>% Complete</span>
                                </div>
                              </div>
-                          </td> 
+                          </td>--> 
+                          <td><?=$codigoServicio?></td>
                           <td class="td-actions text-right">
                             <?php
                               if($codEstado==4||$codEstado==3||$codEstado==5){
@@ -153,7 +167,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
                                  <?php 
                                  if($idServicioX>0){
                                    ?>
-                                 <button title="Servicio Creado" class="btn btn-success" onclick="">
+                                 <button title="Servicio Creado C: <?=$codigoServicio?>" class="btn btn-success" onclick="">
                                     <i class="material-icons">check</i>
                                   </button>
                                   <?php  
@@ -177,7 +191,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
                                  <?php 
                                  if($idServicioX>0){
                                    ?>
-                                 <button title="Servicio Creado" class="btn btn-success" onclick="">
+                                 <button title="Servicio Creado C: <?=$codigoServicio?>" class="btn btn-success" onclick="">
                                     <i class="material-icons">check</i>
                                   </button>
                                   <?php  

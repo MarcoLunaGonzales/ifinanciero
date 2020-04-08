@@ -38,6 +38,7 @@ $sqlZ="SELECT e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar,(select concat(c.c
       <th class="text-right">D&eacute;bito</th>
       <th class="text-right">Cr&eacute;dito</th>
       <th class="text-right">Saldo</th>
+      <th class="text-right">Total</th>
       <th class="text-left">-</th>
     </tr>
   </thead>
@@ -49,6 +50,8 @@ $sqlZ="SELECT e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar,(select concat(c.c
   $stmt->execute();
   $i=0;$saldo=0;
   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $saldoIndividual=0;
+
     $codigoX=$row['codigo'];
     $codPlanCuentaX=$row['cod_plancuenta'];
     $codCompDetX=$row['cod_comprobantedetalle'];
@@ -98,7 +101,9 @@ $sqlZ="SELECT e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar,(select concat(c.c
       $nombreProveedorClienteX=nameProveedorCliente(1,$codProveedorX);
     }
     $debeX=$montoContra;
+
     $saldo=$saldo+$montoX-$debeX;
+    $saldoIndividual=$montoX-$montoContra;
 
     //Filtramos las cuentas que ya esten cerradas.
     if($montoContra<$montoX){
@@ -124,12 +129,13 @@ $sqlZ="SELECT e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar,(select concat(c.c
       <?php  
       }
       ?>
+      <td class="text-right small font-weight-bold"><?=formatNumberDec($saldoIndividual);?></td>
       <td class="text-right small font-weight-bold"><?=formatNumberDec($saldo);?></td>
       <td>
         <input type="hidden" id="codigoCuentaAux<?=$i?>" value="<?=$codCuentaAuxX?>">
           <div class="form-check">
             <?php
-              $valorCerrarEC=$codigoX."####".$codCuentaAuxX."####".$codProveedorX."####".$saldo;
+              $valorCerrarEC=$codigoX."####".$codCuentaAuxX."####".$codProveedorX."####".$saldoIndividual;
               if($tipoComprobanteX!=3){
             ?>
               <a title="Cerrar EC" id="cuentas_origen_detalle<?=$i?>" href="#" onclick="agregarEstadoCuentaCerrar(<?=$i;?>,'<?=$valorCerrarEC;?>');" class="btn btn-sm btn-warning btn-fab"><span class="material-icons text-dark">double_arrow</span></a>

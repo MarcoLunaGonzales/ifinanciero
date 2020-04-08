@@ -148,7 +148,7 @@
 <!--    end small modal -->
 <!-- Classic Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-  <div class="modal-dialog modal-lg" role="document">
+  <div class="modal-dialog modal-notice" style="max-width: 90% !important;">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Buscar Cuenta</h5>
@@ -159,17 +159,22 @@
       <div class="modal-body">
       	<form name="form1">
 	  		<div class="row">
-    	      	<div class="form-group col-sm-4">
+    	      	<div class="form-group col-sm-3">
             		<label for="nro_cuenta" class="bmd-label-floating">Nro. Cuenta:</label>
                 <input type="hidden" id="nro_cuenta_id" name="nro_cuenta_id">
             		<input type="number" class="form-control" id="nro_cuenta" name="nro_cuenta" onkeypress="buscarCuentaList('numero'); pulsar(event);" onkeyDown="buscarCuentaList('numero');" onkeyUp="buscarCuentaList('numero');" autofocus>
           		</div>
-          		<div class="form-group col-sm-4">
+          		<div class="form-group col-sm-3">
             		<label for="cuenta" class="bmd-label-floating">Cuenta:</label>
                 <input type="hidden" id="cuenta_id" name="cuenta_id">
             		<input type="text" class="form-control" id="cuenta" name="cuenta" onkeypress="buscarCuentaList('nombre');pulsar(event)" onkeyDown="buscarCuentaList('nombre');" onkeyUp="buscarCuentaList('nombre');">
           		</div>
-          		<div class="form-group col-sm-3">
+              <div class="form-group col-sm-3">
+                <label for="cuenta" class="bmd-label-floating">Cuenta Auxiliar:</label>
+                <input type="hidden" id="cuenta_id_auxiliar" name="cuenta_id_auxiliar">
+                <input type="text" class="form-control" id="cuenta_auxiliar_modal" name="cuenta_auxiliar_modal" onkeypress="buscarCuentaListAux('nombre');pulsar(event)" onkeyDown="buscarCuentaListAux('nombre');" onkeyUp="buscarCuentaListAux('nombre');">
+              </div>
+          		<div class="form-group col-sm-2">
 	              <select class="selectpicker form-control form-control-sm" name="padre" id="padre" data-style="<?=$comboColor;?>" onchange="buscarCuenta(form1);">
 			  	        <option selected="selected" value="">Todas</option>                
 			  	         <?php

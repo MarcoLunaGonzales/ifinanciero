@@ -219,6 +219,7 @@ function configuracionCentros(fila,inicio){
     }
   };
 }
+
 function configuracionEstadosCuenta(fila,codigoCuenta,codigoCuentaAux){
   var contador=0;
   for (var i = 0; i < estado_cuentas.length; i++) {
@@ -238,12 +239,11 @@ function configuracionEstadosCuenta(fila,codigoCuenta,codigoCuentaAux){
   if(contador==0){
      $("#estados_cuentas"+fila).removeClass("d-none"); 
      $("#estados_cuentas"+fila).addClass("d-none");
-     //$("#estados_cuentas"+fila).removeClass("d-none"); 
-     //$("#estados_cuentas"+fila).removeClass("btn-danger"); 
-     //$("#estados_cuentas"+fila).addClass("btn-success");
+     /*$("#estados_cuentas"+fila).removeClass("d-none"); 
+     $("#estados_cuentas"+fila).removeClass("btn-danger"); 
+     $("#estados_cuentas"+fila).addClass("btn-success");*/
   }
 }
-
 
 function copiarGlosa(){
   if(numFilas!=0){
@@ -1063,7 +1063,18 @@ function botonBuscarComprobante(){
   }
   ajax.send(null)
 } 
-
+function botonBuscarComprobanteIng(codigo){
+  ajax=nuevoAjax();
+  ajax.open('GET', 'comprobantes/ajax_filtrarComporbantes.php?codigo='+codigo,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      var contenedor=$("#data_comprobantes");
+      contenedor.html(ajax.responseText);
+      // $("#modalBuscador").modal("hide");
+    }
+  }
+  ajax.send(null)
+}
 
 function sendAprobacion(cod,estado){
   if(estado==3){
@@ -2587,7 +2598,7 @@ function enviarSimulacionAjaxServ(){
          $("#logo_carga").hide();
          Swal.fire("Envío Exitoso!", "Se registradon los datos exitosamente!", "success")
              .then((value) => {
-              if(!($("#id_servicioibnored").length)){
+              if(!($("#id_servicioibnored").length>0)){
                location.href="../index.php?opcion=listSimulacionesServ";
               }else{
                 var q=$("#id_servicioibnored").val();
@@ -2621,6 +2632,18 @@ function guardarValoresMoneda(){
 }
 function editarCuentaComprobante(fila){
   filaActiva=fila;
+  if($("#cuenta"+fila).val()!=""){
+    var codigo =$("#cuenta"+fila).val();
+    for (var i = 0; i < itemCuentas.length; i++) {
+      if(itemCuentas[i].codigo==codigo){
+        $("#nro_cuenta").val(itemCuentas[i].numero);
+        $("#cuenta").val(itemCuentas[i].nombre);
+        $("#cuenta_auxiliar_modal").val("");
+        buscarCuentaList('numero');
+        break;
+      }
+    };   
+  }
   $('#myModal').modal('show');
 }
 //retenciones funciones
@@ -5315,7 +5338,17 @@ function buscarCuentaList(campo){
    break;
   }     
 }
-function buscarCuentaNumero(numeros,val){  
+
+function buscarCuentaListAux(campo){
+  var contenedor = document.getElementById('divResultadoBusqueda');
+  var nombreCuentaAux=document.getElementById('cuenta_auxiliar_modal').value;
+  var nroCuenta=document.getElementById('nro_cuenta').value;
+  var nombreCuenta=document.getElementById('cuenta').value;
+  var padre=$("#padre").val();
+  buscarCuentaNombreAux(nombreCuentaAux,nombreCuenta,nroCuenta);    
+}
+
+function buscarCuentaNombreAux(numeros,nombreCuenta,nroCuenta){  
   var contenedor = document.getElementById('divResultadoBusqueda');
   //var str = numeros.replace(/^"(.*)"$/, '$1'); 
   var html="<div class='col-md-12'>"+
@@ -5328,28 +5361,26 @@ function buscarCuentaNumero(numeros,val){
               "<th>Auxiliar</th>"+
           "</tr>"+
       "</thead>";
+      
   for (var i = 0; i < itemCuentas.length; i++) { 
-    //var n = itemCuentas[i].numero.search(/+str+/);
-    if(val==1){
-       var n = itemCuentas[i].numero.indexOf(numeros);
-    }else{
       var cadenaBuscar=itemCuentas[i].nombre.toLowerCase();
       var nn=-1;
-       var n = cadenaBuscar.indexOf(numeros.toLowerCase());
-       if(n!=0){
+       var nom = itemCuentas[i].nombre.toLowerCase().indexOf(nombreCuenta.toLowerCase());
+       var num = itemCuentas[i].numero.toLowerCase().indexOf(nroCuenta.toLowerCase());
+        var n=-1;
        for (var k = 0; k < itemCuentasAux.length; k++) {
         if(itemCuentasAux[k].codCuenta==itemCuentas[i].codigo){
-         var nn = itemCuentasAux[k].nombre.toLowerCase().indexOf(numeros.toLowerCase());
+          nn = itemCuentasAux[k].nombre.toLowerCase().indexOf(numeros.toLowerCase());
          if(nn==0){
           break;
           }  
          }
         };    
-       }
        
-    }
     if(nn==0){
-      n=0;
+      if(nom==0||num==0){
+        n=0;
+      }
     }
     
     if(n==0){
@@ -5373,6 +5404,63 @@ function buscarCuentaNumero(numeros,val){
             }
           }
         };
+       textoAux+="</table>";
+       var label="";
+       if(textoAux!="<table class='table table-condensed' style='overflow-y: scroll;display: block;height:210px;'></table>"){
+        label='<span style="color: #0431B4;">';        
+       }else{
+        textoAux="<table class='table table-condensed'></table>";
+        label='<span>';
+       }
+      html+="<tr>"+
+      "<td class='text-left'>"+label+itemCuentas[i].numero+"</span></td>"+
+          "<td class='text-left'><a href=\"javascript:setBusquedaCuenta(\'"+itemCuentas[i].codigo+"\',\'"+itemCuentas[i].numero+"\',\'"+itemCuentas[i].nombre+"\',\'0\',\'\');\">"+itemCuentas[i].nombre+"</a></td>"+
+          "<td class='text-left'>"+textoAux+"</td>"+
+      "</tr>";
+    }
+  };
+  html+="</table>"+
+  "</div>"+
+  "</div>";
+   contenedor.innerHTML = html;
+}
+
+function buscarCuentaNumero(numeros,val){  
+  var contenedor = document.getElementById('divResultadoBusqueda');
+  //var str = numeros.replace(/^"(.*)"$/, '$1'); 
+  var html="<div class='col-md-12'>"+
+    "<div class='table-responsive'>"+
+    "<table class='table table-condensed'>"+
+      "<thead>"+
+        "<tr>"+
+          "<th>Nro. Cuenta</th>"+
+              "<th>Nombre</th>"+
+              "<th>Auxiliar</th>"+
+          "</tr>"+
+      "</thead>";
+
+      
+  for (var i = 0; i < itemCuentas.length; i++) { 
+    //var n = itemCuentas[i].numero.search(/+str+/);
+    if(val==1){
+       var n = itemCuentas[i].numero.indexOf(numeros);
+    }else{
+      var cadenaBuscar=itemCuentas[i].nombre.toLowerCase();
+       var n = cadenaBuscar.indexOf(numeros.toLowerCase());
+    }
+    
+    if(n==0){
+      var textoAux="<table class='table table-condensed' style='overflow-y: scroll;display: block;height:210px;'>";
+      
+        for (var j = 0; j < itemCuentasAux.length; j++) {
+          if(itemCuentasAux[j].codCuenta==itemCuentas[i].codigo){
+            textoAux+="<tr >"+
+               "<td class='text-left small'>"+itemCuentasAux[j].codigo+"</td>"+
+               "<td class='text-left small'><a href=\"javascript:setBusquedaCuenta(\'"+itemCuentas[i].codigo+"\',\'"+itemCuentas[i].numero+"\',\'"+itemCuentas[i].nombre+"\',\'"+itemCuentasAux[j].codigo+"\',\'"+itemCuentasAux[j].nombre+"\');\">"+itemCuentasAux[j].nombre+"</a></td>"+
+             "</tr>";
+          }
+        };
+
        textoAux+="</table>";
        var label="";
        if(textoAux!="<table class='table table-condensed' style='overflow-y: scroll;display: block;height:210px;'></table>"){
@@ -5462,8 +5550,8 @@ function verEstadosCuentas(fila,cuenta){
     $("#estFila").val(fila);
     $("#tituloCuentaModal").html($("#divCuentaDetalle"+fila).html()); 
     $("#modalEstadosCuentas").modal("show");   
-  }  
-}
+  }
+}  
 
 var itemEstadosCuentas=[];
 function quitarEstadoCuenta(){
@@ -7648,10 +7736,10 @@ function  listarServiciosSimulacionSoloAuditor(anio,cod_area,codigo){
            $("#modal_body_tabla_personal"+anio).append(resp);
            $("#cantidad_personal"+anio+"FFF0").val("1");
            $("#dias_personal"+anio+"FFF0").val("0");
-           $("#modal_montoper"+anio+"FFF0").val("0");
-           $("#modal_montoperUSD"+anio+"FFF0").val("0");
-           $("#modal_montopertotal"+anio+"FFF0").val("0");
-           $("#modal_montopertotalUSD"+anio+"FFF0").val("0");
+           $("#modal_montopre"+anio+"FFF0").val("0");
+           $("#modal_montopreUSD"+anio+"FFF0").val("0");
+           $("#modal_montopretotal"+anio+"FFF0").val("0");
+           $("#modal_montopretotalUSD"+anio+"FFF0").val("0");
            calcularTotalPersonalServicio(anio,2);
            $('.selectpicker').selectpicker("refresh");
         }
@@ -8680,9 +8768,15 @@ function editarAtributo(fila){
   if(($("#div_marca").hasClass("d-none"))){
     $('#pais_empresa').val(itemAtributos[fila].pais+"####"+itemAtributos[fila].nom_pais);
     if($("#modalEditPlantilla").length){
-       seleccionarDepartamentoServicioSitioModal(0,itemAtributos[fila].estado+"####"+itemAtributos[fila].nom_estado,itemAtributos[fila].ciudad+"####"+itemAtributos[fila].nom_ciudad);
+      if(itemAtributos[fila].nom_pais!="SIN REGISTRO"){
+        seleccionarDepartamentoServicioSitioModal(0,itemAtributos[fila].estado+"####"+itemAtributos[fila].nom_estado,itemAtributos[fila].ciudad+"####"+itemAtributos[fila].nom_ciudad);
+      }
+       
     }else{
-       seleccionarDepartamentoServicioSitio(0,itemAtributos[fila].estado+"####"+itemAtributos[fila].nom_estado,itemAtributos[fila].ciudad+"####"+itemAtributos[fila].nom_ciudad);  
+      if(itemAtributos[fila].nom_pais!="SIN REGISTRO"){
+        seleccionarDepartamentoServicioSitio(0,itemAtributos[fila].estado+"####"+itemAtributos[fila].nom_estado,itemAtributos[fila].ciudad+"####"+itemAtributos[fila].nom_ciudad);  
+      }
+       
     }   
     $('.selectpicker').selectpicker("refresh");  
   }
@@ -9163,7 +9257,16 @@ function copiarDatosServiciosPorAnio(anio){
       for (var k = 1; k <= items; k++) {
           $("#cantidad_servicios"+anios[i]+"SSS"+k).val($("#cantidad_servicios"+anio+"SSS"+k).val());
           $("#unidad_servicios"+anios[i]+"SSS"+k).val($("#unidad_servicios"+anio+"SSS"+k).val());
-          $("#modal_montoserv"+anios[i]+"SSS"+k).val($("#modal_montoserv"+anio+"SSS"+k).val());
+          $("#modal_montoserv"+anios[i]+"SSS"+k).val($("#modal_montoserv"+anio+"SSS"+k).val()); 
+          if(($("#modal_montoserv"+anios[i]+"SSS"+k).is("[readonly]"))&&($("#modal_montoserv"+anio+"SSS"+k).is("[readonly]"))){
+            
+          }else{
+            if((!($("#modal_montoserv"+anios[i]+"SSS"+k).is("[readonly]")))&&(!($("#modal_montoserv"+anio+"SSS"+k).is("[readonly]")))){
+            }else{
+              activarInputMontoFilaServicio(anios[i],k); //para cambiar los readonly
+              seleccionarEsteCheck('modal_checkserv'+anios[i]+"SSS"+k);
+            }
+          }        
           $('.selectpicker').selectpicker("refresh");
           calcularTotalFilaServicio(anios[i],2);
        }; 
@@ -9206,6 +9309,15 @@ function copiarDatosPersonalPorAnio(anio){
           $("#cantidad_personal"+anios[i]+"FFF"+k).val($("#cantidad_personal"+anio+"FFF"+k).val());
           $("#dias_personal"+anios[i]+"FFF"+k).val($("#dias_personal"+anio+"FFF"+k).val());
           $("#modal_montopre"+anios[i]+"FFF"+k).val($("#modal_montopre"+anio+"FFF"+k).val());
+          if(($("#modal_montopre"+anios[i]+"FFF"+k).is("[readonly]"))&&($("#modal_montopre"+anio+"FFF"+k).is("[readonly]"))){
+            
+          }else{
+            if((!($("#modal_montopre"+anios[i]+"FFF"+k).is("[readonly]")))&&(!($("#modal_montopre"+anio+"FFF"+k).is("[readonly]")))){
+            }else{
+              activarInputMontoPersonalServicio(anios[i],k); //para cambiar los readonly
+              seleccionarEsteCheck('modal_checkpre'+anios[i]+"FFF"+k);
+            }
+          }     
           $('.selectpicker').selectpicker("refresh");
           calcularTotalPersonalServicio(anios[i],2);
        }; 
@@ -9246,18 +9358,6 @@ function copiarCostosVariablesPorAnio(anio){
  $("#copiar_variables"+anio).val(""); 
  $('.selectpicker').selectpicker("refresh");
 }
-
-// var distribucion_sueldos=[];
-// var numFilasA=0;
-// function filaTablaAGeneral_distibucion(tabla,index){
-//   var html="";
-//   for (var i = 0; i < distribucion_sueldos[index-1].length; i++) {
-//     //alert(distribucion_sueldos[index-1][i].nombre);
-//     html+="<tr><td>"+(i+1)+"</td><td>"+distribucion_sueldos[index-1][i].serviciox+"</td><td>"+detalle_tabla_general[index-1][i].cantidadX+"</td><td>"+detalle_tabla_general[index-1][i].precioX+"</td><td>"+detalle_tabla_general[index-1][i].descripcion_alternaX+"</td></tr>";
-//   }
-//   tabla.html(html);
-//   $("#modalDetalleFac").modal("show");  
-// }
 
 
 function mostrarCambioEstadoObjeto(codigo){
@@ -9453,3 +9553,17 @@ function seleccionarEsteCheck(id) {
       item.checked = true;
     }       
 }
+
+
+// var distribucion_sueldos=[];
+// var numFilasA=0;
+// function filaTablaAGeneral_distibucion(tabla,index){
+//   var html="";
+//   for (var i = 0; i < distribucion_sueldos[index-1].length; i++) {
+//     //alert(distribucion_sueldos[index-1][i].nombre);
+//     html+="<tr><td>"+(i+1)+"</td><td>"+distribucion_sueldos[index-1][i].serviciox+"</td><td>"+detalle_tabla_general[index-1][i].cantidadX+"</td><td>"+detalle_tabla_general[index-1][i].precioX+"</td><td>"+detalle_tabla_general[index-1][i].descripcion_alternaX+"</td></tr>";
+//   }
+//   tabla.html(html);
+//   $("#modalDetalleFac").modal("show");  
+// }
+

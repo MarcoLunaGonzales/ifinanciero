@@ -806,11 +806,21 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
           
 				  	<div class="card-footer fixed-bottom">
             <?php 
-            if($idServicioX==0||$idServicioX==""){
-             ?><a onclick="guardarServicioSimulacion()" class="btn btn-success text-white"><i class="material-icons">send</i> Enviar Propuesta</a>
+            if(!(isset($_GET['q']))){
+              if($pUtilidadLocal>0){
+              ?><a onclick="guardarServicioSimulacion()" class="btn btn-warning text-white"><i class="material-icons">send</i> Enviar Propuesta UT <?=number_format($pUtilidadLocal, 2, '.', ',')?> %</a><?php    
+              }else{
+                ?><a href="#" title="No se puede enviar Propuesta" class="btn btn-danger text-white"><i class="material-icons">warning</i> UTILIDAD NETA <?=number_format($pUtilidadLocal, 2, '.', ',')?> %</a><?php
+              }
+             ?>   
             <a href="../<?=$urlList;?>" class="btn btn-danger">Volver</a><?php
             }else{
-            ?><a onclick="guardarServicioSimulacion()" class="btn btn-success text-white"><i class="material-icons">send</i> Enviar Propuesta</a>
+              if($pUtilidadLocal>0){
+              ?><a onclick="guardarServicioSimulacion()" class="btn btn-success text-white"><i class="material-icons">send</i> Enviar Propuesta UT <?=number_format($pUtilidadLocal, 2, '.', ',')?> %</a><?php    
+              }else{
+                ?><a href="#" title="No se puede enviar Propuesta" class="btn btn-danger text-white"><i class="material-icons">warning</i> UTILIDAD NETA <?=number_format($pUtilidadLocal, 2, '.', ',')?> %</a><?php
+              }
+            ?>
             <a href="../<?=$urlList;?>&q=<?=$idServicioX?>" class="btn btn-danger">Volver</a><?php
             }
             ?>

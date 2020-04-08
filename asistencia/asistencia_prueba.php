@@ -13,10 +13,11 @@ $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//para mostrar err
 try {
     $dias_feriados=2;//buscar datos
     //sacamos codigo e identificacion de personal
-    $stmtPersonal = $dbh->prepare("SELECT codigo,identificacion from personal where cod_estadoreferencial=1 and identificacion in (9253211,3372876,5976118,2233839)");    
+    $stmtPersonal = $dbh->prepare("SELECT codigo,identificacion,CONCAT_WS(' ',primer_nombre,paterno)as nombre_p from personal where cod_estadoreferencial=1 and identificacion in (6832691,9253211,8411443,3372876,5976118,2763530,2233839)");    
     $stmtPersonal->execute();    
     $stmtPersonal->bindColumn('codigo', $codigo);
     $stmtPersonal->bindColumn('identificacion', $identificacion);
+    $stmtPersonal->bindColumn('nombre_p', $nombre_p);
     $dias_asistidos=0;
     while ($row = $stmtPersonal->fetch(PDO::FETCH_BOUND)) {
         //primer caso . el sistema registra  en hra_mar_ent_tar tanto entrada y salida
@@ -68,7 +69,7 @@ try {
         }
         $dias_asistidos=$dias_asistidos+$dias_feriados;
         
-        //===========vemos la parte de minitos de retraso
+        //===========vemos la parte de minitos de atraso
         //hora entrada y hora salida
         $stmtHraEnt = $dbh->prepare("SELECT hra_ent_man from asistencia_prueba where hra_ent_man is not null and id_empleado=$identificacion GROUP BY hra_ent_man");    
         $stmtHraEnt->execute();    
@@ -87,13 +88,15 @@ try {
         $hora_salida = date("H", $fechaComoEntero);
         $hora_salida_aux=$hora_salida.":00";
 
-        echo 'id_personal: '.$identificacion." - ";
+        echo 'personal: '.$nombre_p." - ";
         echo 'hora_entrada: '.$hora_ingreso.":00 - ";
         echo 'hora_salida: '.$hora_salida.":00 - ";
         echo 'dias_asistidos: '.$dias_asistidos."<br>";
         //minutos atraso
+        $minutosAtraso=0;
+        $fechaAbuscar='2020-01-01';
         $stmtMinAtraso = $dbh->prepare("SELECT hra_mar_ent_tar,observacion from asistencia_prueba
-        where hra_mar_ent_tar is not null and id_empleado=$identificacion");    
+        where (DATE(fecha) BETWEEN '$fechaAbuscar' and LAST_DAY('$fechaAbuscar')) and hra_mar_ent_tar is not null and id_empleado=$identificacion");    
         $stmtMinAtraso->execute();
         $stmtMinAtraso->bindColumn('hra_mar_ent_tar', $hra_mar_ent_tar);
         $stmtMinAtraso->bindColumn('observacion', $observacion);
@@ -102,24 +105,20 @@ try {
             $hora_marcada = date("H", $fechaComoEntero);
             $min_marcado = date("i", $fechaComoEntero);
             $hra_completa_mar_aux=$hora_marcada.":".$min_marcado;
+            // echo "fecha: ".$hra_mar_ent_tar." hora marcada:".$hra_completa_mar_aux."<br>";
             // $fechaComoEntero = strtotime($hra_sal_man);
             // $hora_salida_mar = date("H", $fechaComoEntero);
             // $min_salida_mar = date("i", $fechaComoEntero);
             // $hra_salida_mar_aux=$hora_salida_mar.":".$min_salida_mar;
-            if($hora_ingreso==$hora_marcada || $hora_ingreso<$hora_marcada){//hora entrada
-
-
+            if($hora_ingreso==$hora_marcada && $min_marcado>10 && ($observacion=='-' || $observacion=='Falta')){//hora entrada
+                $minutosAtraso+=$min_marcado-10;
+                // echo "min atraso: ".$minutosAtraso."<br>";
             }elseif($hora_salida==$hora_marcada || $hora_marcada < $hora_salida){//hora salida
 
             }
-
-            if($hra_mar_sal_tar==null && $hra_mar_ent_tar==null){
-                if($observacion!='-' && $observacion!='Falta'){
-                    $dias_asistidos++;
-                    // echo "entra <br>";
-                }
-            }
+                       
         }
+        echo "min atraso: ".$minutosAtraso."<br>";
         
     }
 
