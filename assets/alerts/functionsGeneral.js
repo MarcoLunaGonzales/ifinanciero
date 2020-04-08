@@ -5609,14 +5609,10 @@ function verEstadosCuentas(fila,cuenta){
     $("#est_codcuentaaux").val($("#cuenta_auxiliar"+fila).val());*/ 
     $("#tituloCuentaModal").html($("#divCuentaDetalle"+fila).html()); 
     $("#modalEstadosCuentas").modal("show");   
-<<<<<<< HEAD
+
   }
 }  
-//}
-=======
-  }  
-}
->>>>>>> 227198e025b2a3a0d2e39ac847f8a4aa16131ef6
+
 
 var itemEstadosCuentas=[];
 function quitarEstadoCuenta(){
