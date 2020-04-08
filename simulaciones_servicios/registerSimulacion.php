@@ -521,7 +521,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
            <?php 
            $costoFijoPrincipalPeriodo=0;
            for ($an=$inicioAnio; $an<=$anioGeneral; $an++) { 
-            $tituloItem="Año ".$an;
+            $tituloItem="Año ".$an."(Seguimiento ".($an-1).")";
             if(($an==0||$an==1)&&$codAreaX!=39){
               $tituloItem="Año 1 (ETAPA ".($an+1).")";
             }

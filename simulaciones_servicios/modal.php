@@ -469,11 +469,11 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
 
                           for ($an=$inicioAnio; $an<=$anioGeneral; $an++) { 
                             $active="";
-                            $etapas="Año ".$an;
+                            $etapas="Seguimiento ".($an-1);
 
                             if($codAreaX!=39){
                               if($an==0||$an==1){
-                               $etapas="Año 1 (ETAPA ".($an+1).")"; 
+                               $etapas="Etapa ".($an+1).""; 
                               }
                             }
 
@@ -494,11 +494,11 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                          <?php
                           for ($an=$inicioAnio; $an<=$anioGeneral; $an++) { 
                             $active="";
-                            $etapas="AÑO ".$an;
+                            $etapas="Seguimiento ".($an-1);
 
                             if($codAreaX!=39){
                               if($an==0||$an==1){
-                               $etapas="AÑO 1 (ETAPA ".($an+1).")"; 
+                               $etapas="Etapa ".($an+1).""; 
                               }
                             }
                             if($an==1){
@@ -698,10 +698,10 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                                <select class="form-control selectpicker" multiple data-style="btn btn-primary btn-sm btn-round" name="copiar_servicios<?=$an?>[]" id="copiar_servicios<?=$an?>">
                                  <?php
                                 for ($kk=$inicioAnio; $kk<=$anioGeneral; $kk++) { 
-                                    $optionTit="Año ".$kk;
+                                    $optionTit="Seguimiento ".($kk-1);
                                      if($codAreaX!=39){
                                        if($kk==0||$kk==1){
-                                        $optionTit="Año 1 (ETAPA ".($kk+1).")"; 
+                                        $optionTit="Etapa ".($kk+1).""; 
                                        }
                                      }
                                     if($kk!=$an){

@@ -5125,6 +5125,26 @@ function obtenerCodigoEstadoCuentaSolicitudRecursosDetalle($codigo){
    }
    return($valor);
 }
+
+function obtenerDatosCompletosPorSimulacionServicios($codigo){
+  $dbh = new Conexion();
+  $sql="SELECT p.cod_area,p.cod_unidadorganizacional,s.id_tiposervicio,s.cod_cliente,s.cod_responsable 
+  from simulaciones_servicios s join plantillas_servicios p on p.codigo=s.cod_plantillaservicio where s.codigo=$codigo";
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  return $stmt;
+}
+
+function obtenerCodigoServicioIbnorca(){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT IFNULL(max(c.idServicio)+1,1)as codigo from ibnorca.servicios c");
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['codigo'];
+   }
+   return($valor);
+}
 ?>
 
 
