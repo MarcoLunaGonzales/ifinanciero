@@ -1061,7 +1061,18 @@ function botonBuscarComprobante(){
   }
   ajax.send(null)
 } 
-
+function botonBuscarComprobanteIng(codigo){
+  ajax=nuevoAjax();
+  ajax.open('GET', 'comprobantes/ajax_filtrarComporbantes.php?codigo='+codigo,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      var contenedor=$("#data_comprobantes");
+      contenedor.html(ajax.responseText);
+      // $("#modalBuscador").modal("hide");
+    }
+  }
+  ajax.send(null)
+}
 
 function sendAprobacion(cod,estado){
   if(estado==3){
