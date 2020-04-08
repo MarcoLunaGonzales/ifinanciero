@@ -100,6 +100,7 @@ for ($i=1;$i<=$cantidadFilas;$i++){
       $stmtInsertEC = $dbh->prepare($sqlInsertEC);
       $flagSuccessInsertEC=$stmtInsertEC->execute();      
     }
+    //Fin insertar estado de cuentas acumular.
 
 
         $nF=cantidadF($facturas[$i-1]);

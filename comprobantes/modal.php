@@ -494,86 +494,14 @@
                           <input class="form-control" type="number" step="0.001" readonly name="monto_estadocuenta" id="monto_estadocuenta"/>
                         </div>
                         </div>
-                        <!--<div class="col-sm-7">
-                          <div class="form-group">
-                           <select class="selectpicker form-control form-control-sm" name="proveedores" id="proveedores" data-style="<?=$comboColor;?>" onChange="cargarDatosCuenta()">
-                               <option selected value="0">Sin Proveedor</option>
-                             <?php
-                              $stmt = $dbh->prepare("SELECT * FROM af_proveedores order by codigo");
-                              $stmt->execute();
-                              while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                                $codigoX=$row['codigo'];
-                                $nombreX=$row['nombre'];
-                                ?>
-                                <option value="<?=$codigoX;?>"><?=$nombreX;?></option>  
-                                <?php
-                                  }
-                                  ?>
-                             </select>
-                          </div> 
-                       </div> -->     
-                  </div>
-                  <div class="row" id="div_cuentasorigen">
-                        <label class="col-sm-2 col-form-label">Cuenta Origen</label>
-                        <div class="col-sm-4">
-                          <div class="form-group">
-                           <select class="selectpicker form-control form-control-sm" data-live-search="true" onchange="verCuentasAuxiliaresSelect()" name="cuentas_origen" id="cuentas_origen" data-style="<?=$comboColor;?>">
-                             <option disabled selected value="">Seleccione una Cuenta</option>
-                             <?php
-                              $stmt = $dbh->prepare("SELECT p.* FROM plan_cuentas p, configuracion_estadocuentas c where c.cod_plancuenta=p.codigo and c.cod_tipoestadocuenta=1 and c.tipo=2 and c.cod_cuentaaux=0
-                                                   UNION
-                                                   SELECT p.* FROM plan_cuentas p, configuracion_estadocuentas c where c.cod_plancuenta=p.codigo and c.cod_tipoestadocuenta=2 and c.tipo=1 and c.cod_cuentaaux=0
-                                                   ORDER BY nombre");
-                              $stmt->execute();
-                              while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                                $codigoX=$row['codigo'];
-                                $nombreX=$row['nombre'];
-                                $numeroX=$row['numero'];
-                                ?>
-                                <option value="<?=$codigoX;?>###NNN"><?=trim($numeroX);?> - <?=trim($nombreX);?></option>  
-                                <?php
-                              }   
-                                ?>  
-                             </select>
-                          </div> 
-                       </div>
-
-                       <div class="row col-sm-6 d-none" id="div_cuentasorigenaux">
-                          <label class="col-sm-3 col-form-label">Auxiliares</label>
-                            <div class="col-sm-7">
-                              <div class="form-group">
-                                <select class="selectpicker form-control form-control-sm" data-live-search="true" name="cuentas_auxiliaresorigen" id="cuentas_auxiliaresorigen" data-style="<?=$comboColor;?>">
-                                  <option selected value="all">TODOS</option>
-                                  <?php
-                              //$listaAuxiliar = listaCuentasAuxiliaresRelacionadasProveedoresClientes();
-                              $sqlAuxiliares="SELECT distinct(c.codigo)as codigo, c.cod_cuenta, e.cod_proveedor, (select af.nombre from af_proveedores af where af.codigo=e.cod_proveedor)as nombre from cuentas_auxiliares c, estados_cuenta e where e.cod_cuentaaux=c.codigo and c.cod_tipoauxiliar=1 
-                                  union
-                                  SELECT distinct(c.codigo), c.cod_cuenta, e.cod_proveedor, (select af.nombre from clientes af where af.codigo=e.cod_proveedor)as nombre from cuentas_auxiliares c, estados_cuenta e where e.cod_cuentaaux=c.codigo and c.cod_tipoauxiliar=2   ORDER BY nombre";
-                              $stmtAux = $dbh->prepare($sqlAuxiliares);    
-                              $stmtAux->execute();
-                              while ($rowAux = $stmtAux->fetch(PDO::FETCH_ASSOC)) {
-                                $codigoX=$rowAux['codigo'];
-                                $codCuentaX=$rowAux['cod_cuenta'];
-                                $codProveedorX=$rowAux['cod_proveedor'];
-                                $nombreX=$rowAux['nombre'];
-                                ?>
-                                <option value="<?=$codigoX;?>###<?=$codCuentaX?>"><?=trim($nombreX);?></option>  
-                                <?php
-                                  }
-                                  ?> 
-                                </select>
-                              </div>    
-                           </div>
-                           <button class="btn btn-warning btn-round btn-fab col-sm-1" onclick="mostrarSelectProveedoresClientes()"><i class="material-icons">search</i></button>
-                       </div>      
                   </div>
                   <div class="card-title"><center><div id="tituloCuentaModal"></div></center></div>
                   <br>
                  <div id="div_estadocuentas"></div>
                  <div id="mensaje_estadoscuenta"></div>
                  <div class="form-group float-right">
-                        <button type="button" class="btn btn-info btn-round" onclick="agregarEstadoCuenta()">Agregar</button>
-                        <button type="button" class="btn btn-danger btn-round" onclick="quitarEstadoCuenta()">Quitar</button>
+                        <!--button type="button" class="btn btn-info btn-round" onclick="agregarEstadoCuenta()">Agregar</button-->
+                        <button type="button" class="btn btn-danger btn-round" onclick="quitarEstadoCuenta()">Quitar Estado de Cuenta</button>
                   </div>
                 </div>
       </div>  

@@ -230,10 +230,16 @@
                   }else{
                     for (var i = 0; i < numFilas; i++) {
                       if($("#debe"+(i+1)).val()==""&&$("#haber"+(i+1)).val()==""){
-                        mensaje+="<p>Todas las filas deben tener al menos un DEBE ó un HABER</p>";
+                        mensaje+="<p>Todas las filas deben tener al menos un DEBE ó un HABER.</p>";
                         $('#msgError').html(mensaje);
                         $('#modalAlert').modal('show');
                         debehaber=1;
+                      }
+                      if($('#glosa_detalle'+(i+1)).val()==""){
+                        mensaje+="<p>Fila "+(i+1)+". Debe registar la Glosa.</p>";
+                        $('#msgError').html(mensaje);
+                        $('#modalAlert').modal('show');
+                        envio=1; 
                       }
                       if($('#cuenta'+(i+1)).val()==""||$('#cuenta'+(i+1)).val()==null||$('#cuenta'+(i+1)).val()==0){
                         contcuenta++;
@@ -272,13 +278,34 @@
                           
                           //Validamos TipoC: Ingreso y cuando haya EC se registre obligatoriamente en el Haber
                           if( (tipoComprobante==1 && tipoEstadoCuenta==1) ){
-                            if( haberZ <= 0 || estadoCuentaSelect==false){
-                              $('#msgError').html("La fila "+(i+1)+" esta configurada para cerrar Estados de Cuenta.");
+                            if( haberZ <= 0 ){
+                              $('#msgError').html("Fila "+(i+1)+" esta configurada para cerrar Estados de Cuenta con Monto en el Haber.");
+                              $('#modalAlert').modal('show');
+                              return false;
+                            }      
+                            if( estadoCuentaSelect==false ){
+                              $('#msgError').html("Fila "+(i+1)+" Debe seleccionar un estado de cuenta para Cerrar.");
+                              $('#modalAlert').modal('show');
+                              return false;
+                            }                                                        
+                          }else{
+                            console.log("cuenta sin problemas; tipoComp:1");
+                          }
+
+                          //Validamos TipoC: Ingreso y cuando haya EC se registre obligatoriamente en el Haber
+                          if( (tipoComprobante==2 && tipoEstadoCuenta==2) ){
+                            if( debeZ <= 0 ){
+                              $('#msgError').html("Fila "+(i+1)+" esta configurada para cerrar Estados de Cuenta con monto en el Debe.");
                               $('#modalAlert').modal('show');
                               return false;
                             }
+                            if( estadoCuentaSelect==false ){
+                              $('#msgError').html("Fila "+(i+1)+" Debe seleccionar un Estado de Cuenta para Cerrar.");
+                              $('#modalAlert').modal('show');
+                              return false;
+                            }  
                           }else{
-                            console.log("cuenta sin problemas; tipoComp:3");
+                            console.log("cuenta sin problemas; tipoComp:2");
                           }
                           
 
