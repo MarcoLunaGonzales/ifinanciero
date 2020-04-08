@@ -105,6 +105,7 @@ $un=0;
  $un=0;
 $stmt = $dbh->prepare("SELECT * FROM facturas_compra");
 $stmt->execute();
+$arrayFacturasGenerales=[];
   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
   	 $arrayFacturasGenerales[$un]['cod_comprobantedetalle']=$row['cod_comprobantedetalle'];
 	 $arrayFacturasGenerales[$un]['nit']=$row['nit'];
@@ -266,26 +267,37 @@ $stmt->execute();
 				</div>
 				<div class="card-body ">
 					<div class="row">
+	    <label class="col-sm-1 col-form-label" style="text-align: center;">-</label>
+	    <label class="col-sm-1 col-form-label" style="text-align: center;">Gestion</label>
+	    <label class="col-sm-2 col-form-label" style="text-align: center;">Oficina</label>
+	    <label class="col-sm-2 col-form-label" style="text-align: center;">Fecha</label>
+	    <label class="col-sm-2 col-form-label" style="text-align: center;">Tipo Comprobante</label>
+	    <label class="col-sm-2 col-form-label" style="text-align: center;">Nro. Comprobante</label>
+	    <label class="col-sm-1 col-form-label" style="text-align: center;">-</label>
+ 	</div>
+					<div class="row">
+						<div class="col-sm-1">							
+						</div>
 				 	<?php 
                   while ($row = $data->fetch(PDO::FETCH_BOUND)) {
 				 	?>
 						<div class="col-sm-1">
 							<div class="form-group">
-						  		<label class="bmd-label-static">Gestion</label>
+						  		<!--<label class="bmd-label-static">Gestion</label>-->
 					  			<input class="form-control" type="text" name="gestion" value="<?=$gestion;?>" id="gestion" readonly="true" />
 							</div>
 						</div>
 
-						<div class="col-sm-1">
+						<div class="col-sm-2">
 							<div class="form-group">
-						  		<label class="bmd-label-static">Unidad</label>
+						  		<!--<label class="bmd-label-static">Unidad</label>-->
 						  		<input class="form-control" type="text" name="unidad_organizacional" value="<?=$unidad;?>" id="unidad_organizacional" readonly="true" />
 							</div>
 						</div>
 
 						<div class="col-sm-2">
 							<div class="form-group">
-						  		<label class="bmd-label-static">Fecha</label>
+						  		<!--<label class="bmd-label-static">Fecha</label>-->
 						  		<input class="form-control" type="text" name="fecha" value="<?=$fechaComprobante;?>" id="fecha" readonly="true"/>
 							</div>
 						</div>
@@ -317,20 +329,20 @@ $stmt->execute();
 							</div>
 				      	</div>
 
-						<div class="col-sm-1">
+						<div class="col-sm-2">
 							<div class="form-group">
-						  		<label for="nro_correlativo" class="bmd-label-static">#</label>
+						  		<!--<label for="nro_correlativo" class="bmd-label-static">#</label>-->
 						  		<div id="divnro_correlativo"><input class="form-control" type="number" name="nro_correlativo" id="nro_correlativo" min="1" required="true" readonly="true" value="<?=$nroCorrelativo?>" /></div>
 							</div>
 						</div>
 						
-					    <div class="col-sm-4">
+					    <!--<div class="col-sm-4">
 						    <div class="form-group">
 				          		<label for="glosa" class="bmd-label-static">Glosa</label>
 								<textarea class="form-control" name="glosa" id="glosa" required="true" rows="2" value=""><?=$glosaComprobante?></textarea>
 							</div>
-						</div>
-						<div class="col-sm-1">
+						</div>-->
+						<div class="col-sm-2">
 							<div class="btn-group">
                               <a title="Copiar Glosa (shift+g)" href="#modalCopy" data-toggle="modal" data-target="#modalCopy" class="<?=$buttonCeleste?> btn-fab btn-sm">
                       		        <i class="material-icons"><?=$iconCopy?></i>
@@ -344,7 +356,9 @@ $stmt->execute();
                             </div>
 						</div>
 					</div>
-                   <?php } ?>
+                   <?php
+                    $glosaMadre=$glosaComprobante;
+                    } ?>
 				</div>
 			</div>	
 
@@ -353,6 +367,14 @@ $stmt->execute();
 					<div class="card-text">
 					  <h6 class="card-title">Detalle</h6>
 					</div>
+					<h4 class="card-title" align="right">
+						<div class="col-sm-8">
+						    <div class="form-group">
+				          		<label for="glosa" class="bmd-label-static">Glosa</label>
+								<input class="form-control" name="glosa" id="glosa" required="true" rows="1" value="<?=$glosaMadre?>"/>
+							</div>
+						</div>
+					</h4>
 				</div>
 				<div class="card-body ">
 
@@ -360,15 +382,24 @@ $stmt->execute();
 					//buscar detalles del comprobante
 					?>
 					<fieldset id="fiel" style="width:100%;border:0;">
-							<button title="Agregar (alt+a)" type="button" name="add" class="btn btn-warning btn-round btn-fab" onClick="addCuentaContable(this)" accesskey="a">
-                      		  <i class="material-icons">add</i>
-		                    </button>
+						<div class="row">
+							<div class="col-sm-1">
+	                    		<button title="Agregar (alt+a)" type="button" id="add_boton" name="add" class="btn btn-warning btn-fab btn-round btn-sm" onClick="addCuentaContable(this)">
+	                  		  <i class="material-icons x-s">add</i>
+		                    </button>	
+	                    	</div>
 
-		                <div class="col-sm-1 float-right">
-							<a title="Copiar Unidad - Area (shift+u)" href="#modalCopySel" data-toggle="modal" data-target="#modalCopySel" class="<?=$buttonDelete?> btn-fab">
-                      		  <i class="material-icons"><?=$iconCopy?></i>
-		                    </a>
-		                </div>  
+		                <label class="col-sm-1 col-form-label" style="text-align: center;">Centro Costos</label>
+		                    <label class="col-sm-4 col-form-label" style="text-align: center;">Cuenta</label>
+		                    <label class="col-sm-1 col-form-label" style="text-align: center;">Debe</label>
+		                    <label class="col-sm-1 col-form-label" style="text-align: center;">Haber</label>
+		                    <label class="col-sm-3 col-form-label" style="text-align: center;">Glosa</label>
+			                <div class="col-sm-1" align="right">
+								<a title="Copiar Unidad - Area (shift+u)" href="#modalCopySel" data-toggle="modal" data-target="#modalCopySel" class="<?=$buttonDelete?> btn-fab btn-sm">
+	                      		  <i class="material-icons"><?=$iconCopy?></i>
+			                    </a>
+			                </div> 
+			            </div>     
 		                <div id="div">	
 							
 							<div class="h-divider">
@@ -463,9 +494,9 @@ $stmt->execute();
     			                        </div>
     			                        <div class="col-sm-4">
     			                        	<div class="btn-group">
-    			                        	 <!--<a title="Mayores" href="#" id="mayor<?=$idFila?>" onclick="mayorReporteComprobante(<?=$idFila?>)" class="btn btn-sm btn-info btn-fab"><span class="material-icons">list</span></a>	  	
+    			                        	 <a title="Mayores" href="#" id="mayor<?=$idFila?>" onclick="mayorReporteComprobante(<?=$idFila?>)" class="btn btn-sm btn-info btn-fab"><span class="material-icons">list</span></a>	  	
     			                        	 <a title="Cambiar cuenta" href="#" id="cambiar_cuenta<?=$idFila?>" onclick="editarCuentaComprobante(<?=$idFila?>)" class="btn btn-sm btn-warning btn-fab"><span class="material-icons text-dark">edit</span></a>	  
-    			                        	 <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion<?=$idFila?>" onclick="nuevaDistribucionPonerFila(<?=$idFila;?>);" class="btn btn-sm btn-default btn-fab"><span class="material-icons">scatter_plot</span></a>-->	  
+    			                        	 <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion<?=$idFila?>" onclick="nuevaDistribucionPonerFila(<?=$idFila;?>);" class="btn btn-sm btn-default btn-fab"><span class="material-icons">scatter_plot</span></a>	  
     			                             <input type="hidden" id="tipo_estadocuentas<?=$idFila?>">
     			                             <input type="hidden" id="tipo_proveedorcliente<?=$idFila?>">
     			                             <input type="hidden" id="proveedorcliente<?=$idFila?>">
@@ -498,27 +529,30 @@ $stmt->execute();
                                   ?>
 		                        <div class="col-sm-1">
                                     <div class="form-group">
-                                    	<label class="bmd-label-static">Debe</label>			
+                                    	<!--<label class="bmd-label-static">Debe</label>-->			
                                   		<input class="form-control small" type="number" placeholder="0" value="<?=$debeDet?>" name="debe<?=$idFila;?>" id="debe<?=$idFila;?>" onChange="calcularTotalesComprobante(this.id,event);" OnKeyUp="calcularTotalesComprobante(this.id,event);" step="0.01">	
 		                        	</div>
       	                        </div>
 
 		                        <div class="col-sm-1">
                                     <div class="form-group">
-                                    	<label class="bmd-label-static">Haber</label>			
+                                    	<!--<label class="bmd-label-static">Haber</label>-->			
                                   		<input class="form-control small" type="number" placeholder="0" value="<?=$haberDet?>" name="haber<?=$idFila;?>" id="haber<?=$idFila;?>" onChange="calcularTotalesComprobante(this.id,event);" OnKeyUp="calcularTotalesComprobante(this.id,event);" step="0.01"> 	
 		                        	</div>
       	                        </div>
 
       	                        <div class="col-sm-3">
 		                            <div class="form-group">
-                                  		<label class="bmd-label-static">GlosaDetalle</label>
+                                  		<!--<label class="bmd-label-static">GlosaDetalle</label>-->
 		                        		<textarea rows="1" class="form-control" name="glosa_detalle<?=$idFila;?>" id="glosa_detalle<?=$idFila;?>"><?=$glosaDet?></textarea>
 		                        	</div>
 		                        </div>
 
 		                       <div class="col-sm-1">
 		                         <div class="btn-group">
+		                         	<a href="#" title="Retenciones" id="boton_ret<?=$idFila;?>" onclick="listRetencion(<?=$idFila;?>);" class="btn btn-warning text-dark btn-sm btn-fab">
+                                     <i class="material-icons">ballot</i>
+                                   </a>
 		                         	<a title="Facturas" href="#" id="boton_fac<?=$idFila;?>" onclick="listFac(<?=$idFila;?>);" class="btn btn-info btn-sm btn-fab">
                                       <i class="material-icons">featured_play_list</i><span id="nfac<?=$idFila;?>" class="count bg-warning">0</span>
                                     </a>

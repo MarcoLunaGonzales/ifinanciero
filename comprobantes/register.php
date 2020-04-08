@@ -36,6 +36,8 @@ $nombreCompletoUnidad=nameUnidad($globalUnidad);
 	var configuracionCentro=[];
 	var configuraciones=[];
 	var estado_cuentas=[];
+	var itemCuentas=[];
+	var itemCuentasAux=[];
 </script>
 <?php
   $i=0;
@@ -191,7 +193,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
 	    <label class="col-sm-2 col-form-label" style="text-align: center;">Nro. Comprobante</label>
 	    <label class="col-sm-1 col-form-label" style="text-align: center;">-</label>
  	</div>
-    <div class="row">
+                       <div class="row">
 						<div class="col-sm-1">							
 						</div>
 						<div class="col-sm-1">
