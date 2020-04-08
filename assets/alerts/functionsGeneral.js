@@ -5613,7 +5613,6 @@ function verEstadosCuentas(fila,cuenta){
   }
 }  
 
-
 var itemEstadosCuentas=[];
 function quitarEstadoCuenta(){
   var fila=$("#estFila").val();
