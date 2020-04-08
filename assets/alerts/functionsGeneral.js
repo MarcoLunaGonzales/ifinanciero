@@ -219,30 +219,6 @@ function configuracionCentros(fila,inicio){
     }
   };
 }
-function configuracionEstadosCuenta(fila,codigoCuenta,codigoCuentaAux){
-  var contador=0;
-  for (var i = 0; i < estado_cuentas.length; i++) {
-    if(estado_cuentas[i].cod_cuenta==codigoCuenta){ //&&codigoCuentaAux==0
-      $("#estados_cuentas"+fila).removeClass("d-none"); 
-      $("#tipo_estadocuentas"+fila).val(estado_cuentas[i].tipo);
-      $("#tipo_proveedorcliente"+fila).val(estado_cuentas[i].tipo_estado_cuenta);
-
-      contador++;   
-      break;  
-    }else{
-      $("#estados_cuentas"+fila).removeClass("d-none"); 
-      $("#estados_cuentas"+fila).addClass("d-none");  
-    }
-  };
-  //SI EL ESTADO DE CUENTA NO ESTA EN LA TABLA LE PONEMOS UN CAMBIO DE COLOR
-  if(contador==0){
-     $("#estados_cuentas"+fila).removeClass("d-none"); 
-     $("#estados_cuentas"+fila).addClass("d-none");
-     //$("#estados_cuentas"+fila).removeClass("d-none"); 
-     //$("#estados_cuentas"+fila).removeClass("btn-danger"); 
-     //$("#estados_cuentas"+fila).addClass("btn-success");
-  }
-}
 
 
 function copiarGlosa(){
@@ -5537,7 +5513,7 @@ function verEstadosCuentas(fila,cuenta){
     $("#tituloCuentaModal").html($("#divCuentaDetalle"+fila).html()); 
     $("#modalEstadosCuentas").modal("show");   
   }  
-//}
+}
 
 var itemEstadosCuentas=[];
 function quitarEstadoCuenta(){
