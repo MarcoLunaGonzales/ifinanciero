@@ -5402,8 +5402,8 @@ function verEstadosCuentas(fila,cuenta){
      $('#msgError').html("<p>El Debe o Haber deben de ser llenados</p>");
      $("#modalAlert").modal("show");
   }else{
-    /*
     if(cuenta==0){
+      /*
       if($("#cuenta_auxiliar"+fila).val()==0){
         var cod_cuenta=$("#cuenta"+fila).val();
         var cod_cuenta_auxiliar=0;
@@ -5413,13 +5413,12 @@ function verEstadosCuentas(fila,cuenta){
         var cod_cuenta_auxiliar=$("#cuenta_auxiliar"+fila).val();
         var auxi="SI";
       }
-
+      */
       if($("#cuentas_auxiliaresorigen").length){
         $("#cuentas_auxiliaresorigen").val("all");
         $('.selectpicker').selectpicker("refresh"); 
       }      
     }else{
-    */
       //aca entramos cuando se mata la cuenta
       var cod_cuenta=cuenta;
       var vector_cod_cuenta_auxiliar=$("#cuentas_auxiliaresorigen").val().split('###');
