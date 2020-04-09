@@ -8987,6 +8987,42 @@ function ajax_entidad_Oficina(){
   ajax.send(null)  
 }
 
+function ajax_tipo_filtro_reporte_prove_cliente(){
+  var contenedor;
+  // var codigo_entidad=combo.value;
+
+  var array_tipo_cp = $("#tipo_cp").val();
+
+  contenedor = document.getElementById('div_contenedor_cuenta');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'reportes/ajax_tipo_cliente_provee_cuenta.php?codigo='+array_tipo_cp,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);
+      ajax_clientes_proveedores();
+    }
+  }
+  ajax.send(null)  
+}
+function ajax_clientes_proveedores(){
+    var contenedor;
+  // var codigo_entidad=combo.value;
+
+  var array_tipo_cp = $("#tipo_cp").val();
+  contenedor = document.getElementById('div_contenedorProv_cli');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'reportes/ajax_clientes_proveedores.php?codigo='+array_tipo_cp,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);      
+    }
+  }
+  ajax.send(null)  
+}
+
+
 function ajaxEntidadOficina2(arrayEntidad){
   // var cod_uo=$("#cod_unidadorganizacional").val();  
   // alert(cod_uo);

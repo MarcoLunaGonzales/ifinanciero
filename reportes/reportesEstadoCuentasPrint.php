@@ -49,6 +49,7 @@ $resultG = $stmtG->fetch();
 $NombreGestion = $resultG['nombre'];
 
 $sql="SELECT e.*,d.glosa,d.haber,d.debe,(select concat(c.cod_tipocomprobante,'|',c.numero,'|',cd.cod_unidadorganizacional,'|',MONTH(c.fecha),'|',c.fecha) from comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle)as extra FROM estados_cuenta e,comprobantes_detalle d, comprobantes cc where e.cod_comprobantedetalle=d.codigo and cc.codigo=d.cod_comprobante and (d.cod_cuenta in ($StringCuenta) or e.cod_cuentaaux in ($StringCuenta)) and e.cod_comprobantedetalleorigen=0 and cc.cod_gestion= '$NombreGestion' and cod_proveedor in ($proveedoresString) and e.fecha<='$fecha' and cc.cod_unidadorganizacional in ($StringUnidades) order by e.fecha";
+// echo $sql;
 $stmtUO = $dbh->prepare($sql);
 $stmtUO->execute();
 $i=0;$saldo=0;
@@ -68,7 +69,7 @@ $totalDebito=0;
                       </div> -->
                       <h4 class="card-title"> 
                         <img  class="card-img-top"  src="../marca.png" style="width:100%; max-width:250px;">
-                          Estados de Cuentas
+                          Estado de Cuentas
                       </h4>
                       
                       <!-- <div class="row">

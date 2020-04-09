@@ -261,7 +261,8 @@ try{
 	                    	if($porcentaje_cuentaorigen>100){
 					        	$monto_restante=$monto_recalculado;
 					        }else{
-					        	$monto_restante=$monto_recalculado*$porcentaje_cuentaorigen/100;       
+					        	// $monto_restante=$monto_recalculado*$porcentaje_cuentaorigen/100;       
+					        	$monto_restante=$monto_recalculado;
 					        }
 		                    $cod_uo_config=obtenerValorConfiguracion(15);
 		                    if($cod_uo==$cod_uo_config){
