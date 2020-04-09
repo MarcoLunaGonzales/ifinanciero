@@ -12,11 +12,11 @@ $sqlUO="SELECT uo.codigo, uo.nombre,uo.abreviatura from entidades_uo e, unidades
 $stmt = $db->prepare($sqlUO);
 $stmt->execute();
 ?>
-	<select class="selectpicker form-control form-control-sm" name="unidad[]" id="unidad" data-style="select-with-transition" multiple data-actions-box="true" required>
+	<select class="selectpicker form-control form-control-sm" name="unidad[]" id="unidad" data-style="select-with-transition" multiple data-actions-box="true" required data-live-search="true">
 	    <?php 
 	    	while ($row = $stmt->fetch()){ 
 		?>
-	      	 <option value="<?=$row["codigo"];?>"><?=$row["abreviatura"];?></option>
+	      	 <option value="<?=$row["codigo"];?>" data-subtext="<?=$row["nombre"];?>"><?=$row["abreviatura"];?></option>
 	     <?php 
 	 		} 
 	 	?>

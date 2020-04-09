@@ -68,6 +68,8 @@ $mes=$_GET['mes'];
 	 $haberX=$row['haber'];
 	 $codigoExtra=$row['extra'];
 	 $glosaAuxiliar=$row['glosa_auxiliar'];
+	 $codCuentaAuxDet=$row['cod_cuentaaux'];
+
 
 	 $glosaMostrar="";
 	 if($glosaAuxiliar!=""){
@@ -100,6 +102,7 @@ $mes=$_GET['mes'];
 
 
   	$nombreProveedorClienteX=nameProveedorCliente($tipoProveedorCliente,$codProveedor);
+  	$nombreCuentaAux=nameCuentaAuxiliar($codCuentaAuxDet);
  
 
        ?>
@@ -109,7 +112,7 @@ $mes=$_GET['mes'];
 	  	   	<td class="text-center small"><?=$numeroComprobante;?></td>
 	  	   	<td class="text-center small"><?=$fechaComprobante;?></td>
 	  	   	<td class="text-center small"><?=$fechaX;?></td>
-	  	   	<td class="text-left small"><?=$nombreProveedorClienteX;?></td>
+	  	   	<td class="text-left small">[<?=$nombreCuentaAux;?>] - <?=$nombreProveedorClienteX;?></td>
 	  	   	<td class="text-left small">
 
 		    <div id="accordion<?=$indice;?>" role="tablist">

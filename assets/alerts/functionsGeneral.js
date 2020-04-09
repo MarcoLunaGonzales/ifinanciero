@@ -5548,9 +5548,23 @@ function verEstadosCuentas(fila,cuenta){
   var tipoComprobante=parseFloat($("#tipo_comprobante").val());
   var debeX=parseFloat($("#debe"+fila).val());
   var haberX=parseFloat($("#haber"+fila).val());
+
+  var tipo=$("#tipo_estadocuentas"+fila).val();
+  var tipo_proveedorcliente=$("#tipo_proveedorcliente"+fila).val();
+
   var banderaContinuar=1;
   if(($("#debe"+fila).val()==""&&$("#haber"+fila).val()=="")||($("#debe"+fila).val()==0&&$("#haber"+fila).val()==0)){
     $('#msgError').html("<p>El Debe o Haber deben de ser llenados</p>");
+    $("#modalAlert").modal("show");
+    banderaContinuar=0;
+  }
+  if( tipoComprobante==3 && haberX>0 && tipo==1 ){
+    $('#msgError').html("<p>Esta cuenta No admite Monto en el Haber</p>");
+    $("#modalAlert").modal("show");
+    banderaContinuar=0;
+  }
+  if( tipoComprobante==3 && debeX>0 && tipo==2 ){
+    $('#msgError').html("<p>Esta cuenta No admite Monto en el Debe</p>");
     $("#modalAlert").modal("show");
     banderaContinuar=0;
   }
@@ -5569,8 +5583,6 @@ function verEstadosCuentas(fila,cuenta){
     var cod_cuenta_auxiliar=$("#cuenta_auxiliar"+fila).val();
     var auxi="NO";
 
-    var tipo=$("#tipo_estadocuentas"+fila).val();
-    var tipo_proveedorcliente=$("#tipo_proveedorcliente"+fila).val();
 
     //EN ESTA PARTE DEBEMOS MATAR LA CUENTA    
     if(tipoComprobante==1){//TIPO INGRESO
@@ -9057,6 +9069,42 @@ function ajax_entidad_Oficina(){
   }
   ajax.send(null)  
 }
+
+function ajax_tipo_filtro_reporte_prove_cliente(){
+  var contenedor;
+  // var codigo_entidad=combo.value;
+
+  var array_tipo_cp = $("#tipo_cp").val();
+
+  contenedor = document.getElementById('div_contenedor_cuenta');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'reportes/ajax_tipo_cliente_provee_cuenta.php?codigo='+array_tipo_cp,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);
+      ajax_clientes_proveedores();
+    }
+  }
+  ajax.send(null)  
+}
+function ajax_clientes_proveedores(){
+    var contenedor;
+  // var codigo_entidad=combo.value;
+
+  var array_tipo_cp = $("#tipo_cp").val();
+  contenedor = document.getElementById('div_contenedorProv_cli');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'reportes/ajax_clientes_proveedores.php?codigo='+array_tipo_cp,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);      
+    }
+  }
+  ajax.send(null)  
+}
+
 
 function ajaxEntidadOficina2(arrayEntidad){
   // var cod_uo=$("#cod_unidadorganizacional").val();  
