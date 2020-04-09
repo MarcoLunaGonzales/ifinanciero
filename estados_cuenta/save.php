@@ -27,6 +27,8 @@ $stmt->bindParam(':cod_cuentaaux', $codAux);
 $stmt->bindParam(':tipo', $credito);
 $stmt->bindParam(':cod_tipoestadocuenta', $tipo);
 $flagSuccess=$stmt->execute();
+
+
 if($flagSuccess==true){
 	showAlertSuccessError(true,"../".$urlList2);	
 }else{

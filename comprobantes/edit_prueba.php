@@ -34,6 +34,8 @@ $data->bindColumn('cod_tipocomprobante', $tipoComprobante);
 $data->bindColumn('numero', $nroCorrelativo);
 $data->bindColumn('glosa', $glosaComprobante);
 $fechaActualModal=date("d/m/Y");
+
+//
 if(isset($_GET['codigo'])){
 	$globalCode=$_GET['codigo'];
 }else{
@@ -197,6 +199,7 @@ $stmt->execute();
 		    ?>
 
 <form id="formRegComp" class="form-horizontal" action="saveEdit.php" method="post" enctype="multipart/form-data">
+	<input type="hidden" name="edicion" id="edicion" value="1">
 	<?php 
  if(isset($_GET['cuentas'])){
  	?><input type="hidden" name="incompleto" id="incompleto" value="1"><?php
@@ -280,6 +283,9 @@ $stmt->execute();
 						</div>
 				 	<?php 
                   while ($row = $data->fetch(PDO::FETCH_BOUND)) {
+                  	$fechaComp=explode("-",$fechaComprobante);
+                  	$fechaComp2=explode(" ",$fechaComp[2]);
+                  	$fechaComprobanteModal=$fechaComp2[0]."/".$fechaComp[1]."/".$fechaComp[0];
 				 	?>
 						<div class="col-sm-1">
 							<div class="form-group">
@@ -298,7 +304,7 @@ $stmt->execute();
 						<div class="col-sm-2">
 							<div class="form-group">
 						  		<!--<label class="bmd-label-static">Fecha</label>-->
-						  		<input class="form-control" type="text" name="fecha" value="<?=$fechaComprobante;?>" id="fecha" readonly="true"/>
+						  		<input class="form-control datepicker" type="text" name="fecha" value="<?=$fechaComprobanteModal;?>" id="fecha"/>
 							</div>
 						</div>
 
@@ -568,7 +574,8 @@ $stmt->execute();
                          </div>
 
                        <script>var nfac=[];
-      itemFacturas.push(nfac);</script>
+      itemFacturas.push(nfac);var nest=[];
+      itemEstadosCuentas.push(nest);</script>
 						 <?php
 
 						      for ($i=0; $i < count($arrayFacturasGenerales) ; $i++) {

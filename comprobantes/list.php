@@ -16,7 +16,7 @@ $dbh = new Conexion();
 // (select t.nombre from tipos_comprobante t where t.codigo=c.cod_tipocomprobante)tipo_comprobante, c.fecha, c.numero,c.codigo, c.glosa,ec.nombre,c.cod_estadocomprobante
 // from comprobantes c join estados_comprobantes ec on c.cod_estadocomprobante=ec.codigo where c.cod_estadocomprobante!=2  order by c.fecha desc, c.numero desc");
 
-$sql="SELECT (select u.abreviatura from unidades_organizacionales u where u.codigo=c.cod_unidadorganizacional)unidad, c.cod_gestion, 
+$sql="SELECT c.cod_tipocomprobante,(select u.abreviatura from unidades_organizacionales u where u.codigo=c.cod_unidadorganizacional)unidad, c.cod_gestion, 
 (select m.nombre from monedas m where m.codigo=c.cod_moneda)moneda, 
 (select t.abreviatura from tipos_comprobante t where t.codigo=c.cod_tipocomprobante)tipo_comprobante, c.fecha, c.numero,c.codigo, c.glosa,ec.nombre,c.cod_estadocomprobante
 from comprobantes c join estados_comprobantes ec on c.cod_estadocomprobante=ec.codigo where c.cod_estadocomprobante!=2 ";
@@ -44,6 +44,7 @@ $stmt->bindColumn('codigo', $codigo);
 $stmt->bindColumn('glosa', $glosaComprobante);
 $stmt->bindColumn('nombre', $estadoComprobante);
 $stmt->bindColumn('cod_estadocomprobante', $estadoC);
+$stmt->bindColumn('cod_tipocomprobante', $codTipoC);
 
 
 // busquena por Oficina
@@ -121,6 +122,10 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                       <?php
 						            $index=1;
                       	while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+                          $existeCuenta=0;
+                          if($codTipoC==3){
+                             $existeCuenta=obtenerEstadoCuentaSaldoComprobante($codigo);
+                          }
                           $mes=date('n',strtotime($fechaComprobante));
                           // $mes=date("j",$fechaComprobante);
                           switch ($estadoC) {
@@ -173,9 +178,15 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                             <a href='<?=$urlArchivo;?>?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="btn btn-default">
                               <i class="material-icons">attachment</i>
                             </a>
+                            <?php
+                            if($existeCuenta==0){
+                              ?>
                             <a href='<?=$urlEdit3;?>?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="<?=$buttonEdit;?>">
                               <i class="material-icons"><?=$iconEdit;?></i>
                             </a>
+                              <?php
+                            }
+                            ?>
                             <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')">
                               <i class="material-icons"><?=$iconDelete;?></i>
                             </button>

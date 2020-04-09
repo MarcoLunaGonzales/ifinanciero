@@ -141,12 +141,12 @@ for ($i=1;$i<=$cantidadFilas;$i++){
          //FIN DE ESTADOS DE CUENTA
 	}
 } 
-
-if($flagSuccessDetalle==true){
+echo "<script>window.close();</script>";
+/*if($flagSuccessDetalle==true){
 	showAlertSuccessError(true,"../".$urlList);	
 }else{
 	showAlertSuccessError(false,"../".$urlList);
-}
+}*/
 
 
 ?>

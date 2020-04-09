@@ -140,11 +140,11 @@ function calcularTotalesComprobante(id,e){
     
 
   if($("#totalhab_restante").length){
-    document.getElementById("totaldeb").value=sumadebe+parseFloat($("#totaldeb_restante").val());  
-    document.getElementById("totalhab").value=sumahaber+parseFloat($("#totalhab_restante").val());
+    document.getElementById("totaldeb").value=redondeo(sumadebe+parseFloat($("#totaldeb_restante").val()),2);  
+    document.getElementById("totalhab").value=redondeo(sumahaber+parseFloat($("#totalhab_restante").val()),2);
   }else{
-    document.getElementById("totaldeb").value=sumadebe;  
-    document.getElementById("totalhab").value=sumahaber; 
+    document.getElementById("totaldeb").value=redondeo(sumadebe,2);  
+    document.getElementById("totalhab").value=redondeo(sumahaber,2); 
   }
 }
 
@@ -5519,7 +5519,19 @@ function verEstadosCuentas(fila,cuenta){
       $("#monto_estadocuenta").val($("#debe"+fila).val());      
     }
 
-    var parametros={"cod_cuenta":cod_cuenta,"cod_cuenta_auxiliar":cod_cuenta_auxiliar,"tipo_comprobante":tipoComprobante};
+    if($("#edicion").length>0){
+      var edicion=1;
+    }else{
+      var edicion=0;
+    }
+    if(itemEstadosCuentas[fila-1].length>0){   
+     // alert("mm:"+itemEstadosCuentas[fila-1][0].cod_comprobantedetalle)
+      var comprobanteOrigen=itemEstadosCuentas[fila-1][0].cod_comprobantedetalle;
+       var parametros={"edicion":edicion,"cod_cuenta":cod_cuenta,"cod_cuenta_auxiliar":cod_cuenta_auxiliar,"tipo_comprobante":tipoComprobante,"comprobante_origen":comprobanteOrigen};
+    }else{
+      var parametros={"edicion":edicion,"cod_cuenta":cod_cuenta,"cod_cuenta_auxiliar":cod_cuenta_auxiliar,"tipo_comprobante":tipoComprobante};
+    }
+    
     //PASA Y MOSTRAMOS LOS ESTADOS DE CUENTA    
     $.ajax({
         type: "GET",
@@ -5538,11 +5550,11 @@ function verEstadosCuentas(fila,cuenta){
           if(tipo==2 && tipo_proveedorcliente==1){
             var rsaldo=listarEstadosCuentas(fila,respuesta[1]);
             console.log("listarEstadoCuentasDebito;");
-            listarEstadosCuentasDebito(fila,rsaldo);
+            //listarEstadosCuentasDebito(fila,rsaldo);
           }else{
             var rsaldo=listarEstadosCuentasCredito(fila,respuesta[1]);
             console.log("listarEstadoCuentas;");
-            listarEstadosCuentas(fila,rsaldo);
+            //listarEstadosCuentas(fila,rsaldo);
           } 
           //mostrarSelectProveedoresClientes()          
         }
@@ -5650,13 +5662,14 @@ function agregarEstadoCuentaCerrar(filaXXX,valor){
     itemEstadosCuentas[fila-1]=[];
     itemEstadosCuentas[fila-1].push(nfila);
     
-    //console.log("EC:**"+JSON.stringify(itemEstadosCuentas[fila-1]));
+    console.log("EC:**"+JSON.stringify(itemEstadosCuentas[fila-1]));
 
     $("#nestado"+fila).addClass("estado");
     //verEstadosCuentas(fila,cuenta);
     $('#modalEstadosCuentas').modal('hide');
   }else{
-    $("#mensaje_estadoscuenta").html("<label class='text-danger'>El monto a Cerrar no puede ser mayor al saldo.</label>");
+    Swal.fire('Estados de Cuenta!','El monto a Cerrar no puede ser mayor al saldo!','warning'); 
+   // $("#mensaje_estadoscuenta").html("<label class='text-danger'>El monto a Cerrar no puede ser mayor al saldo.</label>");
   }
 }
 
@@ -5689,42 +5702,51 @@ function listarEstadosCuentasDebito(id,saldo){
   return rsaldo;
 }
  function listarEstadosCuentas(id,saldo){
+     if($("#tipo_comprobante").val()==3){
+        var estiloMonto="text-success";
+      }else{
+        var estiloMonto="text-danger";
+      }
+
   var table = $('#tabla_estadocuenta');
    for (var i = 0; i < itemEstadosCuentas[id-1].length; i++) {
      var row = $('<tr>').addClass('bg-white');
-     row.append($('<td>').addClass('text-left').text("-"));
-     row.append($('<td>').addClass('text-left').text("-"));
-     row.append($('<td>').addClass('text-left').text("-"));
-     row.append($('<td>').addClass('text-left').text("-"));
+     row.append($('<td>').addClass('text-left').text(""));
+     row.append($('<td>').addClass('text-left').text(""));
+     row.append($('<td>').addClass('text-left').text(""));
+     row.append($('<td>').addClass('text-left').text(""));
 
-     row.append($('<td>').addClass('text-left').text("-"));
-     row.append($('<td>').addClass('text-left').text("-"));
-     row.append($('<td>').addClass('text-left text-danger').text("---"));
+     row.append($('<td>').addClass('text-left').text(""));
+     row.append($('<td>').addClass('text-left').text(""));
+     //row.append($('<td>').addClass('text-left text-success').text($("#glosa_detalle"+id).val()));
      
      var tipo=$("#tipo_estadocuentas"+id).val();
      var tipo_proveedorcliente=$("#tipo_proveedorcliente"+id).val();
       if(tipo==2 && tipo_proveedorcliente==1){
-        row.append($('<td>').addClass('text-left text-danger').text($("#glosa_detalle"+id).val()));
+        row.append($('<td>').addClass('text-left '+estiloMonto+'').text($("#glosa_detalle"+id).val()));
         var nsaldo=parseFloat(saldo)+parseFloat(itemEstadosCuentas[id-1][i].monto);
-        row.append($('<td>').addClass('text-right text-danger').text(""));   
-        row.append($('<td>').addClass('text-right text-danger').text(numberFormat(itemEstadosCuentas[id-1][i].monto,2)));
+        row.append($('<td>').addClass('text-right '+estiloMonto+'').text(""));   
+        row.append($('<td>').addClass('text-right '+estiloMonto+'  font-weight-bold').text(""));
       }else{
         var titulo_glosa="";
         if(itemEstadosCuentas[id-1][i].cod_comprobantedetalle!=0){
           titulo_glosa=obtieneDatosFilaEstadosCuenta(itemEstadosCuentas[id-1][i].cod_comprobantedetalle);
         }
-        row.append($('<td>').addClass('text-left text-danger').html($("#glosa_detalle"+id).val()+"<small class='text-success'>"+titulo_glosa+"</small>"));
+        row.append($('<td>').addClass('text-left '+estiloMonto+'').html($("#glosa_detalle"+id).val()+"<small class='text-success'>"+titulo_glosa+"</small>"));
         var nsaldo=parseFloat(saldo)-parseFloat(itemEstadosCuentas[id-1][i].monto);
         //para listar los estados de cliente nuevos en el campo de credito
         if(tipo==2 && tipo_proveedorcliente==2){
-          row.append($('<td>').addClass('text-right text-danger').text(""));
-          row.append($('<td>').addClass('text-right text-danger').text(numberFormat(itemEstadosCuentas[id-1][i].monto,2)));  
+          row.append($('<td>').addClass('text-right text-success').text(""));
+          row.append($('<td>').addClass('text-right text-success font-weight-bold').text(""));  
         }else{
-          row.append($('<td>').addClass('text-right text-danger').text(numberFormat(itemEstadosCuentas[id-1][i].monto,2)));  
-          row.append($('<td>').addClass('text-right text-danger').text(""));       
+          row.append($('<td>').addClass('text-right text-success font-weight-bold').text(""));  
+          row.append($('<td>').addClass('text-right text-success').text(""));       
         }
       }
-      row.append($('<td>').addClass('text-right text-danger font-weight-bold').text(numberFormat(nsaldo,2)));
+      
+      row.append($('<td>').addClass('text-right '+estiloMonto+' font-weight-bold').text(numberFormat(itemEstadosCuentas[id-1][i].monto,2)));
+      row.append($('<td>').addClass('text-left').text(""));
+      row.append($('<td>').addClass('text-left').text(""));
      table.append(row);
      return nsaldo;
    }

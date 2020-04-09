@@ -25,7 +25,7 @@ $tipoComprobanteX=$_GET['tipo_comprobante'];
 $sqlZ="SELECT e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar,(select concat(c.cod_tipocomprobante,'|',c.numero,'|',cd.cod_unidadorganizacional,'|',MONTH(c.fecha),'|',c.fecha) from comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle)as extra FROM estados_cuenta e,comprobantes_detalle d where e.cod_comprobantedetalle=d.codigo and (d.cod_cuenta=$codCuenta) and e.cod_comprobantedetalleorigen=0 and e.cod_cuentaaux=$codCuentaAuxiliar order by e.fecha";
 //echo $sqlZ;
 ?>
-<table class="table table-bordered table-condensed table-warning">
+<table id="tablePaginatorReport" class="table table-bordered table-condensed table-warning">
   <thead>
     <tr class="">
       <th class="text-left">Of</th>
@@ -50,9 +50,16 @@ $sqlZ="SELECT e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar,(select concat(c.c
   $stmt->execute();
   $i=0;$saldo=0;
   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    $saldoIndividual=0;
-
     $codigoX=$row['codigo'];
+    $estiloFila="bg-white";$codOrigen=0;
+    if(isset($_GET['comprobante_origen'])){
+      if($_GET['comprobante_origen']==$codigoX){
+       $estiloFila="bg-plomo";$codOrigen=1;
+      }
+    }
+
+    $saldoIndividual=0;
+    
     $codPlanCuentaX=$row['cod_plancuenta'];
     $codCompDetX=$row['cod_comprobantedetalle'];
     $codProveedorX=$row['cod_proveedor'];
@@ -102,14 +109,33 @@ $sqlZ="SELECT e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar,(select concat(c.c
     }
     $debeX=$montoContra;
 
-    $saldo=$saldo+$montoX-$debeX;
-    $saldoIndividual=$montoX-$montoContra;
+    
 
     //Filtramos las cuentas que ya esten cerradas.
-    if($montoContra<$montoX){
+    
+    
+    $saldoIndividual=$montoX-$montoContra;
+    if(isset($_GET['edicion'])){
+      $edicion=$_GET['edicion'];
+      if($edicion==1){
+       if(($tipoComprobanteX!=3)){
+        if($tipoComprobanteX==1){
+         $saldoIndividual=$montoX;
+         $montoContra=0;
+        }else{     
+         $saldoIndividual=$montoX;
+         $montoContra=0;
+        }     
+       }      
+      }
+    }else{
+      $edicion=0;
+    }
+    $saldo=$saldo+$saldoIndividual;
+    if($montoContra<$montoX||$edicion!=0){
     ?>
-    <tr class="bg-white det-estados">
-      <td class="text-center small"><?=$nombreUnidadO;?></td>
+    <tr class="<?=$estiloFila?> det-estados">
+      <td class="text-center small"><?=$codigoX?>/<?=$nombreUnidadO;?></td>
       <td class="text-center small"><?=$nombreTipoComprobante;?></td>
       <td class="text-center small"><?=$numeroComprobante;?></td>
       <td class="text-left small"><?=$fechaComprobante;?></td>

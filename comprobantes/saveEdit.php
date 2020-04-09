@@ -13,6 +13,8 @@ $codUnidad=$_POST["unidad_organizacional"];
 $cantidadFilas=$_POST["cantidad_filas"];
 $tipoComprobante=$_POST["tipo_comprobante"];
 $nroCorrelativo=$_POST["nro_correlativo"];
+$porcionesFecha = explode("/", $_POST['fecha']);
+$fechaHoraActual2=$porcionesFecha[2]."-".$porcionesFecha[1]."-".$porcionesFecha[0];
 $glosa=$_POST["glosa"];
 $facturas= json_decode($_POST['facturas']);
 $estadosCuentas= json_decode($_POST['estados_cuentas']);
@@ -27,7 +29,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $fechaHoraActual=date("Y-m-d H:i:s");
 
 $codComprobante=$_POST['codigo_comprobante'];
-$sqlUpdate="UPDATE comprobantes SET  glosa='$glosa', modified_at='$fechaHoraActual', modified_by='$globalUser' where codigo=$codComprobante";
+$sqlUpdate="UPDATE comprobantes SET  glosa='$glosa', fecha='$fechaHoraActual2',modified_at='$fechaHoraActual', modified_by='$globalUser' where codigo=$codComprobante";
 echo $sqlUpdate;
 $stmtUpdate = $dbh->prepare($sqlUpdate);
 $flagSuccess=$stmtUpdate->execute();	
@@ -109,12 +111,26 @@ for ($i=1;$i<=$cantidadFilas;$i++){
         $stmtDetalle = $dbh->prepare($sqlDetalle);
         $flagSuccessDetalle=$stmtDetalle->execute();
      }
+        /*ACA INSERTAMOS EL ESTADO DE CUENTAS DE FORMA AUTOMATICA TIPO TRASPASOS Y CUENTA AUXILIAR > 0*/
+    $verificaEC=verificarCuentaEstadosCuenta($cuenta);
+    if($tipoComprobante==3 && $verificaEC>0){
+      $codTipoEC=obtenerTipoEstadosCuenta($cuenta);
+      $codProveedorCliente=obtenerCodigoProveedorClienteEC($cuentaAuxiliar);
+      //Insertamos el estado de cuentas por el detalle
+      $montoEC=0;
+      if($debe>0){
+        $montoEC=$debe;
+      }else{
+        $montoEC=$haber;
+      }
+      $sqlInsertEC="INSERT INTO estados_cuenta (cod_comprobantedetalle, cod_plancuenta, monto, cod_proveedor, fecha,cod_comprobantedetalleorigen,cod_cuentaaux,glosa_auxiliar) VALUES ('$codComprobanteDetalle', '$cuenta', '$montoEC', '$codProveedorCliente', '$fechaHoraActual','0','$cuentaAuxiliar','$glosaDetalle')";
+      $stmtInsertEC = $dbh->prepare($sqlInsertEC);
+      $flagSuccessInsertEC=$stmtInsertEC->execute();      
+    }
+    //Fin insertar estado de cuentas acumular.
 
-        $nF=cantidadF($facturas[$i-1]);
-          $sqlDelete="";
-          $sqlDelete="DELETE from facturas_compra where cod_comprobantedetalle='$codComprobanteDetalle'";
-          $stmtDel = $dbh->prepare($sqlDelete);
-          $flagSuccess=$stmtDel->execute();
+
+          $nF=cantidadF($facturas[$i-1]);
          for($j=0;$j<$nF;$j++){
          	  $nit=$facturas[$i-1][$j]->nit;
          	  $nroFac=$facturas[$i-1][$j]->nroFac;
@@ -135,31 +151,29 @@ for ($i=1;$i<=$cantidadFilas;$i++){
          }
 
          //itemEstadosCuenta
-          $sqlDelete="";
-          $sqlDelete="DELETE from estados_cuenta where cod_comprobantedetalle='$codComprobanteDetalle'";
-          $stmtDel = $dbh->prepare($sqlDelete);
-          $flagSuccess=$stmtDel->execute();
           $nC=cantidadF($estadosCuentas[$i-1]);
           for($j=0;$j<$nC;$j++){
               $fecha=date("Y-m-d H:i:s");
               $codPlanCuenta=$estadosCuentas[$i-1][$j]->cod_plancuenta;
+              $codPlanCuentaAux=$estadosCuentas[$i-1][$j]->cod_plancuentaaux;
               $monto=$estadosCuentas[$i-1][$j]->monto;
-              $codProveedor=$estadosCuentas[$i-1][$j]->cod_proveedor;
+              $codProveedor=obtenerCodigoProveedorCuentaAux($codPlanCuentaAux);
               $codComprobanteDetalleOrigen=$estadosCuentas[$i-1][$j]->cod_comprobantedetalle;
               $fecha=$fecha;
-              $sqlDetalle3="INSERT INTO estados_cuenta (cod_comprobantedetalle, cod_plancuenta, monto, cod_proveedor, fecha,cod_comprobantedetalleorigen) VALUES ('$codComprobanteDetalle', '$codPlanCuenta', '$monto', '$codProveedor', '$fecha','$codComprobanteDetalleOrigen')";
+              $sqlDetalle3="INSERT INTO estados_cuenta (cod_comprobantedetalle, cod_plancuenta, monto, cod_proveedor, fecha,cod_comprobantedetalleorigen,cod_cuentaaux) VALUES ('$codComprobanteDetalle', '$codPlanCuenta', '$monto', '$codProveedor', '$fecha','$codComprobanteDetalleOrigen','$codPlanCuentaAux')";
               $stmtDetalle3 = $dbh->prepare($sqlDetalle3);
               $flagSuccessDetalle3=$stmtDetalle3->execute();
          }
          //FIN DE ESTADOS DE CUENTA
 	}
 } 
-
+echo "<script>window.close();</script>";
+/*
 if($flagSuccessDetalle==true){
 	showAlertSuccessError(true,"../".$urlList);	
 }else{
 	showAlertSuccessError(false,"../".$urlList);
-}
+}*/
 
 
 ?>

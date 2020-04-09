@@ -5145,6 +5145,16 @@ function obtenerCodigoServicioIbnorca(){
    }
    return($valor);
 }
+function obtenerEstadoCuentaSaldoComprobante($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("select count(*) as num from comprobantes_detalle cd join comprobantes c on c.codigo=cd.cod_comprobante join estados_cuenta e on e.cod_comprobantedetalle=cd.codigo where c.codigo=$codigo and c.cod_tipocomprobante=3 and e.cod_comprobantedetalleorigen=0");
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['num'];
+   }
+   return($valor);
+}
 ?>
 
 
