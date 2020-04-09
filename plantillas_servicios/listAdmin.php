@@ -8,16 +8,25 @@ $dbh = new Conexion();
 if(isset($_GET['q'])){
   $q=$_GET['q'];
   $item_3=$_GET['r'];
+  $s=$_GET['s'];
+  $u=$_GET['u'];
+
+    $sqlFilter1 = str_replace("IdOficina", "p.cod_unidadorganizacional", $s);
+    $sqlFilter2 = "and ".str_replace("IdArea", "p.cod_area", $sqlFilter1);
+    $sqlFilter = str_replace("%20", " ", $sqlFilter2);
 ?>
   <input type="hidden" name="id_servicioibnored" value="<?=$q?>" id="id_servicioibnored"/>
   <input type="hidden" name="id_servicioibnored_rol" value="<?=$item_3?>" id="id_servicioibnored_rol"/>
+  <input type="hidden" name="id_servicioibnored_s" value="<?=$s?>" id="id_servicioibnored_s"/>
+  <input type="hidden" name="id_servicioibnored_u" value="<?=$u?>" id="id_servicioibnored_u"/>
 <?php
 }else{
+  $sqlFilter="";
   $item_3=0;
 }
 // Preparamos
 $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_plantilla, u.abreviatura as unidad,a.abreviatura as area from plantillas_servicios p,unidades_organizacionales u, areas a, estados_plantillascosto e 
-  where p.cod_unidadorganizacional=u.codigo and p.cod_area=a.codigo and e.codigo=p.cod_estadoplantilla and p.cod_estadoreferencial!=2 order by codigo");
+  where p.cod_unidadorganizacional=u.codigo and p.cod_area=a.codigo and e.codigo=p.cod_estadoplantilla and p.cod_estadoreferencial!=2 $sqlFilter order by codigo");
 // Ejecutamos
 $stmt->execute();
 // bindColumn

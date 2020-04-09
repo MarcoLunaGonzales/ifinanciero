@@ -12,6 +12,8 @@ $plantilla_costo=$_GET['codigo'];
 
 if(isset($_GET['q'])){
   $q=$_GET['q'];
+  $s=$_GET['s'];
+  $u=$_GET['u'];
 }
 
 $codPlanCosto=obtenerCodigoPlanServ();
@@ -110,7 +112,7 @@ $plantillaAntigua=obtenerPlantillaServicioDatos($plantilla_costo);
 
   }
   if(isset($_GET['q'])){
-   showAlertSuccessError($flagSuccess,$urlList."&q=".$q);
+   showAlertSuccessError($flagSuccess,$urlList."&q=".$q."&s=".$s."&u=".$u);
   }else{
    showAlertSuccessError($flagSuccess,$urlList);
   }

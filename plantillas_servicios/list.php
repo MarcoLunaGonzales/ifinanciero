@@ -5,6 +5,14 @@ require_once 'styles.php';
 if(isset($_GET['q'])){
   $q=$_GET['q'];
   //cargarNuevaSessionDatos($q);
+   if(isset($_GET['s'])){
+    $s=$_GET['s'];
+    $u=$_GET['u'];
+    $arraySql=explode("IdArea=",$_GET['s']);
+    $codigoArea=trim($arraySql[1]);
+
+    $sqlAreas="and p.cod_area=".$codigoArea;
+  }
 }
 $globalAdmin=$_SESSION["globalAdmin"];
 $globalUser=$_SESSION["globalUser"];
@@ -13,7 +21,7 @@ $dbh = new Conexion();
 
 // Preparamos
 $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_plantilla, u.abreviatura as unidad,a.abreviatura as area from plantillas_servicios p,unidades_organizacionales u, areas a, estados_plantillascosto e 
-  where p.cod_unidadorganizacional=u.codigo and p.cod_area=a.codigo and e.codigo=p.cod_estadoplantilla and p.cod_estadoreferencial!=2 order by codigo");
+  where p.cod_unidadorganizacional=u.codigo and p.cod_area=a.codigo and e.codigo=p.cod_estadoplantilla and p.cod_estadoreferencial!=2 $sqlAreas order by codigo");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -86,7 +94,7 @@ $stmt->bindColumn('estado_plantilla', $estadoPlantilla);
                             <?php 
                             if(isset($_GET['q'])){
                               ?>
-                              <a href='<?=$urlReporte;?>?cod=<?=$codigo;?>&q=<?=$q?>' class="btn btn-primary">
+                              <a href='<?=$urlReporte;?>?cod=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>' class="btn btn-primary">
                                 <i class="material-icons" title="Ver Detalles">list</i>
                               </a>
                               <?php
@@ -103,10 +111,10 @@ $stmt->bindColumn('estado_plantilla', $estadoPlantilla);
                               if($globalAdmin==1){
                                 if(isset($_GET['q'])){
                                   ?>
-                            <a href='<?=$urlRegister;?>?cod=<?=$codigo;?>&q=<?=$q?>' rel="tooltip" class="<?=$buttonEdit;?>">
+                            <a href='<?=$urlRegister;?>?cod=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>' rel="tooltip" class="<?=$buttonEdit;?>">
                               <i class="material-icons"><?=$iconEdit;?></i>
                             </a>
-                            <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>&q=<?=$q?>')">
+                            <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>')">
                               <i class="material-icons"><?=$iconDelete;?></i>
                             </button>
                                   <?php
@@ -124,7 +132,7 @@ $stmt->bindColumn('estado_plantilla', $estadoPlantilla);
                             }
                           if(isset($_GET['q'])){
                             ?>
-                             <button title="Duplicar Registro" class="btn btn-primary" onclick="alerts.showSwal('warning-message-and-confirmation-clonar','<?=$urlClonar;?>&codigo=<?=$codigo;?>&q=<?=$q?>')">
+                             <button title="Duplicar Registro" class="btn btn-primary" onclick="alerts.showSwal('warning-message-and-confirmation-clonar','<?=$urlClonar;?>&codigo=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>')">
                               <i class="material-icons"><?=$iconCopy?></i>
                             </button>
                             <?php
@@ -151,7 +159,7 @@ $stmt->bindColumn('estado_plantilla', $estadoPlantilla);
       				<div class="card-footer fixed-bottom">
                 <?php 
                  if(isset($_GET['q'])){
-                  ?><a href="<?=$urlRegister2;?>&q=<?=$q?>" target="_self" class="<?=$buttonNormal;?>">Registrar</a><?php
+                  ?><a href="<?=$urlRegister2;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>" target="_self" class="<?=$buttonNormal;?>">Registrar</a><?php
                 }else{
                   ?><a href="#" onclick="javascript:window.open('<?=$urlRegister2;?>')" class="<?=$buttonNormal;?>">Registrar</a><?php
                 } 
