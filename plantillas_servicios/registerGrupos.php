@@ -15,8 +15,12 @@ $stmtX->execute();
 
 if(isset($_GET['q'])){
 	$q=$_GET['q'];
+	$s=$_GET['s'];
+	$u=$_GET['u'];
 }else{
 	$q=0;
+	$s=0;
+	$u=0;
 }
 $globalNombreGestion=$_SESSION["globalNombreGestion"];
 $globalUser=$_SESSION["globalUser"];
@@ -74,6 +78,8 @@ if(isset($_GET['cod'])){
 			<input type="hidden" name="cantidad_filas" id="cantidad_filas" value="<?=$contadorRegistros;?>">
 			<input type="hidden" name="cod_plantilla" id="cod_plantilla" value="<?=$codigo?>">
 			<input type="hidden" name="q" id="q" value="<?=$q?>">
+			<input type="hidden" name="s" id="s" value="<?=$s?>">
+			<input type="hidden" name="u" id="u" value="<?=$u?>">
 			<div class="card">
 				<div class="card-header <?=$colorCard;?> card-header-text">
 					<div class="card-text fondo-boton">
@@ -418,7 +424,12 @@ if(isset($_GET['cod'])){
 		            </fieldset>
                     <fieldset id="list_personal" class="d-none col-sm-12">
                     	<center>
-		            	<div class="col-sm-12">	
+		            	<div class="col-sm-12">
+		            	<div class="row">
+			                    <div class="form-group">
+			                           <a href="#" class="btn btn-danger fondo-boton fondo-boton-active" onclick="guardarAuditoresPlantilla()">GUARDAR PERSONAL</a> 
+			                       </div>   
+      	                     </div>	
                              <div class="row" id="tabla_personal">
       	                     	<table class="table table-bordered table-condensed">
       	                     		<thead>
@@ -498,7 +509,7 @@ if(isset($_GET['cod'])){
       	                     </div>
       	                     <div class="row float-right">
 			                     	<div class="form-group">
-			                           <a href="#" class="btn btn-danger fondo-boton fondo-boton-active" onclick="guardarAuditoresPlantilla()">Guardar cambios de la tabla</a> 
+			                           <a href="#" class="btn btn-danger fondo-boton fondo-boton-active" onclick="guardarAuditoresPlantilla()">GUARDAR PERSONAL</a> 
 			                         </div>   
       	                     </div>
       	                  </div>   
@@ -510,7 +521,7 @@ if(isset($_GET['cod'])){
 						
 						<?php 
                         if(isset($_GET['q'])){
-                         ?><a href="../<?=$urlList;?>&q=<?=$q?>" class="<?=$buttonCancel;?> fondo-boton">Volver</a><?php
+                         ?><a href="../<?=$urlList;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>" class="<?=$buttonCancel;?> fondo-boton">Volver</a><?php
                         }else{
                          ?><a href="../<?=$urlList;?>" class="<?=$buttonCancel;?> fondo-boton">Volver</a><?php
                         }

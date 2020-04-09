@@ -24,6 +24,8 @@ $utmin=$_POST['utilidad_minima'];
 $unidad=$_POST['unidad'];
 $area=$_POST['area'];
 $q=$_POST['q'];
+$s=$_POST['s'];
+$u=$_POST['u'];
 
 if($area==39){
   $cantidadAuditorias=obtenerValorConfiguracion(17);
@@ -41,18 +43,23 @@ if($area==39){
   $flagSuccess=$stmtInsert->execute();
 
   //enviar plantillas para la actualizacion de ibnorca
+  if(isset($_POST['idPerfil'])){
+   $usuarioPerfil=$_POST['idPerfil'];
+  }else{
+    $usuarioPerfil=$globalUser;
+  }
   $fechaHoraActual=date("Y-m-d H:i:s");
   $idTipoObjeto=2706;
   $idObjeto=2710; //regristado
   $obs="Registro de Plantilla TCP/TCS";
-  actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codPlanServ,$fechaHoraActual,$obs);
+  actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$usuarioPerfil,$codPlanServ,$fechaHoraActual,$obs);
 
   //enviar plantillas para la actualizacion de ibnorca
   $fechaHoraActual=date("Y-m-d H:i:s");
   $idTipoObjeto=2706;
   $idObjeto=2711; //regristado
   $obs="Envio de Plantilla TCP/TCS";
-  actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codPlanServ,$fechaHoraActual,$obs);
+  actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$usuarioPerfil,$codPlanServ,$fechaHoraActual,$obs);
 
 
 
@@ -115,9 +122,9 @@ if($q==0){
   } 
 }else{
   if($flagSuccess==true){
-    showAlertSuccessError(true,"../".$urlRegister."?cod=".$codPlanServ."&q=".$q);  
+    showAlertSuccessError(true,"../".$urlRegister."?cod=".$codPlanServ."&q=".$q."&s=".$s."&u=".$u);  
   }else{
-    showAlertSuccessError(false,"../".$urlList."&q=".$q);
+    showAlertSuccessError(false,"../".$urlList."&q=".$q."&s=".$s."&u=".$u);
   }
 }
 	

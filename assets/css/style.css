@@ -1,3 +1,10 @@
+
+.menu{ height:60px; width:100%;text-align:center;z-index: 999999 !important; color:white !important;background:#35A775 !important;padding-top: 8px;}
+.wrapper{  width:100%; padding-top:20px}
+ 
+.fixed{position:fixed; top:0}
+
+
 input[type=number]::-webkit-outer-spin-button,
 
 input[type=number]::-webkit-inner-spin-button {

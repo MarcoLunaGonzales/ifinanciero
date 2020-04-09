@@ -8,6 +8,7 @@ $dbh = new Conexion();
 if(isset($_GET['q'])){
   $q=$_GET['q'];
   $item_3=$_GET['r'];
+  $u=$_GET['u'];
   $s="";
   if(isset($_GET['s'])){
     $s=$_GET['s'];
@@ -20,6 +21,9 @@ if(isset($_GET['q'])){
 ?>
   <input type="hidden" name="id_servicioibnored" value="<?=$q?>" id="id_servicioibnored"/>
   <input type="hidden" name="id_servicioibnored_rol" value="<?=$item_3?>" id="id_servicioibnored_rol"/>
+  <input type="hidden" name="idPerfil" value="<?=$u?>" id="idPerfil"/>
+  <input type="hidden" name="ss" value="<?=$s?>" id="ss"/>
+  <input type="hidden" name="id_servicioibnored_u" value="<?=$u?>" id="id_servicioibnored_u"/>
 <?php
 }else{
   $item_3=0;
@@ -154,7 +158,7 @@ $item_1=2707;
                                 <?php 
                                 if(isset($_GET['q'])){
                                   ?>
-                                   <a href="<?=$urlVer;?>?cod=<?=$codigo;?>&admin=0&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>" class="dropdown-item">
+                                   <a href="<?=$urlVer;?>?cod=<?=$codigo;?>&admin=0&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>" class="dropdown-item">
                                     <i class="material-icons text-info">bar_chart</i> Ver Propuesta
                                  </a>
                                  <?php 
@@ -239,7 +243,7 @@ $item_1=2707;
               <div class="card-footer fixed-bottom">
                 <?php 
                 if(isset($_GET['q'])){
-                ?><a href="<?=$urlList2?>&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>" class="btn btn-info"><i class="material-icons">refresh</i> Refrescar</a><?php
+                ?><a href="<?=$urlList2?>&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>" class="btn btn-info"><i class="material-icons">refresh</i> Refrescar</a><?php
                 }else{
                  ?><a href="<?=$urlList2?>" class="btn btn-info"><i class="material-icons">refresh</i> Refrescar</a><?php
                 } 

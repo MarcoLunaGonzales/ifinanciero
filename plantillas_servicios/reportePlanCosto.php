@@ -25,6 +25,8 @@ $anio=date("Y");
 $codigo=$_GET['cod'];
 if(isset($_GET['q'])){
   $q=$_GET['q'];
+  $s=$_GET['s'];
+  $u=$_GET['u'];
 }
 $cantidadPersonal=obtenerCantidadPersonalPlantilla($codigo);
 $codArea=obtenerCodigoAreaPlantillaServicio($codigo);
@@ -322,7 +324,7 @@ echo $html;
                           <!-- <button type="submit" class="btn btn-info">Guardar</button>-->
                         <?php 
                         if(isset($_GET['q'])){
-                         ?><a href="../<?=$urlList;?>&q=<?=$q?>" class="btn btn-danger">Volver</a><?php
+                         ?><a href="../<?=$urlList;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>" class="btn btn-danger">Volver</a><?php
                         }else{
                          ?><a href="../<?=$urlList;?>" class="btn btn-danger">Volver</a><?php
                         }

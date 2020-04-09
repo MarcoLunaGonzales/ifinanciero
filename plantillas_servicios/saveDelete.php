@@ -17,7 +17,9 @@ $stmt->bindParam(':codigo', $codigo);
 $flagSuccess=$stmt->execute();
 if(isset($_GET['q'])){
 	 $q=$_GET['q'];
-	 showAlertSuccessError($flagSuccess,$urlList."&q=".$q);
+	 $s=$_GET['s'];
+	 $u=$_GET['u'];
+	 showAlertSuccessError($flagSuccess,$urlList."&q=".$q."&s=".$s."&u=".$u);
 }else{
 	showAlertSuccessError($flagSuccess,$urlList);
 }

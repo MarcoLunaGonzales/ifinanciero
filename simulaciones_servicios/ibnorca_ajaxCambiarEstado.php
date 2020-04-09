@@ -26,11 +26,17 @@ $sqlUpdate="UPDATE simulaciones_servicios SET  cod_estadosimulacion=$iEstado whe
 $stmtUpdate = $dbh->prepare($sqlUpdate);
 $flagSuccess=$stmtUpdate->execute();
 
+$id_perfil=$_GET["id_perfil"];
 //enviar propuestas para la actualizacion de ibnorca
     $fechaHoraActual=date("Y-m-d H:i:s");
     $idTipoObjeto=2707;
     $idObjeto=$estado; //variable desde get
     $obs=$_GET['obs']; //$obs="Registro de propuesta";
+    if($id_perfil==0){
     actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);
+  }else{
+    actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$id_perfil,$codigo,$fechaHoraActual,$obs);
+  }
+    
 
 ?>

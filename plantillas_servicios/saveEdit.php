@@ -28,6 +28,8 @@ $abrevPlan=$_POST['abreviatura'];
 $cantidadPersonal=$_POST['alumnos_ibnorca'];
 $utMinima=$_POST['utilidad_minima'];
 $q=$_POST['q'];
+$s=$_POST['s'];
+$u=$_POST['u'];
 
 $sqlUpdate="UPDATE plantillas_servicios SET  nombre='$nombrePlan',abreviatura='$abrevPlan',cantidad_personal='$cantidadPersonal',utilidad_minima='$utMinima' where codigo=$codPlantillaServicio";
 echo $sqlUpdate;
@@ -69,9 +71,9 @@ if($q==0){
   }	
 }else{
   if($flagSuccess==true){
-	showAlertSuccessError(true,"../".$urlList."&q=".$q);	
+	showAlertSuccessError(true,"../".$urlList."&q=".$q."&s=".$s."&u=".$u);	
   }else{
-	showAlertSuccessError(false,"../".$urlList."&q=".$q);
+	showAlertSuccessError(false,"../".$urlList."&q=".$q."&s=".$s."&u=".$u);
   }	
 }
 

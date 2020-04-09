@@ -10,10 +10,21 @@ $sqlX="SET NAMES utf8";
 $stmtX = $dbh->prepare($sqlX);
 $stmtX->execute();
 
+$sqlAreas="";
 if(isset($_GET['q'])){
   $q=$_GET['q'];
+  $s=$_GET['s'];
+  $u=$_GET['u'];
+  if(isset($_GET['s'])){
+    $arraySql=explode("IdArea=",$_GET['s']);
+    $codigoArea=trim($arraySql[1]);
+
+    $sqlAreas="and codigo=".$codigoArea;
+  }
 }else{
-  $q=0; 
+  $q=0;
+  $s=0;
+  $u=0; 
 }
 
 $globalNombreGestion=$_SESSION["globalNombreGestion"];
@@ -66,6 +77,8 @@ $dbh = new Conexion();
                         <div class="form-group">
                           <input class="form-control" type="text" name="nombre" id="nombre" autocomplete="off" required autofocus/>
                           <input type="hidden" name="q" id="q" value="<?=$q?>"/>
+                          <input type="hidden" name="s" id="s" value="<?=$s?>"/>
+                          <input type="hidden" name="u" id="u" value="<?=$u?>"/>
                         </div>
                         </div>
                  </div>
@@ -121,7 +134,12 @@ $dbh = new Conexion();
                         </div>
                         </div>
                       </div>-->
-
+                      <?php
+                       if(isset($_GET['u'])){
+                        $u=$_GET['u'];
+                         ?><input type="hidden" name="idPerfil" required id="idPerfil" value="<?=$u?>"/><?php
+                       }
+                       ?> 
                       <div class="row">
                        <label class="col-sm-2 col-form-label">D&iacute;as de Auditoria</label>
                        <div class="col-sm-7">
@@ -192,7 +210,7 @@ $dbh = new Conexion();
           
                                 <option disabled selected="selected" value="">Area</option>
                                 <?php
-                                 $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM areas where cod_estado=1 and centro_costos=1 order by 2");
+                                 $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM areas where cod_estado=1 and centro_costos=1 $sqlAreas order by 2");
                                  $stmt->execute();
                                   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                   $codigoX=$row['codigo'];
@@ -219,7 +237,7 @@ $dbh = new Conexion();
 				<button type="submit" class="<?=$buttonNormal;?>">Guardar</button>
         <?php 
          if(isset($_GET['q'])){
-          ?><a href="<?=$urlList?>&q=<?=$q?>" class="<?=$buttonCancel;?>">Volver</a><?php
+          ?><a href="<?=$urlList?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>" class="<?=$buttonCancel;?>">Volver</a><?php
          }else{
           ?><a href="<?=$urlList?>" class="<?=$buttonCancel;?>">Volver</a><?php
          }

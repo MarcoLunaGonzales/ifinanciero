@@ -588,23 +588,18 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
               <?php 
             if(isset($_GET['q'])){
               $q=$_GET['q'];
+              $s=$_GET['s'];
+              $u=$_GET['u'];
               if(isset($_GET['r'])){
-                $r=$_GET['r'];
-                if(isset($_GET['s'])){
-                 $s=$_GET['s']; 
+                $r=$_GET['r'];       
                  ?>
-              <a href="../<?=$urlList;?>&q=<?=$q?>&r=<?=$r?>&s=<?=$s?>" class="btn btn-danger">Volver</a>
+              <a href="../<?=$urlList;?>&q=<?=$q?>&r=<?=$r?>&s=<?=$s?>&u=<?=$u?>" class="btn btn-danger">Volver</a>
               <?php
-                }else{
+              }else{
               ?>
-              <a href="../<?=$urlList;?>&q=<?=$q?>&r=<?=$r?>" class="btn btn-danger">Volver</a>
+              <a href="../<?=$urlList;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>" class="btn btn-danger">Volver</a>
               <?php   
                 }
-              }else{
-                ?>
-              <a href="../<?=$urlList;?>&q=<?=$q?>" class="btn btn-danger">Volver</a>
-              <?php
-              }
             }else{
               ?>
               <a href="../<?=$urlList;?>" class="btn btn-danger">Volver</a>

@@ -5,11 +5,24 @@ require_once 'styles.php';
 require_once 'configModule.php';
 
 setlocale(LC_TIME, "Spanish");
+$sqlAreas="";
 if(isset($_GET['q'])){
   $q=$_GET['q'];
+  $s=$_GET['s'];
+  $u=$_GET['u'];
   //$numeroServicio=(int)obtenerCantidadSimulacionServicio($q)+1;
   $nombreServicioIbnorca="";
   $nombreInputPropuesta=$nombreServicioIbnorca."PROPUESTA";
+  if(isset($_GET['s'])){
+    $arraySql=explode("IdArea=",$_GET['s']);
+    $codigoArea=trim($arraySql[1]);
+
+    $sqlAreas="and p.cod_area=".$codigoArea;
+  }
+  if(isset($_GET['u'])){
+    $u=$_GET['u'];
+    ?><input type="hidden" name="idPerfil" id="idPerfil" value="<?=$u?>"/><?php
+  }
 }else{
   $nombreInputPropuesta="";
 }
@@ -64,7 +77,9 @@ $dbh = new Conexion();
               <?php 
                   if(isset($_GET['q'])){
                     echo "<center><h5><b>".$nombreServicioIbnorca."</b></h5></center>";
-                    ?><input class="form-control col-sm-4" type="hidden" name="codigo_servicioibnorca" id="codigo_servicioibnorca" value="<?=$q?>"/><?php
+                    ?><input class="form-control col-sm-4" type="hidden" name="codigo_servicioibnorca" id="codigo_servicioibnorca" value="<?=$q?>"/>
+                    <input type="hidden" name="codigo_servicioibnorca_s" id="codigo_servicioibnorca_s" value="<?=$s?>"/>
+                    <input type="hidden" name="codigo_servicioibnorca_u" id="codigo_servicioibnorca_u" value="<?=$u?>"/><?php
                   }
               ?>
 
@@ -110,7 +125,7 @@ $dbh = new Conexion();
                         <div class="form-group">
                                 <select class="selectpicker form-control" name="plantilla_servicio" onchange="listarDatosPlantillaSim(this.value)" id="plantilla_servicio" data-style="<?=$comboColor;?>"  data-live-search="true" title="-- Elija una plantilla --" data-style="select-with-transition" data-actions-box="true"required>
                                 <?php
-                                 $stmt = $dbh->prepare("SELECT p.*, u.abreviatura as unidad,a.abreviatura as area from plantillas_servicios p,unidades_organizacionales u, areas a where p.cod_unidadorganizacional=u.codigo and p.cod_area=a.codigo and p.cod_estadoreferencial!=2 and p.cod_estadoplantilla=3 order by codigo");
+                                 $stmt = $dbh->prepare("SELECT p.*, u.abreviatura as unidad,a.abreviatura as area from plantillas_servicios p,unidades_organizacionales u, areas a where p.cod_unidadorganizacional=u.codigo and p.cod_area=a.codigo and p.cod_estadoreferencial!=2 and p.cod_estadoplantilla=3 $sqlAreas order by codigo");
                                  $stmt->execute();
                                   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                   $codigoX=$row['codigo'];
@@ -254,7 +269,7 @@ $dbh = new Conexion();
         <?php 
           if(isset($_GET['q'])){
             ?><button type="button" class="<?=$buttonNormal;?>" onclick="guardarSimulacionServicio()">Guardar</button>
-              <a href="<?=$urlList?>&q=<?=$q?>" class="<?=$buttonCancel;?>">Volver</a><?php
+              <a href="<?=$urlList?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>" class="<?=$buttonCancel;?>">Volver</a><?php
           }else{
             ?><button type="button" class="<?=$buttonNormal;?>" onclick="guardarSimulacionServicio()">Guardar</button>
               <a href="<?=$urlList?>" class="<?=$buttonCancel;?>">Volver</a><?php
