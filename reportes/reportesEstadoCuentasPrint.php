@@ -14,6 +14,8 @@ $cuenta = $_POST["cuenta"];
 $unidad = $_POST["unidad"];
 $proveedores=$_POST["proveedores"];
 $fecha=$_POST["fecha"];
+$tipo_cp=$_POST["tipo_cp"];
+
 
 $proveedoresString=implode(",", $proveedores);
 $StringCuenta=implode(",", $cuenta);
@@ -48,10 +50,7 @@ $stmtG->execute();
 $resultG = $stmtG->fetch();
 $NombreGestion = $resultG['nombre'];
 
-$sql="SELECT e.*,d.glosa,d.haber,d.debe,(select concat(c.cod_tipocomprobante,'|',c.numero,'|',cd.cod_unidadorganizacional,'|',MONTH(c.fecha),'|',c.fecha) from comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle)as extra FROM estados_cuenta e,comprobantes_detalle d, comprobantes cc where e.cod_comprobantedetalle=d.codigo and cc.codigo=d.cod_comprobante and (d.cod_cuenta in ($StringCuenta) or e.cod_cuentaaux in ($StringCuenta)) and e.cod_comprobantedetalleorigen=0 and cc.cod_gestion= '$NombreGestion' and cod_proveedor in ($proveedoresString) and e.fecha<='$fecha' and cc.cod_unidadorganizacional in ($StringUnidades) order by e.fecha";
-// echo $sql;
-$stmtUO = $dbh->prepare($sql);
-$stmtUO->execute();
+
 $i=0;$saldo=0;
 $indice=0;
 $totalCredito=0;
@@ -101,149 +100,173 @@ $totalDebito=0;
                                 </thead>
                                 <tbody>
                                     <?php
-                                    while ($row = $stmtUO->fetch()) {
-                                        $codigoX=$row['codigo'];
-                                        $codCompDetX=$row['cod_comprobantedetalle'];
-                                        $codPlanCuentaX=$row['cod_plancuenta'];
-                                        $codProveedor=$row['cod_proveedor'];
-                                        $montoX=$row['monto'];
-                                        $fechaX=$row['fecha'];
-                                        $fechaX=strftime('%d/%m/%Y',strtotime($fechaX));
-                                        $glosaAuxiliar=$row['glosa_auxiliar'];
-                                        $glosaX=$row['glosa'];
-                                        $debeX=$row['debe'];
-                                        $haberX=$row['haber'];
-                                        $codigoExtra=$row['extra'];
-                                        $glosaMostrar="";
-                                        if($glosaAuxiliar!=""){
-                                            $glosaMostrar=$glosaAuxiliar;
-                                        }else{
-                                            $glosaMostrar=$glosaX;
-                                        }
-                                        list($tipoComprobante, $numeroComprobante, $codUnidadOrganizacional, $mesComprobante, $fechaComprobante)=explode("|", $codigoExtra);
-                                        $nombreTipoComprobante=abrevTipoComprobante($tipoComprobante)."-".$mesComprobante;
-                                        $nombreUnidadO=abrevUnidad_solo($codUnidadOrganizacional);
-
-                                        $fechaComprobante=strftime('%d/%m/%Y',strtotime($fechaComprobante));
-                                        //SACAMOS CUANTO SE PAGO DEL ESTADO DE CUENTA.
-                                        $sqlContra="SELECT sum(monto)as monto from estados_cuenta e where e.cod_comprobantedetalleorigen='$codigoX'";
-                                        $stmtContra = $dbh->prepare($sqlContra);
-                                        $stmtContra->execute();
-                                        $montoContra=0;
-                                        // while ($rowContra = $stmtContra->fetch(PDO::FETCH_ASSOC)) {
-                                        //   $montoContra=$rowContra['monto'];
-                                        // }
-                                        // $debeX=$montoContra;
-                                        //FIN SACAR LOS PAGOS
-                                        
-
-                                         $saldo=$montoX;//-$montoContra;
-                                         $totalCredito=$totalCredito+$saldo;
-                                         $nombreProveedorX=nameProveedor($codProveedor);
+                                    foreach ($cuenta as $cuentai ) {
+                                        $nombreCuenta=nameCuenta($cuentai);//nombre de cuenta    
+                                        ?>
+                                        <tr style="background-color:#9F81F7;">                                            
+                                            <td class="text-left small" colspan="6">CUENTA</td>
+                                            <td class="text-left small" colspan="4"><?=$nombreCuenta?></td>
+                                        </tr> 
 
 
-                                        // if(($row['cod_cuentaaux']!=""||$row['cod_cuentaaux']!=0)){
-                                        //     if($tipoProveedorCliente==1){
-                                        //         $proveedorX=obtenerProveedorCuentaAux($row['cod_cuentaaux']);
-                                        //     }else{
-                                        //         if(($row['cod_cuentaauxiliar']!=0)){
-                                        //             $proveedorX=obtenerClienteCuentaAux($row['cod_cuentaauxiliar']);
-                                        //         }else{
-                                        //             $proveedorX="Sin Cliente";
-                                        //         }       
-                                        //     }
-                                        // }else{
-                                        //     if($tipoProveedorCliente==1){
-                                        //         $proveedorX="Sin Proveedor";
-                                        //     }else{
-                                        //         $proveedorX="Sin Cliente";
-                                        //     }
-                                        // }
-
-
-
-                                      // $stmt2 = $dbh->prepare("SELECT *
-                                      //           from mesdepreciaciones m, mesdepreciaciones_detalle md, activosfijos af
-                                      //           WHERE af.cod_estadoactivofijo=1 and m.codigo = md.cod_mesdepreciaciones and md.cod_activosfijos = af.codigo
-                                      //            and af.cod_unidadorganizacional=:cod_unidadorganizacional and m.mes = ".$mes2." and m.gestion= ".$gestion);
-                                        // Ejecutamos
-                                        // $stmt2->bindParam(':cod_unidadorganizacional',$cod_unidadorganizacional);
-                                        // $stmt2->execute();
-                                        // //resultado
-                                        // $stmt2->bindColumn('codigoactivo', $codigoactivo);
-                                        // $stmt2->bindColumn('activo', $activo);
-                                        ?>                            
-                                            <tr class="bg-white det-estados">
-                                                <td class="text-left small"><?=$nombreUnidadO;?></td>
-                                                <td class="text-center small"><?=$nombreTipoComprobante;?></td>
-                                                <td class="text-center small"><?=$numeroComprobante;?></td>
-                                                <td class="text-left small"><?=$fechaComprobante;?></td>
-                                                <td class="text-left small"><?=$fechaX;?></td>
-                                                <td class="text-left small"><?=$nombreProveedorX;?></td>
-                                                <td class="text-left small"><?=$glosaMostrar;?></td>
-                                                <td class="text-right small"><?=formatNumberDec($montoContra)?></td>
-                                                <td class="text-right small"><?=formatNumberDec($montoX)?></td>
-                                                <td class="text-right small font-weight-bold"><?=formatNumberDec($saldo)?></td>
-                                            </tr> 
                                         <?php
+                                         $sql="SELECT e.*,d.glosa,d.haber,d.debe,(select concat(c.cod_tipocomprobante,'|',c.numero,'|',cd.cod_unidadorganizacional,'|',MONTH(c.fecha),'|',c.fecha) from comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle)as extra FROM estados_cuenta e,comprobantes_detalle d, comprobantes cc where e.cod_comprobantedetalle=d.codigo and cc.codigo=d.cod_comprobante and (d.cod_cuenta in ($cuentai) or e.cod_cuentaaux in ($cuentai)) and e.cod_comprobantedetalleorigen=0 and cc.cod_gestion= '$NombreGestion' and cod_proveedor in ($proveedoresString) and e.fecha<='$fecha' and cc.cod_unidadorganizacional in ($StringUnidades) order by e.fecha";
+                                        // echo $sql;
+                                        $stmtUO = $dbh->prepare($sql);
+                                        $stmtUO->execute();
+                                        while ($row = $stmtUO->fetch()) {
+                                            $codigoX=$row['codigo'];
+                                            $codCompDetX=$row['cod_comprobantedetalle'];
+                                            $codPlanCuentaX=$row['cod_plancuenta'];
+                                            $codProveedor=$row['cod_proveedor'];
+                                            $montoX=$row['monto'];
+                                            $fechaX=$row['fecha'];
+                                            $fechaX=strftime('%d/%m/%Y',strtotime($fechaX));
+                                            $glosaAuxiliar=$row['glosa_auxiliar'];
+                                            $glosaX=$row['glosa'];
+                                            $debeX=$row['debe'];
+                                            $haberX=$row['haber'];
+                                            $codigoExtra=$row['extra'];
+                                            // $cod_tipoCuenta=$row['cod_tipoestadocuenta'];
+                                            
+                                            $glosaMostrar="";
+                                            if($glosaAuxiliar!=""){
+                                                $glosaMostrar=$glosaAuxiliar;
+                                            }else{
+                                                $glosaMostrar=$glosaX;
+                                            }
+                                            list($tipoComprobante, $numeroComprobante, $codUnidadOrganizacional, $mesComprobante, $fechaComprobante)=explode("|", $codigoExtra);
+                                            $nombreTipoComprobante=abrevTipoComprobante($tipoComprobante)."-".$mesComprobante;
+                                            $nombreUnidadO=abrevUnidad_solo($codUnidadOrganizacional);
 
-                                            $stmt_d = $dbh->prepare("SELECT e.*,d.glosa,d.haber,d.debe,(select concat(c.cod_tipocomprobante,'|',c.numero,'|',cd.cod_unidadorganizacional,'|',MONTH(c.fecha),'|',c.fecha) from comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle)as extra
-                                                from estados_cuenta e, comprobantes_detalle d where e.cod_comprobantedetalle=d.codigo and e.cod_comprobantedetalleorigen=$codigoX");
-                                            $stmt_d->execute();
-                                            while ($row_d = $stmt_d->fetch()) {
-                                                $codigoX_d=$row_d['codigo'];
-                                                $codCompDetX_d=$row_d['cod_comprobantedetalle'];
-                                                $codPlanCuentaX_d=$row_d['cod_plancuenta'];
-                                                $codProveedor_d=$row_d['cod_proveedor'];
-                                                $montoX_d=$row_d['monto'];
-                                                $fechaX_d=$row_d['fecha'];
-                                                $fechaX_d=strftime('%d/%m/%Y',strtotime($fechaX_d));
-                                                $glosaAuxiliar_d=$row_d['glosa_auxiliar'];
-                                                $glosaX_d=$row_d['glosa'];
-                                                $debeX_d=$row_d['debe'];
-                                                $haberX_d=$row_d['haber'];
-                                                $codigoExtra_d=$row_d['extra'];
-                                                $glosaMostrar_d="";
-                                                if($glosaAuxiliar_d!=""){
-                                                    $glosaMostrar_d=$glosaAuxiliar_d;
-                                                }else{
-                                                    $glosaMostrar_d=$glosaX_d;
-                                                }
-                                                list($tipoComprobante_d, $numeroComprobante_d, $codUnidadOrganizacional_d, $mesComprobante_d, $fechaComprobante_d)=explode("|", $codigoExtra_d);
-                                                $nombreTipoComprobante_d=abrevTipoComprobante($tipoComprobante_d)."-".$mesComprobante_d;
-                                                $nombreUnidadO_d=abrevUnidad_solo($codUnidadOrganizacional_d);
+                                            $fechaComprobante=strftime('%d/%m/%Y',strtotime($fechaComprobante));
+                                            //SACAMOS CUANTO SE PAGO DEL ESTADO DE CUENTA.
+                                            $sqlContra="SELECT sum(monto)as monto from estados_cuenta e where e.cod_comprobantedetalleorigen='$codigoX'";
+                                            $stmtContra = $dbh->prepare($sqlContra);
+                                            $stmtContra->execute();                                    
+                                            $saldo=$montoX;//-$montoContra;                                    
+                                            // echo "tipo:".$cod_tipoCuenta;
+                                            if($tipo_cp==1){//proveedor
+                                                $totalCredito=$totalCredito+$saldo;
+                                                $nombreProveedorX=nameProveedor($codProveedor);
+                                                ?>
+                                                <tr class="bg-white det-estados">
+                                                    <td class="text-left small"><?=$nombreUnidadO;?></td>
+                                                    <td class="text-center small"><?=$nombreTipoComprobante;?></td>
+                                                    <td class="text-center small"><?=$numeroComprobante;?></td>
+                                                    <td class="text-left small"><?=$fechaComprobante;?></td>
+                                                    <td class="text-left small"><?=$fechaX;?></td>
+                                                    <td class="text-left small"><?=$nombreProveedorX;?></td>
+                                                    <td class="text-left small"><?=$glosaMostrar;?></td>
+                                                    <td class="text-right small"><?=formatNumberDec(0)?></td>
+                                                    <td class="text-right small"><?=formatNumberDec($montoX)?></td>
+                                                    <td class="text-right small font-weight-bold"><?=formatNumberDec($saldo)?></td>
+                                                </tr> 
 
-                                                $fechaComprobante_d=strftime('%d/%m/%Y',strtotime($fechaComprobante_d));
-                                                 $saldo=$saldo-$montoX_d;
-                                                 $totalDebito=$totalDebito+$montoX_d;
-                                                 $nombreProveedorX_d=nameProveedor($codProveedor_d);
-                                                 
+                                            <?php }else{ //cliente
+                                                $nombreProveedorX=namecliente($codProveedor);
+                                                $totalDebito=$totalDebito+$montoX;?>
+                                                 <tr class="bg-white det-estados">
+                                                    <td class="text-left small"><?=$nombreUnidadO;?></td>
+                                                    <td class="text-center small"><?=$nombreTipoComprobante;?></td>
+                                                    <td class="text-center small"><?=$numeroComprobante;?></td>
+                                                    <td class="text-left small"><?=$fechaComprobante;?></td>
+                                                    <td class="text-left small"><?=$fechaX;?></td>
+                                                    <td class="text-left small"><?=$nombreProveedorX;?></td>
+                                                    <td class="text-left small"><?=$glosaMostrar;?></td>
+                                                    <td class="text-right small"><?=formatNumberDec($montoX)?></td>
+                                                    <td class="text-right small"><?=formatNumberDec(0)?></td>
+                                                    <td class="text-right small font-weight-bold"><?=formatNumberDec($saldo)?></td>
+                                                </tr> 
 
-                                            ?>
-                                            <tr  style="background-color:#c5d9dc;">
-                                                <td class="text-left small">&nbsp;&nbsp;&nbsp;&nbsp;<?=$nombreUnidadO_d;?></td>
-                                                <td class="text-center small"><?=$nombreTipoComprobante_d;?></td>
-                                                <td class="text-center small"><?=$numeroComprobante_d;?></td>
-                                                <td class="text-left small"><?=$fechaComprobante_d;?></td>
-                                                <td class="text-left small"><?=$fechaX_d;?></td>
-                                                <td class="text-left small"><?=$nombreProveedorX_d;?></td>
-                                                <td class="text-left small"><?=$glosaMostrar_d;?></td>
-                                                <td class="text-right small"><?=formatNumberDec($montoX_d)?></td>
-                                                <td class="text-right small"><?=formatNumberDec(0)?></td>
-                                                <td class="text-right small font-weight-bold"><?=formatNumberDec($saldo)?></td>
-                                            </tr> 
-                                        <?php
+                                            <?php }
+                                            ?>  
+
+                                                
+                                            <?php
+
+                                                $stmt_d = $dbh->prepare("SELECT e.*,d.glosa,d.haber,d.debe,(select concat(c.cod_tipocomprobante,'|',c.numero,'|',cd.cod_unidadorganizacional,'|',MONTH(c.fecha),'|',c.fecha) from comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle)as extra
+                                                    from estados_cuenta e, comprobantes_detalle d where e.cod_comprobantedetalle=d.codigo and e.cod_comprobantedetalleorigen=$codigoX");
+                                                $stmt_d->execute();
+                                                while ($row_d = $stmt_d->fetch()) {
+                                                    $codigoX_d=$row_d['codigo'];
+                                                    $codCompDetX_d=$row_d['cod_comprobantedetalle'];
+                                                    $codPlanCuentaX_d=$row_d['cod_plancuenta'];
+                                                    $codProveedor_d=$row_d['cod_proveedor'];
+                                                    $montoX_d=$row_d['monto'];
+                                                    $fechaX_d=$row_d['fecha'];
+                                                    $fechaX_d=strftime('%d/%m/%Y',strtotime($fechaX_d));
+                                                    $glosaAuxiliar_d=$row_d['glosa_auxiliar'];
+                                                    $glosaX_d=$row_d['glosa'];
+                                                    $debeX_d=$row_d['debe'];
+                                                    $haberX_d=$row_d['haber'];
+                                                    $codigoExtra_d=$row_d['extra'];
+                                                    $glosaMostrar_d="";
+                                                    if($glosaAuxiliar_d!=""){
+                                                        $glosaMostrar_d=$glosaAuxiliar_d;
+                                                    }else{
+                                                        $glosaMostrar_d=$glosaX_d;
+                                                    }
+                                                    list($tipoComprobante_d, $numeroComprobante_d, $codUnidadOrganizacional_d, $mesComprobante_d, $fechaComprobante_d)=explode("|", $codigoExtra_d);
+                                                    $nombreTipoComprobante_d=abrevTipoComprobante($tipoComprobante_d)."-".$mesComprobante_d;
+                                                    $nombreUnidadO_d=abrevUnidad_solo($codUnidadOrganizacional_d);
+
+                                                    $fechaComprobante_d=strftime('%d/%m/%Y',strtotime($fechaComprobante_d));
+                                                     $saldo=$saldo-$montoX_d;
+                                                     
+                                                     
+                                                     
+                                                    if($tipo_cp==1){//proveedor
+                                                        $nombreProveedorX_d=nameProveedor($codProveedor_d);
+                                                        $totalDebito=$totalDebito+$montoX_d;?>
+                                                        <tr  style="background-color:#ECCEF5;">
+                                                            <td class="text-left small">&nbsp;&nbsp;&nbsp;&nbsp;<?=$nombreUnidadO_d;?></td>
+                                                            <td class="text-center small"><?=$nombreTipoComprobante_d;?></td>
+                                                            <td class="text-center small"><?=$numeroComprobante_d;?></td>
+                                                            <td class="text-left small"><?=$fechaComprobante_d;?></td>
+                                                            <td class="text-left small"><?=$fechaX_d;?></td>
+                                                            <td class="text-left small"><?=$nombreProveedorX_d;?></td>  
+                                                            <td class="text-left small"><?=$glosaMostrar_d;?></td>
+                                                            <td class="text-right small"><?=formatNumberDec($montoX_d)?></td>
+                                                            <td class="text-right small"><?=formatNumberDec(0)?></td>
+                                                            <td class="text-right small font-weight-bold"><?=formatNumberDec($saldo)?></td>
+                                                        </tr> 
+                                                    <?php }else{ //cliente
+                                                        $nombreProveedorX_d=namecliente($codProveedor_d);
+                                                        if($nombreProveedorX_d=='0')$nombreProveedorX_d=nameProveedor($codProveedor_d);
+                                                        $totalCredito=$totalCredito+$saldo;?>
+                                                        <tr  style="background-color:#ECCEF5;">
+                                                            <td class="text-left small">&nbsp;&nbsp;&nbsp;&nbsp;<?=$nombreUnidadO_d;?></td>
+                                                            <td class="text-center small"><?=$nombreTipoComprobante_d;?></td>
+                                                            <td class="text-center small"><?=$numeroComprobante_d;?></td>
+                                                            <td class="text-left small"><?=$fechaComprobante_d;?></td>
+                                                            <td class="text-left small"><?=$fechaX_d;?></td>
+                                                            <td class="text-left small"><?=$nombreProveedorX_d;?></td>  
+                                                            <td class="text-left small"><?=$glosaMostrar_d;?></td>
+                                                            <td class="text-right small"><?=formatNumberDec(0)?></td>
+                                                            <td class="text-right small"><?=formatNumberDec($montoX_d)?></td>
+                                                            <td class="text-right small font-weight-bold"><?=formatNumberDec($saldo)?></td>
+                                                        </tr> 
+
+                                                    <?php }
+                                                ?>
+                                                
+                                            <?php
+                                            }
+                                            $i++;
+                                            $indice++;
                                         }
-                                        $i++;
-                                        $indice++;
-                                    }
-                                    ?>
-                                    <tr>
-                                        <td class="text-right small" colspan="7">Total:</td>
-                                        <td class="text-right small font-weight-bold"><?=formatNumberDec($totalDebito);?></td>
-                                        <td class="text-right small font-weight-bold"><?=formatNumberDec($totalCredito);?></td>
-                                        <td class="text-right small font-weight-bold"></td>
-                                    </tr>
+                                        ?>
+                                        <tr>
+                                            <td class="text-right small" colspan="7">Total:</td>
+                                            <td class="text-right small font-weight-bold"><?=formatNumberDec($totalDebito);?></td>
+                                            <td class="text-right small font-weight-bold"><?=formatNumberDec($totalCredito);?></td>
+                                            <td class="text-right small font-weight-bold"></td>
+                                        </tr>    
+                                    
+                                    <?php } ?>
+
+                                   
                                 </tbody>
                             </table>
                         </div>
