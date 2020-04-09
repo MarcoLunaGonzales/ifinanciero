@@ -1,3 +1,29 @@
+posicionarMenu();
+$(window).scroll(function() {    
+    posicionarMenu();
+});
+ 
+function posicionarMenu() {
+    var altura_del_header = $('#cabecera_scroll').outerHeight(true);
+    var altura_del_menu = $('.menu').outerHeight(true);
+ 
+    if ($(window).scrollTop() >= altura_del_header){
+        $('.menu').addClass('fixed');
+        $('.wrapper').css('margin-top', (altura_del_menu) + 'px');
+        //poner boron copia
+        if($("#segundo_copy").hasClass("d-none")){
+          $("#segundo_copy").removeClass("d-none");
+        }
+    } else {
+        $('.menu').removeClass('fixed');
+        $('.wrapper').css('margin-top', '0');
+        //poner boron copia
+        if(!($("#segundo_copy").hasClass("d-none"))){
+          $("#segundo_copy").addClass("d-none");
+        }
+    }
+}
+
 function number_format(amount, decimals) {
   amount += ''; // por si pasan un numero en vez de un string
   amount = parseFloat(amount.replace(/[^0-9\.-]/g, '')); // elimino cualquier cosa que no sea numero o punto
@@ -137,14 +163,13 @@ function calcularTotalesComprobante(id,e){
     }
   }
   
-    
 
   if($("#totalhab_restante").length){
-    document.getElementById("totaldeb").value=redondeo(sumadebe+parseFloat($("#totaldeb_restante").val()),2);  
-    document.getElementById("totalhab").value=redondeo(sumahaber+parseFloat($("#totalhab_restante").val()),2);
+    document.getElementById("totaldeb").value=redondeo(sumadebe+parseFloat($("#totaldeb_restante").val()),2).toFixed(2);  
+    document.getElementById("totalhab").value=redondeo(sumahaber+parseFloat($("#totalhab_restante").val()),2).toFixed(2);
   }else{
-    document.getElementById("totaldeb").value=redondeo(sumadebe,2);  
-    document.getElementById("totalhab").value=redondeo(sumahaber,2); 
+    document.getElementById("totaldeb").value=redondeo(sumadebe,2).toFixed(2);  
+    document.getElementById("totalhab").value=redondeo(sumahaber,2).toFixed(2); 
   }
 }
 
@@ -1210,6 +1235,16 @@ function cargarTipoCambio(id){
 //**************************************************plantilla de costos  ***********************************************************************
 
 function addGrupoPlantilla(obj) {
+  var correcto=1;
+  if($("#cantidad_personal").length>0){
+          if($("#cantidad_personal").text()>0){
+             correcto=1;
+           }else{
+             correcto=0;
+           }
+  }
+
+  if(correcto==1){
       numFilas++;
       cantidadItems++;
       filaActiva=numFilas;
@@ -1236,7 +1271,10 @@ function addGrupoPlantilla(obj) {
           return false;
        }
       }   
-      ajax.send(null);
+      ajax.send(null);   
+  }else{
+    Swal.fire("Informativo!", "Debe registrar al menos un Personal", "warning");
+  }
 }
 
 function alertaModal(msg,fondo,texto){
@@ -2333,7 +2371,12 @@ function guardarSimulacionServicio(){
   }else{
     var idServicio=$("#codigo_servicioibnorca").val();
   }  
-
+   
+  if(!($("#idPerfil").length>0)){
+    var idPerfil=0;
+  }else{
+    var idPerfil=$("#idPerfil").val();
+  } 
   var nombre=$("#nombre").val();
   var dias=$("#dias_auditoria").val();
   var cliente=$("#cliente").val();
@@ -2359,7 +2402,7 @@ function guardarSimulacionServicio(){
    Swal.fire('Informativo!','Debe llenar los campos!','warning'); 
   }else{
     var tipoServicio=$("#tipo_servicio").val();
-     var parametros={"objeto_servicio":objeto,"tipo_servicio":tipoServicio,"id_servicio":idServicio,"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"atributos":JSON.stringify(itemAtributos),"norma":norma,"anios":anios,"afnor":afnor,"tipo_atributo":2};
+     var parametros={"id_perfil":idPerfil,"objeto_servicio":objeto,"tipo_servicio":tipoServicio,"id_servicio":idServicio,"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"atributos":JSON.stringify(itemAtributos),"norma":norma,"anios":anios,"afnor":afnor,"tipo_atributo":2};
      $.ajax({
         type: "GET",
         dataType: 'html',
@@ -2374,7 +2417,10 @@ function guardarSimulacionServicio(){
          if(!($("#codigo_servicioibnorca").length)){
             alerts.showSwal('success-message','simulaciones_servicios/registerSimulacion.php?cod='+resp);
           }else{
-            alerts.showSwal('success-message','simulaciones_servicios/registerSimulacion.php?cod='+resp+'&q='+idServicio);
+            var s=$("#codigo_servicioibnorca_s").val();
+            var u=$("#codigo_servicioibnorca_u").val();
+
+            alerts.showSwal('success-message','simulaciones_servicios/registerSimulacion.php?cod='+resp+'&q='+idServicio+'&s='+s+'&u='+u);
           }
          
         }
@@ -2385,7 +2431,7 @@ function guardarSimulacionServicio(){
    Swal.fire('Informativo!','Debe llenar los campos!','warning'); 
      }else{
       objeto=0;
-     var parametros={"objeto_servicio":objeto,"id_servicio":idServicio,"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"atributos":JSON.stringify(itemAtributos),"norma":norma,"anios":anios,"afnor":afnor,"tipo_atributo":1};
+     var parametros={"id_perfil":idPerfil,"objeto_servicio":objeto,"id_servicio":idServicio,"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"atributos":JSON.stringify(itemAtributos),"norma":norma,"anios":anios,"afnor":afnor,"tipo_atributo":1};
      $.ajax({
         type: "GET",
         dataType: 'html',
@@ -2400,7 +2446,11 @@ function guardarSimulacionServicio(){
          if(!($("#codigo_servicioibnorca").length)){
             alerts.showSwal('success-message','simulaciones_servicios/registerSimulacion.php?cod='+resp);
           }else{
-            alerts.showSwal('success-message','simulaciones_servicios/registerSimulacion.php?cod='+resp+'&q='+idServicio);
+            if(!($("#codigo_servicioibnorca").length>0)){
+               alerts.showSwal('success-message','simulaciones_servicios/registerSimulacion.php?cod='+resp+'&q='+idServicio);
+            }else{
+              alerts.showSwal('success-message','simulaciones_servicios/registerSimulacion.php?cod='+resp+'&q='+idServicio+'&u='+idPerfil);
+            }            
           }
         }
     });
@@ -2585,7 +2635,13 @@ function enviarSimulacionAjax(){
 function enviarSimulacionAjaxServ(){
   var codigo=$("#cod_simulacion").val();
   var aprobado=$("#aprobado").val();
-  var parametros={"codigo":codigo,"aprobado":aprobado};
+  if(!($("#idPerfil").length>0)){
+      var id_perfil=0;
+  }else{
+    var id_perfil=$("#idPerfil").val();
+  }
+
+  var parametros={"codigo":codigo,"aprobado":aprobado,"id_perfil":id_perfil};
      $.ajax({
         type: "GET",
         dataType: 'html',
@@ -2602,7 +2658,12 @@ function enviarSimulacionAjaxServ(){
                location.href="../index.php?opcion=listSimulacionesServ";
               }else{
                 var q=$("#id_servicioibnored").val();
-                location.href="../index.php?opcion=listSimulacionesServ&q="+q;
+                if(!($("#idPerfil").length>0)){
+                    //location.href="../index.php?opcion=listSimulacionesServ&q="+q;
+                }else{
+                    //location.href="../index.php?opcion=listSimulacionesServ&q="+q+"&u="+id_perfil;
+                }
+                
               }
              
          });
@@ -6432,7 +6493,15 @@ if(!(ut_i==""||dia==""||dia==0||productos.length==0)){
   }; 
     
   }
-  alerts.showSwal('success-message','registerSimulacion.php?cod='+cod_sim); 
+  if(!($("#id_servicioibnored").length)){
+      alerts.showSwal('success-message','registerSimulacion.php?cod='+cod_sim);
+    }else{
+    var q=$("#id_servicioibnored").val();
+    var s=$("#id_servicioibnored_s").val();
+    var u=$("#id_servicioibnored_u").val();
+    alerts.showSwal('success-message','registerSimulacion.php?cod='+cod_sim+'&q='+q+'&s='+s+"&u="+u);
+    } 
+   
   //poner un script aqui
   /* FIN PARA PERSONAL*/
  }else{
@@ -6455,12 +6524,14 @@ function actualizarSimulacion(){
         buttonsStyling: false
       }).then((result) => {           
          if (result.value) {
-            if(!($("#id_servicioibnored").length)){
-               location.href='registerSimulacion.php?cod='+codigo;
-             }else{
-              var q=$("#id_servicioibnored").val();
-               location.href='registerSimulacion.php?cod='+codigo+'&q='+q;
-             } 
+          if(!($("#id_servicioibnored").length)){
+              location.href='registerSimulacion.php?cod='+codigo;
+            }else{
+            var q=$("#id_servicioibnored").val();
+            var s=$("#id_servicioibnored_s").val();
+            var u=$("#id_servicioibnored_u").val();
+            location.href='registerSimulacion.php?cod='+codigo+'&q='+q+'&s='+s+'&u='+u;
+            }
             
             $("#narch").removeClass("estado");
             return(true);
@@ -9437,7 +9508,12 @@ function cambiarEstadoObjetoAjax(){
   var codigo=$("#modal_codigopropuesta").val();
   var estado=$("#modal_codigoestado").val();
   var observaciones=$("#modal_observacionesestado").val();
-  var parametros={"obs":observaciones,"estado":estado,"codigo":codigo};
+  if($("#idPerfil").length>0){
+     var parametros={"obs":observaciones,"estado":estado,"codigo":codigo,"id_perfil":$("#idPerfil").val()};
+  }else{
+    var parametros={"obs":observaciones,"estado":estado,"codigo":codigo,"id_perfil":0};
+  }
+  
      $.ajax({
         type: "GET",
         dataType: 'html',
@@ -9453,7 +9529,14 @@ function cambiarEstadoObjetoAjax(){
            if($("#id_servicioibnored").length>0){
             var q=$("#id_servicioibnored").val();
             var r=$("#id_servicioibnored_rol").val();
-            alerts.showSwal('success-message','index.php?opcion=listSimulacionesServAdmin&q='+q+'&r='+r);   
+            if($("#idPerfil").length>0){
+             var u=$("#idPerfil").val();
+             var s=$("#ss").val();
+             alerts.showSwal('success-message','index.php?opcion=listSimulacionesServAdmin&q='+q+'&r='+r+'&s='+s+'&u='+u);   
+            }else{
+             alerts.showSwal('success-message','index.php?opcion=listSimulacionesServAdmin&q='+q+'&r='+r);   
+            }
+            
           }else{
              alerts.showSwal('success-message','index.php?opcion=listSimulacionesServAdmin');
           }
@@ -9543,7 +9626,12 @@ function cambiarEstadoObjetoPlanAjax(){
   var codigo=$("#modal_codigopropuesta").val();
   var estado=$("#modal_codigoestado").val();
   var observaciones=$("#modal_observacionesestado").val();
-  var parametros={"obs":observaciones,"estado":estado,"codigo":codigo};
+  if($("#id_servicioibnored_u").length>0){
+    var idPerfil=$("#id_servicioibnored_u").val();
+  }else{
+    var idPerfil=0;
+  }
+  var parametros={"obs":observaciones,"estado":estado,"codigo":codigo,"id_perfil":idPerfil};
      $.ajax({
         type: "GET",
         dataType: 'html',
@@ -9559,7 +9647,9 @@ function cambiarEstadoObjetoPlanAjax(){
            if($("#id_servicioibnored").length>0){
             var q=$("#id_servicioibnored").val();
             var r=$("#id_servicioibnored_rol").val();
-            alerts.showSwal('success-message','index.php?opcion=listPlantillasServiciosAdmin&q='+q+'&r='+r);   
+            var s=$("#id_servicioibnored_s").val();
+            var u=$("#id_servicioibnored_u").val();
+            alerts.showSwal('success-message','index.php?opcion=listPlantillasServiciosAdmin&q='+q+'&r='+r+'&s='+s+'&u='+u);   
           }else{
              alerts.showSwal('success-message','index.php?opcion=listPlantillasServiciosAdmin');
           }

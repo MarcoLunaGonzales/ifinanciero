@@ -262,7 +262,7 @@ $stmt->execute();
 			<input type="hidden" name="cantidad_filas" id="cantidad_filas" value="<?=$contadorRegistros;?>">
 			<input type="hidden" name="codigo_comprobante" id="codigo_comprobante" value="<?=$globalCode;?>">
 
-			<div class="card">
+			<div class="card" id="cabecera_scroll">
 				<div class="card-header <?=$colorCard;?> card-header-text">
 					<div class="card-text">
 					  <h4 class="card-title">Editar <?=$moduleNameSingular;?></h4>
@@ -383,29 +383,33 @@ $stmt->execute();
 					</h4>
 				</div>
 				<div class="card-body ">
-
-					<?php
-					//buscar detalles del comprobante
-					?>
-					<fieldset id="fiel" style="width:100%;border:0;">
-						<div class="row">
+                    <div class="row menu">
 							<div class="col-sm-1">
 	                    		<button title="Agregar (alt+a)" type="button" id="add_boton" name="add" class="btn btn-warning btn-fab btn-round btn-sm" onClick="addCuentaContable(this)">
 	                  		  <i class="material-icons x-s">add</i>
 		                    </button>	
 	                    	</div>
 
-		                <label class="col-sm-1 col-form-label" style="text-align: center;">Centro Costos</label>
-		                    <label class="col-sm-4 col-form-label" style="text-align: center;">Cuenta</label>
-		                    <label class="col-sm-1 col-form-label" style="text-align: center;">Debe</label>
-		                    <label class="col-sm-1 col-form-label" style="text-align: center;">Haber</label>
-		                    <label class="col-sm-3 col-form-label" style="text-align: center;">Glosa</label>
+		                <label class="col-sm-1 col-form-label text-white" style="text-align: center;">Centro Costos</label>
+		                    <label class="col-sm-4 col-form-label text-white" style="text-align: center;">Cuenta</label>
+		                    <label class="col-sm-1 col-form-label text-white" style="text-align: center;">Debe</label>
+		                    <label class="col-sm-1 col-form-label text-white" style="text-align: center;">Haber</label>
+		                    <label class="col-sm-3 col-form-label text-white" style="text-align: center;">Glosa</label>
 			                <div class="col-sm-1" align="right">
+			                	<a title="Copiar Glosa (shift+g)" id="segundo_copy" href="#modalCopy" data-toggle="modal" data-target="#modalCopy" class="<?=$buttonCeleste?> btn-fab btn-sm d-none">
+                      		        <i class="material-icons"><?=$iconCopy?></i>
+		                        </a>
 								<a title="Copiar Unidad - Area (shift+u)" href="#modalCopySel" data-toggle="modal" data-target="#modalCopySel" class="<?=$buttonDelete?> btn-fab btn-sm">
 	                      		  <i class="material-icons"><?=$iconCopy?></i>
 			                    </a>
 			                </div> 
-			            </div>     
+			            </div>
+					<?php
+					//buscar detalles del comprobante
+					?>
+					<div class="wrapper">
+					<fieldset id="fiel" style="width:100%;border:0;">
+						     
 		                <div id="div">	
 							
 							<div class="h-divider">
@@ -627,6 +631,7 @@ $stmt->execute();
 						      	<div class="col-sm-4">
 								</div>
 							</div>
+					  </div>		
 				  	<div class="card-footer fixed-bottom">
 						<button type="submit" class="<?=$buttonMorado;?>">Guardar</button>
 						<?php 

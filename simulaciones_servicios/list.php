@@ -12,10 +12,22 @@ $dbh = new Conexion();
 // Preparamos
 if(isset($_GET['q'])){
   $q=$_GET['q'];
+  $s=$_GET['s'];
+  $u=$_GET['u'];
+  if(isset($_GET['s'])){
+    $s=$_GET['s'];
+    $u=$_GET['u'];
+    $arraySql=explode("IdArea=",$_GET['s']);
+    $codigoArea=trim($arraySql[1]);
+
+    $sqlAreas="and p.cod_area=".$codigoArea;
+  }
   //cargarDatosSession();
-  $stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado,c.nombre as cliente from simulaciones_servicios sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo join clientes c on c.codigo=sc.cod_cliente where sc.cod_estadoreferencial=1 and sc.cod_responsable=$globalUser order by sc.fecha desc");
+  $stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado,c.nombre as cliente from simulaciones_servicios sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo join clientes c on c.codigo=sc.cod_cliente join plantillas_servicios p on p.codigo=sc.cod_plantillaservicio where sc.cod_estadoreferencial=1 and sc.cod_responsable=$globalUser $sqlAreas order by sc.fecha desc");
 }else{
-  $stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado,c.nombre as cliente from simulaciones_servicios sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo join clientes c on c.codigo=sc.cod_cliente where sc.cod_estadoreferencial=1 and sc.cod_responsable=$globalUser order by sc.fecha desc");
+  $s=0;
+  $u=0;
+  $stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado,c.nombre as cliente from simulaciones_servicios sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo join clientes c on c.codigo=sc.cod_cliente join plantillas_servicios p on p.codigo=sc.cod_plantillaservicio where sc.cod_estadoreferencial=1 and sc.cod_responsable=$globalUser order by sc.fecha desc");
 }
 
 // Ejecutamos
@@ -123,12 +135,12 @@ $stmt->bindColumn('idServicio', $idServicioX);
                                 <?php 
                                 if(isset($_GET['q'])){
                                  if($codEstado==4){
-                                 ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1&admin=0&q=<?=$q?>" class="dropdown-item">
+                                 ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>" class="dropdown-item">
                                     <i class="material-icons text-danger">clear</i> Cancelar solicitud
                                  </a>
                                  <?php 
                                  }?>
-                                 <a href="<?=$urlVer;?>?cod=<?=$codigo;?>&q=<?=$q?>" class="dropdown-item">
+                                 <a href="<?=$urlVer;?>?cod=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>" class="dropdown-item">
                                     <i class="material-icons text-warning">bar_chart</i> Ver Propuesta
                                  </a>
                                  <!--<a href="#" class="dropdown-item">
@@ -155,13 +167,13 @@ $stmt->bindColumn('idServicio', $idServicioX);
                              if($codEstado==5){
                                $anteriorCod=obtenerCodigoSolicitudRecursosSimulacion(2,$codigo);
                                if(isset($_GET['q'])){
-                                  ?><a href="<?=$urlSolicitudRecursos?>?cod=<?=$codigo?>&q=<?=$q?>" target="_self" title="Solicitud De Recursos"class="btn btn-danger">
+                                  ?><a href="<?=$urlSolicitudRecursos?>?cod=<?=$codigo?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>" target="_self" title="Solicitud De Recursos"class="btn btn-danger">
                                     <i class="material-icons">content_paste</i>
                                  </a>
                                  <a title="Imprimir Solicitud de Recursos" href='#' onclick="javascript:window.open('solicitudes/imp.php?sol=<?=$anteriorCod;?>&mon=1')" class="btn btn-primary">
                                      <i class="material-icons"><?=$iconImp;?></i>
                                  </a> 
-                                 <a class="btn btn-warning" title="Solicitud de Facturación" href='<?=$urlSolicitudfactura;?>&cod=<?=$codigo;?>&q=<?=$q?>'>
+                                 <a class="btn btn-warning" title="Solicitud de Facturación" href='<?=$urlSolicitudfactura;?>&cod=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>'>
                                    <i class="material-icons" >receipt</i>                              
                                  </a>
                                  <?php 
@@ -173,7 +185,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
                                   <?php  
                                   }else{
                                     ?>
-                                    <button title="Crear Servicio" class="btn btn-danger" onclick="alerts.showSwal('warning-message-crear-servicio','<?=$urlRegisterNewServicio;?>&codigo=<?=$codigo;?>&q=<?=$q?>')">
+                                    <button title="Crear Servicio" class="btn btn-danger" onclick="alerts.showSwal('warning-message-crear-servicio','<?=$urlRegisterNewServicio;?>&codigo=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>')">
                                     <i class="material-icons">add</i>
                                   </button>                                 
                                   <?php 
@@ -208,10 +220,10 @@ $stmt->bindColumn('idServicio', $idServicioX);
                               }else{
                                 if(isset($_GET['q'])){
                                  ?>
-                                  <a title="Editar Simulación - Detalle" target="_self" href='<?=$urlRegister;?>?cod=<?=$codigo;?>&q=<?=$q?>' class="btn btn-info">
+                                  <a title="Editar Simulación - Detalle" target="_self" href='<?=$urlRegister;?>?cod=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>' class="btn btn-info">
                                     <i class="material-icons"><?=$iconEdit;?></i>
                                   </a>
-                                  <button title="Eliminar Simulación" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>&q=<?=$q?>')">
+                                  <button title="Eliminar Simulación" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>')">
                                     <i class="material-icons"><?=$iconDelete;?></i>
                                   </button>
                                  <?php 
@@ -244,7 +256,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
                <?php 
               //if($globalAdmin==1){
                 if(isset($_GET['q'])){
-                  ?><a href="<?=$urlRegister2;?>&q=<?=$q?>" target="_self" class="<?=$buttonNormal;?>">Registrar</a><?php
+                  ?><a href="<?=$urlRegister2;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>" target="_self" class="<?=$buttonNormal;?>">Registrar</a><?php
                 }else{
                   ?><a href="#" onclick="javascript:window.open('<?=$urlRegister2;?>')" class="<?=$buttonNormal;?>">Registrar</a><?php
                 }  

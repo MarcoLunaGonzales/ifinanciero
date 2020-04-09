@@ -51,8 +51,8 @@ if(isset($_GET['nombre'])){
   }else{
     $idTipoServicio=0;
   }
-
-$areaGeneralPlantilla=obtenerCodigoAreaPlantillasServicios($plantilla_servicio);
+  
+  $areaGeneralPlantilla=obtenerCodigoAreaPlantillasServicios($plantilla_servicio);
 
    if($areaGeneralPlantilla==39){
      $inicioAnio=1;
@@ -70,7 +70,13 @@ $areaGeneralPlantilla=obtenerCodigoAreaPlantillasServicios($plantilla_servicio);
   $idTipoObjeto=2707;
   $idObjeto=2715; //regristado
   $obs="Registro de propuesta";
-  actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codSimServ,$fechaHoraActual,$obs);
+  //id de perfil para cambio de estado en ibnorca
+  $id_perfil=$_GET['id_perfil'];
+  if($id_perfil==0){
+    actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codSimServ,$fechaHoraActual,$obs);
+  }else{
+    actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$id_perfil,$codSimServ,$fechaHoraActual,$obs);
+  }
 
 
   $dbhD = new Conexion();

@@ -2722,7 +2722,7 @@ function obtenerCantidadPersonalSimulacionDetalle($codigo){
 function obtenerCantidadPersonalPlantilla($codPlantilla){
   $dbh = new Conexion();
   $sql="";
-  $sql="SELECT sum(cantidad) as num FROM plantillas_servicios_auditores where cod_plantillaservicio=$codPlantilla";
+  $sql="SELECT IFNULL(sum(cantidad),0) as num FROM plantillas_servicios_auditores where cod_plantillaservicio=$codPlantilla";
    $stmt = $dbh->prepare($sql);
    $stmt->execute(); 
    $num=0;

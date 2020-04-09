@@ -34,9 +34,19 @@ if(isset($_GET['cod'])){
 $lista= obtenerPaisesServicioIbrnorca();
 if(isset($_GET['q'])){
  $idServicioX=$_GET['q'];
+ $s=$_GET['s'];
+ $u=$_GET['u'];
  ?>
   <input type="hidden" name="id_servicioibnored" value="<?=$idServicioX?>" id="id_servicioibnored"/>
+  <input type="hidden" name="id_servicioibnored_s" value="<?=$s?>" id="id_servicioibnored_s"/>
+  <input type="hidden" name="id_servicioibnored_u" value="<?=$u?>" id="id_servicioibnored_u"/>
  <?php
+ if(isset($_GET['u'])){
+  $u=$_GET['u'];
+ ?>
+  <input type="hidden" name="idPerfil" value="<?=$u?>" id="idPerfil"/>
+ <?php
+ }
 }else{
   $idServicioX=0; 
 }
@@ -821,7 +831,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                 ?><a href="#" title="No se puede enviar Propuesta" class="btn btn-danger text-white"><i class="material-icons">warning</i> UTILIDAD NETA <?=number_format($pUtilidadLocal, 2, '.', ',')?> %</a><?php
               }
             ?>
-            <a href="../<?=$urlList;?>&q=<?=$idServicioX?>" class="btn btn-danger">Volver</a><?php
+            <a href="../<?=$urlList;?>&q=<?=$idServicioX?>&s=<?=$s?>&u=<?=$u?>" class="btn btn-danger">Volver</a><?php
             }
             ?>
              

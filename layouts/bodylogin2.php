@@ -363,13 +363,26 @@
       var mensaje="";
       if($("#cantidad_filas").val()==0){
         mensaje+="<p></p>";
-        Swal.fire("Informativo!", "Debe registrar al menos un GRUPO", "warning");
+        Swal.fire("Informativo!", "Debe registrar al menos un grupo en el DETALLE", "warning");
         return false;
       }else{
-          $('<input />').attr('type', 'hidden')
+        if($("#cantidad_personal").length>0){
+           if($("#cantidad_personal").text()>0){
+             $('<input />').attr('type', 'hidden')
             .attr('name', 'detalles')
             .attr('value', JSON.stringify(itemDetalle))
             .appendTo('#formRegDet');
+           }else{
+             mensaje+="<p></p>";
+             Swal.fire("Informativo!", "Debe registrar al menos un Personal", "warning");
+             return false;
+           }
+        }else{
+          $('<input />').attr('type', 'hidden')
+            .attr('name', 'detalles')
+            .attr('value', JSON.stringify(itemDetalle))
+            .appendTo('#formRegDet');       
+        }
       }     
     });
     $("#formDetTcp").submit(function(e) {

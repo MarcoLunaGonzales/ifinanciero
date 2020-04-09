@@ -35,7 +35,7 @@ while ($row = $simulacion->fetch(PDO::FETCH_ASSOC)) {
 }
 
 if(isset($_GET['q'])){
-  showAlertSuccessError($flagSuccess,$urlList."&q=".$_GET['q']);	
+  showAlertSuccessError($flagSuccess,$urlList."&q=".$_GET['q']."&s=".$_GET['s']."&u=".$_GET['u']);	
 }else{
   showAlertSuccessError($flagSuccess,$urlList);
 }
