@@ -9,14 +9,14 @@ function posicionarMenu() {
  
     if ($(window).scrollTop() >= altura_del_header){
         $('.menu').addClass('fixed');
-        $('.wrapper').css('margin-top', (altura_del_menu) + 'px');
+        $('.wrapper_caja').css('margin-top', (altura_del_menu) + 'px');
         //poner boron copia
         if($("#segundo_copy").hasClass("d-none")){
           $("#segundo_copy").removeClass("d-none");
         }
     } else {
         $('.menu').removeClass('fixed');
-        $('.wrapper').css('margin-top', '0');
+        $('.wrapper_caja').css('margin-top', '0');
         //poner boron copia
         if(!($("#segundo_copy").hasClass("d-none"))){
           $("#segundo_copy").addClass("d-none");
@@ -1008,7 +1008,7 @@ function nuevaDistribucion(){
   if(debe==""&&haber==""){
     valor=0;
   }else{
-    if(debe==0){
+    if(debe==0||debe==""){
       valor = haber;
       cond=1;
       //alert(haber);
@@ -1026,13 +1026,14 @@ function nuevaDistribucion(){
   };*/
 
   if(valor!=0){
-  minusCuentaContable(fila);
+  
   ajax=nuevoAjax();
   ajax.open("GET","ajaxDistribucionGastos.php?area="+area+"&filas="+cantidadItems+"&cuenta_aux="+cuenta_aux+"&cuenta="+cuenta+"&cond="+cond+"&valor="+valor+"&glosa="+glosa+"&listDist="+JSON.stringify(distribucionPor),true);
   ajax.onreadystatechange=function(){
   if (ajax.readyState==4) {
     //var fi=document.getElementById("fiel");
     var fi=$("#fiel");
+    minusCuentaContable(fila);
     fi.append(ajax.responseText);
     $('.selectpicker').selectpicker(["refresh"]);
    }
