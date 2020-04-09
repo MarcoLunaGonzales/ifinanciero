@@ -94,7 +94,7 @@ $nombreCompletoUnidad=nameUnidad($globalUnidad);
 		    ?>
 
 		  	<?php
-			$stmt = $dbh->prepare("SELECT codigo, cod_unidadorganizacional, porcentaje FROM distribucion_gastosporcentaje");
+			$stmt = $dbh->prepare("SELECT d.codigo, d.cod_unidadorganizacional, d.porcentaje FROM distribucion_gastosporcentaje_detalle d join distribucion_gastosporcentaje p on p.codigo=d.cod_distribucion_gastos where p.estado=1");
 			$stmt->execute();
 			$i=0;
 			while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -157,7 +157,7 @@ $stmt->bindColumn('nombre', $nombreMon);
 <form id="formRegComp" class="form-horizontal" action="save.php" method="post" enctype="multipart/form-data">
 <div class="content">
 	<div class="container-fluid">
-			<input type="hidden" name="cantidad_filas" id="cantidad_filas" value="<?=$contadorRegistros;?>">
+			<input type="text" name="cantidad_filas" id="cantidad_filas" value="<?=$contadorRegistros;?>">
 
 			<div class="card" id="cabecera_scroll">
 				<div class="card-header <?=$colorCard;?> card-header-text">
@@ -320,7 +320,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
 			                </div>
 			             
 	                    </div>
-	                  <div class="wrapper">
+	                  <div class="wrapper_caja">
 					<fieldset id="fiel" style="width:100%;border:0;">				
 			        	<?php
     	                //$index=1;

@@ -78,6 +78,9 @@ $globalAdmin=$_SESSION["globalAdmin"];
       //aumentar un itemfactura
       var nfac=[];
       itemFacturas.push(nfac);
+
+      var nnn=[];
+      itemEstadosCuentas.push(nnn);
       document.getElementById("cantidad_filas").value=numFilas;
       </script>   
 <div id="div<?=$idFila?>">
@@ -148,19 +151,19 @@ $globalAdmin=$_SESSION["globalAdmin"];
     </div>
     <div class="col-sm-1">
             <div class="form-group">
-              <label class="bmd-label-static">Debe</label>      
+              <!--<label class="bmd-label-static">Debe</label>      -->
               <input class="form-control small" type="number" placeholder="0" value="<?=$debe?>" <?=$estadodebe?> name="debe<?=$idFila;?>" id="debe<?=$idFila;?>" onChange="calcularTotalesComprobante(this.id,event);" OnKeyUp="calcularTotalesComprobante(this.id,event);" step="0.01"> 
       </div>
     </div>
     <div class="col-sm-1">
             <div class="form-group">
-              <label class="bmd-label-static">Haber</label>     
+              <!--<label class="bmd-label-static">Haber</label>     -->
               <input class="form-control small" type="number" placeholder="0" value="<?=$haber?>" <?=$estadohaber?> name="haber<?=$idFila;?>" id="haber<?=$idFila;?>" onChange="calcularTotalesComprobante(this.id,event);" OnKeyUp="calcularTotalesComprobante(this.id,event);" step="0.01">   
       </div>
     </div>
     <div class="col-sm-3">
         <div class="form-group">
-              <label class="bmd-label-static">GlosaDetalle</label>
+              <!--<label class="bmd-label-static">GlosaDetalle</label>-->
         <textarea rows="1" class="form-control" name="glosa_detalle<?=$idFila;?>" id="glosa_detalle<?=$idFila;?>"><?=$glosa?></textarea>
       </div>
     </div>
