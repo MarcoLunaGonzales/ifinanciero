@@ -68,7 +68,7 @@ $totalDebito=0;
                       </div> -->
                       <h4 class="card-title"> 
                         <img  class="card-img-top"  src="../marca.png" style="width:100%; max-width:250px;">
-                          Estados de Cuentas
+                          Estado de Cuentas
                       </h4>
                       
                       <!-- <div class="row">
@@ -236,12 +236,16 @@ $totalDebito=0;
                                         $i++;
                                         $indice++;
                                     }
+                                    $totalSaldo=$totalDebito-$totalCredito;
+                                    if($totalSaldo<0){
+                                        $totalSaldo=$totalSaldo*(-1);
+                                    }
                                     ?>
                                     <tr>
                                         <td class="text-right small" colspan="7">Total:</td>
                                         <td class="text-right small font-weight-bold"><?=formatNumberDec($totalDebito);?></td>
                                         <td class="text-right small font-weight-bold"><?=formatNumberDec($totalCredito);?></td>
-                                        <td class="text-right small font-weight-bold"></td>
+                                        <td class="text-right small font-weight-bold"><?=formatNumberDec($totalSaldo);?></td>
                                     </tr>
                                 </tbody>
                             </table>

@@ -5487,9 +5487,23 @@ function verEstadosCuentas(fila,cuenta){
   var tipoComprobante=parseFloat($("#tipo_comprobante").val());
   var debeX=parseFloat($("#debe"+fila).val());
   var haberX=parseFloat($("#haber"+fila).val());
+
+  var tipo=$("#tipo_estadocuentas"+fila).val();
+  var tipo_proveedorcliente=$("#tipo_proveedorcliente"+fila).val();
+
   var banderaContinuar=1;
   if(($("#debe"+fila).val()==""&&$("#haber"+fila).val()=="")||($("#debe"+fila).val()==0&&$("#haber"+fila).val()==0)){
     $('#msgError').html("<p>El Debe o Haber deben de ser llenados</p>");
+    $("#modalAlert").modal("show");
+    banderaContinuar=0;
+  }
+  if( tipoComprobante==3 && haberX>0 && tipo==1 ){
+    $('#msgError').html("<p>Esta cuenta No admite Monto en el Haber</p>");
+    $("#modalAlert").modal("show");
+    banderaContinuar=0;
+  }
+  if( tipoComprobante==3 && debeX>0 && tipo==2 ){
+    $('#msgError').html("<p>Esta cuenta No admite Monto en el Debe</p>");
     $("#modalAlert").modal("show");
     banderaContinuar=0;
   }
@@ -5508,8 +5522,6 @@ function verEstadosCuentas(fila,cuenta){
     var cod_cuenta_auxiliar=$("#cuenta_auxiliar"+fila).val();
     var auxi="NO";
 
-    var tipo=$("#tipo_estadocuentas"+fila).val();
-    var tipo_proveedorcliente=$("#tipo_proveedorcliente"+fila).val();
 
     //EN ESTA PARTE DEBEMOS MATAR LA CUENTA    
     if(tipoComprobante==1){//TIPO INGRESO
