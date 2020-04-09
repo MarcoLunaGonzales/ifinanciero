@@ -7,9 +7,7 @@ $dbh = new Conexion();
 
   $i=0;
   echo "<script>var array_cuenta=[],imagen_cuenta=[];</script>";
-   $stmtCuenta = $dbh->prepare("SELECT CONCAT(p.codigo,'$$','NNN') as codigo, p.numero, p.nombre from plan_cuentas p where p.nivel=5
-UNION
-SELECT CONCAT(p.codigo,'$$','AUX') as codigo, p.nro_cuenta AS numero, p.nombre from cuentas_auxiliares p");
+   $stmtCuenta = $dbh->prepare("SELECT CONCAT(p.codigo,'$$','NNN') as codigo, p.numero, p.nombre from plan_cuentas p where p.nivel=5");
    $stmtCuenta->execute();
    while ($rowCuenta = $stmtCuenta->fetch(PDO::FETCH_ASSOC)) {
     $codigoX=$rowCuenta['codigo'];
