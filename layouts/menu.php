@@ -558,7 +558,7 @@ if($menuModulo==0){
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=reportesEstadoCuentas">
                     <span class="sidebar-mini"> P </span>
-                    <span class="sidebar-normal"> Estados de Cuentas</span>
+                    <span class="sidebar-normal"> Estado de Cuentas</span>
                   </a>
                 </li>
                 <li class="nav-item ">
