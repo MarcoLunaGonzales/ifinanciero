@@ -157,7 +157,7 @@ $stmt->bindColumn('nombre', $nombreMon);
 <form id="formRegComp" class="form-horizontal" action="save.php" method="post" enctype="multipart/form-data">
 <div class="content">
 	<div class="container-fluid">
-			<input type="text" name="cantidad_filas" id="cantidad_filas" value="<?=$contadorRegistros;?>">
+			<input type="hidden" name="cantidad_filas" id="cantidad_filas" value="<?=$contadorRegistros;?>">
 
 			<div class="card" id="cabecera_scroll">
 				<div class="card-header <?=$colorCard;?> card-header-text">

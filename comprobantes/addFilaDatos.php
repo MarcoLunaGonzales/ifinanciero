@@ -52,7 +52,7 @@
 
    <div class="col-sm-4">
     <input type="hidden" name="numero_cuenta<?=$idFila;?>" value="<?=$n_cuenta?>" id="numero_cuenta<?=$idFila;?>">
-        <input type="text" name="cuenta<?=$idFila;?>" value="<?=$cuenta?>" id="cuenta<?=$idFila;?>">
+        <input type="hidden" name="cuenta<?=$idFila;?>" value="<?=$cuenta?>" id="cuenta<?=$idFila;?>">
         <input type="hidden" name="cuenta_auxiliar<?=$idFila;?>" value="" id="cuenta_auxiliar<?=$idFila;?>">
         <div class="row">
           <div class="col-sm-8">
