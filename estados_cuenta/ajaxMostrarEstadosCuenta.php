@@ -38,7 +38,6 @@ $sqlZ="SELECT e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar,(select concat(c.c
       <th class="text-right">D&eacute;bito</th>
       <th class="text-right">Cr&eacute;dito</th>
       <th class="text-right">Saldo</th>
-      <th class="text-right">Total</th>
       <th class="text-left">-</th>
     </tr>
   </thead>
@@ -118,7 +117,7 @@ $sqlZ="SELECT e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar,(select concat(c.c
     if(isset($_GET['edicion'])){
       $edicion=$_GET['edicion'];
       if($edicion==1){
-       if(($tipoComprobanteX!=3)){
+       if(($tipoComprobanteX!=3)&&$codOrigen==1){
         if($tipoComprobanteX==1){
          $saldoIndividual=$montoX;
          $montoContra=0;
@@ -156,7 +155,6 @@ $sqlZ="SELECT e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar,(select concat(c.c
       }
       ?>
       <td class="text-right small font-weight-bold"><?=formatNumberDec($saldoIndividual);?></td>
-      <td class="text-right small font-weight-bold"><?=formatNumberDec($saldo);?></td>
       <td>
         <input type="hidden" id="codigoCuentaAux<?=$i?>" value="<?=$codCuentaAuxX?>">
           <div class="form-check">
@@ -176,6 +174,10 @@ $sqlZ="SELECT e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar,(select concat(c.c
     }
   }
 ?>
+    <tr>
+      <td colspan="9">Saldo Total</td>
+      <td class="text-center"><?=formatNumberDec($saldo);?></td>
+    </tr>
   </tbody>
 </table>
 <?php

@@ -249,24 +249,28 @@ $totalDebito=0;
                                                         </tr> 
 
                                                     <?php }
-                                                ?>
-                                                
-                                            <?php
-                                            }
-                                            $i++;
-                                            $indice++;
+                                                    ?>
+                                                    
+                                                    <?php
+                                                }
+                                                $i++;
+                                                $indice++;
                                         }
+                                    }
+                                    $totalSaldo=$totalDebito-$totalCredito;
+                                    if($totalSaldo<0){
+                                        $totalSaldo=$totalSaldo*(-1);
+                                    }
+// <<<<<<< HEAD
                                         ?>
                                         <tr>
                                             <td class="text-right small" colspan="7">Total:</td>
                                             <td class="text-right small font-weight-bold"><?=formatNumberDec($totalDebito);?></td>
                                             <td class="text-right small font-weight-bold"><?=formatNumberDec($totalCredito);?></td>
-                                            <td class="text-right small font-weight-bold"></td>
-                                        </tr>    
-                                    
-                                    <?php } ?>
+                                            <td class="text-right small font-weight-bold"><?=formatNumberDec($totalSaldo);?></td>
+                                        </tr>   
+           
 
-                                   
                                 </tbody>
                             </table>
                         </div>

@@ -598,7 +598,7 @@ $stmt->execute();
 			                   } 	
 
 						      // estados de cuenta
-			                   for ($i=0; $i < count($arrayEstadosCuentas) ; $i++) {
+			                   /*for ($i=0; $i < count($arrayEstadosCuentas) ; $i++) {
 						      	    $codX=$arrayEstadosCuentas[$i]['cod_comprobantedetalle'];
 			  	                    $cuenta=$arrayEstadosCuentas[$i]['cod_plancuenta'];
 				                    $codComproDet=$arrayEstadosCuentas[$i]['cod_comprobantedetalleorigen'];
@@ -606,7 +606,7 @@ $stmt->execute();
 			  	                   if($codX==$codDet){
 			  	                    ?><script>abrirEstado(<?=$idFila?>,'<?=$cuenta?>',<?=$codComproDet?>,'<?=$monto?>');</script><?php
 			  	                   }
-			                   } 
+			                   }*/ 
 						 $idFila=$idFila+1;
 						}
 						?>
