@@ -117,7 +117,7 @@ $sqlZ="SELECT e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar,(select concat(c.c
     if(isset($_GET['edicion'])){
       $edicion=$_GET['edicion'];
       if($edicion==1){
-       if(($tipoComprobanteX!=3)){
+       if(($tipoComprobanteX!=3)&&$codOrigen==1){
         if($tipoComprobanteX==1){
          $saldoIndividual=$montoX;
          $montoContra=0;
