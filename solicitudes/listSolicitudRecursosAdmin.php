@@ -8,15 +8,28 @@ $dbh = new Conexion();
 if(isset($_GET['q'])){
   $q=$_GET['q'];
   $item_3=$_GET['r'];
+  $s=$_GET['s'];
+  $u=$_GET['u'];
+
+    $arraySql=explode("IdArea=",$s);
+    $codigoArea=trim($arraySql[1]);
+    $sqlAreas="and sr.cod_area=".$codigoArea;
+
+    // $sqlAreas=""; quitar cuando se registre la unidad y el area de la solicitud propuesta
   ?>
   <input type="hidden" name="id_servicioibnored" value="<?=$q?>" id="id_servicioibnored"/>
   <input type="hidden" name="id_servicioibnored_rol" value="<?=$item_3?>" id="id_servicioibnored_rol"/>
+  <input type="hidden" name="id_servicioibnored_s" value="<?=$s?>" id="id_servicioibnored_s"/>
+  <input type="hidden" name="id_servicioibnored_u" value="<?=$u?>" id="id_servicioibnored_u"/>
 <?php
 }else{
   $item_3=0;
+  $s=0;
+  $u=0;
+  $sqlAreas="";
 }
 // Preparamos
-$stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo where sr.cod_estadoreferencial=1 and sr.cod_estadosolicitudrecurso!=1 order by sr.codigo");
+$stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo where sr.cod_estadoreferencial=1 and sr.cod_estadosolicitudrecurso!=1 $sqlAreas order by sr.codigo");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -32,6 +45,7 @@ $stmt->bindColumn('estado', $estado);
 $stmt->bindColumn('cod_comprobante', $codComprobante);
 $stmt->bindColumn('cod_simulacionservicio', $codSimulacionServicio);
 $stmt->bindColumn('numero', $numeroSol);
+$stmt->bindColumn('idServicio', $idServicio);
 
 $item_1=2708;
 ?>
@@ -141,7 +155,7 @@ $item_1=2708;
                               <div class="dropdown-menu">
                                 <?php
                               if(isset($_GET['q'])){
-                                ?><a href="<?=$urlVer;?>?cod=<?=$codigo;?>&admin=0&q=<?=$q?>&r=<?=$item_3?>" class="dropdown-item">
+                                ?><a href="<?=$urlVer;?>?cod=<?=$codigo;?>&admin=0&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>" class="dropdown-item">
                                     <i class="material-icons text-info">bar_chart</i> Ver Solicitud
                                  </a>
                               
@@ -151,7 +165,7 @@ $item_1=2708;
                                  <a href="#" onclick="mostrarCambioEstadoObjeto(<?=$codigo?>)" class="dropdown-item">
                                     <i class="material-icons text-warning">dns</i> Cambiar Estado
                                  </a>
-                                 <a href="<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&q=<?=$q?>&r=<?=$item_3?>" class="dropdown-item">
+                                 <a href="<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>&v=<?=$idServicio?>" class="dropdown-item">
                                     <i class="material-icons text-success">offline_pin</i> Verificar Solicitud
                                  </a>
                                  <!--<a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1&q=<?=$q?>" class="dropdown-item">

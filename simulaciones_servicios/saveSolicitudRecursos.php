@@ -58,9 +58,10 @@ $codCont=0;//CODIGO DE CONTRATO
 $codSimServ=$_GET['cod'];
 if(isset($_GET['q'])){
   $q=$_GET['q'];
-  ?>
-  <script>window.location.href="../solicitudes/register.php?q="+<?=$q?>+"&sim="+<?=$codSimServ?>+"&det=TCP"</script>
-  <?php
+  $s=$_GET['s'];
+  $u=$_GET['u'];
+  $v=$_GET['v'];
+  showAlertNewSolicitudRecursos("../solicitudes/register.php?q=".$q."&s=".$s."&u=".$u."&v=".$v."&sim=".$codSimServ."&det=TCP");
 }else{
   ?>
   <script>window.location.href="../solicitudes/register.php?sim="+<?=$codSimServ?>+"&det=TCP"</script>

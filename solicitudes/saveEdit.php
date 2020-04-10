@@ -122,10 +122,13 @@ editarComprobanteDetalle($codSolicitud,'cod_solicitudrecurso',$cont1,$fila,$stmt
 
 if(isset($_POST['usuario_ibnored'])){
     $q=$_POST['usuario_ibnored'];
+    $s=$_POST['usuario_ibnored_s'];
+    $u=$_POST['usuario_ibnored_u'];
+    $v=$_POST['usuario_ibnored_v'];
   if($flagSuccess==true){
-    showAlertSuccessError(true,"../".$urlList."&q=".$q); 
+    showAlertSuccessError(true,"../".$urlList."&q=".$q."&s=".$s."&u=".$u."&v=".$v); 
   }else{
-    showAlertSuccessError(false,"../".$urlList."&q=".$q);
+    showAlertSuccessError(false,"../".$urlList."&q=".$q."&s=".$s."&u=".$u."&v=".$v);
   }
 }else{
   if($flagSuccess==true){
