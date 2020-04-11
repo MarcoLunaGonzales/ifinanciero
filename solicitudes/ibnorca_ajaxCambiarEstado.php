@@ -31,6 +31,11 @@ $flagSuccess=$stmtUpdate->execute();
     $idTipoObjeto=2708;
     $idObjeto=$estado; //variable desde get
     $obs=$_GET['obs']; //$obs="Registro de propuesta";
-    actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);
+    if(isset($_GET['u'])){
+    	actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);
+    }else{
+    	actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);
+    }
+    
 
 ?>

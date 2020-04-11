@@ -9,14 +9,14 @@ function posicionarMenu() {
  
     if ($(window).scrollTop() >= altura_del_header){
         $('.menu').addClass('fixed');
-        $('.wrapper').css('margin-top', (altura_del_menu) + 'px');
+        $('.wrapper_caja').css('margin-top', (altura_del_menu) + 'px');
         //poner boron copia
         if($("#segundo_copy").hasClass("d-none")){
           $("#segundo_copy").removeClass("d-none");
         }
     } else {
         $('.menu').removeClass('fixed');
-        $('.wrapper').css('margin-top', '0');
+        $('.wrapper_caja').css('margin-top', '0');
         //poner boron copia
         if(!($("#segundo_copy").hasClass("d-none"))){
           $("#segundo_copy").addClass("d-none");
@@ -1008,7 +1008,7 @@ function nuevaDistribucion(){
   if(debe==""&&haber==""){
     valor=0;
   }else{
-    if(debe==0){
+    if(debe==0||debe==""){
       valor = haber;
       cond=1;
       //alert(haber);
@@ -1026,13 +1026,14 @@ function nuevaDistribucion(){
   };*/
 
   if(valor!=0){
-  minusCuentaContable(fila);
+  
   ajax=nuevoAjax();
   ajax.open("GET","ajaxDistribucionGastos.php?area="+area+"&filas="+cantidadItems+"&cuenta_aux="+cuenta_aux+"&cuenta="+cuenta+"&cond="+cond+"&valor="+valor+"&glosa="+glosa+"&listDist="+JSON.stringify(distribucionPor),true);
   ajax.onreadystatechange=function(){
   if (ajax.readyState==4) {
     //var fi=document.getElementById("fiel");
     var fi=$("#fiel");
+    minusCuentaContable(fila);
     fi.append(ajax.responseText);
     $('.selectpicker').selectpicker(["refresh"]);
    }
@@ -3140,11 +3141,24 @@ function mayorReporteComprobante(fila){
 
  function listarTipoSolicitud(tipo){
   var url="";
-  if(tipo==1){
-   url="ajaxListSimulacion.php";
+  if($("#ibnorca_q").length>0){
+   var q=$("#ibnorca_q").val();
+   var s=$("#ibnorca_s").val();
+   var u=$("#ibnorca_u").val();
+   var v=$("#ibnorca_v").val(); 
+    if(tipo==1){
+     url="ajaxListSimulacion.php?q="+q+"&s="+s+"&u="+u+"&v="+v;
+    }else{
+     url="ajaxListProveedor.php?q="+q+"&s="+s+"&u="+u+"&v="+v;
+    }
   }else{
-   url="ajaxListProveedor.php";
+    if(tipo==1){
+     url="ajaxListSimulacion.php";
+    }else{
+     url="ajaxListProveedor.php";
+    }
   }
+  
   if(tipo!=3){
    ajax=nuevoAjax();
     ajax.open("GET",url,true);
@@ -3222,7 +3236,10 @@ function listarTipoSolicitudAjaxPropuesta(tipo,id){
   }else{
     if($("#id_ibnorca").length){
       var q=$("#id_ibnorca").val();
-      var parametros={"q":q,"numero":numero,"cod_sim":codSim,"cod_prov":codProv};
+      var s=$("#ibnorca_s").val();
+      var u=$("#ibnorca_u").val();
+      var v=$("#ibnorca_v").val();
+      var parametros={"q":q,"s":s,"u":u,"v":v,"numero":numero,"cod_sim":codSim,"cod_prov":codProv};
     }else{
       var parametros={"numero":numero,"cod_sim":codSim,"cod_prov":codProv};
     }
@@ -9704,7 +9721,12 @@ function cambiarEstadoObjetoSolAjax(){
   var codigo=$("#modal_codigopropuesta").val();
   var estado=$("#modal_codigoestado").val();
   var observaciones=$("#modal_observacionesestado").val();
-  var parametros={"obs":observaciones,"estado":estado,"codigo":codigo};
+  if($("#id_servicioibnored_u").length>0){
+    var parametros={"obs":observaciones,"estado":estado,"codigo":codigo,"u":$("#id_servicioibnored_u").val()};
+  }else{
+    var parametros={"obs":observaciones,"estado":estado,"codigo":codigo};
+  }
+  
      $.ajax({
         type: "GET",
         dataType: 'html',
@@ -9720,7 +9742,9 @@ function cambiarEstadoObjetoSolAjax(){
            if($("#id_servicioibnored").length>0){
             var q=$("#id_servicioibnored").val();
             var r=$("#id_servicioibnored_rol").val();
-            alerts.showSwal('success-message','index.php?opcion=listSolicitudRecursosAdmin&q='+q+'&r='+r);   
+            var s=$("#id_servicioibnored_s").val();
+            var u=$("#id_servicioibnored_u").val();
+            alerts.showSwal('success-message','index.php?opcion=listSolicitudRecursosAdmin&q='+q+'&r='+r+'&s='+s+'&u='+u);   
           }else{
              alerts.showSwal('success-message','index.php?opcion=listSolicitudRecursosAdmin');
           }

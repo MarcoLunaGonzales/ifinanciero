@@ -17,6 +17,9 @@ $stmtX->execute();
 
 if(isset($_GET['q'])){
   $q=$_GET['q'];
+  $s=$_GET['s'];
+  $u=$_GET['u'];
+  $v=$_GET['v'];
 }
 
 $globalNombreGestion=$_SESSION["globalNombreGestion"];
@@ -118,7 +121,10 @@ if(isset($_GET['cod'])){
       <input type="hidden" name="cod_configuracioniva" id="cod_configuracioniva" value="<?=obtenerValorConfiguracion(35)?>">
       <?php 
       if(isset($_GET['q'])){
-        ?><input type="hidden" name="usuario_ibnored" id="usuario_ibnored" value="<?=$q;?>"><?php
+        ?><input type="hidden" name="usuario_ibnored" id="usuario_ibnored" value="<?=$q;?>">
+        <input type="hidden" name="usuario_ibnored_s" id="usuario_ibnored_s" value="<?=$s;?>">
+        <input type="hidden" name="usuario_ibnored_u" id="usuario_ibnored_u" value="<?=$u;?>">
+        <input type="hidden" name="usuario_ibnored_v" id="usuario_ibnored_v" value="<?=$v;?>"><?php
       }
       ?> 
       <div class="card">
@@ -352,7 +358,7 @@ if(isset($_GET['cod'])){
               <?php 
                if(isset($_GET['q'])){
                 ?>
-                 <a href="../<?=$urlList;?>&q=<?=$q?>" class="<?=$buttonCancel;?>">Volver</a> 
+                 <a href="../<?=$urlList;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>" class="<?=$buttonCancel;?>">Volver</a> 
                 <?php
                }else{
                 ?>

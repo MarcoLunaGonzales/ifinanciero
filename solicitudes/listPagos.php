@@ -13,6 +13,9 @@ setlocale(LC_TIME, "Spanish");
 $dbh = new Conexion();
 if(isset($_GET['q'])){
   $q=$_GET['q'];
+  $s=$_GET['s'];
+  $u=$_GET['u'];
+  $v=$_GET['v'];
 }
 $codSol=$_GET['codigo'];
 // Preparamos
@@ -313,7 +316,10 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
                 if(isset($_GET['q'])){
 
                   ?><input type="hidden" value="<?=$q?>" id="q" name="q">
-                  <a class="<?=$buttonCancel;?>" href="#" onClick="location.href='<?=$urlList;?>&q=<?=$q?>'">Volver</a><?php
+                  <input type="hidden" value="<?=$s?>" id="s" name="s">
+                  <input type="hidden" value="<?=$u?>" id="u" name="u">
+                  <input type="hidden" value="<?=$v?>" id="v" name="v">
+                  <a class="<?=$buttonCancel;?>" href="#" onClick="location.href='<?=$urlList;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>'">Volver</a><?php
                 }else{
                   ?><a class="<?=$buttonCancel;?>" href="#" onClick="location.href='<?=$urlList;?>'">Volver</a><?php
                 }

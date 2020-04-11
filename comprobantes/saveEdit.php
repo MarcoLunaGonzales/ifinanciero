@@ -167,7 +167,10 @@ for ($i=1;$i<=$cantidadFilas;$i++){
          //FIN DE ESTADOS DE CUENTA
 	}
 } 
-echo "<script>window.close();</script>";
+echo "<script>
+window.opener.location.reload();
+window.close();
+</script>";
 /*
 if($flagSuccessDetalle==true){
 	showAlertSuccessError(true,"../".$urlList);	

@@ -172,7 +172,7 @@ $stmt->execute();
 		    ?>
 
 		  	<?php
-			$stmt = $dbh->prepare("SELECT codigo, cod_unidadorganizacional, porcentaje FROM distribucion_gastosporcentaje");
+			$stmt = $dbh->prepare("SELECT d.codigo, d.cod_unidadorganizacional, d.porcentaje FROM distribucion_gastosporcentaje_detalle d join distribucion_gastosporcentaje p on p.codigo=d.cod_distribucion_gastos where p.estado=1");
 			$stmt->execute();
 			$i=0;
 			while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -407,7 +407,7 @@ $stmt->execute();
 					<?php
 					//buscar detalles del comprobante
 					?>
-					<div class="wrapper">
+					<div class="wrapper_caja">
 					<fieldset id="fiel" style="width:100%;border:0;">
 						     
 		                <div id="div">	

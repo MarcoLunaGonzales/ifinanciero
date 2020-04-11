@@ -13,6 +13,9 @@ $dbh = new Conexion();
 if(isset($_GET['q'])){
   $q=$_GET['q'];
   $r=$_GET['r'];
+  $s=$_GET['s'];
+  $u=$_GET['u'];
+  $v=$_GET['v'];
 }
 $sqlX="SET NAMES 'utf8'";
 $stmtX = $dbh->prepare($sqlX);
@@ -89,6 +92,8 @@ if(isset($_GET['cod'])){
       if(isset($_GET['q'])){
         ?><input type="hidden" name="usuario_ibnored" id="usuario_ibnored" value="<?=$q;?>">
           <input type="hidden" name="usuario_ibnored_rol" id="usuario_ibnored_rol" value="<?=$r;?>">
+          <input type="hidden" name="usuario_ibnored_s" id="usuario_ibnored_s" value="<?=$s;?>">
+        <input type="hidden" name="usuario_ibnored_u" id="usuario_ibnored_u" value="<?=$u;?>">
         <?php
       }
       ?>
@@ -312,7 +317,7 @@ if(isset($_GET['cod'])){
                if(isset($_GET['q'])){
                 ?>
                  
-               <a href="../<?=$urlList2;?>&q=<?=$q?>&r=<?=$r?>" class="<?=$buttonCancel;?>">Volver</a> 
+               <a href="../<?=$urlList2;?>&q=<?=$q?>&r=<?=$r?>&s=<?=$s?>&u=<?=$u?>" class="<?=$buttonCancel;?>">Volver</a> 
                 <?php
                }else{
                 ?>

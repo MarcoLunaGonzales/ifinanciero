@@ -32,7 +32,13 @@ if($estado!=1){
     $idTipoObjeto=2708;
     $idObjeto=2722; //regristado
     $obs="En Aprobacion Solicitud";
-    actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);		
+    if(isset($_GET['u'])){
+       $u=$_GET['u'];
+       actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);    
+     }else{
+       actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);    
+     }
+    
 	}
 	//fin de actulizar estados del servidor ibnorca
 }else{
@@ -41,19 +47,27 @@ if($estado!=1){
     $idTipoObjeto=2708;
     $idObjeto=2721; //regristado
     $obs="Registro de Solicitud";
-    actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);
+    if(isset($_GET['u'])){
+       $u=$_GET['u'];
+       actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);
+     }else{
+       actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);
+     }
+    
 }
-
 
 if(isset($_GET['admin'])){
   $urlList2=$urlList;
 }
 if(isset($_GET['q'])){
 	$q=$_GET['q'];
+  $s=$_GET['s'];
+  $u=$_GET['u'];
+  $v=$_GET['v'];
   if($flagSuccess==true){
-	showAlertSuccessError(true,"../".$urlList2."&q=".$q);	
+	showAlertSuccessError(true,"../".$urlList2."&q=".$q."&s=".$s."&u=".$u."&v=".$v);	
    }else{
-	showAlertSuccessError(false,"../".$urlList2."&q=".$q);
+	showAlertSuccessError(false,"../".$urlList2."&q=".$q."&s=".$s."&u=".$u."&v=".$v);
    }
 }else{
 	if($flagSuccess==true){

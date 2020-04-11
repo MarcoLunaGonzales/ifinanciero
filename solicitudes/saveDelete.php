@@ -18,7 +18,10 @@ $flagSuccess=$stmt->execute();
 
 if(isset($_GET['q'])){
 	$q=$_GET['q'];
-	showAlertSuccessError($flagSuccess,$urlList."&q=".$q);
+	$s=$_GET['s'];
+	$u=$_GET['u'];
+	$v=$_GET['v'];
+	showAlertSuccessError($flagSuccess,$urlList."&q=".$q."&s=".$s."&u=".$u."&v=".$v);
 }else{
   showAlertSuccessError($flagSuccess,$urlList);	
 }

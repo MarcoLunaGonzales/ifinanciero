@@ -7,9 +7,28 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $dbh = new Conexion();
 if(isset($_GET['q'])){
   $q=$_GET['q'];
+  $u=$_GET['u'];
+  $sqlAreas="";
+  $sqlServicio="";
+  if(isset($_GET['v'])){
+    $v=$_GET['v'];
+    $sqlServicio="and sr.idServicio=".$v;
+  }
+  if(isset($_GET['s'])){
+    $s=$_GET['s'];
+    $arraySql=explode("IdArea=",$s);
+    $codigoArea=trim($arraySql[1]);
+    $sqlAreas="and sr.cod_area=".$codigoArea;
+  }
+
+}else{
+  $sqlAreas="";
+  $sqlServicio="";
 }
 // Preparamos
-$stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo where sr.cod_estadoreferencial=1 order by sr.codigo");
+$stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area 
+  from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo 
+  where sr.cod_estadoreferencial=1 $sqlServicio order by sr.codigo");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -142,18 +161,18 @@ $stmt->bindColumn('numero', $numeroSol);
                                 <?php 
                             if(isset($_GET['q'])){
                               if($codEstado==4){
-                                 ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1&admin=0&q=<?=$q?>" class="dropdown-item">
+                                 ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>" class="dropdown-item">
                                     <i class="material-icons text-danger">clear</i> Cancelar solicitud
                                  </a><?php 
                                  }else{
                                    ?>
-                                   <a href="<?=$urlPagos;?>&codigo=<?=$codigo;?>&q=<?=$q?>" class="dropdown-item">
+                                   <a href="<?=$urlPagos;?>&codigo=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>" class="dropdown-item">
                                     <i class="material-icons text-success">attach_money</i> PAGOS
                                    </a>
                                    <?php 
                                  }
                                  ?>
-                                 <a href="<?=$urlVer;?>?cod=<?=$codigo;?>&q=<?=$q?>" class="dropdown-item">
+                                 <a href="<?=$urlVer;?>?cod=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>" class="dropdown-item">
                                     <i class="material-icons text-danger">bar_chart</i> Ver Solicitud
                                  </a>
                              <?php
@@ -185,13 +204,13 @@ $stmt->bindColumn('numero', $numeroSol);
                             <a title="Imprimir" href='#' onclick="javascript:window.open('<?=$urlImp;?>?sol=<?=$codigo;?>&mon=1')" class="<?=$buttonEdit;?>">
                               <i class="material-icons"><?=$iconImp;?></i>
                             </a>
-                            <a title="Enviar solicitud" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=4&admin=0&q=<?=$q?>'  itle="Enviar Solicitud" class="btn btn-warning">
+                            <a title="Enviar solicitud" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=4&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>'  itle="Enviar Solicitud" class="btn btn-warning">
                               <i class="material-icons">send</i>
                             </a> 
-                            <a title="Editar solicitud - detalle" href='<?=$urlRegister;?>?cod=<?=$codigo;?>&q=<?=$q?>'  class="btn btn-info">
+                            <a title="Editar solicitud - detalle" href='<?=$urlRegister;?>?cod=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>'  class="btn btn-info">
                               <i class="material-icons"><?=$iconEdit;?></i>
                             </a>
-                            <button title="Eliminar solicitud"  class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>&q=<?=$q?>')">
+                            <button title="Eliminar solicitud"  class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>')">
                               <i class="material-icons"><?=$iconDelete;?></i>
                             </button>
                               <?php  
@@ -227,7 +246,7 @@ $stmt->bindColumn('numero', $numeroSol);
               <div class="card-footer fixed-bottom">
                 <?php 
                 if(isset($_GET['q'])){
-                ?><a href="<?=$urlRegister2;?>?q=<?=$q?>" target="_self" class="<?=$buttonNormal;?>">Registrar</a><?php
+                ?><a href="<?=$urlRegister2;?>?q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>" target="_self" class="<?=$buttonNormal;?>">Registrar</a><?php
                 }else{
                  ?><a href="#" onclick="javascript:window.open('<?=$urlRegister2;?>')" class="<?=$buttonNormal;?>">Registrar</a><?php
                 } 

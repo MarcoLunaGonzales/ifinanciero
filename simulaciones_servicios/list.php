@@ -167,7 +167,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
                              if($codEstado==5){
                                $anteriorCod=obtenerCodigoSolicitudRecursosSimulacion(2,$codigo);
                                if(isset($_GET['q'])){
-                                  ?><a href="<?=$urlSolicitudRecursos?>?cod=<?=$codigo?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>" target="_self" title="Solicitud De Recursos"class="btn btn-danger">
+                                  ?><a onclick="alerts.showSwal('success-solicitud','solicitudes/register.php?q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$idServicioX?>&sim=<?=$codigo?>&det=TCP')" href="#" target="_self" title="Solicitud De Recursos"class="btn btn-danger">
                                     <i class="material-icons">content_paste</i>
                                  </a>
                                  <a title="Imprimir Solicitud de Recursos" href='#' onclick="javascript:window.open('solicitudes/imp.php?sol=<?=$anteriorCod;?>&mon=1')" class="btn btn-primary">
@@ -191,7 +191,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
                                   <?php 
                                   } 
                                 }else{
-                                ?><a href="<?=$urlSolicitudRecursos?>?cod=<?=$codigo?>" target="_blank" title="Solicitud De Recursos"class="btn btn-danger">
+                                ?><a onclick="alerts.showSwal('success-solicitud','solicitudes/register.php?sim=<?=$codigo?>&det=TCP')" href="#" target="_blank" title="Solicitud De Recursos"class="btn btn-danger">
                                     <i class="material-icons">content_paste</i>
                                  </a>
                                  <a title="Imprimir Solicitud de Recursos" href='#' onclick="javascript:window.open('solicitudes/imp.php?sol=<?=$anteriorCod;?>&mon=1')" class="btn btn-primary">
