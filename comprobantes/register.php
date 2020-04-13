@@ -271,12 +271,26 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
 					  <h6 class="card-title">Detalle</h6>
 					</div>
 					<h4 class="card-title" align="right">
-						<div class="col-sm-8">
-						    <div class="form-group">
-				          		<label for="glosa" class="bmd-label-static">Glosa</label>
-								<input class="form-control" name="glosa" id="glosa" required="true" rows="1" value=""/>
-							</div>
+						<div class="row">
+							<div class="col-sm-3" align="left">
+			                   <div class="form-group">                                
+			                        <a href="#" style="background-color: #0489B1" class="btn btn-round btn-fab btn-sm" onclick="cargarDatosRegistroComprobantes()">
+			                        	<i class="material-icons" title="Add Proveedor">add</i>
+			                        </a>
+			                        <a href="#" class="btn btn-round btn-fab btn-sm" onclick="actualizarRegistroProveedorComprobante()">
+			                        	<i class="material-icons" title="Actualizar Proveedor">update</i>
+			                        </a> 
+			                   </div>
+			                </div>  
+							<div class="col-sm-9">
+							    <div class="form-group">
+					          		<label for="glosa" class="bmd-label-static">Glosa</label>
+									<input class="form-control" name="glosa" id="glosa" required="true" rows="1" value=""/>
+								</div>
+							</div>	
+
 						</div>
+						
 					</h4>
 
 				</div>
@@ -410,6 +424,40 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
 <!--    end small modal -->
 </form>
 
+<div class="cargar">
+  	<div class="div-loading text-center">
+     	<h4 class="text-warning font-weight-bold">Procesando Datos</h4>
+     	<p class="text-white">Aguard&aacute; un momento por favor</p>  
+  	</div>
+</div>
+<div class="cargar-ajax d-none">
+  	<div class="div-loading text-center">
+     	<h4 class="text-warning font-weight-bold" id="texto_ajax_titulo">Procesando Datos</h4>
+     	<p class="text-white">Aguard&aacute; un momento por favor</p>  
+  	</div>
+</div>
+<div class="modal fade modal-arriba modal-primary" id="modalAgregarProveedor" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  	<div class="modal-dialog modal-lg">
+    	<div class="modal-content card">
+            <div class="card-header card-header-warning card-header-icon">
+                <div class="card-icon">
+                    <i class="material-icons text-dark">ballot</i>
+                </div>
+                 <h4 class="card-title">Proveedor</h4>
+            </div>
+            <div class="card-body">
+                <div id="datosProveedorNuevo">
+                   
+                </div> 
+                <div class="form-group float-right">
+                        <button type="button" onclick="guardarDatosProveedorComprobante()" class="btn btn-info btn-round">Agregar</button>
+                </div>
+          	</div>
+      	</div>  
+    </div>
+</div>
+
+
 <?php 
 $dbh = new Conexion();
 
@@ -441,6 +489,7 @@ $stmt->bindColumn('nombre', $nombreCuenta);
 		    itemCuentas.push({codigo:"<?=$codigoCuenta?>",numero:"<?=$numeroCuenta?>",nombre:"<?=$nombreCuenta?>",cod_aux:"0",nom_aux:""});
 		 </script><?php	
 		$cont++;
-		}
+		}?>
 
-require_once 'modal.php';?>
+<script>$('.selectpicker').selectpicker("refresh");</script>
+<?php require_once 'modal.php';?>

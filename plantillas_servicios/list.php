@@ -2,6 +2,8 @@
 require_once 'conexion.php';
 require_once 'configModule.php';
 require_once 'styles.php';
+
+$sqlAreas="";
 if(isset($_GET['q'])){
   $q=$_GET['q'];
   //cargarNuevaSessionDatos($q);

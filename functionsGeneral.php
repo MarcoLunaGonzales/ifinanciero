@@ -14,6 +14,12 @@ function showAlertSuccessError($bandera, $url){
    }
 }
 
+function showAlertNewSolicitudRecursos($url){
+      echo "<script>
+         alerts.showSwal('success-solicitud','$url');
+      </script>";
+}
+
 function showAlertSuccessError2($bandera, $url){
    if($bandera==true){
       echo "<script>

@@ -12,6 +12,13 @@ setlocale(LC_TIME, "Spanish");
 $dbh = new Conexion();
 if(isset($_GET['q'])){
   $q=$_GET['q'];
+  $s=$_GET['s'];
+  $u=$_GET['u'];
+  $v=$_GET['v'];
+  ?><input type="hidden" name="ibnorca_q" id="ibnorca_q" value="<?=$q;?>">
+  <input type="hidden" name="ibnorca_s" id="ibnorca_s" value="<?=$s;?>">
+  <input type="hidden" name="ibnorca_u" id="ibnorca_u" value="<?=$u;?>">
+  <input type="hidden" name="ibnorca_v" id="ibnorca_v" value="<?=$v;?>"><?php
 }
 
 $sqlX="SET NAMES 'utf8'";
@@ -87,9 +94,9 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                       <hr>
                 <?php 
                 if(isset($_GET['q'])){
-                  $urlBack="../index.php?opcion=listSolicitudRecursos&q=".$q;
+                  $urlBack="../index.php?opcion=listSolicitudRecursos&q=".$q."&s=".$s."&u=".$u."&v=".$v;
                   if(isset($_GET['sim'])){
-                    $urlBack="../index.php?opcion=listSimulacionesServicios&q=".$q;
+                    $urlBack="../index.php?opcion=listSimulacionesServicios&q=".$q."&s=".$s."&u=".$u;
                   }
                 ?><div class="form-group float-right">
                         <a href="<?=$urlBack?>" class="btn btn-default btn-round">Volver</a>

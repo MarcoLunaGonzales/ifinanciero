@@ -428,7 +428,9 @@ if($flagSuccess==true){
   if(isset($_POST['usuario_ibnored'])){
     $q=$_POST['usuario_ibnored'];
     $r=$_POST['usuario_ibnored_rol'];
-    showAlertSuccessError(true,"../".$urlList2."&q=".$q."&r=".$r);  
+    $s=$_POST['usuario_ibnored_s'];
+    $u=$_POST['usuario_ibnored_u'];
+    showAlertSuccessError(true,"../".$urlList2."&q=".$q."&r=".$r."&s=".$s."&u=".$u);  
   }else{
   showAlertSuccessError(true,"../".$urlList2); 
    }     
@@ -437,7 +439,10 @@ if($flagSuccess==true){
   if(isset($_POST['usuario_ibnored'])){
     $q=$_POST['usuario_ibnored'];
     $r=$_POST['usuario_ibnored_rol'];
-   showAlertSuccessError(false,"../".$urlList2."&q=".$q."&r=".$r);
+    $s=$_POST['usuario_ibnored_s'];
+    $u=$_POST['usuario_ibnored_u'];
+    $v=$_POST['usuario_ibnored_v'];
+   showAlertSuccessError(false,"../".$urlList2."&q=".$q."&r=".$r."&s=".$s."&u=".$u."&v=".$v);
   }else{
   showAlertSuccessError(false,"../".$urlList2);
    } 

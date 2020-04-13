@@ -11,8 +11,17 @@ $sqlX="SET NAMES 'utf8'";
 $stmtX = $dbh->prepare($sqlX);
 $stmtX->execute();
 $usuario=$_SESSION['globalUser'];
- $query="SELECT * FROM simulaciones_costos where cod_responsable=$usuario and cod_estadosimulacion=5 order by codigo";
- $query2="SELECT * FROM simulaciones_servicios where  cod_estadosimulacion=5 order by codigo"; //cod_responsable=$usuario and
+
+$sqlAreas="";
+if(isset($_GET['s'])){
+  $arraySql=explode("IdArea=",$_GET['s']);
+  $codigoArea=trim($arraySql[1]);
+
+  $sqlAreas="and p.cod_area=".$codigoArea;
+}
+
+ $query="SELECT s.*,p.cod_area FROM simulaciones_costos s join plantillas_costo p on p.codigo=s.cod_plantillacosto where s.cod_responsable=$usuario and s.cod_estadosimulacion=5 $sqlAreas order by s.codigo";
+ $query2="SELECT s.*,p.cod_area FROM simulaciones_servicios s join plantillas_servicios p on p.codigo=s.cod_plantillaservicio where s.cod_responsable=$usuario and s.cod_estadosimulacion=5 $sqlAreas order by s.codigo"; //cod_responsable=$usuario and
   ?>
    <label class="col-sm-3 col-form-label">Propuesta :</label>
    <div class="col-sm-9">
@@ -22,15 +31,17 @@ $usuario=$_SESSION['globalUser'];
            $stmt = $dbh->prepare($query);
            $stmt->execute();
            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+              $nomArea=abrevArea_solo($row['cod_area']);
               $codigoSim=$row['codigo'];    
-              ?><option value="<?=$codigoSim?>$$$SIM" class="text-right"><?=$row['nombre']?></option>
+              ?><option value="<?=$codigoSim?>$$$SIM" class="text-right"><?=$row['nombre']?> - <?=$nomArea?></option>
              <?php 
              } 
           $stmt2 = $dbh->prepare($query2);
            $stmt2->execute();
            while ($row2 = $stmt2->fetch(PDO::FETCH_ASSOC)) {
-              $codigoSim=$row2['codigo'];    
-              ?><option value="<?=$codigoSim?>$$$TCP" class="text-right"><?=$row2['nombre']?></option>
+              $codigoSim=$row2['codigo'];
+              $nomArea=abrevArea_solo($row2['cod_area']);    
+              ?><option value="<?=$codigoSim?>$$$TCP" class="text-right"><?=$row2['nombre']?> - <?=$nomArea?></option>
              <?php 
              } ?> 
            </select>

@@ -6,12 +6,16 @@ require_once 'styles.php';
 
 $globalAdmin=$_SESSION["globalAdmin"];
 $globalUser=$_SESSION["globalUser"];
+$globalUnidad=$_SESSION["globalUnidad"];
+// $globalNombreUnidad=$_SESSION['globalNombreUnidad'];
+
+
 
 $dbh = new Conexion();
 
 $stmt = $dbh->prepare("SELECT *,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_uo) as nombre_uo,
   (select a.abreviatura from areas a where a.codigo=cod_area)as nombre_area
-  from tipos_caja_chica where cod_estadoreferencial=1 and cod_personal=$globalUser");
+  from tipos_caja_chica where cod_estadoreferencial=1 and cod_uo=$globalUnidad");//and cod_personal=$globalUser
 //ejecutamos
 $stmt->execute();
 //bindColumn

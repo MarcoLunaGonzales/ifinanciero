@@ -153,10 +153,13 @@ for ($i=1;$i<=$cantidadFilas;$i++){
 
 if(isset($_POST['q'])){
   $q=$_POST['q'];
+  $s=$_POST['s'];
+  $u=$_POST['u'];
+  $v=$_POST['v'];
   if($flagSuccess==true){
-  showAlertSuccessError(true,"../".$urlList."&q=".$q); 
+  showAlertSuccessError(true,"../".$urlList."&q=".$q."&s=".$s."&u=".$u."&v=".$v); 
   }else{
-  showAlertSuccessError(false,"../".$urlList."&q=".$q);
+  showAlertSuccessError(false,"../".$urlList."&q=".$q."&s=".$s."&u=".$u."&v=".$v);
   }
 }else{
   if($flagSuccess==true){

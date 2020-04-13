@@ -101,6 +101,9 @@
 		if ($_GET['opcion']=='listComprobantes') {
 			require_once('comprobantes/list.php');
 		}
+		if ($_GET['opcion']=='listComprobantes2') {
+			require_once('comprobantes/list2.php');
+		}
 		if ($_GET['opcion']=='listComprobantesRegistrados') {
 			require_once('comprobantes/listRegistrados.php');
 		}

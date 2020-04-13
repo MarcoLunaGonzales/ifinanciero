@@ -57,7 +57,6 @@
           <div class="row"> 
           <div class="col-sm-8">
             <div class="form-group" id="divCuentaDetalle<?=$idFila;?>">
-          
                   </div>
           </div>
           <div class="col-sm-4">

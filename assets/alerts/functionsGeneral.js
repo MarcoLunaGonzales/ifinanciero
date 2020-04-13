@@ -1102,6 +1102,89 @@ function botonBuscarComprobanteIng(codigo){
   ajax.send(null)
 }
 
+
+
+// var areas_tabla=[]; 
+var array_comprobantes_general=[];
+var numFilasA=0;
+function botonSiguienteComprobante(){  
+  var cantidadTotal=array_comprobantes_general.length;
+  if(numFilasA < cantidadTotal-1){
+    numFilasA++;
+    // botonItemsFunction(numFilasA+1);//indicamos en que posicion esta el item
+    // alert(cantidadTotal);
+    var dato=array_comprobantes_general[numFilasA];
+    // alert(numFilasA+"-"+dato);
+    ajax=nuevoAjax();
+    ajax.open('GET', 'comprobantes/lista_comprobantes2_ajax.php?codigo='+dato+'&pos='+(numFilasA+1)+'&total='+cantidadTotal,true);
+    ajax.onreadystatechange=function() {
+      if (ajax.readyState==4) {
+        var contenedor=$("#data_comprobantes");
+        contenedor.html(ajax.responseText);
+        // $("#modalBuscador").modal("hide");
+      }
+    }
+    ajax.send(null)
+  }  
+}
+function botonAnteriorComprobante(){  
+  var cantidadTotal=array_comprobantes_general.length;
+  if(numFilasA > 0){
+    numFilasA--;
+    var dato=array_comprobantes_general[numFilasA];
+    // botonItemsFunction(numFilasA+1);//indicamos en que posicion esta el item
+    ajax=nuevoAjax();
+    ajax.open('GET', 'comprobantes/lista_comprobantes2_ajax.php?codigo='+dato+'&pos='+(numFilasA+1)+'&total='+cantidadTotal,true);
+    ajax.onreadystatechange=function() {
+      if (ajax.readyState==4) {
+        var contenedor=$("#data_comprobantes");
+        contenedor.html(ajax.responseText);
+        // $("#modalBuscador").modal("hide");
+      }
+    }
+    ajax.send(null)
+  }  
+}
+function botonInicioComprobante(){  
+  var cantidadTotal=array_comprobantes_general.length;  
+    numFilasA=0;
+    var dato=array_comprobantes_general[numFilasA];
+    // botonItemsFunction(numFilasA+1);//indicamos en que posicion esta el item
+    ajax=nuevoAjax();
+    ajax.open('GET', 'comprobantes/lista_comprobantes2_ajax.php?codigo='+dato+'&pos='+(numFilasA+1)+'&total='+cantidadTotal,true);
+    ajax.onreadystatechange=function() {
+      if (ajax.readyState==4) {
+        var contenedor=$("#data_comprobantes");
+        contenedor.html(ajax.responseText);
+        // $("#modalBuscador").modal("hide");
+      }
+    }
+    ajax.send(null)
+  // }  
+}
+function botonFinComprobante(){  
+  var cantidadTotal=array_comprobantes_general.length;  
+  numFilasA=cantidadTotal-1;
+  // botonItemsFunction(numFilasA+1);//indicamos en que posicion esta el item
+  var dato=array_comprobantes_general[numFilasA];
+  // alert(numFilasA+"-"+dato);
+  ajax=nuevoAjax();
+  ajax.open('GET', 'comprobantes/lista_comprobantes2_ajax.php?codigo='+dato+'&pos='+(numFilasA+1)+'&total='+cantidadTotal,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      var contenedor=$("#data_comprobantes");
+      contenedor.html(ajax.responseText);
+      // $("#modalBuscador").modal("hide");
+    }
+  }
+  ajax.send(null)
+}
+// function botonItemsFunction(posicion){  
+//   var cantidadTotal=array_comprobantes_general.length;    
+//   // $("#botonItems").val(posicion+"-"+cantidadTotal);  
+//   document.getElementById('botonItems').innerHTML = posicion+"-"+cantidadTotal;
+// }
+
 function sendAprobacion(cod,estado){
   if(estado==3){
     $("#modalAlertStyle").addClass("bg-info");
@@ -1693,9 +1776,10 @@ function detectarCargaAjax(){
   var idp=str_cuenta[0];
   var unidad=$("#cod_unidad").val();
   var area=$("#cod_area").val();
-  //var valor=$("#cod_mescurso").val();
+
+  var valor2=$("#cod_mescurso").val();
   var valor=$("#codValor").val();
-  var parametros={"idp":idp,"unidad":unidad,"area":area,"valor":valor};
+  var parametros={"idp":idp,"unidad":unidad,"area":area,"valor":valor,"valor2":valor2};
      $.ajax({
         type: "GET",
         dataType: 'html',
@@ -1706,7 +1790,6 @@ function detectarCargaAjax(){
          $("#mensajeDetalle").html("<center><p class='text-muted'></p></center>"); 
         },
         success:  function (resp) {
-          
            detectarCargaAjax();
           //if($("#tipo_dato").val()==1){
             $("#monto_ibnorca").val(redondeo(parseFloat(resp)*$("#cod_mescurso").val()));
@@ -3058,11 +3141,24 @@ function mayorReporteComprobante(fila){
 
  function listarTipoSolicitud(tipo){
   var url="";
-  if(tipo==1){
-   url="ajaxListSimulacion.php";
+  if($("#ibnorca_q").length>0){
+   var q=$("#ibnorca_q").val();
+   var s=$("#ibnorca_s").val();
+   var u=$("#ibnorca_u").val();
+   var v=$("#ibnorca_v").val(); 
+    if(tipo==1){
+     url="ajaxListSimulacion.php?q="+q+"&s="+s+"&u="+u+"&v="+v;
+    }else{
+     url="ajaxListProveedor.php?q="+q+"&s="+s+"&u="+u+"&v="+v;
+    }
   }else{
-   url="ajaxListProveedor.php";
+    if(tipo==1){
+     url="ajaxListSimulacion.php";
+    }else{
+     url="ajaxListProveedor.php";
+    }
   }
+  
   if(tipo!=3){
    ajax=nuevoAjax();
     ajax.open("GET",url,true);
@@ -3140,7 +3236,10 @@ function listarTipoSolicitudAjaxPropuesta(tipo,id){
   }else{
     if($("#id_ibnorca").length){
       var q=$("#id_ibnorca").val();
-      var parametros={"q":q,"numero":numero,"cod_sim":codSim,"cod_prov":codProv};
+      var s=$("#ibnorca_s").val();
+      var u=$("#ibnorca_u").val();
+      var v=$("#ibnorca_v").val();
+      var parametros={"q":q,"s":s,"u":u,"v":v,"numero":numero,"cod_sim":codSim,"cod_prov":codProv};
     }else{
       var parametros={"numero":numero,"cod_sim":codSim,"cod_prov":codProv};
     }
@@ -9622,7 +9721,12 @@ function cambiarEstadoObjetoSolAjax(){
   var codigo=$("#modal_codigopropuesta").val();
   var estado=$("#modal_codigoestado").val();
   var observaciones=$("#modal_observacionesestado").val();
-  var parametros={"obs":observaciones,"estado":estado,"codigo":codigo};
+  if($("#id_servicioibnored_u").length>0){
+    var parametros={"obs":observaciones,"estado":estado,"codigo":codigo,"u":$("#id_servicioibnored_u").val()};
+  }else{
+    var parametros={"obs":observaciones,"estado":estado,"codigo":codigo};
+  }
+  
      $.ajax({
         type: "GET",
         dataType: 'html',
@@ -9638,7 +9742,9 @@ function cambiarEstadoObjetoSolAjax(){
            if($("#id_servicioibnored").length>0){
             var q=$("#id_servicioibnored").val();
             var r=$("#id_servicioibnored_rol").val();
-            alerts.showSwal('success-message','index.php?opcion=listSolicitudRecursosAdmin&q='+q+'&r='+r);   
+            var s=$("#id_servicioibnored_s").val();
+            var u=$("#id_servicioibnored_u").val();
+            alerts.showSwal('success-message','index.php?opcion=listSolicitudRecursosAdmin&q='+q+'&r='+r+'&s='+s+'&u='+u);   
           }else{
              alerts.showSwal('success-message','index.php?opcion=listSolicitudRecursosAdmin');
           }
@@ -9728,3 +9834,164 @@ function seleccionarEsteCheck(id) {
 //   $("#modalDetalleFac").modal("show");  
 // }
 
+//proveedores en comprobantes
+function cargarDatosRegistroComprobantes(){
+  var parametros={"cod":"none"};
+  // $('#cod_tcc').val(cod_tcc);
+  // $('#cod_cc').val(cod_cc);
+  // $('#cod_dcc').val(cod_dcc);
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "../comprobantes/ajaxListarDatosRegistroProveedor.php",
+        data: parametros,
+        beforeSend: function () {
+        $("#texto_ajax_titulo").html("Obteniendo datos del servicio..."); 
+          iniciarCargaAjax();
+        },
+        success:  function (resp) {
+           detectarCargaAjax();
+           $("#datosProveedorNuevo").html(resp);
+           $("#texto_ajax_titulo").html("Procesando Datos"); 
+           $("#pais_empresa").val("26"); //para el pais de BOLIVIA
+           seleccionarDepartamentoServicioComprobantes();
+           $('.selectpicker').selectpicker("refresh");
+           $("#modalAgregarProveedor").modal("show");
+           
+        }
+    });
+}
+
+function seleccionarDepartamentoServicioComprobantes(){
+ var parametros={"codigo":$("#pais_empresa").val()};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "../solicitudes/ajaxListarDepto.php",
+        data: parametros,
+        beforeSend: function () {
+        $("#texto_ajax_titulo").html("Pais: "+$("#pais_empresa option:selected" ).text()); 
+          iniciarCargaAjax();
+        },
+        success:  function (resp) {
+           detectarCargaAjax();
+           $("#texto_ajax_titulo").html("Procesando Datos"); 
+           $("#departamento_empresa").html(resp);
+           $("#departamento_empresa").val("480"); // departamento de LA PAZ
+           seleccionarCiudadServicioComprobantes();
+           $("#ciudad_empresa").val("");
+           $('.selectpicker').selectpicker("refresh");          
+        }
+    }); 
+}
+
+function seleccionarCiudadServicioComprobantes(){
+  var parametros={"codigo":$("#departamento_empresa").val()};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "../solicitudes/ajaxListarCiudad.php",
+        data: parametros,
+        beforeSend: function () {
+        $("#texto_ajax_titulo").html("Estado / Departamento: "+$("#departamento_empresa option:selected" ).text()); 
+          iniciarCargaAjax();
+        },
+        success:  function (resp) {
+           detectarCargaAjax();
+           $("#texto_ajax_titulo").html("Procesando Datos"); 
+           $("#ciudad_empresa").html(resp);
+           $("#ciudad_empresa").val("62"); //PARA LA CIUDAD DE EL ALTO
+           $('.selectpicker').selectpicker("refresh");
+        }
+    }); 
+}
+function guardarDatosProveedorComprobante(){
+  var nombre =$("#nombre_empresa").val();
+  var nit =$("#nit_empresa").val();
+  var pais =$("#pais_empresa").val();
+  var estado =$("#departamento_empresa").val();
+  var ciudad =$("#ciudad_empresa").val();
+  var direccion =$("#direccion_empresa").val();
+  var telefono =$("#telefono_empresa").val();
+  var correo =$("#correo_empresa").val();
+  var nombre_contacto =$("#nombre_contacto").val();
+  var apellido_contacto =$("#apellido_contacto").val();
+  var cargo_contacto =$("#cargo_contacto").val();
+  var correo_contacto =$("#correo_contacto").val();
+
+  // var cod_tcc =$("#cod_tcc").val();
+  // var cod_cc =$("#cod_cc").val();
+  // var cod_dcc =$("#cod_dcc").val();
+
+  // alert("cod_tcc:"+cod_tcc+"-cod_cc:"+cod_cc+"-cod_dcc:"+cod_dcc);
+
+   var ciudad_true=0;
+  // validaciones de campos
+   if(nombre!=""&&nit!=""&&(pais>0)&&(estado>0)&&direccion!=""&&telefono!=""&&correo!=""&&nombre_contacto!=""&&apellido_contacto!=""&&cargo_contacto!=""&&correo_contacto!=""){
+     if(ciudad>0){
+       ciudad_true=1;
+     }else{
+      if(ciudad=="NN"){
+         ciudad_true=2;
+         ciudad="";
+      }
+     }
+     if(ciudad_true>0){
+        if(ciudad_true==1){
+          var otra="";
+        }else{
+          var otra=$("#otra_ciudad").val();
+        }
+        if(otra==""&&ciudad_true==2){
+          Swal.fire("Informativo!", "Ingrese el nombre de la Ciudad", "warning");
+        }else{
+          //proceso de guardado de informacion
+           var parametros={"tipo":$("#tipo_empresa").val(),"nacional":$("#nacional_empresa").val(),"nombre":nombre,"nit":nit,"pais":pais,"estado":estado,"ciudad":ciudad,"otra":otra,"direccion":direccion,"telefono":telefono,"correo":correo,"nombre_contacto":nombre_contacto,"apellido_contacto":apellido_contacto,"cargo_contacto":cargo_contacto,"correo_contacto":correo_contacto};
+            $.ajax({
+               type: "GET",
+               dataType: 'html',
+               url: "../solicitudes/ajaxAgregarNuevoProveedor.php",
+               data: parametros,
+               beforeSend: function () {
+                $("#texto_ajax_titulo").html("Enviando datos al servidor..."); 
+                  iniciarCargaAjax();
+                },
+               success:  function (resp) {
+                  // actualizarRegistroProveedor();
+                  actualizarRegistroProveedorComprobante()
+                  detectarCargaAjax();
+                  $("#texto_ajax_titulo").html("Procesando Datos"); 
+                  if(resp.trim()=="1"){
+                    alerts.showSwal('success-message','../comprobantes/register.php');
+                  }else{
+                    Swal.fire("Error!", "Ocurrio un error de envio", "warning");
+                  }
+               }
+             });  
+        }       
+     }else{
+        Swal.fire("Informativo!", "Todos los campos son requeridos", "warning");
+     }
+   }else{
+     Swal.fire("Informativo!", "Todos los campos son requeridos", "warning");
+   }
+}
+function actualizarRegistroProveedorComprobante(){
+  var codigo = $("#cod_solicitud").val();
+ var parametros={"codigo":"none"};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "../solicitudes/ajaxActualizarProveedores.php",
+        data: parametros,
+        beforeSend: function () {
+        $("#texto_ajax_titulo").html("Actualizando proveedores desde el Servicio Web..."); 
+          iniciarCargaAjax();
+        },
+        success:  function (resp) {
+           detectarCargaAjax();
+           $("#texto_ajax_titulo").html("Procesando Datos"); 
+           alerts.showSwal('success-message','../comprobantes/register.php');
+        }
+    });  
+}

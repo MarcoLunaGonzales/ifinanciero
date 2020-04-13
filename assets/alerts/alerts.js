@@ -194,6 +194,25 @@ alerts = {
         })
     }
 
+    else if (type == 'success-solicitud') {
+      swal({
+        title: 'SOLICITUD DE RECURSOS',
+        text: "Ir a la creación de la solicitud",
+        type: 'warning',
+        confirmButtonClass: 'btn btn-warning',
+        confirmButtonText: 'Ir',
+        buttonsStyling: false
+      }).then((result) => {
+        if (result.value) {
+            location.href=url; 
+            return(true);
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            location.href=url; 
+            return(true);
+          }
+        })
+    }
+
   },
 
   

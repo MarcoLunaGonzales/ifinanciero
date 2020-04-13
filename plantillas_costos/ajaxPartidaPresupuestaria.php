@@ -21,7 +21,7 @@ $globalArea=$_SESSION["globalArea"];
 $idp=$_GET['idp'];
 $unidad=$_GET['unidad'];
 $area=$_GET['area'];
-$valor=$_GET['valor'];
+$valor=$_GET['valor2'];
 $anio=date("Y");
 $anio_pasado=(int)$anio-1;
  
