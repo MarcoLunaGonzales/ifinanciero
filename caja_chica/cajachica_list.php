@@ -96,7 +96,7 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
                                 <?php
                                 if($globalAdmin==1 and $cod_estado==1){
                               ?>
-                              <a href='<?=$urlListDetalleCajaChica;?>&codigo=<?=$cod_cajachica;?>&cod_tcc=<?=$codigo_tipo_caja_Chica?>' rel="tooltip" class="btn btn-warning">
+                              <a href='<?=$urlListDetalleCajaChica;?>&codigo=<?=$cod_cajachica;?>&cod_tcc=<?=$codigo_tipo_caja_Chica?>' rel="tooltip" class="btn" style="vertical-align: middle;padding: 0;font-size:18px;width:30px;height:30px;background-color:#013ADF;">
                                   <i class="material-icons" title="Agregar Detalle">playlist_add</i>
                               </a>
                               <label class="text-danger"> | </label>
