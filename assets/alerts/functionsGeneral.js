@@ -1693,9 +1693,10 @@ function detectarCargaAjax(){
   var idp=str_cuenta[0];
   var unidad=$("#cod_unidad").val();
   var area=$("#cod_area").val();
-  //var valor=$("#cod_mescurso").val();
+
+  var valor2=$("#cod_mescurso").val();
   var valor=$("#codValor").val();
-  var parametros={"idp":idp,"unidad":unidad,"area":area,"valor":valor};
+  var parametros={"idp":idp,"unidad":unidad,"area":area,"valor":valor,"valor2":valor2};
      $.ajax({
         type: "GET",
         dataType: 'html',
@@ -1706,7 +1707,6 @@ function detectarCargaAjax(){
          $("#mensajeDetalle").html("<center><p class='text-muted'></p></center>"); 
         },
         success:  function (resp) {
-          
            detectarCargaAjax();
           //if($("#tipo_dato").val()==1){
             $("#monto_ibnorca").val(redondeo(parseFloat(resp)*$("#cod_mescurso").val()));
