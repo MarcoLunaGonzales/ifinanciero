@@ -42,6 +42,7 @@ $nameEntidad="";
 while ($rowDetalle = $stmt->fetch(PDO::FETCH_BOUND)) {
     $fechaC=$fechaComprobante;
     $glosaC=$glosaComprobante;
+    $glosaC=substr($glosaC, 0, 200);
     $unidadC=$nombreUnidad;
     $codUC=$codigoUnidad;
     $monedaC=$nombreMoneda;
