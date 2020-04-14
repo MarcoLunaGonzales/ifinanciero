@@ -9,19 +9,19 @@ $dbh = new Conexion();
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//try
 //RECIBIMOS LAS VARIABLES
 
-$codigo = $_GET["codigo"];//codigoactivofijo
+$codigo_af = $_GET["codigo"];//codigoactivofijo
 try{
     $stmtAF = $dbh->prepare("SELECT (select p.nombre from proyectos_financiacionexterna p where p.codigo=cod_proy_financiacion) as nom_proy_financiacion
     from activosfijos
      WHERE codigo=:codigo");
-    $stmtAF->bindParam(':codigo',$codigo);
+    $stmtAF->bindParam(':codigo',$codigo_af);
     $stmtAF->execute();
     $result = $stmtAF->fetch();
     $nom_proy_financiacion = $result['nom_proy_financiacion'];    
 
-    $stmt = $dbh->prepare("SELECT codigo,codigoactivo,tipoalta,DATE_FORMAT(fechalta ,'%d/%m/%Y')as fechalta,activo,depreciacionacumulada,valorresidual,estadobien,(select d.nombre from depreciaciones d where d.codigo=cod_depreciaciones) as nombre_depreciaciones,(select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=cod_responsables_responsable) as nombre_personal,(select t.tipo_bien from tiposbienes t where t.codigo=cod_tiposbienes)as tipo_bien,(select uo.nombre from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional) as nombre_uo2,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional) as abrev_uo2 from activosfijos WHERE codigo=:codigo");
+    $stmt = $dbh->prepare("SELECT codigo,codigoactivo,tipoalta,DATE_FORMAT(fechalta ,'%d/%m/%Y')as fechalta,activo,depreciacionacumulada,valorresidual,estadobien,(select d.nombre from depreciaciones d where d.codigo=cod_depreciaciones) as nombre_depreciaciones,(select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=cod_responsables_responsable) as nombre_personal,(select t.tipo_bien from tiposbienes t where t.codigo=cod_tiposbienes)as tipo_bien,(select uo.nombre from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional) as nombre_uo2,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional) as abrev_uo2,(select a.nombre from areas a where a.codigo=cod_area) as nombre_area,(select c.numero from comprobantes  c where c.codigo=cod_comprobante ) as comprobante from activosfijos WHERE codigo=:codigo");
     //Ejecutamos;
-    $stmt->bindParam(':codigo',$codigo);
+    $stmt->bindParam(':codigo',$codigo_af);
     $stmt->execute();
     
     $result = $stmt->fetch();
@@ -49,7 +49,7 @@ try{
     // $created_at = $result['created_at'];
     // $created_by = $result['created_by'];
     // $modified_at = $result['modified_at'];
-    // $modified_by = $result['modified_by'];
+    $comprobante = $result['modified_by'];
     // $vidautilmeses_restante = $result['vidautilmeses_restante'];
     $nombre_personal = $result['nombre_personal'];
     $nombre_depreciaciones = $result['nombre_depreciaciones'];
@@ -59,28 +59,27 @@ try{
     // $nombre_uo = $result['nombre_uo'];
     $nombre_uo2 = $result['nombre_uo2'];
     $abrev_uo2 = $result['abrev_uo2'];
+    $nombre_area = $result['nombre_area'];
     
 
     //==================================================================================================================
     //imagen
     $stmtIM = $dbh->prepare("SELECT * FROM activosfijosimagen  where codigo =:codigo");
-    $stmtIM->bindParam(':codigo',$codigo);
+    $stmtIM->bindParam(':codigo',$codigo_af);
     $stmtIM->execute();
     $resultIM = $stmtIM->fetch();
     //$codigo = $result['codigo'];
     $imagen = $resultIM['imagen'];
-
-
     //==================================================================================================================
 
     //$gestion2 = $_POST["gestion"];
-    $stmt2 = $dbh->prepare("select * 
+    $stmt2 = $dbh->prepare("SELECT * 
     from mesdepreciaciones m, mesdepreciaciones_detalle md
     WHERE m.codigo = md.cod_mesdepreciaciones 
     and md.cod_activosfijos = :codigo");
     // Ejecutamos
     //$stmt2->bindParam(':mes',$mes2);
-    $stmt2->bindParam(':codigo',$codigo);
+    $stmt2->bindParam(':codigo',$codigo_af);
 
     $stmt2->execute();
     //resultado
@@ -116,7 +115,7 @@ try{
     (select eaf.nombre from estados_asignacionaf eaf where eaf.codigo=cod_estadoasignacionaf) as estadoAsigAF,
     fecha_recepcion,observaciones_recepcion,fecha_devolucion,observaciones_devolucion
     from activofijos_asignaciones
-    where cod_activosfijos =".$codigo;
+    where cod_activosfijos =".$codigo_af." order by fecha_recepcion desc";
         $statement2 = $dbh->query($query2);
 
 
@@ -142,18 +141,19 @@ $html.=  '<header class="header">'.
             '<div id="header_titulo_texto">Ficha De Activo Fijo</div>'.
 
             '<br><br><br><br>'.
-            '<table align="center">'.
+            '<table align="center" >'.
                 '<tbody>';                
 
                     $row = $stmt2->fetch();
                         $d2_valorresidual_aux = $row["d2_valorresidual"];
                         $d10_valornetobs_aux = $row["d10_valornetobs"];
                     $html.='<tr>'.
-                        '<td class="text-left small">'.
+                        '<td class="text-left small" >'.
                             '<p>'.
                                 '<b>Código Activo : </b>'.$codigoactivo.'<br>'.
                                 '<b>Descripción : </b>'.$activo.'<br>'.
                                 '<b>Oficina : </b>'.$nombre_uo2.' <br>'.
+                                '<b>Area : </b>'.$nombre_area.' <br>'.
                                 '<b>Rubro : </b>'.$nombre_depreciaciones.' <br>'.
                                 '<b>Responsable : </b>'.$nombre_personal.' <br>'.
                                 '<b>Tipo alta : </b>'.$tipoalta.'<br>'.
@@ -166,9 +166,10 @@ $html.=  '<header class="header">'.
                                 '<b>Proyecto Financiación : </b>'.$nom_proy_financiacion.
                             '</p>'.
                         '</td>'.
-                        '<td class="text-right small">';
-                            
-                            '<img src="imagenes/'.$imagen.'" style="width: 150px; height: 150px;"><br>';
+                        '<td class="text-center small">'; if($imagen!="" || $imagen!=null){
+                            $html.='<img src="imagenes/'.$imagen.'" style="width: 100px; height:100px;"><br>';
+                            }
+                                                        
                                 $dir = 'qr_temp/';
                                 if(!file_exists($dir)){
                                     mkdir ($dir);}
@@ -176,7 +177,7 @@ $html.=  '<header class="header">'.
                                 $tamanio = 2; //tamaño de imagen que se creará
                                 $level = 'L'; //tipo de precicion Baja L, mediana M, alta Q, maxima H
                                 $frameSize = 1; //marco de qr                                
-                                $contenido = "Cod:".$codigoactivo."\nRubro:".$nombre_depreciaciones."\nDesc:".$activo."\nRespo.:".$abrev_uo2.' - '.$nombre_personal;
+                                $contenido = "Cod:".$codigoactivo."\nRubro:".$nombre_depreciaciones."\nDesc:".$activo."\nRespo.:".$abrev_uo2." - ".$nombre_personal."\n NC:".$comprobante;
                                 QRcode::png($contenido, $fileName, $level, $tamanio,$frameSize);
                                 $html.='<img src="'.$fileName.'"/>';
                         $html.='</td>'.

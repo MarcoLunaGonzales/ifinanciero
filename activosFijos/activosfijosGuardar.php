@@ -55,8 +55,8 @@ try {
     //$created_by=$_POST["created_by"];
     //$modified_at=$_POST["modified_at"];
     //$modified_by=$_POST["modified_by"];    
-    if(isset($_POST["cod_af_proveedores"])){
-        $cod_af_proveedores=$_POST["cod_af_proveedores"];
+    if(isset($_POST["proveedores"])){
+        $cod_af_proveedores=$_POST["proveedores"];
     }else $cod_af_proveedores=null;
     $numerofactura=$_POST["numerofactura"];
     $bandera_depreciar = 'NO';#LA PRIMERA VEZ LUEGO SE CAMBIA A SI Y DEPRECIA
@@ -203,13 +203,15 @@ try {
             $bandera_depreciar = 'NO';//SIGNIFICA FLASH
         //preparamos para actualizar
 
-        $stmt = $dbh->prepare("UPDATE activosfijos set codigoactivo=:codigoactivo,tipoalta=:tipoalta,fechalta=:fechalta,
+        $sql="UPDATE activosfijos set codigoactivo=:codigoactivo,tipoalta=:tipoalta,fechalta=:fechalta,
         indiceufv=:indiceufv,tipocambio=:tipocambio,moneda=:moneda,valorinicial=:valorinicial,
         depreciacionacumulada=:depreciacionacumulada,valorresidual=:valorresidual,
         cod_depreciaciones=:cod_depreciaciones,cod_tiposbienes=:cod_tiposbienes,
         vidautilmeses=:vidautilmeses,estadobien=:estadobien,otrodato=:otrodato,cod_empresa=:cod_empresa,activo=:activo,
         vidautilmeses_restante=:vidautilmeses_restante,cod_af_proveedores=:cod_af_proveedores,
-        numerofactura=:numerofactura, bandera_depreciar = :bandera_depreciar,cod_proy_financiacion=:cod_proy_financiacion,tipo_af=:cod_tiposactivos where codigo = :codigo");
+        numerofactura=:numerofactura, bandera_depreciar = :bandera_depreciar,cod_proy_financiacion=:cod_proy_financiacion,tipo_af=:cod_tiposactivos where codigo = :codigo";
+
+        $stmt = $dbh->prepare($sql);
         //bind
         //created_at=:created_at,created_by=:created_by,modified_at=:modified_at,modified_by=:modified_by,
        
@@ -239,6 +241,7 @@ try {
 
         $flagSuccess=$stmt->execute();
 
+        // echo "prov:".$cod_af_proveedores;
         //si cambio la imagen reemplazar...
 
         //1 obtener la imagen anterior
