@@ -5697,15 +5697,17 @@ function verEstadosCuentas(fila,cuenta){
 
     if($("#edicion").length>0){
       var edicion=1;
+      var codigo_comprobante=$("#codigo_comprobante").val();
     }else{
       var edicion=0;
+      var codigo_comprobante=0;
     }
     if(itemEstadosCuentas[fila-1].length>0){   
      // alert("mm:"+itemEstadosCuentas[fila-1][0].cod_comprobantedetalle)
       var comprobanteOrigen=itemEstadosCuentas[fila-1][0].cod_comprobantedetalle;
-       var parametros={"edicion":edicion,"cod_cuenta":cod_cuenta,"cod_cuenta_auxiliar":cod_cuenta_auxiliar,"tipo_comprobante":tipoComprobante,"comprobante_origen":comprobanteOrigen};
+       var parametros={"codigo_comprobante":codigo_comprobante,"edicion":edicion,"cod_cuenta":cod_cuenta,"cod_cuenta_auxiliar":cod_cuenta_auxiliar,"tipo_comprobante":tipoComprobante,"comprobante_origen":comprobanteOrigen};
     }else{
-      var parametros={"edicion":edicion,"cod_cuenta":cod_cuenta,"cod_cuenta_auxiliar":cod_cuenta_auxiliar,"tipo_comprobante":tipoComprobante};
+      var parametros={"codigo_comprobante":codigo_comprobante,"edicion":edicion,"cod_cuenta":cod_cuenta,"cod_cuenta_auxiliar":cod_cuenta_auxiliar,"tipo_comprobante":tipoComprobante};
     }
     
     //PASA Y MOSTRAMOS LOS ESTADOS DE CUENTA    

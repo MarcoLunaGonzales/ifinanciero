@@ -83,7 +83,13 @@ $sqlZ="SELECT e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar,(select concat(c.c
 
     $fechaComprobante=strftime('%d/%m/%Y',strtotime($fechaComprobante));
     //SACAMOS CUANTO SE PAGO DEL ESTADO DE CUENTA.
-    $sqlContra="SELECT sum(monto)as monto from estados_cuenta e where e.cod_comprobantedetalleorigen='$codigoX'";
+    if(isset($_GET['edicion'])){
+      $codigoComprobante=$_GET['codigo_comprobante'];
+      $sqlContra="SELECT sum(e.monto)as monto from estados_cuenta e join comprobantes_detalle cd on cd.codigo=e.cod_comprobantedetalle where e.cod_comprobantedetalleorigen='$codigoX' and cd.cod_comprobante!='$codigoComprobante'";
+    }else{
+      $sqlContra="SELECT sum(monto)as monto from estados_cuenta e where e.cod_comprobantedetalleorigen='$codigoX'";
+    }
+    
 //    echo $sqlContra;
     $stmtContra = $dbh->prepare($sqlContra);
     $stmtContra->execute();
@@ -116,8 +122,8 @@ $sqlZ="SELECT e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar,(select concat(c.c
     $saldoIndividual=$montoX-$montoContra;
     if(isset($_GET['edicion'])){
       $edicion=$_GET['edicion'];
-      if($edicion==1){
-       if(($tipoComprobanteX!=3)&&$codOrigen==1){
+      /*if($edicion==1){
+       if(($tipoComprobanteX!=3)){
         if($tipoComprobanteX==1){
          $saldoIndividual=$montoX;
          $montoContra=0;
@@ -126,15 +132,15 @@ $sqlZ="SELECT e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar,(select concat(c.c
          $montoContra=0;
         }     
        }      
-      }
+      }*/
     }else{
       $edicion=0;
     }
     $saldo=$saldo+$saldoIndividual;
-    if($montoContra<$montoX||$edicion!=0){
+    if($montoContra<$montoX){
     ?>
     <tr class="<?=$estiloFila?> det-estados">
-      <td class="text-center small"><?=$codigoX?>/<?=$nombreUnidadO;?></td>
+      <td class="text-center small"><?=$codigoX?>/<?=$nombreUnidadO;?> <?=$codigoComprobante?></td>
       <td class="text-center small"><?=$nombreTipoComprobante;?></td>
       <td class="text-center small"><?=$numeroComprobante;?></td>
       <td class="text-left small"><?=$fechaComprobante;?></td>
