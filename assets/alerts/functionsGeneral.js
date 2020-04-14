@@ -8770,16 +8770,17 @@ function agregarAtributoAjax(){
   }
 
    if(($("#productos_div").hasClass("d-none"))){
-     $("#pais_empresa").val("26####Bolivia"); //para el pais de BOLIVIA
+     //solo sitio
+    $("#lbl_nombre_atributo").text("Nombre");
+   }else{
+    $("#lbl_nombre_atributo").text("Producto");
+   }
+   $("#pais_empresa").val("26####Bolivia"); //para el pais de BOLIVIA
     if($("#modalEditPlantilla").length){
       seleccionarDepartamentoServicioSitioModal(1);  
     }else{
        seleccionarDepartamentoServicioSitio(1);  
     }
-    $("#lbl_nombre_atributo").text("Nombre");
-   }else{
-    $("#lbl_nombre_atributo").text("Producto");
-   }
 
 }
 
@@ -8796,6 +8797,9 @@ function listarAtributo(){
       titulos.append($('<th>').addClass('').text('MARCA'));
       titulos.append($('<th>').addClass('').text('NORMA'));
       titulos.append($('<th>').addClass('').text('SELLO'));
+      titulos.append('<td width="15%">PAIS</td>');
+      titulos.append('<td width="15%">DEPTO</td>');
+      titulos.append('<td width="15%">CIUDAD</td>');
      }else{
       titulos.append('<td width="15%">PAIS</td>');
       titulos.append('<td width="15%">DEPTO</td>');
@@ -8824,6 +8828,9 @@ function listarAtributo(){
       row.append($('<td>').addClass('').text(itemAtributos[i].marca));
       row.append($('<td>').addClass('').text(itemAtributos[i].norma));
       row.append($('<td>').addClass('').text(itemAtributos[i].sello));
+      row.append($('<td>').addClass('').text(itemAtributos[i].nom_pais));
+      row.append($('<td>').addClass('').text(itemAtributos[i].nom_estado));
+      row.append($('<td>').addClass('').text(itemAtributos[i].nom_ciudad));
      }else{
       row.append($('<td>').addClass('').text(itemAtributos[i].nom_pais));
       row.append($('<td>').addClass('').text(itemAtributos[i].nom_estado));
@@ -8864,7 +8871,13 @@ function guardarAtributoItem(){
     var norma="";
     var sello="";
     var marca="";
-    if($("#pais_empresa").val()!=null){
+      
+  }else{
+    var norma=$("#modal_norma").val();
+    var sello=$("#modal_sello").val();
+    var marca=$("#modal_marca").val();
+  }
+  if($("#pais_empresa").val()!=null){
     var pais=$("#pais_empresa").val().split("####")[0];
     var nom_pais=$("#pais_empresa").val().split("####")[1];
     }else{
@@ -8884,18 +8897,7 @@ function guardarAtributoItem(){
     }else{
       var ciudad="";
       var nom_ciudad="SIN CIUDAD";
-    }  
-  }else{
-    var norma=$("#modal_norma").val();
-    var sello=$("#modal_sello").val();
-    var marca=$("#modal_marca").val();
-    var pais="";
-    var estado="";
-    var ciudad="";
-    var nom_pais="";
-    var nom_estado="";
-    var nom_ciudad="";
-  }
+    }
   var fila=$("#modal_fila").val();
   if(fila<0){
     var codigoNuevo=itemAtributos.length;
@@ -8986,7 +8988,11 @@ function editarAtributo(fila){
   }
   if(($("#div_marca").hasClass("d-none"))){
     $("#lbl_nombre_atributo").text("Nombre");
-    $('#pais_empresa').val(itemAtributos[fila].pais+"####"+itemAtributos[fila].nom_pais);
+      
+  }else{
+    $("#lbl_nombre_atributo").text("Nombre");
+  }
+  $('#pais_empresa').val(itemAtributos[fila].pais+"####"+itemAtributos[fila].nom_pais);
     if($("#modalEditPlantilla").length){
       if(itemAtributos[fila].nom_pais!="SIN REGISTRO"){
         seleccionarDepartamentoServicioSitioModal(0,itemAtributos[fila].estado+"####"+itemAtributos[fila].nom_estado,itemAtributos[fila].ciudad+"####"+itemAtributos[fila].nom_ciudad);
@@ -8998,11 +9004,7 @@ function editarAtributo(fila){
       }
        
     }   
-    $('.selectpicker').selectpicker("refresh");  
-  }else{
-    $("#lbl_nombre_atributo").text("Nombre");
-  }
-
+    $('.selectpicker').selectpicker("refresh");
   $('#modal_direccion').val(itemAtributos[fila].direccion); 
   $("#modal_atributo").modal("show");
   if($("#modalEditPlantilla").length){

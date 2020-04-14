@@ -165,6 +165,9 @@ if(isset($_GET['nombre'])){
       }else{
         $montoCuenta=$rowCuenta['montoext'];
       }
+
+      $montoCuenta=0; //para inicialiar valores en 0 costos variables
+
       $anioParaRegistroAuditor=-1;
   for ($i=$inicioAnio; $i<=$anios; $i++) { 
       $porcentaje=((float)$montoCuenta*100)/(float)$montoLocal;
@@ -184,6 +187,7 @@ if(isset($_GET['nombre'])){
       $codC=$rowDetallesPlan['cod_cuenta'];
       $glosaD=$rowDetallesPlan['glosa'];
       $montoD=$rowDetallesPlan['monto_total'];
+       // antes de setear los variables a 0 
       $montoDE=$rowDetallesPlan['monto_totalext'];
       $editD=$rowDetallesPlan['editado_alumno'];
       $editDE=$rowDetallesPlan['editado_alumnoext'];
@@ -213,7 +217,7 @@ if(isset($_GET['nombre'])){
          }
 
          //$codigoAuditorSimulacion=$rowAudPlantilla['cod_tipoauditor'];
-         $codigoAuditorSimulacionDias=$rowAudPlantilla['dias'];
+         $codigoAuditorSimulacionDias=0; // antes de setear los costos variables a 0 $codigoAuditorSimulacionDias=$rowAudPlantilla['dias'];
          $codigoAuditorSimulacionCantidad=$rowAudPlantilla['cantidad'];
          $monto_generado+=$codigoAuditorSimulacionDias*$codigoAuditorSimulacionCantidad;
          $dbhSS = new Conexion();

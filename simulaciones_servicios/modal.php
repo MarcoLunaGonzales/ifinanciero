@@ -22,7 +22,7 @@
                           <label class="col-sm-2 col-form-label" id="lbl_nombre_atributo">Nombre</label>
                            <div class="col-sm-4">                     
                              <div class="form-group">
-                               <input type="text" class="form-control" name="modal_nombre" id="modal_nombre" value="">
+                               <input type="text" class="form-control" name="modal_nombre" id="modal_nombre" value="" onkeyup="javascript:this.value=this.value.toUpperCase();">
                              </div>
                            </div>
                            <?php if($codAreaX==39){
@@ -31,7 +31,7 @@
                              <label class="col-sm-2 col-form-label">Marca</label>
                              <div class="col-sm-10">                     
                               <div class="form-group">
-                               <input type="text" class="form-control" name="modal_marca" id="modal_marca" value="">
+                               <input type="text" class="form-control" name="modal_marca" id="modal_marca" value="" onkeyup="javascript:this.value=this.value.toUpperCase();">
                                </div>
                              </div>  
                            </div> 
@@ -47,16 +47,50 @@
                           <label class="col-sm-2 col-form-label">Norma</label>
                            <div class="col-sm-4">                     
                              <div class="form-group">
-                               <input type="text" class="form-control" name="modal_norma" id="modal_norma" value="">
+                               <input type="text" class="form-control" name="modal_norma" id="modal_norma" value="" onkeyup="javascript:this.value=this.value.toUpperCase();">
                              </div>
                            </div>
                            <label class="col-sm-1 col-form-label">Nº Sello</label>
                            <div class="col-sm-5">                     
                              <div class="form-group">
-                               <input type="text" class="form-control" name="modal_sello" id="modal_sello" value="">
+                               <input type="text" class="form-control" name="modal_sello" id="modal_sello" value="" onkeyup="javascript:this.value=this.value.toUpperCase();">
                              </div>
                            </div>  
                       </div>
+                      <div class="row col-sm-12" id="div_pais">
+                          <div class="row col-sm-12">
+                       <label class="col-sm-2 col-form-label">Pais</label>
+                       <div class="col-sm-10">
+                        <div class="form-group">
+                          <select name="pais_empresa" id="pais_empresa" data-size="6" onchange="seleccionarDepartamentoServicioSitioModal()" class="form-control form-control-sm selectpicker" data-style="btn btn-info">
+                            <option disabled selected value="">--SELECCIONE--</option>
+                             <?php
+                                  foreach ($lista->lista as $listas) {
+                                      echo "<option value='".$listas->idPais."####".$listas->paisNombre."'>".$listas->paisNombre."</opction>";
+                                  }?>
+                          </select>
+                        </div>
+                       </div>
+                      </div>
+                      <div class="row col-sm-12">
+                       <label class="col-sm-2 col-form-label">Dep / Est</label>
+                       <div class="col-sm-10">
+                        <div class="form-group">
+                          <select name="departamento_empresa"  data-size="6" onchange="seleccionarCiudadServicioSitioModal()" id="departamento_empresa" class="form-control form-control-sm selectpicker" data-style="btn btn-info">
+                          </select>
+                        </div>
+                       </div>
+                      </div>
+                      <div class="row col-sm-12">
+                       <label class="col-sm-2 col-form-label">Ciudad</label>
+                       <div class="col-sm-10">
+                        <div class="form-group">
+                          <select name="ciudad_empresa" onchange="" data-size="6" id="ciudad_empresa" class="form-control form-control-sm selectpicker" data-style="btn btn-success">
+                          </select>
+                        </div>
+                       </div>
+                      </div>  
+                      </div>  
                             <?php
                                  }else{
                               ?>
@@ -101,7 +135,7 @@
                           <label class="col-sm-2 col-form-label">Direcci&oacute;n</label>
                            <div class="col-sm-10">                     
                              <div class="form-group">
-                               <input type="text" class="form-control" name="modal_direccion" id="modal_direccion" value="">
+                               <input type="text" class="form-control" name="modal_direccion" id="modal_direccion" value="" onkeyup="javascript:this.value=this.value.toUpperCase();">
                              </div>
                            </div>  
                       </div>
@@ -486,15 +520,20 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                                   <td>
                                     <select class="form-control selectpicker form-control-sm" data-style="fondo-boton fondo-boton-active" name="anio<?=$an?>SSS0" id="anio<?=$an?>SSS0">
                                           <?php 
-                                          for ($i=0; $i <= $anioGeneral; $i++) { 
-                                             $etapas="Seg ".($i-1);
+                                          for ($i=$inicioAnio; $i <= $anioGeneral; $i++) { 
+                                             if($codAreaX!=39){
+                                            $etapas="Seg ".($i-1);
 
                                               if($codAreaX!=39){
                                                if($i==0||$i==1){
                                                 $etapas="Et ".($i+1).""; 
                                                }
                                               }
-                                              if($i==$codAnioPre){
+                                              
+                                              }else{
+                                               $etapas="Año ".$i; 
+                                              } 
+                                             if($i==$codAnioPre){
                                                   ?><option value="<?=$i?>" selected><?=$etapas?></option><?php
                                                 }else{
                                                   ?><option value="<?=$i?>"><?=$etapas?></option><?php
@@ -608,15 +647,20 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                                      <td>
                                         <select class="form-control selectpicker form-control-sm" data-style="fondo-boton fondo-boton-active" name="anio<?=$an?>SSS<?=$iii?>" id="anio<?=$an?>SSS<?=$iii?>">
                                           <?php 
-                                          for ($i=0; $i <= $anioGeneral; $i++) { 
-                                             $etapas="Seg ".($i-1);
+                                          for ($i=$inicioAnio; $i <= $anioGeneral; $i++) {
+                                          if($codAreaX!=39){
+                                            $etapas="Seg ".($i-1);
 
                                               if($codAreaX!=39){
                                                if($i==0||$i==1){
                                                 $etapas="Et ".($i+1).""; 
                                                }
                                               }
-                                              if($i==$codAnioPre){
+                                              
+                                              }else{
+                                               $etapas="Año ".$i; 
+                                              } 
+                                             if($i==$codAnioPre){
                                                   ?><option value="<?=$i?>" selected><?=$etapas?></option><?php
                                                 }else{
                                                   ?><option value="<?=$i?>"><?=$etapas?></option><?php
@@ -697,14 +741,19 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                       
                          <?php   
                           for ($an=$inicioAnio; $an<=$anioGeneral; $an++) { 
-                            $active="";
-                            $etapas="Seguimiento ".($an-1);
+                            if($codAreaX!=39){
+                             $etapas="Seguimiento ".($an-1);
 
                             if($codAreaX!=39){
                               if($an==0||$an==1){
                                $etapas="Etapa ".($an+1).""; 
                               }
                             }
+                            }else{
+                                $etapas="Año ".$an; 
+                            } 
+                            $active="";
+                            
                             if($an==1){
                               $active="active";
                             }
