@@ -21,7 +21,7 @@ try{
 		(select pr.abreviatura from proyectos_financiacionexterna pr where pr.codigo=af.cod_proy_financiacion)as proy_financiacion,
 		 (select uo.abreviatura from unidades_organizacionales uo where uo.codigo=af.cod_unidadorganizacional)as nombre_unidad, 
 		 (select a.abreviatura from areas a where a.codigo=af.cod_area)as nombre_area,
-		 (select concat_ws(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=af.cod_responsables_responsable)as nombre_responsable
+		 (select concat_ws(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=af.cod_responsables_responsable)as nombre_responsable(select p.nombre from af_proveedores p where p.codigo=af.cod_af_proveedores) as proveedor
 		from activosfijos af, depreciaciones d, tiposbienes tb 
 		where af.cod_depreciaciones = d.codigo and af.cod_tiposbienes = tb.codigo and af.codigo=$codigo_activo");
 	    $stmtCajaChica->execute();
@@ -38,6 +38,7 @@ try{
 	    $monto_af = $resultCCD['valorinicial'];
 	    $nombre_responsable = $resultCCD['nombre_responsable'];
 	    $cod_depre = $resultCCD['cod_depre'];
+	    $proveedor = $resultCCD['proveedor'];
 	    
 
 		//datos para el comprbant
@@ -51,7 +52,7 @@ try{
 		$tipoComprobante=3;
 
 		$numeroComprobante=obtenerCorrelativoComprobante($tipoComprobante, $cod_unidadorganizacional, $gestionTrabajo, $mesTrabajo);
-		$concepto_contabilizacion="REGISTRO DE F/".$numerofactura." COMPRA DE ".$activo.".";
+		$concepto_contabilizacion="REGISTRO DE F/".$numerofactura." ".$proveedor." COMPRA DE ".$activo.".";
 
 		$codComprobante=obtenerCodigoComprobante();
 		// $cod_contra_cuenta=obtenerValorConfiguracion(28);

@@ -2094,6 +2094,36 @@ function ajaxAFunidadorganizacionalArea(combo){
   }
   ajax.send(null)  
 }//unidad_area-cargo
+function ajaxPersonalUbicacionTrasfer(combo){
+  var contenedor;
+  var codigo_UO=combo.value;
+  contenedor = document.getElementById('div_personal_UO');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'activosFijos/ubicacionPersonalAjaxTransfer.php?codigo_UO='+codigo_UO,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);
+      ajaxAFunidadorganizacionalArea2(codigo_UO);
+    }
+  }
+  ajax.send(null)
+}
+function ajaxAFunidadorganizacionalArea2(codigo_UO){
+  // var contenedor;
+  // var codigo_UO=combo.value;
+  contenedor = document.getElementById('div_contenedor_area');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'activosFijos/ubicacionesUnidadAjax.php?codigo_UO='+codigo_UO,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);   
+       
+    }
+  }
+  ajax.send(null)  
+}//unidad_area-cargo
 
 function ajaxPersonalUbicacion(codigo_UO){
   // var cod_uo=$("#cod_unidadorganizacional").val();  
@@ -2147,20 +2177,7 @@ function ajaxCajaCPersonalArea(codigo_personal){
   ajax.send(null)  
 }
 
-function ajaxPersonalUbicacionTrasfer(combo){
-  var contenedor;
-  var codigo_UO=combo.value;
-  contenedor = document.getElementById('div_personal_UO');
-  ajax=nuevoAjax();
-  ajax.open('GET', 'activosFijos/ubicacionPersonalAjaxTransfer.php?codigo_UO='+codigo_UO,true);
-  ajax.onreadystatechange=function() {
-    if (ajax.readyState==4) {
-      contenedor.innerHTML = ajax.responseText;
-      $('.selectpicker').selectpicker(["refresh"]);
-    }
-  }
-  ajax.send(null)
-}
+
 
 
 function agregaform(datos){

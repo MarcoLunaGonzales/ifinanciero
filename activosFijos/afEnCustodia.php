@@ -87,8 +87,11 @@ $stmt->bindColumn('fecha_recepcion', $fecha_recepcion);
                           ?>                          
                             <tr>
                                 <td  class="td-actions text-right">
-                                  <a href='<?=$printAFCustodia;?>?codigo=<?=$cod_activo;?>' target="_blank" rel="tooltip" class="<?=$buttonEdit;?>">
+                                  <!-- <a href='<?=$printAFCustodia;?>?codigo=<?=$cod_activo;?>' target="_blank" rel="tooltip" class="<?=$buttonEdit;?>">
                                     <i class="material-icons" title="Imprimir">print</i>
+                                  </a> -->
+                                  <a href='<?=$printDepreciacion1;?>?codigo=<?=$cod_activo;?>' target="_blank" rel="tooltip" class="btn btn-info">
+                                    <i class="material-icons" title="Ficha Activo Fijo" style="color:black">print</i>
                                   </a>
                                 </td>
                                 <td><?=$index?></td>

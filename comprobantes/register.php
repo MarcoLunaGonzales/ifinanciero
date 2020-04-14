@@ -271,8 +271,14 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
 					  <h6 class="card-title">Detalle</h6>
 					</div>
 					<h4 class="card-title" align="right">
-						<div class="row">
-							<div class="col-sm-3" align="left">
+						<div class="row">							
+							<div class="col-sm-9">
+							    <div class="form-group">
+					          		<label for="glosa" class="bmd-label-static">Glosa</label>
+									<input class="form-control" name="glosa" id="glosa" required="true" rows="1" value=""/>
+								</div>
+							</div>	
+							<div class="col-sm-3" align="right">
 			                   <div class="form-group">                                
 			                        <a href="#" style="background-color: #0489B1" class="btn btn-round btn-fab btn-sm" onclick="cargarDatosRegistroComprobantes()">
 			                        	<i class="material-icons" title="Add Proveedor">add</i>
@@ -281,13 +287,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
 			                        	<i class="material-icons" title="Actualizar Proveedor">update</i>
 			                        </a> 
 			                   </div>
-			                </div>  
-							<div class="col-sm-9">
-							    <div class="form-group">
-					          		<label for="glosa" class="bmd-label-static">Glosa</label>
-									<input class="form-control" name="glosa" id="glosa" required="true" rows="1" value=""/>
-								</div>
-							</div>	
+			                </div> 
 
 						</div>
 						

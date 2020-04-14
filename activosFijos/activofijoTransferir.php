@@ -10,12 +10,12 @@ $sqlX="SET NAMES 'utf8'";
 $stmtX = $dbh->prepare($sqlX);
 $stmtX->execute();
 
-
+$codigo_af=$codigo;
 $globalAdmin=$_SESSION["globalAdmin"];
 
 //asignaciones
 $query2 = "SELECT afs.*,af.activo,(select d.nombre from depreciaciones d where d.codigo=af.cod_depreciaciones) as nombreRubro,(select d.tipo_bien from tiposbienes d where d.codigo=af.cod_tiposbienes) as nombreBien,
-(select CONCAT_WS(' ',p.primer_nombre,p.paterno,p.materno) from personal p where p.codigo=afs.cod_personal) as nombre_personal,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=afs.cod_unidadorganizacional)as nombre_uo FROM activofijos_asignaciones afs, activosfijos af where afs.cod_activosfijos=af.codigo and af.codigo  = ".$codigo;
+(select CONCAT_WS(' ',p.primer_nombre,p.paterno,p.materno) from personal p where p.codigo=afs.cod_personal) as nombre_personal,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=afs.cod_unidadorganizacional)as nombre_uo FROM activofijos_asignaciones afs, activosfijos af where afs.cod_activosfijos=af.codigo and af.codigo  = ".$codigo_af;
 $statement2 = $dbh->query($query2);
 //unidad
 $queryUO = "SELECT * from unidades_organizacionales order by 2";
@@ -62,6 +62,7 @@ $responsable='';
                           <?php $index=1;
                               while ($row = $statement2->fetch()) { 
                                   $codigo=$row["codigo"];
+                                  $cod_activosfijos=$row["cod_activosfijos"];
                                   $fechaasignacion=$row["fechaasignacion"];
                                   $estadobien_asig=$row["estadobien_asig"];
                                   $nombre_personal=$row["nombre_personal"];
@@ -73,7 +74,7 @@ $responsable='';
                                   
                                 }?>
                              <tr>
-                                <td><?=$codigo;?></td>
+                                <td><?=$cod_activosfijos;?></td>
                                 <td><small><?=$nombreActivo;?></small></td>
                                 <td>
                                   <?php
@@ -85,7 +86,7 @@ $responsable='';
                                   $tamanio = 2.5; //tamaño de imagen que se creará
                                   $level = 'L'; //tipo de precicion Baja L, mediana M, alta Q, maxima H
                                   $frameSize = 1; //marco de qr
-                                  $contenido = "Cod:".$codigo."\nRubro:".$nombreRubro."\nDesc:".$nombreActivo."\nRespo.:".$nombre_uo.' - '.$nombre_personal;
+                                  $contenido = "Cod:".$cod_activosfijos."\nRubro:".$nombreRubro."\nDesc:".$nombreActivo."\nRespo.:".$nombre_uo.' - '.$nombre_personal;
                                   QRcode::png($contenido, $fileName, $level,$tamanio,$frameSize);
                                   echo '<img src="'.$fileName.'"/>';
                                   ?>
@@ -124,7 +125,7 @@ $responsable='';
                       <label class="col-sm-2 col-form-label">Código Activo</label>
                       <div class="col-sm-4">
                           <div class="form-group">
-                              <input type="text"  readonly="readonly" style="padding-left:20px" class="form-control" name="codigoactivo" id="codigoactivo" required="true"  value="<?=$codigo;?>"/>
+                              <input type="text"  readonly="readonly" style="padding-left:20px" class="form-control" name="codigoactivo" id="codigoactivo" required="true"  value="<?=$codigo_af;?>"/>
                           </div>
                       </div>
                     </div>
@@ -149,12 +150,11 @@ $responsable='';
                       <label class="col-sm-2 col-form-label">Area</label>
                       <div class="col-sm-7">
                         <div class="form-group">
-                            <select id="cod_area" name="cod_area" class="selectpicker form-control form-control-sm" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" required="true">
-                            <option value=""></option>
-                            <?php while ($row = $statementArea->fetch()){ ?>
-                                <option value="<?=$row["codigo"];?>"><?=$row["abreviatura"];?> - <?=$row["nombre"];?></option>
-                            <?php } ?> 
-                            </select>
+                          <div id="div_contenedor_area">
+                            
+
+                          </div>
+                            
                         </div>
                       </div>
                     </div><!--fin campo area -->

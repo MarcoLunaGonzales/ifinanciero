@@ -24,7 +24,7 @@ try{
     $sqlActivos="SELECT codigo,codigoactivo,activo,
 (select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional)as abr_uo,
 (select a.abreviatura from areas a where a.codigo=cod_area) as abr_area,
-(select concat_ws(' ',r.paterno,r.materno,r.primer_nombre) from personal r where r.codigo=cod_responsables_responsable) as nombre_responsable
+(select concat_ws(' ',r.paterno,r.materno,r.primer_nombre) from personal r where r.codigo=cod_responsables_responsable) as nombre_responsable,(select c.numero from comprobantes  c where c.codigo=cod_comprobante ) as comprobante
 from activosfijos 
 where cod_estadoactivofijo = 1 and cod_unidadorganizacional in ($unidadOrgString) and cod_area in ($areaString) and cod_depreciaciones in ($rubrosString) and cod_responsables_responsable in ($personalString)";  
 
@@ -40,6 +40,7 @@ $stmtActivos->bindColumn('activo', $activoX);
 $stmtActivos->bindColumn('abr_uo', $abr_uoX);
 $stmtActivos->bindColumn('abr_area', $abr_areaX);
 $stmtActivos->bindColumn('nombre_responsable', $nombre_responsableX);
+$stmtActivos->bindColumn('comprobante', $comprobanteX);
     
 
 
@@ -87,7 +88,7 @@ $html.='<table class="table">'.
                                             $level = 'Q'; //tipo de precicion Baja L, mediana M, alta Q, maxima H
                                             $frameSize = 1; //marco de qr
                                             // $contenido = $codigoActivoX;
-                                            $contenido = "Cod:".$codigoX."\nRubro:".$nombreRubro."\nDesc:".$activoX."\nRespo.:".$abr_uoX.' - '.$nombre_responsableX;
+                                            $contenido = "Cod:".$codigoX."\nRubro:".$nombreRubro."\nDesc:".$activoX."\nRespo.:".$abr_uoX." - ".$nombre_responsableX."\n NC:".$comprobante;
                                             //QRcode::png($contenido, $fileName, $level, $tamanio,$frameSize);
                                             QRcode::png($contenido, $fileName, $level, $tamanio,$frameSize);
                                             $html.= '<img src="'.$fileName.'"/>';

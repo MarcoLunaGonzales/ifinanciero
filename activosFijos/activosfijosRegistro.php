@@ -381,7 +381,7 @@ if ($codigo > 0){
                                         <select id="cod_responsables_responsable" name="cod_responsables_responsable" class="selectpicker form-control form-control-sm" 
                                         data-style="btn btn-primary" data-size="5">
                                             <?php while ($row = $stmtRR->fetch()){ ?>
-                                                <option <?=($cod_responsables_responsable==$row["codigo"])?"selected":"";?>  <?=($codigo>0)?"disabled":"";?> value="<?=$row["codigo"];?>">
+                                                <option <?=($cod_responsables_responsable==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>">
                                                     <?=$row["paterno"].' '.$row["materno"].' '.$row["primer_nombre"];?>
                                                 </option>
                                             <?php } ?>
@@ -397,7 +397,7 @@ if ($codigo > 0){
                                 <div class="form-group">
                                     <select id="cod_responsables_autorizadopor" name="cod_responsables_autorizadopor" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" data-show-subtext="true" data-live-search="true" required="true">
                                         <?php while ($row = $statementPersonal2->fetch()){ ?>
-                                            <option <?=($cod_responsables_autorizadopor==$row["codigo"])?"selected":"";?>  <?=($codigo>0)?"disabled":"";?> value="<?=$row["codigo"];?>">
+                                            <option <?=($cod_responsables_autorizadopor==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>">
                                                 <?=$row["paterno"].' '.$row["materno"].' '.$row["primer_nombre"];?>
                                             </option>
                                         <?php } ?>

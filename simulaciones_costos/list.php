@@ -98,7 +98,10 @@ $stmt->bindColumn('estado', $estado);
                                     <i class="material-icons text-warning">bar_chart</i> Ver Propuesta
                                  </a> 
                               </div>
-                            </div>                           
+                            </div>
+                            <a class="btn btn-warning" title="Solicitud de Facturación" href='<?=$urlSolicitudfactura;?>&cod=<?=$codigo;?>'>
+                               <i class="material-icons" >receipt</i>                              
+                             </a>                           
                             <?php    
                               }else{
                               ?>
