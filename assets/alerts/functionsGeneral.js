@@ -3123,7 +3123,9 @@ function mayorReporteComprobante(fila){
       "area_costo":null,
       "cuenta_especifica":cuenta,
       "cuenta":null,
-      "unidad":null
+      "unidad":null,
+      "gestion":null,
+      "entidad":null
     };
      $.ajax({
         type: "POST",

@@ -18,10 +18,10 @@ $globalArea=$_SESSION["globalArea"];
 $globalAdmin=$_SESSION["globalAdmin"];
 
 $fechaActual=date("Y-m-d");
-if($_POST["fecha_desde"]==null){
-  $y=date("Y");
-  $desde=strftime('%Y-%m-%d',strtotime($y."/01/01"));
-  $hasta=strftime('%Y-%m-%d',strtotime($y."/31/12"));
+if($_POST["fecha_desde"]==""){
+  $y=$globalNombreGestion;
+  $desde=$y."-01-01";
+  $hasta=$y."-12-31";
 }else{
   $porcionesFechaDesde = explode("-", $_POST["fecha_desde"]);
   $porcionesFechaHasta = explode("-", $_POST["fecha_hasta"]);
@@ -42,6 +42,10 @@ $unidad=$_POST['unidad'];
 
 $gestion= $_POST["gestion"];
 $entidad = $_POST["entidad"];
+
+if($gestion==null){
+  $gestion=$globalGestion;
+}
 
 $stmtG = $dbh->prepare("SELECT * from gestiones WHERE codigo=:codigo");
 $stmtG->bindParam(':codigo',$gestion);
@@ -64,7 +68,7 @@ if(isset($_POST['cuenta_especifica'])){
 if($unidadCosto==null){
   $unidadCosto=[];$unidad=[];
   $iu=0;
-  $stmtUnidad = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM unidades_organizacionales where cod_estado=1 and centro_costos=1 order by 3");
+  $stmtUnidad = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM unidades_organizacionales where cod_estado=1 and centro_costos=1 and codigo='$globalUnidad' order by 3");
   $stmtUnidad->execute();
   while ($rowUnidad= $stmtUnidad->fetch(PDO::FETCH_ASSOC)) {
     $unidadCosto[$iu]=$rowUnidad['codigo'];
