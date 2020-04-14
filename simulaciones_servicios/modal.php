@@ -19,7 +19,7 @@
                 <div class="card-body">
                        <input type="hidden" class="form-control" name="modal_fila" id="modal_fila" value="-1">
                       <div class="row">
-                          <label class="col-sm-2 col-form-label">Nombre</label>
+                          <label class="col-sm-2 col-form-label" id="lbl_nombre_atributo">Nombre</label>
                            <div class="col-sm-4">                     
                              <div class="form-group">
                                <input type="text" class="form-control" name="modal_nombre" id="modal_nombre" value="">
@@ -764,14 +764,15 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                                   <td class="text-right">
                                        <input type="number" readonly min="1" id="cantidad_personal<?=$an?>FFF0" name="cantidad_personal<?=$an?>FFF0" class="form-control text-primary text-right" onchange="" onkeyUp="" value="1">
                                   </td>
-                                  <td>
-                                      <select class="form-control selectpicker form-control-sm" data-style="fondo-boton" name="dias_personal<?=$an?>FFF0" id="dias_personal<?=$an?>FFF0" onchange="calcularTotalPersonalServicioNuevo(<?=$an?>,2)">
+                                  <td class="text-right">
+                                    <input type="number" min="0" id="dias_personal<?=$an?>FFF0" name="dias_personal<?=$an?>FFF0" class="form-control fondo-boton text-right" onchange="calcularTotalPersonalServicioNuevo(<?=$an?>,2)" onkeyUp="calcularTotalPersonalServicioNuevo(<?=$an?>,2)" value="1">
+                                     <!-- <select class="form-control selectpicker form-control-sm" data-style="fondo-boton" name="dias_personal<?=$an?>FFF0" id="dias_personal<?=$an?>FFF0" onchange="calcularTotalPersonalServicioNuevo(<?=$an?>,2)">
                                           <?php 
                                              for ($hf=0; $hf<=$diasSimulacion; $hf++) {
                                               ?><option value="<?=$hf?>"><?=$hf?></option><?php      
                                              }
                                           ?>
-                                      </select>
+                                      </select>-->
                                      </td>
                                     <td class="text-right">
                                        <input type="number" id="modal_montopre<?=$an?>FFF0" name="modal_montopre<?=$an?>FFF0" class="form-control text-primary text-right" onchange="calcularTotalPersonalServicioNuevo(<?=$an?>,2)" onkeyUp="calcularTotalPersonalServicioNuevo(<?=$an?>,2)" value="0" step="0.01">
@@ -857,8 +858,8 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                                       </select>-->
                                      </td>
                                      <td class="text-center">
-
-                                       <select class="form-control selectpicker form-control-sm" data-size="6" data-style="fondo-boton" name="dias_personal<?=$an?>FFF<?=$iii?>" id="dias_personal<?=$an?>FFF<?=$iii?>" onchange="calcularTotalPersonalServicio('<?=$an?>',2)">
+                                       <input type="number" min="0" id="dias_personal<?=$an?>FFF<?=$iii?>" name="dias_personal<?=$an?>FFF<?=$iii?>" class="form-control fondo-boton text-right" onchange="calcularTotalPersonalServicio(<?=$an?>,2)" onkeyUp="calcularTotalPersonalServicio(<?=$an?>,2)" value="<?=$diasPre?>">
+                                       <!--<select class="form-control selectpicker form-control-sm" data-size="6" data-style="fondo-boton" name="dias_personal<?=$an?>FFF<?=$iii?>" id="dias_personal<?=$an?>FFF<?=$iii?>" onchange="calcularTotalPersonalServicio('<?=$an?>',2)">
                                           <?php 
                                              for ($hf=0; $hf<=$diasSimulacion; $hf++) {
                                               if($hf==$diasPre){
@@ -868,7 +869,7 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                                               }      
                                              }
                                           ?>
-                                      </select>
+                                      </select>-->
                                      </td>
                                      <td class="text-right">
                                        <input type="<?=$claseDeshabilitado?>" id="modal_montopre<?=$an?>FFF<?=$iii?>" name="modal_montopre<?=$an?>FFF<?=$iii?>" <?=($banderaHab==0)?"readonly":"";?> class="form-control text-info text-right" onchange="calcularTotalPersonalServicio('<?=$an?>',2)" onkeyUp="calcularTotalPersonalServicio('<?=$an?>',2)" value="<?=$montoPreSi?>" step="0.01">

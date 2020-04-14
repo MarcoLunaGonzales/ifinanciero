@@ -321,7 +321,7 @@ $dbh = new Conexion();
                 <div class="card-body">
                        <input type="hidden" class="form-control" name="modal_fila" id="modal_fila" value="-1">
                       <div class="row">
-                          <label class="col-sm-2 col-form-label">Nombre</label>
+                          <label class="col-sm-2 col-form-label" id="lbl_nombre_atributo">Nombre</label>
                            <div class="col-sm-4">                     
                              <div class="form-group">
                                <input type="text" class="form-control" name="modal_nombre" id="modal_nombre" value="">

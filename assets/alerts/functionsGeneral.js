@@ -2496,7 +2496,7 @@ function guardarSimulacionServicio(){
           iniciarCargaAjax();
         },
         success:  function (resp) {
-          alert(resp);
+         // alert(resp);
           detectarCargaAjax();
          if(!($("#codigo_servicioibnorca").length)){
             alerts.showSwal('success-message','simulaciones_servicios/registerSimulacion.php?cod='+resp);
@@ -8776,6 +8776,9 @@ function agregarAtributoAjax(){
     }else{
        seleccionarDepartamentoServicioSitio(1);  
     }
+    $("#lbl_nombre_atributo").text("Nombre");
+   }else{
+    $("#lbl_nombre_atributo").text("Producto");
    }
 
 }
@@ -8982,6 +8985,7 @@ function editarAtributo(fila){
     $('#modal_sello').val(itemAtributos[fila].sello);
   }
   if(($("#div_marca").hasClass("d-none"))){
+    $("#lbl_nombre_atributo").text("Nombre");
     $('#pais_empresa').val(itemAtributos[fila].pais+"####"+itemAtributos[fila].nom_pais);
     if($("#modalEditPlantilla").length){
       if(itemAtributos[fila].nom_pais!="SIN REGISTRO"){
@@ -8995,6 +8999,8 @@ function editarAtributo(fila){
        
     }   
     $('.selectpicker').selectpicker("refresh");  
+  }else{
+    $("#lbl_nombre_atributo").text("Nombre");
   }
 
   $('#modal_direccion').val(itemAtributos[fila].direccion); 

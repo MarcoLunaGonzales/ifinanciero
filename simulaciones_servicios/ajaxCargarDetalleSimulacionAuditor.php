@@ -126,7 +126,8 @@ if(isset($_GET["cod_simulacion"])){
           $montoPre=number_format($montoPre,2,".","");       
          ?>
          <td class="text-right">
-           <select class="form-control selectpicker form-control-sm" data-size="6" data-style="fondo-boton fondo-boton-active" name="modal_dias_personalItem<?=$ncol?>RRR<?=$iii?>" id="modal_dias_personalItem<?=$ncol?>RRR<?=$iii?>" onchange="calcularTotalPersonalServicioAuditor()">
+          <input type="number" min="0" id="modal_dias_personalItem<?=$ncol?>RRR<?=$iii?>" name="modal_dias_personalItem<?=$ncol?>RRR<?=$iii?>" class="form-control fondo-boton fondo-boton-active text-right" onchange="calcularTotalPersonalServicioAuditor()" onkeyUp="calcularTotalPersonalServicioAuditor()" value="<?=$diasPres?>">
+           <!--<select class="form-control selectpicker form-control-sm" data-size="6" data-style="fondo-boton fondo-boton-active" name="modal_dias_personalItem<?=$ncol?>RRR<?=$iii?>" id="modal_dias_personalItem<?=$ncol?>RRR<?=$iii?>" onchange="calcularTotalPersonalServicioAuditor()">
               <?php 
                  for ($hf=0; $hf<=$diasTipo; $hf++) {
                    if($hf==$diasPres){
@@ -136,7 +137,7 @@ if(isset($_GET["cod_simulacion"])){
                    }      
                 }
                ?>
-           </select>
+           </select>-->
          </td> 
          <td class="text-right">
             <input type="number" id="monto<?=$ncol?>RRR<?=$iii?>" step="0.01" value="<?=$montoPres?>" class="form-control text-info text-right" onchange="calcularTotalPersonalServicioAuditor()" onkeyUp="calcularTotalPersonalServicioAuditor()">
