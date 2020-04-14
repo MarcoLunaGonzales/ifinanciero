@@ -21,7 +21,7 @@ $stmtX->execute();
 $stmt = $dbh->prepare("SELECT (select u.nombre from unidades_organizacionales u where u.codigo=c.cod_unidadorganizacional)unidad,
 (select u.abreviatura from unidades_organizacionales u where u.codigo=c.cod_unidadorganizacional)cod_unidad,c.cod_gestion, 
 (select m.nombre from monedas m where m.codigo=c.cod_moneda)moneda, (select m.codigo from monedas m where m.codigo=c.cod_moneda)cod_moneda,
-(select t.nombre from tipos_comprobante t where t.codigo=c.cod_tipocomprobante)tipo_comprobante, c.fecha, c.numero,c.codigo, c.glosa
+(select t.nombre from tipos_comprobante t where t.codigo=c.cod_tipocomprobante)tipo_comprobante, c.fecha, c.numero,c.codigo, c.glosa, c.cod_unidadorganizacional
 from comprobantes c where c.codigo=$codigo;");
 // Ejecutamos
 $stmt->execute();
@@ -36,19 +36,30 @@ $stmt->bindColumn('fecha', $fechaComprobante);
 $stmt->bindColumn('numero', $nroCorrelativo);
 $stmt->bindColumn('codigo', $codigo);
 $stmt->bindColumn('glosa', $glosaComprobante);
+$stmt->bindColumn('cod_unidadorganizacional', $codigoUO);
 
+$nameEntidad="";
 while ($rowDetalle = $stmt->fetch(PDO::FETCH_BOUND)) {
     $fechaC=$fechaComprobante;
     $glosaC=$glosaComprobante;
+    $glosaC=substr($glosaC, 0, 200);
     $unidadC=$nombreUnidad;
     $codUC=$codigoUnidad;
     $monedaC=$nombreMoneda;
     $codMC=$codigoMoneda;
     $tipoC=$nombreTipoComprobante;
     $numeroC=$nroCorrelativo;
+    $codigoUOX=$codigoUO;
 }
 //INICIAR valores de las sumas
 $tDebeDol=0;$tHaberDol=0;$tDebeBol=0;$tHaberBol=0;
+
+$nameEntidad=nameEntidadUO($codigoUOX);
+
+$tcUFV=0;
+$tcUFV=obtenerValorTipoCambio(4,strftime('%Y-%m-%d',strtotime($fechaC)));
+$abrevUFV="";
+$abrevUFV=abrevMoneda(4);
 
 // Llamamos a la funcion para obtener el reporte de comprobantes
 $data = obtenerComprobantesDetImp($codigo);
@@ -76,11 +87,20 @@ $html.='<body>'.
 $html.=  '<header class="header">'.            
             '<img class="imagen-logo-izq" src="../assets/img/ibnorca2.jpg">'.
             '<div id="header_titulo_texto">Comprobante de Contabilidad</div>'.
-         '<div id="header_titulo_texto_inf">OFICINA: '.$unidadC.'</div>'.
+         '<div id="header_titulo_texto_inf" style="clear: left; border: 1;">&nbsp;</div>'.
+         '<div id="header_titulo_texto_inf" class="left"></div>'.
+         '<table>'.
+            '<tr class="bold table-title">'.
+              '<td align="left">Entidad: '.$nameEntidad.'</td>'.
+            '</tr>'.
+            '<tr>'.
+            '<td align="left">Oficina: '.$unidadC.'</td>'.
+            '</tr>'.
+         '</table>'.
          '<table class="table pt-2">'.
             '<tr class="bold table-title">'.
               '<td width="22%">Fecha: '.strftime('%d/%m/%Y',strtotime($fechaC)).'</td>'.
-              '<td width="33%">t/c: '.$abrevMon.': '.$tc.'</td>'.
+              '<td width="33%" align="right">t/c: '.$abrevMon.': '.$tc.' '.$abrevUFV.':'.$tcUFV.'</td>'.
               '<td width="45%" class="text-right">'.$tipoC.' '.strtoupper(abrevMes(strftime('%m',strtotime($fechaC)))).' N&uacute;mero: '.generarNumeroCeros(6,$numeroC).'</td>'.
             '</tr>'.
             '<tr>'.

@@ -84,6 +84,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
             $stmt1->bindColumn('porcentaje_fijo', $porcentajeFijoX);
             $stmt1->bindColumn('afnor', $afnorX);
             $stmt1->bindColumn('porcentaje_afnor', $porcentajeAfnorX);
+            $stmt1->bindColumn('id_tiposervicio', $idTipoServicioX);
 
       while ($row1 = $stmt1->fetch(PDO::FETCH_BOUND)) {
          //plantilla datos      
@@ -120,6 +121,10 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
             $inicioAnio=0;
            }
            
+           $idTipoServGlobal=$idTipoServicioX;
+           if($idTipoServGlobal==0){
+             $idTipoServGlobal=309;
+           }
       }    
 ?>
 <script>
@@ -531,10 +536,15 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
            <?php 
            $costoFijoPrincipalPeriodo=0;
            for ($an=$inicioAnio; $an<=$anioGeneral; $an++) { 
-            $tituloItem="Año ".$an."(Seguimiento ".($an-1).")";
-            if(($an==0||$an==1)&&$codAreaX!=39){
-              $tituloItem="Año 1 (ETAPA ".($an+1).")";
-            }
+            if($codAreaX!=39){
+                $tituloItem="Año ".$an."(Seguimiento ".($an-1).")";
+                if(($an==0||$an==1)&&$codAreaX!=39){
+                  $tituloItem="Año 1 (ETAPA ".($an+1).")";
+                }
+            }else{
+                $tituloItem="Año ".$an;
+            } 
+           
             
             $totalIngresoUsd=0;$totalIngreso=0;
             $totalCostoTotalUsd=0;$totalCostoTotal=0;

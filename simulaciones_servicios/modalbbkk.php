@@ -36,6 +36,8 @@
                              </div>  
                            </div> 
                             <?php
+                                 }else{
+                                  ?><div class="row col-sm-6 d-none" id="div_marca"></div><?php
                                  }
                             ?>           
                       </div>
@@ -56,6 +58,43 @@
                            </div>  
                       </div>
                             <?php
+                                 }else{
+                              ?>
+                             <div class="row col-sm-12" id="div_pais">
+                          <div class="row col-sm-12">
+                       <label class="col-sm-2 col-form-label">Pais</label>
+                       <div class="col-sm-10">
+                        <div class="form-group">
+                          <select name="pais_empresa" id="pais_empresa" data-size="6" onchange="seleccionarDepartamentoServicioSitioModal()" class="form-control form-control-sm selectpicker" data-style="btn btn-info">
+                            <option disabled selected value="">--SELECCIONE--</option>
+                             <?php
+                                  foreach ($lista->lista as $listas) {
+                                      echo "<option value='".$listas->idPais."####".$listas->paisNombre."'>".$listas->paisNombre."</opction>";
+                                  }?>
+                          </select>
+                        </div>
+                       </div>
+                      </div>
+                      <div class="row col-sm-12">
+                       <label class="col-sm-2 col-form-label">Dep / Est</label>
+                       <div class="col-sm-10">
+                        <div class="form-group">
+                          <select name="departamento_empresa"  data-size="6" onchange="seleccionarCiudadServicioSitioModal()" id="departamento_empresa" class="form-control form-control-sm selectpicker" data-style="btn btn-info">
+                          </select>
+                        </div>
+                       </div>
+                      </div>
+                      <div class="row col-sm-12">
+                       <label class="col-sm-2 col-form-label">Ciudad</label>
+                       <div class="col-sm-10">
+                        <div class="form-group">
+                          <select name="ciudad_empresa" onchange="" data-size="6" id="ciudad_empresa" class="form-control form-control-sm selectpicker" data-style="btn btn-success">
+                          </select>
+                        </div>
+                       </div>
+                      </div>  
+                      </div>  
+                              <?php    
                                  }
                             ?> 
                       <div class="row" id="div_direccion">
@@ -300,50 +339,126 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
   </div>
 <!--    end small modal -->
 
-
-
-
 <!-- small modal -->
 <div class="modal fade modal-primary" id="modalEditPlantilla" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-notice wizard-container" style="max-width: 90% !important;">
-    <div class="modal-content card card-wizard" data-color="rose" id="wizardProfile">
-                    
-<!--      Wizard container        -->
-                <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
+  <div class="modal-dialog modal-notice" style="max-width: 90% !important;">
+    <div class="modal-content card">
+               <div class="card-header card-header-info card-header-text">
+                  <div class="card-text">
+                    <h4>Editar Propuesta</h4>
+                  </div>
+                  <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
                     <i class="material-icons">close</i>
                   </button>
-                 <form action="" method=""> 
-                  <!--        You can switch " data-color="primary" "  with one of the next bright colors: "green", "orange", "red", "blue"       -->
-                  <div class="card-header text-center">
-                    <h3 class="card-title">
-                      EDITAR DATOS PROPUESTA
-                    </h3>
-                    <h5 class="card-description">Cambia los valores del servicio.</h5>
-                  </div>
-                  <div class="wizard-navigation">
-                    <ul class="nav nav-pills" role="tablistee">
-                      <li class="nav-item">
-                        <a class="nav-link" href="#servicioswewe" data-toggle="tab" role="tablistee">
-                          DATOS 1
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link" href="#servicioswewe2" data-toggle="tab" role="tablistee">
-                          DATOS 2
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-                  <div class="card-body">
-                    <div class="tab-content">
-                      <div class="tab-pane" id="servicioswewe">
-                        <!--poner los servicios-->
+                </div>
+                <div class="card-body">
+
+                      <div class="row">
+                          <label class="col-sm-2 col-form-label">Utilidad M&iacute;nima %</label>
+                           <div class="col-sm-4">                     
+                             <div class="form-group">
+                               <input type="number" step="0.01" class="form-control" name="modal_utibnorca" id="modal_utibnorca" value="">
+                             </div>
+                           </div>  
+                           <!--<label class="col-sm-2 col-form-label">D&iacute;as Auditoria</label>
+                           <div class="col-sm-4">                     
+                             <div class="form-group">-->
+                               <input type="hidden" min="1" class="form-control" name="modal_diasauditoria" id="modal_diasauditoria" value="">
+                             <!--</div>
+                           </div>-->
+
+                          <!--<label class="col-sm-2 col-form-label">UT Min. Fuera %</label>
+                           <div class="col-sm-4">                     
+                             <div class="form-group">-->
+                               <input type="hidden" step="0.01" class="form-control" name="modal_utifuera" id="modal_utifuera" value="">
+                             <!--</div>
+                           </div>--> 
+                      </div>
+                      <?php 
+                        if($codAreaX==39){
+                          $cantidadProductos=explode(",",$productosX);
+                         ?>
+                     <div class="row">
+                       <label class="col-sm-2 col-form-label">Productos <!--<small class="text-muted">(<?=count($cantidadProductos)?>)</small>--></label>
+                       <div class="col-sm-8">
+                        <div class="form-group" style="border-bottom: 1px solid #CACFD2">
+                          <input type="hidden" value="" class="form-control tagsinput" name="modal_productos" id="modal_productos" data-role="tagsinput" data-color="warning">
+                          <div id="productos_div" class=""></div>
+                          <div id="divResultadoListaAtributosProd">
+                            <div class="">
+                              <center><h4><b>SIN REGISTROS</b></h4></center>
+                            </div>
+                          </div>                          
+                        </div>
+                        </div>
+                        <div class="col-sm-2">
+                           <button title="Agregar Sitio" type="button" name="add" class="btn btn-warning btn-round btn-fab" onClick="agregarAtributoAjax()"><i class="material-icons">add</i>
+                            </button>
+                        </div>
+                      </div>
+                         <?php
+                        }else{
+                            if($codAreaX==38){
+                              $cantidadSitios=explode(",",$sitiosX);
+                         ?>
+                     <div class="row">
+                       <label class="col-sm-2 col-form-label">Sitios <!--<small class="text-muted">(<?=count($cantidadSitios)?>)</small>--></label>
+                       <div class="col-sm-8">
+                        <div class="form-group" style="border-bottom: 1px solid #CACFD2">
+                          <div id="productos_div" class="d-none"></div>
+                          <input type="hidden" value="" class="form-control tagsinput" name="modal_sitios" id="modal_sitios" data-role="tagsinput" data-color="warning">                          
+                          <div id="divResultadoListaAtributos">
+                            <div class="">
+                              <center><h4><b>SIN REGISTROS</b></h4></center>
+                            </div>
+                          </div>
+                        </div>
+                        </div>
+                        <div class="col-sm-2">
+                           <button title="Agregar Sitio" type="button" name="add" class="btn btn-warning btn-round btn-fab" onClick="agregarAtributoAjax()"><i class="material-icons">add</i>
+                            </button>
+                        </div>
+                      </div>
+                         <?php
+                            }else{
+                             //otro servicio
+                            }
+                          }
+                        ?>
+                      
+                      <div class="row">
+                       <label class="col-sm-2 col-form-label">Cliente</label>
+                       <div class="col-sm-10">
+                        <div class="form-group">
+                          <input type="text" readonly value="<?=$nombreClienteX?>" class="form-control" name="modal_nombrecliente" id="modal_nombrecliente">                          
+                        </div>
+                        </div>
+                      </div>
+                      <!--<div class="row">
+                          <label class="col-sm-3 col-form-label">N&uacute;mero de Personal</label>
+                           <div class="col-sm-8">                     
+                             <div class="form-group">-->
+                               <input type="hidden" class="form-control" min="1" readonly name="modal_alibnorca" id="modal_alibnorca" value="">
+                             <!--</div>
+                           </div> --> 
+
+                          <!--<label class="col-sm-2 col-form-label">Personal Fuera</label>
+                           <div class="col-sm-4">                     
+                             <div class="form-group">-->
+                               <input type="hidden" class="form-control" min="1" name="modal_alfuera" id="modal_alfuera" value="">
+                             <!--</div>
+                           </div> 
+                      </div> -->
+
+                      
                       <?php 
                        /*Aqui poner los servicios*/
                        
                       ?>
                       
                       <div>
+                        <hr>
+                        <br>
                         <ul class="nav nav-pills nav-pills-warning" role="tablist">
                         <?php
                         if($codAreaX==39){
@@ -354,11 +469,11 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
 
                           for ($an=$inicioAnio; $an<=$anioGeneral; $an++) { 
                             $active="";
-                            $etapas="Año ".$an;
+                            $etapas="Seguimiento ".($an-1);
 
                             if($codAreaX!=39){
                               if($an==0||$an==1){
-                               $etapas="Año 1 (ETAPA ".($an+1).")"; 
+                               $etapas="Etapa ".($an+1).""; 
                               }
                             }
 
@@ -379,11 +494,11 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                          <?php
                           for ($an=$inicioAnio; $an<=$anioGeneral; $an++) { 
                             $active="";
-                            $etapas="AÑO ".$an;
+                            $etapas="Seguimiento ".($an-1);
 
                             if($codAreaX!=39){
                               if($an==0||$an==1){
-                               $etapas="AÑO 1 (ETAPA ".($an+1).")"; 
+                               $etapas="Etapa ".($an+1).""; 
                               }
                             }
                             if($an==1){
@@ -426,16 +541,16 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                                     }
                                   }
                                 ?>
-                                  <select class="selectpicker form-control form-control-sm" data-live-search="true" name="modal_editservicio<?=$an?>" id="modal_editservicio<?=$an?>" data-style="fondo-boton">
+                                  <select class="selectpicker form-control form-control-sm" data-size="6" data-live-search="true" name="modal_editservicio<?=$an?>" id="modal_editservicio<?=$an?>" data-style="fondo-boton">
                                     <option disabled selected="selected" value="">--SERVICIOS--</option>
                                     <?php 
-                                     $stmt3 = $dbh->prepare("SELECT idclaservicio,descripcion,codigo from cla_servicios where (codigo_n1=108 or codigo_n1=109) and vigente=1 and codigo_n1=$codigoAreaServ and idTipo=$idTipoServ");
+                                     $stmt3 = $dbh->prepare("SELECT idclaservicio,descripcion,codigo from cla_servicios where (codigo_n1=108 or codigo_n1=109) and vigente=1 and codigo_n1=$codigoAreaServ and idTipo=$idTipoServ order by 2");
                                      $stmt3->execute();
                                      while ($rowServ = $stmt3->fetch(PDO::FETCH_ASSOC)) {
                                       $codigoServX=$rowServ['idclaservicio'];
                                       $nombreServX=$rowServ['descripcion'];
                                       $abrevServX=$rowServ['codigo'];
-                                      ?><option value="<?=$codigoServX;?>"><?=$abrevServX?> - <?=$nombreServX?></option><?php 
+                                      ?><option value="<?=$codigoServX;?>"><?=$nombreServX?></option><?php 
                                      }
                                     ?>
                                   </select>
@@ -555,7 +670,7 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                                      <td>
                                        <div class="togglebutton">
                                                <label>
-                                                 <input type="checkbox" <?=($banderaHab==1)?"checked":"";?> onchange="activarInputMontoFilaServicio(<?=$an?>,'<?=$iii?>')">
+                                                 <input type="checkbox" <?=($banderaHab==1)?"checked":"";?> id="modal_checkserv<?=$an?>SSS<?=$iii?>" onchange="activarInputMontoFilaServicio(<?=$an?>,'<?=$iii?>')">
                                                  <span class="toggle"></span>
                                                </label>
                                        </div>
@@ -583,10 +698,10 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                                <select class="form-control selectpicker" multiple data-style="btn btn-primary btn-sm btn-round" name="copiar_servicios<?=$an?>[]" id="copiar_servicios<?=$an?>">
                                  <?php
                                 for ($kk=$inicioAnio; $kk<=$anioGeneral; $kk++) { 
-                                    $optionTit="Año ".$kk;
+                                    $optionTit="Seguimiento ".($kk-1);
                                      if($codAreaX!=39){
                                        if($kk==0||$kk==1){
-                                        $optionTit="Año 1 (ETAPA ".($kk+1).")"; 
+                                        $optionTit="Etapa ".($kk+1).""; 
                                        }
                                      }
                                     if($kk!=$an){
@@ -640,7 +755,7 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                                     }
                                   }
                                 ?>
-                                  <select class="selectpicker form-control form-control-sm" data-live-search="true" name="modal_editpersonal<?=$an?>" id="modal_editpersonal<?=$an?>" data-style="fondo-boton">
+                                  <select class="selectpicker form-control form-control-sm" data-size="6" data-live-search="true" name="modal_editpersonal<?=$an?>" id="modal_editpersonal<?=$an?>" data-style="fondo-boton">
                                     <option disabled selected="selected" value="">--PERSONAL--</option>
                                     <?php 
                                      $stmt3 = $dbh->prepare("SELECT codigo,nombre,abreviatura from tipos_auditor where cod_estadoreferencial=1");
@@ -751,7 +866,7 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                                      </td>
                                      <td class="text-center">
 
-                                       <select class="form-control selectpicker form-control-sm" data-style="fondo-boton fondo-boton-active" name="dias_personal<?=$an?>FFF<?=$iii?>" id="dias_personal<?=$an?>FFF<?=$iii?>" onchange="calcularTotalPersonalServicio('<?=$an?>',2)">
+                                       <select class="form-control selectpicker form-control-sm" data-size="6" data-style="fondo-boton fondo-boton-active" name="dias_personal<?=$an?>FFF<?=$iii?>" id="dias_personal<?=$an?>FFF<?=$iii?>" onchange="calcularTotalPersonalServicio('<?=$an?>',2)">
                                           <?php 
                                              for ($hf=0; $hf<=$diasSimulacion; $hf++) {
                                               if($hf==$diasPre){
@@ -785,7 +900,7 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                                      <td>
                                        <div class="togglebutton">
                                                <label>
-                                                 <input type="checkbox" <?=($banderaHab==1)?"checked":"";?> onchange="activarInputMontoPersonalServicio('<?=$an?>','<?=$iii?>')">
+                                                 <input type="checkbox" <?=($banderaHab==1)?"checked":"";?> id="modal_checkpre<?=$an?>FFF<?=$iii?>" onchange="activarInputMontoPersonalServicio('<?=$an?>','<?=$iii?>')">
                                                  <span class="toggle"></span>
                                                </label>
                                        </div>
@@ -843,129 +958,12 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
 
                          </div>
                       </div>
-
-                      </div>
-                      <div class="tab-pane" id="servicioswewe2">
-                        <!--poner los servicios-->
-
-                      <div class="row">
-                          <label class="col-sm-2 col-form-label">Utilidad M&iacute;nima %</label>
-                           <div class="col-sm-4">                     
-                             <div class="form-group">
-                               <input type="number" step="0.01" class="form-control" name="modal_utibnorca" id="modal_utibnorca" value="">
-                             </div>
-                           </div>  
-                           <label class="col-sm-2 col-form-label">D&iacute;as Auditoria</label>
-                           <div class="col-sm-4">                     
-                             <div class="form-group">
-                               <input type="number" min="1" class="form-control" name="modal_diasauditoria" id="modal_diasauditoria" value="">
-                             </div>
-                           </div>
-
-                          <!--<label class="col-sm-2 col-form-label">UT Min. Fuera %</label>
-                           <div class="col-sm-4">                     
-                             <div class="form-group">-->
-                               <input type="hidden" step="0.01" class="form-control" name="modal_utifuera" id="modal_utifuera" value="">
-                             <!--</div>
-                           </div>--> 
-                      </div>
-                      <?php 
-                        if($codAreaX==39){
-                          $cantidadProductos=explode(",",$productosX);
-                         ?>
-                     <div class="row">
-                       <label class="col-sm-2 col-form-label">Productos <!--<small class="text-muted">(<?=count($cantidadProductos)?>)</small>--></label>
-                       <div class="col-sm-8">
-                        <div class="form-group" style="border-bottom: 1px solid #CACFD2">
-                          <input type="hidden" value="" class="form-control tagsinput" name="modal_productos" id="modal_productos" data-role="tagsinput" data-color="warning">
-                          <div id="productos_div" class=""></div>
-                          <div id="divResultadoListaAtributosProd">
-                            <div class="">
-                              <center><h4><b>SIN REGISTROS</b></h4></center>
-                            </div>
-                          </div>                          
-                        </div>
-                        </div>
-                        <div class="col-sm-2">
-                           <button title="Agregar Sitio" type="button" name="add" class="btn btn-warning btn-round btn-fab" onClick="agregarAtributoAjax()"><i class="material-icons">add</i>
-                            </button>
-                        </div>
-                      </div>
-                         <?php
-                        }else{
-                            if($codAreaX==38){
-                              $cantidadSitios=explode(",",$sitiosX);
-                         ?>
-                     <div class="row">
-                       <label class="col-sm-2 col-form-label">Sitios <!--<small class="text-muted">(<?=count($cantidadSitios)?>)</small>--></label>
-                       <div class="col-sm-8">
-                        <div class="form-group" style="border-bottom: 1px solid #CACFD2">
-                          <div id="productos_div" class="d-none"></div>
-                          <input type="hidden" value="" class="form-control tagsinput" name="modal_sitios" id="modal_sitios" data-role="tagsinput" data-color="warning">                          
-                          <div id="divResultadoListaAtributos">
-                            <div class="">
-                              <center><h4><b>SIN REGISTROS</b></h4></center>
-                            </div>
-                          </div>
-                        </div>
-                        </div>
-                        <div class="col-sm-2">
-                           <button title="Agregar Sitio" type="button" name="add" class="btn btn-warning btn-round btn-fab" onClick="agregarAtributoAjax()"><i class="material-icons">add</i>
-                            </button>
-                        </div>
-                      </div>
-                         <?php
-                            }else{
-                             //otro servicio
-                            }
-                          }
-                        ?>
-                      
-                      <div class="row">
-                       <label class="col-sm-2 col-form-label">Cliente</label>
-                       <div class="col-sm-10">
-                        <div class="form-group">
-                          <input type="text" readonly value="<?=$nombreClienteX?>" class="form-control" name="modal_nombrecliente" id="modal_nombrecliente">                          
-                        </div>
-                        </div>
-                      </div>
-                      <!--<div class="row">
-                          <label class="col-sm-3 col-form-label">N&uacute;mero de Personal</label>
-                           <div class="col-sm-8">                     
-                             <div class="form-group">-->
-                               <input type="hidden" class="form-control" min="1" readonly name="modal_alibnorca" id="modal_alibnorca" value="">
-                             <!--</div>
-                           </div> --> 
-
-                          <!--<label class="col-sm-2 col-form-label">Personal Fuera</label>
-                           <div class="col-sm-4">                     
-                             <div class="form-group">-->
-                               <input type="hidden" class="form-control" min="1" name="modal_alfuera" id="modal_alfuera" value="">
-                             <!--</div>
-                           </div> 
-                      </div> -->
-
-
-
-
-
-
-                      </div>
-                    </div>
-                  </div>
-                  <div class="card-footer">
-                    <div class="mr-auto">
-                      <input type="button" class="btn btn-previous btn-fill btn-default btn-wd disabled" name="previous" value="Anterior">
-                    </div>
-                    <div class="ml-auto">
-                      <input type="button" class="btn btn-next btn-fill btn-rose btn-wd" name="next" value="Siguiente">
-                      <input type="button" id="boton_guardarplan" class="btn btn-finish btn-fill btn-rose btn-wd" name="finish" value="Finalizar" onclick="guardarDatosPlantillaServicio(this.id)" style="display: none;">
-                    </div>
-                    <div class="clearfix"></div>
-                  </div>
-                </form>
-            <!-- wizard container -->
-
+                      <hr>
+                       
+                      <div class="form-group float-right">
+                        <button type="button" id="boton_guardarplan" class="btn btn-default" onclick="guardarDatosPlantillaServicio(this.id)">Guardar</button>
+                      </div> 
+                </div>
       </div>  
     </div>
   </div>
@@ -991,5 +989,23 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
     </div>
   </div>
 <!--    end small modal -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

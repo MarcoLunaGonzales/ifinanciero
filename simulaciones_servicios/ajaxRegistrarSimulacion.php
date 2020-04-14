@@ -52,6 +52,11 @@ if(isset($_GET['nombre'])){
     $idTipoServicio=0;
   }
   
+  if(isset($_GET['region_cliente'])){
+    $regionCliente=$_GET['region_cliente'];
+  }else{
+    $regionCliente=0;
+  }
   $areaGeneralPlantilla=obtenerCodigoAreaPlantillasServicios($plantilla_servicio);
 
    if($areaGeneralPlantilla==39){
@@ -60,8 +65,8 @@ if(isset($_GET['nombre'])){
      $inicioAnio=0;
    }
 
-  $sqlInsert="INSERT INTO simulaciones_servicios (codigo, nombre, fecha, cod_plantillaservicio, cod_responsable,dias_auditoria,utilidad_minima,cod_cliente,productos,norma,idServicio,anios,porcentaje_fijo,sitios,afnor,porcentaje_afnor,id_tiposervicio,cod_objetoservicio) 
-  VALUES ('".$codSimServ."','".$nombre."','".$fecha."', '".$plantilla_servicio."', '".$globalUser."','".$dias."','".$utilidad."','".$cliente."','".$productos."','".$norma."','".$id_servicio."','".$anios."','".obtenerValorConfiguracion(32)."','".$sitios."','".$afnor."','".obtenerValorConfiguracion(33)."','".$idTipoServicio."','".$objeto_servicio."')";
+  $sqlInsert="INSERT INTO simulaciones_servicios (codigo, nombre, fecha, cod_plantillaservicio, cod_responsable,dias_auditoria,utilidad_minima,cod_cliente,productos,norma,idServicio,anios,porcentaje_fijo,sitios,afnor,porcentaje_afnor,id_tiposervicio,cod_objetoservicio,cod_tipoclientenacionalidad) 
+  VALUES ('".$codSimServ."','".$nombre."','".$fecha."', '".$plantilla_servicio."', '".$globalUser."','".$dias."','".$utilidad."','".$cliente."','".$productos."','".$norma."','".$id_servicio."','".$anios."','".obtenerValorConfiguracion(32)."','".$sitios."','".$afnor."','".obtenerValorConfiguracion(33)."','".$idTipoServicio."','".$objeto_servicio."','".$regionCliente."')";
   $stmtInsert = $dbh->prepare($sqlInsert);
   $stmtInsert->execute();
 
@@ -160,6 +165,9 @@ if(isset($_GET['nombre'])){
       }else{
         $montoCuenta=$rowCuenta['montoext'];
       }
+
+      $montoCuenta=0; //para inicialiar valores en 0 costos variables
+
       $anioParaRegistroAuditor=-1;
   for ($i=$inicioAnio; $i<=$anios; $i++) { 
       $porcentaje=((float)$montoCuenta*100)/(float)$montoLocal;
@@ -179,6 +187,7 @@ if(isset($_GET['nombre'])){
       $codC=$rowDetallesPlan['cod_cuenta'];
       $glosaD=$rowDetallesPlan['glosa'];
       $montoD=$rowDetallesPlan['monto_total'];
+       // antes de setear los variables a 0 
       $montoDE=$rowDetallesPlan['monto_totalext'];
       $editD=$rowDetallesPlan['editado_alumno'];
       $editDE=$rowDetallesPlan['editado_alumnoext'];
@@ -208,7 +217,7 @@ if(isset($_GET['nombre'])){
          }
 
          //$codigoAuditorSimulacion=$rowAudPlantilla['cod_tipoauditor'];
-         $codigoAuditorSimulacionDias=$rowAudPlantilla['dias'];
+         $codigoAuditorSimulacionDias=0; // antes de setear los costos variables a 0 $codigoAuditorSimulacionDias=$rowAudPlantilla['dias'];
          $codigoAuditorSimulacionCantidad=$rowAudPlantilla['cantidad'];
          $monto_generado+=$codigoAuditorSimulacionDias*$codigoAuditorSimulacionCantidad;
          $dbhSS = new Conexion();
@@ -230,15 +239,27 @@ if(isset($_GET['nombre'])){
   }
   
   
-    for ($jjjj=$inicioAnio; $jjjj<=$anios; $jjjj++) { 
+    //for ($jjjj=$inicioAnio; $jjjj<=$anios; $jjjj++) { 
+     $jjjj=$anios;
      //volcado de datos a la tabla simulaciones_servicios_tiposervicio
-     $serviciosPlan=obtenerDetallePlantillaServicioTipoServicio($plantilla_servicio);
+     if(isset($_GET['region_cliente'])){
+      $serviciosPlan=obtenerServiciosClaServicioTipo(309); //TCP 
+     }else{
+      $serviciosPlan=obtenerServiciosClaServicioTipo($idTipoServicio); //TCS $serviciosPlan=obtenerDetallePlantillaServicioTipoServicio($plantilla_servicio);
+     }
+     
      while ($rowServPlan = $serviciosPlan->fetch(PDO::FETCH_ASSOC)) {
 
-      $codCS=$rowServPlan['cod_claservicio'];
-      $obsCS=$rowServPlan['observaciones'];
-      $cantidadS=$rowServPlan['cantidad'];
-      $montoS=$rowServPlan['monto'];
+      //$codCS=$rowServPlan['cod_claservicio'];
+      //$obsCS=$rowServPlan['observaciones'];
+      //$cantidadS=$rowServPlan['cantidad'];
+      //$montoS=$rowServPlan['monto'];
+
+      $codCS=$rowServPlan['IdClaServicio'];
+      $obsCS=$rowServPlan['Descripcion'];
+      $cantidadS=1;
+      $montoS=1;
+
       if($montoS==0){
         $montoS=1;
       }
@@ -250,6 +271,10 @@ if(isset($_GET['nombre'])){
         //$productosLista=explode(",", $productos);
         $codTC=obtenerTipoCliente($cliente);
         $nacional=obtenerTipoNacionalCliente($cliente);
+        if(isset($_GET['region_cliente'])){
+          $nacional=$_GET['region_cliente'];
+        }
+        
         for ($i=0; $i < count($atributos); $i++) {
           $aux=obtenerCostoTipoClienteSello(($i+1),$codTC,$nacional);
            if($aux==0){
@@ -269,7 +294,7 @@ if(isset($_GET['nombre'])){
       $stmtAU->execute();
      }
 
-   } //fin de for anios  
+   //} //fin de for anios  
 
   echo $codSimServ;
 }

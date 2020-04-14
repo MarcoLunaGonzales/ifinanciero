@@ -73,7 +73,8 @@ if(isset($_GET["codigo"])){
                <script>$("#productos_div").removeClass("d-none");</script>
                <script>$("#div_marca").removeClass("d-none");</script>
                <script>$("#div_norma").removeClass("d-none");</script>
-               <script>$("#titulo_modal_atributo").html("AGREGAR PRODUCTO");</script> 
+               <script>$("#titulo_modal_atributo").html("AGREGAR PRODUCTO");</script>
+               <script>$("#div_pais").removeClass("d-none");</script> 
                <?php
             }else{
               if($areaX==38){

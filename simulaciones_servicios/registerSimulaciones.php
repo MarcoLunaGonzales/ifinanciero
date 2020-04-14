@@ -97,7 +97,7 @@ $dbh = new Conexion();
                         <div class="row">
                           <div class="col-sm-12">
                             <div class="form-group">
-                                <select class="selectpicker form-control" data-size="6" data-live-search-placeholder="Buscar cliente..." data-live-search="true" name="cliente" id="cliente" data-style="btn btn-info"  required>
+                                <select class="selectpicker form-control" data-size="4" data-live-search-placeholder="Buscar cliente..." data-live-search="true" name="cliente" id="cliente" data-style="btn btn-info"  required>
           
                                 <!--<option disabled selected="selected" value="">Cliente</option>-->
                                 <?php
@@ -145,7 +145,7 @@ $dbh = new Conexion();
                       <div id="productos_div" class="d-none">
                       <div class="row">
                        <label class="col-sm-2 col-form-label">Productos</label>
-                       <div class="col-sm-7">
+                       <div class="col-sm-9">
                         <div class="form-group">
                           <!--<input type="text" value="" class="form-control tagsinput" name="productos" id="productos" data-role="tagsinput" required data-color="warning">-->
                           <div id="divResultadoListaAtributosProd">
@@ -155,16 +155,40 @@ $dbh = new Conexion();
                           </div>
                         </div>
                       </div>
-                      <div class="col-sm-2">
+                      <div class="col-sm-1">
                            <button title="Agregar Sitio" type="button" name="add" class="btn btn-warning btn-round btn-fab" onClick="agregarAtributoAjax()"><i class="material-icons">add</i>
                             </button>
                         </div>
                     </div>
+                    <div class="row">
+                       <label class="col-sm-2 col-form-label">Regi&oacute;n</label>
+                       <div class="col-sm-7">
+                        <div class="row">
+                          <div class="col-sm-12">
+                            <div class="form-group">
+                                <select class="selectpicker form-control" name="region_cliente" id="region_cliente" data-style="btn btn-info"  required>
+                                <?php
+                                 $stmt = $dbh->prepare("SELECT c.codigo, c.descripcion FROM tipos_clientenacionalidad c order by 1");
+                                 $stmt->execute();
+                                  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                  $codigoX=$row['codigo'];
+                                  $nombreX=$row['descripcion'];
+                                   ?>
+                                  <option value="<?=$codigoX;?>"><?=$nombreX;?></option> 
+                                  <?php
+                                    }
+                                    ?>
+                                </select>
+                              </div>
+                          </div> 
+                        </div>
+                       </div>
+                      </div><!--row-->
                       </div>
                       <div id="sitios_div" class="d-none">
                       <div class="row">
                        <label class="col-sm-2 col-form-label">Sitios</label>
-                       <div class="col-sm-7">
+                       <div class="col-sm-9">
                         <div class="form-group">
                           <!--<input type="readonly" value="" class="form-control tagsinput" name="sitios" id="sitios" data-role="tagsinput" required data-color="success">-->
                           <div id="divResultadoListaAtributos">
@@ -174,7 +198,7 @@ $dbh = new Conexion();
                           </div>
                         </div>
                         </div>
-                        <div class="col-sm-2">
+                        <div class="col-sm-1">
                            <button title="Agregar Sitio" type="button" name="add" class="btn btn-warning btn-round btn-fab" onClick="agregarAtributoAjax()"><i class="material-icons">add</i>
                             </button>
                         </div>       
@@ -297,17 +321,17 @@ $dbh = new Conexion();
                 <div class="card-body">
                        <input type="hidden" class="form-control" name="modal_fila" id="modal_fila" value="-1">
                       <div class="row">
-                          <label class="col-sm-2 col-form-label">Nombre</label>
+                          <label class="col-sm-2 col-form-label" id="lbl_nombre_atributo">Nombre</label>
                            <div class="col-sm-4">                     
                              <div class="form-group">
-                               <input type="text" class="form-control" name="modal_nombre" id="modal_nombre" value="">
+                               <input type="text" class="form-control" name="modal_nombre" id="modal_nombre" value="" onkeyup="javascript:this.value=this.value.toUpperCase();">
                              </div>
                            </div> 
                            <div class="row col-sm-6" id="div_marca">
                              <label class="col-sm-2 col-form-label">Marca</label>
                              <div class="col-sm-10">                     
                               <div class="form-group">
-                               <input type="text" class="form-control" name="modal_marca" id="modal_marca" value="">
+                               <input type="text" class="form-control" name="modal_marca" id="modal_marca" value="" onkeyup="javascript:this.value=this.value.toUpperCase();">
                                </div>
                              </div>  
                            </div> 
@@ -317,13 +341,13 @@ $dbh = new Conexion();
                           <label class="col-sm-2 col-form-label">Norma</label>
                            <div class="col-sm-4">                     
                              <div class="form-group">
-                               <input type="text" class="form-control" name="modal_norma" id="modal_norma" value="">
+                               <input type="text" class="form-control" name="modal_norma" id="modal_norma" value="" onkeyup="javascript:this.value=this.value.toUpperCase();">
                              </div>
                            </div>
                            <label class="col-sm-1 col-form-label">Nº Sello</label>
                            <div class="col-sm-5">                     
                              <div class="form-group">
-                               <input type="text" class="form-control" name="modal_sello" id="modal_sello" value="">
+                               <input type="text" class="form-control" name="modal_sello" id="modal_sello" value="" onkeyup="javascript:this.value=this.value.toUpperCase();">
                              </div>
                            </div>  
                       </div>
@@ -366,7 +390,7 @@ $dbh = new Conexion();
                           <label class="col-sm-2 col-form-label">Direcci&oacute;n</label>
                            <div class="col-sm-10">                     
                              <div class="form-group">
-                               <input type="text" class="form-control" name="modal_direccion" id="modal_direccion" value="">
+                               <input type="text" class="form-control" name="modal_direccion" id="modal_direccion" value="" onkeyup="javascript:this.value=this.value.toUpperCase();">
                              </div>
                            </div>  
                       </div>

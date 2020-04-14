@@ -408,6 +408,19 @@ function nameEntidad($codigo){
    }
    return($nombreX);
 }
+function nameEntidadUO($codigo){
+   $dbh = new Conexion();
+   $sql="SELECT e.nombre from entidades e, entidades_uo eu where e.codigo=eu.cod_entidad and eu.cod_uo=:codigo";
+   //echo $sql;
+   $stmt = $dbh->prepare($sql);
+   $stmt->bindParam(':codigo',$codigo);
+   $stmt->execute();
+   $nombreX="";
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $nombreX=$row['nombre'];
+   }
+   return($nombreX);
+}
 
 
 function namePartidaPres($codigo){
@@ -5180,6 +5193,15 @@ function obtenerUnidadAreaPorSimulacionCosto($codigo){
         $unidadX=$row['cod_unidadorganizacional'];
      }
      return array($areaX,$unidadX);
+}
+
+function obtenerServiciosClaServicioTipo($id){
+  $dbh = new Conexion();
+  $sql="";
+  $sql="SELECT p.* FROM cla_servicios p where p.vigente=1 and p.codigo_n2=$id";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
 }
 ?>
 

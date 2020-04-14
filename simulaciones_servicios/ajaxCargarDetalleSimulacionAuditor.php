@@ -30,7 +30,7 @@ if(isset($_GET["cod_simulacion"])){
         $totalColumnaDetalle[$i]=0;
         $nombreColumna=obtenerNombreDetalleSimulacionVariablesPeriodo($codigos[$i],$anio);
          ?>
-         <td class="fondo-boton" colspan="3"><?=$nombreColumna?></td>
+         <td class="fondo-boton" colspan="4"><?=$nombreColumna?></td>
          <?php
         }?>
         <td class="fondo-boton" colspan="2">TOTAL</td>
@@ -42,7 +42,8 @@ if(isset($_GET["cod_simulacion"])){
         <?php 
         for ($i=0; $i < $nroColumnas; $i++) {
          ?>
-         <td class="fondo-boton">CANT</td>
+         <td class="fondo-boton">D/C</td>
+         <td class="bg-success text-white">MON</td>
          <td class="fondo-boton">BOB</td>
          <td class="fondo-boton">USD</td>
          <?php
@@ -109,7 +110,7 @@ if(isset($_GET["cod_simulacion"])){
           
           $montoPres=obtenerMontoSimulacionDetalleAuditorPeriodo($codSimulacion,$codigoCol,$codigoTipo,$anio);
           //montoPres
-          $montoPres=$montos_filas[$i];
+          //$montoPres=$montos_filas[$i]; //para obtener el monto del modal anterioir
 
           $diasPres=obtenerDiasEspecificoSimulacionDetalleAuditorPeriodo($codSimulacion,$codigoCol,$codigoTipo,$anio);
           $montoPresext=obtenerMontoSimulacionDetalleAuditorExternoPeriodo($codSimulacion,$codigoCol,$codigoTipo,$anio);
@@ -125,7 +126,8 @@ if(isset($_GET["cod_simulacion"])){
           $montoPre=number_format($montoPre,2,".","");       
          ?>
          <td class="text-right">
-           <select class="form-control selectpicker form-control-sm" data-size="6" data-style="fondo-boton fondo-boton-active" name="modal_dias_personalItem<?=$ncol?>RRR<?=$iii?>" id="modal_dias_personalItem<?=$ncol?>RRR<?=$iii?>" onchange="calcularTotalPersonalServicioAuditor()">
+          <input type="number" min="0" id="modal_dias_personalItem<?=$ncol?>RRR<?=$iii?>" name="modal_dias_personalItem<?=$ncol?>RRR<?=$iii?>" class="form-control fondo-boton fondo-boton-active text-right" onchange="calcularTotalPersonalServicioAuditor()" onkeyUp="calcularTotalPersonalServicioAuditor()" value="<?=$diasPres?>">
+           <!--<select class="form-control selectpicker form-control-sm" data-size="6" data-style="fondo-boton fondo-boton-active" name="modal_dias_personalItem<?=$ncol?>RRR<?=$iii?>" id="modal_dias_personalItem<?=$ncol?>RRR<?=$iii?>" onchange="calcularTotalPersonalServicioAuditor()">
               <?php 
                  for ($hf=0; $hf<=$diasTipo; $hf++) {
                    if($hf==$diasPres){
@@ -135,13 +137,16 @@ if(isset($_GET["cod_simulacion"])){
                    }      
                 }
                ?>
-           </select>
+           </select>-->
          </td> 
+         <td class="text-right">
+            <input type="number" id="monto<?=$ncol?>RRR<?=$iii?>" step="0.01" value="<?=$montoPres?>" class="form-control text-info text-right" onchange="calcularTotalPersonalServicioAuditor()" onkeyUp="calcularTotalPersonalServicioAuditor()">
+          </td>
           <td class="text-right">
             <input type="hidden" id="codigo_columnas<?=$ncol?>RRR<?=$iii?>" value="<?=$codigoCol?>">
             <!--<input type="hidden" id="codigo_ssd_ssa<?=$ncol?>RRR<?=$iii?>" value="<?=$codigoCol?>">-->
             <input type="number" id="monto_mult<?=$ncol?>RRR<?=$iii?>" readonly name="monto_mult<?=$ncol?>RRR<?=$iii?>" class="form-control text-info text-right" onchange="calcularTotalPersonalServicioAuditor()" onkeyUp="calcularTotalPersonalServicioAuditor()" value="<?=$montoPre?>" step="0.01">
-            <input type="hidden" id="monto<?=$ncol?>RRR<?=$iii?>" value="<?=$montoPres?>">
+            <!--<input type="number" id="monto<?=$ncol?>RRR<?=$iii?>" step="0.01" value="<?=$montoPres?>" class="form-control text-info text-right" onchange="calcularTotalPersonalServicioAuditor()" onkeyUp="calcularTotalPersonalServicioAuditor()">-->
             <input type="hidden" id="montoext<?=$ncol?>RRR<?=$iii?>" value="<?=$montoPresext?>">
           </td>
           <td class="text-right">
@@ -167,6 +172,7 @@ if(isset($_GET["cod_simulacion"])){
       <?php 
        for ($i=0; $i < $nroColumnas; $i++) {
         ?>
+        <td></td>
         <td></td>
         <td class="text-right font-weight-bold" id="total_item<?=$i+1?>"><?=number_format($totalColumnaDetalle[$i], 2, '.', ',')?></td> 
         <td class="text-right font-weight-bold" id="total_itemUSD<?=$i+1?>"><?=number_format($totalColumnaDetalle[$i]/$usd, 2, '.', ',')?></td> 
