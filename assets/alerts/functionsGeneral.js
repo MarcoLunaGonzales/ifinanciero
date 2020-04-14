@@ -2496,7 +2496,7 @@ function guardarSimulacionServicio(){
           iniciarCargaAjax();
         },
         success:  function (resp) {
-          //alert(resp);
+          alert(resp);
           detectarCargaAjax();
          if(!($("#codigo_servicioibnorca").length)){
             alerts.showSwal('success-message','simulaciones_servicios/registerSimulacion.php?cod='+resp);
@@ -6574,7 +6574,8 @@ if(!(ut_i==""||dia==""||dia==0||productos.length==0)){
   };
   /* FIN PARA PERSONAL*/ 
   /*PARA SERVICIOS*/ 
-  for (var anio=inicioAnio;anio<=anios; anio++) {
+  var anio=0; //para los servicios en una sola tabla
+  //for (var anio=inicioAnio;anio<=anios; anio++) {
   var total=$("#modal_numeroservicio"+anio).val();
   for (var i = 1; i <=(total-1); i++) {
      var habilitado=1;
@@ -6583,10 +6584,11 @@ if(!(ut_i==""||dia==""||dia==0||productos.length==0)){
       var cantidad = $("#cantidad_servicios"+anio+"SSS"+i).val();
       var unidad = $("#unidad_servicios"+anio+"SSS"+i).val();
       var precio_fijo=$("#precio_fijo"+anio+"SSS"+i).val();
+      var anio_fila=$("#anio"+anio+"SSS"+i).val();
       if($("#modal_montoserv"+anio+"SSS"+i).is("[readonly]")){
         habilitado=0;
       }
-      var parametros = {"codigo":codigo,"monto":monto,"simulacion":cod_sim,"sitios_dias":atributosDias,"productos":JSON.stringify(productos),"precio_fijo":precio_fijo,"unidad":unidad,"plantilla":codigo_p,"dia":dia,"utilidad":ut_i,"habilitado":habilitado,"cantidad":cantidad,"anio":anio,"iteracion":i,"tcs":tcs};
+      var parametros = {"codigo":codigo,"monto":monto,"simulacion":cod_sim,"sitios_dias":atributosDias,"productos":JSON.stringify(productos),"precio_fijo":precio_fijo,"unidad":unidad,"plantilla":codigo_p,"dia":dia,"utilidad":ut_i,"habilitado":habilitado,"cantidad":cantidad,"anio":anio,"iteracion":i,"tcs":tcs,"anio_fila":anio_fila};
       $.ajax({
         type:"GET",
         data:parametros,
@@ -6604,7 +6606,7 @@ if(!(ut_i==""||dia==""||dia==0||productos.length==0)){
       });
   }; 
     
-  }
+  //}
   if(!($("#id_servicioibnored").length)){
       alerts.showSwal('success-message','registerSimulacion.php?cod='+cod_sim);
     }else{
@@ -7858,11 +7860,11 @@ function agregarNuevoServicioSimulacion(anio,cod_sim,cod_area){
   var cantidad=$("#cantidad_servicios"+anio+"SSS0").val();
   var monto=$("#modal_montoserv"+anio+"SSS0").val();
   var unidad=$("#unidad_servicios"+anio+"SSS0").val();
-  
+  var anio_fila=$("#anio"+anio+"SSS0").val();
   if(!(cod_cla>0)||cantidad==""||cantidad==0||monto==""){
    Swal.fire("Informativo!", "Debe llenar los campos requeridos", "warning");
   }else{
-  var parametros={"cod_sim":cod_sim,"cod_cla":cod_cla,"cantidad":cantidad,"monto":monto,"unidad":unidad,"anio":anio};
+  var parametros={"cod_sim":cod_sim,"cod_cla":cod_cla,"cantidad":cantidad,"monto":monto,"unidad":unidad,"anio":anio,"anio_fila":anio_fila};
      $.ajax({
         type: "GET",
         dataType: 'html',
@@ -7878,7 +7880,7 @@ function agregarNuevoServicioSimulacion(anio,cod_sim,cod_area){
            var respuesta=respu.split("###");
            var resp=respuesta[0];
            if(resp==0){
-              listarServiciosSimulacionSoloServicio(anio,cod_area,respuesta[1]);
+              listarServiciosSimulacionSoloServicio(anio,cod_area,respuesta[1],anio_fila);
             //listarServiciosSimulacion(anio,cod_area);
            }else{
             Swal.fire("Informativo!", "El servicio ya existe!", "warning");
@@ -7951,10 +7953,11 @@ function  listarServiciosSimulacionSoloAuditor(anio,cod_area,codigo){
     });
 }
 
-function listarServiciosSimulacionSoloServicio(anio,cod_area,codigo){
+function listarServiciosSimulacionSoloServicio(anio,cod_area,codigo,anio_fila){
   var cod_sim=$("#cod_simulacion").val();
   var usd=$("#cambio_moneda").val();
-  var parametros={"cod_sim":cod_sim,"cod_area":cod_area,"anio":anio,"usd":usd,"codigo":codigo,"cantidad_filas":$("#modal_numeroservicio"+anio).val()};
+  var anio_general=$("#anio_simulacion").val();
+  var parametros={"anio_general":anio_general,"anio_fila":anio_fila,"cod_sim":cod_sim,"cod_area":cod_area,"anio":anio,"usd":usd,"codigo":codigo,"cantidad_filas":$("#modal_numeroservicio"+anio).val()};
      $.ajax({
         type: "GET",
         dataType: 'html',
@@ -8779,24 +8782,24 @@ function listarAtributo(){
   var table = $('<table>').addClass('table');
   table.addClass("table-bordered");
   table.addClass("table-sm table-striped");
-  var titulos = $('<tr>').addClass('fondo-boton');
+  var titulos = $('<tr>').addClass('bg-info text-white');
      titulos.append($('<th>').addClass('').text('#'));
      titulos.append($('<th>').addClass('').text('NOMBRE'));
-     titulos.append($('<th>').addClass('').text('DIRECCION')); 
+     titulos.append('<td width="20%">DIRECCION</td>'); 
      if(!($("#productos_div").hasClass("d-none"))){
       titulos.append($('<th>').addClass('').text('MARCA'));
       titulos.append($('<th>').addClass('').text('NORMA'));
       titulos.append($('<th>').addClass('').text('SELLO'));
      }else{
-      titulos.append($('<th>').addClass('').text('PAIS'));
-      titulos.append($('<th>').addClass('').text('DEPTO'));
-      titulos.append($('<th>').addClass('').text('CIUDAD'));
+      titulos.append('<td width="15%">PAIS</td>');
+      titulos.append('<td width="15%">DEPTO</td>');
+      titulos.append('<td width="15%">CIUDAD</td>');
       if($("#modalEditPlantilla").length){
         if($("#codigo_area").val()!=39){
         for (var k = 0; k <= parseInt($("#anio_simulacion").val()); k++) {
-          var tituloTD="AÑO "+k;
+          var tituloTD="S "+(k-1);
           if(k==0||k==1){
-            tituloTD="Año 1 (ETAPA "+(k+1)+")";
+            tituloTD="E "+(k+1);
           }
           titulos.append($('<th>').addClass('').text(tituloTD));  
         };
@@ -8804,7 +8807,7 @@ function listarAtributo(){
       }
      }
       
-     titulos.append($('<th>').addClass('text-right').text('OPCION DETALLES'));
+     titulos.append('<td class="text-right" width="12%">OPCION</td>');
      table.append(titulos);
    for (var i = 0; i < itemAtributos.length; i++) {
      var row = $('<tr>').addClass('');
@@ -8823,24 +8826,29 @@ function listarAtributo(){
         for (var k = 0; k <=parseInt($("#anio_simulacion").val()); k++) {
           for (var j= 0; j< itemAtributosDias.length; j++) {
            if(itemAtributosDias[j].codigo_atributo==itemAtributos[i].codigo&&itemAtributosDias[j].anio==k){
-            row.append($('<td>').addClass('').text(itemAtributosDias[j].dias));  
+            row.append('<td><input id="sitio_dias'+j+'" onchange="cambiarMontoDiasSitio('+j+')" onkeypress="cambiarMontoDiasSitio('+j+')" class="form-control" type="number" value="'+itemAtributosDias[j].dias+'"></td>');  
            } 
          };     
         };
       }
      }
       
-     row.append($('<td>').addClass('text-right small').html('<button class="btn btn-sm btn-fab btn-info" onclick="editarAtributo('+i+');"><i class="material-icons" >edit</i></button><button class="btn btn-sm btn-fab btn-danger" onclick="removeAtributo('+i+');"><i class="material-icons">delete</i></button>'));
+     row.append($('<td>').addClass('text-right small').html('<button title="Editar" class="btn btn-sm btn-fab btn-success" onclick="editarAtributo('+i+');"><i class="material-icons" >edit</i></button><button class="btn btn-sm btn-fab btn-danger" title="Eliminar" onclick="removeAtributo('+i+');"><i class="material-icons">delete</i></button>'));
      table.append(row);
    }
    div.append(table);
      if($("#productos_div").hasClass("d-none")){
       $('#divResultadoListaAtributos').html(div);
-      $('#divResultadoListaAtributos').bootstrapMaterialDesign(); 
+      //$('#divResultadoListaAtributos').bootstrapMaterialDesign(); 
      }else{
       $('#divResultadoListaAtributosProd').html(div);
-      $('#divResultadoListaAtributosProd').bootstrapMaterialDesign(); 
+      //$('#divResultadoListaAtributosProd').bootstrapMaterialDesign(); 
      } 
+}
+
+function cambiarMontoDiasSitio(j){
+  var valor = $("#sitio_dias"+j).val();
+  itemAtributosDias[j].dias=valor;
 }
 function guardarAtributoItem(){
   if($('#modal_nombre').val()==""){

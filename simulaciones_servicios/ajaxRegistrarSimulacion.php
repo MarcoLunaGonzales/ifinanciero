@@ -230,15 +230,22 @@ if(isset($_GET['nombre'])){
   }
   
   
-    for ($jjjj=$inicioAnio; $jjjj<=$anios; $jjjj++) { 
+    //for ($jjjj=$inicioAnio; $jjjj<=$anios; $jjjj++) { 
+     $jjjj=$anios;
      //volcado de datos a la tabla simulaciones_servicios_tiposervicio
-     $serviciosPlan=obtenerDetallePlantillaServicioTipoServicio($plantilla_servicio);
+     $serviciosPlan=obtenerServiciosClaServicioTipo($idTipoServicio); //$serviciosPlan=obtenerDetallePlantillaServicioTipoServicio($plantilla_servicio);
      while ($rowServPlan = $serviciosPlan->fetch(PDO::FETCH_ASSOC)) {
 
-      $codCS=$rowServPlan['cod_claservicio'];
-      $obsCS=$rowServPlan['observaciones'];
-      $cantidadS=$rowServPlan['cantidad'];
-      $montoS=$rowServPlan['monto'];
+      //$codCS=$rowServPlan['cod_claservicio'];
+      //$obsCS=$rowServPlan['observaciones'];
+      //$cantidadS=$rowServPlan['cantidad'];
+      //$montoS=$rowServPlan['monto'];
+
+      $codCS=$rowServPlan['IdClaServicio'];
+      $obsCS=$rowServPlan['Descripcion'];
+      $cantidadS=1;
+      $montoS=1;
+
       if($montoS==0){
         $montoS=1;
       }
@@ -269,7 +276,7 @@ if(isset($_GET['nombre'])){
       $stmtAU->execute();
      }
 
-   } //fin de for anios  
+   //} //fin de for anios  
 
   echo $codSimServ;
 }

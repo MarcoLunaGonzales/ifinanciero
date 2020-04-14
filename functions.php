@@ -5181,6 +5181,15 @@ function obtenerUnidadAreaPorSimulacionCosto($codigo){
      }
      return array($areaX,$unidadX);
 }
+
+function obtenerServiciosClaServicioTipo($id){
+  $dbh = new Conexion();
+  $sql="";
+  $sql="SELECT p.* FROM cla_servicios p where p.vigente=1 and p.codigo_n2=$id";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+}
 ?>
 
 

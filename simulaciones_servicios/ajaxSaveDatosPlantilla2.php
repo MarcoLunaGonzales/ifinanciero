@@ -24,6 +24,7 @@ $fijo=$_GET['precio_fijo'];
 $productos="";
 $atributos= json_decode($_GET['productos']);
 $anio=$_GET['anio'];
+$anio_fila=$_GET['anio_fila'];
 $iteracion=$_GET['iteracion'];
 
 if($_GET['tcs']==0){
@@ -114,7 +115,7 @@ if($fijo!=""){
        $cantidad=1;
        $monto=$suma; 
 }
-$sqlDetalles="UPDATE simulaciones_servicios_tiposervicio SET cantidad_editado=$cantidad,monto=$monto,habilitado=$habilitado,cod_tipounidad=$unidad where codigo=$codigo";
+$sqlDetalles="UPDATE simulaciones_servicios_tiposervicio SET cantidad_editado=$cantidad,monto=$monto,habilitado=$habilitado,cod_tipounidad=$unidad,cod_anio=$anio_fila where codigo=$codigo";
 $stmtDetalles = $dbh->prepare($sqlDetalles);
 $stmtDetalles->execute();
 echo $anio."WWW".$iteracion;

@@ -20,6 +20,7 @@ $globalArea=$_SESSION["globalArea"];
 $codAreaX=$_GET['cod_area'];
 $codigoSimulacionSuper=$_GET['cod_sim'];
 $anio=$_GET['anio'];
+
 $usd=$_GET['usd'];
 ?>
 

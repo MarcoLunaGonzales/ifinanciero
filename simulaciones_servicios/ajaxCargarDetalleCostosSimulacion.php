@@ -99,7 +99,7 @@ $bgClase="bg-info";
           $precioLocalX=obtenerPrecioServiciosSimulacionPorAnio($codigo,$yyyy);
           $precioRegistrado=obtenerPrecioRegistradoPlantilla($codPlan);
           $sumaPrecioRegistrado=0;
-          if($yyyy!=1){
+          if($yyyy>1){
            //$precioLocalX=($precioLocalX*$porCre)+$precioLocalX;
            $sumaPrecioRegistrado=$precioRegistrado*$porCre;
           }
@@ -277,7 +277,7 @@ echo $html;
   </table>
   <?php  
    if($tipoCosto!=1){
-        ?><div class="row div-center"><h4 class="font-weight-bold"><small>N&uacute;mero de personal registrado:</small> <small class="text-success"><?=$alumnos?></small></h4></div><?php 
+        ?><!--<div class="row div-center"><h4 class="font-weight-bold"><small>N&uacute;mero de personal registrado:</small> <small class="text-success"><?=$alumnos?></small></h4></div>--><?php 
     }
    ?></div><?php    
  }     
