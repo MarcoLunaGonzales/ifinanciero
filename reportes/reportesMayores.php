@@ -5,6 +5,8 @@ require_once 'styles.php';
 require_once 'functions.php';
 require_once 'functionsGeneral.php';
 $globalAdmin=$_SESSION["globalAdmin"];
+$globalUnidad=$_SESSION["globalUnidad"];
+
 
 $fechaActual=date("m/d/Y");
 $m=date("m");
@@ -63,7 +65,7 @@ $i=0;
 					                          	$nombreX=$row['nombre'];
 					                          	$abrevX=$row['abreviatura'];
 					                          ?>
-					                       <option value="<?=$codigoX;?>"><?=$nombreX?></option>	
+					                       <option value="<?=$codigoX;?>" selected><?=$nombreX?></option>	
 					                         <?php
 				  	                         }
 				  	                         ?>
@@ -102,7 +104,21 @@ $i=0;
 				                <label class="col-sm-4 col-form-label">Oficina</label>
 				                <div class="col-sm-8">
 				                	<div class="form-group">
-				                		<div id="div_contenedor_oficina1">				                			
+				                		<div id="div_contenedor_oficina1">		
+				                			<?php
+											$sqlUO="SELECT uo.codigo, uo.nombre,uo.abreviatura from unidades_organizacionales uo order by 2";
+											$stmt = $dbh->prepare($sqlUO);
+											$stmt->execute();
+											?>
+												<select class="selectpicker form-control form-control-sm" name="unidad[]" id="unidad" data-style="select-with-transition" multiple data-actions-box="true" required data-live-search="true">
+												    <?php 
+												    	while ($row = $stmt->fetch()){ 
+													?>
+												      	 <option value="<?=$row["codigo"];?>" data-subtext="<?=$row["nombre"];?>" <?=($row["codigo"]==$globalUnidad)?"selected":""?> ><?=$row["abreviatura"];?></option>
+									    	<?php 
+												 		} 
+										 	?>
+												</select>
 				                		</div>
 				                     </div>
 				                </div>
@@ -160,7 +176,20 @@ $i=0;
 			                 <div class="col-sm-8">
 			                	<div class="form-group">
 			                		<div id="div_contenedor_oficina_costo">
-			                			
+				                			<?php
+											$sqlUO="SELECT uo.codigo, uo.nombre,uo.abreviatura from unidades_organizacionales uo order by 2";
+											$stmt = $dbh->prepare($sqlUO);
+											$stmt->execute();
+											?>
+												<select class="selectpicker form-control form-control-sm" name="unidad_costo[]" id="unidad_costo" data-style="select-with-transition" multiple data-actions-box="true" required data-live-search="true">
+												    <?php 
+												    	while ($row = $stmt->fetch()){ 
+													?>
+												      	 <option value="<?=$row["codigo"];?>" data-subtext="<?=$row["nombre"];?>" <?=($row["codigo"]==$globalUnidad)?"selected":""?> ><?=$row["abreviatura"];?></option>
+									    	<?php 
+												 		} 
+										 	?>
+												</select>			                			
 			                		</div>
 	                              <!-- <select class="selectpicker form-control form-control-sm" name="unidad_costo[]" id="unidad_costo" data-style="select-with-transition" multiple data-actions-box="true" required>
 			  	                          <?php
@@ -194,7 +223,7 @@ $i=0;
 				                     	$nombreX=$row['nombre'];
 				                     	$abrevX=$row['abreviatura'];
 				                     ?>
-				                     <option value="<?=$codigoX;?>"><?=$abrevX;?></option>	
+				                     <option value="<?=$codigoX;?>" selected><?=$abrevX;?></option>	
 				                       <?php
 			  	                       }
 			  	                       ?>

@@ -408,6 +408,19 @@ function nameEntidad($codigo){
    }
    return($nombreX);
 }
+function nameEntidadUO($codigo){
+   $dbh = new Conexion();
+   $sql="SELECT e.nombre from entidades e, entidades_uo eu where e.codigo=eu.cod_entidad and eu.cod_uo=:codigo";
+   //echo $sql;
+   $stmt = $dbh->prepare($sql);
+   $stmt->bindParam(':codigo',$codigo);
+   $stmt->execute();
+   $nombreX="";
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $nombreX=$row['nombre'];
+   }
+   return($nombreX);
+}
 
 
 function namePartidaPres($codigo){

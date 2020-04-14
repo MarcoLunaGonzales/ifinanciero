@@ -107,7 +107,7 @@ $nombreCompletoUnidad=nameUnidad($globalUnidad);
 			 }
 		    ?>
 		    <?php
-			$stmt = $dbh->prepare("SELECT cod_unidadorganizacional,cod_grupocuentas,fijo,cod_area FROM configuracion_centrocostoscomprobantes");
+			$stmt = $dbh->prepare("SELECT cod_unidadorganizacional,cod_grupocuentas,fijo,cod_area FROM configuracion_centrocostoscomprobantes where cod_unidadorganizacional='$globalUnidad'");
 			$stmt->execute();
 			while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 				$codUnidadX=$row['cod_unidadorganizacional'];
