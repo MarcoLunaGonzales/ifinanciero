@@ -2514,8 +2514,9 @@ function guardarSimulacionServicio(){
     if(norma==""||itemAtributos.length==0||dias==""||nombre==""||!(plantilla_servicio>0)){
    Swal.fire('Informativo!','Debe llenar los campos!','warning'); 
      }else{
+      var regionCliente=$("#region_cliente").val();
       objeto=0;
-     var parametros={"id_perfil":idPerfil,"objeto_servicio":objeto,"id_servicio":idServicio,"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"atributos":JSON.stringify(itemAtributos),"norma":norma,"anios":anios,"afnor":afnor,"tipo_atributo":1};
+     var parametros={"region_cliente":regionCliente,"id_perfil":idPerfil,"objeto_servicio":objeto,"id_servicio":idServicio,"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"atributos":JSON.stringify(itemAtributos),"norma":norma,"anios":anios,"afnor":afnor,"tipo_atributo":1};
      $.ajax({
         type: "GET",
         dataType: 'html',

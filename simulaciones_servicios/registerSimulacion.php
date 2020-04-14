@@ -122,6 +122,9 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
            }
            
            $idTipoServGlobal=$idTipoServicioX;
+           if($idTipoServGlobal==0){
+             $idTipoServGlobal=309;
+           }
       }    
 ?>
 <script>

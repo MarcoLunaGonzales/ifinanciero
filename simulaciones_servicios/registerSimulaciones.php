@@ -160,6 +160,30 @@ $dbh = new Conexion();
                             </button>
                         </div>
                     </div>
+                    <div class="row">
+                       <label class="col-sm-2 col-form-label">Regi&oacute;n</label>
+                       <div class="col-sm-7">
+                        <div class="row">
+                          <div class="col-sm-12">
+                            <div class="form-group">
+                                <select class="selectpicker form-control" name="region_cliente" id="region_cliente" data-style="btn btn-info"  required>
+                                <?php
+                                 $stmt = $dbh->prepare("SELECT c.codigo, c.descripcion FROM tipos_clientenacionalidad c order by 1");
+                                 $stmt->execute();
+                                  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                  $codigoX=$row['codigo'];
+                                  $nombreX=$row['descripcion'];
+                                   ?>
+                                  <option value="<?=$codigoX;?>"><?=$nombreX;?></option> 
+                                  <?php
+                                    }
+                                    ?>
+                                </select>
+                              </div>
+                          </div> 
+                        </div>
+                       </div>
+                      </div><!--row-->
                       </div>
                       <div id="sitios_div" class="d-none">
                       <div class="row">

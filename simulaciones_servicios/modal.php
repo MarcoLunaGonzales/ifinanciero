@@ -750,7 +750,7 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                                   <select class="selectpicker form-control form-control-sm" data-size="6" data-live-search="true" name="modal_editpersonal<?=$an?>" id="modal_editpersonal<?=$an?>" data-style="fondo-boton fondo-boton-active">
                                     <option disabled selected="selected" value="">--PERSONAL--</option>
                                     <?php 
-                                     $stmt3 = $dbh->prepare("SELECT codigo,nombre,abreviatura from tipos_auditor where cod_estadoreferencial=1");
+                                     $stmt3 = $dbh->prepare("SELECT codigo,nombre,abreviatura from tipos_auditor where cod_estadoreferencial=1 order by nro_orden");
                                      $stmt3->execute();
                                      while ($rowServ = $stmt3->fetch(PDO::FETCH_ASSOC)) {
                                       $codigoServX=$rowServ['codigo'];
@@ -796,7 +796,7 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                                 </tr>
                                 <?php 
                                 $iii=1;
-                               $queryPr="SELECT s.*,t.nombre as tipo_personal FROM simulaciones_servicios_auditores s, tipos_auditor t where s.cod_simulacionservicio=$codigoSimulacionSuper and s.cod_tipoauditor=t.codigo and s.cod_anio=$an order by s.codigo";
+                               $queryPr="SELECT s.*,t.nombre as tipo_personal FROM simulaciones_servicios_auditores s, tipos_auditor t where s.cod_simulacionservicio=$codigoSimulacionSuper and s.cod_tipoauditor=t.codigo and s.cod_anio=$an order by t.nro_orden";
                                $stmt = $dbh->prepare($queryPr);
                                $stmt->execute();
                                $modal_totalmontopre=0;$modal_totalmontopretotal=0;$sumaCantidadPre=0;
