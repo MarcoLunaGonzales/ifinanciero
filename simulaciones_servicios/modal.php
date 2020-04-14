@@ -360,12 +360,12 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                                <input type="number" step="0.01" class="form-control" name="modal_utibnorca" id="modal_utibnorca" value="">
                              </div>
                            </div>  
-                           <label class="col-sm-2 col-form-label">D&iacute;as Auditoria</label>
+                           <!--<label class="col-sm-2 col-form-label">D&iacute;as Auditoria</label>
                            <div class="col-sm-4">                     
-                             <div class="form-group">
-                               <input type="number" min="1" class="form-control" name="modal_diasauditoria" id="modal_diasauditoria" value="">
-                             </div>
-                           </div>
+                             <div class="form-group">-->
+                               <input type="hidden" min="1" class="form-control" name="modal_diasauditoria" id="modal_diasauditoria" value="">
+                             <!--</div>
+                           </div>-->
 
                           <!--<label class="col-sm-2 col-form-label">UT Min. Fuera %</label>
                            <div class="col-sm-4">                     
@@ -402,8 +402,8 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                               $cantidadSitios=explode(",",$sitiosX);
                          ?>
                      <div class="row">
-                       <label class="col-sm-2 col-form-label">Sitios <!--<small class="text-muted">(<?=count($cantidadSitios)?>)</small>--></label>
-                       <div class="col-sm-8">
+                       <!--<label class="col-sm-2 col-form-label">Sitios <small class="text-muted">(<?=count($cantidadSitios)?>)</small></label>-->
+                       <div class="col-sm-11">
                         <div class="form-group" style="border-bottom: 1px solid #CACFD2">
                           <div id="productos_div" class="d-none"></div>
                           <input type="hidden" value="" class="form-control tagsinput" name="modal_sitios" id="modal_sitios" data-role="tagsinput" data-color="warning">                          
@@ -414,7 +414,7 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                           </div>
                         </div>
                         </div>
-                        <div class="col-sm-2">
+                        <div class="col-sm-1">
                            <button title="Agregar Sitio" type="button" name="add" class="btn btn-warning btn-round btn-fab" onClick="agregarAtributoAjax()"><i class="material-icons">add</i>
                             </button>
                         </div>
@@ -459,63 +459,19 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                       <div>
                         <hr>
                         <br>
-                        <ul class="nav nav-pills nav-pills-warning" role="tablist">
-                        <?php
-                        if($codAreaX==39){
-                          $inicioAnio=1;
-                        }else{
-                          $inicioAnio=0;
-                        }
-
-                          for ($an=$inicioAnio; $an<=$anioGeneral; $an++) { 
-                            $active="";
-                            $etapas="Seguimiento ".($an-1);
-
-                            if($codAreaX!=39){
-                              if($an==0||$an==1){
-                               $etapas="Etapa ".($an+1).""; 
-                              }
-                            }
-
-                            if($an==1){
-                              $active="active";
-                            }
-                                ?>
-                          <li class="nav-item">
-                            <a class="nav-link <?=$active?>" data-toggle="tab" href="#link<?=$an?>" onclick="cambiarTituloPersonalModal(<?=$an?>)" role="tablist">
-                              <?=$etapas?> 
-                            </a>
-                          </li>
-                        <?php
-                            }
-                        ?>
-                         </ul>
-                         <div class="tab-content tab-space">
-                         <?php
-                          for ($an=$inicioAnio; $an<=$anioGeneral; $an++) { 
-                            $active="";
-                            $etapas="Seguimiento ".($an-1);
-
-                            if($codAreaX!=39){
-                              if($an==0||$an==1){
-                               $etapas="Etapa ".($an+1).""; 
-                              }
-                            }
-                            if($an==1){
-                              $active="active";
-                            }
-                                ?>
-                          <div class="tab-pane <?=$active?>" id="link<?=$an?>">
-
+                         <div class="content">
+                          <div class="">
+                    <?php $an=0; ?>
                     <!--INICIO DE SERVICIOS-->
-                    <h4 class="font-weight-bold"><center><?=$etapas?> SERVICIOS</center></h4>
+                    <!--<h4 class="font-weight-bold"><center><?=$etapas?> SERVICIOS</center></h4>-->
                       <div class="row" id="modal_contenidoservicios<?=$an?>">
                         <table class="table table-bordered table-condensed table-striped table-sm">
                              <thead>
                                   <tr class="fondo-boton">
                                     <td>#</td>
-                                    <td width="30%">Descripci&oacute;n</td>
-                                    <td>Cantidad</td>
+                                    <td width="6%">Año</td>
+                                    <td width="23%"> SERVICIOS</td>
+                                    <td width="5%">Cantidad</td>
                                     <td width="17%">Unidad</td>
                                     <td>Monto BOB</td>
                                     <td>Monto USD</td>
@@ -527,6 +483,26 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                               <tbody id="modal_body_tabla_servicios<?=$an?>">
                                 <tr class="bg-plomo">
                                   <td>N</td>
+                                  <td>
+                                    <select class="form-control selectpicker form-control-sm" data-style="fondo-boton fondo-boton-active" name="anio<?=$an?>SSS0" id="anio<?=$an?>SSS0">
+                                          <?php 
+                                          for ($i=0; $i <= $anioGeneral; $i++) { 
+                                             $etapas="Seg ".($i-1);
+
+                                              if($codAreaX!=39){
+                                               if($i==0||$i==1){
+                                                $etapas="Et ".($i+1).""; 
+                                               }
+                                              }
+                                              if($i==$codAnioPre){
+                                                  ?><option value="<?=$i?>" selected><?=$etapas?></option><?php
+                                                }else{
+                                                  ?><option value="<?=$i?>"><?=$etapas?></option><?php
+                                                }
+                                          }
+                                          ?>
+                                      </select>
+                                  </td>
                                   <td><?php 
                                   if($codAreaX==39){
                                     $codigoAreaServ=108;
@@ -544,7 +520,7 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                                   <select class="selectpicker form-control form-control-sm" data-size="6" data-live-search="true" name="modal_editservicio<?=$an?>" id="modal_editservicio<?=$an?>" data-style="fondo-boton">
                                     <option disabled selected="selected" value="">--SERVICIOS--</option>
                                     <?php 
-                                     $stmt3 = $dbh->prepare("SELECT idclaservicio,descripcion,codigo from cla_servicios where (codigo_n1=108 or codigo_n1=109) and vigente=1 and codigo_n1=$codigoAreaServ and idTipo=$idTipoServ order by 2");
+                                     $stmt3 = $dbh->prepare("SELECT idclaservicio,descripcion,codigo from cla_servicios where (codigo_n1=108 or codigo_n1=109) and vigente=1 and codigo_n1=$codigoAreaServ and idTipo=$idTipoServGlobal order by 2");
                                      $stmt3->execute();
                                      while ($rowServ = $stmt3->fetch(PDO::FETCH_ASSOC)) {
                                       $codigoServX=$rowServ['idclaservicio'];
@@ -595,7 +571,7 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                                 </tr>
                                 <?php 
                                 $iii=1;
-                               $queryPr="SELECT s.*,t.descripcion as nombre_serv FROM simulaciones_servicios_tiposervicio s, cla_servicios t where s.cod_simulacionservicio=$codigoSimulacionSuper and s.cod_claservicio=t.idclaservicio and s.cod_anio=$an order by s.codigo";
+                               $queryPr="SELECT s.*,t.descripcion as nombre_serv FROM simulaciones_servicios_tiposervicio s, cla_servicios t where s.cod_simulacionservicio=$codigoSimulacionSuper and s.cod_claservicio=t.idclaservicio order by s.codigo";
                                $stmt = $dbh->prepare($queryPr);
                                $stmt->execute();
                                $modal_totalmontopre=0;$modal_totalmontopretotal=0;
@@ -609,6 +585,7 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                                   $montoPreTotal=$montoPre*$cantidadEPre;
                                   $banderaHab=$rowPre['habilitado'];
                                   $codTipoUnidad=$rowPre['cod_tipounidad'];
+                                  $codAnioPre=$rowPre['cod_anio'];
                                   $claseDeshabilitado="hidden";
                                   $claseDeshabilitadoOFF="number";
                                   if($banderaHab!=0){
@@ -628,6 +605,26 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                                    ?>
                                    <tr>
                                      <td><?=$iii?></td>
+                                     <td>
+                                        <select class="form-control selectpicker form-control-sm" data-style="fondo-boton fondo-boton-active" name="anio<?=$an?>SSS<?=$iii?>" id="anio<?=$an?>SSS<?=$iii?>">
+                                          <?php 
+                                          for ($i=0; $i <= $anioGeneral; $i++) { 
+                                             $etapas="Seg ".($i-1);
+
+                                              if($codAreaX!=39){
+                                               if($i==0||$i==1){
+                                                $etapas="Et ".($i+1).""; 
+                                               }
+                                              }
+                                              if($i==$codAnioPre){
+                                                  ?><option value="<?=$i?>" selected><?=$etapas?></option><?php
+                                                }else{
+                                                  ?><option value="<?=$i?>"><?=$etapas?></option><?php
+                                                }
+                                          }
+                                          ?>
+                                      </select>
+                                     </td>
                                      <td class="text-left"><i class="material-icons text-warning"><?=$iconServ?></i><input type="hidden" id="precio_fijo<?=$an?>SSS<?=$iii?>" value="<?=$iconServ?>"> <?=$tipoPre?></td>
                                      <td class="text-right">
                                        <input type="number" min="1" id="cantidad_servicios<?=$an?>SSS<?=$iii?>" name="cantidad_servicios<?=$an?>SSS<?=$iii?>" class="form-control text-info text-right" onchange="calcularTotalFilaServicio(<?=$an?>,2)" onkeyUp="calcularTotalFilaServicio(<?=$an?>,2)" value="<?=$cantidadEPre?>">
@@ -682,7 +679,7 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                                   
                               </tbody>
                                   <tr>
-                                     <td colspan="4" class="text-center font-weight-bold">Total</td>
+                                     <td colspan="5" class="text-center font-weight-bold">Total</td>
                                      <td id="modal_totalmontoserv<?=$an?>" class="text-right"><?=number_format($modal_totalmontopre,2, ',', '')?></td>
                                      <td id="modal_totalmontoservUSD<?=$an?>" class="text-right"><?=number_format($modal_totalmontopre/$usd,2,', ','')?></td>
                                      <td id="modal_totalmontoservtotal<?=$an?>" class="text-right font-weight-bold"><?=number_format($modal_totalmontopretotal,2, ',', '')?></td>    
@@ -690,47 +687,40 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                                      <td></td>
                                    </tr>
                            </table>
-                           <input type="hidden" id="modal_numeroservicio<?=$an?>" value="<?=$iii?>">
-                           <div class="row col-sm-12">
-                            <label class="col-sm-4 col-form-label">Copiar datos (SERVICIOS) de <?=$etapas?> a:</label>
-                             <div class="col-sm-2">
-                              <div class="form-group">
-                               <select class="form-control selectpicker" multiple data-style="btn btn-primary btn-sm btn-round" name="copiar_servicios<?=$an?>[]" id="copiar_servicios<?=$an?>">
-                                 <?php
-                                for ($kk=$inicioAnio; $kk<=$anioGeneral; $kk++) { 
-                                    $optionTit="Seguimiento ".($kk-1);
-                                     if($codAreaX!=39){
-                                       if($kk==0||$kk==1){
-                                        $optionTit="Etapa ".($kk+1).""; 
-                                       }
-                                     }
-                                    if($kk!=$an){
-                                        ?><option value="<?=$kk?>"><?=$optionTit?></option><?php
-                                    }
-                                }    
-                                  ?>       
-                                </select>
-                               </div> 
-                             </div>
-                             <div class="col-sm-2">
-                              <div class="form-group">
-                                <button onclick="copiarDatosServicios(<?=$an?>)" class="btn btn-info btn-sm" >COPIAR</button>
-                               </div> 
-                             </div>
-                           </div>          
+                           <input type="hidden" id="modal_numeroservicio<?=$an?>" value="<?=$iii?>">        
                       </div>
                     <!--FIN DE SERVICIOS-->
 
-                   <!--INICION DE PERSONAL-->         
-                      <h4 class="font-weight-bold"><center><?=$etapas?> HONORARIOS PERSONAL</center></h4>
+                   
+                          </div>
+
+                      
+                         <?php   
+                          for ($an=$inicioAnio; $an<=$anioGeneral; $an++) { 
+                            $active="";
+                            $etapas="Seguimiento ".($an-1);
+
+                            if($codAreaX!=39){
+                              if($an==0||$an==1){
+                               $etapas="Etapa ".($an+1).""; 
+                              }
+                            }
+                            if($an==1){
+                              $active="active";
+                            }
+                                ?>
+                          <div class="">
+
+                    <!--INICION DE PERSONAL-->         
+                      <!--<h4 class="font-weight-bold"><center><?=$etapas?> HONORARIOS PERSONAL</center></h4>-->
                       <div class="row">
                         <table class="table table-bordered table-condensed table-striped table-sm">
                              <thead>
-                                  <tr class="fondo-boton">
+                                  <tr class="fondo-boton fondo-boton-active">
                                     <td>#</td>
-                                    <td width="25%">Tipo de Personal</td>
-                                    <td width="8%" class="text-center">Cantidad</td>                                   
-                                    <td width="8%">D&iacute;as Aud.</td>
+                                    <td width="30%"><?=$etapas?> HONORARIOS PERSONAL</td>
+                                    <td class="text-center">Cantidad</td>                                   
+                                    <td width="17%">D&iacute;as Aud.</td>
                                     <td>Monto BOB</td>
                                     <td>Monto USD</td>
                                     <td>Total BOB</td>           
@@ -744,18 +734,20 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                                   <td><?php 
                                   if($codAreaX==39){
                                     $codigoAreaServ=108;
-                                    $idTipoServ=309;
+                                    //$idTipoServ=309;
                                   }else{
                                     if($codAreaX==38){
                                       $codigoAreaServ=109; //codigo 109 tcp
-                                      $idTipoServ=310;
+                                      //$idTipoServ=310;
                                     }else{
                                       $codigoAreaServ=0;
-                                      $idTipoServ=309;
+                                     // $idTipoServ=309;
                                     }
                                   }
+
+                                  $idTipoServ=309; //para filtrar los servicios solor
                                 ?>
-                                  <select class="selectpicker form-control form-control-sm" data-size="6" data-live-search="true" name="modal_editpersonal<?=$an?>" id="modal_editpersonal<?=$an?>" data-style="fondo-boton">
+                                  <select class="selectpicker form-control form-control-sm" data-size="6" data-live-search="true" name="modal_editpersonal<?=$an?>" id="modal_editpersonal<?=$an?>" data-style="fondo-boton fondo-boton-active">
                                     <option disabled selected="selected" value="">--PERSONAL--</option>
                                     <?php 
                                      $stmt3 = $dbh->prepare("SELECT codigo,nombre,abreviatura from tipos_auditor where cod_estadoreferencial=1");
@@ -773,7 +765,7 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                                        <input type="number" readonly min="1" id="cantidad_personal<?=$an?>FFF0" name="cantidad_personal<?=$an?>FFF0" class="form-control text-primary text-right" onchange="" onkeyUp="" value="1">
                                   </td>
                                   <td>
-                                      <select class="form-control selectpicker form-control-sm" data-style="fondo-boton fondo-boton-active" name="dias_personal<?=$an?>FFF0" id="dias_personal<?=$an?>FFF0" onchange="calcularTotalPersonalServicioNuevo(<?=$an?>,2)">
+                                      <select class="form-control selectpicker form-control-sm" data-style="fondo-boton" name="dias_personal<?=$an?>FFF0" id="dias_personal<?=$an?>FFF0" onchange="calcularTotalPersonalServicioNuevo(<?=$an?>,2)">
                                           <?php 
                                              for ($hf=0; $hf<=$diasSimulacion; $hf++) {
                                               ?><option value="<?=$hf?>"><?=$hf?></option><?php      
@@ -796,7 +788,7 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                                      </td>
                                   <td>
                                     <div class="btn-group">
-                                       <a href="#" class="btn btn-primary btn-sm" id="boton_modalnuevopersonal<?=$an?>" onclick="agregarNuevoPersonalSimulacion(<?=$an?>,<?=$codigoSimulacionSuper?>,<?=$codAreaX?>); return false;">
+                                       <a href="#" class="btn btn-info btn-sm" id="boton_modalnuevopersonal<?=$an?>" onclick="agregarNuevoPersonalSimulacion(<?=$an?>,<?=$codigoSimulacionSuper?>,<?=$codAreaX?>); return false;">
                                          Agregar
                                        </a>
                                      </div>
@@ -866,7 +858,7 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                                      </td>
                                      <td class="text-center">
 
-                                       <select class="form-control selectpicker form-control-sm" data-size="6" data-style="fondo-boton fondo-boton-active" name="dias_personal<?=$an?>FFF<?=$iii?>" id="dias_personal<?=$an?>FFF<?=$iii?>" onchange="calcularTotalPersonalServicio('<?=$an?>',2)">
+                                       <select class="form-control selectpicker form-control-sm" data-size="6" data-style="fondo-boton" name="dias_personal<?=$an?>FFF<?=$iii?>" id="dias_personal<?=$an?>FFF<?=$iii?>" onchange="calcularTotalPersonalServicio('<?=$an?>',2)">
                                           <?php 
                                              for ($hf=0; $hf<=$diasSimulacion; $hf++) {
                                               if($hf==$diasPre){
@@ -922,7 +914,7 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                            </table>
                            <input type="hidden" id="modal_numeropersonal<?=$an?>" value="<?=$iii?>">
                            <input type="hidden" id="modal_cantidadpersonal<?=$an?>" value="<?=$sumaCantidadPre?>">
-                           <div class="row col-sm-12">
+                           <!--<div class="row col-sm-12">
                             <label class="col-sm-4 col-form-label">Copiar datos (PERSONAL) de <?=$etapas?> a:</label>
                              <div class="col-sm-2">
                               <div class="form-group">
@@ -948,14 +940,15 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                                 <button onclick="copiarDatosPersonal(<?=$an?>)" class="btn btn-info btn-sm" >COPIAR</button>
                                </div> 
                              </div>
-                           </div>
+                           </div>-->
                       </div>
                        <!--FIN DE PERSONAL-->
+
+                   
                           </div>
                         <?php
                             }
                         ?>  
-
                          </div>
                       </div>
                       <hr>

@@ -97,7 +97,7 @@ $dbh = new Conexion();
                         <div class="row">
                           <div class="col-sm-12">
                             <div class="form-group">
-                                <select class="selectpicker form-control" data-size="6" data-live-search-placeholder="Buscar cliente..." data-live-search="true" name="cliente" id="cliente" data-style="btn btn-info"  required>
+                                <select class="selectpicker form-control" data-size="4" data-live-search-placeholder="Buscar cliente..." data-live-search="true" name="cliente" id="cliente" data-style="btn btn-info"  required>
           
                                 <!--<option disabled selected="selected" value="">Cliente</option>-->
                                 <?php

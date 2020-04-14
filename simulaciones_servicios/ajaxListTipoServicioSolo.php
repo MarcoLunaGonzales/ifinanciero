@@ -20,14 +20,16 @@ $globalArea=$_SESSION["globalArea"];
 $codAreaX=$_GET['cod_area'];
 $codigoSimulacionSuper=$_GET['cod_sim'];
 $anio=$_GET['anio'];
+$anio_fila=$_GET['anio_fila'];
 $usd=$_GET['usd'];
 $codigo=$_GET['codigo'];
+$anioGeneral=$_GET['anio_general'];
 ?>
 
                       
                                 <?php 
                                 $iii=$_GET['cantidad_filas'];
-                               $queryPr="SELECT s.*,t.descripcion as nombre_serv FROM simulaciones_servicios_tiposervicio s, cla_servicios t where s.cod_simulacionservicio=$codigoSimulacionSuper and s.cod_claservicio=t.idclaservicio and s.cod_anio=$anio and s.codigo=$codigo";
+                               $queryPr="SELECT s.*,t.descripcion as nombre_serv FROM simulaciones_servicios_tiposervicio s, cla_servicios t where s.cod_simulacionservicio=$codigoSimulacionSuper and s.cod_claservicio=t.idclaservicio and s.cod_anio=$anio_fila and s.codigo=$codigo";
                                $stmt = $dbh->prepare($queryPr);
                                $stmt->execute();
                                $modal_totalmontopre=0;$modal_totalmontopretotal=0;
@@ -41,6 +43,7 @@ $codigo=$_GET['codigo'];
                                   $montoPreTotal=$montoPre*$cantidadEPre;
                                   $banderaHab=$rowPre['habilitado'];
                                   $codTipoUnidad=$rowPre['cod_tipounidad'];
+                                  $codAnioPre=$rowPre['cod_anio'];
                                   $claseDeshabilitado="hidden";
                                   $claseDeshabilitadoOFF="number";
                                   if($banderaHab!=0){
@@ -60,6 +63,26 @@ $codigo=$_GET['codigo'];
                                    ?>
                                    <tr>
                                      <td><?=$iii?></td>
+                                      <td>
+                                        <select class="form-control selectpicker form-control-sm" data-style="fondo-boton fondo-boton-active" name="anio<?=$anio?>SSS<?=$iii?>" id="anio<?=$anio?>SSS<?=$iii?>">
+                                          <?php 
+                                          for ($i=0; $i <= $anioGeneral; $i++) { 
+                                             $etapas="Seg ".($i-1);
+
+                                              if($codAreaX!=39){
+                                               if($i==0||$i==1){
+                                                $etapas="Et ".($i+1).""; 
+                                               }
+                                              }
+                                              if($i==$codAnioPre){
+                                                  ?><option value="<?=$i?>" selected><?=$etapas?></option><?php
+                                                }else{
+                                                  ?><option value="<?=$i?>"><?=$etapas?></option><?php
+                                                }
+                                          }
+                                          ?>
+                                      </select>
+                                     </td>
                                      <td class="text-left"><i class="material-icons text-warning"><?=$iconServ?></i><input type="hidden" id="precio_fijo<?=$anio?>SSS<?=$iii?>" value="<?=$iconServ?>"> <?=$tipoPre?></td>
                                      <td class="text-right">
                                        <input type="number" min="1" id="cantidad_servicios<?=$anio?>SSS<?=$iii?>" name="cantidad_servicios<?=$anio?>SSS<?=$iii?>" class="form-control text-info text-right" onchange="calcularTotalFilaServicio(<?=$anio?>,2)" onkeyUp="calcularTotalFilaServicio(<?=$anio?>,2)" value="<?=$cantidadEPre?>">
