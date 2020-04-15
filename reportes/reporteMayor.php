@@ -262,6 +262,7 @@ while ($rowComp = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
             $tDebeBol+=$debeX;$tHaberBol+=$haberX;
             $tDebeTc+=$debeX/$tc;$tHaberTc+=$haberX/$tc;  
+            
              $html.='<tr>'.
                       //'<td class="font-weight-bold">'.$nombreUnidad.'</td>'.
                       '<td class="font-weight-bold small">'.$unidadX.'</td>'.
@@ -275,6 +276,7 @@ while ($rowComp = $stmt->fetch(PDO::FETCH_ASSOC)) {
                       '<td class="text-right font-weight-bold small">'.number_format(00000, 2, '.', ',').'</td>';        
                       
                     $html.='</tr>';
+            }
       $entero=floor($tDebeBol);
       $decimal=$tDebeBol-$entero;
       $centavos=floor($decimal*100);
