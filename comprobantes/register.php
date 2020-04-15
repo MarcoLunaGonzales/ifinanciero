@@ -364,7 +364,12 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
 						            	<input class="form-control" type="number" step=".01" name="totalhab" placeholder="0" id="totalhab" readonly="true">	
 									</div>
 						      	</div>
-						      	<div class="col-sm-4">
+						      	<div class="col-sm-1">
+						            <div class="form-group">
+						            	<input class="form-control text-primary" type="number" step=".01" name="total_dif" placeholder="0" id="total_dif" readonly="true">	
+									</div>
+						      	</div>
+						      	<div class="col-sm-3">
 								</div>
 							</div>
 	                  	

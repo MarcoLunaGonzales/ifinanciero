@@ -58,6 +58,9 @@ while ($row = $cont->fetch(PDO::FETCH_BOUND)) {
 //totales debe haber 
 $totalesDebeHaber=obtenerTotalesDebeHaberComprobante($globalCode);
 
+$totalDebeComp=number_format($totalesDebeHaber[0],2,".","");
+$totalHaberComp=number_format($totalesDebeHaber[1],2,".","");
+$totalesDif=number_format($totalesDebeHaber[0]-$totalesDebeHaber[1],2,".","");
 //unidad organizacional
 //configuraciones
 $stmtUnidades = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM unidades_organizacionales where cod_estado=1 and centro_costos=1 order by 2");
@@ -618,17 +621,22 @@ $stmt->execute();
 						            <div class="form-group">	
 						          		<input class="form-control" type="hidden" name="totaldeb_restante" placeholder="0" id="totaldeb_restante" readonly="true">
 						          		<input class="form-control" type="hidden" name="totaldeb_total" placeholder="0" id="totaldeb_total" readonly="true">	
-						          		<input class="form-control" type="number" name="totaldeb" value="<?=$totalesDebeHaber[0]?>" placeholder="0" id="totaldeb" readonly="true">
+						          		<input class="form-control" type="number" name="totaldeb" value="<?=$totalDebeComp?>" placeholder="0" id="totaldeb" readonly="true">
 									</div>
 						      	</div>
 								<div class="col-sm-1">
 						            <div class="form-group">
 						            	<input class="form-control" type="hidden" name="totalhab_restante" placeholder="0" id="totalhab_restante" readonly="true">
 						            	<input class="form-control" type="hidden" name="totalhab_total" placeholder="0" id="totalhab_total" readonly="true">
-						            	<input class="form-control" type="number" name="totalhab" value="<?=$totalesDebeHaber[1]?>" placeholder="0" id="totalhab" readonly="true">	
+						            	<input class="form-control" type="number" name="totalhab" value="<?=$totalHaberComp?>" placeholder="0" id="totalhab" readonly="true">	
 									</div>
 						      	</div>
-						      	<div class="col-sm-4">
+						      	<div class="col-sm-1">
+						            <div class="form-group">
+						            	<input class="form-control text-primary" value="<?=$totalesDif?>" type="number" name="total_dif" placeholder="0" id="total_dif" readonly="true">	
+									</div>
+						      	</div>
+						      	<div class="col-sm-3">
 								</div>
 							</div>
 					  </div>		

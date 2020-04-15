@@ -4815,7 +4815,7 @@ function nameCuentaAuxiliar($cuentaaux){
    $sqlX="SELECT nombre FROM cuentas_auxiliares where codigo='$cuentaaux'";
    $stmt = $dbh->prepare($sqlX);
    $stmt->execute();
-   $nombreX=0;
+   $nombreX="";
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       $nombreX=$row['nombre'];
    }
