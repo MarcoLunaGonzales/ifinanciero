@@ -188,8 +188,9 @@ $porciones = explode("@", $codcuenta[$xx]);
 $cuenta=$porciones[0];
 if($porciones[1]=="aux"){
   $nombreCuenta=nameCuentaAux($cuenta);
+
  $query1="SELECT d.codigo as cod_det,d.cod_area,d.cod_unidadorganizacional,d.glosa,d.debe,d.haber,
-p.codigo,p.nro_cuenta,p.nombre,
+p.codigo,p.nro_cuenta,p.nombre,d.cod_cuentaauxiliar,
 u.abreviatura,a.abreviatura as areaAbrev,
 c.cod_unidadorganizacional as unidad,c.fecha
 FROM cuentas_auxiliares p 
@@ -200,8 +201,9 @@ join comprobantes c on d.cod_comprobante=c.codigo
 where c.cod_gestion=$NombreGestion and p.codigo=$cuenta and c.fecha BETWEEN '$desde' and '$hasta' and ($queryFin";
 }else{
   $nombreCuenta=nameCuenta($cuenta);
+
   $query1="SELECT d.codigo as cod_det,d.cod_area,d.cod_unidadorganizacional,d.glosa,d.debe,d.haber,
-p.codigo,p.numero,p.nombre,p.cuenta_auxiliar,
+p.codigo,p.numero,p.nombre,d.cod_cuentaauxiliar,
 u.abreviatura,a.abreviatura as areaAbrev,
 c.cod_unidadorganizacional as unidad,c.fecha
 FROM plan_cuentas p 
@@ -211,7 +213,9 @@ join unidades_organizacionales u on u.codigo=d.cod_unidadorganizacional
 join comprobantes c on d.cod_comprobante=c.codigo
 where c.cod_gestion=$NombreGestion and p.codigo=$cuenta and c.fecha BETWEEN '$desde' and '$hasta' and ($queryFin";
 }
-// echo $query1;
+
+//echo $query1;
+
 $stmt = $dbh->prepare($query1);
 // Ejecutamos
 $stmt->execute();
@@ -249,7 +253,8 @@ while ($rowComp = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $areaX=$rowComp['areaAbrev'];
     $debeX=$rowComp['debe'];
     $haberX=$rowComp['haber'];
-    $cuenta_auxiliarX=nameCuentaAuxiliar($rowComp['cuenta_auxiliar']);
+    $codCuentaAuxiliar=$rowComp['cod_cuentaauxiliar'];
+    $cuenta_auxiliarX=nameCuentaAuxiliar($codCuentaAuxiliar);
     $nombreUnidad=nameUnidad($rowComp['unidad']);
     //INICIAR valores de las sumas
     if($glosaLen==0){      
@@ -261,22 +266,22 @@ while ($rowComp = $stmt->fetch(PDO::FETCH_ASSOC)) {
     if($tc==0){$tc=1;}
 
             $tDebeBol+=$debeX;$tHaberBol+=$haberX;
-            $tDebeTc+=$debeX/$tc;$tHaberTc+=$haberX/$tc;  
+            $tDebeTc+=$debeX/$tc;$tHaberTc+=$haberX/$tc; 
+            $saldoX=$debeX-$haberX; 
             
              $html.='<tr>'.
                       //'<td class="font-weight-bold">'.$nombreUnidad.'</td>'.
                       '<td class="font-weight-bold small">'.$unidadX.'</td>'.
                       '<td class="font-weight-bold small">'.$areaX.'</td>'.
                       '<td class="font-weight-bold small">'.strftime('%d/%m/%Y',strtotime($fechaX)).'</td>'.
-                      '<td class="text-left small">'.$cuenta_auxiliarX." - ".$glosaX.'</td>'.
+                      '<td class="text-left small">['.$cuenta_auxiliarX."] - ".$glosaX.'</td>'.
                       '<td class="font-weight-bold small">'.$tc.'</td>';
                       
                        $html.='<td class="text-right font-weight-bold small">'.number_format($debeX/$tc, 2, '.', ',').'</td>'.
                       '<td class="text-right font-weight-bold small">'.number_format($haberX/$tc, 2, '.', ',').'</td>'.
-                      '<td class="text-right font-weight-bold small">'.number_format(00000, 2, '.', ',').'</td>';        
+                      '<td class="text-right font-weight-bold small">'.number_format($saldoX, 2, '.', ',').'</td>';        
                       
                     $html.='</tr>';
-            }
       $entero=floor($tDebeBol);
       $decimal=$tDebeBol-$entero;
       $centavos=floor($decimal*100);
@@ -286,6 +291,8 @@ while ($rowComp = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $index++; 
     }/* Fin del primer while*/
     if($contador!=0){
+      $saldoY=$tDebeTc-$tHaberTc;
+
       $html.='<tr class="bg-secondary text-white">'.
                   '<td colspan="5" class="text-center">Sumas del periodo:</td>'.
                   '<td style="display: none;"></td>'.
@@ -298,7 +305,7 @@ while ($rowComp = $stmt->fetch(PDO::FETCH_ASSOC)) {
                   // '<td class="text-right font-weight-bold small">'.number_format(00000, 2, '.', ',').'</td>'. 
                   '<td class="text-right font-weight-bold small">'.number_format($tDebeTc, 2, '.', ',').'</td>'. 
                   '<td class="text-right font-weight-bold small">'.number_format($tHaberTc, 2, '.', ',').'</td>'.
-                  '<td class="text-right font-weight-bold small">'.number_format(00000, 2, '.', ',').'</td>'.       
+                  '<td class="text-right font-weight-bold small">'.number_format($saldoY, 2, '.', ',').'</td>'.       
               '</tr>';
       $html.='<tr class="bg-secondary text-white">'.
                   '<td colspan="5" class="text-center">Sumas y saldos finales:</td>'.
@@ -312,7 +319,7 @@ while ($rowComp = $stmt->fetch(PDO::FETCH_ASSOC)) {
                   // '<td class="text-right font-weight-bold small">'.number_format(00000, 2, '.', ',').'</td>'. 
                   '<td class="text-right font-weight-bold small">'.number_format($tDebeTc, 2, '.', ',').'</td>'. 
                   '<td class="text-right font-weight-bold small">'.number_format($tHaberTc, 2, '.', ',').'</td>'.
-                  '<td class="text-right font-weight-bold small">'.number_format(00000, 2, '.', ',').'</td>'.       
+                  '<td class="text-right font-weight-bold small">'.number_format($saldoY, 2, '.', ',').'</td>'.       
               '</tr>'; 
             }
 
