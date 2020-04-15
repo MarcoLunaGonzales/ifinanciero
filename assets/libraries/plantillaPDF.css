@@ -134,7 +134,7 @@ border-collapse: collapse;
   margin-top: 30px;
 }
 .pt-4{
-  margin-top: 40px;
+  margin-top: 40px !important;
 }
 
 .bold{
