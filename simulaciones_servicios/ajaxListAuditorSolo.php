@@ -29,14 +29,15 @@ $codigo=$_GET['codigo'];
                                 $diasSimulacion=$_GET['dias_simulacion'];
                                 $iii=$_GET['cantidad_filas'];
                                 $sumaCantidadPre=$_GET['cantidad_personal'];
-                               $queryPr="SELECT s.*,t.nombre as tipo_personal FROM simulaciones_servicios_auditores s, tipos_auditor t where s.cod_simulacionservicio=$codigoSimulacionSuper and s.cod_tipoauditor=t.codigo and s.cod_anio=$anio and s.codigo=$codigo";
+                               $queryPr="SELECT s.*,t.nombre as tipo_personal FROM simulaciones_servicios_auditores s, tipos_auditor t where s.cod_simulacionservicio=$codigoSimulacionSuper and s.cod_tipoauditor=t.codigo and s.cod_anio=$anio and s.codigo=$codigo order by s.codigo";
                                $stmt = $dbh->prepare($queryPr);
                                $stmt->execute();
                                $modal_totalmontopre=0;$modal_totalmontopretotal=0;
                                $modal_totalmontopreext=0;$modal_totalmontopretotalext=0;
                                while ($rowPre = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                   $codigoPre=$rowPre['codigo'];
-                                  $tipoPre=$rowPre['tipo_personal'];
+                                  $tipoPre=$rowPre['descripcion'];//$rowPre['tipo_personal'];
+                                  $codtipoPre=$rowPre['cod_tipoauditor'];
                                   $cantidadPre=$rowPre['cantidad'];
                                   $diasPre=$rowPre['dias'];
                                   $cantidadEPre=$rowPre['cantidad_editado'];
@@ -90,8 +91,8 @@ $codigo=$_GET['codigo'];
                                       </select>-->
                                      </td>
                                      <td class="text-center">
-
-                                       <select class="form-control selectpicker form-control-sm" data-size="6" data-style="fondo-boton fondo-boton-active" name="dias_personal<?=$anio?>FFF<?=$iii?>" id="dias_personal<?=$anio?>FFF<?=$iii?>" onchange="calcularTotalPersonalServicio('<?=$anio?>',2)">
+                                        <input type="number" min="0" id="dias_personal<?=$anio?>FFF<?=$iii?>" name="dias_personal<?=$anio?>FFF<?=$iii?>" class="form-control fondo-boton text-right" onchange="calcularTotalPersonalServicio(<?=$anio?>,2)" onkeyUp="calcularTotalPersonalServicio(<?=$anio?>,2)" value="<?=$diasPre?>">
+                                       <!--<select class="form-control selectpicker form-control-sm" data-size="6" data-style="fondo-boton fondo-boton-active" name="dias_personal<?=$anio?>FFF<?=$iii?>" id="dias_personal<?=$anio?>FFF<?=$iii?>" onchange="calcularTotalPersonalServicio('<?=$anio?>',2)">
                                           <?php 
                                              for ($hf=0; $hf<=$diasSimulacion; $hf++) {
                                               if($hf==$diasPre){
@@ -101,7 +102,7 @@ $codigo=$_GET['codigo'];
                                               }      
                                              }
                                           ?>
-                                      </select>
+                                      </select>-->
                                      </td>
                                      <td class="text-right">
                                        <input type="<?=$claseDeshabilitado?>" id="modal_montopre<?=$anio?>FFF<?=$iii?>" name="modal_montopre<?=$anio?>FFF<?=$iii?>" <?=($banderaHab==0)?"readonly":"";?> class="form-control text-info text-right" onchange="calcularTotalPersonalServicio('<?=$anio?>',2)" onkeyUp="calcularTotalPersonalServicio('<?=$anio?>',2)" value="<?=$montoPreSi?>" step="0.01">

@@ -82,9 +82,13 @@ $stmtDetAt->execute();
               $normaAtributo=$atributos[$att]->norma;
               $selloAtributo=$atributos[$att]->sello;
 
+              $paisAtributo=$atributos[$att]->pais;
+              $estadoAtributo=$atributos[$att]->estado;
+              $ciudadAtributo=$atributos[$att]->ciudad;
+
               $codSimulacionServicioAtributo=obtenerCodigoSimulacionServicioAtributo();
-              $sqlDetalleAtributos="INSERT INTO simulaciones_servicios_atributos (codigo,cod_simulacionservicio, nombre, direccion, cod_tipoatributo,marca,norma,nro_sello) 
-              VALUES ('$codSimulacionServicioAtributo','$codSimulacion', '$nombreAtributo', '$direccionAtributo', '$tipo_atributo','$marcaAtributo','$normaAtributo','$selloAtributo')";
+              $sqlDetalleAtributos="INSERT INTO simulaciones_servicios_atributos (codigo,cod_simulacionservicio, nombre, direccion, cod_tipoatributo,marca,norma,nro_sello,cod_pais,cod_estado,cod_ciudad) 
+              VALUES ('$codSimulacionServicioAtributo','$codSimulacion', '$nombreAtributo', '$direccionAtributo', '$tipo_atributo','$marcaAtributo','$normaAtributo','$selloAtributo','$paisAtributo','$estadoAtributo','$ciudadAtributo')";
               $stmtDetalleAtributos = $dbh->prepare($sqlDetalleAtributos);
               $stmtDetalleAtributos->execute();
 

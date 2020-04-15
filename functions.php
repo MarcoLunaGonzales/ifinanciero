@@ -4833,6 +4833,18 @@ function nameTipoAsignacion($valor){
    return($nombreX);
 }
 
+function nameTipoAuditor($valor){
+   $dbh = new Conexion();
+   $nombreX=0;
+   $sqlX="SELECT nombre FROM tipos_auditor where codigo='$valor'";
+   $stmt = $dbh->prepare($sqlX);
+   $stmt->execute();
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $nombreX=$row['nombre'];      
+   }
+   return($nombreX);
+}
+
 function obtenerCodigoAreaPlantillasServicios($codigo){
    $dbh = new Conexion();
    $sqlX="SELECT cod_area FROM plantillas_servicios where codigo='$codigo'";
@@ -5195,10 +5207,15 @@ function obtenerUnidadAreaPorSimulacionCosto($codigo){
      return array($areaX,$unidadX);
 }
 
-function obtenerServiciosClaServicioTipo($id){
+function obtenerServiciosClaServicioTipo($id,$valor){
   $dbh = new Conexion();
   $sql="";
-  $sql="SELECT p.* FROM cla_servicios p where p.vigente=1 and p.codigo_n2=$id";
+  if($valor==1){
+    $sql="SELECT p.* FROM cla_servicios p where p.vigente=1 and p.codigo_n2=$id and p.estado=1";
+  }else{
+    $sql="SELECT p.* FROM cla_servicios p where p.vigente=1 and p.codigo_n2=$id";
+  }
+  
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
    return $stmt;
