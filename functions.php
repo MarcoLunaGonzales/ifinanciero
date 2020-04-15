@@ -5173,8 +5173,8 @@ function obtenerUnidadAreaPorSimulacionServicio($codigo){
      $dbh = new Conexion();
      $stmt = $dbh->prepare("SELECT p.cod_area,p.cod_unidadorganizacional FROM simulaciones_servicios s join plantillas_servicios p on p.codigo=s.cod_plantillaservicio where s.codigo=$codigo");
      $stmt->execute();
-     $areaX=$row['cod_area'];
-     $unidadX=$row['cod_unidadorganizacional'];
+     $areaX="";
+     $unidadX="";
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $areaX=$row['cod_area'];
         $unidadX=$row['cod_unidadorganizacional'];
@@ -5186,8 +5186,8 @@ function obtenerUnidadAreaPorSimulacionCosto($codigo){
      $dbh = new Conexion();
      $stmt = $dbh->prepare("SELECT p.cod_area,p.cod_unidadorganizacional FROM simulaciones_costos s join plantillas_costo p on p.codigo=s.cod_plantillacosto where s.codigo=$codigo");
      $stmt->execute();
-     $areaX=$row['cod_area'];
-     $unidadX=$row['cod_unidadorganizacional'];
+     $areaX="";
+     $unidadX="";
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $areaX=$row['cod_area'];
         $unidadX=$row['cod_unidadorganizacional'];
