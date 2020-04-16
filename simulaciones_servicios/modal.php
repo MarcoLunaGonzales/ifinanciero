@@ -66,7 +66,7 @@
                             <option disabled selected value="">--SELECCIONE--</option>
                              <?php
                                   foreach ($lista->lista as $listas) {
-                                      echo "<option value='".$listas->idPais."####".$listas->paisNombre."'>".$listas->paisNombre."</opction>";
+                                      echo "<option value='".$listas->idPais."####".strtoupper($listas->paisNombre)."'>".$listas->paisNombre."</opction>";
                                   }?>
                           </select>
                         </div>
