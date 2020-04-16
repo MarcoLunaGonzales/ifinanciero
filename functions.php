@@ -5211,9 +5211,9 @@ function obtenerServiciosClaServicioTipo($id,$valor){
   $dbh = new Conexion();
   $sql="";
   if($valor==1){
-    $sql="SELECT p.* FROM cla_servicios p where p.vigente=1 and p.codigo_n2=$id and p.estado=1";
+    $sql="SELECT p.* FROM ibnorca.cla_servicios p where p.vigente=1 and p.codigo_n2=$id and p.estado=1";
   }else{
-    $sql="SELECT p.* FROM cla_servicios p where p.vigente=1 and p.codigo_n2=$id";
+    $sql="SELECT p.* FROM ibnorca.cla_servicios p where p.vigente=1 and p.codigo_n2=$id";
   }
   
    $stmt = $dbh->prepare($sql);

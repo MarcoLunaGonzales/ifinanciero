@@ -559,12 +559,12 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                                   <select class="selectpicker form-control form-control-sm" data-size="6" data-live-search="true" name="modal_editservicio<?=$an?>" id="modal_editservicio<?=$an?>" data-style="fondo-boton">
                                     <option disabled selected="selected" value="">--SERVICIOS--</option>
                                     <?php 
-                                     $stmt3 = $dbh->prepare("SELECT idclaservicio,descripcion,codigo from cla_servicios where (codigo_n1=108 or codigo_n1=109) and vigente=1 and codigo_n1=$codigoAreaServ and idTipo=$idTipoServGlobal order by 2");
+                                     $stmt3 = $dbh->prepare("SELECT IdClaServicio,Descripcion,Codigo from ibnorca.cla_servicios where (codigo_n1=108 or codigo_n1=109) and vigente=1 and codigo_n1=$codigoAreaServ and idTipo=$idTipoServGlobal order by 2");
                                      $stmt3->execute();
                                      while ($rowServ = $stmt3->fetch(PDO::FETCH_ASSOC)) {
-                                      $codigoServX=$rowServ['idclaservicio'];
-                                      $nombreServX=$rowServ['descripcion'];
-                                      $abrevServX=$rowServ['codigo'];
+                                      $codigoServX=$rowServ['IdClaServicio'];
+                                      $nombreServX=$rowServ['Descripcion'];
+                                      $abrevServX=$rowServ['Codigo'];
                                       ?><option value="<?=$codigoServX;?>"><?=$nombreServX?></option><?php 
                                      }
                                     ?>
@@ -610,7 +610,7 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                                 </tr>
                                 <?php 
                                 $iii=1;
-                               $queryPr="SELECT s.*,t.descripcion as nombre_serv FROM simulaciones_servicios_tiposervicio s, cla_servicios t where s.cod_simulacionservicio=$codigoSimulacionSuper and s.cod_claservicio=t.idclaservicio order by t.nro_orden";
+                               $queryPr="SELECT s.*,t.Descripcion as nombre_serv FROM simulaciones_servicios_tiposervicio s, ibnorca.cla_servicios t where s.cod_simulacionservicio=$codigoSimulacionSuper and s.cod_claservicio=t.IdClaServicio order by t.nro_orden";
                                $stmt = $dbh->prepare($queryPr);
                                $stmt->execute();
                                $modal_totalmontopre=0;$modal_totalmontopretotal=0;
@@ -1004,7 +1004,7 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                         ?>  
                         <table class="table table-bordered table-condensed table-striped table-sm">
                              <tr>
-                                     <td width="80%" class="text-center font-weight-bold">TOTAL PERSONAL</td>
+                                     <td width="80%" class="text-center font-weight-bold">TOTAL HONORARIOS</td>
                                      <td width="10%" id="suma_totalpre" class="text-right font-weight-bold"><?=number_format($totalesAuditores,2, ',', '')?> Bs.</td>
                                      <td width="10%" id="suma_totalpreUSD" class="text-right font-weight-bold"><?=number_format($totalesAuditores/$usd,2, ',', '')?> USD.</td>
                                    </tr>

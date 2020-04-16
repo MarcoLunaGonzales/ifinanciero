@@ -6605,6 +6605,7 @@ if(!(ut_i==""||dia==""||dia==0||productos.length==0)){
           iniciarCargaAjax();
         },
         success:function(resp){
+          
           //detectarCargaAjax();
           //alerts.showSwal('success-message','registerSimulacion.php?cod='+cod_sim);
         }
