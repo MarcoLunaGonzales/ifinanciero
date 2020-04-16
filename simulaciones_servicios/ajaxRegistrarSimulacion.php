@@ -199,6 +199,7 @@ if(isset($_GET['nombre'])){
        while ($rowAudPlantilla = $auditoresPlantilla->fetch(PDO::FETCH_ASSOC)) {
 
          $codTIPA=$rowAudPlantilla['cod_tipoauditor'];
+         $nombreTIPA=nameTipoAuditor($codTIPA);
          $cantidadS=$rowAudPlantilla['cantidad'];
          $montoS=$rowAudPlantilla['monto'];
          $montoSE=$rowAudPlantilla['monto_externo'];
@@ -208,8 +209,8 @@ if(isset($_GET['nombre'])){
          if($anioParaRegistroAuditor!=$i){
             $codigoAuditorSimulacion=obtenerCodigoSimulacionServicioAuditor();
             $dbhAU = new Conexion();
-            $sqlAU="INSERT INTO simulaciones_servicios_auditores (codigo,cod_simulacionservicio,cod_tipoauditor, cantidad, monto,cod_estadoreferencial,cantidad_editado,dias,monto_externo,cod_externolocal,cod_anio,habilitado) 
-             VALUES ('".$codigoAuditorSimulacion."','".$codSimServ."','".$codTIPA."','".$cantidadS."','".$montoS."',1,'".$cantidadS."','".$dias."','".$montoSE."','".$codBolLocSE."','".$i."',0)";
+            $sqlAU="INSERT INTO simulaciones_servicios_auditores (codigo,cod_simulacionservicio,cod_tipoauditor, cantidad, monto,cod_estadoreferencial,cantidad_editado,dias,monto_externo,cod_externolocal,cod_anio,habilitado,descripcion) 
+             VALUES ('".$codigoAuditorSimulacion."','".$codSimServ."','".$codTIPA."','".$cantidadS."','0',1,'".$cantidadS."',1,'".$montoSE."','".$codBolLocSE."','".$i."',0,'".$nombreTIPA."')";
             $stmtAU = $dbhAU->prepare($sqlAU);
             $stmtAU->execute();
          }else{
@@ -243,9 +244,9 @@ if(isset($_GET['nombre'])){
      $jjjj=$anios;
      //volcado de datos a la tabla simulaciones_servicios_tiposervicio
      if(isset($_GET['region_cliente'])){
-      $serviciosPlan=obtenerServiciosClaServicioTipo(309); //TCP 
+      $serviciosPlan=obtenerServiciosClaServicioTipo(309,1); //TCP 
      }else{
-      $serviciosPlan=obtenerServiciosClaServicioTipo($idTipoServicio); //TCS $serviciosPlan=obtenerDetallePlantillaServicioTipoServicio($plantilla_servicio);
+      $serviciosPlan=obtenerServiciosClaServicioTipo($idTipoServicio,0); //TCS $serviciosPlan=obtenerDetallePlantillaServicioTipoServicio($plantilla_servicio);
      }
      
      while ($rowServPlan = $serviciosPlan->fetch(PDO::FETCH_ASSOC)) {

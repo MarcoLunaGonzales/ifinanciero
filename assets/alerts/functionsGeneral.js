@@ -4773,8 +4773,22 @@ function calcularTotalPersonalServicio(anio,valor){
   $("#modal_totalmontopretotalUSD"+anio).text(resultUSD);
   $("#modal_totalmontopreUSD"+anio).text(redondeo(resultaUSD)); 
   $("#modal_cantidadpersonal"+anio).val(sumaC);
+  calcularTotalesAuditor();
 }
-
+function calcularTotalesAuditor(){
+  if($("#codigo_area").val()==39){
+    var inicio=1;
+  }else{
+    var inicio=0;
+  }
+  var suma=0;var sumaUSD=0;
+  for (var i = inicio; i <= parseInt($("#anio_simulacion").val()); i++) {
+   suma+= parseFloat($("#modal_totalmontopretotal"+i).text());
+   sumaUSD+= parseFloat($("#modal_totalmontopretotalUSD"+i).text());
+  };
+  $("#suma_totalpre").text(redondeo(suma)+ " Bs.");
+  $("#suma_totalpreUSD").text(redondeo(sumaUSD)+ " USD.");
+}
 function calcularTotalPersonalServicioAuditor(){
   var suma=0; var sumal=0; var sumaC=0;
   var sumae=0; var sumale=0;
@@ -8913,7 +8927,7 @@ function guardarAtributoItem(){
       var estado="";
       var nom_estado="SIN DEPTO";
     }
-    if($("#pais_empresa").val()!=null){
+    if($("#ciudad_empresa").val()!=null){
     var ciudad=$("#ciudad_empresa").val().split("####")[0];
     var nom_ciudad=$("#ciudad_empresa").val().split("####")[1];
     }else{
@@ -8955,14 +8969,15 @@ function guardarAtributoItem(){
     itemAtributos[fila].norma=$('#modal_norma').val();
     itemAtributos[fila].marca=$('#modal_marca').val();
     itemAtributos[fila].sello=$('#modal_sello').val();
-    if(($("#productos_div").hasClass("d-none"))){
-      itemAtributos[fila].pais=$('#pais_empresa').val().split("####")[0];
+    itemAtributos[fila].pais=$('#pais_empresa').val().split("####")[0];
     itemAtributos[fila].estado=$('#departamento_empresa').val().split("####")[0];
     itemAtributos[fila].ciudad=$('#ciudad_empresa').val().split("####")[0];
     itemAtributos[fila].nom_pais=$('#pais_empresa').val().split("####")[1];
     itemAtributos[fila].nom_estado=$('#departamento_empresa').val().split("####")[1];
     itemAtributos[fila].nom_ciudad=$('#ciudad_empresa').val().split("####")[1];
-    }   
+    /*if(($("#productos_div").hasClass("d-none"))){
+      
+    }*/   
     if($("#modalEditPlantilla").length){
     //editar dias sitios
       for (var i = 0; i <= parseInt($("#anio_servicio").val()); i++) {

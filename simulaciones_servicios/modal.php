@@ -394,12 +394,12 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                                <input type="number" step="0.01" class="form-control" name="modal_utibnorca" id="modal_utibnorca" value="">
                              </div>
                            </div>  
-                           <!--<label class="col-sm-2 col-form-label">D&iacute;as Auditoria</label>
+                           <label class="col-sm-2 col-form-label">Area</label>
                            <div class="col-sm-4">                     
-                             <div class="form-group">-->
-                               <input type="hidden" min="1" class="form-control" name="modal_diasauditoria" id="modal_diasauditoria" value="">
-                             <!--</div>
-                           </div>-->
+                             <div class="form-group">
+                               <input type="text" readonly class="form-control" name="modal_area" id="modal_area" value="<?=$areaX?>">
+                             </div>
+                           </div>
 
                           <!--<label class="col-sm-2 col-form-label">UT Min. Fuera %</label>
                            <div class="col-sm-4">                     
@@ -495,7 +495,7 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                         <br>
                          <div class="content">
                           <div class="">
-                    <?php $an=0; ?>
+                    <?php $an=0; $totalesAuditores=0;?>
                     <!--INICIO DE SERVICIOS-->
                     <!--<h4 class="font-weight-bold"><center><?=$etapas?> SERVICIOS</center></h4>-->
                       <div class="row" id="modal_contenidoservicios<?=$an?>">
@@ -610,7 +610,7 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                                 </tr>
                                 <?php 
                                 $iii=1;
-                               $queryPr="SELECT s.*,t.descripcion as nombre_serv FROM simulaciones_servicios_tiposervicio s, cla_servicios t where s.cod_simulacionservicio=$codigoSimulacionSuper and s.cod_claservicio=t.idclaservicio order by s.codigo";
+                               $queryPr="SELECT s.*,t.descripcion as nombre_serv FROM simulaciones_servicios_tiposervicio s, cla_servicios t where s.cod_simulacionservicio=$codigoSimulacionSuper and s.cod_claservicio=t.idclaservicio order by t.nro_orden";
                                $stmt = $dbh->prepare($queryPr);
                                $stmt->execute();
                                $modal_totalmontopre=0;$modal_totalmontopretotal=0;
@@ -853,7 +853,7 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                                $modal_totalmontopreext=0;$modal_totalmontopretotalext=0;
                                while ($rowPre = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                   $codigoPre=$rowPre['codigo'];
-                                  $tipoPre=$rowPre['tipo_personal'];
+                                  $tipoPre=$rowPre['descripcion'];//$rowPre['tipo_personal'];
                                   $cantidadPre=$rowPre['cantidad'];
                                   $diasPre=$rowPre['dias'];
                                   $cantidadEPre=$rowPre['cantidad_editado'];
@@ -962,6 +962,7 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                                      <td></td>
                                    </tr>
                            </table>
+                           
                            <input type="hidden" id="modal_numeropersonal<?=$an?>" value="<?=$iii?>">
                            <input type="hidden" id="modal_cantidadpersonal<?=$an?>" value="<?=$sumaCantidadPre?>">
                            <!--<div class="row col-sm-12">
@@ -997,8 +998,17 @@ for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) {
                    
                           </div>
                         <?php
+                        $totalesAuditores+=$modal_totalmontopretotal;
                             }
+
                         ?>  
+                        <table class="table table-bordered table-condensed table-striped table-sm">
+                             <tr>
+                                     <td width="80%" class="text-center font-weight-bold">TOTAL PERSONAL</td>
+                                     <td width="10%" id="suma_totalpre" class="text-right font-weight-bold"><?=number_format($totalesAuditores,2, ',', '')?> Bs.</td>
+                                     <td width="10%" id="suma_totalpreUSD" class="text-right font-weight-bold"><?=number_format($totalesAuditores/$usd,2, ',', '')?> USD.</td>
+                                   </tr>
+                           </table>
                          </div>
                       </div>
                       <hr>
