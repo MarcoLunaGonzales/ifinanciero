@@ -154,15 +154,15 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
    $lista= obtenerPaisesServicioIbrnorca();
    foreach ($lista->lista as $listas) {
       if($listas->idPais==$paisXAtrib){
-        $nom_paisXAtrib=$listas->paisNombre;
+        $nom_paisXAtrib=strtoupper($listas->paisNombre);
         $lista2= obtenerDepartamentoServicioIbrnorca($paisXAtrib);
         foreach ($lista2->lista as $listas2) {
           if($listas2->idEstado==$estadoXAtrib){
-            $nom_estadoXAtrib=$listas2->estNombre;
+            $nom_estadoXAtrib=strtoupper($listas2->estNombre);
             $lista3= obtenerCiudadServicioIbrnorca($estadoXAtrib);
             foreach ($lista3->lista as $listas3) {
               if($listas3->idCiudad==$ciudadXAtrib){
-                $nom_ciudadXAtrib=$listas3->nomCiudad;
+                $nom_ciudadXAtrib=strtoupper($listas3->nomCiudad);
                 break;
               }else{
                 $nom_ciudadXAtrib="SIN REGISTRO";
