@@ -435,12 +435,12 @@ if($menuModulo==0){
             <div class="collapse" id="tablesConta">
               <ul class="nav">
                 
-                <li class="nav-item ">
+                <!--li class="nav-item ">
                   <a class="nav-link" href="?opcion=listConfigCuentas">
                     <span class="sidebar-mini"> CC </span>
                     <span class="sidebar-normal"> Configuracion de Cuentas </span>
                   </a>
-                </li>
+                </li-->
 
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listPlanCuentas">
