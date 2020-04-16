@@ -5214,12 +5214,12 @@ function obtenerServiciosClaServicioTipo($id,$valor){
     $sql="SELECT p.* FROM cla_servicios p join configuraciones_serviciosestado c on p.IdClaServicio=c.IdClaServicio where p.vigente=1 and p.codigo_n2=$id";
   }else{
     $sql="SELECT p.* FROM cla_servicios p where p.vigente=1 and p.codigo_n2=$id";
-  }
-  
+  }  
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
    return $stmt;
 }
+
 ?>
 
 
