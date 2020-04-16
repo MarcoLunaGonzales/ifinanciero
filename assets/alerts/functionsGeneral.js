@@ -6605,7 +6605,7 @@ if(!(ut_i==""||dia==""||dia==0||productos.length==0)){
           iniciarCargaAjax();
         },
         success:function(resp){
-          
+
           //detectarCargaAjax();
           //alerts.showSwal('success-message','registerSimulacion.php?cod='+cod_sim);
         }
@@ -7458,7 +7458,7 @@ function seleccionarDepartamentoServicioSitio(setear,depto,ciudad){
            $("#texto_ajax_titulo").html("Procesando Datos"); 
            $("#departamento_empresa").html(resp);
            if(setear==1){
-            $("#departamento_empresa").val("480####La Paz"); // departamento de LA PAZ
+            $("#departamento_empresa").val("480####LA PAZ"); // departamento de LA PAZ
             seleccionarCiudadServicioSitio(1);
            }else{
              $("#departamento_empresa").val(depto); // departamento de LA PAZ
@@ -7488,7 +7488,7 @@ function seleccionarDepartamentoServicioSitioModal(setear,depto,ciudad){
            $("#texto_ajax_titulo").html("Procesando Datos"); 
            $("#departamento_empresa").html(resp);
            if(setear==1){
-            $("#departamento_empresa").val("480####La Paz"); // departamento de LA PAZ
+            $("#departamento_empresa").val("480####LA PAZ"); // departamento de LA PAZ
             seleccionarCiudadServicioSitioModal(1);
            }else{
              $("#departamento_empresa").val(depto); // departamento de LA PAZ
@@ -7538,7 +7538,7 @@ function seleccionarCiudadServicioSitio(setear,ciudad){
            $("#texto_ajax_titulo").html("Procesando Datos"); 
            $("#ciudad_empresa").html(resp);
            if(setear==1){
-            $("#ciudad_empresa").val("62####La Paz"); //PARA LA CIUDAD DE la paz
+            $("#ciudad_empresa").val("62####LA PAZ"); //PARA LA CIUDAD DE la paz
            }else{
             $("#ciudad_empresa").val(ciudad); //PARA LA CIUDAD DE la paz
            }
@@ -7565,7 +7565,7 @@ function seleccionarCiudadServicioSitioModal(setear,ciudad){
            $("#texto_ajax_titulo").html("Procesando Datos"); 
            $("#ciudad_empresa").html(resp);
            if(setear==1){
-            $("#ciudad_empresa").val("62####La Paz"); //PARA LA CIUDAD DE la paz
+            $("#ciudad_empresa").val("62####LA PAZ"); //PARA LA CIUDAD DE la paz
            }else{
             $("#ciudad_empresa").val(ciudad); //PARA LA CIUDAD DE la paz
            }
@@ -8812,7 +8812,7 @@ function agregarAtributoAjax(){
    }else{
     $("#lbl_nombre_atributo").text("Producto");
    }
-   $("#pais_empresa").val("26####Bolivia"); //para el pais de BOLIVIA
+   $("#pais_empresa").val("26####BOLIVIA"); //para el pais de BOLIVIA
     if($("#modalEditPlantilla").length){
       seleccionarDepartamentoServicioSitioModal(1);  
     }else{

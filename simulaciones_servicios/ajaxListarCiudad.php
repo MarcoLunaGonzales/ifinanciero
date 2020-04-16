@@ -18,6 +18,6 @@ $lista= obtenerCiudadServicioIbrnorca($codigo);
                             <option disabled selected value="">--Seleccione--</option>
                              <?php
                                   foreach ($lista->lista as $listas) {
-                                      echo "<option value='".$listas->idCiudad."####".$listas->nomCiudad."'>".$listas->nomCiudad."</option>";
+                                      echo "<option value='".$listas->idCiudad."####".strtoupper($listas->nomCiudad)."'>".$listas->nomCiudad."</option>";
                                   }?>
                              <!--<option value="NN">OTRO</option>-->     
