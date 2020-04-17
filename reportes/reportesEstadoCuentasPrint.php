@@ -83,7 +83,7 @@ $totalDebito=0;
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-bordered table-condensed" id="tablePaginatorFixedEstadoCuentas">
+                            <table class="table table-bordered table-condensed" id="tablePaginatorReport">
                                 <thead>
                                     <tr class="">
                                         <th class="text-left">Of</th>
@@ -127,6 +127,8 @@ $totalDebito=0;
                                             $debeX=$row['debe'];
                                             $haberX=$row['haber'];
                                             $codigoExtra=$row['extra'];
+                                            $codPlanCuentaAuxiliarX=$row['cod_cuentaaux'];
+                                            $nombreCuentaAuxiliarX=nameCuentaAuxiliar($codPlanCuentaAuxiliarX);
                                             // $cod_tipoCuenta=$row['cod_tipoestadocuenta'];
                                             
                                             $glosaMostrar="";
@@ -156,7 +158,7 @@ $totalDebito=0;
                                                     <td class="text-center small"><?=$numeroComprobante;?></td>
                                                     <td class="text-left small"><?=$fechaComprobante;?></td>
                                                     <td class="text-left small"><?=$fechaX;?></td>
-                                                    <td class="text-left small"><?=$nombreProveedorX;?></td>
+                                                    <td class="text-left small"><?=$nombreCuentaAuxiliarX;?>[<?=$nombreProveedorX;?>]</td>
                                                     <td class="text-left small"><?=$glosaMostrar;?></td>
                                                     <td class="text-right small"><?=formatNumberDec(0)?></td>
                                                     <td class="text-right small"><?=formatNumberDec($montoX)?></td>
@@ -172,7 +174,7 @@ $totalDebito=0;
                                                     <td class="text-center small"><?=$numeroComprobante;?></td>
                                                     <td class="text-left small"><?=$fechaComprobante;?></td>
                                                     <td class="text-left small"><?=$fechaX;?></td>
-                                                    <td class="text-left small"><?=$nombreProveedorX;?></td>
+                                                    <td class="text-left small"><?=$nombreCuentaAuxiliarX;?>[<?=$nombreProveedorX;?>]</td>
                                                     <td class="text-left small"><?=$glosaMostrar;?></td>
                                                     <td class="text-right small"><?=formatNumberDec($montoX)?></td>
                                                     <td class="text-right small"><?=formatNumberDec(0)?></td>
@@ -234,7 +236,7 @@ $totalDebito=0;
                                                     <?php }else{ //cliente
                                                         $nombreProveedorX_d=namecliente($codProveedor_d);
                                                         if($nombreProveedorX_d=='0')$nombreProveedorX_d=nameProveedor($codProveedor_d);
-                                                        $totalCredito=$totalCredito+$saldo;?>
+                                                        $totalCredito=$totalCredito+$montoX_d;?>
                                                         <tr  style="background-color:#ECCEF5;">
                                                             <td class="text-left small">&nbsp;&nbsp;&nbsp;&nbsp;<?=$nombreUnidadO_d;?></td>
                                                             <td class="text-center small"><?=$nombreTipoComprobante_d;?></td>

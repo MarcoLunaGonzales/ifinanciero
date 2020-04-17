@@ -167,15 +167,21 @@ $stmt->bindColumn('idServicio', $idServicioX);
                              if($codEstado==5){
                                $anteriorCod=obtenerCodigoSolicitudRecursosSimulacion(2,$codigo);
                                if(isset($_GET['q'])){
-                                  ?><a onclick="alerts.showSwal('success-solicitud','solicitudes/register.php?q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$idServicioX?>&sim=<?=$codigo?>&det=TCP')" href="#" target="_self" title="Solicitud De Recursos"class="btn btn-danger">
+                                  ?><!--<a onclick="alerts.showSwal('success-solicitud','solicitudes/register.php?q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$idServicioX?>&sim=<?=$codigo?>&det=TCP')" href="#" target="_self" title="Solicitud De Recursos"class="btn btn-danger">
                                     <i class="material-icons">content_paste</i>
-                                 </a>
+                                 </a>-->
                                  <a title="Imprimir Solicitud de Recursos" href='#' onclick="javascript:window.open('solicitudes/imp.php?sol=<?=$anteriorCod;?>&mon=1')" class="btn btn-primary">
                                      <i class="material-icons"><?=$iconImp;?></i>
                                  </a> 
+
                                  <a class="btn btn-warning" title="Solicitud de Facturación" href='<?=$urlSolicitudfactura;?>&cod=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>'>
                                    <i class="material-icons" >monetization_on</i>                              
                                  </a>
+
+                                 <!--<a class="btn btn-warning" title="Solicitud de Facturación" href='<?=$urlSolicitudfactura;?>&cod=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>'>
+                                   <i class="material-icons" >receipt</i>                              
+                                 </a>-->
+
                                  <?php 
                                  if($idServicioX>0){
                                    ?>

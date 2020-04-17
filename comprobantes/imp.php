@@ -97,17 +97,8 @@ $html.=  '<header class="header">'.
             '<td align="left">Oficina: '.$unidadC.'</td>'.
             '</tr>'.
          '</table>'.
-         '<table class="table pt-2">'.
-            '<tr class="bold table-title">'.
-              '<td width="22%">Fecha: '.strftime('%d/%m/%Y',strtotime($fechaC)).'</td>'.
-              '<td width="33%" align="right">t/c: '.$abrevMon.': '.$tc.' '.$abrevUFV.':'.$tcUFV.'</td>'.
-              '<td width="45%" class="text-right">'.$tipoC.' '.strtoupper(abrevMes(strftime('%m',strtotime($fechaC)))).' N&uacute;mero: '.generarNumeroCeros(6,$numeroC).'</td>'.
-            '</tr>'.
-            '<tr>'.
-            '<td colspan="3">CONCEPTO: '.$glosaC.'</td>'.
-            '</tr>'.
-         '</table>'.
-         '</header><br><br>';
+         ''.
+         '</header>';
          $html.='
          <footer class="footer"><table class="table">'.
              '<tr class="text-center" valign="top">'.
@@ -124,6 +115,15 @@ $html.=  '<header class="header">'.
              '</tr>'.
            '</table></footer>'.
          '<table class="table">'.
+            '<tr class="bold table-title">'.
+              '<td width="22%">Fecha: '.strftime('%d/%m/%Y',strtotime($fechaC)).'</td>'.
+              '<td width="33%" align="right">t/c: '.$abrevMon.': '.$tc.' '.$abrevUFV.':'.$tcUFV.'</td>'.
+              '<td width="45%" class="text-right">'.$tipoC.' '.strtoupper(abrevMes(strftime('%m',strtotime($fechaC)))).' N&uacute;mero: '.generarNumeroCeros(6,$numeroC).'</td>'.
+            '</tr>'.
+            '<tr>'.
+            '<td colspan="3">CONCEPTO: '.$glosaC.'</td>'.
+            '</tr>'.
+         '</table><table class="table">'.
             '<thead>'.
             '<tr class="bold table-title text-center">'.
               '<td colspan="2" class="td-border-none"></td>'.

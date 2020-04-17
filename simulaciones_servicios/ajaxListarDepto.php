@@ -18,5 +18,5 @@ $lista= obtenerDepartamentoServicioIbrnorca($codigo);
                             <option disabled selected value="">--Seleccione--</option>
                              <?php
                                   foreach ($lista->lista as $listas) {
-                                      echo "<option value='".$listas->idEstado."####".$listas->estNombre."'>".$listas->estNombre."</option>";
+                                      echo "<option value='".$listas->idEstado."####".strtoupper($listas->estNombre)."'>".$listas->estNombre."</option>";
                                   }?>

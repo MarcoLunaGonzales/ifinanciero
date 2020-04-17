@@ -347,7 +347,7 @@ $dbh = new Conexion();
                            <label class="col-sm-1 col-form-label">Nº Sello</label>
                            <div class="col-sm-5">                     
                              <div class="form-group">
-                               <input type="text" class="form-control" name="modal_sello" id="modal_sello" value="" onkeyup="javascript:this.value=this.value.toUpperCase();">
+                               <input type="number" class="form-control" name="modal_sello" id="modal_sello" value="" onkeyup="javascript:this.value=this.value.toUpperCase();">
                              </div>
                            </div>  
                       </div>
@@ -361,7 +361,7 @@ $dbh = new Conexion();
                             <option disabled selected value="####">--SELECCIONE--</option>
                              <?php
                                   foreach ($lista->lista as $listas) {
-                                      echo "<option value='".$listas->idPais."####".$listas->paisNombre."'>".$listas->paisNombre."</opction>";
+                                      echo "<option value='".$listas->idPais."####".strtoupper($listas->paisNombre)."'>".$listas->paisNombre."</opction>";
                                   }?>
                           </select>
                         </div>

@@ -58,7 +58,7 @@ if(isset($_GET["cod_simulacion"])){
     $iii=1;$totalTabla=0;$totalTablaUnitario=0;
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       $codigoTipo=$row['codigo'];
-      $nombreTipo=$row['tipo'];
+      $nombreTipo=$row['descripcion']; //$row['tipo'];
       $cantidadTipo=$row['cantidad_editado'];
       $diasTipo=$row['dias'];
       $codExtLoc=$row['cod_externolocal'];

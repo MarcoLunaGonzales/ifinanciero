@@ -167,9 +167,12 @@ function calcularTotalesComprobante(id,e){
   if($("#totalhab_restante").length){
     document.getElementById("totaldeb").value=redondeo(sumadebe+parseFloat($("#totaldeb_restante").val()),2).toFixed(2);  
     document.getElementById("totalhab").value=redondeo(sumahaber+parseFloat($("#totalhab_restante").val()),2).toFixed(2);
+
+    document.getElementById("total_dif").value=redondeo($("#totaldeb").val()-$("#totalhab").val(),2).toFixed(2);
   }else{
     document.getElementById("totaldeb").value=redondeo(sumadebe,2).toFixed(2);  
     document.getElementById("totalhab").value=redondeo(sumahaber,2).toFixed(2); 
+    document.getElementById("total_dif").value=redondeo(sumadebe-sumahaber,2).toFixed(2);  
   }
 }
 
@@ -4801,8 +4804,22 @@ function calcularTotalPersonalServicio(anio,valor){
   $("#modal_totalmontopretotalUSD"+anio).text(resultUSD);
   $("#modal_totalmontopreUSD"+anio).text(redondeo(resultaUSD)); 
   $("#modal_cantidadpersonal"+anio).val(sumaC);
+  calcularTotalesAuditor();
 }
-
+function calcularTotalesAuditor(){
+  if($("#codigo_area").val()==39){
+    var inicio=1;
+  }else{
+    var inicio=0;
+  }
+  var suma=0;var sumaUSD=0;
+  for (var i = inicio; i <= parseInt($("#anio_simulacion").val()); i++) {
+   suma+= parseFloat($("#modal_totalmontopretotal"+i).text());
+   sumaUSD+= parseFloat($("#modal_totalmontopretotalUSD"+i).text());
+  };
+  $("#suma_totalpre").text(redondeo(suma)+ " Bs.");
+  $("#suma_totalpreUSD").text(redondeo(sumaUSD)+ " USD.");
+}
 function calcularTotalPersonalServicioAuditor(){
   var suma=0; var sumal=0; var sumaC=0;
   var sumae=0; var sumale=0;
@@ -5745,15 +5762,17 @@ function verEstadosCuentas(fila,cuenta){
 
     if($("#edicion").length>0){
       var edicion=1;
+      var codigo_comprobante=$("#codigo_comprobante").val();
     }else{
       var edicion=0;
+      var codigo_comprobante=0;
     }
     if(itemEstadosCuentas[fila-1].length>0){   
      // alert("mm:"+itemEstadosCuentas[fila-1][0].cod_comprobantedetalle)
       var comprobanteOrigen=itemEstadosCuentas[fila-1][0].cod_comprobantedetalle;
-       var parametros={"edicion":edicion,"cod_cuenta":cod_cuenta,"cod_cuenta_auxiliar":cod_cuenta_auxiliar,"tipo_comprobante":tipoComprobante,"comprobante_origen":comprobanteOrigen};
+       var parametros={"codigo_comprobante":codigo_comprobante,"edicion":edicion,"cod_cuenta":cod_cuenta,"cod_cuenta_auxiliar":cod_cuenta_auxiliar,"tipo_comprobante":tipoComprobante,"comprobante_origen":comprobanteOrigen};
     }else{
-      var parametros={"edicion":edicion,"cod_cuenta":cod_cuenta,"cod_cuenta_auxiliar":cod_cuenta_auxiliar,"tipo_comprobante":tipoComprobante};
+      var parametros={"codigo_comprobante":codigo_comprobante,"edicion":edicion,"cod_cuenta":cod_cuenta,"cod_cuenta_auxiliar":cod_cuenta_auxiliar,"tipo_comprobante":tipoComprobante};
     }
     
     //PASA Y MOSTRAMOS LOS ESTADOS DE CUENTA    
@@ -6617,6 +6636,7 @@ if(!(ut_i==""||dia==""||dia==0||productos.length==0)){
           iniciarCargaAjax();
         },
         success:function(resp){
+
           //detectarCargaAjax();
           //alerts.showSwal('success-message','registerSimulacion.php?cod='+cod_sim);
         }
@@ -7469,7 +7489,7 @@ function seleccionarDepartamentoServicioSitio(setear,depto,ciudad){
            $("#texto_ajax_titulo").html("Procesando Datos"); 
            $("#departamento_empresa").html(resp);
            if(setear==1){
-            $("#departamento_empresa").val("480####La Paz"); // departamento de LA PAZ
+            $("#departamento_empresa").val("480####LA PAZ"); // departamento de LA PAZ
             seleccionarCiudadServicioSitio(1);
            }else{
              $("#departamento_empresa").val(depto); // departamento de LA PAZ
@@ -7499,7 +7519,7 @@ function seleccionarDepartamentoServicioSitioModal(setear,depto,ciudad){
            $("#texto_ajax_titulo").html("Procesando Datos"); 
            $("#departamento_empresa").html(resp);
            if(setear==1){
-            $("#departamento_empresa").val("480####La Paz"); // departamento de LA PAZ
+            $("#departamento_empresa").val("480####LA PAZ"); // departamento de LA PAZ
             seleccionarCiudadServicioSitioModal(1);
            }else{
              $("#departamento_empresa").val(depto); // departamento de LA PAZ
@@ -7549,7 +7569,7 @@ function seleccionarCiudadServicioSitio(setear,ciudad){
            $("#texto_ajax_titulo").html("Procesando Datos"); 
            $("#ciudad_empresa").html(resp);
            if(setear==1){
-            $("#ciudad_empresa").val("62####La Paz"); //PARA LA CIUDAD DE la paz
+            $("#ciudad_empresa").val("62####LA PAZ"); //PARA LA CIUDAD DE la paz
            }else{
             $("#ciudad_empresa").val(ciudad); //PARA LA CIUDAD DE la paz
            }
@@ -7576,7 +7596,7 @@ function seleccionarCiudadServicioSitioModal(setear,ciudad){
            $("#texto_ajax_titulo").html("Procesando Datos"); 
            $("#ciudad_empresa").html(resp);
            if(setear==1){
-            $("#ciudad_empresa").val("62####La Paz"); //PARA LA CIUDAD DE la paz
+            $("#ciudad_empresa").val("62####LA PAZ"); //PARA LA CIUDAD DE la paz
            }else{
             $("#ciudad_empresa").val(ciudad); //PARA LA CIUDAD DE la paz
            }
@@ -8823,7 +8843,7 @@ function agregarAtributoAjax(){
    }else{
     $("#lbl_nombre_atributo").text("Producto");
    }
-   $("#pais_empresa").val("26####Bolivia"); //para el pais de BOLIVIA
+   $("#pais_empresa").val("26####BOLIVIA"); //para el pais de BOLIVIA
     if($("#modalEditPlantilla").length){
       seleccionarDepartamentoServicioSitioModal(1);  
     }else{
@@ -8939,7 +8959,7 @@ function guardarAtributoItem(){
       var estado="";
       var nom_estado="SIN DEPTO";
     }
-    if($("#pais_empresa").val()!=null){
+    if($("#ciudad_empresa").val()!=null){
     var ciudad=$("#ciudad_empresa").val().split("####")[0];
     var nom_ciudad=$("#ciudad_empresa").val().split("####")[1];
     }else{
@@ -8981,14 +9001,15 @@ function guardarAtributoItem(){
     itemAtributos[fila].norma=$('#modal_norma').val();
     itemAtributos[fila].marca=$('#modal_marca').val();
     itemAtributos[fila].sello=$('#modal_sello').val();
-    if(($("#productos_div").hasClass("d-none"))){
-      itemAtributos[fila].pais=$('#pais_empresa').val().split("####")[0];
+    itemAtributos[fila].pais=$('#pais_empresa').val().split("####")[0];
     itemAtributos[fila].estado=$('#departamento_empresa').val().split("####")[0];
     itemAtributos[fila].ciudad=$('#ciudad_empresa').val().split("####")[0];
     itemAtributos[fila].nom_pais=$('#pais_empresa').val().split("####")[1];
     itemAtributos[fila].nom_estado=$('#departamento_empresa').val().split("####")[1];
     itemAtributos[fila].nom_ciudad=$('#ciudad_empresa').val().split("####")[1];
-    }   
+    /*if(($("#productos_div").hasClass("d-none"))){
+      
+    }*/   
     if($("#modalEditPlantilla").length){
     //editar dias sitios
       for (var i = 0; i <= parseInt($("#anio_servicio").val()); i++) {

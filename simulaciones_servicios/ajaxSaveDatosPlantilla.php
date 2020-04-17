@@ -29,9 +29,9 @@ $dias_aud=$_GET['dias'];
 $habilitado=$_GET['habilitado'];
 $productos="";
 $atributos= json_decode($_GET['productos']);
-if($dia<$dias_aud){
+/*if($dia<$dias_aud){
   $dias_aud=$dia;
-}
+}*/
 if($_GET['tcs']==0){
   $tipo_atributo=1;
   $sqlUpdatePlantilla="UPDATE simulaciones_servicios SET  utilidad_minima='$ut_i',dias_auditoria='$dia',productos='$productos' where codigo=$codSimulacion";
@@ -48,8 +48,6 @@ $stmtUpdatePlantilla->execute();
 $sqlDetalles="UPDATE simulaciones_servicios_auditores SET cantidad_editado=$cantidad,monto=$monto,habilitado=$habilitado,dias=$dias_aud,monto_externo='$montoe',cod_externolocal='$extlocal' where codigo=$codigo";
 $stmtDetalles = $dbh->prepare($sqlDetalles);
 $stmtDetalles->execute();
-
-
 
 $sqlDet="SELECT * FROM simulaciones_serviciodetalle where cod_simulacionservicio=$codSimulacion";
 $stmtDet = $dbh->prepare($sqlDet);
@@ -82,9 +80,13 @@ $stmtDetAt->execute();
               $normaAtributo=$atributos[$att]->norma;
               $selloAtributo=$atributos[$att]->sello;
 
+              $paisAtributo=$atributos[$att]->pais;
+              $estadoAtributo=$atributos[$att]->estado;
+              $ciudadAtributo=$atributos[$att]->ciudad;
+
               $codSimulacionServicioAtributo=obtenerCodigoSimulacionServicioAtributo();
-              $sqlDetalleAtributos="INSERT INTO simulaciones_servicios_atributos (codigo,cod_simulacionservicio, nombre, direccion, cod_tipoatributo,marca,norma,nro_sello) 
-              VALUES ('$codSimulacionServicioAtributo','$codSimulacion', '$nombreAtributo', '$direccionAtributo', '$tipo_atributo','$marcaAtributo','$normaAtributo','$selloAtributo')";
+              $sqlDetalleAtributos="INSERT INTO simulaciones_servicios_atributos (codigo,cod_simulacionservicio, nombre, direccion, cod_tipoatributo,marca,norma,nro_sello,cod_pais,cod_estado,cod_ciudad) 
+              VALUES ('$codSimulacionServicioAtributo','$codSimulacion', '$nombreAtributo', '$direccionAtributo', '$tipo_atributo','$marcaAtributo','$normaAtributo','$selloAtributo','$paisAtributo','$estadoAtributo','$ciudadAtributo')";
               $stmtDetalleAtributos = $dbh->prepare($sqlDetalleAtributos);
               $stmtDetalleAtributos->execute();
 

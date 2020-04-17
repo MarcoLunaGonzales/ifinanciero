@@ -309,6 +309,30 @@
                           }
                           
 
+                           //Validar las cuentas que esten relacionadads al estado de cuentas los montos deben ser iguales
+                          if( (tipoComprobante==1 && tipoEstadoCuenta==1) ){
+                            for (var f = 0; f < itemEstadosCuentas[i].length; f++) {
+                              if(itemEstadosCuentas[i][f].monto!=haberZ){
+                                 $('#msgError').html("Fila "+(i+1)+" el monto del estado de cuenta no iguala al haber.");
+                                 $('#modalAlert').modal('show');
+                                 return false;
+                              }
+                            };  
+                          }else{
+                            console.log("cuenta sin problemas; tipoComp:2");
+                          }
+                          //Validar las cuentas que esten relacionadads al estado de cuentas los montos deben ser iguales
+                          if( (tipoComprobante==2 && tipoEstadoCuenta==2) ){
+                            for (var f = 0; f < itemEstadosCuentas[i].length; f++) {
+                              if(itemEstadosCuentas[i][f].monto!=debeZ){
+                                 $('#msgError').html("Fila "+(i+1)+" el monto del estado de cuenta no iguala al debe.");
+                                 $('#modalAlert').modal('show');
+                                 return false;
+                              }
+                            };  
+                          }else{
+                            console.log("cuenta sin problemas; tipoComp:2");
+                          }
 
                           //COMENTAMOS LA VALIDACION DE LOS ESTADOS DE CUENTA
                           /*if($("#tipo_estadocuentas"+(i+1)).val()=="1" && haberZ>0  && (!($("#nestado"+(i+1)).hasClass("estado")))){

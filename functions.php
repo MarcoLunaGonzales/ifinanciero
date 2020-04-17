@@ -4815,7 +4815,7 @@ function nameCuentaAuxiliar($cuentaaux){
    $sqlX="SELECT nombre FROM cuentas_auxiliares where codigo='$cuentaaux'";
    $stmt = $dbh->prepare($sqlX);
    $stmt->execute();
-   $nombreX=0;
+   $nombreX="";
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       $nombreX=$row['nombre'];
    }
@@ -4825,6 +4825,18 @@ function nameTipoAsignacion($valor){
    $dbh = new Conexion();
    $nombreX=0;
    $sqlX="SELECT nombre FROM estados_asignacionaf where codigo='$valor'";
+   $stmt = $dbh->prepare($sqlX);
+   $stmt->execute();
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $nombreX=$row['nombre'];      
+   }
+   return($nombreX);
+}
+
+function nameTipoAuditor($valor){
+   $dbh = new Conexion();
+   $nombreX=0;
+   $sqlX="SELECT nombre FROM tipos_auditor where codigo='$valor'";
    $stmt = $dbh->prepare($sqlX);
    $stmt->execute();
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -5173,8 +5185,8 @@ function obtenerUnidadAreaPorSimulacionServicio($codigo){
      $dbh = new Conexion();
      $stmt = $dbh->prepare("SELECT p.cod_area,p.cod_unidadorganizacional FROM simulaciones_servicios s join plantillas_servicios p on p.codigo=s.cod_plantillaservicio where s.codigo=$codigo");
      $stmt->execute();
-     $areaX=$row['cod_area'];
-     $unidadX=$row['cod_unidadorganizacional'];
+     $areaX="";
+     $unidadX="";
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $areaX=$row['cod_area'];
         $unidadX=$row['cod_unidadorganizacional'];
@@ -5186,8 +5198,8 @@ function obtenerUnidadAreaPorSimulacionCosto($codigo){
      $dbh = new Conexion();
      $stmt = $dbh->prepare("SELECT p.cod_area,p.cod_unidadorganizacional FROM simulaciones_costos s join plantillas_costo p on p.codigo=s.cod_plantillacosto where s.codigo=$codigo");
      $stmt->execute();
-     $areaX=$row['cod_area'];
-     $unidadX=$row['cod_unidadorganizacional'];
+     $areaX="";
+     $unidadX="";
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $areaX=$row['cod_area'];
         $unidadX=$row['cod_unidadorganizacional'];
@@ -5195,14 +5207,19 @@ function obtenerUnidadAreaPorSimulacionCosto($codigo){
      return array($areaX,$unidadX);
 }
 
-function obtenerServiciosClaServicioTipo($id){
+function obtenerServiciosClaServicioTipo($id,$valor){
   $dbh = new Conexion();
   $sql="";
-  $sql="SELECT p.* FROM cla_servicios p where p.vigente=1 and p.codigo_n2=$id";
+  if($valor==1){
+    $sql="SELECT p.* FROM cla_servicios p join configuraciones_serviciosestado c on p.IdClaServicio=c.IdClaServicio where p.vigente=1 and p.codigo_n2=$id";
+  }else{
+    $sql="SELECT p.* FROM cla_servicios p where p.vigente=1 and p.codigo_n2=$id";
+  }  
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
    return $stmt;
 }
+
 ?>
 
 
