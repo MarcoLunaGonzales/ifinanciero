@@ -80,7 +80,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                 if($globalAdmin==1){?>
                                   <div class="dropdown">
                                     <button class="btn btn-success dropdown-toggle" type="button" id="reporte_sueldos" data-toggle="dropdown" aria-extended="true">
-                                      <i class="material-icons" title="Imprimir Facturas">description</i>
+                                      <i class="material-icons" title="Imprimir Facturas">print</i>
                                       <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu" role="menu" aria-labelledby="reporte_sueldos">

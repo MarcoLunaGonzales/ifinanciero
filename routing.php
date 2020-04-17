@@ -198,8 +198,17 @@
 			require_once('simulaciones_costos/solicitud_facturacion_costos.php');
 		}
 		if ($_GET['opcion']=='registro_solicitud_facturacion') {
-			$codigo=$_GET['codigo'];		
+			$codigo=$_GET['codigo'];	
+			$cod_simulacion=$_GET['cod_simulacion'];	
+			$cod_facturacion=$_GET['cod_facturacion'];			
 			require_once('simulaciones_costos/registro_solicitud_facturacion.php');
+		}
+		if ($_GET['opcion']=='save_solicitud_facturacion_costos') {
+			require_once('simulaciones_costos/save_solicitud_facturacion_costos.php');
+		}
+
+		if ($_GET['opcion']=='listFacturasServicios_costos') {
+			require_once('simulaciones_costos/listFacturasSolicitadas.php');
 		}
 
         //PLANTILLAS TCP

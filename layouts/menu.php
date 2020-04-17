@@ -507,8 +507,8 @@ if($menuModulo==0){
                 </li>
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listComprobantes2">
-                    <span class="sidebar-mini"> LC2 </span>
-                    <span class="sidebar-normal"> Lista Comprobantes 2 </span>
+                    <span class="sidebar-mini"> C2 </span>
+                    <span class="sidebar-normal"> Comprobantes 2 </span>
                   </a>
                 </li>
                 <li class="nav-item ">
@@ -766,15 +766,21 @@ if($menuModulo==0){
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listFacturasServicios">
                     <span class="sidebar-mini"> SF </span>
-                    <span class="sidebar-normal"> Solicitudes de Facturación TCP - TCS</span>
+                    <span class="sidebar-normal"> Solicitudes de Facturación </span>
                   </a>
                 </li>
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listFacturasGeneradas">
                     <span class="sidebar-mini"> FG </span>
-                    <span class="sidebar-normal"> Facturas Generadas TCP - TCS</span>
+                    <span class="sidebar-normal"> Facturas Generadas</span>
                   </a>
                 </li>
+                <!-- <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listFacturasServicios_costos">
+                    <span class="sidebar-mini"> SFC </span>
+                    <span class="sidebar-normal"> Solicitudes de Facturación Capacitación</span>
+                  </a>
+                </li> -->
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listPagoProveedores">
                     <span class="sidebar-mini"> PP </span>

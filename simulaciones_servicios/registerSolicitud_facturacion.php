@@ -141,7 +141,7 @@ $contadorRegistros=0;
                             <label class="col-sm-2 col-form-label">Tipo Pago</label>
                             <div class="col-sm-4">
                                 <div class="form-group" >
-                                        <select name="cod_tipopago" id="cod_tipopago" class="selectpicker form-control form-control-sm" data-style="btn btn-info"
+                                        <select name="cod_tipopago" id="cod_tipopago" class="selectpicker form-control form-control-sm" data-style="btn btn-info">
                                             <option value=""></option>
                                             <?php 
                                             $queryTipoPago = "SELECT codigo,nombre FROM  tipos_pago WHERE cod_estadoreferencial=1 order by nombre";
@@ -282,7 +282,7 @@ $contadorRegistros=0;
                                                </div>
                                              </td>
                                              <td>
-                                                 <input type="text" name="descripcion_alterna<?=$iii?>" id="descripcion_alterna<?=$iii?>" class="form-control">
+                                                 <input type="text" name="descripcion_alterna<?=$iii?>" id="descripcion_alterna<?=$iii?>" class="form-control" onkeyup="javascript:this.value=this.value.toUpperCase();">
                                              </td>
                                            </tr>
 

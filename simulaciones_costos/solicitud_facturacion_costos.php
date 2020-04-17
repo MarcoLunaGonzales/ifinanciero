@@ -32,12 +32,20 @@ class ConexionIBNORCA extends PDO {
   } 
 } 
 $dbhIBNO = new ConexionIBNORCA();
+//sacamos el nombre del curso
+$stmtIBNOCurso = $dbhIBNO->prepare("SELECT pc.Nombre
+FROM asignacionalumno aa, alumnos a, alumnocurso ac, clasificador c, programas_cursos pc, modulos m where aa.IdModulo=4000 and a.CiAlumno=aa.CiAlumno 
+and ac.IdCurso=aa.IdCurso and ac.CiAlumno=aa.CiAlumno and ac.IdConceptoPago=c.IdClasificador and pc.IdCurso=pc.IdCurso and pc.IdCurso=aa.IdCurso and 
+m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo limit 1");//poner el codigo de curso a buscar
+  $stmtIBNOCurso->execute();
+  $resultNombreCurso = $stmtIBNOCurso->fetch();
+$nombre_curso = $resultNombreCurso['Nombre'];
   //datos registrado de la simulacion en curso
-  $stmtIBNO = $dbhIBNO->prepare("SELECT aa.IdModulo, aa.IdCurso, aa.CiAlumno, concat(a.ApPaterno,' ',a.ApMaterno,' ',a.Nombre)as nombreAlumno, c.Abrev, c.Auxiliar,
+$stmtIBNO = $dbhIBNO->prepare("SELECT aa.IdModulo, aa.IdCurso, aa.CiAlumno, concat(a.ApPaterno,' ',a.ApMaterno,' ',a.Nombre)as nombreAlumno, c.Abrev, c.Auxiliar,
 pc.Costo, pc.CantidadModulos, m.NroModulo, pc.Nombre
 FROM asignacionalumno aa, alumnos a, alumnocurso ac, clasificador c, programas_cursos pc, modulos m where aa.IdModulo=4000 and a.CiAlumno=aa.CiAlumno 
 and ac.IdCurso=aa.IdCurso and ac.CiAlumno=aa.CiAlumno and ac.IdConceptoPago=c.IdClasificador and pc.IdCurso=pc.IdCurso and pc.IdCurso=aa.IdCurso and 
-m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo");
+m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo order by nombreAlumno");//poner el codigo de curso a buscar
   $stmtIBNO->execute();
   $stmtIBNO->bindColumn('IdModulo', $IdModulo);
   $stmtIBNO->bindColumn('IdCurso', $IdCurso);
@@ -60,7 +68,8 @@ m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo");
                       <i class="material-icons">polymer</i>
                     </div>
                     <h4 class="card-title"><b>Solicitud de Facturación Capacitación</b></h4>
-                    <h4 class="card-title" align="center"><b><?=$nombre_simulacion?></b></h4>
+                    <h4 class="card-title" align="center"><b>Propuesta: <?=$nombre_simulacion?></b></h4>
+                    <h4 class="card-title" align="center"><b>Curso: <?=$nombre_curso?></b></h4>
                   </div>
                   <div class="card-body">
                       <table class="table" id="tablePaginator">
@@ -69,37 +78,46 @@ m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo");
                             <th class="text-center">#</th>                          
                             <th>CI Alumno</th>
                             <th>Nombre</th>
-                            <th>Costo</th>
-                            <th>Canti. Mod</th>
+                            <th>Monto</th>
+                            <!-- <th>Canti. Mod</th> -->
                             <th>Nro Módulo</th>
-                            <th>Nombre Mod.</th>
+                            <!-- <th>Nombre Mod.</th> -->
                             <th class="text-right">Actions</th>
                           </tr>
                         </thead>
                         <tbody>
                         <?php
                           $index=1;
-                          while ($row = $stmtIBNO->fetch(PDO::FETCH_BOUND)) {                            
-                            //los registros de la factura
-                           
+                          while ($row = $stmtIBNO->fetch(PDO::FETCH_BOUND)) {  
+                            $monto_pagar=($Costo - ($Costo*$Abrev/100) )/$CantidadModulos; //monto a pagar del estudiante                          
+                            //buscamos a los estudiantes que ya fueron solicitados su facturacion
+                            $codigo_facturacion=0;
+                            $sqlFac="SELECT * from solicitudes_facturacion where cod_simulacion_servicio=$codigo_simulacion and cod_cliente=$CiAlumno";
+                            $stmtSimuFact = $dbh->prepare($sqlFac);
+                            $stmtSimuFact->execute();
+                            $resultSimuFact = $stmtSimuFact->fetch();
+                            $codigo_facturacion = $resultSimuFact['codigo'];
                             ?>
                           <tr>
                             <td align="center"><?=$index;?></td>
                             <td><?=$CiAlumno;?></td>
                             <td><?=$nombreAlumno;?></td>
-                            <td><?=$Costo;?></td>
-                            <td><?=$CantidadModulos;?></td>
+                            <td><?=formatNumberDec($monto_pagar);?></td>
+                            <!-- <td><?=$CantidadModulos;?></td> -->
                             <td><?=$NroModulo;?></td>
-                            <td><?=$nombre_mod;?></td>
-
+                            <!-- <td><?=$nombre_mod;?></td> -->
                             <td class="td-actions text-right">
                               <?php
                                 if($globalAdmin==1){                            
-                                ?>                              
-                              <a href='<?=$urlregistro_solicitud_facturacion?>&codigo=<?=$CiAlumno?>' rel="tooltip" class="btn" style="background-color: #0489B1;">
-                              <i class="material-icons" title="Solicitar Facturación">receipt</i>
-                            </a>                                                  
-                                <?php  
+                                  if($codigo_facturacion>0){?>
+                                        <a title="Editar Solicitud de Facturación" href='<?=$urlregistro_solicitud_facturacion?>&codigo=<?=$CiAlumno?>&cod_simulacion=<?=$codigo_simulacion;?>&cod_facturacion=<?=$codigo_facturacion?>' class="btn btn-success">
+                                          <i class="material-icons"><?=$iconEdit;?></i>
+                                        </a>                                               
+                                  <?php }else{ ?>
+                                        <a href='<?=$urlregistro_solicitud_facturacion?>&codigo=<?=$CiAlumno?>&cod_simulacion=<?=$codigo_simulacion;?>&cod_facturacion=0' rel="tooltip" class="btn" style="background-color: #0489B1;">
+                                          <i class="material-icons" title="Solicitar Facturación">receipt</i>
+                                        </a>                                                  
+                                  <?php }                                
                                 }
                               ?>
                             </td>
@@ -117,10 +135,12 @@ m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo");
                 if($globalAdmin==1){              
                     ?>
                     <!-- <a href="<?=$urlRegisterSolicitudfactura;?>&cod_s=<?=$codigo_simulacion?>&cod_f=0&cod_sw=1" target="_self" class="<?=$buttonNormal;?>">Registrar</a>
-                    <a href='<?=$urlList;?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a> -->
+                     -->
+
                     <?php                
                 } 
                  ?>
+                 <a href='<?=$urlList;?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
                 </div>      
               </div>
           </div>  

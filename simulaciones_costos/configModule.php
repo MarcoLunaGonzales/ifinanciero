@@ -26,5 +26,9 @@ $urlReporteMayor="reportes/reporteMayor.php";
 $urlSolicitudfactura="?opcion=solicitud_facturacion_costos";
 
 $urlregistro_solicitud_facturacion="?opcion=registro_solicitud_facturacion";
+$urlSave_solicitud_facturacion_costos="?opcion=save_solicitud_facturacion_costos";
+
+$urlGenerarFacturas2="simulaciones_costos/generarFacturas2.php";
+$urlGenerarFacturasPrint="simulaciones_servicios/generarFacturasPrint.php";
 
 ?>

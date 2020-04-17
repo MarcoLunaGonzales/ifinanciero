@@ -37,6 +37,33 @@ try{
     $importe = $resultInfo['importe'];
     $observaciones = $resultInfo['observaciones'];
     $nombre_cliente = $resultInfo['nombre_cliente'];
+    if($cod_factura==null || $cod_factura==''){
+      $stmtInfo = $dbh->prepare("SELECT sf.* FROM facturas_venta sf  where sf.cod_solicitudfacturacion=$codigo");
+      $stmtInfo->execute();
+      $resultInfo = $stmtInfo->fetch();   
+      $cod_factura = $resultInfo['codigo']; 
+
+      $cod_solicitudfacturacion = $resultInfo['cod_solicitudfacturacion'];
+      $cod_unidadorganizacional = $resultInfo['cod_unidadorganizacional'];
+      $cod_area = $resultInfo['cod_area'];
+      $fecha_factura = $resultInfo['fecha_factura'];
+      $fecha_limite_emision = $resultInfo['fecha_limite_emision'];
+      $cod_cliente = $resultInfo['cod_cliente'];
+      $cod_personal = $resultInfo['cod_personal'];
+      $razon_social = $resultInfo['razon_social'];
+      $nit = $resultInfo['nit'];
+      $nro_factura = $resultInfo['nro_factura'];
+
+      $nro_autorizacion = $resultInfo['nro_autorizacion'];
+      $codigo_control = $resultInfo['codigo_control'];
+      $importe = $resultInfo['importe'];
+      $observaciones = $resultInfo['observaciones'];
+      // $nombre_cliente = $resultInfo['nombre_cliente'];
+      $nombre_cliente = $razon_social;
+
+    }
+      
+
     $cantidad=1;
     //copia cliente
     $stmt = $dbh->prepare("SELECT sf.cantidad from facturas_ventadetalle sf where sf.cod_facturaventa=$cod_factura");
@@ -57,7 +84,7 @@ try{
     where sf.cod_facturaventa=$cod_factura");
     $stmt_conta3->execute();
 
-
+//primero guardamos la factura del cliente
   $nit_empresa=obtenerValorConfiguracionFactura(9);
 $html = '';
 $html.='<html>'.

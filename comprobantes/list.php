@@ -75,7 +75,7 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                   <h4 class="card-title"><?=$moduleNamePlural?></h4>
                   <h4 align="right">
                     <?php
-                      $stmtTipoComprobante_x = $dbh->prepare("SELECT codigo,abreviatura,nombre from tipos_comprobante where cod_estadoreferencial=1");
+                      $stmtTipoComprobante_x = $dbh->prepare("SELECT codigo,abreviatura,nombre from tipos_comprobante where cod_estadoreferencial=1 order by abreviatura asc");
                       $stmtTipoComprobante_x->execute();
                       $stmtTipoComprobante_x->bindColumn('codigo', $cod_tipo_comprobante_x);
                       $stmtTipoComprobante_x->bindColumn('abreviatura', $abreviatura_x);
