@@ -1310,7 +1310,7 @@
 			require_once('dotaciones/listDotPersonalMeses.php');
 		}
 
-		//Distribucion Gastos y Porcentajes
+		//Distribucion Gastos x Oficina
 		if ($_GET['opcion']=='listDistribucionGasto') {
 			require_once('distribucion_gastosporcentaje/list.php');
 		}
@@ -1323,7 +1323,32 @@
 			$codigo=$_GET['codigo'];
 			require_once('distribucion_gastosporcentaje/registerDistribucionGastos.php');
 		}
+		//Distribucion Gastos x AREA
+		if ($_GET['opcion']=='listDistribucionGastoArea') {
+			require_once('distribucion_gastos_area/list.php');
+		}
+		if ($_GET['opcion']=='editDistribucionGastosArea') {
+			$codigo=$_GET['codigo'];
+			require_once('distribucion_gastos_area/editDistribucionGastos.php');
+		}
+		if ($_GET['opcion']=='registerDistribucionGastosArea') {
+			$codigo=$_GET['codigo'];
+			require_once('distribucion_gastos_area/registerDistribucionGastos.php');
+		}
+		if ($_GET['opcion']=='DistribucionGastosDetalleArea') {
+			$codigo=$_GET['codigo'];
+			require_once('distribucion_gastos_area/list_distribucion_detalle.php');
+		}
+		if ($_GET['opcion']=='deleteDistribucionArea') {
+			$codigo=$_GET['codigo'];
+			require_once('distribucion_gastos_area/saveDeleteDistribucion.php');
+		}
+		if ($_GET['opcion']=='saveCambiarDistribucionGastosArea') {
+			$codigo=$_GET['codigo'];
+			require_once('distribucion_gastos_area/saveCambiarDistribucionGastos.php');
+		}
 
+		//ESCALAS ANTIGUEDAD
 		if ($_GET['opcion']=='registerEscalaAntiguedad') {
 			require_once('escalas_antiguedad/register.php');
 		}
@@ -1332,10 +1357,7 @@
 			$cod_esc_ant=$_GET['cod_esc_ant'];
 			require_once('escalas_antiguedad/saveDelete.php');
 		}
-
-
 		//refrigerios
-
 		if ($_GET['opcion']=='listRefrigerio') {
 			require_once('refrigerios/list.php');
 		}

@@ -1,8 +1,8 @@
 <?php
 $table_distribucion="distribucion_gastosporcentaje";
 
-$moduleNameSingular="Distribución de Gasto y Porcentaje";
-$moduleNamePlural="Distribución de Gastos y Porcentajes";
+$moduleNameSingular="Distribución de Gasto por Oficina";
+$moduleNamePlural="Distribución de Gastos por Oficina";
 
 $urlList="?opcion=listDistribucionGasto";
 

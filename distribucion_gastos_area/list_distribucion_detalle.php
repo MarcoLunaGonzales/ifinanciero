@@ -7,18 +7,17 @@ require_once 'styles.php';
 $globalAdmin = $_SESSION["globalAdmin"];
 
 $dbh = new Conexion();
-$stmtDist = $dbh->prepare("SELECT nombre from distribucion_gastosporcentaje 
-where codigo=$codigo");
+$stmtDist = $dbh->prepare("SELECT nombre from distribucion_gastosarea where codigo=$codigo");
 $stmtDist->execute();
 $resultDist=$stmtDist->fetch();
 $nombre_d=$resultDist['nombre'];
 
 
-$stmt = $dbh->prepare("SELECT dgd.codigo as codDistribucion,dgd.cod_unidadorganizacional as codUnidad,
-  (SELECT uo.nombre FROM unidades_organizacionales uo WHERE uo.codigo=dgd.cod_unidadorganizacional) as unidad_nomb,
-  (SELECT uo.abreviatura FROM unidades_organizacionales uo WHERE uo.codigo=dgd.cod_unidadorganizacional) as unidad_abrev,dgd.porcentaje
-from distribucion_gastosporcentaje_detalle dgd
-where dgd.cod_distribucion_gastos=$codigo");
+$stmt = $dbh->prepare("SELECT dgd.codigo as codDistribucion, dgd.cod_area as codUnidad,
+  (SELECT a.nombre FROM areas a WHERE a.codigo=dgd.cod_area) as unidad_nomb,
+  (SELECT a.abreviatura FROM areas a WHERE a.codigo=dgd.cod_area) as unidad_abrev, dgd.porcentaje
+from distribucion_gastosarea_detalle dgd
+where dgd.cod_distribucionarea=$codigo");
 
 $stmt->execute();
 
@@ -47,7 +46,7 @@ $stmt->bindColumn('porcentaje', $porcentaje);
                 <thead>
                   <tr>
                     <th class="text-left">#</th>
-                    <th class="text-center">Oficina</th>
+                    <th class="text-center">Área</th>
                     <th class="text-center">Abreviatura</th>
                     <th class="text-center">Porcentaje</th>
                     <!--th class="text-right">Actions</th-->

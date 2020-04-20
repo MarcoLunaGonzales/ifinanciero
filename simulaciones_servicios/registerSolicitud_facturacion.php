@@ -220,7 +220,7 @@ $contadorRegistros=0;
                                           <tr class="fondo-boton">
                                             <th>#</th>
                                             <th >Año</th>
-                                            <th>Servicio</th>
+                                            <th>Item</th>
                                             <th>Cant.</th>
                                             <th>Importe</th>
                                             <th>Total</th>                                            
