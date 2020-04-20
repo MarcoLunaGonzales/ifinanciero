@@ -424,7 +424,10 @@ if($flagSuccess==true){
        $stmtUpdateSolicitud = $dbh->prepare($sqlUpdateSolicitud);
        $stmtUpdateSolicitud->execute();
     }*/
-   
+if(!isset($_GET['control_admin'])){
+ $urlList2=$urlList;
+}   
+
   if(isset($_POST['usuario_ibnored'])){
     $q=$_POST['usuario_ibnored'];
     $r=$_POST['usuario_ibnored_rol'];

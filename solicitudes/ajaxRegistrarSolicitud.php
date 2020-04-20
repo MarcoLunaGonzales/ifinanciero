@@ -68,6 +68,10 @@ if(isset($_GET['numero'])){
   $stmtInsert = $dbh->prepare($sqlInsert);
   $stmtInsert->execute();
 
+
+
+  
+
   //enviar propuestas para la actualizacion de ibnorca
   $fechaHoraActual=date("Y-m-d H:i:s");
   $idTipoObjeto=2708;

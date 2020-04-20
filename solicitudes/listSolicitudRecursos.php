@@ -207,7 +207,7 @@ $stmt->bindColumn('numero', $numeroSol);
                             <a title="Enviar solicitud" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=4&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>'  itle="Enviar Solicitud" class="btn btn-warning">
                               <i class="material-icons">send</i>
                             </a> 
-                            <a title="Editar solicitud - detalle" href='<?=$urlRegister;?>?cod=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>'  class="btn btn-info">
+                            <a title="Editar solicitud - detalle" href='<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>'  class="btn btn-info">
                               <i class="material-icons"><?=$iconEdit;?></i>
                             </a>
                             <button title="Eliminar solicitud"  class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>')">
@@ -222,7 +222,7 @@ $stmt->bindColumn('numero', $numeroSol);
                             <a title="Enviar solicitud" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=4&admin=0'  itle="Enviar Solicitud" class="btn btn-warning">
                               <i class="material-icons">send</i>
                             </a> 
-                            <a title="Editar solicitud - detalle" href='<?=$urlRegister;?>?cod=<?=$codigo;?>'  class="btn btn-info">
+                            <a title="Editar solicitud - detalle" href='<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>'  class="btn btn-info">
                               <i class="material-icons"><?=$iconEdit;?></i>
                             </a>
                             <button title="Eliminar solicitud"  class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')">
@@ -246,9 +246,9 @@ $stmt->bindColumn('numero', $numeroSol);
               <div class="card-footer fixed-bottom">
                 <?php 
                 if(isset($_GET['q'])){
-                ?><a href="<?=$urlRegister2;?>?q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>" target="_self" class="<?=$buttonNormal;?>">Registrar</a><?php
+                ?><a href="<?=$urlRegister3;?>?q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>" target="_self" class="<?=$buttonNormal;?>">Registrar</a><?php
                 }else{
-                 ?><a href="#" onclick="javascript:window.open('<?=$urlRegister2;?>')" class="<?=$buttonNormal;?>">Registrar</a><?php
+                 ?><a href="#" onclick="javascript:window.open('<?=$urlRegister3;?>')" class="<?=$buttonNormal;?>">Registrar</a><?php
                 } 
                 ?>
                 

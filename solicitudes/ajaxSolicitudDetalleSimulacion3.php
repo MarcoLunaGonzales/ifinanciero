@@ -19,8 +19,8 @@ $codAreaX=$_GET['area'];
 
 $codigo_detalle=$_GET['codigo_detalle'];
 
-						//$detalle=obtenerDetalleSolicitudSimulacion($codSimulacionServX);
-                        $codigoPlantillaXX=obtenerPlantillaCodigoSimulacionServicio($codSimulacionServX);
+		//$detalle=obtenerDetalleSolicitudSimulacion($codSimulacionServX);
+                    $codigoPlantillaXX=obtenerPlantillaCodigoSimulacionServicio($codSimulacionServX);
                         if($anio=="all"){
 
                         }
@@ -47,7 +47,7 @@ $codigo_detalle=$_GET['codigo_detalle'];
 							}
 							$codCuentaX=$row['codigo'];
 							$codDetalleX=0;
-							$detalleX=$row['glosa'];
+							$detalleX=$row['glosa_completa'];
 							$proveedorX="";
 							$retencionX="";
 							$tituloImporte="Importe";

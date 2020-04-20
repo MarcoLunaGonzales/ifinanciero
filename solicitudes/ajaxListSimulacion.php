@@ -23,10 +23,10 @@ if(isset($_GET['s'])){
  $query="SELECT s.*,p.cod_area FROM simulaciones_costos s join plantillas_costo p on p.codigo=s.cod_plantillacosto where s.cod_responsable=$usuario and s.cod_estadosimulacion=5 $sqlAreas order by s.codigo";
  $query2="SELECT s.*,p.cod_area FROM simulaciones_servicios s join plantillas_servicios p on p.codigo=s.cod_plantillaservicio where s.cod_responsable=$usuario and s.cod_estadosimulacion=5 $sqlAreas order by s.codigo"; //cod_responsable=$usuario and
   ?>
-   <label class="col-sm-3 col-form-label">Propuesta :</label>
-   <div class="col-sm-9">
+   <!--<label class="col-sm-3 col-form-label">Propuesta :</label>-->
+   <div class="col-sm-12">
      <div class="form-group">
-          <select class="selectpicker form-control" name="simulaciones" id="simulaciones" data-style="<?=$comboColor;?>" required>
+          <select class="selectpicker form-control form-control-sm" name="simulaciones" id="simulaciones" data-style="btn-warning" required>
            <?php 
            $stmt = $dbh->prepare($query);
            $stmt->execute();
