@@ -441,49 +441,55 @@ if($menuModulo==0){
                     <span class="sidebar-normal"> Configuracion de Cuentas </span>
                   </a>
                 </li-->
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listEntidades">
+                    <span class="sidebar-mini">E</span>
+                    <span class="sidebar-normal">Entidades</span>
+                  </a>
+                </li>
 
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listPlanCuentas">
-                    <span class="sidebar-mini"> PC </span>
-                    <span class="sidebar-normal"> Plan de Cuentas </span>
+                    <span class="sidebar-mini">PC</span>
+                    <span class="sidebar-normal">Plan de Cuentas</span>
                   </a>
                 </li>
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listPlanCuentasCajaChica">
-                    <span class="sidebar-mini"> PCCC </span>
-                    <span class="sidebar-normal"> Plan de Cuentas Caja Chica </span>
+                    <span class="sidebar-mini">PCH</span>
+                    <span class="sidebar-normal">Plan de Cuentas Caja Chica</span>
                   </a>
                 </li>
 
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listPartidasPres">
-                    <span class="sidebar-mini"> PP </span>
-                    <span class="sidebar-normal"> Partidas Presupuestarias </span>
+                    <span class="sidebar-mini">PP</span>
+                    <span class="sidebar-normal">Partidas Presupuestarias</span>
                   </a>
                 </li>
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=tipoDeCambio">
-                    <span class="sidebar-mini"> TC </span>
-                    <span class="sidebar-normal"> Tipo de Cambio de Monedas </span>
+                    <span class="sidebar-mini">TC</span>
+                    <span class="sidebar-normal">Tipo de Cambio de Monedas</span>
                   </a>
                 </li>
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listDistribucionGasto">
-                    <span class="sidebar-mini"> DGP </span>
-                    <span class="sidebar-normal"> Distribucion de Gastos</span>
+                    <span class="sidebar-mini">DGO</span>
+                    <span class="sidebar-normal">Distribucion Gastos Oficina</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listDistribucionGastoArea">
+                    <span class="sidebar-mini">DGA</span>
+                    <span class="sidebar-normal">Distribucion Gastos Área</span>
                   </a>
                 </li>
                 <li class="nav-item ">
                     <a class="nav-link" href="?opcion=ListaTipoCajaChica">
-                      <span class="sidebar-mini"> TCC </span>
-                      <span class="sidebar-normal"> Tipos Caja Chica </span>
+                      <span class="sidebar-mini">TCC</span>
+                      <span class="sidebar-normal">Tipos Caja Chica</span>
                     </a>
-                </li>
-                <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=listEntidades">
-                    <span class="sidebar-mini"> E </span>
-                    <span class="sidebar-normal"> Entidades </span>
-                  </a>
                 </li>
               </ul>
             </div>
@@ -523,12 +529,12 @@ if($menuModulo==0){
                     <span class="sidebar-normal"> Caja Chica </span>
                   </a>
                 </li>
-                <li class="nav-item ">
+                <!--li class="nav-item ">
                   <a class="nav-link" href="?opcion=ListaRendiciones">
                     <span class="sidebar-mini"> MR </span>
                     <span class="sidebar-normal"> Mis Rendiciones </span>
                   </a>
-                </li>
+                </li-->
 
               </ul>
             </div>

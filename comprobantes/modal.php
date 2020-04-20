@@ -8,6 +8,7 @@
       </div>
       <div class="modal-body">
         <input type="hidden" id="distFila" value="">
+        <input type="hidden" id="tipoDistribucion" value="">
         <div id="mensajeDist"></div>
       </div>
       <div class="modal-footer">

@@ -18,7 +18,7 @@ $j=1;
     $i=1;
     ?>
     <input type="hidden" name="codigo_partida_presupuestaria<?=$ann?>QQQ<?=$j?>" id="codigo_partida_presupuestaria<?=$ann?>QQQ<?=$j?>" value="<?=$codigoPartida?>" readonly/>
-    <h4 class="font-weight-bold"><center>PARTIDA: <?=$nombrePartida?></center>
+    <h4 class="font-weight-bold"><center>PARTIDA: <?=$nombrePartida?> - <?=$tituloItem?></center>
     </h4>
       <div class="row">
            <input class="form-control text-right" type="hidden" name="monto_designado<?=$ann?>QQQ<?=$j?>" id="monto_designado<?=$ann?>QQQ<?=$j?>" value="<?=$montoTotal?>" readonly/>
@@ -94,6 +94,6 @@ $j=1;
   ?>
    <div id="mensaje_cuenta<?=$ann?>"></div>
   <input type="hidden" id="numero_cuentaspartida<?=$ann?>" value="<?=$j?>">
-  <div class="form-group float-right">
+  <!--<div class="form-group float-right">
     <button class="btn btn-success" id="guardar_cuenta<?=$ann?>" onclick="guardarCuentasSimulacionGenericoServicioPrevio('<?=$ann?>',<?=$ibnorcaC?>)">Editar Detalle por Persona</button>
-  </div>
+  </div>-->

@@ -139,8 +139,6 @@ for ($i=1;$i<=$cantidadFilas;$i++){
 
          //itemEstadosCuenta
           $nC=cantidadF($estadosCuentas[$i-1]);
-          // echo "nc:".$nC;
-
           for($j=0;$j<$nC;$j++){
               $fecha=date("Y-m-d H:i:s");
               $codPlanCuenta=$estadosCuentas[$i-1][$j]->cod_plancuenta;

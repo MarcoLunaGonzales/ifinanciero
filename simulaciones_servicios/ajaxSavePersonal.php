@@ -35,7 +35,12 @@ $existe=0;$contador=0;
 }
 
 if($existe==0){
-	$nombreTIPA=nameTipoAuditor($cod_cla)."(".($contador+1).")";
+  if($contador==0){
+    $nombreTIPA=nameTipoAuditor($cod_cla);
+  }else{
+    $nombreTIPA=nameTipoAuditor($cod_cla)."(".($contador+1).")";
+  }
+	
 	$codSimulacionServicioAuditor=obtenerCodigoSimulacionServicioAuditor();
     $sql="INSERT INTO simulaciones_servicios_auditores (codigo,cod_simulacionservicio, cod_tipoauditor,cantidad,monto,cantidad_editado,cod_estadoreferencial,dias,cod_externolocal,cod_anio,descripcion) 
        VALUES ('".$codSimulacionServicioAuditor."','".$cod_sim."','".$cod_cla."','".$cant."','".$monto."','".$cant."', 1,'".$dias."',1,'".$anio."','".$nombreTIPA."')";

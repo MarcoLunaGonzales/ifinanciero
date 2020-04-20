@@ -268,7 +268,7 @@ if(isset($_GET['nombre'])){
 
       //insertar valores pre definidos a los servicios de sello seleccionados
       $suma=0;$aux=0;$aux2=0;
-      if(obtenerConfiguracionValorServicio($codCS)==true){
+      if(obtenerConfiguracionValorServicio($codCS)==true&&isset($_GET['region_cliente'])){
         //$productosLista=explode(",", $productos);
         $codTC=obtenerTipoCliente($cliente);
         $nacional=obtenerTipoNacionalCliente($cliente);
