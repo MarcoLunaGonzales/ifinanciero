@@ -173,9 +173,15 @@ $stmt->bindColumn('idServicio', $idServicioX);
                                  <a title="Imprimir Solicitud de Recursos" href='#' onclick="javascript:window.open('solicitudes/imp.php?sol=<?=$anteriorCod;?>&mon=1')" class="btn btn-primary">
                                      <i class="material-icons"><?=$iconImp;?></i>
                                  </a> 
+
+                                 <a class="btn btn-warning" title="Solicitud de Facturación" href='<?=$urlSolicitudfactura;?>&cod=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>'>
+                                   <i class="material-icons" >monetization_on</i>                              
+                                 </a>
+
                                  <!--<a class="btn btn-warning" title="Solicitud de Facturación" href='<?=$urlSolicitudfactura;?>&cod=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>'>
                                    <i class="material-icons" >receipt</i>                              
                                  </a>-->
+
                                  <?php 
                                  if($idServicioX>0){
                                    ?>

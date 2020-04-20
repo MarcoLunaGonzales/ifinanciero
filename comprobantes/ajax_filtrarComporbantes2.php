@@ -20,24 +20,44 @@ $globalUnidad=$_SESSION["globalUnidad"];
 $globalArea=$_SESSION["globalArea"];
 
 
-$codigo_comprobante=$_GET['codigo'];
-$posItem=$_GET['pos'];
-$totalItem=$_GET['total'];
+$codigo_tipo=$_GET['codigo'];
 
 
 // $unidadOrgString=implode(",", $cod_uo);
 
 
+$sqlArray="SELECT c.codigo,c.cod_tipocomprobante,(select u.abreviatura from unidades_organizacionales u where u.codigo=c.cod_unidadorganizacional)unidad,
+(select t.abreviatura from tipos_comprobante t where t.codigo=c.cod_tipocomprobante)tipo_comprobante, c.fecha, c.numero
+from comprobantes c join estados_comprobantes ec on c.cod_estadocomprobante=ec.codigo where c.cod_estadocomprobante!=2
+and c.cod_unidadorganizacional='$globalUnidad'
+and c.cod_gestion='$globalGestion'";
 
-$sql="SELECT c.cod_tipocomprobante,(select u.abreviatura from unidades_organizacionales u where u.codigo=c.cod_unidadorganizacional)unidad, c.cod_gestion, 
-  (select m.nombre from monedas m where m.codigo=c.cod_moneda)moneda, 
-  (select t.abreviatura from tipos_comprobante t where t.codigo=c.cod_tipocomprobante)tipo_comprobante, c.fecha, c.numero,c.codigo, c.glosa,ec.nombre,c.cod_estadocomprobante
-  from comprobantes c join estados_comprobantes ec on c.cod_estadocomprobante=ec.codigo where c.cod_estadocomprobante!=2 ";  
-  $sql.=" and c.codigo = $codigo_comprobante";
-$sql.=" and c.cod_unidadorganizacional='$globalUnidad' ";
-$sql.=" and c.cod_gestion='$globalGestion' order by c.fecha desc, unidad, tipo_comprobante, c.numero";
+$sqlArray.=" and c.cod_tipocomprobante in ($codigo_tipo)";
+$sqlArray.=" order by c.fecha desc, unidad, tipo_comprobante, c.numero desc limit 100";
+//echo $sqlArray;
+$stmtArray = $dbh->prepare($sqlArray);
+$stmtArray->execute();
+$stmtArray->bindColumn('codigo', $codigo_comprobante);
 
+$array_cod_comprobante=array();
+while ($row = $stmtArray->fetch(PDO::FETCH_BOUND)) {
+  array_push($array_cod_comprobante, $codigo_comprobante);
+}
+$cantidad_itms=count($array_cod_comprobante);
+if($cantidad_itms>0){
+  $cod_comprobante_x=$array_cod_comprobante[0];
+  $posicion=1;
+}else{ $cod_comprobante_x=null;
+  $posicion=0;
+}
 // echo $sql;
+$sql="SELECT c.cod_tipocomprobante,(select u.abreviatura from unidades_organizacionales u where u.codigo=c.cod_unidadorganizacional)unidad, c.cod_gestion, 
+(select m.nombre from monedas m where m.codigo=c.cod_moneda)moneda, 
+(select t.abreviatura from tipos_comprobante t where t.codigo=c.cod_tipocomprobante)tipo_comprobante, c.fecha, c.numero,c.codigo, c.glosa,ec.nombre,c.cod_estadocomprobante
+from comprobantes c join estados_comprobantes ec on c.cod_estadocomprobante=ec.codigo where c.cod_estadocomprobante!=2 and c.codigo=$cod_comprobante_x";
+$sql.=" and c.cod_unidadorganizacional='$globalUnidad' ";
+$sql.=" and c.cod_gestion='$globalGestion' order by c.fecha desc, unidad, tipo_comprobante, c.numero desc limit 1";
+
 
 $stmt = $dbh->prepare($sql);
 $stmt->execute();
@@ -66,13 +86,13 @@ $stmt->bindColumn('cod_tipocomprobante', $codTipoC);
           <button title="Anterior" type="button" style="padding: 0;font-size:10px;width:23px;height:23px;" class="btn btn-primary btn-sm btn-round " id="botonAnteriorComprobante" name="botonAnteriorComprobante" onclick="botonAnteriorComprobante()" ><</button>
           <button title="Siguiente" type="button" style="padding: 0;font-size:10px;width:23px;height:23px;" class="btn btn-primary btn-sm btn-round " id="botonSiguienteComprobante" name="botonSiguienteComprobante" onclick="botonSiguienteComprobante()">></button>
           <button title="Final" type="button" style="padding: 0;font-size:10px;width:23px;height:23px;" class="btn btn-primary btn-sm btn-round " id="botonFinComprobante" name="botonFinComprobante" onclick="botonFinComprobante()" >>></button>
-          <button title="posicion - Total Items" type="button" style="padding: 0;font-size:10px;width:70px;height:23px;" class="btn btn-primary btn-sm btn-round " id="botonItems" name="botonItems"><?=$posItem?> - <?=$totalItem?></button>
+          <button title="posicion - Total Items" type="button" style="padding: 0;font-size:10px;width:70px;height:23px;" class="btn btn-primary btn-sm btn-round " id="botonItems" name="botonItems"><?=$posicion?> - <?=$cantidad_itms?></button>
           <!-- <input type="hidden" name="posicion" id="posicion" value="0"> -->
         </div>
                               
         <div class="col-md-6" align="right"> 
           <?php
-            $stmtTipoComprobante_x = $dbh->prepare("SELECT codigo,abreviatura,nombre from tipos_comprobante where cod_estadoreferencial=1");
+            $stmtTipoComprobante_x = $dbh->prepare("SELECT codigo,abreviatura,nombre from tipos_comprobante where cod_estadoreferencial=1 order by abreviatura asc");
             $stmtTipoComprobante_x->execute();
             $stmtTipoComprobante_x->bindColumn('codigo', $cod_tipo_comprobante_x);
             $stmtTipoComprobante_x->bindColumn('abreviatura', $abreviatura_x);
@@ -225,4 +245,17 @@ $stmt->bindColumn('cod_tipocomprobante', $codTipoC);
     </div>
   </div>
 </div>
+<script>
+  var array_comprobantes_general=[];
+  var numFilasA=0;
+</script>
+<?php 
+// var_dump($array_cod_comprobante);
 
+for ($i=0; $i < $cantidad_itms; $i++) {
+  ?>  
+  <script>array_comprobantes_general.push(<?=$array_cod_comprobante[$i]?>);
+    // alert(array_comprobantes_general);
+  </script><?php                    
+}
+?>

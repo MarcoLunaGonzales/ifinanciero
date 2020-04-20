@@ -22,7 +22,12 @@ while ($row = $stmtArray->fetch(PDO::FETCH_BOUND)) {
   array_push($array_cod_comprobante, $codigo_comprobante);
 }
 $cantidad_itms=count($array_cod_comprobante);
-$cod_comprobante_x=$array_cod_comprobante[0];
+if($cantidad_itms>0){
+  $cod_comprobante_x=$array_cod_comprobante[0];
+  $posicion=1;
+}else{ $cod_comprobante_x=null;
+  $posicion=0;
+}
 // echo $cod_comprobante_x;
 
 //el listado inicial
@@ -84,19 +89,19 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                     <button title="Anterior" type="button" style="padding: 0;font-size:10px;width:23px;height:23px;" class="btn btn-primary btn-sm btn-round " id="botonAnteriorComprobante" name="botonAnteriorComprobante" onclick="botonAnteriorComprobante()" ><</button>
                     <button title="Siguiente" type="button" style="padding: 0;font-size:10px;width:23px;height:23px;" class="btn btn-primary btn-sm btn-round " id="botonSiguienteComprobante" name="botonSiguienteComprobante" onclick="botonSiguienteComprobante()">></button>
                     <button title="Final" type="button" style="padding: 0;font-size:10px;width:23px;height:23px;" class="btn btn-primary btn-sm btn-round " id="botonFinComprobante" name="botonFinComprobante" onclick="botonFinComprobante()" >>></button>
-                    <button title="posición - Total Items" type="button" style="padding: 0;font-size:10px;width:70px;height:23px;" class="btn btn-primary btn-sm btn-round " id="botonItems" name="botonItems" >1-<?=$cantidad_itms?></button>
+                    <button title="posición - Total Items" type="button" style="padding: 0;font-size:10px;width:70px;height:23px;" class="btn btn-primary btn-sm btn-round " id="botonItems" name="botonItems" ><?=$posicion?> - <?=$cantidad_itms?></button>
                     <!-- <input type="hidden" name="posicion" id="posicion" value="0"> -->
                   </div>
                                         
                   <div class="col-md-6" align="right"> 
                     <?php
-                      $stmtTipoComprobante_x = $dbh->prepare("SELECT codigo,abreviatura,nombre from tipos_comprobante where cod_estadoreferencial=1");
+                      $stmtTipoComprobante_x = $dbh->prepare("SELECT codigo,abreviatura,nombre from tipos_comprobante where cod_estadoreferencial=1 order by abreviatura asc");
                       $stmtTipoComprobante_x->execute();
                       $stmtTipoComprobante_x->bindColumn('codigo', $cod_tipo_comprobante_x);
                       $stmtTipoComprobante_x->bindColumn('abreviatura', $abreviatura_x);
                       $stmtTipoComprobante_x->bindColumn('nombre', $nombre_x);
                       while ($rowTC = $stmtTipoComprobante_x->fetch(PDO::FETCH_BOUND)) {?>
-                        <button title="Filtrar por <?=$nombre_x?>" type="button" class="btn btn-success btn-sm btn-round " id="botonBuscarComprobanteIng" name="botonBuscarComprobanteIng" style="padding: 0;font-size:10px;width:50px;height:23px;" onclick="botonBuscarComprobanteIng(<?=$cod_tipo_comprobante_x?>)"><?=$abreviatura_x?></button>
+                        <button title="Filtrar por <?=$nombre_x?>" type="button" class="btn btn-success btn-sm btn-round " id="botonBuscarComprobanteIng" name="botonBuscarComprobanteIng" style="padding: 0;font-size:10px;width:50px;height:23px;" onclick="botonBuscarComprobanteIng2(<?=$cod_tipo_comprobante_x?>)"><?=$abreviatura_x?></button>
                       <?php }
                     ?>                  
                     <button type="button" class="btn btn-warning btn-round btn-fab btn-sm" data-toggle="modal" data-target="#modalBuscador" style="padding: 0;font-size:10px;width:30px;height:30px;">
@@ -109,7 +114,7 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
             </div>      
             <div class="card-body">                                          
               <div class="" id="">
-                <table id="tablePaginator" class="table table-condensed">
+                <table id="" class="table table-condensed">
                   <thead>
                     <tr>
                       <th class="text-center">#</th>                          
@@ -197,59 +202,53 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                       </td>
                     </tr>
                     <?php
-                                  $index++;
-                                }
-                    ?>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-          <!-- card detalle -->
-          <div class="card">
-            <div class="card-header <?=$colorCard;?> card-header-icon">
-              <!-- <div class="card-icon">
-                <i class="material-icons"><?=$iconCard;?></i>
-              </div> -->
-              <h4 class="card-title"><?=$moduleNamePlural?> Detalle</h4>                                    
-            </div>      
-            <div class="card-body">                                    
-              <div class="" id="">
-                <table id="tablePaginator" class="table table-condensed">
-                  <thead>
-                    <tr>
-                      <th class="text-center">#</th>
-                      <th class="text-center">Centro Costos</th>
-                      <th class="text-center small">Cuenta</th>
-                      <th class="text-center small">Nombre Cuenta</th>
-                      <th class="text-center small">Debe</th>
-                      <th class="text-center small">Haber</th>
-                      
-                    </tr>
-                  </thead>
-                  <tbody>
-                  <?php
-                    $indexDetalle=1;
-                    $data = obtenerComprobantesDetImp($cod_comprobante_x);                                    
-                    while ($rowDet = $data->fetch(PDO::FETCH_ASSOC)) {  ?>
-                    <tr>                    
-                      <td align="text-center small"><?=$indexDetalle;?></td>                          
-                      <td class="text-center small"><?=$rowDet['unidadAbrev']?>/<?=$rowDet['abreviatura']?></td>
-                      <td class="text-center small"><?=$rowDet['numero']?></td>
-                      <td class="text-left small"><?=$rowDet['nombre']?></td>
-                      <td class="text-center small"><?=number_format($rowDet['debe'], 2, '.', ',')?></td>
-                      <td class="text-left small"><?=number_format($rowDet['haber'], 2, '.', ',')?></td>                                                  
-                    </tr>
-                    <?php
-                          $indexDetalle++;
+                          $index++;
                         }
                     ?>
                   </tbody>
                 </table>
               </div>
+              <!-- card detalle -->
+              <div class="card">            
+                <h4 class="card-title" align="center">Detalle <?=$moduleNamePlural?></h4>                                    
+                <div class="card-body">                                    
+                  <div class="" id="">
+                    <table id="" class="table table-condensed">
+                      <thead>
+                        <tr>
+                          <th class="text-center">#</th>
+                          <th class="text-center">Centro Costos</th>
+                          <th class="text-center small">Cuenta</th>
+                          <th class="text-center small">Nombre Cuenta</th>
+                          <th class="text-center small">Debe</th>
+                          <th class="text-center small">Haber</th>
+                          
+                        </tr>
+                      </thead>
+                      <tbody>
+                      <?php
+                        $indexDetalle=1;
+                        $data = obtenerComprobantesDetImp($cod_comprobante_x);                                    
+                        while ($rowDet = $data->fetch(PDO::FETCH_ASSOC)) {  ?>
+                        <tr>                    
+                          <td align="text-center small"><?=$indexDetalle;?></td>                          
+                          <td class="text-center small"><?=$rowDet['unidadAbrev']?>/<?=$rowDet['abreviatura']?></td>
+                          <td class="text-center small"><?=$rowDet['numero']?></td>
+                          <td class="text-left small"><?=$rowDet['nombre']?></td>
+                          <td class="text-center small"><?=number_format($rowDet['debe'], 2, '.', ',')?></td>
+                          <td class="text-left small"><?=number_format($rowDet['haber'], 2, '.', ',')?></td>                                                  
+                        </tr>
+                        <?php
+                              $indexDetalle++;
+                            }
+                        ?>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-
         </div>
         
       	<div class="card-footer fixed-bottom">
@@ -312,7 +311,7 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
       </div>
 
       <div class="modal-footer">
-        <button type="button" class="btn btn-success" id="botonBuscarComprobante" name="botonBuscarComprobante" onclick="botonBuscarComprobante()">Buscar</button>
+        <button type="button" class="btn btn-success" id="botonBuscarComprobante" name="botonBuscarComprobante" onclick="botonBuscarComprobante2()">Buscar</button>
         <!-- <button type="button" class="btn btn-danger" data-dismiss="modal"> Cerrar </button> -->
       </div>
     </div>

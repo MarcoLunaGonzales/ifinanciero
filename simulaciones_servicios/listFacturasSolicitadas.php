@@ -9,7 +9,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 
 
   //datos registrado de la simulacion en curso
-  $stmt = $dbh->prepare("SELECT sf.*,t.nombre as nombre_cliente FROM solicitudes_facturacion sf,clientes t  where sf.cod_cliente=t.codigo");
+  $stmt = $dbh->prepare("SELECT sf.* FROM solicitudes_facturacion sf");
   $stmt->execute();
   $stmt->bindColumn('codigo', $codigo_facturacion);
   $stmt->bindColumn('cod_simulacion_servicio', $cod_simulacion_servicio);
@@ -24,7 +24,8 @@ $globalAdmin=$_SESSION["globalAdmin"];
   $stmt->bindColumn('razon_social', $razon_social);
   $stmt->bindColumn('nit', $nit);
   $stmt->bindColumn('observaciones', $observaciones);
-  $stmt->bindColumn('nombre_cliente', $nombre_cliente);
+  // $stmt->bindColumn('nombre_cliente', $nombre_cliente);
+
   ?>
   <div class="content">
     <div class="container-fluid">
@@ -66,12 +67,23 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             //obtenemos datos de la simulacion
                             $sql="SELECT sc.nombre,ps.cod_area,ps.cod_unidadorganizacional
                             from simulaciones_servicios sc,plantillas_servicios ps
-                            where sc.cod_plantillaservicio=ps.codigo and sc.cod_estadoreferencial=1 and sc.codigo=$cod_simulacion_servicio";
+                            where sc.cod_plantillaservicio=ps.codigo and sc.cod_estadoreferencial=1 and sc.codigo=$cod_simulacion_servicio";                            
                             $stmtSimu = $dbh->prepare($sql);
                             $stmtSimu->execute();
                             $resultSimu = $stmtSimu->fetch();
                             $nombre_simulacion = $resultSimu['nombre'];
                             $cod_area_simulacion = $resultSimu['cod_area'];
+                            if($nombre_simulacion==null || $nombre_simulacion == ''){
+                              $sqlCostos="SELECT sc.nombre,sc.cod_responsable,ps.cod_area,ps.cod_unidadorganizacional
+                              from simulaciones_costos sc,plantillas_servicios ps
+                              where sc.cod_plantillacosto=ps.codigo and sc.cod_estadoreferencial=1 and sc.codigo=$cod_simulacion_servicio order by sc.codigo";
+                              $stmtSimuCostos = $dbh->prepare($sqlCostos);
+                              $stmtSimuCostos->execute();
+                              $resultSimu = $stmtSimuCostos->fetch();
+                              $nombre_simulacion = $resultSimu['nombre'];
+                              $cod_area_simulacion = $resultSimu['cod_area'];
+                            }
+
                             $name_area_simulacion=abrevArea($cod_area_simulacion);
 
                             // --------
@@ -86,7 +98,8 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             <td><?=$nombre_simulacion?> - <?=$name_area_simulacion?></td>
                             <td><?=$fecha_registro;?></td>
                             <td><?=$fecha_solicitudfactura;?></td>
-                            <td><?=$nombre_cliente;?></td>
+                            <!-- <td><?=$nombre_cliente;?></td> -->
+                            <td><?=$razon_social;?></td>
                             <td><?=$responsable;?></td>
 
                             <td class="td-actions text-right">
@@ -96,7 +109,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                     ?>
                                     <div class="dropdown">
                                       <button class="btn btn-success dropdown-toggle" type="button" id="reporte_sueldos" data-toggle="dropdown" aria-extended="true">
-                                        <i class="material-icons" title="Imprimir Facturas">description</i>
+                                        <i class="material-icons" title="Imprimir Facturas">print</i>
                                         <span class="caret"></span>
                                       </button>
                                       <ul class="dropdown-menu" role="menu" aria-labelledby="reporte_sueldos">
@@ -114,8 +127,8 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                     </a> -->
                                   <?php }else{// generar facturas
                                     ?>
-                                    <button title="Generar Factura"  ctarget="_blank" class="btn btn-warning" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlGenerarFacturas2;?>&codigo=<?=$codigo_facturacion;?>')">
-                                      <i class="material-icons">description</i>
+                                    <button title="Generar Factura"  target="blank" class="btn btn-success" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlGenerarFacturas2;?>?codigo=<?=$codigo_facturacion;?>')">
+                                      <i class="material-icons">monetization_on</i>
                                     </button>
                                   
                                   <?php }                           
