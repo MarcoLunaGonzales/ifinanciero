@@ -503,7 +503,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
 				<input type="hidden" id="cantidad_alibnorca" name="cantidad_alibnorca" readonly value="<?=$alumnosX?>">
 				<input type="hidden" id="cantidad_alfuera" name="cantidad_alfuera" readonly value="<?=$alumnosExternoX?>">
 				<input type="hidden" id="aprobado" name="aprobado" readonly value="<?=$codEstadoSimulacion?>">
-                          <div class="btn-group dropdown">
+                          <!--<div class="btn-group dropdown">
                               <button type="button" title="Editar Variables de Costo" class="btn btn-sm btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="material-icons">edit</i>
                               </button>
@@ -515,14 +515,17 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                                      $tituloItem="Año 1 (ETAPA ".($an+1).")";
                                    }
                                       ?>
-                                       <a href="#" onclick="modificarMontosPeriodo(<?=$an?>)" class="dropdown-item">
+                                       <a href="#" onclick="modificarMontosPeriodo(<?=$an?>)"  class="dropdown-item">
                                            <i class="material-icons">keyboard_arrow_right</i><?=$tituloItem?>
                                        </a> 
                                      <?php
                                   }
                                   ?>
                               </div>
-                            </div>
+                            </div>-->
+                          <a href="#" title="Editar Variables de Costo" onclick="modificarMontosPeriodo(0)" class="btn btn-sm btn-danger">
+                              <i class="material-icons">edit</i>
+                          </a>  
                           <a href="#" onclick="listarCostosFijosPeriodo(<?=$anioGeneral?>)" class="btn btn-sm btn-info">
                                            <i class="material-icons">list</i> CF
                           </a>
@@ -725,15 +728,15 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                   <td class="text-right font-weight-bold"><?=number_format($costoFijoPrincipalPeriodo/$usd, 2, '.', ',')?></td>
                 </tr>
                 <tr>
-                  <td class="text-left small bg-table-primary text-white">COSTO VARIABLE TOTAL</td>
-                  <td class="text-right font-weight-bold"><?=number_format(($totalVariable[2]*$alumnosX), 2, '.', ',')?></td>
-                  <td class="text-right font-weight-bold"><?=number_format(($totalVariable[2]*$alumnosX)/$usd, 2, '.', ',')?></td>
+                  <td class="text-left small bg-table-primary text-white">COSTO VARIABLE TOTAL + HONORARIOS</td>
+                  <td class="text-right font-weight-bold"><?=number_format((($totalVariable[2]*$alumnosX)+$costoVariablePersonal), 2, '.', ',')?></td>
+                  <td class="text-right font-weight-bold"><?=number_format((($totalVariable[2]*$alumnosX)+$costoVariablePersonal)/$usd, 2, '.', ',')?></td>
                 </tr>
-                <tr>
+                <!--<tr>
                   <td class="text-left small bg-table-primary text-white">COSTO HONORARIOS PERSONAL</td>
                   <td class="text-right font-weight-bold"><?=number_format($costoVariablePersonal, 2, '.', ',')?></td>
                   <td class="text-right font-weight-bold"><?=number_format($costoVariablePersonal/$usd, 2, '.', ',')?></td>
-                </tr>
+                </tr>-->
                 <tr class="bg-warning text-dark">
                   <td class="text-left small">COSTO TOTAL</td>
                   <td class="text-right font-weight-bold"><?=number_format($costoTotalLocal, 2, '.', ',')?></td>
