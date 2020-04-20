@@ -8,22 +8,16 @@ $globalAdmin = $_SESSION["globalAdmin"];
 
 $dbh = new Conexion();
 
-
-// $stmtDistrGastos = $dbh->prepare("SELECT codigo from distribucion_gastosporcentaje where estado=1");
-// $stmtDistrGastos->execute();
-// $result=$stmtDistrGastos->fetch();
-// $codDistribucionGastos=$result['codigo'];
 $codigo=$codigo;
-if($codigo==0)
-{
-  $stmt = $dbh->prepare("SELECT codigo,nombre,abreviatura from unidades_organizacionales where cod_estado=1");
+if($codigo==0){
+  $stmt = $dbh->prepare("SELECT codigo,nombre,abreviatura from areas where cod_estado=1 and distribucion_gastos=1 order by nombre");
 
   $stmt->execute();
 
   // $stmt->bindColumn('codDistribucion', $cod_distribucionDetalle);
-  $stmt->bindColumn('codigo', $cod_unidad);
-  $stmt->bindColumn('nombre', $unidad_nombre);
-  $stmt->bindColumn('abreviatura', $unidad_abreviatura);
+  $stmt->bindColumn('codigo', $cod_area);
+  $stmt->bindColumn('nombre', $nombre_area);
+  $stmt->bindColumn('abreviatura', $abreviatura_area);
 
   $porcentaje=0;
   $nombre_d='';  
@@ -44,13 +38,35 @@ if($codigo==0)
             </div>
             <div class="card-body">
               <div class="row">
-                <label class="col-sm-2 col-form-label" style="color:#0B2161;font-size: 15px">Nombre Ditribución:</label>
-                <div class="col-sm-7">
+                <label class="col-sm-2 col-form-label" style="color:#0B2161;font-size: 15px">Nombre Distribución:</label>
+                <div class="col-sm-3">
                 <div class="form-group">
                   <input class="form-control" type="text" name="nombre_d" id="nombre_d" value="<?=$nombre_d?>" required="true" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
                 </div>
                 </div>
+
+                <label class="col-sm-2 col-form-label" style="color:#0B2161;font-size: 15px">Oficina:</label>
+                <div class="col-sm-3">
+                  <div class="form-group">
+                    <select class="selectpicker form-control form-control-sm" name="unidad" id="unidad" data-style="<?=$comboColor;?>" >
+                      <option disabled selected="selected" value="">Oficina</option>
+                      <?php
+                        $stmtOf = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM unidades_organizacionales where cod_estado=1 order by 2");
+                        $stmtOf->execute();
+                        while ($rowOf = $stmtOf->fetch(PDO::FETCH_ASSOC)) {
+                          $codigoX=$rowOf['codigo'];
+                          $nombreX=$rowOf['nombre'];
+                          $abrevX=$rowOf['abreviatura'];
+                      ?>
+                      <option value="<?=$codigoX;?>"><?=$nombreX;?></option> 
+                      <?php
+                        }
+                      ?>
+                    </select>
+                  </div>
+                </div>
               </div>
+
               <h6 class="card-title">Por favor ingrese los porcentajes</h6>
 
               <div class="table-responsive">
@@ -60,7 +76,7 @@ if($codigo==0)
                   <thead>
                     <tr>
                       <th class="text-left">#</th>
-                      <th class="text-center">Oficina</th>
+                      <th class="text-center">Área</th>
                       <th class="text-center">Abreviatura</th>
                       <th class="text-center">Porcentaje</th>
                       <!--th class="text-right">Actions</th-->
@@ -76,12 +92,11 @@ if($codigo==0)
                     ?>
                       <tr>
                         <td class="text-center"><?= $index; ?></td>
-                        <td class="text-left"><?= $unidad_nombre; ?></td>
-                        <td class="text-center"><?= $unidad_abreviatura; ?></td>
+                        <td class="text-left"><?= $nombre_area; ?></td>
+                        <td class="text-center"><?= $abreviatura_area; ?></td>
                         <td class="text-center">
-                        <input type="hidden" name="cod_unidad[]"  value="<?=$cod_unidad;?>"/>
+                        <input type="hidden" name="cod_area[]"  value="<?=$cod_area;?>"/>
                         <input class="form-control sm" type="number" onchange="sumarPorcentaje()" id="porcentaje<?= $index; ?>" name="porcentaje[]"  required="true" value="<?= $porcentaje; ?>" onkeyup="sumarPorcentaje(); javascript:this.value=this.value.toUpperCase();"/>  
-
                         </td>
                       </tr>
                     <?php
@@ -103,12 +118,11 @@ if($codigo==0)
             </div>
           </div>
           <?php
-                    if ($globalAdmin == 1) {
+          if($globalAdmin == 1) {
           ?>
             <div class="card-footer fixed-bottom">
-            <button type="submit" id="botonGuardar" class="<?=$buttonCeleste;?>">Guardar</button>
-            <a href='<?= $urlList; ?>'  rel="tooltip" class="<?=$buttonCancel;?>">Volver
-                
+            <button type="submit" id="botonGuardar" class="<?=$buttonCeleste;?>" disabled="true">Guardar</button>
+            <a href='<?= $urlList; ?>'  rel="tooltip" class="<?=$buttonCancel;?>">Volver      
             </a>
             </div>
           <?php
@@ -122,26 +136,13 @@ if($codigo==0)
   </div>
 
   
-<?php }else{
-  $stmtDist = $dbh->prepare("SELECT nombre from distribucion_gastosporcentaje 
-  where codigo=$codigo");
+<?php 
+}else{
+  $stmtDist = $dbh->prepare("SELECT nombre, cod_uo from distribucion_gastosarea where codigo=$codigo");
   $stmtDist->execute();
   $resultDist=$stmtDist->fetch();
   $nombre_d=$resultDist['nombre'];
-
-
-  // $stmt = $dbh->prepare("SELECT dgd.codigo as codDistribucion,dgd.cod_unidadorganizacional as codUnidad,
-  // (SELECT uo.nombre FROM unidades_organizacionales uo WHERE uo.codigo=dgd.cod_unidadorganizacional) as unidad_nomb,
-  // (SELECT uo.abreviatura FROM unidades_organizacionales uo WHERE uo.codigo=dgd.cod_unidadorganizacional) as unidad_abrev,dgd.porcentaje
-  // from distribucion_gastosporcentaje_detalle dgd,distribucion_gastosporcentaje dg
-  // where dgd.cod_distribucion_gastos=dg.codigo and dg.codigo=$codigo");
-  // $stmt->execute();
-
-  // // $stmt->bindColumn('codDistribucion', $cod_distribucionDetalle);
-  // $stmt->bindColumn('porcentaje', $porcentaje);
-  // $stmt->bindColumn('codUnidad', $cod_unidad);
-  // $stmt->bindColumn('unidad_nomb', $unidad_nombre);
-  // $stmt->bindColumn('unidad_abrev', $unidad_abreviatura);
+  $cod_oficina=$resultDist['cod_uo'];
 
   ?>
     <div class="content">
@@ -155,16 +156,37 @@ if($codigo==0)
                 <div class="card-icon">
                   <i class="material-icons"><?= $iconCard; ?></i>
                 </div>
-                <h4 class="card-title">Registrar Nueva Distribución</h4>
+                <h4 class="card-title">Editar Distribución x Á
+                rea</h4>
                 <!-- <h6 class="card-title">Por favor active la casilla para registrar el Area</h6> -->            
               </div>
               <div class="card-body">
                 <div class="row">
-                  <label class="col-sm-2 col-form-label" >Nombre Ditribución:</label>
-                  <div class="col-sm-7">
+                  <label class="col-sm-2 col-form-label" >Nombre Distribución:</label>
+                  <div class="col-sm-3">
                   <div class="form-group">
                     <input class="form-control" type="text" name="nombre_d" id="nombre_d" value="<?=$nombre_d?>" required="true" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
                   </div>
+                  </div>
+                  <label class="col-sm-2 col-form-label" style="color:#0B2161;font-size: 15px">Oficina:</label>
+                  <div class="col-sm-3">
+                    <div class="form-group">
+                      <select class="selectpicker form-control form-control-sm" name="unidad" id="unidad" data-style="<?=$comboColor;?>" >
+                        <option disabled selected="selected" value="">Oficina</option>
+                      <?php
+                        $stmtOf = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM unidades_organizacionales where cod_estado=1 order by 2");
+                        $stmtOf->execute();
+                        while ($rowOf = $stmtOf->fetch(PDO::FETCH_ASSOC)) {
+                          $codigoX=$rowOf['codigo'];
+                          $nombreX=$rowOf['nombre'];
+                          $abrevX=$rowOf['abreviatura'];
+                      ?>
+                        <option value="<?=$codigoX;?>" <?=($cod_oficina==$codigoX)?"selected":"";?>><?=$nombreX;?></option> 
+                      <?php
+                        }
+                      ?>
+                      </select>
+                    </div>
                   </div>
                 </div>
 

@@ -126,6 +126,7 @@ for ($i=1;$i<=$cantidadFilas;$i++){
 
          //itemEstadosCuenta
           $nC=cantidadF($estadosCuentas[$i-1]);
+          echo "cantidad Estados de cuenta: ".$nC;
           for($j=0;$j<$nC;$j++){
               $fecha=date("Y-m-d H:i:s");
               $codPlanCuenta=$estadosCuentas[$i-1][$j]->cod_plancuenta;
@@ -141,10 +142,11 @@ for ($i=1;$i<=$cantidadFilas;$i++){
          //FIN DE ESTADOS DE CUENTA
 	}
 } 
-echo "<script>
-window.opener.location.reload();
-window.close();
-</script>";
+//echo "<script>
+//window.opener.location.reload();
+//window.close();
+//</script>";
+
 /*if($flagSuccessDetalle==true){
 	showAlertSuccessError(true,"../".$urlList);	
 }else{

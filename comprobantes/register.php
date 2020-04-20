@@ -33,6 +33,7 @@ $nombreCompletoUnidad=nameUnidad($globalUnidad);
 	numFilas=<?=$contadorRegistros;?>;
 	cantidadItems=<?=$contadorRegistros;?>;
 	var distribucionPor=[];
+	var distribucionPorArea=[];
 	var configuracionCentro=[];
 	var configuraciones=[];
 	var estado_cuentas=[];
@@ -94,7 +95,7 @@ $nombreCompletoUnidad=nameUnidad($globalUnidad);
 		    ?>
 
 		  	<?php
-			$stmt = $dbh->prepare("SELECT d.codigo, d.cod_unidadorganizacional, d.porcentaje FROM distribucion_gastosporcentaje_detalle d join distribucion_gastosporcentaje p on p.codigo=d.cod_distribucion_gastos where p.estado=1");
+			$stmt = $dbh->prepare("SELECT d.codigo, d.cod_unidadorganizacional, d.porcentaje FROM distribucion_gastosporcentaje_detalle d join distribucion_gastosporcentaje p on p.codigo=d.cod_distribucion_gastos where p.estado=1 and d.porcentaje>0");
 			$stmt->execute();
 			$i=0;
 			while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -106,6 +107,21 @@ $nombreCompletoUnidad=nameUnidad($globalUnidad);
 		    <?php
 			 }
 		    ?>
+
+		  	<?php
+			$stmt = $dbh->prepare("SELECT d.codigo, d.cod_area, d.porcentaje FROM distribucion_gastosarea_detalle d join distribucion_gastosarea p on p.codigo=d.cod_distribucionarea where p.estado=1 and d.porcentaje>0 and p.cod_uo='$globalUnidad'");
+			$stmt->execute();
+			$i=0;
+			while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+				$codigoX=$row['codigo'];
+				$areaX=$row['cod_area'];
+				$porcentajeX=$row['porcentaje'];
+			 ?>
+			 <script>distribucionPorArea.push({codigo:<?=$codigoX?>,cod_area:<?=$areaX?>,porcent:<?=$porcentajeX?>});</script>
+		    <?php
+			 }
+		    ?>
+
 		    <?php
 			$stmt = $dbh->prepare("SELECT cod_unidadorganizacional,cod_grupocuentas,fijo,cod_area FROM configuracion_centrocostoscomprobantes where cod_unidadorganizacional='$globalUnidad'");
 			$stmt->execute();

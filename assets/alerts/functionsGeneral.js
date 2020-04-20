@@ -977,7 +977,7 @@ function abrirPlantilla(id,n,glosa,tipo){
   }
   ajax.send(null);  
 }
-function nuevaDistribucionPonerFila(fila){
+function nuevaDistribucionPonerFila(fila,tipoDistribucion){
  var glosa = $("#glosa_detalle"+fila).val();
  if(glosa==""){
    $("#mensajeDist").html("<p>La glosa se encuentra vacía!</p>");
@@ -993,6 +993,7 @@ function nuevaDistribucionPonerFila(fila){
         $("#mensajeDist").html("<p>No puede distribuir un monto 0</p>");
       }else{
          $("#mensajeDist").html("<p>¿Esta seguro de distribuir los gastos?</p>");
+         $("#tipoDistribucion").val(tipoDistribucion);         
          $("#distFila").val(fila);
       }    
     }   
@@ -1001,6 +1002,7 @@ function nuevaDistribucionPonerFila(fila){
 }
 function nuevaDistribucion(){
   var fila = $("#distFila").val();
+  var tipoDistribucion=$("#tipoDistribucion").val();
   var cuenta = $("#cuenta"+fila).val();
   var debe = $("#debe"+fila).val();
   var haber = $("#haber"+fila).val();
@@ -1027,22 +1029,26 @@ function nuevaDistribucion(){
  /* for (var i = 0; i < distribucionPor.length; i++) {
     
   };*/
-
+  var urlDist="";
   if(valor!=0){
-  
-  ajax=nuevoAjax();
-  ajax.open("GET","ajaxDistribucionGastos.php?area="+area+"&filas="+cantidadItems+"&cuenta_aux="+cuenta_aux+"&cuenta="+cuenta+"&cond="+cond+"&valor="+valor+"&glosa="+glosa+"&listDist="+JSON.stringify(distribucionPor),true);
-  ajax.onreadystatechange=function(){
-  if (ajax.readyState==4) {
-    //var fi=document.getElementById("fiel");
-    var fi=$("#fiel");
-    minusCuentaContable(fila);
-    fi.append(ajax.responseText);
-    $('.selectpicker').selectpicker(["refresh"]);
-   }
-  }
-  ajax.send(null); 
-  $("#distFila").val("");
+    ajax=nuevoAjax();
+    if(tipoDistribucion==1){
+      urlDist="ajaxDistribucionGastos.php";
+      ajax.open("GET",urlDist+"?area="+area+"&filas="+cantidadItems+"&cuenta_aux="+cuenta_aux+"&cuenta="+cuenta+"&cond="+cond+"&valor="+valor+"&glosa="+glosa+"&listDist="+JSON.stringify(distribucionPor),true);
+    }else{
+      urlDist="ajaxDistribucionGastosArea.php";
+      ajax.open("GET",urlDist+"?area="+area+"&filas="+cantidadItems+"&cuenta_aux="+cuenta_aux+"&cuenta="+cuenta+"&cond="+cond+"&valor="+valor+"&glosa="+glosa+"&listDist="+JSON.stringify(distribucionPorArea),true);
+    }
+    ajax.onreadystatechange=function(){
+      if (ajax.readyState==4) {
+        var fi=$("#fiel");
+        minusCuentaContable(fila);
+        fi.append(ajax.responseText);
+        $('.selectpicker').selectpicker(["refresh"]);
+      }
+    }
+    ajax.send(null); 
+    $("#distFila").val("");
   }  
 }
 function buscarComprobantes(estado){

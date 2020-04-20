@@ -46,7 +46,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 
   for ($i=0; $i < cantidadF($json); $i++) {
 
-    $unidadDet=$json[$i]->cod_unidad;
+    $areaDet=$json[$i]->cod_area;
     //$areaDet=$json[1][$i]->area;
     $porcent=$json[$i]->porcent;
     if($cond==0){
@@ -90,17 +90,19 @@ $globalAdmin=$_SESSION["globalAdmin"];
           <div class="form-group">
           <select class="selectpicker form-control form-control-sm" name="unidad<?=$idFila;?>" id="unidad<?=$idFila;?>" data-style="btn btn-primary" >
                <?php
-                                   $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM unidades_organizacionales where cod_estado=1 and centro_costos=1 order by 2");
-                                   $stmt->execute();
-                                   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                                    $codigoX=$row['codigo'];
-                                    $nombreX=$row['nombre'];
-                                    $abrevX=$row['abreviatura'];
-                                    if($codigoX==$unidadDet){
-                                             ?><option value="<?=$codigoX;?>" selected><?=$abrevX;?></option><?php
-                                    }
-                                    }
-                                    ?>
+                  $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM unidades_organizacionales where cod_estado=1 and centro_costos=1 order by 2");
+                  $stmt->execute();
+                  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                    $codigoX=$row['codigo'];
+                    $nombreX=$row['nombre'];
+                    $abrevX=$row['abreviatura'];
+                    if($codigoX==$globalUnidad){
+              ?>
+                      <option value="<?=$codigoX;?>" selected><?=$abrevX;?></option>
+              <?php
+                    }
+                  }
+              ?>
       </select>
       </div>
     </div>
@@ -109,46 +111,45 @@ $globalAdmin=$_SESSION["globalAdmin"];
           <select class="selectpicker form-control form-control-sm" name="area<?=$idFila;?>" id="area<?=$idFila;?>" data-style="btn btn-primary">
           <?php
                                   
-                                  $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM areas where cod_estado=1 and centro_costos=1 order by 2");
-                                $stmt->execute();
-                                $cont=0;
-                                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                                  $codigoX=$row['codigo'];
-                                  $nombreX=$row['nombre'];
-                                  $abrevX=$row['abreviatura'];
-                                  if($codigoX==$areaDet){
-                                    $cont=1;     
-                                    }
-                                }
-                                if($cont==0) {
-                                  ?><option value="<?=$areaDet;?>" selected>SA</option><?php
-                                }else{
-                                $stmt2 = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM areas where cod_estado=1 and centro_costos=1 order by 2");
-                                $stmt2->execute();
-                                  while ($row2 = $stmt2->fetch(PDO::FETCH_ASSOC)) {
-                                  $codigoX=$row2['codigo'];
-                                  $nombreX=$row2['nombre'];
-                                  $abrevX=$row2['abreviatura'];
-                                  if($codigoX==$areaDet){
-                                      ?><option value="<?=$codigoX;?>" selected><?=$abrevX;?></option><?php
-                                    }
-                                   }  
-
-                                }  
-                                   ?>
+                  $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM areas where cod_estado=1 and centro_costos=1 order by 2");
+                  $stmt->execute();
+                  $cont=0;
+                  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                    $codigoX=$row['codigo'];
+                    $nombreX=$row['nombre'];
+                    $abrevX=$row['abreviatura'];
+                    if($codigoX==$areaDet){
+                      $cont=1;     
+                    }
+                  }
+                  if($cont==0) {
+                    ?><option value="<?=$areaDet;?>" selected>SA</option><?php
+                  }else{
+                  $stmt2 = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM areas where cod_estado=1 and centro_costos=1 order by 2");
+                  $stmt2->execute();
+                    while ($row2 = $stmt2->fetch(PDO::FETCH_ASSOC)) {
+                      $codigoX=$row2['codigo'];
+                      $nombreX=$row2['nombre'];
+                      $abrevX=$row2['abreviatura'];
+                      if($codigoX==$areaDet){
+                        ?><option value="<?=$codigoX;?>" selected><?=$abrevX;?></option><?php
+                      }
+                    }  
+                  }  
+          ?>
       </select>
     </div>
   </div>
 
     <div class="col-sm-4">
-      <input type="hidden" name="numero_cuenta<?=$idFila;?>" value="<?=$numero_cuenta?>" id="numero_cuenta<?=$idFila;?>">
-      <input type="hidden" name="cuenta<?=$idFila;?>" value="<?=$cuenta?>" id="cuenta<?=$idFila;?>">
-      <input type="hidden" name="cuenta_auxiliar<?=$idFila;?>" value="<?=$cuenta_aux?>" id="cuenta_auxiliar<?=$idFila;?>">
+        <input type="hidden" name="numero_cuenta<?=$idFila;?>" value="<?=$numero_cuenta?>" id="numero_cuenta<?=$idFila;?>">
+        <input type="hidden" name="cuenta<?=$idFila;?>" value="<?=$cuenta?>" id="cuenta<?=$idFila;?>">
+        <input type="hidden" name="cuenta_auxiliar<?=$idFila;?>" value="<?=$cuenta_aux?>" id="cuenta_auxiliar<?=$idFila;?>">
       <div class="row"> 
         <div class="col-sm-8">
           <div class="form-group" id="divCuentaDetalle<?=$idFila;?>">
             <span class="text-info font-weight-bold">[<?=$n_cuenta?>]-<?=$nom_cuenta?> </span><br><span class="text-info font-weight-bold small"><?=$nom_cuenta_auxiliar?></span>     
-              <p class="text-muted"><?=$porcent?> <span>%</span> de <?=$valor?></p>   
+            <p class="text-muted"><?=$porcent?><span>%</span> de <?=$valor?></p>   
           </div>
         </div>
         <div class="col-sm-4">
@@ -156,27 +157,26 @@ $globalAdmin=$_SESSION["globalAdmin"];
             <a title="Mayores" href="#" id="mayor<?=$idFila?>" onclick="mayorReporteComprobante(<?=$idFila?>)" class="btn btn-sm btn-info btn-fab"><span class="material-icons">list</span></a>     
             <a title="Cambiar cuenta" href="#" id="cambiar_cuenta<?=$idFila?>" onclick="editarCuentaComprobante(<?=$idFila?>)" class="btn btn-sm btn-warning btn-fab"><span class="material-icons text-dark">edit</span></a>
             <div class="btn-group dropdown">
-              <button type="button" class="btn btn-sm btn-success btn-fab dropdown-toggle material-icons text-dark" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Distribucion de Gastos">
-                <i class="material-icons">call_split</i>
-              </button>
-              <div class="dropdown-menu">   
-                <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion<?=$idFila?>" onclick="nuevaDistribucionPonerFila(<?=$idFila;?>,1);" class="dropdown-item">
-                  <i class="material-icons">bubble_chart</i> x Oficina
-                </a>
-                <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion<?=$idFila?>" onclick="nuevaDistribucionPonerFila(<?=$idFila;?>,2);" class="dropdown-item">
-                  <i class="material-icons">bubble_chart</i> x Área
-                </a>
-              </div>
+                      <button type="button" class="btn btn-sm btn-success btn-fab dropdown-toggle material-icons text-dark" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Distribucion de Gastos">
+                      <i class="material-icons">call_split</i>
+                        </button>
+                        <div class="dropdown-menu">   
+                        <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion<?=$idFila?>" onclick="nuevaDistribucionPonerFila(<?=$idFila;?>,1);" class="dropdown-item">
+                          <i class="material-icons">bubble_chart</i> x Oficina
+                        </a>
+                        <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion<?=$idFila?>" onclick="nuevaDistribucionPonerFila(<?=$idFila;?>,2);" class="dropdown-item">
+                          <i class="material-icons">bubble_chart</i> x Área
+                        </a>
+                        </div>
             </div>        
-            <input type="hidden" id="tipo_estadocuentas<?=$idFila?>" value="-100"><!-- -100=CUENTA PARA MATAR-->
-            <input type="hidden" id="tipo_proveedorcliente<?=$idFila?>" value="-100">
-            <input type="hidden" id="proveedorcliente<?=$idFila?>" value="-100">
-            <a title="Estado de Cuentas" id="estados_cuentas<?=$idFila?>" href="#" onclick="verEstadosCuentas(<?=$idFila;?>,0);" class="btn btn-sm btn-danger btn-fab d-none"><span class="material-icons text-dark">ballot</span><span id="nestado<?=$idFila?>" class="bg-warning"></span></a>    
+               <input type="hidden" id="tipo_estadocuentas<?=$idFila?>" value="-100"><!-- -100=CUENTA PARA MATAR-->
+               <input type="hidden" id="tipo_proveedorcliente<?=$idFila?>" value="-100">
+               <input type="hidden" id="proveedorcliente<?=$idFila?>" value="-100">
+               <a title="Estado de Cuentas" id="estados_cuentas<?=$idFila?>" href="#" onclick="verEstadosCuentas(<?=$idFila;?>,0);" class="btn btn-sm btn-danger btn-fab d-none"><span class="material-icons text-dark">ballot</span><span id="nestado<?=$idFila?>" class="bg-warning"></span></a>    
           </div>  
         </div>
       </div>
     </div>
-
     <div class="col-sm-1">
             <div class="form-group">
               <!--<label class="bmd-label-static">Debe</label>      -->
@@ -211,6 +211,8 @@ $globalAdmin=$_SESSION["globalAdmin"];
 </div>
 <script>$("#div"+<?=$idFila?>).bootstrapMaterialDesign();</script>
       <?php
+
   }
+
 ?>
 <script>calcularTotalesComprobante("null");</script>
