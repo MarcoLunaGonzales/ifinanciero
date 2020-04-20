@@ -351,14 +351,14 @@
                             <div class="col-sm-3">
                               <div class="form-group">
                                 <!-- <label for="exe_fac" class="bmd-label-floating" style="color: #4a148c;">Extento</label>      -->
-                                <input class="form-control" type="text" name="exe_fac" id="exe_fac" required="true"/>
+                                <input class="form-control" type="text" name="exe_fac" id="exe_fac" required="true" value="0" />
                               </div>
                             </div>
                             <label class="col-sm-1 col-form-label" style="color: #4a148c;">ICE</label>
                             <div class="col-sm-3">
                               <div class="form-group">
                                 <!-- <label for="ice_fac" class="bmd-label-floating" style="color: #4a148c;">ICE</label>      -->
-                                <input class="form-control" type="text" name="ice_fac" id="ice_fac" required="true"/>
+                                <input class="form-control" type="text" name="ice_fac" id="ice_fac" required="true" value="0" />
                               </div>
                              </div>
                           </div>                                                                  
@@ -368,7 +368,7 @@
                             <div class="col-sm-3">
                               <div class="form-group">
                                 <!-- <label for="taza_fac" class="bmd-label-floating" style="color: #4a148c;">Taza Cero</label>      -->
-                                <input class="form-control" type="text" name="taza_fac" id="taza_fac" required="true"/>
+                                <input class="form-control" type="text" name="taza_fac" id="taza_fac" required="true" value="0" />
                               </div>
                             </div>
                             <label class="col-sm-1 col-form-label" style="color: #4a148c;">Autorizaci&oacute;n</label>
@@ -390,11 +390,16 @@
                             <label class="col-sm-1 col-form-label" style="color: #4a148c;">Tipo</label>
                             <div class="col-sm-2">
                               <div class="form-group">
-                                <!-- <label for="tipo_fac" class="bmd-label-floating" style="color: #4a148c;">Tipo Compra</label> -->                                
-                                <select class="selectpicker form-control form-control-sm" name="tipo_fac" id="tipo_fac" data-style="btn btn-primary">
-                                  <option value="1">1</option>
-                                  <option value="2">2</option>
-                                  <option value="3">3</option>
+                                <select class="selectpicker form-control form-control-sm" name="tipo_fac" id="tipo_fac" data-style="btn btn-primary">                                  
+                                   <?php
+                                         $stmt = $dbh->prepare("SELECT codigo, nombre FROM tipos_compra_facturas where cod_estadoreferencial=1");
+                                       $stmt->execute();
+                                      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                        $codigoX=$row['codigo'];
+                                        $nombreX=$row['nombre'];
+                                        ?><option value="<?=$codigoX;?>"><?=$nombreX;?></option><?php
+                                         }
+                                     ?>
                                 </select>
                               </div>
                             </div>                        
