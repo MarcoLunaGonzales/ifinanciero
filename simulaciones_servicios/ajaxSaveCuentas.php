@@ -48,7 +48,7 @@ $dbh2 = new Conexion();
       $stmtUpdate = $dbh2->prepare($sqlUpdate);
       $flagSuccess=$stmtUpdate->execute();
 
-if(isset($_GET["otroanio"])){
+/*if(isset($_GET["otroanio"])){
   $anios=json_decode($_GET["otroanio"]);
   for ($i=0; $i < count($anios) ; $i++) {
   $aniose=$anios[$i]; 
@@ -84,5 +84,5 @@ $dbh2 = new Conexion();
       $flagSuccess=$stmtUpdate->execute();
 
   }
-}
+}*/
 ?>
