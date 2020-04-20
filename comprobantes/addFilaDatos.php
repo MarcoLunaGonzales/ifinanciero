@@ -7,7 +7,20 @@
       itemFacturas.push(nfac);
       itemEstadosCuentas.push(nfac);
       document.getElementById("cantidad_filas").value=numFilas;
-      </script>   
+      </script> 
+<!-- para el autocompletado de la factura -->
+<!-- campo nit -->
+<div class="form-group d-none" id="divNitFactura<?=$idFila;?>">  
+  <input class="form-control" type="number"  onkeyup="llenarFacturaAutomaticamente(this.value,'<?=$idFila;?>');">
+</div>
+  <?php $importe_x=intval($importe)?>  
+  <!-- campo importe -->
+<div class="form-group d-none" id="divImporteFactura<?=$idFila;?>">
+  <input class="form-control" type="number" name="imp_fac" id="imp_fac" readonly="true" value="<?=$importe_x?>"/>
+</div>
+
+
+
 <div id="div<?=$idFila?>">
  <div class="col-md-12">
   <div class="row">
@@ -36,16 +49,16 @@
                     <!--<option value="" disabled selected>Area</option>-->
           <?php
                                   
-                                  $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM areas where cod_estado=1 and centro_costos=1 order by 2");
-                                $stmt->execute();
-                                $cont=0;
-                                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                                  $codigoX=$row['codigo'];
-                                  $nombreX=$row['nombre'];
-                                  $abrevX=$row['abreviatura'];
-                                  ?><option value="<?=$codigoX;?>"><?=$abrevX;?></option><?php
-                                } 
-                                ?>
+                $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM areas where cod_estado=1 and centro_costos=1 order by 2");
+              $stmt->execute();
+              $cont=0;
+              while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $codigoX=$row['codigo'];
+                $nombreX=$row['nombre'];
+                $abrevX=$row['abreviatura'];
+                ?><option value="<?=$codigoX;?>"><?=$abrevX;?></option><?php
+              } 
+              ?>
       </select>
     </div>
   </div>
@@ -55,7 +68,7 @@
         <input type="hidden" name="cuenta<?=$idFila;?>" value="<?=$cuenta?>" id="cuenta<?=$idFila;?>">
         <input type="hidden" name="cuenta_auxiliar<?=$idFila;?>" value="" id="cuenta_auxiliar<?=$idFila;?>">
         <div class="row">
-          <div class="col-sm-8">
+          <div class="col-sm-8">        
           <div class="form-group" id="divCuentaDetalle<?=$idFila;?>">
            <span class="text-info font-weight-bold">[<?=$n_cuenta?>]-<?=$nom_cuenta?> </span><br><span class="text-info font-weight-bold small"><?=$nom_cuenta_auxiliar?></span>     
             <p class="text-muted"><?=$porcentajeX?> <span>%</span> de <?=$importe?></p>   
@@ -95,9 +108,17 @@
     </div>
     <div class="col-sm-1">
       <div class="btn-group">
-          <a href="#" title="Facturas" id="boton_fac<?=$idFila;?>" onclick="listFac(<?=$idFila;?>);" class="btn btn-info btn-sm btn-fab">
-               <i class="material-icons">featured_play_list</i><span id="nfac<?=$idFila;?>" class="count bg-warning">0</span>
-          </a>
+          <?php
+            $cod_cuenta_configuracion_iva=obtenerValorConfiguracion(3);//cuenta iva
+            if($cuenta==$cod_cuenta_configuracion_iva){ ?>
+              <a href="#" title="Facturas" id="boton_fac<?=$idFila;?>" onclick="listFac(<?=$idFila;?>);" class="btn btn-info btn-sm btn-fab">
+                <i class="material-icons">featured_play_list</i><span id="nfac<?=$idFila;?>" class="count bg-warning">0</span>
+              </a>
+
+            <?php }
+          ?>
+          
+
            <a rel="tooltip" href="#" class="btn btn-danger btn-sm btn-fab" id="boton_remove<?=$idFila;?>" onclick="minusCuentaContable('<?=$idFila;?>');">
               <i class="material-icons">remove_circle</i>
           </a>

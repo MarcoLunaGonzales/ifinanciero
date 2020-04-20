@@ -270,7 +270,7 @@
 <!--    end small modal -->
 <!-- notice modal -->
 <div class="modal fade" id="modalFac" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-notice modal-lg">
+  <div class="modal-dialog modal-notice modal-xl">
     <div class="modal-content">
       <div class="modal-body">
       	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
@@ -285,20 +285,20 @@
                 <div class="card-body ">
                   <ul class="nav nav-pills nav-pills-warning" role="tablist">
                   	<li class="nav-item">
-                          <a id="nav_boton1"class="nav-link active" data-toggle="tab" href="#link110" role="tablist">
-                            <span class="material-icons">view_list</span> Lista
-                          </a>
-                        </li>
-                        <li class="nav-item">
-                          <a id="nav_boton2"class="nav-link" data-toggle="tab" href="#link111" role="tablist">
-                            <span class="material-icons">add</span> Nuevo
-                          </a>
-                        </li>
-                        <li class="nav-item">
-                          <a id="nav_boton3" class="nav-link" data-toggle="tab" href="#link112" role="tablist">
-                            <span class="material-icons">filter_center_focus</span> QR quincho
-                          </a>
-                        </li>
+                      <a id="nav_boton1"class="nav-link active" data-toggle="tab" href="#link110" role="tablist">
+                          <span class="material-icons">view_list</span> Lista
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a id="nav_boton2"class="nav-link" data-toggle="tab" href="#link111" role="tablist">
+                        <span class="material-icons">add</span> Nuevo
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a id="nav_boton3" class="nav-link" data-toggle="tab" href="#link112" role="tablist">
+                        <span class="material-icons">filter_center_focus</span> QR quincho
+                      </a>
+                    </li>
                   </ul>
                   <div class="tab-content tab-space">
                     <div class="tab-pane active" id="link110" style="background: #e0e0e0">
@@ -308,64 +308,110 @@
                     </div>
                     <div class="tab-pane" id="link111" style="background: #e0e0e0">
                       <form name="form2">
-			                     <input class="form-control" type="hidden" name="codCuenta" id="codCuenta"/>
-                      <div class="row">
-			                 <label class="col-sm-2 col-form-label">NIT</label>
-			                 <div class="col-sm-4">
-			                	<div class="form-group">
-			                	  <input class="form-control" type="text" name="nit_fac" id="nit_fac" required="true"/>
-			                	</div>
-			                  </div>
-                        <label class="col-sm-2 col-form-label">Nro. Factura</label>
-                       <div class="col-sm-4">
-                        <div class="form-group">
-                          <input class="form-control" type="number" name="nro_fac" id="nro_fac" required="true"/>
+  			                <input class="form-control" type="hidden" name="codCuenta" id="codCuenta"/>
+                        <div style="padding: 20px;">
+                          <div class="row">                      
+                            <label class="col-sm-1 col-form-label" style="color: #4a148c;">NIT</label>
+                            <div class="col-sm-3">
+                              <div class="form-group">  
+                                <div id="divNitFacturaDetalle">
+                                  <input class="form-control" type="number" name="nit_fac" id="nit_fac" required="true">                        
+                                </div>                                
+                                <div id="divNit2FacturaDetalle">
+                                  
+                                </div>                                
+                                  
+                              </div>
+
+                            </div>
+                            <label class="col-sm-1 col-form-label" style="color: #4a148c;">Nro. Factura</label>
+                            <div class="col-sm-3">
+                              <div class="form-group" id="divNroFacFacturaDetalle">
+                                  <!-- <label for="number" class="bmd-label-floating" style="color: #4a148c;">Nro. Factura</label>      -->
+                                  <input class="form-control" type="number" name="nro_fac" id="nro_fac" required="true"/>
+                              </div>
+                            </div>
+                            <label class="col-sm-1 col-form-label" style="color: #4a148c;">Fecha</label>
+                            <div class="col-sm-3">
+                              <div class="form-group">
+                                <!-- <label for="fecha_fac" class="bmd-label-floating" style="color: #4a148c;">Fecha</label>      -->
+                                <input type="text" class="form-control datepicker" name="fecha_fac" id="fecha_fac" value="<?=$fechaActualModal?>">
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <label class="col-sm-1 col-form-label" style="color: #4a148c;">Importe</label>
+                            <div class="col-sm-3">
+                              <div class="form-group" id="divImporteFacturaDetalle">
+                                <input class="form-control" type="number" name="imp_fac" id="imp_fac" required="true"/>
+                              </div>
+                            </div>
+                            <label class="col-sm-1 col-form-label" style="color: #4a148c;">Exento</label>
+                            <div class="col-sm-3">
+                              <div class="form-group">
+                                <!-- <label for="exe_fac" class="bmd-label-floating" style="color: #4a148c;">Extento</label>      -->
+                                <input class="form-control" type="text" name="exe_fac" id="exe_fac" required="true"/>
+                              </div>
+                            </div>
+                            <label class="col-sm-1 col-form-label" style="color: #4a148c;">ICE</label>
+                            <div class="col-sm-3">
+                              <div class="form-group">
+                                <!-- <label for="ice_fac" class="bmd-label-floating" style="color: #4a148c;">ICE</label>      -->
+                                <input class="form-control" type="text" name="ice_fac" id="ice_fac" required="true"/>
+                              </div>
+                             </div>
+                          </div>                                                                  
+                          <!--No tiene funcion este campo-->
+                          <div class="row">                                            
+                            <label class="col-sm-1 col-form-label" style="color: #4a148c;">Tasa Cero</label>
+                            <div class="col-sm-3">
+                              <div class="form-group">
+                                <!-- <label for="taza_fac" class="bmd-label-floating" style="color: #4a148c;">Taza Cero</label>      -->
+                                <input class="form-control" type="text" name="taza_fac" id="taza_fac" required="true"/>
+                              </div>
+                            </div>
+                            <label class="col-sm-1 col-form-label" style="color: #4a148c;">Autorizaci&oacute;n</label>
+                            <div class="col-sm-3">
+                              <div class="form-group" id="divNroAutoFacturaDetalle">
+                                <!-- <label for="aut_fac" class="bmd-label-floating" style="color: #4a148c;">Nro. Autorizaci&oacute;n</label>      -->
+                                <input class="form-control" type="text" name="aut_fac" id="aut_fac" required="true"/>
+                              </div>
+                            </div>
+                            <label class="col-sm-1 col-form-label" style="color: #4a148c;">Cod. Control</label>
+                            <div class="col-sm-3">
+                              <div class="form-group">
+                                <!-- <label for="con_fac" class="bmd-label-floating" style="color: #4a148c;">Cod. Control</label>      -->
+                                <input class="form-control" type="text" name="con_fac" id="con_fac" required="true"/>
+                              </div>
+                             </div>
+                          </div> 
+                          <div class="row">
+                            <label class="col-sm-1 col-form-label" style="color: #4a148c;">Tipo</label>
+                            <div class="col-sm-2">
+                              <div class="form-group">
+                                <!-- <label for="tipo_fac" class="bmd-label-floating" style="color: #4a148c;">Tipo Compra</label> -->                                
+                                <select class="selectpicker form-control form-control-sm" name="tipo_fac" id="tipo_fac" data-style="btn btn-primary">
+                                  <option value="1">1</option>
+                                  <option value="2">2</option>
+                                  <option value="3">3</option>
+                                </select>
+                              </div>
+                            </div>                        
+                            <label class="col-sm-1 col-form-label" style="color: #4a148c;">Razón Social</label>
+                            <div class="col-sm-8">
+                              <div class="form-group" id="divRazonFacturaDetalle">                                
+                                <input type="text" class="form-control" name="razon_fac" id="razon_fac">
+                                
+                              </div>
+                            </div>   
                         </div>
-                        </div>
-			                </div>
-			                <div class="row">
-			                 <label class="col-sm-2 col-form-label">Fecha</label>
-			                 <div class="col-sm-4">
-			                	<div class="form-group">
-			                	  <input type="text" class="form-control datepicker" name="fecha_fac" id="fecha_fac" value="<?=$fechaActualModal?>">
-			                	</div>
-                        </div>
-                        <label class="col-sm-2 col-form-label">Importe</label>
-                       <div class="col-sm-4">
-                        <div class="form-group">
-                          <input class="form-control" type="number" name="imp_fac" id="imp_fac" required="true"/>
-                        </div>
-                        </div>
-			                </div>
-                      <!-- Exento oculto-->
-                      <input class="form-control" type="hidden" name="exe_fac" id="exe_fac" required="true"/>
-                      <!--No tiene funcion este campo-->
-			                <div class="row">
-			                 <label class="col-sm-2 col-form-label">Nro. Autorizaci&oacute;n</label>
-			                 <div class="col-sm-4">
-			                	<div class="form-group">
-			                	  <input class="form-control" type="text" name="aut_fac" id="aut_fac" required="true"/>
-			                	</div>
-			                  </div>
-                        <label class="col-sm-2 col-form-label">Cod. Control</label>
-                       <div class="col-sm-4">
-                        <div class="form-group">
-                          <input class="form-control" type="text" name="con_fac" id="con_fac" required="true"/>
-                        </div>
-                       </div>
-			                </div>
-                      <div class="row">
-                       <label class="col-sm-2 col-form-label">Razon Social</label>
-                       <div class="col-sm-10">
-                        <div class="form-group">
-                          <textarea class="form-control" name="razon_fac" id="razon_fac" value=""></textarea>
-                        </div>
-                        </div>
-                      </div>
-			                <div class="form-group float-right">
-			                	<button type="button" class="btn btn-info btn-round" onclick="saveFactura()">Guardar</button>
-			                </div>
-                         </form>
+                        
+                          
+                        </div>                     
+  			                <div class="form-group float-right">
+  			                	<button type="button" class="btn btn-info btn-round" onclick="saveFactura()">Guardar</button>
+  			                </div>
+                      </form>
                     </div>
                     <div class="tab-pane" id="link112">
                      <div class="fileinput fileinput-new text-center" data-provides="fileinput">

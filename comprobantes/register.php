@@ -153,12 +153,16 @@ $stmt->bindColumn('cod_estadoreferencial', $codEstadoRef);
 $stmt->bindColumn('codigo', $codigoMon);
 $stmt->bindColumn('abreviatura', $abreviaturaMon);
 $stmt->bindColumn('nombre', $nombreMon);
+
+
+$cod_cuenta_configuracion_iva=obtenerValorConfiguracion(3);//cuenta iva
 ?>
 <form id="formRegComp" class="form-horizontal" action="save.php" method="post" enctype="multipart/form-data">
-<div class="content">
-	<div class="container-fluid">
-			<input type="hidden" name="cantidad_filas" id="cantidad_filas" value="<?=$contadorRegistros;?>">
-
+	<div class="content">
+		<div class="container-fluid">
+			<input type="hidden" name="cantidad_filas" id="cantidad_filas" value="<?=$contadorRegistros;
+			?>">
+			<input type="hidden" name="cod_cuenta_configuracion_iva" id="cod_cuenta_configuracion_iva" value="<?=$cod_cuenta_configuracion_iva;?>">
 			<div class="card" id="cabecera_scroll">
 				<div class="card-header <?=$colorCard;?> card-header-text">
 					<div class="card-text">
@@ -166,102 +170,103 @@ $stmt->bindColumn('nombre', $nombreMon);
 					</div>
 				</div>
 				<div class="card-body ">
-<?php
-$contMonedas=0;
-while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
-    if($codigoMon!=1){
-      $valorTipo=obtenerValorTipoCambio($codigoMon,$fechaActual);
-      if($valorTipo==0){
-      	$contMonedas++;
-       }
-     }
- }
+					<?php
+					$contMonedas=0;
+					while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+					    if($codigoMon!=1){
+					      $valorTipo=obtenerValorTipoCambio($codigoMon,$fechaActual);
+					      if($valorTipo==0){
+					      	$contMonedas++;
+					       }
+					    }
+					}
 
- if($contMonedas!=0){
- 	?>
-     <p>No hay registros del tipo de cambio para hoy <?=strftime('%d de %B del %Y',strtotime($fechaActual))?></p>
-     <a href="../index.php?opcion=tipoDeCambio" class="btn btn-warning">registrar</a>
- 	<?php
- }else{
- 	 ?>
- 	<div class="row">
-	    <label class="col-sm-1 col-form-label" style="text-align: center;">-</label>
-	    <label class="col-sm-1 col-form-label" style="text-align: center;">Gestion</label>
-	    <label class="col-sm-2 col-form-label" style="text-align: center;">Oficina</label>
-	    <label class="col-sm-2 col-form-label" style="text-align: center;">Fecha</label>
-	    <label class="col-sm-2 col-form-label" style="text-align: center;">Tipo Comprobante</label>
-	    <label class="col-sm-2 col-form-label" style="text-align: center;">Nro. Comprobante</label>
-	    <label class="col-sm-1 col-form-label" style="text-align: center;">-</label>
- 	</div>
-                       <div class="row">
-						<div class="col-sm-1">							
-						</div>
-						<div class="col-sm-1">
-							<div class="form-group">
-						  		<!--label class="bmd-label-static">Gestion</label-->
-					  			<input class="form-control" type="text" name="gestion" value="<?=$globalNombreGestion;?>" id="gestion" readonly="true" style="background-color:#E3CEF6;text-align: left"/>
+					if($contMonedas!=0){
+					 	?>
+					     <p>No hay registros del tipo de cambio para hoy <?=strftime('%d de %B del %Y',strtotime($fechaActual))?></p>
+					     <a href="../index.php?opcion=tipoDeCambio" class="btn btn-warning">registrar</a>
+					 	<?php
+					}else{
+					 	 ?>
+					 	<div class="row">
+						    <label class="col-sm-1 col-form-label" style="text-align: center;">-</label>
+						    <label class="col-sm-1 col-form-label" style="text-align: center;">Gestion</label>
+						    <label class="col-sm-2 col-form-label" style="text-align: center;">Oficina</label>						    
+						    <label class="col-sm-2 col-form-label" style="text-align: center;">Tipo Comprobante</label>
+						    <label class="col-sm-2 col-form-label" style="text-align: center;">Nro. Comprobante</label>
+						    <label class="col-sm-2 col-form-label" style="text-align: center;">Fecha</label>
+						    <label class="col-sm-1 col-form-label" style="text-align: center;">-</label>
+					 	</div>
+                        <div class="row">
+							<div class="col-sm-1">							
 							</div>
-						</div>
+							<div class="col-sm-1">
+								<div class="form-group">
+							  		<!--label class="bmd-label-static">Gestion</label-->
+						  			<input class="form-control" type="text" name="gestion" value="<?=$globalNombreGestion;?>" id="gestion" readonly="true" style="background-color:#E3CEF6;text-align: left"/>
+								</div>
+							</div>
 
-						<div class="col-sm-2">
-							<div class="form-group">
-						  		<!--label class="bmd-label-static">Oficina</label-->
-						  		<input class="form-control" type="text" name="unidad_organizacional" value="<?=$nombreCompletoUnidad;?> - <?=$globalNombreUnidad;?>" id="unidad_organizacional" readonly="true" style="background-color:#E3CEF6;text-align: left"/>
+							<div class="col-sm-2">
+								<div class="form-group">
+							  		<!--label class="bmd-label-static">Oficina</label-->
+							  		<input class="form-control" type="text" name="unidad_organizacional" value="<?=$nombreCompletoUnidad;?> - <?=$globalNombreUnidad;?>" id="unidad_organizacional" readonly="true" style="background-color:#E3CEF6;text-align: left"/>
+								</div>
 							</div>
-						</div>
+							<div class="col-sm-2">
+					        	<div class="form-group">
+							        <select class="selectpicker form-control form-control-sm" name="tipo_comprobante" id="tipo_comprobante" data-style="<?=$comboColor;?>" onChange="ajaxCorrelativo(this);">
+									  	<option disabled selected value="">Tipo</option>
+								  	<?php
+								  	$stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM tipos_comprobante where cod_estadoreferencial=1 order by 1");
+									$stmt->execute();
+									while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+										$codigoX=$row['codigo'];
+										$nombreX=$row['nombre'];
+										$abrevX=$row['abreviatura'];
+									?>
+									<option value="<?=$codigoX;?>"><?=$nombreX;?></option>	
+									<?php
+								  	}
+								  	?>
+									</select>
+								</div>
+					      	</div>
 
-						<div class="col-sm-2">
-							<div class="form-group">
-						  		<!--label class="bmd-label-static">Fecha</label-->
-						  		<input class="form-control datepicker" type="text" name="fecha" value="<?=$fechaActualModal?>" id="fecha" required/>
+							<div class="col-sm-2">
+								<div class="form-group">
+							  		<!--label for="nro_correlativo" class="bmd-label-static">Nro. Comprobante</label-->
+							  		<div id="divnro_correlativo"><input class="form-control" type="number" name="nro_correlativo" id="nro_correlativo" min="1" required="true" readonly="true" style="background-color:#E3CEF6;text-align: left"/></div>
+								</div>
 							</div>
-						</div>
-
-						<div class="col-sm-2">
-				        	<div class="form-group">
-						        <select class="selectpicker form-control form-control-sm" name="tipo_comprobante" id="tipo_comprobante" data-style="<?=$comboColor;?>" onChange="ajaxCorrelativo(this);">
-								  	<option disabled selected value="">Tipo</option>
-							  	<?php
-							  	$stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM tipos_comprobante where cod_estadoreferencial=1 order by 1");
-								$stmt->execute();
-								while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-									$codigoX=$row['codigo'];
-									$nombreX=$row['nombre'];
-									$abrevX=$row['abreviatura'];
-								?>
-								<option value="<?=$codigoX;?>"><?=$nombreX;?></option>	
-								<?php
-							  	}
-							  	?>
-							</select>
+							<div class="col-sm-2">
+								<div class="form-group">
+							  		<div id="div_fecha_comprobante">
+							  			<input class="form-control datepicker" type="text" name="fecha" value="<?=$fechaActualModal?>" id="fecha" required/>	
+							  		</div>
+								</div>
 							</div>
-				      	</div>
-
-						<div class="col-sm-2">
-							<div class="form-group">
-						  		<!--label for="nro_correlativo" class="bmd-label-static">Nro. Comprobante</label-->
-						  		<div id="divnro_correlativo"><input class="form-control" type="number" name="nro_correlativo" id="nro_correlativo" min="1" required="true" readonly="true" style="background-color:#E3CEF6;text-align: left"/></div>
-							</div>
-						</div>
 						
-						<div class="col-sm-2">
-							<div class="btn-group">
-                              <a title="Copiar Glosa (shift+g)" href="#modalCopy" data-toggle="modal" data-target="#modalCopy" class="<?=$buttonCeleste?> btn-fab btn-sm">
-                      		        <i class="material-icons"><?=$iconCopy?></i>
-		                        </a>
-                               <a title="Subir Archivos Respaldo (shift+r)" href="#modalFile" data-toggle="modal" data-target="#modalFile" class="btn btn-default btn-fab btn-sm">
-                      		        <i class="material-icons"><?=$iconFile?></i><span id="narch" class="bg-warning"></span>
-		                        </a>
-		                        <a title="Cargar Plantilla (shift+p)"  href="#" onclick="cargarPlantillas()" class="btn btn-warning btn-fab btn-sm">
-                      		        <i class="material-icons">post_add</i>
-		                        </a>
-		                        <a  title="Guardar como Plantilla (shift+s)" href="#" onclick="modalPlantilla()"class="btn btn-danger btn-fab btn-sm">
-                      		        <i class="material-icons">favorite</i>
-		                        </a>
-                            </div>
+							<div class="col-sm-2">
+								<div class="btn-group">
+	                              <a title="Copiar Glosa (shift+g)" href="#modalCopy" data-toggle="modal" data-target="#modalCopy" class="<?=$buttonCeleste?> btn-fab btn-sm">
+	                      		        <i class="material-icons"><?=$iconCopy?></i>
+			                        </a>
+	                               <a title="Subir Archivos Respaldo (shift+r)" href="#modalFile" data-toggle="modal" data-target="#modalFile" class="btn btn-default btn-fab btn-sm">
+	                      		        <i class="material-icons"><?=$iconFile?></i><span id="narch" class="bg-warning"></span>
+			                        </a>
+			                        <a title="Cargar Plantilla (shift+p)"  href="#" onclick="cargarPlantillas()" class="btn btn-warning btn-fab btn-sm">
+	                      		        <i class="material-icons">post_add</i>
+			                        </a>
+			                        <a  title="Guardar como Plantilla (shift+s)" href="#" onclick="modalPlantilla()"class="btn btn-danger btn-fab btn-sm">
+	                      		        <i class="material-icons">favorite</i>
+			                        </a>
+	                            </div>
+							</div>
 						</div>
-					</div>
-
+						<?php
+					}
+					?>
 				</div>
 			</div>	
 
@@ -279,20 +284,17 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
 								</div>
 							</div>	
 							<div class="col-sm-3" align="right">
-			                   <div class="form-group">                                
+			                    <div class="form-group">                                
 			                        <a href="#" style="background-color: #0489B1" class="btn btn-round btn-fab btn-sm" onclick="cargarDatosRegistroComprobantes()">
 			                        	<i class="material-icons" title="Add Proveedor">add</i>
 			                        </a>
 			                        <a href="#" class="btn btn-round btn-fab btn-sm" onclick="actualizarRegistroProveedorComprobante()">
 			                        	<i class="material-icons" title="Actualizar Proveedor">update</i>
 			                        </a> 
-			                   </div>
+			                    </div>
 			                </div> 
-
 						</div>
-						
 					</h4>
-
 				</div>
 				<div class="card-body ">
 
@@ -313,8 +315,8 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
 					*/
 					?>
 					<div class="row menu">
-	                    	<div class="col-sm-1">
-	                    		<button title="Agregar (alt+a)" type="button" id="add_boton" name="add" class="btn btn-warning btn-fab btn-round btn-sm" onClick="addCuentaContable(this)">
+	                    <div class="col-sm-1">
+	                    	<button title="Agregar (alt+a)" type="button" id="add_boton" name="add" class="btn btn-warning btn-fab btn-round btn-sm" onClick="addCuentaContable(this)">
 	                  		  <i class="material-icons x-s">add</i>
 		                    </button>	
 	                    	</div>
@@ -332,25 +334,24 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
 	                      		  <i class="material-icons"><?=$iconCopy?></i>
 			                    </a>
 			                </div>
-			             
 	                    </div>
-	                  <div class="wrapper_caja">
-					<fieldset id="fiel" style="width:100%;border:0;">				
-			        	<?php
-    	                //$index=1;
-                      	//while ($rowLista = $stmtLista->fetch(PDO::FETCH_BOUND)) {
-	                    ?>
-						<div id="div<?=$index;?>">	
-							
-							<div class="h-divider">
-	        				</div>
-		 					
-	 					</div>
-			            <?php
-						//	$index++;
-						//}
-						?>
-		            </fieldset>
+	                  	<div class="wrapper_caja">
+							<fieldset id="fiel" style="width:100%;border:0;">				
+					        	<?php
+		    	                //$index=1;
+		                      	//while ($rowLista = $stmtLista->fetch(PDO::FETCH_BOUND)) {
+			                    ?>
+								<div id="div<?=$index;?>">	
+									
+									<div class="h-divider">
+			        				</div>
+				 					
+			 					</div>
+					            <?php
+								//	$index++;
+								//}
+								?>
+				            </fieldset>
 							<div class="row">
 								<div class="col-sm-6">
 						      	</div>
@@ -372,61 +373,52 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
 						      	<div class="col-sm-3">
 								</div>
 							</div>
-	                  	
-	                  </div>  
-							
-
-				  	<div class="card-footer fixed-bottom">
-						<button type="submit" class="<?=$buttonMorado;?>">Guardar</button>
-						<a href="../<?=$urlList;?>" class="<?=$buttonCancel;?>">Volver</a>
-
-				  	</div>
- 	 <?php
- }
-?>
-
-					
-
+	                  	</div>  						
+					  	<div class="card-footer fixed-bottom">
+							<button type="submit" class="<?=$buttonMorado;?>">Guardar</button>
+							<a href="../<?=$urlList;?>" class="<?=$buttonCancel;?>">Volver</a>
+					  	</div>
+					</div>
 				</div>
-			</div>	
+			</div>
+ 		</div>
+		<!-- small modal -->
+		<div class="modal fade modal-primary" id="modalFile" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		  <div class="modal-dialog modal-lg">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		      	<i class="material-icons" data-notify="icon"><?=$iconFile?></i>
+		        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="material-icons">clear</i></button>
+		      </div>
+		      <div class="modal-body">
+		        <p>Cargar archivos de respaldo.</p> 
+		           <div class="fileinput fileinput-new col-md-12" data-provides="fileinput">
+		           	<div class="row">
+		           		<div class="col-md-9">
+		           			<div class="border" id="lista_archivos">Ningun archivo seleccionado</div>
+		           		</div>
+		           		<div class="col-md-3">
+		           			<span class="btn btn-info btn-round btn-file">
+		                      <span class="fileinput-new">Buscar</span>
+		                      <span class="fileinput-exists">Cambiar</span>
+		                      <input type="file" name="archivos[]" id="archivos" multiple="multiple"/>
+		                   </span>
+		                <a href="#" class="btn btn-danger btn-round fileinput-exists" onclick="archivosPreview(1)" data-dismiss="fileinput"><i class="material-icons">clear</i> Quitar</a>
+		           		</div>
+		           	</div>
+		           </div>
+		           <p class="text-danger">Los archivos se subir&aacute;n al servidor cuando se GUARDE el comprobante</p>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" onclick="" class="btn btn-link" data-dismiss="modal">Aceptar
+		          <div class="ripple-container"></div>
+		        </button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
 	</div>
-</div>
-<!-- small modal -->
-<div class="modal fade modal-primary" id="modalFile" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-      	<i class="material-icons" data-notify="icon"><?=$iconFile?></i>
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="material-icons">clear</i></button>
-      </div>
-      <div class="modal-body">
-        <p>Cargar archivos de respaldo.</p> 
-           <div class="fileinput fileinput-new col-md-12" data-provides="fileinput">
-           	<div class="row">
-           		<div class="col-md-9">
-           			<div class="border" id="lista_archivos">Ningun archivo seleccionado</div>
-           		</div>
-           		<div class="col-md-3">
-           			<span class="btn btn-info btn-round btn-file">
-                      <span class="fileinput-new">Buscar</span>
-                      <span class="fileinput-exists">Cambiar</span>
-                      <input type="file" name="archivos[]" id="archivos" multiple="multiple"/>
-                   </span>
-                <a href="#" class="btn btn-danger btn-round fileinput-exists" onclick="archivosPreview(1)" data-dismiss="fileinput"><i class="material-icons">clear</i> Quitar</a>
-           		</div>
-           	</div>
-           </div>
-           <p class="text-danger">Los archivos se subir&aacute;n al servidor cuando se GUARDE el comprobante</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" onclick="" class="btn btn-link" data-dismiss="modal">Aceptar
-          <div class="ripple-container"></div>
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-<!--    end small modal -->
+	<!--    end small modal -->
 </form>
 
 <div class="cargar">

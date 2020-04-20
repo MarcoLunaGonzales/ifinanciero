@@ -112,20 +112,35 @@ for ($i=1;$i<=$cantidadFilas;$i++){
          	  $fecha=$facturas[$i-1][$j]->fechaFac;
          	  $porciones = explode("/", $fecha);
          	  $fechaFac=$porciones[2]."-".$porciones[1]."-".$porciones[0];
-         	  
-         	  $razonFac=$facturas[$i-1][$j]->razonFac;
-         	  $impFac=$facturas[$i-1][$j]->impFac;
-         	  $exeFac=$facturas[$i-1][$j]->exeFac;
-         	  $autFac=$facturas[$i-1][$j]->autFac;
-         	  $conFac=$facturas[$i-1][$j]->conFac;
 
-		      $sqlDetalle2="INSERT INTO facturas_compra (cod_comprobantedetalle, nit, nro_factura, fecha, razon_social, importe, exento, nro_autorizacion, codigo_control) VALUES ('$codComprobanteDetalle', '$nit', '$nroFac', '$fechaFac', '$razonFac', '$impFac', '$exeFac', '$autFac', '$conFac')";
+            $razonFac=$facturas[$i-1][$j]->razonFac;
+            $impFac=$facturas[$i-1][$j]->impFac;            
+            $autFac=$facturas[$i-1][$j]->autFac;
+            $conFac=$facturas[$i-1][$j]->conFac;
+            
+            $exeFac=$facturas[$i-1][$j]->exeFac;
+            $tipoFac=$facturas[$i-1][$j]->tipoFac;
+            $tazaFac=$facturas[$i-1][$j]->tazaFac;
+            $iceFac=$facturas[$i-1][$j]->iceFac;
+
+            // echo "razonFac:".$razonFac."<br>";
+            // echo "autFac:".$autFac."<br>";
+            // echo "impFac:".$impFac."<br>";
+            // echo "iceFac:".$iceFac."<br>";
+            // echo "exc:".$exeFac."<br>";
+            // echo "tipo:".$tipoFac."<br>";
+            // echo "tasa:".$tazaFac."<br>";
+            // echo "nit:".$nit."<br>";
+
+		      $sqlDetalle2="INSERT INTO facturas_compra (cod_comprobantedetalle, nit, nro_factura, fecha, razon_social, importe, exento, nro_autorizacion, codigo_control,ice,tasa_cero,tipo_compra) VALUES ('$codComprobanteDetalle', '$nit', '$nroFac', '$fechaFac', '$razonFac', '$impFac', '$exeFac', '$autFac', '$conFac','$iceFac','$tazaFac','$tipoFac')";
 		      $stmtDetalle2 = $dbh->prepare($sqlDetalle2);
 		      $flagSuccessDetalle2=$stmtDetalle2->execute();
          }
 
          //itemEstadosCuenta
           $nC=cantidadF($estadosCuentas[$i-1]);
+          // echo "nc:".$nC;
+
           for($j=0;$j<$nC;$j++){
               $fecha=date("Y-m-d H:i:s");
               $codPlanCuenta=$estadosCuentas[$i-1][$j]->cod_plancuenta;
