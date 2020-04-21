@@ -55,7 +55,7 @@ if(isset($_GET['nombre'])){
   if(isset($_GET['region_cliente'])){
     $regionCliente=$_GET['region_cliente'];
   }else{
-    $regionCliente=0;
+    $regionCliente=1;
   }
   $areaGeneralPlantilla=obtenerCodigoAreaPlantillasServicios($plantilla_servicio);
 
