@@ -25,6 +25,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 
   $json=json_decode($_GET["listDist"]);
   $idFila=$_GET['filas'];
+  $idFila--;
   $areaDet=$_GET['area'];
   $valor=$_GET['valor'];
   $glosa=$_GET['glosa'];
@@ -161,10 +162,10 @@ $globalAdmin=$_SESSION["globalAdmin"];
                       <i class="material-icons">call_split</i>
                         </button>
                         <div class="dropdown-menu">   
-                        <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion<?=$idFila?>" onclick="nuevaDistribucionPonerFila(<?=$idFila;?>,1);" class="dropdown-item">
+                        <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucionX<?=$idFila?>" onclick="nuevaDistribucionPonerFila(<?=$idFila;?>,1);" class="dropdown-item">
                           <i class="material-icons">bubble_chart</i> x Oficina
                         </a>
-                        <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion<?=$idFila?>" onclick="nuevaDistribucionPonerFila(<?=$idFila;?>,2);" class="dropdown-item">
+                        <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucionY<?=$idFila?>" onclick="nuevaDistribucionPonerFila(<?=$idFila;?>,2);" class="dropdown-item">
                           <i class="material-icons">bubble_chart</i> x Área
                         </a>
                         </div>
@@ -197,7 +198,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
     </div>
     <div class="col-sm-1">
       <div class="btn-group">
-        <a href="#" id="boton_fac<?=$idFila;?>" onclick="listFac(<?=$idFila;?>);" class="btn btn-info btn-sm btn-fab">
+        <a href="#" id="boton_fac<?=$idFila;?>" onclick="listFac(<?=$idFila;?>);" class="btn btn-info btn-sm btn-fab d-none">
                <i class="material-icons">featured_play_list</i><span id="nfac<?=$idFila;?>" class="count bg-warning">0</span>
              </a>
       <a rel="tooltip" href="#" class="btn btn-danger btn-sm btn-fab" id="boton_remove<?=$idFila;?>" onclick="minusCuentaContable('<?=$idFila;?>');">

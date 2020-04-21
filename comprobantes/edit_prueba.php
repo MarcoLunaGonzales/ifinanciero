@@ -139,6 +139,7 @@ $stmt->execute();
 	numFilas=<?=$contadorRegistros;?>;
 	cantidadItems=<?=$contadorRegistros;?>;
 	var distribucionPor=[];
+	var distribucionPorArea=[];
 	var configuracionCentro=[];
 	var configuraciones=[];
 	var estado_cuentas=[];
@@ -175,7 +176,7 @@ $stmt->execute();
 		    ?>
 
 		  	<?php
-			$stmt = $dbh->prepare("SELECT d.codigo, d.cod_unidadorganizacional, d.porcentaje FROM distribucion_gastosporcentaje_detalle d join distribucion_gastosporcentaje p on p.codigo=d.cod_distribucion_gastos where p.estado=1");
+			$stmt = $dbh->prepare("SELECT d.codigo, d.cod_unidadorganizacional, d.porcentaje FROM distribucion_gastosporcentaje_detalle d join distribucion_gastosporcentaje p on p.codigo=d.cod_distribucion_gastos where p.estado=1 and d.porcentaje>0");
 			$stmt->execute();
 			$i=0;
 			while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -187,6 +188,21 @@ $stmt->execute();
 		    <?php
 			 }
 		    ?>
+
+		  	<?php
+			$stmt = $dbh->prepare("SELECT d.codigo, d.cod_area, d.porcentaje FROM distribucion_gastosarea_detalle d join distribucion_gastosarea p on p.codigo=d.cod_distribucionarea where p.estado=1 and d.porcentaje>0 and p.cod_uo='$globalUnidad'");
+			$stmt->execute();
+			$i=0;
+			while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+				$codigoX=$row['codigo'];
+				$areaX=$row['cod_area'];
+				$porcentajeX=$row['porcentaje'];
+			 ?>
+			 <script>distribucionPorArea.push({codigo:<?=$codigoX?>,cod_area:<?=$areaX?>,porcent:<?=$porcentajeX?>});</script>
+		    <?php
+			 }
+		    ?>
+
 		    <?php
 			$stmt = $dbh->prepare("SELECT cod_unidadorganizacional,cod_grupocuentas,fijo,cod_area FROM configuracion_centrocostoscomprobantes");
 			$stmt->execute();
@@ -509,7 +525,19 @@ $stmt->execute();
     			                        	<div class="btn-group">
     			                        	 <a title="Mayores" href="#" id="mayor<?=$idFila?>" onclick="mayorReporteComprobante(<?=$idFila?>)" class="btn btn-sm btn-info btn-fab"><span class="material-icons">list</span></a>	  	
     			                        	 <a title="Cambiar cuenta" href="#" id="cambiar_cuenta<?=$idFila?>" onclick="editarCuentaComprobante(<?=$idFila?>)" class="btn btn-sm btn-warning btn-fab"><span class="material-icons text-dark">edit</span></a>	  
-    			                        	 <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion<?=$idFila?>" onclick="nuevaDistribucionPonerFila(<?=$idFila;?>);" class="btn btn-sm btn-default btn-fab"><span class="material-icons">scatter_plot</span></a>	  
+                        	             	<div class="btn-group dropdown">
+								              <button type="button" class="btn btn-sm btn-success btn-fab dropdown-toggle material-icons text-dark" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Distribucion de Gastos">
+								                <i class="material-icons">call_split</i>
+								              </button>
+								              <div class="dropdown-menu">   
+								                <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucionX<?=$idFila?>" onclick="nuevaDistribucionPonerFila(<?=$idFila;?>,1);" class="dropdown-item">
+								                  <i class="material-icons">bubble_chart</i> x Oficina
+								                </a>
+								                <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucionY<?=$idFila?>" onclick="nuevaDistribucionPonerFila(<?=$idFila;?>,2);" class="dropdown-item">
+								                  <i class="material-icons">bubble_chart</i> x Área
+								                </a>
+								              </div>
+								            </div>  
     			                             <input type="hidden" id="tipo_estadocuentas<?=$idFila?>">
     			                             <input type="hidden" id="tipo_proveedorcliente<?=$idFila?>">
     			                             <input type="hidden" id="proveedorcliente<?=$idFila?>">

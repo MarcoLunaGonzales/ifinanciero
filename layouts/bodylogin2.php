@@ -216,7 +216,7 @@
                   $('#modalAlert').modal('show'); 
                   envio=1;
               }else{
-                  var cont=0; var contcuenta=0;
+                  var cont=0; var contcuenta=0;var contcuentaIva=0;
                   for (var i = 0; i < numFilas; i++) {
                     if($('select[name=area'+(i+1)+']').val()==null||$('select[name=unidad'+(i+1)+']').val()==null){
                       cont++;
@@ -243,7 +243,25 @@
                       }
                       if($('#cuenta'+(i+1)).val()==""||$('#cuenta'+(i+1)).val()==null||$('#cuenta'+(i+1)).val()==0){
                         contcuenta++;
+                      } 
+                      if($('#cuenta'+(i+1)).val()==63){
+                        contcuentaIva++;
                       }           
+                    }
+                    if(contcuentaIva!=0 ){
+                      var cantiFacturas = itemFacturas.length;                  
+                      var contadorFacturas=0;
+                      for (var i = 0; i < cantiFacturas; i++){
+                        if(itemFacturas[i]==null || itemFacturas[i]==''){
+                          contadorFacturas++;
+                        }
+                      }
+                      if(contadorFacturas==cantiFacturas){
+                        mensaje+="<p>No puede existir Facturas vacías!</p>";
+                        $('#msgError').html(mensaje);
+                        $('#modalAlert').modal('show');
+                        envio=1; 
+                      } 
                     }
                     if(contcuenta!=0){
                       mensaje+="<p>No puede existir cuentas vacías!</p>";

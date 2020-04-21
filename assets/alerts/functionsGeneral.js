@@ -75,6 +75,7 @@ function ajaxObtienePadre(cuenta){
 var numFilas=0;
 var cantidadItems=0;
 var filaActiva=0;
+
 function addCuentaContable(obj) {
   if($("#add_boton").length){
     $("#add_boton").attr("disabled",true);
@@ -447,8 +448,15 @@ function minusCuentaContable(idF){
        $("#mayor"+nuevoId).attr("id","mayor"+i);
        $("#cambiar_cuenta"+nuevoId).attr("onclick","editarCuentaComprobante('"+i+"')");
        $("#cambiar_cuenta"+nuevoId).attr("id","cambiar_cuenta"+i);
-       $("#distribucion"+nuevoId).attr("onclick","nuevaDistribucionPonerFila('"+i+"')");
+       
+       $("#distribucionX"+nuevoId).attr("onclick","nuevaDistribucionPonerFila('"+i+"',1)");
+       $("#distribucionY"+nuevoId).attr("onclick","nuevaDistribucionPonerFila('"+i+"',2)");
+
        $("#distribucion"+nuevoId).attr("id","distribucion"+i);
+       $("#distribucionX"+nuevoId).attr("id","distribucionX"+i);
+       $("#distribucionY"+nuevoId).attr("id","distribucionY"+i);
+
+       
        $("#boton_ret"+nuevoId).attr("onclick","listRetencion('"+i+"')");
        $("#boton_ret"+nuevoId).attr("id","boton_ret"+i);
 
@@ -8216,6 +8224,34 @@ function cargarDatosRegistroProveedorCajaChica(cod_tcc,cod_cc,cod_dcc){
         }
     });
 }
+function ajaxTipoProveedorPersona(combo){
+  var contenedor;
+  var codigo=combo.value;
+  contenedor = document.getElementById('div_nombre_proveedor');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'solicitudes/ajax_nombre_proveedor.php?codigo='+codigo,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]); 
+      ajaxTipoProveedor_datos_add(codigo);
+    }
+  }
+  ajax.send(null)  
+}
+function ajaxTipoProveedor_datos_add(codigo){
+  var contenedor;
+  contenedor = document.getElementById('div_datos_add_proveedor');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'solicitudes/ajax_datos_add_proveedor.php?codigo='+codigo,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]); 
+    }
+  }
+  ajax.send(null)  
+}
 function seleccionarDepartamentoServicioCajaChica(){
  var parametros={"codigo":$("#pais_empresa").val()};
      $.ajax({
@@ -8260,6 +8296,9 @@ function seleccionarCiudadServicioCajaChica(){
 }
 function guardarDatosProveedorCajaChica(){
   var nombre =$("#nombre_empresa").val();
+  var nombre_p =$("#nombre_persona").val();
+  var paterno_p =$("#paterno_persona").val();
+  var materno_p =$("#materno_persona").val();
   var nit =$("#nit_empresa").val();
   var pais =$("#pais_empresa").val();
   var estado =$("#departamento_empresa").val();
@@ -8280,7 +8319,21 @@ function guardarDatosProveedorCajaChica(){
 
    var ciudad_true=0;
   // validaciones de campos
-   if(nombre!=""&&nit!=""&&(pais>0)&&(estado>0)&&direccion!=""&&telefono!=""&&correo!=""&&nombre_contacto!=""&&apellido_contacto!=""&&cargo_contacto!=""&&correo_contacto!=""){
+  if($("#tipo_empresa").val()=='E'){
+    if(nombre!=""&&nit!=""&&(pais>0)&&(estado>0)&&direccion!=""&&telefono!=""&&correo!=""&&nombre_contacto!=""&&apellido_contacto!=""&&cargo_contacto!=""&&correo_contacto!="")
+      var sw=true;
+    else{
+      var sw=false;
+    }
+  }else{
+    if(nombre_p!=""&&paterno_p!=""&&materno_p!=""&&nit!=""&&(pais>0)&&(estado>0)&&direccion!=""&&telefono!=""&&correo!=""&&nombre_contacto!=""&&apellido_contacto!=""&&cargo_contacto!=""&&correo_contacto!="")
+      var sw=true;
+    else{
+      var sw=false;
+    }
+  }
+
+   if(sw){
      if(ciudad>0){
        ciudad_true=1;
      }else{
@@ -8299,7 +8352,7 @@ function guardarDatosProveedorCajaChica(){
           Swal.fire("Informativo!", "Ingrese el nombre de la Ciudad", "warning");
         }else{
           //proceso de guardado de informacion
-           var parametros={"tipo":$("#tipo_empresa").val(),"nacional":$("#nacional_empresa").val(),"nombre":nombre,"nit":nit,"pais":pais,"estado":estado,"ciudad":ciudad,"otra":otra,"direccion":direccion,"telefono":telefono,"correo":correo,"nombre_contacto":nombre_contacto,"apellido_contacto":apellido_contacto,"cargo_contacto":cargo_contacto,"correo_contacto":correo_contacto};
+           var parametros={"tipo":$("#tipo_empresa").val(),"nacional":$("#nacional_empresa").val(),"nombre":nombre,"nombre_p":nombre_p,"paterno_p":paterno_p,"materno_p":materno_p,"nit":nit,"pais":pais,"estado":estado,"ciudad":ciudad,"otra":otra,"direccion":direccion,"telefono":telefono,"correo":correo,"nombre_contacto":nombre_contacto,"apellido_contacto":apellido_contacto,"cargo_contacto":cargo_contacto,"correo_contacto":correo_contacto};
             $.ajax({
                type: "GET",
                dataType: 'html',
@@ -8344,8 +8397,9 @@ function actualizarRegistroProveedorCajaChica(cod_tcc,cod_cc,cod_dcc){
         },
         success:  function (resp) {
            detectarCargaAjax();
-           $("#texto_ajax_titulo").html("Procesando Datos"); 
-           alerts.showSwal('success-message','index.php?opcion=DetalleCajaChicaForm&codigo='+cod_dcc+'&cod_tcc='+cod_tcc+'&cod_cc='+cod_cc);
+           $("#texto_ajax_titulo").html("Procesando Datos");
+           $('.selectpicker').selectpicker("refresh"); 
+           //alerts.showSwal('success-message','index.php?opcion=DetalleCajaChicaForm&codigo='+cod_dcc+'&cod_tcc='+cod_tcc+'&cod_cc='+cod_cc);
         }
     });  
 }
