@@ -3331,7 +3331,7 @@ function mayorReporteComprobante(fila){
  ///////////////////////////////////////////////////////////////////
  /*                              Solicitud de recursos                                      */
 
- function listarTipoSolicitud(tipo){
+ function listarTipoSolicitud(tipo,sim){
   var url="";
   if($("#ibnorca_q").length>0){
    var q=$("#ibnorca_q").val();
@@ -3364,18 +3364,18 @@ function mayorReporteComprobante(fila){
         buttonsStyling: false
        }).then((result) => {
           if (result.value) {
-            cargarDatosSelectTipoSolicitud(url,tipo);            
+            cargarDatosSelectTipoSolicitud(url,tipo,sim);            
             return(true);
           } else if (result.dismiss === Swal.DismissReason.cancel) {
             return(false);
           }
       });
   }else{
-     cargarDatosSelectTipoSolicitud(url,tipo)   
+     cargarDatosSelectTipoSolicitud(url,tipo,sim)   
   }
 
  }
-function cargarDatosSelectTipoSolicitud(url,tipo){
+function cargarDatosSelectTipoSolicitud(url,tipo,sim){
   if(tipo!=3){ 
    ajax=nuevoAjax();
     ajax.open("GET",url,true);
@@ -3391,7 +3391,18 @@ function cargarDatosSelectTipoSolicitud(url,tipo){
       }else{
        if(($("#filtros_solicitud").hasClass("d-none"))){
          $("#filtros_solicitud").removeClass("d-none")
-       }    
+       } 
+       if(tipo==1&&(sim!='none')){
+          $('#simulaciones option').each(function() {
+            if ( $(this).val() != sim ) {
+            //alert($(this).val());
+             $(this).remove();
+            }else{
+              $(this).attr("selected",true);
+            }
+         });
+          filtrarSolicitudRecursosDetalleDatos();
+       }   
       }
 
       if($("#buscar_solicitudesdetalle").hasClass("d-none")){

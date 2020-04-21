@@ -49,7 +49,7 @@ if(isset($_GET['nombre'])){
   if(isset($_GET['tipo_servicio'])){
     $idTipoServicio=$_GET['tipo_servicio'];
   }else{
-    $idTipoServicio=0;
+    $idTipoServicio=309; //para servicio TCP
   }
   
   if(isset($_GET['region_cliente'])){

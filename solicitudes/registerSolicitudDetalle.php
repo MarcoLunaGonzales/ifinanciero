@@ -31,6 +31,7 @@ $globalArea=$_SESSION["globalArea"];
 $globalAdmin=$_SESSION["globalAdmin"];
 
 $contadorRegistros=0;
+
 ?>
 <script>
   numFilas=<?=$contadorRegistros;?>;
@@ -141,7 +142,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             </div>
             <div class="col-sm-2">
               <div class="form-group">
-                  <select class="selectpicker form-control form-control-sm" onchange="listarTipoSolicitud(this.value)" name="tipo_solicitud" id="tipo_solicitud" data-style="btn btn-info" title="-- Tipo de Solicitud --" data-style="select-with-transition" data-actions-box="true"required>
+                  <select class="selectpicker form-control form-control-sm" onchange="listarTipoSolicitud(this.value,'none')" name="tipo_solicitud" id="tipo_solicitud" data-style="btn btn-info" title="-- Tipo de Solicitud --" required>
                       <option value="1">POR PROPUESTA</option> 
                       <option value="2">POR PROVEEDOR</option>
                       <option value="3">MANUAL</option>  
@@ -282,4 +283,29 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 </form>
 <?php
 require_once 'modal.php';
+
+if(isset($_GET['sim'])){
+  $sim=$_GET['sim'];
+  $det=$_GET['det'];
+  if($det!=1){
+    $detalle="TCP";
+  }else{
+    $detalle="SIM";
+  }
+  ?>
+  <script>
+  $(document).ready(function() {
+    $("#tipo_solicitud").html("");
+    $('.selectpicker').selectpicker("refresh");
+    $("#tipo_solicitud").append("<option selected value='1'>POR PROPUESTA</option>");
+    $('.selectpicker').selectpicker("refresh");
+
+    listarTipoSolicitud(1,'<?=$sim?>$$$<?=$detalle?>'); //se eliminan las demas solicitudes
+    $('.selectpicker').selectpicker("refresh");
+
+  });
+  </script>
+  <?php
+}
+
 ?>

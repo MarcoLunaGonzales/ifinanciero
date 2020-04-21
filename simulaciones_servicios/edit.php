@@ -40,6 +40,57 @@ if($estado!=1){
 
     
 	}
+
+    if($estado==5){
+    //enviar propuestas para la actualizacion de ibnorca
+    $fechaHoraActual=date("Y-m-d H:i:s");
+    $idTipoObjeto=2707;
+    $idObjeto=2718; //regristado
+    $obs="Adjudicada";
+    if(!isset($_GET['u'])){
+     actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);           
+    }else{
+     $u=$_GET["u"];
+     actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);     
+    }
+      //crear la solicitud
+      $simulacion=obtenerDatosCompletosPorSimulacionServicios($codigo);
+      while ($row = $simulacion->fetch(PDO::FETCH_ASSOC)) {
+         $IdArea=$row['cod_area'];
+         $IdOficina=$row['cod_unidadorganizacional'];
+         $IdTipo=$row['id_tiposervicio'];
+         $IdCliente=$row['cod_cliente'];
+         $Descripcion="Nuevo Servicio";
+         $IdUsuarioRegistro=$row['cod_responsable'];
+         $fecharegistro=date("Y-m-d");
+         $idServicio=obtenerCodigoServicioIbnorca();
+       // Prepare
+         $stmt = $dbh->prepare("INSERT INTO ibnorca.servicios (idServicio,IdArea,IdOficina,IdTipo,IdCliente,Descripcion,IdUsuarioRegistro,fecharegistro,IdPropuesta) 
+         VALUES ('$idServicio','$IdArea','$IdOficina','$IdTipo','$IdCliente','$Descripcion','$IdUsuarioRegistro','$fecharegistro','$codigo')");
+       // Bind
+        $stmt->execute();
+
+          //enviar propuestas para la actualizacion de ibnorca
+        $fechaHoraActual=date("Y-m-d H:i:s");
+        $idTipoObjeto=195;
+        $idObjeto=204; //regristado
+        $obs="En ejecución";
+        //id de perfil para cambio de estado en ibnorca
+  
+        if(isset($_GET['u'])){
+          $id_perfil=$_GET['u'];
+          actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$idServicio,$fechaHoraActual,$obs);
+        }else{
+          actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$id_perfil,$idServicio,$fechaHoraActual,$obs);
+        }
+   
+        $stmt2 = $dbh->prepare("UPDATE simulaciones_servicios SET idServicio=$idServicio where codigo=$codigo");
+        $flagSuccess2=$stmt2->execute();
+      }
+    //fin crear servicio
+    
+    }
+
 	//fin de actulizar estados del servidor ibnorca
 }else{
 	//enviar propuestas para la actualizacion de ibnorca
