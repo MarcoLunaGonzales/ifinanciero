@@ -26,7 +26,7 @@ $lista= obtenerPaisesServicioIbrnorca();
                        <label class="col-sm-3 col-form-label">Tipo Proveedor *</label>
                        <div class="col-sm-9">
                         <div class="form-group">
-                          <select name="tipo_empresa" id="tipo_empresa" class="form-control form-control-sm selectpicker" data-style="btn btn-primary" required="true">
+                          <select name="tipo_empresa" id="tipo_empresa" class="form-control form-control-sm selectpicker" data-style="btn btn-primary" required="true" onchange="ajaxTipoProveedorPersona(this)">
                             <option value="E">EMPRESA</option>
                             <option value="P">PERSONA</option>
                           </select>
@@ -44,13 +44,20 @@ $lista= obtenerPaisesServicioIbrnorca();
                         </div>
                        </div>
                       </div>
-                     <div class="row">
-                       <label class="col-sm-3 col-form-label">Nombre *</label>
-                       <div class="col-sm-9">
-                        <div class="form-group">
-                          <input type="text" class="form-control" name="nombre_empresa" id="nombre_empresa" value="" required="true" onkeyup="javascript:this.value=this.value.toUpperCase();">
-                        </div>
-                        </div>
+                      <div id="div_nombre_proveedor">
+                        <div class="row">
+                          <label class="col-sm-3 col-form-label">Nombre *</label>
+                          <div class="col-sm-9">
+                            <div class="form-group" >
+                                <input type="text" class="form-control" name="nombre_empresa" id="nombre_empresa" value="" required="true" onkeyup="javascript:this.value=this.value.toUpperCase();">
+                                <input type="hidden" name="nombre_persona" id="nombre_persona">
+                                <input type="hidden" name="paterno_persona" id="paterno_persona">
+                                <input type="hidden" name="materno_persona" id="materno_persona"> 
+                                <input type="hidden" name="tipo_id" id="tipo_id">
+                                <input type="hidden" name="tipo_id_otro" id="tipo_id_otro">
+                            </div>
+                          </div>
+                        </div>                          
                       </div>
 
                       <div class="row">
@@ -117,46 +124,50 @@ $lista= obtenerPaisesServicioIbrnorca();
                         </div>
                        </div>
                       </div>
-                      <div class="row">
-                       <label class="col-sm-3 col-form-label">Correo *</label>
-                       <div class="col-sm-9">
-                        <div class="form-group">
-                          <input type="text" class="form-control" name="correo_empresa" id="correo_empresa" value="" required="true">
+                      <div id="div_datos_add_proveedor">
+                        <input type="hidden" name="numero_celular" id="numero_celular">
+                        <div class="row">
+                          <label class="col-sm-3 col-form-label">Correo *</label>
+                          <div class="col-sm-9">
+                            <div class="form-group">
+                              <input type="text" class="form-control" name="correo_empresa" id="correo_empresa" value="" required="true">
+                            </div>
+                          </div>
                         </div>
-                       </div>
+                          <center><h4 class="fontweight-bold text-muted">Datos del contacto </h4></center>
+                          <div class="row">
+                           <label class="col-sm-3 col-form-label">Nombre Contacto *</label>
+                           <div class="col-sm-9">
+                            <div class="form-group">
+                              <input type="text" class="form-control" name="nombre_contacto" id="nombre_contacto" value="" required="true" onkeyup="javascript:this.value=this.value.toUpperCase();">
+                            </div>
+                           </div>
+                          </div>
+                          <div class="row">
+                           <label class="col-sm-3 col-form-label">Apellido Contacto *</label>
+                           <div class="col-sm-9">
+                            <div class="form-group">
+                              <input type="text" class="form-control" name="apellido_contacto" id="apellido_contacto" value="" required="true" onkeyup="javascript:this.value=this.value.toUpperCase();">
+                            </div>
+                           </div>
+                          </div>
+                          <div class="row">
+                           <label class="col-sm-3 col-form-label">Cargo Contacto *</label>
+                           <div class="col-sm-9">
+                            <div class="form-group">
+                              <input type="text" class="form-control" name="cargo_contacto" id="cargo_contacto" value="" required="true" onkeyup="javascript:this.value=this.value.toUpperCase();">
+                            </div>
+                           </div>
+                          </div>
+                          <div class="row">
+                           <label class="col-sm-3 col-form-label">Correo Contacto *</label>
+                           <div class="col-sm-9">
+                            <div class="form-group">
+                              <input type="text" class="form-control" name="correo_contacto" id="correo_contacto" value="" required="true">
+                            </div>
+                           </div>
+                          </div>
                       </div>
-                      <center><h4 class="fontweight-bold text-muted">Datos del contacto </h4></center>
-                      <div class="row">
-                       <label class="col-sm-3 col-form-label">Nombre Contacto *</label>
-                       <div class="col-sm-9">
-                        <div class="form-group">
-                          <input type="text" class="form-control" name="nombre_contacto" id="nombre_contacto" value="" required="true" onkeyup="javascript:this.value=this.value.toUpperCase();">
-                        </div>
-                       </div>
-                      </div>
-                      <div class="row">
-                       <label class="col-sm-3 col-form-label">Apellido Contacto *</label>
-                       <div class="col-sm-9">
-                        <div class="form-group">
-                          <input type="text" class="form-control" name="apellido_contacto" id="apellido_contacto" value="" required="true" onkeyup="javascript:this.value=this.value.toUpperCase();">
-                        </div>
-                       </div>
-                      </div>
-                      <div class="row">
-                       <label class="col-sm-3 col-form-label">Cargo Contacto *</label>
-                       <div class="col-sm-9">
-                        <div class="form-group">
-                          <input type="text" class="form-control" name="cargo_contacto" id="cargo_contacto" value="" required="true" onkeyup="javascript:this.value=this.value.toUpperCase();">
-                        </div>
-                       </div>
-                      </div>
-                      <div class="row">
-                       <label class="col-sm-3 col-form-label">Correo Contacto *</label>
-                       <div class="col-sm-9">
-                        <div class="form-group">
-                          <input type="text" class="form-control" name="correo_contacto" id="correo_contacto" value="" required="true">
-                        </div>
-                       </div>
-                      </div>
+                      
                       
 
