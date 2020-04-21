@@ -26,11 +26,11 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 ?>
 <div id="comp_row" class="col-md-12">
 	<div class="row">
-		<div class="col-sm-1">
-            <div class="form-group">
+		<div class="row col-sm-4">
+            <div class="form-group col-sm-2">
                <div class="row">
-			           <label class="col-sm-8 col-form-label">habilitar</label>
-                <div class="col-sm-4">
+			           
+                <div class="col-sm-12">
           		  <div class="form-check">
                      <label class="form-check-label">
                       <input class="form-check-input" onchange="habilitarFila(<?=$idFila;?>)" type="checkbox" id="habilitar<?=$idFila?>" name="habilitar<?=$idFila?>" checked value="1">
@@ -41,20 +41,19 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                   </div>
                </div>
               </div>   	
-			</div>
+			   </div>
+         <div class="form-group col-sm-10">
+             <label for="partida_cuenta<?=$idFila;?>" class="bmd-label-floating">PARTIDA PRESUPUESTARIA / Cuenta</label>
+             <input class="form-control" type="hidden" name="partida_cuenta_id<?=$idFila?>" id="partida_cuenta_id<?=$idFila?>"/>     
+             <input class="form-control" type="text" autofocus name="partida_cuenta<?=$idFila;?>" id="partida_cuenta<?=$idFila;?>" required value=""> 
+           </div>
     </div>
     <input type="hidden" id="unidad<?=$idFila;?>" name="unidad<?=$idFila;?>" value="<?=$unidadSol?>">
     <input type="hidden" id="area<?=$idFila;?>" name="area<?=$idFila;?>" value="<?=$areaSol?>">
     <input type="hidden" id="cod_detalleplantilla<?=$idFila;?>" name="cod_detalleplantilla<?=$idFila;?>" value="">
     <input type="hidden" id="cod_servicioauditor<?=$idFila;?>" name="cod_servicioauditor<?=$idFila;?>" value="">    
-        <div class="col-sm-4">
-           <div class="form-group">
-             <label for="partida_cuenta<?=$idFila;?>" class="bmd-label-floating">PARTIDA PRESUPUESTARIA / Cuenta</label>
-             <input class="form-control" type="hidden" name="partida_cuenta_id<?=$idFila?>" id="partida_cuenta_id<?=$idFila?>"/>     
-             <input class="form-control" type="text" autofocus name="partida_cuenta<?=$idFila;?>" id="partida_cuenta<?=$idFila;?>" required value=""> 
-           </div>
-        </div>
-        <div class="col-sm-2">
+       
+        <div class="col-sm-3">
 		    <div class="form-group">
           		<label for="detalle_detalle<?=$idFila;?>" class="bmd-label-static">Detalle</label>
 				<textarea rows="1" class="form-control" name="detalle_detalle<?=$idFila;?>" id="detalle_detalle<?=$idFila;?>" value=""></textarea>

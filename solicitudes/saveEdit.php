@@ -56,8 +56,8 @@ if(isset($_POST['numero'])){
   $fecha= date("Y-m-d h:m:s");
   $codSolicitud=obtenerCodigoSolicitudRecursos();
   $dbh = new Conexion();
-  if(isset($_POST['v'])){
-       $v=$_POST['v'];
+  if(isset($_POST['usuario_ibnored_v'])){
+       $v=$_POST['usuario_ibnored_v'];
        $sqlInsert="INSERT INTO solicitud_recursos (codigo, cod_personal,cod_unidadorganizacional,cod_area,fecha,numero,cod_simulacion,cod_proveedor,cod_simulacionservicio,cod_contrato,idServicio) 
        VALUES ('".$codSolicitud."','".$globalUser."','".$globalUnidad."', '".$globalArea."', '".$fecha."','".$numero."','".$codSim."','".$codProv."','".$codSimServ."','".$codCont."','".$v."')";
   }else{
@@ -72,8 +72,8 @@ if(isset($_POST['numero'])){
   $idTipoObjeto=2708;
   $idObjeto=2721; //regristado
   $obs="Registro de Solicitud";
-  if(isset($_POST['u'])){
-       $u=$_POST['u'];
+  if(isset($_POST['usuario_ibnored_u'])){
+       $u=$_POST['usuario_ibnored_u'];
        actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codSolicitud,$fechaHoraActual,$obs);
   }else{
        actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codSolicitud,$fechaHoraActual,$obs);
