@@ -139,6 +139,12 @@ $stmt->bindColumn('idServicio', $idServicioX);
                                     <i class="material-icons text-danger">clear</i> Cancelar solicitud
                                  </a>
                                  <?php 
+                                 }else{
+                                  if($codEstado==3){
+                                   ?><a href="#" onclick="alerts.showSwal('warning-message-crear-servicio','<?=$urlEdit2?>?cod=<?=$codigo?>&estado=5&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>')" class="dropdown-item">
+                                    <i class="material-icons text-success">emoji_events</i> ADJUDICAR
+                                 </a><?php
+                                  }
                                  }?>
                                  <a href="<?=$urlVer;?>?cod=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>" class="dropdown-item">
                                     <i class="material-icons text-warning">bar_chart</i> Ver Propuesta
@@ -153,6 +159,12 @@ $stmt->bindColumn('idServicio', $idServicioX);
                                     <i class="material-icons text-danger">clear</i> Cancelar solicitud
                                  </a>
                                  <?php 
+                                 }else{
+                                   if($codEstado==3){
+                                   ?><a href="#" onclick="alerts.showSwal('warning-message-crear-servicio','<?=$urlEdit2?>?cod=<?=$codigo?>&estado=5&admin=0')" class="dropdown-item">
+                                      <i class="material-icons text-success">emoji_events</i> ADJUDICAR
+                                   </a><?php
+                                   }
                                  }?>
                                  <a href="<?=$urlVer;?>?cod=<?=$codigo;?>" class="dropdown-item">
                                     <i class="material-icons text-warning">bar_chart</i> Ver Propuesta
@@ -167,9 +179,9 @@ $stmt->bindColumn('idServicio', $idServicioX);
                              if($codEstado==5){
                                $anteriorCod=obtenerCodigoSolicitudRecursosSimulacion(2,$codigo);
                                if(isset($_GET['q'])){
-                                  ?><!--<a onclick="alerts.showSwal('success-solicitud','solicitudes/register.php?q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$idServicioX?>&sim=<?=$codigo?>&det=TCP')" href="#" target="_self" title="Solicitud De Recursos"class="btn btn-danger">
+                                  ?><a href="solicitudes/registerSolicitudDetalle.php?sim=<?=$codigo?>&det=2&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$idServicioX?>" target="_self" title="Solicitud De Recursos"class="btn btn-danger">
                                     <i class="material-icons">content_paste</i>
-                                 </a>-->
+                                 </a>
                                  <a title="Imprimir Solicitud de Recursos" href='#' onclick="javascript:window.open('solicitudes/imp.php?sol=<?=$anteriorCod;?>&mon=1')" class="btn btn-primary">
                                      <i class="material-icons"><?=$iconImp;?></i>
                                  </a> 
@@ -185,7 +197,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
                                  <?php 
                                  if($idServicioX>0){
                                    ?>
-                                 <button title="Servicio Creado C: <?=$codigoServicio?>" class="btn btn-success" onclick="">
+                                 <button title="Servicio Creado <?=$codigoServicio?>" class="btn btn-success" onclick="">
                                     <i class="material-icons">check</i>
                                   </button>
                                   <?php  
@@ -197,7 +209,11 @@ $stmt->bindColumn('idServicio', $idServicioX);
                                   <?php 
                                   } 
                                 }else{
-                                ?><a onclick="alerts.showSwal('success-solicitud','solicitudes/register.php?sim=<?=$codigo?>&det=TCP')" href="#" target="_blank" title="Solicitud De Recursos"class="btn btn-danger">
+                                ?>
+                                 <a href="#" class="btn btn-danger" title="Ver en PDF">
+                                    <i class="material-icons text-dark">picture_as_pdf</i>
+                                 </a> 
+                                <a href="solicitudes/registerSolicitudDetalle.php?sim=<?=$codigo?>&det=2" target="_blank" title="Solicitud De Recursos"class="btn btn-danger">
                                     <i class="material-icons">content_paste</i>
                                  </a>
                                  <a title="Imprimir Solicitud de Recursos" href='#' onclick="javascript:window.open('solicitudes/imp.php?sol=<?=$anteriorCod;?>&mon=1')" class="btn btn-primary">
@@ -209,7 +225,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
                                  <?php 
                                  if($idServicioX>0){
                                    ?>
-                                 <button title="Servicio Creado C: <?=$codigoServicio?>" class="btn btn-success" onclick="">
+                                 <button title="Servicio Creado <?=$codigoServicio?>" class="btn btn-success" onclick="">
                                     <i class="material-icons">check</i>
                                   </button>
                                   <?php  

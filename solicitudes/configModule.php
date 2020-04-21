@@ -11,6 +11,8 @@ $urlList2="index.php?opcion=listSolicitudRecursosAdmin";
 $urlImp="solicitudes/imp.php";
 $urlImpComp="comprobantes/imp.php";
 $urlRegister="solicitudes/registerSolicitud.php";
+$urlRegister3="solicitudes/registerSolicitudDetalle.php";
+
 $urlVer="solicitudes/verSolicitudRecursos.php";
 $urlRegister2="solicitudes/register.php";
 $urlEdit="index.php?opcion=editSolicitudRecursos";

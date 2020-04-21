@@ -22,7 +22,8 @@
 							}
 							$codCuentaX=$row['codigo'];
 							$codDetalleX=0;
-							$detalleX=$row['glosa'];
+							$detalleX=$row['glosa_completa'];
+							$detalleXX=$row['glosa'];
 							$proveedorX="";
 							$retencionX="";
 							$tituloImporte="Importe";
@@ -71,12 +72,12 @@
 						    }
 							$auxAnio=(int)$row['cod_anio'];
 
-							if($detalleX!=$detalleAux){
-								$listaDetalles[$contAux]=$detalleX;
+							if($detalleXX!=$detalleAux){
+								$listaDetalles[$contAux]=$detalleXX;
 								$contAux++;
 							}
                          		
-							$detalleAux=$detalleX;
+							$detalleAux=$detalleXX;
 							
 							if($entro==0){
 								?><script>var nfac=[];itemFacturas.push(nfac);</script><?php

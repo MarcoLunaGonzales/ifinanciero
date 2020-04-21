@@ -122,7 +122,7 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                       <th class="text-center small">Tipo</th>
                       <th class="text-center small">Corre.</th>
                       <th class="text-center small">Fecha</th>
-                      <th class="text-left small">Glosa</th>
+                      <th class="text-center small">Glosa</th>
                       <th class="text-center small">Estado</th>
                       <th class="text-center small">Actions</th>
                     </tr>
@@ -210,7 +210,7 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
               </div>
               <!-- card detalle -->
               <div class="card">            
-                <h4 class="card-title" align="center">Detalle <?=$moduleNamePlural?></h4>                                    
+                <h4 class="card-title" align="center">Detalle</h4>                                    
                 <div class="card-body">                                    
                   <div class="" id="">
                     <table id="" class="table table-condensed">
@@ -227,21 +227,31 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                       </thead>
                       <tbody>
                       <?php
+                        $totalDebe=0;
+                        $totalHaber=0;
                         $indexDetalle=1;
                         $data = obtenerComprobantesDetImp($cod_comprobante_x);                                    
-                        while ($rowDet = $data->fetch(PDO::FETCH_ASSOC)) {  ?>
+                        while ($rowDet = $data->fetch(PDO::FETCH_ASSOC)) {
+                          $totalDebe+=$rowDet['debe'];
+                          $totalHaber+=$rowDet['haber'];
+                        ?>
                         <tr>                    
                           <td align="text-center small"><?=$indexDetalle;?></td>                          
                           <td class="text-center small"><?=$rowDet['unidadAbrev']?>/<?=$rowDet['abreviatura']?></td>
                           <td class="text-center small"><?=$rowDet['numero']?></td>
                           <td class="text-left small"><?=$rowDet['nombre']?></td>
-                          <td class="text-center small"><?=number_format($rowDet['debe'], 2, '.', ',')?></td>
-                          <td class="text-left small"><?=number_format($rowDet['haber'], 2, '.', ',')?></td>                                                  
+                          <td class="text-right small"><?=formatNumberDec($rowDet['debe']);?></td>
+                          <td class="text-right small"><?=formatNumberDec($rowDet['haber']);?></td>
                         </tr>
                         <?php
                               $indexDetalle++;
                             }
                         ?>
+                        <tr>                    
+                          <td align="text-center small" colspan="4">&nbsp;</td>                          
+                          <td class="text-right small font-weight-bold"><?=formatNumberDec($totalDebe);?></td>
+                          <td class="text-right small font-weight-bold"><?=formatNumberDec($totalHaber);?></td>
+                        </tr>
                       </tbody>
                     </table>
                   </div>

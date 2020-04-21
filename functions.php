@@ -2132,20 +2132,10 @@ simulaciones_detalle tablap where tablap.cod_cuenta=tabla_uno.codigo and (tablap
 function obtenerDetalleSolicitudSimulacionCuentaPlantillaServicio($codigo,$codigoPlan){
    $dbh = new Conexion();
    $sql="";
-   $sql="(SELECT tablap.cod_anio,CONCAT(tablap.codigo,'###DET-SIM') as codigo_detalle,tablap.glosa,tablap.monto_total,tablap.habilitado,tabla_uno.codigo,
-tabla_uno.numero,tabla_uno.nombre,tabla_uno.partida,tabla_uno.cod_partida,tabla_uno.monto_local,tabla_uno.monto_externo 
-   FROM (SELECT pc.codigo,pc.numero,pc.nombre,pp.nombre as partida, pp.codigo as cod_partida,sc.monto_local,sc.monto_externo,sc.cod_anio from cuentas_simulacion sc 
-join partidas_presupuestarias pp on pp.codigo=sc.cod_partidapresupuestaria 
-join plan_cuentas pc on sc.cod_plancuenta=pc.codigo where sc.cod_simulacionservicios=$codigo order by pp.codigo) tabla_uno,
-simulaciones_serviciodetalle tablap where tablap.cod_cuenta=tabla_uno.codigo and tabla_uno.cod_anio=tablap.cod_anio and (tablap.cod_plantillatcp!='' or tablap.cod_plantillatcp!=NULL) and tablap.cod_plantillatcp=$codigoPlan and tablap.cod_simulacionservicio=$codigo and tablap.habilitado=1 and tablap.cod_estadoreferencial=1 order by tabla_uno.codigo)
-UNION (select ss.cod_anio,CONCAT(ss.codigo,'###DET-AUD') as codigo_detalle,t.nombre as glosa,(cantidad * monto * dias) as monto_total,ss.habilitado,c.cod_plancuenta as codigo,c.numero,
-p.nombre,pp.nombre as partida,pp.codigo as cod_partida,1 as monto_local,1 as monto_externo
- from simulaciones_servicios_auditores ss,tipos_auditor t 
- join configuraciones_solicitudes_auditores c on c.cod_tipoauditor=t.codigo  
- join plan_cuentas p on p.codigo=c.cod_plancuenta 
-join partidaspresupuestarias_cuentas pc on pc.cod_cuenta=p.codigo
-join partidas_presupuestarias pp on pp.codigo=pc.cod_partidapresupuestaria
- where ss.cod_tipoauditor=t.codigo and ss.cod_simulacionservicio=$codigo and ss.habilitado=1) order by cod_anio";
+   $sql="(select * from v_propuestas_detalle_variables  where cod_simulacionservicio=$codigo order by cod_detalle)
+        UNION
+         (select * from v_propuestas_detalle_honorarios  where cod_simulacionservicio=$codigo)
+        order by cod_anio";
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
    return $stmt;
@@ -4279,37 +4269,22 @@ function obtenerActividadesServicioImonitoreo($codigo_proyecto){
   function obtenerDetalleSolicitudSimulacionCuentaPlantillaServicioFiltro($codigo,$codigoPlan,$anio,$item_detalle,$codigo_detalle){
    $dbh = new Conexion();
    if($anio!="all"){
-    $anioSQL1="tablap.cod_anio=$anio and";
-    $anioSQL2="ss.cod_anio=$anio and";
+    $anioSQL1="cod_anio=$anio and";
    }else{
     $anioSQL1="";
-    $anioSQL2="";
    }
    
    if($codigo_detalle!="all"){
-    $item_detalleSQL1="tablap.glosa='$item_detalle' and";
-    $item_detalleSQL2="t.nombre='$item_detalle' and";
+    $item_detalleSQL1="glosa='$item_detalle' and";
    }else{
     $item_detalleSQL1="";
-    $item_detalleSQL2="";
    }
 
    $sql="";
-   $sql="(SELECT tablap.cod_anio,CONCAT(tablap.codigo,'###DET-SIM') as codigo_detalle,tablap.glosa,tablap.monto_total,tablap.habilitado,tabla_uno.codigo,
-tabla_uno.numero,tabla_uno.nombre,tabla_uno.partida,tabla_uno.cod_partida,tabla_uno.monto_local,tabla_uno.monto_externo 
-   FROM (SELECT pc.codigo,pc.numero,pc.nombre,pp.nombre as partida, pp.codigo as cod_partida,sc.monto_local,sc.monto_externo,sc.cod_anio from cuentas_simulacion sc 
-join partidas_presupuestarias pp on pp.codigo=sc.cod_partidapresupuestaria 
-join plan_cuentas pc on sc.cod_plancuenta=pc.codigo where sc.cod_simulacionservicios=$codigo order by pp.codigo) tabla_uno,
-simulaciones_serviciodetalle tablap where $anioSQL1 $item_detalleSQL1 tablap.cod_cuenta=tabla_uno.codigo and tabla_uno.cod_anio=tablap.cod_anio and (tablap.cod_plantillatcp!='' or tablap.cod_plantillatcp!=NULL) and tablap.cod_plantillatcp=$codigoPlan and tablap.cod_simulacionservicio=$codigo and tablap.habilitado=1 and tablap.cod_estadoreferencial=1 order by tabla_uno.codigo)
-
-UNION (select ss.cod_anio,CONCAT(ss.codigo,'###DET-AUD') as codigo_detalle,t.nombre as glosa,(cantidad * monto * dias) as monto_total,ss.habilitado,c.cod_plancuenta as codigo,c.numero,
-p.nombre,pp.nombre as partida,pp.codigo as cod_partida,1 as monto_local,1 as monto_externo
- from simulaciones_servicios_auditores ss,tipos_auditor t 
- join configuraciones_solicitudes_auditores c on c.cod_tipoauditor=t.codigo  
- join plan_cuentas p on p.codigo=c.cod_plancuenta 
-join partidaspresupuestarias_cuentas pc on pc.cod_cuenta=p.codigo
-join partidas_presupuestarias pp on pp.codigo=pc.cod_partidapresupuestaria
- where $anioSQL2 $item_detalleSQL2 ss.cod_tipoauditor=t.codigo and ss.cod_simulacionservicio=$codigo and ss.habilitado=1) order by cod_anio";
+   $sql="(select * from v_propuestas_detalle_variables  where $anioSQL1 $item_detalleSQL1 cod_simulacionservicio=$codigo  order by cod_detalle)
+UNION
+(select * from v_propuestas_detalle_honorarios  where $anioSQL1 $item_detalleSQL1 cod_simulacionservicio=$codigo)
+order by cod_anio";
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
    return $stmt;

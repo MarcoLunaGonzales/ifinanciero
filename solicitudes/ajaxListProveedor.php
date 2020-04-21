@@ -13,10 +13,10 @@ $stmtX->execute();
 $usuario=$_SESSION['globalUser'];
  $query="SELECT * FROM af_proveedores order by codigo";
   ?>
-   <label class="col-sm-3 col-form-label">Proveedores :</label>
-   <div class="col-sm-9">
+   <!--<label class="col-sm-3 col-form-label">Proveedores :</label>-->
+   <div class="col-sm-12">
      <div class="form-group">
-          <select class="selectpicker form-control" name="proveedores" id="proveedores" data-style="<?=$comboColor;?>" required>
+          <select class="selectpicker form-control form-control-sm" name="proveedores" id="proveedores" data-style="btn btn-primary" required>
            <?php 
            $stmt = $dbh->prepare($query);
            $stmt->execute();
