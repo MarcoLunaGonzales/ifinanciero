@@ -20,8 +20,8 @@ if(isset($_GET['s'])){
   $sqlAreas="and p.cod_area=".$codigoArea;
 }
 
- $query="SELECT s.*,p.cod_area FROM simulaciones_costos s join plantillas_costo p on p.codigo=s.cod_plantillacosto where s.cod_responsable=$usuario and s.cod_estadosimulacion=5 $sqlAreas order by s.codigo";
- $query2="SELECT s.*,p.cod_area FROM simulaciones_servicios s join plantillas_servicios p on p.codigo=s.cod_plantillaservicio where s.cod_responsable=$usuario and s.cod_estadosimulacion=5 $sqlAreas order by s.codigo"; //cod_responsable=$usuario and
+ $query="SELECT s.*,p.cod_area FROM simulaciones_costos s join plantillas_costo p on p.codigo=s.cod_plantillacosto  where s.cod_responsable=$usuario and s.cod_estadosimulacion=5 $sqlAreas order by s.codigo";
+ $query2="SELECT s.*,p.cod_area,c.nombre as cliente FROM simulaciones_servicios s join plantillas_servicios p on p.codigo=s.cod_plantillaservicio join clientes c on c.codigo=s.cod_cliente where s.cod_responsable=$usuario and s.cod_estadosimulacion=5 $sqlAreas order by s.codigo"; //cod_responsable=$usuario and
   ?>
    <!--<label class="col-sm-3 col-form-label">Propuesta :</label>-->
    <div class="col-sm-12">
@@ -40,8 +40,9 @@ if(isset($_GET['s'])){
            $stmt2->execute();
            while ($row2 = $stmt2->fetch(PDO::FETCH_ASSOC)) {
               $codigoSim=$row2['codigo'];
+              $cliente=$row2['cliente'];
               $nomArea=abrevArea_solo($row2['cod_area']);    
-              ?><option value="<?=$codigoSim?>$$$TCP" class="text-right"><?=$row2['nombre']?> - <?=$nomArea?></option>
+              ?><option value="<?=$codigoSim?>$$$TCP" class="text-right"><?=$row2['nombre']?> - <?=$nomArea?> <?=$cliente?></option>
              <?php 
              } ?> 
            </select>
