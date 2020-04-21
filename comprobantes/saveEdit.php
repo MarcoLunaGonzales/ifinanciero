@@ -30,7 +30,7 @@ $fechaHoraActual=date("Y-m-d H:i:s");
 
 $codComprobante=$_POST['codigo_comprobante'];
 $sqlUpdate="UPDATE comprobantes SET  glosa='$glosa', fecha='$fechaHoraActual2',modified_at='$fechaHoraActual', modified_by='$globalUser' where codigo=$codComprobante";
-echo $sqlUpdate;
+//echo $sqlUpdate;
 $stmtUpdate = $dbh->prepare($sqlUpdate);
 $flagSuccess=$stmtUpdate->execute();	
 
