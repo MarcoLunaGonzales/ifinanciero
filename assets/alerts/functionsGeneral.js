@@ -75,6 +75,7 @@ function ajaxObtienePadre(cuenta){
 var numFilas=0;
 var cantidadItems=0;
 var filaActiva=0;
+
 function addCuentaContable(obj) {
   if($("#add_boton").length){
     $("#add_boton").attr("disabled",true);
@@ -447,8 +448,15 @@ function minusCuentaContable(idF){
        $("#mayor"+nuevoId).attr("id","mayor"+i);
        $("#cambiar_cuenta"+nuevoId).attr("onclick","editarCuentaComprobante('"+i+"')");
        $("#cambiar_cuenta"+nuevoId).attr("id","cambiar_cuenta"+i);
-       $("#distribucion"+nuevoId).attr("onclick","nuevaDistribucionPonerFila('"+i+"')");
+       
+       $("#distribucionX"+nuevoId).attr("onclick","nuevaDistribucionPonerFila('"+i+"',1)");
+       $("#distribucionY"+nuevoId).attr("onclick","nuevaDistribucionPonerFila('"+i+"',2)");
+
        $("#distribucion"+nuevoId).attr("id","distribucion"+i);
+       $("#distribucionX"+nuevoId).attr("id","distribucionX"+i);
+       $("#distribucionY"+nuevoId).attr("id","distribucionY"+i);
+
+       
        $("#boton_ret"+nuevoId).attr("onclick","listRetencion('"+i+"')");
        $("#boton_ret"+nuevoId).attr("id","boton_ret"+i);
 

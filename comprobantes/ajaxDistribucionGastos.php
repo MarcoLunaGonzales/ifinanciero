@@ -25,6 +25,8 @@ $globalAdmin=$_SESSION["globalAdmin"];
 
   $json=json_decode($_GET["listDist"]);
   $idFila=$_GET['filas'];
+  //DISMINUIMOS LA FILA EN 1
+  $idFila--;
   $areaDet=$_GET['area'];
   $valor=$_GET['valor'];
   $glosa=$_GET['glosa'];
@@ -62,26 +64,20 @@ $globalAdmin=$_SESSION["globalAdmin"];
     $estadohaber="";
     $haber=number_format($haber, 2, '.', '');
    }
-    
-   // $glosa=$json[$i]->glosa_detalle;
-    //$cod_cuenta=$json[$i]->cuenta;
-    //$cod_cuenta_aux=$json[$i]->cuenta_auxiliar;
-    //$nombre_cuenta=$json[$i]->nom_cuenta;
-    //$nombre_cuenta_aux=$json[$i]->nom_cuenta_auxiliar;
-    //$numero_cuenta=$json[$i]->n_cuenta;
     $idFila=$idFila+1; 
-      ?>   
+?>   
       <script>
-      numFilas++;
-      cantidadItems++;
-      filaActiva=numFilas;
-      //aumentar un itemfactura
-      var nfac=[];
-      itemFacturas.push(nfac);
-
-      var nnn=[];
-      itemEstadosCuentas.push(nnn);
-      document.getElementById("cantidad_filas").value=numFilas;
+          
+          numFilas++;
+          cantidadItems++;
+          filaActiva=numFilas;
+          //aumentar un itemfactura
+          var nfac=[];
+          itemFacturas.push(nfac);
+          var nnn=[];
+          itemEstadosCuentas.push(nnn);
+          document.getElementById("cantidad_filas").value=numFilas;
+          console.log("numFilas: "+numFilas+" cantidadItems: "+cantidadItems+" FilaActiva: "+filaActiva);
       </script>   
 <div id="div<?=$idFila?>">
  <div class="col-md-12">
@@ -160,10 +156,10 @@ $globalAdmin=$_SESSION["globalAdmin"];
                 <i class="material-icons">call_split</i>
               </button>
               <div class="dropdown-menu">   
-                <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion<?=$idFila?>" onclick="nuevaDistribucionPonerFila(<?=$idFila;?>,1);" class="dropdown-item">
+                <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucionX<?=$idFila?>" onclick="nuevaDistribucionPonerFila(<?=$idFila;?>,1);" class="dropdown-item">
                   <i class="material-icons">bubble_chart</i> x Oficina
                 </a>
-                <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion<?=$idFila?>" onclick="nuevaDistribucionPonerFila(<?=$idFila;?>,2);" class="dropdown-item">
+                <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucionY<?=$idFila?>" onclick="nuevaDistribucionPonerFila(<?=$idFila;?>,2);" class="dropdown-item">
                   <i class="material-icons">bubble_chart</i> x Área
                 </a>
               </div>
@@ -197,7 +193,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
     </div>
     <div class="col-sm-1">
       <div class="btn-group">
-        <a href="#" id="boton_fac<?=$idFila;?>" onclick="listFac(<?=$idFila;?>);" class="btn btn-info btn-sm btn-fab">
+        <a href="#" id="boton_fac<?=$idFila;?>" onclick="listFac(<?=$idFila;?>);" class="btn btn-info btn-sm btn-fab d-none">
                <i class="material-icons">featured_play_list</i><span id="nfac<?=$idFila;?>" class="count bg-warning">0</span>
              </a>
       <a rel="tooltip" href="#" class="btn btn-danger btn-sm btn-fab" id="boton_remove<?=$idFila;?>" onclick="minusCuentaContable('<?=$idFila;?>');">

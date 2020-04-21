@@ -1,20 +1,33 @@
 <?php
 require_once '../conexion.php';
+require_once '../functions.php';
 require_once 'configModule.php';
 
+session_start();
 
 $tipoComprobante=$_GET["tipo_comprobante"];
 $fecha=$_GET["fecha"];
 
+$globalGestion=$_SESSION["globalGestion"];
+$anio=nameGestion($globalGestion);
+
+$globalUnidad=$_SESSION["globalUnidad"];
+$globalMes=$_SESSION["globalMes"];
+
+
 $db = new Conexion();
-$sqlUO="SELECT fecha from comprobantes where cod_tipocomprobante=$tipoComprobante ORDER BY codigo desc limit 1";
+$sqlUO="SELECT max(fecha)as fecha from comprobantes where cod_tipocomprobante=$tipoComprobante and cod_unidadorganizacional='$globalUnidad' and YEAR(fecha)='$anio' and MONTH(fecha)='$globalMes'";
+//echo $sqlUO;
 $stmt = $db->prepare($sqlUO);
 $stmt->execute();
+$fechaDefault=$anio."-".$globalMes."-01";
+$fechaComprobante=$anio."-".$globalMes."-01";
 while ($row = $stmt->fetch()){
-	$fecha=$row['fecha'];
+	$fechaComprobante=$row['fecha'];
 }
- // $fechaMin = date_format($fecha, 'Y-m-d');
-$fechaMin = date("Y-m-d",strtotime($fecha."+ 1 days"));
- 
+$fechaMin = date("Y-m-d",strtotime($fechaComprobante."+ 0 days"));
+$fechaMax = date("Y-m-d",strtotime($fechaDefault."+ 1 month"));
+$fechaMax = date("Y-m-d",strtotime($fechaMax."- 1 days"));
+
 ?>
-<input class="form-control" type="date" name="fecha" min="<?=$fechaMin?>" value="<?=$fechaMin?>" id="fecha" required/>
+<input class="form-control" type="date" name="fecha" min="<?=$fechaMin;?>" value="<?=$fechaMin;?>" max="<?=$fechaMax;?>" id="fecha" required/>
