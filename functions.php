@@ -5106,7 +5106,7 @@ where d.glosa=e.glosa and d.cod_anio=$anio and d.cod_simulacionservicio=$simulac
 
 function obtenerCodigoSimServicioTCPTCS($cod){
    $dbh = new Conexion();
-   $stmt = $dbh->prepare("SELECT IFNULL(max(c.nombre)+1,1)as codigo from simulaciones_servicios c, plantillas_servicios p where p.cod_area=$cod and c.cod_plantillaservicio=p.codigo");
+   $stmt = $dbh->prepare("SELECT IFNULL(max(CAST(c.nombre AS INT))+1,1)as codigo from simulaciones_servicios c, plantillas_servicios p where p.cod_area=$cod and c.cod_plantillaservicio=p.codigo");
    $stmt->execute();
    $codigoComprobante=0;
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
