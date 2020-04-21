@@ -18,9 +18,71 @@ $globalUnidad=$_SESSION["globalUnidad"];
 $globalArea=$_SESSION["globalArea"];
 $globalAdmin=$_SESSION["globalAdmin"];
 
-$fechaHoraActual=date("Y-m-d H:i:s");
 
-$codSolicitud=$_POST['cod_solicitud'];
+if(isset($_POST['numero'])){
+    $numero=$_POST['numero'];
+    $tipoSol=$_POST['tipo_solicitud'];
+  if($tipoSol!=2){
+    $codProv=0;
+    if($tipoSol==3){
+      //datos para solicitud recursos manual manual
+      $codSim=0;
+      $codSimServ=0;
+    }else{
+      //datos para solicitud recursos SIMULACION (PROPUESTA)
+     $simu=explode("$$$",$_POST['simulaciones']);
+     if($simu[1]=="TCP"){
+      //tcp o tcs
+      $codSim=0;
+      $codSimServ=$simu[0];
+      $areaUnidad=obtenerUnidadAreaPorSimulacionServicio($codSimServ);
+     }else{
+      // sec
+      $codSim=$simu[0];
+      $codSimServ=0;
+      $areaUnidad=obtenerUnidadAreaPorSimulacionCosto($codSim);
+     }
+     $globalArea=$areaUnidad[0];
+     $globalUnidad=$areaUnidad[1];     
+    }
+  }else{
+    //datos para solicitud recursos proveeedor
+    $codProv=$_POST['proveedores'];
+    $codSim=0;
+    $codSimServ=0;
+  }
+
+   $codCont=0;//CODIGO DE CONTRATO
+  $fecha= date("Y-m-d h:m:s");
+  $codSolicitud=obtenerCodigoSolicitudRecursos();
+  $dbh = new Conexion();
+  if(isset($_POST['usuario_ibnored_v'])){
+       $v=$_POST['usuario_ibnored_v'];
+       $sqlInsert="INSERT INTO solicitud_recursos (codigo, cod_personal,cod_unidadorganizacional,cod_area,fecha,numero,cod_simulacion,cod_proveedor,cod_simulacionservicio,cod_contrato,idServicio) 
+       VALUES ('".$codSolicitud."','".$globalUser."','".$globalUnidad."', '".$globalArea."', '".$fecha."','".$numero."','".$codSim."','".$codProv."','".$codSimServ."','".$codCont."','".$v."')";
+  }else{
+    $sqlInsert="INSERT INTO solicitud_recursos (codigo, cod_personal,cod_unidadorganizacional,cod_area,fecha,numero,cod_simulacion,cod_proveedor,cod_simulacionservicio,cod_contrato) 
+    VALUES ('".$codSolicitud."','".$globalUser."','".$globalUnidad."', '".$globalArea."', '".$fecha."','".$numero."','".$codSim."','".$codProv."','".$codSimServ."','".$codCont."')";
+  }
+  $stmtInsert = $dbh->prepare($sqlInsert);
+  $stmtInsert->execute();
+
+  //enviar propuestas para la actualizacion de ibnorca
+  $fechaHoraActual=date("Y-m-d H:i:s");
+  $idTipoObjeto=2708;
+  $idObjeto=2721; //regristado
+  $obs="Registro de Solicitud";
+  if(isset($_POST['usuario_ibnored_u'])){
+       $u=$_POST['usuario_ibnored_u'];
+       actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codSolicitud,$fechaHoraActual,$obs);
+  }else{
+       actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codSolicitud,$fechaHoraActual,$obs);
+  }
+
+}
+
+
+
 
 $flagSuccess=true;
 //subir archivos al servidor
