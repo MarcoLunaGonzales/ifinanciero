@@ -25,6 +25,9 @@ if(isset($_GET["cod_simulacion"])){
  if(($anio==0||$anio==1)&&$codAreaX==38){
    $tituloItem="Año 1 (Etapa".($anio+1).")";
  }
+ if(($anio>1)&&$codAreaX==38){
+   $tituloItem="Año ".$anio." (Seguimiento".($anio-1).")";
+ }
  ?>
  <h5 class="font-weight-bold"><center><?=$tituloItem?></center></h5>
   <table class="table table-condensed table-bordered">
@@ -129,7 +132,7 @@ if(isset($_GET["cod_simulacion"])){
            <input type="hidden" id="cantidad_columnas<?=$anio?>CCCC<?=$iii?>" value="<?=$nroColumnas?>">
          </td>
          <td class="text-left small">
-            <input class="form-control text-info text-right" type="<?=$claseDeshabilitado?>" <?=($banderaHab==0)?"readonly":"";?> id="dias_honorario<?=$anio?>CCCC<?=$iii?>" value="<?=$diasTipo?>" onchange="calcularTotalPersonalServicioAuditorHonorarios(<?=$anio?>)" onkeyup="calcularTotalPersonalServicioAuditorHonorarios(<?=$anio?>)">
+            <input class="form-control text-info text-right" step="0.5" type="<?=$claseDeshabilitado?>" <?=($banderaHab==0)?"readonly":"";?> id="dias_honorario<?=$anio?>CCCC<?=$iii?>" value="<?=$diasTipo?>" onchange="calcularTotalPersonalServicioAuditorHonorarios(<?=$anio?>)" onkeyup="calcularTotalPersonalServicioAuditorHonorarios(<?=$anio?>)">
             <input type="<?=$claseDeshabilitadoOFF?>" id="dias_honorarioOFF<?=$anio?>CCCC<?=$iii?>" readonly name="dias_honorarioOFF<?=$anio?>CCCC<?=$iii?>" class="form-control" value="0">
          </td>
          <td class="text-left small">
@@ -197,7 +200,7 @@ if(isset($_GET["cod_simulacion"])){
 
          ?>
          <td class="text-right">
-          <input type="<?=$claseDeshabilitado?>" min="0" <?=($banderaHab==0)?"readonly":"";?> id="modal_dias_personalItem<?=$anio?>CCCC<?=$ncol?>RRR<?=$iii?>" name="modal_dias_personalItem<?=$anio?>CCCC<?=$ncol?>RRR<?=$iii?>" class="form-control fondo-boton fondo-boton-active text-right" onchange="calcularTotalPersonalServicioAuditor(<?=$anio?>)" onkeyUp="calcularTotalPersonalServicioAuditor(<?=$anio?>)" value="<?=$diasPres?>">
+          <input type="<?=$claseDeshabilitado?>" min="0" <?=($banderaHab==0)?"readonly":"";?> step="0.5" id="modal_dias_personalItem<?=$anio?>CCCC<?=$ncol?>RRR<?=$iii?>" name="modal_dias_personalItem<?=$anio?>CCCC<?=$ncol?>RRR<?=$iii?>" class="form-control fondo-boton fondo-boton-active text-right" onchange="calcularTotalPersonalServicioAuditor(<?=$anio?>)" onkeyUp="calcularTotalPersonalServicioAuditor(<?=$anio?>)" value="<?=$diasPres?>">
           <input type="<?=$claseDeshabilitadoOFF?>" id="modal_dias_personalItemOFF<?=$anio?>CCCC<?=$ncol?>RRR<?=$iii?>" readonly name="modal_dias_personalItemOFF<?=$anio?>CCCC<?=$ncol?>RRR<?=$iii?>" class="form-control" value="0">
            <!--<select class="form-control selectpicker form-control-sm" data-size="6" data-style="fondo-boton fondo-boton-active" name="modal_dias_personalItem<?=$anio?>CCCC<?=$ncol?>RRR<?=$iii?>" id="modal_dias_personalItem<?=$anio?>CCCC<?=$ncol?>RRR<?=$iii?>" onchange="calcularTotalPersonalServicioAuditor(<?=$anio?>)">
               <?php 

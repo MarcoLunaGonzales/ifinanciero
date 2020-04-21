@@ -1148,6 +1148,7 @@ function nuevaDistribucion(){
   var haber = $("#haber"+fila).val();
   var glosa = $("#glosa_detalle"+fila).val();
   var area=$("#area"+fila).val();
+  var oficina=$("#unidad"+fila).val();
   var cuenta_aux=$("#cuenta_auxiliar"+fila).val();
   var valor=0; var cond=9;
   if(debe==""&&haber==""){
@@ -1174,15 +1175,15 @@ function nuevaDistribucion(){
     ajax=nuevoAjax();
     if(tipoDistribucion==1){
       urlDist="ajaxDistribucionGastos.php";
-      ajax.open("GET",urlDist+"?area="+area+"&filas="+cantidadItems+"&cuenta_aux="+cuenta_aux+"&cuenta="+cuenta+"&cond="+cond+"&valor="+valor+"&glosa="+glosa+"&listDist="+JSON.stringify(distribucionPor),true);
+      ajax.open("GET",urlDist+"?fila="+fila+"&unidad="+oficina+"&area="+area+"&filas="+cantidadItems+"&cuenta_aux="+cuenta_aux+"&cuenta="+cuenta+"&cond="+cond+"&valor="+valor+"&glosa="+glosa+"&listDist="+JSON.stringify(distribucionPor),true);
     }else{
       urlDist="ajaxDistribucionGastosArea.php";
-      ajax.open("GET",urlDist+"?area="+area+"&filas="+cantidadItems+"&cuenta_aux="+cuenta_aux+"&cuenta="+cuenta+"&cond="+cond+"&valor="+valor+"&glosa="+glosa+"&listDist="+JSON.stringify(distribucionPorArea),true);
+      ajax.open("GET",urlDist+"?fila="+fila+"&unidad="+oficina+"&area="+area+"&filas="+cantidadItems+"&cuenta_aux="+cuenta_aux+"&cuenta="+cuenta+"&cond="+cond+"&valor="+valor+"&glosa="+glosa+"&listDist="+JSON.stringify(distribucionPorArea),true);
     }
     ajax.onreadystatechange=function(){
       if (ajax.readyState==4) {
         var fi=$("#fiel");
-        minusCuentaContable(fila);
+        //minusCuentaContable(fila);
         fi.append(ajax.responseText);
         $('.selectpicker').selectpicker(["refresh"]);
       }
