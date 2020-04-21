@@ -231,7 +231,7 @@ $dbh = new Conexion();
                        <label class="col-sm-2 col-form-label">Tipo del Servicio</label>
                        <div class="col-sm-7">
                         <div class="form-group">
-                          <select class="selectpicker form-control" data-size="6" data-live-search="true" name="tipo_servicio" id="tipo_servicio" data-style="btn btn-info"  required>       
+                          <select class="selectpicker form-control" data-size="6" data-live-search="true" multiple name="tipo_servicio[]" id="tipo_servicio" data-style="btn btn-info"  required>       
                                 <?php
                                  $stmt = $dbh->prepare("select DISTINCT codigo_n2,descripcion_n2 from cla_servicios where codigo_n1=109 order by 2");
                                  $stmt->execute();
