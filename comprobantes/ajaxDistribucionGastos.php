@@ -25,8 +25,10 @@ $globalAdmin=$_SESSION["globalAdmin"];
 
   $json=json_decode($_GET["listDist"]);
   $idFila=$_GET['filas'];
+  $idFilaOrigen=$_GET['fila'];
   //DISMINUIMOS LA FILA EN 1
-  $idFila--;
+  //$idFila--;
+  $unidadFila=$_GET['unidad'];
   $areaDet=$_GET['area'];
   $valor=$_GET['valor'];
   $glosa=$_GET['glosa'];
@@ -64,7 +66,20 @@ $globalAdmin=$_SESSION["globalAdmin"];
     $estadohaber="";
     $haber=number_format($haber, 2, '.', '');
    }
+   if($unidadDet==$unidadFila){
+     //mostrar los datos directamente
+    ?>
+    <script>
+    var filaUno='<?=$idFilaOrigen?>';
+    console.log("numFilas: "+filaUno+" ENTROOOO");
+    $("#divCuentaDetalle"+filaUno).html('<span class="text-info font-weight-bold">['+"<?=$n_cuenta?>"+']-'+"<?=$nom_cuenta?>"+' </span><br><span class="text-info font-weight-bold small">'+"<?=$nom_cuenta_auxiliar?>"+'</span><p class="text-muted">'+"<?=$porcent?>"+' <span>%</span> de '+"<?=$valor?>"+'</p>');
+    $("#debe"+filaUno).val('<?=$debe?>');
+    $("#haber"+filaUno).val('<?=$haber?>');
+    </script>
+    <?php
+   }else{
     $idFila=$idFila+1; 
+
 ?>   
       <script>
           
@@ -78,7 +93,8 @@ $globalAdmin=$_SESSION["globalAdmin"];
           itemEstadosCuentas.push(nnn);
           document.getElementById("cantidad_filas").value=numFilas;
           console.log("numFilas: "+numFilas+" cantidadItems: "+cantidadItems+" FilaActiva: "+filaActiva);
-      </script>   
+      </script> 
+     
 <div id="div<?=$idFila?>">
  <div class="col-md-12">
   <div class="row">
@@ -206,7 +222,8 @@ $globalAdmin=$_SESSION["globalAdmin"];
  <div class="h-divider"></div>
 </div>
 <script>$("#div"+<?=$idFila?>).bootstrapMaterialDesign();</script>
-      <?php
+      <?php 
+    }//fin de else
   }
 ?>
 <script>calcularTotalesComprobante("null");</script>
