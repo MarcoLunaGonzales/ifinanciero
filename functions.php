@@ -5194,6 +5194,44 @@ function obtenerServiciosClaServicioTipo($id,$valor){
    return $stmt;
 }
 
+function buscarFechasMinMaxComprobante($tipoComprobante, $nroCorrelativo, $UO, $anioTrabajo, $mesTrabajo){
+  $dbh = new Conexion();   
+
+  $fechaDefaultMin=$anioTrabajo."-".$mesTrabajo."-01";
+  $fechaDefaultMin=date("Y-m-d",strtotime($fechaDefaultMin));
+  $fechaDefaultMax=date("Y-m-d",strtotime($fechaDefaultMin."+ 1 month"));
+  $fechaDefaultMax=date("Y-m-d",strtotime($fechaDefaultMax."- 1 days")); 
+
+  $numeroMenor=$nroCorrelativo-1;
+  $numeroMayor=$nroCorrelativo+1;
+
+  $sql="SELECT max(fecha)as fecha from comprobantes where cod_tipocomprobante=$tipoComprobante and cod_unidadorganizacional='$UO' and YEAR(fecha)='$anioTrabajo' and MONTH(fecha)='$mesTrabajo' and numero='$numeroMenor'";
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  $fechaMenor="";
+  while ($row = $stmt->fetch()){
+    $fechaMenor=$row['fecha'];
+  }
+  if($fechaMenor=="" || $fechaMenor==null){
+    $fechaMenor=$fechaDefaultMin;  
+  }
+
+  $sql="SELECT max(fecha)as fecha from comprobantes where cod_tipocomprobante=$tipoComprobante and cod_unidadorganizacional='$UO' and YEAR(fecha)='$anioTrabajo' and MONTH(fecha)='$mesTrabajo' and numero='$numeroMayor'";
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  $fechaMayor="";
+  while ($row = $stmt->fetch()){
+    $fechaMayor=$row['fecha'];
+  }
+  if($fechaMayor=="" || $fechaMayor==null){
+    $fechaMayor=$fechaDefaultMax;  
+  }
+  $fechaMenor=date("Y-m-d",strtotime($fechaMenor));
+  $fechaMayor=date("Y-m-d",strtotime($fechaMayor));
+
+  return array($fechaMenor,$fechaMayor);  
+}
+
 ?>
 
 

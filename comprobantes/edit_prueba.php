@@ -1,6 +1,10 @@
 <?php
 session_start();
 set_time_limit(0);
+
+setlocale(LC_TIME, "Spanish");
+
+
 require_once '../layouts/bodylogin2.php';
 require_once '../conexion.php';
 require_once '../styles.php';
@@ -23,6 +27,8 @@ $globalUnidad=$_SESSION["globalUnidad"];
 $globalNombreUnidad=$_SESSION['globalNombreUnidad'];
 $globalArea=$_SESSION["globalArea"];
 $globalAdmin=$_SESSION["globalAdmin"];
+$globalMesActivo=$_SESSION['globalMes'];
+
 
 $data = obtenerComprobante($_GET['codigo']);
 // bindColumn
@@ -118,9 +124,12 @@ $arrayFacturasGenerales=[];
 	 $arrayFacturasGenerales[$un]['fecha']=$row['fecha'];
 	 $arrayFacturasGenerales[$un]['razon_social']=$row['razon_social'];
 	 $arrayFacturasGenerales[$un]['importe']=$row['importe'];
-	 $arrayFacturasGenerales[$un]['exento']=$row['exento'];
 	 $arrayFacturasGenerales[$un]['nro_autorizacion']=$row['nro_autorizacion'];
 	 $arrayFacturasGenerales[$un]['codigo_control']=$row['codigo_control'];
+	 $arrayFacturasGenerales[$un]['exento']=$row['exento'];
+	 $arrayFacturasGenerales[$un]['ice']=$row['ice'];
+	 $arrayFacturasGenerales[$un]['tipo_compra']=$row['tipo_compra'];
+	 $arrayFacturasGenerales[$un]['tasa_cero']=$row['tasa_cero'];
 	$un++; 
 	}
 //estados de Cuentas
@@ -215,6 +224,8 @@ $stmt->execute();
 			 <script>configuracionCentro.push({cod_unidad:<?=$codUnidadX?>,cod_grupo:<?=$codGrupoX?>,fijo:<?=$fijoX?>,cod_area:<?=$codAreaX?>});</script>
 		    <?php
 			 }
+
+			$cod_cuenta_configuracion_iva=obtenerValorConfiguracion(3);//cuenta iva
 		    ?>
 
 <form id="formRegComp" class="form-horizontal" action="saveEdit.php" method="post" enctype="multipart/form-data">
@@ -277,7 +288,7 @@ $stmt->execute();
 			 }
 		    ?>
 		
-
+			<input type="hidden" name="cod_cuenta_configuracion_iva" id="cod_cuenta_configuracion_iva" value="<?=$cod_cuenta_configuracion_iva;?>">
 			<input type="hidden" name="cantidad_filas" id="cantidad_filas" value="<?=$contadorRegistros;?>">
 			<input type="hidden" name="codigo_comprobante" id="codigo_comprobante" value="<?=$globalCode;?>">
 
@@ -292,9 +303,9 @@ $stmt->execute();
 	    <label class="col-sm-1 col-form-label" style="text-align: center;">-</label>
 	    <label class="col-sm-1 col-form-label" style="text-align: center;">Gestion</label>
 	    <label class="col-sm-2 col-form-label" style="text-align: center;">Oficina</label>
-	    <label class="col-sm-2 col-form-label" style="text-align: center;">Fecha</label>
 	    <label class="col-sm-2 col-form-label" style="text-align: center;">Tipo Comprobante</label>
 	    <label class="col-sm-2 col-form-label" style="text-align: center;">Nro. Comprobante</label>
+	    <label class="col-sm-2 col-form-label" style="text-align: center;">Fecha</label>
 	    <label class="col-sm-1 col-form-label" style="text-align: center;">-</label>
  	</div>
 					<div class="row">
@@ -302,9 +313,15 @@ $stmt->execute();
 						</div>
 				 	<?php 
                   while ($row = $data->fetch(PDO::FETCH_BOUND)) {
-                  	$fechaComp=explode("-",$fechaComprobante);
-                  	$fechaComp2=explode(" ",$fechaComp[2]);
-                  	$fechaComprobanteModal=$fechaComp2[0]."/".$fechaComp[1]."/".$fechaComp[0];
+                  	$fechaComprobanteModal=$fechaComprobante;
+					$fechaComprobanteModal = date("Y-m-d",strtotime($fechaComprobanteModal));
+                  	
+                  	$vectorFechas=buscarFechasMinMaxComprobante($tipoComprobante, $nroCorrelativo, $globalUnidad, $globalNombreGestion, $globalMesActivo);
+                  	
+                  	$cadenaVectorFechas=implode(",",$vectorFechas);
+                  	list($fechaInicioDefault, $fechaFinalDefault)=explode(",", $cadenaVectorFechas);
+                  	//echo $fechaInicioDefault." ".$fechaFinalDefault;
+                  	//$fechaMaxima=buscarFechaMaxima($tipoComprobante, $nroCorrelativo, $globalUnidad);
 				 	?>
 						<div class="col-sm-1">
 							<div class="form-group">
@@ -321,13 +338,6 @@ $stmt->execute();
 						</div>
 
 						<div class="col-sm-2">
-							<div class="form-group">
-						  		<!--<label class="bmd-label-static">Fecha</label>-->
-						  		<input class="form-control datepicker" type="text" name="fecha" value="<?=$fechaComprobanteModal;?>" id="fecha"/>
-							</div>
-						</div>
-
-						<div class="col-sm-2">
 				        	<div class="form-group">
 						        <select class="selectpicker form-control form-control-sm" name="tipo_comprobante" id="tipo_comprobante" data-style="<?=$comboColor;?>" onChange="ajaxCorrelativo(this);">
 								  	
@@ -337,7 +347,7 @@ $stmt->execute();
 							  	}else{
                                    ?><option disabled value="">Tipo</option><?php
 							  	}
-							  	$stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM tipos_comprobante where cod_estadoreferencial=1 order by 1");
+							  	$stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM tipos_comprobante where cod_estadoreferencial=1 and codigo='$tipoComprobante' order by 1");
 								$stmt->execute();
 								while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 									$codigoX=$row['codigo'];
@@ -358,6 +368,13 @@ $stmt->execute();
 							<div class="form-group">
 						  		<!--<label for="nro_correlativo" class="bmd-label-static">#</label>-->
 						  		<div id="divnro_correlativo"><input class="form-control" type="number" name="nro_correlativo" id="nro_correlativo" min="1" required="true" readonly="true" value="<?=$nroCorrelativo?>" /></div>
+							</div>
+						</div>
+
+						<div class="col-sm-2">
+							<div class="form-group">
+						  		<!--<label class="bmd-label-static">Fecha</label>-->
+						  		<input class="form-control" type="date" name="fecha" value="<?=$fechaComprobanteModal;?>" id="fecha" min="<?=$fechaInicioDefault;?>" max="<?=$fechaFinalDefault;?>" />
 							</div>
 						</div>
 						
@@ -459,6 +476,7 @@ $stmt->execute();
 							$totaldebDet+=$row['debe'];$totalhabDet+=$row['haber'];
 							$codigoCuenta=$row['codigo'];
 
+							//echo $unidadDet." ".$areaDet;
 
 						 ?>
                          <div id="div<?=$idFila?>">               	         
@@ -501,7 +519,7 @@ $stmt->execute();
 			  	                         for ($i=0; $i < count($arrayAreas) ; $i++) {
 			  	                             $codigoX=$arrayAreas[$i]['codigo'];
 			  	                             $abrevX=$arrayAreas[$i]['abreviatura'];
-			  	                         	if($codigoX==$unidadDet){
+			  	                         	if($codigoX==$areaDet){
                                              ?><option value="<?=$codigoX;?>" selected><?=$abrevX;?></option><?php
 				                           	}else{
                                               ?><option value="<?=$codigoX;?>"><?=$abrevX;?></option><?php
@@ -594,7 +612,7 @@ $stmt->execute();
 		                         	<a href="#" title="Retenciones" id="boton_ret<?=$idFila;?>" onclick="listRetencion(<?=$idFila;?>);" class="btn btn-warning text-dark btn-sm btn-fab">
                                      <i class="material-icons">ballot</i>
                                    </a>
-		                         	<a title="Facturas" href="#" id="boton_fac<?=$idFila;?>" onclick="listFac(<?=$idFila;?>);" class="btn btn-info btn-sm btn-fab">
+		                         	<a title="Facturas" href="#" id="boton_fac<?=$idFila;?>" onclick="listFac(<?=$idFila;?>);" class="btn btn-info btn-sm btn-fab <?=($cod_cuenta_configuracion_iva==$codigoCuenta)?'':'d-none';?>" >
                                       <i class="material-icons">featured_play_list</i><span id="nfac<?=$idFila;?>" class="count bg-warning">0</span>
                                     </a>
                                    <a title="Eliminar (alt + q)" rel="tooltip" href="#" class="btn btn-danger btn-sm btn-fab" id="boton_remove<?=$idFila;?>" onclick="minusCuentaContable('<?=$idFila;?>');">
@@ -620,11 +638,14 @@ $stmt->execute();
 				                    $fechaFac=$arrayFacturasGenerales[$i]['fecha'];
 				                    $razon=$arrayFacturasGenerales[$i]['razon_social'];
 				                    $importe=$arrayFacturasGenerales[$i]['importe'];
-				                    $exento=$arrayFacturasGenerales[$i]['exento'];
 				                    $autorizacion=$arrayFacturasGenerales[$i]['nro_autorizacion'];
 				                    $control=$arrayFacturasGenerales[$i]['codigo_control'];
+				                    $exento=$arrayFacturasGenerales[$i]['exento'];
+				                    $ice=$arrayFacturasGenerales[$i]['ice'];
+				                    $tipocompra=$arrayFacturasGenerales[$i]['tipo_compra'];
+				                    $tasacero=$arrayFacturasGenerales[$i]['tasa_cero'];
 			  	                   if($codX==$codDet){
-			  	                     ?><script>abrirFactura(<?=$idFila?>,'<?=$nit?>',<?=$factura?>,'<?=$fechaFac?>','<?=$razon?>',<?=$importe?>,<?=$exento?>,'<?=$autorizacion?>','<?=$control?>');</script><?php
+			  	                     ?><script>abrirFactura(<?=$idFila?>,'<?=$nit?>',<?=$factura?>,'<?=$fechaFac?>','<?=$razon?>',<?=$importe?>,<?=$exento?>,'<?=$autorizacion?>','<?=$control?>','<?=$ice?>','<?=$tipocompra?>','<?=$tasacero?>');</script><?php
 			  	                   }
 			                   } 	
 

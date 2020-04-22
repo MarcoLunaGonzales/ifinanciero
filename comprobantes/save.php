@@ -24,8 +24,9 @@ $globalUnidad=$_SESSION["globalUnidad"];
 $globalArea=$_SESSION["globalArea"];
 $globalAdmin=$_SESSION["globalAdmin"];
 
-$porcionesFecha = explode("/", $_POST['fecha']);
-$fechaHoraActual=$porcionesFecha[2]."-".$porcionesFecha[1]."-".$porcionesFecha[0];
+$fechaHoraActual=$_POST["fecha"];
+//$porcionesFecha = explode("/", $_POST['fecha']);
+//$fechaHoraActual=$porcionesFecha[2]."-".$porcionesFecha[1]."-".$porcionesFecha[0];
 
 $codComprobante=obtenerCodigoComprobante();
 $sqlInsert="INSERT INTO comprobantes (codigo, cod_empresa, cod_unidadorganizacional, cod_gestion, cod_moneda, cod_estadocomprobante, cod_tipocomprobante, fecha, numero, glosa, created_at, created_by, modified_at, modified_by) VALUES ('$codComprobante', '1', '$globalUnidad', '$codGestion', '1', '1', '$tipoComprobante', '$fechaHoraActual', '$nroCorrelativo', '$glosa', '$fechaHoraActual', '$globalUser', '$fechaHoraActual', '$globalUser')";
@@ -154,15 +155,10 @@ for ($i=1;$i<=$cantidadFilas;$i++){
          //FIN DE ESTADOS DE CUENTA
 	}
 } 
+
 echo "<script>
 window.opener.location.reload();
 window.close();
 </script>";
-/*if($flagSuccessDetalle==true){
-	showAlertSuccessError(true,"../".$urlList);	
-}else{
-	showAlertSuccessError(false,"../".$urlList);
-}*/
-
 
 ?>

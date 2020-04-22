@@ -575,6 +575,7 @@ function saveFactura(){
     
   var monto_debe_total_comprobante = $("#totaldeb").val();
   var monto_suma_factura=parseInt($('#imp_fac').val())+parseInt($('#ice_fac').val())+parseInt($('#exe_fac').val());
+  console.log("SUMAS FACTURAS: "+monto_suma_factura+" "+monto_debe_total_comprobante);
   if(monto_suma_factura != monto_debe_total_comprobante){
     alert("El monto registrado en las facturas difiere del total!");
   }else{
@@ -618,16 +619,19 @@ function saveFactura(){
   
   
 }
- function abrirFactura(index,nit,nro,fecha,razon,imp,exe,aut,con){
+ function abrirFactura(index,nit,nro,fecha,razon,imp,exe,aut,con,ice,tipocompra,tasacero){
    var factura={
     nit: nit,
     nroFac: nro,
     fechaFac: fecha,
     razonFac:razon,
     impFac: imp,
-    exeFac: exe,
     autFac: aut,
-    conFac: con
+    conFac: con,
+    exeFac: exe,
+    iceFac: ice,
+    tipoCompra: tipocompra,
+    tasaCero: tasacero
     }
     itemFacturas[index-1].push(factura);
     //listarFact(index);
