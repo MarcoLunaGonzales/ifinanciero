@@ -52,7 +52,7 @@ if($cantidad_items>0){
                       <i class="material-icons">polymer</i>
                     </div>
                     <h4 class="card-title"><b>Solicitud de Facturación</b></h4>
-                    <h4 class="card-title" align="center"><b><?=$nombre_simulacion?> - <?=$name_area_simulacion?></b></h4>
+                    <h4 class="card-title" align="center"><b>Propuesta : <?=$nombre_simulacion?> - <?=$name_area_simulacion?></b></h4>
                   </div>
                   <div class="card-body">
                       <table class="table" id="tablePaginator">
@@ -155,13 +155,13 @@ if($cantidad_items>0){
 
   <!-- small modal -->
   <div class="modal fade modal-primary" id="modalDetalleFac" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
       <div class="modal-content card">
                 <div class="card-header card-header-warning card-header-icon">
                   <div class="card-icon">
                     <i class="material-icons">settings_applications</i>
                   </div>
-                  <h4 class="card-title">Areas Registradas</h4>
+                  <h4 class="card-title">Detalle Solicitud</h4>
                 </div>
                 <div class="card-body">
                   <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
@@ -171,7 +171,7 @@ if($cantidad_items>0){
                     <thead>
                       <tr class="text-dark bg-plomo">
                       <th>#</th>
-                      <th>Servicio</th>
+                      <th>Item</th>
                       <th>Cantidad</th>
                       <th>Importe</th>  
                       <th>Descripción Alterna</th>                    

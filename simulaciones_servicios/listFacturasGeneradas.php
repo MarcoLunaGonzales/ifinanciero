@@ -113,16 +113,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                         </tbody>
                       </table>
                   </div>
-                </div>
-                <!-- <div class="card-footer fixed-bottom">
-                 <?php 
-                if($globalAdmin==1){              
-                    ?><a href="<?=$urlRegisterSolicitudfactura;?>&cod_s=<?=$codigo_simulacion?>&cod_f=0&cod_sw=1" target="_self" class="<?=$buttonNormal;?>">Registrar</a>
-                    <a href='<?=$urlList;?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
-                    <?php                
-                } 
-                 ?>
-                </div> -->      
+                </div>                
               </div>
           </div>  
     </div>

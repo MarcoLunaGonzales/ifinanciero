@@ -8783,7 +8783,7 @@ function filaTablaAGeneral(tabla,index){
   var html="";
   for (var i = 0; i < detalle_tabla_general[index-1].length; i++) {
     //alert(detalle_tabla_general[index-1][i].nombre);
-    html+="<tr><td>"+(i+1)+"</td><td>"+detalle_tabla_general[index-1][i].serviciox+"</td><td>"+detalle_tabla_general[index-1][i].cantidadX+"</td><td>"+detalle_tabla_general[index-1][i].precioX+"</td><td>"+detalle_tabla_general[index-1][i].descripcion_alternaX+"</td></tr>";
+    html+="<tr><td>"+(i+1)+"</td><td>"+detalle_tabla_general[index-1][i].serviciox+"</td><td>"+detalle_tabla_general[index-1][i].cantidadX+"</td><td>"+number_format(detalle_tabla_general[index-1][i].precioX,2)+"</td><td>"+detalle_tabla_general[index-1][i].descripcion_alternaX+"</td></tr>";
   }
   tabla.html(html);
   $("#modalDetalleFac").modal("show");  

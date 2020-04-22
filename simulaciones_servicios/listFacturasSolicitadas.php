@@ -88,8 +88,35 @@ $globalAdmin=$_SESSION["globalAdmin"];
 
                             // --------
                             $responsable=namePersonal($cod_personal);//nombre del personal
-                            $nombre_area=abrevArea($cod_area);//nombre del personal
-                            $nombre_uo=nameUnidad($cod_unidadorganizacional);//nombre del personal
+                            $nombre_area=abrevArea($cod_area);//nombre del area
+                            $nombre_uo=nameUnidad($cod_unidadorganizacional);//nombre de la oficina
+
+                            //los registros de la factura
+                            $dbh1 = new Conexion();
+                            $sqlA="SELECT sf.*,t.descripcion as nombre_serv from solicitudes_facturaciondetalle sf,cla_servicios t 
+                                where sf.cod_claservicio=t.idclaservicio and sf.cod_solicitudfacturacion=$codigo_facturacion";
+                            $stmt2 = $dbh1->prepare($sqlA);                                   
+                            $stmt2->execute(); 
+                            $nc=0;
+                            while ($row2 = $stmt2->fetch(PDO::FETCH_ASSOC)) {
+                              $dato = new stdClass();//obejto
+                              $codFila=(int)$row2['codigo'];
+                              $cod_claservicioX=trim($row2['nombre_serv']);
+                              $cantidadX=trim($row2['cantidad']);
+                              $precioX=trim($row2['precio']);
+                              $descripcion_alternaX=trim($row2['descripcion_alterna']);
+                              $dato->codigo=($nc+1);
+                              $dato->cod_facturacion=$codFila;
+                              $dato->serviciox=$cod_claservicioX;
+                              $dato->cantidadX=$cantidadX;
+                              $dato->precioX=$precioX;
+                              $dato->descripcion_alternaX=$descripcion_alternaX;
+                              $datos[$index-1][$nc]=$dato;                           
+                              $nc++;
+                            }
+                            $cont[$index-1]=$nc;  
+
+
                             ?>
                           <tr>
                             <td align="center"><?=$index;?></td>
@@ -128,8 +155,11 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                   <?php }else{// generar facturas
                                     ?>
                                     <button title="Generar Factura"  target="blank" class="btn btn-success" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlGenerarFacturas2;?>?codigo=<?=$codigo_facturacion;?>')">
-                                      <i class="material-icons">monetization_on</i>
+                                      <i class="material-icons">receipt</i>
                                     </button>
+                                    <a href='#' rel="tooltip" class="btn btn-warning" onclick="filaTablaAGeneral($('#tablasA_registradas'),<?=$index?>)">
+                                      <i class="material-icons" title="Ver Detalle">settings_applications</i>
+                                    </a>
                                   
                                   <?php }                           
                                   ?>
@@ -145,21 +175,60 @@ $globalAdmin=$_SESSION["globalAdmin"];
                         </tbody>
                       </table>
                   </div>
-                </div>
-                <!-- <div class="card-footer fixed-bottom">
-                 <?php 
-                if($globalAdmin==1){              
-                    ?><a href="<?=$urlRegisterSolicitudfactura;?>&cod_s=<?=$codigo_simulacion?>&cod_f=0&cod_sw=1" target="_self" class="<?=$buttonNormal;?>">Registrar</a>
-                    <a href='<?=$urlList;?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
-                    <?php                
-                } 
-                 ?>
-                </div> -->      
+                </div>     
               </div>
           </div>  
     </div>
   </div>
+<!-- small modal -->
+<div class="modal fade modal-primary" id="modalDetalleFac" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content card">
+              <div class="card-header card-header-warning card-header-icon">
+                <div class="card-icon">
+                  <i class="material-icons">settings_applications</i>
+                </div>
+                <h4 class="card-title">Detalle Solicitud</h4>
+              </div>
+              <div class="card-body">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                <i class="material-icons">close</i>
+              </button>
+                <table class="table table-condensed">
+                  <thead>
+                    <tr class="text-dark bg-plomo">
+                    <th>#</th>
+                    <th>Item</th>
+                    <th>Cantidad</th>
+                    <th>Importe</th>  
+                    <th>Descripción Alterna</th>                    
+                    </tr>
+                  </thead>
+                  <tbody id="tablasA_registradas">
+                    
+                  </tbody>
+                </table>
+              </div>
+    </div>  
+  </div>
+</div>
+<!--    end small modal -->
 
+<?php 
+  $lan=sizeof($cont);
+  error_reporting(0);
+  for ($i=0; $i < $lan; $i++) {
+    ?>
+    <script>var detalle_fac=[];</script>
+    <?php
+       for ($j=0; $j < $cont[$i]; $j++) {     
+           if($cont[$i]>0){
+            ?><script>detalle_fac.push({codigo:<?=$datos[$i][$j]->codigo?>,cod_facturacion:<?=$datos[$i][$j]->cod_facturacion?>,serviciox:'<?=$datos[$i][$j]->serviciox?>',cantidadX:'<?=$datos[$i][$j]->cantidadX?>',precioX:'<?=$datos[$i][$j]->precioX?>',descripcion_alternaX:'<?=$datos[$i][$j]->descripcion_alternaX?>'});</script><?php         
+            }          
+          }
+      ?><script>detalle_tabla_general.push(detalle_fac);</script><?php                    
+  }
+  ?>
 
 
   

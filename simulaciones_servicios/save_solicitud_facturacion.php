@@ -17,8 +17,7 @@ try {
     $cod_area = $_POST["cod_area"];
     $fecha_registro = $_POST["fecha_registro"];
     $fecha_solicitudfactura = $_POST["fecha_solicitudfactura"];
-    $cod_tipoobjeto = $_POST["cod_tipoobjeto"];
-    $cod_tipopago = $_POST["cod_tipopago"];
+        
     $cod_cliente = $_POST["cod_cliente"];
     $cod_personal = $_POST["cod_personal"];
     $razon_social = $_POST["razon_social"];
@@ -27,6 +26,14 @@ try {
 
     $modal_totalmontos = $_POST["modal_totalmontos"];
     $modal_numeroservicio = $_POST["modal_numeroservicio"];
+    if(isset($_POST["cod_tipoobjeto"])){
+        $cod_tipoobjeto = $_POST["cod_tipoobjeto"];
+    }else $cod_tipoobjeto=0;
+    if(isset($_POST["cod_tipopago"])){
+        $cod_tipopago = $_POST["cod_tipopago"];
+    }else $cod_tipopago=0;
+    
+
     if ($cod_facturacion == 0){//insertamos        
         $stmt = $dbh->prepare("INSERT INTO solicitudes_facturacion(cod_simulacion_servicio,cod_unidadorganizacional,cod_area,fecha_registro,fecha_solicitudfactura,cod_tipoobjeto,cod_tipopago,cod_cliente,cod_personal,razon_social,nit,observaciones) 
         values ('$cod_simulacion','$cod_unidadorganizacional','$cod_area','$fecha_registro','$fecha_solicitudfactura','$cod_tipoobjeto','$cod_tipopago','$cod_cliente','$cod_personal','$razon_social','$nit','$observaciones')");
