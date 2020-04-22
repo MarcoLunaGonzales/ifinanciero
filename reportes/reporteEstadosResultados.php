@@ -11,8 +11,11 @@ $fechaActual=date("Y-m-d");
 $gestion=nameGestion($_POST['gestion']);
 $fecha=$_POST['fecha'];
 $fechaTitulo= explode("-",$fecha);
+$fechaFormateada=$fechaTitulo[2].'/'.$fechaTitulo[1].'/'.$fechaTitulo[0];
 
-$fechaFormateada=$fechaTitulo[0].'/'.$fechaTitulo[1].'/'.$fechaTitulo[2];
+$fechaHasta=$_POST['fecha_hasta'];
+$fechaTituloHasta= explode("-",$fechaHasta);
+$fechaFormateadaHasta=$fechaTituloHasta[2].'/'.$fechaTituloHasta[1].'/'.$fechaTituloHasta[0];
 
 
 
@@ -42,8 +45,8 @@ $html.='<html>'.
 $html.='<body>';
 $html.=  '<header class="header">'.            
             '<img class="imagen-logo-izq" src="../assets/img/ibnorca2.jpg">'.
-            '<div id="header_titulo_texto">'.obtenerValorConfiguracion(44).'</div>'.
-         '<div id="header_titulo_texto_inf_pegado">Practicado al '.$fechaFormateada.'</div>'.
+            '<div id="header_titulo_texto">'.obtenerValorConfiguracion(43).'</div>'.
+         '<div id="header_titulo_texto_inf_pegado">Del '.$fechaFormateada.' al '.$fechaFormateadaHasta.'</div>'.
          '<div id="header_titulo_texto_inf_pegado_Max">Expresado en Bolivianos</div>'.
          '<table class="table pt-2">'.
             '<tr class="bold table-title">'.
@@ -62,7 +65,7 @@ $html.='<br><table class="table">'.
            $tBolActivo=0;$tBolPasivo=0;
 // Preparamos
 $stmt = $dbh->prepare("SELECT p.codigo, p.numero, p.nombre, p.cod_padre, p.nivel, 
-  (select tc.nombre from tipos_cuenta tc where tc.codigo=p.cod_tipocuenta)cod_tipocuenta, p.cuenta_auxiliar FROM plan_cuentas p where cod_estadoreferencial=1 and p.nivel=1 and (p.codigo=1 or p.codigo=2 or p.codigo=3) order by p.numero");
+  (select tc.nombre from tipos_cuenta tc where tc.codigo=p.cod_tipocuenta)cod_tipocuenta, p.cuenta_auxiliar FROM plan_cuentas p where cod_estadoreferencial=1 and p.nivel=1 and (p.codigo=4 or p.codigo=5) order by p.numero");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -117,12 +120,12 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
             while ($row = $stmt4->fetch(PDO::FETCH_BOUND)) {
                $sumaNivel4=0;$html4="";           
               //listar los montos
-              $detallesReporte=listaSumaMontosDebeHaberComprobantesDetalle($fechaFormateada,1,$unidades,$areas,$codigo_4,$gestion,"none");
+              $detallesReporte=listaSumaMontosDebeHaberComprobantesDetalle($fechaFormateadaHasta,1,$unidades,$areas,$codigo_4,$gestion,$fechaFormateada);
                while ($rowComp = $detallesReporte->fetch(PDO::FETCH_ASSOC)) {
                    $numeroX=$rowComp['numero'];
                    $nombreX=formateaPlanCuenta($rowComp['nombre'], $rowComp['nivel']);
                    
-                   if($codigo==1){
+                   if($codigo==5){
                     $montoX=(float)($rowComp['total_debe']-$rowComp['total_haber']);
                     $tBolActivo+=$montoX;
                   }else{
@@ -134,28 +137,28 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                       $html4.='<tr>'.
                            '<td class="td-border-none text-left">'.formatoNumeroCuenta($numeroX).'</td>'.
                            '<td class="td-border-none text-left">'.$nombreX.'</td>'.
-                           '<td class="td-border-none text-right">'.number_format($montoX, 2, '.', ',').'</td>'.
                            '<td class="td-border-none text-right"></td>'.
                            '<td class="td-border-none text-right"></td>'.
-                           '<td class="td-border-none text-right"></td>';   
+                           '<td class="td-border-none text-right"></td>'.
+                           '<td class="td-border-none text-right">'.number_format($montoX, 2, '.', ',').'</td>';   
                       $html4.='</tr>';      
                     }elseif($montoX<0){
                       $html4.='<tr>'.
                            '<td class="td-border-none text-left">'.formatoNumeroCuenta($numeroX).'</td>'.
                            '<td class="td-border-none text-left">'.$nombreX.'</td>'.
-                           '<td class="td-border-none text-right">('.number_format($montoX, 2, '.', ',').')</td>'.
                            '<td class="td-border-none text-right"></td>'.
                            '<td class="td-border-none text-right"></td>'.
-                           '<td class="td-border-none text-right"></td>';   
+                           '<td class="td-border-none text-right"></td>'.
+                           '<td class="td-border-none text-right">('.number_format($montoX, 2, '.', ',').')</td>';   
                       $html4.='</tr>';      
                     }elseif($montoX==0){
                       $html4.='<tr>'.
                            '<td class="td-border-none text-left">'.formatoNumeroCuenta($numeroX).'</td>'.
                            '<td class="td-border-none text-left">'.$nombreX.'</td>'.
-                           '<td class="td-border-none text-right">-</td>'.
                            '<td class="td-border-none text-right"></td>'.
                            '<td class="td-border-none text-right"></td>'.
-                           '<td class="td-border-none text-right"></td>';   
+                           '<td class="td-border-none text-right"></td>'.
+                           '<td class="td-border-none text-right">-</td>';   
                      $html4.='</tr>';      
                     }
                             
@@ -167,10 +170,10 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                 $html3.='<tr class="bold">'.
                   '<td class=" td-border-none text-left">'.formatoNumeroCuenta($numero_4).'</td>'.
                   '<td class=" td-border-none text-left">'.$nombre_4.'</td>'.
-                  '<td class=" td-border-none text-right">'.number_format($sumaNivel4, 2, '.', ',').'</td>'.
                   '<td class=" td-border-none text-right"></td>'.
                   '<td class=" td-border-none text-right"></td>'.
-                  '<td class=" td-border-none text-right"></td>';   
+                  '<td class=" td-border-none text-right"></td>'.
+                  '<td class=" td-border-none text-right">'.number_format($sumaNivel4, 2, '.', ',').'</td>';   
                 $html3.='</tr>';
                 $html3.=$html4;       
               }elseif($sumaNivel4<0){
@@ -179,10 +182,10 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                 $html3.='<tr class="bold">'.
                   '<td class=" td-border-none text-left">'.formatoNumeroCuenta($numero_4).'</td>'.
                   '<td class=" td-border-none text-left">'.$nombre_4.'</td>'.
-                  '<td class=" td-border-none text-right">('.number_format($sumaNivel4, 2, '.', ',').')</td>'.
                   '<td class=" td-border-none text-right"></td>'.
                   '<td class=" td-border-none text-right"></td>'.
-                  '<td class=" td-border-none text-right"></td>';   
+                  '<td class=" td-border-none text-right"></td>'.
+                  '<td class=" td-border-none text-right">('.number_format($sumaNivel4, 2, '.', ',').')</td>';   
                 $html3.='</tr>';
                 $html3.=$html4;       
               }elseif($sumaNivel4==0){
@@ -191,10 +194,10 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                 $html3.='<tr class="bold">'.
                   '<td class=" td-border-none text-left">'.formatoNumeroCuenta($numero_4).'</td>'.
                   '<td class=" td-border-none text-left">'.$nombre_4.'</td>'.
-                  '<td class=" td-border-none text-right">-</td>'.
                   '<td class=" td-border-none text-right"></td>'.
                   '<td class=" td-border-none text-right"></td>'.
-                  '<td class=" td-border-none text-right"></td>';   
+                  '<td class=" td-border-none text-right"></td>'.
+                  '<td class=" td-border-none text-right">-</td>';   
                 $html3.='</tr>';
                 $html3.=$html4;       
               } 
@@ -206,9 +209,9 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                   '<td class=" td-border-none text-left">'.formatoNumeroCuenta($numero_3).'</td>'.
                   '<td class=" td-border-none text-left">'.$nombre_3.'</td>'.
                   '<td class=" td-border-none text-right"></td>'.
-                  '<td class=" td-border-none text-right">'.number_format($sumaNivel3, 2, '.', ',').'</td>'.
                   '<td class=" td-border-none text-right"></td>'.
-                  '<td class=" td-border-none text-right"></td>';   
+                  '<td class=" td-border-none text-right"></td>'.
+                  '<td class=" td-border-none text-right">'.number_format($sumaNivel3, 2, '.', ',').'</td>';   
               $html2.='</tr>';
               $html2.=$html3;
             }elseif($sumaNivel3<0){
@@ -218,9 +221,9 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                   '<td class=" td-border-none text-left">'.formatoNumeroCuenta($numero_3).'</td>'.
                   '<td class=" td-border-none text-left">'.$nombre_3.'</td>'.
                   '<td class=" td-border-none text-right"></td>'.
-                  '<td class=" td-border-none text-right">('.number_format($sumaNivel3, 2, '.', ',').')</td>'.
                   '<td class=" td-border-none text-right"></td>'.
-                  '<td class=" td-border-none text-right"></td>';   
+                  '<td class=" td-border-none text-right"></td>'.
+                  '<td class=" td-border-none text-right">('.number_format($sumaNivel3, 2, '.', ',').')</td>';   
               $html2.='</tr>';
               $html2.=$html3;
             }
@@ -247,8 +250,8 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                     '<td class="td-border-none text-left">'.$nombre_2.'</td>'.
                     '<td class="td-border-none text-right"></td>'.
                     '<td class="td-border-none text-right"></td>'.
-                    '<td class="td-border-none text-right">'.number_format($sumaNivel2, 2, '.', ',').'</td>'.
-                    '<td class="td-border-none text-right"></td>';   
+                    '<td class="td-border-none text-right"></td>'.
+                    '<td class="td-border-none text-right">'.number_format($sumaNivel2, 2, '.', ',').'</td>';   
              $html1.='</tr>';
              $html1.=$html2; 
           }
@@ -261,8 +264,8 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                     '<td class="td-border-none text-left">'.$nombre_2.'</td>'.
                     '<td class="td-border-none text-right"></td>'.
                     '<td class="td-border-none text-right"></td>'.
-                    '<td class="td-border-none text-right">('.number_format($sumaNivel2, 2, '.', ',').')</td>'.
-                    '<td class="td-border-none text-right"></td>';   
+                    '<td class="td-border-none text-right"></td>'.
+                    '<td class="td-border-none text-right">('.number_format($sumaNivel2, 2, '.', ',').')</td>';   
              $html1.='</tr>';
              $html1.=$html2; 
           }
@@ -329,24 +332,22 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
       }
       $html.='<br><table class="table">'.
             '<thead>'.
-            '<tr class="bold table-title text-center">'.
-              '<td width="70%"></td>'.
-              '<td>ACTIVO</td>'.
-              '<td>PASIVO + PATRIMONIO</td>'.
+            '<tr class="bold table-title">'.
+              '<td class="text-left" width="85%">Resultado</td>'.
+              '<td class="text-right">'.number_format(abs($tBolPasivo-$tBolActivo), 2, '.', ',').'</td>'.
             '</tr>'.
            '</thead>'.
            '<tbody>';
 
-     $html.='<tr class="">'.
+    /* $html.='<tr class="">'.
                   '<td class="bold table-title text-center text-center">Totales:</td>'.
                   '<td class="text-right">'.number_format($tBolActivo, 2, '.', ',').'</td>'.
-                  '<td class="text-right">'.number_format($tBolPasivo, 2, '.', ',').'</td>'.     
-              '</tr>';
+                  '<td class="text-right"></td>'.     
+              '</tr>';*/
   $html.=    '</tbody></table>';
 
-/*$html.='<p class="bold table-title">Son: '.ucfirst(CifrasEnLetras::convertirNumeroEnLetras($entero)).'      '.$centavos.'/100 Bolivianos</p>';*/
 $html.='</body>'.
       '</html>';
                     
-descargarPDF("IBNORCA - ".$unidadC." (".$tipoC.", ".$numeroC.")",$html);
+descargarPDF("IBNORCA - Estado de Resultados ".$unidadC." (".$tipoC.", ".$numeroC.")",$html);
 ?>
