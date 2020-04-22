@@ -42,7 +42,7 @@ $html.='<html>'.
 $html.='<body>';
 $html.=  '<header class="header">'.            
             '<img class="imagen-logo-izq" src="../assets/img/ibnorca2.jpg">'.
-            '<div id="header_titulo_texto">Balance General</div>'.
+            '<div id="header_titulo_texto">'.obtenerValorConfiguracion(44).'</div>'.
          '<div id="header_titulo_texto_inf_pegado">Practicado al '.$fechaFormateada.'</div>'.
          '<div id="header_titulo_texto_inf_pegado_Max">Expresado en Bolivianos</div>'.
          '<table class="table pt-2">'.

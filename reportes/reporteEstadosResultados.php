@@ -45,7 +45,7 @@ $html.='<html>'.
 $html.='<body>';
 $html.=  '<header class="header">'.            
             '<img class="imagen-logo-izq" src="../assets/img/ibnorca2.jpg">'.
-            '<div id="header_titulo_texto">Estado de Resultados</div>'.
+            '<div id="header_titulo_texto">'.obtenerValorConfiguracion(43).'</div>'.
          '<div id="header_titulo_texto_inf_pegado">Del '.$fechaFormateada.' al '.$fechaFormateadaHasta.'</div>'.
          '<div id="header_titulo_texto_inf_pegado_Max">Expresado en Bolivianos</div>'.
          '<table class="table pt-2">'.
