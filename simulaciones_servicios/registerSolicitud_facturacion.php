@@ -245,11 +245,26 @@ $contadorRegistros=0;
                                           // $montoPreTotal=$montoPre*$cantidadEPre;
                                           $banderaHab=$rowPre['habilitado'];
                                           $codTipoUnidad=$rowPre['cod_tipounidad'];
-                                          $cod_anio=$rowPre['cod_anio'];
-
+                                          $cod_anio=$rowPre['cod_anio'];                                        
                                           if($banderaHab!=0){
                                             // $modal_totalmontopre+=$montoPre;
                                             $montoPre=number_format($montoPre,2,".","");
+                                            //parte del controlador de check
+                                            $sqlControlador="SELECT * from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$cod_simulacion and sfd.cod_claservicio=$codCS";
+                                          // echo $sqlControlador;
+                                            $stmtControlado = $dbh->prepare($sqlControlador);
+                                           $stmtControlado->execute();                                           
+                                           $sw="";//para la parte de editar
+                                           $sw2="";//para registrar inpedir los ya registrados
+                                           while ($rowPre = $stmtControlado->fetch(PDO::FETCH_ASSOC)) {
+                                                if($cod_facturacion > 0){
+                                                    $sw="checked";
+                                                }else{
+                                                    $sw2="readonly style='background-color:#cec6d6;'";  
+                                                } 
+                                           }
+                                            
+
                                             // $modal_totalmontopretotal+=$montoPreTotal;
                                             ?>
                                             <!-- guardamos las varialbles en un input -->
@@ -270,19 +285,22 @@ $contadorRegistros=0;
                                              <td class="text-right"><?=$cantidadPre?></td>
                                              <td class="text-right"><?=formatNumberDec($montoPre)?></td>
                                              <td class="text-right">
-                                                <input type="number" id="modal_importe<?=$iii?>" name="modal_importe<?=$iii?>" class="form-control text-primary text-right"  value="<?=$montoPre?>" step="0.01">
+                                                <input type="number" id="modal_importe<?=$iii?>" name="modal_importe<?=$iii?>" class="form-control text-primary text-right"  value="<?=$montoPre?>" step="0.01" <?=$sw2?>>
                                                 </td>
                                              
                                              <td>
-                                               <div class="togglebutton">
-                                                   <label>
-                                                     <input type="checkbox"  id="modal_check<?=$iii?>" onchange="activarInputMontoFilaServicio2()">
-                                                     <span class="toggle"></span>
-                                                   </label>
-                                               </div>
+                                                <?php if($sw2!="readonly style='background-color:#cec6d6;'"){?>
+                                                    <div class="togglebutton">
+                                                       <label>
+                                                         <input type="checkbox"  id="modal_check<?=$iii?>" onchange="activarInputMontoFilaServicio2()" <?=$sw?> >
+                                                         <span class="toggle"></span>
+                                                       </label>
+                                                   </div>
+                                                <?php }?>
+                                               
                                              </td>
                                              <td>
-                                                <textarea name="descripcion_alterna<?=$iii?>" id="descripcion_alterna<?=$iii?>" class="form-control" onkeyup="javascript:this.value=this.value.toUpperCase();"></textarea>
+                                                <textarea name="descripcion_alterna<?=$iii?>" id="descripcion_alterna<?=$iii?>" class="form-control" onkeyup="javascript:this.value=this.value.toUpperCase();" <?=$sw2?>></textarea>
                                                  <!-- <input type="text" > -->
                                              </td>
                                            </tr>
@@ -290,7 +308,12 @@ $contadorRegistros=0;
                                           <?php   $iii++;  }
                                                                                                                     
                                           // $montoPreTotal=number_format($montoPreTotal,2,".","");
-                                           ?>                                           
+                                           ?>
+                                           <script>
+                                               
+                                               window.onload = activarInputMontoFilaServicio2;
+                                           </script>
+
                                           <?php
                                         
                                           } ?>                        
