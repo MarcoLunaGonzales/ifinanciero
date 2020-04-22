@@ -78,7 +78,9 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             <td class="td-actions text-right">
                               <?php
                                 if($globalAdmin==1){?>
-                                  <div class="dropdown">
+                                  
+                                  <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=2' target="_blank"><i class="material-icons" title="Imprimir Facturas">print</i></a>
+                                  <!-- <div class="dropdown">
                                     <button class="btn btn-success dropdown-toggle" type="button" id="reporte_sueldos" data-toggle="dropdown" aria-extended="true">
                                       <i class="material-icons" title="Imprimir Facturas">print</i>
                                       <span class="caret"></span>
@@ -87,11 +89,11 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                       <li role="presentation" class="dropdown-header"><small>IMPRIMIR</small></li>
                                       <li role="presentation"><a role="item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$cod_solicitudfacturacion;?>&tipo=1' target="_blank"><small>Facturas</small></a>
                                       </li>
-                                      <li role="presentation"><a role="item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$cod_solicitudfacturacion;?>&tipo=2' target="_blank"><small>Facturas Con Descripción  Alterna</small></a>
+                                      <li role="presentation"><a role="item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$cod_solicitudfacturacion;?>&tipo=2' target="_blank"><small>Facturas Con Descripción  de Servicio</small></a>
                                       </li>
                                                                    
                                     </ul>
-                                  </div>
+                                  </div> -->
                                 <?php  
                                 }
                               ?>
@@ -128,15 +130,20 @@ $globalAdmin=$_SESSION["globalAdmin"];
         <h4 class="modal-title" id="myModalLabel">Enviar Correo</h4>
       </div>
       <div class="modal-body">
-        <input type="hidden" name="codigo_facturacion" id="codigo_facturacion" value="0">                      
+        <input type="hidden" name="codigo_facturacion" id="codigo_facturacion" value="0">
         <input type="hidden" name="cod_solicitudfacturacion" id="cod_solicitudfacturacion" value="0">
         <input type="hidden" name="nro_factura" id="nro_factura" value="0">
+        <?php
+          $texto_cuerpo="Estimad@,\n\n Le Hacemos el envío de la Factura.\n\nSaludos.";
+          $asunto="ENVIO FACTURA - IBNORCA";
+
+        ?>
         <h6> Correo Destino : </h6>
         <input class="form-control" type="email" name="correo_destino" id="correo_destino" required="true" />
         <h6> Asunto : </h6>
-        <input class="form-control" type="text" name="asunto" id="asunto" required="true"/>
+        <input class="form-control" type="text" name="asunto" id="asunto" value="<?=$asunto?>" required="true"/>
         <h6> Mensaje : </h6>
-        <textarea class="form-control" name="mensaje" id="mensaje" required="true"></textarea>
+        <textarea class="form-control" name="mensaje" id="mensaje" required="true"><?=$texto_cuerpo?></textarea>
         <!-- <input class="form-control" type="text" /> -->
       </div>
       <div class="modal-footer">

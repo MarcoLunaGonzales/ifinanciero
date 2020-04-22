@@ -4886,42 +4886,6 @@ function activarInputMontoFilaServicio(anio,fila){
   }
   calcularTotalFilaServicio(anio,2);
 }
-// function activarInputMontoFilaServicio2(){
-
-//   calcularTotalFilaServicio2();
-// }
-// function calcularTotalFilaServicio2(){
-//   var sumal=0;
-//   var total= $("#modal_numeroservicio").val();
-//   var comprobante_auxiliar=0;
-//   for (var i=1;i<=(total-1);i++){          
-//     var check=document.getElementById("modal_check"+i).checked;
-//        if(check) {
-//         comprobante_auxiliar=comprobante_auxiliar+1;
-//         //sumanos los importes
-//         sumal+=parseFloat($("#modal_importe"+i).text());
-
-//         var servicio = document.getElementById("servicio"+i).value;
-//         var cantidad=document.getElementById("cantidad"+i).value;
-//         var importe=document.getElementById("importe"+i).value;
-        
-//         document.getElementById("servicio_a"+i).value=servicio;
-//         document.getElementById("cantidad_a"+i).value=cantidad;
-//         document.getElementById("importe_a"+i).value=importe;        
-//         // alert(servicio);
-//       }
-
-//   } 
-  
-//   var resulta=sumal;
-  
-//   $("#modal_totalmontoserv").text(resulta);
-
-//   document.getElementById("modal_totalmontos").value=resulta;
-//   document.getElementById("comprobante_auxiliar").value=comprobante_auxiliar;
-
-// }
-
 
 
 function cambiarCantidadMontoGenericoServicio(matriz){
@@ -8660,6 +8624,7 @@ function calcularTotalFilaServicio2(){
         //sacamos los datos de los servicios que se activaron
         var cod_serv_tiposerv = document.getElementById("cod_serv_tiposerv"+i).value;
         var servicio = document.getElementById("servicio"+i).value;
+        var nombre_servicio = document.getElementById("nombre_servicio"+i).value;
         var cantidad=document.getElementById("cantidad"+i).value;
         var importe=document.getElementById("importe"+i).value;
         // aqui se guardan los servicios activados
@@ -8668,7 +8633,8 @@ function calcularTotalFilaServicio2(){
         document.getElementById("cantidad_a"+i).value=cantidad;
         document.getElementById("importe_a"+i).value=importe;        
         // alert(servicio);
-      }
+      }else nombre_servicio="";
+      document.getElementById("descripcion_alterna"+i).value=nombre_servicio;//glosa descrip
   } 
   var resulta=sumal;
   //sumamos la parte que se adiciona
@@ -8832,12 +8798,38 @@ function borrarItemSeriviciosFacturacion(idF){
 // var areas_tabla=[]; 
 var detalle_tabla_general=[];
 var numFilasA=0;
-function filaTablaAGeneral(tabla,index){
+function filaTablaAGeneral(tabla,index,stringCabecera){
+  var cabecera = stringCabecera.split("##");
+  var uo = cabecera[0];
+  var area = cabecera[1];
+  var nombre_simulacion = cabecera[2];
+  var area_simulacion = cabecera[3];
+  var fecha_registro = cabecera[4];
+  var fecha_facturar = cabecera[5];
+  var nit = cabecera[6];
+  var razon_social = cabecera[7];
+  //ajax cabecera  
+  var contenedor = document.getElementById('div_cabecera');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'simulaciones_servicios/ajax_cabecera_modal.php?uo='+uo+'&area='+area+'&nombre_simulacion='+nombre_simulacion+'&area_simulacion='+area_simulacion+'&fecha_registro='+fecha_registro+'&fecha_facturar='+fecha_facturar+'&nit='+nit+'&razon_social='+razon_social,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      // $('.selectpicker').selectpicker(["refresh"]);
+    }
+  }
+  ajax.send(null);
+
   var html="";
+  var sumaTotalDetalle=0;
+  var cantidadTotalDetalle=0;
   for (var i = 0; i < detalle_tabla_general[index-1].length; i++) {
     //alert(detalle_tabla_general[index-1][i].nombre);
+    sumaTotalDetalle+=detalle_tabla_general[index-1][i].precioX;
+    cantidadTotalDetalle+=parseInt(detalle_tabla_general[index-1][i].cantidadX);
     html+="<tr><td>"+(i+1)+"</td><td>"+detalle_tabla_general[index-1][i].serviciox+"</td><td>"+detalle_tabla_general[index-1][i].cantidadX+"</td><td>"+number_format(detalle_tabla_general[index-1][i].precioX,2)+"</td><td>"+detalle_tabla_general[index-1][i].descripcion_alternaX+"</td></tr>";
   }
+  html+="<tr style='background-color:#d3dcde;'><td></td><td>TOTAL</td><td>"+cantidadTotalDetalle+"</td><td>"+number_format(sumaTotalDetalle,2)+"</td><td></td></tr>";
   tabla.html(html);
   $("#modalDetalleFac").modal("show");  
 }

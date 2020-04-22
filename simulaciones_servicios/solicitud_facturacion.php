@@ -14,7 +14,7 @@ $stmtSimu->execute();
 $resultSimu = $stmtSimu->fetch();
 $nombre_simulacion = $resultSimu['nombre'];
 $cod_area_simulacion = $resultSimu['cod_area'];
-$name_area_simulacion=abrevArea($cod_area_simulacion);
+$name_area_simulacion=trim(abrevArea($cod_area_simulacion),'-');
 //obtenemos la cantidad de datos registrados de la simulacion en curso
 $stmtCantidad = $dbh->prepare("SELECT count(codigo) as cantidad FROM solicitudes_facturacion where cod_simulacion_servicio=$codigo_simulacion");
 $stmtCantidad->execute();
@@ -60,54 +60,61 @@ if($cantidad_items>0){
                           <tr>
                             <th class="text-center">#</th>                          
                             <th>Oficina</th>
-                            <th>Area</th>
+                            <th>Area</th>                            
+                            <th>Responsable</th>
                             <th>F. Registro</th>
                             <th>F. a Facturar</th>
-                            <th>Cliente</th>
-                            <th>Personal</th>
+                            <th>Monto</th>                            
+                            <th>Razón Social</th>
+                            <th>Nit</th>
                             <th class="text-right">Actions</th>
                           </tr>
                         </thead>
                         <tbody>
                         <?php
                           $index=1;
+                          $stringCabecera="";
                           while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                             $responsable=namePersonal($cod_personal);//nombre del personal
-                            $nombre_area=abrevArea($cod_area);//nombre del personal
+                            $nombre_area=trim(abrevArea($cod_area),'-');//nombre del personal
                             $nombre_uo=nameUnidad($cod_unidadorganizacional);//nombre del personal
-                            //los registros de la factura
-                            $dbh1 = new Conexion();
+                            //los registros de la factura                            
                             $sqlA="SELECT sf.*,t.descripcion as nombre_serv from solicitudes_facturaciondetalle sf,cla_servicios t 
                                 where sf.cod_claservicio=t.idclaservicio and sf.cod_solicitudfacturacion=$codigo_facturacion";
-                                   $stmt2 = $dbh1->prepare($sqlA);                                   
-                                   $stmt2->execute(); 
-                                   $nc=0;
-                                   while ($row2 = $stmt2->fetch(PDO::FETCH_ASSOC)) {
-                                      $dato = new stdClass();//obejto
-                                      $codFila=(int)$row2['codigo'];
-                                      $cod_claservicioX=trim($row2['nombre_serv']);
-                                      $cantidadX=trim($row2['cantidad']);
-                                      $precioX=trim($row2['precio']);
-                                      $descripcion_alternaX=trim($row2['descripcion_alterna']);
-                                      $dato->codigo=($nc+1);
-                                      $dato->cod_facturacion=$codFila;
-                                      $dato->serviciox=$cod_claservicioX;
-                                      $dato->cantidadX=$cantidadX;
-                                      $dato->precioX=$precioX;
-                                      $dato->descripcion_alternaX=$descripcion_alternaX;
-                                      $datos[$index-1][$nc]=$dato;                           
-                                      $nc++;
-                                    }
-                                $cont[$index-1]=$nc;  
+                            $stmt2 = $dbh->prepare($sqlA);                                   
+                            $stmt2->execute(); 
+                            $nc=0;
+                            $sumaTotalMonto=0;
+                            while ($row2 = $stmt2->fetch(PDO::FETCH_ASSOC)) {
+                              $dato = new stdClass();//obejto
+                              $codFila=(int)$row2['codigo'];
+                              $cod_claservicioX=trim($row2['nombre_serv']);
+                              $cantidadX=trim($row2['cantidad']);
+                              $precioX=trim($row2['precio']);
+                              $descripcion_alternaX=trim($row2['descripcion_alterna']);
+                              $dato->codigo=($nc+1);
+                              $dato->cod_facturacion=$codFila;
+                              $dato->serviciox=$cod_claservicioX;
+                              $dato->cantidadX=$cantidadX;
+                              $dato->precioX=$precioX;
+                              $dato->descripcion_alternaX=$descripcion_alternaX;
+                              $datos[$index-1][$nc]=$dato;                           
+                              $nc++;
+                              $sumaTotalMonto+=$precioX;
+                            }
+                            $cont[$index-1]=$nc;  
+                            $stringCabecera=$nombre_uo."##".$nombre_area."##".$nombre_simulacion."##".$name_area_simulacion."##".$fecha_registro."##".$fecha_solicitudfactura."##".$nit."##".$razon_social;
                             ?>
                           <tr>
                             <td align="center"><?=$index;?></td>
                             <td><?=$nombre_uo;?></td>
                             <td><?=$nombre_area;?></td>
+                            <td><?=$responsable;?></td>
                             <td><?=$fecha_registro;?></td>
                             <td><?=$fecha_solicitudfactura;?></td>
-                            <td><?=$nombre_cliente;?></td>
-                            <td><?=$responsable;?></td>
+                            <td><?=formatNumberDec($sumaTotalMonto) ;?></td>
+                            <td><?=$razon_social;?></td>
+                            <td><?=$nit;?></td>
 
                             <td class="td-actions text-right">
                               <?php
@@ -116,7 +123,7 @@ if($cantidad_items>0){
                               <a title="Editar Simulación - Detalle" href='<?=$urlRegisterSolicitudfactura;?>&cod_s=<?=$codigo_simulacion?>&cod_f=<?=$codigo_facturacion?>&cod_sw=1' class="btn btn-info">
                                 <i class="material-icons"><?=$iconEdit;?></i>
                               </a>
-                              <a href='#' rel="tooltip" class="btn btn-warning" onclick="filaTablaAGeneral($('#tablasA_registradas'),<?=$index?>)">
+                              <a href='#' rel="tooltip" class="btn btn-warning" onclick="filaTablaAGeneral($('#tablasA_registradas'),<?=$index?>,'<?=$stringCabecera?>')">
                               <i class="material-icons" title="Ver Detalle">settings_applications</i>
                             </a>
                               <!-- <button type="button" onclick="SolicitudFacturacionDetalle()" class="btn btn-success ">
@@ -167,6 +174,10 @@ if($cantidad_items>0){
                   <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                   <i class="material-icons">close</i>
                 </button>
+                  <div class="row" id="div_cabecera" >
+                    
+                  </div>
+                  
                   <table class="table table-condensed">
                     <thead>
                       <tr class="text-dark bg-plomo">

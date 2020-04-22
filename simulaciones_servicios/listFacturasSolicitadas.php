@@ -46,11 +46,13 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             <th class="text-center">#</th>                          
                             <th>Oficina</th>
                             <th>Area</th>
-                            <th>Nombre Simulación</th>
+                            <th>Propuesta</th>
+                            <th>Responsable</th>
                             <th>F. Registro</th>
                             <th>F. a Facturar</th>
-                            <th>Cliente</th>
-                            <th>Personal</th>
+                            <th>Monto</th>
+                            <th>Razón Social</th>                            
+                            <th>Nit</th>
                             <th class="text-right">Actions</th>
                           </tr>
                         </thead>
@@ -84,11 +86,11 @@ $globalAdmin=$_SESSION["globalAdmin"];
                               $cod_area_simulacion = $resultSimu['cod_area'];
                             }
 
-                            $name_area_simulacion=abrevArea($cod_area_simulacion);
+                            $name_area_simulacion=trim(abrevArea($cod_area_simulacion),'-');
 
                             // --------
                             $responsable=namePersonal($cod_personal);//nombre del personal
-                            $nombre_area=abrevArea($cod_area);//nombre del area
+                            $nombre_area=trim(abrevArea($cod_area),'-');//nombre del area
                             $nombre_uo=nameUnidad($cod_unidadorganizacional);//nombre de la oficina
 
                             //los registros de la factura
@@ -98,12 +100,13 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             $stmt2 = $dbh1->prepare($sqlA);                                   
                             $stmt2->execute(); 
                             $nc=0;
+                            $sumaTotalMonto=0;
                             while ($row2 = $stmt2->fetch(PDO::FETCH_ASSOC)) {
                               $dato = new stdClass();//obejto
                               $codFila=(int)$row2['codigo'];
                               $cod_claservicioX=trim($row2['nombre_serv']);
                               $cantidadX=trim($row2['cantidad']);
-                              $precioX=trim($row2['precio']);
+                              $precioX=trim($row2['precio']);                              
                               $descripcion_alternaX=trim($row2['descripcion_alterna']);
                               $dato->codigo=($nc+1);
                               $dato->cod_facturacion=$codFila;
@@ -113,9 +116,10 @@ $globalAdmin=$_SESSION["globalAdmin"];
                               $dato->descripcion_alternaX=$descripcion_alternaX;
                               $datos[$index-1][$nc]=$dato;                           
                               $nc++;
+                              $sumaTotalMonto+=$precioX;
                             }
-                            $cont[$index-1]=$nc;  
-
+                            $cont[$index-1]=$nc;                              
+                            $stringCabecera=$nombre_uo."##".$nombre_area."##".$nombre_simulacion."##".$name_area_simulacion."##".$fecha_registro."##".$fecha_solicitudfactura."##".$nit."##".$razon_social;
 
                             ?>
                           <tr>
@@ -123,18 +127,20 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             <td><?=$nombre_uo;?></td>
                             <td><?=$nombre_area;?></td>
                             <td><?=$nombre_simulacion?> - <?=$name_area_simulacion?></td>
-                            <td><?=$fecha_registro;?></td>
-                            <td><?=$fecha_solicitudfactura;?></td>
-                            <!-- <td><?=$nombre_cliente;?></td> -->
-                            <td><?=$razon_social;?></td>
                             <td><?=$responsable;?></td>
+                            <td><?=$fecha_registro;?></td>
+                            <td><?=$fecha_solicitudfactura;?></td>                            
+                            <td><?=formatNumberDec($sumaTotalMonto);?></td>
+                            <td><?=$razon_social;?></td>
+                            <td><?=$nit;?></td>
 
                             <td class="td-actions text-right">
                               <?php
                                 if($globalAdmin==1){ 
                                   if($codigo_fact_x>0){//print facturas
                                     ?>
-                                    <div class="dropdown">
+                                    <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=2' target="_blank"><i class="material-icons" title="Imprimir Facturas">print</i></a>
+                                    <!-- <div class="dropdown">
                                       <button class="btn btn-success dropdown-toggle" type="button" id="reporte_sueldos" data-toggle="dropdown" aria-extended="true">
                                         <i class="material-icons" title="Imprimir Facturas">print</i>
                                         <span class="caret"></span>
@@ -147,7 +153,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                         </li>
                                                                      
                                       </ul>
-                                    </div>
+                                    </div> -->
                                     
                                    <!--  <a title="Ver Factura" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>' target="_blank" class="btn btn-success">
                                       <i class="material-icons">description</i>
@@ -157,7 +163,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                     <button title="Generar Factura"  target="blank" class="btn btn-success" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlGenerarFacturas2;?>?codigo=<?=$codigo_facturacion;?>')">
                                       <i class="material-icons">receipt</i>
                                     </button>
-                                    <a href='#' rel="tooltip" class="btn btn-warning" onclick="filaTablaAGeneral($('#tablasA_registradas'),<?=$index?>)">
+                                    <a href='#' rel="tooltip" class="btn btn-warning" onclick="filaTablaAGeneral($('#tablasA_registradas'),<?=$index?>,'<?=$stringCabecera?>')">
                                       <i class="material-icons" title="Ver Detalle">settings_applications</i>
                                     </a>
                                   
@@ -190,10 +196,14 @@ $globalAdmin=$_SESSION["globalAdmin"];
                 </div>
                 <h4 class="card-title">Detalle Solicitud</h4>
               </div>
+
               <div class="card-body">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                 <i class="material-icons">close</i>
               </button>
+              <div class="row" id="div_cabecera" >
+                    
+              </div>
                 <table class="table table-condensed">
                   <thead>
                     <tr class="text-dark bg-plomo">
