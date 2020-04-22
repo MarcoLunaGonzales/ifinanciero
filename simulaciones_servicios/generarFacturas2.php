@@ -120,7 +120,7 @@ try{
             values ('$cod_facturaVenta','$cod_claservicio_x','$cantidad_x','$precio_x','$descripcion_alterna_x')");
             $flagSuccess=$stmtInsertSoliFactDet->execute();
 
-            header('Location: ../simulaciones_servicios/generarFacturasPrint.php?codigo='.$codigo.'&tipo=1');
+            header('Location: ../simulaciones_servicios/generarFacturasPrint.php?codigo='.$codigo.'&tipo=2');
           }  
         }
 

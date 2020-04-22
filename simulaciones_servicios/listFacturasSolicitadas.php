@@ -139,20 +139,21 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                 if($globalAdmin==1){ 
                                   if($codigo_fact_x>0){//print facturas
                                     ?>
-                                    <div class="dropdown">
+                                    <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=2' target="_blank"><i class="material-icons" title="Imprimir Facturas">print</i></a>
+                                    <!-- <div class="dropdown">
                                       <button class="btn btn-success dropdown-toggle" type="button" id="reporte_sueldos" data-toggle="dropdown" aria-extended="true">
                                         <i class="material-icons" title="Imprimir Facturas">print</i>
                                         <span class="caret"></span>
                                       </button>
                                       <ul class="dropdown-menu" role="menu" aria-labelledby="reporte_sueldos">
                                         <li role="presentation" class="dropdown-header"><small>IMPRIMIR</small></li>
-                                        <!-- <li role="presentation"><a role="item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=1' target="_blank"><small>Facturas</small></a>
-                                        </li> -->
-                                        <li role="presentation"><a role="item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=2' target="_blank"><small>Facturas Con Descripción de Servicios</small></a>
+                                        <li role="presentation"><a role="item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=1' target="_blank"><small>Facturas</small></a>
+                                        </li>
+                                        <li role="presentation"><a role="item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=2' target="_blank"><small>Facturas Con Descripción  Alterna</small></a>
                                         </li>
                                                                      
                                       </ul>
-                                    </div>
+                                    </div> -->
                                     
                                    <!--  <a title="Ver Factura" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>' target="_blank" class="btn btn-success">
                                       <i class="material-icons">description</i>
