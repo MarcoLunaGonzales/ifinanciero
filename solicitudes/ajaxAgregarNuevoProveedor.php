@@ -22,10 +22,10 @@ if($_GET['ciudad']==""){
 	$ciudad=NULL;
 	$otra=$_GET['otra'];
 }
-if($_GET['nit']==""){
-	$nit=NULL;
+if($_GET['identificacion']==""){
+	$identificacion=NULL;
 }else{
-	$nit=(int)$_GET['nit'];
+	$identificacion=(int)$_GET['identificacion'];
 }
 
 
@@ -37,7 +37,7 @@ if($_GET['tipo']=='E'){
 						  "tipoCliente"=>$_GET['tipo'], // Tipo P=Persona, E=Empresa
 						  "claseCliente"=>$_GET['nacional'], // Clase N=Nacional, I=Internacional
 						  "nombreRazon"=>$_GET['nombre'], //Nombre de la empresa
-						  "identificacion"=>$nit, //NIT de la empresa
+						  "identificacion"=>$identificacion, //NIT de la empresa
 						  "pais"=>(int)$_GET['pais'], //Valor numerico determinado por el ws-paises opcion pais, el valor = 26 para Bolivia
 						  "depto"=>(int)$_GET['estado'], //Valor numerico determinado por el ws-paises opcion estados y id pais =26 para deptos de bolivia(Ej. 480=La Paz)
 						  "ciudad"=>$ciudad, //Valor numerico determinado por el ws-paises opcion ciudad y idEstado=480 para La Paz (Ej. 72=ciudad El Alto)
@@ -52,7 +52,7 @@ if($_GET['tipo']=='E'){
 
 						  "optFactura"=>1 // 1=datos de factura, 0 = sin datos de factura
 						  "facturaRazon"=>$_GET['nombre'], // Razon Social de la factura Puede ser el mismo nombre empresa, NULL en caso de optFactura=0
-						  "facturaNIT"=>$nit // NIT para factura el mismo del IDENTIFICACION, NULL en caso de optFactura=0
+						  "facturaNIT"=>$identificacion // NIT para factura el mismo del IDENTIFICACION, NULL en caso de optFactura=0
 						  );
 
 }else{//para el cliente
@@ -67,7 +67,7 @@ if($_GET['tipo']=='E'){
 						  "materno"=>$_GET['materno_p'], //Apellido materno del cliente persona
 						  "tipoId"=>$_GET['tipo_id'], //tipo de identificacion valor numerico determinado por el clasificador tipo de documento id padre 1580 (1581=CI, 1582=Pasaporte)
 						  "tipoIdOtro"=>$_GET['tipo_id_otro'], // Otro tipo de identificacion campo VARCHAR, se debe habilitar en el caso de seleccionar otro en el campo tipoId
-						  "identificacion"=>10705473010, // Numero de identificacion, campo VARCHAR
+						  "identificacion"=>$identificacion, // Numero de identificacion, campo VARCHAR
 						  "emision"=>480, //Lugar de emision en Bolivia, Valor numerico determinado por el ws-paises opcion estados y idPais 26=Bolivia(Ej. 480=La Paz)
 						  "emisionOtro"=>NULL, //Otro lugar de emision campo VARCHAR, se emplea en el caso de seleccionar otro en el campo emision
 						  "nacionalidad"=>26, //Pais de origen valor numerico, determinado por el listado de paises (web service paises) 26=Bolivia

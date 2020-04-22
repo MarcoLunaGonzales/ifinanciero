@@ -22,7 +22,7 @@ $cod_area=$_GET['cod_area'];
 <div id="comp_row" class="col-md-12">
 	<div class="row">
 
-    <div class="col-sm-4">
+    <div class="col-sm-3">
       <div class="form-group">
         <?php 
           if($cod_area==39){
@@ -35,7 +35,7 @@ $cod_area=$_GET['cod_area'];
               }
           }
           ?>
-          <label for="haber<?=$idFila;?>" class="bmd-label-floating">Descripción</label>
+          <!-- <label for="haber<?=$idFila;?>" class="bmd-label-floating">Glosa</label> -->
           <select class="selectpicker form-control form-control-sm" data-live-search="true" name="modal_editservicio<?=$idFila;?>" id="modal_editservicio<?=$idFila;?>" data-style="fondo-boton" required="true">
               <option disabled selected="selected" value="">--SERVICIOS--</option>
               <?php 
@@ -52,22 +52,23 @@ $cod_area=$_GET['cod_area'];
 		  </div>
     </div>
 
-		<div class="col-sm-2">
+		<div class="col-sm-1">
       <div class="form-group">
         <label for="haber<?=$idFila;?>" class="bmd-label-floating">Cantidad</label>			
         <input type="number" min="1" id="cantidad_servicios<?=$idFila;?>" name="cantidad_servicios<?=$idFila;?>" class="form-control text-primary text-right" value="1" required="true">
 			</div>
     </div>
-    <div class="col-sm-2">
+    <div class="col-sm-1">
         <div class="form-group">
         	<label for="haber<?=$idFila;?>" class="bmd-label-floating">Importe</label>
       		<input type="number" id="modal_montoserv<?=$idFila;?>" name="modal_montoserv<?=$idFila;?>" class="form-control text-primary text-right"   step="0.01" onChange="sumartotalAddServiciosFacturacion(this.id,event);" OnKeyUp="sumartotalAddServiciosFacturacion(this.id,event);" required="true">
 			</div>
     </div>
-    <div class="col-sm-3">
+    <div class="col-sm-6">
       <div class="form-group">
-        <label for="haber<?=$idFila;?>" class="bmd-label-floating">Descripción</label>     
-        <input type="text" id="descripcion<?=$idFila;?>" name="descripcion<?=$idFila;?>" class="form-control text-primary text-right" >
+        <label for="haber<?=$idFila;?>" class="bmd-label-floating">Glosa</label>     
+        <textarea id="descripcion<?=$idFila;?>" name="descripcion<?=$idFila;?>" class="form-control text-primary text-right" onkeyup="javascript:this.value=this.value.toUpperCase();"></textarea>
+        
       </div>
     </div>
 		<div class="col-sm-1">

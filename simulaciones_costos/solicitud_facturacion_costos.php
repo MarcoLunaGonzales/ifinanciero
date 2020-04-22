@@ -115,7 +115,7 @@ m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo order by nombreAlumno");//poner 
                                         </a>                                               
                                   <?php }else{ ?>
                                         <a href='<?=$urlregistro_solicitud_facturacion?>&codigo=<?=$CiAlumno?>&cod_simulacion=<?=$codigo_simulacion;?>&cod_facturacion=0' rel="tooltip" class="btn" style="background-color: #0489B1;">
-                                          <i class="material-icons" title="Solicitar Facturación">monetization_on</i>
+                                          <i class="material-icons" title="Solicitar Facturación">receipt</i>
                                         </a>                                                  
                                   <?php }                                
                                 }

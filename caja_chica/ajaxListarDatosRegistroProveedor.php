@@ -55,19 +55,22 @@ $lista= obtenerPaisesServicioIbrnorca();
                                 <input type="hidden" name="materno_persona" id="materno_persona"> 
                                 <input type="hidden" name="tipo_id" id="tipo_id">
                                 <input type="hidden" name="tipo_id_otro" id="tipo_id_otro">
+                                <input type="hidden" name="emision" id="emision">
+                                <input type="hidden" name="emision_otro" id="emision_otro">
                             </div>
                           </div>
-                        </div>                          
+                        </div>  
+                        <div class="row">
+                          <label class="col-sm-3 col-form-label">NIT *</label>
+                          <div class="col-sm-9">
+                            <div class="form-group">
+                              <input class="form-control" type="number" name="identificacion" id="identificacion" required="true"/>
+                            </div>
+                          </div>
+                        </div>                        
                       </div>
 
-                      <div class="row">
-                       <label class="col-sm-3 col-form-label">NIT *</label>
-                       <div class="col-sm-9">
-                        <div class="form-group">
-                          <input class="form-control" type="number" name="nit_empresa" id="nit_empresa" required="true"/>
-                        </div>
-                        </div>
-                      </div>
+                      
                       <div class="row">
                        <label class="col-sm-3 col-form-label">Pais *</label>
                        <div class="col-sm-9">

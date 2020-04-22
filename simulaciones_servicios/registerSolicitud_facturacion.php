@@ -82,7 +82,7 @@ $contadorRegistros=0;
                     <div class="card-text">
                       <h4 class="card-title"><?php if ($cod_simulacion == 0) echo "Registrar "; else echo "Editar ";?>Solicitud de Facturación</h4>                      
                     </div>
-                    <h4 class="card-title" align="center"><b><?=$nombre_simulacion?> - <?=$name_area?></b></h4>
+                    <h4 class="card-title" align="center"><b>Propuesta: <?=$nombre_simulacion?> - <?=$name_area?></b></h4>
                   </div>
                   <div class="card-body ">
                         <div class="row">
@@ -123,12 +123,12 @@ $contadorRegistros=0;
 
                         </div>
                         <!-- fin fechas -->
-                        <div class="row">
+                        <div class="row d-none" >
                             <label class="col-sm-2 col-form-label">Tipo Objeto</label>
                             <div class="col-sm-4">
                                 <div class="form-group" >
                                         <select name="cod_tipoobjeto" id="cod_tipoobjeto" class="selectpicker form-control form-control-sm" data-style="btn btn-info" >
-                                            <option value=""></option>
+                                            <!-- <option value=""></option> -->
                                             <?php 
                                             $queryTipoObjeto = "SELECT codigo,nombre FROM  tipos_objetofacturacion WHERE cod_estadoreferencial=1 order by nombre";
                                             $statementObjeto = $dbh->query($queryTipoObjeto);
@@ -142,7 +142,7 @@ $contadorRegistros=0;
                             <div class="col-sm-4">
                                 <div class="form-group" >
                                         <select name="cod_tipopago" id="cod_tipopago" class="selectpicker form-control form-control-sm" data-style="btn btn-info">
-                                            <option value=""></option>
+                                            <!-- <option value=""></option> -->
                                             <?php 
                                             $queryTipoPago = "SELECT codigo,nombre FROM  tipos_pago WHERE cod_estadoreferencial=1 order by nombre";
                                             $statementPAgo = $dbh->query($queryTipoPago);
@@ -198,7 +198,7 @@ $contadorRegistros=0;
                             <label class="col-sm-2 col-form-label">Observaciones</label>
                             <div class="col-sm-7">
                                 <div class="form-group">
-                                    <input class="form-control" type="text" name="observaciones" id="observaciones" required="true" value="<?=$observaciones;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+                                    <input class="form-control" type="text" name="observaciones" id="observaciones"  value="<?=$observaciones;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
                                 </div>
                             </div>
                         </div>
@@ -225,7 +225,7 @@ $contadorRegistros=0;
                                             <th>Importe</th>
                                             <th>Total</th>                                            
                                             <th class="small">H/D</th>
-                                            <th width="30%">Descripción</th>  
+                                            <th width="50%">Glosa</th>  
                                           </tr>
                                       </thead>
                                       <tbody>                                
@@ -282,7 +282,8 @@ $contadorRegistros=0;
                                                </div>
                                              </td>
                                              <td>
-                                                 <input type="text" name="descripcion_alterna<?=$iii?>" id="descripcion_alterna<?=$iii?>" class="form-control" onkeyup="javascript:this.value=this.value.toUpperCase();">
+                                                <textarea name="descripcion_alterna<?=$iii?>" id="descripcion_alterna<?=$iii?>" class="form-control" onkeyup="javascript:this.value=this.value.toUpperCase();"></textarea>
+                                                 <!-- <input type="text" > -->
                                              </td>
                                            </tr>
 

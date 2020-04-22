@@ -14,11 +14,21 @@ if($codigo=='E'){?><!-- empresa -->
 		    </div>
 		</div>
 	</div>
+	<div class="row">
+      	<label class="col-sm-3 col-form-label">NIT *</label>
+      	<div class="col-sm-9">
+	        <div class="form-group">
+	          <input class="form-control" type="number" name="identificacion" id="identificacion" required="true"/>
+	        </div>
+	    </div>
+    </div>     
 	<input type="hidden" name="nombre_persona" id="nombre_persona">
     <input type="hidden" name="paterno_persona" id="paterno_persona">
     <input type="hidden" name="materno_persona" id="materno_persona">
     <input type="hidden" name="tipo_id" id="tipo_id">
     <input type="hidden" name="tipo_id_otro" id="tipo_id_otro">
+    <input type="hidden" name="emision" id="emision">
+    <input type="hidden" name="emision_otro" id="emision_otro">
 
 <?php }else{?><!-- persona -->
 	<input type="hidden" name="nombre_empresa" id="nombre_empresa">
@@ -64,10 +74,35 @@ if($codigo=='E'){?><!-- empresa -->
 		</div>
 	</div>
 	<div class="row">
-		<label class="col-sm-3 col-form-label">Tipo ID *</label>
+      	<label class="col-sm-3 col-form-label">Identificación *</label>
+      	<div class="col-sm-9">
+	        <div class="form-group">
+	          <input class="form-control" type="number" name="identificacion" id="identificacion" required="true"/>
+	        </div>
+	    </div>
+    </div> 
+	<div class="row">
+		<label class="col-sm-3 col-form-label">ID Otro *</label>
 		<div class="col-sm-9">
 		    <div class="form-group" >
 		        <input type="text" class="form-control" name="tipo_id_otro" id="tipo_id_otro" value="" required="true" onkeyup="javascript:this.value=this.value.toUpperCase();">
+		    </div>
+		</div>
+	</div>
+	<div class="row">
+		<label class="col-sm-3 col-form-label">Lugar Emisión *</label>
+		<div class="col-sm-9">
+		    <div class="form-group" >
+		        <select name="emision" onchange="seleccionarCiudadServicioCajaChica()" id="emision" class="form-control form-control-sm selectpicker" data-style="btn btn-info" required="true">
+                          </select>
+		    </div>
+		</div>
+	</div>
+	<div class="row">
+		<label class="col-sm-3 col-form-label">Emisión Otro *</label>
+		<div class="col-sm-9">
+		    <div class="form-group" >
+		        <input type="text" class="form-control" name="emision_otro" id="emision_otro" value="" required="true" onkeyup="javascript:this.value=this.value.toUpperCase();">
 		    </div>
 		</div>
 	</div>

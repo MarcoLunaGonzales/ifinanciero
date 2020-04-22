@@ -203,12 +203,8 @@ $stmt->bindColumn('cod_area', $codAreaX);
                                  </a> 
 
                                  <a class="btn btn-warning" title="Solicitud de Facturación" href='<?=$urlSolicitudfactura;?>&cod=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>'>
-                                   <i class="material-icons" >monetization_on</i>                              
+                                   <i class="material-icons">receipt</i>                              
                                  </a>
-
-                                 <!--<a class="btn btn-warning" title="Solicitud de Facturación" href='<?=$urlSolicitudfactura;?>&cod=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>'>
-                                   <i class="material-icons" >receipt</i>                              
-                                 </a>-->
 
                                  <?php 
                                  if($idServicioX>0){
@@ -236,7 +232,7 @@ $stmt->bindColumn('cod_area', $codAreaX);
                                      <i class="material-icons"><?=$iconImp;?></i>
                                  </a> 
                                  <a class="btn btn-warning" title="Solicitud de Facturación" href='<?=$urlSolicitudfactura;?>&cod=<?=$codigo;?>'>
-                                   <i class="material-icons" >monetization_on</i>                              
+                                   <i class="material-icons" >receipt</i>                              
                                  </a>
                                  <?php 
                                  if($idServicioX>0){
