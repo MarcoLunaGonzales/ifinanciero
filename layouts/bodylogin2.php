@@ -244,17 +244,33 @@
                       if($('#cuenta'+(i+1)).val()==""||$('#cuenta'+(i+1)).val()==null||$('#cuenta'+(i+1)).val()==0){
                         contcuenta++;
                       } 
-                      if($('#cuenta'+(i+1)).val()==63){
+
+                      if($('#cuenta'+(i+1)).val()==63){//para facturas
                         contcuentaIva++;
                       }           
                     }
-                    if(contcuentaIva!=0 ){
+                    if(contcuentaIva!=0){
                       var cantiFacturas = itemFacturas.length;                  
                       var contadorFacturas=0;
                       for (var i = 0; i < cantiFacturas; i++){
+                        var factura=itemFacturas[i];                          
                         if(itemFacturas[i]==null || itemFacturas[i]==''){
                           contadorFacturas++;
+                        }else{//existe factura
+                          var sumaTotalFactura=0;
+                          for(var j = 0; j < itemFacturas[i].length; j++){
+                            var dato = Object.values(itemFacturas[i][j]);
+                            sumaTotalFactura=sumaTotalFactura+parseInt(dato[4])+parseInt(dato[7])+parseInt(dato[8]);
+                          }                           
+                          var monto_debe_total_comprobante = $("#totaldeb").val();                          
+                          if(sumaTotalFactura!=monto_debe_total_comprobante){
+                            mensaje+="<p>El Monto registrado en las facturas difiere del total!</p>";
+                            $('#msgError').html(mensaje);
+                            $('#modalAlert').modal('show');
+                            envio=1; 
+                          }
                         }
+
                       }
                       if(contadorFacturas==cantiFacturas){
                         mensaje+="<p>No puede existir Facturas vacías!</p>";

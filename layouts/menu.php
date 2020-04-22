@@ -560,7 +560,13 @@ if($menuModulo==0){
                     <span class="sidebar-mini"> LM </span>
                     <span class="sidebar-normal"> Libro Mayor</span>
                   </a>
-                </li>   
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=reportesLibroCompras">
+                    <span class="sidebar-mini"> LC </span>
+                    <span class="sidebar-normal"> Libro Compras</span>
+                  </a>
+                </li>    
                 <li class="nav-item ">
                   <a class="nav-link" href="caja_chica/rpt_proveedores_print.php" target="_blank">
                     <span class="sidebar-mini"> P </span>

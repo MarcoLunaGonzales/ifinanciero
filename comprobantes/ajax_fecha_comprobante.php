@@ -17,15 +17,27 @@ $globalMes=$_SESSION["globalMes"];
 
 $db = new Conexion();
 $sqlUO="SELECT max(fecha)as fecha from comprobantes where cod_tipocomprobante=$tipoComprobante and cod_unidadorganizacional='$globalUnidad' and YEAR(fecha)='$anio' and MONTH(fecha)='$globalMes'";
-//echo $sqlUO;
+
 $stmt = $db->prepare($sqlUO);
 $stmt->execute();
 $fechaDefault=$anio."-".$globalMes."-01";
+
+$fechaDefault = date("Y-m-d",strtotime($fechaDefault));
+// echo $fechaDefault;
+
 $fechaComprobante=$anio."-".$globalMes."-01";
 while ($row = $stmt->fetch()){
 	$fechaComprobante=$row['fecha'];
+	// echo "entro: ".$fechaComprobante;
 }
-$fechaMin = date("Y-m-d",strtotime($fechaComprobante."+ 0 days"));
+
+if($fechaComprobante=="" || $fechaComprobante==null){
+	// echo "if";
+	$fechaMin=$fechaDefault;	
+}else{
+	$fechaMin = date("Y-m-d",strtotime($fechaComprobante."+ 0 days"));	
+}
+
 $fechaMax = date("Y-m-d",strtotime($fechaDefault."+ 1 month"));
 $fechaMax = date("Y-m-d",strtotime($fechaMax."- 1 days"));
 

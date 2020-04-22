@@ -128,6 +128,10 @@
 			require_once('reportes/reportesMayores.php');
 		}
 		//REPORTES
+		if ($_GET['opcion']=='reportesLibroCompras') {
+			require_once('reportes/reportesLibroCompras.php');
+		}
+		//REPORTES
 		if ($_GET['opcion']=='reportesEstadoCuentas') {
 			require_once('reportes/reportesEstadoCuentas.php');
 		}

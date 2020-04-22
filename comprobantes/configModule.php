@@ -21,4 +21,7 @@ $urlSaveDelete="";
 $urlReporteDiario="reportes/reporteDiario.php";
 $urlReporteMayor="reportes/reporteMayor.php";
 $urlReporteBalance="reportes/reporteBalance.php";
+
+$urlReporteCompras="reportes/reportePrintLibroCompra.php";
 ?>
+
