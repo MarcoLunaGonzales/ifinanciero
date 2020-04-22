@@ -87,8 +87,6 @@ $item_1=2707;
                           <th>Fecha</th>
                           <th>Estado</th>
                           <th>Servicio</th>
-                          <th>Unidad</th>
-                          <th>Area</th>
                           <th class="text-center">Actions</th>
                         </tr>
                       </thead>
@@ -96,6 +94,7 @@ $item_1=2707;
 <?php
             $index=1;
                         while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+                          
                           $unidadX=abrevUnidad_solo($codUnidadX);
                           $areaX=abrevArea_solo($codAreaX);
                           $codigoServicio="SIN CODIGO";
@@ -133,7 +132,7 @@ $item_1=2707;
 ?>
                         <tr class="<?=$estiloFila?>">
                           <td align="center"><?=$index;?></td>
-                          <td class="font-weight-bold"><?=$nombre;?></td>
+                          <td class="font-weight-bold"><?=$nombre;?>  <?=$unidadX?> - <?=$areaX?></td>
                           <td><?=$cliente;?></td>
                           <td class="text-left">
                                  <img src="assets/img/faces/persona1.png" width="20" height="20"/><?=$responsable;?>
@@ -147,8 +146,6 @@ $item_1=2707;
                              </div>
                           </td>-->
                           <td><?=$codigoServicio?></td>
-                          <td><?=$unidadX?></td>
-                          <td><?=$areaX?></td>  
                           <td class="td-actions text-right">
                             <div class="btn-group dropdown">
                               <button type="button" class="btn <?=$btnEstado?> dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

@@ -23,11 +23,21 @@ if(isset($_GET['q'])){
     $sqlAreas="and p.cod_area=".$codigoArea;
   }
   //cargarDatosSession();
-  $stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado,c.nombre as cliente from simulaciones_servicios sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo join clientes c on c.codigo=sc.cod_cliente join plantillas_servicios p on p.codigo=sc.cod_plantillaservicio where sc.cod_estadoreferencial=1 and sc.cod_responsable=$globalUser $sqlAreas order by sc.fecha desc");
+  $stmt = $dbh->prepare("SELECT p.cod_unidadorganizacional,p.cod_area,sc.*,es.nombre as estado,c.nombre as cliente 
+from simulaciones_servicios sc 
+join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo 
+join clientes c on c.codigo=sc.cod_cliente 
+join plantillas_servicios p on p.codigo=sc.cod_plantillaservicio
+where sc.cod_estadoreferencial=1 and sc.cod_responsable=$globalUser $sqlAreas order by sc.fecha desc");
 }else{
   $s=0;
   $u=0;
-  $stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado,c.nombre as cliente from simulaciones_servicios sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo join clientes c on c.codigo=sc.cod_cliente join plantillas_servicios p on p.codigo=sc.cod_plantillaservicio where sc.cod_estadoreferencial=1 and sc.cod_responsable=$globalUser order by sc.fecha desc");
+  $stmt = $dbh->prepare("SELECT p.cod_unidadorganizacional,p.cod_area,sc.*,es.nombre as estado,c.nombre as cliente 
+from simulaciones_servicios sc 
+join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo 
+join clientes c on c.codigo=sc.cod_cliente 
+join plantillas_servicios p on p.codigo=sc.cod_plantillaservicio
+where sc.cod_estadoreferencial=1 and sc.cod_responsable=$globalUser order by sc.fecha desc");
 }
 
 // Ejecutamos
@@ -43,6 +53,8 @@ $stmt->bindColumn('cod_responsable', $codResponsable);
 $stmt->bindColumn('estado', $estado);
 $stmt->bindColumn('cliente', $cliente);
 $stmt->bindColumn('idServicio', $idServicioX);
+$stmt->bindColumn('cod_unidadorganizacional', $codUnidadX);
+$stmt->bindColumn('cod_area', $codAreaX);
 
 ?>
 
@@ -68,6 +80,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
                           <th>Fecha</th>
                           <th>Estado</th>
                           <th>Servicio</th>
+                          
                           <th class="text-right">Actions</th>
                         </tr>
                       </thead>
@@ -75,6 +88,8 @@ $stmt->bindColumn('idServicio', $idServicioX);
                       <?php
                         $index=1;
                         while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+                          $unidadX=abrevUnidad_solo($codUnidadX);
+                          $areaX=abrevArea_solo($codAreaX);
                           $codigoServicio="SIN CODIGO";
                           $sql="SELECT codigo FROM ibnorca.servicios where idServicio=$idServicioX";
                           $stmt1=$dbh->prepare($sql);
@@ -108,7 +123,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
 ?>
                         <tr>
                           <td align="center"><?=$index;?></td>
-                          <td class="font-weight-bold"><?=$nombre;?></td>
+                          <td class="font-weight-bold"><?=$nombre;?>  <?=$unidadX?> - <?=$areaX?></td>
                           <td><?=$cliente?></td>
                           <td>
                                  <img src="assets/img/faces/persona1.png" width="20" height="20"/><?=$responsable;?>
@@ -122,6 +137,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
                              </div>
                           </td>--> 
                           <td><?=$codigoServicio?></td>
+                        
                           <td class="td-actions text-right">
                             <?php
                               if($codEstado==4||$codEstado==3||$codEstado==5){

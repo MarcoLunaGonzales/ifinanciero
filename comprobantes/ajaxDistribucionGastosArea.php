@@ -25,7 +25,9 @@ $globalAdmin=$_SESSION["globalAdmin"];
 
   $json=json_decode($_GET["listDist"]);
   $idFila=$_GET['filas'];
-  $idFila--;
+  $idFilaOrigen=$_GET['fila'];
+  //$idFila--;
+  $areaFila=$_GET['area'];
   $areaDet=$_GET['area'];
   $valor=$_GET['valor'];
   $glosa=$_GET['glosa'];
@@ -70,6 +72,20 @@ $globalAdmin=$_SESSION["globalAdmin"];
     //$nombre_cuenta=$json[$i]->nom_cuenta;
     //$nombre_cuenta_aux=$json[$i]->nom_cuenta_auxiliar;
     //$numero_cuenta=$json[$i]->n_cuenta;
+
+   if($areaDet==$areaFila){
+     //mostrar los datos directamente
+    ?>
+    <script>
+    var filaUno='<?=$idFilaOrigen?>';
+    console.log("numFilas: "+filaUno+" por Area");
+    $("#divCuentaDetalle"+filaUno).html('<span class="text-danger font-weight-bold">['+"<?=$n_cuenta?>"+']-'+"<?=$nom_cuenta?>"+' </span><br><span class="text-info font-weight-bold small">'+"<?=$nom_cuenta_auxiliar?>"+'</span><p class="text-muted">'+"<?=$porcent?>"+' <span>%</span> de '+"<?=$valor?>"+'</p>');
+    $("#debe"+filaUno).val('<?=$debe?>');
+    $("#haber"+filaUno).val('<?=$haber?>');
+    </script>
+    <?php
+   }else{
+
     $idFila=$idFila+1; 
       ?>   
       <script>
@@ -212,7 +228,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 </div>
 <script>$("#div"+<?=$idFila?>).bootstrapMaterialDesign();</script>
       <?php
-
+    }//fin de else
   }
 
 ?>

@@ -1148,6 +1148,7 @@ function nuevaDistribucion(){
   var haber = $("#haber"+fila).val();
   var glosa = $("#glosa_detalle"+fila).val();
   var area=$("#area"+fila).val();
+  var oficina=$("#unidad"+fila).val();
   var cuenta_aux=$("#cuenta_auxiliar"+fila).val();
   var valor=0; var cond=9;
   if(debe==""&&haber==""){
@@ -1174,15 +1175,15 @@ function nuevaDistribucion(){
     ajax=nuevoAjax();
     if(tipoDistribucion==1){
       urlDist="ajaxDistribucionGastos.php";
-      ajax.open("GET",urlDist+"?area="+area+"&filas="+cantidadItems+"&cuenta_aux="+cuenta_aux+"&cuenta="+cuenta+"&cond="+cond+"&valor="+valor+"&glosa="+glosa+"&listDist="+JSON.stringify(distribucionPor),true);
+      ajax.open("GET",urlDist+"?fila="+fila+"&unidad="+oficina+"&area="+area+"&filas="+cantidadItems+"&cuenta_aux="+cuenta_aux+"&cuenta="+cuenta+"&cond="+cond+"&valor="+valor+"&glosa="+glosa+"&listDist="+JSON.stringify(distribucionPor),true);
     }else{
       urlDist="ajaxDistribucionGastosArea.php";
-      ajax.open("GET",urlDist+"?area="+area+"&filas="+cantidadItems+"&cuenta_aux="+cuenta_aux+"&cuenta="+cuenta+"&cond="+cond+"&valor="+valor+"&glosa="+glosa+"&listDist="+JSON.stringify(distribucionPorArea),true);
+      ajax.open("GET",urlDist+"?fila="+fila+"&unidad="+oficina+"&area="+area+"&filas="+cantidadItems+"&cuenta_aux="+cuenta_aux+"&cuenta="+cuenta+"&cond="+cond+"&valor="+valor+"&glosa="+glosa+"&listDist="+JSON.stringify(distribucionPorArea),true);
     }
     ajax.onreadystatechange=function(){
       if (ajax.readyState==4) {
         var fi=$("#fiel");
-        minusCuentaContable(fila);
+        //minusCuentaContable(fila);
         fi.append(ajax.responseText);
         $('.selectpicker').selectpicker(["refresh"]);
       }
@@ -2682,7 +2683,7 @@ function guardarSimulacionServicio(){
    if(norma==""||itemAtributos.length==0||dias==""||nombre==""||!(plantilla_servicio>0)){
    Swal.fire('Informativo!','Debe llenar los campos!','warning'); 
   }else{
-    var tipoServicio=$("#tipo_servicio").val();
+    var tipoServicio=$("#tipo_servicio").val()[0];
      var parametros={"id_perfil":idPerfil,"objeto_servicio":objeto,"tipo_servicio":tipoServicio,"id_servicio":idServicio,"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"atributos":JSON.stringify(itemAtributos),"norma":norma,"anios":anios,"afnor":afnor,"tipo_atributo":2};
      $.ajax({
         type: "GET",
