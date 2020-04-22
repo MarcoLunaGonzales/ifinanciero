@@ -168,13 +168,15 @@ function calcularTotalesComprobante(id,e){
   if($("#totalhab_restante").length){
     document.getElementById("totaldeb").value=redondeo(sumadebe+parseFloat($("#totaldeb_restante").val()),2).toFixed(2);  
     document.getElementById("totalhab").value=redondeo(sumahaber+parseFloat($("#totalhab_restante").val()),2).toFixed(2);
-
     document.getElementById("total_dif").value=redondeo($("#totaldeb").val()-$("#totalhab").val(),2).toFixed(2);
   }else{
     document.getElementById("totaldeb").value=redondeo(sumadebe,2).toFixed(2);  
     document.getElementById("totalhab").value=redondeo(sumahaber,2).toFixed(2); 
     document.getElementById("total_dif").value=redondeo(sumadebe-sumahaber,2).toFixed(2);  
   }
+  document.getElementById("totaldeb_fijo").value=document.getElementById("totaldeb").value;
+  document.getElementById("totalhab_fijo").value=document.getElementById("totalhab").value;
+  document.getElementById("total_dif_fijo").value=document.getElementById("total_dif").value;
 }
 
 function llenarFacturaAutomaticamente(valor,fila){
@@ -1184,6 +1186,7 @@ function nuevaDistribucion(){
       if (ajax.readyState==4) {
         var fi=$("#fiel");
         //minusCuentaContable(fila);
+        //alert(ajax.responseText);
         fi.append(ajax.responseText);
         $('.selectpicker').selectpicker(["refresh"]);
       }

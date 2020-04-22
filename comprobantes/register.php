@@ -390,10 +390,33 @@ $cod_cuenta_configuracion_iva=obtenerValorConfiguracion(3);//cuenta iva
 						      	<div class="col-sm-3">
 								</div>
 							</div>
-	                  	</div>  						
+	                  	</div>
+
 					  	<div class="card-footer fixed-bottom">
 							<button type="submit" class="<?=$buttonMorado;?>">Guardar</button>
 							<a href="../<?=$urlList;?>" class="<?=$buttonCancel;?>">Volver</a>
+							<div class="row col-sm-12">
+								<div class="col-sm-6">
+						      	</div>
+								<div class="col-sm-2">
+						            <div class="form-group">
+						                <label class="bmd-label-static fondo-boton">Debe</label>	
+						          		<input class="form-control fondo-boton-active text-center" style="border-radius:20px;" type="number" step=".01" placeholder="0" value="0" id="totaldeb_fijo" readonly="true">	
+									</div>
+						      	</div>
+								<div class="col-sm-2">
+						            <div class="form-group">
+						            	<label class="bmd-label-static fondo-boton">Haber</label>	
+						            	<input class="form-control fondo-boton-active text-center" style="border-radius:20px;" type="number" step=".01" placeholder="0" value="0" id="totalhab_fijo" readonly="true">	
+									</div>
+						      	</div>
+						      	<div class="col-sm-2">
+						            <div class="form-group">
+						            	<label class="bmd-label-static fondo-boton">Diferencia</label>	
+						            	<input class="form-control fondo-boton-active text-center" style="border-radius:20px;" type="number" step=".01" placeholder="0" value="0" id="total_dif_fijo" readonly="true">	
+									</div>
+						      	</div>
+							</div>
 					  	</div>
 					</div>
 				</div>
