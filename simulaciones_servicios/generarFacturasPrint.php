@@ -65,20 +65,25 @@ try{
       
 
     $cantidad=1;
+
+    //para generar factura
+     $stmtDesCli = $dbh->prepare("SELECT sf.cantidad from facturas_ventadetalle sf where sf.cod_facturaventa=$cod_factura");
+    $stmtDesCli->execute();
+    $stmt2DesCli = $dbh->prepare("SELECT sf.descripcion_alterna from facturas_ventadetalle sf where sf.cod_facturaventa=$cod_factura");
+    $stmt2DesCli->execute();
+     $stmt3DesCli = $dbh->prepare("SELECT sf.precio from facturas_ventadetalle sf where sf.cod_facturaventa=$cod_factura");
+    $stmt3DesCli->execute();
     //copia cliente
     $stmt = $dbh->prepare("SELECT sf.cantidad from facturas_ventadetalle sf where sf.cod_facturaventa=$cod_factura");
     $stmt->execute();
-    $stmt2 = $dbh->prepare("SELECT sf.descripcion_alterna from facturas_ventadetalle sf
-    where sf.cod_facturaventa=$cod_factura");
+    $stmt2 = $dbh->prepare("SELECT sf.descripcion_alterna from facturas_ventadetalle sf where sf.cod_facturaventa=$cod_factura");
     $stmt2->execute();
-     $stmt3 = $dbh->prepare("SELECT sf.precio from facturas_ventadetalle sf 
-    where sf.cod_facturaventa=$cod_factura");
+     $stmt3 = $dbh->prepare("SELECT sf.precio from facturas_ventadetalle sf where sf.cod_facturaventa=$cod_factura");
     $stmt3->execute();
     //copia contabilidad
     $stmt_conta = $dbh->prepare("SELECT sf.cantidad from facturas_ventadetalle sf where sf.cod_facturaventa=$cod_factura");
     $stmt_conta->execute();
-    $stmt_conta2 = $dbh->prepare("SELECT sf.descripcion_alterna from facturas_ventadetalle sf
-    where sf.cod_facturaventa=$cod_factura");
+    $stmt_conta2 = $dbh->prepare("SELECT sf.descripcion_alterna from facturas_ventadetalle sf where sf.cod_facturaventa=$cod_factura");
     $stmt_conta2->execute();
      $stmt_conta3 = $dbh->prepare("SELECT sf.precio from facturas_ventadetalle sf 
     where sf.cod_facturaventa=$cod_factura");
@@ -166,19 +171,19 @@ $html.=  '<header class="header">'.
                   $suma_total+=$importe;
                 }else{//imporesion detallada
                   $html.='<td valign="top" height="8%" class="text-right"><h4>';
-                  while ($row = $stmt->fetch()) 
+                  while ($row = $stmtDesCli->fetch()) 
                   {
                     $html.=formatNumberDec($row["cantidad"]).'<br>';
                   }
                   $html.='</h4></td> 
                   <td valign="top" height="8%"><h4>';
-                  while ($row = $stmt2->fetch()) 
+                  while ($row = $stmt2DesCli->fetch()) 
                   {
                     $html.=$row["descripcion_alterna"].'<br>';
                   }
                   $html.='</h4></td>                   
                   <td valign="top" height="8%" class="text-right"><h4>';
-                  while ($row = $stmt3->fetch()) 
+                  while ($row = $stmt3DesCli->fetch()) 
                   {
                     $html.=formatNumberDec($row["precio"]).'<br>';
                     $suma_total+=$row["precio"];
@@ -475,19 +480,19 @@ $htmlConta.=  '<header class="header">'.
                     $suma_total+=$importe;
                   }else{//imporesion detallada
                     $htmlConta.='<td valign="top" height="8%" class="text-right"><h4>';
-                    while ($row = $stmt->fetch()) 
+                    while ($row = $stmt_conta->fetch()) 
                     {
                       $htmlConta.=formatNumberDec($row["cantidad"]).'<br>';
                     }
                     $htmlConta.='</h4></td> 
                     <td valign="top" height="8%"><h4>';
-                    while ($row = $stmt2->fetch()) 
+                    while ($row = $stmt_conta2->fetch()) 
                     {
                       $htmlConta.=$row["descripcion_alterna"].'<br>';
                     }
                     $htmlConta.='</h4></td>                   
                     <td valign="top" height="8%" class="text-right"><h4>';
-                    while ($row = $stmt3->fetch()) 
+                    while ($row = $stmt_conta3->fetch()) 
                     {
                       $htmlConta.=formatNumberDec($row["precio"]).'<br>';
                       $suma_total+=$row["precio"];

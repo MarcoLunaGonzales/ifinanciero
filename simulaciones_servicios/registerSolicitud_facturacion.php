@@ -55,7 +55,7 @@ if ($cod_facturacion > 0){
     $observaciones = null;
 }
 $name_uo=nameUnidad($cod_uo);
-$name_area=abrevArea($cod_area);
+$name_area=trim(abrevArea($cod_area),'-');
 
 $contadorRegistros=0;
 ?>
@@ -270,6 +270,7 @@ $contadorRegistros=0;
                                             <!-- guardamos las varialbles en un input -->
                                             <input type="hidden" id="cod_serv_tiposerv<?=$iii?>" name="cod_serv_tiposerv<?=$iii?>" value="<?=$codigoPre?>">
                                             <input type="hidden" id="servicio<?=$iii?>" name="servicio<?=$iii?>" value="<?=$codCS?>">
+                                             <input type="hidden" id="nombre_servicio<?=$iii?>" name="nombre_servicio<?=$iii?>" value="<?=$tipoPre?>">
                                             <input type="hidden" id="cantidad<?=$iii?>" name="cantidad<?=$iii?>" value="<?=$cantidadPre?>">
                                             <input type="hidden" id="importe<?=$iii?>" name="importe<?=$iii?>" value="<?=$montoPre?>">
 
@@ -281,7 +282,7 @@ $contadorRegistros=0;
                                             <tr>
                                              <td><?=$iii?></td>
                                              <td class="text-left"><?=$cod_anio?> </td>
-                                             <td class="text-right"><?=$tipoPre?></td>
+                                             <td class="text-left"><?=$tipoPre?></td>
                                              <td class="text-right"><?=$cantidadPre?></td>
                                              <td class="text-right"><?=formatNumberDec($montoPre)?></td>
                                              <td class="text-right">

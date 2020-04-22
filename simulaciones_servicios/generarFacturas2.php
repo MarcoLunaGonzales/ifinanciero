@@ -60,8 +60,10 @@ try{
         // echo "uo:",$cod_unidadorganizacional."<br>";
         $fecha_actual=date('Y-m-d');
         $fecha_actual_cH=date('Y-m-d H:i:s');
-        $stmtInfo = $dbh->prepare("SELECT d.codigo,d.nro_autorizacion, d.llave_dosificacion,d.fecha_limite_emision
-        from dosificaciones_facturas d where d.cod_sucursal='$cod_unidadorganizacional' order by codigo");
+        $sqlInfo="SELECT d.codigo,d.nro_autorizacion, d.llave_dosificacion,d.fecha_limite_emision
+        from dosificaciones_facturas d where d.cod_sucursal='$cod_unidadorganizacional' order by codigo";
+        $stmtInfo = $dbh->prepare($sqlInfo);
+        // echo $sqlInfo;
         $stmtInfo->execute();
         $resultInfo = $stmtInfo->fetch();  
         $cod_dosificacionfactura = $resultInfo['codigo'];  
@@ -124,7 +126,7 @@ try{
 
     }else{//ya se registro
         echo "ya se registró la factura.";
-        header('Location: ../simulaciones_servicios/generarFacturasPrint.php?codigo='.$codigo.'&tipo=1');
+        header('Location: ../simulaciones_servicios/generarFacturasPrint.php?codigo='.$codigo.'&tipo=2');
     }?>
 
 <?php 
