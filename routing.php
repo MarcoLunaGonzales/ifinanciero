@@ -140,7 +140,10 @@
 		if ($_GET['opcion']=='reportesBalanceGeneral') {
 			require_once('reportes/reportesBalanceGeneral.php');
 		}
-
+        
+        if ($_GET['opcion']=='reportesEstadoResultados') {
+			require_once('reportes/reportesEstadoResultados.php');
+		}
 
  		//TIPO DE CAMBIO
 		if ($_GET['opcion']=='tipoDeCambio') {
