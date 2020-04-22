@@ -40,7 +40,6 @@ $stmt2->bindColumn('tipo_compra', $tipo_compra);
 
 //datos de la factura
 $stmtPersonal = $dbh->prepare("SELECT * from titulos_oficinas where cod_uo in ($stringUnidadesX)");
-
 $stmtPersonal->execute();
 $result=$stmtPersonal->fetch();
 $sucursal=$result['sucursal'];
@@ -102,6 +101,11 @@ $razon_social=$result['razon_social'];
                                 $index++;
                                 $importe_sujeto_iva=$importe-$ice-$exento;
                                 $iva_obtenido=$importe_sujeto_iva*13/100;
+                                $caracter=substr($codigo_control, -1);
+                                if($caracter=='-'){
+                                  $codigo_control=trim($codigo_control, '-');
+                                }
+                                
 
                                 $total_importe+=$importe;
                                 $total_ice+=$ice;
