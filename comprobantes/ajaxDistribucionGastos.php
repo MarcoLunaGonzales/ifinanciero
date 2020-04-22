@@ -71,18 +71,16 @@ $globalAdmin=$_SESSION["globalAdmin"];
     ?>
     <script>
     var filaUno='<?=$idFilaOrigen?>';
-    console.log("numFilas: "+filaUno+" ENTROOOO");
-    $("#divCuentaDetalle"+filaUno).html('<span class="text-info font-weight-bold">['+"<?=$n_cuenta?>"+']-'+"<?=$nom_cuenta?>"+' </span><br><span class="text-info font-weight-bold small">'+"<?=$nom_cuenta_auxiliar?>"+'</span><p class="text-muted">'+"<?=$porcent?>"+' <span>%</span> de '+"<?=$valor?>"+'</p>');
+    console.log("numFilas: "+filaUno+" POR UNIDAD");
+    $("#divCuentaDetalle"+filaUno).html('<span class="text-danger font-weight-bold">['+"<?=$n_cuenta?>"+']-'+"<?=$nom_cuenta?>"+' </span><br><span class="text-info font-weight-bold small">'+"<?=$nom_cuenta_auxiliar?>"+'</span><p class="text-muted">'+"<?=$porcent?>"+' <span>%</span> de '+"<?=$valor?>"+'</p>');
     $("#debe"+filaUno).val('<?=$debe?>');
     $("#haber"+filaUno).val('<?=$haber?>');
     </script>
     <?php
    }else{
     $idFila=$idFila+1; 
-
 ?>   
-      <script>
-          
+      <script>      
           numFilas++;
           cantidadItems++;
           filaActiva=numFilas;
