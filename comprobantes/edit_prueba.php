@@ -716,7 +716,7 @@ $stmt->execute();
 						      	<div class="col-sm-2">
 						            <div class="form-group">
 						            	<label class="bmd-label-static fondo-boton">Diferencia</label>	
-						            	<input class="form-control fondo-boton-active text-center" style="border-radius:20px;" type="number" step=".01" placeholder="0" value="0" id="total_dif_fijo" readonly="true">	
+						            	<input class="form-control fondo-boton-active text-center" style="border-radius:20px;" type="number" step=".01" placeholder="0" value="<?=$totalesDif?>" id="total_dif_fijo" readonly="true">	
 									</div>
 						      	</div>
 							</div>
