@@ -334,7 +334,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
             '<thead>'.
             '<tr class="bold table-title">'.
               '<td class="text-left" width="85%">Resultado</td>'.
-              '<td class="text-right">'.number_format($tBolPasivo-$tBolActivo, 2, '.', ',').'</td>'.
+              '<td class="text-right">'.number_format(abs($tBolPasivo-$tBolActivo), 2, '.', ',').'</td>'.
             '</tr>'.
            '</thead>'.
            '<tbody>';
