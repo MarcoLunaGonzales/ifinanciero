@@ -3,6 +3,7 @@ require_once '../conexion.php';
 require_once '../functions.php';
 require_once 'configModule.php';
 
+setlocale(LC_TIME, "Spanish");
 session_start();
 
 $tipoComprobante=$_GET["tipo_comprobante"];

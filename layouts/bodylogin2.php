@@ -250,19 +250,27 @@
                       }           
                     }
                     if(contcuentaIva!=0){
-                      var cantiFacturas = itemFacturas.length;                  
+                      var cantiFacturas = itemFacturas.length;  
+                      console.log("numero de Facturas: "+cantiFacturas+" json: "+JSON.stringify(itemFacturas));
                       var contadorFacturas=0;
                       for (var i = 0; i < cantiFacturas; i++){
                         var factura=itemFacturas[i];                          
                         if(itemFacturas[i]==null || itemFacturas[i]==''){
                           contadorFacturas++;
                         }else{//existe factura
+                          console.log("exite factura: "+JSON.stringify(itemFacturas[i]));
                           var sumaTotalFactura=0;
                           for(var j = 0; j < itemFacturas[i].length; j++){
                             var dato = Object.values(itemFacturas[i][j]);
+                            console.log("dato: "+dato);
+                            console.log("datos: "+dato[4]+" "+dato[7]+" "+dato[8]);
+                            if(dato[4]==""){  dato[4]=0;}
+                            if(dato[7]==""){  dato[7]=0;}
+                            if(dato[8]==""){  dato[8]=0;}
                             sumaTotalFactura=sumaTotalFactura+parseInt(dato[4])+parseInt(dato[7])+parseInt(dato[8]);
                           }                           
-                          var monto_debe_total_comprobante = $("#totaldeb").val();                          
+                          var monto_debe_total_comprobante = $("#totaldeb").val();  
+                          console.log("SUMA FACTURAS: "+sumaTotalFactura+" "+monto_debe_total_comprobante);
                           if(sumaTotalFactura!=monto_debe_total_comprobante){
                             mensaje+="<p>El Monto registrado en las facturas difiere del total!</p>";
                             $('#msgError').html(mensaje);
@@ -298,7 +306,7 @@
                           var cuentaAuxiliar=$("#cuenta_auxiliar"+(i+1)).val();  
                           var estadoCuentaSelect=$("#nestado"+(i+1)).hasClass("estado");
 
-                          console.log("debe: "+debeZ+" haber: "+haberZ+" TC: "+tipoComprobante+" CA: "+cuentaAuxiliar+" TEC: "+tipoEstadoCuenta+" EEC: "+estadoCuentaSelect);
+                          //console.log("debe: "+debeZ+" haber: "+haberZ+" TC: "+tipoComprobante+" CA: "+cuentaAuxiliar+" TEC: "+tipoEstadoCuenta+" EEC: "+estadoCuentaSelect);
 
                           //VALIDAMOS CUANDO LA CUENTA TENGA EC LA CUENTA AUXILIAR SIEMPRE ESTE SELECCIONADA.
                           if(tipoComprobante==3 && tipoEstadoCuenta>0 && cuentaAuxiliar==0){  
@@ -306,7 +314,7 @@
                             $('#modalAlert').modal('show');
                             return false;
                           }else{
-                            console.log("cuenta sin problemas; tipoComp:3");
+                            //console.log("cuenta sin problemas; tipoComp:3");
                           }
 
                           
@@ -323,7 +331,7 @@
                               return false;
                             }                                                        
                           }else{
-                            console.log("cuenta sin problemas; tipoComp:1");
+                            //console.log("cuenta sin problemas; tipoComp:1");
                           }
 
                           //Validamos TipoC: Ingreso y cuando haya EC se registre obligatoriamente en el Haber
@@ -339,7 +347,7 @@
                               return false;
                             }  
                           }else{
-                            console.log("cuenta sin problemas; tipoComp:2");
+                            //console.log("cuenta sin problemas; tipoComp:2");
                           }
                           
 
@@ -353,7 +361,7 @@
                               }
                             };  
                           }else{
-                            console.log("cuenta sin problemas; tipoComp:2");
+                            //console.log("cuenta sin problemas; tipoComp:2");
                           }
                           //Validar las cuentas que esten relacionadads al estado de cuentas los montos deben ser iguales
                           if( (tipoComprobante==2 && tipoEstadoCuenta==2) ){
@@ -365,7 +373,7 @@
                               }
                             };  
                           }else{
-                            console.log("cuenta sin problemas; tipoComp:2");
+                            //console.log("cuenta sin problemas; tipoComp:2");
                           }
 
                           //COMENTAMOS LA VALIDACION DE LOS ESTADOS DE CUENTA

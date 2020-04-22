@@ -46,7 +46,7 @@ $sql="SELECT (select u.abreviatura from unidades_organizacionales u where u.codi
 // }
   $sql.=" and c.cod_tipocomprobante in ($codigo_tipo)";
 $sql.=" and c.cod_unidadorganizacional='$globalUnidad' ";
-$sql.=" and c.cod_gestion='$globalGestion' order by c.fecha desc, unidad, tipo_comprobante, c.numero desc limit 100";
+$sql.=" and c.cod_gestion='$globalGestion' order by c.fecha desc, c.numero desc, unidad, tipo_comprobante limit 100";
 
 // echo $sql;
 
