@@ -4709,7 +4709,7 @@ function obtenerComprobantesDetCuenta($codigo,$cuenta){
    $sql="";
    $sqlAreas="";
    $sqlUnidades="";
-
+  $fechaFinalMod=explode("/", $fechaFinal);
   //formateando fecha
    if($fechaInicio=="none"){
     $fi=$fechaFinalMod[2]."-01-01";
@@ -4717,9 +4717,9 @@ function obtenerComprobantesDetCuenta($codigo,$cuenta){
      $fechaFinalModIni=explode("/", $fechaInicio);
      $fi=$fechaFinalModIni[2]."-".$fechaFinalModIni[1]."-".$fechaFinalModIni[0];
    }
-  $fechaFinalMod=explode("/", $fechaFinal);
+  
   $fa=$fechaFinalMod[2]."-".$fechaFinalMod[1]."-".$fechaFinalMod[0];
-  $fi=$fechaFinalMod[2]."-01-01";
+  //$fi=$fechaFinalMod[2]."-01-01";
 
    for ($i=0; $i < count($arrayAreas); $i++) {
       if($i==0){
@@ -5041,7 +5041,10 @@ where d.glosa=e.glosa and d.cod_anio=$anio and d.cod_simulacionservicio=$simulac
        break;
      case 2725:
        return 5;
-       break;      
+       break;
+     case 2732:
+       return 6;
+       break;       
      default:
        return 1;
        break;

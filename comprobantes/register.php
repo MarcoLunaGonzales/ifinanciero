@@ -374,17 +374,17 @@ $cod_cuenta_configuracion_iva=obtenerValorConfiguracion(3);//cuenta iva
 						      	</div>
 								<div class="col-sm-1">
 						            <div class="form-group">	
-						          		<input class="form-control" type="number" step=".01" name="totaldeb" placeholder="0" id="totaldeb" readonly="true">	
+						          		<input class="form-control d-none" type="number" step=".01" name="totaldeb" placeholder="0" id="totaldeb" readonly="true">	
 									</div>
 						      	</div>
 								<div class="col-sm-1">
 						            <div class="form-group">
-						            	<input class="form-control" type="number" step=".01" name="totalhab" placeholder="0" id="totalhab" readonly="true">	
+						            	<input class="form-control d-none" type="number" step=".01" name="totalhab" placeholder="0" id="totalhab" readonly="true">	
 									</div>
 						      	</div>
 						      	<div class="col-sm-1">
 						            <div class="form-group">
-						            	<input class="form-control text-primary" type="number" step=".01" name="total_dif" placeholder="0" id="total_dif" readonly="true">	
+						            	<input class="form-control text-primary d-none" type="number" step=".01" name="total_dif" placeholder="0" id="total_dif" readonly="true">	
 									</div>
 						      	</div>
 						      	<div class="col-sm-3">
@@ -401,19 +401,19 @@ $cod_cuenta_configuracion_iva=obtenerValorConfiguracion(3);//cuenta iva
 								<div class="col-sm-2">
 						            <div class="form-group">
 						                <label class="bmd-label-static fondo-boton">Debe</label>	
-						          		<input class="form-control fondo-boton-active text-center" style="border-radius:20px;" type="number" step=".01" placeholder="0" value="0" id="totaldeb_fijo" readonly="true">	
+						          		<input class="form-control fondo-boton-active text-center" style="border-radius:10px;" type="number" step=".01" placeholder="0" value="0" id="totaldeb_fijo" readonly="true">	
 									</div>
 						      	</div>
 								<div class="col-sm-2">
 						            <div class="form-group">
 						            	<label class="bmd-label-static fondo-boton">Haber</label>	
-						            	<input class="form-control fondo-boton-active text-center" style="border-radius:20px;" type="number" step=".01" placeholder="0" value="0" id="totalhab_fijo" readonly="true">	
+						            	<input class="form-control fondo-boton-active text-center" style="border-radius:10px;" type="number" step=".01" placeholder="0" value="0" id="totalhab_fijo" readonly="true">	
 									</div>
 						      	</div>
 						      	<div class="col-sm-2">
 						            <div class="form-group">
 						            	<label class="bmd-label-static fondo-boton">Diferencia</label>	
-						            	<input class="form-control fondo-boton-active text-center" style="border-radius:20px;" type="number" step=".01" placeholder="0" value="0" id="total_dif_fijo" readonly="true">	
+						            	<input class="form-control fondo-boton-active text-center" style="border-radius:10px;" type="number" step=".01" placeholder="0" value="0" id="total_dif_fijo" readonly="true">	
 									</div>
 						      	</div>
 							</div>

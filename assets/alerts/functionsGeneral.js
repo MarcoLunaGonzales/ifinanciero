@@ -3386,7 +3386,31 @@ function mayorReporteComprobante(fila){
     }
   }
   
-  if(tipo!=3){
+  if($("#cantidad_filas").val()>0){
+     Swal.fire({
+        title: '¿Cambiar el Tipo?',
+        text: "Se detectaron registros en el detalle ¿desea continuar?",
+         type: 'warning',
+        showCancelButton: true,
+        confirmButtonClass: 'btn btn-warning',
+        cancelButtonClass: 'btn btn-danger',
+        confirmButtonText: 'Si',
+        cancelButtonText: 'No',
+        buttonsStyling: false
+       }).then((result) => {
+          if (result.value) {
+            cargarDatosSelectTipoSolicitud(url,tipo);            
+            return(true);
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            return(false);
+          }
+      });
+  }else{
+     cargarDatosSelectTipoSolicitud(url,tipo)   
+  }
+ }
+function cargarDatosSelectTipoSolicitud(url,tipo){
+  if(tipo!=3){ 
    ajax=nuevoAjax();
     ajax.open("GET",url,true);
     ajax.onreadystatechange=function(){
@@ -3394,12 +3418,34 @@ function mayorReporteComprobante(fila){
       var fi=$("#lista_tipo");
       fi.html(ajax.responseText);
       fi.bootstrapMaterialDesign();
+      if(tipo==2){
+        if(!($("#filtros_solicitud").hasClass("d-none"))){
+          $("#filtros_solicitud").addClass("d-none")
+        }
+      }else{
+       if(($("#filtros_solicitud").hasClass("d-none"))){
+         $("#filtros_solicitud").removeClass("d-none")
+       }    
+      }
+
+      if($("#buscar_solicitudesdetalle").hasClass("d-none")){
+        $("#buscar_solicitudesdetalle").removeClass("d-none");
+      }
        $('.selectpicker').selectpicker("refresh");
     }
    }
     ajax.send(null);
-  }
- }
+  }else{
+    if(!($("#filtros_solicitud").hasClass("d-none"))){
+       $("#filtros_solicitud").addClass("d-none")
+    }
+    $("#fiel").html("");
+    $("#cantidad_filas").val(0);
+    if(!($("#buscar_solicitudesdetalle").hasClass("d-none"))){
+      $("#buscar_solicitudesdetalle").addClass("d-none");
+    } 
+   }
+}
 
 function listarTipoSolicitudAjaxPropuesta(tipo,id){
   var url="";
@@ -8829,6 +8875,70 @@ function filtrarSolicitudRecursosServicios(cod_sim,cod_solicitud,unidad,area){
         }
     });      
 }
+
+function filtrarSolicitudRecursosServiciosItems(){
+  var re = $("#simulaciones").val().split("$$$");
+  var cod_sim=re[0];
+  var anio =$("#anio_solicitud").val();
+  var itemDetalle =$('select[id="item_detalle_solicitud"] option:selected').text();
+  var codigoDetalle =$("#item_detalle_solicitud").val();
+   var parametros={"cod_sim":cod_sim,"anio":anio,"item_detalle":itemDetalle,"codigo_detalle":codigoDetalle};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxSolicitudDetalleSimulacionNuevoFiltro.php",
+        data: parametros,
+        beforeSend: function () {
+        $("#texto_ajax_titulo").html("Filtrando datos..."); 
+          iniciarCargaAjax();
+        },        
+        success:  function (resp) {
+           detectarCargaAjax();
+           $("#texto_ajax_titulo").html("Procesando Datos");
+           $("#fiel").html(resp);
+           $('.selectpicker').selectpicker("refresh");
+        }
+    });      
+}
+
+
+function filtrarSolicitudRecursosDetalleDatos(){
+  var tipo = $("#tipo_solicitud").val();
+  if(tipo==1){
+    var res=$("#simulaciones").val().split("$$$");
+    var cod_sim=res[0];
+    if(res[1]=="SIM"){//propuestas SEC
+      var url ="ajaxSolicitudDetalleSimulacionSecNuevo.php";
+    }else{ //propuestas TCP TCS
+      var url ="ajaxSolicitudDetalleSimulacionNuevo.php";
+    }
+   var parametros={"cod_sim":cod_sim};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: url,
+        data: parametros,
+        beforeSend: function () {
+          $('#anio_solicitud').html('<option value="all" selected>TODOS</option>');
+          $('#item_detalle_solicitud').html('<option value="all" selected>TODOS</option>');
+        $("#texto_ajax_titulo").html("Buscando Costos Variables..."); 
+          iniciarCargaAjax();
+        },        
+        success:  function (resp) {
+           detectarCargaAjax();
+           $("#texto_ajax_titulo").html("Procesando Datos");
+           //alert(resp)
+           $("#fiel").html(resp);
+
+           $('.selectpicker').selectpicker("refresh");
+        }
+    });      
+  }else{
+    Swal.fire("Sin Datos!", "No se encontraron registros", "warning");
+  }
+}
+
+
 
 function nuevoPagoSolicitudRecursos(){
   $("#modalRegistrarPago").modal("show");

@@ -670,19 +670,19 @@ $stmt->execute();
 						            <div class="form-group">	
 						          		<input class="form-control" type="hidden" name="totaldeb_restante" placeholder="0" id="totaldeb_restante" readonly="true">
 						          		<input class="form-control" type="hidden" name="totaldeb_total" placeholder="0" id="totaldeb_total" readonly="true">	
-						          		<input class="form-control" type="number" name="totaldeb" value="<?=$totalDebeComp?>" placeholder="0" id="totaldeb" readonly="true">
+						          		<input class="form-control d-none" type="number" name="totaldeb" value="<?=$totalDebeComp?>" placeholder="0" id="totaldeb" readonly="true">
 									</div>
 						      	</div>
 								<div class="col-sm-1">
 						            <div class="form-group">
 						            	<input class="form-control" type="hidden" name="totalhab_restante" placeholder="0" id="totalhab_restante" readonly="true">
 						            	<input class="form-control" type="hidden" name="totalhab_total" placeholder="0" id="totalhab_total" readonly="true">
-						            	<input class="form-control" type="number" name="totalhab" value="<?=$totalHaberComp?>" placeholder="0" id="totalhab" readonly="true">	
+						            	<input class="form-control d-none" type="number" name="totalhab" value="<?=$totalHaberComp?>" placeholder="0" id="totalhab" readonly="true">	
 									</div>
 						      	</div>
 						      	<div class="col-sm-1">
 						            <div class="form-group">
-						            	<input class="form-control text-primary" value="<?=$totalesDif?>" type="number" name="total_dif" placeholder="0" id="total_dif" readonly="true">	
+						            	<input class="form-control text-primary d-none" value="<?=$totalesDif?>" type="number" name="total_dif" placeholder="0" id="total_dif" readonly="true">	
 									</div>
 						      	</div>
 						      	<div class="col-sm-3">
@@ -704,19 +704,19 @@ $stmt->execute();
 								<div class="col-sm-2">
 						            <div class="form-group">
 						                <label class="bmd-label-static fondo-boton">Debe</label>	
-						          		<input class="form-control fondo-boton-active text-center" style="border-radius:20px;" type="number" step=".01" placeholder="0" value="0" id="totaldeb_fijo" readonly="true">	
+						          		<input class="form-control fondo-boton-active text-center" style="border-radius:10px;" type="number" step=".01" placeholder="0" value="<?=$totalDebeComp?>" id="totaldeb_fijo" readonly="true">	
 									</div>
 						      	</div>
 								<div class="col-sm-2">
 						            <div class="form-group">
 						            	<label class="bmd-label-static fondo-boton">Haber</label>	
-						            	<input class="form-control fondo-boton-active text-center" style="border-radius:20px;" type="number" step=".01" placeholder="0" value="0" id="totalhab_fijo" readonly="true">	
+						            	<input class="form-control fondo-boton-active text-center" style="border-radius:10px;" type="number" step=".01" placeholder="0" value="<?=$totalHaberComp?>" id="totalhab_fijo" readonly="true">	
 									</div>
 						      	</div>
 						      	<div class="col-sm-2">
 						            <div class="form-group">
 						            	<label class="bmd-label-static fondo-boton">Diferencia</label>	
-						            	<input class="form-control fondo-boton-active text-center" style="border-radius:20px;" type="number" step=".01" placeholder="0" value="0" id="total_dif_fijo" readonly="true">	
+						            	<input class="form-control fondo-boton-active text-center" style="border-radius:10px;" type="number" step=".01" placeholder="0" value="<?=$totalesDif?>" id="total_dif_fijo" readonly="true">	
 									</div>
 						      	</div>
 							</div>
