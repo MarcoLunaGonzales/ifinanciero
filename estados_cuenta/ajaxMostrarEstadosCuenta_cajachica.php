@@ -25,6 +25,8 @@ $mes=$_GET['mes'];
 	<thead>
 	  <tr class="">
 	  	<th class="text-left"></th>
+      <th class="text-left">Of</th>
+      <th class="text-left">Tipo</th>
 	  	<th class="text-left">Fecha</th>
       <th class="text-left">Proveedor</th>
 	  	<th class="text-left">Glosa</th>
@@ -35,7 +37,7 @@ $mes=$_GET['mes'];
 	</thead>
 	<tbody id="tabla_estadocuenta">
   <?php
-    $stmt = $dbh->prepare("SELECT e.*,d.glosa,d.haber,d.debe FROM estados_cuenta e,comprobantes_detalle d where e.cod_comprobantedetalle=d.codigo and (d.cod_cuenta=$codCuenta or e.cod_plancuenta=$codCuenta) and e.cod_comprobantedetalleorigen=0 order by e.fecha");
+    $stmt = $dbh->prepare("SELECT e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar,(select concat(c.cod_tipocomprobante,'|',c.numero,'|',cd.cod_unidadorganizacional,'|',MONTH(c.fecha),'|',c.fecha) from comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle)as extra FROM estados_cuenta e,comprobantes_detalle d where e.cod_comprobantedetalle=d.codigo and (d.cod_cuenta=$codCuenta) and e.cod_comprobantedetalleorigen=0  order by e.fecha");
     $stmt->execute();
     $i=0;$saldo=0;
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -49,10 +51,13 @@ $mes=$_GET['mes'];
   	 $glosaX=$row['glosa'];
   	 $debeX=$row['debe'];
   	 $haberX=$row['haber'];
+     $codigoExtra=$row['extra'];
      $codCuentaAuxX=$row['cod_cuentaaux'];
   	 
 
-
+     list($tipoComprobante, $numeroComprobante, $codUnidadOrganizacional, $mesComprobante, $fechaComprobante)=explode("|", $codigoExtra);
+     $nombreUnidadO=abrevUnidad_solo($codUnidadOrganizacional);
+     $nombreTipoComprobante=abrevTipoComprobante($tipoComprobante)."-".$mesComprobante;
      $credito_padre=ObtenerMontoTotalEstadoCuentas_hijos($codCuenta,$codigoX);
      $saldo=$montoX-$credito_padre;
 
@@ -80,6 +85,8 @@ $mes=$_GET['mes'];
               <?php    
     	    } ?>
     	    </td>
+          <td class="text-center small"><?=$nombreUnidadO;?></td>
+          <td class="text-center small"><?=$nombreTipoComprobante;?></td>
           <td class="text-left font-weight-bold"><?=$fechaX?></td>
           <td class="text-left"><?=$proveedorX?></td><td class="text-left"><?=$glosaX?></td>
           <td class="text-right"><?=number_format($credito_padre, 2, '.', ',')?></td>

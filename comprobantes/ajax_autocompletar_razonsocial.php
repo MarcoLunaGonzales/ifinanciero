@@ -4,7 +4,7 @@ require_once 'configModule.php';
 
 $nit = $_GET["nit"];
 $db = new Conexion();
-$razon_social="-";
+$razon_social=null;
 $sqRS="SELECT razon_social from facturas_compra where  nit='$nit' order by codigo desc limit 1";
 $stmtRS = $db->prepare($sqRS);
 $stmtRS->execute();

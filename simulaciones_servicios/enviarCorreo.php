@@ -5,8 +5,11 @@ $codigo_facturacion=$_POST['codigo_facturacion'];
 $cod_solicitudfacturacion=$_POST['cod_solicitudfacturacion'];
 $nro_factura=$_POST['nro_factura'];
 $correo_destino=$_POST['correo_destino'];
-$asunto=$_POST['asunto'];
-$mensaje=$_POST['mensaje'];
+// $asunto=$_POST['asunto'];
+// $mensaje=$_POST['mensaje'];
+
+$asunto="ENVIO FACTURA - IBNORCA";
+$mensaje="Estimado cliente,<br>\n<br>\n Le Hacemos el envío de la Factura Nro. ".$nro_factura.".<br>\n<br>\nSaludos.";
 
 if($correo_destino==''||$asunto==''||$mensaje==''){
 	// echo "<script>alert('Los Campos marcados con * son obligatorios');location.href='javascript:history.back()';</script>";

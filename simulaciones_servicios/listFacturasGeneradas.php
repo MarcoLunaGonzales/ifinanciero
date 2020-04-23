@@ -134,16 +134,16 @@ $globalAdmin=$_SESSION["globalAdmin"];
         <input type="hidden" name="cod_solicitudfacturacion" id="cod_solicitudfacturacion" value="0">
         <input type="hidden" name="nro_factura" id="nro_factura" value="0">
         <?php
-          $texto_cuerpo="Estimad@,\n\n Le Hacemos el envío de la Factura.\n\nSaludos.";
-          $asunto="ENVIO FACTURA - IBNORCA";
+          // $texto_cuerpo="Estimado cliente,\n\n Le Hacemos el envío de la Factura.\n\nSaludos.";
+          // $asunto="ENVIO FACTURA - IBNORCA";
 
         ?>
         <h6> Correo Destino : </h6>
         <input class="form-control" type="email" name="correo_destino" id="correo_destino" required="true" />
-        <h6> Asunto : </h6>
+        <!-- <h6> Asunto : </h6>
         <input class="form-control" type="text" name="asunto" id="asunto" value="<?=$asunto?>" required="true"/>
         <h6> Mensaje : </h6>
-        <textarea class="form-control" name="mensaje" id="mensaje" required="true"><?=$texto_cuerpo?></textarea>
+        <textarea class="form-control" name="mensaje" id="mensaje" required="true"><?=$texto_cuerpo?></textarea> -->
         <!-- <input class="form-control" type="text" /> -->
       </div>
       <div class="modal-footer">
@@ -161,9 +161,16 @@ $globalAdmin=$_SESSION["globalAdmin"];
       cod_solicitudfacturacion=document.getElementById("cod_solicitudfacturacion").value;
       nro_factura=document.getElementById("nro_factura").value;      
       correo_destino=$('#correo_destino').val();
-      asunto=$('#asunto').val();
-      mensaje=$('#mensaje').val();
-      EnviarCorreoAjax(codigo_facturacion,nro_factura,cod_solicitudfacturacion,correo_destino,asunto,mensaje);
+      // asunto=$('#asunto').val();
+      // mensaje=$('#mensaje').val();
+      asunto=null;
+      mensaje=null;
+      if(correo_destino==null || correo_destino == "" ||correo_destino == 0){
+        alert("Por Favor Agregue Un correo para el envío de la Factura!");
+      }else{
+        EnviarCorreoAjax(codigo_facturacion,nro_factura,cod_solicitudfacturacion,correo_destino,asunto,mensaje);  
+      }
+      
     });
   });
 </script>

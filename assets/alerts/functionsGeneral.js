@@ -178,18 +178,33 @@ function calcularTotalesComprobante(id,e){
   document.getElementById("total_dif_fijo").value=document.getElementById("total_dif").value;
 }
 
-function llenarFacturaAutomaticamente(valor,fila){
+function llenarFacturaAutomaticamente(valor,fila,importe){
   // var nit =document.getElementById("nit_fac").value
   // var nit = $("#nit_fac").val();
- ajaxFacturasComprobanteNit(valor); 
+ ajaxFacturasComprobanteNit(valor,importe); 
   
 }
+
 //este ajax remmplaza al div de nit porque no esta jalando 
-function ajaxFacturasComprobanteNit(nit){
+function ajaxFacturasComprobanteNit(nit,importe){
   var contenedor;
   contenedor = document.getElementById('divNit2FacturaDetalle');
   ajax=nuevoAjax();
   ajax.open('GET', '../comprobantes/ajax_autocompletar_nit.php?nit='+nit,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);   
+      ajaxFacturasComprobanteImporte(nit,importe);
+    }
+  }
+  ajax.send(null)  
+}
+function ajaxFacturasComprobanteImporte(nit,importe){
+  var contenedor;
+  contenedor = document.getElementById('divImporteFacturaDetalle');
+  ajax=nuevoAjax();
+  ajax.open('GET', '../comprobantes/ajax_autocompletar_importe.php?importe='+importe,true);
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
       contenedor.innerHTML = ajax.responseText;
@@ -616,12 +631,8 @@ function saveFactura(){
       alert('Campo "NIT" Vacío.');
     }
   }
-
-    
-  
-  
 }
- function abrirFactura(index,nit,nro,fecha,razon,imp,exe,aut,con,ice,tipocompra,tasacero){
+ function abrirFactura(index,nit,nro,fecha,razon,imp,exe,aut,con,ice,tipocompra,tazacero){
    var factura={
     nit: nit,
     nroFac: nro,
@@ -632,8 +643,8 @@ function saveFactura(){
     conFac: con,
     exeFac: exe,
     iceFac: ice,
-    tipoCompra: tipocompra,
-    tasaCero: tasacero
+    tazaFac: tazacero,
+    tipoFac: tipocompra
     }
     itemFacturas[index-1].push(factura);
     //listarFact(index);
@@ -703,6 +714,9 @@ function listarFactDCC(id){
      //titulos.append($('<th>').addClass('').text('EXCENTOS'));
      titulos.append($('<th>').addClass('').text('AUTORIZACION'));
      titulos.append($('<th>').addClass('').text('CONTROL'));
+     titulos.append($('<th>').addClass('').text('EXENTOS'));
+     titulos.append($('<th>').addClass('').text('ICE'));     
+     titulos.append($('<th>').addClass('').text('TASA'));
      titulos.append($('<th>').addClass('').text('OPCION'));
      table.append(titulos);
    
@@ -717,6 +731,9 @@ function listarFactDCC(id){
      //row.append($('<td>').addClass('').text(itemFacturasDCC[id-1][i].exeFac));
      row.append($('<td>').addClass('').text(itemFacturasDCC[id-1][i].autFac));
      row.append($('<td>').addClass('').text(itemFacturasDCC[id-1][i].conFac));
+     row.append($('<td>').addClass('').text(itemFacturasDCC[id-1][i].exeFac));
+     row.append($('<td>').addClass('').text(itemFacturasDCC[id-1][i].iceFac));         
+     row.append($('<td>').addClass('').text(itemFacturasDCC[id-1][i].tasaFac));
      row.append($('<td>').addClass('').html('<button class="btn btn-danger btn-link" onclick="removeFacDCC('+id+','+i+');"><i class="material-icons">remove_circle</i></button>'));
      table.append(row);
    }
@@ -730,17 +747,19 @@ function saveFacturaDCC(){
     nroFac: $('#nro_fac').val(),
     fechaFac: $('#fecha_fac').val(),
     razonFac: $('#razon_fac').val(),
-    impFac: $('#imp_fac').val(),
-    exeFac: $('#exe_fac').val(),
+    impFac: $('#imp_fac').val(),    
     autFac: $('#aut_fac').val(),
     conFac: $('#con_fac').val(),
+    exeFac: $('#exe_fac').val(),
+    iceFac: $('#ice_fac').val(),
+    tasaFac: $('#taza_fac').val()  
     }
   if($('#nit_fac').val()!=''){
     if($('#nro_fac').val()!=''){
       if($('#fecha_fac').val()!=''){        
           if($('#imp_fac').val()!=''){
             if($('#aut_fac').val()!=''){
-              if($('#con_fac').val()!=''){
+              // if($('#con_fac').val()!=''){
                 if($('#razon_fac').val()!=''){
                   itemFacturasDCC[index-1].push(factura);
                   limpiarFormFacDCC();
@@ -751,9 +770,9 @@ function saveFacturaDCC(){
                 }else{
                   alert('Campo "Razón Social" Vacío.');
                 }
-              }else{
-                alert('Campo "Cod. Control" Vacío.');
-              }
+              // }else{
+              //   alert('Campo "Cod. Control" Vacío.');
+              // }
             }else{
               alert('Campo "Nro. Autorización" Vacío.');
             }
@@ -770,24 +789,24 @@ function saveFacturaDCC(){
   }else{
     alert('Campo "NIT" Vacío.');
   }
+}
 
-    
-  
-}
 function limpiarFormFacDCC(){
-    $('#nit_fac').val('');$('#nro_fac').val('');$('#fecha_fac').val('');$('#razon_fac').val('');$('#imp_fac').val('');
-    $('#exe_fac').val('');$('#aut_fac').val('');$('#con_fac').val('');
+  $('#nit_fac').val('');$('#nro_fac').val('');$('#fecha_fac').val('');$('#razon_fac').val('');$('#imp_fac').val('');
+    $('#aut_fac').val('');$('#con_fac').val('');$('#exe_fac').val('');$('#ice_fac').val('');$('#taza_fac').val('');    
 }
- function abrirFacturaDCC(index,nit,nro,fecha,razon,imp,exe,aut,con){
+ function abrirFacturaDCC(index,nit,nro,fecha,razon,imp,exe,aut,con,ice,tasacero){
    var factura={
     nit: nit,
     nroFac: nro,
     fechaFac: fecha,
     razonFac:razon,
-    impFac: imp,
-    exeFac: exe,
+    impFac: imp,    
     autFac: aut,
-    conFac: con
+    conFac: con,
+    exeFac: exe,
+    iceFac: ice,    
+    tasaFac: tasacero
     }
     itemFacturasDCC[index-1].push(factura);
     //listarFact(index);
@@ -8641,9 +8660,9 @@ function calcularTotalFilaServicio2(){
 
   nro_items = document.getElementById("cantidad_filas").value;
   if(nro_items==0){
-    $("#monto_total").val(resulta);
+    $("#monto_total").val(number_format(resulta,2));
   }
-  document.getElementById("modal_totalmontoserv").value=resulta;
+  document.getElementById("modal_totalmontoserv").value=number_format(resulta,2);
   //   $("#modal_totalmontoserv").text(resulta);
   document.getElementById("modal_totalmontos").value=resulta;
   document.getElementById("comprobante_auxiliar").value=comprobante_auxiliar;
@@ -8825,7 +8844,7 @@ function filaTablaAGeneral(tabla,index,stringCabecera){
   var cantidadTotalDetalle=0;
   for (var i = 0; i < detalle_tabla_general[index-1].length; i++) {
     //alert(detalle_tabla_general[index-1][i].nombre);
-    sumaTotalDetalle+=detalle_tabla_general[index-1][i].precioX;
+    sumaTotalDetalle+=parseFloat(detalle_tabla_general[index-1][i].precioX);
     cantidadTotalDetalle+=parseInt(detalle_tabla_general[index-1][i].cantidadX);
     html+="<tr><td>"+(i+1)+"</td><td>"+detalle_tabla_general[index-1][i].serviciox+"</td><td>"+detalle_tabla_general[index-1][i].cantidadX+"</td><td>"+number_format(detalle_tabla_general[index-1][i].precioX,2)+"</td><td>"+detalle_tabla_general[index-1][i].descripcion_alternaX+"</td></tr>";
   }

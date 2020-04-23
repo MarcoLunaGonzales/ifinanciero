@@ -209,7 +209,9 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                                         $exento=$row['exento'];
                                         $autorizacion=$row['nro_autorizacion'];
                                         $control=$row['codigo_control'];
-                                        ?><script>abrirFacturaDCC(<?=$idFila?>,'<?=$nit?>',<?=$factura?>,'<?=$fechaFac?>','<?=$razon?>',<?=$importe?>,<?=$exento?>,'<?=$autorizacion?>','<?=$control?>');</script><?php
+                                        $ice=$row['ice'];
+                                        $tasa_cero=$row['tasa_cero'];
+                                        ?><script>abrirFacturaDCC(<?=$idFila?>,'<?=$nit?>',<?=$factura?>,'<?=$fechaFac?>','<?=$razon?>',<?=$importe?>,<?=$exento?>,'<?=$autorizacion?>','<?=$control?>',<?=$ice?>,<?=$tasa_cero?>);</script><?php
                                     }                                    
                               ?> 
                                 
@@ -350,62 +352,80 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                         <div class="card" style="background: #e0e0e0">
                           <div class="card-body">
                             <div class="row">
-                             <label class="col-sm-2 col-form-label" style="color:#000000;">NIT</label>
-                             <div class="col-sm-4">
+                             <label class="col-sm-1 col-form-label" style="color: #4a148c;">NIT</label>
+                             <div class="col-sm-3">
                               <div class="form-group">
                                 <input class="form-control" type="text" name="nit_fac" id="nit_fac" required="true"/>
                               </div>
                               </div>
-                              <label class="col-sm-2 col-form-label" style="color:#000000;">Nro. Factura</label>
-                             <div class="col-sm-4">
+                              <label class="col-sm-1 col-form-label" style="color:#4a148c;">Nro. Factura</label>
+                             <div class="col-sm-3">
                               <div class="form-group">
                                 <input class="form-control" type="number" name="nro_fac" id="nro_fac" required="true"/>
                               </div>
                               </div>
-                            </div>
-                            <div class="row">
-                             <label class="col-sm-2 col-form-label" style="color:#000000;">Fecha</label>
-                             <div class="col-sm-4">
-                              <div class="form-group">
-                                <input type="text" class="form-control datepicker" name="fecha_fac" id="fecha_fac" value="<?=$fechaActualModal?>">
-                              </div>
-                              </div>
-                              <label class="col-sm-2 col-form-label" style="color:#000000;">Importe</label>
-                             <div class="col-sm-4">
-                              <div class="form-group">
-                                <input class="form-control" type="number" name="imp_fac" id="imp_fac" required="true"/>
-                              </div>
+                              <label class="col-sm-1 col-form-label" style="color:#4a148c;">Fecha</label>
+                              <div class="col-sm-3">
+                                <div class="form-group">
+                                  <input type="text" class="form-control datepicker" name="fecha_fac" id="fecha_fac" value="<?=$fechaActualModal?>">
+                                </div>
                               </div>
                             </div>
-                            <!-- Exento oculto-->
-                            <input class="form-control" type="hidden" name="exe_fac" id="exe_fac" required="true"/>
-                            <!--No tiene funcion este campo-->
                             <div class="row">
-                             <label class="col-sm-2 col-form-label" style="color:#000000;">Nro. Autorizaci&oacute;n</label>
-                             <div class="col-sm-4">
-                              <div class="form-group">
-                                <input class="form-control" type="text" name="aut_fac" id="aut_fac" required="true"/>
+                              <label class="col-sm-1 col-form-label" style="color:#4a148c;">Importe</label>
+                              <div class="col-sm-3">
+                                <div class="form-group">
+                                  <input class="form-control" type="number" name="imp_fac" id="imp_fac" required="true"/>
+                                </div>
                               </div>
+                              <label class="col-sm-1 col-form-label" style="color: #4a148c;">Exento</label>
+                              <div class="col-sm-3">
+                                <div class="form-group">                                 
+                                  <input class="form-control" type="text" name="exe_fac" id="exe_fac" required="true" value="0" />
+                                </div>
                               </div>
-                              <label class="col-sm-2 col-form-label" style="color:#000000;">Cod. Control</label>
-                             <div class="col-sm-4">
+                              <label class="col-sm-1 col-form-label" style="color: #4a148c;">ICE</label>
+                              <div class="col-sm-3">
+                                <div class="form-group">                                 
+                                  <input class="form-control" type="text" name="ice_fac" id="ice_fac" required="true" value="0" />
+                                </div>
+                              </div>
+                            </div>                            
+                            
+                            <div class="row">
+                              <label class="col-sm-1 col-form-label" style="color: #4a148c;">Tasa Cero</label>
+                              <div class="col-sm-3">
+                                <div class="form-group">                              
+                                  <input class="form-control" type="text" name="taza_fac" id="taza_fac" required="true" value="0" />
+                                </div>
+                              </div>
+                              <label class="col-sm-1 col-form-label" style="color:#4a148c;">Autorizaci&oacute;n</label>
+                              <div class="col-sm-3">
+                                <div class="form-group">
+                                  <input class="form-control" type="text" name="aut_fac" id="aut_fac" required="true"/>
+                                </div>
+                              </div>
+                              <label class="col-sm-1 col-form-label" style="color:#4a148c;">Cod. Control</label>
+                             <div class="col-sm-3">
                               <div class="form-group">
                                 <input class="form-control" type="text" name="con_fac" id="con_fac" required="true"/>
                               </div>
                              </div>
                             </div>
                             <div class="row">
-                             <label class="col-sm-2 col-form-label" style="color:#000000;">Razon Social</label>
-                             <div class="col-sm-10">
-                              <div class="form-group">
-                                <textarea class="form-control" name="razon_fac" id="razon_fac" value="" onkeyup="javascript:this.value=this.value.toUpperCase();"></textarea>
-                              </div>
-                              </div>
+
+                              <label class="col-sm-1 col-form-label" style="color: #4a148c;">Razón Social</label>
+                              <div class="col-sm-10">
+                                <div class="form-group">
+                                  <input type="text" class="form-control" name="razon_fac" id="razon_fac" onkeyup="javascript:this.value=this.value.toUpperCase();">
+                                </div>
+                              </div>   
                             </div>
                           </div>
                         </div>
                       <div class="form-group float-right">
-                        <button type="button" class="btn btn-info btn-round" onclick="saveFacturaDCC()">Guardar</button>
+                        <button type="button" class="btn btn-info btn-round" onclick="saveFacturaDCC()">
+                        Guardar</button>
                       </div>
                          </form>
                     </div>

@@ -56,7 +56,7 @@ try {
                 if(isset($_POST["servicio".$i])){
                     $servicioInsert=$_POST["servicio_a".$i];
                     $CantidadInsert=$_POST["cantidad_a".$i];
-                    $importeInsert=$_POST["importe_a".$i];
+                    $importeInsert=$_POST["modal_importe".$i];
                     $DescricpionInsert=$_POST["descripcion_alterna".$i];
                 }
                 if($servicioInsert!=0 || $servicioInsert!=""){
@@ -110,7 +110,7 @@ try {
                 if(isset($_POST["servicio".$i])){
                     $servicioInsert=$_POST["servicio_a".$i];
                     $CantidadInsert=$_POST["cantidad_a".$i];
-                    $importeInsert=$_POST["importe_a".$i];
+                    $importeInsert=$_POST["modal_importe".$i];
                     $DescricpionInsert=$_POST["descripcion_alterna".$i];
                 }
                 if($servicioInsert!=0 || $servicioInsert!=""){

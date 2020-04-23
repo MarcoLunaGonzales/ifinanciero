@@ -250,22 +250,27 @@ $contadorRegistros=0;
                                             // $modal_totalmontopre+=$montoPre;
                                             $montoPre=number_format($montoPre,2,".","");
                                             //parte del controlador de check
-                                            $sqlControlador="SELECT * from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$cod_simulacion and sfd.cod_claservicio=$codCS";
+                                            $sqlControlador="SELECT precio from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$cod_simulacion and sfd.cod_claservicio=$codCS and sf.codigo=$cod_facturacion";
                                           // echo $sqlControlador;
                                             $stmtControlado = $dbh->prepare($sqlControlador);
                                            $stmtControlado->execute();                                           
-                                           $sw="";//para la parte de editar
-                                           $sw2="";//para registrar inpedir los ya registrados
+                                           $sw="";//para la parte de editar                                           
                                            while ($rowPre = $stmtControlado->fetch(PDO::FETCH_ASSOC)) {
-                                                if($cod_facturacion > 0){
-                                                    $sw="checked";
-                                                }else{
-                                                    $sw2="readonly style='background-color:#cec6d6;'";  
-                                                } 
+                                              $sw="checked";
+                                              $montoPre=$rowPre['precio'];
                                            }
+                                           $sqlControlador2="SELECT precio from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$cod_simulacion and sfd.cod_claservicio=$codCS";
+                                          // echo $sqlControlador2;
+                                            $stmtControlador2 = $dbh->prepare($sqlControlador2);
+                                            $stmtControlador2->execute();                                           
+                                            $sw2="";//para registrar inpedir los ya registrados
+                                            while ($rowPre = $stmtControlador2->fetch(PDO::FETCH_ASSOC)) {
+                                              if($sw!="checked"){
+                                                $sw2="readonly style='background-color:#cec6d6;'";
+                                                $montoPre=$rowPre['precio'];
+                                              }
+                                            }
                                             
-
-                                            // $modal_totalmontopretotal+=$montoPreTotal;
                                             ?>
                                             <!-- guardamos las varialbles en un input -->
                                             <input type="hidden" id="cod_serv_tiposerv<?=$iii?>" name="cod_serv_tiposerv<?=$iii?>" value="<?=$codigoPre?>">
@@ -286,7 +291,7 @@ $contadorRegistros=0;
                                              <td class="text-right"><?=$cantidadPre?></td>
                                              <td class="text-right"><?=formatNumberDec($montoPre)?></td>
                                              <td class="text-right">
-                                                <input type="number" id="modal_importe<?=$iii?>" name="modal_importe<?=$iii?>" class="form-control text-primary text-right"  value="<?=$montoPre?>" step="0.01" <?=$sw2?>>
+                                                <input type="number" id="modal_importe<?=$iii?>" name="modal_importe<?=$iii?>" class="form-control text-primary text-right"  value="<?=$montoPre?>" step="0.01" onkeyup="activarInputMontoFilaServicio2()" <?=$sw2?>>
                                                 </td>
                                              
                                              <td>
@@ -297,6 +302,13 @@ $contadorRegistros=0;
                                                          <span class="toggle"></span>
                                                        </label>
                                                    </div>
+                                                <?php }else{?>
+                                                  <div class="togglebutton d-none">
+                                                       <label>
+                                                         <input type="checkbox"  id="modal_check<?=$iii?>" >
+                                                         <span class="toggle"></span>
+                                                       </label>
+                                                   </div>                                                
                                                 <?php }?>
                                                
                                              </td>
@@ -311,7 +323,6 @@ $contadorRegistros=0;
                                           // $montoPreTotal=number_format($montoPreTotal,2,".","");
                                            ?>
                                            <script>
-                                               
                                                window.onload = activarInputMontoFilaServicio2;
                                            </script>
 
@@ -329,7 +340,7 @@ $contadorRegistros=0;
                                     <label class="col-sm-5 col-form-label" style="color:#000000">Monto Total</label>
                                     <div class="col-sm-4">
                                         <div class="form-group">                                        
-                                            <input style="background:#ffffff" class="form-control" type="text" value="0" name="modal_totalmontoserv" id="modal_totalmontoserv"/>                                            
+                                            <input style="background:#ffffff" class="form-control" type="text" value="0" name="modal_totalmontoserv" id="modal_totalmontoserv" step="0.01"/>                                            
                                         </div>
                                     </div>
                                         
@@ -350,7 +361,7 @@ $contadorRegistros=0;
                                     <label class="col-sm-5 col-form-label" style="color:#000000">Monto Total + Servicios Adicionales</label>
                                     <div class="col-sm-4">
                                         <div class="form-group">                                            
-                                            <input style="background:#ffffff" class="form-control"  name="monto_total" id="monto_total"  readonly="readonly" value="0" />
+                                            <input style="background:#ffffff" class="form-control"  name="monto_total" id="monto_total"  readonly="readonly" value="0" step="0.01" />
                                         </div>
                                     </div>
                                 </div>
