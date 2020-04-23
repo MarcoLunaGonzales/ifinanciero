@@ -92,6 +92,12 @@ $stmt->bindColumn('numero', $numeroSol);
                             case 4:
                               $nEst=60;$barEstado="progress-bar-warning";$btnEstado="btn-warning";
                             break;
+                            case 5:
+                              $nEst=100;$barEstado="progress-bar-warning";$btnEstado="btn-warning";
+                            break;
+                            case 6:
+                              $nEst=50;$barEstado="progress-bar-default";$btnEstado="btn-default";
+                            break;
                           }
                           if($codSimulacion!=0){
                            $nombreCliente="Sin Cliente";
@@ -121,7 +127,7 @@ $stmt->bindColumn('numero', $numeroSol);
                           </td> 
                           <td class="td-actions text-right">
                             <?php
-                              if($codEstado==4||$codEstado==3){
+                              if($codEstado==4||$codEstado==3||$codEstado==5){
                             ?>
                             <a title="Imprimir" href='#' onclick="javascript:window.open('<?=$urlImp;?>?sol=<?=$codigo;?>&mon=1')" class="<?=$buttonEdit;?>">
                               <i class="material-icons"><?=$iconImp;?></i>
@@ -199,36 +205,76 @@ $stmt->bindColumn('numero', $numeroSol);
                             </div>                           
                             <?php    
                               }else{
+                                if($codEstado==6){
+                                  //para el envio a administracion
+                                  if(isset($_GET['q'])){
+                                   ?>
+                                    <a title="Enviar solicitud" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=4&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>'  class="btn btn-warning">
+                                      <i class="material-icons">send</i>
+                                    </a>
+                                    <a title="Volver al Estado Registro" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>'  class="btn btn-danger">
+                                      <i class="material-icons">refresh</i>
+                                    </a>
+                                   <?php
+                                  }else{
+                                    ?>
+                                     <a title="Enviar solicitud" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=4&admin=0'  class="btn btn-warning">
+                                       <i class="material-icons">send</i>
+                                     </a>
+                                     <a title="Volver al Estado Registro" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1&admin=0'  class="btn btn-danger">
+                                       <i class="material-icons">refresh</i>
+                                     </a>
+                                    <?php
+                                  }
+                                }else{
+                                 if(isset($_GET['q'])){
+                                   ?>
+                                    <a title="Pre Envio - Solicitud Recursos" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=6&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>' class="btn btn-default">
+                                      <i class="material-icons">send</i>
+                                    </a>
+                                   <?php
+                                  }else{
+                                    ?>
+                                     <a title="Pre Envio - Solicitud Recursos" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=6&admin=0'  class="btn btn-default">
+                                       <i class="material-icons">send</i>
+                                     </a>
+                                    <?php
+                                  }                                   
+                                }
                             if(isset($_GET['q'])){
                               ?>
                             <a title="Imprimir" href='#' onclick="javascript:window.open('<?=$urlImp;?>?sol=<?=$codigo;?>&mon=1')" class="<?=$buttonEdit;?>">
                               <i class="material-icons"><?=$iconImp;?></i>
                             </a>
-                            <a title="Enviar solicitud" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=4&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>'  itle="Enviar Solicitud" class="btn btn-warning">
-                              <i class="material-icons">send</i>
-                            </a> 
+                             
                             <a title="Editar solicitud - detalle" href='<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>'  class="btn btn-info">
                               <i class="material-icons"><?=$iconEdit;?></i>
                             </a>
+                            <?php
+                             if($codEstado==1){
+                             ?>
                             <button title="Eliminar solicitud"  class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>')">
                               <i class="material-icons"><?=$iconDelete;?></i>
                             </button>
                               <?php  
+                              
+                             }
                             }else{
                               ?>
                             <a title="Imprimir" href='#' onclick="javascript:window.open('<?=$urlImp;?>?sol=<?=$codigo;?>&mon=1')" class="<?=$buttonEdit;?>">
                               <i class="material-icons"><?=$iconImp;?></i>
                             </a>
-                            <a title="Enviar solicitud" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=4&admin=0'  itle="Enviar Solicitud" class="btn btn-warning">
-                              <i class="material-icons">send</i>
-                            </a> 
                             <a title="Editar solicitud - detalle" href='<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>'  class="btn btn-info">
                               <i class="material-icons"><?=$iconEdit;?></i>
                             </a>
+                            <?php
+                             if($codEstado==1){
+                             ?>
                             <button title="Eliminar solicitud"  class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')">
                               <i class="material-icons"><?=$iconDelete;?></i>
                             </button>
-                              <?php  
+                              <?php      
+                             } 
                             }    
                               
                            }

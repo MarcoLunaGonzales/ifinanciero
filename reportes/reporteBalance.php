@@ -12,7 +12,7 @@ $gestion=nameGestion($_POST['gestion']);
 $fecha=$_POST['fecha'];
 $fechaTitulo= explode("-",$fecha);
 
-$fechaFormateada=$fechaTitulo[0].'/'.$fechaTitulo[1].'/'.$fechaTitulo[2];
+$fechaFormateada=$fechaTitulo[2].'/'.$fechaTitulo[1].'/'.$fechaTitulo[0];
 
 
 

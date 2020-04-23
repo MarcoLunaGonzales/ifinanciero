@@ -29,7 +29,7 @@ if(isset($_GET['q'])){
   $sqlAreas="";
 }
 // Preparamos
-$stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo where sr.cod_estadoreferencial=1 and sr.cod_estadosolicitudrecurso!=1 $sqlAreas order by sr.codigo");
+$stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo where sr.cod_estadoreferencial=1 and (sr.cod_estadosolicitudrecurso=2 or sr.cod_estadosolicitudrecurso=3 or sr.cod_estadosolicitudrecurso=4 or sr.cod_estadosolicitudrecurso=5) $sqlAreas order by sr.codigo");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -89,13 +89,16 @@ $item_1=2708;
                               $nEst=10;$barEstado="progress-bar-danger";$btnEstado="btn-danger";
                             break;
                             case 3:
-                              $nEst=80;$barEstado="progress-bar-primary";$btnEstado="btn-primary";
+                              $nEst=100;$barEstado="progress-bar-success";$btnEstado="btn-success";
                             break;
                             case 4:
-                              $nEst=60;$barEstado="progress-bar-info";$btnEstado="btn-info";
+                              $nEst=60;$barEstado="progress-bar-warning";$btnEstado="btn-warning";
                             break;
                             case 5:
-                              $nEst=100;$barEstado="progress-bar-success";$btnEstado="btn-success";
+                              $nEst=100;$barEstado="progress-bar-warning";$btnEstado="btn-warning";
+                            break;
+                            case 6:
+                              $nEst=50;$barEstado="progress-bar-default";$btnEstado="btn-default";
                             break;
                           }
                           if($codSimulacion!=0){
