@@ -39,10 +39,12 @@ for($j=0;$j<$nF;$j++){
 	  $fechaFac=$porciones[2]."-".$porciones[1]."-".$porciones[0];
 	  
 	  $razonFac=$facturas[$cantidad_filas_ccd-1][$j]->razonFac;
-	  $impFac=$facturas[$cantidad_filas_ccd-1][$j]->impFac;
-	  $exeFac=0;
+	  $impFac=$facturas[$cantidad_filas_ccd-1][$j]->impFac;	  
 	  $autFac=$facturas[$cantidad_filas_ccd-1][$j]->autFac;
 	  $conFac=$facturas[$cantidad_filas_ccd-1][$j]->conFac;
+    $exeFac=$facturas[$cantidad_filas_ccd-1][$j]->exeFac;
+    $iceFac=$facturas[$cantidad_filas_ccd-1][$j]->iceFac;
+    $tasaFac=$facturas[$cantidad_filas_ccd-1][$j]->tasaFac;
 
   $suma_importe_fac=$suma_importe_fac+$impFac;
 
@@ -55,7 +57,7 @@ for($j=0;$j<$nF;$j++){
   // echo "autFac:".$autFac."<br>";
   // echo "conFac:".$conFac."<br>";
 
-  $sqlDetalle2="INSERT INTO facturas_detalle_cajachica (cod_cajachicadetalle, nit, nro_factura, fecha, razon_social, importe, exento, nro_autorizacion, codigo_control) VALUES ('$cod_ccd', '$nit', '$nroFac', '$fechaFac', '$razonFac', '$impFac', '$exeFac', '$autFac', '$conFac')";
+  $sqlDetalle2="INSERT INTO facturas_detalle_cajachica (cod_cajachicadetalle, nit, nro_factura, fecha, razon_social, importe, exento, nro_autorizacion, codigo_control,ice,tasa_cero) VALUES ('$cod_ccd', '$nit', '$nroFac', '$fechaFac', '$razonFac', '$impFac', '$exeFac', '$autFac', '$conFac','$iceFac','$tasaFac')";
   $stmtDetalle2 = $dbh->prepare($sqlDetalle2);
   $flagSuccessDetalle2=$stmtDetalle2->execute();
 }

@@ -42,8 +42,8 @@ if($cont>0){
     $stmtEnvioCorreo->execute();
     $resultEC = $stmtEnvioCorreo->fetch();
     $nombre_encargado = $resultEC['nombre_encargado'];
-    // $email_respo = $resultEC['email'];  
-    $email_respo="bsullcamani@gmail.com";//correo de prueba
+    $email_respo = $resultEC['email'];  
+    // $email_respo="bsullcamani@gmail.com";//correo de prueba
 
     //preparamos para el envio de correo
     $texto_cuerpo="Estimad@ ".$nombre_encargado.",<br>\n<br>\n queremos recordarle que el contrato del personal que se encuentra en la siguente lista, finalizará en la fecha adjunta:<br>\n<br>\n".$MessgAdjunto."<br>Saludos.";
