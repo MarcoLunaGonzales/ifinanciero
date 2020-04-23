@@ -125,7 +125,7 @@ for ($i=1;$i<=$cantidadFilas;$i++){
       }else{
         $montoEC=$haber;
       }
-      $sqlInsertEC="INSERT INTO estados_cuenta (cod_comprobantedetalle, cod_plancuenta, monto, cod_proveedor, fecha,cod_comprobantedetalleorigen,cod_cuentaaux,glosa_auxiliar) VALUES ('$codComprobanteDetalle', '$cuenta', '$montoEC', '$codProveedorCliente', '$fechaHoraActual','0','$cuentaAuxiliar','$glosaDetalle')";
+      $sqlInsertEC="INSERT INTO estados_cuenta (cod_comprobantedetalle, cod_plancuenta, monto, cod_proveedor, fecha,cod_comprobantedetalleorigen,cod_cuentaaux,glosa_auxiliar) VALUES ('$codComprobanteDetalle', '$cuenta', '$montoEC', '$codProveedorCliente', '$fechaHoraActual2','0','$cuentaAuxiliar','$glosaDetalle')";
       $stmtInsertEC = $dbh->prepare($sqlInsertEC);
       $flagSuccessInsertEC=$stmtInsertEC->execute();      
     }

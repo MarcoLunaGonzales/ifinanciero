@@ -220,7 +220,7 @@ $stmt->bindColumn('cod_tipocomprobante', $codTipoC);
       </table>
     </div>
     <div class="card">            
-      <h4 class="card-title" align="center">Detalle <?=$moduleNamePlural?></h4>
+      <h4 class="card-title" align="center">Detalle</h4>
       <div class="card-body">                                    
         <div class="" id="">
           <table id="tablePaginator" class="table table-condensed">
@@ -237,21 +237,31 @@ $stmt->bindColumn('cod_tipocomprobante', $codTipoC);
             </thead>
             <tbody>
             <?php
+              $totalDebe=0;
+              $totalHaber=0;
               $indexDetalle=1;
               $data = obtenerComprobantesDetImp($codigo_comprobante);                                    
-              while ($rowDet = $data->fetch(PDO::FETCH_ASSOC)) {  ?>
+              while ($rowDet = $data->fetch(PDO::FETCH_ASSOC)) {  
+                $totalDebe+=$rowDet['debe'];
+                $totalHaber+=$rowDet['haber'];
+            ?>
               <tr>                    
                 <td align="text-center small"><?=$indexDetalle;?></td>                          
                 <td class="text-center small"><?=$rowDet['unidadAbrev']?>/<?=$rowDet['abreviatura']?></td>
                 <td class="text-center small"><?=$rowDet['numero']?></td>
                 <td class="text-left small"><?=$rowDet['nombre']?></td>
-                <td class="text-center small"><?=number_format($rowDet['debe'], 2, '.', ',')?></td>
-                <td class="text-left small"><?=number_format($rowDet['haber'], 2, '.', ',')?></td>                                                  
+                <td class="text-right small"><?=formatNumberDec($rowDet['debe']);?></td>
+                <td class="text-right small"><?=formatNumberDec($rowDet['haber']);?></td> 
               </tr>
               <?php
                     $indexDetalle++;
                   }
               ?>
+              <tr>                    
+                <td align="text-center small" colspan="4">&nbsp;</td>                          
+                <td class="text-right small font-weight-bold"><?=formatNumberDec($totalDebe);?></td>
+                <td class="text-right small font-weight-bold"><?=formatNumberDec($totalHaber);?></td>
+              </tr>
             </tbody>
           </table>
         </div>
