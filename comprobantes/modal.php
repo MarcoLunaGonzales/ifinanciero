@@ -1,3 +1,137 @@
+<!-- notice modal -->
+<div class="modal fade" id="modalEditFac" tabindex="-1" role="dialog" style="z-index:99999"aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-notice modal-xl">
+    <div class="modal-content">
+      <div class="modal-body">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+          <i class="material-icons">close</i>
+        </button>
+              <div class="card ">
+                <div class="card-header" id="divTituloCuentaDetalle">
+                  <h4 class="card-title">Facturas -
+                    <small class="description">Edicion</small>
+                  </h4>
+                </div>
+                <div class="card-body ">
+                        <input class="form-control" type="hidden" name="fila_fac" id="fila_fac"/>
+                        <input class="form-control" type="hidden" name="indice_fac" id="indice_fac"/>
+                        <div style="padding: 20px;">
+                          <div class="row">                      
+                            <label class="col-sm-1 col-form-label" style="color: #4a148c;">NIT</label>
+                            <div class="col-sm-3">
+                              <div class="form-group">  
+                                <div id="">
+                                  <input class="form-control" type="number" name="nit_fac_edit" id="nit_fac_edit" required="true">                        
+                                </div>                                                                                                
+                              </div>
+
+                            </div>
+                            <label class="col-sm-1 col-form-label" style="color: #4a148c;">Nro. Factura</label>
+                            <div class="col-sm-3">
+                              <div class="form-group" id="">
+                                  <!-- <label for="number" class="bmd-label-floating" style="color: #4a148c;">Nro. Factura</label>      -->
+                                  <input class="form-control" type="number" name="nro_fac_edit" id="nro_fac_edit" required="true"/>
+                              </div>
+                            </div>
+                            <label class="col-sm-1 col-form-label" style="color: #4a148c;">Fecha</label>
+                            <div class="col-sm-3">
+                              <div class="form-group">
+                                <!-- <label for="fecha_fac" class="bmd-label-floating" style="color: #4a148c;">Fecha</label>      -->
+                                <input type="text" class="form-control datepicker" name="fecha_fac_edit" id="fecha_fac_edit" value="<?=$fechaActualModal?>">
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <label class="col-sm-1 col-form-label" style="color: #4a148c;">Importe</label>
+                            <div class="col-sm-3">
+                              <div class="form-group" id="">
+                                <input class="form-control" type="number" name="imp_fac_edit" id="imp_fac_edit" required="true"/>
+                              </div>
+                            </div>
+                            <label class="col-sm-1 col-form-label" style="color: #4a148c;">Exento</label>
+                            <div class="col-sm-3">
+                              <div class="form-group">
+                                <!-- <label for="exe_fac" class="bmd-label-floating" style="color: #4a148c;">Extento</label>      -->
+                                <input class="form-control" type="text" name="exe_fac_edit" id="exe_fac_edit" required="true" value="0" />
+                              </div>
+                            </div>
+                            <label class="col-sm-1 col-form-label" style="color: #4a148c;">ICE</label>
+                            <div class="col-sm-3">
+                              <div class="form-group">
+                                <!-- <label for="ice_fac" class="bmd-label-floating" style="color: #4a148c;">ICE</label>      -->
+                                <input class="form-control" type="text" name="ice_fac_edit" id="ice_fac_edit" required="true" value="0" />
+                              </div>
+                             </div>
+                          </div>                                                                  
+                          <!--No tiene funcion este campo-->
+                          <div class="row">                                            
+                            <label class="col-sm-1 col-form-label" style="color: #4a148c;">Tasa Cero</label>
+                            <div class="col-sm-3">
+                              <div class="form-group">
+                                <!-- <label for="taza_fac" class="bmd-label-floating" style="color: #4a148c;">Taza Cero</label>      -->
+                                <input class="form-control" type="text" name="taza_fac_edit" id="taza_fac_edit" required="true" value="0" />
+                              </div>
+                            </div>
+                            <label class="col-sm-1 col-form-label" style="color: #4a148c;">Autorizaci&oacute;n</label>
+                            <div class="col-sm-3">
+                              <div class="form-group" id="">
+                                <!-- <label for="aut_fac" class="bmd-label-floating" style="color: #4a148c;">Nro. Autorizaci&oacute;n</label>      -->
+                                <input class="form-control" type="text" name="aut_fac_edit" id="aut_fac_edit" required="true"/>
+                              </div>
+                            </div>
+                            <label class="col-sm-1 col-form-label" style="color: #4a148c;">Cod. Control</label>
+                            <div class="col-sm-3">
+                              <div class="form-group">
+                                <!-- <label for="con_fac" class="bmd-label-floating" style="color: #4a148c;">Cod. Control</label>      -->
+                                <input class="form-control" type="text" name="con_fac_edit" id="con_fac_edit" required="true"/>
+                              </div>
+                             </div>
+                          </div> 
+                          <div class="row">
+                            <label class="col-sm-1 col-form-label" style="color: #4a148c;">Tipo</label>
+                            <div class="col-sm-2">
+                              <div class="form-group">
+                                <select class="selectpicker form-control form-control-sm" name="tipo_fac_edit" id="tipo_fac_edit" data-style="btn btn-primary">                                  
+                                   <?php
+                                         $stmt = $dbh->prepare("SELECT codigo, nombre FROM tipos_compra_facturas where cod_estadoreferencial=1");
+                                       $stmt->execute();
+                                      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                        $codigoX=$row['codigo'];
+                                        $nombreX=$row['nombre'];
+                                        ?><option value="<?=$codigoX;?>"><?=$nombreX;?></option><?php
+                                         }
+                                     ?>
+                                </select>
+                              </div>
+                            </div>                        
+                            <label class="col-sm-1 col-form-label" style="color: #4a148c;">Razón Social</label>
+                            <div class="col-sm-8">
+                              <div class="form-group" id="">                                
+                                <input type="text" class="form-control" name="razon_fac_edit" id="razon_fac_edit">
+                                
+                              </div>
+                            </div>   
+                        </div>
+                        
+                          
+                        </div>                     
+                        <div class="form-group float-right">
+                          <button type="button" class="btn btn-info btn-round" onclick="saveFacturaEdit()">Guardar</button>
+                        </div>
+                      
+                </div>
+              </div>
+        
+        <!--<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eaque ullam autem illum, minima doloribus doloremque adipisci dolorem, repellendus debitis animi laboriosam commodi dolores et sint, quod. Pariatur, repudiandae sequi assumenda.</p>-->
+      </div>
+      <div class="modal-footer justify-content-center">
+        
+      </div>
+    </div>
+  </div>
+</div>
+<!-- end notice modal -->
+
 <!-- small modal -->
 <div class="modal fade modal-mini modal-primary" id="modalDist" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-small">
@@ -128,7 +262,7 @@
 </div>
 <!--    end small modal -->
 <!-- small modal -->
-<div class="modal fade modal-mini modal-primary" id="modalAlert" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade modal-mini modal-primary" id="modalAlert" style="z-index:99999" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-small">
     <div id="modalAlertStyle" class="modal-content bg-danger text-white">
       <div class="modal-header">
