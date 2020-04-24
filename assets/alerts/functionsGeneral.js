@@ -3374,15 +3374,30 @@ function mayorReporteComprobante(fila){
    var u=$("#ibnorca_u").val();
    var v=$("#ibnorca_v").val(); 
     if(tipo==1){
+      //para propuestas
      url="ajaxListSimulacion.php?q="+q+"&s="+s+"&u="+u+"&v="+v;
     }else{
-     url="ajaxListProveedor.php?q="+q+"&s="+s+"&u="+u+"&v="+v;
+      if(tipo==2){
+        //para proveedor
+        url="ajaxListProveedor.php?q="+q+"&s="+s+"&u="+u+"&v="+v;
+      }else{
+        //propuestas Manuales
+        url="ajaxListManual.php?q="+q+"&s="+s+"&u="+u+"&v="+v;
+      }
+     
     }
   }else{
     if(tipo==1){
      url="ajaxListSimulacion.php";
     }else{
-     url="ajaxListProveedor.php";
+      if(tipo==2){
+        //para proveedor
+        url="ajaxListProveedor.php";
+      }else{
+        //propuestas Manuales
+        url="ajaxListManual.php";
+      }
+     
     }
   }
   
@@ -3410,7 +3425,8 @@ function mayorReporteComprobante(fila){
   }
  }
 function cargarDatosSelectTipoSolicitud(url,tipo){
-  if(tipo!=3){ 
+  $("#fiel").html("");
+  //if(tipo!=3){ 
    ajax=nuevoAjax();
     ajax.open("GET",url,true);
     ajax.onreadystatechange=function(){
@@ -3418,24 +3434,34 @@ function cargarDatosSelectTipoSolicitud(url,tipo){
       var fi=$("#lista_tipo");
       fi.html(ajax.responseText);
       fi.bootstrapMaterialDesign();
-      if(tipo==2){
+      if(tipo==2||tipo==3){
         if(!($("#filtros_solicitud").hasClass("d-none"))){
           $("#filtros_solicitud").addClass("d-none")
         }
+        if(tipo==3){
+          if(!($("#buscar_solicitudesdetalle").hasClass("d-none"))){
+            $("#buscar_solicitudesdetalle").addClass("d-none");
+           }
+        }else{
+         if($("#buscar_solicitudesdetalle").hasClass("d-none")){
+            $("#buscar_solicitudesdetalle").removeClass("d-none");
+          }
+        }      
       }else{
        if(($("#filtros_solicitud").hasClass("d-none"))){
          $("#filtros_solicitud").removeClass("d-none")
-       }    
+       } 
+       if($("#buscar_solicitudesdetalle").hasClass("d-none")){
+         $("#buscar_solicitudesdetalle").removeClass("d-none");
+        }   
       }
 
-      if($("#buscar_solicitudesdetalle").hasClass("d-none")){
-        $("#buscar_solicitudesdetalle").removeClass("d-none");
-      }
+      
        $('.selectpicker').selectpicker("refresh");
     }
    }
     ajax.send(null);
-  }else{
+ /* }else{
     if(!($("#filtros_solicitud").hasClass("d-none"))){
        $("#filtros_solicitud").addClass("d-none")
     }
@@ -3444,7 +3470,7 @@ function cargarDatosSelectTipoSolicitud(url,tipo){
     if(!($("#buscar_solicitudesdetalle").hasClass("d-none"))){
       $("#buscar_solicitudesdetalle").addClass("d-none");
     } 
-   }
+   }*/
 }
 
 function listarTipoSolicitudAjaxPropuesta(tipo,id){
@@ -3559,12 +3585,7 @@ function addSolicitudDetalle(obj,tipo) {
       fi.appendChild(contenedor);
       var divDetalle;
       divDetalle=$("#div"+numFilas);
-      if(tipo==1){
-        var url="ajaxSolicitudRecursosDetalleSimulacion.php";
-      }else{
-        var url="ajaxSolicitudRecursosDetalleSimulacion.php";
-       // var url="ajaxSolicitudRecursosDetalleProveedor.php";
-      }
+      var url="ajaxSolicitudRecursosDetalleSimulacion.php";
       ajax=nuevoAjax();
       ajax.open("GET",url+"?idFila="+numFilas+"&codigo="+codigoSol,true);
       ajax.onreadystatechange=function(){
@@ -3721,7 +3742,7 @@ function agregarRetencionSolicitud(){
      $("#cod_retencion"+fila).val(respuesta[0]);
      $("#retFila").val("");
      $('#modalRetencion').modal('hide');
-     $("#importe_label"+fila).text("Importe - "+respuesta[1].substr(0,3)+"...");
+     $("#importe_label"+fila).html("<small>Importe-"+respuesta[1].substr(0,3)+".</small>");
   }else{
     $("#mensaje_retencion").html("<p class='text-danger'>Debe seleccionar al menos una retención</p>");
   }

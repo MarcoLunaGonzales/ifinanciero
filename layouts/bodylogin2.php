@@ -496,17 +496,28 @@
            Swal.fire("Informativo!", "La Retencion IVA debe tener al menos una factura registrada", "warning"); 
            return false;
         }else{
-          //para poner la retencion iva si tiene al menos una factura..
-        for (var i = 0; i < $("#cantidad_filas").val(); i++) {
+          var cont2=0;
+          for (var i = 0; i < $("#cantidad_filas").val(); i++) {
+           if($('#partida_cuenta_id'+(i+1)).val()==""){
+              cont2++; 
+              break;    
+           }                  
+          }
+          if(cont2!=0){
+           Swal.fire("Informativo!", "Hay filas que no estan relacionadas a una cuenta!", "warning"); 
+           return false;
+          }else{
+           //para poner la retencion iva si tiene al menos una factura..
+           for (var i = 0; i < $("#cantidad_filas").val(); i++) {
              if(itemFacturas[i].length!=0){
               $('#cod_retencion'+(i+1)).val($('#cod_configuracioniva').val()); 
              }                       
-        }
-
-          $('<input />').attr('type', 'hidden')
+           }
+           $('<input />').attr('type', 'hidden')
             .attr('name', 'facturas')
             .attr('value', JSON.stringify(itemFacturas))
-            .appendTo('#formSolDet');
+            .appendTo('#formSolDet');       
+          }       
         }
       }  
 

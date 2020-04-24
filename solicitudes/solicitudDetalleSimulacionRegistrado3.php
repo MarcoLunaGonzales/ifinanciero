@@ -5,6 +5,8 @@
                         $ibnorca=1;
                         $unidadSol=$codUnidadX;
                         $areaSol=$codAreaX;
+                        $unidadXX=$codUnidadX;
+                        $areaXX=$codAreaX;
 						$idFila=1;
 						$cuentasCodigos=[];$conta=0;$auxAnio=0;$detalleAux="";$contAux=0;
 					?><div id="detalles_solicitud"><?php

@@ -46,7 +46,36 @@ $fechaDesde="01/".$m."/".$y;
 $fechaHasta=$d."/".$m."/".$y;
 
 $dbh = new Conexion();
-
+echo "<script>var array_cuenta=[];</script>";
+$i=0;
+  $cuentaLista=obtenerCuentasListaSolicitud(); //null para todas las iniciales del numero de cuenta obtenerCuentasLista(5,[5,4]);
+   while ($rowCuenta = $cuentaLista->fetch(PDO::FETCH_ASSOC)) {
+    $codigoX=$rowCuenta['codigo'];
+    $numeroX=$rowCuenta['numero'];
+    $nombreX=$rowCuenta['nombre'];
+    ?>
+    <script>
+     var obtejoLista={
+       label:'[<?=trim($numeroX)?>] - <?=trim($nombreX)?>',
+       value:'<?=$codigoX?>'};
+       array_cuenta[<?=$i?>]=obtejoLista;
+    </script> 
+    <?php
+    $i=$i+1;
+  }
+ $cuentaCombo=obtenerCuentasSimulaciones(5,3,$globalUser);
+$i=0;
+  while ($rowCombo = $cuentaCombo->fetch(PDO::FETCH_ASSOC)) {
+   $codigoX=$rowCombo['codigo'];
+   $numeroX=$rowCombo['numero'];
+   $nombreX=$rowCombo['nombre'];
+   $nivelX=$rowCombo['nivel'];
+   $arrayNuevo[$i][0]=$codigoX;
+   $arrayNuevo[$i][1]=trim($numeroX);
+   $arrayNuevo[$i][2]=trim($nombreX);
+   $arrayNuevo[$i][3]=$nivelX;
+    $i++;
+  } 
 if(isset($_GET['cod'])){
   $codigo=$_GET['cod'];
   $codigoSolicitud=$_GET['cod'];

@@ -8,9 +8,7 @@
 						$idFila=1;
 						$cuentasCodigos=[];$conta=0;$auxAnio=0;$detalleAux="";$contAux=0;
 					?><div id="detalles_solicitud"><?php
-							 
-						
-                         
+							             
                        $solicitudDetalle=obtenerSolicitudRecursosDetalle($codigo);
                        while ($rowDetalles = $solicitudDetalle->fetch(PDO::FETCH_ASSOC)) {
                           $tituloImporte="Importe";

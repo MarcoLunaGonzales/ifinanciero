@@ -2760,6 +2760,20 @@ function obtenerCodigoAreaPlantillaServicio($codigo){
   }
   return $num;
 }
+function obtenerCodigoUnidadPlantillaServicio($codigo){
+   $dbh = new Conexion();
+  $sql="";
+  $sql="SELECT cod_unidadorganizacional FROM plantillas_servicios where codigo=$codigo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute(); 
+   $num=0;
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
+  {
+   $num=$row['cod_unidadorganizacional'];
+  }
+  return $num;
+}
+
 //================ ========== PARA  planilla sueldos
 
 function obtenerBonoAntiguedad($minino_salarial,$ing_contr,$anio_actual){  

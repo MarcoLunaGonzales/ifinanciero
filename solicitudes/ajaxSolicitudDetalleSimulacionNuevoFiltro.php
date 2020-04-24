@@ -18,6 +18,8 @@ $codigo_detalle=$_GET['codigo_detalle'];
 
 		//$detalle=obtenerDetalleSolicitudSimulacion($codSimulacionServX);
                     $codigoPlantillaXX=obtenerPlantillaCodigoSimulacionServicio($codSimulacionServX);
+                    $areaXX=obtenerCodigoAreaPlantillasServicios($codigoPlantillaXX);
+                    $unidadXX=obtenerCodigoUnidadPlantillaServicio($codigoPlantillaXX);  
                         if($anio=="all"){
 
                         }
