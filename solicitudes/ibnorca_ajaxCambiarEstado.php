@@ -1,5 +1,5 @@
 <?php
-require_once '../layouts/bodylogin.php';
+//require_once '../layouts/bodylogin.php';
 require_once '../conexion.php';
 require_once '../functions.php';
 require_once '../functionsGeneral.php';
@@ -32,6 +32,7 @@ $flagSuccess=$stmtUpdate->execute();
     $idObjeto=$estado; //variable desde get
     $obs=$_GET['obs']; //$obs="Registro de propuesta";
     if(isset($_GET['u'])){
+    	$u=$_GET['u'];
     	actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);
     }else{
     	actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);
@@ -45,6 +46,8 @@ $stmtSolicitud->execute();
 // bindColumn
 $stmtSolicitud->bindColumn('unidad', $unidadX);
 $stmtSolicitud->bindColumn('area', $areaX);
+$stmtSolicitud->bindColumn('cod_unidadorganizacional', $cod_unidadX);
+$stmtSolicitud->bindColumn('cod_area', $cod_areaX);
 $stmtSolicitud->bindColumn('cod_simulacion', $codSimulacion);
 $stmtSolicitud->bindColumn('cod_proveedor', $codProveedor);
 $stmtSolicitud->bindColumn('cod_simulacionservicio', $codSimulacionServicio);
@@ -53,6 +56,8 @@ $stmtSolicitud->bindColumn('numero', $numeroSol);
 while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
       $unidadX=$unidadX;
       $areaX=$areaX;
+      $cod_unidadX=$cod_unidadX;
+      $cod_areaX=$cod_areaX;
       $codSimulacion=$codSimulacion;
       $codProveedor=$codProveedor;
       $codSimulacionServicio=$codSimulacionServicio;
@@ -72,15 +77,15 @@ while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
 
     $codGestion=date("Y");
     $tipoComprobante=3;
-    $nroCorrelativo=numeroCorrelativoComprobante($globalGestion,$globalUnidad,3);
+    $nroCorrelativo=numeroCorrelativoComprobante($globalGestion,$cod_unidadX,3);
     $fechaHoraActual=date("Y-m-d H:i:s");
     $glosa="SOL:".$numeroSol." - ".$areaX." - ".$nombreSimulacion." COMPROBANTE DEVENGADOS";
     $userSolicitud=obtenerPersonalSolicitanteRecursos($codigo);
-    $unidadSol=obtenerUnidadSolicitanteRecursos($codSolicitud);
-    $areaSol=obtenerAreaSolicitanteRecursos($codSolicitud);
+    $unidadSol=$cod_unidadX;
+    $areaSol=$cod_areaX;
 
     $sqlInsert="INSERT INTO comprobantes (codigo, cod_empresa, cod_unidadorganizacional, cod_gestion, cod_moneda, cod_estadocomprobante, cod_tipocomprobante, fecha, numero, glosa, created_at, created_by, modified_at, modified_by) 
-    VALUES ('$codComprobante', '1', '$globalUnidad', '$codGestion', '1', '1', '$tipoComprobante', '$fechaHoraActual', '$nroCorrelativo', '$glosa', '$fechaHoraActual', '$userSolicitud', '$fechaHoraActual', '$userSolicitud')";
+    VALUES ('$codComprobante', '1', '$cod_unidadX', '$codGestion', '1', '1', '$tipoComprobante', '$fechaHoraActual', '$nroCorrelativo', '$glosa', '$fechaHoraActual', '$userSolicitud', '$fechaHoraActual', '$userSolicitud')";
     echo $sqlInsert;
     $stmtInsert = $dbh->prepare($sqlInsert);
     $flagSuccessComprobante=$stmtInsert->execute();
@@ -103,7 +108,8 @@ while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
           $cuentaAuxiliarProv=obtenerCodigoCuentaAuxiliarProveedorCliente(1,$codProveedor);
           $numeroCuentaProv=trim(obtieneNumeroCuenta($cuentaProv));
           $inicioNumeroProv=$numeroCuentaProv[0];
-          $unidadareaProv=obtenerUnidadAreaCentrosdeCostos($inicioNumeroProv);
+          //unidad y area de la solicitud
+          $unidadareaProv=obtenerUnidadAreaCentrosdeCostos($inicioNumeroProv);           ////////////////////////unidad y area para el detalle
           if($unidadareaProv[0]==0){
               $unidadDetalleProv=$unidadSol;
               $areaProv=$areaSol;
@@ -127,18 +133,13 @@ while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
             
            } 
          $codProveedor=$rowNuevo['cod_proveedor'];
-         /*if($cambio==1){
-          $cambio=0;
-         }else{
-           $cambio=1; 
-         } */
         }
         
         $cuenta=$rowNuevo['cod_plancuenta'];
         $cuentaAuxiliar=0;
         $numeroCuenta=trim(obtieneNumeroCuenta($cuenta));
         $inicioNumero=$numeroCuenta[0];
-        $unidadarea=obtenerUnidadAreaCentrosdeCostos($inicioNumero);
+        $unidadarea=obtenerUnidadAreaCentrosdeCostos($inicioNumero);               ////////////////////////unidad y area para el detalle
         if($unidadarea[0]==0){
             $unidadDetalle=$unidadSol;
             $area=$areaSol;
@@ -187,8 +188,6 @@ while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
       $importe=$importeOriginal;
     }
     $montoRetencion=($porcentajeX/100)*$importe;
-    
-    //$totalRetencion+=$montoRetencion;
 
     $montoRetencion=number_format($montoRetencion, 2, '.', '');   
 
@@ -200,17 +199,12 @@ while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
       $haberRet=$montoRetencion;
     }
     $importe=number_format($importe, 2, '.', '');
-    /*if($rowRet['cod_cuenta']==0){
-      $n_cuenta="";
-      $nom_cuenta="";
-      include "addFilaVacio.php";
-    }else{*/
       $cuentaRetencion=$rowRet['cod_cuenta'];  
       $cuentaAuxiliar=0;
       $n_cuenta=trim(obtieneNumeroCuenta($cuentaRetencion));
       $nom_cuenta=nameCuenta($cuentaRetencion);
       $inicioNumeroRet=$n_cuenta[0];
-      $unidadareaRet=obtenerUnidadAreaCentrosdeCostos($inicioNumeroRet);
+      $unidadareaRet=obtenerUnidadAreaCentrosdeCostos($inicioNumeroRet);                     ////////////////////////unidad y area para el detalle
       if($unidadareaRet[0]==0){
             $unidadDetalleRet=$unidadSol;
             $areaRet=$areaSol;
@@ -227,11 +221,7 @@ while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
       $retenciones[$j]['glosa']=$glosaX." D/".$rowNuevo['glosa'];
       $retenciones[$j]['numero']=$ii; 
       $retenciones[$j]['debe_haber']=$debehaberX;
-
-    /*}*/
     $j++;
-
-   // $sumaDevengado+=$totalRetencion;
   }
 
   $i=$ii;     
@@ -264,8 +254,7 @@ while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
 
           // fin de retencion 
         $haber=0;
-        
-        //$glosaDetalle.="( ".$totalRetencion." --- ".$rowNuevo['monto'].")"; 
+
         if($porcentajeCuentaX<=100){
           $debe=$importeOriginal2;
           $sumaDevengado+=$importeOriginal; 

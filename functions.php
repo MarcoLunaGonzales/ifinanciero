@@ -4438,7 +4438,7 @@ function obtenerCodigoProveedorCuentaAux($codigo){
 
 function obtenerDetalleSolicitudParaComprobante($codigo){
   $dbh = new Conexion();
-  $sql="SELECT codigo,cod_plancuenta,importe as monto,cod_proveedor,detalle as glosa,cod_confretencion from solicitud_recursosdetalle where cod_solicitudrecurso=$codigo order by cod_proveedor";
+  $sql="SELECT cod_unidadorganizacional,cod_area,codigo,cod_plancuenta,importe as monto,cod_proveedor,detalle as glosa,cod_confretencion from solicitud_recursosdetalle where cod_solicitudrecurso=$codigo order by cod_proveedor";
   $stmt = $dbh->prepare($sql);
   $stmt->execute();
   return $stmt;

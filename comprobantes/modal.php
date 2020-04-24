@@ -13,8 +13,8 @@
                   </h4>
                 </div>
                 <div class="card-body ">
-                        <input class="form-control" type="hidden" name="fila_fac" id="fila_fac"/>
-                        <input class="form-control" type="hidden" name="indice_fac" id="indice_fac"/>
+                        <input class="form-control" type="text" name="fila_fac" id="fila_fac"/>
+                        <input class="form-control" type="text" name="indice_fac" id="indice_fac"/>
                         <div style="padding: 20px;">
                           <div class="row">                      
                             <label class="col-sm-1 col-form-label" style="color: #4a148c;">NIT</label>

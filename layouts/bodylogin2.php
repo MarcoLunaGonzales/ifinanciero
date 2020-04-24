@@ -252,14 +252,14 @@
                     if(contcuentaIva!=0){
                       var cantiFacturas = itemFacturas.length;  
                       console.log("numero de Facturas: "+cantiFacturas+" json: "+JSON.stringify(itemFacturas));
-                      var contadorFacturas=0;
+                      var contadorFacturas=0;var sumaTotalFactura=0;
                       for (var i = 0; i < cantiFacturas; i++){
                         var factura=itemFacturas[i];                          
                         if(itemFacturas[i]==null || itemFacturas[i]==''){
                           contadorFacturas++;
                         }else{//existe factura
                           console.log("exite factura: "+JSON.stringify(itemFacturas[i]));
-                          var sumaTotalFactura=0;
+                          
                           for(var j = 0; j < itemFacturas[i].length; j++){
                             var dato = Object.values(itemFacturas[i][j]);
                             console.log("dato: "+dato);
@@ -268,18 +268,18 @@
                             if(dato[7]==""){  dato[7]=0;}
                             if(dato[8]==""){  dato[8]=0;}
                             sumaTotalFactura=sumaTotalFactura+parseInt(dato[4])+parseInt(dato[7])+parseInt(dato[8]);
-                          }                           
-                          var monto_debe_total_comprobante = $("#totaldeb").val();  
+                          }                              
+                        }                
+                      }
+                      var monto_debe_total_comprobante = $("#totaldeb").val();  
                           console.log("SUMA FACTURAS: "+sumaTotalFactura+" "+monto_debe_total_comprobante);
                           if(sumaTotalFactura!=monto_debe_total_comprobante){
                             mensaje+="<p>El Monto registrado en las facturas difiere del total!</p>";
                             $('#msgError').html(mensaje);
                             $('#modalAlert').modal('show');
                             envio=1; 
-                          }
-                        }
-
                       }
+
                       if(contadorFacturas==cantiFacturas){
                         mensaje+="<p>No puede existir Facturas vacías!</p>";
                         $('#msgError').html(mensaje);
