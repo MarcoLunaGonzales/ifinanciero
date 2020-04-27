@@ -115,7 +115,7 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                           <th class="text-center small">Fecha</th>
                           <th class="text-left small">Glosa</th>
                           <th class="text-center small">Estado</th>
-                          <th class="text-center small">Actions</th>
+                          <th class="text-center small col-md-2">Actions</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -175,21 +175,28 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                                    ?>
                               </div>
                             </div>
-                            <a href='<?=$urlArchivo;?>?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="btn btn-default" title="Ver Adjuntos">
-                              <i class="material-icons">attachment</i>
-                            </a>
-                            <?php
-                            if($existeCuenta==0){
-                              ?>
-                            <a href='<?=$urlEdit3;?>?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="<?=$buttonEdit;?>" title="Editar">
-                              <i class="material-icons"><?=$iconEdit;?></i>
-                            </a>
-                              <?php
-                            }
-                            ?>
-                            <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')" title="Anular">
-                              <i class="material-icons"><?=$iconDelete;?></i>
-                            </button>
+                            <div class="btn-group dropdown">
+                              <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Ver Comprobante">
+                                <i class="material-icons">more_horiz</i>
+                              </button>
+                              <div class="dropdown-menu">
+                                <a href='<?=$urlArchivo;?>?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="btn btn-default" title="Ver Adjuntos">
+                                  <i class="material-icons">attachment</i>
+                                </a>
+                                <?php
+                                if($existeCuenta==0){
+                                ?>
+                                <a href='<?=$urlEdit3;?>?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="<?=$buttonEdit;?>" title="Editar">
+                                  <i class="material-icons"><?=$iconEdit;?></i>
+                                </a>
+                                <?php
+                                }
+                                ?>
+                                <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')" title="Anular">
+                                  <i class="material-icons"><?=$iconDelete;?></i>
+                                </button>
+                              </div>
+                            </div>
                           </td>
                         </tr>
                         <?php

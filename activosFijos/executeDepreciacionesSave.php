@@ -24,14 +24,18 @@ $mes=$_POST["mes"];
 $gestion=$_POST["gestion"];
 //verificamos si esa fecha no se registro aun
 
-$stmt = $dbh->prepare("SELECT codigo from mesdepreciaciones where gestion=$gestion and mes=$mes");
+$stmt = $dbh->prepare("SELECT count(codigo)as contador from mesdepreciaciones where gestion=$gestion and mes=$mes");
 	//ejecutamos
 	$stmt->execute();
 	//bindColumn
 	$result=$stmt->fetch();
-	$codigo_aux=$result['codigo'];
-	if($codigo_aux==null)
+	$codigo_aux=$result['contador'];
+	
+	//echo "codAux : ".$codigo_aux;
+
+	if($codigo_aux==0)
 	{
+		//echo "entro correcto 1";
 		//verificamos si se salta algun mes
 		$stmt2 = $dbh->prepare("SELECT mes,gestion from mesdepreciaciones  order by codigo desc limit 1");
 		$stmt2->execute();
@@ -42,25 +46,23 @@ $stmt = $dbh->prepare("SELECT codigo from mesdepreciaciones where gestion=$gesti
 		if($mes_aux==12){
 			$mes_aux=1;
 		}else{
-			if($mes_aux==null)
+			if($mes_aux==null || $mes_aux=="")
 				$mes_aux=0;
 			else $mes_aux=$mes_aux+1;
 		}
+		echo "mesAux: ".$mes_aux;
 		if($mes_aux==$mes || $mes_aux==0){//no se salto ningun mes
-			//$ufvinicio=$_POST["ufvinicio"];
-		$ufvinicio=obtenerUFV($fecha_primerdia);
-		//$ufvfinal=$_POST["ufvfinal"];
-		$ufvfinal=obtenerUFV($fecha_ultimodia);
-		$estado=1;
-		//Prepare
-		$stmt = $dbh->prepare("call crear_depreciacion_mensual(:mes, :gestion, :ufvinicio, :ufvfinal)");
-		$stmt->bindParam(':mes', $mes);
-		$stmt->bindParam(':gestion', $gestion);
-		$stmt->bindParam(':ufvinicio', $ufvinicio);
-		$stmt->bindParam(':ufvfinal', $ufvfinal);
-		$flagSuccess=$stmt->execute();
-		showAlertSuccessErrorDepreciaciones($flagSuccess,$urlList7);
-
+			$ufvinicio=obtenerUFV($fecha_primerdia);
+			$ufvfinal=obtenerUFV($fecha_ultimodia);
+			$estado=1;
+			//Prepare
+			$stmt = $dbh->prepare("call crear_depreciacion_mensual(:mes, :gestion, :ufvinicio, :ufvfinal)");
+			$stmt->bindParam(':mes', $mes);
+			$stmt->bindParam(':gestion', $gestion);
+			$stmt->bindParam(':ufvinicio', $ufvinicio);
+			$stmt->bindParam(':ufvfinal', $ufvfinal);
+			$flagSuccess=$stmt->execute();
+			showAlertSuccessErrorDepreciaciones($flagSuccess,$urlList7);
 		}else{//se esta saltando un mes de depreciacion
 			$flagSuccess=false;
 			showAlertSuccessErrorDepreciaciones2($flagSuccess,$urlList7);
@@ -68,6 +70,7 @@ $stmt = $dbh->prepare("SELECT codigo from mesdepreciaciones where gestion=$gesti
 		
 		
 	}else{
+		//echo "entro falso 1";
 		$flagSuccess=false;
 		showAlertSuccessErrorDepreciaciones($flagSuccess,$urlRegistrar7);
 	}
