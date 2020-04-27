@@ -6981,6 +6981,19 @@ function editarDatosPlantilla(){
   $('.selectpicker').selectpicker("refresh");
  $("#modalEditPlantilla").modal("show"); 
 }
+
+function editarDatosPlantillaSec(){
+  $("#modal_diasauditoria").val($("#dias_plan").val());
+  $("#modal_utibnorca").val($("#utilidad_minlocal").val());
+  $("#modal_utifuera").val($("#utilidad_minext").val());
+  $("#modal_alibnorca").val($("#alumnos_plan").val());
+  $("#modal_alfuera").val($("#alumnos_plan_fuera").val());
+  $("#modal_importeplan").val($("#cod_precioplantilla").val());
+
+  $('.selectpicker').selectpicker("refresh");
+ $("#modalEditPlantilla").modal("show"); 
+}
+
 function guardarDatosPlantilla(btn_id){
   var codigo_p=$("#cod_plantilla").val();
   var cod_sim=$("#cod_simulacion").val();

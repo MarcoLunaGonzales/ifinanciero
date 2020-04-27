@@ -100,10 +100,10 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
             <div class="row"><div class="card col-sm-5">
 				<div class="card-header card-header-success card-header-text">
 					<div class="card-text">
-					  <h4 class="card-title">Datos de la Simulaci&oacute;n</h4>
+					  <h4 class="card-title">Datos de la Propuesta</h4>
 					</div>
           <button type="button" onclick="editarDatosSimulacion()" class="btn btn-success btn-sm btn-fab float-right">
-             <i class="material-icons" title="Editar Simulación">edit</i>
+             <i class="material-icons" title="Editar Propuesta">edit</i>
           </button>
 				</div>
 				<div class="card-body ">
@@ -151,13 +151,13 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
 			<div class="card col-sm-7">
 				<div class="card-header card-header-info card-header-text">
 					<div class="card-text">
-					  <h4 class="card-title">Datos de la Plantilla</h4>
+					  <h4 class="card-title">Datos de la Propuesta</h4>
 					</div>
-          <button type="button" onclick="editarDatosPlantilla()" class="btn btn-success btn-sm btn-fab float-right">
+          <button type="button" onclick="editarDatosPlantillaSec()" class="btn btn-success btn-sm btn-fab float-right">
              <i class="material-icons" title="Editar Plantilla">edit</i>
           </button>
           <button type="button" onclick="actualizarSimulacion()" class="btn btn-default btn-sm btn-fab float-right">
-             <i class="material-icons" title="Actualizar la Simulación">refresh</i><span id="narch" class="bg-warning"></span>
+             <i class="material-icons" title="Actualizar la Propuesta">refresh</i><span id="narch" class="bg-warning"></span>
           </button>
 				</div>
 				<div class="card-body ">
@@ -360,35 +360,35 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
                  $codEstadoSimulacion=4; 
                  if($pUtilidadLocal>=$utilidadIbnorcaX&&$pUtilidadExterno>=$utilidadFueraX){
                     $estiloUtilidad="bg-success text-white";
-                    $mensajeText="La simulación SI CUMPLE con la UTILIDAD MINIMA REQUERIDA DEL ".$utilidadReferencial." % ".$ibnorca_title;
+                    $mensajeText="La Propuesta SI CUMPLE con la UTILIDAD MINIMA REQUERIDA DEL ".$utilidadReferencial." % ".$ibnorca_title;
                     $estiloMensaje="text-success font-weight-bold";
                     $codEstadoSimulacion=3;  
                  }else{
                     if($pUtilidadLocal>=$utilidadIbnorcaX){
                         $estiloUtilidadIbnorca="bg-success text-white";
                         if($ibnorcaC==1){
-                         $mensajeText="La simulación SI CUMPLE con la UTILIDAD MINIMA REQUERIDA DEL ".$utilidadReferencial." % ".$ibnorca_title;
+                         $mensajeText="La Propuesta SI CUMPLE con la UTILIDAD MINIMA REQUERIDA DEL ".$utilidadReferencial." % ".$ibnorca_title;
                          $estiloMensaje="text-success font-weight-bold";
                          $codEstadoSimulacion=3;
                         }                 
                     }else{
                         $estiloUtilidadIbnorca="bg-danger text-white";
                         if($ibnorcaC==1){
-                         $mensajeText="La simulación NO CUMPLE con la UTILIDAD MINIMA REQUERIDA DEL ".$utilidadReferencial." % ".$ibnorca_title;
+                         $mensajeText="La Propuesta NO CUMPLE con la UTILIDAD MINIMA REQUERIDA DEL ".$utilidadReferencial." % ".$ibnorca_title;
                          $estiloMensaje="text-danger font-weight-bold";
                         }                      
                     }
                     if($pUtilidadExterno>=$utilidadFueraX){
                         $estiloUtilidadFuera="bg-success text-white";
                         if($ibnorcaC!=1){
-                         $mensajeText="La simulación SI CUMPLE con la UTILIDAD MINIMA REQUERIDA DEL ".$utilidadReferencial." % ".$ibnorca_title;
+                         $mensajeText="La Propuesta SI CUMPLE con la UTILIDAD MINIMA REQUERIDA DEL ".$utilidadReferencial." % ".$ibnorca_title;
                          $estiloMensaje="text-success font-weight-bold";
                          $codEstadoSimulacion=3;
                         }
                     }else{
                         $estiloUtilidadFuera="bg-danger text-white";
                         if($ibnorcaC!=1){
-                         $mensajeText="La simulación NO CUMPLE con la UTILIDAD MINIMA REQUERIDA DEL ".$utilidadReferencial." % ".$ibnorca_title;
+                         $mensajeText="La Propuesta NO CUMPLE con la UTILIDAD MINIMA REQUERIDA DEL ".$utilidadReferencial." % ".$ibnorca_title;
                          $estiloMensaje="text-danger font-weight-bold";
                         }                      
                     }
@@ -577,7 +577,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
           <div class="row div-center">
 				  	<div class="card-footer fixed-bottom">
             
-            <a onclick="guardarSimulacion()" class="btn btn-success text-white"><i class="material-icons">send</i> Enviar Simulacion</a>
+            <a onclick="guardarSimulacion()" class="btn btn-success text-white"><i class="material-icons">send</i> Enviar Propuesta</a>
 				  	<a href="../<?=$urlList;?>" class="btn btn-danger">Volver</a> 
             </div>
 				 </div>
