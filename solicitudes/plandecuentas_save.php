@@ -1,0 +1,39 @@
+<?php
+
+require_once '../layouts/bodylogin.php';
+require_once '../conexion.php';
+require_once '../functions.php';
+require_once '../functionsGeneral.php';
+require_once 'configModule.php';
+
+$dbh = new Conexion();
+
+session_start();
+
+//$cuentasX=$_POST["cuentas"];
+// $cuentasX=json_decode($_POST["cuentas2"]);
+
+$cuentasX=$_POST["cuentas"];
+// $codPartida=$_POST["cod_partida"];
+
+$stmtDel = $dbh->prepare("DELETE FROM solicitud_recursoscuentas ");
+$stmtDel->execute();
+$flagSuccessDetail=true;
+
+
+for ($i=0;$i<count($cuentasX);$i++){ 	    
+	 echo $cuentasX[$i]."<br>";
+	$stmt = $dbh->prepare("INSERT INTO solicitud_recursoscuentas(cod_cuenta) VALUES (:cod_cuenta)");
+	$stmt->bindParam(':cod_cuenta', $cuentasX[$i]);
+	$flagSuccess2=$stmt->execute();
+	if($flagSuccess2==false){
+		$flagSuccessDetail=false;
+	}
+}
+
+if($flagSuccessDetail==true){
+	showAlertSuccessError(true,"../".$urlListCC2);	
+}else{
+	showAlertSuccessError(false,"../".$urlListCC2);
+}
+?>

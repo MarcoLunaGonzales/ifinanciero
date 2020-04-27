@@ -678,7 +678,13 @@ if($menuModulo==0){
                     <span class="sidebar-mini"> TS </span>
                     <span class="sidebar-normal"> Tarifario de Servicios TCP</span>
                   </a>
-                </li>    
+                </li> 
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listPlanCuentasSolicitudesRecursos">
+                    <span class="sidebar-mini">PSR</span>
+                    <span class="sidebar-normal">Plan de Cuentas Solicitud de Recursos</span>
+                  </a>
+                </li>   
               </ul>
             </div>
           </li>    

@@ -322,6 +322,13 @@
         if ($_GET['opcion']=='listSolicitudPagosProveedores') {
 			require_once('solicitudes/listPagos.php');
 		}
+		if ($_GET['opcion']=='listPlanCuentasSolicitudesRecursos') {
+			require_once('solicitudes/plandecuentas_list.php');
+		}
+		if ($_GET['opcion']=='registerPlanCuentaSS') {
+			$codigo=$_GET['codigo'];
+			require_once('solicitudes/plandecuentas_registrer.php');
+		}
 
 		//ESTADOS DE CUENTAS
 		if ($_GET['opcion']=='configuracionEstadosCuenta') {
