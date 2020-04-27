@@ -20,6 +20,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 
 
 if(isset($_POST['numero'])){
+    $observaciones=$_POST['observaciones_solicitud'];
     $numero=$_POST['numero'];
     $tipoSol=$_POST['tipo_solicitud'];
   if($tipoSol!=2){
@@ -60,11 +61,11 @@ if(isset($_POST['numero'])){
   $dbh = new Conexion();
   if(isset($_POST['usuario_ibnored_v'])){
        $v=$_POST['usuario_ibnored_v'];
-       $sqlInsert="INSERT INTO solicitud_recursos (codigo, cod_personal,cod_unidadorganizacional,cod_area,fecha,numero,cod_simulacion,cod_proveedor,cod_simulacionservicio,cod_contrato,idServicio) 
-       VALUES ('".$codSolicitud."','".$globalUser."','".$globalUnidad."', '".$globalArea."', '".$fecha."','".$numero."','".$codSim."','".$codProv."','".$codSimServ."','".$codCont."','".$v."')";
+       $sqlInsert="INSERT INTO solicitud_recursos (codigo, cod_personal,cod_unidadorganizacional,cod_area,fecha,numero,cod_simulacion,cod_proveedor,cod_simulacionservicio,cod_contrato,idServicio,observaciones,) 
+       VALUES ('".$codSolicitud."','".$globalUser."','".$globalUnidad."', '".$globalArea."', '".$fecha."','".$numero."','".$codSim."','".$codProv."','".$codSimServ."','".$codCont."','".$v."','".$observaciones."')";
   }else{
-    $sqlInsert="INSERT INTO solicitud_recursos (codigo, cod_personal,cod_unidadorganizacional,cod_area,fecha,numero,cod_simulacion,cod_proveedor,cod_simulacionservicio,cod_contrato) 
-    VALUES ('".$codSolicitud."','".$globalUser."','".$globalUnidad."', '".$globalArea."', '".$fecha."','".$numero."','".$codSim."','".$codProv."','".$codSimServ."','".$codCont."')";
+    $sqlInsert="INSERT INTO solicitud_recursos (codigo, cod_personal,cod_unidadorganizacional,cod_area,fecha,numero,cod_simulacion,cod_proveedor,cod_simulacionservicio,cod_contrato,observaciones) 
+    VALUES ('".$codSolicitud."','".$globalUser."','".$globalUnidad."', '".$globalArea."', '".$fecha."','".$numero."','".$codSim."','".$codProv."','".$codSimServ."','".$codCont."','".$observaciones."')";
   }
   $stmtInsert = $dbh->prepare($sqlInsert);
   $stmtInsert->execute();

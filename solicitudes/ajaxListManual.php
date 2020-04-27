@@ -11,6 +11,8 @@ $sqlX="SET NAMES 'utf8'";
 $stmtX = $dbh->prepare($sqlX);
 $stmtX->execute();
 $usuario=$_SESSION['globalUser'];
+$globalUnidad=$_SESSION["globalUnidad"];
+$globalArea=$_SESSION["globalArea"];
   ?>
   <div class="row col-sm-12">
                            <div class="col-sm-6">
@@ -23,7 +25,12 @@ $usuario=$_SESSION['globalUser'];
                                     $codigoX=$row['codigo'];
                                     $nombreX=$row['nombre'];
                                     $abrevX=$row['abreviatura'];
-                                       ?><option value="<?=$codigoX;?>"><?=$abrevX;?></option><?php
+                                    if($codigoX==$globalUnidad){
+                                     ?><option selected value="<?=$codigoX;?>"><?=$abrevX;?></option><?php 
+                                   }else{
+                                    ?><option value="<?=$codigoX;?>"><?=$abrevX;?></option><?php
+                                   }
+                                       
                                       }
                                     ?>
                                    </select>
@@ -41,7 +48,12 @@ $usuario=$_SESSION['globalUser'];
                                            $codigoX=$row['codigo'];
                                            $nombreX=$row['nombre'];
                                            $abrevX=$row['abreviatura'];
+                                           if($codigoX==$globalArea){
+                                             ?><option selected value="<?=$codigoX;?>"><?=$abrevX;?></option><?php
+                                           }else{
                                             ?><option value="<?=$codigoX;?>"><?=$abrevX;?></option><?php
+                                           }
+                                            
                                          } 
                                          ?>
                                         </select>

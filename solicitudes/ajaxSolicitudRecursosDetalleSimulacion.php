@@ -36,8 +36,12 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                     $codigoX=$row['codigo'];
                                     $nombreX=$row['nombre'];
                                     $abrevX=$row['abreviatura'];
+                                    if($codigoX==$globalUnidad){
+                                       ?><option selected value="<?=$codigoX;?>"><?=$abrevX;?></option><?php
+                                    }else{
                                        ?><option value="<?=$codigoX;?>"><?=$abrevX;?></option><?php
-                                    }
+                                    }                                     
+                                  }
                                     ?>
                                    </select>
                                    </div>
@@ -55,7 +59,11 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                            $codigoX=$row['codigo'];
                                            $nombreX=$row['nombre'];
                                            $abrevX=$row['abreviatura'];
-                                            ?><option value="<?=$codigoX;?>"><?=$abrevX;?></option><?php
+                                           if($codigoX==$globalArea){
+                                             ?><option selected value="<?=$codigoX;?>"><?=$abrevX;?></option><?php
+                                           }else{
+                                             ?><option value="<?=$codigoX;?>"><?=$abrevX;?></option><?php
+                                           }   
                                          } 
                                          ?>
                                         </select>
@@ -108,7 +116,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       	</div>
       	<div class="col-sm-2">
             <div class="form-group">
-                <select class="selectpicker form-control form-control-sm" name="proveedor<?=$idFila?>" id="proveedor<?=$idFila?>" required data-style="<?=$comboColor;?>">
+                <select class="selectpicker form-control form-control-sm" data-live-search="true" data-size="6" name="proveedor<?=$idFila?>" id="proveedor<?=$idFila?>" required data-style="<?=$comboColor;?>">
                     <option disabled selected value="">Proveedor</option>
                   <?php
                   $stmt = $dbh->prepare("SELECT * FROM af_proveedores order by codigo");
