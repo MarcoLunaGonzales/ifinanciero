@@ -1039,6 +1039,10 @@ function obtenerPlantilla($codigo){
           $valFac[$h][5]=$fact[$i][$h]->exeFac;
           $valFac[$h][6]=$fact[$i][$h]->autFac;
           $valFac[$h][7]=$fact[$i][$h]->conFac;
+          $valFac[$h][8]=$fact[$i][$h]->exeFac;
+          $valFac[$h][9]=$fact[$i][$h]->iceFac;
+          $valFac[$h][10]=$fact[$i][$h]->tazaFac;
+          $valFac[$h][11]=$fact[$i][$h]->tipoFac;
         }
         if(cantidadF($fact[$i])>0){
          $cabeceraFac[0]="nit";$cabeceraFac[1]="nro_factura";$cabeceraFac[2]="fecha";$cabeceraFac[3]="razon_social";$cabeceraFac[4]="importe";$cabeceraFac[5]="exento";$cabeceraFac[6]="nro_autorizacion";$cabeceraFac[7]="codigo_control";
@@ -1094,6 +1098,10 @@ function obtenerPlantilla($codigo){
           $valFac[$h][5]=$fact[$j][$h]->exeFac;
           $valFac[$h][6]=$fact[$j][$h]->autFac;
           $valFac[$h][7]=$fact[$j][$h]->conFac;
+          $valFac[$h][8]=$fact[$j][$h]->exeFac;
+          $valFac[$h][9]=$fact[$j][$h]->iceFac;
+          $valFac[$h][10]=$fact[$j][$h]->tazaFac;
+          $valFac[$h][11]=$fact[$j][$h]->tipoFac;
         }
         if(cantidadF($fact[$j])>0){
         $cabeceraFac[0]="nit";$cabeceraFac[1]="nro_factura";$cabeceraFac[2]="fecha";$cabeceraFac[3]="razon_social";$cabeceraFac[4]="importe";$cabeceraFac[5]="exento";$cabeceraFac[6]="nro_autorizacion";$cabeceraFac[7]="codigo_control";
