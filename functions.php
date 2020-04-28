@@ -3450,6 +3450,20 @@ function descargarPDF($nom,$html){
   $mydompdf->set_base_path('assets/libraries/plantillaPDF.css');
   $mydompdf->stream($nom.".pdf", array("Attachment" => false));
 }
+function descargarPDFSolicitudesRecursos($nom,$html){
+  //aumentamos la memoria  
+  ini_set("memory_limit", "128M");
+  // Cargamos DOMPDF
+  require_once 'assets/libraries/dompdf/dompdf_config.inc.php';
+  $mydompdf = new DOMPDF();
+  ob_clean();
+  $mydompdf->load_html($html);
+  $mydompdf->render();
+  $canvas = $mydompdf->get_canvas();
+  $canvas->page_text(450, 763, "Página:  {PAGE_NUM} de {PAGE_COUNT}", Font_Metrics::get_font("sans-serif"), 9, array(0,0,0)); 
+  $mydompdf->set_base_path('assets/libraries/plantillaPDFSolicitudesRecursos.css');
+  $mydompdf->stream($nom.".pdf", array("Attachment" => false));
+}
 function descargarPDF1($nom,$html){
   //aumentamos la memoria  
   ini_set("memory_limit", "128M");

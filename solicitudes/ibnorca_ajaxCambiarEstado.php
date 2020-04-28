@@ -37,6 +37,9 @@ $flagSuccess=$stmtUpdate->execute();
     }else{
     	actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);
     }
+
+//////////////////////////////fin cambio estado//////////////////////////777
+
  if($estado=3){
  	//  CREAR EL COMPROBANTE DEBENGADO
  	// Preparamos

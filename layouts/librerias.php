@@ -344,6 +344,14 @@
             .appendTo('#form_partidaspresupuestariasCC');     
      });
 
+     $("#form_partidaspresupuestariasSR").submit(function(e) {
+          var datos=cuentas_tabla;
+          $('<input />').attr('type', 'hidden')
+            .attr('name', 'cuentas2')
+            .attr('value', JSON.stringify(datos))
+            .appendTo('#form_partidaspresupuestariasSR');     
+     });
+
      $("#form_bonosgrupos").submit(function(e) {
           $('<input />').attr('type', 'hidden')
             .attr('name', 'montos')

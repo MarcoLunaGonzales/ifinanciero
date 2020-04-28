@@ -11,7 +11,7 @@ $sqlX="SET NAMES 'utf8'";
 $stmtX = $dbh->prepare($sqlX);
 $stmtX->execute();
 
-$table="plan_cuentas_cajachica";
+$table="solicitud_recursoscuentas";
 $moduleName="Configurar Cuentas para Solicitud de Recursos";
 
 $codPartida=$codigo;
@@ -50,7 +50,7 @@ $stmt->bindColumn('bandera', $bandera);
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
-                    <form id="form_partidaspresupuestariasCC" method="post" action="solicitudes/plandecuentas_save.php">
+                    <form id="form_partidaspresupuestariasSR" method="post" action="solicitudes/plandecuentas_save.php">
                     <table class="table" id="data_cuentas_2">
                       <thead>
                         <tr>
@@ -111,7 +111,9 @@ $stmt->bindColumn('bandera', $bandera);
     </div>
 <?php 
 for ($i=0; $i < $nc; $i++) { 
-  ?><script>cuentas_tabla.push({codigo:<?=$data[$i][0]?>,nombre:'<?=$data[$i][1]?>',numero:'<?=$data[$i][2]?>'});</script><?php
+
+  ?><script>cuentas_tabla.push({codigo:<?=$data[$i][0]?>,nombre:'<?=$data[$i][1]?>',numero:'<?=$data[$i][2]?>'});</script>
+    <script>console.log(JSON.stringify(cuentas_tabla))</script><?php
 }
 
 ?>
