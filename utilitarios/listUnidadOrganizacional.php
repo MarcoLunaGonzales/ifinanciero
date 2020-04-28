@@ -32,23 +32,24 @@ $globalUnidad=$_SESSION['globalUnidad'];
                       </thead>
                       <tbody>
                         <tr>
-                          <td align="center">
-                            <select class="selectpicker" title="Seleccione una opcion" name="oficina" id="oficina" data-style="<?=$comboColor;?>" required>
+                          <td align="center">                            
+                               <select name="oficina" id="oficina" class="selectpicker" data-style="<?=$comboColor;?>" data-show-subtext="true" data-live-search="true" onChange="ajaxAreaUOCAJACHICA(this);" title="Elija una opción" required>
+
                               <option disabled selected value="">--SELECCIONE UNA OFICINA--</option>
                               <?php
-                              $stmt = $dbh->prepare("SELECT g.codigo, g.nombre FROM unidades_organizacionales g where g.cod_estado=1 order by 2 desc");
+                              $stmt = $dbh->prepare("SELECT g.codigo, g.nombre,g.abreviatura FROM unidades_organizacionales g where g.cod_estado=1 order by 2 asc");
                               $stmt->execute();
                               while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                 $codigoX=$row['codigo'];
                                 $nombreX=$row['nombre'];
                                 $abrevX=$row['abreviatura'];
                                 if($globalUnidad==$codigoX){
-                                  ?>
-                              <option value="<?=$codigoX;?>" selected><?=$nombreX;?></option>
-                              <?php  
+                                  ?>                              
+                                  <option data-subtext="<?=$codigoX;?>" value="<?=$codigoX;?>"><?=$nombreX;?>(<?=$abrevX;?>)</option>
+                                  <?php  
                                 }else{
                                   ?>
-                                  <option value="<?=$codigoX;?>"><?=$nombreX;?></option>
+                                  <option data-subtext="<?=$codigoX;?>" value="<?=$codigoX;?>"><?=$nombreX;?>(<?=$abrevX;?>)</option>
                                   <?php 
                                 }
                               

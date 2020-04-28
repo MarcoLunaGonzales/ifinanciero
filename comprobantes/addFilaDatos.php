@@ -27,7 +27,7 @@
   <div class="row">
     <div class="col-sm-1">
           <div class="form-group">
-          <select class="selectpicker form-control form-control-sm" name="unidad<?=$idFila;?>" id="unidad<?=$idFila;?>" data-style="btn btn-primary" >
+          <select class="selectpicker form-control form-control-sm" name="unidad<?=$idFila;?>" id="unidad<?=$idFila;?>" data-style="btn btn-primary" onChange="facturacomprobanteSIS(<?=$idFila;?>)">
                      <option value="" disabled selected>Unidad</option>
                <?php
                                    $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM unidades_organizacionales where cod_estado=1 and centro_costos=1 order by 2");

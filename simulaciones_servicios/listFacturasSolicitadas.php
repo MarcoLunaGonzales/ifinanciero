@@ -50,7 +50,11 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             <th>Responsable</th>
                             <th>F. Registro</th>
                             <th>F. a Facturar</th>
-                            <th>Monto</th>
+                            <th>Nro Fact</th>
+                            <th>Precio (BOB)</th>                            
+                            <th>Descu (%)</th>  
+                            <th>Descu (BOB)</th>  
+                            <th>Importe (BOB)</th>  
                             <th>Razón Social</th>                            
                             <th>Nit</th>
                             <th class="text-right">Actions</th>
@@ -59,13 +63,16 @@ $globalAdmin=$_SESSION["globalAdmin"];
                         <tbody>
                         <?php
                           $index=1;
-                          while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
-                            //verificamos si ya tiene factua generada                            
-                            $stmtFact = $dbh->prepare("SELECT codigo from facturas_venta where cod_solicitudfacturacion=$codigo_facturacion");
+                          $codigo_fact_x=0;
+                          $cont= array();
+                          while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {                            
+                            //verificamos si ya tiene factua generada y esta activa                           
+                            $stmtFact = $dbh->prepare("SELECT codigo,nro_factura from facturas_venta where cod_solicitudfacturacion=$codigo_facturacion and cod_estadofactura=1");
                             $stmtFact->execute();
                             $resultSimu = $stmtFact->fetch();
                             $codigo_fact_x = $resultSimu['codigo'];
-
+                            $nro_fact_x = $resultSimu['nro_factura'];
+                            if ($nro_fact_x==null)$nro_fact_x="-";
                             //obtenemos datos de la simulacion
                             $sql="SELECT sc.nombre,ps.cod_area,ps.cod_unidadorganizacional
                             from simulaciones_servicios sc,plantillas_servicios ps
@@ -75,6 +82,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             $resultSimu = $stmtSimu->fetch();
                             $nombre_simulacion = $resultSimu['nombre'];
                             $cod_area_simulacion = $resultSimu['cod_area'];
+                            //si es nulo, verificamos si pertenece a capacitacion
                             if($nombre_simulacion==null || $nombre_simulacion == ''){
                               $sqlCostos="SELECT sc.nombre,sc.cod_responsable,ps.cod_area,ps.cod_unidadorganizacional
                               from simulaciones_costos sc,plantillas_servicios ps
@@ -84,6 +92,15 @@ $globalAdmin=$_SESSION["globalAdmin"];
                               $resultSimu = $stmtSimuCostos->fetch();
                               $nombre_simulacion = $resultSimu['nombre'];
                               $cod_area_simulacion = $resultSimu['cod_area'];
+                            }
+                            //verificamos si pertence a propuestas y servicios
+                            if($nombre_simulacion==null || $nombre_simulacion == ''){
+                              $sqlCostos="SELECT Descripcion,IdArea,IdOficina from servicios s where s.IdServicio=$cod_simulacion_servicio";
+                              $stmtSimuCostos = $dbh->prepare($sqlCostos);
+                              $stmtSimuCostos->execute();
+                              $resultSimu = $stmtSimuCostos->fetch();
+                              $nombre_simulacion = $resultSimu['Descripcion'];
+                              $cod_area_simulacion = $resultSimu['IdArea'];
                             }
 
                             $name_area_simulacion=trim(abrevArea($cod_area_simulacion),'-');
@@ -101,24 +118,34 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             $stmt2->execute(); 
                             $nc=0;
                             $sumaTotalMonto=0;
+                            $sumaTotalDescuento_por=0;
+                            $sumaTotalDescuento_bob=0;
+
                             while ($row2 = $stmt2->fetch(PDO::FETCH_ASSOC)) {
                               $dato = new stdClass();//obejto
                               $codFila=(int)$row2['codigo'];
                               $cod_claservicioX=trim($row2['nombre_serv']);
                               $cantidadX=trim($row2['cantidad']);
-                              $precioX=trim($row2['precio']);                              
+                              $precioX=trim($row2['precio'])+trim($row2['descuento_bob']);
+                              $descuento_porX=trim($row2['descuento_por']);
+                              $descuento_bobX=trim($row2['descuento_bob']);                             
                               $descripcion_alternaX=trim($row2['descripcion_alterna']);
                               $dato->codigo=($nc+1);
                               $dato->cod_facturacion=$codFila;
                               $dato->serviciox=$cod_claservicioX;
                               $dato->cantidadX=$cantidadX;
                               $dato->precioX=$precioX;
+                              $dato->descuento_porX=$descuento_porX;
+                              $dato->descuento_bobX=$descuento_bobX;
                               $dato->descripcion_alternaX=$descripcion_alternaX;
                               $datos[$index-1][$nc]=$dato;                           
                               $nc++;
                               $sumaTotalMonto+=$precioX;
+                              $sumaTotalDescuento_por+=$descuento_porX;
+                              $sumaTotalDescuento_bob+=$descuento_bobX;
                             }
-                            $cont[$index-1]=$nc;                              
+                            $sumaTotalImporte=$sumaTotalMonto-$sumaTotalDescuento_bob;
+                            $cont[$index-1]=$nc;
                             $stringCabecera=$nombre_uo."##".$nombre_area."##".$nombre_simulacion."##".$name_area_simulacion."##".$fecha_registro."##".$fecha_solicitudfactura."##".$nit."##".$razon_social;
 
                             ?>
@@ -130,7 +157,11 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             <td><?=$responsable;?></td>
                             <td><?=$fecha_registro;?></td>
                             <td><?=$fecha_solicitudfactura;?></td>                            
-                            <td><?=formatNumberDec($sumaTotalMonto);?></td>
+                            <td><?=$nro_fact_x;?></td> 
+                            <td class="text-right"><?=formatNumberDec($sumaTotalMonto) ;?></td>
+                            <td class="text-right"><?=formatNumberDec($sumaTotalDescuento_por) ;?></td>
+                            <td class="text-right"><?=formatNumberDec($sumaTotalDescuento_bob) ;?></td>
+                            <td class="text-right"><?=formatNumberDec($sumaTotalImporte) ;?></td>
                             <td><?=$razon_social;?></td>
                             <td><?=$nit;?></td>
 
@@ -139,28 +170,12 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                 if($globalAdmin==1){ 
                                   if($codigo_fact_x>0){//print facturas
                                     ?>
-                                    <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=2' target="_blank"><i class="material-icons" title="Imprimir Facturas">print</i></a>
-                                    <!-- <div class="dropdown">
-                                      <button class="btn btn-success dropdown-toggle" type="button" id="reporte_sueldos" data-toggle="dropdown" aria-extended="true">
-                                        <i class="material-icons" title="Imprimir Facturas">print</i>
-                                        <span class="caret"></span>
-                                      </button>
-                                      <ul class="dropdown-menu" role="menu" aria-labelledby="reporte_sueldos">
-                                        <li role="presentation" class="dropdown-header"><small>IMPRIMIR</small></li>
-                                        <li role="presentation"><a role="item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=1' target="_blank"><small>Facturas</small></a>
-                                        </li>
-                                        <li role="presentation"><a role="item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=2' target="_blank"><small>Facturas Con Descripción  Alterna</small></a>
-                                        </li>
-                                                                     
-                                      </ul>
-                                    </div> -->
+                                    <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=2' target="_blank"><i class="material-icons" title="Imprimir Factura">print</i></a>
+                                    <!-- <a class="btn btn-danger" href='<?=$urlAnularFactura;?>&codigo=<?=$codigo_facturacion;?>' ><i class="material-icons" title="Anular Factura">delete</i></a> -->
                                     
-                                   <!--  <a title="Ver Factura" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>' target="_blank" class="btn btn-success">
-                                      <i class="material-icons">description</i>
-                                    </a> -->
                                   <?php }else{// generar facturas
                                     ?>
-                                    <button title="Generar Factura"  target="blank" class="btn btn-success" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlGenerarFacturas2;?>?codigo=<?=$codigo_facturacion;?>')">
+                                    <button title="Generar Factura" target="_blank" class="btn btn-success" onclick="alerts.showSwal('warning-message-and-confirmation-generar-factura','<?=$urlGenerarFacturas2;?>?codigo=<?=$codigo_facturacion;?>')">
                                       <i class="material-icons">receipt</i>
                                     </button>
                                     <a href='#' rel="tooltip" class="btn btn-warning" onclick="filaTablaAGeneral($('#tablasA_registradas'),<?=$index?>,'<?=$stringCabecera?>')">
@@ -169,6 +184,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                   
                                   <?php }                           
                                   ?>
+                                  <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir">print</i></a>
                                 <?php  
                                 }
                               ?>
@@ -210,7 +226,10 @@ $globalAdmin=$_SESSION["globalAdmin"];
                     <th>#</th>
                     <th>Item</th>
                     <th>Cantidad</th>
-                    <th>Importe</th>  
+                    <th>Precio(BOB)</th>  
+                      <th>Desc(%)</th> 
+                      <th>Desc(BOB)</th> 
+                      <th>Importe(BOB)</th>  
                     <th>Descripción Alterna</th>                    
                     </tr>
                   </thead>
@@ -233,7 +252,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
     <?php
        for ($j=0; $j < $cont[$i]; $j++) {     
            if($cont[$i]>0){
-            ?><script>detalle_fac.push({codigo:<?=$datos[$i][$j]->codigo?>,cod_facturacion:<?=$datos[$i][$j]->cod_facturacion?>,serviciox:'<?=$datos[$i][$j]->serviciox?>',cantidadX:'<?=$datos[$i][$j]->cantidadX?>',precioX:'<?=$datos[$i][$j]->precioX?>',descripcion_alternaX:'<?=$datos[$i][$j]->descripcion_alternaX?>'});</script><?php         
+            ?><script>detalle_fac.push({codigo:<?=$datos[$i][$j]->codigo?>,cod_facturacion:<?=$datos[$i][$j]->cod_facturacion?>,serviciox:'<?=$datos[$i][$j]->serviciox?>',cantidadX:'<?=$datos[$i][$j]->cantidadX?>',precioX:'<?=$datos[$i][$j]->precioX?>',descuento_porX:'<?=$datos[$i][$j]->descuento_porX?>',descuento_bobX:'<?=$datos[$i][$j]->descuento_bobX?>',descripcion_alternaX:'<?=$datos[$i][$j]->descripcion_alternaX?>'});</script><?php         
             }          
           }
       ?><script>detalle_tabla_general.push(detalle_fac);</script><?php                    

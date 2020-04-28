@@ -44,7 +44,7 @@ try {
            $stmt = $dbh->prepare("SELECT codigo from solicitudes_facturacion where cod_simulacion_servicio=$cod_simulacion ORDER BY codigo desc LIMIT 1");
            $stmt->execute();           
            while ($rowPre = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                  $codigo_facturacion=$rowPre['codigo'];
+                  $cod_facturacion=$rowPre['codigo'];
             }
             for ($i=1;$i<=$modal_numeroservicio-1;$i++){
                 $servicioInsert="";
@@ -58,14 +58,19 @@ try {
                     $CantidadInsert=$_POST["cantidad_a".$i];
                     $importeInsert=$_POST["modal_importe".$i];
                     $DescricpionInsert=$_POST["descripcion_alterna".$i];
+                    $descuento_por_Insert=$_POST["descuento_por".$i];
+                    $descuento_bob_Insert=$_POST["descuento_bob".$i]; 
                 }
                 if($servicioInsert!=0 || $servicioInsert!=""){
                     // echo " servicio:".$servicioInsert."<br>";
                     // echo " cantida:".$CantidadInsert."<br>";
                     // echo " importe:".$importeInsert."<br>";
                     // echo " Descricpion:".$DescricpionInsert."<br>";
-                    $stmt = $dbh->prepare("INSERT INTO solicitudes_facturaciondetalle(cod_solicitudfacturacion,cod_claservicio,cantidad,precio,descripcion_alterna) 
-                    values ('$codigo_facturacion','$servicioInsert','$CantidadInsert','$importeInsert','$DescricpionInsert')");
+                    // echo " descuento_por_:".$descuento_por_Insert."<br>";
+                    // echo " descuento_bob_:".$descuento_bob_Insert."<br>";
+
+                    $stmt = $dbh->prepare("INSERT INTO solicitudes_facturaciondetalle(cod_solicitudfacturacion,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_por,descuento_bob) 
+                    values ('$cod_facturacion','$servicioInsert','$CantidadInsert','$importeInsert','$DescricpionInsert','$descuento_por_Insert','$descuento_bob_Insert')");
                     $flagSuccess=$stmt->execute();
                 }
             }
@@ -76,10 +81,6 @@ try {
                 $CantidadInsert_ajax=$_POST["cantidad_servicios".$i];
                 $importeInsert_ajax=$_POST["modal_montoserv".$i];
                 $DescricpionInsert_ajax=$_POST["descripcion".$i];                
-                // echo " servicio:".$servicioInsert_ajax."<br>";
-                // echo " cantida:".$CantidadInsert_ajax."<br>";
-                // echo " importe:".$importeInsert_ajax."<br>";
-                // echo " Descricpion:".$DescricpionInsert_ajax."<br>";
                 $stmt = $dbh->prepare("INSERT INTO solicitudes_facturaciondetalle(cod_solicitudfacturacion,cod_claservicio,cantidad,precio,descripcion_alterna) 
                 values ('$codigo_facturacion','$servicioInsert_ajax','$CantidadInsert_ajax','$importeInsert_ajax','$DescricpionInsert_ajax')");
                 $flagSuccess=$stmt->execute();                
@@ -112,10 +113,12 @@ try {
                     $CantidadInsert=$_POST["cantidad_a".$i];
                     $importeInsert=$_POST["modal_importe".$i];
                     $DescricpionInsert=$_POST["descripcion_alterna".$i];
+                    $descuento_por_Insert=$_POST["descuento_por".$i];
+                    $descuento_bob_Insert=$_POST["descuento_bob".$i];
                 }
                 if($servicioInsert!=0 || $servicioInsert!=""){
-                    $stmt = $dbh->prepare("INSERT INTO solicitudes_facturaciondetalle(cod_solicitudfacturacion,cod_claservicio,cantidad,precio,descripcion_alterna) 
-                    values ('$cod_facturacion','$servicioInsert','$CantidadInsert','$importeInsert','$DescricpionInsert')");
+                    $stmt = $dbh->prepare("INSERT INTO solicitudes_facturaciondetalle(cod_solicitudfacturacion,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_por,descuento_bob) 
+                    values ('$cod_facturacion','$servicioInsert','$CantidadInsert','$importeInsert','$DescricpionInsert','$descuento_por_Insert','$descuento_bob_Insert')");
                     $flagSuccess=$stmt->execute();
                 }
             }

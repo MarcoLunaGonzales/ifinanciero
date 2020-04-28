@@ -23,7 +23,7 @@ $glosaDet="";
 
 		<div class="col-sm-1">
         	<div class="form-group">
-	        <select class="selectpicker form-control form-control-sm" name="unidad<?=$idFila;?>" id="unidad<?=$idFila;?>" data-style="<?=$comboColor;?>" >
+	        <select class="selectpicker form-control form-control-sm" name="unidad<?=$idFila;?>" id="unidad<?=$idFila;?>" data-style="<?=$comboColor;?>" onChange="facturacomprobanteSIS(<?=$idFila;?>)" >
 			  	
 			  	<option disabled selected="selected" value="">Oficina</option>
 			  	<?php

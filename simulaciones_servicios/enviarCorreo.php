@@ -46,10 +46,9 @@ if($sw==1){//existe archivo
 	$flag=sendemailFiles($mail_username,$mail_userpassword,$mail_setFromEmail,$mail_setFromName,$mail_addAddress,$txt_message,$mail_subject,$template,0,$rutaArchivo,$nombreArchivo);
 	if($flag!=0){//se envio correctamente
 	 	echo "1$$$".$correo_destino;
-	 	// $sqlB="INSERT INTO eventos_sistemapersonal (cod_eventosistema,cod_personal,cod_estadoreferencial,texto) 
-	 	// VALUES('$evento','$personal','1','$mensaje')";
-	  //   $stmtB = $dbhB->prepare($sqlB);
-	  //   $stmtB->execute();
+	 	$sql="UPDATE facturas_venta set cod_estadofactura='3' where codigo=$codigo_facturacion";
+	    $stmtB = $dbhB->prepare($sql);
+	    $stmtB->execute();
 	   
 	}else{
 	 	echo "2$$$".$correo_destino;

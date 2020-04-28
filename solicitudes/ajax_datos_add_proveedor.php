@@ -56,7 +56,7 @@ if($codigo=='E'){?><!-- empresa -->
 	<input type="hidden" name="correo_contacto" id="correo_contacto">
 
 	<div class="row">
-      <label class="col-sm-3 col-form-label">Num. Celular *</label>
+      <label class="col-sm-3 col-form-label">Num. Celular </label>
       <div class="col-sm-9">
         <div class="form-group">
           <input type="text" class="form-control" name="numero_celular" id="numero_celular" value="" required="true">

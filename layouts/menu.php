@@ -754,6 +754,13 @@ if($menuModulo==0){
                     <span class="sidebar-normal"> Gesti&oacute;n de Propuestas Servicios TCP - TCS</span>
                   </a>
                 </li>
+
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listServiciosPresupuestos">
+                    <span class="sidebar-mini"> S </span>
+                    <span class="sidebar-normal"> Servicios</span>
+                  </a>
+                </li>
               </ul>
             </div>
           </li>

@@ -64,7 +64,11 @@ if($cantidad_items>0){
                             <th>Responsable</th>
                             <th>F. Registro</th>
                             <th>F. a Facturar</th>
-                            <th>Monto</th>                            
+                            <th>#Fact</th>
+                            <th>Precio (BOB)</th>                            
+                            <th>Desc(%)</th>  
+                            <th>Desc(BOB)</th>  
+                            <th>Importe (BOB)</th>  
                             <th>Razón Social</th>
                             <th>Nit</th>
                             <th class="text-right">Actions</th>
@@ -74,10 +78,20 @@ if($cantidad_items>0){
                         <?php
                           $index=1;
                           $stringCabecera="";
+                          $codigo_fact_x=0;
+                          $cont= array();
                           while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+                            //verificamos si ya tiene factua generada                            
+                            $stmtFact = $dbh->prepare("SELECT codigo, nro_factura from facturas_venta where cod_solicitudfacturacion=$codigo_facturacion and cod_estadofactura=1");
+                            $stmtFact->execute();
+                            $resultSimu = $stmtFact->fetch();
+                            $codigo_fact_x = $resultSimu['codigo'];
+                            $nro_fact_x = $resultSimu['nro_factura'];
+                            if ($nro_fact_x==null)$nro_fact_x="-";
+
                             $responsable=namePersonal($cod_personal);//nombre del personal
-                            $nombre_area=trim(abrevArea($cod_area),'-');//nombre del personal
-                            $nombre_uo=nameUnidad($cod_unidadorganizacional);//nombre del personal
+                            $nombre_area=trim(abrevArea($cod_area),'-');//nombre de area
+                            $nombre_uo=trim(abrevUnidad($cod_unidadorganizacional),' - ');//nombre de oficina
                             //los registros de la factura                            
                             $sqlA="SELECT sf.*,t.descripcion as nombre_serv from solicitudes_facturaciondetalle sf,cla_servicios t 
                                 where sf.cod_claservicio=t.idclaservicio and sf.cod_solicitudfacturacion=$codigo_facturacion";
@@ -85,23 +99,34 @@ if($cantidad_items>0){
                             $stmt2->execute(); 
                             $nc=0;
                             $sumaTotalMonto=0;
+                            $sumaTotalDescuento_por=0;
+                            $sumaTotalDescuento_bob=0;
+
                             while ($row2 = $stmt2->fetch(PDO::FETCH_ASSOC)) {
                               $dato = new stdClass();//obejto
                               $codFila=(int)$row2['codigo'];
                               $cod_claservicioX=trim($row2['nombre_serv']);
                               $cantidadX=trim($row2['cantidad']);
-                              $precioX=trim($row2['precio']);
+                              $precioX=trim($row2['precio'])+trim($row2['descuento_bob']);
+                              $descuento_porX=trim($row2['descuento_por']);
+                              $descuento_bobX=trim($row2['descuento_bob']);
                               $descripcion_alternaX=trim($row2['descripcion_alterna']);
                               $dato->codigo=($nc+1);
                               $dato->cod_facturacion=$codFila;
                               $dato->serviciox=$cod_claservicioX;
                               $dato->cantidadX=$cantidadX;
                               $dato->precioX=$precioX;
+                              $dato->descuento_porX=$descuento_porX;
+                              $dato->descuento_bobX=$descuento_bobX;
                               $dato->descripcion_alternaX=$descripcion_alternaX;
                               $datos[$index-1][$nc]=$dato;                           
                               $nc++;
                               $sumaTotalMonto+=$precioX;
+                              $sumaTotalDescuento_por+=$descuento_porX;
+                              $sumaTotalDescuento_bob+=$descuento_bobX;
+
                             }
+                            $sumaTotalImporte=$sumaTotalMonto-$sumaTotalDescuento_bob;
                             $cont[$index-1]=$nc;  
                             $stringCabecera=$nombre_uo."##".$nombre_area."##".$nombre_simulacion."##".$name_area_simulacion."##".$fecha_registro."##".$fecha_solicitudfactura."##".$nit."##".$razon_social;
                             ?>
@@ -112,20 +137,29 @@ if($cantidad_items>0){
                             <td><?=$responsable;?></td>
                             <td><?=$fecha_registro;?></td>
                             <td><?=$fecha_solicitudfactura;?></td>
-                            <td><?=formatNumberDec($sumaTotalMonto) ;?></td>
+                            <td><?=$nro_fact_x;?></td>
+                            <td class="text-right"><?=formatNumberDec($sumaTotalMonto) ;?></td>
+                            <td class="text-right"><?=formatNumberDec($sumaTotalDescuento_por) ;?></td>
+                            <td class="text-right"><?=formatNumberDec($sumaTotalDescuento_bob) ;?></td>
+                            <td class="text-right"><?=formatNumberDec($sumaTotalImporte) ;?></td>
                             <td><?=$razon_social;?></td>
                             <td><?=$nit;?></td>
 
                             <td class="td-actions text-right">
                               <?php
-                                if($globalAdmin==1){                            
+                                if($globalAdmin==1){
+                                  if($codigo_fact_x==0){?>
+                                    <a title="Editar Simulación - Detalle" href='<?=$urlRegisterSolicitudfactura;?>&cod_s=<?=$codigo_simulacion?>&cod_f=<?=$codigo_facturacion?>&cod_sw=1' class="btn btn-info">
+                                      <i class="material-icons"><?=$iconEdit;?></i>
+                                    </a>
+                                  <?php }else{?>
+                                    <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=2' target="_blank"><i class="material-icons" title="Imprimir Factura">print</i></a>
+                                  <?php }
                                 ?>
-                              <a title="Editar Simulación - Detalle" href='<?=$urlRegisterSolicitudfactura;?>&cod_s=<?=$codigo_simulacion?>&cod_f=<?=$codigo_facturacion?>&cod_sw=1' class="btn btn-info">
-                                <i class="material-icons"><?=$iconEdit;?></i>
-                              </a>
-                              <a href='#' rel="tooltip" class="btn btn-warning" onclick="filaTablaAGeneral($('#tablasA_registradas'),<?=$index?>,'<?=$stringCabecera?>')">
-                              <i class="material-icons" title="Ver Detalle">settings_applications</i>
-                            </a>
+                                <a href='#' rel="tooltip" class="btn btn-warning" onclick="filaTablaAGeneral($('#tablasA_registradas'),<?=$index?>,'<?=$stringCabecera?>')">
+                                  <i class="material-icons" title="Ver Detalle">settings_applications</i>
+                                </a>
+                              
                               <!-- <button type="button" onclick="SolicitudFacturacionDetalle()" class="btn btn-success ">
                                  <i class="material-icons" title="Facturación Detalle">description</i>
                               </button> -->
@@ -182,10 +216,13 @@ if($cantidad_items>0){
                     <thead>
                       <tr class="text-dark bg-plomo">
                       <th>#</th>
-                      <th>Item</th>
-                      <th>Cantidad</th>
-                      <th>Importe</th>  
-                      <th>Descripción Alterna</th>                    
+                      <th width="20%">Item</th>
+                      <th>Canti.</th>
+                      <th>Precio(BOB)</th>  
+                      <th>Desc(%)</th> 
+                      <th>Desc(BOB)</th> 
+                      <th width="10%">Importe(BOB)</th> 
+                      <th width="45%">Descripción Alterna</th>                    
                       </tr>
                     </thead>
                     <tbody id="tablasA_registradas">
@@ -207,7 +244,7 @@ if($cantidad_items>0){
       <?php
          for ($j=0; $j < $cont[$i]; $j++) {     
              if($cont[$i]>0){
-              ?><script>detalle_fac.push({codigo:<?=$datos[$i][$j]->codigo?>,cod_facturacion:<?=$datos[$i][$j]->cod_facturacion?>,serviciox:'<?=$datos[$i][$j]->serviciox?>',cantidadX:'<?=$datos[$i][$j]->cantidadX?>',precioX:'<?=$datos[$i][$j]->precioX?>',descripcion_alternaX:'<?=$datos[$i][$j]->descripcion_alternaX?>'});</script><?php         
+              ?><script>detalle_fac.push({codigo:<?=$datos[$i][$j]->codigo?>,cod_facturacion:<?=$datos[$i][$j]->cod_facturacion?>,serviciox:'<?=$datos[$i][$j]->serviciox?>',cantidadX:'<?=$datos[$i][$j]->cantidadX?>',precioX:'<?=$datos[$i][$j]->precioX?>',descuento_porX:'<?=$datos[$i][$j]->descuento_porX?>',descuento_bobX:'<?=$datos[$i][$j]->descuento_bobX?>',descripcion_alternaX:'<?=$datos[$i][$j]->descripcion_alternaX?>'});</script><?php         
               }          
             }
         ?><script>detalle_tabla_general.push(detalle_fac);</script><?php                    

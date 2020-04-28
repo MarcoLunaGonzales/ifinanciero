@@ -2,64 +2,22 @@
 require_once 'conexion.php';
 require_once 'configModule.php';
 require_once 'styles.php';
-$codigo_simulacion=$cod;//codigo de simulacion
+
 $dbh = new Conexion();
 $globalAdmin=$_SESSION["globalAdmin"];
 
-$sql="SELECT nombre,cod_area,cod_uo from simulaciones_costos where codigo=$codigo_simulacion";
-$stmtSimu = $dbh->prepare($sql);
-$stmtSimu->execute();
-$resultSimu = $stmtSimu->fetch();
-$nombre_simulacion = $resultSimu['nombre'];
-$cod_area = $resultSimu['cod_area'];
-$cod_uo = $resultSimu['cod_uo'];
-
-//simulamos conexion con ibnorca
-class ConexionIBNORCA extends PDO { 
-  private $tipo_de_base = 'mysql';
-  private $host = 'localhost';
-  private $nombre_de_base = 'ibnorca';
-  private $usuario = 'root';
-  private $contrasena = '';
-  private $port = '3306';   
-  public function __construct() {
-    //Sobreescribo el método constructor de la clase PDO.
-    try{
-       parent::__construct($this->tipo_de_base.':host='.$this->host.';dbname='.$this->nombre_de_base.';port='.$this->port, $this->usuario, $this->contrasena,array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));//      
-    }catch(PDOException $e){
-       echo 'Ha surgido un error y no se puede conectar a la base de datos. Detalle: ' . $e->getMessage();
-       exit;
-    }
-  } 
-} 
-$dbhIBNO = new ConexionIBNORCA();
-//sacamos el nombre del curso
-$stmtIBNOCurso = $dbhIBNO->prepare("SELECT pc.Nombre
-FROM asignacionalumno aa, alumnos a, alumnocurso ac, clasificador c, programas_cursos pc, modulos m where aa.IdModulo=4000 and a.CiAlumno=aa.CiAlumno 
-and ac.IdCurso=aa.IdCurso and ac.CiAlumno=aa.CiAlumno and ac.IdConceptoPago=c.IdClasificador and pc.IdCurso=pc.IdCurso and pc.IdCurso=aa.IdCurso and 
-m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo limit 1");//poner el codigo de curso a buscar
-  $stmtIBNOCurso->execute();
-  $resultNombreCurso = $stmtIBNOCurso->fetch();
-$nombre_curso = $resultNombreCurso['Nombre'];
-  //datos registrado de la simulacion en curso
-$stmtIBNO = $dbhIBNO->prepare("SELECT aa.IdModulo, aa.IdCurso, aa.CiAlumno, concat(a.ApPaterno,' ',a.ApMaterno,' ',a.Nombre)as nombreAlumno, c.Abrev, c.Auxiliar,
-pc.Costo, pc.CantidadModulos, m.NroModulo, pc.Nombre
-FROM asignacionalumno aa, alumnos a, alumnocurso ac, clasificador c, programas_cursos pc, modulos m where aa.IdModulo=4000 and a.CiAlumno=aa.CiAlumno 
-and ac.IdCurso=aa.IdCurso and ac.CiAlumno=aa.CiAlumno and ac.IdConceptoPago=c.IdClasificador and pc.IdCurso=pc.IdCurso and pc.IdCurso=aa.IdCurso and 
-m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo order by nombreAlumno");//poner el codigo de curso a buscar
-  $stmtIBNO->execute();
-  $stmtIBNO->bindColumn('IdModulo', $IdModulo);
-  $stmtIBNO->bindColumn('IdCurso', $IdCurso);
-  $stmtIBNO->bindColumn('CiAlumno', $CiAlumno);
-  $stmtIBNO->bindColumn('nombreAlumno', $nombreAlumno);
-  $stmtIBNO->bindColumn('Abrev', $Abrev);
-  $stmtIBNO->bindColumn('Auxiliar', $Auxiliar);
-  $stmtIBNO->bindColumn('Costo', $Costo);
-  $stmtIBNO->bindColumn('CantidadModulos', $CantidadModulos);
-  $stmtIBNO->bindColumn('NroModulo', $NroModulo);
-  $stmtIBNO->bindColumn('Nombre', $nombre_mod);
-
-
+  $stmt = $dbh->prepare("SELECT *, (select c.descripcion_n2 from cla_servicios c where c.IdTipo=s.IdTipo LIMIT 1) as nombreTipo, (select cc.nombre from clientes cc where cc.codigo=s.IdCliente) as nombreCliente from servicios s where s.IdArea=11 and YEAR(s.fecharegistro)=2020");
+  $stmt->execute();
+  $stmt->bindColumn('IdServicio', $IdServicio);
+  $stmt->bindColumn('IdArea', $IdArea);
+  $stmt->bindColumn('IdOficina', $IdOficina);
+  $stmt->bindColumn('nombreTipo', $nombreTipo);
+  $stmt->bindColumn('Codigo', $Codigo);
+  $stmt->bindColumn('IdCliente', $IdCliente);
+  $stmt->bindColumn('nombreCliente', $nombreCliente);
+  $stmt->bindColumn('Descripcion', $Descripcion);
+  $stmt->bindColumn('fecharegistro', $fecharegistro);
+  $stmt->bindColumn('carpeta', $carpeta);
   ?>
   <div class="content">
     <div class="container-fluid">
@@ -70,47 +28,52 @@ m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo order by nombreAlumno");//poner 
                     <div class="card-icon">
                       <i class="material-icons">polymer</i>
                     </div>
-                    <h4 class="card-title"><b>Solicitud de Facturación Capacitación</b></h4>
-                    <h4 class="card-title" align="center"><b>Propuesta: <?=$nombre_simulacion?></b></h4>
-                    <h4 class="card-title" align="center"><b>Curso: <?=$nombre_curso?></b></h4>
+                    <h4 class="card-title"><b>Servicios & Presupuestos</b></h4>
+                    <!-- <h4 class="card-title" align="center"><b><?=$nombre_simulacion?> - <?=$name_area_simulacion?></b></h4> -->
                   </div>
                   <div class="card-body">
                       <table class="table" id="tablePaginator">
                         <thead>
                           <tr>
                             <th class="text-center">#</th>                          
-                            <th>CI Alumno</th>
-                            <th>Nombre</th>
-                            <th>Precio (BOB)</th>                            
+                            <!-- <th>IdServicio</th> -->
+                            <th>Area</th>
+                            <th>Of</th>
+                            <th>Tipo</th>
+                            <!-- <th>Codigo</th> -->
+                            <th>Cliente</th>
+                            <th>Fecha R.</th>
+                            <th>#Fact</th>
+                            <!--<th>Precio (BOB)</th>                            
                             <th>Desc(%)</th>  
                             <th>Desc(BOB)</th>  
-                            <th>Importe (BOB)</th>   
-                            <!-- <th>Canti. Mod</th> -->
-                            <th>Nro Módulo</th>
-                            <!-- <th>Nombre Mod.</th> -->
-                            <th class="text-right">Actions</th>
+                            <th>Importe (BOB)</th>   -->
+                            <th>Descripción</th>
+                            <th class="text-right">Opciones</th>                            
                           </tr>
                         </thead>
                         <tbody>
                         <?php
                           $index=1;
-                          $descuento_por = 0;
-                          $descuento_bob = 0;
-                          while ($row = $stmtIBNO->fetch(PDO::FETCH_BOUND)) {  
-                            $monto_pagar=($Costo - ($Costo*$Abrev/100) )/$CantidadModulos; //monto a pagar del estudiante    
-                            $nombre_area=trim(abrevArea($cod_area),'-');
-                            $nombre_uo=trim(abrevUnidad($cod_uo),' - ');                      
-                            //buscamos a los estudiantes que ya fueron solicitados su facturacion
+                          $stringCabecera="";
+                          $codigo_fact_x=0;
+                          $cont= array();
+                          while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+                            $nombre_area=trim(abrevArea($IdArea),'-');
+                            $nombre_uo=trim(abrevUnidad($IdOficina),' - ');
+
+                            //buscamos a los propuestas que ya fueron solicitadas su facturacion
                             $codigo_facturacion=0;
-                            $sqlFac="SELECT sf.codigo,sf.fecha_registro,sf.fecha_solicitudfactura,sf.razon_social,sf.nit from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sfd.cod_solicitudfacturacion=sf.codigo and sf.cod_simulacion_servicio=$codigo_simulacion and sf.cod_cliente=$CiAlumno";
+                            $sqlFac="SELECT sf.codigo,sf.fecha_registro,sf.fecha_solicitudfactura,sf.razon_social,sf.nit from solicitudes_facturacion sf where sf.cod_simulacion_servicio=$IdServicio and sf.cod_cliente=$IdCliente";
                             $stmtSimuFact = $dbh->prepare($sqlFac);
                             $stmtSimuFact->execute();
                             $resultSimuFact = $stmtSimuFact->fetch();
-                            $codigo_facturacion = $resultSimuFact['codigo'];
+                            $codigo_facturacion = $resultSimuFact['codigo'];                            
                             $nit = $resultSimuFact['nit'];
                             $fecha_registro = $resultSimuFact['fecha_registro'];
                             $fecha_solicitudfactura = $resultSimuFact['fecha_solicitudfactura'];
                             $razon_social = $resultSimuFact['razon_social'];
+
                             //verificamos si ya tiene factura generada                            
                             $stmtFact = $dbh->prepare("SELECT codigo, nro_factura from facturas_venta where cod_solicitudfacturacion=$codigo_facturacion and cod_estadofactura=1");
                             $stmtFact->execute();
@@ -124,9 +87,10 @@ m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo order by nombreAlumno");//poner 
                             $stmt2 = $dbh->prepare($sqlA);                                   
                             $stmt2->execute(); 
                             $nc=0;
-                            $sumaTotalMonto=$Costo;
+                            $sumaTotalMonto=0;
                             $sumaTotalDescuento_por=0;
                             $sumaTotalDescuento_bob=0;
+
                             while ($row2 = $stmt2->fetch(PDO::FETCH_ASSOC)) {
                               $dato = new stdClass();//obejto
                               $codFila=(int)$row2['codigo'];
@@ -152,43 +116,49 @@ m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo order by nombreAlumno");//poner 
                             }
                             $sumaTotalImporte=$sumaTotalMonto-$sumaTotalDescuento_bob;
                             $cont[$index-1]=$nc;  
-                            // $nombre_simulacion=$Descripcion;
+                            $nombre_simulacion=$Descripcion;
                             $stringCabecera=$nombre_uo."##".$nombre_area."##".$nombre_simulacion."##-##".$fecha_registro."##".$fecha_solicitudfactura."##".$nit."##".$razon_social;
 
                             ?>
+                            
                           <tr>
                             <td align="center"><?=$index;?></td>
-                            <td><?=$CiAlumno;?></td>
-                            <td><?=$nombreAlumno;?></td>
-                            <td class="text-right"><?=formatNumberDec($sumaTotalMonto) ;?></td>
+                            <!-- <td><?=$IdServicio?></td> -->
+                            <td><?=$nombre_area?></td>
+                            <td><?=$nombre_uo?></td>
+                            <td><?=$nombreTipo?></td>
+                            <!-- <td><?=$Codigo?></td>     -->                        
+                            <td><?=$nombreCliente?></td>                            
+                            <td><?=$fecharegistro?></td>                            
+                            <td><?=$nro_fact_x;?></td>
+                            <!-- <td class="text-right"><?=formatNumberDec($sumaTotalMonto) ;?></td>
                             <td class="text-right"><?=formatNumberDec($sumaTotalDescuento_por) ;?></td>
                             <td class="text-right"><?=formatNumberDec($sumaTotalDescuento_bob) ;?></td>
-                            <td class="text-right"><?=formatNumberDec($sumaTotalImporte) ;?></td>
-                            <!-- <td><?=$CantidadModulos;?></td> -->
-                            <td><?=$NroModulo;?></td>
-                            <!-- <td><?=$nombre_mod;?></td> -->
-                            <td class="td-actions text-right">
+                            <td class="text-right"><?=formatNumberDec($sumaTotalImporte) ;?></td> -->
+                            <td><?=$Descripcion?></td>
+                            <td class="td-actions text-right">                              
                               <?php
                                 if($globalAdmin==1){                            
                                   if($codigo_facturacion>0){
                                     if($codigo_fact_x==0){ //no se genero factura ?>
-                                      <a title="Editar Solicitud de Facturación" href='<?=$urlregistro_solicitud_facturacion?>&codigo=<?=$CiAlumno?>&cod_simulacion=<?=$codigo_simulacion;?>&cod_facturacion=<?=$codigo_facturacion?>' class="btn btn-success">
-                                          <i class="material-icons"><?=$iconEdit;?></i>
-                                        </a>   
+                                    <a title="Editar Solicitud de Facturación" href='<?=$urlRegisterSolicitudfactura?>&cod_simulacion=0&IdServicio=<?=$IdServicio?>&cod_facturacion=<?=$codigo_facturacion?>' class="btn btn-success">
+                                      <i class="material-icons"><?=$iconEdit;?></i>
+                                    </a>
                                   <?php }else{//ya se genero factura ?>
                                     <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=2' target="_blank"><i class="material-icons" title="Imprimir Factura">print</i></a>
                                   <?php }?>
                                   <a href='#' rel="tooltip" class="btn btn-warning" onclick="filaTablaAGeneral($('#tablasA_registradas'),<?=$index?>,'<?=$stringCabecera?>')">
                                     <i class="material-icons" title="Ver Detalle">settings_applications</i>
-                                  </a>
-                                  <?php }else{//no se hizo solicitud de factura ?>
-                                    <a href='<?=$urlregistro_solicitud_facturacion?>&codigo=<?=$CiAlumno?>&cod_simulacion=<?=$codigo_simulacion;?>&cod_facturacion=0' rel="tooltip" class="btn" style="background-color: #0489B1;">
-                                          <i class="material-icons" title="Solicitar Facturación">receipt</i>
-                                        </a>                                                    
+                                  </a>         
+                                <?php }else{//no se hizo solicitud de factura ?>
+                                    <a href='<?=$urlRegisterSolicitudfactura?>&cod_simulacion=0&IdServicio=<?=$IdServicio?>&cod_facturacion=0' rel="tooltip" class="btn" style="background-color: #0489B1;">
+                                    <i class="material-icons" title="Solicitar Facturación">receipt</i>
+                                  </a>                                                    
                                   <?php }                                
                                 }
-                              ?>                                               
+                              ?>                               
                             </td>
+                            
                           </tr>
                           <?php
                               $index++;
@@ -197,23 +167,11 @@ m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo order by nombreAlumno");//poner 
                         </tbody>
                       </table>
                   </div>
-                </div>
-                <div class="card-footer fixed-bottom">
-                 <?php 
-                if($globalAdmin==1){              
-                    ?>
-                    <!-- <a href="<?=$urlRegisterSolicitudfactura;?>&cod_s=<?=$codigo_simulacion?>&cod_f=0&cod_sw=1" target="_self" class="<?=$buttonNormal;?>">Registrar</a>
-                     -->
-
-                    <?php                
-                } 
-                 ?>
-                 <a href='<?=$urlList;?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
-                </div>      
+                </div>                
               </div>
           </div>  
     </div>
-  </div>
+</div>
 
 <!-- small modal -->
 <div class="modal fade modal-primary" id="modalDetalleFac" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -271,7 +229,3 @@ m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo order by nombreAlumno");//poner 
       ?><script>detalle_tabla_general.push(detalle_fac);</script><?php                    
   }
   ?>
-
-
-
-  

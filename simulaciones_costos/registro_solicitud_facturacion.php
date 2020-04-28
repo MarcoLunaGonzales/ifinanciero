@@ -69,7 +69,8 @@ $Nombre = $resultSimu['Nombre'];
 $monto_pagar=($Costo - ($Costo*$Abrev/100) )/$CantidadModulos; //formula para sacar el monto a pagar del estudiante
 
 if($cod_facturacion>0){//editar
-    $sqlFac="SELECT * from solicitudes_facturacion where codigo=$cod_facturacion";
+    $sqlFac="SELECT sf.*,sfd.precio,sfd.descuento_por,sfd.descuento_bob from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sfd.cod_solicitudfacturacion=sf.codigo and sf.codigo=$cod_facturacion";
+
     $stmtSimuFact = $dbh->prepare($sqlFac);
     $stmtSimuFact->execute();
     $resultSimuFact = $stmtSimuFact->fetch();
@@ -80,6 +81,11 @@ if($cod_facturacion>0){//editar
     $observaciones = $resultSimuFact['observaciones'];
     $cod_tipopago=$resultSimuFact['cod_tipopago'];
     $cod_tipoobjeto=$resultSimuFact['cod_tipoobjeto'];
+
+    $monto_pagar=$resultSimuFact['precio'];
+    $descuento_por=$resultSimuFact['descuento_por'];
+    $descuento_bob=$resultSimuFact['descuento_bob'];
+
 }else{//registrat
     $fecha_registro = date('Y-m-d');
     $fecha_solicitudfactura = date('Y-m-d');
@@ -88,10 +94,13 @@ if($cod_facturacion>0){//editar
     $observaciones = null;
     $cod_tipopago=null;
     $cod_tipoobjeto=obtenerValorConfiguracion(41);
+
+    $descuento_por=0;
+    $descuento_bob=0;
 }
 
 $name_uo=nameUnidad($cod_uo);
-$name_area=abrevArea($cod_area);
+$name_area=trim(abrevArea($cod_area),'-');
 $contadorRegistros=0;
 ?>
 <script>
@@ -122,7 +131,7 @@ $contadorRegistros=0;
                             <div class="col-sm-4">
                                 <div class="form-group">
                                     <input class="form-control" type="hidden" name="cod_uo" id="cod_uo" required="true" value="<?=$cod_uo;?>" required="true" readonly/>
-                                    <input class="form-control" type="text" required="true" value="<?=$name_uo;?>" required="true" readonly/>
+                                    <input class="form-control" type="text" required="true" value="<?=$name_uo;?>" required="true" readonly style="background-color:#E3CEF6;text-align: left"/>
                                
                                 </div>
                             </div>
@@ -132,7 +141,7 @@ $contadorRegistros=0;
                                     <div id="div_contenedor_area_tcc">
                                         <input class="form-control" type="hidden" name="cod_area" id="cod_area" required="true" value="<?=$cod_area;?>" required="true" readonly/>
 
-                                        <input class="form-control" type="text" required="true" value="<?=$name_area;?>" required="true" readonly/>
+                                        <input class="form-control" type="text" required="true" value="<?=$name_area;?>" required="true" readonly style="background-color:#E3CEF6;text-align: left"/>
                                        
                                     </div>                    
                                 </div>
@@ -199,7 +208,7 @@ $contadorRegistros=0;
                                 <div class="form-group">            
                                     <?php  $responsable=namePersonal($cod_responsable); ?>                    
                                     <input type="hidden" name="cod_personal" id="cod_personal" value="<?=$cod_responsable?>" readonly="true" class="form-control">
-                                    <input type="text" value="<?=$responsable?>" readonly="true" class="form-control">
+                                    <input type="text" value="<?=$responsable?>" readonly="true" style="background-color:#E3CEF6;text-align: left" class="form-control">
                                 </div>
                             </div>        
                         </div>
@@ -227,7 +236,7 @@ $contadorRegistros=0;
                             <label class="col-sm-2 col-form-label">Observaciones</label>
                             <div class="col-sm-7">
                                 <div class="form-group">
-                                    <input class="form-control" type="text" name="observaciones" id="observaciones" required="true" value="<?=$observaciones?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+                                    <input class="form-control" type="text" name="observaciones" id="observaciones" value="<?=$observaciones?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
                                 </div>
                             </div>
                         </div>
@@ -246,10 +255,13 @@ $contadorRegistros=0;
                                             <!-- <th >Año</th> -->
                                             <th>Item</th>
                                             <th>Cant.</th>
-                                            <th>Importe</th>
-                                            <th>Total</th>                                            
-                                            <th class="small">H/D</th>
+                                            <th>Precio(BOB)</th>
+                                            <th>Desc(%)</th>
+                                            <th>Desc(BOB)</th>
+                                            <th width="10%">Importe(BOB)</th>                                      
+                                            
                                             <th width="30%">Descripción</th>  
+                                            <th class="small">H/D</th>
                                           </tr>
                                       </thead>
                                       <tbody>                                
@@ -268,15 +280,44 @@ $contadorRegistros=0;
                                             $cod_anio=1;
 
                                             if($banderaHab!=0){
-                                                // $modal_totalmontopre+=$montoPre;
+                                                $descuento_porX=0;
+                                                $descuento_bobX=0;
+                                                $descripcion_alternaX=$tipoPre;                     
                                                 $montoPre=number_format($montoPre,2,".","");
-                                                // $modal_totalmontopretotal+=$montoPreTotal;
+                                                $sqlControlador="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$cod_simulacion and sfd.cod_claservicio=$codCS and sf.codigo=$cod_facturacion";
+                                                // echo $sqlControlador;
+                                                $stmtControlado = $dbh->prepare($sqlControlador);
+                                                $stmtControlado->execute();                                           
+                                                $sw="";                                         
+                                                while ($rowPre = $stmtControlado->fetch(PDO::FETCH_ASSOC)) {
+                                                      $sw="checked";
+                                                      $montoPre=$rowPre['precio']+$rowPre['descuento_bob'];
+                                                      $descuento_porX=$rowPre['descuento_por'];
+                                                      $descuento_bobX=$rowPre['descuento_bob'];
+                                                      $descripcion_alternaX=$rowPre['descripcion_alterna'];
+                                                }
+                                                //parte del controlador de check//impedir los ya registrados
+                                                $sqlControlador2="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$cod_simulacion and sfd.cod_claservicio=$codCS";
+                                                // echo $sqlControlador2;
+                                                $stmtControlador2 = $dbh->prepare($sqlControlador2);
+                                                $stmtControlador2->execute();                                           
+                                                $sw2="";
+                                                while ($rowPre = $stmtControlador2->fetch(PDO::FETCH_ASSOC)) {
+                                                    if($sw!="checked"){
+                                                        $sw2="readonly style='background-color:#cec6d6;'";
+                                                        $montoPre=$rowPre['precio']+$rowPre['descuento_bob'];
+                                                        $descuento_porX=$rowPre['descuento_por'];
+                                                        $descuento_bobX=$rowPre['descuento_bob'];
+                                                        $descripcion_alternaX=$rowPre['descripcion_alterna'];
+                                                    }
+                                                }
                                                 ?>
                                                 <!-- guardamos las varialbles en un input -->
                                                 <input type="hidden" id="cod_serv_tiposerv<?=$iii?>" name="cod_serv_tiposerv<?=$iii?>" value="<?=$codigoPre?>">
                                                 <input type="hidden" id="servicio<?=$iii?>" name="servicio<?=$iii?>" value="<?=$codCS?>">
                                                 <input type="hidden" id="cantidad<?=$iii?>" name="cantidad<?=$iii?>" value="<?=$cantidadPre?>">
                                                 <input type="hidden" id="importe<?=$iii?>" name="importe<?=$iii?>" value="<?=$montoPre?>">
+                                                <input type="hidden" id="nombre_servicio<?=$iii?>" name="nombre_servicio<?=$iii?>" value="<?=$tipoPre?>">
 
                                                 <!-- aqui se captura los servicios activados -->
                                                 <input type="hidden" id="cod_serv_tiposerv_a<?=$iii?>" name="cod_serv_tiposerv_a<?=$iii?>">
@@ -286,33 +327,46 @@ $contadorRegistros=0;
                                                 <tr>
                                                     <td><?=$iii?></td>
                                                     <!-- <td class="text-left"><?=$cod_anio?> </td> -->
-                                                    <td class="text-right"><?=$tipoPre?></td>
+                                                    <td class="text-left" width="35%"><?=$tipoPre?></td>
                                                     <td class="text-right"><?=$cantidadPre?></td>
-                                                    <td class="text-right"><?=formatNumberDec($montoPre)?></td>
-                                                    <td class="text-right">
-                                                    <input type="number" id="modal_importe<?=$iii?>" name="modal_importe<?=$iii?>" class="form-control text-primary text-right"  value="<?=$montoPre?>" step="0.01">
+                                                    <td class="text-right"><input type="number" id="monto_precio<?=$iii?>" name="monto_precio<?=$iii?>" class="form-control text-primary text-right"  value="<?=$montoPre?>" step="0.01" onkeyup="activarInputMontoFilaServicio2()" <?=$sw2?>></td>
+                                                  <!--  descuentos -->
+                                                  <td class="text-right"><input type="text" class="form-control" name="descuento_por<?=$iii?>" id="descuento_por<?=$iii?>" value="<?=$descuento_porX?>" style ="background-color: #ffffff;" onkeyup="descuento_convertir_a_bolivianos(<?=$iii?>)" <?=$sw2?>></td>                                             
+                                                  <td class="text-right"><input type="text" class="form-control" name="descuento_bob<?=$iii?>" id="descuento_bob<?=$iii?>" value="<?=$descuento_bobX?>" style ="background-color: #ffffff;" onkeyup="descuento_convertir_a_porcentaje(<?=$iii?>)" <?=$sw2?>></td>                                        
+                                                  <!-- total -->
+                                                  <td class="text-right"><input type="hidden" name="modal_importe<?=$iii?>" id="modal_importe<?=$iii?>"><input type="text" class="form-control" name="modal_importe_dos<?=$iii?>" id="modal_importe_dos<?=$iii?>" style ="background-color: #ffffff;" readonly></td>                                   
+                                                    <td width="35%">
+                                                        <textarea type="text" name="descripcion_alterna<?=$iii?>" id="descripcion_alterna<?=$iii?>" class="form-control" onkeyup="javascript:this.value=this.value.toUpperCase();"><?=$descripcion_alternaX?></textarea>
                                                     </td>
-                                                 
+                                                    <!-- checkbox -->
+                                                    <!-- checkbox -->
                                                     <td>
-                                                        <div class="togglebutton">
-                                                           <label>
-                                                             <input type="checkbox"  id="modal_check<?=$iii?>" onchange="activarInputMontoFilaServicio2()">
-                                                             <span class="toggle"></span>
-                                                           </label>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <input type="text" name="descripcion_alterna<?=$iii?>" id="descripcion_alterna<?=$iii?>" class="form-control" onkeyup="javascript:this.value=this.value.toUpperCase();">
-                                                    </td>
+                                                        <?php if($sw2!="readonly style='background-color:#cec6d6;'"){?>
+                                                            <div class="togglebutton">
+                                                               <label>
+                                                                 <input type="checkbox"  id="modal_check<?=$iii?>" onchange="activarInputMontoFilaServicio2()" <?=$sw?> >
+                                                                 <span class="toggle"></span>
+                                                               </label>
+                                                           </div>
+                                                        <?php }else{?>
+                                                          <div class="togglebutton d-none">
+                                                               <label>
+                                                                 <input type="checkbox"  id="modal_check<?=$iii?>" >
+                                                                 <span class="toggle"></span>
+                                                               </label>
+                                                           </div>                                                
+                                                        <?php }?>
+                                                    </td><!-- fin checkbox -->
                                                 </tr>
-
+                                                
                                               <?php   $iii++;
-                                            }
-                                                                                                                        
-                                              // $montoPreTotal=number_format($montoPreTotal,2,".","");
-                                         ?>                        
+                                            } ?> 
+                                            <script>
+                                               window.onload = activarInputMontoFilaServicio2;
+                                           </script>                       
                                       </tbody>
                                 </table>
+
 
                                 <input type="hidden" id="modal_numeroservicio" name="modal_numeroservicio" value="<?=$iii?>">                    
                                 <input type="hidden" id="modal_totalmontos" name="modal_totalmontos">
@@ -364,14 +418,14 @@ $contadorRegistros=0;
 <script type="text/javascript">
     function valida(f) {
         var ok = true;
-        var msg = "Habilite los servicios que se desee facturar...\n";  
-        if(f.elements["modal_totalmontoserv"].value == 0 || f.elements["modal_totalmontoserv"].value == '')
+        var msg = "El monto Total no debe ser '0' o 'negativo', Habilite los Items que desee facturar...\n";  
+        if(f.elements["modal_totalmontoserv"].value == 0 || f.elements["modal_totalmontoserv"].value < 0 || f.elements["modal_totalmontoserv"].value == '')
         {    
             ok = false;
         }
         
         if(ok == false)
-          alert(msg);
+          Swal.fire("Informativo!",msg, "warning");
         return ok;
     }
 </script>
