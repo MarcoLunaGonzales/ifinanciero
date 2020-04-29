@@ -8,6 +8,7 @@ require_once '../styles.php';
 $dbh = new Conexion();
 
 $codSimulacionServX=$_GET['cod_sim'];
+$tipoSolicitud =$_GET['tipo'];
                     $codigoPlantillaXX=obtenerPlantillaCodigoSimulacionServicio($codSimulacionServX);
                     $detalle=obtenerDetalleSolicitudSimulacionCuentaPlantillaServicio($codSimulacionServX,$codigoPlantillaXX);
                     $areaXX=obtenerCodigoAreaPlantillasServicios($codigoPlantillaXX);
@@ -17,7 +18,7 @@ $codSimulacionServX=$_GET['cod_sim'];
                         $areaSol=0;
 						$idFila=1;
 ?><script>numFilas=0;cantidadItems=0;itemFacturas=[];</script><?php
-						$cuentasCodigos=[];$conta=0;$auxAnio=0;$detalleAux="";$contAux=0;
+						$cuentasCodigos=[];$conta=0;$auxAnio=0;$detalleAux="";$contAux=0;$totalImportePres=0;$totalImporteSol=0;
 
 						while ($row = $detalle->fetch(PDO::FETCH_ASSOC)) {
 							$codigo_fila=explode("###",$row['codigo_detalle']);

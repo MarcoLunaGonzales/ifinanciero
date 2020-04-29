@@ -115,7 +115,7 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                           <th class="text-center small">Fecha</th>
                           <th class="text-left small">Glosa</th>
                           <th class="text-center small">Estado</th>
-                          <th class="text-center small col-md-2">Actions</th>
+                          <th class="text-center small" width="10%">Actions</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -152,7 +152,8 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                           <td class="text-left small"><?=$glosaComprobante;?></td>
                           <td><button class="btn <?=$btnEstado?> btn-sm btn-link"><?=$estadoComprobante;?>  <span class="material-icons small"><?=$estadoIcon?></span></button></td>
                           <td class="td-actions text-right">
-                            <div class="btn-group dropdown">
+                            <div class="btn-group">
+                            <div class="dropdown">
                               <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Ver Comprobante">
                                 <i class="material-icons"><?=$iconImp;?></i>
                               </button>
@@ -175,28 +176,29 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                                    ?>
                               </div>
                             </div>
-                            <div class="btn-group dropdown">
+                            <div class="dropdown">
                               <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Ver Comprobante">
                                 <i class="material-icons">more_horiz</i>
                               </button>
                               <div class="dropdown-menu">
-                                <a href='<?=$urlArchivo;?>?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="btn btn-default" title="Ver Adjuntos">
-                                  <i class="material-icons">attachment</i>
+                                <a href='<?=$urlArchivo;?>?codigo=<?=$codigo;?>' target="_blank" class="dropdown-item" title="Ver Adjuntos">
+                                  <i class="material-icons text-default">attachment</i> Adjuntos
                                 </a>
                                 <?php
                                 if($existeCuenta==0){
                                 ?>
-                                <a href='<?=$urlEdit3;?>?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="<?=$buttonEdit;?>" title="Editar">
-                                  <i class="material-icons"><?=$iconEdit;?></i>
+                                <a href='<?=$urlEdit3;?>?codigo=<?=$codigo;?>' target="_blank" class="dropdown-item" title="Editar">
+                                  <i class="material-icons text-success"><?=$iconEdit;?></i> Editar
                                 </a>
                                 <?php
                                 }
                                 ?>
-                                <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')" title="Anular">
-                                  <i class="material-icons"><?=$iconDelete;?></i>
-                                </button>
+                                <a href="#" class="dropdown-item" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')" title="Anular">
+                                  <i class="material-icons text-danger"><?=$iconDelete;?></i> Eliminar
+                                </a>
                               </div>
                             </div>
+                           </div>
                           </td>
                         </tr>
                         <?php

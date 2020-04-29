@@ -3682,7 +3682,8 @@ function minusDetalleSolicitud(idF){
       numFilas=numFilas-1;
       cantidadItems=cantidadItems-1;
       filaActiva=numFilas;
-      document.getElementById("cantidad_filas").value=numFilas;  
+      document.getElementById("cantidad_filas").value=numFilas;
+      calcularTotalesSolicitud();  
 }
 
 var numArchivosDetalle=0;
@@ -8946,7 +8947,7 @@ function filtrarSolicitudRecursosDetalleDatos(){
     }else{ //propuestas TCP TCS
       var url ="ajaxSolicitudDetalleSimulacionNuevo.php";
     }
-   var parametros={"cod_sim":cod_sim};
+   var parametros={"cod_sim":cod_sim,"tipo":tipo};
      $.ajax({
         type: "GET",
         dataType: 'html',
@@ -8965,6 +8966,7 @@ function filtrarSolicitudRecursosDetalleDatos(){
            $("#fiel").html(resp);
 
            $('.selectpicker').selectpicker("refresh");
+           calcularTotalesSolicitud();
         }
     });      
   }else{
@@ -10911,4 +10913,21 @@ function saveFacturaEdit(){
     }else{
       alertaModal('Campo "NIT" Vacío.','bg-primary','text-white');
     }                 
+}
+
+function calcularTotalesSolicitud(){
+  var sumapres=0;
+  var sumasol=0;
+  var formulariop = document.getElementById("formSolDet");
+  for (var i=0;i<formulariop.elements.length;i++){
+    if (formulariop.elements[i].id.indexOf("importe_presupuesto") !== -1 ){   
+      sumapres += (formulariop.elements[i].value) * 1; 
+    }
+    if (formulariop.elements[i].id.indexOf("importe") !== -1 ){         
+      sumasol += (formulariop.elements[i].value) * 1;
+    }
+  }
+
+    document.getElementById("total_presupuestado").value=redondeo(sumapres,2).toFixed(2);  
+    document.getElementById("total_solicitado").value=redondeo(sumasol,2).toFixed(2);  
 }

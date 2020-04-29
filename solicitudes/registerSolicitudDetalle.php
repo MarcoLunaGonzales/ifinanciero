@@ -246,7 +246,23 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
               ?>  
                <a href="#" onclick="cargarDatosRegistroProveedor()" class="btn btn-warning float-right">Agregar Proveedor</a>
                <a href="#" onclick="actualizarRegistroProveedor()" class="btn btn-success float-right">Actualizar Proveedores</a>
-            </div>
+               <div class="row col-sm-12">
+                    <div class="col-sm-1">
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="form-group">
+                            <label class="bmd-label-static fondo-boton">Presupuestado</label>  
+                          <input class="form-control fondo-boton-active text-center" style="border-radius:10px;" type="number" step=".01" placeholder="0" value="0" id="total_presupuestado" readonly="true"> 
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="form-group">
+                          <label class="bmd-label-static fondo-boton">Solicitado</label> 
+                          <input class="form-control fondo-boton-active text-center" style="border-radius:10px;" type="number" step=".01" placeholder="0" value="0" id="total_solicitado" readonly="true"> 
+                        </div>
+                    </div>
+              </div>
+          </div>
         </div>
       </div>      
     </div>
