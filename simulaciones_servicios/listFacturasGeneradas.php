@@ -56,14 +56,26 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             <th>Importe</th>
                             <th>Obs.</th>
                             <th>Estado</th>
-                            <th class="text-right"></th>
-                            <th class="text-right"></th>
+                            <th class="text-right">Opciones</th>                            
                           </tr>
                         </thead>
                         <tbody>
                         <?php
                           $index=1;
                           while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+                            //colores de estados                         
+                            switch ($cod_estadofactura) {
+                              case 1://activo
+                                $label='<span class="badge badge-success">';
+                                break;
+                              case 2://anulado
+                                $label='<span class="badge badge-danger">';
+                                break;
+                              case 3://enviado
+                                $label='<span class="badge badge-info" style="">';
+                                break;
+                                                          
+                            }
                             $datos=$codigo_facturacion.'/'.$cod_solicitudfacturacion.'/'.$nro_factura;
                             ?>
                           <tr>
@@ -72,41 +84,33 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             <td><?=$sucursal;?></td>
                             <td><?=$fecha_factura?></td>
                             <td><?=$cliente;?></td>
-                            <td><?=formatNumberDec($importe);?></td>
-                            <td><?=$observaciones;?></td>
-                            <td><?=$estadofactura;?></td>
+                            <td class="text-right"><?=formatNumberDec($importe);?></td>
+                            <td><?=$observaciones;?></td>                            
+                            <td><?=$label.$estadofactura."</span>";?></td>
                             <td class="td-actions text-right">
                               <?php
-                                if($globalAdmin==1){?>
-                                  
+                                if($globalAdmin==1 and $cod_estadofactura==1 ){?>                                
                                   <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=2' target="_blank"><i class="material-icons" title="Imprimir Facturas">print</i></a>
-                                  <!-- <div class="dropdown">
-                                    <button class="btn btn-success dropdown-toggle" type="button" id="reporte_sueldos" data-toggle="dropdown" aria-extended="true">
-                                      <i class="material-icons" title="Imprimir Facturas">print</i>
-                                      <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu" role="menu" aria-labelledby="reporte_sueldos">
-                                      <li role="presentation" class="dropdown-header"><small>IMPRIMIR</small></li>
-                                      <li role="presentation"><a role="item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$cod_solicitudfacturacion;?>&tipo=1' target="_blank"><small>Facturas</small></a>
-                                      </li>
-                                      <li role="presentation"><a role="item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$cod_solicitudfacturacion;?>&tipo=2' target="_blank"><small>Facturas Con Descripción  de Servicio</small></a>
-                                      </li>
-                                                                   
-                                    </ul>
-                                  </div> -->
-                                <?php  
-                                }
-                              ?>
-                            </td>
-                            <td class="td-actions text-right">
-                              <?php
-                                if($globalAdmin==1){?>
-                                  <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalEnviarCorreo" onclick="agregaformEnviarCorreo('<?=$datos;?>')">
+                                 <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalEnviarCorreo" onclick="agregaformEnviarCorreo('<?=$datos;?>')">
                                     <i class="material-icons" title="Enviar Correo">email</i>
-                                  </button><?php  
-                                }
+                                  </button>
+                                  <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation-anular-factura','<?=$urlAnularFactura;?>&codigo=<?=$codigo_facturacion;?>')">
+                                  <i class="material-icons" title="Anular Factura">clear</i>
+                                  </button>
+                                <?php  
+                                }elseif($globalAdmin==1 and $cod_estadofactura==3){?>
+                                  <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=2' target="_blank"><i class="material-icons" title="Imprimir Facturas">print</i></a>
+
+                                  <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation-anular-factura','<?=$urlAnularFactura;?>&codigo=<?=$codigo_facturacion;?>')">
+                                  <i class="material-icons" title="Anular Factura">clear</i>
+                                  </button>
+                                <?php }
+
                               ?>
+
+                              
                             </td>
+                            
                           </tr>
                           <?php
                               $index++;
@@ -166,7 +170,8 @@ $globalAdmin=$_SESSION["globalAdmin"];
       asunto=null;
       mensaje=null;
       if(correo_destino==null || correo_destino == "" ||correo_destino == 0){
-        alert("Por Favor Agregue Un correo para el envío de la Factura!");
+        // alert("Por Favor Agregue Un correo para el envío de la Factura!");
+        Swal.fire("Informativo!", "Por Favor Agregue Un correo válido para el envío de la Factura!", "warning");
       }else{
         EnviarCorreoAjax(codigo_facturacion,nro_factura,cod_solicitudfacturacion,correo_destino,asunto,mensaje);  
       }

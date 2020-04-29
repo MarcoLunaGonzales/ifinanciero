@@ -27,8 +27,9 @@ $mes=$_GET['mes'];
 	  	<th class="text-left"></th>
       <th class="text-left">Of</th>
       <th class="text-left">Tipo</th>
-	  	<th class="text-left">Fecha</th>
-      <th class="text-left">Proveedor</th>
+      <th class="text-left">FechaComp</th>
+	  	<th class="text-left">FechaEC</th>
+      <th class="text-left">Proveedor/Cliente</th>
 	  	<th class="text-left">Glosa</th>
 	  	<th class="text-right">D&eacute;bito</th>
 	  	<th class="text-right">Cr&eacute;dito</th>
@@ -60,6 +61,7 @@ $mes=$_GET['mes'];
      $nombreTipoComprobante=abrevTipoComprobante($tipoComprobante)."-".$mesComprobante;
      $credito_padre=ObtenerMontoTotalEstadoCuentas_hijos($codCuenta,$codigoX);
      $saldo=$montoX-$credito_padre;
+     $fechaComprobante=strftime('%d/%m/%Y',strtotime($fechaComprobante));
 
      if(obtenerProveedorCuentaAux($row['cod_cuentaaux'])==""){
       $proveedorX="Sin Proveedor";
@@ -87,7 +89,8 @@ $mes=$_GET['mes'];
     	    </td>
           <td class="text-center small"><?=$nombreUnidadO;?></td>
           <td class="text-center small"><?=$nombreTipoComprobante;?></td>
-          <td class="text-left font-weight-bold"><?=$fechaX?></td>
+          <td class="text-left small"><?=$fechaComprobante;?></td>
+          <td class="text-left small"><?=$fechaX;?></td>
           <td class="text-left"><?=$proveedorX?></td><td class="text-left"><?=$glosaX?></td>
           <td class="text-right"><?=number_format($credito_padre, 2, '.', ',')?></td>
           <td class="text-right"><?=number_format($montoX, 2, '.', ',')?></td>
@@ -119,6 +122,7 @@ $mes=$_GET['mes'];
               ?>
               <tr class="bg-white det-estados-<?=$i?>"  style="display:none">
                 <td></td>
+                <td class="text-left font-weight-bold"><small></small></td>
                 <td class="text-left font-weight-bold"><small><?=$fechaX_hijos?></small></td>
                 <td class="text-left"><small><?=$proveedorX?></small></td>
                 <td class="text-left"></td>

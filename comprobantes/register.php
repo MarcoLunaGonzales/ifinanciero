@@ -173,6 +173,7 @@ $stmt->bindColumn('nombre', $nombreMon);
 
 
 $cod_cuenta_configuracion_iva=obtenerValorConfiguracion(3);//cuenta iva
+$cod_sis_configuracion=obtenerValorConfiguracion(16);//codigo de proyecto sis
 ?>
 <form id="formRegComp" class="form-horizontal" action="save.php" method="post" enctype="multipart/form-data">
 	<div class="content">
@@ -180,6 +181,7 @@ $cod_cuenta_configuracion_iva=obtenerValorConfiguracion(3);//cuenta iva
 			<input type="hidden" name="cantidad_filas" id="cantidad_filas" value="<?=$contadorRegistros;
 			?>">
 			<input type="hidden" name="cod_cuenta_configuracion_iva" id="cod_cuenta_configuracion_iva" value="<?=$cod_cuenta_configuracion_iva;?>">
+			<input type="hidden" name="cod_sis_configuracion" id="cod_sis_configuracion" value="<?=$cod_sis_configuracion;?>">
 			<div class="card" id="cabecera_scroll">
 				<div class="card-header <?=$colorCard;?> card-header-text">
 					<div class="card-text">

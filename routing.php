@@ -199,6 +199,10 @@
 		if ($_GET['opcion']=='save_solicitud_facturacion') {
 			require_once('simulaciones_servicios/save_solicitud_facturacion.php');
 		}
+		if ($_GET['opcion']=='anular_facturaSoliciutd') {
+			$codigo=$_GET['codigo'];
+			require_once('simulaciones_servicios/anular_facturaGenerada.php');
+		}
 		// Solicitud facturacion Capacitacion
 		if ($_GET['opcion']=='solicitud_facturacion_costos') {
 			$cod=$_GET['cod'];
@@ -258,7 +262,20 @@
 		if ($_GET['opcion']=='deleteSimulacionServicio') {
 			require_once('simulaciones_servicios/saveDelete.php');
 		}
-         
+        //solicitud facturaion servicios & presupuestos
+        if ($_GET['opcion']=='listServiciosPresupuestos') {
+			require_once('servicios_presupuestos/listServiciosPresupuestos.php');
+		}
+		if ($_GET['opcion']=='registerSolicitud_facturacion_sp') {		
+			$IdServicio=$_GET['IdServicio'];
+			$cod_facturacion=$_GET['cod_facturacion'];
+			$cod_simulacion=$_GET['cod_simulacion'];
+			
+			require_once('servicios_presupuestos/register_solicitud_facturacion.php');
+		}
+		if ($_GET['opcion']=='save_solicitud_facturacion_sp') {
+			require_once('servicios_presupuestos/save_solicitud_facturacion.php');
+		}
 
         //tarifario servicios
         if ($_GET['opcion']=='listTarifarioServicios') {

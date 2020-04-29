@@ -11,11 +11,8 @@ $stmtX->execute();
 
 
 $globalAdmin=$_SESSION["globalAdmin"];
-//listado de tipo documento rendicion
-// $statementTipoDocRendicion = $dbh->query("SELECT td.codigo,td.nombre from tipos_documentocajachica td where td.tipo=2 order by 2");
-
 $idFila=$_GET['idFila'];
-$cod_area=$_GET['cod_area'];
+$IdTipo=$_GET['IdTipo'];
 
 
 ?>
@@ -23,30 +20,18 @@ $cod_area=$_GET['cod_area'];
 	<div class="row">
 
     <div class="col-sm-3">
-      <div class="form-group">
-        <?php 
-          if($cod_area==39){
-              $codigoAreaServ=108;
-          }else{
-              if($cod_area==38){
-                $codigoAreaServ=109;
-              }else{
-                $codigoAreaServ=0;
-              }
-          }
-          ?>
-          <!-- <label for="haber<?=$idFila;?>" class="bmd-label-floating">Glosa</label> -->
+      <div class="form-group">               
           <select class="selectpicker form-control form-control-sm" data-live-search="true" name="modal_editservicio<?=$idFila;?>" id="modal_editservicio<?=$idFila;?>" data-style="fondo-boton" required="true">
               <option disabled selected="selected" value="">--SERVICIOS--</option>
               <?php 
-                $sql="SELECT idclaservicio,descripcion,codigo from cla_servicios where (codigo_n1=108 or codigo_n1=109) and vigente=1 and codigo_n1=$codigoAreaServ";
+                $sql="SELECT * from cla_servicios where IdTipo=$IdTipo";
                 $stmt3 = $dbh->prepare($sql);
                 echo $sql; 
                 $stmt3->execute();
                 while ($rowServ = $stmt3->fetch(PDO::FETCH_ASSOC)) {
-                  $codigoServX=$rowServ['idclaservicio'];
-                  $nombreServX=$rowServ['descripcion'];
-                  $abrevServX=$rowServ['codigo'];
+                  $codigoServX=$rowServ['IdClaServicio'];
+                  $nombreServX=$rowServ['Descripcion'];
+                  $abrevServX=$rowServ['Codigo'];
                   ?><option value="<?=$codigoServX;?>"><?=$abrevServX?> - <?=$nombreServX?></option><?php 
                 }
               ?>

@@ -89,6 +89,9 @@ width: 100%;
 .td-border-none{
   border: none !important;
 }
+.td-color-celeste{
+  background-color:#d1dbe3;
+}
 .table .table-title{
  font-size: 12px;
 }

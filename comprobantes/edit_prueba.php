@@ -41,6 +41,9 @@ $data->bindColumn('numero', $nroCorrelativo);
 $data->bindColumn('glosa', $glosaComprobante);
 $fechaActualModal=date("d/m/Y");
 
+
+$cod_cuenta_configuracion_iva=obtenerValorConfiguracion(3);//cuenta iva
+$cod_sis_configuracion=obtenerValorConfiguracion(16);//codigo de proyecto sis
 //
 if(isset($_GET['codigo'])){
 	$globalCode=$_GET['codigo'];
@@ -230,6 +233,8 @@ $stmt->execute();
 
 <form id="formRegComp" class="form-horizontal" action="saveEdit.php" method="post" enctype="multipart/form-data">
 	<input type="hidden" name="edicion" id="edicion" value="1">
+	<input type="hidden" name="cod_cuenta_configuracion_iva" id="cod_cuenta_configuracion_iva" value="<?=$cod_cuenta_configuracion_iva;?>">
+	<input type="hidden" name="cod_sis_configuracion" id="cod_sis_configuracion" value="<?=$cod_sis_configuracion;?>">
 	<?php 
  if(isset($_GET['cuentas'])){
  	?><input type="hidden" name="incompleto" id="incompleto" value="1"><?php
@@ -326,14 +331,14 @@ $stmt->execute();
 						<div class="col-sm-1">
 							<div class="form-group">
 						  		<!--<label class="bmd-label-static">Gestion</label>-->
-					  			<input class="form-control" type="text" name="gestion" value="<?=$gestion;?>" id="gestion" readonly="true" />
+					  			<input style="background-color:#E3CEF6;text-align: left" class="form-control" type="text" name="gestion" value="<?=$gestion;?>" id="gestion" readonly="true" />
 							</div>
 						</div>
 
 						<div class="col-sm-2">
 							<div class="form-group">
 						  		<!--<label class="bmd-label-static">Unidad</label>-->
-						  		<input class="form-control" type="text" name="unidad_organizacional" value="<?=$unidad;?>" id="unidad_organizacional" readonly="true" />
+						  		<input style="background-color:#E3CEF6;text-align: left" class="form-control" type="text" name="unidad_organizacional" value="<?=$unidad;?>" id="unidad_organizacional" readonly="true" />
 							</div>
 						</div>
 
@@ -367,7 +372,7 @@ $stmt->execute();
 						<div class="col-sm-2">
 							<div class="form-group">
 						  		<!--<label for="nro_correlativo" class="bmd-label-static">#</label>-->
-						  		<div id="divnro_correlativo"><input class="form-control" type="number" name="nro_correlativo" id="nro_correlativo" min="1" required="true" readonly="true" value="<?=$nroCorrelativo?>" /></div>
+						  		<div id="divnro_correlativo"><input style="background-color:#E3CEF6;text-align: left" class="form-control" type="number" name="nro_correlativo" id="nro_correlativo" min="1" required="true" readonly="true" value="<?=$nroCorrelativo?>" /></div>
 							</div>
 						</div>
 

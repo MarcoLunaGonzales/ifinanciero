@@ -34,5 +34,10 @@ $urlGenerarFacturas2="simulaciones_servicios/generarFacturas2.php";
 
 $urlRegisterNewServicio="index.php?opcion=crearServicioIbnorca";
 
+$urlAnularFactura="?opcion=anular_facturaSoliciutd";
+
+
+$urllistFacturasServicios="index.php?opcion=listFacturasGeneradas";
+$urlPrintSolicitud="simulaciones_servicios/printSolicitud.php";
 // $urlSolicitudfactura="simulaciones_servicios/solicitud_facturacion.php";
 ?>

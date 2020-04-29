@@ -244,41 +244,43 @@
                       if($('#cuenta'+(i+1)).val()==""||$('#cuenta'+(i+1)).val()==null||$('#cuenta'+(i+1)).val()==0){
                         contcuenta++;
                       } 
-
-                      if($('#cuenta'+(i+1)).val()==63){//para facturas
+                      var cod_confi_iva=document.getElementById('cod_cuenta_configuracion_iva').value;
+                      if($('#cuenta'+(i+1)).val()==cod_confi_iva){//para facturas
                         contcuentaIva++;
                       }           
                     }
                     if(contcuentaIva!=0){
-                      var cantiFacturas = itemFacturas.length;  
-                      console.log("numero de Facturas: "+cantiFacturas+" json: "+JSON.stringify(itemFacturas));
-                      var contadorFacturas=0;var sumaTotalFactura=0;
+                      var cantiFacturas = itemFacturas.length;                        
+                      var contadorFacturas=0;
+                      // console.log("numero de Facturas: "+cantiFacturas+" json: "+JSON.stringify(itemFacturas));
+                      var contadorFacturas=0;//var sumaTotalFactura=0;
                       for (var i = 0; i < cantiFacturas; i++){
                         var factura=itemFacturas[i];                          
                         if(itemFacturas[i]==null || itemFacturas[i]==''){
                           contadorFacturas++;
-                        }else{//existe factura
-                          console.log("exite factura: "+JSON.stringify(itemFacturas[i]));
-                          
+                        }else{//existe factura                          
+                          var sumaTotalFactura=0;                          
                           for(var j = 0; j < itemFacturas[i].length; j++){
                             var dato = Object.values(itemFacturas[i][j]);
-                            console.log("dato: "+dato);
-                            console.log("datos: "+dato[4]+" "+dato[7]+" "+dato[8]);
+                            //console.log("dato: "+dato);
+                            //console.log("datos: "+dato[4]+" "+dato[7]+" "+dato[8]);
                             if(dato[4]==""){  dato[4]=0;}
                             if(dato[7]==""){  dato[7]=0;}
                             if(dato[8]==""){  dato[8]=0;}
                             sumaTotalFactura=sumaTotalFactura+parseInt(dato[4])+parseInt(dato[7])+parseInt(dato[8]);
-                          }                              
-                        }                
-                      }
-                      var monto_debe_total_comprobante = $("#totaldeb").val();  
-                          console.log("SUMA FACTURAS: "+sumaTotalFactura+" "+monto_debe_total_comprobante);
+                          }                           
+                          var monto_debe_total_comprobante = $("#totaldeb").val();  
                           if(sumaTotalFactura!=monto_debe_total_comprobante){
                             mensaje+="<p>El Monto registrado en las facturas difiere del total!</p>";
                             $('#msgError').html(mensaje);
                             $('#modalAlert').modal('show');
                             envio=1; 
+                          }                                                      
+                        }                
                       }
+                      var monto_debe_total_comprobante = $("#totaldeb").val();  
+                          console.log("SUMA FACTURAS: "+sumaTotalFactura+" "+monto_debe_total_comprobante);
+                      
 
                       if(contadorFacturas==cantiFacturas){
                         mensaje+="<p>No puede existir Facturas vacías!</p>";
