@@ -40,6 +40,7 @@ $contadorRegistros=0;
 
 <?php
 $fechaActual=date("Y-m-d");
+$fechaActualFormat=date("d/m/Y");
 $m=date("m");
 $y=date("Y");
 $d=date("d",(mktime(0,0,0,$m+1,1,$y)-1));
@@ -137,7 +138,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             <div class="col-sm-2">
               <div class="form-group">
                   <label class="bmd-label-static">Fecha Solicitud</label>
-                  <input class="form-control" type="text" name="nfecha_solicitudumero" value="<?=$fechaActual?>" id="numero" readonly/>
+                  <input class="form-control" type="text" name="nfecha_solicitudumero" value="<?=$fechaActualFormat?>" id="numero" readonly/>
               </div>
             </div>
             <div class="col-sm-2">
@@ -161,6 +162,14 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                   <a title="Subir Archivos Respaldo (shift+r)" href="#modalFile" data-toggle="modal" data-target="#modalFile" class="btn btn-default btn-sm">Archivos 
                     <i class="material-icons"><?=$iconFile?></i><span id="narch" class="bg-warning"></span>
                   </a>
+                </div> 
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12">
+               <div class="form-group">
+                  <label class="bmd-label-static">Observaciones</label>
+                  <textarea type="text" id="observaciones_solicitud" name="observaciones_solicitud" class="form-control"></textarea>
                 </div> 
             </div>
           </div>          

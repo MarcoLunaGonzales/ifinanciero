@@ -23,5 +23,6 @@ $urlSavePago="solicitudes/savePago.php";
 
 $urlVerificarSolicitud="solicitudes/comprobarSolicitud.php";
 $urlPagos="index.php?opcion=listSolicitudPagosProveedores";
-
+$urlRegisterSS="index.php?opcion=registerPlanCuentaSS&codigo=0";
+$urlListCC2="index.php?opcion=listPlanCuentasSolicitudesRecursos";
 ?>

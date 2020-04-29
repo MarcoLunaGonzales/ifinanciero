@@ -20,6 +20,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 
 
 if(isset($_POST['numero'])){
+    $observaciones=$_POST['observaciones_solicitud'];
     $numero=$_POST['numero'];
     $tipoSol=$_POST['tipo_solicitud'];
   if($tipoSol!=2){
@@ -28,6 +29,8 @@ if(isset($_POST['numero'])){
       //datos para solicitud recursos manual manual
       $codSim=0;
       $codSimServ=0;
+      $globalArea=$_POST['area_solicitud'];
+     $globalUnidad=$_POST['unidad_solicitud'];  
     }else{
       //datos para solicitud recursos SIMULACION (PROPUESTA)
      $simu=explode("$$$",$_POST['simulaciones']);
@@ -58,11 +61,11 @@ if(isset($_POST['numero'])){
   $dbh = new Conexion();
   if(isset($_POST['usuario_ibnored_v'])){
        $v=$_POST['usuario_ibnored_v'];
-       $sqlInsert="INSERT INTO solicitud_recursos (codigo, cod_personal,cod_unidadorganizacional,cod_area,fecha,numero,cod_simulacion,cod_proveedor,cod_simulacionservicio,cod_contrato,idServicio) 
-       VALUES ('".$codSolicitud."','".$globalUser."','".$globalUnidad."', '".$globalArea."', '".$fecha."','".$numero."','".$codSim."','".$codProv."','".$codSimServ."','".$codCont."','".$v."')";
+       $sqlInsert="INSERT INTO solicitud_recursos (codigo, cod_personal,cod_unidadorganizacional,cod_area,fecha,numero,cod_simulacion,cod_proveedor,cod_simulacionservicio,cod_contrato,idServicio,observaciones,) 
+       VALUES ('".$codSolicitud."','".$globalUser."','".$globalUnidad."', '".$globalArea."', '".$fecha."','".$numero."','".$codSim."','".$codProv."','".$codSimServ."','".$codCont."','".$v."','".$observaciones."')";
   }else{
-    $sqlInsert="INSERT INTO solicitud_recursos (codigo, cod_personal,cod_unidadorganizacional,cod_area,fecha,numero,cod_simulacion,cod_proveedor,cod_simulacionservicio,cod_contrato) 
-    VALUES ('".$codSolicitud."','".$globalUser."','".$globalUnidad."', '".$globalArea."', '".$fecha."','".$numero."','".$codSim."','".$codProv."','".$codSimServ."','".$codCont."')";
+    $sqlInsert="INSERT INTO solicitud_recursos (codigo, cod_personal,cod_unidadorganizacional,cod_area,fecha,numero,cod_simulacion,cod_proveedor,cod_simulacionservicio,cod_contrato,observaciones) 
+    VALUES ('".$codSolicitud."','".$globalUser."','".$globalUnidad."', '".$globalArea."', '".$fecha."','".$numero."','".$codSim."','".$codProv."','".$codSimServ."','".$codCont."','".$observaciones."')";
   }
   $stmtInsert = $dbh->prepare($sqlInsert);
   $stmtInsert->execute();
@@ -118,16 +121,18 @@ $flagSuccess=true;
     $fila=0;
 for ($i=1;$i<=$cantidadFilas;$i++){	
     if(isset($_POST["habilitar".$i])){      
-    $data[$fila][0]=$_POST["partida_cuenta_id".$i]; 
-    $data[$fila][1]=$_POST["detalle_detalle".$i]; 
-    $data[$fila][2]=$_POST["importe_presupuesto".$i]; 
-    $data[$fila][3]=$_POST["importe".$i];           
-    $data[$fila][4]=0; 
-    $data[$fila][5]="";
-    $data[$fila][6]=$_POST["proveedor".$i];
-    $data[$fila][7]=$_POST["cod_detalleplantilla".$i];
-    $data[$fila][8]=$_POST["cod_servicioauditor".$i];
-    $data[$fila][9]=$_POST["cod_retencion".$i];
+    $data[$fila][0]=$_POST["partida_cuenta_id".$i];
+    $data[$fila][1]=$_POST["unidad_fila".$i]; 
+    $data[$fila][2]=$_POST["area_fila".$i];  
+    $data[$fila][3]=$_POST["detalle_detalle".$i]; 
+    $data[$fila][4]=$_POST["importe_presupuesto".$i]; 
+    $data[$fila][5]=$_POST["importe".$i];           
+    $data[$fila][6]=0; 
+    $data[$fila][7]="";
+    $data[$fila][8]=$_POST["proveedor".$i];
+    $data[$fila][9]=$_POST["cod_detalleplantilla".$i];
+    $data[$fila][10]=$_POST["cod_servicioauditor".$i];
+    $data[$fila][11]=$_POST["cod_retencion".$i];
     //$dataInsert  
     $fila++;
       foreach($_FILES["archivos".$i]['tmp_name'] as $key => $tmp_name)
@@ -159,15 +164,17 @@ for ($i=1;$i<=$cantidadFilas;$i++){
     }
 } 
 $cab[0]="cod_plancuenta";
-$cab[1]="detalle";
-$cab[2]="importe_presupuesto";
-$cab[3]="importe";
-$cab[4]="numero_factura";
-$cab[5]="archivo";
-$cab[6]="cod_proveedor";
-$cab[7]="cod_detalleplantilla";
-$cab[8]="cod_servicioauditor";
-$cab[9]="cod_confretencion";
+$cab[1]="cod_unidadorganizacional";
+$cab[2]="cod_area";
+$cab[3]="detalle";
+$cab[4]="importe_presupuesto";
+$cab[5]="importe";
+$cab[6]="numero_factura";
+$cab[7]="archivo";
+$cab[8]="cod_proveedor";
+$cab[9]="cod_detalleplantilla";
+$cab[10]="cod_servicioauditor";
+$cab[11]="cod_confretencion";
 $solDet=contarSolicitudDetalle($codSolicitud);
 $solDet->bindColumn('total', $contador);
 while ($row = $solDet->fetch(PDO::FETCH_BOUND)) {

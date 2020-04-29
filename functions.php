@@ -1039,6 +1039,10 @@ function obtenerPlantilla($codigo){
           $valFac[$h][5]=$fact[$i][$h]->exeFac;
           $valFac[$h][6]=$fact[$i][$h]->autFac;
           $valFac[$h][7]=$fact[$i][$h]->conFac;
+          $valFac[$h][8]=$fact[$i][$h]->exeFac;
+          $valFac[$h][9]=$fact[$i][$h]->iceFac;
+          $valFac[$h][10]=$fact[$i][$h]->tazaFac;
+          $valFac[$h][11]=$fact[$i][$h]->tipoFac;
         }
         if(cantidadF($fact[$i])>0){
          $cabeceraFac[0]="nit";$cabeceraFac[1]="nro_factura";$cabeceraFac[2]="fecha";$cabeceraFac[3]="razon_social";$cabeceraFac[4]="importe";$cabeceraFac[5]="exento";$cabeceraFac[6]="nro_autorizacion";$cabeceraFac[7]="codigo_control";
@@ -1094,6 +1098,10 @@ function obtenerPlantilla($codigo){
           $valFac[$h][5]=$fact[$j][$h]->exeFac;
           $valFac[$h][6]=$fact[$j][$h]->autFac;
           $valFac[$h][7]=$fact[$j][$h]->conFac;
+          $valFac[$h][8]=$fact[$j][$h]->exeFac;
+          $valFac[$h][9]=$fact[$j][$h]->iceFac;
+          $valFac[$h][10]=$fact[$j][$h]->tazaFac;
+          $valFac[$h][11]=$fact[$j][$h]->tipoFac;
         }
         if(cantidadF($fact[$j])>0){
         $cabeceraFac[0]="nit";$cabeceraFac[1]="nro_factura";$cabeceraFac[2]="fecha";$cabeceraFac[3]="razon_social";$cabeceraFac[4]="importe";$cabeceraFac[5]="exento";$cabeceraFac[6]="nro_autorizacion";$cabeceraFac[7]="codigo_control";
@@ -2760,6 +2768,20 @@ function obtenerCodigoAreaPlantillaServicio($codigo){
   }
   return $num;
 }
+function obtenerCodigoUnidadPlantillaServicio($codigo){
+   $dbh = new Conexion();
+  $sql="";
+  $sql="SELECT cod_unidadorganizacional FROM plantillas_servicios where codigo=$codigo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute(); 
+   $num=0;
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
+  {
+   $num=$row['cod_unidadorganizacional'];
+  }
+  return $num;
+}
+
 //================ ========== PARA  planilla sueldos
 
 function obtenerBonoAntiguedad($minino_salarial,$ing_contr,$anio_actual){  
@@ -3426,6 +3448,20 @@ function descargarPDF($nom,$html){
         }*/
   $canvas->page_text(500, 25, "Página:            {PAGE_NUM}", Font_Metrics::get_font("sans-serif"), 10, array(0,0,0)); 
   $mydompdf->set_base_path('assets/libraries/plantillaPDF.css');
+  $mydompdf->stream($nom.".pdf", array("Attachment" => false));
+}
+function descargarPDFSolicitudesRecursos($nom,$html){
+  //aumentamos la memoria  
+  ini_set("memory_limit", "128M");
+  // Cargamos DOMPDF
+  require_once 'assets/libraries/dompdf/dompdf_config.inc.php';
+  $mydompdf = new DOMPDF();
+  ob_clean();
+  $mydompdf->load_html($html);
+  $mydompdf->render();
+  $canvas = $mydompdf->get_canvas();
+  $canvas->page_text(450, 763, "Página:  {PAGE_NUM} de {PAGE_COUNT}", Font_Metrics::get_font("sans-serif"), 9, array(0,0,0)); 
+  $mydompdf->set_base_path('assets/libraries/plantillaPDFSolicitudesRecursos.css');
   $mydompdf->stream($nom.".pdf", array("Attachment" => false));
 }
 function descargarPDF1($nom,$html){
@@ -4445,7 +4481,7 @@ function obtenerCodigoProveedorCuentaAux($codigo){
 
 function obtenerDetalleSolicitudParaComprobante($codigo){
   $dbh = new Conexion();
-  $sql="SELECT codigo,cod_plancuenta,importe as monto,cod_proveedor,detalle as glosa,cod_confretencion from solicitud_recursosdetalle where cod_solicitudrecurso=$codigo order by cod_proveedor";
+  $sql="SELECT cod_unidadorganizacional,cod_area,codigo,cod_plancuenta,importe as monto,cod_proveedor,detalle as glosa,cod_confretencion from solicitud_recursosdetalle where cod_solicitudrecurso=$codigo order by cod_proveedor";
   $stmt = $dbh->prepare($sql);
   $stmt->execute();
   return $stmt;

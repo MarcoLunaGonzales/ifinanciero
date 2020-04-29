@@ -26,7 +26,50 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 ?>
 <div id="comp_row" class="col-md-12">
 	<div class="row">
-		<div class="row col-sm-4">
+    <div class="col-sm-1">
+                                 <div class="form-group">
+                                    <select class="selectpicker form-control form-control-sm" name="unidad_fila<?=$idFila;?>" id="unidad_fila<?=$idFila;?>" data-style="btn btn-primary">
+                                      <?php
+                                   $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM unidades_organizacionales where cod_estado=1 and centro_costos=1 order by 2");
+                                   $stmt->execute();
+                                   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                    $codigoX=$row['codigo'];
+                                    $nombreX=$row['nombre'];
+                                    $abrevX=$row['abreviatura'];
+                                    if($codigoX==$globalUnidad){
+                                       ?><option selected value="<?=$codigoX;?>"><?=$abrevX;?></option><?php
+                                    }else{
+                                       ?><option value="<?=$codigoX;?>"><?=$abrevX;?></option><?php
+                                    }                                     
+                                  }
+                                    ?>
+                                   </select>
+                                   </div>
+                                 </div>
+                                 <div class="col-sm-1">
+                                       <div class="form-group">
+                                       <select class="selectpicker form-control form-control-sm" name="area_fila<?=$idFila;?>" id="area_fila<?=$idFila;?>" data-style="btn btn-primary">
+                                               <!--<option value="" disabled selected>Area</option>-->
+                                     <?php
+                                                             
+                                           $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM areas where cod_estado=1 and centro_costos=1 order by 2");
+                                         $stmt->execute();
+                                         $cont=0;
+                                         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                           $codigoX=$row['codigo'];
+                                           $nombreX=$row['nombre'];
+                                           $abrevX=$row['abreviatura'];
+                                           if($codigoX==$globalArea){
+                                             ?><option selected value="<?=$codigoX;?>"><?=$abrevX;?></option><?php
+                                           }else{
+                                             ?><option value="<?=$codigoX;?>"><?=$abrevX;?></option><?php
+                                           }   
+                                         } 
+                                         ?>
+                                        </select>
+                                      </div>
+                                 </div>
+		<div class="row col-sm-3">
             <div class="form-group col-sm-2">
                <div class="row">
 			           
@@ -43,7 +86,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
               </div>   	
 			   </div>
          <div class="form-group col-sm-10">
-             <label for="partida_cuenta<?=$idFila;?>" class="bmd-label-floating">PARTIDA PRESUPUESTARIA / Cuenta</label>
+             <label for="partida_cuenta<?=$idFila;?>" class="bmd-label-floating">PARTIDA PRES. / Cuenta</label>
              <input class="form-control" type="hidden" name="partida_cuenta_id<?=$idFila?>" id="partida_cuenta_id<?=$idFila?>"/>     
              <input class="form-control" type="text" autofocus name="partida_cuenta<?=$idFila;?>" id="partida_cuenta<?=$idFila;?>" required value=""> 
            </div>
@@ -53,10 +96,10 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     <input type="hidden" id="cod_detalleplantilla<?=$idFila;?>" name="cod_detalleplantilla<?=$idFila;?>" value="">
     <input type="hidden" id="cod_servicioauditor<?=$idFila;?>" name="cod_servicioauditor<?=$idFila;?>" value="">    
        
-        <div class="col-sm-3">
+        <div class="col-sm-2">
 		    <div class="form-group">
           		<label for="detalle_detalle<?=$idFila;?>" class="bmd-label-static">Detalle</label>
-				<textarea rows="1" class="form-control" name="detalle_detalle<?=$idFila;?>" id="detalle_detalle<?=$idFila;?>" value=""></textarea>
+				<textarea rows="1" class="form-control" name="detalle_detalle<?=$idFila;?>" required id="detalle_detalle<?=$idFila;?>" value=""></textarea>
 			</div>
 		</div>
     <div class="col-sm-1">
@@ -73,7 +116,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       	</div>
       	<div class="col-sm-2">
             <div class="form-group">
-                <select class="selectpicker form-control form-control-sm" name="proveedor<?=$idFila?>" id="proveedor<?=$idFila?>" required data-style="<?=$comboColor;?>">
+                <select class="selectpicker form-control form-control-sm" data-live-search="true" data-size="6" name="proveedor<?=$idFila?>" id="proveedor<?=$idFila?>" required data-style="<?=$comboColor;?>">
                     <option disabled selected value="">Proveedor</option>
                   <?php
                   $stmt = $dbh->prepare("SELECT * FROM af_proveedores order by codigo");

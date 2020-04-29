@@ -8,11 +8,10 @@ require_once '../styles.php';
 $dbh = new Conexion();
 
 $codSimulacionServX=$_GET['cod_sim'];
-
-
                     $codigoPlantillaXX=obtenerPlantillaCodigoSimulacionServicio($codSimulacionServX);
                     $detalle=obtenerDetalleSolicitudSimulacionCuentaPlantillaServicio($codSimulacionServX,$codigoPlantillaXX);
-                        
+                    $areaXX=obtenerCodigoAreaPlantillasServicios($codigoPlantillaXX);
+                    $unidadXX=obtenerCodigoUnidadPlantillaServicio($codigoPlantillaXX);    
                         $ibnorca=1;
                         $unidadSol=0;
                         $areaSol=0;
@@ -86,15 +85,18 @@ $codSimulacionServX=$_GET['cod_sim'];
 						}
                         
                          
-						
-$resultado = array_unique($listaDetalles);						
-for ($i=0; $i < count($resultado); $i++) { 
+	if(isset($listaDetalles)){
+           $resultado = array_unique($listaDetalles);						
+           for ($i=0; $i < count($resultado); $i++) { 
                        ?>
                          <script>
                             $('#item_detalle_solicitud').append("<option value='<?=$i?>'><?=$resultado[$i]?></option>");
                             $('.selectpicker').selectpicker("refresh");
                           </script>
 						 <?php  	
-}
-?>
+          }
+     }else{
+     	?><script>Swal.fire("Sin Datos!", "No se encontraron registros", "warning");</script><?php
+     }       
+  ?>					
 	<script>$("#cantidad_filas").val(<?=($idFila-1)?>)</script>					

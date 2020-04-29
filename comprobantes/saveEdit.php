@@ -115,6 +115,7 @@ for ($i=1;$i<=$cantidadFilas;$i++){
      }
         /*ACA INSERTAMOS EL ESTADO DE CUENTAS DE FORMA AUTOMATICA TIPO TRASPASOS Y CUENTA AUXILIAR > 0*/
     $verificaEC=verificarCuentaEstadosCuenta($cuenta);
+    $flagSuccessInsertEC=false;
     if($tipoComprobante==3 && $verificaEC>0){
       $codTipoEC=obtenerTipoEstadosCuenta($cuenta);
       $codProveedorCliente=obtenerCodigoProveedorClienteEC($cuentaAuxiliar);
@@ -151,8 +152,8 @@ for ($i=1;$i<=$cantidadFilas;$i++){
 		      $stmtDetalle2 = $dbh->prepare($sqlDetalle2);
 		      $flagSuccessDetalle2=$stmtDetalle2->execute();
          }
-
          //itemEstadosCuenta
+         if($flagSuccessInsertEC==false){
           $nC=cantidadF($estadosCuentas[$i-1]);
           for($j=0;$j<$nC;$j++){
               $fecha=date("Y-m-d H:i:s");
@@ -165,6 +166,7 @@ for ($i=1;$i<=$cantidadFilas;$i++){
               $sqlDetalle3="INSERT INTO estados_cuenta (cod_comprobantedetalle, cod_plancuenta, monto, cod_proveedor, fecha,cod_comprobantedetalleorigen,cod_cuentaaux) VALUES ('$codComprobanteDetalle', '$codPlanCuenta', '$monto', '$codProveedor', '$fecha','$codComprobanteDetalleOrigen','$codPlanCuentaAux')";
               $stmtDetalle3 = $dbh->prepare($sqlDetalle3);
               $flagSuccessDetalle3=$stmtDetalle3->execute();
+          }
          }
          //FIN DE ESTADOS DE CUENTA
 	}

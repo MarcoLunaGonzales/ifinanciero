@@ -250,16 +250,16 @@
                       }           
                     }
                     if(contcuentaIva!=0){
-                      var cantiFacturas = itemFacturas.length;  
-                      //console.log("numero de Facturas: "+cantiFacturas+" json: "+JSON.stringify(itemFacturas));
+                      var cantiFacturas = itemFacturas.length;                        
                       var contadorFacturas=0;
+                      // console.log("numero de Facturas: "+cantiFacturas+" json: "+JSON.stringify(itemFacturas));
+                      var contadorFacturas=0;//var sumaTotalFactura=0;
                       for (var i = 0; i < cantiFacturas; i++){
                         var factura=itemFacturas[i];                          
                         if(itemFacturas[i]==null || itemFacturas[i]==''){
                           contadorFacturas++;
-                        }else{//existe factura
-                          //console.log("exite factura: "+JSON.stringify(itemFacturas[i]));
-                          var sumaTotalFactura=0;
+                        }else{//existe factura                          
+                          var sumaTotalFactura=0;                          
                           for(var j = 0; j < itemFacturas[i].length; j++){
                             var dato = Object.values(itemFacturas[i][j]);
                             //console.log("dato: "+dato);
@@ -270,16 +270,18 @@
                             sumaTotalFactura=sumaTotalFactura+parseInt(dato[4])+parseInt(dato[7])+parseInt(dato[8]);
                           }                           
                           var monto_debe_total_comprobante = $("#totaldeb").val();  
-                          //console.log("SUMA FACTURAS: "+sumaTotalFactura+" "+monto_debe_total_comprobante);
                           if(sumaTotalFactura!=monto_debe_total_comprobante){
                             mensaje+="<p>El Monto registrado en las facturas difiere del total!</p>";
                             $('#msgError').html(mensaje);
                             $('#modalAlert').modal('show');
                             envio=1; 
-                          }
-                        }
-
+                          }                                                      
+                        }                
                       }
+                      var monto_debe_total_comprobante = $("#totaldeb").val();  
+                          console.log("SUMA FACTURAS: "+sumaTotalFactura+" "+monto_debe_total_comprobante);
+                      
+
                       if(contadorFacturas==cantiFacturas){
                         mensaje+="<p>No puede existir Facturas vacías!</p>";
                         $('#msgError').html(mensaje);
@@ -496,17 +498,28 @@
            Swal.fire("Informativo!", "La Retencion IVA debe tener al menos una factura registrada", "warning"); 
            return false;
         }else{
-          //para poner la retencion iva si tiene al menos una factura..
-        for (var i = 0; i < $("#cantidad_filas").val(); i++) {
+          var cont2=0;
+          for (var i = 0; i < $("#cantidad_filas").val(); i++) {
+           if($('#partida_cuenta_id'+(i+1)).val()==""){
+              cont2++; 
+              break;    
+           }                  
+          }
+          if(cont2!=0){
+           Swal.fire("Informativo!", "Hay filas que no estan relacionadas a una cuenta!", "warning"); 
+           return false;
+          }else{
+           //para poner la retencion iva si tiene al menos una factura..
+           for (var i = 0; i < $("#cantidad_filas").val(); i++) {
              if(itemFacturas[i].length!=0){
               $('#cod_retencion'+(i+1)).val($('#cod_configuracioniva').val()); 
              }                       
-        }
-
-          $('<input />').attr('type', 'hidden')
+           }
+           $('<input />').attr('type', 'hidden')
             .attr('name', 'facturas')
             .attr('value', JSON.stringify(itemFacturas))
-            .appendTo('#formSolDet');
+            .appendTo('#formSolDet');       
+          }       
         }
       }  
 
