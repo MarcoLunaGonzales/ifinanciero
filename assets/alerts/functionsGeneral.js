@@ -8761,10 +8761,8 @@ function descuento_convertir_a_bolivianos(id){
     $("#descuento_bob"+id).val(monto_bob_porcentaje.toFixed(2));
     calcularTotalFilaServicio2();
   }
-  
-
-  
 }
+
 
 function activarInputMontoFilaServicio2(){
 
@@ -8813,11 +8811,19 @@ function calcularTotalFilaServicio2(){
   nro_items = document.getElementById("cantidad_filas").value;
   if(nro_items==0){
     $("#monto_total").val(number_format(resulta,2));
+  }else{
+    var importe_ajax=0;
+    for (var j = 1; j <=nro_items; j++) {    
+      importe_ajax+=parseFloat(document.getElementById("modal_importe_add"+j).value);
+    }
+    // alert(importe_ajax);
   }
   document.getElementById("modal_totalmontoserv").value=number_format(resulta,2);
   //   $("#modal_totalmontoserv").text(resulta);
-  document.getElementById("modal_totalmontos").value=resulta;
+  document.getElementById("modal_totalmontos").value=resulta;//escondido
   document.getElementById("comprobante_auxiliar").value=comprobante_auxiliar;
+
+  //sumartotalAddServiciosFacturacion(id);
 }
 function ajax_Cliente_razonsocial(combo){
   var contenedor;
@@ -8966,23 +8972,65 @@ function AgregarSeviciosFacturacion2_servicios(obj) {
       }   
       ajax.send(null);
 }
+function descuento_convertir_a_porcentaje_add(id){
+  var monto_precio=$("#modal_montoserv"+id).val();// precio de item
+  var descuento_bob=$("#descuento_bob_add"+id).val();//monto de descuento Bob
+  if(monto_precio<0 || monto_precio==0 || monto_precio==null){
+    Swal.fire("Informativo!", "El Precio del Item NO debe ser 0 o número negativo!", "warning");
+  }else{
+    var numero_porcentaje=parseFloat(descuento_bob)*100/parseFloat(monto_precio);
+    //alert(numero_porcentaje);
+    $("#descuento_por_add"+id).val(numero_porcentaje.toFixed(2));
+    //agregamos al total
+    var importe_total=parseFloat(monto_precio)-parseFloat(descuento_bob);    
+    $("#modal_importe_add"+id).val(importe_total);//irá en hidden 
+    $("#modal_importe_dos_add"+id).val(number_format(importe_total,2));//para mostrar con formato
+
+
+
+    sumartotalAddServiciosFacturacion(id);
+  }
+}
+function descuento_convertir_a_bolivianos_add(id){
+  var monto_precio=$("#modal_montoserv"+id).val();// precio de item
+  var descuento_por=$("#descuento_por_add"+id).val();//monto de descuento %
+
+  if(monto_precio<0 || monto_precio==0 || monto_precio==null){
+    Swal.fire("Informativo!", "El Precio del Item NO debe ser 0 o número negativo!", "warning");
+  }else{
+    var monto_bob_porcentaje=parseFloat(descuento_por)*parseFloat(monto_precio)/100;
+    //alert(monto_bob_porcentaje);
+    $("#descuento_bob_add"+id).val(monto_bob_porcentaje.toFixed(2));
+
+     //agregamos al total
+    var importe_total=parseFloat(monto_precio)-parseFloat(monto_bob_porcentaje);    
+    $("#modal_importe_add"+id).val(importe_total);//irá en hidden 
+    $("#modal_importe_dos_add"+id).val(number_format(importe_total,2));//para mostrar con formato
+
+
+     sumartotalAddServiciosFacturacion(id);
+  }  
+}
 function sumartotalAddServiciosFacturacion(id){
   var sumatotal=0;
   var formulariop = document.getElementById("form1");
   // alert(formulariop.elements.length);
   for (var i=0;i<formulariop.elements.length;i++){
-    if (formulariop.elements[i].id.indexOf("modal_montoserv") !== -1 ){    
-      //console.log("debe "+formulariop.elements[i].value);    
+    if (formulariop.elements[i].id.indexOf("modal_importe_add") !== -1 ){    
+      var monto_precio=formulariop.elements[i].value;      
+      console.log("monto "+monto_precio);
       sumatotal += parseFloat((formulariop.elements[i].value) * 1);
-    }
+    }  
   }
   
-  modalmonto_total=parseFloat(document.getElementById("modal_totalmontoserv").value);
+  
+  var modalmonto_total=parseFloat(document.getElementById("modal_totalmontos").value);
+  // alert(modalmonto_total);
   if (modalmonto_total==''){modalmonto_total=0;}
 
-  monto_Total= modalmonto_total+sumatotal;
+  monto_Total= parseFloat(modalmonto_total)+parseFloat(sumatotal);
 
-  $("#monto_total").val(monto_Total);  
+  $("#monto_total").val(number_format(monto_Total,2));  
   // $("#monto_faltante").val(monto_faltante);  
 }
 function borrarItemSeriviciosFacturacion(idF){ 

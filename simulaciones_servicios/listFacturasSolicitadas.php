@@ -9,7 +9,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 
 
   //datos registrado de la simulacion en curso
-  $stmt = $dbh->prepare("SELECT sf.* FROM solicitudes_facturacion sf");
+  $stmt = $dbh->prepare("SELECT sf.* FROM solicitudes_facturacion sf where cod_estado=1 order by fecha_solicitudfactura desc");
   $stmt->execute();
   $stmt->bindColumn('codigo', $codigo_facturacion);
   $stmt->bindColumn('cod_simulacion_servicio', $cod_simulacion_servicio);
@@ -24,8 +24,10 @@ $globalAdmin=$_SESSION["globalAdmin"];
   $stmt->bindColumn('razon_social', $razon_social);
   $stmt->bindColumn('nit', $nit);
   $stmt->bindColumn('observaciones', $observaciones);
+  $stmt->bindColumn('cod_estado', $cod_estado);
+  $stmt->bindColumn('nro_correlativo', $nro_correlativo);
+  $stmt->bindColumn('persona_contacto', $persona_contacto);
   // $stmt->bindColumn('nombre_cliente', $nombre_cliente);
-
   ?>
   <div class="content">
     <div class="container-fluid">
@@ -44,19 +46,21 @@ $globalAdmin=$_SESSION["globalAdmin"];
                         <thead>
                           <tr>
                             <th class="text-center">#</th>                          
-                            <th>Oficina</th>
+                            <th>Of.</th>
                             <th>Area</th>
+                            <th>#Sol.</th>
                             <th>Propuesta</th>
-                            <th>Responsable</th>
+                            <!-- <th>Responsable</th> -->
                             <th>F. Registro</th>
                             <th>F. a Facturar</th>
-                            <th>Nro Fact</th>
-                            <th>Precio (BOB)</th>                            
+                            <th style="color:#cc4545;">#Fact</th>
+                            <!-- <th>Precio (BOB)</th>                            
                             <th>Descu (%)</th>  
-                            <th>Descu (BOB)</th>  
+                            <th>Descu (BOB)</th>   -->
                             <th>Importe (BOB)</th>  
+                            <th>Per.Contacto</th>  
                             <th>Razón Social</th>                            
-                            <th>Nit</th>
+                            
                             <th class="text-right">Actions</th>
                           </tr>
                         </thead>
@@ -153,17 +157,16 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             <td align="center"><?=$index;?></td>
                             <td><?=$nombre_uo;?></td>
                             <td><?=$nombre_area;?></td>
+                            <td><?=$nro_correlativo;?></td>
                             <td><?=$nombre_simulacion?> - <?=$name_area_simulacion?></td>
-                            <td><?=$responsable;?></td>
+                            <!-- <td><?=$responsable;?></td> -->
                             <td><?=$fecha_registro;?></td>
                             <td><?=$fecha_solicitudfactura;?></td>                            
-                            <td><?=$nro_fact_x;?></td> 
-                            <td class="text-right"><?=formatNumberDec($sumaTotalMonto) ;?></td>
-                            <td class="text-right"><?=formatNumberDec($sumaTotalDescuento_por) ;?></td>
-                            <td class="text-right"><?=formatNumberDec($sumaTotalDescuento_bob) ;?></td>
+                            <td style="color:#cc4545;"><?=$nro_fact_x;?></td>                             
                             <td class="text-right"><?=formatNumberDec($sumaTotalImporte) ;?></td>
+                            <td class="text-left"><?=$persona_contacto;?></td>
                             <td><?=$razon_social;?></td>
-                            <td><?=$nit;?></td>
+                            <!-- <td><?=$nit;?></td> -->
 
                             <td class="td-actions text-right">
                               <?php
@@ -181,10 +184,14 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                     <a href='#' rel="tooltip" class="btn btn-warning" onclick="filaTablaAGeneral($('#tablasA_registradas'),<?=$index?>,'<?=$stringCabecera?>')">
                                       <i class="material-icons" title="Ver Detalle">settings_applications</i>
                                     </a>
+
+                                    <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation-anular-solicitud','<?=$urlAnular_SoliciutdFacturacion;?>&codigo=<?=$codigo_facturacion;?>')">
+                                      <i class="material-icons" title="Anular Solicitud">clear</i>
+                                    </button>
                                   
                                   <?php }                           
                                   ?>
-                                  <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir">print</i></a>
+                                  <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir Solicitud">print</i></a>
                                 <?php  
                                 }
                               ?>
@@ -229,8 +236,8 @@ $globalAdmin=$_SESSION["globalAdmin"];
                     <th>Precio(BOB)</th>  
                       <th>Desc(%)</th> 
                       <th>Desc(BOB)</th> 
-                      <th>Importe(BOB)</th>  
-                    <th>Descripción Alterna</th>                    
+                      <th width="10%">Importe(BOB)</th> 
+                      <th width="45%">Glosa</th>                   
                     </tr>
                   </thead>
                   <tbody id="tablasA_registradas">

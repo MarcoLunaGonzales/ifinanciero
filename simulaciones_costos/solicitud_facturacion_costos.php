@@ -52,7 +52,7 @@ m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo order by nombreAlumno");//poner 
   $stmtIBNO->bindColumn('IdCurso', $IdCurso);
   $stmtIBNO->bindColumn('CiAlumno', $CiAlumno);
   $stmtIBNO->bindColumn('nombreAlumno', $nombreAlumno);
-  $stmtIBNO->bindColumn('Abrev', $Abrev);
+  $stmtIBNO->bindColumn('Abrev', $descuento);
   $stmtIBNO->bindColumn('Auxiliar', $Auxiliar);
   $stmtIBNO->bindColumn('Costo', $Costo);
   $stmtIBNO->bindColumn('CantidadModulos', $CantidadModulos);
@@ -81,10 +81,11 @@ m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo order by nombreAlumno");//poner 
                             <th class="text-center">#</th>                          
                             <th>CI Alumno</th>
                             <th>Nombre</th>
-                            <th>Precio (BOB)</th>                            
-                            <th>Desc(%)</th>  
-                            <th>Desc(BOB)</th>  
-                            <th>Importe (BOB)</th>   
+                            <th>Precio curso (BOB)</th>                            
+                            <th>Desc curso(%)</th>                              
+                            <th>Importe curso(BOB)</th>   
+                            <th>Importe modulo(BOB)</th>   
+                            <th>Importe Solicitud(BOB)</th>   
                             <!-- <th>Canti. Mod</th> -->
                             <th>Nro Módulo</th>
                             <!-- <th>Nombre Mod.</th> -->
@@ -97,7 +98,9 @@ m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo order by nombreAlumno");//poner 
                           $descuento_por = 0;
                           $descuento_bob = 0;
                           while ($row = $stmtIBNO->fetch(PDO::FETCH_BOUND)) {  
-                            $monto_pagar=($Costo - ($Costo*$Abrev/100) )/$CantidadModulos; //monto a pagar del estudiante    
+                            $monto_pagar=($Costo - ($Costo*$descuento/100) )/$CantidadModulos; //monto a pagar del estudiante 
+                            $importe_curso=   $Costo*$descuento/100;//importe curso con desuento
+                            $importe_curso= $Costo-$importe_curso;//importe curso con desuento
                             $nombre_area=trim(abrevArea($cod_area),'-');
                             $nombre_uo=trim(abrevUnidad($cod_uo),' - ');                      
                             //buscamos a los estudiantes que ya fueron solicitados su facturacion
@@ -124,7 +127,7 @@ m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo order by nombreAlumno");//poner 
                             $stmt2 = $dbh->prepare($sqlA);                                   
                             $stmt2->execute(); 
                             $nc=0;
-                            $sumaTotalMonto=$Costo;
+                            $sumaTotalMonto=0;
                             $sumaTotalDescuento_por=0;
                             $sumaTotalDescuento_bob=0;
                             while ($row2 = $stmt2->fetch(PDO::FETCH_ASSOC)) {
@@ -160,11 +163,11 @@ m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo order by nombreAlumno");//poner 
                             <td align="center"><?=$index;?></td>
                             <td><?=$CiAlumno;?></td>
                             <td><?=$nombreAlumno;?></td>
-                            <td class="text-right"><?=formatNumberDec($sumaTotalMonto) ;?></td>
-                            <td class="text-right"><?=formatNumberDec($sumaTotalDescuento_por) ;?></td>
-                            <td class="text-right"><?=formatNumberDec($sumaTotalDescuento_bob) ;?></td>
-                            <td class="text-right"><?=formatNumberDec($sumaTotalImporte) ;?></td>
-                            <!-- <td><?=$CantidadModulos;?></td> -->
+                            <td class="text-right"><?=formatNumberDec($Costo) ;?></td>
+                            <td class="text-right"><?=$descuento ;?></td>                          
+                            <td class="text-right"><?=formatNumberDec($importe_curso) ;?></td>                          
+                            <td class="text-right"><?=formatNumberDec($monto_pagar) ;?></td>                            
+                            <td class="text-right"><?=formatNumberDec($sumaTotalImporte) ;?></td>     
                             <td><?=$NroModulo;?></td>
                             <!-- <td><?=$nombre_mod;?></td> -->
                             <td class="td-actions text-right">
@@ -174,13 +177,15 @@ m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo order by nombreAlumno");//poner 
                                     if($codigo_fact_x==0){ //no se genero factura ?>
                                       <a title="Editar Solicitud de Facturación" href='<?=$urlregistro_solicitud_facturacion?>&codigo=<?=$CiAlumno?>&cod_simulacion=<?=$codigo_simulacion;?>&cod_facturacion=<?=$codigo_facturacion?>' class="btn btn-success">
                                           <i class="material-icons"><?=$iconEdit;?></i>
-                                        </a>   
+                                        </a>  
+
                                   <?php }else{//ya se genero factura ?>
                                     <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=2' target="_blank"><i class="material-icons" title="Imprimir Factura">print</i></a>
                                   <?php }?>
                                   <a href='#' rel="tooltip" class="btn btn-warning" onclick="filaTablaAGeneral($('#tablasA_registradas'),<?=$index?>,'<?=$stringCabecera?>')">
                                     <i class="material-icons" title="Ver Detalle">settings_applications</i>
                                   </a>
+                                  <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir Solicitud">print</i></a> 
                                   <?php }else{//no se hizo solicitud de factura ?>
                                     <a href='<?=$urlregistro_solicitud_facturacion?>&codigo=<?=$CiAlumno?>&cod_simulacion=<?=$codigo_simulacion;?>&cod_facturacion=0' rel="tooltip" class="btn" style="background-color: #0489B1;">
                                           <i class="material-icons" title="Solicitar Facturación">receipt</i>
@@ -243,7 +248,7 @@ m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo order by nombreAlumno");//poner 
                       <th>Desc(%)</th> 
                       <th>Desc(BOB)</th> 
                       <th width="10%">Importe(BOB)</th> 
-                      <th width="45%">Descripción Alterna</th>                    
+                      <th width="45%">Glosa</th>                    
                       </tr>
                     </thead>
                     <tbody id="tablasA_registradas">

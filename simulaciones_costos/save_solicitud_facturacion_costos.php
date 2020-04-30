@@ -22,6 +22,7 @@ try {//recibiendo datos
     $razon_social = $_POST["razon_social"];    
     $nit = $_POST["nit"];
     $observaciones = $_POST["observaciones"];    
+    $persona_contacto = $_POST["persona_contacto"];
 
     $modal_totalmontos = $_POST["modal_totalmontos"];
     $modal_numeroservicio = $_POST["modal_numeroservicio"];
@@ -33,15 +34,16 @@ try {//recibiendo datos
     // $DescricpionInsert=$observaciones;
 
     if ($cod_facturacion == 0){//insertamos       
-        $stmt = $dbh->prepare("INSERT INTO solicitudes_facturacion(cod_simulacion_servicio,cod_unidadorganizacional,cod_area,fecha_registro,fecha_solicitudfactura,cod_tipoobjeto,cod_tipopago,cod_cliente,cod_personal,razon_social,nit,observaciones) 
-        values ('$cod_simulacion','$cod_unidadorganizacional','$cod_area','$fecha_registro','$fecha_solicitudfactura','$cod_tipoobjeto','$cod_tipopago','$ci_estudiante','$cod_personal','$razon_social','$nit','$observaciones')");
+        $nro_correlativo=obtenerCorrelativoSolicitud();//correlativo
+        $stmt = $dbh->prepare("INSERT INTO solicitudes_facturacion(cod_simulacion_servicio,cod_unidadorganizacional,cod_area,fecha_registro,fecha_solicitudfactura,cod_tipoobjeto,cod_tipopago,cod_cliente,cod_personal,razon_social,nit,observaciones,nro_correlativo,cod_estado,persona_contacto) 
+        values ('$cod_simulacion','$cod_unidadorganizacional','$cod_area','$fecha_registro','$fecha_solicitudfactura','$cod_tipoobjeto','$cod_tipopago','$cod_cliente','$cod_personal','$razon_social','$nit','$observaciones','$nro_correlativo',1,'$persona_contacto')");
         $flagSuccess=$stmt->execute();        
         if($flagSuccess){
             //antes de insertar sacamos el codigo de la solicitud para el detalle
             $stmt = $dbh->prepare("SELECT codigo from solicitudes_facturacion where cod_simulacion_servicio=$cod_simulacion ORDER BY codigo desc LIMIT 1");
             $stmt->execute();
             while ($rowPre = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                  $codigo_facturacion=$rowPre['codigo'];
+                  $cod_facturacion=$rowPre['codigo'];
             }
             for ($i=1;$i<=$modal_numeroservicio-1;$i++){
                 $servicioInsert="";
@@ -63,8 +65,8 @@ try {//recibiendo datos
                     // echo " cantida:".$CantidadInsert."<br>";
                     // echo " importe:".$importeInsert."<br>";
                     // echo " Descricpion:".$DescricpionInsert."<br>";
-                    $stmt = $dbh->prepare("INSERT INTO solicitudes_facturaciondetalle(cod_solicitudfacturacion,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_por,descuento_bob) 
-                    values ('$cod_facturacion','$servicioInsert','$CantidadInsert','$importeInsert','$DescricpionInsert','$descuento_por_Insert','$descuento_bob_Insert')");
+                    $stmt = $dbh->prepare("INSERT INTO solicitudes_facturaciondetalle(cod_solicitudfacturacion,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_por,descuento_bob,tipo_item) 
+                    values ('$cod_facturacion','$servicioInsert','$CantidadInsert','$importeInsert','$DescricpionInsert','$descuento_por_Insert','$descuento_bob_Insert',1)");
                     $flagSuccess=$stmt->execute();
                 }
             }            
@@ -72,7 +74,7 @@ try {//recibiendo datos
         showAlertSuccessError($flagSuccess,$urlSolicitudfactura."&cod=".$cod_simulacion);
         //$stmt->debugDumpParams();
     } else {//update
-        $stmt = $dbh->prepare("UPDATE solicitudes_facturacion set fecha_registro='$fecha_registro',fecha_solicitudfactura='$fecha_solicitudfactura',cod_tipopago='$cod_tipopago',razon_social='$razon_social',nit='$nit',observaciones='$observaciones'
+        $stmt = $dbh->prepare("UPDATE solicitudes_facturacion set fecha_registro='$fecha_registro',fecha_solicitudfactura='$fecha_solicitudfactura',cod_tipopago='$cod_tipopago',razon_social='$razon_social',nit='$nit',observaciones='$observaciones',persona_contacto='$persona_contacto'
          where codigo = $cod_facturacion");
         $flagSuccess=$stmt->execute();  
         if($flagSuccess){
@@ -97,8 +99,8 @@ try {//recibiendo datos
                     // echo " importe:".$importeInsert."<br>";
                     // echo " Descricpion:".$DescricpionInsert."<br>";
                 if($servicioInsert!=0 || $servicioInsert!=""){                    
-                    $stmt = $dbh->prepare("INSERT INTO solicitudes_facturaciondetalle(cod_solicitudfacturacion,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_por,descuento_bob) 
-                    values ('$cod_facturacion','$servicioInsert','$CantidadInsert','$importeInsert','$DescricpionInsert','$descuento_por_Insert','$descuento_bob_Insert')");
+                    $stmt = $dbh->prepare("INSERT INTO solicitudes_facturaciondetalle(cod_solicitudfacturacion,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_por,descuento_bob,tipo_item) 
+                    values ('$cod_facturacion','$servicioInsert','$CantidadInsert','$importeInsert','$DescricpionInsert','$descuento_por_Insert','$descuento_bob_Insert',1)");
                     $flagSuccess=$stmt->execute();
                 }
             }

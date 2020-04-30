@@ -2243,6 +2243,19 @@ function obtenerCorrelativoComprobante($cod_tipocomprobante, $unidad_organizacio
 }
 
 
+function obtenerCorrelativoSolicitud(){
+  $dbh = new Conexion(); 
+  $sql="SELECT IFNULL(max(c.nro_correlativo)+1,1)as correlativo from solicitudes_facturacion c where c.cod_estado=1";
+  //echo $sql;
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  $nroCorrelativo=0;
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $nroCorrelativo=$row['correlativo'];
+  }
+  return ($nroCorrelativo);
+}
+
 function obtenerFacturasSoli($codigo){
    $dbh = new Conexion();
    $sql="";

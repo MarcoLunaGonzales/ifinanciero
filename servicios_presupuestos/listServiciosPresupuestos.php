@@ -36,14 +36,15 @@ $globalAdmin=$_SESSION["globalAdmin"];
                         <thead>
                           <tr>
                             <th class="text-center">#</th>                          
-                            <!-- <th>IdServicio</th> -->
-                            <th>Area</th>
+                            <!-- <th>Cod. Serv.</th> -->
                             <th>Of</th>
+                            <th>Area</th>
+                            
                             <th>Tipo</th>
                             <!-- <th>Codigo</th> -->
                             <th>Cliente</th>
-                            <th>Fecha R.</th>
-                            <th>#Fact</th>
+                            <th>F.Registro</th>
+                            <th style="color:#cc4545;">#Fact</th>
                             <!--<th>Precio (BOB)</th>                            
                             <th>Desc(%)</th>  
                             <th>Desc(BOB)</th>  
@@ -64,7 +65,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 
                             //buscamos a los propuestas que ya fueron solicitadas su facturacion
                             $codigo_facturacion=0;
-                            $sqlFac="SELECT sf.codigo,sf.fecha_registro,sf.fecha_solicitudfactura,sf.razon_social,sf.nit from solicitudes_facturacion sf where sf.cod_simulacion_servicio=$IdServicio and sf.cod_cliente=$IdCliente";
+                            $sqlFac="SELECT sf.codigo,sf.fecha_registro,sf.fecha_solicitudfactura,sf.razon_social,sf.nit from solicitudes_facturacion sf where sf.cod_estado=1 and sf.cod_simulacion_servicio=$IdServicio and sf.cod_cliente=$IdCliente";
                             $stmtSimuFact = $dbh->prepare($sqlFac);
                             $stmtSimuFact->execute();
                             $resultSimuFact = $stmtSimuFact->fetch();
@@ -123,14 +124,15 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             
                           <tr>
                             <td align="center"><?=$index;?></td>
-                            <!-- <td><?=$IdServicio?></td> -->
-                            <td><?=$nombre_area?></td>
+                             <!-- <td><?=$IdServicio?></td> -->
+                            
                             <td><?=$nombre_uo?></td>
+                            <td><?=$nombre_area?></td>
                             <td><?=$nombreTipo?></td>
                             <!-- <td><?=$Codigo?></td>     -->                        
                             <td><?=$nombreCliente?></td>                            
                             <td><?=$fecharegistro?></td>                            
-                            <td><?=$nro_fact_x;?></td>
+                            <td style="color:#cc4545;"><b><?=$nro_fact_x;?></b></td>
                             <!-- <td class="text-right"><?=formatNumberDec($sumaTotalMonto) ;?></td>
                             <td class="text-right"><?=formatNumberDec($sumaTotalDescuento_por) ;?></td>
                             <td class="text-right"><?=formatNumberDec($sumaTotalDescuento_bob) ;?></td>
@@ -149,7 +151,8 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                   <?php }?>
                                   <a href='#' rel="tooltip" class="btn btn-warning" onclick="filaTablaAGeneral($('#tablasA_registradas'),<?=$index?>,'<?=$stringCabecera?>')">
                                     <i class="material-icons" title="Ver Detalle">settings_applications</i>
-                                  </a>         
+                                  </a>
+                                  <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir">print</i></a>         
                                 <?php }else{//no se hizo solicitud de factura ?>
                                     <a href='<?=$urlRegisterSolicitudfactura?>&cod_simulacion=0&IdServicio=<?=$IdServicio?>&cod_facturacion=0' rel="tooltip" class="btn" style="background-color: #0489B1;">
                                     <i class="material-icons" title="Solicitar Facturación">receipt</i>

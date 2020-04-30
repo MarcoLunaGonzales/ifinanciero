@@ -23,6 +23,7 @@ try {
     $razon_social = $_POST["razon_social"];
     $nit = $_POST["nit"];
     $observaciones = $_POST["observaciones"];
+    $persona_contacto = $_POST["persona_contacto"];
 
     $modal_totalmontos = $_POST["modal_totalmontos"];
     $modal_numeroservicio = $_POST["modal_numeroservicio"];
@@ -35,8 +36,9 @@ try {
     
 
     if ($cod_facturacion == 0){//insertamos        
-        $stmt = $dbh->prepare("INSERT INTO solicitudes_facturacion(cod_simulacion_servicio,cod_unidadorganizacional,cod_area,fecha_registro,fecha_solicitudfactura,cod_tipoobjeto,cod_tipopago,cod_cliente,cod_personal,razon_social,nit,observaciones) 
-        values ('$cod_simulacion','$cod_unidadorganizacional','$cod_area','$fecha_registro','$fecha_solicitudfactura','$cod_tipoobjeto','$cod_tipopago','$cod_cliente','$cod_personal','$razon_social','$nit','$observaciones')");
+       $nro_correlativo=obtenerCorrelativoSolicitud();//correlativo
+        $stmt = $dbh->prepare("INSERT INTO solicitudes_facturacion(cod_simulacion_servicio,cod_unidadorganizacional,cod_area,fecha_registro,fecha_solicitudfactura,cod_tipoobjeto,cod_tipopago,cod_cliente,cod_personal,razon_social,nit,observaciones,nro_correlativo,cod_estado,persona_contacto) 
+        values ('$cod_simulacion','$cod_unidadorganizacional','$cod_area','$fecha_registro','$fecha_solicitudfactura','$cod_tipoobjeto','$cod_tipopago','$cod_cliente','$cod_personal','$razon_social','$nit','$observaciones','$nro_correlativo',1,'$persona_contacto')");
         $flagSuccess=$stmt->execute();
         $flagSuccess=true;
         if($flagSuccess){
@@ -69,8 +71,8 @@ try {
                     // echo " descuento_por_:".$descuento_por_Insert."<br>";
                     // echo " descuento_bob_:".$descuento_bob_Insert."<br>";
 
-                    $stmt = $dbh->prepare("INSERT INTO solicitudes_facturaciondetalle(cod_solicitudfacturacion,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_por,descuento_bob) 
-                    values ('$cod_facturacion','$servicioInsert','$CantidadInsert','$importeInsert','$DescricpionInsert','$descuento_por_Insert','$descuento_bob_Insert')");
+                    $stmt = $dbh->prepare("INSERT INTO solicitudes_facturaciondetalle(cod_solicitudfacturacion,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_por,descuento_bob,tipo_item) 
+                    values ('$cod_facturacion','$servicioInsert','$CantidadInsert','$importeInsert','$DescricpionInsert','$descuento_por_Insert','$descuento_bob_Insert',1)");
                     $flagSuccess=$stmt->execute();
                 }
             }
@@ -79,10 +81,14 @@ try {
             for ($i=1;$i<=$cantidad_filas;$i++){                
                 $servicioInsert_ajax=$_POST["modal_editservicio".$i];
                 $CantidadInsert_ajax=$_POST["cantidad_servicios".$i];
-                $importeInsert_ajax=$_POST["modal_montoserv".$i];
-                $DescricpionInsert_ajax=$_POST["descripcion".$i];                
-                $stmt = $dbh->prepare("INSERT INTO solicitudes_facturaciondetalle(cod_solicitudfacturacion,cod_claservicio,cantidad,precio,descripcion_alterna) 
-                values ('$cod_facturacion','$servicioInsert_ajax','$CantidadInsert_ajax','$importeInsert_ajax','$DescricpionInsert_ajax')");
+                //$importeInsert_ajax=$_POST["modal_montoserv".$i];
+                $DescricpionInsert_ajax=$_POST["descripcion".$i];  
+                $importeInsert_ajax=$_POST["modal_importe_add".$i];                
+                $descuento_por_Insert_ajax=$_POST["descuento_por_add".$i];
+                $descuento_bob_Insert_ajax=$_POST["descuento_bob_add".$i]; 
+                $sql="INSERT INTO solicitudes_facturaciondetalle(cod_solicitudfacturacion,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_por,descuento_bob,tipo_item) 
+                values ('$cod_facturacion','$servicioInsert_ajax','$CantidadInsert_ajax','$importeInsert_ajax','$DescricpionInsert_ajax','$descuento_por_Insert_ajax','$descuento_bob_Insert_ajax'2)";
+                $stmt = $dbh->prepare($sql);                
                 $flagSuccess=$stmt->execute();                
             }           
         }        
@@ -93,7 +99,7 @@ try {
         //$stmt->debugDumpParams();
     } else {//update
         //actualizamos los campos estaticos
-        $stmt = $dbh->prepare("UPDATE solicitudes_facturacion set cod_unidadorganizacional='$cod_unidadorganizacional',cod_area='$cod_area',fecha_registro='$fecha_registro',fecha_solicitudfactura='$fecha_solicitudfactura',cod_tipoobjeto='$cod_tipoobjeto',cod_tipopago='$cod_tipopago',cod_cliente='$cod_cliente',cod_personal='$cod_personal',razon_social='$razon_social',nit='$nit',observaciones='$observaciones'
+        $stmt = $dbh->prepare("UPDATE solicitudes_facturacion set cod_unidadorganizacional='$cod_unidadorganizacional',cod_area='$cod_area',fecha_registro='$fecha_registro',fecha_solicitudfactura='$fecha_solicitudfactura',cod_tipoobjeto='$cod_tipoobjeto',cod_tipopago='$cod_tipopago',cod_cliente='$cod_cliente',cod_personal='$cod_personal',razon_social='$razon_social',nit='$nit',observaciones='$observaciones',persona_contacto='$persona_contacto'
          where codigo = $cod_facturacion");      
         $flagSuccess=$stmt->execute();
         if($flagSuccess){
@@ -114,22 +120,26 @@ try {
                     $descuento_bob_Insert=$_POST["descuento_bob".$i];
                 }
                 if($servicioInsert!=0 || $servicioInsert!=""){
-                    $stmt = $dbh->prepare("INSERT INTO solicitudes_facturaciondetalle(cod_solicitudfacturacion,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_por,descuento_bob) 
-                    values ('$cod_facturacion','$servicioInsert','$CantidadInsert','$importeInsert','$DescricpionInsert','$descuento_por_Insert','$descuento_bob_Insert')");
+                    $stmt = $dbh->prepare("INSERT INTO solicitudes_facturaciondetalle(cod_solicitudfacturacion,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_por,descuento_bob,tipo_item) 
+                    values ('$cod_facturacion','$servicioInsert','$CantidadInsert','$importeInsert','$DescricpionInsert','$descuento_por_Insert','$descuento_bob_Insert',1)");
                     $flagSuccess=$stmt->execute();
                 }
             }
-            //los agregados con  ajax
+             //los agregados con  ajax
             $cantidad_filas = $_POST["cantidad_filas"];
             for ($i=1;$i<=$cantidad_filas;$i++){                
                 $servicioInsert_ajax=$_POST["modal_editservicio".$i];
                 $CantidadInsert_ajax=$_POST["cantidad_servicios".$i];
-                $importeInsert_ajax=$_POST["modal_montoserv".$i];
-                $DescricpionInsert_ajax=$_POST["descripcion".$i];                
-                $stmt = $dbh->prepare("INSERT INTO solicitudes_facturaciondetalle(cod_solicitudfacturacion,cod_claservicio,cantidad,precio,descripcion_alterna) 
-                values ('$cod_facturacion','$servicioInsert_ajax','$CantidadInsert_ajax','$importeInsert_ajax','$DescricpionInsert_ajax')");
+                //$importeInsert_ajax=$_POST["modal_montoserv".$i];
+                $DescricpionInsert_ajax=$_POST["descripcion".$i];  
+                $importeInsert_ajax=$_POST["modal_importe_add".$i];                
+                $descuento_por_Insert_ajax=$_POST["descuento_por_add".$i];
+                $descuento_bob_Insert_ajax=$_POST["descuento_bob_add".$i]; 
+                $sql="INSERT INTO solicitudes_facturaciondetalle(cod_solicitudfacturacion,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_por,descuento_bob,tipo_item) 
+                values ('$cod_facturacion','$servicioInsert_ajax','$CantidadInsert_ajax','$importeInsert_ajax','$DescricpionInsert_ajax','$descuento_por_Insert_ajax','$descuento_bob_Insert_ajax',2)";
+                $stmt = $dbh->prepare($sql);                
                 $flagSuccess=$stmt->execute();                
-            }
+            }           
            
         }        
         showAlertSuccessError($flagSuccess,$url_list_Solicitudfactura);       

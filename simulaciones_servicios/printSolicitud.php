@@ -29,6 +29,7 @@ try{
   $razon_social = $resultInfo['razon_social'];  
   $nit = $resultInfo['nit'];  
   $observaciones = $resultInfo['observaciones'];  
+  $nro_correlativo = $resultInfo['nro_correlativo'];  
   
 $nombre_unidad=nameUnidad($cod_unidadorganizacional);
 $abrev_area=trim(abrevArea($cod_area),'-');
@@ -75,7 +76,7 @@ $html.=  '<header class="header">'.
               <td width="30%">'.$nombre_unidad.'</td>
               <td align="left" width="30%">'.$fecha_solicitudfactura.'</td>
               <td width="5%" class="td-color-celeste"><b>N°: </b></td>
-              <td width="15%">'.$codigo_facturacion.'</td>
+              <td width="15%">'.$nro_correlativo.'</td>
             </tr>                    
           </table>'.
           '<br>'.
@@ -119,7 +120,7 @@ $html.=  '<header class="header">'.
               </tr>                    
             </thead>
             <tbody>';
-            $sqlA="SELECT sf.*,t.descripcion as nombre_serv from solicitudes_facturaciondetalle sf,cla_servicios t 
+            $sqlA="SELECT sf.*,t.descripcion as nombre_serv ,t.Codigo from solicitudes_facturaciondetalle sf,cla_servicios t 
                 where sf.cod_claservicio=t.idclaservicio and sf.cod_solicitudfacturacion=$codigo_facturacion";
             $stmt2 = $dbh->prepare($sqlA);                                   
             $stmt2->execute();
@@ -134,7 +135,7 @@ $html.=  '<header class="header">'.
               $html.='<tr>
                 <td  class="text-center"><b>'.$index.'</b></td>
                 <td  class="text-center">'.$abrev_area.'</td>
-                <td  class="text-left">codigo</td>
+                <td  class="text-left">'.$row2['Codigo'].'</td>
                 <td  class="text-left">'.$row2["descripcion_alterna"].'</td>
                 <td  class="text-right">'.formatNumberDec($row2["cantidad"]).'</td>
                 <td  class="text-right">'.formatNumberDec($precio_unitario).'</td>
@@ -166,7 +167,7 @@ $html.=  '<header class="header">'.
             </table><br>';
             $html.='<table class="table">
               <tr class="td-color-celeste"><td class="text-center"><b>Observaciones</b></td></tr>
-              <tr><td>&nbsp;</td></tr>
+              <tr><td>&nbsp;'.$observaciones.'</td></tr>
             </table><br><br><br>';
           }elseif($cod_tipopago==47){//cheque
             $html.='<table class="table" >
@@ -175,7 +176,7 @@ $html.=  '<header class="header">'.
             </table><br>';
             $html.='<table class="table">
               <tr class="td-color-celeste"><td class="text-center"><b>Observaciones</b></td></tr>
-              <tr><td>&nbsp;</td></tr>
+              <tr><td>&nbsp;'.$observaciones.'</td></tr>
             </table><br><br><br>';
           }elseif($cod_tipopago==217){//credito
             $html.='<table class="table" >
@@ -249,7 +250,17 @@ $html.=  '<header class="header">'.
             
             $html.='<table class="table">
               <tr style="background-color:#d1dbe3"><td class="text-center"><b>Observaciones</b></td></tr>
-              <tr><td><p>&nbsp;</p></td></tr>
+              <tr><td><p>&nbsp;'.$observaciones.'</p></td></tr>
+            </table><br><br><br>';
+
+          }else{
+            $html.='<table class="table" >
+              <tr class="td-color-celeste"><td class="text-center"><b>Forma de Pago</b></td></tr>
+              <tr><td class="text-left"></td></tr>
+            </table><br>';
+            $html.='<table class="table">
+              <tr class="td-color-celeste"><td class="text-center"><b>Observaciones</b></td></tr>
+              <tr><td>&nbsp;'.$observaciones.'</td></tr>
             </table><br><br><br>';
 
           }
@@ -272,10 +283,10 @@ $html.=  '<header class="header">'.
 
           <table class="table">
             <tr>
-              <td>IBNORCA<td>
-              <td>CÓDIGO<td>
-              <td>V:<td>
-              <td>Página 1 de 1<td>
+              <td class="s4 text-left" width="25%">IBNORCA</td>
+              <td class="s4 text-left" width="25%">CÓDIGO</td>
+              <td class="s4 text-left" width="25%">V:</td>
+              <td class="s4 text-left" width="25%">Página 1 de 1</td>
             </tr>
           </table>
 
