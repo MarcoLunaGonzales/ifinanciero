@@ -795,9 +795,22 @@ if($menuModulo==0){
                   </a>
                 </li>
                 <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listPagoProveedores">
+                    <span class="sidebar-mini"> PP </span>
+                    <span class="sidebar-normal"> Pagos</span>
+                  </a>
+                </li>
+
+                <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listFacturasServicios">
                     <span class="sidebar-mini"> SF </span>
                     <span class="sidebar-normal"> Solicitudes de Facturación </span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listFacturasServiciosAdmin">
+                    <span class="sidebar-mini"> GSF </span>
+                    <span class="sidebar-normal"> Gesti&oacute;n Solicitudes de Facturación </span>
                   </a>
                 </li>
                 <li class="nav-item ">
@@ -812,12 +825,7 @@ if($menuModulo==0){
                     <span class="sidebar-normal"> Solicitudes de Facturación Capacitación</span>
                   </a>
                 </li> -->
-                <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=listPagoProveedores">
-                    <span class="sidebar-mini"> PP </span>
-                    <span class="sidebar-normal"> Pagos</span>
-                  </a>
-                </li>                          
+                                          
 
               </ul>
             </div>

@@ -82,22 +82,22 @@ $stmt->bindColumn('idServicio', $idServicioX);
                           $solicitante=namePersonal($codPersonal);
                           switch ($codEstado) {
                             case 1:
-                              $nEst=40;$barEstado="progress-bar-default";$btnEstado="btn-default";
+                              $btnEstado="btn-default";
                             break;
                             case 2:
-                              $nEst=10;$barEstado="progress-bar-danger";$btnEstado="btn-danger";
+                              $btnEstado="btn-danger";
                             break;
                             case 3:
-                              $nEst=100;$barEstado="progress-bar-success";$btnEstado="btn-success";
+                              $btnEstado="btn-success";
                             break;
                             case 4:
-                              $nEst=60;$barEstado="progress-bar-warning";$btnEstado="btn-warning";
+                              $btnEstado="btn-warning";
                             break;
                             case 5:
-                              $nEst=100;$barEstado="progress-bar-warning";$btnEstado="btn-warning";
+                              $btnEstado="btn-warning";
                             break;
                             case 6:
-                              $nEst=50;$barEstado="progress-bar-default";$btnEstado="btn-default";
+                              $btnEstado="btn-default";
                             break;
                           }
                           if($codSimulacion!=0){
