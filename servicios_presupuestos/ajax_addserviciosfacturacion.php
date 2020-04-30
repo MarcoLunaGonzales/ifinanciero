@@ -19,7 +19,7 @@ $IdTipo=$_GET['IdTipo'];
 <div id="comp_row" class="col-md-12">
 	<div class="row">
 
-    <div class="col-sm-3">
+    <div class="col-sm-4">
       <div class="form-group">               
           <select class="selectpicker form-control form-control-sm" data-live-search="true" name="modal_editservicio<?=$idFila;?>" id="modal_editservicio<?=$idFila;?>" data-style="fondo-boton" required="true">
               <option disabled selected="selected" value="">--SERVICIOS--</option>
@@ -41,20 +41,40 @@ $IdTipo=$_GET['IdTipo'];
 
 		<div class="col-sm-1">
       <div class="form-group">
-        <label for="haber<?=$idFila;?>" class="bmd-label-floating">Cantidad</label>			
+        <label for="haber<?=$idFila;?>" class="bmd-label-floating">Cant</label>			
         <input type="number" min="1" id="cantidad_servicios<?=$idFila;?>" name="cantidad_servicios<?=$idFila;?>" class="form-control text-primary text-right" value="1" required="true">
 			</div>
     </div>
     <div class="col-sm-1">
         <div class="form-group">
         	<label for="haber<?=$idFila;?>" class="bmd-label-floating">Precio(BOB)</label>
-      		<input type="number" id="modal_montoserv<?=$idFila;?>" name="modal_montoserv<?=$idFila;?>" class="form-control text-primary text-right"   step="0.01" onChange="sumartotalAddServiciosFacturacion(this.id,event);" OnKeyUp="sumartotalAddServiciosFacturacion(this.id,event);" required="true">
+      		<input type="number" id="modal_montoserv<?=$idFila;?>" name="modal_montoserv<?=$idFila;?>" class="form-control text-primary text-right"   step="0.01" onkeyup="descuento_convertir_a_bolivianos_add(<?=$idFila?>)"  value="0" required="true">
 			</div>
     </div>
-    <div class="col-sm-6">
+    <div class="col-sm-1">
+        <div class="form-group">          
+          <label for="haber<?=$idFila;?>" class="bmd-label-floating">Desc(%)</label>
+          <input type="text" class="form-control" name="descuento_por_add<?=$idFila?>" id="descuento_por_add<?=$idFila?>" value="0" onkeyup="descuento_convertir_a_bolivianos_add(<?=$idFila?>)">
+      </div>
+    </div>
+    <div class="col-sm-1">
+        <div class="form-group">
+          <label for="haber<?=$idFila;?>" class="bmd-label-floating">Desc(BOB)</label>
+          <input type="text" class="form-control" name="descuento_bob_add<?=$idFila?>" id="descuento_bob_add<?=$idFila?>" value="0" onkeyup="descuento_convertir_a_porcentaje_add(<?=$idFila?>)">
+      </div>
+    </div>
+    <div class="col-sm-1">
+        <div class="form-group">
+          <label for="haber<?=$idFila;?>" class="bmd-label-floating">Importe(BOB)</label>
+          <input type="hidden" name="modal_importe_add<?=$idFila?>" id="modal_importe_add<?=$idFila?>">
+          <input type="text" class="form-control" name="modal_importe_dos_add<?=$idFila?>" id="modal_importe_dos_add<?=$idFila?>" value="0" style ="background-color: #ffffff;" readonly>
+      </div>
+    </div>
+
+    <div class="col-sm-2">
       <div class="form-group">
         <label for="haber<?=$idFila;?>" class="bmd-label-floating">Glosa</label>     
-        <textarea id="descripcion<?=$idFila;?>" name="descripcion<?=$idFila;?>" class="form-control text-primary text-right" onkeyup="javascript:this.value=this.value.toUpperCase();"></textarea>
+        <textarea id="descripcion<?=$idFila;?>" name="descripcion<?=$idFila;?>" class="form-control text-primary" onkeyup="javascript:this.value=this.value.toUpperCase();" required></textarea>
         
       </div>
     </div>

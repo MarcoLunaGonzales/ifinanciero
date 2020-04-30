@@ -9,7 +9,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 
 
   //datos registrado de la simulacion en curso
-  $stmt = $dbh->prepare("SELECT *,(select s.abreviatura from unidades_organizacionales s where s.codigo=cod_sucursal)as sucursal,(select c.nombre from clientes c where c.codigo=cod_cliente)as cliente,(select t.nombre from estados_factura t where t.codigo=cod_estadofactura)as estadofactura from facturas_venta");
+  $stmt = $dbh->prepare("SELECT *,(select s.abreviatura from unidades_organizacionales s where s.codigo=cod_sucursal)as sucursal,(select c.nombre from clientes c where c.codigo=cod_cliente)as cliente,(select t.nombre from estados_factura t where t.codigo=cod_estadofactura)as estadofactura from facturas_venta order by  fecha_factura desc");
   $stmt->execute();
   $stmt->bindColumn('codigo', $codigo_facturacion);
   $stmt->bindColumn('cod_sucursal', $cod_sucursal);

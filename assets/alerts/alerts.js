@@ -50,6 +50,25 @@ alerts = {
             return(false);
           }
         })
+    }else if (type == 'warning-message-and-confirmation-anular-solicitud') {
+      swal({
+        title: '¿Quieres Anular la Solicitud?',
+        text: "",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonClass: 'btn btn-success',
+        cancelButtonClass: 'btn btn-danger',
+        confirmButtonText: 'Si, Anular!',
+        cancelButtonText: 'No, Cancelar!',
+        buttonsStyling: false
+      }).then((result) => {
+          if (result.value) {
+            location.href=url; 
+            return(true);
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            return(false);
+          }
+        })
     }else if (type == 'warning-message-and-confirmation-generar-factura') {
       swal({
         title: '¿Quieres generar la Factura?',

@@ -31,6 +31,8 @@ if ($cod_facturacion > 0){
     $razon_social = $result['razon_social'];
     $nit = $result['nit'];
     $observaciones = $result['observaciones'];
+    $persona_contacto= $result['persona_contacto'];
+
     $nombre_simulacion = $resultServicio['Descripcion'];
     $name_cliente=nameCliente($cod_cliente);
 }else {
@@ -48,6 +50,7 @@ if ($cod_facturacion > 0){
     $razon_social = $name_cliente;
     $nit = 0;
     $observaciones = null;
+    $persona_contacto= null;
 }
 $name_uo=nameUnidad($cod_uo);
 $name_area=trim(abrevArea($cod_area),'-');
@@ -145,6 +148,12 @@ $contadorRegistros=0;
                                         </select>                                
                                 </div>
                             </div>
+                            <label class="col-sm-2 col-form-label">Persona Contacto</label>
+                            <div class="col-sm-4">
+                                <div class="form-group" >
+                                        <input type="text" name="persona_contacto" id="persona_contacto" value="<?=$persona_contacto?>" class="form-control" required="true">
+                                </div>
+                            </div>
                         </div>
                         <!-- fin tipos pago y objeto                 -->                        
                         <div class="row">
@@ -224,7 +233,13 @@ $contadorRegistros=0;
                                       <tbody>                                
                                         <?php 
                                         $iii=1;                                    
-                                        $queryPr="SELECT s.*,c.descripcion from serviciopresupuesto s, cla_servicios c where s.IdClaServicio=c.idclaservicio and s.IdServicio=$IdServicio";
+                                        $queryPr="SELECT s.IdDetServicio,s.IdClaServicio,c.descripcion,s.Cantidad,s.PrecioUnitario from serviciopresupuesto s, cla_servicios c where s.IdClaServicio=c.idclaservicio and s.IdServicio=$IdServicio";
+                                        if ($cod_facturacion > 0){
+                                            $queryPr.=" UNION ";
+                                            $queryPr.="SELECT d.codigo,d.cod_claservicio,(select cs.descripcion from cla_servicios cs where cs.IdClaServicio=d.cod_claservicio) as descripcion,d.cantidad,d.precio from solicitudes_facturaciondetalle d where d.tipo_item=2 and d.cod_solicitudfacturacion=$cod_facturacion";
+
+                                        }
+                                        //echo $queryPr;
                                         $stmt = $dbh->prepare($queryPr);
                                         $stmt->execute();
                                         $modal_totalmontopre=0;$modal_totalmontopretotal=0;
@@ -238,13 +253,13 @@ $contadorRegistros=0;
                                             $banderaHab=1;
                                             $codTipoUnidad=0;
                                             // $cod_anio=$rowPre['cod_anio'];
-                                            if($banderaHab!=0){
+                                            if($banderaHab!=0){ 
                                                 $descuento_porX=0;
                                                 $descuento_bobX=0;
                                                 $descripcion_alternaX=$tipoPre;                     
                                                 $montoPre=number_format($montoPre,2,".","");
                                                 //parte del controlador de check //para la parte de editar  
-                                                $sqlControlador="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$IdServicio and sfd.cod_claservicio=$codCS and sf.codigo=$cod_facturacion";
+                                                $sqlControlador="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_estado=1 and sf.cod_simulacion_servicio=$IdServicio and sfd.cod_claservicio=$codCS and sf.codigo=$cod_facturacion";
                                                 // echo $sqlControlador;
                                                 $stmtControlado = $dbh->prepare($sqlControlador);
                                                 $stmtControlado->execute();                                           
@@ -257,7 +272,7 @@ $contadorRegistros=0;
                                                       $descripcion_alternaX=$rowPre['descripcion_alterna'];
                                                 }
                                                 //parte del controlador de check//impedir los ya registrados
-                                                $sqlControlador2="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$IdServicio and sfd.cod_claservicio=$codCS";
+                                                $sqlControlador2="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_estado=1 and sf.cod_simulacion_servicio=$IdServicio and sfd.cod_claservicio=$codCS"; 
                                                 // echo $sqlControlador2;
                                                 $stmtControlador2 = $dbh->prepare($sqlControlador2);
                                                 $stmtControlador2->execute();                                           
@@ -386,7 +401,7 @@ $contadorRegistros=0;
 function valida(f) {
     var ok = true;
     var msg = "El monto Total no debe ser '0' o 'negativo', Habilite los Items que desee facturar...\n";  
-    if(f.elements["modal_totalmontoserv"].value == 0 || f.elements["modal_totalmontoserv"].value < 0 || f.elements["modal_totalmontoserv"].value == '')
+    if(f.elements["monto_total"].value == 0 || f.elements["monto_total"].value < 0 || f.elements["monto_total"].value == '')
     {    
         ok = false;
     }

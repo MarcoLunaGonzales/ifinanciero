@@ -16,7 +16,7 @@ $nombre_simulacion = $resultSimu['nombre'];
 $cod_area_simulacion = $resultSimu['cod_area'];
 $name_area_simulacion=trim(abrevArea($cod_area_simulacion),'-');
 //obtenemos la cantidad de datos registrados de la simulacion en curso
-$stmtCantidad = $dbh->prepare("SELECT count(codigo) as cantidad FROM solicitudes_facturacion where cod_simulacion_servicio=$codigo_simulacion");
+$stmtCantidad = $dbh->prepare("SELECT count(codigo) as cantidad FROM solicitudes_facturacion where cod_simulacion_servicio=$codigo_simulacion and cod_estado=1");
 $stmtCantidad->execute();
 $resutCanitdad = $stmtCantidad->fetch();
 $cantidad_items = $resutCanitdad['cantidad'];
@@ -25,7 +25,7 @@ if(isset($_GET['q'])){
 }
 if($cantidad_items>0){
   //datos registrado de la simulacion en curso
-  $stmt = $dbh->prepare("SELECT sf.*,t.nombre as nombre_cliente FROM solicitudes_facturacion sf,clientes t  where sf.cod_cliente=t.codigo and sf.cod_simulacion_servicio=$codigo_simulacion");
+  $stmt = $dbh->prepare("SELECT sf.*,t.nombre as nombre_cliente FROM solicitudes_facturacion sf,clientes t  where sf.cod_cliente=t.codigo and sf.cod_simulacion_servicio=$codigo_simulacion and  sf.cod_estado=1");
   $stmt->execute();
   $stmt->bindColumn('codigo', $codigo_facturacion);
   $stmt->bindColumn('cod_simulacion_servicio', $cod_simulacion_servicio);
@@ -41,6 +41,8 @@ if($cantidad_items>0){
   $stmt->bindColumn('nit', $nit);
   $stmt->bindColumn('observaciones', $observaciones);
   $stmt->bindColumn('nombre_cliente', $nombre_cliente);
+  $stmt->bindColumn('nro_correlativo', $nro_correlativo);
+  $stmt->bindColumn('persona_contacto', $persona_contacto);
   ?>
   <div class="content">
     <div class="container-fluid">
@@ -59,18 +61,18 @@ if($cantidad_items>0){
                         <thead>
                           <tr>
                             <th class="text-center">#</th>                          
-                            <th>Oficina</th>
+                            <th>Of.</th>
                             <th>Area</th>                            
-                            <th>Responsable</th>
+                            <th>#Soli.</th>
                             <th>F. Registro</th>
                             <th>F. a Facturar</th>
                             <th>#Fact</th>
-                            <th>Precio (BOB)</th>                            
+                            <!-- <th>Precio (BOB)</th>                            
                             <th>Desc(%)</th>  
-                            <th>Desc(BOB)</th>  
-                            <th>Importe (BOB)</th>  
-                            <th>Razón Social</th>
-                            <th>Nit</th>
+                            <th>Desc(BOB)</th>   -->
+                            <th width="8%">Importe (BOB)</th>  
+                            <th>Per.Contacto</th>  
+                            <th width="35%">Razón Social</th>                            
                             <th class="text-right">Actions</th>
                           </tr>
                         </thead>
@@ -134,17 +136,16 @@ if($cantidad_items>0){
                             <td align="center"><?=$index;?></td>
                             <td><?=$nombre_uo;?></td>
                             <td><?=$nombre_area;?></td>
-                            <td><?=$responsable;?></td>
+                            <td><?=$nro_correlativo;?></td>
                             <td><?=$fecha_registro;?></td>
                             <td><?=$fecha_solicitudfactura;?></td>
                             <td><?=$nro_fact_x;?></td>
-                            <td class="text-right"><?=formatNumberDec($sumaTotalMonto) ;?></td>
+                            <!-- <td class="text-right"><?=formatNumberDec($sumaTotalMonto) ;?></td>
                             <td class="text-right"><?=formatNumberDec($sumaTotalDescuento_por) ;?></td>
-                            <td class="text-right"><?=formatNumberDec($sumaTotalDescuento_bob) ;?></td>
+                            <td class="text-right"><?=formatNumberDec($sumaTotalDescuento_bob) ;?></td> -->
                             <td class="text-right"><?=formatNumberDec($sumaTotalImporte) ;?></td>
-                            <td><?=$razon_social;?></td>
-                            <td><?=$nit;?></td>
-
+                            <td class="text-left"><?=$persona_contacto;?></td>
+                            <td><?=$razon_social;?></td>                            
                             <td class="td-actions text-right">
                               <?php
                                 if($globalAdmin==1){
@@ -152,6 +153,7 @@ if($cantidad_items>0){
                                     <a title="Editar Simulación - Detalle" href='<?=$urlRegisterSolicitudfactura;?>&cod_s=<?=$codigo_simulacion?>&cod_f=<?=$codigo_facturacion?>&cod_sw=1' class="btn btn-info">
                                       <i class="material-icons"><?=$iconEdit;?></i>
                                     </a>
+                                    
                                   <?php }else{?>
                                     <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=2' target="_blank"><i class="material-icons" title="Imprimir Factura">print</i></a>
                                   <?php }
@@ -159,6 +161,7 @@ if($cantidad_items>0){
                                 <a href='#' rel="tooltip" class="btn btn-warning" onclick="filaTablaAGeneral($('#tablasA_registradas'),<?=$index?>,'<?=$stringCabecera?>')">
                                   <i class="material-icons" title="Ver Detalle">settings_applications</i>
                                 </a>
+                                <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir Solicitud">print</i></a>
                               
                               <!-- <button type="button" onclick="SolicitudFacturacionDetalle()" class="btn btn-success ">
                                  <i class="material-icons" title="Facturación Detalle">description</i>
@@ -222,7 +225,7 @@ if($cantidad_items>0){
                       <th>Desc(%)</th> 
                       <th>Desc(BOB)</th> 
                       <th width="10%">Importe(BOB)</th> 
-                      <th width="45%">Descripción Alterna</th>                    
+                      <th width="45%">Glosa</th>                    
                       </tr>
                     </thead>
                     <tbody id="tablasA_registradas">

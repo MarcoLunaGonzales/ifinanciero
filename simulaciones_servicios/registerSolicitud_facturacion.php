@@ -34,8 +34,10 @@ if ($cod_facturacion > 0){
     $razon_social = $result['razon_social'];
     $nit = $result['nit'];
     $observaciones = $result['observaciones'];
+    $persona_contacto= $result['persona_contacto'];
     // $anios_servicio = $resultServicio['anios'];
     $nombre_simulacion = $resultServicio['nombre'];
+    
     $name_cliente=nameCliente($cod_cliente);
 }else {
     $nombre_simulacion = $resultServicio['nombre'];
@@ -53,6 +55,7 @@ if ($cod_facturacion > 0){
     $razon_social = $name_cliente;
     $nit = 0;
     $observaciones = null;
+    $persona_contacto=null;
 }
 $name_uo=nameUnidad($cod_uo);
 $name_area=trim(abrevArea($cod_area),'-');
@@ -155,6 +158,12 @@ $contadorRegistros=0;
                                         </select>                                
                                 </div>
                             </div>
+                             <label class="col-sm-2 col-form-label">Persona Contacto</label>
+                            <div class="col-sm-4">
+                                <div class="form-group" >
+                                        <input type="text" name="persona_contacto" id="persona_contacto"  value="<?=$persona_contacto?>" class="form-control" required="true">
+                                </div>
+                            </div>
                         </div>
                         <!-- fin tipos pago y objeto                 -->
                         
@@ -236,7 +245,12 @@ $contadorRegistros=0;
                                       <tbody>                                
                                         <?php 
                                         $iii=1;
-                                       $queryPr="SELECT s.*,t.descripcion as nombre_serv FROM simulaciones_servicios_tiposervicio s, cla_servicios t where s.cod_simulacionservicio=$cod_simulacion and s.cod_claservicio=t.idclaservicio order by s.codigo";
+                                        $queryPr="SELECT s.codigo,s.cod_claservicio,t.descripcion as nombre_serv,s.cantidad,s.monto,s.habilitado,s.cod_tipounidad,s.cod_anio,s.cantidad_editado FROM simulaciones_servicios_tiposervicio s, cla_servicios t where s.cod_simulacionservicio=$cod_simulacion and s.cod_claservicio=t.idclaservicio";
+                                        if ($cod_facturacion > 0){
+                                            $queryPr.=" UNION ";
+                                            $queryPr.="SELECT d.codigo,d.cod_claservicio,(select cs.descripcion from cla_servicios cs where cs.IdClaServicio=d.cod_claservicio) as descripcion,d.cantidad,d.precio,1,1,null,1 from solicitudes_facturaciondetalle d where d.tipo_item=2 and d.cod_solicitudfacturacion=$cod_facturacion ORDER BY nombre_serv";
+                                        }
+                                       // echo $queryPr;
                                        $stmt = $dbh->prepare($queryPr);
                                        $stmt->execute();
                                        $modal_totalmontopre=0;$modal_totalmontopretotal=0;
@@ -258,11 +272,11 @@ $contadorRegistros=0;
                                             // $modal_totalmontopre+=$montoPre;
                                             $montoPre=number_format($montoPre,2,".","");
                                             //parte del controlador de check
-                                            $sqlControlador="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$cod_simulacion and sfd.cod_claservicio=$codCS and sf.codigo=$cod_facturacion";
+                                            $sqlControlador="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$cod_simulacion and sf.cod_estado=1 and sfd.cod_claservicio=$codCS and sf.codigo=$cod_facturacion";
                                           // echo $sqlControlador;
                                             $stmtControlado = $dbh->prepare($sqlControlador);
                                            $stmtControlado->execute();                                           
-                                           $sw="";//para la parte de editar                                           
+                                           $sw="";//para la parte de editar
                                             while ($rowPre = $stmtControlado->fetch(PDO::FETCH_ASSOC)) {
                                               $sw="checked";
                                               $montoPre=$rowPre['precio']+$rowPre['descuento_bob'];
@@ -270,11 +284,11 @@ $contadorRegistros=0;
                                               $descuento_bobX=$rowPre['descuento_bob'];
                                               $descripcion_alternaX=$rowPre['descripcion_alterna'];
                                             }
-                                           $sqlControlador2="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$cod_simulacion and sfd.cod_claservicio=$codCS";
+                                           $sqlControlador2="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$cod_simulacion and sf.cod_estado=1 and sfd.cod_claservicio=$codCS";
                                           // echo $sqlControlador2;
                                             $stmtControlador2 = $dbh->prepare($sqlControlador2);
                                             $stmtControlador2->execute();                                           
-                                            $sw2="";//para registrar impedir los ya registrados
+                                            $sw2="";//para registrar nuevos, impedir los ya registrados
                                             
                                             while ($rowPre = $stmtControlador2->fetch(PDO::FETCH_ASSOC)) {
                                               if($sw!="checked"){

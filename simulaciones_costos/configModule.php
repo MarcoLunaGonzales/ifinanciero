@@ -30,5 +30,5 @@ $urlSave_solicitud_facturacion_costos="?opcion=save_solicitud_facturacion_costos
 
 $urlGenerarFacturas2="simulaciones_costos/generarFacturas2.php";
 $urlGenerarFacturasPrint="simulaciones_servicios/generarFacturasPrint.php";
-
+$urlPrintSolicitud="simulaciones_servicios/printSolicitud.php";
 ?>

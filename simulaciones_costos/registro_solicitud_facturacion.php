@@ -70,7 +70,7 @@ $monto_pagar=($Costo - ($Costo*$Abrev/100) )/$CantidadModulos; //formula para sa
 
 if($cod_facturacion>0){//editar
     $sqlFac="SELECT sf.*,sfd.precio,sfd.descuento_por,sfd.descuento_bob from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sfd.cod_solicitudfacturacion=sf.codigo and sf.codigo=$cod_facturacion";
-
+    // echo $sqlFac;
     $stmtSimuFact = $dbh->prepare($sqlFac);
     $stmtSimuFact->execute();
     $resultSimuFact = $stmtSimuFact->fetch();
@@ -85,6 +85,7 @@ if($cod_facturacion>0){//editar
     $monto_pagar=$resultSimuFact['precio'];
     $descuento_por=$resultSimuFact['descuento_por'];
     $descuento_bob=$resultSimuFact['descuento_bob'];
+    $persona_contacto= $resultSimuFact['persona_contacto'];
 
 }else{//registrat
     $fecha_registro = date('Y-m-d');
@@ -93,6 +94,7 @@ if($cod_facturacion>0){//editar
     $nit = null;
     $observaciones = null;
     $cod_tipopago=null;
+    $persona_contacto= null;
     $cod_tipoobjeto=obtenerValorConfiguracion(41);
 
     $descuento_por=0;
@@ -163,21 +165,24 @@ $contadorRegistros=0;
                             </div>
                         </div>
                         <!-- fin fechas -->
-                        <div class="row">                           
-                            <label class="col-sm-2 col-form-label">Tipo Objeto</label>
-                            <div class="col-sm-4">
-                                <div class="form-group" >
-                                        <select name="cod_tipoobjeto" id="cod_tipoobjeto" class="selectpicker form-control form-control-sm" data-style="btn btn-info" required="true">
-                                            <option value=""></option>
-                                            <?php 
-                                            $queryTipoObjeto = "SELECT codigo,nombre FROM  tipos_objetofacturacion WHERE cod_estadoreferencial=1 order by nombre";
-                                            $statementObjeto = $dbh->query($queryTipoObjeto);
-                                            while ($row = $statementObjeto->fetch()){ ?>
-                                                <option <?=($cod_tipoobjeto==$row["codigo"])?"selected":"";?>  value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
-                                            <?php } ?>
-                                        </select>                                
+                        <div class="row">          
+                            <div class="d-none">
+                                <label class="col-sm-2 col-form-label">Tipo Objeto</label>
+                                <div class="col-sm-4">
+                                    <div class="form-group" >
+                                            <select name="cod_tipoobjeto" id="cod_tipoobjeto" class="selectpicker form-control form-control-sm" data-style="btn btn-info" required="true">
+                                                <option value=""></option>
+                                                <?php 
+                                                $queryTipoObjeto = "SELECT codigo,nombre FROM  tipos_objetofacturacion WHERE cod_estadoreferencial=1 order by nombre";
+                                                $statementObjeto = $dbh->query($queryTipoObjeto);
+                                                while ($row = $statementObjeto->fetch()){ ?>
+                                                    <option <?=($cod_tipoobjeto==$row["codigo"])?"selected":"";?>  value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                                                <?php } ?>
+                                            </select>                                
+                                    </div>
                                 </div>
-                            </div>
+                            </div>                 
+                                
 
                             <label class="col-sm-2 col-form-label">Tipo Pago</label>
                             <div class="col-sm-4">
@@ -191,6 +196,12 @@ $contadorRegistros=0;
                                                 <option <?=($cod_tipopago==$row["codigo"])?"selected":"";?>  value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
                                             <?php } ?>
                                         </select>                                
+                                </div>
+                            </div>
+                            <label class="col-sm-2 col-form-label">Persona Contacto</label>
+                            <div class="col-sm-4">
+                                <div class="form-group" >
+                                        <input type="text" name="persona_contacto" id="persona_contacto" class="form-control" value="<?=$persona_contacto?>" required="true">
                                 </div>
                             </div>
                         </div>
@@ -284,11 +295,11 @@ $contadorRegistros=0;
                                                 $descuento_bobX=0;
                                                 $descripcion_alternaX=$tipoPre;                     
                                                 $montoPre=number_format($montoPre,2,".","");
-                                                $sqlControlador="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$cod_simulacion and sfd.cod_claservicio=$codCS and sf.codigo=$cod_facturacion";
+                                                $sqlControlador="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$cod_simulacion and sf.cod_estado=1 and sfd.cod_claservicio=$codCS and sf.codigo=$cod_facturacion";
                                                 // echo $sqlControlador;
                                                 $stmtControlado = $dbh->prepare($sqlControlador);
                                                 $stmtControlado->execute();                                           
-                                                $sw="";                                         
+                                                $sw="checked";                                         
                                                 while ($rowPre = $stmtControlado->fetch(PDO::FETCH_ASSOC)) {
                                                       $sw="checked";
                                                       $montoPre=$rowPre['precio']+$rowPre['descuento_bob'];
@@ -297,7 +308,7 @@ $contadorRegistros=0;
                                                       $descripcion_alternaX=$rowPre['descripcion_alterna'];
                                                 }
                                                 //parte del controlador de check//impedir los ya registrados
-                                                $sqlControlador2="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$cod_simulacion and sfd.cod_claservicio=$codCS";
+                                                $sqlControlador2="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$cod_simulacion and sf.cod_estado=1 and sfd.cod_claservicio=$codCS";
                                                 // echo $sqlControlador2;
                                                 $stmtControlador2 = $dbh->prepare($sqlControlador2);
                                                 $stmtControlador2->execute();                                           

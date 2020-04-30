@@ -3,7 +3,7 @@ body{font-family:  sans-serif; font-size: 10px;}
 
 
 header { position: fixed; top: -125px; left: 0px; right: 0px; height: 70px;}
-footer { position: fixed; bottom: -40px; left: 0px; right: 0px; height: 50px; }
+footer { position: fixed; bottom: -40px; left: 0px; right: 0px; height: 0px; }
 
 .imagen-logo-izq{
   position: absolute;
@@ -67,6 +67,12 @@ width: 100%;
 
 }
 
+.s2{
+  FONT-SIZE: 11px;
+  FONT-FAMILY: Helvetica, Arial, sans-serif;
+  color: rgb(0,0,0);
+  FONT-WEIGHT: bold;
+}
 
 .table .fila-primary td{
 
