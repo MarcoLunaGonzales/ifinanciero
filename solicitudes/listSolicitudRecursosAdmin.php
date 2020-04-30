@@ -29,7 +29,7 @@ if(isset($_GET['q'])){
   $sqlAreas="";
 }
 // Preparamos
-$stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo where sr.cod_estadoreferencial=1 and (sr.cod_estadosolicitudrecurso=2 or sr.cod_estadosolicitudrecurso=3 or sr.cod_estadosolicitudrecurso=4 or sr.cod_estadosolicitudrecurso=5) $sqlAreas order by sr.codigo");
+$stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo where sr.cod_estadoreferencial=1 and (sr.cod_estadosolicitudrecurso=2 or sr.cod_estadosolicitudrecurso=4 or sr.cod_estadosolicitudrecurso=5) $sqlAreas order by sr.codigo");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -69,7 +69,7 @@ $item_1=2708;
                           <th>Unidad</th>
                           <th>Area</th>
                           <th>Nº Sol.</th>
-                          <th>Propuesta</th>
+                          <th>Cod. Servicio</th>
                           <th>Cliente</th>
                           <th>Responsable</th>
                           <th>Fecha</th>
@@ -108,13 +108,20 @@ $item_1=2708;
                            $nombreCliente=nameClienteSimulacionServicio($codSimulacionServicio);
                            $nombreSimulacion=nameSimulacionServicio($codSimulacionServicio);
                           }
+                          $codigoServicio="SIN CODIGO";
+                          $sql="SELECT codigo FROM ibnorca.servicios where idServicio=$idServicio";
+                          $stmt1=$dbh->prepare($sql);
+                          $stmt1->execute();
+                           while ($row1 = $stmt1->fetch(PDO::FETCH_ASSOC)) {
+                             $codigoServicio=$row1['codigo'];
+                           }
 ?>
                         <tr>
                           <td align="center"><?=$index;?></td>
                           <td><?=$unidad;?></td>
                           <td><?=$area;?></td>
                           <td class="font-weight-bold"><?=$numeroSol;?></td>
-                          <td><?=$nombreSimulacion;?></td>
+                          <td><?=$codigoServicio;?></td>
                           <td><?=$nombreCliente;?></td>
                           <td>
                                  <img src="assets/img/faces/persona1.png" width="20" height="20"/><?=$solicitante;?>
@@ -194,7 +201,14 @@ $item_1=2708;
                                 <?php 
                                 if($codEstado==4){
                                  ?>
-                                 <a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=3" class="dropdown-item">
+                                 <a href="#" onclick="mostrarCambioEstadoObjeto(<?=$codigo?>)" class="dropdown-item">
+                                    <i class="material-icons text-warning">dns</i> Cambiar Estado
+                                 </a>
+                                 <a href="<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&admin=0" class="dropdown-item">
+                                    <i class="material-icons text-success">offline_pin</i> Verificar Solicitud
+                                 </a>
+
+                                 <!--<a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=3" class="dropdown-item">
                                     <i class="material-icons text-success">offline_pin</i> Aprobar Solicitud
                                  </a>
                                  <a href="<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&admin=0" class="dropdown-item">
@@ -205,10 +219,10 @@ $item_1=2708;
                                  </a>
                                  <a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=2" class="dropdown-item">
                                     <i class="material-icons text-danger">clear</i> Anular Solicitud
-                                 </a><?php 
+                                 </a>--><?php 
                                 }else{
-                                ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=4" class="dropdown-item">
-                                    <i class="material-icons text-dark">reply</i> Deshacer Cambios
+                                ?><a href="#" onclick="mostrarCambioEstadoObjeto(<?=$codigo?>)" class="dropdown-item">
+                                    <i class="material-icons text-warning">dns</i> Cambiar Estado
                                  </a>
                                  <?php 
                                 }

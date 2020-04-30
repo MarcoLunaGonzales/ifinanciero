@@ -44,6 +44,7 @@ $stmt->bindColumn('estado', $estado);
 $stmt->bindColumn('cod_comprobante', $codComprobante);
 $stmt->bindColumn('cod_simulacionservicio', $codSimulacionServicio);
 $stmt->bindColumn('numero', $numeroSol);
+$stmt->bindColumn('idServicio', $idServicioX);
 
 ?>
 
@@ -66,7 +67,7 @@ $stmt->bindColumn('numero', $numeroSol);
                           <th>Unidad</th>
                           <th>Area</th>
                           <th>Nº Sol.</th>
-                          <th>Propuesta</th>
+                          <th>Cod. Servicio</th>
                           <th>Cliente</th>
                           <th>Responsable</th>
                           <th>Fecha</th>
@@ -106,13 +107,20 @@ $stmt->bindColumn('numero', $numeroSol);
                            $nombreCliente=nameClienteSimulacionServicio($codSimulacionServicio);
                            $nombreSimulacion=nameSimulacionServicio($codSimulacionServicio);
                           }
+                          $codigoServicio="SIN CODIGO";
+                          $sql="SELECT codigo FROM ibnorca.servicios where idServicio=$idServicioX";
+                          $stmt1=$dbh->prepare($sql);
+                          $stmt1->execute();
+                           while ($row1 = $stmt1->fetch(PDO::FETCH_ASSOC)) {
+                             $codigoServicio=$row1['codigo'];
+                           }
 ?>
                         <tr>
                           <td align="center"><?=$index;?></td>
                           <td><?=$unidad;?></td>
                           <td><?=$area;?></td>
                           <td class="font-weight-bold"><?=$numeroSol;?></td>
-                          <td><?=$nombreSimulacion;?></td>
+                          <td><?=$codigoServicio;?></td>
                           <td><?=$nombreCliente;?></td>
                           <td>
                                  <img src="assets/img/faces/persona1.png" width="20" height="20"/><?=$solicitante;?>

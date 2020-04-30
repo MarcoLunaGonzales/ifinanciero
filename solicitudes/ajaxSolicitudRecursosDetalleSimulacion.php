@@ -24,6 +24,10 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
   $areaSol=$row['cod_area'];
 }
 ?>
+<div class="form-group d-none" id="divNitFactura<?=$idFila;?>">  
+  <input class="form-control" type="number"  onkeyup="llenarFacturaAutomaticamente(this.value,'<?=$idFila;?>',0);">
+</div>
+
 <div id="comp_row" class="col-md-12">
 	<div class="row">
     <div class="col-sm-1">
@@ -111,7 +115,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 		<div class="col-sm-1">
             <div class="form-group">
             	<label for="importe<?=$idFila;?>" class="bmd-label-floating" id="importe_label<?=$idFila;?>">Importe</label>     
-          		<input class="form-control" type="number" required name="importe<?=$idFila;?>" id="importe<?=$idFila;?>" step="0.01">	
+          		<input class="form-control" value="0" type="number" required name="importe<?=$idFila;?>" id="importe<?=$idFila;?>" step="0.01" onChange="calcularTotalesSolicitud();" OnKeyUp="calcularTotalesSolicitud();">	
 			</div>
       	</div>
       	<div class="col-sm-2">

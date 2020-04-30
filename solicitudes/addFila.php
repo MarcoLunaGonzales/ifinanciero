@@ -1,3 +1,6 @@
+<div class="form-group d-none" id="divNitFactura<?=$idFila;?>">  
+  <input class="form-control" type="number"  onkeyup="llenarFacturaAutomaticamente(this.value,'<?=$idFila;?>',<?=$importeSolX?>);">
+</div>
  <div id="div<?=$idFila?>">               	         
                              <div class="col-md-12">
                              	<div class="row">
@@ -93,7 +96,7 @@
 		                              <div class="col-sm-1">
                                           <div class="form-group">
                                           	<label for="importe<?=$idFila;?>" class="bmd-label-floating" id="importe_label<?=$idFila;?>"><?=$tituloImporte?></label>			
-                                        		<input class="form-control" type="number" name="importe<?=$idFila;?>" id="importe<?=$idFila;?>" value="<?=$importeSolX?>" step="0.001" required>	
+                                        		<input class="form-control" type="number" name="importe<?=$idFila;?>" id="importe<?=$idFila;?>" value="<?=$importeSolX?>" step="0.001" onChange="calcularTotalesSolicitud();" OnKeyUp="calcularTotalesSolicitud();" required>	
 		                              	</div>
       	                          </div>
       	                              <div class="col-sm-2">
