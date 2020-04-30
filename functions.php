@@ -5336,6 +5336,28 @@ function buscarFechasMinMaxComprobante($tipoComprobante, $nroCorrelativo, $UO, $
   return array($fechaMenor,$fechaMayor);  
 }
 
+function obtenerCodigoServicioPorPropuestaTCPTCS($idPropuesta){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("select IFNULL(se.Codigo,'SERVICIO SIN CODIGO')as codigo  from simulaciones_servicios  s, ibnorca.servicios se where s.idServicio=se.IdServicio and s.codigo=$idPropuesta");
+   $stmt->execute();
+   $valor="SIN SERVICIO";
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['codigo'];
+   }
+   return($valor);
+}
+
+function obtenerCodigoServicioPorIdServicio($idServicio){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT codigo FROM ibnorca.servicios where idServicio=$idServicio");
+   $stmt->execute();
+   $valor="SIN SERVICIO";
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['codigo'];
+   }
+   return($valor);
+}
+
 ?>
 
 

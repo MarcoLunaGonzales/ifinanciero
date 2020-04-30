@@ -268,6 +268,25 @@ alerts = {
             return(true);
           }
         })
+    }else if (type == 'warning-message-and-confirmation-restart') {
+      swal({
+        title: '¿Estás Seguro?',
+        text: "¡Se restaurará el item Eliminado!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonClass: 'btn btn-success',
+        cancelButtonClass: 'btn btn-danger',
+        confirmButtonText: 'Si, Continuar!',
+        cancelButtonText: 'No, Cancelar!',
+        buttonsStyling: false
+      }).then((result) => {
+          if (result.value) {
+            location.href=url; 
+            return(true);
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            return(false);
+          }
+        })
     }
 
   },
