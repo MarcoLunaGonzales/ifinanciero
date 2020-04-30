@@ -2,6 +2,7 @@
 session_start();
 require_once '../conexion.php';
 require_once '../styles.php';
+require_once '../functions.php';
 
 $dbh = new Conexion();
 
@@ -14,6 +15,8 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $idFila=$_GET['idFila'];
 $IdTipo=$_GET['IdTipo'];
 
+$codigoAdministrativos=obtenerValorConfiguracion(43);
+
 
 ?>
 <div id="comp_row" class="col-md-12">
@@ -24,7 +27,9 @@ $IdTipo=$_GET['IdTipo'];
           <select class="selectpicker form-control form-control-sm" data-live-search="true" name="modal_editservicio<?=$idFila;?>" id="modal_editservicio<?=$idFila;?>" data-style="fondo-boton" required="true">
               <option disabled selected="selected" value="">--SERVICIOS--</option>
               <?php 
-                $sql="SELECT * from cla_servicios where IdTipo=$IdTipo";
+                $sql="SELECT * from cla_servicios where IdTipo=$IdTipo
+                  UNION 
+                  Select * from cla_servicios where codigo_n2=$codigoAdministrativos";
                 $stmt3 = $dbh->prepare($sql);
                 echo $sql; 
                 $stmt3->execute();
