@@ -23,7 +23,12 @@ $stmt2->execute();
     $codigoX=$row2['idestadosiguiente'];
     $descX=$row2['descr'];  
     if($codigoX!=2725){ //para quitar el estado pagado
-      ?><option value="<?=$codigoX?>"><?=$descX?></option><?php
+      if($codigoX!=2729){
+        ?><option value="<?=$codigoX?>"><?=$descX?></option><?php
+      }else{
+        
+      }
+      
     }else{
        $saldoSol=obtenerTodoPagoSolicitud($item_2); 
        if($saldoSol<=0){

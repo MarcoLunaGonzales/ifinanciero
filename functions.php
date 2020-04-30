@@ -5120,6 +5120,31 @@ where d.glosa=e.glosa and d.cod_anio=$anio and d.cod_simulacionservicio=$simulac
        break;
    }
   }
+  function obtenerEstadoIfinancieroSolicitudesFac($estado){
+   switch ($estado) {
+     case 2726:
+       return 1;
+       break;
+     case 2727:
+       return 4;
+       break;
+     case 2728:
+       return 3;
+       break;
+     case 2729:
+       return 5;
+       break;
+     case 2730:
+       return 2;
+       break;
+     case 2731:
+       return 6;
+       break;       
+     default:
+       return 1;
+       break;
+   }
+  }
   function obtenerEstadoIfinancieroPlantillas($estado){
    switch ($estado) {
      case 2710:

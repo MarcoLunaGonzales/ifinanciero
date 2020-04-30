@@ -11,6 +11,10 @@ require_once __DIR__.'/../functionsGeneral.php';
 $dbh = new Conexion();
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//try
 set_time_limit(300);
+session_start();
+
+$globalUser=$_SESSION["globalUser"];
+
 //RECIBIMOS LAS VARIABLES
 
 $codigo = $_GET["codigo"];
@@ -129,9 +133,23 @@ try{
                 header('Location: ../simulaciones_servicios/generarFacturasPrint.php?codigo='.$codigo.'&tipo=2');
               }  
             }
+
+          $sqlUpdate="UPDATE solicitudes_facturacion SET  cod_estadosolicitudfacturacion=5 where codigo=$codigo";
+          $stmtUpdate = $dbh->prepare($sqlUpdate);
+          $flagSuccess=$stmtUpdate->execute(); 
+          //enviar propuestas para la actualizacion de ibnorca
+          $fechaHoraActual=date("Y-m-d H:i:s");
+          $idTipoObjeto=2709;
+          $idObjeto=2729; //regristado
+          $obs="Solicitud Facturada";
+         if(isset($_GET['u'])){
+            $u=$_GET['u'];
+            actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);
+          }else{
+            actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);
+          } 
         }
 
-       
     }else{//ya se registro
         echo "ya se registró la factura.";
         header('Location: ../simulaciones_servicios/generarFacturasPrint.php?codigo='.$codigo.'&tipo=2');

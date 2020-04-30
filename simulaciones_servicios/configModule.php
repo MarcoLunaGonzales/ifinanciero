@@ -41,5 +41,10 @@ $urlAnular_SoliciutdFacturacion="?opcion=anular_SoliciutdFacturacion";
 $urllistFacturasServicios="index.php?opcion=listFacturasGeneradas";
 $urlPrintSolicitud="simulaciones_servicios/printSolicitud.php";
 // $urlSolicitudfactura="simulaciones_servicios/solicitud_facturacion.php";
+
+$urlEdit2Sol="servicios_presupuestos/edit.php";
+$urlListSol="index.php?opcion=listFacturasServicios";
+$urlList2Sol="index.php?opcion=listFacturasServiciosAdmin";
 $urlListSolicitudFacturas="index.php?opcion=listFacturasServicios";
+
 ?>

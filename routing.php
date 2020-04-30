@@ -250,6 +250,10 @@
 		if ($_GET['opcion']=='listFacturasServicios') {
 			require_once('simulaciones_servicios/listFacturasSolicitadas.php');
 		}
+		if ($_GET['opcion']=='listFacturasServiciosAdmin') {
+			require_once('simulaciones_servicios/listFacturasSolicitadasAdmin.php');
+		}
+
 		if ($_GET['opcion']=='listFacturasGeneradas') {
 			require_once('simulaciones_servicios/listFacturasGeneradas.php');
 		}

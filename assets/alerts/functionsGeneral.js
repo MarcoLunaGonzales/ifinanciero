@@ -10573,6 +10573,7 @@ function mostrarCambioEstadoObjeto(codigo){
     });
 }
 
+
 function cambiarEstadoObjeto(){
   if($("#modal_codigoestado").val()>0){
     Swal.fire({
@@ -10693,6 +10694,66 @@ function cambiarEstadoObjetoSolAjax(){
             alerts.showSwal('success-message','index.php?opcion=listSolicitudRecursosAdmin&q='+q+'&r='+r+'&s='+s+'&u='+u);   
           }else{
              alerts.showSwal('success-message','index.php?opcion=listSolicitudRecursosAdmin');
+          }
+        }
+    });
+}
+
+function cambiarEstadoObjetoSolFac(){
+  if($("#modal_codigoestado").val()>0){
+    Swal.fire({
+        title: '¿Esta Seguro?',
+        text: "Se cambiará el estado!",
+         type: 'warning',
+        showCancelButton: true,
+        confirmButtonClass: 'btn btn-warning',
+        cancelButtonClass: 'btn btn-danger',
+        confirmButtonText: 'SI',
+        cancelButtonText: 'NO',
+        buttonsStyling: false
+       }).then((result) => {
+          if (result.value) {
+               cambiarEstadoObjetoSolFacAjax();            
+            return(true);
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            return(false);
+          }
+        });   
+  }else{
+    Swal.fire("Informativo!", "Debe Seleccionar Un estado", "warning");
+  }
+}
+
+function cambiarEstadoObjetoSolFacAjax(){
+  var codigo=$("#modal_codigopropuesta").val();
+  var estado=$("#modal_codigoestado").val();
+  var observaciones=$("#modal_observacionesestado").val();
+  if($("#id_servicioibnored_u").length>0){
+    var parametros={"obs":observaciones,"estado":estado,"codigo":codigo,"u":$("#id_servicioibnored_u").val()};
+  }else{
+    var parametros={"obs":observaciones,"estado":estado,"codigo":codigo};
+  }
+  
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "simulaciones_servicios/ibnorca_ajaxCambiarEstadoFac.php",
+        data: parametros,
+        beforeSend: function () {
+        $("#texto_ajax_titulo").html("Actualizando estado..."); 
+          iniciarCargaAjax();
+        },
+        success:  function (resp) {
+           detectarCargaAjax();
+           $("#texto_ajax_titulo").html("Procesando Datos");
+           if($("#id_servicioibnored").length>0){
+            var q=$("#id_servicioibnored").val();
+            var r=$("#id_servicioibnored_rol").val();
+            var s=$("#id_servicioibnored_s").val();
+            var u=$("#id_servicioibnored_u").val();
+            alerts.showSwal('success-message','index.php?opcion=listFacturasServiciosAdmin&q='+q+'&r='+r+'&s='+s+'&u='+u);   
+          }else{
+             alerts.showSwal('success-message','index.php?opcion=listFacturasServiciosAdmin');
           }
         }
     });
