@@ -51,7 +51,6 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
             $stmt->bindColumn('numero', $numeroX);
             $stmt->bindColumn('cod_simulacion', $codSimulacionX);
             $stmt->bindColumn('cod_proveedor', $codProveedorX);
-            $stmt->bindColumn('idServicio', $idServicioX);
 
 ?>
 <div id="logo_carga" class="logo-carga" style="display:none;"></div>
@@ -67,80 +66,38 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
 					</div>
 				</div>
 				<div class="card-body">
+				
 					<div class=""> 	
-					<div class="row" id="">
-				        <?php 
+					<div class="col-sm-8 div-center">	
+						<table class="table table-bordered table-condensed table-warning">
+							<thead>
+								<tr class="">
+									<th>Solicitante</th>
+									<th>Fecha</th>
+									<th>Numero</th>
+									<th>Unidad</th>
+									<th>Area</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+							<?php 
                             while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                                 $solicitante=namePersonal($codPersonalX);
                                 $fechaSolicitud=strftime('%d/%m/%Y',strtotime($fechaX));
-                                $codigoServicio=obtenerCodigoServicioPorIdServicio($idServicioX);
-                                ?>
+                                ?><td><?=$solicitante?></td><td><?=$fechaSolicitud?></td><td><?=$numeroX?></td><td><?=$unidadX?></td><td><?=$areaX?></td><?php
 
-                        
-					
-                    <label class="col-sm-1 col-form-label" style="color:#000000; ">Oficina :</label>
-<div class="col-sm-2">
-  <div class="form-group">
-  	<input type="text" class="form-control" readonly="true" value="<?=$unidadX?>" style="background-color:#E3CEF6;text-align: left" >
-  </div>
-</div>  
-<label class="col-sm-1 col-form-label" style="color:#000000; ">Area :</label>
-<div class="col-sm-1">
-  <div class="form-group">
-  	<input type="text" class="form-control" readonly="true" value="<?=$areaX?>" style="background-color:#E3CEF6;text-align: left">
-  </div>
-</div>  
-<label class="col-sm-1 col-form-label" style="color:#000000; ">Servicio :</label>
-<div class="col-sm-2">
-  <div class="form-group">
-  	<input type="text" class="form-control" readonly="true" value="<?=$codigoServicio?>" style="background-color:#E3CEF6;text-align: left" >
-  </div>
-</div>  
-<label class="col-sm-1 col-form-label" style="color:#000000; ">Fecha Solicitud:</label>
-<div class="col-sm-2">
-  <div class="form-group">
-  	<input type="text" class="form-control" readonly="true" value="<?=$fechaSolicitud?>" style="background-color:#E3CEF6;text-align: left" >
-  </div>
-</div> 
-</div>
-<div class="row">
-<label class="col-sm-1 col-form-label" style="color:#000000; ">N&uacute;mero</label>
-<div class="col-sm-2">
-  <div class="form-group">
-  	<input type="text" class="form-control" readonly="true" value="<?=$numeroX?>" style="background-color:#E3CEF6;text-align: left" >
-  </div>
-</div> 
-<label class="col-sm-1 col-form-label" style="color:#000000; ">Estado</label>
-<div class="col-sm-1">
-  <div class="form-group">
-  	<input type="text" class="form-control" readonly="true" value="<?=$estadoX?>" style="background-color:#E3CEF6;text-align: left" >
-  </div>
-</div> 
-<label class="col-sm-1 col-form-label" style="color:#000000; ">Solicitante</label>
-<div class="col-sm-3">
-  <div class="form-group">
-  	<input type="text" class="form-control" readonly="true" value="<?=$solicitante?>" style="background-color:#E3CEF6;text-align: left" >
-  </div>
-</div>         <?php
-
-                  } ?>
-                    </div>
-                    <div class="col-sm-12"><center><h3>ARCHIVOS ADJUNTOS DE LA CABECERA</h3></center></div>
-					<div class="row col-sm-12">
-                        
-						<div class="div-center">
-							<?php 
-							obtenerDirectoriosSol("../assets/archivos-respaldo/archivos_solicitudes/SOL-".$codigo);
-							?>
-						</div>
-						<div class="col-sm-8" id="cont_archivos">						
-						</div>	
+                            }
+                        	?>
+                        	</tr>
+							</tbody>
+						</table>
 					</div>
-					<div class="col-sm-4 div-center"><center><h3>Detalle de la Solicitud de Recursos</h3></center></div>
+					<div class="col-sm-4 div-center"><center><h4>Detalle de la Solicitud de Recursos</h4></center></div>
 					<div class="col-sm-12 div-center">	
-						<table class="table table-bordered table-condensed">
+						<table class="table table-bordered table-condensed table-warning">
 							<thead>
-								<tr class="text-dark bg-plomo">
+								<tr class="">
 									<th>#</th>
 									<th>Numero</th>
 									<th class="text-left">Nombre Cuenta</th>
@@ -149,7 +106,6 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
 									<th class="text-right">Presupuestado</th>
 									<th class="text-right">Importe</th>			
 									<th>Proveedor</th>
-									<th>Archivos Adjuntos</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -183,7 +139,6 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
                                     <td class="text-right"><?=number_format($importeX, 2, '.', ',')?></td>
                                     <td class="text-right"><?=number_format($importeSolX, 2, '.', ',')?></td>
                                     <td><?=$proveedorX?></td>
-                                    <td><?=obtenerDirectoriosSol("../assets/archivos-respaldo/archivos_solicitudes/SOL-".$codigo."/DET-".$index);?></td>
                                 </tr><?php
                               $index++;
                              }
@@ -193,22 +148,11 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
                                     <td class="text-right"><?=number_format($totalImportePres, 2, '.', ',')?></td>
                                     <td class="text-right"><?=number_format($totalImporte, 2, '.', ',')?></td>
                                     <td></td>
-                                    <td></td>
                         	  </tr>
 							</tbody>
 						</table>
-					</div>	
-					<br><br><br>
-					<hr>
-					<div class="col-sm-12 text-info"><center><h4 id="titulo_vista_previa">VISTA PREVIA</h4></center></div>
-					<div class="row col-sm-12">
-                      <iframe src="../vista_file.html"  id="vista_previa_frame" width="800" class="div-center" height="600" scrolling="yes" style="border:none; border: #8CF5E3 solid 3px;border-radius:10px;">
-                      	No hay vista disponible
-                      </iframe>
-					</div>	
-					<br>
-					<br>
-				  	<div class="card-footer fixed-bottom col-sm-12">
+					</div>		
+				  	<div class="card-footer fixed-bottom">
 						
 						<?php 
 					if(isset($_GET['q'])){
@@ -248,20 +192,6 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
                         }	 
 	                }	   
 						?>
-						<div class="row col-sm-9 float-right">
-                    <div class="col-sm-2">
-                        <div class="form-group">
-                            <label class="bmd-label-static fondo-boton">Presupuestado</label>  
-                          <input class="form-control fondo-boton-active text-center" style="border-radius:10px;" type="number" step=".01" placeholder="0" value="<?=$totalImportePres?>" id="total_presupuestado" readonly="true"> 
-                        </div>
-                    </div>
-                    <div class="col-sm-2">
-                        <div class="form-group">
-                          <label class="bmd-label-static fondo-boton">Solicitado</label> 
-                          <input class="form-control fondo-boton-active text-center" style="border-radius:10px;" type="number" step=".01" placeholder="0" value="<?=$totalImporte?>" id="total_solicitado" readonly="true"> 
-                        </div>
-                    </div>
-              </div>
 				  	</div>
 				 </div>
 			    </div><!--div end card-->			

@@ -11128,3 +11128,7 @@ function calcularTotalesSolicitud(){
     document.getElementById("total_presupuestado").value=redondeo(sumapres,2).toFixed(2);  
     document.getElementById("total_solicitado").value=redondeo(sumasol,2).toFixed(2);  
 }
+function vistaPreviaArchivoSol(url,nombre){
+  $("#vista_previa_frame").attr("src",url);
+  $("#titulo_vista_previa").text('VISTA PREVIA "'+nombre+'"');
+}

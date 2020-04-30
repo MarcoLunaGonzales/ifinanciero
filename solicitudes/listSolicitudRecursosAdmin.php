@@ -66,11 +66,11 @@ $item_1=2708;
                       <thead>
                         <tr>
                           <th class="text-center">#</th>
-                          <th>Unidad</th>
-                          <th>Area</th>
+                          <th>Of. - Area</th>
                           <th>Nº Sol.</th>
                           <th>Cod. Servicio</th>
                           <th>Cliente</th>
+                          <th>Proveedores</th>
                           <th>Solicitante</th>
                           <th>Fecha</th>
                           <th class="text-right">Actions</th>
@@ -118,11 +118,11 @@ $item_1=2708;
 ?>
                         <tr>
                           <td align="center"><?=$index;?></td>
-                          <td><?=$unidad;?></td>
-                          <td><?=$area;?></td>
+                          <td><?=$unidad;?>- <?=$area;?></td>
                           <td class="font-weight-bold"><?=$numeroSol;?></td>
                           <td><?=$codigoServicio;?></td>
                           <td><?=$nombreCliente;?></td>
+                          <td><small><?=obtenerNombreConcatenadoProveedorDetalleSolicitudRecurso($codigo)?></small></td>
                           <td>
                                  <img src="assets/img/faces/persona1.png" width="20" height="20"/><?=$solicitante;?>
                           </td>
@@ -337,11 +337,11 @@ $item_1=2708;
                       <thead>
                         <tr class="bg-info">
                           <th class="text-center">#</th>
-                          <th>Unidad</th>
-                          <th>Area</th>
+                          <th>Of. - Area</th>
                           <th>Nº Sol.</th>
                           <th>Cod. Servicio</th>
                           <th>Cliente</th>
+                          <th>Proveedores</th>
                           <th>Solicitante</th>
                           <th>Fecha</th>
                           <th class="text-right">Actions</th>
@@ -389,11 +389,11 @@ $item_1=2708;
 ?>
                         <tr>
                           <td align="center"><?=$index;?></td>
-                          <td><?=$unidad;?></td>
-                          <td><?=$area;?></td>
+                          <td><?=$unidad;?> - <?=$area;?></td>
                           <td class="font-weight-bold"><?=$numeroSol;?></td>
                           <td><?=$codigoServicio;?></td>
                           <td><?=$nombreCliente;?></td>
+                          <td><small><?=obtenerNombreConcatenadoProveedorDetalleSolicitudRecurso($codigo)?></small></td>
                           <td>
                                  <img src="assets/img/faces/persona1.png" width="20" height="20"/><?=$solicitante;?>
                           </td>

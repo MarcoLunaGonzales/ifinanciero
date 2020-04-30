@@ -41,6 +41,20 @@ $stmt->execute();
             $stmt->bindColumn('observaciones', $observacionesX);
 
 while ($rowDetalle = $stmt->fetch(PDO::FETCH_BOUND)) {
+    $userEnvio=obtenerPersonaCambioEstado(2708,$codigoX,2722);
+    if($userEnvio==0){
+       $nombreEnviado="Sin registro";    
+    }else{
+       $nombreEnviado=namePersonal($userEnvio);    
+    }
+
+    $userAprobado=obtenerPersonaCambioEstado(2708,$codigoX,2723);
+    if($userAprobado==0){
+       $nombreAprobado="Sin registro";    
+    }else{
+       $nombreAprobado=namePersonal($userAprobado);    
+    }
+    
     $fechaC=$fechaX;
     $unidadC=$unidadNombreX;
     $codUC=$codUnidadX;
@@ -223,10 +237,10 @@ $tituloImporte="";
             <td class="s3 text-center" height="80px"></td>
         </tr>
         <tr>
-            <td class="s3 text-center">Firma Solicitante</td>
-            <td class="s3 text-center">Autorización P-SA/P-DNAF</td>
-            <td class="s3 text-center">Autorización DNS/DR/J-GES/J-TI</td>
-            <td class="s3 text-center">Autorización DNAF</td>
+            <td class="s3 text-center">Solicitante <?=$solicitante?></td>
+            <td class="s3 text-center">Autorización <?=$nombreEnviado?></td>
+            <td class="s3 text-center">Autorización <?=$nombreAprobado?></td>
+            <td class="s3 text-center">Autorización <?=$nombreAprobado?></td>
         </tr>
         <tr>
             <td class="s3 text-left">Fecha:</td>

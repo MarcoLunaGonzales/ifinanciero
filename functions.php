@@ -1457,6 +1457,38 @@ function obtenerDirectorios($ruta){
         echo "No tiene archivos adjuntos";
     }
 }
+function obtenerDirectoriosSol($ruta){
+    // Se comprueba que realmente sea la ruta de un directorio
+    if (is_dir($ruta)){
+        // Abre un gestor de directorios para la ruta indicada
+        $gestor = opendir($ruta);
+        echo "<div>";
+
+        // Recorre todos los elementos del directorio
+        while (($archivo = readdir($gestor)) !== false)  {
+                
+            $ruta_completa = $ruta . "/" . $archivo;
+
+            // Se muestran todos los archivos y carpetas excepto "." y ".."
+            if ($archivo != "." && $archivo != "..") {
+                // Si es un directorio se recorre recursivamente
+                if (is_dir($ruta_completa)) {
+                 
+                } else {
+                  echo "<div class='btn-group'><a class='btn btn-sm btn-info btn-block' href='".$ruta_completa."' target='_blank'>" . $archivo . "</a><a class='btn btn-sm btn-default' href='".$ruta_completa."' download='".$archivo."'><i class='material-icons'>vertical_align_bottom</i></a><a class='btn btn-sm btn-primary' href='#' onclick='vistaPreviaArchivoSol(\"".$ruta_completa."\",\"".$archivo."\"); return false;'><i class='material-icons'>remove_red_eye</i></a></div>";
+                }
+            }
+        }
+        
+        // Cierra el gestor de directorios
+        closedir($gestor);
+        echo "</div>";
+    } else {
+        echo "No tiene archivos adjuntos";
+    }
+}
+
+
 function obtenerCodigoPlanCosto(){
    $dbh = new Conexion();
    $stmt = $dbh->prepare("SELECT IFNULL(max(c.codigo)+1,1)as codigo from plantillas_costo c");
@@ -5357,6 +5389,26 @@ function obtenerCodigoServicioPorIdServicio($idServicio){
    }
    return($valor);
 }
+function obtenerNombreConcatenadoProveedorDetalleSolicitudRecurso($codigo){
+  $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT DISTINCT p.nombre from solicitud_recursosdetalle d, af_proveedores p where d.cod_solicitudrecurso=$codigo and d.cod_proveedor=p.codigo");
+   $stmt->execute();
+   $valor="";
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor.=$row['nombre'].",";
+   }
+   return($valor);
+}
+ function obtenerPersonaCambioEstado($tipo,$objeto,$estado){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT * FROM ibnorca.estadoobjeto where IdTipoObjeto=$tipo and IdObjeto = $objeto and IdEstado=$estado");
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['idResponsable'];
+   }
+   return($valor);
+ }
 
 ?>
 
