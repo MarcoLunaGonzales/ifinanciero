@@ -315,10 +315,7 @@ function setBusquedaCuenta(codigoCuenta, numeroCuenta, nombreCuenta, codigoCuent
   document.getElementById('divCuentaDetalle'+fila).innerHTML='<span class=\"text-danger font-weight-bold\">['+numeroCuenta+']-'+nombreCuenta+' </span><br><span class=\"text-primary font-weight-bold small\">'+nombreCuentaAux+'</span>';
   configuracionCentros(fila,inicio);
   configuracionEstadosCuenta(fila,codigoCuenta,codigoCuentaAux);
-  facturacomprobanteSIS(fila);//icono de factura
   facturacomprobante(fila);//icono de factura
-  
-  
   $('#myModal').modal('hide');
   $(".selectpicker").selectpicker('refresh');
   $("#debe"+fila).focus();
@@ -367,21 +364,13 @@ function configuracionEstadosCuenta(fila,codigoCuenta,codigoCuentaAux){
   if(contador==0){
      $("#estados_cuentas"+fila).removeClass("d-none"); 
      $("#estados_cuentas"+fila).addClass("d-none");
+     /*$("#estados_cuentas"+fila).removeClass("d-none"); 
+     $("#estados_cuentas"+fila).removeClass("btn-danger"); 
+     $("#estados_cuentas"+fila).addClass("btn-success");*/
   }  
 }
-
-function facturacomprobanteSIS(fila){
-  var cod_confi_sis=document.getElementById('cod_sis_configuracion').value;
-  var cod_unidad =$("#unidad"+fila).val();  
-  if(cod_unidad==cod_confi_sis){
-      // alert("soy proyeto sis");
-      $("#boton_fac"+fila).removeClass("d-none"); 
-  }else{
-    $("#boton_fac"+fila).addClass("d-none"); 
-  }
-}
 function facturacomprobante(fila){
-  var cod_confi_iva=document.getElementById('cod_cuenta_configuracion_iva').value;
+  var cod_confi_iva=document.getElementById('cod_cuenta_configuracion_iva').value;  
   //alert(cod_confi_iva);
   var codigo =$("#cuenta"+fila).val();  
   if(codigo==cod_confi_iva){
@@ -604,10 +593,9 @@ function saveFactura(){
   var monto_debe_total_comprobante = $("#totaldeb").val();
   var monto_suma_factura=parseInt($('#imp_fac').val())+parseInt($('#ice_fac').val())+parseInt($('#exe_fac').val());
   console.log("SUMAS FACTURAS: "+monto_suma_factura+" "+monto_debe_total_comprobante);
-  if(monto_suma_factura != monto_debe_total_comprobante){
+  //if(monto_suma_factura != monto_debe_total_comprobante){
     //alert("El monto registrado en las facturas difiere del total!");
-    Swal.fire("Informativo!", "El monto registrado en las facturas difiere del total!", "warning");
-  }else{    
+  //}else{
     if($('#nit_fac').val()!=''){
       if($('#nro_fac').val()!=''){
         if($('#fecha_fac').val()!=''){        
@@ -625,30 +613,24 @@ function saveFactura(){
                     $("#link110").addClass("active");$("#link111").removeClass("active");$("#link112").removeClass("active");
                     $("#nav_boton1").addClass("active");$("#nav_boton2").removeClass("active");$("#nav_boton3").removeClass("active");                
                   }else{
-                    //alert('Campo "Razón Social" Vacío.');
-                    Swal.fire("Informativo!", "Campo 'Razón Social' Vacío.", "warning");
+                    alert('Campo "Razón Social" Vacío.');
                   }
               }else{
-                //alert('Campo 'Nro. Autorización' Vacío.');
-                Swal.fire("Informativo!", "Campo 'Nro. Autorización' Vacío.", "warning");
+                alert('Campo "Nro. Autorización" Vacío.');
               }
             }else{
-              //alert('Campo 'Importe' Vacío.');
-              Swal.fire("Informativo!", "Campo 'Importe' Vacío.", "warning");
+              alert('Campo "Importe" Vacío.');
             }
         }else{
-          //alert('Campo "Fecha" Vacío.');
-          Swal.fire("Informativo!", "Campo 'Fecha' Vacío.", "warning");
+          alert('Campo "Fecha" Vacío.');
         }  
       }else{
-        //alert('Campo "Nro.Factura" Vacío.');
-        Swal.fire("Informativo!", "Campo 'Nro. Factura' ", "warning");
+        alert('Campo "Nro. Factura" Vacío.');
       }  
     }else{
-      //alert('Campo "NIT" Vacío.');
-      Swal.fire("Informativo!", "Campo 'NIT' Vacío.", "warning");
+      alert('Campo "NIT" Vacío.');
     }
-  }
+ // }
 }
  function abrirFactura(index,nit,nro,fecha,razon,imp,exe,aut,con,ice,tipocompra,tazacero){
    var factura={
@@ -786,32 +768,26 @@ function saveFacturaDCC(){
                   $("#link110").addClass("active");$("#link111").removeClass("active");$("#link112").removeClass("active");
                   $("#nav_boton1").addClass("active");$("#nav_boton2").removeClass("active");$("#nav_boton3").removeClass("active");                 
                 }else{
-                  //alert('Campo "Razón Social" Vacío.');
-                  Swal.fire("Informativo!", "Campo 'Razón Social' Vacío.", "warning");
+                  alert('Campo "Razón Social" Vacío.');
                 }
               // }else{
               //   alert('Campo "Cod. Control" Vacío.');
               // }
             }else{
-              //alert('Campo "Nro. Autorización" Vacío.');
-              Swal.fire("Informativo!", "Campo 'Nro. Autorización' Vacío.", "warning");
+              alert('Campo "Nro. Autorización" Vacío.');
             }
           }else{
-            //alert('Campo "Importe" Vacío.');
-            Swal.fire("Informativo!", "Campo 'Importe' Vacío.", "warning");
+            alert('Campo "Importe" Vacío.');
           }
       }else{
-        //alert('Campo "Fecha" Vacío.');
-        Swal.fire("Informativo!", "Campo 'Fecha' Vacío.", "warning");
+        alert('Campo "Fecha" Vacío.');
       }  
     }else{
-      //alert('Campo "Nro. Factura" Vacío.');
-      Swal.fire("Informativo!", "Campo 'Nro. Factura' Vacío.", "warning");
+      alert('Campo "Nro. Factura" Vacío.');
     }
     
   }else{
-    //alert('Campo "NIT" Vacío.');
-    Swal.fire("Informativo!", "Campo 'NIT' Vacío.", "warning");
+    alert('Campo "NIT" Vacío.');
   }
 }
 
@@ -8184,7 +8160,6 @@ function guardarDatosProveedor(){
   var apellido_contacto =$("#apellido_contacto").val();
   var cargo_contacto =$("#cargo_contacto").val();
   var correo_contacto =$("#correo_contacto").val();
-  var numero_celular =$("#numero_celular").val();
 
    var ciudad_true=0;
   // validaciones de campos
@@ -8290,35 +8265,6 @@ function ajaxTipoProveedor_datos_add(codigo){
   }
   ajax.send(null)  
 }
-
-function ajaxTipoProveedorPersonaComprobantes(combo){
-  var contenedor;
-  var codigo=combo.value;
-  contenedor = document.getElementById('div_nombre_proveedor');
-  ajax=nuevoAjax();
-  ajax.open('GET', '../solicitudes/ajax_nombre_proveedor.php?codigo='+codigo,true);
-  ajax.onreadystatechange=function() {
-    if (ajax.readyState==4) {
-      contenedor.innerHTML = ajax.responseText;
-      $('.selectpicker').selectpicker(["refresh"]); 
-      ajaxTipoProveedor_datos_add_comprobantes(codigo);
-    }
-  }
-  ajax.send(null)  
-}
-function ajaxTipoProveedor_datos_add_comprobantes(codigo){
-  var contenedor;
-  contenedor = document.getElementById('div_datos_add_proveedor');
-  ajax=nuevoAjax();
-  ajax.open('GET', '../solicitudes/ajax_datos_add_proveedor.php?codigo='+codigo,true);
-  ajax.onreadystatechange=function() {
-    if (ajax.readyState==4) {
-      contenedor.innerHTML = ajax.responseText;
-      $('.selectpicker').selectpicker(["refresh"]); 
-    }
-  }
-  ajax.send(null)  
-}
 function seleccionarDepartamentoServicioCajaChica(){
  var parametros={"codigo":$("#pais_empresa").val()};
      $.ajax({
@@ -8367,16 +8313,11 @@ function guardarDatosProveedorCajaChica(){
   var paterno_p =$("#paterno_persona").val();
   var materno_p =$("#materno_persona").val();
   var identificacion =$("#identificacion").val();
-  var tipo_id =$("#tipo_id").val();
-  var tipo_id_otro =$("#tipo_id_otro").val();
-
   var pais =$("#pais_empresa").val();
   var estado =$("#departamento_empresa").val();
   var ciudad =$("#ciudad_empresa").val();
   var direccion =$("#direccion_empresa").val();
   var telefono =$("#telefono_empresa").val();
-  var numero_celular =$("#numero_celular").val();
-  
   var correo =$("#correo_empresa").val();
   var nombre_contacto =$("#nombre_contacto").val();
   var apellido_contacto =$("#apellido_contacto").val();
@@ -8398,7 +8339,7 @@ function guardarDatosProveedorCajaChica(){
       var sw=false;
     }
   }else{
-    if(nombre_p!=""&&paterno_p!=""&&materno_p!=""&&identificacion!=""&&(pais>0)&&(estado>0)&&direccion!=""&&telefono!=""&&correo!="")
+    if(nombre_p!=""&&paterno_p!=""&&materno_p!=""&&identificacion!=""&&(pais>0)&&(estado>0)&&direccion!=""&&telefono!=""&&correo!=""&&nombre_contacto!=""&&apellido_contacto!=""&&cargo_contacto!=""&&correo_contacto!="")
       var sw=true;
     else{
       var sw=false;
@@ -8424,7 +8365,7 @@ function guardarDatosProveedorCajaChica(){
           Swal.fire("Informativo!", "Ingrese el nombre de la Ciudad", "warning");
         }else{
           //proceso de guardado de informacion
-           var parametros={"tipo":$("#tipo_empresa").val(),"nacional":$("#nacional_empresa").val(),"nombre":nombre,"nombre_p":nombre_p,"paterno_p":paterno_p,"materno_p":materno_p,"identificacion":identificacion,"tipo_id":tipo_id,"tipo_id_otro":tipo_id_otro,"pais":pais,"estado":estado,"ciudad":ciudad,"otra":otra,"direccion":direccion,"telefono":telefono,"numero_celular":numero_celular,"correo":correo,"nombre_contacto":nombre_contacto,"apellido_contacto":apellido_contacto,"cargo_contacto":cargo_contacto,"correo_contacto":correo_contacto};
+           var parametros={"tipo":$("#tipo_empresa").val(),"nacional":$("#nacional_empresa").val(),"nombre":nombre,"nombre_p":nombre_p,"paterno_p":paterno_p,"materno_p":materno_p,"identificacion":identificacion,"pais":pais,"estado":estado,"ciudad":ciudad,"otra":otra,"direccion":direccion,"telefono":telefono,"correo":correo,"nombre_contacto":nombre_contacto,"apellido_contacto":apellido_contacto,"cargo_contacto":cargo_contacto,"correo_contacto":correo_contacto};
             $.ajax({
                type: "GET",
                dataType: 'html',
@@ -8436,15 +8377,11 @@ function guardarDatosProveedorCajaChica(){
                 },
                success:  function (resp) {
                   // actualizarRegistroProveedor();
-                  //actualizarRegistroProveedorCajaChica(cod_tcc,cod_cc,cod_dcc)
+                  actualizarRegistroProveedorCajaChica(cod_tcc,cod_cc,cod_dcc)
                   detectarCargaAjax();
                   $("#texto_ajax_titulo").html("Procesando Datos"); 
                   if(resp.trim()=="1"){
-                    //alerts.showSwal('success-message','index.php?opcion=DetalleCajaChicaForm&codigo='+cod_dcc+'&cod_tcc='+cod_tcc+'&cod_cc='+cod_cc);
-                    Swal.fire("Correcto!", "Los datos se actualizaron de forma correcta.", "success");
-                    actualizarComboBoxAjax();
-                  }if(resp.trim()=="2"){
-                    Swal.fire("Informativo!", "La Identificación o Nit ya se encuentra registrada en la base de datos...", "warning");                    
+                    alerts.showSwal('success-message','index.php?opcion=DetalleCajaChicaForm&codigo='+cod_dcc+'&cod_tcc='+cod_tcc+'&cod_cc='+cod_cc);
                   }else{
                     Swal.fire("Error!", "Ocurrio un error de envio", "warning");
                   }
@@ -8474,27 +8411,12 @@ function actualizarRegistroProveedorCajaChica(cod_tcc,cod_cc,cod_dcc){
         success:  function (resp) {
            detectarCargaAjax();
            $("#texto_ajax_titulo").html("Procesando Datos");
-           // $('.selectpicker').selectpicker("refresh"); 
-           Swal.fire("Correcto!", "Los datos se actualizaron de forma correcta.", "success");
-           actualizarComboBoxAjax();
+           $('.selectpicker').selectpicker("refresh"); 
            //alerts.showSwal('success-message','index.php?opcion=DetalleCajaChicaForm&codigo='+cod_dcc+'&cod_tcc='+cod_tcc+'&cod_cc='+cod_cc);
         }
     });  
 }
 
-function actualizarComboBoxAjax(){
-  var contenedor;  
-  contenedor = document.getElementById('div_contenedor_proveedor');
-  ajax=nuevoAjax();
-  ajax.open('GET', 'caja_chica/ajax_actualizarComboAjax.php',true);
-  ajax.onreadystatechange=function() {
-    if (ajax.readyState==4) {
-      contenedor.innerHTML = ajax.responseText;
-      $('.selectpicker').selectpicker(["refresh"]);             
-    }
-  }
-  ajax.send(null)  
-}//unidad_area-cargo
 
 function actualizarTablaClaServicios(){
   var codigo = $("#cod_plantilla").val();
@@ -8738,75 +8660,35 @@ function cambiarTituloPersonalModal(anio){
   }*/
 }
 
-function descuento_convertir_a_porcentaje(id){
-  var monto_precio=$("#monto_precio"+id).val();// precio de item
-  var descuento_bob=$("#descuento_bob"+id).val();//monto de descuento Bob
-  if(monto_precio<0 || monto_precio==0 || monto_precio==null){
-    Swal.fire("Informativo!", "El Precio del Item NO debe ser 0 o número negativo!", "warning");
-  }else{
-    var numero_porcentaje=parseFloat(descuento_bob)*100/parseFloat(monto_precio);
-    //alert(numero_porcentaje);
-    $("#descuento_por"+id).val(numero_porcentaje.toFixed(2));
-    calcularTotalFilaServicio2();
-  }
-}
-function descuento_convertir_a_bolivianos(id){
-  var monto_precio=$("#monto_precio"+id).val();// precio de item
-  var descuento_por=$("#descuento_por"+id).val();//monto de descuento %
-
-  if(monto_precio<0 || monto_precio==0 || monto_precio==null){
-    Swal.fire("Informativo!", "El Precio del Item NO debe ser 0 o número negativo!", "warning");
-  }else{
-    var monto_bob_porcentaje=parseFloat(descuento_por)*parseFloat(monto_precio)/100;
-    //alert(monto_bob_porcentaje);
-    $("#descuento_bob"+id).val(monto_bob_porcentaje.toFixed(2));
-    calcularTotalFilaServicio2();
-  }
-  
-
-  
-}
 
 function activarInputMontoFilaServicio2(){
 
   calcularTotalFilaServicio2();
 }
 function calcularTotalFilaServicio2(){
-  var sumal=0;  
+  var sumal=0;
   var total= $("#modal_numeroservicio").val();
   var comprobante_auxiliar=0;
   for (var i=1;i<=(total-1);i++){          
-    var monto_precio=$("#monto_precio"+i).val();    
-    var descuento_bob=$("#descuento_bob"+i).val();    
-    if(descuento_bob==null ||descuento_bob=='NaN'||descuento_bob==' '||descuento_bob==''){descuento_bob=0;}
-    var monto_importe_total=parseFloat(monto_precio)-parseFloat(descuento_bob);
-    //alert(monto_importe_total);
-    $("#modal_importe"+i).val(monto_importe_total);//irá en hidden 
-    $("#modal_importe_dos"+i).val(number_format(monto_importe_total,2));//para mostrar con formato
-
     var check=document.getElementById("modal_check"+i).checked;
-    if(check) {//BUSACMOS LOS CHECK ACTIVOS
-      comprobante_auxiliar=comprobante_auxiliar+1;        
-      //sumanos los importes
-      sumal+=parseFloat($("#modal_importe"+i).val());
-      //sacamos los datos de los items que se activaron
-      var cod_serv_tiposerv = document.getElementById("cod_serv_tiposerv"+i).value;
-      var servicio = document.getElementById("servicio"+i).value;
-      var nombre_servicio = document.getElementById("nombre_servicio"+i).value;
-      var cantidad=document.getElementById("cantidad"+i).value;
-      var importe=document.getElementById("importe"+i).value;
-      // aqui se guardan los servicios activados
-      document.getElementById("cod_serv_tiposerv_a"+i).value=cod_serv_tiposerv;
-      
-      //alert("servicio:"+servicio);
-      document.getElementById("servicio_a"+i).value=servicio;
-
-      document.getElementById("cantidad_a"+i).value=cantidad;
-      document.getElementById("importe_a"+i).value=importe;        
-      // alert(servicio);
-    }else{ nombre_servicio="";document.getElementById("servicio_a"+i).value="";}
-
-    //document.getElementById("descripcion_alterna"+i).value=nombre_servicio;//glosa descrip
+       if(check) {
+        comprobante_auxiliar=comprobante_auxiliar+1;
+        //sumanos los importes
+        sumal+=parseFloat($("#modal_importe"+i).val());
+        //sacamos los datos de los servicios que se activaron
+        var cod_serv_tiposerv = document.getElementById("cod_serv_tiposerv"+i).value;
+        var servicio = document.getElementById("servicio"+i).value;
+        var nombre_servicio = document.getElementById("nombre_servicio"+i).value;
+        var cantidad=document.getElementById("cantidad"+i).value;
+        var importe=document.getElementById("importe"+i).value;
+        // aqui se guardan los servicios activados
+        document.getElementById("cod_serv_tiposerv_a"+i).value=cod_serv_tiposerv;
+        document.getElementById("servicio_a"+i).value=servicio;
+        document.getElementById("cantidad_a"+i).value=cantidad;
+        document.getElementById("importe_a"+i).value=importe;        
+        // alert(servicio);
+      }else nombre_servicio="";
+      document.getElementById("descripcion_alterna"+i).value=nombre_servicio;//glosa descrip
   } 
   var resulta=sumal;
   //sumamos la parte que se adiciona
@@ -8921,52 +8803,6 @@ function AgregarSeviciosFacturacion2(obj) {
       }   
       ajax.send(null);
 }
-function AgregarSeviciosFacturacion2_servicios(obj) {
-  if($("#add_boton").length){
-    $("#add_boton").attr("disabled",true);
-  }
-  var IdTipo=document.getElementById("IdTipo").value;
-  // alert(IdTipo);
-      numFilas++;
-      cantidadItems++;
-      
-      filaActiva=numFilas;
-      document.getElementById("cantidad_filas").value=numFilas;
-      console.log("num: "+numFilas+" cantidadItems: "+cantidadItems);
-      fi = document.getElementById('fiel');
-      contenedor = document.createElement('div');
-      contenedor.id = 'div'+numFilas;  
-      fi.type="style";
-      fi.appendChild(contenedor);
-      var divDetalle;
-      divDetalle=$("#div"+numFilas);
-      //document.getElementById('nro_cuenta').focus();
-      ajax=nuevoAjax();
-      ajax.open("GET","servicios_presupuestos/ajax_addserviciosfacturacion.php?idFila="+numFilas+"&IdTipo="+IdTipo,true);
-      ajax.onreadystatechange=function(){
-        if (ajax.readyState==4) {
-          divDetalle.html(ajax.responseText);
-          divDetalle.bootstrapMaterialDesign();   
-          // $('#codigo_rendicionA').val("");
-          // $('#cod_tipo_documentoA').val("");//
-          $('#modal_editservicio').val("");
-          $('#cantidad_servicios').val("");
-          $('#modal_montoserv').val("");
-
-          $('.selectpicker').selectpicker("refresh");
-          // $('#modalAgregarDR').modal('show');
-          // if(numFilas!=1){
-          //   //alert((numFilas-1)+"-"+$("#monto_A"+(numFilas-1)).val());
-          //   sumartotalprueba2(numFilas-1);
-          // }        
-          if($("#add_boton").length){
-            $("#add_boton").removeAttr("disabled");
-          }
-          return false;
-       }
-      }   
-      ajax.send(null);
-}
 function sumartotalAddServiciosFacturacion(id){
   var sumatotal=0;
   var formulariop = document.getElementById("form1");
@@ -9041,19 +8877,13 @@ function filaTablaAGeneral(tabla,index,stringCabecera){
   var html="";
   var sumaTotalDetalle=0;
   var cantidadTotalDetalle=0;
-  var sumaTotalDescPor=0;
-  var sumaTotalDescBob=0;
   for (var i = 0; i < detalle_tabla_general[index-1].length; i++) {
     //alert(detalle_tabla_general[index-1][i].nombre);
     sumaTotalDetalle+=parseFloat(detalle_tabla_general[index-1][i].precioX);
-    sumaTotalDescPor+=parseFloat(detalle_tabla_general[index-1][i].descuento_porX);
-    sumaTotalDescBob+=parseFloat(detalle_tabla_general[index-1][i].descuento_bobX);
     cantidadTotalDetalle+=parseInt(detalle_tabla_general[index-1][i].cantidadX);
-    var importeX=parseFloat(detalle_tabla_general[index-1][i].precioX)-parseFloat(detalle_tabla_general[index-1][i].descuento_bobX);
-    html+="<tr><td>"+(i+1)+"</td><td>"+detalle_tabla_general[index-1][i].serviciox+"</td><td>"+detalle_tabla_general[index-1][i].cantidadX+"</td><td>"+number_format(detalle_tabla_general[index-1][i].precioX,2)+"</td><td>"+number_format(detalle_tabla_general[index-1][i].descuento_porX,2)+"</td><td>"+number_format(detalle_tabla_general[index-1][i].descuento_bobX,2)+"</td><td>"+number_format(importeX,2)+"</td><td>"+detalle_tabla_general[index-1][i].descripcion_alternaX+"</td></tr>";
+    html+="<tr><td>"+(i+1)+"</td><td>"+detalle_tabla_general[index-1][i].serviciox+"</td><td>"+detalle_tabla_general[index-1][i].cantidadX+"</td><td>"+number_format(detalle_tabla_general[index-1][i].precioX,2)+"</td><td>"+detalle_tabla_general[index-1][i].descripcion_alternaX+"</td></tr>";
   }
-  var sumaTotalImporte=sumaTotalDetalle-sumaTotalDescBob;
-  html+="<tr style='background-color:#d3dcde;'><td></td><td>TOTAL</td><td>"+cantidadTotalDetalle+"</td><td>"+number_format(sumaTotalDetalle,2)+"</td><td>"+number_format(sumaTotalDescPor,2)+"</td><td>"+number_format(sumaTotalDescBob,2)+"</td><td>"+number_format(sumaTotalImporte,2)+"</td><td></td></tr>";
+  html+="<tr style='background-color:#d3dcde;'><td></td><td>TOTAL</td><td>"+cantidadTotalDetalle+"</td><td>"+number_format(sumaTotalDetalle,2)+"</td><td></td></tr>";
   tabla.html(html);
   $("#modalDetalleFac").modal("show");  
 }
@@ -10277,18 +10107,12 @@ function cargarDatosRegistroProveedorActivoFijo(cod_activo){
 }
 function guardarDatosProveedorActivosFijos(){
   var nombre =$("#nombre_empresa").val();
-  var nombre_p =$("#nombre_persona").val();
-  var paterno_p =$("#paterno_persona").val();
-  var materno_p =$("#materno_persona").val();
-  var identificacion =$("#identificacion").val();
-  var tipo_id =$("#tipo_id").val();
-  var tipo_id_otro =$("#tipo_id_otro").val();
+  var nit =$("#nit_empresa").val();
   var pais =$("#pais_empresa").val();
   var estado =$("#departamento_empresa").val();
   var ciudad =$("#ciudad_empresa").val();
   var direccion =$("#direccion_empresa").val();
   var telefono =$("#telefono_empresa").val();
-  var numero_celular =$("#numero_celular").val();
   var correo =$("#correo_empresa").val();
   var nombre_contacto =$("#nombre_contacto").val();
   var apellido_contacto =$("#apellido_contacto").val();
@@ -10303,21 +10127,7 @@ function guardarDatosProveedorActivosFijos(){
 
    var ciudad_true=0;
   // validaciones de campos
-    // validaciones de campos
-  if($("#tipo_empresa").val()=='E'){
-    if(nombre!=""&&identificacion!=""&&(pais>0)&&(estado>0)&&direccion!=""&&telefono!=""&&correo!=""&&nombre_contacto!=""&&apellido_contacto!=""&&cargo_contacto!=""&&correo_contacto!="")
-      var sw=true;
-    else{
-      var sw=false;
-    }
-  }else{
-    if(nombre_p!=""&&paterno_p!=""&&materno_p!=""&&identificacion!=""&&(pais>0)&&(estado>0)&&direccion!=""&&telefono!=""&&correo!="")
-      var sw=true;
-    else{
-      var sw=false;
-    }
-  }
-   if(sw){
+   if(nombre!=""&&nit!=""&&(pais>0)&&(estado>0)&&direccion!=""&&telefono!=""&&correo!=""&&nombre_contacto!=""&&apellido_contacto!=""&&cargo_contacto!=""&&correo_contacto!=""){
      if(ciudad>0){
        ciudad_true=1;
      }else{
@@ -10336,7 +10146,7 @@ function guardarDatosProveedorActivosFijos(){
           Swal.fire("Informativo!", "Ingrese el nombre de la Ciudad", "warning");
         }else{
           //proceso de guardado de informacion
-           var parametros={"tipo":$("#tipo_empresa").val(),"nacional":$("#nacional_empresa").val(),"nombre":nombre,"nombre_p":nombre_p,"paterno_p":paterno_p,"materno_p":materno_p,"identificacion":identificacion,"tipo_id":tipo_id,"tipo_id_otro":tipo_id_otro,"pais":pais,"estado":estado,"ciudad":ciudad,"otra":otra,"direccion":direccion,"telefono":telefono,"numero_celular":numero_celular,"correo":correo,"nombre_contacto":nombre_contacto,"apellido_contacto":apellido_contacto,"cargo_contacto":cargo_contacto,"correo_contacto":correo_contacto};
+           var parametros={"tipo":$("#tipo_empresa").val(),"nacional":$("#nacional_empresa").val(),"nombre":nombre,"nit":nit,"pais":pais,"estado":estado,"ciudad":ciudad,"otra":otra,"direccion":direccion,"telefono":telefono,"correo":correo,"nombre_contacto":nombre_contacto,"apellido_contacto":apellido_contacto,"cargo_contacto":cargo_contacto,"correo_contacto":correo_contacto};
             $.ajax({
                type: "GET",
                dataType: 'html',
@@ -10352,11 +10162,8 @@ function guardarDatosProveedorActivosFijos(){
                   detectarCargaAjax();
                   $("#texto_ajax_titulo").html("Procesando Datos"); 
                   if(resp.trim()=="1"){
-                    //alerts.showSwal('success-message','index.php?opcion=DetalleCajaChicaForm&codigo='+cod_dcc+'&cod_tcc='+cod_tcc+'&cod_cc='+cod_cc);
-                    Swal.fire("Correcto!", "Los datos se actualizaron de forma correcta.", "success");
-                    actualizarComboBoxAjax();
-                  }if(resp.trim()=="2"){
-                    Swal.fire("Informativo!", "La Identificación o Nit ya se encuentra registrada en la base de datos...", "warning");                    
+                    alerts.showSwal('success-message','index.php?opcion=activofijoRegister&codigo='+cod_activo);
+                    // $('.selectpicker').selectpicker("refresh");
                   }else{
                     Swal.fire("Error!", "Ocurrio un error de envio", "warning");
                   }
@@ -10370,7 +10177,6 @@ function guardarDatosProveedorActivosFijos(){
      Swal.fire("Informativo!", "Todos los campos son requeridos", "warning");
    }
 }
-
 function actualizarRegistroProveedorActivoFijo(cod_activo){
   // var codigo = $("#cod_solicitud").val();
  var parametros={"codigo":"none"};
@@ -10387,9 +10193,7 @@ function actualizarRegistroProveedorActivoFijo(cod_activo){
            detectarCargaAjax();
            $("#texto_ajax_titulo").html("Procesando Datos"); 
            // $('.selectpicker').selectpicker("refresh");
-           //alerts.showSwal('success-message','index.php?opcion=activofijoRegister&codigo='+cod_activo);
-           Swal.fire("Correcto!", "Los datos se actualizaron de forma correcta.", "success");
-           actualizarComboBoxAjax();
+           alerts.showSwal('success-message','index.php?opcion=activofijoRegister&codigo='+cod_activo);
 
         }
     });  
@@ -10913,45 +10717,27 @@ function seleccionarCiudadServicioComprobantes(){
 }
 function guardarDatosProveedorComprobante(){
   var nombre =$("#nombre_empresa").val();
-  var nombre_p =$("#nombre_persona").val();
-  var paterno_p =$("#paterno_persona").val();
-  var materno_p =$("#materno_persona").val();
-  var identificacion =$("#identificacion").val();
-  var tipo_id =$("#tipo_id").val();
-  var tipo_id_otro =$("#tipo_id_otro").val();
-
+  var nit =$("#nit_empresa").val();
   var pais =$("#pais_empresa").val();
   var estado =$("#departamento_empresa").val();
   var ciudad =$("#ciudad_empresa").val();
   var direccion =$("#direccion_empresa").val();
   var telefono =$("#telefono_empresa").val();
-  var numero_celular =$("#numero_celular").val();
-  
   var correo =$("#correo_empresa").val();
   var nombre_contacto =$("#nombre_contacto").val();
   var apellido_contacto =$("#apellido_contacto").val();
   var cargo_contacto =$("#cargo_contacto").val();
   var correo_contacto =$("#correo_contacto").val();
 
+  // var cod_tcc =$("#cod_tcc").val();
+  // var cod_cc =$("#cod_cc").val();
+  // var cod_dcc =$("#cod_dcc").val();
+
   // alert("cod_tcc:"+cod_tcc+"-cod_cc:"+cod_cc+"-cod_dcc:"+cod_dcc);
 
    var ciudad_true=0;
   // validaciones de campos
-    if($("#tipo_empresa").val()=='E'){
-    if(nombre!=""&&identificacion!=""&&(pais>0)&&(estado>0)&&direccion!=""&&telefono!=""&&correo!=""&&nombre_contacto!=""&&apellido_contacto!=""&&cargo_contacto!=""&&correo_contacto!="")
-      var sw=true;
-    else{
-      var sw=false;
-    }
-  }else{
-    if(nombre_p!=""&&paterno_p!=""&&materno_p!=""&&identificacion!=""&&(pais>0)&&(estado>0)&&direccion!=""&&telefono!=""&&correo!="")
-      var sw=true;
-    else{
-      var sw=false;
-    }
-  }
-
-   if(sw){
+   if(nombre!=""&&nit!=""&&(pais>0)&&(estado>0)&&direccion!=""&&telefono!=""&&correo!=""&&nombre_contacto!=""&&apellido_contacto!=""&&cargo_contacto!=""&&correo_contacto!=""){
      if(ciudad>0){
        ciudad_true=1;
      }else{
@@ -10970,7 +10756,7 @@ function guardarDatosProveedorComprobante(){
           Swal.fire("Informativo!", "Ingrese el nombre de la Ciudad", "warning");
         }else{
           //proceso de guardado de informacion
-           var parametros={"tipo":$("#tipo_empresa").val(),"nacional":$("#nacional_empresa").val(),"nombre":nombre,"nombre_p":nombre_p,"paterno_p":paterno_p,"materno_p":materno_p,"identificacion":identificacion,"tipo_id":tipo_id,"tipo_id_otro":tipo_id_otro,"pais":pais,"estado":estado,"ciudad":ciudad,"otra":otra,"direccion":direccion,"telefono":telefono,"numero_celular":numero_celular,"correo":correo,"nombre_contacto":nombre_contacto,"apellido_contacto":apellido_contacto,"cargo_contacto":cargo_contacto,"correo_contacto":correo_contacto};
+           var parametros={"tipo":$("#tipo_empresa").val(),"nacional":$("#nacional_empresa").val(),"nombre":nombre,"nit":nit,"pais":pais,"estado":estado,"ciudad":ciudad,"otra":otra,"direccion":direccion,"telefono":telefono,"correo":correo,"nombre_contacto":nombre_contacto,"apellido_contacto":apellido_contacto,"cargo_contacto":cargo_contacto,"correo_contacto":correo_contacto};
             $.ajax({
                type: "GET",
                dataType: 'html',

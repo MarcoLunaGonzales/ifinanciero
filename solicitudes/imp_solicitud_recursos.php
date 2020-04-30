@@ -122,10 +122,14 @@ $tituloImporte="";
             <td class="s3 text-center" rowspan="2">N° Factura</td>
             <td class="s3 text-center" rowspan="2">Descripci&oacute;n</td>
             <td class="s3 text-center">Importe</td>
+            <td class="s3 text-center">Ret</td>
+            <td class="s3 text-center">Sub Total</td>
         </tr>
         <tr class="bg-celeste">
             <td class="s3 text-center">BOB</td>
             <td class="s3 text-center">%</td>
+            <td class="s3 text-center">BOB</td>
+            <td class="s3 text-center">BOB</td>
             <td class="s3 text-center">BOB</td>
         </tr>
         <?php
@@ -141,44 +145,65 @@ $tituloImporte="";
             $retencionX=$row["cod_confretencion"];
             $totalImportePres+=$importeX;
             $totalImporte+=$importeSolX;
+
+            if($importeX!=0){
+             $importePorcent=($importeSolX*100)/$importeX;   
+            }else{
+             $importePorcent=0;
+            }      
             if($retencionX!=0){
               $tituloImporte=nameRetencion($retencionX);
+              $porcentajeRetencion=porcentRetencion($retencionX);
+              $montoImporte=$importeSolX*($porcentajeRetencion/100);
+              $montoImporteRes=$importeSolX-$montoImporte;     
             }else{
-            $tituloImporte="Ninguno"; 
+             $tituloImporte="Ninguno";
+             $montoImporte=0;
+             $montoImporteRes=0; 
             }
+            
             $numeroCuentaX=trim($row['numero']);
             $nombreCuentaX=trim($row['nombre']);
         ?>
         <tr>
             <td class="s3 text-center" width="4%"><?=$index?></td>
-            <td class="s3 text-center"></td>
-            <td class="s3 text-center"></td>
+            <td class="s3 text-center"><?=number_format($importeX, 2, '.', '')?></td>
+            <td class="s3 text-center"><?=number_format($importePorcent, 2, '.', '')?></td>
             <td class="s3 text-center" width="14%"><?=$nombreArea?></td>
             <td class="s3 text-center" width="14%"></td>
             <td class="s3 text-left" width="40%"><?=$detalleX?></td>
+            <td class="s3 text-right"><?=number_format($montoImporte, 2, '.', '')?></td>
+            <td class="s3 text-right"><?=number_format($montoImporteRes, 2, '.', '')?></td>
             <td class="s3 text-right"><?=number_format($importeSolX, 2, '.', '')?></td>
         </tr> 
         <?php  
         $index++; 
         }
         ?>
-        <tr>
-            <td class="s3 text-center" rowspan="3" colspan="3"></td>
+        <!--<tr>
+            <td class="s3 text-center" rowspan="2" colspan="3"></td>
             <td class="s3 text-right bg-celeste" colspan="3">Sub Total (BOB)</td>
+            <td class="s3 text-right"></td>
+            <td class="s3 text-right"></td>
             <td class="s3 text-right"><?=number_format($totalImporte, 2, '.', '')?></td>
         </tr>
         <tr>
             <td class="s3 text-right bg-celeste" colspan="2">Retenci&oacute;n de Impuestos</td>
             <td class="s3 text-center"><?=$tituloImporte?></td>
             <td class="s3 text-right"></td>
-        </tr>
+        </tr>-->
         <tr>
+            <td class="s3 text-center" colspan="3"></td>
             <td class="s3 text-right bg-celeste" colspan="3">TOTAL (BOB)</td>
+            <td class="s3 text-right"></td>
+            <td class="s3 text-right"></td>
             <td class="s3 text-right"><?=number_format($totalImporte, 2, '.', '')?></td>
         </tr>
         <tr>
             <td class="s3 text-center" colspan="3">V°B° P-SA/P-DNAF</td>
             <td class="s3 text-right bg-celeste" colspan="3">TOTAL (USD)</td>
+            <td class="s3 text-right"></td>
+            <td class="s3 text-right"></td>
             <td class="s3 text-right"><?=number_format($totalImporte/6.96, 2, '.', '')?></td>
         </tr>
      </table>
