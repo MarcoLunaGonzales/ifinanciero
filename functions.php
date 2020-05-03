@@ -5144,7 +5144,7 @@ where d.glosa=e.glosa and d.cod_anio=$anio and d.cod_simulacionservicio=$simulac
      case 2725:
        return 5;
        break;
-     case 2732:
+     case 2822:
        return 6;
        break;       
      default:
@@ -5169,7 +5169,7 @@ where d.glosa=e.glosa and d.cod_anio=$anio and d.cod_simulacionservicio=$simulac
      case 2730:
        return 2;
        break;
-     case 2731:
+     case 2823:
        return 6;
        break;       
      default:

@@ -18,7 +18,7 @@ $tipoSolicitud =$_GET['tipo'];
                         $areaSol=0;
 						$idFila=1;
 ?><script>numFilas=0;cantidadItems=0;itemFacturas=[];</script><?php
-						$cuentasCodigos=[];$conta=0;$auxAnio=0;$detalleAux="";$contAux=0;$totalImportePres=0;$totalImporteSol=0;
+						$cuentasCodigos=[];$conta=0;$auxAnio=-1;$detalleAux="";$contAux=0;$totalImportePres=0;$totalImporteSol=0;
 
 						while ($row = $detalle->fetch(PDO::FETCH_ASSOC)) {
 							$codigo_fila=explode("###",$row['codigo_detalle']);
@@ -45,8 +45,12 @@ $tipoSolicitud =$_GET['tipo'];
                               $importeX=$row['monto_externo'];
                               $importeSolX=$row['monto_externo'];
 							}
+              $tituloAnio="Año ".$row['cod_anio'];
+              if($row['cod_anio']<=1){
+                $tituloAnio="Año 1 - Et ".($row['cod_anio']+1);
+              }
 							$nombrePartidaX="<b class='text-warning'>".$row['partida']."</b>";
-							$nombrePartidaDetalleX="<b class='text-warning'>Cuenta</b> - <b class='text-dark'>Año ".$row['cod_anio']."</b>";
+							$nombrePartidaDetalleX="<b class='text-warning'>Cuenta</b> - <b class='text-dark'>".$tituloAnio."</b>";
                             
 							
 							$entro=0;
@@ -59,7 +63,7 @@ $tipoSolicitud =$_GET['tipo'];
 								$anioSelect=(int)$row['cod_anio'];
                                  ?>
                                  <script>
-                                    $('#anio_solicitud').append("<option value='<?=$anioSelect?>' >AÑO <?=$anioSelect?></option>");
+                                    $('#anio_solicitud').append("<option value='<?=$anioSelect?>' ><?=$tituloAnio?></option>");
                                     $('.selectpicker').selectpicker("refresh");
                                   </script>
 						       <?php  				 			

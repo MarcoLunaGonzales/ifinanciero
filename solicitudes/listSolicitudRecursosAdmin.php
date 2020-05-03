@@ -65,7 +65,6 @@ $item_1=2708;
                     <table class="table table-condesed" id="tablePaginator">
                       <thead>
                         <tr>
-                          <th class="text-center">#</th>
                           <th>Of. - Area</th>
                           <th>Nº Sol.</th>
                           <th>Cod. Servicio</th>
@@ -117,7 +116,6 @@ $item_1=2708;
                            }
 ?>
                         <tr>
-                          <td align="center"><?=$index;?></td>
                           <td><?=$unidad;?>- <?=$area;?></td>
                           <td class="font-weight-bold"><?=$numeroSol;?></td>
                           <td><?=$codigoServicio;?></td>
@@ -333,10 +331,9 @@ $item_1=2708;
               <div class="row" id="div_cabecera" >
                     
               </div>
-                <table class="table table-condesed" id="tablePaginator">
+                <table class="table table-condesed" id="tablePaginatorHead">
                       <thead>
                         <tr class="bg-info">
-                          <th class="text-center">#</th>
                           <th>Of. - Area</th>
                           <th>Nº Sol.</th>
                           <th>Cod. Servicio</th>
@@ -388,7 +385,6 @@ $item_1=2708;
                            }
 ?>
                         <tr>
-                          <td align="center"><?=$index;?></td>
                           <td><?=$unidad;?> - <?=$area;?></td>
                           <td class="font-weight-bold"><?=$numeroSol;?></td>
                           <td><?=$codigoServicio;?></td>
