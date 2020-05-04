@@ -16,7 +16,7 @@ $nombre_simulacion = $resultSimu['nombre'];
 $cod_area_simulacion = $resultSimu['cod_area'];
 $name_area_simulacion=trim(abrevArea($cod_area_simulacion),'-');
 //obtenemos la cantidad de datos registrados de la simulacion en curso
-$stmtCantidad = $dbh->prepare("SELECT count(codigo) as cantidad FROM solicitudes_facturacion where cod_simulacion_servicio=$codigo_simulacion and cod_estado=1");
+$stmtCantidad = $dbh->prepare("SELECT count(codigo) as cantidad FROM solicitudes_facturacion where cod_simulacion_servicio=$codigo_simulacion ");//and cod_estado=1
 $stmtCantidad->execute();
 $resutCanitdad = $stmtCantidad->fetch();
 $cantidad_items = $resutCanitdad['cantidad'];
@@ -25,14 +25,14 @@ if(isset($_GET['q'])){
 }
 if($cantidad_items>0){
   //datos registrado de la simulacion en curso
-  $stmt = $dbh->prepare("SELECT sf.*,t.nombre as nombre_cliente FROM solicitudes_facturacion sf,clientes t  where sf.cod_cliente=t.codigo and sf.cod_simulacion_servicio=$codigo_simulacion and  sf.cod_estado=1");
+  $stmt = $dbh->prepare("SELECT sf.*,t.nombre as nombre_cliente,(select s.nombre from estados_solicitudfacturacion s where s.codigo = sf.cod_estadosolicitudfacturacion) as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')as fecha_registro_x,DATE_FORMAT(sf.fecha_solicitudfactura,'%d/%m/%Y')as fecha_solicitudfactura_x FROM solicitudes_facturacion sf,clientes t  where sf.cod_cliente=t.codigo and sf.cod_simulacion_servicio=$codigo_simulacion ");//and  sf.cod_estado=1
   $stmt->execute();
   $stmt->bindColumn('codigo', $codigo_facturacion);
   $stmt->bindColumn('cod_simulacion_servicio', $cod_simulacion_servicio);
   $stmt->bindColumn('cod_unidadorganizacional', $cod_unidadorganizacional);
   $stmt->bindColumn('cod_area', $cod_area);
-  $stmt->bindColumn('fecha_registro', $fecha_registro);
-  $stmt->bindColumn('fecha_solicitudfactura', $fecha_solicitudfactura);
+  $stmt->bindColumn('fecha_registro_x', $fecha_registro);
+  $stmt->bindColumn('fecha_solicitudfactura_x', $fecha_solicitudfactura);
   $stmt->bindColumn('cod_tipoobjeto', $cod_tipoobjeto);
   $stmt->bindColumn('cod_tipopago', $cod_tipopago);
   $stmt->bindColumn('cod_cliente', $cod_cliente);
@@ -43,6 +43,9 @@ if($cantidad_items>0){
   $stmt->bindColumn('nombre_cliente', $nombre_cliente);
   $stmt->bindColumn('nro_correlativo', $nro_correlativo);
   $stmt->bindColumn('persona_contacto', $persona_contacto);
+  $stmt->bindColumn('codigo_alterno', $codigo_alterno);
+  $stmt->bindColumn('cod_estadosolicitudfacturacion', $codEstado);
+  $stmt->bindColumn('estado', $estado);
   ?>
   <div class="content">
     <div class="container-fluid">
@@ -63,16 +66,18 @@ if($cantidad_items>0){
                             <th class="text-center">#</th>                          
                             <th>Of.</th>
                             <th>Area</th>                            
-                            <th>#Soli.</th>
-                            <th>F. Registro</th>
-                            <th>F. a Facturar</th>
-                            <th>#Fact</th>
+                            <th>Nro<br>Soli.</th>
+                            <th>Codigo<br>Servicio</th>
+                            <th>Fecha<br>Registro</th>
+                            <th>Fecha a<br>Facturar</th>
+                            <th>Nro<br>Factura</th>
                             <!-- <th>Precio (BOB)</th>                            
                             <th>Desc(%)</th>  
                             <th>Desc(BOB)</th>   -->
                             <th width="8%">Importe (BOB)</th>  
-                            <th>Per.Contacto</th>  
+                            <th>Persona<br>Contacto</th>  
                             <th width="35%">Razón Social</th>                            
+                            <th width="5%">Estado</th>    
                             <th class="text-right">Actions</th>
                           </tr>
                         </thead>
@@ -83,6 +88,26 @@ if($cantidad_items>0){
                           $codigo_fact_x=0;
                           $cont= array();
                           while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+                            switch ($codEstado) {
+                            case 1:
+                              $btnEstado="btn-default";
+                            break;
+                            case 2:
+                              $btnEstado="btn-danger";
+                            break;
+                            case 3:
+                              $btnEstado="btn-success";
+                            break;
+                            case 4:
+                              $btnEstado="btn-warning";
+                            break;
+                            case 5:
+                              $btnEstado="btn-warning";
+                            break;
+                            case 6:
+                              $btnEstado="btn-default";
+                            break;
+                          }
                             //verificamos si ya tiene factua generada                            
                             $stmtFact = $dbh->prepare("SELECT codigo, nro_factura from facturas_venta where cod_solicitudfacturacion=$codigo_facturacion and cod_estadofactura=1");
                             $stmtFact->execute();
@@ -137,6 +162,7 @@ if($cantidad_items>0){
                             <td><?=$nombre_uo;?></td>
                             <td><?=$nombre_area;?></td>
                             <td><?=$nro_correlativo;?></td>
+                            <td><?=$codigo_alterno;?></td>
                             <td><?=$fecha_registro;?></td>
                             <td><?=$fecha_solicitudfactura;?></td>
                             <td><?=$nro_fact_x;?></td>
@@ -146,15 +172,17 @@ if($cantidad_items>0){
                             <td class="text-right"><?=formatNumberDec($sumaTotalImporte) ;?></td>
                             <td class="text-left"><?=$persona_contacto;?></td>
                             <td><?=$razon_social;?></td>                            
+                            <td><button class="btn <?=$btnEstado?> btn-sm btn-link"><?=$estado;?></button></td>
                             <td class="td-actions text-right">
                               <?php
                                 if($globalAdmin==1){
-                                  if($codigo_fact_x==0){?>
+                                  if($codigo_fact_x==0){
+                                    if($codEstado==1){?>
                                     <a title="Editar Simulación - Detalle" href='<?=$urlRegisterSolicitudfactura;?>&cod_s=<?=$codigo_simulacion?>&cod_f=<?=$codigo_facturacion?>&cod_sw=1' class="btn btn-info">
                                       <i class="material-icons"><?=$iconEdit;?></i>
                                     </a>
                                     
-                                  <?php }else{?>
+                                  <?php }}else{?>
                                     <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=2' target="_blank"><i class="material-icons" title="Imprimir Factura">print</i></a>
                                   <?php }
                                 ?>
@@ -221,9 +249,9 @@ if($cantidad_items>0){
                       <th>#</th>
                       <th width="20%">Item</th>
                       <th>Canti.</th>
-                      <th>Precio(BOB)</th>  
+                      <!-- <th>Precio(BOB)</th>  
                       <th>Desc(%)</th> 
-                      <th>Desc(BOB)</th> 
+                      <th>Desc(BOB)</th>  -->
                       <th width="10%">Importe(BOB)</th> 
                       <th width="45%">Glosa</th>                    
                       </tr>

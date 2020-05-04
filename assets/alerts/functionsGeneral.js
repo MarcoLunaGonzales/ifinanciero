@@ -8381,9 +8381,16 @@ function guardarDatosProveedorCajaChica(){
                   detectarCargaAjax();
                   $("#texto_ajax_titulo").html("Procesando Datos"); 
                   if(resp.trim()=="1"){
-                    alerts.showSwal('success-message','index.php?opcion=DetalleCajaChicaForm&codigo='+cod_dcc+'&cod_tcc='+cod_tcc+'&cod_cc='+cod_cc);
+                    //alerts.showSwal('success-message','index.php?opcion=DetalleCajaChicaForm&codigo='+cod_dcc+'&cod_tcc='+cod_tcc+'&cod_cc='+cod_cc);
+                    Swal.fire("Correcto!", "Los datos se actualizaron de forma correcta.", "success");
+                    actualizarComboBoxAjax();
                   }else{
-                    Swal.fire("Error!", "Ocurrio un error de envio", "warning");
+                    if(resp.trim()=="2"){
+                      Swal.fire("Informativo!", "La identificación del proveedor ya se encuentra registrado.", "warning");
+                      actualizarComboBoxAjax();
+                    }else{
+                      Swal.fire("Error!", "Ocurrio un error de envio", "warning");
+                    }                    
                   }
                }
              });  
@@ -8413,6 +8420,8 @@ function actualizarRegistroProveedorCajaChica(cod_tcc,cod_cc,cod_dcc){
            $("#texto_ajax_titulo").html("Procesando Datos");
            $('.selectpicker').selectpicker("refresh"); 
            //alerts.showSwal('success-message','index.php?opcion=DetalleCajaChicaForm&codigo='+cod_dcc+'&cod_tcc='+cod_tcc+'&cod_cc='+cod_cc);
+           Swal.fire("Correcto!", "Los datos se actualizaron de forma correcta.", "success");
+           actualizarComboBoxAjax();
         }
     });  
 }
@@ -8692,6 +8701,7 @@ function activarInputMontoFilaServicio2(){
   calcularTotalFilaServicio2();
 }
 function calcularTotalFilaServicio2(){
+  console.log('entre');
   var sumal=0;  
   var total= $("#modal_numeroservicio").val();
   var comprobante_auxiliar=0;
@@ -8808,6 +8818,7 @@ function AgregarSeviciosFacturacion2(obj) {
     $("#add_boton").attr("disabled",true);
   }
   var cod_area=document.getElementById("cod_area").value;
+    var IdTipo=document.getElementById("IdTipo").value;
   // alert(cod_area);
       numFilas++;
       cantidadItems++;
@@ -8824,7 +8835,52 @@ function AgregarSeviciosFacturacion2(obj) {
       divDetalle=$("#div"+numFilas);
       //document.getElementById('nro_cuenta').focus();
       ajax=nuevoAjax();
-      ajax.open("GET","simulaciones_servicios/ajax_addserviciosfacturacion.php?idFila="+numFilas+"&cod_area="+cod_area,true);
+      ajax.open("GET","simulaciones_servicios/ajax_addserviciosfacturacion.php?idFila="+numFilas+"&cod_area="+cod_area+'&IdTipo='+IdTipo,true);
+      ajax.onreadystatechange=function(){
+        if (ajax.readyState==4) {
+          divDetalle.html(ajax.responseText);
+          divDetalle.bootstrapMaterialDesign();   
+          // $('#codigo_rendicionA').val("");
+          // $('#cod_tipo_documentoA').val("");//
+          $('#modal_editservicio').val("");
+          $('#cantidad_servicios').val("");
+          $('#modal_montoserv').val("");
+
+          $('.selectpicker').selectpicker("refresh");
+          // $('#modalAgregarDR').modal('show');
+          // if(numFilas!=1){
+          //   //alert((numFilas-1)+"-"+$("#monto_A"+(numFilas-1)).val());
+          //   sumartotalprueba2(numFilas-1);
+          // }        
+          if($("#add_boton").length){
+            $("#add_boton").removeAttr("disabled");
+          }
+          return false;
+       }
+      }   
+      ajax.send(null);
+}
+
+function AgregarSeviciosFacturacion_soli_manual(obj) {
+  if($("#add_boton").length){
+    $("#add_boton").attr("disabled",true);
+  }
+      numFilas++;
+      cantidadItems++;
+      
+      filaActiva=numFilas;
+      document.getElementById("cantidad_filas").value=numFilas;
+      console.log("num: "+numFilas+" cantidadItems: "+cantidadItems);
+      fi = document.getElementById('fiel');
+      contenedor = document.createElement('div');
+      contenedor.id = 'div'+numFilas;  
+      fi.type="style";
+      fi.appendChild(contenedor);
+      var divDetalle;
+      divDetalle=$("#div"+numFilas);
+      //document.getElementById('nro_cuenta').focus();
+      ajax=nuevoAjax();
+      ajax.open("GET","simulaciones_servicios/ajax_addserviciosfacturacion_manual.php?idFila="+numFilas,true);
       ajax.onreadystatechange=function(){
         if (ajax.readyState==4) {
           divDetalle.html(ajax.responseText);
@@ -8957,6 +9013,95 @@ function sumartotalAddServiciosFacturacion(id){
 
   $("#monto_total").val(number_format(monto_Total,2));  
   // $("#monto_faltante").val(monto_faltante);  
+}
+function descuento_convertir_a_porcentaje_add_manual(id){
+  var monto_precio=$("#modal_montoserv"+id).val();// precio de item
+  var descuento_bob=$("#descuento_bob_add"+id).val();//monto de descuento Bob
+  if(monto_precio<0 || monto_precio==0 || monto_precio==null){
+    Swal.fire("Informativo!", "El Precio del Item NO debe ser 0 o número negativo!", "warning");
+  }else{
+    var numero_porcentaje=parseFloat(descuento_bob)*100/parseFloat(monto_precio);
+    //alert(numero_porcentaje);
+    $("#descuento_por_add"+id).val(numero_porcentaje.toFixed(2));
+    //agregamos al total
+    var importe_total=parseFloat(monto_precio)-parseFloat(descuento_bob);    
+    $("#modal_importe_add"+id).val(importe_total);//irá en hidden 
+    $("#modal_importe_dos_add"+id).val(number_format(importe_total,2));//para mostrar con formato
+
+
+
+    sumartotalAddServiciosFacturacion_manual(id);
+  }
+}
+function descuento_convertir_a_bolivianos_add_manual(id){
+  var monto_precio=$("#modal_montoserv"+id).val();// precio de item
+  var descuento_por=$("#descuento_por_add"+id).val();//monto de descuento %
+
+  if(monto_precio<0 || monto_precio==0 || monto_precio==null){
+    Swal.fire("Informativo!", "El Precio del Item NO debe ser 0 o número negativo!", "warning");
+  }else{
+    var monto_bob_porcentaje=parseFloat(descuento_por)*parseFloat(monto_precio)/100;
+    //alert(monto_bob_porcentaje);
+    $("#descuento_bob_add"+id).val(monto_bob_porcentaje.toFixed(2));
+
+     //agregamos al total
+    var importe_total=parseFloat(monto_precio)-parseFloat(monto_bob_porcentaje);    
+    $("#modal_importe_add"+id).val(importe_total);//irá en hidden 
+    $("#modal_importe_dos_add"+id).val(number_format(importe_total,2));//para mostrar con formato
+
+
+     sumartotalAddServiciosFacturacion_manual(id);
+  }  
+}
+
+function sumartotalAddServiciosFacturacion_manual(id){
+  var sumatotal=0;
+  var formulariop = document.getElementById("form1");
+  // alert(formulariop.elements.length);
+  for (var i=0;i<formulariop.elements.length;i++){
+    if (formulariop.elements[i].id.indexOf("modal_importe_add") !== -1 ){    
+      var monto_precio=formulariop.elements[i].value;      
+      console.log("monto "+monto_precio);
+      sumatotal += parseFloat((formulariop.elements[i].value) * 1);
+    }  
+  }
+  
+  
+  var modalmonto_total=parseFloat(0);
+  // alert(modalmonto_total);
+  if (modalmonto_total==''){modalmonto_total=0;}
+
+  monto_Total= parseFloat(modalmonto_total)+parseFloat(sumatotal);
+
+  $("#monto_total").val(number_format(monto_Total,2));  
+  // $("#monto_faltante").val(monto_faltante);  
+}
+function borrarItemSeriviciosFacturacion_manual(idF){ 
+  var elem = document.getElementById('div'+idF);
+  elem.parentNode.removeChild(elem);
+  if(idF<numFilas){
+    for (var i = parseInt(idF); i < (numFilas+1); i++) {
+      var nuevoId=i+1;
+      $("#div"+nuevoId).attr("id","div"+i);
+      $("#modal_editservicio"+nuevoId).attr("name","modal_editservicio"+i);
+      $("#modal_editservicio"+nuevoId).attr("id","modal_editservicio"+i);
+      $("#cantidad_servicios"+nuevoId).attr("name","cantidad_servicios"+i);
+      $("#cantidad_servicios"+nuevoId).attr("id","cantidad_servicios"+i);
+
+      $("#modal_montoserv"+nuevoId).attr("name","modal_montoserv"+i);
+      $("#modal_montoserv"+nuevoId).attr("id","modal_montoserv"+i);
+      $("#descripcion"+nuevoId).attr("name","descripcion"+i);
+      $("#descripcion"+nuevoId).attr("id","descripcion"+i);       
+    }
+  } 
+  numFilas=numFilas-1;
+  cantidadItems=cantidadItems-1;
+  filaActiva=numFilas;
+  document.getElementById("cantidad_filas").value=numFilas;
+  // document.getElementById("totalhab").value=numFilas;
+  $("#monto_total").val(numFilas);
+  console.log("num: "+numFilas+" cantidadItems: "+cantidadItems); 
+  sumartotalAddServiciosFacturacion_manual("null");   
 }
 function borrarItemSeriviciosFacturacion(idF){ 
   var elem = document.getElementById('div'+idF);
@@ -10298,10 +10443,16 @@ function guardarDatosProveedorActivosFijos(){
                   detectarCargaAjax();
                   $("#texto_ajax_titulo").html("Procesando Datos"); 
                   if(resp.trim()=="1"){
-                    alerts.showSwal('success-message','index.php?opcion=activofijoRegister&codigo='+cod_activo);
-                    // $('.selectpicker').selectpicker("refresh");
+                    //alerts.showSwal('success-message','index.php?opcion=activofijoRegister&codigo='+cod_activo);                    
+                    Swal.fire("Correcto!", "Los datos se actualizaron de forma correcta.", "success");
+                    actualizarComboBoxAjax();
                   }else{
-                    Swal.fire("Error!", "Ocurrio un error de envio", "warning");
+                    if(resp.trim()=="2"){
+                      Swal.fire("Informativo!", "La identificación del proveedor ya se encuentra registrado.", "warning");
+                      actualizarComboBoxAjax();
+                    }else{
+                      Swal.fire("Error!", "Ocurrio un error de envio", "warning");
+                    }                       
                   }
                }
              });  
@@ -10329,11 +10480,175 @@ function actualizarRegistroProveedorActivoFijo(cod_activo){
            detectarCargaAjax();
            $("#texto_ajax_titulo").html("Procesando Datos"); 
            // $('.selectpicker').selectpicker("refresh");
-           alerts.showSwal('success-message','index.php?opcion=activofijoRegister&codigo='+cod_activo);
+           //alerts.showSwal('success-message','index.php?opcion=activofijoRegister&codigo='+cod_activo);
+           Swal.fire("Correcto!", "Los datos se actualizaron de forma correcta.", "success");
+           actualizarComboBoxAjax();
 
         }
     });  
 }
+
+function actualizarComboBoxAjax(){
+  var contenedor;  
+  contenedor = document.getElementById('div_contenedor_proveedor');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'caja_chica/ajax_actualizarComboAjax.php',true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);             
+    }
+  }
+  ajax.send(null)  
+}//unidad_area-cargo
+
+
+
+function cargarDatosRegistroContacto(){
+  var cod_cliente=$("#cod_cliente").val();
+  var cod_personal=$("#cod_personal").val();  
+  if(cod_cliente==null  || cod_cliente=='' ){
+        Swal.fire("Informativo!", "Seleccione un cliente por favor.", "warning");
+  }else{
+    var parametros={"cod":"none"};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "simulaciones_servicios/ajaxListarDatosRegistroContacto.php?cod_cliente="+cod_cliente+"&cod_personal="+cod_personal,
+        data: parametros,
+        beforeSend: function () {
+        $("#texto_ajax_titulo").html("Obteniendo datos del servicio..."); 
+          iniciarCargaAjax();        
+        },
+        success:  function (resp) {
+           detectarCargaAjax();
+           $("#datosProveedorNuevo").html(resp);
+           $("#texto_ajax_titulo").html("Procesando Datos"); 
+           // $("#pais_contacto").val("26"); //para el pais de BOLIVIA
+           $("#departamento_contacto").val("480"); // departamento de LA PAZ           
+           $('.selectpicker').selectpicker("refresh");
+           $("#modalAgregarProveedor").modal("show");
+        }
+    });
+  }
+}
+function guardarDatoscontacto(){
+  var cod_cliente=$("#cod_cliente").val();
+  var cod_personal=$("#cod_personal").val(); 
+  var nombre_contacto =$("#nombre_contacto").val();
+  var paterno_contacto =$("#paterno_contacto").val();
+  var materno_contacto =$("#materno_contacto").val();
+  var identificacion_contacto =$("#identificacion_contacto").val();
+  var pais_contacto =$("#pais_contacto").val();
+  var departamento_contacto =$("#departamento_contacto").val();
+  var cargo_contacto =$("#cargo_contacto").val();
+  var telefono_contacto =$("#telefono_contacto").val();
+  var correo_contacto =$("#correo_contacto").val();
+
+  // validaciones de campos
+  //console.log("departamento_contacto:"+departamento_contacto+"-telefono_contacto:"+telefono_contacto+"-correo_contacto:"+correo_contacto+"-identificacion_contacto:"+identificacion_contacto);
+  if(nombre_contacto!=""&&paterno_contacto!=""&&identificacion_contacto>0&&departamento_contacto!=""&&telefono_contacto>0&&correo_contacto!="")
+    var sw=true;
+  else{
+    var sw=false;
+  }
+  if(sw){
+    //proceso de guardado de informacion
+     var parametros={"cod_personal":cod_personal,"cod_cliente":cod_cliente,"nombre_contacto":nombre_contacto,"paterno_contacto":paterno_contacto,"materno_contacto":materno_contacto,"identificacion_contacto":identificacion_contacto,"departamento_contacto":departamento_contacto,"cargo_contacto":cargo_contacto,"correo_contacto":correo_contacto,"telefono_contacto":telefono_contacto};
+      $.ajax({
+         type: "GET",
+         dataType: 'html',
+         url: "simulaciones_servicios/ajaxAgregarNuevoContacto.php",
+         data: parametros,
+         beforeSend: function () {
+          $("#texto_ajax_titulo").html("Enviando datos al servidor..."); 
+            iniciarCargaAjax();
+          },
+         success:  function (resp) {
+            detectarCargaAjax();
+            $("#texto_ajax_titulo").html("Procesando Datos"); 
+            if(resp.trim()=="1"){
+              //alerts.showSwal('success-message','index.php?opcion=DetalleCajaChicaForm&codigo='+cod_dcc+'&cod_tcc='+cod_tcc+'&cod_cc='+cod_cc);
+              Swal.fire("Correcto!", "Los datos se actualizaron de forma correcta.", "success");
+              actualizarComboBoxAjax_cliente(cod_cliente);
+            }else{              
+                Swal.fire("Error!", "Ocurrio un error de envio. <br>"+resp.trim(), "warning");
+            }
+         }
+       });  
+  }else{
+    Swal.fire("Informativo!", "Todos los campos son requeridos", "warning");
+  }
+}
+function actualizarComboBoxAjax_cliente(cod_cliente){
+  var contenedor;  
+  contenedor = document.getElementById('div_contenedor_contactos');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'simulaciones_servicios/ajax_actualizarComboAjax_cliente.php',true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);             
+    }
+  }
+  ajax.send(null)  
+}//unidad_area-cargo
+
+
+
+function actualizarRegistroContacto(){
+  var cod_cliente=$("#cod_cliente").val();
+  if(cod_cliente==null  || cod_cliente=='' ){
+        Swal.fire("Informativo!", "Seleccione un cliente por favor.", "warning");
+  }else{
+    var parametros={"codigo":"none"};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "simulaciones_servicios/ajaxActualizarContactos.php?cod_cliente="+cod_cliente,
+        data: parametros,
+        beforeSend: function () {
+        $("#texto_ajax_titulo").html("Actualizando Contactos de Clientes desde el Servicio Web..."); 
+          iniciarCargaAjax();
+        },
+        success:  function (resp) {
+           detectarCargaAjax();
+           $("#texto_ajax_titulo").html("Procesando Datos"); 
+           // $('.selectpicker').selectpicker("refresh");           
+           Swal.fire("Correcto!", "Los datos se actualizaron de forma correcta.", "success");
+           actualizarComboBoxAjax_cliente(cod_cliente);
+        }
+    });  
+  }
+
+ 
+}
+function actualizarRegistroClientes(){
+  // var codigo = $("#cod_solicitud").val();
+ var parametros={"codigo":"none"};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "clientes/ajaxActualizarClientes.php?",
+        data: parametros,
+        beforeSend: function () {
+        $("#texto_ajax_titulo").html("Actualizando Contactos de Clientes desde el Servicio Web..."); 
+          iniciarCargaAjax();
+        },
+        success:  function (resp) {
+           detectarCargaAjax();
+           $("#texto_ajax_titulo").html("Procesando Datos"); 
+           // $('.selectpicker').selectpicker("refresh");           
+           Swal.fire("Correcto!", "Los datos se actualizaron de forma correcta.", "success");
+           //sactualizarComboBoxAjax_cliente(cod_cliente);
+
+        }
+    });  
+}
+
+
+
+
 
 function botonBuscarActivoFijo(){
   var valor_uo=$("#OficinaBusqueda").val();
@@ -10971,7 +11286,9 @@ function guardarDatosProveedorComprobante(){
                   if(resp.trim()=="1"){
                     alerts.showSwal('success-message','../comprobantes/register.php');
                   }else{
-                    Swal.fire("Error!", "Ocurrio un error de envio", "warning");
+                    
+                      Swal.fire("Informativo!", "La identificacion del proveedor ya se encuentra registrado.", "warning");
+                                                    
                   }
                }
              });  
@@ -11128,3 +11445,34 @@ function calcularTotalesSolicitud(){
     document.getElementById("total_presupuestado").value=redondeo(sumapres,2).toFixed(2);  
     document.getElementById("total_solicitado").value=redondeo(sumasol,2).toFixed(2);  
 }
+
+
+function ajaxClienteContacto(combo){
+  var contenedor;
+  var cod_cliente=combo.value;
+  contenedor = document.getElementById('div_contenedor_contactos');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'solicitud_facturacion_manual/ajax_contacto_cliente.php?cod_cliente='+cod_cliente,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);   
+      ajaxCliente_nit_razonsocial(cod_cliente);       
+    }
+  }
+  ajax.send(null)  
+}//unidad_area-cargo
+
+function ajaxCliente_nit_razonsocial(cod_cliente){
+  var contenedor;  
+  contenedor = document.getElementById('contenedor_razon_nit');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'solicitud_facturacion_manual/ajax_nit_razon_cliente.php?cod_cliente='+cod_cliente,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);          
+    }
+  }
+  ajax.send(null)  
+}//unidad_area-cargo

@@ -800,7 +800,12 @@ if($menuModulo==0){
                     <span class="sidebar-normal"> Pagos</span>
                   </a>
                 </li>
-
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=register_solicitudfacturacion_manual">
+                    <span class="sidebar-mini"> SFM </span>
+                    <span class="sidebar-normal"> Solicitud de Facturacion Manual</span>
+                  </a>
+                </li>
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listFacturasServicios">
                     <span class="sidebar-mini"> SF </span>

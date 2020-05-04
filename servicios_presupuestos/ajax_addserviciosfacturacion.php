@@ -27,7 +27,7 @@ $codigoAdministrativos=obtenerValorConfiguracion(43);
           <select class="selectpicker form-control form-control-sm" data-live-search="true" name="modal_editservicio<?=$idFila;?>" id="modal_editservicio<?=$idFila;?>" data-style="fondo-boton" required="true">
               <option disabled selected="selected" value="">--SERVICIOS--</option>
               <?php 
-                $sql="SELECT * from cla_servicios where IdTipo=$IdTipo
+                $sql="SELECT * from cla_servicios where IdTipo=$IdTipo and vigente=1
                   UNION 
                   Select * from cla_servicios where codigo_n2=$codigoAdministrativos";
                 $stmt3 = $dbh->prepare($sql);
@@ -46,31 +46,31 @@ $codigoAdministrativos=obtenerValorConfiguracion(43);
 
 		<div class="col-sm-1">
       <div class="form-group">
-        <label for="haber<?=$idFila;?>" class="bmd-label-floating">Cant</label>			
+        
         <input type="number" min="1" id="cantidad_servicios<?=$idFila;?>" name="cantidad_servicios<?=$idFila;?>" class="form-control text-primary text-right" value="1" required="true">
 			</div>
     </div>
     <div class="col-sm-1">
         <div class="form-group">
-        	<label for="haber<?=$idFila;?>" class="bmd-label-floating">Precio(BOB)</label>
+        	
       		<input type="number" id="modal_montoserv<?=$idFila;?>" name="modal_montoserv<?=$idFila;?>" class="form-control text-primary text-right"   step="0.01" onkeyup="descuento_convertir_a_bolivianos_add(<?=$idFila?>)"  value="0" required="true">
 			</div>
     </div>
     <div class="col-sm-1">
         <div class="form-group">          
-          <label for="haber<?=$idFila;?>" class="bmd-label-floating">Desc(%)</label>
+          
           <input type="text" class="form-control" name="descuento_por_add<?=$idFila?>" id="descuento_por_add<?=$idFila?>" value="0" onkeyup="descuento_convertir_a_bolivianos_add(<?=$idFila?>)">
       </div>
     </div>
     <div class="col-sm-1">
         <div class="form-group">
-          <label for="haber<?=$idFila;?>" class="bmd-label-floating">Desc(BOB)</label>
+          
           <input type="text" class="form-control" name="descuento_bob_add<?=$idFila?>" id="descuento_bob_add<?=$idFila?>" value="0" onkeyup="descuento_convertir_a_porcentaje_add(<?=$idFila?>)">
       </div>
     </div>
     <div class="col-sm-1">
         <div class="form-group">
-          <label for="haber<?=$idFila;?>" class="bmd-label-floating">Importe(BOB)</label>
+          
           <input type="hidden" name="modal_importe_add<?=$idFila?>" id="modal_importe_add<?=$idFila?>">
           <input type="text" class="form-control" name="modal_importe_dos_add<?=$idFila?>" id="modal_importe_dos_add<?=$idFila?>" value="0" style ="background-color: #ffffff;" readonly>
       </div>
@@ -78,7 +78,7 @@ $codigoAdministrativos=obtenerValorConfiguracion(43);
 
     <div class="col-sm-2">
       <div class="form-group">
-        <label for="haber<?=$idFila;?>" class="bmd-label-floating">Glosa</label>     
+        
         <textarea id="descripcion<?=$idFila;?>" name="descripcion<?=$idFila;?>" class="form-control text-primary" onkeyup="javascript:this.value=this.value.toUpperCase();" required></textarea>
         
       </div>

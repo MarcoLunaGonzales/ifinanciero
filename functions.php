@@ -5336,6 +5336,134 @@ function buscarFechasMinMaxComprobante($tipoComprobante, $nroCorrelativo, $UO, $
   return array($fechaMenor,$fechaMayor);  
 }
 
+
+
+function obtenerCodigoServicioPorPropuestaTCPTCS($idPropuesta){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("select IFNULL(se.Codigo,'SERVICIO SIN CODIGO')as codigo  from simulaciones_servicios  s, ibnorca.servicios se where s.idServicio=se.IdServicio and s.codigo=$idPropuesta");
+   $stmt->execute();
+   $valor="SIN SERVICIO";
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['codigo'];
+   }
+   return($valor);
+}
+
+function obtenerCodigoServicioPorIdServicio($idServicio){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT codigo FROM ibnorca.servicios where idServicio=$idServicio");
+   $stmt->execute();
+   $valor="SIN SERVICIO";
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['codigo'];
+   }
+   return($valor);
+}
+
+function descripcionClaServicio($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT descripcion FROM cla_servicios where idclaservicio=:codigo");
+   $stmt->bindParam(':codigo',$codigo);
+   $stmt->execute();
+   $descripcionX=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $descripcionX=$row['descripcion'];
+   }
+   return($descripcionX);
+}
+
+
+function obtenerListaContactosEmpresaDelServicio($cod_cliente){
+  $direccion=obtenerValorConfiguracion(42);//direccion des servicio web
+  $sIde = "ifinanciero";
+  $sKey = "ce94a8dabdf0b112eafa27a5aa475751"; 
+  /*Datos de Clientes Empresa*/
+  $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"DatosClienteEmpresa", "IdCliente"=>$cod_cliente); //
+    $parametros=json_encode($parametros);
+    // abrimos la sesión cURL
+    $ch = curl_init();
+    // definimos la URL a la que hacemos la petición
+    curl_setopt($ch, CURLOPT_URL,$direccion."cliente/ws-cliente-listas.php");     
+    // indicamos el tipo de petición: POST
+    curl_setopt($ch, CURLOPT_POST, TRUE);
+    // definimos cada uno de los parámetros
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);
+    // recibimos la respuesta y la guardamos en una variable
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $remote_server_output = curl_exec ($ch);
+    // cerramos la sesión cURL
+    curl_close ($ch);  
+    return json_decode($remote_server_output);       
+}
+function obtenerListaContactosClientesDelServicio($cod_cliente){
+  $direccion=obtenerValorConfiguracion(42);//direccion des servicio web
+  $sIde = "ifinanciero";
+  $sKey = "ce94a8dabdf0b112eafa27a5aa475751"; 
+  /*Datos de Clientes Empresa*/
+  $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ContactosCliente", "IdCliente"=>$cod_cliente); //
+    $parametros=json_encode($parametros);
+    // abrimos la sesión cURL
+    $ch = curl_init();
+    // definimos la URL a la que hacemos la petición
+    curl_setopt($ch, CURLOPT_URL,$direccion."cliente/ws-cliente-listas.php");     
+    // indicamos el tipo de petición: POST
+    curl_setopt($ch, CURLOPT_POST, TRUE);
+    // definimos cada uno de los parámetros
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);
+    // recibimos la respuesta y la guardamos en una variable
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $remote_server_output = curl_exec ($ch);
+    // cerramos la sesión cURL
+    curl_close ($ch);  
+    return json_decode($remote_server_output);       
+}
+
+function obtenerListaClientes(){
+  $direccion=obtenerValorConfiguracion(42);//direccion des servicio web
+  //LLAVES DE ACCESO AL WS
+  $sIde = "ifinanciero";
+  $sKey = "ce94a8dabdf0b112eafa27a5aa475751";   
+  /*Datos de Clientes Empresa*/
+  $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "lista"=>"Clientes"); 
+  $parametros=json_encode($parametros);
+    // abrimos la sesión cURL
+    $ch = curl_init();
+    // definimos la URL a la que hacemos la petición
+    curl_setopt($ch, CURLOPT_URL,$direccion."cliente/ws-cliente-listas.php");     
+    // indicamos el tipo de petición: POST
+    curl_setopt($ch, CURLOPT_POST, TRUE);
+    // definimos cada uno de los parámetros
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);
+    // recibimos la respuesta y la guardamos en una variable
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $remote_server_output = curl_exec ($ch);
+    // cerramos la sesión cURL
+    curl_close ($ch);  
+    return json_decode($remote_server_output);   
+}
+function obtenerNitCliente($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT identificacion FROM clientes where codigo=:codigo");
+   $stmt->bindParam(':codigo',$codigo);
+   $stmt->execute();
+   $valor="";
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['identificacion'];
+   }
+   return($valor);
+}
+function obtenerDescuentoCliente($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT descuento FROM clientes where codigo=:codigo");
+   $stmt->bindParam(':codigo',$codigo);
+   $stmt->execute();
+   $valor="";
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['descuento'];
+   }
+   return($valor);
+}
+
 ?>
 
 
