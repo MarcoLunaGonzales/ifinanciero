@@ -13,7 +13,7 @@ $item_detalle=$_GET['item_detalle'];
 
 $codUnidadX=0;
 $codAreaX=0;
-
+$tipoSolicitud =$_GET['tipo'];
 $codigo_detalle=$_GET['codigo_detalle'];
 
 		//$detalle=obtenerDetalleSolicitudSimulacion($codSimulacionServX);
@@ -57,8 +57,12 @@ $codigo_detalle=$_GET['codigo_detalle'];
                               $importeX=$row['monto_externo'];
                               $importeSolX=$row['monto_externo'];
 							}
+							$tituloAnio="Año ".$row['cod_anio'];
+                            if($row['cod_anio']<=1){
+                              $tituloAnio="Año 1 - Et ".($row['cod_anio']+1);
+                            }
 							$nombrePartidaX="<b class='text-warning'>".$row['partida']."</b>";
-							$nombrePartidaDetalleX="<b class='text-warning'>Cuenta</b> - <b class='text-dark'>Año ".$row['cod_anio']."</b>";
+							$nombrePartidaDetalleX="<b class='text-warning'>Cuenta</b> - <b class='text-dark'>".$tituloAnio."</b>";
                             
 							
 							$entro=0;

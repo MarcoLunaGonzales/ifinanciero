@@ -359,6 +359,9 @@
 			$codigo=$_GET['codigo'];
 			require_once('solicitudes/plandecuentas_registrer.php');
 		}
+		if ($_GET['opcion']=='deleteSolicitudRecursosRestart') {
+			require_once('solicitudes/saveDeleteRestart.php');
+		}
 
 		//ESTADOS DE CUENTAS
 		if ($_GET['opcion']=='configuracionEstadosCuenta') {

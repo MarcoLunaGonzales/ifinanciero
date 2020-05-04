@@ -44,7 +44,7 @@ if($estado!=1){
     //enviar propuestas para la actualizacion de ibnorca
     $fechaHoraActual=date("Y-m-d H:i:s");
     $idTipoObjeto=2708;
-    $idObjeto=2732; //regristado
+    $idObjeto=2822; //regristado
     $obs="En Pre Aprobacion Solicitud";
     if(isset($_GET['u'])){
        $u=$_GET['u'];

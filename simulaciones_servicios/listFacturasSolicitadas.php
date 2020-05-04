@@ -238,7 +238,9 @@ if(isset($_GET['q'])){
                                         if(isset($_GET['q'])){
                                           if($codEstado==4){
                                            ?>
-
+                                           <a href="<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion;?>&estado=1&admin=0" class="dropdown-item">
+                                              <i class="material-icons text-danger">clear</i> Cancelar solicitud
+                                           </a>
                                            <?php 
                                            }else{
                                              ?>

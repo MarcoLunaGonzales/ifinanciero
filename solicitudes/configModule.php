@@ -18,6 +18,7 @@ $urlRegister2="solicitudes/register.php";
 $urlEdit="index.php?opcion=editSolicitudRecursos";
 $urlEdit2="solicitudes/edit.php";
 $urlDelete="index.php?opcion=deleteSolicitudRecursos";
+
 $urlSaveDelete="";
 $urlSavePago="solicitudes/savePago.php";
 
@@ -25,4 +26,6 @@ $urlVerificarSolicitud="solicitudes/comprobarSolicitud.php";
 $urlPagos="index.php?opcion=listSolicitudPagosProveedores";
 $urlRegisterSS="index.php?opcion=registerPlanCuentaSS&codigo=0";
 $urlListCC2="index.php?opcion=listPlanCuentasSolicitudesRecursos";
+
+$urlDeleteRestart="index.php?opcion=deleteSolicitudRecursosRestart";
 ?>

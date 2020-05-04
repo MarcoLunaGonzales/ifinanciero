@@ -204,7 +204,7 @@ $item_1=2709;
                             <td><button class="btn <?=$btnEstado?> btn-sm btn-link"><?=$estado;?></button></td>
                             <td class="td-actions text-right">
                               <?php
-                                if($globalAdmin==1){ 
+                                //if($globalAdmin==1){ 
                                   if($codigo_fact_x>0){//print facturas
                                     ?>
                                     <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=2' target="_blank"><i class="material-icons" title="Imprimir Factura">print</i></a>
@@ -248,7 +248,7 @@ $item_1=2709;
                                   ?>
                                   <!--<a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir">print</i></a>-->
                                   <?php  
-                                }
+                                //}
                               ?>
                             </td>
                           </tr>

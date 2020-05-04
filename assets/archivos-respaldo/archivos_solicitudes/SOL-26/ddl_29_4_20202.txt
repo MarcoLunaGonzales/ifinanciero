@@ -1,0 +1,10 @@
+ALTER TABLE `solicitudes_facturaciondetalle` 
+ADD COLUMN `tipo_item` int(11) NULL DEFAULT 1 COMMENT '1 agregados de tabla 2 agregados de ajax' AFTER `descuento_bob`;
+
+ALTER TABLE `solicitudes_facturacion` 
+ADD COLUMN `nro_correlativo` int(11) NULL AFTER `observaciones`;
+ALTER TABLE `solicitudes_facturacion` 
+ADD COLUMN `cod_estado` int(11) NULL AFTER `nro_correlativo`;
+
+ALTER TABLE `solicitudes_facturacion` 
+ADD COLUMN `persona_contacto` varchar(255) NULL AFTER `cod_estado`;

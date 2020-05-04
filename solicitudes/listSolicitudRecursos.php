@@ -28,7 +28,7 @@ if(isset($_GET['q'])){
 // Preparamos
 $stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area 
   from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo 
-  where sr.cod_estadoreferencial=1 $sqlServicio order by sr.codigo");
+  where sr.cod_estadoreferencial=1 and sr.cod_estadosolicitudrecurso!=2 $sqlServicio order by sr.codigo");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -63,13 +63,12 @@ $stmt->bindColumn('idServicio', $idServicioX);
                     <table class="table table-condesed" id="tablePaginator">
                       <thead>
                         <tr>
-                          <th class="text-center">#</th>
-                          <th>Unidad</th>
-                          <th>Area</th>
+                          <th>Of. - Area</th>
                           <th>Nº Sol.</th>
                           <th>Cod. Servicio</th>
                           <th>Cliente</th>
-                          <th>Responsable</th>
+                          <th>Proveedores</th>
+                          <th>Solicitante</th>
                           <th>Fecha</th>
                           <th>Estado</th>
                           <th class="text-right">Actions</th>
@@ -116,12 +115,11 @@ $stmt->bindColumn('idServicio', $idServicioX);
                            }
 ?>
                         <tr>
-                          <td align="center"><?=$index;?></td>
-                          <td><?=$unidad;?></td>
-                          <td><?=$area;?></td>
+                          <td><?=$unidad;?>- <?=$area;?></td>
                           <td class="font-weight-bold"><?=$numeroSol;?></td>
                           <td><?=$codigoServicio;?></td>
                           <td><?=$nombreCliente;?></td>
+                          <td><small><?=obtenerNombreConcatenadoProveedorDetalleSolicitudRecurso($codigo)?></small></td>
                           <td>
                                  <img src="assets/img/faces/persona1.png" width="20" height="20"/><?=$solicitante;?>
                           </td>
@@ -297,17 +295,161 @@ $stmt->bindColumn('idServicio', $idServicioX);
                     </table>
                 </div>
               </div>
-              <div class="card-footer fixed-bottom">
+              <div class="card-footer fixed-bottom col-sm-9">
                 <?php 
                 if(isset($_GET['q'])){
                 ?><a href="<?=$urlRegister3;?>?q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>" target="_self" class="<?=$buttonNormal;?>">Registrar</a><?php
                 }else{
-                 ?><a href="#" onclick="javascript:window.open('<?=$urlRegister3;?>')" class="<?=$buttonNormal;?>">Registrar</a><?php
+                 ?><a href="#" onclick="javascript:window.open('<?=$urlRegister3;?>')" class="<?=$buttonNormal;?>">Registrar</a>
+                  <?php
                 } 
                 ?>
-                
+                <a href="#" onclick="abrirModal('modalListSolEliminados')" class="btn btn-danger float-right"><i class="material-icons"><?=$iconDelete;?></i> <small id="cantidad_eliminados"></small> Eliminados</a>
               </div>      
             </div>
           </div>  
         </div>
     </div>
+
+
+<?php
+$stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area 
+  from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo 
+  where sr.cod_estadoreferencial=2 $sqlServicio order by sr.codigo");
+// Ejecutamos
+$stmt->execute();
+// bindColumn
+$stmt->bindColumn('codigo', $codigo);
+$stmt->bindColumn('unidad', $unidad);
+$stmt->bindColumn('area', $area);
+$stmt->bindColumn('fecha', $fecha);
+$stmt->bindColumn('cod_personal', $codPersonal);
+$stmt->bindColumn('cod_simulacion', $codSimulacion);
+$stmt->bindColumn('cod_proveedor', $codProveedor);
+$stmt->bindColumn('cod_estadosolicitudrecurso', $codEstado);
+$stmt->bindColumn('estado', $estado);
+$stmt->bindColumn('cod_comprobante', $codComprobante);
+$stmt->bindColumn('cod_simulacionservicio', $codSimulacionServicio);
+$stmt->bindColumn('numero', $numeroSol);
+$stmt->bindColumn('idServicio', $idServicioX);
+?>
+<!-- small modal -->
+<div class="modal fade modal-primary" id="modalListSolEliminados" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content card">
+              <div class="card-header card-header-danger card-header-icon">
+                <div class="card-icon">
+                  <i class="material-icons"><?=$iconDelete;?></i>
+                </div>
+                <h4 class="card-title">Solicitudes Eliminadas</h4>
+              </div>
+
+              <div class="card-body">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                <i class="material-icons">close</i>
+              </button>
+              <div class="row" id="div_cabecera" >
+                    
+              </div>
+                <table class="table table-condesed" id="tablePaginatorHead">
+                      <thead>
+                        <tr class="bg-info">
+                          <th>Of. - Area</th>
+                          <th>Nº Sol.</th>
+                          <th>Cod. Servicio</th>
+                          <th>Cliente</th>
+                          <th>Proveedores</th>
+                          <th>Solicitante</th>
+                          <th>Fecha</th>
+                          <th>Estado</th>
+                          <th class="text-right">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <?php
+                    $index=1;
+                        while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+                          $solicitante=namePersonal($codPersonal);
+                          switch ($codEstado) {
+                            case 1:
+                              $btnEstado="btn-default";
+                            break;
+                            case 2:
+                              $btnEstado="btn-danger";
+                            break;
+                            case 3:
+                              $btnEstado="btn-success";
+                            break;
+                            case 4:
+                              $btnEstado="btn-warning";
+                            break;
+                            case 5:
+                              $btnEstado="btn-warning";
+                            break;
+                            case 6:
+                              $btnEstado="btn-default";
+                            break;
+                          }
+                          if($codSimulacion!=0){
+                           $nombreCliente="Sin Cliente";
+                           $nombreSimulacion=nameSimulacion($codSimulacion);
+                          }else{
+                           $nombreCliente=nameClienteSimulacionServicio($codSimulacionServicio);
+                           $nombreSimulacion=nameSimulacionServicio($codSimulacionServicio);
+                          }
+                          $codigoServicio="SIN CODIGO";
+                          $sql="SELECT codigo FROM ibnorca.servicios where idServicio=$idServicioX";
+                          $stmt1=$dbh->prepare($sql);
+                          $stmt1->execute();
+                           while ($row1 = $stmt1->fetch(PDO::FETCH_ASSOC)) {
+                             $codigoServicio=$row1['codigo'];
+                           }
+?>
+                        <tr>
+                          <td><?=$unidad;?> - <?=$area;?></td>
+                          <td class="font-weight-bold"><?=$numeroSol;?></td>
+                          <td><?=$codigoServicio;?></td>
+                          <td><?=$nombreCliente;?></td>
+                          <td><small><?=obtenerNombreConcatenadoProveedorDetalleSolicitudRecurso($codigo)?></small></td>
+                          <td>
+                                 <img src="assets/img/faces/persona1.png" width="20" height="20"/><?=$solicitante;?>
+                          </td>
+                          <td><?=strftime('%d/%m/%Y',strtotime($fecha));?></td>
+                          <td><button class="btn <?=$btnEstado?> btn-sm btn-link"><?=$estado;?></button> <!--<?=$nEst?> %
+                             <div class="progress">
+                               <div class="progress-bar <?=$barEstado?>" role="progressbar" aria-valuenow="<?=$nEst?>" aria-valuemin="0" aria-valuemax="100" style="width:<?=$nEst?>%">
+                                  <span class="sr-only"><?=$nEst?>% Complete</span>
+                               </div>
+                             </div>-->
+                          </td> 
+                          <td class="td-actions text-right">
+                            <?php
+                              if(isset($_GET['q'])){
+                              ?>
+                            <button title="Restaurar Solicitud Recurso"  class="btn btn-info" onclick="alerts.showSwal('warning-message-and-confirmation-restart','<?=$urlDeleteRestart;?>&codigo=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>')">
+                              <i class="material-icons">reply</i>
+                            </button>
+                              <?php
+                            }else{
+                             ?>
+                            <button title="Restaurar Solicitud Recurso"  class="btn btn-info" onclick="alerts.showSwal('warning-message-and-confirmation-restart','<?=$urlDeleteRestart;?>&codigo=<?=$codigo;?>')">
+                              <i class="material-icons">reply</i>
+                            </button>
+                              <?php      
+                            }
+                                   
+                            ?>
+                          </td>
+                        </tr>
+<?php
+              $index++;
+            }
+?>
+                  </tbody>
+                </table>
+              </div>
+             <script>$("#cantidad_eliminados").html("("+<?=$index-1?>+")");</script> 
+    </div>  
+  </div>
+</div>
+<!--    end small modal -->

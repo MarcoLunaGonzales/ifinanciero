@@ -9193,12 +9193,13 @@ function filtrarSolicitudRecursosServicios(cod_sim,cod_solicitud,unidad,area){
 }
 
 function filtrarSolicitudRecursosServiciosItems(){
+  var tipo = $("#tipo_solicitud").val();
   var re = $("#simulaciones").val().split("$$$");
   var cod_sim=re[0];
   var anio =$("#anio_solicitud").val();
   var itemDetalle =$('select[id="item_detalle_solicitud"] option:selected').text();
   var codigoDetalle =$("#item_detalle_solicitud").val();
-   var parametros={"cod_sim":cod_sim,"anio":anio,"item_detalle":itemDetalle,"codigo_detalle":codigoDetalle};
+   var parametros={"cod_sim":cod_sim,"anio":anio,"item_detalle":itemDetalle,"codigo_detalle":codigoDetalle,"tipo":tipo};
      $.ajax({
         type: "GET",
         dataType: 'html',
@@ -9213,6 +9214,7 @@ function filtrarSolicitudRecursosServiciosItems(){
            $("#texto_ajax_titulo").html("Procesando Datos");
            $("#fiel").html(resp);
            $('.selectpicker').selectpicker("refresh");
+           calcularTotalesSolicitud();
         }
     });      
 }
@@ -10955,6 +10957,7 @@ function cambiarEstadoObjetoAjax(){
 }
 
 function cambiarEstadoObjetoSol(){
+  $("#modalEstadoObjeto"),modal("hide");
   if($("#modal_codigoestado").val()>0){
     Swal.fire({
         title: '¿Esta Seguro?',
@@ -11015,6 +11018,7 @@ function cambiarEstadoObjetoSolAjax(){
 }
 
 function cambiarEstadoObjetoSolFac(){
+  $("#modalEstadoObjeto"),modal("hide");
   if($("#modal_codigoestado").val()>0){
     Swal.fire({
         title: '¿Esta Seguro?',
@@ -11432,15 +11436,11 @@ function saveFacturaEdit(){
 function calcularTotalesSolicitud(){
   var sumapres=0;
   var sumasol=0;
-  var formulariop = document.getElementById("formSolDet");
-  for (var i=0;i<formulariop.elements.length;i++){
-    if (formulariop.elements[i].id.indexOf("importe_presupuesto") !== -1 ){   
-      sumapres += (formulariop.elements[i].value) * 1; 
-    }
-    if (formulariop.elements[i].id.indexOf("importe") !== -1 ){         
-      sumasol += (formulariop.elements[i].value) * 1;
-    }
-  }
+  var cantidad = $("#cantidad_filas").val();
+  for (var i = 1; i <= cantidad; i++) {
+     sumapres += $("#importe_presupuesto"+i).val() * 1;
+     sumasol += $("#importe"+i).val() * 1;
+  };
 
     document.getElementById("total_presupuestado").value=redondeo(sumapres,2).toFixed(2);  
     document.getElementById("total_solicitado").value=redondeo(sumasol,2).toFixed(2);  
@@ -11476,3 +11476,7 @@ function ajaxCliente_nit_razonsocial(cod_cliente){
   }
   ajax.send(null)  
 }//unidad_area-cargo
+function vistaPreviaArchivoSol(url,nombre){
+  $("#vista_previa_frame").attr("src",url);
+  $("#titulo_vista_previa").text('VISTA PREVIA "'+nombre+'"');
+}

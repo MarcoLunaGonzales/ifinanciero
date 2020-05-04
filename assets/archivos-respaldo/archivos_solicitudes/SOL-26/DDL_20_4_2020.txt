@@ -1,0 +1,49 @@
+
+--20/04/2020
+update configuraciones set valor_configuracion=63 where id_configuracion=3;
+alter table facturas_compra add(ice int(11));
+alter table facturas_compra add(tasa_cero int(11));
+alter table facturas_compra add(tipo_compra int(11));
+ALTER TABLE `facturas_compra` 
+MODIFY COLUMN `exento` double NULL DEFAULT NULL AFTER `importe`,
+MODIFY COLUMN `ice` double NULL DEFAULT NULL AFTER `codigo_control`,
+MODIFY COLUMN `tasa_cero` double NULL DEFAULT NULL AFTER `ice`;
+
+CREATE TABLE `tipos_compra_facturas`  (
+  `codigo` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
+  `abreviatura` varchar(50) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
+  `cod_estadoreferencial` int(11) NULL DEFAULT NULL,
+  PRIMARY KEY (`codigo`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Compact;
+INSERT INTO `tipos_compra_facturas` VALUES (1, 'nombre 1', 'n1', 1);
+INSERT INTO `tipos_compra_facturas` VALUES (2, 'nombre2', 'n2', 1);
+INSERT INTO `tipos_compra_facturas` VALUES (3, 'nombre3', 'n3', 1);
+
+
+--22/04/2020
+
+SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for titulos_oficinas
+-- ----------------------------
+DROP TABLE IF EXISTS `titulos_oficinas`;
+CREATE TABLE `titulos_oficinas`  (
+  `codigo` int(11) NOT NULL AUTO_INCREMENT,
+  `cod_uo` int(11) NULL DEFAULT NULL,
+  `sucursal` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
+  `direccion` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
+  `telefono` int(255) NULL DEFAULT NULL,
+  `nit` int(255) NULL DEFAULT NULL,
+  `razon_social` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`codigo`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of titulos_oficinas
+-- ----------------------------
+INSERT INTO `titulos_oficinas` VALUES (1, 5, '0 - CASA MATRIZ', 'Calle 7 de Obrajes Nro. 545', NULL, 1020745020, 'IBNORCA');
+
+SET FOREIGN_KEY_CHECKS = 1;
