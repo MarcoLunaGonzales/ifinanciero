@@ -121,8 +121,11 @@ $html.=  '<header class="header">'.
               </tr>                    
             </thead>
             <tbody>';
-            $sqlA="SELECT sf.*,t.descripcion as nombre_serv ,t.Codigo from solicitudes_facturaciondetalle sf,cla_servicios t 
-                where sf.cod_claservicio=t.idclaservicio and sf.cod_solicitudfacturacion=$codigo_facturacion";
+            // $sqlA="SELECT sf.*,t.descripcion as nombre_serv ,t.Codigo from solicitudes_facturaciondetalle sf,cla_servicios t 
+            //     where sf.cod_claservicio=t.idclaservicio and sf.cod_solicitudfacturacion=$codigo_facturacion";
+
+            $sqlA="SELECT *,(select t.Codigo from cla_servicios t where t.idclaservicio=cod_claservicio) as Codigo  from solicitudes_facturaciondetalle where cod_solicitudfacturacion=$codigo_facturacion";
+
             $stmt2 = $dbh->prepare($sqlA);                                   
             $stmt2->execute();
             $index=1;
