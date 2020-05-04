@@ -6,6 +6,13 @@ require_once 'configModule.php';
 
 //$dbh = new Conexion();
 $dbh = new Conexion();
+if(isset($_GET['q'])){
+  $q=$_GET['q'];
+  $s=$_GET['s'];
+  $u=$_GET['u'];
+  $v=$_GET['v'];
+}
+
 $cod_simulacion=$cod_s;
 $cod_facturacion=$cod_f;
 $cod_sw=$cod_sw;
@@ -72,10 +79,13 @@ $contadorRegistros=0;
             <div class="col-md-12">
               <form id="form1" class="form-horizontal" action="<?=$urlSaveSolicitudfactura;?>" method="post" onsubmit="return valida(this)">
                 <?php 
-               if(isset($_GET['q'])){
-                 ?><input type="hidden" name="id_ibnored" id="id_ibnored" value="<?=$q;?>"/><?php 
-              }
-                ?>
+      if(isset($_GET['q'])){
+        ?><input type="hidden" name="usuario_ibnored" id="usuario_ibnored" value="<?=$q;?>">
+        <input type="hidden" name="usuario_ibnored_s" id="usuario_ibnored_s" value="<?=$s;?>">
+        <input type="hidden" name="usuario_ibnored_u" id="usuario_ibnored_u" value="<?=$u;?>">
+        <input type="hidden" name="usuario_ibnored_v" id="usuario_ibnored_v" value="<?=$v;?>"><?php
+      }
+      ?> 
                 
                 <input type="hidden" name="cod_simulacion" id="cod_simulacion" value="<?=$cod_simulacion;?>"/>
                 <input type="hidden" name="cod_facturacion" id="cod_facturacion" value="<?=$cod_facturacion;?>"/>
@@ -405,9 +415,9 @@ $contadorRegistros=0;
                     <button type="submit" class="<?=$buttonNormal;?>">Guardar</button><?php
                     if(isset($_GET['q'])){
                     if($cod_sw==1){?>
-                        <a href='<?=$urlSolicitudfactura;?>&cod=<?=$cod_simulacion;?>&q=<?=$q?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
+                        <a href='<?=$urlSolicitudfactura;?>&cod=<?=$cod_simulacion;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
                     <?php }else{?>
-                        <a href='<?=$urlListSimulacionesServ?>&q=<?=$q?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
+                        <a href='<?=$urlListSimulacionesServ?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
                     <?php }
                     }else{
                       if($cod_sw==1){?>

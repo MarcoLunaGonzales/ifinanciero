@@ -202,7 +202,7 @@ $stmt->bindColumn('cod_area', $codAreaX);
                                      <i class="material-icons"><?=$iconImp;?></i>
                                  </a> 
 
-                                 <a class="btn btn-warning" title="Solicitud de Facturación" href='<?=$urlSolicitudfactura;?>&cod=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>'>
+                                 <a class="btn btn-warning" title="Solicitud de Facturación" href='<?=$urlSolicitudfactura;?>&cod=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$idServicioX?>'>
                                    <i class="material-icons">receipt</i>                              
                                  </a>
 

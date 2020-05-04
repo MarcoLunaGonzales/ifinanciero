@@ -6,6 +6,13 @@ require_once 'configModule.php';
 
 //$dbh = new Conexion();
 $dbh = new Conexion();
+if(isset($_GET['q'])){
+  $q=$_GET['q'];
+  $s=$_GET['s'];
+  $u=$_GET['u'];
+  $v=$_GET['v'];
+}
+
 $IdServicio=$IdServicio;
 $cod_facturacion=$cod_facturacion;
 //$cod_simulacion=$cod_simulacion;
@@ -69,6 +76,14 @@ $contadorRegistros=0;
                 <input type="hidden" name="cod_simulacion" id="cod_simulacion" value="<?=$IdServicio;?>"/>
                 <input type="hidden" name="cod_facturacion" id="cod_facturacion" value="<?=$cod_facturacion;?>"/>
                 <input type="hidden" name="cantidad_filas" id="cantidad_filas" value="<?=$contadorRegistros;?>">
+                <?php 
+      if(isset($_GET['q'])){
+        ?><input type="hidden" name="usuario_ibnored" id="usuario_ibnored" value="<?=$q;?>">
+        <input type="hidden" name="usuario_ibnored_s" id="usuario_ibnored_s" value="<?=$s;?>">
+        <input type="hidden" name="usuario_ibnored_u" id="usuario_ibnored_u" value="<?=$u;?>">
+        <input type="hidden" name="usuario_ibnored_v" id="usuario_ibnored_v" value="<?=$v;?>"><?php
+      }
+      ?> 
                 <!-- para agregar nuevos servicios -->
                 <input type="hidden" name="IdTipo" id="IdTipo" value="<?=$IdTipo;?>">
                 <div class="card">
@@ -386,8 +401,13 @@ $contadorRegistros=0;
                   </div>
                   <div class="card-footer ml-auto mr-auto">
                     <button type="submit" class="<?=$buttonNormal;?>">Guardar</button>
-                    
-                        <a href='<?=$url_list_Solicitudfactura;?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>                                        
+                    <?php 
+                    if(isset($_GET['q'])){
+                        ?><a href='<?=$url_list_Solicitudfactura;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a><?php
+                    }else{
+                        ?><a href='<?=$url_list_Solicitudfactura;?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a><?php
+                    }?>
+                        
                     
                   </div>
                 </div>

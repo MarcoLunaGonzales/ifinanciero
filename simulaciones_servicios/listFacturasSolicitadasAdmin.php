@@ -31,7 +31,7 @@ if(isset($_GET['q'])){
 
 
   //datos registrado de la simulacion en curso
-  $stmt = $dbh->prepare("SELECT sf.*,es.nombre as estado FROM solicitudes_facturacion sf join estados_solicitudfacturacion es on sf.cod_estadosolicitudfacturacion=es.codigo where sf.cod_estadosolicitudfacturacion!=1"); /*and sf.cod_estadosolicitudfacturacion!=5*/
+  $stmt = $dbh->prepare("SELECT sf.*,es.nombre as estado FROM solicitudes_facturacion sf join estados_solicitudfacturacion es on sf.cod_estadosolicitudfacturacion=es.codigo where sf.cod_estadosolicitudfacturacion!=1 and sf.cod_estadosolicitudfacturacion!=6"); /*and sf.cod_estadosolicitudfacturacion!=5*/
   $stmt->execute();
   $stmt->bindColumn('codigo', $codigo_facturacion);
   $stmt->bindColumn('cod_simulacion_servicio', $cod_simulacion_servicio);

@@ -40,7 +40,21 @@ if($estado!=1){
        actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);    
      }
     
-	}
+	}else{
+    if($estado==6){
+    //enviar propuestas para la actualizacion de ibnorca
+    $fechaHoraActual=date("Y-m-d H:i:s");
+    $idTipoObjeto=2708;
+    $idObjeto=2823; //regristado
+    $obs="En Pre Aprobacion Solicitud";
+    if(isset($_GET['u'])){
+       $u=$_GET['u'];
+       actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);    
+     }else{
+       actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);    
+     }   
+   }
+  }
 	//fin de actulizar estados del servidor ibnorca
 }else{
 	//enviar propuestas para la actualizacion de ibnorca
@@ -58,6 +72,9 @@ if($estado!=1){
 }
 if(isset($_GET['admin'])){
   $urlList2Sol=$urlListSol;
+  if(isset($_GET['sim'])){
+    $urlList2Sol=$urlListSolSim."&cod=".$_GET['sim'];
+  }
 }
 if(isset($_GET['q'])){
 	$q=$_GET['q'];

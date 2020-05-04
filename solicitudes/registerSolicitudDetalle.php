@@ -124,7 +124,13 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       <div class="card">
         <div class="card-header card-header-danger card-header-text">
           <div class="card-text">
-            <h4 class="card-title">Nueva <?=$moduleNameSingular;?></h4>
+            <h4 class="card-title">Nueva <?=$moduleNameSingular;?> <?php 
+      if(isset($_GET['v'])){
+        $codigoServicioTitulo=obtenerCodigoServicioPorIdServicio($_GET['v']);
+        echo " ".$codigoServicioTitulo;
+      }
+      ?>
+       </h4>
           </div>
         </div>
         <div class="card-body ">

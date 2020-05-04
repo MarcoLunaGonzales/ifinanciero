@@ -5,7 +5,7 @@ require_once 'conexion.php';
 require_once 'functions.php';
 require_once 'configModule.php';
 ini_set('display_errors',1);
-
+$globalUser=$_SESSION["globalUser"];
 $dbh = new Conexion();
 
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//para mostrar errores en la ejecucion
@@ -39,8 +39,8 @@ try {
 
     if ($cod_facturacion == 0){//insertamos        
         $nro_correlativo=obtenerCorrelativoSolicitud();//correlativo
-        $stmt = $dbh->prepare("INSERT INTO solicitudes_facturacion(cod_simulacion_servicio,cod_unidadorganizacional,cod_area,fecha_registro,fecha_solicitudfactura,cod_tipoobjeto,cod_tipopago,cod_cliente,cod_personal,razon_social,nit,observaciones,nro_correlativo,cod_estado,persona_contacto) 
-        values ('$cod_simulacion','$cod_unidadorganizacional','$cod_area','$fecha_registro','$fecha_solicitudfactura','$cod_tipoobjeto','$cod_tipopago','$cod_cliente','$cod_personal','$razon_social','$nit','$observaciones','$nro_correlativo',1,'$persona_contacto')");
+        $stmt = $dbh->prepare("INSERT INTO solicitudes_facturacion(cod_simulacion_servicio,cod_unidadorganizacional,cod_area,fecha_registro,fecha_solicitudfactura,cod_tipoobjeto,cod_tipopago,cod_cliente,cod_personal,razon_social,nit,observaciones,nro_correlativo,cod_estado,persona_contacto,cod_estadosolicitudfacturacion) 
+        values ('$cod_simulacion','$cod_unidadorganizacional','$cod_area','$fecha_registro','$fecha_solicitudfactura','$cod_tipoobjeto','$cod_tipopago','$cod_cliente','$cod_personal','$razon_social','$nit','$observaciones','$nro_correlativo',1,'$persona_contacto',1)");
         $flagSuccess=$stmt->execute();
         // $flagSuccess=true;
         if($flagSuccess){
@@ -94,8 +94,24 @@ try {
                 $flagSuccess=$stmt->execute();                
             }           
         }
-        if(isset($_POST['id_ibnored'])){
-          showAlertSuccessError($flagSuccess,$urlSolicitudfactura."&cod=".$cod_simulacion."&q=".$_POST['id_ibnored']);
+        //enviar propuestas para la actualizacion de ibnorca
+         $fechaHoraActual=date("Y-m-d H:i:s");
+         $idTipoObjeto=2709;
+         $idObjeto=2726; //regristado
+         $obs="Registro de Solicitud Facturación";
+         if(isset($_POST['u'])){
+            $u=$_POST['u'];
+            actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$cod_facturacion,$fechaHoraActual,$obs);
+         }else{
+           actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$cod_facturacion,$fechaHoraActual,$obs);
+         }
+
+         if(isset($_POST['usuario_ibnored'])){
+          $q=$_POST['usuario_ibnored'];
+          $s=$_POST['usuario_ibnored_s'];
+          $u=$_POST['usuario_ibnored_u'];
+          $v=$_POST['usuario_ibnored_v'];
+          showAlertSuccessError($flagSuccess,$urlSolicitudfactura."&cod=".$cod_simulacion."&q=".$q."&s=".$s."&u=".$u."&v=".$v);
         }else{
           showAlertSuccessError($flagSuccess,$urlSolicitudfactura."&cod=".$cod_simulacion);  
         }
@@ -146,11 +162,15 @@ try {
                 $flagSuccess=$stmt->execute();                
             }           
         }
-        if(isset($_POST['id_ibnored'])){
-          showAlertSuccessError($flagSuccess,$urlSolicitudfactura."&cod=".$cod_simulacion."&q=".$_POST['id_ibnored']);
+        if(isset($_POST['usuario_ibnored'])){
+          $q=$_POST['usuario_ibnored'];
+          $s=$_POST['usuario_ibnored_s'];
+          $u=$_POST['usuario_ibnored_u'];
+          $v=$_POST['usuario_ibnored_v'];
+          showAlertSuccessError($flagSuccess,$urlSolicitudfactura."&cod=".$cod_simulacion."&q=".$q."&s=".$s."&u=".$u."&v=".$v);
         }else{
           showAlertSuccessError($flagSuccess,$urlSolicitudfactura."&cod=".$cod_simulacion);
-        }      
+        }   
 
     }//si es insert o update
     

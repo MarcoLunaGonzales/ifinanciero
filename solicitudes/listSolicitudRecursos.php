@@ -304,7 +304,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
                   <?php
                 } 
                 ?>
-                <a href="#" onclick="abrirModal('modalListSolEliminados')" class="btn btn-danger float-right"><i class="material-icons"><?=$iconDelete;?></i> <small id="cantidad_eliminados"></small> Eliminados</a>
+                <a href="#" onclick="abrirModal('modalListSolEliminados');moverModal('modalListSolEliminados');" class="btn btn-danger float-right"><i class="material-icons"><?=$iconDelete;?></i> <small id="cantidad_eliminados"></small> Eliminados</a>
               </div>      
             </div>
           </div>  
