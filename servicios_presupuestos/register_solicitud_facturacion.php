@@ -6,7 +6,7 @@ require_once 'styles.php';
 require_once 'configModule.php';
 
 $dbh = new Conexion();
-<<<<<<< HEAD
+
 if(isset($_GET['q'])){
   $q=$_GET['q'];
   $s=$_GET['s'];
@@ -14,9 +14,8 @@ if(isset($_GET['q'])){
   $v=$_GET['v'];
 }
 
-=======
 $dbhIBNO = new ConexionIBNORCA();
->>>>>>> aac92cef098d0067b573481a7d52e8f162f1e1a8
+
 $IdServicio=$IdServicio;
 $cod_facturacion=$cod_facturacion;
 //$cod_simulacion=$cod_simulacion;
