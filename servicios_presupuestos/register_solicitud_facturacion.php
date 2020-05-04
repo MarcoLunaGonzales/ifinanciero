@@ -7,12 +7,14 @@ require_once 'configModule.php';
 
 $dbh = new Conexion();
 
+
 if(isset($_GET['q'])){
   $q=$_GET['q'];
   $s=$_GET['s'];
   $u=$_GET['u'];
   $v=$_GET['v'];
 }
+
 
 $dbhIBNO = new ConexionIBNORCA();
 
@@ -202,7 +204,7 @@ $contadorRegistros=0;
                                               while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                                 $codigo=$row['codigo'];    
                                                 $nombre_conatacto=$row['nombre']." ".$row['paterno']." ".$row['materno'];
-                                                ?><option value="<?=$codigo?>" class="text-right"><?=$nombre_conatacto?></option>
+                                                ?><option <?=($persona_contacto==$row["codigo"])?"selected":"";?> value="<?=$codigo?>" class="text-right"><?=$nombre_conatacto?></option>
                                                <?php 
                                                } ?> 
                                             </select>
@@ -279,14 +281,15 @@ $contadorRegistros=0;
                                       <tbody>                                
                                         <?php 
                                         $iii=1;                                    
-                                        $queryPr="SELECT s.IdDetServicio,s.IdClaServicio,s.Cantidad,s.PrecioUnitario from serviciopresupuesto s where  s.IdServicio=$IdServicio";
+                                        $queryPr="SELECT s.IdDetServicio,s.IdClaServicio,s.Cantidad,s.PrecioUnitario from ibnorca.serviciopresupuesto s where  s.IdServicio=$IdServicio";
                                         if ($cod_facturacion > 0){
                                             $queryPr.=" UNION ";
-                                            $queryPr.="SELECT d.codigo,d.cod_claservicio,(select cs.descripcion from cla_servicios cs where cs.IdClaServicio=d.cod_claservicio) as descripcion,d.cantidad,d.precio from solicitudes_facturaciondetalle d where d.tipo_item=2 and d.cod_solicitudfacturacion=$cod_facturacion";
+                                            //,(select cs.descripcion from cla_servicios cs where cs.IdClaServicio=d.cod_claservicio) as descripcion
+                                            $queryPr.="SELECT d.codigo,d.cod_claservicio,d.cantidad,d.precio from solicitudes_facturaciondetalle d where d.tipo_item=2 and d.cod_solicitudfacturacion=$cod_facturacion";
 
                                         }
                                         // echo $queryPr;
-                                        $stmt = $dbhIBNO->prepare($queryPr);
+                                        $stmt = $dbh->prepare($queryPr);
                                         $stmt->execute();
                                         $modal_totalmontopre=0;$modal_totalmontopretotal=0;
                                         while ($rowPre = $stmt->fetch(PDO::FETCH_ASSOC)) {

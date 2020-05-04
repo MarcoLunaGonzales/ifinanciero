@@ -108,8 +108,8 @@ m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo order by nombreAlumno");//poner 
                             $nro_fact_x = $resultSimu['nro_factura'];
                             if ($nro_fact_x==null)$nro_fact_x="-";
                             //los registros de la factura                            
-                            $sqlA="SELECT sf.*,t.descripcion as nombre_serv from solicitudes_facturaciondetalle sf,cla_servicios t 
-                                where sf.cod_claservicio=t.idclaservicio and sf.cod_solicitudfacturacion=$codigo_facturacion";
+                            $sqlA="SELECT *,(select t.descripcion from cla_servicios t where t.idclaservicio=cod_claservicio) as nombre_serv  from solicitudes_facturaciondetalle where cod_solicitudfacturacion=$codigo_facturacion";
+                            // echo $sqlA;
                             $stmt2 = $dbh->prepare($sqlA);                                   
                             $stmt2->execute(); 
                             $nc=0;

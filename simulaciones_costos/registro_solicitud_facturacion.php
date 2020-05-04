@@ -199,7 +199,7 @@ $contadorRegistros=0;
                                         </select>                                
                                 </div>
                             </div>
-                            <label class="col-sm-2 col-form-label">Persona Contacto</label>
+                            <!-- <label class="col-sm-2 col-form-label">Persona Contacto</label>
                             <div class="col-sm-3">
                                 <div class="form-group" >
                                         <input type="text" name="persona_contacto" id="persona_contacto" class="form-control" value="<?=$persona_contacto?>" required="true">
@@ -207,14 +207,14 @@ $contadorRegistros=0;
                             </div>
                             <div class="col-sm-1">
                                 <div class="form-group" >                                        
-                                    <a href="#" class="btn btn-warning btn-round btn-fab btn-sm" onclick="cargarDatosRegistroContacto(<?=$cod_simulacion?>)">
+                                    <a href="#" class="btn btn-warning btn-round btn-fab btn-sm" onclick="cargarDatosRegistroContacto()">
                                         <i class="material-icons" title="Add Contacto">add</i>
                                     </a>
-                                    <a href="#" class="btn btn-success btn-round btn-fab btn-sm" onclick="">
+                                    <a href="#" class="btn btn-success btn-round btn-fab btn-sm" onclick="actualizarRegistroContacto()">
                                        <i class="material-icons" title="Actualizar Contacto">update</i>
-                                    </a>
+                                    </a> 
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                         <!-- fin tipos pago y objeto  -->                                                 
                         <div class="row">
