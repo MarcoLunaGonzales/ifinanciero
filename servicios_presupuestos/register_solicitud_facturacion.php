@@ -1,11 +1,12 @@
 <?php
 
 require_once 'conexion.php';
+require_once 'conexion_externa.php';
 require_once 'styles.php';
 require_once 'configModule.php';
 
-//$dbh = new Conexion();
 $dbh = new Conexion();
+<<<<<<< HEAD
 if(isset($_GET['q'])){
   $q=$_GET['q'];
   $s=$_GET['s'];
@@ -13,15 +14,18 @@ if(isset($_GET['q'])){
   $v=$_GET['v'];
 }
 
+=======
+$dbhIBNO = new ConexionIBNORCA();
+>>>>>>> aac92cef098d0067b573481a7d52e8f162f1e1a8
 $IdServicio=$IdServicio;
 $cod_facturacion=$cod_facturacion;
 //$cod_simulacion=$cod_simulacion;
 //sacamos datos para la facturacion
-$sql="SELECT *, (select c.descripcion_n2 from cla_servicios c where c.IdTipo=s.IdTipo LIMIT 1) as nombreTipo, (select cc.nombre from clientes cc where cc.codigo=s.IdCliente) as nombreCliente from servicios s where s.IdArea=11 and YEAR(s.fecharegistro)=2020 and IdServicio=$IdServicio";
-$stmtServicio = $dbh->prepare($sql);
-$stmtServicio->execute();
-$resultServicio = $stmtServicio->fetch();
+$stmtIBNO = $dbhIBNO->prepare("SELECT * from servicios s where IdServicio=$IdServicio");
+$stmtIBNO->execute();
+$resultServicio = $stmtIBNO->fetch();
 $IdTipo = $resultServicio['IdTipo'];
+$Codigo_alterno = $resultServicio['Codigo'];
 
 if ($cod_facturacion > 0){
     $stmt = $dbh->prepare("SELECT * FROM solicitudes_facturacion where codigo=$cod_facturacion");
@@ -73,6 +77,7 @@ $contadorRegistros=0;
         <div style="overflow-y:scroll;">
             <div class="col-md-12">
               <form id="form1" class="form-horizontal" action="<?=$urlSaveSolicitudfactura;?>" method="post" onsubmit="return valida(this)">
+                <input type="hidden" name="Codigo_alterno" id="Codigo_alterno" value="<?=$Codigo_alterno;?>"/>
                 <input type="hidden" name="cod_simulacion" id="cod_simulacion" value="<?=$IdServicio;?>"/>
                 <input type="hidden" name="cod_facturacion" id="cod_facturacion" value="<?=$cod_facturacion;?>"/>
                 <input type="hidden" name="cantidad_filas" id="cantidad_filas" value="<?=$contadorRegistros;?>">
@@ -91,7 +96,7 @@ $contadorRegistros=0;
                     <div class="card-text">
                       <h4 class="card-title"><?php if ($cod_facturacion == 0) echo "Registrar "; else echo "Editar ";?>Solicitud de Facturación</h4>                      
                     </div>
-                    <h4 class="card-title" align="center"><b>Propuesta: <?=$nombre_simulacion?> - <?=$name_area?></b></h4>
+                    <h4 class="card-title" align="center"><b>Propuesta: <?=$nombre_simulacion?>  / <?=$Codigo_alterno?></b></h4>
                   </div>
                   <div class="card-body ">
                         <div class="row">
@@ -163,10 +168,12 @@ $contadorRegistros=0;
                                         </select>                                
                                 </div>
                             </div>
-                            <label class="col-sm-2 col-form-label">Persona Contacto</label>
+                            <label class="col-sm-2 col-form-label">Responsable</label>
                             <div class="col-sm-4">
-                                <div class="form-group" >
-                                        <input type="text" name="persona_contacto" id="persona_contacto" value="<?=$persona_contacto?>" class="form-control" required="true">
+                                <div class="form-group">            
+                                    <?php  $responsable=namePersonal($cod_personal); ?>                    
+                                    <input type="hidden" name="cod_personal" id="cod_personal" value="<?=$cod_personal?>" readonly="true" class="form-control">
+                                    <input type="text" value="<?=$responsable?>" readonly="true" class="form-control" style="background-color:#E3CEF6;text-align: left">
                                 </div>
                             </div>
                         </div>
@@ -182,14 +189,39 @@ $contadorRegistros=0;
                                         
                                 </div>
                             </div>
-                            <label class="col-sm-2 col-form-label">Responsable</label>
-                            <div class="col-sm-4">
-                                <div class="form-group">            
-                                    <?php  $responsable=namePersonal($cod_personal); ?>                    
-                                    <input type="hidden" name="cod_personal" id="cod_personal" value="<?=$cod_personal?>" readonly="true" class="form-control">
-                                    <input type="text" value="<?=$responsable?>" readonly="true" class="form-control" style="background-color:#E3CEF6;text-align: left">
+                            <label class="col-sm-2 col-form-label">Persona Contacto</label>
+                            <div class="col-sm-3">
+                                <div class="form-group" >
+                                        <!-- <input type="text" name="persona_contacto" id="persona_contacto" value="<?=$persona_contacto?>" class="form-control" required="true"> -->
+                                        <div id="div_contenedor_contactos">
+                                            <select class="selectpicker form-control form-control-sm" name="persona_contacto" id="persona_contacto" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" title="Seleccione Contacto" required="true">
+                                              <option value=""></option>
+                                              <?php 
+                                              $query="SELECT * FROM clientes_contactos where cod_cliente=$cod_cliente order by nombre";
+                                              $stmt = $dbh->prepare($query);
+                                              $stmt->execute();
+                                              while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                                $codigo=$row['codigo'];    
+                                                $nombre_conatacto=$row['nombre']." ".$row['paterno']." ".$row['materno'];
+                                                ?><option value="<?=$codigo?>" class="text-right"><?=$nombre_conatacto?></option>
+                                               <?php 
+                                               } ?> 
+                                            </select>
+                                        </div>
+                                </div>
+
+                            </div>
+                            <div class="col-sm-1">
+                                <div class="form-group" >                                        
+                                    <a href="#" class="btn btn-warning btn-round btn-fab btn-sm" onclick="cargarDatosRegistroContacto()">
+                                        <i class="material-icons" title="Add Contacto">add</i>
+                                    </a>
+                                    <a href="#" class="btn btn-success btn-round btn-fab btn-sm" onclick="actualizarRegistroContacto()">
+                                       <i class="material-icons" title="Actualizar Contacto">update</i>
+                                    </a> 
                                 </div>
                             </div>
+                            
                         </div>
                         <!-- fin cliente y responsable -->
 
@@ -248,22 +280,24 @@ $contadorRegistros=0;
                                       <tbody>                                
                                         <?php 
                                         $iii=1;                                    
-                                        $queryPr="SELECT s.IdDetServicio,s.IdClaServicio,c.descripcion,s.Cantidad,s.PrecioUnitario from serviciopresupuesto s, cla_servicios c where s.IdClaServicio=c.idclaservicio and s.IdServicio=$IdServicio";
+                                        $queryPr="SELECT s.IdDetServicio,s.IdClaServicio,s.Cantidad,s.PrecioUnitario from serviciopresupuesto s where  s.IdServicio=$IdServicio";
                                         if ($cod_facturacion > 0){
                                             $queryPr.=" UNION ";
                                             $queryPr.="SELECT d.codigo,d.cod_claservicio,(select cs.descripcion from cla_servicios cs where cs.IdClaServicio=d.cod_claservicio) as descripcion,d.cantidad,d.precio from solicitudes_facturaciondetalle d where d.tipo_item=2 and d.cod_solicitudfacturacion=$cod_facturacion";
 
                                         }
-                                        //echo $queryPr;
-                                        $stmt = $dbh->prepare($queryPr);
+                                        // echo $queryPr;
+                                        $stmt = $dbhIBNO->prepare($queryPr);
                                         $stmt->execute();
                                         $modal_totalmontopre=0;$modal_totalmontopretotal=0;
                                         while ($rowPre = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                             $codigoPre=$rowPre['IdDetServicio'];
                                             $codCS=$rowPre['IdClaServicio'];
-                                            $tipoPre=$rowPre['descripcion'];
+                                            // $tipoPre=$rowPre['descripcion'];
                                             $cantidadPre=$rowPre['Cantidad'];                                          
                                             $montoPre=$rowPre['PrecioUnitario'];
+
+                                            $tipoPre=descripcionClaServicio($codCS);
                                             // $montoPreTotal=$montoPre*$cantidadEPre;
                                             $banderaHab=1;
                                             $codTipoUnidad=0;
@@ -370,7 +404,7 @@ $contadorRegistros=0;
                                     <label class="col-sm-5 col-form-label" style="color:#000000">Monto Total</label>
                                     <div class="col-sm-4">
                                         <div class="form-group">                                        
-                                            <input style="background:#ffffff" class="form-control" type="text" value="0" name="modal_totalmontoserv" id="modal_totalmontoserv" step="0.01"/>                                            
+                                            <input style="background:#ffffff" class="form-control" type="text" value="0" name="modal_totalmontoserv" id="modal_totalmontoserv" step="0.01" readonly="true" />                                            
                                         </div>
                                     </div>
                                 </div>
@@ -378,7 +412,18 @@ $contadorRegistros=0;
                                     <button title="Agregar Servicios" type="button" id="add_boton" name="add" class="btn btn-warning btn-round btn-fab" onClick="AgregarSeviciosFacturacion2_servicios(this)">
                                         <i class="material-icons">add</i>
                                     </button><span style="color:#084B8A;"><b> SERVICIOS ADICIONALES</b></span>
-                                    
+                                    <div class="row" style="background-color:#1a2748">
+                                        <th><label class="col-sm-4 col-form-label" style="color:#ff9c14">Servicios</label>
+                                        <label class="col-sm-1 col-form-label" style="color:#ff9c14">Cant</label>
+                                        <label class="col-sm-1 col-form-label" style="color:#ff9c14">Precio(BOB)</label>
+                                        <label class="col-sm-1 col-form-label" style="color:#ff9c14">Desc(%)</label>
+                                        <label class="col-sm-1 col-form-label" style="color:#ff9c14">Desc(BOB)</label>
+                                        <label class="col-sm-1 col-form-label" style="color:#ff9c14">Importe(BOB)</label>
+                                        <label class="col-sm-2 col-form-label" style="color:#ff9c14">Glosa</label>
+                                        <label class="col-sm-1 col-form-label" style="color:#ff9c14">Eliminar</label>
+
+
+                                    </div>
 
                                     <div id="div<?=$index;?>">  
                                         <div class="h-divider">
@@ -416,6 +461,35 @@ $contadorRegistros=0;
         </div>
     </div>
 </div>
+
+<div class="cargar-ajax d-none">
+  <div class="div-loading text-center">
+     <h4 class="text-warning font-weight-bold" id="texto_ajax_titulo">Procesando Datos</h4>
+     <p class="text-white">Aguard&aacute; un momento por favor</p>  
+  </div>
+</div>
+<div class="modal fade modal-arriba modal-primary" id="modalAgregarProveedor" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content card">
+            <div class="card-header card-header-warning card-header-icon">
+                <div class="card-icon">
+                    <i class="material-icons text-dark">ballot</i>
+                 </div>
+                  <h4 class="card-title">Contacto</h4>
+            </div>
+            <div class="card-body">
+                 <div id="datosProveedorNuevo">
+                   
+                 </div> 
+                <div class="form-group float-right">
+                        <button type="button" onclick="guardarDatoscontacto()" class="btn btn-info btn-round">Agregar</button>
+                </div>
+          </div>
+      </div>  
+    </div>
+  </div>
+
+
 
 <script type="text/javascript">
 function valida(f) {

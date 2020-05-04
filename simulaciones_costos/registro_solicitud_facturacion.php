@@ -1,6 +1,7 @@
 <?php
 
 require_once 'conexion.php';
+require_once 'conexion_externa.php';
 require_once 'styles.php';
 require_once 'configModule.php';
 
@@ -23,38 +24,38 @@ $cod_responsable = $resultSimu['cod_responsable'];
 
 
 //simulacion conexxion con ibnorca
-class ConexionIBNORCA extends PDO { 
-  private $tipo_de_base = 'mysql';
-  private $host = 'localhost';
-  private $nombre_de_base = 'ibnorca';
-  private $usuario = 'root';
-  private $contrasena = '';
-  private $port = '3306';   
-  public function __construct() {
-    //Sobreescribo el método constructor de la clase PDO.
-    try{
-       parent::__construct($this->tipo_de_base.':host='.$this->host.';dbname='.$this->nombre_de_base.';port='.$this->port, $this->usuario, $this->contrasena,array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));//      
-    }catch(PDOException $e){
-       echo 'Ha surgido un error y no se puede conectar a la base de datos. Detalle: ' . $e->getMessage();
-       exit;
-    }
-  } 
-} 
+// class ConexionIBNORCA extends PDO { 
+//   private $tipo_de_base = 'mysql';
+//   private $host = 'localhost';
+//   private $nombre_de_base = 'ibnorca';
+//   private $usuario = 'root';
+//   private $contrasena = '';
+//   private $port = '3306';   
+//   public function __construct() {
+//     //Sobreescribo el método constructor de la clase PDO.
+//     try{
+//        parent::__construct($this->tipo_de_base.':host='.$this->host.';dbname='.$this->nombre_de_base.';port='.$this->port, $this->usuario, $this->contrasena,array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));//      
+//     }catch(PDOException $e){
+//        echo 'Ha surgido un error y no se puede conectar a la base de datos. Detalle: ' . $e->getMessage();
+//        exit;
+//     }
+//   } 
+// } 
 $dbhIBNO = new ConexionIBNORCA();
 //nombre del curso de ibnoca
 $stmtIBNOCurso = $dbhIBNO->prepare("SELECT pc.Nombre
-FROM asignacionalumno aa, alumnos a, alumnocurso ac, clasificador c, programas_cursos pc, modulos m where aa.IdModulo=4000 and a.CiAlumno=aa.CiAlumno 
-and ac.IdCurso=aa.IdCurso and ac.CiAlumno=aa.CiAlumno and ac.IdConceptoPago=c.IdClasificador and pc.IdCurso=pc.IdCurso and pc.IdCurso=aa.IdCurso and 
-m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo and aa.CiAlumno=$ci_estudiante");//poner el codigo de curso a buscar
+    FROM asignacionalumno aa, alumnos a, alumnocurso ac, clasificador c, programas_cursos pc, modulos m where aa.IdModulo=4000 and a.CiAlumno=aa.CiAlumno 
+    and ac.IdCurso=aa.IdCurso and ac.CiAlumno=aa.CiAlumno and ac.IdConceptoPago=c.IdClasificador and pc.IdCurso=pc.IdCurso and pc.IdCurso=aa.IdCurso and 
+    m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo and aa.CiAlumno=$ci_estudiante");//poner el codigo de curso a buscar
 $stmtIBNOCurso->execute();
 $resultNombreCurso = $stmtIBNOCurso->fetch();
 $nombre_curso = $resultNombreCurso['Nombre'];
 //datos del estudiante y el curso que se encuentra
 $sqlIBNORCA="SELECT aa.IdModulo, aa.IdCurso, aa.CiAlumno, concat(a.ApPaterno,' ',a.ApMaterno,' ',a.Nombre)as nombreAlumno, c.Abrev, c.Auxiliar,
-pc.Costo, pc.CantidadModulos, m.NroModulo, pc.Nombre
-FROM asignacionalumno aa, alumnos a, alumnocurso ac, clasificador c, programas_cursos pc, modulos m where aa.IdModulo=4000 and a.CiAlumno=aa.CiAlumno 
-and ac.IdCurso=aa.IdCurso and ac.CiAlumno=aa.CiAlumno and ac.IdConceptoPago=c.IdClasificador and pc.IdCurso=pc.IdCurso and pc.IdCurso=aa.IdCurso and 
-m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo and aa.CiAlumno=$ci_estudiante";
+    pc.Costo, pc.CantidadModulos, m.NroModulo, pc.Nombre
+    FROM asignacionalumno aa, alumnos a, alumnocurso ac, clasificador c, programas_cursos pc, modulos m where aa.IdModulo=4000 and a.CiAlumno=aa.CiAlumno 
+    and ac.IdCurso=aa.IdCurso and ac.CiAlumno=aa.CiAlumno and ac.IdConceptoPago=c.IdClasificador and pc.IdCurso=pc.IdCurso and pc.IdCurso=aa.IdCurso and 
+    m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo and aa.CiAlumno=$ci_estudiante";
 $stmtIbno = $dbhIBNO->prepare($sqlIBNORCA);
 $stmtIbno->execute();
 $resultSimu = $stmtIbno->fetch();
@@ -166,22 +167,22 @@ $contadorRegistros=0;
                         </div>
                         <!-- fin fechas -->
                         <div class="row">          
-                            <div class="d-none">
-                                <label class="col-sm-2 col-form-label">Tipo Objeto</label>
-                                <div class="col-sm-4">
-                                    <div class="form-group" >
-                                            <select name="cod_tipoobjeto" id="cod_tipoobjeto" class="selectpicker form-control form-control-sm" data-style="btn btn-info" required="true">
-                                                <option value=""></option>
-                                                <?php 
-                                                $queryTipoObjeto = "SELECT codigo,nombre FROM  tipos_objetofacturacion WHERE cod_estadoreferencial=1 order by nombre";
-                                                $statementObjeto = $dbh->query($queryTipoObjeto);
-                                                while ($row = $statementObjeto->fetch()){ ?>
-                                                    <option <?=($cod_tipoobjeto==$row["codigo"])?"selected":"";?>  value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
-                                                <?php } ?>
-                                            </select>                                
+                                <div class="d-none">
+                                    <label class="col-sm-2 col-form-label">Tipo Objeto</label>
+                                    <div class="col-sm-4">
+                                        <div class="form-group" >
+                                                <!-- <select name="cod_tipoobjeto" id="cod_tipoobjeto" class="selectpicker form-control form-control-sm" data-style="btn btn-info" required="true">
+                                                    <option value=""></option>
+                                                    <?php 
+                                                    $queryTipoObjeto = "SELECT codigo,nombre FROM  tipos_objetofacturacion WHERE cod_estadoreferencial=1 order by nombre";
+                                                    $statementObjeto = $dbh->query($queryTipoObjeto);
+                                                    while ($row = $statementObjeto->fetch()){ ?>
+                                                        <option <?=($cod_tipoobjeto==$row["codigo"])?"selected":"";?>  value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                                                    <?php } ?>
+                                                </select>    -->                             
+                                        </div>
                                     </div>
-                                </div>
-                            </div>                 
+                                </div>                 
                                 
 
                             <label class="col-sm-2 col-form-label">Tipo Pago</label>
@@ -199,9 +200,19 @@ $contadorRegistros=0;
                                 </div>
                             </div>
                             <label class="col-sm-2 col-form-label">Persona Contacto</label>
-                            <div class="col-sm-4">
+                            <div class="col-sm-3">
                                 <div class="form-group" >
                                         <input type="text" name="persona_contacto" id="persona_contacto" class="form-control" value="<?=$persona_contacto?>" required="true">
+                                </div>
+                            </div>
+                            <div class="col-sm-1">
+                                <div class="form-group" >                                        
+                                    <a href="#" class="btn btn-warning btn-round btn-fab btn-sm" onclick="cargarDatosRegistroContacto(<?=$cod_simulacion?>)">
+                                        <i class="material-icons" title="Add Contacto">add</i>
+                                    </a>
+                                    <a href="#" class="btn btn-success btn-round btn-fab btn-sm" onclick="">
+                                       <i class="material-icons" title="Actualizar Contacto">update</i>
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -387,7 +398,7 @@ $contadorRegistros=0;
                                     <label class="col-sm-5 col-form-label" style="color:#000000">Monto Total</label>
                                     <div class="col-sm-4">
                                         <div class="form-group">                                        
-                                            <input style="background:#ffffff" class="form-control" type="text" value="0" name="modal_totalmontoserv" id="modal_totalmontoserv"/>                                            
+                                            <input style="background:#ffffff" class="form-control" type="text" value="0" name="modal_totalmontoserv" id="modal_totalmontoserv" readonly="true" />                                            
                                         </div>
                                     </div>
                                         

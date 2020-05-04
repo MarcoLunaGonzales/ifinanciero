@@ -1,5 +1,6 @@
 <?php
 require_once 'conexion.php';
+require_once 'conexion_externa.php';
 require_once 'configModule.php';
 require_once 'styles.php';
 $codigo_simulacion=$cod;//codigo de simulacion
@@ -15,23 +16,6 @@ $cod_area = $resultSimu['cod_area'];
 $cod_uo = $resultSimu['cod_uo'];
 
 //simulamos conexion con ibnorca
-class ConexionIBNORCA extends PDO { 
-  private $tipo_de_base = 'mysql';
-  private $host = 'localhost';
-  private $nombre_de_base = 'ibnorca';
-  private $usuario = 'root';
-  private $contrasena = '';
-  private $port = '3306';   
-  public function __construct() {
-    //Sobreescribo el método constructor de la clase PDO.
-    try{
-       parent::__construct($this->tipo_de_base.':host='.$this->host.';dbname='.$this->nombre_de_base.';port='.$this->port, $this->usuario, $this->contrasena,array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));//      
-    }catch(PDOException $e){
-       echo 'Ha surgido un error y no se puede conectar a la base de datos. Detalle: ' . $e->getMessage();
-       exit;
-    }
-  } 
-} 
 $dbhIBNO = new ConexionIBNORCA();
 //sacamos el nombre del curso
 $stmtIBNOCurso = $dbhIBNO->prepare("SELECT pc.Nombre
@@ -97,6 +81,7 @@ m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo order by nombreAlumno");//poner 
                           $index=1;
                           $descuento_por = 0;
                           $descuento_bob = 0;
+                          $cont= array();
                           while ($row = $stmtIBNO->fetch(PDO::FETCH_BOUND)) {  
                             $monto_pagar=($Costo - ($Costo*$descuento/100) )/$CantidadModulos; //monto a pagar del estudiante 
                             $importe_curso=   $Costo*$descuento/100;//importe curso con desuento
@@ -106,6 +91,7 @@ m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo order by nombreAlumno");//poner 
                             //buscamos a los estudiantes que ya fueron solicitados su facturacion
                             $codigo_facturacion=0;
                             $sqlFac="SELECT sf.codigo,sf.fecha_registro,sf.fecha_solicitudfactura,sf.razon_social,sf.nit from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sfd.cod_solicitudfacturacion=sf.codigo and sf.cod_simulacion_servicio=$codigo_simulacion and sf.cod_cliente=$CiAlumno";
+                            // echo $sqlFac;
                             $stmtSimuFact = $dbh->prepare($sqlFac);
                             $stmtSimuFact->execute();
                             $resultSimuFact = $stmtSimuFact->fetch();
@@ -244,9 +230,9 @@ m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo order by nombreAlumno");//poner 
                       <th>#</th>
                       <th width="20%">Item</th>
                       <th>Canti.</th>
-                      <th>Precio(BOB)</th>  
+                      <!-- <th>Precio(BOB)</th>  
                       <th>Desc(%)</th> 
-                      <th>Desc(BOB)</th> 
+                      <th>Desc(BOB)</th>  -->
                       <th width="10%">Importe(BOB)</th> 
                       <th width="45%">Glosa</th>                    
                       </tr>

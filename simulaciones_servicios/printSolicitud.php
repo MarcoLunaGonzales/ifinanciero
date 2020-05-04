@@ -30,6 +30,7 @@ try{
   $nit = $resultInfo['nit'];  
   $observaciones = $resultInfo['observaciones'];  
   $nro_correlativo = $resultInfo['nro_correlativo'];  
+  $codigo_alterno = $resultInfo['codigo_alterno'];  
   
 $nombre_unidad=nameUnidad($cod_unidadorganizacional);
 $abrev_area=trim(abrevArea($cod_area),'-');
@@ -37,7 +38,7 @@ $nombre_cliente=nameCliente($cod_cliente);
 $nombre_responsable=namePersonal($cod_personal);
 $tc=obtenerValorTipoCambio(2,strftime('%Y-%m-%d',strtotime($fecha_solicitudfactura)));
 $usd=$tc;
-$codigo_servicio="RLP-TCS-SGC-00135";
+$codigo_servicio="$codigo_alterno";
 
 $html = '';
 $html.='<html>'.

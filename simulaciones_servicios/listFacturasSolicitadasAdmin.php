@@ -31,14 +31,15 @@ if(isset($_GET['q'])){
 
 
   //datos registrado de la simulacion en curso
-  $stmt = $dbh->prepare("SELECT sf.*,es.nombre as estado FROM solicitudes_facturacion sf join estados_solicitudfacturacion es on sf.cod_estadosolicitudfacturacion=es.codigo where sf.cod_estadosolicitudfacturacion!=1 and sf.cod_estadosolicitudfacturacion!=6"); /*and sf.cod_estadosolicitudfacturacion!=5*/
+
+  $stmt = $dbh->prepare("SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')as fecha_registro,DATE_FORMAT(sf.fecha_solicitudfactura,'%d/%m/%Y')as fecha_solicitudfactura_x FROM solicitudes_facturacion_x sf join estados_solicitudfacturacion es on sf.cod_estadosolicitudfacturacion=es.codigo where sf.cod_estadosolicitudfacturacion!=1 and sf.cod_estadosolicitudfacturacion!=6"); /*and sf.cod_estadosolicitudfacturacion!=5*/
   $stmt->execute();
   $stmt->bindColumn('codigo', $codigo_facturacion);
   $stmt->bindColumn('cod_simulacion_servicio', $cod_simulacion_servicio);
   $stmt->bindColumn('cod_unidadorganizacional', $cod_unidadorganizacional);
   $stmt->bindColumn('cod_area', $cod_area);
-  $stmt->bindColumn('fecha_registro', $fecha_registro);
-  $stmt->bindColumn('fecha_solicitudfactura', $fecha_solicitudfactura);
+  $stmt->bindColumn('fecha_registro_x', $fecha_registro);
+  $stmt->bindColumn('fecha_solicitudfactura_x', $fecha_solicitudfactura);
   $stmt->bindColumn('cod_tipoobjeto', $cod_tipoobjeto);
   $stmt->bindColumn('cod_tipopago', $cod_tipopago);
   $stmt->bindColumn('cod_cliente', $cod_cliente);
@@ -288,9 +289,9 @@ $item_1=2709;
                     <th>#</th>
                     <th>Item</th>
                     <th>Cantidad</th>
-                    <th>Precio(BOB)</th>  
+                    <!-- <th>Precio(BOB)</th>  
                       <th>Desc(%)</th> 
-                      <th>Desc(BOB)</th> 
+                      <th>Desc(BOB)</th>  -->
                       <th>Importe(BOB)</th>  
                     <th>Descripción Alterna</th>                    
                     </tr>

@@ -29,15 +29,15 @@ if(isset($_GET['q'])){
 
   //datos registrado de la simulacion en curso
 
-  $stmt = $dbh->prepare("SELECT sf.*,es.nombre as estado FROM solicitudes_facturacion sf join estados_solicitudfacturacion es on sf.cod_estadosolicitudfacturacion=es.codigo");
+  $stmt = $dbh->prepare("SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')as fecha_registro_x,DATE_FORMAT(sf.fecha_solicitudfactura,'%d/%m/%Y')as fecha_solicitudfactura_x FROM solicitudes_facturacion sf join estados_solicitudfacturacion es on sf.cod_estadosolicitudfacturacion=es.codigo order by sf.fecha_solicitudfactura desc");
 
   $stmt->execute();
   $stmt->bindColumn('codigo', $codigo_facturacion);
   $stmt->bindColumn('cod_simulacion_servicio', $cod_simulacion_servicio);
   $stmt->bindColumn('cod_unidadorganizacional', $cod_unidadorganizacional);
   $stmt->bindColumn('cod_area', $cod_area);
-  $stmt->bindColumn('fecha_registro', $fecha_registro);
-  $stmt->bindColumn('fecha_solicitudfactura', $fecha_solicitudfactura);
+  $stmt->bindColumn('fecha_registro_x', $fecha_registro);
+  $stmt->bindColumn('fecha_solicitudfactura_x', $fecha_solicitudfactura);
   $stmt->bindColumn('cod_tipoobjeto', $cod_tipoobjeto);
   $stmt->bindColumn('cod_tipopago', $cod_tipopago);
   $stmt->bindColumn('cod_cliente', $cod_cliente);
@@ -49,6 +49,7 @@ if(isset($_GET['q'])){
   $stmt->bindColumn('estado', $estado);
   $stmt->bindColumn('nro_correlativo', $nro_correlativo);
   $stmt->bindColumn('persona_contacto', $persona_contacto);
+  $stmt->bindColumn('codigo_alterno', $codigo_alterno);
   // $stmt->bindColumn('nombre_cliente', $nombre_cliente);
   ?>
   <div class="content">
@@ -70,20 +71,20 @@ if(isset($_GET['q'])){
                             <th class="text-center">#</th>                          
                             <th>Of.</th>
                             <th>Area</th>
-                            <th>#Sol.</th>
-                            <th>Propuesta</th>
+                            <th>nro<br>Sol.</th>
+                            <th>Codigo<br>Servicio</th>
                             <!-- <th>Responsable</th> -->
-                            <th>F. Registro</th>
-                            <th>F. a Facturar</th>
+                            <th>Fecha<br>Registro</th>
+                            <th>Fecha<br>a Facturar</th>
                             <th style="color:#cc4545;">#Fact</th>
                             <!-- <th>Precio (BOB)</th>                            
                             <th>Descu (%)</th>  
                             <th>Descu (BOB)</th>   -->
-                            <th>Importe (BOB)</th>  
-                            <th>Per.Contacto</th>  
+                            <th>Importe<br>(BOB)</th>  
+                            <th>Persona<br>Contacto</th>  
                             <th>Razón Social</th>                            
                             <!--ESTADO DE LA SOLICITUD-->
-                            <th>Estado</th>
+                            <th width="5%">Estado</th>
                             <th class="text-right">Actions</th>
                           </tr>
                         </thead>
@@ -202,7 +203,7 @@ if(isset($_GET['q'])){
                             <td><?=$nombre_uo;?></td>
                             <td><?=$nombre_area;?></td>
                             <td><?=$nro_correlativo;?></td>
-                            <td><?=$name_area_simulacion?></td>
+                            <td><?=$codigo_alterno?></td>
                             <!-- <td><?=$responsable;?></td> -->
                             <td><?=$fecha_registro;?></td>
                             <td><?=$fecha_solicitudfactura;?></td>                            
@@ -263,7 +264,7 @@ if(isset($_GET['q'])){
                                           }else{
                                             if($codEstado==3){
                                              ?>
-                                             <a href='#' title="Generar Factura" target="_blank" class="dropdown-item" onclick="alerts.showSwal('warning-message-and-confirmation-generar-factura','<?=$urlGenerarFacturas2;?>?codigo=<?=$codigo_facturacion;?>')">
+                                             <a href='#' title="Generar Factura" class="dropdown-item" onclick="alerts.showSwal('warning-message-and-confirmation-generar-factura','<?=$urlGenerarFacturas2;?>?codigo=<?=$codigo_facturacion;?>')">
                                               <i class="material-icons text-success">receipt</i> Generar Factura
                                              </a>
                                              <?php      
@@ -401,9 +402,9 @@ if(isset($_GET['q'])){
                     <th>#</th>
                     <th>Item</th>
                     <th>Cantidad</th>
-                    <th>Precio(BOB)</th>  
+                    <!-- <th>Precio(BOB)</th>  
                       <th>Desc(%)</th> 
-                      <th>Desc(BOB)</th> 
+                      <th>Desc(BOB)</th>  -->
                       <th width="10%">Importe(BOB)</th> 
                       <th width="45%">Glosa</th>                   
                     </tr>

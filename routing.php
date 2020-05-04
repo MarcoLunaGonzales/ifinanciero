@@ -221,11 +221,16 @@
 		if ($_GET['opcion']=='save_solicitud_facturacion_costos') {
 			require_once('simulaciones_costos/save_solicitud_facturacion_costos.php');
 		}
+		if ($_GET['opcion']=='save_solicitud_facturacion_manual') {
+			require_once('solicitud_facturacion_manual/save_solicitud_facturacion.php');
+		}
 
 		if ($_GET['opcion']=='listFacturasServicios_costos') {
 			require_once('simulaciones_costos/listFacturasSolicitadas.php');
 		}
-
+		if ($_GET['opcion']=='register_solicitudfacturacion_manual') {
+			require_once('solicitud_facturacion_manual/register_solicitud_facturacion_manual.php');
+		}
         //PLANTILLAS TCP
         if ($_GET['opcion']=='listPlantillasServicios') {
 			require_once('plantillas_servicios/list.php');

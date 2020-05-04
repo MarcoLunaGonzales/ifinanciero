@@ -1,23 +1,25 @@
 <?php
 require_once 'conexion.php';
+require_once 'conexion_externa.php';
 require_once 'configModule.php';
 require_once 'styles.php';
-
 $dbh = new Conexion();
+$dbhIBNO = new ConexionIBNORCA();
 $globalAdmin=$_SESSION["globalAdmin"];
+$stmtIBNO = $dbhIBNO->prepare("SELECT *, DATE_FORMAT(s.fecharegistro,'%d/%m/%Y')as fecharegistro_x from servicios s where s.IdArea=11 and YEAR(s.fecharegistro)=2020");
+$stmtIBNO->execute();
+$stmtIBNO->bindColumn('IdServicio', $IdServicio);
+$stmtIBNO->bindColumn('IdArea', $IdArea);
+$stmtIBNO->bindColumn('IdOficina', $IdOficina);
+// $stmtIBNO->bindColumn('nombreTipo', $nombreTipo);  
+$stmtIBNO->bindColumn('IdTipo', $IdTipo);
+$stmtIBNO->bindColumn('IdCliente', $IdCliente);
+// $stmtIBNO->bindColumn('nombreCliente', $nombreCliente);
+$stmtIBNO->bindColumn('Descripcion', $Descripcion);
+$stmtIBNO->bindColumn('fecharegistro_x', $fecharegistro);
+$stmtIBNO->bindColumn('carpeta', $carpeta);
+$stmtIBNO->bindColumn('Codigo', $Codigo_alterno);
 
-  $stmt = $dbh->prepare("SELECT *, (select c.descripcion_n2 from cla_servicios c where c.IdTipo=s.IdTipo LIMIT 1) as nombreTipo, (select cc.nombre from clientes cc where cc.codigo=s.IdCliente) as nombreCliente from servicios s where s.IdArea=11 and YEAR(s.fecharegistro)=2020");
-  $stmt->execute();
-  $stmt->bindColumn('IdServicio', $IdServicio);
-  $stmt->bindColumn('IdArea', $IdArea);
-  $stmt->bindColumn('IdOficina', $IdOficina);
-  $stmt->bindColumn('nombreTipo', $nombreTipo);
-  $stmt->bindColumn('Codigo', $Codigo);
-  $stmt->bindColumn('IdCliente', $IdCliente);
-  $stmt->bindColumn('nombreCliente', $nombreCliente);
-  $stmt->bindColumn('Descripcion', $Descripcion);
-  $stmt->bindColumn('fecharegistro', $fecharegistro);
-  $stmt->bindColumn('carpeta', $carpeta);
   ?>
   <div class="content">
     <div class="container-fluid">
@@ -39,17 +41,13 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             <!-- <th>Cod. Serv.</th> -->
                             <th>Of</th>
                             <th>Area</th>
-                            
-                            <th>Tipo</th>
-                            <!-- <th>Codigo</th> -->
+                            <th>Cod. Servicio</th>
+                            <!-- <th>Tipo</th> -->                            
                             <th>Cliente</th>
-                            <th>F.Registro</th>
-                            <th style="color:#cc4545;">#Fact</th>
-                            <!--<th>Precio (BOB)</th>                            
-                            <th>Desc(%)</th>  
-                            <th>Desc(BOB)</th>  
-                            <th>Importe (BOB)</th>   -->
+                            <th>Fecha<br>Registro</th>
+                            <th style="color:#cc4545;">Nro<br>Fact</th>
                             <th>Descripción</th>
+                            <th>Estado</th>
                             <th class="text-right">Opciones</th>                            
                           </tr>
                         </thead>
@@ -59,13 +57,14 @@ $globalAdmin=$_SESSION["globalAdmin"];
                           $stringCabecera="";
                           $codigo_fact_x=0;
                           $cont= array();
-                          while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+                          while ($row = $stmtIBNO->fetch(PDO::FETCH_BOUND)) {
+                            $nombreCliente=nameCliente($IdCliente);
                             $nombre_area=trim(abrevArea($IdArea),'-');
                             $nombre_uo=trim(abrevUnidad($IdOficina),' - ');
 
                             //buscamos a los propuestas que ya fueron solicitadas su facturacion
                             $codigo_facturacion=0;
-                            $sqlFac="SELECT sf.codigo,sf.fecha_registro,sf.fecha_solicitudfactura,sf.razon_social,sf.nit from solicitudes_facturacion sf where sf.cod_estado=1 and sf.cod_simulacion_servicio=$IdServicio and sf.cod_cliente=$IdCliente";
+                            $sqlFac="SELECT sf.codigo,sf.fecha_registro,sf.fecha_solicitudfactura,sf.razon_social,sf.nit,sf.cod_estadosolicitudfacturacion,(select s.nombre from estados_solicitudfacturacion s where s.codigo = sf.cod_estadosolicitudfacturacion) as estado from solicitudes_facturacion sf where sf.cod_estado=1 and sf.cod_simulacion_servicio=$IdServicio and sf.cod_cliente=$IdCliente";
                             $stmtSimuFact = $dbh->prepare($sqlFac);
                             $stmtSimuFact->execute();
                             $resultSimuFact = $stmtSimuFact->fetch();
@@ -74,6 +73,29 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             $fecha_registro = $resultSimuFact['fecha_registro'];
                             $fecha_solicitudfactura = $resultSimuFact['fecha_solicitudfactura'];
                             $razon_social = $resultSimuFact['razon_social'];
+                            $codEstado = $resultSimuFact['cod_estadosolicitudfacturacion'];
+                            $estado = $resultSimuFact['estado'];
+                            switch ($codEstado) {
+                              case 1:
+                                $btnEstado="btn-default";
+                              break;
+                              case 2:
+                                $btnEstado="btn-danger";
+                              break;
+                              case 3:
+                                $btnEstado="btn-success";
+                              break;
+                              case 4:
+                                $btnEstado="btn-warning";
+                              break;
+                              case 5:
+                                $btnEstado="btn-warning";
+                              break;
+                              case 6:
+                                $btnEstado="btn-default";
+                              break;
+                            }
+
 
                             //verificamos si ya tiene factura generada                            
                             $stmtFact = $dbh->prepare("SELECT codigo, nro_factura from facturas_venta where cod_solicitudfacturacion=$codigo_facturacion and cod_estadofactura=1");
@@ -123,30 +145,25 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             ?>
                             
                           <tr>
-                            <td align="center"><?=$index;?></td>
-                             <!-- <td><?=$IdServicio?></td> -->
-                            
+                            <td align="center"><?=$index;?></td>                                                         
                             <td><?=$nombre_uo?></td>
                             <td><?=$nombre_area?></td>
-                            <td><?=$nombreTipo?></td>
-                            <!-- <td><?=$Codigo?></td>     -->                        
-                            <td><?=$nombreCliente?></td>                            
+                            <td class="text-left"><?=$Codigo_alterno?></td>
+                            <td class="text-left"><?=$nombreCliente?></td>                            
                             <td><?=$fecharegistro?></td>                            
-                            <td style="color:#cc4545;"><b><?=$nro_fact_x;?></b></td>
-                            <!-- <td class="text-right"><?=formatNumberDec($sumaTotalMonto) ;?></td>
-                            <td class="text-right"><?=formatNumberDec($sumaTotalDescuento_por) ;?></td>
-                            <td class="text-right"><?=formatNumberDec($sumaTotalDescuento_bob) ;?></td>
-                            <td class="text-right"><?=formatNumberDec($sumaTotalImporte) ;?></td> -->
-                            <td><?=$Descripcion?></td>
+                            <td style="color:#cc4545;"><b><?=$nro_fact_x;?></b></td>                            
+                            <td class="text-left"><?=$Descripcion?></td>
+                            <td width="5%"><button class="btn <?=$btnEstado?> btn-sm btn-link"><?=$estado;?></button></td>
                             <td class="td-actions text-right">                              
                               <?php
                                 if($globalAdmin==1){                            
                                   if($codigo_facturacion>0){
-                                    if($codigo_fact_x==0){ //no se genero factura ?>
+                                    if($codigo_fact_x==0){ //no se genero factura 
+                                      if($codEstado==1){?>
                                     <a title="Editar Solicitud de Facturación" href='<?=$urlRegisterSolicitudfactura?>&cod_simulacion=0&IdServicio=<?=$IdServicio?>&cod_facturacion=<?=$codigo_facturacion?>' class="btn btn-success">
                                       <i class="material-icons"><?=$iconEdit;?></i>
                                     </a>
-                                  <?php }else{//ya se genero factura ?>
+                                  <?php }}else{//ya se genero factura ?>
                                     <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=2' target="_blank"><i class="material-icons" title="Imprimir Factura">print</i></a>
                                   <?php }?>
                                   <a href='#' rel="tooltip" class="btn btn-warning" onclick="filaTablaAGeneral($('#tablasA_registradas'),<?=$index?>,'<?=$stringCabecera?>')">
@@ -200,9 +217,9 @@ $globalAdmin=$_SESSION["globalAdmin"];
                       <th>#</th>
                       <th width="20%">Item</th>
                       <th>Canti.</th>
-                      <th>Precio(BOB)</th>  
+                    <!--   <th>Precio(BOB)</th>  
                       <th>Desc(%)</th> 
-                      <th>Desc(BOB)</th> 
+                      <th>Desc(BOB)</th> --> 
                       <th width="10%">Importe(BOB)</th> 
                       <th width="45%">Descripción Alterna</th>                    
                       </tr>
