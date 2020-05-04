@@ -10957,7 +10957,7 @@ function cambiarEstadoObjetoAjax(){
 }
 
 function cambiarEstadoObjetoSol(){
-  $("#modalEstadoObjeto"),modal("hide");
+  $("#modalEstadoObjeto").modal("hide");
   if($("#modal_codigoestado").val()>0){
     Swal.fire({
         title: '¿Esta Seguro?',
@@ -11018,7 +11018,7 @@ function cambiarEstadoObjetoSolAjax(){
 }
 
 function cambiarEstadoObjetoSolFac(){
-  $("#modalEstadoObjeto"),modal("hide");
+  $("#modalEstadoObjeto").modal("hide");
   if($("#modal_codigoestado").val()>0){
     Swal.fire({
         title: '¿Esta Seguro?',
@@ -11479,4 +11479,10 @@ function ajaxCliente_nit_razonsocial(cod_cliente){
 function vistaPreviaArchivoSol(url,nombre){
   $("#vista_previa_frame").attr("src",url);
   $("#titulo_vista_previa").text('VISTA PREVIA "'+nombre+'"');
+}
+
+function moverModal(mod){
+  $("#"+mod).draggable({
+    handle: ".card-header"
+  }); 
 }

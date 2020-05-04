@@ -241,7 +241,7 @@ $item_1=2708;
                 </div>
               </div>
               <div class="card-footer fixed-bottom col-sm-9">
-                <a href="#" onclick="abrirModal('modalListSolEliminados')" class="btn btn-info float-right"><i class="material-icons">history</i> <small id="cantidad_eliminados"></small> Histórico</a>
+                <a href="#" onclick="abrirModal('modalListSolEliminados');moverModal('modalListSolEliminados');" class="btn btn-info float-right"><i class="material-icons">history</i> <small id="cantidad_eliminados"></small> Histórico</a>
               </div>    
             </div>
           </div>  

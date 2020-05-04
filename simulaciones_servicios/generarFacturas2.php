@@ -129,8 +129,16 @@ try{
                 $stmtInsertSoliFactDet = $dbh->prepare("INSERT INTO facturas_ventadetalle(cod_facturaventa,cod_claservicio,cantidad,precio,descripcion_alterna) 
                 values ('$cod_facturaVenta','$cod_claservicio_x','$cantidad_x','$precio_x','$descripcion_alterna_x')");
                 $flagSuccess=$stmtInsertSoliFactDet->execute();
-
-                header('Location: ../simulaciones_servicios/generarFacturasPrint.php?codigo='.$codigo.'&tipo=2');
+                if(isset($_GET['q'])){
+                  $q=$_GET['q'];
+                  $s=$_GET['s'];
+                  $u=$_GET['u'];
+                  $v=$_GET['v'];
+                  header('Location: ../simulaciones_servicios/generarFacturasPrint.php?codigo='.$codigo.'&tipo=2'."&q=".$q."&s=".$s."&u=".$u."&v=".$v);
+                }else{
+                  header('Location: ../simulaciones_servicios/generarFacturasPrint.php?codigo='.$codigo.'&tipo=2');
+                }
+                
               }  
             }
 
@@ -152,7 +160,16 @@ try{
 
     }else{//ya se registro
         echo "ya se registró la factura.";
-        header('Location: ../simulaciones_servicios/generarFacturasPrint.php?codigo='.$codigo.'&tipo=2');
+        if(isset($_GET['q'])){
+           $q=$_GET['q'];
+           $s=$_GET['s'];
+           $u=$_GET['u'];
+           $v=$_GET['v'];
+           header('Location: ../simulaciones_servicios/generarFacturasPrint.php?codigo='.$codigo.'&tipo=2'."&q=".$q."&s=".$s."&u=".$u."&v=".$v);
+        }else{
+           header('Location: ../simulaciones_servicios/generarFacturasPrint.php?codigo='.$codigo.'&tipo=2');
+        }
+        
     }?>
 
 <?php 

@@ -97,7 +97,7 @@ try {
                 $flagSuccess=$stmt->execute();                
             }           
         }        
-        showAlertSuccessError($flagSuccess,$url_list_Solicitudfactura);  
+         
         
         //enviar propuestas para la actualizacion de ibnorca
          $fechaHoraActual=date("Y-m-d H:i:s");
@@ -110,7 +110,15 @@ try {
          }else{
            actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$cod_facturacion,$fechaHoraActual,$obs);
          }
-
+        if(isset($_POST['usuario_ibnored'])){
+          $q=$_POST['usuario_ibnored'];
+          $s=$_POST['usuario_ibnored_s'];
+          $u=$_POST['usuario_ibnored_u'];
+          $v=$_POST['usuario_ibnored_v'];
+          showAlertSuccessError($flagSuccess,$url_list_Solicitudfactura."&q=".$q."&s=".$s."&u=".$u."&v=".$v);
+        }else{
+          showAlertSuccessError($flagSuccess,$url_list_Solicitudfactura); 
+        } 
 
         //$stmt->debugDumpParams();
     } else {//update
@@ -157,8 +165,17 @@ try {
                 $flagSuccess=$stmt->execute();                
             }           
            
-        }        
-        showAlertSuccessError($flagSuccess,$url_list_Solicitudfactura);       
+        }    
+        if(isset($_POST['usuario_ibnored'])){
+          $q=$_POST['usuario_ibnored'];
+          $s=$_POST['usuario_ibnored_s'];
+          $u=$_POST['usuario_ibnored_u'];
+          $v=$_POST['usuario_ibnored_v'];
+          showAlertSuccessError($flagSuccess,$url_list_Solicitudfactura."&q=".$q."&s=".$s."&u=".$u."&v=".$v);
+        }else{
+          showAlertSuccessError($flagSuccess,$url_list_Solicitudfactura); 
+        }     
+              
     }//si es insert o update
     
     } catch(PDOException $ex){
