@@ -78,7 +78,7 @@ for ($i=1;$i<=$cantidadFilas;$i++){
 		$debe=$_POST["debe".$i];
 		$haber=$_POST["haber".$i];
 		$glosaDetalle=$_POST["glosa_detalle".$i];
-
+    
 		
     $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
 		$sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobanteDetalle','$codComprobante', '$cuenta', '$cuentaAuxiliar', '$unidadDetalle', '$area', '$debe', '$haber', '$glosaDetalle', '$i')";
@@ -87,8 +87,11 @@ for ($i=1;$i<=$cantidadFilas;$i++){
 
     /*ACA INSERTAMOS EL ESTADO DE CUENTAS DE FORMA AUTOMATICA TIPO TRASPASOS Y CUENTA AUXILIAR > 0*/
     $verificaEC=verificarCuentaEstadosCuenta($cuenta);
+    $tipoEstadoCuentasCasoespecial=verificarCuentaECCasoEspecial($cuenta);
+
     $flagSuccessInsertEC=false;
-    if($tipoComprobante==3 && $verificaEC>0){
+
+    if( ($tipoComprobante==3 && $verificaEC>0 && $tipoEstadoCuentasCasoespecial!=1) || ($tipoComprobante==2 && $verificaEC>0 && $tipoEstadoCuentasCasoespecial==1) ) {
       $codTipoEC=obtenerTipoEstadosCuenta($cuenta);
       $codProveedorCliente=obtenerCodigoProveedorClienteEC($cuentaAuxiliar);
       //Insertamos el estado de cuentas por el detalle

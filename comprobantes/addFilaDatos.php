@@ -9,7 +9,10 @@
       document.getElementById("cantidad_filas").value=numFilas;
       </script> 
 <!-- para el autocompletado de la factura -->
-<?php $importe_x=intval($importe)?>  
+<?php 
+  $importe_x=floatval($importe);
+  $importe_x=number_format($importe_x, 2, '.', '');
+?>  
 <!-- campo nit -->
 <div class="form-group d-none" id="divNitFactura<?=$idFila;?>">  
   <input class="form-control" type="number"  onkeyup="llenarFacturaAutomaticamente(this.value,'<?=$idFila;?>',<?=$importe_x?>);">

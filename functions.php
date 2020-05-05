@@ -4534,6 +4534,8 @@ function obtenerDetalleSolicitudParaComprobante($codigo){
 
 function numeroCorrelativoComprobante($codGestion,$unidad,$tipoComprobante){
   $dbh = new Conexion();
+  $mesActivo=1;
+
   $sql1="SELECT m.*,g.nombre from meses_trabajo m join gestiones g on m.cod_gestion=g.codigo where cod_gestion='$codGestion' and cod_estadomesestrabajo=3";
   $stmt1 = $dbh->prepare($sql1);
   $stmt1->execute();
@@ -5087,7 +5089,18 @@ where d.glosa=e.glosa and d.cod_anio=$anio and d.cod_simulacionservicio=$simulac
   function verificarCuentaEstadosCuenta($cuenta){      
     $dbh = new Conexion();
     $valor=0;
-    $sql="select count(*)as contador from configuracion_estadocuentas c where c.cod_plancuenta='$cuenta'";
+    $sql="SELECT count(*)as contador from configuracion_estadocuentas c where c.cod_plancuenta='$cuenta'";
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['contador'];
+    }
+    return $valor;
+  }
+  function verificarCuentaECCasoEspecial($cuenta){      
+    $dbh = new Conexion();
+    $valor=0;
+    $sql="SELECT cod_cuentaaux as contador from configuracion_estadocuentas c where c.cod_plancuenta='$cuenta'";
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
