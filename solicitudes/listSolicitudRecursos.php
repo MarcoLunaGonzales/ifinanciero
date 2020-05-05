@@ -67,7 +67,8 @@ $stmt->bindColumn('idServicio', $idServicioX);
                           <th>Nº Sol.</th>
                           <th>Cod. Servicio</th>
                           <th>Cliente</th>
-                          <th>Proveedores</th>
+                          <th>Proveedor</th>
+                          <th>Cuenta</th>
                           <th>Solicitante</th>
                           <th>Fecha</th>
                           <th>Estado</th>
@@ -120,6 +121,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
                           <td><?=$codigoServicio;?></td>
                           <td><?=$nombreCliente;?></td>
                           <td><small><?=obtenerNombreConcatenadoProveedorDetalleSolicitudRecurso($codigo)?></small></td>
+                          <td><small><?=obtenerNombreConcatenadoCuentaDetalleSolicitudRecurso($codigo)?></small></td>
                           <td>
                                  <img src="assets/img/faces/persona1.png" width="20" height="20"/><?=$solicitante;?>
                           </td>
@@ -358,11 +360,12 @@ $stmt->bindColumn('idServicio', $idServicioX);
                           <th>Nº Sol.</th>
                           <th>Cod. Servicio</th>
                           <th>Cliente</th>
-                          <th>Proveedores</th>
+                          <th>Proveedor</th>
+                          <th>Cuenta</th>
                           <th>Solicitante</th>
+                          <th class="text-right">Actions</th>
                           <th>Fecha</th>
                           <th>Estado</th>
-                          <th class="text-right">Actions</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -411,6 +414,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
                           <td><?=$codigoServicio;?></td>
                           <td><?=$nombreCliente;?></td>
                           <td><small><?=obtenerNombreConcatenadoProveedorDetalleSolicitudRecurso($codigo)?></small></td>
+                          <td><small><?=obtenerNombreConcatenadoCuentaDetalleSolicitudRecurso($codigo)?></small></td>
                           <td>
                                  <img src="assets/img/faces/persona1.png" width="20" height="20"/><?=$solicitante;?>
                           </td>

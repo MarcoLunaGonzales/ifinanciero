@@ -28,4 +28,6 @@ $urlRegisterSS="index.php?opcion=registerPlanCuentaSS&codigo=0";
 $urlListCC2="index.php?opcion=listPlanCuentasSolicitudesRecursos";
 
 $urlDeleteRestart="index.php?opcion=deleteSolicitudRecursosRestart";
+$urlCambiarPasivo="index.php?opcion=cambiarPasivoCuentaSol";
+$urlSavePasivo="solicitudes/savePasivo.php";
 ?>

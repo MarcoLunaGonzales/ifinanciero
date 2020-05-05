@@ -133,7 +133,7 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
                       </tr>
                     </table>
                   </div>
-                  <div class="table-responsive" id="data_comprobantes">
+                  <div class="" id="data_comprobantes">
                     <table id="" class="table table-condensed small">
                       <thead>
                         <tr>
@@ -270,7 +270,7 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
                              </div>
                           </td>
                           <td>
-                            <input type="number" readonly class="form-control text-right" readonly value="0" id="numero_cheque<?=$index?>" name="numero_cheque<?=$index?>">
+                            <input type="number" readonly class="form-control text-right" readonly min="0" value="0" id="numero_cheque<?=$index?>" name="numero_cheque<?=$index?>">
                           </td>
                           <td>
                             <input type="text" readonly class="form-control" readonly value="" id="beneficiario<?=$index?>" name="beneficiario<?=$index?>">

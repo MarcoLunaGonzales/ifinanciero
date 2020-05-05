@@ -3366,7 +3366,7 @@ function mayorReporteComprobante(fila){
  ///////////////////////////////////////////////////////////////////
  /*                              Solicitud de recursos                                      */
 
- function listarTipoSolicitud(tipo){
+ function listarTipoSolicitud(tipo,id){
   var url="";
   if($("#ibnorca_q").length>0){
    var q=$("#ibnorca_q").val();
@@ -3414,17 +3414,17 @@ function mayorReporteComprobante(fila){
         buttonsStyling: false
        }).then((result) => {
           if (result.value) {
-            cargarDatosSelectTipoSolicitud(url,tipo);            
+            cargarDatosSelectTipoSolicitud(url,tipo,id);            
             return(true);
           } else if (result.dismiss === Swal.DismissReason.cancel) {
             return(false);
           }
       });
   }else{
-     cargarDatosSelectTipoSolicitud(url,tipo)   
+     cargarDatosSelectTipoSolicitud(url,tipo,id)   
   }
  }
-function cargarDatosSelectTipoSolicitud(url,tipo){
+function cargarDatosSelectTipoSolicitud(url,tipo,id){
   $("#fiel").html("");
   //if(tipo!=3){ 
    ajax=nuevoAjax();
@@ -3456,7 +3456,10 @@ function cargarDatosSelectTipoSolicitud(url,tipo){
         }   
       }
 
-      
+      if(id!="none"){
+        quitarPropuestaCombo(id);
+        filtrarSolicitudRecursosDetalleDatos();
+      }
        $('.selectpicker').selectpicker("refresh");
     }
    }
@@ -9455,6 +9458,7 @@ function cargarChequesPagoDetalle(fila){
 function ponerNumeroChequePagoDetalle(fila){
   var valor= $("#emitidos_pago"+fila).val().split("####");
   $("#numero_cheque"+fila).val(valor[1]);
+  $("#numero_cheque"+fila).attr("min",valor[1]);
   if(valor==""||valor==null){
     if(!($("#numero_cheque"+fila).is("[readonly]"))){
       $("#numero_cheque"+fila).attr("readonly",true);
@@ -11485,4 +11489,13 @@ function moverModal(mod){
   $("#"+mod).draggable({
     handle: ".card-header"
   }); 
+}
+
+function quitarPropuestaCombo(id){
+  $('#simulaciones option').each(function() {
+    if ( $(this).val() != id ) {
+        $(this).remove();
+    }
+  });
+  $('.selectpicker').selectpicker("refresh");
 }

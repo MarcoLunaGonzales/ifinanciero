@@ -10,7 +10,7 @@ $dbh = new Conexion();
 $inicio=$_POST["inicio"];
 $final=$_POST["final"];
 $serie=$_POST["serie"];
-$cheque=$_POST["cheque"];
+$cheque=$_POST["inicio"];
 
 $banco=$_POST["banco"];
 $codEstadoReferencial="1";

@@ -12,7 +12,10 @@ setlocale(LC_TIME, "Spanish");
 $dbh = new Conexion();
 if(isset($_GET['q'])){
   $q=$_GET['q'];
-  $r=$_GET['r'];
+  $r="nn";
+  if(isset($_GET['r'])){
+   $r=$_GET['r'];
+  } 
   $s=$_GET['s'];
   $u=$_GET['u'];
   $v=$_GET['v'];
@@ -123,6 +126,7 @@ if(isset($_GET['cod'])){
           <input type="hidden" name="usuario_ibnored_rol" id="usuario_ibnored_rol" value="<?=$r;?>">
           <input type="hidden" name="usuario_ibnored_s" id="usuario_ibnored_s" value="<?=$s;?>">
         <input type="hidden" name="usuario_ibnored_u" id="usuario_ibnored_u" value="<?=$u;?>">
+        <input type="hidden" name="usuario_ibnored_v" id="usuario_ibnored_v" value="<?=$v;?>">
         <?php
       }
       if(isset($_GET['admin'])){
@@ -353,7 +357,7 @@ if(isset($_GET['cod'])){
                 <?php
                 }else{
                   ?>  
-                  <a href="../<?=$urlList;?>&q=<?=$q?>&r=<?=$r?>&s=<?=$s?>&u=<?=$u?>" class="<?=$buttonCancel;?>">Volver</a> 
+                  <a href="../<?=$urlList;?>&q=<?=$q?>&r=<?=$r?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>" class="<?=$buttonCancel;?>">Volver</a> 
                 <?php
                 }
                 

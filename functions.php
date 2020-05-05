@@ -1850,6 +1850,19 @@ function nameRetencion($codigo){
    }
    return($nombreX);
 }
+
+function abrevRetencion($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT abreviatura FROM configuracion_retenciones where codigo=:codigo");
+   $stmt->bindParam(':codigo',$codigo);
+   $stmt->execute();
+   $nombreX=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $nombreX=$row['abreviatura'];
+   }
+   return($nombreX);
+}
+
 // obtener porcentaje de retencion
 function porcentRetencion($codigo){
    $dbh = new Conexion();
@@ -5504,8 +5517,27 @@ function obtenerNombreConcatenadoProveedorDetalleSolicitudRecurso($codigo){
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       $valor.=$row['nombre'].",";
    }
+   if (strlen($valor)>22){
+    $valor= substr($valor, 0, 22)."..."; 
+   }
+   
    return($valor);
 }
+function obtenerNombreConcatenadoCuentaDetalleSolicitudRecurso($codigo){
+  $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT DISTINCT p.nombre from solicitud_recursosdetalle d, plan_cuentas p where d.cod_solicitudrecurso=$codigo and d.cod_plancuenta=p.codigo");
+   $stmt->execute();
+   $valor="";
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor.=$row['nombre'].",";
+   }
+   if (strlen($valor)>22){
+    $valor= substr($valor, 0, 22)."..."; 
+   }
+   
+   return($valor);
+}
+
 function obtenerPersonaCambioEstado($tipo,$objeto,$estado){
    $dbh = new Conexion();
    $stmt = $dbh->prepare("SELECT * FROM ibnorca.estadoobjeto where IdTipoObjeto=$tipo and IdObjeto = $objeto and IdEstado=$estado");
@@ -5515,6 +5547,87 @@ function obtenerPersonaCambioEstado($tipo,$objeto,$estado){
       $valor=$row['idResponsable'];
    }
    return($valor);
+}
+
+function obtenerIdPropuestaServicioIbnorca($idServicio){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT idPropuesta FROM ibnorca.servicios where idServicio=$idServicio");
+   $stmt->execute();
+   $valor="NONE";
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['idPropuesta'];
+   }
+   if($valor==null||$valor==0){
+    $valor="NONE";
+   }
+   return($valor);
+}
+
+ function obtenerIdAreaServicioIbnorca($idServicio){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT IdArea FROM ibnorca.servicios where idServicio=$idServicio");
+   $stmt->execute();
+   $valor="NONE";
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['IdArea'];
+   }
+   return($valor);
+}
+function obtenerIdUnidadServicioIbnorca($idServicio){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT IdOficina FROM ibnorca.servicios where idServicio=$idServicio");
+   $stmt->execute();
+   $valor="NONE";
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['IdOficina'];
+   }
+   return($valor);
+}
+function obtenerCuentaPasivaSolicitudesRecursos($cuenta){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT cod_cuentapasivo FROM solicitud_recursoscuentas where cod_cuenta=$cuenta");
+   $stmt->execute();
+   $valor=obtenerValorConfiguracion(36);
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['cod_cuentapasivo'];
+   }
+   return($valor);
+}
+function obtenerNumeroFacturaSolicitudRecursos($codigo){
+  $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT * FROM solicitud_recursosdetalle where cod_solicitudrecurso=$codigo");
+   $stmt->execute();
+   $titulo="";$index=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      if($index==0){
+       $valor=obtenerNumeroFacturaSolicitudRecursoDetalle($row['codigo']);
+       $titulo=$valor;
+      }else{
+      $titulo=$valor." - ".obtenerNumeroFacturaSolicitudRecursoDetalle($row['codigo']);  
+      } 
+      $index++;      
+   }
+   return($titulo);
+}
+
+function obtenerNumeroFacturaSolicitudRecursoDetalle($codigo){
+  $facturas=obtenerFacturasSoli($codigo);
+            $numeroFac="";
+    while ($rowFac = $facturas->fetch(PDO::FETCH_ASSOC)) {
+                $numeroFac=$rowFac['nro_factura'];          
+    }
+    return $numeroFac;
+}
+
+function obtenerProveedorSolicitudRecursos($codigo){
+  $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT * FROM solicitud_recursosdetalle where cod_solicitudrecurso=$codigo");
+   $stmt->execute();
+   $titulo="";
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $titulo=nameProveedor($row['cod_proveedor']);        
+   }
+   return($titulo);
 }
 
 ?>

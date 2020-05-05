@@ -78,7 +78,6 @@ $tipoSolicitud =$_GET['tipo'];
 							}
                          		
 							$detalleAux=$detalleXX;
-							
 
                          	if($entro==0){
                          		?><script>var nfac=[];itemFacturas.push(nfac);</script><?php

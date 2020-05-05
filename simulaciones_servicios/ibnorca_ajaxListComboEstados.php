@@ -15,8 +15,8 @@ $item_1=$_GET['item_1'];
 $item_2=$_GET['item_2'];
 $item_3=$_GET['item_3'];
 //cambiar por ibnorca 
-$sql2="SELECT idestadosiguiente, ibnorca2.d_clasificador(idestadosiguiente) AS descr  
-        FROM ibnorca2.flujoobjeto WHERE idobjeto=$item_1 AND idestado=ibnorca2.id_estadoobjeto($item_1,$item_2) AND locate(ibnorca2.d_abrevclasificador($item_3),rol)>0 ORDER BY 2";
+$sql2="SELECT idestadosiguiente, ibnorca.d_clasificador(idestadosiguiente) AS descr  
+        FROM ibnorca.flujoobjeto WHERE idobjeto=$item_1 AND idestado=ibnorca.id_estadoobjeto($item_1,$item_2) AND locate(ibnorca.d_abrevclasificador($item_3),rol)>0 ORDER BY 2";
 $stmt2=$dbh->prepare($sql2);
 $stmt2->execute(); 
   while ($row2 = $stmt2->fetch(PDO::FETCH_ASSOC)) {

@@ -362,6 +362,9 @@
 		if ($_GET['opcion']=='deleteSolicitudRecursosRestart') {
 			require_once('solicitudes/saveDeleteRestart.php');
 		}
+		if ($_GET['opcion']=='cambiarPasivoCuentaSol') {
+			require_once('solicitudes/listPasivo.php');
+		}
 
 		//ESTADOS DE CUENTAS
 		if ($_GET['opcion']=='configuracionEstadosCuenta') {

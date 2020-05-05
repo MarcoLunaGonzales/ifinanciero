@@ -118,7 +118,13 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         ?><input type="hidden" name="usuario_ibnored" id="usuario_ibnored" value="<?=$q;?>">
         <input type="hidden" name="usuario_ibnored_s" id="usuario_ibnored_s" value="<?=$s;?>">
         <input type="hidden" name="usuario_ibnored_u" id="usuario_ibnored_u" value="<?=$u;?>">
-        <input type="hidden" name="usuario_ibnored_v" id="usuario_ibnored_v" value="<?=$v;?>"><?php
+        <input type="hidden" name="usuario_ibnored_v" id="usuario_ibnored_v" value="<?=$v;?>">
+
+        <input type="hidden" name="ibnorca_q" id="ibnorca_q" value="<?=$q;?>">
+        <input type="hidden" name="ibnorca_s" id="ibnorca_s" value="<?=$s;?>">
+        <input type="hidden" name="ibnorca_u" id="ibnorca_u" value="<?=$u;?>">
+        <input type="hidden" name="ibnorca_v" id="ibnorca_v" value="<?=$v;?>">
+        <?php
       }
       ?> 
       <div class="card">
@@ -331,12 +337,49 @@ if(isset($_GET['sim'])){
     $("#tipo_solicitud").append("<option selected value='1'>POR PROPUESTA</option>");
     $('.selectpicker').selectpicker("refresh");
 
-    listarTipoSolicitud(1,'<?=$sim?>$$$<?=$detalle?>'); //se eliminan las demas solicitudes
-    $('.selectpicker').selectpicker("refresh");
-
+    listarTipoSolicitud(1,'<?=$sim?>$$$<?=$detalle?>');
+    //se eliminan las demas solicitudes
   });
   </script>
   <?php
+}else{
+  if(isset($_GET['v'])){
+    $idPropuesta=obtenerIdPropuestaServicioIbnorca($v);
+    $areaServicio=obtenerIdAreaServicioIbnorca($v);
+     if($areaServicio==39||$areaServicio==38){
+      $detalle="TCP";
+     }else{
+       $detalle="SIM";
+     }
+    if($idPropuesta!="NONE"){
+    ?>
+  <script>
+  $(document).ready(function() {
+    $("#tipo_solicitud").html("");
+    $('.selectpicker').selectpicker("refresh");
+    $("#tipo_solicitud").append("<option selected value='1'>POR PROPUESTA</option>");
+    $('.selectpicker').selectpicker("refresh");
+    listarTipoSolicitud(1,'<?=$idPropuesta?>$$$<?=$detalle?>');
+    //se eliminan las demas solicitudes
+   });
+   </script>
+   <?php    
+    }else{
+      //servicio SIN PROPUESTA "OI" 
+      ?>
+  <script>
+  $(document).ready(function() {
+    $("#tipo_solicitud").html("");
+    $('.selectpicker').selectpicker("refresh");
+    $("#tipo_solicitud").append("<option selected value='3'>MANUAL</option>");
+    $('.selectpicker').selectpicker("refresh");
+    listarTipoSolicitud(3,'none');
+    //se eliminan las demas solicitudes
+   });
+   </script>
+   <?php 
+    }
+  }
 }
 
 ?>

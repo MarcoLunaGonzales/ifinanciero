@@ -67,7 +67,7 @@ while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
       $numeroSol=$numeroSol;
 
       if($codSimulacion!=0){
-        $nombreCliente="Sin Cliente";
+        $nombreCliente="";
         $nombreSimulacion=nameSimulacion($codSimulacion);
       }else{
         $nombreCliente=nameClienteSimulacionServicio($codSimulacionServicio);
@@ -81,8 +81,14 @@ while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
     $codGestion=date("Y");
     $tipoComprobante=3;
     $nroCorrelativo=numeroCorrelativoComprobante($globalGestion,$cod_unidadX,3);
+    
+    $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
+
     $fechaHoraActual=date("Y-m-d H:i:s");
-    $glosa="SOL:".$numeroSol." - ".$areaX." - ".$nombreSimulacion." COMPROBANTE DEVENGADOS";
+    //glosa detalle
+    //"".." F/".$numeroFac." ".$proveedorX." ".$detalleX
+
+    $glosa="SOL:".$numeroSol." ".$nombreCliente." F/ ".$facturaCabecera." ".obtenerProveedorSolicitudRecursos($codigo);
     $userSolicitud=obtenerPersonalSolicitanteRecursos($codigo);
     $unidadSol=$cod_unidadX;
     $areaSol=$cod_areaX;
@@ -92,6 +98,13 @@ while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
     echo $sqlInsert;
     $stmtInsert = $dbh->prepare($sqlInsert);
     $flagSuccessComprobante=$stmtInsert->execute();
+
+    $sqlUpdateSolicitud="UPDATE solicitud_recursos SET cod_comprobante=$codComprobante where codigo=$codigo";
+    $stmtUpdateSolicitudRecurso = $dbh->prepare($sqlUpdateSolicitud);
+    $stmtUpdateSolicitudRecurso->execute();
+    
+    $glosa="SOL:".$numeroSol." ".$nombreCliente;
+
     //insertar en detalle comprobante
     $nuevosDetalles=obtenerDetalleSolicitudParaComprobante($codigo); 
 
@@ -105,32 +118,8 @@ while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
         
         if($codProveedor!=$rowNuevo['cod_proveedor']){
            if($codProveedor!=0){
-            //proveedor devengado
+            //proveedor devengado //para cuando cambie de proveedor (ULTIMO PROVEEEDOR)
           
-          $cuentaProv=obtenerValorConfiguracion(36);
-          $cuentaAuxiliarProv=obtenerCodigoCuentaAuxiliarProveedorCliente(1,$codProveedor);
-          $numeroCuentaProv=trim(obtieneNumeroCuenta($cuentaProv));
-          $inicioNumeroProv=$numeroCuentaProv[0];
-          //unidad y area de la solicitud
-          $unidadareaProv=obtenerUnidadAreaCentrosdeCostos($inicioNumeroProv);           ////////////////////////unidad y area para el detalle
-          if($unidadareaProv[0]==0){
-              $unidadDetalleProv=$unidadSol;
-              $areaProv=$areaSol;
-          }else{
-              $unidadDetalleProv=$unidadareaProv[0];
-              $areaProv=$unidadareaProv[1];
-          }
-
-            $debeProv=0;
-            $haberProv=$sumaDevengado;
-            $glosaDetalleProv=$glosa." - PROVEEDOR ".nameProveedor($codProveedor);
-        
-            $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
-            $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) 
-            VALUES ('$codComprobanteDetalle','$codComprobante', '$cuentaProv', '$cuentaAuxiliarProv', '$unidadDetalleProv', '$areaProv', '$debeProv', '$haberProv', '$glosaDetalleProv', '$i')";
-            $stmtDetalle = $dbh->prepare($sqlDetalle);
-            $flagSuccessDetalle=$stmtDetalle->execute();
-           
             $sumaDevengado=0;
             $i++; 
             
@@ -156,135 +145,134 @@ while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
         /*if($facturaNueva==){
           $detalleFac="F/";
         }*/
-        $glosaDetalle=$glosa." D/".$rowNuevo['glosa'];
+        $glosaDetalle=$glosa." F/".obtenerNumeroFacturaSolicitudRecursoDetalle($rowNuevo['codigo'])." ".nameProveedor($rowNuevo['cod_proveedor'])." ".$rowNuevo['glosa'];
         $codSolicitudDetalle=$rowNuevo['codigo'];
         if($rowNuevo['cod_confretencion']==0){
-          $sumaDevengado+=$debe;
+          //detalle comprobante SIN RETENCION //////////////////////////////////////////////////////////////7
+          $sumaDevengado=$debe;
           $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
         $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) 
         VALUES ('$codComprobanteDetalle','$codComprobante', '$cuenta', '$cuentaAuxiliar', '$unidadDetalle', '$area', '$debe', '$haber', '$glosaDetalle', '$i')";
         $stmtDetalle = $dbh->prepare($sqlDetalle);
         $flagSuccessDetalle=$stmtDetalle->execute();  
         }else{
-            //
+            // SI TIENE RETENCION **********************************************************************************
+
             $codigoRet=$rowNuevo['cod_confretencion'];
             $importeOriginal=$rowNuevo['monto'];
             $ii=$i;
           // retencion de costos
-      $nom_cuenta_auxiliar="";
-      $importeOriginal2=0;$j=0;
-      $totalRetencion=0;
-    //obtener datos de retenciones
-    $stmtRetenciones = $dbh->prepare("SELECT cd.*,c.porcentaje_cuentaorigen from configuracion_retenciones c join configuracion_retencionesdetalle cd on cd.cod_configuracionretenciones=c.codigo where cd.cod_configuracionretenciones=$codigoRet order by cd.codigo");
-    $stmtRetenciones->execute();
-   while ($rowRet = $stmtRetenciones->fetch(PDO::FETCH_ASSOC)) {
-   $ii++;                         
-    $porcentajeX=$rowRet['porcentaje'];                         
-    $glosaX=$rowRet['glosa'];
-    $debehaberX=$rowRet['debe_haber'];
+            $nom_cuenta_auxiliar="";
+            $importeOriginal2=0;
+            $totalRetencion=0;
+            //obtener datos de retenciones
+            $stmtRetenciones = $dbh->prepare("SELECT cd.*,c.porcentaje_cuentaorigen from configuracion_retenciones c join configuracion_retencionesdetalle cd on cd.cod_configuracionretenciones=c.codigo where cd.cod_configuracionretenciones=$codigoRet order by cd.codigo");
+            $stmtRetenciones->execute();
+            $j=0;
+            while ($rowRet = $stmtRetenciones->fetch(PDO::FETCH_ASSOC)) {
+            $ii++;                         
+             $porcentajeX=$rowRet['porcentaje'];                         
+             $glosaX=$rowRet['glosa'];
+             $debehaberX=$rowRet['debe_haber'];
 
-    $porcentajeCuentaX=$rowRet['porcentaje_cuentaorigen'];
-    if($porcentajeCuentaX>100){
-      $importe=($porcentajeCuentaX/100)*$importeOriginal;
-    }else{
-      $importeOriginal2=($porcentajeCuentaX/100)*$importeOriginal;
-      $importe=$importeOriginal;
-    }
-    $montoRetencion=($porcentajeX/100)*$importe;
+             $porcentajeCuentaX=$rowRet['porcentaje_cuentaorigen'];
+             if($porcentajeCuentaX>100){
+               $importe=($porcentajeCuentaX/100)*$importeOriginal;
+             }else{
+               $importeOriginal2=($porcentajeCuentaX/100)*$importeOriginal;
+               $importe=$importeOriginal;
+             }
+             $montoRetencion=($porcentajeX/100)*$importe;
 
-    $montoRetencion=number_format($montoRetencion, 2, '.', '');   
+             $montoRetencion=number_format($montoRetencion, 2, '.', '');   
 
-   if($debehaberX==1){
-      $debeRet=$montoRetencion;
-      $haberRet=0;    
-    }else{
-      $debeRet=0;
-      $haberRet=$montoRetencion;
-    }
-    $importe=number_format($importe, 2, '.', '');
-      $cuentaRetencion=$rowRet['cod_cuenta'];  
-      $cuentaAuxiliar=0;
-      $n_cuenta=trim(obtieneNumeroCuenta($cuentaRetencion));
-      $nom_cuenta=nameCuenta($cuentaRetencion);
-      $inicioNumeroRet=$n_cuenta[0];
-      $unidadareaRet=obtenerUnidadAreaCentrosdeCostos($inicioNumeroRet);                     ////////////////////////unidad y area para el detalle
-      if($unidadareaRet[0]==0){
-            $unidadDetalleRet=$unidadSol;
-            $areaRet=$areaSol;
-      }else{
-           $unidadDetalleRet=$unidadareaRet[0];
-            $areaRet=$unidadareaRet[1];
-      }
+             if($debehaberX==1){
+                $debeRet=$montoRetencion;
+                $haberRet=0;    
+              }else{
+                $debeRet=0;
+                $haberRet=$montoRetencion;
+              }
+             $importe=number_format($importe, 2, '.', '');
+             $cuentaRetencion=$rowRet['cod_cuenta'];  
+             $cuentaAuxiliar=0;
+             $n_cuenta=trim(obtieneNumeroCuenta($cuentaRetencion));
+             $nom_cuenta=nameCuenta($cuentaRetencion);
+             $inicioNumeroRet=$n_cuenta[0];
+             $unidadareaRet=obtenerUnidadAreaCentrosdeCostos($inicioNumeroRet);////////////////////////unidad y area para el detalle
+             if($unidadareaRet[0]==0){
+                   $unidadDetalleRet=$unidadSol;
+                   $areaRet=$areaSol;
+             }else{
+                  $unidadDetalleRet=$unidadareaRet[0];
+                   $areaRet=$unidadareaRet[1];
+             }
     
-      $retenciones[$j]['cuenta']=$cuentaRetencion;
-      $retenciones[$j]['unidad']=$unidadDetalleRet;
-      $retenciones[$j]['area']=$areaRet;
-      $retenciones[$j]['debe']=$debeRet;
-      $retenciones[$j]['haber']=$haberRet;
-      $retenciones[$j]['glosa']=$glosaX." D/".$rowNuevo['glosa'];
-      $retenciones[$j]['numero']=$ii; 
-      $retenciones[$j]['debe_haber']=$debehaberX;
-    $j++;
-  }
+             $retenciones[$j]['cuenta']=$cuentaRetencion;
+             $retenciones[$j]['unidad']=$unidadDetalleRet;
+             $retenciones[$j]['area']=$areaRet;
+             $retenciones[$j]['debe']=$debeRet;
+             $retenciones[$j]['haber']=$haberRet;
+             $retenciones[$j]['glosa']=$glosaX." - ".$glosaDetalle;
+             $retenciones[$j]['numero']=$ii; 
+             $retenciones[$j]['debe_haber']=$debehaberX;
+           $j++;
+          }
 
-  $i=$ii;     
+         $i=$ii;     
+     
+           $totalRetencion=0;  
+            //if($totalRetencion!=0){
+              for ($j=0; $j < count($retenciones); $j++) { 
+              $cuentaRetencion=$retenciones[$j]['cuenta'];
+              $unidadDetalleRet=$retenciones[$j]['unidad'];
+              $areaRet=$retenciones[$j]['area'];
+              $debeRet=$retenciones[$j]['debe'];
+              $haberRet=$retenciones[$j]['haber'];
+              $glosaX=$retenciones[$j]['glosa'];
+              $ii=$retenciones[$j]['numero']; 
 
-        
-       $totalRetencion=0;  
-     //if($totalRetencion!=0){
-        for ($j=0; $j < count($retenciones); $j++) { 
-        $cuentaRetencion=$retenciones[$j]['cuenta'];
-        $unidadDetalleRet=$retenciones[$j]['unidad'];
-        $areaRet=$retenciones[$j]['area'];
-        $debeRet=$retenciones[$j]['debe'];
-        $haberRet=$retenciones[$j]['haber'];
-        $glosaX=$retenciones[$j]['glosa'];
-        $ii=$retenciones[$j]['numero']; 
+              if($retenciones[$j]['debe_haber']==1){
+                $totalRetencion+=(float)$debeRet;
+              }else{
+                $totalRetencion+=(float)$haberRet;
+              }   
+              $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
+              $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) 
+              VALUES ('$codComprobanteDetalle','$codComprobante', '$cuentaRetencion', '$cuentaAuxiliar', '$unidadDetalleRet', '$areaRet', '$debeRet', '$haberRet', '$glosaX', '$ii')";
+              $stmtDetalle = $dbh->prepare($sqlDetalle);
+              $flagSuccessDetalle=$stmtDetalle->execute();
 
-        if($retenciones[$j]['debe_haber']==1){
-          $totalRetencion+=(float)$debeRet;
-        }else{
-          $totalRetencion+=(float)$haberRet;
-        }   
-        $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
-        $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) 
-        VALUES ('$codComprobanteDetalle','$codComprobante', '$cuentaRetencion', '$cuentaAuxiliar', '$unidadDetalleRet', '$areaRet', '$debeRet', '$haberRet', '$glosaX', '$ii')";
-        $stmtDetalle = $dbh->prepare($sqlDetalle);
-        $flagSuccessDetalle=$stmtDetalle->execute();
+              //$sumaDevengado+=$totalRetencion;   
+              }
 
-        //$sumaDevengado+=$totalRetencion;   
-        }
+            // fin de retencion 
+            $haber=0;
 
-          // fin de retencion 
-        $haber=0;
-
-        if($porcentajeCuentaX<=100){
-          $debe=$importeOriginal2;
-          $sumaDevengado+=$importeOriginal; 
-          $debe=number_format($debe, 2, '.', ''); 
-        }else{
-          $debe=$importe;
-          $sumaDevengado+=$importeOriginal; 
-          $debe=number_format($debe, 2, '.', ''); 
-        }
-        
-        $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
-        $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) 
-        VALUES ('$codComprobanteDetalle','$codComprobante', '$cuenta', '$cuentaAuxiliar', '$unidadDetalle', '$area', '$debe', '$haber', '$glosaDetalle', '$i')";
-        $stmtDetalle = $dbh->prepare($sqlDetalle);
-        $flagSuccessDetalle=$stmtDetalle->execute();
-
+            if($porcentajeCuentaX<=100){
+              $debe=$importeOriginal2;
+              $sumaDevengado=$importeOriginal; 
+              $debe=number_format($debe, 2, '.', ''); 
+            }else{
+              $debe=$importe;
+              $sumaDevengado=$importeOriginal; 
+              $debe=number_format($debe, 2, '.', ''); 
+            }
+           //detalle comprobante CON RETENCION //////////////////////////////////////////////////////////////7
+           $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
+           $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) 
+           VALUES ('$codComprobanteDetalle','$codComprobante', '$cuenta', '$cuentaAuxiliar', '$unidadDetalle', '$area', '$debe', '$haber', '$glosaDetalle', '$i')";
+           $stmtDetalle = $dbh->prepare($sqlDetalle);
+           $flagSuccessDetalle=$stmtDetalle->execute();
       //}
-      $totalRetencion=0;
-     } //fin else
-          
+        $totalRetencion=0;
+      } //fin else *********************************** SI TIENE RETENCION ****************************************************+    
         
-    }  
 
-     if($sumaDevengado!=0){
-        //proveedor devengado
+       //ASOCIAR PASIVO A DETALLE CUENTA
+       //proveedor devengado
           $i++;
-          $cuentaProv=obtenerValorConfiguracion(36);
+          $cuentaProv=obtenerCuentaPasivaSolicitudesRecursos($cuenta);
           $cuentaAuxiliarProv=obtenerCodigoCuentaAuxiliarProveedorCliente(1,$codProveedor);
           $numeroCuentaProv=trim(obtieneNumeroCuenta($cuentaProv));
           $inicioNumeroProv=$numeroCuentaProv[0];
@@ -299,7 +287,7 @@ while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
 
             $debeProv=0;
             $haberProv=$sumaDevengado;
-            $glosaDetalleProv=$glosa." - PROVEEDOR: ".nameProveedor($codProveedor);
+            $glosaDetalleProv=$glosa." F/".obtenerNumeroFacturaSolicitudRecursoDetalle($rowNuevo['codigo'])." ".nameProveedor($rowNuevo['cod_proveedor'])." ".$rowNuevo['glosa'];
         
             $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
             $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) 
@@ -308,26 +296,26 @@ while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
             $flagSuccessDetalle=$stmtDetalle->execute();
 
             $codProveedorEstado=$codProveedor;
-            //estado de cuentas devengado
-            $codEstadoCuenta=obtenerCodigoEstadosCuenta();
+              //estado de cuentas devengado
+              $codEstadoCuenta=obtenerCodigoEstadosCuenta();
               $sqlDetalleEstadoCuenta="INSERT INTO estados_cuenta (codigo,cod_comprobantedetalle, cod_plancuenta, monto, cod_proveedor, fecha,cod_comprobantedetalleorigen,cod_cuentaaux) 
               VALUES ('$codEstadoCuenta','$codComprobanteDetalle', '0', '$haberProv', '$codProveedorEstado', '$fechaHoraActual','0','$cuentaAuxiliarProv')";
               $stmtDetalleEstadoCuenta = $dbh->prepare($sqlDetalleEstadoCuenta);
-              $stmtDetalleEstadoCuenta->execute();
-             
+              $stmtDetalleEstadoCuenta->execute();             
              echo $sqlDetalleEstadoCuenta."";
-            //
+              //actualizamos con el codigo de comprobante detalle la solicitud recursos detalle 
+              $sqlUpdateSolicitudRecursoDetalle="UPDATE solicitud_recursosdetalle SET cod_proveedor=$codProveedorEstado,cod_estadocuenta=$codEstadoCuenta where codigo=$codSolicitudDetalle";
+              $stmtUpdateSolicitudRecursoDetalle = $dbh->prepare($sqlUpdateSolicitudRecursoDetalle);
+              $stmtUpdateSolicitudRecursoDetalle->execute();
 
-          //actualizamos con el codigo de comprobante detalle la solicitud recursos detalle
-          
-          $sqlUpdateSolicitudRecursoDetalle="UPDATE solicitud_recursosdetalle SET cod_proveedor=$codProveedorEstado,cod_estadocuenta=$codEstadoCuenta where codigo=$codSolicitudDetalle";
-          $stmtUpdateSolicitudRecursoDetalle = $dbh->prepare($sqlUpdateSolicitudRecursoDetalle);
-          $stmtUpdateSolicitudRecursoDetalle->execute();
+             echo $sqlUpdateSolicitudRecursoDetalle."";
 
-          echo $sqlUpdateSolicitudRecursoDetalle."";
-    }    
+    }  
+
+        if($sumaDevengado!=0){
         
-
+         }    
+        
     //fin de crear comprobante
  }   
   
