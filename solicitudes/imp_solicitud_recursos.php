@@ -36,11 +36,15 @@ $stmt->execute();
             $stmt->bindColumn('cod_estadosolicitudrecurso', $codEstadoX);
             $stmt->bindColumn('numero', $numeroX);
             $stmt->bindColumn('cod_simulacion', $codSimulacionX);
+            $stmt->bindColumn('cod_simulacionservicio', $codSimulacionServicioX);
             $stmt->bindColumn('cod_proveedor', $codProveedorX);
             $stmt->bindColumn('idServicio', $idServicioX);
             $stmt->bindColumn('observaciones', $observacionesX);
 
 while ($rowDetalle = $stmt->fetch(PDO::FETCH_BOUND)) {
+
+    $nombreCliente=obtenerNombreClienteSimulacion($codSimulacionServicioX);
+
     $userEnvio=obtenerPersonaCambioEstado(2708,$codigoX,2722);
     if($userEnvio==0){
        $nombreEnviado="Sin registro";    
@@ -84,6 +88,9 @@ $tDebeDol=0;$tHaberDol=0;$tDebeBol=0;$tHaberBol=0;
 
 $data = obtenerSolicitudRecursosDetalle($codigo);
 $tc=obtenerValorTipoCambio($moneda,strftime('%Y-%m-%d',strtotime($fechaC)));
+
+$anioSol=strftime('%Y',strtotime($fechaC));
+$mesSol=strftime('%m',strtotime($fechaC));
 if($tc==0){$tc=1;}
 $fechaActual=date("Y-m-d");
 $tituloImporte="";
@@ -132,11 +139,12 @@ $tituloImporte="";
         <tr class="bg-celeste">
             <td class="s3 text-center" rowspan="2">N°</td>
             <td class="s3 text-center" colspan="2">Seguimiento Presupuestal</td>
-            <td class="s3 text-center" rowspan="2">Centro de Costos (Area)</td>
+            <td class="s3 text-center" rowspan="2">C. C. (Area)</td>
             <td class="s3 text-center" rowspan="2">N° Factura</td>
             <td class="s3 text-center" rowspan="2">Descripci&oacute;n</td>
             <td class="s3 text-center">Importe</td>
             <td class="s3 text-center">Ret</td>
+            <td class="s3 text-center">T. Ret</td>
             <td class="s3 text-center">Sub Total</td>
         </tr>
         <tr class="bg-celeste">
@@ -144,13 +152,22 @@ $tituloImporte="";
             <td class="s3 text-center">%</td>
             <td class="s3 text-center">BOB</td>
             <td class="s3 text-center">BOB</td>
+            <td class="s3 text-center"></td>
             <td class="s3 text-center">BOB</td>
         </tr>
         <?php
         $index=1;$totalImporte=0;$totalImportePres=0;
+        $segPres=0;$porcentSegPres=0;
         while ($row = $data->fetch(PDO::FETCH_ASSOC)) {
+
+            $facturas=obtenerFacturasSoli($row['codigo']);
+            $numeroFac="";
+            while ($rowFac = $facturas->fetch(PDO::FETCH_ASSOC)) {
+                $numeroFac=$rowFac['nro_factura'];          
+            }
             $codCuentaX=$row['cod_plancuenta'];
             $codAreaXX=$row['cod_area'];
+            $codOficinaXX=$row['cod_unidadorganizacional'];
             $nombreArea=abrevArea_solo($codAreaXX);
             $detalleX=$row["detalle"];
             $importeX=$row["importe_presupuesto"];
@@ -166,7 +183,7 @@ $tituloImporte="";
              $importePorcent=0;
             }      
             if($retencionX!=0){
-              $tituloImporte=nameRetencion($retencionX);
+              $tituloImporte=abrevRetencion($retencionX);
               $porcentajeRetencion=porcentRetencion($retencionX);
               $montoImporte=$importeSolX*($porcentajeRetencion/100);
               $montoImporteRes=$importeSolX-$montoImporte;     
@@ -178,16 +195,24 @@ $tituloImporte="";
             
             $numeroCuentaX=trim($row['numero']);
             $nombreCuentaX=trim($row['nombre']);
+            $datosSeg=obtenerPresupuestoEjecucionDelServicio($codOficinaXX,$codAreaXX,$anioSol,(int)$mesSol,$numeroCuentaX);
+            
+            if($datosSeg->presupuesto!=null||$datosSeg->presupuesto!=0){
+               $segPres=$datosSeg->presupuesto;
+               $porcentSegPres=($datosSeg->ejecutado*100)/$datosSeg->presupuesto; 
+            }
+            
         ?>
         <tr>
             <td class="s3 text-center" width="4%"><?=$index?></td>
-            <td class="s3 text-center"><?=number_format($importeX, 2, '.', '')?></td>
-            <td class="s3 text-center"><?=number_format($importePorcent, 2, '.', '')?></td>
-            <td class="s3 text-center" width="14%"><?=$nombreArea?></td>
-            <td class="s3 text-center" width="14%"></td>
-            <td class="s3 text-left" width="40%"><?=$detalleX?></td>
+            <td class="s3 text-center"><?=number_format($segPres, 2, '.', '')?></td>
+            <td class="s3 text-center"><?=number_format($porcentSegPres, 2, '.', '')?></td>
+            <td class="s3 text-center" width="8%"><?=$nombreArea?></td>
+            <td class="s3 text-center" width="8%"><?=$numeroFac?></td>
+            <td class="s3 text-left" width="40%"><?="".$nombreCliente." F/".$numeroFac." ".$proveedorX." ".$detalleX?></td>
             <td class="s3 text-right"><?=number_format($montoImporte, 2, '.', '')?></td>
             <td class="s3 text-right"><?=number_format($montoImporteRes, 2, '.', '')?></td>
+            <td class="s3 text-right"><?=$tituloImporte?></td>
             <td class="s3 text-right"><?=number_format($importeSolX, 2, '.', '')?></td>
         </tr> 
         <?php  
@@ -211,11 +236,13 @@ $tituloImporte="";
             <td class="s3 text-right bg-celeste" colspan="3">TOTAL (BOB)</td>
             <td class="s3 text-right"></td>
             <td class="s3 text-right"></td>
+            <td class="s3 text-right"></td>
             <td class="s3 text-right"><?=number_format($totalImporte, 2, '.', '')?></td>
         </tr>
         <tr>
             <td class="s3 text-center" colspan="3">V°B° P-SA/P-DNAF</td>
             <td class="s3 text-right bg-celeste" colspan="3">TOTAL (USD)</td>
+            <td class="s3 text-right"></td>
             <td class="s3 text-right"></td>
             <td class="s3 text-right"></td>
             <td class="s3 text-right"><?=number_format($totalImporte/6.96, 2, '.', '')?></td>

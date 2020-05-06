@@ -159,7 +159,7 @@ if($flagSuccess==true){
        $stmtUpdateSolicitud = $dbh->prepare($sqlUpdateSolicitud);
        $stmtUpdateSolicitud->execute();
     }*/
-if(!isset($_GET['control_admin'])){
+if(!isset($_POST['control_admin'])){
  $urlList2=$urlList;
 }   
 
@@ -168,7 +168,8 @@ if(!isset($_GET['control_admin'])){
     $r=$_POST['usuario_ibnored_rol'];
     $s=$_POST['usuario_ibnored_s'];
     $u=$_POST['usuario_ibnored_u'];
-    showAlertSuccessError(true,"../".$urlList2."&q=".$q."&r=".$r."&s=".$s."&u=".$u);  
+    $v=$_POST['usuario_ibnored_v'];
+    showAlertSuccessError(true,"../".$urlList2."&q=".$q."&r=".$r."&s=".$s."&u=".$u."&v=".$v);  
   }else{
   showAlertSuccessError(true,"../".$urlList2); 
    }     

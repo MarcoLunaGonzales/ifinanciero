@@ -39,7 +39,14 @@ $dbh = new Conexion();
 					</div>
 				  </div>
 				</div>
-				
+				<div class="row">
+				  <label class="col-sm-2 col-form-label">Nro Cuenta</label>
+				  <div class="col-sm-7">
+					<div class="form-group">
+					  <input class="form-control" type="text" name="serie" id="serie" value="1"/>
+					</div>
+				  </div>
+				</div>
 				<div class="row">
 				  <label class="col-sm-2 col-form-label">Nro Inicio</label>
 				  <div class="col-sm-7">
@@ -53,22 +60,6 @@ $dbh = new Conexion();
 				  <div class="col-sm-7">
 					<div class="form-group">
 					  <input class="form-control" type="number" name="final" id="final" value="1"/>
-					</div>
-				  </div>
-				</div>
-				<div class="row">
-				  <label class="col-sm-2 col-form-label">Nro Serie</label>
-				  <div class="col-sm-7">
-					<div class="form-group">
-					  <input class="form-control" type="number" name="serie" id="serie" value="1"/>
-					</div>
-				  </div>
-				</div>
-				<div class="row">
-				  <label class="col-sm-2 col-form-label">Nro Cheque</label>
-				  <div class="col-sm-7">
-					<div class="form-group">
-					  <input class="form-control" type="number" name="cheque" id="cheque" value="1"/>
 					</div>
 				  </div>
 				</div>

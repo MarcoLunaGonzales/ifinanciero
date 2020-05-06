@@ -69,7 +69,8 @@ $item_1=2708;
                           <th>Nº Sol.</th>
                           <th>Cod. Servicio</th>
                           <th>Cliente</th>
-                          <th>Proveedores</th>
+                          <th>Proveedor</th>
+                          <th>Cuenta</th>
                           <th>Solicitante</th>
                           <th>Fecha</th>
                           <th class="text-right">Actions</th>
@@ -121,6 +122,7 @@ $item_1=2708;
                           <td><?=$codigoServicio;?></td>
                           <td><?=$nombreCliente;?></td>
                           <td><small><?=obtenerNombreConcatenadoProveedorDetalleSolicitudRecurso($codigo)?></small></td>
+                          <td><small><?=obtenerNombreConcatenadoCuentaDetalleSolicitudRecurso($codigo)?></small></td>
                           <td>
                                  <img src="assets/img/faces/persona1.png" width="20" height="20"/><?=$solicitante;?>
                           </td>
@@ -130,6 +132,22 @@ $item_1=2708;
                               <i class="material-icons"><?=$iconImp;?></i>
                             </a>
                             <?php 
+                            if($codEstado==4){
+                              if(isset($_GET['q'])){
+                                ?>
+                                <a title="Volver al Estado Registro" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>'  class="btn btn-danger">
+                                       <i class="material-icons">refresh</i>
+                                </a>
+                                <?php
+                              }else{
+                                ?>
+                                <a title="Volver al Estado Registro" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1'  class="btn btn-danger">
+                                       <i class="material-icons">refresh</i>
+                                </a>
+                                <?php
+                              }
+                            }
+
                                    if($codComprobante!=0&&$codEstado==3){
                                    ?>
                                    <div class="btn-group dropdown">
@@ -338,7 +356,8 @@ $item_1=2708;
                           <th>Nº Sol.</th>
                           <th>Cod. Servicio</th>
                           <th>Cliente</th>
-                          <th>Proveedores</th>
+                          <th>Proveedor</th>
+                          <th>Cuenta</th>
                           <th>Solicitante</th>
                           <th>Fecha</th>
                           <th class="text-right">Actions</th>
@@ -390,6 +409,7 @@ $item_1=2708;
                           <td><?=$codigoServicio;?></td>
                           <td><?=$nombreCliente;?></td>
                           <td><small><?=obtenerNombreConcatenadoProveedorDetalleSolicitudRecurso($codigo)?></small></td>
+                          <td><small><?=obtenerNombreConcatenadoCuentaDetalleSolicitudRecurso($codigo)?></small></td>
                           <td>
                                  <img src="assets/img/faces/persona1.png" width="20" height="20"/><?=$solicitante;?>
                           </td>
@@ -399,6 +419,7 @@ $item_1=2708;
                               <i class="material-icons"><?=$iconImp;?></i>
                             </a>
                             <?php 
+                            
                                    if($codComprobante!=0&&$codEstado==3){
                                    ?>
                                    <div class="btn-group dropdown">
@@ -454,7 +475,9 @@ $item_1=2708;
                                 }else{
                                   ?><a href="#" onclick="mostrarCambioEstadoObjeto(<?=$codigo?>)" class="dropdown-item">
                                     <i class="material-icons text-warning">dns</i> Cambiar Estado
-                                 </a><?php
+                                 </a>
+                                 
+                                 <?php
                                 ?><!--<a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=4&q=<?=$q?>" class="dropdown-item">
                                     <i class="material-icons text-dark">reply</i> Deshacer Cambios
                                  </a>-->

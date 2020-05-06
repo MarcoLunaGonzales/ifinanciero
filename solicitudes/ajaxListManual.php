@@ -13,6 +13,15 @@ $stmtX->execute();
 $usuario=$_SESSION['globalUser'];
 $globalUnidad=$_SESSION["globalUnidad"];
 $globalArea=$_SESSION["globalArea"];
+
+$v=0;
+if(isset($_GET['v'])){
+ $v=$_GET['v'];
+ if($v!=0){
+  $globalUnidad=obtenerIdUnidadServicioIbnorca($v);
+  $globalArea=obtenerIdAreaServicioIbnorca($v); 
+ }
+}
   ?>
   <div class="row col-sm-12">
                            <div class="col-sm-6">
@@ -28,7 +37,9 @@ $globalArea=$_SESSION["globalArea"];
                                     if($codigoX==$globalUnidad){
                                      ?><option selected value="<?=$codigoX;?>"><?=$abrevX;?></option><?php 
                                    }else{
-                                    ?><option value="<?=$codigoX;?>"><?=$abrevX;?></option><?php
+                                    if($v==0){
+                                      ?><option value="<?=$codigoX;?>"><?=$abrevX;?></option><?php
+                                    }      
                                    }
                                        
                                       }
@@ -51,7 +62,9 @@ $globalArea=$_SESSION["globalArea"];
                                            if($codigoX==$globalArea){
                                              ?><option selected value="<?=$codigoX;?>"><?=$abrevX;?></option><?php
                                            }else{
-                                            ?><option value="<?=$codigoX;?>"><?=$abrevX;?></option><?php
+                                            if($v==0){
+                                              ?><option value="<?=$codigoX;?>"><?=$abrevX;?></option><?php
+                                            }          
                                            }
                                             
                                          } 

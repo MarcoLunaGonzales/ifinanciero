@@ -69,9 +69,22 @@ if($estado!=1){
      }
     
 }
+if(isset($_GET['q'])){
+  $q=$_GET['q'];
+  $s=$_GET['s'];
+  $u=$_GET['u'];
+  $v=$_GET['v'];
+
+}
 
 if(isset($_GET['admin'])){
   $urlList2=$urlList;
+  $urlc="&q=".$q."&s=".$s."&u=".$u."&v=".$v;
+}else{
+  $urlc="&q=".$q."&s=".$s."&u=".$u;
+  if(isset($_GET['r'])){
+    $urlc=$urlc."&r=".$_GET['r'];
+  }
 }
 if(isset($_GET['q'])){
 	$q=$_GET['q'];
@@ -79,9 +92,9 @@ if(isset($_GET['q'])){
   $u=$_GET['u'];
   $v=$_GET['v'];
   if($flagSuccess==true){
-	showAlertSuccessError(true,"../".$urlList2."&q=".$q."&s=".$s."&u=".$u."&v=".$v);	
+	showAlertSuccessError(true,"../".$urlList2.$urlc);	
    }else{
-	showAlertSuccessError(false,"../".$urlList2."&q=".$q."&s=".$s."&u=".$u."&v=".$v);
+	showAlertSuccessError(false,"../".$urlList2.$urlc);
    }
 }else{
 	if($flagSuccess==true){

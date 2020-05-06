@@ -12,7 +12,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $dbh = new Conexion();
 
 // Preparamos
-$stmt = $dbh->prepare("SELECT pcc.cod_cuenta,pc.numero,pc.nombre from solicitud_recursoscuentas pcc,plan_cuentas pc 
+$stmt = $dbh->prepare("SELECT pcc.cod_cuenta,pc.numero,pc.nombre,pcc.cod_cuentapasivo from solicitud_recursoscuentas pcc,plan_cuentas pc 
 where pcc.cod_cuenta=pc.codigo");
 // Ejecutamos
 $stmt->execute();
@@ -20,6 +20,7 @@ $stmt->execute();
 $stmt->bindColumn('cod_cuenta', $cod_cuenta);
 $stmt->bindColumn('numero', $numero);
 $stmt->bindColumn('nombre', $nombre);
+$stmt->bindColumn('cod_cuentapasivo', $cod_cuentapasivo);
 ?>
 
 <div class="content">
@@ -40,22 +41,33 @@ $stmt->bindColumn('nombre', $nombre);
                         <tr>
                           <th class="text-center">#</th>
                           <th>Codigo</th>
-                          <th>Nombre</th>                          
-                          
+                          <th>Nombre</th>
+                          <th>Pasivo</th>                          
+                          <th class="text-right">Actions</th>
                         </tr>
                       </thead>
                       <tbody>
                       <?php
             						$index=1;
                       	while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
-                          
+                          $tienePasivo=nameCuenta($cod_cuentapasivo);
+                          if($tienePasivo=="0"){
+                            $tituloCuentaPasivo="Sin Pasivo";
+                          }else{
+                            $tituloCuentaPasivo="[".obtieneNumeroCuenta($cod_cuentapasivo)."] ".nameCuenta($cod_cuentapasivo);
+                          }
+
                         ?>
                         <tr>
                           <td align="center"><?=$index;?></td>
-                          <td><?=$numero;?></td>
+                          <td class="font-weight-bold">[<?=$numero;?>]</td>
                           <td><?=$nombre;?></td>
-                          
-                         
+                          <td class="font-weight-bold"><?=$tituloCuentaPasivo?></td>
+                          <td class="td-actions text-right">
+                            <a title="Pasivo" target="_blank" href='<?=$urlCambiarPasivo?>&cod=<?=$cod_cuenta?>' class="btn btn-warning">
+                              <i class="material-icons">playlist_add</i>
+                            </a>
+                          </td>
                         </tr>
                         <?php
                         							$index++;

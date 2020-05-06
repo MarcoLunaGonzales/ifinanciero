@@ -9,14 +9,12 @@ $dbh = new Conexion();
 
 //RECIBIMOS LAS VARIABLES
 $codigo=$_POST['codigo'];
-$final=$_POST['final'];
-$cheque=$_POST['cheque'];
-$serie=$_POST['serie'];
+$cuenta=$_POST['cuenta'];
 // Prepare
-$stmt = $dbh->prepare("UPDATE $table set nro_final='$final',nro_cheque='$cheque',nro_serie='$serie' where codigo=:codigo");
+$stmt = $dbh->prepare("UPDATE solicitud_recursoscuentas set cod_cuentapasivo='$cuenta' where cod_cuenta=:codigo");
 // Bind
 $stmt->bindParam(':codigo', $codigo);
 $flagSuccess=$stmt->execute();
-showAlertSuccessError($flagSuccess,"../".$urlList);	
+showAlertSuccessError($flagSuccess,"../".$urlListCC2);	
 
 ?>

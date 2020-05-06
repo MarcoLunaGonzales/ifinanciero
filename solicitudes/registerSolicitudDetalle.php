@@ -94,6 +94,25 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
   $nroCorrelativo=$row['codigo'];
 }
 ?>
+
+             <div id="combo_tipodocumento" class="d-none">
+                <select class="selectpicker form-control form-control-sm" name="tipo_documento" id="tipo_documento" data-style="<?=$comboColor;?>" onChange="asignarTipoDocumento()">
+                    <option disabled selected value="">TIPO DOCUMENTO</option>
+                  <?php
+                  $stmt = $dbh->prepare("select c.descripcion,t.* from ibnorca.grupodocumento t join ibnorca.clasificador c on c.idClasificador=t.idClaDocumento where idGruposDocumento=18");
+                $stmt->execute();
+                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                  $codigoX=$row['idGrupoDocumento'];
+                  $nombreX=$row['descripcion'];
+                ?>
+                <option value="<?=$codigoX;?>"><?=$nombreX;?></option>  
+                <?php
+                  }
+                  ?>
+               </select>
+              </div>
+
+
 <div class="cargar">
   <div class="div-loading text-center">
      <h4 class="text-warning font-weight-bold">Procesando Datos</h4>
@@ -118,7 +137,13 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         ?><input type="hidden" name="usuario_ibnored" id="usuario_ibnored" value="<?=$q;?>">
         <input type="hidden" name="usuario_ibnored_s" id="usuario_ibnored_s" value="<?=$s;?>">
         <input type="hidden" name="usuario_ibnored_u" id="usuario_ibnored_u" value="<?=$u;?>">
-        <input type="hidden" name="usuario_ibnored_v" id="usuario_ibnored_v" value="<?=$v;?>"><?php
+        <input type="hidden" name="usuario_ibnored_v" id="usuario_ibnored_v" value="<?=$v;?>">
+
+        <input type="hidden" name="ibnorca_q" id="ibnorca_q" value="<?=$q;?>">
+        <input type="hidden" name="ibnorca_s" id="ibnorca_s" value="<?=$s;?>">
+        <input type="hidden" name="ibnorca_u" id="ibnorca_u" value="<?=$u;?>">
+        <input type="hidden" name="ibnorca_v" id="ibnorca_v" value="<?=$v;?>">
+        <?php
       }
       ?> 
       <div class="card">
@@ -278,29 +303,35 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 <!-- small modal -->
 <div class="modal fade modal-primary" id="modalFile" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <i class="material-icons" data-notify="icon"><?=$iconFile?></i>
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="material-icons">clear</i></button>
-      </div>
-      <div class="modal-body">
+    <div class="modal-content card">
+      <div class="card-header card-header-info card-header-text">
+                  <div class="card-text">
+                    <h5>DOCUMENTOS DE RESPALDO</h5>      
+                  </div>
+                  <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">close</i>
+                  </button>
+                </div>
+      <div class="card-body">
         <p>Cargar archivos de respaldo.</p> 
            <div class="fileinput fileinput-new col-md-12" data-provides="fileinput">
             <div class="row">
-              <div class="col-md-9">
+              <div class="col-md-12">
                 <div class="border" id="lista_archivos">Ningun archivo seleccionado</div>
               </div>
-              <div class="col-md-3">
-                <span class="btn btn-info btn-round btn-file">
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <span class="btn btn-info btn-info btn-file btn-sm">
                       <span class="fileinput-new">Buscar</span>
                       <span class="fileinput-exists">Cambiar</span>
                       <input type="file" name="archivos[]" id="archivos" multiple="multiple"/>
                    </span>
-                <a href="#" class="btn btn-danger btn-round fileinput-exists" onclick="archivosPreview(1)" data-dismiss="fileinput"><i class="material-icons">clear</i> Quitar</a>
+                <a href="#" class="btn btn-danger btn-sm fileinput-exists" onclick="archivosPreview(1)" data-dismiss="fileinput"><i class="material-icons">clear</i> Quitar</a>
               </div>
             </div>
            </div>
-           <p class="text-danger">Los archivos se subir&aacute;n al servidor cuando se GUARDE la solicitud</p>
+           <p class="text-muted"><small>Los archivos se subir&aacute;n al servidor cuando se GUARDE la solicitud</small></p>
       </div>
       <div class="modal-footer">
         <button type="button" onclick="" class="btn btn-link" data-dismiss="modal">Aceptar
@@ -331,12 +362,49 @@ if(isset($_GET['sim'])){
     $("#tipo_solicitud").append("<option selected value='1'>POR PROPUESTA</option>");
     $('.selectpicker').selectpicker("refresh");
 
-    listarTipoSolicitud(1,'<?=$sim?>$$$<?=$detalle?>'); //se eliminan las demas solicitudes
-    $('.selectpicker').selectpicker("refresh");
-
+    listarTipoSolicitud(1,'<?=$sim?>$$$<?=$detalle?>');
+    //se eliminan las demas solicitudes
   });
   </script>
   <?php
+}else{
+  if(isset($_GET['v'])){
+    $idPropuesta=obtenerIdPropuestaServicioIbnorca($v);
+    $areaServicio=obtenerIdAreaServicioIbnorca($v);
+     if($areaServicio==39||$areaServicio==38){
+      $detalle="TCP";
+     }else{
+       $detalle="SIM";
+     }
+    if($idPropuesta!="NONE"){
+    ?>
+  <script>
+  $(document).ready(function() {
+    $("#tipo_solicitud").html("");
+    $('.selectpicker').selectpicker("refresh");
+    $("#tipo_solicitud").append("<option selected value='1'>POR PROPUESTA</option>");
+    $('.selectpicker').selectpicker("refresh");
+    listarTipoSolicitud(1,'<?=$idPropuesta?>$$$<?=$detalle?>');
+    //se eliminan las demas solicitudes
+   });
+   </script>
+   <?php    
+    }else{
+      //servicio SIN PROPUESTA "OI" 
+      ?>
+  <script>
+  $(document).ready(function() {
+    $("#tipo_solicitud").html("");
+    $('.selectpicker').selectpicker("refresh");
+    $("#tipo_solicitud").append("<option selected value='3'>MANUAL</option>");
+    $('.selectpicker').selectpicker("refresh");
+    listarTipoSolicitud(3,'none');
+    //se eliminan las demas solicitudes
+   });
+   </script>
+   <?php 
+    }
+  }
 }
 
 ?>

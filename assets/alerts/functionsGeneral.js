@@ -1441,22 +1441,57 @@ input.addEventListener('change', function (e) {
 }, false)*/
 var numArchivos=0;
 function archivosPreview(send) {
+  var itemDocumentos=[];
     var inp=document.getElementById("archivos");
     if(send!=1){
-      $("#lista_archivos").html("<p class='text-success text-center'>Lista de Archivos</p>");
+      var table = $('<table>').addClass('table');
+      table.addClass('table-condensed');
+      table.addClass('table-bordered');
+       var titulos = $('<tr>').addClass('bg-info text-white');
+       titulos.append($('<td>').addClass('text-left').text('#'));
+       titulos.append($('<td>').addClass('').text('DOCUMENTO'));
+       titulos.append($('<td>').addClass('').text('TIPO DE ARCHIVO'));
+       titulos.append($('<td>').addClass('').text('TIPO DOCUMENTO'));    
+       table.append(titulos);
       for (var i = 0; i < inp.files.length; ++i) {
         numArchivos++;
         var name = inp.files.item(i).name;
-        $("#lista_archivos").append("<div class='text-left'><label>"+name+"</label></div>");
+        var row = $('<tr>').addClass('');
+       row.append($('<td>').addClass('text-left').text(i+1));
+       row.append($('<td>').addClass('font-weight-bold').text(name));
+       row.append($('<td>').addClass('font-weight-bold').text(/[^.]+$/.exec(name)));
+       if($("#formSolDet").length>0){
+        var doc = {
+          id:i,
+          nombre:name,
+          tipo:0
+        }
+        itemDocumentos.push(doc);
+        console.log(JSON.stringify(itemDocumentos));
+        var htmlSelect = '<select onChange="asignarTipoDocumento(\''+name+'\','+(i+1)+')" class="selectpicker form-control form-control-sm" name="tipo_documento'+(i+1)+'" id="tipo_documento'+(i+1)+'" data-style="btn btn-primary">';
+         htmlSelect+=$("#tipo_documento").html();
+         htmlSelect+='</select>';
+         row.append($('<td>').addClass('').html(htmlSelect));      
+       }else{
+         row.append($('<td>').addClass('').text("TODOS"));      
+       }        
+       table.append(row);
+        // $("#lista_archivos").append("<div class='text-left'><label>"+name+"</label></div>");
        }
        $("#narch").addClass("estado");
+       $("#lista_archivos").html(table);
+       $('.selectpicker').selectpicker("refresh");
      }else{
       numArchivos=0;
         $("#lista_archivos").html("Ningun archivo seleccionado");
         $("#narch").removeClass("estado");
      }
-
-    
+}
+var itemDocumentos=[];
+function asignarTipoDocumento(nombreArchivo,fila){
+  var tipos = $("#tipo_documento"+fila).val();
+  itemDocumentos[fila-1].tipo=tipos;
+  console.log(JSON.stringify(itemDocumentos));
 }
 function readSingleFile(evt) {
     var f = evt.target.files[0];
@@ -3358,7 +3393,7 @@ function mayorReporteComprobante(fila){
  ///////////////////////////////////////////////////////////////////
  /*                              Solicitud de recursos                                      */
 
- function listarTipoSolicitud(tipo){
+ function listarTipoSolicitud(tipo,id){
   var url="";
   if($("#ibnorca_q").length>0){
    var q=$("#ibnorca_q").val();
@@ -3406,17 +3441,17 @@ function mayorReporteComprobante(fila){
         buttonsStyling: false
        }).then((result) => {
           if (result.value) {
-            cargarDatosSelectTipoSolicitud(url,tipo);            
+            cargarDatosSelectTipoSolicitud(url,tipo,id);            
             return(true);
           } else if (result.dismiss === Swal.DismissReason.cancel) {
             return(false);
           }
       });
   }else{
-     cargarDatosSelectTipoSolicitud(url,tipo)   
+     cargarDatosSelectTipoSolicitud(url,tipo,id)   
   }
  }
-function cargarDatosSelectTipoSolicitud(url,tipo){
+function cargarDatosSelectTipoSolicitud(url,tipo,id){
   $("#fiel").html("");
   //if(tipo!=3){ 
    ajax=nuevoAjax();
@@ -3448,7 +3483,10 @@ function cargarDatosSelectTipoSolicitud(url,tipo){
         }   
       }
 
-      
+      if(id!="none"){
+        quitarPropuestaCombo(id);
+        filtrarSolicitudRecursosDetalleDatos();
+      }
        $('.selectpicker').selectpicker("refresh");
     }
    }
@@ -9447,6 +9485,7 @@ function cargarChequesPagoDetalle(fila){
 function ponerNumeroChequePagoDetalle(fila){
   var valor= $("#emitidos_pago"+fila).val().split("####");
   $("#numero_cheque"+fila).val(valor[1]);
+  $("#numero_cheque"+fila).attr("min",valor[1]);
   if(valor==""||valor==null){
     if(!($("#numero_cheque"+fila).is("[readonly]"))){
       $("#numero_cheque"+fila).attr("readonly",true);
@@ -11469,6 +11508,15 @@ function moverModal(mod){
   }); 
 }
 
+function quitarPropuestaCombo(id){
+  $('#simulaciones option').each(function() {
+    if ( $(this).val() != id ) {
+        $(this).remove();
+    }
+  });
+  $('.selectpicker').selectpicker("refresh");
+}
+
 
 function botonBuscarNormasSolfac(){
   var valor_glosa_cliente=$("#glosaCliente").val();  
@@ -11542,3 +11590,4 @@ function ajaxUnidadorganizacionalAreaNormas(combo){
   }
   ajax.send(null)  
 }//unidad_area-cargo
+

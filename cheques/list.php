@@ -37,7 +37,7 @@ $lista=listaChequesPago();
                           <th>Inicio</th>
                           <th>Final</th>
                           <th>Nro Cheque</th>
-                          <th>Nro Serie</th>
+                          <th>Nro Cuenta</th>
                           <th class="text-right">Actions</th>
                         </tr>
                       </thead>

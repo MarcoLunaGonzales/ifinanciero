@@ -50,7 +50,7 @@ $stmtb->bindColumn('nro_cheque', $cheque);
                   <?php
                   while ($row = $stmtb->fetch(PDO::FETCH_BOUND)) {
                     ?>
-                  <h4 class="card-title" align="center"><?=$nombreBanco?> <b>NRO. SERIE: <?=$serie?></b> / <b>NRO. CHEQUE: <?=$cheque?></b></h4>
+                  <h4 class="card-title" align="center"><?=$nombreBanco?> <b>NRO. CUENTA: <?=$serie?></b> / <b>NRO. CHEQUE: <?=$cheque?></b></h4>
                   <?php
                   }
                   ?>

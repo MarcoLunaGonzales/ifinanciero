@@ -23,8 +23,8 @@ $fila=$_GET['fila'];
                                       $codigoSel2=$row2['codigo'];
                                       $serie=$row2['nro_serie'];
                                       $cheque=(int)$row2['nro_cheque']+1;
-                                      ?><option value="<?=$codigoSel2;?>####<?=$cheque?>"># SERIE : <?=$serie?></option><?php 
+                                      ?><option value="<?=$codigoSel2;?>####<?=$cheque?>"># CUENTA : <?=$serie?></option><?php 
                                      }
                                     ?>
                                   </select>
-                             </div>                        
+                             </div>                    
