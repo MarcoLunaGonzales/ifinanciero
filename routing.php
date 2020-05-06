@@ -186,6 +186,15 @@
 		
 		
 		//solicitud facturacion TCP
+		if ($_GET['opcion']=='solicitud_facturacion_principal') {
+			$v=$_GET['v'];
+			$q=$_GET['q'];
+			$s=$_GET['s'];
+			$u=$_GET['u'];
+			require_once('simulaciones_servicios/solicitud_facturacion_principal.php');
+		}
+
+
 		if ($_GET['opcion']=='solicitud_facturacion') {
 			$cod=$_GET['cod'];
 			require_once('simulaciones_servicios/solicitud_facturacion.php');

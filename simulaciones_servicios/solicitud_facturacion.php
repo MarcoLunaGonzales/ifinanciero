@@ -345,7 +345,7 @@ if($cantidad_items>0){
                  <?php 
                 if($globalAdmin==1){
                   if(isset($_GET['q'])){
-                   ?><a href="<?=$urlRegisterSolicitudfactura;?>&cod_s=<?=$codigo_simulacion?>&cod_f=0&cod_sw=1&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>" target="_self" class="<?=$buttonNormal;?>">Registrar</a>
+                   ?><a href="<?=$urlRegisterSolicitudfactura;?>&cod_s=<?=$v?>&cod_f=0&cod_sw=1&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>" target="_self" class="<?=$buttonNormal;?>">Registrar</a>
                     <a href='<?=$urlList;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
                     <?php 
                   }else{
@@ -423,7 +423,7 @@ if($cantidad_items>0){
   if(isset($_GET['q'])){
     ?>
       <script type="text/javascript">
-        location = "<?=$urlRegisterSolicitudfactura;?>&cod_s=<?=$codigo_simulacion?>&cod_f=0&cod_sw=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>"
+        location = "<?=$urlRegisterSolicitudfactura;?>&cod_s=<?=$v?>&cod_f=0&cod_sw=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>"
       </script>
    <?php
   }else{

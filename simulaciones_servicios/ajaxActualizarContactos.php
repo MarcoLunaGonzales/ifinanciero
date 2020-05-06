@@ -36,10 +36,10 @@ foreach ($lista->lista as $listaCliente) {
 	while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 		$codigoUnidadX=$row['cod_unidad'];
 	}
-	echo "codigo:".$codigoX."<br>";
-	echo "nombre:".$nombreX."<br>";
-	echo "estado:".$estadoX."<br>";
-	echo "identificacion:".$identificacionX."<br>";
+	// echo "codigo:".$codigoX."<br>";
+	// echo "nombre:".$nombreX."<br>";
+	// echo "estado:".$estadoX."<br>";
+	// echo "identificacion:".$identificacionX."<br>";
 
 	$stmt = $dbh->prepare("INSERT INTO clientes (codigo, nombre,cod_unidad,identificacion,descuento,cod_estadoreferencial) VALUES (:codigo, :nombre, :cod_unidad, :identificacion, :descuento, :cod_estado)");
 	$stmt->bindParam(':codigo', $codigoX);
@@ -58,22 +58,22 @@ foreach ($lista->lista as $listaCliente) {
 	        $stmt = $dbh->prepare($sql);
 	        $stmt->execute(); 
 		}
-		$codigo=$listas->IdContacto;	
-		$cod_cliente=$listas->IdCliente;
-		$nombre=$listas->NombreContacto;
-		$paterno=$listas->PaternoContacto;
-		$materno=$listas->MaternoContacto;
-		$cargo=$listas->CargoContacto;
-		$telefono=$listas->FonoContacto;
 		$vigencia=$listas->Vigencia;
-	    $identificacion=$listas->Identificacion;
-
-
-		$sql="INSERT INTO clientes_contactos(codigo,cod_cliente,nombre,paterno,materno,cargo,telefono,identificacion,cod_estadoreferencial)
-	        VALUES ('$codigo','$cod_cliente','$nombre','$paterno','$materno','$cargo','$telefono','$identificacion','$vigencia')";
-	     $stmt = $dbh->prepare($sql);
-	     $stmt->execute();  
-	     $contador_contactos++;
+		if($vigencia==1){
+			$codigo=$listas->IdContacto;	
+			$cod_cliente=$listas->IdCliente;
+			$nombre=$listas->NombreContacto;
+			$paterno=$listas->PaternoContacto;
+			$materno=$listas->MaternoContacto;
+			$cargo=$listas->CargoContacto;
+			$telefono=$listas->FonoContacto;
+		    $identificacion=$listas->Identificacion;
+			$sql="INSERT INTO clientes_contactos(codigo,cod_cliente,nombre,paterno,materno,cargo,telefono,identificacion,cod_estadoreferencial)
+		        VALUES ('$codigo','$cod_cliente','$nombre','$paterno','$materno','$cargo','$telefono','$identificacion','$vigencia')";
+		     $stmt = $dbh->prepare($sql);
+		     $stmt->execute();  
+		     $contador_contactos++;
+		}
 	}
 	$listaPersona=obtenerListaContactosClientesDelServicio($codigoX);
 	foreach ($listaPersona->contactos as $listas) {
@@ -82,21 +82,22 @@ foreach ($lista->lista as $listaCliente) {
 	        $stmt = $dbh->prepare($sql);
 	        $stmt->execute(); 
 		}
-		$codigo=$listas->IdContacto;	
-		$cod_cliente=$listas->IdCliente;
-		$nombre=$listas->NombreContacto;
-		$paterno=$listas->PaternoContacto;
-		$materno=$listas->MaternoContacto;
-		$cargo=$listas->CargoContacto;
-		$telefono=$listas->FonoContacto;
 		$vigencia=$listas->Vigencia;
-	    $identificacion=$listas->Identificacion;
-
-		$sql="INSERT INTO clientes_contactos(codigo,cod_cliente,nombre,paterno,materno,cargo,telefono,identificacion,cod_estadoreferencial)
-	        VALUES ('$codigo','$cod_cliente','$nombre','$paterno','$materno','$cargo','$telefono','$identificacion','$vigencia')";
-	     $stmt = $dbh->prepare($sql);
-	     $stmt->execute();  
-	     $contador_contactos++;
+		if($vigencia==1){
+			$codigo=$listas->IdContacto;	
+			$cod_cliente=$listas->IdCliente;
+			$nombre=$listas->NombreContacto;
+			$paterno=$listas->PaternoContacto;
+			$materno=$listas->MaternoContacto;
+			$cargo=$listas->CargoContacto;
+			$telefono=$listas->FonoContacto;
+		    $identificacion=$listas->Identificacion;
+			$sql="INSERT INTO clientes_contactos(codigo,cod_cliente,nombre,paterno,materno,cargo,telefono,identificacion,cod_estadoreferencial)
+		        VALUES ('$codigo','$cod_cliente','$nombre','$paterno','$materno','$cargo','$telefono','$identificacion','$vigencia')";
+		     $stmt = $dbh->prepare($sql);
+		     $stmt->execute();  
+		     $contador_contactos++;
+		}
 	}
 	$contador_clientes++;
 }
