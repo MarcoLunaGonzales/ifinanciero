@@ -267,7 +267,7 @@
                             if(dato[4]==""){  dato[4]=0;}
                             if(dato[7]==""){  dato[7]=0;}
                             if(dato[8]==""){  dato[8]=0;}
-                            sumaTotalFactura=sumaTotalFactura+parseInt(dato[4])+parseInt(dato[7])+parseInt(dato[8]);
+                            sumaTotalFactura=sumaTotalFactura+parseFloat(dato[4])+parseFloat(dato[7])+parseFloat(dato[8]);
                           }                           
                           var monto_debe_total_comprobante = $("#totaldeb").val();  
                           if(sumaTotalFactura!=monto_debe_total_comprobante){
@@ -305,6 +305,7 @@
                           var haberZ=parseFloat($("#haber"+(i+1)).val());
                           var tipoComprobante=parseFloat($("#tipo_comprobante").val());
                           var tipoEstadoCuenta=$("#tipo_estadocuentas"+(i+1)).val();
+                          var tipoECCasoespecial=$("#tipo_estadocuentas_casoespecial"+(i+1)).val();
                           var cuentaAuxiliar=$("#cuenta_auxiliar"+(i+1)).val();  
                           var estadoCuentaSelect=$("#nestado"+(i+1)).hasClass("estado");
 
@@ -315,7 +316,25 @@
                             $('#msgError').html("La fila "+(i+1)+" debe estar asociada a una CUENTA AUXILIAR, ya que está configurada para llevar Estados de Cuenta.");
                             $('#modalAlert').modal('show');
                             return false;
+                            //CONSULTAMOS SI EN EL CASO ESPECIAL ESTA MATANDO LA CUENTA
                           }else{
+                            if( tipoComprobante==3 && tipoEstadoCuenta>0 ){
+                              if( estadoCuentaSelect==false && tipoECCasoespecial==1){
+                                $('#msgError').html("Fila "+(i+1)+" Debe seleccionar un estado de cuenta para Cerrar.");
+                                $('#modalAlert').modal('show');
+                                return false;
+                              }
+                              if( haberZ>0 && tipoEstadoCuenta==1 ){
+                                $('#msgError').html("<p>Fila "+(i+1)+"Esta cuenta No admite Monto en el Haber</p>");
+                                $("#modalAlert").modal("show");
+                                return false;
+                              }
+                              if( debeZ>0 && tipoEstadoCuenta==2 ){
+                                $('#msgError').html("<p>Fila "+(i+1)+"Esta cuenta No admite Monto en el Debe</p>");
+                                $("#modalAlert").modal("show");
+                                return false;
+                              }
+                            }
                             //console.log("cuenta sin problemas; tipoComp:3");
                           }
 
@@ -343,7 +362,7 @@
                               $('#modalAlert').modal('show');
                               return false;
                             }
-                            if( estadoCuentaSelect==false ){
+                            if( estadoCuentaSelect==false && tipoECCasoespecial!=1 ){
                               $('#msgError').html("Fila "+(i+1)+" Debe seleccionar un Estado de Cuenta para Cerrar.");
                               $('#modalAlert').modal('show');
                               return false;
@@ -376,23 +395,7 @@
                             };  
                           }else{
                             //console.log("cuenta sin problemas; tipoComp:2");
-                          }
-
-                          //COMENTAMOS LA VALIDACION DE LOS ESTADOS DE CUENTA
-                          /*if($("#tipo_estadocuentas"+(i+1)).val()=="1" && haberZ>0  && (!($("#nestado"+(i+1)).hasClass("estado")))){
-                             contEstadoDebito=1;
-                            mensaje+="<p>Existen cuentas que deben estar relacionadas a un Estado de Cuentas</p>";
-                            $('#msgError').html(mensaje);
-                            $('#modalAlert').modal('show');
-                            contEstadoDebito=1;
-                          }
-                          if($("#tipo_estadocuentas"+(i+1)).val()=="2" && debeZ>0  && (!($("#nestado"+(i+1)).hasClass("estado")))){
-                             contEstadoDebito=1;
-                            mensaje+="<p>Existen cuentas que deben estar relacionadas a un Estado de Cuentas</p>";
-                            $('#msgError').html(mensaje);
-                            $('#modalAlert').modal('show');
-                            contEstadoDebito=1;
-                          }*/         
+                          }      
                         }
                         if(contEstadoDebito==1){
                           envio=1;

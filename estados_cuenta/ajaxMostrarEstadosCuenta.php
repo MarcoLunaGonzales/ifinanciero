@@ -21,8 +21,10 @@ $fechaActual=date("d/m/Y");
 $codCuenta=$_GET['cod_cuenta'];
 $codCuentaAuxiliar=$_GET['cod_cuenta_auxiliar'];
 $tipoComprobanteX=$_GET['tipo_comprobante'];
+$tipoEstadoCuentasCasoespecial=$_GET["tipo_estadocuentas_casoespecial"];
 
-$sqlZ="SELECT e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar,(select concat(c.cod_tipocomprobante,'|',c.numero,'|',cd.cod_unidadorganizacional,'|',MONTH(c.fecha),'|',c.fecha) from comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle)as extra FROM estados_cuenta e,comprobantes_detalle d where e.cod_comprobantedetalle=d.codigo and (d.cod_cuenta=$codCuenta) and e.cod_comprobantedetalleorigen=0 and e.cod_cuentaaux=$codCuentaAuxiliar order by e.fecha";
+
+$sqlZ="SELECT e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar,(select concat(c.cod_tipocomprobante,'|',c.numero,'|',cd.cod_unidadorganizacional,'|',MONTH(c.fecha),'|',c.fecha) from comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle)as extra FROM estados_cuenta e,comprobantes_detalle d, comprobantes c where c.codigo=d.cod_comprobante and c.cod_estadocomprobante<>2 and  e.cod_comprobantedetalle=d.codigo and (d.cod_cuenta=$codCuenta) and e.cod_comprobantedetalleorigen=0 and e.cod_cuentaaux=$codCuentaAuxiliar order by e.fecha";
 //echo $sqlZ;
 ?>
 <table id="tablePaginatorReport" class="table table-bordered table-condensed table-warning">
@@ -85,9 +87,9 @@ $sqlZ="SELECT e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar,(select concat(c.c
     //SACAMOS CUANTO SE PAGO DEL ESTADO DE CUENTA.
     if(isset($_GET['edicion'])){
       $codigoComprobante=$_GET['codigo_comprobante'];
-      $sqlContra="SELECT sum(e.monto)as monto from estados_cuenta e join comprobantes_detalle cd on cd.codigo=e.cod_comprobantedetalle where e.cod_comprobantedetalleorigen='$codigoX' and cd.cod_comprobante!='$codigoComprobante'";
+      $sqlContra="SELECT sum(e.monto)as monto from estados_cuenta e, comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and c.cod_estadocomprobante<>2 and cd.codigo=e.cod_comprobantedetalle and e.cod_comprobantedetalleorigen='$codigoX' and cd.cod_comprobante!='$codigoComprobante'";
     }else{
-      $sqlContra="SELECT sum(monto)as monto from estados_cuenta e where e.cod_comprobantedetalleorigen='$codigoX'";
+      $sqlContra="SELECT sum(monto)as monto from estados_cuenta e, comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and c.cod_estadocomprobante<>2 and e.cod_comprobantedetalleorigen='$codigoX'";
     }
     
 //    echo $sqlContra;
@@ -166,7 +168,7 @@ $sqlZ="SELECT e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar,(select concat(c.c
           <div class="form-check">
             <?php
               $valorCerrarEC=$codigoX."####".$codCuentaAuxX."####".$codProveedorX."####".$saldoIndividual;
-              if($tipoComprobanteX!=3){
+              if(($tipoComprobanteX!=3) || ($tipoComprobanteX==3 && $tipoEstadoCuentasCasoespecial==1)){
             ?>
               <a title="Cerrar EC" id="cuentas_origen_detalle<?=$i?>" href="#" onclick="agregarEstadoCuentaCerrar(<?=$i;?>,'<?=$valorCerrarEC;?>');" class="btn btn-sm btn-warning btn-fab"><span class="material-icons text-dark">double_arrow</span></a>
             <?php

@@ -38,6 +38,8 @@ $stmtX->execute();
       $importeOriginal2=($porcentajeCuentaX/100)*$importeOriginal;
       $importe=$importeOriginal;
     }
+    $importeOriginal2=number_format($importeOriginal2, 2, '.', '');
+    
     $montoRetencion=($porcentajeX/100)*$importe;
     $montoRetencion=number_format($montoRetencion, 2, '.', '');
     $idFila=$idFila+1;    
