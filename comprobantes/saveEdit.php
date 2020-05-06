@@ -171,16 +171,16 @@ for ($i=1;$i<=$cantidadFilas;$i++){
          //FIN DE ESTADOS DE CUENTA
 	}
 } 
-echo "<script>
+/*echo "<script>
 window.opener.location.reload();
 window.close();
-</script>";
-/*
+</script>";*/
+
 if($flagSuccessDetalle==true){
 	showAlertSuccessError(true,"../".$urlList);	
 }else{
 	showAlertSuccessError(false,"../".$urlList);
-}*/
+}
 
 
 ?>
