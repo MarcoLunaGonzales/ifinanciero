@@ -65,13 +65,13 @@ m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo order by nombreAlumno");//poner 
                             <th class="text-center">#</th>                          
                             <th>CI Alumno</th>
                             <th>Nombre</th>
-                            <th>Precio curso (BOB)</th>                            
-                            <th>Desc curso(%)</th>                              
-                            <th>Importe curso(BOB)</th>   
-                            <th>Importe modulo(BOB)</th>   
-                            <th>Importe Solicitud(BOB)</th>   
+                            <th>Precio <br>curso (BOB)</th>                            
+                            <th>Desc. <br>curso(%)</th>                              
+                            <th>Importe <br>curso(BOB)</th>   
+                            <th>Importe <br>modulo(BOB)</th>   
+                            <th>Importe <br>Solicitud(BOB)</th>   
                             <!-- <th>Canti. Mod</th> -->
-                            <th>Nro Módulo</th>
+                            <th>Nro <br>Módulo</th>
                             <!-- <th>Nombre Mod.</th> -->
                             <th class="text-right">Actions</th>
                           </tr>

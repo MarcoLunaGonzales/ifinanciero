@@ -807,6 +807,12 @@ if($menuModulo==0){
                   </a>
                 </li>
                 <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listSolicitud_facturacion_normas">
+                    <span class="sidebar-mini"> SFVN</span>
+                    <span class="sidebar-normal"> Solicitud de Facturacion Venta Normas</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listFacturasServicios">
                     <span class="sidebar-mini"> SF </span>
                     <span class="sidebar-normal"> Solicitudes de Facturación </span>

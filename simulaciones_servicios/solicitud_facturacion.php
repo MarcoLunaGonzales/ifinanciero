@@ -74,20 +74,11 @@ if($cantidad_items>0){
                             <th>Codigo<br>Servicio</th>
                             <th>Fecha<br>Registro</th>
                             <th>Fecha a<br>Facturar</th>
-                            <th>Nro<br>Factura</th>
-                            <!-- <th>Precio (BOB)</th>                            
-                            <th>Desc(%)</th>  
-                            <th>Desc(BOB)</th>   -->
+                            <th>Nro<br>Factura</th>                            
                             <th width="8%">Importe (BOB)</th>  
-<<<<<<< HEAD
-                            <th>Per.Contacto</th>  
-                            <th width="35%">Razón Social</th> 
-                            <th>Estado</th>                           
-=======
                             <th>Persona<br>Contacto</th>  
                             <th width="35%">Razón Social</th>                            
                             <th width="5%">Estado</th>    
->>>>>>> aac92cef098d0067b573481a7d52e8f162f1e1a8
                             <th class="text-right">Actions</th>
                           </tr>
                         </thead>
@@ -130,6 +121,7 @@ if($cantidad_items>0){
                             $responsable=namePersonal($cod_personal);//nombre del personal
                             $nombre_area=trim(abrevArea($cod_area),'-');//nombre de area
                             $nombre_uo=trim(abrevUnidad($cod_unidadorganizacional),' - ');//nombre de oficina
+                            $nombre_contacto=nameContacto($persona_contacto);//nombre del personal
                             //los registros de la factura                            
                             $sqlA="SELECT sf.*,t.descripcion as nombre_serv from solicitudes_facturaciondetalle sf,cla_servicios t 
                                 where sf.cod_claservicio=t.idclaservicio and sf.cod_solicitudfacturacion=$codigo_facturacion";
@@ -172,7 +164,7 @@ if($cantidad_items>0){
                             <td align="center"><?=$index;?></td>
                             <td><?=$nombre_uo;?></td>
                             <td><?=$nombre_area;?></td>
-                            <td><?=$nro_correlativo;?></td>
+                            <td class="text-right"><?=$nro_correlativo;?></td>
                             <td><?=$codigo_alterno;?></td>
                             <td><?=$fecha_registro;?></td>
                             <td><?=$fecha_solicitudfactura;?></td>
@@ -181,7 +173,7 @@ if($cantidad_items>0){
                             <td class="text-right"><?=formatNumberDec($sumaTotalDescuento_por) ;?></td>
                             <td class="text-right"><?=formatNumberDec($sumaTotalDescuento_bob) ;?></td> -->
                             <td class="text-right"><?=formatNumberDec($sumaTotalImporte) ;?></td>
-                            <td class="text-left"><?=$persona_contacto;?></td>
+                            <td class="text-left"><?=$nombre_contacto;?></td>
                             <td><?=$razon_social;?></td>
                             <td><button class="btn <?=$btnEstado?> btn-sm btn-link"><?=$estado;?></button></td>                            
                             <td class="td-actions text-right">
