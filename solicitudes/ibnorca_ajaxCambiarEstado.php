@@ -55,6 +55,7 @@ $stmtSolicitud->bindColumn('cod_simulacion', $codSimulacion);
 $stmtSolicitud->bindColumn('cod_proveedor', $codProveedor);
 $stmtSolicitud->bindColumn('cod_simulacionservicio', $codSimulacionServicio);
 $stmtSolicitud->bindColumn('numero', $numeroSol);
+$stmtSolicitud->bindColumn('idServicio', $idServicioX);
 
 while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
       $unidadX=$unidadX;
@@ -87,8 +88,13 @@ while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
     $fechaHoraActual=date("Y-m-d H:i:s");
     //glosa detalle
     //"".." F/".$numeroFac." ".$proveedorX." ".$detalleX
+    $IdTipo=obtenerTipoServicioPorIdServicio($idServicioX);
+    $codObjeto=obtenerCodigoObjetoServicioPorIdSimulacion($codSimulacionServicio);
 
-    $glosa="SOL:".$numeroSol." ".$nombreCliente." F/ ".$facturaCabecera." ".obtenerProveedorSolicitudRecursos($codigo);
+    $datosServicio=obtenerServiciosClaServicioTipoNombre($IdTipo)."  ".obtenerServiciosTipoObjetoNombre($codObjeto);
+
+
+    $glosa="SOL:".$numeroSol." ".$nombreCliente." F/ ".$facturaCabecera." ".obtenerProveedorSolicitudRecursos($codigo)." ".$datosServicio;
     $userSolicitud=obtenerPersonalSolicitanteRecursos($codigo);
     $unidadSol=$cod_unidadX;
     $areaSol=$cod_areaX;

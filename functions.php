@@ -5289,7 +5289,7 @@ function obtenerCodigoEstadoCuentaSolicitudRecursosDetalle($codigo){
 
 function obtenerDatosCompletosPorSimulacionServicios($codigo){
   $dbh = new Conexion();
-  $sql="SELECT p.cod_area,p.cod_unidadorganizacional,s.id_tiposervicio,s.cod_cliente,s.cod_responsable 
+  $sql="SELECT p.cod_area,p.cod_unidadorganizacional,s.id_tiposervicio,s.cod_cliente,s.cod_responsable,s.cod_objetoservicio 
   from simulaciones_servicios s join plantillas_servicios p on p.codigo=s.cod_plantillaservicio where s.codigo=$codigo";
   $stmt = $dbh->prepare($sql);
   $stmt->execute();
@@ -5732,6 +5732,66 @@ function obtenerCiudadDeUnidad($codigo){
    }
    return($valor); 
 }
+
+function obtenerServiciosClaServicioTipoNombre($id){
+  $dbh = new Conexion();
+  $sql="";
+  $sql="SELECT DISTINCT p.descripcion_n2 AS nombre FROM cla_servicios p where p.vigente=1 and p.codigo_n2=$id";
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  $valor="";
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['nombre'];
+   }
+   return($valor);  
+}
+
+function obtenerServiciosTipoObjetoNombre($id){
+  $dbh = new Conexion();
+  $sql="";
+  $sql="SELECT nombre FROM objeto_servicio where codigo=$id";
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  $valor="";
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['nombre'];
+   }
+   return($valor);  
+}
+
+function obtenerTipoServicioPorIdServicio($idServicio){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT IdTipo FROM ibnorca.servicios where idServicio=$idServicio");
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['IdTipo'];
+   }
+   return($valor);
+}
+
+function obtenerCodigoObjetoServicioPorIdSimulacion($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT cod_objetoservicio from simulaciones_servicios where codigo=$codigo");
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['cod_objetoservicio'];
+   }
+   return($valor);
+}
+
+function obtenerIdServicioPorIdSimulacion($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT idServicio from simulaciones_servicios where codigo=$codigo");
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['idServicio'];
+   }
+   return($valor);
+}
+
 ?>
 
 
