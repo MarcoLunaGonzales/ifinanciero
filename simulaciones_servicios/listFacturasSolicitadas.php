@@ -29,7 +29,7 @@ if(isset($_GET['q'])){
 
   //datos registrado de la simulacion en curso
 
-  $stmt = $dbh->prepare("SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')as fecha_registro_x,DATE_FORMAT(sf.fecha_solicitudfactura,'%d/%m/%Y')as fecha_solicitudfactura_x FROM solicitudes_facturacion sf join estados_solicitudfacturacion es on sf.cod_estadosolicitudfacturacion=es.codigo order by sf.fecha_solicitudfactura desc");
+  $stmt = $dbh->prepare("SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')as fecha_registro_x,DATE_FORMAT(sf.fecha_solicitudfactura,'%d/%m/%Y')as fecha_solicitudfactura_x FROM solicitudes_facturacion sf join estados_solicitudfacturacion es on sf.cod_estadosolicitudfacturacion=es.codigo order by codigo desc");
 
   $stmt->execute();
   $stmt->bindColumn('codigo', $codigo_facturacion);
@@ -50,7 +50,7 @@ if(isset($_GET['q'])){
   $stmt->bindColumn('nro_correlativo', $nro_correlativo);
   $stmt->bindColumn('persona_contacto', $persona_contacto);
   $stmt->bindColumn('codigo_alterno', $codigo_alterno);
-  // $stmt->bindColumn('nombre_cliente', $nombre_cliente);
+  $stmt->bindColumn('tipo_solicitud', $tipo_solicitud);//1 tcp - 2 capacitacion - 3 servicios - 4 manual - 5 venta de normas
   ?>
   <div class="content">
     <div class="container-fluid">
@@ -61,29 +61,23 @@ if(isset($_GET['q'])){
                     <div class="card-icon">
                       <i class="material-icons">polymer</i>
                     </div>
-                    <h4 class="card-title"><b>Solicitudes de Facturación</b></h4>
-                    <!-- <h4 class="card-title" align="center"><b><?=$nombre_simulacion?> - <?=$name_area_simulacion?></b></h4> -->
+                    <h4 class="card-title"><b>Solicitudes de Facturación</b></h4>                    
                   </div>
                   <div class="card-body">
                       <table class="table" id="tablePaginator">
                         <thead>
                           <tr>
                             <th class="text-center">#</th>                          
-                            <th>Of.</th>
+                            <th>Oficina</th>
                             <th>Area</th>
                             <th>nro<br>Sol.</th>
-                            <th>Codigo<br>Servicio</th>
-                            <!-- <th>Responsable</th> -->
+                            <th>Codigo<br>Servicio</th>                            
                             <th>Fecha<br>Registro</th>
                             <th>Fecha<br>a Facturar</th>
-                            <th style="color:#cc4545;">#Fact</th>
-                            <!-- <th>Precio (BOB)</th>                            
-                            <th>Descu (%)</th>  
-                            <th>Descu (BOB)</th>   -->
+                            <th style="color:#cc4545;">#Fact</th>                            
                             <th>Importe<br>(BOB)</th>  
                             <th>Persona<br>Contacto</th>  
-                            <th>Razón Social</th>                            
-                            <!--ESTADO DE LA SOLICITUD-->
+                            <th>Razón Social</th>                      
                             <th width="5%">Estado</th>
                             <th class="text-right">Actions</th>
                           </tr>
@@ -114,25 +108,26 @@ if(isset($_GET['q'])){
                               $btnEstado="btn-default";
                             break;
                           }
-
-                            //verificamos si ya tiene factua generada y esta activa                           
+                            //verificamos si ya tiene factura generada y esta activa                           
                             $stmtFact = $dbh->prepare("SELECT codigo,nro_factura from facturas_venta where cod_solicitudfacturacion=$codigo_facturacion and cod_estadofactura=1");
                             $stmtFact->execute();
                             $resultSimu = $stmtFact->fetch();
                             $codigo_fact_x = $resultSimu['codigo'];
                             $nro_fact_x = $resultSimu['nro_factura'];
                             if ($nro_fact_x==null)$nro_fact_x="-";
-                            //obtenemos datos de la simulacion
-                            $sql="SELECT sc.nombre,ps.cod_area,ps.cod_unidadorganizacional
-                            from simulaciones_servicios sc,plantillas_servicios ps
-                            where sc.cod_plantillaservicio=ps.codigo and sc.cod_estadoreferencial=1 and sc.codigo=$cod_simulacion_servicio";                            
-                            $stmtSimu = $dbh->prepare($sql);
-                            $stmtSimu->execute();
-                            $resultSimu = $stmtSimu->fetch();
-                            $nombre_simulacion = $resultSimu['nombre'];
-                            $cod_area_simulacion = $resultSimu['cod_area'];
-                            //si es nulo, verificamos si pertenece a capacitacion
-                            if($nombre_simulacion==null || $nombre_simulacion == ''){
+                            $cod_area_simulacion=$cod_area;
+                            $nombre_simulacion='OTROS';
+                            if($tipo_solicitud==1){// la solicitud pertence tcp-tcs
+                              //obtenemos datos de la simulacion TCP
+                              $sql="SELECT sc.nombre,ps.cod_area,ps.cod_unidadorganizacional
+                              from simulaciones_servicios sc,plantillas_servicios ps
+                              where sc.cod_plantillaservicio=ps.codigo and sc.cod_estadoreferencial=1 and sc.codigo=$cod_simulacion_servicio";                            
+                              $stmtSimu = $dbh->prepare($sql);
+                              $stmtSimu->execute();
+                              $resultSimu = $stmtSimu->fetch();
+                              $nombre_simulacion = $resultSimu['nombre'];
+                              $cod_area_simulacion = $resultSimu['cod_area'];
+                            }elseif($tipo_solicitud==2){//  pertence capacitacion
                               $sqlCostos="SELECT sc.nombre,sc.cod_responsable,ps.cod_area,ps.cod_unidadorganizacional
                               from simulaciones_costos sc,plantillas_servicios ps
                               where sc.cod_plantillacosto=ps.codigo and sc.cod_estadoreferencial=1 and sc.codigo=$cod_simulacion_servicio order by sc.codigo";
@@ -141,9 +136,7 @@ if(isset($_GET['q'])){
                               $resultSimu = $stmtSimuCostos->fetch();
                               $nombre_simulacion = $resultSimu['nombre'];
                               $cod_area_simulacion = $resultSimu['cod_area'];
-                            }
-                            //verificamos si pertence a propuestas y servicios
-                            if($nombre_simulacion==null || $nombre_simulacion == ''){
+                            }elseif($tipo_solicitud==3){// pertence a propuestas y servicios
                               $sqlCostos="SELECT Descripcion,IdArea,IdOficina from servicios s where s.IdServicio=$cod_simulacion_servicio";
                               $stmtSimuCostos = $dbh->prepare($sqlCostos);
                               $stmtSimuCostos->execute();
@@ -156,6 +149,7 @@ if(isset($_GET['q'])){
 
                             // --------
                             $responsable=namePersonal($cod_personal);//nombre del personal
+                            $nombre_contacto=nameContacto($persona_contacto);//nombre del personal
                             $nombre_area=trim(abrevArea($cod_area),'-');//nombre del area
                             $nombre_uo=nameUnidad($cod_unidadorganizacional);//nombre de la oficina
 
@@ -202,14 +196,14 @@ if(isset($_GET['q'])){
                             <td align="center"><?=$index;?></td>
                             <td><?=$nombre_uo;?></td>
                             <td><?=$nombre_area;?></td>
-                            <td><?=$nro_correlativo;?></td>
+                            <td class="text-right"><?=$nro_correlativo;?></td>
                             <td><?=$codigo_alterno?></td>
                             <!-- <td><?=$responsable;?></td> -->
                             <td><?=$fecha_registro;?></td>
                             <td><?=$fecha_solicitudfactura;?></td>                            
                             <td style="color:#cc4545;"><?=$nro_fact_x;?></td>                             
                             <td class="text-right"><?=formatNumberDec($sumaTotalImporte) ;?></td>
-                            <td class="text-left"><?=$persona_contacto;?></td>
+                            <td class="text-left"><?=$nombre_contacto;?></td>
                             <td><?=$razon_social;?></td>
                             <td><button class="btn <?=$btnEstado?> btn-sm btn-link"><?=$estado;?></button></td>
                             <!-- <td><?=$nit;?></td> -->
@@ -226,7 +220,7 @@ if(isset($_GET['q'])){
 
                                    if($codEstado==4||$codEstado==3||$codEstado==5){
                                      ?>
-                                      <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir">print</i></a>
+                                      <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir Solicitud">print</i></a>
                                      <?php
                                      ?>
                                      <div class="btn-group dropdown">

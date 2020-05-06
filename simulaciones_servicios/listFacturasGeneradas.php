@@ -9,7 +9,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 
 
   //datos registrado de la simulacion en curso
-  $stmt = $dbh->prepare("SELECT *,(select s.abreviatura from unidades_organizacionales s where s.codigo=cod_sucursal)as sucursal,(select c.nombre from clientes c where c.codigo=cod_cliente)as cliente,(select t.nombre from estados_factura t where t.codigo=cod_estadofactura)as estadofactura from facturas_venta order by  fecha_factura desc");
+  $stmt = $dbh->prepare("SELECT *,(select s.abreviatura from unidades_organizacionales s where s.codigo=cod_sucursal)as sucursal,(select t.nombre from estados_factura t where t.codigo=cod_estadofactura)as estadofactura from facturas_venta order by  fecha_factura desc");
   $stmt->execute();
   $stmt->bindColumn('codigo', $codigo_facturacion);
   $stmt->bindColumn('cod_sucursal', $cod_sucursal);
@@ -29,7 +29,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
   $stmt->bindColumn('observaciones', $observaciones);
   $stmt->bindColumn('cod_estadofactura', $cod_estadofactura);
   $stmt->bindColumn('sucursal', $sucursal);
-  $stmt->bindColumn('cliente', $cliente);
+  // $stmt->bindColumn('cliente', $cliente);
   $stmt->bindColumn('estadofactura', $estadofactura);
   ?>
   <div class="content">
@@ -63,6 +63,8 @@ $globalAdmin=$_SESSION["globalAdmin"];
                         <?php
                           $index=1;
                           while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+                            
+                            $cliente=nameCliente($cod_cliente);
                             //colores de estados                         
                             switch ($cod_estadofactura) {
                               case 1://activo
@@ -90,7 +92,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             <td class="td-actions text-right">
                               <?php
                                 if($globalAdmin==1 and $cod_estadofactura==1 ){?>                                
-                                  <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=2' target="_blank"><i class="material-icons" title="Imprimir Facturas">print</i></a>
+                                  <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$cod_solicitudfacturacion;?>&tipo=2' target="_blank"><i class="material-icons" title="Imprimir Facturas">print</i></a>
                                  <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalEnviarCorreo" onclick="agregaformEnviarCorreo('<?=$datos;?>')">
                                     <i class="material-icons" title="Enviar Correo">email</i>
                                   </button>
@@ -99,7 +101,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                   </button>
                                 <?php  
                                 }elseif($globalAdmin==1 and $cod_estadofactura==3){?>
-                                  <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=2' target="_blank"><i class="material-icons" title="Imprimir Facturas">print</i></a>
+                                  <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$cod_solicitudfacturacion;?>&tipo=2' target="_blank"><i class="material-icons" title="Imprimir Facturas">print</i></a>
 
                                   <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation-anular-factura','<?=$urlAnularFactura;?>&codigo=<?=$codigo_facturacion;?>')">
                                   <i class="material-icons" title="Anular Factura">clear</i>

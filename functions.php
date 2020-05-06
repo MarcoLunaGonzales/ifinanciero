@@ -5373,7 +5373,7 @@ function obtenerCodigoServicioPorPropuestaTCPTCS($idPropuesta){
    $dbh = new Conexion();
    $stmt = $dbh->prepare("select IFNULL(se.Codigo,'SERVICIO SIN CODIGO')as codigo  from simulaciones_servicios  s, ibnorca.servicios se where s.idServicio=se.IdServicio and s.codigo=$idPropuesta");
    $stmt->execute();
-   $valor="SIN SERVICIO";
+   $valor="SERVICIO SIN CODIGO";
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       $valor=$row['codigo'];
    }
@@ -5517,6 +5517,68 @@ function obtenerPersonaCambioEstado($tipo,$objeto,$estado){
    return($valor);
 }
 
+
+function nameNorma($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT abreviatura FROM normas where codigo=:codigo");
+   $stmt->bindParam(':codigo',$codigo);
+   $stmt->execute();
+   $valor=null;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['abreviatura'];
+   }
+   return($valor);
+}
+
+function obtenerListaClientesWS(){
+  $direccion=obtenerValorConfiguracion(42);//direccion des servicio web
+  // $sIde = "ifinanciero";
+  // $sKey = "ce94a8dabdf0b112eafa27a5aa475751";
+  
+  $sIde = "monitoreo"; 
+  $sKey = "837b8d9aa8bb73d773f5ef3d160c9b17";
+
+  /*Lista de Clientes Empresa*/
+  $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "lista"=>"Clientes");
+    $parametros=json_encode($parametros);
+    // abrimos la sesión cURL
+    $ch = curl_init();
+    // definimos la URL a la que hacemos la petición
+    curl_setopt($ch, CURLOPT_URL,$direccion."cliente/ws-cliente-listas.php");     
+    // indicamos el tipo de petición: POST
+    curl_setopt($ch, CURLOPT_POST, TRUE);
+    // definimos cada uno de los parámetros
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);
+    // recibimos la respuesta y la guardamos en una variable
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $remote_server_output = curl_exec ($ch);
+    // cerramos la sesión cURL
+    curl_close ($ch);  
+    return json_decode($remote_server_output);       
+}
+function nameContacto($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT nombre FROM clientes_contactos where codigo=:codigo");
+   $stmt->bindParam(':codigo',$codigo);
+   $stmt->execute();
+   $valor=null;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['nombre'];
+   }
+   return($valor);
+}
+
+function obtenerCiudadDeUnidad($codigo){
+  $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT nombre FROM ciudades where cod_unidad=:codigo limit 1");
+   $stmt->bindParam(':codigo',$codigo);
+   $stmt->execute();
+   $valor=null;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['nombre'];
+   }
+   return($valor); 
+}
 ?>
 
 

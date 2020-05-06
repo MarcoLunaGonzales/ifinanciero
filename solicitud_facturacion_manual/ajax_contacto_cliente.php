@@ -13,10 +13,9 @@ $stmtX->execute();
 $cod_cliente=$_GET['cod_cliente'];
 
 ?> 
-<select class="selectpicker form-control form-control-sm" name="persona_contacto" id="persona_contacto" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" title="Seleccione Contacto" required="true">
-	<option value=""></option>
+<select class="selectpicker form-control form-control-sm" name="persona_contacto" id="persona_contacto" data-style="btn btn-info" data-show-subtext="true" data-live-search="true"  required="true">	
 	<?php 
-	$query="SELECT * FROM clientes_contactos where cod_cliente=$cod_cliente order by nombre";
+	$query="SELECT * FROM clientes_contactos where cod_cliente=$cod_cliente and cod_estadoreferencial=1 order by nombre";
 	$stmt = $dbh->prepare($query);
 	$stmt->execute();
 	while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {

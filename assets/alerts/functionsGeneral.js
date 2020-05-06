@@ -1271,8 +1271,6 @@ function botonBuscarComprobante2(){
   var valor_fi=$("#fechaBusquedaInicio").val();
   var valor_ff=$("#fechaBusquedaFin").val();
   var valor_glosa=$("#glosaBusqueda").val();
-  
-  
   ajax=nuevoAjax();
   ajax.open('GET', 'comprobantes/ajax_busquedaComprobanteUO2.php?cod_uo='+valor_uo+'&tipo='+valor_tipo+'&fechaI='+valor_fi+'&fechaF='+valor_ff+'&glosa='+valor_glosa,true);
   ajax.onreadystatechange=function() {
@@ -10600,14 +10598,11 @@ function actualizarComboBoxAjax_cliente(cod_cliente){
 
 function actualizarRegistroContacto(){
   var cod_cliente=$("#cod_cliente").val();
-  if(cod_cliente==null  || cod_cliente=='' ){
-        Swal.fire("Informativo!", "Seleccione un cliente por favor.", "warning");
-  }else{
-    var parametros={"codigo":"none"};
+  var parametros={"codigo":"none"};
      $.ajax({
         type: "GET",
         dataType: 'html',
-        url: "simulaciones_servicios/ajaxActualizarContactos.php?cod_cliente="+cod_cliente,
+        url: "simulaciones_servicios/ajaxActualizarContactos.php?",
         data: parametros,
         beforeSend: function () {
         $("#texto_ajax_titulo").html("Actualizando Contactos de Clientes desde el Servicio Web..."); 
@@ -10620,10 +10615,7 @@ function actualizarRegistroContacto(){
            Swal.fire("Correcto!", "Los datos se actualizaron de forma correcta.", "success");
            actualizarComboBoxAjax_cliente(cod_cliente);
         }
-    });  
-  }
-
- 
+    }); 
 }
 function actualizarRegistroClientes(){
   // var codigo = $("#cod_solicitud").val();
@@ -10647,10 +10639,6 @@ function actualizarRegistroClientes(){
         }
     });  
 }
-
-
-
-
 
 function botonBuscarActivoFijo(){
   var valor_uo=$("#OficinaBusqueda").val();
@@ -11486,3 +11474,77 @@ function moverModal(mod){
     handle: ".card-header"
   }); 
 }
+
+
+function botonBuscarNormasSolfac(){
+  var valor_glosa_cliente=$("#glosaCliente").val();  
+  var valor_fi=$("#fechaBusquedaInicio").val();
+  var valor_ff=$("#fechaBusquedaFin").val();
+  var valor_normas=$("#normas").val();
+  
+  
+  ajax=nuevoAjax();
+  ajax.open('GET', 'solicitud_facturacion_manual/ajax_busqueda_normas.php?glosa_cliente='+valor_glosa_cliente+'&fechaI='+valor_fi+'&fechaF='+valor_ff+'&normas='+valor_normas,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      var contenedor=$("#contenedor_items_normas");
+      contenedor.html(ajax.responseText);
+      $("#modalBuscador").modal("hide");
+    }
+  }
+  ajax.send(null)
+}
+
+
+function actualizarRegistroNormas(){
+    var parametros={"codigo":"none"};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "solicitud_facturacion_manual/ajax_actualizar_normas.php",
+        data: parametros,
+        beforeSend: function () {
+        $("#texto_ajax_titulo").html("Actualizando Normas desde el Servicio Web..."); 
+          iniciarCargaAjax();
+        },
+        success:  function (resp) {
+           detectarCargaAjax();
+           $("#texto_ajax_titulo").html("Procesando Datos");            
+           // Swal.fire("Correcto!", "Los datos se actualizaron de forma correcta.", "success");
+           alerts.showSwal('success-message','index.php?opcion=listSolicitud_facturacion_normas');
+        }
+    });
+}
+
+function itemsSeleccionados_ventaNormas(){  
+  var sumal=0;  
+  var total=$("#total_items").val();
+  var comprobante_auxiliar=0;
+  for (var i=1;i<=(total-1);i++){              
+    var check=document.getElementById("modal_check"+i).checked;
+    if(check) {//BUSACMOS LOS CHECK ACTIVOS
+      comprobante_auxiliar=comprobante_auxiliar+1;        
+      //sacamos los datos de los items que se activaron
+      var idVentaNormas = document.getElementById("idVentaNormas"+i).value;      
+      // aqui se guardan los items activados
+      document.getElementById("idVentaNormas_a"+i).value=idVentaNormas;
+    }    
+  } 
+  document.getElementById("comprobante_auxiliar").value=comprobante_auxiliar;//cantidad de items activados
+}
+
+
+function ajaxUnidadorganizacionalAreaNormas(combo){
+  var contenedor;
+  var codigo_UO=combo.value;
+  contenedor = document.getElementById('div_contenedor_area');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'solicitud_facturacion_manual/AjaxUnidad_area.php?codigo_UO='+codigo_UO,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);        
+    }
+  }
+  ajax.send(null)  
+}//unidad_area-cargo

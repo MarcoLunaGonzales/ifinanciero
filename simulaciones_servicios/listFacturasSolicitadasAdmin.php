@@ -32,7 +32,7 @@ if(isset($_GET['q'])){
 
   //datos registrado de la simulacion en curso
 
-  $stmt = $dbh->prepare("SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')as fecha_registro,DATE_FORMAT(sf.fecha_solicitudfactura,'%d/%m/%Y')as fecha_solicitudfactura_x FROM solicitudes_facturacion_x sf join estados_solicitudfacturacion es on sf.cod_estadosolicitudfacturacion=es.codigo where sf.cod_estadosolicitudfacturacion!=1 and sf.cod_estadosolicitudfacturacion!=6"); /*and sf.cod_estadosolicitudfacturacion!=5*/
+  $stmt = $dbh->prepare("SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')as fecha_registro_x,DATE_FORMAT(sf.fecha_solicitudfactura,'%d/%m/%Y')as fecha_solicitudfactura_x FROM solicitudes_facturacion sf join estados_solicitudfacturacion es on sf.cod_estadosolicitudfacturacion=es.codigo where sf.cod_estadosolicitudfacturacion!=1 and sf.cod_estadosolicitudfacturacion!=6"); /*and sf.cod_estadosolicitudfacturacion!=5*/
   $stmt->execute();
   $stmt->bindColumn('codigo', $codigo_facturacion);
   $stmt->bindColumn('cod_simulacion_servicio', $cod_simulacion_servicio);
@@ -49,7 +49,9 @@ if(isset($_GET['q'])){
   $stmt->bindColumn('observaciones', $observaciones);
   $stmt->bindColumn('cod_estadosolicitudfacturacion', $codEstado);
   $stmt->bindColumn('estado', $estado);
-  // $stmt->bindColumn('nombre_cliente', $nombre_cliente);
+  $stmt->bindColumn('nro_correlativo', $nro_correlativo);
+  $stmt->bindColumn('persona_contacto', $persona_contacto);
+  $stmt->bindColumn('codigo_alterno', $codigo_alterno);
 $item_1=2709;
   ?>
   <div class="content">
@@ -71,11 +73,13 @@ $item_1=2709;
                             <th class="text-center">#</th>                          
                             <th>Oficina</th>
                             <th>Area</th>
-                            <th>Propuesta</th>
-                            <th>Responsable</th>
-                            <th>F. Registro</th>
-                            <th>F. a Facturar</th>
-                            <th>Importe (BOB)</th>  
+                            <th>nro<br>Sol.</th>
+                            <th>Codigo<br>Servicio</th>   
+                            <th>Fecha<br>Registro</th>
+                            <th>Fecha<br>a Facturar</th>
+                            <th style="color:#cc4545;">#Fact</th>
+                            <th>Importe<br>(BOB)</th>  
+                            <th>Persona<br>Contacto</th>  
                             <th>Razón Social</th>                            
                             <!--ESTADO DE LA SOLICITUD-->
                             <th>Estado</th>
@@ -152,6 +156,7 @@ $item_1=2709;
                             $responsable=namePersonal($cod_personal);//nombre del personal
                             $nombre_area=trim(abrevArea($cod_area),'-');//nombre del area
                             $nombre_uo=nameUnidad($cod_unidadorganizacional);//nombre de la oficina
+                            $nombre_contacto=nameContacto($persona_contacto);//nombre del personal
 
                             //los registros de la factura
                             $dbh1 = new Conexion();
@@ -196,11 +201,13 @@ $item_1=2709;
                             <td align="center"><?=$index;?></td>
                             <td><?=$nombre_uo;?></td>
                             <td><?=$nombre_area;?></td>
-                            <td> - <?=$name_area_simulacion?></td>
-                            <td><?=$responsable;?></td>
+                            <td class="text-right"><?=$nro_correlativo;?></td>
+                            <td><?=$codigo_alterno?></td>                            
                             <td><?=$fecha_registro;?></td>
                             <td><?=$fecha_solicitudfactura;?></td>                            
+                            <td style="color:#cc4545;"><?=$nro_fact_x;?></td>                             
                             <td class="text-right"><?=formatNumberDec($sumaTotalImporte) ;?></td>
+                            <td class="text-left"><?=$nombre_contacto;?></td>
                             <td><?=$razon_social;?></td>
                             <td><button class="btn <?=$btnEstado?> btn-sm btn-link"><?=$estado;?></button></td>
                             <td class="td-actions text-right">

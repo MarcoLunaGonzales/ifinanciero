@@ -196,6 +196,18 @@
 			$cod_sw=$_GET['cod_sw'];
 			require_once('simulaciones_servicios/registerSolicitud_facturacion.php');
 		}
+
+		if ($_GET['opcion']=='listSolicitud_facturacion_normas') {			
+			require_once('solicitud_facturacion_manual/lista_solicitud_facturacion_normas.php');
+		}
+		if ($_GET['opcion']=='registerSolicitud_facturacion_normas') {			
+			require_once('solicitud_facturacion_manual/register_solicitud_facturacion_normas.php');
+		}
+
+		if ($_GET['opcion']=='save_solicitud_facturacion_normas') {
+			require_once('solicitud_facturacion_manual/save_solicitud_facturacion_normas.php');
+		}
+
 		if ($_GET['opcion']=='save_solicitud_facturacion') {
 			require_once('simulaciones_servicios/save_solicitud_facturacion.php');
 		}
@@ -361,6 +373,9 @@
 		}
 		if ($_GET['opcion']=='deleteSolicitudRecursosRestart') {
 			require_once('solicitudes/saveDeleteRestart.php');
+		}
+		if ($_GET['opcion']=='listSolicitudFacturacionNormas') {
+			require_once('solicitud_facturacion_manual/listSolicitudFacturacionNormas.php');
 		}
 
 		//ESTADOS DE CUENTAS

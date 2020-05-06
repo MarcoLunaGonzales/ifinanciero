@@ -3,61 +3,35 @@
 require_once 'conexion.php';
 require_once 'styles.php';
 require_once 'configModule.php';
-
-
-$globalUser=$_SESSION["globalUser"];
+require_once 'functions.php';
+require_once 'functionsGeneral.php';
 //$dbh = new Conexion();
 $dbh = new Conexion();
-$cod_simulacion=0;
-$cod_facturacion=0;
-$cod_sw=0;
-//sacamos datos para la facturacion
 if(isset($_GET['q'])){
   $q=$_GET['q'];
+  $s=$_GET['s'];
+  $u=$_GET['u'];
+  $v=$_GET['v'];
 }
-if ($cod_facturacion > 0){
-    // $stmt = $dbh->prepare("SELECT * FROM solicitudes_facturacion where codigo=$cod_facturacion");
-    // $stmt->execute();
-    // $result = $stmt->fetch();
-    // $cod_uo = $result['cod_unidadorganizacional'];
-    // $cod_area = $result['cod_area'];
-    // $fecha_registro = $result['fecha_registro'];
-    // $fecha_solicitudfactura = $result['fecha_solicitudfactura'];
-    // $cod_tipoobjeto = $result['cod_tipoobjeto'];
-    // $cod_tipopago = $result['cod_tipopago'];
-    // $cod_cliente = $result['cod_cliente'];
-    // $cod_personal = $result['cod_personal'];
-    // $razon_social = $result['razon_social'];
-    // $nit = $result['nit'];
-    // $observaciones = $result['observaciones'];
-    // $persona_contacto= $result['persona_contacto'];
-    // // $anios_servicio = $resultServicio['anios'];
-    // $nombre_simulacion = $resultServicio['nombre'];
-    
-    // $name_cliente=nameCliente($cod_cliente);
-}else {
-    $nombre_simulacion = null;
-    $cod_uo = null; 
-    $cod_area = null; 
-    $cod_cliente =null;
-    $cod_personal= $globalUser;     
-    // $anios_servicio = $resultServicio['anios'];
 
-    $id_tiposervicio = null;
 
-    $fecha_registro =date('Y-m-d');
-    $fecha_solicitudfactura =$fecha_registro;
-    $cod_tipoobjeto=obtenerValorConfiguracion(34);//por defecto
-    $cod_tipopago = null;
-    $name_cliente=null;    
-    $razon_social = $name_cliente;
-    $nit = 0;
-    $observaciones = null;
-    $persona_contacto=null;
-}
-$name_uo=null;
+$cod_simulacion=0;
+$cod_facturacion=null;
+$cod_uo=null;
+$cod_area=null;
+$cod_cliente=null;
+$globalUser=$_SESSION["globalUser"];
+$cod_personal=$globalUser;
+$fecha_registro =date('Y-m-d');
+$fecha_solicitudfactura =$fecha_registro;
+$cod_tipoobjeto=obtenerValorConfiguracion(34);//por defecto
+$cod_tipopago = null;
+$name_cliente=null;
+$razon_social = $name_cliente;
+$nit=null;
+$observaciones = null;
+$persona_contacto=null;
 $name_area=null;
-$Codigo_alterno=null;
 $contadorRegistros=0;
 ?>
 <script>
@@ -68,34 +42,34 @@ $contadorRegistros=0;
     <div class="container-fluid">
         <div style="overflow-y:scroll;">
             <div class="col-md-12">
-              <form id="form1" class="form-horizontal" action="<?=$urlSaveSolicitudfactura;?>" method="post" onsubmit="return valida(this)">
+              <form id="form1" class="form-horizontal" action="<?=$urlSaveSolicitudfactura_normas;?>" method="post" onsubmit="return valida(this)">
                 <?php 
-               if(isset($_GET['q'])){
-                 ?><input type="hidden" name="id_ibnored" id="id_ibnored" value="<?=$q;?>"/><?php 
-              }
-                ?>
-                <input type="hidden" name="Codigo_alterno" id="Codigo_alterno" value="<?=$Codigo_alterno;?>"/>
+      if(isset($_GET['q'])){
+        ?><input type="hidden" name="usuario_ibnored" id="usuario_ibnored" value="<?=$q;?>">
+        <input type="hidden" name="usuario_ibnored_s" id="usuario_ibnored_s" value="<?=$s;?>">
+        <input type="hidden" name="usuario_ibnored_u" id="usuario_ibnored_u" value="<?=$u;?>">
+        <input type="hidden" name="usuario_ibnored_v" id="usuario_ibnored_v" value="<?=$v;?>"><?php
+      }
+      ?> 
+                
+                
                 <input type="hidden" name="cod_simulacion" id="cod_simulacion" value="<?=$cod_simulacion;?>"/>
                 <input type="hidden" name="cod_facturacion" id="cod_facturacion" value="<?=$cod_facturacion;?>"/>
-                <input type="hidden" name="cantidad_filas" id="cantidad_filas" value="<?=$contadorRegistros;?>">
-                <input type="hidden" name="IdTipo" id="IdTipo" value="<?=$id_tiposervicio;?>"><!-- //tipo de servicio -->
+                <input type="hidden" name="cantidad_filas" id="cantidad_filas" value="<?=$contadorRegistros;?>">                
 
                 <div class="card">
                   <div class="card-header <?=$colorCard;?> card-header-text">
                     <div class="card-text">
-                      <h4 class="card-title"><?php if ($cod_simulacion == 0) echo "Registrar "; else echo "Editar ";?>Solicitud de Facturación Manual</h4>                      
+                      <h4 class="card-title"><?php if ($cod_simulacion == 0) echo "Registrar "; else echo "Editar ";?>Solicitud de Facturación</h4>                      
                     </div>
-                    <!-- <h4 class="card-title" align="center"><b>Propuesta: Manual</b></h4> -->
+                    <h4 class="card-title" align="center"><b>Venta de Normas</b></h4>
                   </div>
                   <div class="card-body ">
                         <div class="row">
                           <label class="col-sm-2 col-form-label">Oficina</label>
                           <div class="col-sm-4">
-                            <div class="form-group">
-                                <!-- <input class="form-control" type="hidden" name="cod_uo" id="cod_uo" required="true" value="<?=$cod_uo;?>" required="true" readonly/>
-                                 <input class="form-control" type="text" required="true" value="<?=$name_uo;?>" required="true" readonly style="background-color:#E3CEF6;text-align: left"/> -->
-
-                                 <select name="cod_uo" id="cod_uo" onChange="ajaxAFunidadorganizacionalArea(this);" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true" required="true">                                        
+                            <div class="form-group">                               
+                                 <select name="cod_uo" id="cod_uo" onChange="ajaxUnidadorganizacionalAreaNormas(this);" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true" required="true">                                        
                                     <option value=""></option>
                                     <?php 
                                     $queryUO1 = "SELECT codigo,nombre,abreviatura from unidades_organizacionales where cod_estado=1 order by nombre";
@@ -109,13 +83,8 @@ $contadorRegistros=0;
                           </div>
                           <label class="col-sm-2 col-form-label">Area</label>
                             <div class="col-sm-4">
-                                <div class="form-group" >
-                                    <!-- <div id="div_contenedor_area_tcc"> -->
-                                    <div id="div_contenedor_area">
-                                        <!-- <input class="form-control" type="hidden" name="cod_area" id="cod_area" required="true" value="<?=$cod_area;?>" required="true" readonly/>
-
-                                        <input class="form-control" type="text" required="true" value="<?=$name_area;?>" required="true" readonly style="background-color:#E3CEF6;text-align: left"/> -->
-                                       
+                                <div class="form-group" >                                
+                                    <div id="div_contenedor_area">                                        
                                     </div>                    
                                 </div>
                             </div>
@@ -134,7 +103,6 @@ $contadorRegistros=0;
                                     <input class="form-control" type="date" name="fecha_solicitudfactura" id="fecha_solicitudfactura" required="true" value="<?=$fecha_solicitudfactura;?>" required="true"/>
                                 </div>
                             </div>
-
                         </div>
                         <!-- fin fechas -->
                         <div class="row" >
@@ -176,9 +144,7 @@ $contadorRegistros=0;
                                     <input type="hidden" name="cod_personal" id="cod_personal" value="<?=$cod_personal?>" readonly="true" class="form-control">
                                     <input type="text" value="<?=$responsable?>" readonly="true" class="form-control" style="background-color:#E3CEF6;text-align: left">
                                 </div>
-                            </div>
-
-                            
+                            </div>                           
                         </div>
                         <!-- fin tipos pago y objeto                 -->
                         
@@ -186,7 +152,7 @@ $contadorRegistros=0;
                             <label class="col-sm-2 col-form-label">Cliente</label>
                             <div class="col-sm-4">
                                 <div class="form-group" >                                                            
-                                    <select name="cod_cliente" id="cod_cliente" class="selectpicker form-control form-control-sm" data-style="btn btn-info"  required="true" onChange="ajaxClienteContacto(this);" data-live-search="true">
+                                    <select name="cod_cliente" id="cod_cliente" class="selectpicker form-control form-control-sm" data-style="btn btn-info"  required="true" onChange="ajaxClienteContacto(this);" data-live-search="true" >
                                         <option value=""></option>
                                         <?php 
                                         $queryTipoObjeto = "SELECT * from clientes where cod_estadoreferencial=1 order by nombre";
@@ -227,8 +193,7 @@ $contadorRegistros=0;
                                        <i class="material-icons" title="Actualizar Contacto">update</i>
                                     </a> 
                                 </div>
-                            </div>
-                            
+                            </div>                    
                         </div>
                         <!-- fin cliente  -->
 
@@ -257,7 +222,6 @@ $contadorRegistros=0;
                                 </div>
                             </div>
                         </div>
-                        <!-- fin observaciones -->
 
                         <div class="card">
                             <div class="card-header <?=$colorCard;?> card-header-text">
@@ -270,38 +234,127 @@ $contadorRegistros=0;
                             </button> -->
 
                             <div class="card-body ">
-                               
-                                <fieldset id="fiel" style="width:100%;border:0;">
-                                    <button title="Agregar Servicios" type="button" id="add_boton" name="add" class="btn btn-warning btn-round btn-fab" onClick="AgregarSeviciosFacturacion_soli_manual(this)">
-                                        <i class="material-icons">add</i>
-                                    </button><span style="color:#084B8A;"><b> SERVICIOS ADICIONALES</b></span>
-                                    <div class="row" style="background-color:#1a2748">
-                                        <th><label class="col-sm-4 col-form-label" style="color:#ff9c14">Servicios</label>
-                                        <label class="col-sm-1 col-form-label" style="color:#ff9c14">Cant</label>
-                                        <label class="col-sm-1 col-form-label" style="color:#ff9c14">Precio(BOB)</label>
-                                        <label class="col-sm-1 col-form-label" style="color:#ff9c14">Desc(%)</label>
-                                        <label class="col-sm-1 col-form-label" style="color:#ff9c14">Desc(BOB)</label>
-                                        <label class="col-sm-1 col-form-label" style="color:#ff9c14">Importe(BOB)</label>
-                                        <label class="col-sm-2 col-form-label" style="color:#ff9c14">Glosa</label>
-                                        <label class="col-sm-1 col-form-label" style="color:#ff9c14">Eliminar</label>
+                                <table class="table table-bordered table-condensed table-sm">
+                                     <thead>
+                                          <tr class="fondo-boton">
+                                            <th>#</th>                                            
+                                            <th>Item</th>
+                                            <th>Cant.</th>
+                                            <th>Precio(BOB)</th>
+                                            <th>Desc(%)</th>
+                                            <th>Desc(BOB)</th>
+                                            <th width="10%">Importe(BOB)</th>
+                                            <th width="40%">Glosa</th>
+                                            <th class="small">H/D</th>  
+                                          </tr>
+                                      </thead>
+                                      <tbody>                                
+                                        <?php 
+                                        $iii=1;
+                                        //recibimos las normas seleccionadas a facturar
+                                        $total_items = $_POST["total_items"];
+                                        $ids_normas= array();
+                                        for ($i=1;$i<=$total_items-1;$i++){
+                                            if($_POST["idVentaNormas_a".$i]!=''){
+                                                $idVentaNormas=$_POST["idVentaNormas_a".$i];
+                                                $ids_normas[$i-1]=$idVentaNormas;
+                                            }
+                                        }
+                                        $stringNormas=implode(",", $ids_normas);
+                                        $stringNormas=trim($stringNormas,',');
 
+                                        $queryPr="SELECT * from ibnorca.ventanormas where IdVentaNormas in ($stringNormas)";
+                                       // echo $queryPr;
+                                        $stmt = $dbh->prepare($queryPr);
+                                        $stmt->execute();
+                                        $modal_totalmontopre=0;$modal_totalmontopretotal=0;
+                                        while ($rowPre = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                            $codigoPre=$rowPre['IdVentaNormas'];
+                                            $codCS=533;//por defecto
+                                            $tipoPre=descripcionClaServicio($codCS);
+                                            $cantidadPre=$rowPre['Cantidad'];                                            
+                                            $montoPre=$rowPre['Precio'];
+                                            $descuento_bob_cliente=0; //descuento maximo
+                                            $banderaHab=1;                                            
+                                            $cod_anio=1;                                        
+                                            if($banderaHab!=0){
+                                                $descuento_porX=0;
+                                                $descuento_bobX=0;                                                
+                                                $idNorma=$rowPre['idNorma'];   
+                                                $descripcion_alternaX=nameNorma($idNorma);                                                
+                                                $montoPre=number_format($montoPre,2,".","");
+                                                ?>
+                                                <!-- guardamos las varialbles en un input -->
+                                                <input type="hidden" id="cod_serv_tiposerv<?=$iii?>" name="cod_serv_tiposerv<?=$iii?>" value="<?=$codigoPre?>">
+                                                <input type="hidden" id="servicio<?=$iii?>" name="servicio<?=$iii?>" value="<?=$codCS?>">
+                                                 <input type="hidden" id="nombre_servicio<?=$iii?>" name="nombre_servicio<?=$iii?>" value="<?=$tipoPre?>">
+                                                <input type="hidden" id="cantidad<?=$iii?>" name="cantidad<?=$iii?>" value="<?=$cantidadPre?>">
+                                                <input type="hidden" id="importe<?=$iii?>" name="importe<?=$iii?>" value="<?=$montoPre?>">
 
-                                    </div>
-                                    
+                                                <!-- aqui se captura los servicios activados -->
+                                                <input type="hidden" id="cod_serv_tiposerv_a<?=$iii?>" name="cod_serv_tiposerv_a<?=$iii?>">
+                                                <input type="hidden" id="servicio_a<?=$iii?>" name="servicio_a<?=$iii?>">
+                                                <input type="hidden" id="cantidad_a<?=$iii?>" name="cantidad_a<?=$iii?>">
+                                                <input type="hidden" id="importe_a<?=$iii?>" name="importe_a<?=$iii?>">
+                                                <tr>
+                                                  <td><?=$iii?></td>                                                  
+                                                  <td class="text-left"><?=$tipoPre?></td>
+                                                  <td class="text-right"><?=$cantidadPre?></td>
+                                                  <td class="text-right"><input type="number" step="0.01" id="monto_precio<?=$iii?>" name="monto_precio<?=$iii?>" class="form-control text-primary text-right"  value="<?=$montoPre?>" step="0.01" onkeyup="activarInputMontoFilaServicio2()"></td>
+                                                  <!--  descuentos -->
+                                                  <td class="text-right"><input type="number" step="0.01" class="form-control" name="descuento_por<?=$iii?>" id="descuento_por<?=$iii?>" value="<?=$descuento_porX?>" min="0" max="<?=$descuento_cliente?>" onkeyup="descuento_convertir_a_bolivianos(<?=$iii?>)"></td>                                             
+                                                  <td class="text-right"><input type="number" class="form-control" name="descuento_bob<?=$iii?>" id="descuento_bob<?=$iii?>" value="<?=$descuento_bobX?>" min="0" max="<?=$descuento_bob_cliente?>" onkeyup="descuento_convertir_a_porcentaje(<?=$iii?>)"></td>                                        
+                                                  <!-- total -->
+                                                  <td class="text-right"><input type="hidden" name="modal_importe<?=$iii?>" id="modal_importe<?=$iii?>"><input type="text" class="form-control" name="modal_importe_dos<?=$iii?>" id="modal_importe_dos<?=$iii?>" style ="background-color: #ffffff;" readonly></td>
+                                                                                              
+                                                  <td>
+                                                    <textarea name="descripcion_alterna<?=$iii?>" id="descripcion_alterna<?=$iii?>" class="form-control" onkeyup="javascript:this.value=this.value.toUpperCase();"><?=$descripcion_alternaX?></textarea>
+                                                     <!-- <input type="text" > -->
+                                                  </td>
+                                                  <!-- checkbox -->
+                                                  <td>                                                    
+                                                        <div class="togglebutton">
+                                                           <label>
+                                                             <input type="checkbox"  id="modal_check<?=$iii?>" onchange="activarInputMontoFilaServicio2()" checked>
+                                                             <span class="toggle"></span>
+                                                           </label>
+                                                       </div>                                                    
+                                                  </td><!-- fin checkbox -->
+                                               </tr>
 
-                                    <div id="div<?=$index;?>">  
-                                        <div class="h-divider">
+                                            <?php   $iii++;  }
+                                                                                                                    
+                                            // $montoPreTotal=number_format($montoPreTotal,2,".","");
+                                            ?>
+                                            <script>
+                                                window.onload = activarInputMontoFilaServicio2;
+                                            </script>
+
+                                            <?php
                                         
+                                        } ?>                        
+                                      </tbody>
+                                </table>
+
+                                <input type="hidden" id="modal_numeroservicio" name="modal_numeroservicio" value="<?=$iii?>">                    
+                                <input type="hidden" id="modal_totalmontos" name="modal_totalmontos">
+                                <!-- <script>activarInputMontoFilaServicio2();</script>   -->
+                                <input type="hidden" id="comprobante_auxiliar" name="comprobante_auxiliar">
+                                <div class="row">
+                                    <label class="col-sm-5 col-form-label" style="color:#000000">Monto Total</label>
+                                    <div class="col-sm-4">
+                                        <div class="form-group">                                        
+                                            <input style="background:#ffffff" class="form-control" type="text" value="0" name="modal_totalmontoserv" id="modal_totalmontoserv" step="0.01" readonly="true" />                                            
                                         </div>
                                     </div>
-                                    
-
-                                </fieldset>
+                                        
+                                </div>                               
                                 <div class="row">
-                                    <label class="col-sm-5 col-form-label" style="color:#000000">Monto Total <!-- + Servicios Adicionales --></label>
+                                    <!-- <label class="col-sm-5 col-form-label" style="color:#000000">Monto Total + Servicios Adicionales</label> -->
+
                                     <div class="col-sm-4">
                                         <div class="form-group">                                            
-                                            <input style="background:#ffffff" class="form-control"  name="monto_total" id="monto_total"  readonly="readonly" value="0" step="0.01" />
+                                            <input style="background:#ffffff" class="form-control" type="hidden" name="monto_total" id="monto_total"  readonly="readonly" value="0" step="0.01" />
                                         </div>
                                     </div>
                                 </div>
@@ -312,18 +365,11 @@ $contadorRegistros=0;
                     <button type="submit" class="<?=$buttonNormal;?>">Guardar</button><?php
                     if(isset($_GET['q'])){
                     if($cod_sw==1){?>
-                        <a href='<?=$urlSolicitudfactura;?>&cod=<?=$cod_simulacion;?>&q=<?=$q?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
+                        <a href='<?=$urlSolicitudfactura;?>&cod=<?=$cod_simulacion;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
                     <?php }else{?>
-                        <a href='<?=$urlListSimulacionesServ?>&q=<?=$q?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
+                        <a href='<?=$urlListSimulacionesServ?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
                     <?php }
-                    }else{
-                      if($cod_sw==1){?>
-                        <a href='<?=$urlSolicitudfactura;?>&cod=<?=$cod_simulacion;?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
-                    <?php }else{?>
-                       <!--  <a href='<?=$urlListSimulacionesServ?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a> -->
-                    <?php }   
                     }
-
                     ?>
                     
                   </div>
@@ -410,6 +456,16 @@ $contadorRegistros=0;
     </div>
 </div>
 <!--    end small modal -->
+
+
+<!-- carga de proveedores -->
+<!-- <div class="cargar">
+  <div class="div-loading text-center">
+     <h4 class="text-warning font-weight-bold">Procesando Datos</h4>
+     <p class="text-white">Aguard&aacute; un momento por favor</p>  
+  </div>
+</div> -->
+
 <div class="cargar-ajax d-none">
   <div class="div-loading text-center">
      <h4 class="text-warning font-weight-bold" id="texto_ajax_titulo">Procesando Datos</h4>
@@ -438,21 +494,24 @@ $contadorRegistros=0;
   </div>
 
 
-<script type="text/javascript">
-function valida(f) {
-  var ok = true;
-  var msg = "El monto Total no debe ser '0' o 'negativo', Habilite los Items que desee facturar...\n";  
-  if(f.elements["comprobante_auxiliar"].value == 0 || f.elements["comprobante_auxiliar"].value < 0 || f.elements["comprobante_auxiliar"].value == '')
-  {    
-    ok = false;
-  }
-  if(f.elements["monto_total"].value>0)
-  {    
-    ok = true;
-  }
 
-  if(ok == false)    
-    Swal.fire("Informativo!",msg, "warning");
-  return ok;
-}
+<script type="text/javascript">
+    function valida(f) {
+      var ok = true;
+      var msg = "El monto Total no debe ser '0' o 'negativo', Habilite los Items que desee facturar...\n";  
+      if(f.elements["comprobante_auxiliar"].value == 0 || f.elements["comprobante_auxiliar"].value < 0 || f.elements["comprobante_auxiliar"].value == '')
+      {    
+        ok = false;
+      }
+      if(f.elements["monto_total"].value>0)
+      {    
+        ok = true;
+      }
+
+      if(ok == false)    
+        Swal.fire("Informativo!",msg, "warning");
+      return ok;
+    }
 </script>
+
+<script>$('.selectpicker').selectpicker("refresh");</script>
