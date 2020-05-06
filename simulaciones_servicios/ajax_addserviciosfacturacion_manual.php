@@ -12,7 +12,7 @@ $stmtX->execute();
 
 
 $globalAdmin=$_SESSION["globalAdmin"];
-$codigoAdministrativos=obtenerValorConfiguracion(43);
+$codigoAdministrativos=obtenerValorConfiguracion(46);
 $idFila=$_GET['idFila'];
 
 

@@ -5420,12 +5420,12 @@ function obtenerCodigoServicioPorIdServicio($idServicio){
 
 function descripcionClaServicio($codigo){
    $dbh = new Conexion();
-   $stmt = $dbh->prepare("SELECT descripcion FROM cla_servicios where idclaservicio=:codigo");
+   $stmt = $dbh->prepare("SELECT Descripcion FROM cla_servicios where IdClaServicio=:codigo");
    $stmt->bindParam(':codigo',$codigo);
    $stmt->execute();
    $descripcionX=0;
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-      $descripcionX=$row['descripcion'];
+      $descripcionX=$row['Descripcion'];
    }
    return($descripcionX);
 }
