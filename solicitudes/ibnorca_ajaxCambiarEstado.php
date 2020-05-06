@@ -55,6 +55,7 @@ $stmtSolicitud->bindColumn('cod_simulacion', $codSimulacion);
 $stmtSolicitud->bindColumn('cod_proveedor', $codProveedor);
 $stmtSolicitud->bindColumn('cod_simulacionservicio', $codSimulacionServicio);
 $stmtSolicitud->bindColumn('numero', $numeroSol);
+$stmtSolicitud->bindColumn('idServicio', $idServicioX);
 
 while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
       $unidadX=$unidadX;
@@ -87,8 +88,13 @@ while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
     $fechaHoraActual=date("Y-m-d H:i:s");
     //glosa detalle
     //"".." F/".$numeroFac." ".$proveedorX." ".$detalleX
+    $IdTipo=obtenerTipoServicioPorIdServicio($idServicioX);
+    $codObjeto=obtenerCodigoObjetoServicioPorIdSimulacion($codSimulacionServicio);
 
-    $glosa="SOL:".$numeroSol." ".$nombreCliente." F/ ".$facturaCabecera." ".obtenerProveedorSolicitudRecursos($codigo);
+    $datosServicio=obtenerServiciosTipoObjetoNombre($codObjeto)." - ".obtenerServiciosClaServicioTipoNombre($IdTipo);
+
+
+    $glosa="SOL:".$numeroSol." ".$nombreCliente." F/".$facturaCabecera." - ".obtenerProveedorSolicitudRecursos($codigo)." ".$datosServicio;
     $userSolicitud=obtenerPersonalSolicitanteRecursos($codigo);
     $unidadSol=$cod_unidadX;
     $areaSol=$cod_areaX;
@@ -145,7 +151,7 @@ while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
         /*if($facturaNueva==){
           $detalleFac="F/";
         }*/
-        $glosaDetalle=$glosa." F/".obtenerNumeroFacturaSolicitudRecursoDetalle($rowNuevo['codigo'])." ".nameProveedor($rowNuevo['cod_proveedor'])." ".$rowNuevo['glosa'];
+        $glosaDetalle=$glosa." F/".obtenerNumeroFacturaSolicitudRecursoDetalle($rowNuevo['codigo'])." - ".nameProveedor($rowNuevo['cod_proveedor'])." ".str_replace("-", "",$rowNuevo['glosa'])." - ".$datosServicio;
         $codSolicitudDetalle=$rowNuevo['codigo'];
         if($rowNuevo['cod_confretencion']==0){
           //detalle comprobante SIN RETENCION //////////////////////////////////////////////////////////////7
@@ -287,7 +293,7 @@ while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
 
             $debeProv=0;
             $haberProv=$sumaDevengado;
-            $glosaDetalleProv=$glosa." F/".obtenerNumeroFacturaSolicitudRecursoDetalle($rowNuevo['codigo'])." ".nameProveedor($rowNuevo['cod_proveedor'])." ".$rowNuevo['glosa'];
+            $glosaDetalleProv=$glosa." F/".obtenerNumeroFacturaSolicitudRecursoDetalle($rowNuevo['codigo'])." - ".nameProveedor($rowNuevo['cod_proveedor'])." ".str_replace("-", "",$rowNuevo['glosa'])." - ".$datosServicio;
         
             $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
             $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) 

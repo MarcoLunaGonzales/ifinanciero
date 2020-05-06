@@ -89,7 +89,7 @@ $html.=  '<header class="header">'.
             </tr>
              <tr>
               <td class="td-color-celeste"><b>Cliente:</b></td>
-              <td width="10%" colspan="2" align="center">'.$nombre_cliente.'</td>              
+              <td width="10%" colspan="2" align="left">'.$nombre_cliente.'</td>              
               <td width="3%" colspan="2" class="td-color-celeste"><b>Tipo Cambio:</b></td>
               <td width="4%" align="center" >'.$usd.'</td>              
             </tr>

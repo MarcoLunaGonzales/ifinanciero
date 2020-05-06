@@ -21,8 +21,10 @@ $cod_sw=$cod_sw;
 $sql="SELECT sc.nombre,sc.anios,sc.cod_responsable,sc.cod_cliente,ps.cod_area,ps.cod_unidadorganizacional,sc.id_tiposervicio
 from simulaciones_servicios sc,plantillas_servicios ps
 where sc.cod_plantillaservicio=ps.codigo and sc.cod_estadoreferencial=1 and sc.codigo=$cod_simulacion order by sc.codigo";
+// echo $sql;
 $stmtServicio = $dbh->prepare($sql);
 $stmtServicio->execute();
+$Codigo_alterno=obtenerCodigoServicioPorPropuestaTCPTCS($cod_simulacion);
 $resultServicio = $stmtServicio->fetch();
 if(isset($_GET['q'])){
   $q=$_GET['q'];
@@ -63,12 +65,12 @@ if ($cod_facturacion > 0){
     $razon_social = $name_cliente;
 
     $nit=obtenerNitCliente($cod_cliente);    
-    $observaciones = null;
+    $observaciones = $Codigo_alterno." - ".$name_cliente;
     $persona_contacto=null;
 }
 $name_uo=nameUnidad($cod_uo);
 $name_area=trim(abrevArea($cod_area),'-');
-$Codigo_alterno=obtenerCodigoServicioPorPropuestaTCPTCS($cod_simulacion);
+
 $contadorRegistros=0;
 
 
@@ -183,7 +185,7 @@ $descuento_cliente=obtenerDescuentoCliente($cod_cliente);
                                 </div>
                                             -->
                                 <div id="div_contenedor_contactos">
-                                    <select class="selectpicker form-control form-control-sm" name="persona_contacto" id="persona_contacto" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" title="Seleccione Contacto" required="true">
+                                    <select class="selectpicker form-control form-control-sm" name="persona_contacto" id="persona_contacto" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" title="Seleccione Contacto">
                                         <option value=""></option>
                                         <?php 
                                         $query="SELECT * FROM clientes_contactos where cod_cliente=$cod_cliente order by nombre";
@@ -462,13 +464,15 @@ $descuento_cliente=obtenerDescuentoCliente($cod_cliente);
                   </div>
                   <div class="card-footer ml-auto mr-auto">
                     <button type="submit" class="<?=$buttonNormal;?>">Guardar</button><?php
-                    if(isset($_GET['q'])){
-                    if($cod_sw==1){?>
-                        <a href='<?=$urlSolicitudfactura;?>&cod=<?=$cod_simulacion;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
-                    <?php }else{?>
-                        <a href='<?=$urlListSimulacionesServ?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
-                    <?php }
-                    }else{
+                    if(isset($_GET['q'])){//desde intranet
+                        if($cod_sw==1){//vuelve al lsitado de tcp
+                            ?>
+                            <a href='<?=$urlSolicitudfactura;?>&cod=<?=$cod_simulacion;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
+                        <?php }else{//vuelve al listado de solicitud general
+                            ?>
+                            <a href='<?=$urlListSol?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
+                        <?php }
+                    }else{//desde ifinanciero
                       if($cod_sw==1){?>
                         <a href='<?=$urlSolicitudfactura;?>&cod=<?=$cod_simulacion;?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
                     <?php }else{?>

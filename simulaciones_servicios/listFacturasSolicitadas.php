@@ -210,7 +210,7 @@ if(isset($_GET['q'])){
 
                             <td class="td-actions text-right">
                               <?php
-                                if($globalAdmin==1){ 
+                                // if($globalAdmin==1){ //
                                   if($codigo_fact_x>0){//print facturas
                                     ?>
                                     <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=2' target="_blank"><i class="material-icons" title="Imprimir Factura">print</i></a>
@@ -356,7 +356,7 @@ if(isset($_GET['q'])){
                                   <!--<a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir Solicitud">print</i></a>-->
                                 <?php  
                                 
-                                }
+                                // }
                               ?>
                             </td>
                           </tr>

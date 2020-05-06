@@ -178,7 +178,7 @@ if($cantidad_items>0){
                             <td><button class="btn <?=$btnEstado?> btn-sm btn-link"><?=$estado;?></button></td>                            
                             <td class="td-actions text-right">
                               <?php
-                                if($globalAdmin==1){
+                                // if($globalAdmin==1){
                                   if($codEstado==4||$codEstado==3||$codEstado==5){
                                     if($codigo_fact_x==0){
                                     ?>                  
@@ -329,7 +329,7 @@ if($cantidad_items>0){
                                 <i class="material-icons"><?=$iconDelete;?></i>
                               </button> -->                            
                                 <?php  
-                                }
+                                // }
                               ?>
                             </td>
                           </tr>
@@ -343,7 +343,7 @@ if($cantidad_items>0){
                 </div>
                 <div class="card-footer fixed-bottom">
                  <?php 
-                if($globalAdmin==1){
+                // if($globalAdmin==1){
                   if(isset($_GET['q'])){
                    ?><a href="<?=$urlRegisterSolicitudfactura;?>&cod_s=<?=$codigo_simulacion?>&cod_f=0&cod_sw=1&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>" target="_self" class="<?=$buttonNormal;?>">Registrar</a>
                     <a href='<?=$urlList;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
@@ -354,7 +354,7 @@ if($cantidad_items>0){
                     <?php 
                   }              
                                    
-                } 
+                // } 
                  ?>
                 </div>      
               </div>
@@ -436,7 +436,3 @@ if($cantidad_items>0){
     
   }
  ?>
-
-
-
-  

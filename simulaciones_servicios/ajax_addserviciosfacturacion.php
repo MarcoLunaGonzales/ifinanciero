@@ -12,7 +12,7 @@ $stmtX->execute();
 
 
 $globalAdmin=$_SESSION["globalAdmin"];
-$codigoAdministrativos=obtenerValorConfiguracion(43);
+$codigoAdministrativos=obtenerValorConfiguracion(46);
 //listado de tipo documento rendicion
 // $statementTipoDocRendicion = $dbh->query("SELECT td.codigo,td.nombre from tipos_documentocajachica td where td.tipo=2 order by 2");
 

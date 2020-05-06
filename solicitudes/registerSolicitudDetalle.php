@@ -86,7 +86,7 @@ $codigo=0;
 
 $unidad=$_SESSION['globalUnidad'];
 //numero correlativo de la solicitud
-$sql="SELECT IFNULL(max(c.codigo)+1,1)as codigo from solicitud_recursos c where c.cod_unidadorganizacional=$unidad";
+$sql="SELECT IFNULL(max(c.numero)+1,1)as codigo from solicitud_recursos c";
 $stmt = $dbh->prepare($sql);
 $stmt->execute();
 $nroCorrelativo=0;
@@ -99,11 +99,11 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 <select class="selectpicker form-control form-control-sm" name="tipo_documento" id="tipo_documento" data-style="<?=$comboColor;?>" onChange="asignarTipoDocumento()">
                     <option disabled selected value="">TIPO DOCUMENTO</option>
                   <?php
-                  $stmt = $dbh->prepare("select c.descripcion,t.* from ibnorca.grupodocumento t join ibnorca.clasificador c on c.idClasificador=t.idClaDocumento where idGruposDocumento=18");
+                  $stmt = $dbh->prepare("SELECT * from ibnorca.vw_plantillaDocumentos where idTipoServicio=2708");
                 $stmt->execute();
                 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                  $codigoX=$row['idGrupoDocumento'];
-                  $nombreX=$row['descripcion'];
+                  $codigoX=$row['idClaDocumento'];
+                  $nombreX=$row['Documento'];
                 ?>
                 <option value="<?=$codigoX;?>"><?=$nombreX;?></option>  
                 <?php
