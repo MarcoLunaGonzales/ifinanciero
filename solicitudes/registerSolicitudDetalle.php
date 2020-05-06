@@ -86,7 +86,7 @@ $codigo=0;
 
 $unidad=$_SESSION['globalUnidad'];
 //numero correlativo de la solicitud
-$sql="SELECT IFNULL(max(c.codigo)+1,1)as codigo from solicitud_recursos c where c.cod_unidadorganizacional=$unidad";
+$sql="SELECT IFNULL(max(c.numero)+1,1)as codigo from solicitud_recursos c";
 $stmt = $dbh->prepare($sql);
 $stmt->execute();
 $nroCorrelativo=0;
