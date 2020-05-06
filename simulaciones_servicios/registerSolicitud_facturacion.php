@@ -24,6 +24,7 @@ where sc.cod_plantillaservicio=ps.codigo and sc.cod_estadoreferencial=1 and sc.c
 // echo $sql;
 $stmtServicio = $dbh->prepare($sql);
 $stmtServicio->execute();
+$Codigo_alterno=obtenerCodigoServicioPorPropuestaTCPTCS($cod_simulacion);
 $resultServicio = $stmtServicio->fetch();
 if(isset($_GET['q'])){
   $q=$_GET['q'];
@@ -64,12 +65,12 @@ if ($cod_facturacion > 0){
     $razon_social = $name_cliente;
 
     $nit=obtenerNitCliente($cod_cliente);    
-    $observaciones = null;
+    $observaciones = $Codigo_alterno." - ".$name_cliente;
     $persona_contacto=null;
 }
 $name_uo=nameUnidad($cod_uo);
 $name_area=trim(abrevArea($cod_area),'-');
-$Codigo_alterno=obtenerCodigoServicioPorPropuestaTCPTCS($cod_simulacion);
+
 $contadorRegistros=0;
 
 

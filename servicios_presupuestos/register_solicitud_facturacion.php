@@ -61,7 +61,7 @@ if ($cod_facturacion > 0){
     $name_cliente=nameCliente($cod_cliente);
     $razon_social = $name_cliente;
     $nit = 0;
-    $observaciones = null;
+    $observaciones = $Codigo_alterno." - ".$name_cliente;
     $persona_contacto= null;
 }
 $name_uo=nameUnidad($cod_uo);
