@@ -171,7 +171,7 @@ try {
           $s=$_POST['usuario_ibnored_s'];
           $u=$_POST['usuario_ibnored_u'];
           $v=$_POST['usuario_ibnored_v'];
-          showAlertSuccessError($flagSuccess,$url_list_Solicitudfactura."&q=".$q."&s=".$s."&u=".$u."&v=".$v);
+          showAlertSuccessError($flagSuccess,$urllistFacturasServicios."&q=".$q."&s=".$s."&u=".$u."&v=".$v);
         }else{
           showAlertSuccessError($flagSuccess,$url_list_Solicitudfactura); 
         }     

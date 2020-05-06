@@ -195,7 +195,7 @@ $contadorRegistros=0;
                                 <div class="form-group" >
                                         <!-- <input type="text" name="persona_contacto" id="persona_contacto" value="<?=$persona_contacto?>" class="form-control" required="true"> -->
                                         <div id="div_contenedor_contactos">
-                                            <select class="selectpicker form-control form-control-sm" name="persona_contacto" id="persona_contacto" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" title="Seleccione Contacto" required="true">
+                                            <select class="selectpicker form-control form-control-sm" name="persona_contacto" id="persona_contacto" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" title="Seleccione Contacto">
                                               <option value=""></option>
                                               <?php 
                                               $query="SELECT * FROM clientes_contactos where cod_cliente=$cod_cliente order by nombre";
@@ -282,6 +282,7 @@ $contadorRegistros=0;
                                         <?php 
                                         $iii=1;                                    
                                         $queryPr="SELECT s.IdDetServicio,s.IdClaServicio,s.Cantidad,s.PrecioUnitario from ibnorca.serviciopresupuesto s where  s.IdServicio=$IdServicio";
+                                        // echo $queryPr;
                                         if ($cod_facturacion > 0){
                                             $queryPr.=" UNION ";
                                             //,(select cs.descripcion from cla_servicios cs where cs.IdClaServicio=d.cod_claservicio) as descripcion
@@ -298,7 +299,7 @@ $contadorRegistros=0;
                                             // $tipoPre=$rowPre['descripcion'];
                                             $cantidadPre=$rowPre['Cantidad'];                                          
                                             $montoPre=$rowPre['PrecioUnitario'];
-
+                                            // echo "---cod  :".$codCS;
                                             $tipoPre=descripcionClaServicio($codCS);
                                             // $montoPreTotal=$montoPre*$cantidadEPre;
                                             $banderaHab=1;
@@ -450,7 +451,7 @@ $contadorRegistros=0;
                     <button type="submit" class="<?=$buttonNormal;?>">Guardar</button>
                     <?php 
                     if(isset($_GET['q'])){
-                        ?><a href='<?=$url_list_Solicitudfactura;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a><?php
+                        ?><a href='<?=$urllistFacturasServicios;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a><?php
                     }else{
                         ?><a href='<?=$url_list_Solicitudfactura;?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a><?php
                     }?>

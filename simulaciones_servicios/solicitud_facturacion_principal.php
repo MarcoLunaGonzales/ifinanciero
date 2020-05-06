@@ -24,7 +24,7 @@ if(isset($_GET['v'])){
     if($idPropuesta!="NONE"){//servicio CON PROPUESTA  ?>
       
       <script type="text/javascript">
-        location = "<?=$urlSolicitudfactura;?>&cod=<?=$v?>&cod_f=0&cod_sw=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>"
+        location = "<?=$urlSolicitudfactura;?>&cod=<?=$idPropuesta?>&cod_f=0&cod_sw=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>"
       </script>
 
     <?php }else{ //servicio SIN PROPUESTA "OI" ?>
