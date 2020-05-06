@@ -49,7 +49,7 @@ while ($rowDetalle = $stmt->fetch(PDO::FETCH_BOUND)) {
     $IdTipo=obtenerTipoServicioPorIdServicio($idServicioX);
     $codObjeto=obtenerCodigoObjetoServicioPorIdSimulacion($codSimulacionServicioX);
 
-    $datosServicio=obtenerServiciosClaServicioTipoNombre($IdTipo)."  ".obtenerServiciosTipoObjetoNombre($codObjeto);
+    $datosServicio=obtenerServiciosTipoObjetoNombre($codObjeto)." - ".obtenerServiciosClaServicioTipoNombre($IdTipo);
 
     $userEnvio=obtenerPersonaCambioEstado(2708,$codigoX,2722);
     if($userEnvio==0){
@@ -211,15 +211,15 @@ $tituloImporte="";
         ?>
         <tr>
             <td class="s3 text-center" width="4%"><?=$index?></td>
-            <td class="s3 text-center"><?=number_format($segPres, 2, '.', '')?></td>
-            <td class="s3 text-center"><?=number_format($porcentSegPres, 2, '.', '')?></td>
+            <td class="s3 text-center"><?=number_format($segPres, 0, '.', ',')?></td>
+            <td class="s3 text-center"><?=number_format($porcentSegPres, 0, '.', '')?></td>
             <td class="s3 text-center" width="8%"><?=$nombreArea?></td>
             <td class="s3 text-center" width="8%"><?=$numeroFac?></td>
-            <td class="s3 text-left" width="40%"><?="".$nombreCliente." F/".$numeroFac." ".$proveedorX." ".$detalleX." ".$datosServicio?></td>
-            <td class="s3 text-right"><?=number_format($montoImporte, 2, '.', '')?></td>
-            <td class="s3 text-right"><?=number_format($montoImporteRes, 2, '.', '')?></td>
+            <td class="s3 text-left" width="40%"><?="".$nombreCliente." F/".$numeroFac." - ".$proveedorX." ".str_replace("-", "", $detalleX)." - ".$datosServicio?></td>
+            <td class="s3 text-right"><?=number_format($montoImporte, 2, '.', ',')?></td>
+            <td class="s3 text-right"><?=number_format($montoImporteRes, 2, '.', ',')?></td>
             <td class="s3 text-right"><?=$tituloImporte?></td>
-            <td class="s3 text-right"><?=number_format($importeSolX, 2, '.', '')?></td>
+            <td class="s3 text-right"><?=number_format($importeSolX, 2, '.', ',')?></td>
         </tr> 
         <?php  
         $index++; 

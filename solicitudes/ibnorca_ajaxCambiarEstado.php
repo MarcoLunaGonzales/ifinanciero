@@ -91,10 +91,10 @@ while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
     $IdTipo=obtenerTipoServicioPorIdServicio($idServicioX);
     $codObjeto=obtenerCodigoObjetoServicioPorIdSimulacion($codSimulacionServicio);
 
-    $datosServicio=obtenerServiciosClaServicioTipoNombre($IdTipo)."  ".obtenerServiciosTipoObjetoNombre($codObjeto);
+    $datosServicio=obtenerServiciosTipoObjetoNombre($codObjeto)." - ".obtenerServiciosClaServicioTipoNombre($IdTipo);
 
 
-    $glosa="SOL:".$numeroSol." ".$nombreCliente." F/ ".$facturaCabecera." ".obtenerProveedorSolicitudRecursos($codigo)." ".$datosServicio;
+    $glosa="SOL:".$numeroSol." ".$nombreCliente." F/".$facturaCabecera." - ".obtenerProveedorSolicitudRecursos($codigo)." ".$datosServicio;
     $userSolicitud=obtenerPersonalSolicitanteRecursos($codigo);
     $unidadSol=$cod_unidadX;
     $areaSol=$cod_areaX;
@@ -151,7 +151,7 @@ while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
         /*if($facturaNueva==){
           $detalleFac="F/";
         }*/
-        $glosaDetalle=$glosa." F/".obtenerNumeroFacturaSolicitudRecursoDetalle($rowNuevo['codigo'])." ".nameProveedor($rowNuevo['cod_proveedor'])." ".$rowNuevo['glosa'];
+        $glosaDetalle=$glosa." F/".obtenerNumeroFacturaSolicitudRecursoDetalle($rowNuevo['codigo'])." - ".nameProveedor($rowNuevo['cod_proveedor'])." ".str_replace("-", "",$rowNuevo['glosa'])." - ".$datosServicio;
         $codSolicitudDetalle=$rowNuevo['codigo'];
         if($rowNuevo['cod_confretencion']==0){
           //detalle comprobante SIN RETENCION //////////////////////////////////////////////////////////////7
@@ -293,7 +293,7 @@ while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
 
             $debeProv=0;
             $haberProv=$sumaDevengado;
-            $glosaDetalleProv=$glosa." F/".obtenerNumeroFacturaSolicitudRecursoDetalle($rowNuevo['codigo'])." ".nameProveedor($rowNuevo['cod_proveedor'])." ".$rowNuevo['glosa'];
+            $glosaDetalleProv=$glosa." F/".obtenerNumeroFacturaSolicitudRecursoDetalle($rowNuevo['codigo'])." - ".nameProveedor($rowNuevo['cod_proveedor'])." ".str_replace("-", "",$rowNuevo['glosa'])." - ".$datosServicio;
         
             $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
             $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) 
