@@ -45,6 +45,12 @@ while ($rowDetalle = $stmt->fetch(PDO::FETCH_BOUND)) {
 
     $nombreCliente=obtenerNombreClienteSimulacion($codSimulacionServicioX);
 
+    //
+    $IdTipo=obtenerTipoServicioPorIdServicio($idServicioX);
+    $codObjeto=obtenerCodigoObjetoServicioPorIdSimulacion($codSimulacionServicioX);
+
+    $datosServicio=obtenerServiciosClaServicioTipoNombre($IdTipo)."  ".obtenerServiciosTipoObjetoNombre($codObjeto);
+
     $userEnvio=obtenerPersonaCambioEstado(2708,$codigoX,2722);
     if($userEnvio==0){
        $nombreEnviado="Sin registro";    
@@ -209,7 +215,7 @@ $tituloImporte="";
             <td class="s3 text-center"><?=number_format($porcentSegPres, 2, '.', '')?></td>
             <td class="s3 text-center" width="8%"><?=$nombreArea?></td>
             <td class="s3 text-center" width="8%"><?=$numeroFac?></td>
-            <td class="s3 text-left" width="40%"><?="".$nombreCliente." F/".$numeroFac." ".$proveedorX." ".$detalleX?></td>
+            <td class="s3 text-left" width="40%"><?="".$nombreCliente." F/".$numeroFac." ".$proveedorX." ".$detalleX." ".$datosServicio?></td>
             <td class="s3 text-right"><?=number_format($montoImporte, 2, '.', '')?></td>
             <td class="s3 text-right"><?=number_format($montoImporteRes, 2, '.', '')?></td>
             <td class="s3 text-right"><?=$tituloImporte?></td>
