@@ -47,5 +47,6 @@ $urlListSol="index.php?opcion=listFacturasServicios";
 $urlListSolSim="index.php?opcion=solicitud_facturacion";
 $urlList2Sol="index.php?opcion=listFacturasServiciosAdmin";
 $urlListSolicitudFacturas="index.php?opcion=listFacturasServicios";
+$urlRegisterSolicitudfactura_sp="?opcion=registerSolicitud_facturacion_sp";
 
 ?>
