@@ -352,6 +352,7 @@ function configuracionEstadosCuenta(fila,codigoCuenta,codigoCuentaAux){
       $("#estados_cuentas"+fila).removeClass("d-none"); 
       $("#tipo_estadocuentas"+fila).val(estado_cuentas[i].tipo);
       $("#tipo_proveedorcliente"+fila).val(estado_cuentas[i].tipo_estado_cuenta);
+      $("#tipo_estadocuentas_casoespecial"+fila).val(estado_cuentas[i].cod_cuentaaux);
 
       contador++;   
       break;  
@@ -360,14 +361,6 @@ function configuracionEstadosCuenta(fila,codigoCuenta,codigoCuentaAux){
       $("#estados_cuentas"+fila).addClass("d-none");  
     }
   };
-  //SI EL ESTADO DE CUENTA NO ESTA EN LA TABLA LE PONEMOS UN CAMBIO DE COLOR
-  if(contador==0){
-     $("#estados_cuentas"+fila).removeClass("d-none"); 
-     $("#estados_cuentas"+fila).addClass("d-none");
-     /*$("#estados_cuentas"+fila).removeClass("d-none"); 
-     $("#estados_cuentas"+fila).removeClass("btn-danger"); 
-     $("#estados_cuentas"+fila).addClass("btn-success");*/
-  }  
 }
 function facturacomprobante(fila){
   var cod_confi_iva=document.getElementById('cod_cuenta_configuracion_iva').value;  
@@ -471,6 +464,7 @@ function minusCuentaContable(idF){
 
        $("#tipo_estadocuentas"+nuevoId).attr("id","tipo_estadocuentas"+i);
        $("#tipo_proveedorcliente"+nuevoId).attr("id","tipo_proveedorcliente"+i);
+       $("#tipo_estadocuentas_casoespecial"+nuevoId).attr("id","tipo_estadocuentas_casoespecial"+i);
        $("#proveedorcliente"+nuevoId).attr("id","proveedorcliente"+i);
        if($("#codigo_detalle"+i).length){
          $("#codigo_detalle"+nuevoId).attr("id","codigo_detalle"+i);
@@ -1449,22 +1443,57 @@ input.addEventListener('change', function (e) {
 }, false)*/
 var numArchivos=0;
 function archivosPreview(send) {
+  var itemDocumentos=[];
     var inp=document.getElementById("archivos");
     if(send!=1){
-      $("#lista_archivos").html("<p class='text-success text-center'>Lista de Archivos</p>");
+      var table = $('<table>').addClass('table');
+      table.addClass('table-condensed');
+      table.addClass('table-bordered');
+       var titulos = $('<tr>').addClass('bg-info text-white');
+       titulos.append($('<td>').addClass('text-left').text('#'));
+       titulos.append($('<td>').addClass('').text('DOCUMENTO'));
+       titulos.append($('<td>').addClass('').text('TIPO DE ARCHIVO'));
+       titulos.append($('<td>').addClass('').text('TIPO DOCUMENTO'));    
+       table.append(titulos);
       for (var i = 0; i < inp.files.length; ++i) {
         numArchivos++;
         var name = inp.files.item(i).name;
-        $("#lista_archivos").append("<div class='text-left'><label>"+name+"</label></div>");
+        var row = $('<tr>').addClass('');
+       row.append($('<td>').addClass('text-left').text(i+1));
+       row.append($('<td>').addClass('font-weight-bold').text(name));
+       row.append($('<td>').addClass('font-weight-bold').text(/[^.]+$/.exec(name)));
+       if($("#formSolDet").length>0){
+        var doc = {
+          id:i,
+          nombre:name,
+          tipo:0
+        }
+        itemDocumentos.push(doc);
+        console.log(JSON.stringify(itemDocumentos));
+        var htmlSelect = '<select onChange="asignarTipoDocumento(\''+name+'\','+(i+1)+')" class="selectpicker form-control form-control-sm" name="tipo_documento'+(i+1)+'" id="tipo_documento'+(i+1)+'" data-style="btn btn-primary">';
+         htmlSelect+=$("#tipo_documento").html();
+         htmlSelect+='</select>';
+         row.append($('<td>').addClass('').html(htmlSelect));      
+       }else{
+         row.append($('<td>').addClass('').text("TODOS"));      
+       }        
+       table.append(row);
+        // $("#lista_archivos").append("<div class='text-left'><label>"+name+"</label></div>");
        }
        $("#narch").addClass("estado");
+       $("#lista_archivos").html(table);
+       $('.selectpicker').selectpicker("refresh");
      }else{
       numArchivos=0;
         $("#lista_archivos").html("Ningun archivo seleccionado");
         $("#narch").removeClass("estado");
      }
-
-    
+}
+var itemDocumentos=[];
+function asignarTipoDocumento(nombreArchivo,fila){
+  var tipos = $("#tipo_documento"+fila).val();
+  itemDocumentos[fila-1].tipo=tipos;
+  console.log(JSON.stringify(itemDocumentos));
 }
 function readSingleFile(evt) {
     var f = evt.target.files[0];
@@ -6239,6 +6268,7 @@ function verEstadosCuentas(fila,cuenta){
 
   var tipo=$("#tipo_estadocuentas"+fila).val();
   var tipo_proveedorcliente=$("#tipo_proveedorcliente"+fila).val();
+  var tipo_estadocuentas_casoespecial=$("#tipo_estadocuentas_casoespecial"+fila).val();
 
   var banderaContinuar=1;
   if(($("#debe"+fila).val()==""&&$("#haber"+fila).val()=="")||($("#debe"+fila).val()==0&&$("#haber"+fila).val()==0)){
@@ -6280,6 +6310,10 @@ function verEstadosCuentas(fila,cuenta){
       $("#monto_estadocuenta").val($("#debe"+fila).val());      
     }
 
+    if(tipoComprobante==3 && tipo_estadocuentas_casoespecial==1){//TIPO TRASPASO CASO ESPECIAL
+      $("#monto_estadocuenta").val($("#haber"+fila).val());      
+    }
+
     if($("#edicion").length>0){
       var edicion=1;
       var codigo_comprobante=$("#codigo_comprobante").val();
@@ -6288,11 +6322,10 @@ function verEstadosCuentas(fila,cuenta){
       var codigo_comprobante=0;
     }
     if(itemEstadosCuentas[fila-1].length>0){   
-     // alert("mm:"+itemEstadosCuentas[fila-1][0].cod_comprobantedetalle)
       var comprobanteOrigen=itemEstadosCuentas[fila-1][0].cod_comprobantedetalle;
-       var parametros={"codigo_comprobante":codigo_comprobante,"edicion":edicion,"cod_cuenta":cod_cuenta,"cod_cuenta_auxiliar":cod_cuenta_auxiliar,"tipo_comprobante":tipoComprobante,"comprobante_origen":comprobanteOrigen};
+      var parametros={"codigo_comprobante":codigo_comprobante,"edicion":edicion,"cod_cuenta":cod_cuenta,"cod_cuenta_auxiliar":cod_cuenta_auxiliar,"tipo_comprobante":tipoComprobante,"comprobante_origen":comprobanteOrigen,"tipo_estadocuentas_casoespecial":tipo_estadocuentas_casoespecial};
     }else{
-      var parametros={"codigo_comprobante":codigo_comprobante,"edicion":edicion,"cod_cuenta":cod_cuenta,"cod_cuenta_auxiliar":cod_cuenta_auxiliar,"tipo_comprobante":tipoComprobante};
+      var parametros={"codigo_comprobante":codigo_comprobante,"edicion":edicion,"cod_cuenta":cod_cuenta,"cod_cuenta_auxiliar":cod_cuenta_auxiliar,"tipo_comprobante":tipoComprobante,"tipo_estadocuentas_casoespecial":tipo_estadocuentas_casoespecial};
     }
     
     //PASA Y MOSTRAMOS LOS ESTADOS DE CUENTA    
@@ -7940,12 +7973,8 @@ function borrarItemRendicionDetalle(idF){
        $("#monto_A"+nuevoId).attr("id","monto_A"+i);
        $("#observacionesA"+nuevoId).attr("name","observacionesA"+i);
        $("#observacionesA"+nuevoId).attr("id","observacionesA"+i);
-       
-
       }
      } 
-
-
       // itemFacturas.splice((idF-1), 1);
       // itemEstadosCuentas.splice((idF-1), 1);
       numFilas=numFilas-1;

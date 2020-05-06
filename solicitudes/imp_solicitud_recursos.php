@@ -88,6 +88,9 @@ $tDebeDol=0;$tHaberDol=0;$tDebeBol=0;$tHaberBol=0;
 
 $data = obtenerSolicitudRecursosDetalle($codigo);
 $tc=obtenerValorTipoCambio($moneda,strftime('%Y-%m-%d',strtotime($fechaC)));
+
+$anioSol=strftime('%Y',strtotime($fechaC));
+$mesSol=strftime('%m',strtotime($fechaC));
 if($tc==0){$tc=1;}
 $fechaActual=date("Y-m-d");
 $tituloImporte="";
@@ -154,6 +157,7 @@ $tituloImporte="";
         </tr>
         <?php
         $index=1;$totalImporte=0;$totalImportePres=0;
+        $segPres=0;$porcentSegPres=0;
         while ($row = $data->fetch(PDO::FETCH_ASSOC)) {
 
             $facturas=obtenerFacturasSoli($row['codigo']);
@@ -163,6 +167,7 @@ $tituloImporte="";
             }
             $codCuentaX=$row['cod_plancuenta'];
             $codAreaXX=$row['cod_area'];
+            $codOficinaXX=$row['cod_unidadorganizacional'];
             $nombreArea=abrevArea_solo($codAreaXX);
             $detalleX=$row["detalle"];
             $importeX=$row["importe_presupuesto"];
@@ -190,11 +195,18 @@ $tituloImporte="";
             
             $numeroCuentaX=trim($row['numero']);
             $nombreCuentaX=trim($row['nombre']);
+            $datosSeg=obtenerPresupuestoEjecucionDelServicio($codOficinaXX,$codAreaXX,$anioSol,(int)$mesSol,$numeroCuentaX);
+            
+            if($datosSeg->presupuesto!=null||$datosSeg->presupuesto!=0){
+               $segPres=$datosSeg->presupuesto;
+               $porcentSegPres=($datosSeg->ejecutado*100)/$datosSeg->presupuesto; 
+            }
+            
         ?>
         <tr>
             <td class="s3 text-center" width="4%"><?=$index?></td>
-            <td class="s3 text-center"><?=number_format($importeX, 2, '.', '')?></td>
-            <td class="s3 text-center"><?=number_format($importePorcent, 2, '.', '')?></td>
+            <td class="s3 text-center"><?=number_format($segPres, 2, '.', '')?></td>
+            <td class="s3 text-center"><?=number_format($porcentSegPres, 2, '.', '')?></td>
             <td class="s3 text-center" width="8%"><?=$nombreArea?></td>
             <td class="s3 text-center" width="8%"><?=$numeroFac?></td>
             <td class="s3 text-left" width="40%"><?="".$nombreCliente." F/".$numeroFac." ".$proveedorX." ".$detalleX?></td>

@@ -43,7 +43,7 @@ $mes=$_GET['mes'];
 	</thead>
 	<tbody id="tabla_estadocuenta">
 <?php
-	$sqlEstadoCuenta="SELECT e.*,d.glosa,d.haber,d.debe,(select concat(c.cod_tipocomprobante,'|',c.numero,'|',cd.cod_unidadorganizacional,'|',MONTH(c.fecha),'|',c.fecha) from comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle)as extra FROM estados_cuenta e,comprobantes_detalle d where e.cod_comprobantedetalle=d.codigo and (d.cod_cuenta=$codCuenta) and e.cod_comprobantedetalleorigen=0 order by e.fecha";
+	$sqlEstadoCuenta="SELECT e.*,d.glosa,d.haber,d.debe,(select concat(c.cod_tipocomprobante,'|',c.numero,'|',cd.cod_unidadorganizacional,'|',MONTH(c.fecha),'|',c.fecha) from comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle)as extra FROM estados_cuenta e,comprobantes_detalle d, comprobantes c where c.codigo=d.cod_comprobante and c.cod_estadocomprobante<>2 and e.cod_comprobantedetalle=d.codigo and (d.cod_cuenta=$codCuenta) and e.cod_comprobantedetalleorigen=0 order by e.fecha";
   	
   	//echo $sqlEstadoCuenta;
 
@@ -85,7 +85,8 @@ $mes=$_GET['mes'];
 	$fechaComprobante=strftime('%d/%m/%Y',strtotime($fechaComprobante));
 
 	//SACAMOS CUANTO SE PAGO DEL ESTADO DE CUENTA.
-    $sqlContra="SELECT sum(monto)as monto from estados_cuenta e where e.cod_comprobantedetalleorigen='$codigoX'";
+    $sqlContra="SELECT sum(e.monto)as monto from estados_cuenta e, comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and c.cod_estadocomprobante<>2 and cd.codigo=e.cod_comprobantedetalle and e.cod_comprobantedetalleorigen='$codigoX'";
+    //echo $sqlContra;
     $stmtContra = $dbh->prepare($sqlContra);
     $stmtContra->execute();
     $montoContra=0;
@@ -132,7 +133,7 @@ $mes=$_GET['mes'];
 		          <div id="collapse<?=$indice;?>" class="collapse" role="tabpanel" aria-labelledby="heading<?=$indice;?>" data-parent="#accordion<?=$indice;?>" style="">
 		            <div class="card-body">
 		            	<?php
-                  			$sqlDetalleX="SELECT e.fecha, e.monto, (select cd.glosa from comprobantes_detalle cd where cd.codigo=e.cod_comprobantedetalle)as glosa from estados_cuenta e where e.cod_comprobantedetalleorigen=$codigoX"; 	                                 
+                  			$sqlDetalleX="SELECT e.fecha, e.monto, (select cd.glosa from comprobantes_detalle cd where  cd.codigo=e.cod_comprobantedetalle)as glosa from estados_cuenta e, comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and c.cod_estadocomprobante<>2 and cd.codigo=e.cod_comprobantedetalle and e.cod_comprobantedetalleorigen=$codigoX"; 	                                 
 	                     	$stmtDetalleX = $dbh->prepare($sqlDetalleX);
 		                    $stmtDetalleX->execute();
 
