@@ -2188,7 +2188,7 @@ function obtenerDetalleSolicitudSimulacionCuentaPlantillaServicio($codigo,$codig
    $sql="(select * from v_propuestas_detalle_variables  where cod_simulacionservicio=$codigo order by cod_detalle)
         UNION
          (select * from v_propuestas_detalle_honorarios  where cod_simulacionservicio=$codigo)
-        order by cod_anio";
+        order by cod_anio limit 12";
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
    return $stmt;
@@ -5790,6 +5790,98 @@ function obtenerIdServicioPorIdSimulacion($codigo){
       $valor=$row['idServicio'];
    }
    return($valor);
+}
+
+function obtenerGlosaSolicitudSimulacionCuentaPlantillaServicio($codigo){
+   $dbh = new Conexion();
+   $sql="";
+   $sql="SELECT DISTINCT glo.glosa from (
+       (select * from v_propuestas_detalle_variables  where cod_simulacionservicio=$codigo order by cod_detalle)
+        UNION
+         (select * from v_propuestas_detalle_honorarios  where cod_simulacionservicio=$codigo)
+        )  as glo ";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+}
+function obtenerAnioSimulacionServicio($codigo){
+   $dbh = new Conexion();
+   $valor=0;
+   $sql="SELECT anios from simulaciones_servicios p where p.codigo=$codigo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['anios'];
+  }
+  return $valor;
+}
+
+function sumaMontosDebeHaberComprobantesDetalleResultados($fechaFinal,$tipoBusqueda,$arrayUnidades,$arrayAreas,$gestion,$fechaInicio)
+ {
+   $dbh = new Conexion();
+   $sql="";
+   $sqlAreas="";
+   $sqlUnidades="";
+  $fechaFinalMod=explode("/", $fechaFinal);
+  //formateando fecha
+   if($fechaInicio=="none"){
+    $fi=$fechaFinalMod[2]."-01-01";
+   }else{
+     $fechaFinalModIni=explode("/", $fechaInicio);
+     $fi=$fechaFinalModIni[2]."-".$fechaFinalModIni[1]."-".$fechaFinalModIni[0];
+   }
+  
+  $fa=$fechaFinalMod[2]."-".$fechaFinalMod[1]."-".$fechaFinalMod[0];
+  //$fi=$fechaFinalMod[2]."-01-01";
+
+   for ($i=0; $i < count($arrayAreas); $i++) {
+      if($i==0){
+        $sqlAreas.="and (";
+      }
+      if($i==(count($arrayAreas)-1)){
+        $sqlAreas.="d.cod_area='".$arrayAreas[$i]."')";
+       }else{
+        $sqlAreas.="d.cod_area='".$arrayAreas[$i]."' or ";
+       }  
+   }
+   //busqueda de unidades
+   for ($i=0; $i < count($arrayUnidades); $i++) {
+      if($i==0){
+        $sqlUnidades.="and (";
+      }
+      if($i==(count($arrayUnidades)-1)){
+        $sqlUnidades.="d.cod_unidadorganizacional='".$arrayUnidades[$i]."')";
+       }else{
+        $sqlUnidades.="d.cod_unidadorganizacional='".$arrayUnidades[$i]."' or ";
+       }  
+   }
+   
+   $sql="(SELECT sum(total_debe) as t_debe,sum(total_haber) as t_haber,1 as tipo from plan_cuentas p join 
+           (select d.cod_cuenta,sum(debe) as total_debe,sum(haber) as total_haber 
+            from comprobantes_detalle d join comprobantes c on c.codigo=d.cod_comprobante 
+            where (c.fecha between '$fi' and '$fa') $sqlUnidades and c.cod_gestion='$gestion' group by (d.cod_cuenta) order by d.cod_cuenta) cuentas_monto
+        on p.codigo=cuentas_monto.cod_cuenta where p.numero like '4%' and p.nivel=5 order by p.numero)
+         UNION
+         (SELECT sum(total_debe) as t_debe,sum(total_haber) as t_haber,2 as tipo from plan_cuentas p join 
+           (select d.cod_cuenta,sum(debe) as total_debe,sum(haber) as total_haber 
+            from comprobantes_detalle d join comprobantes c on c.codigo=d.cod_comprobante 
+            where (c.fecha between '$fi' and '$fa') $sqlUnidades and c.cod_gestion='$gestion' group by (d.cod_cuenta) order by d.cod_cuenta) cuentas_monto
+        on p.codigo=cuentas_monto.cod_cuenta where p.numero like '5%' and p.nivel=5 order by p.numero)";
+    
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+}
+function obtieneCuentaPadre($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT cod_padre FROM plan_cuentas where codigo=:codigo");
+   $stmt->bindParam(':codigo',$codigo);
+   $stmt->execute();
+   $nombreX=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $nombreX=$row['cod_padre'];
+   }
+   return($nombreX);
 }
 
 ?>
