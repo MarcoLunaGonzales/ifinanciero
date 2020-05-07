@@ -2188,7 +2188,7 @@ function obtenerDetalleSolicitudSimulacionCuentaPlantillaServicio($codigo,$codig
    $sql="(select * from v_propuestas_detalle_variables  where cod_simulacionservicio=$codigo order by cod_detalle)
         UNION
          (select * from v_propuestas_detalle_honorarios  where cod_simulacionservicio=$codigo)
-        order by cod_anio limit 12";
+        order by cod_anio limit 20";
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
    return $stmt;
@@ -4383,9 +4383,15 @@ function obtenerActividadesServicioImonitoreo($codigo_proyecto){
   function obtenerDetalleSolicitudSimulacionCuentaPlantillaServicioFiltro($codigo,$codigoPlan,$anio,$item_detalle,$codigo_detalle){
    $dbh = new Conexion();
    if($anio!="all"){
-    $anioSQL1="cod_anio=$anio and";
+   $anioSQL1="cod_anio=$anio and";  
+    if($anio==1){
+        if(obtenerCodigoAreaPlantillasServicios($codigoPlan)==38){
+          $an=$anio-1;
+          $anioSQL1="(cod_anio=$an or cod_anio=$anio) and";
+        }
+    }
    }else{
-    $anioSQL1="";
+    $anioSQL1="";    
    }
    
    if($codigo_detalle!="all"){

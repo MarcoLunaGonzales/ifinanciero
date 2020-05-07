@@ -83,14 +83,11 @@ $tipoSolicitud =$_GET['tipo'];
 
             $anioSelect=obtenerAnioSimulacionServicio($codSimulacionServX);
             $inicioAnio=1;
-            if($areaXX==38){
-              $inicioAnio=0;
-            }
             for ($i=$inicioAnio; $i <= $anioSelect ; $i++) { 
               $tituloAnio="Año ".$i;
               $tituloAnio="Año ".$i;
-              if($i<=1&&$areaXX==38){
-                 $tituloAnio="Año 1 - Et ".($i+1);
+              if($i==1&&$areaXX==38){
+                 $tituloAnio="Año 1 Et 1 - Et 2";
               }
                ?>
                       <script>
