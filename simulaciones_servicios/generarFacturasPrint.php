@@ -437,6 +437,7 @@ $htmlConta.=  '<header class="header">'.
                       '.obtenerValorConfiguracionFactura(3  ).'<br>
                       Teléfonos:'.obtenerValorConfiguracionFactura(4).' * Fax: '.obtenerValorConfiguracionFactura(12).'<br>
                       Web:'.obtenerValorConfiguracionFactura(10).' * E-mail:'.obtenerValorConfiguracionFactura(11).' * '.obtenerValorConfiguracionFactura(13).' <br>
+                      SFC - 02<br>
                     </h4></small> 
                   </td>
                   <td  valign="top" width="26%"><div id="header_titulo_texto_grande" >FACTURA</div></td>
