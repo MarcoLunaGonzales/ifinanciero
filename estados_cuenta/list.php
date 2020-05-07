@@ -8,10 +8,10 @@ $dbh = new Conexion();
 
 //echo dirname(__DIR__)."/".basename(__DIR__);
 // Preparamos
-$sql="SELECT c.*,p.numero,p.nombre, (select tec.codigo from tipos_estado_cuenta tec where tec.codigo=c.cod_tipoestadocuenta)as codtipoestadocuenta, (select tec.nombre from tipos_estado_cuenta tec where tec.codigo=c.cod_tipoestadocuenta)as tipoestadocuenta from configuracion_estadocuentas c,plan_cuentas p where c.cod_plancuenta=p.codigo
-UNION
-SELECT c.*,p.nro_cuenta as numero,p.nombre, (select tec.codigo from tipos_estado_cuenta tec where tec.codigo=c.cod_tipoestadocuenta)as codtipoestadocuenta, (select tec.nombre from tipos_estado_cuenta tec where tec.codigo=c.cod_tipoestadocuenta)as tipoestadocuenta from configuracion_estadocuentas c,cuentas_auxiliares p where c.cod_cuentaaux=p.codigo order by numero";
+$sql="SELECT c.*,p.numero,p.nombre, (select tec.codigo from tipos_estado_cuenta tec where tec.codigo=c.cod_tipoestadocuenta)as codtipoestadocuenta, (select tec.nombre from tipos_estado_cuenta tec where tec.codigo=c.cod_tipoestadocuenta)as tipoestadocuenta from configuracion_estadocuentas c,plan_cuentas p where c.cod_plancuenta=p.codigo order by p.nombre";
+
 //echo $sql;
+
 $stmt = $dbh->prepare($sql);
 // Ejecutamos
 $stmt->execute();
@@ -50,6 +50,7 @@ $stmt->bindColumn('tipoestadocuenta', $tipoEstadoCuenta);
                         <tr>
                           <th class="text-center">#</th>
                           <th class="text-left">Cuenta</th>
+                          <th class="text-left">Caso Especial</th>
                           <th class="text-left">Tipo Estado Cuenta</th>
                           <th>Debe/Haber</th>
                           <th class="text-right">Actions</th>
@@ -58,7 +59,11 @@ $stmt->bindColumn('tipoestadocuenta', $tipoEstadoCuenta);
                       <tbody>
 <?php
 						$index=1;
-                      	while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+                      while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+                        $txtCasoEspecial="";
+                        if($codCuentaAux==1){
+                          $txtCasoEspecial="Caso Especial";
+                        }
                        if($tipo==1){
                        $tipoDes="Débito";
                        }else{
@@ -68,6 +73,7 @@ $stmt->bindColumn('tipoestadocuenta', $tipoEstadoCuenta);
                         <tr>
                           <td align="center"><?=$index;?></td>
                           <td class="text-left">[<?=$numero;?>] - <?=$nombre;?></td>
+                          <td class="text-left"><?=$txtCasoEspecial;?></td>
                           <td>
                             <?=$tipoEstadoCuenta;?>
                           </td>                 
