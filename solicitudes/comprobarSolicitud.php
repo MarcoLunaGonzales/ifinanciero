@@ -487,30 +487,36 @@ if(isset($_GET['cod'])){
 </div>
 <!-- small modal -->
 <div class="modal fade modal-primary" id="modalFile" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <i class="material-icons" data-notify="icon"><?=$iconFile?></i>
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="material-icons">clear</i></button>
-      </div>
-      <div class="modal-body">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content card">
+      <div class="card-header card-header-info card-header-text">
+                  <div class="card-text">
+                    <h5>DOCUMENTOS DE RESPALDO</h5>      
+                  </div>
+                  <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">close</i>
+                  </button>
+                </div>
+      <div class="card-body">
         <p>Cargar archivos de respaldo.</p> 
            <div class="fileinput fileinput-new col-md-12" data-provides="fileinput">
             <div class="row">
-              <div class="col-md-9">
+              <div class="col-md-12">
                 <div class="border" id="lista_archivos">Ningun archivo seleccionado</div>
               </div>
-              <div class="col-md-3">
-                <span class="btn btn-info btn-round btn-file">
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <span class="btn btn-info btn-info btn-file btn-sm">
                       <span class="fileinput-new">Buscar</span>
                       <span class="fileinput-exists">Cambiar</span>
                       <input type="file" name="archivos[]" id="archivos" multiple="multiple"/>
                    </span>
-                <a href="#" class="btn btn-danger btn-round fileinput-exists" onclick="archivosPreview(1)" data-dismiss="fileinput"><i class="material-icons">clear</i> Quitar</a>
+                <a href="#" class="btn btn-danger btn-sm fileinput-exists" onclick="archivosPreview(1)" data-dismiss="fileinput"><i class="material-icons">clear</i> Quitar</a>
               </div>
             </div>
            </div>
-           <p class="text-danger">Los archivos se subir&aacute;n al servidor cuando se GUARDE la solicitud</p>
+           <p class="text-muted"><small>Los archivos se subir&aacute;n al servidor cuando se GUARDE la solicitud</small></p>
       </div>
       <div class="modal-footer">
         <button type="button" onclick="" class="btn btn-link" data-dismiss="modal">Aceptar

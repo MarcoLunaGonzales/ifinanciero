@@ -534,7 +534,14 @@
             $('<input />').attr('type', 'hidden')
             .attr('name', 'archivos_cabecera')
             .attr('value', JSON.stringify(itemDocumentos))
-            .appendTo('#formSolDet');       
+            .appendTo('#formSolDet');
+
+            $('<input />').attr('type', 'hidden')
+            .attr('name', 'archivos_detalle')
+            .attr('value', JSON.stringify(itemDocumentosDetalle))
+            .appendTo('#formSolDet');
+
+
           }       
         }
       }  
