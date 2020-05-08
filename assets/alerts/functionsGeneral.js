@@ -1041,7 +1041,7 @@ function ayudaPlantilla(){
 }
 //plantilla guardar
 function guardarPlantilla(){
-  var cod=$("#codigo_comprobante").val();
+  var cod="10000";
   var tipo=$("#tipo_comprobante").val();
   var glosa=$("#glosa").val();
   var titulo=$("#titulo").val();
@@ -1071,7 +1071,8 @@ function guardarPlantilla(){
           $("#titulo").val("");
           $("#descrip_plan").val("");
           $('#modalPlantilla').modal('hide');
-          window.location="../index.php?opcion=listComprobantes";
+          Swal.fire("Correcto!", "Se Guardó la Plantilla!", "success");
+          //window.location="../index.php?opcion=listComprobantes";
         }
       }
       ajax.send(null);
@@ -1116,25 +1117,21 @@ function abrirPlantilla(id,n,glosa,tipo){
   document.getElementById("cantidad_filas").value=n;
   $("#glosa").val(glosa);
   //$("#tipo_comprobante").val(tipo);
-
-  ajax=nuevoAjax();
-  ajax.open("GET","ajaxOpenPlantilla.php?codigo="+id,true);
-  ajax.onreadystatechange=function(){
-  if (ajax.readyState==4) {
-    var fi=document.getElementById("fiel");
-    fi.innerHTML=ajax.responseText;
-    calcularTotalesComprobante("null");
-    for (var i = 0; i < cantidadItems; i++) {
-        var numeroC=$("#numero_cuenta"+(i+1)).val();
-        var inicio=numeroC.substr(0,1);
-         configuracionCentros((i+1),inicio);
-    };
-    $('.selectpicker').selectpicker(["refresh"]);
-    $("#modalAbrirPlantilla").modal("hide");
-    //$("#mensaje").html("<p class='text-success'>Listado de todas las plantillas</p>");
-   }
-  }
-  ajax.send(null);  
+  var parametros={"codigo":id};
+  $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxOpenPlantilla.php",
+        data: parametros,
+        success:  function (resp) {
+          var fi=$("#fiel");
+          fi.html(resp);
+          numFilas=n;
+          calcularTotalesComprobante("null");
+          $('.selectpicker').selectpicker("refresh");
+          $("#modalAbrirPlantilla").modal("hide");     
+        }
+    }); 
 }
 function nuevaDistribucionPonerFila(fila,tipoDistribucion){
  var glosa = $("#glosa_detalle"+fila).val();
@@ -1477,7 +1474,7 @@ function archivosPreview(send) {
          htmlSelect+='</select>';
          row.append($('<td>').addClass('').html(htmlSelect));
 
-        var htmlInput='<input class="form-control text-right text-muted" placeholder="Ingresar descripción" id="nombre_tipodocumento'+(i+1)+'" readonly value="SIN TIPO ARCHIVO" onkeyup="asignarTipoDocumentoText(\''+name+'\','+(i+1)+')" onkeydown="asignarTipoDocumentoText(\''+name+'\','+(i+1)+')">'       
+        var htmlInput='<input class="form-control text-right text-muted" placeholder="Ingresar descripción" id="nombre_tipodocumento'+(i+1)+'" readonly value="SIN TIPO ARCHIVO" onkeyup="asignarTipoDocumentoText('+(i+1)+')" onkeydown="asignarTipoDocumentoText('+(i+1)+')">'       
         row.append($('<td>').addClass('').html(htmlInput));
        }        
        table.append(row);
@@ -1514,10 +1511,9 @@ function asignarTipoDocumento(nombreArchivo,fila){
 }
 
 function asignarTipoDocumentoText(fila){
-  $("#nombre_tipodocumento"+fila).val($("#nombre_tipodocumento"+fila).val().toUpperCase());
   var nombre_tipodocumento=$("#nombre_tipodocumento"+fila).val();
   itemDocumentos[fila-1].nombre_tipo=nombre_tipodocumento;
-  console.log(JSON.stringify(itemDocumentos));
+  //console.log(JSON.stringify(itemDocumentos));
 }
 
 function readSingleFile(evt) {

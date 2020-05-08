@@ -18,6 +18,7 @@ $globalUnidad=$_SESSION["globalUnidad"];
 $globalArea=$_SESSION["globalArea"];
 $globalAdmin=$_SESSION["globalAdmin"];
 
+$arrayFilesCabecera=json_decode($_POST['archivos_cabecera']);
 
 if(isset($_POST['numero'])){
     $observaciones=$_POST['observaciones_solicitud'];
@@ -55,7 +56,7 @@ if(isset($_POST['numero'])){
     $codSimServ=0;
   }
 
-   $codCont=0;//CODIGO DE CONTRATO
+  $codCont=0;//CODIGO DE CONTRATO
   $fecha= date("Y-m-d h:m:s");
   $codSolicitud=obtenerCodigoSolicitudRecursos();
   $dbh = new Conexion();
@@ -89,6 +90,10 @@ if(isset($_POST['numero'])){
   $sqlDel="DELETE FROM distribucion_gastos_solicitud_recursos where cod_solicitudrecurso=$codSolicitud";
   $stmtDel = $dbh->prepare($sqlDel);
   $stmtDel->execute();
+  //borramos los archivos
+  $sqlDel="DELETE FROM archivos_adjuntos where cod_padre=$codSolicitud and cod_tipopadre=2708";
+  $stmtDel = $dbh->prepare($sqlDel);
+  $stmtDel->execute();
   
   $valorDist=$_POST['n_distribucion'];
   if($valorDist!=0){
@@ -119,7 +124,7 @@ $flagSuccess=true;
             $filename = $_FILES["archivos"]["name"][$key]; //Obtenemos el nombre original del archivos
             $source = $_FILES["archivos"]["tmp_name"][$key]; //Obtenemos un nombre temporal del archivos
             
-            $directorio = '../assets/archivos-respaldo/archivos_solicitudes/SOL-'.$codSolicitud.'/'; //Declaramos una  variable con la ruta donde guardaremos los archivoss
+            $directorio = '../assets/archivos-respaldo/archivos_solicitudes/SOL-'.$codSolicitud; //Declaramos una  variable con la ruta donde guardaremos los archivoss
             //Validamos si la ruta de destino existe, en caso de no existir la creamos
             if(!file_exists($directorio)){
                 mkdir($directorio, 0777,true) or die("No se puede crear el directorio de extracci&oacute;n");    
@@ -132,7 +137,20 @@ $flagSuccess=true;
             //El primer campo es el origen y el segundo el destino
             if(move_uploaded_file($source, $target_path)) { 
                 echo "ok";
-                } else {    
+                for ($a=0; $a < count($arrayFilesCabecera); $a++) { 
+                  if($arrayFilesCabecera[$a]->nombre==$filename){
+                    //insertamos a la tabla de archivos
+                    $tipo=$arrayFilesCabecera[$a]->tipo;
+                    $descripcion=$arrayFilesCabecera[$a]->nombre_tipo;
+                    $tipoPadre=2708;
+                    $sqlInsert="INSERT INTO archivos_adjuntos (cod_tipoarchivo,descripcion,direccion_archivo,cod_tipopadre,cod_padre) 
+                    VALUES ('$tipo','$descripcion','$target_path','$tipoPadre','$codSolicitud')";
+                    $stmtInsert = $dbh->prepare($sqlInsert);
+                    $stmtInsert->execute();    
+                    print_r($sqlInsert);
+                  }
+                }
+            } else {    
                 echo "error";
             }       
         }
