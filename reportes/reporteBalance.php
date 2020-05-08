@@ -172,12 +172,13 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                   $datosResultados=sumaMontosDebeHaberComprobantesDetalleResultados($fechaFormateada,1,$unidades,$areas,$gestion,"none");
                   while ($rowRes = $datosResultados->fetch(PDO::FETCH_ASSOC)) {
                      if($rowRes['tipo']==1){
-                      $montoResultadoIngreso=abs($rowRes['t_debe']-$rowRes['t_haber']);
+                      $montoResultadoIngreso=$rowRes['t_debe']-$rowRes['t_haber'];
                      }else{
                       $montoResultadoEgreso=$rowRes['t_debe']-$rowRes['t_haber'];
                      } 
                   }
-                  $sumaNivel4+=abs(($montoResultadoIngreso-$montoResultadoEgreso));
+                  //$sumaNivel4+=abs(($montoResultadoIngreso-$montoResultadoEgreso));
+                  $sumaNivel4+=($montoResultadoIngreso-$montoResultadoEgreso);
                   $nombreResultado=formateaPlanCuenta($nombreResultado, 5); 
                       $html4.='<tr>'.
                            '<td class="td-border-none text-left">'.formatoNumeroCuenta($numeroResultado).'</td>'.
