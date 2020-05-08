@@ -124,12 +124,11 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                while ($rowComp = $detallesReporte->fetch(PDO::FETCH_ASSOC)) {
                    $numeroX=$rowComp['numero'];
                    $nombreX=formateaPlanCuenta($rowComp['nombre'], $rowComp['nivel']);
-                   
-                   if($codigo==5){
-                    $montoX=(float)($rowComp['total_debe']-$rowComp['total_haber']);
+                   $montoX=(float)($rowComp['total_debe']-$rowComp['total_haber']);
+                   if($codigo==5){                    
                     $tBolActivo+=$montoX;
                   }else{
-                    $montoX=abs((float)($rowComp['total_debe']-$rowComp['total_haber']));
+                    //$montoX=abs((float)($rowComp['total_debe']-$rowComp['total_haber']));
                     $tBolPasivo+=$montoX;
                   }
                     $sumaNivel4+=$montoX;  
@@ -149,7 +148,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                            '<td class="td-border-none text-right"></td>'.
                            '<td class="td-border-none text-right"></td>'.
                            '<td class="td-border-none text-right"></td>'.
-                           '<td class="td-border-none text-right">('.number_format($montoX, 2, '.', ',').')</td>';   
+                           '<td class="td-border-none text-right">('.number_format(abs($montoX), 2, '.', ',').')</td>';   
                       $html4.='</tr>';      
                     }elseif($montoX==0){
                       $html4.='<tr>'.
@@ -185,7 +184,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                   '<td class=" td-border-none text-right"></td>'.
                   '<td class=" td-border-none text-right"></td>'.
                   '<td class=" td-border-none text-right"></td>'.
-                  '<td class=" td-border-none text-right">('.number_format($sumaNivel4, 2, '.', ',').')</td>';   
+                  '<td class=" td-border-none text-right">('.number_format(abs($sumaNivel4), 2, '.', ',').')</td>';   
                 $html3.='</tr>';
                 $html3.=$html4;       
               }elseif($sumaNivel4==0){
@@ -223,7 +222,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                   '<td class=" td-border-none text-right"></td>'.
                   '<td class=" td-border-none text-right"></td>'.
                   '<td class=" td-border-none text-right"></td>'.
-                  '<td class=" td-border-none text-right">('.number_format($sumaNivel3, 2, '.', ',').')</td>';   
+                  '<td class=" td-border-none text-right">('.number_format(abs($sumaNivel3), 2, '.', ',').')</td>';   
               $html2.='</tr>';
               $html2.=$html3;
             }
@@ -265,7 +264,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                     '<td class="td-border-none text-right"></td>'.
                     '<td class="td-border-none text-right"></td>'.
                     '<td class="td-border-none text-right"></td>'.
-                    '<td class="td-border-none text-right">('.number_format($sumaNivel2, 2, '.', ',').')</td>';   
+                    '<td class="td-border-none text-right">('.number_format(abs($sumaNivel2), 2, '.', ',').')</td>';   
              $html1.='</tr>';
              $html1.=$html2; 
           }
@@ -304,7 +303,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                 '<td class="td-border-centro text-right" width="10%"></td>'.
                 '<td class="td-border-centro text-right"></td>'.
                 '<td class="td-border-centro text-right"></td>'.
-                '<td class="td-border-derecha text-right">('.number_format($sumaNivel1, 2, '.', ',').')</td>';   
+                '<td class="td-border-derecha text-right">('.number_format(abs($sumaNivel1), 2, '.', ',').')</td>';   
      $html.='</tr>';
      $html.=$html1;
     }
@@ -330,13 +329,24 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
       if($centavos<10){
         $centavos="0".$decimal;
       }
-      $html.='<br><table class="table">'.
+      $totalResultado=$tBolPasivo-$tBolActivo;
+      if($totalResultado>=0){
+        $html.='<br><table class="table">'.
             '<thead>'.
             '<tr class="bold table-title">'.
               '<td class="text-left" width="85%">Resultado</td>'.
-              '<td class="text-right">'.number_format($tBolPasivo-$tBolActivo, 2, '.', ',').'</td>'.
-            '</tr>'.
-           '</thead>'.
+              '<td class="text-right">'.number_format($totalResultado, 2, '.', ',').'</td>'.
+            '</tr>';
+      }elseif ($totalResultado<0) {
+        $html.='<br><table class="table">'.
+            '<thead>'.
+            '<tr class="bold table-title">'.
+              '<td class="text-left" width="85%">Resultado</td>'.
+              '<td class="text-right">('.number_format(abs($totalResultado), 2, '.', ',').')</td>'.
+            '</tr>';
+      }
+      
+      $html.='</thead>'.
            '<tbody>';
 
     /* $html.='<tr class="">'.

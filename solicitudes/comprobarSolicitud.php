@@ -33,6 +33,67 @@ $globalNombreUnidad=$_SESSION['globalNombreUnidad'];
 $globalArea=$_SESSION["globalArea"];
 $globalAdmin=$_SESSION["globalAdmin"];
 
+//distribucion gastosarea
+$distribucionOfi=obtenerDistribucionCentroCostosUnidadActivo(); //null para todas las iniciales del numero de cuenta obtenerCuentasLista(5,[5,4]);
+   while ($rowOfi = $distribucionOfi->fetch(PDO::FETCH_ASSOC)) {
+    $codigoD=$rowOfi['codigo'];
+    $codDistD=$rowOfi['cod_distribucion_gastos'];
+    $codUnidadD=$rowOfi['cod_unidadorganizacional'];
+    $porcentajeD=$rowOfi['porcentaje'];
+    $nombreD=$rowOfi['nombre'];
+    $porcentajeD=obtenerPorcentajeDistribucionGastoSolicitud($porcentajeD,1,$codUnidadD,$_GET['cod']);
+     ?>
+      <script>
+        var distri = {
+          codigo:<?=$codigoD?>,
+          cod_dis:<?=$codDistD?>,
+          unidad:<?=$codUnidadD?>,
+          nombre:'<?=$nombreD?>',
+          porcentaje:<?=$porcentajeD?>
+        }
+        itemDistOficina.push(distri);
+      </script>  
+      <?php
+   }
+$distribucionArea=obtenerDistribucionCentroCostosAreaActivo(); //null para todas las iniciales del numero de cuenta obtenerCuentasLista(5,[5,4]);
+   while ($rowArea = $distribucionArea->fetch(PDO::FETCH_ASSOC)) {
+    $codigoD=$rowArea['codigo'];
+    $codDistD=$rowArea['cod_distribucionarea'];
+    $codAreaD=$rowArea['cod_area'];
+    $porcentajeD=$rowArea['porcentaje'];
+    $nombreD=$rowArea['nombre'];
+    $porcentajeD=obtenerPorcentajeDistribucionGastoSolicitud($porcentajeD,2,$codAreaD,$_GET['cod']);
+     ?>
+      <script>
+        var distri = {
+          codigo:<?=$codigoD?>,
+          cod_dis:<?=$codDistD?>,
+          area:<?=$codAreaD?>,
+          nombre:'<?=$nombreD?>',
+          porcentaje:<?=$porcentajeD?>
+        }
+        itemDistArea.push(distri);
+      </script>  
+      <?php
+   }
+
+   $valorDistribucion=obtenerSiDistribucionSolicitudRecurso($_GET['cod']);
+   $estadoDistribucion="";
+   $titDistribucion="Distribución";
+   if($valorDistribucion!=0){
+     $estadoDistribucion.=" estado";
+     if($valorDistribucion==1){
+      $titDistribucion="x Oficina";
+     }else{
+       if($valorDistribucion==2){
+        $titDistribucion="x Área";
+       }else{
+        $titDistribucion="x Oficina y x Área";
+       }
+     }
+   }
+
+
 $contadorRegistros=0;
 ?>
 <script>
@@ -318,7 +379,31 @@ if(isset($_GET['cod'])){
               } 
               ?>
                  
-
+              <div class="float-right">
+                <div class="col-sm-2">
+              <input type="hidden" name="n_distribucion" id="n_distribucion" value="<?=$valorDistribucion?>">
+              <input type="hidden" name="nueva_distribucion" id="nueva_distribucion" value="<?=$valorDistribucion?>">
+              <div class="btn-group dropdown">
+                      <button type="button" class="btn btn-sm btn-success dropdown-toggle material-icons text-dark" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Distribucion de Gastos">
+                      <i class="material-icons">call_split</i> <span id="distrib_icon" class="bg-warning <?=$estadoDistribucion?>"></span> <b id="boton_titulodist"><?=$titDistribucion?></b>
+                        </button>
+                        <div class="dropdown-menu">   
+                        <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion" onclick="cargarDistribucionSol(1)" class="dropdown-item">
+                          <i class="material-icons">bubble_chart</i> x Oficina
+                        </a>
+                        <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion" onclick="cargarDistribucionSol(2)" class="dropdown-item">
+                          <i class="material-icons">bubble_chart</i> x Área
+                        </a>
+                        <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion" onclick="cargarDistribucionSol(3)" class="dropdown-item">
+                          <i class="material-icons">bubble_chart</i> x Oficina y x Área
+                        </a>
+                        <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion" onclick="cargarDistribucionSol(0)" class="dropdown-item">
+                          <i class="material-icons">bubble_chart</i> Nínguna
+                        </a>
+                        </div>
+                    </div>
+            </div> 
+              </div>
              <div id="div">   
               <div class="h-divider"></div>     
              </div>
