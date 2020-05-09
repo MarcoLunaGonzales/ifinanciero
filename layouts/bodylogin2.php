@@ -520,6 +520,20 @@
            $('<input />').attr('type', 'hidden')
             .attr('name', 'facturas')
             .attr('value', JSON.stringify(itemFacturas))
+            .appendTo('#formSolDet');
+           $('<input />').attr('type', 'hidden')
+            .attr('name', 'd_oficinas')
+            .attr('value', JSON.stringify(itemDistOficina))
+            .appendTo('#formSolDet');
+           $('<input />').attr('type', 'hidden')
+            .attr('name', 'd_areas')
+            .attr('value', JSON.stringify(itemDistArea))
+            .appendTo('#formSolDet');
+
+            // documentos cabecera
+            $('<input />').attr('type', 'hidden')
+            .attr('name', 'archivos_cabecera')
+            .attr('value', JSON.stringify(itemDistArea))
             .appendTo('#formSolDet');       
           }       
         }

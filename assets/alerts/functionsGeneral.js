@@ -1441,7 +1441,7 @@ input.addEventListener('change', function (e) {
 }, false)*/
 var numArchivos=0;
 function archivosPreview(send) {
-  var itemDocumentos=[];
+    itemDocumentos=[];
     var inp=document.getElementById("archivos");
     if(send!=1){
       var table = $('<table>').addClass('table');
@@ -1450,8 +1450,11 @@ function archivosPreview(send) {
        var titulos = $('<tr>').addClass('bg-info text-white');
        titulos.append($('<td>').addClass('text-left').text('#'));
        titulos.append($('<td>').addClass('').text('DOCUMENTO'));
-       titulos.append($('<td>').addClass('').text('TIPO DE ARCHIVO'));
-       titulos.append($('<td>').addClass('').text('TIPO DOCUMENTO'));    
+       titulos.append($('<td>').addClass('').text('.*'));
+       if($("#formSolDet").length>0){
+         titulos.append($('<td>').addClass('').text('TIPO DOCUMENTO')); 
+         titulos.append($('<td>').addClass('').text('DESCRIPCIÓN TIPO'));     
+       }
        table.append(titulos);
       for (var i = 0; i < inp.files.length; ++i) {
         numArchivos++;
@@ -1464,16 +1467,18 @@ function archivosPreview(send) {
         var doc = {
           id:i,
           nombre:name,
-          tipo:0
+          tipo:0,
+          nombre_tipo:""
         }
         itemDocumentos.push(doc);
         console.log(JSON.stringify(itemDocumentos));
         var htmlSelect = '<select onChange="asignarTipoDocumento(\''+name+'\','+(i+1)+')" class="selectpicker form-control form-control-sm" name="tipo_documento'+(i+1)+'" id="tipo_documento'+(i+1)+'" data-style="btn btn-primary">';
          htmlSelect+=$("#tipo_documento").html();
          htmlSelect+='</select>';
-         row.append($('<td>').addClass('').html(htmlSelect));      
-       }else{
-         row.append($('<td>').addClass('').text("TODOS"));      
+         row.append($('<td>').addClass('').html(htmlSelect));
+
+        var htmlInput='<input class="form-control text-right text-muted" placeholder="Ingresar descripción" id="nombre_tipodocumento'+(i+1)+'" readonly value="SIN TIPO ARCHIVO" onkeyup="asignarTipoDocumentoText(\''+name+'\','+(i+1)+')" onkeydown="asignarTipoDocumentoText(\''+name+'\','+(i+1)+')">'       
+        row.append($('<td>').addClass('').html(htmlInput));
        }        
        table.append(row);
         // $("#lista_archivos").append("<div class='text-left'><label>"+name+"</label></div>");
@@ -1489,10 +1494,32 @@ function archivosPreview(send) {
 }
 var itemDocumentos=[];
 function asignarTipoDocumento(nombreArchivo,fila){
-  var tipos = $("#tipo_documento"+fila).val();
+  var tipos = $("#tipo_documento"+fila).val(); 
+  if(tipos!=-100){
+    $("#nombre_tipodocumento"+fila).val($('#tipo_documento'+fila+' option:selected').text().toUpperCase());
+    if(!($("#nombre_tipodocumento"+fila).is("[readonly]"))){
+      $("#nombre_tipodocumento"+fila).attr("readonly",true);
+    }
+  }else{
+    $("#nombre_tipodocumento"+fila).val("");
+    $("#nombre_tipodocumento"+fila).focus();
+    if($("#nombre_tipodocumento"+fila).is("[readonly]")){
+      $("#nombre_tipodocumento"+fila).removeAttr("readonly");
+    } 
+  }
+  var nombre_tipodocumento=$("#nombre_tipodocumento"+fila).val();
   itemDocumentos[fila-1].tipo=tipos;
+  itemDocumentos[fila-1].nombre_tipo=nombre_tipodocumento;
   console.log(JSON.stringify(itemDocumentos));
 }
+
+function asignarTipoDocumentoText(fila){
+  $("#nombre_tipodocumento"+fila).val($("#nombre_tipodocumento"+fila).val().toUpperCase());
+  var nombre_tipodocumento=$("#nombre_tipodocumento"+fila).val();
+  itemDocumentos[fila-1].nombre_tipo=nombre_tipodocumento;
+  console.log(JSON.stringify(itemDocumentos));
+}
+
 function readSingleFile(evt) {
     var f = evt.target.files[0];
       if (f) {
@@ -10390,7 +10417,34 @@ function AjaxGestionFechaDesdeBG(combo){
     }
   }
   ajax.send(null)  
+}
+function ajaxGestionFechaDesdeER(combo){
+  var contenedor;
+  var cod_gestion=combo.value;
+  contenedor= document.getElementById('div_contenedor_fechaD');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'reportes/GestionDesdeAjax.php?cod_gestion='+cod_gestion,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;      
+      ajaxGestionFechaHastaER(combo);
+    }
+  }
+  ajax.send(null)  
+}
 
+function ajaxGestionFechaHastaER(combo){
+  var contenedor;
+  var cod_gestion=combo.value;
+  contenedor= document.getElementById('div_contenedor_fechaH');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'reportes/GestionHastaAjax.php?cod_gestion='+cod_gestion,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;      
+    }
+  }
+  ajax.send(null)  
 }
 
 function cargarDatosRegistroProveedorActivoFijo(cod_activo){
@@ -11591,3 +11645,138 @@ function ajaxUnidadorganizacionalAreaNormas(combo){
   ajax.send(null)  
 }//unidad_area-cargo
 
+var itemDistOficina=[];
+var itemDistArea=[];
+function cargarDistribucionSol(valor){
+  $("#nueva_distribucion").val(valor);
+  switch (valor){
+    case 1:
+    cargarTablaDistribucion(itemDistOficina,0);
+    $("#titulo_distribucion").html("x OFICINA");
+    break;
+    case 2:
+    cargarTablaDistribucion(0,itemDistArea);
+    $("#titulo_distribucion").html("x AREA");
+    break;
+    case 3:
+    cargarTablaDistribucion(itemDistOficina,itemDistArea);
+    $("#titulo_distribucion").html("x OFICINA y x Area");
+    break;
+    case 0:
+    quitarDistribucionSolicitud();
+    break;
+  }
+}
+function cargarTablaDistribucion(array1,array2){  
+  console.log(JSON.stringify(array1));
+  console.log(JSON.stringify(array2));
+   listarArrayTabla(array1,'cuerpo_tabladistofi');
+   listarArrayTabla(array2,'cuerpo_tabladistarea');
+   $("#modalDistribucionSol").modal("show");
+}
+function listarArrayTabla(array,cuerpo){
+  $("#"+cuerpo).html('');
+  var table = $("#"+cuerpo);
+  for (var i = 0; i < array.length; i++) {
+     var row = $('<tr>').addClass('');
+     row.append($('<td>').addClass('').text(i+1));
+     row.append($('<td>').addClass('font-weight-bold text-left').text(array[i].nombre));
+     row.append($('<td>').addClass('').html('<input type="number" onkeyup="calcularTotalesSolicitudDistribucion()" onkeydown="calcularTotalesSolicitudDistribucion()" step="0.01" class="form-control text-right" id="'+cuerpo+'_'+(i+1)+'" value="'+redondeo(array[i].porcentaje)+'">'));    
+     table.append(row);
+   }   
+   var row = $('<tr>').addClass('bg-plomo');
+     row.append($('<td>').addClass('').text(""));
+     row.append($('<td>').addClass('text-left font-weight-bold').text("Total"));
+     row.append($('<td>').addClass('text-right font-weight-bold').text('0').attr("id","total_"+cuerpo));    
+     table.append(row);
+   calcularTotalesSolicitudDistribucion();  
+}
+function saveDistribucionSolicitudRecurso(){
+  if(!($("#distrib_icon").hasClass("estado"))){
+    $("#distrib_icon").addClass("estado");
+   }
+
+  for (var i = 0; i < itemDistOficina.length; i++) {  
+   if($("#cuerpo_tabladistofi_"+(i+1)).length>0){
+    if($("#cuerpo_tabladistofi_"+(i+1)).val()==""||$("#cuerpo_tabladistofi_"+(i+1)).val()<0){
+      var valor = 0;
+    }else{
+      var valor = $("#cuerpo_tabladistofi_"+(i+1)).val();
+    }
+    itemDistOficina[i].porcentaje=valor;
+   }
+  }
+
+  for (var i = 0; i < itemDistArea.length; i++) {  
+   if($("#cuerpo_tabladistarea_"+(i+1)).length>0){
+    if($("#cuerpo_tabladistarea_"+(i+1)).val()==""||$("#cuerpo_tabladistarea_"+(i+1)).val()<0){
+      var valor = 0;
+    }else{
+      var valor = $("#cuerpo_tabladistarea_"+(i+1)).val();
+    }
+    itemDistArea[i].porcentaje=valor;
+   }
+  }
+  $("#modalDistribucionSol").modal("hide");
+  $("#boton_titulodist").html($("#titulo_distribucion").html());
+  $("#n_distribucion").val($("#nueva_distribucion").val());
+}
+
+function guardarDistribucionSolicitudRecurso(){
+  var sumaOfi=0; var sumaArea=0;
+  for (var i = 0; i < itemDistOficina.length; i++) {  
+   if($("#cuerpo_tabladistofi_"+(i+1)).length>0){
+    if(!($("#cuerpo_tabladistofi_"+(i+1)).val()==""||$("#cuerpo_tabladistofi_"+(i+1)).val()<0)){
+      sumaOfi+=parseFloat($("#cuerpo_tabladistofi_"+(i+1)).val())
+    }
+   }
+  }
+  for (var i = 0; i < itemDistArea.length; i++) {  
+   if($("#cuerpo_tabladistarea_"+(i+1)).length>0){
+    if(!($("#cuerpo_tabladistarea_"+(i+1)).val()==""||$("#cuerpo_tabladistarea_"+(i+1)).val()<0)){
+      sumaArea+=parseFloat($("#cuerpo_tabladistarea_"+(i+1)).val())
+    }
+   }
+  }
+  if(sumaOfi!=100&&sumaOfi!=0){
+   Swal.fire("Informativo!", "El porcentaje Total de Oficina debe ser 100 !", "warning");
+  }else{
+    if(sumaArea!=100&&sumaArea!=0){
+     Swal.fire("Informativo!", "El porcentaje Total de Area debe ser 100 !", "warning");
+    }else{
+       saveDistribucionSolicitudRecurso();
+    }
+  }
+}
+
+function calcularTotalesSolicitudDistribucion(){
+  var sumaOfi=0; var sumaArea=0;
+  for (var i = 0; i < itemDistOficina.length; i++) {  
+   if($("#cuerpo_tabladistofi_"+(i+1)).length>0){
+    if(!($("#cuerpo_tabladistofi_"+(i+1)).val()==""||$("#cuerpo_tabladistofi_"+(i+1)).val()<0)){
+      sumaOfi+=parseFloat($("#cuerpo_tabladistofi_"+(i+1)).val())
+    }
+   }
+  }
+  for (var i = 0; i < itemDistArea.length; i++) {  
+   if($("#cuerpo_tabladistarea_"+(i+1)).length>0){
+    if(!($("#cuerpo_tabladistarea_"+(i+1)).val()==""||$("#cuerpo_tabladistarea_"+(i+1)).val()<0)){
+      sumaArea+=parseFloat($("#cuerpo_tabladistarea_"+(i+1)).val())
+    }
+   }
+  }
+ if($("#total_cuerpo_tabladistofi").length>0){
+   $("#total_cuerpo_tabladistofi").text(redondeo(sumaOfi));
+ }
+ if($("#total_cuerpo_tabladistarea").length>0){
+   $("#total_cuerpo_tabladistarea").text(redondeo(sumaArea));
+ }
+}
+function quitarDistribucionSolicitud(){
+  $("#nueva_distribucion").val(0);
+  $("#n_distribucion").val(0);
+  if($("#distrib_icon").hasClass("estado")){
+    $("#distrib_icon").removeClass("estado");
+   }
+  $("#boton_titulodist").html("Distribución"); 
+}

@@ -5890,6 +5890,47 @@ function obtieneCuentaPadre($codigo){
    return($nombreX);
 }
 
+function obtenerDistribucionCentroCostosUnidadActivo(){
+   $dbh = new Conexion();
+   $sql="";
+   $sql="SELECT dd.*,u.nombre FROM distribucion_gastosporcentaje_detalle dd join distribucion_gastosporcentaje d on d.codigo=dd.cod_distribucion_gastos 
+join unidades_organizacionales u on u.codigo=dd.cod_unidadorganizacional  
+where estado=1";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+}
+
+function obtenerDistribucionCentroCostosAreaActivo(){
+   $dbh = new Conexion();
+   $sql="";
+   $sql="SELECT dd.*,u.nombre FROM distribucion_gastosarea_detalle dd join distribucion_gastosarea d on d.codigo=dd.cod_distribucionarea 
+join areas u on u.codigo=dd.cod_area  
+where estado=1";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+}
+function obtenerPorcentajeDistribucionGastoSolicitud($antValor,$tipo,$of_area,$codigoSolicitud){
+  $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT porcentaje FROM distribucion_gastos_solicitud_recursos where tipo_distribucion=$tipo and oficina_area=$of_area and cod_solicitudrecurso=$codigoSolicitud");
+   $stmt->execute();
+   $valor=$antValor;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['porcentaje'];
+   }
+   return($valor);
+}
+function obtenerSiDistribucionSolicitudRecurso($codigoSolicitud){
+  $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT DISTINCT tipo_distribucion FROM distribucion_gastos_solicitud_recursos where cod_solicitudrecurso=$codigoSolicitud");
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor+=$row['tipo_distribucion']; //obtener el valor 1:oficina, 2:area, 3:ambos
+   }
+   return($valor);
+}
 ?>
 
 

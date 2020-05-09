@@ -1,4 +1,57 @@
 <!-- notice modal -->
+<div class="modal fade" id="modalDistribucionSol" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content card">
+      <div class="card-header card-header-success card-header-text">
+          <div class="card-text">
+            <h5>Distribución de Gastos <b id="titulo_distribucion"></b> </h5> 
+          </div>
+          <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
+            <i class="material-icons">close</i>
+          </button>
+      </div>
+          <div class="card-body">
+            <div class="row col-sm-12">
+              <div class="col-sm-6">                                                              
+                  <table class="table table-condensed table-bordered">
+                    <thead>
+                      <tr class="bg-principal text-white">
+                        <th>#</th>
+                        <th>Oficina</th>
+                        <th width="10%">%</th>
+                      </tr>
+                    </thead>
+                    <tbody id="cuerpo_tabladistofi">
+                      
+                    </tbody>
+                  </table>
+              </div>
+              <div class="col-sm-6">                                                              
+                  <table class="table table-condensed table-bordered">
+                    <thead>
+                      <tr class="bg-principal text-white">
+                        <th>#</th>
+                        <th>Area</th>
+                        <th width="10%">%</th>
+                      </tr>
+                    </thead>
+                    <tbody id="cuerpo_tabladistarea">
+                      
+                    </tbody>
+                  </table>
+              </div> 
+             </div>                     
+             <div class="form-group float-right">
+                <button type="button" class="btn btn-success btn-round" onclick="guardarDistribucionSolicitudRecurso()">Guardar</button>
+             </div>         
+          </div>
+    </div>
+  </div>
+</div>
+<!-- end notice modal -->
+
+
+<!-- notice modal -->
 <div class="modal fade" id="modalEditFac" tabindex="-1" role="dialog" style="z-index:99999"aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-notice modal-xl">
     <div class="modal-content">

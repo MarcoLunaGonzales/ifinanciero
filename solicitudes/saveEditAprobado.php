@@ -52,7 +52,25 @@ while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
       }
 }
 
-
+//insertamos la distribucion
+  $sqlDel="DELETE FROM distribucion_gastos_solicitud_recursos where cod_solicitudrecurso=$codSolicitud";
+  $stmtDel = $dbh->prepare($sqlDel);
+  $stmtDel->execute();
+  
+  $valorDist=$_POST['n_distribucion'];
+  if($valorDist!=0){
+      $array1=json_decode($_POST['d_oficinas']);
+      $array2=json_decode($_POST['d_areas']);
+      if($valorDist==1){
+        guardarDatosDistribucion($array1,0,$codSolicitud); //dist x Oficina
+      }else{
+        if($valorDist==2){
+          guardarDatosDistribucion(0,$array2,$codSolicitud); //dist x Area
+        }else{
+          guardarDatosDistribucion($array1,$array2,$codSolicitud); //dist x Oficina y Area
+        }
+      }   
+  }
 
 $flagSuccess=true;
 //subir archivos al servidor
@@ -188,4 +206,27 @@ if(!isset($_POST['control_admin'])){
 	
 }
 
+function guardarDatosDistribucion($array1,$array2,$codigoSol){
+  $dbh = new Conexion();
+ if($array1!=0){
+  for ($i=0; $i < count($array1); $i++) { 
+    $unidad=$array1[$i]->unidad;
+    $porcentaje=$array1[$i]->porcentaje;
+    $sqlInsert="INSERT INTO distribucion_gastos_solicitud_recursos (tipo_distribucion,oficina_area,porcentaje,cod_solicitudrecurso) 
+    VALUES ('1','$unidad','$porcentaje','$codigoSol')";
+    $stmtInsert = $dbh->prepare($sqlInsert);
+    $stmtInsert->execute();
+  }   
+}
+if($array2!=0){
+  for ($i=0; $i < count($array2); $i++) { 
+    $area=$array2[$i]->area;
+    $porcentaje=$array2[$i]->porcentaje;
+    $sqlInsert="INSERT INTO distribucion_gastos_solicitud_recursos (tipo_distribucion,oficina_area,porcentaje,cod_solicitudrecurso) 
+    VALUES ('2','$area','$porcentaje','$codigoSol')";
+    $stmtInsert = $dbh->prepare($sqlInsert);
+    $stmtInsert->execute();
+  }
+ } 
+}
 ?>

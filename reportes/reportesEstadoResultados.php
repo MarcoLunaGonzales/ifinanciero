@@ -7,6 +7,8 @@ require_once 'styles.php';
 require_once 'functions.php';
 require_once 'functionsGeneral.php';
 
+setlocale(LC_TIME, "Spanish");
+
 $dbh = new Conexion();
 $query = "select * from depreciaciones";
 $statement = $dbh->query($query);
@@ -60,7 +62,7 @@ $fechaHasta=$y."-12-31";
               <div class="col-sm-7">
                 <div class="form-group">
                   <select name="gestion" id="gestion" class="selectpicker form-control form-control-sm " data-style="btn btn-info"
-                      required onChange="AjaxGestionFechaDesdeBG(this)">
+                      required onChange="ajaxGestionFechaDesdeER(this)">
                       <?php
                         $sql="SELECT * FROM gestiones order by 2 desc";
                         $stmtg = $dbh->prepare($sql);
@@ -95,9 +97,7 @@ $fechaHasta=$y."-12-31";
                 <label class="col-sm-2 col-form-label">Del:</label>
                 <div class="col-sm-3">
                   <div class="form-group">
-                    <div id="">                    
-                      <!-- <input type="text" class="form-control datepicker " autocomplete="off" name="fecha_hasta" id="fecha_hasta" min="<?=$fechaDesde?>" max="<?=$fechaHasta?>" value="<?=$fechaHasta?>">   -->
-                      <input type="date" name="fecha" id="fecha" class="form-control" min="<?=$fechaDesde?>" max="<?=$fechaHasta?>">
+                    <div id="div_contenedor_fechaD">                    
                     </div>
                       
                   </div>
@@ -106,10 +106,7 @@ $fechaHasta=$y."-12-31";
                 <div class="col-sm-3">
                   <div class="form-group">
                     <div id="div_contenedor_fechaH">                    
-                      <!-- <input type="text" class="form-control datepicker " autocomplete="off" name="fecha_hasta" id="fecha_hasta" min="<?=$fechaDesde?>" max="<?=$fechaHasta?>" value="<?=$fechaHasta?>">   -->
-                      <input type="date" name="fecha_hasta" id="fecha_hasta" class="form-control" min="<?=$fechaDesde?>" max="<?=$fechaHasta?>">
                     </div>
-                      
                   </div>
                 </div>
             </div><!--fin campo RUBRO -->
