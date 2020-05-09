@@ -533,8 +533,15 @@
             // documentos cabecera
             $('<input />').attr('type', 'hidden')
             .attr('name', 'archivos_cabecera')
-            .attr('value', JSON.stringify(itemDistArea))
-            .appendTo('#formSolDet');       
+            .attr('value', JSON.stringify(itemDocumentos))
+            .appendTo('#formSolDet');
+
+            $('<input />').attr('type', 'hidden')
+            .attr('name', 'archivos_detalle')
+            .attr('value', JSON.stringify(itemDocumentosDetalle))
+            .appendTo('#formSolDet');
+
+
           }       
         }
       }  

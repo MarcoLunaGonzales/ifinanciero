@@ -5931,6 +5931,17 @@ function obtenerSiDistribucionSolicitudRecurso($codigoSolicitud){
    }
    return($valor);
 }
+
+function obtenerComprobantePlantilla(){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT IFNULL(max(c.codigo)+1,1)as codigo from plantillas_comprobante c");
+   $stmt->execute();
+   $codigoComprobante=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $codigoComprobante=$row['codigo'];
+   }
+   return($codigoComprobante);
+}
 ?>
 
 

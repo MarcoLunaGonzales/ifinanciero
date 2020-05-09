@@ -391,10 +391,11 @@
 			                	</div>
 			                  </div>
 			                </div>
-			                <div class="form-group float-right">
-			                	<button type="button" class="btn btn-danger btn-round" onclick="guardarPlantilla()">Guardar</button>
-			                </div>
+			                
                          </form>
+                         <div class="form-group float-right">
+                        <a href="#" type="button" class="btn btn-danger btn-round" onclick="guardarPlantilla()">Guardar</a>
+                      </div>
                  <div id="mensaje"></div>
                 </div>
               </div>

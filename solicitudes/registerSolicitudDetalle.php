@@ -368,7 +368,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 </div>
 <!-- small modal -->
 <div class="modal fade modal-primary" id="modalFile" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog modal-xl">
     <div class="modal-content card">
       <div class="card-header card-header-info card-header-text">
                   <div class="card-text">

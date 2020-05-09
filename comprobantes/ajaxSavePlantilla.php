@@ -33,7 +33,7 @@ $data->bindColumn('numero', $nroCorrelativo);
 $data->bindColumn('glosa', $glosaComprobante);
 
 if(isset($_GET['codigo'])){
-	$globalCode=$_GET['codigo'];
+	$globalCode=obtenerComprobantePlantilla();
   $cantidadFilas=$_GET["cantidad_filas"];
   $detalles= json_decode($_GET['det']);
 }else{

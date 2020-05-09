@@ -1041,7 +1041,7 @@ function ayudaPlantilla(){
 }
 //plantilla guardar
 function guardarPlantilla(){
-  var cod=$("#codigo_comprobante").val();
+  var cod="10000";
   var tipo=$("#tipo_comprobante").val();
   var glosa=$("#glosa").val();
   var titulo=$("#titulo").val();
@@ -1071,7 +1071,8 @@ function guardarPlantilla(){
           $("#titulo").val("");
           $("#descrip_plan").val("");
           $('#modalPlantilla').modal('hide');
-          window.location="../index.php?opcion=listComprobantes";
+          Swal.fire("Correcto!", "Se Guardó la Plantilla!", "success");
+          //window.location="../index.php?opcion=listComprobantes";
         }
       }
       ajax.send(null);
@@ -1116,25 +1117,21 @@ function abrirPlantilla(id,n,glosa,tipo){
   document.getElementById("cantidad_filas").value=n;
   $("#glosa").val(glosa);
   //$("#tipo_comprobante").val(tipo);
-
-  ajax=nuevoAjax();
-  ajax.open("GET","ajaxOpenPlantilla.php?codigo="+id,true);
-  ajax.onreadystatechange=function(){
-  if (ajax.readyState==4) {
-    var fi=document.getElementById("fiel");
-    fi.innerHTML=ajax.responseText;
-    calcularTotalesComprobante("null");
-    for (var i = 0; i < cantidadItems; i++) {
-        var numeroC=$("#numero_cuenta"+(i+1)).val();
-        var inicio=numeroC.substr(0,1);
-         configuracionCentros((i+1),inicio);
-    };
-    $('.selectpicker').selectpicker(["refresh"]);
-    $("#modalAbrirPlantilla").modal("hide");
-    //$("#mensaje").html("<p class='text-success'>Listado de todas las plantillas</p>");
-   }
-  }
-  ajax.send(null);  
+  var parametros={"codigo":id};
+  $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxOpenPlantilla.php",
+        data: parametros,
+        success:  function (resp) {
+          var fi=$("#fiel");
+          fi.html(resp);
+          numFilas=n;
+          calcularTotalesComprobante("null");
+          $('.selectpicker').selectpicker("refresh");
+          $("#modalAbrirPlantilla").modal("hide");     
+        }
+    }); 
 }
 function nuevaDistribucionPonerFila(fila,tipoDistribucion){
  var glosa = $("#glosa_detalle"+fila).val();
@@ -1442,6 +1439,7 @@ input.addEventListener('change', function (e) {
 var numArchivos=0;
 function archivosPreview(send) {
     itemDocumentos=[];
+    numArchivos=0;
     var inp=document.getElementById("archivos");
     if(send!=1){
       var table = $('<table>').addClass('table');
@@ -1477,7 +1475,7 @@ function archivosPreview(send) {
          htmlSelect+='</select>';
          row.append($('<td>').addClass('').html(htmlSelect));
 
-        var htmlInput='<input class="form-control text-right text-muted" placeholder="Ingresar descripción" id="nombre_tipodocumento'+(i+1)+'" readonly value="SIN TIPO ARCHIVO" onkeyup="asignarTipoDocumentoText(\''+name+'\','+(i+1)+')" onkeydown="asignarTipoDocumentoText(\''+name+'\','+(i+1)+')">'       
+        var htmlInput='<input class="form-control text-right text-muted" placeholder="Ingresar descripción" id="nombre_tipodocumento'+(i+1)+'" readonly value="SIN TIPO ARCHIVO" onkeyup="asignarTipoDocumentoText('+(i+1)+')" onkeydown="asignarTipoDocumentoText('+(i+1)+')">'       
         row.append($('<td>').addClass('').html(htmlInput));
        }        
        table.append(row);
@@ -1493,6 +1491,7 @@ function archivosPreview(send) {
      }
 }
 var itemDocumentos=[];
+var itemDocumentosDetalle=[];
 function asignarTipoDocumento(nombreArchivo,fila){
   var tipos = $("#tipo_documento"+fila).val(); 
   if(tipos!=-100){
@@ -1513,13 +1512,36 @@ function asignarTipoDocumento(nombreArchivo,fila){
   console.log(JSON.stringify(itemDocumentos));
 }
 
-function asignarTipoDocumentoText(fila){
-  $("#nombre_tipodocumento"+fila).val($("#nombre_tipodocumento"+fila).val().toUpperCase());
-  var nombre_tipodocumento=$("#nombre_tipodocumento"+fila).val();
-  itemDocumentos[fila-1].nombre_tipo=nombre_tipodocumento;
-  console.log(JSON.stringify(itemDocumentos));
+function asignarTipoDocumentoDetalle(nombreArchivo,fila,indice){
+  var tipos = $("#tipo_documentodetalle"+fila).val(); 
+  if(tipos!=-100){
+    $("#nombre_tipodocumentodetalle"+fila).val($('#tipo_documentodetalle'+fila+' option:selected').text().toUpperCase());
+    if(!($("#nombre_tipodocumentodetalle"+fila).is("[readonly]"))){
+      $("#nombre_tipodocumentodetalle"+fila).attr("readonly",true);
+    }
+  }else{
+    $("#nombre_tipodocumentodetalle"+fila).val("");
+    $("#nombre_tipodocumentodetalle"+fila).focus();
+    if($("#nombre_tipodocumentodetalle"+fila).is("[readonly]")){
+      $("#nombre_tipodocumentodetalle"+fila).removeAttr("readonly");
+    } 
+  }
+  var nombre_tipodocumento=$("#nombre_tipodocumentodetalle"+fila).val();
+  itemDocumentosDetalle[indice-1][fila-1].tipo=tipos;
+  itemDocumentosDetalle[indice-1][fila-1].nombre_tipo=nombre_tipodocumento;
+  console.log(JSON.stringify(itemDocumentosDetalle));
 }
 
+
+function asignarTipoDocumentoText(fila){
+  var nombre_tipodocumento=$("#nombre_tipodocumento"+fila).val();
+  itemDocumentos[fila-1].nombre_tipo=nombre_tipodocumento;
+  //console.log(JSON.stringify(itemDocumentos));
+}
+function asignarTipoDocumentoTextDetalle(fila,index){
+  var nombre_tipodocumento=$("#nombre_tipodocumentodetalle"+fila).val();
+  itemDocumentosDetalle[index-1][fila-1].nombre_tipo=nombre_tipodocumento;
+}
 function readSingleFile(evt) {
     var f = evt.target.files[0];
       if (f) {
@@ -3736,6 +3758,7 @@ function minusDetalleSolicitud(idF){
       }
      } 
      itemFacturas.splice((idF-1), 1);
+     itemDocumentosDetalle.splice((idF-1), 1);
       numFilas=numFilas-1;
       cantidadItems=cantidadItems-1;
       filaActiva=numFilas;
@@ -3746,6 +3769,8 @@ function minusDetalleSolicitud(idF){
 var numArchivosDetalle=0;
 function archivosPreviewDetalle(send) {
   var fila =$("#codigo_fila").val();
+  numArchivosDetalle=0;
+  itemDocumentosDetalle[fila-1]=[];
      var x = $("#archivosDetalle");
       var y = x.clone();
       y.attr("id", "archivos"+fila);
@@ -3755,13 +3780,47 @@ function archivosPreviewDetalle(send) {
     var inp=document.getElementById("archivosDetalle");
     var inpDetalle=document.getElementById("archivos"+fila);
     if(send!=1){
-      $("#lista_archivosdetalle").html("<p class='text-success text-center'>Lista de Archivos</p>");
-      for (var i = 0; i < inpDetalle.files.length; i++) {
-       numArchivosDetalle++;
+    var table = $('<table>').addClass('table');
+      table.addClass('table-condensed');
+      table.addClass('table-bordered');
+       var titulos = $('<tr>').addClass('bg-info text-white');
+       titulos.append($('<td>').addClass('text-left').text('#'));
+       titulos.append($('<td>').addClass('').text('DOCUMENTO'));
+       titulos.append($('<td>').addClass('').text('.*'));
+       if($("#formSolDet").length>0){
+         titulos.append($('<td>').addClass('').text('TIPO DOCUMENTO')); 
+         titulos.append($('<td>').addClass('').text('DESCRIPCIÓN TIPO'));     
+       }
+       table.append(titulos);
+      for (var i = 0; i < inpDetalle.files.length; ++i) {
+        numArchivosDetalle++;
         var name = inpDetalle.files.item(i).name;
-        $("#lista_archivosdetalle").append("<div class='text-left'><label>"+name+"</label></div>");
-      };
+        var row = $('<tr>').addClass('');
+       row.append($('<td>').addClass('text-left').text(i+1));
+       row.append($('<td>').addClass('font-weight-bold').text(name));
+       row.append($('<td>').addClass('font-weight-bold').text(/[^.]+$/.exec(name)));
+       if($("#formSolDet").length>0){
+        var doc = {
+          id:i,
+          nombre:name,
+          tipo:0,
+          nombre_tipo:""
+        }
+        itemDocumentosDetalle[fila-1].push(doc);
+        console.log(JSON.stringify(itemDocumentosDetalle[fila-1]));
+        var htmlSelect = '<select onChange="asignarTipoDocumentoDetalle(\''+name+'\','+(i+1)+','+(fila)+')" class="selectpicker form-control form-control-sm" name="tipo_documentodetalle'+(i+1)+'" id="tipo_documentodetalle'+(i+1)+'" data-style="btn btn-warning">';
+         htmlSelect+=$("#tipo_documento").html();
+         htmlSelect+='</select>';
+         row.append($('<td>').addClass('').html(htmlSelect));
+
+        var htmlInput='<input class="form-control text-right text-muted" placeholder="Ingresar descripción" id="nombre_tipodocumentodetalle'+(i+1)+'" readonly value="SIN TIPO ARCHIVO" onkeyup="asignarTipoDocumentoTextDetalle('+(i+1)+','+(fila)+')" onkeydown="asignarTipoDocumentoTextDetalle('+(i+1)+','+(fila)+')">'       
+        row.append($('<td>').addClass('').html(htmlInput));
+       }        
+       table.append(row);
+       }     
+      $("#lista_archivosdetalle").html(table);
        $("#narch"+fila).addClass("estado");
+       $('.selectpicker').selectpicker("refresh");
      }else{
       numArchivosDetalle=0;
         $("#lista_archivosdetalle").html("Ningun archivo seleccionado");

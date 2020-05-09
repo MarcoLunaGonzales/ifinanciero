@@ -186,27 +186,34 @@
 <!-- end notice modal -->
 <!-- small modal -->
 <div class="modal fade modal-primary" id="modalFileDet" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <i class="material-icons" data-notify="icon"><?=$iconFile?></i>
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="material-icons">clear</i></button>
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content card">
+      <div class="card-header card-header-info card-header-text">
+                  <div class="card-text">
+                    <h5>DOCUMENTOS DE RESPALDO</h5>      
+                  </div>
+                  <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">close</i>
+                  </button>
       </div>
-      <div class="modal-body">
+
+      <div class="card-body">
         <p>Cargar archivos de respaldo.</p> 
         <input type="hidden" id="codigo_fila" value=""/>
            <div class="fileinput fileinput-new col-md-12" data-provides="fileinput">
-            <div class="row">
-              <div class="col-md-9">
+           <div class="row">
+              <div class="col-md-12">
                 <div class="border" id="lista_archivosdetalle">Ningun archivo seleccionado</div>
               </div>
-              <div class="col-md-3">
-                <span class="btn btn-info btn-round btn-file">
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <span class="btn btn-info btn-file btn-sm">
                       <span class="fileinput-new">Buscar</span>
                       <span class="fileinput-exists">Cambiar</span>
                       <input type="file" name="archivosDetalle[]" id="archivosDetalle" multiple="multiple"/>
                    </span>
-                <a href="#" id="boton_quitararchivos" class="btn btn-success btn-round fileinput-exists" onclick="archivosPreviewDetalle(1)" data-dismiss="fileinput"><i class="material-icons">clear</i> Quitar</a>
+                <a href="#" id="boton_quitararchivos" class="btn btn-danger btn-sm fileinput-exists" onclick="archivosPreviewDetalle(1)" data-dismiss="fileinput"><i class="material-icons">clear</i> Quitar</a>
               </div>
             </div>
            </div>
