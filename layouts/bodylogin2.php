@@ -303,98 +303,50 @@
                           var debeZ=parseFloat($("#debe"+(i+1)).val());
                           var haberZ=parseFloat($("#haber"+(i+1)).val());
                           var tipoComprobante=parseFloat($("#tipo_comprobante").val());
-                          var tipoEstadoCuenta=$("#tipo_estadocuentas"+(i+1)).val();
+                          var tipoEstadoCuenta=$("#tipo_estadocuentas"+(i+1)).val();//1 DEBE; 2 HABER
                           var tipoECCasoespecial=$("#tipo_estadocuentas_casoespecial"+(i+1)).val();
                           var cuentaAuxiliar=$("#cuenta_auxiliar"+(i+1)).val();  
                           var estadoCuentaSelect=$("#nestado"+(i+1)).hasClass("estado");
-
-                          //console.log("debe: "+debeZ+" haber: "+haberZ+" TC: "+tipoComprobante+" CA: "+cuentaAuxiliar+" TEC: "+tipoEstadoCuenta+" EEC: "+estadoCuentaSelect);
+                          //var nombreCuenta=$("#divCuentaDetalle"+(i+1).text);
+                          //console.log(nombreCuenta);
 
                           //VALIDAMOS CUANDO LA CUENTA TENGA EC LA CUENTA AUXILIAR SIEMPRE ESTE SELECCIONADA.
-                          if(tipoComprobante==3 && tipoEstadoCuenta>0 && cuentaAuxiliar==0){  
+                          if(tipoEstadoCuenta>0 && cuentaAuxiliar==0){  
                             $('#msgError').html("La fila "+(i+1)+" debe estar asociada a una CUENTA AUXILIAR, ya que está configurada para llevar Estados de Cuenta.");
                             $('#modalAlert').modal('show');
                             return false;
                             //CONSULTAMOS SI EN EL CASO ESPECIAL ESTA MATANDO LA CUENTA
                           }else{
-                            if( tipoComprobante==3 && tipoEstadoCuenta>0 ){
-                              if( estadoCuentaSelect==false && tipoECCasoespecial==1){
-                                $('#msgError').html("Fila "+(i+1)+" Debe seleccionar un estado de cuenta para Cerrar.");
+                            if( (tipoEstadoCuenta==1 && haberZ>0) || (tipoEstadoCuenta==2 && debeZ>0) ){
+                              if( estadoCuentaSelect==false ){
+                                $('#msgError').html("Fila "+(i+1)+" Debe seleccionar un Estado de Cuenta para Cerrar.");
                                 $('#modalAlert').modal('show');
-                                return false;
-                              }
-                              if( haberZ>0 && tipoEstadoCuenta==1 ){
-                                $('#msgError').html("<p>Fila "+(i+1)+"Esta cuenta No admite Monto en el Haber</p>");
-                                $("#modalAlert").modal("show");
-                                return false;
-                              }
-                              if( debeZ>0 && tipoEstadoCuenta==2 ){
-                                $('#msgError').html("<p>Fila "+(i+1)+"Esta cuenta No admite Monto en el Debe</p>");
-                                $("#modalAlert").modal("show");
                                 return false;
                               }
                             }
                             //console.log("cuenta sin problemas; tipoComp:3");
                           }
-
                           
-                          //Validamos TipoC: Ingreso y cuando haya EC se registre obligatoriamente en el Haber
-                          if( (tipoComprobante==1 && tipoEstadoCuenta==1) ){
-                            if( haberZ <= 0 ){
-                              $('#msgError').html("Fila "+(i+1)+" esta configurada para cerrar Estados de Cuenta con Monto en el Haber.");
-                              $('#modalAlert').modal('show');
-                              return false;
-                            }      
-                            if( estadoCuentaSelect==false ){
-                              $('#msgError').html("Fila "+(i+1)+" Debe seleccionar un estado de cuenta para Cerrar.");
-                              $('#modalAlert').modal('show');
-                              return false;
-                            }                                                        
-                          }else{
-                            //console.log("cuenta sin problemas; tipoComp:1");
-                          }
-
-                          //Validamos TipoC: Ingreso y cuando haya EC se registre obligatoriamente en el Haber
-                          if( (tipoComprobante==2 && tipoEstadoCuenta==2) ){
-                            if( debeZ <= 0 ){
-                              $('#msgError').html("Fila "+(i+1)+" esta configurada para cerrar Estados de Cuenta con monto en el Debe.");
-                              $('#modalAlert').modal('show');
-                              return false;
-                            }
-                            if( estadoCuentaSelect==false && tipoECCasoespecial!=1 ){
-                              $('#msgError').html("Fila "+(i+1)+" Debe seleccionar un Estado de Cuenta para Cerrar.");
-                              $('#modalAlert').modal('show');
-                              return false;
-                            }  
-                          }else{
-                            //console.log("cuenta sin problemas; tipoComp:2");
-                          }
-                          
-
-                           //Validar las cuentas que esten relacionadads al estado de cuentas los montos deben ser iguales
-                          if( (tipoComprobante==1 && tipoEstadoCuenta==1) ){
+                          //Validar las cuentas que esten relacionadads al estado de cuentas los montos deben ser iguales
+                          if( (tipoEstadoCuenta==1 && haberZ>0) ){
                             for (var f = 0; f < itemEstadosCuentas[i].length; f++) {
                               if(itemEstadosCuentas[i][f].monto!=haberZ){
-                                 $('#msgError').html("Fila "+(i+1)+" el monto del estado de cuenta no iguala al haber.");
+                                 $('#msgError').html("Fila "+(i+1)+" El Monto del Estado de Cuenta no iguala al Haber.");
                                  $('#modalAlert').modal('show');
                                  return false;
                               }
-                            };  
-                          }else{
-                            //console.log("cuenta sin problemas; tipoComp:2");
+                            }  
                           }
-                          //Validar las cuentas que esten relacionadads al estado de cuentas los montos deben ser iguales
-                          if( (tipoComprobante==2 && tipoEstadoCuenta==2) ){
+                          if( (tipoEstadoCuenta==2 && debeZ>0) ){
                             for (var f = 0; f < itemEstadosCuentas[i].length; f++) {
                               if(itemEstadosCuentas[i][f].monto!=debeZ){
-                                 $('#msgError').html("Fila "+(i+1)+" el monto del estado de cuenta no iguala al debe.");
+                                 $('#msgError').html("Fila "+(i+1)+" El Monto del Estado de Cuenta no iguala al Debe.");
                                  $('#modalAlert').modal('show');
                                  return false;
                               }
-                            };  
-                          }else{
-                            //console.log("cuenta sin problemas; tipoComp:2");
-                          }      
+                            }  
+                          }
+
                         }
                         if(contEstadoDebito==1){
                           envio=1;

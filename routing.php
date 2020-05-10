@@ -398,6 +398,10 @@
 		if ($_GET['opcion']=='registerConfiguracionEstadoCuenta') {
 			require_once('estados_cuenta/register.php');
 		}
+		if ($_GET['opcion']=='editConfiguracionEstadoCuenta') {
+			$codigo=$_GET['codigo'];
+			require_once('estados_cuenta/edit.php');
+		}
 		if ($_GET['opcion']=='deleteConfiguracionEstadoCuenta') {
 			require_once('estados_cuenta/saveDelete.php');
 		}

@@ -50,9 +50,8 @@ $stmt->bindColumn('tipoestadocuenta', $tipoEstadoCuenta);
                         <tr>
                           <th class="text-center">#</th>
                           <th class="text-left">Cuenta</th>
-                          <th class="text-left">Caso Especial</th>
                           <th class="text-left">Tipo Estado Cuenta</th>
-                          <th>Debe/Haber</th>
+                          <th>Acumular En</th>
                           <th class="text-right">Actions</th>
                         </tr>
                       </thead>
@@ -60,20 +59,15 @@ $stmt->bindColumn('tipoestadocuenta', $tipoEstadoCuenta);
 <?php
 						$index=1;
                       while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
-                        $txtCasoEspecial="";
-                        if($codCuentaAux==1){
-                          $txtCasoEspecial="Caso Especial";
-                        }
                        if($tipo==1){
-                       $tipoDes="Débito";
+                       $tipoDes="Debe";
                        }else{
-                        $tipoDes="Crédito";
+                        $tipoDes="Haber";
                        }
 ?>
                         <tr>
                           <td align="center"><?=$index;?></td>
                           <td class="text-left">[<?=$numero;?>] - <?=$nombre;?></td>
-                          <td class="text-left"><?=$txtCasoEspecial;?></td>
                           <td>
                             <?=$tipoEstadoCuenta;?>
                           </td>                 
@@ -81,19 +75,12 @@ $stmt->bindColumn('tipoestadocuenta', $tipoEstadoCuenta);
                             <img src="assets/img/logoibnorca.png" width="20" height="20"/> <?=$tipoDes;?>
                           </td>
                           <td class="td-actions text-right">
-                            <?php 
-                            if( ($tipo==1 && $codTipoEstadoCuenta==2) || ($tipo==2 && $codTipoEstadoCuenta==1)){
-                              ?>
-                              <a title="Detalle" href='#' onclick="verEstadosCuentasModal('<?=$nombre?>',<?=$codCuenta?>,<?=$codCuentaAux?>,<?=$tipo?>,<?=$codTipoEstadoCuenta?>)" class="btn btn-default">
-                               <i class="material-icons">ballot</i>
-                              </a>
-                              <!--a href='basename(__DIR__)/estados_cuenta/detalleEstadoCuentas.php?cod_cuenta=<?=$codCuenta?>&cod_cuentaaux=<?=$codCuentaAux?>&tipo=<?=$tipo?>&tipo_proveedorcliente=<?=$codTipoEstadoCuenta?>' target='_BLANK' class="btn btn-default">
-                               <i class="material-icons">ballot</i>
-                              </a-->
-                              <?php
-                            }
-                            ?>
-                            
+                            <a title="Detalle" href='#' onclick="verEstadosCuentasModal('<?=$nombre?>',<?=$codCuenta?>,<?=$codCuentaAux?>,<?=$tipo?>,<?=$codTipoEstadoCuenta?>)" class="btn btn-default">
+                             <i class="material-icons">ballot</i>
+                            </a>
+                            <a href='<?=$urlEdit;?>&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonEdit;?>">
+                              <i class="material-icons"><?=$iconEdit;?></i>
+                            </a>
                             <button title="Eliminar Cuenta" class="btn btn-danger" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')">
                               <i class="material-icons"><?=$iconDelete;?></i>
                             </button>

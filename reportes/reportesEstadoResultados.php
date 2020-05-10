@@ -62,7 +62,8 @@ $fechaHasta=$y."-12-31";
               <div class="col-sm-7">
                 <div class="form-group">
                   <select name="gestion" id="gestion" class="selectpicker form-control form-control-sm " data-style="btn btn-info"
-                      required onChange="ajaxGestionFechaDesdeER(this)">
+                      required="true" onChange="ajaxGestionFechaDesdeER(this);">
+                      <option value=""></option>
                       <?php
                         $sql="SELECT * FROM gestiones order by 2 desc";
                         $stmtg = $dbh->prepare($sql);

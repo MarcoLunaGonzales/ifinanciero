@@ -127,6 +127,10 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                    $numeroX=$rowComp['numero'];
                    $nombreX=formateaPlanCuenta($rowComp['nombre'], $rowComp['nivel']);
                    $montoX=(float)($rowComp['total_debe']-$rowComp['total_haber']);
+
+                   //ACA VOLVEMOS TODO POSITIVO PARA LA RESTA FINAL
+                   $montoX=abs($montoX);
+                   
                    if($codigo==5){                    
                     $tBolActivo+=$montoX;
                   }else{

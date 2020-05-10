@@ -5116,14 +5116,14 @@ where d.glosa=e.glosa and d.cod_anio=$anio and d.cod_simulacionservicio=$simulac
     }
     return $valor;
   }
-  function verificarCuentaECCasoEspecial($cuenta){      
+  function verificarTipoEstadoCuenta($cuenta){      
     $dbh = new Conexion();
     $valor=0;
-    $sql="SELECT cod_cuentaaux as contador from configuracion_estadocuentas c where c.cod_plancuenta='$cuenta'";
+    $sql="SELECT c.tipo from configuracion_estadocuentas c where c.cod_plancuenta='$cuenta'";
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-      $valor=$row['contador'];
+      $valor=$row['tipo'];
     }
     return $valor;
   }

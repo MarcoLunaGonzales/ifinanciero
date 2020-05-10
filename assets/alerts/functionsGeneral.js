@@ -354,6 +354,9 @@ function configuracionEstadosCuenta(fila,codigoCuenta,codigoCuentaAux){
       $("#tipo_proveedorcliente"+fila).val(estado_cuentas[i].tipo_estado_cuenta);
       $("#tipo_estadocuentas_casoespecial"+fila).val(estado_cuentas[i].cod_cuentaaux);
 
+      console.log("tipo: "+estado_cuentas[i].tipo);
+      console.log("ProvCliente: "+estado_cuentas[i].tipo_estado_cuenta);
+
       contador++;   
       break;  
     }else{
@@ -6347,56 +6350,41 @@ function buscarCuentaNumero(numeros,val){
 // ESTADOS DE CUENTAS/////////////////////////////////////
 function verEstadosCuentas(fila,cuenta){
   var tipoComprobante=parseFloat($("#tipo_comprobante").val());
-  var debeX=parseFloat($("#debe"+fila).val());
-  var haberX=parseFloat($("#haber"+fila).val());
+  
+  var debeX=0;
+  var haberX=0;
 
-  var tipo=$("#tipo_estadocuentas"+fila).val();
-  var tipo_proveedorcliente=$("#tipo_proveedorcliente"+fila).val();
-  var tipo_estadocuentas_casoespecial=$("#tipo_estadocuentas_casoespecial"+fila).val();
+  if(!isNaN(parseFloat($("#debe"+fila).val()))) { debeX=parseFloat($("#debe"+fila).val());}
+  if(!isNaN(parseFloat($("#haber"+fila).val()))) { haberX=parseFloat($("#haber"+fila).val());}
+
+  var tipo=$("#tipo_estadocuentas"+fila).val();//1 DEBE; 2 HABER
+  var tipo_proveedorcliente=$("#tipo_proveedorcliente"+fila).val();//1 PROV 2 CLIENTE
+  var tipo_estadocuentas_casoespecial=$("#tipo_estadocuentas_casoespecial"+fila).val();//
 
   var banderaContinuar=1;
-  if(($("#debe"+fila).val()==""&&$("#haber"+fila).val()=="")||($("#debe"+fila).val()==0&&$("#haber"+fila).val()==0)){
-    $('#msgError').html("<p>El Debe o Haber deben de ser llenados</p>");
+  var banderaCerrarEC=0;
+
+  console.log("debe:"+debeX+" haber:"+haberX);
+  if( debeX==0 && haberX==0 ){
+    $('#msgError').html("<p>Debe existir un Monto Válido ya sea en el Debe o en el Haber.</p>");
     $("#modalAlert").modal("show");
     banderaContinuar=0;
   }
-  if( tipoComprobante==3 && haberX>0 && tipo==1 ){
-    $('#msgError').html("<p>Esta cuenta No admite Monto en el Haber</p>");
-    $("#modalAlert").modal("show");
-    banderaContinuar=0;
-  }
-  if( tipoComprobante==3 && debeX>0 && tipo==2 ){
-    $('#msgError').html("<p>Esta cuenta No admite Monto en el Debe</p>");
-    $("#modalAlert").modal("show");
-    banderaContinuar=0;
-  }
-  if( tipoComprobante==1 && debeX>0 ){
-    $('#msgError').html("<p>Esta cuenta no admite Cerrar un Estado de Cuenta con un monto en el Debe</p>");
-    $("#modalAlert").modal("show");
-    banderaContinuar=0;
-  }
-  if( tipoComprobante==2 && haberX>0 ){
-    $('#msgError').html("<p>Esta cuenta no admite Cerrar un Estado de Cuenta con un monto en el Haber</p>");
-    $("#modalAlert").modal("show");
-    banderaContinuar=0;
-  }
+
   if(banderaContinuar==1){
+    if( debeX>0 && tipo==2 ){
+      banderaCerrarEC=1;
+      $("#monto_estadocuenta").val(debeX);    
+    }
+    if( haberX>0 && tipo==1 ){
+      banderaCerrarEC=1;
+      $("#monto_estadocuenta").val(haberX);
+    }
+    console.log("CERRAR EC: "+banderaCerrarEC);
+
     var cod_cuenta=$("#cuenta"+fila).val();
     var cod_cuenta_auxiliar=$("#cuenta_auxiliar"+fila).val();
     var auxi="NO";
-
-
-    //EN ESTA PARTE DEBEMOS MATAR LA CUENTA    
-    if(tipoComprobante==1){//TIPO INGRESO
-      $("#monto_estadocuenta").val($("#haber"+fila).val());      
-    }
-    if(tipoComprobante==2){//TIPO EGRESO
-      $("#monto_estadocuenta").val($("#debe"+fila).val());      
-    }
-
-    if(tipoComprobante==3 && tipo_estadocuentas_casoespecial==1){//TIPO TRASPASO CASO ESPECIAL
-      $("#monto_estadocuenta").val($("#haber"+fila).val());      
-    }
 
     if($("#edicion").length>0){
       var edicion=1;
@@ -6407,9 +6395,9 @@ function verEstadosCuentas(fila,cuenta){
     }
     if(itemEstadosCuentas[fila-1].length>0){   
       var comprobanteOrigen=itemEstadosCuentas[fila-1][0].cod_comprobantedetalle;
-      var parametros={"codigo_comprobante":codigo_comprobante,"edicion":edicion,"cod_cuenta":cod_cuenta,"cod_cuenta_auxiliar":cod_cuenta_auxiliar,"tipo_comprobante":tipoComprobante,"comprobante_origen":comprobanteOrigen,"tipo_estadocuentas_casoespecial":tipo_estadocuentas_casoespecial};
+      var parametros={"codigo_comprobante":codigo_comprobante,"edicion":edicion,"cod_cuenta":cod_cuenta,"cod_cuenta_auxiliar":cod_cuenta_auxiliar,"tipo_comprobante":tipoComprobante,"comprobante_origen":comprobanteOrigen,"cerrar_ec":banderaCerrarEC};
     }else{
-      var parametros={"codigo_comprobante":codigo_comprobante,"edicion":edicion,"cod_cuenta":cod_cuenta,"cod_cuenta_auxiliar":cod_cuenta_auxiliar,"tipo_comprobante":tipoComprobante,"tipo_estadocuentas_casoespecial":tipo_estadocuentas_casoespecial};
+      var parametros={"codigo_comprobante":codigo_comprobante,"edicion":edicion,"cod_cuenta":cod_cuenta,"cod_cuenta_auxiliar":cod_cuenta_auxiliar,"tipo_comprobante":tipoComprobante,"cerrar_ec":banderaCerrarEC};
     }
     
     //PASA Y MOSTRAMOS LOS ESTADOS DE CUENTA    
@@ -6419,7 +6407,7 @@ function verEstadosCuentas(fila,cuenta){
         url: "../estados_cuenta/ajaxMostrarEstadosCuenta.php",
         data: parametros,
         beforeSend: function () {
-        $("#texto_ajax_titulo").html("Consultando los estados de cuenta..."); 
+        $("#texto_ajax_titulo").html("Consultando Estado de Cuentas..."); 
           iniciarCargaAjax();
         },
         success:  function (resp) {
@@ -6427,6 +6415,7 @@ function verEstadosCuentas(fila,cuenta){
           $("#texto_ajax_titulo").html("Procesando Datos");
           var respuesta=resp.split('@');
           $("#div_estadocuentas").html(respuesta[0]);
+          //REVISAR ESTA INSTRUCCION
           if(tipo==2 && tipo_proveedorcliente==1){
             var rsaldo=listarEstadosCuentas(fila,respuesta[1]);
             console.log("listarEstadoCuentasDebito;");
