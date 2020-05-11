@@ -10382,7 +10382,7 @@ function ajax_tipo_filtro_reporte_prove_cliente(){
     if (ajax.readyState==4) {
       contenedor.innerHTML = ajax.responseText;
       $('.selectpicker').selectpicker(["refresh"]);
-      ajax_clientes_proveedores();
+      //ajax_clientes_proveedores();
     }
   }
   ajax.send(null)  
