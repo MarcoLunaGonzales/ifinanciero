@@ -226,7 +226,25 @@ while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
           }
 
          $i=$ii;     
-     
+      
+            $haber=0;
+
+            if($porcentajeCuentaX<=100){
+              $debe=$importeOriginal2;
+              $sumaDevengado=$importeOriginal; 
+              $debe=number_format($debe, 2, '.', ''); 
+            }else{
+              $debe=$importe;
+              $sumaDevengado=$importeOriginal; 
+              $debe=number_format($debe, 2, '.', ''); 
+            }
+           //detalle comprobante CON RETENCION //////////////////////////////////////////////////////////////7
+           $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
+           $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) 
+           VALUES ('$codComprobanteDetalle','$codComprobante', '$cuenta', '$cuentaAuxiliar', '$unidadDetalle', '$area', '$debe', '$haber', '$glosaDetalle', '$i')";
+           $stmtDetalle = $dbh->prepare($sqlDetalle);
+           $flagSuccessDetalle=$stmtDetalle->execute();
+
            $totalRetencion=0;  
             //if($totalRetencion!=0){
               for ($j=0; $j < count($retenciones); $j++) { 
@@ -252,24 +270,7 @@ while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
               //$sumaDevengado+=$totalRetencion;   
               }
 
-            // fin de retencion 
-            $haber=0;
-
-            if($porcentajeCuentaX<=100){
-              $debe=$importeOriginal2;
-              $sumaDevengado=$importeOriginal; 
-              $debe=number_format($debe, 2, '.', ''); 
-            }else{
-              $debe=$importe;
-              $sumaDevengado=$importeOriginal; 
-              $debe=number_format($debe, 2, '.', ''); 
-            }
-           //detalle comprobante CON RETENCION //////////////////////////////////////////////////////////////7
-           $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
-           $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) 
-           VALUES ('$codComprobanteDetalle','$codComprobante', '$cuenta', '$cuentaAuxiliar', '$unidadDetalle', '$area', '$debe', '$haber', '$glosaDetalle', '$i')";
-           $stmtDetalle = $dbh->prepare($sqlDetalle);
-           $flagSuccessDetalle=$stmtDetalle->execute();
+            // fin de retencion
       //}
         $totalRetencion=0;
       } //fin else *********************************** SI TIENE RETENCION ****************************************************+    

@@ -48,14 +48,15 @@ $mes=$_GET['mes'];
   	//echo $sqlEstadoCuenta;
 
   	$stmt = $dbh->prepare($sqlEstadoCuenta);
-	//$sqlEstadoCuenta="SELECT e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar FROM estados_cuenta e,comprobantes_detalle d where e.cod_comprobantedetalle=d.codigo and (d.cod_cuenta=$codCuenta or e.cod_plancuenta=$codCuenta) and e.cod_comprobantedetalleorigen=0 order by e.fecha";
-  //$stmt = $dbh->prepare($sqlEstadoCuenta);
+
 
   
   $stmt->execute();
   $i=0;$saldo=0;
   $indice=0;
   $totalSaldo=0;
+  $totalDebe=0;
+  $totalHaber=0;
   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 	 $codigoX=$row['codigo'];
 	 $codPlanCuentaX=$row['cod_plancuenta'];
@@ -70,6 +71,11 @@ $mes=$_GET['mes'];
 	 $glosaAuxiliar=$row['glosa_auxiliar'];
 	 $codCuentaAuxDet=$row['cod_cuentaaux'];
 
+	 if($tipo==1){
+	 	$totalDebe+=$montoX;
+	 }else{
+	 	$totalHaber+=$montoX;
+	 }
 
 	 $glosaMostrar="";
 	 if($glosaAuxiliar!=""){
@@ -92,6 +98,11 @@ $mes=$_GET['mes'];
     $montoContra=0;
     while ($rowContra = $stmtContra->fetch(PDO::FETCH_ASSOC)) {
       $montoContra=$rowContra['monto'];
+    }
+    if($tipo==1){
+    	$totalHaber+=$montoContra;
+    }else{
+    	$totalDebe+=$montoContra;
     }
     $debeX=$montoContra;
     //FIN SACAR LOS PAGOS
@@ -167,7 +178,7 @@ $mes=$_GET['mes'];
 
 	      	</td>
 	      	<?php
-	      	if($tipoProveedorCliente==1){
+	      	if($tipo==2){
 	      	?>
 	      	<td class="text-right small"><?=formatNumberDec($montoContra)?></td>
 	  	   	<td class="text-right small"><?=formatNumberDec($montoX)?></td>
@@ -189,7 +200,9 @@ $mes=$_GET['mes'];
   }
 ?>
 		<tr>
-	  	   	<td class="text-right small" colspan="9">Total:</td>
+	  	   	<td class="text-right small" colspan="7">Totales:</td>
+	  	   	<td class="text-right small font-weight-bold"><?=formatNumberDec($totalDebe);?></td>
+	  	   	<td class="text-right small font-weight-bold"><?=formatNumberDec($totalHaber);?></td>
 	  	   	<td class="text-right small font-weight-bold"><?=formatNumberDec($totalSaldo);?></td>
 	   	</tr>
 	</tbody>

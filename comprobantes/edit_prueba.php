@@ -171,7 +171,7 @@ $stmt->execute();
 			 }
 
             //ESTADO DE CUENTAS
-			$stmt = $dbh->prepare("SELECT * FROM configuracion_estadocuentas");
+			$stmt = $dbh->prepare("SELECT * FROM configuracion_estadocuentas where cod_estadoreferencial=1");
 			$stmt->execute();
 			$i=0;
 			while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {

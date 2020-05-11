@@ -33,6 +33,67 @@ $globalNombreUnidad=$_SESSION['globalNombreUnidad'];
 $globalArea=$_SESSION["globalArea"];
 $globalAdmin=$_SESSION["globalAdmin"];
 
+//distribucion gastosarea
+$distribucionOfi=obtenerDistribucionCentroCostosUnidadActivo(); //null para todas las iniciales del numero de cuenta obtenerCuentasLista(5,[5,4]);
+   while ($rowOfi = $distribucionOfi->fetch(PDO::FETCH_ASSOC)) {
+    $codigoD=$rowOfi['codigo'];
+    $codDistD=$rowOfi['cod_distribucion_gastos'];
+    $codUnidadD=$rowOfi['cod_unidadorganizacional'];
+    $porcentajeD=$rowOfi['porcentaje'];
+    $nombreD=$rowOfi['nombre'];
+    $porcentajeD=obtenerPorcentajeDistribucionGastoSolicitud($porcentajeD,1,$codUnidadD,$_GET['cod']);
+     ?>
+      <script>
+        var distri = {
+          codigo:<?=$codigoD?>,
+          cod_dis:<?=$codDistD?>,
+          unidad:<?=$codUnidadD?>,
+          nombre:'<?=$nombreD?>',
+          porcentaje:<?=$porcentajeD?>
+        }
+        itemDistOficina.push(distri);
+      </script>  
+      <?php
+   }
+$distribucionArea=obtenerDistribucionCentroCostosAreaActivo(); //null para todas las iniciales del numero de cuenta obtenerCuentasLista(5,[5,4]);
+   while ($rowArea = $distribucionArea->fetch(PDO::FETCH_ASSOC)) {
+    $codigoD=$rowArea['codigo'];
+    $codDistD=$rowArea['cod_distribucionarea'];
+    $codAreaD=$rowArea['cod_area'];
+    $porcentajeD=$rowArea['porcentaje'];
+    $nombreD=$rowArea['nombre'];
+    $porcentajeD=obtenerPorcentajeDistribucionGastoSolicitud($porcentajeD,2,$codAreaD,$_GET['cod']);
+     ?>
+      <script>
+        var distri = {
+          codigo:<?=$codigoD?>,
+          cod_dis:<?=$codDistD?>,
+          area:<?=$codAreaD?>,
+          nombre:'<?=$nombreD?>',
+          porcentaje:<?=$porcentajeD?>
+        }
+        itemDistArea.push(distri);
+      </script>  
+      <?php
+   }
+
+   $valorDistribucion=obtenerSiDistribucionSolicitudRecurso($_GET['cod']);
+   $estadoDistribucion="";
+   $titDistribucion="Distribución";
+   if($valorDistribucion!=0){
+     $estadoDistribucion.=" estado";
+     if($valorDistribucion==1){
+      $titDistribucion="x Oficina";
+     }else{
+       if($valorDistribucion==2){
+        $titDistribucion="x Área";
+       }else{
+        $titDistribucion="x Oficina y x Área";
+       }
+     }
+   }
+
+
 $contadorRegistros=0;
 ?>
 <script>
@@ -318,7 +379,31 @@ if(isset($_GET['cod'])){
               } 
               ?>
                  
-
+              <div class="float-right">
+                <div class="col-sm-2">
+              <input type="hidden" name="n_distribucion" id="n_distribucion" value="<?=$valorDistribucion?>">
+              <input type="hidden" name="nueva_distribucion" id="nueva_distribucion" value="<?=$valorDistribucion?>">
+              <div class="btn-group dropdown">
+                      <button type="button" class="btn btn-sm btn-success dropdown-toggle material-icons text-dark" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Distribucion de Gastos">
+                      <i class="material-icons">call_split</i> <span id="distrib_icon" class="bg-warning <?=$estadoDistribucion?>"></span> <b id="boton_titulodist"><?=$titDistribucion?></b>
+                        </button>
+                        <div class="dropdown-menu">   
+                        <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion" onclick="cargarDistribucionSol(1)" class="dropdown-item">
+                          <i class="material-icons">bubble_chart</i> x Oficina
+                        </a>
+                        <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion" onclick="cargarDistribucionSol(2)" class="dropdown-item">
+                          <i class="material-icons">bubble_chart</i> x Área
+                        </a>
+                        <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion" onclick="cargarDistribucionSol(3)" class="dropdown-item">
+                          <i class="material-icons">bubble_chart</i> x Oficina y x Área
+                        </a>
+                        <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion" onclick="cargarDistribucionSol(0)" class="dropdown-item">
+                          <i class="material-icons">bubble_chart</i> Nínguna
+                        </a>
+                        </div>
+                    </div>
+            </div> 
+              </div>
              <div id="div">   
               <div class="h-divider"></div>     
              </div>
@@ -402,30 +487,36 @@ if(isset($_GET['cod'])){
 </div>
 <!-- small modal -->
 <div class="modal fade modal-primary" id="modalFile" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <i class="material-icons" data-notify="icon"><?=$iconFile?></i>
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="material-icons">clear</i></button>
-      </div>
-      <div class="modal-body">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content card">
+      <div class="card-header card-header-info card-header-text">
+                  <div class="card-text">
+                    <h5>DOCUMENTOS DE RESPALDO</h5>      
+                  </div>
+                  <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">close</i>
+                  </button>
+                </div>
+      <div class="card-body">
         <p>Cargar archivos de respaldo.</p> 
            <div class="fileinput fileinput-new col-md-12" data-provides="fileinput">
             <div class="row">
-              <div class="col-md-9">
+              <div class="col-md-12">
                 <div class="border" id="lista_archivos">Ningun archivo seleccionado</div>
               </div>
-              <div class="col-md-3">
-                <span class="btn btn-info btn-round btn-file">
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <span class="btn btn-info btn-info btn-file btn-sm">
                       <span class="fileinput-new">Buscar</span>
                       <span class="fileinput-exists">Cambiar</span>
                       <input type="file" name="archivos[]" id="archivos" multiple="multiple"/>
                    </span>
-                <a href="#" class="btn btn-danger btn-round fileinput-exists" onclick="archivosPreview(1)" data-dismiss="fileinput"><i class="material-icons">clear</i> Quitar</a>
+                <a href="#" class="btn btn-danger btn-sm fileinput-exists" onclick="archivosPreview(1)" data-dismiss="fileinput"><i class="material-icons">clear</i> Quitar</a>
               </div>
             </div>
            </div>
-           <p class="text-danger">Los archivos se subir&aacute;n al servidor cuando se GUARDE la solicitud</p>
+           <p class="text-muted"><small>Los archivos se subir&aacute;n al servidor cuando se GUARDE la solicitud</small></p>
       </div>
       <div class="modal-footer">
         <button type="button" onclick="" class="btn btn-link" data-dismiss="modal">Aceptar

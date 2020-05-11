@@ -1,0 +1,9 @@
+ALTER TABLE plantillas_grupocostodetalle AUTO_INCREMENT = 1;
+ALTER TABLE plantillas_gruposcosto AUTO_INCREMENT = 1;
+ALTER TABLE plantillas_costo AUTO_INCREMENT = 1;
+ALTER TABLE precios_plantillacosto AUTO_INCREMENT = 1;
+ALTER TABLE plantillas_servicios_detalle AUTO_INCREMENT = 1;
+ALTER TABLE cuentas_simulacion AUTO_INCREMENT = 1;
+ALTER TABLE simulaciones_costos AUTO_INCREMENT = 1;
+ALTER TABLE solicitud_recursos AUTO_INCREMENT = 1;
+ALTER TABLE solicitud_recursosdetalle AUTO_INCREMENT = 1;

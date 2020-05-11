@@ -208,12 +208,12 @@
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="material-icons">clear</i></button>
       </div>
       <div class="modal-body">
-        <p>Seleccione las opciones que desea cambiar. (Los cambios seran para todos los comprobantes)</p>
+        <p>Seleccione las opciones que desea cambiar. (Los cambios se aplicaran a todas las cuentas)</p>
         <div class="row">
         	<div class="col-sm-6">
         	    <div class="form-group">
 	              <select class="selectpicker form-control form-control-sm" name="unidad" id="unidad" data-style="<?=$comboColor;?>">
-			  	      <option disabled selected="selected" value="">Unidad</option>
+			  	      <option disabled selected="selected" value="">Oficina</option>
 			  	                <?php
 			  	                $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM unidades_organizacionales where cod_estado=1 and centro_costos=1 order by 2");
 				                $stmt->execute();
@@ -391,10 +391,11 @@
 			                	</div>
 			                  </div>
 			                </div>
-			                <div class="form-group float-right">
-			                	<button type="button" class="btn btn-danger btn-round" onclick="guardarPlantilla()">Guardar</button>
-			                </div>
+			                
                          </form>
+                         <div class="form-group float-right">
+                        <a href="#" type="button" class="btn btn-danger btn-round" onclick="guardarPlantilla()">Guardar</a>
+                      </div>
                  <div id="mensaje"></div>
                 </div>
               </div>

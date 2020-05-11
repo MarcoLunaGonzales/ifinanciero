@@ -112,7 +112,7 @@ $fechaHasta=$y."-12-31";
               </div>
             </div><!--fin campo cuenta -->
 
-            <div class="row">
+            <!--div class="row">
               <label class="col-sm-2 col-form-label">Proveedores/Cliente</label>
               <div class="col-sm-7">
                 <div class="form-group">
@@ -122,7 +122,7 @@ $fechaHasta=$y."-12-31";
                   
                 </div>
               </div>
-            </div>
+            </div-->
             <!--  fin de seleccion unidad organizacional-->
 
             <div class="row">

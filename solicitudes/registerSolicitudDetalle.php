@@ -30,6 +30,50 @@ $globalNombreUnidad=$_SESSION['globalNombreUnidad'];
 $globalArea=$_SESSION["globalArea"];
 $globalAdmin=$_SESSION["globalAdmin"];
 
+
+//distribucion gastosarea
+$distribucionOfi=obtenerDistribucionCentroCostosUnidadActivo(); //null para todas las iniciales del numero de cuenta obtenerCuentasLista(5,[5,4]);
+   while ($rowOfi = $distribucionOfi->fetch(PDO::FETCH_ASSOC)) {
+    $codigoD=$rowOfi['codigo'];
+    $codDistD=$rowOfi['cod_distribucion_gastos'];
+    $codUnidadD=$rowOfi['cod_unidadorganizacional'];
+    $porcentajeD=$rowOfi['porcentaje'];
+    $nombreD=$rowOfi['nombre'];
+     ?>
+      <script>
+        var distri = {
+          codigo:<?=$codigoD?>,
+          cod_dis:<?=$codDistD?>,
+          unidad:<?=$codUnidadD?>,
+          nombre:'<?=$nombreD?>',
+          porcentaje:<?=$porcentajeD?>
+        }
+        itemDistOficina.push(distri);
+      </script>  
+      <?php
+   }
+$distribucionArea=obtenerDistribucionCentroCostosAreaActivo(); //null para todas las iniciales del numero de cuenta obtenerCuentasLista(5,[5,4]);
+   while ($rowArea = $distribucionArea->fetch(PDO::FETCH_ASSOC)) {
+    $codigoD=$rowArea['codigo'];
+    $codDistD=$rowArea['cod_distribucionarea'];
+    $codAreaD=$rowArea['cod_area'];
+    $porcentajeD=$rowArea['porcentaje'];
+    $nombreD=$rowArea['nombre'];
+     ?>
+      <script>
+        var distri = {
+          codigo:<?=$codigoD?>,
+          cod_dis:<?=$codDistD?>,
+          area:<?=$codAreaD?>,
+          nombre:'<?=$nombreD?>',
+          porcentaje:<?=$porcentajeD?>
+        }
+        itemDistArea.push(distri);
+      </script>  
+      <?php
+   }
+
+
 $contadorRegistros=0;
 
 ?>
@@ -83,7 +127,6 @@ $i=0;
 
 
 $codigo=0;
-
 $unidad=$_SESSION['globalUnidad'];
 //numero correlativo de la solicitud
 $sql="SELECT IFNULL(max(c.numero)+1,1)as codigo from solicitud_recursos c";
@@ -93,13 +136,14 @@ $nroCorrelativo=0;
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
   $nroCorrelativo=$row['codigo'];
 }
+
 ?>
 
              <div id="combo_tipodocumento" class="d-none">
                 <select class="selectpicker form-control form-control-sm" name="tipo_documento" id="tipo_documento" data-style="<?=$comboColor;?>" onChange="asignarTipoDocumento()">
                     <option disabled selected value="">TIPO DOCUMENTO</option>
                   <?php
-                  $stmt = $dbh->prepare("SELECT * from ibnorca.vw_plantillaDocumentos where idTipoServicio=2708");
+                  $stmt = $dbh->prepare("SELECT * from ibnorca.vw_plantillaDocumentos where idTipoServicio=2824"); //2708 //2824 localhost
                 $stmt->execute();
                 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                   $codigoX=$row['idClaDocumento'];
@@ -109,6 +153,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 <?php
                   }
                   ?>
+                  <option value="-100">OTROS DOCUMENTOS</option>
                </select>
               </div>
 
@@ -128,8 +173,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 <form id="formSolDet" class="form-horizontal" action="saveEdit.php" method="post" enctype="multipart/form-data">
 <div class="content">
   <div id="contListaGrupos" class="container-fluid">
-      <input type="hidden" name="cantidad_filas" id="cantidad_filas" value="<?=$contadorRegistros;?>">
-      
+      <input type="hidden" name="cantidad_filas" id="cantidad_filas" value="<?=$contadorRegistros;?>">      
       <input type="hidden" name="cod_configuracioniva" id="cod_configuracioniva" value="<?=obtenerValorConfiguracion(35)?>">
       
       <?php 
@@ -221,7 +265,30 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             <fieldset style="width:100%;border:0;">
               <button title="Agregar (alt + n)" type="button" name="add" class="btn btn-warning btn-round btn-fab" onClick="addSolicitudDetalle(this,3)"><i class="material-icons">add</i>
               </button>
-              <div class="row col-sm-10 float-right">
+              <div class="row col-sm-11 float-right">
+            <div class="col-sm-2">
+              <input type="hidden" name="n_distribucion" id="n_distribucion" value="0">
+              <input type="hidden" name="nueva_distribucion" id="nueva_distribucion" value="0">
+              <div class="btn-group dropdown">
+                      <button type="button" class="btn btn-sm btn-success dropdown-toggle material-icons text-dark" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Distribucion de Gastos">
+                      <i class="material-icons">call_split</i> <span id="distrib_icon" class="bg-warning"></span> <b id="boton_titulodist">Distribución</b>
+                        </button>
+                        <div class="dropdown-menu">   
+                        <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion" onclick="cargarDistribucionSol(1)" class="dropdown-item">
+                          <i class="material-icons">bubble_chart</i> x Oficina
+                        </a>
+                        <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion" onclick="cargarDistribucionSol(2)" class="dropdown-item">
+                          <i class="material-icons">bubble_chart</i> x Área
+                        </a>
+                        <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion" onclick="cargarDistribucionSol(3)" class="dropdown-item">
+                          <i class="material-icons">bubble_chart</i> x Oficina y x Área
+                        </a>
+                        <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion" onclick="cargarDistribucionSol(0)" class="dropdown-item">
+                          <i class="material-icons">bubble_chart</i> Nínguna
+                        </a>
+                        </div>
+                    </div>
+            </div>    
             <div class="col-sm-3">
                   <div class="form-group">
                     <select class="selectpicker form-control form-control-sm" data-live-search="true" name="proveedores" id="proveedores" data-style="<?=$comboColor;?>" onChange="cargarDatosCuenta()">
@@ -240,9 +307,8 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
               </select>
               </div>    
             </div>
-            <div class="col-sm-1">
-            </div>
-            <div class="row col-sm-8 d-none" id="filtros_solicitud">
+            
+            <div class="row col-sm-7 d-none" id="filtros_solicitud">
               <div class="form-group col-sm-4">
                     <select class="selectpicker form-control form-control-sm" data-style="<?=$comboColor;?>" name="anio_solicitud" id="anio_solicitud">
                      <option value="all" selected>TODOS</option>
@@ -302,7 +368,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 </div>
 <!-- small modal -->
 <div class="modal fade modal-primary" id="modalFile" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog modal-xl">
     <div class="modal-content card">
       <div class="card-header card-header-info card-header-text">
                   <div class="card-text">

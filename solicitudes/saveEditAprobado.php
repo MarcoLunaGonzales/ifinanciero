@@ -7,6 +7,9 @@ require_once '../functionsGeneral.php';
 require_once 'configModule.php';
 
 $dbh = new Conexion();
+$arrayFilesCabecera=json_decode($_POST['archivos_cabecera']);
+$arrayFilesDetalle=json_decode($_POST['archivos_detalle']);
+$codComprobanteDetalle=obtenerCodigoSolicitudDetalle();
 
 $cantidadFilas=$_POST["cantidad_filas"];
 $facturas= json_decode($_POST['facturas']);
@@ -52,7 +55,37 @@ while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
       }
 }
 
+//insertamos la distribucion
+  $sqlDel="DELETE FROM distribucion_gastos_solicitud_recursos where cod_solicitudrecurso=$codSolicitud";
+  $stmtDel = $dbh->prepare($sqlDel);
+  $stmtDel->execute();
+  //borramos los archivos
+  /*$sqlDel="DELETE FROM archivos_adjuntos where cod_objeto=$codSolicitud and cod_tipopadre=2708";
+  $stmtDel = $dbh->prepare($sqlDel);
+  $stmtDel->execute();
+  $sqlDel="DELETE FROM archivos_adjuntos where cod_padre=$codSolicitud and cod_tipopadre=27080";
+  $stmtDel = $dbh->prepare($sqlDel);
+  $stmtDel->execute();*/
 
+  //insertamos la distribucion
+  $sqlDel="DELETE FROM solicitud_recursosdetalle where cod_solicitudrecurso=$codSolicitud";
+  $stmtDel = $dbh->prepare($sqlDel);
+  $stmtDel->execute();
+  
+  $valorDist=$_POST['n_distribucion'];
+  if($valorDist!=0){
+      $array1=json_decode($_POST['d_oficinas']);
+      $array2=json_decode($_POST['d_areas']);
+      if($valorDist==1){
+        guardarDatosDistribucion($array1,0,$codSolicitud); //dist x Oficina
+      }else{
+        if($valorDist==2){
+          guardarDatosDistribucion(0,$array2,$codSolicitud); //dist x Area
+        }else{
+          guardarDatosDistribucion($array1,$array2,$codSolicitud); //dist x Oficina y Area
+        }
+      }   
+  }
 
 $flagSuccess=true;
 //subir archivos al servidor
@@ -64,7 +97,7 @@ $flagSuccess=true;
             $filename = $_FILES["archivos"]["name"][$key]; //Obtenemos el nombre original del archivos
             $source = $_FILES["archivos"]["tmp_name"][$key]; //Obtenemos un nombre temporal del archivos
             
-            $directorio = '../assets/archivos-respaldo/archivos_solicitudes/SOL-'.$codSolicitud.'/'; //Declaramos una  variable con la ruta donde guardaremos los archivoss
+            $directorio = '../assets/archivos-respaldo/archivos_solicitudes/SOL-'.$codSolicitud; //Declaramos una  variable con la ruta donde guardaremos los archivoss
             //Validamos si la ruta de destino existe, en caso de no existir la creamos
             if(!file_exists($directorio)){
                 mkdir($directorio, 0777,true) or die("No se puede crear el directorio de extracci&oacute;n");    
@@ -77,7 +110,20 @@ $flagSuccess=true;
             //El primer campo es el origen y el segundo el destino
             if(move_uploaded_file($source, $target_path)) { 
                 echo "ok";
-                } else {    
+                for ($a=0; $a < count($arrayFilesCabecera); $a++) { 
+                  if($arrayFilesCabecera[$a]->nombre==$filename){
+                    //insertamos a la tabla de archivos
+                    $tipo=$arrayFilesCabecera[$a]->tipo;
+                    $descripcion=$arrayFilesCabecera[$a]->nombre_tipo;
+                    $tipoPadre=2708;
+                    $sqlInsert="INSERT INTO archivos_adjuntos (cod_tipoarchivo,descripcion,direccion_archivo,cod_tipopadre,cod_padre,cod_objeto) 
+                    VALUES ('$tipo','$descripcion','$target_path','$tipoPadre',0,'$codSolicitud')";
+                    $stmtInsert = $dbh->prepare($sqlInsert);
+                    $stmtInsert->execute();    
+                    print_r($sqlInsert);
+                  }
+                }
+            } else {    
                 echo "error";
             }
             
@@ -109,7 +155,7 @@ for ($i=1;$i<=$cantidadFilas;$i++){
             $filename = $_FILES["archivos".$i]["name"][$key]; //Obtenemos el nombre original del archivos
             $source = $_FILES["archivos".$i]["tmp_name"][$key]; //Obtenemos un nombre temporal del archivos
             
-            $directorio = '../assets/archivos-respaldo/archivos_solicitudes/SOL-'.$codSolicitud.'/DET-'.$fila.'/'; //Declaramos una  variable con la ruta donde guardaremos los archivoss
+            $directorio = '../assets/archivos-respaldo/archivos_solicitudes/SOL-'.$codSolicitud.'/DET-'; //Declaramos una  variable con la ruta donde guardaremos los archivoss
             //Validamos si la ruta de destino existe, en caso de no existir la creamos
             if(!file_exists($directorio)){
                 mkdir($directorio, 0777,true) or die("No se puede crear el directorio de extracci&oacute;n");    
@@ -122,12 +168,29 @@ for ($i=1;$i<=$cantidadFilas;$i++){
             //El primer campo es el origen y el segundo el destino
             if(move_uploaded_file($source, $target_path)) { 
                 echo "ok";
-                } else {    
+                for ($a=0; $a < count($arrayFilesDetalle[$i-1]); $a++) {         
+                  if($arrayFilesDetalle[$i-1][$a]->nombre==$filename){
+                    
+                    //insertamos a la tabla de archivos
+                    $tipo=$arrayFilesDetalle[$i-1][$a]->tipo;
+                    $descripcion=$arrayFilesDetalle[$i-1][$a]->nombre_tipo;
+                    $tipoPadre=27080; //clasificador para detalle de solicitudes
+                    $sqlInsert="INSERT INTO archivos_adjuntos (cod_tipoarchivo,descripcion,direccion_archivo,cod_tipopadre,cod_padre,cod_objeto) 
+                    VALUES ('$tipo','$descripcion','$target_path','$tipoPadre','$codSolicitud','$codComprobanteDetalle')";
+                    $stmtInsert = $dbh->prepare($sqlInsert);
+                    $stmtInsert->execute();    
+                    print_r($sqlInsert);
+                    
+                  }
+                }
+                
+            } else {    
                 echo "error";
             }
             
         }
-      }   
+      }
+      $codComprobanteDetalle++;   
     }
 } 
 $cab[0]="cod_plancuenta";
@@ -188,4 +251,27 @@ if(!isset($_POST['control_admin'])){
 	
 }
 
+function guardarDatosDistribucion($array1,$array2,$codigoSol){
+  $dbh = new Conexion();
+ if($array1!=0){
+  for ($i=0; $i < count($array1); $i++) { 
+    $unidad=$array1[$i]->unidad;
+    $porcentaje=$array1[$i]->porcentaje;
+    $sqlInsert="INSERT INTO distribucion_gastos_solicitud_recursos (tipo_distribucion,oficina_area,porcentaje,cod_solicitudrecurso) 
+    VALUES ('1','$unidad','$porcentaje','$codigoSol')";
+    $stmtInsert = $dbh->prepare($sqlInsert);
+    $stmtInsert->execute();
+  }   
+}
+if($array2!=0){
+  for ($i=0; $i < count($array2); $i++) { 
+    $area=$array2[$i]->area;
+    $porcentaje=$array2[$i]->porcentaje;
+    $sqlInsert="INSERT INTO distribucion_gastos_solicitud_recursos (tipo_distribucion,oficina_area,porcentaje,cod_solicitudrecurso) 
+    VALUES ('2','$area','$porcentaje','$codigoSol')";
+    $stmtInsert = $dbh->prepare($sqlInsert);
+    $stmtInsert->execute();
+  }
+ } 
+}
 ?>
