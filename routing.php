@@ -276,6 +276,9 @@
 		if ($_GET['opcion']=='listFacturasServicios') {
 			require_once('simulaciones_servicios/listFacturasSolicitadas.php');
 		}
+		if ($_GET['opcion']=='listFacturasServicios_conta') {
+			require_once('simulaciones_servicios/listFacturasSolicitadas_conta.php');
+		}
 		if ($_GET['opcion']=='listFacturasServiciosAdmin') {
 			require_once('simulaciones_servicios/listFacturasSolicitadasAdmin.php');
 		}
@@ -364,6 +367,10 @@
 		if ($_GET['opcion']=='listSolicitudRecursosAdmin') {
 			require_once('solicitudes/listSolicitudRecursosAdmin.php');
 		}
+		if ($_GET['opcion']=='listFacturasServicios_conta_history') {
+			require_once('simulaciones_servicios/listFacturasSolicitadas_conta_historico.php');
+		}
+		
         if ($_GET['opcion']=='deleteSolicitudRecursos') {
 			require_once('solicitudes/saveDelete.php');
 		}
@@ -1618,6 +1625,10 @@
 		//REPORTES
 		if ($_GET['opcion']=='reportesProveedores') {
 			require_once('caja_chica/rpt_proveedores_print.php');
+		}
+		//plan cuentas solicitudes factacion
+		if ($_GET['opcion']=='listPlanCuentasSolicitudesFacturacion') {
+			require_once('simulaciones_servicios/plandecuentas_list.php');
 		}
 		
 		

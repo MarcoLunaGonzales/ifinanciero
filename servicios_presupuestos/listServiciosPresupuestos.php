@@ -37,7 +37,7 @@ $stmtIBNO->bindColumn('Codigo', $Codigo_alterno);
                       <table class="table" id="tablePaginator">
                         <thead>
                           <tr>
-                            <th class="text-center">#</th>                          
+                            <th class="text-center"></th>                          
                             <!-- <th>Cod. Serv.</th> -->
                             <th>Of</th>
                             <th>Area</th>
@@ -145,7 +145,7 @@ $stmtIBNO->bindColumn('Codigo', $Codigo_alterno);
                             ?>
                             
                           <tr>
-                            <td align="center"><?=$index;?></td>                                                         
+                            <td align="center"></td>                                                         
                             <td><?=$nombre_uo?></td>
                             <td><?=$nombre_area?></td>
                             <td class="text-left"><?=$Codigo_alterno?></td>

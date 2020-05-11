@@ -5,18 +5,18 @@ require_once '../functions.php';
 //header('Content-Type: application/json');
 //ini_set("display_errors", "1");
 $dbh = new Conexion();
-// $cod_cliente=$_GET['cod_cliente'];
+$cod_cliente=$_GET['cod_cliente'];
 
 ?>
-<select class="selectpicker form-control form-control-sm" name="persona_contacto" id="persona_contacto" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" title="Seleccione Contacto">
-  <option value=""></option>
+<select class="selectpicker form-control form-control-sm" name="persona_contacto" id="persona_contacto" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" title="Seleccione Contacto">  
   <?php 
-  $query="SELECT * FROM clientes_contactos  order by nombre";
+  $query="SELECT * FROM clientes_contactos where cod_cliente=$cod_cliente order by nombre";
   $stmt = $dbh->prepare($query);
   $stmt->execute();
   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    $codigo=$row['codigo'];    
-    ?><option value="<?=$codigo?>" class="text-right"><?=$row['nombre']?></option>
+    $codigo_contacto=$row['codigo'];    
+    $nombre_conatacto=$rowContacto['nombre']." ".$rowContacto['paterno']." ".$rowContacto['materno'];
+    ?><option value="<?=$codigo_contacto?>" class="text-right"><?=$nombre_conatacto?></option>
    <?php 
    } ?> 
 </select>

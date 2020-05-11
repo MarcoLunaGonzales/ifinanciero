@@ -5711,12 +5711,12 @@ function obtenerListaClientesWS(){
 }
 function nameContacto($codigo){
    $dbh = new Conexion();
-   $stmt = $dbh->prepare("SELECT nombre FROM clientes_contactos where codigo=:codigo");
+   $stmt = $dbh->prepare("SELECT nombre,paterno,materno FROM clientes_contactos where codigo=:codigo");
    $stmt->bindParam(':codigo',$codigo);
    $stmt->execute();
    $valor=null;
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-      $valor=$row['nombre'];
+      $valor=$row['nombre']." ".$row['paterno']." ".$row['materno'];
    }
    return($valor);
 }

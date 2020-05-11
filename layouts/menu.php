@@ -460,6 +460,12 @@ if($menuModulo==0){
                     <span class="sidebar-normal">Plan de Cuentas Caja Chica</span>
                   </a>
                 </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listPlanCuentasSolicitudesFacturacion">
+                    <span class="sidebar-mini">PSF</span>
+                    <span class="sidebar-normal">Plan de Cuentas Sol. Fact.</span>
+                  </a>
+                </li>
 
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listPartidasPres">
@@ -527,6 +533,12 @@ if($menuModulo==0){
                   <a class="nav-link" href="?opcion=principal_CajaChica">
                     <span class="sidebar-mini"> CC </span>
                     <span class="sidebar-normal"> Caja Chica </span>
+                  </a>
+                </li>
+                 <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listFacturasServicios_conta">
+                    <span class="sidebar-mini"> SF </span>
+                    <span class="sidebar-normal"> Solicitudes de Facturación</span>
                   </a>
                 </li>
                 <!--li class="nav-item ">

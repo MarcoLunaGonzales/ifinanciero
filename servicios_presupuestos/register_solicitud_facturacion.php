@@ -154,21 +154,65 @@ $contadorRegistros=0;
                                     </div>
                                 </div>    
                             </div>
-                            
+                            <script>var nfac=[];itemTipoPagos_facturacion.push(nfac);var nfacAreas=[];itemAreas_facturacion.push(nfacAreas);</script>
+                            <div class="">
+                                <?php 
+                                    $queryAreas="SELECT codigo,nombre,abreviatura from areas where areas_ingreso=1 and cod_estado=1";
+                                    $stmtAreas = $dbh->prepare($queryAreas);
+                                    $stmtAreas->execute();
+                                    $ncAreas=0;$contAreas= array();
+                                    while ($rowAreas = $stmtAreas->fetch(PDO::FETCH_ASSOC)) { 
+                                        //objeto dato donde se guarda las areas de servicios
+                                        $datoArea = new stdClass();//obejto
+                                        $codFila=(int)$rowAreas["codigo"];
+                                        $nombre_x=trim($rowAreas['nombre']);                                        
+                                        $datoArea->codigo=($ncAreas+1);
+                                        $datoArea->cod_area=$codFila;
+                                        $datoArea->nombrex=$nombre_x;                                                
+                                        $datosAreas[0][$ncAreas]=$datoArea;                           
+                                        $ncAreas++;
+                                    }
+                                    $contAreas[0]=$ncAreas;
+                                ?>
+                            </div>
                             <label class="col-sm-2 col-form-label">Tipo Pago</label>
-                            <div class="col-sm-4">
+                            <div class="col-sm-3">
                                 <div class="form-group" >
-                                        <select name="cod_tipopago" id="cod_tipopago" class="selectpicker form-control form-control-sm" data-style="btn btn-info">
-                                            <!-- <option value=""></option> -->
-                                            <?php 
-                                            $queryTipoPago = "SELECT codigo,nombre FROM  tipos_pago WHERE cod_estadoreferencial=1 order by nombre";
-                                            $statementPAgo = $dbh->query($queryTipoPago);
-                                            while ($row = $statementPAgo->fetch()){ ?>
-                                                <option <?=($cod_tipopago==$row["codigo"])?"selected":"";?>  value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
-                                            <?php } ?>
-                                        </select>                                
+                                    <select name="cod_tipopago" id="cod_tipopago" class="selectpicker form-control form-control-sm" data-style="btn btn-info" onChange="ajaxTipoPagoContactoPersonal(this);">
+                                        <?php 
+                                        $queryTipoPago = "SELECT codigo,nombre FROM  tipos_pago WHERE cod_estadoreferencial=1 order by nombre";
+                                        $statementPAgo = $dbh->query($queryTipoPago);
+                                        $nc=0;$cont= array();
+                                        while ($row = $statementPAgo->fetch()){ 
+                                            //objeto dato donde guarda tipos de pago
+                                            $dato = new stdClass();//obejto
+                                            $codFila=(int)$row["codigo"];
+                                            $nombre_x=trim($row['nombre']);
+                                            $dato->codigo=($nc+1);
+                                            $dato->cod_tipopago=$codFila;
+                                            $dato->nombrex=$nombre_x;                                                
+                                            $datos[0][$nc]=$dato;                           
+                                            $nc++;
+                                            ?>
+                                            <option <?=($cod_tipopago==$row["codigo"])?"selected":"";?>  value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                                        <?php } 
+                                        $cont[0]=$nc;
+                                        ?>
+                                    </select>                                    
                                 </div>
                             </div>
+                            <div class="col-sm-1">
+                                <div class="form-group" >    
+                                    <button type="button" class="btn btn-danger btn-round btn-fab btn-sm" data-toggle="modal" data-target="" onclick="agregarDatosModalTipoPagoFacturacion()">
+                                        <i class="material-icons" title="Tipo Pago Porcentaje">list</i>
+                                        <span id="nfac" class="count bg-warning"></span>
+                                     </button>
+                                     <button type="button" class="btn btn-primary btn-round btn-fab btn-sm" data-toggle="modal" data-target="" onclick="agregarDatosModalAreasFacturacion()">
+                                        <i class="material-icons" title="Areas Porcentaje">list</i>
+                                        <span id="nfacAreas" class="count bg-warning"></span>
+                                     </button>                              
+                                </div>
+                            </div>         
                             <label class="col-sm-2 col-form-label">Responsable</label>
                             <div class="col-sm-4">
                                 <div class="form-group">            
@@ -218,7 +262,7 @@ $contadorRegistros=0;
                                         <i class="material-icons" title="Add Contacto">add</i>
                                     </a>
                                     <a href="#" class="btn btn-success btn-round btn-fab btn-sm" onclick="actualizarRegistroContacto()">
-                                       <i class="material-icons" title="Actualizar Contacto">update</i>
+                                       <i class="material-icons" title="Actualizar Clientes & Contactos">update</i>
                                     </a> 
                                 </div>
                             </div>
@@ -244,10 +288,18 @@ $contadorRegistros=0;
                         </div>
                         <!-- fin razon social y nit -->
                         <div class="row">
-                            <label class="col-sm-2 col-form-label">Observaciones</label>
-                            <div class="col-sm-7">
+                            <label class="col-sm-3 col-form-label">Observaciones <small style="color: #f45454">*(Información para la contabilización)</small></label>
+                            <div class="col-sm-9">
                                 <div class="form-group">
-                                    <input class="form-control" type="text" name="observaciones" id="observaciones"  value="<?=$observaciones;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+                                    <input class="form-control" type="text" name="observaciones" id="observaciones"  value="<?=$observaciones;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" requerid/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <label class="col-sm-3 col-form-label">Observaciones</label>
+                            <div class="col-sm-9">
+                                <div class="form-group">
+                                    <input class="form-control" type="text" name="observaciones_2" id="observaciones_2" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
                                 </div>
                             </div>
                         </div>
@@ -441,6 +493,7 @@ $contadorRegistros=0;
                                     <div class="col-sm-4">
                                         <div class="form-group">                                            
                                             <input style="background:#ffffff" class="form-control"  name="monto_total" id="monto_total"  readonly="readonly" value="0" step="0.01" />
+                                            <input  class="form-control" type="hidden" name="monto_total_a" id="monto_total_a"  readonly="readonly" value="0"  />
                                         </div>
                                     </div>
                                 </div>                                
@@ -508,3 +561,43 @@ function valida(f) {
   return ok;
 }
 </script>
+<?php  require_once 'simulaciones_servicios/modal_facturacion.php';?>
+<!-- objeto tipo de pago -->
+<?php 
+    $lan=sizeof($cont);//filas si lo hubiese         
+    for ($i=0; $i < $lan; $i++) {
+      ?>
+      <script>var detalle_tipopago=[];</script>
+      <?php      
+        for ($j=0; $j < $cont[$i]; $j++) {
+             if($cont[$i]>0){?>
+                <script>
+                    detalle_tipopago.push({codigo:<?=$datos[$i][$j]->codigo?>,cod_tipopago:<?=$datos[$i][$j]->cod_tipopago?>,nombrex:'<?=$datos[$i][$j]->nombrex?>'});
+
+                </script>
+
+              <?php
+              }          
+            }
+        ?><script>itemTipoPagos_facturacion_aux.push(detalle_tipopago);</script><?php                    
+    }
+?>
+<!-- objeto Areas servicio -->
+<?php 
+    $lanAreas=sizeof($contAreas);
+    for ($i=0; $i < $lanAreas; $i++) {
+      ?>
+      <script>var detalle_areas=[];</script>
+      <?php
+        for ($j=0; $j < $contAreas[$i]; $j++) {            
+             if($contAreas[$i]>0){?>
+                <script>
+                    detalle_areas.push({codigo:<?=$datosAreas[$i][$j]->codigo?>,cod_area:<?=$datosAreas[$i][$j]->cod_area?>,nombrex:'<?=$datosAreas[$i][$j]->nombrex?>'});
+                </script>
+
+              <?php         
+              }          
+            }
+        ?><script>itemAreas_facturacion_aux.push(detalle_areas);</script><?php                    
+    }
+?>

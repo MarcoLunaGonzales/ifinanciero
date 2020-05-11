@@ -62,7 +62,7 @@ m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo order by nombreAlumno");//poner 
                       <table class="table" id="tablePaginator">
                         <thead>
                           <tr>
-                            <th class="text-center">#</th>                          
+                            <th class="text-center"></th>                          
                             <th>CI Alumno</th>
                             <th>Nombre</th>
                             <th>Precio <br>curso (BOB)</th>                            
@@ -146,7 +146,7 @@ m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo order by nombreAlumno");//poner 
 
                             ?>
                           <tr>
-                            <td align="center"><?=$index;?></td>
+                            <td align="center"></td>
                             <td><?=$CiAlumno;?></td>
                             <td><?=$nombreAlumno;?></td>
                             <td class="text-right"><?=formatNumberDec($Costo) ;?></td>
