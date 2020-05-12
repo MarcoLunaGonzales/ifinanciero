@@ -68,8 +68,7 @@ $stmt->bindColumn('cod_estadocomprobante', $estadoC);
     <tr>
       <th class="text-center">#</th>                          
       <th class="text-center small">Oficina</th>
-      <th class="text-center small">Tipo</th>
-      <th class="text-center small">Corre.</th>
+      <th class="text-center small">Tipo/Número</th>
       <th class="text-center small">Fecha</th>
       <th class="text-left small">Glosa</th>
       <th class="text-center small">Estado</th>
@@ -80,6 +79,7 @@ $stmt->bindColumn('cod_estadocomprobante', $estadoC);
   <?php
     $index=1;
     while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+      $nombreComprobante=nombreComprobante($codigo);
       $mes=date('n',strtotime($fechaComprobante));
       // $mes=date("j",$fechaComprobante);
       switch ($estadoC) {
@@ -98,9 +98,8 @@ $stmt->bindColumn('cod_estadocomprobante', $estadoC);
       
       <td align="text-center small"><?=$index;?></td>                          
       <td class="text-center small"><?=$nombreUnidad;?></td>
-      <td class="text-center small"><?=$nombreTipoComprobante;?>-<?=$mes;?></td>
-      <td class="text-center small"><?=$nroCorrelativo;?></td>
-      <td class="text-center small"><?=strftime('%Y/%m/%d',strtotime($fechaComprobante));?></td>
+      <td class="text-center small"><?=$nombreComprobante;?></td>
+      <td class="text-center small"><?=strftime('%d/%m/%Y',strtotime($fechaComprobante));?></td>
       
       <!--td><?=$nombreMoneda;?></td-->
       <td class="text-left small"><?=$glosaComprobante;?></td>
