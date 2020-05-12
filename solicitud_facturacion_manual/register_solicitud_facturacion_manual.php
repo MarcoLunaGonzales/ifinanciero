@@ -35,6 +35,7 @@ if ($cod_facturacion > 0){
     $razon_social = $name_cliente;
     $nit = 0;
     $observaciones = null;
+    $observaciones_2 = null;
     $persona_contacto=null;
 }
 $name_uo=null;

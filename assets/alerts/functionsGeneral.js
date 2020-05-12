@@ -9143,7 +9143,7 @@ function descuento_convertir_a_bolivianos_add(id){
 
 function sumartotalAddServiciosFacturacion(id){
   var sumatotal=0;
-  var formulariop = document.getElementById("form1");
+  var formulariop = document.getElementById("formSoliFactTcp");
   // alert(formulariop.elements.length);
   for (var i=0;i<formulariop.elements.length;i++){
     if (formulariop.elements[i].id.indexOf("modal_importe_add") !== -1 ){    
@@ -9199,7 +9199,7 @@ function descuento_convertir_a_bolivianos_add_manual(id){
 
 function sumartotalAddServiciosFacturacion_manual(id){
   var sumatotal=0;
-  var formulariop = document.getElementById("form1");
+  var formulariop = document.getElementById("formSoliFactTcp");
   // alert(formulariop.elements.length);
   for (var i=0;i<formulariop.elements.length;i++){
     if (formulariop.elements[i].id.indexOf("modal_importe_add") !== -1 ){    
@@ -11736,8 +11736,6 @@ function botonBuscarNormasSolfac(){
   var valor_fi=$("#fechaBusquedaInicio").val();
   var valor_ff=$("#fechaBusquedaFin").val();
   var valor_normas=$("#normas").val();
-  
-  
   ajax=nuevoAjax();
   ajax.open('GET', 'solicitud_facturacion_manual/ajax_busqueda_normas.php?glosa_cliente='+valor_glosa_cliente+'&fechaI='+valor_fi+'&fechaF='+valor_ff+'&normas='+valor_normas,true);
   ajax.onreadystatechange=function() {
@@ -11749,6 +11747,24 @@ function botonBuscarNormasSolfac(){
   }
   ajax.send(null)
 }
+function botonBuscarEstudiantesCapacitacion(){
+  var valor_ci_cliente=$("#ci").val();    
+  var valor_nombre_cliente=$("#nombreCliente").val();   
+  var valor_paterno_cliente=$("#paternoCliente").val();   
+  var valor_materno_cliente=$("#maternoCliente").val(); 
+  // alert(valor_nombre_cliente+"-"+valor_paterno_cliente+"-"+valor_materno_cliente);
+  ajax=nuevoAjax();
+  ajax.open('GET', 'simulaciones_costos/ajax_busqueda_estudiantes.php?ci='+valor_ci_cliente+'&nombre='+valor_nombre_cliente+'&paterno='+valor_paterno_cliente+'&materno='+valor_materno_cliente,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      var contenedor=$("#contenedor_items_estudiantes");
+      contenedor.html(ajax.responseText);
+      $("#modalBuscador").modal("hide");
+    }
+  }
+  ajax.send(null)
+}
+
 
 
 function actualizarRegistroNormas(){
@@ -11922,7 +11938,7 @@ function agregarDatosModalTipoPagoFacturacion(){
   // alert("llege");
   // var d=datos.split('/');
   var cod_tipopago=$("#cod_tipopago").val();
-  var monto_total=$("#monto_total_a").val();
+  var monto_total=$("#monto_total_a").val();  
   // if(monto_total==null || monto_total==''){
   //   var monto_total=$("#monto_total_a").val();
   // }

@@ -63,11 +63,12 @@ if ($cod_facturacion > 0){
     $razon_social = $name_cliente;
     $nit = 0;
     $observaciones = $Codigo_alterno." - ".$name_cliente;
+    $observaciones_2=null;
     $persona_contacto= null;
+    echo "aqui";
 }
 $name_uo=nameUnidad($cod_uo);
 $name_area=trim(abrevArea($cod_area),'-');
-
 $contadorRegistros=0;
 ?>
 <script>

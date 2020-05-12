@@ -237,6 +237,7 @@
 			$codigo=$_GET['codigo'];	
 			$cod_simulacion=$_GET['cod_simulacion'];	
 			$cod_facturacion=$_GET['cod_facturacion'];			
+			$IdCurso=$_GET['IdCurso'];	
 			require_once('simulaciones_costos/registro_solicitud_facturacion.php');
 		}
 		if ($_GET['opcion']=='save_solicitud_facturacion_costos') {
