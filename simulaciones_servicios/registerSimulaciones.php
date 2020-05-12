@@ -357,7 +357,7 @@ $dbh = new Conexion();
                        <label class="col-sm-2 col-form-label">Pais</label>
                        <div class="col-sm-10">
                         <div class="form-group">
-                          <select name="pais_empresa" id="pais_empresa" onchange="seleccionarDepartamentoServicioSitio()" class="form-control form-control-sm selectpicker" data-style="btn btn-info">
+                          <select name="pais_empresa" id="pais_empresa" data-live-search="true" onchange="seleccionarDepartamentoServicioSitio()" class="form-control form-control-sm selectpicker" data-style="btn btn-info">
                             <option disabled selected value="####">--SELECCIONE--</option>
                              <?php
                                   foreach ($lista->lista as $listas) {
@@ -371,7 +371,7 @@ $dbh = new Conexion();
                        <label class="col-sm-2 col-form-label">Dep / Est</label>
                        <div class="col-sm-10">
                         <div class="form-group">
-                          <select name="departamento_empresa" onchange="seleccionarCiudadServicioSitio()" id="departamento_empresa" class="form-control form-control-sm selectpicker" data-style="btn btn-info">
+                          <select name="departamento_empresa" data-live-search="true" onchange="seleccionarCiudadServicioSitio()" id="departamento_empresa" class="form-control form-control-sm selectpicker" data-style="btn btn-info">
                           </select>
                         </div>
                        </div>
@@ -380,7 +380,7 @@ $dbh = new Conexion();
                        <label class="col-sm-2 col-form-label">Ciudad</label>
                        <div class="col-sm-10">
                         <div class="form-group">
-                          <select name="ciudad_empresa" onchange="mostrarOtraCiudadServicioSitio()" id="ciudad_empresa" class="form-control form-control-sm selectpicker" data-style="btn btn-success">
+                          <select name="ciudad_empresa" data-live-search="true" onchange="mostrarOtraCiudadServicioSitio()" id="ciudad_empresa" class="form-control form-control-sm selectpicker" data-style="btn btn-success">
                           </select>
                         </div>
                        </div>
