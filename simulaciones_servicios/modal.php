@@ -114,7 +114,7 @@
                        <label class="col-sm-2 col-form-label">Pais</label>
                        <div class="col-sm-10">
                         <div class="form-group">
-                          <select name="pais_empresa" id="pais_empresa" data-size="6" onchange="seleccionarDepartamentoServicioSitioModal()" class="form-control form-control-sm selectpicker" data-style="btn btn-info">
+                          <select name="pais_empresa" id="pais_empresa" data-size="6" data-live-search="true" onchange="seleccionarDepartamentoServicioSitioModal()" class="form-control form-control-sm selectpicker" data-style="btn btn-info">
                             <option disabled selected value="">--SELECCIONE--</option>
                              <?php
                                   foreach ($lista->lista as $listas) {
@@ -128,7 +128,7 @@
                        <label class="col-sm-2 col-form-label">Dep / Est</label>
                        <div class="col-sm-10">
                         <div class="form-group">
-                          <select name="departamento_empresa"  data-size="6" onchange="seleccionarCiudadServicioSitioModal()" id="departamento_empresa" class="form-control form-control-sm selectpicker" data-style="btn btn-info">
+                          <select name="departamento_empresa"  data-size="6" data-live-search="true" onchange="seleccionarCiudadServicioSitioModal()" id="departamento_empresa" class="form-control form-control-sm selectpicker" data-style="btn btn-info">
                           </select>
                         </div>
                        </div>
@@ -137,7 +137,7 @@
                        <label class="col-sm-2 col-form-label">Ciudad</label>
                        <div class="col-sm-10">
                         <div class="form-group">
-                          <select name="ciudad_empresa" onchange="" data-size="6" id="ciudad_empresa" class="form-control form-control-sm selectpicker" data-style="btn btn-success">
+                          <select name="ciudad_empresa" onchange="" data-size="6" data-live-search="true" id="ciudad_empresa" class="form-control form-control-sm selectpicker" data-style="btn btn-success">
                           </select>
                         </div>
                        </div>
@@ -350,9 +350,9 @@
                    include "cargarDetallePlantillaPartida.php";   
                     }
                     ?>  
-                   <div class="form-group float-right">
+                   <!--<div class="form-group float-right">
                      <button class="btn btn-success" id="guardar_cuenta0" onclick="cargarDetallesCostosVariablesTodosLosAnios(<?=$inicioAnio?>,<?=$ibnorcaC?>)">Editar Detalle por Persona</button>
-                   </div> 
+                   </div>--> 
                  </div>   
                 </div>
       </div>  
