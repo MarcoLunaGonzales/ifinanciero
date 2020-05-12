@@ -50,7 +50,7 @@ $contadorRegistros=0;
     <div class="container-fluid">
         <div style="overflow-y:scroll;">
             <div class="col-md-12">
-              <form id="form1" class="form-horizontal" action="<?=$urlSaveSolicitudfactura;?>" method="post" onsubmit="return valida(this)">
+              <form id="formSoliFactTcp" class="form-horizontal" action="<?=$urlSaveSolicitudfactura;?>" method="post" onsubmit="return valida(this)">
                 <?php 
                if(isset($_GET['q'])){
                  ?><input type="hidden" name="id_ibnored" id="id_ibnored" value="<?=$q;?>"/><?php 
@@ -276,7 +276,7 @@ $contadorRegistros=0;
                         </div>
                         <!-- fin razon social y nit -->
                         <div class="row">
-                            <label class="col-sm-3 col-form-label">Observaciones <small style="color: #f45454">*(Información para la contabilización)</small></label>
+                            <label class="col-sm-3 col-form-label">Observaciones * 1</label>
                             <div class="col-sm-9">
                                 <div class="form-group">
                                     <input class="form-control" type="text" name="observaciones" id="observaciones"  value="<?=$observaciones;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" requerid/>
@@ -284,7 +284,7 @@ $contadorRegistros=0;
                             </div>
                         </div>
                         <div class="row">
-                            <label class="col-sm-3 col-form-label">Observaciones </label>
+                            <label class="col-sm-3 col-form-label">Observaciones 2</label>
                             <div class="col-sm-9">
                                 <div class="form-group">
                                     <input class="form-control" type="text" name="observaciones_2" id="observaciones_2" onkeyup="javascript:this.value=this.value.toUpperCase();"/>

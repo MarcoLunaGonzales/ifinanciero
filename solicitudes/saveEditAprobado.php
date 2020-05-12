@@ -68,9 +68,9 @@ while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
   $stmtDel->execute();*/
 
   //insertamos la distribucion
-  $sqlDel="DELETE FROM solicitud_recursosdetalle where cod_solicitudrecurso=$codSolicitud";
+  /*$sqlDel="DELETE FROM solicitud_recursosdetalle where cod_solicitudrecurso=$codSolicitud";
   $stmtDel = $dbh->prepare($sqlDel);
-  $stmtDel->execute();
+  $stmtDel->execute();*/
   
   $valorDist=$_POST['n_distribucion'];
   if($valorDist!=0){
@@ -146,6 +146,10 @@ for ($i=1;$i<=$cantidadFilas;$i++){
     $data[$fila][9]=$_POST["cod_detalleplantilla".$i];
     $data[$fila][10]=$_POST["cod_servicioauditor".$i];
     $data[$fila][11]=$_POST["cod_retencion".$i];
+    $data[$fila][12]=$_POST["cod_tipopago".$i];
+    $data[$fila][13]=$_POST["nombre_beneficiario".$i];
+    $data[$fila][14]=$_POST["apellido_beneficiario".$i];
+    $data[$fila][15]=$_POST["cuenta_beneficiario".$i];
     //$dataInsert  
     $fila++;
       foreach($_FILES["archivos".$i]['tmp_name'] as $key => $tmp_name)
@@ -205,6 +209,10 @@ $cab[8]="cod_proveedor";
 $cab[9]="cod_detalleplantilla";
 $cab[10]="cod_servicioauditor";
 $cab[11]="cod_confretencion";
+$cab[12]="cod_tipopagoproveedor";
+$cab[13]="nombre_beneficiario";
+$cab[14]="apellido_beneficiario";
+$cab[15]="nro_cuenta_beneficiario";
 $solDet=contarSolicitudDetalle($codSolicitud);
 $solDet->bindColumn('total', $contador);
 while ($row = $solDet->fetch(PDO::FETCH_BOUND)) {

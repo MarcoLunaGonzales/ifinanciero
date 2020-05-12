@@ -38,6 +38,10 @@ $tipoSolicitud =$_GET['tipo'];
 						        	$detalleXX=$row['glosa'];
 						        	$proveedorX="";
 						        	$retencionX="";
+                      $codTipoPago=0;
+                      $nombreBen="";
+                      $apellidoBen="";
+                      $cuentaBen="";
 						        	$tituloImporte="Importe";
 							        if($ibnorca==1){
                               $importeX=$row['monto_total'];

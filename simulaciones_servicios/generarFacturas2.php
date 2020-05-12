@@ -7,6 +7,7 @@ include '../assets/controlcode/sin/ControlCode.php';
 //require_once 'configModule.php';
 require_once __DIR__.'/../functions.php';
 require_once __DIR__.'/../functionsGeneral.php';
+require_once 'executeComprobante_factura.php';
 
 $dbh = new Conexion();
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//try
@@ -18,6 +19,7 @@ $globalUser=$_SESSION["globalUser"];
 //RECIBIMOS LAS VARIABLES
 
 $codigo = $_GET["codigo"];
+ejecutarComprobanteSolicitud($codigo);
 try{
     // verificamos si ya se registro la factura
     $stmtVerif = $dbh->prepare("SELECT codigo FROM facturas_venta where cod_solicitudfacturacion=$codigo and cod_estadofactura=1");

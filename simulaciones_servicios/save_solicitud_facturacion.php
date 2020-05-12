@@ -10,7 +10,8 @@ $dbh = new Conexion();
 
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//para mostrar errores en la ejecucion
 
-try {
+try 
+{
     $codigo_alterno = $_POST["Codigo_alterno"];
     $cod_simulacion = $_POST["cod_simulacion"];
     $cod_facturacion = $_POST["cod_facturacion"];    
@@ -36,10 +37,47 @@ try {
     if(isset($_POST["cod_tipopago"])){
         $cod_tipopago = $_POST["cod_tipopago"];
     }else $cod_tipopago=0;
-
     if(isset($_POST['u'])){
         $cod_personal=$_POST['u'];
     }
+
+    
+    // if($nF>0){
+    //   $sqlDeleteFactura="DELETE from facturas_detalle_cajachica where cod_cajachicadetalle=$cod_ccd";
+    //   $stmtDelFactura = $dbh->prepare($sqlDeleteFactura);
+    //   $stmtDelFactura->execute();  
+    // }
+    // for($j=0;$j<$nF;$j++){
+    //     $nit=$facturas[$cantidad_filas_ccd-1][$j]->nit;
+    //     $nroFac=$facturas[$cantidad_filas_ccd-1][$j]->nroFac;
+    //     $fecha=$facturas[$cantidad_filas_ccd-1][$j]->fechaFac;
+    //     $porciones = explode("/", $fecha);
+    //     $fechaFac=$porciones[2]."-".$porciones[1]."-".$porciones[0];
+
+    //     $razonFac=$facturas[$cantidad_filas_ccd-1][$j]->razonFac;
+    //     $impFac=$facturas[$cantidad_filas_ccd-1][$j]->impFac;   
+    //     $autFac=$facturas[$cantidad_filas_ccd-1][$j]->autFac;
+    //     $conFac=$facturas[$cantidad_filas_ccd-1][$j]->conFac;
+    //     $exeFac=$facturas[$cantidad_filas_ccd-1][$j]->exeFac;
+    //     $iceFac=$facturas[$cantidad_filas_ccd-1][$j]->iceFac;
+    //     $tasaFac=$facturas[$cantidad_filas_ccd-1][$j]->tasaFac;
+
+    //   $suma_importe_fac=$suma_importe_fac+$impFac;
+
+    //   // echo "nit:".$nit."<br>";
+    //   // echo "nroFac:".$nroFac."<br>";
+    //   // echo "fecha:".$fecha."<br>";
+    //   // echo "fechaFac:".$fechaFac."<br>";
+    //   // echo "razonFac:".$razonFac."<br>";
+    //   // echo "exeFac:".$exeFac."<br>";
+    //   // echo "autFac:".$autFac."<br>";
+    //   // echo "conFac:".$conFac."<br>";
+
+    //   $sqlDetalle2="INSERT INTO facturas_detalle_cajachica (cod_cajachicadetalle, nit, nro_factura, fecha, razon_social, importe, exento, nro_autorizacion, codigo_control,ice,tasa_cero) VALUES ('$cod_ccd', '$nit', '$nroFac', '$fechaFac', '$razonFac', '$impFac', '$exeFac', '$autFac', '$conFac','$iceFac','$tasaFac')";
+    //   $stmtDetalle2 = $dbh->prepare($sqlDetalle2);
+    //   $flagSuccessDetalle2=$stmtDetalle2->execute();
+    // }
+
 
 
     if ($cod_facturacion == 0){//insertamos        
@@ -51,9 +89,9 @@ try {
         // $flagSuccess=true;
         if($flagSuccess){
             //sacamos el codigo insertado
-           $stmt = $dbh->prepare("SELECT codigo from solicitudes_facturacion where cod_simulacion_servicio=$cod_simulacion ORDER BY codigo desc LIMIT 1");
-           $stmt->execute();           
-           while ($rowPre = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $stmt = $dbh->prepare("SELECT codigo from solicitudes_facturacion where cod_simulacion_servicio=$cod_simulacion ORDER BY codigo desc LIMIT 1");
+            $stmt->execute();           
+            while ($rowPre = $stmt->fetch(PDO::FETCH_ASSOC)) {
                   $cod_facturacion=$rowPre['codigo'];
             }
             for ($i=1;$i<=$modal_numeroservicio-1;$i++){
@@ -98,7 +136,68 @@ try {
                 values ('$cod_facturacion','$servicioInsert_ajax','$CantidadInsert_ajax','$importeInsert_ajax','$DescricpionInsert_ajax','$descuento_por_Insert_ajax','$descuento_bob_Insert_ajax',2)";
                 $stmt = $dbh->prepare($sql);                
                 $flagSuccess=$stmt->execute();                
-            }           
+            }
+            //======================================
+            //para tipo de pagos
+            $sqlDeleteTiposPago="DELETE from solicitudes_facturacion_tipospago where cod_solicitudfacturacion=$cod_facturacion";
+            $stmtDelTiposPago = $dbh->prepare($sqlDeleteTiposPago);
+            $stmtDelTiposPago->execute();
+            //si existe array de objetos tipopago
+            if(isset($_POST['tiposPago_facturacion'])){
+                $tiposPago_facturacion= json_decode($_POST['tiposPago_facturacion']);
+                $nF=cantidadF($tiposPago_facturacion[0]);
+                for($j=0;$j<$nF;$j++){
+                    $codigo_tipopago=$tiposPago_facturacion[0][$j]->codigo_tipopago;
+                    $monto_porcentaje=$tiposPago_facturacion[0][$j]->monto_porcentaje;
+                    $monto_bob=$tiposPago_facturacion[0][$j]->monto_bob;                                
+                    // echo "codigo_tipopago:".$codigo_tipopago."<br>";
+                    // echo "monto_porcentaje:".$monto_porcentaje."<br>";        
+                    // echo "monto_bob:".$monto_bob."<br>";          
+                    $sqlTiposPago="INSERT INTO solicitudes_facturacion_tipospago(cod_solicitudfacturacion, cod_tipopago, porcentaje, monto) VALUES ('$cod_facturacion','$codigo_tipopago','$monto_porcentaje','$monto_bob')";
+                    $stmtTiposPago = $dbh->prepare($sqlTiposPago);
+                    $stmtTiposPago->execute();
+                }
+            }else{
+                $codigo_tipopago=$cod_tipopago;
+                $monto_porcentaje=100;
+                $monto_bob=$_POST["monto_total_a"];
+                // echo "codigo_tipopago:".$codigo_tipopago."<br>";
+                // echo "monto_porcentaje:".$monto_porcentaje."<br>";        
+                // echo "monto_bob:".$monto_bob."<br>";    
+                $sqlTiposPago="INSERT INTO solicitudes_facturacion_tipospago(cod_solicitudfacturacion, cod_tipopago, porcentaje, monto) VALUES ('$cod_facturacion','$codigo_tipopago','$monto_porcentaje','$monto_bob')";
+                $stmtTiposPago = $dbh->prepare($sqlTiposPago);
+                $stmtTiposPago->execute();
+            }
+            //para porcetnaje de areas
+            $sqlDeleteAreas="DELETE from solicitudes_facturacion_areas where cod_solicitudfacturacion=$cod_facturacion";
+            $stmtDelAreas = $dbh->prepare($sqlDeleteAreas);
+            $stmtDelAreas->execute();
+            //si existe array de objetos areas
+            if(isset($_POST['areas_facturacion'])){
+                $areas_facturacion= json_decode($_POST['areas_facturacion']);
+                $nF=cantidadF($areas_facturacion[0]);
+                for($j=0;$j<$nF;$j++){
+                    $codigo_area=$areas_facturacion[0][$j]->codigo_areas;
+                    $monto_porcentaje=$areas_facturacion[0][$j]->monto_porcentaje;
+                    $monto_bob=$areas_facturacion[0][$j]->monto_bob;                                
+                    // echo "codigo_area:".$codigo_area."<br>";
+                    // echo "monto_porcentaje:".$monto_porcentaje."<br>";        
+                    // echo "monto_bob:".$monto_bob."<br>";          
+                    $sqlTiposPago="INSERT INTO solicitudes_facturacion_areas(cod_solicitudfacturacion, cod_area, porcentaje, monto) VALUES ('$cod_facturacion','$codigo_area','$monto_porcentaje','$monto_bob')";
+                    $stmtTiposPago = $dbh->prepare($sqlTiposPago);
+                    $stmtTiposPago->execute();
+                }
+            }else{
+                $codigo_area=$cod_area;
+                $monto_porcentaje=100;
+                $monto_bob=$_POST["monto_total_a"];
+                // echo "codigo_area:".$codigo_area."<br>";
+                // echo "monto_porcentaje:".$monto_porcentaje."<br>";        
+                // echo "monto_bob:".$monto_bob."<br>";    
+                $sqlTiposPago="INSERT INTO solicitudes_facturacion_areas(cod_solicitudfacturacion, cod_area, porcentaje, monto) VALUES ('$cod_facturacion','$codigo_area','$monto_porcentaje','$monto_bob')";
+                $stmtTiposPago = $dbh->prepare($sqlTiposPago);
+                $stmtTiposPago->execute();
+            }
         }
         //enviar propuestas para la actualizacion de ibnorca
          $fechaHoraActual=date("Y-m-d H:i:s");
@@ -127,7 +226,7 @@ try {
     } else {//update
         //actualizamos los campos estaticos
         $stmt = $dbh->prepare("UPDATE solicitudes_facturacion set cod_unidadorganizacional='$cod_unidadorganizacional',cod_area='$cod_area',fecha_registro='$fecha_registro',fecha_solicitudfactura='$fecha_solicitudfactura',cod_tipoobjeto='$cod_tipoobjeto',cod_tipopago='$cod_tipopago',cod_cliente='$cod_cliente',cod_personal='$cod_personal',razon_social='$razon_social',nit='$nit',observaciones='$observaciones',observaciones_2='$observaciones_2',persona_contacto='$persona_contacto'
-         where codigo = $cod_facturacion");      
+        where codigo = $cod_facturacion");      
         $flagSuccess=$stmt->execute();
         if($flagSuccess){
             //borramos los datos y insertados en detalle
@@ -166,7 +265,68 @@ try {
                 values ('$cod_facturacion','$servicioInsert_ajax','$CantidadInsert_ajax','$importeInsert_ajax','$DescricpionInsert_ajax','$descuento_por_Insert_ajax','$descuento_bob_Insert_ajax',2)";
                 $stmt = $dbh->prepare($sql);                
                 $flagSuccess=$stmt->execute();                
-            }           
+            }
+            //======================================
+            //para tipo de pagos
+            $sqlDeleteTiposPago="DELETE from solicitudes_facturacion_tipospago where cod_solicitudfacturacion=$cod_facturacion";
+            $stmtDelTiposPago = $dbh->prepare($sqlDeleteTiposPago);
+            $stmtDelTiposPago->execute();
+            //si existe array de objetos tipopago
+            if(isset($_POST['tiposPago_facturacion'])){
+                $tiposPago_facturacion= json_decode($_POST['tiposPago_facturacion']);
+                $nF=cantidadF($tiposPago_facturacion[0]);
+                for($j=0;$j<$nF;$j++){
+                    $codigo_tipopago=$tiposPago_facturacion[0][$j]->codigo_tipopago;
+                    $monto_porcentaje=$tiposPago_facturacion[0][$j]->monto_porcentaje;
+                    $monto_bob=$tiposPago_facturacion[0][$j]->monto_bob;                                
+                    // echo "codigo_tipopago:".$codigo_tipopago."<br>";
+                    // echo "monto_porcentaje:".$monto_porcentaje."<br>";        
+                    // echo "monto_bob:".$monto_bob."<br>";          
+                    $sqlTiposPago="INSERT INTO solicitudes_facturacion_tipospago(cod_solicitudfacturacion, cod_tipopago, porcentaje, monto) VALUES ('$cod_facturacion','$codigo_tipopago','$monto_porcentaje','$monto_bob')";
+                    $stmtTiposPago = $dbh->prepare($sqlTiposPago);
+                    $stmtTiposPago->execute();
+                }
+            }else{
+                $codigo_tipopago=$cod_tipopago;
+                $monto_porcentaje=100;
+                $monto_bob=$_POST["monto_total_a"];
+                // echo "codigo_tipopago:".$codigo_tipopago."<br>";
+                // echo "monto_porcentaje:".$monto_porcentaje."<br>";        
+                // echo "monto_bob:".$monto_bob."<br>";    
+                $sqlTiposPago="INSERT INTO solicitudes_facturacion_tipospago(cod_solicitudfacturacion, cod_tipopago, porcentaje, monto) VALUES ('$cod_facturacion','$codigo_tipopago','$monto_porcentaje','$monto_bob')";
+                $stmtTiposPago = $dbh->prepare($sqlTiposPago);
+                $stmtTiposPago->execute();
+            }
+            //para porcetnaje de areas
+            $sqlDeleteAreas="DELETE from solicitudes_facturacion_areas where cod_solicitudfacturacion=$cod_facturacion";
+            $stmtDelAreas = $dbh->prepare($sqlDeleteAreas);
+            $stmtDelAreas->execute();
+            //si existe array de objetos areas
+            if(isset($_POST['areas_facturacion'])){
+                $areas_facturacion= json_decode($_POST['areas_facturacion']);
+                $nF=cantidadF($areas_facturacion[0]);
+                for($j=0;$j<$nF;$j++){
+                    $codigo_area=$areas_facturacion[0][$j]->codigo_areas;
+                    $monto_porcentaje=$areas_facturacion[0][$j]->monto_porcentaje;
+                    $monto_bob=$areas_facturacion[0][$j]->monto_bob;                                
+                    // echo "codigo_area:".$codigo_area."<br>";
+                    // echo "monto_porcentaje:".$monto_porcentaje."<br>";        
+                    // echo "monto_bob:".$monto_bob."<br>";          
+                    $sqlTiposPago="INSERT INTO solicitudes_facturacion_areas(cod_solicitudfacturacion, cod_area, porcentaje, monto) VALUES ('$cod_facturacion','$codigo_area','$monto_porcentaje','$monto_bob')";
+                    $stmtTiposPago = $dbh->prepare($sqlTiposPago);
+                    $stmtTiposPago->execute();
+                }
+            }else{
+                $codigo_area=$cod_area;
+                $monto_porcentaje=100;
+                $monto_bob=$_POST["monto_total_a"];
+                // echo "codigo_area:".$codigo_area."<br>";
+                // echo "monto_porcentaje:".$monto_porcentaje."<br>";        
+                // echo "monto_bob:".$monto_bob."<br>";    
+                $sqlTiposPago="INSERT INTO solicitudes_facturacion_areas(cod_solicitudfacturacion, cod_area, porcentaje, monto) VALUES ('$cod_facturacion','$codigo_area','$monto_porcentaje','$monto_bob')";
+                $stmtTiposPago = $dbh->prepare($sqlTiposPago);
+                $stmtTiposPago->execute();
+            }
         }
         if(isset($_POST['usuario_ibnored'])){
           $q=$_POST['usuario_ibnored'];
@@ -180,9 +340,8 @@ try {
 
     }//si es insert o update
     
-    } catch(PDOException $ex){
-        //manejar error
-        echo "Un error ocurrio".$ex->getMessage();
-
-    }
+} catch(PDOException $ex){
+    //manejar error
+    echo "Un error ocurrio".$ex->getMessage();
+}
 ?>

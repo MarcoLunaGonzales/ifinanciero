@@ -120,7 +120,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       	</div>
       	<div class="col-sm-2">
             <div class="form-group">
-                <select class="selectpicker form-control form-control-sm" data-live-search="true" data-size="6" name="proveedor<?=$idFila?>" id="proveedor<?=$idFila?>" required data-style="<?=$comboColor;?>">
+                <select class="selectpicker form-control form-control-sm" onchange="quitarFormaPagoProveedor(<?=$idFila?>)" data-live-search="true" data-size="6" name="proveedor<?=$idFila?>" id="proveedor<?=$idFila?>" required data-style="<?=$comboColor;?>">
                     <option disabled selected value="">Proveedor</option>
                   <?php
                   $stmt = $dbh->prepare("SELECT * FROM af_proveedores order by codigo");
@@ -138,6 +138,14 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         </div> 	
 		<div class="col-sm-1">
           <div class="btn-group">
+            <input type="hidden" id="cod_beneficiario<?=$idFila?>" value="0"/>
+            <input type="hidden" name="cod_tipopago<?=$idFila?>" id="cod_tipopago<?=$idFila?>" value="0"/>
+            <input type="hidden" name="nombre_beneficiario<?=$idFila?>" id="nombre_beneficiario<?=$idFila?>" value=""/>
+            <input type="hidden" name="apellido_beneficiario<?=$idFila?>" id="apellido_beneficiario<?=$idFila?>" value=""/>
+            <input type="hidden" name="cuenta_beneficiario<?=$idFila?>" id="cuenta_beneficiario<?=$idFila?>" value=""/>
+            <a  title="Forma de Pago" href="#" class="btn btn-success btn-sm btn-fab" id="boton_formapago<?=$idFila;?>" onclick="agregarTipoPagoProveedorDetalle(<?=$idFila;?>)">
+                  <i class="material-icons">money</i><span id="nben<?=$idFila?>" class="bg-danger"></span>
+            </a>
             <input type="hidden" name="cod_retencion<?=$idFila?>" id="cod_retencion<?=$idFila?>" value=""/>
             <a href="#" title="Retenciones" id="boton_ret<?=$idFila;?>" onclick="listRetencion(<?=$idFila;?>);" class="btn btn-warning text-dark btn-sm btn-fab">
                     <i class="material-icons">ballot</i>

@@ -80,6 +80,7 @@ if($cod_facturacion>0){//editar
     $razon_social = $resultSimuFact['razon_social'];
     $nit = $resultSimuFact['nit'];
     $observaciones = $resultSimuFact['observaciones'];
+    $observaciones_2 = $result['observaciones_2'];
     $cod_tipopago=$resultSimuFact['cod_tipopago'];
     $cod_tipoobjeto=$resultSimuFact['cod_tipoobjeto'];
 
@@ -114,7 +115,7 @@ $contadorRegistros=0;
     <div class="container-fluid">
         <div style="overflow-y:scroll;">
             <div class="col-md-12">
-              <form id="form1" class="form-horizontal" action="<?=$urlSave_solicitud_facturacion_costos;?>" method="post" onsubmit="return valida(this)">                
+              <form id="formSoliFactTcp" class="form-horizontal" action="<?=$urlSave_solicitud_facturacion_costos;?>" method="post" onsubmit="return valida(this)">                
                 <input type="hidden" name="ci_estudiante" id="ci_estudiante" value="<?=$ci_estudiante;?>"/>
                 <input type="hidden" name="cod_simulacion" id="cod_simulacion" value="<?=$cod_simulacion;?>"/>
                 <input type="hidden" name="cod_facturacion" id="cod_facturacion" value="<?=$cod_facturacion;?>"/>
@@ -187,7 +188,51 @@ $contadorRegistros=0;
 
                             <script>var nfac=[];itemTipoPagos_facturacion.push(nfac);var nfacAreas=[];itemAreas_facturacion.push(nfacAreas);</script>
                              <div class="">
-                                <?php 
+                                <?php
+                                    //====ingresamos los objetos con porcentajes
+                                    if($cod_facturacion > 0)
+                                    {
+                                        $queryTipopagoEdit="SELECT cod_tipopago,porcentaje,monto from solicitudes_facturacion_tipospago where cod_solicitudfacturacion=$cod_facturacion";
+                                        $stmtTipopagoEdit = $dbh->prepare($queryTipopagoEdit);
+                                        $stmtTipopagoEdit->execute();
+                                        $ncAreas=0;$contAreas= array();
+                                        while ($rowAreas = $stmtTipopagoEdit->fetch(PDO::FETCH_ASSOC)) {
+                                            $datoArea = new stdClass();//obejto
+                                            $codFila=(int)$rowAreas["cod_tipopago"];
+                                            $porcentaje_x=trim($rowAreas['porcentaje']);
+                                            $monto_x=trim($rowAreas['monto']);?>
+                                            <script>
+                                                var tipopago={
+                                                    codigo_tipopago: <?=$codFila?>,
+                                                    monto_porcentaje: <?=$porcentaje_x?>,
+                                                    monto_bob: <?=$monto_x?>
+                                                }
+                                                itemTipoPagos_facturacion[0].push(tipopago);  
+                                            </script>
+                                            <?php
+                                        }
+                                        //para objetos areas                                        
+                                        $queryAreasEdit="SELECT cod_area,porcentaje,monto from solicitudes_facturacion_areas where cod_solicitudfacturacion=$cod_facturacion";
+                                        $stmtAreasEdit = $dbh->prepare($queryAreasEdit);
+                                        $stmtAreasEdit->execute();
+                                        $ncAreas=0;$contAreas= array();
+                                        while ($row = $stmtAreasEdit->fetch(PDO::FETCH_ASSOC)) {
+                                            $datoArea = new stdClass();//obejto
+                                            $codFila=(int)$row["cod_area"];
+                                            $porcentaje_x=trim($row['porcentaje']);
+                                            $monto_x=trim($row['monto']);?>
+                                            <script>
+                                                var area={
+                                                    codigo_areas: <?=$codFila?>,
+                                                    monto_porcentaje: <?=$porcentaje_x?>,
+                                                    monto_bob: <?=$monto_x?>
+                                                }
+                                                itemAreas_facturacion[0].push(area);  
+                                            </script>
+                                            <?php
+                                        }
+                                    }
+                                    //=== termina porcentaje objetos
                                     $queryAreas="SELECT codigo,nombre,abreviatura from areas where areas_ingreso=1 and cod_estado=1";
                                     $stmtAreas = $dbh->prepare($queryAreas);
                                     $stmtAreas->execute();
@@ -300,7 +345,7 @@ $contadorRegistros=0;
                         </div>
                         <!-- fin razon social y nit -->
                         <div class="row">
-                            <label class="col-sm-3 col-form-label">Observaciones <small style="color: #f45454">*(Información para la contabilización)</small></label>
+                            <label class="col-sm-3 col-form-label">Observaciones * 1</label>
                             <div class="col-sm-9">
                                 <div class="form-group">
                                     <input class="form-control" type="text" name="observaciones" id="observaciones"  value="<?=$observaciones;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" requerid/>
@@ -308,10 +353,10 @@ $contadorRegistros=0;
                             </div>
                         </div>
                         <div class="row">
-                            <label class="col-sm-3 col-form-label">Observaciones</label>
+                            <label class="col-sm-3 col-form-label">Observaciones 2</label>
                             <div class="col-sm-9">
                                 <div class="form-group">
-                                    <input class="form-control" type="text" name="observaciones_2" id="observaciones_2" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+                                    <input class="form-control" type="text" name="observaciones_2" id="observaciones_2" value="<?=$observaciones_2;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
                                 </div>
                             </div>
                         </div>

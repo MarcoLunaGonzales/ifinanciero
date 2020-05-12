@@ -5,7 +5,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Porcentajes  de Tipo Pago</h4>
+        <h3 class="modal-title" id="myModalLabel"><b>Porcentaje de distribución del ingreso por tipo de pago</b></h3>
       </div>
       <div class="modal-body">
         <!-- <input type="hidden" name="cod_tipopago" id="cod_tipopago" value="0">    -->
@@ -35,7 +35,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Porcentaje de Areas</h4>
+        <h3 class="modal-title" id="myModalLabel"><b>Porcentaje de distribución del ingreso por área</b></h3>
       </div>
       <div class="modal-body">
         <div class="row" id="div_cabecera_hidden_areas">
@@ -56,3 +56,21 @@
   </div>
 </div>
 
+<div class="modal fade modal-mini modal-primary" id="modalAlert" style="z-index:99999" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-small">
+    <div id="modalAlertStyle" class="modal-content bg-danger text-white">
+      <div class="modal-header">
+        <i class="material-icons" data-notify="icon">notifications_active</i>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="material-icons">clear</i></button>
+      </div>
+      <div class="modal-body">
+        <div id="msgError"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-white btn-link" data-dismiss="modal">Aceptar
+          <div class="ripple-container"></div>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

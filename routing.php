@@ -1630,9 +1630,13 @@
 		if ($_GET['opcion']=='reportesProveedores') {
 			require_once('caja_chica/rpt_proveedores_print.php');
 		}
-		//plan cuentas solicitudes factacion
+		//plan cuentas solicitudes factacion tipo pago
 		if ($_GET['opcion']=='listPlanCuentasSolicitudesFacturacion') {
 			require_once('simulaciones_servicios/plandecuentas_list.php');
+		} 
+		//plan cuentas solicitudes factacion areas
+		if ($_GET['opcion']=='listPlanCuentasAreas') {
+			require_once('simulaciones_servicios/plandecuentas_list_areas.php');
 		}
 		
 		

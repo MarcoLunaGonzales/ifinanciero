@@ -12,7 +12,7 @@ $sqlX="SET NAMES 'utf8'";
 $stmtX = $dbh->prepare($sqlX);
 $stmtX->execute();
 
-$sql="SELECT t.codigo,t.nombre,t.abreviatura,(select cod_cuenta from tipos_pago_contabilizacion c where c.cod_tipopago=t.codigo)as cod_cuenta from tipos_pago t where t.cod_estadoreferencial=1";
+$sql="SELECT * from areas where areas_ingreso=1";
 $stmt = $dbh->prepare($sql);
 //ejecutamos
 $stmt->execute();
@@ -20,7 +20,7 @@ $stmt->execute();
 $stmt->bindColumn('codigo', $codigo);
 $stmt->bindColumn('nombre', $nombre);
 $stmt->bindColumn('abreviatura', $abreviatura);
-$stmt->bindColumn('cod_cuenta', $cod_cuenta);
+$stmt->bindColumn('cod_cuenta_ingreso', $cod_cuenta);
 
 // //plan de cuentas
 // $query_cuentas = "SELECT codigo,numero,nombre from plan_cuentas where cod_estadoreferencial=1";
@@ -37,7 +37,7 @@ $stmt->bindColumn('cod_cuenta', $cod_cuenta);
             <div class="card-icon">
               <i class="material-icons"><?=$iconCard;?></i>
             </div>
-            <h4 class="card-title">Plan De Cuentas para Tipos de Pagos</h4>            
+            <h4 class="card-title">Plan De Cuentas para Areas</h4>            
           </div>
           <div class="card-body">
             <div class="table-responsive">
@@ -70,7 +70,7 @@ $stmt->bindColumn('cod_cuenta', $cod_cuenta);
                             if($globalAdmin==1){
                           ?>
 
-                            <button type="button" class="btn btn-warning btn-round btn-fab btn-sm" data-toggle="modal" data-target="#modalAgregarC" onclick="agregarDatosModalCuenta('<?=$datos;?>')">
+                            <button type="button" class="btn btn-warning btn-round btn-fab btn-sm" data-toggle="modal" data-target="#modalAgregarC" onclick="agregarDatosModalCuenta_areas('<?=$datos;?>')">
                                 <i class="material-icons" title="Asociar Cuenta Contable">add</i>
                              </button>                        
                             <?php
@@ -101,7 +101,7 @@ $stmt->bindColumn('cod_cuenta', $cod_cuenta);
         <h4 class="modal-title" id="myModalLabel">Asociar Cuenta Contable</h4>
       </div>
       <div class="modal-body">
-        <input type="hidden" name="cod_tipopago" id="cod_tipopago" value="0">   
+        <input type="hidden" name="cod_area" id="cod_area" value="0">   
 
         <div class="row">
           <label class="col-sm-2 col-form-label" style="color:#424242"> Tipo de Pago: </label>
@@ -115,16 +115,13 @@ $stmt->bindColumn('cod_cuenta', $cod_cuenta);
         <div class="row">
           <label class="col-sm-2 col-form-label" style="color:#424242">Cuenta Asociada:</label>
           <div class="col-sm-8">
-            <div class="form-group" id="div_cuenta_contable_sol_fac">
-                
+            <div class="form-group" id="div_cuenta_contable_sol_fac_areas">               
             </div>
           </div>
-        </div>
-
-        
+        </div>        
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-success" id="registrarCuentaAsociada" name="registrarCuentaAsociada" data-dismiss="modal">Agregar</button>
+        <button type="button" class="btn btn-success" id="registrarCuentaAsociadaAreas" name="registrarCuentaAsociadaAreas" data-dismiss="modal">Agregar</button>
         <button type="button" class="btn btn-danger" data-dismiss="modal"> Volver </button>
       </div>
     </div>
@@ -133,10 +130,10 @@ $stmt->bindColumn('cod_cuenta', $cod_cuenta);
 
 <script type="text/javascript">
   $(document).ready(function(){
-    $('#registrarCuentaAsociada').click(function(){    
-      cod_tipopago=document.getElementById("cod_tipopago").value;
+    $('#registrarCuentaAsociadaAreas').click(function(){    
+      cod_area=document.getElementById("cod_area").value;
       cod_cuenta=$('#cod_cuenta').val();      
-      registrarCuentaAsociadaSOLFAC(cod_tipopago,cod_cuenta);
+      registrarCuentaAsociadaSOLFAC_areas(cod_area,cod_cuenta);
     });    
 
   });
