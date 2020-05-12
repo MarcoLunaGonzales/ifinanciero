@@ -30,6 +30,7 @@ $name_cliente=null;
 $razon_social = $name_cliente;
 $nit=null;
 $observaciones = null;
+$observaciones_2 = null;
 $persona_contacto=null;
 $name_area=null;
 $contadorRegistros=0;
@@ -112,12 +113,12 @@ $contadorRegistros=0;
                                     <div class="form-group" >
                                             <select name="cod_tipoobjeto" id="cod_tipoobjeto" class="selectpicker form-control form-control-sm" data-style="btn btn-info" >
                                                 <!-- <option value=""></option> -->
-                                                <?php 
+                                                <!-- <?php 
                                                 $queryTipoObjeto = "SELECT codigo,nombre FROM  tipos_objetofacturacion WHERE cod_estadoreferencial=1 order by nombre";
                                                 $statementObjeto = $dbh->query($queryTipoObjeto);
                                                 while ($row = $statementObjeto->fetch()){ ?>
                                                     <option <?=($cod_tipoobjeto==$row["codigo"])?"selected":"";?>  value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
-                                                <?php } ?>
+                                                <?php } ?> -->
                                             </select>                                
                                     </div>
                                 </div>    
@@ -413,6 +414,7 @@ $contadorRegistros=0;
                                     <div class="col-sm-4">
                                         <div class="form-group">                                            
                                             <input style="background:#ffffff" class="form-control" type="hidden" name="monto_total" id="monto_total"  readonly="readonly" value="0" step="0.01" />
+                                            <input  type="hidden"  name="monto_total_a" id="monto_total_a" value="0" step="0.01" />
                                         </div>
                                     </div>
                                 </div>
