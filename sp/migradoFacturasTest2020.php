@@ -23,7 +23,7 @@ $dbh = new Conexion();
             <div class="card-icon">
               <i class="material-icons">assignment</i>
             </div>
-            <h4 class="card-title">Cargado Inicial de Comprobantes</h4>
+            <h4 class="card-title">Cargado Inicial de Facturas</h4>
           </div>
           <div class="card-body">
                   
@@ -35,8 +35,8 @@ echo "<h6>Hora Inicio Proceso: " . date("Y-m-d H:i:s")."</h6>";
   $dsn = "conta"; 
 // $dsn = "DRIVER={SQL Server};SERVER=RLP-VMGDB\SQLEXPRESS ";
   //debe ser de sistema no de usuario
-  $usuario = "consultadb";
-  $clave="consultaibno1$";
+  $usuario = "sa";
+  $clave="minka@2018";
   //realizamos la conexion mediante odbc
   $conexión=odbc_connect($dsn, $usuario, $clave);
 //end modificado
@@ -47,29 +47,17 @@ if (!$conexión) {
 
     echo "CONEXION ESTABLECIDA!!!!";
 
-    $sqlDelete = "DELETE from comprobantes_detalle";
-    $stmtDelete = $dbh->prepare($sqlDelete);
-    
-    //$flagSuccess=$stmtDelete->execute();
-
-    $sqlDelete = "DELETE from comprobantes";
-    $stmtDelete = $dbh->prepare($sqlDelete);
-    
-    //$flagSuccess=$stmtDelete->execute();
-     
     //maximo codigo tabla po_mayores
     $flagSuccess=TRUE;
     $sqlInserta="";
 
-    /*$sqlMaxCod = 'SELECT IFNULL(max(indice),0)maximo from po_mayores';
-    $stmtMaxCod = $dbh->prepare($sqlMaxCod);
-    $stmtMaxCod->execute();
-    while ($rowMaxCod = $stmtMaxCod->fetch(PDO::FETCH_ASSOC)) {
-      $indiceMax=$rowMaxCod['maximo'];
-    }*/
+    $sqlIni="SET dateformat ymd;";
+    $rsIni = odbc_exec( $conexión, $sqlIni );
 
-    // query modificado IBNORCA - INGE (se agrego el nombre de base de datos a la tabla del from ibnorca2019.dbo.vw_MayorContable
-    $sql = "SELECT forma.fondo, forma.clase, forma.numero, forma.fecha, forma.moneda, forma.glosa, forma.estado FROM ibnorca2019.dbo.forma where forma.clase not in ('I-ADM','POA','POA99','POE','POE99','PPC','4') order by forma.fecha, forma.clase, forma.numero";
+    $fechaInicial="2020-01-01 00:00:00";
+    $fechaFinal="2020-01-31 23:59:59";
+
+    $sql = "SELECT forma.fondo, forma.clase, forma.numero, forma.fecha, forma.moneda, forma.glosa, forma.estado FROM ibnorca2020.dbo.forma where forma.clase in ('FAC') and forma.fecha between '$fechaInicial' and '$fechaFinal' order by forma.fecha, forma.clase, forma.numero";
     // end modificado
 
     $rs = odbc_exec( $conexión, $sql );
@@ -129,8 +117,11 @@ if (!$conexión) {
         $unidadInsertar=$fondo;
       }
 
-      list($tipoComprobante, $mesComprobante) = explode('-',$clase);
-      if($tipoComprobante=="T"){
+      //list($tipoComprobante, $mesComprobante) = explode('-',$clase);
+      $tipoComprobante=$clase;
+      $tipoComprobanteInsertar=4;
+
+      /*if($tipoComprobante=="T"){
         $tipoComprobanteInsertar=3;
       }elseif ($tipoComprobante=="I") {
         $tipoComprobanteInsertar=1;
@@ -138,7 +129,7 @@ if (!$conexión) {
         $tipoComprobanteInsertar=2;
       }elseif ($tipoComprobante=="FAC"){
         $tipoComprobanteInsertar=4;
-      }
+      }*/
 
       $numeroComprobante=intval($numero);
 
@@ -147,18 +138,17 @@ if (!$conexión) {
       $codMoneda=1;
       $codEstadoComprobante=1;
       $codComprobante=obtenerCodigoComprobante();
-      $sqlInsertCab="INSERT INTO comprobantes (codigo, cod_empresa, cod_unidadorganizacional, cod_gestion, cod_moneda, cod_estadocomprobante, cod_tipocomprobante, fecha, numero, glosa) values ('$codComprobante','$codEmpresa','$unidadInsertar','2019','$codMoneda','$codEstadoComprobante','$tipoComprobanteInsertar','$fecha','$numeroComprobante','$glosa')";
+      $sqlInsertCab="INSERT INTO comprobantes (codigo, cod_empresa, cod_unidadorganizacional, cod_gestion, cod_moneda, cod_estadocomprobante, cod_tipocomprobante, fecha, numero, glosa) values ('$codComprobante','$codEmpresa','$unidadInsertar','2020','$codMoneda','$codEstadoComprobante','$tipoComprobanteInsertar','$fecha','$numeroComprobante','$glosa')";
       $stmtInsertCab = $dbh->prepare($sqlInsertCab);
       
-      //$flagSuccess=$stmtInsertCab->execute();
-      
+      $flagSuccess=$stmtInsertCab->execute();
       if($flagSuccess==FALSE){
         exit("ERROR EN LA INSERCION ".$sqlInsertCab);
       }
       
       //
 
-      $sqlDetalle="SELECT detalle.cuenta, cuenta.nombre AS nombre_cuenta, detalle.partida, detalle.debebs, detalle.haberbs, detalle.glosa AS glosa_detalle, detalle.organismo, detalle.categoria AS ml_partida, detalle.auxiliar FROM ibnorca2019.dbo.detalle, ibnorca2019.dbo.cuenta WHERE detalle.entidad = '10' AND detalle.fondo = '$fondo' AND detalle.clase = '$clase' AND detalle.numero = '$numero' AND cuenta.codigo = detalle.cuenta";
+      $sqlDetalle="SELECT detalle.cuenta, cuenta.nombre AS nombre_cuenta, detalle.partida, detalle.debebs, detalle.haberbs, detalle.glosa AS glosa_detalle, detalle.organismo, detalle.categoria AS ml_partida, detalle.auxiliar FROM ibnorca2020.dbo.detalle, ibnorca2020.dbo.cuenta WHERE detalle.entidad = '10' AND detalle.fondo = '$fondo' AND detalle.clase = '$clase' AND detalle.numero = '$numero' AND cuenta.codigo = detalle.cuenta";
       $rsDetalle = odbc_exec($conexión, $sqlDetalle);
 
       if ( !$rsDetalle ) { 
@@ -242,7 +232,7 @@ if (!$conexión) {
       $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ".$insert_str.";";
       //echo $sqlInsertDet;
       $stmtInsertDet=$dbh->prepare($sqlInsertDet);
-      //$flagSuccess2=$stmtInsertDet->execute();
+      $flagSuccess2=$stmtInsertDet->execute();
 
       if($flagSuccess2==FALSE){
         exit("ERROR EN LA INSERCION DETALLE ".$sqlInsertDet);

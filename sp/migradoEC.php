@@ -23,15 +23,21 @@ $dbh = new Conexion();
             <div class="card-icon">
               <i class="material-icons">assignment</i>
             </div>
-            <h4 class="card-title">Cargado Inicial de Comprobantes</h4>
+            <h4 class="card-title">Cargado de Estados de Cuenta</h4>
           </div>
           <div class="card-body">
                   
 <?php
 
-echo "<h6>Hora Inicio Proceso: " . date("Y-m-d H:i:s")."</h6>";
+echo "<h6>Hora Inicio Proceso ESTADO CUENTAS: " . date("Y-m-d H:i:s")."</h6>";
 
-$codComprobanteOrigen=18692;
+//$codComprobanteOrigen=18692; //COMP SCZ
+//$codComprobanteOrigen=18693; //COMP CBBA
+//$codComprobanteOrigen=18696; //COMP ORURO
+//$codComprobanteOrigen=18697; //COMP POTOSI
+//$codComprobanteOrigen=18694; //COMP SUCRE
+
+$codComprobanteOrigen=18695; //COMP TARIJA
 $codCuentaOrigen=67;
 $tipoEstadoCuenta=2;//CLIENTE
 
@@ -52,12 +58,12 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
   $sqlInsert="INSERT into estados_cuenta(cod_comprobantedetalle, cod_plancuenta, monto,  cod_proveedor, fecha, cod_comprobantedetalleorigen, cod_cuentaaux, cod_cajachicadetalle, cod_tipoestadocuenta, glosa_auxiliar) values ('$codigoX','$codCuentaX','$debeX','0','$fechaX','0','$codCuentaAuxiliarX','0','$tipoEstadoCuenta','$glosaX')";
   $stmtInsert = $dbh->prepare($sqlInsert);
-  $stmtInsert->execute();
+  //$stmtInsert->execute();
 
   
 }
 
-echo "<h6>HORA FIN PROCESO CARGADO INICIAL COMPROBANTES: " . date("Y-m-d H:i:s")."</h6>";
+echo "<h6>HORA FIN PROCESO CARGADO ESTADO CUENTAS: " . date("Y-m-d H:i:s")."</h6>";
 
 ?>
           </div>
