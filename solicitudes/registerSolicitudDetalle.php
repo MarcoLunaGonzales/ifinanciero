@@ -138,7 +138,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 }
 
 ?>
-
+<input type="hidden" value="-100" id="tipo_documento_otro" name="tipo_documento_otro">
              <div id="combo_tipodocumento" class="d-none">
                 <select class="selectpicker form-control form-control-sm" name="tipo_documento" id="tipo_documento" data-style="<?=$comboColor;?>" onChange="asignarTipoDocumento()">
                     <option disabled selected value="">TIPO DOCUMENTO</option>
@@ -379,8 +379,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                   </button>
                 </div>
       <div class="card-body">
-        <p>Cargar archivos de respaldo.</p> 
-           <div class="fileinput fileinput-new col-md-12" data-provides="fileinput">
+           <!--<div class="fileinput fileinput-new col-md-12" data-provides="fileinput">
             <div class="row">
               <div class="col-md-12">
                 <div class="border" id="lista_archivos">Ningun archivo seleccionado</div>
@@ -396,11 +395,56 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 <a href="#" class="btn btn-danger btn-sm fileinput-exists" onclick="archivosPreview(1)" data-dismiss="fileinput"><i class="material-icons">clear</i> Quitar</a>
               </div>
             </div>
-           </div>
-           <p class="text-muted"><small>Los archivos se subir&aacute;n al servidor cuando se GUARDE la solicitud</small></p>
+           </div>-->
+           <p class="text-muted"><small>Los archivos se subir&aacute;n al servidor cuando se GUARDE la Solicitud de Recurso</small></p>
+            <div class="row col-sm-11 div-center">
+              <table class="table table-dark table-bordered table-condensed">
+                <thead>
+                  <tr>
+                    <th class="small" width="30%">Tipo de Documento <a href="#" title="Otro Documento" class="btn btn-primary btn-round btn-sm btn-fab float-left" onClick="agregarFilaArchivosAdjuntosCabecera()"><i class="material-icons">add</i></a></th>
+                    <th class="small">Obligatorio</th>
+                    <th class="small" width="35%">Archivo</th>
+                    <th class="small">Descripción</th>                  
+                  </tr>
+                </thead>
+                <tbody id="tabla_archivos">
+                  <?php
+                  $stmtArchivo = $dbh->prepare("SELECT * from ibnorca.vw_plantillaDocumentos where idTipoServicio=2824"); //2708 //2824 localhost
+                  $stmtArchivo->execute();
+                  $filaA=0;
+                  while ($rowArchivo = $stmtArchivo->fetch(PDO::FETCH_ASSOC)) {
+                     $filaA++;
+                     $codigoX=$rowArchivo['idClaDocumento'];
+                     $nombreX=$rowArchivo['Documento'];
+                     $ObligatorioX=$rowArchivo['Obligatorio'];
+                     $Obli='<i class="material-icons text-danger">clear</i> NO';
+                     if($ObligatorioX==1){
+                      $Obli='<i class="material-icons text-success">done</i> SI';
+                     }
+                  ?>
+                  <tr>
+                    <td class="text-left"><input type="hidden" name="codigo_archivo<?=$filaA?>" id="codigo_archivo<?=$filaA?>" value="<?=$codigoX;?>"><input type="hidden" name="nombre_archivo<?=$filaA?>" id="nombre_archivo<?=$filaA?>" value="<?=$nombreX;?>"><?=$nombreX;?></td>
+                    <td class="text-center"><?=$Obli?></td>
+                    <td class="text-right">
+                      <small id="label_txt_documentos_cabecera<?=$filaA?>"></small> 
+                      <span class="input-archivo">
+                        <input type="file" class="archivo" name="documentos_cabecera<?=$filaA?>" id="documentos_cabecera<?=$filaA?>"/>
+                      </span>
+                      <label title="Ningún archivo" for="documentos_cabecera<?=$filaA?>" id="label_documentos_cabecera<?=$filaA?>" class="label-archivo btn btn-warning btn-sm"><i class="material-icons">publish</i> Subir Archivo
+                      </label>
+                    </td>    
+                    <td><?=$nombreX;?></td>
+                  </tr> 
+                  <?php
+                   }
+                  ?>       
+                </tbody>
+              </table>
+              <input type="hidden" value="<?=$filaA?>" id="cantidad_archivosadjuntos" name="cantidad_archivosadjuntos">
+            </div>
       </div>
       <div class="modal-footer">
-        <button type="button" onclick="" class="btn btn-link" data-dismiss="modal">Aceptar
+        <button type="button" onclick="" class="btn btn-success" data-dismiss="modal">Aceptar
           <div class="ripple-container"></div>
         </button>
       </div>

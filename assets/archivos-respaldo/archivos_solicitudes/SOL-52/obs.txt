@@ -1,0 +1,29 @@
+
+COD_CUENTAPASIVO (solicitud_recursoscuentas)
+
+				PENDIENTES
+
+=============================================================
+
+				REALIZADOS
+nro_sol TIGRE F/29 NOMBRE_PROVEEDOR 
+
+- En el detalle de la impresión de las solicitudes de recursos debe figurar mayor detalle 
+  (Propuesta X - Cod Servicio Y - Cuenta - Detalle)
+- En el detalle de la impresión debe figurar  el tipo de Retención aplicado 
+   en cada solicitud de Recursos.
+- En el detalle de la impresión se pueden reducir el centro de 
+   Costos y el Nro. Factura.
+- En el listado de Solicitudes de Recursos dice Proveedores, debe decir Proveedor.
+- En el listado de Solicitudes poner la cuenta para que identifique cuando 
+  por ejemplo dice (AUDITOR - AUDITOR LIDER, ETC.)
+- No se deben poder modificar los cheques hacia atras.
+- En los cheques debe ir Banco, Cuenta, Inicio y Final.
+- Desde Contabilidad se puede rebotar la solicitud hasta el usuario.
+- Cada cuenta de gasto debe relacionarse a su cuenta de pasivo (que inicia con 2) 
+  para su contabilización en el devengado.
+- En el detalle de la impresión debe realizarse el seguimiento presupuestal por Oficina, 
+   Área y Cuenta)
+- Consultar con Luis para poner los tipos de documento de respaldo 
+   en los archivos de respaldo en un listado.
+- DEVENGADO (proveedor sin sumatoria)

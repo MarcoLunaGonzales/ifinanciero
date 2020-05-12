@@ -3641,7 +3641,8 @@ function listarTipoSolicitudAjaxPropuesta(tipo,id){
 function cargarDatosCuenta(){
   var codigoProv=$("#proveedores").val();
  for (var i = 0; i < numFilas; i++) {
-   $('select[name=proveedor'+(i+1)+']').val(codigoProv);  
+   $('select[name=proveedor'+(i+1)+']').val(codigoProv);
+   quitarFormaPagoProveedor(i+1);  
    }
    $('.selectpicker').selectpicker("refresh");
 }
@@ -3714,6 +3715,12 @@ function minusDetalleSolicitud(idF){
       for (var i = parseInt(idF); i < (numFilas+1); i++) {
         var nuevoId=i+1;
        $("#div"+nuevoId).attr("id","div"+i);
+
+       $("#unidad_fila"+nuevoId).attr("name","unidad_fila"+i);
+       $("#unidad_fila"+nuevoId).attr("id","unidad_fila"+i);
+       $("#area_fila"+nuevoId).attr("name","area_fila"+i);
+       $("#area_fila"+nuevoId).attr("id","area_fila"+i);
+
        $("#unidad"+nuevoId).attr("name","unidad"+i);
        $("#unidad"+nuevoId).attr("id","unidad"+i);
        $("#area"+nuevoId).attr("name","area"+i);
@@ -3739,7 +3746,7 @@ function minusDetalleSolicitud(idF){
        }else{
 
        }
-       $("#boton_remove"+nuevoId).attr("onclick","minusCuentaContable('"+i+"')");
+       $("#boton_remove"+nuevoId).attr("onclick","minusDetalleSolicitud('"+i+"')");
        $("#boton_remove"+nuevoId).attr("id","boton_remove"+i);
        $("#boton_fac"+nuevoId).attr("onclick","listFac('"+i+"')");
        $("#boton_fac"+nuevoId).attr("id","boton_fac"+i);
@@ -3755,6 +3762,21 @@ function minusDetalleSolicitud(idF){
        $("#importe_label"+nuevoId).attr("id","importe_label"+i); 
        $("#cod_retencion"+nuevoId).attr("name","cod_retencion"+i);
        $("#cod_retencion"+nuevoId).attr("id","cod_retencion"+i);
+       
+       $("#cod_tipopago"+nuevoId).attr("name","cod_tipopago"+i);
+       $("#cod_tipopago"+nuevoId).attr("id","cod_tipopago"+i);
+       $("#nombre_beneficiario"+nuevoId).attr("name","nombre_beneficiario"+i);
+       $("#nombre_beneficiario"+nuevoId).attr("id","nombre_beneficiario"+i);
+       $("#apellido_beneficiario"+nuevoId).attr("name","apellido_beneficiario"+i);
+       $("#apellido_beneficiario"+nuevoId).attr("id","apellido_beneficiario"+i);
+       $("#cuenta_beneficiario"+nuevoId).attr("name","cuenta_beneficiario"+i);
+       $("#cuenta_beneficiario"+nuevoId).attr("id","cuenta_beneficiario"+i); 
+
+       $("#cod_beneficiario"+nuevoId).attr("id","cod_beneficiario"+i);     
+       
+       $("#boton_formapago"+nuevoId).attr("onclick","agregarTipoPagoProveedorDetalle('"+i+"')");
+       $("#boton_formapago"+nuevoId).attr("id","boton_formapago"+i);
+       $("#nben"+nuevoId).attr("id","nben"+i);
       }
      } 
      itemFacturas.splice((idF-1), 1);
@@ -11812,3 +11834,131 @@ function quitarDistribucionSolicitud(){
    }
   $("#boton_titulodist").html("Distribución"); 
 }
+
+function agregarTipoPagoProveedorDetalle(fila){
+  $("#fila_pago").val(fila);
+  if($("#proveedor"+fila).val()>0){
+    //if($("#proveedor"+fila).val()!=$("#cod_beneficiario"+fila).val()){
+      var proveedor = $("#proveedor"+fila).val();
+      var parametros={"codigo":proveedor};
+      $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajax_datos_bancarios.php",
+        data: parametros,
+        beforeSend: function () {
+        $("#texto_ajax_titulo").html("Cargando los datos del proveedor..."); 
+          iniciarCargaAjax();
+        },
+        success:  function (resp) {
+          $(".mensaje").html(resp);
+           detectarCargaAjax();
+           $("#tipo_pagoproveedor").val($("#cod_tipopago"+fila).val());
+           $("#texto_ajax_titulo").html("Procesando Datos");   
+           $("#modalTipoPagoSolicitud").modal("show");         
+        }
+      });   
+    //}else{
+      //$("#nombre_beneficiario").val('<?=$nombre?>');
+      //$("#apellido_beneficiario").val('<?=$apellido?>');
+      //$("#cuenta_beneficiario").val('<?=$cuenta?>');
+    //}
+  }else{
+    Swal.fire("Informativo!", "Debe seleccionar un proveedor!", "warning");
+  }
+}
+function guardarFormaPagoSolicitud(){
+  var fila = $("#fila_pago").val();
+  $("#cod_tipopago"+fila).val($("#tipo_pagoproveedor").val());
+  $("#nombre_beneficiario"+fila).val($("#nombre_beneficiario").val());
+  $("#apellido_beneficiario"+fila).val($("#apellido_beneficiario").val());
+  $("#cuenta_beneficiario"+fila).val($("#cuenta_beneficiario").val());
+  if(!($("#nben"+fila).hasClass("estado"))){
+    $("#nben"+fila).addClass("estado");
+  }
+  $("#modalTipoPagoSolicitud").modal("hide");
+}
+
+function quitarFormaPagoProveedor(fila){
+  if($("#nben"+fila).hasClass("estado")){
+    $("#nben"+fila).removeClass("estado");   
+  }
+  $("#cod_tipopago"+fila).val("");
+  $("#nombre_beneficiario"+fila).val("");
+  $("#apellido_beneficiario"+fila).val("");
+  $("#cuenta_beneficiario"+fila).val("");
+}
+
+function agregarFilaArchivosAdjuntosCabecera(){
+  var codigo = $("#tipo_documento_otro").val();
+  var num = parseInt($("#cantidad_archivosadjuntos").val());
+  num++;  
+  var row = $('<tr>').addClass('').attr('id','fila_archivo'+num);
+  row.append($('<td>').addClass('text-left').html('<input type="hidden" name="codigo_archivo'+num+'" id="codigo_archivo'+num+'" value="'+codigo+'">Otros Documentos <a href="#" title="Quitar" class="btn btn-default btn-round btn-sm btn-fab float-right" onClick="quitarElementoAdjunto('+num+')"><i class="material-icons">delete_outline</i></a>'));
+  row.append($('<td>').addClass('text-center').html('<i class="material-icons text-danger">clear</i> NO'));
+  row.append($('<td>').addClass('text-right').html('<small id="label_txt_documentos_cabecera'+num+'"></small>'+ 
+                      '<span class="input-archivo">'+
+                        '<input type="file" class="archivo" name="documentos_cabecera'+num+'" id="documentos_cabecera'+num+'"/>'+
+                      '</span>'+
+                      '<label title="Ningún archivo" for="documentos_cabecera'+num+'" id="label_documentos_cabecera'+num+'" class="label-archivo btn btn-warning btn-sm"><i class="material-icons">publish</i> Subir Archivo'+
+                      '</label>'));
+  row.append($('<td>').addClass('text-center').html('<input type="text" class="form-control" style="background-color:#E3CEF6;text-align: left" value="" placeholder="Ingresar Descripción" id="nombre_archivo'+num+'" name="nombre_archivo'+num+'">')); 
+  $("#tabla_archivos").append(row);
+  $("#cantidad_archivosadjuntos").val(num);
+}
+function quitarElementoAdjunto(fila){
+  $("#fila_archivo"+fila).remove();
+}
+
+function agregarFilaArchivosAdjuntosDetalle(){
+  var codigo = $("#tipo_documento_otro").val();
+  var num = parseInt($("#cantidad_archivosadjuntosdetalle").val());
+  num++;  
+  var row = $('<tr>').addClass('').attr('id','fila_archivo'+num);
+  row.append($('<td>').addClass('text-left').html('<input type="hidden" name="codigo_archivodetalle'+num+'" id="codigo_archivodetalle'+num+'" value="'+codigo+'">Otros Documentos <a href="#" title="Quitar" class="btn btn-default btn-round btn-sm btn-fab float-right" onClick="quitarElementoAdjuntoDetalle('+num+')"><i class="material-icons">delete_outline</i></a>'));
+  row.append($('<td>').addClass('text-center').html('<i class="material-icons text-danger">clear</i> NO'));
+  row.append($('<td>').addClass('text-right').html('<small id="label_txt_documentos_detalle'+num+'"></small>'+ 
+                      '<span class="input-archivo">'+
+                        '<input type="file" class="archivo" name="documentos_detalle'+num+'" id="documentos_detalle'+num+'"/>'+
+                      '</span>'+
+                      '<label title="Ningún archivo" for="documentos_cabecera'+num+'" id="label_documentos_cabecera'+num+'" class="label-archivo btn btn-warning btn-sm"><i class="material-icons">publish</i> Subir Archivo'+
+                      '</label>'));
+  row.append($('<td>').addClass('text-center').html('<input type="text" class="form-control" style="background-color:#E3CEF6;text-align: left" value="" placeholder="Ingresar Descripción" id="nombre_archivodetalle'+num+'" name="nombre_archivodetalle'+num+'">')); 
+  $("#tabla_archivosdetalle").append(row);
+  $("#cantidad_archivosadjuntosdetalle").val(num);
+}
+function quitarElementoAdjuntoDetalle(fila){
+  $("#fila_archivodetalle"+fila).remove();
+}
+
+function guardarArchivosDetalleSolicitud(){
+  var fila = $("#codigo_fila").val();
+  var cantidad=$("#cantidad_archivosadjuntosdetalle").val(); 
+  for (var i = 1; i <=parseInt(cantidad); i++) {
+    if($("#codigo_archivodetalle"+i).length>0){
+      
+    }
+  };
+}
+$(document).on('change', '.archivo', function() {
+  var filename = $(this).val().split('\\').pop();
+  var idname = $(this).attr('id');
+  $("#label_txt_"+idname).html(filename);
+  if(filename.length>28){
+    $("#label_txt_"+idname).html(filename.substr(0,28)+"...");
+  }  
+   $("#label_"+idname).attr("title",filename);
+   if(filename==""||filename==null){
+    $("#label_"+idname).html('<i class="material-icons">publish</i> Subir Archivo');
+    if($("#label_"+idname).hasClass("btn-primary")){
+      $("#label_"+idname).removeClass('btn-primary');
+      $("#label_"+idname).addClass('btn-warning');
+    }  
+   }else{
+    $("#label_"+idname).html('<i class="material-icons">done</i> Correcto');
+    if(!($("#label_"+idname).hasClass("btn-primary"))){
+      $("#label_"+idname).addClass('btn-primary');
+      $("#label_"+idname).removeClass('btn-warning');
+    } 
+   }
+});

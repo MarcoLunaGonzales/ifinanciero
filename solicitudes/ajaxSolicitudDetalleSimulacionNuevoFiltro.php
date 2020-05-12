@@ -49,6 +49,10 @@ $codigo_detalle=$_GET['codigo_detalle'];
 							$detalleX=$row['glosa_completa'];
 							$proveedorX="";
 							$retencionX="";
+                            $codTipoPago=0;
+                            $nombreBen="";
+                            $apellidoBen="";
+                            $cuentaBen="";
 							$tituloImporte="Importe";
 							if($ibnorca==1){
                               $importeX=$row['monto_total'];
