@@ -480,8 +480,14 @@ if($menuModulo==0){
                 </li>
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listPlanCuentasSolicitudesFacturacion">
-                    <span class="sidebar-mini">PSF</span>
-                    <span class="sidebar-normal">Plan de Cuentas Sol. Fact.</span>
+                    <span class="sidebar-mini">PCTP</span>
+                    <span class="sidebar-normal">Plan de Cuentas para tipos de pago</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listPlanCuentasAreas">
+                    <span class="sidebar-mini">PCA</span>
+                    <span class="sidebar-normal">Plan de Cuentas para Areas</span>
                   </a>
                 </li>
 

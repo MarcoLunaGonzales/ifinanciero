@@ -112,13 +112,13 @@ if($_GET['tipo']=='E'){
 }		
 
 		$parametros=json_encode($parametros);
-		// abrimos la sesión cURL
+		// abrimos la sesiรณn cURL
 		$ch = curl_init();
 		//curl_setopt($ch, CURLOPT_URL,$direccion."registro/ws-registro-proveedor.php"); // OFFICIAL
 		curl_setopt($ch, CURLOPT_URL,$direccion."registro/ws-registro-proveedor.php"); // PRUEBA
-		// indicamos el tipo de petición: POST
+		// indicamos el tipo de peticiรณn: POST
 		curl_setopt($ch, CURLOPT_POST, TRUE);
-		// definimos cada uno de los parámetros
+		// definimos cada uno de los parรกmetros
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);
 		// recibimos la respuesta y la guardamos en una variable
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

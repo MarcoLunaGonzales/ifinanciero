@@ -268,104 +268,151 @@
 <script type="text/javascript">
     $(document).ready(function() {
       data_cuentas= $('#data_cuentas').DataTable({
-            columnDefs: [{
-            orderable: false,
-            targets: [0]
-          }],
+        columnDefs: [{
+        orderable: false,
+        targets: [0]
+        }],
           "pageLength": 50
          }
-        );
+      );
       data_cuentas_ver= $('#data_cuentas_2').DataTable({
-            "paging": false ,
-            "language": {
-                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-            }
-         }
-        );
-
+        "paging": false ,
+        "language": {
+            "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+        }
+        }
+      );
       $("#form-pagos").submit(function(e) {
-      var mensaje="";
-    if($("#cantidad_filas").val()==0){
-        Swal.fire("Informativo!", "Debe registrar al menos un pago", "warning");
-        return false;
-      }else{
-        var cont=0;
-        for (var i = 0; i < $("#cantidad_filas").val(); i++) {
-           if(parseFloat($('#monto_pago'+(i+1)).val())>parseFloat($('#saldo_pago'+(i+1)).text())){
-             cont++;
-             break;   
-           }                  
-        }
-        if(cont!=0){
-           Swal.fire("Informativo!", "Uno de los montos ingresados es mayor al saldo", "warning"); 
-           return false;
+        var mensaje="";
+        if($("#cantidad_filas").val()==0){
+          Swal.fire("Informativo!", "Debe registrar al menos un pago", "warning");
+          return false;
         }else{
-          var conta=0;
+          var cont=0;
           for (var i = 0; i < $("#cantidad_filas").val(); i++) {
-            if($("#monto_pago"+(i+1)).val()>0){
-             if(($('#tipo_pago'+(i+1)).val()>0)){
-              if(($('#tipo_pago'+(i+1)).val()==1)){
-                if($("#banco_pago"+(i+1)).val()>0){
-                 if(($('#emitidos_pago'+(i+1)).val()=="####")){
-                   conta++;
-                   break;
-                 }
-                }else{
-                  conta++;
-                  break;
-                }
-              }       
-             }else{
-              conta++;
-              break;
-             }
-            } 
-         }
-         if(conta!=0){
-           Swal.fire("Informativo!", "Faltan datos!", "warning"); 
-           return false;
-         }else{
+             if(parseFloat($('#monto_pago'+(i+1)).val())>parseFloat($('#saldo_pago'+(i+1)).text())){
+               cont++;
+               break;   
+             }                  
+          }
+          if(cont!=0){
+             Swal.fire("Informativo!", "Uno de los montos ingresados es mayor al saldo", "warning"); 
+             return false;
+          }else{
+            var conta=0;
+            for (var i = 0; i < $("#cantidad_filas").val(); i++) {
+              if($("#monto_pago"+(i+1)).val()>0){
+               if(($('#tipo_pago'+(i+1)).val()>0)){
+                if(($('#tipo_pago'+(i+1)).val()==1)){
+                  if($("#banco_pago"+(i+1)).val()>0){
+                   if(($('#emitidos_pago'+(i+1)).val()=="####")){
+                     conta++;
+                     break;
+                   }
+                  }else{
+                    conta++;
+                    break;
+                  }
+                }       
+               }else{
+                conta++;
+                break;
+               }
+              } 
+           }
+           if(conta!=0){
+             Swal.fire("Informativo!", "Faltan datos!", "warning"); 
+             return false;
+           }else{
 
-         }          
-        }
-      }     
-    });
+           }          
+          }
+        }     
+      });
 
-     $("#form_partidaspresupuestarias").submit(function(e) {
+      $("#form_partidaspresupuestarias").submit(function(e) {
           var datos=alertDatosTabla();
           $('<input />').attr('type', 'hidden')
             .attr('name', 'cuentas2')
             .attr('value', JSON.stringify(datos))
             .appendTo('#form_partidaspresupuestarias');     
-     });
-     $("#form_partidaspresupuestariasCC").submit(function(e) {
+      });
+      $("#form_partidaspresupuestariasCC").submit(function(e) {
           var datos=alertDatosTabla();
           $('<input />').attr('type', 'hidden')
             .attr('name', 'cuentas2')
             .attr('value', JSON.stringify(datos))
             .appendTo('#form_partidaspresupuestariasCC');     
-     });
+      });
 
-     $("#form_partidaspresupuestariasSR").submit(function(e) {
+      $("#form_partidaspresupuestariasSR").submit(function(e) {
           var datos=cuentas_tabla;
           $('<input />').attr('type', 'hidden')
             .attr('name', 'cuentas2')
             .attr('value', JSON.stringify(datos))
             .appendTo('#form_partidaspresupuestariasSR');     
-     });
-
+      });
      $("#form_bonosgrupos").submit(function(e) {
           $('<input />').attr('type', 'hidden')
             .attr('name', 'montos')
             .attr('value', JSON.stringify(montos_personal))
             .appendTo('#form_bonosgrupos');   
-    });
+      });
      $("#form_anticipospersonal").submit(function(e) {
          if($("#monto").val()>$("#haber_basico2").val()){
           $("#mensaje").html("<p class='text-danger'>El monto no puede ser mayor al 50% del haber b&aacute;sico</p>");
           return false;
          }
-    });
+      });
+      $("#formSoliFactTcp").submit(function(e) {
+        if($("#total_monto_bob_a_tipopago").val()){//existe array de objetos tipopago
+          var montoTotalItems=$("#monto_total_a").val();
+          var monto_modal_por_tipopago=$("#total_monto_bob_a_tipopago").val();
+          //si existe array de objetos transformarlo a json
+          $('<input />').attr('type', 'hidden')
+            .attr('name', 'tiposPago_facturacion')
+            .attr('value', JSON.stringify(itemTipoPagos_facturacion))
+            .appendTo('#formSoliFactTcp');
+          if(montoTotalItems!=monto_modal_por_tipopago){
+            var mensaje="<p>Por favor verifique los montos de la distribución de pocentajes en Tipo de Pago...</p>";
+            $('#msgError').html(mensaje);
+            $('#modalAlert').modal('show'); 
+            return false;  
+          }else{
+            if($("#total_monto_bob_a_areas").val()){
+              var montoTotalItems=$("#monto_total_a").val();            
+              var monto_modal_por_area=$("#total_monto_bob_a_areas").val();
+              //si existe array de objetos areas
+              $('<input />').attr('type', 'hidden')
+              .attr('name', 'areas_facturacion')
+              .attr('value', JSON.stringify(itemAreas_facturacion))
+              .appendTo('#formSoliFactTcp');
+              if(montoTotalItems!=monto_modal_por_area){
+                var mensaje="<p>Por favor verifique los montos de la distribución de pocentajes en Areas...</p>";
+                $('#msgError').html(mensaje);
+                $('#modalAlert').modal('show'); 
+                return false;
+              }
+            }
+          }
+        }else{
+          if($("#total_monto_bob_a_areas").val()){
+            var montoTotalItems=$("#monto_total_a").val();            
+            var monto_modal_por_area=$("#total_monto_bob_a_areas").val();
+            //si existe array de objetos areas
+            $('<input />').attr('type', 'hidden')
+            .attr('name', 'areas_facturacion')
+            .attr('value', JSON.stringify(itemAreas_facturacion))
+            .appendTo('#formSoliFactTcp');
+            if(montoTotalItems!=monto_modal_por_area){
+              var mensaje="<p>Por favor verifique los montos de la distribución de pocentajes en Areas...</p>";
+              $('#msgError').html(mensaje);
+              $('#modalAlert').modal('show'); 
+              return false;
+            }
+          }
+        }
+      });      
     } );
   </script>
 

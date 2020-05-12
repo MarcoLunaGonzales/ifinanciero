@@ -2289,6 +2289,18 @@ function obtenerCorrelativoComprobante($cod_tipocomprobante, $unidad_organizacio
   return ($nroCorrelativo);
 }
 
+function obtenerCorrelativoComprobante2($cod_tipocomprobante){
+  $dbh = new Conexion(); 
+  $sql="SELECT IFNULL(max(c.numero)+1,1)as codigo from comprobantes c where c.cod_tipocomprobante=$cod_tipocomprobante";
+  //echo $sql;
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  $nroCorrelativo=0;
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $nroCorrelativo=$row['codigo'];
+  }
+  return ($nroCorrelativo);
+}
 
 function obtenerCorrelativoSolicitud(){
   $dbh = new Conexion(); 

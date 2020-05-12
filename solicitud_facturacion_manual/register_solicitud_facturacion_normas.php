@@ -42,7 +42,7 @@ $contadorRegistros=0;
     <div class="container-fluid">
         <div style="overflow-y:scroll;">
             <div class="col-md-12">
-              <form id="form1" class="form-horizontal" action="<?=$urlSaveSolicitudfactura_normas;?>" method="post" onsubmit="return valida(this)">
+              <form id="formSoliFactTcp" class="form-horizontal" action="<?=$urlSaveSolicitudfactura_normas;?>" method="post" onsubmit="return valida(this)">
                 <?php 
       if(isset($_GET['q'])){
         ?><input type="hidden" name="usuario_ibnored" id="usuario_ibnored" value="<?=$q;?>">
@@ -265,7 +265,7 @@ $contadorRegistros=0;
                         </div>
                         <!-- fin razon social y nit -->
                         <div class="row">
-                            <label class="col-sm-3 col-form-label">Observaciones <small style="color: #f45454">*(Información para la contabilización)</small></label>
+                            <label class="col-sm-3 col-form-label">Observaciones * 1</label>
                             <div class="col-sm-9">
                                 <div class="form-group">
                                     <input class="form-control" type="text" name="observaciones" id="observaciones"  value="<?=$observaciones;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" requerid/>
@@ -273,7 +273,7 @@ $contadorRegistros=0;
                             </div>
                         </div>
                         <div class="row">
-                            <label class="col-sm-3 col-form-label">Observaciones </label>
+                            <label class="col-sm-3 col-form-label">Observaciones 2</label>
                             <div class="col-sm-9">
                                 <div class="form-group">
                                     <input class="form-control" type="text" name="observaciones_2" id="observaciones_2" onkeyup="javascript:this.value=this.value.toUpperCase();" required="true" />
@@ -437,83 +437,6 @@ $contadorRegistros=0;
         </div>
     </div>
 </div>
-<!-- small modal -->
-<div class="modal fade modal-primary" id="modalAgregarServicioFacturacion" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content card">
-           <div class="card-header card-header-success card-header-text">
-              <div class="card-text">
-                <h4>Agregar Servicio</h4>
-              </div>
-              <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
-                <i class="material-icons">close</i>
-              </button>
-            </div>
-            <div class="card-body">
-                <table class="table table-bordered table-condensed table-striped table-sm">
-                    <thead>
-                        <tr class="fondo-boton">
-                            <td width="30%">Descripci&oacute;n</td>
-                            <td>Cantidad</td>                            
-                            <td>Importe</td>                            
-                            <td>Action</td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="bg-plomo">                        
-                            <td><?php 
-                                if($cod_area==39){
-                                    $codigoAreaServ=108;
-                                }else{
-                                    if($cod_area==38){
-                                      $codigoAreaServ=109;
-                                    }else{
-                                      $codigoAreaServ=0;
-                                    }
-                                }
-                                ?>
-                                <select class="selectpicker form-control form-control-sm" data-live-search="true" name="modal_editservicio" id="modal_editservicio" data-style="fondo-boton">
-                                    <option disabled selected="selected" value="">--SERVICIOS--</option>
-                                    <?php 
-                                     $stmt3 = $dbh->prepare("SELECT idclaservicio,descripcion,codigo from cla_servicios where (codigo_n1=108 or codigo_n1=109) and vigente=1 and codigo_n1=$codigoAreaServ");
-                                     $stmt3->execute();
-                                     while ($rowServ = $stmt3->fetch(PDO::FETCH_ASSOC)) {
-                                      $codigoServX=$rowServ['idclaservicio'];
-                                      $nombreServX=$rowServ['descripcion'];
-                                      $abrevServX=$rowServ['codigo'];
-                                      ?><option value="<?=$codigoServX;?>"><?=$abrevServX?> - <?=$nombreServX?></option><?php 
-                                     }
-                                    ?>
-                                </select>
-                            </td>
-                            <td class="text-right">
-                               <input type="number" min="1" id="cantidad_servicios" name="cantidad_servicios" class="form-control text-primary text-right" value="1">
-                            </td>                        
-                            <td class="text-right">
-                               <input type="number" id="modal_montoserv" name="modal_montoserv" class="form-control text-primary text-right"  value="0" step="0.01">
-                            </td>
-                            
-                          <td>
-                            <div class="btn-group">                            
-                               <button id="add_boton" name="add" class="btn btn-primary btn-sm" onClick="agregarNuevoServicioSimulacion2(this); return false;">
-                                 Agregar
-                               </button>
-                             </div>
-                          </td>
-                        </tr>
-                    </tbody>
-               </table>
-                  
-                  
-                <!-- <hr>
-                <div class="form-group float-right">
-                    <button type="button" id="boton_guardarsim" class="btn btn-default" onclick="guardarDatosSimulacion(this.id)">Guardar</button>
-                </div>  -->
-            </div>
-        </div>  
-    </div>
-</div>
-<!--    end small modal -->
 
 
 <!-- carga de proveedores -->
