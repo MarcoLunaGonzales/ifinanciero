@@ -229,8 +229,7 @@
 			require_once('simulaciones_servicios/anular_SoliciutdFacturacion.php');
 		}
 		// Solicitud facturacion Capacitacion
-		if ($_GET['opcion']=='solicitud_facturacion_costos') {
-			$cod=$_GET['cod'];
+		if ($_GET['opcion']=='solicitud_facturacion_costos') {			
 			require_once('simulaciones_costos/solicitud_facturacion_costos.php');
 		}
 		if ($_GET['opcion']=='registro_solicitud_facturacion') {

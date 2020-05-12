@@ -3,7 +3,7 @@ require_once 'conexion.php';
 require_once 'conexion_externa.php';
 require_once 'configModule.php';
 require_once 'styles.php';
-$codigo_simulacion=$cod;//codigo de simulacion
+$codigo_simulacion=0;//codigo de simulacion
 $dbh = new Conexion();
 $globalAdmin=$_SESSION["globalAdmin"];
 
@@ -198,17 +198,8 @@ m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo order by nombreAlumno");//poner 
                     </div>
                   </div>
                 </div>
-                <div class="card-footer fixed-bottom">
-                 <?php 
-                if($globalAdmin==1){              
-                    ?>
-                    <!-- <a href="<?=$urlRegisterSolicitudfactura;?>&cod_s=<?=$codigo_simulacion?>&cod_f=0&cod_sw=1" target="_self" class="<?=$buttonNormal;?>">Registrar</a>
-                     -->
-
-                    <?php                
-                } 
-                 ?>
-                 <a href='<?=$urlList;?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
+                <div class="card-footer fixed-bottom">              
+                 <!-- <a href='<?=$urlList;?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a> -->
                 </div>      
               </div>
           </div>  
