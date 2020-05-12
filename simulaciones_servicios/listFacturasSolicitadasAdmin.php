@@ -70,10 +70,10 @@ $item_1=2709;
                       <table class="table" id="tablePaginator">
                         <thead>
                           <tr>
-                            <th class="text-center">#</th>                          
-                            <th>Oficina</th>
-                            <th>Area</th>
-                            <th>nro<br>Sol.</th>
+                            <th class="text-center"></th>                          
+                            <th>Of - Area</th>                            
+                            <th>#Sol.</th>
+                            <th>Responsable</th>
                             <th>Codigo<br>Servicio</th>   
                             <th>Fecha<br>Registro</th>
                             <th>Fecha<br>a Facturar</th>
@@ -156,7 +156,7 @@ $item_1=2709;
                             $responsable=namePersonal($cod_personal);//nombre del personal
                             $nombre_area=trim(abrevArea($cod_area),'-');//nombre del area
                             $nombre_uo=nameUnidad($cod_unidadorganizacional);//nombre de la oficina
-                            $nombre_contacto=nameContacto($persona_contacto);//nombre del personal
+                            $nombre_contacto=ucfirst(nameContacto($persona_contacto));//nombre del personal
 
                             //los registros de la factura
                             $dbh1 = new Conexion();
@@ -198,17 +198,17 @@ $item_1=2709;
 
                             ?>
                           <tr>
-                            <td align="center"><?=$index;?></td>
-                            <td><?=$nombre_uo;?></td>
-                            <td><?=$nombre_area;?></td>
-                            <td class="text-right"><?=$nro_correlativo;?></td>
-                            <td><?=$codigo_alterno?></td>                            
-                            <td><?=$fecha_registro;?></td>
-                            <td><?=$fecha_solicitudfactura;?></td>                            
+                            <td align="center"></td>
+                            <td class="small"><?=$nombre_uo;?> - <?=$nombre_area;?></td>
+                            <td class="text-right small"><?=$nro_correlativo;?></td>
+                            <td class="text-left small"><?=$responsable?></td>
+                            <td class="small"><?=$codigo_alterno?></td>                            
+                            <td class="small"><?=$fecha_registro;?></td>
+                            <td class="small"><?=$fecha_solicitudfactura;?></td>                            
                             <td style="color:#cc4545;"><?=$nro_fact_x;?></td>                             
-                            <td class="text-right"><?=formatNumberDec($sumaTotalImporte) ;?></td>
-                            <td class="text-left"><?=$nombre_contacto;?></td>
-                            <td><?=$razon_social;?></td>
+                            <td class="text-right small"><?=formatNumberDec($sumaTotalImporte) ;?></td>
+                            <td class="text-left small"><?=$nombre_contacto;?></td>
+                            <td class="text-left small "><?=$razon_social;?></td>
                             <td><button class="btn <?=$btnEstado?> btn-sm btn-link"><?=$estado;?></button></td>
                             <td class="td-actions text-right">
                               <?php

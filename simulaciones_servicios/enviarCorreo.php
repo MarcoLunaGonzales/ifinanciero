@@ -1,10 +1,14 @@
 <?php
 require '../notificaciones_sistema/PHPMailer/send.php';
+require_once '../conexion.php';
+//$dbh = new Conexion();
+$dbhB = new Conexion();
 //RECIBIMOS LAS VARIABLES
 $codigo_facturacion=$_POST['codigo_facturacion'];
 $cod_solicitudfacturacion=$_POST['cod_solicitudfacturacion'];
 $nro_factura=$_POST['nro_factura'];
 $correo_destino=$_POST['correo_destino'];
+$correo_destino=trim($correo_destino,',');
 // $asunto=$_POST['asunto'];
 // $mensaje=$_POST['mensaje'];
 
@@ -50,7 +54,7 @@ if($sw==1){//existe archivo
 	    $stmtB = $dbhB->prepare($sql);
 	    $stmtB->execute();
 	   
-	}else{
+	}else{//error al enviar el correo
 	 	echo "2$$$".$correo_destino;
 	}
 }else{

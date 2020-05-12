@@ -67,10 +67,10 @@ if($cantidad_items>0){
                       <table class="table" id="tablePaginator">
                         <thead>
                           <tr>
-                            <th class="text-center">#</th>                          
-                            <th>Of.</th>
-                            <th>Area</th>                            
+                            <th class="text-center"></th>                          
+                            <th>Of - Area</th>                          
                             <th>Nro<br>Soli.</th>
+                            <th>Responsable</th> 
                             <th>Codigo<br>Servicio</th>
                             <th>Fecha<br>Registro</th>
                             <th>Fecha a<br>Facturar</th>
@@ -161,17 +161,14 @@ if($cantidad_items>0){
                             $stringCabecera=$nombre_uo."##".$nombre_area."##".$nombre_simulacion."##".$name_area_simulacion."##".$fecha_registro."##".$fecha_solicitudfactura."##".$nit."##".$razon_social;
                             ?>
                           <tr>
-                            <td align="center"><?=$index;?></td>
-                            <td><?=$nombre_uo;?></td>
-                            <td><?=$nombre_area;?></td>
+                            <td align="center"></td>
+                            <td><?=$nombre_uo;?> - <?=$nombre_area;?></td>
                             <td class="text-right"><?=$nro_correlativo;?></td>
+                            <td><?=$responsable;?></td>
                             <td><?=$codigo_alterno;?></td>
                             <td><?=$fecha_registro;?></td>
                             <td><?=$fecha_solicitudfactura;?></td>
-                            <td><?=$nro_fact_x;?></td>
-                            <!-- <td class="text-right"><?=formatNumberDec($sumaTotalMonto) ;?></td>
-                            <td class="text-right"><?=formatNumberDec($sumaTotalDescuento_por) ;?></td>
-                            <td class="text-right"><?=formatNumberDec($sumaTotalDescuento_bob) ;?></td> -->
+                            <td><?=$nro_fact_x;?></td>                            
                             <td class="text-right"><?=formatNumberDec($sumaTotalImporte) ;?></td>
                             <td class="text-left"><?=$nombre_contacto;?></td>
                             <td><?=$razon_social;?></td>

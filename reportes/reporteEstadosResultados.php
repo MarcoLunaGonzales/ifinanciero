@@ -5,11 +5,13 @@ require_once '../functionsGeneral.php';
 require_once '../functions.php';
 require_once '../assets/libraries/CifrasEnLetras.php';
 
+setlocale(LC_TIME, "Spanish");
+
 $dbh = new Conexion();
 set_time_limit(300);
 $fechaActual=date("Y-m-d");
 $gestion=nameGestion($_POST['gestion']);
-$fecha=$_POST['fecha'];
+$fecha=$_POST['fecha_desde'];
 $fechaTitulo= explode("-",$fecha);
 $fechaFormateada=$fechaTitulo[2].'/'.$fechaTitulo[1].'/'.$fechaTitulo[0];
 
@@ -125,6 +127,10 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                    $numeroX=$rowComp['numero'];
                    $nombreX=formateaPlanCuenta($rowComp['nombre'], $rowComp['nivel']);
                    $montoX=(float)($rowComp['total_debe']-$rowComp['total_haber']);
+
+                   //ACA VOLVEMOS TODO POSITIVO PARA LA RESTA FINAL
+                   $montoX=abs($montoX);
+                   
                    if($codigo==5){                    
                     $tBolActivo+=$montoX;
                   }else{

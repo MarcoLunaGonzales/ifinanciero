@@ -146,7 +146,7 @@ if (!$conexión) {
       $sqlInsertCab="INSERT INTO comprobantes (codigo, cod_empresa, cod_unidadorganizacional, cod_gestion, cod_moneda, cod_estadocomprobante, cod_tipocomprobante, fecha, numero, glosa) values ('$codComprobante','$codEmpresa','$unidadInsertar','2020','$codMoneda','$codEstadoComprobante','$tipoComprobanteInsertar','$fecha','$numeroComprobante','$glosa')";
       $stmtInsertCab = $dbh->prepare($sqlInsertCab);
       
-      $flagSuccess=$stmtInsertCab->execute();
+      //$flagSuccess=$stmtInsertCab->execute();
       if($flagSuccess==FALSE){
         exit("ERROR EN LA INSERCION ".$sqlInsertCab);
       }
@@ -237,7 +237,7 @@ if (!$conexión) {
       $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ".$insert_str.";";
       //echo $sqlInsertDet;
       $stmtInsertDet=$dbh->prepare($sqlInsertDet);
-      $flagSuccess2=$stmtInsertDet->execute();
+      //$flagSuccess2=$stmtInsertDet->execute();
 
       if($flagSuccess2==FALSE){
         exit("ERROR EN LA INSERCION DETALLE ".$sqlInsertDet);

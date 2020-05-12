@@ -442,6 +442,24 @@ if($menuModulo==0){
                   </a>
                 </li-->
                 <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=configuracionEstadosCuenta">
+                    <span class="sidebar-mini"> CEC </span>
+                    <span class="sidebar-normal"> Configuracion Estados de Cuentas</span>
+                  </a>
+                </li>                
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listDistribucionGastoArea">
+                    <span class="sidebar-mini">DGA</span>
+                    <span class="sidebar-normal">Distribucion Gastos Área</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listDistribucionGasto">
+                    <span class="sidebar-mini">DGO</span>
+                    <span class="sidebar-normal">Distribucion Gastos Oficina</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listEntidades">
                     <span class="sidebar-mini">E</span>
                     <span class="sidebar-normal">Entidades</span>
@@ -460,6 +478,18 @@ if($menuModulo==0){
                     <span class="sidebar-normal">Plan de Cuentas Caja Chica</span>
                   </a>
                 </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listPlanCuentasSolicitudesFacturacion">
+                    <span class="sidebar-mini">PCTP</span>
+                    <span class="sidebar-normal">Plan de Cuentas para tipos de pago</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listPlanCuentasAreas">
+                    <span class="sidebar-mini">PCA</span>
+                    <span class="sidebar-normal">Plan de Cuentas para Areas</span>
+                  </a>
+                </li>
 
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listPartidasPres">
@@ -471,18 +501,6 @@ if($menuModulo==0){
                   <a class="nav-link" href="?opcion=tipoDeCambio">
                     <span class="sidebar-mini">TC</span>
                     <span class="sidebar-normal">Tipo de Cambio de Monedas</span>
-                  </a>
-                </li>
-                <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=listDistribucionGasto">
-                    <span class="sidebar-mini">DGO</span>
-                    <span class="sidebar-normal">Distribucion Gastos Oficina</span>
-                  </a>
-                </li>
-                <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=listDistribucionGastoArea">
-                    <span class="sidebar-mini">DGA</span>
-                    <span class="sidebar-normal">Distribucion Gastos Área</span>
                   </a>
                 </li>
                 <li class="nav-item ">
@@ -527,6 +545,12 @@ if($menuModulo==0){
                   <a class="nav-link" href="?opcion=principal_CajaChica">
                     <span class="sidebar-mini"> CC </span>
                     <span class="sidebar-normal"> Caja Chica </span>
+                  </a>
+                </li>
+                 <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listFacturasServicios_conta">
+                    <span class="sidebar-mini"> SF </span>
+                    <span class="sidebar-normal"> Solicitudes de Facturación</span>
                   </a>
                 </li>
                 <!--li class="nav-item ">
@@ -634,12 +658,6 @@ if($menuModulo==0){
                   <a class="nav-link" href="?opcion=configuracionDeRetenciones">
                     <span class="sidebar-mini"> CR </span>
                     <span class="sidebar-normal"> Configuracion de Retenciones</span>
-                  </a>
-                </li>
-                <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=configuracionEstadosCuenta">
-                    <span class="sidebar-mini"> CEC </span>
-                    <span class="sidebar-normal"> Configuracion Estados de Cuentas</span>
                   </a>
                 </li>                          
               </ul>

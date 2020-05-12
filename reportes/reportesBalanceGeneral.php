@@ -7,6 +7,8 @@ require_once 'styles.php';
 require_once 'functions.php';
 require_once 'functionsGeneral.php';
 
+setlocale(LC_TIME, "Spanish");
+
 $dbh = new Conexion();
 $query = "select * from depreciaciones";
 $statement = $dbh->query($query);

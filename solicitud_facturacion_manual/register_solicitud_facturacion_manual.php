@@ -16,25 +16,7 @@ if(isset($_GET['q'])){
   $q=$_GET['q'];
 }
 if ($cod_facturacion > 0){
-    // $stmt = $dbh->prepare("SELECT * FROM solicitudes_facturacion where codigo=$cod_facturacion");
-    // $stmt->execute();
-    // $result = $stmt->fetch();
-    // $cod_uo = $result['cod_unidadorganizacional'];
-    // $cod_area = $result['cod_area'];
-    // $fecha_registro = $result['fecha_registro'];
-    // $fecha_solicitudfactura = $result['fecha_solicitudfactura'];
-    // $cod_tipoobjeto = $result['cod_tipoobjeto'];
-    // $cod_tipopago = $result['cod_tipopago'];
-    // $cod_cliente = $result['cod_cliente'];
-    // $cod_personal = $result['cod_personal'];
-    // $razon_social = $result['razon_social'];
-    // $nit = $result['nit'];
-    // $observaciones = $result['observaciones'];
-    // $persona_contacto= $result['persona_contacto'];
-    // // $anios_servicio = $resultServicio['anios'];
-    // $nombre_simulacion = $resultServicio['nombre'];
-    
-    // $name_cliente=nameCliente($cod_cliente);
+   
 }else {
     $nombre_simulacion = null;
     $cod_uo = null; 
@@ -68,7 +50,7 @@ $contadorRegistros=0;
     <div class="container-fluid">
         <div style="overflow-y:scroll;">
             <div class="col-md-12">
-              <form id="form1" class="form-horizontal" action="<?=$urlSaveSolicitudfactura;?>" method="post" onsubmit="return valida(this)">
+              <form id="formSoliFactTcp" class="form-horizontal" action="<?=$urlSaveSolicitudfactura;?>" method="post" onsubmit="return valida(this)">
                 <?php 
                if(isset($_GET['q'])){
                  ?><input type="hidden" name="id_ibnored" id="id_ibnored" value="<?=$q;?>"/><?php 
@@ -155,20 +137,65 @@ $contadorRegistros=0;
                                 </div>    
                             </div>
                             
+                            <script>var nfac=[];itemTipoPagos_facturacion.push(nfac);var nfacAreas=[];itemAreas_facturacion.push(nfacAreas);</script>
+                            <div class="">
+                                <?php 
+                                    $queryAreas="SELECT codigo,nombre,abreviatura from areas where areas_ingreso=1 and cod_estado=1";
+                                    $stmtAreas = $dbh->prepare($queryAreas);
+                                    $stmtAreas->execute();
+                                    $ncAreas=0;$contAreas= array();
+                                    while ($rowAreas = $stmtAreas->fetch(PDO::FETCH_ASSOC)) { 
+                                        //objeto dato donde se guarda las areas de servicios
+                                        $datoArea = new stdClass();//obejto
+                                        $codFila=(int)$rowAreas["codigo"];
+                                        $nombre_x=trim($rowAreas['nombre']);                                        
+                                        $datoArea->codigo=($ncAreas+1);
+                                        $datoArea->cod_area=$codFila;
+                                        $datoArea->nombrex=$nombre_x;                                                
+                                        $datosAreas[0][$ncAreas]=$datoArea;                           
+                                        $ncAreas++;
+                                    }
+                                    $contAreas[0]=$ncAreas;
+                                ?>
+                            </div>
                             <label class="col-sm-2 col-form-label">Tipo Pago</label>
-                            <div class="col-sm-4">
+                            <div class="col-sm-3">
                                 <div class="form-group" >
-                                        <select name="cod_tipopago" id="cod_tipopago" class="selectpicker form-control form-control-sm" data-style="btn btn-info">
-                                            <!-- <option value=""></option> -->
-                                            <?php 
-                                            $queryTipoPago = "SELECT codigo,nombre FROM  tipos_pago WHERE cod_estadoreferencial=1 order by nombre";
-                                            $statementPAgo = $dbh->query($queryTipoPago);
-                                            while ($row = $statementPAgo->fetch()){ ?>
-                                                <option <?=($cod_tipopago==$row["codigo"])?"selected":"";?>  value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
-                                            <?php } ?>
-                                        </select>                                
+                                        <select name="cod_tipopago" id="cod_tipopago" class="selectpicker form-control form-control-sm" data-style="btn btn-info" onChange="ajaxTipoPagoContactoPersonal(this);">
+                                        <?php 
+                                        $queryTipoPago = "SELECT codigo,nombre FROM  tipos_pago WHERE cod_estadoreferencial=1 order by nombre";
+                                        $statementPAgo = $dbh->query($queryTipoPago);
+                                        $nc=0;$cont= array();
+                                        while ($row = $statementPAgo->fetch()){ 
+                                            //objeto dato donde guarda tipos de pago
+                                            $dato = new stdClass();//obejto
+                                            $codFila=(int)$row["codigo"];
+                                            $nombre_x=trim($row['nombre']);
+                                            $dato->codigo=($nc+1);
+                                            $dato->cod_tipopago=$codFila;
+                                            $dato->nombrex=$nombre_x;                                                
+                                            $datos[0][$nc]=$dato;                           
+                                            $nc++;
+                                            ?>
+                                            <option <?=($cod_tipopago==$row["codigo"])?"selected":"";?>  value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                                        <?php } 
+                                        $cont[0]=$nc;
+                                        ?>
+                                    </select>                                
                                 </div>
                             </div>
+                            <div class="col-sm-1">
+                                <div class="form-group" >
+                                    <button type="button" class="btn btn-danger btn-round btn-fab btn-sm" data-toggle="modal" data-target="" onclick="agregarDatosModalTipoPagoFacturacion()">
+                                        <i class="material-icons" title="Tipo Pago Porcentaje">list</i>
+                                        <span id="nfac" class="count bg-warning"></span>
+                                     </button>
+                                     <button type="button" class="btn btn-primary btn-round btn-fab btn-sm" data-toggle="modal" data-target="" onclick="agregarDatosModalAreasFacturacion()">
+                                        <i class="material-icons" title="Areas Porcentaje">list</i>
+                                        <span id="nfacAreas" class="count bg-warning"></span>
+                                     </button>                              
+                                </div>
+                            </div>   
                             <label class="col-sm-2 col-form-label">Responsable</label>
                             <div class="col-sm-4">
                                 <div class="form-group">            
@@ -202,8 +229,7 @@ $contadorRegistros=0;
                             <div class="col-sm-3">
                                 <div class="form-group" >
                                     <div id="div_contenedor_contactos">
-                                        <select class="selectpicker form-control form-control-sm" name="persona_contacto" id="persona_contacto" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" title="Seleccione Contacto" required="true">
-                                          <option value=""></option>
+                                        <select class="selectpicker form-control form-control-sm" name="persona_contacto" id="persona_contacto" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" title="Seleccione Contacto">
                                           <?php 
                                           $query="SELECT * FROM clientes_contactos where cod_cliente=$cod_cliente order by nombre";
                                           $stmt = $dbh->prepare($query);
@@ -224,7 +250,7 @@ $contadorRegistros=0;
                                         <i class="material-icons" title="Add Contacto">add</i>
                                     </a>
                                     <a href="#" class="btn btn-success btn-round btn-fab btn-sm" onclick="actualizarRegistroContacto()">
-                                       <i class="material-icons" title="Actualizar Contacto">update</i>
+                                       <i class="material-icons" title="Actualizar Clientes & Contactos">update</i>
                                     </a> 
                                 </div>
                             </div>
@@ -250,10 +276,18 @@ $contadorRegistros=0;
                         </div>
                         <!-- fin razon social y nit -->
                         <div class="row">
-                            <label class="col-sm-2 col-form-label">Observaciones</label>
-                            <div class="col-sm-7">
+                            <label class="col-sm-3 col-form-label">Observaciones * 1</label>
+                            <div class="col-sm-9">
                                 <div class="form-group">
-                                    <input class="form-control" type="text" name="observaciones" id="observaciones"  value="<?=$observaciones;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+                                    <input class="form-control" type="text" name="observaciones" id="observaciones"  value="<?=$observaciones;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" requerid/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <label class="col-sm-3 col-form-label">Observaciones 2</label>
+                            <div class="col-sm-9">
+                                <div class="form-group">
+                                    <input class="form-control" type="text" name="observaciones_2" id="observaciones_2" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
                                 </div>
                             </div>
                         </div>
@@ -302,6 +336,7 @@ $contadorRegistros=0;
                                     <div class="col-sm-4">
                                         <div class="form-group">                                            
                                             <input style="background:#ffffff" class="form-control"  name="monto_total" id="monto_total"  readonly="readonly" value="0" step="0.01" />
+                                            <input  type="hidden"  name="monto_total_a" id="monto_total_a" value="0" step="0.01" />
                                         </div>
                                     </div>
                                 </div>
@@ -333,82 +368,7 @@ $contadorRegistros=0;
         </div>
     </div>
 </div>
-<!-- small modal -->
-<div class="modal fade modal-primary" id="modalAgregarServicioFacturacion" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content card">
-           <div class="card-header card-header-success card-header-text">
-              <div class="card-text">
-                <h4>Agregar Servicio</h4>
-              </div>
-              <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
-                <i class="material-icons">close</i>
-              </button>
-            </div>
-            <div class="card-body">
-                <table class="table table-bordered table-condensed table-striped table-sm">
-                    <thead>
-                        <tr class="fondo-boton">
-                            <td width="30%">Descripci&oacute;n</td>
-                            <td>Cantidad</td>                            
-                            <td>Importe</td>                            
-                            <td>Action</td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="bg-plomo">                        
-                            <td><?php 
-                                if($cod_area==39){
-                                    $codigoAreaServ=108;
-                                }else{
-                                    if($cod_area==38){
-                                      $codigoAreaServ=109;
-                                    }else{
-                                      $codigoAreaServ=0;
-                                    }
-                                }
-                                ?>
-                                <select class="selectpicker form-control form-control-sm" data-live-search="true" name="modal_editservicio" id="modal_editservicio" data-style="fondo-boton">
-                                    <option disabled selected="selected" value="">--SERVICIOS--</option>
-                                    <?php 
-                                     $stmt3 = $dbh->prepare("SELECT idclaservicio,descripcion,codigo from cla_servicios where (codigo_n1=108 or codigo_n1=109) and vigente=1 and codigo_n1=$codigoAreaServ");
-                                     $stmt3->execute();
-                                     while ($rowServ = $stmt3->fetch(PDO::FETCH_ASSOC)) {
-                                      $codigoServX=$rowServ['idclaservicio'];
-                                      $nombreServX=$rowServ['descripcion'];
-                                      $abrevServX=$rowServ['codigo'];
-                                      ?><option value="<?=$codigoServX;?>"><?=$abrevServX?> - <?=$nombreServX?></option><?php 
-                                     }
-                                    ?>
-                                </select>
-                            </td>
-                            <td class="text-right">
-                               <input type="number" min="1" id="cantidad_servicios" name="cantidad_servicios" class="form-control text-primary text-right" value="1">
-                            </td>                        
-                            <td class="text-right">
-                               <input type="number" id="modal_montoserv" name="modal_montoserv" class="form-control text-primary text-right"  value="0" step="0.01">
-                            </td>
-                            
-                          <td>
-                            <div class="btn-group">                            
-                               <button id="add_boton" name="add" class="btn btn-primary btn-sm" onClick="agregarNuevoServicioSimulacion2(this); return false;">
-                                 Agregar
-                               </button>
-                             </div>
-                          </td>
-                        </tr>
-                    </tbody>
-               </table>
-                  
-                  
-                <!-- <hr>
-                <div class="form-group float-right">
-                    <button type="button" id="boton_guardarsim" class="btn btn-default" onclick="guardarDatosSimulacion(this.id)">Guardar</button>
-                </div>  -->
-            </div>
-        </div>  
-    </div>
-</div>
+
 <!--    end small modal -->
 <div class="cargar-ajax d-none">
   <div class="div-loading text-center">
@@ -456,3 +416,43 @@ function valida(f) {
   return ok;
 }
 </script>
+<?php  require_once 'simulaciones_servicios/modal_facturacion.php';?>
+<!-- objeto tipo de pago -->
+<?php 
+    $lan=sizeof($cont);//filas si lo hubiese         
+    for ($i=0; $i < $lan; $i++) {
+      ?>
+      <script>var detalle_tipopago=[];</script>
+      <?php      
+        for ($j=0; $j < $cont[$i]; $j++) {
+             if($cont[$i]>0){?>
+                <script>
+                    detalle_tipopago.push({codigo:<?=$datos[$i][$j]->codigo?>,cod_tipopago:<?=$datos[$i][$j]->cod_tipopago?>,nombrex:'<?=$datos[$i][$j]->nombrex?>'});
+
+                </script>
+
+              <?php
+              }          
+            }
+        ?><script>itemTipoPagos_facturacion_aux.push(detalle_tipopago);</script><?php                    
+    }
+?>
+<!-- objeto Areas servicio -->
+<?php 
+    $lanAreas=sizeof($contAreas);
+    for ($i=0; $i < $lanAreas; $i++) {
+      ?>
+      <script>var detalle_areas=[];</script>
+      <?php
+        for ($j=0; $j < $contAreas[$i]; $j++) {            
+             if($contAreas[$i]>0){?>
+                <script>
+                    detalle_areas.push({codigo:<?=$datosAreas[$i][$j]->codigo?>,cod_area:<?=$datosAreas[$i][$j]->cod_area?>,nombrex:'<?=$datosAreas[$i][$j]->nombrex?>'});
+                </script>
+
+              <?php         
+              }          
+            }
+        ?><script>itemAreas_facturacion_aux.push(detalle_areas);</script><?php                    
+    }
+?>

@@ -455,6 +455,7 @@ function abrevArea($codigo){
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       $cadenaAreas=$cadenaAreas."-".$row['abreviatura'];
    }
+   $cadenaAreas=substr($cadenaAreas, 1);
    return($cadenaAreas);
 }
 function abrevArea_solo($codigo){
@@ -555,8 +556,9 @@ function abrevUnidad($codigo){
    $stmt->execute();
    $nombreX="";
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-      $nombreX.=$row['abreviatura']." - ";
+      $nombreX.=$row['abreviatura']."-";
    }
+   $nombreX=substr($nombreX, 0, -1);
    return($nombreX);
 }
 function abrevUnidad_solo($codigo){
@@ -2287,6 +2289,18 @@ function obtenerCorrelativoComprobante($cod_tipocomprobante, $unidad_organizacio
   return ($nroCorrelativo);
 }
 
+function obtenerCorrelativoComprobante2($cod_tipocomprobante){
+  $dbh = new Conexion(); 
+  $sql="SELECT IFNULL(max(c.numero)+1,1)as codigo from comprobantes c where c.cod_tipocomprobante=$cod_tipocomprobante";
+  //echo $sql;
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  $nroCorrelativo=0;
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $nroCorrelativo=$row['codigo'];
+  }
+  return ($nroCorrelativo);
+}
 
 function obtenerCorrelativoSolicitud(){
   $dbh = new Conexion(); 
@@ -4826,36 +4840,34 @@ function obtenerComprobantesDetCuenta($codigo,$cuenta){
    return($valor);
 }
 
- function listaSumaMontosDebeHaberComprobantesDetalle($fechaFinal,$tipoBusqueda,$arrayUnidades,$arrayAreas,$padre,$gestion,$fechaInicio)
- {
-   $dbh = new Conexion();
-   $sql="";
-   $sqlAreas="";
-   $sqlUnidades="";
-  $fechaFinalMod=explode("/", $fechaFinal);
-  //formateando fecha
-   if($fechaInicio=="none"){
-    $fi=$fechaFinalMod[2]."-01-01";
-   }else{
-     $fechaFinalModIni=explode("/", $fechaInicio);
-     $fi=$fechaFinalModIni[2]."-".$fechaFinalModIni[1]."-".$fechaFinalModIni[0];
-   }
+ function listaSumaMontosDebeHaberComprobantesDetalle($fechaFinal,$tipoBusqueda,$arrayUnidades,$arrayAreas,$padre,$gestion,$fechaInicio){
+    $dbh = new Conexion();
+    $sql="";
+    $sqlAreas="";
+    $sqlUnidades="";
+    $fechaFinalMod=explode("/", $fechaFinal);
+    //formateando fecha
+    if($fechaInicio=="none"){
+      $fi=$fechaFinalMod[2]."-01-01";
+    }else{
+      $fechaFinalModIni=explode("/", $fechaInicio);
+      $fi=$fechaFinalModIni[2]."-".$fechaFinalModIni[1]."-".$fechaFinalModIni[0];
+    }
   
-  $fa=$fechaFinalMod[2]."-".$fechaFinalMod[1]."-".$fechaFinalMod[0];
-  //$fi=$fechaFinalMod[2]."-01-01";
-
-   for ($i=0; $i < count($arrayAreas); $i++) {
+    $fa=$fechaFinalMod[2]."-".$fechaFinalMod[1]."-".$fechaFinalMod[0];
+    //$fi=$fechaFinalMod[2]."-01-01";
+    for ($i=0; $i < count($arrayAreas); $i++) {
       if($i==0){
         $sqlAreas.="and (";
       }
       if($i==(count($arrayAreas)-1)){
         $sqlAreas.="d.cod_area='".$arrayAreas[$i]."')";
-       }else{
+      }else{
         $sqlAreas.="d.cod_area='".$arrayAreas[$i]."' or ";
-       }  
-   }
-   //busqueda de unidades
-   for ($i=0; $i < count($arrayUnidades); $i++) {
+      }  
+    }
+    //busqueda de unidades
+    for ($i=0; $i < count($arrayUnidades); $i++) {
       if($i==0){
         $sqlUnidades.="and (";
       }
@@ -4864,49 +4876,45 @@ function obtenerComprobantesDetCuenta($codigo,$cuenta){
        }else{
         $sqlUnidades.="d.cod_unidadorganizacional='".$arrayUnidades[$i]."' or ";
        }  
-   }
-   
-   $sql="SELECT cuentas_monto.*,p.nombre,p.numero,p.nivel,p.cod_padre from plan_cuentas p join 
+    }
+    $sql="SELECT cuentas_monto.*,p.nombre,p.numero,p.nivel,p.cod_padre from plan_cuentas p join 
            (select d.cod_cuenta,sum(debe) as total_debe,sum(haber) as total_haber 
             from comprobantes_detalle d join comprobantes c on c.codigo=d.cod_comprobante 
-            where (c.fecha between '$fi' and '$fa') $sqlUnidades and c.cod_gestion='$gestion' group by (d.cod_cuenta) order by d.cod_cuenta) cuentas_monto
+            where (c.fecha between '$fi' and '$fa') $sqlUnidades and c.cod_estadocomprobante<>'2' and c.cod_gestion='$gestion' group by (d.cod_cuenta) order by d.cod_cuenta) cuentas_monto
         on p.codigo=cuentas_monto.cod_cuenta where p.cod_padre=$padre order by p.numero";
-   $stmt = $dbh->prepare($sql);
-   $stmt->execute();
-   return $stmt;
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    return $stmt;
 }
 
 function sumaMontosDebeHaberComprobantesDetalleNivel($fechaFinal,$tipoBusqueda,$arrayUnidades,$padre){
-   $dbh = new Conexion();
-   $sql="";
-   $sqlAreas="";
-   $sqlUnidades="";
-
-  //formateando fecha
+  $dbh = new Conexion();
+  $sql="";
+  $sqlAreas="";
+  $sqlUnidades="";
+    //formateando fecha
   $fechaFinalMod=explode("/", $fechaFinal);
   $fa=$fechaFinalMod[2]."-".$fechaFinalMod[1]."-".$fechaFinalMod[0];
   $fi=$fechaFinalMod[2]."-01-01";
-
-   //busqueda de unidades
-   for ($i=0; $i < count($arrayUnidades); $i++) {
-      if($i==0){
-        $sqlUnidades.="and (";
-      }
-      if($i==(count($arrayUnidades)-1)){
-        $sqlUnidades.="d.cod_unidadorganizacional='".$arrayUnidades[$i]."')";
-       }else{
-        $sqlUnidades.="d.cod_unidadorganizacional='".$arrayUnidades[$i]."' or ";
-       }  
-   }
-   
-   $sql="SELECT cuentas_monto.*,p.nombre,p.numero,p.nivel,p.cod_padre from plan_cuentas p join 
+  //busqueda de unidades
+  for ($i=0; $i < count($arrayUnidades); $i++) {
+    if($i==0){
+      $sqlUnidades.="and (";
+    }
+    if($i==(count($arrayUnidades)-1)){
+      $sqlUnidades.="d.cod_unidadorganizacional='".$arrayUnidades[$i]."')";
+    }else{
+      $sqlUnidades.="d.cod_unidadorganizacional='".$arrayUnidades[$i]."' or ";
+    }  
+  }
+  $sql="SELECT cuentas_monto.*,p.nombre,p.numero,p.nivel,p.cod_padre from plan_cuentas p join 
            (select d.cod_cuenta,sum(debe) as total_debe,sum(haber) as total_haber 
-            from comprobantes_detalle d join comprobantes c on c.codigo=d.cod_comprobante 
+            from comprobantes_detalle d join comprobantes c on c.codigo=d.cod_comprobante and c.cod_estadocomprobante<>'2' 
             where (c.fecha between '$fi' and '$fa') $sqlUnidades group by (d.cod_cuenta) order by d.cod_cuenta) cuentas_monto
         on p.codigo=cuentas_monto.cod_cuenta where p.cod_padre=$padre order by p.numero";
-   $stmt = $dbh->prepare($sql);
-   $stmt->execute();
-   return $stmt;
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  return $stmt;
 }
 
 function formatoNumeroCuenta($numero){
@@ -5116,14 +5124,14 @@ where d.glosa=e.glosa and d.cod_anio=$anio and d.cod_simulacionservicio=$simulac
     }
     return $valor;
   }
-  function verificarCuentaECCasoEspecial($cuenta){      
+  function verificarTipoEstadoCuenta($cuenta){      
     $dbh = new Conexion();
     $valor=0;
-    $sql="SELECT cod_cuentaaux as contador from configuracion_estadocuentas c where c.cod_plancuenta='$cuenta'";
+    $sql="SELECT c.tipo from configuracion_estadocuentas c where c.cod_plancuenta='$cuenta'";
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-      $valor=$row['contador'];
+      $valor=$row['tipo'];
     }
     return $valor;
   }
@@ -5717,12 +5725,12 @@ function obtenerListaClientesWS(){
 }
 function nameContacto($codigo){
    $dbh = new Conexion();
-   $stmt = $dbh->prepare("SELECT nombre FROM clientes_contactos where codigo=:codigo");
+   $stmt = $dbh->prepare("SELECT nombre,paterno,materno FROM clientes_contactos where codigo=:codigo");
    $stmt->bindParam(':codigo',$codigo);
    $stmt->execute();
    $valor=null;
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-      $valor=$row['nombre'];
+      $valor=$row['nombre']." ".$row['paterno']." ".$row['materno'];
    }
    return($valor);
 }
@@ -5864,13 +5872,13 @@ function sumaMontosDebeHaberComprobantesDetalleResultados($fechaFinal,$tipoBusqu
    
    $sql="(SELECT sum(total_debe) as t_debe,sum(total_haber) as t_haber,1 as tipo from plan_cuentas p join 
            (select d.cod_cuenta,sum(debe) as total_debe,sum(haber) as total_haber 
-            from comprobantes_detalle d join comprobantes c on c.codigo=d.cod_comprobante 
+            from comprobantes_detalle d join comprobantes c on c.codigo=d.cod_comprobante and c.cod_estadocomprobante<>2 
             where (c.fecha between '$fi' and '$fa') $sqlUnidades and c.cod_gestion='$gestion' group by (d.cod_cuenta) order by d.cod_cuenta) cuentas_monto
         on p.codigo=cuentas_monto.cod_cuenta where p.numero like '4%' and p.nivel=5 order by p.numero)
          UNION
          (SELECT sum(total_debe) as t_debe,sum(total_haber) as t_haber,2 as tipo from plan_cuentas p join 
            (select d.cod_cuenta,sum(debe) as total_debe,sum(haber) as total_haber 
-            from comprobantes_detalle d join comprobantes c on c.codigo=d.cod_comprobante 
+            from comprobantes_detalle d join comprobantes c on c.codigo=d.cod_comprobante and c.cod_estadocomprobante<>2
             where (c.fecha between '$fi' and '$fa') $sqlUnidades and c.cod_gestion='$gestion' group by (d.cod_cuenta) order by d.cod_cuenta) cuentas_monto
         on p.codigo=cuentas_monto.cod_cuenta where p.numero like '5%' and p.nivel=5 order by p.numero)";
     
@@ -5965,6 +5973,41 @@ function obtenerListaCuentaBancoProveedorWS($codClienteProv){
     curl_close ($ch);  
     return json_decode($remote_server_output);     
 }
+function nombreComprobante($codigo){
+  $dbh = new Conexion();
+  $sql="SELECT c.cod_tipocomprobante, (select tc.abreviatura from tipos_comprobante tc where tc.codigo=c.cod_tipocomprobante)as tipoComprobante, MONTH(c.fecha)as mes, c.numero from comprobantes c where c.codigo='$codigo'";
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  $nombreComprobante="";
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $tipoComprobanteX=$row['tipoComprobante'];
+    $mesComprobanteX=str_pad($row['mes'], 2, "0", STR_PAD_LEFT);
+    $numeroX=str_pad($row['numero'], 4, "0", STR_PAD_LEFT);;
+
+    $nombreComprobante=$tipoComprobanteX.$mesComprobanteX."-".$numeroX;
+  }
+  return($nombreComprobante);  
+}
+
+function montoCuentaRangoFechas($unidadArray, $unidadCostoArray, $areaCostoArray, $desde, $hasta, $cuenta, $gestion){
+  $dbh = new Conexion();
+  $sql="SELECT sum(d.debe)as debe, sum(d.haber)as haber
+      FROM plan_cuentas p 
+      join comprobantes_detalle d on p.codigo=d.cod_cuenta 
+      join areas a on d.cod_area=a.codigo 
+      join unidades_organizacionales u on u.codigo=d.cod_unidadorganizacional 
+      join comprobantes c on d.cod_comprobante=c.codigo
+      where c.cod_gestion=$gestion and p.codigo=$cuenta and c.cod_estadocomprobante<>2 and c.fecha BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and d.cod_unidadorganizacional in ($unidadCostoArray) and d.cod_area in ($areaCostoArray) and c.cod_unidadorganizacional in ($unidadArray)";
+  //echo $sql;
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  $debeX=0; $haberX=0;
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $debeX=$row['debe'];
+    $haberX=$row['haber'];
+  }
+  $variableMontos=array($debeX,$haberX);
+  return($variableMontos); 
+}
+
 ?>
-
-

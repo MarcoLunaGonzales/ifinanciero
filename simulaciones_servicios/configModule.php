@@ -49,4 +49,9 @@ $urlList2Sol="index.php?opcion=listFacturasServiciosAdmin";
 $urlListSolicitudFacturas="index.php?opcion=listFacturasServicios";
 $urlRegisterSolicitudfactura_sp="?opcion=registerSolicitud_facturacion_sp";
 
+$urlListHistoricoContabilidad="?opcion=listFacturasServicios_conta_history";
+
+$urlListSolicitudContabilidad="?opcion=listFacturasServicios_conta";
+
+
 ?>

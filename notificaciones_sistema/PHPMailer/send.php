@@ -54,7 +54,12 @@ function sendemailFiles($mail_username,$mail_userpassword,$mail_setFromEmail,$ma
 		require 'PHPMailer/src/Exception.php';
 	    require 'PHPMailer/src/PHPMailer.php';
 	    require 'PHPMailer/src/SMTP.php';
-	}    
+	}   
+	//recibimos correos
+	
+
+
+
 	$mail = new PHPMailer;
 	$mail->isSMTP();                            // Establecer el correo electrónico para utilizar SMTP
 	$mail->Host = 'mail.minkasoftware.com';             // Especificar el servidor de correo a utilizar 
@@ -65,7 +70,12 @@ function sendemailFiles($mail_username,$mail_userpassword,$mail_setFromEmail,$ma
 	$mail->Port = 587;                          // Puerto TCP  para conectarse 
 	$mail->setFrom($mail_setFromEmail, $mail_setFromName);//Introduzca la dirección de la que debe aparecer el correo electrónico. Puede utilizar cualquier dirección que el servidor SMTP acepte como válida. El segundo parámetro opcional para esta función es el nombre que se mostrará como el remitente en lugar de la dirección de correo electrónico en sí.
 	$mail->addReplyTo($mail_setFromEmail, $mail_setFromName);//Introduzca la dirección de la que debe responder. El segundo parámetro opcional para esta función es el nombre que se mostrará para responder
-	$mail->addAddress($mail_addAddress);   // Agregar quien recibe el e-mail enviado
+	
+	$correo_array=explode( ',', $mail_addAddress);//convertimos a array para el envio multiple
+	for($i = 0; $i < count($correo_array); $i++) {	    
+	    $mail->addAddress($correo_array[$i]);   // Agregar quien recibe el e-mail enviado
+	}
+
 	$mail->addAttachment($rutaArchivo,$nombreArchivo);
 	
 	

@@ -6,7 +6,7 @@ require_once '../functions.php';
 require_once '../assets/libraries/CifrasEnLetras.php';
 
 $dbh = new Conexion();
-set_time_limit(300);
+set_time_limit(0);
 $fechaActual=date("Y-m-d");
 $gestion=nameGestion($_POST['gestion']);
 $fecha=$_POST['fecha'];
@@ -124,10 +124,12 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                    $nombreX=formateaPlanCuenta($rowComp['nombre'], $rowComp['nivel']);
                    $montoX=(float)($rowComp['total_debe']-$rowComp['total_haber']);
                    if($codigo==1){
-                    
+                    $montoX=(float)($rowComp['total_debe']-$rowComp['total_haber']);
                     $tBolActivo+=$montoX;
                   }else{
                     //$montoX=abs((float)($rowComp['total_debe']-$rowComp['total_haber']));
+                    //LE CAMBIAMOS EL SIGNO AL PASIVO Y PATRIMONIO
+                    $montoX=$montoX*(-1);
                     $tBolPasivo+=$montoX;
                     if($codigo==3){
                       $vacio++;
@@ -174,6 +176,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
 
                      if($rowRes['tipo']==1){
                       $montoResultadoIngreso=$rowRes['t_debe']-$rowRes['t_haber'];
+                      $montoResultadoIngreso=$montoResultadoIngreso*(-1);
                      }else{
                       $montoResultadoEgreso=$rowRes['t_debe']-$rowRes['t_haber'];
                      } 
@@ -378,6 +381,8 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
       if($centavos<10){
         $centavos="0".$decimal;
       }
+
+      $tBolPasivo=$tBolPasivo+$montoResultado;
 
       $html.='<br><table class="table">'.
             '<thead>'.

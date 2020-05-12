@@ -67,10 +67,11 @@ if(isset($_GET['q'])){
                       <table class="table" id="tablePaginator">
                         <thead>
                           <tr>
-                            <th class="text-center">#</th>                          
-                            <th>Oficina</th>
-                            <th>Area</th>
-                            <th>nro<br>Sol.</th>
+                            <th class="text-center"></th>                          
+                            <th>Of - Area</th>
+                            
+                            <th>#Sol.</th>
+                            <th>Responsable</th>
                             <th>Codigo<br>Servicio</th>                            
                             <th>Fecha<br>Registro</th>
                             <th>Fecha<br>a Facturar</th>
@@ -151,7 +152,7 @@ if(isset($_GET['q'])){
                             $responsable=namePersonal($cod_personal);//nombre del personal
                             $nombre_contacto=nameContacto($persona_contacto);//nombre del personal
                             $nombre_area=trim(abrevArea($cod_area),'-');//nombre del area
-                            $nombre_uo=nameUnidad($cod_unidadorganizacional);//nombre de la oficina
+                            $nombre_uo=trim(abrevUnidad($cod_unidadorganizacional),' - ');//nombre de la oficina
 
                             //los registros de la factura
                             $dbh1 = new Conexion();
@@ -194,11 +195,11 @@ if(isset($_GET['q'])){
                             ?>
                           <tr>
                             <td align="center"><?=$index;?></td>
-                            <td><?=$nombre_uo;?></td>
-                            <td><?=$nombre_area;?></td>
+                            <td><?=$nombre_uo;?> - <?=$nombre_area;?></td>
                             <td class="text-right"><?=$nro_correlativo;?></td>
+                            <td><?=$responsable;?></td>
                             <td><?=$codigo_alterno?></td>
-                            <!-- <td><?=$responsable;?></td> -->
+                            
                             <td><?=$fecha_registro;?></td>
                             <td><?=$fecha_solicitudfactura;?></td>                            
                             <td style="color:#cc4545;"><?=$nro_fact_x;?></td>                             

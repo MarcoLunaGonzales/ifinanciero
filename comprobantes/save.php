@@ -38,7 +38,7 @@ $flagSuccess=$stmtInsert->execute();
 //Como el elemento es un arreglos utilizamos foreach para extraer todos los valores
     foreach($_FILES["archivos"]['tmp_name'] as $key => $tmp_name)
     {
-        //Validamos que el archivos exista
+        //Validamos que el archivo exista
         if($_FILES["archivos"]["name"][$key]) {
             $filename = $_FILES["archivos"]["name"][$key]; //Obtenemos el nombre original del archivos
             $source = $_FILES["archivos"]["tmp_name"][$key]; //Obtenemos un nombre temporal del archivos
@@ -47,27 +47,24 @@ $flagSuccess=$stmtInsert->execute();
             //Validamos si la ruta de destino existe, en caso de no existir la creamos
             if(!file_exists($directorio)){
                 mkdir($directorio, 0777,true) or die("No se puede crear el directorio de extracci&oacute;n");    
-            }
-            
-            
+            }            
             $target_path = $directorio.'/'.$filename; //Indicamos la ruta de destino, así como el nombre del archivos
-            
             //Movemos y validamos que el archivos se haya cargado correctamente
             //El primer campo es el origen y el segundo el destino
             if(move_uploaded_file($source, $target_path)) { 
                 echo "ok";
                 } else {    
                 echo "error";
-            }
-            
+            }            
         }
     }
-       //BORRAMOS LA TABLA
+    //BORRAMOS LA TABLA DETALLE
 		$sqlDelete="";
 		$sqlDelete="DELETE from comprobantes_detalle where cod_comprobante='$codComprobante'";
 		$stmtDel = $dbh->prepare($sqlDelete);
 		$flagSuccess=$stmtDel->execute();
 
+//ITERAMOS EL DETALLE
 for ($i=1;$i<=$cantidadFilas;$i++){ 	    	
 	$cuenta=$_POST["cuenta".$i];
 
@@ -85,14 +82,14 @@ for ($i=1;$i<=$cantidadFilas;$i++){
 		$stmtDetalle = $dbh->prepare($sqlDetalle);
 		$flagSuccessDetalle=$stmtDetalle->execute();	
 
-    /*ACA INSERTAMOS EL ESTADO DE CUENTAS DE FORMA AUTOMATICA TIPO TRASPASOS Y CUENTA AUXILIAR > 0*/
+    /*ACA INSERTAMOS EL ESTADO DE CUENTAS DE FORMA AUTOMATICA CON LA VALIDACION DE TIPO(DEBE/HABER)*/
     $verificaEC=verificarCuentaEstadosCuenta($cuenta);
-    $tipoEstadoCuentasCasoespecial=verificarCuentaECCasoEspecial($cuenta);
+    $tipoEstadoCuenta=verificarTipoEstadoCuenta($cuenta); // DEBE O HABER PARA ACUMULAR
 
     $flagSuccessInsertEC=false;
 
-    if( ($tipoComprobante==3 && $verificaEC>0 && $tipoEstadoCuentasCasoespecial!=1) || ($tipoComprobante==2 && $verificaEC>0 && $tipoEstadoCuentasCasoespecial==1) ) {
-      $codTipoEC=obtenerTipoEstadosCuenta($cuenta);
+    if( ($verificaEC>0 && $tipoEstadoCuenta==1 && $debe>0) || ($verificaEC>0 && $tipoEstadoCuenta==2 && $haber>0) ) {
+      $codTipoEC=obtenerTipoEstadosCuenta($cuenta); //PFOVEEDOR O CLIENTE
       $codProveedorCliente=obtenerCodigoProveedorClienteEC($cuentaAuxiliar);
       //Insertamos el estado de cuentas por el detalle
       $montoEC=0;
@@ -154,7 +151,7 @@ for ($i=1;$i<=$cantidadFilas;$i++){
               $codProveedor=obtenerCodigoProveedorCuentaAux($codPlanCuentaAux);
               $codComprobanteDetalleOrigen=$estadosCuentas[$i-1][$j]->cod_comprobantedetalle;
               $fecha=$fecha;
-              $sqlDetalle3="INSERT INTO estados_cuenta (cod_comprobantedetalle, cod_plancuenta, monto, cod_proveedor, fecha,cod_comprobantedetalleorigen,cod_cuentaaux) VALUES ('$codComprobanteDetalle', '$codPlanCuenta', '$monto', '$codProveedor', '$fecha','$codComprobanteDetalleOrigen','$codPlanCuentaAux')";
+              $sqlDetalle3="INSERT INTO estados_cuenta (cod_comprobantedetalle, cod_plancuenta, monto, cod_proveedor, fecha,cod_comprobantedetalleorigen,cod_cuentaaux) VALUES ('$codComprobanteDetalle', '$codPlanCuenta', '$monto', '$codProveedor', '$fechaHoraActual','$codComprobanteDetalleOrigen','$codPlanCuentaAux')";
               $stmtDetalle3 = $dbh->prepare($sqlDetalle3);
               $flagSuccessDetalle3=$stmtDetalle3->execute();
           }    

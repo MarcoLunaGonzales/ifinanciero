@@ -1,11 +1,13 @@
 <?php
 require_once '../conexion.php';
+require_once '../functions.php';
 require_once 'configModule.php';
 
 //header('Content-Type: application/json');
 $dbh = new Conexion();
 
 $codigo = $_GET["codigo"];
+$listaCiudad= obtenerDepartamentoServicioIbrnorca(26);
 if($codigo=='E'){?><!-- empresa -->
 	<div class="row">
 		<label class="col-sm-3 col-form-label">Nombre *</label>
@@ -95,8 +97,13 @@ if($codigo=='E'){?><!-- empresa -->
 		<label class="col-sm-3 col-form-label">Lugar Emisión *</label>
 		<div class="col-sm-9">
 		    <div class="form-group" >
-		        <select name="emision" onchange="seleccionarCiudadServicioCajaChica()" id="emision" class="form-control form-control-sm selectpicker" data-style="btn btn-info" required="true">
-                          </select>
+		        <select name="emision" id="emision" class="form-control form-control-sm selectpicker" data-style="btn btn-info" required="true">
+		        	<option disabled selected value="">--Seleccione--</option>
+                 <?php
+                      foreach ($listaCiudad->lista as $listas) {
+                          echo "<option value=".$listas->idEstado.">".$listas->estNombre."</opction>";
+                      }?>
+                  </select>
 		    </div>
 		</div>
 	</div>

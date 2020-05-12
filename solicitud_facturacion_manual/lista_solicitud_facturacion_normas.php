@@ -189,10 +189,10 @@ $cod_facturacion=null;
                 <input class="form-control input-sm" type="text" name="glosaCliente" id="glosaCliente"  >
             </div>
             <div class="form-group col-sm-3">
-                <input class="form-control input-sm" type="date" name="fechaBusquedaInicio" id="fechaBusquedaInicio" value="<?=$globalGestion?>-01-01" min="<?=$globalGestion?>-01-01" max="<?=$globalGestion?>-12-31">
+                <input class="form-control input-sm" type="date" name="fechaBusquedaInicio" id="fechaBusquedaInicio">
             </div>
             <div class="form-group col-sm-3">
-                <input class="form-control input-sm" type="date" name="fechaBusquedaFin" id="fechaBusquedaFin" value="<?=$globalGestion?>-12-31" min="<?=$globalGestion?>-01-01" max="<?=$globalGestion?>-12-31"  >
+                <input class="form-control input-sm" type="date" name="fechaBusquedaFin" id="fechaBusquedaFin" >
             </div>
             <div class="form-group col-sm-3">            
                 <select name="normas[]" id="normas" class="selectpicker form-control form-control-sm" data-style="btn btn-info select-with-transition" data-show-subtext="true" data-live-search="true" data-actions-box="true" multiple> 

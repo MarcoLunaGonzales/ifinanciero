@@ -122,7 +122,7 @@ $html.=  '<header class="header">'.
                       '.obtenerValorConfiguracionFactura(3  ).'<br>
                       Teléfonos:'.obtenerValorConfiguracionFactura(4).' * Fax: '.obtenerValorConfiguracionFactura(12).'<br>
                       Web:'.obtenerValorConfiguracionFactura(10).' * E-mail:'.obtenerValorConfiguracionFactura(11).' * '.obtenerValorConfiguracionFactura(13).' <br>
-                      SFC - 02<br>
+                      '.obtenerValorConfiguracionFactura(14).'<br>
                     </h4></small> 
                   </td>
                   <td  valign="top" width="26%"><div id="header_titulo_texto_grande" >FACTURA</div></td>
@@ -152,7 +152,7 @@ $html.=  '<header class="header">'.
             </table>';
             $htmlConta.='<table class="table">'.
               '<tr class="bold table-title text-left">'.
-                  '<td  class="td-border-none" width="20%"><b>Señor(es):</b></td>'.
+                  '<td  class="td-border-none" width="9%"><b>Señor(es):</b></td>'.
                   '<td  colspan="2" class="td-border-none" ><h4><b>'.$nombre_cliente.'</b></h4></td>'.                
                   '<td  colspan="2" class="td-border-none" width="30%"><h4><b>NIT/CI:</b> &nbsp;&nbsp;'.$nit.'</h4></td>'.                
                 '</tr>'.
@@ -170,30 +170,30 @@ $html.=  '<header class="header">'.
               $html.='<tbody>
                 <tr>';
                 if($tipo_impresion==1){//tipo de impresion normal
-                  $html.='<td valign="top" height="8%" class="text-right"><h4>'.formatNumberDec($cantidad).'</h4></td>'.
-                  '<td valign="top" height="8%"><h4>'.$observaciones.'</h4></td>'.
-                  '<td valign="top" height="8%" class="text-right"><h4>'.formatNumberDec($importe).'</h4></td>';
+                  $html.='<td valign="top" height="8%" class="text-right"><h5>'.formatNumberDec($cantidad).'</h5></td>'.
+                  '<td valign="top" height="8%"><h5>'.$observaciones.'</h5></td>'.
+                  '<td valign="top" height="8%" class="text-right"><h5>'.formatNumberDec($importe).'</h5></td>';
                   $suma_total+=$importe;
                 }else{//imporesion detallada
-                  $html.='<td valign="top" height="8%" class="text-right"><h4>';
+                  $html.='<td valign="top" height="8%" class="text-right"><h5>';
                   while ($row = $stmtDesCli->fetch()) 
                   {
                     $html.=formatNumberDec($row["cantidad"]).'<br>';
                   }
-                  $html.='</h4></td> 
-                  <td valign="top" height="8%"><h4>';
+                  $html.='</h5></td> 
+                  <td valign="top" height="8%"><h5>';
                   while ($row = $stmt2DesCli->fetch()) 
                   {
                     $html.=$row["descripcion_alterna"].'<br>';
                   }
-                  $html.='</h4></td>                   
-                  <td valign="top" height="8%" class="text-right"><h4>';
+                  $html.='</h5></td>                   
+                  <td valign="top" height="8%" class="text-right"><h5>';
                   while ($row = $stmt3DesCli->fetch()) 
                   {
                     $html.=formatNumberDec($row["precio"]).'<br>';
                     $suma_total+=$row["precio"];
                   }
-                  $html.='</h4></td>';
+                  $html.='</h5></td>';
                 } 
                   
                 $html.='</tr>';
@@ -201,10 +201,10 @@ $html.=  '<header class="header">'.
 
               $html.='<tr>'.
                 '<td height="8%" colspan="3">
-                  <table class="table3">
+                  <table class="table" style="border-top: hidden;border-bottom: hidden;border-right: hidden;border-left: hidden;">
                     <thead>
                       <tr>
-                        <td width="20%" height="8%">';                          
+                        <td rowspan="3" width="20%" height="8%">';                          
                             //GENERAMOS LA CADENA DEL QR
                             $contenidoQr=$nit_empresa."|".$nro_factura."|".$nro_autorizacion."|".$fecha_factura."|".$importe."|".$importe."|".$codigo_control."|".$nit."|0|0|0|0";
                             $dir = 'qr_temp/';
@@ -216,38 +216,33 @@ $html.=  '<header class="header">'.
                             $frameSize = 1; //marco de qr
                             $contenido = $contenidoQr;
                             QRcode::png($contenido, $fileName, $level,$tamanio,$frameSize);
-                            $html.= '<img src="'.$fileName.'"/>';
+                            $htmlConta.= '<img src="'.$fileName.'"/>';
                             // echo '<img src="'.$fileName.'"/>';        
-                        $html.='</td>
-                        <td width="60%" height="8%">';
+                        $htmlConta.='</td>
+                        <td width="60%" style="border-right: hidden" rowspan="2">';
 
-                        $entero=floor($importe);
-                        $decimal=$importe-$entero;
-                        $centavos=round($decimal*100);
-                        if($centavos<10){
-                          $centavos="0".$centavos;
-                        }
-                        $html.='<p class="bold table-title">Son: '.ucfirst(CifrasEnLetras::convertirNumeroEnLetras($entero)).'      '.$centavos.'/100 Bolivianos</p>'; 
-                        $html.='</td>
-                        <td width="25%" align="right" height="8%"><b>Total Bs &nbsp;&nbsp;&nbsp;&nbsp;'.formatNumberDec($suma_total).'</b></td>
+                          $entero=floor($importe);
+                          $decimal=$importe-$entero;
+                          $centavos=round($decimal*100);
+                          if($centavos<10){
+                            $centavos="0".$centavos;
+                          }
+                          $htmlConta.='<p class="bold table-title">Son: '.ucfirst(CifrasEnLetras::convertirNumeroEnLetras($entero)).'      '.$centavos.'/100 Bolivianos</p>'; 
+                          $htmlConta.='</td>
+                        <td width="25%" align="right" style="border-left: hidden" rowspan="2"><b>Total Bs &nbsp;&nbsp;&nbsp;&nbsp;'.formatNumberDec($suma_total).'</b></td>
+                      </tr>
+                      <tr>
+                        
+                      </tr>
+                      <tr>
+                        <td width="50%" style="border-right: hidden"><b>CODIGO DE CONTROL:&nbsp;&nbsp;&nbsp;&nbsp;</b> '.$codigo_control.'</td>
+                        <td width="50%" align="right" style="border-left: hidden"><b>FECHA LÍMITE DE EMISIÓN:&nbsp;&nbsp;&nbsp;&nbsp;</b>'.$fecha_limite_emision.'</td> 
                       </tr>
                     </thead>
                   </table>
                 </td>
               </tr>'.
-
-              '<tr>'.
-                '<td colspan="3">'.
-                  '<table class="table3">
-                    <thead>
-                      <tr>
-                        <td width="50%"><b>CODIGO DE CONTROL:&nbsp;&nbsp;&nbsp;&nbsp;</b> '.$codigo_control.'</td>
-                        <td width="50%" align="center"><b>FECHA LÍMITE DE EMISIÓN:&nbsp;&nbsp;&nbsp;&nbsp;</b>'.$fecha_limite_emision.'</td>                        
-                      </tr>
-                    </thead>
-                  </table>'.
-                '</td>               
-              </tr>'.
+             
              '</tbody>'.                        
           '</table>'; 
           $html.='<table class="table3" >
@@ -291,7 +286,7 @@ $htmlConta.=  '<header class="header">'.
                       '.obtenerValorConfiguracionFactura(3  ).'<br>
                       Teléfonos:'.obtenerValorConfiguracionFactura(4).' * Fax: '.obtenerValorConfiguracionFactura(12).'<br>
                       Web:'.obtenerValorConfiguracionFactura(10).' * E-mail:'.obtenerValorConfiguracionFactura(11).' * '.obtenerValorConfiguracionFactura(13).' <br>
-                      SFC - 02<br>
+                      '.obtenerValorConfiguracionFactura(14).'<br>
                     </h4></small> 
                   </td>
                   <td  valign="top" width="26%"><div id="header_titulo_texto_grande" >FACTURA</div></td>
@@ -321,7 +316,7 @@ $htmlConta.=  '<header class="header">'.
             </table>';
             $htmlConta.='<table class="table">'.
               '<tr class="bold table-title text-left">'.
-                  '<td  class="td-border-none" width="20%"><b>Señor(es):</b></td>'.
+                  '<td  class="td-border-none" width="9%"><b>Señor(es):</b></td>'.
                   '<td  colspan="2" class="td-border-none" ><h4><b>'.$nombre_cliente.'</b></h4></td>'.                
                   '<td  colspan="2" class="td-border-none" width="30%"><h4><b>NIT/CI:</b> &nbsp;&nbsp;'.$nit.'</h4></td>'.                
                 '</tr>'.
@@ -339,30 +334,30 @@ $htmlConta.=  '<header class="header">'.
               $htmlConta.='<tbody>
                 <tr>';
                 if($tipo_impresion==1){//tipo de impresion normal
-                  $htmlConta.='<td valign="top" height="8%" class="text-right"><h4>'.formatNumberDec($cantidad).'</h4></td>'.
-                  '<td valign="top" height="8%"><h4>'.$observaciones.'</h4></td>'.
-                  '<td valign="top" height="8%" class="text-right"><h4>'.formatNumberDec($importe).'</h4></td>';
+                  $htmlConta.='<td valign="top" height="8%" class="text-right"><h5>'.formatNumberDec($cantidad).'</h5></td>'.
+                  '<td valign="top" height="8%"><h5>'.$observaciones.'</h5></td>'.
+                  '<td valign="top" height="8%" class="text-right"><h5>'.formatNumberDec($importe).'</h5></td>';
                   $suma_total+=$importe;
                 }else{//imporesion detallada
-                  $htmlConta.='<td valign="top" height="8%" class="text-right"><h4>';
+                  $htmlConta.='<td valign="top" height="8%" class="text-right"><h5>';
                   while ($row = $stmt->fetch()) 
                   {
                     $htmlConta.=formatNumberDec($row["cantidad"]).'<br>';
                   }
-                  $htmlConta.='</h4></td> 
-                  <td valign="top" height="8%"><h4>';
+                  $htmlConta.='</h5></td> 
+                  <td valign="top" height="8%"><h5>';
                   while ($row = $stmt2->fetch()) 
                   {
                     $htmlConta.=$row["descripcion_alterna"].'<br>';
                   }
-                  $htmlConta.='</h4></td>                   
-                  <td valign="top" height="8%" class="text-right"><h4>';
+                  $htmlConta.='</h5></td>                   
+                  <td valign="top" height="8%" class="text-right"><h5>';
                   while ($row = $stmt3->fetch()) 
                   {
                     $htmlConta.=formatNumberDec($row["precio"]).'<br>';
                     $suma_total+=$row["precio"];
                   }
-                  $htmlConta.='</h4></td>';
+                  $htmlConta.='</h5></td>';
                 } 
                   
                 $htmlConta.='</tr>';
@@ -370,10 +365,10 @@ $htmlConta.=  '<header class="header">'.
 
               $htmlConta.='<tr>'.
                 '<td height="8%" colspan="3">
-                  <table class="table3">
+                  <table class="table" style="border-top: hidden;border-bottom: hidden;border-right: hidden;border-left: hidden;">
                     <thead>
                       <tr>
-                        <td width="20%" height="8%">';                          
+                        <td rowspan="3" width="20%" height="8%">';                          
                             //GENERAMOS LA CADENA DEL QR
                             $contenidoQr=$nit_empresa."|".$nro_factura."|".$nro_autorizacion."|".$fecha_factura."|".$importe."|".$importe."|".$codigo_control."|".$nit."|0|0|0|0";
                             $dir = 'qr_temp/';
@@ -388,35 +383,30 @@ $htmlConta.=  '<header class="header">'.
                             $htmlConta.= '<img src="'.$fileName.'"/>';
                             // echo '<img src="'.$fileName.'"/>';        
                         $htmlConta.='</td>
-                        <td width="60%" height="8%">';
+                        <td width="60%" style="border-right: hidden" rowspan="2">';
 
-                        $entero=floor($importe);
-                        $decimal=$importe-$entero;
-                        $centavos=round($decimal*100);
-                        if($centavos<10){
-                          $centavos="0".$centavos;
-                        }
-                        $htmlConta.='<p class="bold table-title">Son: '.ucfirst(CifrasEnLetras::convertirNumeroEnLetras($entero)).'      '.$centavos.'/100 Bolivianos</p>'; 
-                        $htmlConta.='</td>
-                        <td width="25%" align="right" height="8%"><b>Total Bs &nbsp;&nbsp;&nbsp;&nbsp;'.formatNumberDec($suma_total).'</b></td>
+                          $entero=floor($importe);
+                          $decimal=$importe-$entero;
+                          $centavos=round($decimal*100);
+                          if($centavos<10){
+                            $centavos="0".$centavos;
+                          }
+                          $htmlConta.='<p class="bold table-title">Son: '.ucfirst(CifrasEnLetras::convertirNumeroEnLetras($entero)).'      '.$centavos.'/100 Bolivianos</p>'; 
+                          $htmlConta.='</td>
+                        <td width="25%" align="right" style="border-left: hidden" rowspan="2"><b>Total Bs &nbsp;&nbsp;&nbsp;&nbsp;'.formatNumberDec($suma_total).'</b></td>
+                      </tr>
+                      <tr>
+                        
+                      </tr>
+                      <tr>
+                        <td width="50%" style="border-right: hidden"><b>CODIGO DE CONTROL:&nbsp;&nbsp;&nbsp;&nbsp;</b> '.$codigo_control.'</td>
+                        <td width="50%" align="right" style="border-left: hidden"><b>FECHA LÍMITE DE EMISIÓN:&nbsp;&nbsp;&nbsp;&nbsp;</b>'.$fecha_limite_emision.'</td> 
                       </tr>
                     </thead>
                   </table>
                 </td>
               </tr>'.
-
-              '<tr>'.
-                '<td colspan="3">'.
-                  '<table class="table3">
-                    <thead>
-                      <tr>
-                        <td width="50%"><b>CODIGO DE CONTROL:&nbsp;&nbsp;&nbsp;&nbsp;</b> '.$codigo_control.'</td>
-                        <td width="50%" align="center"><b>FECHA LÍMITE DE EMISIÓN:&nbsp;&nbsp;&nbsp;&nbsp;</b>'.$fecha_limite_emision.'</td>                        
-                      </tr>
-                    </thead>
-                  </table>'.
-                '</td>               
-              </tr>'.
+            
       
              '</tbody>'.                        
           '</table>'; 
@@ -437,7 +427,7 @@ $htmlConta.=  '<header class="header">'.
                       '.obtenerValorConfiguracionFactura(3  ).'<br>
                       Teléfonos:'.obtenerValorConfiguracionFactura(4).' * Fax: '.obtenerValorConfiguracionFactura(12).'<br>
                       Web:'.obtenerValorConfiguracionFactura(10).' * E-mail:'.obtenerValorConfiguracionFactura(11).' * '.obtenerValorConfiguracionFactura(13).' <br>
-                      SFC - 02<br>
+                      '.obtenerValorConfiguracionFactura(14).'<br>
                     </h4></small> 
                   </td>
                   <td  valign="top" width="26%"><div id="header_titulo_texto_grande" >FACTURA</div></td>
@@ -467,7 +457,7 @@ $htmlConta.=  '<header class="header">'.
           </table>';
           $htmlConta.='<table class="table">'.
               '<tr class="bold table-title text-left">'.
-                  '<td  class="td-border-none" width="20%"><b>Señor(es):</b></td>'.
+                  '<td  class="td-border-none" width="9%"><b>Señor(es):</b></td>'.
                   '<td  colspan="2" class="td-border-none" ><h4><b>'.$nombre_cliente.'</b></h4></td>'.                
                   '<td  colspan="2" class="td-border-none" width="30%"><h4><b>NIT/CI:</b> &nbsp;&nbsp;'.$nit.'</h4></td>'.                
                 '</tr>'.
@@ -485,38 +475,38 @@ $htmlConta.=  '<header class="header">'.
               $htmlConta.='<tbody>
                 <tr>';
                   if($tipo_impresion==1){//tipo de impresion normal
-                    $htmlConta.='<td valign="top" height="8%" class="text-right"><h4>'.formatNumberDec($cantidad).'</h4></td>'.
-                    '<td valign="top" height="8%"><h4>'.$observaciones.'</h4></td>'.
-                    '<td valign="top" height="8%" class="text-right"><h4>'.formatNumberDec($importe).'</h4></td>';
+                    $htmlConta.='<td valign="top" height="8%" class="text-right"><h5>'.formatNumberDec($cantidad).'</h5></td>'.
+                    '<td valign="top" height="8%"><h5>'.$observaciones.'</h5></td>'.
+                    '<td valign="top" height="8%" class="text-right"><h5>'.formatNumberDec($importe).'</h5></td>';
                     $suma_total+=$importe;
                   }else{//imporesion detallada
-                    $htmlConta.='<td valign="top" height="8%" class="text-right"><h4>';
+                    $htmlConta.='<td valign="top" height="8%" class="text-right"><h5>';
                     while ($row = $stmt_conta->fetch()) 
                     {
                       $htmlConta.=formatNumberDec($row["cantidad"]).'<br>';
                     }
-                    $htmlConta.='</h4></td> 
-                    <td valign="top" height="8%"><h4>';
+                    $htmlConta.='</h5></td> 
+                    <td valign="top" height="8%"><h5>';
                     while ($row = $stmt_conta2->fetch()) 
                     {
                       $htmlConta.=$row["descripcion_alterna"].'<br>';
                     }
-                    $htmlConta.='</h4></td>                   
-                    <td valign="top" height="8%" class="text-right"><h4>';
+                    $htmlConta.='</h5></td>                   
+                    <td valign="top" height="8%" class="text-right"><h5>';
                     while ($row = $stmt_conta3->fetch()) 
                     {
                       $htmlConta.=formatNumberDec($row["precio"]).'<br>';
                       $suma_total+=$row["precio"];
                     }
-                    $htmlConta.='</h4></td>';
+                    $htmlConta.='</h5></td>';
                   } 
                 $htmlConta.='</tr>';
               $htmlConta.='<tr>'.
                 '<td height="8%" colspan="3">
-                  <table class="table3">
+                  <table class="table" style="border-top: hidden;border-bottom: hidden;border-right: hidden;border-left: hidden;">
                     <thead>
                       <tr>
-                        <td width="20%" height="8%">';                          
+                        <td rowspan="3" width="20%" height="8%">';                          
                             //GENERAMOS LA CADENA DEL QR
                             $contenidoQr=$nit_empresa."|".$nro_factura."|".$nro_autorizacion."|".$fecha_factura."|".$importe."|".$importe."|".$codigo_control."|".$nit."|0|0|0|0";
                             $dir = 'qr_temp/';
@@ -531,35 +521,30 @@ $htmlConta.=  '<header class="header">'.
                             $htmlConta.= '<img src="'.$fileName.'"/>';
                             // echo '<img src="'.$fileName.'"/>';        
                         $htmlConta.='</td>
-                        <td width="60%" height="8%">';
+                        <td width="60%" style="border-right: hidden" rowspan="2">';
 
-                        $entero=floor($importe);
-                        $decimal=$importe-$entero;
-                        $centavos=round($decimal*100);
-                        if($centavos<10){
-                          $centavos="0".$centavos;
-                        }
-                        $htmlConta.='<p class="bold table-title">Son: '.ucfirst(CifrasEnLetras::convertirNumeroEnLetras($entero)).'      '.$centavos.'/100 Bolivianos</p>'; 
-                        $htmlConta.='</td>
-                        <td width="25%" align="right" height="8%"><b>Total Bs &nbsp;&nbsp;&nbsp;&nbsp;'.formatNumberDec($suma_total).'</b></td>
+                          $entero=floor($importe);
+                          $decimal=$importe-$entero;
+                          $centavos=round($decimal*100);
+                          if($centavos<10){
+                            $centavos="0".$centavos;
+                          }
+                          $htmlConta.='<p class="bold table-title">Son: '.ucfirst(CifrasEnLetras::convertirNumeroEnLetras($entero)).'      '.$centavos.'/100 Bolivianos</p>'; 
+                          $htmlConta.='</td>
+                        <td width="25%" align="right" style="border-left: hidden" rowspan="2"><b>Total Bs &nbsp;&nbsp;&nbsp;&nbsp;'.formatNumberDec($suma_total).'</b></td>
+                      </tr>
+                      <tr>
+                        
+                      </tr>
+                      <tr>
+                        <td width="50%" style="border-right: hidden"><b>CODIGO DE CONTROL:&nbsp;&nbsp;&nbsp;&nbsp;</b> '.$codigo_control.'</td>
+                        <td width="50%" align="right" style="border-left: hidden"><b>FECHA LÍMITE DE EMISIÓN:&nbsp;&nbsp;&nbsp;&nbsp;</b>'.$fecha_limite_emision.'</td> 
                       </tr>
                     </thead>
                   </table>
                 </td>
               </tr>'.
-
-              '<tr>'.
-                '<td colspan="3">'.
-                  '<table class="table3">
-                    <thead>
-                      <tr>
-                        <td width="50%"><b>CODIGO DE CONTROL:&nbsp;&nbsp;&nbsp;&nbsp;</b> '.$codigo_control.'</td>
-                        <td width="50%" align="center"><b>FECHA LÍMITE DE EMISIÓN:&nbsp;&nbsp;&nbsp;&nbsp;</b>'.$fecha_limite_emision.'</td>                        
-                      </tr>
-                    </thead>
-                  </table>'.
-                '</td>               
-              </tr>'.
+             
       
              '</tbody>'.                        
           '</table>'; 
