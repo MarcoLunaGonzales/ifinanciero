@@ -24,6 +24,7 @@ try {
     $razon_social = $_POST["razon_social"];
     $nit = $_POST["nit"];
     $observaciones = $_POST["observaciones"];
+    $observaciones_2 = $_POST["observaciones_2"];
     $persona_contacto = $_POST["persona_contacto"];
     
 
@@ -35,11 +36,14 @@ try {
     if(isset($_POST["cod_tipopago"])){
         $cod_tipopago = $_POST["cod_tipopago"];
     }else $cod_tipopago=0;
+    if(isset($_POST['u'])){
+        $cod_personal=$_POST['u'];
+    }
 
         $nro_correlativo=obtenerCorrelativoSolicitud();//correlativo
 
-        $stmt = $dbh->prepare("INSERT INTO solicitudes_facturacion(cod_simulacion_servicio,cod_unidadorganizacional,cod_area,fecha_registro,fecha_solicitudfactura,cod_tipoobjeto,cod_tipopago,cod_cliente,cod_personal,razon_social,nit,observaciones,nro_correlativo,cod_estado,persona_contacto,cod_estadosolicitudfacturacion,codigo_alterno,tipo_solicitud) 
-        values ('$cod_simulacion','$cod_unidadorganizacional','$cod_area','$fecha_registro','$fecha_solicitudfactura','$cod_tipoobjeto','$cod_tipopago','$cod_cliente','$cod_personal','$razon_social','$nit','$observaciones','$nro_correlativo',1,'$persona_contacto',1,'$codigo_alterno',5)");//5 tipo solicitud de normas
+        $stmt = $dbh->prepare("INSERT INTO solicitudes_facturacion(cod_simulacion_servicio,cod_unidadorganizacional,cod_area,fecha_registro,fecha_solicitudfactura,cod_tipoobjeto,cod_tipopago,cod_cliente,cod_personal,razon_social,nit,observaciones,observaciones_2,nro_correlativo,cod_estado,persona_contacto,cod_estadosolicitudfacturacion,codigo_alterno,tipo_solicitud) 
+        values ('$cod_simulacion','$cod_unidadorganizacional','$cod_area','$fecha_registro','$fecha_solicitudfactura','$cod_tipoobjeto','$cod_tipopago','$cod_cliente','$cod_personal','$razon_social','$nit','$observaciones','$observaciones_2','$nro_correlativo',1,'$persona_contacto',1,'$codigo_alterno',5)");//5 tipo solicitud de normas
         $flagSuccess=$stmt->execute();
          // $flagSuccess=true;
         if($flagSuccess){

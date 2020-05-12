@@ -16,6 +16,8 @@ $cod_dcc=$_GET['cod_dcc'];
        
 $lista= obtenerPaisesServicioIbrnorca();
 
+
+
 ?>                  
 <input class="form-control" type="hidden" name="cod_tcc" id="cod_tcc" value="<?=$cod_tcc?>" />
 <input class="form-control" type="hidden" name="cod_cc" id="cod_cc" value="<?=$cod_cc?>"/>
@@ -82,6 +84,7 @@ $lista= obtenerPaisesServicioIbrnorca();
               foreach ($lista->lista as $listas) {
                   echo "<option value=".$listas->idPais.">".$listas->paisNombre."</opction>";
               }?>
+              
       </select>
     </div>
    </div>

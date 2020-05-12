@@ -5,39 +5,15 @@ require_once 'styles.php';
 
 $dbh = new Conexion();
 $globalAdmin=$_SESSION["globalAdmin"];
-if(isset($_GET['q'])){
-  $q=$_GET['q'];
-  $item_3=$_GET['r'];
-  $s=$_GET['s'];
-  $u=$_GET['u'];
+//datos registrado de la simulacion en curso
 
-    $arraySql=explode("IdArea=",$s);
-    $codigoArea=trim($arraySql[1]);
-    $sqlAreas="and sr.cod_area=".$codigoArea;
+  $stmt = $dbh->prepare("SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')as fecha_registro_x,DATE_FORMAT(sf.fecha_solicitudfactura,'%d/%m/%Y')as fecha_solicitudfactura_x FROM solicitudes_facturacion sf join estados_solicitudfacturacion es on sf.cod_estadosolicitudfacturacion=es.codigo where cod_estadosolicitudfacturacion=3 order by codigo desc");
 
-    // $sqlAreas=""; quitar cuando se registre la unidad y el area de la solicitud propuesta
-  ?>
-  <input type="hidden" name="id_servicioibnored" value="<?=$q?>" id="id_servicioibnored"/>
-  <input type="hidden" name="id_servicioibnored_rol" value="<?=$item_3?>" id="id_servicioibnored_rol"/>
-  <input type="hidden" name="id_servicioibnored_s" value="<?=$s?>" id="id_servicioibnored_s"/>
-  <input type="hidden" name="id_servicioibnored_u" value="<?=$u?>" id="id_servicioibnored_u"/>
-<?php
-}else{
-  $item_3=0;
-  $s=0;
-  $u=0;
-  $sqlAreas="";
-}
-
-
-  //datos registrado de la simulacion en curso
-
-  $stmt = $dbh->prepare("SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')as fecha_registro_x,DATE_FORMAT(sf.fecha_solicitudfactura,'%d/%m/%Y')as fecha_solicitudfactura_x FROM solicitudes_facturacion sf join estados_solicitudfacturacion es on sf.cod_estadosolicitudfacturacion=es.codigo where sf.cod_estadosolicitudfacturacion!=1 and sf.cod_estadosolicitudfacturacion!=6  order by codigo desc"); /*and sf.cod_estadosolicitudfacturacion!=5*/
   $stmt->execute();
   $stmt->bindColumn('codigo', $codigo_facturacion);
   $stmt->bindColumn('cod_simulacion_servicio', $cod_simulacion_servicio);
   $stmt->bindColumn('cod_unidadorganizacional', $cod_unidadorganizacional);
-  $stmt->bindColumn('cod_area', $cod_area);
+  $stmt->bindColumn('cod_area', $cod_area);  
   $stmt->bindColumn('fecha_registro_x', $fecha_registro);
   $stmt->bindColumn('fecha_solicitudfactura_x', $fecha_solicitudfactura);
   $stmt->bindColumn('cod_tipoobjeto', $cod_tipoobjeto);
@@ -52,37 +28,35 @@ if(isset($_GET['q'])){
   $stmt->bindColumn('nro_correlativo', $nro_correlativo);
   $stmt->bindColumn('persona_contacto', $persona_contacto);
   $stmt->bindColumn('codigo_alterno', $codigo_alterno);
-$item_1=2709;
+  $stmt->bindColumn('tipo_solicitud', $tipo_solicitud);//1 tcp - 2 capacitacion - 3 servicios - 4 manual - 5 venta de normas
   ?>
   <div class="content">
     <div class="container-fluid">
           <div class="row">
               <div class="col-md-12">
                 <div class="card">
-                  <div class="card-header card-header-info card-header-icon">
+                  <div class="card-header card-header-warning card-header-icon">
                     <div class="card-icon">
-                      <i class="material-icons">content_paste</i>
+                      <i class="material-icons">polymer</i>
                     </div>
-                    <h4 class="card-title"><b>Gesti&oacute;n de Solicitudes de Facturación</b></h4>
-            
+                    <h4 class="card-title"><b>Solicitudes de Facturación</b></h4>                    
                   </div>
                   <div class="card-body">
                       <table class="table" id="tablePaginator">
                         <thead>
                           <tr>
                             <th class="text-center"></th>                          
-                            <th>Of - Area</th>                            
+                            <th>Of-Area</th>                            
                             <th>#Sol.</th>
                             <th>Responsable</th>
-                            <th>Codigo<br>Servicio</th>   
+                            <th>Codigo<br>Servicio</th>                            
                             <th>Fecha<br>Registro</th>
                             <th>Fecha<br>a Facturar</th>
-                            <th style="color:#cc4545;">#Fact</th>
+                            <th style="color:#cc4545;">#Fact</th>                            
                             <th>Importe<br>(BOB)</th>  
                             <th>Persona<br>Contacto</th>  
-                            <th>Razón Social</th>                            
-                            <!--ESTADO DE LA SOLICITUD-->
-                            <th>Estado</th>
+                            <th>Razón Social</th>                      
+                            <th width="5%">Estado</th>
                             <th class="text-right">Actions</th>
                           </tr>
                         </thead>
@@ -112,25 +86,26 @@ $item_1=2709;
                               $btnEstado="btn-default";
                             break;
                           }
-
-                            //verificamos si ya tiene factua generada y esta activa                           
+                            //verificamos si ya tiene factura generada y esta activa                           
                             $stmtFact = $dbh->prepare("SELECT codigo,nro_factura from facturas_venta where cod_solicitudfacturacion=$codigo_facturacion and cod_estadofactura=1");
                             $stmtFact->execute();
                             $resultSimu = $stmtFact->fetch();
                             $codigo_fact_x = $resultSimu['codigo'];
                             $nro_fact_x = $resultSimu['nro_factura'];
                             if ($nro_fact_x==null)$nro_fact_x="-";
-                            //obtenemos datos de la simulacion
-                            $sql="SELECT sc.nombre,ps.cod_area,ps.cod_unidadorganizacional
-                            from simulaciones_servicios sc,plantillas_servicios ps
-                            where sc.cod_plantillaservicio=ps.codigo and sc.cod_estadoreferencial=1 and sc.codigo=$cod_simulacion_servicio";                            
-                            $stmtSimu = $dbh->prepare($sql);
-                            $stmtSimu->execute();
-                            $resultSimu = $stmtSimu->fetch();
-                            $nombre_simulacion = $resultSimu['nombre'];
-                            $cod_area_simulacion = $resultSimu['cod_area'];
-                            //si es nulo, verificamos si pertenece a capacitacion
-                            if($nombre_simulacion==null || $nombre_simulacion == ''){
+                            $cod_area_simulacion=$cod_area;
+                            $nombre_simulacion='OTROS';
+                            if($tipo_solicitud==1){// la solicitud pertence tcp-tcs
+                              //obtenemos datos de la simulacion TCP
+                              $sql="SELECT sc.nombre,ps.cod_area,ps.cod_unidadorganizacional
+                              from simulaciones_servicios sc,plantillas_servicios ps
+                              where sc.cod_plantillaservicio=ps.codigo and sc.cod_estadoreferencial=1 and sc.codigo=$cod_simulacion_servicio";                            
+                              $stmtSimu = $dbh->prepare($sql);
+                              $stmtSimu->execute();
+                              $resultSimu = $stmtSimu->fetch();
+                              $nombre_simulacion = $resultSimu['nombre'];
+                              $cod_area_simulacion = $resultSimu['cod_area'];
+                            }elseif($tipo_solicitud==2){//  pertence capacitacion
                               $sqlCostos="SELECT sc.nombre,sc.cod_responsable,ps.cod_area,ps.cod_unidadorganizacional
                               from simulaciones_costos sc,plantillas_servicios ps
                               where sc.cod_plantillacosto=ps.codigo and sc.cod_estadoreferencial=1 and sc.codigo=$cod_simulacion_servicio order by sc.codigo";
@@ -139,9 +114,7 @@ $item_1=2709;
                               $resultSimu = $stmtSimuCostos->fetch();
                               $nombre_simulacion = $resultSimu['nombre'];
                               $cod_area_simulacion = $resultSimu['cod_area'];
-                            }
-                            //verificamos si pertence a propuestas y servicios
-                            if($nombre_simulacion==null || $nombre_simulacion == ''){
+                            }elseif($tipo_solicitud==3){// pertence a propuestas y servicios
                               $sqlCostos="SELECT Descripcion,IdArea,IdOficina from servicios s where s.IdServicio=$cod_simulacion_servicio";
                               $stmtSimuCostos = $dbh->prepare($sqlCostos);
                               $stmtSimuCostos->execute();
@@ -154,9 +127,9 @@ $item_1=2709;
 
                             // --------
                             $responsable=namePersonal($cod_personal);//nombre del personal
+                            $nombre_contacto=nameContacto($persona_contacto);//nombre del personal
                             $nombre_area=trim(abrevArea($cod_area),'-');//nombre del area
-                            $nombre_uo=nameUnidad($cod_unidadorganizacional);//nombre de la oficina
-                            $nombre_contacto=ucfirst(nameContacto($persona_contacto));//nombre del personal
+                            $nombre_uo=trim(abrevUnidad($cod_unidadorganizacional),' - ');//nombre de la oficina
 
                             //los registros de la factura
                             $dbh1 = new Conexion();
@@ -199,64 +172,84 @@ $item_1=2709;
                             ?>
                           <tr>
                             <td align="center"></td>
-                            <td class="small"><?=$nombre_uo;?> - <?=$nombre_area;?></td>
-                            <td class="text-right small"><?=$nro_correlativo;?></td>
-                            <td class="text-left small"><?=$responsable?></td>
-                            <td class="small"><?=$codigo_alterno?></td>                            
-                            <td class="small"><?=$fecha_registro;?></td>
-                            <td class="small"><?=$fecha_solicitudfactura;?></td>                            
+                            <td><?=$nombre_uo;?> - <?=$nombre_area;?></td>                            
+                            <td class="text-right"><?=$nro_correlativo;?></td>
+                            <td><?=$responsable;?></td>
+                            <td><?=$codigo_alterno?></td>
+                            
+                            <td><?=$fecha_registro;?></td>
+                            <td><?=$fecha_solicitudfactura;?></td>                            
                             <td style="color:#cc4545;"><?=$nro_fact_x;?></td>                             
-                            <td class="text-right small"><?=formatNumberDec($sumaTotalImporte) ;?></td>
-                            <td class="text-left small"><?=$nombre_contacto;?></td>
-                            <td class="text-left small "><?=$razon_social;?></td>
+                            <td class="text-right"><?=formatNumberDec($sumaTotalImporte) ;?></td>
+                            <td class="text-left"><?=$nombre_contacto;?></td>
+                            <td><?=$razon_social;?></td>
                             <td><button class="btn <?=$btnEstado?> btn-sm btn-link"><?=$estado;?></button></td>
+                            <!-- <td><?=$nit;?></td> -->
+
                             <td class="td-actions text-right">
                               <?php
-                                //if($globalAdmin==1){ 
+                                if($globalAdmin==1){ //
                                   if($codigo_fact_x>0){//print facturas
                                     ?>
-                                    <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=2' target="_blank"><i class="material-icons" title="Imprimir Factura">print</i></a>
-                                    <!-- <a class="btn btn-danger" href='<?=$urlAnularFactura;?>&codigo=<?=$codigo_facturacion;?>' ><i class="material-icons" title="Anular Factura">delete</i></a> -->
-                                    
-                                  <?php }else{// generar facturas
-                                    
-                                     ?>
-                                      <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir">print</i></a>
-                                     <?php
-                                     ?>
-                                     <div class="btn-group dropdown">
-                                       <button type="button" class="btn <?=$btnEstado?> dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                         <i class="material-icons">list</i> <?=$estado;?>
-                                       </button>
-                                       <div class="dropdown-menu">
-                                        <?php 
-                                        if(isset($_GET['q'])){
-                                           ?>
-                                           <a href='#' rel="tooltip" class="dropdown-item" onclick="filaTablaAGeneral($('#tablasA_registradas'),<?=$index?>,'<?=$stringCabecera?>')">
-                                              <i class="material-icons text-warning" title="Ver Detalle">settings_applications</i> Ver Detalle
-                                            </a>
-                                            <a href="#" onclick="mostrarCambioEstadoObjeto(<?=$codigo_facturacion?>)" class="dropdown-item">
-                                               <i class="material-icons text-warning">dns</i> Cambiar Estado
-                                            </a>
+                                    <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=2' target="_blank"><i class="material-icons" title="Imprimir Factura">print</i></a>                                    
+                                    <?php 
+                                  }else{// generar facturas
+                                    if($codEstado==4||$codEstado==3||$codEstado==5){ ?>
+                                      <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir Solicitud">print</i></a>
+                                      <?php
+                                      ?>
+                                      <div class="btn-group dropdown">
+                                        <button type="button" class="btn <?=$btnEstado?> dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                           <i class="material-icons">list</i> <?=$estado;?>
+                                        </button>
+                                        <div class="dropdown-menu">
+                                          <?php                                        
+                                            if($codEstado==4){
+                                             ?><a href="<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion;?>&estado=1&admin=0" class="dropdown-item">
+                                                <i class="material-icons text-danger">clear</i> Cancelar solicitud
+                                             </a><?php 
+                                            }else{
+                                              if($codEstado==3){
+                                               ?>
+                                               <a href='#' title="Generar Factura" class="dropdown-item" onclick="alerts.showSwal('warning-message-and-confirmation-generar-factura','<?=$urlGenerarFacturas2;?>?codigo=<?=$codigo_facturacion;?>')">
+                                                <i class="material-icons text-success">receipt</i> Generar Factura
+                                               </a>
+                                               <?php      
+                                              }
+                                            }
+                                            ?>
+                                            <a href='#' rel="tooltip" class="dropdown-item" onclick="filaTablaAGeneral($('#tablasA_registradas'),<?=$index?>,'<?=$stringCabecera?>')">
+                                                <i class="material-icons text-warning" title="Ver Detalle">settings_applications</i> Ver Detalle
+                                            </a>                                          
+                                        </div>
+                                      </div>                           
+                                      <?php 
+                                    }else{
+                                      if($codEstado==6){
+                                          ?>
+                                           <a title="Enviar solicitud" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=4&admin=0'  class="btn btn-warning">
+                                             <i class="material-icons">send</i>
+                                           </a>
+                                           <a title="Volver al Estado Registro" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=1&admin=0'  class="btn btn-danger">
+                                             <i class="material-icons">refresh</i>
+                                           </a>
+                                          <?php                                          
+                                      }else{
+                                        if($codEstado!=2){                                          
+                                          ?>
+                                           <a title="Pre Envio - Solicitud Facturación" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=6&admin=0'  class="btn btn-default">
+                                             <i class="material-icons">send</i>
+                                           </a>
                                           <?php
-                                       }else{
-                                          ?><a href='#' rel="tooltip" class="dropdown-item" onclick="filaTablaAGeneral($('#tablasA_registradas'),<?=$index?>,'<?=$stringCabecera?>')">
-                                              <i class="material-icons text-warning" title="Ver Detalle">settings_applications</i> Ver Detalle
-                                            </a>
-                                            <a href="#" onclick="mostrarCambioEstadoObjeto(<?=$codigo_facturacion?>)" class="dropdown-item">
-                                               <i class="material-icons text-warning">dns</i> Cambiar Estado
-                                            </a>       
-                                         <?php  
-                                     }    
-                                    ?>       
-                                     </div>
-                                   </div>                           
-                                   <?php                                      
-                                   }                            
-                                  ?>
-                                  <!--<a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir">print</i></a>-->
-                                  <?php  
-                                //}
+                                        }
+                                      }
+                                      ?>
+                                      <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir">print</i></a>
+                                      <!--editar solicitud facturacion-->
+                                      <?php
+                                    }
+                                  }                            
+                                }
                               ?>
                             </td>
                           </tr>
@@ -267,6 +260,9 @@ $item_1=2709;
                         </tbody>
                       </table>
                   </div>
+                  <div class="card-footer fixed-bottom col-sm-9">
+                    <a href='<?=$urlListHistoricoContabilidad;?>' class="btn btn-info float-right"><i class="material-icons">history</i> Histórico</a>
+                  </div>    
                 </div>     
               </div>
           </div>  
@@ -299,8 +295,8 @@ $item_1=2709;
                     <!-- <th>Precio(BOB)</th>  
                       <th>Desc(%)</th> 
                       <th>Desc(BOB)</th>  -->
-                      <th>Importe(BOB)</th>  
-                    <th>Descripción Alterna</th>                    
+                      <th width="10%">Importe(BOB)</th> 
+                      <th width="45%">Glosa</th>                   
                     </tr>
                   </thead>
                   <tbody id="tablasA_registradas">
@@ -312,50 +308,7 @@ $item_1=2709;
   </div>
 </div>
 <!--    end small modal -->
-<!-- small modal -->
-<div class="modal fade modal-arriba modal-primary" id="modalEstadoObjeto" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-notice" style="max-width: 50% !important;">
-    <div class="modal-content card">
-                <div class="card-header card-header-warning card-header-text">
-                  <div class="card-text">
-                    <h4>Cambiar de Estado</h4>
-                  </div>
-                  <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
-                    <i class="material-icons">close</i>
-                  </button>
-                </div>
-                <input type="hidden" class="form-control" name="modal_codigopropuesta" id="modal_codigopropuesta" value="">
-                <input type="hidden" class="form-control" name="modal_tipoobjeto" id="modal_tipoobjeto" value="<?=$item_1?>">
-                <input type="hidden" class="form-control" name="modal_rolpersona" id="modal_rolpersona" value="<?=$item_3?>">
-                <div class="card-body">
-                 <div class="card-body">
-                      <div class="row">
-                       <label class="col-sm-2 col-form-label">Estado</label>
-                       <div class="col-sm-10">
-                        <div class="form-group">
-                             <select class="selectpicker form-control" name="modal_codigoestado" id="modal_codigoestado" data-style="btn btn-primary">
-                                  
-                             </select>
-                         </div>
-                        </div>
-                      </div>
-                      <div class="row">
-                          <label class="col-sm-2 col-form-label">Observaciones</label>
-                           <div class="col-sm-10">                     
-                             <div class="form-group">
-                               <textarea type="text" class="form-control" name="modal_observacionesestado" id="modal_observacionesestado"></textarea>
-                             </div>
-                           </div>  
-                      </div> 
-                      <div class="form-group float-right">
-                        <button type="button" id="boton_guardarsim" class="btn btn-default" onclick="cambiarEstadoObjetoSolFac()">Cambiar Estado</button>
-                      </div> 
-                </div>   
-                </div>
-      </div>  
-    </div>
-  </div>
-<!--    end small modal -->
+
 <?php 
   $lan=sizeof($cont);
   error_reporting(0);

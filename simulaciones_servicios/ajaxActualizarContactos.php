@@ -44,7 +44,6 @@ foreach ($lista->lista as $listaCliente) {
 	$stmt = $dbh->prepare("INSERT INTO clientes (codigo, nombre,cod_unidad,identificacion,descuento,cod_estadoreferencial) VALUES (:codigo, :nombre, :cod_unidad, :identificacion, :descuento, :cod_estado)");
 	$stmt->bindParam(':codigo', $codigoX);
 	$stmt->bindParam(':nombre', $nombreX);
-	
 	$stmt->bindParam(':cod_unidad', $codigoUnidadX);
 	$stmt->bindParam(':identificacion', $identificacionX);
 	$stmt->bindParam(':descuento', $descuentoX);
@@ -68,8 +67,11 @@ foreach ($lista->lista as $listaCliente) {
 			$cargo=$listas->CargoContacto;
 			$telefono=$listas->FonoContacto;
 		    $identificacion=$listas->Identificacion;
-			$sql="INSERT INTO clientes_contactos(codigo,cod_cliente,nombre,paterno,materno,cargo,telefono,identificacion,cod_estadoreferencial)
-		        VALUES ('$codigo','$cod_cliente','$nombre','$paterno','$materno','$cargo','$telefono','$identificacion','$vigencia')";
+		    $correo=$listas->Correo;
+
+		    
+			$sql="INSERT INTO clientes_contactos(codigo,cod_cliente,nombre,paterno,materno,cargo,telefono,identificacion,correo,cod_estadoreferencial)
+		        VALUES ('$codigo','$cod_cliente','$nombre','$paterno','$materno','$cargo','$telefono','$identificacion','$correo','$vigencia')";
 		     $stmt = $dbh->prepare($sql);
 		     $stmt->execute();  
 		     $contador_contactos++;
@@ -92,8 +94,9 @@ foreach ($lista->lista as $listaCliente) {
 			$cargo=$listas->CargoContacto;
 			$telefono=$listas->FonoContacto;
 		    $identificacion=$listas->Identificacion;
-			$sql="INSERT INTO clientes_contactos(codigo,cod_cliente,nombre,paterno,materno,cargo,telefono,identificacion,cod_estadoreferencial)
-		        VALUES ('$codigo','$cod_cliente','$nombre','$paterno','$materno','$cargo','$telefono','$identificacion','$vigencia')";
+		    $correo=$listas->Correo;
+			$sql="INSERT INTO clientes_contactos(codigo,cod_cliente,nombre,paterno,materno,cargo,telefono,identificacion,correo,cod_estadoreferencial)
+		        VALUES ('$codigo','$cod_cliente','$nombre','$paterno','$materno','$cargo','$telefono','$identificacion','$correo','$vigencia')";
 		     $stmt = $dbh->prepare($sql);
 		     $stmt->execute();  
 		     $contador_contactos++;
