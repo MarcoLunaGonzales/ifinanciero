@@ -1,3 +1,21 @@
+.input-archivo {
+ width: 0.1px;
+ height: 0.1px;
+ opacity: 0;
+ overflow: hidden;
+ position: absolute;
+ z-index: -1;
+ }
+
+ .label-archivo {
+ font-size: 13px;
+ display: inline-block;
+ cursor: pointer;
+ text-transform: uppercase;
+ text-align: center;
+ width: 150px;
+ }
+
 
 .menu{ height:60px; width:100%;text-align:center;z-index: 999999 !important; color:white !important;background:#35A775 !important;padding-top: 8px;}
 .wrapper_caja{  width:100%; padding-top:20px}

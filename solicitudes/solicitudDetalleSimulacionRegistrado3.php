@@ -27,6 +27,10 @@
 							$detalleX=$row['glosa'];
 							$proveedorX="";
 							$retencionX="";
+                            $codTipoPago=0;
+                            $nombreBen="";
+                            $apellidoBen="";
+                            $cuentaBen="";
 							$tituloImporte="Importe";
 							if($ibnorca==1){
                               $importeX=$row['monto_total'];
@@ -60,6 +64,10 @@
 							   $importeSolX=$rowDetalles["importe"];
 							   $proveedorX=$rowDetalles["cod_proveedor"];
 							   $retencionX=$rowDetalles["cod_confretencion"];
+							   $codTipoPago=$rowDetalles["cod_tipopagoproveedor"];
+                               $nombreBen=$rowDetalles["nombre_beneficiario"];
+                               $apellidoBen=$rowDetalles["apellido_beneficiario"];
+                               $cuentaBen=$rowDetalles["nro_cuenta_beneficiario"];
 							   if($retencionX!=0){
 							   	$tituloImporte="Importe - ".nameRetencion($retencionX);
 							   	if(strlen($tituloImporte)>13){
@@ -95,6 +103,10 @@
 							   $importeSolX=$rowDetalles["importe"];
 							   $proveedorX=$rowDetalles["cod_proveedor"];
 							   $retencionX=$rowDetalles["cod_confretencion"];
+							   $codTipoPago=$rowDetalles["cod_tipopagoproveedor"];
+                               $nombreBen=$rowDetalles["nombre_beneficiario"];
+                               $apellidoBen=$rowDetalles["apellido_beneficiario"];
+                               $cuentaBen=$rowDetalles["nro_cuenta_beneficiario"];
 							   if($retencionX!=0){
 							   	$tituloImporte="Importe - ".nameRetencion($retencionX);
 							   	if(strlen($tituloImporte)>13){
