@@ -29,7 +29,7 @@ try {//recibiendo datos
     $nit = $_POST["nit"];
     $observaciones = $_POST["observaciones"];    
     $observaciones_2 = $_POST["observaciones_2"];    
-    $persona_contacto = $_POST["persona_contacto"];
+    $persona_contacto = 0;
 
     $modal_totalmontos = $_POST["modal_totalmontos"];
     $modal_numeroservicio = $_POST["modal_numeroservicio"];

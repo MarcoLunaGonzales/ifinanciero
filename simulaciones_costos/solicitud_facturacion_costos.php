@@ -54,12 +54,20 @@ m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo order by nombreAlumno");//poner 
                     <div class="card-icon">
                       <i class="material-icons">polymer</i>
                     </div>
-                    <h4 class="card-title"><b>Solicitud de Facturación Capacitación</b></h4>
-                    <h4 class="card-title" align="center"><b>Propuesta: <?=$nombre_simulacion?></b></h4>
-                    <h4 class="card-title" align="center"><b>Curso: <?=$nombre_curso?></b></h4>
+                    <h4 class="card-title"><b>Solicitud de Facturación para Capacitación</b></h4>                    
                   </div>
+                  <div class="row">
+                        <div class="col-sm-12">
+                          <div class="form-group" align="right">
+                            <button type="button" class="btn btn-warning btn-round btn-fab btn-sm" data-toggle="modal" data-target="#modalBuscador">
+                              <i class="material-icons" title="Buscador Avanzado">search</i>
+                            </button>                                 
+                          </div>
+                        </div>
+                    </div>
                   <div class="card-body">
-                      <table class="table" id="tablePaginator">
+                    <div id="contenedor_items_estudiantes">
+                      <table class="table d-none" id="tablePaginator" >
                         <thead>
                           <tr>
                             <th class="text-center"></th>                          
@@ -187,6 +195,7 @@ m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo order by nombreAlumno");//poner 
                           ?>
                         </tbody>
                       </table>
+                    </div>
                   </div>
                 </div>
                 <div class="card-footer fixed-bottom">
@@ -206,6 +215,45 @@ m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo order by nombreAlumno");//poner 
     </div>
   </div>
 
+
+<!-- Modal busqueda de items-->
+<div class="modal fade" id="modalBuscador" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Buscador de Estudiantes</h4>
+      </div>
+      <div class="modal-body ">
+        <div class="row">
+          <label class="col-sm-3 col-form-label text-center">Nombre</label>
+          <label class="col-sm-3 col-form-label text-center">Paterno</label>   
+          <label class="col-sm-3 col-form-label text-center">Materno</label>   
+          <label class="col-sm-3 col-form-label text-center">CI</label>
+        </div> 
+        <div class="row">
+            <div class="form-group col-sm-3">
+                <input class="form-control input-sm" type="text" name="nombreCliente" id="nombreCliente"  >
+            </div>            
+            <div class="form-group col-sm-3">
+                <input class="form-control input-sm" type="text" name="paternoCliente" id="paternoCliente"  >
+            </div>            
+            <div class="form-group col-sm-3">
+                <input class="form-control input-sm" type="text" name="maternoCliente" id="maternoCliente"  >
+            </div>            
+            <div class="form-group col-sm-3">
+                <input class="form-control input-sm" type="text" name="ci" id="ci"  >
+            </div>            
+        </div> 
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" id="botonBuscarEstudiantes" name="botonBuscarEstudiantes" onclick="botonBuscarEstudiantesCapacitacion()">Buscar</button>
+        <!-- <button type="button" class="btn btn-danger" data-dismiss="modal"> Cerrar </button> -->
+      </div>
+    </div>
+  </div>
+</div>
 <!-- small modal -->
 <div class="modal fade modal-primary" id="modalDetalleFac" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
@@ -245,7 +293,7 @@ m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo order by nombreAlumno");//poner 
       </div>  
     </div>
 </div>
-  <!--    end small modal -->
+<!--    end small modal -->
 
 <?php 
   $lan=sizeof($cont);
