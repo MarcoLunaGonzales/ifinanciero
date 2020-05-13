@@ -12,7 +12,7 @@ private $port = '3307';*/
 
    private $tipo_de_base = 'mysql';
    private $host = 'localhost';
-   private $nombre_de_base = 'ibno_conta';
+   private $nombre_de_base = 'ibno_conta4';
    private $usuario = 'root';
    private $contrasena = '';
    private $port = '3306';

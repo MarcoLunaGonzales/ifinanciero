@@ -5901,6 +5901,17 @@ function obtieneCuentaPadre($codigo){
    return($nombreX);
 }
 
+function obtieneCuentaPadreAux($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT c.cod_cuenta FROM plan_cuentas p,cuentas_auxiliares c where c.cod_cuenta=p.codigo and c.codigo=$codigo");
+   $stmt->execute();
+   $nombreX=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $nombreX=$row['cod_cuenta'];
+   }
+   return($nombreX);
+}
+
 function obtenerDistribucionCentroCostosUnidadActivo(){
    $dbh = new Conexion();
    $sql="";

@@ -12580,3 +12580,40 @@ $(document).on('change', '.archivo', function() {
     } 
    }
 });
+
+function cambiarCuentaAuxiliarDetalle(tipo,com,cod,ant,nue){
+  $("#tipo").val(tipo);
+  $("#cod_comprobantedetalle").val(com);
+  $("#cod_estadocuenta").val(cod);
+  $("#cod_antiguo").val(ant);
+  $("#cod_nuevo").val(nue);
+  $("#cambioCodigoAuxiliar").modal("show");
+}
+function cambiarCodigoAuxiliar(){
+  var parametros={
+    "tipo":$("#tipo").val(),"cod_comprobantedetalle":$("#cod_comprobantedetalle").val(),
+    "cod_estadocuenta":$("#cod_estadocuenta").val(),
+    "cod_nuevo":$("#cod_nuevo").val()
+   };
+      $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxSaveAuxiliarNuevo.php",
+        data: parametros,
+        beforeSend: function () {
+        $("#texto_ajax_titulo").html("Cambiando Datos..."); 
+          iniciarCargaAjax();
+        },
+        success:  function (resp) {
+           detectarCargaAjax();
+           if(resp=="1"){
+            Swal.fire('Correcto!','Registro exitoso!','success');
+            window.location.href="repo.php";
+           }else{
+            Swal.fire('ERROR!','No se pudo registrar!','error');
+           }
+           $("#texto_ajax_titulo").html("Procesando Datos");   
+           $("#cambioCodigoAuxiliar").modal("hide");         
+        }
+      }); 
+}
