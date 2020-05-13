@@ -7,7 +7,7 @@ require_once 'configModule.php';
 
 //$dbh = new Conexion();
 $dbh = new Conexion();
-$ci_estudiante=$codigo;
+$cod_empresa=$codigo;
 $cod_simulacion=$cod_simulacion;//agarramos el id del curso
 $cod_facturacion=$cod_facturacion;
 $IdCurso=$IdCurso;
@@ -28,34 +28,17 @@ $cod_area=13;
 $dbhIBNO = new ConexionIBNORCA();
 
 //nombre del curso de ibnoca
-// $stmtIBNOCurso = $dbhIBNO->prepare("SELECT aa.IdModulo, aa.IdCurso, aa.CiAlumno, concat(cpe.clPaterno,' ',cpe.clMaterno,' ',cpe.clNombreRazon)as nombreAlumno, c.Abrev, c.Auxiliar,
-// pc.Costo, pc.CantidadModulos, m.NroModulo, pc.Nombre, m.IdTema
-// FROM asignacionalumno aa, dbcliente.cliente_persona_empresa cpe, alumnocurso ac, clasificador c, programas_cursos pc, modulos m 
-// where cpe.clIdentificacion=aa.CiAlumno 
-// and ac.IdCurso=aa.IdCurso and ac.CiAlumno=aa.CiAlumno and ac.IdConceptoPago=c.IdClasificador and pc.IdCurso=aa.IdCurso and 
-// m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo and cpe.clIdentificacion=$ci_estudiante and aa.IdModulo=$IdModulo;");//poner el codigo de curso a buscar
-// $stmtIBNOCurso->execute();
-// $resultNombreCurso = $stmtIBNOCurso->fetch();
-// $nombre_curso = $resultNombreCurso['Nombre'];
-//datos del estudiante y el curso que se encuentra
-$sqlIBNORCA="SELECT aa.IdModulo, aa.IdCurso, aa.CiAlumno, concat(cpe.clPaterno,' ',cpe.clMaterno,' ',cpe.clNombreRazon)as nombreAlumno, c.Abrev, c.Auxiliar,
-pc.Costo, pc.CantidadModulos, m.NroModulo, pc.Nombre, m.IdTema
-FROM asignacionalumno aa, dbcliente.cliente_persona_empresa cpe, alumnocurso ac, clasificador c, programas_cursos pc, modulos m 
-where cpe.clIdentificacion=aa.CiAlumno 
-and ac.IdCurso=aa.IdCurso and ac.CiAlumno=aa.CiAlumno and ac.IdConceptoPago=c.IdClasificador and pc.IdCurso=aa.IdCurso and 
-m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo and cpe.clIdentificacion=$ci_estudiante and aa.IdCurso=$IdCurso limit 1;";
-$stmtIbno = $dbhIBNO->prepare($sqlIBNORCA);
-$stmtIbno->execute();
-$resultSimu = $stmtIbno->fetch();
-$IdModulo = $resultSimu['IdModulo'];
-$IdCurso = $resultSimu['IdCurso'];
-$nombreAlumno = $resultSimu['nombreAlumno'];
-$Abrev = $resultSimu['Abrev'];
-$Costo = $resultSimu['Costo'];
-$CantidadModulos = $resultSimu['CantidadModulos'];
-$NroModulo = $resultSimu['NroModulo'];
-$Nombre = $resultSimu['Nombre'];
-$monto_pagar=($Costo - ($Costo*$Abrev/100) )/$CantidadModulos; //formula para sacar el monto a pagar del estudiante
+$stmtIBNOCurso = $dbhIBNO->prepare("SELECT * from programas_cursos pc where pc.idEmpresa<>0 and IdCurso=$IdCurso;");//poner el codigo de curso a buscar
+$stmtIBNOCurso->execute();
+$resultNombreCurso = $stmtIBNOCurso->fetch();
+$nombre_curso = $resultNombreCurso['Nombre'];
+$cod_uo = $resultNombreCurso['IdOficina'];
+$cantidadModulos = $resultNombreCurso['CantidadModulos'];
+$Costo = $resultNombreCurso['Costo'];
+$monto_modulos=$Costo/$cantidadModulos;
+
+$nombre_cliente=nameCliente($cod_empresa);
+
 
 if($cod_facturacion>0){//editar
     $sqlFac="SELECT sf.*,sfd.precio,sfd.descuento_por,sfd.descuento_bob from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sfd.cod_solicitudfacturacion=sf.codigo and sf.codigo=$cod_facturacion";
@@ -80,8 +63,8 @@ if($cod_facturacion>0){//editar
 }else{//registrat
     $fecha_registro = date('Y-m-d');
     $fecha_solicitudfactura = date('Y-m-d');
-    $razon_social= $nombreAlumno;
-    $nit = null;
+    $razon_social= $nombre_cliente;
+    $nit = obtenerNitCliente($cod_empresa);;
     $observaciones = null;
     $observaciones_2 = null;
     $cod_tipopago=null;
@@ -106,8 +89,8 @@ $descuento_cliente=0;
     <div class="container-fluid">
         <div style="overflow-y:scroll;">
             <div class="col-md-12">
-              <form id="formSoliFactTcp" class="form-horizontal" action="<?=$urlSave_solicitud_facturacion_costos;?>" method="post" onsubmit="return valida(this)">                
-                <input type="hidden" name="ci_estudiante" id="ci_estudiante" value="<?=$ci_estudiante;?>"/>
+              <form id="formSoliFactTcp" class="form-horizontal" action="<?=$urlSave_solicitud_facturacion_costos_empresa;?>" method="post" onsubmit="return valida(this)">                
+                <input type="hidden" name="cod_empresa" id="cod_empresa" value="<?=$cod_empresa;?>"/>
                 <input type="hidden" name="cod_simulacion" id="cod_simulacion" value="<?=$cod_simulacion;?>"/>
                 <input type="hidden" name="cod_facturacion" id="cod_facturacion" value="<?=$cod_facturacion;?>"/>
                 <input type="hidden" name="cantidad_filas" id="cantidad_filas" value="<?=$contadorRegistros;?>">
@@ -117,7 +100,7 @@ $descuento_cliente=0;
                         <div class="card-text">
                           <h4 class="card-title"><?php if ($cod_facturacion == 0) echo "Registrar "; else echo "Editar ";?>Solicitud de Facturación</h4>                      
                         </div>
-                        <h4 class="card-title" align="center"><b>Nombre Curso : <?=$Nombre?></b></h4>
+                        <h4 class="card-title" align="center"><b>Nombre Curso : <?=$nombre_curso?></b></h4>
                         <!-- <h4 class="card-title" align="center"><b>Módulo : <?=$NroModulo?></b></h4> -->
                     </div>
                     <div class="card-body ">    
@@ -131,7 +114,7 @@ $descuento_cliente=0;
                                     $queryUO1 = "SELECT codigo,nombre,abreviatura from unidades_organizacionales where cod_estado=1 order by nombre";
                                     $statementUO1 = $dbh->query($queryUO1);
                                     while ($row = $statementUO1->fetch()){ ?>
-                                        <option <?=($globalUnidad==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>" data-subtext="(<?=$row['codigo']?>)"><?=$row["abreviatura"];?> - <?=$row["nombre"];?></option>
+                                        <option <?=($cod_uo==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>" data-subtext="(<?=$row['codigo']?>)"><?=$row["abreviatura"];?> - <?=$row["nombre"];?></option>
                                     <?php } ?>
                                 </select>
                                
@@ -292,10 +275,40 @@ $descuento_cliente=0;
                                      </button>                              
                                 </div>
                             </div>  
-                            <!-- <label class="col-sm-2 col-form-label">Persona Contacto</label>
-                            <div class="col-sm-3">
-                                <div class="form-group" >
-                                        <input type="text" name="persona_contacto" id="persona_contacto" class="form-control" value="<?=$persona_contacto?>" required="true">
+                             <label class="col-sm-2 col-form-label">Responsable</label>
+                            <div class="col-sm-4">
+                                <div class="form-group">            
+                                    <?php  $responsable=namePersonal($cod_personal); ?>
+                                    <input type="hidden" name="cod_personal" id="cod_personal" value="<?=$cod_personal?>" readonly="true" class="form-control">
+                                    <input type="text" value="<?=$responsable?>" readonly="true" class="form-control" style="background-color:#E3CEF6;text-align: left">
+                                </div>
+                            </div>                             
+                        </div>
+                        <!-- fin tipos pago y objeto  -->                                                 
+                        <div class="row">
+                            <label class="col-sm-2 col-form-label">Empresa</label>
+                            <div class="col-sm-4">
+                                <div class="form-group" >                                     
+                                        <input class="form-control" type="text" id="nombreAlumno" name="nombreAlumno" value="<?=$nombre_cliente;?>" required="true" readonly style="background-color:#E3CEF6;text-align: left"/>
+                                        
+                                </div>
+                            </div> 
+                            <label class="col-sm-2 col-form-label">Persona Contacto</label>
+                            <div class="col-sm-3">                                
+                                <div id="div_contenedor_contactos">
+                                    <select class="selectpicker form-control form-control-sm" name="persona_contacto" id="persona_contacto" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" title="Seleccione Contacto">
+                                        <?php 
+                                        $query="SELECT * FROM clientes_contactos where cod_cliente=$cod_empresa order by nombre";
+                                        $stmt = $dbh->prepare($query);
+                                        $stmt->execute();
+                                        while ($rowContacto = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                        $codigo_contacto=$rowContacto['codigo'];    
+                                        $nombre_conatacto=$rowContacto['nombre']." ".$rowContacto['paterno']." ".$rowContacto['materno'];
+                                        ?><option <?=($persona_contacto==$codigo_contacto)?"selected":"";?> value="<?=$codigo_contacto?>" class="text-right"><?=$nombre_conatacto?></option>
+                                        <?php 
+                                        } ?> 
+                                    </select>
+                                    
                                 </div>
                             </div>
                             <div class="col-sm-1">
@@ -304,30 +317,12 @@ $descuento_cliente=0;
                                         <i class="material-icons" title="Add Contacto">add</i>
                                     </a>
                                     <a href="#" class="btn btn-success btn-round btn-fab btn-sm" onclick="actualizarRegistroContacto()">
-                                       <i class="material-icons" title="Actualizar Contacto">update</i>
+                                       <i class="material-icons" title="Actualizar Clientes & Contactos">update</i>
                                     </a> 
                                 </div>
-                            </div> -->
+                            </div>
                         </div>
-                        <!-- fin tipos pago y objeto  -->                                                 
-                        <div class="row">
-                            <label class="col-sm-2 col-form-label">Estudiante</label>
-                            <div class="col-sm-4">
-                                <div class="form-group" >                                     
-                                        <input class="form-control" type="text" id="nombreAlumno" name="nombreAlumno" value="<?=$nombreAlumno;?>" required="true" readonly style="background-color:#E3CEF6;text-align: left"/>
-                                        
-                                </div>
-                            </div>      
-                            <label class="col-sm-2 col-form-label">Responsable</label>
-                            <div class="col-sm-4">
-                                <div class="form-group">            
-                                    <?php  $responsable=namePersonal($cod_personal); ?>
-                                    <input type="hidden" name="cod_personal" id="cod_personal" value="<?=$cod_personal?>" readonly="true" class="form-control">
-                                    <input type="text" value="<?=$responsable?>" readonly="true" class="form-control" style="background-color:#E3CEF6;text-align: left">
-                                </div>
-                            </div>     
-                        </div>
-                        <!-- fin cliente y responsable -->                       
+                        <!-- fin cliente y contacto -->                       
                                                                 
 
                         <div class="row">
@@ -390,12 +385,7 @@ $descuento_cliente=0;
                                     <tbody>                                
                                         <?php 
                                         $iii=1;
-                                        $queryPr="SELECT aa.IdModulo, aa.IdCurso, aa.CiAlumno, concat(cpe.clPaterno,' ',cpe.clMaterno,' ',cpe.clNombreRazon)as nombreAlumno, c.Abrev, c.Auxiliar,
-                                            pc.Costo, pc.CantidadModulos, m.NroModulo, pc.Nombre, m.IdTema,(select d_clasificador(m.IdTema))as nombre_tema
-                                            FROM asignacionalumno aa, dbcliente.cliente_persona_empresa cpe, alumnocurso ac, clasificador c, programas_cursos pc, modulos m 
-                                            where cpe.clIdentificacion=aa.CiAlumno 
-                                            and ac.IdCurso=aa.IdCurso and ac.CiAlumno=aa.CiAlumno and ac.IdConceptoPago=c.IdClasificador and pc.IdCurso=aa.IdCurso and 
-                                            m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo and cpe.clIdentificacion=$ci_estudiante and aa.IdCurso=$IdCurso";                                        
+                                        $queryPr="SELECT m.*,(select d_clasificador(m.IdTema))as nombre_tema from modulos m where m.IdCurso=$IdCurso;";                                        
                                         // echo $queryPr;
                                         $stmt = $dbhIBNO->prepare($queryPr);
                                         $stmt->execute();
@@ -406,15 +396,10 @@ $descuento_cliente=0;
                                             //$codCS=430;//defecto
                                             $codCS=$rowPre['IdModulo'];
                                             $NroModulo=$rowPre['NroModulo'];
-                                            $tipoPre="Mod:".$NroModulo." - ".$rowPre['nombre_tema'];
-                                            $CantidadModulos=$rowPre['CantidadModulos'];
-                                            $cantidadPre=1;
-
-                                            $Costo=$rowPre['Costo'];
-                                            $Abrev=$rowPre['Abrev'];
-                                            // $cantidadEPre=$rowPre['cantidad_editado'];
-                                            $monto_pagar=($Costo - ($Costo*$Abrev/100) )/$CantidadModulos; //formula para sacar el monto a pagar del estudiante
-                                            $montoPre=$monto_pagar;
+                                            $tipoPre="Mod:".$NroModulo." - ".$rowPre['nombre_tema'];                                            
+                                            $cantidadPre=1;                                            
+                                            // $cantidadEPre=$rowPre['cantidad_editado'];                                            
+                                            $montoPre=$monto_modulos;
                                             $descuento_bob_cliente=$montoPre*$descuento_cliente; 
                                             // $montoPreTotal=$montoPre*$cantidadEPre;
                                             $banderaHab=1;
@@ -560,7 +545,7 @@ $descuento_cliente=0;
                   </div>
                   <div class="card-footer ml-auto mr-auto">
                     <button type="submit" class="<?=$buttonNormal;?>">Guardar</button>                
-                    <a href='<?=$urlSolicitudfactura?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>                    
+                    <a href='<?=$urlSolicitudfactura_empresa?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>                    
                   </div>
                 </div>
               </form>                  

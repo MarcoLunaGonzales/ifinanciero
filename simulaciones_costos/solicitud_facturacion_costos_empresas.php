@@ -7,13 +7,13 @@ $codigo_simulacion=0;//codigo de simulacion
 $dbh = new Conexion();
 $globalAdmin=$_SESSION["globalAdmin"];
 
-$sql="SELECT nombre,cod_area,cod_uo from simulaciones_costos where codigo=$codigo_simulacion";
-$stmtSimu = $dbh->prepare($sql);
-$stmtSimu->execute();
-$resultSimu = $stmtSimu->fetch();
-$nombre_simulacion = $resultSimu['nombre'];
-$cod_area = $resultSimu['cod_area'];
-$cod_uo = $resultSimu['cod_uo'];
+// $sql="SELECT nombre,cod_area,cod_uo from simulaciones_costos where codigo=$codigo_simulacion";
+// $stmtSimu = $dbh->prepare($sql);
+// $stmtSimu->execute();
+// $resultSimu = $stmtSimu->fetch();
+// $nombre_simulacion = $resultSimu['nombre'];
+// $cod_area = $resultSimu['cod_area'];
+// $cod_uo = $resultSimu['cod_uo'];
 
 //simulamos conexion con ibnorca
 $dbhIBNO = new ConexionIBNORCA();
@@ -42,9 +42,7 @@ m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo order by nombreAlumno");//poner 
   $stmtIBNO->bindColumn('CantidadModulos', $CantidadModulos);
   $stmtIBNO->bindColumn('NroModulo', $NroModulo);
   $stmtIBNO->bindColumn('Nombre', $nombre_mod);
-
-
-  ?>
+?>
   <div class="content">
     <div class="container-fluid">
           <div class="row">
@@ -54,8 +52,8 @@ m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo order by nombreAlumno");//poner 
                     <div class="card-icon">
                       <i class="material-icons">polymer</i>
                     </div>
-                    <h4 class="card-title"><b>Solicitud de Facturación para Capacitación</b></h4>                    
-                    <h4 class="card-title text-center"><b>Estudiantes</b></h4>
+                    <h4 class="card-title"><b>Solicitud de Facturación para Capacitación</b></h4>
+                    <h4 class="card-title text-center"><b>Empresas</b></h4>
                   </div>
                   <div class="row">
                         <div class="col-sm-12">
@@ -67,7 +65,7 @@ m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo order by nombreAlumno");//poner 
                         </div>
                     </div>
                   <div class="card-body">
-                    <div id="contenedor_items_estudiantes">
+                    <div id="contenedor_items_empresas">
                       <table class="table d-none" id="tablePaginator" >
                         <thead>
                           <tr>
@@ -77,11 +75,11 @@ m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo order by nombreAlumno");//poner 
                             <th>Precio <br>curso (BOB)</th>                            
                             <th>Desc. <br>curso(%)</th>                              
                             <th>Importe <br>curso(BOB)</th>   
-                            <th>Importe <br>modulo(BOB)</th>   
-                            <th>Importe <br>Solicitud(BOB)</th>   
+                            <!-- <th>Importe <br>modulo(BOB)</th>   
+                            <th>Importe <br>Solicitud(BOB)</th>    -->
                             <!-- <th>Canti. Mod</th> -->
-                            <th>Nro <br>Módulo</th>
-                            <!-- <th>Nombre Mod.</th> -->
+                            <!-- <th>Nro <br>Módulo</th> -->
+                            <th>Nombre Mod.</th>
                             <th class="text-right">Actions</th>
                           </tr>
                         </thead>
@@ -95,8 +93,8 @@ m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo order by nombreAlumno");//poner 
                             $monto_pagar=($Costo - ($Costo*$descuento/100) )/$CantidadModulos; //monto a pagar del estudiante 
                             $importe_curso=   $Costo*$descuento/100;//importe curso con desuento
                             $importe_curso= $Costo-$importe_curso;//importe curso con desuento
-                            $nombre_area=trim(abrevArea($cod_area),'-');
-                            $nombre_uo=trim(abrevUnidad($cod_uo),' - ');                      
+                            // $nombre_area=trim(abrevArea($cod_area),'-');
+                            // $nombre_uo=trim(abrevUnidad($cod_uo),' - ');                      
                             //buscamos a los estudiantes que ya fueron solicitados su facturacion
                             $codigo_facturacion=0;
                             $sqlFac="SELECT sf.codigo,sf.fecha_registro,sf.fecha_solicitudfactura,sf.razon_social,sf.nit from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sfd.cod_solicitudfacturacion=sf.codigo and sf.cod_simulacion_servicio=$codigo_simulacion and sf.cod_cliente=$CiAlumno";
@@ -116,43 +114,10 @@ m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo order by nombreAlumno");//poner 
                             $codigo_fact_x = $resultSimu['codigo'];
                             $nro_fact_x = $resultSimu['nro_factura'];
                             if ($nro_fact_x==null)$nro_fact_x="-";
-                            //los registros de la factura                            
-                            $sqlA="SELECT *,(select t.descripcion from cla_servicios t where t.idclaservicio=cod_claservicio) as nombre_serv  from solicitudes_facturaciondetalle where cod_solicitudfacturacion=$codigo_facturacion";
-                            // echo $sqlA;
-                            $stmt2 = $dbh->prepare($sqlA);                                   
-                            $stmt2->execute(); 
-                            $nc=0;
+
                             $sumaTotalMonto=0;
                             $sumaTotalDescuento_por=0;
-                            $sumaTotalDescuento_bob=0;
-                            while ($row2 = $stmt2->fetch(PDO::FETCH_ASSOC)) {
-                              $dato = new stdClass();//obejto
-                              $codFila=(int)$row2['codigo'];
-                              $cod_claservicioX=trim($row2['nombre_serv']);
-                              $cantidadX=trim($row2['cantidad']);
-                              $precioX=trim($row2['precio'])+trim($row2['descuento_bob']);
-                              $descuento_porX=trim($row2['descuento_por']);
-                              $descuento_bobX=trim($row2['descuento_bob']);
-                              $descripcion_alternaX=trim($row2['descripcion_alterna']);
-                              $dato->codigo=($nc+1);
-                              $dato->cod_facturacion=$codFila;
-                              $dato->serviciox=$cod_claservicioX;
-                              $dato->cantidadX=$cantidadX;
-                              $dato->precioX=$precioX;
-                              $dato->descuento_porX=$descuento_porX;
-                              $dato->descuento_bobX=$descuento_bobX;
-                              $dato->descripcion_alternaX=$descripcion_alternaX;
-                              $datos[$index-1][$nc]=$dato;                           
-                              $nc++;
-                              $sumaTotalMonto+=$precioX;
-                              $sumaTotalDescuento_por+=$descuento_porX;
-                              $sumaTotalDescuento_bob+=$descuento_bobX;
-                            }
-                            $sumaTotalImporte=$sumaTotalMonto-$sumaTotalDescuento_bob;
-                            $cont[$index-1]=$nc;  
-                            // $nombre_simulacion=$Descripcion;
-                            $stringCabecera=$nombre_uo."##".$nombre_area."##".$nombre_simulacion."##-##".$fecha_registro."##".$fecha_solicitudfactura."##".$nit."##".$razon_social;
-
+                            $sumaTotalDescuento_bob=0;                           
                             ?>
                           <tr>
                             <td align="center"></td>
@@ -161,10 +126,10 @@ m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo order by nombreAlumno");//poner 
                             <td class="text-right"><?=formatNumberDec($Costo) ;?></td>
                             <td class="text-right"><?=$descuento ;?></td>                          
                             <td class="text-right"><?=formatNumberDec($importe_curso) ;?></td>                          
-                            <td class="text-right"><?=formatNumberDec($monto_pagar) ;?></td>                            
-                            <td class="text-right"><?=formatNumberDec($sumaTotalImporte) ;?></td>     
-                            <td><?=$NroModulo;?></td>
-                            <!-- <td><?=$nombre_mod;?></td> -->
+                            <!-- <td class="text-right"><?=formatNumberDec($monto_pagar) ;?></td>                            
+                            <td class="text-right"><?=formatNumberDec($sumaTotalImporte) ;?></td>   -->   
+                            <!-- <td><?=$NroModulo;?></td> -->
+                            <td><?=$nombre_mod;?></td>
                             <td class="td-actions text-right">
                               <?php
                                 if($globalAdmin==1){                            
@@ -214,33 +179,34 @@ m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo order by nombreAlumno");//poner 
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Buscador de Estudiantes</h4>
+        <h4 class="modal-title" id="myModalLabel">Buscador de Empresas</h4>
       </div>
       <div class="modal-body ">
         <div class="row">
-          <label class="col-sm-3 col-form-label text-center">Nombre</label>
-          <label class="col-sm-3 col-form-label text-center">Paterno</label>   
-          <label class="col-sm-3 col-form-label text-center">Materno</label>   
-          <label class="col-sm-3 col-form-label text-center">CI</label>
+          <label class="col-sm-4 col-form-label text-center">Empresa</label>          
+          <label class="col-sm-4 col-form-label text-center">Glosa</label>
         </div> 
         <div class="row">
-            <div class="form-group col-sm-3">
-                <input class="form-control input-sm" type="text" name="nombreCliente" id="nombreCliente"  >
-            </div>            
-            <div class="form-group col-sm-3">
-                <input class="form-control input-sm" type="text" name="paternoCliente" id="paternoCliente"  >
-            </div>            
-            <div class="form-group col-sm-3">
-                <input class="form-control input-sm" type="text" name="maternoCliente" id="maternoCliente"  >
-            </div>            
-            <div class="form-group col-sm-3">
-                <input class="form-control input-sm" type="text" name="ci" id="ci"  >
-            </div>            
+            <div class="form-group col-sm-4">            
+                <select name="cod_empresa[]" id="cod_empresa" class="selectpicker form-control form-control-sm" data-style="btn btn-info select-with-transition" data-show-subtext="true" data-live-search="true" data-actions-box="true" multiple> 
+                <option value="0"></option>
+                <?php 
+                $query1 = "SELECT codigo,nombre from clientes where cod_estadoreferencial=1 order by nombre";
+                $statement = $dbh->query($query1);
+                while ($row = $statement->fetch()){ ?>
+                    <option value="<?=$row["codigo"];?>"><?=$row["nombre"];?> </option>
+                <?php } ?>
+                </select>
+            
+            </div>
+            <div class="form-group col-sm-4">
+                <input class="form-control input-sm" type="text" name="glosa" id="glosa"  >
+            </div>                        
         </div> 
       </div>
 
       <div class="modal-footer">
-        <button type="button" class="btn btn-success" id="botonBuscarEstudiantes" name="botonBuscarEstudiantes" onclick="botonBuscarEstudiantesCapacitacion()">Buscar</button>
+        <button type="button" class="btn btn-success" id="botonBuscarEmpresas" name="botonBuscarEmpresas" onclick="botonBuscarEmpresasCapacitacion()">Buscar</button>
         <!-- <button type="button" class="btn btn-danger" data-dismiss="modal"> Cerrar </button> -->
       </div>
     </div>
