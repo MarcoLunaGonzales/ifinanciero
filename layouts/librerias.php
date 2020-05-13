@@ -373,28 +373,32 @@
             .attr('name', 'tiposPago_facturacion')
             .attr('value', JSON.stringify(itemTipoPagos_facturacion))
             .appendTo('#formSoliFactTcp');
-          if(montoTotalItems!=monto_modal_por_tipopago){
-            var mensaje="<p>Por favor verifique los montos de la distribución de pocentajes en Tipo de Pago...</p>";
-            $('#msgError').html(mensaje);
-            $('#modalAlert').modal('show'); 
-            return false;  
-          }else{
-            if($("#total_monto_bob_a_areas").val()){
-              var montoTotalItems=$("#monto_total_a").val();            
-              var monto_modal_por_area=$("#total_monto_bob_a_areas").val();
-              //si existe array de objetos areas
-              $('<input />').attr('type', 'hidden')
-              .attr('name', 'areas_facturacion')
-              .attr('value', JSON.stringify(itemAreas_facturacion))
-              .appendTo('#formSoliFactTcp');
-              if(montoTotalItems!=monto_modal_por_area){
-                var mensaje="<p>Por favor verifique los montos de la distribución de pocentajes en Areas...</p>";
-                $('#msgError').html(mensaje);
-                $('#modalAlert').modal('show'); 
-                return false;
+          if(monto_modal_por_tipopago!=0){
+            if(montoTotalItems!=monto_modal_por_tipopago){
+              var mensaje="<p>Por favor verifique los montos de la distribución de pocentajes en Tipo de Pago...</p>";
+              $('#msgError').html(mensaje);
+              $('#modalAlert').modal('show'); 
+              return false;  
+            }else{
+              if($("#total_monto_bob_a_areas").val()){
+                var montoTotalItems=$("#monto_total_a").val();            
+                var monto_modal_por_area=$("#total_monto_bob_a_areas").val();
+                //si existe array de objetos areas
+                $('<input />').attr('type', 'hidden')
+                .attr('name', 'areas_facturacion')
+                .attr('value', JSON.stringify(itemAreas_facturacion))
+                .appendTo('#formSoliFactTcp');
+                if(monto_modal_por_tipopago!=0){
+                  if(montoTotalItems!=monto_modal_por_area){
+                    var mensaje="<p>Por favor verifique los montos de la distribución de pocentajes en Areas...</p>";
+                    $('#msgError').html(mensaje);
+                    $('#modalAlert').modal('show'); 
+                    return false;
+                  }
+                }
               }
             }
-          }
+          }          
         }else{
           if($("#total_monto_bob_a_areas").val()){
             var montoTotalItems=$("#monto_total_a").val();            
@@ -404,11 +408,13 @@
             .attr('name', 'areas_facturacion')
             .attr('value', JSON.stringify(itemAreas_facturacion))
             .appendTo('#formSoliFactTcp');
-            if(montoTotalItems!=monto_modal_por_area){
-              var mensaje="<p>Por favor verifique los montos de la distribución de pocentajes en Areas...</p>";
-              $('#msgError').html(mensaje);
-              $('#modalAlert').modal('show'); 
-              return false;
+            if(monto_modal_por_tipopago!=0){
+              if(montoTotalItems!=monto_modal_por_area){
+                var mensaje="<p>Por favor verifique los montos de la distribución de pocentajes en Areas...</p>";
+                $('#msgError').html(mensaje);
+                $('#modalAlert').modal('show'); 
+                return false;
+              }
             }
           }
         }

@@ -43,9 +43,6 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion){
 			$concepto_contabilizacion.=$descripcion_alterna." / ".$razon_social."<br>\n";
 			$concepto_contabilizacion.="Cantidad: ".$cantidad." * ".$precio_natural." = ".$precio."<br>\n";
 		}
-
-		
-
 		$codComprobante=obtenerCodigoComprobante();
 		
 		$cod_contra_cuenta=obtenerValorConfiguracion(28);
@@ -114,7 +111,7 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion){
 	            $flagSuccessDet=$stmtInsertDet->execute();
 	            $ordenDetalle++;
 			}
-
+			return $codComprobante;
 
 			// header('Location: ../comprobantes/imp.php?comp='.$codComprobante.'&mon=1');
 		}

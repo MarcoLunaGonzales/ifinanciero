@@ -5618,6 +5618,9 @@ function obtenerCuentaPasivaSolicitudesRecursos($cuenta){
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       $valor=$row['cod_cuentapasivo'];
    }
+   if($valor==0){
+    $valor=obtenerValorConfiguracion(36);
+   }
    return($valor);
 }
 function obtenerNumeroFacturaSolicitudRecursos($codigo){
@@ -5909,12 +5912,12 @@ where estado=1";
    return $stmt;
 }
 
-function obtenerDistribucionCentroCostosAreaActivo(){
+function obtenerDistribucionCentroCostosAreaActivo($unidad){
    $dbh = new Conexion();
    $sql="";
    $sql="SELECT dd.*,u.nombre FROM distribucion_gastosarea_detalle dd join distribucion_gastosarea d on d.codigo=dd.cod_distribucionarea 
 join areas u on u.codigo=dd.cod_area  
-where estado=1";
+where estado=1 and d.cod_uo=$unidad";
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
    return $stmt;
@@ -6014,5 +6017,48 @@ function montoCuentaRangoFechas($unidadArray, $unidadCostoArray, $areaCostoArray
   $variableMontos=array($debeX,$haberX);
   return($variableMontos); 
 }
-
+function verificarListaDistribucionGastoSolicitudRecurso($codigoSolicitud){
+  $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT * FROM distribucion_gastos_solicitud_recursos where cod_solicitudrecurso=$codigoSolicitud");
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor++;
+   }
+   return($valor);
+}
+function verificarHayAmbasDistribucionesSolicitudRecurso($codigoSolicitud){
+  $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT DISTINCT tipo_distribucion FROM distribucion_gastos_solicitud_recursos where cod_solicitudrecurso=$codigoSolicitud");
+   $stmt->execute();
+   $valor=0;$val2=0;$distribucion=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['tipo_distribucion'];
+      $val2++;
+   }
+   switch ($val2) {
+     case 1:
+     if($valor==1){
+      $distribucion=1;
+     }else{
+      $distribucion=2;
+     }
+     break;
+     case 2:
+       $distribucion=3;
+     break;
+     default:
+       $distribucion=0;
+     break;
+   }
+   return($distribucion);
+}
+function obtenerDistribucionGastoSolicitudRecurso($codigo,$tipo,$monto){
+   $dbh = new Conexion();
+   $sql="";
+   $sql="SELECT codigo,oficina_area,porcentaje,(porcentaje/100)*$monto as monto_porcentaje,cod_solicitudrecurso from distribucion_gastos_solicitud_recursos where cod_solicitudrecurso=$codigo and tipo_distribucion=$tipo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+}
 ?>

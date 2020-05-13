@@ -94,14 +94,14 @@ while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
     $datosServicio=obtenerServiciosTipoObjetoNombre($codObjeto)." - ".obtenerServiciosClaServicioTipoNombre($IdTipo);
 
 
-    $glosa="SOL:".$numeroSol." ".$nombreCliente." F/".$facturaCabecera." - ".obtenerProveedorSolicitudRecursos($codigo)." ".$datosServicio;
+    $glosa="Beneficiario: ".obtenerProveedorSolicitudRecursos($codigo)." ".$datosServicio."  F/".$facturaCabecera." ".$nombreCliente." SR ".$numeroSol;
     $userSolicitud=obtenerPersonalSolicitanteRecursos($codigo);
     $unidadSol=$cod_unidadX;
     $areaSol=$cod_areaX;
 
     $sqlInsert="INSERT INTO comprobantes (codigo, cod_empresa, cod_unidadorganizacional, cod_gestion, cod_moneda, cod_estadocomprobante, cod_tipocomprobante, fecha, numero, glosa, created_at, created_by, modified_at, modified_by) 
     VALUES ('$codComprobante', '1', '$cod_unidadX', '$codGestion', '1', '1', '$tipoComprobante', '$fechaHoraActual', '$nroCorrelativo', '$glosa', '$fechaHoraActual', '$userSolicitud', '$fechaHoraActual', '$userSolicitud')";
-    echo $sqlInsert;
+    //echo $sqlInsert;
     $stmtInsert = $dbh->prepare($sqlInsert);
     $flagSuccessComprobante=$stmtInsert->execute();
 
@@ -109,7 +109,7 @@ while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
     $stmtUpdateSolicitudRecurso = $dbh->prepare($sqlUpdateSolicitud);
     $stmtUpdateSolicitudRecurso->execute();
     
-    $glosa="SOL:".$numeroSol." ".$nombreCliente;
+    $glosa=$nombreCliente."SR ".$numeroSol;
 
     //insertar en detalle comprobante
     $nuevosDetalles=obtenerDetalleSolicitudParaComprobante($codigo); 
@@ -151,16 +151,21 @@ while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
         /*if($facturaNueva==){
           $detalleFac="F/";
         }*/
-        $glosaDetalle=$glosa." F/".obtenerNumeroFacturaSolicitudRecursoDetalle($rowNuevo['codigo'])." - ".nameProveedor($rowNuevo['cod_proveedor'])." ".str_replace("-", "",$rowNuevo['glosa'])." - ".$datosServicio;
+        $glosaDetalle="Beneficiario: ".nameProveedor($rowNuevo['cod_proveedor'])." ".str_replace("-", "",$rowNuevo['glosa'])." F/".obtenerNumeroFacturaSolicitudRecursoDetalle($rowNuevo['codigo'])." - ".$datosServicio." ".$glosa;
         $codSolicitudDetalle=$rowNuevo['codigo'];
         if($rowNuevo['cod_confretencion']==0){
-          //detalle comprobante SIN RETENCION //////////////////////////////////////////////////////////////7
-          $sumaDevengado=$debe;
-          $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
-        $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) 
-        VALUES ('$codComprobanteDetalle','$codComprobante', '$cuenta', '$cuentaAuxiliar', '$unidadDetalle', '$area', '$debe', '$haber', '$glosaDetalle', '$i')";
-        $stmtDetalle = $dbh->prepare($sqlDetalle);
-        $flagSuccessDetalle=$stmtDetalle->execute();  
+          if(verificarListaDistribucionGastoSolicitudRecurso($codigo)==0){
+            //detalle comprobante SIN RETENCION ///////////////////////////////////////////////////////////////
+            $sumaDevengado=$debe;
+            $codComprobanteDetalle=obtenerCodigoComprobanteDetalle(); 
+            $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) 
+            VALUES ('$codComprobanteDetalle','$codComprobante', '$cuenta', '$cuentaAuxiliar', '$unidadDetalle', '$area', '$debe', '$haber', '$glosaDetalle', '$i')";
+            $stmtDetalle = $dbh->prepare($sqlDetalle);
+            $flagSuccessDetalle=$stmtDetalle->execute();  
+          }else{
+            //distribuir gastos
+             include "distribucionComprobanteDevengado.php";
+          }
         }else{
             // SI TIENE RETENCION **********************************************************************************
 
@@ -238,12 +243,16 @@ while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
               $sumaDevengado=$importeOriginal; 
               $debe=number_format($debe, 2, '.', ''); 
             }
-           //detalle comprobante CON RETENCION //////////////////////////////////////////////////////////////7
-           $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
-           $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) 
-           VALUES ('$codComprobanteDetalle','$codComprobante', '$cuenta', '$cuentaAuxiliar', '$unidadDetalle', '$area', '$debe', '$haber', '$glosaDetalle', '$i')";
-           $stmtDetalle = $dbh->prepare($sqlDetalle);
-           $flagSuccessDetalle=$stmtDetalle->execute();
+           if(verificarListaDistribucionGastoSolicitudRecurso($codigo)==0){
+             //detalle comprobante CON RETENCION //////////////////////////////////////////////////////////////7
+              $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
+              $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) 
+              VALUES ('$codComprobanteDetalle','$codComprobante', '$cuenta', '$cuentaAuxiliar', '$unidadDetalle', '$area', '$debe', '$haber', '$glosaDetalle', '$i')";
+              $stmtDetalle = $dbh->prepare($sqlDetalle);
+              $flagSuccessDetalle=$stmtDetalle->execute();
+           }else{
+              include "distribucionComprobanteDevengado.php";
+           }           
 
            $totalRetencion=0;  
             //if($totalRetencion!=0){
@@ -294,14 +303,14 @@ while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
 
             $debeProv=0;
             $haberProv=$sumaDevengado;
-            $glosaDetalleProv=$glosa." F/".obtenerNumeroFacturaSolicitudRecursoDetalle($rowNuevo['codigo'])." - ".nameProveedor($rowNuevo['cod_proveedor'])." ".str_replace("-", "",$rowNuevo['glosa'])." - ".$datosServicio;
+            $glosaDetalleProv="Beneficiario: ".nameProveedor($rowNuevo['cod_proveedor'])." ".str_replace("-", "",$rowNuevo['glosa'])." F/".obtenerNumeroFacturaSolicitudRecursoDetalle($rowNuevo['codigo'])." - ".$datosServicio." ".$glosa;
         
             $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
             $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) 
             VALUES ('$codComprobanteDetalle','$codComprobante', '$cuentaProv', '$cuentaAuxiliarProv', '$unidadDetalleProv', '$areaProv', '$debeProv', '$haberProv', '$glosaDetalleProv', '$i')";
             $stmtDetalle = $dbh->prepare($sqlDetalle);
             $flagSuccessDetalle=$stmtDetalle->execute();
-
+            print_r($sqlDetalle); 
             $codProveedorEstado=$codProveedor;
               //estado de cuentas devengado
               $codEstadoCuenta=obtenerCodigoEstadosCuenta();
@@ -309,13 +318,13 @@ while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
               VALUES ('$codEstadoCuenta','$codComprobanteDetalle', '0', '$haberProv', '$codProveedorEstado', '$fechaHoraActual','0','$cuentaAuxiliarProv')";
               $stmtDetalleEstadoCuenta = $dbh->prepare($sqlDetalleEstadoCuenta);
               $stmtDetalleEstadoCuenta->execute();             
-             echo $sqlDetalleEstadoCuenta."";
+             //echo $sqlDetalleEstadoCuenta."";
               //actualizamos con el codigo de comprobante detalle la solicitud recursos detalle 
               $sqlUpdateSolicitudRecursoDetalle="UPDATE solicitud_recursosdetalle SET cod_proveedor=$codProveedorEstado,cod_estadocuenta=$codEstadoCuenta where codigo=$codSolicitudDetalle";
               $stmtUpdateSolicitudRecursoDetalle = $dbh->prepare($sqlUpdateSolicitudRecursoDetalle);
               $stmtUpdateSolicitudRecursoDetalle->execute();
 
-             echo $sqlUpdateSolicitudRecursoDetalle."";
+             //echo $sqlUpdateSolicitudRecursoDetalle."";
 
     }  
 

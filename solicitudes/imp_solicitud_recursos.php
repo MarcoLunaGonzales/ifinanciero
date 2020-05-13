@@ -215,7 +215,7 @@ $tituloImporte="";
             <td class="s3 text-center"><?=number_format($porcentSegPres, 0, '.', '')?></td>
             <td class="s3 text-center" width="8%"><?=$nombreArea?></td>
             <td class="s3 text-center" width="8%"><?=$numeroFac?></td>
-            <td class="s3 text-left" width="40%"><?="".$nombreCliente." F/".$numeroFac." - ".$proveedorX." ".str_replace("-", "", $detalleX)." - ".$datosServicio?></td>
+            <td class="s3 text-left" width="40%"><?="Beneficiario: ".$proveedorX." ".str_replace("-", "", $detalleX)." F/".$numeroFac." - ".$datosServicio." ".$nombreCliente?></td>
             <td class="s3 text-right"><?=number_format($montoImporte, 2, '.', ',')?></td>
             <td class="s3 text-right"><?=number_format($montoImporteRes, 2, '.', ',')?></td>
             <td class="s3 text-right"><?=$tituloImporte?></td>

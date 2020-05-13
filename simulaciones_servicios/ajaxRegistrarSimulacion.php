@@ -135,7 +135,7 @@ if(isset($_GET['nombre'])){
               }else{   
                 for ($yyyy=$inicioAnio; $yyyy<=$anios; $yyyy++) {  
                  $sqlDetalleAtributosDias="INSERT INTO simulaciones_servicios_atributosdias (cod_simulacionservicioatributo, dias, cod_anio) 
-                 VALUES ('$codSimulacionServicioAtributo', '$dias', '$yyyy')";
+                 VALUES ('$codSimulacionServicioAtributo', '0', '$yyyy')";
                  $stmtDetalleAtributosDias = $dbh->prepare($sqlDetalleAtributosDias);
                  $stmtDetalleAtributosDias->execute();     
                 }

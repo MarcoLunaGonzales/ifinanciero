@@ -11764,6 +11764,22 @@ function botonBuscarEstudiantesCapacitacion(){
   }
   ajax.send(null)
 }
+function botonBuscarEmpresasCapacitacion(){
+  var valor_cod_empresa=$("#cod_empresa").val();    
+  var valor_glosa=$("#glosa").val();   
+
+  // alert(valor_nombre_cliente+"-"+valor_paterno_cliente+"-"+valor_materno_cliente);
+  ajax=nuevoAjax();
+  ajax.open('GET', 'simulaciones_costos/ajax_busqueda_empresas.php?cod_empresa='+valor_cod_empresa+'&glosa='+valor_glosa,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      var contenedor=$("#contenedor_items_empresas");
+      contenedor.html(ajax.responseText);
+      $("#modalBuscador").modal("hide");
+    }
+  }
+  ajax.send(null)
+}
 
 
 
