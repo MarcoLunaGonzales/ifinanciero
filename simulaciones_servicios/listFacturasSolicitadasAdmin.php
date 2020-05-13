@@ -155,7 +155,7 @@ $item_1=2709;
                             // --------
                             $responsable=namePersonal($cod_personal);//nombre del personal
                             $nombre_area=trim(abrevArea($cod_area),'-');//nombre del area
-                            $nombre_uo=nameUnidad($cod_unidadorganizacional);//nombre de la oficina
+                            $nombre_uo=trim(abrevUnidad($cod_unidadorganizacional),' - ');//nombre de la oficina
                             $nombre_contacto=ucfirst(nameContacto($persona_contacto));//nombre del personal
 
                             //los registros de la factura
@@ -198,7 +198,7 @@ $item_1=2709;
 
                             ?>
                           <tr>
-                            <td align="center"></td>
+                            <!-- <td align="center"></td> -->
                             <td class="small"><?=$nombre_uo;?> - <?=$nombre_area;?></td>
                             <td class="text-right small"><?=$nro_correlativo;?></td>
                             <td class="text-left small"><?=$responsable?></td>
