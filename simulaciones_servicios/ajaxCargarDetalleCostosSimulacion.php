@@ -32,8 +32,11 @@ if(isset($_GET["simulacion"])){
       for ($an=$inicioAnio; $an<=$cod_anio; $an++) { 
         $active="";
         $tituloItem="Año ".$an;
-        if(($an==0||$an==1)&&$codArea!=39){
-              $tituloItem="Año 1 (ETAPA ".($an+1).")";
+        if($codArea!=39){
+          $tituloItem="Año ".$an."(SEGUIMIENTO ".($an-1).")";
+           if($an==0||$an==1){
+           $tituloItem="Año 1 (ETAPA ".($an+1).")"; 
+          }
         }
 
         if($an==1){
@@ -54,8 +57,11 @@ if(isset($_GET["simulacion"])){
  for ($yyyy=$inicioAnio; $yyyy <=$cod_anio; $yyyy++) { 
     $active="";
     $tituloItem="AÑO ".$yyyy;
-    if(($yyyy==0||$yyyy==1)&&$codArea!=39){
-              $tituloItem="AÑO 1 (ETAPA ".($yyyy+1).")";
+    if($codArea!=39){
+      $tituloItem="Año ".$yyyy."(SEGUIMIENTO ".($yyyy-1).")";
+       if($yyyy==0||$yyyy==1){
+       $tituloItem="Año 1 (ETAPA ".($yyyy+1).")"; 
+      }
     }
     if($yyyy==1){
       $active="active";
@@ -259,17 +265,27 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 }
     if($tipoCosto==1){
            $html.='<tr class="bg-plomo">'.
-                      '<td class="font-weight-bold text-left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Total </td>'.
+                      '<td class="font-weight-bold text-left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Total Variables</td>'.
                       '<td class="text-right text-muted font-weight-bold">'.number_format($montoTotales, 2, '.', ',').'</td>'.
                       '<td class="text-right text-muted font-weight-bold">'.number_format($montoTotales/$usd, 2, '.', ',').'</td>';
-                $html.='</tr>';
+                $html.='</tr>';     
          }else{
            $html.='<tr class="bg-plomo">'.
-                      '<td class="font-weight-bold text-left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Total </td>'.
+                      '<td class="font-weight-bold text-left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Total Variables</td>'.
                       '<td class="text-right text-muted font-weight-bold">'.number_format($montoTotales2, 2, '.', ',').'</td>'.
                       '<td class="text-right text-muted font-weight-bold">'.number_format($montoTotales2/$usd, 2, '.', ',').'</td>'.
-                      '<td class="text-right text-muted font-weight-bold">'.number_format($montoTotales2Alumno, 2, '.', ',').'</td><td class="text-right text-muted font-weight-bold">'.number_format($montoTotales2Alumno/$usd, 2, '.', ',').'</td><td class="text-right text-muted font-weight-bold"></td>';
+                      '<td class="text-right text-muted font-weight-bold">'.number_format($montoTotales2Alumno, 2, '.', ',').'</td>'.
+                      '<td class="text-right text-muted font-weight-bold">'.number_format($montoTotales2Alumno/$usd, 2, '.', ',').'</td>'.
+                      '<td class="text-right text-muted font-weight-bold"></td>';
                 $html.='</tr>';
+           $html.='<tr class="bg-plomo">'.
+                      '<td class="font-weight-bold text-left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Total Honorarios</td>'.
+                      '<td class="text-right text-muted font-weight-bold"></td>'.
+                      '<td class="text-right text-muted font-weight-bold"></td>'.
+                      '<td class="text-right text-muted font-weight-bold">'.number_format(costoVariablesHonorariosSimulacionServicio($codigo,$yyyy), 2, '.', ',').'</td>'.
+                      '<td class="text-right text-muted font-weight-bold">'.number_format(costoVariablesHonorariosSimulacionServicio($codigo,$yyyy)/$usd, 2, '.', ',').'</td>'.
+                      '<td class="text-right text-muted font-weight-bold"></td>';
+                $html.='</tr>';     
          } 
 
 echo $html;

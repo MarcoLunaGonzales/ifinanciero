@@ -6056,4 +6056,14 @@ function obtenerDistribucionGastoSolicitudRecurso($codigo,$tipo,$monto){
    $stmt->execute();
    return $stmt;
 }
+function costoVariablesHonorariosSimulacionServicio($sim,$anio){
+  $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT sum(monto) as monto FROM simulaciones_servicios_auditores where cod_simulacionservicio=$sim and cod_anio=$anio and habilitado=1 and cantidad=1");
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['monto'];
+   }
+   return($valor);
+}
 ?>
