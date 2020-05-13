@@ -229,8 +229,7 @@
 			require_once('simulaciones_servicios/anular_SoliciutdFacturacion.php');
 		}
 		// Solicitud facturacion Capacitacion
-		if ($_GET['opcion']=='solicitud_facturacion_costos') {
-			$cod=$_GET['cod'];
+		if ($_GET['opcion']=='solicitud_facturacion_costos') {			
 			require_once('simulaciones_costos/solicitud_facturacion_costos.php');
 		}
 		if ($_GET['opcion']=='registro_solicitud_facturacion') {
@@ -240,8 +239,18 @@
 			$IdCurso=$_GET['IdCurso'];	
 			require_once('simulaciones_costos/registro_solicitud_facturacion.php');
 		}
+		if($_GET['opcion']=='registro_solicitud_facturacion_empresas') {
+			$codigo=$_GET['codigo'];	
+			$cod_simulacion=$_GET['cod_simulacion'];	
+			$cod_facturacion=$_GET['cod_facturacion'];			
+			$IdCurso=$_GET['IdCurso'];	
+			require_once('simulaciones_costos/registro_solicitud_facturacion_empresas.php');
+		}
 		if ($_GET['opcion']=='save_solicitud_facturacion_costos') {
 			require_once('simulaciones_costos/save_solicitud_facturacion_costos.php');
+		}
+		if ($_GET['opcion']=='save_solicitud_facturacion_costos_empresa') {
+			require_once('simulaciones_costos/save_solicitud_facturacion_costos_empresa.php');
 		}
 		if ($_GET['opcion']=='save_solicitud_facturacion_manual') {
 			require_once('solicitud_facturacion_manual/save_solicitud_facturacion.php');
@@ -250,6 +259,11 @@
 		if ($_GET['opcion']=='listFacturasServicios_costos') {
 			require_once('simulaciones_costos/listFacturasSolicitadas.php');
 		}
+		//solicitud facturacion costos empresas
+		if ($_GET['opcion']=='solicitud_facturacion_costos_empresas') {			
+			require_once('simulaciones_costos/solicitud_facturacion_costos_empresas.php');
+		}
+
 		if ($_GET['opcion']=='register_solicitudfacturacion_manual') {
 			require_once('solicitud_facturacion_manual/register_solicitud_facturacion_manual.php');
 		}

@@ -201,7 +201,7 @@ $stmtCliente->bindColumn('nombre', $nombre_cli);
                           <tr>
                             <td align="center"></td>
                             <td><?=$nombre_uo;?> - <?=$nombre_area;?></td>
-                            <td></td>
+                            
                             <td class="text-right"><?=$nro_correlativo;?></td>
                             <td><?=$responsable;?></td>
                             <td><?=$codigo_alterno?></td>

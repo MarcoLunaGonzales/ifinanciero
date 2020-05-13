@@ -67,9 +67,8 @@ if(isset($_GET['q'])){
                       <table class="table" id="tablePaginator">
                         <thead>
                           <tr>
-                            <th class="text-center"></th>                          
+                            <!-- <th class="text-center"></th>  -->                         
                             <th>Of - Area</th>
-                            
                             <th>#Sol.</th>
                             <th>Responsable</th>
                             <th>Codigo<br>Servicio</th>                            
@@ -194,7 +193,7 @@ if(isset($_GET['q'])){
 
                             ?>
                           <tr>
-                            <td align="center"><?=$index;?></td>
+                            <!-- <td align="center"><?=$index;?></td> -->
                             <td><?=$nombre_uo;?> - <?=$nombre_area;?></td>
                             <td class="text-right"><?=$nro_correlativo;?></td>
                             <td><?=$responsable;?></td>

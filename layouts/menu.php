@@ -741,6 +741,18 @@ if($menuModulo==0){
                     <span class="sidebar-normal"> Gesti&oacute;n de Propuestas SEC</span>
                   </a>
                 </li> 
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=solicitud_facturacion_costos">
+                    <span class="sidebar-mini"> SF </span>
+                    <span class="sidebar-normal">Solicitudes de Facturación Estudiantes</span>
+                  </a>
+                </li> 
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=solicitud_facturacion_costos_empresas">
+                    <span class="sidebar-mini"> SF </span>
+                    <span class="sidebar-normal">Solicitudes de Facturación Empresas</span>
+                  </a>
+                </li> 
               </ul>
             </div>
           </li>

@@ -99,9 +99,9 @@ $stmt->bindColumn('estado', $estado);
                                  </a> 
                               </div>
                             </div>
-                            <a class="btn btn-warning" title="Solicitud de Facturación" href='<?=$urlSolicitudfactura;?>&cod=<?=$codigo;?>'>
+                            <!-- <a class="btn btn-warning" title="Solicitud de Facturación" href='<?=$urlSolicitudfactura;?>&cod=<?=$codigo;?>'>
                                <i class="material-icons" >receipt</i>                              
-                             </a>                           
+                             </a>   -->                         
                             <?php    
                               }else{
                               ?>

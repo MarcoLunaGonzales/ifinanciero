@@ -5,7 +5,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h3 class="modal-title" id="myModalLabel"><b>Porcentaje de distribución del ingreso por tipo de pago</b></h3>
+        <h3 class="modal-title" id="myModalLabel"><b>Porcentaje de Distribución del Ingreso por Tipo de Pago</b></h3>
       </div>
       <div class="modal-body">
         <!-- <input type="hidden" name="cod_tipopago" id="cod_tipopago" value="0">    -->
@@ -35,7 +35,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h3 class="modal-title" id="myModalLabel"><b>Porcentaje de distribución del ingreso por área</b></h3>
+        <h3 class="modal-title" id="myModalLabel"><b>Porcentaje de Distribución del Ingreso por Area</b></h3>
       </div>
       <div class="modal-body">
         <div class="row" id="div_cabecera_hidden_areas">

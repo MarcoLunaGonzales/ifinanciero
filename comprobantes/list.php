@@ -2,7 +2,9 @@
 
 require_once 'conexion.php';
 require_once 'configModule.php';
+require_once 'functions.php';
 require_once 'styles.php';
+
 $globalAdmin=$_SESSION["globalAdmin"];
 $globalUnidad=$_SESSION['globalUnidad'];
 $globalGestion=$_SESSION['globalNombreGestion'];
@@ -75,7 +77,7 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                   <h4 class="card-title"><?=$moduleNamePlural?></h4>
                   <h4 align="right">
                     <?php
-                      $stmtTipoComprobante_x = $dbh->prepare("SELECT codigo,abreviatura,nombre from tipos_comprobante where cod_estadoreferencial=1 order by abreviatura asc");
+                      $stmtTipoComprobante_x = $dbh->prepare("SELECT codigo,abreviatura,nombre from tipos_comprobante where cod_estadoreferencial=1 order by codigo asc");
                       $stmtTipoComprobante_x->execute();
                       $stmtTipoComprobante_x->bindColumn('codigo', $cod_tipo_comprobante_x);
                       $stmtTipoComprobante_x->bindColumn('abreviatura', $abreviatura_x);
@@ -90,28 +92,13 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                   </h4>
                 </div>      
                 <div class="card-body">
-                  
-                  <!-- //busqueda de comprobantes por cuenta -->
-                  <!-- <div class="col-sm-4 float-right">
-                      <div class="input-group no-border">
-                        <input type="text" value="" id="buscar_comprobantes" class="form-control" placeholder="Buscar..." onChange="buscarComprobantes('registrado')" OnKeyUp="buscarComprobantes('registrado')">
-                        <a href="#" onclick="buscarComprobantes('registrado')" class="btn btn-white btn-round btn-just-icon">
-                          <i class="material-icons">search</i>
-                          <div class="ripple-container"></div>
-                        </a>
-                      </div>
-                  </div> -->             
-                  
-
-
                   <div class="" id="data_comprobantes">
                     <table id="tablePaginator" class="table table-condensed">
                       <thead>
                         <tr>
                           <th class="text-center">#</th>                          
                           <th class="text-center small">Oficina</th>
-                          <th class="text-center small">Tipo</th>
-                          <th class="text-center small">Corre.</th>
+                          <th class="text-center small">Tipo/Número</th>
                           <th class="text-center small">Fecha</th>
                           <th class="text-left small">Glosa</th>
                           <th class="text-center small">Estado</th>
@@ -122,6 +109,7 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                       <?php
 						            $index=1;
                       	while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+                          $nombreComprobante=nombreComprobante($codigo);
                           $existeCuenta=0;
                           if($codTipoC==3){
                              $existeCuenta=obtenerEstadoCuentaSaldoComprobante($codigo);
@@ -144,9 +132,8 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                           
                           <td align="text-center small"><?=$index;?></td>                          
                           <td class="text-center small"><?=$nombreUnidad;?></td>
-                          <td class="text-center small"><?=$nombreTipoComprobante;?>-<?=$mes;?></td>
-                          <td class="text-center small"><?=$nroCorrelativo;?></td>
-                          <td class="text-center small"><?=strftime('%Y/%m/%d',strtotime($fechaComprobante));?></td>
+                          <td class="text-center small"><?=$nombreComprobante;?></td>
+                          <td class="text-center small"><?=strftime('%d/%m/%Y',strtotime($fechaComprobante));?></td>
                           
                           <!--td><?=$nombreMoneda;?></td-->
                           <td class="text-left small"><?=$glosaComprobante;?></td>

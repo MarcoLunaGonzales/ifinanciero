@@ -5983,11 +5983,16 @@ function nombreComprobante($codigo){
   $stmt->execute();
   $nombreComprobante="";
   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $codTipoComprobanteX=$row['cod_tipocomprobante'];
     $tipoComprobanteX=$row['tipoComprobante'];
     $mesComprobanteX=str_pad($row['mes'], 2, "0", STR_PAD_LEFT);
-    $numeroX=str_pad($row['numero'], 4, "0", STR_PAD_LEFT);;
+    $numeroX=str_pad($row['numero'], 5, "0", STR_PAD_LEFT);;
 
-    $nombreComprobante=$tipoComprobanteX.$mesComprobanteX."-".$numeroX;
+    if($codTipoComprobanteX<>4){
+      $nombreComprobante=$tipoComprobanteX.$mesComprobanteX."-".$numeroX;
+    }else{
+      $nombreComprobante=$tipoComprobanteX."-".$numeroX;
+    }
   }
   return($nombreComprobante);  
 }
