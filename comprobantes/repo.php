@@ -149,9 +149,9 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                   </button>
                 </div>
                 <div class="card-body">
-                  <input type="text" name="tipo" id="tipo" value="0">
-                    <input type="text" name="cod_comprobantedetalle" id="cod_comprobantedetalle" value="0">
-                    <input type="text" name="cod_estadocuenta" id="cod_estadocuenta" value="0">
+                  <input type="hidden" name="tipo" id="tipo" value="0">
+                    <input type="hidden" name="cod_comprobantedetalle" id="cod_comprobantedetalle" value="0">
+                    <input type="hidden" name="cod_estadocuenta" id="cod_estadocuenta" value="0">
                       <div class="row">
                           <label class="col-sm-2 col-form-label">CODIGO ANTIGUO</label>
                            <div class="col-sm-4">                     
