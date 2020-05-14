@@ -290,7 +290,7 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
             <select  name="OficinaBusqueda[]" id="OficinaBusqueda" class="selectpicker form-control form-control-sm" data-style="btn btn-info select-with-transition" data-show-subtext="true" data-live-search="true" data-actions-box="true" multiple> 
               <option value="0"></option>
               <?php while ($rowUO = $stmtUO->fetch(PDO::FETCH_BOUND)) { ?>
-                <option value="<?=$codigo_uo;?>"> <?=$nombreUnidad_x;?></option>
+                <option <?=($globalUnidad==$codigo_uo)?"selected":"";?> value="<?=$codigo_uo;?>"> <?=$nombreUnidad_x;?></option>
               <?php }?>
             </select>
           </div>
@@ -310,12 +310,22 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
             
           </div>              
         </div> 
-        <div class="row">
-          <label class="col-sm-3 col-form-label text-center">Glosa</label> 
-          <div class="form-group col-sm-8">
+        <div class="row">          
+          <label class="col-sm-2 col-form-label text-center">Núm Compr</label>
+          <label class="col-sm-3 col-form-label text-center">Núm Cuenta</label>
+          <label class="col-sm-7 col-form-label text-center">Glosa</label>
+        </div> 
+        <div class="row">          
+          <div class="form-group col-sm-2">
+            <input class="form-control input-sm" type="number" name="nro_comprobante" id="nro_comprobante"  >
+          </div>           
+          <div class="form-group col-sm-3">
+            <input class="form-control input-sm" type="number" name="nro_cuenta" id="nro_cuenta"  >
+          </div>           
+          <div class="form-group col-sm-7">
             <input class="form-control input-sm" type="text" name="glosaBusqueda" id="glosaBusqueda"  >
           </div>           
-        </div> 
+        </div>  
 
       </div>
 

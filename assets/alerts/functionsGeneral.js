@@ -1246,10 +1246,12 @@ function botonBuscarComprobante(){
   var valor_fi=$("#fechaBusquedaInicio").val();
   var valor_ff=$("#fechaBusquedaFin").val();
   var valor_glosa=$("#glosaBusqueda").val();
+  var valor_nro_compr=$("#nro_comprobante").val();
+  var valor_nro_cuenta=$("#nro_cuenta").val();
   
   
   ajax=nuevoAjax();
-  ajax.open('GET', 'comprobantes/ajax_busquedaComprobanteUO.php?cod_uo='+valor_uo+'&tipo='+valor_tipo+'&fechaI='+valor_fi+'&fechaF='+valor_ff+'&glosa='+valor_glosa,true);
+  ajax.open('GET', 'comprobantes/ajax_busquedaComprobanteUO.php?cod_uo='+valor_uo+'&tipo='+valor_tipo+'&fechaI='+valor_fi+'&fechaF='+valor_ff+'&glosa='+valor_glosa+'&comprobante='+valor_nro_compr+'&cuenta='+valor_nro_cuenta,true);
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
       var contenedor=$("#data_comprobantes");
@@ -1265,8 +1267,10 @@ function botonBuscarComprobante2(){
   var valor_fi=$("#fechaBusquedaInicio").val();
   var valor_ff=$("#fechaBusquedaFin").val();
   var valor_glosa=$("#glosaBusqueda").val();
+  var valor_nro_compr=$("#nro_comprobante").val();
+  var valor_nro_cuenta=$("#nro_cuenta").val();
   ajax=nuevoAjax();
-  ajax.open('GET', 'comprobantes/ajax_busquedaComprobanteUO2.php?cod_uo='+valor_uo+'&tipo='+valor_tipo+'&fechaI='+valor_fi+'&fechaF='+valor_ff+'&glosa='+valor_glosa,true);
+  ajax.open('GET', 'comprobantes/ajax_busquedaComprobanteUO2.php?cod_uo='+valor_uo+'&tipo='+valor_tipo+'&fechaI='+valor_fi+'&fechaF='+valor_ff+'&glosa='+valor_glosa+'&comprobante='+valor_nro_compr+'&cuenta='+valor_nro_cuenta,true);
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
       var contenedor=$("#data_comprobantes");
