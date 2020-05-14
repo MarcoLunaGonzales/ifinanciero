@@ -6347,6 +6347,9 @@ function buscarCuentaNumero(numeros,val){
     //var n = itemCuentas[i].numero.search(/+str+/);
     if(val==1){
        var n = itemCuentas[i].numero.indexOf(numeros);
+       if(n!=0){
+        n=-1;
+       }
     }else{
       var cadenaBuscar=itemCuentas[i].nombre.toLowerCase();
        var n = cadenaBuscar.indexOf(numeros.toLowerCase());
