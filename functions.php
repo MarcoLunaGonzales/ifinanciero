@@ -5694,11 +5694,10 @@ function nameNorma($codigo){
 
 function obtenerListaClientesWS(){
   $direccion=obtenerValorConfiguracion(42);//direccion des servicio web
-  // $sIde = "ifinanciero";
-  // $sKey = "ce94a8dabdf0b112eafa27a5aa475751";
-  
-  $sIde = "monitoreo"; 
-  $sKey = "837b8d9aa8bb73d773f5ef3d160c9b17";
+  $sIde = "ifinanciero";
+  $sKey = "ce94a8dabdf0b112eafa27a5aa475751";
+  // $sIde = "monitoreo"; 
+  // $sKey = "837b8d9aa8bb73d773f5ef3d160c9b17";
 
   /*Lista de Clientes Empresa*/
   $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "lista"=>"Clientes");
