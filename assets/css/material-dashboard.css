@@ -13026,7 +13026,7 @@ select.form-control {
 }
 
 .form-group {
-  padding-bottom: 10px;
+  padding-bottom: 1px;
   position: relative;
   margin: 8px 0 0;
 }

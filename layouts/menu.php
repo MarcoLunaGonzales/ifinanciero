@@ -659,7 +659,13 @@ if($menuModulo==0){
                     <span class="sidebar-mini"> CR </span>
                     <span class="sidebar-normal"> Configuracion de Retenciones</span>
                   </a>
-                </li>                          
+                </li> 
+                <li class="nav-item ">
+                  <a class="nav-link" href="utilitarios/rptClientesGeneral.php" target="_blank">
+                    <span class="sidebar-mini"> CG </span>
+                    <span class="sidebar-normal"> Clientes Listado</span>
+                  </a>
+                </li>                         
               </ul>
             </div>
           </li>
