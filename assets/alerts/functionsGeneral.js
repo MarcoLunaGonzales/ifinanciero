@@ -6352,8 +6352,9 @@ function buscarCuentaNumero(numeros,val){
        }
     }else{
       var cadenaBuscar=itemCuentas[i].nombre.toLowerCase();
-       var n = cadenaBuscar.indexOf(numeros.toLowerCase());
+      var n = cadenaBuscar.indexOf(numeros.toLowerCase());
     }
+  var nren=n;  
   var nombreAuxiliar = $("#cuenta_auxiliar_modal").val();  
   if($("#nro_cuenta").val()==""&&$("#cuenta").val()==""&&$("#cuenta_auxiliar_modal").val()!=""){
     n=-1;
@@ -6368,7 +6369,24 @@ function buscarCuentaNumero(numeros,val){
             }
           }    
       }
-  }  
+  }else{
+   if(($("#nro_cuenta").val()!=""||$("#cuenta").val()!="")&&$("#cuenta_auxiliar_modal").val()!=""){
+    n=-1;
+      for (var j = 0; j < itemCuentasAux.length; j++) {
+          var nn=-1;
+          var cadenaBuscarAux=itemCuentasAux[j].nombre.toLowerCase();
+          nn = cadenaBuscarAux.indexOf(nombreAuxiliar.toLowerCase());
+          if(itemCuentasAux[j].codCuenta==itemCuentas[i].codigo){
+            if(nn>=0&&nren>=0){
+             n=1;
+             break;
+            }
+          }    
+      }
+    }   
+  }
+
+
     if(n>=0){
       var textoAux="<table class='table table-condensed' style='overflow-y: scroll;display: block;height:210px;'>";
       
