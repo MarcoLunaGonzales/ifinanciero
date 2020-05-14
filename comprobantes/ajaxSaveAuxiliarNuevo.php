@@ -4,7 +4,7 @@ $dbh = new Conexion();
 
 $tipo=$_GET['tipo'];
 $aux=$_GET['cod_nuevo'];
-if($tipo==1){
+if($tipo==1||$tipo==3){
   $codigo=$_GET['cod_estadocuenta']; //estados cuenta
   $sqlUpdate="UPDATE estados_cuenta SET  cod_cuentaaux='$aux' where codigo=$codigo";
 }else{

@@ -12581,19 +12581,49 @@ $(document).on('change', '.archivo', function() {
    }
 });
 
-function cambiarCuentaAuxiliarDetalle(tipo,com,cod,ant,nue){
+function cambiarCuentaAuxiliarDetalle(cuentaPadre,tipo,com,cod,ant,nue){
   $("#tipo").val(tipo);
   $("#cod_comprobantedetalle").val(com);
   $("#cod_estadocuenta").val(cod);
   $("#cod_antiguo").val(ant);
-  $("#cod_nuevo").val(nue);
-  $("#cambioCodigoAuxiliar").modal("show");
+  if(tipo==3||tipo==4){
+    $("#cod_nuevo").val("");
+    $("#cod_nuevo").removeAttr("readonly");
+    if(!($("#div_codigo_nuevo").hasClass("d-none"))){
+      $("#div_codigo_nuevo").addClass("d-none");
+      $("#div_codigo_nuevo_sel").removeClass("d-none");
+      var parametros={"cod_cuenta":cuentaPadre};
+      $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxSaveAuxiliarNuevoList.php",
+        data: parametros,
+        success:  function (resp) {
+          $("#div_codigo_nuevo_sel").html(resp); 
+          $('.selectpicker').selectpicker("refresh");            
+        }
+      }); 
+    }
+  }else{
+    if($("#div_codigo_nuevo").hasClass("d-none")){
+      $("#div_codigo_nuevo").removeClass("d-none");
+      $("#div_codigo_nuevo_sel").addClass("d-none");
+    }
+    $("#cod_nuevo").val(nue);
+    $("#cod_nuevo").attr("readonly",true);
+  }
+  $("#cambioCodigoAuxiliar").modal("show");  
 }
 function cambiarCodigoAuxiliar(){
+  if($("#tipo").val()>2){
+    var nuevo = $("#cod_nuevo_sel").val();
+  }else{
+    var nuevo = $("#cod_nuevo").val();
+  }
   var parametros={
     "tipo":$("#tipo").val(),"cod_comprobantedetalle":$("#cod_comprobantedetalle").val(),
     "cod_estadocuenta":$("#cod_estadocuenta").val(),
-    "cod_nuevo":$("#cod_nuevo").val()
+    "cod_nuevo":nuevo
    };
       $.ajax({
         type: "GET",
@@ -12615,5 +12645,5 @@ function cambiarCodigoAuxiliar(){
            $("#texto_ajax_titulo").html("Procesando Datos");   
            $("#cambioCodigoAuxiliar").modal("hide");         
         }
-      }); 
+      });
 }
