@@ -12638,7 +12638,12 @@ function cambiarCodigoAuxiliar(){
            detectarCargaAjax();
            if(resp=="1"){
             Swal.fire('Correcto!','Registro exitoso!','success');
-            window.location.href="repo.php";
+            if($("#auxiliares_det").length > 0){
+              window.location.href="repoAux.php"; 
+            }else{
+              window.location.href="repo.php";
+            }
+            
            }else{
             Swal.fire('ERROR!','No se pudo registrar!','error');
            }

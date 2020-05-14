@@ -11,7 +11,7 @@ $sql="SELECT * from cuentas_auxiliares where cod_cuenta=$codigo";
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
   $codAux=$row['codigo'];
   $nomAux=$row['nombre'];
-  ?><option value="<?=$codAux?>"><?=$nomAux?></option><?php
+  ?><option value="<?=$codAux?>"><?=$nomAux?> (<?=$codAux?>)</option><?php
 }
 ?>
 </select>

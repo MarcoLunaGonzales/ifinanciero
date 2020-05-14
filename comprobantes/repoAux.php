@@ -13,18 +13,19 @@ $dbh = new Conexion();
      <p class="text-white">Aguard&aacute; un momento por favor</p>  
   </div>
 </div>
+<input type="hidden" value="0" id="auxiliares_det">
 <?php
 $anio=2020;
 $unidad=5;
 //
-$sql="SELECT DISTINCT cod_plancuenta FROM estados_cuenta";
+$sql="SELECT DISTINCT codigo from plan_cuentas where nivel=5 and cuenta_auxiliar=1";
 $stmt = $dbh->prepare($sql);
 $stmt->execute();
 $nro_registros=0;
 $nro_errorescuentas=0;$nro_erroresMontoHaber=0;$nro_erroresMontoDebe=0;$nro_erroresauxiliares=0;
 $nro_erroresauxPadre=0;$nro_erroresauxiliaresPadre=0;
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-  $codCuenta=$row['cod_plancuenta'];
+  $codCuenta=$row['codigo'];
   $nombreCuenta=nameCuenta($codCuenta);
   ?>
   <center><h4>Codigo:<b><?=$codCuenta?></b>, Cuenta: <b><?=$nombreCuenta?></b></h4></center>
@@ -36,40 +37,35 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             <td>MONTO</td>
             <td>DEBE</td>
             <td>HABER</td>
-            <td>AUXILIAR CE/CC</td>
-            <td>AUX ESTADO</td>
+            <td>COD. AUX</td>
             <td>AUX COMP.</td>
             <td>GLOSA</td>
-            <td>NOMBRE AUX ESTADO</td>
             <td>NOMBRE AUX COMP.</td>
             <td>NUEVO COD AUX</td>  
           </tr>
       <?php 
-        $sql2="SELECT e.*,d.haber,d.debe,d.glosa as glosa_comp,d.cod_cuentaauxiliar from estados_cuenta e ,(select cd.* from comprobantes c, comprobantes_detalle cd where c.codigo=cd.cod_comprobante and cd.cod_cuenta=$codCuenta and c.fecha<='$anio-01-01' and c.cod_gestion=$anio) d where e.cod_comprobantedetalle=d.codigo order by d.codigo";
+        $sql2="(SELECT cd.* from comprobantes c, comprobantes_detalle cd where c.codigo=cd.cod_comprobante and cd.cod_cuenta=$codCuenta and c.fecha<='$anio-01-01' and c.cod_gestion=$anio)";
         $stmt2 = $dbh->prepare($sql2);
         $stmt2->execute();
         while ($row2 = $stmt2->fetch(PDO::FETCH_ASSOC)) {
           $nro_registros++;
-          $codCompDet=$row2['cod_comprobantedetalle'];
+          $codCompDet=$row2['codigo'];
           $codCompEst=$row2['codigo'];
-          $selCompDet=$row2['cod_comprobantedetalle'];
+          $selCompDet=$row2['codigo'];
           $selCompEst=$row2['codigo'];
+
           $montoEstado=$row2['monto'];
           $debe=$row2['debe'];
           $haber=$row2['haber'];
-          $codPlan=$row2['cod_plancuenta'];
-          $codCuentaAux=$row2['cod_cuentaaux'];
+          $codPlan=$row2['cod_cuenta'];
+          $codCuentaAux=$row2['cod_cuentaauxiliar'];
           $codCuentaAuxiliar=$row2['cod_cuentaauxiliar'];
-          $selCuentaAux=$row2['cod_cuentaaux'];
+          $selCuentaAux=$row2['cod_cuentaauxiliar'];
           $selCuentaAuxiliar=$row2['cod_cuentaauxiliar'];
-          $glosa=$row2['glosa_auxiliar'];
+          $glosa=$row2['glosa'];
           $nomCuentaAux=nameCuentaAux($codCuentaAux);
           $nomCuentaAuxiliar=nameCuentaAux($codCuentaAuxiliar);
           
-          $estiloNomCuentaAux="";
-          if (strpos(strtolower(eliminar_acentos($glosa)), strtolower(eliminar_acentos($nomCuentaAux))) !== false) {
-              $estiloNomCuentaAux="bg-warning";
-          }
           $estiloNomCuentaAuxiliar="";
           if (strpos(strtolower(eliminar_acentos($glosa)), strtolower(eliminar_acentos($nomCuentaAuxiliar))) !== false) {
               $estiloNomCuentaAuxiliar="bg-warning";
@@ -98,21 +94,11 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
              }
            }
 
-           
-          
-          $estiloAuxPadre="";
-          if($codCuenta!=obtieneCuentaPadreAux($codCuentaAux)){
-           $estiloAuxPadre="text-danger";
-           $codCuentaAuxPadre='PADRE: '.obtieneCuentaPadreAux($codCuentaAux).' <a href="#" onclick="cambiarCuentaAuxiliarDetalle('.$codCuenta.',1,0,'.$codCompEst.','.$codCuentaAux.','.$codCuentaAuxiliar.');return false;" class="btn btn-sm btn-danger">CA:'.$codCuentaAux.' -> '.$codCuentaAuxiliar.'</a>';
-           $nro_erroresauxPadre++;
-          }else{
-            $codCuentaAuxPadre='PADRE: '.$codCuenta.' <a href="#" onclick="" class="btn btn-sm btn-success">CORRECTO:'.$codCuentaAux.'</a>';
-          }
           
           $estiloAuxiliarPadre="";
           if($codCuenta!=obtieneCuentaPadreAux($codCuentaAuxiliar)){
            $estiloAuxiliarPadre="text-danger";
-           $codCuentaAuxiliarPadre='PADRE: '.obtieneCuentaPadreAux($codCuentaAuxiliar).' <a href="#" onclick="cambiarCuentaAuxiliarDetalle('.$codCuenta.',2,'.$codCompDet.',0,'.$codCuentaAuxiliar.','.$codCuentaAux.');return false;" class="btn btn-sm btn-danger">CA:'.$codCuentaAuxiliar.' -> '.$codCuentaAux.'</a>';
+           $codCuentaAuxiliarPadre='PADRE: '.obtieneCuentaPadreAux($codCuentaAuxiliar).' <a href="#" onclick="" class="btn btn-sm btn-danger">CA:'.$codCuentaAuxiliar.'</a>';
            $nro_erroresauxiliaresPadre++;
           }else{
             $codCuentaAuxiliarPadre='PADRE: '.$codCuenta.' <a href="#" onclick="" class="btn btn-sm btn-success">CORRECTO:'.$codCuentaAuxiliar.'</a>';
@@ -134,11 +120,9 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             <td class="<?=$estiloMonto?>"><?=$montoEstado?></td>
             <td><?=$debe?></td>
             <td><?=$haber?></td>
-            <td class="<?=$estiloAuxiliar?>"><?=$codCuentaAux?></td>
-            <td class="<?=$estiloAuxPadre?>"><?=$codCuentaAuxPadre?></td> 
+            <td class="<?=$estiloAuxiliar?>"><?=$codCuentaAux?></td> 
             <td class="<?=$estiloAuxiliarPadre?>"><?=$codCuentaAuxiliarPadre?></td>
             <td><?=$glosa?></td>  
-            <td><b class="<?=$estiloNomCuentaAux?>"><?=$nomCuentaAux?></b></td>
             <td><b class="<?=$estiloNomCuentaAuxiliar?>"><?=$nomCuentaAuxiliar?></b></td>
             <td width="10%">
               <?php //if ($estiloAuxiliar!=""){
@@ -147,10 +131,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                     <button type="button" class="btn btn-danger dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="material-icons">save</i>
                     </button>
-                    <div class="dropdown-menu">
-                        <a href='#' onclick="cambiarCuentaAuxiliarDetalle(<?=$codCuenta?>,1,0,<?=$selCompEst?>,<?=$selCuentaAux?>,<?=$selCuentaAuxiliar?>);return false;" class="dropdown-item">CAMBIAR - COD ESTADO DE CUENTAS</a>
-                        <a href='#' onclick="cambiarCuentaAuxiliarDetalle(<?=$codCuenta?>,2,<?=$selCompDet?>,0,<?=$selCuentaAuxiliar?>,<?=$selCuentaAux?>);return false;" class="dropdown-item">CAMBIAR - COD COMPROBANTE DETALLE</a>
-                        <a href='#' onclick="cambiarCuentaAuxiliarDetalle(<?=$codCuenta?>,3,0,<?=$selCompEst?>,<?=$selCuentaAux?>,0);return false;" class="dropdown-item">NUEVO - EST</a>
+                    <div class="dropdown-menu">                        
                         <a href='#' onclick="cambiarCuentaAuxiliarDetalle(<?=$codCuenta?>,4,<?=$selCompDet?>,0,<?=$selCuentaAuxiliar?>,0);return false;" class="dropdown-item">NUEVO - COMP</a>
                     </div>
                   </div>
