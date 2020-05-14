@@ -666,6 +666,12 @@ if($menuModulo==0){
                     <span class="sidebar-normal"> Clientes Listado</span>
                   </a>
                 </li>                         
+                <li class="nav-item ">
+                  <a class="nav-link" href="utilitarios/rptProveedoresGeneral.php" target="_blank">
+                    <span class="sidebar-mini"> P </span>
+                    <span class="sidebar-normal"> Proveedores Listado</span>
+                  </a>
+                </li>                         
               </ul>
             </div>
           </li>
