@@ -72,7 +72,7 @@ $stmt->bindColumn('nombre', $nombreCuenta);
 			while ($rowAux = $stmtAux->fetch(PDO::FETCH_BOUND)) {
 				$txtAuxiliarCuentas.="<tr>
 				<td class='text-left small'>$codigoCuentaAux</td>
-				<td class='text-left small'><a href='javascript:setBusquedaCuenta(\"$codigoCuenta\",\"$numeroCuenta\",\"$nombreCuenta\",\"$codigoCuentaAux\",\"$nombreCuentaAux\");'>$nombreCuentaAux</a></td>
+				<td class='text-left small'><a href='javascript:setBusquedaCuenta(\"$codigoCuenta\",\"$numeroCuenta\",\"$nombreCuenta\",\"$codigoCuentaAux\",\"$nombreCuentaAux\");'>".strtoupper($nombreCuentaAux)."</a></td>
 				</tr>";
 				$contAux++;
 			}  	
@@ -80,7 +80,7 @@ $stmt->bindColumn('nombre', $nombreCuenta);
 		?>
 		<tr>
 			<td class="text-left"><?=$numeroCuenta;?></td>
-	      	<td class="text-left"><a href="javascript:setBusquedaCuenta('<?=$codigoCuenta;?>','<?=$numeroCuenta;?>','<?=$nombreCuenta;?>','0','');"><?=$nombreCuenta;?></a></td>
+	      	<td class="text-left"><a href="javascript:setBusquedaCuenta('<?=$codigoCuenta;?>','<?=$numeroCuenta;?>','<?=$nombreCuenta;?>','0','');"><?=strtoupper($nombreCuenta);?></a></td>
 	      	<td class="text-left"><?=$txtAuxiliarCuentas;?></td>
 		</tr>
 		<?php

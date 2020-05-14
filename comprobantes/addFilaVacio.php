@@ -13,6 +13,7 @@
   <div class="row">
     <div class="col-sm-1">
           <div class="form-group">
+            <span style="position:absolute;left:-15px; font-size:16px;font-weight:600; color:#386D93;"><?=$idFila?></span>
           <select class="selectpicker form-control form-control-sm" name="unidad<?=$idFila;?>" id="unidad<?=$idFila;?>" data-style="btn btn-primary" onChange="facturacomprobanteSIS(<?=$idFila;?>)">
                      <option value="" disabled selected>Unidad</option>
                <?php
