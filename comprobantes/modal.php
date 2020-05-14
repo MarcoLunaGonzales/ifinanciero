@@ -307,7 +307,7 @@
               <div class="form-group col-sm-3">
                 <label for="cuenta" class="bmd-label-floating">Cuenta Auxiliar:</label>
                 <input type="hidden" id="cuenta_id_auxiliar" name="cuenta_id_auxiliar">
-                <input type="text" class="form-control" id="cuenta_auxiliar_modal" name="cuenta_auxiliar_modal" onkeypress="buscarCuentaListAux('nombre');pulsar(event)" onkeyDown="buscarCuentaListAux('nombre');" onkeyUp="buscarCuentaListAux('nombre');">
+                <input type="text" class="form-control" id="cuenta_auxiliar_modal" name="cuenta_auxiliar_modal" onkeypress="buscarCuentaList('nombre');pulsar(event)" onkeyDown="buscarCuentaList('nombre');" onkeyUp="buscarCuentaList('nombre');">
               </div>
           		<div class="form-group col-sm-2">
 	              <select class="selectpicker form-control form-control-sm" name="padre" id="padre" data-style="<?=$comboColor;?>" onchange="buscarCuenta(form1);">

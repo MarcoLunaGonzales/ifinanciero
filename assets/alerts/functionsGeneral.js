@@ -6274,26 +6274,26 @@ function buscarCuentaNombreAux(numeros,nombreCuenta,nroCuenta){
        for (var k = 0; k < itemCuentasAux.length; k++) {
         if(itemCuentasAux[k].codCuenta==itemCuentas[i].codigo){
           nn = itemCuentasAux[k].nombre.toLowerCase().indexOf(numeros.toLowerCase());
-         if(nn==0){
+         if(nn>=0){
           break;
           }  
          }
         };    
        
-    if(nn==0){
-      if(nom==0||num==0){
+    if(nn>=0){
+      if(nom>=0||num>=0){
         n=0;
       }
     }
     
-    if(n==0){
+    if(n>=0){
       var textoAux="<table class='table table-condensed' style='overflow-y: scroll;display: block;height:210px;'>";
       
         for (var j = 0; j < itemCuentasAux.length; j++) {
           if(itemCuentasAux[j].codCuenta==itemCuentas[i].codigo){
-            if(nn==0){
+            if(nn>=0){
               var nnn = itemCuentasAux[j].nombre.toLowerCase().indexOf(numeros.toLowerCase());
-              if(nnn==0){
+              if(nnn>=0){
                  textoAux+="<tr >"+
                "<td class='text-left small'>"+itemCuentasAux[j].codigo+"</td>"+
                "<td class='text-left small'><a href=\"javascript:setBusquedaCuenta(\'"+itemCuentas[i].codigo+"\',\'"+itemCuentas[i].numero+"\',\'"+itemCuentas[i].nombre+"\',\'"+itemCuentasAux[j].codigo+"\',\'"+itemCuentasAux[j].nombre+"\');\">"+itemCuentasAux[j].nombre+"</a></td>"+
@@ -6347,20 +6347,60 @@ function buscarCuentaNumero(numeros,val){
     //var n = itemCuentas[i].numero.search(/+str+/);
     if(val==1){
        var n = itemCuentas[i].numero.indexOf(numeros);
+       if(n!=0){
+        n=-1;
+       }
     }else{
       var cadenaBuscar=itemCuentas[i].nombre.toLowerCase();
-       var n = cadenaBuscar.indexOf(numeros.toLowerCase());
+      var n = cadenaBuscar.indexOf(numeros.toLowerCase());
     }
-    
-    if(n==0){
+  var nren=n;  
+  var nombreAuxiliar = $("#cuenta_auxiliar_modal").val();  
+  if($("#nro_cuenta").val()==""&&$("#cuenta").val()==""&&$("#cuenta_auxiliar_modal").val()!=""){
+    n=-1;
+      for (var j = 0; j < itemCuentasAux.length; j++) {
+          var nn=-1;
+          var cadenaBuscarAux=itemCuentasAux[j].nombre.toLowerCase();
+          nn = cadenaBuscarAux.indexOf(nombreAuxiliar.toLowerCase());
+          if(itemCuentasAux[j].codCuenta==itemCuentas[i].codigo){
+            if(nn>=0){
+             n=1;
+             break;
+            }
+          }    
+      }
+  }else{
+   if(($("#nro_cuenta").val()!=""||$("#cuenta").val()!="")&&$("#cuenta_auxiliar_modal").val()!=""){
+    n=-1;
+      for (var j = 0; j < itemCuentasAux.length; j++) {
+          var nn=-1;
+          var cadenaBuscarAux=itemCuentasAux[j].nombre.toLowerCase();
+          nn = cadenaBuscarAux.indexOf(nombreAuxiliar.toLowerCase());
+          if(itemCuentasAux[j].codCuenta==itemCuentas[i].codigo){
+            if(nn>=0&&nren>=0){
+             n=1;
+             break;
+            }
+          }    
+      }
+    }   
+  }
+
+
+    if(n>=0){
       var textoAux="<table class='table table-condensed' style='overflow-y: scroll;display: block;height:210px;'>";
       
         for (var j = 0; j < itemCuentasAux.length; j++) {
+          var nn=-1;
+          var cadenaBuscarAux=itemCuentasAux[j].nombre.toLowerCase();
+          nn = cadenaBuscarAux.indexOf(nombreAuxiliar.toLowerCase());
           if(itemCuentasAux[j].codCuenta==itemCuentas[i].codigo){
-            textoAux+="<tr >"+
+            if(nn>=0){
+             textoAux+="<tr >"+
                "<td class='text-left small'>"+itemCuentasAux[j].codigo+"</td>"+
                "<td class='text-left small'><a href=\"javascript:setBusquedaCuenta(\'"+itemCuentas[i].codigo+"\',\'"+itemCuentas[i].numero+"\',\'"+itemCuentas[i].nombre+"\',\'"+itemCuentasAux[j].codigo+"\',\'"+itemCuentasAux[j].nombre+"\');\">"+itemCuentasAux[j].nombre+"</a></td>"+
-             "</tr>";
+             "</tr>";  
+            }      
           }
         };
 
@@ -12638,7 +12678,12 @@ function cambiarCodigoAuxiliar(){
            detectarCargaAjax();
            if(resp=="1"){
             Swal.fire('Correcto!','Registro exitoso!','success');
-            window.location.href="repo.php";
+            if($("#auxiliares_det").length > 0){
+              window.location.href="repoAux.php"; 
+            }else{
+              window.location.href="repo.php";
+            }
+            
            }else{
             Swal.fire('ERROR!','No se pudo registrar!','error');
            }
