@@ -47,7 +47,7 @@ try{
         </script>
     <?php }elseif($cont_areas!=0){//falta asociar alguna cuenta en areas ?>
         <script>
-            alert("A ocurrido un error: Por favor verifique que las areas de ingres estén asociadas a una cuenta.");
+            alert("A ocurrido un error: Por favor verifique que las areas de ingreso estén asociadas a una cuenta.");
         </script>
     <?php }else{//cuando todo esta en orden
         // verificamos si ya se registro la factura
@@ -112,9 +112,7 @@ try{
                 </script>
                 <?php
                 //header('Location: ../index.php?opcion=listFacturasServicios');
-            }else{
-                //generamos el comprobante
-                $cod_comprobante=ejecutarComprobanteSolicitud($codigo);
+            }else{                
                 //monto total redondeado
                 $stmtMontoTotal = $dbh->prepare("SELECT sum(sf.precio) as monto from solicitudes_facturaciondetalle sf,cla_servicios t 
                 where sf.cod_claservicio=t.idclaservicio and sf.cod_solicitudfacturacion=$codigo");
@@ -129,7 +127,10 @@ try{
                 $stmtNroFac->execute();
                 $resultNroFact = $stmtNroFac->fetch();    
                 $nro_correlativo = $resultNroFact['correlativo'];
-                if($nro_correlativo==null)$nro_correlativo=1;    
+                if($nro_correlativo==null)$nro_correlativo=1;   
+
+                //generamos el comprobante
+                $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$nro_correlativo);
                 // echo "auto:".$nroAutorizacion." - nro_corr:".$nro_correlativo." - nitCliente:".$nitCliente." - fecha_actual:".$fecha_actual." - totalFinalRedondeado:".$totalFinalRedondeado." - llaveDosificacion:".$llaveDosificacion;
                 $controlCode = new ControlCode();
                 $code = $controlCode->generate($nroAutorizacion,//Numero de autorizacion
