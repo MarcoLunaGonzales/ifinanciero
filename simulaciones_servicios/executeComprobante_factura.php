@@ -1,6 +1,6 @@
 <?php //ESTADO FINALIZADO
 
-function ejecutarComprobanteSolicitud($cod_solicitudfacturacion){
+function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$nro_factura){
 	require_once __DIR__.'/../conexion.php';
 	require_once '../functions.php';
 	require_once '../assets/libraries/CifrasEnLetras.php';
@@ -40,13 +40,10 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion){
 		$concepto_contabilizacion=$codigo_alterno." - ";
 		while ($row_det = $stmtDetalleSol->fetch()){
 			$precio_natural=$precio/$cantidad;
-			$concepto_contabilizacion.=$descripcion_alterna." / ".$razon_social."<br>\n";
+			$concepto_contabilizacion.=$descripcion_alterna." / F ".$nro_factura." / ".$razon_social."<br>\n";
 			$concepto_contabilizacion.="Cantidad: ".$cantidad." * ".formatNumberDec($precio_natural)." = ".formatNumberDec($precio)."<br>\n";
 		}
-		$codComprobante=obtenerCodigoComprobante();
-		
-		$cod_contra_cuenta=obtenerValorConfiguracion(28);
-		$centroCostosDN=obtenerValorConfiguracion(29);//DN 
+		$codComprobante=obtenerCodigoComprobante();		
 		// echo $numeroComprobante;
 		// informacion solicitudd en curso
 		$sqlInsertCabecera="INSERT INTO comprobantes (codigo, cod_empresa, cod_unidadorganizacional, cod_gestion, cod_moneda, cod_estadocomprobante, cod_tipocomprobante, fecha, numero, glosa,created_by,modified_by) values ('$codComprobante','$codEmpresa','$cod_uo_solicitud','$codAnio','$codMoneda','$codEstadoComprobante','$tipoComprobante','$fechaActual','$numeroComprobante','$concepto_contabilizacion','$globalUser','$globalUser')";
@@ -61,17 +58,19 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion){
 			$stmtDetalleTipoPago->bindColumn('porcentaje', $porcentaje);	
 			$stmtDetalleTipoPago->bindColumn('monto', $monto_tipopago);	  
 			$stmtDetalleTipoPago->bindColumn('cod_cuenta', $cod_cuenta);  
+			$monto_tipopago_total=0;
 			while ($row_detTipopago = $stmtDetalleTipoPago->fetch()) {
 				$descripcion=$concepto_contabilizacion;
+				$monto_tipopago_total+=$monto_tipopago;
 				$sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','0','$cod_uo_solicitud','$cod_area_solicitud','$monto_tipopago','0','$descripcion','$ordenDetalle')";
 	            $stmtInsertDet = $dbh->prepare($sqlInsertDet);
 	            $flagSuccessDet=$stmtInsertDet->execute();
 	            $ordenDetalle++;
-			}
+			}			
 			//para IT gasto
 			$cod_cuenta_it_gasto=obtenerValorConfiguracion(49);
 			$porcentaje_it_gasto=obtenerValorConfiguracion(2);
-			$monto_it_gasto=$porcentaje_it_gasto*$monto_tipopago/100;
+			$monto_it_gasto=$porcentaje_it_gasto*$monto_tipopago_total/100;
 			$descripcion_it_gasto=$concepto_contabilizacion;
 			$sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta_it_gasto','0','$cod_uo_solicitud','$cod_area_solicitud','$monto_it_gasto','0','$descripcion_it_gasto','$ordenDetalle')";
 	        $stmtInsertDet = $dbh->prepare($sqlInsertDet);
@@ -80,7 +79,7 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion){
 	        //para IT
 			$cod_cuenta_debito_iva=obtenerValorConfiguracion(50);
 			$porcentaje_debito_iva=obtenerValorConfiguracion(1);
-			$monto_debito_iva=$porcentaje_debito_iva*$monto_tipopago/100;
+			$monto_debito_iva=$porcentaje_debito_iva*$monto_tipopago_total/100;
 			$descripcion_debito_iva=$concepto_contabilizacion;
 			$sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta_debito_iva','0','$cod_uo_solicitud','$cod_area_solicitud','0','$monto_debito_iva','$descripcion_debito_iva','$ordenDetalle')";
 	        $stmtInsertDet = $dbh->prepare($sqlInsertDet);
@@ -89,7 +88,7 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion){
 	        //para IT pasivo
 			$cod_cuenta_it_pasivo=obtenerValorConfiguracion(51);
 			$porcentaje_it_pasivo=obtenerValorConfiguracion(2);
-			$monto_it_pasivo=$porcentaje_it_pasivo*$monto_tipopago/100;
+			$monto_it_pasivo=$porcentaje_it_pasivo*$monto_tipopago_total/100;
 			$descripcion_it_pasivo=$concepto_contabilizacion;
 			$sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta_it_pasivo','0','$cod_uo_solicitud','$cod_area_solicitud','0','$monto_it_pasivo','$descripcion_it_pasivo','$ordenDetalle')";
 	        $stmtInsertDet = $dbh->prepare($sqlInsertDet);
