@@ -65,7 +65,7 @@ if ($cod_facturacion > 0){
     $observaciones = $Codigo_alterno." - ".$name_cliente;
     $observaciones_2=null;
     $persona_contacto= null;
-    echo "aqui";
+    // echo "aqui";
 }
 $name_uo=nameUnidad($cod_uo);
 $name_area=trim(abrevArea($cod_area),'-');

@@ -41,7 +41,7 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion){
 		while ($row_det = $stmtDetalleSol->fetch()){
 			$precio_natural=$precio/$cantidad;
 			$concepto_contabilizacion.=$descripcion_alterna." / ".$razon_social."<br>\n";
-			$concepto_contabilizacion.="Cantidad: ".$cantidad." * ".$precio_natural." = ".$precio."<br>\n";
+			$concepto_contabilizacion.="Cantidad: ".$cantidad." * ".formatNumberDec($precio_natural)." = ".formatNumberDec($precio)."<br>\n";
 		}
 		$codComprobante=obtenerCodigoComprobante();
 		

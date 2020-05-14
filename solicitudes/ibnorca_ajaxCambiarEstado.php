@@ -109,7 +109,7 @@ while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
     $stmtUpdateSolicitudRecurso = $dbh->prepare($sqlUpdateSolicitud);
     $stmtUpdateSolicitudRecurso->execute();
     
-    $glosa=$nombreCliente."SR ".$numeroSol;
+    $glosa=$nombreCliente." SR ".$numeroSol;
 
     //insertar en detalle comprobante
     $nuevosDetalles=obtenerDetalleSolicitudParaComprobante($codigo); 

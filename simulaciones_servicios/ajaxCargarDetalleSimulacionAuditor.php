@@ -39,7 +39,7 @@ if(isset($_GET["cod_simulacion"])){
         $totalColumnaDetalle[$i]=0;
         $nombreColumna=obtenerNombreDetalleSimulacionVariablesPeriodo($codigos[$i],$anio);
          ?>
-         <td class="fondo-boton" colspan="4"><?=$nombreColumna?></td>
+         <td class="fondo-boton" colspan="5"><?=$nombreColumna?></td>
          <?php
         }?>
         <td class="fondo-boton" colspan="2">TOTAL</td>
@@ -57,7 +57,8 @@ if(isset($_GET["cod_simulacion"])){
         for ($i=0; $i < $nroColumnas; $i++) {
          ?>
          <td class="fondo-boton">D/C</td>
-         <td class="bg-success text-white">MON</td>
+         <td class="bg-success text-white">M B</td>
+         <td class="bg-success text-white">M U</td>
          <td class="fondo-boton">BOB</td>
          <td class="fondo-boton">USD</td>
          <?php
@@ -197,7 +198,8 @@ if(isset($_GET["cod_simulacion"])){
             $claseDeshabilitadocol="hidden"; //number por defecto
             $claseDeshabilitadocolOFF="number";
           }
-
+          $montoPresUSD=number_format($montoPres/$usd,2,".","");
+          $montoPres=number_format($montoPres,2,".","");
          ?>
          <td class="text-right">
           <input type="<?=$claseDeshabilitado?>" min="0" <?=($banderaHab==0)?"readonly":"";?> step="0.5" id="modal_dias_personalItem<?=$anio?>CCCC<?=$ncol?>RRR<?=$iii?>" name="modal_dias_personalItem<?=$anio?>CCCC<?=$ncol?>RRR<?=$iii?>" class="form-control fondo-boton fondo-boton-active text-right" onchange="calcularTotalPersonalServicioAuditor(<?=$anio?>)" onkeyUp="calcularTotalPersonalServicioAuditor(<?=$anio?>)" value="<?=$diasPres?>">
@@ -218,6 +220,11 @@ if(isset($_GET["cod_simulacion"])){
             <input type="<?=$claseDeshabilitadocol?>" id="monto<?=$anio?>CCCC<?=$ncol?>RRR<?=$iii?>" step="0.01" value="<?=$montoPres?>" class="form-control text-info text-right" onchange="calcularTotalPersonalServicioAuditor(<?=$anio?>)" onkeyUp="calcularTotalPersonalServicioAuditor(<?=$anio?>)">
             <input type="<?=$claseDeshabilitadocolOFF?>" id="montoOFF<?=$anio?>CCCC<?=$ncol?>RRR<?=$iii?>" readonly name="montoOFF<?=$anio?>CCCC<?=$ncol?>RRR<?=$iii?>" class="form-control" value="0">
           </td>
+          <td class="text-right">
+            <input type="<?=$claseDeshabilitadocol?>" id="montoUSD<?=$anio?>CCCC<?=$ncol?>RRR<?=$iii?>" step="0.01" value="<?=$montoPresUSD?>" class="form-control text-info text-right" onchange="calcularTotalPersonalServicioAuditorDolar(<?=$anio?>,<?=$ncol?>,<?=$iii?>)" onkeyUp="calcularTotalPersonalServicioAuditorDolar(<?=$anio?>,<?=$ncol?>,<?=$iii?>)">
+            <input type="<?=$claseDeshabilitadocolOFF?>" id="montoUSDOFF<?=$anio?>CCCC<?=$ncol?>RRR<?=$iii?>" readonly name="montoUSDOFF<?=$anio?>CCCC<?=$ncol?>RRR<?=$iii?>" class="form-control" value="0">
+          </td>
+
           <td class="text-right">
             <input type="hidden" id="codigo_columnas<?=$anio?>CCCC<?=$ncol?>RRR<?=$iii?>" value="<?=$codigoCol?>">
             <!--<input type="hidden" id="codigo_ssd_ssa<?=$anio?>CCCC<?=$ncol?>RRR<?=$iii?>" value="<?=$codigoCol?>">-->
@@ -260,7 +267,7 @@ if(isset($_GET["cod_simulacion"])){
         ?>
         <td></td>
         <td></td>
-
+        <td></td>
         <td class="text-right font-weight-bold" id="total_item<?=$anio?>CCCC<?=$i+1?>"><?=number_format($totalColumnaDetalle[$i], 2, '.', ',')?></td> 
         <td class="text-right font-weight-bold" id="total_itemUSD<?=$anio?>CCCC<?=$i+1?>"><?=number_format($totalColumnaDetalle[$i]/$usd, 2, '.', ',')?></td> 
         <?php

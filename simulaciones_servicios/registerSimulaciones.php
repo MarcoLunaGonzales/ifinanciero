@@ -340,8 +340,8 @@ $dbh = new Conexion();
                       <div class="row" id="div_norma">
                           <label class="col-sm-2 col-form-label">Norma</label>
                            <div class="col-sm-4">                     
-                             <div class="form-group">
-                               <input type="text" class="form-control" name="modal_norma" id="modal_norma" value="" onkeyup="javascript:this.value=this.value.toUpperCase();">
+                             <div class="form-group" style="border-bottom: 1px solid #CACFD2">          
+                               <input type="text" class="form-control tagsinput" data-role="tagsinput" data-color="info" name="modal_norma" id="modal_norma" value="" onkeyup="javascript:this.value=this.value.toUpperCase();">
                              </div>
                            </div>
                            <label class="col-sm-1 col-form-label">Nº Sello</label>

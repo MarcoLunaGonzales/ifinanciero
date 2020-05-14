@@ -22,6 +22,12 @@ $habilitadoP=$_GET["habilitadoP"];
 $dias_honorarios=$_GET["dias_honorarios"];
 $monto_honorarios=$_GET["monto_honorarios"];
 
+
+$sqlDetalles="UPDATE simulaciones_servicios_auditores SET monto=$monto_honorarios,dias=$dias_honorarios,habilitado=$habilitadoP where codigo=$tipo";
+$stmtDetalles = $dbh->prepare($sqlDetalles);
+$stmtDetalles->execute();
+
+
 if($habilitadoP!=0){
   if(verificarTipoAuditorMontosVariables($simulaciones,$tipo,$codDet,$anio)==0){
 	$sqlUpdateDetalle="INSERT INTO simulaciones_ssd_ssa (monto,monto_externo,dias,cantidad,cod_simulacionservicio,cod_simulacionserviciodetalle,cod_simulacionservicioauditor,cod_anio) 
@@ -35,9 +41,7 @@ if($habilitadoP!=0){
   }	
 }
 
-$sqlDetalles="UPDATE simulaciones_servicios_auditores SET monto=$monto_honorarios,dias=$dias_honorarios,habilitado=$habilitadoP where codigo=$tipo";
-$stmtDetalles = $dbh->prepare($sqlDetalles);
-$stmtDetalles->execute();
+
 
 
 if(isset($_GET["otroanio"])){

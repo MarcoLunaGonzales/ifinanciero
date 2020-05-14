@@ -70,6 +70,7 @@ if(isset($_POST['numero'])){
     $sqlInsert="INSERT INTO solicitud_recursos (codigo, cod_personal,cod_unidadorganizacional,cod_area,fecha,numero,cod_simulacion,cod_proveedor,cod_simulacionservicio,cod_contrato,idServicio,observaciones) 
        VALUES ('".$codSolicitud."','".$globalUser."','".$globalUnidad."', '".$globalArea."', '".$fecha."','".$numero."','".$codSim."','".$codProv."','".$codSimServ."','".$codCont."','".$v."','".$observaciones."')";
   }
+  print_r($sqlInsert);
   $stmtInsert = $dbh->prepare($sqlInsert);
   $stmtInsert->execute();
 
