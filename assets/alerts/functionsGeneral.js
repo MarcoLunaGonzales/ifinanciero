@@ -5282,6 +5282,12 @@ function calcularTotalPersonalServicioAuditorHonorarios(anio){
   calcularTotalPersonalServicioAuditor(anio);
 }
 
+function calcularTotalPersonalServicioAuditorDolar(val1,val2,val3){
+  var usd= $("#cambio_moneda").val();
+  var monto = parseFloat($("#montoUSD"+val1+"CCCC"+val2+"RRR"+val3).val());
+  $("#monto"+val1+"CCCC"+val2+"RRR"+val3).val(redondeo(monto*usd));
+  calcularTotalPersonalServicioAuditor(val1);
+}
 function calcularTotalPersonalServicioAuditor(anio){
   var suma=0; var sumal=0; var sumaC=0;
   var sumae=0; var sumale=0;
@@ -5308,11 +5314,15 @@ function calcularTotalPersonalServicioAuditor(anio){
           montos+=parseFloat($("#monto_mult"+anio+"CCCC"+j+"RRR"+i).val());
           $("#monto_multUSD"+anio+"CCCC"+j+"RRR"+i).val(redondeo($("#monto_mult"+anio+"CCCC"+j+"RRR"+i).val()/parseFloat(usd)));
           totalesItem[j-1]+=redondeo($("#monto_mult"+anio+"CCCC"+j+"RRR"+i).val());
-       }      
+       } 
+       $("#montoUSD"+anio+"CCCC"+j+"RRR"+i).val(redondeo(parseFloat($("#monto"+anio+"CCCC"+j+"RRR"+i).val())/usd));
        //deshabilitar o habilitar montos
        if($("#modal_dias_personalItem"+anio+"CCCC"+j+"RRR"+i).val()<=0){
         $("#monto"+anio+"CCCC"+j+"RRR"+i).attr("type","hidden");
         $("#montoOFF"+anio+"CCCC"+j+"RRR"+i).attr("type","number");
+        $("#montoUSD"+anio+"CCCC"+j+"RRR"+i).attr("type","hidden");
+        $("#montoUSDOFF"+anio+"CCCC"+j+"RRR"+i).attr("type","number");
+
         $("#monto_mult"+anio+"CCCC"+j+"RRR"+i).attr("type","hidden");
         $("#monto_multOFF"+anio+"CCCC"+j+"RRR"+i).attr("type","number");
         $("#monto_multUSD"+anio+"CCCC"+j+"RRR"+i).attr("type","hidden");
@@ -5320,6 +5330,8 @@ function calcularTotalPersonalServicioAuditor(anio){
        }else{
         $("#montoOFF"+anio+"CCCC"+j+"RRR"+i).attr("type","hidden");
         $("#monto"+anio+"CCCC"+j+"RRR"+i).attr("type","number");
+        $("#montoUSDOFF"+anio+"CCCC"+j+"RRR"+i).attr("type","hidden");
+        $("#montoUSD"+anio+"CCCC"+j+"RRR"+i).attr("type","number");
         $("#monto_mult"+anio+"CCCC"+j+"RRR"+i).attr("type","number");
         $("#monto_multOFF"+anio+"CCCC"+j+"RRR"+i).attr("type","hidden");
         $("#monto_multUSD"+anio+"CCCC"+j+"RRR"+i).attr("type","number");
@@ -5644,6 +5656,10 @@ function guardarCuentasSimulacionAjaxGenericoServicioAuditorTodos(inicio){
         var habilitadoPersonal=1;
       }else{
         var habilitadoPersonal=0;
+      }
+
+      if(columnas==0){
+        columnas++; //para que registre el honorario aunque no este registrado el detalle
       }
          for (var k = 1; k <=columnas; k++) {
           var diasn=$("#modal_dias_personalItem"+anio+"CCCC"+k+"RRR"+l).val();
@@ -6071,7 +6087,7 @@ function cargarDetallesCostosVariablesTodosLosAnios(inicio,ib){
     }    
    }    
   }; 
-   if(existeAnio!=0){
+   //if(existeAnio!=0){
     //ajax estado de cuentas
     var parametros={"anios":$("#anio_simulacion").val(),"cod_area":$("#codigo_area").val(),"cod_simulacion":cosSim,"codigo_filas":codigosFilas,"anio":anio,"usd":usd,"monto_filas":montoFilasPersonal};
     $.ajax({
@@ -6096,7 +6112,7 @@ function cargarDetallesCostosVariablesTodosLosAnios(inicio,ib){
            ponerCantidadTotalesVariablesModal(inicio,anio);     
         }
     });
-  }
+  //}
    // guardarCuentasSimulacionGenericoServicioPrevio(i,ib)
   };
   $("#modalSimulacionCuentasPersonal").modal("show");
@@ -10202,6 +10218,10 @@ function editarAtributo(fila){
     $('#modal_marca').val(itemAtributos[fila].marca);
     $('#modal_norma').val(itemAtributos[fila].norma);
     $('#modal_sello').val(itemAtributos[fila].sello);
+
+    $("#modal_norma").tagsinput('removeAll');
+    $("#modal_norma").tagsinput('add', itemAtributos[fila].norma);
+
   }
   if(($("#div_marca").hasClass("d-none"))){
     $("#lbl_nombre_atributo").text("Nombre");
@@ -12560,3 +12580,70 @@ $(document).on('change', '.archivo', function() {
     } 
    }
 });
+
+function cambiarCuentaAuxiliarDetalle(cuentaPadre,tipo,com,cod,ant,nue){
+  $("#tipo").val(tipo);
+  $("#cod_comprobantedetalle").val(com);
+  $("#cod_estadocuenta").val(cod);
+  $("#cod_antiguo").val(ant);
+  if(tipo==3||tipo==4){
+    $("#cod_nuevo").val("");
+    $("#cod_nuevo").removeAttr("readonly");
+    if(!($("#div_codigo_nuevo").hasClass("d-none"))){
+      $("#div_codigo_nuevo").addClass("d-none");
+      $("#div_codigo_nuevo_sel").removeClass("d-none");
+      var parametros={"cod_cuenta":cuentaPadre};
+      $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxSaveAuxiliarNuevoList.php",
+        data: parametros,
+        success:  function (resp) {
+          $("#div_codigo_nuevo_sel").html(resp); 
+          $('.selectpicker').selectpicker("refresh");            
+        }
+      }); 
+    }
+  }else{
+    if($("#div_codigo_nuevo").hasClass("d-none")){
+      $("#div_codigo_nuevo").removeClass("d-none");
+      $("#div_codigo_nuevo_sel").addClass("d-none");
+    }
+    $("#cod_nuevo").val(nue);
+    $("#cod_nuevo").attr("readonly",true);
+  }
+  $("#cambioCodigoAuxiliar").modal("show");  
+}
+function cambiarCodigoAuxiliar(){
+  if($("#tipo").val()>2){
+    var nuevo = $("#cod_nuevo_sel").val();
+  }else{
+    var nuevo = $("#cod_nuevo").val();
+  }
+  var parametros={
+    "tipo":$("#tipo").val(),"cod_comprobantedetalle":$("#cod_comprobantedetalle").val(),
+    "cod_estadocuenta":$("#cod_estadocuenta").val(),
+    "cod_nuevo":nuevo
+   };
+      $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxSaveAuxiliarNuevo.php",
+        data: parametros,
+        beforeSend: function () {
+        $("#texto_ajax_titulo").html("Cambiando Datos..."); 
+          iniciarCargaAjax();
+        },
+        success:  function (resp) {
+           detectarCargaAjax();
+           if(resp=="1"){
+            Swal.fire('Correcto!','Registro exitoso!','success');
+            window.location.href="repo.php";
+           }else{
+            Swal.fire('ERROR!','No se pudo registrar!','error');
+           }
+           $("#texto_ajax_titulo").html("Procesando Datos");   
+           $("#cambioCodigoAuxiliar").modal("hide");         
+        }
+      });
+}

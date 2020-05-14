@@ -3864,20 +3864,12 @@ function obtenerPaisesServicioIbrnorca(){
   $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "TipoLista"=>"paises"); //Lista todos los paises
   $parametros=json_encode($parametros);
     $ch = curl_init();
-    // definimos la URL a la que hacemos la petición
-    //curl_setopt($ch, CURLOPT_URL,$direccion."clasificador/ws-paises.php"); // OFICIAL
     curl_setopt($ch, CURLOPT_URL,$direccion."clasificador/ws-paises.php"); // PRUEBA
-    // indicamos el tipo de petición: POST
     curl_setopt($ch, CURLOPT_POST, TRUE);
-    // definimos cada uno de los parámetros
     curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);
-    // recibimos la respuesta y la guardamos en una variable
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     $remote_server_output = curl_exec ($ch);
     curl_close ($ch);
-    
-    // imprimir en formato JSON  
-    //print_r($remote_server_output);
     return json_decode($remote_server_output);
 }
 function obtenerDepartamentoServicioIbrnorca($cod){
@@ -5901,6 +5893,17 @@ function obtieneCuentaPadre($codigo){
    return($nombreX);
 }
 
+function obtieneCuentaPadreAux($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT c.cod_cuenta FROM plan_cuentas p,cuentas_auxiliares c where c.cod_cuenta=p.codigo and c.codigo=$codigo");
+   $stmt->execute();
+   $nombreX=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $nombreX=$row['cod_cuenta'];
+   }
+   return($nombreX);
+}
+
 function obtenerDistribucionCentroCostosUnidadActivo(){
    $dbh = new Conexion();
    $sql="";
@@ -6061,4 +6064,56 @@ function obtenerDistribucionGastoSolicitudRecurso($codigo,$tipo,$monto){
    $stmt->execute();
    return $stmt;
 }
+function costoVariablesHonorariosSimulacionServicio($sim,$anio){
+  $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT sum(monto) as monto FROM simulaciones_servicios_auditores where cod_simulacionservicio=$sim and cod_anio=$anio and habilitado=1 and cantidad=1");
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['monto'];
+   }
+   return($valor);
+}
+function eliminar_acentos($cadena){
+    
+    //Reemplazamos la A y a
+    $cadena = str_replace(
+    array('Á', 'À', 'Â', 'Ä', 'á', 'à', 'ä', 'â', 'ª'),
+    array('A', 'A', 'A', 'A', 'a', 'a', 'a', 'a', 'a'),
+    $cadena
+    );
+ 
+    //Reemplazamos la E y e
+    $cadena = str_replace(
+    array('É', 'È', 'Ê', 'Ë', 'é', 'è', 'ë', 'ê'),
+    array('E', 'E', 'E', 'E', 'e', 'e', 'e', 'e'),
+    $cadena );
+ 
+    //Reemplazamos la I y i
+    $cadena = str_replace(
+    array('Í', 'Ì', 'Ï', 'Î', 'í', 'ì', 'ï', 'î'),
+    array('I', 'I', 'I', 'I', 'i', 'i', 'i', 'i'),
+    $cadena );
+ 
+    //Reemplazamos la O y o
+    $cadena = str_replace(
+    array('Ó', 'Ò', 'Ö', 'Ô', 'ó', 'ò', 'ö', 'ô'),
+    array('O', 'O', 'O', 'O', 'o', 'o', 'o', 'o'),
+    $cadena );
+ 
+    //Reemplazamos la U y u
+    $cadena = str_replace(
+    array('Ú', 'Ù', 'Û', 'Ü', 'ú', 'ù', 'ü', 'û'),
+    array('U', 'U', 'U', 'U', 'u', 'u', 'u', 'u'),
+    $cadena );
+ 
+    //Reemplazamos la N, n, C y c
+    $cadena = str_replace(
+    array('Ñ', 'ñ', 'Ç', 'ç'),
+    array('N', 'n', 'C', 'c'),
+    $cadena
+    );
+    
+    return $cadena;
+  }
 ?>

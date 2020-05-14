@@ -98,8 +98,8 @@
                       <div class="row" id="div_norma">
                           <label class="col-sm-2 col-form-label">Norma</label>
                            <div class="col-sm-4">                     
-                             <div class="form-group">
-                               <input type="text" class="form-control" name="modal_norma" id="modal_norma" value="" onkeyup="javascript:this.value=this.value.toUpperCase();">
+                             <div class="form-group" style="border-bottom: 1px solid #CACFD2">
+                               <input type="text" class="form-control tagsinput" data-role="tagsinput" data-color="info" name="modal_norma" id="modal_norma" value="" onkeyup="javascript:this.value=this.value.toUpperCase();">
                              </div>
                            </div>
                            <label class="col-sm-1 col-form-label">Nº Sello</label>
@@ -205,6 +205,7 @@
                                           $etapas="Año ".$an;
 
                                           if($codAreaX!=39){
+                                            $etapas="Año ".$an."(Seguimiento ".($an-1).")";
                                             if($an==0||$an==1){
                                              $etapas="Año 1 (ETAPA ".($an+1).")"; 
                                             }
@@ -344,8 +345,11 @@
                   <?php
                    for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) { 
                      $tituloItem="Año ".$ann;
-                     if(($ann==0||$ann==1)&&$codAreaX!=39){
-                       $tituloItem="Año 1 (ETAPA ".($ann+1).")";
+                      if($codAreaX!=39){
+                        $tituloItem="Año ".$ann."(SEGUIMIENTO ".($ann-1).")";
+                        if($ann==0||$ann==1){
+                         $tituloItem="Año 1 (ETAPA ".($ann+1).")"; 
+                        }
                       }
                    include "cargarDetallePlantillaPartida.php";   
                     }

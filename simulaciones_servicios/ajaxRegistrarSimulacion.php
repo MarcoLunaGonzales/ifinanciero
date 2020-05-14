@@ -275,6 +275,12 @@ if(isset($_GET['nombre'])){
         if(isset($_GET['region_cliente'])){
           $nacional=$_GET['region_cliente'];
         }
+
+        if($nacional>1){
+          if($codTC<=2){
+             $codTC=4; //empresa MEDIANA
+          }
+        }
         
         for ($i=0; $i < count($atributos); $i++) {
           $aux=obtenerCostoTipoClienteSello(($i+1),$codTC,$nacional);

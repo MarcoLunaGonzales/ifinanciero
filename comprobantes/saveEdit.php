@@ -30,8 +30,11 @@ $globalAdmin=$_SESSION["globalAdmin"];
 
 $fechaHoraActual=date("Y-m-d H:i:s");
 
+$fechaHoraSistema=date("Y-m-d H:i:s");
+
+
 $codComprobante=$_POST['codigo_comprobante'];
-$sqlUpdate="UPDATE comprobantes SET  glosa='$glosa', fecha='$fechaHoraActual2',modified_at='$fechaHoraActual', modified_by='$globalUser' where codigo=$codComprobante";
+$sqlUpdate="UPDATE comprobantes SET  glosa='$glosa', fecha='$fechaHoraActual2',modified_at='$fechaHoraSistema', modified_by='$globalUser' where codigo=$codComprobante";
 //echo $sqlUpdate;
 $stmtUpdate = $dbh->prepare($sqlUpdate);
 $flagSuccess=$stmtUpdate->execute();	
