@@ -20,11 +20,10 @@ $glosaDet="";
 ?>
 <div id="comp_row" class="col-md-12">
 	<div class="row">
-
 		<div class="col-sm-1">
         	<div class="form-group">
-	        <select class="selectpicker form-control form-control-sm" name="unidad<?=$idFila;?>" id="unidad<?=$idFila;?>" data-style="<?=$comboColor;?>" onChange="facturacomprobanteSIS(<?=$idFila;?>)" >
-			  	
+        	<span style="position:absolute;left:-15px; font-size:16px;font-weight:600; color:#386D93;"><?=$idFila?></span>
+	        <select class="selectpicker form-control form-control-sm" name="unidad<?=$idFila;?>" id="unidad<?=$idFila;?>" data-style="<?=$comboColor;?>" onChange="facturacomprobanteSIS(<?=$idFila;?>)" >  	
 			  	<option disabled selected="selected" value="">Oficina</option>
 			  	<?php
 			  	$stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM unidades_organizacionales where cod_estado=1 and centro_costos=1 order by 2");
