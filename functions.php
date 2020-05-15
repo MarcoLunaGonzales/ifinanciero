@@ -6116,4 +6116,17 @@ function eliminar_acentos($cadena){
     
     return $cadena;
   }
+
+  function datosPDFFacturasVenta($html){
+  //aumentamos la memoria  
+  ini_set("memory_limit", "128M");
+  require_once 'assets/libraries/dompdf/dompdf_config.inc.php';
+    $dompdf = new DOMPDF();
+    $dompdf->set_paper("letter", "portrait");
+    $dompdf->load_html($html);    
+    $dompdf->render();
+    $pdf = $dompdf->output();
+    return array('archivo' => $pdf,'base64'=>base64_encode($pdf));
+}
+
 ?>
