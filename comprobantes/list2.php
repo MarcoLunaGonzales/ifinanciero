@@ -13,7 +13,7 @@ $sqlArray="SELECT c.codigo,c.cod_tipocomprobante,(select u.abreviatura from unid
 (select t.abreviatura from tipos_comprobante t where t.codigo=c.cod_tipocomprobante)tipo_comprobante, c.fecha, c.numero
 from comprobantes c join estados_comprobantes ec on c.cod_estadocomprobante=ec.codigo where c.cod_estadocomprobante!=2
 and c.cod_unidadorganizacional='$globalUnidad'
-and c.cod_gestion='$globalGestion' order by c.fecha desc, unidad, tipo_comprobante, c.numero desc limit 100";
+and c.cod_gestion='$globalGestion' order by c.fecha asc, unidad, tipo_comprobante, c.numero asc ";
 $stmtArray = $dbh->prepare($sqlArray);
 $stmtArray->execute();
 $stmtArray->bindColumn('codigo', $codigo_comprobante);
@@ -36,7 +36,7 @@ $sql="SELECT c.cod_tipocomprobante,(select u.abreviatura from unidades_organizac
 (select t.abreviatura from tipos_comprobante t where t.codigo=c.cod_tipocomprobante)tipo_comprobante, c.fecha, c.numero,c.codigo, c.glosa,ec.nombre,c.cod_estadocomprobante
 from comprobantes c join estados_comprobantes ec on c.cod_estadocomprobante=ec.codigo where c.cod_estadocomprobante!=2 and c.codigo=$cod_comprobante_x";
 $sql.=" and c.cod_unidadorganizacional='$globalUnidad' ";
-$sql.=" and c.cod_gestion='$globalGestion' order by c.fecha desc, unidad, tipo_comprobante, c.numero desc limit 1";
+$sql.=" and c.cod_gestion='$globalGestion' order by c.fecha asc, unidad, tipo_comprobante, c.numero asc limit 1";
 // echo $sql;
 $stmt = $dbh->prepare($sql);
 // Ejecutamos
@@ -268,28 +268,6 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
   </div>
 </div>
 
-<?php
-$i=0;
-echo "<script>var array_cuenta=[],imagen_cuenta=[];</script>";
-   $stmtCuenta = $dbh->prepare("SELECT pcc.cod_cuenta,pc.numero,pc.nombre from plan_cuentas_cajachica pcc,plan_cuentas pc where pcc.cod_cuenta=pc.codigo");
-   $stmtCuenta->execute();
-   while ($rowCuenta = $stmtCuenta->fetch(PDO::FETCH_ASSOC)) {
-    $codigoX=$rowCuenta['cod_cuenta'];
-    $numeroX=$rowCuenta['numero'];
-    $nombreX=$rowCuenta['nombre'];
-    ?>
-    <script>
-     var obtejoLista={
-       label:'<?=trim($numeroX)?> - <?=trim($nombreX)?>',
-       value:'<?=$codigoX?>'};
-       array_cuenta[<?=$i?>]=obtejoLista;
-       imagen_cuenta[<?=$i?>]='../assets/img/calc.jpg';
-    </script> 
-    <?php
-    $i=$i+1;  
-  }
-?>
-
 <!-- Modal busqueda de comprobantes-->
 <div class="modal fade" id="modalBuscador" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog modal-xl" role="document">
@@ -340,8 +318,19 @@ echo "<script>var array_cuenta=[],imagen_cuenta=[];</script>";
           </div>           
           <div class="form-group col-sm-5">
             <!-- <input class="form-control input-sm" type="number" name="nro_cuenta" id="nro_cuenta"  > -->            
-                    <input class="form-control" type="text" name="cuenta_auto" id="cuenta_auto" placeholder="[numero] y nombre de cuenta" required />
-                    <input class="form-control" type="hidden" name="cuenta_auto_id" id="cuenta_auto_id" required/>
+                    <!-- <input class="form-control" type="text" name="cuenta_auto" id="cuenta_auto" placeholder="[numero] y nombre de cuenta" required />
+                    <input class="form-control" type="hidden" name="cuenta_auto_id" id="cuenta_auto_id" required/> -->
+            <?php                    
+              //plan de cuentas
+              $query_cuentas = "SELECT codigo,numero,nombre from plan_cuentas where cod_estadoreferencial=1 and nivel=5";
+              $statementCuentas = $dbh->query($query_cuentas);
+              ?>
+              <select name="cuenta_auto_id" id="cuenta_auto_id" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" required data-show-subtext="true" data-live-search="true">
+                <option value=""></option>
+                <?php while ($row = $statementCuentas->fetch()){ ?>
+                    <option value="<?=$row["codigo"];?>"><?=$row["numero"];?> - <?=$row["nombre"];?></option>
+                <?php } ?>
+              </select>
           </div>           
           <div class="form-group col-sm-5">
             <input class="form-control input-sm" type="text" name="glosaBusqueda" id="glosaBusqueda"  >

@@ -33,7 +33,7 @@ and c.cod_unidadorganizacional='$globalUnidad'
 and c.cod_gestion='$globalGestion'";
 
 $sqlArray.=" and c.cod_tipocomprobante in ($codigo_tipo)";
-$sqlArray.=" order by c.fecha desc, unidad, tipo_comprobante, c.numero desc limit 100";
+$sqlArray.=" order by c.fecha asc, unidad, tipo_comprobante, c.numero asc";
 //echo $sqlArray;
 $stmtArray = $dbh->prepare($sqlArray);
 $stmtArray->execute();
@@ -56,7 +56,7 @@ $sql="SELECT c.cod_tipocomprobante,(select u.abreviatura from unidades_organizac
 (select t.abreviatura from tipos_comprobante t where t.codigo=c.cod_tipocomprobante)tipo_comprobante, c.fecha, c.numero,c.codigo, c.glosa,ec.nombre,c.cod_estadocomprobante
 from comprobantes c join estados_comprobantes ec on c.cod_estadocomprobante=ec.codigo where c.cod_estadocomprobante!=2 and c.codigo=$cod_comprobante_x";
 $sql.=" and c.cod_unidadorganizacional='$globalUnidad' ";
-$sql.=" and c.cod_gestion='$globalGestion' order by c.fecha desc, unidad, tipo_comprobante, c.numero desc limit 1";
+$sql.=" and c.cod_gestion='$globalGestion' order by c.fecha asc, unidad, tipo_comprobante, c.numero asc limit 1";
 
 
 $stmt = $dbh->prepare($sql);
