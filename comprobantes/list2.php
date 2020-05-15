@@ -268,10 +268,31 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
   </div>
 </div>
 
+<?php
+$i=0;
+echo "<script>var array_cuenta=[],imagen_cuenta=[];</script>";
+   $stmtCuenta = $dbh->prepare("SELECT pcc.cod_cuenta,pc.numero,pc.nombre from plan_cuentas_cajachica pcc,plan_cuentas pc where pcc.cod_cuenta=pc.codigo");
+   $stmtCuenta->execute();
+   while ($rowCuenta = $stmtCuenta->fetch(PDO::FETCH_ASSOC)) {
+    $codigoX=$rowCuenta['cod_cuenta'];
+    $numeroX=$rowCuenta['numero'];
+    $nombreX=$rowCuenta['nombre'];
+    ?>
+    <script>
+     var obtejoLista={
+       label:'<?=trim($numeroX)?> - <?=trim($nombreX)?>',
+       value:'<?=$codigoX?>'};
+       array_cuenta[<?=$i?>]=obtejoLista;
+       imagen_cuenta[<?=$i?>]='../assets/img/calc.jpg';
+    </script> 
+    <?php
+    $i=$i+1;  
+  }
+?>
 
 <!-- Modal busqueda de comprobantes-->
 <div class="modal fade" id="modalBuscador" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog modal-lg" role="document">
+  <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -285,8 +306,6 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
         </div> 
         <div class="row">
           <div class="form-group col-sm-3">
-    <!--         <select class="selectpicker form-control" title="Seleccione una opcion" name="areas[]" id="areas" data-style="select-with-transition" data-size="5" data-actions-box="true" multiple required> -->
-
             <select  name="OficinaBusqueda[]" id="OficinaBusqueda" class="selectpicker form-control form-control-sm" data-style="btn btn-info select-with-transition" data-show-subtext="true" data-live-search="true" data-actions-box="true" multiple> 
               <option value="0"></option>
               <?php while ($rowUO = $stmtUO->fetch(PDO::FETCH_BOUND)) { ?>
@@ -311,21 +330,23 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
           </div>              
         </div> 
         <div class="row">          
-          <label class="col-sm-2 col-form-label text-center">Núm Compr</label>
-          <label class="col-sm-3 col-form-label text-center">Núm Cuenta</label>
-          <label class="col-sm-7 col-form-label text-center">Glosa</label>
+          <label class="col-sm-2 col-form-label text-center">#Cbte</label>
+          <label class="col-sm-5 col-form-label text-center">Cuenta</label>
+          <label class="col-sm-5 col-form-label text-center">Glosa</label>
         </div> 
         <div class="row">          
           <div class="form-group col-sm-2">
             <input class="form-control input-sm" type="number" name="nro_comprobante" id="nro_comprobante"  >
           </div>           
-          <div class="form-group col-sm-3">
-            <input class="form-control input-sm" type="number" name="nro_cuenta" id="nro_cuenta"  >
+          <div class="form-group col-sm-5">
+            <!-- <input class="form-control input-sm" type="number" name="nro_cuenta" id="nro_cuenta"  > -->            
+                    <input class="form-control" type="text" name="cuenta_auto" id="cuenta_auto" placeholder="[numero] y nombre de cuenta" required />
+                    <input class="form-control" type="hidden" name="cuenta_auto_id" id="cuenta_auto_id" required/>
           </div>           
-          <div class="form-group col-sm-7">
+          <div class="form-group col-sm-5">
             <input class="form-control input-sm" type="text" name="glosaBusqueda" id="glosaBusqueda"  >
           </div>           
-        </div>  
+        </div> 
 
       </div>
 

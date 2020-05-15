@@ -32,7 +32,7 @@ $cuenta=$_GET['cuenta'];
 $sqlArray="SELECT (select u.abreviatura from unidades_organizacionales u where u.codigo=c.cod_unidadorganizacional)unidad, c.cod_gestion, 
   (select m.nombre from monedas m where m.codigo=c.cod_moneda)moneda, 
   (select t.abreviatura from tipos_comprobante t where t.codigo=c.cod_tipocomprobante)tipo_comprobante, c.fecha, c.numero,c.codigo, c.glosa,ec.nombre,c.cod_estadocomprobante
-  from comprobantes c, estados_comprobantes ec, comprobantes_detalle cd,plan_cuentas pc where c.cod_estadocomprobante=ec.codigo and cd.cod_comprobante=c.codigo and cd.cod_cuenta=pc.codigo and c.cod_estadocomprobante!=2 and c.cod_gestion='$globalGestion' ";
+  from comprobantes c, estados_comprobantes ec, comprobantes_detalle cd,plan_cuentas pc where c.cod_estadocomprobante=ec.codigo and cd.cod_comprobante=c.codigo and cd.cod_cuenta=pc.codigo and c.cod_estadocomprobante!=2  ";//and c.cod_gestion='$globalGestion'
 if($cod_uo!=""){
   $sqlArray.=" and c.cod_unidadorganizacional in ($cod_uo)";
 }
