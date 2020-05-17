@@ -39,6 +39,7 @@ $tipoSolicitud =$_GET['tipo'];
 						        	$proveedorX="";
 						        	$retencionX="";
                       $codTipoPago=0;
+                      $codCuentaBancaria=0;
                       $nombreBen="";
                       $apellidoBen="";
                       $cuentaBen="";
@@ -105,4 +106,7 @@ $tipoSolicitud =$_GET['tipo'];
           ?><script>Swal.fire("Sin Datos!", "No se encontraron registros", "warning");</script><?php  
      }       
   ?>					
-	<script>$("#cantidad_filas").val(<?=($idFila-1)?>)</script>					
+<script>
+ $("#cantidad_filas").val(<?=($idFila-1)?>);
+ cargarArrayAreaDistribucion(<?=$unidadXX?>);
+</script>					

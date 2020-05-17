@@ -9,7 +9,7 @@ $urlListReg="index.php?opcion=listComprobantesRegistrados";
 
 $urlImpComp="comprobantes/imp.php";
 $urlEdit="index.php?opcion=editMoneda";
-$urlEdit2="tipos_cambios/historial.php";
+$urlEdit2="obligaciones_pago/edit.php";
 
 $urlDelete="index.php?opcion=deleteComprobante";
 $urlRegister2="index.php?opcion=listPagoProveedor";
@@ -18,4 +18,6 @@ $urlSaveEdit="comprobantes/saveEdit.php";
 $urlSaveDelete="";
 
 $urlImpReporteDiario="reportes/impDiario.php";
+$urlListPago="index.php?opcion=listPagoProveedores";
+
 ?>

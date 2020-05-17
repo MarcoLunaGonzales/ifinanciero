@@ -138,7 +138,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         </div> 	
 		<div class="col-sm-1">
           <div class="btn-group">
-            <input type="hidden" id="cod_beneficiario<?=$idFila?>" value="0"/>
+            <input type="hidden" name="cod_cuentaBancaria<?=$idFila?>" id="cod_cuentaBancaria<?=$idFila?>" value="0"/>
             <input type="hidden" name="cod_tipopago<?=$idFila?>" id="cod_tipopago<?=$idFila?>" value="0"/>
             <input type="hidden" name="nombre_beneficiario<?=$idFila?>" id="nombre_beneficiario<?=$idFila?>" value=""/>
             <input type="hidden" name="apellido_beneficiario<?=$idFila?>" id="apellido_beneficiario<?=$idFila?>" value=""/>

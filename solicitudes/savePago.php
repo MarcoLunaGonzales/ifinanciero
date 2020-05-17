@@ -49,8 +49,8 @@ $codComprobante=obtenerCodigoComprobante();
         $flagSuccess=$stmtDel->execute();
 
     $cod_pagoproveedor=obtenerCodigoPagoProveedor();
-   $sqlInsert="INSERT INTO pagos_proveedores (codigo, fecha,observaciones,cod_comprobante) 
-  VALUES ('".$cod_pagoproveedor."','".$fecha_pago."','".$observaciones_pago."','".$codComprobante."')";
+   $sqlInsert="INSERT INTO pagos_proveedores (codigo, fecha,observaciones,cod_comprobante,cod_estadopago) 
+  VALUES ('".$cod_pagoproveedor."','".$fecha_pago."','".$observaciones_pago."','".$codComprobante."',1)";
   $stmtInsert = $dbh->prepare($sqlInsert);
   $stmtInsert->execute();     
 //COMPROBANTE

@@ -3779,7 +3779,8 @@ function minusDetalleSolicitud(idF){
        $("#cuenta_beneficiario"+nuevoId).attr("name","cuenta_beneficiario"+i);
        $("#cuenta_beneficiario"+nuevoId).attr("id","cuenta_beneficiario"+i); 
 
-       $("#cod_beneficiario"+nuevoId).attr("id","cod_beneficiario"+i);     
+       $("#cod_cuentaBancaria"+nuevoId).attr("name","cod_cuentaBancaria"+i);
+       $("#cod_cuentaBancaria"+nuevoId).attr("id","cod_cuentaBancaria"+i);
        
        $("#boton_formapago"+nuevoId).attr("onclick","agregarTipoPagoProveedorDetalle('"+i+"')");
        $("#boton_formapago"+nuevoId).attr("id","boton_formapago"+i);
@@ -12500,7 +12501,6 @@ function quitarDistribucionSolicitud(){
 function agregarTipoPagoProveedorDetalle(fila){
   $("#fila_pago").val(fila);
   if($("#proveedor"+fila).val()>0){
-    //if($("#proveedor"+fila).val()!=$("#cod_beneficiario"+fila).val()){
       var proveedor = $("#proveedor"+fila).val();
       var parametros={"codigo":proveedor};
       $.ajax({
@@ -12513,24 +12513,33 @@ function agregarTipoPagoProveedorDetalle(fila){
           iniciarCargaAjax();
         },
         success:  function (resp) {
-          $(".mensaje").html(resp);
+          $("#cuenta_bancaria").html(resp);
            detectarCargaAjax();
            $("#tipo_pagoproveedor").val($("#cod_tipopago"+fila).val());
            $("#texto_ajax_titulo").html("Procesando Datos");   
+           if(!($("#nben"+fila).hasClass("estado"))){
+              $("#nombre_beneficiario").val('');
+              $("#apellido_beneficiario").val('');
+              $("#cuenta_beneficiario").val('');
+              $("#tipo_pagoproveedor").val('');
+           }else{
+              $("#nombre_beneficiario").val($("#nombre_beneficiario"+fila).val());
+              $("#apellido_beneficiario").val($("#apellido_beneficiario"+fila).val());
+              $("#cuenta_beneficiario").val($("#cuenta_beneficiario"+fila).val());
+              $("#cuenta_bancaria").val($("#cod_cuentaBancaria"+fila).val());
+              $("#tipo_pagoproveedor").val($("#cod_tipopago"+fila).val());
+           } 
+           $('.selectpicker').selectpicker("refresh");       
            $("#modalTipoPagoSolicitud").modal("show");         
         }
       });   
-    //}else{
-      //$("#nombre_beneficiario").val('<?=$nombre?>');
-      //$("#apellido_beneficiario").val('<?=$apellido?>');
-      //$("#cuenta_beneficiario").val('<?=$cuenta?>');
-    //}
   }else{
     Swal.fire("Informativo!", "Debe seleccionar un proveedor!", "warning");
   }
 }
 function guardarFormaPagoSolicitud(){
   var fila = $("#fila_pago").val();
+  $("#cod_cuentaBancaria"+fila).val($("#cuenta_bancaria").val());
   $("#cod_tipopago"+fila).val($("#tipo_pagoproveedor").val());
   $("#nombre_beneficiario"+fila).val($("#nombre_beneficiario").val());
   $("#apellido_beneficiario"+fila).val($("#apellido_beneficiario").val());
@@ -12545,6 +12554,7 @@ function quitarFormaPagoProveedor(fila){
   if($("#nben"+fila).hasClass("estado")){
     $("#nben"+fila).removeClass("estado");   
   }
+  $("#cod_cuentaBancaria"+fila).val("");
   $("#cod_tipopago"+fila).val("");
   $("#nombre_beneficiario"+fila).val("");
   $("#apellido_beneficiario"+fila).val("");
@@ -12695,4 +12705,38 @@ function cambiarCodigoAuxiliar(){
            $("#cambioCodigoAuxiliar").modal("hide");         
         }
       });
+}
+
+function cargarArrayAreaDistribucion(valor){
+  if(valor==-1){
+   var unidad = $("#unidad_solicitud").val();  
+  }else{
+    var unidad = valor;
+  }
+  var parametros={"unidad":unidad};
+  $.ajax({
+    type: "GET",
+    dataType: 'html',
+    url: "ajaxCargarArrayDistribucionArea.php",
+    data: parametros,
+    success:  function (resp) {       
+      $("#array_distribucion").html(resp);
+    }
+  }); 
+}
+
+function cargarDatosCuentaBancariaProveedor(){
+  var fila =$("#fila_pago").val();
+  var proveedor = $("#proveedor"+fila).val();
+  var banco = $("#cuenta_bancaria").val();
+  var parametros={"codigo":proveedor,"banco":banco};
+  $.ajax({
+    type: "GET",
+    dataType: 'html',
+    url: "ajax_datos_bancarios_cuenta.php",
+    data: parametros,
+    success:  function (resp) {       
+      $(".mensaje").html(resp);
+    }
+  }); 
 }

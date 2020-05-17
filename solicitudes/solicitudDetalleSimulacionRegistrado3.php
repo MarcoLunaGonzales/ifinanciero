@@ -28,6 +28,7 @@
 							$proveedorX="";
 							$retencionX="";
                             $codTipoPago=0;
+                            $codCuentaBancaria=0;
                             $nombreBen="";
                             $apellidoBen="";
                             $cuentaBen="";
@@ -64,6 +65,7 @@
 							   $importeSolX=$rowDetalles["importe"];
 							   $proveedorX=$rowDetalles["cod_proveedor"];
 							   $retencionX=$rowDetalles["cod_confretencion"];
+							   $codCuentaBancaria=$rowDetalles["cod_cuentabancaria"];
 							   $codTipoPago=$rowDetalles["cod_tipopagoproveedor"];
                                $nombreBen=$rowDetalles["nombre_beneficiario"];
                                $apellidoBen=$rowDetalles["apellido_beneficiario"];
@@ -103,6 +105,7 @@
 							   $importeSolX=$rowDetalles["importe"];
 							   $proveedorX=$rowDetalles["cod_proveedor"];
 							   $retencionX=$rowDetalles["cod_confretencion"];
+							   $codCuentaBancaria=$rowDetalles["cod_cuentabancaria"];
 							   $codTipoPago=$rowDetalles["cod_tipopagoproveedor"];
                                $nombreBen=$rowDetalles["nombre_beneficiario"];
                                $apellidoBen=$rowDetalles["apellido_beneficiario"];

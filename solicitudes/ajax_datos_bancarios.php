@@ -14,16 +14,13 @@ set_time_limit(300);
 $codigo=$_GET['codigo'];
 $lista=obtenerListaCuentaBancoProveedorWS($codigo);
 if($lista->totalLista>0){
+ ?><option disabled selected value="">--Seleccione--</option><?php   
  foreach ($lista->lista as $listas) {
-	$nombre=$listas->BeneficiarioNombre;
-	$apellido=$listas->BeneficiarioApellido;
     $cuenta=$listas->NroCuenta;
+    $banco=$listas->Banco;
+    $cbanco=$listas->IdCuentaBanco;
     ?>
-    <script>
-     $("#nombre_beneficiario").val('<?=$nombre?>');
-     $("#apellido_beneficiario").val('<?=$apellido?>');
-     $("#cuenta_beneficiario").val('<?=$cuenta?>');
-    </script>
+    <option value="<?=$cbanco?>"><?=$banco?> - (<?=$cuenta?>)</option>
     <?php
  }
 }

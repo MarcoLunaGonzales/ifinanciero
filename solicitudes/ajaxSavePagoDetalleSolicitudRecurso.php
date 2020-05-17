@@ -33,8 +33,8 @@ if(isset($_GET['cod_solicitud'])){
   $observaciones_pago=$_GET['observaciones_pago'];
   if($cod_pagoproveedor==0){
     $cod_pagoproveedor=obtenerCodigoPagoProveedor();
-   $sqlInsert="INSERT INTO pagos_proveedores (codigo, fecha,observaciones) 
-  VALUES ('".$cod_pagoproveedor."','".$fecha."','".$observaciones_pago."')";
+   $sqlInsert="INSERT INTO pagos_proveedores (codigo, fecha,observaciones,cod_estadopago) 
+  VALUES ('".$cod_pagoproveedor."','".$fecha."','".$observaciones_pago."',1)";
   $stmtInsert = $dbh->prepare($sqlInsert);
   $stmtInsert->execute();
   }
