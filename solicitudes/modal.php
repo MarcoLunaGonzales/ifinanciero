@@ -30,6 +30,16 @@
                         ?>
                     </select>
                   </div>
+                </div>                          
+              </div>
+               <div class="row">
+                <label class="col-sm-2 col-form-label" style="color: #4a148c;">Cuentas Bancarias</label>
+                <div class="col-sm-4">
+                  <div class="form-group">
+                     <select class="selectpicker form-control form-control-sm" onchange="cargarDatosCuentaBancariaProveedor()" name="cuenta_bancaria" id="cuenta_bancaria" data-style="btn btn-primary">
+                       
+                    </select>
+                  </div>
                 </div>
                 <label class="col-sm-2 col-form-label" style="color: #4a148c;">Cuenta Beneficiario</label>
                 <div class="col-sm-4">
@@ -42,13 +52,13 @@
                     <label class="col-sm-2 col-form-label" style="color: #4a148c;">Nombre Benef.</label>
                     <div class="col-sm-4">
                       <div class="form-group">  
-                           <input class="form-control" type="text" readonly name="nombre_beneficiario" id="nombre_beneficiario" required="true">                                                                                                                       
+                           <input class="form-control" type="text" name="nombre_beneficiario" id="nombre_beneficiario" required="true">                                                                                                                       
                        </div>
                     </div>
                     <label class="col-sm-2 col-form-label" style="color: #4a148c;">Apellido Benef.</label>
                     <div class="col-sm-4">
                       <div class="form-group">  
-                           <input class="form-control" type="text" readonly name="apellido_beneficiario" id="apellido_beneficiario" required="true">                                                                                                                       
+                           <input class="form-control" type="text" name="apellido_beneficiario" id="apellido_beneficiario" required="true">                                                                                                                       
                        </div>
                     </div>
                 </div>
