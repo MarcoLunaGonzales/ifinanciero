@@ -4366,7 +4366,8 @@ function obtenerActividadesServicioImonitoreo($codigo_proyecto){
   $parametros=json_encode($parametros);
     $ch = curl_init();
     // definimos la URL a la que hacemos la petición    
-    curl_setopt($ch, CURLOPT_URL,"http://localhost/imonitoreo/componentesSIS/compartir_servicio.php");
+    //curl_setopt($ch, CURLOPT_URL,"http://localhost/imonitoreo/componentesSIS/compartir_servicio.php");//prueba
+    curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/imonitoreo/componentesSIS/compartir_servicio.php");//prueba    
     // indicamos el tipo de petición: POST
     curl_setopt($ch, CURLOPT_POST, TRUE);
     // definimos cada uno de los parámetros

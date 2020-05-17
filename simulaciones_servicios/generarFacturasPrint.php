@@ -150,7 +150,7 @@ $html.=  '<header class="header">'.
                 </tr>
               </thead>
             </table>';
-            $htmlConta.='<table class="table">'.
+            $html.='<table class="table">'.
               '<tr class="bold table-title text-left">'.
                   '<td  class="td-border-none" width="9%"><b>Señor(es):</b></td>'.
                   '<td  colspan="2" class="td-border-none" ><h4><b>'.$nombre_cliente.'</b></h4></td>'.                
@@ -216,9 +216,9 @@ $html.=  '<header class="header">'.
                             $frameSize = 1; //marco de qr
                             $contenido = $contenidoQr;
                             QRcode::png($contenido, $fileName, $level,$tamanio,$frameSize);
-                            $htmlConta.= '<img src="'.$fileName.'"/>';
+                            $html.= '<img src="'.$fileName.'"/>';
                             // echo '<img src="'.$fileName.'"/>';        
-                        $htmlConta.='</td>
+                        $html.='</td>
                         <td width="60%" style="border-right: hidden" rowspan="2">';
 
                           $entero=floor($importe);
@@ -227,8 +227,8 @@ $html.=  '<header class="header">'.
                           if($centavos<10){
                             $centavos="0".$centavos;
                           }
-                          $htmlConta.='<p class="bold table-title">Son: '.ucfirst(CifrasEnLetras::convertirNumeroEnLetras($entero)).'      '.$centavos.'/100 Bolivianos</p>'; 
-                          $htmlConta.='</td>
+                          $html.='<p class="bold table-title">Son: '.ucfirst(CifrasEnLetras::convertirNumeroEnLetras($entero)).'      '.$centavos.'/100 Bolivianos</p>'; 
+                          $html.='</td>
                         <td width="25%" align="right" style="border-left: hidden" rowspan="2"><b>Total Bs &nbsp;&nbsp;&nbsp;&nbsp;'.formatNumberDec($suma_total).'</b></td>
                       </tr>
                       <tr>

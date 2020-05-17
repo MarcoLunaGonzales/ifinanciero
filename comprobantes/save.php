@@ -30,9 +30,9 @@ $fechaHoraActual=$_POST["fecha"];
 $fechaHoraSistema=date("Y-m-d H:i:s");
 
 $codComprobante=obtenerCodigoComprobante();
-$sqlInsert="INSERT INTO comprobantes (codigo, cod_empresa, cod_unidadorganizacional, cod_gestion, cod_moneda, cod_estadocomprobante, cod_tipocomprobante, fecha, numero, glosa, created_at, created_by) 
-VALUES ('$codComprobante', '1', '$globalUnidad', '$codGestion', '1', '1', '$tipoComprobante', '$fechaHoraActual', '$nroCorrelativo', '$glosa', '$fechaHoraSistema', '$fechaHoraSistema', '$globalUser')";
+$sqlInsert="INSERT INTO comprobantes (codigo, cod_empresa, cod_unidadorganizacional, cod_gestion, cod_moneda, cod_estadocomprobante, cod_tipocomprobante, fecha, numero, glosa, created_at, created_by) VALUES ('$codComprobante', '1', '$globalUnidad', '$codGestion', '1', '1', '$tipoComprobante', '$fechaHoraActual', '$nroCorrelativo', '$glosa', '$fechaHoraSistema', '$globalUser')";
 //echo $sqlInsert;
+
 $stmtInsert = $dbh->prepare($sqlInsert);
 $flagSuccess=$stmtInsert->execute();	
 
