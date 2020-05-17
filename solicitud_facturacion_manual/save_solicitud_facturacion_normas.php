@@ -105,7 +105,7 @@ try {
                     // echo "monto_bob:".$monto_bob."<br>";          
                     $sqlTiposPago="INSERT INTO solicitudes_facturacion_tipospago(cod_solicitudfacturacion, cod_tipopago, porcentaje, monto) VALUES ('$cod_facturacion','$codigo_tipopago','$monto_porcentaje','$monto_bob')";
                     $stmtTiposPago = $dbh->prepare($sqlTiposPago);
-                    $stmtTiposPago->execute();
+                    $stmtTiposPago->execute();                    
                 }
             }else{
                 $codigo_tipopago=$cod_tipopago;
@@ -136,6 +136,32 @@ try {
                     $sqlTiposPago="INSERT INTO solicitudes_facturacion_areas(cod_solicitudfacturacion, cod_area, porcentaje, monto) VALUES ('$cod_facturacion','$codigo_area','$monto_porcentaje','$monto_bob')";
                     $stmtTiposPago = $dbh->prepare($sqlTiposPago);
                     $stmtTiposPago->execute();
+                    //si existe array de unidades
+                    if(isset($_POST['unidades_facturacion'])){
+                        $unidades_facturacion=json_decode($_POST['unidades_facturacion']);
+                        $nFU=cantidadF($unidades_facturacion[$j]);
+                        if($nFU>0){
+                            for($u=0;$u<$nFU;$u++){                                
+                                $codigo_unidad=$unidades_facturacion[$j][$u]->codigo_unidad;
+                                $monto_porcentaje_uo=$unidades_facturacion[$j][$u]->monto_porcentaje;
+                                $monto_bob_uo=$unidades_facturacion[$j][$u]->monto_bob;                                
+                                // echo "codigo_unidad:".$codigo_unidad."<br>";
+                                // echo "monto_porcentaje:".$monto_porcentaje_uo."<br>";        
+                                // echo "monto_bob:".$monto_bob_uo."<br>";    
+                                $sqlUnidades="INSERT INTO solicitudes_facturacion_areas_uo(cod_solicitudfacturacion,cod_area, cod_uo, porcentaje, monto) VALUES ('$cod_facturacion','$codigo_area','$codigo_unidad','$monto_porcentaje_uo','$monto_bob_uo')";
+                                $stmtUnidades = $dbh->prepare($sqlUnidades);
+                                $stmtUnidades->execute();                               
+                            }
+                        }else{                            
+                            $sqlUnidades="INSERT INTO solicitudes_facturacion_areas_uo(cod_solicitudfacturacion,cod_area, cod_uo, porcentaje, monto) VALUES ('$cod_facturacion','$codigo_area','$cod_unidadorganizacional',100,'$monto_bob')";
+                            $stmtUnidades = $dbh->prepare($sqlUnidades);
+                            $stmtUnidades->execute();                               
+                        }                        
+                    }else{                        
+                        $sqlUnidades="INSERT INTO solicitudes_facturacion_areas_uo(cod_solicitudfacturacion,cod_area, cod_uo, porcentaje, monto) VALUES ('$cod_facturacion','$codigo_area','$cod_unidadorganizacional',100,'$monto_bob')";
+                        $stmtUnidades = $dbh->prepare($sqlUnidades);
+                        $stmtUnidades->execute();
+                    }
                 }
             }else{
                 $codigo_area=$cod_area;
@@ -147,6 +173,9 @@ try {
                 $sqlTiposPago="INSERT INTO solicitudes_facturacion_areas(cod_solicitudfacturacion, cod_area, porcentaje, monto) VALUES ('$cod_facturacion','$codigo_area','$monto_porcentaje','$monto_bob')";
                 $stmtTiposPago = $dbh->prepare($sqlTiposPago);
                 $stmtTiposPago->execute();
+                $sqlUnidades="INSERT INTO solicitudes_facturacion_areas_uo(cod_solicitudfacturacion,cod_area, cod_uo, porcentaje, monto) VALUES ('$cod_facturacion','$codigo_area','$cod_unidadorganizacional',100,'$monto_bob')";
+                $stmtUnidades = $dbh->prepare($sqlUnidades);
+                $stmtUnidades->execute();
             }
                     
         }

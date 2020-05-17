@@ -64,7 +64,7 @@ if ($cod_facturacion > 0){
     $cod_tipopago = null;
     $name_cliente=nameCliente($cod_cliente);    
     $razon_social = $name_cliente;
-
+    $observaciones_2 = null;
     $nit=obtenerNitCliente($cod_cliente);    
     $observaciones = $Codigo_alterno." - ".$name_cliente;
     $persona_contacto=null;
@@ -217,6 +217,11 @@ $descuento_cliente=obtenerDescuentoCliente($cod_cliente);
                                     $stmtAreas->execute();
                                     $ncAreas=0;$contAreas= array();
                                     while ($rowAreas = $stmtAreas->fetch(PDO::FETCH_ASSOC)) { 
+                                        //unidades de cada area?>
+                                        <script>
+                                            var nfacUnidades=[];itemUnidades_facturacion.push(nfacUnidades);
+                                        </script>
+                                        <?php
                                         //objeto dato donde se guarda las areas de servicios
                                         $datoArea = new stdClass();//obejto
                                         $codFila=(int)$rowAreas["codigo"];
@@ -228,6 +233,24 @@ $descuento_cliente=obtenerDescuentoCliente($cod_cliente);
                                         $ncAreas++;
                                     }
                                     $contAreas[0]=$ncAreas;
+                                ?>
+                                <?php //unidades
+                                    $queryUnidades="SELECT codigo,nombre,abreviatura from unidades_organizacionales where cod_estado=1";
+                                    $stmtUnidades = $dbh->prepare($queryUnidades);
+                                    $stmtUnidades->execute();
+                                    $ncUnidades=0;$contUnidades= array();
+                                    while ($rowUnidades = $stmtUnidades->fetch(PDO::FETCH_ASSOC)) { 
+                                        //objeto dato donde se guarda las areas de servicios
+                                        $datoUnidades = new stdClass();//obejto
+                                        $codFila=(int)$rowUnidades["codigo"];
+                                        $nombre_x=trim($rowUnidades['nombre']);                                        
+                                        $datoUnidades->codigo=($ncUnidades+1);
+                                        $datoUnidades->cod_unidad=$codFila;
+                                        $datoUnidades->nombrex=$nombre_x;                                                
+                                        $datosUnidades[0][$ncUnidades]=$datoUnidades;                           
+                                        $ncUnidades++;
+                                    }
+                                    $contUnidades[0]=$ncUnidades;
                                 ?>
                             </div>
                             <label class="col-sm-2 col-form-label">Tipo Pago</label>
@@ -680,5 +703,24 @@ $descuento_cliente=obtenerDescuentoCliente($cod_cliente);
               }          
             }
         ?><script>itemAreas_facturacion_aux.push(detalle_areas);</script><?php                    
+    }
+?>}
+<!-- objeto unidades servicio -->
+<?php 
+    $lanUnidades=sizeof($contUnidades);
+    for ($i=0; $i < $lanUnidades; $i++) {
+      ?>
+      <script>var detalle_unidades=[];</script>
+      <?php
+        for ($j=0; $j < $contUnidades[$i]; $j++) {            
+             if($contUnidades[$i]>0){?>
+                <script>
+                    detalle_unidades.push({codigo:<?=$datosUnidades[$i][$j]->codigo?>,cod_unidad:<?=$datosUnidades[$i][$j]->cod_unidad?>,nombrex:'<?=$datosUnidades[$i][$j]->nombrex?>'});
+                </script>
+
+              <?php         
+              }          
+            }
+        ?><script>itemUnidades_facturacion_aux.push(detalle_unidades);</script><?php                    
     }
 ?>
