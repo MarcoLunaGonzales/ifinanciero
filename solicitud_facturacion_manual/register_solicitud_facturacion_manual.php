@@ -12,6 +12,9 @@ $cod_sw=0;
 //sacamos datos para la facturacion
 if(isset($_GET['q'])){
   $q=$_GET['q'];
+  $s=$_GET['s'];
+  $u=$_GET['u'];
+  $v=$_GET['v'];
 }
 if ($cod_facturacion > 0){
    
@@ -52,7 +55,12 @@ $contadorRegistros=0;
               <form id="formSoliFactTcp" class="form-horizontal" action="<?=$urlSaveSolicitudfactura;?>" method="post" onsubmit="return valida(this)">
                 <?php 
                if(isset($_GET['q'])){
-                 ?><input type="hidden" name="id_ibnored" id="id_ibnored" value="<?=$q;?>"/><?php 
+                 ?><input type="hidden" name="id_ibnored" id="id_ibnored" value="<?=$q;?>"/>
+                  <input type="hidden" name="usuario_ibnored" id="usuario_ibnored" value="<?=$q;?>">
+                  <input type="hidden" name="usuario_ibnored_s" id="usuario_ibnored_s" value="<?=$s;?>">
+                  <input type="hidden" name="usuario_ibnored_u" id="usuario_ibnored_u" value="<?=$u;?>">
+                  <input type="hidden" name="usuario_ibnored_v" id="usuario_ibnored_v" value="<?=$v;?>">
+        <?php 
               }
                 ?>
                 <input type="hidden" name="Codigo_alterno" id="Codigo_alterno" value="<?=$Codigo_alterno;?>"/>

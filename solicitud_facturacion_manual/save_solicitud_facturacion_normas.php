@@ -184,8 +184,8 @@ try {
         $idTipoObjeto=2709;
         $idObjeto=2726; //regristado
         $obs="Registro de Solicitud Facturación";
-        if(isset($_POST['u'])){
-            $u=$_POST['u'];
+        if(isset($_POST['usuario_ibnored_u'])){
+            $u=$_POST['usuario_ibnored_u'];
             actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$cod_facturacion,$fechaHoraActual,$obs);
         }else{
            actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$cod_facturacion,$fechaHoraActual,$obs);
