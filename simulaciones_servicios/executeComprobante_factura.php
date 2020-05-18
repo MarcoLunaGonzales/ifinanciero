@@ -30,7 +30,7 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$nro_factura){
 		$fechaActual=date("Y-m-d H:i:s");
 		$mes_actual=date('m');
 		$tipoComprobante=4;//facturas
-		$nombreTipoComprobante=nameTipoComprobante($tipoComprobante);
+		$nombreTipoComprobante=abrevTipoComprobante($tipoComprobante);
 		$numeroComprobante=obtenerCorrelativoComprobante2($tipoComprobante);
 
 		$mesComprobanteX=str_pad($mes_actual, 2, "0", STR_PAD_LEFT);

@@ -408,10 +408,10 @@ $descuento_cliente=obtenerDescuentoCliente($cod_cliente);
                                       <tbody>                                
                                         <?php 
                                         $iii=1;
-                                        $queryPr="SELECT s.codigo,s.cod_claservicio,t.descripcion as nombre_serv,s.cantidad,s.monto,s.habilitado,s.cod_tipounidad,s.cod_anio,s.cantidad_editado FROM simulaciones_servicios_tiposervicio s, cla_servicios t where s.cod_simulacionservicio=$cod_simulacion and s.cod_claservicio=t.idclaservicio";
+                                        $queryPr="SELECT s.codigo,s.cod_claservicio,t.Descripcion as nombre_serv,s.cantidad,s.monto,s.habilitado,s.cod_tipounidad,s.cod_anio,s.cantidad_editado FROM simulaciones_servicios_tiposervicio s, cla_servicios t where s.cod_simulacionservicio=$cod_simulacion and s.cod_claservicio=t.IdClaServicio";
                                         if ($cod_facturacion > 0){
                                             $queryPr.=" UNION ";
-                                            $queryPr.="SELECT d.codigo,d.cod_claservicio,(select cs.descripcion from cla_servicios cs where cs.IdClaServicio=d.cod_claservicio) as descripcion,d.cantidad,d.precio,1,1,null,1 from solicitudes_facturaciondetalle d where d.tipo_item=2 and d.cod_solicitudfacturacion=$cod_facturacion ORDER BY nombre_serv";
+                                            $queryPr.="SELECT d.codigo,d.cod_claservicio,(select cs.Descripcion from cla_servicios cs where cs.IdClaServicio=d.cod_claservicio) as descripcion,d.cantidad,d.precio,1,1,null,1 from solicitudes_facturaciondetalle d where d.tipo_item=2 and d.cod_solicitudfacturacion=$cod_facturacion ORDER BY nombre_serv";
                                         }
                                        // echo $queryPr;
                                         $stmt = $dbh->prepare($queryPr);

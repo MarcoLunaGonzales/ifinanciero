@@ -29,14 +29,14 @@ $idFila=$_GET['idFila'];
           <select class="selectpicker form-control form-control-sm" data-live-search="true" name="modal_editservicio<?=$idFila;?>" id="modal_editservicio<?=$idFila;?>" data-style="fondo-boton" required="true">
               <option disabled selected="selected" value="">--SERVICIOS--</option>
               <?php 
-                $sql="SELECT idclaservicio,descripcion,codigo from cla_servicios where  vigente=1";
+                $sql="SELECT IdClaServicio,Descripcion,Codigo from cla_servicios where  vigente=1";
                 $stmt3 = $dbh->prepare($sql);
                 // echo $sql; 
                 $stmt3->execute();
                 while ($rowServ = $stmt3->fetch(PDO::FETCH_ASSOC)) {
-                  $codigoServX=$rowServ['idclaservicio'];
-                  $nombreServX=$rowServ['descripcion'];
-                  $abrevServX=$rowServ['codigo'];
+                  $codigoServX=$rowServ['IdClaServicio'];
+                  $nombreServX=$rowServ['Descripcion'];
+                  $abrevServX=$rowServ['Codigo'];
                   ?><option value="<?=$codigoServX;?>"><?=$abrevServX?> - <?=$nombreServX?></option><?php 
                 }
               ?>

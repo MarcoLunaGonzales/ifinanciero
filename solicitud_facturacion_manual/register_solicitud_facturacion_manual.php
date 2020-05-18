@@ -423,18 +423,26 @@ $contadorRegistros=0;
 <script type="text/javascript">
 function valida(f) {
   var ok = true;
-  var msg = "El monto Total no debe ser '0' o 'negativo', Habilite los Items que desee facturar...\n";  
-  if(f.elements["comprobante_auxiliar"].value == 0 || f.elements["comprobante_auxiliar"].value < 0 || f.elements["comprobante_auxiliar"].value == '')
-  {    
-    ok = false;
-  }
-  if(f.elements["monto_total"].value>0)
-  {    
-    ok = true;
+
+  //verificamos monto mayor a 50
+    if(f.elements["monto_total_a"].value>50000)
+    {    
+        ok = false;
+    }else{
+        if(f.elements["comprobante_auxiliar"].value == 0 || f.elements["comprobante_auxiliar"].value < 0 || f.elements["comprobante_auxiliar"].value == '')
+        {    
+            ok = false;
+        }
+        if(f.elements["monto_total"].value>0)
+        {    
+            ok = true;
+        }
+        if(ok == false)Swal.fire("Informativo!",msg, "warning");
   }
 
-  if(ok == false)    
-    Swal.fire("Informativo!",msg, "warning");
+
+  var msg = "El monto Total no debe ser '0' o 'negativo', Habilite los Items que desee facturar...\n";  
+  
   return ok;
 }
 </script>

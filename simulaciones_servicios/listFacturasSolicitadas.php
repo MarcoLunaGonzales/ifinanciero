@@ -124,11 +124,19 @@ if(isset($_GET['q'])){
                             $stmtDetalleSol->execute();
                             $stmtDetalleSol->bindColumn('cantidad', $cantidad);  
                             $stmtDetalleSol->bindColumn('precio', $precio);     
-                            $stmtDetalleSol->bindColumn('descripcion_alterna', $descripcion_alterna);                              
+                            $stmtDetalleSol->bindColumn('descripcion_alterna', $descripcion_alterna);                
+                            
+                            $mes_actual=date('m');
+                            $tipoComprobante=4;//facturas              
+                            $nombreTipoComprobante=abrevTipoComprobante($tipoComprobante);
+                            $numeroComprobante=obtenerCorrelativoComprobante2($tipoComprobante);
+                            $mesComprobanteX=str_pad($mes_actual, 2, "0", STR_PAD_LEFT);
+                            $numeroX=str_pad($numeroComprobante, 5, "0", STR_PAD_LEFT);
+                            $nombreComprobante=$nombreTipoComprobante.$mesComprobanteX."-".$numeroX;
                             $concepto_contabilizacion=$codigo_alterno." - ";
                             while ($row_det = $stmtDetalleSol->fetch()){
                               $precio_natural=$precio/$cantidad;
-                              $concepto_contabilizacion.=$descripcion_alterna." / F ".$nro_fact_x." / ".$razon_social."<br>\n";
+                              $concepto_contabilizacion.=$descripcion_alterna." / ".$nombreComprobante." - F ".$nro_fact_x." / ".$razon_social."<br>\n";
                               $concepto_contabilizacion.="Cantidad: ".$cantidad." * ".formatNumberDec($precio_natural)." = ".formatNumberDec($precio)."<br>\n";
                             }
                             $concepto_contabilizacion = (substr($concepto_contabilizacion, 0, 100))."..."; //limite de string
@@ -172,8 +180,7 @@ if(isset($_GET['q'])){
 
                             //los registros de la factura
                             $dbh1 = new Conexion();
-                            $sqlA="SELECT sf.*,t.descripcion as nombre_serv from solicitudes_facturaciondetalle sf,cla_servicios t 
-                                where sf.cod_claservicio=t.idclaservicio and sf.cod_solicitudfacturacion=$codigo_facturacion";
+                            $sqlA="SELECT sf.*,(select t.Descripcion from cla_servicios t where t.IdClaServicio=sf.cod_claservicio) as nombre_serv from solicitudes_facturaciondetalle sf where sf.cod_solicitudfacturacion=$codigo_facturacion";
                             $stmt2 = $dbh1->prepare($sqlA);                                   
                             $stmt2->execute(); 
                             $nc=0;
