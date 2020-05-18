@@ -3779,7 +3779,8 @@ function minusDetalleSolicitud(idF){
        $("#cuenta_beneficiario"+nuevoId).attr("name","cuenta_beneficiario"+i);
        $("#cuenta_beneficiario"+nuevoId).attr("id","cuenta_beneficiario"+i); 
 
-       $("#cod_beneficiario"+nuevoId).attr("id","cod_beneficiario"+i);     
+       $("#cod_cuentaBancaria"+nuevoId).attr("name","cod_cuentaBancaria"+i);
+       $("#cod_cuentaBancaria"+nuevoId).attr("id","cod_cuentaBancaria"+i);
        
        $("#boton_formapago"+nuevoId).attr("onclick","agregarTipoPagoProveedorDetalle('"+i+"')");
        $("#boton_formapago"+nuevoId).attr("id","boton_formapago"+i);
@@ -12019,9 +12020,6 @@ function agregarDatosModalTipoPagoFacturacion(){
   // var d=datos.split('/');
   var cod_tipopago=$("#cod_tipopago").val();
   var monto_total=$("#monto_total_a").val();  
-  // if(monto_total==null || monto_total==''){
-  //   var monto_total=$("#monto_total_a").val();
-  // }
   if(monto_total<=0 || monto_total==null || monto_total==''){
     // $('#modalTipoPagoPorcentaje').modal('hide');
     Swal.fire("Informativo!", "El monto Total NO debe ser 0 o número negativo!", "warning");
@@ -12042,18 +12040,6 @@ function agregarDatosModalTipoPagoFacturacion(){
   } 
 }
 function tablaGeneral_tipoPagos_solFac(){  
-  //ajax cabecera  
-  // var contenedor = document.getElementById('div_cabecera');
-  // ajax=nuevoAjax();
-  // ajax.open('GET', 'simulaciones_servicios/ajax_cabecera_modal.php?uo='+uo+'&area='+area+'&nombre_simulacion='+nombre_simulacion+'&area_simulacion='+area_simulacion+'&fecha_registro='+fecha_registro+'&fecha_facturar='+fecha_facturar+'&nit='+nit+'&razon_social='+razon_social,true);
-  // ajax.onreadystatechange=function() {
-  //   if (ajax.readyState==4) {
-  //     contenedor.innerHTML = ajax.responseText;
-  //     // $('.selectpicker').selectpicker(["refresh"]);
-  //   }
-  // }
-  // ajax.send(null);
-  // var cod_tipopago=$("#cod_tipopago").val();
   var monto_total=$("#modal_totalmontos").val();
   var div=$('<div>').addClass('col-sm-12');
   var table = $('<table>').addClass('table table-bordered table-condensed table-sm');
@@ -12090,6 +12076,12 @@ function tablaGeneral_tipoPagos_solFac(){
     row.append($('<td>').addClass('').text('TOTAL'));         
     row.append($('<td>').addClass('').html("<input type='hidden' class='form-control' name='total_monto_porcentaje_a_tipopago' id='total_monto_porcentaje_a_tipopago' value='0'><input type='text' step='0.01' class='form-control' name='total_monto_porcentaje_tipopago' id='total_monto_porcentaje_tipopago' value='"+number_format(0,2)+"' readonly='true'>"));
     row.append($('<td>').addClass('').html("<input type='hidden' step='0.01' class='form-control' name='total_monto_bob_a_tipopago' id='total_monto_bob_a_tipopago' value='0'><input type='text' step='0.01' class='form-control' name='total_monto_bob_tipopago' id='total_monto_bob_tipopago' value='"+number_format(0,2)+"' readonly='true'> "));    
+    table.append(row);
+    var row = $('<tr>').addClass('');//parte de la diferencia
+    row.append($('<td>').addClass('').text(''));
+    row.append($('<td>').addClass('').text('DIFERENCIA'));         
+    row.append($('<td>').addClass('').html("<input type='text' step='0.01' class='form-control' name='total_diferencia_porcentaje_tipopago' id='total_diferencia_porcentaje_tipopago' value='"+number_format(0,2)+"' readonly='true'>"));
+    row.append($('<td>').addClass('').html("<input type='text' step='0.01' class='form-control' name='total_diferencia_bob_tipopago' id='total_diferencia_bob_tipopago' value='"+number_format(0,2)+"' readonly='true'> "));    
     table.append(row);
     div.append(table);
     $("#total_items_tipopago").val(i);
@@ -12160,6 +12152,12 @@ function calcularTotalFilaTipoPagoModal(){
   $("#total_monto_bob_tipopago").val(number_format(suma_bob,2));//con formato
   $("#total_monto_porcentaje_a_tipopago").val(suma_porcentaje);//sin formato tipo hidden
   $("#total_monto_bob_a_tipopago").val(suma_bob);//sin formato tipo hidden
+  //direncia
+  var monto_precio=$("#monto_total_ingreso_tipopago").val();// precio de item unitario
+  var diferencia_bob_tipopago = parseFloat(monto_precio) - suma_bob;
+  var diferencia_porcentaje_tipopago = 100 - suma_porcentaje;
+  $("#total_diferencia_porcentaje_tipopago").val(number_format(diferencia_porcentaje_tipopago,2));//con formato
+  $("#total_diferencia_bob_tipopago").val(number_format(diferencia_bob_tipopago,2));//con formato
 }
 function savePorcentajeTipopago(){
   var total_porcentaje=$('#total_monto_porcentaje_a_tipopago').val();
@@ -12235,6 +12233,7 @@ function tablaGeneral_areas_solFac(){
     titulos.append($('<th>').addClass('').text('Area'));
     titulos.append($('<th>').addClass('').text('Porcentaje(%)'));    
     titulos.append($('<th>').addClass('').text('Monto(BOB)'));    
+    titulos.append($('<th>').addClass('').text('OF'));    
     table.append(titulos);    
     for (var i = 0; i < itemAreas_facturacion_aux[0].length; i++) {
       var nombre_x=itemAreas_facturacion_aux[0][i].nombrex;
@@ -12253,8 +12252,10 @@ function tablaGeneral_areas_solFac(){
         row.append($('<td>').addClass('').html("<input type='number' class='form-control' name='monto_bob_areas"+i+"' id='monto_bob_areas"+i+"' onkeyup='convertir_a_porcentaje_areas("+i+")' value='"+monto_bob_obj+"'>"));        
       }else{              
         row.append($('<td>').addClass('').html("<input type='number' step='0.01' class='form-control' name='monto_porcentaje_areas"+i+"' id='monto_porcentaje_areas"+i+"' onkeyup='convertir_a_bolivianos_areas("+i+")'>"));
-        row.append($('<td>').addClass('').html("<input type='number' class='form-control' name='monto_bob_areas"+i+"' id='monto_bob_areas"+i+"' onkeyup='convertir_a_porcentaje_areas("+i+")'>"));
+        row.append($('<td>').addClass('').html("<input type='number' class='form-control' name='monto_bob_areas"+i+"' id='monto_bob_areas"+i+"' onkeyup='convertir_a_porcentaje_areas("+i+")'>"));    
+
       }
+      row.append($('<td>').addClass('').html("<button type='button' class='btn btn-primary btn-round btn-fab btn-sm' data-toggle='modal' data-target='' onclick='agregarDatosModalUnidadFacturacion("+i+")'><i class='material-icons' title='Unidades Porcentaje'>list</i><span id='nfacUnidades"+i+"' class='count bg-warning'></span></button>"));
       table.append(row);
     }
     var row = $('<tr>').addClass('');//Para el total
@@ -12262,6 +12263,12 @@ function tablaGeneral_areas_solFac(){
     row.append($('<td>').addClass('').text('TOTAL'));         
     row.append($('<td>').addClass('').html("<input type='hidden' class='form-control' name='total_monto_porcentaje_a_areas' id='total_monto_porcentaje_a_areas' value='0'><input type='text' step='0.01' class='form-control' name='total_monto_porcentaje_areas' id='total_monto_porcentaje_areas' value='"+number_format(0,2)+"' readonly='true'>"));
     row.append($('<td>').addClass('').html("<input type='hidden' step='0.01' class='form-control' name='total_monto_bob_a_areas' id='total_monto_bob_a_areas' value='0'><input type='text' step='0.01' class='form-control' name='total_monto_bob_areas' id='total_monto_bob_areas' value='"+number_format(0,2)+"' readonly='true'> "));    
+    table.append(row);
+    var row = $('<tr>').addClass('');//parte de la diferencia
+    row.append($('<td>').addClass('').text(''));
+    row.append($('<td>').addClass('').text('DIFERENCIA'));         
+    row.append($('<td>').addClass('').html("<input type='text' step='0.01' class='form-control' name='total_diferencia_porcentaje_areas' id='total_diferencia_porcentaje_areas' value='"+number_format(0,2)+"' readonly='true'>"));
+    row.append($('<td>').addClass('').html("<input type='text' step='0.01' class='form-control' name='total_diferencia_bob_areas' id='total_diferencia_bob_areas' value='"+number_format(0,2)+"' readonly='true'> "));    
     table.append(row);
     div.append(table);
     $("#total_items_areas").val(i);
@@ -12326,6 +12333,13 @@ function calcularTotalFilaAreasModal(){
   $("#total_monto_bob_areas").val(number_format(suma_bob,2));//con formato 
   $("#total_monto_porcentaje_a_areas").val(suma_porcentaje);//sin formato tipo hidden
   $("#total_monto_bob_a_areas").val(suma_bob);//sin formato tipo hidden
+
+  //direncia
+  var monto_precio=$("#monto_total_ingreso_areas").val();// precio de item unitario
+  var diferencia_bob_areas = parseFloat(monto_precio) - suma_bob;
+  var diferencia_porcentaje_areas = 100 - suma_porcentaje;
+  $("#total_diferencia_porcentaje_areas").val(number_format(diferencia_porcentaje_areas,2));//con formato
+  $("#total_diferencia_bob_areas").val(number_format(diferencia_bob_areas,2));//con formato
 }
 function savePorcentajeAreas(){
   var total_porcentaje=$('#total_monto_porcentaje_a_areas').val();
@@ -12360,6 +12374,193 @@ function borrarItemsAreas(){
   itemAreas_facturacion.splice(0, 1);
   var nfacAreas=[];itemAreas_facturacion.push(nfacAreas);
 }
+var itemUnidades_facturacion=[];//array que contiene objetos agregados a un area
+var itemUnidades_facturacion_aux=[];//array que contiene todas las unidades en general
+function agregarDatosModalUnidadFacturacion(id){    
+  var porcentaje_area=$("#monto_porcentaje_areas"+id).val();    
+  var monto_total=$("#monto_total_a").val();    
+  var codigo_area=$("#codigo_areas"+id).val();
+  if(porcentaje_area==null || porcentaje_area<0 || porcentaje_area==''){    
+    Swal.fire("Informativo!", "Porcentaje de Area no Encontrada, por favor Introduzca Porcentajes!", "warning");
+  }else{
+      $('#modalUnidadesPorcentaje').modal('show');
+      //agregamos la cuenta si lo tuviese  
+      var contenedor;  
+      contenedor = document.getElementById('div_cabecera_hidden_unidad');
+      ajax=nuevoAjax();
+      ajax.open('GET', 'simulaciones_servicios/ajax_modal_unidades_porcentaje.php?porcentaje_area='+porcentaje_area+'&monto_total='+monto_total+'&id='+id+'&codigo_area='+codigo_area,true);
+      ajax.onreadystatechange=function() {
+        if (ajax.readyState==4) {
+          contenedor.innerHTML = ajax.responseText;
+          $('.selectpicker').selectpicker(["refresh"]);        
+          tablaGeneral_unidad_solFac(porcentaje_area,id);
+        }
+      }
+      ajax.send(null);      
+  }
+}
+function tablaGeneral_unidad_solFac(porcentaje_area,id){  
+  var monto_total=$("#modal_totalmontos").val();//monto total de items
+  $("#id_area").val(id);//guardamos el id del area
+  monto_total=porcentaje_area*monto_total/100;//el monto total lo convertimos al monto del porcentaje  
+  var div=$('<div>').addClass('col-sm-12');
+  var table = $('<table>').addClass('table table-condensed table-sm');
+  var titulos = $('<tr>').addClass('fondo-boton');
+    titulos.append($('<th>').addClass('').text('#'));
+    titulos.append($('<th>').addClass('').text('Oficina'));
+    titulos.append($('<th>').addClass('').text('Porcentaje(%)'));    
+    titulos.append($('<th>').addClass('').text('Monto(BOB)'));    
+    table.append(titulos);    
+    for (var i = 0; i < itemUnidades_facturacion_aux[0].length; i++) {
+      var nombre_x=itemUnidades_facturacion_aux[0][i].nombrex;
+      var cod_unidad_x=itemUnidades_facturacion_aux[0][i].cod_unidad;
+      var row = $('<tr>').addClass('');
+      row.append($('<td>').addClass('').text(i+1));
+      row.append($('<td>').addClass('').html("<input type='hidden' name='codigo_unidad"+i+"' id='codigo_unidad"+i+"' value='"+cod_unidad_x+"'>"+nombre_x));
+      var sw = verificaExistenciaCodigoUnidad(cod_unidad_x,id);      
+      if(sw>=0){//verificamos si existe ese codigo en el array objetos
+        $("#nfacUnidades"+id).html(itemUnidades_facturacion[id].length);//muestar numero de itms en esa area
+        //sacamos su valores
+        var objeto_unidad = Object.values(itemUnidades_facturacion[id][sw]);
+        var monto_por_obj=objeto_unidad[1];
+        var monto_bob_obj=objeto_unidad[2];
+        row.append($('<td>').addClass('').html("<input type='number' step='0.01' class='form-control' name='monto_porcentaje_unidades"+i+"' id='monto_porcentaje_unidades"+i+"' onkeyup='convertir_a_bolivianos_unidades("+i+")' value='"+monto_por_obj+"'>"));
+        row.append($('<td>').addClass('').html("<input type='number' class='form-control' name='monto_bob_unidades"+i+"' id='monto_bob_unidades"+i+"' onkeyup='convertir_a_porcentaje_unidades("+i+")' value='"+monto_bob_obj+"'>"));        
+      }else{              
+        row.append($('<td>').addClass('').html("<input type='number' step='0.01' class='form-control' name='monto_porcentaje_unidades"+i+"' id='monto_porcentaje_unidades"+i+"' onkeyup='convertir_a_bolivianos_unidades("+i+")'>"));
+        row.append($('<td>').addClass('').html("<input type='number' class='form-control' name='monto_bob_unidades"+i+"' id='monto_bob_unidades"+i+"' onkeyup='convertir_a_porcentaje_unidades("+i+")'>"));    
+      }   
+      table.append(row);
+    }
+    var row = $('<tr>').addClass('');//Para el total
+    row.append($('<td>').addClass('').text(''));
+    row.append($('<td>').addClass('').text('TOTAL'));         
+    row.append($('<td>').addClass('').html("<input type='hidden' class='form-control' name='total_monto_porcentaje_a_unidades' id='total_monto_porcentaje_a_unidades' value='0'><input type='text' step='0.01' class='form-control' name='total_monto_porcentaje_unidades' id='total_monto_porcentaje_unidades' value='"+number_format(0,2)+"' readonly='true'>"));
+    row.append($('<td>').addClass('').html("<input type='hidden' step='0.01' class='form-control' name='total_monto_bob_a_unidades' id='total_monto_bob_a_unidades' value='0'><input type='text' step='0.01' class='form-control' name='total_monto_bob_unidades' id='total_monto_bob_unidades' value='"+number_format(0,2)+"' readonly='true'> "));    
+    table.append(row);
+    var row = $('<tr>').addClass('');//parte de la diferencia
+    row.append($('<td>').addClass('').text(''));
+    row.append($('<td>').addClass('').text('DIFERENCIA'));         
+    row.append($('<td>').addClass('').html("<input type='text' step='0.01' class='form-control' name='total_diferencia_porcentaje_unidades' id='total_diferencia_porcentaje_unidades' value='"+number_format(0,2)+"' readonly='true'>"));
+    row.append($('<td>').addClass('').html("<input type='text' step='0.01' class='form-control' name='total_diferencia_bob_unidades' id='total_diferencia_bob_unidades' value='"+number_format(0,2)+"' readonly='true'> "));    
+    table.append(row);
+    div.append(table);
+    $("#total_items_unidades").val(i);
+    $('#divResultadoListaModalUnidades').html(div);
+    // calcularTotalFilaAreasModal();
+}
+function convertir_a_porcentaje_unidades(id){  
+  var monto_precio=$("#monto_total_ingreso_unidades").val();// precio de item
+  var descuento_bob=$("#monto_bob_unidades"+id).val();//monto de descuento Bob
+  if(descuento_bob<0 || descuento_bob==0 || descuento_bob==null){
+    // Swal.fire("Informativo!", "El monto del Item NO debe ser 0 o número negativo!", "warning");
+    $("#monto_porcentaje_unidades"+id).val(0);
+    $("#monto_bob_unidades"+id).val(0);
+  }else{
+    var numero_porcentaje=parseFloat(descuento_bob)*100/parseFloat(monto_precio);
+    //alert(numero_porcentaje);
+    $("#monto_porcentaje_unidades"+id).val(numero_porcentaje.toFixed(2));  
+  }
+  calcularTotalFilaUnidadesModal();
+}
+function convertir_a_bolivianos_unidades(id){  
+  var monto_precio=$("#monto_total_ingreso_unidades").val();// precio de item
+  var descuento_por=$("#monto_porcentaje_unidades"+id).val();//monto de descuento %
+  if(descuento_por<0 || descuento_por==0 || descuento_por==null){
+    // Swal.fire("Informativo!", "El porcentaje del Item NO debe ser 0 o número negativo!", "warning");
+    $("#monto_porcentaje_unidades"+id).val(0);
+    $("#monto_bob_unidades"+id).val(0);
+  }else{
+    var monto_bob_porcentaje=parseFloat(descuento_por)*parseFloat(monto_precio)/100;
+    //alert(monto_bob_porcentaje);
+    $("#monto_bob_unidades"+id).val(monto_bob_porcentaje.toFixed(2));    
+  }
+  calcularTotalFilaUnidadesModal();
+}
+function calcularTotalFilaUnidadesModal(){  
+  var suma_porcentaje=0;  
+  var suma_bob=0;  
+  var total_items= $("#total_items_unidades").val();
+  var comprobante_auxiliar=0;
+  for (var i=0;i<=(total_items-1);i++){
+    var monto_bob=$("#monto_bob_unidades"+i).val();    
+    var monto_porcentaje=$("#monto_porcentaje_unidades"+i).val();
+    if(monto_bob=='' || monto_bob==null)monto_bob=0;
+    if(monto_porcentaje=='' || monto_porcentaje==null)monto_porcentaje=0;
+    suma_porcentaje=suma_porcentaje+parseFloat(monto_porcentaje);
+    suma_bob=suma_bob+parseFloat(monto_bob);
+  }   
+  $("#total_monto_porcentaje_unidades").val(number_format(suma_porcentaje,2));//con formato 
+  $("#total_monto_bob_unidades").val(number_format(suma_bob,2));//con formato 
+  $("#total_monto_porcentaje_a_unidades").val(suma_porcentaje);//sin formato tipo hidden
+  $("#total_monto_bob_a_unidades").val(suma_bob);//sin formato tipo hidden
+
+  //direncia
+  var monto_precio=$("#monto_total_ingreso_unidades").val();// precio de item unitario
+  var diferencia_bob_areas = parseFloat(monto_precio) - suma_bob;
+  var diferencia_porcentaje_areas = 100 - suma_porcentaje;
+  $("#total_diferencia_porcentaje_unidades").val(number_format(diferencia_porcentaje_areas,2));//con formato
+  $("#total_diferencia_bob_unidades").val(number_format(diferencia_bob_areas,2));//con formato
+}
+function savePorcentajeUnidades(){
+  var id_area=$('#id_area').val();
+  var total_porcentaje=$('#total_monto_porcentaje_a_unidades').val();
+  if(total_porcentaje==100){
+    // console.log("id: "+id_area);
+    borrarItemsUnidades(id_area); 
+    var total_items=$('#total_items_unidades').val();
+    for (var i=0;i<=(total_items-1);i++){
+      var unidad={
+        codigo_unidad: $('#codigo_unidad'+i).val(),
+        monto_porcentaje: $('#monto_porcentaje_unidades'+i).val(),
+        monto_bob: $('#monto_bob_unidades'+i).val(),    
+      }
+      // console.log($('#monto_porcentaje_areas'+i).val());
+      var monto_x=$('#monto_porcentaje_unidades'+i).val();
+      if(monto_x!=null && monto_x!=0 && monto_x!=''){
+        itemUnidades_facturacion[id_area].push(unidad);          
+      }
+    }  
+    $("#nfacUnidades"+id_area).html(itemUnidades_facturacion[id_area].length);
+    $('#modalUnidadesPorcentaje').modal('hide');
+    // console.log("guardamos: "+itemUnidades_facturacion[0].length);
+    // for(var j = 0; j < itemUnidades_facturacion[0].length; j++){
+    //   var dato = Object.values(itemUnidades_facturacion[0][j]);
+    //    console.log("dato: "+dato);
+    //   // console.log("datos: "+dato[4]+" "+dato[7]+" "+dato[8]);    
+    // }
+  }else{
+    Swal.fire("Informativo!", "EL porcentaje de los montos difiere del 100%", "warning");
+  }      
+}
+function borrarItemsUnidades(id){
+
+
+  // var canti=itemUnidades_facturacion.length;
+  //   console.log("guardamos: "+canti);
+  //   console.log("cantid_: "+itemUnidades_facturacion[canti-1].length);
+
+    // itemUnidades_facturacion.splice(id, 1);
+    //console.log("cantid_: "+itemUnidades_facturacion[id].length);
+
+  //  var nfacUnidades=[];itemUnidades_facturacion[id].push(nfacUnidades);
+}
+function verificaExistenciaCodigoUnidad(codigo,id){  
+  var sw = -1;  
+  for(var j = 0; j < itemUnidades_facturacion[id].length; j++){
+    var dato = Object.values(itemUnidades_facturacion[id][j]);
+    var cod_unidades_x=dato[0];
+    if(cod_unidades_x==codigo){
+      sw=j;
+    }
+    // console.log("dato: "+dato);
+    // console.log("datos: "+dato[4]+" "+dato[7]+" "+dato[8]);    
+  }   
+  return sw;
+}
+
+
+
 
 var itemDistOficina=[];
 var itemDistArea=[];
@@ -12500,7 +12701,6 @@ function quitarDistribucionSolicitud(){
 function agregarTipoPagoProveedorDetalle(fila){
   $("#fila_pago").val(fila);
   if($("#proveedor"+fila).val()>0){
-    //if($("#proveedor"+fila).val()!=$("#cod_beneficiario"+fila).val()){
       var proveedor = $("#proveedor"+fila).val();
       var parametros={"codigo":proveedor};
       $.ajax({
@@ -12513,24 +12713,33 @@ function agregarTipoPagoProveedorDetalle(fila){
           iniciarCargaAjax();
         },
         success:  function (resp) {
-          $(".mensaje").html(resp);
+          $("#cuenta_bancaria").html(resp);
            detectarCargaAjax();
            $("#tipo_pagoproveedor").val($("#cod_tipopago"+fila).val());
            $("#texto_ajax_titulo").html("Procesando Datos");   
+           if(!($("#nben"+fila).hasClass("estado"))){
+              $("#nombre_beneficiario").val('');
+              $("#apellido_beneficiario").val('');
+              $("#cuenta_beneficiario").val('');
+              $("#tipo_pagoproveedor").val('');
+           }else{
+              $("#nombre_beneficiario").val($("#nombre_beneficiario"+fila).val());
+              $("#apellido_beneficiario").val($("#apellido_beneficiario"+fila).val());
+              $("#cuenta_beneficiario").val($("#cuenta_beneficiario"+fila).val());
+              $("#cuenta_bancaria").val($("#cod_cuentaBancaria"+fila).val());
+              $("#tipo_pagoproveedor").val($("#cod_tipopago"+fila).val());
+           } 
+           $('.selectpicker').selectpicker("refresh");       
            $("#modalTipoPagoSolicitud").modal("show");         
         }
       });   
-    //}else{
-      //$("#nombre_beneficiario").val('<?=$nombre?>');
-      //$("#apellido_beneficiario").val('<?=$apellido?>');
-      //$("#cuenta_beneficiario").val('<?=$cuenta?>');
-    //}
   }else{
     Swal.fire("Informativo!", "Debe seleccionar un proveedor!", "warning");
   }
 }
 function guardarFormaPagoSolicitud(){
   var fila = $("#fila_pago").val();
+  $("#cod_cuentaBancaria"+fila).val($("#cuenta_bancaria").val());
   $("#cod_tipopago"+fila).val($("#tipo_pagoproveedor").val());
   $("#nombre_beneficiario"+fila).val($("#nombre_beneficiario").val());
   $("#apellido_beneficiario"+fila).val($("#apellido_beneficiario").val());
@@ -12545,6 +12754,7 @@ function quitarFormaPagoProveedor(fila){
   if($("#nben"+fila).hasClass("estado")){
     $("#nben"+fila).removeClass("estado");   
   }
+  $("#cod_cuentaBancaria"+fila).val("");
   $("#cod_tipopago"+fila).val("");
   $("#nombre_beneficiario"+fila).val("");
   $("#apellido_beneficiario"+fila).val("");
@@ -12695,4 +12905,38 @@ function cambiarCodigoAuxiliar(){
            $("#cambioCodigoAuxiliar").modal("hide");         
         }
       });
+}
+
+function cargarArrayAreaDistribucion(valor){
+  if(valor==-1){
+   var unidad = $("#unidad_solicitud").val();  
+  }else{
+    var unidad = valor;
+  }
+  var parametros={"unidad":unidad};
+  $.ajax({
+    type: "GET",
+    dataType: 'html',
+    url: "ajaxCargarArrayDistribucionArea.php",
+    data: parametros,
+    success:  function (resp) {       
+      $("#array_distribucion").html(resp);
+    }
+  }); 
+}
+
+function cargarDatosCuentaBancariaProveedor(){
+  var fila =$("#fila_pago").val();
+  var proveedor = $("#proveedor"+fila).val();
+  var banco = $("#cuenta_bancaria").val();
+  var parametros={"codigo":proveedor,"banco":banco};
+  $.ajax({
+    type: "GET",
+    dataType: 'html',
+    url: "ajax_datos_bancarios_cuenta.php",
+    data: parametros,
+    success:  function (resp) {       
+      $(".mensaje").html(resp);
+    }
+  }); 
 }

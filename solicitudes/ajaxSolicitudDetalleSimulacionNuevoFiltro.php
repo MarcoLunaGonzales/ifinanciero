@@ -50,6 +50,7 @@ $codigo_detalle=$_GET['codigo_detalle'];
 							$proveedorX="";
 							$retencionX="";
                             $codTipoPago=0;
+                            $codCuentaBancaria=0;
                             $nombreBen="";
                             $apellidoBen="";
                             $cuentaBen="";

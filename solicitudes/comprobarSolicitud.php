@@ -55,27 +55,7 @@ $distribucionOfi=obtenerDistribucionCentroCostosUnidadActivo(); //null para toda
       </script>  
       <?php
    }
-$distribucionArea=obtenerDistribucionCentroCostosAreaActivo(); //null para todas las iniciales del numero de cuenta obtenerCuentasLista(5,[5,4]);
-   while ($rowArea = $distribucionArea->fetch(PDO::FETCH_ASSOC)) {
-    $codigoD=$rowArea['codigo'];
-    $codDistD=$rowArea['cod_distribucionarea'];
-    $codAreaD=$rowArea['cod_area'];
-    $porcentajeD=$rowArea['porcentaje'];
-    $nombreD=$rowArea['nombre'];
-    $porcentajeD=obtenerPorcentajeDistribucionGastoSolicitud($porcentajeD,2,$codAreaD,$_GET['cod']);
-     ?>
-      <script>
-        var distri = {
-          codigo:<?=$codigoD?>,
-          cod_dis:<?=$codDistD?>,
-          area:<?=$codAreaD?>,
-          nombre:'<?=$nombreD?>',
-          porcentaje:<?=$porcentajeD?>
-        }
-        itemDistArea.push(distri);
-      </script>  
-      <?php
-   }
+
 
    $valorDistribucion=obtenerSiDistribucionSolicitudRecurso($_GET['cod']);
    $estadoDistribucion="";
@@ -205,6 +185,28 @@ if(isset($_GET['cod'])){
           <?php while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
             $solicitante=namePersonal($codPersonalX);
             $fechaSolicitud=strftime('%d/%m/%Y',strtotime($fechaX));
+            $distribucionArea=obtenerDistribucionCentroCostosAreaActivo($unidadX); //null para todas las iniciales del numero de cuenta obtenerCuentasLista(5,[5,4]);
+   while ($rowArea = $distribucionArea->fetch(PDO::FETCH_ASSOC)) {
+    $codigoD=$rowArea['codigo'];
+    $codDistD=$rowArea['cod_distribucionarea'];
+    $codAreaD=$rowArea['cod_area'];
+    $porcentajeD=$rowArea['porcentaje'];
+    $nombreD=$rowArea['nombre'];
+    $porcentajeD=obtenerPorcentajeDistribucionGastoSolicitud($porcentajeD,2,$codAreaD,$_GET['cod']);
+     ?>
+      <script>
+        var distri = {
+          codigo:<?=$codigoD?>,
+          cod_dis:<?=$codDistD?>,
+          area:<?=$codAreaD?>,
+          nombre:'<?=$nombreD?>',
+          porcentaje:<?=$porcentajeD?>
+        }
+        itemDistArea.push(distri);
+      </script>  
+      <?php
+   }
+   
             ?>
           <input class="form-control" type="hidden" name="cod_unidad" value="<?=$codUnidadX?>" id="cod_unidad" readonly/>
           <input class="form-control" type="hidden" name="cod_area" value="<?=$codAreaX?>" id="cod_area" readonly/>
@@ -402,6 +404,7 @@ if(isset($_GET['cod'])){
                         </a>
                         </div>
                     </div>
+                    <div id="array_distribucion"></div>
             </div> 
               </div>
              <div id="div">   

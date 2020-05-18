@@ -7,15 +7,17 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $dbh = new Conexion();
 
 // Preparamos
-$stmt = $dbh->prepare("SELECT sr.*,es.glosa from pagos_proveedores sr join comprobantes es on sr.cod_comprobante=es.codigo order by sr.codigo");
+$stmt = $dbh->prepare("SELECT sr.*,e.nombre as estado from pagos_proveedores sr join estados_pago e on sr.cod_estadopago=e.codigo order by sr.codigo");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
 $stmt->bindColumn('codigo', $codigo);
 $stmt->bindColumn('fecha', $fecha);
-$stmt->bindColumn('glosa', $descripcion);
+//$stmt->bindColumn('glosa', $descripcion);
 $stmt->bindColumn('observaciones', $observaciones);
 $stmt->bindColumn('cod_comprobante', $codComprobante);
+$stmt->bindColumn('estado', $estado);
+$stmt->bindColumn('cod_estadopago', $codEstado);
 
 ?>
 
@@ -38,6 +40,7 @@ $stmt->bindColumn('cod_comprobante', $codComprobante);
                           <th>Descripci&oacute;n</th>
                           <th>Fecha</th>
                           <th>Observaciones</th>
+                          <th>Estado</th>
                           <th class="text-right">Actions</th>
                         </tr>
                       </thead>
@@ -45,16 +48,40 @@ $stmt->bindColumn('cod_comprobante', $codComprobante);
 <?php
             $index=1;
                         while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+                          $descripcion=obtenerGlosaComprobante($codComprobante);
+                          if(strlen($descripcion)>50){
+                            $descripcion=substr($descripcion, 0, 50)."...";
+                          }
 
-
+                          switch ($codEstado) {
+                            case 1:
+                              $btnEstado="btn-default";
+                            break;
+                            case 2:
+                              $btnEstado="btn-danger";
+                            break;
+                            case 3:
+                              $btnEstado="btn-success";
+                            break;
+                            case 4:
+                              $btnEstado="btn-warning";
+                            break;
+                            case 5:
+                              $btnEstado="btn-info";
+                            break;
+                          }
 ?>
                         <tr>
                           <td align="center"><?=$index;?></td>
-                          <td><?=substr($descripcion, 0, 50)."..."?></td>
+                          <td><?=$descripcion?></td>
                           <td><?=strftime('%d/%m/%Y',strtotime($fecha));?></td>
                           <td><?=$observaciones;?></td>
+                          <td class="text-muted"><?=$estado?></td>
                           <td class="td-actions text-right">
-                            <div class="btn-group dropdown">
+                            <?php 
+                            if($codComprobante!=0){
+                              ?>
+                               <div class="btn-group dropdown">
                                      <button type="button" class="btn btn-primary dropdown-toggle" title="COMPROBANTE - DEVENGADO" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                        <i class="material-icons"><?=$iconImp;?></i>
                                      </button>
@@ -74,7 +101,49 @@ $stmt->bindColumn('cod_comprobante', $codComprobante);
                                          }
                                          ?>
                                     </div>
-                                  </div>
+                                  </div>   
+                              <?php  
+                            }
+                            ?>
+                            <div class="btn-group dropdown">
+                              <button type="button" class="btn <?=$btnEstado?> dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="material-icons">list</i> <?=$estado;?>
+                              </button>
+                              <div class="dropdown-menu">
+                                <?php 
+                                if($codEstado!=2){
+                                  if($codEstado==1){
+                                    ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=4&admin=0" class="dropdown-item">
+                                       <i class="material-icons text-warning">send</i> Enviar Solicitud
+                                    </a><?php 
+                                  }else{
+                                    if($codEstado==3){
+                                      ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=5&admin=0" class="dropdown-item">
+                                       <i class="material-icons text-success">attach_money</i> Generar Comprobante
+                                      </a><?php 
+                                    }else{
+                                      if($codEstado==4){
+                                        ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1&admin=0" class="dropdown-item">
+                                       <i class="material-icons text-danger">clear</i> Cancelar Envio
+                                      </a><?php
+                                       if($globalAdmin==1){
+                                        ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=3&admin=1" class="dropdown-item">
+                                          <i class="material-icons text-success">offline_pin</i> Aprobar
+                                         </a><?php
+                                        } 
+                                      }else{
+                                        //cod 5 PAGADO
+                                        ?><a href="#" class="dropdown-item">
+                                       <i class="material-icons text-info">attach_money</i> Pago Registrado
+                                      </a><?php
+                                      }        
+                                    }               
+                                 }
+                                }
+                               ?>
+                                      
+                              </div>
+                            </div>             
                           </td>
                         </tr>
 <?php

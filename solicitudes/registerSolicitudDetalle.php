@@ -288,6 +288,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                         </a>
                         </div>
                     </div>
+                <div id="array_distribucion"></div>    
             </div>    
             <div class="col-sm-3">
                   <div class="form-group">

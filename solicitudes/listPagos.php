@@ -137,15 +137,13 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
                     <table id="" class="table table-condensed small">
                       <thead>
                         <tr>
-                          <!--<th class="text-center">#</th>
-                          <th>Unidad</th>
-                          <th>Area</th>
-                          <th>Nro Solicitud</th>-->
-                          <th>Estado</th>
-                          <th>Fecha</th>
-                          <th>Detalle</th>
-                          <th>Proveedor</th>
+                          <!--<th>Estado</th>-->
+                          <th width="20%">Proveedor</th>
+                          <th width="20%">Detalle</th>
+                          <th>F. Sol</th>     
                           <th>Nº Sol</th>
+                          <th>Nº Comp</th>
+                          <th>Oficina</th>
                           <th class="bg-warning text-dark">Importe</th>
                           <th class="" style="background:#07B46D; color:#F7FF5A;">Pagado</th>
                           <th>Saldo</th>
@@ -186,30 +184,36 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
                           $totalImporte+=$importe;
                           $saldoImporte=abs($pagadoFila-$importe);
                           $pagado=$importe-$saldoImporte;
+
+                          $numeroComprobante=obtenerNumeroComprobante($row['cod_comprobante']);
+                          $codTipoPago=$row['cod_tipopagoproveedor'];
+                          $nomBen=$row['nombre_beneficiario'];
+                          $apellBen=$row['apellido_beneficiario'];
+                          $list=obtenerDatosCuentaBancoProveedorWS($codProveedor,$row["cod_cuentabancaria"]);
+                          $listas=$list->datos;
+                          $codBanco=$listas->IdBanco;
                           
 ?>
                         <tr>
-                          <!--<td align="center"><?=$index;?></td>                          
-                          <td><?=$unidad;?></td>
-                          <td><?=$area;?></td>
-                          <td><?=$numero;?></td>-->
-                          <td>
-
+                          <td class="text-left">
                             <input type="hidden" value="<?=$detalle?>" id="glosa_detalle<?=$index?>" name="glosa_detalle<?=$index?>">
                             <input type="hidden" value="<?=$codProveedor?>" id="codigo_proveedor<?=$index?>" name="codigo_proveedor<?=$index?>">
                             <input type="hidden" value="<?=$codSol?>" id="codigo_solicitud<?=$index?>" name="codigo_solicitud<?=$index?>">
                             <input type="hidden" value="<?=$codSolDet?>" id="codigo_solicitudDetalle<?=$index?>" name="codigo_solicitudDetalle<?=$index?>">
+                            <?=$proveedor;?></td>
+                          <!--<td>                        
                             <?php 
                             if(($importe-$pagado)>0){
                              ?><img src="assets/img/progresa.jpg" alt="" width="80px" height="35px"><?php
                             }else{
                               ?><img src="assets/img/cancelado.png" alt="" width="80px" height="35px"><?php 
                             }?> 
-                          </td>
-                          <td class="text-left"><?=strftime('%d/%m/%Y',strtotime($fecha));?></td>
+                          </td>-->
                           <td class="text-left"><?=$detalle;?></td>
-                          <td class="text-left"><?=$proveedor;?></td>
+                          <td class="text-left"><?=strftime('%d/%m/%Y',strtotime($fecha));?></td>  
                           <td class=""><?=$numero;?></td>
+                          <td><?=$numeroComprobante?></td>
+                          <td><?=$unidad?></td>
                           <td class="bg-warning text-dark text-right font-weight-bold"><?=number_format($importe,2,".","")?></td>
                           <td class="text-right font-weight-bold" style="background:#07B46D; color:#F7FF5A;"><?=number_format($pagado,2,".","")?></td>
                           <td class="text-right font-weight-bold"><?=number_format($importe-$pagado,2,".","")?></td>
@@ -240,7 +244,11 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
                                       $codigoSel=$rowSel['codigo'];
                                       $nombreSelX=$rowSel['nombre'];
                                       $abrevSelX=$rowSel['abreviaruta'];
-                                      ?><option value="<?=$codigoSel;?>"><?=$nombreSelX?></option><?php 
+                                      if($codTipoPago==$codigoSel){
+                                         ?><option selected value="<?=$codigoSel;?>"><?=$nombreSelX?></option><?php 
+                                      }else{
+                                         ?><option value="<?=$codigoSel;?>"><?=$nombreSelX?></option><?php 
+                                      }  
                                      }
                                     ?>
                                   </select>
@@ -258,7 +266,12 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
                                       $codigoSel=$rowSel['codigo'];
                                       $nombreSelX=$rowSel['nombre'];
                                       $abrevSelX=$rowSel['abreviaruta'];
-                                      ?><option value="<?=$codigoSel;?>"><?=$nombreSelX?></option><?php 
+                                      if($codBanco==$codigoSel){
+                                       ?><option selected value="<?=$codigoSel;?>"><?=$nombreSelX?></option><?php 
+                                      }else{
+                                       ?><option value="<?=$codigoSel;?>"><?=$nombreSelX?></option><?php 
+                                      }
+                                      
                                      }
                                     ?>
                                       </select>
@@ -273,9 +286,10 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
                             <input type="number" readonly class="form-control text-right" readonly min="0" value="0" id="numero_cheque<?=$index?>" name="numero_cheque<?=$index?>">
                           </td>
                           <td>
-                            <input type="text" readonly class="form-control" readonly value="" id="beneficiario<?=$index?>" name="beneficiario<?=$index?>">
+                            <input type="text" readonly class="form-control" readonly value="<?=$nomBen?> <?=$apellBen?>" id="beneficiario<?=$index?>" name="beneficiario<?=$index?>">
                           </td>
                         </tr>
+                        <script>mostrarDatosChequeDetalle(<?=$index?>);cargarChequesPagoDetalle(<?=$index?>);</script>
 <?php
 							$index++;
                       }

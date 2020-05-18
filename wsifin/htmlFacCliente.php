@@ -56,6 +56,10 @@ try{
       $nro_autorizacion = $resultInfo['nro_autorizacion'];
       $codigo_control = $resultInfo['codigo_control'];
       $importe = $resultInfo['importe'];
+      $descuento_bob = $resultInfo['descuento_bob'];
+
+      $importe=$importe-$descuento_bob;
+
       $observaciones = $resultInfo['observaciones'];
       // $nombre_cliente = $resultInfo['nombre_cliente'];
       $nombre_cliente = $razon_social;
@@ -72,21 +76,21 @@ try{
     $stmtDesCli->execute();
     $stmt2DesCli = $dbh->prepare("SELECT sf.descripcion_alterna from facturas_ventadetalle sf where sf.cod_facturaventa=$cod_factura");
     $stmt2DesCli->execute();
-     $stmt3DesCli = $dbh->prepare("SELECT sf.precio from facturas_ventadetalle sf where sf.cod_facturaventa=$cod_factura");
+     $stmt3DesCli = $dbh->prepare("SELECT sf.precio,sf.descuento_bob from facturas_ventadetalle sf where sf.cod_facturaventa=$cod_factura");
     $stmt3DesCli->execute();
     //copia cliente
     $stmt = $dbh->prepare("SELECT sf.cantidad from facturas_ventadetalle sf where sf.cod_facturaventa=$cod_factura");
     $stmt->execute();
     $stmt2 = $dbh->prepare("SELECT sf.descripcion_alterna from facturas_ventadetalle sf where sf.cod_facturaventa=$cod_factura");
     $stmt2->execute();
-     $stmt3 = $dbh->prepare("SELECT sf.precio from facturas_ventadetalle sf where sf.cod_facturaventa=$cod_factura");
+     $stmt3 = $dbh->prepare("SELECT sf.precio,sf.descuento_bob from facturas_ventadetalle sf where sf.cod_facturaventa=$cod_factura");
     $stmt3->execute();
     //copia contabilidad
     $stmt_conta = $dbh->prepare("SELECT sf.cantidad from facturas_ventadetalle sf where sf.cod_facturaventa=$cod_factura");
     $stmt_conta->execute();
     $stmt_conta2 = $dbh->prepare("SELECT sf.descripcion_alterna from facturas_ventadetalle sf where sf.cod_facturaventa=$cod_factura");
     $stmt_conta2->execute();
-     $stmt_conta3 = $dbh->prepare("SELECT sf.precio from facturas_ventadetalle sf 
+     $stmt_conta3 = $dbh->prepare("SELECT sf.precio,sf.descuento_bob from facturas_ventadetalle sf 
     where sf.cod_facturaventa=$cod_factura");
     $stmt_conta3->execute();
 
@@ -189,8 +193,11 @@ $html.=  '<header class="header">'.
                   <td valign="top" height="8%" class="text-right"><h5>';
                   while ($row = $stmt3DesCli->fetch()) 
                   {
-                    $html.=formatNumberDec($row["precio"]).'<br>';
-                    $suma_total+=$row["precio"];
+                    $precio=$row["precio"];
+                    $descuento_bob=$row["descuento_bob"];
+                    $precio=$precio-$descuento_bob;
+                    $html.=formatNumberDec($precio).'<br>';
+                    $suma_total+=$precio;                    
                   }
                   $html.='</h5></td>';
                 } 

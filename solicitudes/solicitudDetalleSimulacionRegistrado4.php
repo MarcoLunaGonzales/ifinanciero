@@ -28,6 +28,11 @@
 							   $importeSolX=$rowDetalles["importe"];
 							   $proveedorX=$rowDetalles["cod_proveedor"];
 							   $retencionX=$rowDetalles["cod_confretencion"];
+							   $codCuentaBancaria=$rowDetalles["cod_cuentabancaria"];
+							   $codTipoPago=$rowDetalles["cod_tipopagoproveedor"];
+                               $nombreBen=$rowDetalles["nombre_beneficiario"];
+                               $apellidoBen=$rowDetalles["apellido_beneficiario"];
+                               $cuentaBen=$rowDetalles["nro_cuenta_beneficiario"];
 							   if($retencionX!=0){
 							   	$tituloImporte="Importe - ".nameRetencion($retencionX);
 							   	if(strlen($tituloImporte)>13){

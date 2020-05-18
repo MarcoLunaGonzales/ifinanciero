@@ -103,12 +103,21 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$nro_factura){
 			$stmtDetalleAreas->bindColumn('cod_cuenta', $cod_cuenta_areas);
 			$porcentaje_pasivo=100-$porcentaje_debito_iva;			
 			while ($row_detAreas = $stmtDetalleAreas->fetch()) {
-				$monto_areas_x=$monto_areas*$porcentaje_pasivo/100;
+				$monto_areas_format=$monto_areas*$porcentaje_pasivo/100;
 				$descripcion=$concepto_contabilizacion;
-				$sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta_areas','0','$cod_uo_solicitud','$cod_area_areas','0','$monto_areas_x','$descripcion','$ordenDetalle')";
-	            $stmtInsertDet = $dbh->prepare($sqlInsertDet);
-	            $flagSuccessDet=$stmtInsertDet->execute();
-	            $ordenDetalle++;
+				//listado del detalle uo
+				$stmtDetalleUO = $dbh->prepare("SELECT * from solicitudes_facturacion_areas_uo where cod_solicitudfacturacion=$cod_solicitudfacturacion and cod_area=$cod_area_areas");
+				$stmtDetalleUO->execute();
+				$stmtDetalleUO->bindColumn('cod_uo', $cod_uo_areas);	 
+				$stmtDetalleUO->bindColumn('porcentaje', $porcentaje_uo);	
+				$stmtDetalleUO->bindColumn('monto', $monto_areas);				
+				while ($row_detAreas = $stmtDetalleUO->fetch()) {
+					$monto_areas_uo=$monto_areas_format*$porcentaje_uo/100;
+					$sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta_areas','0','$cod_uo_areas','$cod_area_areas','0','$monto_areas_uo','$descripcion','$ordenDetalle')";
+		            $stmtInsertDet = $dbh->prepare($sqlInsertDet);
+		            $flagSuccessDet=$stmtInsertDet->execute();
+		            $ordenDetalle++;
+				}
 			}
 			return $codComprobante;
 

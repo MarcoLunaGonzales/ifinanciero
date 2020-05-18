@@ -164,6 +164,7 @@ $tituloImporte="";
         <?php
         $index=1;$totalImporte=0;$totalImportePres=0;
         $segPres=0;$porcentSegPres=0;
+        $tipoPago="";$beneficiarios="";
         while ($row = $data->fetch(PDO::FETCH_ASSOC)) {
 
             $facturas=obtenerFacturasSoli($row['codigo']);
@@ -208,6 +209,8 @@ $tituloImporte="";
                $porcentSegPres=($datosSeg->ejecutado*100)/$datosSeg->presupuesto; 
             }
             
+            $tipoPago.=nameTipoPago($row["cod_tipopagoproveedor"]).", ";
+            $beneficiarios.=$row["nombre_beneficiario"]." ".$row["apellido_beneficiario"].", ";
         ?>
         <tr>
             <td class="s3 text-center" width="4%"><?=$index?></td>
@@ -246,7 +249,7 @@ $tituloImporte="";
             <td class="s3 text-right"><?=number_format($totalImporte, 2, '.', '')?></td>
         </tr>
         <tr>
-            <td class="s3 text-center" colspan="3">V°B° P-SA/P-DNAF</td>
+            <td class="s3 text-center" colspan="3"></td>
             <td class="s3 text-right bg-celeste" colspan="3">TOTAL (USD)</td>
             <td class="s3 text-right"></td>
             <td class="s3 text-right"></td>
@@ -254,6 +257,16 @@ $tituloImporte="";
             <td class="s3 text-right"><?=number_format($totalImporte/6.96, 2, '.', '')?></td>
         </tr>
      </table>
+     <table class="table">
+        <tr class="bg-celeste">
+            <td class="s3 text-center" colspan="2">FORMA DE PAGO</td>
+        </tr>
+        <tr>
+            <td class="s3 text-left" width="30%"><?=strtoupper($tipoPago)?></td>
+            <td class="s3 text-left"><?=strtoupper($beneficiarios)?></td>
+        </tr>
+     </table>
+
      <table class="table">
         <tr class="bg-celeste">
             <td class="s3 text-center">OBSERVACIONES</td>

@@ -71,12 +71,13 @@ function ejecutarGenerarFactura($IdSucursal,$FechaFactura,$Identificacion,$Razon
             return "3###";
         }else{//cuando todo esta en orden
             // verificamos si ya se registro la factura
-            $sqlVerf="SELECT codigo from facturas_venta where cod_sucursal=$IdSucursal and fecha_factura like '$FechaFactura%' and nit=$Identificacion and razon_social like '%$RazonSocial%'";
-            // echo $sqlVerf;
-            $stmtVerif = $dbh->prepare($sqlVerf);
-            $stmtVerif->execute();
-            $resultVerif = $stmtVerif->fetch();    
-            $codigo_facturacion = $resultVerif['codigo'];
+            // $sqlVerf="SELECT codigo from facturas_venta where cod_sucursal=$IdSucursal and fecha_factura like '$FechaFactura%' and nit=$Identificacion and razon_social like '%$RazonSocial%'";
+            // // echo $sqlVerf;
+            // $stmtVerif = $dbh->prepare($sqlVerf);
+            // $stmtVerif->execute();
+            // $resultVerif = $stmtVerif->fetch();    
+            // $codigo_facturacion = $resultVerif['codigo'];
+            $codigo_facturacion=null;
             if($codigo_facturacion==null){//no se registró
                                
                 $cod_solicitudfacturacion = 0;
@@ -95,6 +96,10 @@ function ejecutarGenerarFactura($IdSucursal,$FechaFactura,$Identificacion,$Razon
                 // echo "uo:",$cod_unidadorganizacional."<br>";
                 $fecha_actual=$FechaFactura;
                 $fecha_actual_cH=$FechaFactura;
+                
+                // $fecha_actual_cH=date('Y-m-d H:i:s');
+                // $fecha_actual=date($fecha_actual_cH,'Y-m-d');
+
                 $sqlInfo="SELECT d.codigo,d.nro_autorizacion, d.llave_dosificacion,d.fecha_limite_emision
                 from dosificaciones_facturas d where d.cod_sucursal='$cod_unidadorganizacional' order by codigo";
                 $stmtInfo = $dbh->prepare($sqlInfo);
@@ -148,7 +153,7 @@ function ejecutarGenerarFactura($IdSucursal,$FechaFactura,$Identificacion,$Razon
                         $cod_facturaVenta = $resultNroFact['codigo'];
                         ////ahora el detalle de la factura
                         // $cod_facturaVenta=0;
-                        $cod_claservicio_x=0;
+                        
                         foreach ($Detalle as $valor) {                         
 
                             // $suscripcionId=$valor->suscripcionId;
@@ -163,8 +168,9 @@ function ejecutarGenerarFactura($IdSucursal,$FechaFactura,$Identificacion,$Razon
                             $precioUnitario=$valor['precioUnitario'];
                             $cantidad=$valor['cantidad'];
                             $precio_x=$cantidad*$precioUnitario;
-                            $stmtInsertSoliFactDet = $dbh->prepare("INSERT INTO facturas_ventadetalle(cod_facturaventa,cod_claservicio,cantidad,precio,descripcion_alterna) 
-                             values ('$cod_facturaVenta','$cod_claservicio_x','$cantidad','$precio_x','$detalle_x')");
+                            $cod_claservicio_x=$pagoCursoId;
+                            $stmtInsertSoliFactDet = $dbh->prepare("INSERT INTO facturas_ventadetalle(cod_facturaventa,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_bob,suscripcionId) 
+                             values ('$cod_facturaVenta','$cod_claservicio_x','$cantidad','$precio_x','$detalle_x',0,$suscripcionId)");
                              $flagSuccess=$stmtInsertSoliFactDet->execute(); 
 
                             //echo "suscripcionId:".$suscripcionId." - pagoCursoId:".$pagoCursoId." - detalle:".$detalle_x." - Precio:".$precio_x." -Canti:".$cantidad."<br>";

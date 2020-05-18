@@ -150,6 +150,7 @@ for ($i=1;$i<=$cantidadFilas;$i++){
     $data[$fila][13]=$_POST["nombre_beneficiario".$i];
     $data[$fila][14]=$_POST["apellido_beneficiario".$i];
     $data[$fila][15]=$_POST["cuenta_beneficiario".$i];
+    $data[$fila][16]=$_POST["cod_cuentaBancaria".$i];
     //$dataInsert  
     $fila++;
       foreach($_FILES["archivos".$i]['tmp_name'] as $key => $tmp_name)
@@ -213,6 +214,7 @@ $cab[12]="cod_tipopagoproveedor";
 $cab[13]="nombre_beneficiario";
 $cab[14]="apellido_beneficiario";
 $cab[15]="nro_cuenta_beneficiario";
+$cab[16]="cod_cuentabancaria";
 $solDet=contarSolicitudDetalle($codSolicitud);
 $solDet->bindColumn('total', $contador);
 while ($row = $solDet->fetch(PDO::FETCH_BOUND)) {

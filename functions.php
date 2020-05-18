@@ -4432,7 +4432,7 @@ join af_proveedores p on sd.cod_proveedor=p.codigo where s.cod_estadosolicitudre
 }
 function listaObligacionesPagoDetalleSolicitudRecursosSolicitud($codigo){
   $dbh = new Conexion();
-  $sql="SELECT p.nombre as proveedor,u.nombre as nombre_unidad,u.abreviatura as unidad,a.nombre as nombre_area,a.abreviatura as area,
+  $sql="SELECT s.cod_comprobante,p.nombre as proveedor,u.nombre as nombre_unidad,u.abreviatura as unidad,a.nombre as nombre_area,a.abreviatura as area,
 s.cod_personal,s.cod_unidadorganizacional,s.cod_area,s.fecha,s.numero,s.cod_estadosolicitudrecurso,sd.* 
   from solicitud_recursosdetalle sd join solicitud_recursos s on sd.cod_solicitudrecurso=s.codigo  
 join unidades_organizacionales u on s.cod_unidadorganizacional=u.codigo
@@ -4633,7 +4633,7 @@ function obtenerUnidadAreaCentrosdeCostos($codigo){
 
 function listaObligacionesPagoDetalleSolicitudRecursosProveedor($codigo){
   $dbh = new Conexion();
-  $sql="SELECT p.nombre as proveedor,u.nombre as nombre_unidad,u.abreviatura as unidad,a.nombre as nombre_area,a.abreviatura as area,
+  $sql="SELECT s.cod_comprobante,p.nombre as proveedor,u.nombre as nombre_unidad,u.abreviatura as unidad,a.nombre as nombre_area,a.abreviatura as area,
 s.cod_personal,s.cod_unidadorganizacional,s.cod_area,s.fecha,s.numero,s.cod_estadosolicitudrecurso,sd.* 
   from solicitud_recursosdetalle sd join solicitud_recursos s on sd.cod_solicitudrecurso=s.codigo  
 join unidades_organizacionales u on s.cod_unidadorganizacional=u.codigo
@@ -5979,6 +5979,29 @@ function obtenerListaCuentaBancoProveedorWS($codClienteProv){
     curl_close ($ch);  
     return json_decode($remote_server_output);     
 }
+function obtenerDatosCuentaBancoProveedorWS($codClienteProv,$cuenta){
+  $direccion=obtenerValorConfiguracion(42);//direccion des servicio web
+  $sIde = "ifinanciero"; 
+  $sKey = "ce94a8dabdf0b112eafa27a5aa475751";
+  /*Lista de Clientes Empresa*/
+    $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"DatosCuentaBanco","IdCuentaBanco" => $cuenta,"IdCliente" => 34661); 
+    $parametros=json_encode($parametros);
+    // abrimos la sesión cURL
+    $ch = curl_init();
+    // definimos la URL a la que hacemos la petición
+    curl_setopt($ch, CURLOPT_URL,$direccion."lista/ws-lst-cuentabanco.php");     
+    // indicamos el tipo de petición: POST
+    curl_setopt($ch, CURLOPT_POST, TRUE);
+    // definimos cada uno de los parámetros
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);
+    // recibimos la respuesta y la guardamos en una variable
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $remote_server_output = curl_exec ($ch);
+    // cerramos la sesión cURL
+    curl_close ($ch);  
+    return json_decode($remote_server_output);     
+}
+
 function nombreComprobante($codigo){
   $dbh = new Conexion();
   $sql="SELECT c.cod_tipocomprobante, (select tc.abreviatura from tipos_comprobante tc where tc.codigo=c.cod_tipocomprobante)as tipoComprobante, MONTH(c.fecha)as mes, c.numero from comprobantes c where c.codigo='$codigo'";
@@ -6129,4 +6152,36 @@ function eliminar_acentos($cadena){
     return array('archivo' => $pdf,'base64'=>base64_encode($pdf));
 }
 
+  function obtenerNumeroComprobante($codigo){
+  $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT numero from comprobantes where codigo=$codigo");
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['numero'];
+   }
+   return($valor);
+}
+function obtenerGlosaComprobante($codigo){
+  $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT glosa from comprobantes where codigo=$codigo");
+   $stmt->execute();
+   $valor="SIN COMPROBANTE";
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['glosa'];
+   }
+   return($valor);
+}
+
+function nameTipoPago($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT nombre FROM tipos_pagoproveedor where codigo=:codigo");
+   $stmt->bindParam(':codigo',$codigo);
+   $stmt->execute();
+   $nombreX="";
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $nombreX=$row['nombre'];
+   }
+   return($nombreX);
+}
 ?>

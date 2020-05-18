@@ -45,18 +45,16 @@ $globalAdmin=$_SESSION["globalAdmin"];
                       <table class="table" id="tablePaginator">
                         <thead>
                           <tr>
-                            <th class="text-center"></th>                          
-                            <th>Of-Area</th>                            
+                            <th>Of - Area</th>
                             <th>#Sol.</th>
                             <th>Responsable</th>
                             <th>Codigo<br>Servicio</th>                            
-                            <th>Fecha<br>Registro</th>
-                            <th>Fecha<br>a Facturar</th>
+                            <th>Fecha<br>Registro</th>                            
                             <th style="color:#cc4545;">#Fact</th>                            
                             <th>Importe<br>(BOB)</th>  
-                            <th>Persona<br>Contacto</th>  
-                            <th>Razón Social</th>                      
-                            <th width="5%">Estado</th>
+                            <th>Persona<br>Contacto</th>                              
+                            <th>Concepto</th>              
+                            <th width="5%">Estado</th>                            
                             <th class="text-right">Actions</th>
                           </tr>
                         </thead>
@@ -93,6 +91,19 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             $codigo_fact_x = $resultSimu['codigo'];
                             $nro_fact_x = $resultSimu['nro_factura'];
                             if ($nro_fact_x==null)$nro_fact_x="-";
+                            //sacamos nombre de los detalles
+                            $stmtDetalleSol = $dbh->prepare("SELECT cantidad,precio,descripcion_alterna from solicitudes_facturaciondetalle where cod_solicitudfacturacion=$codigo_facturacion");
+                            $stmtDetalleSol->execute();
+                            $stmtDetalleSol->bindColumn('cantidad', $cantidad);  
+                            $stmtDetalleSol->bindColumn('precio', $precio);     
+                            $stmtDetalleSol->bindColumn('descripcion_alterna', $descripcion_alterna);                              
+                            $concepto_contabilizacion=$codigo_alterno." - ";
+                            while ($row_det = $stmtDetalleSol->fetch()){
+                              $precio_natural=$precio/$cantidad;
+                              $concepto_contabilizacion.=$descripcion_alterna." / F ".$nro_fact_x." / ".$razon_social."<br>\n";
+                              $concepto_contabilizacion.="Cantidad: ".$cantidad." * ".formatNumberDec($precio_natural)." = ".formatNumberDec($precio)."<br>\n";
+                            }
+                            $concepto_contabilizacion = (substr($concepto_contabilizacion, 0, 100))."..."; //limite de string
                             $cod_area_simulacion=$cod_area;
                             $nombre_simulacion='OTROS';
                             if($tipo_solicitud==1){// la solicitud pertence tcp-tcs
@@ -171,21 +182,18 @@ $globalAdmin=$_SESSION["globalAdmin"];
 
                             ?>
                           <tr>
-                            <td align="center"></td>
-                            <td><?=$nombre_uo;?> - <?=$nombre_area;?></td>                            
-                            <td class="text-right"><?=$nro_correlativo;?></td>
-                            <td><?=$responsable;?></td>
-                            <td><?=$codigo_alterno?></td>
-                            
-                            <td><?=$fecha_registro;?></td>
-                            <td><?=$fecha_solicitudfactura;?></td>                            
-                            <td style="color:#cc4545;"><?=$nro_fact_x;?></td>                             
-                            <td class="text-right"><?=formatNumberDec($sumaTotalImporte) ;?></td>
-                            <td class="text-left"><?=$nombre_contacto;?></td>
-                            <td><?=$razon_social;?></td>
-                            <td><button class="btn <?=$btnEstado?> btn-sm btn-link"><?=$estado;?></button></td>
-                            <!-- <td><?=$nit;?></td> -->
-
+                            <td><small><?=$nombre_uo;?> - <?=$nombre_area;?></small></td>
+                            <td class="text-right"><small><?=$nro_correlativo;?></small></td>
+                            <td><small><?=$responsable;?></small></td>
+                            <td><small><?=$codigo_alterno?></small></td>
+                            <td><small><?=$fecha_registro;?></small></td>
+                            <!-- <td><?=$fecha_solicitudfactura;?></td>          -->                   
+                            <td style="color:#cc4545;"><small><?=$nro_fact_x;?></small></td>                             
+                            <td class="text-right"><small><?=formatNumberDec($sumaTotalImporte);?></small></td>
+                            <td class="text-left"><small><?=$nombre_contacto;?></small></td>
+                            <!-- <td><?=$razon_social;?></td> -->                            
+                            <td width="35%"><small><?=$concepto_contabilizacion?></small></td>
+                            <td><button class="btn <?=$btnEstado?> btn-sm btn-link"><small><?=$estado;?></small></button></td>
                             <td class="td-actions text-right">
                               <?php
                                 if($globalAdmin==1){ //
@@ -200,7 +208,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                       ?>
                                       <div class="btn-group dropdown">
                                         <button type="button" class="btn <?=$btnEstado?> dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                           <i class="material-icons">list</i> <?=$estado;?>
+                                           <small><?=$estado;?></small>
                                         </button>
                                         <div class="dropdown-menu">
                                           <?php                                        

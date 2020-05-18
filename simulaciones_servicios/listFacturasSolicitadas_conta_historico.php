@@ -79,11 +79,11 @@ $stmtCliente->bindColumn('nombre', $nombre_cli);
                             <th>Responsable</th>
                             <th>Código<br>Servicio</th>                            
                             <th>Fecha<br>Registro</th>
-                            <th>Fecha<br>a Facturar</th>
+                            <!-- <th>Fecha<br>a Facturar</th> -->
                             <th style="color:#cc4545;">#Fact</th>                            
                             <th>Importe<br>(BOB)</th>  
                             <th>Persona<br>Contacto</th>  
-                            <th>Razón Social</th>                      
+                            <th>Concepto</th>
                             <th width="5%">Estado</th>
                             <th class="text-right">Actions</th>
                           </tr>
@@ -121,6 +121,20 @@ $stmtCliente->bindColumn('nombre', $nombre_cli);
                             $codigo_fact_x = $resultSimu['codigo'];
                             $nro_fact_x = $resultSimu['nro_factura'];
                             if ($nro_fact_x==null)$nro_fact_x="-";
+                            //sacamos nombre de los detalles
+                            $stmtDetalleSol = $dbh->prepare("SELECT cantidad,precio,descripcion_alterna from solicitudes_facturaciondetalle where cod_solicitudfacturacion=$codigo_facturacion");
+                            $stmtDetalleSol->execute();
+                            $stmtDetalleSol->bindColumn('cantidad', $cantidad);  
+                            $stmtDetalleSol->bindColumn('precio', $precio);     
+                            $stmtDetalleSol->bindColumn('descripcion_alterna', $descripcion_alterna);                              
+                            $concepto_contabilizacion=$codigo_alterno." - ";
+                            while ($row_det = $stmtDetalleSol->fetch()){
+                              $precio_natural=$precio/$cantidad;
+                              $concepto_contabilizacion.=$descripcion_alterna." / F ".$nro_fact_x." / ".$razon_social."<br>\n";
+                              $concepto_contabilizacion.="Cantidad: ".$cantidad." * ".formatNumberDec($precio_natural)." = ".formatNumberDec($precio)."<br>\n";
+                            }
+                            $concepto_contabilizacion = (substr($concepto_contabilizacion, 0, 100))."..."; //limite de string
+                            
                             $cod_area_simulacion=$cod_area;
                             $nombre_simulacion='OTROS';
                             if($tipo_solicitud==1){// la solicitud pertence tcp-tcs
@@ -206,11 +220,11 @@ $stmtCliente->bindColumn('nombre', $nombre_cli);
                             <td><?=$responsable;?></td>
                             <td><?=$codigo_alterno?></td>
                             <td><?=$fecha_registro;?></td>
-                            <td><?=$fecha_solicitudfactura;?></td>                            
+                            <!-- <td><?=$fecha_solicitudfactura;?></td>      -->                       
                             <td style="color:#cc4545;"><?=$nro_fact_x;?></td>                             
                             <td class="text-right"><?=formatNumberDec($sumaTotalImporte) ;?></td>
                             <td class="text-left"><?=$nombre_contacto;?></td>
-                            <td><?=$razon_social;?></td>
+                            <td width="35%"><small><?=$concepto_contabilizacion?></small></td>
                             <td><button class="btn <?=$btnEstado?> btn-sm btn-link"><?=$estado;?></button></td>
                             <!-- <td><?=$nit;?></td> -->
 
