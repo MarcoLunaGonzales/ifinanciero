@@ -324,7 +324,7 @@ function setBusquedaCuenta(codigoCuenta, numeroCuenta, nombreCuenta, codigoCuent
 function configuracionCentros(fila,inicio){
   for (var i = 0; i < configuracionCentro.length; i++) {    
     if(configuracionCentro[i].cod_grupo==parseInt(inicio)){
-        if(configuracionCentro[i].fijo==1){
+        if(configuracionCentro[i].fijo==1){   //Cuando la configuracion es fija
           $("#area"+fila).append("<option value='"+configuracionCentro[i].cod_area+"'>SA</option>");
           $("#area"+fila).val(configuracionCentro[i].cod_area);
           $("#area"+fila+" option").each(function(){
@@ -337,9 +337,11 @@ function configuracionCentros(fila,inicio){
               if ($(this).val() != configuracionCentro[i].cod_unidad){        
                $(this).remove();
               }
-      });
+          });
+        }else{//Cuando la configuracion no esta fija
+          $("#area"+fila).val(configuracionCentro[i].cod_area);
+          $("#unidad"+fila).val(configuracionCentro[i].cod_unidad);
         }
-        
       break;  
     }
   };

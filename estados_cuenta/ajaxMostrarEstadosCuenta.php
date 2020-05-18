@@ -24,7 +24,7 @@ $tipoComprobanteX=$_GET['tipo_comprobante'];
 $cerrarEstadoCuenta=$_GET["cerrar_ec"];
 
 
-$sqlZ="SELECT e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar,(select concat(c.cod_tipocomprobante,'|',c.numero,'|',cd.cod_unidadorganizacional,'|',MONTH(c.fecha),'|',c.fecha) from comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle)as extra FROM estados_cuenta e,comprobantes_detalle d, comprobantes c where c.codigo=d.cod_comprobante and c.cod_estadocomprobante<>2 and  e.cod_comprobantedetalle=d.codigo and (d.cod_cuenta=$codCuenta) and e.cod_comprobantedetalleorigen=0 and e.cod_cuentaaux=$codCuentaAuxiliar order by e.fecha";
+$sqlZ="SELECT e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar,(select concat(c.cod_tipocomprobante,'|',c.numero,'|',cd.cod_unidadorganizacional,'|',MONTH(c.fecha),'|',c.fecha) from comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle)as extra, c.codigo as codigocomprobante FROM estados_cuenta e,comprobantes_detalle d, comprobantes c where c.codigo=d.cod_comprobante and c.cod_estadocomprobante<>2 and  e.cod_comprobantedetalle=d.codigo and (d.cod_cuenta=$codCuenta) and e.cod_comprobantedetalleorigen=0 and e.cod_cuentaaux=$codCuentaAuxiliar order by e.fecha";
 
 //echo $sqlZ;
 
@@ -33,8 +33,7 @@ $sqlZ="SELECT e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar,(select concat(c.c
   <thead>
     <tr class="">
       <th class="text-left">Of</th>
-      <th class="text-left">Tipo</th>
-      <th class="text-left">#</th>
+      <th class="text-left">Tipo/#</th>
       <th class="text-left">FechaComp</th>
       <th class="text-left">FechaEC</th>
       <th class="text-left">Proveedor/Cliente</th>
@@ -52,6 +51,7 @@ $sqlZ="SELECT e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar,(select concat(c.c
   $stmt = $dbh->prepare($sqlZ);
   $stmt->execute();
   $i=0;$saldo=0;
+  $saldoIndividual=0;
   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $codigoX=$row['codigo'];
     $estiloFila="bg-white";$codOrigen=0;
@@ -61,7 +61,7 @@ $sqlZ="SELECT e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar,(select concat(c.c
       }
     }
 
-    $saldoIndividual=0;
+    
     
     $codPlanCuentaX=$row['cod_plancuenta'];
     $codCompDetX=$row['cod_comprobantedetalle'];
@@ -75,6 +75,9 @@ $sqlZ="SELECT e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar,(select concat(c.c
     $codigoExtra=$row['extra'];
     $codCuentaAuxX=$row['cod_cuentaaux'];
     $glosaAuxiliar=$row['glosa_auxiliar'];
+    $codigoComprobante=$row['codigocomprobante'];
+    $nombreComprobante=nombreComprobante($codigoComprobante);
+    
     $glosaMostrar="";
     if($glosaAuxiliar!=""){
       $glosaMostrar=$glosaAuxiliar;
@@ -120,19 +123,18 @@ $sqlZ="SELECT e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar,(select concat(c.c
 
     //Filtramos las cuentas que ya esten cerradas.
 
-    $saldoIndividual=$montoX-$montoContra;
+    $saldoIndividual+=$montoX-$montoContra;
     if(isset($_GET['edicion'])){
       $edicion=$_GET['edicion'];
     }else{
       $edicion=0;
     }
-    $saldo=$saldo+$saldoIndividual;
+    $saldo=$saldoIndividual;
     if($montoContra<$montoX){
     ?>
     <tr class="<?=$estiloFila?> det-estados">
-      <td class="text-center small"><?=$codigoX?>/<?=$nombreUnidadO;?> <?=$codigoComprobante?></td>
-      <td class="text-center small"><?=$nombreTipoComprobante;?></td>
-      <td class="text-center small"><?=$numeroComprobante;?></td>
+      <td class="text-center small"><?=$nombreUnidadO;?></td>
+      <td class="text-center small"><?=$nombreComprobante;?></td>
       <td class="text-left small"><?=$fechaComprobante;?></td>
       <td class="text-left small"><?=$fechaX;?></td>
       <td class="text-left small"><?=$proveedorX?></td>
@@ -171,8 +173,8 @@ $sqlZ="SELECT e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar,(select concat(c.c
   }
 ?>
     <tr>
-      <td colspan="9">Saldo Total</td>
-      <td class="text-center"><?=formatNumberDec($saldo);?></td>
+      <td colspan="8">Saldo Total</td>
+      <td class="text-right font-weight-bold"><?=formatNumberDec($saldo);?></td>
     </tr>
   </tbody>
 </table>
