@@ -14,6 +14,10 @@ $resultSimu = $stmtSimu->fetch();
 $nombre_simulacion = $resultSimu['nombre'];
 $cod_area = $resultSimu['cod_area'];
 $cod_uo = $resultSimu['cod_uo'];
+if(isset($_GET['q'])){
+  $q=$_GET['q'];
+  $r=$_GET['r'];  
+}
 
 //simulamos conexion con ibnorca
 $dbhIBNO = new ConexionIBNORCA();
@@ -42,10 +46,8 @@ m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo order by nombreAlumno");//poner 
   $stmtIBNO->bindColumn('CantidadModulos', $CantidadModulos);
   $stmtIBNO->bindColumn('NroModulo', $NroModulo);
   $stmtIBNO->bindColumn('Nombre', $nombre_mod);
-
-
-  ?>
-  <div class="content">
+?>
+<div class="content">
     <div class="container-fluid">
           <div class="row">
               <div class="col-md-12">
@@ -58,6 +60,15 @@ m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo order by nombreAlumno");//poner 
                     <h4 class="card-title text-center"><b>Estudiantes</b></h4>
                   </div>
                   <div class="row">
+                    <?php
+                    if(isset($_GET['q'])){?>
+                      <input type="hidden" name="q" id="q" value="<?=$q?>">
+                      <input type="hidden" name="r" id="r" value="<?=$r?>">
+                    <?php }else{?>
+                      <input type="hidden" name="q" id="q" value="0">
+                      <input type="hidden" name="r" id="r" value="0">
+                    <?php }
+                    ?>
                         <div class="col-sm-12">
                           <div class="form-group" align="right">
                             <button type="button" class="btn btn-warning btn-round btn-fab btn-sm" data-toggle="modal" data-target="#modalBuscador">
@@ -167,12 +178,12 @@ m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo order by nombreAlumno");//poner 
                             <!-- <td><?=$nombre_mod;?></td> -->
                             <td class="td-actions text-right">
                               <?php
-                                if($globalAdmin==1){                            
+                                if($globalAdmin==1){
                                   if($codigo_facturacion>0){
                                     if($codigo_fact_x==0){ //no se genero factura ?>
                                       <a title="Editar Solicitud de Facturación" href='<?=$urlregistro_solicitud_facturacion?>&codigo=<?=$CiAlumno?>&cod_simulacion=<?=$codigo_simulacion;?>&cod_facturacion=<?=$codigo_facturacion?>' class="btn btn-success">
                                           <i class="material-icons"><?=$iconEdit;?></i>
-                                        </a>  
+                                      </a>
 
                                   <?php }else{//ya se genero factura ?>
                                     <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=2' target="_blank"><i class="material-icons" title="Imprimir Factura">print</i></a>
@@ -181,11 +192,18 @@ m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo order by nombreAlumno");//poner 
                                     <i class="material-icons" title="Ver Detalle">settings_applications</i>
                                   </a>
                                   <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir Solicitud">print</i></a> 
-                                  <?php }else{//no se hizo solicitud de factura ?>
-                                    <a href='<?=$urlregistro_solicitud_facturacion?>&codigo=<?=$CiAlumno?>&cod_simulacion=<?=$codigo_simulacion;?>&cod_facturacion=0' rel="tooltip" class="btn" style="background-color: #0489B1;">
-                                          <i class="material-icons" title="Solicitar Facturación">receipt</i>
-                                        </a>                                                    
-                                  <?php }                                
+                                  <?php }else{//no se hizo solicitud de factura 
+
+                                    if(isset($_GET['q'])){ ?>
+                                      <a href='<?=$urlregistro_solicitud_facturacion?>&codigo=<?=$CiAlumno?>&cod_simulacion=<?=$codigo_simulacion;?>&cod_facturacion=0&q=<?=$q?>&r=<?=$r?>' rel="tooltip" class="btn" style="background-color: #0489B1;">
+                                        <i class="material-icons" title="Solicitar Facturación">receipt</i>
+                                      </a><?php 
+                                    }else{ ?>
+                                      <a href='<?=$urlregistro_solicitud_facturacion?>&codigo=<?=$CiAlumno?>&cod_simulacion=<?=$codigo_simulacion;?>&cod_facturacion=0' rel="tooltip" class="btn" style="background-color: #0489B1;">
+                                        <i class="material-icons" title="Solicitar Facturación">receipt</i>
+                                      </a><?php 
+                                    }
+                                  }                                
                                 }
                               ?>                                               
                             </td>
@@ -205,7 +223,7 @@ m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo order by nombreAlumno");//poner 
               </div>
           </div>  
     </div>
-  </div>
+</div>
 
 
 <!-- Modal busqueda de items-->
@@ -215,6 +233,11 @@ m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo order by nombreAlumno");//poner 
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title" id="myModalLabel">Buscador de Estudiantes</h4>
+      </div>
+      <div class="row">
+        <div class="form-group col-sm-12">
+          <h5 style="color:#FF0000;" class="text-center">* Para Filtrar toda la lista, simplemente presione "buscar"</h5>  
+        </div>
       </div>
       <div class="modal-body ">
         <div class="row">
@@ -304,5 +327,7 @@ m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo order by nombreAlumno");//poner 
   ?>
 
 
-
+<script type="text/javascript">  
+  $('#modalBuscador').modal('show');
+</script>
   

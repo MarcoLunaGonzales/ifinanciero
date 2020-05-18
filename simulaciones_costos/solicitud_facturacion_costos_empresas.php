@@ -6,7 +6,10 @@ require_once 'styles.php';
 $codigo_simulacion=0;//codigo de simulacion
 $dbh = new Conexion();
 $globalAdmin=$_SESSION["globalAdmin"];
-
+if(isset($_GET['q'])){
+  $q=$_GET['q'];
+  $r=$_GET['r'];  
+}
 // $sql="SELECT nombre,cod_area,cod_uo from simulaciones_costos where codigo=$codigo_simulacion";
 // $stmtSimu = $dbh->prepare($sql);
 // $stmtSimu->execute();
@@ -14,7 +17,6 @@ $globalAdmin=$_SESSION["globalAdmin"];
 // $nombre_simulacion = $resultSimu['nombre'];
 // $cod_area = $resultSimu['cod_area'];
 // $cod_uo = $resultSimu['cod_uo'];
-
 //simulamos conexion con ibnorca
 $dbhIBNO = new ConexionIBNORCA();
 //sacamos el nombre del curso
@@ -56,6 +58,15 @@ m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo order by nombreAlumno");//poner 
                     <h4 class="card-title text-center"><b>Empresas</b></h4>
                   </div>
                   <div class="row">
+                    <?php
+                    if(isset($_GET['q'])){?>
+                      <input type="hidden" name="q" id="q" value="<?=$q?>">
+                      <input type="hidden" name="r" id="r" value="<?=$r?>">
+                    <?php }else{?>
+                      <input type="hidden" name="q" id="q" value="0">
+                      <input type="hidden" name="r" id="r" value="0">
+                    <?php }
+                    ?>
                         <div class="col-sm-12">
                           <div class="form-group" align="right">
                             <button type="button" class="btn btn-warning btn-round btn-fab btn-sm" data-toggle="modal" data-target="#modalBuscador">
@@ -181,14 +192,19 @@ m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo order by nombreAlumno");//poner 
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title" id="myModalLabel">Buscador de Empresas</h4>
       </div>
+      <div class="row">
+        <div class="form-group col-sm-12">
+          <h5 style="color:#FF0000;" class="text-center">* Para Filtrar toda la lista, simplemente presione "buscar"</h5>  
+        </div>
+      </div>
       <div class="modal-body ">
         <div class="row">
-          <label class="col-sm-4 col-form-label text-center">Empresa</label>          
-          <label class="col-sm-4 col-form-label text-center">Glosa</label>
+          <label class="col-sm-6 col-form-label text-center">Empresa</label>          
+          <label class="col-sm-6 col-form-label text-center">Glosa</label>
         </div> 
         <div class="row">
-            <div class="form-group col-sm-4">            
-                <select name="cod_empresa[]" id="cod_empresa" class="selectpicker form-control form-control-sm" data-style="btn btn-info select-with-transition" data-show-subtext="true" data-live-search="true" data-actions-box="true" multiple> 
+            <div class="form-group col-sm-6">            
+                <select name="cod_empresa[]" id="cod_empresa" class="selectpicker form-control form-control-sm" data-style="btn btn-info select-with-transition" data-show-subtext="true" data-live-search="true" data-actions-box="true" multiple>
                 <option value="0"></option>
                 <?php 
                 $query1 = "SELECT codigo,nombre from clientes where cod_estadoreferencial=1 order by nombre";
@@ -199,7 +215,7 @@ m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo order by nombreAlumno");//poner 
                 </select>
             
             </div>
-            <div class="form-group col-sm-4">
+            <div class="form-group col-sm-6">
                 <input class="form-control input-sm" type="text" name="glosa" id="glosa"  >
             </div>                        
         </div> 
@@ -268,7 +284,7 @@ m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo order by nombreAlumno");//poner 
       ?><script>detalle_tabla_general.push(detalle_fac);</script><?php                    
   }
   ?>
-
-
-
+<script type="text/javascript">  
+  $('#modalBuscador').modal('show');
+</script>
   

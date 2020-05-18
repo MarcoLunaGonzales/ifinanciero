@@ -23,8 +23,6 @@ $fechaHoraActual=date("Y-m-d H:i:s");
 $sqlUpdate="UPDATE solicitudes_facturacion SET  cod_estadosolicitudfacturacion=$estado where codigo=$codigo";
 $stmtUpdate = $dbh->prepare($sqlUpdate);
 $flagSuccess=$stmtUpdate->execute();
-
-
 if($estado!=1){
 	//actualziar los estados del servidor ibnorca
 	if($estado==4){
@@ -36,39 +34,37 @@ if($estado!=1){
     if(isset($_GET['u'])){
        $u=$_GET['u'];
        actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);    
-     }else{
+    }else{
        actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);    
-     }
-    
+    }
 	}else{
     if($estado==6){
-    //enviar propuestas para la actualizacion de ibnorca
-    $fechaHoraActual=date("Y-m-d H:i:s");
-    $idTipoObjeto=2709;
-    $idObjeto=2823; //regristado
-    $obs="En Pre Aprobacion Solicitud";
-    if(isset($_GET['u'])){
-       $u=$_GET['u'];
-       actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);    
-     }else{
-       actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);    
-     }   
-   }
+      //enviar propuestas para la actualizacion de ibnorca
+      $fechaHoraActual=date("Y-m-d H:i:s");
+      $idTipoObjeto=2709;
+      $idObjeto=2823; //regristado
+      $obs="En Pre Aprobacion Solicitud";
+      if(isset($_GET['u'])){
+        $u=$_GET['u'];
+        actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);    
+      }else{
+        actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);    
+      }   
+    }
   }
 	//fin de actulizar estados del servidor ibnorca
 }else{
 	//enviar propuestas para la actualizacion de ibnorca
-    $fechaHoraActual=date("Y-m-d H:i:s");
-    $idTipoObjeto=2709;
-    $idObjeto=2726; //regristado
-    $obs="Registro de Solicitud Facturación";
-    if(isset($_GET['u'])){
-       $u=$_GET['u'];
-       actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);
-     }else{
-       actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);
-     }
-    
+  $fechaHoraActual=date("Y-m-d H:i:s");
+  $idTipoObjeto=2709;
+  $idObjeto=2726; //regristado
+  $obs="Registro de Solicitud Facturación";
+  if(isset($_GET['u'])){
+    $u=$_GET['u'];
+    actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);
+  }else{
+     actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);
+  }
 }
 if(isset($_GET['admin'])){
   $urlList2Sol=$urlListSol;

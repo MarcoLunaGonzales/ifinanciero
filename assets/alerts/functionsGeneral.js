@@ -11819,9 +11819,16 @@ function botonBuscarEstudiantesCapacitacion(){
   var valor_nombre_cliente=$("#nombreCliente").val();   
   var valor_paterno_cliente=$("#paternoCliente").val();   
   var valor_materno_cliente=$("#maternoCliente").val(); 
+
+  var q=$("#q").val();   
+  var r=$("#r").val(); 
   // alert(valor_nombre_cliente+"-"+valor_paterno_cliente+"-"+valor_materno_cliente);
   ajax=nuevoAjax();
-  ajax.open('GET', 'simulaciones_costos/ajax_busqueda_estudiantes.php?ci='+valor_ci_cliente+'&nombre='+valor_nombre_cliente+'&paterno='+valor_paterno_cliente+'&materno='+valor_materno_cliente,true);
+  if(q!=0){
+    ajax.open('GET', 'simulaciones_costos/ajax_busqueda_estudiantes.php?ci='+valor_ci_cliente+'&nombre='+valor_nombre_cliente+'&paterno='+valor_paterno_cliente+'&materno='+valor_materno_cliente+'&q='+q+'&r='+r,true);
+  }else{
+    ajax.open('GET', 'simulaciones_costos/ajax_busqueda_estudiantes.php?ci='+valor_ci_cliente+'&nombre='+valor_nombre_cliente+'&paterno='+valor_paterno_cliente+'&materno='+valor_materno_cliente,true);  
+  }
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
       var contenedor=$("#contenedor_items_estudiantes");
@@ -11834,10 +11841,17 @@ function botonBuscarEstudiantesCapacitacion(){
 function botonBuscarEmpresasCapacitacion(){
   var valor_cod_empresa=$("#cod_empresa").val();    
   var valor_glosa=$("#glosa").val();   
+  var q=$("#q").val();   
+  var r=$("#r").val(); 
 
   // alert(valor_nombre_cliente+"-"+valor_paterno_cliente+"-"+valor_materno_cliente);
   ajax=nuevoAjax();
-  ajax.open('GET', 'simulaciones_costos/ajax_busqueda_empresas.php?cod_empresa='+valor_cod_empresa+'&glosa='+valor_glosa,true);
+  if(q!=0){
+    ajax.open('GET', 'simulaciones_costos/ajax_busqueda_empresas.php?cod_empresa='+valor_cod_empresa+'&glosa='+valor_glosa+'&q='+q+'&r='+r,true);
+  }else{
+    ajax.open('GET', 'simulaciones_costos/ajax_busqueda_empresas.php?cod_empresa='+valor_cod_empresa+'&glosa='+valor_glosa,true);
+  }
+  
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
       var contenedor=$("#contenedor_items_empresas");

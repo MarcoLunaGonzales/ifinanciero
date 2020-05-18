@@ -3,8 +3,6 @@
 require_once 'conexion.php';
 require_once 'styles.php';
 require_once 'configModule.php';
-
-
 $globalUser=$_SESSION["globalUser"];
 //$dbh = new Conexion();
 $dbh = new Conexion();
