@@ -13,6 +13,27 @@ $globalUnidad=$_SESSION["globalUnidad"];
   itemDistArea=[];
   </script><?php
 if(isset($_GET['unidad'])){
+ /*$distribucionOfi=obtenerDistribucionCentroCostosUnidadActivo(); //null para todas las iniciales del numero de cuenta obtenerCuentasLista(5,[5,4]);
+   while ($rowOfi = $distribucionOfi->fetch(PDO::FETCH_ASSOC)) {
+    $codigoD=$rowOfi['codigo'];
+    $codDistD=$rowOfi['cod_distribucion_gastos'];
+    $codUnidadD=$rowOfi['cod_unidadorganizacional'];
+    $porcentajeD=$rowOfi['porcentaje'];
+    $nombreD=$rowOfi['nombre'];
+     ?>
+      <script>
+        var distri = {
+          codigo:<?=$codigoD?>,
+          cod_dis:<?=$codDistD?>,
+          unidad:<?=$codUnidadD?>,
+          nombre:'<?=$nombreD?>',
+          porcentaje:<?=$porcentajeD?>
+        }
+        itemDistOficina.push(distri);
+      </script>  
+      <?php
+   }*/
+    
  $distribucionArea=obtenerDistribucionCentroCostosAreaActivo($_GET['unidad']); //null para todas las iniciales del numero de 
    while ($rowArea = $distribucionArea->fetch(PDO::FETCH_ASSOC)) {
     $codigoD=$rowArea['codigo'];

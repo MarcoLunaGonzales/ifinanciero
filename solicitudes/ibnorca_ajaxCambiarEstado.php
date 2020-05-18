@@ -22,26 +22,31 @@ $estado=$_GET["estado"];
 $iEstado=obtenerEstadoIfinancieroSolicitudes($estado);
 $fechaHoraActual=date("Y-m-d H:i:s");
 
-$sqlUpdate="UPDATE solicitud_recursos SET  cod_estadosolicitudrecurso=$iEstado where codigo=$codigo";
-$stmtUpdate = $dbh->prepare($sqlUpdate);
-$flagSuccess=$stmtUpdate->execute();
 
-//enviar propuestas para la actualizacion de ibnorca
+//////////////////////////////fin cambio estado//////////////////////////777
+
+ if($estado=3){
+  if(comprobarCuentasPasivasDeSolicitudRecursos($codigo)>0){
+    //no crear el comprobante
+    echo "####none";
+  }else{
+    $sqlUpdate="UPDATE solicitud_recursos SET  cod_estadosolicitudrecurso=$iEstado where codigo=$codigo";
+    $stmtUpdate = $dbh->prepare($sqlUpdate);
+    $flagSuccess=$stmtUpdate->execute();
+    //enviar propuestas para la actualizacion de ibnorca
     $fechaHoraActual=date("Y-m-d H:i:s");
     $idTipoObjeto=2708;
     $idObjeto=$estado; //variable desde get
     $obs=$_GET['obs']; //$obs="Registro de propuesta";
     if(isset($_GET['u'])){
-    	$u=$_GET['u'];
-    	actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);
+      $u=$_GET['u'];
+      actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);
     }else{
-    	actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);
+      actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);
     }
 
-//////////////////////////////fin cambio estado//////////////////////////777
+ 	//  CREAR EL COMPROBANTE DEBENGADOç
 
- if($estado=3){
- 	//  CREAR EL COMPROBANTE DEBENGADO
  	// Preparamos
 $stmtSolicitud = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo where sr.cod_estadoreferencial=1 and sr.codigo=$codigo");
 // Ejecutamos
@@ -333,7 +338,26 @@ while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
          }    
         
     //fin de crear comprobante
- }   
+         echo "####ok";
+    }       
+ }else{
+  $sqlUpdate="UPDATE solicitud_recursos SET  cod_estadosolicitudrecurso=$iEstado where codigo=$codigo";
+    $stmtUpdate = $dbh->prepare($sqlUpdate);
+    $flagSuccess=$stmtUpdate->execute();
+    //enviar propuestas para la actualizacion de ibnorca
+    $fechaHoraActual=date("Y-m-d H:i:s");
+    $idTipoObjeto=2708;
+    $idObjeto=$estado; //variable desde get
+    $obs=$_GET['obs']; //$obs="Registro de propuesta";
+    if(isset($_GET['u'])){
+      $u=$_GET['u'];
+      actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);
+    }else{
+      actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);
+    }
+  echo "####ok";
+ }
+
   
 
 ?>

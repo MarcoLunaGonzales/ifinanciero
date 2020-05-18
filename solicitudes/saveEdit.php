@@ -217,8 +217,6 @@ for ($i=1;$i<=$cantidadFilas;$i++){
     $remote_server_output = curl_exec ($ch);
     // cerramos la sesión cURL
     curl_close ($ch);
-    header('Content-type: application/json');   
-    print_r($remote_server_output); 
     //$dataInsert  
     $fila++;
       foreach($_FILES["archivos".$i]['tmp_name'] as $key => $tmp_name)
