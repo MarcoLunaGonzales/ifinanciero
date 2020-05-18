@@ -11,6 +11,7 @@ $stmtX->execute();
 
 
 $globalAdmin=$_SESSION["globalAdmin"];
+$globalUnidad=$_SESSION["globalUnidad"];
 
 
 $idFila=$_GET['idFila'];

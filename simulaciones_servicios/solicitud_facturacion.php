@@ -73,7 +73,7 @@ if($cantidad_items>0){
                             <th>Responsable</th> 
                             <th>Codigo<br>Servicio</th>
                             <th>Fecha<br>Registro</th>
-                            <th>Fecha a<br>Facturar</th>
+                            <!-- <th>Fecha a<br>Facturar</th> -->
                             <th>Nro<br>Factura</th>                            
                             <th width="8%">Importe (BOB)</th>  
                             <th>Persona<br>Contacto</th>  
@@ -167,7 +167,7 @@ if($cantidad_items>0){
                             <td><?=$responsable;?></td>
                             <td><?=$codigo_alterno;?></td>
                             <td><?=$fecha_registro;?></td>
-                            <td><?=$fecha_solicitudfactura;?></td>
+                            <!-- <td><?=$fecha_solicitudfactura;?></td> -->
                             <td><?=$nro_fact_x;?></td>                            
                             <td class="text-right"><?=formatNumberDec($sumaTotalImporte) ;?></td>
                             <td class="text-left"><?=$nombre_contacto;?></td>

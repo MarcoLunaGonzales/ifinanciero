@@ -51,6 +51,12 @@ if(isset($_GET['q'])){
   $stmt->bindColumn('persona_contacto', $persona_contacto);
   $stmt->bindColumn('codigo_alterno', $codigo_alterno);
   $stmt->bindColumn('tipo_solicitud', $tipo_solicitud);//1 tcp - 2 capacitacion - 3 servicios - 4 manual - 5 venta de normas
+
+
+  // $fecha_actual_cH=date('Y-m-d H:i:s');
+  
+  // $fecha_actual=date($fecha_actual_cH, strtotime("Y-m-d")); // gives 201101
+  // echo $fecha_actual;
   ?>
   <div class="content">
     <div class="container-fluid">
@@ -67,17 +73,15 @@ if(isset($_GET['q'])){
                       <table class="table" id="tablePaginator">
                         <thead>
                           <tr>
-                            <!-- <th class="text-center"></th>  -->                         
                             <th>Of - Area</th>
                             <th>#Sol.</th>
                             <th>Responsable</th>
                             <th>Codigo<br>Servicio</th>                            
-                            <th>Fecha<br>Registro</th>
-                            <th>Fecha<br>a Facturar</th>
+                            <th>Fecha<br>Registro</th>                            
                             <th style="color:#cc4545;">#Fact</th>                            
                             <th>Importe<br>(BOB)</th>  
-                            <th>Persona<br>Contacto</th>  
-                            <th>Razón Social</th>                      
+                            <th>Persona<br>Contacto</th>                              
+                            <th>Concepto</th>
                             <th width="5%">Estado</th>
                             <th class="text-right">Actions</th>
                           </tr>
@@ -88,26 +92,26 @@ if(isset($_GET['q'])){
                           $codigo_fact_x=0;
                           $cont= array();
                           while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
-                          switch ($codEstado) {
-                            case 1:
-                              $btnEstado="btn-default";
-                            break;
-                            case 2:
-                              $btnEstado="btn-danger";
-                            break;
-                            case 3:
-                              $btnEstado="btn-success";
-                            break;
-                            case 4:
-                              $btnEstado="btn-warning";
-                            break;
-                            case 5:
-                              $btnEstado="btn-warning";
-                            break;
-                            case 6:
-                              $btnEstado="btn-default";
-                            break;
-                          }
+                            switch ($codEstado) {
+                              case 1:
+                                $btnEstado="btn-default";
+                              break;
+                              case 2:
+                                $btnEstado="btn-danger";
+                              break;
+                              case 3:
+                                $btnEstado="btn-success";
+                              break;
+                              case 4:
+                                $btnEstado="btn-warning";
+                              break;
+                              case 5:
+                                $btnEstado="btn-warning";
+                              break;
+                              case 6:
+                                $btnEstado="btn-default";
+                              break;
+                            }
                             //verificamos si ya tiene factura generada y esta activa                           
                             $stmtFact = $dbh->prepare("SELECT codigo,nro_factura from facturas_venta where cod_solicitudfacturacion=$codigo_facturacion and cod_estadofactura=1");
                             $stmtFact->execute();
@@ -115,38 +119,51 @@ if(isset($_GET['q'])){
                             $codigo_fact_x = $resultSimu['codigo'];
                             $nro_fact_x = $resultSimu['nro_factura'];
                             if ($nro_fact_x==null)$nro_fact_x="-";
+                            //sacamos nombre de los detalles
+                            $stmtDetalleSol = $dbh->prepare("SELECT cantidad,precio,descripcion_alterna from solicitudes_facturaciondetalle where cod_solicitudfacturacion=$codigo_facturacion");
+                            $stmtDetalleSol->execute();
+                            $stmtDetalleSol->bindColumn('cantidad', $cantidad);  
+                            $stmtDetalleSol->bindColumn('precio', $precio);     
+                            $stmtDetalleSol->bindColumn('descripcion_alterna', $descripcion_alterna);                              
+                            $concepto_contabilizacion=$codigo_alterno." - ";
+                            while ($row_det = $stmtDetalleSol->fetch()){
+                              $precio_natural=$precio/$cantidad;
+                              $concepto_contabilizacion.=$descripcion_alterna." / F ".$nro_fact_x." / ".$razon_social."<br>\n";
+                              $concepto_contabilizacion.="Cantidad: ".$cantidad." * ".formatNumberDec($precio_natural)." = ".formatNumberDec($precio)."<br>\n";
+                            }
+                            $concepto_contabilizacion = (substr($concepto_contabilizacion, 0, 100))."..."; //limite de string
+                            
+
+                            if($tipo_solicitud==1){// la solicitud pertence tcp-tcs
+                                //obtenemos datos de la simulacion TCP
+                                $sql="SELECT sc.nombre,ps.cod_area,ps.cod_unidadorganizacional
+                                from simulaciones_servicios sc,plantillas_servicios ps
+                                where sc.cod_plantillaservicio=ps.codigo and sc.cod_estadoreferencial=1 and sc.codigo=$cod_simulacion_servicio";                            
+                                $stmtSimu = $dbh->prepare($sql);
+                                $stmtSimu->execute();
+                                $resultSimu = $stmtSimu->fetch();
+                                $nombre_simulacion = $resultSimu['nombre'];
+                                $cod_area_simulacion = $resultSimu['cod_area'];
+                            }elseif($tipo_solicitud==2){//  pertence capacitacion
+                                $sqlCostos="SELECT sc.nombre,sc.cod_responsable,ps.cod_area,ps.cod_unidadorganizacional
+                                from simulaciones_costos sc,plantillas_servicios ps
+                                where sc.cod_plantillacosto=ps.codigo and sc.cod_estadoreferencial=1 and sc.codigo=$cod_simulacion_servicio order by sc.codigo";
+                                $stmtSimuCostos = $dbh->prepare($sqlCostos);
+                                $stmtSimuCostos->execute();
+                                $resultSimu = $stmtSimuCostos->fetch();
+                                $nombre_simulacion = $resultSimu['nombre'];
+                                $cod_area_simulacion = $resultSimu['cod_area'];
+                            }elseif($tipo_solicitud==3){// pertence a propuestas y servicios
+                                $sqlCostos="SELECT Descripcion,IdArea,IdOficina from servicios s where s.IdServicio=$cod_simulacion_servicio";
+                                $stmtSimuCostos = $dbh->prepare($sqlCostos);
+                                $stmtSimuCostos->execute();
+                                $resultSimu = $stmtSimuCostos->fetch();
+                                $nombre_simulacion = $resultSimu['Descripcion'];
+                                $cod_area_simulacion = $resultSimu['IdArea'];
+                            }
                             $cod_area_simulacion=$cod_area;
                             $nombre_simulacion='OTROS';
-                            if($tipo_solicitud==1){// la solicitud pertence tcp-tcs
-                              //obtenemos datos de la simulacion TCP
-                              $sql="SELECT sc.nombre,ps.cod_area,ps.cod_unidadorganizacional
-                              from simulaciones_servicios sc,plantillas_servicios ps
-                              where sc.cod_plantillaservicio=ps.codigo and sc.cod_estadoreferencial=1 and sc.codigo=$cod_simulacion_servicio";                            
-                              $stmtSimu = $dbh->prepare($sql);
-                              $stmtSimu->execute();
-                              $resultSimu = $stmtSimu->fetch();
-                              $nombre_simulacion = $resultSimu['nombre'];
-                              $cod_area_simulacion = $resultSimu['cod_area'];
-                            }elseif($tipo_solicitud==2){//  pertence capacitacion
-                              $sqlCostos="SELECT sc.nombre,sc.cod_responsable,ps.cod_area,ps.cod_unidadorganizacional
-                              from simulaciones_costos sc,plantillas_servicios ps
-                              where sc.cod_plantillacosto=ps.codigo and sc.cod_estadoreferencial=1 and sc.codigo=$cod_simulacion_servicio order by sc.codigo";
-                              $stmtSimuCostos = $dbh->prepare($sqlCostos);
-                              $stmtSimuCostos->execute();
-                              $resultSimu = $stmtSimuCostos->fetch();
-                              $nombre_simulacion = $resultSimu['nombre'];
-                              $cod_area_simulacion = $resultSimu['cod_area'];
-                            }elseif($tipo_solicitud==3){// pertence a propuestas y servicios
-                              $sqlCostos="SELECT Descripcion,IdArea,IdOficina from servicios s where s.IdServicio=$cod_simulacion_servicio";
-                              $stmtSimuCostos = $dbh->prepare($sqlCostos);
-                              $stmtSimuCostos->execute();
-                              $resultSimu = $stmtSimuCostos->fetch();
-                              $nombre_simulacion = $resultSimu['Descripcion'];
-                              $cod_area_simulacion = $resultSimu['IdArea'];
-                            }
-
                             $name_area_simulacion=trim(abrevArea($cod_area_simulacion),'-');
-
                             // --------
                             $responsable=namePersonal($cod_personal);//nombre del personal
                             $nombre_contacto=nameContacto($persona_contacto);//nombre del personal
@@ -163,7 +180,6 @@ if(isset($_GET['q'])){
                             $sumaTotalMonto=0;
                             $sumaTotalDescuento_por=0;
                             $sumaTotalDescuento_bob=0;
-
                             while ($row2 = $stmt2->fetch(PDO::FETCH_ASSOC)) {
                               $dato = new stdClass();//obejto
                               $codFila=(int)$row2['codigo'];
@@ -191,23 +207,21 @@ if(isset($_GET['q'])){
                             $cont[$index-1]=$nc;
                             $stringCabecera=$nombre_uo."##".$nombre_area."##".$nombre_simulacion."##".$name_area_simulacion."##".$fecha_registro."##".$fecha_solicitudfactura."##".$nit."##".$razon_social;
 
-                            ?>
+                          ?>
                           <tr>
                             <!-- <td align="center"><?=$index;?></td> -->
-                            <td><?=$nombre_uo;?> - <?=$nombre_area;?></td>
-                            <td class="text-right"><?=$nro_correlativo;?></td>
-                            <td><?=$responsable;?></td>
-                            <td><?=$codigo_alterno?></td>
-                            
-                            <td><?=$fecha_registro;?></td>
-                            <td><?=$fecha_solicitudfactura;?></td>                            
-                            <td style="color:#cc4545;"><?=$nro_fact_x;?></td>                             
-                            <td class="text-right"><?=formatNumberDec($sumaTotalImporte) ;?></td>
-                            <td class="text-left"><?=$nombre_contacto;?></td>
-                            <td><?=$razon_social;?></td>
-                            <td><button class="btn <?=$btnEstado?> btn-sm btn-link"><?=$estado;?></button></td>
-                            <!-- <td><?=$nit;?></td> -->
-
+                            <td><small><?=$nombre_uo;?> - <?=$nombre_area;?></small></td>
+                            <td class="text-right"><small><?=$nro_correlativo;?></small></td>
+                            <td><small><?=$responsable;?></small></td>
+                            <td><small><?=$codigo_alterno?></small></td>
+                            <td><small><?=$fecha_registro;?></small></td>
+                            <!-- <td><?=$fecha_solicitudfactura;?></td>          -->                   
+                            <td style="color:#cc4545;"><small><?=$nro_fact_x;?></small></td>                             
+                            <td class="text-right"><small><?=formatNumberDec($sumaTotalImporte);?></small></td>
+                            <td class="text-left"><small><?=$nombre_contacto;?></small></td>
+                            <!-- <td><?=$razon_social;?></td> -->                            
+                            <td width="35%"><small><?=$concepto_contabilizacion?></small></td>
+                            <td><button class="btn <?=$btnEstado?> btn-sm btn-link"><small><?=$estado;?></small></button></td>
                             <td class="td-actions text-right">
                               <?php
                                 // if($globalAdmin==1){ //
@@ -225,7 +239,7 @@ if(isset($_GET['q'])){
                                      ?>
                                      <div class="btn-group dropdown">
                                        <button type="button" class="btn <?=$btnEstado?> dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                         <i class="material-icons">list</i> <?=$estado;?>
+                                         <small> <?=$estado;?></small>
                                        </button>
                                        <div class="dropdown-menu">
                                         <?php 

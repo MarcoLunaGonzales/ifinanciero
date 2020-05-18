@@ -43,7 +43,7 @@ $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey,
     $ch = curl_init();
     
     curl_setopt($ch, CURLOPT_URL,"http://localhost/ifinanciero/tienda_virtual_ws/ws_generar_factura.php");//prueba
-    //curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/imonitoreo/componentesSIS/compartir_servicio.php");//oficial    
+    //curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/ifinanciero/tienda_virtual_ws/ws_generar_factura.php");//oficial    
 
     // indicamos el tipo de peticiรณn: POST
     curl_setopt($ch, CURLOPT_POST, TRUE);

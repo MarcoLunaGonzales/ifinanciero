@@ -100,7 +100,7 @@ foreach ($lista->lista as $listaCliente) {
 	        $stmt->execute(); 
 		}
 		$vigencia=$listas->Vigencia;	
-		if($vigencia==1) ){						
+		if($vigencia==1){						
 			$cod_cliente=$codigoX;
 			if(isset($listas->IdContacto))$codigo=$listas->IdContacto;
 			else $codigo='';

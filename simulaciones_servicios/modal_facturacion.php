@@ -29,7 +29,7 @@
 </div>
 
 
-<!-- modal tipo pago porcentaje -->
+<!-- modal area porcentaje -->
 <div class="modal fade" id="modalAreasPorcentaje" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -50,6 +50,33 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-success" id="registrarCuentaAsociada" name="registrarCuentaAsociada" onclick="savePorcentajeAreas()">Agregar</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal"> Volver </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- modal unidad porcentaje -->
+<div class="modal fade" id="modalUnidadesPorcentaje" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <!-- <h3 class="modal-title" id="myModalLabel"><b>Porcentaje de Distribución del Ingreso por Oficina</b></h3> -->
+        <div id="div_cabecera_hidden_unidad">
+          
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="row">          
+            <input type="hidden" name="id_area" id="id_area">
+            <div class="col-sm-12" id="divResultadoListaModalUnidades">
+            
+            </div>                      
+            <input type="hidden" id="total_items_unidades" name="total_items_unidades" >
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" id="registrarCuentaAsociada" name="registrarCuentaAsociada" onclick="savePorcentajeUnidades()">Agregar</button>
         <button type="button" class="btn btn-danger" data-dismiss="modal"> Volver </button>
       </div>
     </div>
