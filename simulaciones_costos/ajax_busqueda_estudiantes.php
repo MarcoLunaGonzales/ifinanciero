@@ -28,10 +28,13 @@ $paterno=$_GET['paterno'];
 $materno=$_GET['materno'];
 $codigo_simulacion=0;//codigo de simulacion
 
+if(isset($_GET['q'])){
+  $q=$_GET['q'];
+  $r=$_GET['r'];  
+}
+
+
 // $unidadOrgString=implode(",", $cod_uo);
-
-
-
 $sql="SELECT aa.IdModulo, aa.IdCurso, aa.CiAlumno, concat(cpe.clPaterno,' ',cpe.clMaterno,' ',cpe.clNombreRazon)as nombreAlumno, c.Abrev, c.Auxiliar,
 pc.Costo, pc.CantidadModulos, m.NroModulo, pc.Nombre, m.IdTema
 FROM asignacionalumno aa, dbcliente.cliente_persona_empresa cpe, alumnocurso ac, clasificador c, programas_cursos pc, modulos m 
@@ -128,10 +131,17 @@ $sql.=" GROUP BY IdCurso Order by nombreAlumno";
                         <i class="material-icons" title="Ver Detalle">settings_applications</i>
                       </a>
                       <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir Solicitud">print</i></a> <?php 
-                    }else{//no se hizo solicitud de factura ?>
-                      <a href='<?=$urlregistro_solicitud_facturacion?>&codigo=<?=$CiAlumno?>&cod_simulacion=0&IdCurso=<?=$IdCurso;?>&cod_facturacion=0' rel="tooltip" class="btn" style="background-color: #0489B1;">
-                        <i class="material-icons" title="Solicitar Facturación">receipt</i>
-                      </a><?php 
+                    }else{//no se hizo solicitud de factura
+                      if(isset($_GET['q'])){ ?>
+                        <a href='<?=$urlregistro_solicitud_facturacion?>&codigo=<?=$CiAlumno?>&cod_simulacion=<?=$codigo_simulacion;?>&IdCurso=<?=$IdCurso;?>&cod_facturacion=0&q=<?=$q?>&r=<?=$r?>' rel="tooltip" class="btn" style="background-color: #0489B1;">
+                          <i class="material-icons" title="Solicitar Facturación">receipt</i>
+                        </a><?php 
+                      }else{ ?>
+                        <a href='<?=$urlregistro_solicitud_facturacion?>&codigo=<?=$CiAlumno?>&cod_simulacion=<?=$codigo_simulacion;?>&IdCurso=<?=$IdCurso;?>&cod_facturacion=0' rel="tooltip" class="btn" style="background-color: #0489B1;">
+                          <i class="material-icons" title="Solicitar Facturación">receipt</i>
+                        </a><?php 
+                      }
+                      
                     }
                   }
                 ?>                                               

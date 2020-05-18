@@ -289,26 +289,50 @@ if(isset($_GET['q'])){
                                    </div>                           
                                    <?php 
                                    }else{
-                                      if($codEstado==6){
-                                        if(isset($_GET['q'])){
-                                          ?>
-                                           <a title="Enviar solicitud" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=4&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>'  class="btn btn-warning">
-                                             <i class="material-icons">send</i>
-                                           </a>
-                                           <a title="Volver al Estado Registro" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=1&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>'  class="btn btn-danger">
-                                             <i class="material-icons">refresh</i>
-                                           </a>
-                                          <?php
-                                         }else{
-                                          ?>
-                                           <a title="Enviar solicitud" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=4&admin=0'  class="btn btn-warning">
-                                             <i class="material-icons">send</i>
-                                           </a>
-                                           <a title="Volver al Estado Registro" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=1&admin=0'  class="btn btn-danger">
-                                             <i class="material-icons">refresh</i>
-                                           </a>
+                                      if($codEstado==6){//si es distino a credito cambia de flujo
+                                        $cod_tipopago_cred=obtenerValorConfiguracion(48);
+                                        // echo $cod_tipopago_cred; 
+                                        if($cod_tipopago!=$cod_tipopago_cred){
+                                          if(isset($_GET['q'])){
+                                            ?>
+                                             <a title="Aprobar Solicitud" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=3&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>'  class="btn btn-warning">
+                                               <i class="material-icons">send</i>
+                                             </a>
+                                             <a title="Volver al Estado Registro" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=1&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>'  class="btn btn-danger">
+                                               <i class="material-icons">refresh</i>
+                                             </a>
                                             <?php
+                                          }else{
+                                            ?>
+                                             <a title="Aprobar Solicitud" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=3&admin=0'  class="btn btn-warning">
+                                               <i class="material-icons">send</i>
+                                             </a>
+                                             <a title="Volver al Estado Registro" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=1&admin=0'  class="btn btn-danger">
+                                               <i class="material-icons">refresh</i>
+                                             </a>
+                                              <?php
                                           }  
+                                        }else{
+                                          if(isset($_GET['q'])){
+                                            ?>
+                                             <a title="Enviar solicitud" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=4&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>'  class="btn btn-warning">
+                                               <i class="material-icons">send</i>
+                                             </a>
+                                             <a title="Volver al Estado Registro" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=1&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>'  class="btn btn-danger">
+                                               <i class="material-icons">refresh</i>
+                                             </a>
+                                            <?php
+                                          }else{
+                                            ?>
+                                             <a title="Enviar solicitud" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=4&admin=0'  class="btn btn-warning">
+                                               <i class="material-icons">send</i>
+                                             </a>
+                                             <a title="Volver al Estado Registro" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=1&admin=0'  class="btn btn-danger">
+                                               <i class="material-icons">refresh</i>
+                                             </a>
+                                              <?php
+                                          }  
+                                        }                                        
                                       }else{
                                         if($codEstado!=2){
                                           if(isset($_GET['q'])){

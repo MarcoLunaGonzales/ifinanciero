@@ -15,7 +15,8 @@ try {//recibiendo datos
     $cod_area = $_POST["cod_area"];
     $fecha_registro = $_POST["fecha_registro"];
     $fecha_solicitudfactura = $_POST["fecha_solicitudfactura"];
-    
+    $globalUser=$_SESSION["globalUser"];
+
     if(isset($_POST["cod_tipoobjeto"])){
         $cod_tipoobjeto = $_POST["cod_tipoobjeto"];
     }else $cod_tipoobjeto=0;
@@ -34,8 +35,8 @@ try {//recibiendo datos
     $modal_totalmontos = $_POST["modal_totalmontos"];
     $modal_numeroservicio = $_POST["modal_numeroservicio"];
 
-    if(isset($_POST['u'])){
-        $cod_personal=$_POST['u'];
+    if(isset($_POST['q'])){
+        $cod_personal=$_POST['q'];
     }
     // $servicioInsert=430;
     // $CantidadInsert=1;
@@ -129,6 +130,32 @@ try {//recibiendo datos
                     $sqlTiposPago="INSERT INTO solicitudes_facturacion_areas(cod_solicitudfacturacion, cod_area, porcentaje, monto) VALUES ('$cod_facturacion','$codigo_area','$monto_porcentaje','$monto_bob')";
                     $stmtTiposPago = $dbh->prepare($sqlTiposPago);
                     $stmtTiposPago->execute();
+                    //si existe array de unidades
+                    if(isset($_POST['unidades_facturacion'])){
+                        $unidades_facturacion=json_decode($_POST['unidades_facturacion']);
+                        $nFU=cantidadF($unidades_facturacion[$j]);
+                        if($nFU>0){
+                            for($u=0;$u<$nFU;$u++){                                
+                                $codigo_unidad=$unidades_facturacion[$j][$u]->codigo_unidad;
+                                $monto_porcentaje_uo=$unidades_facturacion[$j][$u]->monto_porcentaje;
+                                $monto_bob_uo=$unidades_facturacion[$j][$u]->monto_bob;                                
+                                // echo "codigo_unidad:".$codigo_unidad."<br>";
+                                // echo "monto_porcentaje:".$monto_porcentaje."<br>";        
+                                // echo "monto_bob:".$monto_bob."<br>";    
+                                $sqlUnidades="INSERT INTO solicitudes_facturacion_areas_uo(cod_solicitudfacturacion,cod_area, cod_uo, porcentaje, monto) VALUES ('$cod_facturacion','$codigo_area','$codigo_unidad','$monto_porcentaje_uo','$monto_bob_uo')";
+                                $stmtUnidades = $dbh->prepare($sqlUnidades);
+                                $stmtUnidades->execute();                               
+                            }
+                        }else{                            
+                            $sqlUnidades="INSERT INTO solicitudes_facturacion_areas_uo(cod_solicitudfacturacion,cod_area, cod_uo, porcentaje, monto) VALUES ('$cod_facturacion','$codigo_area','$cod_unidadorganizacional',100,'$monto_bob')";
+                            $stmtUnidades = $dbh->prepare($sqlUnidades);
+                            $stmtUnidades->execute();                               
+                        }                        
+                    }else{                        
+                        $sqlUnidades="INSERT INTO solicitudes_facturacion_areas_uo(cod_solicitudfacturacion,cod_area, cod_uo, porcentaje, monto) VALUES ('$cod_facturacion','$codigo_area','$cod_unidadorganizacional',100,'$monto_bob')";
+                        $stmtUnidades = $dbh->prepare($sqlUnidades);
+                        $stmtUnidades->execute();
+                    }
                 }
             }else{
                 $codigo_area=$cod_area;
@@ -140,9 +167,33 @@ try {//recibiendo datos
                 $sqlTiposPago="INSERT INTO solicitudes_facturacion_areas(cod_solicitudfacturacion, cod_area, porcentaje, monto) VALUES ('$cod_facturacion','$codigo_area','$monto_porcentaje','$monto_bob')";
                 $stmtTiposPago = $dbh->prepare($sqlTiposPago);
                 $stmtTiposPago->execute();
+                $sqlUnidades="INSERT INTO solicitudes_facturacion_areas_uo(cod_solicitudfacturacion,cod_area, cod_uo, porcentaje, monto) VALUES ('$cod_facturacion','$codigo_area','$cod_unidadorganizacional','$monto_porcentaje','$monto_bob')";
+                $stmtUnidades = $dbh->prepare($sqlUnidades);
+                $stmtUnidades->execute();
             }          
         }
-        showAlertSuccessError($flagSuccess,$urlSolicitudfactura);
+
+
+        //enviar propuestas para la actualizacion de ibnorca
+        $fechaHoraActual=date("Y-m-d H:i:s");
+        $idTipoObjeto=2709;
+        $idObjeto=2726; //regristado
+        $obs="Registro de Solicitud Facturación";
+         if(isset($_POST['q'])){
+            $q=$_POST['q'];
+            actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$q,$cod_facturacion,$fechaHoraActual,$obs);
+         }else{
+           actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$cod_facturacion,$fechaHoraActual,$obs);
+        }
+        if(isset($_POST['q'])){
+          $q=$_POST['q'];
+          $r=$_POST['r'];          
+          showAlertSuccessError($flagSuccess,$urlSolicitudfactura."&q=".$q."&r=".$r);
+        }else{
+          showAlertSuccessError($flagSuccess,$urlSolicitudfactura);
+        } 
+
+        
         //$stmt->debugDumpParams();
     } else {//update
         $stmt = $dbh->prepare("UPDATE solicitudes_facturacion set fecha_registro='$fecha_registro',fecha_solicitudfactura='$fecha_solicitudfactura',cod_tipopago='$cod_tipopago',razon_social='$razon_social',nit='$nit',observaciones='$observaciones',observaciones_2='$observaciones_2',persona_contacto='$persona_contacto'
@@ -224,6 +275,32 @@ try {//recibiendo datos
                     $sqlTiposPago="INSERT INTO solicitudes_facturacion_areas(cod_solicitudfacturacion, cod_area, porcentaje, monto) VALUES ('$cod_facturacion','$codigo_area','$monto_porcentaje','$monto_bob')";
                     $stmtTiposPago = $dbh->prepare($sqlTiposPago);
                     $stmtTiposPago->execute();
+                    //si existe array de unidades
+                    if(isset($_POST['unidades_facturacion'])){
+                        $unidades_facturacion=json_decode($_POST['unidades_facturacion']);
+                        $nFU=cantidadF($unidades_facturacion[$j]);
+                        if($nFU>0){
+                            for($u=0;$u<$nFU;$u++){                                
+                                $codigo_unidad=$unidades_facturacion[$j][$u]->codigo_unidad;
+                                $monto_porcentaje_uo=$unidades_facturacion[$j][$u]->monto_porcentaje;
+                                $monto_bob_uo=$unidades_facturacion[$j][$u]->monto_bob;                                
+                                // echo "codigo_unidad:".$codigo_unidad."<br>";
+                                // echo "monto_porcentaje:".$monto_porcentaje."<br>";        
+                                // echo "monto_bob:".$monto_bob."<br>";    
+                                $sqlUnidades="INSERT INTO solicitudes_facturacion_areas_uo(cod_solicitudfacturacion,cod_area, cod_uo, porcentaje, monto) VALUES ('$cod_facturacion','$codigo_area','$codigo_unidad','$monto_porcentaje_uo','$monto_bob_uo')";
+                                $stmtUnidades = $dbh->prepare($sqlUnidades);
+                                $stmtUnidades->execute();                               
+                            }
+                        }else{                            
+                            $sqlUnidades="INSERT INTO solicitudes_facturacion_areas_uo(cod_solicitudfacturacion,cod_area, cod_uo, porcentaje, monto) VALUES ('$cod_facturacion','$codigo_area','$cod_unidadorganizacional',100,'$monto_bob')";
+                            $stmtUnidades = $dbh->prepare($sqlUnidades);
+                            $stmtUnidades->execute();                               
+                        }                        
+                    }else{                        
+                        $sqlUnidades="INSERT INTO solicitudes_facturacion_areas_uo(cod_solicitudfacturacion,cod_area, cod_uo, porcentaje, monto) VALUES ('$cod_facturacion','$codigo_area','$cod_unidadorganizacional',100,'$monto_bob')";
+                        $stmtUnidades = $dbh->prepare($sqlUnidades);
+                        $stmtUnidades->execute();
+                    }
                 }
             }else{
                 $codigo_area=$cod_area;
@@ -235,10 +312,19 @@ try {//recibiendo datos
                 $sqlTiposPago="INSERT INTO solicitudes_facturacion_areas(cod_solicitudfacturacion, cod_area, porcentaje, monto) VALUES ('$cod_facturacion','$codigo_area','$monto_porcentaje','$monto_bob')";
                 $stmtTiposPago = $dbh->prepare($sqlTiposPago);
                 $stmtTiposPago->execute();
+                $sqlUnidades="INSERT INTO solicitudes_facturacion_areas_uo(cod_solicitudfacturacion,cod_area, cod_uo, porcentaje, monto) VALUES ('$cod_facturacion','$codigo_area','$cod_unidadorganizacional','$monto_porcentaje','$monto_bob')";
+                $stmtUnidades = $dbh->prepare($sqlUnidades);
+                $stmtUnidades->execute();
             }
 
-        }      
-        showAlertSuccessError($flagSuccess,$urlSolicitudfactura);
+        }
+        if(isset($_POST['q'])){
+          $q=$_POST['q'];
+          $r=$_POST['r'];          
+          showAlertSuccessError($flagSuccess,$urlSolicitudfactura."&q=".$q."&r=".$r);
+        }else{
+          showAlertSuccessError($flagSuccess,$urlSolicitudfactura);
+        }         
     }//si es insert o update
     
 } catch(PDOException $ex){

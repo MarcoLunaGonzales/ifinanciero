@@ -11,19 +11,12 @@ $cod_empresa=$codigo;
 $cod_simulacion=$cod_simulacion;//agarramos el id del curso
 $cod_facturacion=$cod_facturacion;
 $IdCurso=$IdCurso;
-//sacamos datos para la facturacion
-// $sql="SELECT sc.nombre,sc.cod_responsable,ps.cod_area,ps.cod_unidadorganizacional
-// from simulaciones_costos sc,plantillas_costo ps
-// where sc.cod_plantillacosto=ps.codigo and sc.cod_estadoreferencial=1 and sc.codigo=$cod_simulacion order by sc.codigo";
-// $stmtSimu = $dbh->prepare($sql);
-// $stmtSimu->execute();
-// $resultSimu = $stmtSimu->fetch();
-// $nombre_simulacion = $resultSimu['nombre'];
-// $cod_uo = $resultSimu['cod_unidadorganizacional'];
-// $cod_area = $resultSimu['cod_area'];
-// $cod_responsable = $resultSimu['cod_responsable'];
 $globalUser=$_SESSION["globalUser"];
 $globalUnidad=$_SESSION['globalUnidad'];
+if(isset($_GET['q'])){
+  $q=$_GET['q'];
+  $r=$_GET['r'];  
+}
 $cod_area=13;
 $dbhIBNO = new ConexionIBNORCA();
 
@@ -89,7 +82,13 @@ $descuento_cliente=0;
     <div class="container-fluid">
         <div style="overflow-y:scroll;">
             <div class="col-md-12">
-              <form id="formSoliFactTcp" class="form-horizontal" action="<?=$urlSave_solicitud_facturacion_costos_empresa;?>" method="post" onsubmit="return valida(this)">                
+              <form id="formSoliFactTcp" class="form-horizontal" action="<?=$urlSave_solicitud_facturacion_costos_empresa;?>" method="post" onsubmit="return valida(this)">
+                <?php
+                if(isset($_GET['q'])){?>
+                    <input type="hidden" name="q" id="q" value="<?=$q?>">
+                    <input type="hidden" name="r" id="r" value="<?=$r?>">
+                <?php }
+                ?> 
                 <input type="hidden" name="cod_empresa" id="cod_empresa" value="<?=$cod_empresa;?>"/>
                 <input type="hidden" name="cod_simulacion" id="cod_simulacion" value="<?=$cod_simulacion;?>"/>
                 <input type="hidden" name="cod_facturacion" id="cod_facturacion" value="<?=$cod_facturacion;?>"/>
@@ -224,6 +223,11 @@ $descuento_cliente=0;
                                     $stmtAreas->execute();
                                     $ncAreas=0;$contAreas= array();
                                     while ($rowAreas = $stmtAreas->fetch(PDO::FETCH_ASSOC)) { 
+                                        //unidades de cada area?>
+                                        <script>
+                                            var nfacUnidades=[];itemUnidades_facturacion.push(nfacUnidades);
+                                        </script>
+                                        <?php
                                         //objeto dato donde se guarda las areas de servicios
                                         $datoArea = new stdClass();//obejto
                                         $codFila=(int)$rowAreas["codigo"];
@@ -235,6 +239,24 @@ $descuento_cliente=0;
                                         $ncAreas++;
                                     }
                                     $contAreas[0]=$ncAreas;
+                                ?>
+                                <?php //unidades
+                                    $queryUnidades="SELECT codigo,nombre,abreviatura from unidades_organizacionales where cod_estado=1";
+                                    $stmtUnidades = $dbh->prepare($queryUnidades);
+                                    $stmtUnidades->execute();
+                                    $ncUnidades=0;$contUnidades= array();
+                                    while ($rowUnidades = $stmtUnidades->fetch(PDO::FETCH_ASSOC)) { 
+                                        //objeto dato donde se guarda las areas de servicios
+                                        $datoUnidades = new stdClass();//obejto
+                                        $codFila=(int)$rowUnidades["codigo"];
+                                        $nombre_x=trim($rowUnidades['nombre']);                                        
+                                        $datoUnidades->codigo=($ncUnidades+1);
+                                        $datoUnidades->cod_unidad=$codFila;
+                                        $datoUnidades->nombrex=$nombre_x;                                                
+                                        $datosUnidades[0][$ncUnidades]=$datoUnidades;                           
+                                        $ncUnidades++;
+                                    }
+                                    $contUnidades[0]=$ncUnidades;
                                 ?>
                             </div>
                             <label class="col-sm-2 col-form-label">Tipo Pago</label>
@@ -288,8 +310,9 @@ $descuento_cliente=0;
                         <div class="row">
                             <label class="col-sm-2 col-form-label">Empresa</label>
                             <div class="col-sm-4">
-                                <div class="form-group" >                                     
-                                        <input class="form-control" type="text" id="nombreAlumno" name="nombreAlumno" value="<?=$nombre_cliente;?>" required="true" readonly style="background-color:#E3CEF6;text-align: left"/>
+                                <div class="form-group" >
+                                    <input class="form-control" type="hidden" name="cod_cliente" id="cod_cliente" required="true" value="<?=$cod_empresa;?>" required="true" readonly/>                                  
+                                    <input class="form-control" type="text" id="nombreAlumno" name="nombreAlumno" value="<?=$nombre_cliente;?>" required="true" readonly style="background-color:#E3CEF6;text-align: left"/>
                                         
                                 </div>
                             </div> 
@@ -544,8 +567,14 @@ $descuento_cliente=0;
                         </div>                 
                   </div>
                   <div class="card-footer ml-auto mr-auto">
-                    <button type="submit" class="<?=$buttonNormal;?>">Guardar</button>                
-                    <a href='<?=$urlSolicitudfactura_empresa?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>                    
+                    <button type="submit" class="<?=$buttonNormal;?>">Guardar</button>
+                    <?php
+                    if(isset($_GET['q'])){?>
+                        <a href='<?=$urlSolicitudfactura_empresa?>&q=<?=$q?>&r=<?=$r?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
+                    <?php }else{?>
+                        <a href='<?=$urlSolicitudfactura_empresa?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
+                    <?php }
+                    ?> 
                   </div>
                 </div>
               </form>                  
@@ -553,6 +582,34 @@ $descuento_cliente=0;
         </div>
     </div>
 </div>
+
+<div class="cargar-ajax d-none">
+  <div class="div-loading text-center">
+     <h4 class="text-warning font-weight-bold" id="texto_ajax_titulo">Procesando Datos</h4>
+     <p class="text-white">Aguard&aacute; un momento por favor</p>  
+  </div>
+</div>
+<div class="modal fade modal-arriba modal-primary" id="modalAgregarProveedor" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content card">
+            <div class="card-header card-header-warning card-header-icon">
+                <div class="card-icon">
+                    <i class="material-icons text-dark">ballot</i>
+                 </div>
+                  <h4 class="card-title">Contacto</h4>
+            </div>
+            <div class="card-body">
+                 <div id="datosProveedorNuevo">
+                   
+                 </div> 
+                <div class="form-group float-right">
+                        <button type="button" onclick="guardarDatoscontacto()" class="btn btn-info btn-round">Agregar</button>
+                </div>
+          </div>
+      </div>  
+    </div>
+</div>
+
 <!-- verifica que esté seleccionado al menos un item -->
 <script type="text/javascript">
     function valida(f) {
@@ -606,5 +663,24 @@ $descuento_cliente=0;
               }          
             }
         ?><script>itemAreas_facturacion_aux.push(detalle_areas);</script><?php                    
+    }
+?>
+<!-- objeto unidades servicio -->
+<?php 
+    $lanUnidades=sizeof($contUnidades);
+    for ($i=0; $i < $lanUnidades; $i++) {
+      ?>
+      <script>var detalle_unidades=[];</script>
+      <?php
+        for ($j=0; $j < $contUnidades[$i]; $j++) {            
+             if($contUnidades[$i]>0){?>
+                <script>
+                    detalle_unidades.push({codigo:<?=$datosUnidades[$i][$j]->codigo?>,cod_unidad:<?=$datosUnidades[$i][$j]->cod_unidad?>,nombrex:'<?=$datosUnidades[$i][$j]->nombrex?>'});
+                </script>
+
+              <?php         
+              }          
+            }
+        ?><script>itemUnidades_facturacion_aux.push(detalle_unidades);</script><?php                    
     }
 ?>

@@ -26,8 +26,12 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $cod_empresa=$_GET['cod_empresa'];
 $glosa=$_GET['glosa'];
 $codigo_simulacion=0;//codigo de simulacion
+if(isset($_GET['q'])){
+  $q=$_GET['q'];
+  $r=$_GET['r'];  
+}
 
-$sql="SELECT * from programas_cursos pc where pc.idEmpresa<>0";  
+$sql="SELECT * from programas_cursos pc where (pc.idEmpresa<>0 || pc.idEmpresa<>null)";  
 
 if($cod_empresa!=""){
   $sql.=" and idEmpresa in ($cod_empresa)";
@@ -97,10 +101,16 @@ $sql.=" order by pc.IdCurso desc";
                         <i class="material-icons" title="Ver Detalle">settings_applications</i>
                       </a> -->
                       <!-- <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir Solicitud">print</i></a>  --><?php 
-                    }else{//no se hizo solicitud de factura ?>
-                      <a href='<?=$urlregistro_solicitud_facturacion_empresas?>&codigo=<?=$idEmpresa?>&cod_simulacion=0&IdCurso=<?=$IdCurso;?>&cod_facturacion=0' rel="tooltip" class="btn" style="background-color: #0489B1;">
-                        <i class="material-icons" title="Solicitar Facturación">receipt</i>
-                      </a><?php 
+                    }else{//no se hizo solicitud de factura
+                      if(isset($_GET['q'])){ ?>
+                        <a href='<?=$urlregistro_solicitud_facturacion_empresas?>&codigo=<?=$idEmpresa?>&cod_simulacion=0&IdCurso=<?=$IdCurso;?>&cod_facturacion=0&q=<?=$q?>&r=<?=$r?>' rel="tooltip" class="btn" style="background-color: #0489B1;">
+                          <i class="material-icons" title="Solicitar Facturación">receipt</i>
+                        </a><?php 
+                      }else{ ?>
+                        <a href='<?=$urlregistro_solicitud_facturacion_empresas?>&codigo=<?=$idEmpresa?>&cod_simulacion=0&IdCurso=<?=$IdCurso;?>&cod_facturacion=0' rel="tooltip" class="btn" style="background-color: #0489B1;">
+                          <i class="material-icons" title="Solicitar Facturación">receipt</i>
+                        </a><?php 
+                      }                      
                     }
                   }
                 ?>                                               

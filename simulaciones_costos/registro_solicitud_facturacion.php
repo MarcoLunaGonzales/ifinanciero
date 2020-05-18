@@ -11,32 +11,15 @@ $ci_estudiante=$codigo;
 $cod_simulacion=$cod_simulacion;//agarramos el id del curso
 $cod_facturacion=$cod_facturacion;
 $IdCurso=$IdCurso;
-//sacamos datos para la facturacion
-// $sql="SELECT sc.nombre,sc.cod_responsable,ps.cod_area,ps.cod_unidadorganizacional
-// from simulaciones_costos sc,plantillas_costo ps
-// where sc.cod_plantillacosto=ps.codigo and sc.cod_estadoreferencial=1 and sc.codigo=$cod_simulacion order by sc.codigo";
-// $stmtSimu = $dbh->prepare($sql);
-// $stmtSimu->execute();
-// $resultSimu = $stmtSimu->fetch();
-// $nombre_simulacion = $resultSimu['nombre'];
-// $cod_uo = $resultSimu['cod_unidadorganizacional'];
-// $cod_area = $resultSimu['cod_area'];
-// $cod_responsable = $resultSimu['cod_responsable'];
+if(isset($_GET['q'])){
+  $q=$_GET['q'];
+  $r=$_GET['r'];  
+}
+
 $globalUser=$_SESSION["globalUser"];
 $globalUnidad=$_SESSION['globalUnidad'];
 $cod_area=13;
 $dbhIBNO = new ConexionIBNORCA();
-
-//nombre del curso de ibnoca
-// $stmtIBNOCurso = $dbhIBNO->prepare("SELECT aa.IdModulo, aa.IdCurso, aa.CiAlumno, concat(cpe.clPaterno,' ',cpe.clMaterno,' ',cpe.clNombreRazon)as nombreAlumno, c.Abrev, c.Auxiliar,
-// pc.Costo, pc.CantidadModulos, m.NroModulo, pc.Nombre, m.IdTema
-// FROM asignacionalumno aa, dbcliente.cliente_persona_empresa cpe, alumnocurso ac, clasificador c, programas_cursos pc, modulos m 
-// where cpe.clIdentificacion=aa.CiAlumno 
-// and ac.IdCurso=aa.IdCurso and ac.CiAlumno=aa.CiAlumno and ac.IdConceptoPago=c.IdClasificador and pc.IdCurso=aa.IdCurso and 
-// m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo and cpe.clIdentificacion=$ci_estudiante and aa.IdModulo=$IdModulo;");//poner el codigo de curso a buscar
-// $stmtIBNOCurso->execute();
-// $resultNombreCurso = $stmtIBNOCurso->fetch();
-// $nombre_curso = $resultNombreCurso['Nombre'];
 //datos del estudiante y el curso que se encuentra
 $sqlIBNORCA="SELECT aa.IdModulo, aa.IdCurso, aa.CiAlumno, concat(cpe.clPaterno,' ',cpe.clMaterno,' ',cpe.clNombreRazon)as nombreAlumno, c.Abrev, c.Auxiliar,
 pc.Costo, pc.CantidadModulos, m.NroModulo, pc.Nombre, m.IdTema
@@ -77,7 +60,7 @@ if($cod_facturacion>0){//editar
     $descuento_bob=$resultSimuFact['descuento_bob'];
     $persona_contacto= $resultSimuFact['persona_contacto'];
 
-}else{//registrat
+}else{//registrar
     $fecha_registro = date('Y-m-d');
     $fecha_solicitudfactura = date('Y-m-d');
     $razon_social= $nombreAlumno;
@@ -106,7 +89,13 @@ $descuento_cliente=0;
     <div class="container-fluid">
         <div style="overflow-y:scroll;">
             <div class="col-md-12">
-              <form id="formSoliFactTcp" class="form-horizontal" action="<?=$urlSave_solicitud_facturacion_costos;?>" method="post" onsubmit="return valida(this)">                
+              <form id="formSoliFactTcp" class="form-horizontal" action="<?=$urlSave_solicitud_facturacion_costos;?>" method="post" onsubmit="return valida(this)"> 
+                <?php
+                if(isset($_GET['q'])){?>
+                    <input type="hidden" name="q" id="q" value="<?=$q?>">
+                    <input type="hidden" name="r" id="r" value="<?=$r?>">
+                <?php }
+                ?>              
                 <input type="hidden" name="ci_estudiante" id="ci_estudiante" value="<?=$ci_estudiante;?>"/>
                 <input type="hidden" name="cod_simulacion" id="cod_simulacion" value="<?=$cod_simulacion;?>"/>
                 <input type="hidden" name="cod_facturacion" id="cod_facturacion" value="<?=$cod_facturacion;?>"/>
@@ -241,6 +230,11 @@ $descuento_cliente=0;
                                     $stmtAreas->execute();
                                     $ncAreas=0;$contAreas= array();
                                     while ($rowAreas = $stmtAreas->fetch(PDO::FETCH_ASSOC)) { 
+                                        //unidades de cada area?>
+                                        <script>
+                                            var nfacUnidades=[];itemUnidades_facturacion.push(nfacUnidades);
+                                        </script>
+                                        <?php
                                         //objeto dato donde se guarda las areas de servicios
                                         $datoArea = new stdClass();//obejto
                                         $codFila=(int)$rowAreas["codigo"];
@@ -252,6 +246,24 @@ $descuento_cliente=0;
                                         $ncAreas++;
                                     }
                                     $contAreas[0]=$ncAreas;
+                                ?>
+                                <?php //unidades
+                                    $queryUnidades="SELECT codigo,nombre,abreviatura from unidades_organizacionales where cod_estado=1";
+                                    $stmtUnidades = $dbh->prepare($queryUnidades);
+                                    $stmtUnidades->execute();
+                                    $ncUnidades=0;$contUnidades= array();
+                                    while ($rowUnidades = $stmtUnidades->fetch(PDO::FETCH_ASSOC)) { 
+                                        //objeto dato donde se guarda las areas de servicios
+                                        $datoUnidades = new stdClass();//obejto
+                                        $codFila=(int)$rowUnidades["codigo"];
+                                        $nombre_x=trim($rowUnidades['nombre']);                                        
+                                        $datoUnidades->codigo=($ncUnidades+1);
+                                        $datoUnidades->cod_unidad=$codFila;
+                                        $datoUnidades->nombrex=$nombre_x;                                                
+                                        $datosUnidades[0][$ncUnidades]=$datoUnidades;                           
+                                        $ncUnidades++;
+                                    }
+                                    $contUnidades[0]=$ncUnidades;
                                 ?>
                             </div>
                             <label class="col-sm-2 col-form-label">Tipo Pago</label>
@@ -559,8 +571,15 @@ $descuento_cliente=0;
                         </div>                 
                   </div>
                   <div class="card-footer ml-auto mr-auto">
-                    <button type="submit" class="<?=$buttonNormal;?>">Guardar</button>                
-                    <a href='<?=$urlSolicitudfactura?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>                    
+                    <button type="submit" class="<?=$buttonNormal;?>">Guardar</button>
+                    <?php
+                    if(isset($_GET['q'])){?>                        
+                        <a href='<?=$urlSolicitudfactura?>&q=<?=$q?>&r=<?=$r?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>                    
+                    <?php }else{?>
+                        <a href='<?=$urlSolicitudfactura?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>                    
+                    <?php }
+                    ?> 
+                    
                   </div>
                 </div>
               </form>                  
@@ -621,5 +640,24 @@ $descuento_cliente=0;
               }          
             }
         ?><script>itemAreas_facturacion_aux.push(detalle_areas);</script><?php                    
+    }
+?>
+<!-- objeto unidades servicio -->
+<?php 
+    $lanUnidades=sizeof($contUnidades);
+    for ($i=0; $i < $lanUnidades; $i++) {
+      ?>
+      <script>var detalle_unidades=[];</script>
+      <?php
+        for ($j=0; $j < $contUnidades[$i]; $j++) {            
+             if($contUnidades[$i]>0){?>
+                <script>
+                    detalle_unidades.push({codigo:<?=$datosUnidades[$i][$j]->codigo?>,cod_unidad:<?=$datosUnidades[$i][$j]->cod_unidad?>,nombrex:'<?=$datosUnidades[$i][$j]->nombrex?>'});
+                </script>
+
+              <?php         
+              }          
+            }
+        ?><script>itemUnidades_facturacion_aux.push(detalle_unidades);</script><?php                    
     }
 ?>
