@@ -5962,7 +5962,7 @@ function obtenerListaCuentaBancoProveedorWS($codClienteProv){
   $sIde = "ifinanciero"; 
   $sKey = "ce94a8dabdf0b112eafa27a5aa475751";
   /*Lista de Clientes Empresa*/
-    $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ListaCuentaBancoxCliente","IdCliente" => 34661); 
+    $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ListaCuentaBancoxCliente","IdCliente" => $codClienteProv); 
     $parametros=json_encode($parametros);
     // abrimos la sesión cURL
     $ch = curl_init();

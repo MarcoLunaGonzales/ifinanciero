@@ -23,6 +23,7 @@ $fechaHoraActual=date("Y-m-d H:i:s");
 $sqlUpdate="UPDATE solicitudes_facturacion SET  cod_estadosolicitudfacturacion=$estado where codigo=$codigo";
 $stmtUpdate = $dbh->prepare($sqlUpdate);
 $flagSuccess=$stmtUpdate->execute();
+
 if($estado!=1){
 	//actualziar los estados del servidor ibnorca
 	if($estado==4){

@@ -188,8 +188,23 @@ try {
                 $stmtUnidades->execute();
             }
         }
-        if(isset($_POST['id_ibnored'])){
-          showAlertSuccessError($flagSuccess,$urlSolicitudfactura."&cod=".$cod_simulacion."&q=".$_POST['id_ibnored']);
+        //enviar propuestas para la actualizacion de ibnorca
+        $fechaHoraActual=date("Y-m-d H:i:s");
+        $idTipoObjeto=2709;
+        $idObjeto=2726; //regristado
+        $obs="Registro de Solicitud Facturación";
+        if(isset($_POST['usuario_ibnored_u'])){
+            $u=$_POST['usuario_ibnored_u'];
+            actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$cod_facturacion,$fechaHoraActual,$obs);
+        }else{
+           actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$cod_facturacion,$fechaHoraActual,$obs);
+        }
+        if(isset($_POST['usuario_ibnored'])){
+          $q=$_POST['usuario_ibnored'];
+          $s=$_POST['usuario_ibnored_s'];
+          $u=$_POST['usuario_ibnored_u'];
+          $v=$_POST['usuario_ibnored_v'];
+          showAlertSuccessError($urlSolicitudfactura."&cod=".$cod_simulacion."&q=".$q."&s=".$s."&u=".$u."&v=".$v);
         }else{
           showAlertSuccessError($flagSuccess,$urlSolicitudfactura."&cod=".$cod_simulacion);  
         }
