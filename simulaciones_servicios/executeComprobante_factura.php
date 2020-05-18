@@ -28,9 +28,14 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$nro_factura){
 		$codMoneda=1;
 		$codEstadoComprobante=1;
 		$fechaActual=date("Y-m-d H:i:s");
+		$mes_actual=date('m');
 		$tipoComprobante=4;//facturas
-
+		$nombreTipoComprobante=nameTipoComprobante($tipoComprobante);
 		$numeroComprobante=obtenerCorrelativoComprobante2($tipoComprobante);
+
+		$mesComprobanteX=str_pad($mes_actual, 2, "0", STR_PAD_LEFT);
+    	$numeroX=str_pad($numeroComprobante, 5, "0", STR_PAD_LEFT);
+		$nombreComprobante=$nombreTipoComprobante.$mesComprobanteX."-".$numeroX;
 		//sacamos nombre de los detalles
 		$stmtDetalleSol = $dbh->prepare("SELECT cantidad,precio,descripcion_alterna from solicitudes_facturaciondetalle where cod_solicitudfacturacion=$cod_solicitudfacturacion");
 		$stmtDetalleSol->execute();
@@ -40,7 +45,7 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$nro_factura){
 		$concepto_contabilizacion=$codigo_alterno." - ";
 		while ($row_det = $stmtDetalleSol->fetch()){
 			$precio_natural=$precio/$cantidad;
-			$concepto_contabilizacion.=$descripcion_alterna." / F ".$nro_factura." / ".$razon_social."<br>\n";
+			$concepto_contabilizacion.=$descripcion_alterna." / ".$nombreComprobante." - F ".$nro_factura." / ".$razon_social."<br>\n";
 			$concepto_contabilizacion.="Cantidad: ".$cantidad." * ".formatNumberDec($precio_natural)." = ".formatNumberDec($precio)."<br>\n";
 		}
 		$codComprobante=obtenerCodigoComprobante();		
