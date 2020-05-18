@@ -22,6 +22,8 @@
 						  }
 						 if($encontrar==0){
 						 	?><script>var nfac=[];itemFacturas.push(nfac);</script><?php
+						 	   $unidadXX=$rowDetalles["cod_unidadorganizacional"];	
+                               $areaXX=$rowDetalles["cod_area"];	 
                                $codDetalleX=$rowDetalles["codigo"];	
                                $detalleX=$rowDetalles["detalle"];
                                $importeX=$rowDetalles["importe_presupuesto"];

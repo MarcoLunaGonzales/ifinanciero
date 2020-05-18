@@ -3742,7 +3742,11 @@ function minusDetalleSolicitud(idF){
        $("#habilitar"+nuevoId).attr("id","habilitar"+i);
        $("#habilitar"+nuevoId).attr("onchange","habilitarFila('"+i+"')");
        if($("#simulacion").length){
-        $("#partida_cuenta_id"+nuevoId).attr("name","partida_cuenta_id"+i);
+        
+       }else{
+
+       }
+       $("#partida_cuenta_id"+nuevoId).attr("name","partida_cuenta_id"+i);
         $("#partida_cuenta_id"+nuevoId).attr("id","partida_cuenta_id"+i);
         $("#partida_cuenta"+nuevoId).attr("name","partida_cuenta"+i);
         $("#partida_cuenta"+nuevoId).attr("id","partida_cuenta"+i);
@@ -3750,11 +3754,10 @@ function minusDetalleSolicitud(idF){
         $("#detalle_detalle"+nuevoId).attr("id","detalle_detalle"+i);
         $("#importe"+nuevoId).attr("name","importe"+i);
         $("#importe"+nuevoId).attr("id","importe"+i);
+        $("#importe_presupuesto"+nuevoId).attr("name","importe_presupuesto"+i);
+        $("#importe_presupuesto"+nuevoId).attr("id","importe_presupuesto"+i);
         $("#proveedor"+nuevoId).attr("name","proveedor"+i);
         $("#proveedor"+nuevoId).attr("id","proveedor"+i);
-       }else{
-
-       }
        $("#boton_remove"+nuevoId).attr("onclick","minusDetalleSolicitud('"+i+"')");
        $("#boton_remove"+nuevoId).attr("id","boton_remove"+i);
        $("#boton_fac"+nuevoId).attr("onclick","listFac('"+i+"')");
@@ -3787,6 +3790,8 @@ function minusDetalleSolicitud(idF){
        $("#boton_formapago"+nuevoId).attr("onclick","agregarTipoPagoProveedorDetalle('"+i+"')");
        $("#boton_formapago"+nuevoId).attr("id","boton_formapago"+i);
        $("#nben"+nuevoId).attr("id","nben"+i);
+       $("#fila_index"+nuevoId).text(i);
+       $("#fila_index"+nuevoId).attr("id","fila_index"+i);
       }
      } 
      itemFacturas.splice((idF-1), 1);
@@ -11280,15 +11285,21 @@ function cambiarEstadoObjetoSolAjax(){
         success:  function (resp) {
            detectarCargaAjax();
            $("#texto_ajax_titulo").html("Procesando Datos");
-           if($("#id_servicioibnored").length>0){
-            var q=$("#id_servicioibnored").val();
-            var r=$("#id_servicioibnored_rol").val();
-            var s=$("#id_servicioibnored_s").val();
-            var u=$("#id_servicioibnored_u").val();
-            alerts.showSwal('success-message','index.php?opcion=listSolicitudRecursosAdmin&q='+q+'&r='+r+'&s='+s+'&u='+u);   
-          }else{
-             alerts.showSwal('success-message','index.php?opcion=listSolicitudRecursosAdmin');
-          }
+           var respu=resp.split("####");
+           if(respu[1]=="none"){
+             //no se creo el comprobante
+             Swal.fire("Informativo!", "Una de las cuentas del detalle de la solicitud, no esta relacionada a su cuenta pasivo", "warning");
+           }else{
+            if($("#id_servicioibnored").length>0){
+              var q=$("#id_servicioibnored").val();
+              var r=$("#id_servicioibnored_rol").val();
+              var s=$("#id_servicioibnored_s").val();
+              var u=$("#id_servicioibnored_u").val();
+              alerts.showSwal('success-message','index.php?opcion=listSolicitudRecursosAdmin&q='+q+'&r='+r+'&s='+s+'&u='+u);   
+            }else{
+              alerts.showSwal('success-message','index.php?opcion=listSolicitudRecursosAdmin');
+            }    
+           }
         }
     });
 }
@@ -12671,14 +12682,18 @@ function guardarDistribucionSolicitudRecurso(){
     }
    }
   }
-  if(sumaOfi!=100&&sumaOfi!=0){
-   Swal.fire("Informativo!", "El porcentaje Total de Oficina debe ser 100 !", "warning");
+  if((itemDistArea.length==0||itemDistOficina.length==0)&&$("#titulo_distribucion").html()=="x OFICINA y x Area"){
+    Swal.fire("Informativo!", "Debe existir distribucion para Area y Oficina", "warning");
   }else{
+   if(sumaOfi!=100&&sumaOfi!=0){
+    Swal.fire("Informativo!", "El porcentaje Total de Oficina debe ser 100 !", "warning");
+   }else{
     if(sumaArea!=100&&sumaArea!=0){
      Swal.fire("Informativo!", "El porcentaje Total de Area debe ser 100 !", "warning");
     }else{
        saveDistribucionSolicitudRecurso();
     }
+   }    
   }
 }
 
