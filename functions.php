@@ -5984,7 +5984,7 @@ function obtenerDatosCuentaBancoProveedorWS($codClienteProv,$cuenta){
   $sIde = "ifinanciero"; 
   $sKey = "ce94a8dabdf0b112eafa27a5aa475751";
   /*Lista de Clientes Empresa*/
-    $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"DatosCuentaBanco","IdCuentaBanco" => $cuenta,"IdCliente" => 34661); 
+    $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"DatosCuentaBanco","IdCuentaBanco" => $cuenta,"IdCliente" => $codClienteProv); 
     $parametros=json_encode($parametros);
     // abrimos la sesión cURL
     $ch = curl_init();
@@ -6183,5 +6183,52 @@ function nameTipoPago($codigo){
       $nombreX=$row['nombre'];
    }
    return($nombreX);
+}
+
+function comprobarCuentasPasivasDeSolicitudRecursos($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT * from solicitud_recursoscuentas where cod_cuenta in (SELECT cod_plancuenta from solicitud_recursosdetalle where cod_solicitudrecurso=$codigo) and (cod_cuentapasivo=0 or cod_cuentapasivo=null)");
+   $stmt->execute();
+   $nombreX=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $nombreX++;
+   }
+   return($nombreX);
+}
+function obtenerTipoPagoSolicitudRecursoDetalle($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT * FROM solicitud_recursosdetalle where cod_solicitudrecurso=$codigo and cod_tipopagoproveedor!=1");
+   $stmt->execute();
+   $nombreX=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $nombreX++;
+   }
+   return($nombreX);
+}
+function obtenerDatosProveedoresPagoDetalle($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT pd.*,sd.detalle,s.fecha as fecha_sol,s.numero,s.cod_unidadorganizacional from pagos_proveedoresdetalle pd join solicitud_recursosdetalle sd on sd.codigo=pd.cod_solicitudrecursosdetalle join solicitud_recursos s on pd.cod_solicitudrecursos=s.codigo  where pd.cod_pagoproveedor=$codigo");
+   $stmt->execute();
+   $proveedores=[];
+   $detalles=[];
+   $fechaSol=[];
+   $numero=[];
+   $oficina=[];
+   $index=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $proveedores[$index]=nameProveedor($row['cod_proveedor']);
+      $detalles[$index]=$row['detalle'];
+      $fechaSol[$index]=strftime('%d/%m/%Y',strtotime($row['fecha_sol']));
+      $numero[$index]=$row['numero'];
+      $oficina[$index]=abrevUnidad_solo($row['cod_unidadorganizacional']);
+      $index++;
+   }
+   return array(implode(",",array_unique($proveedores)),implode(",",array_unique($detalles)),implode(",",array_unique($fechaSol)),implode(",",array_unique($numero)),implode(",",array_unique($oficina)));
+}
+function listaDetallePagosProveedores($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT pd.*,sd.detalle from pagos_proveedoresdetalle pd join solicitud_recursosdetalle sd on pd.cod_solicitudrecursosdetalle=sd.codigo where pd.cod_pagoproveedor=$codigo");
+   $stmt->execute();
+   return $stmt;
 }
 ?>

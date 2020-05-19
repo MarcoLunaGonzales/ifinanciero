@@ -7,7 +7,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $dbh = new Conexion();
 
 // Preparamos
-$stmt = $dbh->prepare("SELECT sr.*,e.nombre as estado from pagos_proveedores sr join estados_pago e on sr.cod_estadopago=e.codigo order by sr.codigo desc");
+$stmt = $dbh->prepare("SELECT sr.*,e.nombre as estado from pagos_proveedores sr join estados_pago e on sr.cod_estadopago=e.codigo where sr.cod_estadopago=4 order by sr.codigo desc");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -18,7 +18,6 @@ $stmt->bindColumn('observaciones', $observaciones);
 $stmt->bindColumn('cod_comprobante', $codComprobante);
 $stmt->bindColumn('estado', $estado);
 $stmt->bindColumn('cod_estadopago', $codEstado);
-$stmt->bindColumn('cod_ebisa', $cod_ebisa);
 
 ?>
 
@@ -27,11 +26,11 @@ $stmt->bindColumn('cod_ebisa', $cod_ebisa);
         <div class="row">
             <div class="col-md-12">
               <div class="card">
-                <div class="card-header card-header-danger card-header-icon">
+                <div class="card-header card-header-info card-header-icon">
                   <div class="card-icon">
                     <i class="material-icons">attach_money</i>
                   </div>
-                  <h4 class="card-title"><b>Pagos</b></h4>
+                  <h4 class="card-title"><b>Gestión de Pagos</b></h4>
                 </div>
                 <div class="card-body">
                     <table class="table table-condesed" id="tablePaginator">
@@ -128,27 +127,19 @@ $stmt->bindColumn('cod_ebisa', $cod_ebisa);
                                     </a><?php 
                                   }else{
                                     if($codEstado==3){
-                                      if($cod_ebisa!=0){
-                                        ?>
-                                       <a href="#" onclick="alerts.showSwal('warning-message-crear-comprobante','<?=$urlGenerarComprobante?>?cod=<?=$codigo?>')" class="dropdown-item">
+                                      ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=5&admin=0" class="dropdown-item">
                                        <i class="material-icons text-success">attach_money</i> Generar Comprobante
-                                      </a>
-                                      <a href="<?=$urlGenerarEbisa?>?cod=<?=$codigo?>" class="dropdown-item">
-                                       <i class="material-icons text-muted">note</i> Descargar Archivo TXT
-                                      </a>  
-                                        <?php
-                                      }else{
-                                        ?>
-                                       <a href="<?=$urlGenerarEbisa?>?cod=<?=$codigo?>" class="dropdown-item">
-                                       <i class="material-icons text-muted">note</i> Generar Archivo TXT
-                                      </a> 
-                                        <?php
-                                      }
+                                      </a><?php 
                                     }else{
                                       if($codEstado==4){
                                         ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1&admin=0" class="dropdown-item">
                                        <i class="material-icons text-danger">clear</i> Cancelar Envio
                                       </a><?php
+                                       if($globalAdmin==1){
+                                        ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=3&admin=1" class="dropdown-item">
+                                          <i class="material-icons text-success">offline_pin</i> Aprobar
+                                         </a><?php
+                                        } 
                                       }else{
                                         //cod 5 PAGADO
                                         ?><a href="#" class="dropdown-item">
@@ -171,9 +162,6 @@ $stmt->bindColumn('cod_ebisa', $cod_ebisa);
                       </tbody>
                     </table>
                 </div>
-              </div>
-              <div class="card-footer fixed-bottom">
-                <a href="#" onclick="javascript:window.open('<?=$urlRegister2;?>')" class="<?=$buttonNormal;?>">Nuevo Pago Proveedor</a>
               </div>      
             </div>
           </div>  

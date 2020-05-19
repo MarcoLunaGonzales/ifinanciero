@@ -208,20 +208,9 @@ $tituloImporte="";
                $segPres=$datosSeg->presupuesto;
                $porcentSegPres=($datosSeg->ejecutado*100)/$datosSeg->presupuesto; 
             }
-            
-            $datosBen[$index-1]=$row["nombre_beneficiario"]." ".$row["apellido_beneficiario"];
-            $siBen=0;
-            for ($i=0; $i < count($datosBen); $i++) { 
-               if($datosBen[$i]!=$row["nombre_beneficiario"]." ".$row["apellido_beneficiario"]&&$siBen==0){
-                  $siBen++;
-                  $tipoPago.=nameTipoPago($row["cod_tipopagoproveedor"]).", ";
-                  $beneficiarios.=$row["nombre_beneficiario"]." ".$row["apellido_beneficiario"].", ";
-               }
-            }
-            /*if($siBen==0){
-                $tipoPago.=nameTipoPago($row["cod_tipopagoproveedor"]).", ";
-                $beneficiarios.=$row["nombre_beneficiario"]." ".$row["apellido_beneficiario"].", ";
-            }*/    
+              
+            $datosBen[$index-1]=trim($row["nombre_beneficiario"])." ".trim($row["apellido_beneficiario"]);
+            $datosTipo[$index-1]=nameTipoPago($row["cod_tipopagoproveedor"]);
         ?>
         <tr>
             <td class="s3 text-center" width="4%"><?=$index?></td>
@@ -238,6 +227,11 @@ $tituloImporte="";
         <?php  
         $index++; 
         }
+
+        //quitar valores repetidos y mostrar
+        $beneficiarios=implode(",", array_unique($datosBen));
+        $tipoPago=implode(",", array_unique($datosTipo));
+        
         ?>
         <!--<tr>
             <td class="s3 text-center" rowspan="2" colspan="3"></td>

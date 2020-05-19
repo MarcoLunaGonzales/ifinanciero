@@ -12985,3 +12985,40 @@ function cargarDatosCuentaBancariaProveedor(){
     }
   }); 
 }
+
+function registrarNuevoBeneficiario(){
+  var fila =$("#fila_pago").val();
+  var proveedor = $("#proveedor"+fila).val();  
+  $("#modalTipoPagoSolicitud").modal("hide");
+  $("#cod_proveedorbeneficiario").val(proveedor);
+  $("#nuevo_cuenta_beneficiario").val("");
+  $("#nuevo_nombre_beneficiario").val("");
+  $("#nuevo_apellido_beneficiario").val("");
+
+  $("#nombre_proveedorbeneficiario").val($("#proveedor"+fila+" option:selected").text().toUpperCase());
+  $("#modalNuevoCuentaBeneficiario").modal("show");
+}
+
+function guardarNuevoBeneficiario(){
+  var proveedor = $("#cod_proveedorbeneficiario").val();
+  var banco = $("#nuevo_banco").val();
+  var cuenta = $("#nuevo_cuenta_beneficiario").val();
+  var nombre = $("#nuevo_nombre_beneficiario").val();
+  var apellido = $("#nuevo_apellido_beneficiario").val();
+  if(cuenta==""||nombre==""||apellido==""){
+    Swal.fire('Informativo!','No se admiten campos vacíos!','warning');
+  }else{
+   var parametros={"codigo":proveedor,"banco":banco,"cuenta":cuenta,"nombre":nombre,"apellido":apellido};
+   $.ajax({
+    type: "GET",
+    dataType: 'html',
+    url: "ajax_datos_bancarios_cuenta_save.php",
+    data: parametros,
+    success:  function (resp) {       
+      $(".mensaje").html(resp);
+      Swal.fire('Correcto!','Se actualizaron los datos del Beneficiario!','success');
+      $("#modalNuevoCuentaBeneficiario").modal("hide");
+    }
+   });   
+  }
+}
