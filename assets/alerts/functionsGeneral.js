@@ -6115,7 +6115,7 @@ function cargarDetallesCostosVariablesTodosLosAnios(inicio,ib){
         },
         success:  function (resp) {
          detectarCargaAjax();
-         results[index] = resp;
+         results[anio] = resp;
           $("#cuentas_simulacionpersonal").append(resp);
           $('.selectpicker').selectpicker("refresh"); 
            ponerCantidadTotalesVariablesModal(inicio,anio);            
@@ -6127,7 +6127,7 @@ function cargarDetallesCostosVariablesTodosLosAnios(inicio,ib){
    index++;
   };//fin de for
   $("#cuentas_simulacionpersonal").append("");
-  for (var i = 0; i < results.length; i++) {  
+  for (var i = inicio; i <= parseInt(anios); i++) {  
     $("#cuentas_simulacionpersonal").append(results[i]);
     $('.selectpicker').selectpicker("refresh"); 
   };
