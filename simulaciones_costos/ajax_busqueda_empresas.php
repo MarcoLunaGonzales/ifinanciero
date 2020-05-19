@@ -54,7 +54,7 @@ $sql.=" order by pc.IdCurso desc";
                 <!-- <th>Importe <br>modulo(BOB)</th>   
                 <th>Importe <br>Solicitud(BOB)</th>                   
                 <th>Nro <br>Módulo</th>                 -->
-                <th>Nombre Mod</th>   
+                <th>Nombre Curso</th>   
                 <th class="text-right">Actions</th>
             </tr>
         </thead>

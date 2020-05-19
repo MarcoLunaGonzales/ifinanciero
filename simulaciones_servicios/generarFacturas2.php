@@ -56,8 +56,7 @@ try{
         $resultVerif = $stmtVerif->fetch();    
         $codigo_facturacion = $resultVerif['codigo'];
         if($codigo_facturacion==null){//no se registró
-            $stmt = $dbh->prepare("SELECT sf.*,t.descripcion as nombre_serv from solicitudes_facturaciondetalle sf,cla_servicios t 
-            where sf.cod_claservicio=t.idclaservicio and sf.cod_solicitudfacturacion=$codigo");
+            $stmt = $dbh->prepare("SELECT sf.*,(select t.Descripcion from cla_servicios t where t.IdClaServicio=sf.cod_claservicio) as nombre_serv from solicitudes_facturaciondetalle sf where sf.cod_solicitudfacturacion=$codigo");
             $stmt->execute();
             //datos de la solicitud de facturacion
             $stmtInfo = $dbh->prepare("SELECT sf.*,t.nombre as nombre_cliente FROM solicitudes_facturacion sf,clientes t  where sf.cod_cliente=t.codigo and sf.codigo=$codigo");
@@ -114,8 +113,8 @@ try{
                 //header('Location: ../index.php?opcion=listFacturasServicios');
             }else{                
                 //monto total redondeado
-                $stmtMontoTotal = $dbh->prepare("SELECT sum(sf.precio) as monto from solicitudes_facturaciondetalle sf,cla_servicios t 
-                where sf.cod_claservicio=t.idclaservicio and sf.cod_solicitudfacturacion=$codigo");
+                $stmtMontoTotal = $dbh->prepare("SELECT sum(sf.precio) as monto from solicitudes_facturaciondetalle sf 
+                where sf.cod_solicitudfacturacion=$codigo");
                 $stmtMontoTotal->execute();
                 $resultMontoTotal = $stmtMontoTotal->fetch();   
                 $monto_total= $resultMontoTotal['monto'];

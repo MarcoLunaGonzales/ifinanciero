@@ -200,7 +200,7 @@ m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo order by nombreAlumno");//poner 
       <div class="modal-body ">
         <div class="row">
           <label class="col-sm-6 col-form-label text-center">Empresa</label>          
-          <label class="col-sm-6 col-form-label text-center">Glosa</label>
+          <label class="col-sm-6 col-form-label text-center">Nombre Curso</label>
         </div> 
         <div class="row">
             <div class="form-group col-sm-6">            

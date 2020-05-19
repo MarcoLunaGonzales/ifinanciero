@@ -123,8 +123,8 @@ if($cantidad_items>0){
                             $nombre_uo=trim(abrevUnidad($cod_unidadorganizacional),' - ');//nombre de oficina
                             $nombre_contacto=nameContacto($persona_contacto);//nombre del personal
                             //los registros de la factura                            
-                            $sqlA="SELECT sf.*,t.descripcion as nombre_serv from solicitudes_facturaciondetalle sf,cla_servicios t 
-                                where sf.cod_claservicio=t.idclaservicio and sf.cod_solicitudfacturacion=$codigo_facturacion";
+                            $sqlA="SELECT sf.*,t.Descripcion as nombre_serv from solicitudes_facturaciondetalle sf,cla_servicios t 
+                                where sf.cod_claservicio=t.IdClaServicio and sf.cod_solicitudfacturacion=$codigo_facturacion";
                             $stmt2 = $dbh->prepare($sqlA);                                   
                             $stmt2->execute(); 
                             $nc=0;

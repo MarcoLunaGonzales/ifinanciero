@@ -173,8 +173,7 @@ $item_1=2709;
 
                             //los registros de la factura
                             $dbh1 = new Conexion();
-                            $sqlA="SELECT sf.*,t.descripcion as nombre_serv from solicitudes_facturaciondetalle sf,cla_servicios t 
-                                where sf.cod_claservicio=t.idclaservicio and sf.cod_solicitudfacturacion=$codigo_facturacion";
+                            $sqlA="SELECT sf.*,(select t.Descripcion from cla_servicios t where t.IdClaServicio=sf.cod_claservicio) as nombre_serv from solicitudes_facturaciondetalle sf where sf.cod_solicitudfacturacion=$codigo_facturacion";
                             $stmt2 = $dbh1->prepare($sqlA);                                   
                             $stmt2->execute(); 
                             $nc=0;

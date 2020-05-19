@@ -388,6 +388,11 @@
                 .attr('name', 'areas_facturacion')
                 .attr('value', JSON.stringify(itemAreas_facturacion))
                 .appendTo('#formSoliFactTcp');
+                 //si existe array de objetos unidades//falta hacer sus alertas
+                $('<input />').attr('type', 'hidden')
+                .attr('name', 'unidades_facturacion')
+                .attr('value', JSON.stringify(itemUnidades_facturacion))
+                .appendTo('#formSoliFactTcp');
                 if(monto_modal_por_tipopago!=0){
                   if(montoTotalItems!=monto_modal_por_area){
                     var mensaje="<p>Por favor verifique los montos de la distribución de pocentajes en Areas...</p>";

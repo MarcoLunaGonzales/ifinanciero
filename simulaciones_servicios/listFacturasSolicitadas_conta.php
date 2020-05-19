@@ -7,7 +7,7 @@ $dbh = new Conexion();
 $globalAdmin=$_SESSION["globalAdmin"];
 //datos registrado de la simulacion en curso
 
-  $stmt = $dbh->prepare("SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')as fecha_registro_x,DATE_FORMAT(sf.fecha_solicitudfactura,'%d/%m/%Y')as fecha_solicitudfactura_x FROM solicitudes_facturacion sf join estados_solicitudfacturacion es on sf.cod_estadosolicitudfacturacion=es.codigo where cod_estadosolicitudfacturacion=3 order by codigo desc");
+  $stmt = $dbh->prepare("SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')as fecha_registro_x,DATE_FORMAT(sf.fecha_solicitudfactura,'%d/%m/%Y')as fecha_solicitudfactura_x FROM solicitudes_facturacion sf join estados_solicitudfacturacion es on sf.cod_estadosolicitudfacturacion=es.codigo where (cod_estadosolicitudfacturacion=3 or cod_estadosolicitudfacturacion=6) order by codigo desc");
 
   $stmt->execute();
   $stmt->bindColumn('codigo', $codigo_facturacion);
@@ -144,8 +144,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 
                             //los registros de la factura
                             $dbh1 = new Conexion();
-                            $sqlA="SELECT sf.*,t.descripcion as nombre_serv from solicitudes_facturaciondetalle sf,cla_servicios t 
-                                where sf.cod_claservicio=t.idclaservicio and sf.cod_solicitudfacturacion=$codigo_facturacion";
+                            $sqlA="SELECT sf.*,(select t.Descripcion from cla_servicios t where t.IdClaServicio=sf.cod_claservicio) as nombre_serv from solicitudes_facturaciondetalle sf where sf.cod_solicitudfacturacion=$codigo_facturacion";
                             $stmt2 = $dbh1->prepare($sqlA);                                   
                             $stmt2->execute(); 
                             $nc=0;
@@ -234,22 +233,26 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                       <?php 
                                     }else{
                                       if($codEstado==6){
-                                          ?>
-                                           <a title="Enviar solicitud" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=4&admin=0'  class="btn btn-warning">
-                                             <i class="material-icons">send</i>
-                                           </a>
-                                           <a title="Volver al Estado Registro" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=1&admin=0'  class="btn btn-danger">
-                                             <i class="material-icons">refresh</i>
-                                           </a>
-                                          <?php                                          
-                                      }else{
-                                        if($codEstado!=2){                                          
-                                          ?>
-                                           <a title="Pre Envio - Solicitud Facturación" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=6&admin=0'  class="btn btn-default">
-                                             <i class="material-icons">send</i>
-                                           </a>
-                                          <?php
+                                        $cod_tipopago_cred=obtenerValorConfiguracion(48);
+                                        // echo $cod_tipopago_cred; 
+                                        if($cod_tipopago!=$cod_tipopago_cred){//si es distino a credito cambia de flujo
+                                            ?>
+                                             <a title="Aceptar Solicitud" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=3&admin=0'  class="btn btn-default">
+                                               <i class="material-icons">send</i>
+                                             </a>
+                                            <?php                                          
+                                        }else{
+                                            ?>
+                                             <a title="Enviar Solicitud" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=4&admin=0'  class="btn btn-default">
+                                               <i class="material-icons">send</i>
+                                             </a>
+                                            <?php                                          
                                         }
+                                          ?>                                        
+                                          <a title="Volver al Estado Registro" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=1&admin=0'  class="btn btn-danger">
+                                             <i class="material-icons">refresh</i>
+                                          </a>
+                                          <?php                                          
                                       }
                                       ?>
                                       <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir">print</i></a>
