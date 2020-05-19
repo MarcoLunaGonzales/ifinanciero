@@ -305,15 +305,15 @@ if(isset($_GET['q'])){
                                       }else{
                                         if($codEstado!=2){
                                             if(isset($_GET['q'])){ ?>
-                                               <a title="Enviar Solicitud" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=4&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>' class="btn btn-default">
-                                                 <i class="material-icons">send</i>
-                                               </a>
+                                               <a title="Pre Envio - Solicitud Facturaciรณn" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=6&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>' class="btn btn-default">
+	                                               <i class="material-icons">send</i>
+	                                             </a>
                                               <?php
                                             }else{
                                               ?>
-                                               <a title="Enviar Solicitud" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=4&admin=0'  class="btn btn-default">
-                                                 <i class="material-icons">send</i>
-                                               </a>
+                                               <a title="Pre Envio - Solicitud Facturaciรณn" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=6&admin=0'  class="btn btn-default">
+	                                               <i class="material-icons">send</i>
+	                                             </a>
                                               <?php
                                             }                                           
                                         }

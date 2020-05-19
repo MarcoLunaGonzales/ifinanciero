@@ -553,6 +553,12 @@ if($menuModulo==0){
                     <span class="sidebar-normal"> Solicitudes de Facturación</span>
                   </a>
                 </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listFacturasGeneradas">
+                    <span class="sidebar-mini"> FG </span>
+                    <span class="sidebar-normal"> Facturas Generadas</span>
+                  </a>
+                </li>
                 <!--li class="nav-item ">
                   <a class="nav-link" href="?opcion=ListaRendiciones">
                     <span class="sidebar-mini"> MR </span>
@@ -866,12 +872,7 @@ if($menuModulo==0){
                     <span class="sidebar-normal"> Gesti&oacute;n Solicitudes de Facturación </span>
                   </a>
                 </li>
-                <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=listFacturasGeneradas">
-                    <span class="sidebar-mini"> FG </span>
-                    <span class="sidebar-normal"> Facturas Generadas</span>
-                  </a>
-                </li>
+                
                 <!-- <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listFacturasServicios_costos">
                     <span class="sidebar-mini"> SFC </span>
