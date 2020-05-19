@@ -12222,6 +12222,8 @@ function borrarItemsTipoPago(){
 
 var itemAreas_facturacion=[];//array que contiene objetos agregado
 var itemAreas_facturacion_aux=[];//array que contiene todas las areas de servicios
+var itemUnidades_facturacion=[];//array que contiene objetos agregados a un area
+var itemUnidades_facturacion_aux=[];//array que contiene todas las unidades en general
 function agregarDatosModalAreasFacturacion(){    
   var cod_area=$("#cod_area").val();  
   if(cod_area==null || cod_area==''){    
@@ -12282,8 +12284,14 @@ function tablaGeneral_areas_solFac(){
         row.append($('<td>').addClass('').html("<input type='number' class='form-control' name='monto_bob_areas"+i+"' id='monto_bob_areas"+i+"' onkeyup='convertir_a_porcentaje_areas("+i+")'>"));    
 
       }
-      row.append($('<td>').addClass('').html("<button type='button' class='btn btn-primary btn-round btn-fab btn-sm' data-toggle='modal' data-target='' onclick='agregarDatosModalUnidadFacturacion("+i+")'><i class='material-icons' title='Unidades Porcentaje'>list</i><span id='nfacUnidades"+i+"' class='count bg-warning'></span></button>"));
-      table.append(row);
+      var cont_uo=verificamos_uo_areas(i);
+      if(cont_uo>0){
+        row.append($('<td>').addClass('').html("<button type='button' class='btn btn-primary btn-round btn-fab btn-sm' data-toggle='modal' data-target='' onclick='agregarDatosModalUnidadFacturacion("+i+")'><i class='material-icons' title='Unidades Porcentaje'>list</i><span id='nfacUnidades"+i+"' class='count bg-warning'>"+div_contenedor_uo+"</span></button>"));
+        table.append(row);  
+      }else{
+        row.append($('<td>').addClass('').html("<button type='button' class='btn btn-primary btn-round btn-fab btn-sm' data-toggle='modal' data-target='' onclick='agregarDatosModalUnidadFacturacion("+i+")'><i class='material-icons' title='Unidades Porcentaje'>list</i><span id='nfacUnidades"+i+"' class='count bg-warning'></span></button>"));
+        table.append(row);  
+      }      
     }
     var row = $('<tr>').addClass('');//Para el total
     row.append($('<td>').addClass('').text(''));
@@ -12313,6 +12321,14 @@ function verificaExistenciaCodigoArea(codigo){
     // console.log("dato: "+dato);
     // console.log("datos: "+dato[4]+" "+dato[7]+" "+dato[8]);    
   }   
+  return sw;
+}
+function verificamos_uo_areas(id){
+  var sw = -1;  
+  var cont_item=itemUnidades_facturacion[id].length;
+  if(cont_item>0){
+    sw=cont_item;  
+  }
   return sw;
 }
 function convertir_a_porcentaje_areas(id){  
@@ -12381,11 +12397,12 @@ function savePorcentajeAreas(){
       }
       // console.log($('#monto_porcentaje_areas'+i).val());
       var monto_x=$('#monto_porcentaje_areas'+i).val();
-      if(monto_x!=null && monto_x!=0 && monto_x!=''){
+      // if(monto_x!=null && monto_x!=0 && monto_x!=''){
         itemAreas_facturacion[0].push(area);  
-      }
+      // }
     }  
-    $("#nfacAreas").html(itemAreas_facturacion[0].length);
+    //$("#nfacAreas").html(itemAreas_facturacion[0].length);
+    $("#nfacAreas").addClass("estado");
     $('#modalAreasPorcentaje').modal('hide');
 
     // for(var j = 0; j < itemAreas_facturacion[0].length; j++){
@@ -12401,8 +12418,6 @@ function borrarItemsAreas(){
   itemAreas_facturacion.splice(0, 1);
   var nfacAreas=[];itemAreas_facturacion.push(nfacAreas);
 }
-var itemUnidades_facturacion=[];//array que contiene objetos agregados a un area
-var itemUnidades_facturacion_aux=[];//array que contiene todas las unidades en general
 function agregarDatosModalUnidadFacturacion(id){    
   var porcentaje_area=$("#monto_porcentaje_areas"+id).val();    
   var monto_total=$("#monto_total_a").val();    
@@ -12438,6 +12453,8 @@ function tablaGeneral_unidad_solFac(porcentaje_area,id){
     titulos.append($('<th>').addClass('').text('Porcentaje(%)'));    
     titulos.append($('<th>').addClass('').text('Monto(BOB)'));    
     table.append(titulos);    
+    var monto_total_area_bob=0;
+    var monto_total_area_por=0;
     for (var i = 0; i < itemUnidades_facturacion_aux[0].length; i++) {
       var nombre_x=itemUnidades_facturacion_aux[0][i].nombrex;
       var cod_unidad_x=itemUnidades_facturacion_aux[0][i].cod_unidad;
@@ -12451,6 +12468,8 @@ function tablaGeneral_unidad_solFac(porcentaje_area,id){
         var objeto_unidad = Object.values(itemUnidades_facturacion[id][sw]);
         var monto_por_obj=objeto_unidad[1];
         var monto_bob_obj=objeto_unidad[2];
+        monto_total_area_por+=monto_por_obj;
+        monto_total_area_bob+=monto_bob_obj;
         row.append($('<td>').addClass('').html("<input type='number' step='0.01' class='form-control' name='monto_porcentaje_unidades"+i+"' id='monto_porcentaje_unidades"+i+"' onkeyup='convertir_a_bolivianos_unidades("+i+")' value='"+monto_por_obj+"'>"));
         row.append($('<td>').addClass('').html("<input type='number' class='form-control' name='monto_bob_unidades"+i+"' id='monto_bob_unidades"+i+"' onkeyup='convertir_a_porcentaje_unidades("+i+")' value='"+monto_bob_obj+"'>"));        
       }else{              
@@ -12470,11 +12489,11 @@ function tablaGeneral_unidad_solFac(porcentaje_area,id){
     row.append($('<td>').addClass('').text('DIFERENCIA'));         
     row.append($('<td>').addClass('').html("<input type='text' step='0.01' class='form-control' name='total_diferencia_porcentaje_unidades' id='total_diferencia_porcentaje_unidades' value='"+number_format(0,2)+"' readonly='true'>"));
     row.append($('<td>').addClass('').html("<input type='text' step='0.01' class='form-control' name='total_diferencia_bob_unidades' id='total_diferencia_bob_unidades' value='"+number_format(0,2)+"' readonly='true'> "));    
-    table.append(row);
+    table.append(row);    
     div.append(table);
     $("#total_items_unidades").val(i);
     $('#divResultadoListaModalUnidades').html(div);
-    // calcularTotalFilaAreasModal();
+    calcularTotalFilaUnidadesModal();
 }
 function convertir_a_porcentaje_unidades(id){  
   var monto_precio=$("#monto_total_ingreso_unidades").val();// precio de item
@@ -12561,16 +12580,11 @@ function savePorcentajeUnidades(){
   }      
 }
 function borrarItemsUnidades(id){
-
-
-  // var canti=itemUnidades_facturacion.length;
-  //   console.log("guardamos: "+canti);
-  //   console.log("cantid_: "+itemUnidades_facturacion[canti-1].length);
-
-    // itemUnidades_facturacion.splice(id, 1);
-    //console.log("cantid_: "+itemUnidades_facturacion[id].length);
-
-  //  var nfacUnidades=[];itemUnidades_facturacion[id].push(nfacUnidades);
+  var cont=itemUnidades_facturacion[id].length;
+  if(cont>0){
+    itemUnidades_facturacion.splice(id, 1);
+    //var nfacUnidades=[];itemUnidades_facturacion[id].push(nfacUnidades); 
+  }
 }
 function verificaExistenciaCodigoUnidad(codigo,id){  
   var sw = -1;  

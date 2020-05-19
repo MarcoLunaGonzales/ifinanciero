@@ -287,7 +287,7 @@ $descuento_cliente=obtenerDescuentoCliente($cod_cliente);
                                      </button>
                                      <button type="button" class="btn btn-primary btn-round btn-fab btn-sm" data-toggle="modal" data-target="" onclick="agregarDatosModalAreasFacturacion()">
                                         <i class="material-icons" title="Areas Porcentaje">list</i>
-                                        <span id="nfacAreas" class="count bg-warning"></span>
+                                        <span id="nfacAreas" class="bg-warning"></span>
                                      </button>                              
                                 </div>
                             </div> 

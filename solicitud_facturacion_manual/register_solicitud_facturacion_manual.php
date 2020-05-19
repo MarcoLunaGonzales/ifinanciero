@@ -12,9 +12,6 @@ $cod_sw=0;
 //sacamos datos para la facturacion
 if(isset($_GET['q'])){
   $q=$_GET['q'];
-  $s=$_GET['s'];
-  $u=$_GET['u'];
-  $v=$_GET['v'];
 }
 if ($cod_facturacion > 0){
    
@@ -55,12 +52,7 @@ $contadorRegistros=0;
               <form id="formSoliFactTcp" class="form-horizontal" action="<?=$urlSaveSolicitudfactura;?>" method="post" onsubmit="return valida(this)">
                 <?php 
                if(isset($_GET['q'])){
-                 ?><input type="hidden" name="id_ibnored" id="id_ibnored" value="<?=$q;?>"/>
-                  <input type="hidden" name="usuario_ibnored" id="usuario_ibnored" value="<?=$q;?>">
-                  <input type="hidden" name="usuario_ibnored_s" id="usuario_ibnored_s" value="<?=$s;?>">
-                  <input type="hidden" name="usuario_ibnored_u" id="usuario_ibnored_u" value="<?=$u;?>">
-                  <input type="hidden" name="usuario_ibnored_v" id="usuario_ibnored_v" value="<?=$v;?>">
-        <?php 
+                 ?><input type="hidden" name="id_ibnored" id="id_ibnored" value="<?=$q;?>"/><?php 
               }
                 ?>
                 <input type="hidden" name="Codigo_alterno" id="Codigo_alterno" value="<?=$Codigo_alterno;?>"/>
@@ -430,28 +422,28 @@ $contadorRegistros=0;
 
 <script type="text/javascript">
 function valida(f) {
-  var ok = true;
 
-  //verificamos monto mayor a 50
-    if(f.elements["monto_total_a"].value>50000)
+    //verificamos monto mayor a 50
+    if(f.elements["monto_total_a"].value>=50000)
     {    
         ok = false;
+        var msg = "Monto Mayor a 50000, llenar formulario de bancarización...\n";  
     }else{
+        var ok = true;
+        var msg = "El monto Total no debe ser '0' o 'negativo', Habilite los Items que desee facturar...\n";  
         if(f.elements["comprobante_auxiliar"].value == 0 || f.elements["comprobante_auxiliar"].value < 0 || f.elements["comprobante_auxiliar"].value == '')
         {    
-            ok = false;
+        ok = false;
         }
         if(f.elements["monto_total"].value>0)
         {    
-            ok = true;
+        ok = true;
         }
-        if(ok == false)Swal.fire("Informativo!",msg, "warning");
-  }
-
-
-  var msg = "El monto Total no debe ser '0' o 'negativo', Habilite los Items que desee facturar...\n";  
-  
-  return ok;
+        
+    }
+    
+    if(ok == false)Swal.fire("Informativo!",msg, "warning");
+    return ok;
 }
 </script>
 <?php  require_once 'simulaciones_servicios/modal_facturacion.php';?>

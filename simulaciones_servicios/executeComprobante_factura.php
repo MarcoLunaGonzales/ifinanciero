@@ -27,15 +27,12 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$nro_factura){
 		$codAnio=$_SESSION["globalNombreGestion"];
 		$codMoneda=1;
 		$codEstadoComprobante=1;
-		$fechaActual=date("Y-m-d H:i:s");
-		$mes_actual=date('m');
+		$fechaActual=date("Y-m-d H:i:s");		
 		$tipoComprobante=4;//facturas
 		$nombreTipoComprobante=abrevTipoComprobante($tipoComprobante);
 		$numeroComprobante=obtenerCorrelativoComprobante2($tipoComprobante);
-
-		$mesComprobanteX=str_pad($mes_actual, 2, "0", STR_PAD_LEFT);
-    	$numeroX=str_pad($numeroComprobante, 5, "0", STR_PAD_LEFT);
-		$nombreComprobante=$nombreTipoComprobante.$mesComprobanteX."-".$numeroX;
+		$numeroX=str_pad($numeroComprobante, 5, "0", STR_PAD_LEFT);	
+		$nombreComprobante=$nombreTipoComprobante."-".$numeroX;
 		//sacamos nombre de los detalles
 		$stmtDetalleSol = $dbh->prepare("SELECT cantidad,precio,descripcion_alterna from solicitudes_facturaciondetalle where cod_solicitudfacturacion=$cod_solicitudfacturacion");
 		$stmtDetalleSol->execute();
