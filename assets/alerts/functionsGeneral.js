@@ -6076,9 +6076,12 @@ function guardarCuentasSimulacionGenericoServicio(ib){
 }
 
 function cargarDetallesCostosVariablesTodosLosAnios(inicio,ib){
+  var results = [];
   var anios = $("#anio_simulacion").val();
   $("#cuentas_simulacionpersonal").html("");
+  var index=0;
   for (var anio = inicio; anio <= parseInt(anios); anio++) {
+    //if(parseInt($("#anio_for").val())==0){
      var conta=0; var contaRead=0; var existeAnio=0;
   var supertotal= $("#numero_cuentaspartida"+anio).val();
   var cosSim=$("#cod_simulacion").val();
@@ -6111,21 +6114,22 @@ function cargarDetallesCostosVariablesTodosLosAnios(inicio,ib){
          iniciarCargaAjax();
         },
         success:  function (resp) {
-          detectarCargaAjax();
+         detectarCargaAjax();
+         results[index] = resp;
           $("#cuentas_simulacionpersonal").append(resp);
-          $('.selectpicker').selectpicker("refresh");
-          /*var titulo="AÑO "+anio;
-          if((anio==0||anio==1)&&($("#codigo_area").val()!=39)){
-           titulo="AÑO 1 (ETAPA "+(parseInt(anio)+1)+")";
-          }*/
-          //$("#titulo_modaldetalleslista").html(titulo);
-          //$("#modalSimulacionCuentasPersonal").modal("show");
-          //$("#modalSimulacionCuentas"+anio).modal("hide");   
-           ponerCantidadTotalesVariablesModal(inicio,anio);     
+          $('.selectpicker').selectpicker("refresh"); 
+           ponerCantidadTotalesVariablesModal(inicio,anio);            
         }
     });
   //}
+   //}
    // guardarCuentasSimulacionGenericoServicioPrevio(i,ib)
+   index++;
+  };//fin de for
+  $("#cuentas_simulacionpersonal").append("");
+  for (var i = 0; i < results.length; i++) {  
+    $("#cuentas_simulacionpersonal").append(results[i]);
+    $('.selectpicker').selectpicker("refresh"); 
   };
   $("#modalSimulacionCuentasPersonal").modal("show");
   ponerCantidadTotalesVariablesModal(inicio,anios);

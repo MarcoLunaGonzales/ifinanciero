@@ -39,7 +39,7 @@ if($_GET['tcs']==0){
 $stmtUpdatePlantilla = $dbh->prepare($sqlUpdatePlantilla);
 $stmtUpdatePlantilla->execute();
 
-if($cantidad<1){
+if($cantidad==0){
 	$cantidad=1;
 }
 

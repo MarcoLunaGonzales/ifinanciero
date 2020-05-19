@@ -13,6 +13,8 @@ if(isset($_GET['q'])){
   if(isset($_GET['v'])){
     $v=$_GET['v'];
     $sqlServicio="and sr.idServicio=".$v;
+  }else{
+    $v=0;
   }
   if(isset($_GET['s'])){
     $s=$_GET['s'];
