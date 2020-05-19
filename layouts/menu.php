@@ -843,6 +843,12 @@ if($menuModulo==0){
                   </a>
                 </li>
                 <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listPagoProveedoresAdmin">
+                    <span class="sidebar-mini"> GP </span>
+                    <span class="sidebar-normal"> Gestión de Pagos</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
                   <a class="nav-link" href="?opcion=register_solicitudfacturacion_manual">
                     <span class="sidebar-mini"> SFM </span>
                     <span class="sidebar-normal"> Solicitud de Facturacion Manual</span>

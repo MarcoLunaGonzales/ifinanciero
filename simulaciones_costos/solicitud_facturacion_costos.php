@@ -178,7 +178,7 @@ m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo order by nombreAlumno");//poner 
                             <!-- <td><?=$nombre_mod;?></td> -->
                             <td class="td-actions text-right">
                               <?php
-                                if($globalAdmin==1){
+                                //f($globalAdmin==1){
                                   if($codigo_facturacion>0){
                                     if($codigo_fact_x==0){ //no se genero factura ?>
                                       <a title="Editar Solicitud de Facturación" href='<?=$urlregistro_solicitud_facturacion?>&codigo=<?=$CiAlumno?>&cod_simulacion=<?=$codigo_simulacion;?>&cod_facturacion=<?=$codigo_facturacion?>' class="btn btn-success">
@@ -204,7 +204,7 @@ m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo order by nombreAlumno");//poner 
                                       </a><?php 
                                     }
                                   }                                
-                                }
+                                //}
                               ?>                                               
                             </td>
                           </tr>

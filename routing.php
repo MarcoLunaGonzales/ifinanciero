@@ -468,6 +468,9 @@
 		if ($_GET['opcion']=='listPagoProveedores') {
 			require_once('obligaciones_pago/lista.php');
 		}
+		if ($_GET['opcion']=='listPagoProveedoresAdmin') {
+			require_once('obligaciones_pago/listaAdmin.php');
+		}
 
 		if ($_GET['opcion']=='listObligacionesPago') {
 			require_once('obligaciones_pago/list.php');

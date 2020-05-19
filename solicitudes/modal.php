@@ -1,6 +1,79 @@
 <!-- notice modal -->
+<div class="modal fade" id="modalNuevoCuentaBeneficiario" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content card">
+      <div class="card-header card-header-success card-header-text">
+          <div class="card-text">
+            <h5>Nueva Cuenta Beneficiario</h5> 
+          </div>
+          <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
+            <i class="material-icons">close</i>
+          </button>
+      </div>
+      <input type="hidden" name="cod_proveedorbeneficiario" id="cod_proveedorbeneficiario"/>
+          <div class="card-body">
+            <div class="col-sm-12">
+              <div class="row">                      
+                    <label class="col-sm-2 col-form-label" style="color: #4a148c;">Proveedor</label>
+                    <div class="col-sm-10">
+                      <div class="form-group">  
+                           <input class="form-control" readonly type="text" name="nombre_proveedorbeneficiario" id="nombre_proveedorbeneficiario" required="true">                                                                                                                       
+                       </div>
+                    </div>
+                </div>
+               <div class="row">
+                <label class="col-sm-2 col-form-label" style="color: #4a148c;">Banco</label>
+                <div class="col-sm-4">
+                  <div class="form-group">
+                     <select class="selectpicker form-control form-control-sm" name="nuevo_banco" id="nuevo_banco" data-style="btn btn-primary">                                  
+                        <?php 
+                         $stmt3 = $dbh->prepare("SELECT * from bancos where cod_estadoreferencial=1");
+                         $stmt3->execute();
+                          while ($rowSel = $stmt3->fetch(PDO::FETCH_ASSOC)) {
+                           $codigoSel=$rowSel['codigo'];
+                          $nombreSelX=$rowSel['nombre'];
+                          $abrevSelX=$rowSel['abreviaruta'];
+                          ?><option value="<?=$codigoSel;?>"><?=$nombreSelX?></option><?php 
+                          }
+                        ?>
+                    </select>
+                  </div>
+                </div>
+                <label class="col-sm-2 col-form-label" style="color: #4a148c;">Cuenta Beneficiario</label>
+                <div class="col-sm-4">
+                   <div class="form-group" id="">
+                        <input class="form-control" type="text" name="nuevo_cuenta_beneficiario" id="nuevo_cuenta_beneficiario" placeholder="123-456-78-90" required="true"/>
+                    </div>
+                </div>                          
+              </div>
+               <div class="row">                      
+                    <label class="col-sm-2 col-form-label" style="color: #4a148c;">Nombre Beneficiario</label>
+                    <div class="col-sm-4">
+                      <div class="form-group">  
+                           <input class="form-control" type="text" name="nuevo_nombre_beneficiario" id="nuevo_nombre_beneficiario" required="true">                                                                                                                       
+                       </div>
+                    </div>
+                    <label class="col-sm-2 col-form-label" style="color: #4a148c;">Apellido Beneficiario</label>
+                    <div class="col-sm-4">
+                      <div class="form-group">  
+                           <input class="form-control" type="text" name="nuevo_apellido_beneficiario" id="nuevo_apellido_beneficiario" required="true">                                                                                                                       
+                       </div>
+                    </div>
+                </div>
+                <div class="mensaje"></div>
+             </div>                     
+             <div class="form-group float-right">
+                <button type="button" class="btn btn-warning btn-round" onclick="guardarNuevoBeneficiario()">Guardar</button>
+             </div>         
+          </div>
+    </div>
+  </div>
+</div>
+<!-- end notice modal -->
+
+<!-- notice modal -->
 <div class="modal fade" id="modalTipoPagoSolicitud" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog modal-xl">
     <div class="modal-content card">
       <div class="card-header card-header-primary card-header-text">
           <div class="card-text">
@@ -30,7 +103,7 @@
                         ?>
                     </select>
                   </div>
-                </div>                          
+                </div>                       
               </div>
                <div class="row">
                 <label class="col-sm-2 col-form-label" style="color: #4a148c;">Cuentas Bancarias</label>
@@ -41,22 +114,30 @@
                     </select>
                   </div>
                 </div>
+                <div class="col-sm-1 float-left">
+                      <div class="form-group">                                
+                              <a href="#" style="background-color: #0489B1" class="btn btn-round btn-fab btn-sm" onclick="registrarNuevoBeneficiario()">
+                                <i class="material-icons" title="Add Proveedor">add</i>
+                              </a>
+                      </div>
+                </div>
                 <label class="col-sm-2 col-form-label" style="color: #4a148c;">Cuenta Beneficiario</label>
-                <div class="col-sm-4">
+                <div class="col-sm-3">
                    <div class="form-group" id="">
                         <input class="form-control" type="text" readonly name="cuenta_beneficiario" id="cuenta_beneficiario" required="true"/>
                     </div>
                 </div>                          
               </div>
                <div class="row">                      
-                    <label class="col-sm-2 col-form-label" style="color: #4a148c;">Nombre Benef.</label>
+                    <label class="col-sm-2 col-form-label" style="color: #4a148c;">Nombre Beneficiario</label>
                     <div class="col-sm-4">
                       <div class="form-group">  
                            <input class="form-control" type="text" name="nombre_beneficiario" id="nombre_beneficiario" required="true">                                                                                                                       
                        </div>
                     </div>
-                    <label class="col-sm-2 col-form-label" style="color: #4a148c;">Apellido Benef.</label>
-                    <div class="col-sm-4">
+                    <div class="col-sm-1"></div>
+                    <label class="col-sm-2 col-form-label" style="color: #4a148c;">Apellido Beneficiario</label>
+                    <div class="col-sm-3">
                       <div class="form-group">  
                            <input class="form-control" type="text" name="apellido_beneficiario" id="apellido_beneficiario" required="true">                                                                                                                       
                        </div>

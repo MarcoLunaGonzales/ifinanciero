@@ -26,7 +26,10 @@ $flagSuccess=$stmtUpdate->execute();
 if($codEstado==5){
   //generar comprobante
 }
-
+$admin=$_GET["admin"];
+if($admin==1){
+	$urlListPago=$urlListPagoAdmin;
+}
 	if($flagSuccess==true){
 	showAlertSuccessError(true,"../".$urlListPago);	
    }else{

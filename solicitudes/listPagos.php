@@ -185,13 +185,10 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
                           $saldoImporte=abs($pagadoFila-$importe);
                           $pagado=$importe-$saldoImporte;
 
-                          $numeroComprobante=obtenerNumeroComprobante($row['cod_comprobante']);
+                          $numeroComprobante=nombreComprobante($row['cod_comprobante']);
                           $codTipoPago=$row['cod_tipopagoproveedor'];
                           $nomBen=$row['nombre_beneficiario'];
                           $apellBen=$row['apellido_beneficiario'];
-                          $list=obtenerDatosCuentaBancoProveedorWS($codProveedor,$row["cod_cuentabancaria"]);
-                          $listas=$list->datos;
-                          $codBanco=$listas->IdBanco;
                           
 ?>
                         <tr>
@@ -266,11 +263,11 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
                                       $codigoSel=$rowSel['codigo'];
                                       $nombreSelX=$rowSel['nombre'];
                                       $abrevSelX=$rowSel['abreviaruta'];
-                                      if($codBanco==$codigoSel){
-                                       ?><option selected value="<?=$codigoSel;?>"><?=$nombreSelX?></option><?php 
-                                      }else{
+                                      //if($codBanco==$codigoSel){
+                                       
+                                      //}else{
                                        ?><option value="<?=$codigoSel;?>"><?=$nombreSelX?></option><?php 
-                                      }
+                                      //}
                                       
                                      }
                                     ?>
@@ -289,7 +286,7 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
                             <input type="text" readonly class="form-control" readonly value="<?=$nomBen?> <?=$apellBen?>" id="beneficiario<?=$index?>" name="beneficiario<?=$index?>">
                           </td>
                         </tr>
-                        <script>mostrarDatosChequeDetalle(<?=$index?>);cargarChequesPagoDetalle(<?=$index?>);</script>
+                        <script>mostrarDatosChequeDetalle(<?=$index?>);</script>
 <?php
 							$index++;
                       }
