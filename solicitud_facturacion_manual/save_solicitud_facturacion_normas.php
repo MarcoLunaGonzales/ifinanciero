@@ -60,7 +60,6 @@ try {
                 $importeInsert="";
                 $DescricpionInsert="";
                 // echo "i:".$i;
-
                 if(isset($_POST["servicio".$i])){
                     
                     $cod_serv_a=$_POST["cod_serv_tiposerv_a".$i];//idItem
