@@ -51,7 +51,19 @@ if($estado!=1){
       }else{
         actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);    
       }   
-    }
+    }elseif($estado==3){
+      //enviar propuestas para la actualizacion de ibnorca
+      $fechaHoraActual=date("Y-m-d H:i:s");
+      $idTipoObjeto=2709;
+      $idObjeto=2728; //variable desde get
+      $obs="Solicitud Aprobada desde Contabilidad"; //$obs="Registro de propuesta";
+      if(isset($_GET['u'])){
+        $u=$_GET['u'];
+        actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);
+      }else{
+        actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);
+      }
+  }
   }
 	//fin de actulizar estados del servidor ibnorca
 }else{
@@ -84,11 +96,20 @@ if(isset($_GET['q'])){
 	showAlertSuccessError(false,"../".$urlList2Sol."&q=".$q."&s=".$s."&u=".$u."&v=".$v);
    }
 }else{
-	if($flagSuccess==true){
-	showAlertSuccessError(true,"../".$urlList2Sol);	
-   }else{
-	showAlertSuccessError(false,"../".$urlList2Sol);
-   }
+  if($estado==3){//enviado desde conta
+    if($flagSuccess==true){
+      showAlertSuccessError(true,"../".$$urlListSolicitudContabilidad); 
+    }else{  
+      showAlertSuccessError(false,"../".$$urlListSolicitudContabilidad);
+    }
+  }else{
+    if($flagSuccess==true){
+      showAlertSuccessError(true,"../".$urlList2Sol); 
+    }else{  
+      showAlertSuccessError(false,"../".$urlList2Sol);
+    }
+  }
+	
 }
 
 ?>

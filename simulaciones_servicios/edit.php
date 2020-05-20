@@ -85,26 +85,6 @@ if($estado!=1){
         }
         //fin crear servicio
     }
-  if($estado==3){
-    $iEstado=$estado;
-    $fechaHoraActual=date("Y-m-d H:i:s");
-
-    $sqlUpdate="UPDATE solicitudes_facturacion SET  cod_estadosolicitudfacturacion=$iEstado where codigo=$codigo";
-    $stmtUpdate = $dbh->prepare($sqlUpdate);
-    $flagSuccess=$stmtUpdate->execute();
-
-    $id_perfil=$_GET["id_perfil"];
-    //enviar propuestas para la actualizacion de ibnorca
-        $fechaHoraActual=date("Y-m-d H:i:s");
-        $idTipoObjeto=2709;
-        $idObjeto=$estado; //variable desde get
-        $obs=$_GET['obs']; //$obs="Registro de propuesta";
-        if($id_perfil==0){
-        actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);
-      }else{
-        actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$id_perfil,$codigo,$fechaHoraActual,$obs);
-      }
-  }
 
 	//fin de actulizar estados del servidor ibnorca
 }else{
