@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $html=generarHTMLFacCliente($codFactura);
                 if($html=="ERROR"){
                  $estado=2;
-                 $mensaje = "No se pudo obtener la factura";
+                 $mensaje = "Factura Inexistente";
                  $resultado=array("estado"=>$estado, 
                             "mensaje"=>$mensaje, 
                             "factura64"=>array(),
@@ -30,14 +30,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $factura = datosPDFFacturasVenta($html); 
                 $resultado=array(
                             "estado"=>$estado,
-                            "mensaje"=>"Factura generada correctamente", 
+                            "mensaje"=>"Factura Generada Correctamente", 
                             "factura64"=>$factura['base64'], 
                             "totalComponentes"=>1     
                             );            
                 }
             }catch(Exception $e){
                 $estado=2;
-                $mensaje = "No se pudo obtener la factura";
+                $mensaje = "Factura Inexistente";
                 $resultado=array("estado"=>$estado, 
                             "mensaje"=>$mensaje, 
                             "factura64"=>array(),
@@ -46,11 +46,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             
          }else{
            $resultado=array("estado"=>3, 
-                            "mensaje"=>"No existe el metodo");
+                            "mensaje"=>"No existe la Accion Solicitada.");
          }
         }else{
             $resultado=array("estado"=>4, 
-                            "mensaje"=>"Error: las credenciales sKey y sIde no son correctas");
+                            "mensaje"=>"Error: Credenciales Incorrectas");
         }
             header('Content-type: application/json');
             echo json_encode($resultado);
