@@ -1,5 +1,7 @@
 <?php
 // SERVICIO WEB PARA FACTURAS
+
+//estados
 require 'htmlFacCliente.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -10,21 +12,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if($datos['sIdentificador']=="facifin"&&$datos['sKey']=="rrf656nb2396k6g6x44434h56jzx5g6"){
         $accion=$datos['accion']; //recibimos la accion
         $codFactura=$datos['idFactura'];//recibimos el codigo del proyecto
-        $estado=false;
+        $estado=0;
         $mensaje="";
         if($accion=="ObtenerFacturaPDF"){
             try{
             
                 $html=generarHTMLFacCliente($codFactura);
                 if($html=="ERROR"){
-                 $estado=true;
+                 $estado=2;
                  $mensaje = "No se pudo obtener la factura";
                  $resultado=array("estado"=>$estado, 
                             "mensaje"=>$mensaje, 
                             "factura64"=>array(),
                             "totalComponentes"=>0);
                 }else{
-                $estado=true;
+                $estado=1;
                 $factura = datosPDFFacturasVenta($html); 
                 $resultado=array(
                             "estado"=>$estado,
@@ -34,8 +36,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             );            
                 }
             }catch(Exception $e){
-                $estado=true;
-                $mensaje = "No se pudo obtener la lista de Componentes".$e;
+                $estado=2;
+                $mensaje = "No se pudo obtener la factura";
                 $resultado=array("estado"=>$estado, 
                             "mensaje"=>$mensaje, 
                             "factura64"=>array(),
@@ -43,17 +45,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
             
          }else{
-           $resultado=array("estado"=>false, 
-                            "mensaje"=>"No tiene acceso al WS");
+           $resultado=array("estado"=>3, 
+                            "mensaje"=>"No existe el metodo");
          }
         }else{
-            $resultado=array("estado"=>false, 
-                            "mensaje"=>"Error: Operacion incorrecta!");
+            $resultado=array("estado"=>4, 
+                            "mensaje"=>"Error: las credenciales sKey y sIde no son correctas");
         }
             header('Content-type: application/json');
             echo json_encode($resultado);
 }else{
-    $resp=array("estado"=>false, 
+    $resp=array("estado"=>5, 
                 "mensaje"=>"No tiene acceso al WS");
     header('Content-type: application/json');
     echo json_encode($resp);
