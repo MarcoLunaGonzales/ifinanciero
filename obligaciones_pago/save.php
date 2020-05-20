@@ -75,7 +75,7 @@ if($contadorCheque==$contadorChequeFilas){
     $tipoComprobante=2;
     $nroCorrelativo=numeroCorrelativoComprobante($globalGestion,$globalUnidad,3);
     $fechaHoraActual=date("Y-m-d H:i:s");
-    $glosa="PAGOS ".nameProveedor($proveedor)." COMPROBANTE (SOLICITUD - RECURSOS) ".$observaciones_pago;
+    $glosa="PAGOS ".nameProveedor($proveedor)." ".$observaciones_pago;
     $userSolicitud=$globalUser;
     $unidadSol=$globalUnidad;
     $areaSol=$globalArea;
@@ -125,9 +125,12 @@ if($contadorCheque==$contadorChequeFilas){
         
         $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($cod_solicitud);
 
-        //$glosa="Beneficiario: ".obtenerProveedorSolicitudRecursos($cod_solicitud)."  F/".$facturaCabecera." ".$nombreCliente." SR ".$numeroSol;
-        $glosaDetalle=$glosa." - ".$glosa_detalle;
-
+        
+        
+        $glosaDetalle=obtenerGlosaSolicitudRecursoDetalle($codigo_detalle);
+        if($glosaDetalle==""){
+          $glosaDetalle=$glosa." - ".$glosa_detalle;
+        }  
 
         $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
         $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) 
@@ -151,7 +154,10 @@ if($contadorCheque==$contadorChequeFilas){
 
         $debe=0;
         $haber=$monto_pago;
-        $glosaDetalle=$glosa." - ".$glosa_detalle;
+        $glosaDetalle=obtenerGlosaSolicitudRecursoDetalle($codigo_detalle);
+        if($glosaDetalle==""){
+          $glosaDetalle=$glosa." - ".$glosa_detalle;
+        }
 
         $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
         $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) 

@@ -325,7 +325,7 @@ while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
               $stmtDetalleEstadoCuenta->execute();             
              //echo $sqlDetalleEstadoCuenta."";
               //actualizamos con el codigo de comprobante detalle la solicitud recursos detalle 
-              $sqlUpdateSolicitudRecursoDetalle="UPDATE solicitud_recursosdetalle SET cod_proveedor=$codProveedorEstado,cod_estadocuenta=$codEstadoCuenta where codigo=$codSolicitudDetalle";
+              $sqlUpdateSolicitudRecursoDetalle="UPDATE solicitud_recursosdetalle SET cod_proveedor=$codProveedorEstado,cod_estadocuenta=$codEstadoCuenta,glosa_comprobantedetalle='$glosaDetalleProv' where codigo=$codSolicitudDetalle";
               $stmtUpdateSolicitudRecursoDetalle = $dbh->prepare($sqlUpdateSolicitudRecursoDetalle);
               $stmtUpdateSolicitudRecursoDetalle->execute();
 
