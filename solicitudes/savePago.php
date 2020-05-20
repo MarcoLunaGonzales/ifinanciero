@@ -99,7 +99,9 @@ if($contadorCheque==$contadorChequeFilas){
     $stmtInsert4 = $dbh->prepare($sqlInsert4);
     $stmtInsert4->execute();
 
-    for ($i=1;$i<=$cantidadFilas;$i++){         
+    for ($i=1;$i<=$cantidadFilas;$i++){  
+    $proveedor=$_POST['codigo_proveedor'.$i];
+    $cod_plancuenta=$_POST['codigo_plancuenta'.$i];        
   $monto_pago=$_POST["monto_pago".$i];
   $totalPago+=$monto_pago;
   $cod_solicitud=$_POST["codigo_solicitud".$i];
@@ -111,7 +113,9 @@ if($contadorCheque==$contadorChequeFilas){
     $tipo_pago=$_POST["tipo_pago".$i];
 
     //comprobantes Detalles
-    $cuenta=obtenerValorConfiguracion(37);
+    $cuenta=obtenerCuentaPasivaSolicitudesRecursos($cod_plancuenta);
+    $cuentaAuxiliar=obtenerCodigoCuentaAuxiliarProveedorCliente(1,$proveedor);
+    //$cuenta=obtenerValorConfiguracion(37);
         $cuentaAuxiliar=0;
         $numeroCuenta=trim(obtieneNumeroCuenta($cuenta));
         $inicioNumero=$numeroCuenta[0];

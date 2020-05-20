@@ -257,7 +257,7 @@ $html.='</body>'.
       '</html>'; 
 
   } catch(PDOException $ex){
-    $html="ERROR";
+    $html="ERROR".$ex;
   }
   return $html;
 }

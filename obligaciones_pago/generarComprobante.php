@@ -23,7 +23,7 @@ $fecha_pago=date("Y-m-d");
     $tipoComprobante=2;
     $nroCorrelativo=numeroCorrelativoComprobante($globalGestion,$globalUnidad,3);
     $fechaHoraActual=date("Y-m-d H:i:s");
-    $glosa="PAGOS  COMPROBANTE (SOLICITUD - RECURSOS) ";
+    $glosa="PAGOS  ";
     $userSolicitud=$globalUser;
     $unidadSol=$globalUnidad;
     $areaSol=$globalArea;
@@ -45,11 +45,14 @@ $fecha_pago=date("Y-m-d");
 
     $datosPago = listaDetallePagosProveedores($codigo);
     while ($row = $datosPago->fetch(PDO::FETCH_ASSOC)) {
+        $cod_plancuenta=$row['codigo_plancuenta'];
+        $proveedor=$row['cod_proveedor'];  
        $monto_pago=$row["monto"];
        $codigo_detalle=$row["cod_solicitudrecursosdetalle"];
        $glosa_detalle=$row["detalle"];
        //comprobante detalle
-       $cuenta=obtenerValorConfiguracion(37);
+       $cuenta=obtenerCuentaPasivaSolicitudesRecursos($cod_plancuenta);
+       $cuentaAuxiliar=obtenerCodigoCuentaAuxiliarProveedorCliente(1,$proveedor);
         $cuentaAuxiliar=0;
         $numeroCuenta=trim(obtieneNumeroCuenta($cuenta));
         $inicioNumero=$numeroCuenta[0];
@@ -65,8 +68,10 @@ $fecha_pago=date("Y-m-d");
         $debe=$monto_pago;
         $haber=0;
         
-        $glosaDetalle=$glosa." - ".$glosa_detalle;
-
+        $glosaDetalle=obtenerGlosaSolicitudRecursoDetalle($codigo_detalle);
+        if($glosaDetalle==""){
+          $glosaDetalle=$glosa." - ".$glosa_detalle;
+        }
 
         $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
         $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) 
@@ -90,7 +95,10 @@ $fecha_pago=date("Y-m-d");
 
         $debe=0;
         $haber=$monto_pago;
-        $glosaDetalle=$glosa." - ".$glosa_detalle;
+        $glosaDetalle=obtenerGlosaSolicitudRecursoDetalle($codigo_detalle);
+        if($glosaDetalle==""){
+          $glosaDetalle=$glosa." - ".$glosa_detalle;
+        }
 
         $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
         $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) 
@@ -106,6 +114,10 @@ $fecha_pago=date("Y-m-d");
           $stmtDetalleEstadoCuenta->execute();
              
     }
+    
+    $sqlUpdate="UPDATE comprobantes SET glosa='$glosaDetalle' where codigo=$codComprobante";
+    $stmtUpdate = $dbh->prepare($sqlUpdate);
+    $stmtUpdate->execute();
 
 if($flagSuccess==true){
 	showAlertSuccessError(true,"../".$urlListPago);	

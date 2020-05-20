@@ -295,7 +295,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                     <select class="selectpicker form-control form-control-sm" data-live-search="true" name="proveedores" id="proveedores" data-style="<?=$comboColor;?>" onChange="cargarDatosCuenta()">
                     <option disabled selected value="">Asignar - Proveedores</option>
                   <?php
-                  $stmt = $dbh->prepare("SELECT * FROM af_proveedores order by codigo");
+                  $stmt = $dbh->prepare("SELECT * FROM af_proveedores order by nombre");
                 $stmt->execute();
                 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                   $codigoX=$row['codigo'];

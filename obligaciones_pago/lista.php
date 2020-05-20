@@ -92,7 +92,7 @@ $stmt->bindColumn('cod_ebisa', $cod_ebisa);
                             if($codComprobante!=0){
                               ?>
                                <div class="btn-group dropdown">
-                                     <button type="button" class="btn btn-primary dropdown-toggle" title="COMPROBANTE - DEVENGADO" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                     <button type="button" class="btn btn-primary dropdown-toggle" title="COMPROBANTE DE PAGOS" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                        <i class="material-icons"><?=$iconImp;?></i>
                                      </button>
                                     <div class="dropdown-menu">

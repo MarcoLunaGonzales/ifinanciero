@@ -66,7 +66,7 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
                                <select class="selectpicker form-control form-control-sm" onchange="cargarDatosProveedorPagos()" data-live-search="true" name="proveedor" id="proveedor" data-style="btn btn-danger">
                                     <option disabled selected="selected" value="">--PROVEEDOR--</option>
                                     <?php 
-                                     $stmt3 = $dbh->prepare("SELECT DISTINCT p.codigo,p.nombre FROM solicitud_recursosdetalle s join af_proveedores p on s.cod_proveedor=p.codigo");
+                                     $stmt3 = $dbh->prepare("SELECT DISTINCT p.codigo,p.nombre FROM solicitud_recursosdetalle s join af_proveedores p on s.cod_proveedor=p.codigo order by p.nombre");
                                      $stmt3->execute();
                                      while ($rowSel = $stmt3->fetch(PDO::FETCH_ASSOC)) {
                                       $codigoSel=$rowSel['codigo'];
