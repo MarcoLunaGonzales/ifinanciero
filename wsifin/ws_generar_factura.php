@@ -16,8 +16,6 @@ function insertarlogFacturas($cod_error,$detalle_error,$json){
     $stmt = $dbh->prepare($sql);
     $stmt->execute();    
 }
-
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Decodificando formato Json
     $json=file_get_contents("php://input");
@@ -104,24 +102,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             $mensaje = "Hubo un error al generar la factura, contáctese con el administrador.";
                         }else{
                             $estado=12;//no encuentro el error
-                            $mensaje = "Error desconocido al generar Factura";                            
+                            $mensaje = "Error interno del servicio";
                         }
                     }            
                 }else{
-                    $estado=13;
-                    $mensaje="Nombre de acción incorrecta"; 
+                    $estado=14;
+                    $mensaje="Acción no encontrada";
                 }
             }else{
                 $estado=14;
-                $mensaje="Acción no encontrada"; 
+                $mensaje="Acción no encontrada";
             }
         }else{
             $estado=15;
-            $mensaje="Error en las credenciales!";            
+            $mensaje="Error en las credenciales sKey y sIde";            
         }
     }else{
-        $estado=16;
-        $mensaje="No tiene acceso al WS!";
+        $estado=15;
+        $mensaje="Error en las credenciales sKey y sIde";
     }
     insertarlogFacturas($estado,$mensaje,$json);
     if($estado==0){$resultado=array("estado"=>$estado,"mensaje"=>$mensaje,"IdFactura"=>$cod_factura);}
@@ -129,8 +127,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     header('Content-type: application/json');
     echo json_encode($resultado);
 }else{
-    $estado='false';
-    $mensaje="No tiene acceso al WS";
+    $estado=15;
+    $mensaje="Error en las credenciales sKey y sIde";
     $json="";
     insertarlogFacturas($estado,$mensaje,$json);
     $resp=array("estado"=>$estado, 
