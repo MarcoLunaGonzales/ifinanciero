@@ -105,7 +105,7 @@
                                               <select class="selectpicker form-control form-control-sm" onchange="quitarFormaPagoProveedor(<?=$idFila?>)" data-live-search="true" data-size="6" name="proveedor<?=$idFila?>" data-live-search="true" id="proveedor<?=$idFila?>" required data-style="<?=$comboColor;?>">
                                                   <option disabled selected value="">Proveedor</option>
                                                    <?php
-                                                   $stmt = $dbh->prepare("SELECT * FROM af_proveedores order by codigo");
+                                                   $stmt = $dbh->prepare("SELECT * FROM af_proveedores order by nombre");
                                                  $stmt->execute();
                                                  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                                    $codigoX=$row['codigo'];

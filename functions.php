@@ -6237,7 +6237,7 @@ function obtenerDatosProveedoresPagoDetalle($codigo){
 }
 function listaDetallePagosProveedores($codigo){
    $dbh = new Conexion();
-   $stmt = $dbh->prepare("SELECT pd.*,sd.detalle from pagos_proveedoresdetalle pd join solicitud_recursosdetalle sd on pd.cod_solicitudrecursosdetalle=sd.codigo where pd.cod_pagoproveedor=$codigo");
+   $stmt = $dbh->prepare("SELECT pd.*,sd.detalle,sd.cod_plancuenta from pagos_proveedoresdetalle pd join solicitud_recursosdetalle sd on pd.cod_solicitudrecursosdetalle=sd.codigo where pd.cod_pagoproveedor=$codigo");
    $stmt->execute();
    return $stmt;
 }

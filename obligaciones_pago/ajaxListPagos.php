@@ -54,6 +54,7 @@ $totalPagadoX=0;
                           $importe=$row['importe'];
                           $proveedor=$row['proveedor'];
                           $codProveedor=$row['cod_proveedor'];
+                          $codPlancuenta=$row['cod_plancuenta'];
                           $codSol=$row['cod_solicitudrecurso'];
                           $codSolDet=$codDetalle;
 
@@ -79,6 +80,7 @@ $totalPagadoX=0;
                             <input type="hidden" value="<?=$codProveedor?>" id="codigo_proveedor<?=$index?>" name="codigo_proveedor<?=$index?>">
                             <input type="hidden" value="<?=$codSol?>" id="codigo_solicitud<?=$index?>" name="codigo_solicitud<?=$index?>">
                             <input type="hidden" value="<?=$codSolDet?>" id="codigo_solicitudDetalle<?=$index?>" name="codigo_solicitudDetalle<?=$index?>">
+                            <input type="hidden" value="<?=$codPlancuenta?>" id="codigo_plancuenta<?=$index?>" name="codigo_plancuenta<?=$index?>">
                             <?=$proveedor;?></td>
                           <!--<td>                        
                             <?php 
