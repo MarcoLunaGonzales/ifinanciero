@@ -1,8 +1,8 @@
 <?php
-
-//require_once '../layouts/bodylogin.php';
-require_once 'conexion.php';
-require_once 'functions.php';
+require_once '../layouts/bodylogin.php';
+require_once '../conexion.php';
+require_once '../functions.php';
+require_once '../functionsGeneral.php';
 require_once 'configModule.php';
 ini_set('display_errors',1);
 $globalUser=$_SESSION["globalUser"];
@@ -36,8 +36,8 @@ try {
     if(isset($_POST["cod_tipopago"])){
         $cod_tipopago = $_POST["cod_tipopago"];
     }else $cod_tipopago=0;
-    if(isset($_POST['u'])){
-        $cod_personal=$_POST['u'];
+    if(isset($_POST['q'])){//si llega desde la intranet
+        $cod_personal=$_POST['q'];
     }
 
         $nro_correlativo=obtenerCorrelativoSolicitud();//correlativo
@@ -195,10 +195,10 @@ try {
           $q=$_POST['usuario_ibnored'];
           $s=$_POST['usuario_ibnored_s'];
           $u=$_POST['usuario_ibnored_u'];
-          $v=$_POST['usuario_ibnored_v'];
-          showAlertSuccessError($flagSuccess,$urlListSolicitud_facturacion_normas."&q=".$q."&s=".$s."&u=".$u."&v=".$v);
+          $r=$_POST['usuario_ibnored_r'];
+          showAlertSuccessError($flagSuccess,"../".$urlListSolicitud_facturacion_normas."&q=".$q."&r=".$r."&s=".$s."&u=".$u);
         }else{
-          showAlertSuccessError($flagSuccess,$urlListSolicitud_facturacion_normas);  
+          showAlertSuccessError($flagSuccess,"../".$urlListSolicitud_facturacion_normas);  
         }
         //$stmt->debugDumpParams();
     } catch(PDOException $ex){

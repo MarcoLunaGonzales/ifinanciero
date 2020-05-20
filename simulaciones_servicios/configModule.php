@@ -24,7 +24,7 @@ $urlReporteDiario="reportes/reporteDiario.php";
 $urlReporteMayor="reportes/reporteMayor.php";
 $urlSolicitudfactura="?opcion=solicitud_facturacion";
 $urlRegisterSolicitudfactura="?opcion=registerSolicitud_facturacion";
-$urlSaveSolicitudfactura="?opcion=save_solicitud_facturacion";
+$urlSaveSolicitudfactura="simulaciones_servicios/save_solicitud_facturacion.php";
 
 $urlListSimulacionesServ="?opcion=listSimulacionesServicios";
 
@@ -53,5 +53,11 @@ $urlListHistoricoContabilidad="?opcion=listFacturasServicios_conta_history";
 
 $urlListSolicitudContabilidad="?opcion=listFacturasServicios_conta";
 
+
+$urlRegister_solicitudfacturacion_manual="?opcion=register_solicitudfacturacion_manual";
+$urlListSolicitud_facturacion_normas="?opcion=listSolicitud_facturacion_normas";
+
+$urlListSol_conta="index.php?opcion=listFacturasServicios_conta";
+//ifinanciero/index.php?opcion=listFacturasServicios_conta
 
 ?>

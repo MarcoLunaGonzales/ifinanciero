@@ -57,7 +57,7 @@ if ($cod_facturacion > 0){
     $cod_cliente = $resultServicio['IdCliente'];    
     $fecha_registro =date('Y-m-d');
     $fecha_solicitudfactura =$fecha_registro;
-    $cod_tipoobjeto=obtenerValorConfiguracion(34);//por defecto
+    $cod_tipoobjeto=211;//por defecto}
     $cod_tipopago = null;
     $name_cliente=nameCliente($cod_cliente);
     $razon_social = $name_cliente;
@@ -67,6 +67,7 @@ if ($cod_facturacion > 0){
     $persona_contacto= null;
     // echo "aqui";
 }
+$name_tipoPago=obtenerNombreTipoPago($cod_tipoobjeto);
 $name_uo=nameUnidad($cod_uo);
 $name_area=trim(abrevArea($cod_area),'-');
 $contadorRegistros=0;
@@ -79,7 +80,7 @@ $contadorRegistros=0;
     <div class="container-fluid">
         <div style="overflow-y:scroll;">
             <div class="col-md-12">
-              <form id="formSoliFactTcp" class="form-horizontal" action="<?=$urlSaveSolicitudfactura;?>" method="post" onsubmit="return valida(this)">
+              <form id="formSoliFactTcp" class="form-horizontal" action="<?=$urlSaveSolicitudfactura;?>" method="post" onsubmit="return valida(this)" enctype="multipart/form-data">
                 <input type="hidden" name="Codigo_alterno" id="Codigo_alterno" value="<?=$Codigo_alterno;?>"/>
                 <input type="hidden" name="cod_simulacion" id="cod_simulacion" value="<?=$IdServicio;?>"/>
                 <input type="hidden" name="cod_facturacion" id="cod_facturacion" value="<?=$cod_facturacion;?>"/>
@@ -139,23 +140,18 @@ $contadorRegistros=0;
                             </div>
                         </div>
                         <!-- fin fechas -->
-                        <div class="row" >
-                            <div class="d-none">
-                                <label class="col-sm-2 col-form-label">Tipo Objeto</label>
-                                <div class="col-sm-4">
-                                    <div class="form-group" >
-                                            <select name="cod_tipoobjeto" id="cod_tipoobjeto" class="selectpicker form-control form-control-sm" data-style="btn btn-info" >
-                                                <!-- <option value=""></option> -->
-                                                <?php 
-                                                $queryTipoObjeto = "SELECT codigo,nombre FROM  tipos_objetofacturacion WHERE cod_estadoreferencial=1 order by nombre";
-                                                $statementObjeto = $dbh->query($queryTipoObjeto);
-                                                while ($row = $statementObjeto->fetch()){ ?>
-                                                    <option <?=($cod_tipoobjeto==$row["codigo"])?"selected":"";?>  value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
-                                                <?php } ?>
-                                            </select>                                
-                                    </div>
-                                </div>    
-                            </div>
+                        <div class="row">
+                            <label class="col-sm-2 col-form-label">Tipo Objeto</label>
+                            <div class="col-sm-4">
+                                <div class="form-group" >
+
+                                    <input class="form-control" type="hidden" name="cod_tipoobjeto" id="cod_tipoobjeto" required="true" value="<?=$cod_tipoobjeto;?>" required="true" readonly/>
+
+                                    <input class="form-control" type="text" required="true" value="<?=$name_tipoPago;?>" required="true" readonly style="background-color:#E3CEF6;text-align: left"/>
+                                </div>
+                            </div>    
+                        </div>     
+                        <div class="row" >                            
                             <script>var nfac=[];itemTipoPagos_facturacion.push(nfac);var nfacAreas=[];itemAreas_facturacion.push(nfacAreas);</script>
                             <div class="">
                                 <?php

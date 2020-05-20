@@ -1,13 +1,11 @@
 <?php
 
-$urlSaveSolicitudfactura="?opcion=save_solicitud_facturacion_manual";
+$urlSaveSolicitudfactura="solicitud_facturacion_manual/save_solicitud_facturacion.php";
+
 $urlSolicitudfactura="?opcion=listFacturasServicios";
-
-
-
 $urlListSolicitud_facturacion_normas="?opcion=listSolicitud_facturacion_normas";
-$urlRegisterSolicitudfactura="?opcion=registerSolicitud_facturacion_normas";
-$urlSaveSolicitudfactura_normas="?opcion=save_solicitud_facturacion_normas";
+$urlRegisterSolicitudfactura="solicitud_facturacion_manual/register_solicitud_facturacion_normas.php";
+$urlSaveSolicitudfactura_normas="save_solicitud_facturacion_normas.php";
 
 
 

@@ -37,7 +37,7 @@ try{
     $observaciones = $resultInfo['observaciones'];
     $nombre_cliente = $resultInfo['nombre_cliente'];
     if($cod_factura==null || $cod_factura==''){
-      $stmtInfo = $dbh->prepare("SELECT sf.* FROM facturas_venta sf  where sf.cod_solicitudfacturacion=$codigo");
+      $stmtInfo = $dbh->prepare("SELECT sf.* FROM facturas_venta sf  where sf.codigo=$codigo");
       $stmtInfo->execute();
       $resultInfo = $stmtInfo->fetch();   
       $cod_factura = $resultInfo['codigo']; 
@@ -56,10 +56,8 @@ try{
       $nro_autorizacion = $resultInfo['nro_autorizacion'];
       $codigo_control = $resultInfo['codigo_control'];
       $importe = $resultInfo['importe'];
-      $descuento_bob = $resultInfo['descuento_bob'];
-
-      $importe=$importe-$descuento_bob;
-
+      // $descuento_bob = $resultInfo['descuento_bob'];
+      $importe=$importe;
       $observaciones = $resultInfo['observaciones'];
       // $nombre_cliente = $resultInfo['nombre_cliente'];
       $nombre_cliente = $razon_social;

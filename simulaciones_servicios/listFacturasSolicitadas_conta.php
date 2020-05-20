@@ -133,9 +133,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                               $nombre_simulacion = $resultSimu['Descripcion'];
                               $cod_area_simulacion = $resultSimu['IdArea'];
                             }
-
                             $name_area_simulacion=trim(abrevArea($cod_area_simulacion),'-');
-
                             // --------
                             $responsable=namePersonal($cod_personal);//nombre del personal
                             $nombre_contacto=nameContacto($persona_contacto);//nombre del personal

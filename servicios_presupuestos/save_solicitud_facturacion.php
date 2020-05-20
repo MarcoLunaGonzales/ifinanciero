@@ -1,7 +1,8 @@
 <?php
-//require_once '../layouts/bodylogin.php';
-require_once 'conexion.php';
-require_once 'functions.php';
+require_once '../layouts/bodylogin.php';
+require_once '../conexion.php';
+require_once '../functions.php';
+require_once '../functionsGeneral.php';
 require_once 'configModule.php';
 ini_set('display_errors',1);
 
@@ -28,7 +29,6 @@ try {
     $observaciones = $_POST["observaciones"];
     $observaciones_2 = $_POST["observaciones_2"];
     $persona_contacto = $_POST["persona_contacto"];
-
     $modal_totalmontos = $_POST["modal_totalmontos"];
     $modal_numeroservicio = $_POST["modal_numeroservicio"];
     if(isset($_POST["cod_tipoobjeto"])){
@@ -37,8 +37,8 @@ try {
     if(isset($_POST["cod_tipopago"])){
         $cod_tipopago = $_POST["cod_tipopago"];
     }else $cod_tipopago=0;
-    if(isset($_POST['u'])){
-        $cod_personal=$_POST['u'];
+    if(isset($_POST['q'])){
+        $cod_personal=$_POST['q'];
     }
 
     if ($cod_facturacion == 0){//insertamos        
@@ -210,9 +210,9 @@ try {
           $s=$_POST['usuario_ibnored_s'];
           $u=$_POST['usuario_ibnored_u'];
           $v=$_POST['usuario_ibnored_v'];
-          showAlertSuccessError($flagSuccess,$urllistFacturasServicios."&q=".$q."&s=".$s."&u=".$u."&v=".$v);
+          showAlertSuccessError($flagSuccess,"../".$urllistFacturasServicios."&q=".$q."&s=".$s."&u=".$u."&v=".$v);
         }else{
-          showAlertSuccessError($flagSuccess,$url_list_Solicitudfactura); 
+          showAlertSuccessError($flagSuccess,"../".$url_list_Solicitudfactura); 
         } 
 
         //$stmt->debugDumpParams();
@@ -358,9 +358,9 @@ try {
           $s=$_POST['usuario_ibnored_s'];
           $u=$_POST['usuario_ibnored_u'];
           $v=$_POST['usuario_ibnored_v'];
-          showAlertSuccessError($flagSuccess,$urllistFacturasServicios."&q=".$q."&s=".$s."&u=".$u."&v=".$v);
+          showAlertSuccessError($flagSuccess,"../".$urllistFacturasServicios."&q=".$q."&s=".$s."&u=".$u."&v=".$v);
         }else{
-          showAlertSuccessError($flagSuccess,$url_list_Solicitudfactura); 
+          showAlertSuccessError($flagSuccess,"../".$url_list_Solicitudfactura); 
         }     
               
     }//si es insert o update

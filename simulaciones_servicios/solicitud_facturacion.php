@@ -60,7 +60,7 @@ if($cantidad_items>0){
                     <div class="card-icon">
                       <i class="material-icons">polymer</i>
                     </div>
-                    <h4 class="card-title"><b>Solicitud de Facturación</b></h4>
+                    <h4 class="card-title"><b>Solicitud de Facturación TCP-TCS</b></h4>
                     <h4 class="card-title" align="center"><b>Propuesta : <?=$nombre_simulacion?> - <?=$name_area_simulacion?></b></h4>
                   </div>
                   <div class="card-body">

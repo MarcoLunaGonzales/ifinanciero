@@ -1,8 +1,8 @@
 <?php
-
-//require_once '../layouts/bodylogin.php';
-require_once 'conexion.php';
-require_once 'functions.php';
+require_once '../layouts/bodylogin.php';
+require_once '../conexion.php';
+require_once '../functions.php';
+require_once '../functionsGeneral.php';
 require_once 'configModule.php';
 ini_set('display_errors',1);
 
@@ -26,8 +26,6 @@ try {
     $observaciones = $_POST["observaciones"];
     $observaciones_2 = $_POST["observaciones_2"];
     $persona_contacto = $_POST["persona_contacto"];
-    
-
     // $modal_totalmontos = $_POST["modal_totalmontos"];
     // $modal_numeroservicio = $_POST["modal_numeroservicio"];
     if(isset($_POST["cod_tipoobjeto"])){
@@ -36,10 +34,10 @@ try {
     if(isset($_POST["cod_tipopago"])){
         $cod_tipopago = $_POST["cod_tipopago"];
     }else $cod_tipopago=0;
-    if(isset($_POST['u'])){
-        $cod_personal=$_POST['u'];
+    
+    if(isset($_POST['q'])){
+        $cod_personal=$_POST['q'];
     }
-
         $nro_correlativo=obtenerCorrelativoSolicitud();//correlativo
         $stmt = $dbh->prepare("INSERT INTO solicitudes_facturacion(cod_simulacion_servicio,cod_unidadorganizacional,cod_area,fecha_registro,fecha_solicitudfactura,cod_tipoobjeto,cod_tipopago,cod_cliente,cod_personal,razon_social,nit,observaciones,observaciones_2,nro_correlativo,cod_estado,persona_contacto,cod_estadosolicitudfacturacion,codigo_alterno,tipo_solicitud) 
         values ('$cod_simulacion','$cod_unidadorganizacional','$cod_area','$fecha_registro','$fecha_solicitudfactura','$cod_tipoobjeto','$cod_tipopago','$cod_cliente','$cod_personal','$razon_social','$nit','$observaciones','$observaciones_2','$nro_correlativo',1,'$persona_contacto',1,'$codigo_alterno',4)");//4 tipo solicitud manual
@@ -51,36 +49,8 @@ try {
            $stmt->execute();           
            while ($rowPre = $stmt->fetch(PDO::FETCH_ASSOC)) {
                   $cod_facturacion=$rowPre['codigo'];
-            }
-            // for ($i=1;$i<=$modal_numeroservicio-1;$i++){
-            //     $servicioInsert="";
-            //     $CantidadInsert="";
-            //     $importeInsert="";
-            //     $DescricpionInsert="";
-            //     // echo "i:".$i;
-
-            //     if(isset($_POST["servicio".$i])){
-            //         $servicioInsert=$_POST["servicio_a".$i];
-            //         $CantidadInsert=$_POST["cantidad_a".$i];
-            //         $importeInsert=$_POST["modal_importe".$i];
-            //         $DescricpionInsert=$_POST["descripcion_alterna".$i];
-            //         $descuento_por_Insert=$_POST["descuento_por".$i];
-            //         $descuento_bob_Insert=$_POST["descuento_bob".$i]; 
-            //     }
-            //     if($servicioInsert!=0 || $servicioInsert!=""){
-            //         // echo " servicio:".$servicioInsert."<br>";
-            //         // echo " cantida:".$CantidadInsert."<br>";
-            //         // echo " importe:".$importeInsert."<br>";
-            //         // echo " Descricpion:".$DescricpionInsert."<br>";
-            //         // echo " descuento_por_:".$descuento_por_Insert."<br>";
-            //         // echo " descuento_bob_:".$descuento_bob_Insert."<br>";
-
-            //         $stmt = $dbh->prepare("INSERT INTO solicitudes_facturaciondetalle(cod_solicitudfacturacion,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_por,descuento_bob,tipo_item) 
-            //         values ('$cod_facturacion','$servicioInsert','$CantidadInsert','$importeInsert','$DescricpionInsert','$descuento_por_Insert','$descuento_bob_Insert',1)");
-            //         $flagSuccess=$stmt->execute();
-            //     }
-            // }
-             //los agregados con  ajax
+            }           
+            //los agregados con  ajax
             $cantidad_filas = $_POST["cantidad_filas"];
             for ($i=1;$i<=$cantidad_filas;$i++){                
                 $servicioInsert_ajax=$_POST["modal_editservicio".$i];
@@ -197,16 +167,16 @@ try {
             $u=$_POST['usuario_ibnored_u'];
             actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$cod_facturacion,$fechaHoraActual,$obs);
         }else{
-           actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$cod_facturacion,$fechaHoraActual,$obs);
+            actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$cod_facturacion,$fechaHoraActual,$obs);
         }
         if(isset($_POST['usuario_ibnored'])){
-          $q=$_POST['usuario_ibnored'];
-          $s=$_POST['usuario_ibnored_s'];
-          $u=$_POST['usuario_ibnored_u'];
-          $v=$_POST['usuario_ibnored_v'];
-          showAlertSuccessError($urlSolicitudfactura."&cod=".$cod_simulacion."&q=".$q."&s=".$s."&u=".$u."&v=".$v);
+            $q=$_POST['usuario_ibnored'];
+            $r=$_POST['usuario_ibnored_r'];
+            $s=$_POST['usuario_ibnored_s'];
+            $u=$_POST['usuario_ibnored_u'];
+            showAlertSuccessError($flagSuccess,"../".$urlSolicitudfactura."&q=".$q."&r=".$r."&s=".$s."&u=".$u);
         }else{
-          showAlertSuccessError($flagSuccess,$urlSolicitudfactura."&cod=".$cod_simulacion);  
+            showAlertSuccessError($flagSuccess,"../".$urlSolicitudfactura);  
         }
         
 

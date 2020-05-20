@@ -854,7 +854,7 @@ if($menuModulo==0){
                     <span class="sidebar-normal"> Gestión de Pagos</span>
                   </a>
                 </li>
-                <li class="nav-item ">
+                <!-- <li class="nav-item ">
                   <a class="nav-link" href="?opcion=register_solicitudfacturacion_manual">
                     <span class="sidebar-mini"> SFM </span>
                     <span class="sidebar-normal"> Solicitud de Facturacion Manual</span>
@@ -865,7 +865,7 @@ if($menuModulo==0){
                     <span class="sidebar-mini"> SFVN</span>
                     <span class="sidebar-normal"> Solicitud de Facturacion Venta Normas</span>
                   </a>
-                </li>
+                </li> -->
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listFacturasServicios">
                     <span class="sidebar-mini"> SF </span>

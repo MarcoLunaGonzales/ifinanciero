@@ -24,7 +24,9 @@ $mes=$_POST["mes"];
 $gestion=$_POST["gestion"];
 //verificamos si esa fecha no se registro aun
 
-$stmt = $dbh->prepare("SELECT count(codigo)as contador from mesdepreciaciones where gestion=$gestion and mes=$mes");
+$sql="SELECT count(codigo)as contador from mesdepreciaciones where gestion=$gestion and mes=$mes";
+$stmt = $dbh->prepare($sql);
+// echo $sql;
 	//ejecutamos
 	$stmt->execute();
 	//bindColumn
@@ -50,8 +52,9 @@ $stmt = $dbh->prepare("SELECT count(codigo)as contador from mesdepreciaciones wh
 				$mes_aux=0;
 			else $mes_aux=$mes_aux+1;
 		}
-		echo "mesAux: ".$mes_aux;
+		// echo "mesAux: ".$mes_aux;
 		if($mes_aux==$mes || $mes_aux==0){//no se salto ningun mes
+			echo "entra";
 			$ufvinicio=obtenerUFV($fecha_primerdia);
 			$ufvfinal=obtenerUFV($fecha_ultimodia);
 			$estado=1;

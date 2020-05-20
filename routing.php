@@ -209,17 +209,17 @@
 		if ($_GET['opcion']=='listSolicitud_facturacion_normas') {			
 			require_once('solicitud_facturacion_manual/lista_solicitud_facturacion_normas.php');
 		}
-		if ($_GET['opcion']=='registerSolicitud_facturacion_normas') {			
-			require_once('solicitud_facturacion_manual/register_solicitud_facturacion_normas.php');
-		}
+		// if ($_GET['opcion']=='registerSolicitud_facturacion_normas') {			
+		// 	require_once('solicitud_facturacion_manual/register_solicitud_facturacion_normas.php');
+		// }
 
-		if ($_GET['opcion']=='save_solicitud_facturacion_normas') {
-			require_once('solicitud_facturacion_manual/save_solicitud_facturacion_normas.php');
-		}
+		// if ($_GET['opcion']=='save_solicitud_facturacion_normas') {
+		// 	require_once('solicitud_facturacion_manual/save_solicitud_facturacion_normas.php');
+		// }
 
-		if ($_GET['opcion']=='save_solicitud_facturacion') {
-			require_once('simulaciones_servicios/save_solicitud_facturacion.php');
-		}
+		// if ($_GET['opcion']=='save_solicitud_facturacion') {
+		// 	require_once('simulaciones_servicios/save_solicitud_facturacion.php');
+		// }
 		if ($_GET['opcion']=='anular_facturaSoliciutd') {
 			$codigo=$_GET['codigo'];
 			require_once('simulaciones_servicios/anular_facturaGenerada.php');
@@ -252,10 +252,6 @@
 		if ($_GET['opcion']=='save_solicitud_facturacion_costos_empresa') {
 			require_once('simulaciones_costos/save_solicitud_facturacion_costos_empresa.php');
 		}
-		if ($_GET['opcion']=='save_solicitud_facturacion_manual') {
-			require_once('solicitud_facturacion_manual/save_solicitud_facturacion.php');
-		}
-
 		if ($_GET['opcion']=='listFacturasServicios_costos') {
 			require_once('simulaciones_costos/listFacturasSolicitadas.php');
 		}
@@ -325,9 +321,9 @@
 			
 			require_once('servicios_presupuestos/register_solicitud_facturacion.php');
 		}
-		if ($_GET['opcion']=='save_solicitud_facturacion_sp') {
-			require_once('servicios_presupuestos/save_solicitud_facturacion.php');
-		}
+		// if ($_GET['opcion']=='save_solicitud_facturacion_sp') {
+		// 	require_once('servicios_presupuestos/save_solicitud_facturacion.php');
+		// }
 
         //tarifario servicios
         if ($_GET['opcion']=='listTarifarioServicios') {
