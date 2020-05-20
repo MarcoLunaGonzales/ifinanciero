@@ -40,6 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     if(isset($datos['importeTotal'])) $importeTotal=$datos['importeTotal'];//recibimos el importe total
                     if(isset($datos['items'])) $items=$datos['items'];//recibimos array de detalle
                     $cont_items=0;
+                    $importeTotal_x=0;
                     $sw=true;
                     foreach ($items as $valor) {  
                         $cont_items++;
@@ -48,6 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $detalle=$valor['detalle'];
                         $precioUnitario=$valor['precioUnitario'];
                         $cantidad=$valor['cantidad'];
+                        $importeTotal_x=$importeTotal_x+$precioUnitario;
                         // echo $suscripcionId." - ".$pagoCursoId."<br>";
                         if($suscripcionId<=0 && $pagoCursoId<=0 && !is_numeric($suscripcionId) && !is_numeric($pagoCursoId)){
                             $sw=false;
@@ -89,8 +91,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         //mostrará el error de los items 
                     }else{
                         // $estado=0;
-                        // $mensaje = "todo ok";
-                        $rspString = ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciCliente,$razonSocial,$importeTotal,$items);//llamamos a la funcion                 
+                        // $mensaje = "todo ok";                        
+                        $rspString = ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciCliente,$razonSocial,$importeTotal_x,$items);//llamamos a la funcion                 
                         $rspArray = explode("###", $rspString);
                         $rsp=$rspArray[0];
                         $cod_factura=$rspArray[1];

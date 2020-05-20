@@ -143,7 +143,7 @@ $html.=  '<header class="header">'.
                         </tr>
                     </table>
                     <small><h4>
-                      COPIA: CLIENTE<br><br>
+                      ORIGINAL: CLIENTE<br><br>
                       * '.obtenerValorConfiguracionFactura(6).'<br><br>
                       '.$nombre_ciudad.', '.obtenerFechaEnLetra($fecha_factura).'<br>
                     </h4></small>
