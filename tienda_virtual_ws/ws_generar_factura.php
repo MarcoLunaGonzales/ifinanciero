@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $accion=NULL;
     $estado='false';
     $mensaje="ERROR";
-    $sucursalId=null;$paralelaId=null;$fechaFactura=null;$nitciCliente=null;$razonSocial=null;$importeTotal=null;$items=null;
+    $sucursalId=null;$pasarelaId=null;$fechaFactura=null;$nitciCliente=null;$razonSocial=null;$importeTotal=null;$items=null;
     if(isset($datos['accion'])&&isset($datos['sIdentificador'])&&isset($datos['sKey']))
     {
         if($datos['sIdentificador']=="facifin"&&$datos['sKey']=="rrf656nb2396k6g6x44434h56jzx5g6")
@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $accion=$datos['accion']; //recibimos la accion
                 if($accion=="GenerarFactura"){//nombre de la accion
                     if(isset($datos['sucursalId'])) $sucursalId=$datos['sucursalId'];//recibimos el codigo de la sucursal
-                    if(isset($datos['sucursalId'])) $paralelaId=$datos['paralelaId'];//recibimos el codigo de la sucursal
+                    if(isset($datos['sucursalId'])) $pasarelaId=$datos['pasarelaId'];//recibimos el codigo de la sucursal
                     if(isset($datos['fechaFactura'])) $fechaFactura=$datos['fechaFactura'];//recibimos fecha de factura
                     if(isset($datos['nitciCliente'])) $nitciCliente=$datos['nitciCliente'];//recibimos ci o nit del cliente
                     if(isset($datos['razonSocial'])) $razonSocial=$datos['razonSocial'];//recibimos razon social
@@ -72,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     if($sucursalId==null || $sucursalId!=1){
                         $estado=1;
                         $mensaje = "Id Sucural incorrecta";
-                    }elseif($paralelaId==null || $paralelaId!=1){
+                    }elseif($pasarelaId==null || $pasarelaId!=1){
                         $estado=2;
                         $mensaje = "Id Paralela incorrecta";
                     }elseif(!check($fechaFactura)){
@@ -92,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     }else{
                         // $estado=0;
                         // $mensaje = "todo ok";
-                        $rspString = ejecutarGenerarFactura($sucursalId,$paralelaId,$fechaFactura,$nitciCliente,$razonSocial,$importeTotal,$items);//llamamos a la funcion                 
+                        $rspString = ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciCliente,$razonSocial,$importeTotal,$items);//llamamos a la funcion                 
                         $rspArray = explode("###", $rspString);
                         $rsp=$rspArray[0];
                         $cod_factura=$rspArray[1];

@@ -24,7 +24,7 @@
 
 // ejecutarGenerarFactura($sucursalId,$fechaFactura,$nitciCliente,$razonSocial,$importeTotal,$items);
 
-function ejecutarGenerarFactura($sucursalId,$paralelaId,$fechaFactura,$nitciCliente,$razonSocial,$importeTotal,$items){
+function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciCliente,$razonSocial,$importeTotal,$items){
     require_once __DIR__.'/../conexion.php';
     require '../assets/phpqrcode/qrlib.php';
     include '../assets/controlcode/sin/ControlCode.php';
@@ -46,7 +46,7 @@ function ejecutarGenerarFactura($sucursalId,$paralelaId,$fechaFactura,$nitciClie
         $cod_solicitudfacturacion = 0;
         $cod_unidadorganizacional = obtenerCodUnidadSucursal($sucursalId);
         $cod_area = 0;
-        if($paralelaId==1){
+        if($pasarelaId==1){
             $cod_tipoobjeto = 1933;
         }else{
             $cod_tipoobjeto = 0;

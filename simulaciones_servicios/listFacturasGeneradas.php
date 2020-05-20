@@ -48,7 +48,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                       <table class="table" id="tablePaginator">
                         <thead>
                           <tr>
-                            <th class="text-center"></th>
+                            <!-- <th class="text-center"></th> -->
                             <th>#Factura</th>
                             <th>Sucursal</th>
                             <th>Fecha<br>Factura</th>
@@ -93,7 +93,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             $datos=$codigo_facturacion.'/'.$cod_solicitudfacturacion.'/'.$nro_factura.'/'.$correos_string;
                             ?>
                           <tr>
-                            <td align="center"><?=$index;?></td>
+                            <!-- <td align="center"><?=$index;?></td> -->
                             <td><?=$nro_factura;?></td>
                             <td><?=$sucursal;?></td>
                             <td><?=$fecha_factura?></td>
@@ -104,7 +104,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             <td class="td-actions text-right">
                               <?php
                                 if($globalAdmin==1 and $cod_estadofactura==1 ){?>                                
-                                  <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$cod_solicitudfacturacion;?>&tipo=2' target="_blank"><i class="material-icons" title="Imprimir Facturas">print</i></a>
+                                  <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=1' target="_blank"><i class="material-icons" title="Imprimir Facturas">print</i></a>
                                  <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalEnviarCorreo" onclick="agregaformEnviarCorreo('<?=$datos;?>')">
                                     <i class="material-icons" title="Enviar Correo">email</i>
                                   </button>
@@ -113,7 +113,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                   </button>
                                 <?php  
                                 }elseif($globalAdmin==1 and $cod_estadofactura==3){?>
-                                  <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$cod_solicitudfacturacion;?>&tipo=2' target="_blank"><i class="material-icons" title="Imprimir Facturas">print</i></a>
+                                  <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=1' target="_blank"><i class="material-icons" title="Imprimir Facturas">print</i></a>
 
                                   <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation-anular-factura','<?=$urlAnularFactura;?>&codigo=<?=$codigo_facturacion;?>')">
                                   <i class="material-icons" title="Anular Factura">clear</i>
