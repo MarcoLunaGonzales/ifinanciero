@@ -108,8 +108,8 @@ $fecha_pago=date("Y-m-d");
     }
 
 if($flagSuccess==true){
-	//showAlertSuccessError(true,"../".$urlListPago);	
+	showAlertSuccessError(true,"../".$urlListPago);	
    }else{
-	//showAlertSuccessError(false,"../".$urlListPago);
+	showAlertSuccessError(false,"../".$urlListPago);
    }
 ?>

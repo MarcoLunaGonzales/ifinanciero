@@ -135,11 +135,11 @@ $stmt->bindColumn('cod_estadopago', $codEstado);
                                         ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1&admin=0" class="dropdown-item">
                                        <i class="material-icons text-danger">clear</i> Cancelar Envio
                                       </a><?php
-                                       if($globalAdmin==1){
+                                       //if($globalAdmin==1){
                                         ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=3&admin=1" class="dropdown-item">
                                           <i class="material-icons text-success">offline_pin</i> Aprobar
                                          </a><?php
-                                        } 
+                                        //} 
                                       }else{
                                         //cod 5 PAGADO
                                         ?><a href="#" class="dropdown-item">

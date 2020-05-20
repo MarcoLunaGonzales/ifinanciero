@@ -66,15 +66,24 @@ $anioGeneral=$_GET['anio_general'];
                                       <td>
                                         <select class="form-control selectpicker form-control-sm" data-style="fondo-boton fondo-boton-active" name="anio<?=$anio?>SSS<?=$iii?>" id="anio<?=$anio?>SSS<?=$iii?>">
                                           <?php 
-                                          for ($i=0; $i <= $anioGeneral; $i++) { 
-                                             $etapas="Seg ".($i-1);
+                                          $inicio=0;
+                                          if($codAreaX==39){
+                                            $inicio=1;
+                                          }
+                                          for ($i=$inicio; $i <= $anioGeneral; $i++) { 
+                                             if($codAreaX!=39){
+                                            $etapas="Seg ".($i-1);
 
                                               if($codAreaX!=39){
                                                if($i==0||$i==1){
                                                 $etapas="Et ".($i+1).""; 
                                                }
                                               }
-                                              if($i==$codAnioPre){
+                                              
+                                              }else{
+                                               $etapas="Año ".$i; 
+                                              } 
+                                             if($i==$codAnioPre){
                                                   ?><option value="<?=$i?>" selected><?=$etapas?></option><?php
                                                 }else{
                                                   ?><option value="<?=$i?>"><?=$etapas?></option><?php
