@@ -56,7 +56,7 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
         $cod_personal = 0;
         $razon_social = $razonSocial;
         $nitCliente = $nitciCliente;
-        $observaciones = '';
+        $observaciones = 'Tienda virtual - RZ: '.$razonSocial;
         $nombre_cliente = $razonSocial;                
         $fechaFactura=$fechaFactura;
         $sqlInfo="SELECT d.codigo,d.nro_autorizacion, d.llave_dosificacion,d.fecha_limite_emision
