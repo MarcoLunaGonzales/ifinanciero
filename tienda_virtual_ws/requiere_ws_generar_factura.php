@@ -47,7 +47,7 @@ $Array= array($Objeto_detalle,$Objeto_detalle2,$Objeto_detalle3,$Objeto_detalle4
 $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 
               "accion"=>"GenerarFactura", //nombre de la accion
               "sucursalId"=>1, // ID Sucursal
-              "paralelaId"=>1, // paralela
+              "pasarelaId"=>1, // paralela
               "fechaFactura"=>'2020-05-28', // fecha a factura
               "nitciCliente"=>5994967, //nit o ci de cliente
               "razonSocial"=>'Chacon', //razon social
