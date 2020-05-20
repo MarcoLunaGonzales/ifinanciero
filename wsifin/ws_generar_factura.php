@@ -16,8 +16,6 @@ function insertarlogFacturas($cod_error,$detalle_error,$json){
     $stmt = $dbh->prepare($sql);
     $stmt->execute();    
 }
-
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Decodificando formato Json
     $json=file_get_contents("php://input");

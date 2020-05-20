@@ -1,17 +1,32 @@
+﻿CODIGOS DE ERROR WS
+
+IDENTIFICADOR=facifin
+KEY=rrf656nb2396k6g6x44434h56jzx5g6
+NOMBRE DE LA ACCION  "GenerarFactura"
+
+SIN ERRORES
+  estado = 0 : descripción = "Factura Generada Correctamente";
+ERRORES EN EL JSON
+  estado = 1 : descripción = "Id Sucural incorrecta";
+  estado = 2 : descripción = "Id Pasalela incorrecta";
+  estado = 3 : descripción = "Fecha incorrecta o Formato no Valido";
+  estado = 4 : descripción = "Nit incorrecto NIT > 0";
+  estado = 5 : descripción = "Razón Social vacía";
+  estado = 6 : descripción = "Items Vacío Detalle Vacio";
+  estado = 7 : descripción = "Algún item con Id Suscripcion y Id PagoCurso vacíos";
+  estado = 8 : descripción = "Algún item con Detalle vacío";
+  estado = 9 : descripción = "Algún item con Precio Incorrecto";
+  estado = 10 : descripción = "Algún item con Cantidad Incorrecta";
+  estado = 11 : descripción = "Dosificación Factura Vencida o Inexistente";
+
+ERRORES EN LA CONEXIÓN CON EL WS
+  estado = 12 : descripción = "Error interno del servicio";
+  estado = 14 : descripción = "Acción no encontrada";
+  estado = 15 : descripción = "Error en las credenciales sKey y sIde"; 
+
+Ejemplo de como requerir el servicio
+
 <?php
-session_start();
-require_once '../conexion.php';
-require_once '../functionsGeneral.php';
-require_once '../functions.php';
-require_once '../styles.php';
-
-$dbh = new Conexion();
-$direccion=obtenerValorConfiguracion(42);//direccion des servicio web
-$sqlX="SET NAMES 'utf8'";
-$stmtX = $dbh->prepare($sqlX);
-$stmtX->execute();
- 
-
 $sIde = "facifin";
 $sKey = "rrf656nb2396k6g6x44434h56jzx5g6";
 $Objeto_detalle = new stdClass();
@@ -47,8 +62,8 @@ $Array= array($Objeto_detalle,$Objeto_detalle2,$Objeto_detalle3,$Objeto_detalle4
 $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 
               "accion"=>"GenerarFactura", //nombre de la accion
               "sucursalId"=>1, // ID Sucursal
-              "pasarelaId"=>1, // paralela
-              "fechaFactura"=>'2020-05-28', // fecha a factura
+              "pasarelaId"=>1, // ID Pasarela 1 para la tienda
+              "fechaFactura"=>'2020-05-28', // fecha de la factura
               "nitciCliente"=>5994967, //nit o ci de cliente
               "razonSocial"=>'Chacon', //razon social
               "importeTotal"=>70, //importe total
@@ -58,8 +73,7 @@ $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey,
     // abrimos la sesiรณn cURL
     $ch = curl_init();
     
-    curl_setopt($ch, CURLOPT_URL,"http://localhost/ifinanciero/tienda_virtual_ws/ws_generar_factura.php");//prueba
-    //curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/ifinanciero/tienda_virtual_ws/ws_generar_factura.php");//oficial    
+    curl_setopt($ch, CURLOPT_URL,"http://200.105.199.164:8008/ifinanciero/wsifin/ws_generar_factura.php");
 
     // indicamos el tipo de peticiรณn: POST
     curl_setopt($ch, CURLOPT_POST, TRUE);

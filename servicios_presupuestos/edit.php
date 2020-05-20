@@ -98,9 +98,9 @@ if(isset($_GET['q'])){
 }else{
   if($estado==3){//enviado desde conta
     if($flagSuccess==true){
-      showAlertSuccessError(true,"../".$$urlListSolicitudContabilidad); 
+      showAlertSuccessError(true,"../".$urlListSol_conta); 
     }else{  
-      showAlertSuccessError(false,"../".$$urlListSolicitudContabilidad);
+      showAlertSuccessError(false,"../".$urlListSol_conta);
     }
   }else{
     if($flagSuccess==true){
