@@ -36,8 +36,8 @@ $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey,
               "sucursalId"=>1, // ID Sucursal
               "pasarelaId"=>1, // ID Pasarela 1 para la tienda
               "fechaFactura"=>'2020-05-20', // fecha de la factura
-              "nitciCliente"=>5994967, //nit o ci de cliente
-              "razonSocial"=>'Chacon', //razon social
+              "nitciCliente"=>4868422016, //nit o ci de cliente
+              "razonSocial"=>'Luna', //razon social
               "importeTotal"=>70, //importe total
               "items"=>$Array // array con el detalle           
               );
@@ -45,7 +45,7 @@ $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey,
     // abrimos la sesiรณn cURL
     $ch = curl_init();
     
-    curl_setopt($ch, CURLOPT_URL,"http://200.105.199.164:8008/ifinanciero/tienda_virtual_ws/ws_generar_factura.php");
+    curl_setopt($ch, CURLOPT_URL,"http://200.105.199.164:8008/ifinanciero/wsifin/ws_generar_factura.php");
 
     // indicamos el tipo de peticiรณn: POST
     curl_setopt($ch, CURLOPT_POST, TRUE);
