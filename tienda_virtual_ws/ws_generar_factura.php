@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     //Parametros de consulta
     $accion=NULL;
     $estado='false';
-    $mensaje="";
+    $mensaje="ERROR";
     $sucursalId=null;$paralelaId=null;$fechaFactura=null;$nitciCliente=null;$razonSocial=null;$importeTotal=null;$items=null;
     if(isset($datos['accion'])&&isset($datos['sIdentificador'])&&isset($datos['sKey']))
     {
@@ -103,24 +103,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             $estado=11;
                             $mensaje = "Hubo un error al generar la factura, contáctese con el administrador.";
                         }else{
-                            $estado=14;//no encuentro el error
+                            $estado=12;//no encuentro el error
                             $mensaje = "Error desconocido al generar Factura";                            
                         }
                     }            
                 }else{
-                    $estado=false;
+                    $estado=13;
                     $mensaje="Nombre de acción incorrecta"; 
                 }
             }else{
-                $estado=false;
+                $estado=14;
                 $mensaje="Acción no encontrada"; 
             }
         }else{
-            $estado=false;
+            $estado=15;
             $mensaje="Error en las credenciales!";            
         }
     }else{
-        $estado=false;
+        $estado=16;
         $mensaje="No tiene acceso al WS!";
     }
     insertarlogFacturas($estado,$mensaje,$json);
@@ -129,8 +129,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     header('Content-type: application/json');
     echo json_encode($resultado);
 }else{
-    $resp=array("estado"=>'false', 
-                "mensaje"=>"No tiene acceso al WS");
+    $estado='false';
+    $mensaje="No tiene acceso al WS";
+    $json="";
+    insertarlogFacturas($estado,$mensaje,$json);
+    $resp=array("estado"=>$estado, 
+                "mensaje"=>$mensaje);
     header('Content-type: application/json');
     echo json_encode($resp);
 }
