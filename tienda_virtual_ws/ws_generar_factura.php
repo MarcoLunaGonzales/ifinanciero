@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $precioUnitario=$valor['precioUnitario'];
                         $cantidad=$valor['cantidad'];
                         // echo $suscripcionId." - ".$pagoCursoId."<br>";
-                        if($suscripcionId<=0 && $pagoCursoId<=0){
+                        if($suscripcionId<=0 && $pagoCursoId<=0 && !is_numeric($suscripcionId) && !is_numeric($pagoCursoId)){
                             $sw=false;
                             $estado=7;
                             $mensaje = "algún item con Id Suscripcion y Id PagoCurso vacíos";
@@ -59,11 +59,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             $sw=false;
                             $estado=8;
                             $mensaje = "algún item con detalle vacío";
-                        }elseif($precioUnitario<=0){
+                        }elseif($precioUnitario<=0 && !is_numeric($precioUnitario)){
                             $sw=false;
                             $estado=9;
                             $mensaje = "algún item con precio incorrecto";
-                        }elseif($cantidad<=0){
+                        }elseif($cantidad<=0 && !is_numeric($cantidad)){
                             $sw=false;
                             $estado=10;
                             $mensaje = "algún item con cantidad incorrecta";
@@ -78,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     }elseif(!check($fechaFactura)){
                         $estado=3;
                         $mensaje = "Fecha incorrecta";
-                    }elseif($nitciCliente==null || $nitciCliente<0){
+                    }elseif($nitciCliente==null || $nitciCliente<0 || !is_numeric($nitciCliente)){
                         $estado=4;
                         $mensaje = "Nit incorrecto";
                     }elseif($razonSocial==null || $razonSocial=='' || $razonSocial==' '){
