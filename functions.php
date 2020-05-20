@@ -6231,4 +6231,15 @@ function listaDetallePagosProveedores($codigo){
    $stmt->execute();
    return $stmt;
 }
+
+function obtenerGlosaSolicitudRecursoDetalle($codigo){
+  $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT glosa_comprobantedetalle from solicitud_recursosdetalle where codigo=$codigo");
+   $stmt->execute();
+   $valor="";
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['glosa_comprobantedetalle'];
+   }
+   return($valor);
+}
 ?>

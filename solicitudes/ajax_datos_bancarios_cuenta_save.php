@@ -51,3 +51,7 @@ $direccion=obtenerValorConfiguracion(42);
     $remote_server_output = curl_exec ($ch);
     // cerramos la sesión cURL
     curl_close ($ch);
+
+    $datos_respu= json_decode($remote_server_output);
+
+    //print_r($datos_respu);
