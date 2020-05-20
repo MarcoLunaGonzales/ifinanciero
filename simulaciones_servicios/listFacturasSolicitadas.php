@@ -7,29 +7,14 @@ $dbh = new Conexion();
 $globalAdmin=$_SESSION["globalAdmin"];
 if(isset($_GET['q'])){
   $q=$_GET['q'];
+  $r=$_GET['r'];
+  $s=$_GET['s'];
   $u=$_GET['u'];
-  $sqlAreas="";
-  $sqlServicio="";
-  if(isset($_GET['v'])){
-    $v=$_GET['v'];
-    $sqlServicio="and sr.idServicio=".$v;
-  }
-  if(isset($_GET['s'])){
-    $s=$_GET['s'];
-    $arraySql=explode("IdArea=",$s);
-    $codigoArea=trim($arraySql[1]);
-    $sqlAreas="and sr.cod_area=".$codigoArea;
-  }
-
-}else{
-  $sqlAreas="";
-  $sqlServicio="";
 }
 
-
-  //datos registrado de la simulacion en curso
-
-  $stmt = $dbh->prepare("SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')as fecha_registro_x,DATE_FORMAT(sf.fecha_solicitudfactura,'%d/%m/%Y')as fecha_solicitudfactura_x FROM solicitudes_facturacion sf join estados_solicitudfacturacion es on sf.cod_estadosolicitudfacturacion=es.codigo order by codigo desc");
+//datos registrado de la simulacion en curso
+$sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')as fecha_registro_x,DATE_FORMAT(sf.fecha_solicitudfactura,'%d/%m/%Y')as fecha_solicitudfactura_x FROM solicitudes_facturacion sf join estados_solicitudfacturacion es on sf.cod_estadosolicitudfacturacion=es.codigo order by codigo desc";
+  $stmt = $dbh->prepare($sqlDatos);
 
   $stmt->execute();
   $stmt->bindColumn('codigo', $codigo_facturacion);
@@ -225,142 +210,122 @@ if(isset($_GET['q'])){
                             <td class="td-actions text-right">
                               <?php
                                 // if($globalAdmin==1){ //
-                                  if($codigo_fact_x>0){//print facturas
+                                if($codigo_fact_x>0){//print facturas
+                                  ?>
+                                  <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=2' target="_blank"><i class="material-icons" title="Imprimir Factura">print</i></a>          
+                                <?php 
+                                }else{// generar facturas
+                                  if($codEstado==4||$codEstado==3||$codEstado==5){
+                                   ?>
+                                    <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir Solicitud">print</i></a>
+                                    <?php
                                     ?>
-                                    <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=2' target="_blank"><i class="material-icons" title="Imprimir Factura">print</i></a>          
-                                  <?php }else{// generar facturas
-                                    if($codEstado==4||$codEstado==3||$codEstado==5){
-                                     ?>
-                                      <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir Solicitud">print</i></a>
-                                      <?php
-                                      ?>
-                                      <div class="btn-group dropdown">
-                                        <button type="button" class="btn <?=$btnEstado?> dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                          <small> <?=$estado;?></small>
-                                        </button>
-                                        <div class="dropdown-menu">
-                                        <?php 
-                                        if(isset($_GET['q'])){
-                                          if($codEstado==4){
-                                             ?>
-                                             <a href="<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion;?>&estado=1&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>" class="dropdown-item">
-                                                <i class="material-icons text-danger">clear</i> Cancelar solicitud
-                                             </a>
-                                             <?php 
-                                          }else{
-                                            if($codEstado==3){
-                                             ?>
-                                             <a href='#' title="Generar Factura" target="_blank" class="dropdown-item" onclick="alerts.showSwal('warning-message-and-confirmation-generar-factura','<?=$urlGenerarFacturas2;?>?codigo=<?=$codigo_facturacion;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>')">
-                                              <i class="material-icons text-success">receipt</i> Generar Factura
-                                             </a>
-                                             <?php      
-                                            }
-                                          }
+                                    <div class="btn-group dropdown">
+                                      <button type="button" class="btn <?=$btnEstado?> dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <small> <?=$estado;?></small>
+                                      </button>
+                                      <div class="dropdown-menu">
+                                      <?php 
+                                      if(isset($_GET['q'])){
+                                        if($codEstado==4){
                                            ?>
-                                          <a href='#' rel="tooltip" class="dropdown-item" onclick="filaTablaAGeneral($('#tablasA_registradas'),<?=$index?>,'<?=$stringCabecera?>')">
-                                            <i class="material-icons text-warning" title="Ver Detalle">settings_applications</i> Ver Detalle
-                                          </a><?php 
-                                        }else{
-                                          if($codEstado==4){
-                                           ?><a href="<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion;?>&estado=1&admin=0" class="dropdown-item">
+                                           <a href="<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion;?>&estado=1&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>" class="dropdown-item">
                                               <i class="material-icons text-danger">clear</i> Cancelar solicitud
-                                           </a><?php 
-                                          }else{
-                                            if($codEstado==3){
-                                             ?>
-                                             <a href='#' title="Generar Factura" class="dropdown-item" onclick="alerts.showSwal('warning-message-and-confirmation-generar-factura','<?=$urlGenerarFacturas2;?>?codigo=<?=$codigo_facturacion;?>')">
-                                              <i class="material-icons text-success">receipt</i> Generar Factura
-                                             </a>
-                                             <?php      
-                                            }
-                                          }
-                                          ?>
-                                          <a href='#' rel="tooltip" class="dropdown-item" onclick="filaTablaAGeneral($('#tablasA_registradas'),<?=$index?>,'<?=$stringCabecera?>')">
-                                              <i class="material-icons text-warning" title="Ver Detalle">settings_applications</i> Ver Detalle
-                                          </a><?php  
-                                        } ?>       
-                                      </div>
-                                      </div><?php 
-                                    }else{
-                                      if($codEstado==6){
-                                        if(isset($_GET['q'])){
-                                          ?>
-                                           <a title="Enviar solicitud" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=4&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>'  class="btn btn-warning">
-                                             <i class="material-icons">send</i>
                                            </a>
-                                           <a title="Volver al Estado Registro" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=1&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>'  class="btn btn-danger">
-                                             <i class="material-icons">refresh</i>
-                                           </a>
-                                          <?php
+                                           <?php 
                                         }else{
-                                          ?>
-                                           <a title="Enviar solicitud" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=4&admin=0'  class="btn btn-warning">
-                                             <i class="material-icons">send</i>
+                                          if($codEstado==3){
+                                           ?>
+                                           <a href='#' title="Generar Factura" target="_blank" class="dropdown-item" onclick="alerts.showSwal('warning-message-and-confirmation-generar-factura','<?=$urlGenerarFacturas2;?>?codigo=<?=$codigo_facturacion;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>')">
+                                            <i class="material-icons text-success">receipt</i> Generar Factura
                                            </a>
-                                           <a title="Volver al Estado Registro" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=1&admin=0'  class="btn btn-danger">
-                                             <i class="material-icons">refresh</i>
-                                           </a>
-                                            <?php
-                                        }                                         
-                                      }else{
-                                        if($codEstado!=2){
-                                            if(isset($_GET['q'])){ ?>
-                                               <a title="Pre Envio - Solicitud Facturaciรณn" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=6&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>' class="btn btn-default">
-	                                               <i class="material-icons">send</i>
-	                                             </a>
-                                              <?php
-                                            }else{
-                                              ?>
-                                               <a title="Pre Envio - Solicitud Facturaciรณn" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=6&admin=0'  class="btn btn-default">
-	                                               <i class="material-icons">send</i>
-	                                             </a>
-                                              <?php
-                                            }                                           
+                                           <?php      
+                                          }
                                         }
-                                      }
+                                         ?>
+                                        <a href='#' rel="tooltip" class="dropdown-item" onclick="filaTablaAGeneral($('#tablasA_registradas'),<?=$index?>,'<?=$stringCabecera?>')">
+                                          <i class="material-icons text-warning" title="Ver Detalle">settings_applications</i> Ver Detalle
+                                        </a><?php 
+                                      }else{
+                                        if($codEstado==4){
+                                         ?><a href="<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion;?>&estado=1&admin=0" class="dropdown-item">
+                                            <i class="material-icons text-danger">clear</i> Cancelar solicitud
+                                         </a><?php 
+                                        }else{
+                                          if($codEstado==3){
+                                           ?>
+                                           <a href='#' title="Generar Factura" class="dropdown-item" onclick="alerts.showSwal('warning-message-and-confirmation-generar-factura','<?=$urlGenerarFacturas2;?>?codigo=<?=$codigo_facturacion;?>')">
+                                            <i class="material-icons text-success">receipt</i> Generar Factura
+                                           </a>
+                                           <?php      
+                                          }
+                                        }
+                                        ?>
+                                        <a href='#' rel="tooltip" class="dropdown-item" onclick="filaTablaAGeneral($('#tablasA_registradas'),<?=$index?>,'<?=$stringCabecera?>')">
+                                            <i class="material-icons text-warning" title="Ver Detalle">settings_applications</i> Ver Detalle
+                                        </a><?php  
+                                      } ?>       
+                                    </div>
+                                    </div><?php 
+                                  }else{
+                                    if($codEstado==6){
                                       if(isset($_GET['q'])){
                                         ?>
-                                        <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir">print</i></a>
-                                        <!--editar solicitud facturacion-->
+                                         <a title="Enviar solicitud" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=4&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>'  class="btn btn-warning">
+                                           <i class="material-icons">send</i>
+                                         </a>
+                                         <a title="Volver al Estado Registro" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=1&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>'  class="btn btn-danger">
+                                           <i class="material-icons">refresh</i>
+                                         </a>
                                         <?php
-                                        if($codEstado==1){?>
-                                           <!-- link para borrar la solicitud-->    
-                                          <?php                                
-                                        }
                                       }else{
                                         ?>
-                                        <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir">print</i></a>
-                                        <!--editar solicitud facturacion-->
-                                        <?php
-                                         if($codEstado==1){
-                                         ?>
-                                         <!-- link para borrar la solicitud--> 
-                                          <?php      
-                                         } 
-                                      } 
+                                         <a title="Enviar solicitud" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=4&admin=0'  class="btn btn-warning">
+                                           <i class="material-icons">send</i>
+                                         </a>
+                                         <a title="Volver al Estado Registro" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=1&admin=0'  class="btn btn-danger">
+                                           <i class="material-icons">refresh</i>
+                                         </a>
+                                          <?php
+                                      }                                         
+                                    }else{
+                                      if($codEstado!=2){
+                                          if(isset($_GET['q'])){ ?>
+                                             <a title="Pre Envio - Solicitud Facturaciรณn" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=6&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>' class="btn btn-default">
+                                               <i class="material-icons">send</i>
+                                             </a>
+                                            <?php
+                                          }else{
+                                            ?>
+                                             <a title="Pre Envio - Solicitud Facturaciรณn" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=6&admin=0'  class="btn btn-default">
+                                               <i class="material-icons">send</i>
+                                             </a>
+                                            <?php
+                                          }                                           
+                                      }
                                     }
-                                  }                            
-                                  ?>
-                                  <!--<a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir">print</i></a>-->
-                                  <?php  
-                                    ?>
-                                    <!--<button title="Generar Factura" target="_blank" class="btn btn-success" onclick="alerts.showSwal('warning-message-and-confirmation-generar-factura','<?=$urlGenerarFacturas2;?>?codigo=<?=$codigo_facturacion;?>')">
-                                      <i class="material-icons">receipt</i>
-                                    </button>
-                                    <a href='#' rel="tooltip" class="btn btn-warning" onclick="filaTablaAGeneral($('#tablasA_registradas'),<?=$index?>,'<?=$stringCabecera?>')">
-                                      <i class="material-icons" title="Ver Detalle">settings_applications</i>
-                                    </a>
-
-                                    <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation-anular-solicitud','<?=$urlAnular_SoliciutdFacturacion;?>&codigo=<?=$codigo_facturacion;?>')">
-                                      <i class="material-icons" title="Anular Solicitud">clear</i>
-                                    </button>-->
-                                  
-                                  <?php //}                           
-                                  ?>
-                                  <!--<a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir Solicitud">print</i></a>-->
-                                <?php  
-                                
-                                // }
+                                    if(isset($_GET['q'])){
+                                      ?>
+                                      <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir">print</i></a>
+                                      <!--editar solicitud facturacion-->
+                                      <?php
+                                      if($codEstado==1){?>
+                                         <!-- link para borrar la solicitud-->    
+                                        <?php                                
+                                      }
+                                    }else{
+                                      ?>
+                                      <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir">print</i></a>
+                                      <!--editar solicitud facturacion-->
+                                      <?php
+                                       if($codEstado==1){
+                                       ?>
+                                       <!-- link para borrar la solicitud--> 
+                                        <?php      
+                                       } 
+                                    } 
+                                  }
+                                }                                  
                               ?>
                             </td>
                           </tr>
@@ -371,7 +336,19 @@ if(isset($_GET['q'])){
                         </tbody>
                       </table>
                   </div>
-                </div>     
+                </div> 
+
+                <div class="card-footer fixed-bottom">
+                  <?php                 
+                    if(isset($_GET['q'])){?>
+                      <a href="<?=$urlRegister_solicitudfacturacion_manual;?>&q=<?=$q?>&r=<?=$r?>&s=<?=$s?>&u=<?=$u?>" class="btn btn-primary">Solicitud Fact Manual</a>
+                      <a href="<?=$urlListSolicitud_facturacion_normas;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&r=<?=$r?>" class="btn btn-warning">Solicitud Fact Normas</a><?php 
+                    }else{?>
+                      <a href="<?=$urlRegister_solicitudfacturacion_manual;?>" class="btn btn-primary">Solicitud Fact Manual</a>
+                      <a href="<?=$urlListSolicitud_facturacion_normas;?>" class="btn btn-warning">Solicitud Fact Normas</a><?php 
+                    }              
+                  ?>
+                </div>        
               </div>
           </div>  
     </div>

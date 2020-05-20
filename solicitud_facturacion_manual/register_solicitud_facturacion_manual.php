@@ -9,12 +9,15 @@ $dbh = new Conexion();
 $cod_simulacion=0;
 $cod_facturacion=0;
 $cod_sw=0;
-//sacamos datos para la facturacion
+
 if(isset($_GET['q'])){
-  $q=$_GET['q'];
+    $q=$_GET['q'];
+    $r=$_GET['r'];
+    $s=$_GET['s'];
+    $u=$_GET['u'];
 }
-if ($cod_facturacion > 0){
-   
+//sacamos datos para la facturacion
+if ($cod_facturacion > 0){   
 }else {
     $nombre_simulacion = null;
     $cod_uo = null; 
@@ -27,7 +30,8 @@ if ($cod_facturacion > 0){
 
     $fecha_registro =date('Y-m-d');
     $fecha_solicitudfactura =$fecha_registro;
-    $cod_tipoobjeto=obtenerValorConfiguracion(34);//por defecto
+    $cod_tipoobjeto=211;//por defecto}
+    $name_tipoPago=obtenerNombreTipoPago($cod_tipoobjeto);
     $cod_tipopago = null;
     $name_cliente=null;    
     $razon_social = $name_cliente;
@@ -49,11 +53,15 @@ $contadorRegistros=0;
     <div class="container-fluid">
         <div style="overflow-y:scroll;">
             <div class="col-md-12">
-              <form id="formSoliFactTcp" class="form-horizontal" action="<?=$urlSaveSolicitudfactura;?>" method="post" onsubmit="return valida(this)">
+              <form id="formSoliFactTcp" class="form-horizontal" action="<?=$urlSaveSolicitudfactura;?>" method="post" onsubmit="return valida(this)" enctype="multipart/form-data">
                 <?php 
-               if(isset($_GET['q'])){
-                 ?><input type="hidden" name="id_ibnored" id="id_ibnored" value="<?=$q;?>"/><?php 
-              }
+                if(isset($_GET['q'])){?>
+                    <input type="hidden" name="usuario_ibnored" id="usuario_ibnored" value="<?=$q;?>">
+                    <input type="hidden" name="usuario_ibnored_s" id="usuario_ibnored_s" value="<?=$s;?>">
+                    <input type="hidden" name="usuario_ibnored_u" id="usuario_ibnored_u" value="<?=$u;?>">
+                    <input type="hidden" name="usuario_ibnored_r" id="usuario_ibnored_r" value="<?=$r;?>">
+                    <?php 
+                }
                 ?>
                 <input type="hidden" name="Codigo_alterno" id="Codigo_alterno" value="<?=$Codigo_alterno;?>"/>
                 <input type="hidden" name="cod_simulacion" id="cod_simulacion" value="<?=$cod_simulacion;?>"/>
@@ -76,7 +84,7 @@ $contadorRegistros=0;
                                 <!-- <input class="form-control" type="hidden" name="cod_uo" id="cod_uo" required="true" value="<?=$cod_uo;?>" required="true" readonly/>
                                  <input class="form-control" type="text" required="true" value="<?=$name_uo;?>" required="true" readonly style="background-color:#E3CEF6;text-align: left"/> -->
 
-                                 <select name="cod_uo" id="cod_uo" onChange="ajaxAFunidadorganizacionalArea(this);" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true" required="true">                                        
+                                <select name="cod_uo" id="cod_uo" onChange="ajaxAFunidadorganizacionalArea(this);" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true" required="true">                                        
                                     <option value=""></option>
                                     <?php 
                                     $queryUO1 = "SELECT codigo,nombre,abreviatura from unidades_organizacionales where cod_estado=1 order by nombre";
@@ -92,10 +100,7 @@ $contadorRegistros=0;
                             <div class="col-sm-4">
                                 <div class="form-group" >
                                     <!-- <div id="div_contenedor_area_tcc"> -->
-                                    <div id="div_contenedor_area">
-                                        <!-- <input class="form-control" type="hidden" name="cod_area" id="cod_area" required="true" value="<?=$cod_area;?>" required="true" readonly/>
-
-                                        <input class="form-control" type="text" required="true" value="<?=$name_area;?>" required="true" readonly style="background-color:#E3CEF6;text-align: left"/> -->
+                                    <div id="div_contenedor_area">                                        
                                        
                                     </div>                    
                                 </div>
@@ -118,24 +123,26 @@ $contadorRegistros=0;
 
                         </div>
                         <!-- fin fechas -->
+                        <div class="row">
+                            <label class="col-sm-2 col-form-label">Tipo Objeto</label>
+                            <div class="col-sm-4">
+                                <div class="form-group" >
+                                    <select name="cod_tipoobjeto" id="cod_tipoobjeto" class="selectpicker form-control form-control-sm" data-style="btn btn-info">
+                                        <?php 
+                                        $queryTipoObjeto = "SELECT codigo,nombre FROM  tipos_objetofacturacion WHERE codigo in (214,840) order by nombre";
+                                        $statementObjeto = $dbh->query($queryTipoObjeto);
+                                        $nc=0;$cont= array();
+                                        while ($row = $statementObjeto->fetch()){
+                                            ?>
+                                            <option <?=($cod_tipoobjeto==$row["codigo"])?"selected":"";?>  value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                                            <?php 
+                                        }
+                                        ?>
+                                    </select>                                      
+                                </div>
+                            </div>    
+                        </div>  
                         <div class="row" >
-                            <div class="d-none">
-                                <label class="col-sm-2 col-form-label">Tipo Objeto</label>
-                                <div class="col-sm-4">
-                                    <div class="form-group" >
-                                            <select name="cod_tipoobjeto" id="cod_tipoobjeto" class="selectpicker form-control form-control-sm" data-style="btn btn-info" >
-                                                <!-- <option value=""></option> -->
-                                                <?php 
-                                                $queryTipoObjeto = "SELECT codigo,nombre FROM  tipos_objetofacturacion WHERE cod_estadoreferencial=1 order by nombre";
-                                                $statementObjeto = $dbh->query($queryTipoObjeto);
-                                                while ($row = $statementObjeto->fetch()){ ?>
-                                                    <option <?=($cod_tipoobjeto==$row["codigo"])?"selected":"";?>  value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
-                                                <?php } ?>
-                                            </select>                                
-                                    </div>
-                                </div>    
-                            </div>
-                            
                             <script>var nfac=[];itemTipoPagos_facturacion.push(nfac);var nfacAreas=[];itemAreas_facturacion.push(nfacAreas);</script>
                             <div class="">
                                 <?php 
@@ -183,7 +190,7 @@ $contadorRegistros=0;
                             <label class="col-sm-2 col-form-label">Tipo Pago</label>
                             <div class="col-sm-3">
                                 <div class="form-group" >
-                                        <select name="cod_tipopago" id="cod_tipopago" class="selectpicker form-control form-control-sm" data-style="btn btn-info" onChange="ajaxTipoPagoContactoPersonal(this);">
+                                    <select name="cod_tipopago" id="cod_tipopago" class="selectpicker form-control form-control-sm" data-style="btn btn-info" onChange="ajaxTipoPagoContactoPersonal(this);">
                                         <?php 
                                         $queryTipoPago = "SELECT codigo,nombre FROM  tipos_pago WHERE cod_estadoreferencial=1 order by nombre";
                                         $statementPAgo = $dbh->query($queryTipoPago);
@@ -365,24 +372,14 @@ $contadorRegistros=0;
                             </div>
                         </div>                    
                   </div>
-                  <div class="card-footer ml-auto mr-auto">
+                  <div class="card-footer fixed-bottom">
                     <button type="submit" class="<?=$buttonNormal;?>">Guardar</button><?php
-                    if(isset($_GET['q'])){
-                    if($cod_sw==1){?>
-                        <a href='<?=$urlSolicitudfactura;?>&cod=<?=$cod_simulacion;?>&q=<?=$q?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
+                    if(isset($_GET['q'])){  ?>
+                        <a href='<?=$urlSolicitudfactura;?>&q=<?=$q?>&r=<?=$r?>&s=<?=$s?>&u=<?=$u?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
                     <?php }else{?>
-                        <a href='<?=$urlListSimulacionesServ?>&q=<?=$q?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
+                        <a href='<?=$urlSolicitudfactura?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
                     <?php }
-                    }else{
-                      if($cod_sw==1){?>
-                        <a href='<?=$urlSolicitudfactura;?>&cod=<?=$cod_simulacion;?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
-                    <?php }else{?>
-                       <!--  <a href='<?=$urlListSimulacionesServ?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a> -->
-                    <?php }   
-                    }
-
                     ?>
-                    
                   </div>
                 </div>
               </form>                  

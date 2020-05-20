@@ -1,136 +1,133 @@
 
 <?php
 require_once 'generar_factura.php';
-
-function listarComponentes($codigo_proyecto){
-    require_once '../conexion.php';
-    $dbh = new Conexion();
-    // Preparamos
-    $stmt = $dbh->prepare("SELECT codigo,nombre,abreviatura from componentessis where cod_estado=1 and cod_proyecto=$codigo_proyecto;");
-
-    $resp = false;
-    $filas = array();
-    if($stmt->execute()){
-        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $resp = true;
+require_once '../conexion.php';
+function check($x) {
+    if (date('Y-m-d', strtotime($x)) == $x) {
+      return true;
+    } else {
+      return false;
     }
-    else{
-        echo "Error: Listar Componentes";
-        $resp=false;
-        exit;       
-    }
-    return $filas;
 }
-/*
- SERVICIO WEB PARA OPERACIONES Componentes  */
+function insertarlogFacturas($cod_error,$detalle_error,$json){
+    $dbh = new Conexion();
+    $fecha =date('Y-m-d H:i:s');
+    $sql="INSERT INTO log_facturas(fecha,cod_error,detalle_error,json) values('$fecha','$cod_error','$detalle_error','$json')";
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();    
+}
+
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Decodificando formato Json
-    $datos = json_decode(file_get_contents("php://input"), true);    
+    $json=file_get_contents("php://input");
+    $datos = json_decode($json, true);    
     //Parametros de consulta
     $accion=NULL;
-    if(isset($datos['accion'])){
-        
-        // $accion='GenerarFactura'; //recibimos la accion
-        
-        // $IdSucursal=5; // ID Sucursal
-        // $FechaFactura='2020-05-09'; // fecha a factura
-        // $Identificacion=1020113024; //nit o ci de cliente
-        // $RazonSocial='Juan Gabriel'; //razon social
-        // $ImporteTotal=260.5; //importe total
-
-        // $Objeto_detalle = new stdClass();
-        // $Objeto_detalle->suscripcionId = 1;
-        // $Objeto_detalle->pagoCursoId = 1;
-        // $Objeto_detalle->detalle = "detalle del item";
-        // $Objeto_detalle->precioUnitario = 100;
-        // $Objeto_detalle->cantidad = 1;
-
-        // $Objeto_detalle2 = new stdClass();
-        // $Objeto_detalle2->suscripcionId = 2;
-        // $Objeto_detalle2->pagoCursoId = 2;
-        // $Objeto_detalle2->detalle = "detalle del item2";
-        // $Objeto_detalle2->precioUnitario = 100;
-        // $Objeto_detalle2->cantidad = 1;
-        // $Detalle= array($Objeto_detalle,$Objeto_detalle2);
-        
-        $accion=$datos['accion']; //recibimos la accion
-        $IdSucursal=$datos['IdSucursal'];//recibimos el codigo de la sucursal
-
-        $FechaFactura=$datos['FechaFactura'];//recibimos fecha de factura
-        $Identificacion=$datos['Identificacion'];//recibimos ci o nit del cliente
-        $RazonSocial=$datos['RazonSocial'];//recibimos razon social
-        $ImporteTotal=$datos['ImporteTotal'];//recibimos el importe total
-        $Detalle=$datos['Detalle'];//recibimos array de detalle
-
-
-
-        $estado='false';
-        $mensaje="";
-        $total=0;
-        $lista=array();
-        if($accion=="GenerarFactura"){//nombre de la accion           
-            try{                
-                $rspString = ejecutarGenerarFactura($IdSucursal,$FechaFactura,$Identificacion,$RazonSocial,$ImporteTotal,$Detalle);//llamamos a la funcion                 
-                $rspArray = explode("###", $rspString);
-                $rsp=$rspArray[0];
-                $cod_factura=$rspArray[1];
-
-                if($rsp==1){
-                    $resultado=array(
-                        "estado"=>1,
-                        "mensaje"=>"Factura Generada Correctamente", 
-                        "IdFactura"=>$cod_factura 
-                        // "totalComponentes"=>$totalComponentes
-                        );
-                }elseif($rsp==2 || $rsp==3 || $rsp==6){                    
-                    $estado=2;
-                    $mensaje = "Hubo un error al generar la factura, contáctese con el administrador.";
-                    $resultado=array("estado"=>$estado, 
-                                "mensaje"=>$mensaje//, 
-                                // "lstComponentes"=>array(),
-                                // "totalComponentes"=>0);
-                    );
-                }elseif($rsp==4){                   
-                    $estado=4;
-                    $mensaje = "La Factura ya fue generada";
-                    $resultado=array("estado"=>$estado, 
-                                "mensaje"=>$mensaje//, 
-                                // "lstComponentes"=>array(),
-                                // "totalComponentes"=>0);
-                    );
-
+    $estado='false';
+    $mensaje="";
+    $sucursalId=null;$paralelaId=null;$fechaFactura=null;$nitciCliente=null;$razonSocial=null;$importeTotal=null;$items=null;
+    if(isset($datos['accion'])&&isset($datos['sIdentificador'])&&isset($datos['sKey']))
+    {
+        if($datos['sIdentificador']=="facifin"&&$datos['sKey']=="rrf656nb2396k6g6x44434h56jzx5g6")
+        {
+            if(isset($datos['accion'])){
+                $accion=$datos['accion']; //recibimos la accion
+                if($accion=="GenerarFactura"){//nombre de la accion
+                    if(isset($datos['sucursalId'])) $sucursalId=$datos['sucursalId'];//recibimos el codigo de la sucursal
+                    if(isset($datos['sucursalId'])) $paralelaId=$datos['paralelaId'];//recibimos el codigo de la sucursal
+                    if(isset($datos['fechaFactura'])) $fechaFactura=$datos['fechaFactura'];//recibimos fecha de factura
+                    if(isset($datos['nitciCliente'])) $nitciCliente=$datos['nitciCliente'];//recibimos ci o nit del cliente
+                    if(isset($datos['razonSocial'])) $razonSocial=$datos['razonSocial'];//recibimos razon social
+                    if(isset($datos['importeTotal'])) $importeTotal=$datos['importeTotal'];//recibimos el importe total
+                    if(isset($datos['items'])) $items=$datos['items'];//recibimos array de detalle
+                    $cont_items=0;
+                    $sw=true;
+                    foreach ($items as $valor) {  
+                        $cont_items++;
+                        $suscripcionId=$valor['suscripcionId'];
+                        $pagoCursoId=$valor['pagoCursoId'];
+                        $detalle=$valor['detalle'];
+                        $precioUnitario=$valor['precioUnitario'];
+                        $cantidad=$valor['cantidad'];
+                        // echo $suscripcionId." - ".$pagoCursoId."<br>";
+                        if($suscripcionId<=0 && $pagoCursoId<=0){
+                            $sw=false;
+                            $estado=7;
+                            $mensaje = "algún item con Id Suscripcion y Id PagoCurso vacíos";
+                        }elseif($detalle==null){
+                            $sw=false;
+                            $estado=8;
+                            $mensaje = "algún item con detalle vacío";
+                        }elseif($precioUnitario<=0){
+                            $sw=false;
+                            $estado=9;
+                            $mensaje = "algún item con precio incorrecto";
+                        }elseif($cantidad<=0){
+                            $sw=false;
+                            $estado=10;
+                            $mensaje = "algún item con cantidad incorrecta";
+                        }
+                    }
+                    if($sucursalId==null || $sucursalId!=1){
+                        $estado=1;
+                        $mensaje = "Id Sucural incorrecta";
+                    }elseif($paralelaId==null || $paralelaId!=1){
+                        $estado=2;
+                        $mensaje = "Id Paralela incorrecta";
+                    }elseif(!check($fechaFactura)){
+                        $estado=3;
+                        $mensaje = "Fecha incorrecta";
+                    }elseif($nitciCliente==null || $nitciCliente<0){
+                        $estado=4;
+                        $mensaje = "Nit incorrecto";
+                    }elseif($razonSocial==null || $razonSocial=='' || $razonSocial==' '){
+                        $estado=5;
+                        $mensaje = "Razón Social vacía";
+                    }elseif($items==null || $cont_items<=0){
+                        $estado=6;
+                        $mensaje = "Items Vacío";
+                    }elseif(!$sw){
+                        //mostrará el error de los items 
+                    }else{
+                        // $estado=0;
+                        // $mensaje = "todo ok";
+                        $rspString = ejecutarGenerarFactura($sucursalId,$paralelaId,$fechaFactura,$nitciCliente,$razonSocial,$importeTotal,$items);//llamamos a la funcion                 
+                        $rspArray = explode("###", $rspString);
+                        $rsp=$rspArray[0];
+                        $cod_factura=$rspArray[1];
+                        if($rsp==0){
+                            $estado=0;
+                            $mensaje = "Factura Generada Correctamente";
+                        }elseif($rsp==11){
+                            $estado=11;
+                            $mensaje = "Hubo un error al generar la factura, contáctese con el administrador.";
+                        }else{
+                            $estado=14;//no encuentro el error
+                            $mensaje = "Error desconocido al generar Factura";                            
+                        }
+                    }            
                 }else{
-                    $estado=5;//no encuentro el error
-                    $mensaje = "no encuentro el error";
-                    $resultado=array("estado"=>$estado, 
-                                "mensaje"=>$mensaje//, 
-                                // "lstComponentes"=>array(),
-                                // "totalComponentes"=>0);
-                    );
-
-
+                    $estado=false;
+                    $mensaje="Nombre de acción incorrecta"; 
                 }
-            }catch(Exception $e){
-                $estado=true;
-                $mensaje = "No se pudo obtener la lista de Componentes".$e;
-                $resultado=array("estado"=>$estado, 
-                            "mensaje"=>$mensaje//, 
-                            // "lstComponentes"=>array(),
-                            // "totalComponentes"=>0);
-                );
-
+            }else{
+                $estado=false;
+                $mensaje="Acción no encontrada"; 
             }
-            
-            
         }else{
-            $resultado=array("estado"=>'false', 
-                            "mensaje"=>"Error: Operacion incorrecta!");
+            $estado=false;
+            $mensaje="Error en las credenciales!";            
         }
-        header('Content-type: application/json');
-        echo json_encode($resultado);
     }else{
-
+        $estado=false;
+        $mensaje="No tiene acceso al WS!";
     }
+    insertarlogFacturas($estado,$mensaje,$json);
+    if($estado==0){$resultado=array("estado"=>$estado,"mensaje"=>$mensaje,"IdFactura"=>$cod_factura);}
+    else $resultado=array("estado"=>$estado,"mensaje"=>$mensaje);
+    header('Content-type: application/json');
+    echo json_encode($resultado);
 }else{
     $resp=array("estado"=>'false', 
                 "mensaje"=>"No tiene acceso al WS");

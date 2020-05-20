@@ -89,12 +89,12 @@ try{
                 $observaciones = $resultInfo['observaciones'];
                 $nombre_cliente = $resultInfo['razon_social'];
             }
-
+            $cod_sucursal=obtenerSucursalCodUnidad($cod_unidadorganizacional);
             // echo "uo:",$cod_unidadorganizacional."<br>";
             $fecha_actual=date('Y-m-d');
             $fecha_actual_cH=date('Y-m-d H:i:s');
             $sqlInfo="SELECT d.codigo,d.nro_autorizacion, d.llave_dosificacion,d.fecha_limite_emision
-            from dosificaciones_facturas d where d.cod_sucursal='$cod_unidadorganizacional' order by codigo";
+            from dosificaciones_facturas d where d.cod_sucursal='$cod_sucursal' order by codigo";
             $stmtInfo = $dbh->prepare($sqlInfo);
             // echo $sqlInfo;
             $stmtInfo->execute();
@@ -122,7 +122,7 @@ try{
                 $totalFinalRedondeado=round($monto_total,0);
                 // echo "monto total:".$totalFinalRedondeado;
                 //NUMERO CORRELATIVO DE FACTURA
-                $stmtNroFac = $dbh->prepare("SELECT IFNULL(nro_factura+1,1)as correlativo from facturas_venta where cod_sucursal=$cod_unidadorganizacional order by codigo desc LIMIT 1");
+                $stmtNroFac = $dbh->prepare("SELECT IFNULL(nro_factura+1,1)as correlativo from facturas_venta where cod_sucursal=$cod_sucursal order by codigo desc LIMIT 1");
                 $stmtNroFac->execute();
                 $resultNroFact = $stmtNroFac->fetch();    
                 $nro_correlativo = $resultNroFact['correlativo'];
@@ -140,8 +140,8 @@ try{
                 $llaveDosificacion//Llave de dosificación
                 );
                 // echo "cod:".$code;
-                $sql="INSERT INTO facturas_venta(cod_sucursal,cod_solicitudfacturacion,cod_unidadorganizacional,cod_area,fecha_factura,fecha_limite_emision,cod_tipopago,cod_cliente,cod_personal,razon_social,nit,cod_dosificacionfactura,nro_factura,nro_autorizacion,codigo_control,importe,observaciones,cod_estadofactura,cod_comprobante) 
-                  values ('$cod_unidadorganizacional','$codigo','$cod_unidadorganizacional','$cod_area','$fecha_actual_cH','$fecha_limite_emision','$cod_tipopago','$cod_cliente','$cod_personal','$razon_social','$nitCliente','$cod_dosificacionfactura','$nro_correlativo','$nroAutorizacion','$code','$totalFinalRedondeado','$observaciones','1','$cod_comprobante')";
+                $sql="INSERT INTO facturas_venta(cod_sucursal,cod_solicitudfacturacion,cod_unidadorganizacional,cod_area,fecha_factura,fecha_limite_emision,cod_tipoobjeto,cod_tipopago,cod_cliente,cod_personal,razon_social,nit,cod_dosificacionfactura,nro_factura,nro_autorizacion,codigo_control,importe,observaciones,cod_estadofactura,cod_comprobante) 
+                  values ('$cod_sucursal','$codigo','$cod_unidadorganizacional','$cod_area','$fecha_actual_cH','$fecha_limite_emision','$cod_tipoobjeto','$cod_tipopago','$cod_cliente','$cod_personal','$razon_social','$nitCliente','$cod_dosificacionfactura','$nro_correlativo','$nroAutorizacion','$code','$totalFinalRedondeado','$observaciones','1','$cod_comprobante')";
                   // echo $sql;
                 $stmtInsertSoliFact = $dbh->prepare($sql);
                 $flagSuccess=$stmtInsertSoliFact->execute();

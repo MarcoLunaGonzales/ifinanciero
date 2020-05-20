@@ -10857,7 +10857,6 @@ function guardarDatoscontacto(){
     Swal.fire("Informativo!", "Todos los campos son requeridos", "warning");
   }
 }
-
 function actualizar_contacto_cliente(cod_cliente){
   var contenedor;  
   contenedor = document.getElementById('div_contenedor_contactos');
@@ -10871,8 +10870,7 @@ function actualizar_contacto_cliente(cod_cliente){
     }
   }
   ajax.send(null)  
-}//unidad_area-cargo
-
+}
 function actualizarComboBoxAjax_cliente(cod_cliente){
   var contenedor;  
   contenedor = document.getElementById('div_contenedor_contactos');
@@ -10885,7 +10883,112 @@ function actualizarComboBoxAjax_cliente(cod_cliente){
     }
   }
   ajax.send(null)  
+}
+function cargarDatosRegistroContactoNormas(){
+  var cod_cliente=$("#cod_cliente").val();
+  var cod_personal=$("#cod_personal").val();  
+  if(cod_cliente==null  || cod_cliente=='' ){
+        Swal.fire("Informativo!", "Seleccione un cliente por favor.", "warning");
+  }else{
+    var parametros={"cod":"none"};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "../simulaciones_servicios/ajaxListarDatosRegistroContacto.php?cod_cliente="+cod_cliente+"&cod_personal="+cod_personal,
+        data: parametros,
+        beforeSend: function () {
+        $("#texto_ajax_titulo").html("Obteniendo datos del servicio..."); 
+          iniciarCargaAjax();        
+        },
+        success:  function (resp) {
+           detectarCargaAjax();
+           $("#datosProveedorNuevo").html(resp);
+           $("#texto_ajax_titulo").html("Procesando Datos"); 
+           // $("#pais_contacto").val("26"); //para el pais de BOLIVIA
+           $("#departamento_contacto").val("480"); // departamento de LA PAZ           
+           $('.selectpicker').selectpicker("refresh");
+           $("#modalAgregarProveedor").modal("show");
+        }
+    });
+  }
+}
+function guardarDatoscontactoNormas(){
+  var cod_cliente=$("#cod_cliente").val();
+  var cod_personal=$("#cod_personal").val(); 
+  var nombre_contacto =$("#nombre_contacto").val();
+  var paterno_contacto =$("#paterno_contacto").val();
+  var materno_contacto =$("#materno_contacto").val();
+  var identificacion_contacto =$("#identificacion_contacto").val();
+  var pais_contacto =$("#pais_contacto").val();
+  var departamento_contacto =$("#departamento_contacto").val();
+  var cargo_contacto =$("#cargo_contacto").val();
+  var telefono_contacto =$("#telefono_contacto").val();
+  var correo_contacto =$("#correo_contacto").val();
+
+  // validaciones de campos
+  //console.log("departamento_contacto:"+departamento_contacto+"-telefono_contacto:"+telefono_contacto+"-correo_contacto:"+correo_contacto+"-identificacion_contacto:"+identificacion_contacto);
+  if(nombre_contacto!=""&&paterno_contacto!=""&&identificacion_contacto>0&&departamento_contacto!=""&&telefono_contacto>0&&correo_contacto!="")
+    var sw=true;
+  else{
+    var sw=false;
+  }
+  if(sw){
+    //proceso de guardado de informacion
+     var parametros={"cod_personal":cod_personal,"cod_cliente":cod_cliente,"nombre_contacto":nombre_contacto,"paterno_contacto":paterno_contacto,"materno_contacto":materno_contacto,"identificacion_contacto":identificacion_contacto,"departamento_contacto":departamento_contacto,"cargo_contacto":cargo_contacto,"correo_contacto":correo_contacto,"telefono_contacto":telefono_contacto};
+      $.ajax({
+         type: "GET",
+         dataType: 'html',
+         url: "../simulaciones_servicios/ajaxAgregarNuevoContacto.php",
+         data: parametros,
+         beforeSend: function () {
+          $("#texto_ajax_titulo").html("Enviando datos al servidor..."); 
+            iniciarCargaAjax();
+          },
+         success:  function (resp) {
+            detectarCargaAjax();
+            $("#texto_ajax_titulo").html("Procesando Datos"); 
+            if(resp.trim()=="1"){              
+              Swal.fire("Correcto!", "Los datos se actualizaron de forma correcta.", "success");
+              $("#modalAgregarProveedor").modal("hide");
+              actualizar_contacto_clienteNormas(cod_cliente);
+
+            }else{              
+                Swal.fire("Error!", "Ocurrio un error de envio. <br>"+resp.trim(), "warning");
+            }
+
+         }
+       });  
+  }else{
+    Swal.fire("Informativo!", "Todos los campos son requeridos", "warning");
+  }
+}
+function actualizar_contacto_clienteNormas(cod_cliente){
+  var contenedor;  
+  contenedor = document.getElementById('div_contenedor_contactos');
+  ajax=nuevoAjax();
+  ajax.open('GET', '../simulaciones_servicios/ajax_actualizar_contacto_cliente.php?cod_cliente='+cod_cliente,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);    
+      actualizarComboBoxAjax_clienteNormas(cod_cliente);         
+    }
+  }
+  ajax.send(null)  
 }//unidad_area-cargo
+function actualizarComboBoxAjax_clienteNormas(cod_cliente){
+  var contenedor;  
+  contenedor = document.getElementById('div_contenedor_contactos');
+  ajax=nuevoAjax();
+  ajax.open('GET', '../simulaciones_servicios/ajax_actualizarComboAjax_cliente.php?cod_cliente='+cod_cliente,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);             
+    }
+  }
+  ajax.send(null)  
+}
 
 
 
@@ -10907,6 +11010,27 @@ function actualizarRegistroContacto(){
            // $('.selectpicker').selectpicker("refresh");           
            Swal.fire("Correcto!", "Los datos se actualizaron de forma correcta.", "success");
            actualizarComboBoxAjax_cliente(cod_cliente);
+        }
+    }); 
+}
+function actualizarRegistroContactoNormas(){
+  var cod_cliente=$("#cod_cliente").val();
+  var parametros={"codigo":"none"};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "../simulaciones_servicios/ajaxActualizarContactos.php?",
+        data: parametros,
+        beforeSend: function () {
+        $("#texto_ajax_titulo").html("Actualizando Contactos de Clientes desde el Servicio Web..."); 
+          iniciarCargaAjax();
+        },
+        success:  function (resp) {
+           detectarCargaAjax();
+           $("#texto_ajax_titulo").html("Procesando Datos"); 
+           // $('.selectpicker').selectpicker("refresh");           
+           Swal.fire("Correcto!", "Los datos se actualizaron de forma correcta.", "success");
+           actualizarComboBoxAjax_clienteNormas(cod_cliente);
         }
     }); 
 }
@@ -10932,6 +11056,7 @@ function actualizarRegistroClientes(){
         }
     });  
 }
+
 
 function botonBuscarActivoFijo(){
   var valor_uo=$("#OficinaBusqueda").val();
@@ -11771,8 +11896,28 @@ function ajaxClienteContacto(combo){
   }else{
 
   }
+}//unidad_area-cargo
+function ajaxClienteContactoNormas(combo){
+  var cod_tipopago=$("#cod_tipopago").val();  
+  // alert(cod_tipopago);
+  if(cod_tipopago!=null){
+    var contenedor;
+    var cod_cliente=combo.value;
+    contenedor = document.getElementById('div_contenedor_contactos');
+    ajax=nuevoAjax();
+    ajax.open('GET', '../solicitud_facturacion_manual/ajax_contacto_cliente.php?cod_cliente='+cod_cliente+'&cod_tipopago='+cod_tipopago,true);
+    ajax.onreadystatechange=function() {
+      if (ajax.readyState==4) {
+        contenedor.innerHTML = ajax.responseText;
+        $('.selectpicker').selectpicker(["refresh"]);   
+        ajaxCliente_nit_razonsocialNormas(cod_cliente);       
+      }
+    }
+    ajax.send(null)  
 
-  
+  }else{
+
+  }
 }//unidad_area-cargo
 
 function ajaxCliente_nit_razonsocial(cod_cliente){
@@ -11780,6 +11925,19 @@ function ajaxCliente_nit_razonsocial(cod_cliente){
   contenedor = document.getElementById('contenedor_razon_nit');
   ajax=nuevoAjax();
   ajax.open('GET', 'solicitud_facturacion_manual/ajax_nit_razon_cliente.php?cod_cliente='+cod_cliente,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);          
+    }
+  }
+  ajax.send(null)  
+}//unidad_area-cargo
+function ajaxCliente_nit_razonsocialNormas(cod_cliente){
+  var contenedor;  
+  contenedor = document.getElementById('contenedor_razon_nit');
+  ajax=nuevoAjax();
+  ajax.open('GET', '../solicitud_facturacion_manual/ajax_nit_razon_cliente.php?cod_cliente='+cod_cliente,true);
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
       contenedor.innerHTML = ajax.responseText;
@@ -11918,7 +12076,7 @@ function ajaxUnidadorganizacionalAreaNormas(combo){
   var codigo_UO=combo.value;
   contenedor = document.getElementById('div_contenedor_area');
   ajax=nuevoAjax();
-  ajax.open('GET', 'solicitud_facturacion_manual/AjaxUnidad_area.php?codigo_UO='+codigo_UO,true);
+  ajax.open('GET', '../solicitud_facturacion_manual/AjaxUnidad_area.php?codigo_UO='+codigo_UO,true);
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
       contenedor.innerHTML = ajax.responseText;
@@ -12056,6 +12214,30 @@ function agregarDatosModalTipoPagoFacturacion(){
     contenedor = document.getElementById('div_cabecera_hidden_tipo_pago');
     ajax=nuevoAjax();
     ajax.open('GET', 'simulaciones_servicios/ajax_modal_tipopago_porcentaje.php?cod_tipopago='+cod_tipopago+'&monto_total='+monto_total,true);
+    ajax.onreadystatechange=function() {
+      if (ajax.readyState==4) {
+        contenedor.innerHTML = ajax.responseText;
+        $('.selectpicker').selectpicker(["refresh"]);  
+        tablaGeneral_tipoPagos_solFac();     
+      }
+    }
+    ajax.send(null)   
+  } 
+}
+function agregarDatosModalTipoPagoFacturacionNormas(){  
+  // alert("llege");
+  // var d=datos.split('/');
+  var cod_tipopago=$("#cod_tipopago").val();
+  var monto_total=$("#monto_total_a").val();  
+  if(monto_total<=0 || monto_total==null || monto_total==''){
+    // $('#modalTipoPagoPorcentaje').modal('hide');
+    Swal.fire("Informativo!", "El monto Total NO debe ser 0 o número negativo!", "warning");
+  }else{
+    $('#modalTipoPagoPorcentaje').modal('show');
+    var contenedor;  
+    contenedor = document.getElementById('div_cabecera_hidden_tipo_pago');
+    ajax=nuevoAjax();
+    ajax.open('GET', '../simulaciones_servicios/ajax_modal_tipopago_porcentaje.php?cod_tipopago='+cod_tipopago+'&monto_total='+monto_total,true);
     ajax.onreadystatechange=function() {
       if (ajax.readyState==4) {
         contenedor.innerHTML = ajax.responseText;
@@ -12229,10 +12411,7 @@ function agregarDatosModalAreasFacturacion(){
   if(cod_area==null || cod_area==''){    
     Swal.fire("Informativo!", "Area no Encontrada, por favor seleccione Oficina y Area!", "warning");
   }else{
-    var monto_total=$("#monto_total_a").val();
-    // if(monto_total==null || monto_total==''){
-    //   var monto_total=$("#monto_total_a").val();
-    // }
+    var monto_total=$("#monto_total_a").val();    
     if(monto_total<=0){      
       Swal.fire("Informativo!", "El monto Total NO debe ser 0 o número negativo!", "warning");
     }else{
@@ -12247,6 +12426,32 @@ function agregarDatosModalAreasFacturacion(){
           contenedor.innerHTML = ajax.responseText;
           $('.selectpicker').selectpicker(["refresh"]);        
           tablaGeneral_areas_solFac();
+        }
+      }
+      ajax.send(null);  
+    } 
+  }
+}
+function agregarDatosModalAreasFacturacionNormas(){    
+  var cod_area=$("#cod_area").val();  
+  if(cod_area==null || cod_area==''){    
+    Swal.fire("Informativo!", "Area no Encontrada, por favor seleccione Oficina y Area!", "warning");
+  }else{
+    var monto_total=$("#monto_total_a").val();    
+    if(monto_total<=0){      
+      Swal.fire("Informativo!", "El monto Total NO debe ser 0 o número negativo!", "warning");
+    }else{
+      $('#modalAreasPorcentaje').modal('show');
+      //agregamos la cuenta si lo tuviese  
+      var contenedor;  
+      contenedor = document.getElementById('div_cabecera_hidden_areas');
+      ajax=nuevoAjax();
+      ajax.open('GET', '../simulaciones_servicios/ajax_modal_areas_porcentaje.php?cod_area='+cod_area+'&monto_total='+monto_total,true);
+      ajax.onreadystatechange=function() {
+        if (ajax.readyState==4) {
+          contenedor.innerHTML = ajax.responseText;
+          $('.selectpicker').selectpicker(["refresh"]);        
+          tablaGeneral_areas_solFacNormas();
         }
       }
       ajax.send(null);  
@@ -12290,6 +12495,63 @@ function tablaGeneral_areas_solFac(){
         table.append(row);  
       }else{
         row.append($('<td>').addClass('').html("<button type='button' class='btn btn-primary btn-round btn-fab btn-sm' data-toggle='modal' data-target='' onclick='agregarDatosModalUnidadFacturacion("+i+")'><i class='material-icons' title='Unidades Porcentaje'>list</i><span id='nfacUnidades"+i+"' class='count bg-warning'></span></button>"));
+        table.append(row);  
+      }      
+    }
+    var row = $('<tr>').addClass('');//Para el total
+    row.append($('<td>').addClass('').text(''));
+    row.append($('<td>').addClass('').text('TOTAL'));         
+    row.append($('<td>').addClass('').html("<input type='hidden' class='form-control' name='total_monto_porcentaje_a_areas' id='total_monto_porcentaje_a_areas' value='0'><input type='text' step='0.01' class='form-control' name='total_monto_porcentaje_areas' id='total_monto_porcentaje_areas' value='"+number_format(0,2)+"' readonly='true'>"));
+    row.append($('<td>').addClass('').html("<input type='hidden' step='0.01' class='form-control' name='total_monto_bob_a_areas' id='total_monto_bob_a_areas' value='0'><input type='text' step='0.01' class='form-control' name='total_monto_bob_areas' id='total_monto_bob_areas' value='"+number_format(0,2)+"' readonly='true'> "));    
+    table.append(row);
+    var row = $('<tr>').addClass('');//parte de la diferencia
+    row.append($('<td>').addClass('').text(''));
+    row.append($('<td>').addClass('').text('DIFERENCIA'));         
+    row.append($('<td>').addClass('').html("<input type='text' step='0.01' class='form-control' name='total_diferencia_porcentaje_areas' id='total_diferencia_porcentaje_areas' value='"+number_format(0,2)+"' readonly='true'>"));
+    row.append($('<td>').addClass('').html("<input type='text' step='0.01' class='form-control' name='total_diferencia_bob_areas' id='total_diferencia_bob_areas' value='"+number_format(0,2)+"' readonly='true'> "));    
+    table.append(row);
+    div.append(table);
+    $("#total_items_areas").val(i);
+    $('#divResultadoListaModalAreas').html(div);
+    calcularTotalFilaAreasModal();
+}
+function tablaGeneral_areas_solFacNormas(){  
+  var monto_total=$("#modal_totalmontos").val();//monto total de items
+  var div=$('<div>').addClass('col-sm-12');
+  var table = $('<table>').addClass('table table-bordered table-condensed table-sm');
+  var titulos = $('<tr>').addClass('fondo-boton');
+    titulos.append($('<th>').addClass('').text('#'));
+    titulos.append($('<th>').addClass('').text('Area'));
+    titulos.append($('<th>').addClass('').text('Porcentaje(%)'));    
+    titulos.append($('<th>').addClass('').text('Monto(BOB)'));    
+    titulos.append($('<th>').addClass('').text('OF'));    
+    table.append(titulos);    
+    for (var i = 0; i < itemAreas_facturacion_aux[0].length; i++) {
+      var nombre_x=itemAreas_facturacion_aux[0][i].nombrex;
+      var cod_area_x=itemAreas_facturacion_aux[0][i].cod_area;
+      var row = $('<tr>').addClass('');
+      row.append($('<td>').addClass('').text(i+1));
+      row.append($('<td>').addClass('').html("<input type='hidden' name='codigo_areas"+i+"' id='codigo_areas"+i+"' value='"+cod_area_x+"'>"+nombre_x));
+      var sw = verificaExistenciaCodigoArea(cod_area_x);
+      
+      if(sw>=0){//verificamos si existe ese codigo en el array objetos
+        //sacamos su valores
+        var objeto_area = Object.values(itemAreas_facturacion[0][sw]);
+        var monto_por_obj=objeto_area[1];
+        var monto_bob_obj=objeto_area[2];
+        row.append($('<td>').addClass('').html("<input type='number' step='0.01' class='form-control' name='monto_porcentaje_areas"+i+"' id='monto_porcentaje_areas"+i+"' onkeyup='convertir_a_bolivianos_areas("+i+")' value='"+monto_por_obj+"'>"));
+        row.append($('<td>').addClass('').html("<input type='number' class='form-control' name='monto_bob_areas"+i+"' id='monto_bob_areas"+i+"' onkeyup='convertir_a_porcentaje_areas("+i+")' value='"+monto_bob_obj+"'>"));        
+      }else{              
+        row.append($('<td>').addClass('').html("<input type='number' step='0.01' class='form-control' name='monto_porcentaje_areas"+i+"' id='monto_porcentaje_areas"+i+"' onkeyup='convertir_a_bolivianos_areas("+i+")'>"));
+        row.append($('<td>').addClass('').html("<input type='number' class='form-control' name='monto_bob_areas"+i+"' id='monto_bob_areas"+i+"' onkeyup='convertir_a_porcentaje_areas("+i+")'>"));    
+
+      }
+      var cont_uo=verificamos_uo_areas(i);
+      if(cont_uo>0){
+        row.append($('<td>').addClass('').html("<button type='button' class='btn btn-primary btn-round btn-fab btn-sm' data-toggle='modal' data-target='' onclick='agregarDatosModalUnidadFacturacionNormas("+i+")'><i class='material-icons' title='Unidades Porcentaje'>list</i><span id='nfacUnidades"+i+"' class='count bg-warning'>"+div_contenedor_uo+"</span></button>"));
+        table.append(row);  
+      }else{
+        row.append($('<td>').addClass('').html("<button type='button' class='btn btn-primary btn-round btn-fab btn-sm' data-toggle='modal' data-target='' onclick='agregarDatosModalUnidadFacturacionNormas("+i+")'><i class='material-icons' title='Unidades Porcentaje'>list</i><span id='nfacUnidades"+i+"' class='count bg-warning'></span></button>"));
         table.append(row);  
       }      
     }
@@ -12431,6 +12693,29 @@ function agregarDatosModalUnidadFacturacion(id){
       contenedor = document.getElementById('div_cabecera_hidden_unidad');
       ajax=nuevoAjax();
       ajax.open('GET', 'simulaciones_servicios/ajax_modal_unidades_porcentaje.php?porcentaje_area='+porcentaje_area+'&monto_total='+monto_total+'&id='+id+'&codigo_area='+codigo_area,true);
+      ajax.onreadystatechange=function() {
+        if (ajax.readyState==4) {
+          contenedor.innerHTML = ajax.responseText;
+          $('.selectpicker').selectpicker(["refresh"]);        
+          tablaGeneral_unidad_solFac(porcentaje_area,id);
+        }
+      }
+      ajax.send(null);      
+  }
+}
+function agregarDatosModalUnidadFacturacionNormas(id){    
+  var porcentaje_area=$("#monto_porcentaje_areas"+id).val();    
+  var monto_total=$("#monto_total_a").val();    
+  var codigo_area=$("#codigo_areas"+id).val();
+  if(porcentaje_area==null || porcentaje_area<0 || porcentaje_area==''){    
+    Swal.fire("Informativo!", "Porcentaje de Area no Encontrada, por favor Introduzca Porcentajes!", "warning");
+  }else{
+      $('#modalUnidadesPorcentaje').modal('show');
+      //agregamos la cuenta si lo tuviese  
+      var contenedor;  
+      contenedor = document.getElementById('div_cabecera_hidden_unidad');
+      ajax=nuevoAjax();
+      ajax.open('GET', '../simulaciones_servicios/ajax_modal_unidades_porcentaje.php?porcentaje_area='+porcentaje_area+'&monto_total='+monto_total+'&id='+id+'&codigo_area='+codigo_area,true);
       ajax.onreadystatechange=function() {
         if (ajax.readyState==4) {
           contenedor.innerHTML = ajax.responseText;

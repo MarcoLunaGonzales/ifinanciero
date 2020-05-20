@@ -1,17 +1,22 @@
 <?php
-
-require_once 'conexion.php';
-require_once 'styles.php';
+session_start();
+require_once '../layouts/bodylogin2.php';
+require_once '../conexion.php';
+require_once '../styles.php';
+require_once '../functions.php';
+require_once '../functionsGeneral.php';
 require_once 'configModule.php';
-require_once 'functions.php';
-require_once 'functionsGeneral.php';
+
 //$dbh = new Conexion();
 $dbh = new Conexion();
-if(isset($_GET['q'])){
-  $q=$_GET['q'];
-  $s=$_GET['s'];
-  $u=$_GET['u'];
-  $v=$_GET['v'];
+
+//recibimos las normas seleccionadas a facturar
+$total_items = $_POST["total_items"];
+if(isset($_POST['q'])){
+  $q=$_POST['q'];
+  $s=$_POST['s'];
+  $u=$_POST['u'];
+  $r=$_POST['r'];
 }
 
 
@@ -23,8 +28,9 @@ $cod_cliente=null;
 $globalUser=$_SESSION["globalUser"];
 $cod_personal=$globalUser;
 $fecha_registro =date('Y-m-d');
-$fecha_solicitudfactura =$fecha_registro;
-$cod_tipoobjeto=obtenerValorConfiguracion(34);//por defecto
+$fecha_solicitudfactura=$fecha_registro;
+$cod_tipoobjeto=213;//por defecto}
+$name_tipoPago=obtenerNombreTipoPago($cod_tipoobjeto);
 $cod_tipopago = null;
 $name_cliente=null;
 $razon_social = $name_cliente;
@@ -43,17 +49,16 @@ $contadorRegistros=0;
     <div class="container-fluid">
         <div style="overflow-y:scroll;">
             <div class="col-md-12">
-              <form id="formSoliFactTcp" class="form-horizontal" action="<?=$urlSaveSolicitudfactura_normas;?>" method="post" onsubmit="return valida(this)">
+              <form id="formSoliFactTcp" class="form-horizontal" action="<?=$urlSaveSolicitudfactura_normas;?>" method="post" onsubmit="return valida(this)" enctype="multipart/form-data">
                 <?php 
-      if(isset($_GET['q'])){
-        ?><input type="hidden" name="usuario_ibnored" id="usuario_ibnored" value="<?=$q;?>">
-        <input type="hidden" name="usuario_ibnored_s" id="usuario_ibnored_s" value="<?=$s;?>">
-        <input type="hidden" name="usuario_ibnored_u" id="usuario_ibnored_u" value="<?=$u;?>">
-        <input type="hidden" name="usuario_ibnored_v" id="usuario_ibnored_v" value="<?=$v;?>"><?php
-      }
-      ?> 
-                
-                
+                  if(isset($_POST['q'])){
+                    ?><input type="hidden" name="usuario_ibnored" id="usuario_ibnored" value="<?=$q;?>">
+                    <input type="hidden" name="usuario_ibnored_r" id="usuario_ibnored_r" value="<?=$r;?>">
+                    <input type="hidden" name="usuario_ibnored_s" id="usuario_ibnored_s" value="<?=$s;?>">
+                    <input type="hidden" name="usuario_ibnored_u" id="usuario_ibnored_u" value="<?=$u;?>">
+                    <?php
+                  }
+                  ?>
                 <input type="hidden" name="cod_simulacion" id="cod_simulacion" value="<?=$cod_simulacion;?>"/>
                 <input type="hidden" name="cod_facturacion" id="cod_facturacion" value="<?=$cod_facturacion;?>"/>
                 <input type="hidden" name="cantidad_filas" id="cantidad_filas" value="<?=$contadorRegistros;?>">                
@@ -106,23 +111,18 @@ $contadorRegistros=0;
                             </div>
                         </div>
                         <!-- fin fechas -->
-                        <div class="row" >
-                            <div class="d-none">
-                                <label class="col-sm-2 col-form-label">Tipo Objeto</label>
-                                <div class="col-sm-4">
-                                    <div class="form-group" >
-                                            <select name="cod_tipoobjeto" id="cod_tipoobjeto" class="selectpicker form-control form-control-sm" data-style="btn btn-info" >
-                                                <!-- <option value=""></option> -->
-                                                <!-- <?php 
-                                                $queryTipoObjeto = "SELECT codigo,nombre FROM  tipos_objetofacturacion WHERE cod_estadoreferencial=1 order by nombre";
-                                                $statementObjeto = $dbh->query($queryTipoObjeto);
-                                                while ($row = $statementObjeto->fetch()){ ?>
-                                                    <option <?=($cod_tipoobjeto==$row["codigo"])?"selected":"";?>  value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
-                                                <?php } ?> -->
-                                            </select>                                
-                                    </div>
-                                </div>    
-                            </div>
+                        <div class="row">
+                            <label class="col-sm-2 col-form-label">Tipo Objeto</label>
+                            <div class="col-sm-4">
+                                <div class="form-group" >
+
+                                    <input class="form-control" type="hidden" name="cod_tipoobjeto" id="cod_tipoobjeto" required="true" value="<?=$cod_tipoobjeto;?>" required="true" readonly/>
+
+                                    <input class="form-control" type="text" required="true" value="<?=$name_tipoPago;?>" required="true" readonly style="background-color:#E3CEF6;text-align: left"/>
+                                </div>
+                            </div>    
+                        </div>  
+                        <div class="row" >                            
                             <script>
                                 var nfac=[];itemTipoPagos_facturacion.push(nfac);
                                 var nfacAreas=[];itemAreas_facturacion.push(nfacAreas);
@@ -200,17 +200,13 @@ $contadorRegistros=0;
                                 </div>
                             </div>
                             <div class="col-sm-1">
-                                <div class="form-group" >                                        
-                                    <!-- <button type="button" class="btn btn-danger btn-round btn-fab btn-sm" data-toggle="modal" data-target="" onclick="agregarDatosModalTipoPagoFacturacion()">
-                                        <i class="material-icons" title="Tipo Pago Porcentaje">list</i>
-                                        <span id="nfac" class="count bg-warning"></span>
-                                     </button> -->
-                                     <button type="button" class="btn btn-danger btn-round btn-fab btn-sm" data-toggle="modal" data-target="" onclick="agregarDatosModalTipoPagoFacturacion()">
+                                <div class="form-group" >                                  
+                                     <button type="button" class="btn btn-danger btn-round btn-fab btn-sm" data-toggle="modal" data-target="" onclick="agregarDatosModalTipoPagoFacturacionNormas()">
                                         <i class="material-icons" title="Tipo Pago Porcentaje">list</i>
                                         <span id="nfac" class="count bg-warning"></span>
                                      </button>
                                      
-                                     <button type="button" class="btn btn-primary btn-round btn-fab btn-sm" data-toggle="modal" data-target="" onclick="agregarDatosModalAreasFacturacion()">
+                                     <button type="button" class="btn btn-primary btn-round btn-fab btn-sm" data-toggle="modal" data-target="" onclick="agregarDatosModalAreasFacturacionNormas()">
                                         <i class="material-icons" title="Areas Porcentaje">list</i>
                                         <span id="nfacAreas" class="count bg-warning"></span>
                                      </button>                              
@@ -231,7 +227,7 @@ $contadorRegistros=0;
                             <label class="col-sm-2 col-form-label">Cliente</label>
                             <div class="col-sm-4">
                                 <div class="form-group" >                                                            
-                                    <select name="cod_cliente" id="cod_cliente" class="selectpicker form-control form-control-sm" data-style="btn btn-info"  required="true" onChange="ajaxClienteContacto(this);" data-live-search="true" >
+                                    <select name="cod_cliente" id="cod_cliente" class="selectpicker form-control form-control-sm" data-style="btn btn-info"  required="true" onChange="ajaxClienteContactoNormas(this);" data-live-search="true" >
                                         <option value=""></option>
                                         <?php 
                                         $queryTipoObjeto = "SELECT * from clientes where cod_estadoreferencial=1 order by nombre";
@@ -264,10 +260,10 @@ $contadorRegistros=0;
                             </div>
                             <div class="col-sm-1">
                                 <div class="form-group" >                                        
-                                    <a href="#" class="btn btn-warning btn-round btn-fab btn-sm" onclick="cargarDatosRegistroContacto()">
+                                    <a href="#" class="btn btn-warning btn-round btn-fab btn-sm" onclick="cargarDatosRegistroContactoNormas()">
                                         <i class="material-icons" title="Add Contacto">add</i>
                                     </a>
-                                    <a href="#" class="btn btn-success btn-round btn-fab btn-sm" onclick="actualizarRegistroContacto()">
+                                    <a href="#" class="btn btn-success btn-round btn-fab btn-sm" onclick="actualizarRegistroContactoNormas()">
                                        <i class="material-icons" title="Actualizar Clientes & Contactos">update</i>
                                     </a> 
                                 </div>
@@ -337,8 +333,6 @@ $contadorRegistros=0;
                                       <tbody>                                
                                         <?php 
                                         $iii=1;
-                                        //recibimos las normas seleccionadas a facturar
-                                        $total_items = $_POST["total_items"];
                                         $ids_normas= array();
                                         for ($i=1;$i<=$total_items-1;$i++){
                                             if($_POST["idVentaNormas_a".$i]!=''){
@@ -356,7 +350,7 @@ $contadorRegistros=0;
                                         $modal_totalmontopre=0;$modal_totalmontopretotal=0;
                                         while ($rowPre = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                             $codigoPre=$rowPre['IdVentaNormas'];
-                                            $codCS=533;//por defecto
+                                            $codCS=488;//por defecto
                                             $tipoPre=descripcionClaServicio($codCS);
                                             $cantidadPre=$rowPre['Cantidad'];                                            
                                             $montoPre=$rowPre['Precio'];
@@ -448,17 +442,15 @@ $contadorRegistros=0;
                             </div>
                         </div>                    
                   </div>
-                  <div class="card-footer ml-auto mr-auto">
-                    <button type="submit" class="<?=$buttonNormal;?>">Guardar</button><?php
-                    if(isset($_GET['q'])){
-                    if($cod_sw==1){?>
-                        <a href='<?=$urlSolicitudfactura;?>&cod=<?=$cod_simulacion;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
-                    <?php }else{?>
-                        <a href='<?=$urlListSimulacionesServ?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
-                    <?php }
-                    }
-                    ?>
-                    
+                  <div class="card-footer fixed-bottom">
+                    <button type="submit" class="<?=$buttonNormal;?>">Guardar</button>
+                        <?php
+                        if(isset($_POST['q'])){  ?>
+                            <a href='<?="../".$urlListSolicitud_facturacion_normas;?>&q=<?=$q?>&r=<?=$r?>&s=<?=$s?>&u=<?=$u?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
+                        <?php }else{?>
+                            <a href='<?="../".$urlListSolicitud_facturacion_normas?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
+                        <?php }
+                        ?>
                   </div>
                 </div>
               </form>                  
@@ -496,7 +488,7 @@ $contadorRegistros=0;
                    
                  </div> 
                 <div class="form-group float-right">
-                        <button type="button" onclick="guardarDatoscontacto()" class="btn btn-info btn-round">Agregar</button>
+                        <button type="button" onclick="guardarDatoscontactoNormas()" class="btn btn-info btn-round">Agregar</button>
                 </div>
           </div>
       </div>  
@@ -525,7 +517,7 @@ $contadorRegistros=0;
 </script>
 <script>$('.selectpicker').selectpicker("refresh");</script>
 
-<?php  require_once 'simulaciones_servicios/modal_facturacion.php';?>
+<?php  require_once '../simulaciones_servicios/modal_facturacion.php';?>
 <!-- objeto tipo de pago -->
 <?php 
     $lan=sizeof($cont);//filas si lo hubiese        

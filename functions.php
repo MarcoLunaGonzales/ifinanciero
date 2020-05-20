@@ -540,6 +540,16 @@ function namesDepreciacion($codigo){
  }
  return($nombreX);
 }
+function nameDepreciacion($codigo){
+ $dbh = new Conexion();
+ $stmt = $dbh->prepare("SELECT nombre FROM depreciaciones where codigo=$codigo");
+ $stmt->execute();
+ $nombreX="";
+ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+   $nombreX=$row['nombre'];
+ }
+ return($nombreX);
+}
 function abrevDepreciacion($codigo){
  $dbh = new Conexion();
  $stmt = $dbh->prepare("SELECT abreviatura FROM depreciaciones where codigo in ($codigo)");
@@ -6230,5 +6240,39 @@ function listaDetallePagosProveedores($codigo){
    $stmt = $dbh->prepare("SELECT pd.*,sd.detalle from pagos_proveedoresdetalle pd join solicitud_recursosdetalle sd on pd.cod_solicitudrecursosdetalle=sd.codigo where pd.cod_pagoproveedor=$codigo");
    $stmt->execute();
    return $stmt;
+}
+
+function obtenerCodUnidadSucursal($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT codigo FROM unidades_organizacionales where cod_sucursal=:codigo limit 1");
+   $stmt->bindParam(':codigo',$codigo);
+   $stmt->execute();
+   $codigoX=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $codigoX=$row['codigo'];
+   }
+   return($codigoX);
+}
+function obtenerSucursalCodUnidad($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT cod_sucursal FROM unidades_organizacionales where codigo=:codigo limit 1");
+   $stmt->bindParam(':codigo',$codigo);
+   $stmt->execute();
+   $codigoX=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $codigoX=$row['cod_sucursal'];
+   }
+   return($codigoX);
+}
+function obtenerNombreTipoPago($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT nombre from tipos_objetofacturacion where codigo=:codigo");
+   $stmt->bindParam(':codigo',$codigo);
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['nombre'];
+   }
+   return($valor);
 }
 ?>

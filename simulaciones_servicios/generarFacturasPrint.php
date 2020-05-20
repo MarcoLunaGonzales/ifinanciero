@@ -16,7 +16,8 @@ $codigo = $_GET["codigo"];
 $tipo_impresion = $_GET["tipo"];
 try{
 
-    $stmtInfo = $dbh->prepare("SELECT sf.*,t.nombre as nombre_cliente FROM facturas_venta sf,clientes t  where sf.cod_cliente=t.codigo and sf.cod_solicitudfacturacion=$codigo");
+    $stmtInfo = $dbh->prepare("SELECT sf.*,t.nombre as nombre_cliente FROM facturas_venta sf,clientes t  
+      where sf.cod_cliente=t.codigo and sf.codigo=$codigo");
     $stmtInfo->execute();
     $resultInfo = $stmtInfo->fetch();   
     $cod_factura = $resultInfo['codigo']; 
@@ -35,9 +36,6 @@ try{
     $nro_autorizacion = $resultInfo['nro_autorizacion'];
     $codigo_control = $resultInfo['codigo_control'];
     $importe = $resultInfo['importe'];
-    $descuento_bob = $resultInfo['descuento_bob'];
-    $importe=$importe-$descuento_bob;//para  facturar mostramos el importe incluido en descuento
-
     $observaciones = $resultInfo['observaciones'];
     $nombre_cliente = $resultInfo['nombre_cliente'];
     if($cod_factura==null || $cod_factura==''){
@@ -60,6 +58,9 @@ try{
       $nro_autorizacion = $resultInfo['nro_autorizacion'];
       $codigo_control = $resultInfo['codigo_control'];
       $importe = $resultInfo['importe'];
+      // $descuento_bob = $resultInfo['descuento_bob'];
+      $importe=$importe;
+
       $observaciones = $resultInfo['observaciones'];
       // $nombre_cliente = $resultInfo['nombre_cliente'];
       $nombre_cliente = $razon_social;
@@ -122,7 +123,7 @@ $html.=  '<header class="header">'.
                     <small><h4 >
                       '.obtenerValorConfiguracionFactura(1).'<br>
                       '.obtenerValorConfiguracionFactura(2).'<br>
-                      '.obtenerValorConfiguracionFactura(3  ).'<br>
+                      '.obtenerValorConfiguracionFactura(3).'<br>
                       Teléfonos:'.obtenerValorConfiguracionFactura(4).' * Fax: '.obtenerValorConfiguracionFactura(12).'<br>
                       Web:'.obtenerValorConfiguracionFactura(10).' * E-mail:'.obtenerValorConfiguracionFactura(11).' * '.obtenerValorConfiguracionFactura(13).' <br>
                       '.obtenerValorConfiguracionFactura(14).'<br>
@@ -203,9 +204,7 @@ $html.=  '<header class="header">'.
                   $html.='</h5></td>';
                 } 
                   
-                $html.='</tr>';
-              
-
+                $html.='</tr>';            
               $html.='<tr>'.
                 '<td height="8%" colspan="3">
                   <table class="table" style="border-top: hidden;border-bottom: hidden;border-right: hidden;border-left: hidden;">

@@ -69,12 +69,12 @@ if($cod_facturacion>0){//editar
     $observaciones_2 = null;
     $cod_tipopago=null;
     $persona_contacto= null;
-    $cod_tipoobjeto=obtenerValorConfiguracion(41);
+    $cod_tipoobjeto=212;//por defecto}    
     $cod_personal= $globalUser;
     $descuento_por=0;
     $descuento_bob=0;
 }
-
+$name_tipoPago=obtenerNombreTipoPago($cod_tipoobjeto);
 // $name_uo=nameUnidad($cod_uo);
 // $name_area=trim(abrevArea($cod_area),'-');
 $contadorRegistros=0;
@@ -159,25 +159,18 @@ $descuento_cliente=0;
                             </div>
                         </div>
                         <!-- fin fechas -->
-                        <div class="row">          
-                                <div class="d-none">
-                                    <label class="col-sm-2 col-form-label">Tipo Objeto</label>
-                                    <div class="col-sm-4">
-                                        <div class="form-group" >
-                                                <!-- <select name="cod_tipoobjeto" id="cod_tipoobjeto" class="selectpicker form-control form-control-sm" data-style="btn btn-info" required="true">
-                                                    <option value=""></option>
-                                                    <?php 
-                                                    $queryTipoObjeto = "SELECT codigo,nombre FROM  tipos_objetofacturacion WHERE cod_estadoreferencial=1 order by nombre";
-                                                    $statementObjeto = $dbh->query($queryTipoObjeto);
-                                                    while ($row = $statementObjeto->fetch()){ ?>
-                                                        <option <?=($cod_tipoobjeto==$row["codigo"])?"selected":"";?>  value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
-                                                    <?php } ?>
-                                                </select>    -->                             
-                                        </div>
-                                    </div>
-                                </div>                 
-                                
+                        <div class="row">
+                            <label class="col-sm-2 col-form-label">Tipo Objeto</label>
+                            <div class="col-sm-4">
+                                <div class="form-group" >
 
+                                    <input class="form-control" type="hidden" name="cod_tipoobjeto" id="cod_tipoobjeto" required="true" value="<?=$cod_tipoobjeto;?>" required="true" readonly/>
+
+                                    <input class="form-control" type="text" required="true" value="<?=$name_tipoPago;?>" required="true" readonly style="background-color:#E3CEF6;text-align: left"/>
+                                </div>
+                            </div>    
+                        </div>  
+                        <div class="row">          
                             <script>var nfac=[];itemTipoPagos_facturacion.push(nfac);var nfacAreas=[];itemAreas_facturacion.push(nfacAreas);</script>
                              <div class="">
                                 <?php
@@ -303,14 +296,13 @@ $descuento_cliente=0;
                                         <span id="nfacAreas" class="count bg-warning"></span>
                                      </button>                              
                                 </div>
-                            </div>  
-                            <!-- <label class="col-sm-2 col-form-label">Persona Contacto</label>
-                            <div class="col-sm-3">
+                            </div>                              
+                            <div class="d-none" >
                                 <div class="form-group" >
                                         <input type="text" name="persona_contacto" id="persona_contacto" class="form-control" value="<?=$persona_contacto?>" required="true">
                                 </div>
                             </div>
-                            <div class="col-sm-1">
+                            <!-- <div class="col-sm-1">
                                 <div class="form-group" >                                        
                                     <a href="#" class="btn btn-warning btn-round btn-fab btn-sm" onclick="cargarDatosRegistroContacto()">
                                         <i class="material-icons" title="Add Contacto">add</i>

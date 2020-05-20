@@ -12,12 +12,12 @@ if(isset($_GET['q'])){
   $q=$_GET['q'];
   $s=$_GET['s'];
   $u=$_GET['u'];
-  $v=$_GET['v'];
+  $r=$_GET['r'];
 }
 
 $cod_simulacion=0;
 $cod_facturacion=null;
-
+$contadorRegistros=0;
 ?>
 <script>
   numFilas=<?=$contadorRegistros;?>;
@@ -31,10 +31,11 @@ $cod_facturacion=null;
                 <?php 
                   if(isset($_GET['q'])){
                     ?>
-                    <input type="hidden" name="usuario_ibnored" id="usuario_ibnored" value="<?=$q;?>">
-                    <input type="hidden" name="usuario_ibnored_s" id="usuario_ibnored_s" value="<?=$s;?>">
-                    <input type="hidden" name="usuario_ibnored_u" id="usuario_ibnored_u" value="<?=$u;?>">
-                    <input type="hidden" name="usuario_ibnored_v" id="usuario_ibnored_v" value="<?=$v;?>"><?php
+                    <input type="hidden" name="q" id="q" value="<?=$q;?>">
+                    <input type="hidden" name="r" id="r" value="<?=$r;?>">
+                    <input type="hidden" name="s" id="s" value="<?=$s;?>">
+                    <input type="hidden" name="u" id="u" value="<?=$u;?>">
+                    <?php
                   }
                   ?>       
                  
@@ -107,13 +108,12 @@ $cod_facturacion=null;
                                           <td class="text-right"><?=number_format($Precio,2,".","")?></td>
                                           <!-- checkbox -->
                                           <td>
-                                            
-                                                <div class="togglebutton">
-                                                   <label>
-                                                     <input type="checkbox"  id="modal_check<?=$iii?>" onchange="itemsSeleccionados_ventaNormas()">
-                                                     <span class="toggle"></span>
-                                                   </label>
-                                               </div>                                                    
+                                            <div class="togglebutton">
+                                              <label>
+                                                <input type="checkbox"  id="modal_check<?=$iii?>" onchange="itemsSeleccionados_ventaNormas()">
+                                                <span class="toggle"></span>
+                                              </label>
+                                            </div>                                                    
                                           </td><!-- fin checkbox -->
                                         </tr>
                                         <?php   
@@ -125,15 +125,15 @@ $cod_facturacion=null;
                             </table>                            
                         </div>                        
                     </div>
-                    <div class="card-footer ml-auto mr-auto">
-                        <button type="submit" class="<?=$buttonNormal;?>">Seleccionar</button><?php
-                        if(isset($_GET['q'])){
-                        //no regresa porque la pantalla pricipal es este quiza para la intra net si    
-                        }else{
-                          
-                        }
-
-                        ?>
+                    <div class="card-footer fixed-bottom">
+                        <button type="submit" class="<?=$buttonNormal;?>">Seleccionar</button>
+                        <?php
+                          if(isset($_GET['q'])){  ?>
+                              <a href='<?=$urlSolicitudfactura;?>&q=<?=$q?>&r=<?=$r?>&s=<?=$s?>&u=<?=$u?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
+                          <?php }else{?>
+                              <a href='<?=$urlSolicitudfactura?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
+                          <?php }
+                          ?>
                     </div>
                 </div>
                 </form>
@@ -227,8 +227,6 @@ $cod_facturacion=null;
       {    
         ok = false;
       }
-      
-
       if(ok == false)    
         Swal.fire("Informativo!",msg, "warning");
       return ok;
