@@ -6,7 +6,7 @@ require_once 'styles.php';
 $codigo_simulacion=0;//codigo de simulacion
 $dbh = new Conexion();
 $globalAdmin=$_SESSION["globalAdmin"];
-
+$globalUser=$_SESSION["globalUser"];
 $sql="SELECT nombre,cod_area,cod_uo from simulaciones_costos where codigo=$codigo_simulacion";
 $stmtSimu = $dbh->prepare($sql);
 $stmtSimu->execute();

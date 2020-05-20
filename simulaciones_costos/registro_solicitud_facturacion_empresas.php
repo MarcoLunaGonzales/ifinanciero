@@ -209,7 +209,7 @@ $descuento_cliente=0;
                                         }
                                     }
                                     //=== termina porcentaje objetos
-                                    $queryAreas="SELECT codigo,nombre,abreviatura from areas where areas_ingreso=1 and cod_estado=1";
+                                    $queryAreas="SELECT codigo,nombre,abreviatura from areas where areas_ingreso=1 and cod_estado=1 order by nombre";
                                     $stmtAreas = $dbh->prepare($queryAreas);
                                     $stmtAreas->execute();
                                     $ncAreas=0;$contAreas= array();
@@ -222,17 +222,19 @@ $descuento_cliente=0;
                                         //objeto dato donde se guarda las areas de servicios
                                         $datoArea = new stdClass();//obejto
                                         $codFila=(int)$rowAreas["codigo"];
-                                        $nombre_x=trim($rowAreas['nombre']);                                        
+                                        $nombre_x=trim($rowAreas['nombre']);
+                                        $abrev_x=trim($rowAreas['abreviatura']);
                                         $datoArea->codigo=($ncAreas+1);
                                         $datoArea->cod_area=$codFila;
-                                        $datoArea->nombrex=$nombre_x;                                                
+                                        $datoArea->nombrex=$nombre_x;
+                                        $datoArea->abrevx=$abrev_x;
                                         $datosAreas[0][$ncAreas]=$datoArea;                           
                                         $ncAreas++;
                                     }
                                     $contAreas[0]=$ncAreas;
                                 ?>
                                 <?php //unidades
-                                    $queryUnidades="SELECT codigo,nombre,abreviatura from unidades_organizacionales where cod_estado=1";
+                                    $queryUnidades="SELECT codigo,nombre,abreviatura from unidades_organizacionales where cod_estado=1 order by nombre";
                                     $stmtUnidades = $dbh->prepare($queryUnidades);
                                     $stmtUnidades->execute();
                                     $ncUnidades=0;$contUnidades= array();
@@ -647,7 +649,7 @@ $descuento_cliente=0;
         for ($j=0; $j < $contAreas[$i]; $j++) {            
              if($contAreas[$i]>0){?>
                 <script>
-                    detalle_areas.push({codigo:<?=$datosAreas[$i][$j]->codigo?>,cod_area:<?=$datosAreas[$i][$j]->cod_area?>,nombrex:'<?=$datosAreas[$i][$j]->nombrex?>'});
+                    detalle_areas.push({codigo:<?=$datosAreas[$i][$j]->codigo?>,cod_area:<?=$datosAreas[$i][$j]->cod_area?>,nombrex:'<?=$datosAreas[$i][$j]->nombrex?>',abrevx:'<?=$datosAreas[$i][$j]->abrevx?>'});
                 </script>
 
               <?php         

@@ -6270,7 +6270,7 @@ function obtenerSucursalCodUnidad($codigo){
    $stmt = $dbh->prepare("SELECT cod_sucursal FROM unidades_organizacionales where codigo=:codigo limit 1");
    $stmt->bindParam(':codigo',$codigo);
    $stmt->execute();
-   $codigoX=0;
+   $codigoX=null;
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       $codigoX=$row['cod_sucursal'];
    }

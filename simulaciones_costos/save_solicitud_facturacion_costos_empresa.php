@@ -7,7 +7,7 @@ require_once 'configModule.php';
 ini_set('display_errors',1);
 $dbh = new Conexion();
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//para mostrar errores en la ejecucion
-
+$globalUser=$_SESSION["globalUser"];
 try {//recibiendo datos
     $cod_simulacion = $_POST["cod_simulacion"];
     $cod_facturacion = $_POST["cod_facturacion"];    

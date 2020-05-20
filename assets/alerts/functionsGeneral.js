@@ -12293,8 +12293,8 @@ function tablaGeneral_tipoPagos_solFac(){
     var row = $('<tr>').addClass('');//parte de la diferencia
     row.append($('<td>').addClass('').text(''));
     row.append($('<td>').addClass('').text('DIFERENCIA'));         
-    row.append($('<td>').addClass('').html("<input type='text' step='0.01' class='form-control' name='total_diferencia_porcentaje_tipopago' id='total_diferencia_porcentaje_tipopago' value='"+number_format(0,2)+"' readonly='true'>"));
-    row.append($('<td>').addClass('').html("<input type='text' step='0.01' class='form-control' name='total_diferencia_bob_tipopago' id='total_diferencia_bob_tipopago' value='"+number_format(0,2)+"' readonly='true'> "));    
+    row.append($('<td>').addClass('').html("<input style='background-color:#F5A9A9;' type='text' step='0.01' class='form-control' name='total_diferencia_porcentaje_tipopago' id='total_diferencia_porcentaje_tipopago' value='"+number_format(0,2)+"' readonly='true'>"));
+    row.append($('<td>').addClass('').html("<input style='background-color:#F5A9A9;' type='text' step='0.01' class='form-control' name='total_diferencia_bob_tipopago' id='total_diferencia_bob_tipopago' value='"+number_format(0,2)+"' readonly='true'> "));    
     table.append(row);
     div.append(table);
     $("#total_items_tipopago").val(i);
@@ -12436,49 +12436,24 @@ function agregarDatosModalAreasFacturacion(){
     } 
   }
 }
-function agregarDatosModalAreasFacturacionNormas(){    
-  var cod_area=$("#cod_area").val();  
-  if(cod_area==null || cod_area==''){    
-    Swal.fire("Informativo!", "Area no Encontrada, por favor seleccione Oficina y Area!", "warning");
-  }else{
-    var monto_total=$("#monto_total_a").val();    
-    if(monto_total<=0){      
-      Swal.fire("Informativo!", "El monto Total NO debe ser 0 o número negativo!", "warning");
-    }else{
-      $('#modalAreasPorcentaje').modal('show');
-      //agregamos la cuenta si lo tuviese  
-      var contenedor;  
-      contenedor = document.getElementById('div_cabecera_hidden_areas');
-      ajax=nuevoAjax();
-      ajax.open('GET', '../simulaciones_servicios/ajax_modal_areas_porcentaje.php?cod_area='+cod_area+'&monto_total='+monto_total,true);
-      ajax.onreadystatechange=function() {
-        if (ajax.readyState==4) {
-          contenedor.innerHTML = ajax.responseText;
-          $('.selectpicker').selectpicker(["refresh"]);        
-          tablaGeneral_areas_solFacNormas();
-        }
-      }
-      ajax.send(null);  
-    } 
-  }
-}
 function tablaGeneral_areas_solFac(){  
   var monto_total=$("#modal_totalmontos").val();//monto total de items
   var div=$('<div>').addClass('col-sm-12');
   var table = $('<table>').addClass('table table-bordered table-condensed table-sm');
   var titulos = $('<tr>').addClass('fondo-boton');
     titulos.append($('<th>').addClass('').text('#'));
-    titulos.append($('<th>').addClass('').text('Area'));
+    titulos.append($('<th width="50%">').addClass('').text('Area'));
     titulos.append($('<th>').addClass('').text('Porcentaje(%)'));    
     titulos.append($('<th>').addClass('').text('Monto(BOB)'));    
     titulos.append($('<th>').addClass('').text('OF'));    
     table.append(titulos);    
     for (var i = 0; i < itemAreas_facturacion_aux[0].length; i++) {
       var nombre_x=itemAreas_facturacion_aux[0][i].nombrex;
+      var abrev_x=itemAreas_facturacion_aux[0][i].abrevx;
       var cod_area_x=itemAreas_facturacion_aux[0][i].cod_area;
       var row = $('<tr>').addClass('');
       row.append($('<td>').addClass('').text(i+1));
-      row.append($('<td>').addClass('').html("<input type='hidden' name='codigo_areas"+i+"' id='codigo_areas"+i+"' value='"+cod_area_x+"'>"+nombre_x));
+      row.append($('<td>').addClass('').html("<input type='hidden' name='codigo_areas"+i+"' id='codigo_areas"+i+"' value='"+cod_area_x+"'>"+nombre_x+" - "+abrev_x));
       var sw = verificaExistenciaCodigoArea(cod_area_x);
       
       if(sw>=0){//verificamos si existe ese codigo en el array objetos
@@ -12511,13 +12486,39 @@ function tablaGeneral_areas_solFac(){
     var row = $('<tr>').addClass('');//parte de la diferencia
     row.append($('<td>').addClass('').text(''));
     row.append($('<td>').addClass('').text('DIFERENCIA'));         
-    row.append($('<td>').addClass('').html("<input type='text' step='0.01' class='form-control' name='total_diferencia_porcentaje_areas' id='total_diferencia_porcentaje_areas' value='"+number_format(0,2)+"' readonly='true'>"));
-    row.append($('<td>').addClass('').html("<input type='text' step='0.01' class='form-control' name='total_diferencia_bob_areas' id='total_diferencia_bob_areas' value='"+number_format(0,2)+"' readonly='true'> "));    
+    row.append($('<td>').addClass('').html("<input type='text' step='0.01' class='form-control' style='background-color:#F5A9A9;' name='total_diferencia_porcentaje_areas' id='total_diferencia_porcentaje_areas' value='"+number_format(0,2)+"' readonly='true'>"));
+    row.append($('<td>').addClass('').html("<input type='text' step='0.01' class='form-control' style='background-color:#F5A9A9;' name='total_diferencia_bob_areas' id='total_diferencia_bob_areas' value='"+number_format(0,2)+"' readonly='true'> "));    
     table.append(row);
     div.append(table);
     $("#total_items_areas").val(i);
     $('#divResultadoListaModalAreas').html(div);
     calcularTotalFilaAreasModal();
+}
+function agregarDatosModalAreasFacturacionNormas(){    
+  var cod_area=$("#cod_area").val();  
+  if(cod_area==null || cod_area==''){    
+    Swal.fire("Informativo!", "Area no Encontrada, por favor seleccione Oficina y Area!", "warning");
+  }else{
+    var monto_total=$("#monto_total_a").val();    
+    if(monto_total<=0){      
+      Swal.fire("Informativo!", "El monto Total NO debe ser 0 o número negativo!", "warning");
+    }else{
+      $('#modalAreasPorcentaje').modal('show');
+      //agregamos la cuenta si lo tuviese  
+      var contenedor;  
+      contenedor = document.getElementById('div_cabecera_hidden_areas');
+      ajax=nuevoAjax();
+      ajax.open('GET', '../simulaciones_servicios/ajax_modal_areas_porcentaje.php?cod_area='+cod_area+'&monto_total='+monto_total,true);
+      ajax.onreadystatechange=function() {
+        if (ajax.readyState==4) {
+          contenedor.innerHTML = ajax.responseText;
+          $('.selectpicker').selectpicker(["refresh"]);        
+          tablaGeneral_areas_solFacNormas();
+        }
+      }
+      ajax.send(null);  
+    } 
+  }
 }
 function tablaGeneral_areas_solFacNormas(){  
   var monto_total=$("#modal_totalmontos").val();//monto total de items
@@ -12535,7 +12536,7 @@ function tablaGeneral_areas_solFacNormas(){
       var cod_area_x=itemAreas_facturacion_aux[0][i].cod_area;
       var row = $('<tr>').addClass('');
       row.append($('<td>').addClass('').text(i+1));
-      row.append($('<td>').addClass('').html("<input type='hidden' name='codigo_areas"+i+"' id='codigo_areas"+i+"' value='"+cod_area_x+"'>"+nombre_x));
+      row.append($('<td>').addClass('').html("<input type='hidden' name='codigo_areas"+i+"' id='codigo_areas"+i+"' value='"+cod_area_x+"'>"+nombre_x+" - "+abrev_x));
       var sw = verificaExistenciaCodigoArea(cod_area_x);
       
       if(sw>=0){//verificamos si existe ese codigo en el array objetos
@@ -12568,8 +12569,8 @@ function tablaGeneral_areas_solFacNormas(){
     var row = $('<tr>').addClass('');//parte de la diferencia
     row.append($('<td>').addClass('').text(''));
     row.append($('<td>').addClass('').text('DIFERENCIA'));         
-    row.append($('<td>').addClass('').html("<input type='text' step='0.01' class='form-control' name='total_diferencia_porcentaje_areas' id='total_diferencia_porcentaje_areas' value='"+number_format(0,2)+"' readonly='true'>"));
-    row.append($('<td>').addClass('').html("<input type='text' step='0.01' class='form-control' name='total_diferencia_bob_areas' id='total_diferencia_bob_areas' value='"+number_format(0,2)+"' readonly='true'> "));    
+    row.append($('<td>').addClass('').html("<input style='background-color:#F5A9A9;' type='text' step='0.01' class='form-control' name='total_diferencia_porcentaje_areas' id='total_diferencia_porcentaje_areas' value='"+number_format(0,2)+"' readonly='true'>"));
+    row.append($('<td>').addClass('').html("<input style='background-color:#F5A9A9;' type='text' step='0.01' class='form-control' name='total_diferencia_bob_areas' id='total_diferencia_bob_areas' value='"+number_format(0,2)+"' readonly='true'> "));    
     table.append(row);
     div.append(table);
     $("#total_items_areas").val(i);
@@ -12700,7 +12701,7 @@ function agregarDatosModalUnidadFacturacion(id){
       ajax.onreadystatechange=function() {
         if (ajax.readyState==4) {
           contenedor.innerHTML = ajax.responseText;
-          $('.selectpicker').selectpicker(["refresh"]);        
+          // $('.selectpicker').selectpicker(["refresh"]);        
           tablaGeneral_unidad_solFac(porcentaje_area,id);
         }
       }
@@ -12776,8 +12777,8 @@ function tablaGeneral_unidad_solFac(porcentaje_area,id){
     var row = $('<tr>').addClass('');//parte de la diferencia
     row.append($('<td>').addClass('').text(''));
     row.append($('<td>').addClass('').text('DIFERENCIA'));         
-    row.append($('<td>').addClass('').html("<input type='text' step='0.01' class='form-control' name='total_diferencia_porcentaje_unidades' id='total_diferencia_porcentaje_unidades' value='"+number_format(0,2)+"' readonly='true'>"));
-    row.append($('<td>').addClass('').html("<input type='text' step='0.01' class='form-control' name='total_diferencia_bob_unidades' id='total_diferencia_bob_unidades' value='"+number_format(0,2)+"' readonly='true'> "));    
+    row.append($('<td>').addClass('').html("<input style='background-color:#F5A9A9;' type='text' step='0.01' class='form-control' name='total_diferencia_porcentaje_unidades' id='total_diferencia_porcentaje_unidades' value='"+number_format(0,2)+"' readonly='true'>"));
+    row.append($('<td>').addClass('').html("<input style='background-color:#F5A9A9;' type='text' step='0.01' class='form-control' name='total_diferencia_bob_unidades' id='total_diferencia_bob_unidades' value='"+number_format(0,2)+"' readonly='true'> "));    
     table.append(row);    
     div.append(table);
     $("#total_items_unidades").val(i);

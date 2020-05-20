@@ -35,12 +35,12 @@ if(isset($_GET['q'])){
 
 
 // $unidadOrgString=implode(",", $cod_uo);
-$sql="SELECT aa.IdModulo, aa.IdCurso, aa.CiAlumno, concat(cpe.clPaterno,' ',cpe.clMaterno,' ',cpe.clNombreRazon)as nombreAlumno, c.Abrev, c.Auxiliar,
+$sql="SELECT aa.IdModulo, aa.IdCurso, aa.CiAlumno,aa.FechaInscripcion, concat(cpe.clPaterno,' ',cpe.clMaterno,' ',cpe.clNombreRazon)as nombreAlumno, c.Abrev, c.Auxiliar,
 pc.Costo, pc.CantidadModulos, m.NroModulo, pc.Nombre, m.IdTema
 FROM asignacionalumno aa, dbcliente.cliente_persona_empresa cpe, alumnocurso ac, clasificador c, programas_cursos pc, modulos m 
 where cpe.clIdentificacion=aa.CiAlumno 
 and ac.IdCurso=aa.IdCurso and ac.CiAlumno=aa.CiAlumno and ac.IdConceptoPago=c.IdClasificador and pc.IdCurso=aa.IdCurso and 
-m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo";  
+m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo ";  
 
 if($ci!=""){
   $sql.=" and cpe.clIdentificacion=$ci";
@@ -54,7 +54,7 @@ if($paterno!=""){
 if($materno!=""){
   $sql.=" and cpe.clMaterno like '%$materno&'";
 }
-$sql.=" GROUP BY IdCurso Order by nombreAlumno";
+$sql.=" GROUP BY IdCurso Order by aa.FechaInscripcion desc";
 
 ?>
   <table class="table table-sm" id="tablePaginator">
@@ -70,6 +70,7 @@ $sql.=" GROUP BY IdCurso Order by nombreAlumno";
                 <th>Importe <br>Solicitud(BOB)</th>                   
                 <th>Nro <br>Módulo</th>                 -->
                 <th>Nombre Curso</th>   
+                <th>Fecha Inscripción</th>   
                 <th class="text-right">Actions</th>
             </tr>
         </thead>
@@ -91,6 +92,7 @@ $sql.=" GROUP BY IdCurso Order by nombreAlumno";
           $stmtIBNO->bindColumn('CantidadModulos', $CantidadModulos);
           $stmtIBNO->bindColumn('NroModulo', $NroModulo);
           $stmtIBNO->bindColumn('Nombre', $nombre_mod);                                    
+          $stmtIBNO->bindColumn('FechaInscripcion', $FechaInscripcion);
           while ($rowPre = $stmtIBNO->fetch(PDO::FETCH_ASSOC)){
             $monto_pagar=($Costo - ($Costo*$descuento/100) )/$CantidadModulos; //monto a pagar del estudiante 
             $importe_curso=   $Costo*$descuento/100;//importe curso con desuento
@@ -108,7 +110,7 @@ $sql.=" GROUP BY IdCurso Order by nombreAlumno";
             <tr>
               <td align="center"></td>
               <td><?=$CiAlumno;?></td>
-              <td><?=$nombreAlumno;?></td>
+              <td class="text-left"><?=$nombreAlumno;?></td>              
               <td class="text-right"><?=formatNumberDec($Costo) ;?></td>
               <td class="text-right"><?=$descuento ;?></td>                          
               <td class="text-right"><?=formatNumberDec($importe_curso) ;?></td>                          
@@ -116,6 +118,7 @@ $sql.=" GROUP BY IdCurso Order by nombreAlumno";
               <td class="text-right"><?=formatNumberDec($sumaTotalImporte) ;?></td>     
               <td><?=$NroModulo;?></td>                             -->
               <td class="text-left"><?=$nombre_mod;?></td>      
+              <td class="text-right"><?=$FechaInscripcion;?></td>
               <td class="td-actions text-right">
                 <?php
                   if($globalAdmin==1){                            
