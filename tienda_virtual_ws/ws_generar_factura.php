@@ -104,24 +104,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             $mensaje = "Hubo un error al generar la factura, contáctese con el administrador.";
                         }else{
                             $estado=12;//no encuentro el error
-                            $mensaje = "Error interno";                            
+                            $mensaje = "Error interno del servicio";
                         }
                     }            
                 }else{
                     $estado=14;
-                    $mensaje="Nombre de acción incorrecta"; 
+                    $mensaje="Acción no encontrada";
                 }
             }else{
                 $estado=14;
-                $mensaje="Nombre de acción incorrecta"; 
+                $mensaje="Acción no encontrada";
             }
         }else{
             $estado=15;
-            $mensaje="Error en las credenciales!";            
+            $mensaje="Error en las credenciales sKey y sIde";            
         }
     }else{
         $estado=15;
-        $mensaje="Error en las credenciales!";
+        $mensaje="Error en las credenciales sKey y sIde";
     }
     insertarlogFacturas($estado,$mensaje,$json);
     if($estado==0){$resultado=array("estado"=>$estado,"mensaje"=>$mensaje,"IdFactura"=>$cod_factura);}
@@ -130,7 +130,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     echo json_encode($resultado);
 }else{
     $estado=15;
-    $mensaje="Error en las credenciales!";
+    $mensaje="Error en las credenciales sKey y sIde";
     $json="";
     insertarlogFacturas($estado,$mensaje,$json);
     $resp=array("estado"=>$estado, 
