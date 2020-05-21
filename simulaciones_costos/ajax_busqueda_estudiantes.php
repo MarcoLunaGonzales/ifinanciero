@@ -35,7 +35,7 @@ if(isset($_GET['q'])){
 
 
 // $unidadOrgString=implode(",", $cod_uo);
-$sql="SELECT aa.IdModulo, aa.IdCurso, aa.CiAlumno,aa.FechaInscripcion, concat(cpe.clPaterno,' ',cpe.clMaterno,' ',cpe.clNombreRazon)as nombreAlumno, c.Abrev, c.Auxiliar,
+$sql="SELECT aa.IdModulo, aa.IdCurso, aa.CiAlumno,DATE_FORMAT(aa.FechaInscripcion,'%d/%m/%Y')as FechaInscripcion_x, concat(cpe.clPaterno,' ',cpe.clMaterno,' ',cpe.clNombreRazon)as nombreAlumno, c.Abrev, c.Auxiliar,
 pc.Costo, pc.CantidadModulos, m.NroModulo, pc.Nombre, m.IdTema
 FROM asignacionalumno aa, dbcliente.cliente_persona_empresa cpe, alumnocurso ac, clasificador c, programas_cursos pc, modulos m 
 where cpe.clIdentificacion=aa.CiAlumno 
@@ -92,7 +92,7 @@ $sql.=" GROUP BY IdCurso Order by aa.FechaInscripcion desc";
           $stmtIBNO->bindColumn('CantidadModulos', $CantidadModulos);
           $stmtIBNO->bindColumn('NroModulo', $NroModulo);
           $stmtIBNO->bindColumn('Nombre', $nombre_mod);                                    
-          $stmtIBNO->bindColumn('FechaInscripcion', $FechaInscripcion);
+          $stmtIBNO->bindColumn('FechaInscripcion_x', $FechaInscripcion);
           while ($rowPre = $stmtIBNO->fetch(PDO::FETCH_ASSOC)){
             $monto_pagar=($Costo - ($Costo*$descuento/100) )/$CantidadModulos; //monto a pagar del estudiante 
             $importe_curso=   $Costo*$descuento/100;//importe curso con desuento

@@ -31,7 +31,7 @@ if(isset($_GET['q'])){
   $r=$_GET['r'];  
 }
 
-$sql="SELECT * from programas_cursos pc where (pc.idEmpresa<>0 || pc.idEmpresa<>null)";  
+$sql="SELECT *,DATE_FORMAT(FechaRegistro,'%d/%m/%Y')as FechaRegistro_x from programas_cursos pc where (pc.idEmpresa<>0 || pc.idEmpresa<>null)";  
 
 if($cod_empresa!=""){
   $sql.=" and idEmpresa in ($cod_empresa)";
@@ -72,7 +72,7 @@ $sql.=" order by pc.IdCurso desc";
           $stmtIBNO->bindColumn('Costo', $Costo);
           $stmtIBNO->bindColumn('CantidadModulos', $CantidadModulos);          
           $stmtIBNO->bindColumn('Nombre', $nombre_mod);
-          $stmtIBNO->bindColumn('FechaRegistro', $FechaRegistro);
+          $stmtIBNO->bindColumn('FechaRegistro_x', $FechaRegistro);
           while ($rowPre = $stmtIBNO->fetch(PDO::FETCH_ASSOC)){
             $monto_pagar=$Costo; //monto a pagar del estudiante                         
             $codigo_facturacion=0;

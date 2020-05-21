@@ -12470,7 +12470,7 @@ function tablaGeneral_areas_solFac(){
       }
       var cont_uo=verificamos_uo_areas(i);
       if(cont_uo>0){
-        row.append($('<td>').addClass('').html("<button type='button' class='btn btn-primary btn-round btn-fab btn-sm' data-toggle='modal' data-target='' onclick='agregarDatosModalUnidadFacturacion("+i+")'><i class='material-icons' title='Unidades Porcentaje'>list</i><span id='nfacUnidades"+i+"' class='count bg-warning'>"+div_contenedor_uo+"</span></button>"));
+        row.append($('<td>').addClass('').html("<button type='button' class='btn btn-primary btn-round btn-fab btn-sm' data-toggle='modal' data-target='' onclick='agregarDatosModalUnidadFacturacion("+i+")'><i class='material-icons' title='Unidades Porcentaje'>list</i><span id='nfacUnidades"+i+"' class='count bg-warning'>"+cont_uo+"</span></button>"));
         table.append(row);  
       }else{
         row.append($('<td>').addClass('').html("<button type='button' class='btn btn-primary btn-round btn-fab btn-sm' data-toggle='modal' data-target='' onclick='agregarDatosModalUnidadFacturacion("+i+")'><i class='material-icons' title='Unidades Porcentaje'>list</i><span id='nfacUnidades"+i+"' class='count bg-warning'></span></button>"));
@@ -12526,13 +12526,14 @@ function tablaGeneral_areas_solFacNormas(){
   var table = $('<table>').addClass('table table-bordered table-condensed table-sm');
   var titulos = $('<tr>').addClass('fondo-boton');
     titulos.append($('<th>').addClass('').text('#'));
-    titulos.append($('<th>').addClass('').text('Area'));
+    titulos.append($('<th width="50%">').addClass('').text('Area'));
     titulos.append($('<th>').addClass('').text('Porcentaje(%)'));    
     titulos.append($('<th>').addClass('').text('Monto(BOB)'));    
     titulos.append($('<th>').addClass('').text('OF'));    
     table.append(titulos);    
     for (var i = 0; i < itemAreas_facturacion_aux[0].length; i++) {
       var nombre_x=itemAreas_facturacion_aux[0][i].nombrex;
+      var abrev_x=itemAreas_facturacion_aux[0][i].abrevx;
       var cod_area_x=itemAreas_facturacion_aux[0][i].cod_area;
       var row = $('<tr>').addClass('');
       row.append($('<td>').addClass('').text(i+1));
@@ -12591,7 +12592,7 @@ function verificaExistenciaCodigoArea(codigo){
   return sw;
 }
 function verificamos_uo_areas(id){
-  var sw = -1;  
+  var sw = -1;
   var cont_item=itemUnidades_facturacion[id].length;
   if(cont_item>0){
     sw=cont_item;  
@@ -12652,8 +12653,9 @@ function calcularTotalFilaAreasModal(){
   $("#total_diferencia_bob_areas").val(number_format(diferencia_bob_areas,2));//con formato
 }
 function savePorcentajeAreas(){
-  var total_porcentaje=$('#total_monto_porcentaje_a_areas').val();
-  if(total_porcentaje==100){
+  var porcentaje_dif=$('#total_diferencia_porcentaje_areas').val();
+  var bob_dif=$('#total_diferencia_bob_areas').val();
+  if(porcentaje_dif==0 && bob_dif==0){
     borrarItemsAreas(); 
     var total_items=$('#total_items_areas').val();
     for (var i=0;i<=(total_items-1);i++){
@@ -12678,7 +12680,7 @@ function savePorcentajeAreas(){
     //   // console.log("datos: "+dato[4]+" "+dato[7]+" "+dato[8]);    
     // }
   }else{
-    Swal.fire("Informativo!", "EL porcentaje de los montos difiere del 100%", "warning");
+    Swal.fire("Informativo!", "Verifique porcentajes y montos por favor", "warning");
   }      
 }
 function borrarItemsAreas(){
@@ -12686,12 +12688,16 @@ function borrarItemsAreas(){
   var nfacAreas=[];itemAreas_facturacion.push(nfacAreas);
 }
 function agregarDatosModalUnidadFacturacion(id){    
+  var porcentaje_dif=$('#total_diferencia_porcentaje_areas').val();
+  var bob_dif=$('#total_diferencia_bob_areas').val();
+  // alert(porcentaje_dif+"-"+bob_dif);
   var porcentaje_area=$("#monto_porcentaje_areas"+id).val();    
   var monto_total=$("#monto_total_a").val();    
   var codigo_area=$("#codigo_areas"+id).val();
   if(porcentaje_area==null || porcentaje_area<0 || porcentaje_area==''){    
     Swal.fire("Informativo!", "Porcentaje de Area no Encontrada, por favor Introduzca Porcentajes!", "warning");
   }else{
+    if(porcentaje_dif==0 && bob_dif==0){
       $('#modalUnidadesPorcentaje').modal('show');
       //agregamos la cuenta si lo tuviese  
       var contenedor;  
@@ -12705,16 +12711,23 @@ function agregarDatosModalUnidadFacturacion(id){
           tablaGeneral_unidad_solFac(porcentaje_area,id);
         }
       }
-      ajax.send(null);      
+      ajax.send(null); 
+    }else{
+      Swal.fire("Informativo!", "Por favor, verifique que los porcentajes y montos estén correctamente!", "warning");     
+    }
+      
   }
 }
-function agregarDatosModalUnidadFacturacionNormas(id){    
+function agregarDatosModalUnidadFacturacionNormas(id){ 
+  var porcentaje_dif=$('#total_diferencia_porcentaje_areas').val();
+  var bob_dif=$('#total_diferencia_bob_areas').val();   
   var porcentaje_area=$("#monto_porcentaje_areas"+id).val();    
   var monto_total=$("#monto_total_a").val();    
   var codigo_area=$("#codigo_areas"+id).val();
   if(porcentaje_area==null || porcentaje_area<0 || porcentaje_area==''){    
     Swal.fire("Informativo!", "Porcentaje de Area no Encontrada, por favor Introduzca Porcentajes!", "warning");
   }else{
+    if(porcentaje_dif==0 && bob_dif==0){
       $('#modalUnidadesPorcentaje').modal('show');
       //agregamos la cuenta si lo tuviese  
       var contenedor;  
@@ -12728,7 +12741,10 @@ function agregarDatosModalUnidadFacturacionNormas(id){
           tablaGeneral_unidad_solFac(porcentaje_area,id);
         }
       }
-      ajax.send(null);      
+      ajax.send(null);
+    }else{
+      Swal.fire("Informativo!", "Por favor, verifique que los porcentajes y montos estén correctamente!", "warning");     
+    }
   }
 }
 function tablaGeneral_unidad_solFac(porcentaje_area,id){  
@@ -12839,9 +12855,10 @@ function calcularTotalFilaUnidadesModal(){
   $("#total_diferencia_bob_unidades").val(number_format(diferencia_bob_areas,2));//con formato
 }
 function savePorcentajeUnidades(){
-  var id_area=$('#id_area').val();
-  var total_porcentaje=$('#total_monto_porcentaje_a_unidades').val();
-  if(total_porcentaje==100){
+  var id_area=$('#id_area').val();  
+  var porcentaje_dif=$('#total_diferencia_porcentaje_unidades').val();
+  var bob_dif=$('#total_diferencia_bob_unidades').val();
+  if(porcentaje_dif==0 && bob_dif==0){
     // console.log("id: "+id_area);
     borrarItemsUnidades(id_area); 
     var total_items=$('#total_items_unidades').val();
@@ -12866,14 +12883,15 @@ function savePorcentajeUnidades(){
     //   // console.log("datos: "+dato[4]+" "+dato[7]+" "+dato[8]);    
     // }
   }else{
-    Swal.fire("Informativo!", "EL porcentaje de los montos difiere del 100%", "warning");
+    Swal.fire("Informativo!", "Verifique porcentajes y montos por favor.", "warning");
   }      
 }
 function borrarItemsUnidades(id){
   var cont=itemUnidades_facturacion[id].length;
   if(cont>0){
-    itemUnidades_facturacion.splice(id, 1);
-    //var nfacUnidades=[];itemUnidades_facturacion[id].push(nfacUnidades); 
+    var nfacUnidades=[];
+    itemUnidades_facturacion.splice(id,1,nfacUnidades);
+    // var nfacUnidades=[];itemUnidades_facturacion[id].push(nfacUnidades); 
   }
 }
 function verificaExistenciaCodigoUnidad(codigo,id){  
