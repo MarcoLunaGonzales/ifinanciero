@@ -16,10 +16,11 @@ $ut_f=$_GET['ut_f'];
 $al_i=$_GET['al_i'];
 $al_f=$_GET['al_f'];
 $precio_p=$_GET['precio_p'];
+$precio_pedit=$_GET['precio_pedit'];
 
-/*$sqlUpdate="UPDATE plantillas_costo SET  utilidad_minimalocal='$ut_i',utilidad_minimaexterno='$ut_f',cantidad_alumnoslocal='$al_i',cantidad_alumnosexterno='$al_f' where codigo=$codPlantillaCosto";
+$sqlUpdate="UPDATE precios_simulacioncosto SET  venta_local='$precio_pedit' where codigo=$precio_p";
 $stmtUpdate = $dbh->prepare($sqlUpdate);
-$flagSuccess=$stmtUpdate->execute();*/
+$flagSuccess=$stmtUpdate->execute();
 
 $sqlUpdatePlantilla="UPDATE simulaciones_costos SET  cod_precioplantilla='$precio_p',utilidad_minimalocal='$ut_i',cantidad_alumnoslocal='$al_i' where codigo=$codSimulacion";
 $stmtUpdatePlantilla = $dbh->prepare($sqlUpdatePlantilla);

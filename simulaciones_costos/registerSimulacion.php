@@ -36,7 +36,7 @@ if(isset($_GET['cod'])){
 	$codigo=0;
 }
 $mesConf=obtenerValorConfiguracion(6);
-$stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_externo from simulaciones_costos sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo join precios_plantillacosto pa on sc.cod_precioplantilla=pa.codigo where sc.cod_estadoreferencial=1 and sc.codigo='$codigo'");
+$stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_externo from simulaciones_costos sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo join precios_simulacioncosto pa on sc.cod_precioplantilla=pa.codigo where sc.cod_estadoreferencial=1 and sc.codigo='$codigo'");
 			$stmt1->execute();
 			$stmt1->bindColumn('codigo', $codigoX);
             $stmt1->bindColumn('nombre', $nombreX);
@@ -489,7 +489,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
             </table>
            </div>
           <div class="col-sm-5 bg-blanco2">
-            <p class="font-weight-bold float-left">DATOS DEL CALCULO</p>
+            <p class="font-weight-bold float-left">DATOS DEL CALCULO x MODULO</p>
             <img src="../assets/img/f_abajo2.gif" alt="" height="30px" class="float-right">
 						<table class="table table-bordered table-condensed">
 							<thead>
@@ -531,7 +531,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
 					</div>	
 					</div>
 				  </div>
-          <div class="col-sm-5 bg-blanco2">
+          <div class="col-sm-5 bg-blanco2 div-center">
             <p class="font-weight-bold float-left">DATOS DEL CALCULO PARA <?=$cantidadModuloX?> <?php if($cantidadModuloX>1){ echo "MODULOS";}else{ echo "MODULO";} ?></p>
             <img src="../assets/img/f_abajo2.gif" alt="" height="30px" class="float-right">
             <table class="table table-bordered table-condensed">
@@ -574,14 +574,15 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
                 </tr>
               </tbody>
             </table>
-          <div class="row div-center">
-				  	<div class="card-footer fixed-bottom">
+          
+			 </div>
+       <div class="row div-center">
+            <div class="card-footer fixed-bottom">
             
             <a onclick="guardarSimulacion()" class="btn btn-success text-white"><i class="material-icons">send</i> Enviar Propuesta</a>
-				  	<a href="../<?=$urlList;?>" class="btn btn-danger">Volver</a> 
+            <a href="../<?=$urlList;?>" class="btn btn-danger">Volver</a> 
             </div>
-				 </div>
-			 </div>
+         </div>
       </div>
     </div>
 	</div>

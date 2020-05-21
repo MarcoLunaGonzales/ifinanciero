@@ -175,7 +175,7 @@
     <div class="modal-content card">
                <div class="card-header card-header-info card-header-text">
                   <div class="card-text">
-                    <h4>Editar Plantilla</h4>
+                    <h4>Editar Propuesta</h4>
                   </div>
                   <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
                     <i class="material-icons">close</i>
@@ -215,11 +215,11 @@
                       </div> 
                       <div class="row">
                        <label class="col-sm-3 col-form-label">Precio</label>
-                       <div class="col-sm-8">
+                       <div class="col-sm-4">
                         <div class="form-group">
-                             <select class="selectpicker form-control" name="modal_importeplan" id="modal_importeplan" data-style="btn btn-info">
+                             <select class="selectpicker form-control form-control-sm" name="modal_importeplan" id="modal_importeplan" onchange="cambiarPrecioPlantilla()" data-style="btn btn-info">
                                <?php 
-                               $queryPr="SELECT * FROM precios_plantillacosto where cod_plantillacosto=$codigoPX order by codigo";
+                               $queryPr="SELECT * FROM precios_simulacioncosto where cod_simulacioncosto=$codigo order by codigo";
                                $stmt = $dbh->prepare($queryPr);
                                $stmt->execute();
                                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -232,6 +232,22 @@
                              </select>
                          </div>
                         </div>
+
+                      </div>
+                      <div class="row">
+                        <label class="col-sm-3 col-form-label">BOB</label>
+                       <div class="col-sm-4">
+                        <div class="form-group">
+                             <input type="number" readonly class="form-control" id="modal_importeplanedit" name="modal_importeplanedit">
+                         </div>
+                        </div>
+                        <a href="#" title="Editar Precio" class="btn btn-warning text-dark btn-sm btn-fab" onclick="editarPrecioSimulacionCostos();return false;"><i class="material-icons">edit</i></a>
+                        <!--<label class="col-sm-1 col-form-label">USD</label>
+                       <div class="col-sm-4">
+                        <div class="form-group">
+                             <input type="number" readonly class="form-control" id="modal_importeplaneditUSD" name="modal_importeplaneditUSD">
+                         </div>
+                        </div>-->
                       </div>
                       <hr>
                      

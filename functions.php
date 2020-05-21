@@ -2188,7 +2188,7 @@ function obtenerDetalleSolicitudSimulacionCuentaPlantilla($codigo,$codigoPlan){
 FROM (SELECT pc.codigo,pc.numero,pc.nombre,pp.nombre as partida, pp.codigo as cod_partida,sc.monto_local,sc.monto_externo from cuentas_simulacion sc 
 join partidas_presupuestarias pp on pp.codigo=sc.cod_partidapresupuestaria 
 join plan_cuentas pc on sc.cod_plancuenta=pc.codigo where sc.cod_simulacioncostos=$codigo order by pp.codigo) tabla_uno,
-simulaciones_detalle tablap where tablap.cod_cuenta=tabla_uno.codigo and (tablap.cod_plantillacosto!='' or tablap.cod_plantillacosto!=NULL) and tablap.cod_plantillacosto=$codigoPlan and tablap.cod_simulacioncosto=$codigo and tablap.habilitado=1 and tablap.cod_estadoreferencial=$codigoPlan order by tabla_uno.codigo;";
+simulaciones_detalle tablap where tablap.cod_cuenta=tabla_uno.codigo and (tablap.cod_plantillacosto!='' or tablap.cod_plantillacosto!=NULL) and tablap.cod_plantillacosto=$codigoPlan and tablap.cod_simulacioncosto=$codigo and tablap.habilitado=1 and tablap.cod_estadoreferencial=1 order by tabla_uno.codigo;";
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
    return $stmt;
@@ -2854,6 +2854,19 @@ function obtenerCodigoUnidadPlantillaServicio($codigo){
    $dbh = new Conexion();
   $sql="";
   $sql="SELECT cod_unidadorganizacional FROM plantillas_servicios where codigo=$codigo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute(); 
+   $num=0;
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
+  {
+   $num=$row['cod_unidadorganizacional'];
+  }
+  return $num;
+}
+function obtenerCodigoUnidadPlantillaCosto($codigo){
+   $dbh = new Conexion();
+  $sql="";
+  $sql="SELECT cod_unidadorganizacional FROM plantillas_costo where codigo=$codigo";
    $stmt = $dbh->prepare($sql);
    $stmt->execute(); 
    $num=0;
@@ -4958,6 +4971,17 @@ function nameTipoAuditor($valor){
    }
    return($nombreX);
 }
+function obtenerCodigoAreaPlantillasCosto($codigo){
+   $dbh = new Conexion();
+   $sqlX="SELECT cod_area FROM plantillas_costo where codigo='$codigo'";
+   $stmt = $dbh->prepare($sqlX);
+   $stmt->execute();
+   $nombreX=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $nombreX=$row['cod_area'];
+   }
+   return($nombreX);
+}
 
 function obtenerCodigoAreaPlantillasServicios($codigo){
    $dbh = new Conexion();
@@ -6286,5 +6310,13 @@ function obtenerNombreTipoPago($codigo){
       $valor=$row['nombre'];
    }
    return($valor);
+}
+
+function insertarFacturaSolicitudAComprobante($cod_detallesol,$cod_detallecomp){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("INSERT INTO facturas_compra
+    SELECT $cod_detallecomp as cod_comprobantedetalle,null as cod_solicitudrecursodetalle,nit,nro_factura,fecha,razon_social,importe,exento,nro_autorizacion,codigo_control,ice,tasa_cero,tipo_compra from facturas_compra where cod_solicitudrecursodetalle=$cod_detallesol");
+   $flaf=$stmt->execute();
+   return $flag;
 }
 ?>
