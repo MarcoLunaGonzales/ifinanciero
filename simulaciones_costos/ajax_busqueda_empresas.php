@@ -31,7 +31,7 @@ if(isset($_GET['q'])){
   $r=$_GET['r'];  
 }
 
-$sql="SELECT * from programas_cursos pc where (pc.idEmpresa<>0 || pc.idEmpresa<>null)";  
+$sql="SELECT *,DATE_FORMAT(FechaRegistro,'%d/%m/%Y')as FechaRegistro_x from programas_cursos pc where (pc.idEmpresa<>0 || pc.idEmpresa<>null)";  
 
 if($cod_empresa!=""){
   $sql.=" and idEmpresa in ($cod_empresa)";
@@ -54,7 +54,8 @@ $sql.=" order by pc.IdCurso desc";
                 <!-- <th>Importe <br>modulo(BOB)</th>   
                 <th>Importe <br>Solicitud(BOB)</th>                   
                 <th>Nro <br>Módulo</th>                 -->
-                <th>Nombre Curso</th>   
+                <th>Nombre Curso</th>
+                <th>Fecha Registro</th>
                 <th class="text-right">Actions</th>
             </tr>
         </thead>
@@ -70,7 +71,8 @@ $sql.=" order by pc.IdCurso desc";
           // $stmtIBNO->bindColumn('nombreAlumno', $nombreAlumno);                   
           $stmtIBNO->bindColumn('Costo', $Costo);
           $stmtIBNO->bindColumn('CantidadModulos', $CantidadModulos);          
-          $stmtIBNO->bindColumn('Nombre', $nombre_mod);                                    
+          $stmtIBNO->bindColumn('Nombre', $nombre_mod);
+          $stmtIBNO->bindColumn('FechaRegistro_x', $FechaRegistro);
           while ($rowPre = $stmtIBNO->fetch(PDO::FETCH_ASSOC)){
             $monto_pagar=$Costo; //monto a pagar del estudiante                         
             $codigo_facturacion=0;
@@ -86,6 +88,7 @@ $sql.=" order by pc.IdCurso desc";
               <td><?=$nombre_empresa;?></td>
               <td class="text-right"><?=formatNumberDec($Costo) ;?></td>                                    
               <td class="text-left"><?=$nombre_mod;?></td>      
+              <td class="text-left"><?=$FechaRegistro;?></td>   
               <td class="td-actions text-right">
                 <?php
                   if($globalAdmin==1){                            
