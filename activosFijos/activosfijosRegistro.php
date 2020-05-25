@@ -285,7 +285,7 @@ if ($codigo > 0){
                                 <label class="col-sm-2 col-form-label">Fecha Alta</label>
                                 <div class="col-sm-4">
                                 <div class="form-group">
-                                    <input class="form-control" type="date" name="fechalta" id="fechalta" required="true" value="<?=$fechalta;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" required="true"/>
+                                    <input class="form-control" type="date" name="fechalta" id="fechalta" required="true" value="<?=$fechalta;?>" required="true"/>
                                 </div>
                                 </div><!--fin campo fechalta -->
                             </div>
@@ -300,7 +300,7 @@ if ($codigo > 0){
                                 <label class="col-sm-2 col-form-label">Depr. Acumulada (Nuevo es 0)</label>
                                 <div class="col-sm-4">
                                 <div class="form-group">
-                                    <input class="form-control" type="text" name="depreciacionacumulada" id="depreciacionacumulada" required="true" value="<?=($row["codigo"]==0)?"0":$depreciacionacumulada;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+                                    <input class="form-control" type="text" name="depreciacionacumulada" id="depreciacionacumulada" required="true" value="<?=($row["codigo"]==0)?"0":$depreciacionacumulada;?>"/>
                                 </div>
                                 </div>
                             </div><!--fin campo depreciacionacumulada --> 
@@ -308,7 +308,7 @@ if ($codigo > 0){
                                 <label class="col-sm-2 col-form-label">Valor Residual</label>
                                 <div class="col-sm-4">
                                 <div class="form-group">
-                                    <input class="form-control" readonly type="text" name="valorresidual" id="valorresidual" required="true" value="<?=$valorresidual;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+                                    <input class="form-control" readonly type="text" name="valorresidual" id="valorresidual" required="true" value="<?=$valorresidual;?>"/>
                                 </div>
                                 </div><!--fin campo valorresidual -->
 
@@ -316,7 +316,7 @@ if ($codigo > 0){
                                 <div class="col-sm-4">
                                 <div class="form-group">
                                     <div id="div_contenedor_valorR">
-                                        <input class="form-control" type="text" name="vidautilmeses" id="vidautilmeses" required="true" value="<?=$vidautilmeses;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" readonly="true"/>
+                                        <input class="form-control" type="text" name="vidautilmeses" id="vidautilmeses" required="true" value="<?=$vidautilmeses;?>" readonly="true"/>
                                     </div>
                                 </div>
                                 </div>

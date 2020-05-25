@@ -8,7 +8,7 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$nro_factura){
 	$dbh = new Conexion();
 	$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//try
 	set_time_limit(3000);
-	session_start();
+	// session_start();
 	try{    	
 		$stmtCajaChica = $dbh->prepare("SELECT cod_unidadorganizacional,cod_area,observaciones,codigo_alterno,razon_social from solicitudes_facturacion where codigo=$cod_solicitudfacturacion");
 	    $stmtCajaChica->execute();

@@ -49,7 +49,7 @@ $contadorRegistros=0;
     <div class="container-fluid">
         <div style="overflow-y:scroll;">
             <div class="col-md-12">
-              <form id="formSoliFactTcp" class="form-horizontal" action="<?=$urlSaveSolicitudfactura_normas;?>" method="post" onsubmit="return valida(this)" enctype="multipart/form-data">
+              <form id="formSoliFactNormas" class="form-horizontal" action="<?=$urlSaveSolicitudfactura_normas;?>" method="post" onsubmit="return valida(this)" enctype="multipart/form-data">
                 <?php 
                   if(isset($_POST['q'])){
                     ?><input type="hidden" name="usuario_ibnored" id="usuario_ibnored" value="<?=$q;?>">
