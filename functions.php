@@ -6427,7 +6427,7 @@ function obtenerPrecioAlternativoDetalle($codigo){
    $stmt->execute();
    $valor=0;
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-      $valor=$row['cantidad']*$row['monto'];
+      $valor+=$row['cantidad']*$row['monto'];
    }
    return($valor);
 }

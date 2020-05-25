@@ -101,7 +101,7 @@ $i=0;
                   	<div class="row">
 	                  	<div class="col-sm-6">
 	                  		<div class="row">
-				                <label class="col-sm-4 col-form-label">Oficina</label>
+				                <label class="col-sm-4 col-form-label">Oficina Origen</label>
 				                <div class="col-sm-8">
 				                	<div class="form-group">
 				                		<div id="div_contenedor_oficina1">		
@@ -172,7 +172,7 @@ $i=0;
                   <div class="row">
                   	<div class="col-sm-6">
                   		<div class="row">
-			                 <label class="col-sm-4 col-form-label">Oficina</label>
+			                 <label class="col-sm-4 col-form-label">Centro de Costos - Oficina</label>
 			                 <div class="col-sm-8">
 			                	<div class="form-group">
 			                		<div id="div_contenedor_oficina_costo">
@@ -211,7 +211,7 @@ $i=0;
       	             </div>
                   	<div class="col-sm-6">
                   		<div class="row">
-			                 <label class="col-sm-4 col-form-label">Area</label>
+			                 <label class="col-sm-4 col-form-label">Centro de Costos - Area</label>
 			                 <div class="col-sm-8">
 			                	<div class="form-group">
 	                              <select class="selectpicker form-control form-control-sm" name="area_costo[]" id="area_costo" data-style="select-with-transition" multiple data-actions-box="true" required>
@@ -233,6 +233,26 @@ $i=0;
 			              </div>
 				      </div>
                   </div><!--div row-->
+                  <div class="row">
+      	             <div class="col-sm-6">
+      	             	<div class="row">
+			               <label class="col-sm-4 col-form-label">Cuentas Auxiliares</label>
+                           <div class="col-sm-8">
+			                  <div class="form-group">
+      	             	          <div class="form-check">
+                                    <label class="form-check-label">
+                                      <input class="form-check-input" type="checkbox" id="cuentas_auxiliares" name="cuentas_auxiliares[]" checked value="1">
+                                      <span class="form-check-sign">
+                                        <span class="check"></span>
+                                      </span>
+                                    </label>
+                                  </div>
+                                </div>  
+                             </div>     
+                        </div>  
+      	             </div>
+      	           </div><!--div row-->
+      	           <br>
                   <div class="row">
                   	<div class="col-sm-6">
                   		<div class="row">
