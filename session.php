@@ -5,6 +5,7 @@ require_once 'conexion.php';
 
 $dbh = new Conexion();
 session_start();
+
 $user=$_POST["user"];
 $password=$_POST["password"];
 
