@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $factura = datosPDFFacturasVenta($html); 
                 $resultado=array(
                             "estado"=>$estado,
-                            "mensaje"=>"Factura Generada Correctamente", 
+                            "mensaje"=>"Factura Obtenida Correctamente", 
                             "factura64"=>$factura['base64'], 
                             "totalComponentes"=>1     
                             );            
@@ -50,13 +50,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
          }
         }else{
             $resultado=array("estado"=>4, 
-                            "mensaje"=>"Error: Credenciales Incorrectas");
+                            "mensaje"=>"Credenciales Incorrectas");
         }
             header('Content-type: application/json');
             echo json_encode($resultado);
 }else{
     $resp=array("estado"=>5, 
-                "mensaje"=>"No tiene acceso al WS");
+                "mensaje"=>"El acceso al WS es incorrecto");
     header('Content-type: application/json');
     echo json_encode($resp);
 }
