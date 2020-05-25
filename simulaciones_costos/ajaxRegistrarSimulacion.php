@@ -28,6 +28,7 @@ if(isset($_GET['nombre'])){
   $cantidad_modulos=$_GET['cantidad_modulos'];
   $monto_norma=$_GET['monto_norma'];
   $codPrecio=$_GET['precio'];
+  $tipoCurso=$_GET['tipo_curso'];
   $ibnorca=1;
   $cantidadAlumnos=obtenerPlantillaCostoAlumnos($plantilla_costo);
   $utilidadMin=obtenerPlantillaCostoUtilidad($plantilla_costo);
@@ -35,8 +36,8 @@ if(isset($_GET['nombre'])){
   $fecha= date("Y-m-d");
   $codSimCosto=obtenerCodigoSimCosto();
   $dbh = new Conexion();
-  $sqlInsert="INSERT INTO simulaciones_costos (codigo, nombre, fecha, cod_plantillacosto, cod_responsable,cod_precioplantilla,ibnorca,cantidad_alumnoslocal,utilidad_minimalocal,cantidad_cursosmes,cantidad_modulos,monto_norma,habilitado_norma) 
-  VALUES ('".$codSimCosto."','".$nombre."','".$fecha."', '".$plantilla_costo."', '".$globalUser."','".$codPrecio."','".$ibnorca."','".$cantidadAlumnos."','".$utilidadMin."','".$cantidadCursosMes."','".$cantidad_modulos."','".$monto_norma."',1)";
+  $sqlInsert="INSERT INTO simulaciones_costos (codigo, nombre, fecha, cod_plantillacosto, cod_responsable,cod_precioplantilla,ibnorca,cantidad_alumnoslocal,utilidad_minimalocal,cantidad_cursosmes,cantidad_modulos,monto_norma,habilitado_norma,cod_tipocurso) 
+  VALUES ('".$codSimCosto."','".$nombre."','".$fecha."', '".$plantilla_costo."', '".$globalUser."','".$codPrecio."','".$ibnorca."','".$cantidadAlumnos."','".$utilidadMin."','".$cantidadCursosMes."','".$cantidad_modulos."','".$monto_norma."',1,'".$tipoCurso."')";
   $stmtInsert = $dbh->prepare($sqlInsert);
   $stmtInsert->execute();
 
@@ -99,8 +100,8 @@ if(isset($_GET['nombre'])){
       $montoD=$rowDetallesPlan['monto_total'];
       $editD=$rowDetallesPlan['editado_alumno'];
       $dbhID = new Conexion();
-      $sqlID="INSERT INTO simulaciones_detalle (cod_simulacioncosto,cod_plantillacosto, cod_partidapresupuestaria, cod_cuenta,glosa,monto_unitario,cantidad,monto_total,cod_estadoreferencial,editado_alumno) 
-      VALUES ('".$codSimCosto."','".$codPC."','".$codPP."','".$codC."', '".$glosaD."','".$montoD."','1','".$montoD."',1,'".$editD."')";
+      $sqlID="INSERT INTO simulaciones_detalle (cod_simulacioncosto,cod_plantillacosto, cod_partidapresupuestaria, cod_cuenta,cod_tipo,glosa,monto_unitario,cantidad,monto_total,cod_estadoreferencial,editado_alumno) 
+      VALUES ('".$codSimCosto."','".$codPC."','".$codPP."','".$codC."',1, '".$glosaD."','".$montoD."','".$cantidadAlumnos."','".$montoD."',1,'".$editD."')";
       $stmtID = $dbhID->prepare($sqlID);
       $stmtID->execute();
      }
@@ -109,13 +110,14 @@ if(isset($_GET['nombre'])){
 
     $preciosPlan=obtenerListaPreciosPlantillaCosto($plantilla_costo,$codPrecio);
      while ($rowPrePlan = $preciosPlan->fetch(PDO::FETCH_ASSOC)) {
+      $codPrecioPropuestaCosto=obtenerCodigoPrecioCosto();
       $codCS=$rowPrePlan['codigo'];
       $venCS=$rowPrePlan['venta_local'];
       $veneS=$rowPrePlan['venta_externo'];
       $codPS=$rowPrePlan['cod_plantillacosto'];
       $dbhAU = new Conexion();
-      $sqlAU="INSERT INTO precios_simulacioncosto (venta_local, venta_externo,cod_simulacioncosto) 
-      VALUES ('".$venCS."','".$veneS."','".$codSimCosto."')";
+      $sqlAU="INSERT INTO precios_simulacioncosto (codigo,venta_local, venta_externo,cod_simulacioncosto) 
+      VALUES ('".$codPrecioPropuestaCosto."','".$venCS."','".$veneS."','".$codSimCosto."')";
       $stmtAU = $dbhAU->prepare($sqlAU);
       $stmtAU->execute();
 
@@ -130,6 +132,9 @@ if(isset($_GET['nombre'])){
          $stmtAUC = $dbhAUC->prepare($sqlAUC);
          $stmtAUC->execute();
       }
+      $sqlUpdate="UPDATE simulaciones_costos SET cod_precioplantilla=$codPrecioPropuestaCosto where codigo=$codSimCosto";
+      $stmtUpdate = $dbh->prepare($sqlUpdate);
+      $stmtUpdate->execute();
      }
   echo $codSimCosto;
 }

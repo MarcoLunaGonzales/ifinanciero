@@ -17,6 +17,8 @@ $partida=$_GET["partida"];
 $cuenta=$_GET["cuenta"];
 $habilitado=$_GET["habilitado"];
 $montoNorma=$_GET["monto_norma"];
+$cantidadFila=$_GET["cantidad_fila"];
+$unidadFila=$_GET["unidad_fila"];
 $habNorma=$_GET["habilitado_norma"];
 
 $sqlUpdateDetalleGlobal="UPDATE simulaciones_costos SET  monto_norma='$montoNorma',habilitado_norma='$habNorma' where codigo=$simulaciones";
@@ -25,7 +27,7 @@ $stmtUpdateDetalleGlobal->execute();
 
 
 
-$sqlUpdateDetalle="UPDATE simulaciones_detalle SET  monto_unitario='$monto',monto_total='$monto',habilitado=$habilitado where codigo=$codigo";
+$sqlUpdateDetalle="UPDATE simulaciones_detalle SET  monto_unitario='$monto',monto_total='$monto',habilitado=$habilitado,cantidad=$cantidadFila,cod_tipo=$unidadFila where codigo=$codigo";
 $stmtUpdateDetalle = $dbh->prepare($sqlUpdateDetalle);
 $stmtUpdateDetalle->execute();
 

@@ -203,22 +203,19 @@
                     <div class="tab-pane active" id="link111">
                       <form name="form2">
                      <input class="form-control" type="hidden" name="codGrupo" id="codGrupo"/>
+                     <input class="form-control" type="hidden" value="<?=$precioPresupuestado?>" name="codValor" id="codValor"/>
                      <div class="row">
                        <table class="table table-condensed table-bordered">
                          <tbody>
                            <tr class="bg-info text-white">
-                             <td>Cursos</td>
-                             <td>N&uacute;mero de Alumnos</td>
-                             <!--<td>Alumnos FI</td>-->
-                             <td>Utilidad M&iacute;nima</td>
-                             <!--<td>Ut Min FI</td>-->
+                             <td>IMPORTE PRESUPUESTADO SEC</td>
+                             <td>CURSOS</td>
+                             <td>CANTIDAD DE ALUMNOS</td>
                            </tr>                         
                            <tr>
+                            <td class="text-right small"><?=$precioPresupuestadoTabla?></td>
                              <td class="text-right small"><?=$cantidadCursosMesX?></td>
                              <td class="text-right small"><?=$alumnosLocalX?></td>
-                             <!--<td class="text-right small"><?=$alumnosExternoX?></td>-->
-                             <td class="text-right small"><?=$utilidadIbnorcaX?> %</td>
-                             <!--<td class="text-right small"><?=$utilidadFueraX?> %</td>-->
                            </tr>
                          </tbody>
                        </table>

@@ -135,7 +135,19 @@ if(isset($_GET['cod'])){
 						  		<input class="form-control" type="text" name="area" value="<?=$areaX?>" id="area" readonly/>
 							</div>
 				      	</div>
-				      	
+				      	<?php 
+				      	if($codAreaX==13){
+				      		$codOficina=0;
+				      		if(obtenerValorConfiguracion(52)!=1){
+				      			$codOficina=$codUnidadX;
+				      		}
+                           $precioPresupuestado=number_format(obtenerPresupuestoEjecucionPorArea($codOficina,$codAreaX,$globalNombreGestion,12)['presupuesto'], 0, '.', '');
+                           $precioPresupuestadoTabla=number_format(obtenerPresupuestoEjecucionPorArea($codOficina,$codAreaX,$globalNombreGestion,12)['presupuesto'], 0, '.', ',');
+                         }else{
+                          $precioPresupuestado=0;	
+                          $precioPresupuestadoTabla=0;
+                         }
+				      	?>
 				      </div>
 				      <div class="row">
 				      	
