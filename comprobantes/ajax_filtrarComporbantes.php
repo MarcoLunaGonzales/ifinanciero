@@ -18,6 +18,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $globalGestion=$_SESSION['globalNombreGestion'];
 $globalUnidad=$_SESSION["globalUnidad"];
 $globalArea=$_SESSION["globalArea"];
+$globalMesTrabajo=$_SESSION['globalMes'];
 
 
 $codigo_tipo=$_GET['codigo'];
@@ -30,20 +31,8 @@ $codigo_tipo=$_GET['codigo'];
 $sql="SELECT (select u.abreviatura from unidades_organizacionales u where u.codigo=c.cod_unidadorganizacional)unidad, c.cod_gestion, 
   (select m.nombre from monedas m where m.codigo=c.cod_moneda)moneda, 
   (select t.abreviatura from tipos_comprobante t where t.codigo=c.cod_tipocomprobante)tipo_comprobante, c.fecha, c.numero,c.codigo, c.glosa,ec.nombre,c.cod_estadocomprobante
-  from comprobantes c join estados_comprobantes ec on c.cod_estadocomprobante=ec.codigo where c.cod_estadocomprobante!=2 ";  
+  from comprobantes c join estados_comprobantes ec on c.cod_estadocomprobante=ec.codigo where c.cod_estadocomprobante!=2 and MONTH(c.fecha)='$globalMesTrabajo' ";  
 
-// if($cod_uo!=""){
-//   $sql.=" and c.cod_unidadorganizacional in ($cod_uo)";
-// }
-// if($tipo!=""){
-//   $sql.=" and c.cod_tipocomprobante in ($tipo)";  
-// }
-// if($fechaI!="" && $fechaF!=""){
-//   $sql.=" and c.fecha BETWEEN '$fechaI' and '$fechaF'"; 
-// }
-// if($glosa!=""){
-//   $sql.=" and c.glosa like '%$glosa%'";
-// }
   $sql.=" and c.cod_tipocomprobante in ($codigo_tipo)";
 $sql.=" and c.cod_unidadorganizacional='$globalUnidad' ";
 $sql.=" and c.cod_gestion='$globalGestion' order by c.fecha desc, c.numero desc, unidad, tipo_comprobante limit 100";

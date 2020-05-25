@@ -466,8 +466,7 @@ $stmt->execute();
 						
 						$idFila=1;$totaldebDet=0;$totalhabDet=0;
 						while ($row = $detalle->fetch(PDO::FETCH_ASSOC)) {
-							?>
-							<?php
+
 							$codDet=$row['cod_det'];
 							$unidadDet=$row['cod_unidadorganizacional'];
 							$areaDet=$row['cod_area'];
@@ -588,9 +587,9 @@ $stmt->execute();
 			  	                        }
 			  	                     }
 			  	                     if($existeAux==0){
-                                       ?><script>setBusquedaCuenta('<?=$codigoCuenta;?>','<?=$numeroCuenta;?>','<?=$nombreCuenta;?>','0','');</script><?php		
+                                       ?><script>setBusquedaCuentaEdit('<?=$codigoCuenta;?>','<?=$numeroCuenta;?>','<?=$nombreCuenta;?>','0','');</script><?php		
 			  	                     }else{
-			  	                       ?><script>setBusquedaCuenta('<?=$codigoCuenta?>','<?=$numeroCuenta?>','<?=$nombreCuenta?>','<?=$codigoCuentaAux?>','<?=$nombreCuentaAux?>');</script><?php		
+			  	                       ?><script>setBusquedaCuentaEdit('<?=$codigoCuenta?>','<?=$numeroCuenta?>','<?=$nombreCuenta?>','<?=$codigoCuentaAux?>','<?=$nombreCuentaAux?>');</script><?php		
 			  	                     }
                                   ?>
 		                        <div class="col-sm-1">
