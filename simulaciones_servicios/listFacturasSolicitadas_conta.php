@@ -64,6 +64,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                           $codigo_fact_x=0;
                           $cont= array();
                           while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+                            $datos_FacManual=$codigo_facturacion."/";
                           switch ($codEstado) {
                             case 1:
                               $btnEstado="btn-default";
@@ -199,7 +200,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                     <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=2' target="_blank"><i class="material-icons" title="Imprimir Factura">print</i></a>                                    
                                     <?php 
                                   }else{// generar facturas
-                                    if($codEstado==4||$codEstado==3||$codEstado==5){ ?>
+                                    if($codEstado==3  ){ ?>
                                       <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir Solicitud">print</i></a>
                                       <?php
                                       ?>
@@ -208,24 +209,21 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                            <small><?=$estado;?></small>
                                         </button>
                                         <div class="dropdown-menu">
-                                          <?php                                        
-                                            if($codEstado==4){
-                                             ?><a href="<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion;?>&estado=1&admin=0" class="dropdown-item">
-                                                <i class="material-icons text-danger">clear</i> Cancelar solicitud
-                                             </a><?php 
-                                            }else{
+                                          <?php                                            
                                               if($codEstado==3){
                                                ?>
                                                <a href='#' title="Generar Factura" class="dropdown-item" onclick="alerts.showSwal('warning-message-and-confirmation-generar-factura','<?=$urlGenerarFacturas2;?>?codigo=<?=$codigo_facturacion;?>')">
                                                 <i class="material-icons text-success">receipt</i> Generar Factura
                                                </a>
+                                               <button title="Generar Factura Manual" class="dropdown-item" type="button" data-toggle="modal" data-target="#modalFacturaManual" onclick="agregaDatosFactManual('<?=$datos_FacManual;?>')">
+                                                <i class="material-icons text-success">receipt</i> Generar Factura Manual
+                                               </button>
                                                <?php      
                                               }
-                                            }
                                             ?>
                                             <a href='#' rel="tooltip" class="dropdown-item" onclick="filaTablaAGeneral($('#tablasA_registradas'),<?=$index?>,'<?=$stringCabecera?>')">
-                                                <i class="material-icons text-warning" title="Ver Detalle">settings_applications</i> Ver Detalle
-                                            </a>                                          
+                                              <i class="material-icons text-warning" title="Ver Detalle">settings_applications</i> Ver Detalle
+                                            </a>
                                         </div>
                                       </div>                           
                                       <?php 
@@ -235,7 +233,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                         // echo $cod_tipopago_cred; 
                                         if($cod_tipopago!=$cod_tipopago_cred){//si es distino a credito cambia de flujo
                                             ?>
-                                             <a title="Aceptar Solicitud" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=3&admin=0'  class="btn btn-default">
+                                             <a title="Aceptar Solicitud" href='#'  class="btn btn-default" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=3&admin=0')">
                                                <i class="material-icons">send</i>
                                              </a>
                                             <?php                                          
@@ -317,6 +315,57 @@ $globalAdmin=$_SESSION["globalAdmin"];
   </div>
 </div>
 <!--    end small modal -->
+<!-- FActura manual-->
+<div class="modal fade" id="modalFacturaManual" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h3 class="modal-title" id="myModalLabel"><b>Factura Manual</b></h3>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" name="cod_solicitudfacturacion_factmanual" id="cod_solicitudfacturacion_factmanual" value="0">
+        <div class="row">
+          <label class="col-sm-3 text-right col-form-label" style="color:#424242">Numero de Factura: </label>
+          <div class="col-sm-8">
+            <div class="form-group">
+              <input type="number" name="nro_factura" id="nro_factura" class="form-control">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <label class="col-sm-3 text-right col-form-label" style="color:#424242">Nro de Autorización: </label>
+          <div class="col-sm-8">
+            <div class="form-group">
+              <input type="number" name="nro_autorizacion" id="nro_autorizacion" class="form-control">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <label class="col-sm-3 text-right col-form-label" style="color:#424242">Llave Dosificación: </label>
+          <div class="col-sm-8">
+            <div class="form-group">
+              <input type="text" name="llave_dosificacion" id="llave_dosificacion" class="form-control">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <label class="col-sm-3 text-right col-form-label" style="color:#424242">Fecha Límite Emisión </label>
+          <div class="col-sm-8">
+            <div class="form-group">
+              <input type="date" name="fecha_limite_emision" id="fecha_limite_emision" class="form-control">
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" id="guardarFacturaManual" name="guardarFacturaManual">Agregar</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal"> Volver </button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <?php 
   $lan=sizeof($cont);
@@ -332,7 +381,36 @@ $globalAdmin=$_SESSION["globalAdmin"];
           }
       ?><script>detalle_tabla_general.push(detalle_fac);</script><?php                    
   }
-  ?>
+?>
 
+<!-- para la factura manual -->
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('#guardarFacturaManual').click(function(){    
+      cod_solicitudfacturacion_factmanual=document.getElementById("cod_solicitudfacturacion_factmanual").value;
+      nro_factura=$('#nro_factura').val();
+      nro_autorizacion=$('#nro_autorizacion').val();
+      llave_dosificacion=$('#llave_dosificacion').val();
+      fecha_limite_emision=$('#fecha_limite_emision').val();
+      if(nro_factura==null || nro_factura<=0){
+        Swal.fire("Informativo!", "Por favor introduzca el Número de Factura.", "warning");
+      }else{
+        if(nro_autorizacion==null || nro_autorizacion<=0){
+          Swal.fire("Informativo!", "Por favor introduzca el Número de Autorización.", "warning");
+        }else{
+          if(llave_dosificacion==null || llave_dosificacion=='' || llave_dosificacion==' '){
+            Swal.fire("Informativo!", "Por favor introduzca la Llave de Dosificación.", "warning");
+          }else{
+            if(fecha_limite_emision==null || fecha_limite_emision=='' || fecha_limite_emision==' '){
+              Swal.fire("Informativo!", "Por favor introduzca la Fecha Límite de Emisión", "warning");
+            }else{
+              RegistrarFacturaManual(cod_solicitudfacturacion_factmanual,nro_factura,nro_autorizacion,llave_dosificacion,fecha_limite_emision);
+            }
+          }
+        }
+      }      
+    });    
+  });
+</script>
 
   

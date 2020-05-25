@@ -8967,7 +8967,7 @@ function activarInputMontoFilaServicio2(){
   calcularTotalFilaServicio2();
 }
 function calcularTotalFilaServicio2(){
-  console.log('entre');
+  // console.log('entre');
   var sumal=0;  
   var total= $("#modal_numeroservicio").val();
   var comprobante_auxiliar=0;
@@ -13374,6 +13374,106 @@ function guardarNuevoBeneficiario(){
   }
 }
 
+function saveDatosBancarizacion(){
+  var nro_contrato=$('#nro_contrato_modal').val();
+  var nro_cuenta_doc=$('#nro_cuenta_doc_modal').val();
+  var nit_entidad_financiera=$('#nit_entidad_financiera_modal').val();
+  var nro_transaccion=$('#nro_transaccion_modal').val();
+  var tipo_doc_pago=$('#tipo_doc_pago_modal').val();
+  var fecha_doc_pago=$('#fecha_doc_pago_modal').val();
+  if(nro_contrato==null || nro_contrato==''){
+    Swal.fire("Informativo!", "Por favor introduzca El número de contrato (de no existir contrato introduzca 0)", "warning");
+  }else{
+    if(nro_cuenta_doc==null || nro_cuenta_doc=='' || nro_cuenta_doc<0){
+      Swal.fire("Informativo!", "Por favor introduzca el Nro de cuenta del documento de pago.", "warning");
+    }else{
+      if(nit_entidad_financiera==null || nit_entidad_financiera=='' || nit_entidad_financiera<0){
+        Swal.fire("Informativo!", "Por favor introduzca el NIT de Entidad Financiera.", "warning");
+      }else{
+        if(nro_transaccion==null || nro_transaccion=='' || nro_transaccion<0){
+          Swal.fire("Informativo!", "Por favor introduzca Nro de Operación o Transaccion.", "warning");
+        }else{
+          if(tipo_doc_pago==null || tipo_doc_pago=='' || tipo_doc_pago<0){
+            Swal.fire("Informativo!", "Por favor introduzca Tipo de documento de pago.", "warning");
+          }else{
+            if(fecha_doc_pago==null || fecha_doc_pago==''){
+              Swal.fire("Informativo!", "Por favor seleccione la Fecha del doc. de Pago", "warning");
+            }else{
+              $('#nro_contrato').val(nro_contrato);
+              $('#nro_cuenta_doc').val(nro_cuenta_doc);
+              $('#nit_entidad_financiera').val(nit_entidad_financiera);
+              $('#nro_transaccion').val(nro_transaccion);
+              $('#tipo_doc_pago').val(tipo_doc_pago);
+              $('#fecha_doc_pago').val(fecha_doc_pago);
+              $('#modalBancarizacion').modal('hide');
+            }
+          }
+        }
+      }
+    }
+  }
+  if(total_porcentaje==100){
+    borrarItemsTipoPago(); //limpiamos el array de objeto para guardarlo nuevamente
+    var total_items=$('#total_items_tipopago').val();
+    for (var i=0;i<=(total_items-1);i++){
+      var tipopago={
+        codigo_tipopago: $('#codigo_tipopago'+i).val(),
+        monto_porcentaje: $('#monto_porcentaje_tipopago'+i).val(),
+        monto_bob: $('#monto_bob_tipopago'+i).val(),    
+      }
+      // console.log($('#monto_porcentaje_tipopago'+i).val());
+      // console.log(tipopago);
+      var monto_x=$('#monto_porcentaje_tipopago'+i).val();
+      if(monto_x!=null && monto_x!=0 && monto_x!=''){
+        itemTipoPagos_facturacion[0].push(tipopago);  
+      }
+    }  
+    $("#nfac").html(itemTipoPagos_facturacion[0].length);
+    $('#modalTipoPagoPorcentaje').modal('hide');
+    // for(var j = 0; j < itemTipoPagos_facturacion[0].length; j++){
+    //   var dato = Object.values(itemTipoPagos_facturacion[0][j]);
+    //   console.log("dato: "+dato);
+    //   // console.log("datos: "+dato[4]+" "+dato[7]+" "+dato[8]);    
+    // }
+  }else{
+    Swal.fire("Informativo!", "EL porcentaje de los montos difiere del 100%", "warning");
+  }   
+}
+
+function agregaDatosFactManual(datos){  
+  var d=datos.split('/');
+  document.getElementById("cod_solicitudfacturacion_factmanual").value=d[0];
+}
+function RegistrarFacturaManual(cod_solicitudfacturacion,nro_factura,nro_autorizacion,llave_dosificacion,fecha_limite_emision){
+  $.ajax({
+    type:"POST",
+    data:"cod_solicitudfacturacion="+cod_solicitudfacturacion+"&nro_factura="+nro_factura+"&nro_autorizacion="+nro_autorizacion+"&llave_dosificacion="+llave_dosificacion+"&fecha_limite_emision="+fecha_limite_emision,
+    url:"simulaciones_servicios/generarFacturaManual.php",
+    success:function(r){
+      if(r==1){
+        alerts.showSwal('success-message','index.php?opcion=listFacturasServicios_conta');
+      }else{
+        if(r==2){
+          Swal.fire("A ocurrido un error!", "Por favor verifique que los tipos de pago estén asociados a una cuenta.", "warning");
+        }else{
+          if(r==3){
+            Swal.fire("A ocurrido un error!", "Por favor verifique que las areas de ingreso estén asociadas a una cuenta.", "warning");
+          }else{
+            if(r==4){
+              Swal.fire("informativo!", "La factura ya fue generada.", "warning");
+            }else{
+              if(r==5){
+                Swal.fire("A ocurrido un error!", "Sucursal no encontrada.", "warning");
+              }else{
+                alerts.showSwal('error-message','index.php?opcion=listFacturasServicios_conta');
+              } 
+            } 
+          }  
+        }  
+      }
+         
+    }
+  });
 function editarPrecioSimulacionCostos(){
   if($("#modal_importeplanedit").is("[readonly]")){
     $("#modal_importeplanedit").removeAttr("readonly");
@@ -13381,7 +13481,6 @@ function editarPrecioSimulacionCostos(){
     $("#modal_importeplanedit").attr("readonly",true);
   }
 }
-
 function cambiarPrecioPlantilla(){
   if(!($("#modal_importeplanedit").is("[readonly]"))){
     $("#modal_importeplanedit").attr("readonly",true);

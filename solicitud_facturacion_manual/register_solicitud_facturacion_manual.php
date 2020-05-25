@@ -63,6 +63,16 @@ $contadorRegistros=0;
                     <?php 
                 }
                 ?>
+                <!-- si hubiese bancarizacion -->
+                <input type="hidden" name="nro_contrato" id="nro_contrato" value="0"/>
+                <input type="hidden" name="nro_cuenta_doc" id="nro_cuenta_doc" value="0"/>
+                <input type="hidden" name="nit_entidad_financiera" id="nit_entidad_financiera" value="0"/>
+                <input type="hidden" name="nro_transaccion" id="nro_transaccion" value="0">
+                <input type="hidden" name="tipo_doc_pago" id="tipo_doc_pago" value="0">
+                <input type="hidden" name="fecha_doc_pago" id="fecha_doc_pago" value="0">
+
+
+
                 <input type="hidden" name="Codigo_alterno" id="Codigo_alterno" value="<?=$Codigo_alterno;?>"/>
                 <input type="hidden" name="cod_simulacion" id="cod_simulacion" value="<?=$cod_simulacion;?>"/>
                 <input type="hidden" name="cod_facturacion" id="cod_facturacion" value="<?=$cod_facturacion;?>"/>
@@ -349,11 +359,7 @@ $contadorRegistros=0;
                                         <label class="col-sm-1 col-form-label" style="color:#ff9c14">Importe(BOB)</label>
                                         <label class="col-sm-2 col-form-label" style="color:#ff9c14">Glosa</label>
                                         <label class="col-sm-1 col-form-label" style="color:#ff9c14">Eliminar</label>
-
-
                                     </div>
-                                    
-
                                     <div id="div<?=$index;?>">  
                                         <div class="h-divider">
                                         
@@ -421,12 +427,13 @@ $contadorRegistros=0;
 
 <script type="text/javascript">
 function valida(f) {
-
     //verificamos monto mayor a 50
-    if(f.elements["monto_total_a"].value>=50000)
-    {    
+    var nro_cuenta_doc=$("#nro_cuenta_doc").val();//monto total de items
+    if(f.elements["monto_total_a"].value>=50000 && nro_cuenta_doc==0)
+    {   
+        var msg = "El monto total supera el límite de bancarización. Por favor debe llenar el siguiente formulario...\n";
+        $('#modalBancarizacion').modal('show');
         ok = false;
-        var msg = "Monto Mayor a 50000, llenar formulario de bancarización...\n";  
     }else{
         var ok = true;
         var msg = "El monto Total no debe ser '0' o 'negativo', Habilite los Items que desee facturar...\n";  
@@ -440,7 +447,6 @@ function valida(f) {
         }
         
     }
-    
     if(ok == false)Swal.fire("Informativo!",msg, "warning");
     return ok;
 }

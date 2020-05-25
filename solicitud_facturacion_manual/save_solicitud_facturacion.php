@@ -25,7 +25,8 @@ try {
     $nit = $_POST["nit"];
     $observaciones = $_POST["observaciones"];
     $observaciones_2 = $_POST["observaciones_2"];
-    $persona_contacto = $_POST["persona_contacto"];
+    
+    if(isset($_POST["persona_contacto"]))$persona_contacto = $_POST["persona_contacto"];
     // $modal_totalmontos = $_POST["modal_totalmontos"];
     // $modal_numeroservicio = $_POST["modal_numeroservicio"];
     if(isset($_POST["cod_tipoobjeto"])){
