@@ -13474,6 +13474,7 @@ function RegistrarFacturaManual(cod_solicitudfacturacion,nro_factura,nro_autoriz
          
     }
   });
+}
 function editarPrecioSimulacionCostos(){
   if($("#modal_importeplanedit").is("[readonly]")){
     $("#modal_importeplanedit").removeAttr("readonly");
