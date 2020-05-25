@@ -20,7 +20,7 @@ if(isset($_GET['s'])){
   $sqlAreas="and p.cod_area=".$codigoArea;
 }
 
- $query="SELECT s.*,p.cod_area FROM simulaciones_costos s join plantillas_costo p on p.codigo=s.cod_plantillacosto  where s.cod_responsable=$usuario and s.cod_estadosimulacion=5 $sqlAreas order by s.codigo";
+ $query="SELECT s.*,p.cod_area FROM simulaciones_costos s join plantillas_costo p on p.codigo=s.cod_plantillacosto  where s.cod_responsable=$usuario and s.cod_estadosimulacion=3 $sqlAreas order by s.codigo";
  $query2="SELECT s.*,p.cod_area,c.nombre as cliente FROM simulaciones_servicios s join plantillas_servicios p on p.codigo=s.cod_plantillaservicio join clientes c on c.codigo=s.cod_cliente where s.cod_responsable=$usuario and s.cod_estadosimulacion=5 $sqlAreas order by s.codigo"; //cod_responsable=$usuario and
   ?>
    <!--<label class="col-sm-3 col-form-label">Propuesta :</label>-->

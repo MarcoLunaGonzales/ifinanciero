@@ -7164,6 +7164,7 @@ function editarDatosPlantilla(){
   $("#modal_alfuera").val($("#alumnos_plan_fuera").val());
   $("#modal_importeplan").val($("#cod_precioplantilla").val());
 
+
   if($("#modal_productos").length){ 
      $("#modal_productos").val($("#productos_sim").val());
      $("#modal_productos").tagsinput('removeAll');
@@ -7194,6 +7195,9 @@ function editarDatosPlantillaSec(){
   $("#modal_alfuera").val($("#alumnos_plan_fuera").val());
   $("#modal_importeplan").val($("#cod_precioplantilla").val());
 
+  if($("#modal_importeplanedit").length>0){
+    $("#modal_importeplanedit").val(redondeo(parseFloat($('#modal_importeplan option:selected').text())));
+  }
   $('.selectpicker').selectpicker("refresh");
  $("#modalEditPlantilla").modal("show"); 
 }
@@ -7205,9 +7209,10 @@ function guardarDatosPlantilla(btn_id){
    var ut_f=$("#modal_utifuera").val();
    var al_i=$("#modal_alibnorca").val();
    var al_f=$("#modal_alfuera").val(); 
-   var precio_p=$("#modal_importeplan").val(); 
+   var precio_p=$("#modal_importeplan").val();
+   var precio_pedit=$("#modal_importeplanedit").val();  
 
-   var parametros={"cod_sim":cod_sim,"codigo":codigo_p,"ut_i":ut_i,"ut_f":ut_f,"al_i":al_i,"al_f":al_f,"precio_p":precio_p};
+   var parametros={"cod_sim":cod_sim,"codigo":codigo_p,"ut_i":ut_i,"ut_f":ut_f,"al_i":al_i,"al_f":al_f,"precio_p":precio_p,"precio_pedit":precio_pedit};
 
   if(!(ut_i==""||ut_f==""||al_i==""||al_f=="")){
   $("#"+btn_id).attr("disabled",true); 
@@ -13431,4 +13436,16 @@ function RegistrarFacturaManual(cod_solicitudfacturacion,nro_factura,nro_autoriz
          
     }
   });
+function editarPrecioSimulacionCostos(){
+  if($("#modal_importeplanedit").is("[readonly]")){
+    $("#modal_importeplanedit").removeAttr("readonly");
+  }else{
+    $("#modal_importeplanedit").attr("readonly",true);
+  }
+}
+function cambiarPrecioPlantilla(){
+  if(!($("#modal_importeplanedit").is("[readonly]"))){
+    $("#modal_importeplanedit").attr("readonly",true);
+  }
+  $("#modal_importeplanedit").val(redondeo(parseFloat($('#modal_importeplan option:selected').text())));
 }
