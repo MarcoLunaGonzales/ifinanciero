@@ -93,13 +93,13 @@ try{
             if($cod_sucursal==null || $cod_sucursal==''){//sucursal no encontrado?>
                 <script>
                     alert("A ocurrido un error: Por favor verifique la existencia de sucursales.");
-                </script>
-            <?php }else{
+                </script><?php 
+            }else{
                 // echo "uo:",$cod_unidadorganizacional."<br>";
                 $fecha_actual=date('Y-m-d');
                 $fecha_actual_cH=date('Y-m-d H:i:s');
                 $sqlInfo="SELECT d.codigo,d.nro_autorizacion, d.llave_dosificacion,d.fecha_limite_emision
-                from dosificaciones_facturas d where d.cod_sucursal='$cod_sucursal' order by codigo";
+                from dosificaciones_facturas d where d.cod_sucursal='$cod_sucursal' and d.fecha_limite_emision>='$fecha_actual' order by codigo";
                 $stmtInfo = $dbh->prepare($sqlInfo);
                 // echo $sqlInfo;
                 $stmtInfo->execute();
@@ -169,33 +169,31 @@ try{
                         $stmtInsertSoliFactDet = $dbh->prepare("INSERT INTO facturas_ventadetalle(cod_facturaventa,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_bob,suscripcionId) 
                         values ('$cod_facturaVenta','$cod_claservicio_x','$cantidad_x','$precio_x','$descripcion_alterna_x',$descuento_bob_x,0)");
                         $flagSuccess=$stmtInsertSoliFactDet->execute();
-                        if(isset($_GET['q'])){
-                          $q=$_GET['q'];
-                          $s=$_GET['s'];
-                          $u=$_GET['u'];
-                          $v=$_GET['v'];
-                          header('Location: ../simulaciones_servicios/generarFacturasPrint.php?codigo='.$codigo.'&tipo=2'."&q=".$q."&s=".$s."&u=".$u."&v=".$v);
-                        }else{
-                          header('Location: ../simulaciones_servicios/generarFacturasPrint.php?codigo='.$codigo.'&tipo=2');
-                        }
-                        
                       }  
                     }
-
-                  $sqlUpdate="UPDATE solicitudes_facturacion SET  cod_estadosolicitudfacturacion=5 where codigo=$codigo";
-                  $stmtUpdate = $dbh->prepare($sqlUpdate);
-                  $flagSuccess=$stmtUpdate->execute(); 
-                  //enviar propuestas para la actualizacion de ibnorca
-                  $fechaHoraActual=date("Y-m-d H:i:s");
-                  $idTipoObjeto=2709;
-                  $idObjeto=2729; //regristado
-                  $obs="Solicitud Facturada";
-                 if(isset($_GET['u'])){
+                    $sqlUpdate="UPDATE solicitudes_facturacion SET  cod_estadosolicitudfacturacion=5 where codigo=$codigo";
+                    $stmtUpdate = $dbh->prepare($sqlUpdate);
+                    $flagSuccess=$stmtUpdate->execute(); 
+                    //enviar propuestas para la actualizacion de ibnorca
+                    $fechaHoraActual=date("Y-m-d H:i:s");
+                    $idTipoObjeto=2709;
+                    $idObjeto=2729; //regristado
+                    $obs="Solicitud Facturada";
+                    if(isset($_GET['u'])){
                     $u=$_GET['u'];
-                    actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);
-                  }else{
-                    actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);
-                  } 
+                        actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);
+                    }else{
+                        actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);
+                    } 
+                    if(isset($_GET['q'])){
+                      $q=$_GET['q'];
+                      $s=$_GET['s'];
+                      $u=$_GET['u'];
+                      $v=$_GET['v'];
+                      header('Location: ../simulaciones_servicios/generarFacturasPrint.php?codigo='.$codigo.'&tipo=2'."&q=".$q."&s=".$s."&u=".$u."&v=".$v);
+                    }else{
+                      header('Location: ../simulaciones_servicios/generarFacturasPrint.php?codigo='.$codigo.'&tipo=2');
+                    }
                 }
             }
         }else{//ya se registro

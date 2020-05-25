@@ -2731,6 +2731,7 @@ function guardarSimulacionCosto(){
   var plantilla_costo=$("#plantilla_costo").val();
   var cantidad_modulos=$("#cantidad_modulos").val();
   var monto_norma=$("#monto_norma").val();
+  var tipo_curso=$("#tipo_curso").val();
   var ibnorca = 1;
   /*if( $("#ibnorca_check").is(':checked') ) {
       var ibnorca=1;
@@ -2740,7 +2741,7 @@ function guardarSimulacionCosto(){
   if(nombre==""||!(plantilla_costo>0)||cantidad_modulos==""||monto_norma==""){
    Swal.fire('Informativo!','Debe llenar los campos!','warning'); 
   }else{
-     var parametros={"monto_norma":monto_norma,"nombre":nombre,"plantilla_costo":plantilla_costo,"precio":precio,"ibnorca":ibnorca,"cantidad_modulos":cantidad_modulos};
+     var parametros={"tipo_curso":tipo_curso,"monto_norma":monto_norma,"nombre":nombre,"plantilla_costo":plantilla_costo,"precio":precio,"ibnorca":ibnorca,"cantidad_modulos":cantidad_modulos};
      $.ajax({
         type: "GET",
         dataType: 'html',
@@ -4887,7 +4888,7 @@ function activarInputMontoGenerico(matriz){
       }
   }
   var respu= matriz.split('RRR');
-  calcularTotalPartidaGenerico(respu[0],1);
+  calcularTotalPartidaGenerico(respu[0],2);
 }
 function activarInputMontoGenericoNorma(matriz){
   if(!($("#monto_norma"+matriz).is("[readonly]"))){
@@ -5499,7 +5500,7 @@ function calcularTotalPersonalServicioNuevo(anio,valor){
 }
 
 function calcularTotalPartidaGenerico(fila,valor){
-  var suma=0;
+  var suma=0; var sumal=0;
   var total= $("#numero_cuentas"+fila).val();
   var monto_anterior=parseFloat($("#monto_designado"+fila).val());
   for (var i=1;i<=(total-1);i++){
@@ -5507,19 +5508,20 @@ function calcularTotalPartidaGenerico(fila,valor){
     if(valor==1){
       suma+=parseFloat($("#monto_mod"+fila+"RRR"+i).val());
       if($("#cod_ibnorca").val()==1){
-         $("#monto_modal"+fila+"RRR"+i).val(redondeo(parseFloat($("#monto_mod"+fila+"RRR"+i).val())/parseInt($("#alumnos_plan").val())));
+         $("#monto_modal"+fila+"RRR"+i).val(redondeo(parseFloat($("#monto_mod"+fila+"RRR"+i).val())/parseInt($("#cantidad_monto_modal"+fila+"RRR"+i).val())));
        }else{
-          $("#monto_modal"+fila+"RRR"+i).val(redondeo(parseFloat($("#monto_mod"+fila+"RRR"+i).val())/parseInt($("#alumnos_plan_fuera").val())));
+          $("#monto_modal"+fila+"RRR"+i).val(redondeo(parseFloat($("#monto_mod"+fila+"RRR"+i).val())/parseInt($("#cantidad_monto_modal"+fila+"RRR"+i).val())));
        } 
       
     }else{
      if($("#cod_ibnorca").val()==1){
-         $("#monto_mod"+fila+"RRR"+i).val(redondeo(parseFloat($("#monto_modal"+fila+"RRR"+i).val())*parseInt($("#alumnos_plan").val())));
+         $("#monto_mod"+fila+"RRR"+i).val(redondeo(parseFloat($("#monto_modal"+fila+"RRR"+i).val())*parseInt($("#cantidad_monto_modal"+fila+"RRR"+i).val())));
        }else{
-          $("#monto_mod"+fila+"RRR"+i).val(redondeo(parseFloat($("#monto_modal"+fila+"RRR"+i).val())*parseInt($("#alumnos_plan_fuera").val())));
+          $("#monto_mod"+fila+"RRR"+i).val(redondeo(parseFloat($("#monto_modal"+fila+"RRR"+i).val())*parseInt($("#cantidad_monto_modal"+fila+"RRR"+i).val())));
        }
      suma+=parseFloat($("#monto_mod"+fila+"RRR"+i).val());  
     }
+    sumal+=parseFloat($("#monto_modal"+fila+"RRR"+i).val());
     }
    
   }
@@ -5530,10 +5532,10 @@ function calcularTotalPartidaGenerico(fila,valor){
   document.getElementById("monto_editable"+fila).value=result;
   $("#total_tabladetalle"+fila).text(result); 
   if($("#cod_ibnorca").val()==1){
-       $("#total_tabladetalleAl"+fila).text(redondeo(result/parseInt($("#alumnos_plan").val())));
+       $("#total_tabladetalleAl"+fila).text(redondeo(sumal));
      
        }else{
-       $("#total_tabladetalleAl"+fila).text(redondeo(result/parseInt($("#alumnos_plan").val())));
+       $("#total_tabladetalleAl"+fila).text(redondeo(sumal));
        } 
   if(result<monto_anterior){
     $("#monto_editable"+fila).addClass("text-danger");
@@ -5835,7 +5837,9 @@ function guardarCuentasSimulacionAjaxGenerico(ib){
       }
       var cuenta =$("#codigo_cuenta"+j+"RRR"+i).val();
       var simulacion =$("#codigo_fila"+j+"RRR"+i).val();
-      var parametros = {"habilitado_norma":habilitadoNorma,"monto_norma":montoNorma,"codigo":codigo,"monto":monto,"ibnorca":ib,"simulacion":simulacion,"simulaciones":simulaciones,"plantilla":plantilla,"partida":partida,"cuenta":cuenta,"habilitado":habilitado};
+      var cantidadFila =$("#cantidad_monto_modal"+j+"RRR"+i).val();
+      var unidadFila =$("#unidad_monto_modal"+j+"RRR"+i).val();
+      var parametros = {"cantidad_fila":cantidadFila,"unidad_fila":unidadFila,"habilitado_norma":habilitadoNorma,"monto_norma":montoNorma,"codigo":codigo,"monto":monto,"ibnorca":ib,"simulacion":simulacion,"simulaciones":simulaciones,"plantilla":plantilla,"partida":partida,"cuenta":cuenta,"habilitado":habilitado};
       $.ajax({
         type:"GET",
         data:parametros,
@@ -5885,9 +5889,9 @@ function cargarListaCostosDetalle(valor){
       var alumnos=$("#alumnos_plan_fuera").val();
     }
   if($("#cambio_moneda").length){
-    var parametros = {"simulacion":simulacion,"plantilla":plantilla,"tipo":tipo,"al":alumnos,"usd":$("#cambio_moneda").val(),"unidad_nombre":$("#unidad_plan").val(),"area_nombre":$("#area_plan").val()};
+    var parametros = {"simulacion":simulacion,"plantilla":plantilla,"tipo":tipo,"al":alumnos,"usd":$("#cambio_moneda").val(),"unidad_nombre":$("#unidad_plan").val(),"area_nombre":$("#area_plan").val(),"porcentaje_fijo":$("#porcentaje_fijo").val()};
   }else{
-    var parametros = {"simulacion":simulacion,"plantilla":plantilla,"tipo":tipo,"al":alumnos};
+    var parametros = {"simulacion":simulacion,"plantilla":plantilla,"tipo":tipo,"al":alumnos,"porcentaje_fijo":$("#porcentaje_fijo").val(),"unidad_nombre":$("#unidad_plan").val(),"area_nombre":$("#area_plan").val()};
   }  
       $.ajax({
         type:"GET",
@@ -5993,7 +5997,7 @@ function guardarCuentasSimulacionGenerico(ib){
   
   if((total-1)!=0){
     for (var i=1;i<=(total-1);i++){
-      if($("#monto_mod"+j+"RRR"+i).val()==""||$("#monto_modal"+j+"RRR"+i).val()==""){
+      if($("#monto_mod"+j+"RRR"+i).val()==""||$("#monto_modal"+j+"RRR"+i).val()==""||$("#cantidad_monto_modal"+j+"RRR"+i).val()==""||$("#cantidad_monto_modal"+j+"RRR"+i).val()==0){
         conta++
       }
       if($("#monto_mod"+j+"RRR"+i).is("[readonly]")){
@@ -7164,6 +7168,7 @@ function editarDatosPlantilla(){
   $("#modal_alfuera").val($("#alumnos_plan_fuera").val());
   $("#modal_importeplan").val($("#cod_precioplantilla").val());
 
+
   if($("#modal_productos").length){ 
      $("#modal_productos").val($("#productos_sim").val());
      $("#modal_productos").tagsinput('removeAll');
@@ -7194,6 +7199,9 @@ function editarDatosPlantillaSec(){
   $("#modal_alfuera").val($("#alumnos_plan_fuera").val());
   $("#modal_importeplan").val($("#cod_precioplantilla").val());
 
+  if($("#modal_importeplanedit").length>0){
+    $("#modal_importeplanedit").val(redondeo(parseFloat($('#modal_importeplan option:selected').text())));
+  }
   $('.selectpicker').selectpicker("refresh");
  $("#modalEditPlantilla").modal("show"); 
 }
@@ -7205,12 +7213,42 @@ function guardarDatosPlantilla(btn_id){
    var ut_f=$("#modal_utifuera").val();
    var al_i=$("#modal_alibnorca").val();
    var al_f=$("#modal_alfuera").val(); 
-   var precio_p=$("#modal_importeplan").val(); 
-
-   var parametros={"cod_sim":cod_sim,"codigo":codigo_p,"ut_i":ut_i,"ut_f":ut_f,"al_i":al_i,"al_f":al_f,"precio_p":precio_p};
+   var precio_p=$("#modal_importeplan").val();
+   var precio_pedit=$("#modal_importeplanedit").val();  
+   var precio_alternativo=$("#total_preciosimulacion").val();
+   var parametros={"cod_sim":cod_sim,"codigo":codigo_p,"ut_i":ut_i,"ut_f":ut_f,"al_i":al_i,"al_f":al_f,"precio_p":precio_p,"precio_pedit":precio_pedit,"precio_alternativo":precio_alternativo};
 
   if(!(ut_i==""||ut_f==""||al_i==""||al_f=="")){
-  $("#"+btn_id).attr("disabled",true); 
+    var cantidadFilas=$("#cantidad_filasprecios").val();
+    var error=0;
+    var mensajeError="";
+    for (var i = 1; i <= parseInt(cantidadFilas); i++) {
+      if($("#total_alumnosAAA"+i).length>0){
+         if($("#cantidad_alumnosAAA"+i).val()==""||$("#porcentaje_alumnosAAA"+i).val()==""||$("#monto_alumnosAAA"+i).val()==""){
+          mensajeError="Detalles Precio: No debe existir campos vacíos";
+          error=1;
+         }
+      }  
+    };
+    for (var i = 1; i <= parseInt(cantidadFilas); i++) {
+      if($("#total_alumnosAAA"+i).length>0){
+         if($("#cantidad_alumnosAAA"+i).val()<=0||$("#porcentaje_alumnosAAA"+i).val()<=0||$("#monto_alumnosAAA"+i).val()<=0){
+          mensajeError="Detalles Precio: No debe existir campos negativos o valores 0";
+          error=1;
+         }
+      }  
+    };
+    
+    for (var i = 1; i <= parseInt(cantidadFilas); i++) {
+      if($("#total_alumnosAAA"+i).length>0){
+         if($("#porcentaje_alumnosAAA"+i).val()>100){
+          mensajeError="Detalles Precio: No debe existir porcentajes Mayores a 100";
+          error=1;
+         }
+      }  
+    };
+   if(error==0){
+     $("#"+btn_id).attr("disabled",true); 
   $.ajax({
     url: "ajaxSaveDatosPlantilla.php",
     type: "GET",
@@ -7231,13 +7269,18 @@ function guardarDatosPlantilla(btn_id){
       $("#alumnos_plan_fuera").val(al_f);    
 
      $("#modalEditPlantilla").modal("hide");
-     $("#narch").addClass("estado");        
+     $("#narch").addClass("estado");
+      guardarPreciosDetalle();        
     },
     error: function (xhr, ajaxOptions, thrownError) {
      Swal.fire("Error de envio!", "Verifique los datos e intentelo de nuevo", "error");
       $("#"+btn_id).removeAttr("disabled"); 
     }
-  });    
+  }); 
+   }else{
+      Swal.fire("Informativo!", mensajeError, "warning");
+   }
+     
   }else{
     Swal.fire("Informativo!", "Debe llenar todos los campos", "warning");
   }
@@ -8924,7 +8967,7 @@ function activarInputMontoFilaServicio2(){
   calcularTotalFilaServicio2();
 }
 function calcularTotalFilaServicio2(){
-  console.log('entre');
+  // console.log('entre');
   var sumal=0;  
   var total= $("#modal_numeroservicio").val();
   var comprobante_auxiliar=0;
@@ -12470,7 +12513,7 @@ function tablaGeneral_areas_solFac(){
       }
       var cont_uo=verificamos_uo_areas(i);
       if(cont_uo>0){
-        row.append($('<td>').addClass('').html("<button type='button' class='btn btn-primary btn-round btn-fab btn-sm' data-toggle='modal' data-target='' onclick='agregarDatosModalUnidadFacturacion("+i+")'><i class='material-icons' title='Unidades Porcentaje'>list</i><span id='nfacUnidades"+i+"' class='count bg-warning'>"+div_contenedor_uo+"</span></button>"));
+        row.append($('<td>').addClass('').html("<button type='button' class='btn btn-primary btn-round btn-fab btn-sm' data-toggle='modal' data-target='' onclick='agregarDatosModalUnidadFacturacion("+i+")'><i class='material-icons' title='Unidades Porcentaje'>list</i><span id='nfacUnidades"+i+"' class='count bg-warning'>"+cont_uo+"</span></button>"));
         table.append(row);  
       }else{
         row.append($('<td>').addClass('').html("<button type='button' class='btn btn-primary btn-round btn-fab btn-sm' data-toggle='modal' data-target='' onclick='agregarDatosModalUnidadFacturacion("+i+")'><i class='material-icons' title='Unidades Porcentaje'>list</i><span id='nfacUnidades"+i+"' class='count bg-warning'></span></button>"));
@@ -12526,13 +12569,14 @@ function tablaGeneral_areas_solFacNormas(){
   var table = $('<table>').addClass('table table-bordered table-condensed table-sm');
   var titulos = $('<tr>').addClass('fondo-boton');
     titulos.append($('<th>').addClass('').text('#'));
-    titulos.append($('<th>').addClass('').text('Area'));
+    titulos.append($('<th width="50%">').addClass('').text('Area'));
     titulos.append($('<th>').addClass('').text('Porcentaje(%)'));    
     titulos.append($('<th>').addClass('').text('Monto(BOB)'));    
     titulos.append($('<th>').addClass('').text('OF'));    
     table.append(titulos);    
     for (var i = 0; i < itemAreas_facturacion_aux[0].length; i++) {
       var nombre_x=itemAreas_facturacion_aux[0][i].nombrex;
+      var abrev_x=itemAreas_facturacion_aux[0][i].abrevx;
       var cod_area_x=itemAreas_facturacion_aux[0][i].cod_area;
       var row = $('<tr>').addClass('');
       row.append($('<td>').addClass('').text(i+1));
@@ -12591,7 +12635,7 @@ function verificaExistenciaCodigoArea(codigo){
   return sw;
 }
 function verificamos_uo_areas(id){
-  var sw = -1;  
+  var sw = -1;
   var cont_item=itemUnidades_facturacion[id].length;
   if(cont_item>0){
     sw=cont_item;  
@@ -12652,8 +12696,9 @@ function calcularTotalFilaAreasModal(){
   $("#total_diferencia_bob_areas").val(number_format(diferencia_bob_areas,2));//con formato
 }
 function savePorcentajeAreas(){
-  var total_porcentaje=$('#total_monto_porcentaje_a_areas').val();
-  if(total_porcentaje==100){
+  var porcentaje_dif=$('#total_diferencia_porcentaje_areas').val();
+  var bob_dif=$('#total_diferencia_bob_areas').val();
+  if(porcentaje_dif==0 && bob_dif==0){
     borrarItemsAreas(); 
     var total_items=$('#total_items_areas').val();
     for (var i=0;i<=(total_items-1);i++){
@@ -12678,7 +12723,7 @@ function savePorcentajeAreas(){
     //   // console.log("datos: "+dato[4]+" "+dato[7]+" "+dato[8]);    
     // }
   }else{
-    Swal.fire("Informativo!", "EL porcentaje de los montos difiere del 100%", "warning");
+    Swal.fire("Informativo!", "Verifique porcentajes y montos por favor", "warning");
   }      
 }
 function borrarItemsAreas(){
@@ -12686,12 +12731,16 @@ function borrarItemsAreas(){
   var nfacAreas=[];itemAreas_facturacion.push(nfacAreas);
 }
 function agregarDatosModalUnidadFacturacion(id){    
+  var porcentaje_dif=$('#total_diferencia_porcentaje_areas').val();
+  var bob_dif=$('#total_diferencia_bob_areas').val();
+  // alert(porcentaje_dif+"-"+bob_dif);
   var porcentaje_area=$("#monto_porcentaje_areas"+id).val();    
   var monto_total=$("#monto_total_a").val();    
   var codigo_area=$("#codigo_areas"+id).val();
   if(porcentaje_area==null || porcentaje_area<0 || porcentaje_area==''){    
     Swal.fire("Informativo!", "Porcentaje de Area no Encontrada, por favor Introduzca Porcentajes!", "warning");
   }else{
+    if(porcentaje_dif==0 && bob_dif==0){
       $('#modalUnidadesPorcentaje').modal('show');
       //agregamos la cuenta si lo tuviese  
       var contenedor;  
@@ -12705,16 +12754,23 @@ function agregarDatosModalUnidadFacturacion(id){
           tablaGeneral_unidad_solFac(porcentaje_area,id);
         }
       }
-      ajax.send(null);      
+      ajax.send(null); 
+    }else{
+      Swal.fire("Informativo!", "Por favor, verifique que los porcentajes y montos estén correctamente!", "warning");     
+    }
+      
   }
 }
-function agregarDatosModalUnidadFacturacionNormas(id){    
+function agregarDatosModalUnidadFacturacionNormas(id){ 
+  var porcentaje_dif=$('#total_diferencia_porcentaje_areas').val();
+  var bob_dif=$('#total_diferencia_bob_areas').val();   
   var porcentaje_area=$("#monto_porcentaje_areas"+id).val();    
   var monto_total=$("#monto_total_a").val();    
   var codigo_area=$("#codigo_areas"+id).val();
   if(porcentaje_area==null || porcentaje_area<0 || porcentaje_area==''){    
     Swal.fire("Informativo!", "Porcentaje de Area no Encontrada, por favor Introduzca Porcentajes!", "warning");
   }else{
+    if(porcentaje_dif==0 && bob_dif==0){
       $('#modalUnidadesPorcentaje').modal('show');
       //agregamos la cuenta si lo tuviese  
       var contenedor;  
@@ -12728,7 +12784,10 @@ function agregarDatosModalUnidadFacturacionNormas(id){
           tablaGeneral_unidad_solFac(porcentaje_area,id);
         }
       }
-      ajax.send(null);      
+      ajax.send(null);
+    }else{
+      Swal.fire("Informativo!", "Por favor, verifique que los porcentajes y montos estén correctamente!", "warning");     
+    }
   }
 }
 function tablaGeneral_unidad_solFac(porcentaje_area,id){  
@@ -12839,9 +12898,10 @@ function calcularTotalFilaUnidadesModal(){
   $("#total_diferencia_bob_unidades").val(number_format(diferencia_bob_areas,2));//con formato
 }
 function savePorcentajeUnidades(){
-  var id_area=$('#id_area').val();
-  var total_porcentaje=$('#total_monto_porcentaje_a_unidades').val();
-  if(total_porcentaje==100){
+  var id_area=$('#id_area').val();  
+  var porcentaje_dif=$('#total_diferencia_porcentaje_unidades').val();
+  var bob_dif=$('#total_diferencia_bob_unidades').val();
+  if(porcentaje_dif==0 && bob_dif==0){
     // console.log("id: "+id_area);
     borrarItemsUnidades(id_area); 
     var total_items=$('#total_items_unidades').val();
@@ -12866,14 +12926,15 @@ function savePorcentajeUnidades(){
     //   // console.log("datos: "+dato[4]+" "+dato[7]+" "+dato[8]);    
     // }
   }else{
-    Swal.fire("Informativo!", "EL porcentaje de los montos difiere del 100%", "warning");
+    Swal.fire("Informativo!", "Verifique porcentajes y montos por favor.", "warning");
   }      
 }
 function borrarItemsUnidades(id){
   var cont=itemUnidades_facturacion[id].length;
   if(cont>0){
-    itemUnidades_facturacion.splice(id, 1);
-    //var nfacUnidades=[];itemUnidades_facturacion[id].push(nfacUnidades); 
+    var nfacUnidades=[];
+    itemUnidades_facturacion.splice(id,1,nfacUnidades);
+    // var nfacUnidades=[];itemUnidades_facturacion[id].push(nfacUnidades); 
   }
 }
 function verificaExistenciaCodigoUnidad(codigo,id){  
@@ -13311,4 +13372,213 @@ function guardarNuevoBeneficiario(){
     }
    });   
   }
+}
+
+function saveDatosBancarizacion(){
+  var nro_contrato=$('#nro_contrato_modal').val();
+  var nro_cuenta_doc=$('#nro_cuenta_doc_modal').val();
+  var nit_entidad_financiera=$('#nit_entidad_financiera_modal').val();
+  var nro_transaccion=$('#nro_transaccion_modal').val();
+  var tipo_doc_pago=$('#tipo_doc_pago_modal').val();
+  var fecha_doc_pago=$('#fecha_doc_pago_modal').val();
+  if(nro_contrato==null || nro_contrato==''){
+    Swal.fire("Informativo!", "Por favor introduzca El número de contrato (de no existir contrato introduzca 0)", "warning");
+  }else{
+    if(nro_cuenta_doc==null || nro_cuenta_doc=='' || nro_cuenta_doc<0){
+      Swal.fire("Informativo!", "Por favor introduzca el Nro de cuenta del documento de pago.", "warning");
+    }else{
+      if(nit_entidad_financiera==null || nit_entidad_financiera=='' || nit_entidad_financiera<0){
+        Swal.fire("Informativo!", "Por favor introduzca el NIT de Entidad Financiera.", "warning");
+      }else{
+        if(nro_transaccion==null || nro_transaccion=='' || nro_transaccion<0){
+          Swal.fire("Informativo!", "Por favor introduzca Nro de Operación o Transaccion.", "warning");
+        }else{
+          if(tipo_doc_pago==null || tipo_doc_pago=='' || tipo_doc_pago<0){
+            Swal.fire("Informativo!", "Por favor introduzca Tipo de documento de pago.", "warning");
+          }else{
+            if(fecha_doc_pago==null || fecha_doc_pago==''){
+              Swal.fire("Informativo!", "Por favor seleccione la Fecha del doc. de Pago", "warning");
+            }else{
+              $('#nro_contrato').val(nro_contrato);
+              $('#nro_cuenta_doc').val(nro_cuenta_doc);
+              $('#nit_entidad_financiera').val(nit_entidad_financiera);
+              $('#nro_transaccion').val(nro_transaccion);
+              $('#tipo_doc_pago').val(tipo_doc_pago);
+              $('#fecha_doc_pago').val(fecha_doc_pago);
+              $('#modalBancarizacion').modal('hide');
+            }
+          }
+        }
+      }
+    }
+  }
+  if(total_porcentaje==100){
+    borrarItemsTipoPago(); //limpiamos el array de objeto para guardarlo nuevamente
+    var total_items=$('#total_items_tipopago').val();
+    for (var i=0;i<=(total_items-1);i++){
+      var tipopago={
+        codigo_tipopago: $('#codigo_tipopago'+i).val(),
+        monto_porcentaje: $('#monto_porcentaje_tipopago'+i).val(),
+        monto_bob: $('#monto_bob_tipopago'+i).val(),    
+      }
+      // console.log($('#monto_porcentaje_tipopago'+i).val());
+      // console.log(tipopago);
+      var monto_x=$('#monto_porcentaje_tipopago'+i).val();
+      if(monto_x!=null && monto_x!=0 && monto_x!=''){
+        itemTipoPagos_facturacion[0].push(tipopago);  
+      }
+    }  
+    $("#nfac").html(itemTipoPagos_facturacion[0].length);
+    $('#modalTipoPagoPorcentaje').modal('hide');
+    // for(var j = 0; j < itemTipoPagos_facturacion[0].length; j++){
+    //   var dato = Object.values(itemTipoPagos_facturacion[0][j]);
+    //   console.log("dato: "+dato);
+    //   // console.log("datos: "+dato[4]+" "+dato[7]+" "+dato[8]);    
+    // }
+  }else{
+    Swal.fire("Informativo!", "EL porcentaje de los montos difiere del 100%", "warning");
+  }   
+}
+
+function agregaDatosFactManual(datos){  
+  var d=datos.split('/');
+  document.getElementById("cod_solicitudfacturacion_factmanual").value=d[0];
+}
+function RegistrarFacturaManual(cod_solicitudfacturacion,nro_factura,nro_autorizacion,llave_dosificacion,fecha_limite_emision){
+  $.ajax({
+    type:"POST",
+    data:"cod_solicitudfacturacion="+cod_solicitudfacturacion+"&nro_factura="+nro_factura+"&nro_autorizacion="+nro_autorizacion+"&llave_dosificacion="+llave_dosificacion+"&fecha_limite_emision="+fecha_limite_emision,
+    url:"simulaciones_servicios/generarFacturaManual.php",
+    success:function(r){
+      if(r==1){
+        alerts.showSwal('success-message','index.php?opcion=listFacturasServicios_conta');
+      }else{
+        if(r==2){
+          Swal.fire("A ocurrido un error!", "Por favor verifique que los tipos de pago estén asociados a una cuenta.", "warning");
+        }else{
+          if(r==3){
+            Swal.fire("A ocurrido un error!", "Por favor verifique que las areas de ingreso estén asociadas a una cuenta.", "warning");
+          }else{
+            if(r==4){
+              Swal.fire("informativo!", "La factura ya fue generada.", "warning");
+            }else{
+              if(r==5){
+                Swal.fire("A ocurrido un error!", "Sucursal no encontrada.", "warning");
+              }else{
+                alerts.showSwal('error-message','index.php?opcion=listFacturasServicios_conta');
+              } 
+            } 
+          }  
+        }  
+      }
+         
+    }
+  });
+}
+function editarPrecioSimulacionCostos(){
+  if($("#modal_importeplanedit").is("[readonly]")){
+    $("#modal_importeplanedit").removeAttr("readonly");
+  }else{
+    $("#modal_importeplanedit").attr("readonly",true);
+  }
+}
+function cambiarPrecioPlantilla(){
+  if(!($("#modal_importeplanedit").is("[readonly]"))){
+    $("#modal_importeplanedit").attr("readonly",true);
+  }
+  $("#modal_importeplanedit").val(redondeo(parseFloat($('#modal_importeplan option:selected').text())));
+  cargarPreciosDetalle($('#modal_importeplan').val());
+}
+
+
+function cargarPreciosDetalleSimulacionCosto(){
+  var codigoPlan = $("#modal_importeplan"+fila).val();
+  var parametros={"codigo":codigoPlan};
+  $.ajax({
+    type: "GET",
+    dataType: 'html',
+    url: "ajax_datos_bancarios_cuenta.php",
+    data: parametros,
+    success:  function (resp) {       
+      $(".mensaje").html(resp);
+    }
+  });  
+}
+
+
+function agregarFilaPreciosSimulacionCabecera(){
+  var precio = $("#modal_importeplanedit").val();
+  var num = parseInt($("#cantidad_filasprecios").val());
+  num++;  
+  var row = $('<tr>').addClass('').attr('id','fila_precios'+num);
+  row.append($('<td>').addClass('text-center').html('<input type="number" onkeyup="calcularPrecioTotal('+num+')" onkeydown="calcularPrecioTotal('+num+')" class="form-control" style="background-color:#E3CEF6;text-align: right" value="" placeholder="0" id="cantidad_alumnosAAA'+num+'" name="cantidad_alumnosAAA'+num+'">'));
+  row.append($('<td>').addClass('text-center').html('<input type="number" onkeyup="calcularPrecioPorcentaje('+num+')" onkeydown="calcularPrecioPorcentaje('+num+')" class="form-control" style="background-color:#E3CEF6;text-align: right" value="100" placeholder="00000" id="porcentaje_alumnosAAA'+num+'" name="porcentaje_alumnosAAA'+num+'">'));
+  row.append($('<td>').addClass('text-center').html('<input type="number" onkeyup="calcularPrecioTotal('+num+')" onkeydown="calcularPrecioTotal('+num+')" class="form-control" style="background-color:#E3CEF6;text-align: right" value="'+precio+'" placeholder="00000" id="monto_alumnosAAA'+num+'" name="monto_alumnosAAA'+num+'">'));
+  row.append($('<td>').addClass('text-center').html('<input type="number" readonly class="form-control" style="background-color:#E3CEF6;text-align: right" value="" placeholder="00000" id="total_alumnosAAA'+num+'" name="total_alumnosAAA'+num+'">')); 
+  row.append($('<td>').addClass('text-left').html('<a href="#" title="Quitar" class="btn btn-danger btn-round btn-sm btn-fab float-right" onClick="quitarElementoPrecios('+num+')"><i class="material-icons">delete_outline</i></a>'));
+  $("#modal_body_tabla_alumnos").append(row);
+  $("#cantidad_filasprecios").val(num);
+  calcularTotalesPrecios();
+}
+function quitarElementoPrecios(fila){
+  $("#fila_precios"+fila).remove();
+  calcularTotalesPrecios();
+}
+
+function calcularPrecioTotal(fila){
+  $("#total_alumnosAAA"+fila).val(redondeo($("#monto_alumnosAAA"+fila).val()*$("#cantidad_alumnosAAA"+fila).val()));
+  calcularTotalesPrecios();
+}
+function calcularPrecioPorcentaje(fila){
+  var precio = $("#modal_importeplanedit").val();
+  $("#monto_alumnosAAA"+fila).val(redondeo(($("#porcentaje_alumnosAAA"+fila).val()/100)*precio));
+  calcularPrecioTotal(fila);
+}
+function calcularTotalesPrecios(){
+  var cantidad=$("#cantidad_filasprecios").val();
+  var suma=0;
+  for (var i = 1; i <= parseInt(cantidad); i++) {
+    if($("#total_alumnosAAA"+i).length>0){
+      suma+=redondeo($("#total_alumnosAAA"+i).val());  
+    }  
+  };
+  $("#total_preciosimulacion").val(redondeo(suma));
+}
+
+function guardarPreciosDetalle(){
+  var codigo = $("#modal_importeplan").val();
+  var datos=[];
+  var cantidad=$("#cantidad_filasprecios").val();
+  for (var i = 1; i <= parseInt(cantidad); i++) {
+    if($("#total_alumnosAAA"+i).length>0){
+      datos.push({
+        "cantidad":$("#cantidad_alumnosAAA"+i).val(),
+        "porcentaje":$("#porcentaje_alumnosAAA"+i).val(),
+        "monto":$("#monto_alumnosAAA"+i).val(),
+      }); 
+    }  
+  };
+  var parametros={"codigo":codigo,"datos":JSON.stringify(datos)};
+  $.ajax({
+    type: "GET",
+    dataType: 'html',
+    url: "ajaxSavePreciosDetalle.php",
+    data: parametros,
+    success:  function (resp) {       
+      $(".mensaje").html(resp);
+    }
+  });  
+}
+
+function cargarPreciosDetalle(codigo){
+  var parametros={"codigo":codigo};
+  $.ajax({
+    type: "GET",
+    dataType: 'html',
+    url: "ajaxListPreciosDetalle.php",
+    data: parametros,
+    success:  function (resp) {       
+      $("#modal_body_tabla_alumnos").html(resp);
+    }
+  });  
 }

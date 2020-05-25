@@ -35,8 +35,7 @@ if(isset($_GET['cod'])){
 }else{
 	$codigo=0;
 }
-$mesConf=obtenerValorConfiguracion(6);
-$stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_externo from simulaciones_costos sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo join precios_plantillacosto pa on sc.cod_precioplantilla=pa.codigo where sc.cod_estadoreferencial=1 and sc.codigo='$codigo'");
+$stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_externo from simulaciones_costos sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo join precios_simulacioncosto pa on sc.cod_precioplantilla=pa.codigo where sc.cod_estadoreferencial=1 and sc.codigo='$codigo'");
 			$stmt1->execute();
 			$stmt1->bindColumn('codigo', $codigoX);
             $stmt1->bindColumn('nombre', $nombreX);
@@ -53,6 +52,8 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
             $stmt1->bindColumn('cantidad_modulos', $cantidadModuloX);
             $stmt1->bindColumn('monto_norma', $montoNormaX);
             $stmt1->bindColumn('habilitado_norma', $habilitadoNormaX);
+            $stmt1->bindColumn('cantidad_cursosmes', $cantidadCursosMesX);
+            $stmt1->bindColumn('cod_tipocurso', $codTipoCursoX);
 
       while ($row1 = $stmt1->fetch(PDO::FETCH_BOUND)) {
          //plantilla datos      
@@ -71,6 +72,12 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
             $stmt->bindColumn('utilidad_minimaexterno', $utilidadFueraX);
            
            $nombreSimulacion=$nombreX;
+           $mesConf=$cantidadCursosMesX;
+
+           $nombreTipoCurso=nameTipoCurso($codTipoCursoX);
+           $codigoPrecioSimulacion=$codPrecioPlan;
+           $ingresoAlternativo=obtenerPrecioAlternativoDetalle($codigoPrecioSimulacion);
+           $codigoSimulacionSuper=$codigoX;
       }
   if($ibnorcaC==1){
   	$checkIbnorca="checked";
@@ -193,10 +200,16 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
 							</div>
 				    </div>
           </div>
-           <div class="row">                
-          <div class="col-sm-4">
+           <div class="row">
+             <div class="col-sm-4">
               <div class="form-group">
-                  <label class="bmd-label-static">N&uacute;mero de Alumnos</label>
+                  <label class="bmd-label-static">Tipo Curso</label>
+                  <input class="form-control" type="text" name="tipo_curso" readonly value="<?=$nombreTipoCurso?>" id="tipo_curso"/>
+              </div>
+            </div>                
+          <div class="col-sm-2">
+              <div class="form-group">
+                  <label class="bmd-label-static">N. Alumnos</label>
                   <input class="form-control" type="text" name="alumnos_plan" readonly value="<?=$alumnosX?>" id="alumnos_plan"/>
               </div>
             </div>
@@ -206,9 +219,9 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
                   <input class="form-control" type="hidden" name="alumnos_plan_fuera" readonly value="<?=$alumnosExternoX?>" id="alumnos_plan_fuera"/>
               <!--</div>
             </div>-->
-            <div class="col-sm-4">
+            <div class="col-sm-2">
               <div class="form-group">
-                  <label class="bmd-label-static">Utilidad M&iacute;nima %</label>
+                  <label class="bmd-label-static">Ut. M&iacute;n %</label>
                   <input class="form-control" type="text" name="utilidad_minlocal" readonly value="<?=$utilidadIbnorcaX?>" id="utilidad_minlocal"/>
               </div>
             </div>
@@ -308,25 +321,30 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
 				//valores de la simulacion
 
                   //total desde la plantilla  
-                 $totalFijo=obtenerTotalesPlantilla($codigoPX,1,obtenerValorConfiguracion(6)); //tipo de costo 1:fijo,2:variable desde la plantilla
+                 $totalFijo=obtenerTotalesPlantilla($codigoPX,1,$mesConf); //tipo de costo 1:fijo,2:variable desde la plantilla
                   //total variable desde la plantilla
                  //$totalVariable=obtenerTotalesPlantilla($codigoPX,2,18);
                  //total variable desde simulacion cuentas
                   $totalVariable=obtenerTotalesSimulacion($codigo);
-                  //$alumnosX=round((100*($totalFijo[2]*(0.87+($iva/100))))/((100*(($precioLocalX*(1-($it/100)))-($totalVariable[2]*(1+($iva/100)))))-($utilidadIbnorcaX*$precioLocalX)));  
+                  //$alumnosX=round((100*($totalFijoPlan*(0.87+($iva/100))))/((100*(($precioLocalX*(1-($it/100)))-($totalVariable[2]*(1+($iva/100)))))-($utilidadIbnorcaX*$precioLocalX)));  
                 
-               // $alumnosX=($utilidadIbnorcaX+($totalFijo[2]+))
-                  
+               // $alumnosX=($utilidadIbnorcaX+($totalFijoPlan+))
+                 $precioRegistrado=obtenerPrecioRegistradoPlantillaCosto($codigoPX);
+                 $porcentPrecios=(($precioLocalX*$alumnosX)*100)/$precioRegistrado;
+                 $totalFijoPlan=$totalFijo[0]*($porcentPrecios/100);
+                 $totalFijoPlanModulos=$totalFijoPlan*$cantidadModuloX;
+
                   //
                   /*$il=$precioLocalX*$alumnosX; 
-                  $uti=$il-((($iva+$it)/100)*$il)-$totalFijo[2]-($totalVariable[2]);
+                  $uti=$il-((($iva+$it)/100)*$il)-$totalFijoPlan-($totalVariable[2]);
                   $porl=($uti*100)/$il;*/
                   //
-                  $alumnosRecoX=ceil((100*(-$totalFijo[2]-$totalVariable[2]))/(($utilidadIbnorcaX*$precioLocalX)-(100*$precioLocalX)+(($iva+$it)*$precioLocalX)));                    
+                  $alumnosRecoX=ceil((100*(-$totalFijoPlan-$totalVariable[2]))/(($utilidadIbnorcaX*$precioLocalX)-(100*$precioLocalX)+(($iva+$it)*$precioLocalX)));                    
                   //if($alumnosX)
-                 if($habilitadoNormaX==1){
+                 /*if($habilitadoNormaX==1){
                   $totalVariable[2]=$totalVariable[2]+$montoNormaX;
-                 } 
+                 } */
+
                 $totalVariable[2]=$totalVariable[2]/$alumnosX;
                 $totalVariable[3]=$totalVariable[3]/$alumnosExternoX;
                  //calcular cantidad alumnos si no esta registrado
@@ -351,7 +369,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
                  }
 
                  //cambios para la nueva acortar la simulacion 
-                 $utilidadNetaLocal=$ingresoLocal-((($iva+$it)/100)*$ingresoLocal)-$totalFijo[2]-($totalVariable[2]*$alumnosX);
+                 $utilidadNetaLocal=$ingresoLocal-((($iva+$it)/100)*$ingresoLocal)-$totalFijoPlan-($totalVariable[2]*$alumnosX);
                  $utilidadNetaExterno=$ingresoExterno-((($iva+$it)/100)*$ingresoExterno)-$totalFijo[3]-($totalVariable[3]*$alumnosExternoX);
 
                  $pUtilidadLocal=($utilidadNetaLocal*100)/$ingresoLocal;
@@ -398,6 +416,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
 				<input type="hidden" id="cantidad_alibnorca" name="cantidad_alibnorca" readonly value="<?=$alumnosX?>">
 				<input type="hidden" id="cantidad_alfuera" name="cantidad_alfuera" readonly value="<?=$alumnosExternoX?>">
 				<input type="hidden" id="aprobado" name="aprobado" readonly value="<?=$codEstadoSimulacion?>">
+        <input type="hidden" id="porcentaje_fijo" name="porcentaje_fijo" value="<?=$porcentPrecios?>">
         <a href="#" title="Editar Variables de Costo" onclick="modificarMontos()" class="btn btn-sm btn-danger btn-fab"><i class="material-icons">edit</i></a>  
            <a href="#" title="Listar Detalle Costo Fijo" onclick="listarCostosFijos()" class="btn btn-sm btn-info"><i class="material-icons">list</i> CF</a>
            <a href="#" title="Listar Detalle Costo Variable" onclick="listarCostosVaribles()" class="btn btn-sm btn-info"><i class="material-icons">list</i> CV</a>   
@@ -412,7 +431,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
 								</tr>
 								<tr>
 									<td class="text-left small bg-table-primary text-white">COSTO FIJO TOTAL</td>
-                  <td class="text-right font-weight-bold"><?=number_format($totalFijo[2], 2, '.', ',')?></td>
+                  <td class="text-right font-weight-bold"><?=number_format($totalFijoPlan, 2, '.', ',')?></td>
 								</tr>
 								<tr>
                   <td class="text-left small bg-table-primary text-white">COSTO VARIABLE UNITARIO</td>
@@ -436,7 +455,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
                   <td class="text-right font-weight-bold"><?=$alumnosRecoX?></td>
                 </tr>
                 <?php
-                $puntoEquilibrio=($totalFijo[2]/($precioLocalX-$totalVariable[2]));
+                $puntoEquilibrio=($totalFijoPlan/($precioLocalX-$totalVariable[2]));
                  ?>
                 <tr class="bg-danger text-white">
                   <td class="text-left small">PUNTO DE EQUILIBRIO FINANCIERO</td>
@@ -455,7 +474,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
                 </tr>
                 <tr>
                   <td class="text-left small bg-table-primary text-white">COSTO FIJO TOTAL</td>
-                  <td class="text-right font-weight-bold"><?=number_format($totalFijo[2], 2, '.', ',')?></td>
+                  <td class="text-right font-weight-bold"><?=number_format($totalFijoPlan, 2, '.', ',')?></td>
                 </tr>
                 <tr>
                   <td class="text-left small bg-table-primary text-white">COSTO VARIABLE TOTAL</td>
@@ -489,7 +508,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
             </table>
            </div>
           <div class="col-sm-5 bg-blanco2">
-            <p class="font-weight-bold float-left">DATOS DEL CALCULO</p>
+            <p class="font-weight-bold float-left">DATOS DEL CALCULO x MODULO</p>
             <img src="../assets/img/f_abajo2.gif" alt="" height="30px" class="float-right">
 						<table class="table table-bordered table-condensed">
 							<thead>
@@ -506,8 +525,8 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
                 </tr>
                 <tr>
                   <td class="text-left small bg-table-primary2 text-white">TOTAL COSTO FIJO</td>
-                  <td class="text-right font-weight-bold"><?=number_format($totalFijo[2], 2, '.', ',')?></td>
-                  <td class="text-right font-weight-bold"><?=number_format(($totalFijo[2]/$ingresoLocal)*100, 2, '.', ',')?> %</td>
+                  <td class="text-right font-weight-bold"><?=number_format($totalFijoPlan, 2, '.', ',')?></td>
+                  <td class="text-right font-weight-bold"><?=number_format(($totalFijoPlan/$ingresoLocal)*100, 2, '.', ',')?> %</td>
                 </tr>
                 <tr>
                   <td class="text-left small bg-table-primary2 text-white">TOTAL COSTO VARIABLE</td>
@@ -531,7 +550,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
 					</div>	
 					</div>
 				  </div>
-          <div class="col-sm-5 bg-blanco2">
+          <div class="col-sm-5 bg-blanco2 div-center">
             <p class="font-weight-bold float-left">DATOS DEL CALCULO PARA <?=$cantidadModuloX?> <?php if($cantidadModuloX>1){ echo "MODULOS";}else{ echo "MODULO";} ?></p>
             <img src="../assets/img/f_abajo2.gif" alt="" height="30px" class="float-right">
             <table class="table table-bordered table-condensed">
@@ -554,8 +573,8 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
                 </tr>
                 <tr>
                   <td class="text-left small bg-table-primary2 text-white">TOTAL COSTO FIJO</td>
-                  <td class="text-right font-weight-bold"><?=number_format($totalFijo[2]*$cantidadModuloX, 2, '.', ',')?></td>
-                  <td class="text-right font-weight-bold"><?=number_format((($totalFijo[2]*$cantidadModuloX)/($ingresoLocal*$cantidadModuloX))*100, 2, '.', ',')?> %</td>
+                  <td class="text-right font-weight-bold"><?=number_format($totalFijoPlan*$cantidadModuloX, 2, '.', ',')?></td>
+                  <td class="text-right font-weight-bold"><?=number_format((($totalFijoPlan*$cantidadModuloX)/($ingresoLocal*$cantidadModuloX))*100, 2, '.', ',')?> %</td>
                 </tr>
                 <tr>
                   <td class="text-left small bg-table-primary2 text-white">TOTAL COSTO VARIABLE</td>
@@ -574,14 +593,15 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
                 </tr>
               </tbody>
             </table>
-          <div class="row div-center">
-				  	<div class="card-footer fixed-bottom">
+          
+			 </div>
+       <div class="row div-center">
+            <div class="card-footer fixed-bottom">
             
             <a onclick="guardarSimulacion()" class="btn btn-success text-white"><i class="material-icons">send</i> Enviar Propuesta</a>
-				  	<a href="../<?=$urlList;?>" class="btn btn-danger">Volver</a> 
+            <a href="../<?=$urlList;?>" class="btn btn-danger">Volver</a> 
             </div>
-				 </div>
-			 </div>
+         </div>
       </div>
     </div>
 	</div>

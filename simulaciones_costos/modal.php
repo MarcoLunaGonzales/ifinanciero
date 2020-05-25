@@ -81,7 +81,7 @@
 
 <!-- small modal -->
 <div class="modal fade modal-arriba modal-primary" id="modalSimulacionCuentas" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg col-sm-12">
+  <div class="modal-dialog modal-xl col-sm-12">
     <div class="modal-content card">
                 <div class="card-header card-header-danger card-header-text">
                   <div class="card-text">
@@ -175,7 +175,7 @@
     <div class="modal-content card">
                <div class="card-header card-header-info card-header-text">
                   <div class="card-text">
-                    <h4>Editar Plantilla</h4>
+                    <h4>Editar Propuesta</h4>
                   </div>
                   <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
                     <i class="material-icons">close</i>
@@ -217,9 +217,9 @@
                        <label class="col-sm-3 col-form-label">Precio</label>
                        <div class="col-sm-8">
                         <div class="form-group">
-                             <select class="selectpicker form-control" name="modal_importeplan" id="modal_importeplan" data-style="btn btn-info">
+                             <select class="selectpicker form-control form-control-sm" name="modal_importeplan" id="modal_importeplan" onchange="cambiarPrecioPlantilla()" data-style="btn btn-info">
                                <?php 
-                               $queryPr="SELECT * FROM precios_plantillacosto where cod_plantillacosto=$codigoPX order by codigo";
+                               $queryPr="SELECT * FROM precios_simulacioncosto where cod_simulacioncosto=$codigo order by codigo";
                                $stmt = $dbh->prepare($queryPr);
                                $stmt->execute();
                                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -232,7 +232,84 @@
                              </select>
                          </div>
                         </div>
+
                       </div>
+                      <div class="row">
+                        <label class="col-sm-3 col-form-label">BOB</label>
+                       <div class="col-sm-4">
+                        <div class="form-group">
+                             <input type="number" readonly class="form-control" id="modal_importeplanedit" name="modal_importeplanedit">
+                         </div>
+                        </div>
+                        <a href="#" title="Editar Precio" class="btn btn-warning text-dark btn-sm btn-fab" onclick="editarPrecioSimulacionCostos();return false;"><i class="material-icons">edit</i></a>
+                        <label class="col-sm-1 col-form-label">TOTAL</label>
+                       <div class="col-sm-3">
+                        <div class="form-group">
+                             <input type="number" readonly class="form-control" id="total_preciosimulacion" name="total_preciosimulacion">
+                         </div>
+                        </div>
+                      </div>
+                      <br>    
+                       <!--INICIO DE alumICIOS-->
+                      <h4 class="font-weight-bold"><center>DETALLE PRECIO</center></h4>
+                      <div class="row" id="modal_contenidoalumicios">
+                        <table class="table table-bordered table-condensed table-striped table-sm">
+                             <thead>
+                                  <tr class="fondo-boton">
+                                    <td>Alumnos <a href="#" title="Nueva Fila" class="btn btn-primary btn-round btn-sm btn-fab float-left" onClick="agregarFilaPreciosSimulacionCabecera()"><i class="material-icons">add</i></a></td>
+                                    <td>Porcentaje</td>
+                                    <td>Monto</td>
+                                    <td>Total</td>
+                                    <td>Action</td>
+                                  </tr>
+                              </thead>
+                              <tbody id="modal_body_tabla_alumnos">
+                                <?php 
+                                $iii=1;
+                               $queryPr="SELECT * FROM precios_simulacioncostodetalle where cod_preciosimulacion=$codigoPrecioSimulacion order by 1";
+                               $stmt = $dbh->prepare($queryPr);
+                               $stmt->execute();
+                               $totalFilasPrecios=0;
+                               while ($rowPre = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                  $codigoPre=$rowPre['codigo'];
+                                  $cantidadPre=$rowPre['cantidad'];
+                                  $montoPre=$rowPre['monto'];
+                                  $montoPreTotal=$montoPre*$cantidadPre;
+                                  $totalFilasPrecios+=$montoPreTotal;
+                                  $porcentajePre=$rowPre['porcentaje'];
+                                  $iconalum="check_circle";
+                                  $montoPre=number_format($montoPre,2,".","");
+                                  $montoPreTotal=number_format($montoPreTotal,2,".","");
+                                   ?>
+                                   <tr id="fila_precios<?=$iii?>">
+                                     <td class="text-center">
+                                      <input type="hidden" id="codigo_alumnosAAA<?=$iii?>" value="<?=$codigoPre?>">
+                                       <input type="number" min="1" id="cantidad_alumnosAAA<?=$iii?>" name="cantidad_alumnosAAA<?=$iii?>" class="form-control" style="background-color:#E3CEF6;text-align: right" onchange="calcularPrecioTotal(<?=$iii?>)" onkeyUp="calcularPrecioTotal(<?=$iii?>)" value="<?=$cantidadPre?>">
+                                     </td>
+                                     <td class="text-center">
+                                       <input type="number" id="porcentaje_alumnosAAA<?=$iii?>" name="porcentaje_alumnosAAA<?=$iii?>" class="form-control" style="background-color:#E3CEF6;text-align: right" onchange="calcularPrecioPorcentaje(<?=$iii?>)" onkeyUp="calcularPrecioPorcentaje(<?=$iii?>)" value="<?=$porcentajePre?>" step="0.01">
+                                     </td>
+                                     <td class="text-center">
+                                       <input type="number" id="monto_alumnosAAA<?=$iii?>" name="monto_alumnosAAA<?=$iii?>" class="form-control" style="background-color:#E3CEF6;text-align: right" onchange="calcularPrecioTotal(<?=$iii?>)" onkeyUp="calcularPrecioTotal(<?=$iii?>)" value="<?=$montoPre?>" step="0.01">
+                                     </td>  
+                                     <td class="text-center">
+                                       <input type="number" readonly id="total_alumnosAAA<?=$iii?>" name="total_alumnosAAA<?=$iii?>" class="form-control" style="background-color:#E3CEF6;text-align: right" value="<?=$montoPreTotal?>" step="0.01">
+                                     </td>
+                                     <td class="text-left">
+                                      <a href="#" title="Quitar" class="btn btn-danger btn-round btn-sm btn-fab float-right" onClick="quitarElementoPrecios(<?=$iii?>)"><i class="material-icons">delete_outline</i></a>
+                                     </td>
+                                   </tr>
+                                  <?php
+                                  $iii++; 
+                                  } ?>
+                                  
+                              </tbody>
+                           </table>
+                           <script>$("#total_preciosimulacion").val(<?=$totalFilasPrecios?>);</script>
+                           <input type="hidden" id="cantidad_filasprecios" value="<?=$iii?>">        
+                      </div>
+                    <!--FIN DE alumICIOS-->
+
                       <hr>
                      
                       <div class="form-group float-right">
