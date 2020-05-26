@@ -84,14 +84,35 @@ $dbh = new Conexion();
                                </div>
                              </div>     
                       </div>
-                      <div class="row">
+                      <!--<div class="row">
                            <label class="col-sm-2 col-form-label">Monto Norma:</label>
                            <div class="col-sm-7"> 
-                             <div class="form-group">
-                                 <input class="form-control" type="number" id="monto_norma" name="monto_norma" value="">
-                               </div>
+                             <div class="form-group">-->
+                                 <input class="form-control" type="hidden" id="monto_norma" name="monto_norma" value="10">
+                               <!--</div>
                              </div>     
-                      </div>
+                      </div>-->
+                     <div class="row">
+                       <label class="col-sm-2 col-form-label">Tipo de Curso:</label>
+                       <div class="col-sm-7">
+                        <div class="form-group">
+                                <select class="selectpicker form-control" name="tipo_curso" id="tipo_curso" data-style="btn btn-warning" required>
+                                <?php
+                                 $stmt = $dbh->prepare("SELECT * from tipos_cursos order by 1");
+                                 $stmt->execute();
+                                  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                  $codigoX=$row['codigo'];
+                                  $nombreX=$row['nombre'];
+                                  $abrevX=$row['abreviatura'];
+                                   ?>
+                                  <option value="<?=$codigoX;?>"><?=$nombreX;?></option> 
+                                  <?php
+                                    }
+                                    ?>
+                                </select>
+                              </div>
+                        </div>
+                      </div> 
         
         </div>
         <br>

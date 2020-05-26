@@ -1,6 +1,10 @@
 <?php
                  $alumnosExternoX=1;
-                 $ingresoLocal=$precioLocalX*$alumnosX;                 
+                 if($ingresoAlternativo==0){
+                   $ingresoLocal=$precioLocalX*$alumnosX;                  
+                 }else{
+                    $ingresoLocal=$ingresoAlternativo;
+                 }               
                  $ingresoExterno=1;
                  
                  //porcentajes costo servicio
@@ -13,7 +17,7 @@
 
                  //gastos operativos
                  //TOTAL DE COSTO FIJO
-                 $costoOperLocal=$totalFijo[2]*0.87;
+                 $costoOperLocal=$totalFijoPlan*0.87;
                  $pCostoOperLocal=($costoOperLocal/$ingresoLocal)*100;
 
                  $costoOperExterno=$totalFijo[3]*0.87;
@@ -24,7 +28,7 @@
                  $utilidadExterno=$ingresoExterno-($totalVariable[3]*$alumnosExternoX)-$costoOperExterno;
 
                  // impuesto iva
-                 $costoTotalLocal=$totalFijo[2]+($totalVariable[2]*$alumnosX);
+                 $costoTotalLocal=$totalFijoPlan+($totalVariable[2]*$alumnosX);
                  $costoTotalExterno=$totalFijo[3]+($totalVariable[3]*$alumnosExternoX);
 
                  $impuestoIvaLocal=$costoTotalLocal*($iva/100);

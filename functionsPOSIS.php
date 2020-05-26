@@ -158,7 +158,7 @@ function montoRedistribucionIT($agencia, $anio, $mes, $organismo, $acumulado, $c
   return($montoRedistIT);
 }
 
-function ejecutadoEgresosMes($agencia, $anio, $mes, $organismo, $acumulado, $cuenta){
+/*function ejecutadoEgresosMes($agencia, $anio, $mes, $organismo, $acumulado, $cuenta){
   $dbh = new Conexion();
   //SACAMOS LA CONFIGURACION PARA REDIST 
   $banderaRedistIT=0;
@@ -252,7 +252,7 @@ function ejecutadoEgresosMes($agencia, $anio, $mes, $organismo, $acumulado, $cue
       }
    }
    return($montoEgresoEjecutado);
-}
+}*/
 
 //ESTA FUNCION ES IDENTICA A LA DE ejecutadoEgresosMes
 function distribucionDNSA($agencia, $anio, $mes, $organismo, $acumulado, $dn_sa){

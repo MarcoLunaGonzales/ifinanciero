@@ -22,10 +22,11 @@ $plantillaAntigua=obtenerPlantillaCostoDatos($plantilla_costo);
   	$utilidadExterno=$row['utilidad_minimaexterno'];
   	$alumnosLocal=$row['cantidad_alumnoslocal'];
   	$alumnosExterno=$row['cantidad_alumnosexterno'];
+    $cantidad_cursosmes=$row['cantidad_cursosmes'];
 
    $dbh = new Conexion();
-  $sqlInsert="INSERT INTO plantillas_costo (codigo, nombre, abreviatura, cod_unidadorganizacional, cod_area,utilidad_minimalocal,utilidad_minimaexterno,cantidad_alumnoslocal,cantidad_alumnosexterno) 
-  VALUES ('".$codPlanCosto."','".$nombre."','".$abrev."', '".$unidad."', '".$area."','".$utilidadLocal."','".$utilidadExterno."','".$alumnosLocal."','".$alumnosExterno."')";
+  $sqlInsert="INSERT INTO plantillas_costo (codigo, nombre, abreviatura, cod_unidadorganizacional, cod_area,utilidad_minimalocal,utilidad_minimaexterno,cantidad_alumnoslocal,cantidad_alumnosexterno,cantidad_cursosmes) 
+  VALUES ('".$codPlanCosto."','".$nombre."','".$abrev."', '".$unidad."', '".$area."','".$utilidadLocal."','".$utilidadExterno."','".$alumnosLocal."','".$alumnosExterno."','".$cantidad_cursosmes."')";
   $stmtInsert = $dbh->prepare($sqlInsert);
   $flagSuccess=$stmtInsert->execute();
    //INSERTAR precios

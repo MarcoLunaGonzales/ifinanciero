@@ -39,7 +39,7 @@ $alumnos=$_GET['alumnos'];
                          <div class="form-group">
                           <label class="bmd-label-static" id="titulo_montototal">Filtro</label>
                              <select class="selectpicker form-control form-control-sm" onchange="mostrarInputMonto(this.value)" name="tipoMontoDetalle" id="tipoMontoDetalle" data-style="btn btn-info">
-                                    <option value="monto_ibnorca1">x Mes</option>
+                                    <option value="monto_ibnorca1">x Gestión</option>
                                     <option value="monto_ibnorca2">x Modulo</option>
                                     <option value="monto_ibnorca3">x Persona</option>
                               </select>                   

@@ -34,9 +34,14 @@ if(isset($_GET['nombre'])){
   $precioExterno=1;
   $codPlanCosto=obtenerCodigoPlanCosto();
   $cantidadCursosMes=obtenerValorConfiguracion(6);
+  $codOficina=0;
+  if(obtenerValorConfiguracion(52)!=1){
+    $codOficina=$unidad;
+  }
+  $ingresoPresupuestado=obtenerPresupuestoEjecucionPorArea($codOficina,$area,$globalNombreGestion,12)['presupuesto'];
   $dbh = new Conexion();
-  $sqlInsert="INSERT INTO plantillas_costo (codigo, nombre, abreviatura, cod_unidadorganizacional, cod_area,utilidad_minimalocal,utilidad_minimaexterno,cantidad_alumnoslocal,cantidad_alumnosexterno,cantidad_cursosmes) 
-  VALUES ('".$codPlanCosto."','".$nombre."','".$abrev."', '".$unidad."', '".$area."','".$utilidadLocal."','".$utilidadExterno."','".$alumnosLocal."','".$alumnosExterno."','".$cantidadCursosMes."')";
+  $sqlInsert="INSERT INTO plantillas_costo (codigo, nombre, abreviatura, cod_unidadorganizacional, cod_area,utilidad_minimalocal,utilidad_minimaexterno,cantidad_alumnoslocal,cantidad_alumnosexterno,cantidad_cursosmes,ingreso_presupuestado) 
+  VALUES ('".$codPlanCosto."','".$nombre."','".$abrev."', '".$unidad."', '".$area."','".$utilidadLocal."','".$utilidadExterno."','".$alumnosLocal."','".$alumnosExterno."','".$cantidadCursosMes."','".$ingresoPresupuestado."')";
   $stmtInsert = $dbh->prepare($sqlInsert);
   $stmtInsert->execute();
 

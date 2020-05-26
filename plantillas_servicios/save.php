@@ -9,6 +9,7 @@ require_once 'configModule.php';
 $dbh = new Conexion();
 
 $globalUser=$_SESSION["globalUser"];
+$globalNombreGestion=$_SESSION["globalNombreGestion"];
 
 $fechaHoraActual=date("Y-m-d H:i:s");
 
@@ -34,6 +35,9 @@ if($area==39){
   $cantidadAuditorias=obtenerValorConfiguracion(18);
   $ingresoPresupuestado=obtenerValorConfiguracion(22);
 }
+
+//obtener PRESUPUESTO AREA OFICINA
+//$ingresoPresupuestado=obtenerPresupuestoAreaGestion((int)$globalNombreGestion-1,$area);
 
   $codPlanServ=obtenerCodigoPlanServ();
   $dbh = new Conexion();

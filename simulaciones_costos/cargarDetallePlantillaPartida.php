@@ -45,10 +45,12 @@ $j=1;
        </div>
    <table class="table table-condensed table-bordered">
          <tr class="text-white bg-info">
-        <td>Cuenta</td>
-        <td>Detalle</td>
-        <td>Monto x Modulo</td>
-        <td>Monto x Persona</td>
+        <td width="25%">CUENTA</td>
+        <td width="35%">DETALLE</td>
+        <td width="8%">CANTIDAD</td>
+        <td width="8%">UNIDAD</td>
+        <td>MONTO</td>
+        <td>TOTAL</td>
         <td class="small">Habilitar / Deshabilitar</td>
         </tr>
     <?php
@@ -63,9 +65,11 @@ $j=1;
         if($rowDetalles['cod_cuenta']==$row['cod_plancuenta']){
           $codigoCuenta=$rowDetalles['cod_cuenta'];
           $codigoDetalle=$rowDetalles['codigo'];
+          $cantidadItem=$rowDetalles['cantidad'];
+          $codTipoX=$rowDetalles['cod_tipo'];
           $montoDetalle=number_format($rowDetalles['monto_total'], 2, '.', '');
           if($ibnorcaC==1){
-          $montoDetalleAl=number_format($montoDetalle/$alumnosX, 2, '.', '');       
+          $montoDetalleAl=number_format($montoDetalle/$cantidadItem, 2, '.', '');       
           }else{
           $montoDetalleAl=number_format($montoModX/$alumnosExternoX, 2, '.', '');        
           } 
@@ -74,10 +78,31 @@ $j=1;
           $totalMontoDetalleAl+=$montoDetalleAl;        
          }   
           ?><tr>
-              <td class="text-left small font-weight-bold"><input type="hidden" id="codigo_cuenta<?=$j?>RRR<?=$i?>" value="<?=$codigoCuenta?>"><input type="hidden" id="codigo_fila<?=$j?>RRR<?=$i?>" value="<?=$codX?>">[<?=$numX?>] - <?=$nomX?></td>
-              <td class="text-left small font-weight-bold"><?=$rowDetalles['glosa']?></td>
-              <td class="text-right"><input type="number" id="monto_mod<?=$j?>RRR<?=$i?>" name="monto_mod<?=$j?>RRR<?=$i?>" <?=($bandera==0)?"readonly":"";?> class="form-control text-info text-right" onchange="calcularTotalPartidaGenerico(<?=$j?>,1)" onkeyUp="calcularTotalPartidaGenerico(<?=$j?>,1)" value="<?=$montoDetalle?>" step="0.01"></td>
+              <td class="text-left small text-white bg-info"><input type="hidden" id="codigo_cuenta<?=$j?>RRR<?=$i?>" value="<?=$codigoCuenta?>"><input type="hidden" id="codigo_fila<?=$j?>RRR<?=$i?>" value="<?=$codX?>">&nbsp;&nbsp;&nbsp;&nbsp;<?=$nomX?></td>
+              <td class="text-left small font-weight-bold"><?=strtoupper($rowDetalles['glosa'])?></td>
+              <td class="text-right"><input type="number" id="cantidad_monto_modal<?=$j?>RRR<?=$i?>" name="cantidad_monto_modal<?=$j?>RRR<?=$i?>" <?=($bandera==0)?"readonly":"";?> class="form-control text-info text-right" onchange="calcularTotalPartidaGenerico(<?=$j?>,2)" onkeyUp="calcularTotalPartidaGenerico(<?=$j?>,2)" value="<?=$cantidadItem?>"></td>
+              <td>
+                <div class="form-group">
+                             <select class="selectpicker form-control form-control-sm" name="unidad_monto_modal<?=$j?>RRR<?=$i?>" id="unidad_monto_modal<?=$j?>RRR<?=$i?>" onchange="cambiarPrecioPlantilla()" data-style="btn btn-info">
+                               <?php 
+                               $queryUnidad="SELECT * FROM tipos_unidadsec order by codigo";
+                               $stmtUnidad = $dbh->prepare($queryUnidad);
+                               $stmtUnidad->execute();
+                               while ($rowUnidad = $stmtUnidad->fetch(PDO::FETCH_ASSOC)) {
+                                  $codigoUnidad=$rowUnidad['codigo'];
+                                  $abrevUnidad=$rowUnidad['abreviatura'];
+                                  $nombreUnidad=$rowUnidad['nombre'];
+                                  if($codTipoX==$codigoUnidad){
+                                   ?><option selected value="<?=$codigoUnidad?>" class="text-right"><?=$nombreUnidad?></option> <?php
+                                  }else{
+                                   ?><option value="<?=$codigoUnidad?>" class="text-right"><?=$nombreUnidad?></option> <?php
+                                  }
+                              } ?> 
+                             </select>
+                </div>
+              </td>
               <td class="text-right"><input type="number" id="monto_modal<?=$j?>RRR<?=$i?>" name="monto_modal<?=$j?>RRR<?=$i?>" <?=($bandera==0)?"readonly":"";?> class="form-control text-info text-right" onchange="calcularTotalPartidaGenerico(<?=$j?>,2)" onkeyUp="calcularTotalPartidaGenerico(<?=$j?>,2)" value="<?=$montoDetalleAl?>" step="0.01"></td>
+              <td class="text-right text-white bg-info"><input type="number" id="monto_mod<?=$j?>RRR<?=$i?>" name="monto_mod<?=$j?>RRR<?=$i?>" <?=($bandera==0)?"readonly":"";?> class="form-control text-white text-right" onchange="calcularTotalPartidaGenerico(<?=$j?>,1)" onkeyUp="calcularTotalPartidaGenerico(<?=$j?>,1)" value="<?=$montoDetalle?>" step="0.01"></td>  
               <td><input type="hidden" id="codigo<?=$j?>RRR<?=$i?>" value="<?=$codigoDetalle?>">
                 <div class="togglebutton">
                         <label>
@@ -97,9 +122,9 @@ $j=1;
       
 
       <tr>
-        <td colspan="2" class="text-center font-weight-bold">Total</td>
-        <td id="total_tabladetalle<?=$j?>" class="text-right font-weight-bold"><?=$totalMontoDetalle?></td>
+        <td colspan="4" class="text-center font-weight-bold">Total</td>
         <td id="total_tabladetalleAl<?=$j?>" class="text-right"><?=$totalMontoDetalleAl?></td>
+        <td id="total_tabladetalle<?=$j?>" class="text-right font-weight-bold"><?=$totalMontoDetalle?></td>
         <td></td>
       </tr>
   </table>
@@ -109,7 +134,7 @@ $j=1;
   $j++; 
   }
   ?>
-  <table class="table table-condensed table-bordered">
+  <!--<table class="table table-condensed table-bordered">
     <tr>
               <td class="text-left font-weight-bold text-white bg-info" width="50%">Norma</td>
               <td class="text-right"><input type="number" id="monto_norma<?=$j?>" name="monto_norma<?=$j?>" <?=($habilitadoNormaX==0)?"readonly":"";?> class="form-control text-info text-right" value="<?=$montoNormaX?>" step="0.01"></td>
@@ -124,9 +149,9 @@ $j=1;
                
               </td>
              </tr> 
-  </table>
+  </table>-->
    <div id="mensaje_cuenta"></div>
   <input type="hidden" id="numero_cuentaspartida" value="<?=$j?>">
-  <div class="form-group float-right">
-    <button class="btn btn-default" id="guardar_cuenta" onclick="guardarCuentasSimulacionGenerico(<?=$ibnorcaC?>)">Guardar</button>
+  <div class="form-group col-sm-12">
+    <button class="btn btn-success float-right" id="guardar_cuenta" onclick="guardarCuentasSimulacionGenerico(<?=$ibnorcaC?>)">Guardar</button>
   </div>
