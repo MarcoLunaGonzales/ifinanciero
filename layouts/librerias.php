@@ -249,6 +249,17 @@
             },
             "ordering": false
         } );
+        $('#tablePaginator100').DataTable( {
+            "pageLength": 100,
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            fixedHeader: {
+              header: true,
+              footer: true
+            },
+            "ordering": false
+        } );
         $('#tablePaginatorHead').DataTable( {
             "language": {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"

@@ -48,9 +48,9 @@ $stmt->bindColumn('nombre', $nombreCuenta);
 		<table class="table table-condensed">
 			<thead>
 				<tr>
-					<th>Nro. Cuenta</th>
-	      			<th>Nombre</th>
-	      			<th>Auxiliar</th>
+					<th width="15%">Nro. Cuenta</th>
+	      			<th width="35%">Nombre</th>
+	      			<th width="50%">Auxiliar</th>
 	  			</tr>
 			</thead>
 		<?php
@@ -80,7 +80,7 @@ $stmt->bindColumn('nombre', $nombreCuenta);
 		?>
 		<tr>
 			<td class="text-left"><?=$numeroCuenta;?></td>
-	      	<td class="text-left"><a href="javascript:setBusquedaCuenta('<?=$codigoCuenta;?>','<?=$numeroCuenta;?>','<?=$nombreCuenta;?>','0','');"><?=strtoupper($nombreCuenta);?></a></td>
+	      	<td class="text-left"><a href="javascript:setBusquedaCuenta('<?=$codigoCuenta;?>','<?=$numeroCuenta;?>','<?=$nombreCuenta;?>','0','');"><?=$nombreCuenta;?></a></td>
 	      	<td class="text-left"><?=$txtAuxiliarCuentas;?></td>
 		</tr>
 		<?php

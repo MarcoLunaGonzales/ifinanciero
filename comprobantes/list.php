@@ -90,7 +90,7 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                 </div>      
                 <div class="card-body">
                   <div class="" id="data_comprobantes">
-                    <table id="tablePaginator" class="table table-condensed">
+                    <table id="tablePaginator100" class="table table-condensed">
                       <thead>
                         <tr>
                           <th class="text-center">#</th>                          

@@ -319,8 +319,23 @@ function setBusquedaCuenta(codigoCuenta, numeroCuenta, nombreCuenta, codigoCuent
   $('#myModal').modal('hide');
   $(".selectpicker").selectpicker('refresh');
   $("#debe"+fila).focus();
-
 }
+
+function setBusquedaCuentaEdit(codigoCuenta, numeroCuenta, nombreCuenta, codigoCuentaAux, nombreCuentaAux){
+  var fila=filaActiva;
+  var inicio=numeroCuenta.substr(0,1);
+  //console.log(fila);
+  document.getElementById('cuenta'+fila).value=codigoCuenta;
+
+  document.getElementById('cuenta_auxiliar'+fila).value=codigoCuentaAux;
+  document.getElementById('divCuentaDetalle'+fila).innerHTML='<span class=\"text-danger font-weight-bold\">['+numeroCuenta+']-'+nombreCuenta+' </span><br><span class=\"text-primary font-weight-bold small\">'+nombreCuentaAux+'</span>';
+  configuracionEstadosCuenta(fila,codigoCuenta,codigoCuentaAux);
+  facturacomprobante(fila);//icono de factura
+  $('#myModal').modal('hide');
+  $(".selectpicker").selectpicker('refresh');
+  $("#debe"+fila).focus();
+}
+
 function configuracionCentros(fila,inicio){
   for (var i = 0; i < configuracionCentro.length; i++) {    
     if(configuracionCentro[i].cod_grupo==parseInt(inicio)){
@@ -6247,6 +6262,7 @@ function guardarCuentasSimulacion(ib){
 }
 var itemCuentas=[];
 var itemCuentasAux=[];
+
 function buscarCuentaList(campo){
   var contenedor = document.getElementById('divResultadoBusqueda');
   var nroCuenta=document.getElementById('nro_cuenta').value;
@@ -6356,9 +6372,9 @@ function buscarCuentaNumero(numeros,val){
     "<table class='table table-condensed'>"+
       "<thead>"+
         "<tr>"+
-          "<th>Nro. Cuenta</th>"+
-              "<th>Nombre</th>"+
-              "<th>Auxiliar</th>"+
+          "<th width='15%'>Nro. Cuenta</th>"+
+              "<th width='35%'>Nombre Cuenta</th>"+
+              "<th width='50%'>Cuenta Auxiliar</th>"+
           "</tr>"+
       "</thead>";
 
@@ -6434,7 +6450,7 @@ function buscarCuentaNumero(numeros,val){
        }
       html+="<tr>"+
       "<td class='text-left'>"+label+itemCuentas[i].numero+"</span></td>"+
-          "<td class='text-left'><a href=\"javascript:setBusquedaCuenta(\'"+itemCuentas[i].codigo+"\',\'"+itemCuentas[i].numero+"\',\'"+itemCuentas[i].nombre+"\',\'0\',\'\');\">"+itemCuentas[i].nombre.toUpperCase()+"</a></td>"+
+          "<td class='text-left'><a href=\"javascript:setBusquedaCuenta(\'"+itemCuentas[i].codigo+"\',\'"+itemCuentas[i].numero+"\',\'"+itemCuentas[i].nombre+"\',\'0\',\'\');\">"+itemCuentas[i].nombre+"</a></td>"+
           "<td class='text-left'>"+textoAux+"</td>"+
       "</tr>";
     }

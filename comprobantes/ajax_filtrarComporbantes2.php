@@ -18,11 +18,12 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $globalGestion=$_SESSION['globalNombreGestion'];
 $globalUnidad=$_SESSION["globalUnidad"];
 $globalArea=$_SESSION["globalArea"];
+$globalMesTrabajo=$_SESSION['globalMes'];
 
 
 $codigo_tipo=$_GET['codigo'];
 
-
+//$codTipoComprobanteDefault="3";
 // $unidadOrgString=implode(",", $cod_uo);
 
 
@@ -30,7 +31,7 @@ $sqlArray="SELECT c.codigo,c.cod_tipocomprobante,(select u.abreviatura from unid
 (select t.abreviatura from tipos_comprobante t where t.codigo=c.cod_tipocomprobante)tipo_comprobante, c.fecha, c.numero
 from comprobantes c join estados_comprobantes ec on c.cod_estadocomprobante=ec.codigo where c.cod_estadocomprobante!=2
 and c.cod_unidadorganizacional='$globalUnidad'
-and c.cod_gestion='$globalGestion'";
+and c.cod_gestion='$globalGestion' and MONTH(c.fecha)='$globalMesTrabajo' ";
 
 $sqlArray.=" and c.cod_tipocomprobante in ($codigo_tipo)";
 $sqlArray.=" order by c.fecha asc, unidad, tipo_comprobante, c.numero asc";

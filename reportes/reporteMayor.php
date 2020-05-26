@@ -43,6 +43,8 @@ $unidadCosto=$_POST['unidad_costo'];
 $areaCosto=$_POST['area_costo'];
 $unidad=$_POST['unidad'];
 
+//echo "VARIABLES: ".$unidadCosto." ".$areaCosto." ".$unidad;
+
 $unidadCostoArray=implode(",", $unidadCosto);
 $areaCostoArray=implode(",", $areaCosto);
 $unidadArray=implode(",", $unidad);
