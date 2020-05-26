@@ -6,7 +6,7 @@
                         $unidadSol=$codUnidadX;
                         $areaSol=$codAreaX;
 						$idFila=1;
-						$cuentasCodigos=[];$conta=0;$auxAnio=0;$detalleAux="";$contAux=0;
+						$cuentasCodigos=[];$conta=0;$auxAnio=0;$detalleAux="";$contAux=0;$listaDetalles=[];
 					?><div id="detalles_solicitud"><?php
 							             
                        $solicitudDetalle=obtenerSolicitudRecursosDetalle($codigo);
@@ -14,6 +14,7 @@
                           $tituloImporte="Importe";
                           $codCuentaX=$rowDetalles['cod_plancuenta'];
                           $codigoDetX=$rowDetalles["codigo"];
+                          $cod_plantilladetalle=$rowDetalles['cod_detalleplantilla'];
                           $encontrar=0;
                           for ($i=0; $i < count($cuentasCodigos); $i++) { 
                             if($codigoDetX==$cuentasCodigos[$i]){

@@ -1,7 +1,7 @@
 <?php
 						//$detalle=obtenerDetalleSolicitudSimulacion($codSimulacionServX);
-                        $codigoPlantillaXX=obtenerPlantillaCodigoSimulacionServicio($codSimulacionServX);
-                        $detalle=obtenerDetalleSolicitudSimulacionCuentaPlantillaServicio($codSimulacionServX,$codigoPlantillaXX);
+                        $codigoPlantillaXX=obtenerPlantillaCodigoSimulacion($codSimulacionServX);
+                        $detalle=obtenerDetalleSolicitudSimulacionCuentaPlantilla($codSimulacionServX,$codigoPlantillaXX);
                         $ibnorca=1;
                         $unidadSol=$codUnidadX;
                         $areaSol=$codAreaX;
@@ -12,7 +12,7 @@
 					?><div id="detalles_solicitud"><?php
 						while ($row = $detalle->fetch(PDO::FETCH_ASSOC)) {
 							//$cod_plantilladetalle=$row['codigo_detalle'];
-							$codigo_fila=explode("###",$row['codigo_detalle']);
+							/*$codigo_fila=explode("###",$row['codigo_detalle']);
 							if($codigo_fila[1]=="DET-SIM"){
                              $cod_plantilladetalle=$codigo_fila[0];
                              $cod_plantillauditor="";
@@ -21,7 +21,8 @@
                              $cod_plantilladetalle="";
                              $cod_plantillauditor=$codigo_fila[0];
                              $solicitudDetalle=obtenerSolicitudRecursosDetallePlantillaAudSol($codigo,$cod_plantillauditor);
-							}
+							}*/
+							$cod_plantilladetalle=$row['codigo_detalle'];
 							$codCuentaX=$row['codigo'];
 							$codDetalleX=0;
 							$detalleX=$row['glosa'];
@@ -45,10 +46,10 @@
                             
                             $numeroCuentaX=trim($row['numero']);
 							$nombreCuentaX=trim($row['nombre']);
-							if((int)$row['cod_anio']!=$auxAnio){
+							/*if((int)$row['cod_anio']!=$auxAnio){
 								$anioSelect=(int)$row['cod_anio']; 				 
 						    }
-							$auxAnio=(int)$row['cod_anio'];
+							$auxAnio=(int)$row['cod_anio'];*/
 
 							if($detalleX!=$detalleAux){
 								$listaDetalles[$contAux]=$detalleX;
@@ -91,8 +92,8 @@
                        while ($rowDetalles = $solicitudDetalle->fetch(PDO::FETCH_ASSOC)) {
                           $tituloImporte="Importe";
                           $codCuentaX=$rowDetalles['cod_plancuenta'];
-                          $cod_plantilladetalle=$rowDetalles['cod_detalleplantilla'];
                           $codigoDetX=$rowDetalles["codigo"];
+                          $cod_plantilladetalle=$rowDetalles['cod_detalleplantilla'];
                           $encontrar=0;
                           for ($i=0; $i < count($cuentasCodigos); $i++) { 
                             if($codigoDetX==$cuentasCodigos[$i]){

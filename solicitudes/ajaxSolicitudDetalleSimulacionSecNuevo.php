@@ -79,7 +79,7 @@ $tipoSolicitud =$_GET['tipo'];
 						}
               
             //insertamos datos en el select            
-            $glosas=obtenerGlosaSolicitudSimulacionCuentaPlantillaServicio($codSimulacionServX);
+            $glosas=obtenerGlosaSolicitudSimulacionCuentaPlantillaCosto($codSimulacionServX,$codigoPlantillaXX);
             $i=0;  
             while ($rowglosa = $glosas->fetch(PDO::FETCH_ASSOC)) {
               $detalleDes=$rowglosa['glosa'];
@@ -92,21 +92,6 @@ $tipoSolicitud =$_GET['tipo'];
              $i++;
             }
 
-            $anioSelect=obtenerAnioSimulacionServicio($codSimulacionServX);
-            $inicioAnio=1;
-            for ($i=$inicioAnio; $i <= $anioSelect ; $i++) { 
-              $tituloAnio="Año ".$i;
-              $tituloAnio="Año ".$i;
-              if($i==1&&$areaXX==38){
-                 $tituloAnio="Año 1 Et 1 - Et 2";
-              }
-               ?>
-                      <script>
-                        $('#anio_solicitud').append("<option value='<?=$i?>' ><?=$tituloAnio?></option>");
-                        $('.selectpicker').selectpicker("refresh");
-                      </script>
-                <?php 
-            }
             //fin de selects
      if($idFila==0){
           ?><script>Swal.fire("Sin Datos!", "No se encontraron registros", "warning");</script><?php  

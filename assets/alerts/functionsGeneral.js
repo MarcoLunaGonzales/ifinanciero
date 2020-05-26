@@ -9453,6 +9453,11 @@ function filtrarSolicitudRecursosServiciosItems(){
   var tipo = $("#tipo_solicitud").val();
   var re = $("#simulaciones").val().split("$$$");
   var cod_sim=re[0];
+  if(re[1]=="TCP"){
+    var url = "ajaxSolicitudDetalleSimulacionNuevoFiltro.php";
+  }else{
+    var url = "ajaxSolicitudDetalleSimulacionNuevoFiltroSec.php";
+  }
   var anio =$("#anio_solicitud").val();
   var itemDetalle =$('select[id="item_detalle_solicitud"] option:selected').text();
   var codigoDetalle =$("#item_detalle_solicitud").val();
@@ -9460,7 +9465,7 @@ function filtrarSolicitudRecursosServiciosItems(){
      $.ajax({
         type: "GET",
         dataType: 'html',
-        url: "ajaxSolicitudDetalleSimulacionNuevoFiltro.php",
+        url: url,
         data: parametros,
         beforeSend: function () {
         $("#texto_ajax_titulo").html("Filtrando datos..."); 

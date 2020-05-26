@@ -5854,6 +5854,7 @@ function obtenerGlosaSolicitudSimulacionCuentaPlantillaServicio($codigo){
    $stmt->execute();
    return $stmt;
 }
+
 function obtenerAnioSimulacionServicio($codigo){
    $dbh = new Conexion();
    $valor=0;
@@ -6430,5 +6431,37 @@ function obtenerPrecioAlternativoDetalle($codigo){
       $valor+=$row['cantidad']*$row['monto'];
    }
    return($valor);
+}
+
+function obtenerGlosaSolicitudSimulacionCuentaPlantillaCosto($codigo,$codigoPlan){
+   $dbh = new Conexion();
+   $sql="";
+   $sql="SELECT DISTINCT tablap.glosa
+FROM (SELECT pc.codigo,pc.numero,pc.nombre,pp.nombre as partida, pp.codigo as cod_partida,sc.monto_local,sc.monto_externo from cuentas_simulacion sc 
+join partidas_presupuestarias pp on pp.codigo=sc.cod_partidapresupuestaria 
+join plan_cuentas pc on sc.cod_plancuenta=pc.codigo where sc.cod_simulacioncostos=$codigo order by pp.codigo) tabla_uno,
+simulaciones_detalle tablap where tablap.cod_cuenta=tabla_uno.codigo and (tablap.cod_plantillacosto!='' or tablap.cod_plantillacosto!=NULL) and tablap.cod_plantillacosto=$codigoPlan and tablap.cod_simulacioncosto=$codigo and tablap.habilitado=1 and tablap.cod_estadoreferencial=1 order by tabla_uno.codigo;";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+}
+
+function obtenerDetalleSolicitudSimulacionCuentaPlantillaServicioFiltroSec($codigo,$codigoPlan,$anio,$item_detalle,$codigo_detalle){
+   $dbh = new Conexion();
+   if($codigo_detalle!="all"){
+    $item_detalleSQL1="tablap.glosa='$item_detalle' and";
+   }else{
+    $item_detalleSQL1="";
+   }
+   $sql="";
+   $sql="SELECT tablap.codigo as codigo_detalle,tablap.glosa,tablap.monto_total,tablap.habilitado,tabla_uno.* 
+FROM (SELECT pc.codigo,pc.numero,pc.nombre,pp.nombre as partida, pp.codigo as cod_partida,sc.monto_local,sc.monto_externo from cuentas_simulacion sc 
+join partidas_presupuestarias pp on pp.codigo=sc.cod_partidapresupuestaria 
+join plan_cuentas pc on sc.cod_plancuenta=pc.codigo 
+where sc.cod_simulacioncostos=$codigo order by pp.codigo) tabla_uno,simulaciones_detalle tablap 
+where $item_detalleSQL1 tablap.cod_cuenta=tabla_uno.codigo and (tablap.cod_plantillacosto!='' or tablap.cod_plantillacosto!=NULL) and tablap.cod_plantillacosto=$codigoPlan and tablap.cod_simulacioncosto=$codigo and tablap.habilitado=1 and tablap.cod_estadoreferencial=1 order by tabla_uno.codigo;";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
 }
 ?>
