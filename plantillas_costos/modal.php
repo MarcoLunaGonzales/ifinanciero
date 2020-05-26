@@ -246,7 +246,7 @@
                        <div class="col-sm-10">
                         <div class="form-group">
                              <select class="selectpicker form-control" name="tipo_dato" id="tipo_dato" data-style="btn btn-info" onchange="limpiarMontos()">
-                               <option value="1">Mensual</option>
+                               <option value="1">Automático</option>
                                <option value="2">Manual</option> 
                              </select>
                          </div>

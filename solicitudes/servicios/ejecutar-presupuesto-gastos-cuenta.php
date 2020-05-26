@@ -6,7 +6,7 @@ $direccion=obtenerValorConfiguracion(45);//direccion del Server del Servicio
 	$sKey="101010"; 
 
 /*PARAMETROS PARA LA OBTENCION DE LISTAS DE PERSONAL*/
-	$oficina="5";
+	$oficina="0";
 	$area="13";
 	$anio="2019";
 	$mes="12";

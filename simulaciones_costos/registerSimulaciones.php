@@ -84,14 +84,14 @@ $dbh = new Conexion();
                                </div>
                              </div>     
                       </div>
-                      <div class="row">
+                      <!--<div class="row">
                            <label class="col-sm-2 col-form-label">Monto Norma:</label>
                            <div class="col-sm-7"> 
-                             <div class="form-group">
-                                 <input class="form-control" type="number" id="monto_norma" name="monto_norma" value="">
-                               </div>
+                             <div class="form-group">-->
+                                 <input class="form-control" type="hidden" id="monto_norma" name="monto_norma" value="10">
+                               <!--</div>
                              </div>     
-                      </div>
+                      </div>-->
                      <div class="row">
                        <label class="col-sm-2 col-form-label">Tipo de Curso:</label>
                        <div class="col-sm-7">

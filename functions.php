@@ -1600,7 +1600,7 @@ function obtenerMontoPorCuenta($numero,$unidad,$area,$fecha){
       $tipoSim=obtenerValorConfiguracion(13);
       if($tipoSim==1){
        $saux= ejecutadoEgresosMes($unidad, $fecha, 12, $area, 1, $numero);
-       $saux=$saux/12;
+       //$saux=$saux/12;
        $sum+=$saux; 
       }else{
        $sum+= ejecutadoEgresosMes($unidad, $fecha, $mes, $area, 0, $numero);
@@ -1625,7 +1625,7 @@ function obtenerMontoPorCuenta($numero,$unidad,$area,$fecha){
       $tipoSim=obtenerValorConfiguracion(13);
       if($tipoSim==1){
        $saux= ejecutadoEgresosMes($unidad, $fecha, 12, $area, 1, $numero);
-       $saux=$saux/12;
+       //$saux=$saux/12;
        $sum+=$saux; 
       }else{
        $sum+= ejecutadoEgresosMes($unidad, $fecha, $mes, $area, 0, $numero);
@@ -6463,5 +6463,26 @@ where $item_detalleSQL1 tablap.cod_cuenta=tabla_uno.codigo and (tablap.cod_plant
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
    return $stmt;
+}
+
+function ejecutadoEgresosMes($oficina, $anio, $mes, $area, $acumulado, $cuenta){
+  $direccion=obtenerValorConfiguracion(45);//direccion del Server del Servicio
+  $sIde = "monitoreo"; 
+  $sKey="101010"; 
+  if($acumulado==1){
+    $oficina=0;
+  }
+  $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "oficina"=>$oficina, "area"=>$area, "anio"=>$anio, "mes"=>$mes, "cuenta"=>$cuenta, "accion"=>"listar"); //
+
+  $parametros=json_encode($parametros);
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL,$direccion."ws/wsPresupuestoGastosCuenta.php");
+  curl_setopt($ch, CURLOPT_POST, TRUE);
+  curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  $remote_server_output = curl_exec ($ch);
+  curl_close ($ch);
+  $datos=json_decode($remote_server_output);
+    return $datos->ejecutado; 
 }
 ?>
