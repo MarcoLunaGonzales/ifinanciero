@@ -19,6 +19,7 @@ $globalArea=$_SESSION["globalArea"];
 $globalAdmin=$_SESSION["globalAdmin"];
 
 $fechaActual=date("Y-m-d");
+$desdeInicioAnio="";
 if($_POST["fecha_desde"]==""){
   $y=$globalNombreGestion;
   $desde=$y."-01-01";
@@ -45,18 +46,23 @@ $unidad=$_POST['unidad'];
 
 //echo "VARIABLES: ".$unidadCosto." ".$areaCosto." ".$unidad;
 
-$unidadCostoArray=implode(",", $unidadCosto);
-$areaCostoArray=implode(",", $areaCosto);
-$unidadArray=implode(",", $unidad);
 
 $gestion= $_POST["gestion"];
 $entidad = $_POST["entidad"];
 
+//PONEMOS LAS VARIABLES PARA CUANDO LLAMEMOS AL REPORTE DESDE LOS MAYORES
 if($gestion==null){
   $gestion=$globalGestion;
+  $unidadCosto=explode(",",obtenerUnidadesReport(0));
+  $unidad=explode(",",obtenerUnidadesReport(0));
+  $areaCosto=explode(",",obtenerAreasReport(0));
 }
 
 $NombreGestion = nameGestion($gestion);
+$unidadCostoArray=implode(",", $unidadCosto);
+$areaCostoArray=implode(",", $areaCosto);
+$unidadArray=implode(",", $unidad);
+
  
 if(isset($_POST['glosa_len'])){
  $glosaLen=1; 
@@ -116,7 +122,7 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
 <?php
 $nombreCuentaTitleAux=$nombreCuentaTitle;
  if($cuentas_auxiliares==0){
-   include "reporteMayorCuenta.php";
+    include "reporteMayorCuenta.php";
  }else{
    //include "reporteMayorCuenta.php";
    for ($cta=0; $cta < cantidadF($codcuentaMayor); $cta++) { 
