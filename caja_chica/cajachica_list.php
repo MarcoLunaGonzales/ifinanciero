@@ -27,7 +27,7 @@ $stmt->bindColumn('cod_tipocajachica', $cod_tipocajachica);
 $stmt->bindColumn('fecha', $fecha);
 $stmt->bindColumn('numero', $numero);
 $stmt->bindColumn('monto_inicio', $monto_inicio);
-$stmt->bindColumn('monto_reembolso', $monto_reembolso);
+// $stmt->bindColumn('monto_reembolso', $monto_reembolso);
 $stmt->bindColumn('monto_reembolso_nuevo', $monto_reembolso_nuevo);
 $stmt->bindColumn('observaciones', $observaciones);
 $stmt->bindColumn('cod_personal', $cod_personal);
@@ -73,6 +73,16 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
                       <tbody>
                         <?php $index=1;
                         while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { 
+                          $datos_ComproCajaChica=$cod_cajachica."/".$observaciones;
+                            $sql_rendicion="SELECT SUM(monto) monto_total from caja_chicadetalle where cod_cajachica=$cod_cajachica and cod_estadoreferencial=1 ORDER BY nro_documento desc";
+                            $stmtSaldo = $dbh->prepare($sql_rendicion);
+                            $stmtSaldo->execute();
+                            $resultSaldo=$stmtSaldo->fetch();
+                            if($resultSaldo['monto_total']!=null || $resultSaldo['monto_total']!='')
+                              $monto_total=$resultSaldo['monto_total'];
+                            else $monto_total=0;                        
+                            $monto_saldo=$monto_inicio-$monto_total;
+
                              if($cod_estado==1)
                                 $label='<span class="badge badge-success">';
                             else
@@ -84,7 +94,7 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
                               <td><?=$fecha;?></td>
                               <td><?=$personal;?></td>        
                               <td><?=number_format($monto_inicio, 2, '.', ',');?></td>        
-                              <td><?=number_format($monto_reembolso, 2, '.', ',');?></td><!-- el saldo -->        
+                              <td><?=number_format($monto_saldo, 2, '.', ',');?></td><!-- el saldo -->        
                               <td><?=number_format($monto_reembolso_nuevo, 2, '.', ',');?></td> <!-- el remmbolso registrado -->
                               <td><?=$observaciones;?></td>        
                               <td><?=$label.$nombre_estado."</span>";?></td>
@@ -123,17 +133,32 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
                                 ?>
                               
                               </td>
-                              <td class="text-center">
+                              <td class="td-actions text-center">
                                 <?php
                                 //si es mayo a cero, ya se genero el comprobante.
                                   if($cod_comprobante>0){?>                                    
                                     <a href="<?=$urlImp;?>?comp=<?=$cod_comprobante;?>&mon=1" target="_blank">
-                                           <i class="material-icons" title="Imprimir Comporbante" style="color:red">print</i>
-                                       </a> 
+                                      <i class="material-icons" title="Imprimir Comprobante" style="color:red; ">print</i>
+                                    </a> 
                                   <?php }else{ ?>
-                                    <a href="<?=$urlprint_contabilizacion_cajachica;?>?cod_cajachica=<?=$cod_cajachica;?>" target="_blank" > 
+                                    <div class="btn-group dropdown">
+                                      <button type="button" class="btn btn-ganger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color:red;background-color:#FFFFFF;">
+                                         <i class="material-icons" title="Generar Comprobante" >input</i>
+                                      </button>
+                                      <div class="dropdown-menu" style="background-color: #D8CEF6;">                                    
+                                        <button title="Generar Factura Manual" class="dropdown-item" type="button" data-toggle="modal" data-target="#modalFacturaManual" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlprint_contabilizacion_cajachica;?>?cod_cajachica=<?=$cod_cajachica;?>')" target="_blank">
+                                        <i class="material-icons text-danger">input</i> Generar Comprobante Nuevo
+                                        </button>
+                                        <button title="Generar Factura a Pagos" class="dropdown-item" type="button" data-toggle="modal" data-target="#modalComprobanteCajaChica" onclick="agregaDatosComprCajaChica('<?=$datos_ComproCajaChica;?>')">
+                                        <i class="material-icons text-danger">input</i> Generar Comprobante Existente 
+                                        </button>                                          
+                                      </div>
+                                    </div>
+
+
+                                  <!--   <a href="<?=$urlprint_contabilizacion_cajachica;?>?cod_cajachica=<?=$cod_cajachica;?>" target="_blank" > 
                                       <i class="material-icons" title="Generar Comprobante" style="color:red">input</i>
-                                    </a>
+                                    </a> -->
                                   <?php }
                                 ?>
 
@@ -160,3 +185,109 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
           </div>  
         </div>
     </div>
+
+
+<div class="modal fade" id="modalComprobanteCajaChica" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h3 class="modal-title" id="myModalLabel"><b>Generar Comprobante Existente</b></h3>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" name="cod_cajachica" id="cod_cajachica" value="0">
+         <div class="row">
+          <!-- <label class="col-sm-3 text-right col-form-label" style="color:#424242">Importe De Solicitud de Facturación</label> -->
+          <div class="col-sm-12">
+            <div class="form-group text-center">
+              <input type="text" name="detalle_cajachica" id="detalle_cajachica" value="0" readonly="true" class="form-control text-center" style="background-color:#E3CEF6;text-align: left">            
+            </div>
+          </div>       
+        </div>
+
+        <div class="row">
+          <label class="col-sm-4 text-right col-form-label" style="color:#424242">Número de Comprobante</label>
+          <div class="col-sm-6">
+            <div class="form-group">
+              <input type="number"name="nro_comprobante" id="nro_comprobante" class="form-control">
+            </div>
+          </div>        
+        </div>
+        <div class="row">
+          <label class="col-sm-4 text-right col-form-label" style="color:#424242">Mes del comprobante</label>
+          <div class="col-sm-6">
+            <div class="form-group">              
+              <select class="selectpicker form-control form-control-sm" name="mes_comprobante" id="mes_comprobante" data-style="<?=$comboColor;?>">
+                  <option disabled selected value=""></option>                
+                  <option value="1">ENERO</option>
+                  <option value="2">FEBRERO</option>
+                  <option value="3">MARZO</option>
+                  <option value="4">ABRIL</option>
+                  <option value="5">MAYO</option>
+                  <option value="6">JUNIO</option>
+                  <option value="7">JULIO</option>
+                  <option value="8">AGOSTO</option>
+                  <option value="9">SEPTIEMBRE</option>
+                  <option value="10">OCTUBRE</option>
+                  <option value="11">NOVIEMBRE</option>
+                  <option value="12">DICIEMBRE</option>                  
+              </select>
+            </div>
+          </div>
+      </div>      
+      <div class="row">
+        <label class="col-sm-4 text-right col-form-label" style="color:#424242">Tipo de comprobante</label>
+        <div class="col-sm-6">
+          <div class="form-group">            
+            <select class="selectpicker form-control form-control-sm" name="tipo_comprobante" id="tipo_comprobante" data-style="<?=$comboColor;?>">
+                  <option disabled selected value="">Tipo</option>
+                <?php
+                $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM tipos_comprobante where cod_estadoreferencial=1 order by 1");
+              $stmt->execute();
+              while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $codigoX=$row['codigo'];
+                $nombreX=$row['nombre'];
+                $abrevX=$row['abreviatura'];
+              ?>
+              <option value="<?=$codigoX;?>"><?=$nombreX;?> - <?=$abrevX;?></option>  
+              <?php
+                }
+                ?>
+            </select>
+          </div>
+        </div>
+      </div>      
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" id="guardarDatosModal" name="guardarDatosModal">Generar Factura</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal"> Volver </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('#guardarDatosModal').click(function(){    
+      cod_cajachica=document.getElementById("cod_cajachica").value;
+      detalle_cajachica=document.getElementById("detalle_cajachica").value;
+      nro_comprobante=$('#nro_comprobante').val();
+      mes_comprobante=$('#mes_comprobante').val();
+      tipo_comprobante=$('#tipo_comprobante').val();      
+      if(nro_comprobante==null || nro_comprobante<=0){
+        Swal.fire("Informativo!", "Por favor introduzca el Número de Comprobante.", "warning");
+      }else{
+        if(mes_comprobante==null){
+          Swal.fire("Informativo!", "Por favor introduzca el Mes Del Comprobante.", "warning");
+        }else{
+          
+            if(tipo_comprobante==null){
+              Swal.fire("Informativo!", "Por favor introduzca el Tipo De Comprobante.", "warning");
+            }else{              
+                RegistrarComprobanteCajaChica(cod_cajachica,detalle_cajachica,nro_comprobante,mes_comprobante,tipo_comprobante);
+            }          
+        }
+      }      
+    });   
+  });
+</script>

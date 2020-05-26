@@ -169,8 +169,7 @@ try{
                         $stmtInsertSoliFactDet = $dbh->prepare("INSERT INTO facturas_ventadetalle(cod_facturaventa,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_bob,suscripcionId) 
                         values ('$cod_facturaVenta','$cod_claservicio_x','$cantidad_x','$precio_x','$descripcion_alterna_x',$descuento_bob_x,0)");
                         $flagSuccess=$stmtInsertSoliFactDet->execute();
-                      }  
-                    }
+                    }  
                     $sqlUpdate="UPDATE solicitudes_facturacion SET  cod_estadosolicitudfacturacion=5 where codigo=$codigo";
                     $stmtUpdate = $dbh->prepare($sqlUpdate);
                     $flagSuccess=$stmtUpdate->execute(); 
@@ -195,7 +194,9 @@ try{
                       header('Location: ../simulaciones_servicios/generarFacturasPrint.php?codigo='.$codigo.'&tipo=2');
                     }
                 }
+                    
             }
+            
         }else{//ya se registro
             echo "ya se registró la factura.";
             if(isset($_GET['q'])){

@@ -18,8 +18,11 @@ $codigo=$_POST['cod_solicitudfacturacion'];
 $nro_factura=$_POST['nro_factura'];
 
 $nroAutorizacion=$_POST['nro_autorizacion'];
-$llaveDosificacion=$_POST['llave_dosificacion'];
-$fecha_limite_emision=$_POST['fecha_limite_emision'];
+// $llaveDosificacion=$_POST['llave_dosificacion'];
+// $fecha_limite_emision=$_POST['fecha_limite_emision'];
+$fecha_factura=$_POST['fecha_factura'];
+$nit_cliente=$_POST['nit_cliente'];
+$razon_social=$_POST['razon_social'];
 
 
 // $cod_control=$_POST['cod_control'];
@@ -70,8 +73,8 @@ try{
             $cod_tipopago = $resultInfo['cod_tipopago'];
             $cod_cliente = $resultInfo['cod_cliente'];
             $cod_personal = $resultInfo['cod_personal'];
-            $razon_social = $resultInfo['razon_social'];
-            $nitCliente = $resultInfo['nit'];
+            $razon_social = $razon_social;
+            $nitCliente = $nit_cliente;
             $observaciones = $resultInfo['observaciones'];
             $nombre_cliente = $resultInfo['nombre_cliente'];
             if($nombre_cliente==null || $nombre_cliente==''){//no hay registros con ese dato
@@ -85,8 +88,8 @@ try{
                 $cod_tipopago = $resultInfo['cod_tipopago'];
                 $cod_cliente = $resultInfo['cod_cliente'];
                 $cod_personal = $resultInfo['cod_personal'];
-                $razon_social = $resultInfo['razon_social'];
-                $nitCliente = $resultInfo['nit'];
+                $razon_social = $razon_social;
+                $nitCliente = $nit_cliente;
                 $observaciones = $resultInfo['observaciones'];
                 $nombre_cliente = $resultInfo['razon_social'];
             }
@@ -94,8 +97,8 @@ try{
             if($cod_sucursal==null || $cod_sucursal==''){//sucursal no encontrada
             	echo 5;
             }else{                
-                $fecha_actual=date('Y-m-d');
-                $fecha_actual_cH=date('Y-m-d H:i:s');
+                // $fecha_actual=date('Y-m-d');
+                $fecha_actual_cH=$fecha_factura;
                 $cod_dosificacionfactura = 0;
                 // $nroAutorizacion = $nro_autorizacion;
                 // $llaveDosificacion = $resultInfo['llave_dosificacion'];
@@ -109,25 +112,26 @@ try{
 				$monto_total=$resultMontoTotal['monto'];
 				$totalFinalRedondeado=round($monto_total,0);				
 				//NUMERO CORRELATIVO DE FACTURA
-				$stmtNroFac = $dbh->prepare("SELECT IFNULL(nro_factura+1,1)as correlativo from facturas_venta where cod_sucursal='$cod_sucursal' order by codigo desc LIMIT 1");
-				$stmtNroFac->execute();
-				$resultNroFact = $stmtNroFac->fetch();    
-				$nro_correlativo = $resultNroFact['correlativo'];
-				if($nro_correlativo==null || $nro_correlativo=='')$nro_correlativo=1;   
+				// $stmtNroFac = $dbh->prepare("SELECT IFNULL(nro_factura+1,1)as correlativo from facturas_venta where cod_sucursal='$cod_sucursal' order by codigo desc LIMIT 1");
+				// $stmtNroFac->execute();
+				// $resultNroFact = $stmtNroFac->fetch();    
+				// $nro_correlativo = $resultNroFact['correlativo'];
+
+				// if($nro_correlativo==null || $nro_correlativo=='')$nro_correlativo=1;   
 				//generamos el comprobante
-				$cod_comprobante=ejecutarComprobanteSolicitud($codigo,$nro_correlativo);
+				$cod_comprobante=ejecutarComprobanteSolicitud($codigo,$nro_factura);
 				// echo "auto:".$nroAutorizacion." - nro_corr:".$nro_correlativo." - nitCliente:".$nitCliente." - fecha_actual:".$fecha_actual." - totalFinalRedondeado:".$totalFinalRedondeado." - llaveDosificacion:".$llaveDosificacion;
-				$controlCode = new ControlCode();
-				$cod_autorizacion = $controlCode->generate($nroAutorizacion,//Numero de autorizacion
-				$nro_correlativo,//Numero de factura
-				$nitCliente,//Número de Identificación Tributaria o Carnet de Identidad
-				str_replace('-','',$fecha_actual),//fecha de transaccion de la forma AAAAMMDD
-				$totalFinalRedondeado,//Monto de la transacción
-				$llaveDosificacion//Llave de dosificación
-				);
+				// $controlCode = new ControlCode();
+				// $cod_autorizacion = $controlCode->generate($nroAutorizacion,//Numero de autorizacion
+				// $nro_correlativo,//Numero de factura
+				// $nitCliente,//Número de Identificación Tributaria o Carnet de Identidad
+				// str_replace('-','',$fecha_actual),//fecha de transaccion de la forma AAAAMMDD
+				// $totalFinalRedondeado,//Monto de la transacción
+				// $llaveDosificacion//Llave de dosificación
+				// );
 				// echo "cod:".$cod_autorizacion;
 				$sql="INSERT INTO facturas_venta(cod_sucursal,cod_solicitudfacturacion,cod_unidadorganizacional,cod_area,fecha_factura,fecha_limite_emision,cod_tipoobjeto,cod_tipopago,cod_cliente,cod_personal,razon_social,nit,cod_dosificacionfactura,nro_factura,nro_autorizacion,codigo_control,importe,observaciones,cod_estadofactura,cod_comprobante) 
-				values ('$cod_sucursal','$codigo','$cod_unidadorganizacional','$cod_area','$fecha_actual_cH','$fecha_limite_emision','$cod_tipoobjeto','$cod_tipopago','$cod_cliente','$cod_personal','$razon_social','$nitCliente','$cod_dosificacionfactura','$nro_correlativo','$nroAutorizacion','$cod_autorizacion','$totalFinalRedondeado','$observaciones','1','$cod_comprobante')";
+				values ('$cod_sucursal','$codigo','$cod_unidadorganizacional','$cod_area','$fecha_actual_cH',null,'$cod_tipoobjeto','$cod_tipopago','$cod_cliente','$cod_personal','$razon_social','$nitCliente','$cod_dosificacionfactura','$nro_factura','$nroAutorizacion',null,'$totalFinalRedondeado','$observaciones','4',cod_comprobante)";
 				// echo $sql;
 				$stmtInsertSoliFact = $dbh->prepare($sql);
 				$flagSuccess=$stmtInsertSoliFact->execute();
@@ -156,7 +160,7 @@ try{
 					$fechaHoraActual=date("Y-m-d H:i:s");
 					$idTipoObjeto=2709;
 					$idObjeto=2729; //regristado
-					$obs="Solicitud Facturada manualmente";
+					$obs="Solicitud Facturada Manualmente";
 					if(isset($_GET['u'])){
 						$u=$_GET['u'];
 						actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);

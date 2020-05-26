@@ -46,7 +46,7 @@ if($cod_estado_aux==2 || $cod_estado_aux==null || $codigo>0){
         $stmtCC->execute();
         $resultCC = $stmtCC->fetch();
         $numero_caja_chica_aux = $resultCC['numero'];
-        $monto_amterior = $resultCC['monto_reembolso'];//sacamos el monto anterior de caja chica
+        $monto_anterior = $resultCC['monto_reembolso'];//sacamos el monto anterior de caja chica
         if($numero_caja_chica_aux==null){
             $numero_caja_chica_aux=0;
         }
@@ -54,7 +54,7 @@ if($cod_estado_aux==2 || $cod_estado_aux==null || $codigo>0){
         $cod_tipocajachica = 0;
         $fecha = "";
         $numero = $numero_caja_chica_aux+1;
-        $monto_inicio = $monto_amterior;    
+        $monto_inicio = $monto_anterior;    
         // $monto_reembolso = 0;    
         $observaciones = null;    
         $cod_personal = 0;    
