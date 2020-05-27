@@ -11,16 +11,16 @@
 		$nombreuser="ivonne.casas@ibnorca.org";
 		$claveuser="120e4ada5128ba5d61e5165c9e5911cb";
 	
-	/*Usuario DNS
-		$nombreuser="glicet.osco@ibnorca.org";
-		$claveuser="963775a9f4326afcb14ae372759d9458";
-	*/
+	//Usuario DNS
+	//	$nombreuser="glicet.osco@ibnorca.org";
+	//	$claveuser="963775a9f4326afcb14ae372759d9458";
+	//
 	//preparar array de parametros	
 	/* descomentar	*/
 	
-	/*$datos=array("sIdentificador"=>$sIdentificador, "sKey"=>$sKey, 
-				 "operacion"=>"Login", "nombreUser"=>$nombreuser, "claveUser"=>$claveuser);
-	*/		 
+//	$datos=array("sIdentificador"=>$sIdentificador, "sKey"=>$sKey, 
+//				 "operacion"=>"Login", "nombreUser"=>$nombreuser, "claveUser"=>$claveuser);
+			 
 			 
 	/******************************************
 	*   parametros obtener de Menu de usuario *

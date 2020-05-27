@@ -1,14 +1,15 @@
 <?php 
 //header('Content-Type: text/html; charset=iso-8859-1');
+  require_once 'functions.php';
+  require_once 'functionsGeneral.php';
 	include("head.php");
-	//include("menuService.php");
   include("librerias.php");// se debe cambiar a la parte posterior
-  // include("functionsGeneral.php");
 ?>    
     <div class="main-panel">
       <div class="content">
       <?php 
-          
+          $tipoLogin=obtieneValorConfig(-10);
+
           if(!isset($_GET['opcion'])){
             $_SESSION['modulo']=0;
             include("cabecera.php");
@@ -18,7 +19,11 @@
               include("cabecera.php");
               require_once('routing.php');
             }else{
-              include("layouts/menu.php");
+              if($tipoLogin==1){
+                include("menu.php");
+              }else{
+                include("menuService.php");
+              }
               include("cabecera.php");
               require_once('routing.php');
             }           

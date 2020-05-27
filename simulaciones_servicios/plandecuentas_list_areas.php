@@ -86,6 +86,9 @@ $stmt->bindColumn('cod_cuenta_ingreso', $cod_cuenta);
           </div>
         </div>
         
+        <div class="card-footer fixed-bottom">
+          <a href="index.php?opcion=listPlanCuentas" class="<?=$buttonCancel;?>"> <-- Volver </a>
+        </div>
         
       </div>
     </div>  

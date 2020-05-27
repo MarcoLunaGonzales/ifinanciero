@@ -104,6 +104,10 @@ $stmt->bindColumn('cuenta_auxiliar', $cuentaAuxiliar);
               <!--div class="card-footer ml-auto mr-auto"-->
               <div class="card-footer fixed-bottom">
                     <button class="<?=$buttonNormal;?>" onClick="location.href='<?=$urlRegister;?>'">Registrar</button>
+                    <button class="<?=$buttonNormal;?>" onClick="location.href='<?=$urlSolRecursos;?>'">PC Sol. Recursos</button>
+                    <button class="<?=$buttonNormal;?>" onClick="location.href='<?=$urlTiposPago;?>'">PC Tipos Pago</button>
+                    <button class="<?=$buttonNormal;?>" onClick="location.href='<?=$urlCajaChica;?>'">PC Caja Chica</button>
+                    <button class="<?=$buttonNormal;?>" onClick="location.href='<?=$urlAreas;?>'">PC Áreas</button>                    
               </div>      
             </div>
           </div>  
