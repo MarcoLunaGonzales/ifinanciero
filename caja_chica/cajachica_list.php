@@ -73,8 +73,8 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
                       <tbody>
                         <?php $index=1;
                         while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { 
-                          $datos_ComproCajaChica=$cod_cajachica."/".$observaciones;
-                            $sql_rendicion="SELECT SUM(monto) monto_total from caja_chicadetalle where cod_cajachica=$cod_cajachica and cod_estadoreferencial=1 ORDER BY nro_documento desc";
+                          $datos_ComproCajaChica=$cod_cajachica."/".$observaciones."/".$codigo_tipo_caja_Chica;  
+                            $sql_rendicion="SELECT SUM(c.monto)-IFNULL((select SUM(r.monto) from caja_chicareembolsos r where r.cod_cajachica=$cod_cajachica and r.cod_estadoreferencial=1),0) as monto_total from caja_chicadetalle c where c.cod_cajachica=$cod_cajachica and c.cod_estadoreferencial=1";
                             $stmtSaldo = $dbh->prepare($sql_rendicion);
                             $stmtSaldo->execute();
                             $resultSaldo=$stmtSaldo->fetch();
@@ -147,18 +147,13 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
                                       </button>
                                       <div class="dropdown-menu" style="background-color: #D8CEF6;">                                    
                                         <button title="Generar Factura Manual" class="dropdown-item" type="button" data-toggle="modal" data-target="#modalFacturaManual" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlprint_contabilizacion_cajachica;?>?cod_cajachica=<?=$cod_cajachica;?>')" target="_blank">
-                                        <i class="material-icons text-danger">input</i> Generar Comprobante Nuevo
+                                        <i class="material-icons text-danger">input</i> Generar en Comprobante Nuevo
                                         </button>
                                         <button title="Generar Factura a Pagos" class="dropdown-item" type="button" data-toggle="modal" data-target="#modalComprobanteCajaChica" onclick="agregaDatosComprCajaChica('<?=$datos_ComproCajaChica;?>')">
-                                        <i class="material-icons text-danger">input</i> Generar Comprobante Existente 
+                                        <i class="material-icons text-danger">input</i> Generar En Comprobante Existente
                                         </button>                                          
                                       </div>
-                                    </div>
-
-
-                                  <!--   <a href="<?=$urlprint_contabilizacion_cajachica;?>?cod_cajachica=<?=$cod_cajachica;?>" target="_blank" > 
-                                      <i class="material-icons" title="Generar Comprobante" style="color:red">input</i>
-                                    </a> -->
+                                    </div>                                  
                                   <?php }
                                 ?>
 
@@ -196,22 +191,14 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
       </div>
       <div class="modal-body">
         <input type="hidden" name="cod_cajachica" id="cod_cajachica" value="0">
-         <div class="row">
+        <input type="hidden" name="cod_tipocajachica" id="cod_tipocajachica" value="0">
+        <div class="row">
           <!-- <label class="col-sm-3 text-right col-form-label" style="color:#424242">Importe De Solicitud de Facturación</label> -->
           <div class="col-sm-12">
             <div class="form-group text-center">
               <input type="text" name="detalle_cajachica" id="detalle_cajachica" value="0" readonly="true" class="form-control text-center" style="background-color:#E3CEF6;text-align: left">            
             </div>
           </div>       
-        </div>
-
-        <div class="row">
-          <label class="col-sm-4 text-right col-form-label" style="color:#424242">Número de Comprobante</label>
-          <div class="col-sm-6">
-            <div class="form-group">
-              <input type="number"name="nro_comprobante" id="nro_comprobante" class="form-control">
-            </div>
-          </div>        
         </div>
         <div class="row">
           <label class="col-sm-4 text-right col-form-label" style="color:#424242">Mes del comprobante</label>
@@ -234,31 +221,42 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
               </select>
             </div>
           </div>
-      </div>      
-      <div class="row">
-        <label class="col-sm-4 text-right col-form-label" style="color:#424242">Tipo de comprobante</label>
-        <div class="col-sm-6">
-          <div class="form-group">            
-            <select class="selectpicker form-control form-control-sm" name="tipo_comprobante" id="tipo_comprobante" data-style="<?=$comboColor;?>">
-                  <option disabled selected value="">Tipo</option>
-                <?php
-                $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM tipos_comprobante where cod_estadoreferencial=1 order by 1");
-              $stmt->execute();
-              while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $codigoX=$row['codigo'];
-                $nombreX=$row['nombre'];
-                $abrevX=$row['abreviatura'];
-              ?>
-              <option value="<?=$codigoX;?>"><?=$nombreX;?> - <?=$abrevX;?></option>  
-              <?php
-                }
+        </div>      
+        <div class="row">
+          <label class="col-sm-4 text-right col-form-label" style="color:#424242">Tipo de comprobante</label>
+          <div class="col-sm-6">
+            <div class="form-group">            
+              <select class="selectpicker form-control form-control-sm" name="tipo_comprobante" id="tipo_comprobante" data-style="<?=$comboColor;?>">
+                    <option disabled selected value="">Tipo</option>
+                  <?php
+                  $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM tipos_comprobante where cod_estadoreferencial=1 order by 1");
+                $stmt->execute();
+                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                  $codigoX=$row['codigo'];
+                  $nombreX=$row['nombre'];
+                  $abrevX=$row['abreviatura'];
                 ?>
-            </select>
+                <option value="<?=$codigoX;?>"><?=$nombreX;?> - <?=$abrevX;?></option>  
+                <?php
+                  }
+                  ?>
+              </select>
+            </div>
           </div>
+        </div>  
+        <div class="row">
+          <label class="col-sm-4 text-right col-form-label" style="color:#424242">Número de Comprobante</label>
+          <div class="col-sm-6">
+            <div class="form-group">
+              <input type="number"name="nro_comprobante" id="nro_comprobante" class="form-control" onchange="ajaxBuscarComprobanteCajaChica()">
+            </div>
+          </div>        
+        </div>    
+        <div class="row" id="contenedor_detalle_comprobante">
+          
         </div>
-      </div>      
       <div class="modal-footer">
-        <button type="button" class="btn btn-success" id="guardarDatosModal" name="guardarDatosModal">Generar Factura</button>
+        <button type="button" class="btn btn-success d-none" id="guardarDatosModalComprobante" name="guardarDatosModalComprobante">Generar Comprobante</button>
         <button type="button" class="btn btn-danger" data-dismiss="modal"> Volver </button>
       </div>
     </div>
@@ -268,9 +266,10 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
 
 <script type="text/javascript">
   $(document).ready(function(){
-    $('#guardarDatosModal').click(function(){    
+    $('#guardarDatosModalComprobante').click(function(){    
       cod_cajachica=document.getElementById("cod_cajachica").value;
       detalle_cajachica=document.getElementById("detalle_cajachica").value;
+      cod_tipocajachica=document.getElementById("cod_tipocajachica").value;
       nro_comprobante=$('#nro_comprobante').val();
       mes_comprobante=$('#mes_comprobante').val();
       tipo_comprobante=$('#tipo_comprobante').val();      
@@ -284,7 +283,7 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
             if(tipo_comprobante==null){
               Swal.fire("Informativo!", "Por favor introduzca el Tipo De Comprobante.", "warning");
             }else{              
-                RegistrarComprobanteCajaChica(cod_cajachica,detalle_cajachica,nro_comprobante,mes_comprobante,tipo_comprobante);
+                RegistrarComprobanteCajaChica(cod_cajachica,cod_tipocajachica,nro_comprobante,mes_comprobante,tipo_comprobante);
             }          
         }
       }      

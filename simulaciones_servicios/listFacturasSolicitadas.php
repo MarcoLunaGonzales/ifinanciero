@@ -98,29 +98,37 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                               break;
                             }
                             //verificamos si ya tiene factura generada y esta activa                           
-                            $stmtFact = $dbh->prepare("SELECT codigo,nro_factura,cod_estadofactura from facturas_venta where cod_solicitudfacturacion=$codigo_facturacion and cod_estadofactura in (1,4)");
+                            $stmtFact = $dbh->prepare("SELECT codigo,nro_factura,cod_estadofactura,razon_social,nit,nro_autorizacion,importe from facturas_venta where cod_solicitudfacturacion=$codigo_facturacion and cod_estadofactura in (1,4)");
                             $stmtFact->execute();
                             $resultSimu = $stmtFact->fetch();
                             $codigo_fact_x = $resultSimu['codigo'];
                             $nro_fact_x = $resultSimu['nro_factura'];
                             $cod_estado_factura_x = $resultSimu['cod_estadofactura'];
+                            $nit_x = $resultSimu['nit'];
+                            $razon_social_x = $resultSimu['razon_social'];
+                            $nro_autorizacion_x = $resultSimu['nro_autorizacion'];
+                            $importe_x = $resultSimu['importe'];
                             if ($nro_fact_x==null)$nro_fact_x="-";
                             if($cod_estado_factura_x==4){
                               $btnEstado="btn-warning";
-                              $estado="FACTURADO Manualmente";
+                              $estado="FACTURA MANUAL";
+
+                              $cliente_x=nameCliente($cod_cliente);                              
+                              $datos_FacManual=$cliente_x."/".$razon_social_x."/".$nit_x."/".$nro_fact_x."/".$nro_autorizacion_x."/".$importe_x;
                             }
 
                             //sacamos monto total de la factura para ver si es de tipo factura por pagos
-                            $sqlMontos="SELECT importe,nro_factura from facturas_venta where cod_solicitudfacturacion=$codigo_facturacion and cod_estadofactura=1 ORDER BY codigo desc";
+                            $sqlMontos="SELECT codigo,importe,nro_factura from facturas_venta where cod_solicitudfacturacion=$codigo_facturacion and cod_estadofactura=1 ORDER BY codigo desc";
                             // echo $sqlMontos;
                             $stmtFactMontoTotal = $dbh->prepare($sqlMontos);
                             $stmtFactMontoTotal->execute();
-                            $importe_fact_x=0;$cont_facturas=0;$cadenaFacturas="";
+                            $importe_fact_x=0;$cont_facturas=0;$cadenaFacturas="";$cadenaCodFacturas="";
                             while ($row_montos = $stmtFactMontoTotal->fetch()){
                               $importe_fact_x+=$row_montos['importe'];
                               $cadenaFacturas.=$row_montos['nro_factura']." - ";
+                              $cadenaCodFacturas.=$row_montos['codigo'].",";
                               $cont_facturas++;
-                            }                        
+                            }                       
                             //sacamos nombre de los detalles
                             $stmtDetalleSol = $dbh->prepare("SELECT cantidad,precio,descripcion_alterna from solicitudes_facturaciondetalle where cod_solicitudfacturacion=$codigo_facturacion");
                             $stmtDetalleSol->execute();
@@ -211,7 +219,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                             
 
                             if($cont_facturas>1){                              
-                              $estado="FACTURADO A PAGOS";
+                              $estado="FACTURADO <br>A PAGOS";
                               $nro_fact_x=trim($cadenaFacturas,' - ');
                             }
 
@@ -231,15 +239,27 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                             <td width="35%"><small><?=$concepto_contabilizacion?></small></td>
                             <td><button class="btn <?=$btnEstado?> btn-sm btn-link"><small><?=$estado;?></small></button></td>
                             <td class="td-actions text-right">
-                              <?php
-
-                                if($cod_estado_factura_x==1){ 
+                              <?php                              
+                                if($cod_estado_factura_x==1){
                                   if($codigo_fact_x>0){//print facturas
                                     if($cont_facturas<2){
                                       ?>
                                       <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=2' target="_blank"><i class="material-icons" title="Imprimir Factura">print</i></a>          
                                      <?php               
-                                    }                    
+                                    }elseif($cont_facturas>1){?>
+                                      <div class="btn-group dropdown">
+                                        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><small>PAGOS</small></button>
+                                        <div class="dropdown-menu"><?php 
+                                          $arrayCodFacturas = explode(",",trim($cadenaCodFacturas,','));
+                                          $arrayFacturas = explode(" - ",trim($cadenaFacturas,' - '));
+                                          for ($i=0; $i < $cont_facturas; $i++) { $cod_factura_x= $arrayCodFacturas[$i];$nro_factura_x= $arrayFacturas[$i];?>
+                                            <a class="dropdown-item" type="button" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$cod_factura_x;?>&tipo=1' target="_blank"><i class="material-icons text-success" title="Imprimir Factura">print</i> Factura <?=$i+1;?> - Nro <?=$nro_factura_x?></a>                                        
+                                            <?php 
+
+                                          }?>
+                                        </div>
+                                      </div> <?php 
+                                    }
                                   }else{// generar facturas
                                     if($codEstado==4||$codEstado==3||$codEstado==5){                                   
                                       ?>
@@ -334,6 +354,10 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                       }
                                     }
                                   }
+                                }elseif($cod_estado_factura_x==4){//factura manual ?>
+                                  <button title="Detalles" class="btn btn-success" type="button" data-toggle="modal" data-target="#modalDetalleFacturaManual" onclick="agregaDatosDetalleFactManual('<?=$datos_FacManual;?>')">
+                                    <i class="material-icons">list</i>
+                                  </button> <?php 
                                 }
                               ?>
                                <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir Solicitud">print</i></a>
@@ -400,6 +424,70 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                 </table>
               </div>
     </div>  
+  </div>
+</div>
+<div class="modal fade" id="modalDetalleFacturaManual" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h3 class="modal-title" id="myModalLabel"><b>Detalle Factura Manual</b></h3>
+      </div>
+      <div class="modal-body">        
+        <div class="row">
+          <label class="col-sm-3 text-right col-form-label" style="color:#424242">Cliente</label>
+          <div class="col-sm-8">
+            <div class="form-group">
+              <input type="text" name="cliente_x" id="cliente_x" readonly="true" style="background-color:#D8CEF6;" class="form-control">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <label class="col-sm-3 text-right col-form-label" style="color:#424242">Numero de Factura: </label>
+          <div class="col-sm-8">
+            <div class="form-group">
+              <input type="number" name="nro_factura" id="nro_factura" readonly="true" style="background-color:#D8CEF6;" class="form-control">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <label class="col-sm-3 text-right col-form-label" style="color:#424242">Nro de Autorización: </label>
+          <div class="col-sm-8">
+            <div class="form-group">
+              <input type="number" name="nro_autorizacion" id="nro_autorizacion" readonly="true" style="background-color:#D8CEF6;" class="form-control">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <label class="col-sm-3 text-right col-form-label" style="color:#424242">Nit Cliente </label>
+          <div class="col-sm-8">
+            <div class="form-group">
+              <input type="number" name="nit_cliente" id="nit_cliente" readonly="true" style="background-color:#D8CEF6;" class="form-control">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <label class="col-sm-3 text-right col-form-label" style="color:#424242">Razón Social </label>
+          <div class="col-sm-8">
+            <div class="form-group">
+              <input type="text" name="razon_social" id="razon_social" readonly="true" style="background-color:#D8CEF6;" class="form-control">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <label class="col-sm-3 text-right col-form-label" style="color:#424242">Importe</label>
+          <div class="col-sm-8">
+            <div class="form-group">
+              <input type="text" name="importe" id="importe" readonly="true" style="background-color:#D8CEF6;" class="form-control">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <!-- <button type="button" class="btn btn-success" id="guardarFacturaManual" name="guardarFacturaManual">Agregar</button> -->
+        <button type="button" class="btn btn-danger" data-dismiss="modal"> Volver </button>
+      </div>
+    </div>
   </div>
 </div>
 <!--    end small modal -->
