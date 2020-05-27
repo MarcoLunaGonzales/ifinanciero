@@ -2747,6 +2747,8 @@ function guardarSimulacionCosto(){
   var cantidad_modulos=$("#cantidad_modulos").val();
   var monto_norma=$("#monto_norma").val();
   var tipo_curso=$("#tipo_curso").val();
+  var fecha_estimada=$("#fecha_estimada").val();
+  var cantidad_dias=$("#cantidad_dias").val();
   var ibnorca = 1;
   /*if( $("#ibnorca_check").is(':checked') ) {
       var ibnorca=1;
@@ -2756,7 +2758,7 @@ function guardarSimulacionCosto(){
   if(nombre==""||!(plantilla_costo>0)||cantidad_modulos==""||monto_norma==""){
    Swal.fire('Informativo!','Debe llenar los campos!','warning'); 
   }else{
-     var parametros={"tipo_curso":tipo_curso,"monto_norma":monto_norma,"nombre":nombre,"plantilla_costo":plantilla_costo,"precio":precio,"ibnorca":ibnorca,"cantidad_modulos":cantidad_modulos};
+     var parametros={"fecha_estimada":fecha_estimada,"cantidad_dias":cantidad_dias,"tipo_curso":tipo_curso,"monto_norma":monto_norma,"nombre":nombre,"plantilla_costo":plantilla_costo,"precio":precio,"ibnorca":ibnorca,"cantidad_modulos":cantidad_modulos};
      $.ajax({
         type: "GET",
         dataType: 'html',
@@ -13503,12 +13505,13 @@ function editarPrecioSimulacionCostos(){
     $("#modal_importeplanedit").attr("readonly",true);
   }
 }
+
 function cambiarPrecioPlantilla(){
   if(!($("#modal_importeplanedit").is("[readonly]"))){
     $("#modal_importeplanedit").attr("readonly",true);
   }
   $("#modal_importeplanedit").val(redondeo(parseFloat($('#modal_importeplan option:selected').text())));
-  cargarPreciosDetalle($('#modal_importeplan').val());
+  cargarPreciosDetalle($('#modal_importeplan').val()); //fila afectada
 }
 
 

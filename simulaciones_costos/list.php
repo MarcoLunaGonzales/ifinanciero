@@ -82,6 +82,19 @@ $stmt->bindColumn('estado', $estado);
                           <td class="td-actions text-right">
                             <?php
                               if($codEstado==4||$codEstado==3){
+                                if($codEstado==3){
+                                 ?>
+                                 <a href="solicitudes/registerSolicitudDetalle.php?sim=<?=$codigo?>&det=1" target="_blank" title="Solicitud De Recursos"class="btn btn-danger">
+                                    <i class="material-icons">content_paste</i>
+                                 </a>
+                                 <a href="index.php?opcion=listSolicitudRecursos&cod_sim=<?=$codigo?>" target="_blank" title="Lista Solicitudes Recursos"class="btn btn-info">
+                                    <i class="material-icons">list</i>
+                                 </a>
+                                 <a href="#" target="_blank" title="Reporte Solicitud Recursos"class="btn btn-warning">
+                                    <i class="material-icons">bar_chart</i>
+                                 </a>
+                                 <?php
+                                }
                             ?>
                             <div class="btn-group dropdown">
                               <button type="button" class="btn <?=$btnEstado?> dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

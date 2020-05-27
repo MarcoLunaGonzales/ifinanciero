@@ -6485,4 +6485,14 @@ function ejecutadoEgresosMes($oficina, $anio, $mes, $area, $acumulado, $cuenta){
   $datos=json_decode($remote_server_output);
     return $datos->ejecutado; 
 }
+function obtenerCodigoPrecioSimulacionCosto($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT cod_precioplantilla from simulaciones_costos where codigo=$codigo");  
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['cod_precioplantilla'];
+   }
+   return($valor);
+}
 ?>

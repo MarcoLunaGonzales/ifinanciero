@@ -27,10 +27,15 @@ if(isset($_GET['q'])){
   $sqlAreas="";
   $sqlServicio="";
 }
+$sqlSimCosto="";
+if(isset($_GET['cod_sim'])){
+  $codSimCosto=$_GET['cod_sim'];
+  $sqlSimCosto=" and sr.cod_simulacion=$codSimCosto";
+}
 // Preparamos
 $stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area 
   from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo 
-  where sr.cod_estadoreferencial=1 and sr.cod_estadosolicitudrecurso!=2 $sqlServicio order by sr.numero desc");
+  where sr.cod_estadoreferencial=1 and sr.cod_estadosolicitudrecurso!=2 $sqlServicio $sqlSimCosto order by sr.numero desc");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -300,11 +305,17 @@ $stmt->bindColumn('idServicio', $idServicioX);
                 </div>
               </div>
               <div class="card-footer fixed-bottom col-sm-9">
-                <?php 
+                <?php
+                $codUrl="";$codUrl2=""; 
+                if(isset($_GET['cod_sim'])){
+                 $codUrl="&sim=$codSimCosto&det=1";
+                 $codUrl2="?sim=$codSimCosto&det=1";
+                }
+
                 if(isset($_GET['q'])){
-                ?><a href="<?=$urlRegister3;?>?q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>" target="_self" class="<?=$buttonNormal;?>">Registrar</a><?php
+                ?><a href="<?=$urlRegister3;?>?q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?><?=$codUrl?>" target="_self" class="<?=$buttonNormal;?>">Registrar</a><?php
                 }else{
-                 ?><a href="#" onclick="javascript:window.open('<?=$urlRegister3;?>')" class="<?=$buttonNormal;?>">Registrar</a>
+                 ?><a href="#" onclick="javascript:window.open('<?=$urlRegister3;?><?=$codUrl2?>')" class="<?=$buttonNormal;?>">Registrar</a>
                   <?php
                 } 
                 ?>
@@ -319,7 +330,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
 <?php
 $stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area 
   from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo 
-  where sr.cod_estadoreferencial=2 $sqlServicio order by sr.numero desc");
+  where sr.cod_estadoreferencial=2 $sqlServicio $sqlSimCosto order by sr.numero desc");
 // Ejecutamos
 $stmt->execute();
 // bindColumn

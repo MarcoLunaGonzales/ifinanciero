@@ -49,7 +49,13 @@ $bgClase="bg-info";
           $precioRegistrado=obtenerPrecioRegistradoPlantillaCosto($codPlan);
           $nCursos=obtenerCantidadCursosPlantillaCosto($codPlan); 
           
-          $porcentPrecios=($precioLocalX*100)/($precioRegistrado);  
+          $porcentPrecios=($precioLocalX*100)/($precioRegistrado);
+          $codigoPrecio=obtenerCodigoPrecioSimulacionCosto($codigo);
+          $ingresoAlternativo=obtenerPrecioAlternativoDetalle($codigoPrecio);
+          if($ingresoAlternativo!=0){
+            $precioLocalX=$ingresoAlternativo;
+          }
+
           /* fin de datos */
           $tituloUnidad="NACIONAL";
           if(obtenerValorConfiguracion(51)!=1){
@@ -91,7 +97,9 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
   $grupoUnidad=$row['cod_unidadorganizacional'];
   $grupoArea=$row['cod_area'];
 
-    if($row['calculado']==$row['local']){
+    
+    if($tipoCosto==1){
+      if($row['calculado']==$row['local']){
       $montoCalculadoTit=$row['calculado']*($porcentPrecios/100)*$nCursos;
       $montoCalculadoEjecutadoPadre=$row['calculado']*$nCursos;
     }else{
@@ -99,7 +107,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       $montoCalculadoEjecutadoPadre=$row['local']*$nCursos;
     }
       $montoTotales+=$montoCalculadoTit;
-    if($tipoCosto==1){
+
        $html.='<tr class="bg-plomo">'.
                       '<td class="font-weight-bold text-left">'.$row['nombre'].'</td>'.
                       '<td class="text-right font-weight-bold">'.number_format($montoCalculadoEjecutadoPadre, 2, '.', ',').'</td>'.
@@ -122,7 +130,10 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
        $codPartida=$row_partidas['cod_partidapresupuestaria'];
          $numeroCuentas=contarPresupuestoCuentas($codPartida);
 
-        if($row_partidas['tipo_calculo']!=1){
+        
+        
+         if($tipoCosto==1){
+          if($row_partidas['tipo_calculo']!=1){
           $numeroCuentas="(Manual)";
           $montoCalculado=$row_partidas['monto_local']*($porcentPrecios/100)*$nCursos;
           $montoCalculadoEjecutado=$row_partidas['monto_local']*$nCursos;
@@ -131,8 +142,6 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
           $montoCalculado=$row_partidas['monto_calculado']*($porcentPrecios/100)*$nCursos;
           $montoCalculadoEjecutado=$row_partidas['monto_calculado']*$nCursos;
         }
-        
-         if($tipoCosto==1){
            $html.='<tr class="bg-info text-white">'.
                       '<td class="font-weight-bold text-left">&nbsp;&nbsp; '.$row_partidas['nombre'].' '.$numeroCuentas.'</td>'.
                       '<td class="text-right font-weight-bold">'.number_format($montoCalculadoEjecutado, 2, '.', ',').'</td>'.

@@ -29,6 +29,7 @@ $contadorRegistros=0;
 
 <?php
 $fechaActual=date("Y-m-d");
+$fechaActualInput=date("d/m/Y");
 $dbh = new Conexion();
 ?>
 
@@ -39,7 +40,7 @@ $dbh = new Conexion();
       <div class="card">
         <div class="card-header <?=$colorCard;?> card-header-text">
         <div class="card-text">
-          <h4 class="card-title">Registrar Simulacion</h4>
+          <h4 class="card-title">Registrar Propuesta</h4>
         </div>
         </div>
         <div class="card-body ">
@@ -76,11 +77,18 @@ $dbh = new Conexion();
                       </div>
                       <div class="row" id="lista_precios">
                       </div>
+                      <br>
                       <div class="row">
                            <label class="col-sm-2 col-form-label">Cantidad de M&oacute;dulos:</label>
-                           <div class="col-sm-7"> 
+                           <div class="col-sm-2"> 
                              <div class="form-group">
                                  <input class="form-control" type="number" id="cantidad_modulos" name="cantidad_modulos" min="1" max="12" value="1">
+                               </div>
+                             </div>
+                             <label class="col-sm-2 col-form-label">Cantidad de d&iacute;as:</label>
+                           <div class="col-sm-3"> 
+                             <div class="form-group">
+                                 <input class="form-control" type="number" id="cantidad_dias" name="cantidad_dias" min="1" value="1">
                                </div>
                              </div>     
                       </div>
@@ -92,6 +100,14 @@ $dbh = new Conexion();
                                <!--</div>
                              </div>     
                       </div>-->
+                      <div class="row">
+                       <label class="col-sm-2 col-form-label">Fecha Estimada:</label>
+                       <div class="col-sm-7">
+                         <div class="form-group">
+                            <input class="form-control datepicker" type="text" id="fecha_estimada" name="fecha_estimada" value="<?=$fechaActualInput?>">  
+                         </div>
+                        </div>
+                      </div>
                      <div class="row">
                        <label class="col-sm-2 col-form-label">Tipo de Curso:</label>
                        <div class="col-sm-7">
@@ -112,7 +128,7 @@ $dbh = new Conexion();
                                 </select>
                               </div>
                         </div>
-                      </div> 
+                      </div>
         
         </div>
         <br>

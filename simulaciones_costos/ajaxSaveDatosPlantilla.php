@@ -37,9 +37,13 @@ $stmtDetalles->execute();
     $montoDet=$rowDet['editado_alumno']*$al_i;
     $cuenta=$rowDet['cod_cuenta'];
     $dbhDet = new Conexion();
-    $sqlUpdateDetalle="UPDATE simulaciones_detalle SET  monto_unitario='$montoDet',monto_total='$montoDet' where codigo=$codDet";
+    /*$sqlUpdateDetalle="UPDATE simulaciones_detalle SET  monto_unitario='$montoDet',monto_total='$montoDet' where codigo=$codDet";
     $stmtUpdateDetalle = $dbhDet->prepare($sqlUpdateDetalle);
-    $stmtUpdateDetalle->execute();
+    $stmtUpdateDetalle->execute();*/
+
+    $sqlUpdateDetalle2="UPDATE simulaciones_detalle SET  cantidad='$al_i',monto_unitario='$montoDet',monto_total='$montoDet' where codigo=$codDet and cod_tipo=1";
+    $stmtUpdateDetalle2 = $dbhDet->prepare($sqlUpdateDetalle2);
+    $stmtUpdateDetalle2->execute();
 
 //insertar en cuentas_simulacion
     $dbhC = new Conexion();

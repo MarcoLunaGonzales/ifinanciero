@@ -29,6 +29,10 @@ if(isset($_GET['nombre'])){
   $monto_norma=$_GET['monto_norma'];
   $codPrecio=$_GET['precio'];
   $tipoCurso=$_GET['tipo_curso'];
+
+  $festimada=explode("/", $_GET['fecha_estimada']);
+  $fecha_estimada=$festimada[2]."-".$festimada[1]."-".$festimada[0];
+  $cantidad_dias=$_GET['cantidad_dias'];
   $ibnorca=1;
   $cantidadAlumnos=obtenerPlantillaCostoAlumnos($plantilla_costo);
   $utilidadMin=obtenerPlantillaCostoUtilidad($plantilla_costo);
@@ -36,8 +40,8 @@ if(isset($_GET['nombre'])){
   $fecha= date("Y-m-d");
   $codSimCosto=obtenerCodigoSimCosto();
   $dbh = new Conexion();
-  $sqlInsert="INSERT INTO simulaciones_costos (codigo, nombre, fecha, cod_plantillacosto, cod_responsable,cod_precioplantilla,ibnorca,cantidad_alumnoslocal,utilidad_minimalocal,cantidad_cursosmes,cantidad_modulos,monto_norma,habilitado_norma,cod_tipocurso) 
-  VALUES ('".$codSimCosto."','".$nombre."','".$fecha."', '".$plantilla_costo."', '".$globalUser."','".$codPrecio."','".$ibnorca."','".$cantidadAlumnos."','".$utilidadMin."','".$cantidadCursosMes."','".$cantidad_modulos."','".$monto_norma."',1,'".$tipoCurso."')";
+  $sqlInsert="INSERT INTO simulaciones_costos (codigo, nombre, fecha, cod_plantillacosto, cod_responsable,cod_precioplantilla,ibnorca,cantidad_alumnoslocal,utilidad_minimalocal,cantidad_cursosmes,cantidad_modulos,monto_norma,habilitado_norma,cod_tipocurso,fecha_curso,dias_curso) 
+  VALUES ('".$codSimCosto."','".$nombre."','".$fecha."', '".$plantilla_costo."', '".$globalUser."','".$codPrecio."','".$ibnorca."','".$cantidadAlumnos."','".$utilidadMin."','".$cantidadCursosMes."','".$cantidad_modulos."','".$monto_norma."',1,'".$tipoCurso."','".$fecha_estimada."','".$cantidad_dias."')";
   $stmtInsert = $dbh->prepare($sqlInsert);
   $stmtInsert->execute();
 

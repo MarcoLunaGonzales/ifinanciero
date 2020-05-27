@@ -69,14 +69,16 @@ $j=1;
           $codTipoX=$rowDetalles['cod_tipo'];
           $montoDetalle=number_format($rowDetalles['monto_total'], 2, '.', '');
           if($ibnorcaC==1){
-          $montoDetalleAl=number_format($montoDetalle/$cantidadItem, 2, '.', '');       
+          $montoDetalleAl=number_format($rowDetalles['editado_alumno'], 2, '.', '');       
           }else{
-          $montoDetalleAl=number_format($montoModX/$alumnosExternoX, 2, '.', '');        
+          $montoDetalleAl=number_format($montoModX, 2, '.', '');        
           } 
+         $montoDetalle=$rowDetalles['editado_alumno']*$cantidadItem;
          if($bandera==1){
           $totalMontoDetalle+=$montoDetalle;
           $totalMontoDetalleAl+=$montoDetalleAl;        
-         }   
+         } 
+         $montoDetalle=number_format($montoDetalle, 2, '.', '');  
           ?><tr>
               <td class="text-left small text-white bg-info"><input type="hidden" id="codigo_cuenta<?=$j?>RRR<?=$i?>" value="<?=$codigoCuenta?>"><input type="hidden" id="codigo_fila<?=$j?>RRR<?=$i?>" value="<?=$codX?>">&nbsp;&nbsp;&nbsp;&nbsp;<?=$nomX?></td>
               <td class="text-left small font-weight-bold"><?=strtoupper($rowDetalles['glosa'])?></td>

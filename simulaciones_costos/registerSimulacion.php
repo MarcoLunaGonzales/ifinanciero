@@ -490,7 +490,10 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
                 </tr>
                 <?php
              $precioVentaUnitario=(($costoTotalLocal/$alumnosX)/(1-($utilidadIbnorcaX/100)));
-             $precioVentaRecomendado=$precioVentaUnitario/(1-(($iva+$it)/100));
+             //;
+             //$precioVentaRecomendado=$precioVentaUnitario/(1-(($iva+$it)/100));
+             $precioVentaRecomendado=(-($totalVariable[2]*$alumnosX)*$precioRegistrado)/((((($utilidadIbnorcaX/100)-1+(($iva+$it)/100))*$precioRegistrado)+$totalFijo[0])*$alumnosX);   
+
                 ?>
                 <tr>
                   <td class="text-left small bg-table-primary text-white">PRECIO DE VENTA UNITARIO MINIMO</td>
@@ -498,7 +501,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
                 </tr>
                 <tr class="bg-danger text-white">
                   <td class="text-left small">PRECIO DE VENTA CON FACTURA "RECOMENDADO"</td>
-                  <td class="text-right font-weight-bold"><?=number_format($precioVentaRecomendado, 2, '.', ',')?></td>
+                  <td class="text-right font-weight-bold"><?=number_format(ceil($precioVentaRecomendado), 2, '.', ',')?></td>
                 </tr>
                 <tr class="bg-warning text-dark">
                   <td class="text-left small">PRECIO DE VENTA CON FACTURA "UTILIZADO"</td>
@@ -541,7 +544,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
                 <tr class="<?=$estiloUtilidad?>">
                   <td class="text-left small bg-table-primary2 text-white">UTILIDAD NETA</td>
                   <td class="text-right font-weight-bold <?=$estiloUtilidadIbnorca?>"><?=number_format($utilidadNetaLocal, 2, '.', ',')?></td>
-                  <td class="text-right font-weight-bold <?=$estiloUtilidadIbnorca?>"><?=number_format($pUtilidadLocal, 2, '.', ',')?> %</td>
+                  <td class="text-right font-weight-bold <?=$estiloUtilidadIbnorca?>"><?=bcdiv($pUtilidadLocal, '1', 2)?> %</td>
                 </tr>
 							</tbody>
 						</table>
@@ -609,4 +612,9 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
 
 <?php
 require_once 'modal.php';
+
 ?>
+
+
+
+
