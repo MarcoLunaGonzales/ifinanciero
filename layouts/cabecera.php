@@ -4,6 +4,11 @@ if(isset($_GET['q'])){
        $url= $_GET["opcion"];
  ?><!--<a class='flotante' title="Cambiar la sesión" href='#'><img src='assets/img/nuevoUser.svg' width="35" height="35" border="0" onclick="alerts.showSwal('warning-message-change-user','change.php?q=<?=$q;?>&url=<?=$url?>')"/></a>--><?php
 }
+
+$urlListGestionTrabajo="index.php?opcion=listGestionTrabajo";
+$urllistUnidadOrganizacional="index.php?opcion=listUnidadOrganizacional";
+$urmesCurso="index.php?opcion=mesCurso";
+
 ?>
 
 <!-- Navbar -->
@@ -32,9 +37,12 @@ if(isset($_GET['q'])){
               $fechaSistema=date("d/m/Y");
               $horaSistema=date("H:i");
             ?>
-            <h6>Gesti&oacute;n Trabajo: </h6>&nbsp;<h4 class="text-danger font-weight-bold">[<?=$globalNombreGestion;?>]</h4>&nbsp;&nbsp;&nbsp;
-            <h6>Mes Trabajo: </h6>&nbsp;<h4 class="text-danger font-weight-bold">[<?=$globalMes;?>]</h4>&nbsp;&nbsp;&nbsp;
-            <h6>Unidad: </h6>&nbsp;<h4 class="text-danger font-weight-bold">[ <?=$globalNombreUnidad;?> ]</h4> &nbsp;&nbsp; <h6>Area: </h6>&nbsp;<h4 class="text-danger font-weight-bold">[ <?=$globalNombreArea;?> ]</h4>
+            
+
+            <h6>Gesti&oacute;n Trabajo: </h6>&nbsp;<h4 class="text-danger font-weight-bold"><a title="Aceptar Solicitud" style="color:#FF0000; " href='<?=$urlListGestionTrabajo?>' >[<?=$globalNombreGestion;?>]</a></h4>
+            &nbsp;&nbsp;&nbsp;
+            <h6>Mes Trabajo: </h6>&nbsp;<h4 class="text-danger font-weight-bold"><a title="Aceptar Solicitud" style="color:#FF0000; " href='<?=$urmesCurso?>' >[<?=$globalMes;?>]</a></h4>&nbsp;&nbsp;&nbsp;
+            <h6>Unidad: </h6>&nbsp;<h4 class="text-danger font-weight-bold"><a title="Aceptar Solicitud" style="color:#FF0000; " href='<?=$urllistUnidadOrganizacional?>' >[ <?=$globalNombreUnidad;?> ]</a></h4> &nbsp;&nbsp; <h6>Area: </h6>&nbsp;<h4 class="text-danger font-weight-bold"><a title="Aceptar Solicitud" style="color:#FF0000; " href='#' >[ <?=$globalNombreArea;?> ]</a></h4>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           
           <div class="collapse navbar-collapse justify-content-end">

@@ -10545,10 +10545,7 @@ function filaTablaUnidadEntidad(tabla){
 //reportes
 function ajax_entidad_Oficina(){
   var contenedor;
-  // var codigo_entidad=combo.value;
-
   var arrayEntidad = $("#entidad").val();
-
   contenedor = document.getElementById('div_contenedor_oficina1');
   ajax=nuevoAjax();
   ajax.open('GET', 'reportes/entidadesOFAjax.php?codigo_entidad='+arrayEntidad,true);
@@ -10556,7 +10553,6 @@ function ajax_entidad_Oficina(){
     if (ajax.readyState==4) {
       contenedor.innerHTML = ajax.responseText;
       $('.selectpicker').selectpicker(["refresh"]);
-      
       ajaxEntidadOficina2(arrayEntidad);
     }
   }
@@ -10565,10 +10561,7 @@ function ajax_entidad_Oficina(){
 
 function ajax_tipo_filtro_reporte_prove_cliente(){
   var contenedor;
-  // var codigo_entidad=combo.value;
-
   var array_tipo_cp = $("#tipo_cp").val();
-
   contenedor = document.getElementById('div_contenedor_cuenta');
   ajax=nuevoAjax();
   ajax.open('GET', 'reportes/ajax_tipo_cliente_provee_cuenta.php?codigo='+array_tipo_cp,true);
@@ -10576,19 +10569,16 @@ function ajax_tipo_filtro_reporte_prove_cliente(){
     if (ajax.readyState==4) {
       contenedor.innerHTML = ajax.responseText;
       $('.selectpicker').selectpicker(["refresh"]);
-      //ajax_clientes_proveedores();
     }
   }
   ajax.send(null)  
 }
 function ajax_clientes_proveedores(){
-    var contenedor;
-  // var codigo_entidad=combo.value;
-
-  var array_tipo_cp = $("#tipo_cp").val();
+  var contenedor;
+  var array_cuentas = $("#cuenta").val();
   contenedor = document.getElementById('div_contenedorProv_cli');
   ajax=nuevoAjax();
-  ajax.open('GET', 'reportes/ajax_clientes_proveedores.php?codigo='+array_tipo_cp,true);
+  ajax.open('GET', 'reportes/ajax_clientes_proveedores.php?codigo='+array_cuentas,true);
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
       contenedor.innerHTML = ajax.responseText;
@@ -10600,9 +10590,6 @@ function ajax_clientes_proveedores(){
 
 
 function ajaxEntidadOficina2(arrayEntidad){
-  // var cod_uo=$("#cod_unidadorganizacional").val();  
-  // alert(cod_uo);
-
   var contenedor; 
   contenedor = document.getElementById('div_contenedor_oficina_costo');
   ajax=nuevoAjax();
@@ -13467,10 +13454,10 @@ function agregaDatosFactManual(datos){
   var d=datos.split('/');
   document.getElementById("cod_solicitudfacturacion_factmanual").value=d[0];
 }
-function RegistrarFacturaManual(cod_solicitudfacturacion,nro_factura,nro_autorizacion,llave_dosificacion,fecha_limite_emision){
+function RegistrarFacturaManual(cod_solicitudfacturacion,nro_factura,nro_autorizacion,fecha_factura,nit_cliente,razon_social){
   $.ajax({
     type:"POST",
-    data:"cod_solicitudfacturacion="+cod_solicitudfacturacion+"&nro_factura="+nro_factura+"&nro_autorizacion="+nro_autorizacion+"&llave_dosificacion="+llave_dosificacion+"&fecha_limite_emision="+fecha_limite_emision,
+    data:"cod_solicitudfacturacion="+cod_solicitudfacturacion+"&nro_factura="+nro_factura+"&nro_autorizacion="+nro_autorizacion+"&fecha_factura="+fecha_factura+"&nit_cliente="+nit_cliente+"&razon_social="+razon_social,
     url:"simulaciones_servicios/generarFacturaManual.php",
     success:function(r){
       if(r==1){
@@ -13498,6 +13485,19 @@ function RegistrarFacturaManual(cod_solicitudfacturacion,nro_factura,nro_autoriz
     }
   });
 }
+function agregaDatosDetalleFactManual(datos){  
+  var d=datos.split('/');  
+  document.getElementById("cliente_x").value=d[0];
+  document.getElementById("razon_social").value=d[1];
+  document.getElementById("nit_cliente").value=d[2];
+  document.getElementById("nro_factura").value=d[3];
+  document.getElementById("nro_autorizacion").value=d[4];
+  document.getElementById("importe").value=d[5];  
+}
+
+
+
+
 function editarPrecioSimulacionCostos(){
   if($("#modal_importeplanedit").is("[readonly]")){
     $("#modal_importeplanedit").removeAttr("readonly");
@@ -13511,7 +13511,158 @@ function cambiarPrecioPlantilla(){
     $("#modal_importeplanedit").attr("readonly",true);
   }
   $("#modal_importeplanedit").val(redondeo(parseFloat($('#modal_importeplan option:selected').text())));
+
   cargarPreciosDetalle($('#modal_importeplan').val()); //fila afectada
+
+}
+
+function agregaDatosFactPagos(datos){  
+  var d=datos.split('/');
+  var monto_solicitud=parseFloat(d[1]);
+  var saldo_anterior=parseFloat(d[2]);
+  document.getElementById("cod_solicitudfacturacion_factpagos").value=d[0];
+  document.getElementById("monto_sol_fact").value=monto_solicitud.toFixed(2);
+  document.getElementById("saldo_anterior").value=saldo_anterior.toFixed(2);
+}
+function monto_convertir_a_porcentaje_factPagos(){
+  var monto_sol_fac=$("#monto_sol_fact").val();
+  var monto_pagar=$("#monto_pagar").val();
+  var saldo_anterior=$("#saldo_anterior").val();
+  
+  if(monto_pagar<0 || monto_pagar==0 || monto_pagar==null){
+    // Swal.fire("Informativo!", "Monto incorrecto!", "warning");
+  }else{
+    if(monto_pagar>saldo_anterior && saldo_anterior!=0){
+      Swal.fire("Informativo!", "El Monto a Pagar es mayor al Saldo Anterior!", "warning");
+    }else{
+      var numero_porcentaje=parseFloat(monto_pagar)*100/parseFloat(monto_sol_fac);
+      //alert(numero_porcentaje);
+      $("#porcentaje_pagar").val(numero_porcentaje.toFixed(2));
+      if(saldo_anterior!=0)var monto_anterior=parseFloat(monto_sol_fac)-parseFloat(saldo_anterior);//sacamos el saldo que teniamos
+      else var monto_anterior=0;
+      var saldo=parseFloat(monto_sol_fac)-parseFloat(monto_anterior)-parseFloat(monto_pagar);
+      $("#saldo_a_pagar").val(saldo.toFixed(2)); 
+    }        
+  }
+}
+function monto_convertir_a_bolivianos_factPagos(){
+  var monto_sol_fact=$("#monto_sol_fact").val();
+  var porcentaje_pagar=$("#porcentaje_pagar").val();
+  var saldo_anterior=$("#saldo_anterior").val();
+
+  if(porcentaje_pagar<0 || porcentaje_pagar==0 || porcentaje_pagar==null){
+    // Swal.fire("Informativo!", "Porcentaje incorrecto!", "warning");
+  }else{
+    // alert(porcentaje_pagar);
+    var monto_porcentaje=parseFloat(porcentaje_pagar)*parseFloat(monto_sol_fact)/100;
+    if(monto_porcentaje>saldo_anterior && saldo_anterior!=0){
+      Swal.fire("Informativo!", "El Monto a Pagar es mayor al Saldo Anterior!", "warning");
+    }else{
+      //alert(monto_porcentaje);
+      $("#monto_pagar").val(monto_porcentaje.toFixed(2));
+      if(saldo_anterior!=0)var monto_anterior=parseFloat(monto_sol_fact)-parseFloat(saldo_anterior);//sacamos el saldo que teniamos
+      else var monto_anterior=0;
+
+      var saldo=parseFloat(monto_sol_fact)-parseFloat(monto_anterior)-parseFloat(monto_porcentaje);
+      $("#saldo_a_pagar").val(saldo.toFixed(2));     
+    }
+    
+  }
+}
+function RegistrarFacturaPagos(cod_solicitudfacturacion,porcentaje_pagar,monto_pagar){
+  $.ajax({
+    type:"POST",
+    data:"cod_solicitudfacturacion="+cod_solicitudfacturacion+"&porcentaje_pagar="+porcentaje_pagar+"&monto_pagar="+monto_pagar,
+    url:"simulaciones_servicios/generarFacturaPagos.php",
+    success:function(r){
+      if(r==1){
+        alerts.showSwal('success-message','index.php?opcion=listFacturasServicios_conta');
+      }else{
+        if(r==2){
+          Swal.fire("A ocurrido un error!", "Por favor verifique que los tipos de pago estén asociados a una cuenta.", "warning");
+        }else{
+          if(r==3){
+            Swal.fire("A ocurrido un error!", "Por favor verifique que las areas de ingreso estén asociadas a una cuenta.", "warning");
+          }else{
+            if(r==4){
+              Swal.fire("informativo!", "La factura ya fue generada.", "warning");
+            }else{
+              if(r==5){
+                Swal.fire("A ocurrido un error!", "Sucursal no encontrada.", "warning");
+              }else{
+                if(r==6){
+                  Swal.fire("A ocurrido un error!", "No tiene registrado La dosificación para la facturación..", "warning");  
+                }else{
+                  alerts.showSwal('error-message','index.php?opcion=listFacturasServicios_conta');
+                }
+                
+              } 
+            } 
+          }  
+        }  
+      }
+         
+    }
+  });
+}
+
+function agregaDatosComprCajaChica(datos){  
+  var d=datos.split('/');  
+  document.getElementById("cod_cajachica").value=d[0];  
+  document.getElementById("detalle_cajachica").value=d[1];  
+  document.getElementById("cod_tipocajachica").value=d[2];
+  
+}
+function RegistrarComprobanteCajaChica(cod_cajachica,cod_tipocajachica,nro_comprobante,mes_comprobante,tipo_comprobante){
+  $.ajax({
+    type:"POST",
+    data:"cod_cajachica="+cod_cajachica+"&nro_comprobante="+nro_comprobante+"&mes_comprobante="+mes_comprobante+"&tipo_comprobante="+tipo_comprobante,
+    url:"caja_chica/executeComprobanteCajaChica_existente.php",
+    success:function(r){
+      if(r==1){
+        alerts.showSwal('success-message','index.php?opcion=ListaCajaChica&codigo='+cod_tipocajachica);
+      }else{
+        if(r==0){
+          Swal.fire("ERROR!", "A ocurrido un error inesperado al generar el comprobante!", "warning");
+        }else{
+          if(r==2){
+            Swal.fire("Informativo!", "El COMPROBANTE ya fue generado. Actualice el Sistema Por favor!", "warning");
+          }else{
+            if(r==3){
+              Swal.fire("ERROR!", "No se pudo encontrar el comprobante, por favor verifique los datos introducidos!", "warning");
+            }
+          }
+        }      
+      }
+    }
+  });
+  // =======
+  //   cargarPreciosDetalle($('#modal_importeplan').val());
+}
+function ajaxBuscarComprobanteCajaChica(){
+  var mes_comprobante=document.getElementById("mes_comprobante").value;
+  var tipo_comprobante=document.getElementById("tipo_comprobante").value;
+  var nro_comprobante=document.getElementById("nro_comprobante").value;
+  if(mes_comprobante!=null && tipo_comprobante!=null){
+    var contenedor;
+    // var codigo_UO=combo.value;
+    contenedor = document.getElementById('contenedor_detalle_comprobante');
+    ajax=nuevoAjax();
+    ajax.open('GET', 'caja_chica/ajax_buscarComprobanteCajaChica.php?mes='+mes_comprobante+'&tipo='+tipo_comprobante+'&nro='+nro_comprobante,true);
+    ajax.onreadystatechange=function() {
+      if (ajax.readyState==4) {
+        contenedor.innerHTML = ajax.responseText;
+        var detalle_comprobante=document.getElementById("detalle_comprobante").value;
+        if(detalle_comprobante!="no encontrado"){
+          $("#guardarDatosModalComprobante").removeClass("d-none"); 
+        }
+        
+      }
+    }
+    ajax.send(null) 
+  }else{
+
+  }
 }
 
 
@@ -13605,4 +13756,5 @@ function cargarPreciosDetalle(codigo){
       $("#modal_body_tabla_alumnos").html(resp);
     }
   });  
+// >>>>>>> 788520b8fdfb5ac80fd814eb6bc7f66b6ddb61ee
 }

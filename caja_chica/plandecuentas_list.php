@@ -69,6 +69,7 @@ $stmt->bindColumn('nombre', $nombre);
               <!--div class="card-footer ml-auto mr-auto"-->
               <div class="card-footer fixed-bottom">
                     <button class="<?=$buttonNormal;?>" onClick="location.href='<?=$urlRegisterCC;?>'">Registrar</button>
+                    <a href="index.php?opcion=listPlanCuentas" class="<?=$buttonCancel;?>"> <-- Volver </a>
               </div>		  
             </div>
           </div>  

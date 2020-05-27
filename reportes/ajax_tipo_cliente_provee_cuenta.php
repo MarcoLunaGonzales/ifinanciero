@@ -12,7 +12,7 @@ $sql="SELECT p.codigo,p.nombre,p.numero from configuracion_estadocuentas c,plan_
 $stmtg = $db->prepare($sql);
 $stmtg->execute();
 ?>
-	<select name="cuenta[]" id="cuenta" class="selectpicker form-control"  data-style="select-with-transition" data-size="5"  data-actions-box="true" multiple required data-live-search="true">
+	<select name="cuenta[]" id="cuenta" class="selectpicker form-control"  data-style="select-with-transition" data-size="5" onchange="ajax_clientes_proveedores();" data-actions-box="true" multiple required data-live-search="true">
 <?php
   
   while ($rowg = $stmtg->fetch(PDO::FETCH_ASSOC)) {

@@ -10,15 +10,25 @@ $dbh = new Conexion();
 
 $fechaHoraActual=date("Y-m-d H:i:s");
 
-$codigo=$_GET['codigo']; 
-     $sql1="UPDATE meses_trabajo SET cod_estadomesestrabajo=1 where cod_estadomesestrabajo=3";
-     $stmt1 = $dbh->prepare($sql1);
-     $stmt1->execute();
 
-     $sql="UPDATE meses_trabajo SET cod_estadomesestrabajo=3 where codigo=$codigo";
-     $stmt = $dbh->prepare($sql);
-     $flagSuccess=$stmt->execute();
-	 
+    $codigo=$_GET['codigo']; 
+    $sql1="UPDATE meses_trabajo SET cod_estadomesestrabajo=1 where cod_estadomesestrabajo=3";
+    $stmt1 = $dbh->prepare($sql1);
+    $stmt1->execute();
+
+    $sql="UPDATE meses_trabajo SET cod_estadomesestrabajo=3 where codigo=$codigo";
+    $stmt = $dbh->prepare($sql);
+    $flagSuccess=$stmt->execute();
+
+    $sqlMesActivo="SELECT cod_mes from meses_trabajo where cod_estadomesestrabajo=3";
+    $stmtMesActivo = $dbh->prepare($sqlMesActivo);
+    $stmtMesActivo->execute();
+    $mesActivo=0;
+    while ($rowMesActivo = $stmtMesActivo->fetch(PDO::FETCH_ASSOC)) {
+          $mesActivo=$rowMesActivo['cod_mes'];
+    }
+    $_SESSION['globalMes']=$mesActivo;
+
 
 if($flagSuccess==true){
 	showAlertSuccessError(true,"../".$urlList);	

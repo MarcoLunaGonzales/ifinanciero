@@ -1,18 +1,55 @@
 <?php
-  $globalUserX=$_SESSION['globalUser'];
-  //echo $globalUserX;
-  $globalPerfilX=$_SESSION['globalPerfil'];
-  $globalNameUserX=$_SESSION['globalNameUser'];
-  $globalNombreUnidadX=$_SESSION['globalNombreUnidad'];
-  $globalNombreAreaX=$_SESSION['globalNombreArea'];
-  $obj=$_SESSION['globalMenuJson'];
+//include("functionsGeneral.php");
+
+$globalUserX=$_SESSION['globalUser'];
+//echo $globalUserX;
+$globalPerfilX=$_SESSION['globalPerfil'];
+$globalNameUserX=$_SESSION['globalNameUser'];
+$globalNombreUnidadX=$_SESSION['globalNombreUnidad'];
+$globalNombreAreaX=$_SESSION['globalNombreArea'];
+$obj=$_SESSION['globalMenuJson'];
+$menuModulo=$_SESSION['modulo'];
+
+$nombreModuloMenu="";
+
+switch ($menuModulo) {
+  case 1:
+   $nombreModulo="RRHH";
+   $estiloMenu="rojo";
+   $nombreModuloMenu="Remuneracion";
+  break;
+  case 2:
+    $nombreModulo="Activos Fijos";
+    $estiloMenu="amarillo";
+    $nombreModuloMenu="ActivosFijos";
+  break;
+  case 3:
+    $nombreModulo="Contabilidad";
+    $estiloMenu="celeste";
+    $nombreModuloMenu="Contabilidad";
+  break;
+  case 4:
+    $nombreModulo="Presupuestos / Solicitudes";
+    $estiloMenu="verde";
+    $nombreModuloMenu="Presupuesto";
+  break;
+}
+
+if($menuModulo==0){
 ?>
-<div class="sidebar" data-color="azure" data-background-color="black" data-image="assets/img/sidebar-1.jpg">
+ <script>window.location.href="index.php";</script>
+<?php
+}
+?>
+
+<div class="sidebar" data-color="purple" data-background-color="<?=$estiloMenu?>" data-image="assets/img/scz.jpg">
       <div class="logo">
-        <a href="http://http://ibnored.ibnorca.org/imonitoreo/" class="simple-text logo-mini">
-          <img src="assets/img/logoibnorca.fw.png" width="30" />
+        <a href="http://http://ibnored.ibnorca.org/ifinanciero/" class="simple-text logo-mini">
+          <img src="assets/img/logo_ibnorca1.fw.png" width="30" />
         </a>
-          <span style="color:white;">iMonitoreo</span>
+        <a href="index.php" class="simple-text logo-normal">
+          ADM & FIN & OP
+        </a>
       </div>
       <div class="sidebar-wrapper">
         <div class="user">
@@ -39,7 +76,9 @@ foreach ($detalle as $objDet){
   $actividad=ucwords(strtolower($actividad));
   $pagina=$objDet->pagina;
   $icono=$objDet->icono;
+  $moduloWS=$objDet->modulo;
   //echo $id." ".$actividad." ".$pagina."<br>";
+  if($moduloWS==$nombreModuloMenu){
 ?>
           <li class="nav-item ">
             <a class="nav-link" data-toggle="collapse" href="#<?=$id;?>">
@@ -52,7 +91,7 @@ foreach ($detalle as $objDet){
             <div class="collapse" id="<?=$id;?>">
               <ul class="nav"><!--hasta aqui el menu 1ra parte-->
 
-  <?php
+  <?php 
   $detalleNivel2=$obj->menus->subm;
   foreach($detalleNivel2 as $objDetN2){
     $idSubMenu=$objDetN2->id;
@@ -60,7 +99,7 @@ foreach ($detalle as $objDet){
     $actividadSubMenu=$objDetN2->actividad;
     $paginaSubMenu=$objDetN2->pagina;
     $iconoSubMenu=$objDetN2->icono;
-    if($padre==$id){
+    if($padre==$id && $moduloWS==$nombreModuloMenu){
       //echo $idSubMenu." ".$padre." ".$actividadSubMenu." ".$paginaSubMenu."<br>";
       ?>
 
@@ -81,6 +120,7 @@ foreach ($detalle as $objDet){
             </div>
           </li>
 <?php
+  }
 }
 ?>
 

@@ -381,6 +381,9 @@
 		if ($_GET['opcion']=='listFacturasServicios_conta_history') {
 			require_once('simulaciones_servicios/listFacturasSolicitadas_conta_historico.php');
 		}
+		if ($_GET['opcion']=='listFacturasGeneradasManuales') {
+			require_once('simulaciones_servicios/listFacturasGeneradasManuales.php');
+		}
 		
         if ($_GET['opcion']=='deleteSolicitudRecursos') {
 			require_once('solicitudes/saveDelete.php');

@@ -15,4 +15,11 @@ $urlSave="plan_cuentas/save.php";
 $urlSaveEdit="plan_cuentas/saveEdit.php";
 $urlSaveDelete="";
 
+$urlSolRecursos="index.php?opcion=listPlanCuentasSolicitudesRecursos&codigo=0";
+$urlTiposPago="index.php?opcion=listPlanCuentasSolicitudesFacturacion&codigo=0";
+$urlCajaChica="index.php?opcion=listPlanCuentasCajaChica&codigo=0";
+$urlAreas="index.php?opcion=listPlanCuentasAreas&codigo=0";
+
+
+
 ?>

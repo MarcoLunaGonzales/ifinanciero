@@ -61,7 +61,6 @@ try{
     $importe = $resultInfo['importe'];
     // $descuento_bob = $resultInfo['descuento_bob'];
     $importe=$importe;
-
     $observaciones = $resultInfo['observaciones'];
     // $nombre_cliente = $resultInfo['nombre_cliente'];
     $nombre_cliente = $razon_social;
