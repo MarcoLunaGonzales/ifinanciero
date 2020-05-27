@@ -1,5 +1,5 @@
 <?php
-include("functionsGeneral.php");
+//include("functionsGeneral.php");
 
 $globalUserX=$_SESSION['globalUser'];
 //echo $globalUserX;
