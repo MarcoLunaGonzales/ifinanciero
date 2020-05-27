@@ -10543,10 +10543,7 @@ function filaTablaUnidadEntidad(tabla){
 //reportes
 function ajax_entidad_Oficina(){
   var contenedor;
-  // var codigo_entidad=combo.value;
-
   var arrayEntidad = $("#entidad").val();
-
   contenedor = document.getElementById('div_contenedor_oficina1');
   ajax=nuevoAjax();
   ajax.open('GET', 'reportes/entidadesOFAjax.php?codigo_entidad='+arrayEntidad,true);
@@ -10554,7 +10551,6 @@ function ajax_entidad_Oficina(){
     if (ajax.readyState==4) {
       contenedor.innerHTML = ajax.responseText;
       $('.selectpicker').selectpicker(["refresh"]);
-      
       ajaxEntidadOficina2(arrayEntidad);
     }
   }
@@ -10563,10 +10559,7 @@ function ajax_entidad_Oficina(){
 
 function ajax_tipo_filtro_reporte_prove_cliente(){
   var contenedor;
-  // var codigo_entidad=combo.value;
-
   var array_tipo_cp = $("#tipo_cp").val();
-
   contenedor = document.getElementById('div_contenedor_cuenta');
   ajax=nuevoAjax();
   ajax.open('GET', 'reportes/ajax_tipo_cliente_provee_cuenta.php?codigo='+array_tipo_cp,true);
@@ -10574,19 +10567,16 @@ function ajax_tipo_filtro_reporte_prove_cliente(){
     if (ajax.readyState==4) {
       contenedor.innerHTML = ajax.responseText;
       $('.selectpicker').selectpicker(["refresh"]);
-      //ajax_clientes_proveedores();
     }
   }
   ajax.send(null)  
 }
 function ajax_clientes_proveedores(){
-    var contenedor;
-  // var codigo_entidad=combo.value;
-
-  var array_tipo_cp = $("#tipo_cp").val();
+  var contenedor;
+  var array_cuentas = $("#cuenta").val();
   contenedor = document.getElementById('div_contenedorProv_cli');
   ajax=nuevoAjax();
-  ajax.open('GET', 'reportes/ajax_clientes_proveedores.php?codigo='+array_tipo_cp,true);
+  ajax.open('GET', 'reportes/ajax_clientes_proveedores.php?codigo='+array_cuentas,true);
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
       contenedor.innerHTML = ajax.responseText;
@@ -10598,9 +10588,6 @@ function ajax_clientes_proveedores(){
 
 
 function ajaxEntidadOficina2(arrayEntidad){
-  // var cod_uo=$("#cod_unidadorganizacional").val();  
-  // alert(cod_uo);
-
   var contenedor; 
   contenedor = document.getElementById('div_contenedor_oficina_costo');
   ajax=nuevoAjax();

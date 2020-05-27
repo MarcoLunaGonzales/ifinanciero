@@ -6,11 +6,11 @@ $direccion=obtenerValorConfiguracion(45);//direccion del Server del Servicio
 	$sKey="101010"; 
 
 /*PARAMETROS PARA LA OBTENCION DE LISTAS DE PERSONAL*/
-	$oficina="5";
+	$oficina="0";
 	$area="13";
-	$anio="2019";
+	$anio="2020";
 	$mes="12";
-	$cuenta="5020102001";
+	$cuenta="5020109003";
 
 	$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "oficina"=>$oficina, "area"=>$area, "anio"=>$anio, "mes"=>$mes, "cuenta"=>$cuenta, "accion"=>"listar"); //
 

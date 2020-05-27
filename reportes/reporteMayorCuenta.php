@@ -80,6 +80,7 @@ for ($xx=0; $xx < cantidadF($codcuenta); $xx++) {
   //OBTENEMOS LOS SALDOS ANTERIORES
   $tc=obtenerValorTipoCambio($moneda,strftime('%Y-%m-%d',strtotime($desdeInicioAnio)));
   if($tc==0){$tc=1;}
+  //echo "desde: ".$desde." desdeInicioAnio: ".$desdeInicioAnio;
   if($desde==$desdeInicioAnio){
     $saldoAnterior=0;
     $debeAnterior=0;

@@ -24,6 +24,7 @@ if($_POST["fecha_desde"]==""){
   $y=$globalNombreGestion;
   $desde=$y."-01-01";
   $hasta=$y."-12-31";
+  $desdeInicioAnio=$y."-01-01";
 }else{
   $porcionesFechaDesde = explode("-", $_POST["fecha_desde"]);
   $porcionesFechaHasta = explode("-", $_POST["fecha_hasta"]);

@@ -17,6 +17,8 @@ $d=date("d",(mktime(0,0,0,$m+1,1,$y)-1));
 $fechaDesde=$y."-01-01";
 $fechaHasta=$y."-12-31";
 
+$fechaMesUltimoDia=$y."-".$m."-".$d;
+
 ?>
 
 <div class="content">
@@ -46,7 +48,7 @@ $fechaHasta=$y."-12-31";
                             $nombreX=$row['nombre'];
                             $abrevX=$row['abreviatura'];
                           ?>
-                       <option value="<?=$codigoX;?>"><?=$nombreX?></option>  
+                       <option value="<?=$codigoX;?>" selected><?=$nombreX?></option>  
                          <?php
                            }
                            ?>
@@ -59,8 +61,22 @@ $fechaHasta=$y."-12-31";
             <div class="col-sm-7">
               <div class="form-group">
                 <div id="div_contenedor_oficina1">                              
+                  <?php
+                  $sqlUO="SELECT uo.codigo, uo.nombre,uo.abreviatura from entidades_uo e, unidades_organizacionales uo where e.cod_uo=uo.codigo";
+                  $stmt = $dbh->prepare($sqlUO);
+                  $stmt->execute();
+                  ?>
+                    <select class="selectpicker form-control form-control-sm" name="unidad[]" id="unidad" data-style="select-with-transition" multiple data-actions-box="true" required data-live-search="true">
+                        <?php 
+                          while ($row = $stmt->fetch()){ 
+                      ?>
+                             <option value="<?=$row["codigo"];?>" data-subtext="<?=$row["nombre"];?>" selected><?=$row["abreviatura"];?></option>
+                  <?php 
+                          } 
+                  ?>
+                    </select>
                 </div>
-                 </div>
+              </div>
             </div>
          </div>
             <div class="row">
@@ -112,17 +128,16 @@ $fechaHasta=$y."-12-31";
               </div>
             </div><!--fin campo cuenta -->
 
-            <!--div class="row">
+            <div class="row">
               <label class="col-sm-2 col-form-label">Proveedores/Cliente</label>
               <div class="col-sm-7">
                 <div class="form-group">
                   <div id="div_contenedorProv_cli">
                     
-                  </div>
-                  
+                  </div>     
                 </div>
               </div>
-            </div-->
+            </div>
             <!--  fin de seleccion unidad organizacional-->
 
             <div class="row">
@@ -131,7 +146,7 @@ $fechaHasta=$y."-12-31";
                   <div class="form-group">
                     <div id="div_contenedor_fechaH">                    
                       <!-- <input type="text" class="form-control datepicker " autocomplete="off" name="fecha_hasta" id="fecha_hasta" min="<?=$fechaDesde?>" max="<?=$fechaHasta?>" value="<?=$fechaHasta?>">   -->
-                      <input type="date" name="fecha" id="fecha" class="form-control" min="<?=$fechaDesde?>" max="<?=$fechaHasta?>">
+                      <input type="date" name="fecha" id="fecha" class="form-control" min="<?=$fechaDesde?>" max="<?=$fechaHasta?>" value="<?=$fechaMesUltimoDia;?>">
                     </div>                    
                   </div>
                 </div>
