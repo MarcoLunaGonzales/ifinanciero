@@ -285,6 +285,16 @@ function obtenerCodigoComprobante(){
    }
    return($codigoComprobante);
 }
+function obtenerCodigoComprobanteExistente($cod_tipocomprobante,$nro_comprobante,$mes_comprobante){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT codigo from comprobantes where cod_tipocomprobante=$cod_tipocomprobante and numero=$nro_comprobante and MONTH(fecha)=$mes_comprobante");
+   $stmt->execute();
+   $codigoComprobante=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $codigoComprobante=$row['codigo'];
+   }
+   return($codigoComprobante);
+}
 function obtenerCodigoSimulacionServicioDetalle(){
    $dbh = new Conexion();
    $stmt = $dbh->prepare("SELECT IFNULL(max(c.codigo)+1,1)as codigo from simulaciones_serviciodetalle c");

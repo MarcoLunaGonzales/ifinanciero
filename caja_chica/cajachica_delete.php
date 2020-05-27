@@ -19,7 +19,8 @@ if($cod_a==2){//borrado
 	$stmt = $dbh->prepare("UPDATE caja_chica set cod_estado=2,fecha_cierre='$fecha_cierre'  where codigo=$codigo");
 	$flagSuccess=$stmt->execute();
 
-	$sql_rendicion="SELECT SUM(monto) monto_total from caja_chicadetalle where cod_cajachica=$codigo and cod_estadoreferencial=1";
+	// $sql_rendicion="SELECT SUM(monto) monto_total from caja_chicadetalle where cod_cajachica=$codigo and cod_estadoreferencial=1";
+    $sql_rendicion="SELECT SUM(c.monto)-IFNULL((select SUM(r.monto) from caja_chicareembolsos r where r.cod_cajachica=$codigo and r.cod_estadoreferencial=1),0) as monto_total from caja_chicadetalle c where c.cod_cajachica=$codigo and c.cod_estadoreferencial=1";
     $stmtSaldo = $dbh->prepare($sql_rendicion);
     $stmtSaldo->execute();
     $resultSaldo=$stmtSaldo->fetch();

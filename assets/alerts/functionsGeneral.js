@@ -13483,6 +13483,19 @@ function RegistrarFacturaManual(cod_solicitudfacturacion,nro_factura,nro_autoriz
     }
   });
 }
+function agregaDatosDetalleFactManual(datos){  
+  var d=datos.split('/');  
+  document.getElementById("cliente_x").value=d[0];
+  document.getElementById("razon_social").value=d[1];
+  document.getElementById("nit_cliente").value=d[2];
+  document.getElementById("nro_factura").value=d[3];
+  document.getElementById("nro_autorizacion").value=d[4];
+  document.getElementById("importe").value=d[5];  
+}
+
+
+
+
 function editarPrecioSimulacionCostos(){
   if($("#modal_importeplanedit").is("[readonly]")){
     $("#modal_importeplanedit").removeAttr("readonly");
@@ -13513,7 +13526,7 @@ function monto_convertir_a_porcentaje_factPagos(){
   if(monto_pagar<0 || monto_pagar==0 || monto_pagar==null){
     // Swal.fire("Informativo!", "Monto incorrecto!", "warning");
   }else{
-    if(monto_pagar>saldo_anterior){
+    if(monto_pagar>saldo_anterior && saldo_anterior!=0){
       Swal.fire("Informativo!", "El Monto a Pagar es mayor al Saldo Anterior!", "warning");
     }else{
       var numero_porcentaje=parseFloat(monto_pagar)*100/parseFloat(monto_sol_fac);
@@ -13536,7 +13549,7 @@ function monto_convertir_a_bolivianos_factPagos(){
   }else{
     // alert(porcentaje_pagar);
     var monto_porcentaje=parseFloat(porcentaje_pagar)*parseFloat(monto_sol_fact)/100;
-    if(monto_porcentaje>saldo_anterior){
+    if(monto_porcentaje>saldo_anterior && saldo_anterior!=0){
       Swal.fire("Informativo!", "El Monto a Pagar es mayor al Saldo Anterior!", "warning");
     }else{
       //alert(monto_porcentaje);
@@ -13591,24 +13604,60 @@ function agregaDatosComprCajaChica(datos){
   var d=datos.split('/');  
   document.getElementById("cod_cajachica").value=d[0];  
   document.getElementById("detalle_cajachica").value=d[1];  
+  document.getElementById("cod_tipocajachica").value=d[2];
+  
 }
-function RegistrarComprobanteCajaChica(cod_cajachica,detalle_cajachica,nro_comprobante,mes_comprobante,tipo_comprobante){
+function RegistrarComprobanteCajaChica(cod_cajachica,cod_tipocajachica,nro_comprobante,mes_comprobante,tipo_comprobante){
   $.ajax({
     type:"POST",
     data:"cod_cajachica="+cod_cajachica+"&nro_comprobante="+nro_comprobante+"&mes_comprobante="+mes_comprobante+"&tipo_comprobante="+tipo_comprobante,
     url:"caja_chica/executeComprobanteCajaChica_existente.php",
     success:function(r){
       if(r==1){
-        alerts.showSwal('success-message','index.php?opcion=ListaCajaChica&codigo='+cod_cajachica);
+        alerts.showSwal('success-message','index.php?opcion=ListaCajaChica&codigo='+cod_tipocajachica);
       }else{
-        alerts.showSwal('error-message','index.php?opcion=ListaCajaChica&codigo='+cod_cajachica);
-        
+        if(r==0){
+          Swal.fire("ERROR!", "A ocurrido un error inesperado al generar el comprobante!", "warning");
+        }else{
+          if(r==2){
+            Swal.fire("Informativo!", "El COMPROBANTE ya fue generado. Actualice el Sistema Por favor!", "warning");
+          }else{
+            if(r==3){
+              Swal.fire("ERROR!", "No se pudo encontrar el comprobante, por favor verifique los datos introducidos!", "warning");
+            }
+          }
+        }      
       }
-         
     }
   });
   // =======
   //   cargarPreciosDetalle($('#modal_importeplan').val());
+}
+function ajaxBuscarComprobanteCajaChica(){
+  var mes_comprobante=document.getElementById("mes_comprobante").value;
+  var tipo_comprobante=document.getElementById("tipo_comprobante").value;
+  var nro_comprobante=document.getElementById("nro_comprobante").value;
+  if(mes_comprobante!=null && tipo_comprobante!=null){
+    var contenedor;
+    // var codigo_UO=combo.value;
+    contenedor = document.getElementById('contenedor_detalle_comprobante');
+    ajax=nuevoAjax();
+    ajax.open('GET', 'caja_chica/ajax_buscarComprobanteCajaChica.php?mes='+mes_comprobante+'&tipo='+tipo_comprobante+'&nro='+nro_comprobante,true);
+    ajax.onreadystatechange=function() {
+      if (ajax.readyState==4) {
+        contenedor.innerHTML = ajax.responseText;
+        var detalle_comprobante=document.getElementById("detalle_comprobante").value;
+        if(detalle_comprobante!="no encontrado"){
+          $("#guardarDatosModalComprobante").removeClass("d-none"); 
+        }
+        
+      }
+    }
+    ajax.send(null) 
+  }else{
+
+  }
+
 }
 
 

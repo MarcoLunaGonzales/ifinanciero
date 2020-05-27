@@ -27,7 +27,8 @@ if($monto_reembolso_nuevo==null || $monto_reembolso_nuevo== '')$monto_reembolso_
 $numero_cc=$resultMCC['numero'];
 //monto de rendiciones
 
-$sql_rendicion="SELECT SUM(monto) as monto_total from caja_chicadetalle where cod_cajachica=$cod_cajachica and cod_estadoreferencial=1 ORDER BY nro_documento desc";
+$sql_rendicion="SELECT SUM(c.monto)-IFNULL((select SUM(r.monto) from caja_chicareembolsos r where r.cod_cajachica=$cod_cajachica and r.cod_estadoreferencial=1),0)
+ as monto_total from caja_chicadetalle c where c.cod_cajachica=$cod_cajachica and c.cod_estadoreferencial=1";
 // echo $sql_rendicion;
 $stmtSaldo = $dbh->prepare($sql_rendicion);
 $stmtSaldo->execute();

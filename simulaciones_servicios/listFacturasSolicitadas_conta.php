@@ -499,11 +499,11 @@ $globalAdmin=$_SESSION["globalAdmin"];
 <script type="text/javascript">
   $(document).ready(function(){
     $('#guardarFacturaManual').click(function(){    
-      cod_solicitudfacturacion_factmanual=document.getElementById("cod_solicitudfacturacion_factmanual").value;
-      nro_factura=$('#nro_factura').val();
-      nro_autorizacion=$('#nro_autorizacion').val();
-      nit_cliente=$('#nit_cliente').val();
-      razon_social=$('#razon_social').val();
+      var cod_solicitudfacturacion_factmanual=document.getElementById("cod_solicitudfacturacion_factmanual").value;
+      var nro_factura=$('#nro_factura').val();
+      var nro_autorizacion=$('#nro_autorizacion').val();
+      var nit_cliente=$('#nit_cliente').val();
+      var razon_social=$('#razon_social').val();
       
       fecha_factura=$('#fecha_factura').val();
       if(nro_factura==null || nro_factura<=0){
@@ -529,18 +529,19 @@ $globalAdmin=$_SESSION["globalAdmin"];
       }      
     });
     $('#guardarFacturaPagos').click(function(){    
-      cod_solicitudfacturacion_factpagos=document.getElementById("cod_solicitudfacturacion_factpagos").value;
-      saldo_anterior=document.getElementById("saldo_anterior").value;
-      porcentaje_pagar=$('#porcentaje_pagar').val();
-      monto_pagar=$('#monto_pagar').val();
+      var cod_solicitudfacturacion_factpagos=document.getElementById("cod_solicitudfacturacion_factpagos").value;
+      var monto_sol_fact=document.getElementById("monto_sol_fact").value;
+      var saldo_anterior=document.getElementById("saldo_anterior").value;
+      var porcentaje_pagar=$('#porcentaje_pagar').val();
+      var monto_pagar=$('#monto_pagar').val();
       if(porcentaje_pagar==null || porcentaje_pagar<=0){
         Swal.fire("Informativo!", "Porcentaje a Pagar incorrecto.", "warning");
       }else{
         if(monto_pagar==null || monto_pagar<=0){
           Swal.fire("Informativo!", "Monto a Pagar incorrecto.", "warning");
         }else{
-          if(monto_pagar>saldo_anterior){
-            Swal.fire("Informativo!", "El monto a Pagar es mayor al Saldo Anterior.", "warning");
+          if((monto_pagar>saldo_anterior && saldo_anterior!=0)||monto_pagar>monto_sol_fact){
+            Swal.fire("Informativo!", "El monto a Pagar es mayor al Saldo Anterior o al Importe Total de Dolicitud de Facturación.", "warning");
           }else{
             RegistrarFacturaPagos(cod_solicitudfacturacion_factpagos,porcentaje_pagar,monto_pagar);    
           }
