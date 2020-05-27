@@ -59,5 +59,6 @@ $urlListSolicitud_facturacion_normas="?opcion=listSolicitud_facturacion_normas";
 
 $urlListSol_conta="index.php?opcion=listFacturasServicios_conta";
 //ifinanciero/index.php?opcion=listFacturasServicios_conta
+$urlListFacturasGeneradasManuales="?opcion=listFacturasGeneradasManuales";
 
 ?>

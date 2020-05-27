@@ -18,6 +18,18 @@ if($cod_a==2){//borrado
 	$fecha_cierre=date('Y-m-d');
 	$stmt = $dbh->prepare("UPDATE caja_chica set cod_estado=2,fecha_cierre='$fecha_cierre'  where codigo=$codigo");
 	$flagSuccess=$stmt->execute();
+
+	$sql_rendicion="SELECT SUM(monto) monto_total from caja_chicadetalle where cod_cajachica=$codigo and cod_estadoreferencial=1";
+    $stmtSaldo = $dbh->prepare($sql_rendicion);
+    $stmtSaldo->execute();
+    $resultSaldo=$stmtSaldo->fetch();
+    if($resultSaldo['monto_total']!=null || $resultSaldo['monto_total']!='')
+      $monto_total=$resultSaldo['monto_total'];
+    else $monto_total=0; 
+
+    $stmtReembolso = $dbh->prepare("UPDATE caja_chica set monto_reembolso=$monto_total where codigo=$codigo");
+    $stmtReembolso->execute();
+    
 }
 showAlertSuccessError($flagSuccess,$urlListCajaChica."&codigo=".$cod_tcc);
 

@@ -10,7 +10,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 
   //datos registrado de la simulacion en curso
   $stmt = $dbh->prepare("SELECT f.*,(select s.abreviatura from unidades_organizacionales s where s.cod_sucursal=f.cod_sucursal limit 1)as sucursal,(select t.nombre from estados_factura t where t.codigo=f.cod_estadofactura)as estadofactura 
- from facturas_venta f order by  f.fecha_factura desc");
+ from facturas_venta f where cod_estadofactura<>4 order by  f.fecha_factura desc");
   $stmt->execute();
   $stmt->bindColumn('codigo', $codigo_facturacion);
   $stmt->bindColumn('cod_sucursal', $cod_sucursal);
@@ -134,6 +134,9 @@ $globalAdmin=$_SESSION["globalAdmin"];
                         </tbody>
                       </table>
                   </div>
+                  <div class="card-footer fixed-bottom col-sm-9">
+                    <a href='<?=$urlListFacturasGeneradasManuales;?>' class="btn btn-info float-right"><i class="material-icons">list</i>Facturas Manuales</a>
+                  </div>   
                 </div>                
               </div>
           </div>  

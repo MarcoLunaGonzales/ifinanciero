@@ -20,13 +20,23 @@ $stmtMCC = $dbh->prepare("SELECT monto_inicio,monto_reembolso,fecha,numero,monto
 $stmtMCC->execute();
 $resultMCC=$stmtMCC->fetch();
 $monto_cajachica=$resultMCC['monto_inicio'];
-$monto_saldo=$resultMCC['monto_reembolso'];
+// $monto_saldo=$resultMCC['monto_reembolso'];
 $fecha_cc=$resultMCC['fecha'];
 $monto_reembolso_nuevo=$resultMCC['monto_reembolso_nuevo'];
 if($monto_reembolso_nuevo==null || $monto_reembolso_nuevo== '')$monto_reembolso_nuevo=0;
 $numero_cc=$resultMCC['numero'];
 //monto de rendiciones
 
+$sql_rendicion="SELECT SUM(monto) as monto_total from caja_chicadetalle where cod_cajachica=$cod_cajachica and cod_estadoreferencial=1 ORDER BY nro_documento desc";
+// echo $sql_rendicion;
+$stmtSaldo = $dbh->prepare($sql_rendicion);
+$stmtSaldo->execute();
+$resultSaldo=$stmtSaldo->fetch();
+
+if($resultSaldo['monto_total']!=null || $resultSaldo['monto_total']!='')
+  $monto_total=$resultSaldo['monto_total'];
+else $monto_total=0;                        
+$monto_saldo=$monto_cajachica-$monto_total;
 
 //listamos los gastos de caja chica
 $stmt = $dbh->prepare("SELECT codigo,cod_cuenta,fecha,cod_tipodoccajachica,cod_uo,cod_area,
