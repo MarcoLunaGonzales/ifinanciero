@@ -1399,11 +1399,29 @@ function botonFinComprobante(){
   }
   ajax.send(null)
 }
-// function botonItemsFunction(posicion){  
-//   var cantidadTotal=array_comprobantes_general.length;    
-//   // $("#botonItems").val(posicion+"-"+cantidadTotal);  
-//   document.getElementById('botonItems').innerHTML = posicion+"-"+cantidadTotal;
-// }
+function input_buscar_comprobante(){ 
+  var intro_number=$("#intro_number").val();
+  var cantidadTotal=array_comprobantes_general.length;
+  numFilasA=intro_number-1;
+  // alert(cantidadTotal);
+  if(intro_number<cantidadTotal+1 && intro_number>0){
+    var dato=array_comprobantes_general[intro_number-1];
+    // botonItemsFunction(numFilasA+1);//indicamos en que posicion esta el item
+    ajax=nuevoAjax();
+    ajax.open('GET', 'comprobantes/lista_comprobantes2_ajax.php?codigo='+dato+'&pos='+(intro_number)+'&total='+cantidadTotal,true);
+    ajax.onreadystatechange=function() {
+      if (ajax.readyState==4) {
+        var contenedor=$("#data_comprobantes");
+        contenedor.html(ajax.responseText);
+        // $("#modalBuscador").modal("hide");
+      }
+    }
+    ajax.send(null)
+  }else{
+    Swal.fire("ERROR!", "Comprobante no encontrado!", "warning");
+  }
+  
+}
 
 function sendAprobacion(cod,estado){
   if(estado==3){
