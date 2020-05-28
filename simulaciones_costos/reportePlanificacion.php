@@ -40,11 +40,13 @@ $tipoCurso=$_POST['tipo_curso'];
 if(isset($_POST['resumido'])){
  $resumido=1; 
  $rowSpan=3;
- $sqlSolicitadosInicio="SELECT 1 as codigo,'TODOS LOS CURSOS' as nombre,'' as fecha_curso,l.cod_cuenta,GROUP_CONCAT(CONCAT(l.glosa,' ',l.nombre_proveedor)) as glosa,sum(l.presupuestado)as presupuestado,sum(l.ejecutado) as ejecutado,null as proveedor,1 as codigo_ejecutado FROM (";
+ $sqlSolicitadosInicio="SELECT 1 as codigo,'Todos' as nombre,'' as fecha_curso,l.cod_cuenta,GROUP_CONCAT(CONCAT(l.glosa,' ',l.nombre_proveedor)) as glosa,sum(l.presupuestado)as presupuestado,sum(l.ejecutado) as ejecutado,null as proveedor,1 as codigo_ejecutado FROM (";
  $sqlSolicitadosFin=") l where l.codigo_ejecutado!='' group by l.cod_cuenta";
  $solicitados=0;
+ $anchoPartida="3%";
 }else{
-  $resumido=0; 
+  $resumido=0;
+  $anchoPartida="30%"; 
   if(isset($_POST['solicitados'])){
     $rowSpan=4; 
     $sqlSolicitadosInicio="";
@@ -94,7 +96,7 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
               '<th colspan="3" class="">'.$nombreMoneda.'</th>'.
             '</tr>'.
             '<tr class="text-center">'.
-              '<th width="30%">Propuesta</th>'.
+              '<th width="'.$anchoPartida.'">Propuesta</th>'.
               '<th width="30%">Cuenta - Detalle</th>';
         if($solicitados==1){
             $html.= '<th width="5%">Estado</th>';
@@ -201,7 +203,7 @@ WHERE s.cod_tipocurso in($tipoCursoArray) and sd.habilitado=1 and s.cod_estadosi
     $tsaldoS+=$saldoX;
             
         $html.='<tr class="'.$claseEstado.'">'.
-                      '<td class="font-weight-bold small text-left">'.$nombreX.' '.$fechaCurso'</td>'.
+                      '<td class="font-weight-bold small text-left">'.$nombreX.' '.$fechaCurso.'</td>'.
                       '<td class="font-weight-bold small text-left">'.$nombreCuenta.' '.$glosaX.'</td>';
         if($solicitados==1){
             $html.= '<td class="font-weight-bold small">'.$estado.'</td>';
