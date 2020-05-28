@@ -80,6 +80,14 @@ $stmt->bindColumn('estado', $estado);
                              </div>
                           </td> 
                           <td class="td-actions text-right">
+                            <?php 
+                            if($codEstado==4){
+                             ?>
+                              <a title="Editar Propuesta - Detalle" target="_blank" href='<?=$urlRegister;?>?cod=<?=$codigo;?>&admin=1' class="btn btn-info">
+                                <i class="material-icons"><?=$iconEdit;?></i>
+                              </a>
+                             <?php
+                            }?>
                             <div class="btn-group dropdown">
                               <button type="button" class="btn <?=$btnEstado?> dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="material-icons">list</i> <?=$estado;?>

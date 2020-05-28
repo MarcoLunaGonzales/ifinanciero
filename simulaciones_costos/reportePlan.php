@@ -124,7 +124,7 @@ $i=0;
       	             </div>
       	             <div class="col-sm-6 d-none" id="div_solicitados">
       	             	<div class="row">
-			               <label class="col-sm-4 col-form-label">Mostrar Sin Ejecución</label>
+			               <label class="col-sm-4 col-form-label">Incluir Detalles Sin SR</label>
                            <div class="col-sm-8">
 			                  <div class="form-group">
       	             	          <div class="form-check">
@@ -141,7 +141,7 @@ $i=0;
       	             </div>
       	           </div><!--div row-->
       	           <br>
-                  <div class="row">
+                  <!--<div class="row">
                   	<div class="col-sm-6">
                   		<div class="row">
 			                 <label class="col-sm-4 col-form-label">Moneda Adicional</label>
@@ -166,7 +166,7 @@ $i=0;
 			                  </div>
 			             </div>
       	             </div>
-      	           </div><!--div row--> 
+      	           </div>--><!--div row-->
                 </div><!--card body-->
                 <div class="card-footer fixed-bottom">
                 	<button type="submit" class="<?=$buttonNormal;?>">Ver Reporte</button>
