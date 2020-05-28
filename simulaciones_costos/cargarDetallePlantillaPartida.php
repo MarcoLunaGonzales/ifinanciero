@@ -48,7 +48,7 @@ $j=1;
         <td width="25%">CUENTA</td>
         <td width="35%">DETALLE</td>
         <td width="8%">CANTIDAD</td>
-        <td width="8%">UNIDAD</td>
+        <td width="13%">UNIDAD</td>
         <td>MONTO</td>
         <td>TOTAL</td>
         <td class="small">Habilitar / Deshabilitar</td>
@@ -73,7 +73,11 @@ $j=1;
           }else{
           $montoDetalleAl=number_format($montoModX, 2, '.', '');        
           } 
-         $montoDetalle=$rowDetalles['editado_alumno']*$cantidadItem;
+          if($codTipoX==4){
+            $montoDetalle=$rowDetalles['editado_alumno']*$cantidadItem*$diasCursoXX;
+          }else{
+            $montoDetalle=$rowDetalles['editado_alumno']*$cantidadItem;
+          }
          if($bandera==1){
           $totalMontoDetalle+=$montoDetalle;
           $totalMontoDetalleAl+=$montoDetalleAl;        
@@ -85,15 +89,18 @@ $j=1;
               <td class="text-right"><input type="number" id="cantidad_monto_modal<?=$j?>RRR<?=$i?>" name="cantidad_monto_modal<?=$j?>RRR<?=$i?>" <?=($bandera==0)?"readonly":"";?> class="form-control text-info text-right" onchange="calcularTotalPartidaGenerico(<?=$j?>,2)" onkeyUp="calcularTotalPartidaGenerico(<?=$j?>,2)" value="<?=$cantidadItem?>"></td>
               <td>
                 <div class="form-group">
-                             <select class="selectpicker form-control form-control-sm" name="unidad_monto_modal<?=$j?>RRR<?=$i?>" id="unidad_monto_modal<?=$j?>RRR<?=$i?>" onchange="cambiarPrecioPlantilla()" data-style="btn btn-info">
+                             <select class="selectpicker form-control form-control-sm" name="unidad_monto_modal<?=$j?>RRR<?=$i?>" id="unidad_monto_modal<?=$j?>RRR<?=$i?>" onchange="calcularTotalPartidaGenerico(<?=$j?>,2)" data-style="fondo-boton-active">
                                <?php 
-                               $queryUnidad="SELECT * FROM tipos_unidadsec order by codigo";
+                               $queryUnidad="SELECT * FROM tipos_unidadsec order by nombre";
                                $stmtUnidad = $dbh->prepare($queryUnidad);
                                $stmtUnidad->execute();
                                while ($rowUnidad = $stmtUnidad->fetch(PDO::FETCH_ASSOC)) {
                                   $codigoUnidad=$rowUnidad['codigo'];
                                   $abrevUnidad=$rowUnidad['abreviatura'];
                                   $nombreUnidad=$rowUnidad['nombre'];
+                                  if($codigoUnidad==4){
+                                    $nombreUnidad="(".$diasCursoXX.")".$nombreUnidad;
+                                  }
                                   if($codTipoX==$codigoUnidad){
                                    ?><option selected value="<?=$codigoUnidad?>" class="text-right"><?=$nombreUnidad?></option> <?php
                                   }else{

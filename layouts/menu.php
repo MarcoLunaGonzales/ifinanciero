@@ -900,7 +900,13 @@ if($menuModulo==0){
               </p>
             </a>
             <div class="collapse" id="reportesPresupuestoSol">
-              <ul class="nav">                
+              <ul class="nav">
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=reportePlanificacion">
+                    <span class="sidebar-mini"> RP </span>
+                    <span class="sidebar-normal"> Reportes Planificacion</span>
+                  </a>
+                </li>                
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listObligacionesPago">
                     <span class="sidebar-mini"> OP </span>

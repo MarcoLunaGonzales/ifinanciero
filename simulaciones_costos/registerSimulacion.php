@@ -54,6 +54,8 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
             $stmt1->bindColumn('habilitado_norma', $habilitadoNormaX);
             $stmt1->bindColumn('cantidad_cursosmes', $cantidadCursosMesX);
             $stmt1->bindColumn('cod_tipocurso', $codTipoCursoX);
+            $stmt1->bindColumn('dias_curso', $diasCursoX);
+            $stmt1->bindColumn('fecha_curso', $fechaCursoX);
 
       while ($row1 = $stmt1->fetch(PDO::FETCH_BOUND)) {
          //plantilla datos      
@@ -78,6 +80,11 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
            $codigoPrecioSimulacion=$codPrecioPlan;
            $ingresoAlternativo=obtenerPrecioAlternativoDetalle($codigoPrecioSimulacion);
            $codigoSimulacionSuper=$codigoX;
+           $diasCursoXX=$diasCursoX;
+           if($diasCursoX==0){
+             $diasCursoXX=1; 
+           }
+           $fechaCurso=strftime('%d/%m/%Y',strtotime($fechaCursoX));
       }
   if($ibnorcaC==1){
   	$checkIbnorca="checked";
@@ -135,8 +142,9 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
           <div class="row">
 						<div class="col-sm-6">
 							<div class="form-group">
-						  		<label class="bmd-label-static">Fecha</label>
+						  		<label class="bmd-label-static">Fecha Creación</label>
 						  		<input class="form-control" type="text" name="fecha" value="<?=$fechaX?>" id="fecha" readonly/>
+                  <input class="form-control" type="hidden" name="fecha_curso" value="<?=$fechaCurso?>" id="fecha_curso" readonly/>
 							</div>
 						</div>
 
@@ -209,7 +217,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
             </div>                
           <div class="col-sm-2">
               <div class="form-group">
-                  <label class="bmd-label-static">N. Alumnos</label>
+                  <label class="bmd-label-static">N. Estudiantes</label>
                   <input class="form-control" type="text" name="alumnos_plan" readonly value="<?=$alumnosX?>" id="alumnos_plan"/>
               </div>
             </div>
@@ -231,10 +239,16 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
                   <input class="form-control" type="hidden" name="utilidad_minext" readonly value="<?=$utilidadFueraX?>" id="utilidad_minext"/>
               <!--</div>
             </div>-->
-            <div class="col-sm-4">
+            <div class="col-sm-2">
               <div class="form-group">
                   <label class="bmd-label-static">Precio</label>
                   <input class="form-control" type="number" name="precio_local" readonly value="<?=$precioLocalX?>" id="precio_local"/>
+              </div>
+            </div>
+            <div class="col-sm-2">
+              <div class="form-group">
+                  <label class="bmd-label-static">Días Curso</label>
+                  <input class="form-control" type="number" name="dias_curso" readonly value="<?=$diasCursoXX?>" id="dias_curso"/>
               </div>
             </div>
             <!--<div class="col-sm-2">

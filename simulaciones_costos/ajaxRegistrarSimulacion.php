@@ -29,6 +29,7 @@ if(isset($_GET['nombre'])){
   $monto_norma=$_GET['monto_norma'];
   $codPrecio=$_GET['precio'];
   $tipoCurso=$_GET['tipo_curso'];
+  $normas=$_GET['normas'];
 
   $festimada=explode("/", $_GET['fecha_estimada']);
   $fecha_estimada=$festimada[2]."-".$festimada[1]."-".$festimada[0];
@@ -50,6 +51,13 @@ if(isset($_GET['nombre'])){
   $stmtD = $dbhD->prepare($sqlD);
   $stmtD->execute();
 
+  for ($i=0; $i < count($normas); $i++) { 
+     $codNorma=$normas[$i];
+     $sqlInsertNorma="INSERT INTO simulaciones_costosnormas (cod_simulacion, cod_norma,cantidad,precio) 
+     VALUES ('".$codSimCosto."','".$codNorma."',1,10)";
+     $stmtInsertNorma = $dbh->prepare($sqlInsertNorma);
+     $stmtInsertNorma->execute();
+  }
   //insertar datos en la tabla cuentas_simulacion
   $anio=date("Y");
   $anio_pasado=((int)$anio)-1;
@@ -103,9 +111,17 @@ if(isset($_GET['nombre'])){
       $glosaD=$rowDetallesPlan['glosa'];
       $montoD=$rowDetallesPlan['monto_total'];
       $editD=$rowDetallesPlan['editado_alumno'];
+      $tipoD=$rowDetallesPlan['tipo_registro'];
+      if($tipoD==1||$tipoD==2){
+        $cantidadAlumnosAux=1;
+        $codTipoD=5;
+      }else{
+        $cantidadAlumnosAux=$cantidadAlumnos;
+        $codTipoD=1;
+      }
       $dbhID = new Conexion();
       $sqlID="INSERT INTO simulaciones_detalle (cod_simulacioncosto,cod_plantillacosto, cod_partidapresupuestaria, cod_cuenta,cod_tipo,glosa,monto_unitario,cantidad,monto_total,cod_estadoreferencial,editado_alumno) 
-      VALUES ('".$codSimCosto."','".$codPC."','".$codPP."','".$codC."',1, '".$glosaD."','".$montoD."','".$cantidadAlumnos."','".$montoD."',1,'".$editD."')";
+      VALUES ('".$codSimCosto."','".$codPC."','".$codPP."','".$codC."','".$codTipoD."', '".$glosaD."','".$montoD."','".$cantidadAlumnosAux."','".$montoD."',1,'".$editD."')";
       $stmtID = $dbhID->prepare($sqlID);
       $stmtID->execute();
      }

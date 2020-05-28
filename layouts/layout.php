@@ -1,14 +1,14 @@
 <?php 
 //header('Content-Type: text/html; charset=iso-8859-1');
   require_once 'functions.php';
-  require_once 'functionsGeneral.php';
+  //require_once 'functionsGeneral.php';
 	include("head.php");
   include("librerias.php");// se debe cambiar a la parte posterior
 ?>    
     <div class="main-panel">
       <div class="content">
       <?php 
-          $tipoLogin=obtieneValorConfig(-10);
+          $tipoLogin=obtenerValorConfiguracion(-10);
 
           if(!isset($_GET['opcion'])){
             $_SESSION['modulo']=0;

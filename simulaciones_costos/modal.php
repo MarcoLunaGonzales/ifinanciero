@@ -132,7 +132,7 @@
     <div class="modal-content card">
                <div class="card-header card-header-success card-header-text">
                   <div class="card-text">
-                    <h4>Editar Simulaci&oacute;n</h4>
+                    <h4>Editar Propuesta</h4>
                   </div>
                   <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
                     <i class="material-icons">close</i>
@@ -145,6 +145,14 @@
                            <div class="col-sm-10">                     
                              <div class="form-group">
                                <input type="text" class="form-control" name="modal_nombresim" id="modal_nombresim" value="">
+                             </div>
+                           </div>  
+                      </div>
+                      <div class="row">
+                          <label class="col-sm-2 col-form-label">Fecha Curso</label>
+                           <div class="col-sm-10">                     
+                             <div class="form-group">
+                               <input type="text" class="form-control datepicker" name="modal_fechacurso" id="modal_fechacurso" value="">
                              </div>
                            </div>  
                       </div> 
@@ -182,7 +190,14 @@
                   </button>
                 </div>
                 <div class="card-body">
-
+                      <div class="row">
+                          <label class="col-sm-3 col-form-label">D&iacute;as Curso</label>
+                           <div class="col-sm-8">                     
+                             <div class="form-group">
+                               <input type="number" class="form-control" min="1" name="modal_diascurso" id="modal_diascurso" value="">
+                             </div>
+                           </div>  
+                      </div> 
                       <div class="row">
                           <label class="col-sm-3 col-form-label">Utilidad M&iacute;nima %</label>
                            <div class="col-sm-8">                     
@@ -199,7 +214,7 @@
                            </div>--> 
                       </div>
                       <div class="row">
-                          <label class="col-sm-3 col-form-label">N&uacute;mero de Alumnos</label>
+                          <label class="col-sm-3 col-form-label">N&uacute;mero de Estudiantes</label>
                            <div class="col-sm-8">                     
                              <div class="form-group">
                                <input type="number" class="form-control" min="1" name="modal_alibnorca" id="modal_alibnorca" value="">
@@ -256,8 +271,8 @@
                         <table class="table table-bordered table-condensed table-striped table-sm">
                              <thead>
                                   <tr class="fondo-boton">
-                                    <td>Alumnos <a href="#" title="Nueva Fila" class="btn btn-primary btn-round btn-sm btn-fab float-left" onClick="agregarFilaPreciosSimulacionCabecera()"><i class="material-icons">add</i></a></td>
-                                    <td>Porcentaje</td>
+                                    <td><a href="#" title="Nueva Fila" class="btn btn-primary btn-round btn-sm btn-fab float-left" onClick="agregarFilaPreciosSimulacionCabecera()"><i class="material-icons">add</i></a> Estudiantes</td>
+                                    <td>% Descuento</td>
                                     <td>Monto</td>
                                     <td>Total</td>
                                     <td>Action</td>

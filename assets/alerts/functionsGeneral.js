@@ -2749,6 +2749,7 @@ function guardarSimulacionCosto(){
   var tipo_curso=$("#tipo_curso").val();
   var fecha_estimada=$("#fecha_estimada").val();
   var cantidad_dias=$("#cantidad_dias").val();
+  var normas=$("#normas").val();
   var ibnorca = 1;
   /*if( $("#ibnorca_check").is(':checked') ) {
       var ibnorca=1;
@@ -2758,7 +2759,7 @@ function guardarSimulacionCosto(){
   if(nombre==""||!(plantilla_costo>0)||cantidad_modulos==""||monto_norma==""){
    Swal.fire('Informativo!','Debe llenar los campos!','warning'); 
   }else{
-     var parametros={"fecha_estimada":fecha_estimada,"cantidad_dias":cantidad_dias,"tipo_curso":tipo_curso,"monto_norma":monto_norma,"nombre":nombre,"plantilla_costo":plantilla_costo,"precio":precio,"ibnorca":ibnorca,"cantidad_modulos":cantidad_modulos};
+     var parametros={"normas":normas,"fecha_estimada":fecha_estimada,"cantidad_dias":cantidad_dias,"tipo_curso":tipo_curso,"monto_norma":monto_norma,"nombre":nombre,"plantilla_costo":plantilla_costo,"precio":precio,"ibnorca":ibnorca,"cantidad_modulos":cantidad_modulos};
      $.ajax({
         type: "GET",
         dataType: 'html',
@@ -5523,18 +5524,26 @@ function calcularTotalPartidaGenerico(fila,valor){
   for (var i=1;i<=(total-1);i++){
     if(!($("#monto_mod"+fila+"RRR"+i).is("[readonly]"))){
     if(valor==1){
+      var dias=1;
+      if($("#unidad_monto_modal"+fila+"RRR"+i).val()==4){
+       var dias=$("#dias_curso").val();
+      }
       suma+=parseFloat($("#monto_mod"+fila+"RRR"+i).val());
       if($("#cod_ibnorca").val()==1){
-         $("#monto_modal"+fila+"RRR"+i).val(redondeo(parseFloat($("#monto_mod"+fila+"RRR"+i).val())/parseInt($("#cantidad_monto_modal"+fila+"RRR"+i).val())));
+         $("#monto_modal"+fila+"RRR"+i).val(redondeo(parseFloat($("#monto_mod"+fila+"RRR"+i).val())/parseInt($("#cantidad_monto_modal"+fila+"RRR"+i).val())/dias));
        }else{
-          $("#monto_modal"+fila+"RRR"+i).val(redondeo(parseFloat($("#monto_mod"+fila+"RRR"+i).val())/parseInt($("#cantidad_monto_modal"+fila+"RRR"+i).val())));
+          $("#monto_modal"+fila+"RRR"+i).val(redondeo(parseFloat($("#monto_mod"+fila+"RRR"+i).val())/parseInt($("#cantidad_monto_modal"+fila+"RRR"+i).val())/dias));
        } 
       
     }else{
+      var dias=1;
+      if($("#unidad_monto_modal"+fila+"RRR"+i).val()==4){
+       var dias=$("#dias_curso").val();
+      }
      if($("#cod_ibnorca").val()==1){
-         $("#monto_mod"+fila+"RRR"+i).val(redondeo(parseFloat($("#monto_modal"+fila+"RRR"+i).val())*parseInt($("#cantidad_monto_modal"+fila+"RRR"+i).val())));
+         $("#monto_mod"+fila+"RRR"+i).val(redondeo(parseFloat($("#monto_modal"+fila+"RRR"+i).val())*parseInt($("#cantidad_monto_modal"+fila+"RRR"+i).val())*dias));
        }else{
-          $("#monto_mod"+fila+"RRR"+i).val(redondeo(parseFloat($("#monto_modal"+fila+"RRR"+i).val())*parseInt($("#cantidad_monto_modal"+fila+"RRR"+i).val())));
+          $("#monto_mod"+fila+"RRR"+i).val(redondeo(parseFloat($("#monto_modal"+fila+"RRR"+i).val())*parseInt($("#cantidad_monto_modal"+fila+"RRR"+i).val())*dias));
        }
      suma+=parseFloat($("#monto_mod"+fila+"RRR"+i).val());  
     }
@@ -7133,7 +7142,9 @@ function mandarDatosBonoIndefinido(){
 function editarDatosSimulacion(){
   var cod_i=$("#cod_ibnorca").val();
   var nombre_s=$("#nombre").val();
+  var fecha_s=$("#fecha_curso").val();
   $("#modal_nombresim").val(nombre_s);
+  $("#modal_fechacurso").val(fecha_s);
   //$("#modal_tiposim").val(cod_i);
   //$('.selectpicker').selectpicker("refresh");
 
@@ -7143,9 +7154,10 @@ function editarDatosSimulacion(){
 function guardarDatosSimulacion(btn_id){
   var codigo_s=$("#cod_simulacion").val();
    var nombre_s=$("#modal_nombresim").val();
+   var fecha_s=$("#modal_fechacurso").val();
    //var cod_i=$("#modal_tiposim").val();
    var cod_i=1;   
-   var parametros={"codigo":codigo_s,"nombre":nombre_s,"ibnorca":cod_i};
+   var parametros={"codigo":codigo_s,"nombre":nombre_s,"ibnorca":cod_i,"fecha_curso":fecha_s};
 
   if(nombre_s!=""){
   $("#"+btn_id).attr("disabled",true); 
@@ -7158,6 +7170,7 @@ function guardarDatosSimulacion(btn_id){
      Swal.fire("Correcto!", "El proceso fue satisfactorio!", "success");
      $("#"+btn_id).removeAttr("disabled"); 
      $("#nombre").val(nombre_s);
+     $("#fecha_curso").val(fecha_s);
      $("#titulo_curso").text(nombre_s);
      $("#cod_ibnorca").val(cod_i);
      if(cod_i==1){
@@ -7216,7 +7229,7 @@ function editarDatosPlantillaSec(){
   $("#modal_alibnorca").val($("#alumnos_plan").val());
   $("#modal_alfuera").val($("#alumnos_plan_fuera").val());
   $("#modal_importeplan").val($("#cod_precioplantilla").val());
-
+  $("#modal_diascurso").val($("#dias_curso").val());
   if($("#modal_importeplanedit").length>0){
     $("#modal_importeplanedit").val(redondeo(parseFloat($('#modal_importeplan option:selected').text())));
   }
@@ -7231,10 +7244,11 @@ function guardarDatosPlantilla(btn_id){
    var ut_f=$("#modal_utifuera").val();
    var al_i=$("#modal_alibnorca").val();
    var al_f=$("#modal_alfuera").val(); 
+   var dias_curso=$("#modal_diascurso").val(); 
    var precio_p=$("#modal_importeplan").val();
    var precio_pedit=$("#modal_importeplanedit").val();  
    var precio_alternativo=$("#total_preciosimulacion").val();
-   var parametros={"cod_sim":cod_sim,"codigo":codigo_p,"ut_i":ut_i,"ut_f":ut_f,"al_i":al_i,"al_f":al_f,"precio_p":precio_p,"precio_pedit":precio_pedit,"precio_alternativo":precio_alternativo};
+   var parametros={"dias_curso":dias_curso,"cod_sim":cod_sim,"codigo":codigo_p,"ut_i":ut_i,"ut_f":ut_f,"al_i":al_i,"al_f":al_f,"precio_p":precio_p,"precio_pedit":precio_pedit,"precio_alternativo":precio_alternativo};
 
   if(!(ut_i==""||ut_f==""||al_i==""||al_f=="")){
     var cantidadFilas=$("#cantidad_filasprecios").val();
@@ -13706,7 +13720,7 @@ function calcularPrecioTotal(fila){
 }
 function calcularPrecioPorcentaje(fila){
   var precio = $("#modal_importeplanedit").val();
-  $("#monto_alumnosAAA"+fila).val(redondeo(($("#porcentaje_alumnosAAA"+fila).val()/100)*precio));
+  $("#monto_alumnosAAA"+fila).val(redondeo(precio-(($("#porcentaje_alumnosAAA"+fila).val()/100)*precio)));
   calcularPrecioTotal(fila);
 }
 function calcularTotalesPrecios(){
@@ -13756,5 +13770,17 @@ function cargarPreciosDetalle(codigo){
       $("#modal_body_tabla_alumnos").html(resp);
     }
   });  
-// >>>>>>> 788520b8fdfb5ac80fd814eb6bc7f66b6ddb61ee
+}
+
+function cambiarReporteResumido(){
+  var check=document.getElementById("resumido").checked;
+    if(!check) {
+      if($("#div_solicitados").hasClass("d-none")){
+        $("#div_solicitados").removeClass("d-none");
+      }
+    }else{
+      if(!($("#div_solicitados").hasClass("d-none"))){
+        $("#div_solicitados").addClass("d-none");
+      }
+    }  
 }

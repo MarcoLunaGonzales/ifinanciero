@@ -129,6 +129,27 @@ $dbh = new Conexion();
                               </div>
                         </div>
                       </div>
+                      <div class="row">
+                       <label class="col-sm-2 col-form-label">Normas:</label>
+                       <div class="col-sm-7">
+                        <div class="form-group">
+                                <select class="selectpicker form-control" name="normas[]" id="normas" multiple data-style="btn btn-warning" data-live-search="true" data-size="6" required>
+                                <?php
+                                 $stmt = $dbh->prepare("SELECT * from normas order by abreviatura");
+                                 $stmt->execute();
+                                  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                  $codigoX=$row['codigo'];
+                                  $nombreX=$row['nombre'];
+                                  $abrevX=$row['abreviatura'];
+                                   ?>
+                                  <option value="<?=$codigoX;?>"><?=$abrevX;?></option> 
+                                  <?php
+                                    }
+                                    ?>
+                                </select>
+                              </div>
+                        </div>
+                      </div>
         
         </div>
         <br>

@@ -592,7 +592,17 @@ function abrevUnidad_solo($codigo){
    return($nombreX);
 }
 
-
+function abrevTipoCurso($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT abreviatura FROM tipos_cursos where codigo in ($codigo)");
+   $stmt->execute();
+   $nombreX="";
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $nombreX.=$row['abreviatura']."-";
+   }
+   $nombreX=substr($nombreX, 0, -1);
+   return($nombreX);
+}
 
 function buscarAreasAdicionales($cod_personal,$tipo){//1 codigos , 2 nombres
   $dbh = new Conexion();

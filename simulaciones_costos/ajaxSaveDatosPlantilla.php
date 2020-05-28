@@ -16,13 +16,14 @@ $ut_f=$_GET['ut_f'];
 $al_i=$_GET['al_i'];
 $al_f=$_GET['al_f'];
 $precio_p=$_GET['precio_p'];
+$dias_curso=$_GET['dias_curso'];
 $precio_pedit=$_GET['precio_pedit'];
 
 $sqlUpdate="UPDATE precios_simulacioncosto SET  venta_local='$precio_pedit' where codigo=$precio_p";
 $stmtUpdate = $dbh->prepare($sqlUpdate);
 $flagSuccess=$stmtUpdate->execute();
 
-$sqlUpdatePlantilla="UPDATE simulaciones_costos SET  cod_precioplantilla='$precio_p',utilidad_minimalocal='$ut_i',cantidad_alumnoslocal='$al_i' where codigo=$codSimulacion";
+$sqlUpdatePlantilla="UPDATE simulaciones_costos SET  dias_curso=$dias_curso,cod_precioplantilla='$precio_p',utilidad_minimalocal='$ut_i',cantidad_alumnoslocal='$al_i' where codigo=$codSimulacion";
 $stmtUpdatePlantilla = $dbh->prepare($sqlUpdatePlantilla);
 $stmtUpdatePlantilla->execute();
 
@@ -34,14 +35,19 @@ $stmtDetalles->execute();
  while ($rowDet = $stmtDetalles->fetch(PDO::FETCH_ASSOC)) {
     $codDet=$rowDet['codigo'];
     $partida=$rowDet['cod_partidapresupuestaria'];
+    $codTipo=$rowDet['cod_tipo'];
+    $al_i=$rowDet['cantidad'];
     $montoDet=$rowDet['editado_alumno']*$al_i;
+    if($codTipo==4){
+      $montoDet=$rowDet['editado_alumno']*$al_i*$dias_curso;
+    } 
     $cuenta=$rowDet['cod_cuenta'];
     $dbhDet = new Conexion();
     /*$sqlUpdateDetalle="UPDATE simulaciones_detalle SET  monto_unitario='$montoDet',monto_total='$montoDet' where codigo=$codDet";
     $stmtUpdateDetalle = $dbhDet->prepare($sqlUpdateDetalle);
     $stmtUpdateDetalle->execute();*/
 
-    $sqlUpdateDetalle2="UPDATE simulaciones_detalle SET  cantidad='$al_i',monto_unitario='$montoDet',monto_total='$montoDet' where codigo=$codDet and cod_tipo=1";
+    $sqlUpdateDetalle2="UPDATE simulaciones_detalle SET  cantidad='$al_i',monto_unitario='$montoDet',monto_total='$montoDet' where codigo=$codDet";
     $stmtUpdateDetalle2 = $dbhDet->prepare($sqlUpdateDetalle2);
     $stmtUpdateDetalle2->execute();
 

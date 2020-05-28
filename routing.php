@@ -474,6 +474,9 @@
 		if ($_GET['opcion']=='listObligacionesPago') {
 			require_once('obligaciones_pago/list.php');
 		}
+		if ($_GET['opcion']=='reportePlanificacion') {
+			require_once('simulaciones_costos/reportePlan.php');
+		}
   
 		//******************************ACTIVOS FIJOS***********************************************************
 		if ($_GET['opcion']=='listUbicaciones') {
