@@ -150,7 +150,7 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
                                         <i class="material-icons text-danger">input</i> Generar en Comprobante Nuevo
                                         </button>
                                         <button title="Generar Factura a Pagos" class="dropdown-item" type="button" data-toggle="modal" data-target="#modalComprobanteCajaChica" onclick="agregaDatosComprCajaChica('<?=$datos_ComproCajaChica;?>')">
-                                        <i class="material-icons text-danger">input</i> Generar En Comprobante Existente
+                                        <i class="material-icons text-danger">input</i> Generar en Comprobante Existente
                                         </button>                                          
                                       </div>
                                     </div>                                  
