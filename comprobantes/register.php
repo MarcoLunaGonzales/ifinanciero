@@ -515,13 +515,21 @@ $stmt->bindColumn('nombre', $nombreCuenta);
 			$numeroCuenta=trim($numeroCuenta);
 			$nombreCuenta=trim($nombreCuenta);
 
-			$sqlCuentasAux="SELECT codigo, nombre FROM cuentas_auxiliares where cod_cuenta='$codigoCuenta' order by 2";
+			$sqlCuentasAux="SELECT codigo, nombre, (select count(*) from estados_cuenta e, comprobantes c, comprobantes_detalle cd where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle and c.cod_estadocomprobante<>2 and e.cod_cuentaaux=ca.codigo)as contador FROM cuentas_auxiliares ca where ca.cod_cuenta='$codigoCuenta' order by 2";
 			$stmtAux = $dbh->prepare($sqlCuentasAux);
 			$stmtAux->execute();
 			$stmtAux->bindColumn('codigo', $codigoCuentaAux);
 			$stmtAux->bindColumn('nombre', $nombreCuentaAux);
+			$stmtAux->bindColumn('contador', $contadorRegistrosEC);
 			while ($rowAux = $stmtAux->fetch(PDO::FETCH_BOUND)) {
-				?><script>itemCuentasAux.push({codigo:"<?=$codigoCuentaAux?>",nombre:"<?=$nombreCuentaAux?>",codCuenta:"<?=$codigoCuenta?>"});</script><?php
+				$txtNumRegistros="";
+				if($contadorRegistrosEC>0){
+					$txtNumRegistros=" -- **".$contadorRegistrosEC."**";
+				}
+				$nombreCuentaAux=$nombreCuentaAux." ".$txtNumRegistros;
+		?>
+			<script>itemCuentasAux.push({codigo:"<?=$codigoCuentaAux?>",nombre:"<?=$nombreCuentaAux?>",codCuenta:"<?=$codigoCuenta?>"});</script>
+		<?php
 				$contAux++;
 			}  	
 		 ?><script>

@@ -65,9 +65,8 @@ $globalAdmin=$_SESSION["globalAdmin"];
                           $index=1;
                           $codigo_fact_x=0;
                           $cont= array();
-                          while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {                            
-
-
+                          $cont_pagosParciales= array();
+                          while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {// para la parte de facturas parciales, items de sol_Fact
                             switch ($codEstado) {
                               case 1:
                                 $btnEstado="btn-default";
@@ -95,7 +94,6 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             $codigo_fact_x = $resultSimu['codigo'];
                             $nro_fact_x = $resultSimu['nro_factura'];                            
                             if ($nro_fact_x==null)$nro_fact_x="-";
-
                             $stmtFactMontoTotal = $dbh->prepare("SELECT SUM(importe) as importe from facturas_venta where cod_solicitudfacturacion=$codigo_facturacion and cod_estadofactura=1 ORDER BY codigo desc");
                             $stmtFactMontoTotal->execute();
                             $resultMontoTotalFAC = $stmtFactMontoTotal->fetch();
@@ -185,14 +183,38 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             }
                             $sumaTotalImporte=$sumaTotalMonto-$sumaTotalDescuento_bob;
                             $cont[$index-1]=$nc;
-                            $stringCabecera=$nombre_uo."##".$nombre_area."##".$nombre_simulacion."##".$name_area_simulacion."##".$fecha_registro."##".$fecha_solicitudfactura."##".$nit."##".$razon_social;                            
-                            if($importe_fact_x!=$sumaTotalImporte){
+                            $stringCabecera=$nombre_uo."##".$nombre_area."##".$nombre_simulacion."##".$name_area_simulacion."##".$fecha_registro."##".$fecha_solicitudfactura."##".$nit."##".$razon_social;
+                            if($importe_fact_x!=$sumaTotalImporte){ //para los items de la factura a pagos
+                              ?>
+                              <script>var nfac=[];itemGenerar_factura_parcial.push(nfac);</script>
+                              <?php
+                                $queryParciales = "SELECT codigo,precio,cod_claservicio,descripcion_alterna from solicitudes_facturaciondetalle where cod_solicitudfacturacion=$codigo_facturacion";
+                                $statementParciales = $dbh->query($queryParciales);
+                                $nc_parciales=0;
+                                while ($row = $statementParciales->fetch()){ 
+                                  //objeto dato donde guarda tipos de pago
+                                  $dato_parcial = new stdClass();//obejto
+                                  $codFila=(int)$row["cod_claservicio"];
+                                  // echo $codFila;
+                                  $precio_x=trim($row['precio']);
+                                  $descripcion_x=trim($row['descripcion_alterna']);
+                                  $dato_parcial->codigo=($nc_parciales+1);
+                                  $dato_parcial->cod_claservicio=$codFila;
+                                  $dato_parcial->preciox=$precio_x;
+                                  if($importe_fact_x!=0)$dato_parcial->saldo_anterior_x=$precio_x-$importe_fact_x;
+                                  else $dato_parcial->saldo_anterior_x=0;
+                                  
+                                  $dato_parcial->descripcionx=$descripcion_x;                
+                                  $dato_parciales[$index-1][$nc_parciales]=$dato_parcial;                           
+                                  $nc_parciales++;
+                                } 
+                                $cont_pagosParciales[$index-1]=$nc_parciales;
                               if($importe_fact_x!=null){
                                 $saldo=$sumaTotalImporte-$importe_fact_x;
-                                $datos_FacManual=$codigo_facturacion."/".$sumaTotalImporte."/".$saldo;//dato para modal
+                                $datos_FacManual=$codigo_facturacion."/".($sumaTotalImporte-$importe_fact_x)."/".$saldo."/".$index;//dato para modal
                                 $estado="FACTURADO A PAGOS";
                               }else{
-                                $datos_FacManual=$codigo_facturacion."/".$sumaTotalImporte."/0";//dato para modal
+                                $datos_FacManual=$codigo_facturacion."/".($sumaTotalImporte-$importe_fact_x)."/0/".$index;//dato para modal
                               }
 
                               ?>
@@ -225,12 +247,13 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                                    <!-- <a href='#' title="Generar Factura" class="dropdown-item" onclick="alerts.showSwal('warning-message-and-confirmation-generar-factura','<?=$urlGenerarFacturas2;?>?codigo=<?=$codigo_facturacion;?>')">
                                                     <i class="material-icons text-success">receipt</i> Generar Factura
                                                    </a> -->
+                                                   <button title="Generar Factura Parcial" class="dropdown-item" type="button" data-toggle="modal" data-target="#modalGenerarFacturapagos" onclick="agregaDatosGenerarFactPagos('<?=$datos_FacManual;?>')">
+                                                    <i class="material-icons text-info">receipt</i><span style="color: #FF0000;">Generar Factura Parcial</span>
+                                                   </button>
                                                    <button title="Generar Factura Manual" class="dropdown-item" type="button" data-toggle="modal" data-target="#modalFacturaManual" onclick="agregaDatosFactManual('<?=$datos_FacManual;?>')">
                                                     <i class="material-icons text-info">receipt</i> Generar Factura Manual
                                                    </button>
-                                                   <button title="Generar Factura a Pagos" class="dropdown-item" type="button" data-toggle="modal" data-target="#modalGenerarFacturapagos" onclick="agregaDatosFactPagos('<?=$datos_FacManual;?>')">
-                                                    <i class="material-icons text-info">receipt</i> Generar Factura a Pagos
-                                                   </button>
+                                                   
                                                    <?php      
                                                   // }
                                                 ?>
@@ -253,15 +276,16 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                               <?php                                            
                                                   if($codEstado==3){
                                                    ?>
-                                                   <a href='#' title="Generar Factura" class="dropdown-item" onclick="alerts.showSwal('warning-message-and-confirmation-generar-factura','<?=$urlGenerarFacturas2;?>?codigo=<?=$codigo_facturacion;?>')">
-                                                    <i class="material-icons text-success">receipt</i> Generar Factura
+                                                   <a href='#' title="Generar Factura Total" class="dropdown-item" onclick="alerts.showSwal('warning-message-and-confirmation-generar-factura','<?=$urlGenerarFacturas2;?>?codigo=<?=$codigo_facturacion;?>')">
+                                                    <i class="material-icons text-success">receipt</i> Generar Factura Total
                                                    </a>
+                                                    <button title="Generar Factura Parcial" class="dropdown-item" type="button" data-toggle="modal" data-target="#modalGenerarFacturapagos" onclick="agregaDatosGenerarFactPagos('<?=$datos_FacManual;?>')">
+                                                    <i class="material-icons text-info">receipt</i><span style="color: #FF0000;">Generar Factura Parcial</span>
+                                                   </button>
                                                    <button title="Generar Factura Manual" class="dropdown-item" type="button" data-toggle="modal" data-target="#modalFacturaManual" onclick="agregaDatosFactManual('<?=$datos_FacManual;?>')">
                                                     <i class="material-icons text-info">receipt</i> Generar Factura Manual
                                                    </button>
-                                                   <button title="Generar Factura a Pagos" class="dropdown-item" type="button" data-toggle="modal" data-target="#modalGenerarFacturapagos" onclick="agregaDatosFactPagos('<?=$datos_FacManual;?>')">
-                                                    <i class="material-icons text-info">receipt</i> Generar Factura a Pagos
-                                                   </button>
+                                                  
                                                    <?php      
                                                   }
                                                 ?>
@@ -373,6 +397,14 @@ $globalAdmin=$_SESSION["globalAdmin"];
       <div class="modal-body">
         <input type="hidden" name="cod_solicitudfacturacion_factmanual" id="cod_solicitudfacturacion_factmanual" value="0">
         <div class="row">
+          <!-- <label class="col-sm-5 text-right col-form-label" style="color:#424242">Importe de Solicitud de Facturacón</label> -->
+          <div class="col-sm-12">
+            <div class="form-group">
+              <input type="text" name="importe_total" id="importe_total" class="form-control text-center" readonly="true" style="background-color:#E3CEF6;text-align: left">
+            </div>
+          </div>
+        </div>
+        <div class="row">
           <label class="col-sm-3 text-right col-form-label" style="color:#424242">Numero de Factura: </label>
           <div class="col-sm-8">
             <div class="form-group">
@@ -424,56 +456,27 @@ $globalAdmin=$_SESSION["globalAdmin"];
   </div>
 </div>
 <div class="modal fade" id="modalGenerarFacturapagos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h3 class="modal-title" id="myModalLabel"><b>Factura A Pagos</b></h3>
+  <div class="modal-dialog modal-xl" role="document">
+    <form id="formFacturaParcial" class="form-horizontal" action="<?=$urlGenerarFacturaParciales;?>" method="post" onsubmit="return valida_modalFacPar(this)" enctype="multipart/form-data">  
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h3 class="modal-title" id="myModalLabel"><b>Generar Factura Parcial</b></h3>
+        </div>      
+        <div class="modal-body">
+          <input type="hidden" name="cod_solicitudfacturacion_factpagos" id="cod_solicitudfacturacion_factpagos" value="0">
+          <div id="contenedor_GenerarFactParcial">
+          
+          </div>
+          <input type="hidden" name="cantidad_items" id="cantidad_items" value="0">          
+        </div>    
+        <div class="modal-footer">
+          <!-- <button type="button" class="btn btn-success" id="guardarFacturaPagos" name="guardarFacturaPagos"></button> -->
+          <button type="submit" class="btn btn-success">Generar Factura</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal"> Volver </button>
+        </div>    
       </div>
-      <div class="modal-body">
-        <input type="hidden" name="cod_solicitudfacturacion_factpagos" id="cod_solicitudfacturacion_factpagos" value="0">
-        
-        <div class="row">
-          <label class="col-sm-3 text-right col-form-label" style="color:#424242">Importe De Solicitud de Facturación</label>
-          <div class="col-sm-3">
-            <div class="form-group">
-              <input type="number" name="monto_sol_fact" id="monto_sol_fact" value="0" readonly="true" class="form-control" style="background-color:#E3CEF6;text-align: left">            
-            </div>
-          </div>
-          <label class="col-sm-1 text-right col-form-label" style="color:#424242">Saldo Anterior</label>
-          <div class="col-sm-2">
-            <div class="form-group">
-              
-              <input type="number" name="saldo_anterior" id="saldo_anterior" value="0" readonly="true" class="form-control" style="background-color:#E3CEC8;text-align: left">            
-            </div>
-          </div>
-          <label class="col-sm-1 text-right col-form-label" style="color:#424242">Saldo Nuevo</label>
-          <div class="col-sm-2">
-            <div class="form-group">
-              <input type="number" name="saldo_a_pagar" id="saldo_a_pagar" value="0" readonly="true" class="form-control" style="background-color:#E3CEC8;text-align: left">                
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <label class="col-sm-2 text-right col-form-label" style="color:#424242">Porcentaje a Pagar</label>
-          <div class="col-sm-4">
-            <div class="form-group">
-              <input type="number" step="0.01" name="porcentaje_pagar" id="porcentaje_pagar" class="form-control" onkeyup="monto_convertir_a_bolivianos_factPagos()">
-            </div>
-          </div>
-          <label class="col-sm-2 text-right col-form-label" style="color:#424242">Monto a pagar</label>
-          <div class="col-sm-4">
-            <div class="form-group">
-              <input type="number" step="0.01" name="monto_pagar" id="monto_pagar" class="form-control" onkeyup="monto_convertir_a_porcentaje_factPagos()">
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-success" id="guardarFacturaPagos" name="guardarFacturaPagos">Generar Factura</button>
-        <button type="button" class="btn btn-danger" data-dismiss="modal"> Volver </button>
-      </div>
-    </div>
+    </form>
   </div>
 </div>
 
@@ -527,28 +530,39 @@ $globalAdmin=$_SESSION["globalAdmin"];
           }          
         }
       }      
-    });
-    $('#guardarFacturaPagos').click(function(){    
-      var cod_solicitudfacturacion_factpagos=document.getElementById("cod_solicitudfacturacion_factpagos").value;
-      var monto_sol_fact=document.getElementById("monto_sol_fact").value;
-      var saldo_anterior=document.getElementById("saldo_anterior").value;
-      var porcentaje_pagar=$('#porcentaje_pagar').val();
-      var monto_pagar=$('#monto_pagar').val();
-      if(porcentaje_pagar==null || porcentaje_pagar<=0){
-        Swal.fire("Informativo!", "Porcentaje a Pagar incorrecto.", "warning");
-      }else{
-        if(monto_pagar==null || monto_pagar<=0){
-          Swal.fire("Informativo!", "Monto a Pagar incorrecto.", "warning");
-        }else{
-          if((monto_pagar>saldo_anterior && saldo_anterior!=0)||monto_pagar>monto_sol_fact){
-            Swal.fire("Informativo!", "El monto a Pagar es mayor al Saldo Anterior o al Importe Total de Dolicitud de Facturación.", "warning");
-          }else{
-            RegistrarFacturaPagos(cod_solicitudfacturacion_factpagos,porcentaje_pagar,monto_pagar);    
-          }
-        }
-      }      
     });    
   });
+  function valida_modalFacPar(f) {
+      var ok = true;
+      var msg = "El monto total no debe ser 0...\n";  
+      if(f.elements["total_importe"].value == 0 || f.elements["total_importe"].value < 0 || f.elements["total_importe"].value == '')
+      {    
+        ok = false;
+      }      
+      if(ok == false)    
+        Swal.fire("Informativo!",msg, "warning");
+      return ok;
+    }
 </script>
+<!-- objeto tipo de pago -->
+<?php 
 
-  
+    $lan_parciales=sizeof($cont_pagosParciales);//filas si lo hubiese         
+    // echo "cont:".$cont_pagosParciales;
+    for ($i=0; $i < $lan_parciales; $i++) {
+      ?>
+      <script>var detalle_pagoparcial=[];</script>
+      <?php      
+        for ($j=0; $j < $cont_pagosParciales[$i]; $j++) {
+             if($cont_pagosParciales[$i]>0){?>
+                <script>
+                    detalle_pagoparcial.push({codigo:<?=$dato_parciales[$i][$j]->codigo?>,codigox:<?=$dato_parciales[$i][$j]->cod_claservicio?>,preciox:'<?=$dato_parciales[$i][$j]->preciox?>',saldo_anterior_x:'<?=$dato_parciales[$i][$j]->saldo_anterior_x?>',descripcionx:'<?=$dato_parciales[$i][$j]->descripcionx?>'});
+                    // console.log(detalle_pagoparcial);
+                </script>
+
+              <?php
+              }          
+            }
+        ?><script>itemGenerar_factura_parcial_aux.push(detalle_pagoparcial);</script><?php                    
+    }
+?>

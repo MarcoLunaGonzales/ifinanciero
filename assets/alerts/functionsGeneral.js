@@ -13467,6 +13467,7 @@ function saveDatosBancarizacion(){
 function agregaDatosFactManual(datos){  
   var d=datos.split('/');
   document.getElementById("cod_solicitudfacturacion_factmanual").value=d[0];
+  document.getElementById("importe_total").value="Importe de Solicitud de Facturacón: "+number_format(d[1],2);
 }
 function RegistrarFacturaManual(cod_solicitudfacturacion,nro_factura,nro_autorizacion,fecha_factura,nit_cliente,razon_social){
   $.ajax({
@@ -13530,59 +13531,147 @@ function cambiarPrecioPlantilla(){
 
 }
 
-function agregaDatosFactPagos(datos){  
+
+
+//tipo pago
+var itemGenerar_factura_parcial=[];
+var itemGenerar_factura_parcial_aux=[];
+function agregaDatosGenerarFactPagos(datos){  
   var d=datos.split('/');
-  var monto_solicitud=parseFloat(d[1]);
-  var saldo_anterior=parseFloat(d[2]);
+  // var monto_solicitud=parseFloat(d[1]);
+  // var saldo_anterior=parseFloat(d[2]);
   document.getElementById("cod_solicitudfacturacion_factpagos").value=d[0];
-  document.getElementById("monto_sol_fact").value=monto_solicitud.toFixed(2);
-  document.getElementById("saldo_anterior").value=saldo_anterior.toFixed(2);
+  var index=(parseFloat(d[3])-1);
+  // document.getElementById("monto_sol_fact").value=monto_solicitud.toFixed(2);
+  // document.getElementById("saldo_anterior").value=saldo_anterior.toFixed(2);
+  // document.getElementById("monto_sol_fact_x").value=number_format(monto_solicitud,2);
+  // document.getElementById("saldo_anterior_x").value=number_format(saldo_anterior,2);
+  tablaGeneral_GenerarFact_parcial(index);
 }
-function monto_convertir_a_porcentaje_factPagos(){
-  var monto_sol_fac=$("#monto_sol_fact").val();
-  var monto_pagar=$("#monto_pagar").val();
-  var saldo_anterior=$("#saldo_anterior").val();
-  
-  if(monto_pagar<0 || monto_pagar==0 || monto_pagar==null){
-    // Swal.fire("Informativo!", "Monto incorrecto!", "warning");
-  }else{
-    if(monto_pagar>saldo_anterior && saldo_anterior!=0){
-      Swal.fire("Informativo!", "El Monto a Pagar es mayor al Saldo Anterior!", "warning");
+function tablaGeneral_GenerarFact_parcial(index){
+  // var monto_total=$("#modal_totalmontos").val();
+  var div=$('<div>').addClass('col-sm-12');
+  var table = $('<table>').addClass('table table-bordered table-condensed table-sm');
+  var titulos = $('<tr>').addClass('fondo-boton');
+    titulos.append($('<th width="2%">').addClass('').text('#'));
+
+    titulos.append($('<th width="8%">').addClass('').text('Precio'));
+    titulos.append($('<th width="3%">').addClass('').text('Pago %'));
+    titulos.append($('<th width="8%">').addClass('').text('Pago BOB'));
+    titulos.append($('<th width="8%">').addClass('').text('Importe a Pagar'));
+    titulos.append($('<th width="7%">').addClass('').text('Saldo'));
+    titulos.append($('<th width="7%">').addClass('').text('Saldo Anterior'));
+    titulos.append($('<th >').addClass('').text('Descripcion'));        
+    table.append(titulos);
+    for (var i = 0; i < itemGenerar_factura_parcial_aux[index].length; i++) {
+      var codigox=itemGenerar_factura_parcial_aux[index][i].codigox;
+      var preciox=itemGenerar_factura_parcial_aux[index][i].preciox;
+      var saldo_anterior_x=itemGenerar_factura_parcial_aux[index][i].saldo_anterior_x;
+      var descripcionx=itemGenerar_factura_parcial_aux[index][i].descripcionx;
+      var cod_solfacdet=itemGenerar_factura_parcial_aux[index][i].cod_solfacdet;
+      
+      var row = $('<tr>').addClass('');
+      row.append($('<td>').addClass('').text(i+1).html("<input type='hidden' name='codigo_x"+i+"' id='codigo_x"+i+"' value='"+codigox+"'>" ));
+        row.append($('<td>').addClass('').html("<input type='number' step='0.01' class='form-control' name='precio_initario"+i+"' id='precio_initario"+i+"' value='"+parseFloat(preciox).toFixed(2)+"' readonly='true'>" ));
+        row.append($('<td>').addClass('').html("<input type='number' step='0.01' class='form-control' name='pago_por"+i+"' id='pago_por"+i+"' value='0' onkeyup='monto_convertir_a_bolivianos_factPagos("+i+")'>"));    
+        row.append($('<td>').addClass('').html("<input type='number' step='0.01' class='form-control' name='pago_bob"+i+"' id='pago_bob"+i+"' value='0' onkeyup='monto_convertir_a_porcentaje_factPagos("+i+")'>"));    
+        row.append($('<td>').addClass('').html("<input type='number' step='0.01' class='form-control' name='importe_pagar"+i+"' id='importe_pagar"+i+"' value='0' readonly='true'>"));    
+        row.append($('<td>').addClass('').html("<input type='number' step='0.01' class='form-control' name='saldo"+i+"' id='saldo"+i+"' value='0' readonly='true'>"));    
+        row.append($('<td>').addClass('').html("<input type='number' step='0.01' class='form-control' name='saldo_anterior"+i+"' id='saldo_anterior"+i+"' value='"+saldo_anterior_x+"' readonly='true'>"));    
+        row.append($('<td>').addClass('').html("<input type='text' class='form-control' name='descripcion"+i+"' id='descripcion"+i+"' value='"+descripcionx+"' readonly='true'>"));
+      table.append(row);
+    }
+    var row = $('<tr>').addClass('');//parte de total
+    row.append($('<td>').addClass('').text(''));
+    row.append($('<td colspan="3" align="right">').addClass('').text('MONTO TOTAL'));         
+    row.append($('<td>').addClass('').html("<input type='hidden' class='form-control' name='total_importe' id='total_importe' value='0'><input type='text' step='0.01' class='form-control' name='total_importe_a' id='total_importe_a' value='"+number_format(0,2)+"' readonly='true'>"));
+    row.append($('<td>').addClass('').html("<input type='hidden' step='0.01' class='form-control' name='total_saldo' id='total_saldo' value='0'><input type='text' step='0.01' class='form-control' name='total_saldo_a' id='total_saldo_a' value='"+number_format(0,2)+"' readonly='true'> "));    
+    row.append($('<td>').addClass('').text(''));
+    table.append(row);    
+    div.append(table);    
+    $("#cantidad_items").val(i);
+    $('#contenedor_GenerarFactParcial').html(div);
+    calcular_monto_total_items_factura_parcial();
+}
+
+
+
+function monto_convertir_a_porcentaje_factPagos(i){
+  // alert("aqui");
+  var precio_initario=$("#precio_initario"+i).val();
+  var pago_bob=$("#pago_bob"+i).val();
+  var saldo_anterior=$("#saldo_anterior"+i).val();
+  var sw_aux=true;
+  if(parseFloat(saldo_anterior)!=0){
+    if(parseFloat(pago_bob)>parseFloat(saldo_anterior)){
+      sw_aux=false;
     }else{
-      var numero_porcentaje=parseFloat(monto_pagar)*100/parseFloat(monto_sol_fac);
-      //alert(numero_porcentaje);
-      $("#porcentaje_pagar").val(numero_porcentaje.toFixed(2));
-      if(saldo_anterior!=0)var monto_anterior=parseFloat(monto_sol_fac)-parseFloat(saldo_anterior);//sacamos el saldo que teniamos
-      else var monto_anterior=0;
-      var saldo=parseFloat(monto_sol_fac)-parseFloat(monto_anterior)-parseFloat(monto_pagar);
-      $("#saldo_a_pagar").val(saldo.toFixed(2)); 
-    }        
+      var saldo=parseFloat(saldo_anterior)-parseFloat(pago_bob);
+    }
+  }else{
+    var saldo=parseFloat(precio_initario)-parseFloat(pago_bob);
+  }
+  if(pago_bob<0 || pago_bob==0 || pago_bob==null){
+    // Swal.fire("Informativo!", "Monto incorrecto!", "warning");
+  }else{    
+    var numero_porcentaje=parseFloat(pago_bob)*100/parseFloat(precio_initario);
+    if(sw_aux){
+      // var saldo=parseFloat(precio_initario)-parseFloat(pago_bob);
+      $("#pago_por"+i).val(numero_porcentaje.toFixed(2));      
+      $("#importe_pagar"+i).val(parseFloat(pago_bob).toFixed(2));      
+      $("#saldo"+i).val(saldo.toFixed(2));      
+      calcular_monto_total_items_factura_parcial();
+    }else{  
+      Swal.fire("Informativo!", "El monto es superior al Saldo Anterior", "warning");
+    }
   }
 }
-function monto_convertir_a_bolivianos_factPagos(){
-  var monto_sol_fact=$("#monto_sol_fact").val();
-  var porcentaje_pagar=$("#porcentaje_pagar").val();
-  var saldo_anterior=$("#saldo_anterior").val();
-
-  if(porcentaje_pagar<0 || porcentaje_pagar==0 || porcentaje_pagar==null){
+function monto_convertir_a_bolivianos_factPagos(i){
+  var precio_initario=$("#precio_initario"+i).val();
+  var pago_por=$("#pago_por"+i).val();  
+  var saldo_anterior=$("#saldo_anterior"+i).val();
+  var sw_aux=true;
+  if(pago_por<0 || pago_por==0 || pago_por==null){
     // Swal.fire("Informativo!", "Porcentaje incorrecto!", "warning");
   }else{
     // alert(porcentaje_pagar);
-    var monto_porcentaje=parseFloat(porcentaje_pagar)*parseFloat(monto_sol_fact)/100;
-    if(monto_porcentaje>saldo_anterior && saldo_anterior!=0){
-      Swal.fire("Informativo!", "El Monto a Pagar es mayor al Saldo Anterior!", "warning");
+    var monto_porcentaje=parseFloat(pago_por)*parseFloat(precio_initario)/100;
+    if(saldo_anterior!=0){
+      if(parseFloat(monto_porcentaje)>parseFloat(saldo_anterior)){
+        sw_aux=false;
+      }else{
+        var saldo=parseFloat(saldo_anterior)-parseFloat(monto_porcentaje);
+      }
     }else{
-      //alert(monto_porcentaje);
-      $("#monto_pagar").val(monto_porcentaje.toFixed(2));
-      if(saldo_anterior!=0)var monto_anterior=parseFloat(monto_sol_fact)-parseFloat(saldo_anterior);//sacamos el saldo que teniamos
-      else var monto_anterior=0;
-
-      var saldo=parseFloat(monto_sol_fact)-parseFloat(monto_anterior)-parseFloat(monto_porcentaje);
-      $("#saldo_a_pagar").val(saldo.toFixed(2));     
+      var saldo=parseFloat(precio_initario)-parseFloat(monto_porcentaje);
     }
-    
+    if(sw_aux){
+      $("#pago_bob"+i).val(monto_porcentaje.toFixed(2));    
+      $("#importe_pagar"+i).val(monto_porcentaje.toFixed(2));
+      $("#saldo"+i).val(saldo.toFixed(2));     
+      calcular_monto_total_items_factura_parcial();
+    }else{  
+      Swal.fire("Informativo!", "El monto es superior al Saldo Anterior", "warning");
+    }
   }
 }
+function calcular_monto_total_items_factura_parcial(){
+  var total_items=$("#cantidad_items").val();
+  var total_importe_monto=0;
+  var total_saldo_monto=0;
+  for(var j=0;j<total_items;j++){
+    var importe_pagar=$("#importe_pagar"+j).val();
+    var saldo=$("#saldo"+j).val();
+    total_importe_monto+=parseFloat(importe_pagar);
+    total_saldo_monto+=parseFloat(saldo);
+  }
+  $("#total_importe").val(total_importe_monto.toFixed(2));      
+  $("#total_importe_a").val(number_format(total_importe_monto,2));  
+  $("#total_saldo").val(total_saldo_monto.toFixed(2));  
+  $("#total_saldo_a").val(number_format(total_saldo_monto,2));
+}
+
+
 function RegistrarFacturaPagos(cod_solicitudfacturacion,porcentaje_pagar,monto_pagar){
   $.ajax({
     type:"POST",
@@ -13667,10 +13756,12 @@ function ajaxBuscarComprobanteCajaChica(){
       if (ajax.readyState==4) {
         contenedor.innerHTML = ajax.responseText;
         var detalle_comprobante=document.getElementById("detalle_comprobante").value;
+        // alert(detalle_comprobante);
         if(detalle_comprobante!="no encontrado"){
           $("#guardarDatosModalComprobante").removeClass("d-none"); 
+        }else{
+            $("#guardarDatosModalComprobante").addClass("d-none"); 
         }
-        
       }
     }
     ajax.send(null) 

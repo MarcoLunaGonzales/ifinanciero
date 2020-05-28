@@ -156,7 +156,7 @@ $totalDebito=0;
                                             $saldo+=$montoX;//-$montoContra;                                    
                                             // echo "tipo:".$cod_tipoCuenta;
                                             if($tipoDebeHaber==2){//proveedor
-                                                $totalCredito=$totalCredito+$saldo;
+                                                $totalCredito=$totalCredito+$montoX;
                                                 $nombreProveedorX=nameProveedor($codProveedor);
                                                 ?>
                                                 <tr class="bg-white det-estados">
@@ -164,7 +164,8 @@ $totalDebito=0;
                                                     <td class="text-center small"><?=$nombreComprobanteX;?></td>
                                                     <td class="text-left small"><?=$fechaComprobante;?></td>
                                                     <td class="text-left small"><?=$fechaX;?></td>
-                                                    <td class="text-left small"><?=$nombreCuentaAuxiliarX;?>[<?=$nombreProveedorX;?>]</td>
+                                                    <!--td class="text-left small"><?=$nombreCuentaAuxiliarX;?>[<?=$nombreProveedorX;?>]</td-->
+                                                    <td class="text-left small"><?=$nombreCuentaAuxiliarX;?></td>
                                                     <td class="text-left small"><?=$glosaMostrar;?></td>
                                                     <td class="text-right small"><?=formatNumberDec(0)?></td>
                                                     <td class="text-right small"><?=formatNumberDec($montoX)?></td>
@@ -179,7 +180,8 @@ $totalDebito=0;
                                                     <td class="text-center small"><?=$nombreComprobanteX;?></td>
                                                     <td class="text-left small"><?=$fechaComprobante;?></td>
                                                     <td class="text-left small"><?=$fechaX;?></td>
-                                                    <td class="text-left small"><?=$nombreCuentaAuxiliarX;?>[<?=$nombreProveedorX;?>]</td>
+                                                    <!--td class="text-left small"><?=$nombreCuentaAuxiliarX;?>[<?=$nombreProveedorX;?>]</td-->
+                                                    <td class="text-left small"><?=$nombreCuentaAuxiliarX;?></td>
                                                     <td class="text-left small"><?=$glosaMostrar;?></td>
                                                     <td class="text-right small"><?=formatNumberDec($montoX)?></td>
                                                     <td class="text-right small"><?=formatNumberDec(0)?></td>

@@ -61,4 +61,7 @@ $urlListSol_conta="index.php?opcion=listFacturasServicios_conta";
 //ifinanciero/index.php?opcion=listFacturasServicios_conta
 $urlListFacturasGeneradasManuales="?opcion=listFacturasGeneradasManuales";
 
+
+$urlGenerarFacturaParciales="simulaciones_servicios/generarFacturaPagos.php";
+
 ?>

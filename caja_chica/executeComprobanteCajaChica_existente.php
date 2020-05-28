@@ -65,10 +65,10 @@ try{
 			$cod_contra_cuenta=obtenerValorConfiguracion(28);
 			$centroCostosDN=obtenerValorConfiguracion(29);//DN 
 			// echo $numeroComprobante;
+			$sqlInsertCab="UPDATE comprobantes set glosa='$concepto_contabilizacion' where codigo='$codComprobante'";
 
-			// $sqlInsertCab="INSERT INTO comprobantes (codigo, cod_empresa, cod_unidadorganizacional, cod_gestion, cod_moneda, cod_estadocomprobante, cod_tipocomprobante, fecha, numero, glosa) values ('$codComprobante','$codEmpresa','$cod_uo_tcc','$codAnio','$codMoneda','$codEstadoComprobante','$tipoComprobante','$fechaActual','$numeroComprobante','$concepto_contabilizacion')";
-			// $stmtInsertCab = $dbh->prepare($sqlInsertCab);
-			// $flagSuccess=$stmtInsertCab->execute();
+			$stmtInsertCab = $dbh->prepare($sqlInsertCab);
+			$flagSuccess=$stmtInsertCab->execute();
 			//borramos el detalle del comprobante
 			$sqlDeleteDetalle="DELETE FROM comprobantes_detalle where cod_comprobante=$codComprobante";
 			$stmtDeleteDetalle = $dbh->prepare($sqlDeleteDetalle);
