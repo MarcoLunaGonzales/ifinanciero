@@ -40,10 +40,11 @@ $tipoCurso=$_POST['tipo_curso'];
 if(isset($_POST['resumido'])){
  $resumido=1; 
  $rowSpan=4;
- $sqlSolicitadosInicio="SELECT l.codigo,l.nombre,l.fecha_curso,l.cod_cuenta,GROUP_CONCAT(l.glosa) as glosa,sum(l.presupuestado)as presupuestado,sum(l.ejecutado) as ejecutado,null as proveedor,1 as codigo_ejecutado FROM (";
+ $sqlSolicitadosInicio="SELECT l.codigo,l.nombre,l.fecha_curso,l.cod_cuenta,GROUP_CONCAT(CONCAT(l.glosa,' ',l.nombre_proveedor)) as glosa,sum(l.presupuestado)as presupuestado,sum(l.ejecutado) as ejecutado,null as proveedor,1 as codigo_ejecutado FROM (";
  $sqlSolicitadosFin=") l where l.codigo_ejecutado!='' group by l.cod_simulacion,l.cod_cuenta";
  $solicitados=0;
 }else{
+  $resumido=0; 
   if(isset($_POST['solicitados'])){
     $rowSpan=5; 
     $sqlSolicitadosInicio="";
@@ -109,10 +110,11 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
 
   $query1=$sqlSolicitadosInicio."select s.codigo as cod_simulacion,s.nombre,s.fecha_curso,sd.codigo,sd.cod_cuenta,sd.glosa,sd.monto_total as presupuestado,
 (SELECT d.importe from solicitud_recursosdetalle d join solicitud_recursos so on so.codigo=d.cod_solicitudrecurso where so.cod_simulacion=s.codigo and d.cod_detalleplantilla=sd.codigo) as ejecutado, 
-(SELECT d.cod_proveedor from solicitud_recursosdetalle d join solicitud_recursos so on so.codigo=d.cod_solicitudrecurso where so.cod_simulacion=s.codigo and d.cod_detalleplantilla=sd.codigo) as proveedor, 
+(SELECT d.cod_proveedor from solicitud_recursosdetalle d join solicitud_recursos so on so.codigo=d.cod_solicitudrecurso where so.cod_simulacion=s.codigo and d.cod_detalleplantilla=sd.codigo) as proveedor,
+(SELECT pro.nombre from solicitud_recursosdetalle d join solicitud_recursos so on so.codigo=d.cod_solicitudrecurso join af_proveedores pro on pro.codigo=d.cod_proveedor where so.cod_simulacion=s.codigo and d.cod_detalleplantilla=sd.codigo) as nombre_proveedor, 
 (SELECT d.cod_detalleplantilla from solicitud_recursosdetalle d join solicitud_recursos so on so.codigo=d.cod_solicitudrecurso where so.cod_simulacion=s.codigo and d.cod_detalleplantilla=sd.codigo) as codigo_ejecutado 
 from simulaciones_detalle sd join simulaciones_costos s on s.codigo=sd.cod_simulacioncosto 
-WHERE s.cod_tipocurso in($tipoCursoArray) order by s.nombre,sd.cod_cuenta".$sqlSolicitadosFin;
+WHERE s.cod_tipocurso in($tipoCursoArray) and sd.habilitado=1 and s.cod_estadosimulacion=3 order by s.nombre,sd.cod_cuenta".$sqlSolicitadosFin;
 
   $stmt = $dbh->prepare($query1);
   // Ejecutamos
@@ -138,6 +140,7 @@ WHERE s.cod_tipocurso in($tipoCursoArray) order by s.nombre,sd.cod_cuenta".$sqlS
     $codCuenta=$rowComp['cod_cuenta'];  
     $glosaX=$rowComp['glosa'];
     $proveedorX=$rowComp['proveedor'];
+
     $presupuestadoX=$rowComp['presupuestado']/$tc;
     $ejecutadoX=$rowComp['ejecutado']/$tc;
     $nombreCuenta=nameCuenta($codCuenta);
@@ -158,6 +161,9 @@ WHERE s.cod_tipocurso in($tipoCursoArray) order by s.nombre,sd.cod_cuenta".$sqlS
          }
       }
       $estadoEjecutado.=" text-white";
+      if($resumido==0){
+        $glosaX.=" ".$rowComp['nombre_proveedor'];
+      }
     } 
     if($cursoNombre!=$nombreX&&$index>1){
        $html.='<tr class="bg-plomo">'.

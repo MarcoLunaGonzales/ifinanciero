@@ -22,10 +22,10 @@ if(isset($_GET['cod_plantillacosto'])){
   $cuenta=$_GET['cuenta'];
   $tipo=$_GET['tipo'];
   
-  if($tipo==3){
+  if($tipo==3||$tipo==1){
   	$alumno=$_GET['monto_al'];
-  }else{
-  	$alumno=0;
+  }else{	
+    $alumno=0;
   }
   $dbh = new Conexion();
   $sqlInsert="INSERT INTO plantillas_servicios_detalle (cod_plantillacosto, cod_partidapresupuestaria, cod_cuenta,glosa,monto_unitario,cantidad,monto_total,cod_estadoreferencial,editado_alumno,tipo_registro) VALUES ('".$codigo."','".$codPartida."','".$cuenta."', '".$detalle."','".$monto."','1','".$monto."',1,'".$alumno."','".$tipo."')";
