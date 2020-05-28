@@ -124,8 +124,8 @@ $i=0;
       	             </div>
       	             <div class="col-sm-6 d-none" id="div_solicitados">
       	             	<div class="row">
-			               <label class="col-sm-4 col-form-label">Incluir Detalles Sin SR</label>
-                           <div class="col-sm-8">
+			               <label class="col-sm-8 col-form-label">Incluir Items sin Solicitud de Recursos</label>
+                           <div class="col-sm-4">
 			                  <div class="form-group">
       	             	          <div class="form-check">
                                     <label class="form-check-label">

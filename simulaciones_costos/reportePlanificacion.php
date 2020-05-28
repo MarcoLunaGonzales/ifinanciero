@@ -40,7 +40,7 @@ $tipoCurso=$_POST['tipo_curso'];
 if(isset($_POST['resumido'])){
  $resumido=1; 
  $rowSpan=3;
- $sqlSolicitadosInicio="SELECT 1 as codigo,'Todos' as nombre,'' as fecha_curso,l.cod_cuenta,GROUP_CONCAT(CONCAT(l.glosa,' ',l.nombre_proveedor)) as glosa,sum(l.presupuestado)as presupuestado,sum(l.ejecutado) as ejecutado,null as proveedor,1 as codigo_ejecutado FROM (";
+ $sqlSolicitadosInicio="SELECT 1 as codigo,'<i class=\'material-icons bg-primary\'>insert_chart</i>' as nombre,'' as fecha_curso,l.cod_cuenta,GROUP_CONCAT(CONCAT(l.glosa,' ',l.nombre_proveedor)) as glosa,sum(l.presupuestado)as presupuestado,sum(l.ejecutado) as ejecutado,null as proveedor,1 as codigo_ejecutado FROM (";
  $sqlSolicitadosFin=") l where l.codigo_ejecutado!='' group by l.cod_cuenta";
  $solicitados=0;
  $anchoPartida="3%";
@@ -170,7 +170,7 @@ WHERE s.cod_tipocurso in($tipoCursoArray) and sd.habilitado=1 and s.cod_estadosi
         $fechaCurso="";
       }
     } 
-    if($cursoNombre!=$nombreX&&$index>1){
+    if($cursoNombre!=$nombreX&&$index>1&&$resumido==0){
        $html.='<tr class="bg-plomo">'.
                   '<td colspan="'.($rowSpan-1).'" class="text-left font-weight-bold">Totales Curso '.$cursoNombre.' </td>'.
                   '<td class="text-right font-weight-bold">'.formatNumberDec(($tEjecutadoS/$tPresupuestoS)*100).' %</td>'.      
@@ -181,7 +181,7 @@ WHERE s.cod_tipocurso in($tipoCursoArray) and sd.habilitado=1 and s.cod_estadosi
         $tPresupuestoS=0;$tEjecutadoS=0;$tsaldoS=0;  
     }
 
-    if($cursoNombre!=$nombreX){
+    if($cursoNombre!=$nombreX&&$resumido==0){
        $html.='<tr class="bg-info text-white">'.
                   '<td colspan="'.(($rowSpan-1)+3).'" class="text-center font-weight-bold">CURSO :'.$nombreX.' </td>'.
                   //'<td class="text-right font-weight-bold">'.formatNumberDec($tsaldoS).'</td>'.      
@@ -215,13 +215,16 @@ WHERE s.cod_tipocurso in($tipoCursoArray) and sd.habilitado=1 and s.cod_estadosi
         $html.='</tr>';
       $index++; 
     }/* Fin del primer while*/
-    $html.='<tr class="bg-plomo">'.
+    if($resumido==0){
+       $html.='<tr class="bg-plomo">'.
                   '<td colspan="'.($rowSpan-1).'" class="text-left font-weight-bold">Totales Curso '.$cursoNombre.' </td>'.
                   '<td class="text-right font-weight-bold">'.formatNumberDec(($tEjecutadoS/$tPresupuestoS)*100).' %</td>'.      
                   '<td class="text-right font-weight-bold">'.formatNumberDec($tPresupuestoS).'</td>'.      
                   '<td class="text-right font-weight-bold">'.formatNumberDec($tEjecutadoS).'</td>'. 
                   //'<td class="text-right font-weight-bold">'.formatNumberDec($tsaldoS).'</td>'.      
               '</tr>';
+
+    }
     if($contador!=0){
       $html.='<tr class="bg-secondary text-white">'.
                   '<td colspan="'.($rowSpan-1).'" class="text-center">Totales:</td>'.
