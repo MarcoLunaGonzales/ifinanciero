@@ -12,6 +12,12 @@ alerts = {
           location.href=url;
       });
     }
+    else if (type == 'error-message-capacitacion') {
+      swal("Error!", "Hubo un problema al momento de registrar en el Servicio Web!. Contacte con el administrador!", "error")
+          .then((value) => {
+          location.href=url;
+      });
+    }
     else if (type == 'warning-message-and-confirmation') {
       swal({
         title: '¿Estás Seguro?',

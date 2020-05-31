@@ -63,7 +63,7 @@ if($estado!=1){
       }else{
         actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);
       }
-  }
+    }
   }
 	//fin de actulizar estados del servidor ibnorca
 }else{
@@ -80,10 +80,15 @@ if($estado!=1){
   }
 }
 if(isset($_GET['admin'])){
-  $urlList2Sol=$urlListSol;
+  if($_GET['admin']==10){
+    $urlList2Sol=$urlListSol_conta;
+  }else{
+    $urlList2Sol=$urlListSol;    
+  }
   if(isset($_GET['sim'])){
     $urlList2Sol=$urlListSolSim."&cod=".$_GET['sim'];
-  }
+  }  
+  
 }
 if(isset($_GET['q'])){
 	$q=$_GET['q'];
@@ -109,7 +114,6 @@ if(isset($_GET['q'])){
       showAlertSuccessError(false,"../".$urlList2Sol);
     }
   }
-	
 }
 
 ?>

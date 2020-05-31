@@ -382,21 +382,9 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
   </div>
 
 <script>
-//  var codigo_detalle = <?=$codigo?>;
-  // if(codigo_detalle>0){ //para edit
-  //   var nro_cuenta = document.getElementById("cuenta_auto").value; 
-  //   if(nro_cuenta.substr(0,1)==2){
-  //     $(".retencion_sin_gastos").show();
-  //     $(".contenedor_contra_cuenta").show();
-  //   }else{
-  //     $(".retencion_sin_gastos").hide();
-  //     $(".contenedor_contra_cuenta").hide();
-  //   }
-  // }
   //el numero de cuenta comporbamos si empieza con 2
   $( "#cuenta_auto" ).blur(function() {
       var nro_cuenta = document.getElementById("cuenta_auto").value; 
-      
       if(nro_cuenta.substr(0,1)==2){//comprobamos el primer digito de la cuenta 
         // alert("es 5");
         $(".retencion_sin_gastos").show();
@@ -406,9 +394,7 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
         // $(".contenedor_contra_cuenta").hide();
       }
     });  
-  
 </script>
-  <!--    end small modal -->
 <script>$('.selectpicker').selectpicker("refresh");</script>
 <!-- verifica que no vea campos vacios -->
 <script type="text/javascript">
@@ -434,10 +420,16 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
               ok = false;
         }
     }
+    var dato = document.getElementById("cuenta_auto_id").value;
+    if(dato==0){
+        ok=false;
+        msg="Cuenta Contable Incorrecta...!";
+    }     
     if(ok == false)
       alert(msg);
     return ok;
   }
+
 </script>
 
 <?php 

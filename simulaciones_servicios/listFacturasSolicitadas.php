@@ -240,7 +240,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                             <td><button class="btn <?=$btnEstado?> btn-sm btn-link"><small><?=$estado;?></small></button></td>
                             <td class="td-actions text-right">
                               <?php                              
-                                if($cod_estado_factura_x==1){
+                                if($cod_estado_factura_x==1 || $cod_estado_factura_x==null){
                                   if($codigo_fact_x>0){//print facturas
                                     if($cont_facturas<2){
                                       ?>
@@ -277,13 +277,13 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                              </a>
                                              <?php 
                                           }else{
-                                            if($codEstado==3){
+                                            //if($codEstado==3){
                                              ?>
-                                             <a href='#' title="Generar Factura" target="_blank" class="dropdown-item" onclick="alerts.showSwal('warning-message-and-confirmation-generar-factura','<?=$urlGenerarFacturas2;?>?codigo=<?=$codigo_facturacion;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>')">
+                                             <!-- <a href='#' title="Generar Factura" target="_blank" class="dropdown-item" onclick="alerts.showSwal('warning-message-and-confirmation-generar-factura','<?=$urlGenerarFacturas2;?>?codigo=<?=$codigo_facturacion;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>')">
                                               <i class="material-icons text-success">receipt</i> Generar Factura
-                                             </a>
+                                             </a> -->
                                              <?php      
-                                            }
+                                            //}
                                           }
                                           ?>
                                           <a href='#' rel="tooltip" class="dropdown-item" onclick="filaTablaAGeneral($('#tablasA_registradas'),<?=$index?>,'<?=$stringCabecera?>')">
@@ -295,13 +295,13 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                               <i class="material-icons text-danger">clear</i> Cancelar solicitud
                                            </a><?php 
                                           }else{
-                                            if($codEstado==3){
+                                            //if($codEstado==3){
                                              ?>
-                                             <a href='#' title="Generar Factura" class="dropdown-item" onclick="alerts.showSwal('warning-message-and-confirmation-generar-factura','<?=$urlGenerarFacturas2;?>?codigo=<?=$codigo_facturacion;?>')">
+                                             <!-- <a href='#' title="Generar Factura" class="dropdown-item" onclick="alerts.showSwal('warning-message-and-confirmation-generar-factura','<?=$urlGenerarFacturas2;?>?codigo=<?=$codigo_facturacion;?>')">
                                               <i class="material-icons text-success">receipt</i> Generar Factura
-                                             </a>
+                                             </a> -->
                                              <?php      
-                                            }
+                                            //}
                                           }
                                           ?>
                                           <a href='#' rel="tooltip" class="dropdown-item" onclick="filaTablaAGeneral($('#tablasA_registradas'),<?=$index?>,'<?=$stringCabecera?>')">

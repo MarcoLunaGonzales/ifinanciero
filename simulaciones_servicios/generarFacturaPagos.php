@@ -22,7 +22,7 @@ $globalUser=$_SESSION["globalUser"];
 // $codigo = $_GET["codigo"];
 $cod_solicitudfacturacion = $_POST["cod_solicitudfacturacion_factpagos"];
 $cantidad_items = $_POST["cantidad_items"];
-$total_importe = $_POST["total_importe"];
+$total_importe = $_POST["total_importe_pagar"];
 try{    
     //verificamos si se registró las cuentas en los tipos de pago 
     $stmtVerif_tipopago = $dbh->prepare("SELECT (select c.cod_cuenta from tipos_pago_contabilizacion c where c.cod_tipopago=t.codigo) as cuenta from tipos_pago t where t.cod_estadoreferencial=1");
@@ -162,7 +162,7 @@ try{
                     $cod_facturaVenta = $resultNroFact['codigo'];
                     for($i=0;$i<$cantidad_items;$i++){
                         $codigo_clax = $_POST["codigo_x".$i];
-                        $importe_pagar = $_POST["importe_pagar".$i];    
+                        $importe_pagar = $_POST["importe_a_pagar".$i];    
                         
                         $sqlDetalles="SELECT sf.* from solicitudes_facturaciondetalle sf where sf.cod_solicitudfacturacion=$cod_solicitudfacturacion and cod_claservicio=$codigo_clax";
                         // echo $sqlDetalles;

@@ -23,5 +23,6 @@ $urlReporteMayor="reportes/reporteMayor.php";
 $urlReporteBalance="reportes/reporteBalance.php";
 $urlReporteEstadosResultados="reportes/reporteEstadosResultados.php";
 $urlReporteCompras="reportes/reportePrintLibroCompra.php";
+$urlReporteVentas="reportes/reportePrintLibroVentas.php";
 ?>
 
