@@ -614,7 +614,6 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
 			 </div>
        <div class="row div-center">
             <div class="card-footer fixed-bottom">
-            
             <a onclick="guardarSimulacion()" class="btn btn-success text-white"><i class="material-icons">send</i> Enviar Propuesta</a>
             <a href="../<?=$urlList;?>" class="btn btn-danger">Volver</a> 
             </div>

@@ -7282,7 +7282,7 @@ function guardarDatosPlantilla(btn_id){
     };
     for (var i = 1; i <= parseInt(cantidadFilas); i++) {
       if($("#total_alumnosAAA"+i).length>0){
-         if($("#cantidad_alumnosAAA"+i).val()<=0||$("#porcentaje_alumnosAAA"+i).val()<=0||$("#monto_alumnosAAA"+i).val()<=0){
+         if($("#cantidad_alumnosAAA"+i).val()<=0||$("#monto_alumnosAAA"+i).val()<=0){
           mensajeError="Detalles Precio: No debe existir campos negativos o valores 0";
           error=1;
          }
@@ -13821,7 +13821,7 @@ function agregarFilaPreciosSimulacionCabecera(){
   num++;  
   var row = $('<tr>').addClass('').attr('id','fila_precios'+num);
   row.append($('<td>').addClass('text-center').html('<input type="number" onkeyup="calcularPrecioTotal('+num+')" onkeydown="calcularPrecioTotal('+num+')" class="form-control" style="background-color:#E3CEF6;text-align: right" value="" placeholder="0" id="cantidad_alumnosAAA'+num+'" name="cantidad_alumnosAAA'+num+'">'));
-  row.append($('<td>').addClass('text-center').html('<input type="number" onkeyup="calcularPrecioPorcentaje('+num+')" onkeydown="calcularPrecioPorcentaje('+num+')" class="form-control" style="background-color:#E3CEF6;text-align: right" value="100" placeholder="00000" id="porcentaje_alumnosAAA'+num+'" name="porcentaje_alumnosAAA'+num+'">'));
+  row.append($('<td>').addClass('text-center').html('<input type="number" onkeyup="calcularPrecioPorcentaje('+num+')" onkeydown="calcularPrecioPorcentaje('+num+')" class="form-control" style="background-color:#E3CEF6;text-align: right" value="0" placeholder="00000" id="porcentaje_alumnosAAA'+num+'" name="porcentaje_alumnosAAA'+num+'">'));
   row.append($('<td>').addClass('text-center').html('<input type="number" onkeyup="calcularPrecioTotal('+num+')" onkeydown="calcularPrecioTotal('+num+')" class="form-control" style="background-color:#E3CEF6;text-align: right" value="'+precio+'" placeholder="00000" id="monto_alumnosAAA'+num+'" name="monto_alumnosAAA'+num+'">'));
   row.append($('<td>').addClass('text-center').html('<input type="number" readonly class="form-control" style="background-color:#E3CEF6;text-align: right" value="" placeholder="00000" id="total_alumnosAAA'+num+'" name="total_alumnosAAA'+num+'">')); 
   row.append($('<td>').addClass('text-left').html('<a href="#" title="Quitar" class="btn btn-danger btn-round btn-sm btn-fab float-right" onClick="quitarElementoPrecios('+num+')"><i class="material-icons">delete_outline</i></a>'));

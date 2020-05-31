@@ -36,10 +36,14 @@ $stmtDetalles->execute();
     $codDet=$rowDet['codigo'];
     $partida=$rowDet['cod_partidapresupuestaria'];
     $codTipo=$rowDet['cod_tipo'];
-    $al_i=$rowDet['cantidad'];
-    $montoDet=$rowDet['editado_alumno']*$al_i;
+    $cantidadAlumnos=$rowDet['cantidad'];
+    if($codTipo==1||$codTipo==4){
+     $cantidadAlumnos=$al_i;
+    }
+    
+    $montoDet=$rowDet['editado_alumno']*$cantidadAlumnos;
     if($codTipo==4){
-      $montoDet=$rowDet['editado_alumno']*$al_i*$dias_curso;
+      $montoDet=$rowDet['editado_alumno']*$cantidadAlumnos*$dias_curso;
     } 
     $cuenta=$rowDet['cod_cuenta'];
     $dbhDet = new Conexion();
@@ -47,7 +51,7 @@ $stmtDetalles->execute();
     $stmtUpdateDetalle = $dbhDet->prepare($sqlUpdateDetalle);
     $stmtUpdateDetalle->execute();*/
 
-    $sqlUpdateDetalle2="UPDATE simulaciones_detalle SET  cantidad='$al_i',monto_unitario='$montoDet',monto_total='$montoDet' where codigo=$codDet";
+    $sqlUpdateDetalle2="UPDATE simulaciones_detalle SET  cantidad='$cantidadAlumnos',monto_unitario='$montoDet',monto_total='$montoDet' where codigo=$codDet";
     $stmtUpdateDetalle2 = $dbhDet->prepare($sqlUpdateDetalle2);
     $stmtUpdateDetalle2->execute();
 

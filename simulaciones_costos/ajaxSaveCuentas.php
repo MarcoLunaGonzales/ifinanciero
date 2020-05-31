@@ -25,9 +25,9 @@ $sqlUpdateDetalleGlobal="UPDATE simulaciones_costos SET  monto_norma='$montoNorm
 $stmtUpdateDetalleGlobal = $dbh->prepare($sqlUpdateDetalleGlobal);
 $stmtUpdateDetalleGlobal->execute();
 
+$montoAl=$monto/$cantidadFila;
 
-
-$sqlUpdateDetalle="UPDATE simulaciones_detalle SET  monto_unitario='$monto',monto_total='$monto',habilitado=$habilitado,cantidad=$cantidadFila,cod_tipo=$unidadFila where codigo=$codigo";
+$sqlUpdateDetalle="UPDATE simulaciones_detalle SET  editado_alumno=$montoAl,monto_unitario='$monto',monto_total='$monto',habilitado=$habilitado,cantidad=$cantidadFila,cod_tipo=$unidadFila where codigo=$codigo";
 $stmtUpdateDetalle = $dbh->prepare($sqlUpdateDetalle);
 $stmtUpdateDetalle->execute();
 

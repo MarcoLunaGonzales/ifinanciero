@@ -6434,6 +6434,19 @@ function obtenerPrecioSimulacionCosto($codigo){
   }
   return $num;
 }
+function obtenerPrecioSimulacionCostoGeneral($codigo){
+  $dbh = new Conexion();
+  $sql="";
+  $sql="SELECT pa.venta_local,sc.cantidad_alumnoslocal from simulaciones_costos sc join precios_simulacioncosto pa on sc.cod_precioplantilla=pa.codigo where sc.codigo=$codigo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute(); 
+   $num=0;
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
+  {
+    $num=$row['venta_local']*$row['cantidad_alumnoslocal'];
+  }
+  return $num;
+}
 function obtenerCantidadCursosPlantillaCosto($codigo){
    $dbh = new Conexion();
    $stmt = $dbh->prepare("SELECT cantidad_cursosmes from plantillas_costo where codigo=$codigo");  
