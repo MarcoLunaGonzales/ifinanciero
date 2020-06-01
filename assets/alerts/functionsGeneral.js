@@ -13515,8 +13515,14 @@ function saveDatosBancarizacion(){
 
 function agregaDatosFactManual(datos){  
   var d=datos.split('/');
-  document.getElementById("cod_solicitudfacturacion_factmanual").value=d[0];
-  document.getElementById("importe_total").value="Importe de Solicitud de Facturacón: "+number_format(d[1],2);
+  document.getElementById("cod_solicitudfacturacion_factmanual").value=d[0];  
+  document.getElementById("importe_total").value="Saldo de Solicitud de Facturacón: "+number_format(d[2],2);
+  
+  document.getElementById("nit_cliente").value=d[4];
+  document.getElementById("razon_social").value=d[5];
+
+
+
 }
 function RegistrarFacturaManual(cod_solicitudfacturacion,nro_factura,nro_autorizacion,fecha_factura,nit_cliente,razon_social){
   $.ajax({
@@ -13539,7 +13545,12 @@ function RegistrarFacturaManual(cod_solicitudfacturacion,nro_factura,nro_autoriz
               if(r==5){
                 Swal.fire("A ocurrido un error!", "Sucursal no encontrada.", "warning");
               }else{
-                alerts.showSwal('error-message','index.php?opcion=listFacturasServicios_conta');
+                if(r==-1){
+                  Swal.fire("A ocurrido un error!", "Registro de pago de Estudiante en Servicio Web no satisfactoria.", "warning");
+                }else{
+                  alerts.showSwal('error-message','index.php?opcion=listFacturasServicios_conta');  
+                }
+                
               } 
             } 
           }  
@@ -13616,7 +13627,8 @@ function tablaGeneral_GenerarFact_parcial(index){
   titulos.append($('<th width="8%">').addClass('').text('Precio'));    
   titulos.append($('<th width="8%">').addClass('').text('Desc BOB'));
   titulos.append($('<th width="3%">').addClass('').text('Importe'));
-  titulos.append($('<th width="8%">').addClass('small').text('Importe Fac Anterior'));
+  titulos.append($('<th width="8%">').addClass('small').text('Importe Facturado'));
+  titulos.append($('<th width="5%">').addClass('small').text('Saldo'));
   titulos.append($('<th width="8%">').addClass('').text('Importe a Pagar'));    
   
   table.append(titulos);
@@ -13628,17 +13640,18 @@ function tablaGeneral_GenerarFact_parcial(index){
     var descuentox=itemGenerar_factura_parcial_aux[index][i].descuentox;;
     var importex=parseFloat(preciox)-parseFloat(descuentox);
     var importe_anterior_x=itemGenerar_factura_parcial_aux[index][i].importe_anterior_x;
-    
+    var saldox=parseFloat(importex)-parseFloat(importe_anterior_x);
     // var cod_solfacdet=itemGenerar_factura_parcial_aux[index][i].cod_solfacdet;
 
     var row = $('<tr style="#FFF000;">').addClass('');
     row.append($('<td>').addClass('').text(i+1).html("<input type='hidden' name='codigo_x"+i+"' id='codigo_x"+i+"' value='"+codigox+"'>" ));
     row.append($('<td>').addClass('').html("<input style='background-color:#FFFFFF;' type='text' class='form-control' name='descripcion"+i+"' id='descripcion"+i+"' value='"+descripcionx+"' readonly='true'>"));
-    row.append($('<td>').addClass('').text(cantidadX));
+    row.append($('<td>').addClass('text-right small').text(cantidadX));
     row.append($('<td>').addClass('').html("<input type='hidden' step='0.01' name='precio_unitario"+i+"' id='precio_unitario"+i+"' value='"+preciox+"'><input style='background-color:#FFFFFF;' type='text' class='form-control' name='precio_unitario_a"+i+"' id='precio_unitario_a"+i+"' value='"+number_format(parseFloat(preciox),2)+"' readonly='true'>" ));
-    row.append($('<td>').addClass('').text(descuentox));
+    row.append($('<td>').addClass('text-right small').text(number_format(descuentox,2)));
     row.append($('<td>').addClass('').html("<input type='hidden' step='0.01' name='importe_x"+i+"' id='importe_x"+i+"' value='"+importex+"'><input style='background-color:#FFFFFF;' type='text' step='0.01' class='form-control' name='importe_x_a"+i+"' id='importe_x_a"+i+"' readonly='true' value='"+number_format(importex,2)+"'>"));        
-    row.append($('<td>').addClass('').html("<input style='background-color:#FFFFFF;' type='number' step='0.01' class='form-control' name='importe_anterior"+i+"' id='importe_anterior"+i+"' value='"+importe_anterior_x+"' readonly='true'>"));    
+    row.append($('<td>').addClass('').html("<input style='background-color:#FFFFFF;' type='hidden' step='0.01' class='form-control' name='importe_anterior"+i+"' id='importe_anterior"+i+"' value='"+importe_anterior_x+"' readonly='true'><input style='background-color:#FFFFFF;' type='text' step='0.01' class='form-control' name='importe_anterior_a"+i+"' id='importe_anterior_a"+i+"' value='"+number_format(importe_anterior_x,2)+"' readonly='true'>"));
+    row.append($('<td>').addClass('').html("<input style='background-color:#FFFFFF;' type='hidden' step='0.01' class='form-control' name='saldo"+i+"' id='saldo"+i+"' value='"+saldox+"' readonly='true'><input style='background-color:#FFFFFF;' type='text' step='0.01' class='form-control' name='saldo_a"+i+"' id='saldo_a"+i+"' value='"+number_format(saldox,2)+"' readonly='true'>"));
     row.append($('<td>').addClass('').html("<input style='background-color:#FFFFFF;' type='number' step='0.01' class='form-control' name='importe_a_pagar"+i+"' id='importe_a_pagar"+i+"' value='0' onkeyup='monto_convertir_a_porcentaje_factPagos("+i+")'>"));        
     table.append(row);
   }
@@ -13647,9 +13660,8 @@ function tablaGeneral_GenerarFact_parcial(index){
   row.append($('<td colspan="4" align="center">').addClass('').html('<b>MONTO TOTAL</b>'));
   row.append($('<td>').addClass('').html("<input type='hidden' step='0.01' class='form-control' name='total_importe' id='total_importe' value='0'><input style='background-color:#F6E3CE;' type='text' step='0.01' class='form-control' name='total_importe_a' id='total_importe_a' value='"+number_format(0,2)+"' readonly='true'> "));
   row.append($('<td>').addClass('').html("<input type='hidden' step='0.01' class='form-control' name='total_importe_anterior' id='total_importe_anterior' value='0'><input style='background-color:#F6E3CE;' type='text' step='0.01' class='form-control' name='total_importe_anterior_a' id='total_importe_anterior_a' value='"+number_format(0,2)+"' readonly='true'> "));
-  row.append($('<td>').addClass('').html("<input type='hidden' class='form-control' name='total_importe_pagar' id='total_importe_pagar' value='0'><input style='background-color:#F6E3CE;' type='text' step='0.01' class='form-control' name='total_importe_pagar_a' id='total_importe_pagar_a' value='"+number_format(0,2)+"' readonly='true'>"));
-  
-  row.append($('<td>').addClass('').text(''));
+  row.append($('<td>').addClass('').html("<input style='background-color:#F6E3CE;' type='text' step='0.01' class='form-control' name='total_saldo_a' id='total_saldo_a' value='"+number_format(0,2)+"' readonly='true'> "));
+  row.append($('<td>').addClass('').html("<input type='hidden' class='form-control' name='total_importe_pagar' id='total_importe_pagar' value='0'><input style='background-color:#F6E3CE;' type='text' step='0.01' class='form-control' name='total_importe_pagar_a' id='total_importe_pagar_a' value='"+number_format(0,2)+"' readonly='true'>"));  
   table.append(row);    
   div.append(table);    
   $("#cantidad_items").val(i);
@@ -13683,14 +13695,16 @@ function calcular_monto_total_items_factura_parcial(){
   var total_importe_monto=0;
   var total_importe_pagar=0;
   var total_importe_anterior=0;
+  var total_saldo=0;
   for(var j=0;j<total_items;j++){
     var importe_x=$("#importe_x"+j).val();
     var importe_anterior=$("#importe_anterior"+j).val();
     var importe_a_pagar=$("#importe_a_pagar"+j).val();
-    
+    var saldo_x=$("#saldo"+j).val();
     total_importe_monto+=parseFloat(importe_x);
     total_importe_anterior+=parseFloat(importe_anterior);
     total_importe_pagar+=parseFloat(importe_a_pagar);
+    total_saldo+=parseFloat(saldo_x);
   }
   $("#total_importe").val(total_importe_monto.toFixed(2));      
   $("#total_importe_a").val(number_format(total_importe_monto,2));  
@@ -13698,6 +13712,7 @@ function calcular_monto_total_items_factura_parcial(){
   $("#total_importe_anterior_a").val(number_format(total_importe_anterior,2));
   $("#total_importe_pagar").val(total_importe_pagar.toFixed(2));  
   $("#total_importe_pagar_a").val(number_format(total_importe_pagar,2));
+  $("#total_saldo_a").val(number_format(total_saldo,2));
 }
 
 
