@@ -131,9 +131,9 @@ $stmt->bindColumn('cod_tipocomprobante', $codTipoC);
           while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
             $nombreComprobante=nombreComprobante($codigo);
             $existeCuenta=0;
-            if($codTipoC==3){
-               $existeCuenta=obtenerEstadoCuentaSaldoComprobante($codigo);
-            }
+            
+            $existeCuenta=obtenerEstadoCuentaSaldoComprobante($codigo);
+            
             $mes=date('n',strtotime($fechaComprobante));
             // $mes=date("j",$fechaComprobante);
             switch ($estadoC) {
