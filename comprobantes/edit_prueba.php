@@ -788,16 +788,28 @@ $stmt->bindColumn('nombre', $nombreCuenta);
 
 			$numeroCuenta=trim($numeroCuenta);
 			$nombreCuenta=trim($nombreCuenta);
-			for ($i=0; $i < count($arrayCuentasAux) ; $i++) {
-			  	 $codigoCuentaAux=$arrayCuentasAux[$i]['codigo'];
-			  	 $codX=$arrayCuentasAux[$i]['cod_cuenta'];
-			  	 $nombreCuentaAux=$arrayCuentasAux[$i]['nombre'];
-			  	 if($codX==$codigoCuenta){
-			  	  ?><script>itemCuentasAux.push({codigo:"<?=$codigoCuentaAux?>",nombre:"<?=$nombreCuentaAux?>",codCuenta:"<?=$codigoCuenta?>"});</script><?php
+
+			$sqlCuentasAux="SELECT codigo, nombre, (select count(*) from estados_cuenta e, comprobantes c, comprobantes_detalle cd where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle and c.cod_estadocomprobante<>2 and e.cod_cuentaaux=ca.codigo and e.cod_comprobantedetalleorigen=0)as contador FROM cuentas_auxiliares ca where ca.cod_cuenta='$codigoCuenta' order by 2";
+			$stmtAux = $dbh->prepare($sqlCuentasAux);
+			$stmtAux->execute();
+			$stmtAux->bindColumn('codigo', $codigoCuentaAux);
+			$stmtAux->bindColumn('nombre', $nombreCuentaAux);
+			$stmtAux->bindColumn('contador', $contadorRegistrosEC);
+			while ($rowAux = $stmtAux->fetch(PDO::FETCH_BOUND)) {
+				$txtNumRegistros="";
+				if($contadorRegistrosEC>0){
+					$txtNumRegistros=" -- **".$contadorRegistrosEC."**";
+				}
+				$nombreCuentaAux=$nombreCuentaAux." ".$txtNumRegistros;
+			  	
+		  	?>
+		  		<script>itemCuentasAux.push({codigo:"<?=$codigoCuentaAux?>",nombre:"<?=$nombreCuentaAux?>",codCuenta:"<?=$codigoCuenta?>"});
+		  		</script>
+	  		<?php
 				$contAux++;
-			  	 }
-			 } 	
-		 ?><script>
+			}  	
+		 ?> 	
+		<script>
 		    itemCuentas.push({codigo:"<?=$codigoCuenta?>",numero:"<?=$numeroCuenta?>",nombre:"<?=$nombreCuenta?>",cod_aux:"0",nom_aux:""});
 		 </script><?php	
 		$cont++;

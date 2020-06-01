@@ -13255,18 +13255,26 @@ function agregarFilaArchivosAdjuntosDetalle(){
   var codigo = $("#tipo_documento_otro").val();
   var num = parseInt($("#cantidad_archivosadjuntosdetalle").val());
   num++;  
-  var row = $('<tr>').addClass('').attr('id','fila_archivo'+num);
+  var row = $('<tr>').addClass('').attr('id','fila_archivodetalle'+num);
   row.append($('<td>').addClass('text-left').html('<input type="hidden" name="codigo_archivodetalle'+num+'" id="codigo_archivodetalle'+num+'" value="'+codigo+'">Otros Documentos <a href="#" title="Quitar" class="btn btn-default btn-round btn-sm btn-fab float-right" onClick="quitarElementoAdjuntoDetalle('+num+')"><i class="material-icons">delete_outline</i></a>'));
   row.append($('<td>').addClass('text-center').html('<i class="material-icons text-danger">clear</i> NO'));
   row.append($('<td>').addClass('text-right').html('<small id="label_txt_documentos_detalle'+num+'"></small>'+ 
                       '<span class="input-archivo">'+
                         '<input type="file" class="archivo" name="documentos_detalle'+num+'" id="documentos_detalle'+num+'"/>'+
                       '</span>'+
-                      '<label title="Ningún archivo" for="documentos_cabecera'+num+'" id="label_documentos_cabecera'+num+'" class="label-archivo btn btn-warning btn-sm"><i class="material-icons">publish</i> Subir Archivo'+
+                      '<label title="Ningún archivo" for="documentos_detalle'+num+'" id="label_documentos_detalle'+num+'" class="label-archivo btn btn-warning btn-sm"><i class="material-icons">publish</i> Subir Archivo'+
                       '</label>'));
   row.append($('<td>').addClass('text-center').html('<input type="text" class="form-control" style="background-color:#E3CEF6;text-align: left" value="" placeholder="Ingresar Descripción" id="nombre_archivodetalle'+num+'" name="nombre_archivodetalle'+num+'">')); 
   $("#tabla_archivosdetalle").append(row);
   $("#cantidad_archivosadjuntosdetalle").val(num);
+
+  //agregar a la fila  
+  var fila=$("#codigo_fila").val();
+  var htmlFila='<input type="hidden" name="codigo_archivodetalle'+num+'FFFF'+fila+'" id="codigo_archivodetalle'+num+'FFFF'+fila+'" value="'+codigo+'">'+
+               '<input type="hidden" value="" id="nombre_archivodetalle'+num+'FFFF'+fila+'" name="nombre_archivodetalle'+num+'FFFF'+fila+'">'+ 
+               '<input type="file" name="documentos_detalle'+num+'FFFF'+fila+'" id="documentos_detalle'+num+'FFFF'+fila+'"/>';
+  $("#archivos_fila").append(htmlFila);
+  $("#cantidad_archivosadjuntosdetalle"+fila).val(num);
 }
 function quitarElementoAdjuntoDetalle(fila){
   $("#fila_archivodetalle"+fila).remove();
@@ -13281,6 +13289,7 @@ function guardarArchivosDetalleSolicitud(){
     }
   };
 }
+
 $(document).on('change', '.archivo', function() {
   var filename = $(this).val().split('\\').pop();
   var idname = $(this).attr('id');

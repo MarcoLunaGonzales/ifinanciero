@@ -62,8 +62,8 @@ try{
       // $nombre_cliente = $resultInfo['nombre_cliente'];
       $nombre_cliente = $razon_social;
 
-    }
-    $nombre_ciudad =  obtenerCiudadDeUnidad($cod_unidadorganizacional);
+
+      $nombre_ciudad =  obtenerCiudadDeUnidad($cod_unidadorganizacional);
 
       
 
@@ -256,8 +256,12 @@ $html.=  '<header class="header">'.
 $html.='</body>'.
       '</html>'; 
 
+    }else{
+      $html="ERROR";
+    }
+
   } catch(PDOException $ex){
-    $html="ERROR".$ex;
+    $html="ERROR";
   }
   return $html;
 }

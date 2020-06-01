@@ -368,7 +368,7 @@
                 </thead>
                 <tbody id="tabla_archivosdetalle">
                   <?php
-                  $stmtArchivo = $dbh->prepare("SELECT * from ibnorca.vw_plantillaDocumentos where idTipoServicio=2824"); //2708 //2824 localhost
+                  $stmtArchivo = $dbh->prepare("SELECT * from ibnorca.vw_plantillaDocumentos where idTipoServicio=2708"); //2708 //2708 localhost
                   $stmtArchivo->execute();
                   $filaA=0;
                   while ($rowArchivo = $stmtArchivo->fetch(PDO::FETCH_ASSOC)) {
