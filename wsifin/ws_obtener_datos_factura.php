@@ -1,9 +1,6 @@
 <?php
 // SERVICIO WEB PARA FACTURAS
 
-//estados
-require 'htmlFacCliente.php';
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $datos = json_decode(file_get_contents("php://input"), true); 
     //Parametros de consulta
@@ -17,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if($accion=="ObtenerFacturaPDF"){
             try{
             
-                $html=generarHTMLFacCliente($codFactura);
+                $html=obtenerDatosFactura($codFactura);
                 if($html=="ERROR"){
                  $estado=2;
                  $mensaje = "Factura Inexistente";
@@ -45,29 +42,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
             
          }else{
-            if($accion=="ObtenerFacturaArray"){
-                $datos=obtenerDatosFactura($codFactura);
-                if($datos[0]==0){
-                 $estado=2;
-                 $mensaje = "Factura Inexistente";
-                 $resultado=array("estado"=>$estado, 
-                            "mensaje"=>$mensaje, 
-                            "factura64"=>array(),
-                            "totalComponentes"=>0);
-                }else{
-                  $estado=1;
-                  $factura = $datos[1]; 
-                  $resultado=array(
-                            "estado"=>$estado,
-                            "mensaje"=>"Factura Obtenida Correctamente", 
-                            "datos"=>$factura, 
-                            "totalComponentes"=>1     
-                            );
-                }
-            }else{
-               $resultado=array("estado"=>3, 
+           $resultado=array("estado"=>3, 
                             "mensaje"=>"No existe la Accion Solicitada.");
-            }        
          }
         }else{
             $resultado=array("estado"=>4, 
@@ -80,26 +56,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 "mensaje"=>"El acceso al WS es incorrecto");
     header('Content-type: application/json');
     echo json_encode($resp);
-}
-
-function obtenerDatosFactura($codigo){
-  require_once __DIR__.'/../conexion.php';
-  $dbh = new Conexion();
-  $sql="select nit,codigo_control,nro_factura,fecha_factura,razon_social,importe,nro_autorizacion,observaciones from facturas_venta where codigo=$codigo";
-  $stmtFac = $dbh->prepare($sql);
-  $stmtFac->execute();
-  $filaA=0;
-  $datos=null;
-  while ($rowFac = $stmtFac->fetch(PDO::FETCH_ASSOC)) {
-     $filaA++;
-     $datos['numero']=$rowFac['nro_factura'];
-     $datos['nit']=$rowFac['nit'];
-     $datos['control']=$rowFac['codigo_control'];
-     $datos['fecha']=$rowFac['fecha_factura'];
-     $datos['razon_social']=$rowFac['razon_social'];
-     $datos['importe']=$rowFac['importe'];
-     $datos['autorizacion']=$rowFac['nro_autorizacion'];
-     $datos['detalle']=$rowFac['observaciones'];
- }
- return array($filaA,$datos);
 }

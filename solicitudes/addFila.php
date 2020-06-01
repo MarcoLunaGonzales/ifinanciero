@@ -132,7 +132,30 @@
                                        <input type="hidden" name="nombre_beneficiario<?=$idFila?>" id="nombre_beneficiario<?=$idFila?>" value="<?=$nombreBen?>"/>
                                        <input type="hidden" name="apellido_beneficiario<?=$idFila?>" id="apellido_beneficiario<?=$idFila?>" value="<?=$apellidoBen?>"/>
                                        <input type="hidden" name="cuenta_beneficiario<?=$idFila?>" id="cuenta_beneficiario<?=$idFila?>" value="<?=$cuentaBen?>"/>
-                                       <?php 
+                                       
+                                       <span id="archivos_fila<?=$idFila?>" class="d-none">
+                                       <?php
+                                       //archivos adjuntos detalle
+                                        $stmtArchivo = $dbh->prepare("SELECT * from ibnorca.vw_plantillaDocumentos where idTipoServicio=2708"); //2708 //2708 localhost
+                                        $stmtArchivo->execute();
+                                        $filaA=0;
+                                        while ($rowArchivo = $stmtArchivo->fetch(PDO::FETCH_ASSOC)) {
+                                           $filaA++;
+                                           $codigoX=$rowArchivo['idClaDocumento'];
+                                           $nombreX=$rowArchivo['Documento'];
+                                           $ObligatorioX=$rowArchivo['Obligatorio'];
+                                        ?>
+                                        <input type="hidden" name="codigo_archivodetalle<?=$filaA?>FFFF<?=$idFila?>" id="codigo_archivodetalle<?=$filaA?>FFFF<?=$idFila?>" value="<?=$codigoX?>">
+                                        <input type="hidden" name="nombre_archivodetalle<?=$filaA?>FFFF<?=$idFila?>" id="nombre_archivodetalle<?=$filaA?>FFFF<?=$idFila?>" value="<?=$nombreX?>">
+                                        <input type="file" class="archivo" name="documentos_detalle<?=$filaA?>FFFF<?=$idFila?>" id="documentos_detalle<?=$filaA?>FFFF<?=$idFila?>"/>
+                                       <?php
+                                        }
+                                        ?>
+                                      </span>  
+                                      <input type="hidden" value="<?=$filaA?>" id="cantidad_archivosadjuntosdetalle<?=$idFila?>" name="cantidad_archivosadjuntosdetalle<?=$idFila?>">
+                                        <?php
+                                     //fin archivos adjuntos detalle   
+
                                        if($codTipoPago!=0){
                                         $estadoBen="estado";
                                        }else{
@@ -149,7 +172,7 @@
 		                                 	<a href="#" title="Facturas" id="boton_fac<?=$idFila;?>" onclick="listFac(<?=$idFila;?>);" class="btn btn-info btn-sm btn-fab">
                                               <i class="material-icons">featured_play_list</i><span id="nfac<?=$idFila;?>" class="count bg-warning">0</span>
                                             </a>
-                                            <span id="archivos_fila<?=$idFila?>" class="d-none"><input type="file" name="archivos<?=$idFila?>[]" id="archivos<?=$idFila?>" multiple="multiple"/></span>
+                                            <!--<span id="archivos_fila<?=$idFila?>" class="d-none"><input type="file" name="archivos<?=$idFila?>[]" id="archivos<?=$idFila?>" multiple="multiple"/></span>-->
                                             <a href="#" title="Archivos" id="boton_archivos<?=$idFila;?>" onclick="addArchivos(<?=$idFila;?>);" class="btn btn-default btn-sm btn-fab">
                                               <i class="material-icons"><?=$iconFile?></i><span id="narch<?=$idFila?>" class="bg-warning"></span>
                                             </a>

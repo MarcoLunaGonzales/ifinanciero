@@ -143,7 +143,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 <select class="selectpicker form-control form-control-sm" name="tipo_documento" id="tipo_documento" data-style="<?=$comboColor;?>" onChange="asignarTipoDocumento()">
                     <option disabled selected value="">TIPO DOCUMENTO</option>
                   <?php
-                  $stmt = $dbh->prepare("SELECT * from ibnorca.vw_plantillaDocumentos where idTipoServicio=2824"); //2708 //2824 localhost
+                  $stmt = $dbh->prepare("SELECT * from ibnorca.vw_plantillaDocumentos where idTipoServicio=2708"); //2708 //2708 localhost
                 $stmt->execute();
                 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                   $codigoX=$row['idClaDocumento'];
@@ -410,7 +410,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 </thead>
                 <tbody id="tabla_archivos">
                   <?php
-                  $stmtArchivo = $dbh->prepare("SELECT * from ibnorca.vw_plantillaDocumentos where idTipoServicio=2824"); //2708 //2824 localhost
+                  $stmtArchivo = $dbh->prepare("SELECT * from ibnorca.vw_plantillaDocumentos where idTipoServicio=2708"); //2708 //2708 localhost
                   $stmtArchivo->execute();
                   $filaA=0;
                   while ($rowArchivo = $stmtArchivo->fetch(PDO::FETCH_ASSOC)) {
