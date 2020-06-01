@@ -12,7 +12,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
   $stmt = $dbh->prepare("SELECT f.*,(select s.abreviatura from unidades_organizacionales s where s.cod_sucursal=f.cod_sucursal limit 1)as sucursal,(select t.nombre from estados_factura t where t.codigo=f.cod_estadofactura)as estadofactura 
  from facturas_venta f where cod_estadofactura<>4 order by  f.fecha_factura desc");
   $stmt->execute();
-  $stmt->bindColumn('codigo', $codigo_facturacion);
+  $stmt->bindColumn('codigo', $codigo_factura);
   $stmt->bindColumn('cod_sucursal', $cod_sucursal);
   $stmt->bindColumn('cod_area', $cod_area);
   $stmt->bindColumn('cod_solicitudfacturacion', $cod_solicitudfacturacion);
@@ -32,6 +32,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
   $stmt->bindColumn('sucursal', $sucursal);
   // $stmt->bindColumn('cliente', $cliente);
   $stmt->bindColumn('estadofactura', $estadofactura);
+  $stmt->bindColumn('cod_comprobante', $cod_comprobante);
   ?>
   <div class="content">
     <div class="container-fluid">
@@ -91,7 +92,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                 break;
                                                           
                             }
-                            $datos=$codigo_facturacion.'/'.$cod_solicitudfacturacion.'/'.$nro_factura.'/'.$correos_string;
+                            $datos=$codigo_factura.'/'.$cod_solicitudfacturacion.'/'.$nro_factura.'/'.$correos_string;
                             ?>
                           <tr>
                             <!-- <td align="center"><?=$index;?></td> -->
@@ -105,18 +106,18 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             <td class="td-actions text-right">
                               <?php
                                 if($globalAdmin==1 and $cod_estadofactura==1 ){?>                                
-                                  <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=1' target="_blank"><i class="material-icons" title="Imprimir Facturas">print</i></a>
+                                  <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_factura;?>&tipo=1' target="_blank"><i class="material-icons" title="Imprimir Facturas">print</i></a>
                                  <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalEnviarCorreo" onclick="agregaformEnviarCorreo('<?=$datos;?>')">
                                     <i class="material-icons" title="Enviar Correo">email</i>
                                   </button>
-                                  <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation-anular-factura','<?=$urlAnularFactura;?>&codigo=<?=$codigo_facturacion;?>')">
+                                  <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation-anular-factura','<?=$urlAnularFactura;?>&codigo=<?=$codigo_factura;?>&cod_solicitudfacturacion=<?=$cod_solicitudfacturacion?>&cod_comprobante=<?=$cod_comprobante?>')">
                                   <i class="material-icons" title="Anular Factura">clear</i>
                                   </button>
                                 <?php  
                                 }elseif($globalAdmin==1 and $cod_estadofactura==3){?>
-                                  <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=1' target="_blank"><i class="material-icons" title="Imprimir Facturas">print</i></a>
+                                  <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_factura;?>&tipo=1' target="_blank"><i class="material-icons" title="Imprimir Facturas">print</i></a>
 
-                                  <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation-anular-factura','<?=$urlAnularFactura;?>&codigo=<?=$codigo_facturacion;?>')">
+                                  <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation-anular-factura','<?=$urlAnularFactura;?>&codigo=<?=$codigo_factura;?>&cod_solicitudfacturacion=<?=$cod_solicitudfacturacion?>&cod_comprobante=<?=$cod_comprobante?>')">
                                   <i class="material-icons" title="Anular Factura">clear</i>
                                   </button>
                                 <?php }

@@ -132,6 +132,10 @@
 			require_once('reportes/reportesLibroCompras.php');
 		}
 		//REPORTES
+		if ($_GET['opcion']=='reportesLibroVentas') {
+			require_once('reportes/reportesLibroVentas.php');
+		}
+		//REPORTES
 		if ($_GET['opcion']=='reportesEstadoCuentas') {
 			require_once('reportes/reportesEstadoCuentas.php');
 		}
@@ -220,8 +224,10 @@
 		// if ($_GET['opcion']=='save_solicitud_facturacion') {
 		// 	require_once('simulaciones_servicios/save_solicitud_facturacion.php');
 		// }
-		if ($_GET['opcion']=='anular_facturaSoliciutd') {
+		if ($_GET['opcion']=='anular_facturaGenerada') {
 			$codigo=$_GET['codigo'];
+			$cod_solicitudfacturacion=$_GET['cod_solicitudfacturacion'];
+			$cod_comprobante=$_GET['cod_comprobante'];
 			require_once('simulaciones_servicios/anular_facturaGenerada.php');
 		}
 		if ($_GET['opcion']=='anular_SoliciutdFacturacion') {

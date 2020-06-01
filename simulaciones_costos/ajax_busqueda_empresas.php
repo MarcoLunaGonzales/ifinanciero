@@ -81,6 +81,16 @@ $sql.=" order by pc.IdCurso desc";
             $sumaTotalDescuento_por=0;
             $sumaTotalDescuento_bob=0;
             $sumaTotalImporte=$sumaTotalMonto-$sumaTotalDescuento_bob;
+
+
+            //verificamos si ya tiene factura generada y esta activa                           
+            $stmtFact = $dbh->prepare("SELECT codigo from solicitudes_facturacion where tipo_solicitud=2 and cod_cliente=$idEmpresa and cod_simulacion_servicio=$IdCurso");
+            $stmtFact->execute();
+            $resultSimu = $stmtFact->fetch();
+            $codigo_facturacion = $resultSimu['codigo'];
+            
+
+            if ($codigo_facturacion==null)$codigo_facturacion=0;    
             ?>
             <tr>
               <td align="center"></td>
@@ -92,29 +102,18 @@ $sql.=" order by pc.IdCurso desc";
               <td class="td-actions text-right">
                 <?php
                   if($globalAdmin==1){                            
-                    if($codigo_facturacion>0){
-                      if($codigo_fact_x==0){ //no se genero factura ?>
-                        <!-- <a title="Editar Solicitud de Facturación" href='<?=$urlregistro_solicitud_facturacion?>&codigo=<?=$CiAlumno?>&cod_simulacion=<?=$codigo_simulacion;?>&cod_facturacion=<?=$codigo_facturacion?>' class="btn btn-success">
-                            <i class="material-icons"><?=$iconEdit;?></i>
-                          </a> --><?php 
-                      }else{//ya se genero factura ?>
-                        <!-- <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=2' target="_blank"><i class="material-icons" title="Imprimir Factura">print</i></a> --><?php 
-                      }?>
-                      <!-- <a href='#' rel="tooltip" class="btn btn-warning" onclick="filaTablaAGeneral($('#tablasA_registradas'),<?=$index?>,'<?=$stringCabecera?>')">
-                        <i class="material-icons" title="Ver Detalle">settings_applications</i>
-                      </a> -->
-                      <!-- <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir Solicitud">print</i></a>  --><?php 
-                    }else{//no se hizo solicitud de factura
-                      if(isset($_GET['q'])){ ?>
-                        <a href='<?=$urlregistro_solicitud_facturacion_empresas?>&codigo=<?=$idEmpresa?>&cod_simulacion=0&IdCurso=<?=$IdCurso;?>&cod_facturacion=0&q=<?=$q?>&r=<?=$r?>' rel="tooltip" class="btn" style="background-color: #0489B1;">
-                          <i class="material-icons" title="Solicitar Facturación">receipt</i>
-                        </a><?php 
-                      }else{ ?>
-                        <a href='<?=$urlregistro_solicitud_facturacion_empresas?>&codigo=<?=$idEmpresa?>&cod_simulacion=0&IdCurso=<?=$IdCurso;?>&cod_facturacion=0' rel="tooltip" class="btn" style="background-color: #0489B1;">
-                          <i class="material-icons" title="Solicitar Facturación">receipt</i>
-                        </a><?php 
-                      }                      
+                    if($codigo_facturacion>0){?>                      
+                      <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir Solicitud">print</i></a><?php 
                     }
+                    if(isset($_GET['q'])){ ?>
+                      <a href='<?=$urlregistro_solicitud_facturacion_empresas?>&codigo=<?=$idEmpresa?>&cod_simulacion=0&IdCurso=<?=$IdCurso;?>&cod_facturacion=0&q=<?=$q?>&r=<?=$r?>' rel="tooltip" class="btn" style="background-color: #0489B1;">
+                        <i class="material-icons" title="Solicitar Facturación">receipt</i>
+                      </a><?php 
+                    }else{ ?>
+                      <a href='<?=$urlregistro_solicitud_facturacion_empresas?>&codigo=<?=$idEmpresa?>&cod_simulacion=0&IdCurso=<?=$IdCurso;?>&cod_facturacion=0' rel="tooltip" class="btn" style="background-color: #0489B1;">
+                        <i class="material-icons" title="Solicitar Facturación">receipt</i>
+                      </a><?php 
+                    }                      
                   }
                 ?>                                               
               </td>

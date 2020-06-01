@@ -13,6 +13,13 @@ function showAlertSuccessError($bandera, $url){
       </script>";
    }
 }
+function showAlertSuccessErrorPagosCapacitacion($bandera, $url){   
+   if ($bandera==false){
+      echo "<script>
+         alerts.showSwal('error-message-capacitacion','$url');
+      </script>";
+   }
+}
 
 function showAlertNewSolicitudRecursos($url){
       echo "<script>
