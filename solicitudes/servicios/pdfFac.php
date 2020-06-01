@@ -5,6 +5,9 @@ $sKey = "rrf656nb2396k6g6x44434h56jzx5g6";
 /*PARAMETROS PARA LA OBTENCION DE PDF FACTURA base 64*/
 	$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ObtenerFacturaPDF","idFactura"=>27); 
 
+/*PARAMETROS PARA LA OBTENCION DE ARRAY FACTURA
+	$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ObtenerFacturaArray","idFactura"=>27); */
+
 		$parametros=json_encode($parametros);
 		// abrimos la sesión cURL
 		$ch = curl_init();
