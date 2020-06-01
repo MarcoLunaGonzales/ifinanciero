@@ -9077,6 +9077,37 @@ function calcularTotalFilaServicio2(){
   document.getElementById("comprobante_auxiliar").value=comprobante_auxiliar;
   //sumartotalAddServiciosFacturacion(id);
 }
+function calcularTotalFilaServicio2Costos(){  
+  var sumal=0;  
+  var total= $("#modal_numeroservicio").val();
+  var comprobante_auxiliar=0;
+  for (var i=1;i<=(total-1);i++){          
+    var importe_a_pagar=$("#importe_a_pagar"+i).val();        
+    var monto_importe_total=parseFloat(importe_a_pagar);
+    var check=document.getElementById("modal_check"+i).checked;
+    if(check) {//BUSACMOS LOS CHECK ACTIVOS
+      comprobante_auxiliar=comprobante_auxiliar+1;        
+      //sumanos los importes
+      sumal+=parseFloat($("#importe_a_pagar"+i).val());
+      //sacamos los datos de los items que se activaron
+      var cod_serv_tiposerv = document.getElementById("cod_serv_tiposerv"+i).value;
+      var servicio = document.getElementById("servicio"+i).value;      
+      var cantidad=document.getElementById("cantidad"+i).value;
+      var importe=document.getElementById("importe"+i).value;
+      // aqui se guardan los servicios activados
+      document.getElementById("cod_serv_tiposerv_a"+i).value=cod_serv_tiposerv;      
+      document.getElementById("servicio_a"+i).value=servicio;
+      document.getElementById("cantidad_a"+i).value=cantidad;
+      document.getElementById("importe_a"+i).value=importe;              
+    }else{ document.getElementById("servicio_a"+i).value="";}
+  } 
+
+  var resulta=sumal;  
+  document.getElementById("modal_totalmontoserv_costo").value=number_format(resulta,2);  
+  // document.getElementById("modal_totalmontos__costo").value=resulta;//escondido
+  // document.getElementById("comprobante_auxiliar_costo").value=comprobante_auxiliar;
+  calcularTotalFilaServicio2();
+}
 function ajax_Cliente_razonsocial(combo){
   var contenedor;
   var codigo_cliente=combo.value;
@@ -13525,7 +13556,7 @@ function agregaDatosDetalleFactManual(datos){
   document.getElementById("nit_cliente").value=d[2];
   document.getElementById("nro_factura").value=d[3];
   document.getElementById("nro_autorizacion").value=d[4];
-  document.getElementById("importe").value=d[5];  
+  document.getElementById("importe").value=number_format(d[5],2) ;  
 }
 
 
@@ -13556,137 +13587,117 @@ var itemGenerar_factura_parcial=[];
 var itemGenerar_factura_parcial_aux=[];
 function agregaDatosGenerarFactPagos(datos){  
   var d=datos.split('/');
+  var cod_solicitudfacturacion=d[0];
   // var monto_solicitud=parseFloat(d[1]);
   // var saldo_anterior=parseFloat(d[2]);
-  document.getElementById("cod_solicitudfacturacion_factpagos").value=d[0];
+  document.getElementById("cod_solicitudfacturacion_factpagos").value=cod_solicitudfacturacion;
   var index=(parseFloat(d[3])-1);
-  // document.getElementById("monto_sol_fact").value=monto_solicitud.toFixed(2);
-  // document.getElementById("saldo_anterior").value=saldo_anterior.toFixed(2);
-  // document.getElementById("monto_sol_fact_x").value=number_format(monto_solicitud,2);
-  // document.getElementById("saldo_anterior_x").value=number_format(saldo_anterior,2);
-  tablaGeneral_GenerarFact_parcial(index);
+  var contenedor = document.getElementById('contenedor_GenerarFactParcial_cabecera');    
+  ajax=nuevoAjax();
+  ajax.open('GET', 'simulaciones_servicios/ajax_cabecera_modal_generarFactPar.php?cod_solicitud='+cod_solicitudfacturacion,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;      
+      $('.selectpicker').selectpicker(["refresh"]);
+      tablaGeneral_GenerarFact_parcial(index);
+    }
+  }
+  ajax.send(null);
 }
 function tablaGeneral_GenerarFact_parcial(index){
   // var monto_total=$("#modal_totalmontos").val();
   var div=$('<div>').addClass('col-sm-12');
   var table = $('<table>').addClass('table table-bordered table-condensed table-sm');
   var titulos = $('<tr>').addClass('fondo-boton');
-    titulos.append($('<th width="2%">').addClass('').text('#'));
+  titulos.append($('<th width="2%">').addClass('').text('#'));
 
-    titulos.append($('<th width="8%">').addClass('').text('Precio'));
-    titulos.append($('<th width="3%">').addClass('').text('Pago %'));
-    titulos.append($('<th width="8%">').addClass('').text('Pago BOB'));
-    titulos.append($('<th width="8%">').addClass('').text('Importe a Pagar'));
-    titulos.append($('<th width="7%">').addClass('').text('Saldo'));
-    titulos.append($('<th width="7%">').addClass('').text('Saldo Anterior'));
-    titulos.append($('<th >').addClass('').text('Descripcion'));        
-    table.append(titulos);
-    for (var i = 0; i < itemGenerar_factura_parcial_aux[index].length; i++) {
-      var codigox=itemGenerar_factura_parcial_aux[index][i].codigox;
-      var preciox=itemGenerar_factura_parcial_aux[index][i].preciox;
-      var saldo_anterior_x=itemGenerar_factura_parcial_aux[index][i].saldo_anterior_x;
-      var descripcionx=itemGenerar_factura_parcial_aux[index][i].descripcionx;
-      var cod_solfacdet=itemGenerar_factura_parcial_aux[index][i].cod_solfacdet;
-      
-      var row = $('<tr>').addClass('');
-      row.append($('<td>').addClass('').text(i+1).html("<input type='hidden' name='codigo_x"+i+"' id='codigo_x"+i+"' value='"+codigox+"'>" ));
-        row.append($('<td>').addClass('').html("<input type='number' step='0.01' class='form-control' name='precio_initario"+i+"' id='precio_initario"+i+"' value='"+parseFloat(preciox).toFixed(2)+"' readonly='true'>" ));
-        row.append($('<td>').addClass('').html("<input type='number' step='0.01' class='form-control' name='pago_por"+i+"' id='pago_por"+i+"' value='0' onkeyup='monto_convertir_a_bolivianos_factPagos("+i+")'>"));    
-        row.append($('<td>').addClass('').html("<input type='number' step='0.01' class='form-control' name='pago_bob"+i+"' id='pago_bob"+i+"' value='0' onkeyup='monto_convertir_a_porcentaje_factPagos("+i+")'>"));    
-        row.append($('<td>').addClass('').html("<input type='number' step='0.01' class='form-control' name='importe_pagar"+i+"' id='importe_pagar"+i+"' value='0' readonly='true'>"));    
-        row.append($('<td>').addClass('').html("<input type='number' step='0.01' class='form-control' name='saldo"+i+"' id='saldo"+i+"' value='0' readonly='true'>"));    
-        row.append($('<td>').addClass('').html("<input type='number' step='0.01' class='form-control' name='saldo_anterior"+i+"' id='saldo_anterior"+i+"' value='"+saldo_anterior_x+"' readonly='true'>"));    
-        row.append($('<td>').addClass('').html("<input type='text' class='form-control' name='descripcion"+i+"' id='descripcion"+i+"' value='"+descripcionx+"' readonly='true'>"));
-      table.append(row);
-    }
-    var row = $('<tr>').addClass('');//parte de total
-    row.append($('<td>').addClass('').text(''));
-    row.append($('<td colspan="3" align="right">').addClass('').text('MONTO TOTAL'));         
-    row.append($('<td>').addClass('').html("<input type='hidden' class='form-control' name='total_importe' id='total_importe' value='0'><input type='text' step='0.01' class='form-control' name='total_importe_a' id='total_importe_a' value='"+number_format(0,2)+"' readonly='true'>"));
-    row.append($('<td>').addClass('').html("<input type='hidden' step='0.01' class='form-control' name='total_saldo' id='total_saldo' value='0'><input type='text' step='0.01' class='form-control' name='total_saldo_a' id='total_saldo_a' value='"+number_format(0,2)+"' readonly='true'> "));    
-    row.append($('<td>').addClass('').text(''));
-    table.append(row);    
-    div.append(table);    
-    $("#cantidad_items").val(i);
-    $('#contenedor_GenerarFactParcial').html(div);
-    calcular_monto_total_items_factura_parcial();
+  titulos.append($('<th >').addClass('').text('Item'));
+  titulos.append($('<th width="8%">').addClass('').text('cantidad'));
+  titulos.append($('<th width="8%">').addClass('').text('Precio'));    
+  titulos.append($('<th width="8%">').addClass('').text('Desc BOB'));
+  titulos.append($('<th width="3%">').addClass('').text('Importe'));
+  titulos.append($('<th width="8%">').addClass('small').text('Importe Fac Anterior'));
+  titulos.append($('<th width="8%">').addClass('').text('Importe a Pagar'));    
+  
+  table.append(titulos);
+  for (var i = 0; i < itemGenerar_factura_parcial_aux[index].length; i++) {
+    var descripcionx=itemGenerar_factura_parcial_aux[index][i].descripcionx;
+    var cantidadX=itemGenerar_factura_parcial_aux[index][i].cantidadxx;;
+    var codigox=itemGenerar_factura_parcial_aux[index][i].codigox;
+    var preciox=itemGenerar_factura_parcial_aux[index][i].preciox;
+    var descuentox=itemGenerar_factura_parcial_aux[index][i].descuentox;;
+    var importex=parseFloat(preciox)-parseFloat(descuentox);
+    var importe_anterior_x=itemGenerar_factura_parcial_aux[index][i].importe_anterior_x;
+    
+    // var cod_solfacdet=itemGenerar_factura_parcial_aux[index][i].cod_solfacdet;
+
+    var row = $('<tr style="#FFF000;">').addClass('');
+    row.append($('<td>').addClass('').text(i+1).html("<input type='hidden' name='codigo_x"+i+"' id='codigo_x"+i+"' value='"+codigox+"'>" ));
+    row.append($('<td>').addClass('').html("<input style='background-color:#FFFFFF;' type='text' class='form-control' name='descripcion"+i+"' id='descripcion"+i+"' value='"+descripcionx+"' readonly='true'>"));
+    row.append($('<td>').addClass('').text(cantidadX));
+    row.append($('<td>').addClass('').html("<input type='hidden' step='0.01' name='precio_unitario"+i+"' id='precio_unitario"+i+"' value='"+preciox+"'><input style='background-color:#FFFFFF;' type='text' class='form-control' name='precio_unitario_a"+i+"' id='precio_unitario_a"+i+"' value='"+number_format(parseFloat(preciox),2)+"' readonly='true'>" ));
+    row.append($('<td>').addClass('').text(descuentox));
+    row.append($('<td>').addClass('').html("<input type='hidden' step='0.01' name='importe_x"+i+"' id='importe_x"+i+"' value='"+importex+"'><input style='background-color:#FFFFFF;' type='text' step='0.01' class='form-control' name='importe_x_a"+i+"' id='importe_x_a"+i+"' readonly='true' value='"+number_format(importex,2)+"'>"));        
+    row.append($('<td>').addClass('').html("<input style='background-color:#FFFFFF;' type='number' step='0.01' class='form-control' name='importe_anterior"+i+"' id='importe_anterior"+i+"' value='"+importe_anterior_x+"' readonly='true'>"));    
+    row.append($('<td>').addClass('').html("<input style='background-color:#FFFFFF;' type='number' step='0.01' class='form-control' name='importe_a_pagar"+i+"' id='importe_a_pagar"+i+"' value='0' onkeyup='monto_convertir_a_porcentaje_factPagos("+i+")'>"));        
+    table.append(row);
+  }
+  var row = $('<tr style="background-color:#F6E3CE;">').addClass('');//parte de total
+  row.append($('<td>').addClass('').text(''));
+  row.append($('<td colspan="4" align="center">').addClass('').html('<b>MONTO TOTAL</b>'));
+  row.append($('<td>').addClass('').html("<input type='hidden' step='0.01' class='form-control' name='total_importe' id='total_importe' value='0'><input style='background-color:#F6E3CE;' type='text' step='0.01' class='form-control' name='total_importe_a' id='total_importe_a' value='"+number_format(0,2)+"' readonly='true'> "));
+  row.append($('<td>').addClass('').html("<input type='hidden' step='0.01' class='form-control' name='total_importe_anterior' id='total_importe_anterior' value='0'><input style='background-color:#F6E3CE;' type='text' step='0.01' class='form-control' name='total_importe_anterior_a' id='total_importe_anterior_a' value='"+number_format(0,2)+"' readonly='true'> "));
+  row.append($('<td>').addClass('').html("<input type='hidden' class='form-control' name='total_importe_pagar' id='total_importe_pagar' value='0'><input style='background-color:#F6E3CE;' type='text' step='0.01' class='form-control' name='total_importe_pagar_a' id='total_importe_pagar_a' value='"+number_format(0,2)+"' readonly='true'>"));
+  
+  row.append($('<td>').addClass('').text(''));
+  table.append(row);    
+  div.append(table);    
+  $("#cantidad_items").val(i);
+  $('#contenedor_GenerarFactParcial').html(div);
+  calcular_monto_total_items_factura_parcial();
 }
-
-
-
 function monto_convertir_a_porcentaje_factPagos(i){
   // alert("aqui");
-  var precio_initario=$("#precio_initario"+i).val();
-  var pago_bob=$("#pago_bob"+i).val();
-  var saldo_anterior=$("#saldo_anterior"+i).val();
-  var sw_aux=true;
-  if(parseFloat(saldo_anterior)!=0){
-    if(parseFloat(pago_bob)>parseFloat(saldo_anterior)){
-      sw_aux=false;
-    }else{
-      var saldo=parseFloat(saldo_anterior)-parseFloat(pago_bob);
+  var importe_x=$("#importe_x"+i).val();  
+  var importe_a_pagar=$("#importe_a_pagar"+i).val();
+  var importe_anterior=$("#importe_anterior"+i).val();
+  var saldo=parseFloat(importe_x)-parseFloat(importe_anterior);
+  var sw_aux=true;  
+  if(parseFloat(importe_anterior)!=0){
+    if(parseFloat(importe_a_pagar)>parseFloat(saldo)){
+      Swal.fire("Informativo!", "El Monto insertado es superior al Saldo Anterior ("+number_format(saldo,2)+")", "warning");
+    }else{      
+        calcular_monto_total_items_factura_parcial();      
     }
   }else{
-    var saldo=parseFloat(precio_initario)-parseFloat(pago_bob);
-  }
-  if(pago_bob<0 || pago_bob==0 || pago_bob==null){
-    // Swal.fire("Informativo!", "Monto incorrecto!", "warning");
-  }else{    
-    var numero_porcentaje=parseFloat(pago_bob)*100/parseFloat(precio_initario);
-    if(sw_aux){
-      // var saldo=parseFloat(precio_initario)-parseFloat(pago_bob);
-      $("#pago_por"+i).val(numero_porcentaje.toFixed(2));      
-      $("#importe_pagar"+i).val(parseFloat(pago_bob).toFixed(2));      
-      $("#saldo"+i).val(saldo.toFixed(2));      
-      calcular_monto_total_items_factura_parcial();
-    }else{  
-      Swal.fire("Informativo!", "El monto es superior al Saldo Anterior", "warning");
+    if(parseFloat(importe_a_pagar)>parseFloat(importe_x)){
+        Swal.fire("Informativo!", "El monto es superior al importe", "warning");
+    }else{
+        calcular_monto_total_items_factura_parcial();
     }
   }
 }
-function monto_convertir_a_bolivianos_factPagos(i){
-  var precio_initario=$("#precio_initario"+i).val();
-  var pago_por=$("#pago_por"+i).val();  
-  var saldo_anterior=$("#saldo_anterior"+i).val();
-  var sw_aux=true;
-  if(pago_por<0 || pago_por==0 || pago_por==null){
-    // Swal.fire("Informativo!", "Porcentaje incorrecto!", "warning");
-  }else{
-    // alert(porcentaje_pagar);
-    var monto_porcentaje=parseFloat(pago_por)*parseFloat(precio_initario)/100;
-    if(saldo_anterior!=0){
-      if(parseFloat(monto_porcentaje)>parseFloat(saldo_anterior)){
-        sw_aux=false;
-      }else{
-        var saldo=parseFloat(saldo_anterior)-parseFloat(monto_porcentaje);
-      }
-    }else{
-      var saldo=parseFloat(precio_initario)-parseFloat(monto_porcentaje);
-    }
-    if(sw_aux){
-      $("#pago_bob"+i).val(monto_porcentaje.toFixed(2));    
-      $("#importe_pagar"+i).val(monto_porcentaje.toFixed(2));
-      $("#saldo"+i).val(saldo.toFixed(2));     
-      calcular_monto_total_items_factura_parcial();
-    }else{  
-      Swal.fire("Informativo!", "El monto es superior al Saldo Anterior", "warning");
-    }
-  }
-}
+
 function calcular_monto_total_items_factura_parcial(){
   var total_items=$("#cantidad_items").val();
   var total_importe_monto=0;
-  var total_saldo_monto=0;
+  var total_importe_pagar=0;
+  var total_importe_anterior=0;
   for(var j=0;j<total_items;j++){
-    var importe_pagar=$("#importe_pagar"+j).val();
-    var saldo=$("#saldo"+j).val();
-    total_importe_monto+=parseFloat(importe_pagar);
-    total_saldo_monto+=parseFloat(saldo);
+    var importe_x=$("#importe_x"+j).val();
+    var importe_anterior=$("#importe_anterior"+j).val();
+    var importe_a_pagar=$("#importe_a_pagar"+j).val();
+    
+    total_importe_monto+=parseFloat(importe_x);
+    total_importe_anterior+=parseFloat(importe_anterior);
+    total_importe_pagar+=parseFloat(importe_a_pagar);
   }
   $("#total_importe").val(total_importe_monto.toFixed(2));      
   $("#total_importe_a").val(number_format(total_importe_monto,2));  
-  $("#total_saldo").val(total_saldo_monto.toFixed(2));  
-  $("#total_saldo_a").val(number_format(total_saldo_monto,2));
+  $("#total_importe_anterior").val(total_importe_anterior.toFixed(2));  
+  $("#total_importe_anterior_a").val(number_format(total_importe_anterior,2));
+  $("#total_importe_pagar").val(total_importe_pagar.toFixed(2));  
+  $("#total_importe_pagar_a").val(number_format(total_importe_pagar,2));
 }
 
 
@@ -13892,4 +13903,72 @@ function cambiarReporteResumido(){
         $("#div_solicitados").addClass("d-none");
       }
     }  
+}
+function ajax_mes_de_gestion(combo){
+  var contenedor = document.getElementById('div_contenedor_mes');
+  var gestion=combo.value;
+  // console.log(gestion);
+  ajax=nuevoAjax();
+  ajax.open('GET', 'reportes/ajax_mes_gestion.php?cod_gestion='+gestion,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;      
+      $('.selectpicker').selectpicker(["refresh"]);
+    }
+  }
+  ajax.send(null);
+
+}
+function descargar_txt_libro_ventas(){
+    var cod_gestion=$("#gestiones").val();
+    var cod_mes=$("#cod_mes_x").val();
+    if(cod_gestion==null || cod_gestion==''){
+      Swal.fire("Informativo!", "Por favor Seleccione la gestión!", "warning");
+    }else{
+      if(cod_mes==null || cod_mes==''){
+        Swal.fire("Informativo!", "Por favor Seleccione el mes!", "warning");
+      }else{
+        // alert("llegue");
+        $.ajax({
+        type:"POST",
+        data:"cod_gestion="+cod_gestion+"&cod_mes="+cod_mes,
+        url:"reportes/reportePrintLibroVentasTXT.php",
+        success:function(r){
+
+          var respu=r.split('#####');
+          var estado=respu[1];
+          var nombre_ar=respu[2];
+          // console.log(r);
+          if(estado==1){
+            // Swal.fire("Correcto!", "El proceso se completo correctamente!", "success");
+            // alerts.showSwal('success-message','reportes/'+nombre_ar);
+            var direccion=nombre_ar;
+            descargar_txt_libro_ventas_x(direccion);
+
+
+          }else{
+            
+            Swal.fire("ERROR!", "Hubo un error al generar el TXT!", "warning");
+            
+          }
+        }
+        });         
+      }
+    }
+}
+function descargar_txt_libro_ventas_x(url){
+  // var monto_total=$("#modal_totalmontos").val();
+  $('#modal_descargarTXT').modal('show');
+      //agregamos la cuenta si lo tuviese  
+    var contenedor;  
+    contenedor = document.getElementById('contenedor_DescargaTxt');
+    ajax=nuevoAjax();
+    ajax.open('GET', 'reportes/ajax_contenedor_boton_descarga_txt.php?url='+url,true);
+    ajax.onreadystatechange=function() {
+      if (ajax.readyState==4) {
+        contenedor.innerHTML = ajax.responseText;
+        $('.selectpicker').selectpicker(["refresh"]);          
+      }
+    }
+    ajax.send(null); 
 }

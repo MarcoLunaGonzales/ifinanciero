@@ -44,17 +44,17 @@ try{
     if($cont_tipopago!=0){//falta asociar cuenta a tipos de pago ?>
         <script>
             alert("A ocurrido un error: Por favor verifique que los tipos de pago estén asociados a una cuenta.");
-        </script>
-    <?php }elseif($cont_areas!=0){//falta asociar alguna cuenta en areas ?>
+        </script><?php 
+    }elseif($cont_areas!=0){//falta asociar alguna cuenta en areas ?>
         <script>
             alert("A ocurrido un error: Por favor verifique que las areas de ingreso estén asociadas a una cuenta.");
-        </script>
-    <?php }else{//cuando todo esta en orden
+        </script><?php 
+    }else{ //cuando todo esta en orden
         // verificamos si ya se registro la factura
         $stmtVerif = $dbh->prepare("SELECT codigo FROM facturas_venta where cod_solicitudfacturacion=$codigo and cod_estadofactura=1");
         $stmtVerif->execute();
         $resultVerif = $stmtVerif->fetch();    
-        $codigo_facturacion = $resultVerif['codigo'];
+        $codigo_facturacion = $resultVerif['codigo'];        
         if($codigo_facturacion==null){//no se registró
             $stmt = $dbh->prepare("SELECT sf.*,(select t.Descripcion from cla_servicios t where t.IdClaServicio=sf.cod_claservicio) as nombre_serv from solicitudes_facturaciondetalle sf where sf.cod_solicitudfacturacion=$codigo");
             $stmt->execute();
@@ -154,49 +154,49 @@ try{
                     if($flagSuccess){
                       //obtenemos el registro del ultimo insert
                       $stmtNroFac = $dbh->prepare("SELECT codigo from facturas_venta where cod_solicitudfacturacion=$codigo order by codigo desc LIMIT 1");
-                    $stmtNroFac->execute();
-                    $resultNroFact = $stmtNroFac->fetch();    
-                    $cod_facturaVenta = $resultNroFact['codigo'];
-
-                    while ($row = $stmt->fetch()) 
-                    { 
-                        $cod_claservicio_x=$row['cod_claservicio'];
-                        $cantidad_x=$row['cantidad'];
-                        $precio_x=$row['precio'];
-                        $descuento_bob_x=$row['descuento_bob'];
-                        $precio_x=$precio_x+$descuento_bob_x;//se registró el precio total incluido el descuento, para la factura necesitamos el precio unitario
-                        $descripcion_alterna_x=$row['descripcion_alterna'];            
-                        $stmtInsertSoliFactDet = $dbh->prepare("INSERT INTO facturas_ventadetalle(cod_facturaventa,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_bob,suscripcionId) 
-                        values ('$cod_facturaVenta','$cod_claservicio_x','$cantidad_x','$precio_x','$descripcion_alterna_x',$descuento_bob_x,0)");
-                        $flagSuccess=$stmtInsertSoliFactDet->execute();
-                    }  
-                    $sqlUpdate="UPDATE solicitudes_facturacion SET  cod_estadosolicitudfacturacion=5 where codigo=$codigo";
-                    $stmtUpdate = $dbh->prepare($sqlUpdate);
-                    $flagSuccess=$stmtUpdate->execute(); 
-                    //enviar propuestas para la actualizacion de ibnorca
-                    $fechaHoraActual=date("Y-m-d H:i:s");
-                    $idTipoObjeto=2709;
-                    $idObjeto=2729; //regristado
-                    $obs="Solicitud Facturada";
-                    if(isset($_GET['u'])){
-                    $u=$_GET['u'];
-                        actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);
+                        $stmtNroFac->execute();
+                        $resultNroFact = $stmtNroFac->fetch();    
+                        $cod_facturaVenta = $resultNroFact['codigo'];
+                        while ($row = $stmt->fetch()) 
+                        { 
+                            $cod_claservicio_x=$row['cod_claservicio'];
+                            $cantidad_x=$row['cantidad'];
+                            $precio_x=$row['precio'];
+                            $descuento_bob_x=$row['descuento_bob'];
+                            $precio_x=$precio_x+$descuento_bob_x;//se registró el precio total incluido el descuento, para la factura necesitamos el precio unitario
+                            $descripcion_alterna_x=$row['descripcion_alterna'];            
+                            $stmtInsertSoliFactDet = $dbh->prepare("INSERT INTO facturas_ventadetalle(cod_facturaventa,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_bob,suscripcionId) 
+                            values ('$cod_facturaVenta','$cod_claservicio_x','$cantidad_x','$precio_x','$descripcion_alterna_x',$descuento_bob_x,0)");
+                            $flagSuccess=$stmtInsertSoliFactDet->execute();
+                        }  
+                        $sqlUpdate="UPDATE solicitudes_facturacion SET  cod_estadosolicitudfacturacion=5 where codigo=$codigo";
+                        $stmtUpdate = $dbh->prepare($sqlUpdate);
+                        $flagSuccess=$stmtUpdate->execute(); 
+                        //enviar propuestas para la actualizacion de ibnorca
+                        $fechaHoraActual=date("Y-m-d H:i:s");
+                        $idTipoObjeto=2709;
+                        $idObjeto=2729; //regristado
+                        $obs="Solicitud Facturada";
+                        if(isset($_GET['u'])){
+                        $u=$_GET['u'];
+                            actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);
+                        }else{
+                            actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);
+                        } 
+                        if(isset($_GET['q'])){
+                          $q=$_GET['q'];
+                          $s=$_GET['s'];
+                          $u=$_GET['u'];
+                          $v=$_GET['v'];
+                          header('Location: ../simulaciones_servicios/generarFacturasPrint.php?codigo='.$codigo.'&tipo=2'."&q=".$q."&s=".$s."&u=".$u."&v=".$v);
+                        }else{
+                          header('Location: ../simulaciones_servicios/generarFacturasPrint.php?codigo='.$codigo.'&tipo=2');
+                        }
                     }else{
-                        actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);
-                    } 
-                    if(isset($_GET['q'])){
-                      $q=$_GET['q'];
-                      $s=$_GET['s'];
-                      $u=$_GET['u'];
-                      $v=$_GET['v'];
-                      header('Location: ../simulaciones_servicios/generarFacturasPrint.php?codigo='.$codigo.'&tipo=2'."&q=".$q."&s=".$s."&u=".$u."&v=".$v);
-                    }else{
-                      header('Location: ../simulaciones_servicios/generarFacturasPrint.php?codigo='.$codigo.'&tipo=2');
+                        echo "error al generar la factura";
                     }
                 }
-                    
-            }
-            
+            }        
         }else{//ya se registro
             echo "ya se registró la factura.";
             if(isset($_GET['q'])){
@@ -210,13 +210,6 @@ try{
             }        
         }
     }
-
-
-    
-
-    ?>
-
-<?php 
 } catch(PDOException $ex){
     echo "Un error ocurrio".$ex->getMessage();
     echo "Error : ".$error;

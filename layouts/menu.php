@@ -596,6 +596,12 @@ if($menuModulo==0){
                     <span class="sidebar-mini"> LC </span>
                     <span class="sidebar-normal"> Libro Compras</span>
                   </a>
+                </li> 
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=reportesLibroVentas">
+                    <span class="sidebar-mini"> LV </span>
+                    <span class="sidebar-normal"> Libro Ventas</span>
+                  </a>
                 </li>    
                 <li class="nav-item ">
                   <a class="nav-link" href="caja_chica/rpt_proveedores_print.php" target="_blank">

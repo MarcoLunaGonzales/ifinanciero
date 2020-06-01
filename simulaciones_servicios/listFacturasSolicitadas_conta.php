@@ -88,12 +88,19 @@ $globalAdmin=$_SESSION["globalAdmin"];
                               break;
                             }
                             //verificamos si ya tiene factura generada y esta activa                           
-                            $stmtFact = $dbh->prepare("SELECT codigo,nro_factura from facturas_venta where cod_solicitudfacturacion=$codigo_facturacion and cod_estadofactura=1 ORDER BY codigo desc");
+                            $stmtFact = $dbh->prepare("SELECT codigo,nro_factura,cod_estadofactura,razon_social,nit,nro_autorizacion,importe from facturas_venta where cod_solicitudfacturacion=$codigo_facturacion and cod_estadofactura in (1,4)");
                             $stmtFact->execute();
                             $resultSimu = $stmtFact->fetch();
                             $codigo_fact_x = $resultSimu['codigo'];
-                            $nro_fact_x = $resultSimu['nro_factura'];                            
+                            $nro_fact_x = $resultSimu['nro_factura'];
+                            $cod_estado_factura_x = $resultSimu['cod_estadofactura'];
                             if ($nro_fact_x==null)$nro_fact_x="-";
+                            if($cod_estado_factura_x==4){
+                              $btnEstado="btn-warning";
+                              $estado="FACTURA MANUAL";                            
+                            }
+
+
                             $stmtFactMontoTotal = $dbh->prepare("SELECT SUM(importe) as importe from facturas_venta where cod_solicitudfacturacion=$codigo_facturacion and cod_estadofactura=1 ORDER BY codigo desc");
                             $stmtFactMontoTotal->execute();
                             $resultMontoTotalFAC = $stmtFactMontoTotal->fetch();
@@ -184,26 +191,35 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             $sumaTotalImporte=$sumaTotalMonto-$sumaTotalDescuento_bob;
                             $cont[$index-1]=$nc;
                             $stringCabecera=$nombre_uo."##".$nombre_area."##".$nombre_simulacion."##".$name_area_simulacion."##".$fecha_registro."##".$fecha_solicitudfactura."##".$nit."##".$razon_social;
-                            if($importe_fact_x!=$sumaTotalImporte){ //para los items de la factura a pagos
+                            if($importe_fact_x!=$sumaTotalImporte && $cod_estado_factura_x!=4){ //para los items de la factura a pagos
                               ?>
                               <script>var nfac=[];itemGenerar_factura_parcial.push(nfac);</script>
                               <?php
-                                $queryParciales = "SELECT codigo,precio,cod_claservicio,descripcion_alterna from solicitudes_facturaciondetalle where cod_solicitudfacturacion=$codigo_facturacion";
+                                $queryParciales = "SELECT codigo,cantidad,descuento_bob,precio,cod_claservicio,descripcion_alterna from solicitudes_facturaciondetalle where cod_solicitudfacturacion=$codigo_facturacion";
                                 $statementParciales = $dbh->query($queryParciales);
                                 $nc_parciales=0;
                                 while ($row = $statementParciales->fetch()){ 
+                                  $cod_claservicio=$row['cod_claservicio'];
+                                  //busacmos el monto ya pagado;
+                                  $stmtFactMontoFacturado = $dbh->prepare("SELECT precio from facturas_ventadetalle where cod_facturaventa=$codigo_fact_x and cod_claservicio=$cod_claservicio");
+                                  $stmtFactMontoFacturado->execute();
+                                  $resultMontoFAC = $stmtFactMontoFacturado->fetch();
+                                  $importe_facturato = $resultMontoFAC['precio'];
+
                                   //objeto dato donde guarda tipos de pago
                                   $dato_parcial = new stdClass();//obejto
-                                  $codFila=(int)$row["cod_claservicio"];
-                                  // echo $codFila;
+                                  $codFila=(int)$cod_claservicio;                                  
+                                  $cantidad_x=trim($row['cantidad']);
                                   $precio_x=trim($row['precio']);
+                                  $descuento_x=trim($row['descuento_bob']);
                                   $descripcion_x=trim($row['descripcion_alterna']);
                                   $dato_parcial->codigo=($nc_parciales+1);
                                   $dato_parcial->cod_claservicio=$codFila;
                                   $dato_parcial->preciox=$precio_x;
-                                  if($importe_fact_x!=0)$dato_parcial->saldo_anterior_x=$precio_x-$importe_fact_x;
-                                  else $dato_parcial->saldo_anterior_x=0;
-                                  
+                                  $dato_parcial->cantidadxx=$cantidad_x;
+                                  $dato_parcial->descuentox=$descuento_x;
+                                  if($importe_fact_x!=0)$dato_parcial->importe_anterior_x=$importe_facturato;
+                                  else $dato_parcial->importe_anterior_x=0;
                                   $dato_parcial->descripcionx=$descripcion_x;                
                                   $dato_parciales[$index-1][$nc_parciales]=$dato_parcial;                           
                                   $nc_parciales++;
@@ -211,10 +227,10 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                 $cont_pagosParciales[$index-1]=$nc_parciales;
                               if($importe_fact_x!=null){
                                 $saldo=$sumaTotalImporte-$importe_fact_x;
-                                $datos_FacManual=$codigo_facturacion."/".($sumaTotalImporte-$importe_fact_x)."/".$saldo."/".$index;//dato para modal
+                                $datos_FacManual=$codigo_facturacion."/0/".$saldo."/".$index;//dato para modal
                                 $estado="FACTURADO A PAGOS";
                               }else{
-                                $datos_FacManual=$codigo_facturacion."/".($sumaTotalImporte-$importe_fact_x)."/0/".$index;//dato para modal
+                                $datos_FacManual=$codigo_facturacion."/0/0/".$index;//dato para modal
                               }
 
                               ?>
@@ -313,7 +329,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                                 <?php                                          
                                             }
                                               ?>                                        
-                                              <a title="Volver al Estado Registro" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=1&admin=0'  class="btn btn-danger">
+                                              <a title="Volver al Estado Registro" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=1&admin=10'  class="btn btn-danger">
                                                  <i class="material-icons">refresh</i>
                                               </a>
                                               <?php                                          
@@ -465,6 +481,10 @@ $globalAdmin=$_SESSION["globalAdmin"];
         </div>      
         <div class="modal-body">
           <input type="hidden" name="cod_solicitudfacturacion_factpagos" id="cod_solicitudfacturacion_factpagos" value="0">
+
+          <div class="row" id="contenedor_GenerarFactParcial_cabecera">
+          
+          </div>
           <div id="contenedor_GenerarFactParcial">
           
           </div>
@@ -534,11 +554,30 @@ $globalAdmin=$_SESSION["globalAdmin"];
   });
   function valida_modalFacPar(f) {
       var ok = true;
-      var msg = "El monto total no debe ser 0...\n";  
-      if(f.elements["total_importe"].value == 0 || f.elements["total_importe"].value < 0 || f.elements["total_importe"].value == '')
-      {    
+      
+      if(f.elements["total_importe_pagar"].value == 0 || f.elements["total_importe_pagar"].value < 0 || f.elements["total_importe_pagar"].value == '')
+      {
+        var msg = "El Monto Total a pagar no debe ser 0 o Nulo...\n";      
         ok = false;
       }      
+      if(f.elements["total_importe_anterior"].value!=0){
+        var importe_anterior=f.elements["total_importe_anterior"].value;
+        var importe=f.elements["total_importe"].value;
+        var saldo=parseFloat(importe)-parseFloat(importe_anterior);
+
+        if(f.elements["total_importe_pagar"].value > saldo)
+        {
+          var msg = "El Monto Total a pagar es Superior al total del Saldo anterior ("+number_format(saldo,2)+") ...\n";      
+          ok = false;
+        }
+      }else{        
+
+        if(f.elements["total_importe_pagar"].value  > f.elements["total_importe"].value)
+        {
+          var msg = "El Monto Total a pagar es Superior al total del importe de la solicitud...\n";      
+          ok = false;
+        }  
+      }
       if(ok == false)    
         Swal.fire("Informativo!",msg, "warning");
       return ok;
@@ -556,7 +595,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
         for ($j=0; $j < $cont_pagosParciales[$i]; $j++) {
              if($cont_pagosParciales[$i]>0){?>
                 <script>
-                    detalle_pagoparcial.push({codigo:<?=$dato_parciales[$i][$j]->codigo?>,codigox:<?=$dato_parciales[$i][$j]->cod_claservicio?>,preciox:'<?=$dato_parciales[$i][$j]->preciox?>',saldo_anterior_x:'<?=$dato_parciales[$i][$j]->saldo_anterior_x?>',descripcionx:'<?=$dato_parciales[$i][$j]->descripcionx?>'});
+                    detalle_pagoparcial.push({codigo:<?=$dato_parciales[$i][$j]->codigo?>,codigox:<?=$dato_parciales[$i][$j]->cod_claservicio?>,preciox:'<?=$dato_parciales[$i][$j]->preciox?>',cantidadxx:'<?=$dato_parciales[$i][$j]->cantidadxx?>',descuentox:'<?=$dato_parciales[$i][$j]->descuentox?>',importe_anterior_x:'<?=$dato_parciales[$i][$j]->importe_anterior_x?>',descripcionx:'<?=$dato_parciales[$i][$j]->descripcionx?>'});
                     // console.log(detalle_pagoparcial);
                 </script>
 
