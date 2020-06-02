@@ -6507,7 +6507,7 @@ function ejecutadoEgresosMes($oficina, $anio, $mes, $area, $acumulado, $cuenta){
   $direccion=obtenerValorConfiguracion(45);//direccion del Server del Servicio
   $sIde = "monitoreo"; 
   $sKey="101010"; 
-  if($acumulado==1){
+  if($oficina==0){
     $oficina=0;
   }
   $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "oficina"=>$oficina, "area"=>$area, "anio"=>$anio, "mes"=>$mes, "cuenta"=>$cuenta, "accion"=>"listar"); //

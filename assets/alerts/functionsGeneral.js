@@ -3693,7 +3693,9 @@ function cargarDatosCuenta(){
 }
 
 function addSolicitudDetalle(obj,tipo) {
-    var codigoSol=$("#cod_solicitud").val();
+  var tipoSolicitud=$("#tipo_solicitud").val();
+  if(tipoSolicitud>0){
+   var codigoSol=$("#cod_solicitud").val();
       numFilas++;
       cantidadItems++;
       filaActiva=numFilas;
@@ -3723,6 +3725,11 @@ function addSolicitudDetalle(obj,tipo) {
        }
       }   
       ajax.send(null);
+  }else{
+    Swal.fire('Informativo!','Debe seleccionar un tipo de Solicitud!','warning');
+    return false;
+  }
+    
 }
 function habilitarFila(fila){
   var check=document.getElementById("habilitar"+fila);

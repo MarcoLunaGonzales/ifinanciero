@@ -108,8 +108,8 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
            ?><th width="5%">Estado</th>
         <?php   
         }?>      
-       <th class="bg-blanco2" width="8%">% EJECUCION GENERAL</th>
-             <th width="6%">%</th>
+       <th class="bg-blanco2" width="8%">% EJECUCION PRESUPUESTARIA CUENTA</th>
+             <th width="6%">% EJECUCION DE PROPUESTA</th>
              <th width="5%">Presupuesto</th>
              <th width="5%">Ejecutado</th>
            </tr>
@@ -198,24 +198,20 @@ WHERE s.cod_tipocurso in($tipoCursoArray) and sd.habilitado=1 and s.cod_estadosi
        //COSTOS FIJOS
         if(isset($_POST['costos_fijos'])) {
           ?>
-          <tr class="bg-principal text-white">
-                <td colspan="<?=(($rowSpan-1)+3)?>" class="text-center font-weight-bold">COSTOS FIJOS</td>    
+          <tr class="text-white" style="background:#92E83B;color:white;">
+                <td colspan="<?=(($rowSpan-1)+3)?>" class="text-center font-weight-bold">COSTOS FIJOS <?=$cursoNombre?></td>    
             </tr>
           <?php  
-         if(obtenerPlantillaCodigoSimulacion($codigoSimulacion)!=$codPlan){
+         //if(obtenerPlantillaCodigoSimulacion($codigoSimulacion)!=$codPlan){
           $htmlFijos='';
           $codPlan=obtenerPlantillaCodigoSimulacion($codigoSimulacion);
-          $query_cuentas="select DISTINCT p.cod_cuenta,pl.numero,pl.nombre from partidaspresupuestarias_cuentas p join plan_cuentas pl on p.cod_cuenta=pl.codigo where p.cod_partidapresupuestaria in (
-                     (select DISTINCT pgcd.cod_partidapresupuestaria from plantillas_grupocostodetalle pgcd 
-                     join plantillas_gruposcosto pgc on pgcd.cod_plantillagrupocosto=pgc.codigo 
-                     join plantillas_costo pc on pgc.cod_plantillacosto=pc.codigo
-                     join simulaciones_costos s on s.cod_plantillacosto=pc.codigo
-                     where s.codigo=$codigoSimulacion and pgc.cod_tipocosto=1 and pgcd.tipo_calculo=1)) order by p.cod_partidapresupuestaria,p.cod_cuenta;";
+          $query_cuentas="SELECT cf.*,p.nombre,p.numero from simulaciones_cf cf join plan_cuentas p on p.codigo=cf.cod_cuenta where cf.cod_simulacioncosto=$codigoSimulacion order by cf.cod_cuenta";
             $stmt_cuentas = $dbh->prepare($query_cuentas);
             $stmt_cuentas->execute();
             while ($row_cuentas = $stmt_cuentas->fetch(PDO::FETCH_ASSOC)) {
                  $nombreCuentaFijo=$row_cuentas['nombre'];
                  $numeroCuentaFijo=$row_cuentas['numero'];
+                 $montoFijo=$row_cuentas['monto_total'];
                  
                  $precioLocalX=obtenerPrecioSimulacionCostoGeneral($codigoSimulacion);
                  $precioRegistrado=obtenerPrecioRegistradoPlantillaCosto(obtenerPlantillaCodigoSimulacion($codigoSimulacion));
@@ -223,30 +219,30 @@ WHERE s.cod_tipocurso in($tipoCursoArray) and sd.habilitado=1 and s.cod_estadosi
                  $porcentPrecios=($precioLocalX)/($precioRegistrado);
                  $datosSeg=obtenerPresupuestoEjecucionDelServicio($globalUnidad,13,$anioSim,(int)$mesSim,$numeroCuentaFijo);             
                  $tipoSim=obtenerValorConfiguracion(13);
-                 $monto=ejecutadoEgresosMes($globalUnidad,((int)$anioSim-1),12,13,1,$numeroCuentaFijo);
+                 //$monto=ejecutadoEgresosMes($globalUnidad,((int)$anioSim-1),(int)$mesSim,13,2,$numeroCuentaFijo);
                  $glosaFijo="<br><b>Precio Curso:</b> ".formatNumberDec($precioLocalX)." Bs. <b>Seguimiento Presupuestal:</b> ".formatNumberDec($precioRegistrado)." Bs. <b>Porcent. :</b> ".formatNumberDec(($porcentPrecios*100))." <b>%</b> ";
-                 $estadoFijo="Monto:".formatNumberDec($monto);
+                 $estadoFijo="Monto:".formatNumberDec(($montoFijo*100)/$porcentPrecios);
                  if($datosSeg->presupuesto!=0){
                     $porcentSegPres=formatNumberDec((($datosSeg->ejecutado)*100)/($datosSeg->presupuesto))." %"; 
                   }else{
                      $porcentSegPres="SIN PRESUPUESTO"; 
                   }
-                  if($monto>0){
-                 $htmlFijos.='<tr class="" style="background:#D469EA">'.
+                  if($montoFijo>0){
+                 $htmlFijos.='<tr class="" style="background:#E4E4E4">'.
                     '<td class="font-weight-bold small text-left">'.$nombreX.' '.$fechaCurso.'</td>'.
                     '<td class="font-weight-bold small text-left">'.$nombreCuentaFijo.' '.$glosaFijo.'</td>';
                   if($solicitados==1){
                       $htmlFijos.= '<td class="font-weight-bold small">'.$estadoFijo.'</td>';
                   }                
-                 $htmlFijos.='<td class="font-weight-bold small text-right">'.$porcentSegPres.'</td>'.
+                 $htmlFijos.='<td class="font-weight-bold small bg-blanco2 text-right">'.$porcentSegPres.'</td>'.
                     '<td class="font-weight-bold small text-right">'.formatNumberDec(100).' %</td>'.
-                    '<td class="font-weight-bold small text-right">'.formatNumberDec($monto*$porcentPrecios).'</td>'.
+                    '<td class="font-weight-bold small text-right">'.formatNumberDec($montoFijo).'</td>'.
                     '<td class="font-weight-bold small text-right">'.formatNumberDec(0).'</td>';
                    $htmlFijos.='</tr>';          
                   }
          
          }
-        }
+        //}
         echo $htmlFijos;       
       }
         //FIN COSTOS FIJOS 
@@ -273,7 +269,7 @@ WHERE s.cod_tipocurso in($tipoCursoArray) and sd.habilitado=1 and s.cod_estadosi
 
     if($cursoNombre!=$nombreX&&$resumido==0){
        ?><tr class="bg-info text-white">
-                <td colspan="<?=(($rowSpan-1)+3)?>" class="text-center font-weight-bold">CURSO :<?=$nombreX?> </td>
+                <td colspan="<?=(($rowSpan-1)+3)?>" class="text-center font-weight-bold">COSTOS VARIABLES <?=$nombreX?> </td>
             </tr>
      <?php       
     }
@@ -313,24 +309,20 @@ WHERE s.cod_tipocurso in($tipoCursoArray) and sd.habilitado=1 and s.cod_estadosi
       //COSTOS FIJOS
         if(isset($_POST['costos_fijos'])) {
           ?>
-          <tr class="bg-principal text-white">
-                <td colspan="<?=(($rowSpan-1)+3)?>" class="text-center font-weight-bold">COSTOS FIJOS</td>    
+          <tr class="text-white" style="background:#92E83B;color:white;">
+                <td colspan="<?=(($rowSpan-1)+3)?>" class="text-center font-weight-bold">COSTOS FIJOS <?=$cursoNombre?></td>    
             </tr>
           <?php  
-         if(obtenerPlantillaCodigoSimulacion($codigoSimulacion)!=$codPlan){
+         //if(obtenerPlantillaCodigoSimulacion($codigoSimulacion)!=$codPlan){
           $htmlFijos='';
           $codPlan=obtenerPlantillaCodigoSimulacion($codigoSimulacion);
-          $query_cuentas="select DISTINCT p.cod_cuenta,pl.numero,pl.nombre from partidaspresupuestarias_cuentas p join plan_cuentas pl on p.cod_cuenta=pl.codigo where p.cod_partidapresupuestaria in (
-                     (select DISTINCT pgcd.cod_partidapresupuestaria from plantillas_grupocostodetalle pgcd 
-                     join plantillas_gruposcosto pgc on pgcd.cod_plantillagrupocosto=pgc.codigo 
-                     join plantillas_costo pc on pgc.cod_plantillacosto=pc.codigo
-                     join simulaciones_costos s on s.cod_plantillacosto=pc.codigo
-                     where s.codigo=$codigoSimulacion and pgc.cod_tipocosto=1 and pgcd.tipo_calculo=1)) order by p.cod_partidapresupuestaria,p.cod_cuenta;";
+          $query_cuentas="SELECT cf.*,p.nombre,p.numero from simulaciones_cf cf join plan_cuentas p on p.codigo=cf.cod_cuenta where cf.cod_simulacioncosto=$codigoSimulacion order by cf.cod_cuenta";
             $stmt_cuentas = $dbh->prepare($query_cuentas);
             $stmt_cuentas->execute();
             while ($row_cuentas = $stmt_cuentas->fetch(PDO::FETCH_ASSOC)) {
                  $nombreCuentaFijo=$row_cuentas['nombre'];
                  $numeroCuentaFijo=$row_cuentas['numero'];
+                 $montoFijo=$row_cuentas['monto_total'];
                  
                  $precioLocalX=obtenerPrecioSimulacionCostoGeneral($codigoSimulacion);
                  $precioRegistrado=obtenerPrecioRegistradoPlantillaCosto(obtenerPlantillaCodigoSimulacion($codigoSimulacion));
@@ -338,30 +330,30 @@ WHERE s.cod_tipocurso in($tipoCursoArray) and sd.habilitado=1 and s.cod_estadosi
                  $porcentPrecios=($precioLocalX)/($precioRegistrado);
                  $datosSeg=obtenerPresupuestoEjecucionDelServicio($globalUnidad,13,$anioSim,(int)$mesSim,$numeroCuentaFijo);             
                  $tipoSim=obtenerValorConfiguracion(13);
-                 $monto=ejecutadoEgresosMes($globalUnidad,((int)$anioSim-1),12,13,1,$numeroCuentaFijo);
+                 //$monto=ejecutadoEgresosMes($globalUnidad,((int)$anioSim-1),(int)$mesSim,13,2,$numeroCuentaFijo);
                  $glosaFijo="<br><b>Precio Curso:</b> ".formatNumberDec($precioLocalX)." Bs. <b>Seguimiento Presupuestal:</b> ".formatNumberDec($precioRegistrado)." Bs. <b>Porcent. :</b> ".formatNumberDec(($porcentPrecios*100))." <b>%</b> ";
-                 $estadoFijo="Monto:".formatNumberDec($monto);
+                 $estadoFijo="Monto:".formatNumberDec(($montoFijo*100)/$porcentPrecios);
                  if($datosSeg->presupuesto!=0){
                     $porcentSegPres=formatNumberDec((($datosSeg->ejecutado)*100)/($datosSeg->presupuesto))." %"; 
                   }else{
                      $porcentSegPres="SIN PRESUPUESTO"; 
                   }
-                 if($monto>0){
-                 $htmlFijos.='<tr class="" style="background:#D469EA">'.
+                  if($montoFijo>0){
+                 $htmlFijos.='<tr class="" style="background:#E4E4E4">'.
                     '<td class="font-weight-bold small text-left">'.$nombreX.' '.$fechaCurso.'</td>'.
                     '<td class="font-weight-bold small text-left">'.$nombreCuentaFijo.' '.$glosaFijo.'</td>';
                   if($solicitados==1){
                       $htmlFijos.= '<td class="font-weight-bold small">'.$estadoFijo.'</td>';
                   }                
-                 $htmlFijos.='<td class="font-weight-bold small text-right">'.$porcentSegPres.'</td>'.
+                 $htmlFijos.='<td class="font-weight-bold small bg-blanco2 text-right">'.$porcentSegPres.'</td>'.
                     '<td class="font-weight-bold small text-right">'.formatNumberDec(100).' %</td>'.
-                    '<td class="font-weight-bold small text-right">'.formatNumberDec($monto*$porcentPrecios).'</td>'.
+                    '<td class="font-weight-bold small text-right">'.formatNumberDec($montoFijo).'</td>'.
                     '<td class="font-weight-bold small text-right">'.formatNumberDec(0).'</td>';
                    $htmlFijos.='</tr>';          
                   }
          
          }
-        }
+        //}
         echo $htmlFijos;       
       }
         //FIN COSTOS FIJOS 
