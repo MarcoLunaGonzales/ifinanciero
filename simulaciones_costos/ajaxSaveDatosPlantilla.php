@@ -80,6 +80,37 @@ while ($row = $detallesMontos->fetch(PDO::FETCH_ASSOC)) {
  }
 }
 
+ //costos Fijos en tabla
+      $sqlDelete="DELETE FROM simulaciones_cf where cod_simulacioncosto=$codSimulacion";  
+      $stmtDelete = $dbh->prepare($sqlDelete);
+      $stmtDelete->execute();
+
+      $cuentasFijas=obtenerListaCuentasPlantillasCostoFijo($codPlantillaCosto);
+      while ($rowFijo = $cuentasFijas->fetch(PDO::FETCH_ASSOC)) {
+         $nombreCuentaFijo=$rowFijo['nombre'];
+         $numeroCuentaFijo=$rowFijo['numero'];
+         $codCuentaFijo=$rowFijo['cod_cuenta'];
+         $codPartidaFijo=$rowFijo['cod_partidapresupuestaria'];
+         $tipoFijo=$rowFijo['tipo'];
+
+         $precioLocalX=obtenerPrecioSimulacionCostoGeneral($codSimulacion);
+         $precioRegistrado=obtenerPrecioRegistradoPlantillaCosto($codPlantillaCosto);
+         $nCursos=obtenerCantidadCursosPlantillaCosto($codPlantillaCosto); 
+         $porcentPrecios=($precioLocalX)/($precioRegistrado);
+         if($tipoFijo==1){ 
+         $anioSim= date("Y");  
+         $monto=ejecutadoEgresosMes($globalUnidad,((int)$anioSim-1),12,13,1,$numeroCuentaFijo);          
+         }else{
+          $monto=obtenerListaCuentasPlantillasCostoFijoManual($codCuentaFijo,$codPartidaFijo,$codPlantillaCosto);
+         }
+         $montoUnidad=$monto*$porcentPrecios; 
+         $dbh = new Conexion();
+         $sqlFijos="INSERT INTO simulaciones_cf (cod_simulacionservicio, cod_simulacioncosto,cod_partidapresupuestaria,cod_cuenta,monto,cantidad,monto_total) 
+         VALUES (0,'".$codSimulacion."','".$codPartidaFijo."','".$codCuentaFijo."','".$montoUnidad."',1,'".$montoUnidad."')";
+         $stmtFijos = $dbh->prepare($sqlFijos);
+         $stmtFijos->execute();
+      }    
+
 
 $precios=obtenerPreciosPorCodigo($precio_p);
 echo $precios[0]."$$$".$precios[1];

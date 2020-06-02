@@ -6622,7 +6622,6 @@ function nro_correlativo_facturas($cod_sucursal){
   }
   return($nroCorrelativo);
 }
-
 function verifica_modulosPagados($IdCurso,$ci_estudiante){
   $direccion=obtenerValorConfiguracion(42);//direccion des servicio web
   $sIde = "ifinanciero";
@@ -6642,6 +6641,75 @@ function verifica_modulosPagados($IdCurso,$ci_estudiante){
   $remote_server_output = curl_exec ($ch);
   curl_close ($ch);
   return json_decode($remote_server_output);  
+}
 
+function obtenerListaCuentasPlantillasCostoFijo($codigo){
+   $dbh = new Conexion();
+   $sql="(SELECT DISTINCT 1 as tipo,p.cod_cuenta,pl.numero,pl.nombre, p.cod_partidapresupuestaria from partidaspresupuestarias_cuentas p join plan_cuentas pl on p.cod_cuenta=pl.codigo where p.cod_partidapresupuestaria in (
+                     (select DISTINCT pgcd.cod_partidapresupuestaria from plantillas_grupocostodetalle pgcd 
+                     join plantillas_gruposcosto pgc on pgcd.cod_plantillagrupocosto=pgc.codigo 
+                     join plantillas_costo pc on pgc.cod_plantillacosto=pc.codigo
+                     where pc.codigo=$codigo and pgc.cod_tipocosto=1 and pgcd.tipo_calculo=1)) order by p.cod_partidapresupuestaria,p.cod_cuenta)                  
+UNION                        
+(SELECT DISTINCT 2 as tipo,p.cod_cuenta,pl.numero,pl.nombre, p.cod_partidapresupuestaria from partidaspresupuestarias_cuentas p join plan_cuentas pl on p.cod_cuenta=pl.codigo where p.cod_partidapresupuestaria in (
+                     (select DISTINCT pgcd.cod_partidapresupuestaria from plantillas_grupocostodetalle pgcd 
+                     join plantillas_gruposcosto pgc on pgcd.cod_plantillagrupocosto=pgc.codigo 
+                     join plantillas_costo pc on pgc.cod_plantillacosto=pc.codigo
+                     where pc.codigo=$codigo and pgc.cod_tipocosto=1 and pgcd.tipo_calculo=2)) order by p.cod_partidapresupuestaria,p.cod_cuenta)";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+}
+function obtenerListaCuentasPlantillasCostoFijoManual($cuenta,$partida,$codigo){
+   $dbh = new Conexion();
+   $sql="SELECT cod_partidapresupuestaria,cod_cuenta,monto_unitario FROM `plantillas_servicios_detalle` WHERE cod_partidapresupuestaria=$partida and cod_plantillacosto=$codigo and cod_cuenta=$cuenta;";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['monto_unitario'];
+  }
+  return $valor;
+}
+function obtenerListaCuentasPlantillasCostoFijoServicioManual($cuenta,$partida,$codigo){
+   $dbh = new Conexion();
+   $sql="SELECT cod_partidapresupuestaria,cod_cuenta,monto_unitario FROM `plantillas_servicios_detalle` WHERE cod_partidapresupuestaria=$partida and cod_plantillatcp=$codigo and cod_cuenta=$cuenta;";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['monto_unitario'];
+  }
+  return $valor;
+}
+
+function obtenerListaCuentasPlantillasCostoFijoServicio($codigo){
+   $dbh = new Conexion();
+   $sql="(SELECT DISTINCT 1 as tipo,p.cod_cuenta,pl.numero,pl.nombre, p.cod_partidapresupuestaria from partidaspresupuestarias_cuentas p join plan_cuentas pl on p.cod_cuenta=pl.codigo where p.cod_partidapresupuestaria in (
+                     (select DISTINCT pgcd.cod_partidapresupuestaria from plantillas_gruposerviciodetalle pgcd 
+                     join plantillas_gruposervicio pgc on pgcd.cod_plantillagruposervicio=pgc.codigo 
+                     join plantillas_servicios pc on pgc.cod_plantillaservicio=pc.codigo
+                     where pc.codigo=3 and pgc.cod_tiposervicio=1 and pgcd.tipo_calculo=1)) order by p.cod_partidapresupuestaria,p.cod_cuenta)                     
+UNION
+(SELECT DISTINCT 2 as tipo,p.cod_cuenta,pl.numero,pl.nombre, p.cod_partidapresupuestaria from partidaspresupuestarias_cuentas p join plan_cuentas pl on p.cod_cuenta=pl.codigo where p.cod_partidapresupuestaria in (
+                     (select DISTINCT pgcd.cod_partidapresupuestaria from plantillas_gruposerviciodetalle pgcd 
+                     join plantillas_gruposervicio pgc on pgcd.cod_plantillagruposervicio=pgc.codigo 
+                     join plantillas_servicios pc on pgc.cod_plantillaservicio=pc.codigo
+                     where pc.codigo=$codigo and pgc.cod_tiposervicio=1 and pgcd.tipo_calculo=2)) order by p.cod_partidapresupuestaria,p.cod_cuenta) 
+";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+}
+function obtenerFechaSimulacionCosto($codigo){
+   $dbh = new Conexion();
+   $valor=0;
+   $sql="SELECT fecha from simulaciones_costos p where p.codigo=$codigo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['fecha'];
+  }
+  return $valor;
 }
 ?>

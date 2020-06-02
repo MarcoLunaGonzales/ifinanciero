@@ -85,13 +85,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 function obtenerDatosFactura($codigo){
   require_once __DIR__.'/../conexion.php';
   $dbh = new Conexion();
-  $sql="select nit,codigo_control,nro_factura,fecha_factura,razon_social,importe,nro_autorizacion,observaciones from facturas_venta where codigo=$codigo";
+  $sqlX="SET NAMES 'utf8'";
+  $stmtX = $dbh->prepare($sqlX);
+  $stmtX->execute();
+
+  $sql="select codigo,nit,codigo_control,nro_factura,fecha_factura,razon_social,importe,nro_autorizacion,observaciones from facturas_venta where codigo=$codigo";
   $stmtFac = $dbh->prepare($sql);
   $stmtFac->execute();
   $filaA=0;
   $datos=null;
   while ($rowFac = $stmtFac->fetch(PDO::FETCH_ASSOC)) {
      $filaA++;
+     $codigoFac=$rowFac['codigo'];
      $datos['numero']=$rowFac['nro_factura'];
      $datos['nit']=$rowFac['nit'];
      $datos['control']=$rowFac['codigo_control'];
@@ -99,7 +104,21 @@ function obtenerDatosFactura($codigo){
      $datos['razon_social']=$rowFac['razon_social'];
      $datos['importe']=$rowFac['importe'];
      $datos['autorizacion']=$rowFac['nro_autorizacion'];
-     $datos['detalle']=$rowFac['observaciones'];
+     $datos['observaciones']=$rowFac['observaciones'];
+
+     $sqlDetalle="SELECT sf.codigo, sf.cantidad, sf.precio, sf.descuento_bob, sf.descripcion_alterna from facturas_ventadetalle sf where sf.cod_facturaventa=$codigoFac";
+     $stmtFacDetalle = $dbh->prepare($sqlDetalle);
+     $stmtFacDetalle->execute();
+     $datosDetalle=[];
+     $index=0;
+     while ($rowFacDetalle = $stmtFacDetalle->fetch(PDO::FETCH_ASSOC)) {
+       $datosDetalle[$index]['cantidad']=$rowFacDetalle['cantidad'];
+       $datosDetalle[$index]['precio']=$rowFacDetalle['precio'];
+       $datosDetalle[$index]['descuento']=$rowFacDetalle['descuento_bob'];
+       $datosDetalle[$index]['descripcion']=$rowFacDetalle['descripcion_alterna'];
+       $index++;
+     }
+    $datos['detalle']=$datosDetalle;      
  }
  return array($filaA,$datos);
 }
