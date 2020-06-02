@@ -6624,11 +6624,58 @@ function nro_correlativo_facturas($cod_sucursal){
 }
 function obtenerListaCuentasPlantillasCostoFijo($codigo){
    $dbh = new Conexion();
-   $sql="select DISTINCT p.cod_cuenta,pl.numero,pl.nombre, p.cod_partidapresupuestaria from partidaspresupuestarias_cuentas p join plan_cuentas pl on p.cod_cuenta=pl.codigo where p.cod_partidapresupuestaria in (
+   $sql="(SELECT DISTINCT 1 as tipo,p.cod_cuenta,pl.numero,pl.nombre, p.cod_partidapresupuestaria from partidaspresupuestarias_cuentas p join plan_cuentas pl on p.cod_cuenta=pl.codigo where p.cod_partidapresupuestaria in (
                      (select DISTINCT pgcd.cod_partidapresupuestaria from plantillas_grupocostodetalle pgcd 
                      join plantillas_gruposcosto pgc on pgcd.cod_plantillagrupocosto=pgc.codigo 
                      join plantillas_costo pc on pgc.cod_plantillacosto=pc.codigo
-                     where pc.codigo=3 and pgc.cod_tipocosto=1)) order by p.cod_partidapresupuestaria,p.cod_cuenta;";
+                     where pc.codigo=$codigo and pgc.cod_tipocosto=1 and pgcd.tipo_calculo=1)) order by p.cod_partidapresupuestaria,p.cod_cuenta)                  
+UNION                        
+(SELECT DISTINCT 2 as tipo,p.cod_cuenta,pl.numero,pl.nombre, p.cod_partidapresupuestaria from partidaspresupuestarias_cuentas p join plan_cuentas pl on p.cod_cuenta=pl.codigo where p.cod_partidapresupuestaria in (
+                     (select DISTINCT pgcd.cod_partidapresupuestaria from plantillas_grupocostodetalle pgcd 
+                     join plantillas_gruposcosto pgc on pgcd.cod_plantillagrupocosto=pgc.codigo 
+                     join plantillas_costo pc on pgc.cod_plantillacosto=pc.codigo
+                     where pc.codigo=$codigo and pgc.cod_tipocosto=1 and pgcd.tipo_calculo=2)) order by p.cod_partidapresupuestaria,p.cod_cuenta)";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+}
+function obtenerListaCuentasPlantillasCostoFijoManual($cuenta,$partida,$codigo){
+   $dbh = new Conexion();
+   $sql="SELECT cod_partidapresupuestaria,cod_cuenta,monto_unitario FROM `plantillas_servicios_detalle` WHERE cod_partidapresupuestaria=$partida and cod_plantillacosto=$codigo and cod_cuenta=$cuenta;";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['monto_unitario'];
+  }
+  return $valor;
+}
+function obtenerListaCuentasPlantillasCostoFijoServicioManual($cuenta,$partida,$codigo){
+   $dbh = new Conexion();
+   $sql="SELECT cod_partidapresupuestaria,cod_cuenta,monto_unitario FROM `plantillas_servicios_detalle` WHERE cod_partidapresupuestaria=$partida and cod_plantillatcp=$codigo and cod_cuenta=$cuenta;";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['monto_unitario'];
+  }
+  return $valor;
+}
+
+function obtenerListaCuentasPlantillasCostoFijoServicio($codigo){
+   $dbh = new Conexion();
+   $sql="(SELECT DISTINCT 1 as tipo,p.cod_cuenta,pl.numero,pl.nombre, p.cod_partidapresupuestaria from partidaspresupuestarias_cuentas p join plan_cuentas pl on p.cod_cuenta=pl.codigo where p.cod_partidapresupuestaria in (
+                     (select DISTINCT pgcd.cod_partidapresupuestaria from plantillas_gruposerviciodetalle pgcd 
+                     join plantillas_gruposervicio pgc on pgcd.cod_plantillagruposervicio=pgc.codigo 
+                     join plantillas_servicios pc on pgc.cod_plantillaservicio=pc.codigo
+                     where pc.codigo=3 and pgc.cod_tiposervicio=1 and pgcd.tipo_calculo=1)) order by p.cod_partidapresupuestaria,p.cod_cuenta)                     
+UNION
+(SELECT DISTINCT 2 as tipo,p.cod_cuenta,pl.numero,pl.nombre, p.cod_partidapresupuestaria from partidaspresupuestarias_cuentas p join plan_cuentas pl on p.cod_cuenta=pl.codigo where p.cod_partidapresupuestaria in (
+                     (select DISTINCT pgcd.cod_partidapresupuestaria from plantillas_gruposerviciodetalle pgcd 
+                     join plantillas_gruposervicio pgc on pgcd.cod_plantillagruposervicio=pgc.codigo 
+                     join plantillas_servicios pc on pgc.cod_plantillaservicio=pc.codigo
+                     where pc.codigo=$codigo and pgc.cod_tiposervicio=1 and pgcd.tipo_calculo=2)) order by p.cod_partidapresupuestaria,p.cod_cuenta) 
+";
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
    return $stmt;
