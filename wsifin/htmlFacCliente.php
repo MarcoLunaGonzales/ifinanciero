@@ -8,11 +8,11 @@ require_once __DIR__.'/../functions.php';
 require_once __DIR__.'/../functionsGeneral.php';
 
 $dbh = new Conexion();
-$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//try
+//$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//try
 set_time_limit(300);
 //RECIBIMOS LAS VARIABLES
 $tipo_impresion = 2;
-try{
+//try{
 
     $stmtInfo = $dbh->prepare("SELECT sf.*,t.nombre as nombre_cliente FROM facturas_venta sf,clientes t  
       where sf.cod_cliente=t.codigo and sf.codigo=$codigo");
@@ -36,6 +36,7 @@ try{
     $importe = $resultInfo['importe'];
     $observaciones = $resultInfo['observaciones'];
     $nombre_cliente = $resultInfo['nombre_cliente'];
+    if($cod_factura>0){
     if($cod_factura==null || $cod_factura==''){
       $stmtInfo = $dbh->prepare("SELECT sf.* FROM facturas_venta sf  where sf.codigo=$codigo");
       $stmtInfo->execute();
@@ -62,8 +63,8 @@ try{
       // $nombre_cliente = $resultInfo['nombre_cliente'];
       $nombre_cliente = $razon_social;
 
-
-      $nombre_ciudad =  obtenerCiudadDeUnidad($cod_unidadorganizacional);
+    }
+    $nombre_ciudad =  obtenerCiudadDeUnidad($cod_unidadorganizacional);
 
       
 
@@ -257,12 +258,12 @@ $html.='</body>'.
       '</html>'; 
 
     }else{
-      $html="ERROR";
+    $html="ERROR";  
     }
 
-  } catch(PDOException $ex){
-    $html="ERROR";
-  }
+  //} catch(PDOException $ex){
+   // $html="ERROR";
+  //}
   return $html;
 }
 ?>
