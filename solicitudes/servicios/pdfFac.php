@@ -1,9 +1,9 @@
 <?php 
-$direccion='http://127.0.0.1/ifinanciero/wsifin/';
+$direccion='http://200.105.199.164:8008/ifinanciero/wsifin/';
 $sIde = "facifin";
 $sKey = "rrf656nb2396k6g6x44434h56jzx5g6";
 /*PARAMETROS PARA LA OBTENCION DE PDF FACTURA base 64*/
-	$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ObtenerFacturaArray","idFactura"=>1); 
+	$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ObtenerFacturaPDF","idFactura"=>27); 
 
 /*PARAMETROS PARA LA OBTENCION DE ARRAY FACTURA
 	$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ObtenerFacturaArray","idFactura"=>27); */

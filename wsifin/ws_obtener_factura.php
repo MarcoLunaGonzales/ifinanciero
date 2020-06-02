@@ -110,11 +110,13 @@ function obtenerDatosFactura($codigo){
      $stmtFacDetalle = $dbh->prepare($sqlDetalle);
      $stmtFacDetalle->execute();
      $datosDetalle=[];
+     $index=0;
      while ($rowFacDetalle = $stmtFacDetalle->fetch(PDO::FETCH_ASSOC)) {
-       $datosDetalle['cantidad']=$rowFacDetalle['cantidad'];
-       $datosDetalle['precio']=$rowFacDetalle['precio'];
-       $datosDetalle['descuento']=$rowFacDetalle['descuento_bob'];
-       $datosDetalle['descripcion']=$rowFacDetalle['descripcion_alterna'];
+       $datosDetalle[$index]['cantidad']=$rowFacDetalle['cantidad'];
+       $datosDetalle[$index]['precio']=$rowFacDetalle['precio'];
+       $datosDetalle[$index]['descuento']=$rowFacDetalle['descuento_bob'];
+       $datosDetalle[$index]['descripcion']=$rowFacDetalle['descripcion_alterna'];
+       $index++;
      }
     $datos['detalle']=$datosDetalle;      
  }
