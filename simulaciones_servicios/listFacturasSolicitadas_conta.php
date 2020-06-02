@@ -99,13 +99,26 @@ $globalAdmin=$_SESSION["globalAdmin"];
                               $btnEstado="btn-warning";
                               $estado="FACTURA MANUAL";                            
                             }
-
-
-                            $stmtFactMontoTotal = $dbh->prepare("SELECT SUM(importe) as importe from facturas_venta where cod_solicitudfacturacion=$codigo_facturacion and cod_estadofactura=1 ORDER BY codigo desc");
+                            //sacamos monto total de la factura para ver si es de tipo factura por pagos
+                            $sqlMontos="SELECT codigo,importe,nro_factura,cod_estadofactura from facturas_venta where cod_solicitudfacturacion=$codigo_facturacion and cod_estadofactura in (1,4) ORDER BY codigo desc";
+                            // echo $sqlMontos;
+                            $stmtFactMontoTotal = $dbh->prepare($sqlMontos);
                             $stmtFactMontoTotal->execute();
-                            $resultMontoTotalFAC = $stmtFactMontoTotal->fetch();
-                            $importe_fact_x = $resultMontoTotalFAC['importe'];
-                            
+                            $importe_fact_x=0;$cont_facturas=0;$cadenaFacturas="";$cadenaFacturasM="";$cadenaCodFacturas="";
+                            while ($row_montos = $stmtFactMontoTotal->fetch()){
+                              $cod_estadofactura=$row_montos['cod_estadofactura'];
+                              if($cod_estadofactura==4){
+                                $btnEstado="btn-warning";
+                                $estado="FACTURA MANUAL";
+                                $cadenaFacturasM.="FM".$row_montos['nro_factura'].",";
+                              }else{
+                                $cadenaFacturas.="F".$row_montos['nro_factura'].",";  
+                              }
+                              $importe_fact_x+=$row_montos['importe'];
+                              
+                              $cadenaCodFacturas.=$row_montos['codigo'].",";
+                              $cont_facturas++;
+                            }                      
                             //sacamos nombre de los detalles
                             $stmtDetalleSol = $dbh->prepare("SELECT cantidad,precio,descripcion_alterna from solicitudes_facturaciondetalle where cod_solicitudfacturacion=$codigo_facturacion");
                             $stmtDetalleSol->execute();
@@ -113,9 +126,10 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             $stmtDetalleSol->bindColumn('precio', $precio);     
                             $stmtDetalleSol->bindColumn('descripcion_alterna', $descripcion_alterna);                              
                             $concepto_contabilizacion=$codigo_alterno." - ";
+                            
                             while ($row_det = $stmtDetalleSol->fetch()){
                               $precio_natural=$precio/$cantidad;
-                              $concepto_contabilizacion.=$descripcion_alterna." / F ".$nro_fact_x." / ".$razon_social."<br>\n";
+                              $concepto_contabilizacion.=$descripcion_alterna." / ".trim($cadenaFacturas,',').",".trim($cadenaFacturasM,",")." / ".$razon_social."<br>\n";
                               $concepto_contabilizacion.="Cantidad: ".$cantidad." * ".formatNumberDec($precio_natural)." = ".formatNumberDec($precio)."<br>\n";
                             }
                             $concepto_contabilizacion = (substr($concepto_contabilizacion, 0, 100))."..."; //limite de string
@@ -154,7 +168,6 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             $nombre_contacto=nameContacto($persona_contacto);//nombre del personal
                             $nombre_area=trim(abrevArea($cod_area),'-');//nombre del area
                             $nombre_uo=trim(abrevUnidad($cod_unidadorganizacional),' - ');//nombre de la oficina
-
                             //los registros de la factura
                             $dbh1 = new Conexion();
                             $sqlA="SELECT sf.*,(select t.Descripcion from cla_servicios t where t.IdClaServicio=sf.cod_claservicio) as nombre_serv from solicitudes_facturaciondetalle sf where sf.cod_solicitudfacturacion=$codigo_facturacion";
@@ -164,7 +177,6 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             $sumaTotalMonto=0;
                             $sumaTotalDescuento_por=0;
                             $sumaTotalDescuento_bob=0;
-
                             while ($row2 = $stmt2->fetch(PDO::FETCH_ASSOC)) {
                               $dato = new stdClass();//obejto
                               $codFila=(int)$row2['codigo'];
@@ -201,11 +213,16 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                 while ($row = $statementParciales->fetch()){ 
                                   $cod_claservicio=$row['cod_claservicio'];
                                   //busacmos el monto ya pagado;
-                                  $stmtFactMontoFacturado = $dbh->prepare("SELECT precio from facturas_ventadetalle where cod_facturaventa=$codigo_fact_x and cod_claservicio=$cod_claservicio");
+
+                                  $cadenaCodFacturas_x=trim($cadenaCodFacturas,',');
+                                  $sqlMontoFact="SELECT sum(precio) as precio_x from facturas_ventadetalle where cod_facturaventa in ($cadenaCodFacturas_x) and cod_claservicio=$cod_claservicio";
+                                  // echo $sqlMontoFact;
+                                  $stmtFactMontoFacturado = $dbh->prepare($sqlMontoFact);
                                   $stmtFactMontoFacturado->execute();
                                   $resultMontoFAC = $stmtFactMontoFacturado->fetch();
-                                  $importe_facturato = $resultMontoFAC['precio'];
-
+                                  $importe_facturato = $resultMontoFAC['precio_x'];
+                                  // echo "importe:".$importe_facturato;
+                                  // echo $importe_facturato;
                                   //objeto dato donde guarda tipos de pago
                                   $dato_parcial = new stdClass();//obejto
                                   $codFila=(int)$cod_claservicio;                                  
@@ -225,14 +242,18 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                   $nc_parciales++;
                                 } 
                                 $cont_pagosParciales[$index-1]=$nc_parciales;
+                              $saldo=0;
                               if($importe_fact_x!=null){
                                 $saldo=$sumaTotalImporte-$importe_fact_x;
-                                $datos_FacManual=$codigo_facturacion."/0/".$saldo."/".$index;//dato para modal
-                                $estado="FACTURADO A PAGOS";
+                                $datos_FacManual=$codigo_facturacion."/0/".$saldo."/".$index."/".$nit."/".$razon_social;//dato para modal
                               }else{
-                                $datos_FacManual=$codigo_facturacion."/0/0/".$index;//dato para modal
+                                $datos_FacManual=$codigo_facturacion."/0/0/".$index."/".$nit."/".$razon_social;//dato para modal
                               }
-
+                              if($cont_facturas>1){                              
+                                $estado="FACTURA PARCIAL";
+                                $nro_fact_x=trim($cadenaFacturas,',');
+                              }
+                              $cadenaFacturasM=trim($cadenaFacturasM,',');
                               ?>
                               <tr>
                                 <td><small><?=$nombre_uo;?> - <?=$nombre_area;?></small></td>
@@ -241,7 +262,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                 <td><small><?=$codigo_alterno?></small></td>
                                 <td><small><?=$fecha_registro;?></small></td>
                                 <!-- <td><?=$fecha_solicitudfactura;?></td>          -->                   
-                                <td style="color:#cc4545;"><small><?=$nro_fact_x;?></small></td>                             
+                                <td style="color:#298A08;"><small><?=$nro_fact_x;?><br><span style="color:#DF0101;"><?=$cadenaFacturasM;?></span></small></td>                             
                                 <td class="text-right"><small><?=formatNumberDec($sumaTotalImporte);?></small></td>
                                 <td class="text-left"><small><?=$nombre_contacto;?></small></td>
                                 <!-- <td><?=$razon_social;?></td> -->                            
@@ -521,7 +542,9 @@ $globalAdmin=$_SESSION["globalAdmin"];
 <!-- para la factura manual -->
 <script type="text/javascript">
   $(document).ready(function(){
-    $('#guardarFacturaManual').click(function(){    
+    $('#guardarFacturaManual').click(function(){  
+      // var importe_total=document.getElementById("importe_total").value;
+      
       var cod_solicitudfacturacion_factmanual=document.getElementById("cod_solicitudfacturacion_factmanual").value;
       var nro_factura=$('#nro_factura').val();
       var nro_autorizacion=$('#nro_autorizacion').val();
@@ -554,7 +577,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
   });
   function valida_modalFacPar(f) {
       var ok = true;
-      
+      calcular_monto_total_items_factura_parcial();
       if(f.elements["total_importe_pagar"].value == 0 || f.elements["total_importe_pagar"].value < 0 || f.elements["total_importe_pagar"].value == '')
       {
         var msg = "El Monto Total a pagar no debe ser 0 o Nulo...\n";      
@@ -564,6 +587,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
         var importe_anterior=f.elements["total_importe_anterior"].value;
         var importe=f.elements["total_importe"].value;
         var saldo=parseFloat(importe)-parseFloat(importe_anterior);
+        // alert(saldo);
 
         if(f.elements["total_importe_pagar"].value > saldo)
         {
@@ -577,7 +601,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
           var msg = "El Monto Total a pagar es Superior al total del importe de la solicitud...\n";      
           ok = false;
         }  
-      }
+      }      
       if(ok == false)    
         Swal.fire("Informativo!",msg, "warning");
       return ok;

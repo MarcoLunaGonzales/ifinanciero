@@ -219,7 +219,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                             
 
                             if($cont_facturas>1){                              
-                              $estado="FACTURADO <br>A PAGOS";
+                              $estado="FACTURA <br>PARCIAL";
                               $nro_fact_x=trim($cadenaFacturas,' - ');
                             }
 

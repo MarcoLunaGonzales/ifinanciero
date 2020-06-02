@@ -1,6 +1,8 @@
 <?php
 require_once 'conexion.php';
 
+date_default_timezone_set('America/La_Paz');
+
 /*function showAlertSuccessError($bandera, $url){
   if($bandera==true){
      echo "<script>
@@ -5378,11 +5380,12 @@ function obtenerCodigoServicioIbnorca(){
 }
 function obtenerEstadoCuentaSaldoComprobante($codigo){
    $dbh = new Conexion();
-   $stmt = $dbh->prepare("select count(*) as num from comprobantes_detalle cd join comprobantes c on c.codigo=cd.cod_comprobante join estados_cuenta e on e.cod_comprobantedetalle=cd.codigo where c.codigo=$codigo and c.cod_tipocomprobante=3 and e.cod_comprobantedetalleorigen=0");
+   $sql="SELECT count(*) as num from comprobantes_detalle cd join comprobantes c on c.codigo=cd.cod_comprobante join estados_cuenta e on e.cod_comprobantedetalle=cd.codigo where c.codigo=$codigo and c.cod_estadocomprobante<>2 and e.cod_comprobantedetalleorigen=0";
+   $stmt = $dbh->prepare($sql);
    $stmt->execute();
    $valor=0;
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-      $valor=$row['num'];
+      //$valor=$row['num'];
    }
    return($valor);
 }
@@ -6595,5 +6598,28 @@ function resgistrar_pago_curso($ci_estudiante,$IdCurso,$Idmodulo,$monto,$cod_sol
   $remote_server_output = curl_exec ($ch);
   curl_close ($ch);
   return json_decode($remote_server_output, true);
+}
+
+function nro_correlativo_facturas($cod_sucursal){
+  $fecha_actual=date('Y-m-d');
+  $dbh = new Conexion();   
+   $sql="SELECT codigo from dosificaciones_facturas where cod_estado=1 and cod_sucursal=$cod_sucursal and fecha_limite_emision>='$fecha_actual'";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   $cod_dosificacion=0; $nroCorrelativo=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $cod_dosificacion=$row['codigo'];
+  }
+  if($cod_dosificacion>0){
+    $sqlFac="SELECT IFNULL(f.nro_factura+1,1)as correlativo from facturas_venta f where f.cod_sucursal='$cod_sucursal' and f.cod_estadofactura<>4 and cod_dosificacionfactura=$cod_dosificacion order by f.codigo desc LIMIT 1";
+    $stmtFac = $dbh->prepare($sqlFac);
+    $stmtFac->execute();
+    $nroCorrelativo==null;
+    while ($row = $stmtFac->fetch(PDO::FETCH_ASSOC)) {    
+     $nroCorrelativo=$row['correlativo'];     
+    }
+    if($nroCorrelativo==null || $nroCorrelativo=='')$nroCorrelativo=1; 
+  }
+  return($nroCorrelativo);
 }
 ?>

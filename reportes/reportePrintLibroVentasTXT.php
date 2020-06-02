@@ -72,11 +72,11 @@ try {
 	$debito_fiscal=13*$importe_debito_fiscal/100;
 	if($nit ==null || $nit==''){
 		$nit=0;
+	}	
+	if($razon_social==null || $razon_social=='' || $razon_social==' '){
+		$razon_social="S/N";
 	}
-	if($razon_social=0 || $razon_social ==null || $razon_social==''){
-		$nit="S/N";
-	}
-	//agregamos los items al archivo
+	//agregamos los items al archivo	
 	$texto="3|".$index."|".$fecha_factura."|".$nro_factura."|0|".$nombre_estado."|".$nit."|".$razon_social."|".$importe."|".$importe_no_iva."|".$extento."|".$ventas_gravadas."|".$subtotal."|".$rebajas_sujetos_iva."|".$importe_debito_fiscal."|".$debito_fiscal."|".$codigo_control;
 	fwrite($archivo, $texto);
 	fwrite($archivo, "\n");
@@ -90,4 +90,3 @@ try {
 	echo "#####0#####";
 }
 ?>
-                      

@@ -129,22 +129,29 @@ $stmtCliente->bindColumn('nombre', $nombre_cli);
                             if($cod_estado_factura_x==4){
                               $btnEstado="btn-warning";
                               $estado="FACTURA MANUAL";
-
                               $cliente_x=nameCliente($cod_cliente);                              
                               $datos_FacManual=$cliente_x."/".$razon_social_x."/".$nit_x."/".$nro_fact_x."/".$nro_autorizacion_x."/".$importe_x;
                             }
                             //sacamos monto total de la factura para ver si es de tipo factura por pagos
-                            $sqlMontos="SELECT codigo,importe,nro_factura from facturas_venta where cod_solicitudfacturacion=$codigo_facturacion and cod_estadofactura=1 ORDER BY codigo desc";
+                            $sqlMontos="SELECT codigo,importe,nro_factura,cod_estadofactura from facturas_venta where cod_solicitudfacturacion=$codigo_facturacion and cod_estadofactura in (1,4) ORDER BY codigo desc";
                             // echo $sqlMontos;
                             $stmtFactMontoTotal = $dbh->prepare($sqlMontos);
                             $stmtFactMontoTotal->execute();
-                            $importe_fact_x=0;$cont_facturas=0;$cadenaFacturas="";$cadenaCodFacturas="";
+                            $importe_fact_x=0;$cont_facturas=0;$cadenaFacturas="";$cadenaFacturasM="";$cadenaCodFacturas="";
                             while ($row_montos = $stmtFactMontoTotal->fetch()){
+                              $cod_estadofactura=$row_montos['cod_estadofactura'];
+                              if($cod_estadofactura==4){
+                                $btnEstado="btn-warning";
+                                $estado="FACTURA MANUAL";
+                                $cadenaFacturasM.="FM".$row_montos['nro_factura'].",";
+                              }else{
+                                $cadenaFacturas.="F".$row_montos['nro_factura'].",";  
+                              }
                               $importe_fact_x+=$row_montos['importe'];
-                              $cadenaFacturas.=$row_montos['nro_factura']." - ";
+                              
                               $cadenaCodFacturas.=$row_montos['codigo'].",";
                               $cont_facturas++;
-                            }
+                            }  
                             //sacamos nombre de los detalles
                             $stmtDetalleSol = $dbh->prepare("SELECT cantidad,precio,descripcion_alterna from solicitudes_facturaciondetalle where cod_solicitudfacturacion=$codigo_facturacion");
                             $stmtDetalleSol->execute();
@@ -222,9 +229,10 @@ $stmtCliente->bindColumn('nombre', $nombre_cli);
                             }
                             $sumaTotalImporte=$sumaTotalMonto-$sumaTotalDescuento_bob;
                             if($cont_facturas>1){                              
-                              $estado="FACTURADO A PAGOS";
-                              $nro_fact_x=trim($cadenaFacturas,' - ');
+                                $estado="FACTURA PARCIAL";
+                                $nro_fact_x=trim($cadenaFacturas,',');
                             }
+                            $cadenaFacturasM=trim($cadenaFacturasM,',');
                             ?>
                           <tr>
                             <td align="center"></td>
@@ -235,7 +243,7 @@ $stmtCliente->bindColumn('nombre', $nombre_cli);
                             <td><small><?=$codigo_alterno?></small></td>
                             <td><small><?=$fecha_registro;?></small></td>
                             <!-- <td><?=$fecha_solicitudfactura;?></small></td>      -->                       
-                            <td style="color:#cc4545;"><small><?=$nro_fact_x;?></small></td>                             
+                            <td style="color:#298A08;"><small><?=$nro_fact_x;?><br><span style="color:#DF0101;"><?=$cadenaFacturasM;?></span></small></td>                         
                             <td class="text-right"><small><?=formatNumberDec($sumaTotalImporte) ;?></small></td>
                             <td class="text-left"><small><?=$nombre_contacto;?></small></td>
                             <td width="35%"><small><?=$concepto_contabilizacion?></small></td>

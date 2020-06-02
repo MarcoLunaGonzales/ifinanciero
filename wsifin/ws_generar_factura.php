@@ -34,9 +34,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 if($accion=="GenerarFactura"){//nombre de la accion
                     if(isset($datos['sucursalId'])) $sucursalId=$datos['sucursalId'];//recibimos el codigo de la sucursal
                     if(isset($datos['sucursalId'])) $pasarelaId=$datos['pasarelaId'];//recibimos el codigo de la sucursal
-                    if(isset($datos['fechaFactura'])) $fechaFactura=$datos['fechaFactura'];//recibimos fecha de factura
+                    if(isset($datos['fechaFactura'])) $fechaFactura=strval($datos['fechaFactura']);//recibimos fecha de factura
                     if(isset($datos['nitciCliente'])) $nitciCliente=$datos['nitciCliente'];//recibimos ci o nit del cliente
-                    if(isset($datos['razonSocial'])) $razonSocial=$datos['razonSocial'];//recibimos razon social
+                    if(isset($datos['razonSocial'])) $razonSocial=strval($datos['razonSocial']);//recibimos razon social
                     if(isset($datos['importeTotal'])) $importeTotal=$datos['importeTotal'];//recibimos el importe total
                     if(isset($datos['items'])) $items=$datos['items'];//recibimos array de detalle
                     $cont_items=0;
@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $cont_items++;
                         $suscripcionId=$valor['suscripcionId'];
                         $pagoCursoId=$valor['pagoCursoId'];
-                        $detalle=$valor['detalle'];
+                        $detalle=strval($valor['detalle']);
                         $precioUnitario=$valor['precioUnitario'];
                         $cantidad=$valor['cantidad'];
                         $importeTotal_x=$importeTotal_x+$precioUnitario;

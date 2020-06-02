@@ -463,20 +463,22 @@ $descuento_cliente=0;
                                                         // echo $IdCurso."-".$ci_estudiante."-".$codCS;
                                                     }
                                                 }
-                                                //parte del controlador de check//impedir los ya registrados
-                                                // $sqlControlador2="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$IdCurso and sf.cod_estado=1 and sfd.cod_claservicio=$codCS";
-                                                //  // echo $sqlControlador2;
-                                                // $stmtControlador2 = $dbh->prepare($sqlControlador2);
-                                                // $stmtControlador2->execute();
-                                                // while ($rowPre = $stmtControlador2->fetch(PDO::FETCH_ASSOC)) {
-                                                //   if($sw!="checked"){
-                                                //     $sw2="readonly style='background-color:#cec6d6;'";
-                                                //     $montoPre=$rowPre['precio']+$rowPre['descuento_bob'];
-                                                //     $descuento_porX=$rowPre['descuento_por'];
-                                                //     $descuento_bobX=$rowPre['descuento_bob'];
-                                                //     $descripcion_alternaX=$rowPre['descripcion_alterna'];
-                                                //   }
-                                                // }
+                                                if($estadoPagado!=1){
+                                                    //parte del controlador de check//impedir los ya registrados
+                                                    $sqlControlador2="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$IdCurso and sf.cod_estado=1 and sfd.cod_claservicio=$codCS";
+                                                     // echo $sqlControlador2;
+                                                    $stmtControlador2 = $dbh->prepare($sqlControlador2);
+                                                    $stmtControlador2->execute();
+                                                    while ($rowPre = $stmtControlador2->fetch(PDO::FETCH_ASSOC)) {
+                                                      if($sw!="checked"){
+                                                        $sw2="readonly style='background-color:#cec6d6;'";
+                                                        $montoPre=$rowPre['precio']+$rowPre['descuento_bob'];
+                                                        $descuento_porX=$rowPre['descuento_por'];
+                                                        $descuento_bobX=$rowPre['descuento_bob'];
+                                                        $descripcion_alternaX=$rowPre['descripcion_alterna'];
+                                                      }
+                                                    }
+                                                }
                                             
                                                 ?>
                                                 <!-- guardamos las varialbles en un input -->

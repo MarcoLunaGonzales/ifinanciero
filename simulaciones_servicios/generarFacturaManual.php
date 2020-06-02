@@ -24,7 +24,7 @@ $fecha_factura=$_POST['fecha_factura'];
 $nit_cliente=$_POST['nit_cliente'];
 $razon_social=$_POST['razon_social'];
 
-
+$estado_ibnorca=0;
 // $cod_control=$_POST['cod_control'];
 try{
     //verificamos si se registró las cuentas en los tipos de pago
@@ -59,9 +59,7 @@ try{
         $stmtVerif->execute();
         $resultVerif = $stmtVerif->fetch();    
         $codigo_facturacion = $resultVerif['codigo'];
-        if($codigo_facturacion==null){//no se registró
-            $stmt = $dbh->prepare("SELECT sf.*,(select t.Descripcion from cla_servicios t where t.IdClaServicio=sf.cod_claservicio) as nombre_serv from solicitudes_facturaciondetalle sf where sf.cod_solicitudfacturacion=$codigo");
-            $stmt->execute();
+        // if($codigo_facturacion==null){//no se registró
             //datos de la solicitud de facturacion
             $stmtInfo = $dbh->prepare("SELECT sf.*,t.nombre as nombre_cliente FROM solicitudes_facturacion sf,clientes t  where sf.cod_cliente=t.codigo and sf.codigo=$codigo");
             $stmtInfo->execute();
@@ -77,6 +75,7 @@ try{
             $nitCliente = $nit_cliente;
             $observaciones = $resultInfo['observaciones'];
             $nombre_cliente = $resultInfo['nombre_cliente'];
+            $tipo_solicitud = $resultInfo['tipo_solicitud'];//1 tcp - 2 capacitacion - 3 servicios - 4 manual - 5 venta de normas
             if($nombre_cliente==null || $nombre_cliente==''){//no hay registros con ese dato
                 $stmtInfo = $dbh->prepare("SELECT sf.* FROM solicitudes_facturacion sf where sf.codigo=$codigo");
                 $stmtInfo->execute();
@@ -92,6 +91,7 @@ try{
                 $nitCliente = $nit_cliente;
                 $observaciones = $resultInfo['observaciones'];
                 $nombre_cliente = $resultInfo['razon_social'];
+                $tipo_solicitud = $resultInfo['tipo_solicitud'];//1 tcp - 2 capacitacion - 3 servicios - 4 manual - 5 venta de normas
             }
             $cod_sucursal=obtenerSucursalCodUnidad($cod_unidadorganizacional);
             if($cod_sucursal==null || $cod_sucursal==''){//sucursal no encontrada
@@ -105,12 +105,26 @@ try{
                 // $fecha_limite_emision = $resultInfo['fecha_limite_emision'];
 
 				//monto total redondeado
-				$stmtMontoTotal = $dbh->prepare("SELECT sum(sf.precio) as monto from solicitudes_facturaciondetalle sf 
-				where sf.cod_solicitudfacturacion=$codigo");
-				$stmtMontoTotal->execute();
-				$resultMontoTotal = $stmtMontoTotal->fetch();   
-				$monto_total=$resultMontoTotal['monto'];
-				$totalFinalRedondeado=round($monto_total,0);				
+                $sqlMontos="SELECT codigo,importe,nro_factura from facturas_venta where cod_solicitudfacturacion=$codigo and cod_estadofactura=1 ORDER BY codigo desc";
+                // echo $sqlMontos;
+                $stmtFactMontoTotal = $dbh->prepare($sqlMontos);
+                $stmtFactMontoTotal->execute();
+                $importe_fact_x=0;$cont_facturas=0;$cadenaFacturas="";$cadenaCodFacturas="";
+                while ($row_montos = $stmtFactMontoTotal->fetch()){
+                  $importe_fact_x+=$row_montos['importe'];
+                  // $cadenaFacturas.=$row_montos['nro_factura']." - ";
+                  // $cadenaCodFacturas.=$row_montos['codigo'].",";
+                  // $cont_facturas++;
+                }
+                if($cadenaCodFacturas==""){
+                    $cadenaCodFacturas=0;
+                }
+                $stmtMontoTotal = $dbh->prepare("SELECT sum(sf.precio) as monto from solicitudes_facturaciondetalle sf 
+                where sf.cod_solicitudfacturacion=$codigo");
+                $stmtMontoTotal->execute();
+                $resultMontoTotal = $stmtMontoTotal->fetch();   
+                $monto_total=$resultMontoTotal['monto']-$importe_fact_x;
+                $totalFinalRedondeado=round($monto_total,0);
 				//NUMERO CORRELATIVO DE FACTURA
 				// $stmtNroFac = $dbh->prepare("SELECT IFNULL(nro_factura+1,1)as correlativo from facturas_venta where cod_sucursal='$cod_sucursal' order by codigo desc LIMIT 1");
 				// $stmtNroFac->execute();
@@ -131,7 +145,7 @@ try{
 				// );
 				// echo "cod:".$cod_autorizacion;
 				$sql="INSERT INTO facturas_venta(cod_sucursal,cod_solicitudfacturacion,cod_unidadorganizacional,cod_area,fecha_factura,fecha_limite_emision,cod_tipoobjeto,cod_tipopago,cod_cliente,cod_personal,razon_social,nit,cod_dosificacionfactura,nro_factura,nro_autorizacion,codigo_control,importe,observaciones,cod_estadofactura,cod_comprobante) 
-				values ('$cod_sucursal','$codigo','$cod_unidadorganizacional','$cod_area','$fecha_actual_cH',null,'$cod_tipoobjeto','$cod_tipopago','$cod_cliente','$cod_personal','$razon_social','$nitCliente','$cod_dosificacionfactura','$nro_factura','$nroAutorizacion',null,'$totalFinalRedondeado','$observaciones','4',cod_comprobante)";
+				values ('$cod_sucursal','$codigo','$cod_unidadorganizacional','$cod_area','$fecha_actual_cH',null,'$cod_tipoobjeto','$cod_tipopago','$cod_cliente','$cod_personal','$razon_social','$nitCliente','$cod_dosificacionfactura','$nro_factura','$nroAutorizacion',null,'$monto_total','$observaciones','4',cod_comprobante)";
 				// echo $sql;
 				$stmtInsertSoliFact = $dbh->prepare($sql);
 				$flagSuccess=$stmtInsertSoliFact->execute();
@@ -141,46 +155,82 @@ try{
 					$stmtNroFac->execute();
 					$resultNroFact = $stmtNroFac->fetch();    
 					$cod_facturaVenta = $resultNroFact['codigo'];
+                    
+                    $stmt = $dbh->prepare("SELECT sf.*,(select t.Descripcion from cla_servicios t where t.IdClaServicio=sf.cod_claservicio) as nombre_serv from solicitudes_facturaciondetalle sf where sf.cod_solicitudfacturacion=$codigo");
+                    $stmt->execute();                    
 					while ($row = $stmt->fetch()) 
-					{ 
-						$cod_claservicio_x=$row['cod_claservicio'];
-						$cantidad_x=$row['cantidad'];
-						$precio_x=$row['precio'];
-						$descuento_bob_x=$row['descuento_bob'];
-						$precio_x=$precio_x+$descuento_bob_x;//se registró el precio total incluido el descuento, para la factura necesitamos el precio unitario
-						$descripcion_alterna_x=$row['descripcion_alterna'];            
-						$stmtInsertSoliFactDet = $dbh->prepare("INSERT INTO facturas_ventadetalle(cod_facturaventa,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_bob,suscripcionId) 
-						values ('$cod_facturaVenta','$cod_claservicio_x','$cantidad_x','$precio_x','$descripcion_alterna_x',$descuento_bob_x,0)");
-						$flagSuccess=$stmtInsertSoliFactDet->execute();
-					}
-					$sqlUpdate="UPDATE solicitudes_facturacion SET  cod_estadosolicitudfacturacion=5 where codigo=$codigo";
-					$stmtUpdate = $dbh->prepare($sqlUpdate);
-					$flagSuccess=$stmtUpdate->execute(); 
-					//enviar propuestas para la actualizacion de ibnorca
-					$fechaHoraActual=date("Y-m-d H:i:s");
-					$idTipoObjeto=2709;
-					$idObjeto=2729; //regristado
-					$obs="Solicitud Facturada Manualmente";
-					if(isset($_GET['u'])){
-						$u=$_GET['u'];
-						actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);
-					}else{
-						actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);
-					}   
+					{                
 
-					if($flagSuccess){
-					    echo 1;
-					}else{
-						echo 0;
-					}				
-					$dbhU=null;
+                        $importe_facturato=0;
+                        $cod_claservicio_x=$row['cod_claservicio'];
+                        //busacmos el monto ya pagado;
+                        $cadenaCodFacturas_x=trim($cadenaCodFacturas,',');                        
+                        $sqlMontoFact="SELECT sum(precio) as precio_x from facturas_ventadetalle where cod_facturaventa in ($cadenaCodFacturas_x) and cod_claservicio=$cod_claservicio_x";
+                        // echo $sqlMontoFact;
+                        $stmtFactMontoFacturado = $dbh->prepare($sqlMontoFact);
+                        $stmtFactMontoFacturado->execute();
+                        // echo "llegue";
+                        $resultMontoFAC = $stmtFactMontoFacturado->fetch();
+
+                        $importe_facturato = $resultMontoFAC['precio_x'];//monto del importe ya pagado
+						// $cod_claservicio_x=$row['cod_claservicio'];
+						$cantidad_x=$row['cantidad'];
+						$precio_x=$row['precio']-$importe_facturato;
+						$descuento_bob_x=$row['descuento_bob'];
+                        //isertamos al servicio web en caso de que sea de capacitacion
+
+                        if($tipo_solicitud==2){// la solicitud pertence capacitacion
+                            $datos=resgistrar_pago_curso($cod_cliente,$cod_simulacion_servicio,$cod_claservicio_x,$precio_x,$codigo);
+                            $estado_x=$datos["estado"];
+                            $mensaje_x=$datos["mensaje"];
+                            if(!$estado_x){//registro correcto webservice
+                                $estado_ibnorca++;
+                                $stmtDelte = $dbh->prepare("DELETE from facturas_venta where codigo=$cod_facturaVenta");
+                                $stmtDelte->execute();
+                                $estado_ibnorca++;
+                                break;
+                            }
+                        }
+                        if($estado_ibnorca==0){//sin errores en el servicio web
+                            $precio_x=$precio_x+$descuento_bob_x;//se registró el precio total incluido el descuento, para la factura necesitamos el precio unitario
+                            $descripcion_alterna_x=$row['descripcion_alterna'];            
+                            $stmtInsertSoliFactDet = $dbh->prepare("INSERT INTO facturas_ventadetalle(cod_facturaventa,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_bob,suscripcionId) 
+                            values ('$cod_facturaVenta','$cod_claservicio_x','$cantidad_x','$precio_x','$descripcion_alterna_x',$descuento_bob_x,0)");
+                            $flagSuccess=$stmtInsertSoliFactDet->execute();
+                        }
+					}
+                    if($estado_ibnorca==0){
+    					$sqlUpdate="UPDATE solicitudes_facturacion SET  cod_estadosolicitudfacturacion=5 where codigo=$codigo";
+    					$stmtUpdate = $dbh->prepare($sqlUpdate);
+    					$flagSuccess=$stmtUpdate->execute(); 
+    					//enviar propuestas para la actualizacion de ibnorca
+    					$fechaHoraActual=date("Y-m-d H:i:s");
+    					$idTipoObjeto=2709;
+    					$idObjeto=2729; //regristado
+    					$obs="Solicitud Facturada Manualmente";
+    					if(isset($_GET['u'])){
+    						$u=$_GET['u'];
+    						actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);
+    					}else{
+    						actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);
+    					}   
+
+    					if($flagSuccess){
+    					    echo 1;
+    					}else{
+    						echo 0;
+    					}				
+    					$dbhU=null;
+                    }else{
+                        echo -1;    
+                    }
 				}else{
 					echo 0;
 				}
             }
-        }else{//ya se registro
-            echo 4;            
-        }
+        // }else{//ya se registro
+        //     echo 4;            
+        // }
     }   
 } catch(PDOException $ex){
     echo 0;

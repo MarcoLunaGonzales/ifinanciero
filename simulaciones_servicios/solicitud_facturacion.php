@@ -120,7 +120,7 @@ if($cantidad_items>0){
                             if ($nro_fact_x==null)$nro_fact_x="-";
                             if($cod_estado_factura_x==4){
                               $btnEstado="btn-warning";
-                              $estado="FACTURADO Manualmente";
+                              $estado="FACTURA MANUAL";
                             }
                             //sacamos monto total de la factura para ver si es de tipo factura por pagos
                             $sqlMontos="SELECT codigo,importe,nro_factura from facturas_venta where cod_solicitudfacturacion=$codigo_facturacion and cod_estadofactura=1 ORDER BY codigo desc";
@@ -130,7 +130,7 @@ if($cantidad_items>0){
                             $importe_fact_x=0;$cont_facturas=0;$cadenaFacturas="";$cadenaCodFacturas="";
                             while ($row_montos = $stmtFactMontoTotal->fetch()){
                               $importe_fact_x+=$row_montos['importe'];
-                              $cadenaFacturas.=$row_montos['nro_factura']." - ";
+                              $cadenaFacturas.="F".$row_montos['nro_factura']." - ";
                               $cadenaCodFacturas.=$row_montos['codigo'].",";
                               $cont_facturas++;
                             }  
@@ -177,7 +177,7 @@ if($cantidad_items>0){
                             $cont[$index-1]=$nc;  
                             $stringCabecera=$nombre_uo."##".$nombre_area."##".$nombre_simulacion."##".$name_area_simulacion."##".$fecha_registro."##".$fecha_solicitudfactura."##".$nit."##".$razon_social;
                             if($cont_facturas>1){                              
-                              $estado="FACTURADO A PAGOS";
+                              $estado="FACTURA PARCIAL";
                               $nro_fact_x=trim($cadenaFacturas,' - ');
                             }
 
