@@ -695,3 +695,79 @@
     </div>
   </div>
 <!--    end small modal -->
+
+
+<div class="modal fade" id="modalRegisterCuentasAux" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content card">
+      <div class="card-header card-header-success card-header-text">
+        <div class="card-text">
+          <h5>Nueva Cuenta Auxiliar</h5> 
+        </div>
+        <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
+          <i class="material-icons">close</i>
+        </button>
+      </div>
+      <!-- <input type="hidden" name="cod_cuenta_x" id="cod_cuenta_x"/> -->
+      <div class="card-body">
+        <div class="row">
+          <label class="col-sm-2 col-form-label">Cuenta</label>
+          <div class="col-sm-4">
+            <div class="form-group">                  
+              <select name="cod_cuenta" id="cod_cuenta" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" data-show-subtext="true" data-live-search="true" >
+                <option value="">SELECCIONAR UNA OPCION</option><?php 
+                $sql="SELECT codigo,numero,nombre from plan_cuentas where cuenta_auxiliar=1 order by nombre";
+                $stmt = $dbh->prepare($sql);
+                $stmt->bindParam(':codigo', $codigo);
+                $stmt->bindParam(':nombre', $nombre);
+                $stmt->bindParam(':numero', $numero);
+                $stmt->execute();
+                while ($row = $stmt->fetch()){ ?>
+                  <option value="<?=$row["codigo"];?>"><?=$row["numero"];?> - <?=$row["nombre"];?></option><?php 
+                } 
+                ?>
+             </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <label class="col-sm-2 col-form-label">Nombre</label>
+          <div class="col-sm-7">
+          <div class="form-group">
+            <input class="form-control" type="text" name="nombre_x" id="nombre_x" required="true" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+          </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <label class="col-sm-2 col-form-label">Tipo</label>
+            <div class="col-sm-4">
+                  <div class="form-group">
+                  <select class="selectpicker form-control form-control-sm" name="tipo_x" id="tipo_x" data-style="<?=$comboColor;?>" required="true" onChange="ajaxTipoProveedorCliente_comprobante(this);">
+                  <option disabled selected value="">Seleccionar una opcion</option>
+                <option value="1">Proveedor</option>  
+                <option value="2">Cliente</option>  
+              </select>
+              </div>
+                </div>
+        </div>
+
+        <div class="row">
+          <label class="col-sm-2 col-form-label">Proveedor/Cliente</label>
+          <div class="col-sm-7">
+          <div class="form-group" id="divProveedorCliente">
+            
+          </div>
+          </div>
+        </div>
+
+
+        <div class="form-group float-right">
+            <button type="button" class="btn btn-warning btn-round" onclick="guardarNuevaCuentaAuxi()">Guardar</button>
+        </div>         
+      </div>
+    </div>
+  </div>
+</div>
+<!-- edit -->

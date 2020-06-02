@@ -70,7 +70,8 @@ $sql.=" GROUP BY IdCurso Order by aa.FechaInscripcion desc";
                 <th>Importe <br>Solicitud(BOB)</th>                   
                 <th>Nro <br>Módulo</th>                 -->
                 <th>Nombre Curso</th>   
-                <th>Fecha Inscripción</th>   
+                <th>Fecha Inscripción</th>
+                <th>Estado</th>
                 <th class="text-right">Actions</th>
             </tr>
         </thead>
@@ -94,22 +95,39 @@ $sql.=" GROUP BY IdCurso Order by aa.FechaInscripcion desc";
           $stmtIBNO->bindColumn('Nombre', $nombre_mod);                                    
           $stmtIBNO->bindColumn('FechaInscripcion_x', $FechaInscripcion);
           while ($rowPre = $stmtIBNO->fetch(PDO::FETCH_ASSOC)){
+            $cont_total_ws=0;
+            $cont_total_pagados=0;
+            $verifica=verifica_pago_curso($IdCurso,$CiAlumno);
+            if($verifica){
+              foreach ($verifica->lstModulos as $listas) {
+                $cont_total_ws++;
+                $estadoPagado=$listas->EstadoPagado;              
+                if($estadoPagado==1){
+                  $cont_total_pagados++;
+                }
+              }
+              if($cont_total_ws==$cont_total_pagados){
+                $estado="Pagado<br>total"; //pagado
+                $btnEstado="btn-success";
+              }else{
+                $estado="Pendiente";//faltan algunos
+                $btnEstado="btn-warning";
+              }  
+            }else{
+                $estado="Sin Servicio";//faltan algunos
+                $btnEstado="btn-danger";
+            }
+            
+
             $monto_pagar=($Costo - ($Costo*$descuento/100) )/$CantidadModulos; //monto a pagar del estudiante 
             $importe_curso=   $Costo*$descuento/100;//importe curso con desuento
-            $importe_curso= $Costo-$importe_curso;//importe curso con desuento
-            // $nombre_area=trim(abrevArea($cod_area),'-');
-            // $nombre_uo=trim(abrevUnidad($cod_uo),' - ');                  
-            //buscamos a los estudiantes que ya fueron solicitados su facturacion
-          
+            $importe_curso= $Costo-$importe_curso;//importe curso con desuento            
             //verificamos si ya tiene factura generada y esta activa                           
             $stmtFact = $dbh->prepare("SELECT codigo from solicitudes_facturacion where tipo_solicitud=2 and cod_cliente=$CiAlumno and cod_simulacion_servicio=$IdCurso");
             $stmtFact->execute();
             $resultSimu = $stmtFact->fetch();
-            $codigo_facturacion = $resultSimu['codigo'];
-            
-
-            if ($codigo_facturacion==null)$codigo_facturacion=0;          
-
+            $codigo_facturacion = $resultSimu['codigo'];        
+            if ($codigo_facturacion==null)$codigo_facturacion=0;
             $sumaTotalMonto=0;
             $sumaTotalDescuento_por=0;
             $sumaTotalDescuento_bob=0;
@@ -127,6 +145,7 @@ $sql.=" GROUP BY IdCurso Order by aa.FechaInscripcion desc";
               <td><?=$NroModulo;?></td>                             -->
               <td class="text-left"><?=$nombre_mod;?></td>      
               <td class="text-right"><?=$FechaInscripcion;?></td>
+              <td><button class="btn <?=$btnEstado?> btn-sm btn-link"><?=$estado;?></button></td> 
               <td class="td-actions text-right">
                 <?php
                   if($globalAdmin==1){                            

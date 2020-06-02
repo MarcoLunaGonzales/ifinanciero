@@ -121,5 +121,35 @@ if($fijo!=""){
 $sqlDetalles="UPDATE simulaciones_servicios_tiposervicio SET cantidad_editado=$cantidad,monto=$monto,habilitado=$habilitado,cod_tipounidad=$unidad,cod_anio=$anio_fila where codigo=$codigo";
 $stmtDetalles = $dbh->prepare($sqlDetalles);
 $stmtDetalles->execute();
+
+      $sqlDelete="DELETE FROM simulaciones_cf where cod_simulacionservicio=$codSimulacion and cod_anio=$anio_fila";  
+      $stmtDelete = $dbh->prepare($sqlDelete);
+      $stmtDelete->execute();
+  //costos Fijos en tabla
+      $cuentasFijas=obtenerListaCuentasPlantillasCostoFijoServicio($codPlantillaCosto);
+      while ($rowFijo = $cuentasFijas->fetch(PDO::FETCH_ASSOC)) {
+         $nombreCuentaFijo=$rowFijo['nombre'];
+         $numeroCuentaFijo=$rowFijo['numero'];
+         $codCuentaFijo=$rowFijo['cod_cuenta'];
+         $codPartidaFijo=$rowFijo['cod_partidapresupuestaria'];
+         $tipoFijo=$rowFijo['tipo'];
+
+         $precioLocalX=obtenerPrecioServiciosSimulacionPorAnio($codSimulacion,$anio_fila);
+         $precioRegistrado=obtenerPrecioRegistradoPlantilla($codPlantillaCosto);
+         $nCursos=obtenerCantidadAuditoriasPlantilla($codPlantillaCosto); 
+         $porcentPrecios=($precioLocalX)/($precioRegistrado);
+         if($tipoFijo==1){ 
+         $anioSim= date("Y");  
+         $monto=ejecutadoEgresosMes($globalUnidad,((int)$anioSim-1),12,$areaGeneralPlantilla,1,$numeroCuentaFijo);          
+         }else{
+          $monto=obtenerListaCuentasPlantillasCostoFijoServicioManual($codCuentaFijo,$codPartidaFijo,$codPlantillaCosto);
+         }
+         $montoUnidad=$monto*$porcentPrecios; 
+         $dbh = new Conexion();
+         $sqlFijos="INSERT INTO simulaciones_cf (cod_simulacionservicio, cod_simulacioncosto,cod_partidapresupuestaria,cod_cuenta,monto,cantidad,monto_total,cod_anio) 
+         VALUES ('".$codSimulacion."',0,'".$codPartidaFijo."','".$codCuentaFijo."','".$montoUnidad."',1,'".$montoUnidad."','".$anio_fila."')";
+         $stmtFijos = $dbh->prepare($sqlFijos);
+         $stmtFijos->execute();
+      } 
 echo $anio."WWW".$iteracion;
 ?>

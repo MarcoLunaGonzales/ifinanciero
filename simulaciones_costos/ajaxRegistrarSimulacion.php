@@ -156,6 +156,52 @@ if(isset($_GET['nombre'])){
       $stmtUpdate = $dbh->prepare($sqlUpdate);
       $stmtUpdate->execute();
      }
+
+     $preciosPlan=obtenerListaPreciosPlantillaCosto($plantilla_costo,$codPrecio);
+     while ($rowPrePlan = $preciosPlan->fetch(PDO::FETCH_ASSOC)) {
+      $codPrecioPropuestaCosto=obtenerCodigoPrecioCosto();
+      $codCS=$rowPrePlan['codigo'];
+      $venCS=$rowPrePlan['venta_local'];
+      $veneS=$rowPrePlan['venta_externo'];
+      $codPS=$rowPrePlan['cod_plantillacosto'];
+      $dbhAU = new Conexion();
+      $sqlAU="INSERT INTO precios_simulacioncosto (codigo,venta_local, venta_externo,cod_simulacioncosto) 
+      VALUES ('".$codPrecioPropuestaCosto."','".$venCS."','".$veneS."','".$codSimCosto."')";
+      $stmtAU = $dbhAU->prepare($sqlAU);
+      $stmtAU->execute();
+      
+      $sqlUpdate="UPDATE simulaciones_costos SET cod_precioplantilla=$codPrecioPropuestaCosto where codigo=$codSimCosto";
+      $stmtUpdate = $dbh->prepare($sqlUpdate);
+      $stmtUpdate->execute();
+
+
+      //costos Fijos en tabla
+      $cuentasFijas=obtenerListaCuentasPlantillasCostoFijo($plantilla_costo);
+      while ($rowFijo = $cuentasFijas->fetch(PDO::FETCH_ASSOC)) {
+         $nombreCuentaFijo=$rowFijo['nombre'];
+         $numeroCuentaFijo=$rowFijo['numero'];
+         $codCuentaFijo=$rowFijo['cod_cuenta'];
+         $codPartidaFijo=$rowFijo['cod_partidapresupuestaria'];
+         $tipoFijo=$rowFijo['tipo'];
+
+         $precioLocalX=obtenerPrecioSimulacionCostoGeneral($codSimCosto);
+         $precioRegistrado=obtenerPrecioRegistradoPlantillaCosto($plantilla_costo);
+         $nCursos=obtenerCantidadCursosPlantillaCosto($plantilla_costo); 
+         $porcentPrecios=($precioLocalX)/($precioRegistrado);
+         if($tipoFijo==1){ 
+         $anioSim= date("Y");  
+         $monto=ejecutadoEgresosMes($globalUnidad,((int)$anioSim-1),12,13,1,$numeroCuentaFijo);          
+         }else{
+          $monto=obtenerListaCuentasPlantillasCostoFijoManual($codCuentaFijo,$codPartidaFijo,$plantilla_costo);
+         }
+         $montoUnidad=$monto*$porcentPrecios; 
+         $dbh = new Conexion();
+         $sqlFijos="INSERT INTO simulaciones_cf (cod_simulacionservicio, cod_simulacioncosto,cod_partidapresupuestaria,cod_cuenta,monto,cantidad,monto_total) 
+         VALUES (0,'".$codSimCosto."','".$codPartidaFijo."','".$codCuentaFijo."','".$montoUnidad."',1,'".$montoUnidad."')";
+         $stmtFijos = $dbh->prepare($sqlFijos);
+         $stmtFijos->execute();
+      } 
+     }
   echo $codSimCosto;
 }
 

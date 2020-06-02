@@ -8,6 +8,7 @@ include '../assets/controlcode/sin/ControlCode.php';
 require_once __DIR__.'/../functions.php';
 require_once __DIR__.'/../functionsGeneral.php';
 require_once 'executeComprobante_factura.php';
+require_once '../layouts/bodylogin.php';
 
 $dbh = new Conexion();
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//try
@@ -42,12 +43,12 @@ try{
         }
     }
     if($cont_tipopago!=0){//falta asociar cuenta a tipos de pago ?>
-        <script>
-            alert("A ocurrido un error: Por favor verifique que los tipos de pago estén asociados a una cuenta.");
+        <script>            
+            Swal.fire("Error!","Por favor verifique que los tipos de pago estén asociados a una cuenta!.", "error");
         </script><?php 
     }elseif($cont_areas!=0){//falta asociar alguna cuenta en areas ?>
-        <script>
-            alert("A ocurrido un error: Por favor verifique que las areas de ingreso estén asociadas a una cuenta.");
+        <script>            
+            Swal.fire("Error!","Por favor verifique que las areas de ingreso estén asociadas a una cuenta!.", "error");
         </script><?php 
     }else{ //cuando todo esta en orden
         // verificamos si ya se registro la factura
@@ -94,8 +95,8 @@ try{
             }
             $cod_sucursal=obtenerSucursalCodUnidad($cod_unidadorganizacional);
             if($cod_sucursal==null || $cod_sucursal==''){//sucursal no encontrado?>
-                <script>
-                    alert("A ocurrido un error: Por favor verifique la existencia de sucursales.");
+                <script>                    
+                    Swal.fire("Error!","A ocurrido un error: Por favor verifique la existencia de sucursales!.", "error");
                 </script><?php 
             }else{
                 // echo "uo:",$cod_unidadorganizacional."<br>";
@@ -111,11 +112,10 @@ try{
                 $nroAutorizacion = $resultInfo['nro_autorizacion'];
                 $llaveDosificacion = $resultInfo['llave_dosificacion'];
                 $fecha_limite_emision = $resultInfo['fecha_limite_emision'];
-                if($nroAutorizacion==null || $nroAutorizacion=='' || $nroAutorizacion==' '){
-                    $error = "No tiene registrado La dosificación para la facturación."; 
+                if($nroAutorizacion==null || $nroAutorizacion=='' || $nroAutorizacion==' '){                    
                     ?>
                     <script>
-                        alert("A ocurrido un error: DOSIFICACION de sucursal incorrecta.");
+                        Swal.fire("Error!","DOSIFICACION de sucursal No encontrada.", "error");
                     </script>
                     <?php
                     //header('Location: ../index.php?opcion=listFacturasServicios');
@@ -133,8 +133,8 @@ try{
                     $nro_correlativo = nro_correlativo_facturas($cod_sucursal);
                     if($nro_correlativo==0){
                         ?>
-                        <script>
-                            alert("A ocurrido un error: DOSIFICACION de sucursal incorrecta.");
+                        <script>                            
+                            Swal.fire("Error!","DOSIFICACION de sucursal incorrecta.", "error");
                         </script>
                         <?php
                     }else{
@@ -214,11 +214,18 @@ try{
                                   header('Location: ../simulaciones_servicios/generarFacturasPrint.php?codigo='.$codigo.'&tipo=2');
                                 }
                             }else{
-                                echo "error en el servicio al registrar pago de Estudiante!.";
+                                ?>
+                                <script>                                    
+                                    Swal.fire("Error!","No se tiene conexión al servicio de capacitación.", "error");
+                                </script>
+                                <?php                                
                             }
                             
-                        }else{
-                            echo "error al generar la factura";
+                        }else{?>
+                            <script>                                
+                                Swal.fire("Error!","Hubo Un error al generar la Factura!.", "error");
+                            </script>
+                            <?php                            
                         }
                     }
                 }

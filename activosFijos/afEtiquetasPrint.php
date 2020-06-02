@@ -61,10 +61,6 @@ $html.='<body>'.
         '$pdf->page_text($x, $y, "{PAGE_NUM}/{PAGE_COUNT}", $font, $size);'.
       '}'.
     '</script>';
-
-
-
-
 $html.='<table class="table">'.
                 '<tbody><tr>';
                     $cont=0;
@@ -94,11 +90,11 @@ $html.='<table class="table">'.
                                             $html.= '<img src="'.$fileName.'"/>';
 
                                         $html.='</td>'.
-                                        '<td style="border: hidden"><small><p align="left">Codigo: '.$codigoActivoX.' <br>Oficina: '.$abr_uoX.' <br>Area: '.$abr_areaX.' <br>Responsable: '.$nombre_responsableX.'</p></small></td>'.
+                                        '<td style="border: hidden"><small><p align="left">Codigo: '.$codigoActivoX.'<br>Comprobante: '.$nro_coprobante.'</p></small></td>'.
                                         '<td style="border: hidden"><img src="../assets/img/logo_ibnorca1.fw.png" width="30" /></td>'.
                                         '</tr>'.
                                         '<tr>'.
-                                        '<td align="center" style="border: hidden" colspan=3><small>'.$activoX.'</small></td>'.                            
+                                        '<td align="center" style="border: hidden" colspan=3><small>'.(substr($activoX, 0, 40))."...".'</small></td>'.                            
                                         '</tr>'.
                                     '</table>'.
                                 '</td>';
@@ -129,7 +125,7 @@ $html.='<table class="table">'.
                                             <td style="border: hidden"><img src="../assets/img/logo_ibnorca1.fw.png" width="30" /></td>
                                             </tr>
                                             <tr>
-                                            <td align="center" style="border: hidden" colspan=3><small>'.$activoX.'</small></td>                            
+                                            <td align="center" style="border: hidden" colspan=3><small>'.(substr($activoX, 0, 40))."...".'</small></td>                         
                                             </tr>
                                         </table>
                                     </td>'.

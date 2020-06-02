@@ -357,7 +357,7 @@
         <p class="text-muted"><small>Los archivos se subir&aacute;n al servidor cuando se GUARDE la Solicitud de Recurso</small></p> 
         <input type="hidden" id="codigo_fila" value=""/>
         <div class="row col-sm-11 div-center">
-              <table class="table table-dark table-bordered table-condensed">
+              <table class="table table-warning table-bordered table-condensed">
                 <thead>
                   <tr>
                     <th class="small" width="30%">Tipo de Documento <a href="#" title="Otro Documento" class="btn btn-primary btn-round btn-sm btn-fab float-left" onClick="agregarFilaArchivosAdjuntosDetalle()"><i class="material-icons">add</i></a></th>

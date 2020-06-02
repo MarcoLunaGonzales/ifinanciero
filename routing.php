@@ -339,6 +339,9 @@
         if ($_GET['opcion']=='mesCurso') {
 			require_once('mes_curso/list.php');
 		}
+		if ($_GET['opcion']=='mesCurso2') {
+			require_once('mes_curso/list2.php');
+		}
 
 		//CAMBIAR GESTION DE TRABAJO
 		if ($_GET['opcion']=='listGestionTrabajo') {
@@ -1665,7 +1668,24 @@
 			require_once('simulaciones_servicios/plandecuentas_list_areas.php');
 		}
 		
-		
+		//abm dosificaciones
+		if ($_GET['opcion']=='listDosificaciones') {
+			require_once('dosificaciones/list.php');
+		}
+		if ($_GET['opcion']=='registerDosificacion') {						
+			$codigo=$_GET['codigo'];
+			require_once('dosificaciones/register.php');
+		}
+		if ($_GET['opcion']=='saveDosificacion') {
+			$codigo=$_GET['codigo'];
+			require_once('dosificaciones/save.php');
+		}
+		if ($_GET['opcion']=='deleteDosificacion') {
+			$codigo=$_GET['codigo'];
+			$sw=$_GET['sw'];
+			$cod_sucursal=$_GET['cod_sucursal'];
+			require_once('dosificaciones/saveDelete.php');
+		}
 
 	}else{
 		//require("paginaprincipal.php");
