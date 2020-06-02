@@ -6622,4 +6622,26 @@ function nro_correlativo_facturas($cod_sucursal){
   }
   return($nroCorrelativo);
 }
+function obtenerListaCuentasPlantillasCostoFijo($codigo){
+   $dbh = new Conexion();
+   $sql="select DISTINCT p.cod_cuenta,pl.numero,pl.nombre, p.cod_partidapresupuestaria from partidaspresupuestarias_cuentas p join plan_cuentas pl on p.cod_cuenta=pl.codigo where p.cod_partidapresupuestaria in (
+                     (select DISTINCT pgcd.cod_partidapresupuestaria from plantillas_grupocostodetalle pgcd 
+                     join plantillas_gruposcosto pgc on pgcd.cod_plantillagrupocosto=pgc.codigo 
+                     join plantillas_costo pc on pgc.cod_plantillacosto=pc.codigo
+                     where pc.codigo=3 and pgc.cod_tipocosto=1)) order by p.cod_partidapresupuestaria,p.cod_cuenta;";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+}
+function obtenerFechaSimulacionCosto($codigo){
+   $dbh = new Conexion();
+   $valor=0;
+   $sql="SELECT fecha from simulaciones_costos p where p.codigo=$codigo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['fecha'];
+  }
+  return $valor;
+}
 ?>

@@ -2784,12 +2784,11 @@ function guardarSimulacionCosto(){
         url: "simulaciones_costos/ajaxRegistrarSimulacion.php",
         data: parametros,
         beforeSend: function () { 
-         Swal.fire("Informativo!", "Procesando datos! espere...", "warning");
-          
+         iniciarCargaAjax();      
         },
         success:  function (resp) {
-          
-         alerts.showSwal('success-message','simulaciones_costos/registerSimulacion.php?cod='+resp);
+          detectarCargaAjax();
+          alerts.showSwal('success-message','simulaciones_costos/registerSimulacion.php?cod='+resp);
         }
     });
   }
@@ -7304,7 +7303,11 @@ function guardarDatosPlantilla(btn_id){
     type: "GET",
     data: parametros,
     dataType: "html",
+    beforeSend: function () { 
+     iniciarCargaAjax();  
+    },
     success: function (resp) { 
+      detectarCargaAjax();
       alerts.showSwal('success-message','registerSimulacion.php?cod='+cod_sim);
      //Swal.fire("Correcto!", "El proceso fue satisfactorio!", "success");
      $("#"+btn_id).removeAttr("disabled"); 
