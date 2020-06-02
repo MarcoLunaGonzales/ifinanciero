@@ -304,12 +304,15 @@ $cod_sis_configuracion=obtenerValorConfiguracion(16);//codigo de proyecto sis
 							</div>	
 							<div class="col-sm-3" align="right">
 			                    <div class="form-group">                                
-			                        <a href="#" style="background-color: #0489B1" class="btn btn-round btn-fab btn-sm" onclick="cargarDatosRegistroComprobantes()">
+			                        <!-- <a href="#"  class="btn btn-round btn-fab btn-sm" onclick="cargarDatosRegistroComprobantes()">
 			                        	<i class="material-icons" title="Add Proveedor">add</i>
-			                        </a>
-			                        <a href="#" class="btn btn-round btn-fab btn-sm" onclick="actualizarRegistroProveedorComprobante()">
+			                        </a> -->
+			                        <button style="background-color: #0489B1" title="Registrar Cuenta Auxiliar" class="btn btn-round btn-fab btn-sm" type="button" data-toggle="modal" data-target="#modalRegisterCuentasAux">
+                                        <i class="material-icons text-info">add</i>
+                                    </button>
+			                        <!-- <a href="#" class="btn btn-round btn-fab btn-sm" onclick="actualizarRegistroProveedorComprobante()">
 			                        	<i class="material-icons" title="Actualizar Proveedor">update</i>
-			                        </a> 
+			                        </a>  -->
 			                    </div>
 			                </div> 
 						</div>
@@ -463,7 +466,7 @@ $cod_sis_configuracion=obtenerValorConfiguracion(16);//codigo de proyecto sis
 	<!--    end small modal -->
 </form>
 
-<div class="cargar">
+<!-- <div class="cargar">
   	<div class="div-loading text-center">
      	<h4 class="text-warning font-weight-bold">Procesando Datos</h4>
      	<p class="text-white">Aguard&aacute; un momento por favor</p>  
@@ -474,8 +477,8 @@ $cod_sis_configuracion=obtenerValorConfiguracion(16);//codigo de proyecto sis
      	<h4 class="text-warning font-weight-bold" id="texto_ajax_titulo">Procesando Datos</h4>
      	<p class="text-white">Aguard&aacute; un momento por favor</p>  
   	</div>
-</div>
-<div class="modal fade modal-arriba modal-primary" id="modalAgregarProveedor" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+</div> -->
+<!-- <div class="modal fade modal-arriba modal-primary" id="modalAgregarProveedor" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   	<div class="modal-dialog modal-lg">
     	<div class="modal-content card">
             <div class="card-header card-header-warning card-header-icon">
@@ -494,7 +497,7 @@ $cod_sis_configuracion=obtenerValorConfiguracion(16);//codigo de proyecto sis
           	</div>
       	</div>  
     </div>
-</div>
+</div> -->
 
 
 <?php 
@@ -539,5 +542,5 @@ $stmt->bindColumn('nombre', $nombreCuenta);
 		$cont++;
 		}?>
 
-<script>$('.selectpicker').selectpicker("refresh");</script>
+<!-- <script>$('.selectpicker').selectpicker("refresh");</script> -->
 <?php require_once 'modal.php';?>

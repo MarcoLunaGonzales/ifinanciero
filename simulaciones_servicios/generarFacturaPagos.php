@@ -46,12 +46,12 @@ try{
         }
     }
     if($cont_tipopago!=0){//falta asociar cuenta a tipos de pago ?>
-        <script>
-            alert("A ocurrido un error: Por favor verifique que los tipos de pago estén asociados a una cuenta.");
+        <script>            
+            Swal.fire("Error!","Por favor verifique que los tipos de pago estén asociados a una cuenta!.", "error");
         </script>
     <?php }elseif($cont_areas!=0){//falta asociar alguna cuenta en areas ?>
-        <script>
-            alert("A ocurrido un error: Por favor verifique que las areas de ingreso estén asociadas a una cuenta.");
+        <script>            
+            Swal.fire("Error!","Por favor verifique que las areas de ingreso estén asociadas a una cuenta!.", "error");
         </script>
     <?php }else{//cuando todo esta en orden
 
@@ -98,8 +98,8 @@ try{
         }
         $cod_sucursal=obtenerSucursalCodUnidad($cod_unidadorganizacional);
         if($cod_sucursal==null || $cod_sucursal==''){//sucursal no encontrado?>
-            <script>
-                alert("A ocurrido un error: Por favor verifique la existencia de sucursales.");
+            <script>                
+                Swal.fire("Error!","Por favor verifique la existencia de sucursales!.", "error");
             </script><?php 
         }else{
             // echo "uo:",$cod_unidadorganizacional."<br>";
@@ -118,8 +118,8 @@ try{
             if($nroAutorizacion==null || $nroAutorizacion=='' || $nroAutorizacion==' '){
                 $error = "No tiene registrado La dosificación para la facturación."; 
                 ?>
-                <script>
-                    alert("A ocurrido un error: DOSIFICACION de sucursal incorrecta.");
+                <script>                    
+                    Swal.fire("Error!","DOSIFICACION de sucursal No encontrada.", "error");
                 </script>
                 <?php                
             }else{                
@@ -135,8 +135,8 @@ try{
                 $nro_correlativo = nro_correlativo_facturas($cod_sucursal);
                 if($nro_correlativo==0){
                     ?>
-                    <script>
-                        alert("A ocurrido un error: DOSIFICACION de sucursal incorrecta.");
+                    <script>                        
+                        Swal.fire("Error!","DOSIFICACION de sucursal incorrecta!.", "error");    
                     </script>
                     <?php
                 }else{
@@ -209,13 +209,12 @@ try{
                                 $flagSuccess=$stmtUpdate->execute(); 
                             }
                         }
-                    }else{
-                        
-                    }
+                    }else{?>
+                        <script>Swal.fire("Error!","A ocurrido un error al generar la factura, contáctese con el administrador!.", "error");</script>
+                    <?php }
                 }
             }
         }
-        
     }
     if($estado_ibnorca==0){//sin errores en el servicio web
             //enviar propuestas para la actualizacion de ibnorca

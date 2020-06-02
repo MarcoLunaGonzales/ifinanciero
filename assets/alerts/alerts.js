@@ -13,7 +13,7 @@ alerts = {
       });
     }
     else if (type == 'error-message-capacitacion') {
-      swal("Error!", "Hubo un problema al momento de registrar en el Servicio Web!. Contacte con el administrador!", "error")
+      swal("Error!", "No se tiene conexión al servicio de capacitación!. Contacte con el administrador!", "error")
           .then((value) => {
           location.href=url;
       });
