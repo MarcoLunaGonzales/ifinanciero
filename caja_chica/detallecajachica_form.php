@@ -425,8 +425,8 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
         ok=false;
         msg="Cuenta Contable Incorrecta...!";
     }     
-    if(ok == false)
-      alert(msg);
+    if(ok == false)      
+      Swal.fire("Informativo!",msg, "warning");
     return ok;
   }
 

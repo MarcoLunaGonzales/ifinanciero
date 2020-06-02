@@ -356,7 +356,7 @@ if($menuModulo==0){
                 
                 <?php
                 $valor=8;
-                $VariableConf=obtieneValorConfig($valor);
+                $VariableConf=obtenerValorConfiguracion($valor);
                   if($globalUserX==$VariableConf){
                 ?>
                 <li class="nav-item ">
@@ -460,6 +460,12 @@ if($menuModulo==0){
                   </a>
                 </li>
                 <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listDosificaciones">
+                    <span class="sidebar-mini"> D </span>
+                    <span class="sidebar-normal"> Dosificaciones</span>
+                  </a>
+                </li>  
+                <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listEntidades">
                     <span class="sidebar-mini">E</span>
                     <span class="sidebar-normal">Entidades</span>
@@ -508,7 +514,7 @@ if($menuModulo==0){
                       <span class="sidebar-mini">TCC</span>
                       <span class="sidebar-normal">Tipos Caja Chica</span>
                     </a>
-                </li>
+                </li>                
               </ul>
             </div>
           </li>

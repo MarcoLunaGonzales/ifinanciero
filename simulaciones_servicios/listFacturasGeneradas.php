@@ -9,14 +9,14 @@ $globalAdmin=$_SESSION["globalAdmin"];
 
 
   //datos registrado de la simulacion en curso
-  $stmt = $dbh->prepare("SELECT f.*,(select s.abreviatura from unidades_organizacionales s where s.cod_sucursal=f.cod_sucursal limit 1)as sucursal,(select t.nombre from estados_factura t where t.codigo=f.cod_estadofactura)as estadofactura 
+  $stmt = $dbh->prepare("SELECT f.*,DATE_FORMAT(f.fecha_factura,'%d/%m/%Y')as fecha_factura_x,(select s.abreviatura from unidades_organizacionales s where s.cod_sucursal=f.cod_sucursal limit 1)as sucursal,(select t.nombre from estados_factura t where t.codigo=f.cod_estadofactura)as estadofactura 
  from facturas_venta f where cod_estadofactura<>4 order by  f.fecha_factura desc");
   $stmt->execute();
   $stmt->bindColumn('codigo', $codigo_factura);
   $stmt->bindColumn('cod_sucursal', $cod_sucursal);
   $stmt->bindColumn('cod_area', $cod_area);
-  $stmt->bindColumn('cod_solicitudfacturacion', $cod_solicitudfacturacion);
-  $stmt->bindColumn('fecha_factura', $fecha_factura);
+  $stmt->bindColumn('cod_solicitudfacturacion', $cod_solicitudfacturacion);  
+  $stmt->bindColumn('fecha_factura_x', $fecha_factura);
   $stmt->bindColumn('fecha_limite_emision', $fecha_limite_emision);
   $stmt->bindColumn('cod_tipopago', $cod_tipopago);
   $stmt->bindColumn('cod_cliente', $cod_cliente);

@@ -5,6 +5,7 @@ $moduleNameSingular="Mes en Curso";
 $moduleNamePlural="Mes en Curso";
 
 $urlList="index.php?opcion=mesCurso";
+$urlList2="index.php?opcion=mesCurso2";
 $urlListReg="index.php?opcion=listComprobantesRegistrados";
 
 

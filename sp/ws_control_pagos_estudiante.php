@@ -57,7 +57,7 @@ $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey,
 					"IdCurso"=>1775);
 */
 
-//OBTENER MODULOS PAGADOS x CURSO
+// OBTENER MODULOS PAGADOS x CURSO
 // $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 
 // 					"accion"=>"ObtenerModulosPagados", 
 // 					"Identificacion"=>6089959, //7666922 ci del alumno
@@ -67,8 +67,8 @@ $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey,
 /* OBTENER MODULOS  X PAGAR, PAGADO Y SALDO DE UN CURSO*/
 $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 
 					"accion"=>"ObtenerModuloxPagarPagadoySaldo", 
-					"Identificacion"=>121897020, //7666922 ci del alumno
-					"IdCurso"=>2220); //1565
+					"Identificacion"=>6089959, //7666922 ci del alumno
+					"IdCurso"=>2322); //1565
 
 
 //s REGISTRAR CONTROL PAGOS 

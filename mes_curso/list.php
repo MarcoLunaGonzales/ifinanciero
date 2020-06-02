@@ -14,13 +14,19 @@ $dbh = new Conexion();
 
 // Preparamos
 $stmt = $dbh->prepare("SELECT * from meses_trabajo where cod_gestion='$codGestionGlobal'");
-// Ejecutamos
 $stmt->execute();
-// bindColumn
 $stmt->bindColumn('cod_estadomesestrabajo', $codEstadoMeses);
 $stmt->bindColumn('codigo', $codigo);
 $stmt->bindColumn('cod_mes', $codMes);
 $stmt->bindColumn('cod_gestion', $codGestion);
+
+
+$stmtEstado = $dbh->prepare("SELECT * from estados_mesestrabajo");
+$stmtEstado->execute();
+$stmtEstado->bindColumn('codigo', $codigo_e);
+$stmtEstado->bindColumn('nombre', $nombre_e);
+
+
 ?>
 
 <div class="content">
@@ -36,42 +42,66 @@ $stmt->bindColumn('cod_gestion', $codGestion);
                 </div>
                 <div class="card-body">
                   <div class="table-responsive" id="data_comprobantes">
-                    <table id="tablePaginator" class="table table-condensed">
+                    <table id="tablePaginator50" class="table table-condensed">
                       <thead>
                         <tr>
                           <th class="text-center">#</th>
-                          <th>Gestion</th>
-                          <th>Mes</th>
-                          <th class="text-right" width="10%">Estado</th>
+                          <th>Gestión</th>
+                          <th >Mes</th>
+                          <th class="text-right" width="10%"></th>
+                          <th class="text-right" width="10%"></th>
+                          <th class="text-right" width="10%"></th>
                         </tr>
                       </thead>
                       <tbody>
-<?php
-						     $index=1;$cont=0;
+                      <?php
+						            $index=1;$cont=0;
                       	while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                           $nombreMes=strToUpper(strftime('%B',strtotime($nombreGestion."-".$codMes."-01")));
-                        if($codEstadoMeses!=2){
-                          if($codEstadoMeses==3){
-                           $valor="Mes en Curso"; 
-                           $estiloTipo="btn btn-info";$textStyle="text-info font-weight-bold";
-                           $actionButton="";
-                          }else{
-                            $valor="Habilitar";
-                            $estiloTipo="btn btn-default";$textStyle="";
-                            $actionButton=$urlSave."?codigo=".$codigo;
+                        
+                          $valor1="Pendiente";
+                          $valor2="Cerrado";
+                          $valor3="En Curso";
+                          switch ($codEstadoMeses) {
+                            case 1:                              
+                              $estiloTipo2="btn btn-default";
+                              $estiloTipo1="btn btn-warning";
+                              $estiloTipo3="btn btn-default";
+                              $textStyle="";                              
+                              break;
+                            case 2:                              
+                              $estiloTipo1="btn btn-default";
+                              $estiloTipo3="btn btn-default";
+                              $estiloTipo2="btn btn-danger";
+                              $textStyle="";                              
+                              break;
+                            case 3:
+                              $estiloTipo3="btn btn-info";
+                              $estiloTipo1="btn btn-default";
+                              $estiloTipo2="btn btn-default";
+                              $textStyle="text-info font-weight-bold";                              
+                              break;
+                            default:                             
+                              $estiloTipo1="btn btn-default";
+                              $estiloTipo2="btn btn-default";
+                              $estiloTipo3="btn btn-default";
+                              $textStyle="";                              
+                              break;
                           }
-?>
+                          ?>
                         <tr>
                           <td class="<?=$textStyle?>"align="center"><?=$index;?></td>
                           <td class="<?=$textStyle?>"><?=nameGestion($codGestion);?></td>
                           <td class="<?=$textStyle?>"><?=$nombreMes;?></td>
-                          <td class="text-right"><a href="<?=$actionButton?>" class="<?=$estiloTipo?> btn-sm"><?=$valor?></a></td>
+                          <td class="text-right"><a href="<?=$urlSave?>?codigo=<?=$codigo?>&estado=3" class="<?=$estiloTipo3?> btn-sm"><?=$valor3?></a></td>
+                          <td class="text-right"><a href="<?=$urlSave?>?codigo=<?=$codigo?>&estado=1" class="<?=$estiloTipo1?> btn-sm"><?=$valor1?></a></td>
+                          <td class="text-right"><a href="<?=$urlSave?>?codigo=<?=$codigo?>&estado=2" class="<?=$estiloTipo2?> btn-sm"><?=$valor2?></a></td>
                         </tr>
-<?php
-							$index++;
-						               }
-                      }
-?>
+                        <?php
+            							$index++;
+            						               // }
+                                  }
+                        ?>
                       </tbody>
                     </table>
                   </div>
