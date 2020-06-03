@@ -162,6 +162,6 @@ for ($i=1;$i<=$cantidadFilas;$i++){
 	}
 } 
 
-echo "<script>window.opener.location.reload();window.close();</script>";
+//echo "<script>window.opener.location.reload();window.close();</script>";
 
 ?>

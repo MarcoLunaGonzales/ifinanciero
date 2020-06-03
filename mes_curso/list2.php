@@ -19,7 +19,7 @@ $mes=$_SESSION['globalMes'];
                   <div class="card-icon">
                     <i class="material-icons">assignment</i>
                   </div>
-                  <h4 class="card-title">Cambiar Oficina de trabajo</h4>
+                  <h4 class="card-title">Cambiar Mes de Trabajo</h4>
                 </div>
                 
                 <div class="card-body">

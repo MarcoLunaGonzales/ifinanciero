@@ -2345,7 +2345,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
 
 function obtenerCorrelativoSolicitud(){
   $dbh = new Conexion(); 
-  $sql="SELECT IFNULL(max(c.nro_correlativo)+1,1)as correlativo from solicitudes_facturacion c where c.cod_estado=1";
+  $sql="SELECT IFNULL(max(c.nro_correlativo)+1,7000)as correlativo from solicitudes_facturacion c where c.cod_estado=1";
   //echo $sql;
   $stmt = $dbh->prepare($sql);
   $stmt->execute();

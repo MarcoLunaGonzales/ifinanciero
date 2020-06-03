@@ -38,7 +38,7 @@ $stmtEstado->bindColumn('nombre', $nombre_e);
                   <div class="card-icon">
                     <i class="material-icons">build</i>
                   </div>
-                  <h4 class="card-title"><?=$moduleNameSingular?></h4>
+                  <h4 class="card-title"><?=$moduleNamePlural?></h4>
                 </div>
                 <div class="card-body">
                   <div class="table-responsive" id="data_comprobantes">
