@@ -118,6 +118,7 @@ if(isset($_GET['nombre'])){
               $direccionAtributo=$atributos[$att]->direccion;
               $marcaAtributo=$atributos[$att]->marca;
               $normaAtributo=$atributos[$att]->norma;
+              $normaCodAtributo=$atributos[$att]->norma_cod;
               $selloAtributo=$atributos[$att]->sello;
 
               $paisAtributo=$atributos[$att]->pais;
@@ -131,7 +132,14 @@ if(isset($_GET['nombre'])){
               $stmtDetalleAtributos->execute();
 
               if($tipo_atributo==1){
-               // $direccionAtributo="";
+                $normasFila=explode(",",$normaCodAtributo);
+                for ($ni=0; $ni < count($normasFila); $ni++) { 
+                 $codNorma=$normasFila[$ni];
+                  $sqlDetalleAtributosNormas="INSERT INTO simulaciones_servicios_atributosnormas (cod_simulacionservicioatributo, cod_norma, precio,cantidad) 
+                 VALUES ('$codSimulacionServicioAtributo', '$codNorma', '10',1)";
+                 $stmtDetalleAtributosNormas = $dbh->prepare($sqlDetalleAtributosNormas);
+                 $stmtDetalleAtributosNormas->execute(); 
+                }
               }else{   
                 for ($yyyy=$inicioAnio; $yyyy<=$anios; $yyyy++) {  
                  $sqlDetalleAtributosDias="INSERT INTO simulaciones_servicios_atributosdias (cod_simulacionservicioatributo, dias, cod_anio) 

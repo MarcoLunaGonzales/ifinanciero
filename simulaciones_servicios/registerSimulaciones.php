@@ -364,8 +364,22 @@ $dbh = new Conexion();
                       <div class="row" id="div_norma">
                           <label class="col-sm-2 col-form-label">Norma</label>
                            <div class="col-sm-4">                     
-                             <div class="form-group" style="border-bottom: 1px solid #CACFD2">          
-                               <input type="text" class="form-control tagsinput" data-role="tagsinput" data-color="info" name="modal_norma" id="modal_norma" value="" onkeyup="javascript:this.value=this.value.toUpperCase();">
+                             <div class="form-group"><!--style="border-bottom: 1px solid #CACFD2"-->          
+                               <!--<input type="text" class="form-control tagsinput" data-role="tagsinput" data-color="info" name="modal_norma" id="modal_norma" value="" onkeyup="javascript:this.value=this.value.toUpperCase();">-->
+                               <select class="selectpicker form-control form-control-sm" name="normas[]" id="normas" multiple data-style="btn btn-warning" data-live-search="true" data-size="6" data-actions-box="true" required>
+                                <?php
+                                 $stmt = $dbh->prepare("SELECT * from normas order by abreviatura");
+                                 $stmt->execute();
+                                  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                  $codigoX=$row['codigo'];
+                                  $nombreX=$row['nombre'];
+                                  $abrevX=$row['abreviatura'];
+                                   ?>
+                                  <option value="<?=$codigoX;?>"><?=$abrevX;?></option> 
+                                  <?php
+                                    }
+                                    ?>
+                                </select>
                              </div>
                            </div>
                            <label class="col-sm-1 col-form-label">Nº Sello</label>

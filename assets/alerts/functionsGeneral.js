@@ -10158,6 +10158,7 @@ function agregarAtributoAjax(){
   }
     
   }
+  $("#normas").val("");
   if($("#modalEditPlantilla").length){
     $("#modalEditPlantilla").modal("hide");
     for (var i = 0; i <= parseInt($("#anio_servicio").val()); i++) {
@@ -10302,7 +10303,15 @@ function guardarAtributoItem(){
     var marca="";
       
   }else{
-    var norma=$("#modal_norma").val();
+    var normasMultiple=$("#normas").val();
+    var norma_cod=normasMultiple.join(",");
+    var normasArray=[]; var i=0;
+    $("#normas option:selected").each(function() {     
+       normasArray[i]= $(this).text();      
+       i++;
+     });
+    var norma=normasArray.join(",");
+    //var norma=$("#modal_norma").val();
     var sello=$("#modal_sello").val();
     var marca=$("#modal_marca").val();
   }
@@ -10335,6 +10344,7 @@ function guardarAtributoItem(){
     nombre: $('#modal_nombre').val(),
     direccion: $('#modal_direccion').val(),
     norma:norma,
+    norma_cod:norma_cod,
     marca:marca,
     sello:sello,
     pais:pais,
@@ -10359,7 +10369,18 @@ function guardarAtributoItem(){
   }else{
     itemAtributos[fila].nombre=$('#modal_nombre').val();
     itemAtributos[fila].direccion=$('#modal_direccion').val();
-    itemAtributos[fila].norma=$('#modal_norma').val();
+    
+    var normasMultiple=$("#normas").val();
+    var norma_cod=normasMultiple.join(",");
+    var normasArray=[]; var i=0;
+    $("#normas option:selected").each(function() {     
+       normasArray[i]= $(this).text();      
+       i++;
+     });
+    var norma=normasArray.join(",");
+
+    itemAtributos[fila].norma=norma;
+    itemAtributos[fila].norma_cod=norma_cod;
     itemAtributos[fila].marca=$('#modal_marca').val();
     itemAtributos[fila].sello=$('#modal_sello').val();
     itemAtributos[fila].pais=$('#pais_empresa').val().split("####")[0];
@@ -10413,12 +10434,13 @@ function editarAtributo(fila){
   $('#modal_nombre').val(itemAtributos[fila].nombre);
   if($("#modal_marca").length){
     $('#modal_marca').val(itemAtributos[fila].marca);
-    $('#modal_norma').val(itemAtributos[fila].norma);
+    //$('#modal_norma').val(itemAtributos[fila].norma);
     $('#modal_sello').val(itemAtributos[fila].sello);
-
-    $("#modal_norma").tagsinput('removeAll');
-    $("#modal_norma").tagsinput('add', itemAtributos[fila].norma);
-
+    //$("#modal_norma").tagsinput('removeAll');
+    //$("#modal_norma").tagsinput('add', itemAtributos[fila].norma);
+    var normasMultiple=itemAtributos[fila].norma_cod.split(",");
+    $("#normas").val(normasMultiple);
+    var norma_cod=normasMultiple.join(",");
   }
   if(($("#div_marca").hasClass("d-none"))){
     $("#lbl_nombre_atributo").text("Nombre");

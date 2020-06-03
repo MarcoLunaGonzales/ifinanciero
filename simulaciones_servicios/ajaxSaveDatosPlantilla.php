@@ -64,7 +64,13 @@ $stmtDetAt->execute();
     $sqlDel="DELETE FROM simulaciones_servicios_atributosdias where cod_simulacionservicioatributo=$codigoDetAt";
     $stmtDel = $dbhA->prepare($sqlDel);
     $stmtDel->execute();
+
+    $sqlDel="DELETE FROM simulaciones_servicios_atributosnormas where cod_simulacionservicioatributo=$codigoDetAt";
+    $stmtDel = $dbhA->prepare($sqlDel);
+    $stmtDel->execute();
   }
+  //normas
+
    $dbhA = new Conexion();
   $sqlA="DELETE FROM simulaciones_servicios_atributos where cod_simulacionservicio=$codSimulacion";
   $stmtA = $dbhA->prepare($sqlA);
@@ -78,6 +84,7 @@ $stmtDetAt->execute();
               $direccionAtributo=$atributos[$att]->direccion;
               $marcaAtributo=$atributos[$att]->marca;
               $normaAtributo=$atributos[$att]->norma;
+              $normaCodAtributo=$atributos[$att]->norma_cod;
               $selloAtributo=$atributos[$att]->sello;
 
               $paisAtributo=$atributos[$att]->pais;
@@ -92,6 +99,13 @@ $stmtDetAt->execute();
 
             if($_GET['tcs']==0){
                 //$direccionAtributo="";
+              $normasFila=explode(",",$normaCodAtributo);
+                for ($ni=0; $ni < count($normasFila); $ni++) { 
+                 $codNorma=$normasFila[$ni];
+                  $sqlDetalleAtributosNormas="INSERT INTO simulaciones_servicios_atributosnormas (cod_simulacionservicioatributo, cod_norma, precio,cantidad) 
+                 VALUES ('$codSimulacionServicioAtributo', '$codNorma', '10',1)";
+                 $stmtDetalleAtributosNormas = $dbh->prepare($sqlDetalleAtributosNormas);
+                 $stmtDetalleAtributosNormas->execute();
               }else{
                  $nCDias=cantidadF($atributosDias);
                     for($jj=0;$jj<$nCDias;$jj++){
