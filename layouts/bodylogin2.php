@@ -317,6 +317,9 @@
     $("#formRegComp").submit(function(e) {
       var envio=0;
       var mensaje=""; var debehaber=0;
+      var debeIVA=0;
+      var haberIVA=0:
+      var banderaDebeHaberIVA=0;
       if(numFilas==0){
         mensaje+="<p>Debe tener registrado al menos una cuenta en detalle</p>";
       }
@@ -369,14 +372,20 @@
                         contcuenta++;
                       } 
                       var cod_confi_iva=document.getElementById('cod_cuenta_configuracion_iva').value;
+                     
                       if($('#cuenta'+(i+1)).val()==cod_confi_iva){//para facturas
                         contcuentaIva++;
+                        debeIVA=parseFloat($("#debe"+(i+1)).val());
+                        haberIVA=parseFloat($("#haber"+(i+1)).val());
+                        if(haberIVA>0){
+                          banderaDebeHaberIVA=1;
+                        }
                       }           
                     }
-                    if(contcuentaIva!=0){
+                    console.log("numero de ivas: "+contcuentaIva+" "+debeIVA+" "+haberIVA+" banderaIVADH: "+banderaDebeHaberIVA);
+
+                    if( contcuentaIva>0 && banderaDebeHaberIVA==0 ){
                       var cantiFacturas = itemFacturas.length;                        
-                      var contadorFacturas=0;
-                      // console.log("numero de Facturas: "+cantiFacturas+" json: "+JSON.stringify(itemFacturas));
                       var contadorFacturas=0;//var sumaTotalFactura=0;
                       var sumaTotalFactura=0;  
                       for (var i = 0; i < cantiFacturas; i++){
@@ -386,8 +395,6 @@
                         }else{//existe facturas                                                 
                           for(var j = 0; j < itemFacturas[i].length; j++){
                             var dato = Object.values(itemFacturas[i][j]);
-                            //console.log("dato: "+dato);
-                            //console.log("datos: "+dato[4]+" "+dato[7]+" "+dato[8]);
                             if(dato[4]==""){  dato[4]=0;}
                             if(dato[7]==""){  dato[7]=0;}
                             if(dato[8]==""){  dato[8]=0;}
@@ -403,8 +410,6 @@
                         envio=1; 
                       }
                       console.log("SUMA FACTURAS: "+sumaTotalFactura+" "+monto_debe_total_comprobante);
-                      
-
                       if(contadorFacturas==cantiFacturas){
                         mensaje+="<p>No puede existir Facturas vacías!</p>";
                         $('#msgError').html(mensaje);
@@ -431,8 +436,6 @@
                           var tipoECCasoespecial=$("#tipo_estadocuentas_casoespecial"+(i+1)).val();
                           var cuentaAuxiliar=$("#cuenta_auxiliar"+(i+1)).val();  
                           var estadoCuentaSelect=$("#nestado"+(i+1)).hasClass("estado");
-                          //var nombreCuenta=$("#divCuentaDetalle"+(i+1).text);
-                          //console.log(nombreCuenta);
 
                           //VALIDAMOS CUANDO LA CUENTA TENGA EC LA CUENTA AUXILIAR SIEMPRE ESTE SELECCIONADA.
                           if(tipoEstadoCuenta>0 && cuentaAuxiliar==0){  
@@ -448,7 +451,6 @@
                                 return false;
                               }
                             }
-                            //console.log("cuenta sin problemas; tipoComp:3");
                           }
                           
                           //Validar las cuentas que esten relacionadads al estado de cuentas los montos deben ser iguales

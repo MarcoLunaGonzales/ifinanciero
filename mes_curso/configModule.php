@@ -1,8 +1,8 @@
 <?php
 //AQUI SE DEFINEN LAS VARIABLES PARA EL ABM
 $table="mes_trabajo";
-$moduleNameSingular="Mes en Curso";
-$moduleNamePlural="Mes en Curso";
+$moduleNameSingular="Mes de Trabajo";
+$moduleNamePlural="Meses de Trabajo";
 
 $urlList="index.php?opcion=mesCurso";
 $urlList2="index.php?opcion=mesCurso2";
