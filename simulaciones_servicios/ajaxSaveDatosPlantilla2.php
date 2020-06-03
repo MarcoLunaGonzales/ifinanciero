@@ -100,7 +100,7 @@ $stmtDetAt->execute();
          //FIN simulaciones_serviciosauditores
 
 
-if($fijo!=""){
+/*if($fijo!=""){
 	$cliente=obtenerCodigoClienteSimulacion($codSimulacion);
 	//$productosLista=explode(",", $productos);
         $codTC=obtenerTipoCliente($cliente);
@@ -117,12 +117,12 @@ if($fijo!=""){
         }
        $cantidad=1;
        $monto=$suma; 
-}
+}*/
 $sqlDetalles="UPDATE simulaciones_servicios_tiposervicio SET cantidad_editado=$cantidad,monto=$monto,habilitado=$habilitado,cod_tipounidad=$unidad,cod_anio=$anio_fila where codigo=$codigo";
 $stmtDetalles = $dbh->prepare($sqlDetalles);
 $stmtDetalles->execute();
 
-      $sqlDelete="DELETE FROM simulaciones_cf where cod_simulacionservicio=$codSimulacion and cod_anio=$anio_fila";  
+      /*$sqlDelete="DELETE FROM simulaciones_cf where cod_simulacionservicio=$codSimulacion and cod_anio=$anio_fila";  
       $stmtDelete = $dbh->prepare($sqlDelete);
       $stmtDelete->execute();
   //costos Fijos en tabla
@@ -150,6 +150,6 @@ $stmtDetalles->execute();
          VALUES ('".$codSimulacion."',0,'".$codPartidaFijo."','".$codCuentaFijo."','".$montoUnidad."',1,'".$montoUnidad."','".$anio_fila."')";
          $stmtFijos = $dbh->prepare($sqlFijos);
          $stmtFijos->execute();
-      } 
+      }*/ 
 echo $anio."WWW".$iteracion;
 ?>

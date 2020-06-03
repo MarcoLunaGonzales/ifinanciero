@@ -270,17 +270,20 @@ if(isset($_GET['nombre'])){
       $suma=0;$aux=0;$aux2=0;
       if(obtenerConfiguracionValorServicio($codCS)==true&&isset($_GET['region_cliente'])){
         //$productosLista=explode(",", $productos);
-        $codTC=obtenerTipoCliente($cliente);
+        if(isset($_GET['tipo_cliente'])){
+          $codTC=$_GET['tipo_cliente'];
+        }else{
+          $codTC=obtenerTipoCliente($cliente);
+        }        
         $nacional=obtenerTipoNacionalCliente($cliente);
         if(isset($_GET['region_cliente'])){
           $nacional=$_GET['region_cliente'];
         }
-
-        if($nacional>1){
+        /*if($nacional>1){
           if($codTC<=2){
              $codTC=4; //empresa MEDIANA
           }
-        }
+        }*/
         
         for ($i=0; $i < count($atributos); $i++) {
           $aux=obtenerCostoTipoClienteSello(($i+1),$codTC,$nacional);

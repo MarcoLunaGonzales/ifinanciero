@@ -184,6 +184,30 @@ $dbh = new Conexion();
                         </div>
                        </div>
                       </div><!--row-->
+                      <div class="row">
+                       <label class="col-sm-2 col-form-label">Tipo Cliente</label>
+                       <div class="col-sm-7">
+                        <div class="row">
+                          <div class="col-sm-12">
+                            <div class="form-group">
+                                <select class="selectpicker form-control" name="tipo_cliente" id="tipo_cliente" data-style="btn btn-warning"  required>
+                                <?php
+                                 $stmt = $dbh->prepare("SELECT c.codigo, c.nombre FROM tipos_clientes c order by 1");
+                                 $stmt->execute();
+                                  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                  $codigoX=$row['codigo'];
+                                  $nombreX=$row['nombre'];
+                                   ?>
+                                  <option value="<?=$codigoX;?>"><?=$nombreX;?></option> 
+                                  <?php
+                                    }
+                                    ?>
+                                </select>
+                              </div>
+                          </div> 
+                        </div>
+                       </div>
+                      </div><!--row-->
                       </div>
                       <div id="sitios_div" class="d-none">
                       <div class="row">

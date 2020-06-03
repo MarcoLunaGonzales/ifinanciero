@@ -400,6 +400,7 @@
                 </tbody>
               </table>
               <input type="hidden" value="<?=$filaA?>" id="cantidad_archivosadjuntosdetalle" name="cantidad_archivosadjuntosdetalle">
+              <input type="hidden" value="<?=$filaA?>" id="cantidad_archivosadjuntosdetalleFijos" name="cantidad_archivosadjuntosdetalleFijos">
             </div>
 
      <!--<div class="fileinput fileinput-new col-md-12" data-provides="fileinput">
