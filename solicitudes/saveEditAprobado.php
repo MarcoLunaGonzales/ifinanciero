@@ -59,18 +59,6 @@ while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
   $sqlDel="DELETE FROM distribucion_gastos_solicitud_recursos where cod_solicitudrecurso=$codSolicitud";
   $stmtDel = $dbh->prepare($sqlDel);
   $stmtDel->execute();
-  //borramos los archivos
-  /*$sqlDel="DELETE FROM archivos_adjuntos where cod_objeto=$codSolicitud and cod_tipopadre=2708";
-  $stmtDel = $dbh->prepare($sqlDel);
-  $stmtDel->execute();
-  $sqlDel="DELETE FROM archivos_adjuntos where cod_padre=$codSolicitud and cod_tipopadre=27080";
-  $stmtDel = $dbh->prepare($sqlDel);
-  $stmtDel->execute();*/
-
-  //insertamos la distribucion
-  /*$sqlDel="DELETE FROM solicitud_recursosdetalle where cod_solicitudrecurso=$codSolicitud";
-  $stmtDel = $dbh->prepare($sqlDel);
-  $stmtDel->execute();*/
   
   $valorDist=$_POST['n_distribucion'];
   if($valorDist!=0){
@@ -90,45 +78,36 @@ while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
 $flagSuccess=true;
 //subir archivos al servidor
 //Como el elemento es un arreglos utilizamos foreach para extraer todos los valores
-    foreach($_FILES["archivos"]['tmp_name'] as $key => $tmp_name)
-    {
-        //Validamos que el archivos exista
-        if($_FILES["archivos"]["name"][$key]) {
-            $filename = $_FILES["archivos"]["name"][$key]; //Obtenemos el nombre original del archivos
-            $source = $_FILES["archivos"]["tmp_name"][$key]; //Obtenemos un nombre temporal del archivos
-            
-            $directorio = '../assets/archivos-respaldo/archivos_solicitudes/SOL-'.$codSolicitud; //Declaramos una  variable con la ruta donde guardaremos los archivoss
-            //Validamos si la ruta de destino existe, en caso de no existir la creamos
-            if(!file_exists($directorio)){
+    $nArchivosCabecera=$_POST["cantidad_archivosadjuntos"];
+for ($ar=1; $ar <= $nArchivosCabecera ; $ar++) { 
+  if(isset($_POST['codigo_archivo'.$ar])){
+    if($_FILES['documentos_cabecera'.$ar]["name"]){
+      $filename = $_FILES['documentos_cabecera'.$ar]["name"]; //Obtenemos el nombre original del archivos
+      $source = $_FILES['documentos_cabecera'.$ar]["tmp_name"]; //Obtenemos un nombre temporal del archivos    
+      $directorio = '../assets/archivos-respaldo/archivos_solicitudes/SOL-'.$codSolicitud; //Declaramos una  variable con la ruta donde guardaremos los archivoss
+      //Validamos si la ruta de destino existe, en caso de no existir la creamos
+      if(!file_exists($directorio)){
                 mkdir($directorio, 0777,true) or die("No se puede crear el directorio de extracci&oacute;n");    
-            }
-            
-            
-            $target_path = $directorio.'/'.$filename; //Indicamos la ruta de destino, así como el nombre del archivos
-            
-            //Movemos y validamos que el archivos se haya cargado correctamente
-            //El primer campo es el origen y el segundo el destino
-            if(move_uploaded_file($source, $target_path)) { 
-                echo "ok";
-                for ($a=0; $a < count($arrayFilesCabecera); $a++) { 
-                  if($arrayFilesCabecera[$a]->nombre==$filename){
-                    //insertamos a la tabla de archivos
-                    $tipo=$arrayFilesCabecera[$a]->tipo;
-                    $descripcion=$arrayFilesCabecera[$a]->nombre_tipo;
-                    $tipoPadre=2708;
-                    $sqlInsert="INSERT INTO archivos_adjuntos (cod_tipoarchivo,descripcion,direccion_archivo,cod_tipopadre,cod_padre,cod_objeto) 
-                    VALUES ('$tipo','$descripcion','$target_path','$tipoPadre',0,'$codSolicitud')";
-                    $stmtInsert = $dbh->prepare($sqlInsert);
-                    $stmtInsert->execute();    
-                    print_r($sqlInsert);
-                  }
-                }
-            } else {    
-                echo "error";
-            }
-            
-        }
+      }
+      $target_path = $directorio.'/'.$filename; //Indicamos la ruta de destino, así como el nombre del archivos
+      //Movemos y validamos que el archivos se haya cargado correctamente
+      //El primer campo es el origen y el segundo el destino
+      if(move_uploaded_file($source, $target_path)) { 
+        echo "ok";
+        $tipo=$_POST['codigo_archivo'.$ar];
+        $descripcion=$_POST['nombre_archivo'.$ar];
+        $tipoPadre=2708;
+        $sqlInsert="INSERT INTO archivos_adjuntos (cod_tipoarchivo,descripcion,direccion_archivo,cod_tipopadre,cod_padre,cod_objeto) 
+        VALUES ('$tipo','$descripcion','$target_path','$tipoPadre',0,'$codSolicitud')";
+        $stmtInsert = $dbh->prepare($sqlInsert);
+        $stmtInsert->execute();    
+        print_r($sqlInsert);
+      } else {    
+          echo "error";
+      } 
     }
+  }
+}
 
 //guardar las ediciones
     $fila=0;
@@ -153,48 +132,36 @@ for ($i=1;$i<=$cantidadFilas;$i++){
     $data[$fila][16]=$_POST["cod_cuentaBancaria".$i];
     //$dataInsert  
     $fila++;
-      foreach($_FILES["archivos".$i]['tmp_name'] as $key => $tmp_name)
-      {
-        //Validamos que el archivos exista
-        if($_FILES["archivos".$i]["name"][$key]) {
-            $filename = $_FILES["archivos".$i]["name"][$key]; //Obtenemos el nombre original del archivos
-            $source = $_FILES["archivos".$i]["tmp_name"][$key]; //Obtenemos un nombre temporal del archivos
-            
-            $directorio = '../assets/archivos-respaldo/archivos_solicitudes/SOL-'.$codSolicitud.'/DET-'; //Declaramos una  variable con la ruta donde guardaremos los archivoss
-            //Validamos si la ruta de destino existe, en caso de no existir la creamos
-            if(!file_exists($directorio)){
+      $nArchivosDetalle=$_POST["cantidad_archivosadjuntosdetalle".$i];
+    for ($ar=1; $ar <= $nArchivosDetalle ; $ar++) { 
+     if(isset($_POST['codigo_archivodetalle'.$ar."FFFF".$i])){
+        if($_FILES['documentos_detalle'.$ar."FFFF".$i]["name"]){
+          $filename = $_FILES['documentos_detalle'.$ar."FFFF".$i]["name"]; //Obtenemos el nombre original del archivos
+          $source = $_FILES['documentos_detalle'.$ar."FFFF".$i]["tmp_name"]; //Obtenemos un nombre temporal del archivos    
+          $directorio = '../assets/archivos-respaldo/archivos_solicitudes/SOL-'.$codSolicitud.'/DET-'.$fila; //Declaramos una  variable con la ruta donde guardaremos los archivoss
+          //Validamos si la ruta de destino existe, en caso de no existir la creamos
+        if(!file_exists($directorio)){
                 mkdir($directorio, 0777,true) or die("No se puede crear el directorio de extracci&oacute;n");    
-            }
-            
-            
-            $target_path = $directorio.'/'.$filename; //Indicamos la ruta de destino, así como el nombre del archivos
-            
-            //Movemos y validamos que el archivos se haya cargado correctamente
-            //El primer campo es el origen y el segundo el destino
-            if(move_uploaded_file($source, $target_path)) { 
-                echo "ok";
-                for ($a=0; $a < count($arrayFilesDetalle[$i-1]); $a++) {         
-                  if($arrayFilesDetalle[$i-1][$a]->nombre==$filename){
-                    
-                    //insertamos a la tabla de archivos
-                    $tipo=$arrayFilesDetalle[$i-1][$a]->tipo;
-                    $descripcion=$arrayFilesDetalle[$i-1][$a]->nombre_tipo;
-                    $tipoPadre=27080; //clasificador para detalle de solicitudes
-                    $sqlInsert="INSERT INTO archivos_adjuntos (cod_tipoarchivo,descripcion,direccion_archivo,cod_tipopadre,cod_padre,cod_objeto) 
+        }
+        $target_path = $directorio.'/'.$filename; //Indicamos la ruta de destino, así como el nombre del archivos
+        //Movemos y validamos que el archivos se haya cargado correctamente
+        //El primer campo es el origen y el segundo el destino
+        if(move_uploaded_file($source, $target_path)) { 
+          echo "ok";
+          $tipo=$_POST['codigo_archivodetalle'.$ar."FFFF".$i];
+          $descripcion=$_POST['nombre_archivodetalle'.$ar."FFFF".$i];
+          $tipoPadre=27080;//clasificador para detalle de solicitudes
+          $sqlInsert="INSERT INTO archivos_adjuntos (cod_tipoarchivo,descripcion,direccion_archivo,cod_tipopadre,cod_padre,cod_objeto) 
                     VALUES ('$tipo','$descripcion','$target_path','$tipoPadre','$codSolicitud','$codComprobanteDetalle')";
                     $stmtInsert = $dbh->prepare($sqlInsert);
                     $stmtInsert->execute();    
                     print_r($sqlInsert);
-                    
-                  }
-                }
-                
-            } else {    
-                echo "error";
-            }
-            
-        }
-      }
+        } else {    
+          echo "error";
+        } 
+       }
+      }//FIN IF
+     }
       $codComprobanteDetalle++;   
     }
 } 
@@ -225,13 +192,6 @@ $stmt1 = obtenerSolicitudesDet($codSolicitud);
 editarComprobanteDetalle($codSolicitud,'cod_solicitudrecurso',$cont1,$fila,$stmt1,'solicitud_recursosdetalle',$cab,$data,$facturas);
 if($flagSuccess==true){
 
-     
-
-    /*if($flagSuccessComprobante==true){
-       $sqlUpdateSolicitud="UPDATE solicitud_recursos SET  cod_estadosolicitudrecurso=3,cod_comprobante=$codComprobante where codigo=$codSolicitud";
-       $stmtUpdateSolicitud = $dbh->prepare($sqlUpdateSolicitud);
-       $stmtUpdateSolicitud->execute();
-    }*/
 if(!isset($_POST['control_admin'])){
  $urlList2=$urlList;
 }   

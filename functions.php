@@ -2256,7 +2256,7 @@ where pc.codigo=cs.cod_plancuenta and s.codigo=cs.cod_simulacioncostos and pc.co
 function obtenerDetalleSolicitudProveedorPlantilla($codigo,$fechai,$fechaf,$estado,$codUsuario){
    $dbh = new Conexion();
    $sql="";
-   $sql="SELECT tablap.codigo as codigo_detalle,tablap.glosa,tablap.monto_total,tablap.habilitado,tabla_uno.* FROM (SELECT s.cod_plantillacosto,cs.monto_local,cs.monto_externo,pc.codigo, pc.numero,pc.nombre,pp.nombre as partida, pp.codigo as cod_partida,s.nombre as simulacion,s.codigo as cod_simulacion,s.fecha as fecha_simulacion 
+   /*$sql="SELECT tablap.codigo as codigo_detalle,tablap.glosa,tablap.monto_total,tablap.habilitado,tabla_uno.* FROM (SELECT s.cod_plantillacosto,cs.monto_local,cs.monto_externo,pc.codigo, pc.numero,pc.nombre,pp.nombre as partida, pp.codigo as cod_partida,s.nombre as simulacion,s.codigo as cod_simulacion,s.fecha as fecha_simulacion 
 from simulaciones_costos s 
 join plantillas_costo p on s.cod_plantillacosto=p.codigo 
 join plantillas_gruposcosto pg on p.codigo=pg.cod_plantillacosto 
@@ -2266,7 +2266,42 @@ join partidaspresupuestarias_cuentas ppc on ppc.cod_partidapresupuestaria=pp.cod
 join plan_cuentas pc on ppc.cod_cuenta=pc.codigo, cuentas_simulacion cs
 where pc.codigo=cs.cod_plancuenta and s.codigo=cs.cod_simulacioncostos and pc.codigo=$codigo and s.cod_estadosimulacion=$estado and s.cod_responsable=$codUsuario and s.fecha BETWEEN '$fechai' and '$fechaf' order by pp.codigo)
 tabla_uno,plantillas_servicios_detalle tablap 
-where tablap.cod_cuenta=tabla_uno.codigo and (tablap.cod_plantillacosto!='' or tablap.cod_plantillacosto!=NULL) and tablap.cod_plantillacosto=tabla_uno.cod_plantillacosto and tablap.habilitado=1 and tablap.cod_estadoreferencial=1 order by tabla_uno.codigo;";
+where tablap.cod_cuenta=tabla_uno.codigo and (tablap.cod_plantillacosto!='' or tablap.cod_plantillacosto!=NULL) and tablap.cod_plantillacosto=tabla_uno.cod_plantillacosto and tablap.habilitado=1 and tablap.cod_estadoreferencial=1 order by tabla_uno.codigo;";*/
+   $sql="(select * from v_propuestas_detalle_variables  where codigo=$codigo order by cod_detalle)
+        UNION
+         (select * from v_propuestas_detalle_honorarios  where codigo=$codigo)";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+}
+function obtenerDetalleSolicitudProveedorPlantillaSec($codigo,$fechai,$fechaf,$codUsuario){
+   $dbh = new Conexion();
+   $sql="";
+   $sql="(SELECT 2 as simu,sec.* from (
+SELECT tablap.codigo as codigo_detalle,tablap.glosa,tablap.monto_total,tablap.habilitado,tabla_uno.*,s.nombre as nombre_simulacion,plan.cod_area,plan.cod_unidadorganizacional  
+FROM 
+(SELECT pc.codigo,pc.numero,pc.nombre,pp.nombre as partida, pp.codigo as cod_partida,sc.monto_local,sc.monto_externo ,sc.cod_simulacioncostos
+from cuentas_simulacion sc 
+join partidas_presupuestarias pp on pp.codigo=sc.cod_partidapresupuestaria 
+join plan_cuentas pc on sc.cod_plancuenta=pc.codigo order by pp.codigo) tabla_uno,
+simulaciones_detalle tablap
+join simulaciones_costos s on s.codigo=tablap.cod_simulacioncosto
+join plantillas_costo plan on plan.codigo=s.cod_plantillacosto
+where tablap.cod_cuenta=tabla_uno.codigo and (tablap.cod_plantillacosto!='' or tablap.cod_plantillacosto!=NULL) and tablap.cod_plantillacosto=3 
+and tablap.cod_simulacioncosto=tabla_uno.cod_simulacioncostos and tablap.habilitado=1 and tablap.cod_estadoreferencial=1  
+and tablap.cod_cuenta=$codigo and s.cod_responsable=$codUsuario and s.fecha BETWEEN '$fechai' and '$fechaf'
+order by tabla_uno.codigo) sec )";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+}
+function obtenerDetalleSolicitudProveedorPlantillaTCPTCS($codigo,$fechai,$fechaf,$codUsuario){
+   $dbh = new Conexion();
+   $sql="";
+   $sql="(SELECT 1 as simu,tcptcs.* FROM ((select v.* ,s.nombre as nombre_simulacion,plan.cod_area,plan.cod_unidadorganizacional from v_propuestas_detalle_variables v join simulaciones_servicios s on s.codigo=v.cod_simulacionservicio join plantillas_servicios plan on plan.codigo=s.cod_plantillaservicio where v.codigo=$codigo and s.cod_responsable=$codUsuario and s.fecha BETWEEN '$fechai' and '$fechaf' order by v.cod_detalle)
+        UNION
+         (select v.*,s.nombre as nombre_simulacion,plan.cod_area,plan.cod_unidadorganizacional from v_propuestas_detalle_honorarios v join simulaciones_servicios s on s.codigo=v.cod_simulacionservicio join plantillas_servicios plan on plan.codigo=s.cod_plantillaservicio where v.codigo=$codigo and s.cod_responsable=$codUsuario and s.fecha BETWEEN '$fechai' and '$fechaf')) tcptcs         
+          )";
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
    return $stmt;
@@ -2390,14 +2425,14 @@ function contarFacturasSoli($codigo){
 
 function obtenerCuentasSimulaciones($nivel,$estado,$codUsuario){
  $dbh = new Conexion();
-   $sql="";
-   $sql="SELECT DISTINCT pc.* from simulaciones_costos s 
+   $sql="SELECT DISTINCT p.* from plantillas_servicios_detalle d join plan_cuentas p on p.codigo=d.cod_cuenta where d.editado_alumno!=0";
+   /*$sql="SELECT DISTINCT pc.* from simulaciones_costos s 
 join plantillas_costo p on s.cod_plantillacosto=p.codigo 
 join plantillas_gruposcosto pg on p.codigo=pg.cod_plantillacosto 
 join plantillas_grupocostodetalle pgd on pgd.cod_plantillagrupocosto=pg.codigo
 join partidas_presupuestarias pp on pp.codigo=pgd.cod_partidapresupuestaria 
 join partidaspresupuestarias_cuentas ppc on ppc.cod_partidapresupuestaria=pp.codigo 
-join plan_cuentas pc on ppc.cod_cuenta=pc.codigo WHERE s.cod_estadosimulacion=$estado and pg.cod_tipocosto=2 and s.cod_responsable=$codUsuario and pc.nivel=$nivel order by pp.codigo";
+join plan_cuentas pc on ppc.cod_cuenta=pc.codigo WHERE s.cod_estadosimulacion=$estado and pg.cod_tipocosto=2 and s.cod_responsable=$codUsuario and pc.nivel=$nivel order by pp.codigo";*/
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
    return $stmt;
@@ -6711,5 +6746,22 @@ function obtenerFechaSimulacionCosto($codigo){
       $valor=$row['fecha'];
   }
   return $valor;
+}
+function verificarArchivoAdjuntoExistente($tipo,$padre,$objeto,$codArchivo){
+  $sqlObjeto="";
+  if($objeto>0){
+    $sqlObjeto="and cod_objeto=$objeto";
+  }
+   $dbh = new Conexion();
+   $sql="SELECT * FROM archivos_adjuntos WHERE cod_tipoarchivo=$codArchivo and cod_tipopadre=$tipo and cod_padre=$padre $sqlObjeto";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   $valor=0;$descripcion="";$url="";
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor++;
+      $descripcion=$row['descripcion'];
+      $url=$row['direccion_archivo'];
+  }
+  return array($valor,$descripcion,$url);
 }
 ?>

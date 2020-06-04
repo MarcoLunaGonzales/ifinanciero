@@ -1,0 +1,40 @@
+OBSERVACIONES PLANTILLAS TCP TCS
+- SITIOS POR AÑO Y DIAS DE AUDITORIA.
+- EQUIPO AUDITOR POR DEFECTO ES 1 Y DEBEN AGREGARSE ADICIONALES (Auditor(2))
+- DIAS DE AUDITORIA SALEN DEL REGISTRO Y POR DEFECTO QUE SE PONGA 10
+- LOS CALCULOS EN LA PLANTILLA DE COSTOS FIJOS SERAN NACIONALES Y TAMBIEN LOS DATOS DEL PRESUPUESTO.
+- PONER OPCION DE REPLICAR INFORMACION DE HONORARIOS Y COSTOS VARIABLES A OTROS AÑOS.
+
+- En plantilla poner un correlativo entre parentesis (1) en el campo nombre.
+- En plantilla solo poner los sericios tcp y tcs..
+- QUITAR DIAS DE AUDITORIA ----> En Propuesta Dias de servicio -> dias de auditoria
+- Agregar productos los siguientes campos 
+     -MARCA y 
+     -NORMA
+     -NRO SELLO
+- (para tcp quitar AFNOR)
+- Detalle de ciudad en Región Bolivia - Extranjero
+- Agregar los tarifarios DE Precio de AUDITORIAS
+- En el Modal EDITAR PROPUESTA solo filtrar los servicios tcp o tcs según el area.
+- agregar el ITEM de GASTOS en lista de servicios "MODAL EDITAR PROPUESTA"
+- cargar por defecto los dias de la auditoria a todos los selects edia registrado. 
+
+- items servicios TCS por defecto
+   - ETAPA 1
+   - ETAPA 2
+   - SEGUIMIENTO 1  
+   - SEGUIMIENTO  2
+- Corregir el Error al agregar servicio en el modal "MODAL EDITAR PROPUESTA".
+
+
+*****************************************************************************************************
+
+Cambios a la BASE DE DATOS
+
+- CONFIGURACIONES 
+
+ID:39.
+VALOR 10.
+TEXTO: DIAS DE AUDITORIA.
+
+- TABLA SIMULACIONES_SERVICIOS_ATRIBUTOS

@@ -13,18 +13,4 @@ $stmtX->execute();
 $usuario=$_SESSION['globalUser'];
  $query="SELECT * FROM af_proveedores order by codigo";
   ?>
-   <!--<label class="col-sm-3 col-form-label">Proveedores :</label>-->
-   <div class="col-sm-12">
-     <div class="form-group">
-          <select class="selectpicker form-control form-control-sm" name="proveedores" id="proveedores" data-style="btn btn-primary" required>
-           <?php 
-           $stmt = $dbh->prepare($query);
-           $stmt->execute();
-           while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-              $codigoProv=$row['codigo'];    
-              ?><option value="<?=$codigoProv?>" class="text-right"><?=$row['nombre']?></option>
-             <?php 
-             } ?> 
-           </select>
-      </div>
-    </div>        
+   

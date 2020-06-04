@@ -226,7 +226,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
               </div>
             </div>             
             <div class="col-sm-3" id="lista_tipo">
-            </div>
+            </div> 
             <div class="col-sm-2">
               <div class="form-group">
                   <a href="#" class="btn btn-sm btn-warning d-none" id="buscar_solicitudesdetalle" onclick="filtrarSolicitudRecursosDetalleDatos()"><i class="material-icons">search</i> BUSCAR DETALLES</a>
@@ -240,6 +240,51 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 </div> 
             </div>
           </div>
+          <div id="listaPro" class="row d-none">
+            <div class="col-sm-2">
+              <div class="form-group">
+                  <select class="selectpicker form-control form-control-sm" name="tipo_solicitudproveedor" id="tipo_solicitudproveedor" data-style="btn btn-info">
+                      <option value="1">CAPACITACIÓN</option> 
+                      <option value="2">E. CONFORMIDAD</option> 
+                  </select>
+              </div>
+            </div>
+              <div class="col-sm-4">
+              <div class="form-group">
+                    <select class="selectpicker form-control form-control-sm" data-style="select-with-transition" data-live-search="true" title="-- Elija una cuenta --" name="cuenta_proveedor" id="cuenta_proveedor"  data-style="select-with-transition" required>
+                      <?php
+                        for ($i=0; $i < count($arrayNuevo); $i++) {
+                        $solicitudDet=obtenerSolicitudRecursosDetalleCuenta($codigo,$arrayNuevo[$i][0]);
+                        $contExiste=0;
+                        while ($rowSolDet = $solicitudDet->fetch(PDO::FETCH_ASSOC)) {
+                          $contExiste++;
+                        }
+                         if($contExiste!=0){
+                           ?><option value="<?=$arrayNuevo[$i][0];?>">[<?=$arrayNuevo[$i][1]?>] - <?=$arrayNuevo[$i][2]?> (&#9679; activo)</option>  <?php
+                         }else{
+                          ?><option value="<?=$arrayNuevo[$i][0];?>">[<?=$arrayNuevo[$i][1]?>] - <?=$arrayNuevo[$i][2]?></option>  <?php
+                         }
+                        }
+                      ?>
+                    </select>
+                </div>
+            </div>   
+            <div class="col-sm-2">
+              <div class="form-group">
+                  <label class="bmd-label-static">Desde</label>
+                  <input type="text" class="form-control datepicker" name="fecha_desde" id="fecha_desde" value="<?=$fechaDesde?>">
+              </div>
+            </div>
+            <div class="col-sm-2">
+              <div class="form-group">
+                  <label class="bmd-label-static">Hasta</label>
+                  <input type="text" class="form-control datepicker" name="fecha_hasta" id="fecha_hasta" value="<?=$fechaHasta?>">
+              </div>
+            </div>
+            <div class="col-sm-2">
+              <button title="Buscar (alt + s)" type="button" id="boton_solicitudbuscar" name="boton_solicitudbuscar" class="btn btn-warning btn-round btn-fab" onClick="addSolicitudDetalleSearch()"><i class="material-icons">search</i></button>
+            </div>
+            </div> 
           <div class="row">
             <div class="col-sm-12">
                <div class="form-group">

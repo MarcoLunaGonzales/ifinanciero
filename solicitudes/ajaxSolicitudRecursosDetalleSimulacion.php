@@ -145,7 +145,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             <input type="hidden" name="apellido_beneficiario<?=$idFila?>" id="apellido_beneficiario<?=$idFila?>" value=""/>
             <input type="hidden" name="cuenta_beneficiario<?=$idFila?>" id="cuenta_beneficiario<?=$idFila?>" value=""/>
             
-            <span id="archivos_fila<?=$idFila?>" class="">
+            <span id="archivos_fila<?=$idFila?>" class="d-none">
                                        <?php
                                        //archivos adjuntos detalle
                                         $stmtArchivo = $dbh->prepare("SELECT * from ibnorca.vw_plantillaDocumentos where idTipoServicio=2708"); //2708 //2708 localhost
@@ -157,14 +157,14 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                            $nombreX=$rowArchivo['Documento'];
                                            $ObligatorioX=$rowArchivo['Obligatorio'];
                                         ?>
-                                        <input type="text" name="codigo_archivodetalle<?=$filaA?>FFFF<?=$idFila?>" id="codigo_archivodetalle<?=$filaA?>FFFF<?=$idFila?>" value="<?=$codigoX?>">
-                                        <input type="text" name="nombre_archivodetalle<?=$filaA?>FFFF<?=$idFila?>" id="nombre_archivodetalle<?=$filaA?>FFFF<?=$idFila?>" value="<?=$nombreX?>">
+                                        <input type="hidden" name="codigo_archivodetalle<?=$filaA?>FFFF<?=$idFila?>" id="codigo_archivodetalle<?=$filaA?>FFFF<?=$idFila?>" value="<?=$codigoX?>">
+                                        <input type="hidden" name="nombre_archivodetalle<?=$filaA?>FFFF<?=$idFila?>" id="nombre_archivodetalle<?=$filaA?>FFFF<?=$idFila?>" value="<?=$nombreX?>">
                                         <input type="file" class="archivo" name="documentos_detalle<?=$filaA?>FFFF<?=$idFila?>" id="documentos_detalle<?=$filaA?>FFFF<?=$idFila?>"/>
                                        <?php
                                         }
                                         ?>
                                       </span>  
-                                      <input type="text" value="<?=$filaA?>" id="cantidad_archivosadjuntosdetalle<?=$idFila?>" name="cantidad_archivosadjuntosdetalle<?=$idFila?>">
+                                      <input type="hidden" value="<?=$filaA?>" id="cantidad_archivosadjuntosdetalle<?=$idFila?>" name="cantidad_archivosadjuntosdetalle<?=$idFila?>">
                                         <?php
                                      //fin archivos adjuntos detalle  
             ?>                            
