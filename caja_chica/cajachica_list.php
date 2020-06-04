@@ -13,7 +13,7 @@ $stmtTCC->execute();
 $resultTCC=$stmtTCC->fetch();
 $nombre_tipoCC=$resultTCC['nombre'];
 
-$sql="SELECT *,
+$sql="SELECT *,date_format(fecha,'%d/%m/%Y') as fecha_x,
   (select e.nombre from estados_contrato e where e.codigo=cod_estado) as nombre_estado,
 (select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=cod_personal) as personal
  from caja_chica where cod_estadoreferencial=1 and cod_tipocajachica = $codigo_tipo_caja_Chica";
@@ -24,7 +24,7 @@ $stmt->execute();
 //bindColumn
 $stmt->bindColumn('codigo', $cod_cajachica);
 $stmt->bindColumn('cod_tipocajachica', $cod_tipocajachica);
-$stmt->bindColumn('fecha', $fecha);
+$stmt->bindColumn('fecha_x', $fecha);
 $stmt->bindColumn('numero', $numero);
 $stmt->bindColumn('monto_inicio', $monto_inicio);
 // $stmt->bindColumn('monto_reembolso', $monto_reembolso);
@@ -57,17 +57,17 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
 
                       <thead>
                         <tr>
-                          <th>Nro. Caja Chica</th>
-                          <th>Fecha</th>
+                          <th width="6%"><small><small>Nro. <br>Caja Chica</small></small></th>
+                          <th width="6%"><small>Fecha</small></th>
                           
-                          <th>Responsable</th>
-                          <th>Monto Inicio</th>
-                          <th>Saldo</th>
-                          <th>Reembolso</th>
-                          <th>Detalle</th>
-                          <th>estado</th>
-                          <th></th>
-                          <th></th>
+                          <th width="10%"><small>Responsable</small></th>
+                          <th width="7%"><small><small>Monto<br>Inicio</small></small></th>
+                          <th width="7%"><small>Saldo</small></th>
+                          <th width="7%"><small>Reembolso</small></th>
+                          <th><small>Detalle</small></th>
+                          <th width="5%"><small>estado</small></th>
+                          <th width="10%"><small></small></th>
+                          <th width="2%"><small></small></th>
                         </tr>
                       </thead>
                       <tbody>
@@ -90,18 +90,16 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
                            
                           ?>
                           <tr>
-                            <td><?=$numero;?></td>    
-                              <td><?=$fecha;?></td>
-                              <td><?=$personal;?></td>        
-                              <td><?=number_format($monto_inicio, 2, '.', ',');?></td>        
-                              <td><?=number_format($monto_saldo, 2, '.', ',');?></td><!-- el saldo -->        
-                              <td><?=number_format($monto_reembolso_nuevo, 2, '.', ',');?></td> <!-- el remmbolso registrado -->
-                              <td><?=$observaciones;?></td>        
-                              <td><?=$label.$nombre_estado."</span>";?></td>
+                              <td class="text-right"><small><?=$numero;?></small></td>    
+                              <td><small><?=$fecha;?></small></td>
+                              <td class="text-left"><small><?=$personal;?></small></td>        
+                              <td class="text-right"><small><?=number_format($monto_inicio, 2, '.', ',');?></small></td>        
+                              <td class="text-right"><small><?=number_format($monto_saldo, 2, '.', ',');?></small></td><!-- el saldo -->        
+                              <td class="text-right"><small><?=number_format($monto_reembolso_nuevo, 2, '.', ',');?></small></td> <!-- el remmbolso registrado -->
+                              <td class="text-left"><small><small><?=$observaciones;?></small></small></td>        
+                              <td><small><?=$label.$nombre_estado."</span>";?></small></td>
                                 
                               <!-- href='<?=$urlprintFiniquitosOficial;?>?codigo=<?=$codigo;?>' -->
-
-
                               <td class="td-actions text-right">
                                 <?php
                                 if($globalAdmin==1 and $cod_estado==1){
@@ -131,7 +129,6 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
                                 <?php
                                   }
                                 ?>
-                              
                               </td>
                               <td class="td-actions text-center">
                                 <?php

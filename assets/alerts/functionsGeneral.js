@@ -13751,17 +13751,24 @@ function RegistrarComprobanteCajaChica(cod_cajachica,cod_tipocajachica,nro_compr
     data:"cod_cajachica="+cod_cajachica+"&nro_comprobante="+nro_comprobante+"&mes_comprobante="+mes_comprobante+"&tipo_comprobante="+tipo_comprobante,
     url:"caja_chica/executeComprobanteCajaChica_existente.php",
     success:function(r){
-      if(r==1){
+      var respu=r.split('#####');
+      var estado=respu[0];
+      var stringRetenciones=respu[1];      
+      if(estado==1){
         alerts.showSwal('success-message','index.php?opcion=ListaCajaChica&codigo='+cod_tipocajachica);
       }else{
-        if(r==0){
+        if(estado==0){
           Swal.fire("ERROR!", "A ocurrido un error inesperado al generar el comprobante!", "warning");
         }else{
-          if(r==2){
+          if(estado==2){
             Swal.fire("Informativo!", "El COMPROBANTE ya fue generado. Actualice el Sistema Por favor!", "warning");
           }else{
-            if(r==3){
+            if(estado==3){
               Swal.fire("ERROR!", "No se pudo encontrar el comprobante, por favor verifique los datos introducidos!", "warning");
+            }else{
+              if(estado==4){
+                Swal.fire("ERROR!", "No se pudo generar el comporbante, debido a que los nros. de documentos de los gastos de caja chica listados a continuación, no tienen registrado la factura correspondiente: <br>\n"+stringRetenciones+".", "warning");
+              }
             }
           }
         }      
@@ -14027,4 +14034,37 @@ function guardarNuevaCuentaAuxi(){
       }
     }
   }
+}
+
+
+function botonBuscarComprobante_caja_chica(){
+  var valor_uo=$("#OficinaBusqueda").val();
+  var valor_tipo=$("#tipoBusqueda").val();
+  var valor_fi=$("#fechaBusquedaInicio").val();
+  var valor_ff=$("#fechaBusquedaFin").val();
+  var valor_glosa=$("#glosaBusqueda").val();
+  var valor_nro_compr=$("#nro_comprobante").val();
+  var valor_nro_cuenta=$("#cuenta_auto_id").val();
+  contenedor_p = document.getElementById('contenedor_lista_comprobantes');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'caja_chica/ajaxListaComprobantesModal.php?cod_uo='+valor_uo+'&tipo='+valor_tipo+'&fechaI='+valor_fi+'&fechaF='+valor_ff+'&glosa='+valor_glosa+'&comprobante='+valor_nro_compr+'&cuenta='+valor_nro_cuenta,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor_p.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);
+      // $("#modalBuscador").modal("hide");
+      $("#modal_lista_comprobantes").modal("show");
+      
+    }
+  }
+  ajax.send(null);
+}
+function SeleccionarComprobante_cajachica_reembolso(cod_comprobante,cod_comprobantedetalle,glosa_x,monto_x){
+  // alert("ok");
+  $("#monto").val(monto_x);
+  $("#observaciones").val(glosa_x);
+  $("#cod_comprobante").val(cod_comprobante);
+  $("#cod_comprobante_detalle").val(cod_comprobantedetalle);
+  $("#modalBuscador").modal("hide");
+  $("#modal_lista_comprobantes").modal("hide");
 }
