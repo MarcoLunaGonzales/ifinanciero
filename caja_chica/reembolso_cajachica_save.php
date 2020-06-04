@@ -19,6 +19,8 @@ try {
     $fecha = $_POST["fecha"];
     $cod_personal = $_POST["cod_personal"];
     $observaciones = $_POST["observaciones"];
+    $cod_comprobante = $_POST["cod_comprobante"];
+    $cod_comprobante_detalle = $_POST["cod_comprobante_detalle"];
 
     //sacamos monto de caja chica
     $stmtMCC = $dbh->prepare("SELECT monto_reembolso from caja_chica where  codigo =$cod_cc");
@@ -28,10 +30,9 @@ try {
 
     if ($codigo == 0){//insertamos
         $monto_saldo=$monto_saldo_anterior_cc+$monto;
-        $cod_estadoreferencial=1;
-        $cod_comprobante=0;
-        $stmt = $dbh->prepare("INSERT INTO caja_chicareembolsos(cod_cajachica,fecha,cod_personal,monto,observaciones,cod_estadoreferencial,cod_comprobante) 
-        values ($cod_cc,'$fecha','$cod_personal',$monto,'$observaciones',$cod_estadoreferencial,$cod_comprobante)");
+        $cod_estadoreferencial=1;        
+        $stmt = $dbh->prepare("INSERT INTO caja_chicareembolsos(cod_cajachica,fecha,cod_personal,monto,observaciones,cod_estadoreferencial,cod_comprobante,cod_comprobante_detalle) 
+        values ($cod_cc,'$fecha','$cod_personal',$monto,'$observaciones',$cod_estadoreferencial,'$cod_comprobante','$cod_comprobante_detalle')");
         $flagSuccess=$stmt->execute();
         if($flagSuccess){//actualizamos el saldo
             $stmtReembolso = $dbh->prepare("UPDATE caja_chica set monto_reembolso=$monto_saldo,monto_reembolso_nuevo=$monto where codigo=$cod_cc");           
@@ -60,7 +61,7 @@ try {
         // echo 'cod_area:'.$cod_area."<br>";
         // echo 'nro_recibo:'.$nro_recibo."<br>";
 
-        $stmtCCD = $dbh->prepare("UPDATE caja_chicareembolsos set fecha='$fecha',monto=$monto,observaciones='$observaciones'
+        $stmtCCD = $dbh->prepare("UPDATE caja_chicareembolsos set fecha='$fecha',monto=$monto,observaciones='$observaciones',cod_comprobante='$cod_comprobante',cod_comprobante_detalle='$cod_comprobante_detalle'
          where codigo = $codigo");
         $flagSuccess=$stmtCCD->execute();
         if($flagSuccess){

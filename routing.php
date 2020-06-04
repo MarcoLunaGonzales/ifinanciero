@@ -1676,8 +1676,7 @@
 			$codigo=$_GET['codigo'];
 			require_once('dosificaciones/register.php');
 		}
-		if ($_GET['opcion']=='saveDosificacion') {
-			$codigo=$_GET['codigo'];
+		if ($_GET['opcion']=='saveDosificacion') {			
 			require_once('dosificaciones/save.php');
 		}
 		if ($_GET['opcion']=='deleteDosificacion') {

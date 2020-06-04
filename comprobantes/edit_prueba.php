@@ -415,11 +415,26 @@ $stmt->execute();
 					  <h6 class="card-title">Detalle</h6>
 					</div>
 					<h4 class="card-title" align="right">
-						<div class="col-sm-8">
-						    <div class="form-group">
-				          		<label for="glosa" class="bmd-label-static">Glosa</label>
-								<input class="form-control" name="glosa" id="glosa" required="true" rows="1" value="<?=$glosaMadre?>"/>
+						<div class="row">
+							<div class="col-sm-9">
+							    <div class="form-group">
+					          		<label for="glosa" class="bmd-label-static">Glosa</label>
+									<input class="form-control" name="glosa" id="glosa" required="true" rows="1" value="<?=$glosaMadre?>"/>
+								</div>
 							</div>
+							<div class="col-sm-3" align="right">
+			                    <div class="form-group">                                
+			                        <!-- <a href="#"  class="btn btn-round btn-fab btn-sm" onclick="cargarDatosRegistroComprobantes()">
+			                        	<i class="material-icons" title="Add Proveedor">add</i>
+			                        </a> -->
+			                        <button style="background-color: #0489B1" title="Registrar Cuenta Auxiliar" class="btn btn-round btn-fab btn-sm" type="button" data-toggle="modal" data-target="#modalRegisterCuentasAux">
+	                                    <i class="material-icons text-info">add</i>
+	                                </button>
+			                        <!-- <a href="#" class="btn btn-round btn-fab btn-sm" onclick="actualizarRegistroProveedorComprobante()">
+			                        	<i class="material-icons" title="Actualizar Proveedor">update</i>
+			                        </a>  -->
+			                    </div>
+			                </div>	
 						</div>
 					</h4>
 				</div>

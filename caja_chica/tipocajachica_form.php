@@ -3,6 +3,7 @@
 require_once 'conexion.php';
 require_once 'styles.php';
 require_once 'configModule.php';
+require_once 'functions.php';
 
 //$dbh = new Conexion();
 $dbh = new Conexion();
@@ -26,9 +27,6 @@ if ($codigo > 0){
     $cod_personal=0;
     $cod_estadoreferencial = 1;
 }
-
-
-
 ?>
 
 <div class="content">
@@ -92,18 +90,22 @@ if ($codigo > 0){
                         <div class="form-group">
                             <div id="div_personal_UO_tcc">
                                 <?php
-                                $stmtPersonal = $dbh->prepare("SELECT p.codigo, p.paterno,p.materno,p.primer_nombre
-                                from personal p, unidades_organizacionales uo 
-                                where uo.codigo=p.cod_unidadorganizacional and uo.codigo=$cod_uo order by 2");
+                                // $sqlParsonal="SELECT p.codigo, p.paterno,p.materno,p.primer_nombre
+                                // from personal p, unidades_organizacionales uo 
+                                // where uo.codigo=p.cod_unidadorganizacional and uo.codigo=$cod_uo order by 2";
+                                $sqlParsonal="SELECT p.codigo, p.paterno,p.materno,p.primer_nombre,p.cod_unidadorganizacional
+                                    from personal p, unidades_organizacionales uo 
+                                    where uo.codigo=p.cod_unidadorganizacional  and p.cod_estadoreferencial=1 order by 2";
+                                $stmtPersonal = $dbh->prepare($sqlParsonal);
                                 $stmtPersonal->execute();
                                 ?>
                                 <select id="cod_personal" name="cod_personal" class="selectpicker form-control form-control-sm" data-style="btn btn-info" data-size="5" data-show-subtext="true" data-live-search="true">
                                     <?php 
-                                        while ($row = $stmtPersonal->fetch()){                                             
-                                       ?>
+                                        while ($row = $stmtPersonal->fetch()){
+                                            $cod_uo=$row["cod_unidadorganizacional"];
+                                            $nombre_uo=nameUnidad($cod_uo); ?>
                                        <option value="<?=$row["codigo"];?>" <?=($cod_personal==$row['codigo'])?"selected":"";?> >
-                                            <?=$row["paterno"].' '.$row["materno"].' '.$row["primer_nombre"];?>
-                                        </option>
+                                            <?=$row["paterno"].' '.$row["materno"].' '.$row["primer_nombre"];?> ( <?=$nombre_uo?> )</option>
                                         <?php 
                                         } ?>
                                 </select>
