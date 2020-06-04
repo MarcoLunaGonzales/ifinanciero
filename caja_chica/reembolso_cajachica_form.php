@@ -75,8 +75,8 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
             </h4>
           </div>
           <div class="card-body ">      
-            <input type="hidden" name="cod_comprobante" id="cod_comprobante">
-            <input type="hidden" name="cod_comprobante_detalle" id="cod_comprobante_detalle">
+            <input type="hidden" name="cod_comprobante" id="cod_comprobante" value="0">
+            <input type="hidden" name="cod_comprobante_detalle" id="cod_comprobante_detalle" value="0">
             <div class="row">
                 <label class="col-sm-2 col-form-label">Monto</label>
                 <div class="col-sm-4">
@@ -221,7 +221,9 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
   </div>
 </div>
 
-
+<script type="text/javascript">  
+  $('#modalBuscador').modal('show');
+</script>
 
 <script type="text/javascript">
   function valida(f) {
