@@ -63,7 +63,7 @@ if(isset($_POST['resumido'])){
 
 $tipoCursoArray=implode(",", $tipoCurso);
 $tipoCursoAbrev="";
-$tipoCursoAbrev=abrevTipoCurso($tipoCursoArray);
+$tipoCursoAbrev=abrevTipoCliente($tipoCursoArray);
 
 $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d/%m/%Y',strtotime($hasta));
 
@@ -91,8 +91,8 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
 
                 <div class="card-body">
                   <h6 class="card-title">Periodo: <?=$periodoTitle?></h6>
-                  <h6 class="card-title">Cursos: <?=$tipoCursoAbrev;?></h6>
-                  <h6 class="card-title">Capacitación</h6>
+                  <h6 class="card-title">Clientes: <?=$tipoCursoAbrev;?></h6>
+                  <h6 class="card-title">Evaluación de la Conformidad</h6>
                   <div class="table-responsive">
     <table id="libro_mayor_rep" class="table table-bordered table-condensed" style="width:100%">
            <thead >
@@ -117,14 +117,29 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
           <tbody>
 <?php
 
-  $query1=$sqlSolicitadosInicio."select s.codigo as cod_simulacion,s.nombre,s.fecha_curso,sd.codigo,sd.cod_cuenta,sd.glosa,sd.monto_total as presupuestado,
-(SELECT d.importe from solicitud_recursosdetalle d join solicitud_recursos so on so.codigo=d.cod_solicitudrecurso where so.cod_simulacion=s.codigo and d.cod_detalleplantilla=sd.codigo) as ejecutado, 
-(SELECT d.cod_proveedor from solicitud_recursosdetalle d join solicitud_recursos so on so.codigo=d.cod_solicitudrecurso where so.cod_simulacion=s.codigo and d.cod_detalleplantilla=sd.codigo) as proveedor,
-(SELECT pro.nombre from solicitud_recursosdetalle d join solicitud_recursos so on so.codigo=d.cod_solicitudrecurso join af_proveedores pro on pro.codigo=d.cod_proveedor where so.cod_simulacion=s.codigo and d.cod_detalleplantilla=sd.codigo) as nombre_proveedor, 
-(SELECT d.cod_detalleplantilla from solicitud_recursosdetalle d join solicitud_recursos so on so.codigo=d.cod_solicitudrecurso where so.cod_simulacion=s.codigo and d.cod_detalleplantilla=sd.codigo) as codigo_ejecutado 
-from simulaciones_detalle sd join simulaciones_costos s on s.codigo=sd.cod_simulacioncosto 
-WHERE s.cod_tipocurso in($tipoCursoArray) and sd.habilitado=1 and s.cod_estadosimulacion=3 and s.fecha_curso BETWEEN '$desde' and '$hasta' order by s.nombre,sd.cod_cuenta".$sqlSolicitadosFin;
+  $query1=$sqlSolicitadosInicio."(select s.codigo as cod_simulacion,concat(a.abreviatura,' - ',s.nombre) as nombre,s.fecha as fecha_curso,sd.codigo,sd.cod_cuenta,sd.glosa,sd.monto_total as presupuestado,sd.cod_anio,plan.cod_area,
+(SELECT d.importe from solicitud_recursosdetalle d join solicitud_recursos so on so.codigo=d.cod_solicitudrecurso where so.cod_simulacionservicio=s.codigo and d.cod_detalleplantilla=sd.codigo) as ejecutado, 
+(SELECT d.cod_proveedor from solicitud_recursosdetalle d join solicitud_recursos so on so.codigo=d.cod_solicitudrecurso where so.cod_simulacionservicio=s.codigo and d.cod_detalleplantilla=sd.codigo) as proveedor,
+(SELECT pro.nombre from solicitud_recursosdetalle d join solicitud_recursos so on so.codigo=d.cod_solicitudrecurso join af_proveedores pro on pro.codigo=d.cod_proveedor where so.cod_simulacionservicio=s.codigo and d.cod_detalleplantilla=sd.codigo) as nombre_proveedor, 
+(SELECT d.cod_detalleplantilla from solicitud_recursosdetalle d join solicitud_recursos so on so.codigo=d.cod_solicitudrecurso where so.cod_simulacionservicio=s.codigo and d.cod_detalleplantilla=sd.codigo) as codigo_ejecutado 
+from simulaciones_serviciodetalle sd 
+join simulaciones_servicios s on s.codigo=sd.cod_simulacionservicio
+join plantillas_servicios plan on plan.codigo=s.cod_plantillaservicio
+join areas a on a.codigo=plan.cod_area 
+WHERE s.cod_cliente in($tipoCursoArray) and sd.habilitado=1 and s.cod_estadosimulacion=5 and s.fecha BETWEEN '$desde' and '$hasta' order by s.nombre,sd.cod_cuenta)
 
+UNION (select s.codigo as cod_simulacion,concat(a.abreviatura,' - ',s.nombre) as nombre,s.fecha as fecha_curso,sd.cod_detalle as codigo,sd.codigo as cod_cuenta,sd.glosa,sd.monto_total as presupuestado,sd.cod_anio,plan.cod_area,
+(SELECT d.importe from solicitud_recursosdetalle d join solicitud_recursos so on so.codigo=d.cod_solicitudrecurso where so.cod_simulacionservicio=s.codigo and d.cod_servicioauditor=sd.cod_detalle) as ejecutado, 
+(SELECT d.cod_proveedor from solicitud_recursosdetalle d join solicitud_recursos so on so.codigo=d.cod_solicitudrecurso where so.cod_simulacionservicio=s.codigo and d.cod_servicioauditor=sd.cod_detalle) as proveedor,
+(SELECT pro.nombre from solicitud_recursosdetalle d join solicitud_recursos so on so.codigo=d.cod_solicitudrecurso join af_proveedores pro on pro.codigo=d.cod_proveedor where so.cod_simulacionservicio=s.codigo and d.cod_servicioauditor=sd.cod_detalle) as nombre_proveedor, 
+(SELECT d.cod_servicioauditor from solicitud_recursosdetalle d join solicitud_recursos so on so.codigo=d.cod_solicitudrecurso where so.cod_simulacionservicio=s.codigo and d.cod_servicioauditor=sd.cod_detalle) as codigo_ejecutado 
+from v_propuestas_detalle_honorarios sd 
+join simulaciones_servicios s on s.codigo=sd.cod_simulacionservicio
+join plantillas_servicios plan on plan.codigo=s.cod_plantillaservicio
+join areas a on a.codigo=plan.cod_area 
+WHERE s.cod_cliente in($tipoCursoArray) and sd.habilitado=1 and s.cod_estadosimulacion=5 and s.fecha BETWEEN '$desde' and '$hasta' order by s.nombre,sd.cod_detalle) order by nombre".$sqlSolicitadosFin;
+
+//echo $query1;
   $stmt = $dbh->prepare($query1);
   // Ejecutamos
   $stmt->execute();
@@ -175,7 +190,21 @@ WHERE s.cod_tipocurso in($tipoCursoArray) and sd.habilitado=1 and s.cod_estadosi
       $claseEstado="text-danger";
       $estadoEjecutado="";
       $fechaCurso='<br><b>Fecha Curso: </b>'.strftime('%d/%m/%Y',strtotime($fechaX));
-      $glosaX="<br><b>Detalle: </b>".$glosaX." ".$rowComp['nombre_proveedor'];
+      $etapas="";
+      if($resumido==0){
+        $anioDetalle=$rowComp['cod_anio'];
+        if($rowComp['cod_area']!=39){
+          $etapas="Seg ".($anioDetalle-1);
+          if($rowComp['cod_area']!=39){
+            if($anioDetalle==0||$anioDetalle==1){
+             $etapas="Et ".($anioDetalle+1).""; 
+            }
+          }                                        
+        }else{
+         $etapas="Año ".$anioDetalle; 
+        }
+      }
+      $glosaX="<br><b>Detalle: </b>".$glosaX." ".$rowComp['nombre_proveedor']." (".$etapas.")";
     }else{
       $estadoEjecutado="bg-success";
       if($presupuestadoX>$ejecutadoX){
@@ -187,14 +216,26 @@ WHERE s.cod_tipocurso in($tipoCursoArray) and sd.habilitado=1 and s.cod_estadosi
       }
       $estadoEjecutado.=" text-white";
       if($resumido==0){
-        $glosaX="<br><b>Detalle: </b>".$glosaX." ".$rowComp['nombre_proveedor'];
-        $fechaCurso='<br><b>Fecha Curso: </b>'.strftime('%d/%m/%Y',strtotime($fechaX));
+        $anioDetalle=$rowComp['cod_anio'];
+        if($rowComp['cod_area']!=39){
+          $etapas="Seg ".($anioDetalle-1);
+          if($rowComp['cod_area']!=39){
+            if($anioDetalle==0||$anioDetalle==1){
+             $etapas="Et ".($anioDetalle+1).""; 
+            }
+          }                                        
+        }else{
+         $etapas="Año ".$anioDetalle; 
+        }
+        $glosaX="<br><b>Detalle: </b>".$glosaX." ".$rowComp['nombre_proveedor']." (".$etapas.")";
+        $fechaCurso='<br><b>Fecha Propuesta: </b>'.strftime('%d/%m/%Y',strtotime($fechaX));
       }else{
         $glosaX="";
         $fechaCurso="";
       }
     } 
     if($cursoNombre!=$nombreX&&$index>1&&$resumido==0){
+      $codAnio=$rowComp['cod_anio'];
        //COSTOS FIJOS
         if(isset($_POST['costos_fijos'])) {
           ?>
@@ -205,7 +246,7 @@ WHERE s.cod_tipocurso in($tipoCursoArray) and sd.habilitado=1 and s.cod_estadosi
          //if(obtenerPlantillaCodigoSimulacion($codigoSimulacion)!=$codPlan){
           $htmlFijos='';
           $codPlan=obtenerPlantillaCodigoSimulacion($codigoSimulacion);
-          $query_cuentas="SELECT cf.*,p.nombre,p.numero from simulaciones_cf cf join plan_cuentas p on p.codigo=cf.cod_cuenta where cf.cod_simulacioncosto=$codigoSimulacion order by cf.cod_cuenta";
+          $query_cuentas="SELECT cf.*,p.nombre,p.numero from simulaciones_cf cf join plan_cuentas p on p.codigo=cf.cod_cuenta where cf.cod_simulacionservicio=$codigoSimulacion order by cf.cod_anio,cf.cod_cuenta";
             $stmt_cuentas = $dbh->prepare($query_cuentas);
             $stmt_cuentas->execute();
             while ($row_cuentas = $stmt_cuentas->fetch(PDO::FETCH_ASSOC)) {
@@ -316,7 +357,7 @@ WHERE s.cod_tipocurso in($tipoCursoArray) and sd.habilitado=1 and s.cod_estadosi
          //if(obtenerPlantillaCodigoSimulacion($codigoSimulacion)!=$codPlan){
           $htmlFijos='';
           $codPlan=obtenerPlantillaCodigoSimulacion($codigoSimulacion);
-          $query_cuentas="SELECT cf.*,p.nombre,p.numero from simulaciones_cf cf join plan_cuentas p on p.codigo=cf.cod_cuenta where cf.cod_simulacioncosto=$codigoSimulacion order by cf.cod_cuenta";
+          $query_cuentas="SELECT cf.*,p.nombre,p.numero from simulaciones_cf cf join plan_cuentas p on p.codigo=cf.cod_cuenta where cf.cod_simulacionservicio=$codigoSimulacion order by cf.cod_anio,cf.cod_cuenta";
             $stmt_cuentas = $dbh->prepare($query_cuentas);
             $stmt_cuentas->execute();
             while ($row_cuentas = $stmt_cuentas->fetch(PDO::FETCH_ASSOC)) {
@@ -405,3 +446,4 @@ WHERE s.cod_tipocurso in($tipoCursoArray) and sd.habilitado=1 and s.cod_estadosi
           </div>  
         </div>
     </div>
+

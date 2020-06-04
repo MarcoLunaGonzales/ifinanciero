@@ -607,6 +607,17 @@ function abrevTipoCurso($codigo){
    $nombreX=substr($nombreX, 0, -1);
    return($nombreX);
 }
+function abrevTipoCliente($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT nombre FROM clientes where codigo in ($codigo)");
+   $stmt->execute();
+   $nombreX="";
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $nombreX.=$row['nombre']."-";
+   }
+   $nombreX=substr($nombreX, 0, -1);
+   return($nombreX);
+}
 
 function buscarAreasAdicionales($cod_personal,$tipo){//1 codigos , 2 nombres
   $dbh = new Conexion();

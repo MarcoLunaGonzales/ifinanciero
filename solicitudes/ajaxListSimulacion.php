@@ -26,7 +26,7 @@ if(isset($_GET['s'])){
    <!--<label class="col-sm-3 col-form-label">Propuesta :</label>-->
    <div class="col-sm-12">
      <div class="form-group">
-          <select class="selectpicker form-control form-control-sm" name="simulaciones" id="simulaciones" data-style="btn-warning" required>
+          <select class="selectpicker form-control form-control-sm" data-size="10" data-live-search="true" name="simulaciones" id="simulaciones" data-style="btn-warning" required>
            <?php 
            $stmt = $dbh->prepare($query);
            $stmt->execute();

@@ -101,12 +101,12 @@ $dbh = new Conexion();
           
                                 <!--<option disabled selected="selected" value="">Cliente</option>-->
                                 <?php
-                                 $stmt = $dbh->prepare("SELECT c.codigo, c.nombre, t.nombre as tipo FROM clientes c join tipos_clientes t on c.cod_tipocliente=t.codigo where c.cod_estadoreferencial=1 order by 2");
+                                 $stmt = $dbh->prepare("SELECT c.codigo, c.nombre FROM clientes c where c.cod_estadoreferencial=1 order by 2");
                                  $stmt->execute();
                                   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                   $codigoX=$row['codigo'];
                                   $nombreX=$row['nombre'];
-                                  $tipoX=$row['tipo'];
+                                  //$tipoX=$row['tipo'];
                                   //$abrevX=$row['abreviatura'];
                                    ?>
                                   <option value="<?=$codigoX;?>"><?=$nombreX;?></option> 

@@ -486,6 +486,9 @@
 		if ($_GET['opcion']=='reportePlanificacion') {
 			require_once('simulaciones_costos/reportePlan.php');
 		}
+		if ($_GET['opcion']=='reportePlanificacionEC') {
+			require_once('simulaciones_servicios/reportePlan.php');
+		}
   
 		//******************************ACTIVOS FIJOS***********************************************************
 		if ($_GET['opcion']=='listUbicaciones') {

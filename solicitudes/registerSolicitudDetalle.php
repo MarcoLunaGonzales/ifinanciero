@@ -251,7 +251,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             </div>
               <div class="col-sm-4">
               <div class="form-group">
-                    <select class="selectpicker form-control form-control-sm" data-style="select-with-transition" data-live-search="true" title="-- Elija una cuenta --" name="cuenta_proveedor" id="cuenta_proveedor"  data-style="select-with-transition" required>
+                    <select class="selectpicker form-control form-control-sm" data-style="select-with-transition" data-live-search="true" title="-- Elija una cuenta --" name="cuenta_proveedor" id="cuenta_proveedor"  data-style="select-with-transition">
                       <?php
                         for ($i=0; $i < count($arrayNuevo); $i++) {
                         $solicitudDet=obtenerSolicitudRecursosDetalleCuenta($codigo,$arrayNuevo[$i][0]);
