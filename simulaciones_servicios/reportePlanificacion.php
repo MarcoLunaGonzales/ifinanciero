@@ -189,7 +189,7 @@ WHERE s.cod_cliente in($tipoCursoArray) and sd.habilitado=1 and s.cod_estadosimu
       $estado="SIN SOLICITUD";
       $claseEstado="text-danger";
       $estadoEjecutado="";
-      $fechaCurso='<br><b>Fecha Curso: </b>'.strftime('%d/%m/%Y',strtotime($fechaX));
+      $fechaCurso='<br><b>Fecha Propuesta: </b>'.strftime('%d/%m/%Y',strtotime($fechaX));
       $etapas="";
       if($resumido==0){
         $anioDetalle=$rowComp['cod_anio'];
