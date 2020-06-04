@@ -146,6 +146,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
    $paisXAtrib=$rowAtributo['cod_pais'];
    $estadoXAtrib=$rowAtributo['cod_estado'];
    $ciudadXAtrib=$rowAtributo['cod_ciudad'];
+
   if($paisXAtrib==0){
     $nom_ciudadXAtrib="SIN REGISTRO";
     $nom_estadoXAtrib="SIN REGISTRO";
@@ -181,6 +182,18 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
     
   }
 
+//normas 
+  $normaCodXAtrib="";
+  if($tipoXAtrib==1){
+    $stmtAtributosNorma = $dbh->prepare("SELECT * from simulaciones_servicios_atributosnormas where cod_simulacionservicioatributo=$codigoXAtrib");
+    $stmtAtributosNorma->execute();
+    $ni=0;$normaFila=[];
+    while ($rowAtributoNorma = $stmtAtributosNorma->fetch(PDO::FETCH_ASSOC)) {
+     $normaFila[$ni]=$rowAtributoNorma['cod_norma'];
+     $ni++; 
+    }
+   $normaCodXAtrib=implode(",",$normaFila); 
+  }
    ?>
     <script>
     var atributo={
@@ -189,6 +202,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
     direccion: '<?=$direccionXAtrib?>',
     marca: '<?=$marcaXAtrib?>',
     norma: '<?=$normaXAtrib?>',
+    norma_cod: '<?=$normaCodXAtrib?>',
     sello: '<?=$selloXAtrib?>',
     pais: '<?=$paisXAtrib?>',
     estado: '<?=$estadoXAtrib?>',

@@ -118,6 +118,7 @@ if(isset($_GET['nombre'])){
               $direccionAtributo=$atributos[$att]->direccion;
               $marcaAtributo=$atributos[$att]->marca;
               $normaAtributo=$atributos[$att]->norma;
+              $normaCodAtributo=$atributos[$att]->norma_cod;
               $selloAtributo=$atributos[$att]->sello;
 
               $paisAtributo=$atributos[$att]->pais;
@@ -131,7 +132,14 @@ if(isset($_GET['nombre'])){
               $stmtDetalleAtributos->execute();
 
               if($tipo_atributo==1){
-               // $direccionAtributo="";
+                $normasFila=explode(",",$normaCodAtributo);
+                for ($ni=0; $ni < count($normasFila); $ni++) { 
+                 $codNorma=$normasFila[$ni];
+                  $sqlDetalleAtributosNormas="INSERT INTO simulaciones_servicios_atributosnormas (cod_simulacionservicioatributo, cod_norma, precio,cantidad) 
+                 VALUES ('$codSimulacionServicioAtributo', '$codNorma', '10',1)";
+                 $stmtDetalleAtributosNormas = $dbh->prepare($sqlDetalleAtributosNormas);
+                 $stmtDetalleAtributosNormas->execute(); 
+                }
               }else{   
                 for ($yyyy=$inicioAnio; $yyyy<=$anios; $yyyy++) {  
                  $sqlDetalleAtributosDias="INSERT INTO simulaciones_servicios_atributosdias (cod_simulacionservicioatributo, dias, cod_anio) 
@@ -270,17 +278,20 @@ if(isset($_GET['nombre'])){
       $suma=0;$aux=0;$aux2=0;
       if(obtenerConfiguracionValorServicio($codCS)==true&&isset($_GET['region_cliente'])){
         //$productosLista=explode(",", $productos);
-        $codTC=obtenerTipoCliente($cliente);
+        if(isset($_GET['tipo_cliente'])){
+          $codTC=$_GET['tipo_cliente'];
+        }else{
+          $codTC=obtenerTipoCliente($cliente);
+        }        
         $nacional=obtenerTipoNacionalCliente($cliente);
         if(isset($_GET['region_cliente'])){
           $nacional=$_GET['region_cliente'];
         }
-
-        if($nacional>1){
+        /*if($nacional>1){
           if($codTC<=2){
              $codTC=4; //empresa MEDIANA
           }
-        }
+        }*/
         
         for ($i=0; $i < count($atributos); $i++) {
           $aux=obtenerCostoTipoClienteSello(($i+1),$codTC,$nacional);

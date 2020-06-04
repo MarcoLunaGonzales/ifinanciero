@@ -13,13 +13,19 @@ set_time_limit(300);
 //RECIBIMOS LAS VARIABLES
 $tipo_impresion = 2;
 //try{
+  $stmtFactura = $dbh->prepare("SELECT sf.codigo FROM facturas_venta sf  
+      where sf.codigo=$codigo");
+    $stmtFactura->execute();
+    $resultInfoFac = $stmtFactura->fetch();   
+    $codigoFactura = $resultInfoFac['codigo']; 
 
+  if($codigoFactura>0){
     $stmtInfo = $dbh->prepare("SELECT sf.*,t.nombre as nombre_cliente FROM facturas_venta sf,clientes t  
       where sf.cod_cliente=t.codigo and sf.codigo=$codigo");
     $stmtInfo->execute();
     $resultInfo = $stmtInfo->fetch();   
     $cod_factura = $resultInfo['codigo']; 
-
+  
     $cod_solicitudfacturacion = $resultInfo['cod_solicitudfacturacion'];
     $cod_unidadorganizacional = $resultInfo['cod_unidadorganizacional'];
     $cod_area = $resultInfo['cod_area'];
@@ -36,7 +42,7 @@ $tipo_impresion = 2;
     $importe = $resultInfo['importe'];
     $observaciones = $resultInfo['observaciones'];
     $nombre_cliente = $resultInfo['nombre_cliente'];
-    if($cod_factura>0){
+    
     if($cod_factura==null || $cod_factura==''){
       $stmtInfo = $dbh->prepare("SELECT sf.* FROM facturas_venta sf  where sf.codigo=$codigo");
       $stmtInfo->execute();

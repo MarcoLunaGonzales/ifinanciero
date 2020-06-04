@@ -2860,8 +2860,9 @@ function guardarSimulacionServicio(){
    Swal.fire('Informativo!','Debe llenar los campos!','warning'); 
      }else{
       var regionCliente=$("#region_cliente").val();
+      var tipoCliente=$("#tipo_cliente").val();
       objeto=0;
-     var parametros={"region_cliente":regionCliente,"id_perfil":idPerfil,"objeto_servicio":objeto,"id_servicio":idServicio,"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"atributos":JSON.stringify(itemAtributos),"norma":norma,"anios":anios,"afnor":afnor,"tipo_atributo":1};
+     var parametros={"tipo_cliente":tipoCliente,"region_cliente":regionCliente,"id_perfil":idPerfil,"objeto_servicio":objeto,"id_servicio":idServicio,"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"atributos":JSON.stringify(itemAtributos),"norma":norma,"anios":anios,"afnor":afnor,"tipo_atributo":1};
      $.ajax({
         type: "GET",
         dataType: 'html',
@@ -3923,6 +3924,7 @@ function archivosPreviewDetalle(send) {
     if(contador==0){
       $("#boton_quitararchivos").click();
     }
+    cargarArchivosAdjuntosFila(fila);
     $('#modalFileDet').modal('show');
   }
 function agregarRetencionSolicitud(){
@@ -10156,6 +10158,7 @@ function agregarAtributoAjax(){
   }
     
   }
+  $("#normas").val("");
   if($("#modalEditPlantilla").length){
     $("#modalEditPlantilla").modal("hide");
     for (var i = 0; i <= parseInt($("#anio_servicio").val()); i++) {
@@ -10300,7 +10303,15 @@ function guardarAtributoItem(){
     var marca="";
       
   }else{
-    var norma=$("#modal_norma").val();
+    var normasMultiple=$("#normas").val();
+    var norma_cod=normasMultiple.join(",");
+    var normasArray=[]; var i=0;
+    $("#normas option:selected").each(function() {     
+       normasArray[i]= $(this).text();      
+       i++;
+     });
+    var norma=normasArray.join(",");
+    //var norma=$("#modal_norma").val();
     var sello=$("#modal_sello").val();
     var marca=$("#modal_marca").val();
   }
@@ -10333,6 +10344,7 @@ function guardarAtributoItem(){
     nombre: $('#modal_nombre').val(),
     direccion: $('#modal_direccion').val(),
     norma:norma,
+    norma_cod:norma_cod,
     marca:marca,
     sello:sello,
     pais:pais,
@@ -10357,7 +10369,18 @@ function guardarAtributoItem(){
   }else{
     itemAtributos[fila].nombre=$('#modal_nombre').val();
     itemAtributos[fila].direccion=$('#modal_direccion').val();
-    itemAtributos[fila].norma=$('#modal_norma').val();
+    
+    var normasMultiple=$("#normas").val();
+    var norma_cod=normasMultiple.join(",");
+    var normasArray=[]; var i=0;
+    $("#normas option:selected").each(function() {     
+       normasArray[i]= $(this).text();      
+       i++;
+     });
+    var norma=normasArray.join(",");
+
+    itemAtributos[fila].norma=norma;
+    itemAtributos[fila].norma_cod=norma_cod;
     itemAtributos[fila].marca=$('#modal_marca').val();
     itemAtributos[fila].sello=$('#modal_sello').val();
     itemAtributos[fila].pais=$('#pais_empresa').val().split("####")[0];
@@ -10411,12 +10434,13 @@ function editarAtributo(fila){
   $('#modal_nombre').val(itemAtributos[fila].nombre);
   if($("#modal_marca").length){
     $('#modal_marca').val(itemAtributos[fila].marca);
-    $('#modal_norma').val(itemAtributos[fila].norma);
+    //$('#modal_norma').val(itemAtributos[fila].norma);
     $('#modal_sello').val(itemAtributos[fila].sello);
-
-    $("#modal_norma").tagsinput('removeAll');
-    $("#modal_norma").tagsinput('add', itemAtributos[fila].norma);
-
+    //$("#modal_norma").tagsinput('removeAll');
+    //$("#modal_norma").tagsinput('add', itemAtributos[fila].norma);
+    var normasMultiple=itemAtributos[fila].norma_cod.split(",");
+    $("#normas").val(normasMultiple);
+    var norma_cod=normasMultiple.join(",");
   }
   if(($("#div_marca").hasClass("d-none"))){
     $("#lbl_nombre_atributo").text("Nombre");
@@ -13130,14 +13154,18 @@ function agregarFilaArchivosAdjuntosDetalle(){
 
   //agregar a la fila  
   var fila=$("#codigo_fila").val();
-  var htmlFila='<input type="hidden" name="codigo_archivodetalle'+num+'FFFF'+fila+'" id="codigo_archivodetalle'+num+'FFFF'+fila+'" value="'+codigo+'">'+
-               '<input type="hidden" value="" id="nombre_archivodetalle'+num+'FFFF'+fila+'" name="nombre_archivodetalle'+num+'FFFF'+fila+'">'+ 
+  var htmlFila='<input type="text" name="codigo_archivodetalle'+num+'FFFF'+fila+'" id="codigo_archivodetalle'+num+'FFFF'+fila+'" value="'+codigo+'">'+
+               '<input type="text" value="" id="nombre_archivodetalle'+num+'FFFF'+fila+'" name="nombre_archivodetalle'+num+'FFFF'+fila+'">'+ 
                '<input type="file" name="documentos_detalle'+num+'FFFF'+fila+'" id="documentos_detalle'+num+'FFFF'+fila+'"/>';
-  $("#archivos_fila").append(htmlFila);
+  $("#archivos_fila"+fila).append(htmlFila);
   $("#cantidad_archivosadjuntosdetalle"+fila).val(num);
 }
 function quitarElementoAdjuntoDetalle(fila){
   $("#fila_archivodetalle"+fila).remove();
+  var num=$("#codigo_fila").val();
+  $("#codigo_archivodetalle"+fila+"FFFF"+num).remove();
+  $("#nombre_archivodetalle"+fila+"FFFF"+num).remove();
+  $("#documentos_detalle"+fila+"FFFF"+num).remove();
 }
 
 function guardarArchivosDetalleSolicitud(){
@@ -13145,11 +13173,41 @@ function guardarArchivosDetalleSolicitud(){
   var cantidad=$("#cantidad_archivosadjuntosdetalle").val(); 
   for (var i = 1; i <=parseInt(cantidad); i++) {
     if($("#codigo_archivodetalle"+i).length>0){
-      
+     $("#codigo_archivodetalle"+i+"FFFF"+fila).val($("#codigo_archivodetalle"+i).val());
+     $("#nombre_archivodetalle"+i+"FFFF"+fila).val($("#nombre_archivodetalle"+i).val());
+
+     var x = $("#documentos_detalle"+i);
+     var y = x.clone();
+      y.attr("id", "documentos_detalle"+i+"FFFF"+fila);
+      y.attr("name", "documentos_detalle"+i+"FFFF"+fila);
+      $("#documentos_detalle"+i+"FFFF"+fila).remove();
+      y.insertAfter($("#nombre_archivodetalle"+i+"FFFF"+fila));
     }
   };
 }
+function cargarArchivosAdjuntosFila(fila){
+  var cantidad=$("#cantidad_archivosadjuntosdetalle").val(); 
+  for (var i = 1; i <=parseInt(cantidad); i++) {
+      $("#fila_archivodetalle"+i).remove();
+  }
+  $("#cantidad_archivosadjuntosdetalle").val($("#cantidad_archivosadjuntosdetalleFijo").val());
+  var cantidadFila=$("#cantidad_archivosadjuntosdetalle"+fila).val(); 
+  for (var i = 1; i <=parseInt(cantidadFila); i++) {
+    if($("#codigo_archivodetalle"+i+"FFFF"+fila).length>0){
+      //falta codigo
 
+
+     $("#codigo_archivodetalle"+i).val($("#codigo_archivodetalle"+i+"FFFF"+fila).val());
+     $("#nombre_archivodetalle"+i).val($("#nombre_archivodetalle"+i+"FFFF"+fila).val());
+     var x = $("#documentos_detalle"+i+"FFFF"+fila);
+     var y = x.clone();
+      y.attr("id", "documentos_detalle"+i);
+      y.attr("name", "documentos_detalle"+i);
+      $("#documentos_detalle"+i).remove();
+      y.insertAfter($("#nombre_archivodetalle"+i));
+    }
+  }  
+}
 $(document).on('change', '.archivo', function() {
   var filename = $(this).val().split('\\').pop();
   var idname = $(this).attr('id');
