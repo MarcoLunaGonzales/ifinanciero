@@ -318,7 +318,7 @@
       var envio=0;
       var mensaje=""; var debehaber=0;
       var debeIVA=0;
-      var haberIVA=0:
+      var haberIVA=0;
       var banderaDebeHaberIVA=0;
       if(numFilas==0){
         mensaje+="<p>Debe tener registrado al menos una cuenta en detalle</p>";
