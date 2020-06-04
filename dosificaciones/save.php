@@ -16,7 +16,7 @@ try {
     $llave_dosificacion = $_POST["llave_dosificacion"];
     $fecha_limite_emision = $_POST["fecha_limite_emision"];
     $cod_sucursal = $_POST["cod_sucursal"];
-    $cod_estado =1;
+    $cod_estado =0;
     $fecha_actual=date('Y-m-d');
     
     if ($_POST["codigo"] == 0){//insertamos

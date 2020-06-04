@@ -93,31 +93,31 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                   <h4 class="card-title" align="center"><?=$nombre_caja_chica?></h4>
                   
                   <div class="row">
-                      <label class="col-sm-1 col-form-label text-right" style="color:#0B2161;font-size: 16px"><b>Monto Inicial</b></label>
+                      <label class="col-sm-1 col-form-label text-right" style="color:#0B2161;font-size: 11px"><b>Monto Inicial</b></label>
                       <div class="col-sm-2">
                           <div class="form-group">
                               <input style="background-color:#F3F781;text-align: center" class="form-control" readonly="readonly" value="<?=number_format($monto_cajachica, 2, '.', ',')?>" />
                           </div>
                       </div>
-                      <label class="col-sm-1 col-form-label text-right" style="color:#0B2161;font-size: 16px"><b>Reembolso</b></label>
+                      <label class="col-sm-1 col-form-label text-right" style="color:#0B2161;font-size: 11px"><b>Reembolso</b></label>
                       <div class="col-sm-2">
                       <div class="form-group">
                           <input style="background-color:#F3F781;text-align: center" class="form-control" name="numero" id="numero" value="<?=number_format($monto_reembolso_nuevo, 2, '.', ',')?>"  readonly="readonly"/>
                       </div>
                       </div>
-                      <label class="col-sm-1 col-form-label text-right" style="color:#0B2161;font-size: 16px"><b>Saldo</b></label>
+                      <label class="col-sm-1 col-form-label text-right" style="color:#0B2161;font-size: 11px"><b>Saldo</b></label>
                       <div class="col-sm-2">
                       <div class="form-group">
                           <input style="background-color:#F3F781;text-align: center" class="form-control" name="numero" id="numero" value="<?=number_format($monto_saldo, 2, '.', ',')?>"  readonly="readonly"/>
                       </div>
                       </div>
-                      <!-- <label class="col-sm-1 col-form-label text-right" style="color:#0B2161;font-size: 16px"><b>Fecha</b></label>
+                      <!-- <label class="col-sm-1 col-form-label text-right" style="color:#0B2161;font-size: 11px"><b>Fecha</b></label>
                       <div class="col-sm-2">
                       <div class="form-group">
                           <input style="background-color:#F3F781;text-align: center" class="form-control" name="numero" id="numero" value="<?=$fecha_cc?>"  readonly="readonly"/>
                       </div>
                       </div> -->
-                      <label class="col-sm-1 col-form-label text-right" style="color:#0B2161;font-size: 16px"><b>Nro. Caja Chica</b></label>
+                      <label class="col-sm-1 col-form-label text-right" style="color:#0B2161;font-size: 11px"><b>Nro. Caja Chica</b></label>
                       <div class="col-sm-2">
                       <div class="form-group">
                           <input style="background-color:#F3F781;text-align: center" class="form-control" name="numero" id="numero" value="<?=$numero_cc?>"  readonly="readonly"/>

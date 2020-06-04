@@ -9,7 +9,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 
 
   //datos registrado de la simulacion en curso
-  $stmt = $dbh->prepare("SELECT f.*,DATE_FORMAT(f.fecha_factura,'%d/%m/%Y')as fecha_factura_x,(select s.abreviatura from unidades_organizacionales s where s.cod_sucursal=f.cod_sucursal limit 1)as sucursal,(select t.nombre from estados_factura t where t.codigo=f.cod_estadofactura)as estadofactura 
+  $stmt = $dbh->prepare("SELECT f.*,DATE_FORMAT(f.fecha_factura,'%d/%m/%Y')as fecha_factura_x,DATE_FORMAT(f.fecha_factura,'%H:%i:%s')as hora_factura_x,(select s.abreviatura from unidades_organizacionales s where s.cod_sucursal=f.cod_sucursal limit 1)as sucursal,(select t.nombre from estados_factura t where t.codigo=f.cod_estadofactura)as estadofactura 
  from facturas_venta f where cod_estadofactura<>4 order by  f.fecha_factura desc");
   $stmt->execute();
   $stmt->bindColumn('codigo', $codigo_factura);
@@ -17,6 +17,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
   $stmt->bindColumn('cod_area', $cod_area);
   $stmt->bindColumn('cod_solicitudfacturacion', $cod_solicitudfacturacion);  
   $stmt->bindColumn('fecha_factura_x', $fecha_factura);
+  $stmt->bindColumn('hora_factura_x', $hora_factura);
   $stmt->bindColumn('fecha_limite_emision', $fecha_limite_emision);
   $stmt->bindColumn('cod_tipopago', $cod_tipopago);
   $stmt->bindColumn('cod_cliente', $cod_cliente);
@@ -51,14 +52,15 @@ $globalAdmin=$_SESSION["globalAdmin"];
                         <thead>
                           <tr>
                             <!-- <th class="text-center"></th> -->
-                            <th>#Factura</th>
-                            <th>Sucursal</th>
-                            <th>Fecha<br>Factura</th>
-                            <th>Cliente</th>
-                            <th>Importe</th>
+                            <th width="8%">#Fac</th>
+                            <!-- <th>Sucursal</th> -->
+                            <th width="8%">Fecha<br>Factura</th>
+                            <th width="25%">Razón Social</th>
+                            <th width="10%">Nit</th>
+                            <th width="8%">Importe<br>Factura</th>
                             <th>Obs.</th>
-                            <th>Estado</th>
-                            <th class="text-right">Opciones</th>                            
+                            <th width="5%">Estado</th>
+                            <th width="10%" class="text-right">Opciones</th>                            
                           </tr>
                         </thead>
                         <tbody>
@@ -97,11 +99,12 @@ $globalAdmin=$_SESSION["globalAdmin"];
                           <tr>
                             <!-- <td align="center"><?=$index;?></td> -->
                             <td><?=$nro_factura;?></td>
-                            <td><?=$sucursal;?></td>
-                            <td><?=$fecha_factura?></td>
-                            <td><?=$cliente;?></td>
+                            <!-- <td><?=$sucursal;?></td> -->
+                            <td><?=$fecha_factura?><br><?=$hora_factura?></td>
+                            <td class="text-left"><small><?=$razon_social;?></small></td>
+                            <td class="text-right"><?=$nit;?></td>
                             <td class="text-right"><?=formatNumberDec($importe);?></td>
-                            <td><?=$observaciones;?></td>                            
+                            <td><small><?=$observaciones;?></small></td>                            
                             <td><?=$label.$estadofactura."</span>";?></td>
                             <td class="td-actions text-right">
                               <?php
