@@ -6,7 +6,7 @@
                              	<div class="row">
                                <div class="col-sm-1">
                                  <div class="form-group">
-                                  <span style="position:absolute;left:-15px; font-size:20px;font-weight:600; color:#F1C40F;" id="fila_index<?=$idFila?>"><?=$idFila?></span>
+                                  <span style="position:absolute;left:-25px; font-size:20px;font-weight:600; color:#F1C40F;" id="fila_index<?=$idFila?>"><?=$idFila?></span>
                                     <select class="selectpicker form-control form-control-sm" name="unidad_fila<?=$idFila;?>" id="unidad_fila<?=$idFila;?>" data-style="btn btn-primary">
                                       <?php
                                    $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM unidades_organizacionales where cod_estado=1 and centro_costos=1 order by 2");
@@ -154,7 +154,7 @@
                                       </span>  
                                       <input type="hidden" value="<?=$filaA?>" id="cantidad_archivosadjuntosdetalle<?=$idFila?>" name="cantidad_archivosadjuntosdetalle<?=$idFila?>">
                                         <?php
-                                     //fin archivos adjuntos detalle   
+                                     //fin archivos adjuntos detalle  
 
                                        if($codTipoPago!=0){
                                         $estadoBen="estado";

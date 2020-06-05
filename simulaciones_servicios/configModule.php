@@ -65,4 +65,5 @@ $urlListFacturasGeneradasManuales="?opcion=listFacturasGeneradasManuales";
 
 $urlGenerarFacturaParciales="simulaciones_servicios/generarFacturaPagos.php";
 
+$urlReportePlan="simulaciones_servicios/reportePlanificacion.php";
 ?>

@@ -122,7 +122,7 @@ $sqlDetalles="UPDATE simulaciones_servicios_tiposervicio SET cantidad_editado=$c
 $stmtDetalles = $dbh->prepare($sqlDetalles);
 $stmtDetalles->execute();
 
-      /*$sqlDelete="DELETE FROM simulaciones_cf where cod_simulacionservicio=$codSimulacion and cod_anio=$anio_fila";  
+      $sqlDelete="DELETE FROM simulaciones_cf where cod_simulacionservicio=$codSimulacion and cod_anio=$anio_fila";  
       $stmtDelete = $dbh->prepare($sqlDelete);
       $stmtDelete->execute();
   //costos Fijos en tabla
@@ -150,6 +150,6 @@ $stmtDetalles->execute();
          VALUES ('".$codSimulacion."',0,'".$codPartidaFijo."','".$codCuentaFijo."','".$montoUnidad."',1,'".$montoUnidad."','".$anio_fila."')";
          $stmtFijos = $dbh->prepare($sqlFijos);
          $stmtFijos->execute();
-      }*/ 
+      } 
 echo $anio."WWW".$iteracion;
 ?>

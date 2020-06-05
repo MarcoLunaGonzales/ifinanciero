@@ -156,6 +156,7 @@ if(isset($_GET['cod'])){
   </div>
 </div>
 <form id="formSolDet" class="form-horizontal" action="saveEditAprobado.php" method="post" enctype="multipart/form-data">
+  <input type="hidden" value="-100" id="tipo_documento_otro" name="tipo_documento_otro">
 <div class="content">
   <div id="contListaGrupos" class="container-fluid">
       <input type="hidden" name="cantidad_filas" id="cantidad_filas" value="<?=$contadorRegistros;?>">
@@ -289,49 +290,7 @@ if(isset($_GET['cod'])){
                   }
                 }else{
                $tipoSolicitud=2;
-               ?>
-            <div class="col-sm-3">
-              <!--<div class="form-group">
-                  <label class="bmd-label-static">Partida Pres./ Cuenta</label>
-                  <input class="form-control" type="text" name="plan_cuenta" value="" id="plan_cuenta" readonly/>
-              </div>-->
-              <div class="form-group">
-                    <select class="selectpicker form-control form-control-sm" data-style="select-with-transition" data-live-search="true" title="-- Elija una cuenta --" name="cuenta_proveedor" id="cuenta_proveedor"  data-style="select-with-transition" required>
-                      <?php
-                        for ($i=0; $i < count($arrayNuevo); $i++) {
-                        $solicitudDet=obtenerSolicitudRecursosDetalleCuenta($codigo,$arrayNuevo[$i][0]);
-                        $contExiste=0;
-                        while ($rowSolDet = $solicitudDet->fetch(PDO::FETCH_ASSOC)) {
-                          $contExiste++;
-                        }
-                         if($contExiste!=0){
-                           ?><option value="<?=$arrayNuevo[$i][0];?>">[<?=$arrayNuevo[$i][1]?>] - <?=$arrayNuevo[$i][2]?> (&#9679; activo)</option>  <?php
-                         }else{
-                          ?><option value="<?=$arrayNuevo[$i][0];?>">[<?=$arrayNuevo[$i][1]?>] - <?=$arrayNuevo[$i][2]?></option>  <?php
-                         }
-                        }
-                      ?>
-                    </select>
-                </div>
-            </div>   
-            
-            <div class="col-sm-2">
-               <p class="text-muted">Se muestran los curso en fechas</p> 
-            </div>  
-            <div class="col-sm-2">
-              <div class="form-group">
-                  <label class="bmd-label-static">Desde</label>
-                  <input type="text" class="form-control datepicker" name="fecha_desde" id="fecha_desde" value="<?=$fechaDesde?>">
-              </div>
-            </div>
-            <div class="col-sm-2">
-              <div class="form-group">
-                  <label class="bmd-label-static">Hasta</label>
-                  <input type="text" class="form-control datepicker" name="fecha_hasta" id="fecha_hasta" value="<?=$fechaHasta?>">
-              </div>
-            </div>
-              <?php
-              }
+               }
              }
              ?>
              <div class="col-sm-3">
@@ -371,12 +330,11 @@ if(isset($_GET['cod'])){
           <div class="card-body">
              <fieldset id="fiel" style="width:100%;border:0;">
               <?php 
-              if($tipoSolicitud==1||$tipoSolicitud==3||$tipoSolicitud==4){
+              if($tipoSolicitud==1||$tipoSolicitud==3||$tipoSolicitud==4||$tipoSolicitud==2){
               ?><button title="Agregar (alt + n)" type="button" name="add" class="btn btn-warning btn-round btn-fab" onClick="addSolicitudDetalle(this,<?=$tipoSolicitud?>)"><i class="material-icons">add</i>
                   </button><?php
               }else{
-              ?><button title="Buscar (alt + s)" type="button" id="boton_solicitudbuscar" name="boton_solicitudbuscar" class="btn btn-warning btn-round btn-fab" onClick="addSolicitudDetalleSearch()"><i class="material-icons">search</i>
-                  </button><button title="Agregar (alt + n)" type="button" name="add" class="btn btn-warning btn-round btn-fab" onClick="addSolicitudDetalle(this,<?=$tipoSolicitud?>)"><i class="material-icons">add</i>
+              ?><button title="Agregar (alt + n)" type="button" name="add" class="btn btn-warning btn-round btn-fab" onClick="addSolicitudDetalle(this,<?=$tipoSolicitud?>)"><i class="material-icons">add</i>
                   </button><?php
               } 
               ?>
@@ -426,7 +384,7 @@ if(isset($_GET['cod'])){
                 include "solicitudDetalleSimulacionRegistrado3.php";
               }else{
                 if($tipoSolicitud==2){
-                 ?><div id="solicitud_proveedor"></div><?php                
+                 include "solicitudDetalleSimulacionRegistrado4.php";
                 }else{
                  include "solicitudDetalleSimulacionRegistrado4.php";
                 }    
@@ -501,8 +459,7 @@ if(isset($_GET['cod'])){
                   </button>
                 </div>
       <div class="card-body">
-        <p>Cargar archivos de respaldo.</p> 
-           <div class="fileinput fileinput-new col-md-12" data-provides="fileinput">
+           <!--<div class="fileinput fileinput-new col-md-12" data-provides="fileinput">
             <div class="row">
               <div class="col-md-12">
                 <div class="border" id="lista_archivos">Ningun archivo seleccionado</div>
@@ -518,11 +475,96 @@ if(isset($_GET['cod'])){
                 <a href="#" class="btn btn-danger btn-sm fileinput-exists" onclick="archivosPreview(1)" data-dismiss="fileinput"><i class="material-icons">clear</i> Quitar</a>
               </div>
             </div>
-           </div>
-           <p class="text-muted"><small>Los archivos se subir&aacute;n al servidor cuando se GUARDE la solicitud</small></p>
+           </div>-->
+           <p class="text-muted"><small>Los archivos se subir&aacute;n al servidor cuando se GUARDE la Solicitud de Recurso</small></p>
+            <div class="row col-sm-11 div-center">
+              <table class="table table-warning table-bordered table-condensed">
+                <thead>
+                  <tr>
+                    <th class="small" width="30%">Tipo de Documento <a href="#" title="Otro Documento" class="btn btn-primary btn-round btn-sm btn-fab float-left" onClick="agregarFilaArchivosAdjuntosCabecera()"><i class="material-icons">add</i></a></th>
+                    <th class="small">Obligatorio</th>
+                    <th class="small" width="35%">Archivo</th>
+                    <th class="small">Descripción</th>                  
+                  </tr>
+                </thead>
+                <tbody id="tabla_archivos">
+                  <?php
+                  $stmtArchivo = $dbh->prepare("SELECT * from ibnorca.vw_plantillaDocumentos where idTipoServicio=2708"); //2708 //2708 localhost
+                  $stmtArchivo->execute();
+                  $filaA=0;
+                  while ($rowArchivo = $stmtArchivo->fetch(PDO::FETCH_ASSOC)) {
+                     $filaA++;
+                     $codigoX=$rowArchivo['idClaDocumento'];
+                     $nombreX=$rowArchivo['Documento'];
+                     $ObligatorioX=$rowArchivo['Obligatorio'];
+                     $Obli='<i class="material-icons text-danger">clear</i> NO';
+                     if($ObligatorioX==1){
+                      $Obli='<i class="material-icons text-success">done</i> SI';
+                     }
+                     //2708 cabecera //27080 detalle
+                     $verificarArchivo=verificarArchivoAdjuntoExistente(2708,$codigoSolicitud,0,$codigoX);
+                  ?>
+                  <tr>
+                    <td class="text-left"><input type="hidden" name="codigo_archivo<?=$filaA?>" id="codigo_archivo<?=$filaA?>" value="<?=$codigoX;?>"><input type="hidden" name="nombre_archivo<?=$filaA?>" id="nombre_archivo<?=$filaA?>" value="<?=$nombreX;?>"><?=$nombreX;?></td>
+                    <td class="text-center"><?=$Obli?></td>
+                    <td class="text-right">
+                      <?php
+                      if($verificarArchivo[0]==0){
+                       ?>
+                      <small id="label_txt_documentos_cabecera<?=$filaA?>"></small> 
+                      <span class="input-archivo">
+                        <input type="file" class="archivo" name="documentos_cabecera<?=$filaA?>" id="documentos_cabecera<?=$filaA?>"/>
+                      </span>
+                      <label title="Ningún archivo" for="documentos_cabecera<?=$filaA?>" id="label_documentos_cabecera<?=$filaA?>" class="label-archivo btn btn-warning btn-sm"><i class="material-icons">publish</i> Subir Archivo
+                      </label>
+                       <?php
+                      }else{
+                        ?>
+                        <a href="#" class="btn btn-button btn-sm">Registrado</a>
+                        <?php
+                      }
+                    ?>  
+                    </td>    
+                    <td><?=$nombreX;?></td>
+                  </tr> 
+                  <?php
+                   }
+                  $stmtArchivo = $dbh->prepare("SELECT * from archivos_adjuntos where cod_tipoarchivo=-100 and cod_tipopadre=2708 and cod_objeto=$codigoSolicitud and cod_padre=0"); //2708 //2708 localhost
+                  $stmtArchivo->execute();
+                  $filaE=0;
+                  while ($rowArchivo = $stmtArchivo->fetch(PDO::FETCH_ASSOC)) {
+                     $filaE++;
+                     $codigoArchivoX=$rowArchivo['codigo'];
+                     $codigoX=$rowArchivo['cod_tipoarchivo'];
+                     $nombreX=$rowArchivo['descripcion'];
+                     $urlArchivo=$rowArchivo['direccion_archivo'];
+                     $ObligatorioX=0;
+                     $Obli='<i class="material-icons text-danger">clear</i> NO';
+                     if($ObligatorioX==1){
+                      $Obli='<i class="material-icons text-success">done</i> SI';
+                     }
+                  ?>
+                  <tr>
+                    <td class="text-left"><input type="hidden" name="codigo_archivoregistrado<?=$filaE?>" id="codigo_archivoregistrado<?=$filaE?>" value="<?=$codigoArchivoX;?>">Otros Documentos</td>
+                    <td class="text-center"><?=$Obli?></td>
+                    <td class="text-right">
+                      <div class="btn-group">
+                        <a href="#" class="btn btn-button btn-sm">Registrado</a>  
+                        <a class="btn btn-button btn-danger btn-sm" href="<?=$urlArchivo?>" title="Descargar: Doc - IFINANCIERO (<?=$nombreX?>)" download="Doc - IFINANCIERO (<?=$nombreX?>)"><i class="material-icons">get_app</i></a>  
+                      </div>     
+                    </td>    
+                    <td><?=$nombreX;?></td>
+                  </tr> 
+                  <?php
+                   }
+                      ?>     
+                </tbody>
+              </table>
+              <input type="hidden" value="<?=$filaA?>" id="cantidad_archivosadjuntos" name="cantidad_archivosadjuntos">
+            </div>
       </div>
       <div class="modal-footer">
-        <button type="button" onclick="" class="btn btn-link" data-dismiss="modal">Aceptar
+        <button type="button" onclick="" class="btn btn-success" data-dismiss="modal">Aceptar
           <div class="ripple-container"></div>
         </button>
       </div>

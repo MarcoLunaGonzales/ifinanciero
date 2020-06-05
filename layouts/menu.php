@@ -916,7 +916,13 @@ if($menuModulo==0){
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=reportePlanificacion">
                     <span class="sidebar-mini"> RP </span>
-                    <span class="sidebar-normal"> Reportes Planificacion</span>
+                    <span class="sidebar-normal"> Reportes Planificacion SEC</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=reportePlanificacionEC">
+                    <span class="sidebar-mini"> RPT </span>
+                    <span class="sidebar-normal"> Reportes Planificacion TCP/TCS</span>
                   </a>
                 </li>                
                 <li class="nav-item ">

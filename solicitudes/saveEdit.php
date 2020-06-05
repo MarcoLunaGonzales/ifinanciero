@@ -8,8 +8,7 @@ require_once 'configModule.php';
 
 $dbh = new Conexion();
 //$arrayFilesCabecera=json_decode($_POST['archivos_cabecera']);
-$arrayFilesDetalle=json_decode($_POST['archivos_detalle']);
-$codComprobanteDetalle=obtenerCodigoSolicitudDetalle();
+//$arrayFilesDetalle=json_decode($_POST['archivos_detalle']);
 $cantidadFilas=$_POST["cantidad_filas"];
 $facturas= json_decode($_POST['facturas']);
 session_start();
@@ -158,26 +157,59 @@ for ($ar=1; $ar <= $nArchivosCabecera ; $ar++) {
 //guardar las ediciones
     $fila=0;
 for ($i=1;$i<=$cantidadFilas;$i++){	
-    if(isset($_POST["habilitar".$i])){      
-    $data[$fila][0]=$_POST["partida_cuenta_id".$i];
-    $data[$fila][1]=$_POST["unidad_fila".$i]; 
-    $data[$fila][2]=$_POST["area_fila".$i];  
-    $data[$fila][3]=$_POST["detalle_detalle".$i]; 
-    $data[$fila][4]=$_POST["importe_presupuesto".$i]; 
-    $data[$fila][5]=$_POST["importe".$i];           
-    $data[$fila][6]=0; 
-    $data[$fila][7]="";
-    $data[$fila][8]=$_POST["proveedor".$i];
-    $data[$fila][9]=$_POST["cod_detalleplantilla".$i];
-    $data[$fila][10]=$_POST["cod_servicioauditor".$i];
-    $data[$fila][11]=$_POST["cod_retencion".$i];
-    $data[$fila][12]=$_POST["cod_tipopago".$i];
-    $data[$fila][13]=$_POST["nombre_beneficiario".$i];
-    $data[$fila][14]=$_POST["apellido_beneficiario".$i];
-    $data[$fila][15]=$_POST["cuenta_beneficiario".$i];
-    $data[$fila][16]=$_POST["cod_cuentaBancaria".$i];
+    if(isset($_POST["habilitar".$i])){ 
+
+      $cod_plancuenta=$_POST["partida_cuenta_id".$i];
+      $cod_unidadorganizacional=$_POST["unidad_fila".$i];
+      $cod_area=$_POST["area_fila".$i];
+      $detalle=$_POST["detalle_detalle".$i];
+      $importe_presupuesto=$_POST["importe_presupuesto".$i];
+      $importe=$_POST["importe".$i];
+      $numero_factura=0;
+      $archivo="";
+      $cod_proveedor=$_POST["proveedor".$i];
+      $cod_detalleplantilla=$_POST["cod_detalleplantilla".$i];
+      $cod_servicioauditor=$_POST["cod_servicioauditor".$i];
+      $cod_confretencion=$_POST["cod_retencion".$i];
+      $cod_tipopagoproveedor=$_POST["cod_tipopago".$i];
+      $nombre_beneficiario=$_POST["nombre_beneficiario".$i];
+      $apellido_beneficiario=$_POST["apellido_beneficiario".$i];
+      $nro_cuenta_beneficiario=$_POST["cuenta_beneficiario".$i];
+      $cod_cuentabancaria=$_POST["cod_cuentaBancaria".$i];
 
 
+      $codComprobanteDetalle=obtenerCodigoSolicitudDetalle();
+      $sqlDetalle="INSERT INTO solicitud_recursosdetalle (codigo,cod_solicitudrecurso,cod_plancuenta,cod_unidadorganizacional,cod_area,detalle,importe_presupuesto,
+        importe,numero_factura,archivo,cod_proveedor,cod_detalleplantilla,cod_servicioauditor,cod_confretencion,cod_tipopagoproveedor,
+        nombre_beneficiario,apellido_beneficiario,nro_cuenta_beneficiario,cod_cuentabancaria) 
+       VALUES ('$codComprobanteDetalle','$codSolicitud','$cod_plancuenta','$cod_unidadorganizacional','$cod_area','$detalle','$importe_presupuesto','$importe',
+        '$numero_factura','$archivo','$cod_proveedor','$cod_detalleplantilla','$cod_servicioauditor','$cod_confretencion','$cod_tipopagoproveedor',
+        '$nombre_beneficiario','$apellido_beneficiario','$nro_cuenta_beneficiario','$cod_cuentabancaria') ";
+      $stmtDetalle = $dbh->prepare($sqlDetalle);
+      $flagSuccessDetalle=$stmtDetalle->execute(); 
+      echo $sqlDetalle; 
+
+       $nF=cantidadF($facturas[$i-1]);
+    for($j=0;$j<$nF;$j++){
+      $nit=$facturas[$i-1][$j]->nit;
+      $nroFac=$facturas[$i-1][$j]->nroFac;
+      
+      $fecha=$facturas[$i-1][$j]->fechaFac;
+      $porciones = explode("/", $fecha);
+      $fechaFac=$porciones[2]."-".$porciones[1]."-".$porciones[0];
+      
+      $razonFac=$facturas[$i-1][$j]->razonFac;
+      $impFac=$facturas[$i-1][$j]->impFac;
+      $exeFac=$facturas[$i-1][$j]->exeFac;
+      $autFac=$facturas[$i-1][$j]->autFac;
+      $conFac=$facturas[$i-1][$j]->conFac;
+
+      $sqlDetalle2="INSERT INTO facturas_compra (cod_solicitudrecursodetalle, nit, nro_factura, fecha, razon_social, importe, exento, nro_autorizacion, codigo_control) 
+      VALUES ('$codComprobanteDetalle', '$nit', '$nroFac', '$fechaFac', '$razonFac', '$impFac', '$exeFac', '$autFac', '$conFac')";
+      $stmtDetalle2 = $dbh->prepare($sqlDetalle2);
+      $flagSuccessDetalle2=$stmtDetalle2->execute();
+      echo $sqlDetalle2;
+    }
     //insertar cambios en el servicio web CUENTAS BANCARIAS
     $sIde = "ifinanciero";
     $sKey = "ce94a8dabdf0b112eafa27a5aa475751";
@@ -219,20 +251,49 @@ for ($i=1;$i<=$cantidadFilas;$i++){
     curl_close ($ch);
     //$dataInsert  
     $fila++;
-      foreach($_FILES["archivos".$i]['tmp_name'] as $key => $tmp_name)
+
+    $nArchivosDetalle=$_POST["cantidad_archivosadjuntosdetalle".$i];
+    for ($ar=1; $ar <= $nArchivosDetalle ; $ar++) { 
+     if(isset($_POST['codigo_archivodetalle'.$ar."FFFF".$i])){
+        if($_FILES['documentos_detalle'.$ar."FFFF".$i]["name"]){
+          $filename = $_FILES['documentos_detalle'.$ar."FFFF".$i]["name"]; //Obtenemos el nombre original del archivos
+          $source = $_FILES['documentos_detalle'.$ar."FFFF".$i]["tmp_name"]; //Obtenemos un nombre temporal del archivos    
+          $directorio = '../assets/archivos-respaldo/archivos_solicitudes/SOL-'.$codSolicitud.'/DET-'.$fila; //Declaramos una  variable con la ruta donde guardaremos los archivoss
+          //Validamos si la ruta de destino existe, en caso de no existir la creamos
+        if(!file_exists($directorio)){
+                mkdir($directorio, 0777,true) or die("No se puede crear el directorio de extracci&oacute;n");    
+        }
+        $target_path = $directorio.'/'.$filename; //Indicamos la ruta de destino, así como el nombre del archivos
+        //Movemos y validamos que el archivos se haya cargado correctamente
+        //El primer campo es el origen y el segundo el destino
+        if(move_uploaded_file($source, $target_path)) { 
+          echo "ok";
+          $tipo=$_POST['codigo_archivodetalle'.$ar."FFFF".$i];
+          $descripcion=$_POST['nombre_archivodetalle'.$ar."FFFF".$i];
+          $tipoPadre=27080;//clasificador para detalle de solicitudes
+          $sqlInsert="INSERT INTO archivos_adjuntos (cod_tipoarchivo,descripcion,direccion_archivo,cod_tipopadre,cod_padre,cod_objeto) 
+                    VALUES ('$tipo','$descripcion','$target_path','$tipoPadre','$codSolicitud','$codComprobanteDetalle')";
+                    $stmtInsert = $dbh->prepare($sqlInsert);
+                    $stmtInsert->execute();    
+                    print_r($sqlInsert);
+        } else {    
+          echo "error";
+        } 
+       }
+      }//FIN IF
+     }
+
+      /*foreach($_FILES["archivos".$i]['tmp_name'] as $key => $tmp_name)
       {
         //Validamos que el archivos exista
         if($_FILES["archivos".$i]["name"][$key]) {
             $filename = $_FILES["archivos".$i]["name"][$key]; //Obtenemos el nombre original del archivos
             $source = $_FILES["archivos".$i]["tmp_name"][$key]; //Obtenemos un nombre temporal del archivos
-            
             $directorio = '../assets/archivos-respaldo/archivos_solicitudes/SOL-'.$codSolicitud.'/DET-'.$fila; //Declaramos una  variable con la ruta donde guardaremos los archivoss
             //Validamos si la ruta de destino existe, en caso de no existir la creamos
             if(!file_exists($directorio)){
                 mkdir($directorio, 0777,true) or die("No se puede crear el directorio de extracci&oacute;n");    
             }
-            
-            
             $target_path = $directorio.'/'.$filename; //Indicamos la ruta de destino, así como el nombre del archivos
             
             //Movemos y validamos que el archivos se haya cargado correctamente
@@ -251,50 +312,15 @@ for ($i=1;$i<=$cantidadFilas;$i++){
                     $stmtInsert = $dbh->prepare($sqlInsert);
                     $stmtInsert->execute();    
                     print_r($sqlInsert);
-                    
                   }
                 }
-                
             } else {    
                 echo "error";
             }
-            
         }  
-      }
-      $codComprobanteDetalle++;   
+      }*/
     }
 } 
-$cab[0]="cod_plancuenta";
-$cab[1]="cod_unidadorganizacional";
-$cab[2]="cod_area";
-$cab[3]="detalle";
-$cab[4]="importe_presupuesto";
-$cab[5]="importe";
-$cab[6]="numero_factura";
-$cab[7]="archivo";
-$cab[8]="cod_proveedor";
-$cab[9]="cod_detalleplantilla";
-$cab[10]="cod_servicioauditor";
-$cab[11]="cod_confretencion";
-$cab[12]="cod_tipopagoproveedor";
-$cab[13]="nombre_beneficiario";
-$cab[14]="apellido_beneficiario";
-$cab[15]="nro_cuenta_beneficiario";
-$cab[16]="cod_cuentabancaria";
-$solDet=contarSolicitudDetalle($codSolicitud);
-$solDet->bindColumn('total', $contador);
-while ($row = $solDet->fetch(PDO::FETCH_BOUND)) {
- $cont1=$contador;
-}
-
-$stmt1 = obtenerSolicitudesDet($codSolicitud);
-editarComprobanteDetalle($codSolicitud,'cod_solicitudrecurso',$cont1,$fila,$stmt1,'solicitud_recursosdetalle',$cab,$data,$facturas);
-
-
-$stmt1 = obtenerSolicitudesDet($codSolicitud);
-//PARA registro de facturas
-editarComprobanteDetalle($codSolicitud,'cod_solicitudrecurso',$cont1,$fila,$stmt1,'solicitud_recursosdetalle',$cab,$data,$facturas);
-
 if(isset($_POST['usuario_ibnored'])){
     $q=$_POST['usuario_ibnored'];
     $s=$_POST['usuario_ibnored_s'];

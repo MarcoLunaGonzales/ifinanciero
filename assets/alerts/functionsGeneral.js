@@ -3560,16 +3560,22 @@ function cargarDatosSelectTipoSolicitud(url,tipo,id){
         if(!($("#filtros_solicitud").hasClass("d-none"))){
           $("#filtros_solicitud").addClass("d-none")
         }
-        if(tipo==3){
-          if(!($("#buscar_solicitudesdetalle").hasClass("d-none"))){
+        if(!($("#buscar_solicitudesdetalle").hasClass("d-none"))){
             $("#buscar_solicitudesdetalle").addClass("d-none");
-           }
+        }
+        if(tipo==2){
+         if($("#listaPro").hasClass("d-none")){
+            $("#listaPro").removeClass("d-none");
+          }
         }else{
-         if($("#buscar_solicitudesdetalle").hasClass("d-none")){
-            $("#buscar_solicitudesdetalle").removeClass("d-none");
+          if(!($("#listaPro").hasClass("d-none"))){
+            $("#listaPro").addClass("d-none");
           }
         }      
       }else{
+        if(!($("#listaPro").hasClass("d-none"))){
+            $("#listaPro").addClass("d-none");
+          }
        if(($("#filtros_solicitud").hasClass("d-none"))){
          $("#filtros_solicitud").removeClass("d-none")
        } 
@@ -3596,6 +3602,9 @@ function cargarDatosSelectTipoSolicitud(url,tipo,id){
       $("#buscar_solicitudesdetalle").addClass("d-none");
     } 
    }*/
+   $("#cantidad_filas").val(0);
+   numFilas=0;
+   cantidadItems=0;
 }
 
 function listarTipoSolicitudAjaxPropuesta(tipo,id){
@@ -3836,6 +3845,21 @@ function minusDetalleSolicitud(idF){
        $("#nben"+nuevoId).attr("id","nben"+i);
        $("#fila_index"+nuevoId).text(i);
        $("#fila_index"+nuevoId).attr("id","fila_index"+i);
+
+       var cantidadArchivos=$("#cantidad_archivosadjuntosdetalle"+nuevoId).val();
+       for (var l = 1; l <= parseInt(cantidadArchivos); l++) {
+        if($("#codigo_archivodetalle"+l+"FFFF"+nuevoId).length>0){
+           $("#codigo_archivodetalle"+l+"FFFF"+nuevoId).attr("name","codigo_archivodetalle"+l+"FFFF"+i);
+           $("#codigo_archivodetalle"+l+"FFFF"+nuevoId).attr("id","codigo_archivodetalle"+l+"FFFF"+i);
+           $("#nombre_archivodetalle"+l+"FFFF"+nuevoId).attr("name","nombre_archivodetalle"+l+"FFFF"+i);
+           $("#nombre_archivodetalle"+l+"FFFF"+nuevoId).attr("id","nombre_archivodetalle"+l+"FFFF"+i);
+           $("#documentos_detalle"+l+"FFFF"+nuevoId).attr("name","documentos_detalle"+l+"FFFF"+i);
+           $("#documentos_detalle"+l+"FFFF"+nuevoId).attr("id","documentos_detalle"+l+"FFFF"+i);
+        } 
+       };
+       $("#cantidad_archivosadjuntosdetalle"+nuevoId).attr("name","cantidad_archivosadjuntosdetalle"+i);
+       $("#cantidad_archivosadjuntosdetalle"+nuevoId).attr("id","cantidad_archivosadjuntosdetalle"+i);
+       $("#archivos_fila"+nuevoId).attr("id","archivos_fila"+i);
       }
      } 
      itemFacturas.splice((idF-1), 1);
@@ -3911,20 +3935,24 @@ function archivosPreviewDetalle(send) {
 
   function addArchivos(fila){
     $("#codigo_fila").val(fila);
-    $("#archivosDetalle").val("");
-    $("#lista_archivosdetalle").html("Ningun archivo seleccionado");
-    var inpDetalle=document.getElementById("archivos"+fila);
-    var contador=0;
-    for (var i = 0; i < inpDetalle.files.length; i++) {
+    
+    if($("#archivos_fila"+fila).length>0){
+      cargarArchivosAdjuntosFila(fila);
+    }else{
+      $("#archivosDetalle").val("");
+      $("#lista_archivosdetalle").html("Ningun archivo seleccionado");
+      var inpDetalle=document.getElementById("archivos"+fila);
+      var contador=0;
+      for (var i = 0; i < inpDetalle.files.length; i++) {
        numArchivosDetalle++;
         var name = inpDetalle.files.item(i).name;
         $("#lista_archivosdetalle").append("<div class='text-left'><label>"+name+"</label></div>");
         contador++;
-    };
-    if(contador==0){
+     };
+      if(contador==0){
       $("#boton_quitararchivos").click();
+     }
     }
-    cargarArchivosAdjuntosFila(fila);
     $('#modalFileDet').modal('show');
   }
 function agregarRetencionSolicitud(){
@@ -3949,12 +3977,13 @@ function agregarRetencionSolicitud(){
  }
 
  function addSolicitudDetalleSearch() {
-    var codigoSol=$("#cod_solicitud").val();
+    //var codigoSol=$("#cod_solicitud").val();
     var codCuenta=$("#cuenta_proveedor").val();
     var fechai=$("#fecha_desde").val();
     var fechaf=$("#fecha_hasta").val();
-     var fi = $('#solicitud_proveedor');
-     var parametros={"codigo":codigoSol,"fecha_i":fechai,"fecha_f":fechaf,"cod_cuenta":codCuenta};
+    var tipo=$("#tipo_solicitudproveedor").val();
+     var fi = $('#fiel');
+     var parametros={"fecha_i":fechai,"fecha_f":fechaf,"cod_cuenta":codCuenta,"tipo":tipo};
      $.ajax({
         type: "GET",
         dataType: 'html',
@@ -5438,13 +5467,13 @@ function calcularTotalFilaServicio(anio,valor){
     if(valor==1){
       suma+=parseFloat($("#modal_montoservtotal"+anio+"SSS"+i).val());
       sumaUSD+=parseFloat($("#modal_montoservtotal"+anio+"SSS"+i).val())/parseFloat(usd);
-      var montoPoner=redondeo(parseFloat($("#modal_montoservtotal"+anio+"SSS"+i).val())/parseInt($("#cantidad_servicios"+anio+"SSS"+i).val()));
+      var montoPoner=redondeo(parseFloat($("#modal_montoservtotal"+anio+"SSS"+i).val())/parseFloat($("#cantidad_servicios"+anio+"SSS"+i).val()));
       $("#modal_montoserv"+anio+"SSS"+i).val(montoPoner);
       $("#modal_montoservUSD"+anio+"SSS"+i).val(redondeo(montoPoner/parseFloat(usd)));
-      $("#modal_montoservtotalUSD"+anio+"SSS"+i).val(redondeo((parseFloat($("#modal_montoserv"+anio+"SSS"+i).val()))/parseInt($("#cantidad_servicios"+anio+"SSS"+i).val())/parseFloat(usd)));
+      $("#modal_montoservtotalUSD"+anio+"SSS"+i).val(redondeo((parseFloat($("#modal_montoserv"+anio+"SSS"+i).val()))/parseFloat($("#cantidad_servicios"+anio+"SSS"+i).val())/parseFloat(usd)));
     }else{
       if(valor==2){
-      var montoPoner=redondeo(parseFloat($("#modal_montoserv"+anio+"SSS"+i).val())*parseInt($("#cantidad_servicios"+anio+"SSS"+i).val()));
+      var montoPoner=redondeo(parseFloat($("#modal_montoserv"+anio+"SSS"+i).val())*parseFloat($("#cantidad_servicios"+anio+"SSS"+i).val()));
       $("#modal_montoservtotal"+anio+"SSS"+i).val(montoPoner);
       $("#modal_montoservtotalUSD"+anio+"SSS"+i).val(redondeo(montoPoner/parseFloat(usd)));
       $("#modal_montoservUSD"+anio+"SSS"+i).val(redondeo(parseFloat($("#modal_montoserv"+anio+"SSS"+i).val())/parseFloat(usd)));
@@ -5454,12 +5483,12 @@ function calcularTotalFilaServicio(anio,valor){
         if(valor==3){
           sumaUSD+=parseFloat($("#modal_montoservtotalUSD"+anio+"SSS"+i).val());
           suma+=parseFloat($("#modal_montoservtotalUSD"+anio+"SSS"+i).val())*parseFloat(usd);  
-          var montoPoner=redondeo(parseFloat($("#modal_montoservtotalUSD"+anio+"SSS"+i).val())/parseInt($("#cantidad_servicios"+anio+"SSS"+i).val()));
+          var montoPoner=redondeo(parseFloat($("#modal_montoservtotalUSD"+anio+"SSS"+i).val())/parseFloat($("#cantidad_servicios"+anio+"SSS"+i).val()));
           $("#modal_montoservUSD"+anio+"SSS"+i).val(montoPoner);
           $("#modal_montoserv"+anio+"SSS"+i).val(redondeo(montoPoner*parseFloat(usd)));
-          $("#modal_montoservtotal"+anio+"SSS"+i).val(redondeo((parseFloat($("#modal_montoserv"+anio+"SSS"+i).val()))/parseInt($("#cantidad_servicios"+anio+"SSS"+i).val())));
+          $("#modal_montoservtotal"+anio+"SSS"+i).val(redondeo((parseFloat($("#modal_montoserv"+anio+"SSS"+i).val()))/parseFloat($("#cantidad_servicios"+anio+"SSS"+i).val())));
         }else{
-          var montoPoner=redondeo(parseFloat($("#modal_montoservUSD"+anio+"SSS"+i).val())*parseInt($("#cantidad_servicios"+anio+"SSS"+i).val()));
+          var montoPoner=redondeo(parseFloat($("#modal_montoservUSD"+anio+"SSS"+i).val())*parseFloat($("#cantidad_servicios"+anio+"SSS"+i).val()));
           $("#modal_montoservtotalUSD"+anio+"SSS"+i).val(montoPoner);
           $("#modal_montoservtotal"+anio+"SSS"+i).val(redondeo(montoPoner*parseFloat(usd)));
           $("#modal_montoserv"+anio+"SSS"+i).val(redondeo(parseFloat($("#modal_montoservUSD"+anio+"SSS"+i).val())*parseFloat(usd)));
@@ -5487,24 +5516,24 @@ function calcularTotalFilaServicioNuevo(anio,valor){
   var i=0;
   var usd=$("#cambio_moneda").val();
   if(valor==1){
-      var montoPoner=redondeo(parseFloat($("#modal_montoservtotal"+anio+"SSS"+i).val())/parseInt($("#cantidad_servicios"+anio+"SSS"+i).val()));
+      var montoPoner=redondeo(parseFloat($("#modal_montoservtotal"+anio+"SSS"+i).val())/parseFloat($("#cantidad_servicios"+anio+"SSS"+i).val()));
       $("#modal_montoserv"+anio+"SSS"+i).val(montoPoner);
       $("#modal_montoservUSD"+anio+"SSS"+i).val(redondeo(montoPoner/parseFloat(usd)));
-      $("#modal_montoservtotalUSD"+anio+"SSS"+i).val(redondeo((parseFloat($("#modal_montoserv"+anio+"SSS"+i).val()))/parseInt($("#cantidad_servicios"+anio+"SSS"+i).val())/parseFloat(usd)));
+      $("#modal_montoservtotalUSD"+anio+"SSS"+i).val(redondeo((parseFloat($("#modal_montoserv"+anio+"SSS"+i).val()))/parseFloat($("#cantidad_servicios"+anio+"SSS"+i).val())/parseFloat(usd)));
     }else{
       if(valor==2){
-      var montoPoner=redondeo(parseFloat($("#modal_montoserv"+anio+"SSS"+i).val())*parseInt($("#cantidad_servicios"+anio+"SSS"+i).val()));
+      var montoPoner=redondeo(parseFloat($("#modal_montoserv"+anio+"SSS"+i).val())*parseFloat($("#cantidad_servicios"+anio+"SSS"+i).val()));
       $("#modal_montoservtotal"+anio+"SSS"+i).val(montoPoner);
       $("#modal_montoservtotalUSD"+anio+"SSS"+i).val(redondeo(montoPoner/parseFloat(usd)));
       $("#modal_montoservUSD"+anio+"SSS"+i).val(redondeo(parseFloat($("#modal_montoserv"+anio+"SSS"+i).val())/parseFloat(usd)));
       }else{
         if(valor==3){ 
-          var montoPoner=redondeo(parseFloat($("#modal_montoservtotalUSD"+anio+"SSS"+i).val())/parseInt($("#cantidad_servicios"+anio+"SSS"+i).val()));
+          var montoPoner=redondeo(parseFloat($("#modal_montoservtotalUSD"+anio+"SSS"+i).val())/parseFloat($("#cantidad_servicios"+anio+"SSS"+i).val()));
           $("#modal_montoservUSD"+anio+"SSS"+i).val(montoPoner);
           $("#modal_montoserv"+anio+"SSS"+i).val(redondeo(montoPoner*parseFloat(usd)));
-          $("#modal_montoservtotal"+anio+"SSS"+i).val(redondeo((parseFloat($("#modal_montoserv"+anio+"SSS"+i).val()))/parseInt($("#cantidad_servicios"+anio+"SSS"+i).val())));
+          $("#modal_montoservtotal"+anio+"SSS"+i).val(redondeo((parseFloat($("#modal_montoserv"+anio+"SSS"+i).val()))/parseFloat($("#cantidad_servicios"+anio+"SSS"+i).val())));
         }else{
-          var montoPoner=redondeo(parseFloat($("#modal_montoservUSD"+anio+"SSS"+i).val())*parseInt($("#cantidad_servicios"+anio+"SSS"+i).val()));
+          var montoPoner=redondeo(parseFloat($("#modal_montoservUSD"+anio+"SSS"+i).val())*parseFloat($("#cantidad_servicios"+anio+"SSS"+i).val()));
           $("#modal_montoservtotalUSD"+anio+"SSS"+i).val(montoPoner);
           $("#modal_montoservtotal"+anio+"SSS"+i).val(redondeo(montoPoner*parseFloat(usd)));
           $("#modal_montoserv"+anio+"SSS"+i).val(redondeo(parseFloat($("#modal_montoservUSD"+anio+"SSS"+i).val())*parseFloat(usd))); 
@@ -5517,24 +5546,24 @@ function calcularTotalPersonalServicioNuevo(anio,valor){
   var i=0;
   var usd=$("#cambio_moneda").val();
   if(valor==1){
-      var montoPoner=redondeo(parseFloat($("#modal_montopretotal"+anio+"FFF"+i).val())/parseInt($("#dias_personal"+anio+"FFF"+i).val()));
+      var montoPoner=redondeo(parseFloat($("#modal_montopretotal"+anio+"FFF"+i).val())/parseFloat($("#dias_personal"+anio+"FFF"+i).val()));
       $("#modal_montopre"+anio+"FFF"+i).val(montoPoner);
       $("#modal_montopreUSD"+anio+"FFF"+i).val(redondeo(montoPoner/parseFloat(usd)));
-      $("#modal_montopretotalUSD"+anio+"FFF"+i).val(redondeo((parseFloat($("#modal_montopre"+anio+"FFF"+i).val()))/parseInt($("#dias_personal"+anio+"FFF"+i).val())/parseFloat(usd)));
+      $("#modal_montopretotalUSD"+anio+"FFF"+i).val(redondeo((parseFloat($("#modal_montopre"+anio+"FFF"+i).val()))/parseFloat($("#dias_personal"+anio+"FFF"+i).val())/parseFloat(usd)));
     }else{
       if(valor==2){
-      var montoPoner=redondeo(parseFloat($("#modal_montopre"+anio+"FFF"+i).val())*parseInt($("#dias_personal"+anio+"FFF"+i).val()));
+      var montoPoner=redondeo(parseFloat($("#modal_montopre"+anio+"FFF"+i).val())*parseFloat($("#dias_personal"+anio+"FFF"+i).val()));
       $("#modal_montopretotal"+anio+"FFF"+i).val(montoPoner);
       $("#modal_montopretotalUSD"+anio+"FFF"+i).val(redondeo(montoPoner/parseFloat(usd)));
       $("#modal_montopreUSD"+anio+"FFF"+i).val(redondeo(parseFloat($("#modal_montopre"+anio+"FFF"+i).val())/parseFloat(usd)));
       }else{
         if(valor==3){ 
-          var montoPoner=redondeo(parseFloat($("#modal_montopretotalUSD"+anio+"FFF"+i).val())/parseInt($("#dias_personal"+anio+"FFF"+i).val()));
+          var montoPoner=redondeo(parseFloat($("#modal_montopretotalUSD"+anio+"FFF"+i).val())/parseFloat($("#dias_personal"+anio+"FFF"+i).val()));
           $("#modal_montopreUSD"+anio+"FFF"+i).val(montoPoner);
           $("#modal_montopre"+anio+"FFF"+i).val(redondeo(montoPoner*parseFloat(usd)));
-          $("#modal_montopretotal"+anio+"FFF"+i).val(redondeo((parseFloat($("#modal_montopre"+anio+"FFF"+i).val()))/parseInt($("#dias_personal"+anio+"FFF"+i).val())));
+          $("#modal_montopretotal"+anio+"FFF"+i).val(redondeo((parseFloat($("#modal_montopre"+anio+"FFF"+i).val()))/parseFloat($("#dias_personal"+anio+"FFF"+i).val())));
         }else{
-          var montoPoner=redondeo(parseFloat($("#modal_montopreUSD"+anio+"FFF"+i).val())*parseInt($("#dias_personal"+anio+"FFF"+i).val()));
+          var montoPoner=redondeo(parseFloat($("#modal_montopreUSD"+anio+"FFF"+i).val())*parseFloat($("#dias_personal"+anio+"FFF"+i).val()));
           $("#modal_montopretotalUSD"+anio+"FFF"+i).val(montoPoner);
           $("#modal_montopretotal"+anio+"FFF"+i).val(redondeo(montoPoner*parseFloat(usd)));
           $("#modal_montopre"+anio+"FFF"+i).val(redondeo(parseFloat($("#modal_montopreUSD"+anio+"FFF"+i).val())*parseFloat(usd))); 
@@ -13186,31 +13215,54 @@ function guardarArchivosDetalleSolicitud(){
   };
 }
 function cargarArchivosAdjuntosFila(fila){
+  var inicio=$("#cantidad_archivosadjuntosdetalleFijos").val(); 
   var cantidad=$("#cantidad_archivosadjuntosdetalle").val(); 
-  for (var i = 1; i <=parseInt(cantidad); i++) {
+  for (var i = parseInt(inicio+1); i <=parseInt(cantidad); i++) {
       $("#fila_archivodetalle"+i).remove();
   }
-  $("#cantidad_archivosadjuntosdetalle").val($("#cantidad_archivosadjuntosdetalleFijo").val());
+  $("#cantidad_archivosadjuntosdetalle").val(inicio);
   var cantidadFila=$("#cantidad_archivosadjuntosdetalle"+fila).val(); 
   for (var i = 1; i <=parseInt(cantidadFila); i++) {
     if($("#codigo_archivodetalle"+i+"FFFF"+fila).length>0){
       //falta codigo
+      if(i<=inicio){
 
-
+      }else{
+        var codigo = $("#tipo_documento_otro").val();
+        var num = parseInt($("#cantidad_archivosadjuntosdetalle").val());
+        num++;  
+        var row = $('<tr>').addClass('').attr('id','fila_archivodetalle'+num);
+        row.append($('<td>').addClass('text-left').html('<input type="hidden" name="codigo_archivodetalle'+num+'" id="codigo_archivodetalle'+num+'" value="'+codigo+'">Otros Documentos <a href="#" title="Quitar" class="btn btn-default btn-round btn-sm btn-fab float-right" onClick="quitarElementoAdjuntoDetalle('+num+')"><i class="material-icons">delete_outline</i></a>'));
+        row.append($('<td>').addClass('text-center').html('<i class="material-icons text-danger">clear</i> NO'));
+        row.append($('<td>').addClass('text-right').html('<small id="label_txt_documentos_detalle'+num+'"></small>'+ 
+                      '<span class="input-archivo">'+
+                        '<input type="file" class="archivo" name="documentos_detalle'+num+'" id="documentos_detalle'+num+'"/>'+
+                      '</span>'+
+                      '<label title="Ningún archivo" for="documentos_detalle'+num+'" id="label_documentos_detalle'+num+'" class="label-archivo btn btn-warning btn-sm"><i class="material-icons">publish</i> Subir Archivo'+
+                      '</label>'));
+        row.append($('<td>').addClass('text-center').html('<input type="text" class="form-control" style="background-color:#E3CEF6;text-align: left" value="" placeholder="Ingresar Descripción" id="nombre_archivodetalle'+num+'" name="nombre_archivodetalle'+num+'">')); 
+        $("#tabla_archivosdetalle").append(row);
+        $("#cantidad_archivosadjuntosdetalle").val(num);    
+      }
      $("#codigo_archivodetalle"+i).val($("#codigo_archivodetalle"+i+"FFFF"+fila).val());
      $("#nombre_archivodetalle"+i).val($("#nombre_archivodetalle"+i+"FFFF"+fila).val());
      var x = $("#documentos_detalle"+i+"FFFF"+fila);
      var y = x.clone();
       y.attr("id", "documentos_detalle"+i);
       y.attr("name", "documentos_detalle"+i);
-      $("#documentos_detalle"+i).remove();
-      y.insertAfter($("#nombre_archivodetalle"+i));
+      y.addClass("archivo");
+     // $("#documentos_detalle"+i).replaceWith(y);
+      $("#documentos_detalle"+i).attr("id","eliminado"+i);
+      y.insertAfter($("#eliminado"+i));
+      $("#eliminado"+i).remove();
+      var filename = $("#documentos_detalle"+i).val().split('\\').pop();
+      var idname = $("#documentos_detalle"+i).attr('id');
+      mostrarArchivoCambios(filename,idname);
     }
   }  
 }
-$(document).on('change', '.archivo', function() {
-  var filename = $(this).val().split('\\').pop();
-  var idname = $(this).attr('id');
+
+function mostrarArchivoCambios(filename,idname){
   $("#label_txt_"+idname).html(filename);
   if(filename.length>28){
     $("#label_txt_"+idname).html(filename.substr(0,28)+"...");
@@ -13229,6 +13281,12 @@ $(document).on('change', '.archivo', function() {
       $("#label_"+idname).removeClass('btn-warning');
     } 
    }
+}
+
+$(document).on('change', '.archivo', function() {
+  var filename = $(this).val().split('\\').pop();
+  var idname = $(this).attr('id');
+  mostrarArchivoCambios(filename,idname);
 });
 
 function cambiarCuentaAuxiliarDetalle(cuentaPadre,tipo,com,cod,ant,nue){
@@ -14010,3 +14068,4 @@ function SeleccionarComprobante_cajachica_reembolso(cod_comprobante,cod_comproba
   $("#modalBuscador").modal("hide");
   $("#modal_lista_comprobantes").modal("hide");
 }
+

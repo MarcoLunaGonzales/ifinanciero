@@ -40,7 +40,7 @@ $tipoCurso=$_POST['tipo_curso'];
 if(isset($_POST['resumido'])){
  $resumido=1; 
  $rowSpan=4;
- $sqlSolicitadosInicio="SELECT 1 as codigo,'<i class=\'material-icons bg-primary\'>insert_chart</i>' as nombre,'$hasta' as fecha_curso,l.cod_cuenta,GROUP_CONCAT(CONCAT(l.glosa,' ',l.nombre_proveedor)) as glosa,sum(l.presupuestado)as presupuestado,sum(l.ejecutado) as ejecutado,null as proveedor,1 as codigo_ejecutado FROM (";
+ $sqlSolicitadosInicio="SELECT 1 as codigo,1 as cod_simulacion,'<i class=\'material-icons bg-primary\'>insert_chart</i>' as nombre,'$hasta' as fecha_curso,l.cod_cuenta,GROUP_CONCAT(CONCAT(l.glosa,' ',l.nombre_proveedor)) as glosa,sum(l.presupuestado)as presupuestado,sum(l.ejecutado) as ejecutado,null as proveedor,1 as codigo_ejecutado FROM (";
  $sqlSolicitadosFin=") l where l.codigo_ejecutado!='' group by l.cod_cuenta";
  $solicitados=0;
  $anchoPartida="3%";
