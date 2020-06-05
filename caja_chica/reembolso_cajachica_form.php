@@ -84,7 +84,7 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
                         <input class="form-control" type="text" step="any" name="monto" id="monto" value="<?=$monto;?>" required/>
                     </div>
                 </div>
-                <label class="col-sm-2 col-form-label">Fecha</label>
+                <label class="col-sm-1 col-form-label">Fecha</label>
                 <div class="col-sm-4">
                     <div class="form-group">
                         <input class="form-control" name="fecha" id="fecha" type="date" min="<?=$fecha_dias_atras?>" max="<?=$fecha?>" required="true" value="<?=$fecha?>" />
@@ -104,9 +104,9 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
               </div>
             <div class="row">
                 <label class="col-sm-2 col-form-label">Detalle</label>
-                <div class="col-sm-7">
+                <div class="col-sm-9">
                 <div class="form-group">
-                    <input class="form-control rounded-0" name="observaciones" id="observaciones" rows="3" required onkeyup="javascript:this.value=this.value.toUpperCase();" value="<?=$observaciones;?>" required/>                            
+                  <textarea class="form-control" name="observaciones" id="observaciones" required onkeyup="javascript:this.value=this.value.toUpperCase();" value="<?=$observaciones;?>"></textarea>
                 </div>
                 </div>
             </div>              
@@ -121,8 +121,6 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
   
   </div>
 </div>
-
-
 <!-- Modal busqueda de comprobantes-->
 <div class="modal fade" id="modalBuscador" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog modal-xl" role="document">
@@ -221,11 +219,12 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
   </div>
 </div>
 
-<script type="text/javascript">  
+<!-- <script type="text/javascript">  
   $('#modalBuscador').modal('show');
 </script>
-
+ -->
 <script type="text/javascript">
+  // $('#modalBuscador').modal('show');
   function valida(f) {
     var ok = true;
     if(f.elements["monto"].value == 0 || f.elements["monto"].value == null || f.elements["monto"].value == '' || f.elements["monto"].value == ' ')

@@ -17,20 +17,29 @@ try{
     $stmt->execute();    
         //==================================================================================================================
     //datos caja chica
-    $stmtInfo = $dbh->prepare("SELECT tc.nombre,c.monto_inicio,c.observaciones,c.numero,c.fecha,c.fecha_cierre from caja_chica c,tipos_caja_chica tc where c.cod_tipocajachica=tc.codigo and c.codigo=$codigo");
+    $stmtInfo = $dbh->prepare("SELECT tc.nombre,tc.cod_uo,c.monto_inicio,c.observaciones,c.numero,c.fecha,c.fecha_cierre from caja_chica c,tipos_caja_chica tc where c.cod_tipocajachica=tc.codigo and c.codigo=$codigo");
     $stmtInfo->execute();
     $resultInfo = $stmtInfo->fetch();
     //$codigo = $result['codigo'];
     $nombre_tcc = $resultInfo['nombre'];
+    $cod_uo = $resultInfo['cod_uo'];
     $monto_inicio_cc = $resultInfo['monto_inicio'];
     $detalle_cc = $resultInfo['observaciones'];
     $numero_cc = $resultInfo['numero'];
     $fecha_inicio_cc = $resultInfo['fecha'];
     $fecha_cierre_cc = $resultInfo['fecha_cierre'];
-
+    $cod_uo_x=$resultInfo['cod_uo'];
+    $nombre_uo_x=nameUnidad($cod_uo_x);
     // $contenido='CAJA CHICA N° '.$numero_cc." De Fecha: ".$fecha_inicio_cc." a ".$fecha_cierre_cc;
-    $contenido='CAJA CHICA N° '.$numero_cc;
-
+    $contenido='CAJA CHICA N° '.$numero_cc; 
+    //DAtos de reembolso
+    $stmtInfoReembolso = $dbh->prepare("SELECT observaciones from caja_chicareembolsos where cod_cajachica=$codigo order by codigo desc limit 1");
+    $stmtInfoReembolso->execute();
+    $resultInfoReembolso = $stmtInfoReembolso->fetch();    
+    $observaciones_reembolso = $resultInfoReembolso['observaciones'];
+    if($observaciones_reembolso==null || $observaciones_reembolso=='' || $observaciones_reembolso==' '){
+      $observaciones_reembolso ="REPOSICION";
+    }
 
 $html = '';
 $html.='<html>'.
@@ -55,8 +64,8 @@ $html.=  '<header class="header">'.
              '<div>
               <h4 >
               '.obtenerValorConfiguracionEmpresa(3).'<br>
-              OFICINA<br>
-              '.obtenerValorConfiguracionEmpresa(6).'<br>
+              OFICINA: '.$nombre_uo_x.'<br>
+              DIRECCION: '.obtenerValorConfiguracionEmpresa(6).'<br>
               <b>NIT:</b>'.obtenerValorConfiguracionEmpresa(4).'<br>            
               </h4> 
             </div>'.
@@ -96,7 +105,7 @@ $html.=  '<header class="header">'.
             '<tr>'.
                 '<td class="text-left small"></td>'.
                 '<td class="text-left small"></td>'.
-                '<td class="text-left small"><b>REPOSICION</b></td>'.
+                '<td class="text-left small"><b>'.$observaciones_reembolso.'</b></td>'.
                 '<td class="text-center small"></td>'.
                 '<td class="text-center small"></td>'.
                 '<td class="text-center small"></td>'.

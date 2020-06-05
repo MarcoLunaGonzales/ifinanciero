@@ -492,6 +492,16 @@
           }
         }
       });      
+      $("#formDetalleCajaChica").submit(function(e) {      
+        $('<input />').attr('type', 'hidden')
+          .attr('name', 'd_oficinas')
+          .attr('value', JSON.stringify(itemDistOficina))
+          .appendTo('#formDetalleCajaChica');
+        $('<input />').attr('type', 'hidden')
+          .attr('name', 'd_areas')
+          .attr('value', JSON.stringify(itemDistArea))
+          .appendTo('#formDetalleCajaChica');        
+      });
     } );
   </script>
 
@@ -509,7 +519,7 @@
             .appendTo('#formRegFactCajaChica');
       
       });
-      document.getElementById('qrquincho').addEventListener('change', readSingleFileDCC, false);
+      // document.getElementById('qrquincho').addEventListener('change', readSingleFileDCC, false);
 
        $("#formRegFactRendiciones").submit(function(e) {
       $('<input />').attr('type', 'hidden')
@@ -518,9 +528,7 @@
             .appendTo('#formRegFactRendiciones');
       
       });
-      document.getElementById('qrquincho').addEventListener('change', readSingleFileDRC, false);
-    // document.getElementById('archivos').addEventListener('change', archivosPreviewDCC, false);
-    // document.getElementById('archivosDetalle').addEventListener('change', archivosPreviewDetalleDCC, false);
+      // document.getElementById('qrquincho').addEventListener('change', readSingleFileDRC, false);    
 
        $("#formChequePago").submit(function(e) {
           var inicioo =parseFloat($("#inicio").val());

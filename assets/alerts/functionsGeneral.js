@@ -13709,7 +13709,7 @@ function RegistrarComprobanteCajaChica(cod_cajachica,cod_tipocajachica,nro_compr
               Swal.fire("ERROR!", "No se pudo encontrar el comprobante, por favor verifique los datos introducidos!", "warning");
             }else{
               if(estado==4){
-                Swal.fire("ERROR!", "No se pudo generar el comporbante, debido a que los nros. de documentos de los gastos de caja chica listados a continuación, no tienen registrado la factura correspondiente: <br>\n"+stringRetenciones+".", "warning");
+                Swal.fire("ERROR!", "No se pudo generar el comprobante.<br>\n Error en: "+stringRetenciones+"<br>\n No tiene Factura registrada.", "warning");
               }
             }
           }
@@ -14001,10 +14001,10 @@ function botonBuscarComprobante_caja_chica(){
   }
   ajax.send(null);
 }
-function SeleccionarComprobante_cajachica_reembolso(cod_comprobante,cod_comprobantedetalle,glosa_x,monto_x){
+function SeleccionarComprobante_cajachica_reembolso(cod_comprobante,cod_comprobantedetalle,glosa_x,monto_x,nombre_comprobante){
   // alert("ok");
   $("#monto").val(monto_x);
-  $("#observaciones").val(glosa_x);
+  $("#observaciones").val(glosa_x+", enlazado al comprobante ("+nombre_comprobante+")");
   $("#cod_comprobante").val(cod_comprobante);
   $("#cod_comprobante_detalle").val(cod_comprobantedetalle);
   $("#modalBuscador").modal("hide");
