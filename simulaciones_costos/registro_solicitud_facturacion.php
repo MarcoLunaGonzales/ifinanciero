@@ -472,10 +472,22 @@ $descuento_cliente=0;
                                                          // echo $sqlControlador2;
                                                         $stmtControlador2 = $dbh->prepare($sqlControlador2);
                                                         $stmtControlador2->execute();
+                                                        //sacamos el monto total
+                                                        $sqlControladorTotal="SELECT SUM(sfd.precio) as precio from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$IdCurso and sf.cod_estado=1 and sfd.cod_claservicio=$codCS";
+                                                         // echo $sqlControladorTotal;
+                                                        $stmtControladorTotal = $dbh->prepare($sqlControladorTotal);
+                                                        $stmtControladorTotal->execute();
+                                                        $resultMontoTotal=$stmtControladorTotal->fetch();
+                                                        $monto_total_pagado=$resultMontoTotal['precio'];
+
                                                         while ($rowPre = $stmtControlador2->fetch(PDO::FETCH_ASSOC)) {
                                                           if($sw!="checked"){
-                                                            $sw2="readonly style='background-color:#cec6d6;'";
-                                                            $montoPre=$rowPre['precio']+$rowPre['descuento_bob'];
+                                                            if($monto_pagar==$monto_total_pagado){
+                                                                $sw2="readonly style='background-color:#cec6d6;'";
+                                                            }                                                            
+                                                            $monto_total_pagado-=$rowPre['descuento_bob'];
+                                                            $saldo=$monto_pagar-$monto_total_pagado;
+                                                            // $montoPre=$rowPre['precio']+$rowPre['descuento_bob'];
                                                             $descuento_porX=$rowPre['descuento_por'];
                                                             $descuento_bobX=$rowPre['descuento_bob'];
                                                             $descripcion_alternaX=$rowPre['descripcion_alterna'];
@@ -484,7 +496,7 @@ $descuento_cliente=0;
                                                     }
                                                 }else{           
                                                     ?>
-                                                    <script>$("#div_mensaje_ws").removeClass('d-none');;</script>
+                                                    <script>$("#div_mensaje_ws").removeClass('d-none');</script>
                                                     <?php
                                                     $estado_ws=false;
                                                     // break;
@@ -513,7 +525,8 @@ $descuento_cliente=0;
                                                     <!-- total -->
                                                     <td class="text-right"><input type="hidden" name="modal_importe<?=$iii?>" id="modal_importe<?=$iii?>"><input type="text" class="form-control" name="modal_importe_dos<?=$iii?>" id="modal_importe_dos<?=$iii?>" style ="background-color: #ffffff;" readonly></td>
                                                     <td>
-                                                        <input type="text" class="form-control" name="modal_importe_pagado_dos<?=$iii?>" id="modal_importe_pagado_dos<?=$iii?>" style ="background-color: #ffffff;" readonly value="<?=number_format($montoPagado,2,'.','');?>">
+                                                        <input type="hidden" name="modal_importe_pagado_dos_a<?=$iii?>" id="modal_importe_pagado_dos_a<?=$iii?>" value="<?=$monto_total_pagado;?>">
+                                                        <input type="text" class="form-control" name="modal_importe_pagado_dos<?=$iii?>" id="modal_importe_pagado_dos<?=$iii?>" style ="background-color: #ffffff;" readonly value="<?=number_format($monto_total_pagado,2,'.','');?>">
                                                     </td>
                                                     <td>
                                                         <input type="number" step="0.01" id="importe_a_pagar<?=$iii?>" name="importe_a_pagar<?=$iii?>" class="form-control text-primary text-right"  value="<?=$saldo?>" step="0.01" onkeyup="calcularTotalFilaServicio2Costos()" <?=$sw2?>>

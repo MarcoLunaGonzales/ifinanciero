@@ -9123,24 +9123,33 @@ function calcularTotalFilaServicio2Costos(){
   var total= $("#modal_numeroservicio").val();
   var comprobante_auxiliar=0;
   for (var i=1;i<=(total-1);i++){          
-    var importe_a_pagar=$("#importe_a_pagar"+i).val();        
+    var importe_a_pagar=$("#importe_a_pagar"+i).val();
+    var importe=$("#importe"+i).val();
+    var modal_importe_pagado_dos_a=$("#modal_importe_pagado_dos_a"+i).val();
+    // alert(importe+"-"+modal_importe_pagado_dos_a);
+    var saldo=parseFloat(importe)-parseFloat(modal_importe_pagado_dos_a);
     var monto_importe_total=parseFloat(importe_a_pagar);
     var check=document.getElementById("modal_check"+i).checked;
-    if(check) {//BUSACMOS LOS CHECK ACTIVOS
-      comprobante_auxiliar=comprobante_auxiliar+1;        
-      //sumanos los importes
-      sumal+=parseFloat($("#importe_a_pagar"+i).val());
-      //sacamos los datos de los items que se activaron
-      var cod_serv_tiposerv = document.getElementById("cod_serv_tiposerv"+i).value;
-      var servicio = document.getElementById("servicio"+i).value;      
-      var cantidad=document.getElementById("cantidad"+i).value;
-      var importe=document.getElementById("importe"+i).value;
-      // aqui se guardan los servicios activados
-      document.getElementById("cod_serv_tiposerv_a"+i).value=cod_serv_tiposerv;      
-      document.getElementById("servicio_a"+i).value=servicio;
-      document.getElementById("cantidad_a"+i).value=cantidad;
-      document.getElementById("importe_a"+i).value=importe;              
-    }else{ document.getElementById("servicio_a"+i).value="";}
+    if(monto_importe_total>saldo){
+      Swal.fire("Informativo!", "El Monto Supera al Saldo! ("+number_format(saldo,2)+").", "warning");
+    }else{
+      if(check) {//BUSACMOS LOS CHECK ACTIVOS
+        comprobante_auxiliar=comprobante_auxiliar+1;        
+        //sumanos los importes
+        sumal+=parseFloat($("#importe_a_pagar"+i).val());
+        //sacamos los datos de los items que se activaron
+        var cod_serv_tiposerv = document.getElementById("cod_serv_tiposerv"+i).value;
+        var servicio = document.getElementById("servicio"+i).value;      
+        var cantidad=document.getElementById("cantidad"+i).value;
+        var importe=document.getElementById("importe"+i).value;
+        // aqui se guardan los servicios activados
+        document.getElementById("cod_serv_tiposerv_a"+i).value=cod_serv_tiposerv;      
+        document.getElementById("servicio_a"+i).value=servicio;
+        document.getElementById("cantidad_a"+i).value=cantidad;
+        document.getElementById("importe_a"+i).value=importe;              
+      }else{ document.getElementById("servicio_a"+i).value="";}  
+    }
+    
   } 
 
   var resulta=sumal;  
@@ -12017,11 +12026,11 @@ function botonBuscarNormasSolfac(){
   ajax.send(null)
 }
 function botonBuscarEstudiantesCapacitacion(){
+  iniciarCargaAjax();
   var valor_ci_cliente=$("#ci").val();    
   var valor_nombre_cliente=$("#nombreCliente").val();   
   var valor_paterno_cliente=$("#paternoCliente").val();   
   var valor_materno_cliente=$("#maternoCliente").val(); 
-
   var q=$("#q").val();   
   var r=$("#r").val(); 
   // alert(valor_nombre_cliente+"-"+valor_paterno_cliente+"-"+valor_materno_cliente);
@@ -12036,11 +12045,13 @@ function botonBuscarEstudiantesCapacitacion(){
       var contenedor=$("#contenedor_items_estudiantes");
       contenedor.html(ajax.responseText);
       $("#modalBuscador").modal("hide");
+      detectarCargaAjax();
     }
   }
   ajax.send(null)
 }
 function botonBuscarEmpresasCapacitacion(){
+  iniciarCargaAjax();
   var valor_cod_empresa=$("#cod_empresa").val();    
   var valor_glosa=$("#glosa").val();   
   var q=$("#q").val();   
@@ -12059,6 +12070,7 @@ function botonBuscarEmpresasCapacitacion(){
       var contenedor=$("#contenedor_items_empresas");
       contenedor.html(ajax.responseText);
       $("#modalBuscador").modal("hide");
+      detectarCargaAjax();
     }
   }
   ajax.send(null)
@@ -13588,6 +13600,7 @@ function agregaDatosGenerarFactPagos(datos){
   // var saldo_anterior=parseFloat(d[2]);
   document.getElementById("cod_solicitudfacturacion_factpagos").value=cod_solicitudfacturacion;
   var index=(parseFloat(d[3])-1);
+  // alert("index:"+index);
   var contenedor = document.getElementById('contenedor_GenerarFactParcial_cabecera');    
   ajax=nuevoAjax();
   ajax.open('GET', 'simulaciones_servicios/ajax_cabecera_modal_generarFactPar.php?cod_solicitud='+cod_solicitudfacturacion,true);
@@ -13614,8 +13627,7 @@ function tablaGeneral_GenerarFact_parcial(index){
   titulos.append($('<th width="3%">').addClass('').text('Importe'));
   titulos.append($('<th width="8%">').addClass('small').text('Importe Facturado'));
   titulos.append($('<th width="5%">').addClass('small').text('Saldo'));
-  titulos.append($('<th width="8%">').addClass('').text('Importe a Pagar'));    
-  
+  titulos.append($('<th width="8%">').addClass('').text('Importe a Pagar'));
   table.append(titulos);
   for (var i = 0; i < itemGenerar_factura_parcial_aux[index].length; i++) {
     var descripcionx=itemGenerar_factura_parcial_aux[index][i].descripcionx;

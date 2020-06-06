@@ -184,8 +184,6 @@ try {//recibiendo datos
             // }
                     
         }
-        // if($estado_ibnorca==0){//no hubo errores al insertar en webservice
-            //enviar propuestas para la actualizacion de ibnorca
             $fechaHoraActual=date("Y-m-d H:i:s");
             $idTipoObjeto=2709;
             $idObjeto=2726; //regristado
@@ -203,16 +201,7 @@ try {//recibiendo datos
             }else{
               showAlertSuccessError($flagSuccess,$urlSolicitudfactura);
             } 
-        // }else{
-        //     if(isset($_POST['q'])){
-        //       $q=$_POST['q'];
-        //       $r=$_POST['r'];          
-        //       showAlertSuccessErrorPagosCapacitacion(false,$urlSolicitudfactura."&q=".$q."&r=".$r);
-        //     }else{
-        //       showAlertSuccessErrorPagosCapacitacion(false,$urlSolicitudfactura);
-        //     } 
-        // }
-        
+
 
         
         //$stmt->debugDumpParams();

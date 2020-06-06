@@ -63,7 +63,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                             <th>Responsable</th>
                             <th>Codigo<br>Servicio</th>                            
                             <th>Fecha<br>Registro</th>                            
-                            <th style="color:#cc4545;">#Fact</th>                            
+                            <th style="color:#cc4545;">#Fact.</th>                            
                             <th>Importe<br>(BOB)</th>  
                             <th>Persona<br>Contacto</th>                              
                             <th>Concepto</th>
@@ -78,23 +78,23 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                           $cont= array();
                           while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                             switch ($codEstado) {
-                              case 1:
-                                $btnEstado="btn-default";
+                              case 1:                                
+                                $label='<span class="badge badge-default">';
                               break;
-                              case 2:
-                                $btnEstado="btn-danger";
+                              case 2:                                
+                                $label='<span class="badge badge-danger">';
                               break;
-                              case 3:
-                                $btnEstado="btn-success";
+                              case 3:                                
+                                $label='<span class="badge badge-success">';
                               break;
-                              case 4:
-                                $btnEstado="btn-warning";
+                              case 4:                                
+                                $label='<span class="badge badge-warning">';
                               break;
-                              case 5:
-                                $btnEstado="btn-warning";
+                              case 5:                                
+                                $label='<span class="badge badge-warning">';
                               break;
-                              case 6:
-                                $btnEstado="btn-default";
+                              case 6:                                
+                                $label='<span class="badge badge-default">';
                               break;
                             }
                             //verificamos si ya tiene factura generada y esta activa                           
@@ -110,7 +110,8 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                             $importe_x = $resultSimu['importe'];
                             if ($nro_fact_x==null)$nro_fact_x="-";
                             if($cod_estado_factura_x==4){
-                              $btnEstado="btn-warning";
+                              // $btnEstado="btn-warning";
+                              $label='<span class="badge badge-warning">';
                               $estado="FACTURA MANUAL";
 
                               $cliente_x=nameCliente($cod_cliente);                              
@@ -237,7 +238,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                             <td class="text-left"><small><?=$nombre_contacto;?></small></td>
                             <!-- <td><?=$razon_social;?></td> -->                            
                             <td width="35%"><small><?=$concepto_contabilizacion?></small></td>
-                            <td><button class="btn <?=$btnEstado?> btn-sm btn-link"><small><?=$estado;?></small></button></td>
+                            <td><?=$label?><small><?=$estado;?></small></span></td>
                             <td class="td-actions text-right">
                               <?php                              
                                 if($cod_estado_factura_x==1 || $cod_estado_factura_x==null){
