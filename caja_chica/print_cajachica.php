@@ -139,7 +139,7 @@ $html.=  '<header class="header">'.
                             '<td class="text-left small">'.$row['observaciones'].'</td>'.
                             '<td class="text-center small">'.$row['nro_recibo'].'</td>'.
                             '<td class="text-center small">'.$nro_factura.'</td>'.
-                            '<td class="text-right small">'.formatNumberDec($ingresos).'</td>'.
+                            '<td class="text-right small">'.$ingresos.'</td>'.
                             '<td class="text-right small">'.formatNumberDec($row['monto']).'</td>'.
                             '<td class="text-right small">'.formatNumberDec($saldo_inicial).'</td>
                     </tr>';
