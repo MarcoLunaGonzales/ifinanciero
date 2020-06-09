@@ -270,7 +270,7 @@ for ($an=0; $an<=$anioGeneral; $an++) {
         <div class="card col-sm-12">
 				<div class="card-header card-header-success card-header-text">
 					<div class="card-text">
-					  <h4 class="card-title">Datos de Sitios</h4>
+					  <h4 class="card-title">Detalle de Sitios</h4>
 					</div>
           <button type="button" onclick="actualizarSimulacionSitios()" class="btn btn-default btn-sm btn-fab float-right">
              <i class="material-icons" title="Actualizar la Pagina">refresh</i><span id="narch" class="bg-warning"></span>
