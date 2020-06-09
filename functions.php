@@ -6787,25 +6787,47 @@ function verificarArchivoAdjuntoExistente($tipo,$padre,$objeto,$codArchivo){
   }
   return array($valor,$descripcion,$url);
 }
-function obtenerDiasAuditorSimulacionServicio($codigo){
-   $dbh = new Conexion();
-   $valor=0;
-   $sql="SELECT dias from simulaciones_servicios_auditores p where p.codigo=$codigo";
+function obtenerCodCuentaTipoPago($codigo){  
+  $dbh = new Conexion();
+  $sql="SELECT cod_cuenta from tipos_pago_contabilizacion where cod_tipopago=$codigo";
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  $valor=0;
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {     
+    $valor=$row['cod_cuenta'];      
+  }
+  return $valor;
+}
+function obtenerCodCuentaArea($codigo){
+  $dbh = new Conexion();
+   $sql="SELECT cod_cuenta_ingreso from areas where codigo=$codigo";
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
-   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-      $valor=$row['dias'];
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {     
+      $valor=$row['cod_cuenta_ingreso'];      
+  }
+  return $valor; 
+}
+function obtenerDiasAuditorSimulacionServicio($codigo){
+  $dbh = new Conexion();
+  $valor=0;
+  $sql="SELECT dias from simulaciones_servicios_auditores p where p.codigo=$codigo";
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+  $valor=$row['dias'];
   }
   return (float)$valor;
 }
 function obtenerEntradaSimulacionServicio($codigo){
-   $dbh = new Conexion();
-   $valor=0;
-   $sql="SELECT entrada from simulaciones_servicios p where p.codigo=$codigo";
-   $stmt = $dbh->prepare($sql);
-   $stmt->execute();
-   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-      $valor=$row['entrada'];
+  $dbh = new Conexion();
+  $valor=0;
+  $sql="SELECT entrada from simulaciones_servicios p where p.codigo=$codigo";
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+  $valor=$row['entrada'];
   }
   return $valor;
 }
