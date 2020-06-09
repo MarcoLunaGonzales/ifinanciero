@@ -28,7 +28,7 @@ $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey,
               "accion"=>"GenerarFactura", //nombre de la accion
               "sucursalId"=>1, // ID Sucursal
               "pasarelaId"=>1, // pasalela
-              "fechaFactura"=>'2020-06-09', // fecha a factura
+              "fechaFactura"=>'2020-06-08', // fecha a factura
               "nitciCliente"=>4868422016, //nit o ci de cliente
               "razonSocial"=>'Luna', //razon social
               "importeTotal"=>2000, //importe total
