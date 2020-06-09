@@ -94,7 +94,7 @@ try{
 				$stmtDeleteDetalle = $dbh->prepare($sqlDeleteDetalle);
 				$stmtDeleteDetalle->execute();
 				 //listado de todo el detalle de caja chica en curso
-			    $stmtCajaChicaDet = $dbh->prepare("SELECT codigo,cod_tipodoccajachica,observaciones,monto,cod_uo,cod_area,cod_cuenta,(select p.nombre from af_proveedores p where p.codigo=cod_proveedores)as proveedor,(select c.nombre from plan_cuentas c where c.codigo=cod_cuenta)nombre_cuenta,
+			    $stmtCajaChicaDet = $dbh->prepare("SELECT codigo,nro_recibo,cod_tipodoccajachica,observaciones,monto,cod_uo,cod_area,cod_cuenta,(select p.nombre from af_proveedores p where p.codigo=cod_proveedores)as proveedor,(select c.nombre from plan_cuentas c where c.codigo=cod_cuenta)nombre_cuenta,
 			    (select c2.numero from plan_cuentas c2 where c2.codigo=cod_cuenta)numero_cuenta,
 			    (select CONCAT_WS(' ',p.primer_nombre,p.paterno,p.materno) from personal p where p.codigo=cod_personal)as personal,
 			    (select u.abreviatura from unidades_organizacionales u where u.codigo=cod_uo)as nombre_uo,
@@ -104,7 +104,6 @@ try{
 			    $stmtCajaChicaDet->bindColumn('codigo', $codigo_ccdetalle);
 			    $stmtCajaChicaDet->bindColumn('cod_cuenta', $cod_cuenta);
 			    $stmtCajaChicaDet->bindColumn('nro_recibo', $nro_recibo);
-			    
 			    $stmtCajaChicaDet->bindColumn('nombre_cuenta', $nombre_cuenta);
 			    $stmtCajaChicaDet->bindColumn('numero_cuenta', $numero_cuenta);    
 			    $stmtCajaChicaDet->bindColumn('personal', $personal);
