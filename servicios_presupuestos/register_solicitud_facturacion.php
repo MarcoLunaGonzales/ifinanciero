@@ -411,7 +411,7 @@ $contadorRegistros=0;
                                             // $tipoPre=$rowPre['descripcion'];
                                             $cantidadPre=$rowPre['Cantidad'];                                          
                                             $montoPre=$rowPre['PrecioUnitario'];
-                                            // echo "---cod  :".$codCS;
+                                            echo "---cod  :".$codCS;
                                             $tipoPre=descripcionClaServicio($codCS);
                                             // $montoPreTotal=$montoPre*$cantidadEPre;
                                             $banderaHab=1;

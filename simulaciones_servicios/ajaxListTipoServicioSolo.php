@@ -25,8 +25,6 @@ $usd=$_GET['usd'];
 $codigo=$_GET['codigo'];
 $anioGeneral=$_GET['anio_general'];
 ?>
-
-                      
                                 <?php 
                                 $iii=$_GET['cantidad_filas'];
                                $queryPr="SELECT s.*,t.descripcion as nombre_serv FROM simulaciones_servicios_tiposervicio s, cla_servicios t where s.cod_simulacionservicio=$codigoSimulacionSuper and s.cod_claservicio=t.idclaservicio and s.cod_anio=$anio_fila and s.codigo=$codigo";
@@ -37,6 +35,7 @@ $anioGeneral=$_GET['anio_general'];
                                   $codigoPre=$rowPre['codigo'];
                                   $codCS=$rowPre['cod_claservicio'];
                                   $tipoPre=$rowPre['nombre_serv'];
+                                  $tipoPreEdit=$rowPre['observaciones'];
                                   $cantidadPre=$rowPre['cantidad'];
                                   $cantidadEPre=$rowPre['cantidad_editado'];
                                   $montoPre=$rowPre['monto'];
@@ -76,7 +75,12 @@ $anioGeneral=$_GET['anio_general'];
 
                                               if($codAreaX!=39){
                                                if($i==0||$i==1){
-                                                $etapas="Et ".($i+1).""; 
+                                                if($i==1){
+                                                 $etapas="Et ".($i+1)." / REN";  
+                                                }else{
+                                                 $etapas="Et ".($i+1)."";   
+                                                }
+                                                
                                                }
                                               }
                                               
@@ -93,6 +97,9 @@ $anioGeneral=$_GET['anio_general'];
                                       </select>
                                      </td>
                                      <td class="text-left"><i class="material-icons text-warning"><?=$iconServ?></i><input type="hidden" id="precio_fijo<?=$anio?>SSS<?=$iii?>" value="<?=$iconServ?>"> <?=$tipoPre?></td>
+                                     <td class="text-right">
+                                       <input type="text" id="descripcion_servicios<?=$anio?>SSS<?=$iii?>" name="descripcion_servicios<?=$anio?>SSS<?=$iii?>" class="form-control text-info text-right" value="<?=$tipoPreEdit?>">
+                                     </td>
                                      <td class="text-right">
                                        <input type="number" min="1" id="cantidad_servicios<?=$anio?>SSS<?=$iii?>" name="cantidad_servicios<?=$anio?>SSS<?=$iii?>" class="form-control text-info text-right" onchange="calcularTotalFilaServicio(<?=$anio?>,2)" onkeyUp="calcularTotalFilaServicio(<?=$anio?>,2)" value="<?=$cantidadEPre?>">
                                      </td>

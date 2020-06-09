@@ -106,6 +106,7 @@ $stmtDetAt->execute();
                  VALUES ('$codSimulacionServicioAtributo', '$codNorma', '10',1)";
                  $stmtDetalleAtributosNormas = $dbh->prepare($sqlDetalleAtributosNormas);
                  $stmtDetalleAtributosNormas->execute();
+               }
               }else{
                  $nCDias=cantidadF($atributosDias);
                     for($jj=0;$jj<$nCDias;$jj++){
@@ -123,10 +124,6 @@ $stmtDetAt->execute();
               
          }
          //FIN simulaciones_serviciosauditores
-
-
-
-
 
 
 

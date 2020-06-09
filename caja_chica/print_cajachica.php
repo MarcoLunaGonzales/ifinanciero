@@ -100,7 +100,7 @@ $html.=  '<header class="header">'.
                 '<td class="text-center small"><b>ASIGNACION DE FONDO</b></td>'.
                 '<td class="text-center small"></td>'.
                 '<td class="text-center small"></td>'.
-                '<td class="text-center small"></td>'.
+                '<td class="text-center small">'.formatNumberDec($monto_inicio_cc).'</td>'.
                 '<td class="text-center small"></td>'.
                 '<td class="text-right small"><b>'.formatNumberDec($monto_inicio_cc).'</b></td>
             </tr>';
@@ -115,7 +115,7 @@ $html.=  '<header class="header">'.
             //     '<td class="text-right small">'.formatNumberDec($monto_inicio_cc).'</td>
             // </tr>';
             $ingresos='';
-            $total_ingresos=0;
+            $total_ingresos=$monto_inicio_cc;
             $total_egresos=0;
             while ($row = $stmt->fetch()) 
             {

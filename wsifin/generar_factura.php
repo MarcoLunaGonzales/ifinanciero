@@ -78,11 +78,11 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
             //NUMERO CORRELATIVO DE FACTURA
             // echo $sucursalId;
             $nro_correlativo = nro_correlativo_facturas($sucursalId);
-            if($nro_correlativo==0){
-                echo date('Y-m-d');                
+            if($nro_correlativo==0){                
                 return "11###";//No tiene registrado La dosificación para la facturación
 
             }else{
+                $fechaFactura_x=date('Y-m-d H:i:s');
                 //generamos el comprobante
                 // $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$nro_correlativo);
                 $cod_comprobante=0;
@@ -97,7 +97,7 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
                 );
                 //echo "cod:".$code;
                 $sql="INSERT INTO facturas_venta(cod_sucursal,cod_solicitudfacturacion,cod_unidadorganizacional,cod_area,fecha_factura,fecha_limite_emision,cod_tipoobjeto,cod_tipopago,cod_cliente,cod_personal,razon_social,nit,cod_dosificacionfactura,nro_factura,nro_autorizacion,codigo_control,importe,observaciones,cod_estadofactura,cod_comprobante) 
-                  values ('$sucursalId','$cod_solicitudfacturacion','$cod_unidadorganizacional','$cod_area','$fechaFactura','$fecha_limite_emision','$cod_tipoobjeto','$cod_tipopago','$cod_cliente','$cod_personal','$razon_social','$nitCliente','$cod_dosificacionfactura','$nro_correlativo','$nroAutorizacion','$code','$totalFinalRedondeado','$observaciones','1','$cod_comprobante')";
+                  values ('$sucursalId','$cod_solicitudfacturacion','$cod_unidadorganizacional','$cod_area','$fechaFactura_x','$fecha_limite_emision','$cod_tipoobjeto','$cod_tipopago','$cod_cliente','$cod_personal','$razon_social','$nitCliente','$cod_dosificacionfactura','$nro_correlativo','$nroAutorizacion','$code','$monto_total','$observaciones','1','$cod_comprobante')";
                   // echo $sql;
                 $stmtInsertSoliFact = $dbh->prepare($sql);
                 $flagSuccess=$stmtInsertSoliFact->execute();

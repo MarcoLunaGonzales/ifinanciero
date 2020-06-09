@@ -19,7 +19,6 @@ $habilitado=$_GET["habilitado"];
 $cantidad=$_GET["cantidad"];
 $anio=$_GET["anio"];
 
-
 $cantidad=obtenerCantidadTotalSimulacionesServiciosDetalleAuditorPeriodo($simulaciones,$codigo,$anio);
 $monto=obtenerMontoTotalSimulacionesServiciosDetalleAuditorPeriodo($simulaciones,$codigo,$anio);
 $montoEditado=$monto/$cantidad;
