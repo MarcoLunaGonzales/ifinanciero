@@ -28,7 +28,7 @@ $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey,
               "accion"=>"GenerarFactura", //nombre de la accion
               "sucursalId"=>1, // ID Sucursal
               "pasarelaId"=>1, // pasalela
-              "fechaFactura"=>'2020-05-25', // fecha a factura
+              "fechaFactura"=>'2020-06-09', // fecha a factura
               "nitciCliente"=>4949494, //nit o ci de cliente
               "razonSocial"=>'chacon', //razon social
               "importeTotal"=>214, //importe total
@@ -38,7 +38,7 @@ $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey,
     // abrimos la sesiรณn cURL
     $ch = curl_init();
     
-    curl_setopt($ch, CURLOPT_URL,"http://200.105.199.164:8008/ifinanciero/wsifin/ws_generar_factura.php");
+    curl_setopt($ch, CURLOPT_URL,"http://localhost/ifinanciero/wsifin/ws_generar_factura.php");
 
     curl_setopt($ch, CURLOPT_POST, TRUE);
     curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);
