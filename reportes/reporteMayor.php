@@ -58,19 +58,15 @@ if($gestion==null){
   $unidad=explode(",",obtenerUnidadesReport(0));
   $areaCosto=explode(",",obtenerAreasReport(0));
 }
-
 $NombreGestion = nameGestion($gestion);
 $unidadCostoArray=implode(",", $unidadCosto);
 $areaCostoArray=implode(",", $areaCosto);
 $unidadArray=implode(",", $unidad);
-
- 
 if(isset($_POST['glosa_len'])){
  $glosaLen=1; 
 }else{
   $glosaLen=0;
 }
-
 if(isset($_POST['cuentas_auxiliares'])){
  $cuentas_auxiliares=1; 
 }else{
@@ -120,47 +116,47 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
                  ?>          
                    <h4 class="card-title text-center">Reporte Libro Mayor</h4>
                 </div>
-<?php
-$nombreCuentaTitleAux=$nombreCuentaTitle;
- if($cuentas_auxiliares==0){
-    include "reporteMayorCuenta.php";
- }else{
-   //include "reporteMayorCuenta.php";
-   for ($cta=0; $cta < cantidadF($codcuentaMayor); $cta++) { 
-     $porcionesCuenta = explode("@", $codcuentaMayor[$cta]);
-     $cuentaCta=$porcionesCuenta[0];
-     $sql="SELECT * from cuentas_auxiliares where cod_cuenta=$cuentaCta and cod_estadoreferencial=1";
-     $stmtAux = $dbh->prepare($sql);
-     $stmtAux->execute();
-     while ($rowAux = $stmtAux->fetch(PDO::FETCH_ASSOC)) {
-       $valorAux=0;
-       $codigoAux=$rowAux['codigo'];
-       $sqlNum="SELECT count(*) as numero
-    FROM cuentas_auxiliares p 
-    join comprobantes_detalle d on p.codigo=d.cod_cuentaauxiliar 
-    join areas a on d.cod_area=a.codigo 
-    join unidades_organizacionales u on u.codigo=d.cod_unidadorganizacional 
-    join comprobantes c on d.cod_comprobante=c.codigo
-    where c.cod_gestion=$NombreGestion and p.codigo=$codigoAux and c.cod_estadocomprobante<>2 and c.fecha BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and d.cod_unidadorganizacional in ($unidadCostoArray) and d.cod_area in ($areaCostoArray) and c.cod_unidadorganizacional in ($unidadArray)";
-       $stmtNum = $dbh->prepare($sqlNum);
-       $stmtNum->execute();
-       while ($rowNum = $stmtNum->fetch(PDO::FETCH_ASSOC)) {
-        $valorAux=$rowNum['numero'];
-       }
+                <?php
+                $nombreCuentaTitleAux=$nombreCuentaTitle;
+                 if($cuentas_auxiliares==0){
+                    include "reporteMayorCuenta.php";
+                 }else{
+                   //include "reporteMayorCuenta.php";
+                   for ($cta=0; $cta < cantidadF($codcuentaMayor); $cta++) { 
+                     $porcionesCuenta = explode("@", $codcuentaMayor[$cta]);
+                     $cuentaCta=$porcionesCuenta[0];
+                     $sql="SELECT * from cuentas_auxiliares where cod_cuenta=$cuentaCta and cod_estadoreferencial=1";
+                     $stmtAux = $dbh->prepare($sql);
+                     $stmtAux->execute();
+                     while ($rowAux = $stmtAux->fetch(PDO::FETCH_ASSOC)) {
+                       $valorAux=0;
+                       $codigoAux=$rowAux['codigo'];
+                       $sqlNum="SELECT count(*) as numero
+                    FROM cuentas_auxiliares p 
+                    join comprobantes_detalle d on p.codigo=d.cod_cuentaauxiliar 
+                    join areas a on d.cod_area=a.codigo 
+                    join unidades_organizacionales u on u.codigo=d.cod_unidadorganizacional 
+                    join comprobantes c on d.cod_comprobante=c.codigo
+                    where c.cod_gestion=$NombreGestion and p.codigo=$codigoAux and c.cod_estadocomprobante<>2 and c.fecha BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and d.cod_unidadorganizacional in ($unidadCostoArray) and d.cod_area in ($areaCostoArray) and c.cod_unidadorganizacional in ($unidadArray)";
+                       $stmtNum = $dbh->prepare($sqlNum);
+                       $stmtNum->execute();
+                       while ($rowNum = $stmtNum->fetch(PDO::FETCH_ASSOC)) {
+                        $valorAux=$rowNum['numero'];
+                       }
 
-      if($valorAux!=0){
-       $codcuenta=[];
-       $nombreCuentaTitle=strtoupper($nombreCuentaTitleAux."  Cuenta Auxiliar: ".$rowAux['nombre']);
-       $codcuenta[0]=$codigoAux."@aux";
-       include "reporteMayorCuenta.php";
-       ?><br></br><hr><br><?php
-      } 
-       
-     }
-   }
-   
- }    
- ?>
+                      if($valorAux!=0){
+                       $codcuenta=[];
+                       $nombreCuentaTitle=strtoupper($nombreCuentaTitleAux."  Cuenta Auxiliar: ".$rowAux['nombre']);
+                       $codcuenta[0]=$codigoAux."@aux";
+                       include "reporteMayorCuenta.php";
+                       ?><br></br><hr><br><?php
+                      } 
+                       
+                     }
+                   }
+                   
+                 }    
+                 ?>
               </div>
             </div>
           </div>  
