@@ -8,29 +8,29 @@ require_once 'functionsGeneral.php';
 
 //$dbh = new Conexion();
 $dbh = new Conexion();
+$globalUnidad=$_SESSION["globalUnidad"];
 //por is es edit
 $cod_cc=$cod_cc;
 $cod_tcc=$cod_tcc;
 $cod_dcc=$codigo;
 $i=0;
-  echo "<script>var array_cuenta=[],imagen_cuenta=[];</script>";
-   $stmtCuenta = $dbh->prepare("SELECT pcc.cod_cuenta,pc.numero,pc.nombre from plan_cuentas_cajachica pcc,plan_cuentas pc where pcc.cod_cuenta=pc.codigo");
-   $stmtCuenta->execute();
-   while ($rowCuenta = $stmtCuenta->fetch(PDO::FETCH_ASSOC)) {
-    $codigoX=$rowCuenta['cod_cuenta'];
-    $numeroX=$rowCuenta['numero'];
-    $nombreX=$rowCuenta['nombre'];
-    ?>
-    <script>
-     var obtejoLista={
-       label:'<?=trim($numeroX)?> - <?=trim($nombreX)?>',
-       value:'<?=$codigoX?>'};
-       array_cuenta[<?=$i?>]=obtejoLista;
-       imagen_cuenta[<?=$i?>]='../assets/img/calc.jpg';
-    </script> 
-    <?php
-    $i=$i+1;  
-  }
+echo "<script>var array_cuenta=[],imagen_cuenta=[];</script>";
+$stmtCuenta = $dbh->prepare("SELECT pcc.cod_cuenta,pc.numero,pc.nombre from plan_cuentas_cajachica pcc,plan_cuentas pc where pcc.cod_cuenta=pc.codigo");
+$stmtCuenta->execute();
+while ($rowCuenta = $stmtCuenta->fetch(PDO::FETCH_ASSOC)) {
+  $codigoX=$rowCuenta['cod_cuenta'];
+  $numeroX=$rowCuenta['numero'];
+  $nombreX=$rowCuenta['nombre'];
+  ?>
+  <script>
+    var obtejoLista={
+      label:'<?=trim($numeroX)?> - <?=trim($nombreX)?>',
+      value:'<?=$codigoX?>'};
+      array_cuenta[<?=$i?>]=obtejoLista;
+      imagen_cuenta[<?=$i?>]='../assets/img/calc.jpg';
+    </script><?php
+  $i=$i+1;  
+}
 //sacmos el valor de fechas hacia atrás
 $dias_atras=obtenerValorConfiguracion(31);
 $cod_proveedores=0;
@@ -70,8 +70,7 @@ if ($codigo > 0){
     $cod_comprobante =  $resultComprobante['cod_comprobantedetalle'];
     $cod_cuenta_compro=$resultComprobante['cod_plancuenta'];
     $cod_cuenta_aux_compro=$resultComprobante['cod_cuentaaux'];   
-    
-} else {
+}else{
     //para el numero correlativo
     $stmtCC = $dbh->prepare("SELECT nro_documento,nro_recibo from caja_chicadetalle where cod_estadoreferencial=1 and cod_cajachica=$cod_cc order by codigo desc limit 1");
     $stmtCC->execute();
@@ -82,7 +81,6 @@ if ($codigo > 0){
         $numero_caja_chica_aux=0;
         $numero_recibo_aux=0;
     }
-
     $codigo=0;
     // $cod_cuenta = 0;
     $cod_uo=0;
@@ -96,7 +94,6 @@ if ($codigo > 0){
     $observaciones = null;    
     $monto = 0;    
     $cod_estado = 1;    
-    
     $cod_cuenta_compro=null;
     $cod_cuenta_aux_compro=null;
     $cod_comprobante=null;
@@ -105,20 +102,53 @@ if ($codigo > 0){
     $cuenta_aux="";
     $cod_cuenta=0;
     $cod_actividad_sw=null;
-
-
-// require_once 'modal.php';
-
 }
-
 $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
-
+//distribucion gastosarea
+$distribucionOfi=obtenerDistribucionCentroCostosUnidadActivo(); //null para todas las iniciales del numero de cuenta obtenerCuentasLista(5,[5,4]);
+while ($rowOfi = $distribucionOfi->fetch(PDO::FETCH_ASSOC)) {
+  $codigoD=$rowOfi['codigo'];
+  $codDistD=$rowOfi['cod_distribucion_gastos'];
+  $codUnidadD=$rowOfi['cod_unidadorganizacional'];
+  $porcentajeD=$rowOfi['porcentaje'];
+  $nombreD=$rowOfi['nombre'];?>
+  <script>
+    var distri = {
+      codigo:<?=$codigoD?>,
+      cod_dis:<?=$codDistD?>,
+      unidad:<?=$codUnidadD?>,
+      nombre:'<?=$nombreD?>',
+      porcentaje:<?=$porcentajeD?>
+    }
+    itemDistOficina.push(distri);
+  </script>  
+  <?php
+}
+$distribucionArea=obtenerDistribucionCentroCostosAreaActivo($globalUnidad); //null para todas las iniciales del numero de cuenta obtenerCuentasLista(5,[5,4]);
+while ($rowArea = $distribucionArea->fetch(PDO::FETCH_ASSOC)) {
+$codigoD=$rowArea['codigo'];
+$codDistD=$rowArea['cod_distribucionarea'];
+$codAreaD=$rowArea['cod_area'];
+$porcentajeD=$rowArea['porcentaje'];
+$nombreD=$rowArea['nombre'];?>
+  <script>
+    var distri = {
+      codigo:<?=$codigoD?>,
+      cod_dis:<?=$codDistD?>,
+      area:<?=$codAreaD?>,
+      nombre:'<?=$nombreD?>',
+      porcentaje:<?=$porcentajeD?>
+    }
+    itemDistArea.push(distri);
+  </script>  
+  <?php
+}
 ?>
 
 <div class="content">
 	<div class="container-fluid">
 		<div class="col-md-12">
-		  <form id="form1" class="form-horizontal" action="<?=$urlSaveDetalleCajaChica;?>" method="post" onsubmit="return valida(this)"> 
+		  <form id="formDetalleCajaChica" class="form-horizontal" action="<?=$urlSaveDetalleCajaChica;?>" method="post" onsubmit="return valida(this)"> 
         <input type="hidden" name="codigo" id="codigo" value="<?=$codigo;?>"/>
         <input type="hidden" name="cod_cc" id="cod_cc" value="<?=$cod_cc;?>"/>
         <input type="hidden" name="cod_tcc" id="cod_tcc" value="<?=$cod_tcc;?>"/>
@@ -236,6 +266,31 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
                     </div>                                                        
                 </div>
               </div>
+              <!-- para la distribucion de monto -->
+              <div class="col-sm-2">
+                <input type="hidden" name="n_distribucion" id="n_distribucion" value="0">
+                <input type="hidden" name="nueva_distribucion" id="nueva_distribucion" value="0">
+                <div class="btn-group dropdown">
+                        <button type="button" class="btn btn-sm btn-success dropdown-toggle material-icons text-dark" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Distribucion de Gastos">
+                        <i class="material-icons">call_split</i> <span id="distrib_icon" class="bg-warning"></span> <b id="boton_titulodist">Distribución</b>
+                          </button>
+                          <div class="dropdown-menu">   
+                          <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion" onclick="cargarDistribucionSol(1)" class="dropdown-item">
+                            <i class="material-icons">bubble_chart</i> x Oficina
+                          </a>
+                          <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion" onclick="cargarDistribucionSol(2)" class="dropdown-item">
+                            <i class="material-icons">bubble_chart</i> x Área
+                          </a>
+                          <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion" onclick="cargarDistribucionSol(3)" class="dropdown-item">
+                            <i class="material-icons">bubble_chart</i> x Oficina y x Área
+                          </a>
+                          <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion" onclick="cargarDistribucionSol(0)" class="dropdown-item">
+                            <i class="material-icons">bubble_chart</i> Nínguna
+                          </a>
+                          </div>
+                      </div>
+                  <div id="array_distribucion"></div>    
+              </div>    
             </div>
             <div class="row">
               <label class="col-sm-2 col-form-label">Area</label>
@@ -434,4 +489,5 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
 
 <?php 
   require_once 'modal.php';
+  require_once 'solicitudes/modal.php';
 ?>

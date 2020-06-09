@@ -6,7 +6,7 @@ require_once 'styles.php';
 $dbh = new Conexion();
 $dbhIBNO = new ConexionIBNORCA();
 $globalAdmin=$_SESSION["globalAdmin"];
-$stmtIBNO = $dbhIBNO->prepare("SELECT *, DATE_FORMAT(s.fecharegistro,'%d/%m/%Y')as fecharegistro_x from servicios s where s.IdArea=11 and YEAR(s.fecharegistro)=2020");
+$stmtIBNO = $dbhIBNO->prepare("SELECT *, DATE_FORMAT(s.fecharegistro,'%d/%m/%Y')as fecharegistro_x from servicios s where s.IdArea=11 and YEAR(s.fecharegistro)=2020 order by fecharegistro desc");
 $stmtIBNO->execute();
 $stmtIBNO->bindColumn('IdServicio', $IdServicio);
 $stmtIBNO->bindColumn('IdArea', $IdArea);

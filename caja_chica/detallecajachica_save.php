@@ -31,7 +31,9 @@ try {
     $cod_area = $_POST["cod_area"];
     $nro_recibo = $_POST["nro_recibo"];
     $cod_proveedores = $_POST["proveedores"];
-    $cod_actividad_sw = $_POST["cod_actividad"];
+    if(isset($_POST["cod_actividad"]))$cod_actividad_sw = $_POST["cod_actividad"];
+    else $cod_actividad_sw=0;
+    
     if($cod_area=='' || $cod_area==0)$cod_area=null;
     if($cod_uo=='' || $cod_uo==0)$cod_uo=null;
     if($cod_proveedores=='' || $cod_proveedores==0)$cod_proveedores=null;
@@ -43,7 +45,6 @@ try {
     $stmtMCC->execute();
     $resultMCC=$stmtMCC->fetch();
     $monto_reembolso_x=$resultMCC['monto_reembolso'];
-
     if ($codigo == 0){//insertamos
         $monto_reembolso=$monto_reembolso_x-$monto;
         //para el codigo del detalle
@@ -74,63 +75,42 @@ try {
         // echo 'observaciones:'.$observaciones."<br>";
         // echo 'cod_area:'.$cod_area."<br>";
         // echo 'nro_recibo:'.$nro_recibo."<br>";
-
-
         $stmt = $dbh->prepare("INSERT INTO caja_chicadetalle(codigo,cod_cajachica,cod_cuenta,fecha,cod_tipodoccajachica,nro_documento,cod_personal,monto,observaciones,cod_estado,cod_estadoreferencial,cod_area,cod_uo,nro_recibo,cod_proveedores,cod_actividad_sw) 
         values ($codigo,$cod_cc,$cod_cuenta,'$fecha',$cod_retencion,$numero,'$cod_personal',$monto,'$observaciones',$cod_estado,$cod_estadoreferencial,'$cod_area','$cod_uo',$nro_recibo,'$cod_proveedores','$cod_actividad_sw')");
         $flagSuccess=$stmt->execute();
         if($flagSuccess){//registramos rendiciones
             $stmtReembolso = $dbh->prepare("UPDATE caja_chica set monto_reembolso=$monto_reembolso where codigo=$cod_cc");
             $stmtReembolso->execute();
-
             $stmtrendiciones = $dbh->prepare("INSERT INTO rendiciones(codigo,numero,cod_tipodoc,monto_a_rendir,monto_rendicion,cod_personal,observaciones,cod_estado,cod_cajachicadetalle,cod_estadoreferencial,fecha_dcc) 
             values ($codigo,$numero,$cod_retencion,$monto,$monto_rendicion,'$cod_personal','$observaciones',$cod_estado,$codigo,$cod_estadoreferencial,'$fecha')");
             $flagSuccess=$stmtrendiciones->execute();
             //insertamos estado_de_cuentas y comprobantes
-            if($cod_comprobante>0){
-                //sacamos informacion del comprobante detalle
-                // $stmtCompDet = $dbh->prepare("SELECT codigo,cod_comprobante From comprobantes_detalle where codigo=$cod_comprobante");                
-                // $stmtCompDet->execute();
-                // $resultCompDet = $stmtCompDet->fetch();                
-                // $codigo_compr_x = $resultCompDet['codigo'];    
-                // $cod_comprobante_x = $resultCompDet['cod_comprobante'];    
-
-                //sacamos informacion del comprobante
-                // $stmtComprob = $dbh->prepare("SELECT cod_gestion,cod_tipocomprobante,numero,glosa from comprobantes where codigo=$cod_comprobante_x");                
-                // $stmtComprob->execute();
-                // $resultComprob = $stmtComprob->fetch();                
-                // $cod_gestion_x = $resultComprob['cod_gestion'];                
-                // $cod_tipocomprobante_x = $resultComprob['cod_tipocomprobante'];
-                // $numero_x = $resultComprob['numero'];    
-                // $glosa_x = $resultComprob['glosa'];
-                // insertamos comprobante
-                // $codComprobante=obtenerCodigoComprobante();
-                // $sqlInsert="INSERT INTO comprobantes(codigo, cod_empresa, cod_unidadorganizacional, cod_gestion, cod_moneda, cod_estadocomprobante, cod_tipocomprobante, fecha, numero, glosa, created_at, created_by, modified_at, modified_by) VALUES ('$codComprobante', '1', '$cod_uo', '$cod_gestion_x', '1', '1', '$cod_tipocomprobante_x', '$fecha', '$numero_x', '$observaciones', '$fecha', '$globalUser', '$fecha', '$globalUser')";
-                // echo $sqlInsert;
-                // $stmtInsertCompro = $dbh->prepare($sqlInsert);
-                // $flagSuccess=$stmtInsertCompro->execute();
-                // if($flagSuccess){
-                    // $sqlDelete="DELETE from comprobantes_detalle where cod_comprobante='$codComprobante'";
-                    // $stmtDel = $dbh->prepare($sqlDelete);
-                    // $flagSuccess=$stmtDel->execute();
-
-                    // $codComprobanteDetalle1=obtenerCodigoComprobanteDetalle();
-                    // $sqlDetalle1="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobanteDetalle1','$codComprobante', '$cod_cuenta', '$cuenta_auxiliar1', '$cod_uo', '$cod_area', '0', '$monto', '$observaciones', '1')";
-                    // $stmtDetalle2 = $dbh->prepare($sqlDetalle1);
-                    // $flagSuccessDetalle=$stmtDetalle2->execute();    
-                    // $codComprobanteDetalle2=obtenerCodigoComprobanteDetalle();
-                    // $sqlDetalle2="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobanteDetalle2','$codComprobante', '$cod_cuenta', '$cuenta_auxiliar1', '$cod_uo', '$cod_area', '$monto', '0', '$observaciones', '2')";
-                    // $stmtDetalle2 = $dbh->prepare($sqlDetalle2);
-                    // $flagSuccessDetalle=$stmtDetalle2->execute(); 
-                    //insertamos estados de cuenta
-                    $stmtContraCuenta = $dbh->prepare("INSERT INTO estados_cuenta(cod_comprobantedetalle,cod_plancuenta,monto,cod_proveedor,fecha,cod_comprobantedetalleorigen,cod_cuentaaux,cod_cajachicadetalle)  
+            if($cod_comprobante>0){                
+                $stmtContraCuenta = $dbh->prepare("INSERT INTO estados_cuenta(cod_comprobantedetalle,cod_plancuenta,monto,cod_proveedor,fecha,cod_comprobantedetalleorigen,cod_cuentaaux,cod_cajachicadetalle)  
                     values ('0','$cod_cuenta','$monto','$cod_proveedores','$fecha','$cod_comprobante','$cuenta_auxiliar1','$codigo')");
-                    $flagSuccess=$stmtContraCuenta->execute();
+                $flagSuccess=$stmtContraCuenta->execute();
                 // } 
-            }        
+            }
+            //Proceso de la distribucion
+            $sqlDel="DELETE FROM distribucion_gastos_caja_chica where cod_cajachica_detalle=$codigo";
+            $stmtDel = $dbh->prepare($sqlDel);
+            $stmtDel->execute();
+            $valorDist=$_POST['n_distribucion'];
+            if($valorDist!=0){
+                $array1=json_decode($_POST['d_oficinas']);
+                $array2=json_decode($_POST['d_areas']);
+                if($valorDist==1){
+                    guardarDatosDistribucion($array1,0,$codigo); //dist x Oficina
+                }else{
+                    if($valorDist==2){
+                      guardarDatosDistribucion(0,$array2,$codigo); //dist x Area
+                    }else{
+                      guardarDatosDistribucion($array1,$array2,$codigo); //dist x Oficina y Area
+                    }
+                }   
+            }
         }
         showAlertSuccessError($flagSuccess,$urlListDetalleCajaChica.'&codigo='.$cod_cc.'&cod_tcc='.$cod_tcc);
-    
     } else {//update
         //actualizamos monto reeembolso
         //sacamos monto anterior de detalle
@@ -172,42 +152,57 @@ try {
 
             //para la parte de la contra cuenta
             //insertamos estado_de_cuentas y comprobantes
-            if($cod_comprobante>0){
-                //sacamos informacion del comprobante detalle
-                // $stmtCompDet = $dbh->prepare("SELECT codigo,cod_comprobante From comprobantes_detalle where codigo=$cod_comprobante");                
-                // $stmtCompDet->execute();
-                // $resultCompDet = $stmtCompDet->fetch();                
-                // $codigo_compr_x = $resultCompDet['codigo'];    
-                // $cod_comprobante_x = $resultCompDet['cod_comprobante'];    
-                // $cod_comprobante_x2=$cod_comprobante_x+1;
-                
-                // $sqlInsert="UPDATE comprobantes set cod_unidadorganizacional='$cod_uo',glosa='$observaciones' where codigo=$cod_comprobante_x";
-                // $stmtInsertCompro = $dbh->prepare($sqlInsert);
-                // $flagSuccess=$stmtInsertCompro->execute();
-                // if($flagSuccess){                    
-                //     $sqlDetalle1="UPDATE comprobantes_detalle set cod_cuenta='$cod_cuenta',cod_cuentaauxiliar='$cuenta_auxiliar1',cod_unidadorganizacional='$cod_uo',cod_area='$cod_area',haber='$monto',glosa='$observaciones' where codigo=$cod_comprobante_x";                    
-                //     $stmtDetalle2 = $dbh->prepare($sqlDetalle1);
-                //     $flagSuccessDetalle=$stmtDetalle2->execute();    
-
-                //     $sqlDetalle2="UPDATE comprobantes_detalle set cod_cuenta='$cod_cuenta',cod_cuentaauxiliar='$cuenta_auxiliar1',cod_unidadorganizacional='$cod_uo',cod_area='$cod_area',debe='$monto',glosa='$observaciones' where codigo=$cod_comprobante_x2";
-                //     $stmtDetalle2 = $dbh->prepare($sqlDetalle2);
-                //     $flagSuccessDetalle=$stmtDetalle2->execute();
-                    // ////borramos los estados de cuenta registrados
-                    // $stmtDeleteContraCuenta = $dbh->prepare("DELETE from estados_cuenta where cod_cajachicadetalle = $codigo");
-                    // $flagSuccess=$stmtDeleteContraCuenta->execute();
-                    //insertamos estados de cuenta
-                    $stmtContraCuenta = $dbh->prepare("UPDATE estados_cuenta set cod_plancuenta='$cod_cuenta',monto='$monto',cod_proveedor='$cod_proveedores',fecha='$fecha',cod_cuentaaux='$cuenta_auxiliar1' where cod_cajachicadetalle=$codigo ");
-                    $flagSuccess=$stmtContraCuenta->execute();
-                // } 
-            } 
+            if($cod_comprobante>0){                
+                $stmtContraCuenta = $dbh->prepare("UPDATE estados_cuenta set cod_plancuenta='$cod_cuenta',monto='$monto',cod_proveedor='$cod_proveedores',fecha='$fecha',cod_cuentaaux='$cuenta_auxiliar1' where cod_cajachicadetalle=$codigo ");
+                $flagSuccess=$stmtContraCuenta->execute();
+            }
+            //Proceso de la distribucion
+            $sqlDel="DELETE FROM distribucion_gastos_caja_chica where cod_cajachica_detalle=$codigo";
+            $stmtDel = $dbh->prepare($sqlDel);
+            $stmtDel->execute();
+            $valorDist=$_POST['n_distribucion'];
+            if($valorDist!=0){
+                $array1=json_decode($_POST['d_oficinas']);
+                $array2=json_decode($_POST['d_areas']);
+                if($valorDist==1){
+                    guardarDatosDistribucion($array1,0,$codigo); //dist x Oficina
+                }else{
+                    if($valorDist==2){
+                      guardarDatosDistribucion(0,$array2,$codigo); //dist x Area
+                    }else{
+                      guardarDatosDistribucion($array1,$array2,$codigo); //dist x Oficina y Area
+                    }
+                }   
+            }
         }
-        showAlertSuccessError($flagSuccess,$urlListDetalleCajaChica.'&codigo='.$cod_cc.'&cod_tcc='.$cod_tcc);
-        
-
+        showAlertSuccessError($flagSuccess,$urlListDetalleCajaChica.'&codigo='.$cod_cc.'&cod_tcc='.$cod_tcc);        
     }//si es insert o update
-    
-    } catch(PDOException $ex){
-        //manejar error
-        echo "Un error ocurrio".$ex->getMessage();
+} catch(PDOException $ex){
+    //manejar error
+    echo "Un error ocurrio".$ex->getMessage();
+}
+
+function guardarDatosDistribucion($array1,$array2,$codigo_cajachica_det){
+    $dbh = new Conexion();
+    if($array1!=0){
+      for ($i=0; $i < count($array1); $i++) { 
+        $unidad=$array1[$i]->unidad;
+        $porcentaje=$array1[$i]->porcentaje;
+        $sqlInsert="INSERT INTO distribucion_gastos_caja_chica (tipo_distribucion,oficina_area,porcentaje,cod_cajachica_detalle) 
+        VALUES ('1','$unidad','$porcentaje','$codigo_cajachica_det')";
+        $stmtInsert = $dbh->prepare($sqlInsert);
+        $stmtInsert->execute();
+      }   
     }
+    if($array2!=0){
+        for ($i=0; $i < count($array2); $i++) { 
+            $area=$array2[$i]->area;
+            $porcentaje=$array2[$i]->porcentaje;
+            $sqlInsert="INSERT INTO distribucion_gastos_caja_chica (tipo_distribucion,oficina_area,porcentaje,cod_cajachica_detalle) 
+            VALUES ('2','$area','$porcentaje','$codigo_cajachica_det')";
+            $stmtInsert = $dbh->prepare($sqlInsert);
+            $stmtInsert->execute();
+        }
+    } 
+}
 ?>

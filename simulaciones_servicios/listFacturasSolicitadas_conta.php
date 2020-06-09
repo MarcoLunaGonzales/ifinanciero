@@ -245,6 +245,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                               $saldo=0;
                               if($importe_fact_x!=null){
                                 $saldo=$sumaTotalImporte-$importe_fact_x;
+                                // echo "saldo".$saldo;
                                 $datos_FacManual=$codigo_facturacion."/0/".$saldo."/".$index."/".$nit."/".$razon_social;//dato para modal
                               }else{
                                 $datos_FacManual=$codigo_facturacion."/0/0/".$index."/".$nit."/".$razon_social;//dato para modal
@@ -366,7 +367,9 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                   ?>
                                 </td>
                               </tr>
-                            <?php }
+                            <?php }else{
+                              $index--;
+                            }
                             ?>                        
                           <?php
                               $index++;
@@ -611,12 +614,15 @@ $globalAdmin=$_SESSION["globalAdmin"];
 <?php 
 
     $lan_parciales=sizeof($cont_pagosParciales);//filas si lo hubiese         
-    // echo "cont:".$cont_pagosParciales;
+    // echo "cont:".$lan_parciales;
+    // var_dump($dato_parciales[2]);
     for ($i=0; $i < $lan_parciales; $i++) {
+      // echo "i:".$i."<br>";
       ?>
       <script>var detalle_pagoparcial=[];</script>
       <?php      
         for ($j=0; $j < $cont_pagosParciales[$i]; $j++) {
+
              if($cont_pagosParciales[$i]>0){?>
                 <script>
                     detalle_pagoparcial.push({codigo:<?=$dato_parciales[$i][$j]->codigo?>,codigox:<?=$dato_parciales[$i][$j]->cod_claservicio?>,preciox:'<?=$dato_parciales[$i][$j]->preciox?>',cantidadxx:'<?=$dato_parciales[$i][$j]->cantidadxx?>',descuentox:'<?=$dato_parciales[$i][$j]->descuentox?>',importe_anterior_x:'<?=$dato_parciales[$i][$j]->importe_anterior_x?>',descripcionx:'<?=$dato_parciales[$i][$j]->descripcionx?>'});
@@ -626,6 +632,11 @@ $globalAdmin=$_SESSION["globalAdmin"];
               <?php
               }          
             }
-        ?><script>itemGenerar_factura_parcial_aux.push(detalle_pagoparcial);</script><?php                    
+        ?><script>itemGenerar_factura_parcial_aux.push(detalle_pagoparcial);
+        console.log(detalle_pagoparcial);
+        </script><?php                    
     }
 ?>
+<script >
+  // console.log(itemGenerar_factura_parcial_aux);
+</script>

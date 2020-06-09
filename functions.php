@@ -6758,6 +6758,18 @@ function obtenerFechaSimulacionCosto($codigo){
   }
   return $valor;
 }
+function verificar_codComprobante_cajaChica($codigo_cobt,$codigo_detalle){
+  $dbh = new Conexion();  
+  $sw=false;
+  $sql="SELECT codigo from caja_chicareembolsos where cod_comprobante=$codigo_cobt and cod_comprobante_detalle=$codigo_detalle";
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $sw=true;
+  }
+  return $sw;
+}
+
 function verificarArchivoAdjuntoExistente($tipo,$padre,$objeto,$codArchivo){
   $sqlObjeto="";
   if($objeto>0){

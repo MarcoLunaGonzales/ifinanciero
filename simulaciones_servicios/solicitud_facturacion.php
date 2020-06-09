@@ -29,7 +29,7 @@ if(isset($_GET['q'])){
 if($cantidad_items>0){
   //datos registrado de la simulacion en curso
 
-  $stmt = $dbh->prepare("SELECT sf.*,es.nombre as estado,t.nombre as nombre_cliente,(select s.nombre from estados_solicitudfacturacion s where s.codigo = sf.cod_estadosolicitudfacturacion) as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')as fecha_registro_x,DATE_FORMAT(sf.fecha_solicitudfactura,'%d/%m/%Y')as fecha_solicitudfactura_x FROM solicitudes_facturacion sf join estados_solicitudfacturacion es on sf.cod_estadosolicitudfacturacion=es.codigo,clientes t  where sf.cod_cliente=t.codigo and sf.cod_simulacion_servicio=$codigo_simulacion ");//and  sf.cod_estado=1
+  $stmt = $dbh->prepare("SELECT sf.*,es.nombre as estado,t.nombre as nombre_cliente,(select s.nombre from estados_solicitudfacturacion s where s.codigo = sf.cod_estadosolicitudfacturacion) as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')as fecha_registro_x,DATE_FORMAT(sf.fecha_solicitudfactura,'%d/%m/%Y')as fecha_solicitudfactura_x FROM solicitudes_facturacion sf join estados_solicitudfacturacion es on sf.cod_estadosolicitudfacturacion=es.codigo,clientes t  where sf.cod_cliente=t.codigo and sf.cod_simulacion_servicio=$codigo_simulacion order by nro_correlativo desc");//and  sf.cod_estado=1
   $stmt->execute();
   $stmt->bindColumn('codigo', $codigo_facturacion);
   $stmt->bindColumn('cod_simulacion_servicio', $cod_simulacion_servicio);
@@ -67,19 +67,19 @@ if($cantidad_items>0){
                       <table class="table" id="tablePaginator">
                         <thead>
                           <tr>
-                            <th class="text-center"></th>                          
-                            <th>Of - Area</th>                          
-                            <th>Nro<br>Soli.</th>
-                            <th>Responsable</th> 
-                            <th>Codigo<br>Servicio</th>
-                            <th>Fecha<br>Registro</th>
-                            <!-- <th>Fecha a<br>Facturar</th> -->
-                            <th>Nro<br>Factura</th>                            
-                            <th width="8%">Importe (BOB)</th>  
-                            <th>Persona<br>Contacto</th>  
-                            <th width="35%">Razón Social</th>                            
-                            <th width="5%">Estado</th>    
-                            <th class="text-right">Actions</th>
+                            <!-- <th class="text-center"></th>         -->                  
+                            <th><small>Of - Area</small></th>
+                            <th><small>#Sol.</small></th>
+                            <th><small>Responsable</small></th> 
+                            <th><small>Código<br>Servicio</small></th>
+                            <th><small>Fecha<br>Registro</small></th>
+                            <!-- <th><small>Fecha a<br>Facturar</small></th> -->
+                            <th style="color:#cc4545;"><small>#Fact.</small></th>                            
+                            <th width="8%"><small>Importe (BOB)</small></th>  
+                            <th><small>Persona<br>Contacto</small></th>  
+                            <th width="35%"><small>Razón Social</small></th>                            
+                            <th width="5%"><small>Estado</small></th>    
+                            <th width="5%" class="text-right"><small>Actions</small></th>
                           </tr>
                         </thead>
                         <tbody>
@@ -91,22 +91,22 @@ if($cantidad_items>0){
                           while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                             switch ($codEstado) {
                             case 1:
-                              $btnEstado="btn-default";
+                             $label='<span class="badge badge-default">';
                             break;
                             case 2:
-                              $btnEstado="btn-danger";
+                             $label='<span class="badge badge-danger">';
                             break;
                             case 3:
-                              $btnEstado="btn-success";
+                             $label='<span class="badge badge-success">';
                             break;
                             case 4:
-                              $btnEstado="btn-warning";
+                             $label='<span class="badge badge-warning">';
                             break;
                             case 5:
-                              $btnEstado="btn-warning";
+                             $label='<span class="badge badge-warning">';
                             break;
                             case 6:
-                              $btnEstado="btn-default";
+                             $label='<span class="badge badge-default">';
                             break;
                           }
 
@@ -119,7 +119,8 @@ if($cantidad_items>0){
                             $cod_estado_factura_x = $resultSimu['cod_estadofactura'];
                             if ($nro_fact_x==null)$nro_fact_x="-";
                             if($cod_estado_factura_x==4){
-                              $btnEstado="btn-warning";
+                              // $btnEstado="btn-warning";
+                              $label='<span class="badge badge-warning">';
                               $estado="FACTURA MANUAL";
                             }
                             //sacamos monto total de la factura para ver si es de tipo factura por pagos
@@ -183,18 +184,18 @@ if($cantidad_items>0){
 
                             ?>
                           <tr>
-                            <td align="center"></td>
-                            <td><?=$nombre_uo;?> - <?=$nombre_area;?></td>
-                            <td class="text-right"><?=$nro_correlativo;?></td>
-                            <td><?=$responsable;?></td>
-                            <td><?=$codigo_alterno;?></td>
-                            <td><?=$fecha_registro;?></td>
-                            <!-- <td><?=$fecha_solicitudfactura;?></td> -->
-                            <td><?=$nro_fact_x;?></td>                            
-                            <td class="text-right"><?=formatNumberDec($sumaTotalImporte) ;?></td>
-                            <td class="text-left"><?=$nombre_contacto;?></td>
-                            <td><?=$razon_social;?></td>
-                            <td><button class="btn <?=$btnEstado?> btn-sm btn-link"><?=$estado;?></button></td>                            
+                            <!-- <td align="center"></td> -->
+                            <td><small><?=$nombre_uo;?> - <?=$nombre_area;?></small></td>
+                            <td class="text-right"><small><?=$nro_correlativo;?></small></td>
+                            <td><small><?=$responsable;?></small></td>
+                            <td><small><small><?=$codigo_alterno;?></small></small></td>
+                            <td><small><?=$fecha_registro;?></small></td>
+                            <!-- <td><small><?=$fecha_solicitudfactura;?></small></td> -->
+                            <td style="color:#cc4545;"><small><?=$nro_fact_x;?></small></td>                            
+                            <td class="text-right"><small><?=formatNumberDec($sumaTotalImporte) ;?></small></td>
+                            <td class="text-left"><small><small><?=$nombre_contacto;?></small></small></td>
+                            <td><small><small><?=$razon_social;?></small></small></td>
+                            <td><?=$label?><small><?=$estado;?></small></span></td>                            
                             <td class="td-actions text-right">
                               <?php
                                 // if($globalAdmin==1){

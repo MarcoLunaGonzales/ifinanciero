@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $accion=$datos['accion']; //recibimos la accion
                 if($accion=="GenerarFactura"){//nombre de la accion
                     if(isset($datos['sucursalId'])) $sucursalId=$datos['sucursalId'];//recibimos el codigo de la sucursal
-                    if(isset($datos['sucursalId'])) $pasarelaId=$datos['pasarelaId'];//recibimos el codigo de la sucursal
+                    if(isset($datos['sucursalId'])) $pasarelaId=$datos['pasarelaId'];//recibimos paralela
                     if(isset($datos['fechaFactura'])) $fechaFactura=strval($datos['fechaFactura']);//recibimos fecha de factura
                     if(isset($datos['nitciCliente'])) $nitciCliente=$datos['nitciCliente'];//recibimos ci o nit del cliente
                     if(isset($datos['razonSocial'])) $razonSocial=strval($datos['razonSocial']);//recibimos razon social
@@ -42,6 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $cont_items=0;
                     $importeTotal_x=0;
                     $sw=true;
+                    $fechaFactura_actual=date('Y-m-d');
                     foreach ($items as $valor) {  
                         $cont_items++;
                         $suscripcionId=$valor['suscripcionId'];
@@ -49,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $detalle=strval($valor['detalle']);
                         $precioUnitario=$valor['precioUnitario'];
                         $cantidad=$valor['cantidad'];
-                        $importeTotal_x=$importeTotal_x+$precioUnitario;
+                        $importeTotal_x=$importeTotal_x+($precioUnitario*$cantidad);
                         // echo $suscripcionId." - ".$pagoCursoId."<br>";
                         if($suscripcionId<=0 && $pagoCursoId<=0 && !is_numeric($suscripcionId) && !is_numeric($pagoCursoId)){
                             $sw=false;
@@ -75,9 +76,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     }elseif($pasarelaId==null || $pasarelaId!=1){
                         $estado=2;
                         $mensaje = "Id Paralela incorrecta";
-                    }elseif(!check($fechaFactura)){
+                    }elseif(!check($fechaFactura) || $fechaFactura!=$fechaFactura_actual){
                         $estado=3;
-                        $mensaje = "Fecha incorrecta";
+                        $mensaje = "Fecha incorrecta o no actual";
                     }elseif($nitciCliente==null || $nitciCliente<0 || !is_numeric($nitciCliente)){
                         $estado=4;
                         $mensaje = "Nit incorrecto";
@@ -91,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         //mostrará el error de los items 
                     }else{
                         // $estado=0;
-                        // $mensaje = "todo ok";                        
+                        // $mensaje = "todo ok";
                         $rspString = ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciCliente,$razonSocial,$importeTotal_x,$items);//llamamos a la funcion                 
                         $rspArray = explode("###", $rspString);
                         $rsp=$rspArray[0];

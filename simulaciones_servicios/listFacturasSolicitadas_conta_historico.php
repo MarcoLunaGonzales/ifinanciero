@@ -262,7 +262,7 @@ $stmtCliente->bindColumn('nombre', $nombre_cli);
                                       <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><small>PAGOS</small></button>
                                       <div class="dropdown-menu"><?php 
                                         $arrayCodFacturas = explode(",",trim($cadenaCodFacturas,','));
-                                        $arrayFacturas = explode(" - ",trim($cadenaFacturas,' - '));
+                                        $arrayFacturas = explode(",",trim($cadenaFacturas,','));                                        
                                         for ($i=0; $i < $cont_facturas; $i++) { $cod_factura_x= $arrayCodFacturas[$i];$nro_factura_x= $arrayFacturas[$i];?>
                                           <a class="dropdown-item" type="button" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$cod_factura_x;?>&tipo=1' target="_blank"><i class="material-icons text-success" title="Imprimir Factura">print</i> Factura <?=$i+1;?> - Nro <?=$nro_factura_x?></a>
                                           <?php 

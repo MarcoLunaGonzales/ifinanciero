@@ -60,8 +60,8 @@ if ($cod_facturacion > 0){
     $cod_tipoobjeto=211;//por defecto}
     $cod_tipopago = null;
     $name_cliente=nameCliente($cod_cliente);
-    $razon_social = $name_cliente;
-    $nit = 0;
+    $nit=obtenerNitCliente($cod_cliente);
+    $razon_social = $name_cliente;    
     $observaciones = $Codigo_alterno." - ".$name_cliente;
     $observaciones_2=null;
     $persona_contacto= null;
@@ -100,7 +100,7 @@ $contadorRegistros=0;
                     <div class="card-text">
                       <h4 class="card-title"><?php if ($cod_facturacion == 0) echo "Registrar "; else echo "Editar ";?>Solicitud de Facturación</h4>                      
                     </div>
-                    <h4 class="card-title" align="center"><b>Propuesta: <?=$nombre_simulacion?>  / <?=$Codigo_alterno?></b></h4>
+                    <h4 class="card-title" align="center"><b>Propuesta/Servicio: <?=$nombre_simulacion?>  / <?=$Codigo_alterno?></b></h4>
                   </div>
                   <div class="card-body ">
                         <div class="row">
@@ -130,17 +130,9 @@ $contadorRegistros=0;
                             <div class="col-sm-4">
                                 <div class="form-group">
                                     <input class="form-control" type="date" name="fecha_registro" id="fecha_registro" required="true" value="<?=$fecha_registro;?>" required="true"/>
+                                    <input type="hidden" name="fecha_solicitudfactura" id="fecha_solicitudfactura" value="<?=$fecha_solicitudfactura;?>"/>
                                 </div>
                             </div>
-                            <label class="col-sm-2 col-form-label">F. A Facturar</label>
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <input class="form-control" type="date" name="fecha_solicitudfactura" id="fecha_solicitudfactura" required="true" value="<?=$fecha_solicitudfactura;?>" required="true"/>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- fin fechas -->
-                        <div class="row">
                             <label class="col-sm-2 col-form-label">Tipo Objeto</label>
                             <div class="col-sm-4">
                                 <div class="form-group" >
@@ -149,8 +141,9 @@ $contadorRegistros=0;
 
                                     <input class="form-control" type="text" required="true" value="<?=$name_tipoPago;?>" required="true" readonly style="background-color:#E3CEF6;text-align: left"/>
                                 </div>
-                            </div>    
-                        </div>     
+                            </div>                            
+                        </div>
+                        <!-- fin fechas -->                        
                         <div class="row" >                            
                             <script>var nfac=[];itemTipoPagos_facturacion.push(nfac);var nfacAreas=[];itemAreas_facturacion.push(nfacAreas);</script>
                             <div class="">
@@ -418,7 +411,7 @@ $contadorRegistros=0;
                                             // $tipoPre=$rowPre['descripcion'];
                                             $cantidadPre=$rowPre['Cantidad'];                                          
                                             $montoPre=$rowPre['PrecioUnitario'];
-                                            // echo "---cod  :".$codCS;
+                                            echo "---cod  :".$codCS;
                                             $tipoPre=descripcionClaServicio($codCS);
                                             // $montoPreTotal=$montoPre*$cantidadEPre;
                                             $banderaHab=1;

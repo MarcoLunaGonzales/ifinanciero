@@ -109,15 +109,15 @@ $html.=  '<header class="header">'.
             <thead>
               <tr class="td-color-celeste">
                 <td rowspan="2" rowspan="2" width="5%" class="text-center"><b><b>N°</b></td>
-                <td rowspan="2" width="10%" class="text-center"><b>C.Costo</b></td>
+                <td rowspan="2" width="6%" class="text-center"><b>C.Costo</b></td>
                 <td rowspan="2" colspan="2" class="text-center"><b>Detalle</b></td>                
                 <td rowspan="2" width="5%" class="text-center"><b>Cantidad</b></td>
-                <td rowspan="2" width="10%" class="text-center"><b>P.U</b>.</td>
+                <td rowspan="2" width="8%" class="text-center"><b>P.U</b>.</td>
                 <td colspan="2" class="text-center"><b>Importe</b></td>
               </tr>
               <tr class="td-color-celeste">
-                <td width="10%" class="text-center"><b>BOB</b></td>
-                <td width="10%" class="text-center"><b>USD</b></td>
+                <td width="8%" class="text-center"><b>BOB</b></td>
+                <td width="8%" class="text-center"><b>USD</b></td>
               </tr>                    
             </thead>
             <tbody>';
@@ -139,8 +139,8 @@ $html.=  '<header class="header">'.
               $html.='<tr>
                 <td  class="text-center"><b>'.$index.'</b></td>
                 <td  class="text-center">'.$abrev_area.'</td>
-                <td  class="text-left">'.$row2['Codigo'].'</td>
-                <td  class="text-left">'.$row2["descripcion_alterna"].'</td>
+                <td  class="text-left" width="15%">'.$row2['Codigo'].'</td>
+                <td  class="text-left"><small>'.$row2["descripcion_alterna"].'</small></td>
                 <td  class="text-right">'.formatNumberDec($row2["cantidad"]).'</td>
                 <td  class="text-right">'.formatNumberDec($precio_unitario).'</td>
                 <td  class="text-right">'.formatNumberDec($precio_unitario).'</td>

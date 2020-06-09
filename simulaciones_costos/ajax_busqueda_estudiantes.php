@@ -27,7 +27,7 @@ $nombre=$_GET['nombre'];
 $paterno=$_GET['paterno'];
 $materno=$_GET['materno'];
 $codigo_simulacion=0;//codigo de simulacion
-
+set_time_limit(1000);
 if(isset($_GET['q'])){
   $q=$_GET['q'];
   $r=$_GET['r'];  

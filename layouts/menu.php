@@ -512,7 +512,7 @@ if($menuModulo==0){
                 <li class="nav-item ">
                     <a class="nav-link" href="?opcion=ListaTipoCajaChica">
                       <span class="sidebar-mini">TCC</span>
-                      <span class="sidebar-normal">Tipos Caja Chica</span>
+                      <span class="sidebar-normal">Instancias Caja Chica</span>
                     </a>
                 </li>                
               </ul>
