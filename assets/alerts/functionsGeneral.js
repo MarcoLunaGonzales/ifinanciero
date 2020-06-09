@@ -14081,3 +14081,20 @@ function SeleccionarComprobante_cajachica_reembolso(cod_comprobante,cod_comproba
   $("#modal_lista_comprobantes").modal("hide");
 }
 
+
+function removePlantillaComprobantes(cod_plantilla){  
+  $.ajax({
+  type:"POST",
+  data:"cod_plantilla="+cod_plantilla,
+  url:"delete_plantillas.php",
+  success:function(r){    
+    if(r==1){      
+      Swal.fire("Correcto!", "El proceso se completo correctamente!", "success");
+      $("#modalAbrirPlantilla").modal("hide");
+    }else{
+      Swal.fire("ERROR!", "Hubo un error en el borrado de la Plantilla!", "warning");
+    }
+  }
+  });           
+}
+

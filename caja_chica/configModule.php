@@ -1,7 +1,7 @@
 <?php 
 	//tipos de caja chica
-	$nombrePluralTiposCajaChica="Tipos Caja Chica";
-	$nombreSingularTiposCajaChica="Tipo Caja Chica";
+	$nombrePluralTiposCajaChica="Instancias Caja Chica";
+	$nombreSingularTiposCajaChica="Instancia Caja Chica";
 	$urlListTiposCajaChica="?opcion=ListaTipoCajaChica";
 	$urlFormTiposCajaChica="index.php?opcion=tipoCajaChicaForm";
 	$urlSaveTiposCajaChica="?opcion=tiposCajaChicaSave";

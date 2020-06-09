@@ -176,7 +176,7 @@
 <!--    end small modal -->
 <!-- small modal -->
 <div class="modal fade modal-primary" id="modalAbrirPlantilla" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog modal-xl">
     <div class="modal-content bg-secondary text-white">
       <div class="modal-body">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">

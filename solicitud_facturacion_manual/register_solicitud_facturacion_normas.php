@@ -101,17 +101,9 @@ $contadorRegistros=0;
                             <div class="col-sm-4">
                                 <div class="form-group">
                                     <input class="form-control" type="date" name="fecha_registro" id="fecha_registro" required="true" value="<?=$fecha_registro;?>" required="true"/>
+                                    <input type="hidden" name="fecha_solicitudfactura" id="fecha_solicitudfactura" value="<?=$fecha_solicitudfactura;?>"/>
                                 </div>
                             </div>
-                            <label class="col-sm-2 col-form-label">Fecha a<br>Facturar</label>
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <input class="form-control" type="date" name="fecha_solicitudfactura" id="fecha_solicitudfactura" required="true" value="<?=$fecha_solicitudfactura;?>" required="true"/>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- fin fechas -->
-                        <div class="row">
                             <label class="col-sm-2 col-form-label">Tipo Objeto</label>
                             <div class="col-sm-4">
                                 <div class="form-group" >
@@ -120,8 +112,9 @@ $contadorRegistros=0;
 
                                     <input class="form-control" type="text" required="true" value="<?=$name_tipoPago;?>" required="true" readonly style="background-color:#E3CEF6;text-align: left"/>
                                 </div>
-                            </div>    
-                        </div>  
+                            </div> 
+                        </div>
+                        <!-- fin fechas -->                        
                         <div class="row" >                            
                             <script>
                                 var nfac=[];itemTipoPagos_facturacion.push(nfac);

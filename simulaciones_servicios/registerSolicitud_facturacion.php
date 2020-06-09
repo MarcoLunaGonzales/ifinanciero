@@ -107,7 +107,7 @@ $descuento_cliente=obtenerDescuentoCliente($cod_cliente);
                     <div class="card-text">
                       <h4 class="card-title"><?php if ($cod_simulacion == 0) echo "Registrar "; else echo "Editar ";?>Solicitud de Facturación</h4>                      
                     </div>
-                    <h4 class="card-title" align="center"><b>Propuesta: <?=$nombre_simulacion?> - <?=$name_area?> / <?=$Codigo_alterno?></b></h4>
+                    <h4 class="card-title" align="center"><b>Propuesta/Servicio: <?=$nombre_simulacion?> - <?=$name_area?> / <?=$Codigo_alterno?></b></h4>
                   </div>
                   <div class="card-body ">
                         <div class="row">
@@ -137,27 +137,17 @@ $descuento_cliente=obtenerDescuentoCliente($cod_cliente);
                             <div class="col-sm-4">
                                 <div class="form-group">
                                     <input class="form-control" type="date" name="fecha_registro" id="fecha_registro" required="true" value="<?=$fecha_registro;?>" required="true"/>
+                                    <input type="hidden" name="fecha_solicitudfactura" id="fecha_solicitudfactura" value="<?=$fecha_solicitudfactura;?>"/>
                                 </div>
                             </div>
-                            <label class="col-sm-2 col-form-label">F. A Facturar</label>
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <input class="form-control" type="date" name="fecha_solicitudfactura" id="fecha_solicitudfactura" required="true" value="<?=$fecha_solicitudfactura;?>" required="true"/>
-                                </div>
-                            </div>
-
-                        </div>
-                        <!-- fin fechas -->
-                        <div class="row">
                             <label class="col-sm-2 col-form-label">Tipo Objeto</label>
                             <div class="col-sm-4">
                                 <div class="form-group" >
-
                                     <input class="form-control" type="hidden" name="cod_tipoobjeto" id="cod_tipoobjeto" required="true" value="<?=$cod_tipoobjeto;?>" required="true" readonly/>
 
                                     <input class="form-control" type="text" required="true" value="<?=$name_tipoPago;?>" required="true" readonly style="background-color:#E3CEF6;text-align: left"/>
                                 </div>
-                            </div>    
+                            </div>
                         </div>                        
                         <div class="row" >                        
                             <script>var nfac=[];itemTipoPagos_facturacion.push(nfac);var nfacAreas=[];itemAreas_facturacion.push(nfacAreas);</script>

@@ -13,7 +13,9 @@ $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//try
 
 $codigo = $_GET["codigo"];//codigoactivofijo
 try{
-    $stmt = $dbh->prepare("SELECT *,(select u.abreviatura from unidades_organizacionales u where u.codigo=cod_uo) as nombre_uo,(select a.abreviatura from areas a where a.codigo=cod_area) as nombre_area from caja_chicadetalle where cod_estadoreferencial=1 and cod_cajachica=$codigo  ORDER BY 1");
+    $stmt = $dbh->prepare("SELECT codigo,monto,fecha,observaciones,nro_recibo,cod_uo,cod_area from caja_chicadetalle where cod_estadoreferencial=1 and cod_cajachica=$codigo 
+UNION
+SELECT codigo,monto,fecha,observaciones,0 as nro_recibo,0 as cod_uo,0 as cod_area from caja_chicareembolsos where cod_estadoreferencial=1 and cod_cajachica=$codigo ORDER BY fecha asc");
     $stmt->execute();    
         //==================================================================================================================
     //datos caja chica
@@ -33,13 +35,13 @@ try{
     // $contenido='CAJA CHICA N° '.$numero_cc." De Fecha: ".$fecha_inicio_cc." a ".$fecha_cierre_cc;
     $contenido='CAJA CHICA N° '.$numero_cc; 
     //DAtos de reembolso
-    $stmtInfoReembolso = $dbh->prepare("SELECT observaciones from caja_chicareembolsos where cod_cajachica=$codigo order by codigo desc limit 1");
-    $stmtInfoReembolso->execute();
-    $resultInfoReembolso = $stmtInfoReembolso->fetch();    
-    $observaciones_reembolso = $resultInfoReembolso['observaciones'];
-    if($observaciones_reembolso==null || $observaciones_reembolso=='' || $observaciones_reembolso==' '){
-      $observaciones_reembolso ="REPOSICION";
-    }
+    // $stmtInfoReembolso = $dbh->prepare("SELECT observaciones from caja_chicareembolsos where cod_cajachica=$codigo order by codigo desc limit 1");
+    // $stmtInfoReembolso->execute();
+    // $resultInfoReembolso = $stmtInfoReembolso->fetch();    
+    // $observaciones_reembolso = $resultInfoReembolso['observaciones'];
+    // if($observaciones_reembolso==null || $observaciones_reembolso=='' || $observaciones_reembolso==' '){
+    //   $observaciones_reembolso ="REPOSICION";
+    // }
 
 $html = '';
 $html.='<html>'.
@@ -101,47 +103,69 @@ $html.=  '<header class="header">'.
                 '<td class="text-center small"></td>'.
                 '<td class="text-center small"></td>'.
                 '<td class="text-right small"><b>'.formatNumberDec($monto_inicio_cc).'</b></td>
-            </tr>'.
-            '<tr>'.
-                '<td class="text-left small"></td>'.
-                '<td class="text-left small"></td>'.
-                '<td class="text-left small"><b>'.$observaciones_reembolso.'</b></td>'.
-                '<td class="text-center small"></td>'.
-                '<td class="text-center small"></td>'.
-                '<td class="text-center small"></td>'.
-                '<td class="text-center small"></td>'.
-                '<td class="text-right small">'.formatNumberDec($monto_inicio_cc).'</td>
             </tr>';
+            // '<tr>'.
+            //     '<td class="text-left small"></td>'.
+            //     '<td class="text-left small"></td>'.
+            //     '<td class="text-left small"><b>'.$observaciones_reembolso.'</b></td>'.
+            //     '<td class="text-center small"></td>'.
+            //     '<td class="text-center small"></td>'.
+            //     '<td class="text-center small"></td>'.
+            //     '<td class="text-center small"></td>'.
+            //     '<td class="text-right small">'.formatNumberDec($monto_inicio_cc).'</td>
+            // </tr>';
             $ingresos='';
             $total_ingresos=0;
             $total_egresos=0;
             while ($row = $stmt->fetch()) 
             {
-              //nro factura
-              $cod_cajachicadetalle=$row['codigo'];
-              $stmtFactura = $dbh->prepare("SELECT nro_factura from facturas_detalle_cajachica where cod_cajachicadetalle=$cod_cajachicadetalle");
-              $stmtFactura->execute();
-              $cont_facturas=0;
-              $nro_factura='';
-              while ($rowFacturas = $stmtFactura->fetch()) 
-              {
-                $nro_factura=$rowFacturas['nro_factura'];
-                $cont_facturas++;
+              $sw_rembolso=false;//indicamos que es un reembolso
+              if($row['nro_recibo']==0 && $row['cod_uo']==0 && $row['cod_area']==0 ){
+                $sw_rembolso=true;
               }
-              if($cont_facturas>1)$nro_factura="VARIOS";
-
-              $saldo_inicial=$saldo_inicial-$row['monto'];
-                // $total_1+=$row['monto_ingreso_neto'];
+              $cod_cajachicadetalle=$row['codigo'];
+              $nombre_uo=abrevUnidad($row['cod_uo']);
+              $nombre_area=abrevArea($row['cod_area']);
+              $nro_recibo=$row['nro_recibo'];
+              //nro factura
+              if(!$sw_rembolso){
+                $stmtFactura = $dbh->prepare("SELECT nro_factura from facturas_detalle_cajachica where cod_cajachicadetalle=$cod_cajachicadetalle");
+                $stmtFactura->execute();
+                $cont_facturas=0;
+                $nro_factura='';
+                while ($rowFacturas = $stmtFactura->fetch()) 
+                {
+                  $nro_factura=$rowFacturas['nro_factura'];
+                  $cont_facturas++;
+                }
+                if($cont_facturas>1)$nro_factura="VARIOS";
+                $saldo_inicial=$saldo_inicial-$row['monto'];                  
                 $total_egresos+=$row['monto'];
+              }else{
+                $nombre_uo="";
+                $nombre_area="";
+                $total_ingresos+=$row['monto'];
+                $saldo_inicial=$saldo_inicial+$row['monto'];                
+                $nro_recibo='';
+              }
               $html.='<tr>'.                      
-                            '<td class="text-center small">'.$row['fecha'].'</td>'.
-                            '<td class="text-left small">'.$row['nombre_uo'].'/'.$row['nombre_area'].'</td>'.
-                            '<td class="text-left small">'.$row['observaciones'].'</td>'.
-                            '<td class="text-center small">'.$row['nro_recibo'].'</td>'.
-                            '<td class="text-center small">'.$nro_factura.'</td>'.
-                            '<td class="text-right small">'.$ingresos.'</td>'.
-                            '<td class="text-right small">'.formatNumberDec($row['monto']).'</td>'.
-                            '<td class="text-right small">'.formatNumberDec($saldo_inicial).'</td>
+                            '<td class="text-center small">'.$row['fecha'].'</td>';
+                            if(!$sw_rembolso){
+                              $html.='<td class="text-left small">'.$nombre_uo.'/'.$nombre_area.'</td>';
+                            }else{
+                              $html.='<td class="text-left small"></td>';
+                            }
+                            $html.='<td class="text-left small">'.$row['observaciones'].'</td>'.
+                            '<td class="text-center small">'.$nro_recibo.'</td>'.
+                            '<td class="text-center small">'.$nro_factura.'</td>';
+                            if(!$sw_rembolso){
+                              $html.='<td class="text-right small">'.$ingresos.'</td>'.
+                              '<td class="text-right small">'.formatNumberDec($row['monto']).'</td>';
+                            }else{
+                              $html.='<td class="text-right small">'.formatNumberDec($row['monto']).'</td>'.
+                              '<td class="text-right small"></td>';
+                            }
+                            $html.='<td class="text-right small">'.formatNumberDec($saldo_inicial).'</td>
                     </tr>';
               }
               $html.='<tr>'.                      
@@ -186,7 +210,7 @@ $html.=    '</table>';
                           <td width="10%"></td>
                           <td width="10%"></td>                    
                           <td width="8%"></td>
-                          <td width="8%" class="text-right small"><b>'.formatNumberDec($total_egresos).'</b></td>
+                          <td width="8%" class="text-right small"><b>'.formatNumberDec($saldo_inicial).'</b></td>
                           <td width="8%"></td>
                         </tr>'.
                        '</tbody>'.                        
