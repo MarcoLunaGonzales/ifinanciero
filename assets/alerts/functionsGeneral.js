@@ -6169,6 +6169,7 @@ function cargarDetallesCostosVariablesTodosLosAnios(inicio,ib){
   var anios = $("#anio_simulacion").val();
   $("#cuentas_simulacionpersonal").html("");
   var index=0;
+
   for (var anio = inicio; anio <= parseInt(anios); anio++) {
     //if(parseInt($("#anio_for").val())==0){
      var conta=0; var contaRead=0; var existeAnio=0;
@@ -6191,35 +6192,41 @@ function cargarDetallesCostosVariablesTodosLosAnios(inicio,ib){
     }    
    }    
   }; 
+
    //if(existeAnio!=0){
     //ajax estado de cuentas
     var parametros={"anios":$("#anio_simulacion").val(),"cod_area":$("#codigo_area").val(),"cod_simulacion":cosSim,"codigo_filas":codigosFilas,"anio":anio,"usd":usd,"monto_filas":montoFilasPersonal};
-    $.ajax({
+    results[anio]=parametros;
+
+    
+  //}
+   //}
+   // guardarCuentasSimulacionGenericoServicioPrevio(i,ib)
+   index++;
+  };//fin de for
+  var parametros={"data":JSON.stringify(results),"anios":$("#anio_simulacion").val(),"cod_area":$("#codigo_area").val()}
+  $.ajax({
         type: "GET",
         dataType: 'html',
-        url: "ajaxCargarDetalleSimulacionAuditor.php",
+        url: "ajaxCargarDetalleSimulacionAuditorNuevo.php",
         data: parametros,
         beforeSend:function(){
          iniciarCargaAjax();
         },
         success:  function (resp) {
          detectarCargaAjax();
-         results[index] = resp;
-          $("#cuentas_simulacionpersonal").append(resp);
+         //results[index] = resp;
+          $("#cuentas_simulacionpersonal").html(resp);
           $('.selectpicker').selectpicker("refresh"); 
-           ponerCantidadTotalesVariablesModal(inicio,anio);            
+          // ponerCantidadTotalesVariablesModal(inicio,anio);            
         }
     });
-  //}
-   //}
-   // guardarCuentasSimulacionGenericoServicioPrevio(i,ib)
-   index++;
-  };//fin de for
-  $("#cuentas_simulacionpersonal").append("");
+
+  /*$("#cuentas_simulacionpersonal").append("");
   for (var i = 0; i <= index; i++) {  
     $("#cuentas_simulacionpersonal").append(results[i]);
     $('.selectpicker').selectpicker("refresh"); 
-  };
+  };*/
   $("#modalSimulacionCuentasPersonal").modal("show");
   ponerCantidadTotalesVariablesModal(inicio,anios);
   $("#modalSimulacionCuentas0").modal("hide"); 

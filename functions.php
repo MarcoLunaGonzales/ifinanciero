@@ -6818,4 +6818,36 @@ function obtenerAuditoresSimulacionPorAnio($codigo,$anio){
    $stmt->execute();
    return $stmt;
 }
+function obtenerListaNormasIbnorca(){
+  $direccion=obtenerValorConfiguracion(42);//direccion des servicio web
+  $sIde = "monitoreo"; // De acuerdo al sistema
+  $sKey = "837b8d9aa8bb73d773f5ef3d160c9b17"; // llave de acuerdo al sistema
+  /*Datos de Normas*/
+  $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "TipoLista"=>"Todos"); //Lista todas las normas
+    $parametros=json_encode($parametros);
+    // abrimos la sesión cURL
+    $ch = curl_init();
+    // definimos la URL a la que hacemos la petición
+    curl_setopt($ch, CURLOPT_URL,$direccion."catalogo/ws-catalogo-nal.php");     
+    // indicamos el tipo de petición: POST
+    curl_setopt($ch, CURLOPT_POST, TRUE);
+    // definimos cada uno de los parámetros
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);
+    // recibimos la respuesta y la guardamos en una variable
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $remote_server_output = curl_exec ($ch);
+    // cerramos la sesión cURL
+    curl_close ($ch);  
+    return json_decode($remote_server_output);       
+}
+function obtenerCodigoNorma(){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT IFNULL(max(c.codigo)+1,1)as codigo from normas c");
+   $stmt->execute();
+   $codigoNorma=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $codigoNorma=$row['codigo'];
+   }
+   return($codigoNorma);
+}
 ?>
