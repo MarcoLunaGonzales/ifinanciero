@@ -716,6 +716,7 @@ function abrirModalDCC(id){
   $('#'+id).modal('show');
 }
 function listarFactDCC(id){
+  // alert("entre");
   var div=$('<div>').addClass('table-responsive');
   var table = $('<table>').addClass('table table-condensed');
   var titulos = $('<tr>').addClass('');
@@ -733,7 +734,7 @@ function listarFactDCC(id){
      titulos.append($('<th>').addClass('').text('TASA'));
      titulos.append($('<th>').addClass('').text('OPCION'));
      table.append(titulos);
-   
+   // console.log(itemFacturasDCC);
    for (var i = 0; i < itemFacturasDCC[id-1].length; i++) {
      var row = $('<tr>').addClass('');
      row.append($('<td>').addClass('').text(i+1));
@@ -823,7 +824,7 @@ function limpiarFormFacDCC(){
     tasaFac: tasacero
     }
     itemFacturasDCC[index-1].push(factura);
-    //listarFact(index);
+    listarFactDCC(index);
     $("#nfac"+(index)).html(itemFacturasDCC[index-1].length);
  }
 

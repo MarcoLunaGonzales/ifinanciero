@@ -209,7 +209,9 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                                 <script>var nfac=[];itemFacturasDCC.push(nfac);</script>
                               <?php
                                 if($globalAdmin==1){
-                                  $stmtFCCD = $dbh->prepare("SELECT * FROM facturas_detalle_cajachica where cod_cajachicadetalle=$codigo_detalle_Cajachica");
+                                  $sqlDetalle="SELECT * FROM facturas_detalle_cajachica where cod_cajachicadetalle=$codigo_detalle_Cajachica";
+                                  // echo $sqlDetalle;
+                                  $stmtFCCD = $dbh->prepare($sqlDetalle);
                                   $stmtFCCD->execute();
                                   while ($row = $stmtFCCD->fetch(PDO::FETCH_ASSOC)) {
                                         $nit=$row['nit'];
@@ -222,12 +224,12 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                                         $control=$row['codigo_control'];
                                         $ice=$row['ice'];
                                         $tasa_cero=$row['tasa_cero'];
-                                        ?><script>abrirFacturaDCC(<?=$idFila?>,'<?=$nit?>',<?=$factura?>,'<?=$fechaFac?>','<?=$razon?>',<?=$importe?>,<?=$exento?>,'<?=$autorizacion?>','<?=$control?>',<?=$ice?>,<?=$tasa_cero?>);</script><?php
+                                        ?><script>abrirFacturaDCC(<?=$idFila?>,'<?=trim($nit)?>',<?=trim($factura)?>,'<?=trim($fechaFac)?>','<?=trim($razon)?>',<?=trim($importe)?>,<?=trim($exento)?>,'<?=trim($autorizacion)?>','<?=trim($control)?>',<?=trim($ice)?>,<?=trim($tasa_cero)?>);</script><?php
                                     }                                    
                               ?> 
                                 
 
-                               <!--  <a href='<?=$urlFormAgregarFacturas;?>&codigo=<?=$idFila;?>&cod_tcc=<?=$cod_tcc?>&cod_cc=<?=$cod_cajachica?>' title="Facturas" id="boton_fac<?=$idFila;?>" class="btn btn-info btn-sm btn-fab">
+                               <!--  <a href='<?=trim($urlFormAgregarFacturas);?>&codigo=<?=$idFila;?>&cod_tcc=<?=$cod_tcc?>&cod_cc=<?=$cod_cajachica?>' title="Facturas" id="boton_fac<?=$idFila;?>" class="btn btn-info btn-sm btn-fab">
                                   <i class="material-icons">featured_play_list</i>
                                 </a> -->
                                
