@@ -184,15 +184,66 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
 
 //normas 
   $normaCodXAtrib="";
+  $normaXAtribOtro="";
+  $normaAtrib=explode(",", $normaXAtrib);
   if($tipoXAtrib==1){
     $stmtAtributosNorma = $dbh->prepare("SELECT * from simulaciones_servicios_atributosnormas where cod_simulacionservicioatributo=$codigoXAtrib");
     $stmtAtributosNorma->execute();
     $ni=0;$normaFila=[];
     while ($rowAtributoNorma = $stmtAtributosNorma->fetch(PDO::FETCH_ASSOC)) {
      $normaFila[$ni]=$rowAtributoNorma['cod_norma'];
+     $existeNorma=-1;
+     for ($nr=0; $nr < count($normaAtrib); $nr++) { 
+        if($normaAtrib[$nr]==nameNorma($rowAtributoNorma['cod_norma'])){
+          $existeNorma=$nr; 
+        }
+     }
+     if($existeNorma>=0){
+      unset($normaAtrib[$existeNorma]);
+     }
      $ni++; 
     }
    $normaCodXAtrib=implode(",",$normaFila); 
+   if(count($normaAtrib)>0){
+    $normaXAtribOtro=implode(",",$normaAtrib); 
+   }else{
+    $normaXAtribOtro="";
+   }
+  }else{
+//atributos auditores
+for ($an=0; $an<=$anioGeneral; $an++) { 
+    $sqlAuditoresAtrib="SELECT sa.*,s.descripcion FROM simulaciones_servicios_atributosauditores sa join simulaciones_servicios_auditores s on s.codigo=sa.cod_auditor join tipos_auditor t on s.cod_tipoauditor=t.codigo where s.cod_simulacionservicio=$codigoSimulacionSuper and s.cod_anio=$an and sa.cod_simulacionservicioatributo=$codigoXAtrib order by t.nro_orden";
+    $stmtAuditoresAtrib=$dbh->prepare($sqlAuditoresAtrib);
+    $stmtAuditoresAtrib->execute();
+    ?>
+    <div class="d-none"><select class="form-control selectpicker form-control-sm" data-style="fondo-boton fondo-boton-active" multiple name="auditores<?=$an?>EEEE<?=$codigoFilaAtrib?>[]" id="auditores<?=$an?>EEEE<?=$codigoFilaAtrib?>"><?php
+     while ($rowAuditoresAtrib = $stmtAuditoresAtrib->fetch(PDO::FETCH_ASSOC)) {
+      $codigoTipoEE=$rowAuditoresAtrib['cod_auditor'];
+      $nombreTipoEE=$rowAuditoresAtrib['descripcion'];
+      $habilitadoEE=$rowAuditoresAtrib['estado'];
+      $words = explode(" ", $nombreTipoEE);
+      $acronym = "";
+      foreach ($words as $w) {
+       if(!(strtolower($w)=="de"||strtolower($w)=="el"||strtolower($w)=="la"||strtolower($w)=="y"||strtolower($w)=="en")){
+          $acronym .= $w[0];
+       }        
+      }
+      $abreviatura = $acronym;
+      //$cantidadTipo=$row['cantidad_editado'];
+      if($habilitadoEE==1){
+        ?>
+         <option value="<?=$codigoTipoEE?>" selected><?=$abreviatura?></option>
+       <?php 
+      }else{
+        ?>
+         <option value="<?=$codigoTipoEE?>"><?=$abreviatura?></option>
+       <?php 
+      }
+       
+    }
+   ?></select></div><?php 
+}
+//fin de atributos auditores
   }
    ?>
     <script>
@@ -203,6 +254,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
     marca: '<?=$marcaXAtrib?>',
     norma: '<?=$normaXAtrib?>',
     norma_cod: '<?=$normaCodXAtrib?>',
+    norma_otro: '<?=$normaXAtribOtro?>',
     sello: '<?=$selloXAtrib?>',
     pais: '<?=$paisXAtrib?>',
     estado: '<?=$estadoXAtrib?>',
@@ -537,8 +589,17 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                                   ?>
                               </div>
                             </div>-->
-                          <a href="#" title="Editar Variables de Costo" onclick="modificarMontosPeriodo(0)" class="btn btn-sm btn-danger">
-                              <i class="material-icons">edit</i>
+                            <?php 
+                             $primeraVez="";
+                             $funcionBoton="modificarMontosPeriodo(0)";
+                             $tituloBoton="Editar Variables de Costo";
+                             if(obtenerEntradaSimulacionServicio($codigoSimulacionSuper)==1){
+                               $primeraVez="estado";
+                               $tituloBoton="Editar Variables de Costo (Primera Vez)";
+                             }
+                             ?> 
+                          <a href="#" title="<?=$tituloBoton?>" onclick="<?=$funcionBoton?>" class="btn btn-sm bg-table-total">
+                              <i class="material-icons">edit</i><span class="bg-warning <?=$primeraVez?>"></span>
                           </a>  
                           <a href="#" onclick="listarCostosFijosPeriodo(<?=$anioGeneral?>)" class="btn btn-sm btn-info">
                                            <i class="material-icons">list</i> CF
@@ -556,7 +617,11 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
             if($codAreaX!=39){
                 $tituloItem="Año ".$an."(Seguimiento ".($an-1).")";
                 if(($an==0||$an==1)&&$codAreaX!=39){
-                  $tituloItem="Año 1 (ETAPA ".($an+1).")";
+                  if($an==1){
+                    $tituloItem="Año 1 (ETAPA ".($an+1)." / RENOVACIÓN)";
+                  }else{
+                    $tituloItem="Año 1 (ETAPA ".($an+1).")";
+                  }      
                 }
             }else{
                 $tituloItem="Año ".$an;

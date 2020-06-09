@@ -208,6 +208,56 @@ $dbh = new Conexion();
                         </div>
                        </div>
                       </div><!--row-->
+                      <div class="row">
+                       <label class="col-sm-2 col-form-label">IAF</label>
+                       <div class="col-sm-3">
+                        <div class="row">
+                          <div class="col-sm-12">
+                            <div class="form-group">
+                                <select class="selectpicker form-control" data-size="4" data-live-search-placeholder="Buscar codigo IAF..." data-live-search="true" name="iaf_primario" id="iaf_primario" data-style="btn btn-info"  required>
+                                  <option value="0" select>NINGUNO</option> 
+                                <?php
+                                 $stmt = $dbh->prepare("SELECT c.codigo, c.nombre,c.abreviatura FROM iaf c order by 1");
+                                 $stmt->execute();
+                                  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                  $codigoX=$row['codigo'];
+                                  $nombreX=$row['nombre'];
+                                  $abreviaturaX=$row['abreviatura'];
+                                   ?>
+                                  <option value="<?=$codigoX;?>"><?=$abreviaturaX?> - <?=$nombreX;?></option> 
+                                  <?php
+                                    }
+                                    ?>
+                                </select>
+                              </div>
+                          </div> 
+                        </div>
+                       </div>
+                       <label class="col-sm-1 col-form-label">IAF Sec.</label>
+                       <div class="col-sm-3">
+                        <div class="row">
+                          <div class="col-sm-12">
+                            <div class="form-group">
+                                <select class="selectpicker form-control" data-size="4" data-live-search-placeholder="Buscar codigo IAF..." data-live-search="true" name="iaf_secundario" id="iaf_secundario" data-style="btn btn-default"  required>
+                                 <option value="0" select>NINGUNO</option> 
+                                <?php
+                                 $stmt = $dbh->prepare("SELECT c.codigo, c.nombre,c.abreviatura FROM iaf c order by 1");
+                                 $stmt->execute();
+                                  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                  $codigoX=$row['codigo'];
+                                  $nombreX=$row['nombre'];
+                                  $abreviaturaX=$row['abreviatura'];
+                                   ?>
+                                  <option value="<?=$codigoX;?>"><?=$abreviaturaX?> - <?=$nombreX;?></option> 
+                                  <?php
+                                    }
+                                    ?>
+                                </select>
+                              </div>
+                          </div> 
+                        </div>
+                       </div>
+                      </div><!--row-->
                       </div>
                       <div id="sitios_div" class="d-none">
                       <div class="row">
@@ -332,7 +382,7 @@ $dbh = new Conexion();
 
 <!-- small modal -->
 <div class="modal fade modal-primary" id="modal_atributo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content card">
                <div class="card-header card-header-primary card-header-text">
                   <div class="card-text">
@@ -360,10 +410,18 @@ $dbh = new Conexion();
                              </div>  
                            </div> 
                       </div>
-                      
-                      <div class="row" id="div_norma">
-                          <label class="col-sm-2 col-form-label">Norma</label>
+                      <div id="div_norma">
+                        <div class="row">
+                           <label class="col-sm-2 col-form-label">Nº Sello</label>
                            <div class="col-sm-4">                     
+                             <div class="form-group">
+                               <input type="number" class="form-control" name="modal_sello" id="modal_sello" value="" onkeyup="javascript:this.value=this.value.toUpperCase();">
+                             </div>
+                           </div>  
+                      </div>
+                      <div class="row">
+                          <label class="col-sm-2 col-form-label">Norma</label>
+                           <div class="col-sm-9">                     
                              <div class="form-group"><!--style="border-bottom: 1px solid #CACFD2"-->          
                                <!--<input type="text" class="form-control tagsinput" data-role="tagsinput" data-color="info" name="modal_norma" id="modal_norma" value="" onkeyup="javascript:this.value=this.value.toUpperCase();">-->
                                <select class="selectpicker form-control form-control-sm" name="normas[]" id="normas" multiple data-style="btn btn-warning" data-live-search="true" data-size="6" data-actions-box="true" required>
@@ -381,13 +439,16 @@ $dbh = new Conexion();
                                     ?>
                                 </select>
                              </div>
-                           </div>
-                           <label class="col-sm-1 col-form-label">Nº Sello</label>
-                           <div class="col-sm-5">                     
-                             <div class="form-group">
-                               <input type="number" class="form-control" name="modal_sello" id="modal_sello" value="" onkeyup="javascript:this.value=this.value.toUpperCase();">
+                           </div>  
+                      </div>
+                       <div class="row">
+                          <label class="col-sm-2 col-form-label">Otra Norma</label>
+                           <div class="col-sm-9">                     
+                             <div class="form-group" style="border-bottom: 1px solid #CACFD2">       
+                                <input type="text" class="form-control tagsinput" data-role="tagsinput" data-color="info" name="modal_norma" id="modal_norma" value="" onkeyup="javascript:this.value=this.value.toUpperCase();">
                              </div>
                            </div>  
+                      </div>    
                       </div>
                       
                      <div class="row col-sm-12" id="div_pais">

@@ -22,6 +22,12 @@ $habilitadoP=$_GET["habilitadoP"];
 $dias_honorarios=$_GET["dias_honorarios"];
 $monto_honorarios=$_GET["monto_honorarios"];
 
+ 
+  //primera vez
+  $sqlSim="UPDATE simulaciones_servicios SET entrada=2 where codigo=$simulaciones";
+  $stmtSim = $dbh->prepare($sqlSim);
+  $stmtSim->execute();
+
 
 $sqlDetalles="UPDATE simulaciones_servicios_auditores SET monto=$monto_honorarios,dias=$dias_honorarios,habilitado=$habilitadoP where codigo=$tipo";
 $stmtDetalles = $dbh->prepare($sqlDetalles);
