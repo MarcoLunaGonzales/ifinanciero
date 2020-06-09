@@ -14,6 +14,7 @@ $stmtX->execute();
 
 if(isset($_GET["cod_simulacion"])){
   $codSimulacion=$_GET["cod_simulacion"];
+
   $anio=$_GET["anio"];
   $anios=$_GET["anios"];
   $usd=$_GET["usd"];
@@ -29,10 +30,12 @@ if(isset($_GET["cod_simulacion"])){
    $tituloItem="Año ".$anio." (Seguimiento".($anio-1).")";
  }
  ?>
+  
+
  <h5 class="font-weight-bold"><center><?=$tituloItem?></center></h5>
   <table class="table table-condensed table-bordered">
     <tr class="text-white bg-info">
-        <td colspan="2"><a href="#" onclick="mostrarNuevoPersonalModal(<?=$anio?>,'<?=$tituloItem?>')" class="btn btn-sm btn-warning"><i class="material-icons">add</i> AGREGAR</a></td>
+        <td colspan="2"><a href="#" onclick="mostrarNuevoPersonalModal(<?=$anio?>,'<?=$tituloItem?>')" class="btn btn-sm btn-default"><i class="material-icons">add</i> AGREGAR</a></td>
         <td colspan="5">HONORARIOS</td>
         <?php 
         for ($i=0; $i < $nroColumnas; $i++) {
@@ -47,24 +50,24 @@ if(isset($_GET["cod_simulacion"])){
     <tr class="text-white bg-info">
         <td width="13%">Tipo Auditor</td>
         <td width="4%">Hab/Des</td>
-        <td width="3%">D</td>
-        <td width="4%">M. BOB</td>
-        <td width="4%">M. USD</td>
-        <td width="4%">BOB</td>
-        <td width="4%">USD</td>
+        <td class="fondo-boton" width="3%">D</td>
+        <td class="bg-success text-white" width="4%">BOB</td>
+        <td class="bg-success text-white" width="4%">USD</td>
+        <td width="4%" class="bg-principal">T BOB</td>
+        <td width="4%" class="bg-principal">T USD</td>
         <!--<td width="8%">D&iacute;as Aud.</td>-->
         <?php 
         for ($i=0; $i < $nroColumnas; $i++) {
          ?>
          <td class="fondo-boton">D/C</td>
-         <td class="bg-success text-white">M B</td>
-         <td class="bg-success text-white">M U</td>
-         <td class="fondo-boton">BOB</td>
-         <td class="fondo-boton">USD</td>
+         <td class="bg-success text-white">BOB</td>
+         <td class="bg-success text-white">USD</td>
+         <td class="bg-principal">T BOB</td>
+         <td class="bg-principal">T USD</td>
          <?php
         }?>
-        <td width="6%" class="fondo-boton">BOB</td>
-        <td width="6%" class="fondo-boton">USD</td>
+        <td width="6%" class="fondo-boton">T BOB</td>
+        <td width="6%" class="fondo-boton">T USD</td>
     </tr>
     <?php 
     $sql="SELECT s.*,t.nombre as tipo FROM simulaciones_servicios_auditores s join tipos_auditor t on s.cod_tipoauditor=t.codigo where s.cod_simulacionservicio=$codSimulacion and s.cod_anio=$anio order by t.nro_orden"; /*and s.habilitado=1*/
@@ -133,7 +136,7 @@ if(isset($_GET["cod_simulacion"])){
            <input type="hidden" id="cantidad_columnas<?=$anio?>CCCC<?=$iii?>" value="<?=$nroColumnas?>">
          </td>
          <td class="text-left small">
-            <input class="form-control text-info text-right" step="0.5" type="<?=$claseDeshabilitado?>" <?=($banderaHab==0)?"readonly":"";?> id="dias_honorario<?=$anio?>CCCC<?=$iii?>" value="<?=$diasTipo?>" onchange="calcularTotalPersonalServicioAuditorHonorarios(<?=$anio?>)" onkeyup="calcularTotalPersonalServicioAuditorHonorarios(<?=$anio?>)">
+            <input class="form-control fondo-boton fondo-boton-active text-right" step="0.5" type="<?=$claseDeshabilitado?>" <?=($banderaHab==0)?"readonly":"";?> id="dias_honorario<?=$anio?>CCCC<?=$iii?>" value="<?=$diasTipo?>" onchange="calcularTotalPersonalServicioAuditorHonorarios(<?=$anio?>)" onkeyup="calcularTotalPersonalServicioAuditorHonorarios(<?=$anio?>)">
             <input type="<?=$claseDeshabilitadoOFF?>" id="dias_honorarioOFF<?=$anio?>CCCC<?=$iii?>" readonly name="dias_honorarioOFF<?=$anio?>CCCC<?=$iii?>" class="form-control" value="0">
          </td>
          <td class="text-left small">
@@ -144,12 +147,12 @@ if(isset($_GET["cod_simulacion"])){
            <input class="form-control text-info text-right" type="<?=$claseDeshabilitado?>" <?=($banderaHab==0)?"readonly":"";?> id="monto_honorarioUSD<?=$anio?>CCCC<?=$iii?>" value="<?=$montoAuditorIndUSD?>" onchange="calcularTotalPersonalServicioAuditorHonorariosSingle(<?=$anio?>,<?=$iii?>,2)" onkeyup="calcularTotalPersonalServicioAuditorHonorariosSingle(<?=$anio?>,<?=$iii?>,2)">
            <input type="<?=$claseDeshabilitadoOFF?>" id="monto_honorarioUSDOFF<?=$anio?>CCCC<?=$iii?>" readonly name="monto_honorarioUSDOFF<?=$anio?>CCCC<?=$iii?>" class="form-control" value="0">
          </td>
-         <td class="text-left small">
-          <input class="form-control text-info text-right" readonly type="<?=$claseDeshabilitado?>" id="monto_honorarioTotal<?=$anio?>CCCC<?=$iii?>" value="<?=$montoAuditor?>">
+         <td class="text-left small bg-principal">
+          <input class="form-control text-right" readonly type="<?=$claseDeshabilitado?>" id="monto_honorarioTotal<?=$anio?>CCCC<?=$iii?>" value="<?=$montoAuditor?>">
           <input type="<?=$claseDeshabilitadoOFF?>" id="monto_honorarioTotalOFF<?=$anio?>CCCC<?=$iii?>" readonly name="monto_honorarioTotalOFF<?=$anio?>CCCC<?=$iii?>" class="form-control" value="0">
         </td>
-         <td class="text-left small">
-          <input class="form-control text-info text-right" readonly type="<?=$claseDeshabilitado?>" id="monto_honorarioTotalUSD<?=$anio?>CCCC<?=$iii?>" value="<?=$montoAuditorUSD?>">
+         <td class="text-left small bg-principal">
+          <input class="form-control text-right" readonly type="<?=$claseDeshabilitado?>" id="monto_honorarioTotalUSD<?=$anio?>CCCC<?=$iii?>" value="<?=$montoAuditorUSD?>">
           <input type="<?=$claseDeshabilitadoOFF?>" id="monto_honorarioTotalUSDOFF<?=$anio?>CCCC<?=$iii?>" readonly name="monto_honorarioTotalUSDOFF<?=$anio?>CCCC<?=$iii?>" class="form-control" value="0">
          </td>
          <!--<td>
@@ -225,17 +228,17 @@ if(isset($_GET["cod_simulacion"])){
             <input type="<?=$claseDeshabilitadocolOFF?>" id="montoUSDOFF<?=$anio?>CCCC<?=$ncol?>RRR<?=$iii?>" readonly name="montoUSDOFF<?=$anio?>CCCC<?=$ncol?>RRR<?=$iii?>" class="form-control" value="0">
           </td>
 
-          <td class="text-right">
+          <td class="text-right bg-principal">
             <input type="hidden" id="codigo_columnas<?=$anio?>CCCC<?=$ncol?>RRR<?=$iii?>" value="<?=$codigoCol?>">
             <!--<input type="hidden" id="codigo_ssd_ssa<?=$anio?>CCCC<?=$ncol?>RRR<?=$iii?>" value="<?=$codigoCol?>">-->
 
-            <input type="<?=$claseDeshabilitadocol?>" id="monto_mult<?=$anio?>CCCC<?=$ncol?>RRR<?=$iii?>" readonly name="monto_mult<?=$anio?>CCCC<?=$ncol?>RRR<?=$iii?>" class="form-control text-info text-right" onchange="calcularTotalPersonalServicioAuditor(<?=$anio?>)" onkeyUp="calcularTotalPersonalServicioAuditor(<?=$anio?>)" value="<?=$montoPre?>" step="0.01">
+            <input type="<?=$claseDeshabilitadocol?>" id="monto_mult<?=$anio?>CCCC<?=$ncol?>RRR<?=$iii?>" readonly name="monto_mult<?=$anio?>CCCC<?=$ncol?>RRR<?=$iii?>" class="form-control text-right" onchange="calcularTotalPersonalServicioAuditor(<?=$anio?>)" onkeyUp="calcularTotalPersonalServicioAuditor(<?=$anio?>)" value="<?=$montoPre?>" step="0.01">
             <input type="<?=$claseDeshabilitadocolOFF?>" id="monto_multOFF<?=$anio?>CCCC<?=$ncol?>RRR<?=$iii?>" readonly name="monto_multOFF<?=$anio?>CCCC<?=$ncol?>RRR<?=$iii?>" class="form-control" value="0">
             <!--<input type="number" id="monto<?=$anio?>CCCC<?=$ncol?>RRR<?=$iii?>" step="0.01" value="<?=$montoPres?>" class="form-control text-info text-right" onchange="calcularTotalPersonalServicioAuditor(<?=$anio?>)" onkeyUp="calcularTotalPersonalServicioAuditor(<?=$anio?>)">-->
             <input type="hidden" id="montoext<?=$anio?>CCCC<?=$ncol?>RRR<?=$iii?>" value="<?=$montoPresext?>">
           </td>
-          <td class="text-right">
-            <input type="<?=$claseDeshabilitadocol?>" id="monto_multUSD<?=$anio?>CCCC<?=$ncol?>RRR<?=$iii?>" readonly name="monto_multUSD<?=$anio?>CCCC<?=$ncol?>RRR<?=$iii?>" class="form-control text-info text-right" value="<?=$montoPreUSD?>" step="0.01">
+          <td class="text-right bg-principal">
+            <input type="<?=$claseDeshabilitadocol?>" id="monto_multUSD<?=$anio?>CCCC<?=$ncol?>RRR<?=$iii?>" readonly name="monto_multUSD<?=$anio?>CCCC<?=$ncol?>RRR<?=$iii?>" class="form-control text-right" value="<?=$montoPreUSD?>" step="0.01">
             <input type="<?=$claseDeshabilitadocolOFF?>" id="monto_multUSDOFF<?=$anio?>CCCC<?=$ncol?>RRR<?=$iii?>" readonly name="monto_multUSDOFF<?=$anio?>CCCC<?=$ncol?>RRR<?=$iii?>" class="form-control" value="0">
           </td>
          <?php
@@ -328,4 +331,3 @@ if(isset($_GET["cod_simulacion"])){
  }
 
  ?>
- 

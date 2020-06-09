@@ -19,7 +19,7 @@ $globalArea=$_SESSION["globalArea"];
 
 $cod_sim=$_GET['cod_sim'];
 $cod_cla=$_GET['cod_cla'];
-$obs="";
+$obs=$_GET['descripcion'];
 $cant=$_GET['cantidad'];
 $monto=$_GET['monto'];
 $unidad=$_GET['unidad'];

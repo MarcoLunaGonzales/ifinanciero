@@ -95,10 +95,19 @@
                       </div>
                       <?php if($codAreaX==39){
                                     ?>
-                      <div class="row" id="div_norma">
-                          <label class="col-sm-2 col-form-label">Norma</label>
+                      <div id="div_norma">
+                        <div class="row">
+                           <label class="col-sm-2 col-form-label">Nº Sello</label>
                            <div class="col-sm-4">                     
-                             <div class="form-group"><!--style="border-bottom: 1px solid #CACFD2"-->
+                             <div class="form-group">
+                               <input type="number" class="form-control" name="modal_sello" id="modal_sello" value="" onkeyup="javascript:this.value=this.value.toUpperCase();">
+                             </div>
+                           </div>  
+                      </div>
+                      <div class="row">
+                          <label class="col-sm-2 col-form-label">Norma</label>
+                           <div class="col-sm-9">                     
+                             <div class="form-group"><!--style="border-bottom: 1px solid #CACFD2"-->          
                                <!--<input type="text" class="form-control tagsinput" data-role="tagsinput" data-color="info" name="modal_norma" id="modal_norma" value="" onkeyup="javascript:this.value=this.value.toUpperCase();">-->
                                <select class="selectpicker form-control form-control-sm" name="normas[]" id="normas" multiple data-style="btn btn-warning" data-live-search="true" data-size="6" data-actions-box="true" required>
                                 <?php
@@ -115,13 +124,16 @@
                                     ?>
                                 </select>
                              </div>
-                           </div>
-                           <label class="col-sm-1 col-form-label">Nº Sello</label>
-                           <div class="col-sm-5">                     
-                             <div class="form-group">
-                               <input type="number" class="form-control" name="modal_sello" id="modal_sello" value="" onkeyup="javascript:this.value=this.value.toUpperCase();">
+                           </div>  
+                      </div>
+                       <div class="row">
+                          <label class="col-sm-2 col-form-label">Otra Norma</label>
+                           <div class="col-sm-9">                     
+                             <div class="form-group" style="border-bottom: 1px solid #CACFD2">       
+                                <input type="text" class="form-control tagsinput" data-role="tagsinput" data-color="info" name="modal_norma" id="modal_norma" value="" onkeyup="javascript:this.value=this.value.toUpperCase();">
                              </div>
                            </div>  
+                      </div>    
                       </div>
                       <div class="row col-sm-12" id="div_pais">
                           <div class="row col-sm-12">
@@ -219,9 +231,14 @@
                                           $etapas="Año ".$an;
 
                                           if($codAreaX!=39){
-                                            $etapas="Año ".$an."(Seguimiento ".($an-1).")";
+                                            $etapas="Año ".$an."(SEGUIMIENTO ".($an-1).")";
                                             if($an==0||$an==1){
-                                             $etapas="Año 1 (ETAPA ".($an+1).")"; 
+                                              if($an==1){
+                                                $etapas="Año 1 (ETAPA ".($an+1)." / RENOVACIÓN)"; 
+                                              }else{
+                                                $etapas="Año 1 (ETAPA ".($an+1).")"; 
+                                              }
+                                             
                                             }
                                           }
                                         ?>
@@ -343,7 +360,7 @@
 <div class="modal fade modal-arriba modal-primary" id="modalSimulacionCuentas0" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-notice" style="max-width: 80% !important;">
     <div class="modal-content card">
-                <div class="card-header card-header-danger card-header-text">
+                <div class="card-header card-header-success card-header-text">
                   <div class="card-text">
                     <h4>Costos Variables - Honorarios</h4>
                   </div>
@@ -362,7 +379,11 @@
                       if($codAreaX!=39){
                         $tituloItem="Año ".$ann."(SEGUIMIENTO ".($ann-1).")";
                         if($ann==0||$ann==1){
-                         $tituloItem="Año 1 (ETAPA ".($ann+1).")"; 
+                          if($ann==1){
+                            $tituloItem="Año 1 (ETAPA ".($ann+1)."/ RENOVACIÓN)"; 
+                          }else{
+                            $tituloItem="Año 1 (ETAPA ".($ann+1).")"; 
+                          }   
                         }
                       }
                    include "cargarDetallePlantillaPartida.php";   
@@ -385,9 +406,9 @@
   <div class="modal-dialog" style="max-width: 100% !important;">
     <div class="modal-content card">
        
-                <div class="card-header card-header-warning card-header-text">
+                <div class="card-header card-header-primary card-header-text">
                   <div class="card-text">
-                    <h4>Costos Variables Detalle <b id="titulo_modaldetalleslista"></b></h4>
+                    <h4>Costos Variables - Honorarios <small>Detalle</small> <b id="titulo_modaldetalleslista"></b></h4>
                   </div>
                   <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
                     <i class="material-icons">close</i>
@@ -395,7 +416,18 @@
                   <a class="btn btn-success btn-sm btn-fab float-right" href="#" onclick="cambiarModalDetalleVariable()">
                     <i class="material-icons">keyboard_backspace</i>
                   </a>
+                  <?php 
+                   if($codAreaX==38){
+                    ?><a href="../<?=$urlDatosSitios?>?cod=<?=$codigoSimulacionSuper?>" class="btn btn-warning text-dark btn-sm float-right" target="_blank"><i class="material-icons">link</i> Ver Sitios</a><?php
+                   }
+                  ?>
+                  
                 </div>
+                <style>
+               #cuentas_simulacionpersonal input:read-only {
+                background-color: #BDC3C7  !important;
+                }
+               </style>
                 <div class="card-body">
                  <div class="card" id="cuentas_simulacionpersonal">
                  </div>
@@ -429,7 +461,8 @@
                     <div class="form-group">
                         <button class="btn btn-success" id="guardar_cuenta" onclick="guardarCuentasSimulacionAjaxGenericoServicioAuditorTodos(<?=$inicioAnio?>);">Guardar Cambios</button>
                     </div> 
-                 </div>   
+                 </div>
+                 <p class="text-muted"><small>USD: Dólar, BOB: Bolivianos, D: Días, C: Cantidad, T BOB: Total en Bolivianos, T USD: Total en Dólares, Hab/Des: Habilitado/Deshabilitado.</small></p>    
                 </div>    
       </div>  
     </div>
@@ -543,8 +576,12 @@
                          ?>
                      <div class="row">
                        <!--<label class="col-sm-2 col-form-label">Sitios <small class="text-muted">(<?=count($cantidadSitios)?>)</small></label>-->
-                       <div class="col-sm-11">
-                        <div class="form-group" style="border-bottom: 1px solid #CACFD2">
+                       <div class="col-sm-12">
+                        <div class="float-right">
+                           <button title="Agregar Sitio" type="button" name="add" class="btn btn-warning btn-round btn-fab" onClick="agregarAtributoAjax()"><i class="material-icons">add</i>
+                            </button>
+                        </div>
+                        <div class="" style="border-bottom: 1px solid #CACFD2">
                           <div id="productos_div" class="d-none"></div>
                           <input type="hidden" value="" class="form-control tagsinput" name="modal_sitios" id="modal_sitios" data-role="tagsinput" data-color="warning">                          
                           <div id="divResultadoListaAtributos">
@@ -554,10 +591,7 @@
                           </div>
                         </div>
                         </div>
-                        <div class="col-sm-1">
-                           <button title="Agregar Sitio" type="button" name="add" class="btn btn-warning btn-round btn-fab" onClick="agregarAtributoAjax()"><i class="material-icons">add</i>
-                            </button>
-                        </div>
+                        
                       </div>
                          <?php
                             }else{
@@ -610,9 +644,10 @@
                                   <tr class="fondo-boton">
                                     <td>#</td>
                                     <td width="6%">Año</td>
-                                    <td width="23%"> SERVICIOS</td>
+                                    <td width="20%"> SERVICIOS</td>
+                                    <td width="20%"> DESCRIPCIÓN</td>
                                     <td width="5%">Cantidad</td>
-                                    <td width="17%">Unidad</td>
+                                    <td width="5%">Unidad</td>
                                     <td>Monto BOB</td>
                                     <td>Monto USD</td>
                                     <td>Total BOB</td>         
@@ -632,7 +667,12 @@
 
                                               if($codAreaX!=39){
                                                if($i==0||$i==1){
-                                                $etapas="Et ".($i+1).""; 
+                                                if($i==1){
+                                                $etapas="Et ".($i+1)." / REN"; 
+
+                                                }else{
+                                                   $etapas="Et ".($i+1)."";                                                  
+                                                }
                                                }
                                               }
                                               
@@ -662,7 +702,7 @@
                                     }
                                   }
                                 ?>
-                                  <select class="selectpicker form-control form-control-sm" data-size="6" data-live-search="true" name="modal_editservicio<?=$an?>" id="modal_editservicio<?=$an?>" data-style="fondo-boton">
+                                  <select class="selectpicker form-control form-control-sm" data-size="6" data-live-search="true" onchange="ponerDescripcionServicio(<?=$an?>)" name="modal_editservicio<?=$an?>" id="modal_editservicio<?=$an?>" data-style="fondo-boton">
                                     <option disabled selected="selected" value="">--SERVICIOS--</option>
                                     <?php 
                                      $stmt3 = $dbh->prepare("SELECT IdClaServicio,Descripcion,Codigo from cla_servicios where (codigo_n1=108 or codigo_n1=109) and vigente=1 and codigo_n1=$codigoAreaServ and idTipo=$idTipoServGlobal order by 2");
@@ -675,6 +715,9 @@
                                      }
                                     ?>
                                   </select>
+                                  </td>
+                                  <td class="text-right">
+                                       <input type="text" id="descripcion_servicios<?=$an?>SSS0" name="descripcion_servicios<?=$an?>SSS0" class="form-control text-primary text-right" value="">
                                   </td>
                                   <td class="text-right">
                                        <input type="number" min="1" id="cantidad_servicios<?=$an?>SSS0" name="cantidad_servicios<?=$an?>SSS0" class="form-control text-primary text-right" onchange="calcularTotalFilaServicioNuevo(<?=$an?>,2)" onkeyUp="calcularTotalFilaServicioNuevo(<?=$an?>,2)" value="1">
@@ -724,6 +767,7 @@
                                   $codigoPre=$rowPre['codigo'];
                                   $codCS=$rowPre['cod_claservicio'];
                                   $tipoPre=$rowPre['nombre_serv'];
+                                  $tipoPreEdit=$rowPre['observaciones'];
                                   $cantidadPre=$rowPre['cantidad'];
                                   $cantidadEPre=$rowPre['cantidad_editado'];
                                   $montoPre=$rowPre['monto'];
@@ -759,7 +803,12 @@
 
                                               if($codAreaX!=39){
                                                if($i==0||$i==1){
-                                                $etapas="Et ".($i+1).""; 
+                                                if($i==1){
+                                                $etapas="Et ".($i+1)." / REN"; 
+
+                                                }else{
+                                                   $etapas="Et ".($i+1)."";                                                  
+                                                }
                                                }
                                               }
                                               
@@ -776,6 +825,9 @@
                                       </select>
                                      </td>
                                      <td class="text-left"><i class="material-icons text-warning"><?=$iconServ?></i><input type="hidden" id="precio_fijo<?=$an?>SSS<?=$iii?>" value="<?=$iconServ?>"> <?=$tipoPre?></td>
+                                     <td class="text-right">
+                                       <input type="text" id="descripcion_servicios<?=$an?>SSS<?=$iii?>" name="descripcion_servicios<?=$an?>SSS<?=$iii?>" class="form-control text-info text-right" value="<?=$tipoPreEdit?>">
+                                     </td>
                                      <td class="text-right">
                                        <input type="number" min="1" id="cantidad_servicios<?=$an?>SSS<?=$iii?>" name="cantidad_servicios<?=$an?>SSS<?=$iii?>" class="form-control text-info text-right" onchange="calcularTotalFilaServicio(<?=$an?>,2)" onkeyUp="calcularTotalFilaServicio(<?=$an?>,2)" value="<?=$cantidadEPre?>">
                                      </td>
@@ -889,6 +941,7 @@
                       <div class="form-group float-right">
                         <button type="button" id="boton_guardarplan" class="btn btn-default" onclick="guardarDatosPlantillaServicio(this.id)">Guardar</button>
                       </div> 
+                <p class="text-muted"><small>USD: Dolar, BOB: Bolivianos, EA: Equipo Auditor.</small></p> 
                 </div>
       </div>  
     </div>
@@ -915,3 +968,4 @@
     </div>
   </div>
 <!--    end small modal -->
+

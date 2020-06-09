@@ -1,4 +1,6 @@
 <?php
+set_time_limit(0);
+
 require_once '../conexion.php';
 require_once '../functions.php';
 require_once '../assets/libraries/CifrasEnLetras.php';
@@ -149,7 +151,7 @@ $html.=  '<header class="header">'.
               // print_r($row['nombre']);
              $html.='<tr>'.
                       '<td>'.$row['numero'].'<br>'.$row['unidadAbrev'].'<br>'.$row['abreviatura'].'</td>'.
-                      '<td>'.$row['nombre'].'-'.$row['nombrecuentaauxiliar'].')<br>'.$row['glosa'].'</td>';
+                      '<td>'.$row['nombre'].' - '.$row['nombrecuentaauxiliar'].'<br>'.$row['glosa'].'</td>';
                       $tDebeBol+=$row['debe'];$tHaberBol+=$row['haber'];
                       $tDebeDol+=$row['debe']/$tc;$tHaberDol+=$row['haber']/$tc;
                        $html.='<td class="text-right">'.number_format($row['debe'], 2, '.', ',').'</td>'.

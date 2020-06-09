@@ -6,33 +6,38 @@ require_once 'configModule.php';
 set_time_limit (0);
 $dbh = new Conexion();
 
-$codigo=$_GET["codigo"];
+$codigo=$_POST["codigo"];
 session_start();
 
-$codPlantillaCosto=$_GET["plantilla"];
-$codSimulacion=$_GET["simulacion"];
-$ut_i=$_GET['utilidad'];
-$dia=$_GET['dia'];
+$codPlantillaCosto=$_POST["plantilla"];
+$codSimulacion=$_POST["simulacion"];
+$ut_i=$_POST['utilidad'];
+$dia=$_POST['dia'];
 
 
-$monto=$_GET['monto'];
-$cantidad=$_GET['cantidad'];
+$monto=$_POST['monto'];
+$cantidad=$_POST['cantidad'];
+$obs=$_POST['descripcion'];
 
-$habilitado=$_GET['habilitado'];
-$unidad=$_GET['unidad'];
-$fijo=$_GET['precio_fijo'];
+$habilitado=$_POST['habilitado'];
+$unidad=$_POST['unidad'];
+$fijo=$_POST['precio_fijo'];
 $productos="";
-$atributos= json_decode($_GET['productos']);
-$anio=$_GET['anio'];
-$anio_fila=$_GET['anio_fila'];
-$iteracion=$_GET['iteracion'];
+$atributos= json_decode($_POST['productos']);
+$anio=$_POST['anio'];
+$anio_fila=$_POST['anio_fila'];
+$iteracion=$_POST['iteracion'];
 
-if($_GET['tcs']==0){
+$sqlDetallesAuditores="UPDATE simulaciones_servicios_auditores SET dias=0 where cod_simulacionservicio=$codSimulacion";
+$stmtDetallesAuditores = $dbh->prepare($sqlDetallesAuditores);
+$stmtDetallesAuditores->execute();
+
+if($_POST['tcs']==0){
   $tipo_atributo=1;
   $sqlUpdatePlantilla="UPDATE simulaciones_servicios SET  utilidad_minima='$ut_i',dias_auditoria='$dia',productos='$productos' where codigo=$codSimulacion";
 }else{
   $tipo_atributo=2;
-  $atributosDias= json_decode($_GET['sitios_dias']);
+  $atributosDias= json_decode($_POST['sitios_dias']);
   $sqlUpdatePlantilla="UPDATE simulaciones_servicios SET  utilidad_minima='$ut_i',dias_auditoria='$dia',sitios='$productos' where codigo=$codSimulacion";
 }
 
@@ -79,9 +84,18 @@ $stmtDetAt->execute();
               VALUES ('$codSimulacionServicioAtributo','$codSimulacion', '$nombreAtributo', '$direccionAtributo', '$tipo_atributo','$marcaAtributo','$normaAtributo','$selloAtributo','$paisAtributo','$estadoAtributo','$ciudadAtributo')";
               $stmtDetalleAtributos = $dbh->prepare($sqlDetalleAtributos);
               $stmtDetalleAtributos->execute();
-            if($_GET['tcs']==0){
+            if($_POST['tcs']==0){
                 //$direccionAtributo="";
+              $normasFila=explode(",",$normaCodAtributo);
+                for ($ni=0; $ni < count($normasFila); $ni++) { 
+                 $codNorma=$normasFila[$ni];
+                  $sqlDetalleAtributosNormas="INSERT INTO simulaciones_servicios_atributosnormas (cod_simulacionservicioatributo, cod_norma, precio,cantidad) 
+                 VALUES ('$codSimulacionServicioAtributo', '$codNorma', '10',1)";
+                 $stmtDetalleAtributosNormas = $dbh->prepare($sqlDetalleAtributosNormas);
+                 $stmtDetalleAtributosNormas->execute();
+               }
               }else{
+                $auditoresDias=json_decode($_POST['auditoresDias']);               
                  $nCDias=cantidadF($atributosDias);
                     for($jj=0;$jj<$nCDias;$jj++){
                        $codigoAtributoDias=$atributosDias[$jj]->codigo_atributo;
@@ -92,6 +106,27 @@ $stmtDetAt->execute();
                         VALUES ('$codSimulacionServicioAtributo', '$diasAtributoDias', '$anioAtributoDias')";
                         $stmtDetalleAtributos = $dbh->prepare($sqlDetalleAtributos);
                         $stmtDetalleAtributos->execute();
+                        $sqlDetalleAu="UPDATE simulaciones_servicios_atributosauditores SET estado=0 where cod_simulacionservicioatributo=$codSimulacionServicioAtributo and cod_anio=$anioAtributoDias";
+                        $stmtDetalleAu = $dbh->prepare($sqlDetalleAu);
+                        $stmtDetalleAu->execute();
+                        if(obtenerEntradaSimulacionServicio($codSimulacion)==1){
+                         //aumentar dias a los auditores
+                         for ($al=0; $al < count($auditoresDias[$jj]); $al++) { 
+                          $codigoAuditor=$auditoresDias[$jj][$al];
+                          $cantidadDiasAnterior=obtenerDiasAuditorSimulacionServicio($codigoAuditor);
+                          $cantidadDiasNuevo=$cantidadDiasAnterior+$diasAtributoDias;
+                          $sqlDetallesAuditores="UPDATE simulaciones_servicios_auditores SET dias=$cantidadDiasNuevo where codigo=$codigoAuditor";
+                          $stmtDetallesAuditores = $dbh->prepare($sqlDetallesAuditores);
+                          $stmtDetallesAuditores->execute();
+
+                          $sqlDetalleAu="UPDATE simulaciones_servicios_atributosauditores SET estado=1 where cod_simulacionservicioatributo=$codSimulacionServicioAtributo and cod_anio=$anioAtributoDias and cod_auditor=$codigoAuditor";
+                          $stmtDetalleAu = $dbh->prepare($sqlDetalleAu);
+                          $stmtDetalleAu->execute();
+                          echo $sqlDetallesAuditores;
+                         }
+                        }
+
+                  
                        }           
                     }
               }         
@@ -118,13 +153,21 @@ $stmtDetAt->execute();
        $cantidad=1;
        $monto=$suma; 
 }*/
-$sqlDetalles="UPDATE simulaciones_servicios_tiposervicio SET cantidad_editado=$cantidad,monto=$monto,habilitado=$habilitado,cod_tipounidad=$unidad,cod_anio=$anio_fila where codigo=$codigo";
+
+$sqlDetallesAuditores="UPDATE simulaciones_servicios_auditores SET dias=1 where cod_simulacionservicio=$codSimulacion and dias=0";
+$stmtDetallesAuditores = $dbh->prepare($sqlDetallesAuditores);
+$stmtDetallesAuditores->execute();
+
+$sqlDetalles="UPDATE simulaciones_servicios_tiposervicio SET observaciones='$obs',cantidad_editado=$cantidad,monto=$monto,habilitado=$habilitado,cod_tipounidad=$unidad,cod_anio=$anio_fila where codigo=$codigo";
 $stmtDetalles = $dbh->prepare($sqlDetalles);
 $stmtDetalles->execute();
 
+      
+/*
       $sqlDelete="DELETE FROM simulaciones_cf where cod_simulacionservicio=$codSimulacion and cod_anio=$anio_fila";  
       $stmtDelete = $dbh->prepare($sqlDelete);
       $stmtDelete->execute();
+
   //costos Fijos en tabla
       $cuentasFijas=obtenerListaCuentasPlantillasCostoFijoServicio($codPlantillaCosto);
       while ($rowFijo = $cuentasFijas->fetch(PDO::FETCH_ASSOC)) {
@@ -151,5 +194,6 @@ $stmtDetalles->execute();
          $stmtFijos = $dbh->prepare($sqlFijos);
          $stmtFijos->execute();
       } 
+      */
 echo $anio."WWW".$iteracion;
 ?>

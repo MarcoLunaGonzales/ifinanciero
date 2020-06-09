@@ -2862,8 +2862,11 @@ function guardarSimulacionServicio(){
      }else{
       var regionCliente=$("#region_cliente").val();
       var tipoCliente=$("#tipo_cliente").val();
+
+      var iaf_primario=$("#iaf_primario").val();
+      var iaf_secundario=$("#iaf_secundario").val();
       objeto=0;
-     var parametros={"tipo_cliente":tipoCliente,"region_cliente":regionCliente,"id_perfil":idPerfil,"objeto_servicio":objeto,"id_servicio":idServicio,"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"atributos":JSON.stringify(itemAtributos),"norma":norma,"anios":anios,"afnor":afnor,"tipo_atributo":1};
+     var parametros={"iaf_primario":iaf_primario,"iaf_secundario":iaf_secundario,"tipo_cliente":tipoCliente,"region_cliente":regionCliente,"id_perfil":idPerfil,"objeto_servicio":objeto,"id_servicio":idServicio,"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"atributos":JSON.stringify(itemAtributos),"norma":norma,"anios":anios,"afnor":afnor,"tipo_atributo":1};
      $.ajax({
         type: "GET",
         dataType: 'html',
@@ -6201,7 +6204,7 @@ function cargarDetallesCostosVariablesTodosLosAnios(inicio,ib){
         },
         success:  function (resp) {
          detectarCargaAjax();
-         results[anio] = resp;
+         results[index] = resp;
           $("#cuentas_simulacionpersonal").append(resp);
           $('.selectpicker').selectpicker("refresh"); 
            ponerCantidadTotalesVariablesModal(inicio,anio);            
@@ -6213,7 +6216,7 @@ function cargarDetallesCostosVariablesTodosLosAnios(inicio,ib){
    index++;
   };//fin de for
   $("#cuentas_simulacionpersonal").append("");
-  for (var i = inicio; i <= parseInt(anios); i++) {  
+  for (var i = 0; i <= index; i++) {  
     $("#cuentas_simulacionpersonal").append(results[i]);
     $('.selectpicker').selectpicker("refresh"); 
   };
@@ -7339,6 +7342,7 @@ function guardarDatosPlantilla(btn_id){
      $("#"+btn_id).attr("disabled",true); 
   $.ajax({
     url: "ajaxSaveDatosPlantilla.php",
+    cache: false,
     type: "GET",
     data: parametros,
     dataType: "html",
@@ -7472,9 +7476,16 @@ function guardarDatosPlantillaServicioAjax(btn_id){
   if($("#divResultadoListaAtributos").length){
     var inicioAnio=0;
     var atributosDias=JSON.stringify(itemAtributosDias);
+    var auditoresDias=[];
+    for (var au = 0; au < itemAtributosDias.length; au++) {
+      auditoresDias[au]=$("#auditores"+au).val();
+    };
+    auditoresDias=JSON.stringify(auditoresDias);
+    console.log(auditoresDias);
    }else{
     var inicioAnio=1;
     var atributosDias="";
+    var auditoresDias="";
    }
 
 if(!(ut_i==""||dia==""||dia==0||productos.length==0)){ 
@@ -7520,6 +7531,7 @@ if(!(ut_i==""||dia==""||dia==0||productos.length==0)){
      var habilitado=1;
       var codigo = $("#modal_codigoservicio"+anio+"SSS"+i).val();
       var monto = $("#modal_montoserv"+anio+"SSS"+i).val();
+      var descripcion = $("#descripcion_servicios"+anio+"SSS"+i).val();
       var cantidad = $("#cantidad_servicios"+anio+"SSS"+i).val();
       var unidad = $("#unidad_servicios"+anio+"SSS"+i).val();
       var precio_fijo=$("#precio_fijo"+anio+"SSS"+i).val();
@@ -7527,9 +7539,9 @@ if(!(ut_i==""||dia==""||dia==0||productos.length==0)){
       if($("#modal_montoserv"+anio+"SSS"+i).is("[readonly]")){
         habilitado=0;
       }
-      var parametros = {"codigo":codigo,"monto":monto,"simulacion":cod_sim,"sitios_dias":atributosDias,"productos":JSON.stringify(productos),"precio_fijo":precio_fijo,"unidad":unidad,"plantilla":codigo_p,"dia":dia,"utilidad":ut_i,"habilitado":habilitado,"cantidad":cantidad,"anio":anio,"iteracion":i,"tcs":tcs,"anio_fila":anio_fila};
+      var parametros = {"auditoresDias":auditoresDias,"descripcion":descripcion,"codigo":codigo,"monto":monto,"simulacion":cod_sim,"sitios_dias":atributosDias,"productos":JSON.stringify(productos),"precio_fijo":precio_fijo,"unidad":unidad,"plantilla":codigo_p,"dia":dia,"utilidad":ut_i,"habilitado":habilitado,"cantidad":cantidad,"anio":anio,"iteracion":i,"tcs":tcs,"anio_fila":anio_fila};
       $.ajax({
-        type:"GET",
+        type:"POST",
         data:parametros,
         url:"ajaxSaveDatosPlantilla2.php",
         beforeSend: function () { 
@@ -7541,6 +7553,7 @@ if(!(ut_i==""||dia==""||dia==0||productos.length==0)){
             detectarCargaAjax();
             
           }   
+         //alert(resp);
         }
       });
   }; 
@@ -8872,13 +8885,14 @@ function montarMontoLocalExternoTablaAuditor(fila){
 function agregarNuevoServicioSimulacion(anio,cod_sim,cod_area){
   var cod_cla=$("#modal_editservicio"+anio).val();
   var cantidad=$("#cantidad_servicios"+anio+"SSS0").val();
+  var descripcion=$("#descripcion_servicios"+anio+"SSS0").val();
   var monto=$("#modal_montoserv"+anio+"SSS0").val();
   var unidad=$("#unidad_servicios"+anio+"SSS0").val();
   var anio_fila=$("#anio"+anio+"SSS0").val();
   if(!(cod_cla>0)||cantidad==""||cantidad==0||monto==""){
    Swal.fire("Informativo!", "Debe llenar los campos requeridos", "warning");
   }else{
-  var parametros={"cod_sim":cod_sim,"cod_cla":cod_cla,"cantidad":cantidad,"monto":monto,"unidad":unidad,"anio":anio,"anio_fila":anio_fila};
+  var parametros={"descripcion":descripcion,"cod_sim":cod_sim,"cod_cla":cod_cla,"cantidad":cantidad,"monto":monto,"unidad":unidad,"anio":anio,"anio_fila":anio_fila};
      $.ajax({
         type: "GET",
         dataType: 'html',
@@ -8965,6 +8979,10 @@ function  listarServiciosSimulacionSoloAuditor(anio,cod_area,codigo){
            $('.selectpicker').selectpicker("refresh");
         }
     });
+}
+
+function ponerDescripcionServicio(anio){
+ $("#descripcion_servicios"+anio+"SSS0").val($("#modal_editservicio"+anio+" option:selected").text());
 }
 
 function listarServiciosSimulacionSoloServicio(anio,cod_area,codigo,anio_fila){
@@ -10198,6 +10216,8 @@ function agregarAtributoAjax(){
     
   }
   $("#normas").val("");
+  $("#modal_norma").val("");
+
   if($("#modalEditPlantilla").length){
     $("#modalEditPlantilla").modal("hide");
     for (var i = 0; i <= parseInt($("#anio_servicio").val()); i++) {
@@ -10223,7 +10243,7 @@ function agregarAtributoAjax(){
 
 function listarAtributo(){
   var sumaDias=[];
-  var div=$('<div>').addClass('table-responsive');
+  var div=$('<div>').addClass('');
   var table = $('<table>').addClass('table');
   table.addClass("table-bordered");
   table.addClass("table-sm table-striped");
@@ -10235,28 +10255,33 @@ function listarAtributo(){
       titulos.append($('<th>').addClass('').text('MARCA'));
       titulos.append($('<th>').addClass('').text('NORMA'));
       titulos.append($('<th>').addClass('').text('SELLO'));
-      titulos.append('<td width="15%">PAIS</td>');
-      titulos.append('<td width="15%">DEPTO</td>');
-      titulos.append('<td width="15%">CIUDAD</td>');
+      titulos.append('<td width="7%">PAIS</td>');
+      titulos.append('<td width="7%">DEPTO</td>');
+      titulos.append('<td width="7%">CIUDAD</td>');
      }else{
-      titulos.append('<td width="15%">PAIS</td>');
-      titulos.append('<td width="15%">DEPTO</td>');
-      titulos.append('<td width="15%">CIUDAD</td>');
-      if($("#modalEditPlantilla").length){
+      titulos.append('<td width="7%">PAIS</td>');
+      titulos.append('<td width="7%">DEPTO</td>');
+      titulos.append('<td width="7%">CIUDAD</td>');
+      if($("#modalEditPlantilla").length>0){
         if($("#codigo_area").val()!=39){
         for (var k = 0; k <= parseInt($("#anio_simulacion").val()); k++) {
           sumaDias[k]=0;
-          var tituloTD="S "+(k-1);
+          var tituloTD="Seg "+(k-1);
           if(k==0||k==1){
-            tituloTD="E "+(k+1);
+            if(k==1){
+              tituloTD="Et "+(k+1)+" /R";
+            }else{
+              tituloTD="Et "+(k+1);
+            } 
           }
-          titulos.append($('<th>').addClass('').text(tituloTD));  
+          titulos.append('<td width="6%" class="bg-principal">'+tituloTD+'</td>');
+          titulos.append('<td width="8%" class="bg-plomo text-dark">EA</td>');    
         };
        }
       }
      }
       
-     titulos.append('<td class="text-right" width="12%">OPCION</td>');
+     titulos.append('<td class="text-right" width="18%">OPCION</td>');
      table.append(titulos);
    for (var i = 0; i < itemAtributos.length; i++) {
      var row = $('<tr>').addClass('');
@@ -10274,30 +10299,41 @@ function listarAtributo(){
       row.append($('<td>').addClass('').text(itemAtributos[i].nom_pais));
       row.append($('<td>').addClass('').text(itemAtributos[i].nom_estado));
       row.append($('<td>').addClass('').text(itemAtributos[i].nom_ciudad));
-      if($("#modalEditPlantilla").length){
+      if($("#modalEditPlantilla").length>0){
        if($("#codigo_area").val()!=39){
         for (var k = 0; k <=parseInt($("#anio_simulacion").val()); k++) {
           for (var j= 0; j< itemAtributosDias.length; j++) {
            if(itemAtributosDias[j].codigo_atributo==itemAtributos[i].codigo&&itemAtributosDias[j].anio==k){
             sumaDias[k]+=parseFloat(itemAtributosDias[j].dias);
             row.append('<td><input id="sitio_dias'+j+'" onchange="cambiarMontoDiasSitio('+j+')" onkeypress="cambiarMontoDiasSitio('+j+')" onkeyup="cambiarMontoDiasSitio('+j+')" class="form-control" type="number" value="'+itemAtributosDias[j].dias+'"></td>');  
+            row.append('<td><select data-actions-box="true" class="form-control selectpicker form-control-sm" multiple data-style="fondo-boton fondo-boton-active" name="auditores'+j+'[]" id="auditores'+j+'">'+
+              $("#auditores"+k+"EEEE"+itemAtributosDias[j].codigo_atributo).html()+
+              '</select></td>');  
+            //alerta 2 0 3
            } 
          };     
         };
        }    
       } //fin #modalEditPlantilla
      }
-      
-     row.append($('<td>').addClass('text-right small').html('<button title="Editar" class="btn btn-sm btn-fab btn-success" onclick="editarAtributo('+i+');"><i class="material-icons" >edit</i></button><button class="btn btn-sm btn-fab btn-danger" title="Eliminar" onclick="removeAtributo('+i+');"><i class="material-icons">delete</i></button>'));
+       $('.selectpicker').selectpicker("refresh");
+       if($("#sinEdicionModal").length>0){
+         row.append($('<td>').addClass('text-right small').html(''));
+       }else{
+         row.append($('<td>').addClass('text-right small').html('<button title="Editar" class="btn btn-sm btn-fab btn-success" onclick="editarAtributo('+i+');"><i class="material-icons" >edit</i></button><button class="btn btn-sm btn-fab btn-danger" title="Eliminar" onclick="removeAtributo('+i+');"><i class="material-icons">delete</i></button>'));    
+       }
+     
      table.append(row);
    }
-   if($("#modalEditPlantilla").length){
+   if($("#modalEditPlantilla").length>0){
     if($("#codigo_area").val()!=39){
       var row = $('<tr>').addClass('');
       row.append($('<td>').addClass('font-weight-bold text-center').attr('colspan',6).text('TOTALES'));
       for (var k = 0; k <=parseInt($("#anio_simulacion").val()); k++) {
         row.append($('<td>').attr('id','dias_modal'+k).addClass('font-weight-bold').text(sumaDias[k]));
+        row.append($('<td>').addClass('font-weight-bold').text(""));
       }  
+      row.append($('<td>').addClass('font-weight-bold').text(""));
       table.append(row);
     }      
    }
@@ -10309,6 +10345,7 @@ function listarAtributo(){
       $('#divResultadoListaAtributosProd').html(div);
       //$('#divResultadoListaAtributosProd').bootstrapMaterialDesign(); 
      } 
+
 }
 
 function cambiarMontoDiasSitio(j){
@@ -10350,7 +10387,12 @@ function guardarAtributoItem(){
        i++;
      });
     var norma=normasArray.join(",");
-    //var norma=$("#modal_norma").val();
+
+    if($("#modal_norma").val()!=""){
+     norma=norma+","+$("#modal_norma").val();
+    }
+
+    var norma_otro=$("#modal_norma").val();
     var sello=$("#modal_sello").val();
     var marca=$("#modal_marca").val();
   }
@@ -10384,6 +10426,7 @@ function guardarAtributoItem(){
     direccion: $('#modal_direccion').val(),
     norma:norma,
     norma_cod:norma_cod,
+    norma_otro:norma_otro,
     marca:marca,
     sello:sello,
     pais:pais,
@@ -10408,8 +10451,8 @@ function guardarAtributoItem(){
   }else{
     itemAtributos[fila].nombre=$('#modal_nombre').val();
     itemAtributos[fila].direccion=$('#modal_direccion').val();
-    
-    var normasMultiple=$("#normas").val();
+    if(!($("#productos_div").hasClass("d-none"))){
+       var normasMultiple=$("#normas").val();
     var norma_cod=normasMultiple.join(",");
     var normasArray=[]; var i=0;
     $("#normas option:selected").each(function() {     
@@ -10417,8 +10460,14 @@ function guardarAtributoItem(){
        i++;
      });
     var norma=normasArray.join(",");
-
-    itemAtributos[fila].norma=norma;
+    }
+   
+    if($("#modal_norma").val()!=""){
+     itemAtributos[fila].norma=norma+","+$("#modal_norma").val();  
+    }else{
+      itemAtributos[fila].norma=norma;
+    }    
+    itemAtributos[fila].norma_otro=$("#modal_norma").val();
     itemAtributos[fila].norma_cod=norma_cod;
     itemAtributos[fila].marca=$('#modal_marca').val();
     itemAtributos[fila].sello=$('#modal_sello').val();
@@ -10447,14 +10496,22 @@ function guardarAtributoItem(){
   $("#modal_norma").val("");
   $("#modal_marca").val("");
   $("#modal_sello").val("");
-
-  if($("#modalEditPlantilla").length){
+//
+  if($("#modalEditPlantilla").length>0){
+    limpiarModalCache("modal_atributo");
     editarDatosPlantilla();
+   }else{
+    listarAtributo();
+    $("#modal_atributo").modal("hide");
    }
-  listarAtributo();
-  $("#modal_atributo").modal("hide"); 
   }
   
+}
+
+function limpiarModalCache(id_modal){
+  $("#"+id_modal).modal("hide");
+  $('body').removeClass('modal-open');//eliminamos la clase del body para poder hacer scroll
+  $('.modal-backdrop').remove();//eliminamos el backdrop del modal
 }
 function removeAtributo(fila){
   if($("#modalEditPlantilla").length){
@@ -10473,13 +10530,15 @@ function editarAtributo(fila){
   $('#modal_nombre').val(itemAtributos[fila].nombre);
   if($("#modal_marca").length){
     $('#modal_marca').val(itemAtributos[fila].marca);
-    //$('#modal_norma').val(itemAtributos[fila].norma);
+    $('#modal_norma').val(itemAtributos[fila].norma_otro);
     $('#modal_sello').val(itemAtributos[fila].sello);
-    //$("#modal_norma").tagsinput('removeAll');
-    //$("#modal_norma").tagsinput('add', itemAtributos[fila].norma);
+    $("#modal_norma").tagsinput('removeAll');
+    $("#modal_norma").tagsinput('add', itemAtributos[fila].norma_otro);
+   if(!($("#div_norma").hasClass("d-none"))){
     var normasMultiple=itemAtributos[fila].norma_cod.split(",");
     $("#normas").val(normasMultiple);
     var norma_cod=normasMultiple.join(",");
+   }   
   }
   if(($("#div_marca").hasClass("d-none"))){
     $("#lbl_nombre_atributo").text("Nombre");
@@ -14083,6 +14142,11 @@ function SeleccionarComprobante_cajachica_reembolso(cod_comprobante,cod_comproba
 }
 
 
+function actualizarSimulacionSitios(){
+  javascript:location.reload(true);
+}
+
+
 function removePlantillaComprobantes(cod_plantilla){  
   $.ajax({
   type:"POST",
@@ -14098,4 +14162,5 @@ function removePlantillaComprobantes(cod_plantilla){
   }
   });           
 }
+
 
