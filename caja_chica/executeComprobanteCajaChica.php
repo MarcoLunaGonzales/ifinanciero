@@ -8,7 +8,7 @@ require_once '../layouts/bodylogin.php';
 $dbh = new Conexion();
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//try
 //RECIBIMOS LAS VARIABLES
-set_time_limit(0);
+set_time_limit(3000);
 session_start();
 $cod_cajachica = $_GET["cod_cajachica"];//codigoactivofijo
 try{
@@ -141,7 +141,7 @@ try{
 		            $stmtRetenciones->bindColumn('debe_haber', $debe_haber);
 		            while ($rowFac = $stmtRetenciones->fetch()) 
 		            {
-		            	$descripcion=$nombre_uo.' F/'.$nro_factura.' (R-'.$nro_recibo.') '.$personal.', '.$observaciones_dcc;
+		            	$descripcion=$nombre_uo.' F/'.$nro_factura.' (R-'.$nro_recibo.'),'.$personal.', '.$observaciones_dcc;
 		                $monto=$monto_recalculado*$porcentaje_retencion/100;
 		                if($cod_cuenta_retencion>0){
 		                    // $nro_cuenta_retencion=obtieneNumeroCuenta($cod_cuenta_retencion);
@@ -181,7 +181,7 @@ try{
 				                	$porcentaje=$rowTipoDistribucion['porcentaje'];
 				                	if($tipo==1){//oficina
 				                		$name_oficina_dis=abrevUnidad($oficina_area);
-				                		$descripcion_distribucion=$nombre_uo.'/'.$name_oficina_dis.' F/'.$nro_factura.' (R-'.$nro_recibo.') '.$personal.', '.$observaciones_dcc;
+				                		$descripcion_distribucion=$nombre_uo.'/'.$name_oficina_dis.' F/'.$nro_factura.' (R-'.$nro_recibo.'),'.$personal.', '.$observaciones_dcc;
 			                            $monto_of=$monto_restante*$porcentaje/100;
 			                            if($debe_haber==1){ //preguntamps si pertenece a la columna debe o haber
 			                            	$sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','0','$oficina_area','$cod_area','0','$monto_of','$descripcion_distribucion','$ordenDetalle')";
@@ -196,7 +196,7 @@ try{
 			                            }
 				                	}elseif($tipo==2){//area				                		
 				                		$name_area_dis=abrevArea($oficina_area);
-				                		$descripcion_distribucion=$nombre_area.'/'.$name_area_dis.' F/'.$nro_factura.' (R-'.$nro_recibo.') '.$personal.', '.$observaciones_dcc;
+				                		$descripcion_distribucion=$nombre_area.'/'.$name_area_dis.' F/'.$nro_factura.' (R-'.$nro_recibo.'),'.$personal.', '.$observaciones_dcc;
 			                            $monto_of=$monto_restante*$porcentaje/100;
 			                            if($debe_haber==1){ //preguntamps si pertenece a la columna debe o haber
 			                            	$sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','0','$cod_uo','$oficina_area','0','$monto_of','$descripcion_distribucion','$ordenDetalle')";
@@ -223,7 +223,7 @@ try{
 				                	$porcentaje=$rowTipoDistribucion['porcentaje'];
 				                	if($tipo==1){//oficina
 				                		$name_oficina_dis=abrevUnidad($oficina_area);
-				                		$descripcion_distribucion=$nombre_uo.'/'.$name_oficina_dis.' F/'.$nro_factura.' (R-'.$nro_recibo.') '.$personal.', '.$observaciones_dcc;
+				                		$descripcion_distribucion=$nombre_uo.'/'.$name_oficina_dis.' F/'.$nro_factura.' (R-'.$nro_recibo.'),'.$personal.', '.$observaciones_dcc;
 			                            
 			                            $monto_of=$monto_uo_distribuido*$porcentaje/100;
 			                            if($debe_haber==1){ //preguntamps si pertenece a la columna debe o haber
@@ -239,7 +239,7 @@ try{
 			                            }
 				                	}elseif($tipo==2){//area				                		
 				                		$name_area_dis=abrevArea($oficina_area);
-				                		$descripcion_distribucion=$nombre_area.'/'.$name_area_dis.' F/'.$nro_factura.' (R-'.$nro_recibo.') '.$personal.', '.$observaciones_dcc;
+				                		$descripcion_distribucion=$nombre_area.'/'.$name_area_dis.' F/'.$nro_factura.' (R-'.$nro_recibo.'),'.$personal.', '.$observaciones_dcc;
 			                            $monto_of=$monto_area_distribuido*$porcentaje/100;
 			                            if($debe_haber==1){ //preguntamps si pertenece a la columna debe o haber
 			                            	$sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','0','$cod_uo','$oficina_area','0','$monto_of','$descripcion_distribucion','$ordenDetalle')";
@@ -268,7 +268,7 @@ try{
 			                        $stmtOficina->bindColumn('oficina', $oficinaFac);
 			                        while ($rowOf = $stmtOficina->fetch()) 
 			                        {                                    
-			                            $descripcion_of=$oficinaFac.'/'.$centroCostosDN.' F/'.$nro_factura.' (R-'.$nro_recibo.') '.$personal.', '.$observaciones_dcc;
+			                            $descripcion_of=$oficinaFac.'/'.$centroCostosDN.' F/'.$nro_factura.' (R-'.$nro_recibo.'),'.$personal.', '.$observaciones_dcc;
 			                            $monto_of=$monto_restante*$porcentaje/100;
 			                            if($debe_haber==1){ //preguntamps si pertenece a la columna debe o haber
 			                            	$sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','0','$cod_unidadorganizacional','$centroCostosDN','0','$monto_of','$descripcion_of','$ordenDetalle')";
@@ -283,7 +283,7 @@ try{
 			                            }                                     
 			                        }
 			                    }else{
-			                        $descripcion_of=$nombre_uo.'/'.$nombre_area.' F/'.$nro_factura.' (R-'.$nro_recibo.') '.$personal.', '.$observaciones_dcc;	
+			                        $descripcion_of=$nombre_uo.'/'.$nombre_area.' F/'.$nro_factura.' (R-'.$nro_recibo.'),'.$personal.', '.$observaciones_dcc;	
 			                        if($debe_haber==1){ //preguntamps si pertenece a la columna debe o haber
 			                    		$sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','0','$cod_uo','$cod_area','0','$monto_restante','$descripcion_of','$ordenDetalle')";
 							            $stmtInsertDet = $dbh->prepare($sqlInsertDet);
@@ -327,7 +327,7 @@ try{
 			        while ($rowFac = $stmtRetenciones->fetch()) 
 			        {                            
 			            //recalculando monto
-			            $descripcionIT=$nombre_uo.' SF (R-'.$nro_recibo.') '.$personal.', '.$observaciones_dcc;                                
+			            $descripcionIT=$nombre_uo.' SF (R-'.$nro_recibo.'),'.$personal.', '.$observaciones_dcc;                                
 			            $monto_it=$monto_recalculado*$porcentaje_retencion/100;            
 			            //las retenciones
 			            if($cod_cuenta_retencion>0){
