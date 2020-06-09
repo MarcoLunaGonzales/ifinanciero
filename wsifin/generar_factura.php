@@ -32,7 +32,7 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
     //require_once 'configModule.php';
     require_once __DIR__.'/../functions.php';
     require_once __DIR__.'/../functionsGeneral.php';
-    // require_once 'executeComprobante_factura.php';
+    require_once 'executeComprobante_factura.php';
 
     $dbh = new Conexion();
     $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//try
@@ -84,8 +84,8 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
             }else{
                 $fechaFactura_x=date('Y-m-d H:i:s');
                 //generamos el comprobante
-                // $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$nro_correlativo);
-                $cod_comprobante=0;
+                $cod_comprobante=ejecutarComprobanteSolicitud($nitciCliente,$razonSocial,$items,$monto_total,$nro_correlativo);
+                // $cod_comprobante=0;
                 //echo "auto:".$nroAutorizacion." - nro_corr:".$nro_correlativo." - nitCliente:".$nitCliente." - fechaFactura:".$fechaFactura." - totalFinalRedondeado:".$totalFinalRedondeado." - llaveDosificacion:".$llaveDosificacion;
                 $controlCode = new ControlCode();
                 $code = $controlCode->generate($nroAutorizacion,//Numero de autorizacion

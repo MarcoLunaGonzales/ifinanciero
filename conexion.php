@@ -6,7 +6,7 @@ private $host = 'localhost';
 private $nombre_de_base = 'ibnfinanciero50';
 private $usuario = 'root';
 private $contrasena = '';
-private $port = '3306';
+private $port = '3307';
 
 
 public function __construct() {

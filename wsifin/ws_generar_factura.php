@@ -78,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $mensaje = "Id Paralela incorrecta";
                     }elseif(!check($fechaFactura) || $fechaFactura!=$fechaFactura_actual){
                         $estado=3;
-                        $mensaje = "Fecha incorrecta o no actual";
+                        $mensaje = "Fecha incorrecta o no actual:".$fechaFactura_actual;
                     }elseif($nitciCliente==null || $nitciCliente<0 || !is_numeric($nitciCliente)){
                         $estado=4;
                         $mensaje = "Nit incorrecto";
