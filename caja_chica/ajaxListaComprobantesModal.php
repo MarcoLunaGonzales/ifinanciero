@@ -2,10 +2,12 @@
 
 require_once '../conexion.php';
 require_once '../styles.php';
-require_once '../layouts/bodylogin2.php';
+// require_once '../layouts/bodylogin2.php';
 require_once '../functionsGeneral.php';
 require_once '../functions.php';
 require_once 'configModule.php';
+
+// session_start();
 
 $dbh = new Conexion();
 
@@ -13,8 +15,8 @@ $sqlX="SET NAMES 'utf8'";
 $stmtX = $dbh->prepare($sqlX);
 $stmtX->execute();
 set_time_limit(300);
-// session_start();
-// $globalAdmin=$_SESSION["globalAdmin"];
+session_start();
+$globalGestion=$_SESSION['globalNombreGestion'];
 // $globalUnidad=$_SESSION["globalUnidad"];
 // $globalArea=$_SESSION["globalArea"];
 $cod_uo=$_GET['cod_uo'];
@@ -32,7 +34,7 @@ $codigos_cuenta_cajaschica=obtenerValorConfiguracion(54);
 $sql="SELECT (select u.abreviatura from unidades_organizacionales u where u.codigo=c.cod_unidadorganizacional)unidad, c.cod_gestion, 
   (select m.nombre from monedas m where m.codigo=c.cod_moneda)moneda, 
   (select t.abreviatura from tipos_comprobante t where t.codigo=c.cod_tipocomprobante)tipo_comprobante, c.fecha, c.numero,c.codigo, c.glosa,ec.nombre,c.cod_estadocomprobante
-  from comprobantes c, estados_comprobantes ec, comprobantes_detalle cd where c.cod_estadocomprobante=ec.codigo and cd.cod_comprobante=c.codigo and c.cod_estadocomprobante!=2 and cd.cod_cuenta in ($codigos_cuenta_cajaschica)";  
+  from comprobantes c, estados_comprobantes ec, comprobantes_detalle cd where c.cod_estadocomprobante=ec.codigo and cd.cod_comprobante=c.codigo and c.cod_estadocomprobante!=2 and cod_gestion=$globalGestion and cd.cod_cuenta in ($codigos_cuenta_cajaschica)";  
 
 if($cod_uo!=""){
   $sql.=" and c.cod_unidadorganizacional in ($cod_uo)";
