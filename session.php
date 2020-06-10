@@ -103,7 +103,7 @@ if($banderaLogin==1 || $tipoLogin==1){
 		$_SESSION['logueado']=1;
 		$_SESSION['globalPerfil']=$perfil;
 
-		if($codigo==90 || $codigo==89 || $codigo==227 || $codigo==195){
+		if($codigo==90 || $codigo==89 || $codigo==227 || $codigo==195 || $codigo==72){
 			$_SESSION['globalAdmin']=1;
 			$_SESSION['globalUnidad']="5";
 			$_SESSION['globalNombreUnidad']="RLP";
