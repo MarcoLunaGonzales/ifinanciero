@@ -15,7 +15,7 @@ $sKey = "837b8d9aa8bb73d773f5ef3d160c9b17"; // llave de acuerdo al sistema
 		// abrimos la sesión cURL
 		$ch = curl_init();
 		// definimos la URL a la que hacemos la petición
-		curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibno/catalogo/ws-catalogo-nal.php");
+		curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibnob/catalogo/ws-catalogo-nal.php");
 		// indicamos el tipo de petición: POST
 		curl_setopt($ch, CURLOPT_POST, TRUE);
 		// definimos cada uno de los parámetros
