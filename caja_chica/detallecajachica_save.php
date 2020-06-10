@@ -17,20 +17,20 @@ try {
     $cod_tcc = $_POST["cod_tcc"];
     $cod_cc = $_POST["cod_cc"];
 
-    $cod_cuenta=$_POST["cuenta_auto_id"];    
-    $cod_comprobante=$_POST["comprobante"];
-    $cuenta_auxiliar1=$_POST["cuenta_auxiliar1"];
-    $cod_retencion = $_POST["tipo_retencion"];
-    $numero = $_POST["numero"];
-    $monto = $_POST["monto"];
-    $fecha = $_POST["fecha"];
-    $cod_personal = $_POST["cod_personal"];
-    $observaciones = $_POST["observaciones"];
+    $cod_cuenta=trim($_POST["cuenta_auto_id"]);    
+    $cod_comprobante=trim($_POST["comprobante"]);
+    $cuenta_auxiliar1=trim($_POST["cuenta_auxiliar1"]);
+    $cod_retencion = trim($_POST["tipo_retencion"]);
+    $numero = trim($_POST["numero"]);
+    $monto = trim($_POST["monto"]);
+    $fecha = trim($_POST["fecha"]);
+    $cod_personal = trim($_POST["cod_personal"]);
+    $observaciones = trim($_POST["observaciones"]);
 
-    $cod_uo = $_POST["cod_uo"];
-    $cod_area = $_POST["cod_area"];
-    $nro_recibo = $_POST["nro_recibo"];
-    $cod_proveedores = $_POST["proveedores"];
+    $cod_uo = trim($_POST["cod_uo"]);
+    $cod_area = trim($_POST["cod_area"]);
+    $nro_recibo = trim($_POST["nro_recibo"]);
+    $cod_proveedores = trim($_POST["proveedores"]);
     if(isset($_POST["cod_actividad"]))$cod_actividad_sw = $_POST["cod_actividad"];
     else $cod_actividad_sw=0;
     

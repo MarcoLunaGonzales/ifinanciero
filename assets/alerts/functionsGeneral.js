@@ -10657,17 +10657,19 @@ function agregaformEnviarCorreo(datos){
   document.getElementById("codigo_facturacion").value=d[0];
   document.getElementById("cod_solicitudfacturacion").value=d[1];
   document.getElementById("nro_factura").value=d[2];
-  var correos=d[3];
+  document.getElementById("correo_destino").value=d[3];
+  document.getElementById("razon_social").value=d[4];  
+  // var correos=d[3];
   //ajax correos
-  var contenedor = document.getElementById('contenedor_correos');
-  ajax=nuevoAjax();
-  ajax.open('GET', 'simulaciones_servicios/ajax_facturas_correos.php?correos='+correos,true);
-  ajax.onreadystatechange=function() {
-    if (ajax.readyState==4) {
-      contenedor.innerHTML = ajax.responseText;
-    }
-  }
-  ajax.send(null);
+  // var contenedor = document.getElementById('contenedor_correos');
+  // ajax=nuevoAjax();
+  // ajax.open('GET', 'simulaciones_servicios/ajax_facturas_correos.php?correos='+correos,true);
+  // ajax.onreadystatechange=function() {
+  //   if (ajax.readyState==4) {
+  //     contenedor.innerHTML = ajax.responseText;
+  //   }
+  // }
+  // ajax.send(null);
 
 }
 

@@ -77,11 +77,11 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             $stmtCorreos->bindColumn('correo', $correo);
                             $correos_string= '';                            
                             while ($row = $stmtCorreos->fetch(PDO::FETCH_BOUND)) {
-                              $correos_string.=$correo.',';
+                              if($correos_string!=null || $correos_string!='' || $correos_string!=' '){
+                                $correos_string.=$correo.',';
+                              }
                             }
-                            
-
-                            //colores de estados                         
+                            //colores de estados
                             switch ($cod_estadofactura) {
                               case 1://activo
                                 $label='<span class="badge badge-success">';
@@ -94,7 +94,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                 break;
                                                           
                             }
-                            $datos=$codigo_factura.'/'.$cod_solicitudfacturacion.'/'.$nro_factura.'/'.$correos_string;
+                            $datos=$codigo_factura.'/'.$cod_solicitudfacturacion.'/'.$nro_factura.'/'.$correos_string.'/'.$razon_social;
                             ?>
                           <tr>
                             <!-- <td align="center"><?=$index;?></td> -->
@@ -150,7 +150,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 <!-- Modal enviar correo-->
 <div class="modal fade" id="modalEnviarCorreo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content" style="background-color:#b7c8bf">
+    <div class="modal-content" style="background-color:#e2e6e7">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title" id="myModalLabel">Enviar Correo</h4>
@@ -158,17 +158,37 @@ $globalAdmin=$_SESSION["globalAdmin"];
       <div class="modal-body">
         <input type="hidden" name="codigo_facturacion" id="codigo_facturacion" value="0">
         <input type="hidden" name="cod_solicitudfacturacion" id="cod_solicitudfacturacion" value="0">
-        <input type="hidden" name="nro_factura" id="nro_factura" value="0">
+        <!-- <input type="text" name="nro_factura" id="nro_factura" value="0">
+        <input type="text" name="razon_social" id="razon_social" value="0"> -->
         <?php
           // $texto_cuerpo="Estimado cliente,\n\n Le Hacemos el envío de la Factura.\n\nSaludos.";
           // $asunto="ENVIO FACTURA - IBNORCA";
 
         ?>
-        <h6> Correo Destino : </h6>
+
+        <div class="row">
+          <label class="col-sm-1 col-form-label" style="color:#000000"><small>Nro. Factura</small></label>
+          <div class="col-sm-2">
+            <div class="form-group" >
+              <input type="text" class="form-control" name="nro_factura" id="nro_factura" value="0" readonly="true" style="background-color:#e2d2e0">              
+            </div>
+          </div>
+          <label class="col-sm-1 col-form-label" style="color:#000000"><small>Razón<br>Social</small></label>
+          <div class="col-sm-8">
+            <div class="form-group" >              
+              <input type="text" class="form-control" name="razon_social" id="razon_social" value="0" readonly="true" style="background-color:#e2d2e0"> 
+            </div>
+          </div>
+        </div>        
         <!-- <input class="form-control" type="email" name="correo_destino" id="correo_destino" required="true" value="" /> -->
         <div class="row">
-          <div class="col-sm-12">
-            <div class="form-group" id="contenedor_correos" >
+          <div class="col-sm-12" >
+            <h6> Correo Destino : </h6>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12" style="background-color:#FFFFFF">
+            <div class="form-group" >
               <input type="text" name="correo_destino" id="correo_destino" class="form-control tagsinput" data-role="tagsinput" data-color="info" required="true" >  
             </div>
           </div>

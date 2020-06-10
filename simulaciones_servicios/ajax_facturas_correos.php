@@ -1,5 +1,5 @@
 <?php
-require_once '../styles.php';
+
 
 
 $correos=$_GET['correos'];

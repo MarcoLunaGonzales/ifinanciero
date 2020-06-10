@@ -1,7 +1,6 @@
 <?php
 function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 	require_once __DIR__.'/../conexion.php';
-
 	if($tipo_admin==1){
 		require '../assets/phpqrcode/qrlib.php';
 		require_once '../assets/libraries/CifrasEnLetras.php';
@@ -18,10 +17,9 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 	// $auxiliar = $_GET["tipo"];
 
 	$codigo = $codigo;
-	$auxiliar =$auxiliar; //de dónde llega la solicitud para impresión 1=lista facturas (cod_factura) / 2=lista solicitudes (cod_sol_Fact)
-	$tipo_admin=$tipo_admin;//1 original cliente, 2 copia contabilidad pantalla, 3 copia contabilidad
+	$auxiliar =$auxiliar; //de dónde llega la solicitud para impresión 1=lista facturas (cod_factura) / 2=lista solicitudes (cod_sol_Fact)//3=lista facturas (cod_factura)tienda virtual
+	$tipo_admin=$tipo_admin;//1 original cliente, 2 original cliente pantalla, 3 copia contabilidad
 	$tipo_impresion=2;//tipo de impresión 1 sin detalles, 2 detalladamente
-
 	try {
 		if($auxiliar==1){
 		    $stmtInfo = $dbh->prepare("SELECT sf.*,(select t.nombre from clientes t where t.codigo=sf.cod_cliente) as nombre_cliente FROM facturas_venta sf where sf.codigo=$codigo");
@@ -45,7 +43,7 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 		    $importe = $resultInfo['importe'];
 		    $observaciones = $resultInfo['observaciones'];
 		    $nombre_cliente = $resultInfo['nombre_cliente'];
-		}else{
+		}elseif($auxiliar==2){
 		    $stmtInfo = $dbh->prepare("SELECT sf.* FROM facturas_venta sf  where sf.cod_solicitudfacturacion=$codigo");
 		    $stmtInfo->execute();
 		    $resultInfo = $stmtInfo->fetch();   
@@ -70,9 +68,32 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 		    $observaciones = $resultInfo['observaciones'];
 		    // $nombre_cliente = $resultInfo['nombre_cliente'];
 		    $nombre_cliente = $razon_social;
+		}else{
+			$stmtInfo = $dbh->prepare("SELECT sf.* FROM facturas_venta sf  where sf.codigo=$codigo");
+			$stmtInfo->execute();
+			$resultInfo = $stmtInfo->fetch();   
+			$cod_factura = $resultInfo['codigo']; 
+			$cod_solicitudfacturacion = $resultInfo['cod_solicitudfacturacion'];
+			$cod_unidadorganizacional = $resultInfo['cod_unidadorganizacional'];
+			$cod_area = $resultInfo['cod_area'];
+			$fecha_factura = $resultInfo['fecha_factura'];
+			$fecha_limite_emision = $resultInfo['fecha_limite_emision'];
+			$cod_cliente = $resultInfo['cod_cliente'];
+			$cod_personal = $resultInfo['cod_personal'];
+			$razon_social = $resultInfo['razon_social'];
+			$nit = $resultInfo['nit'];
+			$nro_factura = $resultInfo['nro_factura'];
+
+			$nro_autorizacion = $resultInfo['nro_autorizacion'];
+			$codigo_control = $resultInfo['codigo_control'];
+			$importe = $resultInfo['importe'];
+			// $descuento_bob = $resultInfo['descuento_bob'];
+			$importe=$importe;
+			$observaciones = $resultInfo['observaciones'];
+			// $nombre_cliente = $resultInfo['nombre_cliente'];
+			$nombre_cliente = $razon_social;
 		}
 		$nombre_ciudad =  obtenerCiudadDeUnidad($cod_unidadorganizacional);
-
 		$cantidad=1;
 		//para generar factura
 		$stmtDesCli = $dbh->prepare("SELECT sf.cantidad from facturas_ventadetalle sf where sf.cod_facturaventa=$cod_factura");
@@ -81,22 +102,6 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 		$stmt2DesCli->execute();
 		$stmt3DesCli = $dbh->prepare("SELECT sf.precio,sf.descuento_bob from facturas_ventadetalle sf where sf.cod_facturaventa=$cod_factura");
 		$stmt3DesCli->execute();
-		//copia cliente
-		$stmt = $dbh->prepare("SELECT sf.cantidad from facturas_ventadetalle sf where sf.cod_facturaventa=$cod_factura");
-		$stmt->execute();
-		$stmt2 = $dbh->prepare("SELECT sf.descripcion_alterna from facturas_ventadetalle sf where sf.cod_facturaventa=$cod_factura");
-		$stmt2->execute();
-		$stmt3 = $dbh->prepare("SELECT sf.precio,sf.descuento_bob from facturas_ventadetalle sf where sf.cod_facturaventa=$cod_factura");
-		$stmt3->execute();
-		//copia contabilidad
-		$stmt_conta = $dbh->prepare("SELECT sf.cantidad from facturas_ventadetalle sf where sf.cod_facturaventa=$cod_factura");
-		$stmt_conta->execute();
-		$stmt_conta2 = $dbh->prepare("SELECT sf.descripcion_alterna from facturas_ventadetalle sf where sf.cod_facturaventa=$cod_factura");
-		$stmt_conta2->execute();
-		$stmt_conta3 = $dbh->prepare("SELECT sf.precio,sf.descuento_bob from facturas_ventadetalle sf 
-		where sf.cod_facturaventa=$cod_factura");
-		$stmt_conta3->execute();
-
 		//primero guardamos la factura del cliente
 		$nit_empresa=obtenerValorConfiguracionFactura(9);
 		$html = '';
