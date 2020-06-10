@@ -10254,6 +10254,7 @@ function listarAtributo(){
   var table = $('<table>').addClass('table');
   table.addClass("table-bordered");
   table.addClass("table-sm table-striped");
+  table.addClass("small");
   var titulos = $('<tr>').addClass('bg-info text-white');
      titulos.append($('<th>').addClass('').text('#'));
      titulos.append($('<th>').addClass('').text('NOMBRE'));
@@ -10327,7 +10328,7 @@ function listarAtributo(){
        if($("#sinEdicionModal").length>0){
          row.append($('<td>').addClass('text-right small').html(''));
        }else{
-         row.append($('<td>').addClass('text-right small').html('<button title="Editar" class="btn btn-sm btn-fab btn-success" onclick="editarAtributo('+i+');"><i class="material-icons" >edit</i></button><button class="btn btn-sm btn-fab btn-danger" title="Eliminar" onclick="removeAtributo('+i+');"><i class="material-icons">delete</i></button>'));    
+         row.append($('<td>').addClass('text-right small').html('<div class="btn-group"><button title="Editar" class="btn btn-sm btn-fab btn-success" onclick="editarAtributo('+i+');"><i class="material-icons" >edit</i></button><button class="btn btn-sm btn-fab btn-danger" title="Eliminar" onclick="removeAtributo('+i+');"><i class="material-icons">delete</i></button></div>'));    
        }
      
      table.append(row);

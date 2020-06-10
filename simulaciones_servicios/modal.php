@@ -881,7 +881,7 @@
                                   
                               </tbody>
                                   <tr>
-                                     <td colspan="5" class="text-center font-weight-bold">Total</td>
+                                     <td colspan="6" class="text-center font-weight-bold">Total</td>
                                      <td id="modal_totalmontoserv<?=$an?>" class="text-right"><?=number_format($modal_totalmontopre,2, ',', '')?></td>
                                      <td id="modal_totalmontoservUSD<?=$an?>" class="text-right"><?=number_format($modal_totalmontopre/$usd,2,', ','')?></td>
                                      <td id="modal_totalmontoservtotal<?=$an?>" class="text-right font-weight-bold"><?=number_format($modal_totalmontopretotal,2, ',', '')?></td>    
