@@ -565,6 +565,27 @@
         }
       }     
     });
+
+    $("#buttonSubmitFalse").on("click",function(){
+          swal({
+        title: '¿Estás Seguro Guardar?',
+        text: "El Monto Solicitado es Mayor al Presupuestado",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonClass: 'btn btn-success',
+        cancelButtonClass: 'btn btn-danger',
+        confirmButtonText: 'Si',
+        cancelButtonText: 'No',
+        buttonsStyling: false
+      }).then((result) => {
+          if (result.value) {
+            $( "#buttonSubmit" ).click();
+            return(true);
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            return(false);
+          }
+        })
+    });
     $("#formSolDet").submit(function(e) {
       var mensaje="";
       /*if($("#cantidad_filas").val()==0){
@@ -601,7 +622,7 @@
            Swal.fire("Informativo!", "Hay filas que no estan relacionadas a una cuenta!", "warning"); 
            return false;
           }else{
-           //para poner la retencion iva si tiene al menos una factura..
+               //para poner la retencion iva si tiene al menos una factura..
            for (var i = 0; i < $("#cantidad_filas").val(); i++) {
              if(itemFacturas[i].length!=0){
               $('#cod_retencion'+(i+1)).val($('#cod_configuracioniva').val()); 
@@ -630,7 +651,6 @@
             .attr('name', 'archivos_detalle')
             .attr('value', JSON.stringify(itemDocumentosDetalle))
             .appendTo('#formSolDet');
-
 
           }       
         }

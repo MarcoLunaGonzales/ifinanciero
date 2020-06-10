@@ -660,6 +660,7 @@ function saveFactura(){
     tazaFac: tazacero,
     tipoFac: tipocompra
     }
+    itemFacturas[index-1]=[];
     itemFacturas[index-1].push(factura);
     //listarFact(index);
     $("#nfac"+(index)).html(itemFacturas[index-1].length);
@@ -3708,6 +3709,9 @@ function cargarDatosCuenta(){
 
 function addSolicitudDetalle(obj,tipo) {
   var tipoSolicitud=$("#tipo_solicitud").val();
+  if($("#cod_solicitud").length>0){
+    tipoSolicitud=1;
+  }
   if(tipoSolicitud>0){
    var codigoSol=$("#cod_solicitud").val();
       numFilas++;
@@ -10314,7 +10318,7 @@ function listarAtributo(){
            if(itemAtributosDias[j].codigo_atributo==itemAtributos[i].codigo&&itemAtributosDias[j].anio==k){
             sumaDias[k]+=parseFloat(itemAtributosDias[j].dias);
             row.append('<td><input id="sitio_dias'+j+'" onchange="cambiarMontoDiasSitio('+j+')" onkeypress="cambiarMontoDiasSitio('+j+')" onkeyup="cambiarMontoDiasSitio('+j+')" class="form-control" type="number" value="'+itemAtributosDias[j].dias+'"></td>');  
-            row.append('<td><select data-actions-box="true" class="form-control selectpicker form-control-sm" multiple data-style="fondo-boton fondo-boton-active" name="auditores'+j+'[]" id="auditores'+j+'">'+
+            row.append('<td><select title="-" data-actions-box="true" class="form-control selectpicker form-control-sm" multiple data-style="fondo-boton fondo-boton-active" name="auditores'+j+'[]" id="auditores'+j+'">'+
               $("#auditores"+k+"EEEE"+itemAtributosDias[j].codigo_atributo).html()+
               '</select></td>');  
             //alerta 2 0 3
@@ -11984,6 +11988,17 @@ function calcularTotalesSolicitud(){
 
     document.getElementById("total_presupuestado").value=redondeo(sumapres,2).toFixed(2);  
     document.getElementById("total_solicitado").value=redondeo(sumasol,2).toFixed(2);  
+    if($("#total_presupuestado").val()>=$("#total_solicitado").val()){
+      if(!($("#buttonSubmitFalse").hasClass("d-none"))){
+        $("#buttonSubmitFalse").addClass("d-none");
+        $("#buttonSubmit").removeClass("d-none");
+      }
+    }else{
+      if($("#buttonSubmitFalse").hasClass("d-none")){
+        $("#buttonSubmitFalse").removeClass("d-none");
+        $("#buttonSubmit").addClass("d-none");
+      }
+    }
 }
 
 
@@ -13203,15 +13218,20 @@ function agregarTipoPagoProveedorDetalle(fila){
 }
 function guardarFormaPagoSolicitud(){
   var fila = $("#fila_pago").val();
+  if($("#tipo_pagoproveedor").val()>0&&$("#nombre_beneficiario").val()!=""&&$("#apellido_beneficiario").val()!=""){
   $("#cod_cuentaBancaria"+fila).val($("#cuenta_bancaria").val());
   $("#cod_tipopago"+fila).val($("#tipo_pagoproveedor").val());
   $("#nombre_beneficiario"+fila).val($("#nombre_beneficiario").val());
   $("#apellido_beneficiario"+fila).val($("#apellido_beneficiario").val());
   $("#cuenta_beneficiario"+fila).val($("#cuenta_beneficiario").val());
-  if(!($("#nben"+fila).hasClass("estado"))){
+   if(!($("#nben"+fila).hasClass("estado"))){
     $("#nben"+fila).addClass("estado");
+   }
+   $("#modalTipoPagoSolicitud").modal("hide");
+  }else{
+   Swal.fire("Informativo!", "Debe llenar los campos requeridos!", "warning"); 
   }
-  $("#modalTipoPagoSolicitud").modal("hide");
+  
 }
 
 function quitarFormaPagoProveedor(fila){

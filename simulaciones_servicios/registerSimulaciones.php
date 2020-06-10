@@ -143,24 +143,7 @@ $dbh = new Conexion();
                       <div class="" id="lista_precios">
                       </div>
                       <div id="productos_div" class="d-none">
-                      <div class="row">
-                       <label class="col-sm-2 col-form-label">Productos</label>
-                       <div class="col-sm-9">
-                        <div class="form-group">
-                          <!--<input type="text" value="" class="form-control tagsinput" name="productos" id="productos" data-role="tagsinput" required data-color="warning">-->
-                          <div id="divResultadoListaAtributosProd">
-                            <div class="">
-                              <center><h4><b>SIN REGISTROS</b></h4></center>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col-sm-1">
-                           <button title="Agregar Sitio" type="button" name="add" class="btn btn-warning btn-round btn-fab" onClick="agregarAtributoAjax()"><i class="material-icons">add</i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="row">
+                        <div class="row">
                        <label class="col-sm-2 col-form-label">Regi&oacute;n</label>
                        <div class="col-sm-7">
                         <div class="row">
@@ -258,25 +241,28 @@ $dbh = new Conexion();
                         </div>
                        </div>
                       </div><!--row-->
-                      </div>
-                      <div id="sitios_div" class="d-none">
+                      <br>
                       <div class="row">
-                       <label class="col-sm-2 col-form-label">Sitios</label>
+                       <label class="col-sm-2 col-form-label">Productos</label>
                        <div class="col-sm-9">
                         <div class="form-group">
-                          <!--<input type="readonly" value="" class="form-control tagsinput" name="sitios" id="sitios" data-role="tagsinput" required data-color="success">-->
-                          <div id="divResultadoListaAtributos">
+                          <!--<input type="text" value="" class="form-control tagsinput" name="productos" id="productos" data-role="tagsinput" required data-color="warning">-->
+                          <div id="divResultadoListaAtributosProd">
                             <div class="">
                               <center><h4><b>SIN REGISTROS</b></h4></center>
                             </div>
                           </div>
                         </div>
-                        </div>
-                        <div class="col-sm-1">
+                      </div>
+                      <div class="col-sm-1">
                            <button title="Agregar Sitio" type="button" name="add" class="btn btn-warning btn-round btn-fab" onClick="agregarAtributoAjax()"><i class="material-icons">add</i>
                             </button>
-                        </div>       
-                     </div>
+                        </div>
+                    </div>
+                    
+                      </div>
+                      <div id="sitios_div" class="d-none">
+                      
                      <div class="row">
                        <label class="col-sm-2 col-form-label">Objeto del Servicio</label>
                        <div class="col-sm-7">
@@ -336,6 +322,25 @@ $dbh = new Conexion();
                                 </div>  
                              </div>     
                         </div> 
+                     <br>
+                     <div class="row">
+                       <label class="col-sm-2 col-form-label">Sitios</label>
+                       <div class="col-sm-9">
+                        <div class="form-group">
+                          <!--<input type="readonly" value="" class="form-control tagsinput" name="sitios" id="sitios" data-role="tagsinput" required data-color="success">-->
+                          <div id="divResultadoListaAtributos">
+                            <div class="">
+                              <center><h4><b>SIN REGISTROS</b></h4></center>
+                            </div>
+                          </div>
+                        </div>
+                        </div>
+                        <div class="col-sm-1">
+                           <button title="Agregar Sitio" type="button" name="add" class="btn btn-warning btn-round btn-fab" onClick="agregarAtributoAjax()"><i class="material-icons">add</i>
+                            </button>
+                        </div>       
+                     </div>
+                     
                     </div>
                       
                       

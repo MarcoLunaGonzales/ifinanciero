@@ -115,10 +115,14 @@ $item_1=2708;
                            while ($row1 = $stmt1->fetch(PDO::FETCH_ASSOC)) {
                              $codigoServicio=$row1['codigo'];
                            }
+                      $numeroSolTitulo=$numeroSol;
+                       if(verificarMontoPresupuestadoSolicitadoSR($codigo)==1){
+                        $numeroSolTitulo='<a href="#" title="El Monto Solicitado es Mayor al Presupuestado" class="btn btn-warning btn-sm btn-round">'.$numeroSol.'</a>';
+                       }
 ?>
                         <tr>
                           <td><?=$unidad;?>- <?=$area;?></td>
-                          <td class="font-weight-bold"><?=$numeroSol;?></td>
+                          <td class="font-weight-bold"><?=$numeroSolTitulo;?></td>
                           <td><?=$codigoServicio;?></td>
                           <td><?=$nombreCliente;?></td>
                           <td><small><?=obtenerNombreConcatenadoProveedorDetalleSolicitudRecurso($codigo)?></small></td>
@@ -402,10 +406,14 @@ $item_1=2708;
                            while ($row1 = $stmt1->fetch(PDO::FETCH_ASSOC)) {
                              $codigoServicio=$row1['codigo'];
                            }
+                      $numeroSolTitulo=$numeroSol;
+                       if(verificarMontoPresupuestadoSolicitadoSR($codigo)==1){
+                        $numeroSolTitulo='<a href="#" title="El Monto Solicitado es Mayor al Presupuestado" class="btn btn-warning btn-sm btn-round">'.$numeroSol.'</a>';
+                       }
 ?>
                         <tr>
                           <td><?=$unidad;?> - <?=$area;?></td>
-                          <td class="font-weight-bold"><?=$numeroSol;?></td>
+                          <td class="font-weight-bold"><?=$numeroSolTitulo;?></td>
                           <td><?=$codigoServicio;?></td>
                           <td><?=$nombreCliente;?></td>
                           <td><small><?=obtenerNombreConcatenadoProveedorDetalleSolicitudRecurso($codigo)?></small></td>

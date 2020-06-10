@@ -6872,4 +6872,18 @@ function obtenerCodigoNorma(){
    }
    return($codigoNorma);
 }
+
+function verificarMontoPresupuestadoSolicitadoSR($codigo){
+  $dbh = new Conexion();
+   $valor=0;
+   $sql="SELECT sum(importe_presupuesto) as presupuesto,sum(importe) as solicitado FROM solicitud_recursosdetalle where cod_solicitudrecurso=$codigo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    if($row['presupuesto']<$row['solicitado']){
+      $valor=1;
+    }
+  }
+  return $valor;
+}
 ?>
