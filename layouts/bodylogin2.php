@@ -98,6 +98,20 @@
 
   <script type="text/javascript">
     $(document).ready(function() {
+        $('#example').DataTable({
+          "paging":   false,
+            "info":     false,
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            fixedHeader: {
+              header: true,
+              footer: true
+            }
+          
+        });
+
+
         $('#tablePaginatorReport ').DataTable({
             "paging":   false,
             "info":     false,

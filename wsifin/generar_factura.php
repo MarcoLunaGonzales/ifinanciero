@@ -44,8 +44,8 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
     try{
 
         $cod_solicitudfacturacion = 0;
-        $cod_unidadorganizacional = obtenerCodUnidadSucursal($sucursalId);
-        $cod_area = 0;
+        $cod_uo_solicitud = 5;
+        $cod_area_solicitud = 13;
         if($pasarelaId==1){
             $cod_tipoobjeto = 1933;
         }else{

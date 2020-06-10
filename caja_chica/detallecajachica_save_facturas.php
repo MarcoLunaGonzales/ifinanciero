@@ -11,10 +11,10 @@ $dbh = new Conexion();
 // $codGestion=$_POST["gestion"];
 // $codUnidad=$_POST["unidad_organizacional"];
 
-$cantidad_filas_ccd=$_POST["cantidad_filas_ccd"];
-$cod_cc=$_POST["cod_cajachica"];
-$cod_tcc=$_POST["cod_tcc"];
-$cod_ccd=$_POST["cod_ccd"];
+$cantidad_filas_ccd=trim($_POST["cantidad_filas_ccd"]);
+$cod_cc=trim($_POST["cod_cajachica"]);
+$cod_tcc=trim($_POST["cod_tcc"]);
+$cod_ccd=trim($_POST["cod_ccd"]);
 $facturas= json_decode($_POST['facturas']);
 // $estadosCuentas= json_decode($_POST['estados_cuentas']);
 session_start();
@@ -31,20 +31,20 @@ $suma_importe_fac=0;
 $flagSuccessDetalle2=false;
 $flagSuccess=false;
 for($j=0;$j<$nF;$j++){
-	  $nit=$facturas[$cantidad_filas_ccd-1][$j]->nit;
-	  $nroFac=$facturas[$cantidad_filas_ccd-1][$j]->nroFac;
+	  $nit=trim($facturas[$cantidad_filas_ccd-1][$j]->nit);
+	  $nroFac=trim($facturas[$cantidad_filas_ccd-1][$j]->nroFac);
 	  
-	  $fecha=$facturas[$cantidad_filas_ccd-1][$j]->fechaFac;
+	  $fecha=trim($facturas[$cantidad_filas_ccd-1][$j]->fechaFac);
 	  $porciones = explode("/", $fecha);
 	  $fechaFac=$porciones[2]."-".$porciones[1]."-".$porciones[0];
 	  
-	  $razonFac=$facturas[$cantidad_filas_ccd-1][$j]->razonFac;
-	  $impFac=$facturas[$cantidad_filas_ccd-1][$j]->impFac;	  
-	  $autFac=$facturas[$cantidad_filas_ccd-1][$j]->autFac;
-	  $conFac=$facturas[$cantidad_filas_ccd-1][$j]->conFac;
-    $exeFac=$facturas[$cantidad_filas_ccd-1][$j]->exeFac;
-    $iceFac=$facturas[$cantidad_filas_ccd-1][$j]->iceFac;
-    $tasaFac=$facturas[$cantidad_filas_ccd-1][$j]->tasaFac;
+	  $razonFac=trim($facturas[$cantidad_filas_ccd-1][$j]->razonFac);
+	  $impFac=trim($facturas[$cantidad_filas_ccd-1][$j]->impFac);	  
+	  $autFac=trim($facturas[$cantidad_filas_ccd-1][$j]->autFac);
+	  $conFac=trim($facturas[$cantidad_filas_ccd-1][$j]->conFac);
+    $exeFac=trim($facturas[$cantidad_filas_ccd-1][$j]->exeFac);
+    $iceFac=trim($facturas[$cantidad_filas_ccd-1][$j]->iceFac);
+    $tasaFac=trim($facturas[$cantidad_filas_ccd-1][$j]->tasaFac);
 
   $suma_importe_fac=$suma_importe_fac+$impFac;
 

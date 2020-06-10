@@ -11,16 +11,16 @@ $dbh = new Conexion();
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//para mostrar errores en la ejecucion
 
 try {
-    $codigo = $_POST["codigo"];
-    $cod_tcc = $_POST["cod_tcc"];
-    $cod_cc = $_POST["cod_cc"];
+    $codigo = trim($_POST["codigo"]);
+    $cod_tcc = trim($_POST["cod_tcc"]);
+    $cod_cc = trim($_POST["cod_cc"]);
 
-    $monto = $_POST["monto"];
-    $fecha = $_POST["fecha"];
-    $cod_personal = $_POST["cod_personal"];
-    $observaciones = $_POST["observaciones"];
-    $cod_comprobante = $_POST["cod_comprobante"];
-    $cod_comprobante_detalle = $_POST["cod_comprobante_detalle"];
+    $monto = trim($_POST["monto"]);
+    $fecha = trim($_POST["fecha"]);
+    $cod_personal = trim($_POST["cod_personal"]);
+    $observaciones = trim($_POST["observaciones"]);
+    $cod_comprobante = trim($_POST["cod_comprobante"]);
+    $cod_comprobante_detalle = trim($_POST["cod_comprobante_detalle"]);
 
     //sacamos monto de caja chica
     $stmtMCC = $dbh->prepare("SELECT monto_reembolso from caja_chica where  codigo =$cod_cc");
