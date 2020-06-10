@@ -2,7 +2,7 @@
 // SERVICIO WEB PARA FACTURAS
 
 //estados
-require 'htmlFacCliente.php';
+require '../simulaciones_servicios/htmlFacturaCliente.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $datos = json_decode(file_get_contents("php://input"), true); 
@@ -16,19 +16,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $mensaje="";
         if($accion=="ObtenerFacturaPDF"){
             try{
-            
-                $html=generarHTMLFacCliente($codFactura);
+                $html_x=generarHTMLFacCliente($codFactura,3,1);
+                $array_html=explode('@@@@@@', $html_x);
+                $html=$array_html[0];
                 if($html=="ERROR"){
-                 $estado=2;
-                 $mensaje = "Factura Inexistente";
-                 $resultado=array("estado"=>$estado, 
-                            "mensaje"=>$mensaje, 
-                            "factura64"=>array(),
-                            "totalComponentes"=>0);
+                    $estado=2;
+                    $mensaje = "Factura Inexistente";
+                    $resultado=array("estado"=>$estado, 
+                    "mensaje"=>$mensaje, 
+                    "factura64"=>array(),
+                    "totalComponentes"=>0);
                 }else{
-                $estado=1;
-                $factura = datosPDFFacturasVenta($html); 
-                $resultado=array(
+                    $estado=1;
+                    $factura = datosPDFFacturasVenta($html); 
+                    $resultado=array(
                             "estado"=>$estado,
                             "mensaje"=>"Factura Obtenida Correctamente", 
                             "factura64"=>$factura['base64'], 
