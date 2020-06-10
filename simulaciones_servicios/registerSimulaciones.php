@@ -456,7 +456,7 @@ $dbh = new Conexion();
                        <label class="col-sm-2 col-form-label">Pais</label>
                        <div class="col-sm-10">
                         <div class="form-group">
-                          <select name="pais_empresa" id="pais_empresa" data-live-search="true" onchange="seleccionarDepartamentoServicioSitio()" class="form-control form-control-sm selectpicker" data-style="btn btn-info">
+                          <select name="pais_empresa" id="pais_empresa" data-live-search="true" onchange="seleccionarDepartamentoServicioSitio(0)" class="form-control form-control-sm selectpicker" data-style="btn btn-info">
                             <option disabled selected value="####">--SELECCIONE--</option>
                              <?php
                                   foreach ($lista->lista as $listas) {

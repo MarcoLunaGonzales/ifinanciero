@@ -10410,14 +10410,14 @@ function guardarAtributoItem(){
       var pais="";
       var nom_pais="SIN PAIS";
     }
-    if($("#departamento_empresa").val()!=null){
+    if(!($("#departamento_empresa").val()==null||$("#departamento_empresa").val()=="")){
     var estado=$("#departamento_empresa").val().split("####")[0];
     var nom_estado=$("#departamento_empresa").val().split("####")[1];
     }else{
       var estado="";
       var nom_estado="SIN DEPTO";
     }
-    if($("#ciudad_empresa").val()!=null){
+    if(!($("#ciudad_empresa").val()==null||$("#ciudad_empresa").val()=="")){
     var ciudad=$("#ciudad_empresa").val().split("####")[0];
     var nom_ciudad=$("#ciudad_empresa").val().split("####")[1];
     }else{
@@ -10478,12 +10478,12 @@ function guardarAtributoItem(){
     itemAtributos[fila].norma_cod=norma_cod;
     itemAtributos[fila].marca=$('#modal_marca').val();
     itemAtributos[fila].sello=$('#modal_sello').val();
-    itemAtributos[fila].pais=$('#pais_empresa').val().split("####")[0];
-    itemAtributos[fila].estado=$('#departamento_empresa').val().split("####")[0];
-    itemAtributos[fila].ciudad=$('#ciudad_empresa').val().split("####")[0];
-    itemAtributos[fila].nom_pais=$('#pais_empresa').val().split("####")[1];
-    itemAtributos[fila].nom_estado=$('#departamento_empresa').val().split("####")[1];
-    itemAtributos[fila].nom_ciudad=$('#ciudad_empresa').val().split("####")[1];
+    itemAtributos[fila].pais=pais;
+    itemAtributos[fila].estado=estado;
+    itemAtributos[fila].ciudad=ciudad;
+    itemAtributos[fila].nom_pais=nom_pais;
+    itemAtributos[fila].nom_estado=nom_estado;
+    itemAtributos[fila].nom_ciudad=nom_ciudad;
     /*if(($("#productos_div").hasClass("d-none"))){
       
     }*/   
