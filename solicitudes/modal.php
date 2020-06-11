@@ -87,7 +87,7 @@
           <div class="card-body">
             <div class="col-sm-12">
               <div class="row">
-                <label class="col-sm-2 col-form-label" style="color: #4a148c;">Tipo Pago</label>
+                <label class="col-sm-2 col-form-label" style="color: #4a148c;">Tipo Pago (<b class="text-danger">*</b>)</label>
                 <div class="col-sm-4">
                   <div class="form-group">
                      <select class="selectpicker form-control form-control-sm" name="tipo_pagoproveedor" id="tipo_pagoproveedor" data-style="btn btn-primary">                                  
@@ -129,14 +129,14 @@
                 </div>                          
               </div>
                <div class="row">                      
-                    <label class="col-sm-2 col-form-label" style="color: #4a148c;">Nombre Beneficiario</label>
+                    <label class="col-sm-2 col-form-label" style="color: #4a148c;">Nombre Beneficiario (<b class="text-danger">*</b>)</label>
                     <div class="col-sm-4">
                       <div class="form-group">  
                            <input class="form-control" type="text" name="nombre_beneficiario" id="nombre_beneficiario" required="true">                                                                                                                       
                        </div>
                     </div>
                     <div class="col-sm-1"></div>
-                    <label class="col-sm-2 col-form-label" style="color: #4a148c;">Apellido Beneficiario</label>
+                    <label class="col-sm-2 col-form-label" style="color: #4a148c;">Apellido Beneficiario (<b class="text-danger">*</b>)</label>
                     <div class="col-sm-3">
                       <div class="form-group">  
                            <input class="form-control" type="text" name="apellido_beneficiario" id="apellido_beneficiario" required="true">                                                                                                                       
@@ -717,7 +717,7 @@
                         $stmtRetencion->execute();
                         $contRetencion=0;
                         while ($row = $stmtRetencion->fetch(PDO::FETCH_ASSOC)) {
-                           $nombreX=$row['nombre'];
+                           $nombreX=$row['abreviatura'];
                            $codigoX=$row['codigo'];
 ?>
                         <tr>

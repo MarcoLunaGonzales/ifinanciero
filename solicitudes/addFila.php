@@ -191,16 +191,19 @@
                                autocompletar("partida_cuenta"+<?=$idFila;?>,"partida_cuenta_id"+<?=$idFila;?>,array_cuenta);
                             </script>
              <?php  
-                  $stmt = $dbh->prepare("SELECT * FROM facturas_compra where cod_solicitudrecursodetalle=$codDetalleX");
-                      $stmt->execute();
-                      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                            $nit=$row['nit'];
-                            $factura=$row['nro_factura'];
-                            $fechaFac=$row['fecha'];
-                            $razon=$row['razon_social'];
-                            $importe=$row['importe'];
-                            $exento=$row['exento'];
-                            $autorizacion=$row['nro_autorizacion'];
-                            $control=$row['codigo_control'];
-                            ?><script>abrirFactura(<?=$idFila?>,'<?=$nit?>',<?=$factura?>,'<?=$fechaFac?>','<?=$razon?>',<?=$importe?>,<?=$exento?>,'<?=$autorizacion?>','<?=$control?>');</script><?php
+                  $stmtFacturas = $dbh->prepare("SELECT * FROM facturas_compra where cod_solicitudrecursodetalle=$codDetalleX");
+                      $stmtFacturas->execute();
+                      while ($rowFacturas = $stmtFacturas->fetch(PDO::FETCH_ASSOC)) {
+                            $nit=$rowFacturas['nit'];
+                            $factura=$rowFacturas['nro_factura'];
+                            $fechaFac=$rowFacturas['fecha'];
+                            $razon=$rowFacturas['razon_social'];
+                            $importe=$rowFacturas['importe'];
+                            $exento=$rowFacturas['exento'];
+                            $tipoFac=$rowFacturas['tipo_compra'];
+                            $iceFac=$rowFacturas['ice'];
+                            $tasaFac=$rowFacturas['tasa_cero'];
+                            $autorizacion=$rowFacturas['nro_autorizacion'];
+                            $control=$rowFacturas['codigo_control'];
+                            ?><script>abrirFactura(<?=$idFila?>,'<?=$nit?>',<?=$factura?>,'<?=$fechaFac?>','<?=$razon?>',<?=$importe?>,<?=$exento?>,'<?=$autorizacion?>','<?=$control?>','<?=$iceFac?>','<?=$tipoFac?>','<?=$tasaFac?>');</script><?php
                         } ?>

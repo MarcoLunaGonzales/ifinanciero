@@ -19,8 +19,8 @@ $Objeto_detalle = new stdClass();
 $Objeto_detalle->suscripcionId = 815;
 $Objeto_detalle->pagoCursoId = 0;
 $Objeto_detalle->detalle = 'NB.ISO 27000:2018';
-$Objeto_detalle->precioUnitario = 150.00;
-$Objeto_detalle->cantidad = 3;
+$Objeto_detalle->precioUnitario = 75.00;
+$Objeto_detalle->cantidad = 7;
 
 $Array= array($Objeto_detalle);
 
@@ -28,9 +28,9 @@ $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey,
               "accion"=>"GenerarFactura", //nombre de la accion
               "sucursalId"=>1, // ID Sucursal
               "pasarelaId"=>1, // pasalela
-              "fechaFactura"=>'2020-06-09', // fecha a factura
-              "nitciCliente"=>4879531, //nit o ci de cliente
-              "razonSocial"=>'Quelali', //razon social
+              "fechaFactura"=>'2020-06-10', // fecha a factura
+              "nitciCliente"=>5952134, //nit o ci de cliente
+              "razonSocial"=>'Salinas', //razon social
               "importeTotal"=>1000, //importe total
               "items"=>$Array // array con el detalle           
               );

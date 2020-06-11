@@ -660,6 +660,7 @@ function saveFactura(){
     tazaFac: tazacero,
     tipoFac: tipocompra
     }
+    itemFacturas[index-1]=[];
     itemFacturas[index-1].push(factura);
     //listarFact(index);
     $("#nfac"+(index)).html(itemFacturas[index-1].length);
@@ -3708,6 +3709,9 @@ function cargarDatosCuenta(){
 
 function addSolicitudDetalle(obj,tipo) {
   var tipoSolicitud=$("#tipo_solicitud").val();
+  if($("#cod_solicitud").length>0){
+    tipoSolicitud=1;
+  }
   if(tipoSolicitud>0){
    var codigoSol=$("#cod_solicitud").val();
       numFilas++;
@@ -10219,6 +10223,7 @@ function listarAtributo(){
   var table = $('<table>').addClass('table');
   table.addClass("table-bordered");
   table.addClass("table-sm table-striped");
+  table.addClass("small");
   var titulos = $('<tr>').addClass('bg-info text-white');
      titulos.append($('<th>').addClass('').text('#'));
      titulos.append($('<th>').addClass('').text('NOMBRE'));
@@ -10278,7 +10283,7 @@ function listarAtributo(){
            if(itemAtributosDias[j].codigo_atributo==itemAtributos[i].codigo&&itemAtributosDias[j].anio==k){
             sumaDias[k]+=parseFloat(itemAtributosDias[j].dias);
             row.append('<td><input id="sitio_dias'+j+'" onchange="cambiarMontoDiasSitio('+j+')" onkeypress="cambiarMontoDiasSitio('+j+')" onkeyup="cambiarMontoDiasSitio('+j+')" class="form-control" type="number" value="'+itemAtributosDias[j].dias+'"></td>');  
-            row.append('<td><select data-actions-box="true" class="form-control selectpicker form-control-sm" multiple data-style="fondo-boton fondo-boton-active" name="auditores'+j+'[]" id="auditores'+j+'">'+
+            row.append('<td><select title="-" data-actions-box="true" class="form-control selectpicker form-control-sm" multiple data-style="fondo-boton fondo-boton-active" name="auditores'+j+'[]" id="auditores'+j+'">'+
               $("#auditores"+k+"EEEE"+itemAtributosDias[j].codigo_atributo).html()+
               '</select></td>');  
             //alerta 2 0 3
@@ -10292,7 +10297,7 @@ function listarAtributo(){
        if($("#sinEdicionModal").length>0){
          row.append($('<td>').addClass('text-right small').html(''));
        }else{
-         row.append($('<td>').addClass('text-right small').html('<button title="Editar" class="btn btn-sm btn-fab btn-success" onclick="editarAtributo('+i+');"><i class="material-icons" >edit</i></button><button class="btn btn-sm btn-fab btn-danger" title="Eliminar" onclick="removeAtributo('+i+');"><i class="material-icons">delete</i></button>'));    
+         row.append($('<td>').addClass('text-right small').html('<div class="btn-group"><button title="Editar" class="btn btn-sm btn-fab btn-success" onclick="editarAtributo('+i+');"><i class="material-icons" >edit</i></button><button class="btn btn-sm btn-fab btn-danger" title="Eliminar" onclick="removeAtributo('+i+');"><i class="material-icons">delete</i></button></div>'));    
        }
      
      table.append(row);
@@ -10375,14 +10380,14 @@ function guardarAtributoItem(){
       var pais="";
       var nom_pais="SIN PAIS";
     }
-    if($("#departamento_empresa").val()!=null){
+    if(!($("#departamento_empresa").val()==null||$("#departamento_empresa").val()=="")){
     var estado=$("#departamento_empresa").val().split("####")[0];
     var nom_estado=$("#departamento_empresa").val().split("####")[1];
     }else{
       var estado="";
       var nom_estado="SIN DEPTO";
     }
-    if($("#ciudad_empresa").val()!=null){
+    if(!($("#ciudad_empresa").val()==null||$("#ciudad_empresa").val()=="")){
     var ciudad=$("#ciudad_empresa").val().split("####")[0];
     var nom_ciudad=$("#ciudad_empresa").val().split("####")[1];
     }else{
@@ -10443,12 +10448,12 @@ function guardarAtributoItem(){
     itemAtributos[fila].norma_cod=norma_cod;
     itemAtributos[fila].marca=$('#modal_marca').val();
     itemAtributos[fila].sello=$('#modal_sello').val();
-    itemAtributos[fila].pais=$('#pais_empresa').val().split("####")[0];
-    itemAtributos[fila].estado=$('#departamento_empresa').val().split("####")[0];
-    itemAtributos[fila].ciudad=$('#ciudad_empresa').val().split("####")[0];
-    itemAtributos[fila].nom_pais=$('#pais_empresa').val().split("####")[1];
-    itemAtributos[fila].nom_estado=$('#departamento_empresa').val().split("####")[1];
-    itemAtributos[fila].nom_ciudad=$('#ciudad_empresa').val().split("####")[1];
+    itemAtributos[fila].pais=pais;
+    itemAtributos[fila].estado=estado;
+    itemAtributos[fila].ciudad=ciudad;
+    itemAtributos[fila].nom_pais=nom_pais;
+    itemAtributos[fila].nom_estado=nom_estado;
+    itemAtributos[fila].nom_ciudad=nom_ciudad;
     /*if(($("#productos_div").hasClass("d-none"))){
       
     }*/   
@@ -11948,6 +11953,17 @@ function calcularTotalesSolicitud(){
 
     document.getElementById("total_presupuestado").value=redondeo(sumapres,2).toFixed(2);  
     document.getElementById("total_solicitado").value=redondeo(sumasol,2).toFixed(2);  
+    if($("#total_presupuestado").val()>=$("#total_solicitado").val()){
+      if(!($("#buttonSubmitFalse").hasClass("d-none"))){
+        $("#buttonSubmitFalse").addClass("d-none");
+        $("#buttonSubmit").removeClass("d-none");
+      }
+    }else{
+      if($("#buttonSubmitFalse").hasClass("d-none")){
+        $("#buttonSubmitFalse").removeClass("d-none");
+        $("#buttonSubmit").addClass("d-none");
+      }
+    }
 }
 
 
@@ -13167,15 +13183,20 @@ function agregarTipoPagoProveedorDetalle(fila){
 }
 function guardarFormaPagoSolicitud(){
   var fila = $("#fila_pago").val();
+  if($("#tipo_pagoproveedor").val()>0&&$("#nombre_beneficiario").val()!=""&&$("#apellido_beneficiario").val()!=""){
   $("#cod_cuentaBancaria"+fila).val($("#cuenta_bancaria").val());
   $("#cod_tipopago"+fila).val($("#tipo_pagoproveedor").val());
   $("#nombre_beneficiario"+fila).val($("#nombre_beneficiario").val());
   $("#apellido_beneficiario"+fila).val($("#apellido_beneficiario").val());
   $("#cuenta_beneficiario"+fila).val($("#cuenta_beneficiario").val());
-  if(!($("#nben"+fila).hasClass("estado"))){
+   if(!($("#nben"+fila).hasClass("estado"))){
     $("#nben"+fila).addClass("estado");
+   }
+   $("#modalTipoPagoSolicitud").modal("hide");
+  }else{
+   Swal.fire("Informativo!", "Debe llenar los campos requeridos!", "warning"); 
   }
-  $("#modalTipoPagoSolicitud").modal("hide");
+  
 }
 
 function quitarFormaPagoProveedor(fila){

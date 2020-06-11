@@ -375,7 +375,8 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
               </div>
             </fieldset>  
             <div class="card-footer fixed-bottom">
-              <button type="submit" class="<?=$buttonMorado;?>">Guardar</button>
+              <a id="buttonSubmitFalse" title="El Monto Solicitado es Mayor al Presupuestado" class="btn btn-warning text-dark d-none">Guardar <span class="material-icons text-dark">warning</span></a>
+              <button id="buttonSubmit" type="submit" class="btn btn-success">Guardar</button>
               <?php 
                if(isset($_GET['q'])){
                 ?>
