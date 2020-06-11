@@ -97,7 +97,9 @@ $sql.=" GROUP BY IdCurso Order by aa.FechaInscripcion desc";
           while ($rowPre = $stmtIBNO->fetch(PDO::FETCH_ASSOC)){
             $cont_total_ws=0;
             $cont_total_pagados=0;
+            $sw_aux=true;
             $verifica=verifica_pago_curso($IdCurso,$CiAlumno);
+            // var_dump($verifica);
             if($verifica){
               foreach ($verifica->lstModulos as $listas) {
                 $cont_total_ws++;
@@ -106,6 +108,7 @@ $sql.=" GROUP BY IdCurso Order by aa.FechaInscripcion desc";
                   $cont_total_pagados++;
                 }
               }
+              // echo $cont_total_ws."-".$cont_total_pagados;              
               if($cont_total_ws==$cont_total_pagados){
                 $estado="Pagado<br>total"; //pagado
                 $btnEstado="btn-success";
@@ -116,6 +119,11 @@ $sql.=" GROUP BY IdCurso Order by aa.FechaInscripcion desc";
             }else{
                 $estado="Sin Servicio";//faltan algunos
                 $btnEstado="btn-danger";
+            }
+            if($cont_total_ws==0 && $cont_total_pagados==0){
+              $sw_aux=false;
+              $estado="No Encontrado";//faltan algunos
+              $btnEstado="btn-danger"; 
             }
             
 
@@ -148,7 +156,7 @@ $sql.=" GROUP BY IdCurso Order by aa.FechaInscripcion desc";
               <td><button class="btn <?=$btnEstado?> btn-sm btn-link"><?=$estado;?></button></td> 
               <td class="td-actions text-right">
                 <?php
-                  if($globalAdmin==1){                            
+                  if($globalAdmin==1 && $sw_aux){                            
                     if($codigo_facturacion>0){
                       if(isset($_GET['q'])){ ?>
                         <a href='<?=$urlregistro_solicitud_facturacion?>&codigo=<?=$CiAlumno?>&cod_simulacion=<?=$codigo_simulacion;?>&IdCurso=<?=$IdCurso;?>&cod_facturacion=0&q=<?=$q?>&r=<?=$r?>' rel="tooltip" class="btn" style="background-color: #0489B1;">

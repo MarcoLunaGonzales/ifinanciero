@@ -1,0 +1,27 @@
+*cuando es tipo de pago a credito, obligar llenado de contacto.(modificar el servicio.solo del cliente al registrar) ---ok
+*generar factura desde ifinanciero.(enlace al modulo azul)
+	*listado de solicitudes de facturacion para contabilidad donde esten solo los que faltan facturar. --ok
+		-historico con busqueda avanzada. --ok
+*mostrar en el listado campos de quien envió la solicitud, fecha y numero de factura. ---ok
+*lista de soli area y unidad en uno solo abreviados+. -- ok
+*correos de clientes para el envio de facturas --ok
+	-tags para el envio de muchos correos de contactos (revisar extender form tags).ok
+*cuando sea de venta de normas(todos) pedir obligadamente correo o celunar del cliente en una glosa 2(informacr con *esta info para contab).ok
+( cereacion de tablas o campos  paralelas al server)pk
+*facturas
+	-nombre de cliente a laa izquierda.--ok
+	-fc-04----ok
+	-qr 2x2.ampliar el tamaño la factuacion..--ok
+*comprobante
+	*tipo de pago a una cuenta asociada ok
+	-antes del generear el comprobante pedir ciertos datos ok
+	-deposito del mes asociada con cuenta de banco ok
+	-deposito mes anterior con una cuenta-- ok
+
+*integracion de la facturacion de normas y manual
+---crear tabla tipos_pago_contabilidad ok
+--crear configuracion para tipos_pago asociar con cuenta.. ok
+
+
+*generar el libro de ventas
+*certificados asociar con servicios.
