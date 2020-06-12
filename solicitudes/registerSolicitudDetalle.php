@@ -219,7 +219,8 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             <div class="col-sm-2">
               <div class="form-group">
                   <select class="selectpicker form-control form-control-sm" onchange="listarTipoSolicitud(this.value,'none')" name="tipo_solicitud" id="tipo_solicitud" data-style="btn btn-info" title="-- Tipo de Solicitud --" required>
-                      <option value="1">POR PROPUESTA</option> 
+                      <option value="1">POR PROPUESTA SEC</option>
+                      <option value="-1">POR PROPUESTA TCP/TCS</option>  
                       <option value="2">POR PROVEEDOR</option>
                       <option value="3">MANUAL</option>  
                   </select>
@@ -508,18 +509,22 @@ if(isset($_GET['sim'])){
   $det=$_GET['det'];
   if($det!=1){
     $detalle="TCP";
+    $tituloPropuesta="TCP/TCS";
+    $det=-1;
   }else{
+    $det=1;
     $detalle="SIM";
+    $tituloPropuesta="SEC";
   }
   ?>
   <script>
   $(document).ready(function() {
     $("#tipo_solicitud").html("");
     $('.selectpicker').selectpicker("refresh");
-    $("#tipo_solicitud").append("<option selected value='1'>POR PROPUESTA</option>");
+    $("#tipo_solicitud").append("<option selected value='1'>POR PROPUESTA <?=$tituloPropuesta?></option>");
     $('.selectpicker').selectpicker("refresh");
 
-    listarTipoSolicitud(1,'<?=$sim?>$$$<?=$detalle?>');
+    listarTipoSolicitud(<?=$det?>,'<?=$sim?>$$$<?=$detalle?>');
     //se eliminan las demas solicitudes
   });
   </script>
@@ -530,8 +535,12 @@ if(isset($_GET['sim'])){
     $areaServicio=obtenerIdAreaServicioIbnorca($v);
      if($areaServicio==39||$areaServicio==38){
       $detalle="TCP";
+      $det=-1;
+      $tituloPropuesta="TCP/TCS";
      }else{
        $detalle="SIM";
+       $det=1;
+       $tituloPropuesta="SEC";
      }
     if($idPropuesta!="NONE"){
     ?>
@@ -539,9 +548,9 @@ if(isset($_GET['sim'])){
   $(document).ready(function() {
     $("#tipo_solicitud").html("");
     $('.selectpicker').selectpicker("refresh");
-    $("#tipo_solicitud").append("<option selected value='1'>POR PROPUESTA</option>");
+    $("#tipo_solicitud").append("<option selected value='1'>POR PROPUESTA <?=$tituloPropuesta?></option>");
     $('.selectpicker').selectpicker("refresh");
-    listarTipoSolicitud(1,'<?=$idPropuesta?>$$$<?=$detalle?>');
+    listarTipoSolicitud(<?=$det?>,'<?=$idPropuesta?>$$$<?=$detalle?>');
     //se eliminan las demas solicitudes
    });
    </script>
