@@ -442,9 +442,11 @@ $descuento_cliente=0;
                                                 $estadoPagado=0;
                                                 $cod_modulo=0;
                                                 $lista=verifica_pago_curso($IdCurso,$ci_estudiante);
+                                                // var_dump($lista);
                                                 if($lista){
                                                     $estado_ws=true;                                                    
-                                                    foreach ($lista->lstModulos as $listas) {                                                    
+                                                    foreach ($lista->lstModulos as $listas) {
+                                                        // var_dump($listas);
                                                         $cod_modulo=$listas->IdModulo;
                                                         $estadoPagado=$listas->EstadoPagado;
                                                         if($cod_modulo==$codCS){
@@ -453,9 +455,10 @@ $descuento_cliente=0;
                                                             }
                                                             $codigo_externo=$listas->Codigo;
                                                             $montoPagado=$listas->MontoPagado;
+                                                            $monto_total_pagado=$listas->MontoPagado;
+                                                            // echo $monto_total_pagado."---";
                                                             $saldo=$listas->Saldo;
                                                             break;
-                                                            // echo $IdCurso."-".$ci_estudiante."-".$codCS;
                                                         }
                                                     }
                                                     if($estadoPagado!=1){
@@ -470,15 +473,19 @@ $descuento_cliente=0;
                                                         $stmtControladorTotal = $dbh->prepare($sqlControladorTotal);
                                                         $stmtControladorTotal->execute();
                                                         $resultMontoTotal=$stmtControladorTotal->fetch();
-                                                        $monto_total_pagado=$resultMontoTotal['precio'];
+                                                        if($resultMontoTotal['precio']==null || $resultMontoTotal['precio']=='' || $resultMontoTotal['precio']==' ' || $resultMontoTotal['precio']==0){                                                        
+                                                        }else $monto_total_pagado=$resultMontoTotal['precio'];
 
                                                         while ($rowPre = $stmtControlador2->fetch(PDO::FETCH_ASSOC)) {
                                                           if($sw!="checked"){
                                                             if($monto_pagar==$monto_total_pagado){
                                                                 $sw2="readonly style='background-color:#cec6d6;'";
-                                                            }                                                            
-                                                            $monto_total_pagado-=$rowPre['descuento_bob'];
-                                                            $saldo=$monto_pagar-$monto_total_pagado;
+                                                            }
+                                                            if($rowPre['descuento_bob']==null || $rowPre['descuento_bob']==0 || $rowPre['descuento_bob']=='' || $rowPre['descuento_bob']==' '){
+                                                            }else{
+                                                                $monto_total_pagado-=$rowPre['descuento_bob'];
+                                                                $saldo=$monto_pagar-$monto_total_pagado;
+                                                            }
                                                             // $montoPre=$rowPre['precio']+$rowPre['descuento_bob'];
                                                             $descuento_porX=$rowPre['descuento_por'];
                                                             $descuento_bobX=$rowPre['descuento_bob'];
@@ -557,7 +564,7 @@ $descuento_cliente=0;
                                         <tr>
                                             <td colspan="5">Monto Total</td>
                                             <td><input style="background:#ffffff" class="form-control" type="text" value="0" name="modal_totalmontoserv" id="modal_totalmontoserv" readonly="true" /></td>
-                                            <td>0</td>
+                                            <td><input style="background:#ffffff" class="form-control" type="text" value="0" name="modal_totalmontoserv_pagado" id="modal_totalmontoserv_pagado" readonly="true" /></td>
                                             <td><input style="background:#ffffff" class="form-control" type="text" value="0" name="modal_totalmontoserv_costo" id="modal_totalmontoserv_costo" readonly="true" /></td>
                                             <td></td>
                                         </tr>
@@ -618,7 +625,7 @@ $descuento_cliente=0;
     function valida(f) {
         var ok = true;
         var msg = "El monto Total no debe ser '0' o 'negativo', Habilite los Items que desee facturar...\n";  
-        if(f.elements["modal_totalmontoserv"].value == 0 || f.elements["modal_totalmontoserv"].value < 0 || f.elements["modal_totalmontoserv"].value == '')
+        if(f.elements["modal_totalmontoserv_costo"].value == 0 || f.elements["modal_totalmontoserv_costo"].value < 0 || f.elements["modal_totalmontoserv_costo"].value == '')
         {    
             ok = false;
         }

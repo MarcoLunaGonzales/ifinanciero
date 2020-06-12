@@ -78,7 +78,7 @@ $totalDebito=0;
                         <div class="table-responsive">
                             <?php 
 
-                            $html='<table class="table table-bordered table-condensed" id="tablePaginatorFixed">'.
+                            $html='<table class="table table-bordered table-condensed" id="tablePaginatorFixedEstadoCuentas">'.
                                 '<thead>'.
                                     '<tr class="">'.
                                         '<th class="text-left">Of</th>'.
@@ -98,8 +98,16 @@ $totalDebito=0;
                                         $nombreCuenta=nameCuenta($cuentai);//nombre de cuenta    
                                         
                                         $html.='<tr style="background-color:#9F81F7;">                                    
+                                            <td style="display: none;"></td>
+                                            <td style="display: none;"></td>
+                                            <td style="display: none;"></td>
+                                            <td style="display: none;"></td>
                                             <td class="text-left small" colspan="5">CUENTA</td>
                                             <td class="text-left small" colspan="4">'.$nombreCuenta.'</td>
+                                            <td style="display: none;"></td>
+                                            <td style="display: none;"></td>
+                                            <td style="display: none;"></td>
+
                                         </tr>'; 
                                         
                                         $sql="SELECT e.*,d.glosa,d.haber,d.debe,(select concat(c.cod_tipocomprobante,'|',c.numero,'|',cd.cod_unidadorganizacional,'|',MONTH(c.fecha),'|',c.fecha) from comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle)as extra, d.cod_cuenta, ca.nombre, cc.codigo as codigocomprobante FROM estados_cuenta e,comprobantes_detalle d, comprobantes cc, cuentas_auxiliares ca  where e.cod_comprobantedetalle=d.codigo and cc.codigo=d.cod_comprobante and e.cod_cuentaaux=ca.codigo and cc.cod_estadocomprobante<>2 and d.cod_cuenta in ($cuentai) and e.cod_comprobantedetalleorigen=0 and cc.cod_gestion= '$NombreGestion' and cc.fecha<='$fecha 23:59:59' and cc.cod_unidadorganizacional in ($StringUnidades) and e.cod_cuentaaux in ($proveedoresString) order by ca.nombre, cc.fecha";
@@ -130,8 +138,16 @@ $totalDebito=0;
                                                 $saldo=0;
                                                 $codPlanCuentaAuxiliarPivotX=$codPlanCuentaAuxiliarX;
                                             
-                                            $html.='<tr style="background-color:#58D68D">                                 
-                                                <td class="text-left small" colspan="9"></td>
+                                            $html.='<tr style="background-color:#58D68D">
+                                                <td colspan="9"></td>
+                                                <td style="display: none;"></td>
+                                                <td style="display: none;"></td>
+                                                <td style="display: none;"></td>
+                                                <td style="display: none;"></td>
+                                                <td style="display: none;"></td>
+                                                <td style="display: none;"></td>
+                                                <td style="display: none;"></td>
+                                                <td style="display: none;"></td>
                                             </tr>';
                                             
                                             }
@@ -263,7 +279,12 @@ $totalDebito=0;
                                     if($totalSaldo<0){
                                         $totalSaldo=$totalSaldo*(-1);
                                     }                                        
-                                        $html.='<tr>
+                                        $html.='<tr>                                            
+                                            <td style="display: none;"></td>
+                                            <td style="display: none;"></td>
+                                            <td style="display: none;"></td>
+                                            <td style="display: none;"></td>
+                                            <td style="display: none;"></td>
                                             <td class="text-right small" colspan="6">Total:</td>
                                             <td class="text-right small font-weight-bold">'.formatNumberDec($totalDebito).'</td>
                                             <td class="text-right small font-weight-bold">'.formatNumberDec($totalCredito).'</td>

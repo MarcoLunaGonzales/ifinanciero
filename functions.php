@@ -543,6 +543,17 @@ function namePersonal($codigo){
    }
    return($nombreX);
 }
+function namePersonal_2($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT CONCAT_WS(' ',paterno,primer_nombre)as nombre FROM personal where codigo=:codigo");
+   $stmt->bindParam(':codigo',$codigo);
+   $stmt->execute();
+   $nombreX="";
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $nombreX=$row['nombre'];
+   }
+   return($nombreX);
+}
 
 function namesDepreciacion($codigo){
  $dbh = new Conexion();

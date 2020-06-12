@@ -35,6 +35,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
   $stmt->bindColumn('nro_correlativo', $nro_correlativo);
   $stmt->bindColumn('persona_contacto', $persona_contacto);
   $stmt->bindColumn('codigo_alterno', $codigo_alterno);
+  $stmt->bindColumn('obs_devolucion', $obs_devolucion);
   $stmt->bindColumn('tipo_solicitud', $tipo_solicitud);//1 tcp - 2 capacitacion - 3 servicios - 4 manual - 5 venta de normas
 
 
@@ -58,17 +59,18 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                       <table class="table" id="tablePaginator">
                         <thead>
                           <tr>
-                            <th>Of - Area</th>
-                            <th>#Sol.</th>
-                            <th>Responsable</th>
-                            <th>Codigo<br>Servicio</th>                            
-                            <th>Fecha<br>Registro</th>                            
-                            <th style="color:#cc4545;">#Fact.</th>                            
-                            <th>Importe<br>(BOB)</th>  
-                            <th>Persona<br>Contacto</th>                              
-                            <th>Concepto</th>
-                            <th width="5%">Estado</th>
-                            <th class="text-right">Actions</th>
+                            <th><small>Of - Area</small></th>
+                            <th><small>#Sol.</small></th>
+                            <th><small>Responsable</small></th>
+                            <th><small>Codigo<br>Servicio</small></th>                            
+                            <th><small>Fecha<br>Registro</small></th>                            
+                            <th style="color:#cc4545;"><small>#Fact.</small></th>                            
+                            <th><small>Importe<br>(BOB)</small></th>  
+                            <th><small>Persona<br>Contacto</small></th>                              
+                            <th width="35%"><small>Concepto</small></th>
+                            <th width="5%"><small>Estado</small></th>
+                            <th width="15%"><small>Observaciones</small></th>
+                            <th class="text-right"><small>Actions</small></th>
                           </tr>
                         </thead>
                         <tbody>
@@ -79,22 +81,22 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                           while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                             switch ($codEstado) {
                               case 1:                                
-                                $label='<span class="badge badge-default">';
+                                $label='<span style="padding:1;" class="badge badge-default">';
                               break;
                               case 2:                                
-                                $label='<span class="badge badge-danger">';
+                                $label='<span style="padding:1;" class="badge badge-danger">';
                               break;
                               case 3:                                
-                                $label='<span class="badge badge-success">';
+                                $label='<span style="padding:1;" class="badge badge-success">';
                               break;
                               case 4:                                
-                                $label='<span class="badge badge-warning">';
+                                $label='<span style="padding:1;" class="badge badge-warning">';
                               break;
                               case 5:                                
-                                $label='<span class="badge badge-warning">';
+                                $label='<span style="padding:1;" class="badge badge-warning">';
                               break;
                               case 6:                                
-                                $label='<span class="badge badge-default">';
+                                $label='<span style="padding:1;" class="badge badge-default">';
                               break;
                             }
                             //verificamos si ya tiene factura generada y esta activa                           
@@ -177,7 +179,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                             $nombre_simulacion='OTROS';
                             $name_area_simulacion=trim(abrevArea($cod_area_simulacion),'-');
                             // --------
-                            $responsable=namePersonal($cod_personal);//nombre del personal
+                            $responsable=namePersonal_2($cod_personal);//nombre del personal
                             $nombre_contacto=nameContacto($persona_contacto);//nombre del personal
                             $nombre_area=trim(abrevArea($cod_area),'-');//nombre del area
                             $nombre_uo=trim(abrevUnidad($cod_unidadorganizacional),' - ');//nombre de la oficina
@@ -235,10 +237,11 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                             <!-- <td><?=$fecha_solicitudfactura;?></td>          -->                   
                             <td style="color:#cc4545;"><small><?=$nro_fact_x;?></small></td>                             
                             <td class="text-right"><small><?=formatNumberDec($sumaTotalImporte);?></small></td>
-                            <td class="text-left"><small><?=$nombre_contacto;?></small></td>
+                            <td class="text-left"><small><small><?=$nombre_contacto;?></small></small></td>
                             <!-- <td><?=$razon_social;?></td> -->                            
-                            <td width="35%"><small><?=$concepto_contabilizacion?></small></td>
+                            <td><small><small><?=$concepto_contabilizacion?></small></small></td>
                             <td><?=$label?><small><?=$estado;?></small></span></td>
+                            <td><button class="btn btn-danger btn-sm btn-link" style="padding:0;"><small><small><?=$obs_devolucion;?></small></small></button></td>
                             <td class="td-actions text-right">
                               <?php                              
                                 if($cod_estado_factura_x==1 || $cod_estado_factura_x==null){
@@ -249,7 +252,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                      <?php               
                                     }elseif($cont_facturas>1){?>
                                       <div class="btn-group dropdown">
-                                        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><small>PAGOS</small></button>
+                                        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><small><small><small>Facturas</small></small></small></button>
                                         <div class="dropdown-menu"><?php 
                                           $arrayCodFacturas = explode(",",trim($cadenaCodFacturas,','));
                                           $arrayFacturas = explode(" - ",trim($cadenaFacturas,' - '));
@@ -266,7 +269,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                       ?>
                                       <div class="btn-group dropdown">
                                         <button type="button" class="btn <?=$btnEstado?> dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                          <small> <?=$estado;?></small>
+                                          <small><small><small><?=$estado;?></small></small></small>
                                         </button>
                                         <div class="dropdown-menu">
                                         <?php 

@@ -9161,6 +9161,7 @@ function calcularTotalFilaServicio2(){
 }
 function calcularTotalFilaServicio2Costos(){  
   var sumal=0;  
+  var suma_pagado=0;  
   var total= $("#modal_numeroservicio").val();
   var comprobante_auxiliar=0;
   for (var i=1;i<=(total-1);i++){          
@@ -9178,6 +9179,7 @@ function calcularTotalFilaServicio2Costos(){
         comprobante_auxiliar=comprobante_auxiliar+1;        
         //sumanos los importes
         sumal+=parseFloat($("#importe_a_pagar"+i).val());
+        suma_pagado+=parseFloat($("#modal_importe_pagado_dos_a"+i).val());
         //sacamos los datos de los items que se activaron
         var cod_serv_tiposerv = document.getElementById("cod_serv_tiposerv"+i).value;
         var servicio = document.getElementById("servicio"+i).value;      
@@ -9194,7 +9196,8 @@ function calcularTotalFilaServicio2Costos(){
   } 
 
   var resulta=sumal;  
-  document.getElementById("modal_totalmontoserv_costo").value=number_format(resulta,2);  
+  document.getElementById("modal_totalmontoserv_costo").value=number_format(resulta,2);
+  document.getElementById("modal_totalmontoserv_pagado").value=number_format(suma_pagado,2);
   // document.getElementById("modal_totalmontos__costo").value=resulta;//escondido
   // document.getElementById("comprobante_auxiliar_costo").value=comprobante_auxiliar;
   calcularTotalFilaServicio2();
@@ -9560,44 +9563,6 @@ function borrarItemSeriviciosFacturacion(idF){
   sumartotalAddServiciosFacturacion("null");   
 }
 // var areas_tabla=[]; 
-var detalle_tabla_general=[];
-var numFilasA=0;
-function filaTablaAGeneral(tabla,index,stringCabecera){
-  var cabecera = stringCabecera.split("##");
-  var uo = cabecera[0];
-  var area = cabecera[1];
-  var nombre_simulacion = cabecera[2];
-  var area_simulacion = cabecera[3];
-  var fecha_registro = cabecera[4];
-  var fecha_facturar = cabecera[5];
-  var nit = cabecera[6];
-  var razon_social = cabecera[7];
-  //ajax cabecera  
-  var contenedor = document.getElementById('div_cabecera');
-  ajax=nuevoAjax();
-  ajax.open('GET', 'simulaciones_servicios/ajax_cabecera_modal.php?uo='+uo+'&area='+area+'&nombre_simulacion='+nombre_simulacion+'&area_simulacion='+area_simulacion+'&fecha_registro='+fecha_registro+'&fecha_facturar='+fecha_facturar+'&nit='+nit+'&razon_social='+razon_social,true);
-  ajax.onreadystatechange=function() {
-    if (ajax.readyState==4) {
-      contenedor.innerHTML = ajax.responseText;
-      // $('.selectpicker').selectpicker(["refresh"]);
-    }
-  }
-  ajax.send(null);
-
-  var html="";
-  var sumaTotalDetalle=0;
-  var cantidadTotalDetalle=0;
-  for (var i = 0; i < detalle_tabla_general[index-1].length; i++) {
-    //alert(detalle_tabla_general[index-1][i].nombre);
-    sumaTotalDetalle+=parseFloat(detalle_tabla_general[index-1][i].precioX);
-    cantidadTotalDetalle+=parseInt(detalle_tabla_general[index-1][i].cantidadX);
-    html+="<tr><td>"+(i+1)+"</td><td>"+detalle_tabla_general[index-1][i].serviciox+"</td><td>"+detalle_tabla_general[index-1][i].cantidadX+"</td><td>"+number_format(detalle_tabla_general[index-1][i].precioX,2)+"</td><td>"+detalle_tabla_general[index-1][i].descripcion_alternaX+"</td></tr>";
-  }
-  html+="<tr style='background-color:#d3dcde;'><td></td><td>TOTAL</td><td>"+cantidadTotalDetalle+"</td><td>"+number_format(sumaTotalDetalle,2)+"</td><td></td></tr>";
-  tabla.html(html);
-  $("#modalDetalleFac").modal("show");  
-}
-
 function filtrarSolicitudRecursosServicios(cod_sim,cod_solicitud,unidad,area){
   var anio =$("#anio_solicitud").val();
   var itemDetalle =$('select[id="item_detalle_solicitud"] option:selected').text();
@@ -13610,67 +13575,6 @@ function saveDatosBancarizacion(){
     Swal.fire("Informativo!", "EL porcentaje de los montos difiere del 100%", "warning");
   }   
 }
-
-function agregaDatosFactManual(datos){  
-  var d=datos.split('/');
-  document.getElementById("cod_solicitudfacturacion_factmanual").value=d[0];  
-  document.getElementById("importe_total").value="Saldo de Solicitud de Facturacón: "+number_format(d[2],2);
-  
-  document.getElementById("nit_cliente").value=d[4];
-  document.getElementById("razon_social").value=d[5];
-
-
-
-}
-function RegistrarFacturaManual(cod_solicitudfacturacion,nro_factura,nro_autorizacion,fecha_factura,nit_cliente,razon_social){
-  $.ajax({
-    type:"POST",
-    data:"cod_solicitudfacturacion="+cod_solicitudfacturacion+"&nro_factura="+nro_factura+"&nro_autorizacion="+nro_autorizacion+"&fecha_factura="+fecha_factura+"&nit_cliente="+nit_cliente+"&razon_social="+razon_social,
-    url:"simulaciones_servicios/generarFacturaManual.php",
-    success:function(r){
-      if(r==1){
-        alerts.showSwal('success-message','index.php?opcion=listFacturasServicios_conta');
-      }else{
-        if(r==2){
-          Swal.fire("A ocurrido un error!", "Por favor verifique que los tipos de pago estén asociados a una cuenta.", "warning");
-        }else{
-          if(r==3){
-            Swal.fire("A ocurrido un error!", "Por favor verifique que las areas de ingreso estén asociadas a una cuenta.", "warning");
-          }else{
-            if(r==4){
-              Swal.fire("informativo!", "La factura ya fue generada.", "warning");
-            }else{
-              if(r==5){
-                Swal.fire("A ocurrido un error!", "Sucursal no encontrada.", "warning");
-              }else{
-                if(r==-1){
-                  Swal.fire("A ocurrido un error!", "No se tiene conexión al servicio de capacitación.", "warning");
-                }else{
-                  alerts.showSwal('error-message','index.php?opcion=listFacturasServicios_conta');  
-                }
-                
-              } 
-            } 
-          }  
-        }  
-      }
-         
-    }
-  });
-}
-function agregaDatosDetalleFactManual(datos){  
-  var d=datos.split('/');  
-  document.getElementById("cliente_x").value=d[0];
-  document.getElementById("razon_social").value=d[1];
-  document.getElementById("nit_cliente").value=d[2];
-  document.getElementById("nro_factura").value=d[3];
-  document.getElementById("nro_autorizacion").value=d[4];
-  document.getElementById("importe").value=number_format(d[5],2) ;  
-}
-
-
-
-
 function editarPrecioSimulacionCostos(){
   if($("#modal_importeplanedit").is("[readonly]")){
     $("#modal_importeplanedit").removeAttr("readonly");
@@ -13696,6 +13600,7 @@ var itemGenerar_factura_parcial=[];
 var itemGenerar_factura_parcial_aux=[];
 function agregaDatosGenerarFactPagos(datos){  
   var d=datos.split('/');
+
   var cod_solicitudfacturacion=d[0];
   // var monto_solicitud=parseFloat(d[1]);
   // var saldo_anterior=parseFloat(d[2]);
@@ -13812,8 +13717,6 @@ function calcular_monto_total_items_factura_parcial(){
   $("#total_importe_pagar_a").val(number_format(total_importe_pagar,2));
   $("#total_saldo_a").val(number_format(total_saldo,2));
 }
-
-
 function RegistrarFacturaPagos(cod_solicitudfacturacion,porcentaje_pagar,monto_pagar){
   $.ajax({
     type:"POST",
@@ -13850,6 +13753,97 @@ function RegistrarFacturaPagos(cod_solicitudfacturacion,porcentaje_pagar,monto_p
     }
   });
 }
+function agregaDatosFactManual(datos){  
+  var d=datos.split('/');
+  document.getElementById("cod_solicitudfacturacion_factmanual").value=d[0];  
+  document.getElementById("importe_total").value="Saldo de Solicitud de Facturacón: "+number_format(d[2],2);
+  
+  document.getElementById("nit_cliente").value=d[4];
+  document.getElementById("razon_social").value=d[5];
+}
+function RegistrarFacturaManual(cod_solicitudfacturacion,nro_factura,nro_autorizacion,fecha_factura,nit_cliente,razon_social){
+  $.ajax({
+    type:"POST",
+    data:"cod_solicitudfacturacion="+cod_solicitudfacturacion+"&nro_factura="+nro_factura+"&nro_autorizacion="+nro_autorizacion+"&fecha_factura="+fecha_factura+"&nit_cliente="+nit_cliente+"&razon_social="+razon_social,
+    url:"simulaciones_servicios/generarFacturaManual.php",
+    success:function(r){
+      if(r==1){
+        alerts.showSwal('success-message','index.php?opcion=listFacturasServicios_conta');
+      }else{
+        if(r==2){
+          Swal.fire("A ocurrido un error!", "Por favor verifique que los tipos de pago estén asociados a una cuenta.", "warning");
+        }else{
+          if(r==3){
+            Swal.fire("A ocurrido un error!", "Por favor verifique que las areas de ingreso estén asociadas a una cuenta.", "warning");
+          }else{
+            if(r==4){
+              Swal.fire("informativo!", "La factura ya fue generada.", "warning");
+            }else{
+              if(r==5){
+                Swal.fire("A ocurrido un error!", "Sucursal no encontrada.", "warning");
+              }else{
+                if(r==-1){
+                  Swal.fire("A ocurrido un error!", "No se tiene conexión al servicio de capacitación.", "warning");
+                }else{
+                  alerts.showSwal('error-message','index.php?opcion=listFacturasServicios_conta');  
+                }
+                
+              } 
+            } 
+          }  
+        }  
+      }
+         
+    }
+  });
+}
+function agregaDatosDetalleFactManual(datos){  
+  var d=datos.split('/');  
+  document.getElementById("cliente_x").value=d[0];
+  document.getElementById("razon_social").value=d[1];
+  document.getElementById("nit_cliente").value=d[2];
+  document.getElementById("nro_factura").value=d[3];
+  document.getElementById("nro_autorizacion").value=d[4];
+  document.getElementById("importe").value=number_format(d[5],2) ;  
+}
+var detalle_tabla_general=[];
+var numFilasA=0;
+function filaTablaAGeneral(tabla,index,stringCabecera){
+  var cabecera = stringCabecera.split("##");
+  var uo = cabecera[0];
+  var area = cabecera[1];
+  var nombre_simulacion = cabecera[2];
+  var area_simulacion = cabecera[3];
+  var fecha_registro = cabecera[4];
+  var fecha_facturar = cabecera[5];
+  var nit = cabecera[6];
+  var razon_social = cabecera[7];
+  //ajax cabecera  
+  var contenedor = document.getElementById('div_cabecera');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'simulaciones_servicios/ajax_cabecera_modal.php?uo='+uo+'&area='+area+'&nombre_simulacion='+nombre_simulacion+'&area_simulacion='+area_simulacion+'&fecha_registro='+fecha_registro+'&fecha_facturar='+fecha_facturar+'&nit='+nit+'&razon_social='+razon_social,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      // $('.selectpicker').selectpicker(["refresh"]);
+    }
+  }
+  ajax.send(null);
+
+  var html="";
+  var sumaTotalDetalle=0;
+  var cantidadTotalDetalle=0;
+  for (var i = 0; i < detalle_tabla_general[index-1].length; i++) {
+    //alert(detalle_tabla_general[index-1][i].nombre);
+    sumaTotalDetalle+=parseFloat(detalle_tabla_general[index-1][i].precioX);
+    cantidadTotalDetalle+=parseInt(detalle_tabla_general[index-1][i].cantidadX);
+    html+="<tr><td>"+(i+1)+"</td><td>"+detalle_tabla_general[index-1][i].serviciox+"</td><td>"+detalle_tabla_general[index-1][i].cantidadX+"</td><td>"+number_format(detalle_tabla_general[index-1][i].precioX,2)+"</td><td>"+detalle_tabla_general[index-1][i].descripcion_alternaX+"</td></tr>";
+  }
+  html+="<tr style='background-color:#d3dcde;'><td></td><td>TOTAL</td><td>"+cantidadTotalDetalle+"</td><td>"+number_format(sumaTotalDetalle,2)+"</td><td></td></tr>";
+  tabla.html(html);
+  $("#modalDetalleFac").modal("show");  
+}
+
 
 function agregaDatosComprCajaChica(datos){  
   var d=datos.split('/');  
@@ -14204,4 +14198,24 @@ function removePlantillaComprobantes(cod_plantilla){
   });           
 }
 
+function modalDevolverSolicitud(datos){  
+  var d=datos.split('/');
+  document.getElementById("cod_solicitudfacturacion").value=d[0];
+  document.getElementById("nro_solicitud").value=d[1];
+  document.getElementById("codigo_servicio").value=d[2];  
+}
 
+function registrarRechazoSolicitud(cod_solicitudfacturacion,observaciones){
+  $.ajax({
+    type:"POST",
+    data:"cod_solicitudfacturacion="+cod_solicitudfacturacion+"&observaciones="+observaciones,
+    url:"simulaciones_servicios/save_solicitud_rechazada.php",
+    success:function(r){
+      if(r==1){
+        alerts.showSwal('success-message','servicios_presupuestos/edit.php?cod='+cod_solicitudfacturacion+'&estado=1&admin=10');
+      }else{
+        Swal.fire("A ocurrido un error!", "No se pudo devolver la solicitud.", "warning");        
+      }
+    }
+  });
+}

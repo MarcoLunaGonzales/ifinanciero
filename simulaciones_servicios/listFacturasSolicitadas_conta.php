@@ -350,15 +350,19 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                                  </a>
                                                 <?php                                          
                                             }
-                                              ?>                                        
-                                              <a title="Volver al Estado Registro" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=1&admin=10'  class="btn btn-danger">
+                                            $datos_devolucion=$codigo_facturacion."/".$nro_correlativo."/".$codigo_alterno;
+                                              ?> 
+
+                                              <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalDevolverSolicitud" onclick="modalDevolverSolicitud('<?=$datos_devolucion;?>')">
+                                                <i class="material-icons" title="Volver al Estado Registro">refresh</i>
+                                              </button>
+                                              <!-- <a title="Volver al Estado Registro" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=1&admin=10'  class="btn btn-danger">
                                                  <i class="material-icons">refresh</i>
-                                              </a>
+                                              </a> -->
+
                                               <?php                                          
                                           }
-                                          ?>
-                                          <!-- <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir">print</i></a> -->
-                                          <!--editar solicitud facturacion-->
+                                          ?>                                          
                                           <?php
                                         }
                                       }?> 
@@ -523,9 +527,50 @@ $globalAdmin=$_SESSION["globalAdmin"];
     </form>
   </div>
 </div>
-
-
-
+<!-- modal devolver solicitud -->
+<div class="modal fade" id="modalDevolverSolicitud" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Rechazar Solicitud</h4>
+      </div>
+      <div class="modal-body">        
+        <input type="hidden" name="cod_solicitudfacturacion" id="cod_solicitudfacturacion" value="0">
+        <div class="row">
+          <label class="col-sm-1 col-form-label" style="color:#000000"><small>Nro. Solicitud</small></label>
+          <div class="col-sm-2">
+            <div class="form-group" >
+              <input type="text" class="form-control" name="nro_solicitud" id="nro_solicitud" readonly="true" style="background-color:#e2d2e0">              
+            </div>
+          </div>
+          <label class="col-sm-1 col-form-label" style="color:#000000"><small>Código<br>Servicio</small></label>
+          <div class="col-sm-8">
+            <div class="form-group" >              
+              <input type="text" class="form-control" name="codigo_servicio" id="codigo_servicio" readonly="true" style="background-color:#e2d2e0">               
+            </div>
+          </div>
+        </div>                
+        <div class="row">
+          <div class="col-sm-12" >
+            <h6>Observaciones </h6>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12" style="background-color:#FFFFFF">
+            <div class="form-group" >              
+              <textarea type="text" name="observaciones" id="observaciones" class="form-control" required="true"></textarea>
+            </div>
+          </div>
+        </div>        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" id="rechazarSolicitud" name="rechazarSolicitud" data-dismiss="modal">Aceptar</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal"> <-- Volver </button>
+      </div>
+    </div>
+  </div>
+</div>
 <?php 
   $lan=sizeof($cont);
   error_reporting(0);
@@ -545,9 +590,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 <!-- para la factura manual -->
 <script type="text/javascript">
   $(document).ready(function(){
-    $('#guardarFacturaManual').click(function(){  
-      // var importe_total=document.getElementById("importe_total").value;
-      
+    $('#guardarFacturaManual').click(function(){      
       var cod_solicitudfacturacion_factmanual=document.getElementById("cod_solicitudfacturacion_factmanual").value;
       var nro_factura=$('#nro_factura').val();
       var nro_autorizacion=$('#nro_autorizacion').val();
@@ -576,7 +619,16 @@ $globalAdmin=$_SESSION["globalAdmin"];
           }          
         }
       }      
-    });    
+    });
+    $('#rechazarSolicitud').click(function(){      
+      var cod_solicitudfacturacion=document.getElementById("cod_solicitudfacturacion").value;
+      var observaciones=$('#observaciones').val();
+      if(observaciones==null || observaciones==0){
+        Swal.fire("Informativo!", "Por favor introduzca el Número de Factura.", "warning");
+      }else{        
+        registrarRechazoSolicitud(cod_solicitudfacturacion,observaciones);
+      }      
+    }); 
   });
   function valida_modalFacPar(f) {
       var ok = true;
@@ -633,7 +685,6 @@ $globalAdmin=$_SESSION["globalAdmin"];
               }          
             }
         ?><script>itemGenerar_factura_parcial_aux.push(detalle_pagoparcial);
-        console.log(detalle_pagoparcial);
         </script><?php                    
     }
 ?>
