@@ -421,6 +421,10 @@
 			require_once('solicitud_facturacion_manual/listSolicitudFacturacionNormas.php');
 		}
 
+		if ($_GET['opcion']=='listSolicitudRecursosAdminReg') {
+			require_once('solicitudes/listSolicitudRecursosAdminReg.php');
+		}
+
 		//ESTADOS DE CUENTAS
 		if ($_GET['opcion']=='configuracionEstadosCuenta') {
 			require_once('estados_cuenta/list.php');

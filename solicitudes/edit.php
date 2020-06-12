@@ -80,6 +80,9 @@ if(isset($_GET['q'])){
 if(isset($_GET['admin'])){
   $urlList2=$urlList;
   $urlc="&q=".$q."&s=".$s."&u=".$u."&v=".$v;
+  if(isset($_GET['reg'])){
+    $urlList2=$urlList3;
+  }
 }else{
   $urlc="&q=".$q."&s=".$s."&u=".$u;
   if(isset($_GET['r'])){
