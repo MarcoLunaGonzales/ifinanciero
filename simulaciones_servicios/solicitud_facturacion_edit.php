@@ -16,11 +16,12 @@ if(isset($_GET['q'])){
   $u=$_GET['u'];
 }
 
-$stmtCantidad = $dbh->prepare("SELECT tipo_solicitud,cod_simulacion_servicio from solicitudes_facturacion where codigo=$codigo_facturacion");//and cod_estado=1
+$stmtCantidad = $dbh->prepare("SELECT tipo_solicitud,cod_simulacion_servicio,cod_cliente from solicitudes_facturacion where codigo=$codigo_facturacion");//and cod_estado=1
 $stmtCantidad->execute();
 $resutCanitdad = $stmtCantidad->fetch();
 $tipo_solicitud = $resutCanitdad['tipo_solicitud'];//1 tcp_tcs, 2 capacitacion estudiantes,6 capacitacion empresas, 3 servicios,4 manual,5Normas
 $cod_simulacion_servicio = $resutCanitdad['cod_simulacion_servicio'];
+$cod_cliente = $resutCanitdad['cod_cliente'];
 if(isset($_GET['q'])){  
   if($tipo_solicitud==1){//tcp ?>  
     <script type="text/javascript">
@@ -38,6 +39,20 @@ if(isset($_GET['q'])){
     <script type="text/javascript">
       location = "<?=$urlRegisterSolicitudfactura_normas;?>?cod_f=<?=$codigo_facturacion?>&cod_sw=5&q=<?=$q?>&v=<?=$v?>&s=<?=$s?>&u=<?=$u?>"      
     </script><?php 
+  }elseif($tipo_solicitud==2){//solicitud capacitacion estudiantes 
+    $IdCurso=$cod_simulacion_servicio;
+    $CiAlumno=$cod_cliente;
+    ?>  
+    <script type="text/javascript">
+      location = "<?=$urlregistro_solicitud_facturacion_sec_estudiantes?>&codigo=<?=$CiAlumno?>&cod_simulacion=<?=$IdCurso;?>&IdCurso=<?=$IdCurso;?>&cod_facturacion=<?=$codigo_facturacion?>&cod_sw=5&q=<?=$q?>&r=<?=$v?>"
+    </script><?php 
+  }elseif($tipo_solicitud==6){//solicitud capacitacion empresas
+    $IdCurso=$cod_simulacion_servicio;
+    $idEmpresa=$cod_cliente;
+    ?>  
+    <script type="text/javascript">
+      location = "<?=$urlregistro_solicitud_facturacion_sec_empresas?>&codigo=<?=$idEmpresa?>&cod_simulacion=<?=$IdCurso;?>&IdCurso=<?=$IdCurso;?>&cod_facturacion=<?=$codigo_facturacion?>&cod_sw=5&q=<?=$q?>&r=<?=$v?>"
+    </script><?php
   }
 
 }else{
@@ -57,12 +72,23 @@ if(isset($_GET['q'])){
     <script type="text/javascript">
       location = "<?=$urlRegisterSolicitudfactura_normas;?>?cod_f=<?=$codigo_facturacion?>&cod_sw=5"
     </script><?php 
+  }elseif($tipo_solicitud==2){//solicitud capacitacion estudiantes 
+    $IdCurso=$cod_simulacion_servicio;
+    $CiAlumno=$cod_cliente;
+    ?>  
+    <script type="text/javascript">
+      location = "<?=$urlregistro_solicitud_facturacion_sec_estudiantes?>&codigo=<?=$CiAlumno?>&cod_simulacion=<?=$IdCurso;?>&IdCurso=<?=$IdCurso;?>&cod_facturacion=<?=$codigo_facturacion?>&cod_sw=5"
+    </script><?php 
+  }
+  elseif($tipo_solicitud==6){//solicitud capacitacion empresas
+    $IdCurso=$cod_simulacion_servicio;
+    $idEmpresa=$cod_cliente;
+    ?>  
+    <script type="text/javascript">
+      location = "<?=$urlregistro_solicitud_facturacion_sec_empresas?>&codigo=<?=$idEmpresa?>&cod_simulacion=<?=$IdCurso;?>&IdCurso=<?=$IdCurso;?>&cod_facturacion=<?=$codigo_facturacion?>&cod_sw=5"
+    </script><?php
   }
 
 }
 
 ?>
-
-<!-- <script type="text/javascript">
-  location = "<?=$urlSolicitudfactura;?>&cod=<?=$idPropuesta?>&cod_f=0&cod_sw=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>"
-</script> -->

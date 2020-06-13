@@ -71,5 +71,7 @@ $urlReportePlan="simulaciones_servicios/reportePlanificacion.php";
 $urlDatosSitios="simulaciones_servicios/simulacion_sitios_dias.php";
 
 $urlRegisterSolicitudfactura_normas="solicitud_facturacion_manual/register_solicitud_facturacion_normas.php";
+$urlregistro_solicitud_facturacion_sec_estudiantes="?opcion=registro_solicitud_facturacion";
+$urlregistro_solicitud_facturacion_sec_empresas="?opcion=registro_solicitud_facturacion_empresas";
 
 ?>
