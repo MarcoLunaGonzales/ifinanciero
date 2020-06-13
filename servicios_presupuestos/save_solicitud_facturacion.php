@@ -360,7 +360,12 @@ try {
           $v=$_POST['usuario_ibnored_v'];
           showAlertSuccessError($flagSuccess,"../".$urllistFacturasServicios."&q=".$q."&s=".$s."&u=".$u."&v=".$v);
         }else{
-          showAlertSuccessError($flagSuccess,"../".$url_list_Solicitudfactura); 
+            if(isset($_POST['cod_sw'])){
+                showAlertSuccessError($flagSuccess,"../".$urllistFacturasServicios); 
+            }else{
+                showAlertSuccessError($flagSuccess,"../".$url_list_Solicitudfactura); 
+            }
+          
         }     
               
     }//si es insert o update

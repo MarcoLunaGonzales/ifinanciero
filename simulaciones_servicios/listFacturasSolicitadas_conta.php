@@ -54,7 +54,8 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             <th>Fecha<br>Registro</th>                            
                             <th style="color:#cc4545;">#Fact</th>                            
                             <th>Importe<br>(BOB)</th>  
-                            <th>Persona<br>Contacto</th>                              
+                            <th>Persona<br>Contacto</th>
+                            <th>Razón<br>Social</th>
                             <th>Concepto</th>              
                             <th width="5%">Estado</th>                            
                             <th class="text-right">Actions</th>
@@ -243,13 +244,15 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                 } 
                                 $cont_pagosParciales[$index-1]=$nc_parciales;
                               $saldo=0;
-                              if($importe_fact_x!=null){
-                                $saldo=$sumaTotalImporte-$importe_fact_x;
-                                // echo "saldo".$saldo;
-                                $datos_FacManual=$codigo_facturacion."/0/".$saldo."/".$index."/".$nit."/".$razon_social;//dato para modal
-                              }else{
-                                $datos_FacManual=$codigo_facturacion."/0/0/".$index."/".$nit."/".$razon_social;//dato para modal
-                              }
+
+                              $saldo=$sumaTotalImporte-$importe_fact_x;
+                              $datos_FacManual=$codigo_facturacion."/0/".$saldo."/".$index."/".$nit."/".$razon_social;//dato para modal
+                              // if($importe_fact_x!=null){
+                              //   $saldo=$sumaTotalImporte-$importe_fact_x;                                
+                              //   $datos_FacManual=$codigo_facturacion."/0/".$saldo."/".$index."/".$nit."/".$razon_social;//dato para modal
+                              // }else{                                
+                              //   $datos_FacManual=$codigo_facturacion."/0/0/".$index."/".$nit."/".$razon_social;//dato para modal
+                              // }
                               if($cont_facturas>1){                              
                                 $estado="FACTURA PARCIAL";
                                 $nro_fact_x=trim($cadenaFacturas,',');
@@ -263,10 +266,10 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                 <td><small><?=$codigo_alterno?></small></td>
                                 <td><small><?=$fecha_registro;?></small></td>
                                 <!-- <td><?=$fecha_solicitudfactura;?></td>          -->                   
-                                <td style="color:#298A08;"><small><?=$nro_fact_x;?><br><span style="color:#DF0101;"><?=$cadenaFacturasM;?></span></small></td>                             
+                                <td style="color:#298A08;"><small><?=$nro_fact_x;?><br><span style="color:#DF0101;"><?=$cadenaFacturasM;?></span></small></td>
                                 <td class="text-right"><small><?=formatNumberDec($sumaTotalImporte);?></small></td>
                                 <td class="text-left"><small><?=$nombre_contacto;?></small></td>
-                                <!-- <td><?=$razon_social;?></td> -->                            
+                                <td><small><small><?=$razon_social;?></small></small></td>
                                 <td width="35%"><small><?=$concepto_contabilizacion?></small></td>
                                 <td><button class="btn <?=$btnEstado?> btn-sm btn-link"><small><?=$estado;?></small></button></td>
                                 <td class="td-actions text-right">
@@ -350,7 +353,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                                  </a>
                                                 <?php                                          
                                             }
-                                            $datos_devolucion=$codigo_facturacion."/".$nro_correlativo."/".$codigo_alterno;
+                                            $datos_devolucion=$codigo_facturacion."###".$nro_correlativo."###".$codigo_alterno."###1###10###".$urlEdit2Sol;
                                               ?> 
 
                                               <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalDevolverSolicitud" onclick="modalDevolverSolicitud('<?=$datos_devolucion;?>')">
@@ -390,187 +393,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
           </div>  
     </div>
   </div>
-<!-- small modal -->
-<div class="modal fade modal-primary" id="modalDetalleFac" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl">
-    <div class="modal-content card">
-              <div class="card-header card-header-warning card-header-icon">
-                <div class="card-icon">
-                  <i class="material-icons">settings_applications</i>
-                </div>
-                <h4 class="card-title">Detalle Solicitud</h4>
-              </div>
-
-              <div class="card-body">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                <i class="material-icons">close</i>
-              </button>
-              <div class="row" id="div_cabecera" >
-                    
-              </div>
-                <table class="table table-condensed">
-                  <thead>
-                    <tr class="text-dark bg-plomo">
-                    <th>#</th>
-                    <th>Item</th>
-                    <th>Cantidad</th>
-                    <!-- <th>Precio(BOB)</th>  
-                      <th>Desc(%)</th> 
-                      <th>Desc(BOB)</th>  -->
-                      <th width="10%">Importe(BOB)</th> 
-                      <th width="45%">Glosa</th>                   
-                    </tr>
-                  </thead>
-                  <tbody id="tablasA_registradas">
-                    
-                  </tbody>
-                </table>
-              </div>
-    </div>  
-  </div>
-</div>
-<!--    end small modal -->
-<!-- FActura manual-->
-<div class="modal fade" id="modalFacturaManual" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h3 class="modal-title" id="myModalLabel"><b>Factura Manual</b></h3>
-      </div>
-      <div class="modal-body">
-        <input type="hidden" name="cod_solicitudfacturacion_factmanual" id="cod_solicitudfacturacion_factmanual" value="0">
-        <div class="row">
-          <!-- <label class="col-sm-5 text-right col-form-label" style="color:#424242">Importe de Solicitud de Facturacón</label> -->
-          <div class="col-sm-12">
-            <div class="form-group">
-              <input type="text" name="importe_total" id="importe_total" class="form-control text-center" readonly="true" style="background-color:#E3CEF6;text-align: left">
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <label class="col-sm-3 text-right col-form-label" style="color:#424242">Numero de Factura: </label>
-          <div class="col-sm-8">
-            <div class="form-group">
-              <input type="number" name="nro_factura" id="nro_factura" class="form-control">
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <label class="col-sm-3 text-right col-form-label" style="color:#424242">Nro de Autorización: </label>
-          <div class="col-sm-8">
-            <div class="form-group">
-              <input type="number" name="nro_autorizacion" id="nro_autorizacion" class="form-control">
-            </div>
-          </div>
-        </div>
-        <div class="row">        
-        </div>
-        <div class="row">
-          <label class="col-sm-3 text-right col-form-label" style="color:#424242">Fecha de Factura </label>
-          <div class="col-sm-8">
-            <div class="form-group">
-              <input type="date" name="fecha_factura" id="fecha_factura" class="form-control">
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <label class="col-sm-3 text-right col-form-label" style="color:#424242">Nit Cliente </label>
-          <div class="col-sm-8">
-            <div class="form-group">
-              <input type="number" name="nit_cliente" id="nit_cliente" class="form-control">
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <label class="col-sm-3 text-right col-form-label" style="color:#424242">Razón Social </label>
-          <div class="col-sm-8">
-            <div class="form-group">
-              <input type="text" name="razon_social" id="razon_social" class="form-control">
-            </div>
-          </div>
-        </div>
-
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-success" id="guardarFacturaManual" name="guardarFacturaManual">Agregar</button>
-        <button type="button" class="btn btn-danger" data-dismiss="modal"> Volver </button>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="modal fade" id="modalGenerarFacturapagos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog modal-xl" role="document">
-    <form id="formFacturaParcial" class="form-horizontal" action="<?=$urlGenerarFacturaParciales;?>" method="post" onsubmit="return valida_modalFacPar(this)" enctype="multipart/form-data">  
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h3 class="modal-title" id="myModalLabel"><b>Generar Factura Parcial</b></h3>
-        </div>      
-        <div class="modal-body">
-          <input type="hidden" name="cod_solicitudfacturacion_factpagos" id="cod_solicitudfacturacion_factpagos" value="0">
-
-          <div class="row" id="contenedor_GenerarFactParcial_cabecera">
-          
-          </div>
-          <div id="contenedor_GenerarFactParcial">
-          
-          </div>
-          <input type="hidden" name="cantidad_items" id="cantidad_items" value="0">          
-        </div>    
-        <div class="modal-footer">
-          <!-- <button type="button" class="btn btn-success" id="guardarFacturaPagos" name="guardarFacturaPagos"></button> -->
-          <button type="submit" class="btn btn-success">Generar Factura</button>
-          <button type="button" class="btn btn-danger" data-dismiss="modal"> Volver </button>
-        </div>    
-      </div>
-    </form>
-  </div>
-</div>
-<!-- modal devolver solicitud -->
-<div class="modal fade" id="modalDevolverSolicitud" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Rechazar Solicitud</h4>
-      </div>
-      <div class="modal-body">        
-        <input type="hidden" name="cod_solicitudfacturacion" id="cod_solicitudfacturacion" value="0">
-        <div class="row">
-          <label class="col-sm-1 col-form-label" style="color:#000000"><small>Nro. Solicitud</small></label>
-          <div class="col-sm-2">
-            <div class="form-group" >
-              <input type="text" class="form-control" name="nro_solicitud" id="nro_solicitud" readonly="true" style="background-color:#e2d2e0">              
-            </div>
-          </div>
-          <label class="col-sm-1 col-form-label" style="color:#000000"><small>Código<br>Servicio</small></label>
-          <div class="col-sm-8">
-            <div class="form-group" >              
-              <input type="text" class="form-control" name="codigo_servicio" id="codigo_servicio" readonly="true" style="background-color:#e2d2e0">               
-            </div>
-          </div>
-        </div>                
-        <div class="row">
-          <div class="col-sm-12" >
-            <h6>Observaciones </h6>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-12" style="background-color:#FFFFFF">
-            <div class="form-group" >              
-              <textarea type="text" name="observaciones" id="observaciones" class="form-control" required="true"></textarea>
-            </div>
-          </div>
-        </div>        
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-success" id="rechazarSolicitud" name="rechazarSolicitud" data-dismiss="modal">Aceptar</button>
-        <button type="button" class="btn btn-danger" data-dismiss="modal"> <-- Volver </button>
-      </div>
-    </div>
-  </div>
-</div>
+<?php  require_once 'simulaciones_servicios/modal_facturacion.php';?>
 <?php 
   $lan=sizeof($cont);
   error_reporting(0);
@@ -596,7 +419,6 @@ $globalAdmin=$_SESSION["globalAdmin"];
       var nro_autorizacion=$('#nro_autorizacion').val();
       var nit_cliente=$('#nit_cliente').val();
       var razon_social=$('#razon_social').val();
-      
       fecha_factura=$('#fecha_factura').val();
       if(nro_factura==null || nro_factura<=0){
         Swal.fire("Informativo!", "Por favor introduzca el Número de Factura.", "warning");
@@ -622,11 +444,14 @@ $globalAdmin=$_SESSION["globalAdmin"];
     });
     $('#rechazarSolicitud').click(function(){      
       var cod_solicitudfacturacion=document.getElementById("cod_solicitudfacturacion").value;
+      var estado=document.getElementById("estado").value;
+      var admin=document.getElementById("admin").value;
+      var direccion=document.getElementById("direccion").value;
       var observaciones=$('#observaciones').val();
-      if(observaciones==null || observaciones==0){
-        Swal.fire("Informativo!", "Por favor introduzca el Número de Factura.", "warning");
+      if(observaciones==null || observaciones==0 || observaciones=='' || observaciones==' '){
+        Swal.fire("Informativo!", "Por favor introduzca la observación.", "warning");
       }else{        
-        registrarRechazoSolicitud(cod_solicitudfacturacion,observaciones);
+        registrarRechazoSolicitud(cod_solicitudfacturacion,observaciones,estado,admin,direccion);
       }      
     }); 
   });

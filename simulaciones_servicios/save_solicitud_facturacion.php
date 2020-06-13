@@ -358,8 +358,7 @@ try
           showAlertSuccessError($flagSuccess,"../".$urlSolicitudfactura."&cod=".$cod_simulacion."&q=".$q."&s=".$s."&u=".$u."&v=".$v);
         }else{
           showAlertSuccessError($flagSuccess,"../".$urlSolicitudfactura."&cod=".$cod_simulacion);
-        }   
-
+        }
     }//si es insert o update
     
 } catch(PDOException $ex){

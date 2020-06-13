@@ -160,10 +160,11 @@ $stmtIBNO->bindColumn('Codigo', $Codigo_alterno);
                                   if($codigo_facturacion>0){
                                     if($codigo_fact_x==0){ //no se genero factura 
                                       if($codEstado==1){?>
-                                    <a title="Editar Solicitud de Facturación" href='<?=$urlRegisterSolicitudfactura?>&cod_simulacion=0&IdServicio=<?=$IdServicio?>&cod_facturacion=<?=$codigo_facturacion?>' class="btn btn-success">
-                                      <i class="material-icons"><?=$iconEdit;?></i>
-                                    </a>
-                                  <?php }}else{//ya se genero factura ?>
+                                        <a title="Editar Solicitud de Facturación" href='<?=$urlRegisterSolicitudfactura?>&cod_simulacion=0&IdServicio=<?=$IdServicio?>&cod_facturacion=<?=$codigo_facturacion?>' class="btn btn-success">
+                                          <i class="material-icons"><?=$iconEdit;?></i>
+                                        </a><?php 
+                                      }
+                                    }else{//ya se genero factura ?>
                                     <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=2' target="_blank"><i class="material-icons" title="Imprimir Factura">print</i></a>
                                   <?php }?>
                                   <a href='#' rel="tooltip" class="btn btn-warning" onclick="filaTablaAGeneral($('#tablasA_registradas'),<?=$index?>,'<?=$stringCabecera?>')">

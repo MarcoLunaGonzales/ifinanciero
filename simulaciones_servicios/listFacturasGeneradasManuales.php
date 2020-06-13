@@ -55,7 +55,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             <th>Fecha<br>Factura</th>
                             <th>Cliente</th>
                             <th>Importe</th>
-                            <th>Obs.</th>
+                            <th>Detalle</th>
                             <th>Estado</th>
                             <th class="text-right">Opciones</th>                            
                           </tr>
