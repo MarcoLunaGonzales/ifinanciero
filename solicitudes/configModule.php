@@ -7,6 +7,7 @@ $moduleNamePlural="Solicitudes de Recursos";
 //$moduleNameSingular="Comprobantes";
 $urlList="index.php?opcion=listSolicitudRecursos";
 $urlList2="index.php?opcion=listSolicitudRecursosAdmin";
+$urlList3="index.php?opcion=listSolicitudRecursosAdminReg";
 
 $urlImp="solicitudes/imp.php";
 $urlImpComp="comprobantes/imp.php";

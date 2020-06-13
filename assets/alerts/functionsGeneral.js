@@ -3500,9 +3500,14 @@ function mayorReporteComprobante(fila){
    var s=$("#ibnorca_s").val();
    var u=$("#ibnorca_u").val();
    var v=$("#ibnorca_v").val(); 
-    if(tipo==1){
-      //para propuestas
-     url="ajaxListSimulacion.php?q="+q+"&s="+s+"&u="+u+"&v="+v;
+    if(tipo==1||tipo==-1){
+      if(tipo==1){
+        //para propuestas
+        url="ajaxListSimulacion.php?sim=sec&q="+q+"&s="+s+"&u="+u+"&v="+v;
+      }else{
+        //para propuestas
+        url="ajaxListSimulacion.php?sim=tcp&q="+q+"&s="+s+"&u="+u+"&v="+v;
+      } 
     }else{
       if(tipo==2){
         //para proveedor
@@ -3514,8 +3519,14 @@ function mayorReporteComprobante(fila){
      
     }
   }else{
-    if(tipo==1){
-     url="ajaxListSimulacion.php";
+    if(tipo==1||tipo==-1){
+      if(tipo==1){
+        //para propuestas
+        url="ajaxListSimulacion.php?sim=sec";
+      }else{
+        //para propuestas
+        url="ajaxListSimulacion.php?sim=tcp";
+      }
     }else{
       if(tipo==2){
         //para proveedor

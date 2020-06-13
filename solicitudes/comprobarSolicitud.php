@@ -174,6 +174,9 @@ if(isset($_GET['cod'])){
       if(isset($_GET['admin'])){
        ?><input type="hidden" name="control_admin" id="control_admin" value="0"><?php 
       }
+      if(isset($_GET['reg'])){
+       ?><input type="hidden" name="control_adminreg" id="control_adminreg" value="0"><?php  
+      }
       ?>
       <div class="card">
         <div class="card-header <?=$colorCard;?> card-header-text">
@@ -403,9 +406,16 @@ if(isset($_GET['cod'])){
                   <a href="../<?=$urlList2;?>&q=<?=$q?>&r=<?=$r?>&s=<?=$s?>&u=<?=$u?>" class="<?=$buttonCancel;?>">Volver</a> 
                 <?php
                 }else{
-                  ?>  
-                  <a href="../<?=$urlList;?>&q=<?=$q?>&r=<?=$r?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>" class="<?=$buttonCancel;?>">Volver</a> 
-                <?php
+                  if(isset($_GET['reg'])){
+                    ?>  
+                    <a href="../<?=$urlList3;?>&q=<?=$q?>&r=<?=$r?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>" class="<?=$buttonCancel;?>">Volver</a> 
+                   <?php
+                  }else{
+                    ?>  
+                    <a href="../<?=$urlList;?>&q=<?=$q?>&r=<?=$r?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>" class="<?=$buttonCancel;?>">Volver</a> 
+                   <?php
+                  }
+                   
                 }
                 
                }else{
@@ -414,9 +424,15 @@ if(isset($_GET['cod'])){
                     <a href="../<?=$urlList2;?>" class="<?=$buttonCancel;?>">Volver</a> 
                 <?php
                 }else{
-                  ?>
+                  if(isset($_GET['reg'])){
+                   ?>
+                     <a href="../<?=$urlList3;?>" class="<?=$buttonCancel;?>">Volver</a> 
+                  <?php
+                  }else{
+                   ?>
                      <a href="../<?=$urlList;?>" class="<?=$buttonCancel;?>">Volver</a> 
-                <?php
+                  <?php
+                  }
                 }
                 
                }
