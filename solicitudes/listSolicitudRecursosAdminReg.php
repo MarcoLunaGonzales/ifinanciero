@@ -35,7 +35,7 @@ if(isset($_GET['cod_sim'])){
 // Preparamos
 $stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area 
   from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo 
-  where sr.cod_estadoreferencial=1 and (sr.cod_estadosolicitudrecurso!=2 and sr.cod_estadosolicitudrecurso!=6) $sqlServicio $sqlSimCosto order by sr.numero desc");
+  where sr.cod_estadoreferencial=1 and sr.cod_estadosolicitudrecurso=6 $sqlServicio $sqlSimCosto order by sr.numero desc");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -60,11 +60,11 @@ $stmt->bindColumn('idServicio', $idServicioX);
         <div class="row">
             <div class="col-md-12">
               <div class="card">
-                <div class="card-header card-header-danger card-header-icon">
-                  <div class="card-icon">
+                <div style="color:#E2AF0F !important;font-weight:bold !important;" class="card-header card-header-danger card-header-icon" >
+                  <div class="card-icon" style="background:rgb(37, 98, 83) !important;">
                     <i class="material-icons">content_paste</i>
                   </div>
-                  <h4 class="card-title"><b><?=$moduleNamePlural?></b></h4>
+                  <h4 class="card-title"><b><?=$moduleNamePlural?> Regional</b></h4>
                 </div>
                 <div class="card-body">
                     <table class="table table-condesed" id="tablePaginator">
@@ -79,7 +79,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
                           <th>Solicitante</th>
                           <th>Fecha</th>
                           <th>Estado</th>
-                          <th class="text-right">Actions</th>
+                          <th class="text-right" width="15%">Actions</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -186,7 +186,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
                                 <?php 
                             if(isset($_GET['q'])){
                               if($codEstado==4){
-                                 ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>" class="dropdown-item">
+                                 ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=6&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>" class="dropdown-item">
                                     <i class="material-icons text-danger">reply</i> Descartar Envío
                                  </a><?php 
                                  }else{
@@ -203,7 +203,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
                              <?php
                             }else{
                                if($codEstado==4){
-                                 ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1&admin=0" class="dropdown-item">
+                                 ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=6&admin=0" class="dropdown-item">
                                     <i class="material-icons text-danger">reply</i> Descartar Envío
                                  </a><?php 
                                  }else{
@@ -228,19 +228,19 @@ $stmt->bindColumn('idServicio', $idServicioX);
                                   //para el envio a administracion
                                   if(isset($_GET['q'])){
                                    ?>
-                                    <a title="Aprobar Solicitud Recurso" onclick="alerts.showSwal('aprobar-solicitud-recurso','<?=$urlEdit2?>?cod=<?=$codigo?>&estado=4&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>')" href='#'  class="btn btn-warning">
+                                    <a title="Aprobar Solicitud Recurso" onclick="alerts.showSwal('aprobar-solicitud-recurso','<?=$urlEdit2?>?cod=<?=$codigo?>&reg=1&estado=4&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>')" href='#'  class="btn btn-warning">
                                       <i class="material-icons">assignment_turned_in</i>
                                     </a>
-                                    <a title="Volver al Estado Registro" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>'  class="btn btn-danger">
+                                    <a title="Volver al Estado Registro" href='<?=$urlEdit2?>?cod=<?=$codigo?>&reg=1&estado=1&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>'  class="btn btn-danger">
                                       <i class="material-icons">reply</i>
                                     </a>
                                    <?php
                                   }else{
                                     ?>
-                                     <a title="Aprobar Solicitud Recurso" onclick="alerts.showSwal('aprobar-solicitud-recurso','<?=$urlEdit2?>?cod=<?=$codigo?>&estado=4&admin=0')" href='#'  class="btn btn-warning">
+                                     <a title="Aprobar Solicitud Recurso" onclick="alerts.showSwal('aprobar-solicitud-recurso','<?=$urlEdit2?>?cod=<?=$codigo?>&reg=1&estado=4&admin=0')" href='#'  class="btn btn-warning">
                                        <i class="material-icons">assignment_turned_in</i>
                                      </a>
-                                     <a title="Volver al Estado Registro" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1&admin=0'  class="btn btn-danger">
+                                     <a title="Volver al Estado Registro" href='<?=$urlEdit2?>?cod=<?=$codigo?>&reg=1&estado=1&admin=0'  class="btn btn-danger">
                                        <i class="material-icons">reply</i>
                                      </a>
                                     <?php
@@ -266,7 +266,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
                               <i class="material-icons"><?=$iconImp;?></i>
                             </a>
                              
-                            <a title="Editar solicitud - detalle" href='<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>'  class="btn btn-info">
+                            <a title="Editar solicitud - detalle" href='<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&reg=1&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>'  class="btn btn-info">
                               <i class="material-icons"><?=$iconEdit;?></i>
                             </a>
                             <?php
@@ -283,7 +283,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
                             <a title="Imprimir" href='#' onclick="javascript:window.open('<?=$urlImp;?>?sol=<?=$codigo;?>&mon=1')" class="<?=$buttonEdit;?>">
                               <i class="material-icons"><?=$iconImp;?></i>
                             </a>
-                            <a title="Editar solicitud - detalle" href='<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>'  class="btn btn-info">
+                            <a title="Editar solicitud - detalle" href='<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&reg=1'  class="btn btn-info">
                               <i class="material-icons"><?=$iconEdit;?></i>
                             </a>
                             <?php
@@ -315,15 +315,8 @@ $stmt->bindColumn('idServicio', $idServicioX);
                  $codUrl="&sim=$codSimCosto&det=1";
                  $codUrl2="?sim=$codSimCosto&det=1";
                 }
-
-                if(isset($_GET['q'])){
-                ?><a href="<?=$urlRegister3;?>?q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?><?=$codUrl?>" target="_self" class="<?=$buttonNormal;?>">Registrar</a><?php
-                }else{
-                 ?><a href="#" onclick="javascript:window.open('<?=$urlRegister3;?><?=$codUrl2?>')" class="<?=$buttonNormal;?>">Registrar</a>
-                  <?php
-                } 
-                ?>
-                <a href="#" onclick="abrirModal('modalListSolEliminados');moverModal('modalListSolEliminados');" class="btn btn-danger float-right"><i class="material-icons"><?=$iconDelete;?></i> <small id="cantidad_eliminados"></small> Eliminados</a>
+?>
+                <a href="#" onclick="abrirModal('modalListSolEliminados');moverModal('modalListSolEliminados');" class="btn btn-danger float-right" style="background:rgb(37, 98, 83) !important; color:#E2AF0F;"><i class="material-icons"><?=$iconDelete;?></i> <small id="cantidad_eliminados"></small> Eliminados</a>
               </div>      
             </div>
           </div>  
@@ -356,8 +349,8 @@ $stmt->bindColumn('idServicio', $idServicioX);
 <div class="modal fade modal-primary" id="modalListSolEliminados" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-xl">
     <div class="modal-content card">
-              <div class="card-header card-header-danger card-header-icon">
-                <div class="card-icon">
+              <div style="color:#E2AF0F !important;font-weight:bold !important;" class="card-header card-header-danger card-header-icon">
+                <div class="card-icon" style="background:rgb(37, 98, 83) !important;">
                   <i class="material-icons"><?=$iconDelete;?></i>
                 </div>
                 <h4 class="card-title">Solicitudes Eliminadas</h4>
@@ -372,7 +365,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
               </div>
                 <table class="table table-condesed" id="tablePaginatorHead">
                       <thead>
-                        <tr class="bg-info">
+                        <tr style="background:rgb(37, 98, 83) !important; color:#E2AF0F;">
                           <th>Of. - Area</th>
                           <th>Nº Sol.</th>
                           <th>Cod. Servicio</th>

@@ -194,6 +194,9 @@ if($flagSuccess==true){
 
 if(!isset($_POST['control_admin'])){
  $urlList2=$urlList;
+ if(isset($_POST['control_adminreg'])){
+   $urlList2=$urlList3;
+ } 
 }   
 
   if(isset($_POST['usuario_ibnored'])){

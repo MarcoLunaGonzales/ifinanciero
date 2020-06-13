@@ -209,21 +209,14 @@
 			$cod_sw=$_GET['cod_sw'];
 			require_once('simulaciones_servicios/registerSolicitud_facturacion.php');
 		}
-
+		if ($_GET['opcion']=='editSolicitud_facturacion') {
+			$codigo_s=$_GET['codigo_s'];			
+			require_once('simulaciones_servicios/solicitud_facturacion_edit.php');
+		}
 		if ($_GET['opcion']=='listSolicitud_facturacion_normas') {			
 			require_once('solicitud_facturacion_manual/lista_solicitud_facturacion_normas.php');
 		}
-		// if ($_GET['opcion']=='registerSolicitud_facturacion_normas') {			
-		// 	require_once('solicitud_facturacion_manual/register_solicitud_facturacion_normas.php');
-		// }
 
-		// if ($_GET['opcion']=='save_solicitud_facturacion_normas') {
-		// 	require_once('solicitud_facturacion_manual/save_solicitud_facturacion_normas.php');
-		// }
-
-		// if ($_GET['opcion']=='save_solicitud_facturacion') {
-		// 	require_once('simulaciones_servicios/save_solicitud_facturacion.php');
-		// }
 		if ($_GET['opcion']=='anular_facturaGenerada') {
 			$codigo=$_GET['codigo'];
 			$cod_solicitudfacturacion=$_GET['cod_solicitudfacturacion'];
@@ -419,6 +412,10 @@
 		}
 		if ($_GET['opcion']=='listSolicitudFacturacionNormas') {
 			require_once('solicitud_facturacion_manual/listSolicitudFacturacionNormas.php');
+		}
+
+		if ($_GET['opcion']=='listSolicitudRecursosAdminReg') {
+			require_once('solicitudes/listSolicitudRecursosAdminReg.php');
 		}
 
 		//ESTADOS DE CUENTAS

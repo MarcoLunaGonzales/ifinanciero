@@ -58,7 +58,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             <th width="25%">Razón Social</th>
                             <th width="10%">Nit</th>
                             <th width="8%">Importe<br>Factura</th>
-                            <th>Obs.</th>
+                            <th>Detalle</th>
                             <th width="5%">Estado</th>
                             <th width="10%" class="text-right">Opciones</th>                            
                           </tr>

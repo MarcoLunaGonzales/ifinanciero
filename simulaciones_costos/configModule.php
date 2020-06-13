@@ -37,4 +37,7 @@ $urlPrintSolicitud="simulaciones_servicios/printSolicitud.php";
 $urlregistro_solicitud_facturacion_empresas="?opcion=registro_solicitud_facturacion_empresas";
 
 $urlReportePlan="simulaciones_costos/reportePlanificacion.php";
+
+
+$urlListSol="index.php?opcion=listFacturasServicios";
 ?>

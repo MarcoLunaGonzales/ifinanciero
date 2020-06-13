@@ -26,9 +26,6 @@ $stmtServicio = $dbh->prepare($sql);
 $stmtServicio->execute();
 $Codigo_alterno=obtenerCodigoServicioPorPropuestaTCPTCS($cod_simulacion);
 $resultServicio = $stmtServicio->fetch();
-if(isset($_GET['q'])){
-  $q=$_GET['q'];
-}
 if ($cod_facturacion > 0){
     $stmt = $dbh->prepare("SELECT * FROM solicitudes_facturacion where codigo=$cod_facturacion");
     $stmt->execute();
@@ -52,7 +49,11 @@ if ($cod_facturacion > 0){
     $name_cliente=nameCliente($cod_cliente);
 }else {
     $nombre_simulacion = $resultServicio['nombre'];
-    $cod_personal = $resultServicio['cod_responsable'];
+    if(isset($_POST['q'])){
+        $cod_personal=$_POST['q'];
+    }else{
+        $cod_personal = $resultServicio['cod_responsable'];
+    }
     $cod_uo = $resultServicio['cod_unidadorganizacional'];
     $cod_area = $resultServicio['cod_area'];
     $cod_cliente = $resultServicio['cod_cliente'];
@@ -105,7 +106,7 @@ $descuento_cliente=obtenerDescuentoCliente($cod_cliente);
                 <div class="card">
                   <div class="card-header <?=$colorCard;?> card-header-text">
                     <div class="card-text">
-                      <h4 class="card-title"><?php if ($cod_simulacion == 0) echo "Registrar "; else echo "Editar ";?>Solicitud de Facturación</h4>                      
+                      <h4 class="card-title"><?php if ($cod_facturacion == 0) echo "Registrar "; else echo "Editar ";?>Solicitud de Facturación</h4>                      
                     </div>
                     <h4 class="card-title" align="center"><b>Propuesta/Servicio: <?=$nombre_simulacion?> - <?=$name_area?> / <?=$Codigo_alterno?></b></h4>
                   </div>
@@ -526,7 +527,6 @@ $descuento_cliente=obtenerDescuentoCliente($cod_cliente);
                                             <input style="background:#ffffff" class="form-control" type="text" value="0" name="modal_totalmontoserv" id="modal_totalmontoserv" step="0.01" readonly="true" />                                            
                                         </div>
                                     </div>
-                                        
                                 </div>
                                 <fieldset id="fiel" style="width:100%;border:0;">
                                     <button title="Agregar Servicios" type="button" id="add_boton" name="add" class="btn btn-warning btn-round btn-fab" onClick="AgregarSeviciosFacturacion2(this)">
@@ -574,14 +574,17 @@ $descuento_cliente=obtenerDescuentoCliente($cod_cliente);
                             <a href='<?=$urlSolicitudfactura;?>&cod=<?=$cod_simulacion;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
                         <?php }else{//vuelve al listado de solicitud general
                             ?>
-                            <a href='<?=$urlListSol?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
+                            <a href='<?=$urlListSol?>&q=<?=$q?>&v=<?=$v?>&s=<?=$s?>&u=<?=$u?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
                         <?php }
                     }else{//desde ifinanciero
                       if($cod_sw==1){?>
                         <a href='<?=$urlSolicitudfactura;?>&cod=<?=$cod_simulacion;?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
+                    <?php }elseif($cod_sw==5){?>
+                        <a href='<?=$urlListSol?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
                     <?php }else{?>
                         <a href='<?=$urlListSimulacionesServ?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
-                    <?php }   
+                        <?php
+                        }
                     }
 
                     ?>

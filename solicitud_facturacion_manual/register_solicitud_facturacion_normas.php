@@ -9,35 +9,77 @@ require_once 'configModule.php';
 
 //$dbh = new Conexion();
 $dbh = new Conexion();
-
+$globalUser=$_SESSION["globalUser"];
 //recibimos las normas seleccionadas a facturar
-$total_items = $_POST["total_items"];
 if(isset($_POST['q'])){
   $q=$_POST['q'];
   $s=$_POST['s'];
   $u=$_POST['u'];
-  $r=$_POST['r'];
+  $v=$_POST['v'];
+}elseif(isset($_GET['q'])){    
+    $q=$_GET['q'];
+    $s=$_GET['s'];
+    $u=$_GET['u'];
+    $v=$_GET['v'];
 }
 
+if(isset($_GET['cod_f'])){
+    $cod_facturacion=$_GET['cod_f'];
+    $cod_simulacion=0;
+}else{
+    $total_items = $_POST["total_items"];
+    $cod_simulacion=0;
+    $cod_facturacion=0;    
+}
 
-$cod_simulacion=0;
-$cod_facturacion=null;
-$cod_uo=null;
-$cod_area=null;
-$cod_cliente=null;
-$globalUser=$_SESSION["globalUser"];
-$cod_personal=$globalUser;
-$fecha_registro =date('Y-m-d');
-$fecha_solicitudfactura=$fecha_registro;
-$cod_tipoobjeto=213;//por defecto}
-$name_tipoPago=obtenerNombreTipoPago($cod_tipoobjeto);
-$cod_tipopago = null;
-$name_cliente=null;
-$razon_social = $name_cliente;
-$nit=null;
-$observaciones = null;
-$observaciones_2 = null;
-$persona_contacto=null;
+if ($cod_facturacion > 0){
+    $sql="SELECT * FROM solicitudes_facturacion where codigo=$cod_facturacion";
+    // echo $sql;
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    $result = $stmt->fetch();
+    $nombre_simulacion = null;
+    $cod_uo = $result['cod_unidadorganizacional'];
+    $cod_area = $result['cod_area'];
+    $cod_cliente = $result['cod_cliente'];
+    $cod_personal = $result['cod_personal'];
+    $id_tiposervicio = null;
+    $fecha_registro = $result['fecha_registro'];
+    $fecha_solicitudfactura = $result['fecha_solicitudfactura'];
+    $cod_tipoobjeto = $result['cod_tipoobjeto'];
+    $name_tipoPago=obtenerNombreTipoPago($cod_tipoobjeto);
+    $cod_tipopago = $result['cod_tipopago'];
+    $name_cliente=nameCliente($cod_cliente);
+    $razon_social = $result['razon_social'];
+    $nit = $result['nit'];
+    $observaciones = $result['observaciones'];
+    $observaciones_2 = $result['observaciones_2'];
+    $persona_contacto= $result['persona_contacto'];
+    $Codigo_alterno=null;
+}else {
+    $cod_simulacion=0;
+    $cod_facturacion=null;
+    $cod_uo=null;
+    $cod_area=null;
+    $cod_cliente=null;    
+    if(isset($_POST['q'])){
+        $cod_personal=$_POST['q'];
+    }else{
+        $cod_personal = $globalUser;
+    }$cod_personal=$globalUser;
+    $fecha_registro =date('Y-m-d');
+    $fecha_solicitudfactura=$fecha_registro;
+    $cod_tipoobjeto=213;//por defecto}
+    $name_tipoPago=obtenerNombreTipoPago($cod_tipoobjeto);
+    $cod_tipopago = null;
+    $name_cliente=null;
+    $razon_social = $name_cliente;
+    $nit=null;
+    $observaciones = null;
+    $observaciones_2 = null;
+    $persona_contacto=null;
+    $Codigo_alterno=null;
+}
 $name_area=null;
 $contadorRegistros=0;
 ?>
@@ -53,7 +95,13 @@ $contadorRegistros=0;
                 <?php 
                   if(isset($_POST['q'])){
                     ?><input type="hidden" name="usuario_ibnored" id="usuario_ibnored" value="<?=$q;?>">
-                    <input type="hidden" name="usuario_ibnored_r" id="usuario_ibnored_r" value="<?=$r;?>">
+                    <input type="hidden" name="usuario_ibnored_v" id="usuario_ibnored_v" value="<?=$v;?>">
+                    <input type="hidden" name="usuario_ibnored_s" id="usuario_ibnored_s" value="<?=$s;?>">
+                    <input type="hidden" name="usuario_ibnored_u" id="usuario_ibnored_u" value="<?=$u;?>">
+                    <?php
+                  }elseif(isset($_GET['q'])){
+                    ?><input type="hidden" name="usuario_ibnored" id="usuario_ibnored" value="<?=$q;?>">
+                    <input type="hidden" name="usuario_ibnored_v" id="usuario_ibnored_v" value="<?=$v;?>">
                     <input type="hidden" name="usuario_ibnored_s" id="usuario_ibnored_s" value="<?=$s;?>">
                     <input type="hidden" name="usuario_ibnored_u" id="usuario_ibnored_u" value="<?=$u;?>">
                     <?php
@@ -66,7 +114,7 @@ $contadorRegistros=0;
                 <div class="card">
                   <div class="card-header <?=$colorCard;?> card-header-text">
                     <div class="card-text">
-                      <h4 class="card-title"><?php if ($cod_simulacion == 0) echo "Registrar "; else echo "Editar ";?>Solicitud de Facturación</h4>                      
+                      <h4 class="card-title"><?php if ($cod_facturacion == 0) echo "Registrar "; else echo "Editar ";?>Solicitud de Facturación</h4>                      
                     </div>
                     <h4 class="card-title" align="center"><b>Venta de Normas</b></h4>
                   </div>
@@ -81,7 +129,7 @@ $contadorRegistros=0;
                                     $queryUO1 = "SELECT codigo,nombre,abreviatura from unidades_organizacionales where cod_estado=1 order by nombre";
                                     $statementUO1 = $dbh->query($queryUO1);
                                     while ($row = $statementUO1->fetch()){ ?>
-                                        <option value="<?=$row["codigo"];?>" data-subtext="(<?=$row['codigo']?>)"><?=$row["abreviatura"];?> - <?=$row["nombre"];?></option>
+                                        <option  <?=($cod_uo==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>" data-subtext="(<?=$row['codigo']?>)"><?=$row["abreviatura"];?> - <?=$row["nombre"];?></option>
                                     <?php } ?>
                                 </select>
                                
@@ -90,7 +138,17 @@ $contadorRegistros=0;
                           <label class="col-sm-2 col-form-label">Area</label>
                             <div class="col-sm-4">
                                 <div class="form-group" >                                
-                                    <div id="div_contenedor_area">                                        
+                                    <div id="div_contenedor_area">  
+                                        <select name="cod_area" id="cod_area" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true" required="true"> 
+                                                <?php 
+                                                $sqlArea="SELECT cod_unidad,cod_area,(select a.nombre from areas a where a.codigo=cod_area) as nombre_area,(select a.abreviatura from areas a where a.codigo=cod_area) as abrev_area FROM areas_organizacion
+                                                where cod_estadoreferencial=1 and cod_unidad=$cod_uo order by nombre_area";
+                                                $stmtArea = $dbh->prepare($sqlArea);                                            
+                                                $stmtArea->execute();
+                                                while ($rowArea = $stmtArea->fetch()){ ?>
+                                                     <option <?=($cod_area==$rowArea["cod_area"])?"selected":"";?> value="<?=$rowArea["cod_area"];?>" data-subtext="(<?=$rowArea['cod_area']?>)"><?=$rowArea["abrev_area"];?> - <?=$rowArea["nombre_area"];?></option><?php 
+                                                } ?>
+                                        </select>                                      
                                     </div>                    
                                 </div>
                             </div>
@@ -124,6 +182,52 @@ $contadorRegistros=0;
                             <!-- creamos los objetos de las areas de servicios -->
                             <div class="">
                                 <?php 
+
+                                    //====ingresamos los objetos con porcentajes
+                                    if($cod_facturacion > 0)
+                                    {
+                                        $queryTipopagoEdit="SELECT cod_tipopago,porcentaje,monto from solicitudes_facturacion_tipospago where cod_solicitudfacturacion=$cod_facturacion";
+                                        $stmtTipopagoEdit = $dbh->prepare($queryTipopagoEdit);
+                                        $stmtTipopagoEdit->execute();
+                                        $ncAreas=0;$contAreas= array();
+                                        while ($rowAreas = $stmtTipopagoEdit->fetch(PDO::FETCH_ASSOC)) {
+                                            $datoArea = new stdClass();//obejto
+                                            $codFila=(int)$rowAreas["cod_tipopago"];
+                                            $porcentaje_x=trim($rowAreas['porcentaje']);
+                                            $monto_x=trim($rowAreas['monto']);?>
+                                            <script>
+                                                var tipopago={
+                                                    codigo_tipopago: <?=$codFila?>,
+                                                    monto_porcentaje: <?=$porcentaje_x?>,
+                                                    monto_bob: <?=$monto_x?>
+                                                }
+                                                itemTipoPagos_facturacion[0].push(tipopago);  
+                                            </script>
+                                            <?php
+                                        }
+                                        //para objetos areas                                        
+                                        $queryAreasEdit="SELECT cod_area,porcentaje,monto from solicitudes_facturacion_areas where cod_solicitudfacturacion=$cod_facturacion";
+                                        $stmtAreasEdit = $dbh->prepare($queryAreasEdit);
+                                        $stmtAreasEdit->execute();
+                                        $ncAreas=0;$contAreas= array();
+                                        while ($row = $stmtAreasEdit->fetch(PDO::FETCH_ASSOC)) {
+                                            $datoArea = new stdClass();//obejto
+                                            $codFila=(int)$row["cod_area"];
+                                            $porcentaje_x=trim($row['porcentaje']);
+                                            $monto_x=trim($row['monto']);?>
+                                            <script>
+                                                var area={
+                                                    codigo_areas: <?=$codFila?>,
+                                                    monto_porcentaje: <?=$porcentaje_x?>,
+                                                    monto_bob: <?=$monto_x?>
+                                                }
+                                                itemAreas_facturacion[0].push(area);  
+                                            </script>
+                                            <?php
+                                        }
+                                    }
+                                    //=== termina porcentaje objetos 
+
                                     $queryAreas="SELECT codigo,nombre,abreviatura from areas where areas_ingreso=1 and cod_estado=1 order by nombre";
                                     $stmtAreas = $dbh->prepare($queryAreas);
                                     $stmtAreas->execute();
@@ -147,8 +251,7 @@ $contadorRegistros=0;
                                         $ncAreas++;
                                     }
                                     $contAreas[0]=$ncAreas;
-                                ?>
-                                <?php //unidades
+                                     //unidades
                                     $queryUnidades="SELECT codigo,nombre,abreviatura from unidades_organizacionales where cod_estado=1 order by nombre";
                                     $stmtUnidades = $dbh->prepare($queryUnidades);
                                     $stmtUnidades->execute();
@@ -228,7 +331,7 @@ $contadorRegistros=0;
                                         $queryTipoObjeto = "SELECT * from clientes where cod_estadoreferencial=1 order by nombre";
                                         $statementObjeto = $dbh->query($queryTipoObjeto);
                                         while ($row = $statementObjeto->fetch()){ ?>
-                                            <option value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                                            <option <?=($cod_cliente==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
                                         <?php } ?>
                                     </select>  
                                         
@@ -244,9 +347,9 @@ $contadorRegistros=0;
                                           $stmt = $dbh->prepare($query);
                                           $stmt->execute();
                                           while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                                            $codigo=$row['codigo'];    
+                                            $codigo_contacto=$row['codigo'];    
                                             $nombre_conatacto=$row['nombre']." ".$row['paterno']." ".$row['materno'];
-                                            ?><option value="<?=$codigo?>" class="text-right"><?=$nombre_conatacto?></option>
+                                            ?><option <?=($persona_contacto==$codigo_contacto)?"selected":"";?> value="<?=$codigo_contacto?>" class="text-right"><?=$nombre_conatacto?></option>
                                            <?php 
                                            } ?> 
                                         </select>
@@ -295,7 +398,7 @@ $contadorRegistros=0;
                             <label class="col-sm-3 col-form-label">Observaciones 2</label>
                             <div class="col-sm-9">
                                 <div class="form-group">
-                                    <input class="form-control" type="text" name="observaciones_2" id="observaciones_2" onkeyup="javascript:this.value=this.value.toUpperCase();" required="true" />
+                                    <input class="form-control" type="text" name="observaciones_2" id="observaciones_2" value="<?=$observaciones_2;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" required="true" />
                                 </div>
                             </div>
                         </div>
@@ -328,36 +431,57 @@ $contadorRegistros=0;
                                       <tbody>                                
                                         <?php 
                                         $iii=1;
-                                        $ids_normas= array();
-                                        for ($i=1;$i<=$total_items-1;$i++){
-                                            if($_POST["idVentaNormas_a".$i]!=''){
-                                                $idVentaNormas=$_POST["idVentaNormas_a".$i];
-                                                $ids_normas[$i-1]=$idVentaNormas;
+                                        if($cod_facturacion==0){
+                                            $ids_normas= array();
+                                            for ($i=1;$i<=$total_items-1;$i++){
+                                                if($_POST["idVentaNormas_a".$i]!=''){
+                                                    $idVentaNormas=$_POST["idVentaNormas_a".$i];
+                                                    $ids_normas[$i-1]=$idVentaNormas;
+                                                }
                                             }
-                                        }
-                                        $stringNormas=implode(",", $ids_normas);
-                                        $stringNormas=trim($stringNormas,',');
+                                            $stringNormas=implode(",", $ids_normas);
+                                            $stringNormas=trim($stringNormas,',');
 
-                                        $queryPr="SELECT * from ibnorca.ventanormas where IdVentaNormas in ($stringNormas)";
-                                       // echo $queryPr;
-                                        $stmt = $dbh->prepare($queryPr);
-                                        $stmt->execute();
+                                            $queryPr="SELECT * from ibnorca.ventanormas where IdVentaNormas in ($stringNormas)";
+                                           // echo $queryPr;
+                                            $stmt = $dbh->prepare($queryPr);
+                                            $stmt->execute();
+                                        }else{
+                                            $queryPr="SELECT d.codigo,d.cod_claservicio,d.descripcion_alterna,d.cantidad,d.precio from solicitudes_facturaciondetalle d where d.tipo_item=1 and d.cod_solicitudfacturacion=$cod_facturacion ORDER BY d.codigo";
+                                            // echo $queryPr;
+                                             $stmt = $dbh->prepare($queryPr);
+                                            $stmt->execute();
+                                        }
                                         $modal_totalmontopre=0;$modal_totalmontopretotal=0;
                                         while ($rowPre = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                                            $codigoPre=$rowPre['IdVentaNormas'];
-                                            $codCS=488;//por defecto
-                                            $tipoPre=descripcionClaServicio($codCS);
-                                            $cantidadPre=$rowPre['Cantidad'];                                            
-                                            $montoPre=$rowPre['Precio'];
-                                            $descuento_bob_cliente=0; //descuento maximo
-                                            $banderaHab=1;                                            
-                                            $cod_anio=1;                                        
-                                            if($banderaHab!=0){
+                                            if($cod_facturacion==0){
+                                                $codigoPre=$rowPre['IdVentaNormas'];
+                                                $codCS=488;//por defecto
+                                                $tipoPre=descripcionClaServicio($codCS);
+                                                $cantidadPre=$rowPre['Cantidad'];                                            
+                                                $montoPre=$rowPre['Precio'];
+                                                $descuento_bob_cliente=0; //descuento maximo
+                                                $banderaHab=1;                                            
+                                                $cod_anio=1; 
                                                 $descuento_porX=0;
                                                 $descuento_bobX=0;                                                
-                                                $idNorma=$rowPre['idNorma'];   
-                                                $descripcion_alternaX=nameNorma($idNorma);                                                
+                                                $idNorma=$rowPre['idNorma'];
+                                                $descripcion_alternaX=nameNorma($idNorma);
                                                 $montoPre=number_format($montoPre,2,".","");
+                                            }else{
+                                                $codigoPre=0;
+                                                $codCS=$rowPre['cod_claservicio'];
+                                                $tipoPre=descripcionClaServicio($codCS);
+                                                $cantidadPre=$rowPre['cantidad'];                                                
+                                                $montoPre=$rowPre['precio'];
+                                                $descuento_bob_cliente=0;                                                 
+                                                $banderaHab=1;                                                
+                                                $cod_anio=1;
+                                                $descripcion_alternaX=$rowPre['descripcion_alterna'];
+                                            }                                        
+                                            if($banderaHab!=0){
+                                                
+                                                
                                                 ?>
                                                 <!-- guardamos las varialbles en un input -->
                                                 <input type="hidden" id="cod_serv_tiposerv<?=$iii?>" name="cod_serv_tiposerv<?=$iii?>" value="<?=$codigoPre?>">
@@ -383,8 +507,7 @@ $contadorRegistros=0;
                                                   <td class="text-right"><input type="hidden" name="modal_importe<?=$iii?>" id="modal_importe<?=$iii?>"><input type="text" class="form-control" name="modal_importe_dos<?=$iii?>" id="modal_importe_dos<?=$iii?>" style ="background-color: #ffffff;" readonly></td>
                                                                                               
                                                   <td>
-                                                    <textarea name="descripcion_alterna<?=$iii?>" id="descripcion_alterna<?=$iii?>" class="form-control" onkeyup="javascript:this.value=this.value.toUpperCase();"><?=$descripcion_alternaX?></textarea>
-                                                     <!-- <input type="text" > -->
+                                                    <textarea name="descripcion_alterna<?=$iii?>" id="descripcion_alterna<?=$iii?>" class="form-control" onkeyup="javascript:this.value=this.value.toUpperCase();"><?=$descripcion_alternaX?></textarea>                                                     <!-- <input type="text" > -->
                                                   </td>
                                                   <!-- checkbox -->
                                                   <td>                                                    

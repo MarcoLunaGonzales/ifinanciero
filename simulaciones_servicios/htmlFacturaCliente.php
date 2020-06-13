@@ -18,10 +18,10 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 
 	$codigo = $codigo;
 	$auxiliar =$auxiliar; //de dónde llega la solicitud para impresión 1=lista facturas (cod_factura) / 2=lista solicitudes (cod_sol_Fact)//3=lista facturas (cod_factura)tienda virtual
-	$tipo_admin=$tipo_admin;//1 original cliente, 2 original cliente pantalla, 3 copia contabilidad
+	$tipo_admin=$tipo_admin;//1 original cliente completo(cierre de html), 2 original cliente pantalla (mitad ariba), 3 copia contabilidad pantalla (mitad abajo)
 	$tipo_impresion=2;//tipo de impresión 1 sin detalles, 2 detalladamente
 	try {
-		if($auxiliar==1){
+		if($auxiliar==1){//
 		    $stmtInfo = $dbh->prepare("SELECT sf.*,(select t.nombre from clientes t where t.codigo=sf.cod_cliente) as nombre_cliente FROM facturas_venta sf where sf.codigo=$codigo");
 		    $stmtInfo->execute();
 		    $resultInfo = $stmtInfo->fetch();   
@@ -68,7 +68,7 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 		    $observaciones = $resultInfo['observaciones'];
 		    // $nombre_cliente = $resultInfo['nombre_cliente'];
 		    $nombre_cliente = $razon_social;
-		}else{
+		}else{//para la tiendA
 			$stmtInfo = $dbh->prepare("SELECT sf.* FROM facturas_venta sf  where sf.codigo=$codigo");
 			$stmtInfo->execute();
 			$resultInfo = $stmtInfo->fetch();   
@@ -124,50 +124,51 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 			        '</script>';
 			$html.=  '<header class="header">';
 		}else{
-			$html.='<br><br><hr>';
+			$html.='<br><br>';
 		}
-		     $html.='<table  style="width: 100%;">
-		              <thead>
-		                <tr>
-		                  <td align="center" width="37%">
-		                    <img class="imagen-logo-izq_2" src="../assets/img/ibnorca2.jpg">
-		                    <small><h4 >
-		                      '.obtenerValorConfiguracionFactura(1).'<br>
-		                      '.obtenerValorConfiguracionFactura(2).'<br>
-		                      '.obtenerValorConfiguracionFactura(3).'<br>
-		                      Teléfonos:'.obtenerValorConfiguracionFactura(4).' * Fax: '.obtenerValorConfiguracionFactura(12).'<br>
-		                      Web:'.obtenerValorConfiguracionFactura(10).' * E-mail:'.obtenerValorConfiguracionFactura(11).' * '.obtenerValorConfiguracionFactura(13).' <br>
-		                      '.obtenerValorConfiguracionFactura(14).'<br>
-		                    </h4></small> 
-		                  </td>
-		                  <td  valign="top" width="26%"><div id="header_titulo_texto_grande" >FACTURA</div></td>
-		                  <td width="37%">
-		                    <table style="width: 100%;border: black 1px solid;text-align: left;">
-		                        <tr align="left">
-		                          <td>
-		                              NIT:<br>
-		                              FACTURA N°:<br>
-		                              AUTORIZACIÓN N°:
-		                          </td>
-		                          <td>
-		                              '.$nit_empresa.'<br>
-		                              '.$nro_factura.'<br>
-		                              '.$nro_autorizacion.'
-		                          </td>
-		                        </tr>
-		                    </table>
-		                    <small><h4>';
-		                    if($tipo_admin==1 || $tipo_admin==2){
-		                    	$html.='ORIGINAL: CLIENTE<br><br>';
-		                    }else{
-		                    	$html.='COPIA: CONTABILIDAD<br><br>';
-		                    }
-		                    $html.='* '.obtenerValorConfiguracionFactura(6).'<br><br>
-		                      '.$nombre_ciudad.', '.obtenerFechaEnLetra($fecha_factura).'<br>
-		                    </h4></small>
-		                  </td>
-		                </tr>
-		              </thead>
+		$html.='<div  style="width: 100%; height:50%">';
+		    $html.='<table  style="width: 100%;" >
+		              	<thead>
+			                <tr>
+			                  <td align="center" width="37%">
+			                    <img class="imagen-logo-izq_2" src="../assets/img/ibnorca2.jpg">
+			                    <small><h4 >
+			                      '.obtenerValorConfiguracionFactura(1).'<br>
+			                      '.obtenerValorConfiguracionFactura(2).'<br>
+			                      '.obtenerValorConfiguracionFactura(3).'<br>
+			                      Teléfonos:'.obtenerValorConfiguracionFactura(4).' * Fax: '.obtenerValorConfiguracionFactura(12).'<br>
+			                      Web:'.obtenerValorConfiguracionFactura(10).' * E-mail:'.obtenerValorConfiguracionFactura(11).' * '.obtenerValorConfiguracionFactura(13).' <br>
+			                      '.obtenerValorConfiguracionFactura(14).'<br>
+			                    </h4></small> 
+			                  </td>
+			                  <td  valign="top" width="26%"><div id="header_titulo_texto_grande" >FACTURA</div></td>
+			                  <td width="37%">
+			                    <table style="width: 100%;border: black 1px solid;text-align: left;">
+			                        <tr align="left">
+			                          <td>
+			                              NIT:<br>
+			                              FACTURA N°:<br>
+			                              AUTORIZACIÓN N°:
+			                          </td>
+			                          <td>
+			                              '.$nit_empresa.'<br>
+			                              '.$nro_factura.'<br>
+			                              '.$nro_autorizacion.'
+			                          </td>
+			                        </tr>
+			                    </table>
+			                    <small><h4>';
+			                    if($tipo_admin==1 || $tipo_admin==2){
+			                    	$html.='ORIGINAL: CLIENTE<br><br>';
+			                    }else{
+			                    	$html.='COPIA: CONTABILIDAD<br><br>';
+			                    }
+			                    $html.='* '.obtenerValorConfiguracionFactura(6).'<br><br>
+			                      '.$nombre_ciudad.', '.obtenerFechaEnLetra($fecha_factura).'<br>
+			                    </h4></small>
+			                  </td>
+			                </tr>
+			            </thead>
 		            </table>';
 		            $html.='<table class="table">'.
 		              '<tr class="bold table-title text-left">'.
@@ -176,7 +177,7 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 		                  '<td  colspan="2" class="td-border-none" width="30%"><h4><b>NIT/CI:</b> &nbsp;&nbsp;'.$nit.'</h4></td>'.                
 		                '</tr>'.
 		            '</table>';
-		     $html.='<table class="table2">'.
+		    $html.='<table class="table2">'.
 		              '<thead>'.                
 		                '<tr>'.
 		                  '<td width="12%" align="center">CANTIDAD</td> 
@@ -262,16 +263,17 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 		          $html.='<table class="table3" >
 		            <tr align="center"><td>&quot;'.obtenerValorConfiguracionFactura(7).'&quot;<br>&quot;'.obtenerValorConfiguracionFactura(8).'&quot;</td></tr>
 		          </table><br><br><hr>';
+		$html.='</div>';
+        if($tipo_admin==1){
+        	'</header>';
+			$html.='</body>'.
+			      '</html>';   
+        }elseif($tipo_admin==3){
+        	'</header>';
+			$html.='</body>'.
+			      '</html>';   
+        }
 
-		        if($tipo_admin==1){
-		        	'</header>';
-					$html.='</body>'.
-					      '</html>';   
-		        }elseif($tipo_admin==3){
-		        	'</header>';
-					$html.='</body>'.
-					      '</html>';   
-		        }
 	    return $html."@@@@@@".$cod_factura."@@@@@@".$nro_factura;
 	} catch (Exception $e) {
 		$html="ERROR@@@@@@0@@@@@@0";

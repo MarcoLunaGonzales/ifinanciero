@@ -314,7 +314,26 @@ alerts = {
           }
         })
     }
-
+     else if (type == 'aprobar-solicitud-recurso') {
+      swal({
+        title: '¿Estás Seguro?',
+        text: "Se aprobara la Solicitud de Recursos y Se enviará a Administración",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonClass: 'btn btn-warning',
+        cancelButtonClass: 'btn btn-danger',
+        confirmButtonText: 'Si, Continuar!',
+        cancelButtonText: 'No, Cancelar!',
+        buttonsStyling: false
+      }).then((result) => {
+          if (result.value) {
+            location.href=url; 
+            return(true);
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            return(false);
+          }
+        })
+    }
   },
 
   

@@ -3500,9 +3500,14 @@ function mayorReporteComprobante(fila){
    var s=$("#ibnorca_s").val();
    var u=$("#ibnorca_u").val();
    var v=$("#ibnorca_v").val(); 
-    if(tipo==1){
-      //para propuestas
-     url="ajaxListSimulacion.php?q="+q+"&s="+s+"&u="+u+"&v="+v;
+    if(tipo==1||tipo==-1){
+      if(tipo==1){
+        //para propuestas
+        url="ajaxListSimulacion.php?sim=sec&q="+q+"&s="+s+"&u="+u+"&v="+v;
+      }else{
+        //para propuestas
+        url="ajaxListSimulacion.php?sim=tcp&q="+q+"&s="+s+"&u="+u+"&v="+v;
+      } 
     }else{
       if(tipo==2){
         //para proveedor
@@ -3514,8 +3519,14 @@ function mayorReporteComprobante(fila){
      
     }
   }else{
-    if(tipo==1){
-     url="ajaxListSimulacion.php";
+    if(tipo==1||tipo==-1){
+      if(tipo==1){
+        //para propuestas
+        url="ajaxListSimulacion.php?sim=sec";
+      }else{
+        //para propuestas
+        url="ajaxListSimulacion.php?sim=tcp";
+      }
     }else{
       if(tipo==2){
         //para proveedor
@@ -14187,21 +14198,36 @@ function removePlantillaComprobantes(cod_plantilla){
   });           
 }
 
-function modalDevolverSolicitud(datos){  
-  var d=datos.split('/');
+function modalDevolverSolicitud(datos){    
+  var d=datos.split('###');  
   document.getElementById("cod_solicitudfacturacion").value=d[0];
   document.getElementById("nro_solicitud").value=d[1];
   document.getElementById("codigo_servicio").value=d[2];  
+  document.getElementById("estado").value=d[3];  //estado
+  document.getElementById("admin").value=d[4];  //tipo admin
+  document.getElementById("direccion").value=d[5];  //tipo admin
 }
 
-function registrarRechazoSolicitud(cod_solicitudfacturacion,observaciones){
+function modalReenviarSolicitudDevuelto(datos){  
+  var d=datos.split('###');  
+  document.getElementById("cod_solicitudfacturacion_r").value=d[0];
+  document.getElementById("nro_solicitud_r").value=d[1];
+  document.getElementById("codigo_servicio_r").value=d[2];  
+  document.getElementById("estado_r").value=d[3];  //estado
+  document.getElementById("admin_r").value=d[4];  //tipo admin
+  document.getElementById("direccion_r").value=d[5];  //tipo admin
+
+
+}
+
+function registrarRechazoSolicitud(cod_solicitudfacturacion,observaciones,estado,admin,direccion){
   $.ajax({
     type:"POST",
     data:"cod_solicitudfacturacion="+cod_solicitudfacturacion+"&observaciones="+observaciones,
     url:"simulaciones_servicios/save_solicitud_rechazada.php",
     success:function(r){
       if(r==1){
-        alerts.showSwal('success-message','servicios_presupuestos/edit.php?cod='+cod_solicitudfacturacion+'&estado=1&admin=10');
+        alerts.showSwal('success-message',direccion+'?cod='+cod_solicitudfacturacion+'&estado='+estado+'&admin='+admin);
       }else{
         Swal.fire("A ocurrido un error!", "No se pudo devolver la solicitud.", "warning");        
       }

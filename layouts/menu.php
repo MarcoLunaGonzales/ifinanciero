@@ -848,10 +848,16 @@ if($menuModulo==0){
                     <span class="sidebar-normal"> Solicitudes de Recursos</span>
                   </a>
                 </li>
-                <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=listSolicitudRecursosAdmin">
+                <li class="nav-item">
+                  <a class="nav-link" style="background:rgba(37, 98, 83,0.6); color:#E2AF0F;font-weight:bold;"  href="?opcion=listSolicitudRecursosAdminReg">
                     <span class="sidebar-mini"> GSR </span>
-                    <span class="sidebar-normal"> Gesti&oacute;n Solicitudes Recursos</span>
+                    <span class="sidebar-normal"> Gesti&oacute;n S. Recursos Regional</span>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="?opcion=listSolicitudRecursosAdmin">
+                    <span class="sidebar-mini"> GSA </span>
+                    <span class="sidebar-normal"> Gesti&oacute;n S. Recursos Administración</span>
                   </a>
                 </li>
                 <li class="nav-item ">
