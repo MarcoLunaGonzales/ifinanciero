@@ -118,6 +118,7 @@ if($cantidad_items>0){
                             $nro_fact_x = $resultSimu['nro_factura'];
                             $cod_estado_factura_x = $resultSimu['cod_estadofactura'];
                             if ($nro_fact_x==null)$nro_fact_x="-";
+                            else $nro_fact_x="F".$nro_fact_x;
                             if($cod_estado_factura_x==4){
                               // $btnEstado="btn-warning";
                               $label='<span class="badge badge-warning">';
@@ -220,7 +221,7 @@ if($cantidad_items>0){
                                       <?php 
                                     }elseif($cont_facturas>1){?>
                                       <div class="btn-group dropdown">
-                                        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><small>PAGOS</small></button>
+                                        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><small>Facturas</small></button>
                                         <div class="dropdown-menu"><?php 
                                           $arrayCodFacturas = explode(",",trim($cadenaCodFacturas,','));
                                           $arrayFacturas = explode(" - ",trim($cadenaFacturas,' - '));

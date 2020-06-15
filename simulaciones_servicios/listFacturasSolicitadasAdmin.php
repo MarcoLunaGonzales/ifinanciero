@@ -119,6 +119,7 @@ $item_1=2709;
                           $codigo_fact_x = $resultSimu['codigo'];
                           $nro_fact_x = $resultSimu['nro_factura'];
                           if ($nro_fact_x==null)$nro_fact_x="-";
+                          else $nro_fact_x="F".$nro_fact_x;
                           //sacamos nombre de los detalles
                           $stmtDetalleSol = $dbh->prepare("SELECT cantidad,precio,descripcion_alterna from solicitudes_facturaciondetalle where cod_solicitudfacturacion=$codigo_facturacion");
                           $stmtDetalleSol->execute();

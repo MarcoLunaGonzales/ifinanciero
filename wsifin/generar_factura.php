@@ -32,7 +32,7 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
     //require_once 'configModule.php';
     require_once __DIR__.'/../functions.php';
     require_once __DIR__.'/../functionsGeneral.php';
-    require_once 'executeComprobante_factura.php';
+    require_once '../simulaciones_servicios/executeComprobante_factura.php';
 
     $dbh = new Conexion();
     $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//try
@@ -84,56 +84,61 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
             }else{
                 $fechaFactura_x=date('Y-m-d H:i:s');
                 //generamos el comprobante
-                $cod_comprobante=ejecutarComprobanteSolicitud($nitciCliente,$razonSocial,$items,$monto_total,$nro_correlativo);
-                // $cod_comprobante=0;
-                //echo "auto:".$nroAutorizacion." - nro_corr:".$nro_correlativo." - nitCliente:".$nitCliente." - fechaFactura:".$fechaFactura." - totalFinalRedondeado:".$totalFinalRedondeado." - llaveDosificacion:".$llaveDosificacion;
-                $controlCode = new ControlCode();
-                $code = $controlCode->generate($nroAutorizacion,//Numero de autorizacion
-                $nro_correlativo,//Numero de factura
-                $nitCliente,//Número de Identificación Tributaria o Carnet de Identidad
-                str_replace('-','',$fechaFactura),//fecha de transaccion de la forma AAAAMMDD
-                $totalFinalRedondeado,//Monto de la transacción
-                $llaveDosificacion//Llave de dosificación
-                );
-                //echo "cod:".$code;
-                $sql="INSERT INTO facturas_venta(cod_sucursal,cod_solicitudfacturacion,cod_unidadorganizacional,cod_area,fecha_factura,fecha_limite_emision,cod_tipoobjeto,cod_tipopago,cod_cliente,cod_personal,razon_social,nit,cod_dosificacionfactura,nro_factura,nro_autorizacion,codigo_control,importe,observaciones,cod_estadofactura,cod_comprobante) 
-                  values ('$sucursalId','$cod_solicitudfacturacion','$cod_uo_solicitud','$cod_area_solicitud','$fechaFactura_x','$fecha_limite_emision','$cod_tipoobjeto','$cod_tipopago','$cod_cliente','$cod_personal','$razon_social','$nitCliente','$cod_dosificacionfactura','$nro_correlativo','$nroAutorizacion','$code','$monto_total','$observaciones','1','$cod_comprobante')";
-                  // echo $sql;
-                $stmtInsertSoliFact = $dbh->prepare($sql);
-                $flagSuccess=$stmtInsertSoliFact->execute();
-                // $flagSuccess=true;
+                $cod_comprobante=ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_correlativo);
+                if($cod_comprobante==null || $cod_comprobante==''){
+                    return "12###";
+                }else{
+                    // $cod_comprobante=0;
+                    //echo "auto:".$nroAutorizacion." - nro_corr:".$nro_correlativo." - nitCliente:".$nitCliente." - fechaFactura:".$fechaFactura." - totalFinalRedondeado:".$totalFinalRedondeado." - llaveDosificacion:".$llaveDosificacion;
+                    $controlCode = new ControlCode();
+                    $code = $controlCode->generate($nroAutorizacion,//Numero de autorizacion
+                    $nro_correlativo,//Numero de factura
+                    $nitCliente,//Número de Identificación Tributaria o Carnet de Identidad
+                    str_replace('-','',$fechaFactura),//fecha de transaccion de la forma AAAAMMDD
+                    $totalFinalRedondeado,//Monto de la transacción
+                    $llaveDosificacion//Llave de dosificación
+                    );
+                    //echo "cod:".$code;
+                    $sql="INSERT INTO facturas_venta(cod_sucursal,cod_solicitudfacturacion,cod_unidadorganizacional,cod_area,fecha_factura,fecha_limite_emision,cod_tipoobjeto,cod_tipopago,cod_cliente,cod_personal,razon_social,nit,cod_dosificacionfactura,nro_factura,nro_autorizacion,codigo_control,importe,observaciones,cod_estadofactura,cod_comprobante) 
+                      values ('$sucursalId','$cod_solicitudfacturacion','$cod_uo_solicitud','$cod_area_solicitud','$fechaFactura_x','$fecha_limite_emision','$cod_tipoobjeto','$cod_tipopago','$cod_cliente','$cod_personal','$razon_social','$nitCliente','$cod_dosificacionfactura','$nro_correlativo','$nroAutorizacion','$code','$monto_total','$observaciones','1','$cod_comprobante')";
+                      // echo $sql;
+                    $stmtInsertSoliFact = $dbh->prepare($sql);
+                    $flagSuccess=$stmtInsertSoliFact->execute();
+                    // $flagSuccess=true;
 
-                if($flagSuccess){
-                    //obtenemos el registro del ultimo insert
-                    $stmtNroFac = $dbh->prepare("SELECT codigo from facturas_venta where cod_sucursal=$sucursalId and fecha_factura like '$fechaFactura%' and nit=$nitciCliente and razon_social like '%$razonSocial%' order by codigo desc");
-                    $stmtNroFac->execute();
-                    $resultNroFact = $stmtNroFac->fetch();    
-                    $cod_facturaVenta = $resultNroFact['codigo'];
-                    ////ahora el detalle de la factura
-                    // $cod_facturaVenta=0;
-                    
-                    foreach ($items as $valor) {
-                        // $suscripcionId=$valor->suscripcionId;
-                        // $pagoCursoId=$valor->pagoCursoId;
-                        // $items=$valor->detalle;
-                        // $precioUnitario=$valor->precioUnitario;
-                        // $cantidad=$valor->cantidad;
+                    if($flagSuccess){
+                        //obtenemos el registro del ultimo insert
+                        $stmtNroFac = $dbh->prepare("SELECT codigo from facturas_venta where cod_sucursal=$sucursalId and fecha_factura like '$fechaFactura_x%' and nit=$nitciCliente and razon_social like '%$razonSocial%' order by codigo desc");
+                        $stmtNroFac->execute();
+                        $resultNroFact = $stmtNroFac->fetch();    
+                        $cod_facturaVenta = $resultNroFact['codigo'];
+                        ////ahora el detalle de la factura
+                        // $cod_facturaVenta=0;
+                        
+                        foreach ($items as $valor) {
+                            // $suscripcionId=$valor->suscripcionId;
+                            // $pagoCursoId=$valor->pagoCursoId;
+                            // $items=$valor->detalle;
+                            // $precioUnitario=$valor->precioUnitario;
+                            // $cantidad=$valor->cantidad;
 
-                        $suscripcionId=$valor['suscripcionId'];
-                        $pagoCursoId=$valor['pagoCursoId'];
-                        $detalle=$valor['detalle'];
-                        $precioUnitario=$valor['precioUnitario'];
-                        $cantidad=$valor['cantidad'];
-                        $precio_x=$cantidad*$precioUnitario;
-                        $cod_claservicio_x=$pagoCursoId;
-                        $stmtInsertSoliFactDet = $dbh->prepare("INSERT INTO facturas_ventadetalle(cod_facturaventa,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_bob,suscripcionId) 
-                         values ('$cod_facturaVenta','$cod_claservicio_x','$cantidad','$precio_x','$detalle',0,$suscripcionId)");
-                         $flagSuccess=$stmtInsertSoliFactDet->execute();                         
-                    }
-                    if($flagSuccess){                            
-                        return "0###".$cod_facturaVenta;
-                    }
+                            $suscripcionId=$valor['suscripcionId'];
+                            $pagoCursoId=$valor['pagoCursoId'];
+                            $detalle=$valor['detalle'];
+                            $precioUnitario=$valor['precioUnitario'];
+                            $cantidad=$valor['cantidad'];
+                            $precio_x=$cantidad*$precioUnitario;
+                            $cod_claservicio_x=$pagoCursoId;
+                            $stmtInsertSoliFactDet = $dbh->prepare("INSERT INTO facturas_ventadetalle(cod_facturaventa,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_bob,suscripcionId) 
+                             values ('$cod_facturaVenta','$cod_claservicio_x','$cantidad','$precio_x','$detalle',0,$suscripcionId)");
+                             $flagSuccess=$stmtInsertSoliFactDet->execute();                         
+                        }
+                        if($flagSuccess){                            
+                            return "0###".$cod_facturaVenta;
+                        }
+                    }    
                 }
+                
             }
         }    
     } catch(PDOException $ex){

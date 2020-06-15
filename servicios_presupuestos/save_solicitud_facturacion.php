@@ -134,6 +134,9 @@ try {
             $sqlDeleteAreas="DELETE from solicitudes_facturacion_areas where cod_solicitudfacturacion=$cod_facturacion";
             $stmtDelAreas = $dbh->prepare($sqlDeleteAreas);
             $stmtDelAreas->execute();
+            $sqlDeleteAreasUO="DELETE from solicitudes_facturacion_areas_uo where cod_solicitudfacturacion=$cod_facturacion";
+            $stmtDelAreasUO = $dbh->prepare($sqlDeleteAreasUO);
+            $stmtDelAreasUO->execute();
             //si existe array de objetos areas
             if(isset($_POST['areas_facturacion'])){
                 $areas_facturacion= json_decode($_POST['areas_facturacion']);
@@ -294,6 +297,9 @@ try {
             $sqlDeleteAreas="DELETE from solicitudes_facturacion_areas where cod_solicitudfacturacion=$cod_facturacion";
             $stmtDelAreas = $dbh->prepare($sqlDeleteAreas);
             $stmtDelAreas->execute();
+            $sqlDeleteAreasUO="DELETE from solicitudes_facturacion_areas_uo where cod_solicitudfacturacion=$cod_facturacion";
+            $stmtDelAreasUO = $dbh->prepare($sqlDeleteAreasUO);
+            $stmtDelAreasUO->execute();
             //si existe array de objetos areas
             if(isset($_POST['areas_facturacion'])){
                 $areas_facturacion= json_decode($_POST['areas_facturacion']);
