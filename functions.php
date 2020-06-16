@@ -6948,4 +6948,14 @@ function verificamosFacturaDuplicada($codigo){
   return $codigo_facturacion;
 }
 
+
+function obtener_dato_dosificacion($cod_dosificacion){
+  $dbh = new Conexion();
+  $stmtVerif = $dbh->prepare("SELECT leyenda from dosificaciones_facturas where codigo=$cod_dosificacion");
+  $stmtVerif->execute();
+  $resultVerif = $stmtVerif->fetch();    
+  $valor = $resultVerif['leyenda'];
+  return $valor;
+
+}
 ?>

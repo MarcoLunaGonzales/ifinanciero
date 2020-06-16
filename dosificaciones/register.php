@@ -16,16 +16,17 @@ if($codigo>0){
     $nro_autorizacion=$result['nro_autorizacion'];
     $llave_dosificacion =$result['llave_dosificacion'];
     $fecha_limite_emision=$result['fecha_limite_emision'];
+    $leyenda=$result['leyenda'];
 }else{
     $codigo = 0;
     $cod_sucursal=null;
     $nro_autorizacion=null;
     $llave_dosificacion =null;
     $fecha_limite_emision=null;
+    $leyenda=null;
     
 }
 ?>
-
 <div class="content">
 	<div class="container-fluid">
 		<div class="col-md-12">
@@ -44,14 +45,7 @@ if($codigo>0){
                             <div class="form-group">
                                 <select name="cod_sucursal" id="cod_sucursal" class="selectpicker form-control form-control-sm" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" required="true">
                                     <option value=""></option>
-
                                     <option <?=($cod_sucursal==1)?"selected":"";?> value="1">Casa Matriz</option>
-                                    <!-- <?php 
-                                    $queryUO = "SELECT codigo,nombre from unidades_organizacionales where cod_estado=1 order by nombre";
-                                    $statementUO = $dbh->query($queryUO);
-                                    while ($row = $statementUO->fetch()){ ?>
-                                        <option <?=($cod_uo==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
-                                    <?php } ?> -->
                                 </select>                                
                             </div>
                         </div>
@@ -77,6 +71,14 @@ if($codigo>0){
                       <div class="col-sm-8">
                         <div class="form-group">
                             <input type="date" name="fecha_limite_emision" id="fecha_limite_emision" class="form-control" value="<?=$fecha_limite_emision?>" required="true">
+                        </div>
+                      </div>                
+                    </div>
+                    <div class="row">
+                      <label class="col-sm-2 col-form-label">Leyenda</label>
+                      <div class="col-sm-8">
+                        <div class="form-group">
+                            <textarea name="leyenda" id="leyenda" class="form-control" value="<?=$leyenda?>" required="true"></textarea>
                         </div>
                       </div>                
                     </div>

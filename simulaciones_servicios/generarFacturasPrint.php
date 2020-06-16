@@ -1,7 +1,6 @@
 <?php //ESTADO FINALIZADO
 
 require_once __DIR__.'/../conexion.php';
-
 //require_once 'configModule.php';
 require_once __DIR__.'/../functions.php';
 require_once __DIR__.'/../functionsGeneral.php';
@@ -11,11 +10,15 @@ $dbh = new Conexion();
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//try
 set_time_limit(300);
 //RECIBIMOS LAS VARIABLES
-
 $codigo = $_GET["codigo"];
 $auxiliar = $_GET["tipo"];//de donde viene la solicitud para impresión 1=lista facturas (cod_factura) / 2=lista solicitudes (cod_sol_Fact)
-$tipo_impresion=2;//tipo de impresión 1 sin detalles, 2 detalladamente
+if(isset($_GET["admin"])){//formato de factura, 1 original y copia, 2 original, 3 copia
+  $admin=$_GET["admin"];
+}else{
+  $admin=0;//viene de la tienda
+}
 try{
+  //descarga la facturaa y lo almacena en una carpeta
   $html_cliente1=generarHTMLFacCliente($codigo,$auxiliar,1);
   $array_html=explode('@@@@@@', $html_cliente1);
   $html1=$array_html[0];
@@ -27,27 +30,51 @@ try{
     echo "hubo un error al generar la factura";
   }
 
-  $htmlConta1=generarHTMLFacCliente($codigo,$auxiliar,2);  
-  $array_html2=explode('@@@@@@', $htmlConta1);
-  $html2=$array_html2[0];
-  if($html2!='ERROR'){
-    $cod_factura=$array_html2[1];
-    $nro_factura=$array_html2[2];    
-  }else{
-    echo "hubo un error al generar la factura";
-  }
-    $htmlConta2=generarHTMLFacCliente($codigo,$auxiliar,3);  
-    $array_html3=explode('@@@@@@', $htmlConta2);
-    // var_dump($array_html3);
-    $html2.=$array_html3[0];
-  if($html2!='ERROR'){
-    $cod_factura=$array_html3[1];
-    $nro_factura=$array_html3[2];    
+  if($admin==1){
+    $htmlConta1=generarHTMLFacCliente($codigo,$auxiliar,2);  
+    $array_html2=explode('@@@@@@', $htmlConta1);
+    $html2=$array_html2[0];
+    if($html2!='ERROR'){
+      $cod_factura=$array_html2[1];
+      $nro_factura=$array_html2[2];    
+    }else{
+      echo "hubo un error al generar la factura";
+    }
+      $htmlConta2=generarHTMLFacCliente($codigo,$auxiliar,3);  
+      $array_html3=explode('@@@@@@', $htmlConta2);
+      // var_dump($array_html3);
+      $html2.=$array_html3[0];
+    if($html2!='ERROR'){
+      $cod_factura=$array_html3[1];
+      $nro_factura=$array_html3[2];    
+      descargarPDFFacturas("IBNORCA-".$cod_factura."-".$nro_factura,$html2);
+    }else{
+      echo "hubo un error al generar la factura";
+    }
+  }elseif($admin==2){
+    $htmlConta1=generarHTMLFacCliente($codigo,$auxiliar,4);  
+    $array_html2=explode('@@@@@@', $htmlConta1);
+    $html2=$array_html2[0];
     descargarPDFFacturas("IBNORCA-".$cod_factura."-".$nro_factura,$html2);
-  }else{
-    echo "hubo un error al generar la factura";
+    if($html2!='ERROR'){
+      $cod_factura=$array_html2[1];
+      $nro_factura=$array_html2[2];    
+    }else{
+      echo "hubo un error al generar la factura";
+    }
+  }elseif($admin==3){
+    $htmlConta1=generarHTMLFacCliente($codigo,$auxiliar,5);
+    $array_html2=explode('@@@@@@', $htmlConta1);
+    $html2=$array_html2[0];
+    descargarPDFFacturas("IBNORCA-".$cod_factura."-".$nro_factura,$html2);
+    if($html2!='ERROR'){
+      $cod_factura=$array_html2[1];
+      $nro_factura=$array_html2[2];    
+    }else{
+      echo "hubo un error al generar la factura";
+    }
+
   }
-  
   // //EL PDF DE FACTURA PARA MOSTRAR EN PANTALLA
   // $htmlConta1=generarHTMLFacCliente($codigo,$auxiliar,2);
   // $htmlConta1.=generarHTMLFacCliente($codigo,$auxiliar,3);

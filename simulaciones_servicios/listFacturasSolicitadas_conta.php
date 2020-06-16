@@ -9,7 +9,7 @@ $dbh = new Conexion();
 $globalAdmin=$_SESSION["globalAdmin"];
 //datos registrado de la simulacion en curso
 
-  $stmt = $dbh->prepare("SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')as fecha_registro_x,DATE_FORMAT(sf.fecha_solicitudfactura,'%d/%m/%Y')as fecha_solicitudfactura_x FROM solicitudes_facturacion sf join estados_solicitudfacturacion es on sf.cod_estadosolicitudfacturacion=es.codigo where (cod_estadosolicitudfacturacion=3 or cod_estadosolicitudfacturacion=6 or cod_estadosolicitudfacturacion=5 ) order by codigo desc");
+  $stmt = $dbh->prepare("SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')as fecha_registro_x,DATE_FORMAT(sf.fecha_solicitudfactura,'%d/%m/%Y')as fecha_solicitudfactura_x FROM solicitudes_facturacion sf join estados_solicitudfacturacion es on sf.cod_estadosolicitudfacturacion=es.codigo where cod_estadosolicitudfacturacion in (3,4,5,6) order by codigo desc");
 
   $stmt->execute();
   $stmt->bindColumn('codigo', $codigo_facturacion);
@@ -72,27 +72,27 @@ $globalAdmin=$_SESSION["globalAdmin"];
                           while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {// para la parte de facturas parciales, items de sol_Fact
                             switch ($codEstado) {
                               case 1:                                
-                                $label='<span style="padding:1;" class="badge badge-default">';
+                                // $label='<span style="padding:1;" class="badge badge-default">';
                                 $btnEstado="btn-default";
                               break;
                               case 2:                                
-                                $label='<span style="padding:1;" class="badge badge-danger">';
+                                // $label='<span style="padding:1;" class="badge badge-danger">';
                                 $btnEstado="btn-danger";
                               break;
                               case 3:                                
-                                $label='<span style="padding:1;" class="badge badge-success">';
+                                // $label='<span style="padding:1;" class="badge badge-success">';
                                 $btnEstado="btn-success";
                               break;
                               case 4:                                
-                                $label='<span style="padding:1;" class="badge badge-warning">';
+                                // $label='<span style="padding:1;" class="badge badge-warning">';
                                 $btnEstado="btn-warning";
                               break;
                               case 5:                                
-                                $label='<span style="padding:1;" class="badge badge-warning">';
+                                // $label='<span style="padding:1;" class="badge badge-warning">';
                                 $btnEstado="btn-warning";
                               break;
                               case 6:                                
-                                $label='<span style="padding:1;" class="badge badge-default">';
+                                // $label='<span style="padding:1;" class="badge badge-default">';
                                 $btnEstado="btn-default";
                               break;
                             }
@@ -283,6 +283,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                 <!-- <td><?=$label?><small><?=$estado;?></small></span></td> -->
                                 <td><button class="btn btn-danger btn-sm btn-link" style="padding:0;"><small><?=$obs_devolucion;?></small></button></td>
                                 <td class="td-actions text-right">
+                                  <button class="btn <?=$btnEstado?> btn-sm btn-link" style="padding:0;"><small><?=$estado;?></small></button><br>
                                   <?php
                                     if($globalAdmin==1){ //
                                       if($codigo_fact_x>0){//print facturas
@@ -336,7 +337,6 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                                    <button title="Generar Factura Manual" class="dropdown-item" type="button" data-toggle="modal" data-target="#modalFacturaManual" onclick="agregaDatosFactManual('<?=$datos_FacManual;?>')">
                                                     <i class="material-icons text-info">receipt</i> Generar Factura Manual
                                                    </button>
-                                                  
                                                    <?php      
                                                   }
                                                 ?>
@@ -347,7 +347,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                           </div>                           
                                           <?php 
                                         }else{
-                                          if($codEstado==6){
+                                          if($codEstado==6 || $codEstado==4){
                                             $cod_tipopago_cred=obtenerValorConfiguracion(48);
                                             // echo $cod_tipopago_cred; 
                                             if($cod_tipopago!=$cod_tipopago_cred){//si es distino a credito cambia de flujo
@@ -355,20 +355,24 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                                  <a title="Aceptar Solicitud" href='#'  class="btn btn-default" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=3&admin=0')">
                                                    <i class="material-icons">send</i>
                                                  </a>
+                                                 <?php
+                                                 $datos_devolucion=$codigo_facturacion."###".$nro_correlativo."###".$codigo_alterno."###1###10###".$urlEdit2Sol;
+                                                 ?>
+                                                 <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalDevolverSolicitud" onclick="modalDevolverSolicitud('<?=$datos_devolucion;?>')">
+                                                <i class="material-icons" title="Volver al Estado Registro">refresh</i>
+                                              </button>
                                                 <?php                                          
                                             }else{
                                                 ?>
-                                                 <a title="Enviar Solicitud" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=4&admin=0'  class="btn btn-default">
+                                                 <!-- <a title="Enviar Solicitud" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=4&admin=0'  class="btn btn-default">
                                                    <i class="material-icons">send</i>
-                                                 </a>
+                                                 </a> -->
                                                 <?php                                          
                                             }
-                                            $datos_devolucion=$codigo_facturacion."###".$nro_correlativo."###".$codigo_alterno."###1###10###".$urlEdit2Sol;
+                                            
                                               ?> 
 
-                                              <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalDevolverSolicitud" onclick="modalDevolverSolicitud('<?=$datos_devolucion;?>')">
-                                                <i class="material-icons" title="Volver al Estado Registro">refresh</i>
-                                              </button>
+                                              
                                               <!-- <a title="Volver al Estado Registro" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=1&admin=10'  class="btn btn-danger">
                                                  <i class="material-icons">refresh</i>
                                               </a> -->
