@@ -471,7 +471,16 @@
         if ($_GET['opcion']=='listChequesEmitidos') {
 			require_once('cheques/listEmitidos.php');
 		}
-        
+        //LIBRETA BANCARIA
+        if ($_GET['opcion']=='listLibreta') {
+			require_once('libretas_bancarias/listLibretas.php');
+		}
+		if ($_GET['opcion']=='registerLibretaBancaria') {
+			require_once('libretas_bancarias/register.php');
+		}
+		if ($_GET['opcion']=='listLibretasDetalle') {
+			require_once('libretas_bancarias/listDetalle.php');
+		}
         //PAGOS listPagoProveedor
         if ($_GET['opcion']=='listPagoProveedor') {
 			require_once('obligaciones_pago/listPago.php');
@@ -492,6 +501,9 @@
 		}
 		if ($_GET['opcion']=='reportePlanificacionEC') {
 			require_once('simulaciones_servicios/reportePlan.php');
+		}
+		if ($_GET['opcion']=='listPagoProveedorLote') {
+			require_once('obligaciones_pago/listPagoLote.php');
 		}
   
 		//******************************ACTIVOS FIJOS***********************************************************

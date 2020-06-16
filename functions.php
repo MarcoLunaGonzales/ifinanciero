@@ -6330,24 +6330,32 @@ function obtenerTipoPagoSolicitudRecursoDetalle($codigo){
    return($nombreX);
 }
 function obtenerDatosProveedoresPagoDetalle($codigo){
+  include 'solicitudes/configModule.php';
    $dbh = new Conexion();
-   $stmt = $dbh->prepare("SELECT pd.*,sd.detalle,s.fecha as fecha_sol,s.numero,s.cod_unidadorganizacional from pagos_proveedoresdetalle pd join solicitud_recursosdetalle sd on sd.codigo=pd.cod_solicitudrecursosdetalle join solicitud_recursos s on pd.cod_solicitudrecursos=s.codigo  where pd.cod_pagoproveedor=$codigo");
+   $stmt = $dbh->prepare("SELECT pd.*,sd.detalle,s.fecha as fecha_sol,s.numero,s.cod_unidadorganizacional,s.codigo as cod_sol from pagos_proveedoresdetalle pd join solicitud_recursosdetalle sd on sd.codigo=pd.cod_solicitudrecursosdetalle join solicitud_recursos s on pd.cod_solicitudrecursos=s.codigo  where pd.cod_pagoproveedor=$codigo");
    $stmt->execute();
    $proveedores=[];
    $detalles=[];
    $fechaSol=[];
    $numero=[];
+   $numeroSolo=[];
    $oficina=[];
    $index=0;
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       $proveedores[$index]=nameProveedor($row['cod_proveedor']);
       $detalles[$index]=$row['detalle'];
+      if(($index % 2) == 0){
+        $estiloBoton="btn-warning";
+      }else{
+        $estiloBoton="btn-danger";
+      }
       $fechaSol[$index]=strftime('%d/%m/%Y',strtotime($row['fecha_sol']));
-      $numero[$index]=$row['numero'];
+      $numero[$index]="<a title='ver Archivos Adjuntos' href='".$urlVer."?cod=".$row['cod_sol']."' target='_blank' class='btn ".$estiloBoton." btn-round btn-sm'>".$row['numero']."</a>";
+      $numeroSolo[$index]=$row['numero'];
       $oficina[$index]=abrevUnidad_solo($row['cod_unidadorganizacional']);
       $index++;
    }
-   return array(implode(",",array_unique($proveedores)),implode(",",array_unique($detalles)),implode(",",array_unique($fechaSol)),implode(",",array_unique($numero)),implode(",",array_unique($oficina)));
+   return array(implode(",",array_unique($proveedores)),implode(",",array_unique($detalles)),implode(",",array_unique($fechaSol)),implode(" ",array_unique($numero)),implode(",",array_unique($oficina)),implode("-",array_unique($numeroSolo)));
 }
 function listaDetallePagosProveedores($codigo){
    $dbh = new Conexion();
@@ -6896,5 +6904,39 @@ function verificarMontoPresupuestadoSolicitadoSR($codigo){
     }
   }
   return $valor;
+}
+
+function obtenerPagoProveedorDetalle($codigo){
+   $dbh = new Conexion();
+   $sql="";
+   $sql="SELECT sd.*,pc.numero,pc.nombre,pp.monto as pago,tp.nombre as tipo_pago 
+from solicitud_recursosdetalle sd 
+join plan_cuentas pc on sd.cod_plancuenta=pc.codigo 
+join pagos_proveedoresdetalle pp on pp.cod_solicitudrecursosdetalle=sd.codigo
+join tipos_pagoproveedor tp on tp.codigo=pp.cod_tipopagoproveedor
+where pp.cod_pagoproveedor=$codigo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+}
+function listaLibretasBancarias(){
+  $dbh = new Conexion();
+  $sql="SELECT p.nombre as banco,dc.* 
+FROM libretas_bancarias dc join bancos p on dc.cod_banco=p.codigo
+WHERE dc.cod_estadoreferencial=1;";
+$stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  return $stmt;
+}
+
+function obtenerCodigoRegistroLibreta(){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT IFNULL(max(c.codigo)+1,1)as codigo from libretas_bancariasregistro c");
+   $stmt->execute();
+   $codigo=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $codigo=$row['codigo'];
+   }
+   return($codigo);
 }
 ?>

@@ -14219,3 +14219,152 @@ function registrarRechazoSolicitud(cod_solicitudfacturacion,observaciones){
     }
   });
 }
+
+function cargarLotesPago(){
+  $("#modalLotesPago").modal("show");
+}
+
+function cargarDatosProveedorPagosLote(fila){
+  var prov = $("#proveedor").val().split("####");
+  var proveedor = prov[0];
+  var parametros={"proveedor":proveedor,"proveedor_nombre":prov[1],"fila":fila};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "obligaciones_pago/ajaxListPagosLote.php",
+        data: parametros,
+        beforeSend: function () {
+        $("#texto_ajax_titulo").html("Listando Pagos  de "+prov[1]); 
+          iniciarCargaAjax();
+        },        
+        success:  function (resp) {
+          detectarCargaAjax();
+           $("#texto_ajax_titulo").html("Procesando Datos");
+           $("#data_pagosproveedores").append(resp);
+           $('.selectpicker').selectpicker("refresh");
+        }
+      });
+}
+function agregarLotePago(){
+
+ if($("#proveedor").val()!="####"){
+  var codigo= $("#proveedor").val().split("####");
+  var cant= parseInt($("#cantidad_proveedores").val());
+  var existe=0;
+  for (var i = 1; i <= cant; i++) {
+    var codFila=$("#codigo_proveedor_modal"+i).val();
+    if(codFila==codigo[0]){
+      existe++;
+    }
+  };
+cant++;
+  if(existe==0){
+    cargarDatosProveedorPagosLote(cant);
+  }else{
+   Swal.fire("Informativo!", "Ya existe el proveedor en la lista.", "warning");         
+  }
+ }else{
+   Swal.fire("Informativo!", "Debe seleccionar un proveedor.", "warning");        
+ }
+}
+
+function removeListaPago(codigo){
+  $('.fila_proveedor'+codigo).remove();
+  $('#f_proveedor'+codigo).remove();
+}
+
+
+
+function nuevoArchivoTxtPagoLote(){
+  $("#modal_txtarchivo").modal("show");
+}
+function activarInputFilaPago(fila){
+  if(!($("#codigo_pagofila"+fila).is("[readonly]"))){
+    $("#codigo_pagofila"+fila).attr("readonly",true);
+  }else{
+    $("#codigo_pagofila"+fila).removeAttr("readonly");
+  }
+}
+
+function generarArchivosTXTVarios(){
+  swal({
+        title: '¿Estás Seguro?',
+        text: "Se creara el archivo txt de los pagos seleccionados",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonClass: 'btn btn-warning',
+        cancelButtonClass: 'btn btn-danger',
+        confirmButtonText: 'Si, Crear!',
+        cancelButtonText: 'No, Cancelar!',
+        buttonsStyling: false
+      }).then((result) => {
+          if (result.value) {
+            generarArchivoTxtVariosAjax(); 
+            return(true);
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            return(false);
+          }
+        });
+  
+}
+
+function generarArchivoTxtVariosAjax(){
+  var cantidad=parseInt($("#cantidad_filaspago").val());
+  var codigos=[];var habilitados=[];
+  for (var i = 0; i < cantidad; i++) {
+    var habilitado=1;
+    if($("#codigo_pagofila"+i).is("[readonly]")){
+        habilitado=0;
+     codigos[i] = 0;     
+    }else{
+     codigos[i] = $("#codigo_pagofila"+i).val();  
+    } 
+  };
+  
+  //var parametros={"codigos":JSON.stringify(codigos)};
+  var xhr = new XMLHttpRequest();
+    xhr.open('GET', "obligaciones_pago/generarTXTLotes.php?codigos="+JSON.stringify(codigos), true);
+    xhr.responseType = 'blob';
+    xhr.onload = function(e) {
+      if (this.status == 200) {
+         var blob = new Blob([this.response], {type: 'text/plain'});
+         // This fires after the blob has been read/loaded.
+       const reader = new FileReader();  
+       reader.addEventListener('loadend', (bb) => {
+        const text = bb.srcElement.result;
+        //alert(text)
+        if(text=="0000"){
+           swal("Error!", "Ocurrio un Error al generar el txt.", "danger");
+        }else{
+          if(text=="1111"){
+           swal("Informativo!", "No hay registros.", "warning");
+          }else{
+            var link = document.createElement('a');
+               link.href = window.URL.createObjectURL(blob);
+               link.download = "data_pago.txt";
+               //link.click();
+             swal({
+               title: 'Correcto!',
+               text: "El Archivo se generó exitosamente",
+               type: 'success',
+               confirmButtonClass: 'btn btn-danger',
+               confirmButtonText: '<i class="material-icons">get_app</i> DESCARGAR EL ARCHIVO',
+               buttonsStyling: false
+              }).then((value) => {
+                link.click();
+               javascript:location.reload(true);
+           });  
+          }
+        }
+      });
+      // Start reading the blob as text.
+       reader.readAsText(blob);
+      }
+    };
+
+    xhr.send();
+}
+
+function subirArchivoExcelLibretaBancaria(){
+  $("#modalSubirArchivoExcel").modal("show");
+}

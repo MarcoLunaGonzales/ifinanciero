@@ -16,7 +16,8 @@ $globalArea=$_SESSION["globalArea"];
 $globalAdmin=$_SESSION["globalAdmin"];
 
 //$fechaHoraActual=date("Y-m-d H:i:s");
-$cantidadFilas=$_POST['cantidad_filas'];
+$cantidadProveedores=$_POST['cantidad_proveedores'];
+$nombre_lote=$_POST['nombre_lote'];
 $proveedorItem = explode("####", $_POST['proveedor']);
 $proveedor=$proveedorItem[0];
 $porFecha = explode("/", $_POST['fecha_pago']);
@@ -24,24 +25,28 @@ $fecha_pago=$porFecha[2]."-".$porFecha[1]."-".$porFecha[0];
 $observaciones_pago=$_POST['observaciones_pago'];
 
    $cod_pagoproveedor=obtenerCodigoPagoProveedor();
-   $sqlInsert="INSERT INTO pagos_proveedores (codigo, fecha,observaciones,cod_comprobante,cod_estadopago,cod_ebisa) 
-  VALUES ('".$cod_pagoproveedor."','".$fecha_pago."','".$observaciones_pago."','0',1,0)";
+   $sqlInsert="INSERT INTO pagos_proveedores (codigo,nombre_lote, fecha,observaciones,cod_comprobante,cod_estadopago,cod_ebisa) 
+  VALUES ('".$cod_pagoproveedor."','".$nombre_lote."','".$fecha_pago."','".$observaciones_pago."','0',1,0)";
   $stmtInsert = $dbh->prepare($sqlInsert);
   $stmtInsert->execute();
 $totalPago=0;
 $contadorCheque=0;$contadorChequeFilas=0;
-for ($i=1;$i<=$cantidadFilas;$i++){
-  $proveedor=$_POST['codigo_proveedor'.$i];  	    	
-	$monto_pago=$_POST["monto_pago".$i];
+
+for ($pro=1; $pro <= $cantidadProveedores ; $pro++) { 
+  if(isset($_POST['cantidad_filas'.$pro])){
+    $cantidadFilas=$_POST['cantidad_filas'.$pro];
+    for ($i=1;$i<=$cantidadFilas;$i++){
+  $proveedor=$_POST['codigo_proveedor'.$i."PPPP".$pro];         
+  $monto_pago=$_POST["monto_pago".$i."PPPP".$pro];
   $totalPago+=$monto_pago;
-  $cod_solicitud=$_POST["codigo_solicitud".$i];
-  $codigo_detalle=$_POST["codigo_solicitudDetalle".$i];
-  $glosa_detalle=$_POST["glosa_detalle".$i];
-	if(!($monto_pago==0 || $monto_pago=="")){
+  $cod_solicitud=$_POST["codigo_solicitud".$i."PPPP".$pro];
+  $codigo_detalle=$_POST["codigo_solicitudDetalle".$i."PPPP".$pro];
+  $glosa_detalle=$_POST["glosa_detalle".$i."PPPP".$pro];
+  if(!($monto_pago==0 || $monto_pago=="")){
     $contadorChequeFilas++;
-    $porFecha2 = explode("/", $_POST["fecha_pago".$i]);
+    $porFecha2 = explode("/", $_POST["fecha_pago".$i."PPPP".$pro]);
     $fecha_pagoDet=$porFecha2[2]."-".$porFecha2[1]."-".$porFecha2[0];
-		$tipo_pago=$_POST["tipo_pago".$i];
+    $tipo_pago=$_POST["tipo_pago".$i."PPPP".$pro];
 
     $cod_pagoproveedordetalle=obtenerCodigoPagoProveedorDetalle();
     $sqlInsert2="INSERT INTO pagos_proveedoresdetalle (codigo,cod_pagoproveedor,cod_proveedor,cod_solicitudrecursos,cod_solicitudrecursosdetalle,cod_tipopagoproveedor,monto,observaciones,fecha) 
@@ -51,10 +56,10 @@ for ($i=1;$i<=$cantidadFilas;$i++){
 
     if($tipo_pago==1){
       $contadorCheque++;
-     $banco=$_POST['banco_pago'.$i];
-     $cheque=$_POST['emitidos_pago'.$i];
-     $numero_cheque=$_POST['numero_cheque'.$i];
-     $nombre_ben=$_POST['beneficiario'.$i];
+     $banco=$_POST['banco_pago'.$i."PPPP".$pro];
+     $cheque=$_POST['emitidos_pago'.$i."PPPP".$pro];
+     $numero_cheque=$_POST['numero_cheque'.$i."PPPP".$pro];
+     $nombre_ben=$_POST['beneficiario'.$i."PPPP".$pro];
 
      $sqlInsert3="INSERT INTO cheques_emitidos (cod_cheque,fecha,nombre_beneficiario,monto,cod_pagodetalle,cod_estadoreferencial) 
               VALUES ('".$cheque."','".$fecha_pagoDet."','".$nombre_ben."','".$monto_pago."','".$cod_pagoproveedordetalle."',1)";
@@ -66,7 +71,10 @@ for ($i=1;$i<=$cantidadFilas;$i++){
      $stmtInsert4->execute();
     }
              
-	}
+  }
+}
+  }//if isset 
+  
 }
 
 if($contadorCheque==$contadorChequeFilas){
@@ -97,19 +105,20 @@ if($contadorCheque==$contadorChequeFilas){
     $sqlInsert4="UPDATE pagos_proveedores SET cod_comprobante=$codComprobante,cod_estadopago=5 where codigo=$cod_pagoproveedor";
     $stmtInsert4 = $dbh->prepare($sqlInsert4);
     $stmtInsert4->execute();
-
-    for ($i=1;$i<=$cantidadFilas;$i++){  
-    //$proveedor=$_POST['codigo_proveedor'.$i];         
-    $cod_plancuenta=$_POST['codigo_plancuenta'.$i];
-  $monto_pago=$_POST["monto_pago".$i];
+   for ($pro=1; $pro <= $cantidadProveedores ; $pro++) { 
+     if(isset($_POST['cantidad_filas'.$pro])){
+        for ($i=1;$i<=$cantidadFilas;$i++){  
+    //$proveedor=$_POST['codigo_proveedor'.$i."PPPP".$pro];         
+    $cod_plancuenta=$_POST['codigo_plancuenta'.$i."PPPP".$pro];
+  $monto_pago=$_POST["monto_pago".$i."PPPP".$pro];
   $totalPago+=$monto_pago;
-  $cod_solicitud=$_POST["codigo_solicitud".$i];
-  $codigo_detalle=$_POST["codigo_solicitudDetalle".$i];
-  $glosa_detalle=$_POST["glosa_detalle".$i];
+  $cod_solicitud=$_POST["codigo_solicitud".$i."PPPP".$pro];
+  $codigo_detalle=$_POST["codigo_solicitudDetalle".$i."PPPP".$pro];
+  $glosa_detalle=$_POST["glosa_detalle".$i."PPPP".$pro];
   if(!($monto_pago==0 || $monto_pago=="")){
-    $porFecha2 = explode("/", $_POST["fecha_pago".$i]);
+    $porFecha2 = explode("/", $_POST["fecha_pago".$i."PPPP".$pro]);
     $fecha_pagoDet=$porFecha2[2]."-".$porFecha2[1]."-".$porFecha2[0];
-    $tipo_pago=$_POST["tipo_pago".$i];
+    $tipo_pago=$_POST["tipo_pago".$i."PPPP".$pro];
 
     //comprobante detalle
     $cuenta=obtenerCuentaPasivaSolicitudesRecursos($cod_plancuenta);
@@ -182,6 +191,9 @@ if($contadorCheque==$contadorChequeFilas){
              
       }
     }
+     } 
+   }   
+    
 }else{
 
 }         
@@ -191,6 +203,5 @@ if($flagSuccess==true){
 }else{
 	showAlertSuccessError(false,"../".$urlListPago);
 }
-
 
 ?>

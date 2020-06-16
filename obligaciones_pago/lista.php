@@ -12,6 +12,7 @@ $stmt = $dbh->prepare("SELECT sr.*,e.nombre as estado from pagos_proveedores sr 
 $stmt->execute();
 // bindColumn
 $stmt->bindColumn('codigo', $codigo);
+$stmt->bindColumn('nombre_lote', $nombre_lote);
 $stmt->bindColumn('fecha', $fecha);
 //$stmt->bindColumn('glosa', $descripcion);
 $stmt->bindColumn('observaciones', $observaciones);
@@ -21,7 +22,12 @@ $stmt->bindColumn('cod_estadopago', $codEstado);
 $stmt->bindColumn('cod_ebisa', $cod_ebisa);
 
 ?>
-
+<div class="cargar-ajax d-none">
+  <div class="div-loading text-center">
+     <h4 class="text-warning font-weight-bold" id="texto_ajax_titulo">Procesando Datos</h4>
+     <p class="text-white">Aguard&aacute; un momento por favor</p>  
+  </div>
+</div>
 <div class="content">
   <div class="container-fluid">
         <div class="row">
@@ -31,14 +37,17 @@ $stmt->bindColumn('cod_ebisa', $cod_ebisa);
                   <div class="card-icon">
                     <i class="material-icons">attach_money</i>
                   </div>
+                  <a href="#" title="Actualizar Lista" class="btn btn-default btn-sm btn-fab float-right" onclick="actualizarSimulacionSitios()">
+                    <i class="material-icons">refresh</i>
+                  </a>
                   <h4 class="card-title"><b>Pagos</b></h4>
+                  
                 </div>
                 <div class="card-body">
-                    <table class="table table-condesed" id="tablePaginator">
+                    <table class="table table-condesed small" id="tablePaginator">
                       <thead>
-                        <tr>
+                        <tr style="background:#21618C; color:#fff;">
                           <th>Proveedor</th>
-                          <!--<th>Descripci&oacute;n</th>-->
                           <th>Detalle</th>
                           <th>Fecha Pago</th>
                           <th>Fecha Sol.</th>
@@ -58,7 +67,9 @@ $stmt->bindColumn('cod_ebisa', $cod_ebisa);
                           if(strlen($descripcion)>50){
                             $descripcion=substr($descripcion, 0, 50)."...";
                           }
-
+                          if($nombre_lote!=""){
+                            $datosArray[0]="<a href='#' title='".$datosArray[0]."' class='btn btn-primary btn-sm'><i class='material-icons'>view_comfy</i> ".$nombre_lote."</a>";
+                          }
                           switch ($codEstado) {
                             case 1:
                               $btnEstado="btn-default";
@@ -83,7 +94,7 @@ $stmt->bindColumn('cod_ebisa', $cod_ebisa);
                           <!--<td><?=$descripcion?></td>-->
                           <td><?=strftime('%d/%m/%Y',strtotime($fecha));?></td>
                           <td><?=$datosArray[2]?></td>
-                          <td><?=$datosArray[3]?></td>
+                          <td><div class="btn-group"><?=$datosArray[3]?></div></td>
                           <td><?=$datosArray[4]?></td>
                           <td><?=$observaciones;?></td>
                           <td class="text-muted"><?=$estado?></td>
@@ -120,6 +131,9 @@ $stmt->bindColumn('cod_ebisa', $cod_ebisa);
                                 <i class="material-icons">list</i> <?=$estado;?>
                               </button>
                               <div class="dropdown-menu">
+                                <a href="<?=$urlVerPago?>?cod=<?=$codigo?>" target="_blank" class="dropdown-item">
+                                       <i class="material-icons text-info">payment</i> Ver Pago
+                                    </a>
                                 <?php 
                                 if($codEstado!=2){
                                   if($codEstado==1){
@@ -173,9 +187,106 @@ $stmt->bindColumn('cod_ebisa', $cod_ebisa);
                 </div>
               </div>
               <div class="card-footer fixed-bottom">
-                <a href="#" onclick="javascript:window.open('<?=$urlRegister2;?>')" class="<?=$buttonNormal;?>">Nuevo Pago Proveedor</a>
+                <a href="#" onclick="javascript:window.open('<?=$urlRegister2;?>')" class="btn btn-info"><i class="material-icons">add</i> Nuevo Pago Proveedor</a>
+                <a href="#" onclick="javascript:window.open('<?=$urlRegisterLote;?>')" class="btn btn-primary"><i class="material-icons">view_comfy</i> Nuevo Pago Por Lotes</a>
+                <a href="#" onclick="nuevoArchivoTxtPagoLote()" class="<?=$buttonNormal;?>">Generar Archivo TXT</a>
               </div>      
             </div>
           </div>  
         </div>
     </div>
+
+
+
+    <!-- small modal -->
+<div class="modal fade modal-arriba modal-primary" id="modal_txtarchivo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-notice" style="max-width: 80% !important;">
+    <div class="modal-content card">
+               <div class="card-header card-header-primary card-header-text">
+                  <div class="card-text">
+                    <h4>Nuevo Archivo Txt</h4>
+                  </div>
+                  <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">close</i>
+                  </button>
+                </div>
+                <div class="card-body">
+                  <div>
+                    <center><h4 class="text-muted">Lista de Pagos Aprobados</h4></center>
+                       <table class="table table-bordered table-condensed small">
+                        <thead>
+                         <tr style="background:#21618C; color:#fff;">
+                          <th>H/D</th>
+                           <th>Proveedor</th>
+                          <th>Detalle</th>
+                          <th>Fecha Pago</th>
+                          <th>Fecha Sol.</th>
+                          <th># Sol.</th>
+                          <th>Oficina</th>
+                          <th>Observaciones</th>
+                          <th>Estado</th>
+                         </tr> 
+                        </thead>
+                        <tbody>
+                        <?php
+                        $stmt = $dbh->prepare("SELECT sr.*,e.nombre as estado from pagos_proveedores sr join estados_pago e on sr.cod_estadopago=e.codigo where sr.cod_estadopago=3 order by sr.codigo desc");
+                        $stmt->execute();
+                        $index=0;
+                          while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                            $codigo=$row['codigo'];
+                            $nombre_lote=$row['nombre_lote'];
+                            $fecha=$row['fecha'];
+                            $observaciones=$row['observaciones'];
+                            $codComprobante=$row['cod_comprobante'];
+                            $estado=$row['estado'];
+                            $codEstado=$row['cod_estadopago'];
+                            $cod_ebisa=$row['cod_ebisa'];
+
+                          $datosArray=obtenerDatosProveedoresPagoDetalle($codigo);
+                          $descripcion=obtenerGlosaComprobante($codComprobante);
+                          if(strlen($descripcion)>50){
+                            $descripcion=substr($descripcion, 0, 50)."...";
+                          }
+                          if($nombre_lote!=""){
+                            $datosArray[0]="<a href='#' title='".$datosArray[0]."' class='btn btn-primary btn-sm'><i class='material-icons'>view_comfy</i> ".$nombre_lote."</a>";
+                          }
+                          if($cod_ebisa!=0){
+                            $banderaHab=1;
+                          }else{
+                            $banderaHab=0;
+                          }
+                          ?>
+                          <tr>
+                            <td>
+                              <div class="togglebutton">
+                                <label>
+                                   <input type="checkbox" <?=($banderaHab==1)?"checked":"";?> id="modal_checkprov" onclick="activarInputFilaPago(<?=$index?>)">
+                                   <span class="toggle"></span>
+                                </label>
+                              </div>
+                              <input type="hidden" id="codigo_pagofila<?=$index?>" value="<?=$codigo?>" <?=($banderaHab==0)?"readonly":"";?>>
+                             </td>
+                             <td><?=$datosArray[0]?></td>
+                             <td><?=$datosArray[1]?></td>
+                             <td><?=strftime('%d/%m/%Y',strtotime($fecha));?></td>
+                             <td><?=$datosArray[2]?></td>
+                             <td><div class="btn-group"><?=$datosArray[3]?></div></td>
+                             <td><?=$datosArray[4]?></td>
+                             <td><?=$observaciones;?></td>
+                             <td class="text-muted"><?=$estado?></td>
+                          </tr>
+                                      <?php 
+                                      $index++;
+                                     }
+                         ?>
+                         </tbody>
+                       </table>
+                    <input type="hidden" id="cantidad_filaspago" value="<?=$index?>">   
+                </div>
+                <hr>
+                <a href="#" onclick="generarArchivosTXTVarios()" class="btn btn-white float-right" style="background:#F7FF5A; color:#07B46D;" >Generar TXT</a>
+                <br><br>
+      </div>  
+    </div>
+  </div>
+<!--    end small modal -->
