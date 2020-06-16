@@ -478,24 +478,6 @@ if($menuModulo==0){
                     <span class="sidebar-normal">Plan de Cuentas</span>
                   </a>
                 </li>
-                <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=listPlanCuentasCajaChica">
-                    <span class="sidebar-mini">PCH</span>
-                    <span class="sidebar-normal">Plan de Cuentas Caja Chica</span>
-                  </a>
-                </li>
-                <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=listPlanCuentasSolicitudesFacturacion">
-                    <span class="sidebar-mini">PCTP</span>
-                    <span class="sidebar-normal">Plan de Cuentas para tipos de pago</span>
-                  </a>
-                </li>
-                <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=listPlanCuentasAreas">
-                    <span class="sidebar-mini">PCA</span>
-                    <span class="sidebar-normal">Plan de Cuentas para Areas</span>
-                  </a>
-                </li>
 
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listPartidasPres">
@@ -693,8 +675,6 @@ if($menuModulo==0){
               </ul>
             </div>
           </li>
-          
-
               <?php
               break;
               case 4:
@@ -727,12 +707,6 @@ if($menuModulo==0){
                     <span class="sidebar-normal"> Tarifario de Servicios TCP</span>
                   </a>
                 </li> 
-                <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=listPlanCuentasSolicitudesRecursos">
-                    <span class="sidebar-mini">PSR</span>
-                    <span class="sidebar-normal">Plan de Cuentas Solicitud de Recursos</span>
-                  </a>
-                </li>   
               </ul>
             </div>
           </li>    

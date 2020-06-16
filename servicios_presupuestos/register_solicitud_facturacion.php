@@ -405,7 +405,7 @@ $contadorRegistros=0;
                                         <?php 
                                         $iii=1;                                    
                                         $queryPr="SELECT s.IdDetServicio,s.IdClaServicio,s.Cantidad,s.PrecioUnitario from ibnorca.serviciopresupuesto s where  s.IdServicio=$IdServicio";
-                                        // echo $queryPr;
+                                        //echo $queryPr;
                                         if ($cod_facturacion > 0){
                                             $queryPr.=" UNION ";
                                             //,(select cs.descripcion from cla_servicios cs where cs.IdClaServicio=d.cod_claservicio) as descripcion
