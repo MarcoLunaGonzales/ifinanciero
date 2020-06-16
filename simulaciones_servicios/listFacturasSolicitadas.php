@@ -67,10 +67,10 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                             <th style="color:#cc4545;"><small>#Fact.</small></th>                            
                             <th><small>Importe<br>(BOB)</small></th>  
                             <th><small>Persona<br>Contacto</small></th>
-                            <th width="35%"><small>Razón<br>Social</small></th>
+                            <th width="15%"><small>Razón Social</small></th>
                             <th width="35%"><small>Concepto</small></th>
                             
-                            <th width="5%"><small>Estado</small></th>
+                            <!-- <th width="5%"><small>Estado</small></th> -->
                             <th width="15%"><small>Observaciones</small></th>
                             <th class="text-right"><small>Actions</small></th>
                           </tr>
@@ -84,25 +84,31 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                             switch ($codEstado) {
                               case 1:                                
                                 $label='<span style="padding:1;" class="badge badge-default">';
+                                $btnEstado="btn-default";
                               break;
                               case 2:                                
                                 $label='<span style="padding:1;" class="badge badge-danger">';
+                                $btnEstado="btn-danger";
                               break;
                               case 3:                                
                                 $label='<span style="padding:1;" class="badge badge-success">';
+                                $btnEstado="btn-success";
                               break;
                               case 4:                                
                                 $label='<span style="padding:1;" class="badge badge-warning">';
+                                $btnEstado="btn-warning";
                               break;
                               case 5:                                
                                 $label='<span style="padding:1;" class="badge badge-warning">';
+                                $btnEstado="btn-warning";
                               break;
                               case 6:                                
                                 $label='<span style="padding:1;" class="badge badge-default">';
+                                $btnEstado="btn-default";
                               break;
                             }
                             //verificamos si ya tiene factura generada y esta activa                           
-                            $stmtFact = $dbh->prepare("SELECT codigo,nro_factura,cod_estadofactura,razon_social,nit,nro_autorizacion,importe from facturas_venta where cod_solicitudfacturacion=$codigo_facturacion and cod_estadofactura in (1,4)");
+                            $stmtFact = $dbh->prepare("SELECT codigo,nro_factura,cod_estadofactura,razon_social,nit,nro_autorizacion,importe,cod_comprobante from facturas_venta where cod_solicitudfacturacion=$codigo_facturacion and cod_estadofactura in (1,4)");
                             $stmtFact->execute();
                             $resultSimu = $stmtFact->fetch();
                             $codigo_fact_x = $resultSimu['codigo'];
@@ -112,7 +118,9 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                             $razon_social_x = $resultSimu['razon_social'];
                             $nro_autorizacion_x = $resultSimu['nro_autorizacion'];
                             $importe_x = $resultSimu['importe'];
+                            $cod_comprobante_x = $resultSimu['cod_comprobante'];
                             if ($nro_fact_x==null)$nro_fact_x="-";
+                            else $nro_fact_x="F".$nro_fact_x;
                             if($cod_estado_factura_x==4){
                               // $btnEstado="btn-warning";
                               $label='<span class="badge badge-warning">';
@@ -130,7 +138,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                             $importe_fact_x=0;$cont_facturas=0;$cadenaFacturas="";$cadenaCodFacturas="";
                             while ($row_montos = $stmtFactMontoTotal->fetch()){
                               $importe_fact_x+=$row_montos['importe'];
-                              $cadenaFacturas.=$row_montos['nro_factura']." - ";
+                              $cadenaFacturas.="F".$row_montos['nro_factura']." - ";
                               $cadenaCodFacturas.=$row_montos['codigo'].",";
                               $cont_facturas++;
                             }                       
@@ -241,9 +249,8 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                             <td class="text-left"><small><small><?=$nombre_contacto;?></small></small></td>                            
                             <td><small><small><?=$razon_social;?></small></small></td>
                             <td><small><small><?=$concepto_contabilizacion?></small></small></td>
-                            
-                            <td><?=$label?><small><?=$estado;?></small></span></td>
-                            <td><button class="btn btn-danger btn-sm btn-link" style="padding:0;"><small><small><?=$obs_devolucion;?></small></small></button></td>
+                            <!-- <td><?=$label?><small><?=$estado;?></small></span></td> -->
+                            <td><button class="btn btn-danger btn-sm btn-link" style="padding:0;"><small><?=$obs_devolucion;?></small></button></td>
                             <td class="td-actions text-right">
                               <?php                              
                                 if($cod_estado_factura_x==1 || $cod_estado_factura_x==null){
@@ -251,6 +258,9 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                     if($cont_facturas<2){
                                       ?>
                                       <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=2' target="_blank"><i class="material-icons" title="Imprimir Factura">print</i></a>          
+                                      <a href="<?=$urlImp;?>?comp=<?=$cod_comprobante_x;?>&mon=1" target="_blank" class="btn" style="background-color:#3f33ff">
+                                      <i class="material-icons" title="Imprimir Comprobante">print</i>
+                                    </a> 
                                      <?php               
                                     }elseif($cont_facturas>1){?>
                                       <div class="btn-group dropdown">
@@ -287,9 +297,16 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                           </a><?php 
                                         }else{
                                           if($codEstado==4){
-                                           ?><a href="<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion;?>&estado=1&admin=0" class="dropdown-item">
+                                            $datos_devolucion=$codigo_facturacion."###".$nro_correlativo."###".$codigo_alterno."###1###0###".$urlEdit2Sol."###".$obs_devolucion;
+                                           ?>
+                                           <button class="dropdown-item" data-toggle="modal" data-target="#modalDevolverSolicitud" onclick="modalDevolverSolicitud('<?=$datos_devolucion;?>')">
+                                                <i class="material-icons text-danger">clear</i> Cancelar solicitud
+                                              </button>
+                                           <!-- <a href="<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion;?>&estado=1&admin=0" class="dropdown-item">
                                               <i class="material-icons text-danger">clear</i> Cancelar solicitud
-                                           </a><?php 
+                                           </a> -->
+
+                                           <?php 
                                           }else{}?>
                                           <a href='#' rel="tooltip" class="dropdown-item" onclick="filaTablaAGeneral($('#tablasA_registradas'),<?=$index?>,'<?=$stringCabecera?>')">
                                               <i class="material-icons text-warning" title="Ver Detalle">settings_applications</i> Ver Detalle
@@ -313,25 +330,26 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                             <?php
                                           }else{
                                             if($obs_devolucion==null || $obs_devolucion==''){//cuado se hace el rechazo de la fac y volvemos a enviar                                              
-                                              ?>
-                                              <!-- <a title="Enviar solicitud" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=4&admin=0'  class="btn btn-warning">
-                                                <i class="material-icons">send</i>
-                                              </a> -->
+                                              ?>                                              
                                               <a title="Enviar solicitud" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=4&admin=0'  class="btn btn-warning">
                                                 <i class="material-icons">send</i>
                                               </a>
                                               <?php 
                                             }else{
-                                              $datos_devolucion=$codigo_facturacion."/".$nro_correlativo."/".$codigo_alterno."/4/0";
+                                              $datos_devolucion=$codigo_facturacion."###".$nro_correlativo."###".$codigo_alterno."###4###0###".$urlEdit2Sol."###".$obs_devolucion;
                                               ?>
-                                              <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalReenviarSolicitudDevuelto" onclick="modalDevolverSolicitud('<?=$datos_devolucion;?>')">
-                                                <i class="material-icons" title="Enviar solicitud">refresh</i>
+                                              <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalReenviarSolicitudDevuelto" onclick="modalReenviarSolicitudDevuelto('<?=$datos_devolucion;?>')">
+                                                <i class="material-icons" title="Enviar solicitud">send</i>
                                               </button>
                                               <?php
-                                            }?>                                             
-                                            <a title="Volver al Estado Registro" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=1&admin=0'  class="btn btn-danger">
+                                            }?>
+                                            <?php $datos_devolucion=$codigo_facturacion."###".$nro_correlativo."###".$codigo_alterno."###1###0###".$urlEdit2Sol."###".$obs_devolucion;?>
+                                             <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalDevolverSolicitud" onclick="modalDevolverSolicitud('<?=$datos_devolucion;?>')">
+                                                <i class="material-icons" title="Volver al Estado Registro">refresh</i>
+                                              </button>
+                                            <!-- <a title="Volver al Estado Registro" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=1&admin=0'  class="btn btn-danger">
                                               <i class="material-icons">refresh</i>
-                                            </a>
+                                            </a> -->
                                               <?php
                                           } 
                                         }else{}
@@ -350,7 +368,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                               </a>                                              
                                               <?php 
                                             }else{
-                                              $datos_devolucion=$codigo_facturacion."###".$nro_correlativo."###".$codigo_alterno."###6###0###".$urlEdit2Sol;
+                                              $datos_devolucion=$codigo_facturacion."###".$nro_correlativo."###".$codigo_alterno."###6###0###".$urlEdit2Sol."###".$obs_devolucion;
                                               ?>
                                               <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalReenviarSolicitudDevuelto" onclick="modalReenviarSolicitudDevuelto('<?=$datos_devolucion;?>')">
                                                 <i class="material-icons" title="Pre Envio - Solicitud Facturación">send</i>
@@ -410,7 +428,19 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
 <?php  require_once 'simulaciones_servicios/modal_facturacion.php';?>
 <!-- para modal -->
 <script type="text/javascript">
-  $(document).ready(function(){    
+  $(document).ready(function(){
+    $('#rechazarSolicitud').click(function(){      
+      var cod_solicitudfacturacion=document.getElementById("cod_solicitudfacturacion").value;
+      var estado=document.getElementById("estado").value;
+      var admin=document.getElementById("admin").value;
+      var direccion=document.getElementById("direccion").value;
+      var observaciones=$('#observaciones').val();
+      if(observaciones==null || observaciones==0 || observaciones=='' || observaciones==' '){
+        Swal.fire("Informativo!", "Por favor introduzca la observación.", "warning");
+      }else{        
+        registrarRechazoSolicitud(cod_solicitudfacturacion,observaciones,estado,admin,direccion);
+      }      
+    });     
     $('#ReenviarSolicitud').click(function(){      
       var cod_solicitudfacturacion=document.getElementById("cod_solicitudfacturacion_r").value;
       var estado=document.getElementById("estado_r").value;

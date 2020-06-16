@@ -25,26 +25,9 @@ $cantidad_items = $_POST["cantidad_items"];
 $total_importe = $_POST["total_importe_pagar"];
 try{    
     //verificamos si se registró las cuentas en los tipos de pago 
-    $stmtVerif_tipopago = $dbh->prepare("SELECT (select c.cod_cuenta from tipos_pago_contabilizacion c where c.cod_tipopago=t.codigo) as cuenta from tipos_pago t where t.cod_estadoreferencial=1");
-    $stmtVerif_tipopago->execute();
-    $cont_tipopago=0;
-    while ($row = $stmtVerif_tipopago->fetch())     
-    {
-        $cod_cuenta=$row['cuenta'];
-        if($cod_cuenta==null){
-            $cont_tipopago++;
-        }
-    }
-    $stmtVerif_area = $dbh->prepare("SELECT cod_cuenta_ingreso from areas a where a.cod_estado=1 and areas_ingreso=1");
-    $stmtVerif_area->execute();
-    $cont_areas=0;
-    while ($row = $stmtVerif_area->fetch())    
-    {
-        $cod_cuenta=$row['cod_cuenta_ingreso'];
-        if($cod_cuenta==null){
-            $cont_areas++;
-        }
-    }
+    $cont_tipopago=verificamos_cuentas_tipos_pagos();
+    //verificamos si se registró las cuentas en LAS AREAS DE INGRESO 
+    $cont_areas=verificamos_cuentas_areas();
     if($cont_tipopago!=0){//falta asociar cuenta a tipos de pago ?>
         <script>            
             Swal.fire("Error!","Por favor verifique que los tipos de pago estén asociados a una cuenta!.", "error");
@@ -197,11 +180,7 @@ try{
                                     values ('$cod_facturaVenta','$cod_claservicio_x','$cantidad_x','$precio_x','$descripcion_alterna_x',$descuento_bob_x,0)");
                                     $flagSuccess=$stmtInsertSoliFactDet->execute();
                                 }
-
-
                                 // $precio_x=$precio_x+$descuento_bob_x;//se registró el precio total incluido el descuento, para la factura necesitamos el precio unitario
-                                
-                                    
                             }
                             if($estado_ibnorca==0){//sin errores en el servicio web
                                 $sqlUpdate="UPDATE solicitudes_facturacion SET  cod_estadosolicitudfacturacion=5 where codigo=$cod_solicitudfacturacion";

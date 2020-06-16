@@ -332,13 +332,13 @@
         <input type="hidden" name="admin" id="admin" value="0">
         <input type="hidden" name="direccion" id="direccion" value="0">
         <div class="row">
-          <label class="col-sm-1 col-form-label" style="color:#000000"><small>Nro. Solicitud</small></label>
+          <label class="col-sm-1 col-form-label" style="color:#7e7e7e"><small>Nro. Solicitud</small></label>
           <div class="col-sm-2">
             <div class="form-group" >
               <input type="text" class="form-control" name="nro_solicitud" id="nro_solicitud" readonly="true" style="background-color:#e2d2e0">              
             </div>
           </div>
-          <label class="col-sm-1 col-form-label" style="color:#000000"><small>Código<br>Servicio</small></label>
+          <label class="col-sm-1 col-form-label" style="color:#7e7e7e"><small>Código<br>Servicio</small></label>
           <div class="col-sm-8">
             <div class="form-group" >              
               <input type="text" class="form-control" name="codigo_servicio" id="codigo_servicio" readonly="true" style="background-color:#e2d2e0">
@@ -346,12 +346,10 @@
           </div>
         </div>                
         <div class="row">
-          <div class="col-sm-12" >
-            <h6>Observaciones </h6>
-          </div>
+          <label class="col-sm-12 col-form-label" style="color:#7e7e7e"><small>Observaciones</small></label>
         </div>
         <div class="row">
-          <div class="col-sm-12" style="background-color:#FFFFFF">
+          <div class="col-sm-12" style="background-color:#f9edf7">
             <div class="form-group" >              
               <textarea type="text" name="observaciones" id="observaciones" class="form-control" required="true"></textarea>
             </div>
@@ -379,13 +377,13 @@
         <input type="hidden" name="admin_r" id="admin_r" value="0">
         <input type="hidden" name="direccion_r" id="direccion_r" value="0">
         <div class="row">
-          <label class="col-sm-1 col-form-label" style="color:#000000"><small>Nro. Solicitud</small></label>
+          <label class="col-sm-1 col-form-label" style="color:#7e7e7e"><small>Nro. Solicitud</small></label>
           <div class="col-sm-2">
             <div class="form-group" >
               <input type="text" class="form-control" name="nro_solicitud_r" id="nro_solicitud_r" readonly="true" style="background-color:#e2d2e0">              
             </div>
           </div>
-          <label class="col-sm-1 col-form-label" style="color:#000000"><small>Código<br>Servicio</small></label>
+          <label class="col-sm-1 col-form-label" style="color:#7e7e7e"><small>Código<br>Servicio</small></label>
           <div class="col-sm-8">
             <div class="form-group" >              
               <input type="text" class="form-control" name="codigo_servicio_r" id="codigo_servicio_r" readonly="true" style="background-color:#e2d2e0">
@@ -393,12 +391,10 @@
           </div>
         </div>                
         <div class="row">
-          <div class="col-sm-12" >
-            <h6>Observaciones </h6>
-          </div>
+          <label class="col-sm-12 col-form-label" style="color:#7e7e7e"><small>Observaciones</small></label>
         </div>
         <div class="row">
-          <div class="col-sm-12" style="background-color:#FFFFFF">
+          <div class="col-sm-12" style="background-color:#f9edf7">
             <div class="form-group" >              
               <textarea type="text" name="observaciones_r" id="observaciones_r" class="form-control" required="true"></textarea>
             </div>

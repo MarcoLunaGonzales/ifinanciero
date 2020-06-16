@@ -26,28 +26,11 @@ $razon_social=$_POST['razon_social'];
 
 $estado_ibnorca=0;
 // $cod_control=$_POST['cod_control'];
-try{
-    //verificamos si se registró las cuentas en los tipos de pago
-    $stmtVerif_tipopago = $dbh->prepare("SELECT (select c.cod_cuenta from tipos_pago_contabilizacion c where c.cod_tipopago=t.codigo) as cuenta from tipos_pago t where t.cod_estadoreferencial=1");
-    $stmtVerif_tipopago->execute();
-    $cont_tipopago=0;
-    while ($row = $stmtVerif_tipopago->fetch())     
-    {
-        $cod_cuenta=$row['cuenta'];
-        if($cod_cuenta==null){
-            $cont_tipopago++;
-        }
-    }
-    $stmtVerif_area = $dbh->prepare("SELECT cod_cuenta_ingreso from areas a where a.cod_estado=1 and areas_ingreso=1");
-    $stmtVerif_area->execute();
-    $cont_areas=0;
-    while ($row = $stmtVerif_area->fetch())    
-    {
-        $cod_cuenta=$row['cod_cuenta_ingreso'];
-        if($cod_cuenta==null){
-            $cont_areas++;
-        }
-    }
+try{    
+    //verificamos si se registró las cuentas en los tipos de pago 
+    $cont_tipopago=verificamos_cuentas_tipos_pagos();
+    //verificamos si se registró las cuentas en LAS AREAS DE INGRESO 
+    $cont_areas=verificamos_cuentas_areas();
     if($cont_tipopago!=0){//falta asociar cuenta a tipos de pago 
     	echo 2;
     }elseif($cont_areas!=0){//falta asociar alguna cuenta en areas 
@@ -55,10 +38,8 @@ try{
     }else{//cuando todo esta en orden
         // verificamos si ya se registro la factura
         // echo $codigo;
-        $stmtVerif = $dbh->prepare("SELECT codigo FROM facturas_venta where cod_solicitudfacturacion=$codigo and cod_estadofactura=1");
-        $stmtVerif->execute();
-        $resultVerif = $stmtVerif->fetch();    
-        $codigo_facturacion = $resultVerif['codigo'];
+        // verificamos si ya se registro la factura
+        $codigo_facturacion=verificamosFacturaDuplicada($codigo);
         // if($codigo_facturacion==null){//no se registró
             //datos de la solicitud de facturacion
             $stmtInfo = $dbh->prepare("SELECT sf.*,t.nombre as nombre_cliente FROM solicitudes_facturacion sf,clientes t  where sf.cod_cliente=t.codigo and sf.codigo=$codigo");

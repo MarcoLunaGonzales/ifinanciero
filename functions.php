@@ -6897,4 +6897,55 @@ function verificarMontoPresupuestadoSolicitadoSR($codigo){
   }
   return $valor;
 }
+function insertarCabeceraComprobante($codComprobante,$codEmpresa,$cod_uo_solicitud,$codAnio,$codMoneda,$codEstadoComprobante,$tipoComprobante,$fechaActual,$numeroComprobante,$concepto_contabilizacion,$globalUser,$globalUser){
+   $dbh = new Conexion();
+   $sqlInsertCabecera="INSERT INTO comprobantes (codigo, cod_empresa, cod_unidadorganizacional, cod_gestion, cod_moneda, cod_estadocomprobante, cod_tipocomprobante, fecha, numero, glosa,created_by,modified_by) values ('$codComprobante','$codEmpresa','$cod_uo_solicitud','$codAnio','$codMoneda','$codEstadoComprobante','$tipoComprobante','$fechaActual','$numeroComprobante','$concepto_contabilizacion','$globalUser','$globalUser')";
+    $stmtInsertCab = $dbh->prepare($sqlInsertCabecera);
+    $flagSuccess=$stmtInsertCab->execute();
+   return $flagSuccess;
+}
+function insertarDetalleComprobante($codComprobante,$cod_cuenta,$cod_cuentaauxiliar,$cod_uo_solicitud,$cod_area_solicitud,$monto_debe,$monto_haber,$descripcion,$ordenDetalle){
+  $dbh = new Conexion();
+  $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','$cod_cuentaauxiliar','$cod_uo_solicitud','$cod_area_solicitud','$monto_debe','$monto_haber','$descripcion','$ordenDetalle')";
+  $stmtInsertDet = $dbh->prepare($sqlInsertDet);
+  $flagSuccessDet=$stmtInsertDet->execute();
+  return $flagSuccessDet;
+}
+function verificamos_cuentas_tipos_pagos(){
+  $dbh = new Conexion();
+  $stmtVerif_tipopago = $dbh->prepare("SELECT (select c.cod_cuenta from tipos_pago_contabilizacion c where c.cod_tipopago=t.codigo) as cuenta from tipos_pago t where t.cod_estadoreferencial=1");
+  $stmtVerif_tipopago->execute();
+  $cont_tipopago=0;
+  while ($row = $stmtVerif_tipopago->fetch())     
+  {
+    $cod_cuenta=$row['cuenta'];
+    if($cod_cuenta==null){
+        $cont_tipopago++;
+    }
+  }
+  return $cont_tipopago;
+}
+function verificamos_cuentas_areas(){
+  $dbh = new Conexion();
+  $stmtVerif_area = $dbh->prepare("SELECT cod_cuenta_ingreso from areas a where a.cod_estado=1 and areas_ingreso=1");
+  $stmtVerif_area->execute();
+  $cont_areas=0;
+  while ($row = $stmtVerif_area->fetch())    
+  {
+      $cod_cuenta=$row['cod_cuenta_ingreso'];
+      if($cod_cuenta==null){
+          $cont_areas++;
+      }
+  }
+  return $cont_areas;
+}
+function verificamosFacturaDuplicada($codigo){
+  $dbh = new Conexion();
+  $stmtVerif = $dbh->prepare("SELECT codigo FROM facturas_venta where cod_solicitudfacturacion=$codigo and cod_estadofactura=1");
+  $stmtVerif->execute();
+  $resultVerif = $stmtVerif->fetch();    
+  $codigo_facturacion = $resultVerif['codigo'];
+  return $codigo_facturacion;
+}
+
 ?>

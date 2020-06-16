@@ -121,6 +121,9 @@ try {
             $sqlDeleteAreas="DELETE from solicitudes_facturacion_areas where cod_solicitudfacturacion=$cod_facturacion";
             $stmtDelAreas = $dbh->prepare($sqlDeleteAreas);
             $stmtDelAreas->execute();
+            $sqlDeleteAreasUO="DELETE from solicitudes_facturacion_areas_uo where cod_solicitudfacturacion=$cod_facturacion";
+            $stmtDelAreasUO = $dbh->prepare($sqlDeleteAreasUO);
+            $stmtDelAreasUO->execute();
             //si existe array de objetos areas
             if(isset($_POST['areas_facturacion'])){
                 $areas_facturacion= json_decode($_POST['areas_facturacion']);
@@ -247,7 +250,7 @@ try {
                     // echo "monto_bob:".$monto_bob."<br>";          
                     $sqlTiposPago="INSERT INTO solicitudes_facturacion_tipospago(cod_solicitudfacturacion, cod_tipopago, porcentaje, monto) VALUES ('$cod_facturacion','$codigo_tipopago','$monto_porcentaje','$monto_bob')";
                     $stmtTiposPago = $dbh->prepare($sqlTiposPago);
-                    $stmtTiposPago->execute();
+                    $stmtTiposPago->execute();                    
                 }
             }else{
                 $codigo_tipopago=$cod_tipopago;
@@ -264,7 +267,10 @@ try {
             $sqlDeleteAreas="DELETE from solicitudes_facturacion_areas where cod_solicitudfacturacion=$cod_facturacion";
             $stmtDelAreas = $dbh->prepare($sqlDeleteAreas);
             $stmtDelAreas->execute();
-            //si existe array de objetos areas            
+            $sqlDeleteAreasUO="DELETE from solicitudes_facturacion_areas_uo where cod_solicitudfacturacion=$cod_facturacion";
+            $stmtDelAreasUO = $dbh->prepare($sqlDeleteAreasUO);
+            $stmtDelAreasUO->execute();
+            //si existe array de objetos areas
             if(isset($_POST['areas_facturacion'])){
                 $areas_facturacion= json_decode($_POST['areas_facturacion']);
                 $nF=cantidadF($areas_facturacion[0]);

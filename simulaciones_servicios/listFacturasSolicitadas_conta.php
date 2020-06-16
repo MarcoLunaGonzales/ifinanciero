@@ -30,6 +30,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
   $stmt->bindColumn('nro_correlativo', $nro_correlativo);
   $stmt->bindColumn('persona_contacto', $persona_contacto);
   $stmt->bindColumn('codigo_alterno', $codigo_alterno);
+  $stmt->bindColumn('obs_devolucion', $obs_devolucion);
   $stmt->bindColumn('tipo_solicitud', $tipo_solicitud);//1 tcp - 2 capacitacion - 3 servicios - 4 manual - 5 venta de normas
   ?>
   <div class="content">
@@ -47,18 +48,19 @@ $globalAdmin=$_SESSION["globalAdmin"];
                       <table class="table" id="tablePaginator">
                         <thead>
                           <tr>
-                            <th>Of - Area</th>
-                            <th>#Sol.</th>
-                            <th>Responsable</th>
-                            <th>Codigo<br>Servicio</th>                            
-                            <th>Fecha<br>Registro</th>                            
-                            <th style="color:#cc4545;">#Fact</th>                            
-                            <th>Importe<br>(BOB)</th>  
-                            <th>Persona<br>Contacto</th>
-                            <th>Razón<br>Social</th>
-                            <th>Concepto</th>              
-                            <th width="5%">Estado</th>                            
-                            <th class="text-right">Actions</th>
+                            <th><small>Of - Area</small></th>
+                            <th><small>#Sol.</small></th>
+                            <th><small>Responsable</small></th>
+                            <th><small>Codigo<br>Servicio</small></th>                            
+                            <th><small>Fecha<br>Registro</small></th>                            
+                            <th style="color:#cc4545;"><small>#Fact</small></th>                            
+                            <th><small>Importe<br>(BOB)</small></th>  
+                            <th><small>Persona<br>Contacto</small></th>
+                            <th width="15%"><small>Razón<br>Social</small></th>
+                            <th width="35%"><small>Concepto</small></th>              
+                            <!-- <th ><small>Estado</small></th>                             -->
+                            <th width="15%"><small>Observaciones</small></th>
+                            <th class="text-right"><small>Actions</small></th>
                           </tr>
                         </thead>
                         <tbody>
@@ -69,22 +71,28 @@ $globalAdmin=$_SESSION["globalAdmin"];
                           $cont_pagosParciales= array();
                           while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {// para la parte de facturas parciales, items de sol_Fact
                             switch ($codEstado) {
-                              case 1:
+                              case 1:                                
+                                $label='<span style="padding:1;" class="badge badge-default">';
                                 $btnEstado="btn-default";
                               break;
-                              case 2:
+                              case 2:                                
+                                $label='<span style="padding:1;" class="badge badge-danger">';
                                 $btnEstado="btn-danger";
                               break;
-                              case 3:
+                              case 3:                                
+                                $label='<span style="padding:1;" class="badge badge-success">';
                                 $btnEstado="btn-success";
                               break;
-                              case 4:
+                              case 4:                                
+                                $label='<span style="padding:1;" class="badge badge-warning">';
                                 $btnEstado="btn-warning";
                               break;
-                              case 5:
+                              case 5:                                
+                                $label='<span style="padding:1;" class="badge badge-warning">';
                                 $btnEstado="btn-warning";
                               break;
-                              case 6:
+                              case 6:                                
+                                $label='<span style="padding:1;" class="badge badge-default">';
                                 $btnEstado="btn-default";
                               break;
                             }
@@ -96,6 +104,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             $nro_fact_x = $resultSimu['nro_factura'];
                             $cod_estado_factura_x = $resultSimu['cod_estadofactura'];
                             if ($nro_fact_x==null)$nro_fact_x="-";
+                            else $nro_fact_x="F".$nro_fact_x;
                             if($cod_estado_factura_x==4){
                               $btnEstado="btn-warning";
                               $estado="FACTURA MANUAL";                            
@@ -262,16 +271,17 @@ $globalAdmin=$_SESSION["globalAdmin"];
                               <tr>
                                 <td><small><?=$nombre_uo;?> - <?=$nombre_area;?></small></td>
                                 <td class="text-right"><small><?=$nro_correlativo;?></small></td>
-                                <td><small><?=$responsable;?></small></td>
-                                <td><small><?=$codigo_alterno?></small></td>
+                                <td class="text-left"><small><?=$responsable;?></small></td>
+                                <td class="text-left"><small><?=$codigo_alterno?></small></td>
                                 <td><small><?=$fecha_registro;?></small></td>
                                 <!-- <td><?=$fecha_solicitudfactura;?></td>          -->                   
                                 <td style="color:#298A08;"><small><?=$nro_fact_x;?><br><span style="color:#DF0101;"><?=$cadenaFacturasM;?></span></small></td>
                                 <td class="text-right"><small><?=formatNumberDec($sumaTotalImporte);?></small></td>
                                 <td class="text-left"><small><?=$nombre_contacto;?></small></td>
-                                <td><small><small><?=$razon_social;?></small></small></td>
-                                <td width="35%"><small><?=$concepto_contabilizacion?></small></td>
-                                <td><button class="btn <?=$btnEstado?> btn-sm btn-link"><small><?=$estado;?></small></button></td>
+                                <td class="text-left"><small><small><?=$razon_social;?></small></small></td>
+                                <td class="text-left"><small><?=$concepto_contabilizacion?></small></td>
+                                <!-- <td><?=$label?><small><?=$estado;?></small></span></td> -->
+                                <td><button class="btn btn-danger btn-sm btn-link" style="padding:0;"><small><?=$obs_devolucion;?></small></button></td>
                                 <td class="td-actions text-right">
                                   <?php
                                     if($globalAdmin==1){ //

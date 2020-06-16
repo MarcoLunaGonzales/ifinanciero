@@ -141,8 +141,9 @@ $contadorRegistros=0;
                                     <div id="div_contenedor_area">  
                                         <select name="cod_area" id="cod_area" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true" required="true"> 
                                                 <?php 
-                                                $sqlArea="SELECT cod_unidad,cod_area,(select a.nombre from areas a where a.codigo=cod_area) as nombre_area,(select a.abreviatura from areas a where a.codigo=cod_area) as abrev_area FROM areas_organizacion
-                                                where cod_estadoreferencial=1 and cod_unidad=$cod_uo order by nombre_area";
+                                                $sqlArea="SELECT uo.cod_unidad,uo.cod_area,a.nombre as nombre_area,a.abreviatura as abrev_area
+                                                FROM areas_organizacion uo,areas a
+                                                where uo.cod_estadoreferencial=1 and uo.cod_area=a.codigo and a.areas_ingreso=1 and uo.cod_unidad=$cod_uo order by nombre_area";
                                                 $stmtArea = $dbh->prepare($sqlArea);                                            
                                                 $stmtArea->execute();
                                                 while ($rowArea = $stmtArea->fetch()){ ?>
@@ -274,7 +275,7 @@ $contadorRegistros=0;
                             <label class="col-sm-2 col-form-label">Tipo Pago</label>
                             <div class="col-sm-3">
                                 <div class="form-group" >
-                                    <select name="cod_tipopago" id="cod_tipopago" class="selectpicker form-control form-control-sm" data-style="btn btn-info" onChange="ajaxTipoPagoContactoPersonal(this);">
+                                    <select name="cod_tipopago" id="cod_tipopago" class="selectpicker form-control form-control-sm" data-style="btn btn-info" onChange="ajaxTipoPagoContactoPersonal_normas(this);">
                                         <?php 
                                         $queryTipoPago = "SELECT codigo,nombre FROM  tipos_pago WHERE cod_estadoreferencial=1 order by nombre";
                                         $statementPAgo = $dbh->query($queryTipoPago);
@@ -341,7 +342,7 @@ $contadorRegistros=0;
                             <div class="col-sm-3">
                                 <div class="form-group" >
                                     <div id="div_contenedor_contactos">
-                                        <select class="selectpicker form-control form-control-sm" name="persona_contacto" id="persona_contacto" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" title="Seleccione Contacto" required="true">
+                                        <select class="selectpicker form-control form-control-sm" name="persona_contacto" id="persona_contacto" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" title="Seleccione Contacto">
                                           <?php 
                                           $query="SELECT * FROM clientes_contactos where cod_cliente=$cod_cliente order by nombre";
                                           $stmt = $dbh->prepare($query);
@@ -372,12 +373,12 @@ $contadorRegistros=0;
                         <div id="contenedor_razon_nit">
                             <div class="row">
                                 <label class="col-sm-2 col-form-label">Razón Social</label>
-                                <div class="col-sm-4">
+                                <div class="col-sm-5">
                                     <div class="form-group">                                    
-                                            <input class="form-control" type="text" name="razon_social" id="razon_social" required="true" value="<?=$razon_social;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>                                        
+                                        <input class="form-control" type="text" name="razon_social" id="razon_social" required="true" value="<?=$razon_social;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>                                        
                                     </div>
                                 </div>
-                                <label class="col-sm-2 col-form-label">Nit</label>
+                                <label class="col-sm-1 col-form-label">Nit</label>
                                 <div class="col-sm-4">
                                     <div class="form-group">                                        
                                             <input class="form-control" type="number" name="nit" id="nit" required="true" value="<?=$nit;?>" required="true"/>
@@ -387,21 +388,22 @@ $contadorRegistros=0;
                         </div>
                         <!-- fin razon social y nit -->
                         <div class="row">
-                            <label class="col-sm-3 col-form-label">Observaciones * 1</label>
-                            <div class="col-sm-9">
+                            <label class="col-sm-2 col-form-label">Observaciones * 1</label>
+                            <div class="col-sm-10">
                                 <div class="form-group">
                                     <input class="form-control" type="text" name="observaciones" id="observaciones"  value="<?=$observaciones;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" requerid/>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
-                            <label class="col-sm-3 col-form-label">Observaciones 2</label>
-                            <div class="col-sm-9">
+                            <label class="col-sm-2 col-form-label">Observaciones 2</label>
+                            <div class="col-sm-10">
                                 <div class="form-group">
-                                    <input class="form-control" type="text" name="observaciones_2" id="observaciones_2" value="<?=$observaciones_2;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" required="true" />
+                                    <input class="form-control" type="text" name="observaciones_2" id="observaciones_2"  value="<?=$observaciones_2;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
                                 </div>
                             </div>
                         </div>
+                        <!-- fin observaciones -->
 
                         <div class="card">
                             <div class="card-header <?=$colorCard;?> card-header-text">

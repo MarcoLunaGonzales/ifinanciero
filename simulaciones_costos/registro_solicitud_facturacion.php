@@ -339,37 +339,38 @@ $descuento_cliente=0;
 
                         <div class="row">
                             <label class="col-sm-2 col-form-label">Razón Social</label>
-                            <div class="col-sm-4">
+                            <div class="col-sm-5">
                                 <div class="form-group">
-                                    <!-- <div id="contenedor_razonsocial"> -->
-                                        <input class="form-control" type="text" name="razon_social" id="razon_social" required="true"  onkeyup="javascript:this.value=this.value.toUpperCase();" value="<?=$razon_social?>" />    
-                                    <!-- </div> -->
+                                    <div id="contenedor_razonsocial">
+                                        <input class="form-control" type="text" name="razon_social" id="razon_social" required="true" value="<?=$razon_social;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>    
+                                    </div>
                                 </div>
                             </div>
-                            <label class="col-sm-2 col-form-label">Nit</label>
+                            <label class="col-sm-1 col-form-label">Nit</label>
                             <div class="col-sm-4">
                                 <div class="form-group">
-                                    <input class="form-control" type="number" name="nit" id="nit" value="<?=$nit;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" required="true" />
+                                    <input class="form-control" type="number" name="nit" id="nit" required="true" value="<?=$nit;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" required="true"/>
                                 </div>
                             </div>
                         </div>
                         <!-- fin razon social y nit -->
                         <div class="row">
-                            <label class="col-sm-3 col-form-label">Observaciones * 1</label>
-                            <div class="col-sm-9">
+                            <label class="col-sm-2 col-form-label">Observaciones * 1</label>
+                            <div class="col-sm-10">
                                 <div class="form-group">
                                     <input class="form-control" type="text" name="observaciones" id="observaciones"  value="<?=$observaciones;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" requerid/>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
-                            <label class="col-sm-3 col-form-label">Observaciones 2</label>
-                            <div class="col-sm-9">
+                            <label class="col-sm-2 col-form-label">Observaciones 2</label>
+                            <div class="col-sm-10">
                                 <div class="form-group">
                                     <input class="form-control" type="text" name="observaciones_2" id="observaciones_2" value="<?=$observaciones_2;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
                                 </div>
                             </div>
                         </div>
+                        <!-- fin observaciones -->
                         <!-- fin observaciones -->
                         <div class="card">
                             <div class="card-header <?=$colorCard;?> card-header-text">

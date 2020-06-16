@@ -2421,6 +2421,21 @@ function ajaxAFunidadorganizacionalArea(combo){
   }
   ajax.send(null)  
 }//unidad_area-cargo
+
+function ajaxAFunidadorganizacionalArea_solicitud_Fact(combo){
+  var contenedor;
+  var codigo_UO=combo.value;
+  contenedor = document.getElementById('div_contenedor_area');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'simulaciones_servicios/ajax_uo_areas.php?codigo_UO='+codigo_UO,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);      
+    }
+  }
+  ajax.send(null)  
+}//unidad_area-cargo
 function ajaxPersonalUbicacionTrasfer(combo){
   var contenedor;
   var codigo_UO=combo.value;
@@ -12207,6 +12222,21 @@ function ajaxTipoPagoContactoPersonal(combo){
   }
   ajax.send(null)  
 }
+function ajaxTipoPagoContactoPersonal_normas(combo){
+  var cod_cliente=$("#cod_cliente").val();
+  var contenedor;
+  var cod_tipo=combo.value;
+  contenedor = document.getElementById('div_contenedor_contactos');
+  ajax=nuevoAjax();
+  ajax.open('GET', '../simulaciones_servicios/ajax_tipopago_contacto.php?cod_tipo='+cod_tipo+'&cod_cliente='+cod_cliente,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);        
+    }
+  }
+  ajax.send(null)  
+}
 
 function botonBuscarSolicitudes_conta(){
   var valor_uo=$("#OficinaBusqueda").val();
@@ -14205,7 +14235,8 @@ function modalDevolverSolicitud(datos){
   document.getElementById("codigo_servicio").value=d[2];  
   document.getElementById("estado").value=d[3];  //estado
   document.getElementById("admin").value=d[4];  //tipo admin
-  document.getElementById("direccion").value=d[5];  //tipo admin
+  document.getElementById("direccion").value=d[5];  //link destino
+  document.getElementById("observaciones").value=d[6];  //obs
 }
 
 function modalReenviarSolicitudDevuelto(datos){  
@@ -14215,7 +14246,8 @@ function modalReenviarSolicitudDevuelto(datos){
   document.getElementById("codigo_servicio_r").value=d[2];  
   document.getElementById("estado_r").value=d[3];  //estado
   document.getElementById("admin_r").value=d[4];  //tipo admin
-  document.getElementById("direccion_r").value=d[5];  //tipo admin
+  document.getElementById("direccion_r").value=d[5];  //link destino
+  document.getElementById("observaciones_r").value=d[6];  //obs
 
 
 }
