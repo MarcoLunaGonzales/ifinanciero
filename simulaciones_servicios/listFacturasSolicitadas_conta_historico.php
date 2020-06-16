@@ -115,7 +115,7 @@ $stmtCliente->bindColumn('nombre', $nombre_cli);
                             break;
                           }
                             //verificamos si ya tiene factura generada y esta activa                           
-                            $stmtFact = $dbh->prepare("SELECT codigo,nro_factura,cod_estadofactura,razon_social,nit,nro_autorizacion,importe from facturas_venta where cod_solicitudfacturacion=$codigo_facturacion and cod_estadofactura in (1,4)");
+                            $stmtFact = $dbh->prepare("SELECT codigo,nro_factura,cod_estadofactura,razon_social,nit,nro_autorizacion,importe,cod_comprobante from facturas_venta where cod_solicitudfacturacion=$codigo_facturacion and cod_estadofactura in (1,4)");
                             $stmtFact->execute();
                             $resultSimu = $stmtFact->fetch();
                             $codigo_fact_x = $resultSimu['codigo'];
@@ -125,7 +125,9 @@ $stmtCliente->bindColumn('nombre', $nombre_cli);
                             $razon_social_x = $resultSimu['razon_social'];
                             $nro_autorizacion_x = $resultSimu['nro_autorizacion'];
                             $importe_x = $resultSimu['importe'];
+                            $cod_comprobante_x = $resultSimu['cod_comprobante'];
                             if ($nro_fact_x==null)$nro_fact_x="-";
+                            else $nro_fact_x="F".$nro_fact_x;
                             if($cod_estado_factura_x==4){
                               $btnEstado="btn-warning";
                               $estado="FACTURA MANUAL";
@@ -256,10 +258,12 @@ $stmtCliente->bindColumn('nombre', $nombre_cli);
                                   if($codigo_fact_x>0 && $cod_estado_factura_x==1 && $cont_facturas<2){//print facturas
                                     ?>
                                     <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=2' target="_blank"><i class="material-icons" title="Imprimir Factura">print</i></a>
+                                    <a href="<?=$urlImp;?>?comp=<?=$cod_comprobante_x;?>&mon=1" target="_blank" class="btn" style="background-color:#3f33ff">
+                                      <i class="material-icons" title="Imprimir Comprobante">print</i>
                                     <?php 
                                   }elseif($cont_facturas>1){?>
                                     <div class="btn-group dropdown">
-                                      <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><small>PAGOS</small></button>
+                                      <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><small>Facturas</small></button>
                                       <div class="dropdown-menu"><?php 
                                         $arrayCodFacturas = explode(",",trim($cadenaCodFacturas,','));
                                         $arrayFacturas = explode(",",trim($cadenaFacturas,','));                                        

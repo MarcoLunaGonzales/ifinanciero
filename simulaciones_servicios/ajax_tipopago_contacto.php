@@ -10,7 +10,7 @@ $cod_cliente=$_GET["cod_cliente"];
 $dbh = new Conexion();
 $cod_tipo_conf=obtenerValorConfiguracion(48);
 if($cod_tipo_conf==$cod_tipo){ //de tipo credito obligado contacto?>
-	<select class="selectpicker form-control form-control-sm" name="persona_contacto" id="persona_contacto" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" title="Seleccione Contacto" required="true">	
+	<select class="selectpicker form-control form-control-sm" name="persona_contacto" id="persona_contacto" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" title="Seleccione Contacto">	
 		<?php 
 		$query="SELECT * FROM clientes_contactos where cod_cliente=$cod_cliente order by nombre";
 		$stmt = $dbh->prepare($query);

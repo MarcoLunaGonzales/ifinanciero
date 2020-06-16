@@ -22,9 +22,9 @@ $resutCanitdad = $stmtCantidad->fetch();
 $cantidad_items = $resutCanitdad['cantidad'];
 if(isset($_GET['q'])){
   $q=$_GET['q'];
+  $v=$_GET['v'];
   $s=$_GET['s'];
   $u=$_GET['u'];
-  $v=$_GET['v'];
 }
 if($cantidad_items>0){
   //datos registrado de la simulacion en curso
@@ -118,6 +118,7 @@ if($cantidad_items>0){
                             $nro_fact_x = $resultSimu['nro_factura'];
                             $cod_estado_factura_x = $resultSimu['cod_estadofactura'];
                             if ($nro_fact_x==null)$nro_fact_x="-";
+                            else $nro_fact_x="F".$nro_fact_x;
                             if($cod_estado_factura_x==4){
                               // $btnEstado="btn-warning";
                               $label='<span class="badge badge-warning">';
@@ -202,12 +203,12 @@ if($cantidad_items>0){
                                 if($codEstado==1){
                                   if(isset($_GET['q'])){?>
                                     <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir Solicitud">print</i></a>
-                                    <a title="Editar Simulación - Detalle" href='<?=$urlRegisterSolicitudfactura;?>&cod_s=<?=$codigo_simulacion?>&cod_f=<?=$codigo_facturacion?>&cod_sw=1&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>' class="btn btn-info">
+                                    <a title="Editar Solicitud Facturación" href='<?=$urlRegisterSolicitudfactura;?>&cod_s=<?=$codigo_simulacion?>&cod_f=<?=$codigo_facturacion?>&cod_sw=1&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>' class="btn btn-info">
                                       <i class="material-icons"><?=$iconEdit;?></i>
                                     </a><?php                                
                                   }else{?>
                                     <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir Solicitud">print</i></a>
-                                    <a title="Editar Simulación - Detalle" href='<?=$urlRegisterSolicitudfactura;?>&cod_s=<?=$codigo_simulacion?>&cod_f=<?=$codigo_facturacion?>&cod_sw=1' class="btn btn-info">
+                                    <a title="Editar Solicitud Facturación" href='<?=$urlRegisterSolicitudfactura;?>&cod_s=<?=$codigo_simulacion?>&cod_f=<?=$codigo_facturacion?>&cod_sw=1' class="btn btn-info">
                                       <i class="material-icons"><?=$iconEdit;?></i>
                                     </a><?php      
                                   }?>
@@ -220,7 +221,7 @@ if($cantidad_items>0){
                                       <?php 
                                     }elseif($cont_facturas>1){?>
                                       <div class="btn-group dropdown">
-                                        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><small>PAGOS</small></button>
+                                        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><small>Facturas</small></button>
                                         <div class="dropdown-menu"><?php 
                                           $arrayCodFacturas = explode(",",trim($cadenaCodFacturas,','));
                                           $arrayFacturas = explode(" - ",trim($cadenaFacturas,' - '));
@@ -343,5 +344,4 @@ if($cantidad_items>0){
    <?php
   }
     
-  }
- ?>
+}?>

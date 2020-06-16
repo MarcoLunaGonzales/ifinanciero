@@ -18,6 +18,7 @@ $stmt->bindColumn('cod_sucursal', $cod_sucursal);
 $stmt->bindColumn('nro_autorizacion', $nro_autorizacion);
 $stmt->bindColumn('llave_dosificacion', $llave_dosificacion);
 $stmt->bindColumn('fecha_limite', $fecha_limite);
+$stmt->bindColumn('leyenda', $leyenda);
 $stmt->bindColumn('cod_estado', $cod_estado);
 
 ?>
@@ -38,10 +39,11 @@ $stmt->bindColumn('cod_estado', $cod_estado);
 
                       <thead>
                         <tr>
-                          <th>Ciudad</th>                        
+                          <th>Sucursal</th>                        
                           <th>Nro. Autorizacióon</th>
                           <th>Llave</th>
                           <th>Fecha Límite<br>Emisión</th>
+                          <th>Leyenda</th>
                           <th>Estado</th>
                           <th></th>
                         </tr>
@@ -49,23 +51,25 @@ $stmt->bindColumn('cod_estado', $cod_estado);
                       <tbody>
                         <?php $index=1;
                         while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { 
-                          switch ($cod_estado) {
-                              case 1:
-                                $estado="Activo";                                                              
-                                $labelEstado='<span class="badge badge-success">';
-                              break;
-                              case 0:
-                                $estado="Cerrado";
-                                $labelEstado='<span class="badge badge-danger">';                                
-                              break;                              
-                            }
+                          $nombre_sucursal=obtenerValorConfiguracionFactura(2);
+                          switch ($cod_estado) {                            
+                            case 1:
+                              $estado="Activo";
+                              $labelEstado='<span class="badge badge-success">';
+                            break;
+                            case 0:
+                              $estado="Cerrado";
+                              $labelEstado='<span class="badge badge-danger">';                                
+                            break;                              
+                          }
                           ?>
                           <tr>
-                            <td><?=$cod_sucursal;?></td>
-                              <td><?=$nro_autorizacion;?></td>
-                              <td><?=$llave_dosificacion;?></td>
-                              <td><?=$fecha_limite;?></td>        
-                              <td><?=$labelEstado.$estado."</span>";?></td>
+                            <td><small><?=$nombre_sucursal;?></small></td>
+                              <td><small><?=$nro_autorizacion;?><small></td>
+                              <td><small><?=$llave_dosificacion;?></small></td>
+                              <td><small><?=$fecha_limite;?></small></td>
+                              <td><small><?=$leyenda;?></small></td>
+                              <td><small><?=$labelEstado.$estado."</span>";?></small></td>
                               <td class="td-actions text-right">
                               <?php
                                 if($globalAdmin==1){
@@ -82,7 +86,6 @@ $stmt->bindColumn('cod_estado', $cod_estado);
                                 <?php
                                   }
                                 ?>
-                              
                               </td>
                           </tr>
                         <?php $index++; } ?>

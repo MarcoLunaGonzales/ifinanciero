@@ -14,8 +14,9 @@ if(isset($_GET['q'])){
   $u=$_GET['u'];
   $v=$_GET['v'];
 }
-
-
+if(isset($_GET['cod_sw'])){
+  $cod_sw=$_GET['cod_sw']; 
+}
 $dbhIBNO = new ConexionIBNORCA();
 
 $IdServicio=$IdServicio;
@@ -50,7 +51,12 @@ if ($cod_facturacion > 0){
     $name_cliente=nameCliente($cod_cliente);
 }else {
     $nombre_simulacion = $resultServicio['Descripcion'];
-    $cod_personal =$_SESSION["globalUser"];
+     if(isset($_POST['q'])){
+        $cod_personal=$_POST['q'];
+    }else{
+        $cod_personal =$_SESSION["globalUser"];
+    }
+    
 
     $cod_uo = $resultServicio['IdOficina'];
     $cod_area = $resultServicio['IdArea'];
@@ -86,13 +92,18 @@ $contadorRegistros=0;
                 <input type="hidden" name="cod_facturacion" id="cod_facturacion" value="<?=$cod_facturacion;?>"/>
                 <input type="hidden" name="cantidad_filas" id="cantidad_filas" value="<?=$contadorRegistros;?>">
                 <?php 
-      if(isset($_GET['q'])){
-        ?><input type="hidden" name="usuario_ibnored" id="usuario_ibnored" value="<?=$q;?>">
-        <input type="hidden" name="usuario_ibnored_s" id="usuario_ibnored_s" value="<?=$s;?>">
-        <input type="hidden" name="usuario_ibnored_u" id="usuario_ibnored_u" value="<?=$u;?>">
-        <input type="hidden" name="usuario_ibnored_v" id="usuario_ibnored_v" value="<?=$v;?>"><?php
-      }
-      ?> 
+                if(isset($_GET['q'])){
+                    ?><input type="hidden" name="usuario_ibnored" id="usuario_ibnored" value="<?=$q;?>">
+                    <input type="hidden" name="usuario_ibnored_s" id="usuario_ibnored_s" value="<?=$s;?>">
+                    <input type="hidden" name="usuario_ibnored_u" id="usuario_ibnored_u" value="<?=$u;?>">
+                    <input type="hidden" name="usuario_ibnored_v" id="usuario_ibnored_v" value="<?=$v;?>"><?php
+                }
+                if(isset($_GET['cod_sw'])){
+                    ?><input type="hidden" name="cod_sw" id="cod_sw" value="<?=$cod_sw;?>">
+                    <?php
+                }                
+                ?> 
+
                 <!-- para agregar nuevos servicios -->
                 <input type="hidden" name="IdTipo" id="IdTipo" value="<?=$IdTipo;?>">
                 <div class="card">
@@ -332,14 +343,14 @@ $contadorRegistros=0;
 
                         <div class="row">
                             <label class="col-sm-2 col-form-label">Razón Social</label>
-                            <div class="col-sm-4">
+                            <div class="col-sm-5">
                                 <div class="form-group">
                                     <div id="contenedor_razonsocial">
                                         <input class="form-control" type="text" name="razon_social" id="razon_social" required="true" value="<?=$razon_social;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>    
                                     </div>
                                 </div>
                             </div>
-                            <label class="col-sm-2 col-form-label">Nit</label>
+                            <label class="col-sm-1 col-form-label">Nit</label>
                             <div class="col-sm-4">
                                 <div class="form-group">
                                     <input class="form-control" type="number" name="nit" id="nit" required="true" value="<?=$nit;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" required="true"/>
@@ -348,16 +359,16 @@ $contadorRegistros=0;
                         </div>
                         <!-- fin razon social y nit -->
                         <div class="row">
-                            <label class="col-sm-3 col-form-label">Observaciones * 1</label>
-                            <div class="col-sm-9">
+                            <label class="col-sm-2 col-form-label">Observaciones * 1</label>
+                            <div class="col-sm-10">
                                 <div class="form-group">
                                     <input class="form-control" type="text" name="observaciones" id="observaciones"  value="<?=$observaciones;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" requerid/>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
-                            <label class="col-sm-3 col-form-label">Observaciones 2</label>
-                            <div class="col-sm-9">
+                            <label class="col-sm-2 col-form-label">Observaciones 2</label>
+                            <div class="col-sm-10">
                                 <div class="form-group">
                                     <input class="form-control" type="text" name="observaciones_2" id="observaciones_2" value="<?=$observaciones_2;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
                                 </div>
@@ -394,7 +405,7 @@ $contadorRegistros=0;
                                         <?php 
                                         $iii=1;                                    
                                         $queryPr="SELECT s.IdDetServicio,s.IdClaServicio,s.Cantidad,s.PrecioUnitario from ibnorca.serviciopresupuesto s where  s.IdServicio=$IdServicio";
-                                        // echo $queryPr;
+                                        //echo $queryPr;
                                         if ($cod_facturacion > 0){
                                             $queryPr.=" UNION ";
                                             //,(select cs.descripcion from cla_servicios cs where cs.IdClaServicio=d.cod_claservicio) as descripcion
@@ -411,7 +422,7 @@ $contadorRegistros=0;
                                             // $tipoPre=$rowPre['descripcion'];
                                             $cantidadPre=$rowPre['Cantidad'];                                          
                                             $montoPre=$rowPre['PrecioUnitario'];
-                                            echo "---cod  :".$codCS;
+                                            // echo "---cod  :".$codCS;
                                             $tipoPre=descripcionClaServicio($codCS);
                                             // $montoPreTotal=$montoPre*$cantidadEPre;
                                             $banderaHab=1;
@@ -566,7 +577,11 @@ $contadorRegistros=0;
                     if(isset($_GET['q'])){
                         ?><a href='<?=$urllistFacturasServicios;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a><?php
                     }else{
-                        ?><a href='<?=$url_list_Solicitudfactura;?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a><?php
+                        if(isset($_GET['cod_sw'])){?>
+                            <a href='<?=$urllistFacturasServicios;?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
+                        <?php }else{?>
+                            <a href='<?=$url_list_Solicitudfactura;?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
+                        <?php }                        
                     }?>
                         
                     

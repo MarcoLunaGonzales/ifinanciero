@@ -26,12 +26,12 @@ $descuento=$respuesta['descuento'];
 <div class="row">
 	
 	<label class="col-sm-2 col-form-label">Razón Social</label>
-	<div class="col-sm-4">
+	<div class="col-sm-5">
 	    <div class="form-group">                                    
 	        <input class="form-control" type="text" name="razon_social" id="razon_social" required="true" value="<?=$razon_social;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>                                        
 	    </div>
 	</div>
-	<label class="col-sm-2 col-form-label">Nit</label>
+	<label class="col-sm-1 col-form-label">Nit</label>
 	<div class="col-sm-4">
 	    <div class="form-group">                                        
 	            <input class="form-control" type="number" name="nit" id="nit" required="true" value="<?=$nit;?>" required="true"/>

@@ -32,7 +32,7 @@ if(isset($_GET['q'])){
 
   //datos registrado de la simulacion en curso
 
-  $stmt = $dbh->prepare("SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')as fecha_registro_x,DATE_FORMAT(sf.fecha_solicitudfactura,'%d/%m/%Y')as fecha_solicitudfactura_x FROM solicitudes_facturacion sf join estados_solicitudfacturacion es on sf.cod_estadosolicitudfacturacion=es.codigo where sf.cod_estadosolicitudfacturacion!=1 and sf.cod_estadosolicitudfacturacion!=2 and sf.cod_estadosolicitudfacturacion!=5 and sf.cod_estadosolicitudfacturacion!=6  order by codigo desc"); /*and sf.cod_estadosolicitudfacturacion!=5*/
+  $stmt = $dbh->prepare("SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')as fecha_registro_x,DATE_FORMAT(sf.fecha_solicitudfactura,'%d/%m/%Y')as fecha_solicitudfactura_x FROM solicitudes_facturacion sf join estados_solicitudfacturacion es on sf.cod_estadosolicitudfacturacion=es.codigo where sf.cod_estadosolicitudfacturacion in (6)  order by codigo desc"); /*and sf.cod_estadosolicitudfacturacion!=5*/
   $stmt->execute();
   $stmt->bindColumn('codigo', $codigo_facturacion);
   $stmt->bindColumn('cod_simulacion_servicio', $cod_simulacion_servicio);
@@ -119,6 +119,7 @@ $item_1=2709;
                           $codigo_fact_x = $resultSimu['codigo'];
                           $nro_fact_x = $resultSimu['nro_factura'];
                           if ($nro_fact_x==null)$nro_fact_x="-";
+                          else $nro_fact_x="F".$nro_fact_x;
                           //sacamos nombre de los detalles
                           $stmtDetalleSol = $dbh->prepare("SELECT cantidad,precio,descripcion_alterna from solicitudes_facturaciondetalle where cod_solicitudfacturacion=$codigo_facturacion");
                           $stmtDetalleSol->execute();

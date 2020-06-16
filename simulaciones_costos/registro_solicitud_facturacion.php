@@ -15,6 +15,9 @@ if(isset($_GET['q'])){
   $q=$_GET['q'];
   $r=$_GET['r'];  
 }
+if(isset($_GET['cod_sw'])){
+  $cod_sw=$_GET['cod_sw'];  
+}
 
 $globalUser=$_SESSION["globalUser"];
 $globalUnidad=$_SESSION['globalUnidad'];
@@ -70,7 +73,12 @@ if($cod_facturacion>0){//editar
     $cod_tipopago=null;
     $persona_contacto= null;
     $cod_tipoobjeto=212;//por defecto}    
-    $cod_personal= $globalUser;
+    if(isset($_POST['q'])){
+        $cod_personal=$_POST['q'];
+    }else{
+        $cod_personal= $globalUser;
+    }
+    
     $descuento_por=0;
     $descuento_bob=0;
 }
@@ -94,6 +102,9 @@ $descuento_cliente=0;
                 if(isset($_GET['q'])){?>
                     <input type="hidden" name="q" id="q" value="<?=$q?>">
                     <input type="hidden" name="r" id="r" value="<?=$r?>">
+                <?php }
+                if(isset($_GET['cod_sw'])){?>
+                    <input type="hidden" name="cod_sw" id="cod_sw" value="<?=$cod_sw?>">                    
                 <?php }
                 ?>              
                 <input type="hidden" name="ci_estudiante" id="ci_estudiante" value="<?=$ci_estudiante;?>"/>
@@ -328,37 +339,38 @@ $descuento_cliente=0;
 
                         <div class="row">
                             <label class="col-sm-2 col-form-label">Razón Social</label>
-                            <div class="col-sm-4">
+                            <div class="col-sm-5">
                                 <div class="form-group">
-                                    <!-- <div id="contenedor_razonsocial"> -->
-                                        <input class="form-control" type="text" name="razon_social" id="razon_social" required="true"  onkeyup="javascript:this.value=this.value.toUpperCase();" value="<?=$razon_social?>" />    
-                                    <!-- </div> -->
+                                    <div id="contenedor_razonsocial">
+                                        <input class="form-control" type="text" name="razon_social" id="razon_social" required="true" value="<?=$razon_social;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>    
+                                    </div>
                                 </div>
                             </div>
-                            <label class="col-sm-2 col-form-label">Nit</label>
+                            <label class="col-sm-1 col-form-label">Nit</label>
                             <div class="col-sm-4">
                                 <div class="form-group">
-                                    <input class="form-control" type="number" name="nit" id="nit" value="<?=$nit;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" required="true" />
+                                    <input class="form-control" type="number" name="nit" id="nit" required="true" value="<?=$nit;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" required="true"/>
                                 </div>
                             </div>
                         </div>
                         <!-- fin razon social y nit -->
                         <div class="row">
-                            <label class="col-sm-3 col-form-label">Observaciones * 1</label>
-                            <div class="col-sm-9">
+                            <label class="col-sm-2 col-form-label">Observaciones * 1</label>
+                            <div class="col-sm-10">
                                 <div class="form-group">
                                     <input class="form-control" type="text" name="observaciones" id="observaciones"  value="<?=$observaciones;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" requerid/>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
-                            <label class="col-sm-3 col-form-label">Observaciones 2</label>
-                            <div class="col-sm-9">
+                            <label class="col-sm-2 col-form-label">Observaciones 2</label>
+                            <div class="col-sm-10">
                                 <div class="form-group">
                                     <input class="form-control" type="text" name="observaciones_2" id="observaciones_2" value="<?=$observaciones_2;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
                                 </div>
                             </div>
                         </div>
+                        <!-- fin observaciones -->
                         <!-- fin observaciones -->
                         <div class="card">
                             <div class="card-header <?=$colorCard;?> card-header-text">
@@ -408,8 +420,8 @@ $descuento_cliente=0;
                                             $Abrev=$rowPre['Abrev'];
                                             // $cantidadEPre=$rowPre['cantidad_editado'];
                                             $monto_pagar=($Costo - ($Costo*$Abrev/100) )/$CantidadModulos; //formula para sacar el monto a pagar del estudiante
-                                            $montoPre=$monto_pagar;
-                                            $descuento_bob_cliente=$montoPre*$descuento_cliente; 
+                                            $monto_pagar=number_format($monto_pagar,2,".","");;
+                                            $descuento_bob_cliente=$monto_pagar*$descuento_cliente; 
                                             // $montoPreTotal=$montoPre*$cantidadEPre;
                                             $banderaHab=1;
                                             $banderaHab=1;
@@ -419,23 +431,24 @@ $descuento_cliente=0;
                                                 $descuento_porX=0;
                                                 $descuento_bobX=0;
                                                 $descripcion_alternaX=$tipoPre;
-                                                // $modal_totalmontopre+=$montoPre;
-                                                $montoPre=number_format($montoPre,2,".","");
+                                                // $modal_totalmontopre+=$montoPre;                                                
                                                 //parte del controlador de check
                                                 //para la parte de editar
-                                                $sqlControlador="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$IdCurso and sf.cod_estado=1 and sfd.cod_claservicio=$codCS and sf.codigo=$cod_facturacion";
-                                                // echo $sqlControlador;
-                                                $stmtControlado = $dbh->prepare($sqlControlador);
-                                               $stmtControlado->execute();                                           
-                                               $sw="";
-                                                while ($rowPre = $stmtControlado->fetch(PDO::FETCH_ASSOC)) {
-                                                    $sw="checked";
-                                                    $montoPre=$rowPre['precio']+$rowPre['descuento_bob'];
-                                                    $descuento_porX=$rowPre['descuento_por'];
-                                                    $descuento_bobX=$rowPre['descuento_bob'];
-                                                    $descripcion_alternaX=$rowPre['descripcion_alterna'];
+                                                $sw="";
+                                                if($cod_facturacion>0){
+                                                    $sqlControlador="SELECT sfd.precio,sfd.monto_pagado,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$IdCurso and sf.cod_estado=1 and sfd.cod_claservicio=$codCS and sf.codigo=$cod_facturacion";
+                                                    // echo $sqlControlador;
+                                                    $stmtControlado = $dbh->prepare($sqlControlador);
+                                                   $stmtControlado->execute();                                                   
+                                                    while ($rowPre = $stmtControlado->fetch(PDO::FETCH_ASSOC)) {
+                                                        $sw="checked";
+                                                        $montoPre=$rowPre['precio']+$rowPre['descuento_bob'];
+                                                        $monto_pagadoX=$rowPre['monto_pagado'];
+                                                        $descuento_porX=$rowPre['descuento_por'];
+                                                        $descuento_bobX=$rowPre['descuento_bob'];
+                                                        $descripcion_alternaX=$rowPre['descripcion_alterna'];
+                                                    }    
                                                 }
-                                                // echo $IdCurso."-".$ci_estudiante."-".$codCS."<br>";
                                                 $sw2="";//para registrar nuevos, impedir los ya registrados
                                                 $codigo_externo="";
                                                 $montoPagado=0;
@@ -462,36 +475,41 @@ $descuento_cliente=0;
                                                         }
                                                     }
                                                     if($estadoPagado!=1){
-                                                        //parte del controlador de check//impedir los ya registrados
-                                                        $sqlControlador2="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$IdCurso and sf.cod_estado=1 and sfd.cod_claservicio=$codCS";
-                                                         // echo $sqlControlador2;
-                                                        $stmtControlador2 = $dbh->prepare($sqlControlador2);
-                                                        $stmtControlador2->execute();
-                                                        //sacamos el monto total
-                                                        $sqlControladorTotal="SELECT SUM(sfd.precio) as precio from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$IdCurso and sf.cod_estado=1 and sfd.cod_claservicio=$codCS";
-                                                         // echo $sqlControladorTotal;
-                                                        $stmtControladorTotal = $dbh->prepare($sqlControladorTotal);
-                                                        $stmtControladorTotal->execute();
-                                                        $resultMontoTotal=$stmtControladorTotal->fetch();
-                                                        if($resultMontoTotal['precio']==null || $resultMontoTotal['precio']=='' || $resultMontoTotal['precio']==' ' || $resultMontoTotal['precio']==0){                                                        
-                                                        }else $monto_total_pagado=$resultMontoTotal['precio'];
-
-                                                        while ($rowPre = $stmtControlador2->fetch(PDO::FETCH_ASSOC)) {
-                                                          if($sw!="checked"){
-                                                            if($monto_pagar==$monto_total_pagado){
-                                                                $sw2="readonly style='background-color:#cec6d6;'";
+                                                        if($cod_facturacion==0){
+                                                            //parte del controlador de check//impedir los ya registrados
+                                                            $sqlControlador2="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$IdCurso and sf.cod_estado=1 and sfd.cod_claservicio=$codCS";
+                                                             // echo $sqlControlador2;
+                                                            $stmtControlador2 = $dbh->prepare($sqlControlador2);
+                                                            $stmtControlador2->execute();
+                                                            //sacamos el monto total
+                                                            $sqlControladorTotal="SELECT SUM(sfd.precio)+sum(sfd.monto_pagado) as precio from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$IdCurso and sf.cod_estado=1 and sfd.cod_claservicio=$codCS";
+                                                             // echo $sqlControladorTotal;
+                                                            $stmtControladorTotal = $dbh->prepare($sqlControladorTotal);
+                                                            $stmtControladorTotal->execute();
+                                                            $resultMontoTotal=$stmtControladorTotal->fetch();
+                                                            if($resultMontoTotal['precio']==null || $resultMontoTotal['precio']=='' || $resultMontoTotal['precio']==' ' || $resultMontoTotal['precio']==0){                                                        
+                                                            }else $monto_total_pagado=$resultMontoTotal['precio'];
+                                                            while ($rowPre = $stmtControlador2->fetch(PDO::FETCH_ASSOC)) {
+                                                              if($sw!="checked"){
+                                                                if($monto_pagar==$monto_total_pagado){
+                                                                    $sw2="readonly style='background-color:#cec6d6;'";
+                                                                    $saldo=0;
+                                                                }
+                                                                if($rowPre['descuento_bob']==null || $rowPre['descuento_bob']==0 || $rowPre['descuento_bob']=='' || $rowPre['descuento_bob']==' '){
+                                                                }else{
+                                                                    $monto_total_pagado-=$rowPre['descuento_bob'];
+                                                                    $saldo=$monto_pagar-$monto_total_pagado;
+                                                                }
+                                                                // $montoPre=$rowPre['precio']+$rowPre['descuento_bob'];
+                                                                $descuento_porX=$rowPre['descuento_por'];
+                                                                $descuento_bobX=$rowPre['descuento_bob'];
+                                                                $descripcion_alternaX=$rowPre['descripcion_alterna'];
+                                                              }
                                                             }
-                                                            if($rowPre['descuento_bob']==null || $rowPre['descuento_bob']==0 || $rowPre['descuento_bob']=='' || $rowPre['descuento_bob']==' '){
-                                                            }else{
-                                                                $monto_total_pagado-=$rowPre['descuento_bob'];
-                                                                $saldo=$monto_pagar-$monto_total_pagado;
-                                                            }
-                                                            // $montoPre=$rowPre['precio']+$rowPre['descuento_bob'];
-                                                            $descuento_porX=$rowPre['descuento_por'];
-                                                            $descuento_bobX=$rowPre['descuento_bob'];
-                                                            $descripcion_alternaX=$rowPre['descripcion_alterna'];
-                                                          }
+                                                        }else{
+                                                            $monto_total_pagado=$monto_pagadoX;
                                                         }
+                                                        
                                                     }
                                                 }else{           
                                                     ?>
@@ -506,7 +524,7 @@ $descuento_cliente=0;
                                                 <input type="hidden" id="servicio<?=$iii?>" name="servicio<?=$iii?>" value="<?=$codCS?>">
                                                 <input type="hidden" id="nombre_servicio<?=$iii?>" name="nombre_servicio<?=$iii?>" value="<?=$tipoPre?>">
                                                 <input type="hidden" id="cantidad<?=$iii?>" name="cantidad<?=$iii?>" value="<?=$cantidadPre?>">
-                                                <input type="hidden" id="importe<?=$iii?>" name="importe<?=$iii?>" value="<?=$montoPre?>">
+                                                <input type="hidden" id="importe<?=$iii?>" name="importe<?=$iii?>" value="<?=$monto_pagar?>">
 
                                                 <!-- aqui se captura los servicios activados -->
                                                 <input type="hidden" id="cod_serv_tiposerv_a<?=$iii?>" name="cod_serv_tiposerv_a<?=$iii?>">
@@ -517,15 +535,15 @@ $descuento_cliente=0;
                                                   <!-- <td class="text-left"><?=$cod_anio?> </td> -->
                                                     <td class="text-left" width="35%"><textarea name="descripcion_alterna<?=$iii?>" id="descripcion_alterna<?=$iii?>" class="form-control" onkeyup="javascript:this.value=this.value.toUpperCase();" <?=$sw2?>><?=$descripcion_alternaX?></textarea></td>
                                                     <td class="text-right"><?=$cantidadPre?></td>
-                                                    <td class="text-right"><input type="number" step="0.01" id="monto_precio<?=$iii?>" name="monto_precio<?=$iii?>" class="form-control text-primary text-right"  value="<?=$montoPre?>" step="0.01" onkeyup="activarInputMontoFilaServicio2()" <?=$sw2?> readonly="true"></td>
+                                                    <td class="text-right"><input type="hidden" step="0.01" id="monto_precio<?=$iii?>" name="monto_precio<?=$iii?>" class="form-control text-primary text-right"  value="<?=$monto_pagar?>" step="0.01" <?=$sw2?> readonly="true"><input type="text" step="0.01" id="monto_precio_a<?=$iii?>" name="monto_precio_a<?=$iii?>" class="form-control text-primary text-right"  value="<?=number_format($monto_pagar,2)?>" <?=$sw2?> readonly="true"></td>
                                                     <!--  descuentos -->
                                                     <td class="text-right"><input type="number" step="0.01" class="form-control" name="descuento_por<?=$iii?>" id="descuento_por<?=$iii?>" value="<?=$descuento_porX?>" min="0" max="<?=$descuento_cliente?>" onkeyup="descuento_convertir_a_bolivianos(<?=$iii?>)" <?=$sw2?>></td>                                             
                                                     <td class="text-right"><input type="number" class="form-control" name="descuento_bob<?=$iii?>" id="descuento_bob<?=$iii?>" value="<?=$descuento_bobX?>" min="0" max="<?=$descuento_bob_cliente?>" onkeyup="descuento_convertir_a_porcentaje(<?=$iii?>)" <?=$sw2?>></td>                                        
                                                     <!-- total -->
-                                                    <td class="text-right"><input type="hidden" name="modal_importe<?=$iii?>" id="modal_importe<?=$iii?>"><input type="text" class="form-control" name="modal_importe_dos<?=$iii?>" id="modal_importe_dos<?=$iii?>" style ="background-color: #ffffff;" readonly></td>
+                                                    <td class="text-right"><input type="hidden" name="modal_importe<?=$iii?>" id="modal_importe<?=$iii?>"><input type="text" class="form-control" name="modal_importe_dos<?=$iii?>" id="modal_importe_dos<?=$iii?>" style ="background-color: #cec6d6;" readonly></td>
                                                     <td>
                                                         <input type="hidden" name="modal_importe_pagado_dos_a<?=$iii?>" id="modal_importe_pagado_dos_a<?=$iii?>" value="<?=$monto_total_pagado;?>">
-                                                        <input type="text" class="form-control" name="modal_importe_pagado_dos<?=$iii?>" id="modal_importe_pagado_dos<?=$iii?>" style ="background-color: #ffffff;" readonly value="<?=number_format($monto_total_pagado,2,'.','');?>">
+                                                        <input type="text" class="form-control" name="modal_importe_pagado_dos<?=$iii?>" id="modal_importe_pagado_dos<?=$iii?>" style ="background-color: #cec6d6;" readonly value="<?=number_format($monto_total_pagado,2);?>">
                                                     </td>
                                                     <td>
                                                         <input type="number" step="0.01" id="importe_a_pagar<?=$iii?>" name="importe_a_pagar<?=$iii?>" class="form-control text-primary text-right"  value="<?=$saldo?>" step="0.01" onkeyup="calcularTotalFilaServicio2Costos()" <?=$sw2?>>
@@ -556,7 +574,10 @@ $descuento_cliente=0;
                                             ?>
                                             <script>
                                                 window.onload = activarInputMontoFilaServicio2;
+                                                // window.onload = calcularTotalFilaServicio2Costos;
+                                                
                                             </script>
+
 
                                             <?php
                                         
@@ -605,12 +626,25 @@ $descuento_cliente=0;
                     <?php if($estado_ws){?>
                     <button type="submit" class="<?=$buttonNormal;?>">Guardar</button>
                     <?php }?>
-                    <?php
-                    if(isset($_GET['q'])){?>                        
-                        <a href='<?=$urlSolicitudfactura?>&q=<?=$q?>&r=<?=$r?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>                    
-                    <?php }else{?>
-                        <a href='<?=$urlSolicitudfactura?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>                    
-                    <?php }
+                    <?php                
+                    if(isset($_GET['cod_sw'])){
+                        if(isset($_GET['q'])){?>
+                            <a href='<?=$urlListSol?>&q=<?=$q?>&v=<?=$r?>&u=<?=$r?>&s=<?=$r?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>                    
+                        <?php }else{?>
+                            <a href='<?=$urlListSol?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>                    
+                        <?php }
+
+
+                     }else{
+                        if(isset($_GET['q'])){?>
+                            <a href='<?=$urlSolicitudfactura?>&q=<?=$q?>&r=<?=$r?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>                    
+                        <?php }else{?>
+                            <a href='<?=$urlSolicitudfactura?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>                    
+                        <?php }
+                     }
+
+
+            
                     ?> 
                     
                   </div>

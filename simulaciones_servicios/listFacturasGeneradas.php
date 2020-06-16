@@ -58,7 +58,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             <th width="25%">Razón Social</th>
                             <th width="10%">Nit</th>
                             <th width="8%">Importe<br>Factura</th>
-                            <th>Obs.</th>
+                            <th>Detalle</th>
                             <th width="5%">Estado</th>
                             <th width="10%" class="text-right">Opciones</th>                            
                           </tr>
@@ -108,26 +108,26 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             <td><?=$label.$estadofactura."</span>";?></td>
                             <td class="td-actions text-right">
                               <?php
-                                if($globalAdmin==1 and $cod_estadofactura==1 ){?>                                
-                                  <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_factura;?>&tipo=1' target="_blank"><i class="material-icons" title="Imprimir Facturas">print</i></a>
-                                 <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalEnviarCorreo" onclick="agregaformEnviarCorreo('<?=$datos;?>')">
+                                if($globalAdmin==1 and $cod_estadofactura==1 ){?>
+                                  <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalEnviarCorreo" onclick="agregaformEnviarCorreo('<?=$datos;?>')">
                                     <i class="material-icons" title="Enviar Correo">email</i>
-                                  </button>
+                                  </button><?php  
+                                }
+                                if($globalAdmin==1 and ($cod_estadofactura==1 || $cod_estadofactura==3)){?>
+                                  <div class="btn-group dropdown">
+                                    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                       <i class="material-icons" title="Imprimir Factura">print</i>
+                                    </button>
+                                    <div class="dropdown-menu">                                      
+                                      <a class="dropdown-item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_factura;?>&tipo=1&admin=1' target="_blank"><i class="material-icons text-success">print</i> Original Cliente y Copia Contabilidad</a>
+                                      <a class="dropdown-item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_factura;?>&tipo=1&admin=2' target="_blank"><i class="material-icons text-success">print</i> Original Cliente</a>
+                                      <a class="dropdown-item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_factura;?>&tipo=1&admin=3' target="_blank"><i class="material-icons text-success">print</i>Copia Contabilidad</a>
+                                    </div>
+                                  </div>    
                                   <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation-anular-factura','<?=$urlAnularFactura;?>&codigo=<?=$codigo_factura;?>&cod_solicitudfacturacion=<?=$cod_solicitudfacturacion?>&cod_comprobante=<?=$cod_comprobante?>')">
                                   <i class="material-icons" title="Anular Factura">clear</i>
-                                  </button>
-                                <?php  
-                                }elseif($globalAdmin==1 and $cod_estadofactura==3){?>
-                                  <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_factura;?>&tipo=1' target="_blank"><i class="material-icons" title="Imprimir Facturas">print</i></a>
-
-                                  <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation-anular-factura','<?=$urlAnularFactura;?>&codigo=<?=$codigo_factura;?>&cod_solicitudfacturacion=<?=$cod_solicitudfacturacion?>&cod_comprobante=<?=$cod_comprobante?>')">
-                                  <i class="material-icons" title="Anular Factura">clear</i>
-                                  </button>
-                                <?php }
-
-                              ?>
-
-                              
+                                  </button><?php 
+                                } ?>
                             </td>
                             
                           </tr>

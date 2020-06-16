@@ -17,6 +17,8 @@ $idFila=$_GET['idFila'];
 
 
 
+
+
 ?>
 <div id="comp_row" class="col-md-12">
   <div class="row">

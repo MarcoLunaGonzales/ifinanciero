@@ -22,26 +22,9 @@ $estado_ibnorca=0;
 $codigo = $_GET["codigo"];
 try{
     //verificamos si se registró las cuentas en los tipos de pago 
-    $stmtVerif_tipopago = $dbh->prepare("SELECT (select c.cod_cuenta from tipos_pago_contabilizacion c where c.cod_tipopago=t.codigo) as cuenta from tipos_pago t where t.cod_estadoreferencial=1");
-    $stmtVerif_tipopago->execute();
-    $cont_tipopago=0;
-    while ($row = $stmtVerif_tipopago->fetch())     
-    {
-        $cod_cuenta=$row['cuenta'];
-        if($cod_cuenta==null){
-            $cont_tipopago++;
-        }
-    }
-    $stmtVerif_area = $dbh->prepare("SELECT cod_cuenta_ingreso from areas a where a.cod_estado=1 and areas_ingreso=1");
-    $stmtVerif_area->execute();
-    $cont_areas=0;
-    while ($row = $stmtVerif_area->fetch())    
-    {
-        $cod_cuenta=$row['cod_cuenta_ingreso'];
-        if($cod_cuenta==null){
-            $cont_areas++;
-        }
-    }
+    $cont_tipopago=verificamos_cuentas_tipos_pagos();
+    //verificamos si se registró las cuentas en LAS AREAS DE INGRESO
+    $cont_areas=verificamos_cuentas_areas();
     if($cont_tipopago!=0){//falta asociar cuenta a tipos de pago ?>
         <script>            
             Swal.fire("Error!","Por favor verifique que los tipos de pago estén asociados a una cuenta!.", "error");
@@ -52,14 +35,8 @@ try{
         </script><?php 
     }else{ //cuando todo esta en orden
         // verificamos si ya se registro la factura
-        $stmtVerif = $dbh->prepare("SELECT codigo FROM facturas_venta where cod_solicitudfacturacion=$codigo and cod_estadofactura=1");
-        $stmtVerif->execute();
-        $resultVerif = $stmtVerif->fetch();    
-        $codigo_facturacion = $resultVerif['codigo'];        
-        if($codigo_facturacion==null){//no se registró
-            $stmt = $dbh->prepare("SELECT sf.*,(select t.Descripcion from cla_servicios t where t.IdClaServicio=sf.cod_claservicio) as nombre_serv from solicitudes_facturaciondetalle sf where sf.cod_solicitudfacturacion=$codigo");
-            $stmt->execute();
-
+        $codigo_facturacion=verificamosFacturaDuplicada($codigo);
+        if($codigo_facturacion==null){//no se registró            
             //datos de la solicitud de facturacion
             $stmtInfo = $dbh->prepare("SELECT sf.*,t.nombre as nombre_cliente FROM solicitudes_facturacion sf,clientes t  where sf.cod_cliente=t.codigo and sf.codigo=$codigo");
             $stmtInfo->execute();
@@ -155,13 +132,15 @@ try{
                           // echo $sql;
                         $stmtInsertSoliFact = $dbh->prepare($sql);
                         $flagSuccess=$stmtInsertSoliFact->execute();
-
                         if($flagSuccess){
                           //obtenemos el registro del ultimo insert
                           $stmtNroFac = $dbh->prepare("SELECT codigo from facturas_venta where cod_solicitudfacturacion=$codigo order by codigo desc LIMIT 1");
                             $stmtNroFac->execute();
                             $resultNroFact = $stmtNroFac->fetch();    
                             $cod_facturaVenta = $resultNroFact['codigo'];
+                            //insertamos detalle
+                            $stmt = $dbh->prepare("SELECT sf.*,(select t.Descripcion from cla_servicios t where t.IdClaServicio=sf.cod_claservicio) as nombre_serv from solicitudes_facturaciondetalle sf where sf.cod_solicitudfacturacion=$codigo");
+                            $stmt->execute();
                             while ($row = $stmt->fetch()) 
                             {                 
                                 $cod_claservicio_x=$row['cod_claservicio'];
