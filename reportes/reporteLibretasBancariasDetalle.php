@@ -4,8 +4,9 @@
  </script>
 
 <div class="card-body">
-  <h6 class="card-title">Periodo: <?=$periodoTitle?></h6>
-  <h6 class="card-title">Banco: <?=$stringEntidades;?></h6>
+  <h6 class="card-title">Periodo Libretas: <?=$periodoTitle?></h6>
+  <h6 class="card-title">Periodo Facturas: <?=$periodoTitleFac?></h6>
+  <h6 class="card-title">Libretas Bancarias: <?=$stringEntidades;?></h6>
   <div class="table-responsive col-sm-12">
     <table id="libro_mayor_rep" class="table table-condensed" style="width:100% !important;">
       <thead>
@@ -13,12 +14,12 @@
           <td class="text-center">#</td>
           <td>Fecha</td>
           <td>Hora</td>
-          <td>Descripcion</td>
+          <td width="35%">Descripcion</td>
           <td>Informacion C.</td>
           <td>Sucursal</td>
           <td>Monto</td>
           <td>Nro Cheque</td>
-          <td>Nro Documento</td>
+          <td width="10%">Nro Documento</td>
           <td width="10%">Estado</td>
         </tr>
       </thead> 
@@ -27,8 +28,10 @@
     $html='<tbody>';
 
 // Preparamos
-    $sqlDetalle="SELECT ce.*
-FROM libretas_bancariasdetalle ce join libretas_bancarias lb on lb.codigo=ce.cod_libretabancaria where lb.cod_banco in ($StringEntidadCodigos) and ce.fecha_hora BETWEEN '$fecha 00:00:00' and '$fechaHasta 23:59:59' and  ce.cod_estadoreferencial=1 order by ce.codigo";
+    $sqlDetalle="(SELECT * FROM (SELECT ce.*,(SELECT fecha_factura from facturas_venta where codigo=ce.cod_factura) as fecha_fac
+FROM libretas_bancariasdetalle ce join libretas_bancarias lb on lb.codigo=ce.cod_libretabancaria where lb.codigo in ($StringEntidadCodigos) and ce.fecha_hora BETWEEN '$fecha 00:00:00' and '$fechaHasta 23:59:59' and  ce.cod_estadoreferencial=1 order by ce.codigo) lbd where lbd.fecha_fac BETWEEN '$fecha_fac 00:00:00' and '$fechaHasta_fac 23:59:59')
+ UNION (SELECT ce.*,(SELECT fecha_factura from facturas_venta where codigo=ce.cod_factura) as fecha_fac
+FROM libretas_bancariasdetalle ce join libretas_bancarias lb on lb.codigo=ce.cod_libretabancaria where lb.codigo in ($StringEntidadCodigos) and ce.fecha_hora BETWEEN '$fecha 00:00:00' and '$fechaHasta 23:59:59' and  ce.cod_estadoreferencial=1 and ce.cod_factura IS NULL order by ce.codigo)";
 $stmt = $dbh->prepare($sqlDetalle);
 //echo $sqlDetalle;
 
@@ -64,7 +67,7 @@ $stmt->bindColumn('cod_factura', $codFactura);
                           <td class="text-left"><?=$agencia?></td>
                           <td class="text-right"><?=number_format($monto,2,".","")?></td>
                           <td class="text-right"><?=$nro_cheque?></td>
-                          <td class="text-left"><?=$nro_documento?></td>
+                          <td class="text-right"><?=$nro_documento?></td>
                           <td class="text-right font-weight-bold"><?=$tituloEstado?></td>
                         </tr>
 <?php

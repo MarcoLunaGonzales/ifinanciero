@@ -432,6 +432,17 @@ function nameBancos($codigo){
    }
    return($nombreX);
 }
+function nameLibretas($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT nombre FROM libretas_bancarias where codigo=:codigo");
+   $stmt->bindParam(':codigo',$codigo);
+   $stmt->execute();
+   $nombreX="";
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $nombreX=$row['nombre'];
+   }
+   return($nombreX);
+}
 function nameEntidadUO($codigo){
    $dbh = new Conexion();
    $sql="SELECT e.nombre from entidades e, entidades_uo eu where e.codigo=eu.cod_entidad and eu.cod_uo=:codigo";

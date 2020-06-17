@@ -13,7 +13,7 @@ setlocale(LC_TIME, "Spanish");
 $dbh = new Conexion();
 set_time_limit(300);
 $fechaActual=date("Y-m-d");
-$gestion=nameGestion($_POST['gestion']);
+
 $fecha=$_POST['fecha_desde'];
 $fechaTitulo= explode("-",$fecha);
 $fechaFormateada=$fechaTitulo[2].'/'.$fechaTitulo[1].'/'.$fechaTitulo[0];
@@ -22,18 +22,25 @@ $fechaHasta=$_POST['fecha_hasta'];
 $fechaTituloHasta= explode("-",$fechaHasta);
 $fechaFormateadaHasta=$fechaTituloHasta[2].'/'.$fechaTituloHasta[1].'/'.$fechaTituloHasta[0];
 
+$fecha_fac=$_POST['fecha_desde_fac'];
+$fechaTituloFac= explode("-",$fecha_fac);
+$fechaFormateadaFac=$fechaTituloFac[2].'/'.$fechaTituloFac[1].'/'.$fechaTituloFac[0];
 
+$fechaHasta_fac=$_POST['fecha_hasta_fac'];
+$fechaTituloHastaFac= explode("-",$fechaHasta_fac);
+$fechaFormateadaHastaFac=$fechaTituloHastaFac[2].'/'.$fechaTituloHastaFac[1].'/'.$fechaTituloHastaFac[0];
 
 $moneda=1; //$_POST["moneda"];
-$entidades=$_POST['bancos'];
+$entidades=$_POST['libretas'];
 $StringEntidadCodigos=implode(",", $entidades);
 
 $stringEntidades="";
 foreach ($entidades as $valor ) {    
-    $stringEntidades.=nameBancos($valor).",";
+    $stringEntidades.=nameLibretas($valor).",";
 }  
 
-$periodoTitle= "Del ".$fechaFormateada.' al '.$fechaFormateadaHasta;  
+$periodoTitle= "Del ".$fechaFormateada.' al '.$fechaFormateadaHasta; 
+$periodoTitleFac= "Del ".$fechaFormateadaFac.' al '.$fechaFormateadaHastaFac;  
 ?>
 <div class="content">
   <div class="container-fluid">

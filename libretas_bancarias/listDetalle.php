@@ -126,7 +126,7 @@ $stmtb->bindColumn('nombre', $nombre);
                 <button class="<?=$buttonCancel;?>" onClick="location.href='<?=$urlList;?>'">Volver</button>
                 <div class="btn-group dropdown">
                               <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Cargar Libreta de Exel
+                                Cargar Libreta desde Excel
                               </button>
                               <div class="dropdown-menu">
                                 <a href="#" onclick="subirArchivoExcelLibretaBancaria(1,'Formato A');return false;"  class="dropdown-item">
@@ -197,7 +197,7 @@ $stmtb->bindColumn('nombre', $nombre);
                          <div class="form-group">
                             <select class="selectpicker form-control" name="tipo_cargado" id="tipo_cargado" data-style="btn btn-info">
                           <?php
-                             $stmt = $dbh->prepare("SELECT p.codigo,p.nombre FROM tipos_libretabancariacargado p where p.cod_estadoreferencial=1 order by p.codigo");
+                             $stmt = $dbh->prepare("SELECT p.codigo,p.nombre FROM tipos_libretabancariacargado p where p.cod_estadoreferencial=1 order by p.codigo desc");
                              $stmt->execute();
                              while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                $codigoX=$row['codigo'];

@@ -10876,6 +10876,7 @@ function ajaxGestionFechaHastaER(combo){
   ajax.send(null)  
 }
 
+
 function cargarDatosRegistroProveedorActivoFijo(cod_activo){
   var parametros={"cod":"none"};
   // $('#cod_tcc').val(cod_tcc);
