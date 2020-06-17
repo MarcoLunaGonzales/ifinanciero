@@ -14466,6 +14466,8 @@ function generarArchivoTxtVariosAjax(){
     xhr.send();
 }
 
-function subirArchivoExcelLibretaBancaria(tipo){
+function subirArchivoExcelLibretaBancaria(tipo,nombre_tipo){
+  $("#tipo_formato").val(tipo);
+  $("#formato_texto").html(nombre_tipo);
   $("#modalSubirArchivoExcel").modal("show");
 }

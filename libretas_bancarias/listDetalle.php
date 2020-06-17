@@ -129,10 +129,10 @@ $stmtb->bindColumn('nombre', $nombre);
                                 Cargar Libreta de Exel
                               </button>
                               <div class="dropdown-menu">
-                                <a href="#" onclick="subirArchivoExcelLibretaBancaria(1);return false;"  class="dropdown-item">
+                                <a href="#" onclick="subirArchivoExcelLibretaBancaria(1,'Formato A');return false;"  class="dropdown-item">
                                            <i class="material-icons">keyboard_arrow_right</i>Formato A
                                 </a>
-                                <a href="#" onclick="subirArchivoExcelLibretaBancaria(2);return false;"  class="dropdown-item">
+                                <a href="#" onclick="subirArchivoExcelLibretaBancaria(2,'Formato B');return false;"  class="dropdown-item">
                                            <i class="material-icons">keyboard_arrow_right</i>Formato B
                                 </a>
                               </div>
@@ -159,7 +159,7 @@ $stmtb->bindColumn('nombre', $nombre);
     <div class="modal-content card">
                <div class="card-header card-header-warning card-header-text">
                   <div class="card-text">
-                    <h4>Archivo Excel</h4>
+                    <h4 id="formato_texto"></h4>
                   </div>
                   <button type="button" class="btn btn-success btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
                     <i class="material-icons">close</i>
@@ -167,6 +167,7 @@ $stmtb->bindColumn('nombre', $nombre);
                 </div>
                 <div class="card-body">
                   <form action="<?=$urlSaveImport?>" method="post" name="formLibretaBancaria" id="formLibretaBancaria" enctype="multipart/form-data">
+                    <input type="hidden" name="tipo_formato" id="tipo_formato">
                   <div class="row">
                        <label class="col-sm-3 col-form-label" style="color:#000000; ">Archivo Excel:</label>
                        <div class="col-sm-6">

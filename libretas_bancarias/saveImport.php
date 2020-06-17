@@ -18,6 +18,8 @@ $globalUser=$_SESSION["globalUser"];
 if (isset($_POST["codigo"])){
 $codigoLibreta=$_POST["codigo"];
 $observaciones=$_POST["observaciones"];
+$tipo_formato=$_POST["tipo_formato"];
+$tipo_cargado=$_POST["tipo_cargado"];
 $cod_estadoreferencial="1";   
 $message="";
 $index=0;
@@ -56,7 +58,7 @@ $allowedFileType = ['application/vnd.ms-excel','text/xls','text/xlsx','applicati
                 }
                 
                 $hora = "";
-                if(isset($Row[1])) {
+                if(isset($Row[1])&&$tipo_formato==1) {
                 	if(verificarHora($Row[1])==true){
                      $fecha_hora.=" ".$Row[1];
                 	}else{
@@ -66,32 +68,40 @@ $allowedFileType = ['application/vnd.ms-excel','text/xls','text/xlsx','applicati
                 }
 
                 $descripcion = "";
-                if(isset($Row[2])) {
+                if(isset($Row[2])&&$tipo_formato==1) {
                     $descripcion = $Row[2];
+                }else{
+                    $descripcion = $Row[1];
                 }
 
                 $informacion_complementaria = "";
-                if(isset($Row[3])) {
+                if(isset($Row[3])&&$tipo_formato==1) {
                     $informacion_complementaria = $Row[3];
                 }
 
                 $nro_documento = "";
-                if(isset($Row[4])) {
+                if(isset($Row[4])&&$tipo_formato==1) {
                     $nro_documento = $Row[4];
+                }else{
+                   $nro_documento = $Row[2];
                 }
 
                 $monto = "";
-                if(isset($Row[5])) {
+                if(isset($Row[5])&&$tipo_formato==1) {
                     $monto = $Row[5];
+                }else{
+                    $monto = $Row[3];
                 }
 
                 $agencia = "";
-                if(isset($Row[6])) {
+                if(isset($Row[6])&&$tipo_formato==1) {
                     $agencia = $Row[6];
+                }else{
+                    $agencia = $Row[4];
                 }
 
                 $nro_cheque = "";
-                if(isset($Row[7])) {
+                if(isset($Row[7])&&$tipo_formato==1) {
                     $nro_cheque = $Row[7];
                 }
 				
