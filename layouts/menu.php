@@ -496,6 +496,12 @@ if($menuModulo==0){
                       <span class="sidebar-mini">TCC</span>
                       <span class="sidebar-normal">Instancias Caja Chica</span>
                     </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listLibreta">
+                    <span class="sidebar-mini"> LB </span>
+                    <span class="sidebar-normal"> Libreta Bancaria</span>
+                  </a>
                 </li>                
               </ul>
             </div>
@@ -614,6 +620,12 @@ if($menuModulo==0){
                     <span class="sidebar-mini"> ER </span>
                     <span class="sidebar-normal"> Estado de Resultados</span>
                   </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=reportesLibretasBancarias">
+                    <span class="sidebar-mini"> LB </span>
+                    <span class="sidebar-normal"> Libretas Bancarias</span>
+                  </a>
                 </li>                         
               </ul>
             </div>
@@ -712,13 +724,7 @@ if($menuModulo==0){
                     <span class="sidebar-mini">PSR</span>
                     <span class="sidebar-normal">Plan de Cuentas Solicitud de Recursos</span>
                   </a>
-                </li> 
-                <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=listLibreta">
-                    <span class="sidebar-mini"> LB </span>
-                    <span class="sidebar-normal"> Libreta Bancaria</span>
-                  </a>
-                </li>  
+                </li>   
               </ul>
             </div>
           </li>    
