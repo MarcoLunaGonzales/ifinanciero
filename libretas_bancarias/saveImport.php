@@ -23,6 +23,7 @@ $tipo_cargado=$_POST["tipo_cargado"];
 $cod_estadoreferencial="1";   
 $message="";
 $index=0;
+$totalFilasCorrectas=0;
 $filasErroneas=0;
 $filasErroneasCampos=0;
 $filasErroneasFechas=0;
@@ -121,6 +122,7 @@ $allowedFileType = ['application/vnd.ms-excel','text/xls','text/xlsx','applicati
                     //se encontraron fechas mayores a la fila
                   }
                   if($verSi==0){
+                   $totalFilasCorrectas++; 
                 	$sql="INSERT INTO libretas_bancariasdetalle (cod_libretabancaria,fecha_hora,nro_documento,descripcion,informacion_complementaria,agencia,monto,nro_cheque,cod_libretabancariaregistro,cod_estadoreferencial) 
                     	VALUES ('$codigoLibreta','$fecha_hora','$nro_documento','$descripcion','$informacion_complementaria','$agencia','$monto','$nro_cheque','$cod_libretabancariaregistro','$cod_estadoreferencial')";
                     $stmt = $dbh->prepare($sql);
@@ -152,7 +154,7 @@ $allowedFileType = ['application/vnd.ms-excel','text/xls','text/xlsx','applicati
   }
 }
 if($filasErroneas>0){
-  showAlertSuccessErrorFilasLibreta("../".$urlList2."&codigo=".$codigoLibreta,"Total errores: <b>".$filasErroneas."</b><br>Filas Sin Formato: <b>".$filasErroneasCampos."</b><br>Filas Mayores a la fecha: <b>".$filasErroneasFechas."</b>");  
+  showAlertSuccessErrorFilasLibreta("../".$urlList2."&codigo=".$codigoLibreta,"<i class=\"material-icons text-danger\">clear</i> Filas con errores: <b>".$filasErroneas."</b><br>Errores sin formato: <b>".$filasErroneasCampos."</b><br>Errores de fecha: <b>".$filasErroneasFechas."</b><br><i class=\"material-icons text-success\">check</i> Filas Correctas: <b>".$totalFilasCorrectas."</b><br>Total Filas: <b>".$index."</b>");  
 }else{
   if($flagSuccess==true){
   	showAlertSuccessError(true,"../".$urlList2."&codigo=".$codigoLibreta);	
