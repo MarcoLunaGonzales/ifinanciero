@@ -23,7 +23,11 @@ $tipo_cargado=$_POST["tipo_cargado"];
 $cod_estadoreferencial="1";   
 $message="";
 $index=0;
-
+if($tipo_cargado==2){
+  $sqlDelete="DELETE FROM  libretas_bancariasdetalle where cod_libretabancaria=$codigoLibreta";
+  $stmtDetalle = $dbh->prepare($sqlDelete);
+  $stmtDetalle->execute();
+}
 $allowedFileType = ['application/vnd.ms-excel','text/xls','text/xlsx','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
   
   if(in_array($_FILES["documentos_excel"]["type"],$allowedFileType)){
