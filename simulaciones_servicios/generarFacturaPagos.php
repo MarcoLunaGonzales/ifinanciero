@@ -140,13 +140,19 @@ try{
                       // echo $sql;
                     $stmtInsertSoliFact = $dbh->prepare($sql);
                     $flagSuccess=$stmtInsertSoliFact->execute();
-
                     if($flagSuccess){
                         //obtenemos el registro del ultimo insert
                         $stmtNroFac = $dbh->prepare("SELECT codigo from facturas_venta where cod_solicitudfacturacion=$cod_solicitudfacturacion order by codigo desc LIMIT 1");
                         $stmtNroFac->execute();
                         $resultNroFact = $stmtNroFac->fetch();    
                         $cod_facturaVenta = $resultNroFact['codigo'];
+                        if($_POST["cod_libreta_pagos"]>0){
+                            $cod_libreta=$_POST["cod_libreta_pagos"];
+                            //si es de tipo deposito en cuenta insertamos en libreta bancaria
+                            $sqlUpdateLibreta="UPDATE libretas_bancariasdetalle SET cod_factura=$cod_facturaVenta where codigo=$cod_libreta";
+                            $stmtUpdateLibreta = $dbh->prepare($sqlUpdateLibreta);
+                            $flagSuccess=$stmtUpdateLibreta->execute(); 
+                        }
                         for($i=0;$i<$cantidad_items;$i++){
                             $codigo_clax = $_POST["codigo_x".$i];
                             $importe_pagar = $_POST["importe_a_pagar".$i];    

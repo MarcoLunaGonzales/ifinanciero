@@ -197,21 +197,24 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 						// 	$suma_total+=$importe;
 						// }else{//imporesion detallada
                				$contador_items=0;
-							$html.='<td class="text-right" valign="top" height="10%"><h5 style="padding: 0px;margin: 0px;">';
+							$html.='<td class="text-right" valign="top"><h5 style="padding: 0px;margin: 0px;">';
 							while ($row = $stmtDesCli->fetch()) 
 							{
-							$html.=formatNumberDec($row["cantidad"]).'<br>';
+								$html.=formatNumberDec($row["cantidad"]).'<br>';
 								$contador_items++;
 							}
+							for($i=$contador_items;$i<18;$i++){
+								$html.='&nbsp;<br>';
+							}							
 							
 							$html.='</h5></td> 
-							<td valign="top" height="10%" colspan="2"><h5 style="padding: 0px;margin: 0px;" >';
+							<td valign="top" colspan="2"><h5 style="padding: 0px;margin: 0px;" >';
 							while ($row = $stmt2DesCli->fetch()) 
 							{
 							$html.=$row["descripcion_alterna"].'<br>';
 							}
 							$html.='</h5></td>                   
-							<td class="text-right" valign="top" height="10%"><h5 style="padding: 0px;margin: 0px;">';
+							<td class="text-right" valign="top"><h5 style="padding: 0px;margin: 0px;">';
 							while ($row = $stmt3DesCli->fetch()) 
 							{
 							$precio=$row["precio"];

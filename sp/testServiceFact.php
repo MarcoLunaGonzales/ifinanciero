@@ -41,12 +41,12 @@ $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey,
               "importeTotal"=>70, //importe total
               "items"=>$Array // array con el detalle           
               );
+$direccion=obtenerValorConfiguracion(56);//direccion del servicio web ifinanciero
     $parametros=json_encode($parametros);
     // abrimos la sesiรณn cURL
     $ch = curl_init();
     
-    curl_setopt($ch, CURLOPT_URL,"http://200.105.199.164:8008/ifinanciero/wsifin/ws_generar_factura.php");
-
+    curl_setopt($ch, CURLOPT_URL,$direccion."ws_generar_factura.php");
     // indicamos el tipo de peticiรณn: POST
     curl_setopt($ch, CURLOPT_POST, TRUE);
     // definimos cada uno de los parรกmetros

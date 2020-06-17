@@ -253,7 +253,7 @@ $item_1=2709;
                                       } ?>
                                       <?php $datos_devolucion=$codigo_facturacion."###".$nro_correlativo."###".$codigo_alterno."###1###20###".$urlEdit2Sol;?>
                                       <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalDevolverSolicitud_intranet" onclick="modalDevolverSolicitud_regional('<?=$datos_devolucion;?>')">
-                                        <i class="material-icons" title="Devolver Solicitud Facturación">refresh</i>
+                                        <i class="material-icons" title="Devolver Solicitud Facturación">settings_backup_restore</i>
                                       </button>
                                       <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir Solicitud Facturación">print</i></a>
                                       <a href='#' rel="tooltip" class="btn btn-warning" onclick="filaTablaAGeneral($('#tablasA_registradas'),<?=$index?>,'<?=$stringCabecera?>')">

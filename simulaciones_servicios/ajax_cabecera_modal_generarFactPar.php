@@ -6,6 +6,9 @@ require_once 'configModule.php';
 //header('Content-Type: application/json');
 
 $cod_solicitud = $_GET["cod_solicitud"];
+// if(isset($_GET["cod_libreta"]))
+//   $cod_libreta=$_GET["cod_solicitud"];
+// else $cod_libreta=0;
 //ini_set("display_errors", "1");
 $db = new Conexion();
 $stmt = $db->prepare("SELECT cod_unidadorganizacional,cod_area,cod_cliente,razon_social,nit,observaciones,nro_correlativo from solicitudes_facturacion where codigo=$cod_solicitud");
