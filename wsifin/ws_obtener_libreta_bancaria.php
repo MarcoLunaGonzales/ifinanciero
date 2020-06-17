@@ -68,24 +68,34 @@ WHERE dc.cod_estadoreferencial=1 and dc.codigo=$codigo";
      $datos['NumeroCuenta']=$rowLib['nro_cuenta'];
      $datos['IdCuenta']=$rowLib['cod_cuenta'];
 
-     $sqlDetalle="SELECT ce.*
+     $sqlDetalle="SELECT ce.*,(select cod_estadofactura from facturas_venta where codigo=ce.cod_factura) as estado_factura
 FROM libretas_bancariasdetalle ce where ce.cod_libretabancaria=$codigoLib and  ce.cod_estadoreferencial=1 order by ce.codigo";
      $stmtFacDetalle = $dbh->prepare($sqlDetalle);
      $stmtFacDetalle->execute();
      $datosDetalle=[];
      $index=0;
      while ($rowLibDetalle = $stmtFacDetalle->fetch(PDO::FETCH_ASSOC)) {
-
-       $datosDetalle[$index]['Descripcion']=$rowLibDetalle['descripcion'];
-       $datosDetalle[$index]['InformacionComplementaria']=$rowLibDetalle['informacion_complementaria'];
-       $datosDetalle[$index]['Agencia']=$rowLibDetalle['agencia'];
-       $datosDetalle[$index]['NumeroCheque']=$rowLibDetalle['nro_cheque'];
-       $datosDetalle[$index]['NumeroDocumento']=$rowLibDetalle['nro_documento'];
-       $datosDetalle[$index]['Fecha']=strftime('%d/%m/%Y',strtotime($rowLibDetalle['fecha_hora']));
-       $datosDetalle[$index]['Hora']=strftime('%H:%M:%S',strtotime($rowLibDetalle['fecha_hora']));
-       $datosDetalle[$index]['FechaHoraCompleta']=$datosDetalle[$index]['Fecha']." ".$datosDetalle[$index]['Hora'];
-       $datosDetalle[$index]['monto']=$rowLibDetalle['monto'];
-       $index++;
+        $validacion=0;
+        if($rowLibDetalle['cod_factura']!=""){
+           if($rowLibDetalle['estado_factura']==2){
+             $validacion=1;
+           }
+        }else{
+            $validacion=1;
+        }
+       if($validacion==1){
+           $datosDetalle[$index]['CodLibretaDetalle']=$rowLibDetalle['codigo'];
+           $datosDetalle[$index]['Descripcion']=$rowLibDetalle['descripcion'];
+           $datosDetalle[$index]['InformacionComplementaria']=$rowLibDetalle['informacion_complementaria'];
+           $datosDetalle[$index]['Agencia']=$rowLibDetalle['agencia'];
+           $datosDetalle[$index]['NumeroCheque']=$rowLibDetalle['nro_cheque'];
+           $datosDetalle[$index]['NumeroDocumento']=$rowLibDetalle['nro_documento'];
+           $datosDetalle[$index]['Fecha']=strftime('%d/%m/%Y',strtotime($rowLibDetalle['fecha_hora']));
+           $datosDetalle[$index]['Hora']=strftime('%H:%M:%S',strtotime($rowLibDetalle['fecha_hora']));
+           $datosDetalle[$index]['FechaHoraCompleta']=$datosDetalle[$index]['Fecha']." ".$datosDetalle[$index]['Hora'];
+           $datosDetalle[$index]['monto']=$rowLibDetalle['monto'];
+           $index++;    
+       }
      }
     $datos['detalle']=$datosDetalle;      
  }
