@@ -566,9 +566,9 @@ $contadorRegistros=0;
                     <button type="submit" class="<?=$buttonNormal;?>">Guardar</button>
                         <?php
                         if(isset($_POST['q'])){  ?>
-                            <a href='<?="../".$urlListSolicitud_facturacion_normas;?>&q=<?=$q?>&r=<?=$r?>&s=<?=$s?>&u=<?=$u?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
+                            <a href='<?="../".$urlSolicitudfactura;?>&q=<?=$q?>&v=<?=$v?>&s=<?=$s?>&u=<?=$u?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> IR A SF </a>
                         <?php }else{?>
-                            <a href='<?="../".$urlListSolicitud_facturacion_normas?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
+                            <a href='<?="../".$urlSolicitudfactura?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> IR A SF </a>
                         <?php }
                         ?>
                   </div>

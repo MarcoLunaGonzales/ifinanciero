@@ -12,7 +12,7 @@ if(isset($_GET['q'])){
   $q=$_GET['q'];
   $s=$_GET['s'];
   $u=$_GET['u'];
-  $r=$_GET['r'];
+  $v=$_GET['v'];
 }
 
 $cod_simulacion=0;
@@ -32,7 +32,7 @@ $contadorRegistros=0;
                   if(isset($_GET['q'])){
                     ?>
                     <input type="hidden" name="q" id="q" value="<?=$q;?>">
-                    <input type="hidden" name="r" id="r" value="<?=$r;?>">
+                    <input type="hidden" name="v" id="v" value="<?=$v;?>">
                     <input type="hidden" name="s" id="s" value="<?=$s;?>">
                     <input type="hidden" name="u" id="u" value="<?=$u;?>">
                     <?php
@@ -129,9 +129,9 @@ $contadorRegistros=0;
                         <button type="submit" class="<?=$buttonNormal;?>">Seleccionar</button>
                         <?php
                           if(isset($_GET['q'])){  ?>
-                              <a href='<?=$urlSolicitudfactura;?>&q=<?=$q?>&r=<?=$r?>&s=<?=$s?>&u=<?=$u?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
+                              <a href='<?=$urlSolicitudfactura;?>&q=<?=$q?>&r=<?=$r?>&s=<?=$s?>&u=<?=$u?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> IR A SF</a>
                           <?php }else{?>
-                              <a href='<?=$urlSolicitudfactura?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
+                              <a href='<?=$urlSolicitudfactura?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> IR A SF</a>
                           <?php }
                           ?>
                     </div>

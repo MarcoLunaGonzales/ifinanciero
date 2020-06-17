@@ -9,7 +9,7 @@ $dbh = new Conexion();
 $globalAdmin=$_SESSION["globalAdmin"];
 //datos registrado de la simulacion en curso
 
-  $stmt = $dbh->prepare("SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')as fecha_registro_x,DATE_FORMAT(sf.fecha_solicitudfactura,'%d/%m/%Y')as fecha_solicitudfactura_x FROM solicitudes_facturacion sf join estados_solicitudfacturacion es on sf.cod_estadosolicitudfacturacion=es.codigo where cod_estadosolicitudfacturacion in (3,4,5,6) order by codigo desc");
+  $stmt = $dbh->prepare("SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')as fecha_registro_x,DATE_FORMAT(sf.fecha_solicitudfactura,'%d/%m/%Y')as fecha_solicitudfactura_x FROM solicitudes_facturacion sf join estados_solicitudfacturacion es on sf.cod_estadosolicitudfacturacion=es.codigo where cod_estadosolicitudfacturacion in (3,4,5) order by codigo desc");
 
   $stmt->execute();
   $stmt->bindColumn('codigo', $codigo_facturacion);
@@ -348,27 +348,27 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                           <?php 
                                         }else{
                                           if($codEstado==6 || $codEstado==4){
-                                            $cod_tipopago_cred=obtenerValorConfiguracion(48);
+                                            // $cod_tipopago_cred=obtenerValorConfiguracion(48);
                                             // echo $cod_tipopago_cred; 
-                                            if($cod_tipopago!=$cod_tipopago_cred){//si es distino a credito cambia de flujo
+                                            // if($cod_tipopago!=$cod_tipopago_cred){//si es distino a credito cambia de flujo
                                                 ?>
                                                  <a title="Aceptar Solicitud" href='#'  class="btn btn-default" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=3&admin=0')">
                                                    <i class="material-icons">send</i>
                                                  </a>
                                                  <?php
-                                                 $datos_devolucion=$codigo_facturacion."###".$nro_correlativo."###".$codigo_alterno."###1###10###".$urlEdit2Sol;
+                                                 $datos_devolucion=$codigo_facturacion."###".$nro_correlativo."###".$codigo_alterno."###1###10###".$urlEdit2Sol."###";
                                                  ?>
                                                  <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalDevolverSolicitud" onclick="modalDevolverSolicitud('<?=$datos_devolucion;?>')">
-                                                <i class="material-icons" title="Volver al Estado Registro">refresh</i>
-                                              </button>
+                                                  <i class="material-icons" title="Devolver Solicitud Facturación">refresh</i>
+                                                </button>
                                                 <?php                                          
-                                            }else{
+                                            // }else{
                                                 ?>
                                                  <!-- <a title="Enviar Solicitud" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=4&admin=0'  class="btn btn-default">
                                                    <i class="material-icons">send</i>
                                                  </a> -->
                                                 <?php                                          
-                                            }
+                                            // }
                                             
                                               ?> 
 
@@ -456,7 +456,8 @@ $globalAdmin=$_SESSION["globalAdmin"];
         }
       }      
     });
-    $('#rechazarSolicitud').click(function(){      
+    $('#rechazarSolicitud').click(function(){
+      var q=0;var s=0;var u=0;var v=0;
       var cod_solicitudfacturacion=document.getElementById("cod_solicitudfacturacion").value;
       var estado=document.getElementById("estado").value;
       var admin=document.getElementById("admin").value;
@@ -465,7 +466,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
       if(observaciones==null || observaciones==0 || observaciones=='' || observaciones==' '){
         Swal.fire("Informativo!", "Por favor introduzca la observación.", "warning");
       }else{        
-        registrarRechazoSolicitud(cod_solicitudfacturacion,observaciones,estado,admin,direccion);
+        registrarRechazoSolicitud(cod_solicitudfacturacion,observaciones,estado,admin,direccion,q,s,u,v);
       }      
     }); 
   });

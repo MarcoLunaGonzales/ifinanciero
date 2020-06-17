@@ -201,9 +201,9 @@ try {//recibiendo datos
             if(isset($_POST['q'])){
               $q=$_POST['q'];
               $r=$_POST['r'];          
-              showAlertSuccessError($flagSuccess,$urlSolicitudfactura."&q=".$q."&r=".$r);
+              showAlertSuccessError($flagSuccess,$urlListSol."&q=".$q."&r=".$r);
             }else{
-              showAlertSuccessError($flagSuccess,$urlSolicitudfactura);
+              showAlertSuccessError($flagSuccess,$urlListSol);
             } 
 
 

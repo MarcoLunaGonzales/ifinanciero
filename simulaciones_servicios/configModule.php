@@ -45,6 +45,7 @@ $urlPrintSolicitud="simulaciones_servicios/printSolicitud.php";
 
 $urlEdit2Sol="servicios_presupuestos/edit.php";
 $urlListSol="index.php?opcion=listFacturasServicios";
+// $urlListSol_regional="index.php?opcion=listFacturasServiciosAdmin";
 $urlListSol_conta="index.php?opcion=listFacturasServicios_conta";
 $urlListSolSim="index.php?opcion=solicitud_facturacion";
 $urlList2Sol="index.php?opcion=listFacturasServiciosAdmin";

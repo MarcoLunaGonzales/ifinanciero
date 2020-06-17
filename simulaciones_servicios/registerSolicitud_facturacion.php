@@ -568,23 +568,11 @@ $descuento_cliente=obtenerDescuentoCliente($cod_cliente);
                   </div>
                   <div class="card-footer ml-auto mr-auto">
                     <button type="submit" class="<?=$buttonNormal;?>">Guardar</button><?php
-                    if(isset($_GET['q'])){//desde intranet
-                        if($cod_sw==1){//vuelve al lsitado de tcp
-                            ?>
-                            <a href='<?=$urlSolicitudfactura;?>&cod=<?=$cod_simulacion;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
-                        <?php }else{//vuelve al listado de solicitud general
-                            ?>
-                            <a href='<?=$urlListSol?>&q=<?=$q?>&v=<?=$v?>&s=<?=$s?>&u=<?=$u?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
-                        <?php }
+                    if(isset($_GET['q'])){//desde intranet ?>
+                            <a href='<?=$urlListSol?>&q=<?=$q?>&v=<?=$v?>&s=<?=$s?>&u=<?=$u?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> IR A SF </a>
+                        <?php 
                     }else{//desde ifinanciero
-                      if($cod_sw==1){?>
-                        <a href='<?=$urlSolicitudfactura;?>&cod=<?=$cod_simulacion;?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
-                    <?php }elseif($cod_sw==5){?>
-                        <a href='<?=$urlListSol?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
-                    <?php }else{?>
-                        <a href='<?=$urlListSimulacionesServ?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
-                        <?php
-                        }
+                        ?><a href='<?=$urlListSol?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> IR A SF </a><?php
                     }
 
                     ?>

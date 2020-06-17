@@ -199,9 +199,9 @@ try {
           $s=$_POST['usuario_ibnored_s'];
           $u=$_POST['usuario_ibnored_u'];
           $v=$_POST['usuario_ibnored_v'];
-          showAlertSuccessError($flagSuccess,"../".$urlListSolicitud_facturacion_normas."&q=".$q."&v=".$v."&s=".$s."&u=".$u);
+          showAlertSuccessError($flagSuccess,"../".$urlSolicitudfactura."&q=".$q."&v=".$v."&s=".$s."&u=".$u);
         }else{
-          showAlertSuccessError($flagSuccess,"../".$urlListSolicitud_facturacion_normas);  
+          showAlertSuccessError($flagSuccess,"../".$urlSolicitudfactura);  
         }
         //$stmt->debugDumpParams();
     }else{//update

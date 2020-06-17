@@ -196,9 +196,9 @@ try {//recibiendo datos
         if(isset($_POST['q'])){
           $q=$_POST['q'];
           $r=$_POST['r'];          
-          showAlertSuccessError($flagSuccess,$urlSolicitudfactura_empresa."&q=".$q."&r=".$r);
+          showAlertSuccessError($flagSuccess,$urlListSol."&q=".$q."&r=".$r);
         }else{
-          showAlertSuccessError($flagSuccess,$urlSolicitudfactura_empresa);
+          showAlertSuccessError($flagSuccess,$urlListSol);
         }        
         //$stmt->debugDumpParams();
     }else {//update

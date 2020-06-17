@@ -10,7 +10,18 @@ if(isset($_GET['q'])){
   $v=$_GET['v'];
   $s=$_GET['s'];
   $u=$_GET['u'];
+}else{
+  $q=0;
+  $v=0;
+  $s=0;
+  $u=0;
 }
+?>
+<input type="hidden" name="q" value="<?=$q?>" id="q"/>
+<input type="hidden" name="s" value="<?=$s?>" id="s"/>
+<input type="hidden" name="u" value="<?=$u?>" id="u"/>
+<input type="hidden" name="v" value="<?=$v?>" id="v"/>
+<?php
 
 //datos registrado de la simulacion en curso
 $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')as fecha_registro_x,DATE_FORMAT(sf.fecha_solicitudfactura,'%d/%m/%Y')as fecha_solicitudfactura_x FROM solicitudes_facturacion sf join estados_solicitudfacturacion es on sf.cod_estadosolicitudfacturacion=es.codigo order by codigo desc";
@@ -252,7 +263,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                             <!-- <td><?=$label?><small><?=$estado;?></small></span></td> -->
                             <td><button class="btn btn-danger btn-sm btn-link" style="padding:0;"><small><?=$obs_devolucion;?></small></button></td>
                             <td class="td-actions text-right">                              
-                              <button class="btn <?=$btnEstado?> btn-sm btn-link"><small><?=$estado;?></small></button>
+                              <button class="btn <?=$btnEstado?> btn-sm btn-link"><small><?=$estado;?></small></button><br>
                               <?php                              
                                 if($cod_estado_factura_x==1 || $cod_estado_factura_x==null){
                                   if($codigo_fact_x>0){//print facturas
@@ -277,106 +288,77 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                         </div>
                                       </div> <?php 
                                     }
-                                  }else{// generar facturas
-                                    if($codEstado==4||$codEstado==3||$codEstado==5){
-                                      ?>
-                                      <!-- <div class="btn-group dropdown">
-                                        <button type="button" class="btn <?=$btnEstado?> dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                          <small><small><small><?=$estado;?></small></small></small>
-                                        </button>
-                                        <div class="dropdown-menu">
-                                        <?php 
-                                        if(isset($_GET['q'])){
-                                          if($codEstado==4){
-                                             ?>
-                                            <a href="<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion;?>&estado=1&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>" class="dropdown-item">
-                                                <i class="material-icons text-danger">clear</i> Cancelar solicitud
-                                            </a><?php 
-                                          }else{}?>
-                                          <a href='#' rel="tooltip" class="dropdown-item" onclick="filaTablaAGeneral($('#tablasA_registradas'),<?=$index?>,'<?=$stringCabecera?>')">
-                                            <i class="material-icons text-warning" title="Ver Detalle">settings_applications</i> Ver Detalle
-                                          </a><?php 
-                                        }else{
-                                          if($codEstado==4){
-                                            $datos_devolucion=$codigo_facturacion."###".$nro_correlativo."###".$codigo_alterno."###1###0###".$urlEdit2Sol."###".$obs_devolucion;
-                                           ?>
-                                           <button class="dropdown-item" data-toggle="modal" data-target="#modalDevolverSolicitud" onclick="modalDevolverSolicitud('<?=$datos_devolucion;?>')">
-                                                <i class="material-icons text-danger">clear</i> Cancelar solicitud
-                                              </button>
-                                         
-
-                                           <?php 
-                                          }else{}?>
-                                          <a href='#' rel="tooltip" class="dropdown-item" onclick="filaTablaAGeneral($('#tablasA_registradas'),<?=$index?>,'<?=$stringCabecera?>')">
-                                              <i class="material-icons text-warning" title="Ver Detalle">settings_applications</i> Ver Detalle
-                                          </a><?php  
-                                        } ?>       
-                                      </div> -->
-                                      <?php 
-                                    }else{
-                                      if($codEstado==6){
-                                        $cod_tipopago_cred=obtenerValorConfiguracion(48);
-                                        // echo $cod_tipopago_cred; 
-                                        if($cod_tipopago==$cod_tipopago_cred){//si es distino a credito cambia de flujo
-                                          if(isset($_GET['q'])){
-                                            ?>
-                                             <!-- <a title="Enviar solicitud" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=4&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>'  class="btn btn-warning">
-                                               <i class="material-icons">send</i>
-                                             </a>
-                                             <a title="Volver al Estado Registro" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=1&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>'  class="btn btn-danger">
-                                               <i class="material-icons">refresh</i>
-                                             </a> -->
-                                            <?php
-                                          }else{
-                                            if($obs_devolucion==null || $obs_devolucion==''){//cuado se hace el rechazo de la fac y volvemos a enviar                                              
-                                              ?>                                              
-                                              <!-- <a title="Enviar solicitud" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=4&admin=0'  class="btn btn-warning">
-                                                <i class="material-icons">send</i>
-                                              </a> -->
-                                              <?php 
-                                            }else{
-                                              $datos_devolucion=$codigo_facturacion."###".$nro_correlativo."###".$codigo_alterno."###4###0###".$urlEdit2Sol."###".$obs_devolucion;
-                                              ?>
-                                              <!-- <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalReenviarSolicitudDevuelto" onclick="modalReenviarSolicitudDevuelto('<?=$datos_devolucion;?>')">
-                                                <i class="material-icons" title="Enviar solicitud">send</i>
-                                              </button> -->
-                                              <?php
-                                            }
-                                            ?>
-                                            <?php $datos_devolucion=$codigo_facturacion."###".$nro_correlativo."###".$codigo_alterno."###1###0###".$urlEdit2Sol."###".$obs_devolucion;?>
-                                             <!-- <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalDevolverSolicitud" onclick="modalDevolverSolicitud('<?=$datos_devolucion;?>')">
-                                                <i class="material-icons" title="Volver al Estado Registro">refresh</i>
-                                              </button> -->
-                                            <!-- <a title="Volver al Estado Registro" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=1&admin=0'  class="btn btn-danger">
-                                              <i class="material-icons">refresh</i>
-                                            </a> -->
-                                              <?php
-                                          } 
-                                        }
-                                      }else{
+                                  }else{// generar facturas                                        
                                         if($codEstado==1){
-                                          if(isset($_GET['q'])){ ?>
-                                             <a title="Pre Envio - Solicitud Facturación" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=6&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>' class="btn btn-default">
-                                               <i class="material-icons">send</i>
-                                             </a>
-                                            <?php
-                                          }else{
-                                            if($obs_devolucion==null || $obs_devolucion==''){//cuado se hace el rechazo de la fac y volvemos a enviar                                              
-                                              ?>                                             
-                                              <a title="Pre Envio - Solicitud Facturación" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=6&admin=0'  class="btn btn-default">
+
+                                          $cod_tipopago_cred=obtenerValorConfiguracion(48);
+                                          // echo $cod_tipopago_cred; 
+                                          if($cod_tipopago==$cod_tipopago_cred){//si es igual a credito cambia de flujo
+                                            if(isset($_GET['q'])){
+                                              if($obs_devolucion==null || $obs_devolucion==''){//cuado se hace el rechazo de la fac y volvemos a enviar
+                                                ?>                                             
+                                                <a title="Enviar a Regional(En Revisión)" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=6&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>' class="btn btn-default">
                                                  <i class="material-icons">send</i>
-                                              </a>                                              
-                                              <?php 
+                                               </a>
+                                                <?php 
+                                              }else{
+                                                $datos_devolucion=$codigo_facturacion."###".$nro_correlativo."###".$codigo_alterno."###6###0###".$urlEdit2Sol."###".$obs_devolucion;?>
+                                                <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalReenviarSolicitudDevuelto" onclick="modalReenviarSolicitudDevuelto('<?=$datos_devolucion;?>')">
+                                                  <i class="material-icons" title="Enviar a Regional(En Revisión)">send</i>
+                                                </button><?php
+                                              }
                                             }else{
-                                              $datos_devolucion=$codigo_facturacion."###".$nro_correlativo."###".$codigo_alterno."###6###0###".$urlEdit2Sol."###".$obs_devolucion;
-                                              ?>
-                                              <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalReenviarSolicitudDevuelto" onclick="modalReenviarSolicitudDevuelto('<?=$datos_devolucion;?>')">
-                                                <i class="material-icons" title="Pre Envio - Solicitud Facturación">send</i>
-                                              </button>
+                                              if($obs_devolucion==null || $obs_devolucion==''){//cuado se hace el rechazo de la fac y volvemos a enviar
+                                                ?>                                             
+                                                <a title="Enviar a Regional(En Revisión)" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=6&admin=0'  class="btn btn-default">
+                                                   <i class="material-icons">send</i>
+                                                </a>
+                                                <?php 
+                                              }else{
+                                                $datos_devolucion=$codigo_facturacion."###".$nro_correlativo."###".$codigo_alterno."###6###0###".$urlEdit2Sol."###".$obs_devolucion;?>
+                                                <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalReenviarSolicitudDevuelto" onclick="modalReenviarSolicitudDevuelto('<?=$datos_devolucion;?>')">
+                                                  <i class="material-icons" title="Enviar a Regional(En Revisión)">send</i>
+                                                </button><?php
+                                              }?>                                             
                                               <?php
-                                            }?>                                             
-                                            <?php
-                                          } 
+                                            } 
+                                          }else{
+                                            if(isset($_GET['q'])){ 
+                                              if($obs_devolucion==null || $obs_devolucion==''){//cuado se hace el rechazo de la fac y volvemos a enviar                                              
+                                                ?>                                             
+                                                <a title="Enviar a contabilidad(Revisado)" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=4&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>' class="btn btn-default">
+                                                 <i class="material-icons">send</i>
+                                               </a>
+                                                <?php 
+                                              }else{
+                                                $datos_devolucion=$codigo_facturacion."###".$nro_correlativo."###".$codigo_alterno."###4###0###".$urlEdit2Sol."###".$obs_devolucion;?>
+                                                <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalReenviarSolicitudDevuelto" onclick="modalReenviarSolicitudDevuelto('<?=$datos_devolucion;?>')">
+                                                  <i class="material-icons" title="Enviar a contabilidad(Revisado)">send</i>
+                                                </button><?php
+                                              }
+                                            }else{
+                                              if($obs_devolucion==null || $obs_devolucion==''){//cuado se hace el rechazo de la fac y volvemos a enviar                                              
+                                                ?>                                             
+                                                <a title="Enviar a contabilidad(Revisado)" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=4&admin=0'  class="btn btn-default">
+                                                   <i class="material-icons">send</i>
+                                                </a>                                              
+                                                <?php 
+                                              }else{
+                                                $datos_devolucion=$codigo_facturacion."###".$nro_correlativo."###".$codigo_alterno."###4###0###".$urlEdit2Sol."###".$obs_devolucion;?>
+                                                <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalReenviarSolicitudDevuelto" onclick="modalReenviarSolicitudDevuelto('<?=$datos_devolucion;?>')">
+                                                  <i class="material-icons" title="Enviar a contabilidad(Revisado)">send</i>
+                                                </button><?php
+                                              }
+                                            } 
+
+                                          }
+
+
+
+
+
+
+
                                           if(isset($_GET['q'])){?>
                                             <a title="Editar Solicitud Facturación" href='<?=$urlEditSolicitudfactura;?>&codigo_s=<?=$codigo_facturacion?>&q=<?=$q?>&v=<?=$v?>&s=<?=$s?>&u=<?=$u?>' class="btn btn-success">
                                               <i class="material-icons"><?=$iconEdit;?></i>
@@ -388,8 +370,6 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                           <?php 
                                           }
                                         }
-                                      }
-                                    }
                                   }
                                 }elseif($cod_estado_factura_x==4){//factura manual ?>
                                   <button title="Detalles" class="btn btn-success" type="button" data-toggle="modal" data-target="#modalDetalleFacturaManual" onclick="agregaDatosDetalleFactManual('<?=$datos_FacManual;?>')">
@@ -442,6 +422,11 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
       }      
     });     
     $('#ReenviarSolicitud').click(function(){      
+      var q=document.getElementById("q").value;
+      var s=document.getElementById("s").value;
+      var u=document.getElementById("u").value;
+      var v=document.getElementById("v").value;
+
       var cod_solicitudfacturacion=document.getElementById("cod_solicitudfacturacion_r").value;
       var estado=document.getElementById("estado_r").value;
       var admin=document.getElementById("admin_r").value;
@@ -450,7 +435,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
       if(observaciones==null || observaciones==0 || observaciones=='' || observaciones==' '){
         Swal.fire("Informativo!", "Por favor introduzca la observación.", "warning");
       }else{        
-        registrarRechazoSolicitud(cod_solicitudfacturacion,observaciones,estado,admin,direccion);
+        registrarRechazoSolicitud(cod_solicitudfacturacion,observaciones,estado,admin,direccion,q,s,u,v);
       }      
     }); 
   });

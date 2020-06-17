@@ -290,6 +290,7 @@
     </div>
   </div>
 </div>
+<!-- factura pagos -->
 <div class="modal fade" id="modalGenerarFacturapagos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog modal-xl" role="document">
     <form id="formFacturaParcial" class="form-horizontal" action="<?=$urlGenerarFacturaParciales;?>" method="post" onsubmit="return valida_modalFacPar(this)" enctype="multipart/form-data">  
@@ -331,6 +332,11 @@
         <input type="hidden" name="estado" id="estado" value="0">
         <input type="hidden" name="admin" id="admin" value="0">
         <input type="hidden" name="direccion" id="direccion" value="0">
+        
+        <input type="hidden" name="q" value="0" id="q"/>
+        <input type="hidden" name="s" value="0" id="s"/>
+        <input type="hidden" name="v" value="0" id="v"/>
+        <input type="hidden" name="u" value="0" id="u"/>
         <div class="row">
           <label class="col-sm-1 col-form-label" style="color:#7e7e7e"><small>Nro. Solicitud</small></label>
           <div class="col-sm-2">

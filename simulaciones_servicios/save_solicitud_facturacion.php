@@ -210,9 +210,9 @@ try
           $s=$_POST['usuario_ibnored_s'];
           $u=$_POST['usuario_ibnored_u'];
           $v=$_POST['usuario_ibnored_v'];
-          showAlertSuccessError($flagSuccess,"../".$urlSolicitudfactura."&cod=".$cod_simulacion."&q=".$q."&s=".$s."&u=".$u."&v=".$v);
+          showAlertSuccessError($flagSuccess,"../".$urlListSol."&q=".$q."&s=".$s."&u=".$u."&v=".$v);
         }else{
-          showAlertSuccessError($flagSuccess,"../".$urlSolicitudfactura."&cod=".$cod_simulacion);  
+          showAlertSuccessError($flagSuccess,"../".$urlListSol);  
         }
         
 
@@ -361,9 +361,9 @@ try
           $s=$_POST['usuario_ibnored_s'];
           $u=$_POST['usuario_ibnored_u'];
           $v=$_POST['usuario_ibnored_v'];
-          showAlertSuccessError($flagSuccess,"../".$urlSolicitudfactura."&cod=".$cod_simulacion."&q=".$q."&s=".$s."&u=".$u."&v=".$v);
+          showAlertSuccessError($flagSuccess,"../".$urlListSol."&q=".$q."&s=".$s."&u=".$u."&v=".$v);
         }else{
-          showAlertSuccessError($flagSuccess,"../".$urlSolicitudfactura."&cod=".$cod_simulacion);
+          showAlertSuccessError($flagSuccess,"../".$urlListSol);
         }
     }//si es insert o update
     

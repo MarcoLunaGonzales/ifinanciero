@@ -7,7 +7,10 @@ $dbh = new Conexion();
 $globalAdmin=$_SESSION["globalAdmin"];
 if(isset($_GET['q'])){
   $q=$_GET['q'];
-  $item_3=$_GET['r'];
+  if(isset($_GET['r'])){
+    $item_3=$_GET['r'];
+  }else $item_3=$_GET['v'];
+
   $s=$_GET['s'];
   $u=$_GET['u'];
 
@@ -17,17 +20,19 @@ if(isset($_GET['q'])){
 
     // $sqlAreas=""; quitar cuando se registre la unidad y el area de la solicitud propuesta
   ?>
-  <input type="hidden" name="id_servicioibnored" value="<?=$q?>" id="id_servicioibnored"/>
-  <input type="hidden" name="id_servicioibnored_rol" value="<?=$item_3?>" id="id_servicioibnored_rol"/>
-  <input type="hidden" name="id_servicioibnored_s" value="<?=$s?>" id="id_servicioibnored_s"/>
-  <input type="hidden" name="id_servicioibnored_u" value="<?=$u?>" id="id_servicioibnored_u"/>
 <?php
 }else{
   $item_3=0;
   $s=0;
   $u=0;
+  $q=0;
   $sqlAreas="";
-}
+}?>
+<input type="hidden" name="id_servicioibnored" value="<?=$q?>" id="id_servicioibnored"/>
+<input type="hidden" name="id_servicioibnored_rol" value="<?=$item_3?>" id="id_servicioibnored_rol"/>
+<input type="hidden" name="id_servicioibnored_s" value="<?=$s?>" id="id_servicioibnored_s"/>
+<input type="hidden" name="id_servicioibnored_u" value="<?=$u?>" id="id_servicioibnored_u"/>
+<?php
 
 
   //datos registrado de la simulacion en curso
@@ -232,44 +237,30 @@ $item_1=2709;
                                     <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=2' target="_blank"><i class="material-icons" title="Imprimir Factura">print</i></a>
                                     <!-- <a class="btn btn-danger" href='<?=$urlAnularFactura;?>&codigo=<?=$codigo_facturacion;?>' ><i class="material-icons" title="Anular Factura">delete</i></a> -->
                                     
-                                  <?php }else{// generar facturas
-                                    
-                                     ?>
-                                      <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir">print</i></a>
-                                     <?php
-                                     ?>
-                                     <div class="btn-group dropdown">
-                                       <button type="button" class="btn <?=$btnEstado?> dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                         <small><?=$estado;?></small>
-                                       </button>
-                                       <div class="dropdown-menu">
-                                        <?php 
-                                        if(isset($_GET['q'])){
-                                           ?>
-                                           <a href='#' rel="tooltip" class="dropdown-item" onclick="filaTablaAGeneral($('#tablasA_registradas'),<?=$index?>,'<?=$stringCabecera?>')">
-                                              <i class="material-icons text-warning" title="Ver Detalle">settings_applications</i> Ver Detalle
-                                            </a>
-                                            <a href="#" onclick="mostrarCambioEstadoObjeto(<?=$codigo_facturacion?>)" class="dropdown-item">
-                                               <small> Cambiar Estado</small>
-                                            </a>
+                                  <?php }else{// generar facturas ?>                                      
+                                      <?php
+                                      if(isset($_GET['q'])){ ?>
+                                            <a title="Enviar a contabilidad(Revisado)" href='#'  class="btn btn-info" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=4&admin=20&q=<?=$q?>&v=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>')">
+                                              <i class="material-icons">send</i>
+                                            </a>                                            
                                           <?php
-                                       }else{
-                                          ?><a href='#' rel="tooltip" class="dropdown-item" onclick="filaTablaAGeneral($('#tablasA_registradas'),<?=$index?>,'<?=$stringCabecera?>')">
-                                              <i class="material-icons text-warning" title="Ver Detalle">settings_applications</i> Ver Detalle
-                                            </a>
-                                            <a href="#" onclick="mostrarCambioEstadoObjeto(<?=$codigo_facturacion?>)" class="dropdown-item">
-                                               <i class="material-icons text-warning">dns</i> Cambiar Estado
-                                            </a>       
+                                      }else{
+                                          ?>
+                                            <a title="Enviar a contabilidad(Revisado)" href='#'  class="btn btn-info" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=4&admin=20')">
+                                              <i class="material-icons">send</i>
+                                            </a>                                            
                                          <?php  
-                                     }    
-                                    ?>       
-                                     </div>
-                                   </div>                           
+                                      } ?>
+                                      <?php $datos_devolucion=$codigo_facturacion."###".$nro_correlativo."###".$codigo_alterno."###1###20###".$urlEdit2Sol;?>
+                                      <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalDevolverSolicitud_intranet" onclick="modalDevolverSolicitud_regional('<?=$datos_devolucion;?>')">
+                                        <i class="material-icons" title="Devolver Solicitud Facturación">refresh</i>
+                                      </button>
+                                      <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir Solicitud Facturación">print</i></a>
+                                      <a href='#' rel="tooltip" class="btn btn-warning" onclick="filaTablaAGeneral($('#tablasA_registradas'),<?=$index?>,'<?=$stringCabecera?>')">
+                                        <i class="material-icons" title="Ver Detalle Solicitud">settings_applications</i>
+                                      </a>
                                    <?php                                      
-                                   }                            
-                                  ?>
-                                  <!--<a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir">print</i></a>-->
-                                  <?php  
+                                   }                                  
                                 //}
                               ?>
                             </td>
@@ -327,48 +318,81 @@ $item_1=2709;
 </div>
 <!--    end small modal -->
 <!-- small modal -->
-<div class="modal fade modal-arriba modal-primary" id="modalEstadoObjeto" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-notice" style="max-width: 50% !important;">
-    <div class="modal-content card">
-                <div class="card-header card-header-warning card-header-text">
-                  <div class="card-text">
-                    <h4>Cambiar de Estado</h4>
-                  </div>
-                  <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
-                    <i class="material-icons">close</i>
-                  </button>
-                </div>
-                <input type="hidden" class="form-control" name="modal_codigopropuesta" id="modal_codigopropuesta" value="">
-                <input type="hidden" class="form-control" name="modal_tipoobjeto" id="modal_tipoobjeto" value="<?=$item_1?>">
-                <input type="hidden" class="form-control" name="modal_rolpersona" id="modal_rolpersona" value="<?=$item_3?>">
-                <div class="card-body">
-                 <div class="card-body">
-                      <div class="row">
-                       <label class="col-sm-2 col-form-label">Estado</label>
-                       <div class="col-sm-10">
-                        <div class="form-group">
-                             <select class="selectpicker form-control" name="modal_codigoestado" id="modal_codigoestado" data-style="btn btn-primary">
-                                  
-                             </select>
-                         </div>
-                        </div>
-                      </div>
-                      <div class="row">
-                          <label class="col-sm-2 col-form-label">Observaciones</label>
-                           <div class="col-sm-10">                     
-                             <div class="form-group">
-                               <textarea type="text" class="form-control" name="modal_observacionesestado" id="modal_observacionesestado"></textarea>
-                             </div>
-                           </div>  
-                      </div> 
-                      <div class="form-group float-right">
-                        <button type="button" id="boton_guardarsim" class="btn btn-default" onclick="cambiarEstadoObjetoSolFac()">Cambiar Estado</button>
-                      </div> 
-                </div>   
-                </div>
-      </div>  
+<!-- modal devolver solicitud -->
+<div class="modal fade" id="modalDevolverSolicitud_intranet" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Devolver Solicitud</h4>
+      </div>
+      <div class="modal-body">        
+        <input type="hidden" name="cod_solicitudfacturacion" id="cod_solicitudfacturacion" value="0">
+        <input type="hidden" name="estado" id="estado" value="0">
+        <input type="hidden" name="admin" id="admin" value="0">
+        <input type="hidden" name="direccion" id="direccion" value="0">
+
+        <input type="hidden" name="id_servicioibnored_modal" value="0" id="id_servicioibnored_modal"/>
+        <input type="hidden" name="id_servicioibnored_rol_modal" value="0" id="id_servicioibnored_rol_modal"/>
+        <input type="hidden" name="id_servicioibnored_s_modal" value="0" id="id_servicioibnored_s_modal"/>
+        <input type="hidden" name="id_servicioibnored_u_modal" value="0" id="id_servicioibnored_u_modal"/>
+        <div class="row">
+          <label class="col-sm-1 col-form-label" style="color:#7e7e7e"><small>Nro. Solicitud</small></label>
+          <div class="col-sm-2">
+            <div class="form-group" >
+              <input type="text" class="form-control" name="nro_solicitud" id="nro_solicitud" readonly="true" style="background-color:#e2d2e0">              
+            </div>
+          </div>
+          <label class="col-sm-1 col-form-label" style="color:#7e7e7e"><small>Código<br>Servicio</small></label>
+          <div class="col-sm-8">
+            <div class="form-group" >              
+              <input type="text" class="form-control" name="codigo_servicio" id="codigo_servicio" readonly="true" style="background-color:#e2d2e0">
+            </div>
+          </div>
+        </div>                
+        <div class="row">
+          <label class="col-sm-12 col-form-label" style="color:#7e7e7e"><small>Observaciones</small></label>
+        </div>
+        <div class="row">
+          <div class="col-sm-12" style="background-color:#f9edf7">
+            <div class="form-group" >              
+              <textarea type="text" name="observaciones" id="observaciones" class="form-control" required="true"></textarea>
+            </div>
+          </div>
+        </div>        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" id="rechazarSolicitud" name="rechazarSolicitud" data-dismiss="modal">Aceptar</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal"> <-- Volver </button>
+      </div>
     </div>
   </div>
+</div>
+<!-- para la factura manual -->
+<script type="text/javascript">
+  $(document).ready(function(){    
+    $('#rechazarSolicitud').click(function(){      
+      var cod_solicitudfacturacion=document.getElementById("cod_solicitudfacturacion").value;
+      var estado=document.getElementById("estado").value;
+      var admin=document.getElementById("admin").value;
+      var direccion=document.getElementById("direccion").value;
+      var observaciones=$('#observaciones').val();
+
+
+      var q=document.getElementById("id_servicioibnored_modal").value;
+      var r=document.getElementById("id_servicioibnored_rol_modal").value;
+      var s=document.getElementById("id_servicioibnored_s_modal").value;
+      var u=document.getElementById("id_servicioibnored_u_modal").value;
+      if(observaciones==null || observaciones==0 || observaciones=='' || observaciones==' '){
+        Swal.fire("Informativo!", "Por favor introduzca la observación.", "warning");
+      }else{                
+          registrarRechazoSolicitud_intranet(cod_solicitudfacturacion,observaciones,estado,admin,direccion,q,r,s,u);
+      }      
+    }); 
+  });
+</script>
+
+
 <!--    end small modal -->
 <?php 
   $lan=sizeof($cont);

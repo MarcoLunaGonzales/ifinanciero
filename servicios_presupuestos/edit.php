@@ -82,6 +82,8 @@ if($estado!=1){
 if(isset($_GET['admin'])){
   if($_GET['admin']==10){
     $urlList2Sol=$urlListSol_conta;
+  }elseif($_GET['admin']==20){
+    $urlList2Sol=$urlList2Sol;
   }else{
     $urlList2Sol=$urlListSol;    
   }
