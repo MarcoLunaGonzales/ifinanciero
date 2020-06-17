@@ -7050,6 +7050,19 @@ function obtenerObtenerLibretaBancaria($codigo){
   // header('Content-type: application/json');   
   // print_r($remote_server_output);
 }
+
+function verificarFechaMaxDetalleLibreta($fecha,$codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT nombre FROM libretas_bancariasdetalle where cod_libretabancaria=:codigo and fecha_hora < :fecha");
+   $stmt->bindParam(':codigo',$codigo);
+   $stmt->bindParam(':fecha',$fecha);
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor++;
+   }
+   return($valor);
+}
 ?>
 
 

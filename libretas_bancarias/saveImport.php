@@ -23,10 +23,13 @@ $tipo_cargado=$_POST["tipo_cargado"];
 $cod_estadoreferencial="1";   
 $message="";
 $index=0;
+$filasErroneas=0;
+$filasErroneasCampos=0;
+$filasErroneasFechas=0;
 if($tipo_cargado==2){
-  $sqlDelete="DELETE FROM  libretas_bancariasdetalle where cod_libretabancaria=$codigoLibreta";
+  /*$sqlDelete="DELETE FROM  libretas_bancariasdetalle where cod_libretabancaria=$codigoLibreta";
   $stmtDetalle = $dbh->prepare($sqlDelete);
-  $stmtDetalle->execute();
+  $stmtDetalle->execute();*/
 }
 $allowedFileType = ['application/vnd.ms-excel','text/xls','text/xlsx','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
   
@@ -112,6 +115,11 @@ $allowedFileType = ['application/vnd.ms-excel','text/xls','text/xlsx','applicati
                               
                 if (!empty($fecha_hora) || !empty($descripcion) || !empty($monto)) {
                 	// Prepare
+                  $verSi=0;
+                  if(verificarFechaMaxDetalleLibreta($fecha_hora,$codigoLibreta)==0&&$tipo_cargado==2){
+                    $verSi=1;
+                  }
+                  if($verSi==0){
                 	$sql="INSERT INTO libretas_bancariasdetalle (cod_libretabancaria,fecha_hora,nro_documento,descripcion,informacion_complementaria,agencia,monto,nro_cheque,cod_libretabancariaregistro,cod_estadoreferencial) 
                     	VALUES ('$codigoLibreta','$fecha_hora','$nro_documento','$descripcion','$informacion_complementaria','$agencia','$monto','$nro_cheque','$cod_libretabancariaregistro','$cod_estadoreferencial')";
                     $stmt = $dbh->prepare($sql);
@@ -124,6 +132,13 @@ $allowedFileType = ['application/vnd.ms-excel','text/xls','text/xlsx','applicati
                         $type = "error";
                         $message = "Hubo un problema al importar registros";
                     }
+                  }else{
+                    $filasErroneas++;
+                    $filasErroneasFechas++;
+                  }
+                }else{
+                  $filasErroneasCampos++;
+                  $filasErroneas++;
                 }
              }
         
@@ -135,13 +150,16 @@ $allowedFileType = ['application/vnd.ms-excel','text/xls','text/xlsx','applicati
         $message = "El archivo enviado es invalido. Por favor vuelva a intentarlo";
   }
 }
-
-echo $message;
-if($flagSuccess==true){
-	showAlertSuccessError(true,"../".$urlList2."&codigo=".$codigoLibreta);	
+if($filasErroneas>0){
+  showAlertSuccessErrorFilasLibreta("../".$urlList2."&codigo=".$codigoLibreta,"Total errores: <b>".$filasErroneas."</b><br>Filas Sin Formato: <b>".$filasErroneasCampos."</b><br>Filas Mayores a la fecha: <b>".$filasErroneasFechas."</b>");  
 }else{
-	showAlertSuccessError(false,"../".$urlList2."&codigo=".$codigoLibreta);
+  if($flagSuccess==true){
+  	showAlertSuccessError(true,"../".$urlList2."&codigo=".$codigoLibreta);	
+  }else{
+	  showAlertSuccessError(false,"../".$urlList2."&codigo=".$codigoLibreta);
+  }
 }
+echo $message;
 
 function verificarFecha($x) {
     if (date('d-m-Y', strtotime($x)) == $x) {
