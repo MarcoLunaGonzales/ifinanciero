@@ -82,7 +82,7 @@ $stmt->bindColumn('cod_estadopago', $codEstado);
                           <!--<td><?=$descripcion?></td>-->
                           <td><?=strftime('%d/%m/%Y',strtotime($fecha));?></td>
                           <td><?=$datosArray[2]?></td>
-                          <td><?=$datosArray[3]?></td>
+                          <td><div class="btn-group"><?=$datosArray[3]?></div></td>
                           <td><?=$datosArray[4]?></td>
                           <td><?=$observaciones;?></td>
                           <td class="text-muted"><?=$estado?></td>
@@ -119,6 +119,9 @@ $stmt->bindColumn('cod_estadopago', $codEstado);
                                 <i class="material-icons">list</i> <?=$estado;?>
                               </button>
                               <div class="dropdown-menu">
+                                <a href="<?=$urlVerPago?>?cod=<?=$codigo?>&admin=0" target="_blank" class="dropdown-item">
+                                       <i class="material-icons text-info">payment</i> Ver Pago
+                                    </a>
                                 <?php 
                                 if($codEstado!=2){
                                   if($codEstado==1){

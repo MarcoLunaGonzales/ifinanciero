@@ -707,6 +707,18 @@ if($menuModulo==0){
                     <span class="sidebar-normal"> Tarifario de Servicios TCP</span>
                   </a>
                 </li> 
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listPlanCuentasSolicitudesRecursos">
+                    <span class="sidebar-mini">PSR</span>
+                    <span class="sidebar-normal">Plan de Cuentas Solicitud de Recursos</span>
+                  </a>
+                </li> 
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listLibreta">
+                    <span class="sidebar-mini"> LB </span>
+                    <span class="sidebar-normal"> Libreta Bancaria</span>
+                  </a>
+                </li>  
               </ul>
             </div>
           </li>    

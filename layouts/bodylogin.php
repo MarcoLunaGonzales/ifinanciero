@@ -16,6 +16,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
   <!-- CSS Files -->
   <link href="../assets/css/material-dashboard.css" rel="stylesheet" />
+  <link href="../assets/css/style.css" rel="stylesheet" />
 </head>
 
 <body class="off-canvas-sidebar">
@@ -53,6 +54,7 @@
   <!--  Plugin for Sweet Alert -->
   <script src="../assets/js/plugins/sweetalert2.js"></script>
   <script src="../assets/alerts/alerts.js"></script>
+  <script src="../assets/alerts/functionsGeneral.js"></script>
 
   <!--ESTE ES EL DOCUMENTO DEL BODYLOGIN -->
   <script>

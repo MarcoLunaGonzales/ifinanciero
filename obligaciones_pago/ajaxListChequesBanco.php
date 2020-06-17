@@ -14,7 +14,7 @@ $codigo=$_GET['banco'];
 $fila=$_GET['fila'];
 ?>                    
                              <div class="form-group">
-                               <select class="selectpicker form-control form-control-sm" onchange="ponerNumeroChequePagoDetalle(<?=$fila?>)" data-live-search="true" name="emitidos_pago<?=$fila?>" id="emitidos_pago<?=$fila?>" data-style="btn btn-primary">
+                               <select class="selectpicker form-control form-control-sm" onchange="ponerNumeroChequePagoDetalle('<?=$fila?>')" data-live-search="true" name="emitidos_pago<?=$fila?>" id="emitidos_pago<?=$fila?>" data-style="btn btn-primary">
                                     <option selected="selected" value="####">--CHEQUES--</option>
                                     <?php 
                                      $stmt4 = $dbh->prepare("SELECT * FROM cheques where cod_banco=$codigo and cod_estadoreferencial=1");

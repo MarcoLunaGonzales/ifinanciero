@@ -23,4 +23,11 @@ $urlListPagoAdmin="index.php?opcion=listPagoProveedoresAdmin";
 $urlGenerarEbisa="obligaciones_pago/generarTXT.php";
 $urlGenerarComprobante="obligaciones_pago/generarComprobante.php";
 
+//lotes
+
+$urlRegisterLote="index.php?opcion=listPagoProveedorLote";
+$urlSaveLote="obligaciones_pago/saveLote.php";
+
+$urlVer="solicitudes/verSolicitudRecursos.php";
+$urlVerPago="obligaciones_pago/verPagoGenerado.php";
 ?>
