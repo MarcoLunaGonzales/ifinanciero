@@ -10,7 +10,7 @@ $direccion=obtenerValorConfiguracion(42);//direccion des servicio web
 $sqlX="SET NAMES 'utf8'";
 $stmtX = $dbh->prepare($sqlX);
 $stmtX->execute();
- 
+$direccion=obtenerValorConfiguracion(56);//direccion del servicio web ifinanciero 
 
 $sIde = "facifin";
 $sKey = "rrf656nb2396k6g6x44434h56jzx5g6";
@@ -38,7 +38,7 @@ $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey,
     // abrimos la sesiรณn cURL
     $ch = curl_init();
     
-    curl_setopt($ch, CURLOPT_URL,"http://200.105.199.164:8008/ifinanciero/wsifin/ws_generar_factura.php");
+    curl_setopt($ch, CURLOPT_URL,$direccion."ws_generar_factura.php");
     
     curl_setopt($ch, CURLOPT_POST, TRUE);
     curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);

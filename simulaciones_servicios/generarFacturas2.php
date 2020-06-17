@@ -18,9 +18,10 @@ session_start();
 $globalUser=$_SESSION["globalUser"];
 
 //RECIBIMOS LAS VARIABLES
-$estado_ibnorca=0;
 $codigo = $_GET["codigo"];
+$estado_ibnorca=0;
 try{
+    
     //verificamos si se registró las cuentas en los tipos de pago 
     $cont_tipopago=verificamos_cuentas_tipos_pagos();
     //verificamos si se registró las cuentas en LAS AREAS DE INGRESO
@@ -138,6 +139,15 @@ try{
                             $stmtNroFac->execute();
                             $resultNroFact = $stmtNroFac->fetch();    
                             $cod_facturaVenta = $resultNroFact['codigo'];
+                            if(isset($_GET["cod_libreta"])){
+                                $cod_libreta=$_GET["cod_libreta"];
+                                //si es de tipo deposito en cuenta insertamos en libreta bancaria
+                                $sqlUpdateLibreta="UPDATE libretas_bancariasdetalle SET cod_factura=$cod_facturaVenta where codigo=$cod_libreta";
+                                $stmtUpdateLibreta = $dbh->prepare($sqlUpdateLibreta);
+                                $flagSuccess=$stmtUpdateLibreta->execute(); 
+                            }
+                            
+
                             //insertamos detalle
                             $stmt = $dbh->prepare("SELECT sf.*,(select t.Descripcion from cla_servicios t where t.IdClaServicio=sf.cod_claservicio) as nombre_serv from solicitudes_facturaciondetalle sf where sf.cod_solicitudfacturacion=$codigo");
                             $stmt->execute();

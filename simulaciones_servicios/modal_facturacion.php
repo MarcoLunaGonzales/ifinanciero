@@ -231,6 +231,7 @@
       </div>
       <div class="modal-body">
         <input type="hidden" name="cod_solicitudfacturacion_factmanual" id="cod_solicitudfacturacion_factmanual" value="0">
+        <input type="hidden" name="cod_libreta_manual" id="cod_libreta_manual" value="0" >
         <div class="row">
           <!-- <label class="col-sm-5 text-right col-form-label" style="color:#424242">Importe de Solicitud de Facturacón</label> -->
           <div class="col-sm-12">
@@ -308,7 +309,8 @@
           <div id="contenedor_GenerarFactParcial">
           
           </div>
-          <input type="hidden" name="cantidad_items" id="cantidad_items" value="0">          
+          <input type="hidden" name="cantidad_items" id="cantidad_items" value="0">
+          <input type="hidden" name="cod_libreta_pagos" id="cod_libreta_pagos" value="0" >
         </div>    
         <div class="modal-footer">
           <!-- <button type="button" class="btn btn-success" id="guardarFacturaPagos" name="guardarFacturaPagos"></button> -->
@@ -410,6 +412,35 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-success" id="ReenviarSolicitud" name="ReenviarSolicitud" data-dismiss="modal">Aceptar</button>
         <button type="button" class="btn btn-danger" data-dismiss="modal"> <-- Volver </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- modal libreta bancaria -->
+<div class="modal fade" id="modalListaLibretaBancaria" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h3 class="modal-title" id="myModalLabel"><b>Libretas Bancaria</b></h3>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" name="cod_solicitudfacturacion" id="cod_solicitudfacturacion" value="0">
+        <input type="hidden" name="direccion" id="direccion" value="0">
+        <input type="hidden" name="datos" id="datos" value="0">
+        <input type="hidden" name="indice" id="indice" value="0">
+        <div class="row">          
+          <div class="col-sm-12" id="div_contenedor_libretaBancaria">
+            
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <!-- <button type="button" class="btn btn-success" id="libreta_bancaria" name="libreta_bancaria">Agregar</button> -->
+        <button type="button" class="btn btn-danger" data-dismiss="modal"> Volver </button>
       </div>
     </div>
   </div>

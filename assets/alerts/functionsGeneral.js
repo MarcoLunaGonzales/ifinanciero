@@ -13716,7 +13716,7 @@ function monto_convertir_a_porcentaje_factPagos(i){
     }
   }else{
     if(parseFloat(importe_a_pagar)>parseFloat(importe_x)){
-        Swal.fire("Informativo!", "El monto es superior al importe", "warning");
+        Swal.fire("Informativo!", "El monto insertado es superior al importe ("+number_format(importe_x,2)+")", "warning");
     }else{
         calcular_monto_total_items_factura_parcial();
     }
@@ -13739,11 +13739,11 @@ function calcular_monto_total_items_factura_parcial(){
     total_importe_pagar+=parseFloat(importe_a_pagar);
     total_saldo+=parseFloat(saldo_x);
   }
-  $("#total_importe").val(total_importe_monto.toFixed(2));      
+  $("#total_importe").val(total_importe_monto);      
   $("#total_importe_a").val(number_format(total_importe_monto,2));  
-  $("#total_importe_anterior").val(total_importe_anterior.toFixed(2));  
+  $("#total_importe_anterior").val(total_importe_anterior);  
   $("#total_importe_anterior_a").val(number_format(total_importe_anterior,2));
-  $("#total_importe_pagar").val(total_importe_pagar.toFixed(2));  
+  $("#total_importe_pagar").val(total_importe_pagar);  
   $("#total_importe_pagar_a").val(number_format(total_importe_pagar,2));
   $("#total_saldo_a").val(number_format(total_saldo,2));
 }
@@ -13791,10 +13791,10 @@ function agregaDatosFactManual(datos){
   document.getElementById("nit_cliente").value=d[4];
   document.getElementById("razon_social").value=d[5];
 }
-function RegistrarFacturaManual(cod_solicitudfacturacion,nro_factura,nro_autorizacion,fecha_factura,nit_cliente,razon_social){
+function RegistrarFacturaManual(cod_solicitudfacturacion,nro_factura,nro_autorizacion,fecha_factura,nit_cliente,razon_social,cod_libreta_manual){
   $.ajax({
     type:"POST",
-    data:"cod_solicitudfacturacion="+cod_solicitudfacturacion+"&nro_factura="+nro_factura+"&nro_autorizacion="+nro_autorizacion+"&fecha_factura="+fecha_factura+"&nit_cliente="+nit_cliente+"&razon_social="+razon_social,
+    data:"cod_solicitudfacturacion="+cod_solicitudfacturacion+"&nro_factura="+nro_factura+"&nro_autorizacion="+nro_autorizacion+"&fecha_factura="+fecha_factura+"&nit_cliente="+nit_cliente+"&razon_social="+razon_social+"&cod_libreta="+cod_libreta_manual,
     url:"simulaciones_servicios/generarFacturaManual.php",
     success:function(r){
       if(r==1){
@@ -14471,3 +14471,72 @@ function subirArchivoExcelLibretaBancaria(tipo,nombre_tipo){
   $("#formato_texto").html(nombre_tipo);
   $("#modalSubirArchivoExcel").modal("show");
 }
+
+function abrirLibretaBancaria(datos,direccion,indice){
+  var d=datos.split('/');
+  var cod_solicitudfacturacion=d[0];
+  document.getElementById("cod_solicitudfacturacion").value=cod_solicitudfacturacion;
+  document.getElementById("direccion").value=direccion;
+  document.getElementById("indice").value=indice;
+  document.getElementById("datos").value=datos;
+  var contenedor = document.getElementById('div_contenedor_libretaBancaria');    
+  ajax=nuevoAjax();
+  ajax.open('GET', 'simulaciones_servicios/ajax_listado_libreta_bancaria.php',true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;      
+      $('.selectpicker').selectpicker(["refresh"]);
+      $("#modalListaLibretaBancaria").modal("show");       
+    }
+  }
+  ajax.send(null);
+}
+
+function seleccionar_libretaBancaria(cod_libreta){
+  var indice=document.getElementById("indice").value;
+  var datos=document.getElementById("datos").value;
+  var cod_solicitudfacturacion=document.getElementById("cod_solicitudfacturacion").value;
+  var direccion=document.getElementById("direccion").value;
+  if(indice==1){
+    alerts.showSwal('warning-message-and-confirmation-generar-factura',direccion+'?codigo='+cod_solicitudfacturacion+'&cod_libreta='+cod_libreta);
+  }else{
+    if(indice==2){
+      $("#modalListaLibretaBancaria").modal("hide");  
+      var d=datos.split('/');
+      var cod_solicitudfacturacion=d[0];
+      document.getElementById("cod_solicitudfacturacion_factpagos").value=cod_solicitudfacturacion;
+      document.getElementById("cod_libreta_pagos").value=cod_libreta;
+      var index=(parseFloat(d[3])-1);      
+      var contenedor = document.getElementById('contenedor_GenerarFactParcial_cabecera');    
+      ajax=nuevoAjax();
+      ajax.open('GET', 'simulaciones_servicios/ajax_cabecera_modal_generarFactPar.php?cod_solicitud='+cod_solicitudfacturacion,true);
+      ajax.onreadystatechange=function() {
+        if (ajax.readyState==4) {
+          contenedor.innerHTML = ajax.responseText;      
+          $('.selectpicker').selectpicker(["refresh"]);
+          $("#modalGenerarFacturapagos").modal("show");  
+          tablaGeneral_GenerarFact_parcial(index);
+        }
+      }
+      ajax.send(null);
+    }else{
+      if(indice==3){
+        $("#modalListaLibretaBancaria").modal("hide");
+        $("#modalFacturaManual").modal("show");  
+          var d=datos.split('/');
+          document.getElementById("cod_solicitudfacturacion_factmanual").value=d[0];  
+          document.getElementById("cod_libreta_manual").value=cod_libreta;
+          document.getElementById("importe_total").value="Saldo de Solicitud de Facturacón: "+number_format(d[2],2);
+          document.getElementById("nit_cliente").value=d[4];
+          document.getElementById("razon_social").value=d[5];
+      }
+
+    }
+  }
+  
+  // alert(direccion);
+  // alert("ok"+cod_libreta_Det);  
+
+}
+
+

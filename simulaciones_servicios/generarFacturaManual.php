@@ -136,6 +136,13 @@ try{
 					$stmtNroFac->execute();
 					$resultNroFact = $stmtNroFac->fetch();    
 					$cod_facturaVenta = $resultNroFact['codigo'];
+                    if($_POST["cod_libreta"]>0){
+                        $cod_libreta=$_POST["cod_libreta"];
+                        //si es de tipo deposito en cuenta insertamos en libreta bancaria
+                        $sqlUpdateLibreta="UPDATE libretas_bancariasdetalle SET cod_factura=$cod_facturaVenta where codigo=$cod_libreta";
+                        $stmtUpdateLibreta = $dbh->prepare($sqlUpdateLibreta);
+                        $flagSuccess=$stmtUpdateLibreta->execute(); 
+                    }
                     
                     $stmt = $dbh->prepare("SELECT sf.*,(select t.Descripcion from cla_servicios t where t.IdClaServicio=sf.cod_claservicio) as nombre_serv from solicitudes_facturaciondetalle sf where sf.cod_solicitudfacturacion=$codigo");
                     $stmt->execute();                    
