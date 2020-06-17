@@ -148,6 +148,12 @@
         if ($_GET['opcion']=='reportesEstadoResultados') {
 			require_once('reportes/reportesEstadoResultados.php');
 		}
+        
+        if ($_GET['opcion']=='reportesLibretasBancarias') {
+			require_once('reportes/reportesLibretasBancarias.php');
+		}
+  
+		
 
  		//TIPO DE CAMBIO
 		if ($_GET['opcion']=='tipoDeCambio') {

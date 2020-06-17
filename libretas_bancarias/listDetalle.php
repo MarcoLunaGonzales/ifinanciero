@@ -95,8 +95,8 @@ $stmtb->bindColumn('nombre', $nombre);
                           <td class="text-left"><?=$descripcion?></td>
                           <td class="text-left"><?=$informacion_complementaria?></td>      
                           <td class="text-left"><?=$agencia?></td>
-                          <td class="text-center"><?=number_format($monto,2,".","")?></td>
-                          <td class="text-left"><?=$nro_cheque?></td>
+                          <td class="text-right"><?=number_format($monto,2,".","")?></td>
+                          <td class="text-right"><?=$nro_cheque?></td>
                           <td class="text-left"><?=$nro_documento?></td>
                           <td class="td-actions text-right">
                           <?php
@@ -124,9 +124,20 @@ $stmtb->bindColumn('nombre', $nombre);
               ?>
       				<div class="card-footer fixed-bottom">
                 <button class="<?=$buttonCancel;?>" onClick="location.href='<?=$urlList;?>'">Volver</button>
-                <a href="#" class="btn btn-success" onClick="subirArchivoExcelLibretaBancaria();return false;">Cargar Libreta de Exel</a>
-                <!--<button class="<?=$buttonNormal;?>" onClick="location.href='<?=$urlRegisterBonoPeriodoPersona;?>&cod_bono=<?=$codigoLibreta;?>'">Registrar por periodo</button>
-                <button class="btn btn-warning" onClick="location.href='<?=$urlFinBonoPeriodoPersona;?>&cod_bono=<?=$codigoLibreta;?>'">Detener Bonos Indefinidos</button>-->
+                <div class="btn-group dropdown">
+                              <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Cargar Libreta de Exel
+                              </button>
+                              <div class="dropdown-menu">
+                                <a href="#" onclick="subirArchivoExcelLibretaBancaria(1);return false;"  class="dropdown-item">
+                                           <i class="material-icons">keyboard_arrow_right</i>Formato A
+                                </a>
+                                <a href="#" onclick="subirArchivoExcelLibretaBancaria(2);return false;"  class="dropdown-item">
+                                           <i class="material-icons">keyboard_arrow_right</i>Formato B
+                                </a>
+                              </div>
+                  </div>
+                
               </div>
               
               <?php
@@ -178,7 +189,27 @@ $stmtb->bindColumn('nombre', $nombre);
                            <textarea type="text" class="form-control" name="observaciones" id="observaciones" value="" style="background-color:#E3CEF6;text-align: left" ></textarea>
                          </div>
                        </div> 
-                </div>
+                   </div>
+                   <div class="row">     
+                       <label class="col-sm-3 col-form-label" style="color:#000000; ">Tipo de Cargado:</label>
+                       <div class="col-sm-6">
+                         <div class="form-group">
+                            <select class="selectpicker form-control" name="tipo_cargado" id="tipo_cargado" data-style="btn btn-info">
+                          <?php
+                             $stmt = $dbh->prepare("SELECT p.codigo,p.nombre FROM tipos_libretabancariacargado p where p.cod_estadoreferencial=1 order by p.codigo");
+                             $stmt->execute();
+                             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                               $codigoX=$row['codigo'];
+                               $nombreX=$row['nombre'];
+                             ?>
+                             <option value="<?=$codigoX;?>"><?=$nombreX;?></option>  
+                             <?php
+                               }
+                               ?> 
+                       </select>
+                         </div>
+                       </div> 
+                   </div>
                 <hr>
                 <div class="float-right">
                   <button type="submit" id="submit" name="import" class="btn btn-success" onclick="iniciarCargaAjax();">Importar Registros</button>

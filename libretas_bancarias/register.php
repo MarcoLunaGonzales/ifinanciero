@@ -23,7 +23,7 @@ $fechaActual=date("d/m/Y");
 				  <label class="col-sm-2 col-form-label">Nombre Libreta</label>
 				  <div class="col-sm-7">
 					<div class="form-group">
-					  <input class="form-control" type="text" name="nombre_libreta" id="nombre_libreta" value=""/>
+					  <input class="form-control" type="text" name="nombre_libreta" id="nombre_libreta" value="" required/>
 					</div>
 				  </div>
 				</div>
@@ -31,7 +31,7 @@ $fechaActual=date("d/m/Y");
 				  <label class="col-sm-2 col-form-label">Bancos</label>
 				  <div class="col-sm-7">
 					<div class="form-group">
-					  <select class="selectpicker form-control" name="banco_libreta" id="banco_libreta" data-style="<?=$comboColor;?>" data-live-search="true" required>
+					  <select class="selectpicker form-control" name="banco_libreta" id="banco_libreta" data-size="6" data-style="<?=$comboColor;?>" data-live-search="true" required>
                           <?php
                   $stmt = $dbh->prepare("SELECT p.codigo,p.nombre FROM bancos p order by p.codigo"); //where NOT EXISTS (SELECT 1 FROM cheques d WHERE d.cod_banco=p.codigo)
                 $stmt->execute();
@@ -51,7 +51,27 @@ $fechaActual=date("d/m/Y");
 				  <label class="col-sm-2 col-form-label">Nro Cuenta</label>
 				  <div class="col-sm-7">
 					<div class="form-group">
-					  <input class="form-control" type="text" name="nro_cuenta" id="nro_cuenta" value=""/>
+					  <input class="form-control" type="text" name="nro_cuenta" id="nro_cuenta" value="" required/>
+					</div>
+				  </div>
+				</div>
+				<div class="row">
+				  <label class="col-sm-2 col-form-label">Cuenta</label>
+				  <div class="col-sm-7">
+					<div class="form-group">
+					  <select class="selectpicker form-control" name="cod_cuenta" id="cod_cuenta" data-size="6" data-live-search="true" data-style="btn btn-info" required>
+                          <?php
+                  $stmt = $dbh->prepare("SELECT p.codigo,p.nombre FROM plan_cuentas p where p.nivel=5 order by p.codigo");
+                $stmt->execute();
+                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                  $codigoX=$row['codigo'];
+                  $nombreX=$row['nombre'];
+                ?>
+                <option value="<?=$codigoX;?>"><?=$nombreX;?></option>  
+                <?php
+                  }
+                  ?> 
+                       </select>
 					</div>
 				  </div>
 				</div>
@@ -63,7 +83,7 @@ $fechaActual=date("d/m/Y");
 					</div>
 				  </div>
 				</div>-->
-				
+				<br><br><br>
 			  </div>
 			  <div  class="card-footer fixed-bottom">
 				<button type="submit" class="<?=$buttonNormal;?>">Guardar</button>

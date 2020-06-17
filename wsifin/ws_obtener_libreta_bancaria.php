@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                   $resultado=array(
                             "estado"=>$estado,
                             "mensaje"=>"Libreta Obtenida Correctamente", 
-                            "datos"=>$libreta, 
+                            "libretas"=>$libreta, 
                             "totalComponentes"=>1     
                             );
                 }
@@ -51,20 +51,26 @@ function obtenerDatosLibreta($codigo){
   $sqlX="SET NAMES 'utf8'";
   $stmtX = $dbh->prepare($sqlX);
   $stmtX->execute();
-
+  $sqlCodigo="";
+if($codigo!=0){
+  $sqlCodigo=" and dc.codigo=".$codigo;
+}
   $sql="SELECT p.nombre as banco,dc.* 
 FROM libretas_bancarias dc join bancos p on dc.cod_banco=p.codigo
-WHERE dc.cod_estadoreferencial=1 and dc.codigo=$codigo";
+WHERE dc.cod_estadoreferencial=1 $sqlCodigo";
   $stmtFac = $dbh->prepare($sql);
   $stmtFac->execute();
   $filaA=0;
   $datos=null;
+  $datosMega=null;
   while ($rowLib = $stmtFac->fetch(PDO::FETCH_ASSOC)) {
-     $filaA++;
 
+    
      $codigoLib=$rowLib['codigo'];
+     $datos['CodLibreta']=$rowLib['codigo'];
      $datos['Nombre']=$rowLib['nombre'];
      $datos['Banco']=$rowLib['banco'];
+     $datos['CodBanco']=$rowLib['cod_banco'];
      $datos['NumeroCuenta']=$rowLib['nro_cuenta'];
      $datos['IdCuenta']=$rowLib['cod_cuenta'];
 
@@ -97,7 +103,9 @@ FROM libretas_bancariasdetalle ce where ce.cod_libretabancaria=$codigoLib and  c
            $index++;    
        }
      }
-    $datos['detalle']=$datosDetalle;      
+    $datos['detalle']=$datosDetalle; 
+    $datosMega[$filaA]=$datos;
+    $filaA++;     
  }
- return array($filaA,$datos);
+ return array($filaA,$datosMega);
 }

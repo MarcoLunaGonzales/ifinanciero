@@ -21,14 +21,7 @@ $observaciones=$_POST["observaciones"];
 $cod_estadoreferencial="1";   
 $message="";
 $index=0;
-?>
-<div class="cargar">
-  <div class="div-loading text-center">
-     <h4 class="text-warning font-weight-bold">Procesando Datos</h4>
-     <p class="text-white">Aguard&aacute; un momento por favor</p>  
-  </div>
-</div>
-<?php
+
 $allowedFileType = ['application/vnd.ms-excel','text/xls','text/xlsx','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
   
   if(in_array($_FILES["documentos_excel"]["type"],$allowedFileType)){
