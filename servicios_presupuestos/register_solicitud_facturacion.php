@@ -575,13 +575,10 @@ $contadorRegistros=0;
                     <button type="submit" class="<?=$buttonNormal;?>">Guardar</button>
                     <?php 
                     if(isset($_GET['q'])){
-                        ?><a href='<?=$urllistFacturasServicios;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a><?php
-                    }else{
-                        if(isset($_GET['cod_sw'])){?>
-                            <a href='<?=$urllistFacturasServicios;?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
-                        <?php }else{?>
-                            <a href='<?=$url_list_Solicitudfactura;?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
-                        <?php }                        
+                        ?><a href='<?=$urllistFacturasServicios;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> IR A SF </a><?php
+                    }else{?>
+                        <a href='<?=$urllistFacturasServicios;?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> IR A SF </a>                       
+                        <?php
                     }?>
                         
                     

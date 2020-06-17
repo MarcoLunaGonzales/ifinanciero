@@ -618,23 +618,12 @@ $descuento_cliente=0;
                   </div>
                   <div class="card-footer ml-auto mr-auto">
                     <button type="submit" class="<?=$buttonNormal;?>">Guardar</button>
-                    <?php
-
-                     if(isset($_GET['cod_sw'])){
+                    <?php                     
                         if(isset($_GET['q'])){?>
-                            <a href='<?=$urlListSol?>&q=<?=$q?>&v=<?=$r?>&u=<?=$r?>&s=<?=$r?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>                    
+                            <a href='<?=$urlListSol?>&q=<?=$q?>&v=<?=$r?>&u=<?=$r?>&s=<?=$r?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> IR A SF </a>
                         <?php }else{?>
-                            <a href='<?=$urlListSol?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>                    
-                        <?php }
-
-
-                     }else{
-                        if(isset($_GET['q'])){?>
-                            <a href='<?=$urlSolicitudfactura_empresa?>&q=<?=$q?>&r=<?=$r?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
-                        <?php }else{?>
-                            <a href='<?=$urlSolicitudfactura_empresa?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
-                        <?php }
-                     }
+                            <a href='<?=$urlListSol?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> IR A SF </a>                    
+                        <?php }                     
                     ?> 
                   </div>
                 </div>

@@ -14238,6 +14238,26 @@ function modalDevolverSolicitud(datos){
   document.getElementById("direccion").value=d[5];  //link destino
   document.getElementById("observaciones").value=d[6];  //obs
 }
+function modalDevolverSolicitud_regional(datos){    
+  var d=datos.split('###');  
+  document.getElementById("cod_solicitudfacturacion").value=d[0];
+  document.getElementById("nro_solicitud").value=d[1];
+  document.getElementById("codigo_servicio").value=d[2];  
+  document.getElementById("estado").value=d[3];  //estado
+  document.getElementById("admin").value=d[4];  //tipo admin
+  document.getElementById("direccion").value=d[5];  //link destino
+  document.getElementById("observaciones").value=d[6];  //obs
+  //para los que tenga q
+  var id_servicioibnored=document.getElementById("id_servicioibnored").value;  //obs
+  var id_servicioibnored_rol=document.getElementById("id_servicioibnored_rol").value;  //obs
+  var id_servicioibnored_s=document.getElementById("id_servicioibnored_s").value;  //obs
+  var id_servicioibnored_u=document.getElementById("id_servicioibnored_u").value;  //obs
+
+  document.getElementById("id_servicioibnored_modal").value=id_servicioibnored;  //obs
+  document.getElementById("id_servicioibnored_rol_modal").value=id_servicioibnored_rol;  //obs
+  document.getElementById("id_servicioibnored_s_modal").value=id_servicioibnored_s;  //obs
+  document.getElementById("id_servicioibnored_u_modal").value=id_servicioibnored_u;  //obs
+}
 
 function modalReenviarSolicitudDevuelto(datos){  
   var d=datos.split('###');  
@@ -14249,17 +14269,51 @@ function modalReenviarSolicitudDevuelto(datos){
   document.getElementById("direccion_r").value=d[5];  //link destino
   document.getElementById("observaciones_r").value=d[6];  //obs
 
+   //para los que tenga q
+  var q=document.getElementById("q").value;  //obs
+  var s=document.getElementById("s").value;  //obs
+  var u=document.getElementById("u").value;  //obs
+  var v=document.getElementById("v").value;  //obs
+
+  document.getElementById("q").value=q;  //obs
+  document.getElementById("s").value=s;  //obs
+  document.getElementById("u").value=u;  //obs
+  document.getElementById("v").value=v;  //obs
+
 
 }
-
-function registrarRechazoSolicitud(cod_solicitudfacturacion,observaciones,estado,admin,direccion){
+function registrarRechazoSolicitud(cod_solicitudfacturacion,observaciones,estado,admin,direccion,q,s,u,v){
   $.ajax({
     type:"POST",
     data:"cod_solicitudfacturacion="+cod_solicitudfacturacion+"&observaciones="+observaciones,
     url:"simulaciones_servicios/save_solicitud_rechazada.php",
     success:function(r){
       if(r==1){
-        alerts.showSwal('success-message',direccion+'?cod='+cod_solicitudfacturacion+'&estado='+estado+'&admin='+admin);
+        if(q==0){
+          alerts.showSwal('success-message',direccion+'?cod='+cod_solicitudfacturacion+'&estado='+estado+'&admin='+admin);          
+        }else{
+          alerts.showSwal('success-message',direccion+'?cod='+cod_solicitudfacturacion+'&estado='+estado+'&admin='+admin+'&q='+q+'&s='+s+'&u='+u+'&v='+v);
+        }
+      }else{
+        Swal.fire("A ocurrido un error!", "No se pudo devolver la solicitud.", "warning");        
+      }
+    }
+  });
+}
+
+function registrarRechazoSolicitud_intranet(cod_solicitudfacturacion,observaciones,estado,admin,direccion,q,r,s,u){
+  $.ajax({
+    type:"POST",
+    data:"cod_solicitudfacturacion="+cod_solicitudfacturacion+"&observaciones="+observaciones,
+    url:"simulaciones_servicios/save_solicitud_rechazada.php",
+    success:function(r){
+      if(r==1){
+        if(q==0){
+          alerts.showSwal('success-message',direccion+'?cod='+cod_solicitudfacturacion+'&estado='+estado+'&admin='+admin);          
+        }else{
+          alerts.showSwal('success-message',direccion+'?cod='+cod_solicitudfacturacion+'&estado='+estado+'&admin='+admin+'&q='+q+'&v='+r+'&s='+s+'&u='+u);
+        }
+        
       }else{
         Swal.fire("A ocurrido un error!", "No se pudo devolver la solicitud.", "warning");        
       }

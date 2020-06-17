@@ -15,7 +15,7 @@ $auxiliar = $_GET["tipo"];//de donde viene la solicitud para impresión 1=lista 
 if(isset($_GET["admin"])){//formato de factura, 1 original y copia, 2 original, 3 copia
   $admin=$_GET["admin"];
 }else{
-  $admin=0;//viene de la tienda
+  $admin=0;//
 }
 try{
   //descarga la facturaa y lo almacena en una carpeta
@@ -30,7 +30,7 @@ try{
     echo "hubo un error al generar la factura";
   }
 
-  if($admin==1){
+  if($admin==1 || $admin==0){
     $htmlConta1=generarHTMLFacCliente($codigo,$auxiliar,2);  
     $array_html2=explode('@@@@@@', $htmlConta1);
     $html2=$array_html2[0];

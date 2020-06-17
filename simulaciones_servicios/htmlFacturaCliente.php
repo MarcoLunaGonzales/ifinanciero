@@ -143,7 +143,7 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 		                    </b></span></small></small>
 		                </td>
 	                    <td  valign="top" width="26%"><div id="header_titulo_texto_grande" ><br>FACTURA</div></td>
-	                    <td width="37%" >
+	                    <td width="37%">
 		                    <table style="width: 100%;border: black 1px solid;text-align: left;">
 		                        <tr align="left">
 		                          <td width="40%">
@@ -176,7 +176,7 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
               '<tr class="bold table-title text-left">'.
                   '<td  class="td-border-none text-right" width="12%"><b>Señor(es):</b></td>'.
                   '<td  class="td-border-none" ><b>'.$nombre_cliente.'</b></td>'.
-                  '<td  class="td-border-none" width="35%"><b>NIT/CI:</b> &nbsp;&nbsp;'.$nit.'</td>'.
+                  '<td  class="td-border-none" width="18%"><b>NIT/CI:</b>&nbsp;'.$nit.'</td>'.
                 '</tr>'.
             '</table>';
     		$html.='<table class="table2">'.
@@ -196,11 +196,14 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 						// 	'<td valign="top" height="8%" class="text-right"><h5 style="padding: 0px;margin: 0px;">'.formatNumberDec($importe).'</h5></td>';
 						// 	$suma_total+=$importe;
 						// }else{//imporesion detallada
-							$html.='<td valign="top" height="10%"><h5 style="padding: 0px;margin: 0px;">';
+               				$contador_items=0;
+							$html.='<td class="text-right" valign="top" height="10%"><h5 style="padding: 0px;margin: 0px;">';
 							while ($row = $stmtDesCli->fetch()) 
 							{
 							$html.=formatNumberDec($row["cantidad"]).'<br>';
+								$contador_items++;
 							}
+							
 							$html.='</h5></td> 
 							<td valign="top" height="10%" colspan="2"><h5 style="padding: 0px;margin: 0px;" >';
 							while ($row = $stmt2DesCli->fetch()) 
@@ -208,7 +211,7 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 							$html.=$row["descripcion_alterna"].'<br>';
 							}
 							$html.='</h5></td>                   
-							<td valign="top" height="10%"><h5 style="padding: 0px;margin: 0px;">';
+							<td class="text-right" valign="top" height="10%"><h5 style="padding: 0px;margin: 0px;">';
 							while ($row = $stmt3DesCli->fetch()) 
 							{
 							$precio=$row["precio"];
