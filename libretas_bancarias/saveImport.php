@@ -116,8 +116,9 @@ $allowedFileType = ['application/vnd.ms-excel','text/xls','text/xlsx','applicati
                 if (!empty($fecha_hora) || !empty($descripcion) || !empty($monto)) {
                 	// Prepare
                   $verSi=0;
-                  if(verificarFechaMaxDetalleLibreta($fecha_hora,$codigoLibreta)==0&&$tipo_cargado==2){
+                  if(verificarFechaMaxDetalleLibreta($fecha_hora,$codigoLibreta)!=0&&$tipo_cargado==2){
                     $verSi=1;
+                    //se encontraron fechas mayores a la fila
                   }
                   if($verSi==0){
                 	$sql="INSERT INTO libretas_bancariasdetalle (cod_libretabancaria,fecha_hora,nro_documento,descripcion,informacion_complementaria,agencia,monto,nro_cheque,cod_libretabancariaregistro,cod_estadoreferencial) 
