@@ -211,6 +211,58 @@ $stmtb->bindColumn('nombre', $nombre);
                          </div>
                        </div> 
                    </div>
+                   <br><br>
+                   <center><h4 id="tipo_formato_titulo2" class="font-weight-bold"></h4></center>
+                   <div id="tabla_muestra_formato_a">
+                     <table class="table table-bordered table-condensed">
+                       <thead>
+                         <tr style="background:#21618C; color:#fff;">
+                          <th>Fecha</th>
+                          <th>Hora</th>
+                          <th>Descripcion</th>
+                          <th>Informacion Complementaria</th>
+                          <th>Nro Documento</th>
+                          <th>Monto</th>
+                          <th>Sucursal</th>
+                          <th>Nro Cheque</th>
+                         </tr>
+                       </thead>
+                       <tbody>
+                         <tr>
+                           <td>dd-mm-aaaa</td>
+                          <td>HH:mm:ss</td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                         </tr>
+                       </tbody>
+                     </table>  
+                   </div>
+                   <div id="tabla_muestra_formato_b" class="d-none">
+                     <table class="table table-bordered table-condensed">
+                       <thead>
+                         <tr style="background:#21618C; color:#fff;">
+                          <th>Fecha</th>
+                          <th>Descripcion</th>
+                          <th>Nro Documento</th>
+                          <th>Monto</th>
+                          <th>Sucursal</th>
+                         </tr>
+                       </thead>
+                       <tbody>
+                         <tr>
+                           <td>dd-mm-aaaa</td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                         </tr>
+                       </tbody>
+                     </table>  
+                   </div>
                 <hr>
                 <div class="float-right">
                   <button type="submit" id="submit" name="import" class="btn btn-success" onclick="iniciarCargaAjax();">Importar Registros</button>

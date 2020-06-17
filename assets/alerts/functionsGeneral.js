@@ -14467,8 +14467,20 @@ function generarArchivoTxtVariosAjax(){
 }
 
 function subirArchivoExcelLibretaBancaria(tipo,nombre_tipo){
+  if(tipo==1){
+    if($("#tabla_muestra_formato_a").hasClass("d-none")){
+      $("#tabla_muestra_formato_a").removeClass("d-none");
+      $("#tabla_muestra_formato_b").addClass("d-none");
+    }
+  }else{
+    if($("#tabla_muestra_formato_b").hasClass("d-none")){
+      $("#tabla_muestra_formato_b").removeClass("d-none");
+      $("#tabla_muestra_formato_a").addClass("d-none");
+    }
+  }
   $("#tipo_formato").val(tipo);
   $("#formato_texto").html(nombre_tipo);
+  $("#tipo_formato_titulo2").html(nombre_tipo);
   $("#modalSubirArchivoExcel").modal("show");
 }
 
