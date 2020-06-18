@@ -33,13 +33,14 @@ $fechaActual=date("d/m/Y");
 					<div class="form-group">
 					  <select class="selectpicker form-control" name="banco_libreta" id="banco_libreta" data-size="6" data-style="<?=$comboColor;?>" data-live-search="true" required>
                           <?php
-                  $stmt = $dbh->prepare("SELECT p.codigo,p.nombre FROM bancos p order by p.codigo"); //where NOT EXISTS (SELECT 1 FROM cheques d WHERE d.cod_banco=p.codigo)
+                  $stmt = $dbh->prepare("SELECT p.codigo,p.nombre,p.abreviatura FROM bancos p order by p.codigo"); //where NOT EXISTS (SELECT 1 FROM cheques d WHERE d.cod_banco=p.codigo)
                 $stmt->execute();
                 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                   $codigoX=$row['codigo'];
                   $nombreX=$row['nombre'];
+                  $abreviaturaX=$row['abreviatura'];
                 ?>
-                <option value="<?=$codigoX;?>"><?=$nombreX;?></option>  
+                <option value="<?=$codigoX;?>" data-subtext="<?=$nombreX;?>"><?=$abreviaturaX;?></option>  
                 <?php
                   }
                   ?> 
@@ -67,7 +68,7 @@ $fechaActual=date("d/m/Y");
                   $codigoX=$row['codigo'];
                   $nombreX=$row['nombre'];
                 ?>
-                <option value="<?=$codigoX;?>"><?=$nombreX;?></option>  
+                <option value="<?=$codigoX;?>" ><?=$nombreX;?></option>  
                 <?php
                   }
                   ?> 
