@@ -296,16 +296,16 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                               <?php                                            
                                                   $cod_tipopago_deposito_cuenta=obtenerValorConfiguracion(55);                                                    
                                                     if($cod_tipopago==$cod_tipopago_deposito_cuenta){//si es deposito en cuenta se activa la libreta bancaria?>
-                                                      <a href='#' title="Generar Factura Parcial" class="dropdown-item" onclick="abrirLibretaBancaria('<?=$datos_FacManual;?>','<?=$urlGenerarFacturas2;?>','2')">
+                                                      <!-- <a href='#' title="Generar Factura Parcial" class="dropdown-item" onclick="abrirLibretaBancaria('<?=$datos_FacManual;?>','<?=$urlGenerarFacturas2;?>','2')">
                                                         <i class="material-icons text-info">receipt</i> <span style="color: #FF0000;">Generar Factura Parcial</span>
-                                                      </a>
+                                                      </a> -->
                                                        <a href='#' title="Generar Factura Manual" class="dropdown-item" onclick="abrirLibretaBancaria('<?=$datos_FacManual;?>','<?=$urlGenerarFacturas2;?>','3')">
                                                         <i class="material-icons text-info">receipt</i>Generar Factura Manual
                                                       </a>  
                                                     <?php }else{?>                                                   
-                                                       <button title="Generar Factura Parcial" class="dropdown-item" type="button" data-toggle="modal" data-target="#modalGenerarFacturapagos" onclick="agregaDatosGenerarFactPagos('<?=$datos_FacManual;?>')">
+                                                       <!-- <button title="Generar Factura Parcial" class="dropdown-item" type="button" data-toggle="modal" data-target="#modalGenerarFacturapagos" onclick="agregaDatosGenerarFactPagos('<?=$datos_FacManual;?>')">
                                                         <i class="material-icons text-info">receipt</i><span style="color: #FF0000;">Generar Factura Parcial</span>
-                                                       </button>
+                                                       </button> -->
                                                        <button title="Generar Factura Manual" class="dropdown-item" type="button" data-toggle="modal" data-target="#modalFacturaManual" onclick="agregaDatosFactManual('<?=$datos_FacManual;?>')">
                                                         <i class="material-icons text-info">receipt</i> Generar Factura Manual
                                                        </button><?php      
@@ -325,15 +325,14 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                             </button>
                                             <div class="dropdown-menu">
                                               <?php                                                  
-                                                $cod_tipopago_deposito_cuenta=obtenerValorConfiguracion(55);
-                                                // echo $cod_tipopago_deposito_cuenta."-".$cod_tipopago; 
+                                                $cod_tipopago_deposito_cuenta=obtenerValorConfiguracion(55);                                                
                                                 if($cod_tipopago==$cod_tipopago_deposito_cuenta){//si es deposito en cuenta se activa la libreta bancaria?>
                                                   <a href='#' title="Generar Factura Total" class="dropdown-item" onclick="abrirLibretaBancaria('<?=$datos_FacManual;?>','<?=$urlGenerarFacturas2;?>','1')">
                                                     <i class="material-icons text-success">receipt</i> Generar Factura Total
                                                   </a>
-                                                  <a href='#' title="Generar Factura Parcial" class="dropdown-item" onclick="abrirLibretaBancaria('<?=$datos_FacManual;?>','<?=$urlGenerarFacturas2;?>','2')">
+                                                  <!-- <a href='#' title="Generar Factura Parcial" class="dropdown-item" onclick="abrirLibretaBancaria('<?=$datos_FacManual;?>','<?=$urlGenerarFacturas2;?>','2')">
                                                     <i class="material-icons text-info">receipt</i><span style="color: #FF0000;">Generar Factura Parcial</span>
-                                                  </a>
+                                                  </a> -->
                                                   <a href='#' title="Generar Factura Manual" class="dropdown-item" onclick="abrirLibretaBancaria('<?=$datos_FacManual;?>','<?=$urlGenerarFacturas2;?>','3')">
                                                     <i class="material-icons text-info">receipt</i>Generar Factura Manual
                                                   </a><?php 
@@ -341,9 +340,9 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                                   <a href='#' title="Generar Factura Total" class="dropdown-item" onclick="alerts.showSwal('warning-message-and-confirmation-generar-factura','<?=$urlGenerarFacturas2;?>?codigo=<?=$codigo_facturacion;?>')">
                                                     <i class="material-icons text-success">receipt</i> Generar Factura Total
                                                   </a>
-                                                  <button title="Generar Factura Parcial" class="dropdown-item" type="button" data-toggle="modal" data-target="#modalGenerarFacturapagos" onclick="agregaDatosGenerarFactPagos('<?=$datos_FacManual;?>')">
+                                                  <!-- <button title="Generar Factura Parcial" class="dropdown-item" type="button" data-toggle="modal" data-target="#modalGenerarFacturapagos" onclick="agregaDatosGenerarFactPagos('<?=$datos_FacManual;?>')">
                                                     <i class="material-icons text-info">receipt</i><span style="color: #FF0000;">Generar Factura Parcial</span>
-                                                  </button>
+                                                  </button> -->
                                                   <button title="Generar Factura Manual" class="dropdown-item" type="button" data-toggle="modal" data-target="#modalFacturaManual" onclick="agregaDatosFactManual('<?=$datos_FacManual;?>')">
                                                     <i class="material-icons text-info">receipt</i> Generar Factura Manual
                                                   </button><?php 

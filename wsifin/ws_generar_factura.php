@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $accion=NULL;
     $estado='false';
     $mensaje="ERROR";
-    $sucursalId=null;$pasarelaId=null;$fechaFactura=null;$nitciCliente=null;$razonSocial=null;$importeTotal=null;$items=null;
+    $sucursalId=null;$pasarelaId=null;$fechaFactura=null;$nitciCliente=null;$razonSocial=null;$importeTotal=null;$items=null;$CodLibretaDetalle=null;$tipoPago=null;
     if(isset($datos['accion'])&&isset($datos['sIdentificador'])&&isset($datos['sKey']))
     {
         if($datos['sIdentificador']=="facifin"&&$datos['sKey']=="rrf656nb2396k6g6x44434h56jzx5g6")
@@ -38,6 +38,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     if(isset($datos['nitciCliente'])) $nitciCliente=$datos['nitciCliente'];//recibimos ci o nit del cliente
                     if(isset($datos['razonSocial'])) $razonSocial=strval($datos['razonSocial']);//recibimos razon social
                     if(isset($datos['importeTotal'])) $importeTotal=$datos['importeTotal'];//recibimos el importe total
+                    if(isset($datos['tipoPago'])) {$tipoPago=$datos['tipoPago'];if($tipoPago==0)$tipoPago=0;}//recibimos el tipo de pago
+                    if(isset($datos['CodLibretaDetalle']))$CodLibretaDetalle=$datos['CodLibretaDetalle'];//recibimos el importe total
                     if(isset($datos['items'])) $items=$datos['items'];//recibimos array de detalle
                     $cont_items=0;
                     $importeTotal_x=0;
@@ -85,6 +87,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     }elseif($razonSocial==null || $razonSocial=='' || $razonSocial==' '){
                         $estado=5;
                         $mensaje = "Razón Social vacía";
+                    }elseif($tipoPago==null || $tipoPago=='' || $tipoPago==' '){
+                        $estado=16;
+                        $mensaje = "Tipo de Pago Vacío".$tipoPago;
+                    }elseif($CodLibretaDetalle==null || $CodLibretaDetalle=='' || $CodLibretaDetalle==' '){
+                        $estado=17;
+                        $mensaje = "CodLibretaDetalle Vacío".$tipoPago;
                     }elseif($items==null || $cont_items<=0){
                         $estado=6;
                         $mensaje = "Items Vacío";

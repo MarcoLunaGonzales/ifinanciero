@@ -6,7 +6,7 @@ require_once '../functions.php';
 require_once '../styles.php';
 
 $dbh = new Conexion();
-$direccion=obtenerValorConfiguracion(42);//direccion des servicio web
+// $direccion=obtenerValorConfiguracion(42);//direccion des servicio web
 $sqlX="SET NAMES 'utf8'";
 $stmtX = $dbh->prepare($sqlX);
 $stmtX->execute();
@@ -28,10 +28,12 @@ $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey,
               "accion"=>"GenerarFactura", //nombre de la accion
               "sucursalId"=>1, // ID Sucursal
               "pasarelaId"=>1, // pasalela
-              "fechaFactura"=>'2020-06-10', // fecha a factura
+              "fechaFactura"=>'2020-06-18', // fecha a factura
               "nitciCliente"=>5952134, //nit o ci de cliente
               "razonSocial"=>'Salinas', //razon social
               "importeTotal"=>1000, //importe total
+              "tipoPago"=>'1', //tipo de pago
+              "CodLibretaDetalle"=>'0', //codigo de libreta detalle, 0 en caso de no estar relacionado
               "items"=>$Array // array con el detalle           
               );
     $parametros=json_encode($parametros);
