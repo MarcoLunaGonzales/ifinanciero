@@ -480,6 +480,12 @@
 		if ($_GET['opcion']=='listLibretasDetalle') {
 			require_once('libretas_bancarias/listDetalle.php');
 		}
+		if ($_GET['opcion']=='deleteLibretaBancaria') {
+			require_once('libretas_bancarias/saveDelete.php');
+		}
+		if ($_GET['opcion']=='editLibretaBancaria') {
+			require_once('libretas_bancarias/edit.php');
+		}
         //PAGOS listPagoProveedor
         if ($_GET['opcion']=='listPagoProveedor') {
 			require_once('obligaciones_pago/listPago.php');

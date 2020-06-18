@@ -126,13 +126,13 @@ $stmtb->bindColumn('nombre', $nombre);
                 <button class="<?=$buttonCancel;?>" onClick="location.href='<?=$urlList;?>'">Volver</button>
                 <div class="btn-group dropdown">
                               <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Cargar Libreta de Exel
+                                Cargar Libreta desde Excel
                               </button>
                               <div class="dropdown-menu">
-                                <a href="#" onclick="subirArchivoExcelLibretaBancaria(1);return false;"  class="dropdown-item">
+                                <a href="#" onclick="subirArchivoExcelLibretaBancaria(1,'Formato A');return false;"  class="dropdown-item">
                                            <i class="material-icons">keyboard_arrow_right</i>Formato A
                                 </a>
-                                <a href="#" onclick="subirArchivoExcelLibretaBancaria(2);return false;"  class="dropdown-item">
+                                <a href="#" onclick="subirArchivoExcelLibretaBancaria(2,'Formato B');return false;"  class="dropdown-item">
                                            <i class="material-icons">keyboard_arrow_right</i>Formato B
                                 </a>
                               </div>
@@ -159,7 +159,7 @@ $stmtb->bindColumn('nombre', $nombre);
     <div class="modal-content card">
                <div class="card-header card-header-warning card-header-text">
                   <div class="card-text">
-                    <h4>Archivo Excel</h4>
+                    <h4 id="formato_texto"></h4>
                   </div>
                   <button type="button" class="btn btn-success btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
                     <i class="material-icons">close</i>
@@ -167,6 +167,7 @@ $stmtb->bindColumn('nombre', $nombre);
                 </div>
                 <div class="card-body">
                   <form action="<?=$urlSaveImport?>" method="post" name="formLibretaBancaria" id="formLibretaBancaria" enctype="multipart/form-data">
+                    <input type="hidden" name="tipo_formato" id="tipo_formato">
                   <div class="row">
                        <label class="col-sm-3 col-form-label" style="color:#000000; ">Archivo Excel:</label>
                        <div class="col-sm-6">
@@ -196,7 +197,7 @@ $stmtb->bindColumn('nombre', $nombre);
                          <div class="form-group">
                             <select class="selectpicker form-control" name="tipo_cargado" id="tipo_cargado" data-style="btn btn-info">
                           <?php
-                             $stmt = $dbh->prepare("SELECT p.codigo,p.nombre FROM tipos_libretabancariacargado p where p.cod_estadoreferencial=1 order by p.codigo");
+                             $stmt = $dbh->prepare("SELECT p.codigo,p.nombre FROM tipos_libretabancariacargado p where p.cod_estadoreferencial=1 order by p.codigo desc");
                              $stmt->execute();
                              while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                $codigoX=$row['codigo'];
@@ -209,6 +210,58 @@ $stmtb->bindColumn('nombre', $nombre);
                        </select>
                          </div>
                        </div> 
+                   </div>
+                   <br><br>
+                   <center><h4 id="tipo_formato_titulo2" class="font-weight-bold"></h4></center>
+                   <div id="tabla_muestra_formato_a">
+                     <table class="table table-bordered table-condensed">
+                       <thead>
+                         <tr style="background:#21618C; color:#fff;">
+                          <th>Fecha</th>
+                          <th>Hora</th>
+                          <th>Descripcion</th>
+                          <th>Informacion Complementaria</th>
+                          <th>Nro Documento</th>
+                          <th>Monto</th>
+                          <th>Sucursal</th>
+                          <th>Nro Cheque</th>
+                         </tr>
+                       </thead>
+                       <tbody>
+                         <tr>
+                           <td>dd-mm-aaaa</td>
+                          <td>HH:mm:ss</td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                         </tr>
+                       </tbody>
+                     </table>  
+                   </div>
+                   <div id="tabla_muestra_formato_b" class="d-none">
+                     <table class="table table-bordered table-condensed">
+                       <thead>
+                         <tr style="background:#21618C; color:#fff;">
+                          <th>Fecha</th>
+                          <th>Descripcion</th>
+                          <th>Nro Documento</th>
+                          <th>Monto</th>
+                          <th>Sucursal</th>
+                         </tr>
+                       </thead>
+                       <tbody>
+                         <tr>
+                           <td>dd-mm-aaaa</td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                         </tr>
+                       </tbody>
+                     </table>  
                    </div>
                 <hr>
                 <div class="float-right">

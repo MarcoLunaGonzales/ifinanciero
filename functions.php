@@ -432,6 +432,17 @@ function nameBancos($codigo){
    }
    return($nombreX);
 }
+function nameLibretas($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT nombre FROM libretas_bancarias where codigo=:codigo");
+   $stmt->bindParam(':codigo',$codigo);
+   $stmt->execute();
+   $nombreX="";
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $nombreX=$row['nombre'];
+   }
+   return($nombreX);
+}
 function nameEntidadUO($codigo){
    $dbh = new Conexion();
    $sql="SELECT e.nombre from entidades e, entidades_uo eu where e.codigo=eu.cod_entidad and eu.cod_uo=:codigo";
@@ -7038,6 +7049,19 @@ function obtenerObtenerLibretaBancaria($codigo){
   // imprimir en formato JSON
   // header('Content-type: application/json');   
   // print_r($remote_server_output);
+}
+
+function verificarFechaMaxDetalleLibreta($fecha,$codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT * FROM libretas_bancariasdetalle where cod_libretabancaria=:codigo and fecha_hora >= :fecha");
+   $stmt->bindParam(':codigo',$codigo);
+   $stmt->bindParam(':fecha',$fecha);
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor++;
+   }
+   return($valor);
 }
 ?>
 

@@ -23,6 +23,12 @@ function showAlertSuccessErrorPagosCapacitacion($bandera, $url){
    }
 }
 
+function showAlertSuccessErrorFilasLibreta($url,$mensaje){   
+      echo "<script>
+         alerts.showSwal('error-message-filas-libreta','$url####$mensaje');
+      </script>";
+}
+
 function showAlertNewSolicitudRecursos($url){
       echo "<script>
          alerts.showSwal('success-solicitud','$url');
