@@ -257,10 +257,20 @@ $html.=  '<header class="header">'.
               <tr><td><p>&nbsp;'.$observaciones.'</p></td></tr>
             </table><br><br><br>';
 
+          }elseif($cod_tipopago==49){
+            $html.='<table class="table" >
+              <tr class="td-color-celeste"><td class="text-center"><b>Forma de Pago</b></td></tr>
+              <tr><td class="text-left">DEPOSITO EN CUENTA</td></tr>
+            </table><br>';
+            $html.='<table class="table">
+              <tr class="td-color-celeste"><td class="text-center"><b>Observaciones</b></td></tr>
+              <tr><td>&nbsp;'.$observaciones.'</td></tr>
+            </table><br><br><br>';
+
           }else{
             $html.='<table class="table" >
               <tr class="td-color-celeste"><td class="text-center"><b>Forma de Pago</b></td></tr>
-              <tr><td class="text-left"></td></tr>
+              <tr><td class="text-left">&nbsp</td></tr>
             </table><br>';
             $html.='<table class="table">
               <tr class="td-color-celeste"><td class="text-center"><b>Observaciones</b></td></tr>

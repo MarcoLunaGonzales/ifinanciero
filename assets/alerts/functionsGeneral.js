@@ -14552,4 +14552,8 @@ function seleccionar_libretaBancaria(cod_libreta){
 
 }
 
+function activardetalleLibreta(j){  
+  $(".libretaDetalles_"+j).toggle();
+}
+
 
