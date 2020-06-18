@@ -67,7 +67,7 @@ $stmtb->bindColumn('nombre', $nombre);
                 
                 <div class="card-body">
                   <div class="table-responsive">
-                    <table id="tablePaginator" class="table table-condensed">
+                    <table id="tablePaginator100" class="table table-condensed small">
                       <thead>
                         <tr style="background:#21618C; color:#fff;">
                           <td class="text-center">#</td>
