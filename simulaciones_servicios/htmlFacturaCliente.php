@@ -22,7 +22,7 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 	$tipo_impresion=2;//tipo de impresión 1 sin detalles, 2 detalladamente
 	try {
 		if($auxiliar==1){//
-		    $stmtInfo = $dbh->prepare("SELECT sf.* FROM facturas_venta sf where sf.codigo=$codigo");
+		    $stmtInfo = $dbh->prepare("SELECT sf.*,DATE_FORMAT(sf.fecha_limite_emision,'%d/%m/%Y')as fecha_limite_emision_x FROM facturas_venta sf where sf.codigo=$codigo");
 		    $stmtInfo->execute();
 		    $resultInfo = $stmtInfo->fetch();   
 		    $cod_factura = $resultInfo['codigo']; 
@@ -31,7 +31,7 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 		    $cod_unidadorganizacional = $resultInfo['cod_unidadorganizacional'];
 		    $cod_area = $resultInfo['cod_area'];
 		    $fecha_factura = $resultInfo['fecha_factura'];
-		    $fecha_limite_emision = $resultInfo['fecha_limite_emision'];
+		    $fecha_limite_emision = $resultInfo['fecha_limite_emision_x'];
 		    $cod_cliente = $resultInfo['cod_cliente'];
 		    $cod_personal = $resultInfo['cod_personal'];
 		    $razon_social = $resultInfo['razon_social'];
@@ -44,7 +44,7 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 		    $observaciones = $resultInfo['observaciones'];
 		    $nombre_cliente = $razon_social;
 		}elseif($auxiliar==2){
-		    $stmtInfo = $dbh->prepare("SELECT sf.* FROM facturas_venta sf  where sf.cod_solicitudfacturacion=$codigo");
+		    $stmtInfo = $dbh->prepare("SELECT sf.*,DATE_FORMAT(sf.fecha_limite_emision,'%d/%m/%Y')as fecha_limite_emision_x FROM facturas_venta sf  where sf.cod_solicitudfacturacion=$codigo");
 		    $stmtInfo->execute();
 		    $resultInfo = $stmtInfo->fetch();   
 		    $cod_factura = $resultInfo['codigo']; 
@@ -53,7 +53,7 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 		    $cod_unidadorganizacional = $resultInfo['cod_unidadorganizacional'];
 		    $cod_area = $resultInfo['cod_area'];
 		    $fecha_factura = $resultInfo['fecha_factura'];
-		    $fecha_limite_emision = $resultInfo['fecha_limite_emision'];
+		    $fecha_limite_emision = $resultInfo['fecha_limite_emision_x'];
 		    $cod_cliente = $resultInfo['cod_cliente'];
 		    $cod_personal = $resultInfo['cod_personal'];
 		    $razon_social = $resultInfo['razon_social'];
@@ -68,7 +68,7 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 		    // $nombre_cliente = $resultInfo['nombre_cliente'];
 		    $nombre_cliente = $razon_social;
 		}else{//para la tiendA
-			$stmtInfo = $dbh->prepare("SELECT sf.* FROM facturas_venta sf  where sf.codigo=$codigo");
+			$stmtInfo = $dbh->prepare("SELECT sf.*,DATE_FORMAT(sf.fecha_limite_emision,'%d/%m/%Y')as fecha_limite_emision_x FROM facturas_venta sf  where sf.codigo=$codigo");
 			$stmtInfo->execute();
 			$resultInfo = $stmtInfo->fetch();   
 			$cod_factura = $resultInfo['codigo']; 
@@ -76,7 +76,7 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 			$cod_unidadorganizacional = $resultInfo['cod_unidadorganizacional'];
 			$cod_area = $resultInfo['cod_area'];
 			$fecha_factura = $resultInfo['fecha_factura'];
-			$fecha_limite_emision = $resultInfo['fecha_limite_emision'];
+			$fecha_limite_emision = $resultInfo['fecha_limite_emision_x'];
 			$cod_cliente = $resultInfo['cod_cliente'];
 			$cod_personal = $resultInfo['cod_personal'];
 			$razon_social = $resultInfo['razon_social'];
