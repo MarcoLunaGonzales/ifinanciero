@@ -336,7 +336,7 @@ alerts = {
     }
     else if (type == 'error-message-filas-libreta') {
       var url2=url.split("####");
-      swal("Advertencia!", "Algunas filas no se Insertaron! <br> "+url2[1], "warning")
+      swal("Errores encontrados!", "No se guardaron los cambios! <br> "+url2[1], "error")
           .then((value) => {
           location.href=url2[0];
       });

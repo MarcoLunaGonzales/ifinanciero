@@ -27,6 +27,8 @@ $totalFilasCorrectas=0;
 $filasErroneas=0;
 $filasErroneasCampos=0;
 $filasErroneasFechas=0;
+$listaFilasFechas=[];
+$listaFilasCampos=[];
 if($tipo_cargado==2){
   /*$sqlDelete="DELETE FROM  libretas_bancariasdetalle where cod_libretabancaria=$codigoLibreta";
   $stmtDetalle = $dbh->prepare($sqlDelete);
@@ -34,6 +36,7 @@ if($tipo_cargado==2){
 }
 $allowedFileType = ['application/vnd.ms-excel','text/xls','text/xlsx','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
   
+$sqlInserts=[];  
   if(in_array($_FILES["documentos_excel"]["type"],$allowedFileType)){
 
         $targetPath = 'subidas/'.$_FILES['documentos_excel']['name'];
@@ -49,8 +52,10 @@ $allowedFileType = ['application/vnd.ms-excel','text/xls','text/xlsx','applicati
             		// Prepare
                 	$sqlRegistro="INSERT INTO libretas_bancariasregistro (codigo,fecha,cod_personal,observaciones,cod_estadoreferencial) 
                     	VALUES ($cod_libretabancariaregistro,'$fechaActual','$globalUser','$observaciones',1)";
-                    $stmtDetalle = $dbh->prepare($sqlRegistro);
-                    $stmtDetalle->execute();
+
+                  $sqlInserts[$index]=$sqlRegistro;   
+                    //$stmtDetalle = $dbh->prepare($sqlRegistro);
+                    //$stmtDetalle->execute();
             	}
                 $index++;
                 $fecha_hora = "";
@@ -67,11 +72,17 @@ $allowedFileType = ['application/vnd.ms-excel','text/xls','text/xlsx','applicati
                 
                 $hora = "";
                 if(isset($Row[1])&&$tipo_formato==1) {
+                  $hora=explode(":", $Row[1]);
+                  if(count($hora)>2){
+                    $horaFecha=$Row[1];
+                  }else{
+                    $horaFecha=$hora[0].":".$hora[1].":00";
+                  }
                 	if(verificarHora($Row[1])==true){
-                     $fecha_hora.=" ".$Row[1];
+                     $fecha_hora.=" ".$horaFecha;
                 	}else{
                      $validacionFila=0; 
-                     $fecha_hora.=" ".$Row[1];
+                     $fecha_hora.=" ".$horaFecha;
                 	}
                 }
 
@@ -125,27 +136,29 @@ $allowedFileType = ['application/vnd.ms-excel','text/xls','text/xlsx','applicati
                    $totalFilasCorrectas++; 
                 	$sql="INSERT INTO libretas_bancariasdetalle (cod_libretabancaria,fecha_hora,nro_documento,descripcion,informacion_complementaria,agencia,monto,nro_cheque,cod_libretabancariaregistro,cod_estadoreferencial) 
                     	VALUES ('$codigoLibreta','$fecha_hora','$nro_documento','$descripcion','$informacion_complementaria','$agencia','$monto','$nro_cheque','$cod_libretabancariaregistro','$cod_estadoreferencial')";
-                    $stmt = $dbh->prepare($sql);
-
-                    $flagSuccess=$stmt->execute();
-                    if ($flagSuccess==true) {
+                   // $stmt = $dbh->prepare($sql);
+                    //$flagSuccess=$stmt->execute();
+                    $sqlInserts[$index]=$sql;
+                    /*if ($flagSuccess==true) {
                         $type = "success";
                         $message = "Excel importado correctamente";
                     } else {
                         $type = "error";
                         $message = "Hubo un problema al importar registros";
-                    }
+                    }*/
                   }else{
+                    $listaFilasFechas[$filasErroneasFechas]=$index;
                     $filasErroneas++;
                     $filasErroneasFechas++;
                   }
                 }else{
+                  $listaFilasCampos[$filasErroneasCampos]=$index;
                   $filasErroneasCampos++;
                   $filasErroneas++;
                 }
              }
         
-         }
+         }//fin for
   }
   else
   { 
@@ -154,15 +167,32 @@ $allowedFileType = ['application/vnd.ms-excel','text/xls','text/xlsx','applicati
   }
 }
 if($filasErroneas>0){
-  showAlertSuccessErrorFilasLibreta("../".$urlList2."&codigo=".$codigoLibreta,"<i class=\"material-icons text-danger\">clear</i> Filas con errores: <b>".$filasErroneas."</b><br>Errores sin formato: <b>".$filasErroneasCampos."</b><br>Errores de fecha: <b>".$filasErroneasFechas."</b><br><i class=\"material-icons text-success\">check</i> Filas Correctas: <b>".$totalFilasCorrectas."</b><br>Total Filas: <b>".$index."</b>");  
+  $htmlInforme='';
+  $htmlInforme='Errores sin formato: <b>'.$filasErroneasCampos.'</b> <a href="#colapseFormato" class="btn btn-default btn-sm" data-toggle="collapse">Ver más...</a>'.
+  '<div id="colapseFormato" class="collapse small">'.
+         'Filas:['.implode(",",$listaFilasCampos).']'.
+       '</div>'.
+  '<br>Errores de fecha: <b>'.$filasErroneasFechas.'</b><a href="#colapseFechas" class="btn btn-default btn-sm" data-toggle="collapse">Ver más...</a>'.
+  '<div id="colapseFechas" class="collapse small">'.
+         'Filas:['.implode(",",$listaFilasFechas).']'.
+       '</div>'. 
+  '<br><i class="material-icons text-danger">clear</i> Filas con errores: <b>'.$filasErroneas.'</b>'.    
+  '<br><i class="material-icons text-success">check</i> Filas Correctas: <b>'.$totalFilasCorrectas.'</b>'.
+  '<br>Total Filas: <b>'.$index.'</b>';
+  showAlertSuccessErrorFilasLibreta("../".$urlList2."&codigo=".$codigoLibreta,$htmlInforme);  
 }else{
+  if($index>0){ // para registrar solo si hay filas en el archivo
+    $sqlAcumulados=implode(";", $sqlInserts);
+    $stmtAcumulados = $dbh->prepare($sqlAcumulados.";");
+    $flagSuccess=$stmtAcumulados->execute();
+  }
+  
   if($flagSuccess==true){
   	showAlertSuccessError(true,"../".$urlList2."&codigo=".$codigoLibreta);	
   }else{
 	  showAlertSuccessError(false,"../".$urlList2."&codigo=".$codigoLibreta);
   }
 }
-echo $message;
 
 function verificarFecha($x) {
     if (date('d-m-Y', strtotime($x)) == $x) {
