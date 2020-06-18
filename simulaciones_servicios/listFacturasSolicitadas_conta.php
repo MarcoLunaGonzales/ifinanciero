@@ -516,7 +516,6 @@ $globalAdmin=$_SESSION["globalAdmin"];
 </script>
 <!-- objeto tipo de pago -->
 <?php 
-
     $lan_parciales=sizeof($cont_pagosParciales);//filas si lo hubiese         
     // echo "cont:".$lan_parciales;
     // var_dump($dato_parciales[2]);
@@ -540,6 +539,3 @@ $globalAdmin=$_SESSION["globalAdmin"];
         </script><?php                    
     }
 ?>
-<script >
-  // console.log(itemGenerar_factura_parcial_aux);
-</script>
