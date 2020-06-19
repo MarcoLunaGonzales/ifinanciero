@@ -31,7 +31,7 @@ try {
     if(isset($_POST["persona_contacto"]))$persona_contacto = $_POST["persona_contacto"];
     else $persona_contacto = 0;
     // $modal_totalmontos = $_POST["modal_totalmontos"];
-    if(isset($modal_numeroservicio)) $modal_numeroservicio= $_POST["modal_numeroservicio"];
+    if(isset($_POST["modal_numeroservicio"])) $modal_numeroservicio= $_POST["modal_numeroservicio"];
     else $modal_numeroservicio=0;
     if(isset($_POST["cod_tipoobjeto"])){
         $cod_tipoobjeto = $_POST["cod_tipoobjeto"];
