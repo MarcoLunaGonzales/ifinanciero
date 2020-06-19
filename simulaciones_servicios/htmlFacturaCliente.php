@@ -125,7 +125,7 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 		}else{
 			$html.='<hr>';
 		}
-		$html.='<div  style="height: 50%">';
+		$html.='<div  style="height: 49.4%">';
     		$html.='<table  style="width: 100%;">
               	<thead>
 	                <tr>
