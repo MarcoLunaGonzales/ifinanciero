@@ -3762,7 +3762,7 @@ function descargarPDFFacturasCopiaCliente($nom,$html){
   // file_put_contents("../simulaciones_servicios/facturas/".$nom.".pdf", $pdf);
     $dompdf = new DOMPDF();
     // $dompdf->set_paper("letter", "portrait");
-    $mydompdf->set_paper("A4", "portrait");
+    $dompdf->set_paper("A4", "portrait");
     $dompdf->load_html($html);    
     $dompdf->render();
     $pdf = $dompdf->output();
