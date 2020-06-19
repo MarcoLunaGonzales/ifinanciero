@@ -7,19 +7,18 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $dbh = new Conexion();
 
 // Preparamos
-$stmt = $dbh->prepare("SELECT sr.*,e.nombre as estado from pagos_proveedores sr join estados_pago e on sr.cod_estadopago=e.codigo where sr.cod_pagolote=0 order by sr.codigo desc");
+$stmt = $dbh->prepare("SELECT sr.*,e.nombre as estado from pagos_lotes sr join estados_pago e on sr.cod_estadopagolote=e.codigo order by sr.codigo desc");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
 $stmt->bindColumn('codigo', $codigo);
-$stmt->bindColumn('cod_pagolote', $cod_pagolote);
 $stmt->bindColumn('fecha', $fecha);
 //$stmt->bindColumn('glosa', $descripcion);
-$stmt->bindColumn('observaciones', $observaciones);
+$stmt->bindColumn('nombre', $observaciones);
 $stmt->bindColumn('cod_comprobante', $codComprobante);
 $stmt->bindColumn('estado', $estado);
-$stmt->bindColumn('cod_estadopago', $codEstado);
-$stmt->bindColumn('cod_ebisa', $cod_ebisa);
+$stmt->bindColumn('cod_estadopagolote', $codEstado);
+$stmt->bindColumn('cod_ebisalote', $cod_ebisa);
 
 ?>
 <div class="cargar-ajax d-none">
@@ -33,14 +32,14 @@ $stmt->bindColumn('cod_ebisa', $cod_ebisa);
         <div class="row">
             <div class="col-md-12">
               <div class="card">
-                <div class="card-header card-header-danger card-header-icon">
+                <div class="card-header card-header-primary card-header-icon">
                   <div class="card-icon">
                     <i class="material-icons">attach_money</i>
                   </div>
                   <a href="#" title="Actualizar Lista" class="btn btn-default btn-sm btn-fab float-right" onclick="actualizarSimulacionSitios()">
                     <i class="material-icons">refresh</i>
                   </a>
-                  <h4 class="card-title"><b>Pagos</b></h4>
+                  <h4 class="card-title"><b>Pagos por Lotes</b></h4>
                   
                 </div>
                 <div class="card-body">
@@ -187,8 +186,8 @@ $stmt->bindColumn('cod_ebisa', $cod_ebisa);
                 </div>
               </div>
               <div class="card-footer fixed-bottom">
-                <a href="#" onclick="javascript:window.open('<?=$urlRegister2;?>')" class="btn btn-info"><i class="material-icons">add</i> Nuevo Pago Proveedor</a>
-                
+              
+                <a href="#" onclick="javascript:window.open('<?=$urlRegisterLote;?>')" class="btn btn-primary"><i class="material-icons">add</i> Nuevon Pago por Lotes</a>
                 <!--<a href="#" onclick="javascript:window.open('<?=$urlRegisterLote;?>')" class="btn btn-primary"><i class="material-icons">view_comfy</i> Pagos Por Lotes</a>-->
                 <!--<a href="#" onclick="nuevoArchivoTxtPagoLote()" class="<?=$buttonNormal;?>">Generar Archivo TXT</a>-->
               </div>      

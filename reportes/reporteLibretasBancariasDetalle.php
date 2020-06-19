@@ -8,7 +8,7 @@
   <h6 class="card-title">Periodo Facturas: <?=$periodoTitleFac?></h6>
   <h6 class="card-title">Libretas Bancarias: <?=$stringEntidades;?></h6>
   <div class="table-responsive col-sm-12">
-    <table id="libro_mayor_rep" class="table table-condensed" style="width:100% !important;">
+    <table id="libro_mayor_rep" class="table table-condensed small" style="width:100% !important;">
       <thead>
         <tr style="background:#21618C; color:#fff;">
           <td class="text-center">#</td>
@@ -21,6 +21,12 @@
           <td>Nro Cheque</td>
           <td width="10%">Nro Documento</td>
           <td width="10%">Estado</td>
+          <td class="bg-success">Fecha</td>
+          <td class="bg-success">Numero</td>
+          <td class="bg-success">NIT</td>
+          <td class="bg-success">Razon Social</td>
+          <td class="bg-success">Detalle</td>
+          <td class="bg-success">Monto</td>
         </tr>
       </thead> 
 
@@ -52,10 +58,24 @@ $stmt->bindColumn('cod_factura', $codFactura);
                         while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                           if($codFactura==""){
                             $tituloEstado="Sin Factura";
+                            $facturaFecha="";
+                            $facturaNumero="";
+                            $facturaNit="";
+                            $facturaRazonSocial="";
+                            $facturaDetalle="";
+                            $facturaMonto="";
                           }else{
                             $tituloEstado="Con Factura";
+                            $datos=obtenerDatosFacturaVenta($codFactura);
+                            $facturaFecha=strftime('%d/%m/%Y',strtotime($datos[0]));
+                            $facturaNumero=$datos[1];
+                            $facturaNit=$datos[2];
+                            $facturaRazonSocial=$datos[3];
+                            $facturaDetalle=$datos[4];
+                            $facturaMonto=number_format($datos[5],2,".","");
                           }
                           $totalMonto+=$monto;
+
                            
 ?>
                         <tr>
@@ -69,6 +89,13 @@ $stmt->bindColumn('cod_factura', $codFactura);
                           <td class="text-right"><?=$nro_cheque?></td>
                           <td class="text-right"><?=$nro_documento?></td>
                           <td class="text-right font-weight-bold"><?=$tituloEstado?></td>
+                          <td class="text-right font-weight-bold"><?=$facturaFecha?></td>
+                          <td class="text-right font-weight-bold"><?=$facturaNumero?></td>
+                          <td class="text-right font-weight-bold"><?=$facturaNit?></td>
+                          <td class="text-right font-weight-bold"><?=$facturaRazonSocial?></td>
+                          <td class="text-right font-weight-bold"><?=$facturaDetalle?></td>
+                          <td class="text-right font-weight-bold"><?=$facturaMonto?></td>
+                          
                         </tr>
 <?php
               $index++;
@@ -82,6 +109,12 @@ $stmt->bindColumn('cod_factura', $codFactura);
                           <td class="d-none"></td>
                           <td class="d-none"></td>
                           <td class="text-right"><?=number_format($totalMonto,2,".","")?></td>
+                          <td class="text-left"></td>
+                          <td class="text-left"></td>
+                          <td class="text-left"></td>
+                          <td class="text-left"></td>
+                          <td class="text-left"></td>
+                          <td class="text-left"></td>
                           <td class="text-left"></td>
                           <td class="text-left"></td>
                           <td class="text-left"></td>

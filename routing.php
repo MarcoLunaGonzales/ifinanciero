@@ -510,6 +510,10 @@
 		if ($_GET['opcion']=='listPagoProveedorLote') {
 			require_once('obligaciones_pago/listPagoLote.php');
 		}
+
+		if ($_GET['opcion']=='listPagoProveedoresLotes') {
+			require_once('obligaciones_pago/listaLotes.php');
+		}
   
 		//******************************ACTIVOS FIJOS***********************************************************
 		if ($_GET['opcion']=='listUbicaciones') {

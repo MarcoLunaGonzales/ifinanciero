@@ -6372,12 +6372,12 @@ function obtenerDatosProveedoresPagoDetalle($codigo){
         $estiloBoton="btn-danger";
       }
       $fechaSol[$index]=strftime('%d/%m/%Y',strtotime($row['fecha_sol']));
-      $numero[$index]="<a title='ver Archivos Adjuntos' href='".$urlVer."?cod=".$row['cod_sol']."' target='_blank' class='btn ".$estiloBoton." btn-round btn-sm'>".$row['numero']."</a>";
+      $numero[$index]="<a title='ver Archivos Adjuntos' href='".$urlVer."?cod=".$row['cod_sol']."' target='_blank' class=''>".$row['numero']."</a>";
       $numeroSolo[$index]=$row['numero'];
       $oficina[$index]=abrevUnidad_solo($row['cod_unidadorganizacional']);
       $index++;
    }
-   return array(implode(",",array_unique($proveedores)),implode(",",array_unique($detalles)),implode(",",array_unique($fechaSol)),implode(" ",array_unique($numero)),implode(",",array_unique($oficina)),implode("-",array_unique($numeroSolo)));
+   return array(implode(",",array_unique($proveedores)),implode(",",array_unique($detalles)),implode(",",array_unique($fechaSol)),implode(", ",array_unique($numero)),implode(",",array_unique($oficina)),implode("-",array_unique($numeroSolo)));
 }
 function listaDetallePagosProveedores($codigo){
    $dbh = new Conexion();
@@ -7062,6 +7062,20 @@ function verificarFechaMaxDetalleLibreta($fecha,$codigo){
       $valor++;
    }
    return($valor);
+}
+
+function obtenerDatosFacturaVenta($codigo){
+  $dbh = new Conexion();
+  $stmtVerif = $dbh->prepare("SELECT * FROM facturas_venta where cod_solicitudfacturacion=$codigo");
+  $stmtVerif->execute();
+  $resultVerif = $stmtVerif->fetch();    
+  $fecha = $resultVerif['fecha_factura'];
+  $numero = $resultVerif['nro_factura'];
+  $nit = $resultVerif['nit'];
+  $razon_social = $resultVerif['razon_social'];
+  $detalle = $resultVerif['observaciones'];
+  $monto = $resultVerif['importe'];
+  return array($fecha,$numero,$nit,$razon_social,$detalle,$monto);
 }
 ?>
 

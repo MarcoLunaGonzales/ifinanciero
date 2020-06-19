@@ -859,6 +859,12 @@ if($menuModulo==0){
                   </a>
                 </li>
                 <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listPagoProveedoresLotes">
+                    <span class="sidebar-mini"> PL </span>
+                    <span class="sidebar-normal"> Pagos por Lotes</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listPagoProveedoresAdmin">
                     <span class="sidebar-mini"> GP </span>
                     <span class="sidebar-normal"> Gestión de Pagos</span>

@@ -19,6 +19,7 @@ $urlSaveDelete="";
 
 $urlImpReporteDiario="reportes/impDiario.php";
 $urlListPago="index.php?opcion=listPagoProveedores";
+$urlListPagoLotes="index.php?opcion=listPagoProveedoresLotes";
 $urlListPagoAdmin="index.php?opcion=listPagoProveedoresAdmin";
 $urlGenerarEbisa="obligaciones_pago/generarTXT.php";
 $urlGenerarComprobante="obligaciones_pago/generarComprobante.php";
