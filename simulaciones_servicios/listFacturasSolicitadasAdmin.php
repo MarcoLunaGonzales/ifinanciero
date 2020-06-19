@@ -76,17 +76,17 @@ $item_1=2709;
                       <table class="table" id="tablePaginator">
                         <thead>
                           <tr>
-                            <th>Of - Area</th>                            
-                            <th>#Sol.</th>
-                            <th>Responsable</th>
-                            <th>Codigo<br>Servicio</th>   
-                            <th>Fecha<br>Registro</th>
-                            <!-- <th>Fecha<br>a Facturar</th> -->
-                            <th style="color:#cc4545;">#Fact</th>
-                            <th>Importe<br>(BOB)</th>  
-                            <th>Persona<br>Contacto</th>  
-                            <th>Concepto</th>                            
-                            <th>Estado</th>
+                            <th><small>Of - Area</small></th>
+                            <th><small>#Sol.</small></th>
+                            <th><small>Responsable</small></th>
+                            <th><small>Codigo<br>Servicio</small></th>   
+                            <th><small>Fecha<br>Registro</small></th>
+                            <!-- <th><small>Fecha<br>a Facturar</small></th> -->
+                            <th style="color:#cc4545;"><small>#Fact</small></th>
+                            <th><small>Importe<br>(BOB)</small></th>  
+                            <th><small>Tipo<br>Pago</small></th>
+                            <th><small>Concepto</small></th>                            
+                            <th><small>Estado</small></th>
                             <th class="text-right">Actions</th>
                           </tr>
                         </thead>
@@ -175,7 +175,7 @@ $item_1=2709;
                             $responsable=namePersonal($cod_personal);//nombre del personal
                             $nombre_area=trim(abrevArea($cod_area),'-');//nombre del area
                             $nombre_uo=trim(abrevUnidad($cod_unidadorganizacional),' - ');//nombre de la oficina
-                            $nombre_contacto=ucfirst(nameContacto($persona_contacto));//nombre del personal
+                            $nombre_tipopago=nameTipoPagoSolFac($cod_tipopago);//
 
                             //los registros de la factura
                             $dbh1 = new Conexion();
@@ -225,8 +225,7 @@ $item_1=2709;
                             <!-- <td><?=$fecha_solicitudfactura;?></td>          -->                   
                             <td style="color:#cc4545;"><small><?=$nro_fact_x;?></small></td>                             
                             <td class="text-right"><small><?=formatNumberDec($sumaTotalImporte);?></small></td>
-                            <td class="text-left"><small><?=$nombre_contacto;?></small></td>
-                            <!-- <td><?=$razon_social;?></td> -->                            
+                            <td class="text-left" style="color:#ff0000;"><small><small><?=$nombre_tipopago;?></small></small></td>                            
                             <td width="35%"><small><?=$concepto_contabilizacion?></small></td>
                             <td><button class="btn <?=$btnEstado?> btn-sm btn-link"><small><?=$estado;?></small></button></td>
                             <td class="td-actions text-right">

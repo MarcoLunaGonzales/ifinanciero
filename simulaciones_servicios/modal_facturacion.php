@@ -100,7 +100,6 @@
   </div>
 </div>
 <!-- modal para bancarizacion -->
-
 <!-- modal tipo pago porcentaje -->
 <div class="modal fade" id="modalBancarizacion" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog modal-lg" role="document">
@@ -180,8 +179,7 @@
     </div>
   </div>
 </div>
-
-<!-- small modal -->
+<!-- small modal detalle facturacion-->
 <div class="modal fade modal-primary" id="modalDetalleFac" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-xl">
     <div class="modal-content card">
@@ -220,7 +218,6 @@
     </div>  
   </div>
 </div>
-<!--    end small modal -->
 <!-- FActura manual-->
 <div class="modal fade" id="modalFacturaManual" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog modal-lg" role="document">
@@ -416,16 +413,13 @@
     </div>
   </div>
 </div>
-
-
-
 <!-- modal libreta bancaria -->
 <div class="modal fade" id="modalListaLibretaBancaria" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h3 class="modal-title" id="myModalLabel"><b>Libretas Bancaria</b></h3>
+        <h3 class="modal-title" id="myModalLabel"><b>Libreta Bancaria</b></h3>
       </div>
       <div class="modal-body">
         <input type="hidden" name="cod_solicitudfacturacion" id="cod_solicitudfacturacion" value="0">

@@ -23,6 +23,8 @@ ERRORES EN LA CONEXIÓN CON EL WS
   estado = 12 : descripción = "Error interno del servicio";
   estado = 14 : descripción = "Acción no encontrada";
   estado = 15 : descripción = "Error en las credenciales sKey y sIde"; 
+  estado = 16 : descripción = "tipo de pago no encontrado"; 
+  estado = 17 : descripción = "codLibretaDetlle no encontrado"; 
 
 Ejemplo de como requerir el servicio
 

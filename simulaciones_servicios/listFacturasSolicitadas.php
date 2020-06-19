@@ -75,13 +75,11 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                             <th><small>Responsable</small></th>
                             <th><small>Codigo<br>Servicio</small></th>                            
                             <th><small>Fecha<br>Registro</small></th>                            
-                            <th style="color:#cc4545;"><small>#Fact.</small></th>                            
+                            <th style="color:#FF0000;"><small>#Fact.</small></th>                            
                             <th><small>Importe<br>(BOB)</small></th>  
-                            <th><small>Persona<br>Contacto</small></th>
+                            <th><small>Tipo<br>Pago</small></th>
                             <th width="15%"><small>Razón Social</small></th>
-                            <th width="35%"><small>Concepto</small></th>
-                            
-                            <!-- <th width="5%"><small>Estado</small></th> -->
+                            <th width="35%"><small>Concepto</small></th>                            
                             <th width="15%"><small>Observaciones</small></th>
                             <th class="text-right"><small>Actions</small></th>
                           </tr>
@@ -92,6 +90,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                           $codigo_fact_x=0;
                           $cont= array();
                           while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+                            $datos_otros=$codigo_facturacion."/0/0/0/".$nit."/".$razon_social;//dato 
                             switch ($codEstado) {
                               case 1:                                
                                 $label='<span style="padding:1;" class="badge badge-default">';
@@ -201,7 +200,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                             $name_area_simulacion=trim(abrevArea($cod_area_simulacion),'-');
                             // --------
                             $responsable=namePersonal_2($cod_personal);//nombre del personal
-                            $nombre_contacto=nameContacto($persona_contacto);//nombre del personal
+                            $nombre_tipopago=nameTipoPagoSolFac($cod_tipopago);//
                             $nombre_area=trim(abrevArea($cod_area),'-');//nombre del area
                             $nombre_uo=trim(abrevUnidad($cod_unidadorganizacional),' - ');//nombre de la oficina
 
@@ -257,7 +256,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                             <td><small><?=$fecha_registro;?></small></td>
                             <td style="color:#cc4545;"><small><?=$nro_fact_x;?></small></td>                             
                             <td class="text-right"><small><?=formatNumberDec($sumaTotalImporte);?></small></td>
-                            <td class="text-left"><small><small><?=$nombre_contacto;?></small></small></td>                            
+                            <td class="text-left" style="color:#ff0000;"><small><small><?=$nombre_tipopago;?></small></small></td>
                             <td><small><small><?=$razon_social;?></small></small></td>
                             <td><small><small><?=$concepto_contabilizacion?></small></small></td>
                             <!-- <td><?=$label?><small><?=$estado;?></small></span></td> -->
@@ -290,7 +289,6 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                     }
                                   }else{// generar facturas                                        
                                         if($codEstado==1){
-
                                           $cod_tipopago_cred=obtenerValorConfiguracion(48);
                                           // echo $cod_tipopago_cred; 
                                           if($cod_tipopago==$cod_tipopago_cred){//si es igual a credito cambia de flujo
@@ -354,11 +352,6 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                           }
 
 
-
-
-
-
-
                                           if(isset($_GET['q'])){?>
                                             <a title="Editar Solicitud Facturación" href='<?=$urlEditSolicitudfactura;?>&codigo_s=<?=$codigo_facturacion?>&q=<?=$q?>&v=<?=$v?>&s=<?=$s?>&u=<?=$u?>' class="btn btn-success">
                                               <i class="material-icons"><?=$iconEdit;?></i>
@@ -378,6 +371,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                 }
                               ?>
                                <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir Solicitud">print</i></a>
+                               <a href='#' title="Archivos Adjuntos" class="btn btn-primary" onclick="abrirArchivosAdjuntos('<?=$datos_otros;?>')"><i class="material-icons" ><?=$iconFile?></i></a>
                             </td>
                           </tr>
                           <?php
@@ -406,6 +400,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
   </div>
 
 <?php  require_once 'simulaciones_servicios/modal_facturacion.php';?>
+<?php  require_once 'simulaciones_servicios/modal_subir_archivos.php';?>
 <!-- para modal -->
 <script type="text/javascript">
   $(document).ready(function(){

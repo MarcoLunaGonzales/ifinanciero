@@ -251,12 +251,12 @@
 			$IdCurso=$_GET['IdCurso'];	
 			require_once('simulaciones_costos/registro_solicitud_facturacion_empresas.php');
 		}
-		if ($_GET['opcion']=='save_solicitud_facturacion_costos') {
-			require_once('simulaciones_costos/save_solicitud_facturacion_costos.php');
-		}
-		if ($_GET['opcion']=='save_solicitud_facturacion_costos_empresa') {
-			require_once('simulaciones_costos/save_solicitud_facturacion_costos_empresa.php');
-		}
+		// if ($_GET['opcion']=='save_solicitud_facturacion_costos') {
+		// 	require_once('simulaciones_costos/save_solicitud_facturacion_costos.php');
+		// }
+		// if ($_GET['opcion']=='save_solicitud_facturacion_costos_empresa') {
+		// 	require_once('simulaciones_costos/save_solicitud_facturacion_costos_empresa.php');
+		// }
 		if ($_GET['opcion']=='listFacturasServicios_costos') {
 			require_once('simulaciones_costos/listFacturasSolicitadas.php');
 		}

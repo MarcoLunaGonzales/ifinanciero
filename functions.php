@@ -1567,7 +1567,36 @@ function obtenerDirectoriosSol($ruta){
         echo "No tiene archivos adjuntos";
     }
 }
+function obtenerDirectoriosSol_solfac($ruta){
+    // Se comprueba que realmente sea la ruta de un directorio
+    if (is_dir($ruta)){
+        // Abre un gestor de directorios para la ruta indicada
+        $gestor = opendir($ruta);
+        echo "<div>";
 
+        // Recorre todos los elementos del directorio
+        while (($archivo = readdir($gestor)) !== false)  {
+                
+            $ruta_completa = $ruta . "/" . $archivo;
+
+            // Se muestran todos los archivos y carpetas excepto "." y ".."
+            if ($archivo != "." && $archivo != "..") {
+                // Si es un directorio se recorre recursivamente
+                if (is_dir($ruta_completa)) {
+                 
+                } else {
+                  echo "<div class='btn-group'><a class='btn btn-sm btn-info btn-block' href='ifinanciero/".$ruta_completa."' target='_blank'>" . $archivo . "</a><a class='btn btn-sm btn-default' href='ifinanciero/".$ruta_completa."' download='ifinanciero/".$archivo."'><i class='material-icons'>vertical_align_bottom</i></a></div>";
+                }
+            }
+        }
+        
+        // Cierra el gestor de directorios
+        closedir($gestor);
+        echo "</div>";
+    } else {
+        echo "No tiene archivos adjuntos";
+    }
+}
 
 function obtenerCodigoPlanCosto(){
    $dbh = new Conexion();
@@ -3705,9 +3734,10 @@ function descargarPDFFacturas($nom,$html){
   $mydompdf = new DOMPDF();
   ob_clean();
   $mydompdf->load_html($html);
+  $mydompdf->set_paper("A4", "portrait");
   $mydompdf->render();
   $canvas = $mydompdf->get_canvas();
-  $canvas->page_text(500, 25, "", Font_Metrics::get_font("sans-serif"), 10, array(0,0,0)); 
+  $canvas->page_text(500, 25, "", Font_Metrics::get_font("sans-serif"), 10, array(0,0,0));   
   $mydompdf->set_base_path('assets/libraries/plantillaPDFFactura.css');
   $mydompdf->stream($nom.".pdf", array("Attachment" => false));
   //guardar pdf
@@ -3731,7 +3761,8 @@ function descargarPDFFacturasCopiaCliente($nom,$html){
   // $pdf = $mydompdf->output();
   // file_put_contents("../simulaciones_servicios/facturas/".$nom.".pdf", $pdf);
     $dompdf = new DOMPDF();
-    $dompdf->set_paper("letter", "portrait");
+    // $dompdf->set_paper("letter", "portrait");
+    $dompdf->set_paper("A4", "portrait");
     $dompdf->load_html($html);    
     $dompdf->render();
     $pdf = $dompdf->output();
@@ -7064,6 +7095,7 @@ function verificarFechaMaxDetalleLibreta($fecha,$codigo){
    return($valor);
 }
 
+
 function obtenerDatosFacturaVenta($codigo){
   $dbh = new Conexion();
   $stmtVerif = $dbh->prepare("SELECT * FROM facturas_venta where cod_solicitudfacturacion=$codigo");
@@ -7076,6 +7108,17 @@ function obtenerDatosFacturaVenta($codigo){
   $detalle = $resultVerif['observaciones'];
   $monto = $resultVerif['importe'];
   return array($fecha,$numero,$nit,$razon_social,$detalle,$monto);
+  }
+
+function nameTipoPagoSolFac($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT nombre FROM tipos_pago where codigo=$codigo");
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['nombre'];
+   }
+   return($valor);
 }
 ?>
 

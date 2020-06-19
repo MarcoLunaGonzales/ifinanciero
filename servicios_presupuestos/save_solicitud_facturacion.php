@@ -6,7 +6,7 @@ require_once '../functionsGeneral.php';
 require_once 'configModule.php';
 ini_set('display_errors',1);
 
-
+session_start();
 $globalUser=$_SESSION["globalUser"];
 
 $dbh = new Conexion();
@@ -193,6 +193,99 @@ try {
                 $sqlUnidades="INSERT INTO solicitudes_facturacion_areas_uo(cod_solicitudfacturacion,cod_area, cod_uo, porcentaje, monto) VALUES ('$cod_facturacion','$codigo_area','$cod_unidadorganizacional','$monto_porcentaje','$monto_bob')";
                 $stmtUnidades = $dbh->prepare($sqlUnidades);
                 $stmtUnidades->execute();
+            }
+            //si existe array de objetos areas            
+            if(isset($_POST['areas_facturacion'])){
+                $areas_facturacion= json_decode($_POST['areas_facturacion']);
+                $nF=cantidadF($areas_facturacion[0]);
+                for($j=0;$j<$nF;$j++){
+                    $codigo_area=$areas_facturacion[0][$j]->codigo_areas;
+                    $monto_porcentaje=$areas_facturacion[0][$j]->monto_porcentaje;
+                    $monto_bob=$areas_facturacion[0][$j]->monto_bob;                                
+                    if($monto_porcentaje>0){
+                        // echo "codigo_area:".$codigo_area."<br>";
+                        // echo "monto_porcentaje:".$monto_porcentaje."<br>";        
+                        // echo "monto_bob:".$monto_bob."<br>";          
+                        $sqlTiposPago="INSERT INTO solicitudes_facturacion_areas(cod_solicitudfacturacion, cod_area, porcentaje, monto) VALUES ('$cod_facturacion','$codigo_area','$monto_porcentaje','$monto_bob')";
+                        $stmtTiposPago = $dbh->prepare($sqlTiposPago);
+                        $stmtTiposPago->execute();
+                        //si existe array de unidades
+                        if(isset($_POST['unidades_facturacion'])){
+                            $unidades_facturacion=json_decode($_POST['unidades_facturacion']);
+                            $nFU=cantidadF($unidades_facturacion[$j]);
+                            if($nFU>0){
+                                for($u=0;$u<$nFU;$u++){                                
+                                    $codigo_unidad=$unidades_facturacion[$j][$u]->codigo_unidad;
+                                    $monto_porcentaje_uo=$unidades_facturacion[$j][$u]->monto_porcentaje;
+                                    $monto_bob_uo=$unidades_facturacion[$j][$u]->monto_bob;                                
+                                    // echo "codigo_unidad:".$codigo_unidad."<br>";
+                                    // echo "monto_porcentaje:".$monto_porcentaje."<br>";        
+                                    // echo "monto_bob:".$monto_bob."<br>";    
+                                    $sqlUnidades="INSERT INTO solicitudes_facturacion_areas_uo(cod_solicitudfacturacion,cod_area, cod_uo, porcentaje, monto) VALUES ('$cod_facturacion','$codigo_area','$codigo_unidad','$monto_porcentaje_uo','$monto_bob_uo')";
+                                    $stmtUnidades = $dbh->prepare($sqlUnidades);
+                                    $stmtUnidades->execute();                               
+                                }
+                            }else{                            
+                                $sqlUnidades="INSERT INTO solicitudes_facturacion_areas_uo(cod_solicitudfacturacion,cod_area, cod_uo, porcentaje, monto) VALUES ('$cod_facturacion','$codigo_area','$cod_unidadorganizacional',100,'$monto_bob')";
+                                $stmtUnidades = $dbh->prepare($sqlUnidades);
+                                $stmtUnidades->execute();                               
+                            }                        
+                        }else{                        
+                            $sqlUnidades="INSERT INTO solicitudes_facturacion_areas_uo(cod_solicitudfacturacion,cod_area, cod_uo, porcentaje, monto) VALUES ('$cod_facturacion','$codigo_area','$cod_unidadorganizacional',100,'$monto_bob')";
+                            $stmtUnidades = $dbh->prepare($sqlUnidades);
+                            $stmtUnidades->execute();
+                        }
+                    }
+                }
+            }else{
+                $codigo_area=$cod_area;
+                $monto_porcentaje=100;
+                $monto_bob=$_POST["monto_total_a"];
+                // echo "codigo_area:".$codigo_area."<br>";
+                // echo "monto_porcentaje:".$monto_porcentaje."<br>";        
+                // echo "monto_bob:".$monto_bob."<br>";    
+                $sqlTiposPago="INSERT INTO solicitudes_facturacion_areas(cod_solicitudfacturacion, cod_area, porcentaje, monto) VALUES ('$cod_facturacion','$codigo_area','$monto_porcentaje','$monto_bob')";
+                $stmtTiposPago = $dbh->prepare($sqlTiposPago);
+                $stmtTiposPago->execute();
+                $sqlUnidades="INSERT INTO solicitudes_facturacion_areas_uo(cod_solicitudfacturacion,cod_area, cod_uo, porcentaje, monto) VALUES ('$cod_facturacion','$codigo_area','$cod_unidadorganizacional','$monto_porcentaje','$monto_bob')";
+                $stmtUnidades = $dbh->prepare($sqlUnidades);
+                $stmtUnidades->execute();
+            }
+            //borramos los archivos
+            $sqlDel="DELETE FROM archivos_adjuntos_solicitud_facturacion where cod_solicitud_facturacion=$cod_facturacion";
+            $stmtDel = $dbh->prepare($sqlDel);
+            $stmtDel->execute();
+            //subir archivos al servidor
+            //Como el elemento es un arreglos utilizamos foreach para extraer todos los valores
+            $nArchivosCabecera=$_POST["cantidad_archivosadjuntos"];;
+            for ($ar=1; $ar <= $nArchivosCabecera ; $ar++) { 
+                if(isset($_POST['codigo_archivo'.$ar])){
+                    if($_FILES['documentos_cabecera'.$ar]["name"]){
+                      $filename = $_FILES['documentos_cabecera'.$ar]["name"]; //Obtenemos el nombre original del archivos
+                      $source = $_FILES['documentos_cabecera'.$ar]["tmp_name"]; //Obtenemos un nombre temporal del archivos    
+                      $directorio = '../assets/archivos-respaldo/archivos_solicitudes_facturacion/SOLFAC-'.$cod_facturacion; //Declaramos una  variable con la ruta donde guardaremos los archivoss
+                      //Validamos si la ruta de destino existe, en caso de no existir la creamos
+                      if(!file_exists($directorio)){
+                                mkdir($directorio, 0777,true) or die("No se puede crear el directorio de extracci&oacute;n");    
+                      }
+                      $target_path = $directorio.'/'.$filename; //Indicamos la ruta de destino, así como el nombre del archivos
+                      //Movemos y validamos que el archivos se haya cargado correctamente
+                      //El primer campo es el origen y el segundo el destino
+                      if(move_uploaded_file($source, $target_path)) { 
+                        echo "Archivo guargado.";
+                        $tipo=$_POST['codigo_archivo'.$ar];
+                        $descripcion=$_POST['nombre_archivo'.$ar];
+                        // $tipoPadre=2708;
+                        $sqlInsert="INSERT INTO archivos_adjuntos_solicitud_facturacion (cod_tipoarchivo,descripcion,direccion_archivo,cod_solicitud_facturacion) 
+                        VALUES ('$tipo','$descripcion','$target_path','$cod_facturacion')";
+                        $stmtInsert = $dbh->prepare($sqlInsert);
+                        $stmtInsert->execute();    
+                        // print_r($sqlInsert);
+                      }else {    
+                          echo "Error al guardar archivo.";
+                      } 
+                    }
+                }
             }        
         }        
          
@@ -356,7 +449,100 @@ try {
                 $sqlUnidades="INSERT INTO solicitudes_facturacion_areas_uo(cod_solicitudfacturacion,cod_area, cod_uo, porcentaje, monto) VALUES ('$cod_facturacion','$codigo_area','$cod_unidadorganizacional','$monto_porcentaje','$monto_bob')";
                 $stmtUnidades = $dbh->prepare($sqlUnidades);
                 $stmtUnidades->execute();
-            }   
+            }  
+            //si existe array de objetos areas            
+            if(isset($_POST['areas_facturacion'])){
+                $areas_facturacion= json_decode($_POST['areas_facturacion']);
+                $nF=cantidadF($areas_facturacion[0]);
+                for($j=0;$j<$nF;$j++){
+                    $codigo_area=$areas_facturacion[0][$j]->codigo_areas;
+                    $monto_porcentaje=$areas_facturacion[0][$j]->monto_porcentaje;
+                    $monto_bob=$areas_facturacion[0][$j]->monto_bob;                                
+                    if($monto_porcentaje>0){
+                        // echo "codigo_area:".$codigo_area."<br>";
+                        // echo "monto_porcentaje:".$monto_porcentaje."<br>";        
+                        // echo "monto_bob:".$monto_bob."<br>";          
+                        $sqlTiposPago="INSERT INTO solicitudes_facturacion_areas(cod_solicitudfacturacion, cod_area, porcentaje, monto) VALUES ('$cod_facturacion','$codigo_area','$monto_porcentaje','$monto_bob')";
+                        $stmtTiposPago = $dbh->prepare($sqlTiposPago);
+                        $stmtTiposPago->execute();
+                        //si existe array de unidades
+                        if(isset($_POST['unidades_facturacion'])){
+                            $unidades_facturacion=json_decode($_POST['unidades_facturacion']);
+                            $nFU=cantidadF($unidades_facturacion[$j]);
+                            if($nFU>0){
+                                for($u=0;$u<$nFU;$u++){                                
+                                    $codigo_unidad=$unidades_facturacion[$j][$u]->codigo_unidad;
+                                    $monto_porcentaje_uo=$unidades_facturacion[$j][$u]->monto_porcentaje;
+                                    $monto_bob_uo=$unidades_facturacion[$j][$u]->monto_bob;                                
+                                    // echo "codigo_unidad:".$codigo_unidad."<br>";
+                                    // echo "monto_porcentaje:".$monto_porcentaje."<br>";        
+                                    // echo "monto_bob:".$monto_bob."<br>";    
+                                    $sqlUnidades="INSERT INTO solicitudes_facturacion_areas_uo(cod_solicitudfacturacion,cod_area, cod_uo, porcentaje, monto) VALUES ('$cod_facturacion','$codigo_area','$codigo_unidad','$monto_porcentaje_uo','$monto_bob_uo')";
+                                    $stmtUnidades = $dbh->prepare($sqlUnidades);
+                                    $stmtUnidades->execute();                               
+                                }
+                            }else{                            
+                                $sqlUnidades="INSERT INTO solicitudes_facturacion_areas_uo(cod_solicitudfacturacion,cod_area, cod_uo, porcentaje, monto) VALUES ('$cod_facturacion','$codigo_area','$cod_unidadorganizacional',100,'$monto_bob')";
+                                $stmtUnidades = $dbh->prepare($sqlUnidades);
+                                $stmtUnidades->execute();                               
+                            }                        
+                        }else{                        
+                            $sqlUnidades="INSERT INTO solicitudes_facturacion_areas_uo(cod_solicitudfacturacion,cod_area, cod_uo, porcentaje, monto) VALUES ('$cod_facturacion','$codigo_area','$cod_unidadorganizacional',100,'$monto_bob')";
+                            $stmtUnidades = $dbh->prepare($sqlUnidades);
+                            $stmtUnidades->execute();
+                        }
+                    }
+                }
+            }else{
+                $codigo_area=$cod_area;
+                $monto_porcentaje=100;
+                $monto_bob=$_POST["monto_total_a"];
+                // echo "codigo_area:".$codigo_area."<br>";
+                // echo "monto_porcentaje:".$monto_porcentaje."<br>";        
+                // echo "monto_bob:".$monto_bob."<br>";    
+                $sqlTiposPago="INSERT INTO solicitudes_facturacion_areas(cod_solicitudfacturacion, cod_area, porcentaje, monto) VALUES ('$cod_facturacion','$codigo_area','$monto_porcentaje','$monto_bob')";
+                $stmtTiposPago = $dbh->prepare($sqlTiposPago);
+                $stmtTiposPago->execute();
+                $sqlUnidades="INSERT INTO solicitudes_facturacion_areas_uo(cod_solicitudfacturacion,cod_area, cod_uo, porcentaje, monto) VALUES ('$cod_facturacion','$codigo_area','$cod_unidadorganizacional','$monto_porcentaje','$monto_bob')";
+                $stmtUnidades = $dbh->prepare($sqlUnidades);
+                $stmtUnidades->execute();
+            }
+            //borramos los archivos
+            // $sqlDel="DELETE FROM archivos_adjuntos_solicitud_facturacion where cod_solicitud_facturacion=$cod_facturacion";
+            // $stmtDel = $dbh->prepare($sqlDel);
+            // $stmtDel->execute();
+            //subir archivos al servidor
+            //Como el elemento es un arreglos utilizamos foreach para extraer todos los valores
+            $nArchivosCabecera=$_POST["cantidad_archivosadjuntos"];;
+            for ($ar=1; $ar <= $nArchivosCabecera ; $ar++) { 
+                if(isset($_POST['codigo_archivo'.$ar])){
+                    if($_FILES['documentos_cabecera'.$ar]["name"]){
+                      $filename = $_FILES['documentos_cabecera'.$ar]["name"]; //Obtenemos el nombre original del archivos
+                      $source = $_FILES['documentos_cabecera'.$ar]["tmp_name"]; //Obtenemos un nombre temporal del archivos    
+                      $directorio = '../assets/archivos-respaldo/archivos_solicitudes_facturacion/SOLFAC-'.$cod_facturacion; //Declaramos una  variable con la ruta donde guardaremos los archivoss
+                      //Validamos si la ruta de destino existe, en caso de no existir la creamos
+                      if(!file_exists($directorio)){
+                                mkdir($directorio, 0777,true) or die("No se puede crear el directorio de extracci&oacute;n");    
+                      }
+                      $target_path = $directorio.'/'.$filename; //Indicamos la ruta de destino, así como el nombre del archivos
+                      //Movemos y validamos que el archivos se haya cargado correctamente
+                      //El primer campo es el origen y el segundo el destino
+                      if(move_uploaded_file($source, $target_path)) { 
+                        echo "Archivo guargado.";
+                        $tipo=$_POST['codigo_archivo'.$ar];
+                        $descripcion=$_POST['nombre_archivo'.$ar];
+                        // $tipoPadre=2708;
+                        $sqlInsert="INSERT INTO archivos_adjuntos_solicitud_facturacion (cod_tipoarchivo,descripcion,direccion_archivo,cod_solicitud_facturacion) 
+                        VALUES ('$tipo','$descripcion','$target_path','$cod_facturacion')";
+                        $stmtInsert = $dbh->prepare($sqlInsert);
+                        $stmtInsert->execute();    
+                        // print_r($sqlInsert);
+                      }else {    
+                          echo "Error al guardar archivo.";
+                      } 
+                    }
+                }
+            } 
            
         }    
         if(isset($_POST['usuario_ibnored'])){

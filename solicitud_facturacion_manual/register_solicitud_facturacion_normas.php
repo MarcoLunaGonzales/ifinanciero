@@ -91,7 +91,7 @@ $contadorRegistros=0;
     <div class="container-fluid">
         <div style="overflow-y:scroll;">
             <div class="col-md-12">
-              <form id="formSoliFactNormas" class="form-horizontal" action="<?=$urlSaveSolicitudfactura_normas;?>" method="post" onsubmit="return valida(this)" enctype="multipart/form-data">
+            <form id="formSoliFactNormas" class="form-horizontal" action="<?=$urlSaveSolicitudfactura_normas;?>" method="post" onsubmit="return valida(this)" enctype="multipart/form-data">
                 <?php 
                   if(isset($_POST['q'])){
                     ?><input type="hidden" name="usuario_ibnored" id="usuario_ibnored" value="<?=$q;?>">
@@ -404,6 +404,18 @@ $contadorRegistros=0;
                             </div>
                         </div>
                         <!-- fin observaciones -->
+                         <!-- archivos -->
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <center>
+                                    <div class="btn-group">
+                                        <a title="Subir Archivos Respaldo (shift+r)" href="#modalFile" data-toggle="modal" data-target="#modalFile" class="btn btn-default btn-sm">Archivos 
+                                            <i class="material-icons"><?=$iconFile?></i><span id="narch" class="bg-warning"></span>
+                                        </a>
+                                    </div> 
+                                </center>
+                            </div>
+                        </div>
 
                         <div class="card">
                             <div class="card-header <?=$colorCard;?> card-header-text">
@@ -573,7 +585,8 @@ $contadorRegistros=0;
                         ?>
                   </div>
                 </div>
-              </form>                  
+                <?php  require_once '../simulaciones_servicios/modal_subir_archivos.php';?>
+            </form>                  
             </div>
         </div>
     </div>

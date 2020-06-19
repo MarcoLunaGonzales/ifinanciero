@@ -1,10 +1,13 @@
 <?php
 
-//require_once '../layouts/bodylogin.php';
-require_once 'conexion.php';
-require_once 'functions.php';
+require_once '../layouts/bodylogin.php';
+require_once '../conexion.php';
+require_once '../functions.php';
+require_once '../functionsGeneral.php';
 require_once 'configModule.php';
 ini_set('display_errors',1);
+session_start();
+$globalUser=$_SESSION["globalUser"];
 $dbh = new Conexion();
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//para mostrar errores en la ejecucion
 
@@ -15,15 +18,10 @@ try {//recibiendo datos
     $cod_unidadorganizacional = $_POST["cod_uo"];
     $cod_area = $_POST["cod_area"];
     $fecha_registro = $_POST["fecha_registro"];
-    $fecha_solicitudfactura = $_POST["fecha_solicitudfactura"];
-    $globalUser=$_SESSION["globalUser"];
-
+    $fecha_solicitudfactura = $_POST["fecha_solicitudfactura"];    
     if(isset($_POST["cod_tipoobjeto"])){
         $cod_tipoobjeto = $_POST["cod_tipoobjeto"];
     }else $cod_tipoobjeto=0;
-    
-
-
     $cod_tipopago = $_POST["cod_tipopago"];  
     $cod_empresa = $_POST["cod_empresa"];
     $cod_personal = $_POST["cod_personal"];//resonsable
@@ -32,10 +30,8 @@ try {//recibiendo datos
     $observaciones = $_POST["observaciones"];    
     $observaciones_2 = $_POST["observaciones_2"];    
     $persona_contacto = $_POST["persona_contacto"];
-
     $modal_totalmontos = $_POST["modal_totalmontos"];
     $modal_numeroservicio = $_POST["modal_numeroservicio"];
-
     if(isset($_POST['q'])){
         $cod_personal=$_POST['q'];
     }
@@ -62,7 +58,6 @@ try {//recibiendo datos
                 $importeInsert="";
                 $DescricpionInsert="";            
                 // echo "i:".$i;
-
                 if(isset($_POST["servicio".$i])){
                     $servicioInsert=$_POST["servicio_a".$i];
                     $CantidadInsert=$_POST["cantidad_a".$i];
@@ -179,7 +174,43 @@ try {//recibiendo datos
                 $sqlUnidades="INSERT INTO solicitudes_facturacion_areas_uo(cod_solicitudfacturacion,cod_area, cod_uo, porcentaje, monto) VALUES ('$cod_facturacion','$codigo_area','$cod_unidadorganizacional','$monto_porcentaje','$monto_bob')";
                 $stmtUnidades = $dbh->prepare($sqlUnidades);
                 $stmtUnidades->execute();
-            }       
+            }
+            //borramos los archivos
+            $sqlDel="DELETE FROM archivos_adjuntos_solicitud_facturacion where cod_solicitud_facturacion=$cod_facturacion";
+            $stmtDel = $dbh->prepare($sqlDel);
+            $stmtDel->execute();
+            //subir archivos al servidor
+            //Como el elemento es un arreglos utilizamos foreach para extraer todos los valores
+            $nArchivosCabecera=$_POST["cantidad_archivosadjuntos"];;
+            for ($ar=1; $ar <= $nArchivosCabecera ; $ar++) { 
+                if(isset($_POST['codigo_archivo'.$ar])){
+                    if($_FILES['documentos_cabecera'.$ar]["name"]){
+                      $filename = $_FILES['documentos_cabecera'.$ar]["name"]; //Obtenemos el nombre original del archivos
+                      $source = $_FILES['documentos_cabecera'.$ar]["tmp_name"]; //Obtenemos un nombre temporal del archivos    
+                      $directorio = '../assets/archivos-respaldo/archivos_solicitudes_facturacion/SOLFAC-'.$cod_facturacion; //Declaramos una  variable con la ruta donde guardaremos los archivoss
+                      //Validamos si la ruta de destino existe, en caso de no existir la creamos
+                      if(!file_exists($directorio)){
+                                mkdir($directorio, 0777,true) or die("No se puede crear el directorio de extracci&oacute;n");    
+                      }
+                      $target_path = $directorio.'/'.$filename; //Indicamos la ruta de destino, así como el nombre del archivos
+                      //Movemos y validamos que el archivos se haya cargado correctamente
+                      //El primer campo es el origen y el segundo el destino
+                      if(move_uploaded_file($source, $target_path)) { 
+                        echo "Archivo guargado.";
+                        $tipo=$_POST['codigo_archivo'.$ar];
+                        $descripcion=$_POST['nombre_archivo'.$ar];
+                        // $tipoPadre=2708;
+                        $sqlInsert="INSERT INTO archivos_adjuntos_solicitud_facturacion (cod_tipoarchivo,descripcion,direccion_archivo,cod_solicitud_facturacion) 
+                        VALUES ('$tipo','$descripcion','$target_path','$cod_facturacion')";
+                        $stmtInsert = $dbh->prepare($sqlInsert);
+                        $stmtInsert->execute();    
+                        // print_r($sqlInsert);
+                      }else {    
+                          echo "Error al guardar archivo.";
+                      } 
+                    }
+                }
+            }
         }
 
         //enviar propuestas para la actualizacion de ibnorca
@@ -344,15 +375,51 @@ try {//recibiendo datos
                 $stmtUnidades = $dbh->prepare($sqlUnidades);
                 $stmtUnidades->execute();
             }
+            //borramos los archivos
+            // $sqlDel="DELETE FROM archivos_adjuntos_solicitud_facturacion where cod_solicitud_facturacion=$cod_facturacion";
+            // $stmtDel = $dbh->prepare($sqlDel);
+            // $stmtDel->execute();
+            //subir archivos al servidor
+            //Como el elemento es un arreglos utilizamos foreach para extraer todos los valores
+            $nArchivosCabecera=$_POST["cantidad_archivosadjuntos"];;
+            for ($ar=1; $ar <= $nArchivosCabecera ; $ar++) { 
+                if(isset($_POST['codigo_archivo'.$ar])){
+                    if($_FILES['documentos_cabecera'.$ar]["name"]){
+                      $filename = $_FILES['documentos_cabecera'.$ar]["name"]; //Obtenemos el nombre original del archivos
+                      $source = $_FILES['documentos_cabecera'.$ar]["tmp_name"]; //Obtenemos un nombre temporal del archivos    
+                      $directorio = '../assets/archivos-respaldo/archivos_solicitudes_facturacion/SOLFAC-'.$cod_facturacion; //Declaramos una  variable con la ruta donde guardaremos los archivoss
+                      //Validamos si la ruta de destino existe, en caso de no existir la creamos
+                      if(!file_exists($directorio)){
+                                mkdir($directorio, 0777,true) or die("No se puede crear el directorio de extracci&oacute;n");    
+                      }
+                      $target_path = $directorio.'/'.$filename; //Indicamos la ruta de destino, así como el nombre del archivos
+                      //Movemos y validamos que el archivos se haya cargado correctamente
+                      //El primer campo es el origen y el segundo el destino
+                      if(move_uploaded_file($source, $target_path)) { 
+                        echo "Archivo guargado.";
+                        $tipo=$_POST['codigo_archivo'.$ar];
+                        $descripcion=$_POST['nombre_archivo'.$ar];
+                        // $tipoPadre=2708;
+                        $sqlInsert="INSERT INTO archivos_adjuntos_solicitud_facturacion (cod_tipoarchivo,descripcion,direccion_archivo,cod_solicitud_facturacion) 
+                        VALUES ('$tipo','$descripcion','$target_path','$cod_facturacion')";
+                        $stmtInsert = $dbh->prepare($sqlInsert);
+                        $stmtInsert->execute();    
+                        // print_r($sqlInsert);
+                      }else {    
+                          echo "Error al guardar archivo.";
+                      } 
+                    }
+                }
+            }
         }
         if(isset($_POST['q'])){
           $q=$_POST['q'];
           $s=$_POST['r'];
           $u=$_POST['r'];
           $v=$_POST['r'];
-          showAlertSuccessError($flagSuccess,$urlListSol."&q=".$q."&s=".$s."&u=".$u."&v=".$v);
+          showAlertSuccessError($flagSuccess,"../".$urlListSol."&q=".$q."&s=".$s."&u=".$u."&v=".$v);
         }else{
-          showAlertSuccessError($flagSuccess,$urlListSol);
+          showAlertSuccessError($flagSuccess,"../".$urlListSol);
         }
     }//si es insert o update
     

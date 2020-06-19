@@ -118,14 +118,14 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 			            '$size = 9;'.
 			            '$y = $pdf->get_height() - 24;'.
 			            '$x = $pdf->get_width() - 15 - Font_Metrics::get_text_width("1/1", $font, $size);'.
-			            '$pdf->page_text($x, $y, "{PAGE_NUM}/{PAGE_COUNT}", $font, $size);'.
+			            '$pdf->page_text($x, $y, "{PAGE_NUM}/{PAGE_COUNT}", $font, $size);'.			            
 			          '}'.
 			        '</script>';
 			// $html.=  '<header class="header">';
 		}else{
 			$html.='<hr>';
 		}
-		$html.='<div  style="height: 49%">';
+		$html.='<div  style="height: 49.4%">';
     		$html.='<table  style="width: 100%;">
               	<thead>
 	                <tr>
