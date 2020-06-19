@@ -3734,9 +3734,10 @@ function descargarPDFFacturas($nom,$html){
   $mydompdf = new DOMPDF();
   ob_clean();
   $mydompdf->load_html($html);
+  $mydompdf->set_paper("A4", "portrait");
   $mydompdf->render();
   $canvas = $mydompdf->get_canvas();
-  $canvas->page_text(500, 25, "", Font_Metrics::get_font("sans-serif"), 10, array(0,0,0)); 
+  $canvas->page_text(500, 25, "", Font_Metrics::get_font("sans-serif"), 10, array(0,0,0));   
   $mydompdf->set_base_path('assets/libraries/plantillaPDFFactura.css');
   $mydompdf->stream($nom.".pdf", array("Attachment" => false));
   //guardar pdf
@@ -3760,7 +3761,8 @@ function descargarPDFFacturasCopiaCliente($nom,$html){
   // $pdf = $mydompdf->output();
   // file_put_contents("../simulaciones_servicios/facturas/".$nom.".pdf", $pdf);
     $dompdf = new DOMPDF();
-    $dompdf->set_paper("letter", "portrait");
+    // $dompdf->set_paper("letter", "portrait");
+    $mydompdf->set_paper("A4", "portrait");
     $dompdf->load_html($html);    
     $dompdf->render();
     $pdf = $dompdf->output();
