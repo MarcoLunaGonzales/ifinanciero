@@ -11,11 +11,13 @@ $sqlX="SET NAMES 'utf8'";
 $stmtX = $dbh->prepare($sqlX);
 $stmtX->execute();
 set_time_limit(300);
+$saldo=$_GET['saldo'];
 
 $codigo=0;
 $lista=obtenerObtenerLibretaBancaria($codigo);
 // var_dump($lista->datos->detalle);
 ?>
+<center><b><p>monto DEPOSITO EN CUENTA a facturar <?=number_format($saldo,2)?> Bs.</p></b></center>
 <table  class="table table-bordered table-condensed table-sm">
   <thead>
     <tr style="background:#21618C; color:#fff;">

@@ -14488,13 +14488,14 @@ function subirArchivoExcelLibretaBancaria(tipo,nombre_tipo){
 function abrirLibretaBancaria(datos,direccion,indice){
   var d=datos.split('/');
   var cod_solicitudfacturacion=d[0];
+  var saldo=d[2];
   document.getElementById("cod_solicitudfacturacion").value=cod_solicitudfacturacion;
   document.getElementById("direccion").value=direccion;
   document.getElementById("indice").value=indice;
   document.getElementById("datos").value=datos;
   var contenedor = document.getElementById('div_contenedor_libretaBancaria');    
   ajax=nuevoAjax();
-  ajax.open('GET', 'simulaciones_servicios/ajax_listado_libreta_bancaria.php',true);
+  ajax.open('GET', 'simulaciones_servicios/ajax_listado_libreta_bancaria.php?saldo='+saldo,true);
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
       contenedor.innerHTML = ajax.responseText;      
@@ -14554,6 +14555,21 @@ function seleccionar_libretaBancaria(cod_libreta){
 
 function activardetalleLibreta(j){  
   $(".libretaDetalles_"+j).toggle();
+}
+function abrirArchivosAdjuntos(datos){
+  var d=datos.split('/');
+  var cod_solicitudfacturacion=d[0];
+  var contenedor = document.getElementById('contenedor_archivos_respaldo_sol_fac');    
+  ajax=nuevoAjax();
+  ajax.open('GET', 'simulaciones_servicios/ajax_modal_archivos_view.php?cod_facturacion='+cod_solicitudfacturacion,true);
+  ajax.onreadystatechange=function() {
+  if (ajax.readyState==4) {
+    contenedor.innerHTML = ajax.responseText;      
+    $('.selectpicker').selectpicker(["refresh"]);
+    $("#modalFile_view").modal("show");       
+  }
+  }
+  ajax.send(null);
 }
 
 

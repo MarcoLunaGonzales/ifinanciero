@@ -24,7 +24,7 @@
 
 // ejecutarGenerarFactura($sucursalId,$fechaFactura,$nitciCliente,$razonSocial,$importeTotal,$items);
 
-function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciCliente,$razonSocial,$importeTotal,$items){
+function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciCliente,$razonSocial,$importeTotal,$items,$CodLibretaDetalle){
     require_once __DIR__.'/../conexion.php';
     require '../assets/phpqrcode/qrlib.php';
     include '../assets/controlcode/sin/ControlCode.php';
@@ -42,7 +42,6 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
     //$globalUser=$_SESSION["globalUser"];
     //RECIBIMOS LAS VARIABLES    
     try{
-
         $cod_solicitudfacturacion = 0;
         $cod_uo_solicitud = 5;
         $cod_area_solicitud = 13;
@@ -112,16 +111,22 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
                         $stmtNroFac->execute();
                         $resultNroFact = $stmtNroFac->fetch();    
                         $cod_facturaVenta = $resultNroFact['codigo'];
-                        ////ahora el detalle de la factura
-                        // $cod_facturaVenta=0;
-                        
+                        if($CodLibretaDetalle>0){
+                            $cod_libreta=$CodLibretaDetalle;
+                            //si es de tipo deposito en cuenta insertamos en libreta bancaria
+                            $sqlUpdateLibreta="UPDATE libretas_bancariasdetalle SET cod_factura=$cod_facturaVenta where codigo=$cod_libreta";
+                            $stmtUpdateLibreta = $dbh->prepare($sqlUpdateLibreta);                            
+                            $stmtUpdateLibreta->execute();
+                            $number_of_rows  = $stmtUpdateLibreta->rowCount();
+                            
+                            if($number_of_rows==0 || $number_of_rows==''){
+                                $sqldeleteCabeceraFactura="DELETE from facturas_venta where codigo=$cod_facturaVenta";
+                                $stmtDeleteCAbeceraFactura = $dbh->prepare($sqldeleteCabeceraFactura);
+                                $flagSuccess=$stmtDeleteCAbeceraFactura->execute();
+                                return "17###";
+                            }
+                        }
                         foreach ($items as $valor) {
-                            // $suscripcionId=$valor->suscripcionId;
-                            // $pagoCursoId=$valor->pagoCursoId;
-                            // $items=$valor->detalle;
-                            // $precioUnitario=$valor->precioUnitario;
-                            // $cantidad=$valor->cantidad;
-
                             $suscripcionId=$valor['suscripcionId'];
                             $pagoCursoId=$valor['pagoCursoId'];
                             $detalle=$valor['detalle'];
@@ -142,8 +147,9 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
             }
         }    
     } catch(PDOException $ex){
-        echo "Un error ocurrio".$ex->getMessage();
-        echo "Error : ".$error;
+        // echo "Un error ocurrio".$ex->getMessage();
+        // echo "Error : ".$error;
+        return "12###";
     }
 
 }

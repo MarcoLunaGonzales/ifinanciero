@@ -1567,7 +1567,36 @@ function obtenerDirectoriosSol($ruta){
         echo "No tiene archivos adjuntos";
     }
 }
+function obtenerDirectoriosSol_solfac($ruta){
+    // Se comprueba que realmente sea la ruta de un directorio
+    if (is_dir($ruta)){
+        // Abre un gestor de directorios para la ruta indicada
+        $gestor = opendir($ruta);
+        echo "<div>";
 
+        // Recorre todos los elementos del directorio
+        while (($archivo = readdir($gestor)) !== false)  {
+                
+            $ruta_completa = $ruta . "/" . $archivo;
+
+            // Se muestran todos los archivos y carpetas excepto "." y ".."
+            if ($archivo != "." && $archivo != "..") {
+                // Si es un directorio se recorre recursivamente
+                if (is_dir($ruta_completa)) {
+                 
+                } else {
+                  echo "<div class='btn-group'><a class='btn btn-sm btn-info btn-block' href='ifinanciero/".$ruta_completa."' target='_blank'>" . $archivo . "</a><a class='btn btn-sm btn-default' href='ifinanciero/".$ruta_completa."' download='ifinanciero/".$archivo."'><i class='material-icons'>vertical_align_bottom</i></a></div>";
+                }
+            }
+        }
+        
+        // Cierra el gestor de directorios
+        closedir($gestor);
+        echo "</div>";
+    } else {
+        echo "No tiene archivos adjuntos";
+    }
+}
 
 function obtenerCodigoPlanCosto(){
    $dbh = new Conexion();
@@ -7060,6 +7089,16 @@ function verificarFechaMaxDetalleLibreta($fecha,$codigo){
    $valor=0;
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       $valor++;
+   }
+   return($valor);
+}
+function nameTipoPagoSolFac($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT nombre FROM tipos_pago where codigo=$codigo");
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['nombre'];
    }
    return($valor);
 }

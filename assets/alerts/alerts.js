@@ -39,7 +39,7 @@ alerts = {
         })
     }else if (type == 'warning-message-and-confirmation-anular-factura') {
       swal({
-        title: '¿Quieres Anular la Factura?',
+        title: '¿Desea Anular la Factura?',
         text: "",
         type: 'warning',
         showCancelButton: true,
@@ -58,7 +58,7 @@ alerts = {
         })
     }else if (type == 'warning-message-and-confirmation-anular-solicitud') {
       swal({
-        title: '¿Quieres Anular la Solicitud?',
+        title: '¿Desea Anular la Solicitud?',
         text: "",
         type: 'warning',
         showCancelButton: true,
@@ -77,7 +77,7 @@ alerts = {
         })
     }else if (type == 'warning-message-and-confirmation-generar-factura') {
       swal({
-        title: '¿Quieres generar la Factura?',
+        title: '¿Desea generar la Factura?',
         text: "",
         type: 'warning',
         showCancelButton: true,
@@ -88,7 +88,8 @@ alerts = {
         buttonsStyling: false
       }).then((result) => {
           if (result.value) {
-            location.href=url; 
+            // location.href=url; 
+            window.open(url,'_blank'); 
             return(true);
           } else if (result.dismiss === Swal.DismissReason.cancel) {
             return(false);
@@ -97,7 +98,7 @@ alerts = {
     }
     else if (type == 'warning-message-and-confirmation-cambiar-estado') {
       swal({
-        title: '¿Quieres Activar ésta Distribución?',
+        title: '¿Desea Activar ésta Distribución?',
         text: "",
         type: 'warning',
         showCancelButton: true,
@@ -138,7 +139,7 @@ alerts = {
     else if (type == 'warning-message-and-confirmationGeneral') {
       swal({
         title: '¿Estás Seguro?',
-        text: "¡No podra revertir el Proceso!",
+        text: "¡No podrá revertir el Proceso!",
         type: 'warning',
         showCancelButton: true,
         confirmButtonClass: 'btn btn-success',

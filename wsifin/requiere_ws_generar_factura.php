@@ -32,8 +32,8 @@ $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey,
               "nitciCliente"=>5952134, //nit o ci de cliente
               "razonSocial"=>'Salinas', //razon social
               "importeTotal"=>1000, //importe total
-              "tipoPago"=>'1', //tipo de pago
-              "CodLibretaDetalle"=>'0', //codigo de libreta detalle, 0 en caso de no estar relacionado
+              "tipoPago"=>'49', //tipo de pago
+              "CodLibretaDetalle"=>'422', //codigo de libreta detalle, 0 en caso de no estar relacionado
               "items"=>$Array // array con el detalle           
               );
     $parametros=json_encode($parametros);

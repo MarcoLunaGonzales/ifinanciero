@@ -2,6 +2,7 @@
 <?php
 require_once 'generar_factura.php';
 require_once '../conexion.php';
+require_once '../functions.php';
 function check($x) {
     if (date('Y-m-d', strtotime($x)) == $x) {
       return true;
@@ -24,6 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $accion=NULL;
     $estado='false';
     $mensaje="ERROR";
+    $sw_cod_libreta=true;
     $sucursalId=null;$pasarelaId=null;$fechaFactura=null;$nitciCliente=null;$razonSocial=null;$importeTotal=null;$items=null;$CodLibretaDetalle=null;$tipoPago=null;
     if(isset($datos['accion'])&&isset($datos['sIdentificador'])&&isset($datos['sKey']))
     {
@@ -38,13 +40,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     if(isset($datos['nitciCliente'])) $nitciCliente=$datos['nitciCliente'];//recibimos ci o nit del cliente
                     if(isset($datos['razonSocial'])) $razonSocial=strval($datos['razonSocial']);//recibimos razon social
                     if(isset($datos['importeTotal'])) $importeTotal=$datos['importeTotal'];//recibimos el importe total
-                    if(isset($datos['tipoPago'])) {$tipoPago=$datos['tipoPago'];if($tipoPago==0)$tipoPago=0;}//recibimos el tipo de pago
+                    if(isset($datos['tipoPago'])) $tipoPago=$datos['tipoPago'];//recibimos el tipo de pago
                     if(isset($datos['CodLibretaDetalle']))$CodLibretaDetalle=$datos['CodLibretaDetalle'];//recibimos el importe total
                     if(isset($datos['items'])) $items=$datos['items'];//recibimos array de detalle
                     $cont_items=0;
                     $importeTotal_x=0;
                     $sw=true;
                     $fechaFactura_actual=date('Y-m-d');
+                    $cod_tipopago_deposito_cuenta=obtenerValorConfiguracion(55);
                     foreach ($items as $valor) {  
                         $cont_items++;
                         $suscripcionId=$valor['suscripcionId'];
@@ -89,32 +92,45 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $mensaje = "Razón Social vacía";
                     }elseif($tipoPago==null || $tipoPago=='' || $tipoPago==' '){
                         $estado=16;
-                        $mensaje = "Tipo de Pago Vacío".$tipoPago;
+                        $mensaje = "Tipo de Pago no encontrado";
                     }elseif($CodLibretaDetalle==null || $CodLibretaDetalle=='' || $CodLibretaDetalle==' '){
                         $estado=17;
-                        $mensaje = "CodLibretaDetalle Vacío".$tipoPago;
+                        $mensaje = "CodLibretaDetalle no encontrado";
                     }elseif($items==null || $cont_items<=0){
                         $estado=6;
                         $mensaje = "Items Vacío";
                     }elseif(!$sw){
                         //mostrará el error de los items 
                     }else{
-                        // $estado=0;
-                        // $mensaje = "todo ok";
-                        $rspString = ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciCliente,$razonSocial,$importeTotal_x,$items);//llamamos a la funcion                 
-                        $rspArray = explode("###", $rspString);
-                        $rsp=$rspArray[0];
-                        $cod_factura=$rspArray[1];
-                        if($rsp==0){
-                            $estado=0;
-                            $mensaje = "Factura Generada Correctamente";
-                        }elseif($rsp==11){
-                            $estado=11;
-                            $mensaje = "Hubo un error al generar la factura, contáctese con el administrador.";
-                        }else{
-                            $estado=12;//no encuentro el error
-                            $mensaje = "Error interno del servicio";
+                        if($tipoPago==$cod_tipopago_deposito_cuenta){
+                            if($CodLibretaDetalle==0){
+                                $estado=17;
+                                $mensaje = "CodLibretaDetalle no encontrado";
+                                $sw_cod_libreta=false;
+                            }else{
+                                $sw_cod_libreta=true;
+                            }
                         }
+                        if($sw_cod_libreta){
+                            $rspString = ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciCliente,$razonSocial,$importeTotal_x,$items,$CodLibretaDetalle);//llamamos a la funcion                 
+                            $rspArray = explode("###", $rspString);
+                            $rsp=$rspArray[0];
+                            $cod_factura=$rspArray[1];
+                            if($rsp=='0'){
+                                $estado='0';
+                                $mensaje = "Factura Generada Correctamente";
+                            }elseif($rsp==11){
+                                $estado=11;
+                                $mensaje = "Hubo un error al generar la factura, contáctese con el administrador.";
+                            }elseif($rsp==17){
+                                $estado=17;
+                                $mensaje = "CodLibretaDetalle no encontrado.";
+                            }else{
+                                $estado=12;//no encuentro el error
+                                $mensaje = "Error interno del servicio";
+                            }
+                        }
+                            
                     }            
                 }else{
                     $estado=14;
@@ -133,7 +149,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $mensaje="Error en las credenciales sKey y sIde";
     }
     insertarlogFacturas($estado,$mensaje,$json);
-    if($estado==0){$resultado=array("estado"=>$estado,"mensaje"=>$mensaje,"IdFactura"=>$cod_factura);}
+    if($estado=='0'){$resultado=array("estado"=>$estado,"mensaje"=>$mensaje,"IdFactura"=>$cod_factura);}
     else $resultado=array("estado"=>$estado,"mensaje"=>$mensaje);
     header('Content-type: application/json');
     echo json_encode($resultado);

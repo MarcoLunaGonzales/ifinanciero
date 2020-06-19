@@ -27,8 +27,8 @@ $urlSolicitudfactura="?opcion=solicitud_facturacion_costos";
 $urlSolicitudfactura_empresa="?opcion=solicitud_facturacion_costos_empresas";
 
 $urlregistro_solicitud_facturacion="?opcion=registro_solicitud_facturacion";
-$urlSave_solicitud_facturacion_costos="?opcion=save_solicitud_facturacion_costos";
-$urlSave_solicitud_facturacion_costos_empresa="?opcion=save_solicitud_facturacion_costos_empresa";
+$urlSave_solicitud_facturacion_costos="simulaciones_costos/save_solicitud_facturacion_costos.php";
+$urlSave_solicitud_facturacion_costos_empresa="simulaciones_costos/save_solicitud_facturacion_costos_empresa.php";
 
 $urlGenerarFacturas2="simulaciones_costos/generarFacturas2.php";
 $urlGenerarFacturasPrint="simulaciones_servicios/generarFacturasPrint.php";

@@ -74,26 +74,26 @@ $stmtCliente->bindColumn('nombre', $nombre_cli);
                         <thead>
                           <tr>
                             <th class="text-center"></th>                          
-                            <th>Of - Area</th>                            
-                            <th>#Sol.</th>
-                            <th>Responsable</th>
-                            <th>Código<br>Servicio</th>                            
-                            <th>Fecha<br>Registro</th>
-                            <!-- <th>Fecha<br>a Facturar</th> -->
-                            <th style="color:#cc4545;">#Fact</th>                            
-                            <th>Importe<br>(BOB)</th>  
-                            <th>Persona<br>Contacto</th>  
-                            <th>Concepto</th>
-                            <th width="5%">Estado</th>
-                            <th class="text-right">Actions</th>
+                            <th><small>Of - Area</small></th>
+                            <th><small>#Sol.</small></th>
+                            <th><small>Responsable</small></th>
+                            <th><small>Código<br>Servicio</small></th>                            
+                            <th><small>Fecha<br>Registro</small></th>                            
+                            <th style="color:#ff0000;"><small>#Fact</small></th>
+                            <th><small>Importe<br>(BOB)</small></th>  
+                            <th><small>Tipo<br>Pago</small></th>
+                            <th><small>Concepto</small></th>
+                            <th width="5%"><small>Estado</small></th>
+                            <th class="text-right"><small>Actions</small></th>
                           </tr>
                         </thead>
                         <tbody>
-                        <?php
+                        <?php                          
                           $index=1;
                           $codigo_fact_x=0;
                           $cont= array();
                           while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+                            $datos_otros=$codigo_facturacion."/0/0/0/".$nit."/".$razon_social;//dato 
                           switch ($codEstado) {
                             case 1:
                               $btnEstado="btn-default";
@@ -114,6 +114,7 @@ $stmtCliente->bindColumn('nombre', $nombre_cli);
                               $btnEstado="btn-default";
                             break;
                           }
+
                             //verificamos si ya tiene factura generada y esta activa                           
                             $stmtFact = $dbh->prepare("SELECT codigo,nro_factura,cod_estadofactura,razon_social,nit,nro_autorizacion,importe,cod_comprobante from facturas_venta where cod_solicitudfacturacion=$codigo_facturacion and cod_estadofactura in (1,4)");
                             $stmtFact->execute();
@@ -202,7 +203,7 @@ $stmtCliente->bindColumn('nombre', $nombre_cli);
 
                             // --------
                             $responsable=namePersonal($cod_personal);//nombre del personal
-                            $nombre_contacto=nameContacto($persona_contacto);//nombre del personal
+                            $nombre_tipopago=nameTipoPagoSolFac($cod_tipopago);//
                             $nombre_area=trim(abrevArea($cod_area),'-');//nombre del area
                             $nombre_uo=trim(abrevUnidad($cod_unidadorganizacional),' - ');//nombre de la oficina
 
@@ -245,13 +246,12 @@ $stmtCliente->bindColumn('nombre', $nombre_cli);
                             <td><small><?=$codigo_alterno?></small></td>
                             <td><small><?=$fecha_registro;?></small></td>
                             <!-- <td><?=$fecha_solicitudfactura;?></small></td>      -->                       
-                            <td style="color:#298A08;"><small><?=$nro_fact_x;?><br><span style="color:#DF0101;"><?=$cadenaFacturasM;?></span></small></td>                         
+                            <td style="color:#298A08;"><small><?=$nro_fact_x;?><br><span style="color:#DF0101;"><?=$cadenaFacturasM;?></span></small></td>
                             <td class="text-right"><small><?=formatNumberDec($sumaTotalImporte) ;?></small></td>
-                            <td class="text-left"><small><?=$nombre_contacto;?></small></td>
+                            <td class="text-left" style="color:#ff0000;"><small><small><?=$nombre_tipopago;?></small></small></td>
                             <td width="35%"><small><?=$concepto_contabilizacion?></small></td>
                             <td><button class="btn <?=$btnEstado?> btn-sm btn-link"><small><?=$estado;?></small></button></td>
                             <!-- <td><?=$nit;?></td> -->
-
                             <td class="td-actions text-right">
                               <?php
                                 if($globalAdmin==1){ //
@@ -278,7 +278,10 @@ $stmtCliente->bindColumn('nombre', $nombre_cli);
                                     <button title="Detalles" class="btn btn-success" type="button" data-toggle="modal" data-target="#modalDetalleFacturaManual" onclick="agregaDatosDetalleFactManual('<?=$datos_FacManual;?>')">
                                       <i class="material-icons">list</i>
                                     </button> <?php 
-                                  }
+                                  }?>
+                                    <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir">print</i></a>
+                                      <a href='#' title="Archivos Adjuntos" class="btn btn-primary" onclick="abrirArchivosAdjuntos('<?=$datos_otros;?>')"><i class="material-icons" ><?=$iconFile?></i></a>
+                                <?php
                                 }
                               ?>
                             </td>
@@ -301,6 +304,7 @@ $stmtCliente->bindColumn('nombre', $nombre_cli);
           </div>  
     </div>
   </div>
+  <?php  require_once 'simulaciones_servicios/modal_subir_archivos.php';?>
 
   <!-- Modal busqueda -->
 <div class="modal fade" id="modalBuscador" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">

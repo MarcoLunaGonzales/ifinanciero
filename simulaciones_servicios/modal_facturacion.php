@@ -100,7 +100,6 @@
   </div>
 </div>
 <!-- modal para bancarizacion -->
-
 <!-- modal tipo pago porcentaje -->
 <div class="modal fade" id="modalBancarizacion" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog modal-lg" role="document">
@@ -180,8 +179,7 @@
     </div>
   </div>
 </div>
-
-<!-- small modal -->
+<!-- small modal detalle facturacion-->
 <div class="modal fade modal-primary" id="modalDetalleFac" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-xl">
     <div class="modal-content card">
@@ -220,7 +218,6 @@
     </div>  
   </div>
 </div>
-<!--    end small modal -->
 <!-- FActura manual-->
 <div class="modal fade" id="modalFacturaManual" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog modal-lg" role="document">

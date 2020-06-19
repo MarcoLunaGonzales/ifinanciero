@@ -53,12 +53,11 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             <th><small>Responsable</small></th>
                             <th><small>Codigo<br>Servicio</small></th>                            
                             <th><small>Fecha<br>Registro</small></th>                            
-                            <th style="color:#cc4545;"><small>#Fact</small></th>                            
+                            <th style="color:#ff0000;"><small>#Fact</small></th>
                             <th><small>Importe<br>(BOB)</small></th>  
-                            <th><small>Persona<br>Contacto</small></th>
+                            <th><small>Tipo<br>Pago</small></th>
                             <th width="15%"><small>Razón<br>Social</small></th>
-                            <th width="35%"><small>Concepto</small></th>              
-                            <!-- <th ><small>Estado</small></th>                             -->
+                            <th width="35%"><small>Concepto</small></th>                            
                             <th width="15%"><small>Observaciones</small></th>
                             <th class="text-right"><small>Actions</small></th>
                           </tr>
@@ -175,7 +174,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             $name_area_simulacion=trim(abrevArea($cod_area_simulacion),'-');
                             // --------
                             $responsable=namePersonal($cod_personal);//nombre del personal
-                            $nombre_contacto=nameContacto($persona_contacto);//nombre del personal
+                            $nombre_tipopago=nameTipoPagoSolFac($cod_tipopago);
                             $nombre_area=trim(abrevArea($cod_area),'-');//nombre del area
                             $nombre_uo=trim(abrevUnidad($cod_unidadorganizacional),' - ');//nombre de la oficina
                             //los registros de la factura
@@ -273,11 +272,10 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                 <td class="text-right"><small><?=$nro_correlativo;?></small></td>
                                 <td class="text-left"><small><?=$responsable;?></small></td>
                                 <td class="text-left"><small><?=$codigo_alterno?></small></td>
-                                <td><small><?=$fecha_registro;?></small></td>
-                                <!-- <td><?=$fecha_solicitudfactura;?></td>          -->                   
+                                <td><small><?=$fecha_registro;?></small></td>                                
                                 <td style="color:#298A08;"><small><?=$nro_fact_x;?><br><span style="color:#DF0101;"><?=$cadenaFacturasM;?></span></small></td>
                                 <td class="text-right"><small><?=formatNumberDec($sumaTotalImporte);?></small></td>
-                                <td class="text-left"><small><?=$nombre_contacto;?></small></td>
+                                <td class="text-left" style="color:#ff0000;"><small><small><?=$nombre_tipopago;?></small></small></td>
                                 <td class="text-left"><small><small><?=$razon_social;?></small></small></td>
                                 <td class="text-left"><small><?=$concepto_contabilizacion?></small></td>
                                 <!-- <td><?=$label?><small><?=$estado;?></small></span></td> -->
@@ -390,7 +388,8 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                           <?php
                                         }
                                       }?> 
-                                      <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir">print</i></a>                           
+                                      <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir">print</i></a>
+                                      <a href='#' title="Archivos Adjuntos" class="btn btn-primary" onclick="abrirArchivosAdjuntos('<?=$datos_FacManual;?>')"><i class="material-icons" ><?=$iconFile?></i></a>
                                     <?php }
                                   ?>
                                 </td>
@@ -415,6 +414,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
     </div>
   </div>
 <?php  require_once 'simulaciones_servicios/modal_facturacion.php';?>
+<?php  require_once 'simulaciones_servicios/modal_subir_archivos.php';?>
 <?php 
   $lan=sizeof($cont);
   error_reporting(0);

@@ -97,7 +97,7 @@ $descuento_cliente=0;
     <div class="container-fluid">
         <div style="overflow-y:scroll;">
             <div class="col-md-12">
-              <form id="formSoliFactTcp" class="form-horizontal" action="<?=$urlSave_solicitud_facturacion_costos;?>" method="post" onsubmit="return valida(this)"> 
+            <form id="formSoliFactTcp" class="form-horizontal" action="<?=$urlSave_solicitud_facturacion_costos;?>" method="post" onsubmit="return valida(this)" enctype="multipart/form-data">             
                 <?php
                 if(isset($_GET['q'])){?>
                     <input type="hidden" name="q" id="q" value="<?=$q?>">
@@ -371,7 +371,18 @@ $descuento_cliente=0;
                             </div>
                         </div>
                         <!-- fin observaciones -->
-                        <!-- fin observaciones -->
+                         <!-- archivos -->
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <center>
+                                    <div class="btn-group">
+                                        <a title="Subir Archivos Respaldo (shift+r)" href="#modalFile" data-toggle="modal" data-target="#modalFile" class="btn btn-default btn-sm">Archivos 
+                                            <i class="material-icons"><?=$iconFile?></i><span id="narch" class="bg-warning"></span>
+                                        </a>
+                                    </div> 
+                                </center>
+                            </div>
+                        </div>
                         <div class="card">
                             <div class="card-header <?=$colorCard;?> card-header-text">
                                 <div class="card-text">
@@ -621,22 +632,23 @@ $descuento_cliente=0;
                                 </div> -->
                             </div>
                         </div>                 
-                  </div>
-                  <div class="card-footer ml-auto mr-auto">
-                    <?php if($estado_ws){?>
-                    <button type="submit" class="<?=$buttonNormal;?>">Guardar</button>
-                    <?php }?>
-                    <?php                                    
-                        if(isset($_GET['q'])){?>
-                            <a href='<?=$urlListSol?>&q=<?=$q?>&v=<?=$r?>&u=<?=$r?>&s=<?=$r?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> IR A SF</a>                    
-                        <?php }else{?>
-                            <a href='<?=$urlListSol?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> IR A SF</a>                    
-                        <?php }                     
-                    ?> 
-                    
-                  </div>
+                    </div>
+                    <div class="card-footer ml-auto mr-auto">
+                        <?php if($estado_ws){?>
+                        <button type="submit" class="<?=$buttonNormal;?>">Guardar</button>
+                        <?php }?>
+                        <?php                                    
+                            if(isset($_GET['q'])){?>
+                                <a href='<?=$urlListSol?>&q=<?=$q?>&v=<?=$r?>&u=<?=$r?>&s=<?=$r?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> IR A SF</a>                    
+                            <?php }else{?>
+                                <a href='<?=$urlListSol?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> IR A SF</a>                    
+                            <?php }                     
+                        ?> 
+                        
+                    </div>
                 </div>
-              </form>                  
+                <?php  require_once 'simulaciones_servicios/modal_subir_archivos.php';?>
+            </form>                  
             </div>
         </div>
     </div>

@@ -83,40 +83,39 @@ $descuento_cliente=obtenerDescuentoCliente($cod_cliente);
     <div class="container-fluid">
         <div style="overflow-y:scroll;">
             <div class="col-md-12">
-              <form id="formSoliFactTcp" class="form-horizontal" action="<?=$urlSaveSolicitudfactura;?>" method="post" onsubmit="return valida(this)" enctype="multipart/form-data">
-                <?php 
-                if(isset($_GET['q'])){?>
-                    <input type="hidden" name="usuario_ibnored" id="usuario_ibnored" value="<?=$q;?>">
-                    <input type="hidden" name="usuario_ibnored_s" id="usuario_ibnored_s" value="<?=$s;?>">
-                    <input type="hidden" name="usuario_ibnored_u" id="usuario_ibnored_u" value="<?=$u;?>">
-                    <input type="hidden" name="usuario_ibnored_v" id="usuario_ibnored_v" value="<?=$v;?>">
+                <form id="formSoliFactTcp" class="form-horizontal" action="<?=$urlSaveSolicitudfactura;?>" method="post" onsubmit="return valida(this)" enctype="multipart/form-data">
                     <?php 
-                }
-                ?>
-                <!-- si hubiese bancarizacion -->
-                <input type="hidden" name="nro_contrato" id="nro_contrato" value="0"/>
-                <input type="hidden" name="nro_cuenta_doc" id="nro_cuenta_doc" value="0"/>
-                <input type="hidden" name="nit_entidad_financiera" id="nit_entidad_financiera" value="0"/>
-                <input type="hidden" name="nro_transaccion" id="nro_transaccion" value="0">
-                <input type="hidden" name="tipo_doc_pago" id="tipo_doc_pago" value="0">
-                <input type="hidden" name="fecha_doc_pago" id="fecha_doc_pago" value="0">
+                    if(isset($_GET['q'])){?>
+                        <input type="hidden" name="usuario_ibnored" id="usuario_ibnored" value="<?=$q;?>">
+                        <input type="hidden" name="usuario_ibnored_s" id="usuario_ibnored_s" value="<?=$s;?>">
+                        <input type="hidden" name="usuario_ibnored_u" id="usuario_ibnored_u" value="<?=$u;?>">
+                        <input type="hidden" name="usuario_ibnored_v" id="usuario_ibnored_v" value="<?=$v;?>">
+                        <?php 
+                    }
+                    ?>
+                    <input type="hidden" value="-100" id="tipo_documento_otro" name="tipo_documento_otro">
+                    <!-- si hubiese bancarizacion -->
+                    <input type="hidden" name="nro_contrato" id="nro_contrato" value="0"/>
+                    <input type="hidden" name="nro_cuenta_doc" id="nro_cuenta_doc" value="0"/>
+                    <input type="hidden" name="nit_entidad_financiera" id="nit_entidad_financiera" value="0"/>
+                    <input type="hidden" name="nro_transaccion" id="nro_transaccion" value="0">
+                    <input type="hidden" name="tipo_doc_pago" id="tipo_doc_pago" value="0">
+                    <input type="hidden" name="fecha_doc_pago" id="fecha_doc_pago" value="0">
 
+                    <input type="hidden" name="Codigo_alterno" id="Codigo_alterno" value="<?=$Codigo_alterno;?>"/>
+                    <input type="hidden" name="cod_simulacion" id="cod_simulacion" value="<?=$cod_simulacion;?>"/>
+                    <input type="hidden" name="cod_facturacion" id="cod_facturacion" value="<?=$cod_facturacion;?>"/>
+                    <input type="hidden" name="cantidad_filas" id="cantidad_filas" value="<?=$contadorRegistros;?>">
+                    <input type="hidden" name="IdTipo" id="IdTipo" value="<?=$id_tiposervicio;?>"><!-- //tipo de servicio -->
 
-
-                <input type="hidden" name="Codigo_alterno" id="Codigo_alterno" value="<?=$Codigo_alterno;?>"/>
-                <input type="hidden" name="cod_simulacion" id="cod_simulacion" value="<?=$cod_simulacion;?>"/>
-                <input type="hidden" name="cod_facturacion" id="cod_facturacion" value="<?=$cod_facturacion;?>"/>
-                <input type="hidden" name="cantidad_filas" id="cantidad_filas" value="<?=$contadorRegistros;?>">
-                <input type="hidden" name="IdTipo" id="IdTipo" value="<?=$id_tiposervicio;?>"><!-- //tipo de servicio -->
-
-                <div class="card">
-                  <div class="card-header <?=$colorCard;?> card-header-text">
-                    <div class="card-text">
-                      <h4 class="card-title"><?php if ($cod_facturacion == 0) echo "Registrar "; else echo "Editar ";?>Solicitud de Facturación Manual</h4>                      
+                    <div class="card">
+                      <div class="card-header <?=$colorCard;?> card-header-text">
+                        <div class="card-text">
+                          <h4 class="card-title"><?php if ($cod_facturacion == 0) echo "Registrar "; else echo "Editar ";?>Solicitud de Facturación Manual</h4>                      
+                        </div>
+                        <!-- <h4 class="card-title" align="center"><b>Propuesta: Manual</b></h4> -->
                     </div>
-                    <!-- <h4 class="card-title" align="center"><b>Propuesta: Manual</b></h4> -->
-                  </div>
-                  <div class="card-body ">
+                    <div class="card-body ">
                         <div class="row">
                           <label class="col-sm-2 col-form-label">Oficina</label>
                           <div class="col-sm-4">
@@ -152,7 +151,7 @@ $descuento_cliente=obtenerDescuentoCliente($cod_cliente);
                                 </div>
                             </div>
                         </div>
-                            <!--fin ofician y area -->
+                        <!--fin ofician y area -->
                         <div class="row">
                             <label class="col-sm-2 col-form-label">Fecha<br>Registro</label>
                             <div class="col-sm-4">
@@ -180,7 +179,6 @@ $descuento_cliente=obtenerDescuentoCliente($cod_cliente);
                             </div>
                         </div>
                         <!-- fin fechas -->
-                      
                         <div class="row" >
                             <script>var nfac=[];itemTipoPagos_facturacion.push(nfac);var nfacAreas=[];itemAreas_facturacion.push(nfacAreas);</script>
                             <div class="">
@@ -318,11 +316,8 @@ $descuento_cliente=obtenerDescuentoCliente($cod_cliente);
                                     <input type="text" value="<?=$responsable?>" readonly="true" class="form-control" style="background-color:#E3CEF6;text-align: left">
                                 </div>
                             </div>
-
-                            
                         </div>
                         <!-- fin tipos pago y objeto                 -->
-                        
                         <div class="row">
                             <label class="col-sm-2 col-form-label">Cliente</label>
                             <div class="col-sm-4">
@@ -368,10 +363,8 @@ $descuento_cliente=obtenerDescuentoCliente($cod_cliente);
                                     </a> 
                                 </div>
                             </div>
-                            
                         </div>
                         <!-- fin cliente  -->
-
                         <div id="contenedor_razon_nit">
                             <div class="row">
                                 <label class="col-sm-2 col-form-label">Razón Social</label>
@@ -406,7 +399,19 @@ $descuento_cliente=obtenerDescuentoCliente($cod_cliente);
                             </div>
                         </div>
                         <!-- fin observaciones -->
-
+                        <!-- archivos -->
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <center>
+                                    <div class="btn-group">
+                                        <a title="Subir Archivos Respaldo (shift+r)" href="#modalFile" data-toggle="modal" data-target="#modalFile" class="btn btn-default btn-sm">Archivos 
+                                            <i class="material-icons"><?=$iconFile?></i><span id="narch" class="bg-warning"></span>
+                                        </a>
+                                    </div> 
+                                </center>
+                            </div>
+                        </div>
+                        <!-- detalle de sol fac -->
                         <div class="card">
                             <div class="card-header <?=$colorCard;?> card-header-text">
                                 <div class="card-text">
@@ -560,7 +565,7 @@ $descuento_cliente=obtenerDescuentoCliente($cod_cliente);
                                     <input type="hidden" id="modal_numeroservicio" name="modal_numeroservicio" value="<?=$iii?>">                    
                                     <input type="hidden" id="modal_totalmontos" name="modal_totalmontos">
                                     <!-- <script>activarInputMontoFilaServicio2();</script>   -->
-                                    <input type="hidden" id="comprobante_auxiliar" name="comprobante_auxiliar">
+                                    <input type="hidden" id="comprobante_auxiliar" name="comprobante_auxiliar" value="0">
                                     <div class="row">
                                         <label class="col-sm-5 col-form-label" style="color:#000000">Monto Total</label>
                                         <div class="col-sm-4">
@@ -604,19 +609,20 @@ $descuento_cliente=obtenerDescuentoCliente($cod_cliente);
                                     </div>
                                 </div>
                             </div>
-                        </div>                    
-                  </div>
-                  <div class="card-footer fixed-bottom">
-                    <button type="submit" class="<?=$buttonNormal;?>">Guardar</button><?php
-                    if(isset($_GET['q'])){  ?>
-                        <a href='<?=$urlSolicitudfactura;?>&q=<?=$q?>&r=<?=$r?>&s=<?=$s?>&u=<?=$u?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> IR A SF </a>
-                    <?php }else{?>
-                        <a href='<?=$urlSolicitudfactura?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> IR A SF </a>
-                    <?php }
-                    ?>
-                  </div>
-                </div>
-              </form>                  
+                        </div>
+                    </div>
+                    <div class="card-footer fixed-bottom">
+                        <button type="submit" class="<?=$buttonNormal;?>">Guardar</button><?php
+                        if(isset($_GET['q'])){  ?>
+                            <a href='<?=$urlSolicitudfactura;?>&q=<?=$q?>&r=<?=$r?>&s=<?=$s?>&u=<?=$u?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> IR A SF </a>
+                        <?php }else{?>
+                            <a href='<?=$urlSolicitudfactura?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> IR A SF </a>
+                        <?php }
+                        ?>
+                    </div>
+                    <?php  require_once 'simulaciones_servicios/modal_subir_archivos.php';?>
+                    
+                </form>                  
             </div>
         </div>
     </div>
@@ -661,10 +667,6 @@ function valida(f) {
     }else{
         var ok = true;
         var msg = "El monto Total no debe ser '0' o 'negativo', Habilite los Items que desee facturar...\n";  
-        if(f.elements["comprobante_auxiliar"].value == 0 || f.elements["comprobante_auxiliar"].value < 0 || f.elements["comprobante_auxiliar"].value == '')
-        {    
-        ok = false;
-        }
         if(f.elements["monto_total"].value>0)
         {    
         ok = true;

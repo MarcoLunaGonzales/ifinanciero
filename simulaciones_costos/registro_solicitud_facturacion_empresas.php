@@ -87,7 +87,7 @@ $descuento_cliente=0;
     <div class="container-fluid">
         <div style="overflow-y:scroll;">
             <div class="col-md-12">
-              <form id="formSoliFactTcp" class="form-horizontal" action="<?=$urlSave_solicitud_facturacion_costos_empresa;?>" method="post" onsubmit="return valida(this)">
+            <form id="formSoliFactTcp" class="form-horizontal" action="<?=$urlSave_solicitud_facturacion_costos_empresa;?>" method="post" onsubmit="return valida(this)" enctype="multipart/form-data">
                 <?php
                 if(isset($_GET['q'])){?>
                     <input type="hidden" name="q" id="q" value="<?=$q?>">
@@ -378,7 +378,18 @@ $descuento_cliente=0;
                             </div>
                         </div>
                         <!-- fin observaciones -->
-                        <!-- fin observaciones -->
+                         <!-- archivos -->
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <center>
+                                    <div class="btn-group">
+                                        <a title="Subir Archivos Respaldo (shift+r)" href="#modalFile" data-toggle="modal" data-target="#modalFile" class="btn btn-default btn-sm">Archivos 
+                                            <i class="material-icons"><?=$iconFile?></i><span id="narch" class="bg-warning"></span>
+                                        </a>
+                                    </div> 
+                                </center>
+                            </div>
+                        </div>
                         <div class="card">
                             <div class="card-header <?=$colorCard;?> card-header-text">
                                 <div class="card-text">
@@ -455,6 +466,7 @@ $descuento_cliente=0;
                                                     $montoPagado=0;
                                                     $estadoPagado=0;
                                                     $cod_modulo=0;
+                                                    $saldo=$montoPre;
                                                     // $controlador_ws=false;
                                                     // $datos=verifica_pago_curso($IdCurso,$cod_empresa,$codCS);
                                                     // foreach ($datos->lstModulos as $listas) {
@@ -577,8 +589,6 @@ $descuento_cliente=0;
                                         </tr>
                                     </tbody>
                                 </table>
-
-
                                 <input type="hidden" id="modal_numeroservicio" name="modal_numeroservicio" value="<?=$iii?>">                    
                                 <input type="hidden" id="modal_totalmontos" name="modal_totalmontos">
                                 <!-- <script>activarInputMontoFilaServicio2();</script>   -->
@@ -615,57 +625,32 @@ $descuento_cliente=0;
                                 </div> -->
                             </div>
                         </div>                 
-                  </div>
-                  <div class="card-footer ml-auto mr-auto">
-                    <button type="submit" class="<?=$buttonNormal;?>">Guardar</button>
-                    <?php                     
-                        if(isset($_GET['q'])){?>
-                            <a href='<?=$urlListSol?>&q=<?=$q?>&v=<?=$r?>&u=<?=$r?>&s=<?=$r?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> IR A SF </a>
-                        <?php }else{?>
-                            <a href='<?=$urlListSol?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> IR A SF </a>                    
-                        <?php }                     
-                    ?> 
-                  </div>
+                    </div>
+                    <div class="card-footer ml-auto mr-auto">
+                        <button type="submit" class="<?=$buttonNormal;?>">Guardar</button>
+                        <?php                     
+                            if(isset($_GET['q'])){?>
+                                <a href='<?=$urlListSol?>&q=<?=$q?>&v=<?=$r?>&u=<?=$r?>&s=<?=$r?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> IR A SF </a>
+                            <?php }else{?>
+                                <a href='<?=$urlListSol?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> IR A SF </a>                    
+                            <?php }                     
+                        ?> 
+                    </div>
                 </div>
-              </form>                  
+                <?php  require_once 'simulaciones_servicios/modal_subir_archivos.php';?>
+            </form>                  
             </div>
         </div>
     </div>
 </div>
 
-<div class="cargar-ajax d-none">
-  <div class="div-loading text-center">
-     <h4 class="text-warning font-weight-bold" id="texto_ajax_titulo">Procesando Datos</h4>
-     <p class="text-white">Aguard&aacute; un momento por favor</p>  
-  </div>
-</div>
-<div class="modal fade modal-arriba modal-primary" id="modalAgregarProveedor" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content card">
-            <div class="card-header card-header-warning card-header-icon">
-                <div class="card-icon">
-                    <i class="material-icons text-dark">ballot</i>
-                 </div>
-                  <h4 class="card-title">Contacto</h4>
-            </div>
-            <div class="card-body">
-                 <div id="datosProveedorNuevo">
-                   
-                 </div> 
-                <div class="form-group float-right">
-                        <button type="button" onclick="guardarDatoscontacto()" class="btn btn-info btn-round">Agregar</button>
-                </div>
-          </div>
-      </div>  
-    </div>
-</div>
 
 <!-- verifica que esté seleccionado al menos un item -->
 <script type="text/javascript">
     function valida(f) {
         var ok = true;
         var msg = "El monto Total no debe ser '0' o 'negativo', Habilite los Items que desee facturar...\n";  
-        if(f.elements["modal_totalmontoserv"].value == 0 || f.elements["modal_totalmontoserv"].value < 0 || f.elements["modal_totalmontoserv"].value == '')
+        if(f.elements["modal_totalmontoserv_costo"].value == 0 || f.elements["modal_totalmontoserv_costo"].value < 0 || f.elements["modal_totalmontoserv_costo"].value == '')
         {    
             ok = false;
         }
