@@ -7098,7 +7098,7 @@ function verificarFechaMaxDetalleLibreta($fecha,$codigo){
 
 function obtenerDatosFacturaVenta($codigo){
   $dbh = new Conexion();
-  $stmtVerif = $dbh->prepare("SELECT * FROM facturas_venta where cod_solicitudfacturacion=$codigo");
+  $stmtVerif = $dbh->prepare("SELECT * FROM facturas_venta where codigo=$codigo");
   $stmtVerif->execute();
   $resultVerif = $stmtVerif->fetch();    
   $fecha = $resultVerif['fecha_factura'];
@@ -7119,6 +7119,29 @@ function nameTipoPagoSolFac($codigo){
       $valor=$row['nombre'];
    }
    return($valor);
+}
+function obtenerDetalleSolicitudFacturacion($codigo){
+  $stmtDetalleSol = $dbh->prepare("SELECT cantidad,precio,descripcion_alterna from solicitudes_facturaciondetalle where cod_solicitudfacturacion=$codigo_facturacion");
+  $stmtDetalleSol->execute();
+  $stmtDetalleSol->bindColumn('cantidad', $cantidad);  
+  $stmtDetalleSol->bindColumn('precio', $precio);     
+  $stmtDetalleSol->bindColumn('descripcion_alterna', $descripcion_alterna);  
+  while ($row_det = $stmtDetalleSol->fetch()){
+    $precio_natural=$precio/$cantidad;
+    $concepto_contabilizacion.=$descripcion_alterna." / ".trim($cadenaFacturas,',').",".trim($cadenaFacturasM,",")." / ".$razon_social."<br>\n";
+    $concepto_contabilizacion.="Cantidad: ".$cantidad." * ".formatNumberDec($precio_natural)." = ".formatNumberDec($precio)."<br>\n";
+  }
+  return $concepto_contabilizacion;
+}
+function obtenerDetalleFactura($codigo){
+  $dbh = new Conexion();
+  $stmt = $dbh->prepare("SELECT nombre FROM tipos_pago where codigo=$codigo");
+  $stmt->execute();
+  $valor=0;
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $valor=$row['nombre'];
+  }
+  return($valor); 
 }
 ?>
 

@@ -236,9 +236,9 @@ try {//recibiendo datos
             if(isset($_POST['q'])){
               $q=$_POST['q'];
               $r=$_POST['r'];          
-              showAlertSuccessError($flagSuccess,$urlListSol."&q=".$q."&r=".$r);
+              showAlertSuccessError($flagSuccess,"../".$urlListSol."&q=".$q."&r=".$r);
             }else{
-              showAlertSuccessError($flagSuccess,$urlListSol);
+              showAlertSuccessError($flagSuccess,"../".$urlListSol);
             } 
 
 
@@ -429,9 +429,9 @@ try {//recibiendo datos
           $s=$_POST['r'];
           $u=$_POST['r'];
           $v=$_POST['r'];
-          showAlertSuccessError($flagSuccess,$urlListSol."&q=".$q."&s=".$s."&u=".$u."&v=".$v);
+          showAlertSuccessError($flagSuccess,"../".$urlListSol."&q=".$q."&s=".$s."&u=".$u."&v=".$v);
         }else{
-          showAlertSuccessError($flagSuccess,$urlListSol);
+          showAlertSuccessError($flagSuccess,"../".$urlListSol);
         }
     }//si es insert o update
  
