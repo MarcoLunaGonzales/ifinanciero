@@ -7098,7 +7098,7 @@ function verificarFechaMaxDetalleLibreta($fecha,$codigo){
 
 function obtenerDatosFacturaVenta($codigo){
   $dbh = new Conexion();
-  $stmtVerif = $dbh->prepare("SELECT * FROM facturas_venta where cod_solicitudfacturacion=$codigo");
+  $stmtVerif = $dbh->prepare("SELECT * FROM facturas_venta where codigo=$codigo");
   $stmtVerif->execute();
   $resultVerif = $stmtVerif->fetch();    
   $fecha = $resultVerif['fecha_factura'];
@@ -7120,6 +7120,18 @@ function nameTipoPagoSolFac($codigo){
    }
    return($valor);
 }
+
+function obtenerCodigoPagoLote(){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT IFNULL(max(c.codigo)+1,1)as codigo from pagos_lotes c");
+   $stmt->execute();
+   $codigo=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $codigo=$row['codigo'];
+   }
+   return($codigo);
+}
+
 ?>
 
 

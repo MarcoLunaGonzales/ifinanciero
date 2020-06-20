@@ -54,8 +54,7 @@ $fechaHasta=date("Y-m-d");
                            ?>
                       </select>
                   </div>
-              </div>  
-
+              </div> 
             </div>
             <br>
             <center><h4 class="text-muted">Fecha Libreta Bancaria</h4></center>
@@ -98,7 +97,18 @@ $fechaHasta=date("Y-m-d");
                   </div>
                 </div>
             </div><!--fin campo RUBRO -->
-
+            <div class="row">
+              <label class="col-sm-2 col-form-label">Filtro</label>
+              <div class="col-sm-7">
+                <div class="form-group">                            
+                    <select class="selectpicker form-control form-control-sm" name="filtro" id="filtro" data-style="<?=$comboColor;?>" required>                           
+                       <option value="0">Ver Todo</option>
+                       <option value="1">Ver Facturas Registradas</option>
+                       <option value="2">Ver Sin Facturas</option>  
+                      </select>
+                  </div>
+              </div> 
+            </div>
           </div>
           <div class="card-footer ml-auto mr-auto">
           <button type="submit" class="<?=$buttonNormal;?>">Generar</button>

@@ -130,10 +130,10 @@ $stmtb->bindColumn('nombre', $nombre);
                               </button>
                               <div class="dropdown-menu">
                                 <a href="#" onclick="subirArchivoExcelLibretaBancaria(1,'Formato A');return false;"  class="dropdown-item">
-                                           <i class="material-icons">keyboard_arrow_right</i>Formato A
+                                           <i class="material-icons">keyboard_arrow_right</i>Formato BISA
                                 </a>
                                 <a href="#" onclick="subirArchivoExcelLibretaBancaria(2,'Formato B');return false;"  class="dropdown-item">
-                                           <i class="material-icons">keyboard_arrow_right</i>Formato B
+                                           <i class="material-icons">keyboard_arrow_right</i>Formato UNION
                                 </a>
                               </div>
                   </div>

@@ -41,6 +41,16 @@ foreach ($entidades as $valor ) {
 
 $periodoTitle= "Del ".$fechaFormateada.' al '.$fechaFormateadaHasta; 
 $periodoTitleFac= "Del ".$fechaFormateadaFac.' al '.$fechaFormateadaHastaFac;  
+
+$filtro=$_POST['filtro'];
+$sqlFiltro="";
+if($filtro==1){
+  $sqlFiltro="and (ce.cod_factura IS NOT NULL or ce.cod_factura!=0)";
+}else{
+  if($filtro==2){
+    $sqlFiltro="and (ce.cod_factura IS NULL or ce.cod_factura=0)";
+  }
+}
 ?>
 <div class="content">
   <div class="container-fluid">
@@ -55,7 +65,6 @@ $periodoTitleFac= "Del ".$fechaFormateadaFac.' al '.$fechaFormateadaHastaFac;
                    <h4 class="card-title text-center"><?=obtenerValorConfiguracion(57)?></h4>
                    <!--<div class="float-right col-sm-2"><h6 class="card-title">Exportar como</h6></div>-->
                 </div>
-
                 <?php
                 include "reporteLibretasBancariasDetalle.php";
                 ?>
