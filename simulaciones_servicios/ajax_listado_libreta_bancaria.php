@@ -23,12 +23,12 @@ $lista=obtenerObtenerLibretaBancaria($codigo);
     <tr style="background:#21618C; color:#fff;">
       <td class="text-center">#</td>
       <td class="small">Fecha</td>
-      <td class="small">Hora</td>
-      <td class="small">Descripcion</td>
-      <td class="small" width="50%">Informacion C.</td>
-      <td class="small">Sucursal</td>
+      <!-- <td class="small">Hora</td> -->
+      <!-- <td class="small">Descripción</td> -->
+      <td class="small" width="40%">Información Complementaria</td>
+      <!-- <td class="small">Sucursal</td> -->
       <td class="small">Monto</td>      
-      <td class="small">Nro Documento</td>
+      <td class="small">Nro. Documento</td>
       <td class="text-right" width="3%"></td>
     </tr>
   </thead>
@@ -58,11 +58,11 @@ $lista=obtenerObtenerLibretaBancaria($codigo);
 				$monto=$v_detalle->monto; ?>
 			    <tr>
 			      <td style="display:none" class="libretaDetalles_<?=$j?> small" align="center"><?=$index;?></td>
-			      <td style="display:none" class="libretaDetalles_<?=$j?> text-center small"><?=strftime('%d/%m/%Y',strtotime($FechaHoraCompleta))?></td>
-			      <td style="display:none" class="libretaDetalles_<?=$j?> text-center small"><?=strftime('%H:%M:%S',strtotime($FechaHoraCompleta))?></td>
-			      <td style="display:none" class="libretaDetalles_<?=$j?> text-left small"><?=$Descripcion?></td>
-			      <td style="display:none" class="libretaDetalles_<?=$j?> text-left small"><?=$InformacionComplementaria?></td>      
-			      <td style="display:none" class="libretaDetalles_<?=$j?> text-left small"><?=$Agencia?></td>
+			      <td style="display:none" class="libretaDetalles_<?=$j?> text-center small"><?=strftime('%d/%m/%Y',strtotime($FechaHoraCompleta))?><br><?=strftime('%H:%M:%S',strtotime($FechaHoraCompleta))?></td>
+			      <!-- <td style="display:none" class="libretaDetalles_<?=$j?> text-center small"></td> -->
+			      <!-- <td style="display:none" class="libretaDetalles_<?=$j?> text-left small"><?=$Descripcion?></td> -->
+			      <td style="display:none" class="libretaDetalles_<?=$j?> text-left small"><small><small><?=$InformacionComplementaria?></small></small></td>      
+			      <!-- <td style="display:none" class="libretaDetalles_<?=$j?> text-left small"><?=$Agencia?></td> -->
 			      <td style="display:none" class="libretaDetalles_<?=$j?> text-center small"><?=number_format($monto,2)?></td>			      
 			      <td style="display:none" class="libretaDetalles_<?=$j?> text-left small"><?=$NumeroDocumento?></td>
 			      <td style="display:none" class="libretaDetalles_<?=$j?> td-actions text-right small">	      

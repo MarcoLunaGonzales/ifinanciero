@@ -76,4 +76,8 @@ $urlregistro_solicitud_facturacion_sec_estudiantes="?opcion=registro_solicitud_f
 $urlregistro_solicitud_facturacion_sec_empresas="?opcion=registro_solicitud_facturacion_empresas";
 $urlImp="comprobantes/imp.php";
 
+
+$urlSolicitudfactura_estudiante="?opcion=solicitud_facturacion_costos";
+$urlSolicitudfactura_empresa="?opcion=solicitud_facturacion_costos_empresas";
+
 ?>
