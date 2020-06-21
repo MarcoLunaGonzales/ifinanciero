@@ -7120,6 +7120,19 @@ function nameTipoPagoSolFac($codigo){
    }
    return($valor);
 }
+
+function obtenerCodigoPagoLote(){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT IFNULL(max(c.codigo)+1,1)as codigo from pagos_lotes c");
+   $stmt->execute();
+   $codigo=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $codigo=$row['codigo'];
+   }
+   return($codigo);
+}
+
+
 function obtenerDetalleSolicitudFacturacion($codigo){
   $stmtDetalleSol = $dbh->prepare("SELECT cantidad,precio,descripcion_alterna from solicitudes_facturaciondetalle where cod_solicitudfacturacion=$codigo_facturacion");
   $stmtDetalleSol->execute();
@@ -7143,6 +7156,7 @@ function obtenerDetalleFactura($codigo){
   }
   return($valor); 
 }
+
 ?>
 
 

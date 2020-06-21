@@ -38,7 +38,7 @@ if(isset($_GET['admin'])){
       $stmt = $dbh->prepare("SELECT sr.*,e.nombre as estado from pagos_proveedores sr join estados_pago e on sr.cod_estadopago=e.codigo where sr.codigo=$codigo");
       $stmt->execute();
       $stmt->bindColumn('codigo', $codigo);
-      $stmt->bindColumn('nombre_lote', $nombre_lote);
+      $stmt->bindColumn('cod_pagolote', $nombre_lote);
       $stmt->bindColumn('fecha', $fecha);
       $stmt->bindColumn('observaciones', $observaciones);
       $stmt->bindColumn('cod_comprobante', $codComprobante);
@@ -68,9 +68,7 @@ if(isset($_GET['admin'])){
                           if(strlen($descripcion)>50){
                             $descripcion=substr($descripcion, 0, 50)."...";
                           }
-                          if($nombre_lote!=""){
-                            $datosArray[0]=$nombre_lote." (LOTES)";
-                          }
+                          
                           switch ($codEstado) {
                             case 1:
                               $btnEstado="btn-default";

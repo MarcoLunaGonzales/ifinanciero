@@ -81,14 +81,8 @@ FROM libretas_bancariasdetalle ce where ce.cod_libretabancaria=$codigoLib and  c
      $datosDetalle=[];
      $index=0;
      while ($rowLibDetalle = $stmtFacDetalle->fetch(PDO::FETCH_ASSOC)) {
-        $validacion=0;
-        if($rowLibDetalle['cod_factura']!=""){
-           if($rowLibDetalle['estado_factura']==2){
-             $validacion=1;
-           }
-        }else{
-            $validacion=1;
-        }
+        $validacion=1;
+        
        if($validacion==1){
            $datosDetalle[$index]['CodLibretaDetalle']=$rowLibDetalle['codigo'];
            $datosDetalle[$index]['Descripcion']=$rowLibDetalle['descripcion'];
@@ -100,6 +94,28 @@ FROM libretas_bancariasdetalle ce where ce.cod_libretabancaria=$codigoLib and  c
            $datosDetalle[$index]['Hora']=strftime('%H:%M:%S',strtotime($rowLibDetalle['fecha_hora']));
            $datosDetalle[$index]['FechaHoraCompleta']=$datosDetalle[$index]['Fecha']." ".$datosDetalle[$index]['Hora'];
            $datosDetalle[$index]['monto']=$rowLibDetalle['monto'];
+           $datosDetalle[$index]['CodFactura']=$rowLibDetalle['cod_factura'];
+
+           $datosDetalle[$index]['FechaFactura']=null;
+           $datosDetalle[$index]['NumeroFactura']=null;
+           $datosDetalle[$index]['NitFactura']=null;
+           $datosDetalle[$index]['RSFactura']=null;
+           $datosDetalle[$index]['DetalleFactura']=null;
+           $datosDetalle[$index]['MontoFactura']=null;
+
+           if($rowLibDetalle['cod_factura']!=""){
+             if($rowLibDetalle['estado_factura']==1){
+               $datosFacturas=obtenerDatosFacturaVenta($rowLibDetalle['cod_factura']);
+               $datosDetalle[$index]['FechaFactura']=strftime('%d/%m/%Y',strtotime($datosFacturas[0]));
+               $datosDetalle[$index]['NumeroFactura']=$datosFacturas[1];
+               $datosDetalle[$index]['NitFactura']=$datosFacturas[2];
+               $datosDetalle[$index]['RSFactura']=$datosFacturas[3];
+               $datosDetalle[$index]['DetalleFactura']=$datosFacturas[4];
+               $datosDetalle[$index]['MontoFactura']=number_format($datosFacturas[5],2,".","");
+              }else{
+                $datosDetalle[$index]['CodFactura']=null;
+              }
+           }   
            $index++;    
        }
      }
@@ -109,3 +125,17 @@ FROM libretas_bancariasdetalle ce where ce.cod_libretabancaria=$codigoLib and  c
  }
  return array($filaA,$datosMega);
 }
+
+function obtenerDatosFacturaVenta($codigo){
+  $dbh = new Conexion();
+  $stmtVerif = $dbh->prepare("SELECT * FROM facturas_venta where codigo=$codigo");
+  $stmtVerif->execute();
+  $resultVerif = $stmtVerif->fetch();    
+  $fecha = $resultVerif['fecha_factura'];
+  $numero = $resultVerif['nro_factura'];
+  $nit = $resultVerif['nit'];
+  $razon_social = $resultVerif['razon_social'];
+  $detalle = $resultVerif['observaciones'];
+  $monto = $resultVerif['importe'];
+  return array($fecha,$numero,$nit,$razon_social,$detalle,$monto);
+  }

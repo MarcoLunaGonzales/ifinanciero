@@ -7,7 +7,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $dbh = new Conexion();
 
 // Preparamos
-$stmt = $dbh->prepare("SELECT sr.*,e.nombre as estado from pagos_proveedores sr join estados_pago e on sr.cod_estadopago=e.codigo where sr.cod_pagolote=0 order by sr.codigo desc");
+$stmt = $dbh->prepare("SELECT sr.*,e.nombre as estado from pagos_proveedores sr join estados_pago e on sr.cod_estadopago=e.codigo where sr.cod_pagolote=0 or sr.cod_pagolote IS NULL order by sr.codigo desc");
 // Ejecutamos
 $stmt->execute();
 // bindColumn

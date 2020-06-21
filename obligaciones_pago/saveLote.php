@@ -24,16 +24,23 @@ $porFecha = explode("/", $_POST['fecha_pago']);
 $fecha_pago=$porFecha[2]."-".$porFecha[1]."-".$porFecha[0];
 $observaciones_pago=$_POST['observaciones_pago'];
 
-   $cod_pagoproveedor=obtenerCodigoPagoProveedor();
-   $sqlInsert="INSERT INTO pagos_proveedores (codigo,nombre_lote, fecha,observaciones,cod_comprobante,cod_estadopago,cod_ebisa) 
-  VALUES ('".$cod_pagoproveedor."','".$nombre_lote."','".$fecha_pago."','".$observaciones_pago."','0',1,0)";
-  $stmtInsert = $dbh->prepare($sqlInsert);
-  $stmtInsert->execute();
+   $cod_pagolote=obtenerCodigoPagoLote();
+   $sqlInsert="INSERT INTO pagos_lotes (codigo,nombre,abreviatura, fecha,cod_comprobante,cod_estadopagolote,cod_ebisalote,cod_estadoreferencial) 
+  VALUES ('".$cod_pagolote."','".$nombre_lote."','','".$fecha_pago."','0',1,0,1)";
+   $stmtInsert = $dbh->prepare($sqlInsert);
+   $stmtInsert->execute();
 $totalPago=0;
 $contadorCheque=0;$contadorChequeFilas=0;
 
 for ($pro=1; $pro <= $cantidadProveedores ; $pro++) { 
   if(isset($_POST['cantidad_filas'.$pro])){
+    $cod_pagoproveedor=obtenerCodigoPagoProveedor();
+    $sqlInsert="INSERT INTO pagos_proveedores (codigo,cod_pagolote, fecha,observaciones,cod_comprobante,cod_estadopago,cod_ebisa) 
+     VALUES ('".$cod_pagoproveedor."','".$cod_pagolote."','".$fecha_pago."','".$observaciones_pago."','0',1,0)";
+    $stmtInsert = $dbh->prepare($sqlInsert);
+    $stmtInsert->execute();
+
+
     $cantidadFilas=$_POST['cantidad_filas'.$pro];
     for ($i=1;$i<=$cantidadFilas;$i++){
   $proveedor=$_POST['codigo_proveedor'.$i."PPPP".$pro];         
@@ -102,11 +109,15 @@ if($contadorCheque==$contadorChequeFilas){
     $flagSuccess=$stmtDel->execute();
         //fin de comprobante
 
-    $sqlInsert4="UPDATE pagos_proveedores SET cod_comprobante=$codComprobante,cod_estadopago=5 where codigo=$cod_pagoproveedor";
+    $sqlInsert4="UPDATE pagos_lotes SET cod_comprobante=$codComprobante,cod_estadopagolote=5 where codigo=$cod_pagolote";
     $stmtInsert4 = $dbh->prepare($sqlInsert4);
     $stmtInsert4->execute();
    for ($pro=1; $pro <= $cantidadProveedores ; $pro++) { 
      if(isset($_POST['cantidad_filas'.$pro])){
+         $sqlInsert4="UPDATE pagos_proveedores SET cod_comprobante=$codComprobante,cod_estadopago=5 where cod_pagolote=$cod_pagolote";
+         $stmtInsert4 = $dbh->prepare($sqlInsert4);
+         $stmtInsert4->execute();
+
         for ($i=1;$i<=$cantidadFilas;$i++){  
     //$proveedor=$_POST['codigo_proveedor'.$i."PPPP".$pro];         
     $cod_plancuenta=$_POST['codigo_plancuenta'.$i."PPPP".$pro];
@@ -199,9 +210,9 @@ if($contadorCheque==$contadorChequeFilas){
 }         
 
 if($flagSuccess==true){
-	showAlertSuccessError(true,"../".$urlListPago);	
+	showAlertSuccessError(true,"../".$urlListPagoLotes);	
 }else{
-	showAlertSuccessError(false,"../".$urlListPago);
+	showAlertSuccessError(false,"../".$urlListPagoLotes);
 }
 
 ?>
