@@ -4,29 +4,92 @@ require_once '../conexion.php';
 require_once '../functionsGeneral.php';
 require_once '../functions.php';
 require_once '../styles.php';
-// require_once '../layouts/bodylogin2.php';
+require_once '../layouts/bodylogin2.php';
 $dbh = new Conexion();
 
-$direccion=obtenerValorConfiguracion(56);//direccion del servicio web ifinanciero
-  $sIde = "libBan";
-  $sKey = "89i6u32v7xda12jf96jgi30lh";
-  //PARAMETROS PARA LA OBTENCION DE ARRAY LIBRETA
-  $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ObtenerLibretaBancaria","idLibreta"=>0); 
-  $parametros=json_encode($parametros);
-  // abrimos la sesión cURL
-  $ch = curl_init();
-  // definimos la URL a la que hacemos la petición
-  curl_setopt($ch, CURLOPT_URL,$direccion."ws_obtener_libreta_bancaria.php"); 
-  // indicamos el tipo de petición: POST
-  curl_setopt($ch, CURLOPT_POST, TRUE);
-  // definimos cada uno de los parámetros
-  curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);
-  // recibimos la respuesta y la guardamos en una variable
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-  $remote_server_output = curl_exec ($ch);
-  // cerramos la sesión cURL
-  curl_close ($ch);
-  // return json_decode($remote_server_output);
-  // imprimir en formato JSON
-  header('Content-type: application/json');   
-  print_r($remote_server_output);
+$sqlX="SET NAMES 'utf8'";
+$stmtX = $dbh->prepare($sqlX);
+$stmtX->execute();
+set_time_limit(300);
+$saldo=$_GET['saldo'];
+
+$codigo=0;
+$lista=obtenerObtenerLibretaBancaria($codigo);
+// var_dump($lista->datos->detalle);
+?>
+<center><b><p>monto DEPÓSITO EN CUENTA a facturar <?=number_format($saldo,2)?> Bs.</p></b></center>
+<table id="libro_mayor_rep" class="table table-condensed small" style="width:100% !important;">
+  <thead>
+    <tr style="background:#21618C; color:#fff;">
+      <td class="text-center">#</td>
+      <td class="small" width="5%">Fecha</td>      
+      <td class="small" width="40%">Información Complementaria</td>      
+      <td class="small" width="5%">Monto</td>
+      <td class="small" width="3%">N° Documento</td>      
+      <td class="small bg-success" width="4%">Fecha<br>Asoc.</td>
+      <td class="small bg-success" width="3%">N° Fact</td>      
+      <td class="small bg-success">Nit</td>
+      <td class="small bg-success">Razón Social</td>
+      <td class="small bg-success" width="5%">Monto<br>Factura</td>
+      <td class="text-right bg-success" width="3%"></td>
+    </tr>
+  </thead>
+  <tbody>
+	<?php
+	if($lista->estado==1){
+		$j=1;
+	  	foreach ($lista->libretas as $v) {
+	  		$Nombre=$v->Nombre;
+	  		$Banco=$v->Banco;
+	  		$detalle=$v->detalle;
+	  		$index=1;?>
+	  		<tr>
+				<td align="center" colspan="12" style="background:#e58400; color:#fff;"><button title="Detalles" id="botonLibreta<?=$j?>" style="border:none; background:#e58400; color:#fff;" onclick="activardetalleLibreta(<?=$j?>)"><small><?=$Banco;?> - <?=$Nombre;?></small></button></td>
+			</tr>			
+			<?php
+	  		foreach ($detalle as $v_detalle) {
+	  			$CodLibretaDetalle=$v_detalle->CodLibretaDetalle;
+  				$Descripcion=$v_detalle->Descripcion;
+  				$InformacionComplementaria=$v_detalle->InformacionComplementaria;
+  				$Agencia=$v_detalle->Agencia;
+  				$NumeroCheque=$v_detalle->NumeroCheque;
+  				$NumeroDocumento=$v_detalle->NumeroDocumento;
+  				$Fecha=$v_detalle->Fecha;
+  				$Hora=$v_detalle->Hora;
+  				$FechaHoraCompleta=$v_detalle->FechaHoraCompleta;
+  				$monto=$v_detalle->monto;
+
+          $CodFactura=$v_detalle->CodFactura;
+          $FechaFactura=$v_detalle->FechaFactura;
+          $NumeroFactura=$v_detalle->NumeroFactura;
+          $NitFactura=$v_detalle->NitFactura;
+          $RSFactura=$v_detalle->RSFactura;
+          $MontoFactura=$v_detalle->MontoFactura; ?>
+			    <tr>
+			      <td style="display:none" class="libretaDetalles_<?=$j?> small" align="center"><small><?=$index;?></small></td>
+			      <td style="display:none" class="libretaDetalles_<?=$j?> text-center "><small><small><span style="padding:0px;border: 0px;"><?=strftime('%d/%m/%Y',strtotime($FechaHoraCompleta))?><br><?=strftime('%H:%M:%S',strtotime($FechaHoraCompleta))?></span></small></small></td>			     
+			      <td style="display:none" class="libretaDetalles_<?=$j?> text-left "><small><small><?=$InformacionComplementaria?></small></small></td>
+			      <td style="display:none" class="libretaDetalles_<?=$j?> text-right small"><small><?=number_format($monto,2)?></small></td>
+            <td style="display:none" class="libretaDetalles_<?=$j?> text-left small"><small><?=$NumeroDocumento?></small></td>
+			      <td style="display:none; color: #ff0000;" class="libretaDetalles_<?=$j?> text-center small"><small><?=$FechaFactura?></small></td>
+            <td style="display:none; color: #ff0000;" class="libretaDetalles_<?=$j?> text-right small"><small><?=$NumeroFactura?></small></td>            
+            <td style="display:none; color: #ff0000;" class="libretaDetalles_<?=$j?> text-right small"><small><?=$NitFactura?></small></td>
+            <td style="display:none; color: #ff0000;" class="libretaDetalles_<?=$j?> text-left"><small><small><?=$RSFactura?></small></small></td>
+            <td style="display:none; color: #ff0000;" class="libretaDetalles_<?=$j?> text-right small"><small><?=$MontoFactura?></small></td>
+			      <td style="display:none; color: #ff0000;" class="libretaDetalles_<?=$j?> td-actions text-right small">
+              <?php
+              if($CodFactura==null || $CodFactura==''){?>
+                <a href="#" onclick="seleccionar_libretaBancaria(<?=$CodLibretaDetalle?>)" class="btn btn-fab btn-success btn-sm" title="Seleccionar Item"><i class="material-icons">done</i></a>
+              <?php }?>
+			      </td>
+			    </tr>
+				<?php
+				$index++;
+	  		}
+	  		$j++;
+		}
+	}
+	?>
+  </tbody>
+</table>
+

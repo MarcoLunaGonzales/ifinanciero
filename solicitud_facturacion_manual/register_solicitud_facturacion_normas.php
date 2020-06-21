@@ -80,6 +80,7 @@ if ($cod_facturacion > 0){
     $persona_contacto=null;
     $Codigo_alterno=null;
 }
+$cod_defecto_deposito_cuenta=obtenerValorConfiguracion(55);
 $name_area=null;
 $contadorRegistros=0;
 ?>
@@ -107,6 +108,7 @@ $contadorRegistros=0;
                     <?php
                   }
                   ?>
+                <input type="hidden" name="cod_defecto_deposito_cuenta" id="cod_defecto_deposito_cuenta" value="<?=$cod_defecto_deposito_cuenta?>"/>
                 <input type="hidden" name="cod_simulacion" id="cod_simulacion" value="<?=$cod_simulacion;?>"/>
                 <input type="hidden" name="cod_facturacion" id="cod_facturacion" value="<?=$cod_facturacion;?>"/>
                 <input type="hidden" name="cantidad_filas" id="cantidad_filas" value="<?=$contadorRegistros;?>">                
@@ -632,20 +634,27 @@ $contadorRegistros=0;
 
 <script type="text/javascript">
     function valida(f) {
-      var ok = true;
-      var msg = "El monto Total no debe ser '0' o 'negativo', Habilite los Items que desee facturar...\n";  
-      if(f.elements["comprobante_auxiliar"].value == 0 || f.elements["comprobante_auxiliar"].value < 0 || f.elements["comprobante_auxiliar"].value == '')
-      {    
-        ok = false;
-      }
-      if(f.elements["monto_total"].value>0)
-      {    
-        ok = true;
-      }
-
-      if(ok == false)    
-        Swal.fire("Informativo!",msg, "warning");
-      return ok;
+        var ok = true;
+        var msg = "El monto Total no debe ser '0' o 'negativo', Habilite los Items que desee facturar...\n";  
+        if(f.elements["comprobante_auxiliar"].value == 0 || f.elements["comprobante_auxiliar"].value < 0 || f.elements["comprobante_auxiliar"].value == '')
+        {    
+            ok = false;
+        }
+        if(f.elements["monto_total"].value>0)
+        {    
+            ok = true;
+        }
+        var cod_tipopago=f.elements["cod_tipopago"].value;
+        var cod_defecto_deposito_cuenta=$("#cod_defecto_deposito_cuenta").val();
+        if(cod_tipopago==cod_defecto_deposito_cuenta){
+            if(f.elements["cantidad_archivosadjuntos"].value==0){
+                 var msg = "Por favor agregue Archivo Adjunto.";        
+                ok = false;
+            }
+        }
+        if(ok == false)    
+            Swal.fire("Informativo!",msg, "warning");
+        return ok;
     }
 </script>
 <script>$('.selectpicker').selectpicker("refresh");</script>

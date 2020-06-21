@@ -14,7 +14,7 @@ $correo_destino=trim($correo_destino,',');
 // $mensaje=$_POST['mensaje'];
 
 $asunto="ENVIO FACTURA - IBNORCA";
-$mensaje="Estimado cliente,<br>\n<br>\n Le Hacemos el envío de la Factura Nro. ".$nro_factura.".<br>\n<br>\nSaludos.";
+$mensaje="Estimado cliente,<br>\n<br>\n adjunto la Factura Nro. ".$nro_factura.".<br>\n<br>\nSaludos.";
 
 if($correo_destino==''||$asunto==''||$mensaje==''){
 	// echo "<script>alert('Los Campos marcados con * son obligatorios');location.href='javascript:history.back()';</script>";

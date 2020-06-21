@@ -77,6 +77,7 @@ $name_tipoPago=obtenerNombreTipoPago($cod_tipoobjeto);
 $name_uo=nameUnidad($cod_uo);
 $name_area=trim(abrevArea($cod_area),'-');
 $contadorRegistros=0;
+$cod_defecto_deposito_cuenta=obtenerValorConfiguracion(55);
 ?>
 <script>
   numFilas=<?=$contadorRegistros;?>;
@@ -87,6 +88,7 @@ $contadorRegistros=0;
         <div style="overflow-y:scroll;">
             <div class="col-md-12">
             <form id="formSoliFactTcp" class="form-horizontal" action="<?=$urlSaveSolicitudfactura;?>" method="post" onsubmit="return valida(this)" enctype="multipart/form-data">
+                <input type="hidden" name="cod_defecto_deposito_cuenta" id="cod_defecto_deposito_cuenta" value="<?=$cod_defecto_deposito_cuenta?>"/>
                 <input type="hidden" name="Codigo_alterno" id="Codigo_alterno" value="<?=$Codigo_alterno;?>"/>
                 <input type="hidden" name="cod_simulacion" id="cod_simulacion" value="<?=$IdServicio;?>"/>
                 <input type="hidden" name="cod_facturacion" id="cod_facturacion" value="<?=$cod_facturacion;?>"/>
@@ -380,10 +382,18 @@ function valida(f) {
     {    
         ok = false;
     }
+    var cod_tipopago=f.elements["cod_tipopago"].value;
+    var cod_defecto_deposito_cuenta=$("#cod_defecto_deposito_cuenta").val();
+    if(cod_tipopago==cod_defecto_deposito_cuenta){
+        if(f.elements["cantidad_archivosadjuntos"].value==0){
+             var msg = "Por favor agregue Archivo Adjunto.";        
+            ok = false;
+        }
+    }
 
-  if(ok == false)    
-    Swal.fire("Informativo!",msg, "warning");
-  return ok;
+    if(ok == false)    
+       Swal.fire("Informativo!",msg, "warning");
+    return ok;
 }
 </script>
 <?php  require_once 'simulaciones_servicios/modal_facturacion.php';?>

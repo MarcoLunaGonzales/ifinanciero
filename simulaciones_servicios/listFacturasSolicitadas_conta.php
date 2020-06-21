@@ -35,7 +35,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
   ?>
   <div class="content">
     <div class="container-fluid">
-          <div class="row">
+          <div class="row" >
               <div class="col-md-12">
                 <div class="card">
                   <div class="card-header card-header-warning card-header-icon">

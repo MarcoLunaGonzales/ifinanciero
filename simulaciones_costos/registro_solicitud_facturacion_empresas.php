@@ -73,6 +73,7 @@ if($cod_facturacion>0){//editar
     $descuento_bob=0;
 }
 $name_tipoPago=obtenerNombreTipoPago($cod_tipoobjeto);
+$cod_defecto_deposito_cuenta=obtenerValorConfiguracion(55);
 // $name_uo=nameUnidad($cod_uo);
 // $name_area=trim(abrevArea($cod_area),'-');
 $contadorRegistros=0;
@@ -97,6 +98,7 @@ $descuento_cliente=0;
                     <input type="hidden" name="cod_sw" id="cod_sw" value="<?=$cod_sw?>">                    
                 <?php }
                 ?> 
+                <input type="hidden" name="cod_defecto_deposito_cuenta" id="cod_defecto_deposito_cuenta" value="<?=$cod_defecto_deposito_cuenta?>"/>
                 <input type="hidden" name="cod_empresa" id="cod_empresa" value="<?=$cod_empresa;?>"/>
                 <input type="hidden" name="cod_simulacion" id="cod_simulacion" value="<?=$cod_simulacion;?>"/>
                 <input type="hidden" name="cod_facturacion" id="cod_facturacion" value="<?=$cod_facturacion;?>"/>
@@ -425,7 +427,7 @@ $descuento_cliente=0;
                                             //$codCS=430;//defecto
                                             $codCS=$rowPre['IdModulo'];
                                             $NroModulo=$rowPre['NroModulo'];
-                                            $tipoPre="Mod:".$NroModulo." - ".$rowPre['nombre_tema'];                                            
+                                            $tipoPre=$Nombre." - Mod:".$NroModulo." - ".$rowPre['nombre_tema'];                                            
                                             $cantidadPre=1;                                            
                                             // $cantidadEPre=$rowPre['cantidad_editado'];                                            
                                             $montoPre=$monto_modulos;
@@ -654,7 +656,14 @@ $descuento_cliente=0;
         {    
             ok = false;
         }
-        
+        var cod_tipopago=f.elements["cod_tipopago"].value;
+        var cod_defecto_deposito_cuenta=$("#cod_defecto_deposito_cuenta").val();
+        if(cod_tipopago==cod_defecto_deposito_cuenta){
+            if(f.elements["cantidad_archivosadjuntos"].value==0){
+                 var msg = "Por favor agregue Archivo Adjunto.";        
+                ok = false;
+            }
+        }
         if(ok == false)
           Swal.fire("Informativo!",msg, "warning");
         return ok;

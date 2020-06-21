@@ -74,6 +74,7 @@ $name_uo=null;
 $name_area=null;
 $contadorRegistros=0;
 $descuento_cliente=obtenerDescuentoCliente($cod_cliente);
+$cod_defecto_deposito_cuenta=obtenerValorConfiguracion(55);
 ?>
 <script>
   numFilas=<?=$contadorRegistros;?>;
@@ -94,6 +95,7 @@ $descuento_cliente=obtenerDescuentoCliente($cod_cliente);
                     }
                     ?>
                     <input type="hidden" value="-100" id="tipo_documento_otro" name="tipo_documento_otro">
+                    <input type="hidden" name="cod_defecto_deposito_cuenta" id="cod_defecto_deposito_cuenta" value="<?=$cod_defecto_deposito_cuenta?>"/>
                     <!-- si hubiese bancarizacion -->
                     <input type="hidden" name="nro_contrato" id="nro_contrato" value="0"/>
                     <input type="hidden" name="nro_cuenta_doc" id="nro_cuenta_doc" value="0"/>
@@ -659,6 +661,7 @@ $descuento_cliente=obtenerDescuentoCliente($cod_cliente);
 function valida(f) {
     //verificamos monto mayor a 50
     var nro_cuenta_doc=$("#nro_cuenta_doc").val();//monto total de items
+    // alert(cod_tipopago+"-"+cod_defecto_deposito_cuenta);
     if(f.elements["monto_total_a"].value>=50000 && nro_cuenta_doc==0)
     {   
         var msg = "El monto total supera el límite de bancarización. Por favor debe llenar el siguiente formulario...\n";
@@ -667,11 +670,18 @@ function valida(f) {
     }else{
         var ok = true;
         var msg = "El monto Total no debe ser '0' o 'negativo', Habilite los Items que desee facturar...\n";  
-        if(f.elements["monto_total"].value>0)
+        if(f.elements["monto_total"].value<=0)
         {    
-        ok = true;
+            ok = false;
         }
-        
+    }
+    var cod_tipopago=f.elements["cod_tipopago"].value;
+    var cod_defecto_deposito_cuenta=$("#cod_defecto_deposito_cuenta").val();
+    if(cod_tipopago==cod_defecto_deposito_cuenta){
+        if(f.elements["cantidad_archivosadjuntos"].value==0){
+             var msg = "Por favor agregue Archivo Adjunto.";        
+            ok = false;
+        }
     }
     if(ok == false)Swal.fire("Informativo!",msg, "warning");
     return ok;

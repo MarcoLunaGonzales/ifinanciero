@@ -257,7 +257,7 @@ try {
             $stmtDel->execute();
             //subir archivos al servidor
             //Como el elemento es un arreglos utilizamos foreach para extraer todos los valores
-            $nArchivosCabecera=$_POST["cantidad_archivosadjuntos"];;
+            $nArchivosCabecera=$_POST["cantidad_archivosadjuntos"];
             for ($ar=1; $ar <= $nArchivosCabecera ; $ar++) { 
                 if(isset($_POST['codigo_archivo'.$ar])){
                     if($_FILES['documentos_cabecera'.$ar]["name"]){
@@ -513,7 +513,7 @@ try {
             // $stmtDel->execute();
             //subir archivos al servidor
             //Como el elemento es un arreglos utilizamos foreach para extraer todos los valores
-            $nArchivosCabecera=$_POST["cantidad_archivosadjuntos"];;
+            $nArchivosCabecera=$_POST["cantidad_archivosadjuntos"];
             for ($ar=1; $ar <= $nArchivosCabecera ; $ar++) { 
                 if(isset($_POST['codigo_archivo'.$ar])){
                     if($_FILES['documentos_cabecera'.$ar]["name"]){
