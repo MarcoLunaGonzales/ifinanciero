@@ -226,11 +226,20 @@ try {//recibiendo datos
         }
         if(isset($_POST['q'])){
           $q=$_POST['q'];
-          $r=$_POST['r'];          
-          showAlertSuccessError($flagSuccess,"../".$urlListSol."&q=".$q."&r=".$r);
+          $s=$_POST['r'];
+          $u=$_POST['r'];
+          $v=$_POST['r'];
+          showAlertSuccessError($flagSuccess,"../".$urlListSol."&q=".$q."&s=".$s."&u=".$u."&v=".$v);
         }else{
           showAlertSuccessError($flagSuccess,"../".$urlListSol);
-        }        
+        }
+        // if(isset($_POST['q'])){
+        //   $q=$_POST['q'];
+        //   $r=$_POST['r'];          
+        //   showAlertSuccessError($flagSuccess,"../".$urlListSol."&q=".$q."&r=".$r);
+        // }else{
+        //   showAlertSuccessError($flagSuccess,"../".$urlListSol);
+        // }        
         //$stmt->debugDumpParams();
     }else {//update
         //actualizamos los campos estaticos

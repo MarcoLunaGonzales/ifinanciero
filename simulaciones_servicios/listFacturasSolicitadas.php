@@ -387,7 +387,12 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                   <?php                 
                     if(isset($_GET['q'])){?>
                       <a href="<?=$urlRegister_solicitudfacturacion_manual;?>&q=<?=$q?>&v=<?=$v?>&s=<?=$s?>&u=<?=$u?>" class="btn btn-primary">Solicitud Fact Manual</a>
-                      <a href="<?=$urlListSolicitud_facturacion_normas;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>" class="btn btn-warning">Solicitud Fact Normas</a><?php 
+                      <a href="<?=$urlListSolicitud_facturacion_normas;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>" class="btn btn-warning">Solicitud Fact Normas</a>
+
+                      <a href="<?=$urlSolicitudfactura_estudiante;?>&q=<?=$q?>&r=<?=$s?>" class="btn btn-success">Solicitud Fact Estudiantes</a>
+                      <a href="<?=$urlSolicitudfactura_empresa;?>&q=<?=$q?>&r=<?=$s?>" class="btn btn-danger">Solicitud Fact Empresas</a>
+
+                      <?php 
                     }else{?>
                       <a href="<?=$urlRegister_solicitudfacturacion_manual;?>" class="btn btn-primary">Solicitud Fact Manual</a>
                       <a href="<?=$urlListSolicitud_facturacion_normas;?>" class="btn btn-warning">Solicitud Fact Normas</a>

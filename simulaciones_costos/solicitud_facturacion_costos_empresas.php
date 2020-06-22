@@ -85,17 +85,13 @@ m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo order by nombreAlumno");//poner 
                             <th>Nombre</th>
                             <th>Precio <br>curso (BOB)</th>                            
                             <th>Desc. <br>curso(%)</th>                              
-                            <th>Importe <br>curso(BOB)</th>   
-                            <!-- <th>Importe <br>modulo(BOB)</th>   
-                            <th>Importe <br>Solicitud(BOB)</th>    -->
-                            <!-- <th>Canti. Mod</th> -->
-                            <!-- <th>Nro <br>Módulo</th> -->
+                            <th>Importe <br>curso(BOB)</th>                              
                             <th>Nombre Mod.</th>
                             <th class="text-right">Actions</th>
                           </tr>
                         </thead>
                         <tbody>
-                        <?php
+                        <!-- <?php
                           $index=1;
                           $descuento_por = 0;
                           $descuento_bob = 0;
@@ -130,46 +126,43 @@ m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo order by nombreAlumno");//poner 
                             $sumaTotalDescuento_por=0;
                             $sumaTotalDescuento_bob=0;                           
                             ?>
-                          <tr>
-                            <td align="center"></td>
-                            <td><?=$CiAlumno;?></td>
-                            <td><?=$nombreAlumno;?></td>
-                            <td class="text-right"><?=formatNumberDec($Costo) ;?></td>
-                            <td class="text-right"><?=$descuento ;?></td>                          
-                            <td class="text-right"><?=formatNumberDec($importe_curso) ;?></td>                          
-                            <!-- <td class="text-right"><?=formatNumberDec($monto_pagar) ;?></td>                            
-                            <td class="text-right"><?=formatNumberDec($sumaTotalImporte) ;?></td>   -->   
-                            <!-- <td><?=$NroModulo;?></td> -->
-                            <td><?=$nombre_mod;?></td>
-                            <td class="td-actions text-right">
-                              <?php
-                                if($globalAdmin==1){                            
-                                  if($codigo_facturacion>0){
-                                    if($codigo_fact_x==0){ //no se genero factura ?>
-                                      <a title="Editar Solicitud de Facturación" href='<?=$urlregistro_solicitud_facturacion?>&codigo=<?=$CiAlumno?>&cod_simulacion=<?=$codigo_simulacion;?>&cod_facturacion=<?=$codigo_facturacion?>' class="btn btn-success">
-                                          <i class="material-icons"><?=$iconEdit;?></i>
-                                        </a>  
+                            <tr>
+                              <td align="center"></td>
+                              <td><?=$CiAlumno;?></td>
+                              <td><?=$nombreAlumno;?></td>
+                              <td class="text-right"><?=formatNumberDec($Costo) ;?></td>
+                              <td class="text-right"><?=$descuento ;?></td>                          
+                              <td class="text-right"><?=formatNumberDec($importe_curso) ;?></td>                                                      
+                              <td><?=$nombre_mod;?></td>
+                              <td class="td-actions text-right">
+                                <?php
+                                  if($globalAdmin==1){                            
+                                    if($codigo_facturacion>0){
+                                      if($codigo_fact_x==0){ //no se genero factura ?>
+                                        <a title="Editar Solicitud de Facturación" href='<?=$urlregistro_solicitud_facturacion?>&codigo=<?=$CiAlumno?>&cod_simulacion=<?=$codigo_simulacion;?>&cod_facturacion=<?=$codigo_facturacion?>' class="btn btn-success">
+                                            <i class="material-icons"><?=$iconEdit;?></i>
+                                          </a>  
 
-                                  <?php }else{//ya se genero factura ?>
-                                    <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=2' target="_blank"><i class="material-icons" title="Imprimir Factura">print</i></a>
-                                  <?php }?>
-                                  <a href='#' rel="tooltip" class="btn btn-warning" onclick="filaTablaAGeneral($('#tablasA_registradas'),<?=$index?>,'<?=$stringCabecera?>')">
-                                    <i class="material-icons" title="Ver Detalle">settings_applications</i>
-                                  </a>
-                                  <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir Solicitud">print</i></a> 
-                                  <?php }else{//no se hizo solicitud de factura ?>
-                                    <a href='<?=$urlregistro_solicitud_facturacion?>&codigo=<?=$CiAlumno?>&cod_simulacion=<?=$codigo_simulacion;?>&cod_facturacion=0' rel="tooltip" class="btn" style="background-color: #0489B1;">
-                                          <i class="material-icons" title="Solicitar Facturación">receipt</i>
-                                        </a>                                                    
-                                  <?php }                                
-                                }
-                              ?>                                               
-                            </td>
-                          </tr>
-                          <?php
+                                    <?php }else{//ya se genero factura ?>
+                                      <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=2' target="_blank"><i class="material-icons" title="Imprimir Factura">print</i></a>
+                                    <?php }?>
+                                    <a href='#' rel="tooltip" class="btn btn-warning" onclick="filaTablaAGeneral($('#tablasA_registradas'),<?=$index?>,'<?=$stringCabecera?>')">
+                                      <i class="material-icons" title="Ver Detalle">settings_applications</i>
+                                    </a>
+                                    <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir Solicitud">print</i></a> 
+                                    <?php }else{//no se hizo solicitud de factura ?>
+                                      <a href='<?=$urlregistro_solicitud_facturacion?>&codigo=<?=$CiAlumno?>&cod_simulacion=<?=$codigo_simulacion;?>&cod_facturacion=0' rel="tooltip" class="btn" style="background-color: #0489B1;">
+                                            <i class="material-icons" title="Solicitar Facturación">receipt</i>
+                                          </a>                                                    
+                                    <?php }                                
+                                  }
+                                ?>                                               
+                              </td>
+                            </tr>
+                            <?php
                               $index++;
-                            }
-                          ?>
+                          }
+                        ?> -->
                         </tbody>
                       </table>
                     </div>
@@ -228,7 +221,14 @@ m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo order by nombreAlumno");//poner 
       </div>
 
       <div class="modal-footer">
-        <button type="button" class="btn btn-success" id="botonBuscarEmpresas" name="botonBuscarEmpresas" onclick="botonBuscarEmpresasCapacitacion()">Buscar</button>
+         <?php                                    
+              if(isset($_GET['q'])){?>
+                  <a href='<?=$urlListSol?>&q=<?=$q?>&v=<?=$r?>&u=<?=$r?>&s=<?=$r?>' class="<?=$buttonCancel;?>"><i class="material-icons"  title="Ir A Solicitudes de Facturación">keyboard_return</i> IR A SF</a>                    
+              <?php }else{?>
+                  <a href='<?=$urlListSol?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Ir A Solicitudes de Facturación">keyboard_return</i> IR A SF</a>                    
+              <?php }                     
+          ?> 
+        <button type="button" class="btn btn-success" id="botonBuscarEmpresas" name="botonBuscarEmpresas" title="Buscar" onclick="botonBuscarEmpresasCapacitacion()">Buscar</button>
         <!-- <button type="button" class="btn btn-danger" data-dismiss="modal"> Cerrar </button> -->
       </div>
     </div>

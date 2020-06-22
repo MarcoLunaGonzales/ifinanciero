@@ -58,6 +58,13 @@ m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo order by nombreAlumno");//poner 
                     </div>
                     <h4 class="card-title"><b>Solicitud de Facturación para Capacitación</b></h4>                    
                     <h4 class="card-title text-center"><b>Estudiantes</b></h4>
+                    <div>
+                          <div  align="right">
+                            <button type="button" class="btn btn-warning btn-round btn-fab btn-sm" data-toggle="modal" data-target="#modalBuscador">
+                              <i class="material-icons" title="Buscador Avanzado">search</i>
+                            </button>                                 
+                          </div>
+                        </div>
                   </div>
                   <div class="row">
                     <?php
@@ -69,14 +76,7 @@ m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo order by nombreAlumno");//poner 
                       <input type="hidden" name="r" id="r" value="0">
                     <?php }
                     ?>
-                        <div class="col-sm-12">
-                          <div class="form-group" align="right">
-                            <button type="button" class="btn btn-warning btn-round btn-fab btn-sm" data-toggle="modal" data-target="#modalBuscador">
-                              <i class="material-icons" title="Buscador Avanzado">search</i>
-                            </button>                                 
-                          </div>
-                        </div>
-                    </div>
+                  </div>
                   <div class="card-body">
                     <div id="contenedor_items_estudiantes">
                       <table class="table d-none" id="tablePaginator" >
@@ -89,15 +89,13 @@ m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo order by nombreAlumno");//poner 
                             <th>Desc. <br>curso(%)</th>                              
                             <th>Importe <br>curso(BOB)</th>   
                             <th>Importe <br>modulo(BOB)</th>   
-                            <th>Importe <br>Solicitud(BOB)</th>   
-                            <!-- <th>Canti. Mod</th> -->
-                            <th>Nro <br>Módulo</th>
-                            <!-- <th>Nombre Mod.</th> -->
+                            <th>Importe <br>Solicitud(BOB)</th> 
+                            <th>Nro <br>Módulo</th>                            
                             <th class="text-right">Actions</th>
                           </tr>
                         </thead>
                         <tbody>
-                        <?php
+                        <!-- <?php
                           $index=1;
                           $descuento_por = 0;
                           $descuento_bob = 0;
@@ -165,60 +163,58 @@ m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo order by nombreAlumno");//poner 
                             $stringCabecera=$nombre_uo."##".$nombre_area."##".$nombre_simulacion."##-##".$fecha_registro."##".$fecha_solicitudfactura."##".$nit."##".$razon_social;
 
                             ?>
-                          <tr>
-                            <td align="center"></td>
-                            <td><?=$CiAlumno;?></td>
-                            <td><?=$nombreAlumno;?></td>
-                            <td class="text-right"><?=formatNumberDec($Costo) ;?></td>
-                            <td class="text-right"><?=$descuento ;?></td>                          
-                            <td class="text-right"><?=formatNumberDec($importe_curso) ;?></td>                          
-                            <td class="text-right"><?=formatNumberDec($monto_pagar) ;?></td>                            
-                            <td class="text-right"><?=formatNumberDec($sumaTotalImporte) ;?></td>     
-                            <td><?=$NroModulo;?></td>
-                            <!-- <td><?=$nombre_mod;?></td> -->
-                            <td class="td-actions text-right">
-                              <?php
-                                //f($globalAdmin==1){
-                                  if($codigo_facturacion>0){
-                                    if($codigo_fact_x==0){ //no se genero factura ?>
-                                      <a title="Editar Solicitud de Facturación" href='<?=$urlregistro_solicitud_facturacion?>&codigo=<?=$CiAlumno?>&cod_simulacion=<?=$codigo_simulacion;?>&cod_facturacion=<?=$codigo_facturacion?>' class="btn btn-success">
-                                          <i class="material-icons"><?=$iconEdit;?></i>
-                                      </a>
+                            <tr>
+                              <td align="center"></td>
+                              <td><?=$CiAlumno;?></td>
+                              <td><?=$nombreAlumno;?></td>
+                              <td class="text-right"><?=formatNumberDec($Costo) ;?></td>
+                              <td class="text-right"><?=$descuento ;?></td>                          
+                              <td class="text-right"><?=formatNumberDec($importe_curso) ;?></td>                          
+                              <td class="text-right"><?=formatNumberDec($monto_pagar) ;?></td>                            
+                              <td class="text-right"><?=formatNumberDec($sumaTotalImporte) ;?></td>     
+                              <td><?=$NroModulo;?></td>                            
+                              <td class="td-actions text-right">
+                                <?php
+                                  //f($globalAdmin==1){
+                                    if($codigo_facturacion>0){
+                                      if($codigo_fact_x==0){ //no se genero factura ?>
+                                        <a title="Editar Solicitud de Facturación" href='<?=$urlregistro_solicitud_facturacion?>&codigo=<?=$CiAlumno?>&cod_simulacion=<?=$codigo_simulacion;?>&cod_facturacion=<?=$codigo_facturacion?>' class="btn btn-success">
+                                            <i class="material-icons"><?=$iconEdit;?></i>
+                                        </a>
 
-                                  <?php }else{//ya se genero factura ?>
-                                    <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=2' target="_blank"><i class="material-icons" title="Imprimir Factura">print</i></a>
-                                  <?php }?>
-                                  <a href='#' rel="tooltip" class="btn btn-warning" onclick="filaTablaAGeneral($('#tablasA_registradas'),<?=$index?>,'<?=$stringCabecera?>')">
-                                    <i class="material-icons" title="Ver Detalle">settings_applications</i>
-                                  </a>
-                                  <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir Solicitud">print</i></a> 
-                                  <?php }else{//no se hizo solicitud de factura 
+                                    <?php }else{//ya se genero factura ?>
+                                      <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=2' target="_blank"><i class="material-icons" title="Imprimir Factura">print</i></a>
+                                    <?php }?>
+                                    <a href='#' rel="tooltip" class="btn btn-warning" onclick="filaTablaAGeneral($('#tablasA_registradas'),<?=$index?>,'<?=$stringCabecera?>')">
+                                      <i class="material-icons" title="Ver Detalle">settings_applications</i>
+                                    </a>
+                                    <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir Solicitud">print</i></a> 
+                                    <?php }else{//no se hizo solicitud de factura 
 
-                                    if(isset($_GET['q'])){ ?>
-                                      <a href='<?=$urlregistro_solicitud_facturacion?>&codigo=<?=$CiAlumno?>&cod_simulacion=<?=$codigo_simulacion;?>&cod_facturacion=0&q=<?=$q?>&r=<?=$r?>' rel="tooltip" class="btn" style="background-color: #0489B1;">
-                                        <i class="material-icons" title="Solicitar Facturación">receipt</i>
-                                      </a><?php 
-                                    }else{ ?>
-                                      <a href='<?=$urlregistro_solicitud_facturacion?>&codigo=<?=$CiAlumno?>&cod_simulacion=<?=$codigo_simulacion;?>&cod_facturacion=0' rel="tooltip" class="btn" style="background-color: #0489B1;">
-                                        <i class="material-icons" title="Solicitar Facturación">receipt</i>
-                                      </a><?php 
-                                    }
-                                  }                                
-                                //}
-                              ?>                                               
-                            </td>
-                          </tr>
-                          <?php
+                                      if(isset($_GET['q'])){ ?>
+                                        <a href='<?=$urlregistro_solicitud_facturacion?>&codigo=<?=$CiAlumno?>&cod_simulacion=<?=$codigo_simulacion;?>&cod_facturacion=0&q=<?=$q?>&r=<?=$r?>' rel="tooltip" class="btn" style="background-color: #0489B1;">
+                                          <i class="material-icons" title="Solicitar Facturación">receipt</i>
+                                        </a><?php 
+                                      }else{ ?>
+                                        <a href='<?=$urlregistro_solicitud_facturacion?>&codigo=<?=$CiAlumno?>&cod_simulacion=<?=$codigo_simulacion;?>&cod_facturacion=0' rel="tooltip" class="btn" style="background-color: #0489B1;">
+                                          <i class="material-icons" title="Solicitar Facturación">receipt</i>
+                                        </a><?php 
+                                      }
+                                    }                                
+                                  //}
+                                ?>                                               
+                              </td>
+                            </tr>
+                            <?php
                               $index++;
-                            }
-                          ?>
+                          }
+                        ?> -->
                         </tbody>
                       </table>
                     </div>
                   </div>
                 </div>
-                <div class="card-footer fixed-bottom">              
-                 <!-- <a href='<?=$urlList;?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a> -->
+                <div class="card-footer fixed-bottom">                               
                 </div>      
               </div>
           </div>  
@@ -275,7 +271,14 @@ m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo order by nombreAlumno");//poner 
       </div>
 
       <div class="modal-footer">
-        <button type="button" class="btn btn-success" id="botonBuscarEstudiantes" name="botonBuscarEstudiantes" onclick="botonBuscarEstudiantesCapacitacion()">Buscar</button>
+         <?php                                    
+            if(isset($_GET['q'])){?>
+                <a href='<?=$urlListSol?>&q=<?=$q?>&v=<?=$r?>&u=<?=$r?>&s=<?=$r?>' class="<?=$buttonCancel;?>"><i class="material-icons"  title="Ir A Solicitudes de Facturación">keyboard_return</i> IR A SF</a>                    
+            <?php }else{?>
+                <a href='<?=$urlListSol?>' class="<?=$buttonCancel;?>"><i class="material-icons"  title="Ir A Solicitudes de Facturación">keyboard_return</i> IR A SF</a>                    
+            <?php }                     
+        ?> 
+        <button type="button" class="btn btn-success" id="botonBuscarEstudiantes" name="botonBuscarEstudiantes"  title="Buscar" onclick="botonBuscarEstudiantesCapacitacion()">Buscar</button>
         <!-- <button type="button" class="btn btn-danger" data-dismiss="modal"> Cerrar </button> -->
       </div>
     </div>

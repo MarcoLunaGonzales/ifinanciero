@@ -414,25 +414,19 @@
   </div>
 </div>
 <!-- modal libreta bancaria -->
-<div class="modal fade" id="modalListaLibretaBancaria" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal fade" id="modalListaLibretaBancaria" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
   <div class="modal-dialog modal-xl" role="document">
-    <div class="modal-content">
+    <div class="modal-content ">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h3 class="modal-title" id="myModalLabel"><b>Libreta Bancaria</b></h3>
+        <h3 class="modal-title" id="myModalLabel"><b>Libreta Bancaria</b></h3>        
       </div>
+      <div id="contenedor_cabecera_libreta_bancaria"></div>
       <div class="modal-body">
         <input type="hidden" name="cod_solicitudfacturacion" id="cod_solicitudfacturacion" value="0">
         <input type="hidden" name="direccion" id="direccion" value="0">
         <input type="hidden" name="datos" id="datos" value="0">
-        <input type="hidden" name="indice" id="indice" value="0">
-        <div class="row " >
-          <div class="col-sm-12">
-            <div class="form-group">
-              <div id="contenedor_cabecera_libreta_bancaria"></div>
-            </div>        
-          </div>
-        </div>
+        <input type="hidden" name="indice" id="indice" value="0">       
         <div class="row">          
           <div class="table-responsive">
             <?php
@@ -446,20 +440,20 @@
                   
                 }
               </style>            
-            <table id="libreta_bancaria_reporte_modal" class="table table-condensed table-bordered small" style="width:100% !important;">
+            <table id="libreta_bancaria_reporte_modal" class="table table-condensed table-bordered table-sm small" style="width:100% !important;">
               <thead>
                 <tr style="background:#21618C; color:#fff;">
-                  <th class="text-center">#</th>
-                  <th class="small" width="5%">Fecha</th>      
-                  <th class="small" width="40%">Información Complementaria</th>      
-                  <th class="small" width="5%">Monto</th>
-                  <th class="small" width="3%">N° <br>Referencia</th>
-                  <th class="small bg-success" width="4%">Fecha<br>Fac.</th>
-                  <th class="small bg-success" width="3%">N° Fac.</th>      
-                  <th class="small bg-success">Nit Fac.</th>
-                  <th class="small bg-success">Razón Social Fac.</th>
-                  <th class="small bg-success" width="5%">Monto<br>Fac.</th>
-                  <th class="text-right bg-success" width="3%"></th>
+                  <th class="text-center" width="3%">#</th>
+                  <th class="small" width="5%"><small>Fecha</small></th>      
+                  <th class="small" width="30%"><small>Información Complementaria</small></th>      
+                  <th class="small" width="5%"><small>Monto</small></th>
+                  <th class="small" width="3%"><small><small>N° Ref</small></small></th>
+                  <th class="small bg-success" width="4%"><small>Fecha Fac.</small></th>
+                  <th class="small bg-success" width="4%"><small>N° Fac.</small></th>      
+                  <th class="small bg-success"><small>Nit Fac.</small></th>
+                  <th class="small bg-success"><small>Razón Social Fac.</small></th>
+                  <th class="small bg-success" width="7%"><small>Monto Fac.</small></th>
+                  <!-- <th class="text-right bg-success" width="3%"></th> -->
                 </tr>
               </thead>
               <tbody>
@@ -472,7 +466,6 @@
                       $detalle=$v->detalle;
                       $index=1;?>
                       <tr>
-                        <td align="center" colspan="11" style="background:#e58400; color:#fff;"><button title="Detalles" id="botonLibreta<?=$j?>" style="border:none; background:#e58400; color:#fff;" onclick="activardetalleLibreta(<?=$j?>)"><small><?=$Banco;?> - <?=$Nombre;?></small></button></td>
                         <td class="d-none"></td>
                         <td class="d-none"></td>
                         <td class="d-none"></td>
@@ -482,7 +475,8 @@
                         <td class="d-none"></td>
                         <td class="d-none"></td>
                         <td class="d-none"></td>
-                        <td class="d-none"></td>
+                        <!-- <td class="d-none"></td> -->
+                        <td align="center" colspan="10" style="background:#e58400; color:#fff;"><button title="Detalles" id="botonLibreta<?=$j?>" style="border:none; background:#e58400; color:#fff;" onclick="activardetalleLibreta(<?=$j?>)"><small><?=$Banco;?> - <?=$Nombre;?></small></button></td>
                       </tr>     
                       <?php
                         foreach ($detalle as $v_detalle) {
@@ -513,13 +507,13 @@
                           <td style=" color: #ff0000;" class="libretaDetalles_<?=$j?> text-right small"><?=$NumeroFactura?></td>            
                           <td style=" color: #ff0000;" class="libretaDetalles_<?=$j?> text-right small"><?=$NitFactura?></td>
                           <td style=" color: #ff0000;" class="libretaDetalles_<?=$j?> text-left"><small><small><?=$RSFactura?></small></small></td>
-                          <td style=" color: #ff0000;" class="libretaDetalles_<?=$j?> text-right small"><?=$MontoFactura?></td>
-                          <td style=" color: #ff0000;" class="libretaDetalles_<?=$j?> td-actions text-right small">
-                            <?php
+                          <td style=" color: #ff0000;" class="libretaDetalles_<?=$j?> text-right small"><?=$MontoFactura?> <?php
                             if($CodFactura==null || $CodFactura==''){?>
-                              <a href="#" onclick="seleccionar_libretaBancaria(<?=$CodLibretaDetalle?>)" class="btn btn-fab btn-success btn-sm" title="Seleccionar Item"><i class="material-icons">done</i></a>
-                            <?php }?>
-                          </td>
+                              <a href="#" style="padding: 0;font-size:10px;width:25px;height:25px;" onclick="seleccionar_libretaBancaria(<?=$CodLibretaDetalle?>)" class="btn btn-fab btn-success btn-sm" title="Seleccionar Item"><i class="material-icons">done</i></a>
+                            <?php }?></td>
+                          <!-- <td style=" color: #ff0000;" class="libretaDetalles_<?=$j?> td-actions text-right small">
+                            
+                          </td> -->
                         </tr>
                       <?php
                       $index++;
@@ -531,17 +525,17 @@
               </tbody>
               <tfoot>
                 <tr style="background:#21618C; color:#fff;">
-                  <th class="text-center">#</th>                  
-                  <th class="small" width="5%">Fecha</th>      
-                  <th class="small" width="40%">Información Complementaria</th>      
-                  <th class="small" width="5%">Monto</th>
-                  <th class="small" width="3%">N° Documento</th>      
-                  <th class="small bg-success" width="4%">Fecha<br>Fac.</th>
-                  <th class="small bg-success" width="3%">N° Fac</th>      
-                  <th class="small bg-success">Nit Fac</th>
-                  <th class="small bg-success">Razón Social Fac</th>
-                  <th class="small bg-success" width="5%">Monto<br>Fac</th>
-                  <th class="text-right bg-success"></th>
+                  <th class="text-center" width="3%">#</th>
+                  <th class="small" width="5%"><small>Fecha</small></th>      
+                  <th class="small" width="30%"><small>Información Complementaria</small></th>      
+                  <th class="small" width="5%"><small>Monto</small></th>
+                  <th class="small" width="3%"><small><small>N° Ref</small></small></th>
+                  <th class="small bg-success" width="4%"><small>Fecha<br>Fac.</small></th>
+                  <th class="small bg-success" width="4%"><small>N° Fac.</small></th>      
+                  <th class="small bg-success"><small>Nit Fac.</small></th>
+                  <th class="small bg-success"><small>Razón Social Fac.</small></th>
+                  <th class="small bg-success" width="7%"><small>Monto Fac.</small></th>
+                  <!-- <th class="text-right bg-success" width="3%"></th> -->
                 </tr>
               </tfoot>
             </table>
@@ -550,7 +544,7 @@
       </div>
       <div class="modal-footer">
         <!-- <button type="button" class="btn btn-success" id="libreta_bancaria" name="libreta_bancaria">Agregar</button> -->
-        <button type="button" class="btn btn-danger" data-dismiss="modal"> Volver </button>
+        <!-- <button type="button" class="btn btn-danger" data-dismiss="modal"> Volver </button> -->
       </div>
     </div>
   </div>

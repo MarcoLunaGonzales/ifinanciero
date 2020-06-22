@@ -6,10 +6,17 @@ require_once 'functions.php';
 require_once 'functionsGeneral.php';
 
 $dbh = new Conexion();
+
+$globalNombreGestion=$_SESSION["globalNombreGestion"];
+$globalUser=$_SESSION["globalUser"];
+$globalGestion=$_SESSION["globalGestion"];
+$globalUnidad=$_SESSION["globalUnidad"];
+$globalNombreUnidad=$_SESSION['globalNombreUnidad'];
+$globalArea=$_SESSION["globalArea"];
 $globalAdmin=$_SESSION["globalAdmin"];
 //datos registrado de la simulacion en curso
 
-  $stmt = $dbh->prepare("SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')as fecha_registro_x,DATE_FORMAT(sf.fecha_solicitudfactura,'%d/%m/%Y')as fecha_solicitudfactura_x FROM solicitudes_facturacion sf join estados_solicitudfacturacion es on sf.cod_estadosolicitudfacturacion=es.codigo where cod_estadosolicitudfacturacion in (3,4,5) order by codigo desc");
+  $stmt = $dbh->prepare("SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')as fecha_registro_x,DATE_FORMAT(sf.fecha_solicitudfactura,'%d/%m/%Y')as fecha_solicitudfactura_x FROM solicitudes_facturacion sf join estados_solicitudfacturacion es on sf.cod_estadosolicitudfacturacion=es.codigo where cod_estadosolicitudfacturacion in (3,4,5) and sf.cod_personal=$globalUser order by codigo desc");
 
   $stmt->execute();
   $stmt->bindColumn('codigo', $codigo_facturacion);
@@ -35,7 +42,8 @@ $globalAdmin=$_SESSION["globalAdmin"];
   ?>
   <div class="content">
     <div class="container-fluid">
-          <div class="row" >
+      <!-- <div style="overflow-y:scroll;"> -->
+          <div class="row"  >
               <div class="col-md-12">
                 <div class="card">
                   <div class="card-header card-header-warning card-header-icon">
@@ -411,6 +419,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                 </div>     
               </div>
           </div>  
+      <!-- </div> -->
     </div>
   </div>
 <?php  require_once 'simulaciones_servicios/modal_facturacion.php';?>

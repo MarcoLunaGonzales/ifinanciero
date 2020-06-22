@@ -295,18 +295,24 @@
                     "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
             },
             fixedHeader: {
-                  header: true,
-                  footer: true
+                  header: false,
+                  footer: false
             },
             "order": false,
             "paging":   false,
-            "info":     false,
-
-            // "scrollY": 200,             
-             "scrollCollapse": true,
-             
-            "searching": false
+            "info":     false,          
+            "scrollY":        "200px",
+            "scrollCollapse": true
         });
+
+        $('#modalListaLibretaBancaria').on('shown.bs.modal', function(e){
+           $($.fn.dataTable.tables(true)).DataTable()
+              .columns.adjust();
+        });
+
+
+
+
         if ($('#cuenta_auto').length) {
           autocompletar("cuenta_auto","cuenta_auto_id",array_cuenta);
         }

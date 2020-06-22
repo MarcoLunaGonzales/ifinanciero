@@ -588,7 +588,7 @@ $descuento_cliente=0;
                                             ?>
                                             <script>
                                                 window.onload = activarInputMontoFilaServicio2;
-                                                // window.onload = calcularTotalFilaServicio2Costos;
+                                                window.onload = calcularTotalFilaServicio2Costos;
                                                 
                                             </script>
 
