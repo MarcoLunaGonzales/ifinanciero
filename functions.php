@@ -7132,7 +7132,6 @@ function obtenerCodigoPagoLote(){
    return($codigo);
 }
 
-
 function obtenerDetalleSolicitudFacturacion($codigo){
   $stmtDetalleSol = $dbh->prepare("SELECT cantidad,precio,descripcion_alterna from solicitudes_facturaciondetalle where cod_solicitudfacturacion=$codigo_facturacion");
   $stmtDetalleSol->execute();

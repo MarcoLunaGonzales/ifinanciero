@@ -85,45 +85,64 @@ $sqlInserts=[];
                      $fecha_hora.=" ".$horaFecha;
                 	}
                 }
+                
+                $nro_cheque = "";
+                if(isset($Row[2])&&$tipo_formato==1) {
+                    $nro_cheque = $Row[2];
+                }
 
                 $descripcion = "";
-                if(isset($Row[2])&&$tipo_formato==1) {
-                    $descripcion = $Row[2];
-                }else{
-                    $descripcion = $Row[1];
-                }
-
-                $informacion_complementaria = "";
                 if(isset($Row[3])&&$tipo_formato==1) {
-                    $informacion_complementaria = $Row[3];
-                }
-
-                $nro_documento = "";
-                if(isset($Row[4])&&$tipo_formato==1) {
-                    $nro_documento = $Row[4];
+                    $descripcion = $Row[3];
                 }else{
-                   $nro_documento = $Row[2];
+                    $descripcion = $Row[2];
                 }
 
                 $monto = "";
-                if(isset($Row[5])&&$tipo_formato==1) {
-                    $monto = $Row[5];
+                if(isset($Row[4])&&$tipo_formato==1) {
+                    $monto = $Row[4];
                 }else{
-                    $monto = $Row[3];
+                    $monto = $Row[4];
+                }
+
+                $saldo = "";
+                if(isset($Row[5])&&$tipo_formato==1) {
+                    $saldo = $Row[5];
+                }else{
+                    $saldo = $Row[5];
+                }
+
+                $informacion_complementaria = "";
+                if(isset($Row[6])&&$tipo_formato==1) {
+                    $informacion_complementaria = $Row[6];
                 }
 
                 $agencia = "";
-                if(isset($Row[6])&&$tipo_formato==1) {
-                    $agencia = $Row[6];
+                if(isset($Row[7])&&$tipo_formato==1) {
+                    $agencia = $Row[7];
                 }else{
-                    $agencia = $Row[4];
+                    $agencia = $Row[1];
                 }
 
-                $nro_cheque = "";
-                if(isset($Row[7])&&$tipo_formato==1) {
-                    $nro_cheque = $Row[7];
+                $nro_documento = "";
+                if(isset($Row[3])&&$tipo_formato!=1) {
+                    $nro_documento = $Row[3];
                 }
-				
+                
+                $canal = "";
+                if(isset($Row[8])&&$tipo_formato==1) {
+                    $canal = $Row[8];
+                }
+
+                $nro_referencia = "";
+                if(isset($Row[9])&&$tipo_formato==1) {
+                    $nro_referencia = $Row[9];
+                }
+
+                $cod_fila = 0;
+                if(isset($Row[10])&&$tipo_formato==1) {
+                    $cod_fila = $Row[10];
+                }
                               
                 if (!empty($fecha_hora) || !empty($descripcion) || !empty($monto)) {
                 	// Prepare
@@ -134,8 +153,8 @@ $sqlInserts=[];
                   }
                   if($verSi==0){
                    $totalFilasCorrectas++; 
-                	$sql="INSERT INTO libretas_bancariasdetalle (cod_libretabancaria,fecha_hora,nro_documento,descripcion,informacion_complementaria,agencia,monto,nro_cheque,cod_libretabancariaregistro,cod_estadoreferencial) 
-                    	VALUES ('$codigoLibreta','$fecha_hora','$nro_documento','$descripcion','$informacion_complementaria','$agencia','$monto','$nro_cheque','$cod_libretabancariaregistro','$cod_estadoreferencial')";
+                	$sql="INSERT INTO libretas_bancariasdetalle (cod_libretabancaria,fecha_hora,nro_documento,descripcion,informacion_complementaria,agencia,monto,nro_cheque,cod_libretabancariaregistro,cod_estadoreferencial,canal,nro_referencia,codigo_fila,saldo) 
+                    	VALUES ('$codigoLibreta','$fecha_hora','$nro_documento','$descripcion','$informacion_complementaria','$agencia','$monto','$nro_cheque','$cod_libretabancariaregistro','$cod_estadoreferencial','$canal','$nro_referencia','$cod_fila','$saldo')";
                    // $stmt = $dbh->prepare($sql);
                     //$flagSuccess=$stmt->execute();
                     $sqlInserts[$index]=$sql;

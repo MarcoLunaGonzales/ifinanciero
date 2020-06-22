@@ -2,25 +2,29 @@
           cuenta_mayor='<?=trim($nombreCuentaTitle)?>';
           unidad_mayor='<?=$unidadGeneral?>';
  </script>
-
+<style>
+tfoot input {
+        width: 100%;
+        padding: 3px;
+        box-sizing: border-box;
+    }
+</style>
 <div class="card-body">
   <h6 class="card-title">Periodo Libretas: <?=$periodoTitle?></h6>
   <h6 class="card-title">Periodo Facturas: <?=$periodoTitleFac?></h6>
   <h6 class="card-title">Libretas Bancarias: <?=$stringEntidades;?></h6>
   <div class="table-responsive col-sm-12">
-    <table id="libro_mayor_rep" class="table table-condensed small" style="width:100% !important;">
+    <table id="libreta_bancaria_reporte" class="table table-condensed small" style="width:100% !important;">
       <thead>
         <tr style="background:#21618C; color:#fff;">
-          <td class="text-center">#</td>
           <td>Fecha</td>
           <td>Hora</td>
           <td width="35%">Descripcion</td>
           <td>Informacion C.</td>
           <td>Sucursal</td>
           <td>Monto</td>
-          <td>Nro Cheque</td>
           <td width="10%">Nro Documento</td>
-          <td width="10%">Estado</td>
+          <td width="10%"><a href="#" id="minus_tabla_lib" title="Abrir/Cerrar Facturas" class="text-white float-right"><i class="material-icons">switch_left</i></a>Estado</td>
           <td class="bg-success">Fecha</td>
           <td class="bg-success">Numero</td>
           <td class="bg-success">NIT</td>
@@ -72,21 +76,19 @@ $stmt->bindColumn('cod_factura', $codFactura);
                             $facturaNit=$datos[2];
                             $facturaRazonSocial=$datos[3];
                             $facturaDetalle=$datos[4];
-                            $facturaMonto=number_format($datos[5],2,".","");
+                            $facturaMonto=number_format($datos[5],2,".",",");
                           }
                           $totalMonto+=$monto;
 
                            
 ?>
                         <tr>
-                          <td align="center"><?=$index;?></td>
                           <td class="text-center font-weight-bold"><?=strftime('%d/%m/%Y',strtotime($fecha))?></td>
                           <td class="text-center"><?=strftime('%H:%M:%S',strtotime($fecha))?></td>
                           <td class="text-left"><?=$descripcion?></td>
                           <td class="text-left"><?=$informacion_complementaria?></td>      
                           <td class="text-left"><?=$agencia?></td>
-                          <td class="text-right"><?=number_format($monto,2,".","")?></td>
-                          <td class="text-right"><?=$nro_cheque?></td>
+                          <td class="text-right"><?=number_format($monto,2,".",",")?></td>
                           <td class="text-right"><?=$nro_documento?></td>
                           <td class="text-right font-weight-bold"><?=$tituloEstado?></td>
                           <td class="text-right font-weight-bold"><?=$facturaFecha?></td>
@@ -102,14 +104,12 @@ $stmt->bindColumn('cod_factura', $codFactura);
             }
             ?>
                         <tr class="font-weight-bold" style="background:#21618C; color:#fff;">
-                          <td align="center" colspan="6">Totales</td>
+                          <td align="center" colspan="5">Totales</td>
                           <td class="d-none"></td>
                           <td class="d-none"></td>
                           <td class="d-none"></td>
                           <td class="d-none"></td>
-                          <td class="d-none"></td>
-                          <td class="text-right"><?=number_format($totalMonto,2,".","")?></td>
-                          <td class="text-left"></td>
+                          <td class="text-right"><?=number_format($totalMonto,2,".",",")?></td>
                           <td class="text-left"></td>
                           <td class="text-left"></td>
                           <td class="text-left"></td>
@@ -120,10 +120,30 @@ $stmt->bindColumn('cod_factura', $codFactura);
                           <td class="text-left"></td>
                         </tr>
 <?php
-    $html.=    '</tbody></table>';
+    $html.=    '</tbody>';
 
     echo $html;
+
     ?>
+        <tfoot>
+            <tr style="background:#21618C; color:#fff;">
+                <th>Fecha</th>
+                <th>Hora</th>
+                <th>Descripcion</th>
+                <th>Informacion C.</th>
+                <th>Sucursal</th>
+                <th>Monto</th>
+                <th>Nro Documento</th>
+                <th>Estado</th>
+                <th class="bg-success">Fecha</th>
+                <th class="bg-success">Numero</th>
+                <th class="bg-success">NIT</th>
+                <th class="bg-success">Razon Social</th>
+                <th class="bg-success">Detalle</th>
+                <th class="bg-success">Monto</th>
+            </tr>
+        </tfoot>
+      </table>  
   </div>
 </div>
               

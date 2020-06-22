@@ -703,6 +703,51 @@
   </script>
   <script type="text/javascript">
     $(document).ready(function() {
+    // Setup - add a text input to each footer cell
+    $('#libreta_bancaria_reporte tfoot th').each( function () {
+        var title = $(this).text();
+        $(this).html( '<input type="text" placeholder="'+title+'" />' );
+    } );
+ 
+    // DataTable
+    var table = $('#libreta_bancaria_reporte').DataTable({
+        initComplete: function () {
+            // Apply the search
+            this.api().columns().every( function () {
+                var that = this;
+                $( 'input', this.footer() ).on( 'keyup change clear', function () {
+                    if ( that.search() !== this.value ) {
+                        that
+                            .search( this.value )
+                            .draw();
+                    }
+                });
+            });
+        },
+        "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+        },
+        fixedHeader: {
+              header: true,
+              footer: true
+        },
+        "order": false,
+        "paging":   false,
+        "info":     false,
+        "searching": false
+    });
+
+    $('#minus_tabla_lib').on( 'click', function (e) {
+        e.preventDefault();
+        for (var i = 8; i < 14; i++) {
+          var column = table.column(i);
+          column.visible( ! column.visible() );
+        };
+    } );
+
+} );
+
+    $(document).ready(function() {
       var table_mayor=$('#libro_mayor_rep').DataTable(
       {
           "paging":   false,

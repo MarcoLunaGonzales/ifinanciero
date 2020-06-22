@@ -90,6 +90,7 @@ FROM libretas_bancariasdetalle ce where ce.cod_libretabancaria=$codigoLib and  c
            $datosDetalle[$index]['Agencia']=$rowLibDetalle['agencia'];
            $datosDetalle[$index]['NumeroCheque']=$rowLibDetalle['nro_cheque'];
            $datosDetalle[$index]['NumeroDocumento']=$rowLibDetalle['nro_documento'];
+           $datosDetalle[$index]['NumeroReferencia']=$rowLibDetalle['nro_referencia'];
            $datosDetalle[$index]['Fecha']=strftime('%d/%m/%Y',strtotime($rowLibDetalle['fecha_hora']));
            $datosDetalle[$index]['Hora']=strftime('%H:%M:%S',strtotime($rowLibDetalle['fecha_hora']));
            $datosDetalle[$index]['FechaHoraCompleta']=$datosDetalle[$index]['Fecha']." ".$datosDetalle[$index]['Hora'];

@@ -27,6 +27,8 @@ $stmt->bindColumn('nro_cheque', $nro_cheque);
 $stmt->bindColumn('nro_documento', $nro_documento);
 $stmt->bindColumn('fecha_hora', $fecha);
 $stmt->bindColumn('monto', $monto);
+$stmt->bindColumn('saldo', $saldo);
+$stmt->bindColumn('nro_referencia', $nro_referencia);
 
 
 //Mostrar tipo bono
@@ -77,7 +79,8 @@ $stmtb->bindColumn('nombre', $nombre);
                           <td>Informacion C.</td>
                           <td>Sucursal</td>
                           <td>Monto</td>
-                          <td>Nro Cheque</td>
+                          <td>Saldo</td>
+                          <td>Nro Ref</td>
                           <td>Nro Documento</td>
                           <td class="text-right">Acciones</td>
                         </tr>
@@ -95,8 +98,9 @@ $stmtb->bindColumn('nombre', $nombre);
                           <td class="text-left"><?=$descripcion?></td>
                           <td class="text-left"><?=$informacion_complementaria?></td>      
                           <td class="text-left"><?=$agencia?></td>
-                          <td class="text-right"><?=number_format($monto,2,".","")?></td>
-                          <td class="text-right"><?=$nro_cheque?></td>
+                          <td class="text-right"><?=number_format($monto,2,".",",")?></td>
+                          <td class="text-right"><?=number_format($saldo,2,".",",")?></td>
+                          <td class="text-right"><?=$nro_referencia?></td>
                           <td class="text-left"><?=$nro_documento?></td>
                           <td class="td-actions text-right">
                           <?php
@@ -129,10 +133,10 @@ $stmtb->bindColumn('nombre', $nombre);
                                 Cargar Libreta desde Excel
                               </button>
                               <div class="dropdown-menu">
-                                <a href="#" onclick="subirArchivoExcelLibretaBancaria(1,'Formato A');return false;"  class="dropdown-item">
+                                <a href="#" onclick="subirArchivoExcelLibretaBancaria(1,'Formato BISA');return false;"  class="dropdown-item">
                                            <i class="material-icons">keyboard_arrow_right</i>Formato BISA
                                 </a>
-                                <a href="#" onclick="subirArchivoExcelLibretaBancaria(2,'Formato B');return false;"  class="dropdown-item">
+                                <a href="#" onclick="subirArchivoExcelLibretaBancaria(2,'Formato UNION');return false;"  class="dropdown-item">
                                            <i class="material-icons">keyboard_arrow_right</i>Formato UNION
                                 </a>
                               </div>
@@ -157,7 +161,7 @@ $stmtb->bindColumn('nombre', $nombre);
 <div class="modal fade modal-arriba modal-primary" id="modalSubirArchivoExcel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-notice" style="max-width: 80% !important;">
     <div class="modal-content card">
-               <div class="card-header card-header-warning card-header-text">
+               <div class="card-header card-header-default card-header-text">
                   <div class="card-text">
                     <h4 id="formato_texto"></h4>
                   </div>
@@ -177,7 +181,7 @@ $stmtb->bindColumn('nombre', $nombre);
                           <span class="input-archivo">
                             <input type="file" class="archivo" accept=".xls,.xlsx" name="documentos_excel" id="documentos_excel"/>
                           </span>
-                          <label title="Ningún archivo" for="documentos_excel" id="label_documentos_excel" class="label-archivo btn btn-info btn-sm"><i class="material-icons">publish</i> Subir Archivo
+                          <label title="Ningún archivo" for="documentos_excel" id="label_documentos_excel" class="label-archivo btn btn-default btn-sm"><i class="material-icons">publish</i> Subir Archivo
                           </label>
                       
                          </div>
@@ -195,7 +199,7 @@ $stmtb->bindColumn('nombre', $nombre);
                        <label class="col-sm-3 col-form-label" style="color:#000000; ">Tipo de Cargado:</label>
                        <div class="col-sm-6">
                          <div class="form-group">
-                            <select class="selectpicker form-control" name="tipo_cargado" id="tipo_cargado" data-style="btn btn-info">
+                            <select class="selectpicker form-control" name="tipo_cargado" id="tipo_cargado" data-style="btn btn-default">
                           <?php
                              $stmt = $dbh->prepare("SELECT p.codigo,p.nombre FROM tipos_libretabancariacargado p where p.cod_estadoreferencial=1 order by p.codigo desc");
                              $stmt->execute();
@@ -214,23 +218,29 @@ $stmtb->bindColumn('nombre', $nombre);
                    <br><br>
                    <center><h4 id="tipo_formato_titulo2" class="font-weight-bold"></h4></center>
                    <div id="tabla_muestra_formato_a">
-                     <table class="table table-bordered table-condensed">
+                     <table class="table table-bordered small table-condensed">
                        <thead>
-                         <tr style="background:#21618C; color:#fff;">
+                         <tr style="background:#F9D820; color:#262C7B;">
                           <th>Fecha</th>
                           <th>Hora</th>
-                          <th>Descripcion</th>
-                          <th>Informacion Complementaria</th>
-                          <th>Nro Documento</th>
-                          <th>Monto</th>
-                          <th>Sucursal</th>
                           <th>Nro Cheque</th>
+                          <th>Descripcion</th>
+                          <th>Monto</th>
+                          <th>Saldo</th>
+                          <th>Informacion C.</th>
+                          <th>Sucursal</th>
+                          <th>Canal</th>
+                          <th>Nro Referencia</th> 
+                          <th>Codigo</th>
                          </tr>
                        </thead>
                        <tbody>
-                         <tr>
-                           <td>dd-mm-aaaa</td>
+                         <tr style="background:#262C7B; color:#fff;">
+                          <td>dd-mm-aaaa</td>
                           <td>HH:mm:ss</td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
                           <td></td>
                           <td></td>
                           <td></td>
@@ -244,17 +254,19 @@ $stmtb->bindColumn('nombre', $nombre);
                    <div id="tabla_muestra_formato_b" class="d-none">
                      <table class="table table-bordered table-condensed">
                        <thead>
-                         <tr style="background:#21618C; color:#fff;">
+                         <tr style="background:#223BC8; color:#F3F300;">
                           <th>Fecha</th>
+                          <th>Agencia</th>
                           <th>Descripcion</th>
                           <th>Nro Documento</th>
                           <th>Monto</th>
-                          <th>Sucursal</th>
+                          <th>Saldo</th>
                          </tr>
                        </thead>
                        <tbody>
-                         <tr>
+                         <tr style="background:#F37200; color:#fff;">
                            <td>dd-mm-aaaa</td>
+                          <td></td>
                           <td></td>
                           <td></td>
                           <td></td>
