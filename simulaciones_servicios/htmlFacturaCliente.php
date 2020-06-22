@@ -92,7 +92,7 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 			$nombre_cliente = $razon_social;
 		}		
 		$leyenda=obtener_dato_dosificacion($cod_dosificacionfactura);//sacmos la leyenda
-		$nombre_ciudad =  obtenerCiudadDeUnidad($cod_unidadorganizacional);
+		$nombre_ciudad =  obtenerCiudadDeUnidad(5);//sacmos la ciudad de cod_uo 5(regional La Paz)defecto para todas las fac
 		$cantidad=1;
 		//para generar factura
 		$stmtDesCli = $dbh->prepare("SELECT sf.cantidad from facturas_ventadetalle sf where sf.cod_facturaventa=$cod_factura");

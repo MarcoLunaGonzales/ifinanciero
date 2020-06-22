@@ -2098,7 +2098,7 @@ function detectarCargaAjax(){
   $(".cargar-ajax").addClass("d-none");
   $(".cargar-ajax").fadeOut("slow");
 }
- function calcularMontos(){
+function calcularMontos(){
   var str_cuenta=dividirCadena($('#cuenta_detalle').val(),"@");
   var idp=str_cuenta[0];
   var unidad=$("#cod_unidad").val();
@@ -2142,7 +2142,7 @@ function detectarCargaAjax(){
           $("#mensajeDetalle").html("<center><p class='text-info'>Cálculo realizado Hoy "+horaImprimible+"</p></center>");
         }
     });
- }
+}
 function agregarPersonalPlantillaDetalle(plantilla){
   
 }
@@ -14486,6 +14486,7 @@ function subirArchivoExcelLibretaBancaria(tipo,nombre_tipo){
 }
 
 function abrirLibretaBancaria(datos,direccion,indice){
+  iniciarCargaAjax();
   var d=datos.split('/');
   var cod_solicitudfacturacion=d[0];
   var saldo=d[2];
@@ -14500,6 +14501,7 @@ function abrirLibretaBancaria(datos,direccion,indice){
     if (ajax.readyState==4) {
       contenedor.innerHTML = ajax.responseText;      
       $('.selectpicker').selectpicker(["refresh"]);
+      detectarCargaAjax();
       $("#modalListaLibretaBancaria").modal("show");       
     }
   }
@@ -14512,6 +14514,7 @@ function seleccionar_libretaBancaria(cod_libreta){
   var cod_solicitudfacturacion=document.getElementById("cod_solicitudfacturacion").value;
   var direccion=document.getElementById("direccion").value;
   if(indice==1){
+    $("#modalListaLibretaBancaria").modal("hide");
     alerts.showSwal('warning-message-and-confirmation-generar-factura',direccion+'?codigo='+cod_solicitudfacturacion+'&cod_libreta='+cod_libreta);
   }else{
     if(indice==2){
@@ -14571,5 +14574,30 @@ function abrirArchivosAdjuntos(datos){
   }
   ajax.send(null);
 }
+function abrirModalBuscadorLibreta(){
+  $("#modalBuscadorLibretaBancaria").modal("show"); 
 
-
+}
+function botonBuscarLibretaBancariaDetalle(){
+  $("#modalBuscadorLibretaBancaria").modal("hide");
+  // $("#modalListaLibretaBancaria").modal("hide");
+  iniciarCargaAjax();
+  // $("#modalListaLibretaBancaria").modal("show");
+  var valor_info=$("#informacion_libreta").val();
+  var valor_monto=$("#monto_libreta").val();
+  var valor_rs=$("#razon_social_libreta").val();  
+  var valor_datos=$("#datos").val();  
+  var datos=valor_datos.split('/');
+  var valor_saldo=datos[2];
+  contenedor_p = document.getElementById('div_contenedor_libretaBancaria');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'simulaciones_servicios/ajax_listado_libreta_bancaria_buscador.php?informacion='+valor_info+'&monto='+valor_monto+'&razon_social='+valor_rs+'&saldo='+valor_saldo,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor_p.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);
+      detectarCargaAjax();
+    }
+  }
+  ajax.send(null);
+}
