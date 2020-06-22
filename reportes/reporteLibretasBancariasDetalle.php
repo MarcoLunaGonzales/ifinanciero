@@ -19,12 +19,12 @@ tfoot input {
         <tr style="background:#21618C; color:#fff;">
           <td>Fecha</td>
           <td>Hora</td>
-          <td width="35%">Descripcion</td>
-          <td>Informacion C.</td>
+          <td width="35%">Descripción</td>
+          <td>Información C.</td>
           <td>Sucursal</td>
           <td>Monto</td>
-          <td width="10%">Nro Documento</td>
-          <td width="10%"><a href="#" id="minus_tabla_lib" title="Abrir/Cerrar Facturas" class="text-white float-right"><i class="material-icons">switch_left</i></a>Estado</td>
+          <td width="10%">Nro Doc / Nro Ref</td>
+          <!--<td width="10%"><a href="#" id="minus_tabla_lib" title="Abrir/Cerrar Facturas" class="text-white float-right"><i class="material-icons">switch_left</i></a>Estado</td>-->
           <td class="bg-success">Fecha</td>
           <td class="bg-success">Numero</td>
           <td class="bg-success">NIT</td>
@@ -58,7 +58,7 @@ $stmt->bindColumn('fecha_hora', $fecha);
 $stmt->bindColumn('monto', $monto);
 $stmt->bindColumn('cod_factura', $codFactura);
 
-            $index=1;$totalMonto=0;
+            $index=1;$totalMonto=0;$totalMontoFac=0;
                         while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                           if($codFactura==""){
                             $tituloEstado="Sin Factura";
@@ -68,6 +68,7 @@ $stmt->bindColumn('cod_factura', $codFactura);
                             $facturaRazonSocial="";
                             $facturaDetalle="";
                             $facturaMonto="";
+                            $totalMontoFac+=0;
                           }else{
                             $tituloEstado="Con Factura";
                             $datos=obtenerDatosFacturaVenta($codFactura);
@@ -77,8 +78,10 @@ $stmt->bindColumn('cod_factura', $codFactura);
                             $facturaRazonSocial=$datos[3];
                             $facturaDetalle=$datos[4];
                             $facturaMonto=number_format($datos[5],2,".",",");
+                            $totalMontoFac+=$datos[5];
                           }
                           $totalMonto+=$monto;
+
 
                            
 ?>
@@ -90,7 +93,7 @@ $stmt->bindColumn('cod_factura', $codFactura);
                           <td class="text-left"><?=$agencia?></td>
                           <td class="text-right"><?=number_format($monto,2,".",",")?></td>
                           <td class="text-right"><?=$nro_documento?></td>
-                          <td class="text-right font-weight-bold"><?=$tituloEstado?></td>
+                          <!--<td class="text-right font-weight-bold"><?=$tituloEstado?></td>-->
                           <td class="text-right font-weight-bold"><?=$facturaFecha?></td>
                           <td class="text-right font-weight-bold"><?=$facturaNumero?></td>
                           <td class="text-right font-weight-bold"><?=$facturaNit?></td>
@@ -116,8 +119,7 @@ $stmt->bindColumn('cod_factura', $codFactura);
                           <td class="text-left"></td>
                           <td class="text-left"></td>
                           <td class="text-left"></td>
-                          <td class="text-left"></td>
-                          <td class="text-left"></td>
+                          <td class="text-left"><?=number_format($totalMontoFac,2,".",",")?></td>
                         </tr>
 <?php
     $html.=    '</tbody>';
@@ -134,7 +136,6 @@ $stmt->bindColumn('cod_factura', $codFactura);
                 <th>Sucursal</th>
                 <th>Monto</th>
                 <th>Nro Documento</th>
-                <th>Estado</th>
                 <th class="bg-success">Fecha</th>
                 <th class="bg-success">Numero</th>
                 <th class="bg-success">NIT</th>

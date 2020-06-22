@@ -733,8 +733,8 @@
         },
         "order": false,
         "paging":   false,
-        "info":     false,
-        "searching": false
+        "info":     false
+        //"searching": false
     });
 
     $('#minus_tabla_lib').on( 'click', function (e) {

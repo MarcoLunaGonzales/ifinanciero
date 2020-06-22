@@ -127,17 +127,20 @@ $sqlInserts=[];
                 $nro_documento = "";
                 if(isset($Row[3])&&$tipo_formato!=1) {
                     $nro_documento = $Row[3];
+                }else{
+                   $nro_documento = $Row[9];
                 }
                 
+
                 $canal = "";
                 if(isset($Row[8])&&$tipo_formato==1) {
                     $canal = $Row[8];
                 }
 
                 $nro_referencia = "";
-                if(isset($Row[9])&&$tipo_formato==1) {
+                /*if(isset($Row[9])&&$tipo_formato==1) {
                     $nro_referencia = $Row[9];
-                }
+                }*/
 
                 $cod_fila = 0;
                 if(isset($Row[10])&&$tipo_formato==1) {
