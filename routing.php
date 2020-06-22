@@ -483,6 +483,9 @@
 		if ($_GET['opcion']=='deleteLibretaBancaria') {
 			require_once('libretas_bancarias/saveDelete.php');
 		}
+		if ($_GET['opcion']=='deleteLibretaBancariaDetalle') {
+			require_once('libretas_bancarias/saveDeleteDetalle.php');
+		}
 		if ($_GET['opcion']=='editLibretaBancaria') {
 			require_once('libretas_bancarias/edit.php');
 		}

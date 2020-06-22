@@ -13,9 +13,9 @@ require_once 'functions.php';
 
 $q=$_GET['q'];
 $dbh = new Conexion();
-    $sql="SELECT p.codigo,CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre)as nombre, p.cod_area, p.cod_unidadorganizacional, pd.perfil, pd.usuario_pon 
-      from personal p, personal_datosadicionales pd 
-      where p.codigo=pd.cod_personal and p.codigo='$q'";
+    $sql="SELECT p.codigo,CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre)as nombre, p.cod_area, p.cod_unidadorganizacional, 1 as perfil, 1 as usuario_pon 
+      from personal p
+      where p.codigo='$q'";
 //echo $sql;
 $stmt = $dbh->prepare($sql);
 $stmt->execute();

@@ -75,13 +75,12 @@ $stmtb->bindColumn('nombre', $nombre);
                           <td class="text-center">#</td>
                           <td>Fecha</td>
                           <td>Hora</td>
-                          <td>Descripcion</td>
-                          <td>Informacion C.</td>
+                          <td>Descripción</td>
+                          <td>Información C.</td>
                           <td>Sucursal</td>
                           <td>Monto</td>
                           <td>Saldo</td>
-                          <td>Nro Ref</td>
-                          <td>Nro Documento</td>
+                          <td>Nro Doc / Nro Ref</td>
                           <td class="text-right">Acciones</td>
                         </tr>
                       </thead>
@@ -100,13 +99,14 @@ $stmtb->bindColumn('nombre', $nombre);
                           <td class="text-left"><?=$agencia?></td>
                           <td class="text-right"><?=number_format($monto,2,".",",")?></td>
                           <td class="text-right"><?=number_format($saldo,2,".",",")?></td>
-                          <td class="text-right"><?=$nro_referencia?></td>
                           <td class="text-left"><?=$nro_documento?></td>
                           <td class="td-actions text-right">
                           <?php
                             if($globalAdmin==1){
                             ?>
-                            <a href="#" class="btn btn-fab btn-danger btn-sm"><i class="material-icons"><?=$iconDelete;?></i></a>
+                            <a href="#" rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDeleteDetalle;?>&codigo=<?=$codigo;?>&c=<?=$codigoLibreta?>')">
+                              <i class="material-icons"><?=$iconDelete;?></i>
+                            </a>
                             <?php
                             }
                             ?>
@@ -224,10 +224,10 @@ $stmtb->bindColumn('nombre', $nombre);
                           <th>Fecha</th>
                           <th>Hora</th>
                           <th>Nro Cheque</th>
-                          <th>Descripcion</th>
+                          <th>Descripción</th>
                           <th>Monto</th>
                           <th>Saldo</th>
-                          <th>Informacion C.</th>
+                          <th>Información C.</th>
                           <th>Sucursal</th>
                           <th>Canal</th>
                           <th>Nro Referencia</th> 
@@ -257,7 +257,7 @@ $stmtb->bindColumn('nombre', $nombre);
                          <tr style="background:#223BC8; color:#F3F300;">
                           <th>Fecha</th>
                           <th>Agencia</th>
-                          <th>Descripcion</th>
+                          <th>Descripción</th>
                           <th>Nro Documento</th>
                           <th>Monto</th>
                           <th>Saldo</th>

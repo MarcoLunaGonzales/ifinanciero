@@ -11,6 +11,7 @@ $urlEdit="index.php?opcion=editLibretaBancaria";
 //$urlEdit2="tipos_cambios/historial.php";
 
 $urlDelete="index.php?opcion=deleteLibretaBancaria";
+$urlDeleteDetalle="index.php?opcion=deleteLibretaBancariaDetalle";
 $urlSave="libretas_bancarias/save.php";
 $urlSaveEdit="libretas_bancarias/saveEdit.php";
 $urlSaveDelete="";
