@@ -101,7 +101,7 @@ $sql.=" order by pc.IdCurso desc";
               <td class="text-left"><?=$FechaRegistro;?></td>   
               <td class="td-actions text-right">
                 <?php
-                  if($globalAdmin==1){                            
+                  
                     if($codigo_facturacion>0){?>                      
                       <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir Solicitud">print</i></a><?php 
                     }
@@ -114,7 +114,7 @@ $sql.=" order by pc.IdCurso desc";
                         <i class="material-icons" title="Solicitar Facturación">receipt</i>
                       </a><?php 
                     }                      
-                  }
+                  
                 ?>                                               
               </td>
             </tr>

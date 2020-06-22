@@ -156,7 +156,7 @@ $sql.=" GROUP BY IdCurso Order by aa.FechaInscripcion desc";
               <td><button class="btn <?=$btnEstado?> btn-sm btn-link"><?=$estado;?></button></td> 
               <td class="td-actions text-right">
                 <?php
-                  if($globalAdmin==1 && $sw_aux){                            
+                  if($sw_aux){                            
                     if($codigo_facturacion>0){
                       if(isset($_GET['q'])){ ?>
                         <a href='<?=$urlregistro_solicitud_facturacion?>&codigo=<?=$CiAlumno?>&cod_simulacion=<?=$codigo_simulacion;?>&IdCurso=<?=$IdCurso;?>&cod_facturacion=0&q=<?=$q?>&r=<?=$r?>' rel="tooltip" class="btn" style="background-color: #0489B1;">

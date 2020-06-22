@@ -14485,24 +14485,26 @@ function subirArchivoExcelLibretaBancaria(tipo,nombre_tipo){
   $("#modalSubirArchivoExcel").modal("show");
 }
 
+
 function abrirLibretaBancaria(datos,direccion,indice){
   iniciarCargaAjax();
   var d=datos.split('/');
   var cod_solicitudfacturacion=d[0];
   var saldo=d[2];
+  var razon_social=d[5];
   document.getElementById("cod_solicitudfacturacion").value=cod_solicitudfacturacion;
   document.getElementById("direccion").value=direccion;
   document.getElementById("indice").value=indice;
   document.getElementById("datos").value=datos;
-  var contenedor = document.getElementById('div_contenedor_libretaBancaria');    
+  $("#modalListaLibretaBancaria").modal("show");          
+  var contenedor = document.getElementById('contenedor_cabecera_libreta_bancaria');    
   ajax=nuevoAjax();
-  ajax.open('GET', 'simulaciones_servicios/ajax_listado_libreta_bancaria.php?saldo='+saldo,true);
+  ajax.open('GET', 'simulaciones_servicios/ajax_listado_libreta_bancaria.php?saldo='+saldo+'&razon_social='+razon_social,true);
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
       contenedor.innerHTML = ajax.responseText;      
       $('.selectpicker').selectpicker(["refresh"]);
-      detectarCargaAjax();
-      $("#modalListaLibretaBancaria").modal("show");       
+      detectarCargaAjax();      
     }
   }
   ajax.send(null);
@@ -14573,10 +14575,6 @@ function abrirArchivosAdjuntos(datos){
   }
   }
   ajax.send(null);
-}
-function abrirModalBuscadorLibreta(){
-  $("#modalBuscadorLibretaBancaria").modal("show"); 
-
 }
 function botonBuscarLibretaBancariaDetalle(){
   $("#modalBuscadorLibretaBancaria").modal("hide");
