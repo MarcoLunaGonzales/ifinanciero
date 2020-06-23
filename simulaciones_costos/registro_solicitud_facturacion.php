@@ -24,7 +24,7 @@ $globalUnidad=$_SESSION['globalUnidad'];
 $cod_area=13;
 $dbhIBNO = new ConexionIBNORCA();
 //datos del estudiante y el curso que se encuentra
-$sqlIBNORCA="SELECT aa.IdModulo, aa.IdCurso, aa.CiAlumno, concat(cpe.clPaterno,' ',cpe.clMaterno,' ',cpe.clNombreRazon)as nombreAlumno, c.Abrev, c.Auxiliar,
+$sqlIBNORCA="SELECT aa.IdModulo, aa.IdCurso, aa.CiAlumno, concat(cpe.clPaterno,' ',cpe.clMaterno,' ',cpe.clNombreRazon)as nombreAlumno, concat(cpe.clNombreRazon,' ',cpe.clPaterno,' ',cpe.clMaterno)as razonsocial, c.Abrev, c.Auxiliar,
 pc.Costo, pc.CantidadModulos, m.NroModulo, pc.Nombre, m.IdTema
 FROM asignacionalumno aa, dbcliente.cliente_persona_empresa cpe, alumnocurso ac, clasificador c, programas_cursos pc, modulos m 
 where cpe.clIdentificacion=aa.CiAlumno 
@@ -37,6 +37,7 @@ $resultSimu = $stmtIbno->fetch();
 $IdModulo = $resultSimu['IdModulo'];
 $IdCurso = $resultSimu['IdCurso'];
 $nombreAlumno = $resultSimu['nombreAlumno'];
+$razon_social = $resultSimu['razonsocial'];
 $Abrev = $resultSimu['Abrev'];
 $Costo = $resultSimu['Costo'];
 $CantidadModulos = $resultSimu['CantidadModulos'];
@@ -67,7 +68,6 @@ if($cod_facturacion>0){//editar
 }else{//registrar
     $fecha_registro = date('Y-m-d');
     $fecha_solicitudfactura = date('Y-m-d');
-    $razon_social= $nombreAlumno;
     $nit = $ci_estudiante;
     $observaciones = null;
     $observaciones_2 = null;
