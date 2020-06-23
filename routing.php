@@ -258,11 +258,11 @@
 		// 	require_once('simulaciones_costos/save_solicitud_facturacion_costos_empresa.php');
 		// }
 		if ($_GET['opcion']=='listFacturasServicios_costos') {
-			require_once('simulaciones_costos/listFacturasSolicitadas.php');
+			require_once('simulaciones_servicios/listFacturasSolicitadas.php');
 		}
 		//solicitud facturacion costos empresas
 		if ($_GET['opcion']=='solicitud_facturacion_costos_empresas') {			
-			require_once('simulaciones_costos/solicitud_facturacion_costos_empresas.php');
+			require_once('simulaciones_servicios/solicitud_facturacion_costos_empresas.php');
 		}
 
 		if ($_GET['opcion']=='register_solicitudfacturacion_manual') {

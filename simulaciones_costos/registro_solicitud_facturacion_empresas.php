@@ -34,6 +34,7 @@ $Costo = $resultNombreCurso['Costo'];
 $monto_modulos=$Costo/$cantidadModulos;
 
 $nombre_cliente=nameCliente($cod_empresa);
+$Codigo_alterno=obtenerCodigoExternoCurso($IdCurso);
 if($cod_facturacion>0){//editar
     $sqlFac="SELECT sf.*,sfd.precio,sfd.descuento_por,sfd.descuento_bob from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sfd.cod_solicitudfacturacion=sf.codigo and sf.codigo=$cod_facturacion";
     // echo $sqlFac;
@@ -59,7 +60,7 @@ if($cod_facturacion>0){//editar
     $fecha_solicitudfactura = date('Y-m-d');
     $razon_social= $nombre_cliente;
     $nit = obtenerNitCliente($cod_empresa);;
-    $observaciones = null;
+    $observaciones = $Codigo_alterno." - ".$nombreAlumno;
     $observaciones_2 = null;
     $cod_tipopago=null;
     $persona_contacto= null;
@@ -99,6 +100,7 @@ $descuento_cliente=0;
                 <?php }
                 ?> 
                 <input type="hidden" name="cod_defecto_deposito_cuenta" id="cod_defecto_deposito_cuenta" value="<?=$cod_defecto_deposito_cuenta?>"/>
+                <input type="hidden" name="Codigo_alterno" id="Codigo_alterno" value="<?=$Codigo_alterno;?>"/>  
                 <input type="hidden" name="cod_empresa" id="cod_empresa" value="<?=$cod_empresa;?>"/>
                 <input type="hidden" name="cod_simulacion" id="cod_simulacion" value="<?=$cod_simulacion;?>"/>
                 <input type="hidden" name="cod_facturacion" id="cod_facturacion" value="<?=$cod_facturacion;?>"/>
@@ -110,7 +112,7 @@ $descuento_cliente=0;
                         <div class="card-text">
                           <h4 class="card-title"><?php if ($cod_facturacion == 0) echo "Registrar "; else echo "Editar ";?>Solicitud de Facturación</h4>                      
                         </div>
-                        <h4 class="card-title" align="center"><b>Nombre Curso : <?=$nombre_curso?></b></h4>
+                        <h4 class="card-title" align="center"><b>Nombre Curso : <?=$Codigo_alterno?> - <?=$nombre_curso?></b></h4>
                         <!-- <h4 class="card-title" align="center"><b>Módulo : <?=$NroModulo?></b></h4> -->
                     </div>
                     <div class="card-body ">    
@@ -427,7 +429,7 @@ $descuento_cliente=0;
                                             //$codCS=430;//defecto
                                             $codCS=$rowPre['IdModulo'];
                                             $NroModulo=$rowPre['NroModulo'];
-                                            $tipoPre=$Nombre." - Mod:".$NroModulo." - ".$rowPre['nombre_tema'];                                            
+                                            $tipoPre=$Codigo_alterno." - Mod:".$NroModulo." - ".$rowPre['nombre_tema'];                                            
                                             $cantidadPre=1;                                            
                                             // $cantidadEPre=$rowPre['cantidad_editado'];                                            
                                             $montoPre=$monto_modulos;
