@@ -894,15 +894,6 @@ if($menuModulo==0){
                     <span class="sidebar-normal"> Gesti&oacute;n Solicitudes de Facturación </span>
                   </a>
                 </li>
-                
-                <!-- <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=listFacturasServicios_costos">
-                    <span class="sidebar-mini"> SFC </span>
-                    <span class="sidebar-normal"> Solicitudes de Facturación Capacitación</span>
-                  </a>
-                </li> -->
-                                          
-
               </ul>
             </div>
           </li>  
