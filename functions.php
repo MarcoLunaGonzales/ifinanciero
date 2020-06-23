@@ -6417,6 +6417,12 @@ function listaDetallePagosProveedores($codigo){
    return $stmt;
 }
 
+function listaDetallePagosProveedoresLote($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT pd.*,sd.detalle,sd.cod_plancuenta from pagos_proveedoresdetalle pd join solicitud_recursosdetalle sd on pd.cod_solicitudrecursosdetalle=sd.codigo join pagos_proveedores p on p.codigo=pd.cod_pagoproveedor where p.cod_pagolote=$codigo");
+   $stmt->execute();
+   return $stmt;
+}
 
 function obtenerGlosaSolicitudRecursoDetalle($codigo){
   $dbh = new Conexion();
@@ -7155,7 +7161,17 @@ function obtenerDetalleFactura($codigo){
   }
   return($valor); 
 }
-
+function nameLotesPago($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT nombre FROM pagos_lotes where codigo=:codigo");
+   $stmt->bindParam(':codigo',$codigo);
+   $stmt->execute();
+   $nombreX="";
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $nombreX=$row['nombre'];
+   }
+   return($nombreX);
+}
 ?>
 
 

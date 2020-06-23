@@ -6,8 +6,15 @@ $globalAdmin=$_SESSION["globalAdmin"];
 
 $dbh = new Conexion();
 
+$sqlwhere="where sr.cod_pagolote=0 or sr.cod_pagolote IS NULL";
+$sqlNombreLote="";
+if(isset($_GET['codigo'])){
+  $codigoLote=$_GET['codigo'];
+  $sqlwhere="where sr.cod_pagolote=$codigoLote"; 
+  $sqlNombreLote=" - ".nameLotesPago($codigoLote); 
+}
 // Preparamos
-$stmt = $dbh->prepare("SELECT sr.*,e.nombre as estado from pagos_proveedores sr join estados_pago e on sr.cod_estadopago=e.codigo where sr.cod_pagolote=0 or sr.cod_pagolote IS NULL order by sr.codigo desc");
+$stmt = $dbh->prepare("SELECT sr.*,e.nombre as estado from pagos_proveedores sr join estados_pago e on sr.cod_estadopago=e.codigo $sqlwhere order by sr.codigo desc");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -40,7 +47,7 @@ $stmt->bindColumn('cod_ebisa', $cod_ebisa);
                   <a href="#" title="Actualizar Lista" class="btn btn-default btn-sm btn-fab float-right" onclick="actualizarSimulacionSitios()">
                     <i class="material-icons">refresh</i>
                   </a>
-                  <h4 class="card-title"><b>Pagos</b></h4>
+                  <h4 class="card-title"><b>Pagos<?=$sqlNombreLote?></b></h4>
                   
                 </div>
                 <div class="card-body">
@@ -100,7 +107,7 @@ $stmt->bindColumn('cod_ebisa', $cod_ebisa);
                           <td class="text-muted"><?=$estado?></td>
                           <td class="td-actions text-right">
                             <?php 
-                            if($codComprobante!=0){
+                            if($codComprobante!=0&&!isset($_GET['codigo'])){
                               ?>
                                <div class="btn-group dropdown">
                                      <button type="button" class="btn btn-primary dropdown-toggle" title="COMPROBANTE DE PAGOS" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -131,10 +138,12 @@ $stmt->bindColumn('cod_ebisa', $cod_ebisa);
                                 <i class="material-icons">list</i> <?=$estado;?>
                               </button>
                               <div class="dropdown-menu">
-                                <a href="<?=$urlVerPago?>?cod=<?=$codigo?>" target="_blank" class="dropdown-item">
-                                       <i class="material-icons text-info">payment</i> Ver Pago
-                                    </a>
+                                
                                 <?php 
+                                if(!isset($_GET['codigo'])){
+                                  ?><a href="<?=$urlVerPago?>?cod=<?=$codigo?>" target="_blank" class="dropdown-item">
+                                       <i class="material-icons text-info">payment</i> Ver Pago
+                                    </a><?php
                                 if($codEstado!=2){
                                   if($codEstado==1){
                                     ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=4&admin=0" class="dropdown-item">
@@ -172,6 +181,11 @@ $stmt->bindColumn('cod_ebisa', $cod_ebisa);
                                     }               
                                  }
                                 }
+                              }else{
+                                ?><a href="<?=$urlVerPago?>?cod=<?=$codigo?>&codl=<?=$codigoLote?>" target="_blank" class="dropdown-item">
+                                       <i class="material-icons text-info">payment</i> Ver Pago
+                                    </a><?php
+                              }//fin if isset
                                ?>
                                       
                               </div>
@@ -186,12 +200,24 @@ $stmt->bindColumn('cod_ebisa', $cod_ebisa);
                     </table>
                 </div>
               </div>
-              <div class="card-footer fixed-bottom">
+              <?php 
+              if(!isset($_GET['codigo'])){
+               ?>
+               <div class="card-footer fixed-bottom">
                 <a href="#" onclick="javascript:window.open('<?=$urlRegister2;?>')" class="btn btn-info"><i class="material-icons">add</i> Nuevo Pago Proveedor</a>
-                
                 <!--<a href="#" onclick="javascript:window.open('<?=$urlRegisterLote;?>')" class="btn btn-primary"><i class="material-icons">view_comfy</i> Pagos Por Lotes</a>-->
                 <!--<a href="#" onclick="nuevoArchivoTxtPagoLote()" class="<?=$buttonNormal;?>">Generar Archivo TXT</a>-->
-              </div>      
+              </div>
+               <?php 
+              }else{
+                ?>
+                <div class="card-footer fixed-bottom">
+                <a href="<?=$urlListPagoLotes;?>" class="btn btn-danger">Volver</a>
+                </div>
+              <?php
+              }
+              ?>
+                    
             </div>
           </div>  
         </div>

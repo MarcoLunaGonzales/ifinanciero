@@ -198,7 +198,12 @@ if(isset($_GET['admin'])){
 				  	<div class="card-footer fixed-bottom col-sm-12">
 						
 						<?php 
-	          ?><a href="../<?=$urlListPago;?>" class="btn btn-danger">Volver</a><?php	   
+            if(isset($_GET['codl'])){
+              $codigoL=$_GET['codl'];
+              ?><a href="../<?=$urlListPago;?>&codigo=<?=$codigoL?>" class="btn btn-warning">Volver</a><?php  
+            }else{
+              ?><a href="../<?=$urlListPago;?>" class="btn btn-danger">Volver</a><?php  
+            }     
 						?>
 						<div class="row col-sm-9 float-right">
                     <div class="col-sm-2">

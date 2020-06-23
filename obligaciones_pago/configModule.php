@@ -10,6 +10,7 @@ $urlListReg="index.php?opcion=listComprobantesRegistrados";
 $urlImpComp="comprobantes/imp.php";
 $urlEdit="index.php?opcion=editMoneda";
 $urlEdit2="obligaciones_pago/edit.php";
+$urlEdit2Lote="obligaciones_pago/editLote.php";
 
 $urlDelete="index.php?opcion=deleteComprobante";
 $urlRegister2="index.php?opcion=listPagoProveedor";
@@ -22,8 +23,9 @@ $urlListPago="index.php?opcion=listPagoProveedores";
 $urlListPagoLotes="index.php?opcion=listPagoProveedoresLotes";
 $urlListPagoAdmin="index.php?opcion=listPagoProveedoresAdmin";
 $urlGenerarEbisa="obligaciones_pago/generarTXT.php";
+$urlGenerarEbisaLote="obligaciones_pago/generarTXTLote.php";
 $urlGenerarComprobante="obligaciones_pago/generarComprobante.php";
-
+$urlGenerarComprobanteLote="obligaciones_pago/generarComprobanteLote.php";
 //lotes
 
 $urlRegisterLote="index.php?opcion=listPagoProveedorLote";
