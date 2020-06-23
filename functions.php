@@ -1,5 +1,6 @@
 <?php
 require_once 'conexion.php';
+require_once 'conexion_externa.php';
 
 date_default_timezone_set('America/La_Paz');
 
@@ -5269,9 +5270,9 @@ where d.glosa=e.glosa and d.cod_anio=$anio and d.cod_simulacionservicio=$simulac
 
 
   function obtenerRolPersonaIbnorca($codPersona){
-    $dbh = new Conexion();
+    $dbh = new ConexionIBNORCA();
    $valor=0;
-   $sql="select ibnorca.personarol($codPersona) as rol";
+   $sql="select personarol($codPersona) as rol";
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -5305,9 +5306,9 @@ where d.glosa=e.glosa and d.cod_anio=$anio and d.cod_simulacionservicio=$simulac
   }
 
   function actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$user,$objeto,$fechaHoraActual,$obs){
-    $dbh = new Conexion();
+    $dbh = new ConexionIBNORCA();
     //enviar propuestas para la actualizacion de ibnorca
-    $sqlUpdateIbnorca="INSERT INTO ibnorca.estadoobjeto (idtipoobjeto,idestado,idresponsable,idobjeto,fechaestado,observaciones)
+    $sqlUpdateIbnorca="INSERT INTO estadoobjeto (idtipoobjeto,idestado,idresponsable,idobjeto,fechaestado,observaciones)
    VALUES ('$idTipoObjeto','$idObjeto','$user','$objeto','$fechaHoraActual','$obs')";
    $stmtUpdateIbnorca = $dbh->prepare($sqlUpdateIbnorca);
    $stmtUpdateIbnorca->execute();
@@ -5402,9 +5403,9 @@ where d.glosa=e.glosa and d.cod_anio=$anio and d.cod_simulacionservicio=$simulac
    }
   }
   function obtenerRolPersonaIbnorcaSesion($codPersona){
-    $dbh = new Conexion();
+    $dbh = new ConexionIBNORCA();
    $valor=0;
-   $sql="SELECT idrol FROM ibnorca.personarol WHERE idpersona=$codPersona and pordefecto=1";
+   $sql="SELECT idrol FROM personarol WHERE idpersona=$codPersona and pordefecto=1";
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -5479,8 +5480,8 @@ function obtenerDatosCompletosPorSimulacionServicios($codigo){
 }
 
 function obtenerCodigoServicioIbnorca(){
-   $dbh = new Conexion();
-   $stmt = $dbh->prepare("SELECT IFNULL(max(c.idServicio)+1,1)as codigo from ibnorca.servicios c");
+   $dbh = new ConexionIBNORCA();
+   $stmt = $dbh->prepare("SELECT IFNULL(max(c.idServicio)+1,1)as codigo from servicios c");
    $stmt->execute();
    $valor=0;
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -5579,8 +5580,8 @@ function buscarFechasMinMaxComprobante($tipoComprobante, $nroCorrelativo, $UO, $
 
 
 function obtenerCodigoServicioPorPropuestaTCPTCS($idPropuesta){
-   $dbh = new Conexion();
-   $stmt = $dbh->prepare("select IFNULL(se.Codigo,'SERVICIO SIN CODIGO')as codigo  from simulaciones_servicios  s, ibnorca.servicios se where s.idServicio=se.IdServicio and s.codigo=$idPropuesta");
+   $dbh = new ConexionIBNORCA();
+   $stmt = $dbh->prepare("select IFNULL(se.Codigo,'SERVICIO SIN CODIGO')as codigo  from simulaciones_servicios  s, servicios se where s.idServicio=se.IdServicio and s.codigo=$idPropuesta");
    $stmt->execute();
    $valor="SERVICIO SIN CODIGO";
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -5590,8 +5591,8 @@ function obtenerCodigoServicioPorPropuestaTCPTCS($idPropuesta){
 }
 
 function obtenerCodigoServicioPorIdServicio($idServicio){
-   $dbh = new Conexion();
-   $stmt = $dbh->prepare("SELECT codigo FROM ibnorca.servicios where idServicio=$idServicio");
+   $dbh = new ConexionIBNORCA();
+   $stmt = $dbh->prepare("SELECT codigo FROM servicios where idServicio=$idServicio");
    $stmt->execute();
    $valor="SIN SERVICIO";
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -5735,8 +5736,8 @@ function obtenerNombreConcatenadoCuentaDetalleSolicitudRecurso($codigo){
 }
 
 function obtenerPersonaCambioEstado($tipo,$objeto,$estado){
-   $dbh = new Conexion();
-   $stmt = $dbh->prepare("SELECT * FROM ibnorca.estadoobjeto where IdTipoObjeto=$tipo and IdObjeto = $objeto and IdEstado=$estado");
+   $dbh = new ConexionIBNORCA();
+   $stmt = $dbh->prepare("SELECT * FROM estadoobjeto where IdTipoObjeto=$tipo and IdObjeto = $objeto and IdEstado=$estado");
    $stmt->execute();
    $valor=0;
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -5746,8 +5747,8 @@ function obtenerPersonaCambioEstado($tipo,$objeto,$estado){
 }
 
 function obtenerIdPropuestaServicioIbnorca($idServicio){
-   $dbh = new Conexion();
-   $stmt = $dbh->prepare("SELECT idPropuesta FROM ibnorca.servicios where idServicio=$idServicio");
+   $dbh = new ConexionIBNORCA();
+   $stmt = $dbh->prepare("SELECT idPropuesta FROM servicios where idServicio=$idServicio");
    $stmt->execute();
    $valor="NONE";
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -5760,8 +5761,8 @@ function obtenerIdPropuestaServicioIbnorca($idServicio){
 }
 
  function obtenerIdAreaServicioIbnorca($idServicio){
-   $dbh = new Conexion();
-   $stmt = $dbh->prepare("SELECT IdArea FROM ibnorca.servicios where idServicio=$idServicio");
+   $dbh = new ConexionIBNORCA();
+   $stmt = $dbh->prepare("SELECT IdArea FROM servicios where idServicio=$idServicio");
    $stmt->execute();
    $valor="NONE";
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -5770,8 +5771,8 @@ function obtenerIdPropuestaServicioIbnorca($idServicio){
    return($valor);
 }
 function obtenerIdUnidadServicioIbnorca($idServicio){
-   $dbh = new Conexion();
-   $stmt = $dbh->prepare("SELECT IdOficina FROM ibnorca.servicios where idServicio=$idServicio");
+   $dbh = new ConexionIBNORCA();
+   $stmt = $dbh->prepare("SELECT IdOficina FROM servicios where idServicio=$idServicio");
    $stmt->execute();
    $valor="NONE";
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -5945,8 +5946,8 @@ function obtenerServiciosTipoObjetoNombre($id){
 }
 
 function obtenerTipoServicioPorIdServicio($idServicio){
-   $dbh = new Conexion();
-   $stmt = $dbh->prepare("SELECT IdTipo FROM ibnorca.servicios where idServicio=$idServicio");
+   $dbh = new ConexionIBNORCA();
+   $stmt = $dbh->prepare("SELECT IdTipo FROM servicios where idServicio=$idServicio");
    $stmt->execute();
    $valor=0;
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -7161,6 +7162,7 @@ function obtenerDetalleFactura($codigo){
   }
   return($valor); 
 }
+
 function nameLotesPago($codigo){
    $dbh = new Conexion();
    $stmt = $dbh->prepare("SELECT nombre FROM pagos_lotes where codigo=:codigo");
@@ -7172,6 +7174,19 @@ function nameLotesPago($codigo){
    }
    return($nombreX);
 }
+
+function obtenerCodigoExternoCurso($codigo){
+  $dbh = new ConexionIBNORCA();
+  $stmt = $dbh->prepare("SELECT codigo_curso($codigo) as codigo");
+  $stmt->execute();
+  $valor=0;
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $valor=$row['codigo'];
+  }
+  return($valor); 
+    
+}
+
 ?>
 
 

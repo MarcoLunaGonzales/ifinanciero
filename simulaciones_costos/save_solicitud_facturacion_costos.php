@@ -13,6 +13,7 @@ $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//para mostrar err
 
 try {//recibiendo datos
     // $cod_simulacion = $_POST["cod_simulacion"];
+    $codigo_alterno = $_POST["Codigo_alterno"];
     $cod_simulacion = $_POST["IdCurso"];    
     $cod_facturacion = $_POST["cod_facturacion"];    
     $cod_unidadorganizacional = $_POST["cod_uo"];
@@ -44,7 +45,7 @@ try {//recibiendo datos
     if ($cod_facturacion == 0){//insertamos       
         $nro_correlativo=obtenerCorrelativoSolicitud();//correlativo
         $stmt = $dbh->prepare("INSERT INTO solicitudes_facturacion(cod_simulacion_servicio,cod_unidadorganizacional,cod_area,fecha_registro,fecha_solicitudfactura,cod_tipoobjeto,cod_tipopago,cod_cliente,cod_personal,razon_social,nit,observaciones,observaciones_2,nro_correlativo,cod_estado,persona_contacto,cod_estadosolicitudfacturacion,codigo_alterno,tipo_solicitud) 
-        values ('$cod_simulacion','$cod_unidadorganizacional','$cod_area','$fecha_registro','$fecha_solicitudfactura','$cod_tipoobjeto','$cod_tipopago','$ci_estudiante','$cod_personal','$razon_social','$nit','$observaciones','$observaciones_2','$nro_correlativo',1,'$persona_contacto',1,null,2)");//2 tipo capacitacion
+        values ('$cod_simulacion','$cod_unidadorganizacional','$cod_area','$fecha_registro','$fecha_solicitudfactura','$cod_tipoobjeto','$cod_tipopago','$ci_estudiante','$cod_personal','$razon_social','$nit','$observaciones','$observaciones_2','$nro_correlativo',1,'$persona_contacto',1,'$codigo_alterno',2)");//2 tipo capacitacion
         $flagSuccess=$stmt->execute();        
         if($flagSuccess){
             //antes de insertar sacamos el codigo de la solicitud para el detalle
@@ -233,13 +234,26 @@ try {//recibiendo datos
              }else{
                actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$cod_facturacion,$fechaHoraActual,$obs);
             }
+
+
             if(isset($_POST['q'])){
               $q=$_POST['q'];
-              $r=$_POST['r'];          
-              showAlertSuccessError($flagSuccess,"../".$urlListSol."&q=".$q."&r=".$r);
+              $s=$_POST['r'];
+              $u=$_POST['r'];
+              $v=$_POST['r'];
+              showAlertSuccessError($flagSuccess,"../".$urlListSol."&q=".$q."&s=".$s."&u=".$u."&v=".$v);
             }else{
               showAlertSuccessError($flagSuccess,"../".$urlListSol);
-            } 
+            }
+
+        
+            // if(isset($_POST['q'])){
+            //   $q=$_POST['q'];
+            //   $r=$_POST['r'];          
+            //   showAlertSuccessError($flagSuccess,"../".$urlListSol."&q=".$q."&r=".$r);
+            // }else{
+            //   showAlertSuccessError($flagSuccess,"../".$urlListSol);
+            // } 
 
 
         

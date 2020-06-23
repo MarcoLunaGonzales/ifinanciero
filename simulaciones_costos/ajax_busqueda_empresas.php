@@ -7,6 +7,7 @@ require_once '../styles.php';
 require_once '../functionsGeneral.php';
 require_once '../functions.php';
 require_once 'configModule.php';
+require_once '../layouts/bodylogin2.php';
 
 $dbh = new Conexion();
 $dbhIBNO = new ConexionIBNORCA();
@@ -15,8 +16,8 @@ $sqlX="SET NAMES 'utf8'";
 $stmtX = $dbh->prepare($sqlX);
 $stmtX->execute();
 
-session_start();
-$globalAdmin=$_SESSION["globalAdmin"];
+// session_start();
+// $globalAdmin=$_SESSION["globalAdmin"];
 // $globalAdmin=$_SESSION["globalAdmin"];
 // $globalGestion=$_SESSION["globalGestion"];
 // $globalUnidad=$_SESSION["globalUnidad"];
@@ -48,12 +49,7 @@ $sql.=" order by pc.IdCurso desc";
               <th class="text-center"></th>                          
                 <th>Id Empresa</th>
                 <th>Empresa</th>
-                <th>Precio <br>curso (BOB)</th>                            
-                <!-- <th>Desc. <br>curso(%)</th>                              
-                <th>Importe <br>curso(BOB)</th>    -->
-                <!-- <th>Importe <br>modulo(BOB)</th>   
-                <th>Importe <br>Solicitud(BOB)</th>                   
-                <th>Nro <br>Módulo</th>                 -->
+                <th>Precio <br>curso (BOB)</th>
                 <th>Nombre Curso</th>
                 <th>Fecha Registro</th>
                 <th class="text-right">Actions</th>
@@ -101,7 +97,7 @@ $sql.=" order by pc.IdCurso desc";
               <td class="text-left"><?=$FechaRegistro;?></td>   
               <td class="td-actions text-right">
                 <?php
-                  if($globalAdmin==1){                            
+                  
                     if($codigo_facturacion>0){?>                      
                       <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir Solicitud">print</i></a><?php 
                     }
@@ -114,7 +110,7 @@ $sql.=" order by pc.IdCurso desc";
                         <i class="material-icons" title="Solicitar Facturación">receipt</i>
                       </a><?php 
                     }                      
-                  }
+                  
                 ?>                                               
               </td>
             </tr>

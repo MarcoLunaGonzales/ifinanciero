@@ -7,7 +7,7 @@ require_once '../styles.php';
 require_once '../functionsGeneral.php';
 require_once '../functions.php';
 require_once 'configModule.php';
-
+require_once '../layouts/bodylogin2.php';
 $dbh = new Conexion();
 $dbhIBNO = new ConexionIBNORCA();
 
@@ -15,8 +15,8 @@ $sqlX="SET NAMES 'utf8'";
 $stmtX = $dbh->prepare($sqlX);
 $stmtX->execute();
 
-session_start();
-$globalAdmin=$_SESSION["globalAdmin"];
+// session_start();
+// $globalAdmin=$_SESSION["globalAdmin"];
 // $globalAdmin=$_SESSION["globalAdmin"];
 // $globalGestion=$_SESSION["globalGestion"];
 // $globalUnidad=$_SESSION["globalUnidad"];
@@ -52,27 +52,24 @@ if($paterno!=""){
   $sql.=" and cpe.clPaterno like '%$paterno%'";
 }
 if($materno!=""){
-  $sql.=" and cpe.clMaterno like '%$materno&'";
+  $sql.=" and cpe.clMaterno like '%$materno%'";
 }
 $sql.=" GROUP BY IdCurso Order by aa.FechaInscripcion desc";
-
+// echo $sql;
 ?>
   <table class="table table-sm" id="tablePaginator">
        <thead>
             <tr>
               <th class="text-center"></th>                          
-                <th>CI Alumno</th>
-                <th>Nombre</th>
-                <th>Precio <br>curso (BOB)</th>                            
-                <th>Desc. <br>curso(%)</th>                              
-                <th>Importe <br>curso(BOB)</th>   
-                <!-- <th>Importe <br>modulo(BOB)</th>   
-                <th>Importe <br>Solicitud(BOB)</th>                   
-                <th>Nro <br>Módulo</th>                 -->
-                <th>Nombre Curso</th>   
-                <th>Fecha Inscripción</th>
-                <th>Estado</th>
-                <th class="text-right">Actions</th>
+                <th><small>CI Alumno</small></th>
+                <th><small>Nombre</small></th>
+                <th><small>Precio <br>curso (BOB)</small></th>                            
+                <th><small>Desc. <br>curso(%)</small></th>                              
+                <th><small>Importe <br>curso(BOB)</small></th>                   
+                <th><small>Nombre Curso</small></th>   
+                <th><small>Fecha Inscripción</small></th>
+                <th><small>Estado</small></th>
+                <th class="text-right"><small>smallActions</small></th>
             </tr>
         </thead>
         <tbody>                                
@@ -144,19 +141,16 @@ $sql.=" GROUP BY IdCurso Order by aa.FechaInscripcion desc";
             <tr>
               <td align="center"></td>
               <td><?=$CiAlumno;?></td>
-              <td class="text-left"><?=$nombreAlumno;?></td>              
-              <td class="text-right"><?=formatNumberDec($Costo) ;?></td>
-              <td class="text-right"><?=$descuento ;?></td>                          
-              <td class="text-right"><?=formatNumberDec($importe_curso) ;?></td>                          
-              <!-- <td class="text-right"><?=formatNumberDec($monto_pagar) ;?></td>                            
-              <td class="text-right"><?=formatNumberDec($sumaTotalImporte) ;?></td>     
-              <td><?=$NroModulo;?></td>                             -->
-              <td class="text-left"><?=$nombre_mod;?></td>      
-              <td class="text-right"><?=$FechaInscripcion;?></td>
-              <td><button class="btn <?=$btnEstado?> btn-sm btn-link"><?=$estado;?></button></td> 
+              <td class="text-left small"><?=$nombreAlumno;?></td>              
+              <td class="text-right small"><?=formatNumberDec($Costo) ;?></td>
+              <td class="text-right small"><?=$descuento ;?></td>                          
+              <td class="text-right small"><?=formatNumberDec($importe_curso) ;?></td>              
+              <td class="text-left small" ><?=$nombre_mod;?></td>      
+              <td class="text-right small"><?=$FechaInscripcion;?></td>
+              <td><button class="btn <?=$btnEstado?> btn-sm btn-link"><small><?=$estado;?></small></button></td> 
               <td class="td-actions text-right">
                 <?php
-                  if($globalAdmin==1 && $sw_aux){                            
+                  if($sw_aux && $estado!="Pagado<br>total"){                            
                     if($codigo_facturacion>0){
                       if(isset($_GET['q'])){ ?>
                         <a href='<?=$urlregistro_solicitud_facturacion?>&codigo=<?=$CiAlumno?>&cod_simulacion=<?=$codigo_simulacion;?>&IdCurso=<?=$IdCurso;?>&cod_facturacion=0&q=<?=$q?>&r=<?=$r?>' rel="tooltip" class="btn" style="background-color: #0489B1;">

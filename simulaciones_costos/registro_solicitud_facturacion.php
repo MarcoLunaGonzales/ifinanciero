@@ -24,7 +24,7 @@ $globalUnidad=$_SESSION['globalUnidad'];
 $cod_area=13;
 $dbhIBNO = new ConexionIBNORCA();
 //datos del estudiante y el curso que se encuentra
-$sqlIBNORCA="SELECT aa.IdModulo, aa.IdCurso, aa.CiAlumno, concat(cpe.clPaterno,' ',cpe.clMaterno,' ',cpe.clNombreRazon)as nombreAlumno, c.Abrev, c.Auxiliar,
+$sqlIBNORCA="SELECT aa.IdModulo, aa.IdCurso, aa.CiAlumno, concat(cpe.clPaterno,' ',cpe.clMaterno,' ',cpe.clNombreRazon)as nombreAlumno, concat(cpe.clNombreRazon,' ',cpe.clPaterno,' ',cpe.clMaterno)as razonsocial, c.Abrev, c.Auxiliar,
 pc.Costo, pc.CantidadModulos, m.NroModulo, pc.Nombre, m.IdTema
 FROM asignacionalumno aa, dbcliente.cliente_persona_empresa cpe, alumnocurso ac, clasificador c, programas_cursos pc, modulos m 
 where cpe.clIdentificacion=aa.CiAlumno 
@@ -37,6 +37,7 @@ $resultSimu = $stmtIbno->fetch();
 $IdModulo = $resultSimu['IdModulo'];
 $IdCurso = $resultSimu['IdCurso'];
 $nombreAlumno = $resultSimu['nombreAlumno'];
+$razon_social = $resultSimu['razonsocial'];
 $Abrev = $resultSimu['Abrev'];
 $Costo = $resultSimu['Costo'];
 $CantidadModulos = $resultSimu['CantidadModulos'];
@@ -44,6 +45,7 @@ $NroModulo = $resultSimu['NroModulo'];
 $Nombre = $resultSimu['Nombre'];
 $monto_pagar=($Costo - ($Costo*$Abrev/100) )/$CantidadModulos; //formula para sacar el monto a pagar del estudiante
 
+$Codigo_alterno=obtenerCodigoExternoCurso($IdCurso);
 if($cod_facturacion>0){//editar
     $sqlFac="SELECT sf.*,sfd.precio,sfd.descuento_por,sfd.descuento_bob from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sfd.cod_solicitudfacturacion=sf.codigo and sf.codigo=$cod_facturacion";
     // echo $sqlFac;
@@ -68,8 +70,8 @@ if($cod_facturacion>0){//editar
     $fecha_registro = date('Y-m-d');
     $fecha_solicitudfactura = date('Y-m-d');
     $razon_social= $nombreAlumno;
-    $nit = $ci_estudiante;
-    $observaciones = null;
+    $nit = $ci_estudiante;    
+    $observaciones = $Codigo_alterno." - ".$nombreAlumno;
     $observaciones_2 = null;
     $cod_tipopago=null;
     $persona_contacto= null;
@@ -110,6 +112,7 @@ $descuento_cliente=0;
                 <?php }
                 ?>
                 <input type="hidden" name="cod_defecto_deposito_cuenta" id="cod_defecto_deposito_cuenta" value="<?=$cod_defecto_deposito_cuenta?>"/>
+                <input type="hidden" name="Codigo_alterno" id="Codigo_alterno" value="<?=$Codigo_alterno;?>"/>  
                 <input type="hidden" name="ci_estudiante" id="ci_estudiante" value="<?=$ci_estudiante;?>"/>
                 <input type="hidden" name="cod_simulacion" id="cod_simulacion" value="<?=$cod_simulacion;?>"/>
                 <input type="hidden" name="cod_facturacion" id="cod_facturacion" value="<?=$cod_facturacion;?>"/>
@@ -121,7 +124,7 @@ $descuento_cliente=0;
                         <div class="card-text">
                           <h4 class="card-title"><?php if ($cod_facturacion == 0) echo "Registrar "; else echo "Editar ";?>Solicitud de Facturación</h4>                      
                         </div>
-                        <h4 class="card-title" align="center"><b>Nombre Curso : <?=$Nombre?></b></h4>
+                        <h4 class="card-title" align="center"><b>Nombre Curso : <?=$Codigo_alterno?> - <?=$Nombre?></b></h4>
                         <!-- <h4 class="card-title" align="center"><b>Módulo : <?=$NroModulo?></b></h4> -->
                     </div>
                     <div class="card-body ">    
@@ -426,7 +429,7 @@ $descuento_cliente=0;
                                             //$codCS=430;//defecto
                                             $codCS=$rowPre['IdModulo'];//guardaremos el id de curso en ves de servicio..
                                             $NroModulo=$rowPre['NroModulo'];
-                                            $tipoPre=$Nombre." - Mod:".$NroModulo." - ".$rowPre['nombre_tema'];
+                                            $tipoPre=$Codigo_alterno." - Mod:".$NroModulo." - ".$rowPre['nombre_tema'];
                                             $CantidadModulos=$rowPre['CantidadModulos'];
                                             $cantidadPre=1;
 
@@ -588,7 +591,7 @@ $descuento_cliente=0;
                                             ?>
                                             <script>
                                                 window.onload = activarInputMontoFilaServicio2;
-                                                // window.onload = calcularTotalFilaServicio2Costos;
+                                                window.onload = calcularTotalFilaServicio2Costos;
                                                 
                                             </script>
 

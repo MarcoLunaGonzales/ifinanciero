@@ -400,7 +400,7 @@
         </div>
         <div class="row">
           <div class="col-sm-12" style="background-color:#f9edf7">
-            <div class="form-group" >              
+            <div class="form-group" >
               <textarea type="text" name="observaciones_r" id="observaciones_r" class="form-control" required="true"></textarea>
             </div>
           </div>
@@ -414,27 +414,137 @@
   </div>
 </div>
 <!-- modal libreta bancaria -->
-<div class="modal fade" id="modalListaLibretaBancaria" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal fade" id="modalListaLibretaBancaria" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
   <div class="modal-dialog modal-xl" role="document">
-    <div class="modal-content">
+    <div class="modal-content ">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h3 class="modal-title" id="myModalLabel"><b>Libreta Bancaria</b></h3><button type="button" class="btn btn-warning btn-round btn-fab btn-sm" onclick="abrirModalBuscadorLibreta()"><i class="material-icons" title="Buscador Avanzado">search</i></button>
+        <h3 class="modal-title" id="myModalLabel"><b>Libreta Bancaria</b></h3>        
       </div>
+      <div id="contenedor_cabecera_libreta_bancaria"></div>
       <div class="modal-body">
         <input type="hidden" name="cod_solicitudfacturacion" id="cod_solicitudfacturacion" value="0">
         <input type="hidden" name="direccion" id="direccion" value="0">
         <input type="hidden" name="datos" id="datos" value="0">
-        <input type="hidden" name="indice" id="indice" value="0">
+        <input type="hidden" name="indice" id="indice" value="0">       
         <div class="row">          
-          <div class="col-sm-12" id="div_contenedor_libretaBancaria">
-            
+          <div class="table-responsive">
+            <?php
+              $codigo=0;
+              $lista=obtenerObtenerLibretaBancaria($codigo);
+              ?>
+              <style>
+                tfoot input {
+                  width: 100%;
+                  padding: 3px;
+                  
+                }
+              </style>            
+            <table id="libreta_bancaria_reporte_modal" class="table table-condensed table-bordered table-sm small" style="width:100% !important;">
+              <thead>
+                <tr style="background:#21618C; color:#fff;">
+                  <th class="text-center" width="3%">#</th>
+                  <th class="small" width="5%"><small>Fecha</small></th>      
+                  <th class="small" width="30%"><small>Información Complementaria</small></th>      
+                  <th class="small" width="5%"><small>Monto</small></th>
+                  <th class="small" width="3%"><small><small>N° Ref</small></small></th>
+                  <th class="small bg-success" width="4%"><small>Fecha Fac.</small></th>
+                  <th class="small bg-success" width="4%"><small>N° Fac.</small></th>      
+                  <th class="small bg-success"><small>Nit Fac.</small></th>
+                  <th class="small bg-success"><small>Razón Social Fac.</small></th>
+                  <th class="small bg-success" width="7%"><small>Monto Fac.</small></th>
+                  <!-- <th class="text-right bg-success" width="3%"></th> -->
+                </tr>
+              </thead>
+              <tbody>
+                <?php
+                if($lista->estado==1){
+                  $j=1;
+                    foreach ($lista->libretas as $v) {
+                      $Nombre=$v->Nombre;
+                      $Banco=$v->Banco;
+                      $detalle=$v->detalle;
+                      $index=1;?>
+                      <tr>
+                        <td class="d-none"></td>
+                        <td class="d-none"></td>
+                        <td class="d-none"></td>
+                        <td class="d-none"></td>                        
+                        <td class="d-none"></td>
+                        <td class="d-none"></td>
+                        <td class="d-none"></td>
+                        <td class="d-none"></td>
+                        <td class="d-none"></td>
+                        <!-- <td class="d-none"></td> -->
+                        <td align="center" colspan="10" style="background:#e58400; color:#fff;"><button title="Detalles" id="botonLibreta<?=$j?>" style="border:none; background:#e58400; color:#fff;" onclick="activardetalleLibreta(<?=$j?>)"><small><?=$Banco;?> - <?=$Nombre;?></small></button></td>
+                      </tr>     
+                      <?php
+                        foreach ($detalle as $v_detalle) {
+                        $CodLibretaDetalle=$v_detalle->CodLibretaDetalle;
+                        $Descripcion=$v_detalle->Descripcion;
+                        $InformacionComplementaria=$v_detalle->InformacionComplementaria;
+                        $Agencia=$v_detalle->Agencia;
+                        $NumeroCheque=$v_detalle->NumeroCheque;
+                        $NumeroDocumento=$v_detalle->NumeroDocumento;
+                        $Fecha=$v_detalle->Fecha;
+                        $Hora=$v_detalle->Hora;
+                        $FechaHoraCompleta=$v_detalle->FechaHoraCompleta;
+                        $monto=$v_detalle->monto;
+
+                        $CodFactura=$v_detalle->CodFactura;
+                        $FechaFactura=$v_detalle->FechaFactura;
+                        $NumeroFactura=$v_detalle->NumeroFactura;
+                        $NitFactura=$v_detalle->NitFactura;
+                        $RSFactura=$v_detalle->RSFactura;
+                        $MontoFactura=$v_detalle->MontoFactura; ?>
+                        <tr>
+                          <td style="" class="libretaDetalles_<?=$j?> small" align="center"><?=$index;?></td>
+                          <td style="" class="libretaDetalles_<?=$j?> text-center small"><span style="padding:0px;border: 0px;"><?=strftime('%d/%m/%Y',strtotime($FechaHoraCompleta))?><br><?=strftime('%H:%M:%S',strtotime($FechaHoraCompleta))?></span></td>           
+                          <td style="" class="libretaDetalles_<?=$j?> text-left "><small><small><?=$InformacionComplementaria?></small></small></td>
+                          <td style="" class="libretaDetalles_<?=$j?> text-right small"><?=number_format($monto,2)?></td>
+                          <td style="" class="libretaDetalles_<?=$j?> text-left small"><?=$NumeroDocumento?></td>
+                          <td style=" color: #ff0000;" class="libretaDetalles_<?=$j?> text-center small"><?=$FechaFactura?></td>
+                          <td style=" color: #ff0000;" class="libretaDetalles_<?=$j?> text-right small"><?=$NumeroFactura?></td>            
+                          <td style=" color: #ff0000;" class="libretaDetalles_<?=$j?> text-right small"><?=$NitFactura?></td>
+                          <td style=" color: #ff0000;" class="libretaDetalles_<?=$j?> text-left"><small><small><?=$RSFactura?></small></small></td>
+                          <td style=" color: #ff0000;" class="libretaDetalles_<?=$j?> text-right small"><?=$MontoFactura?> <?php
+                            if($CodFactura==null || $CodFactura==''){?>
+                              <a href="#" style="padding: 0;font-size:10px;width:25px;height:25px;" onclick="seleccionar_libretaBancaria(<?=$CodLibretaDetalle?>)" class="btn btn-fab btn-success btn-sm" title="Seleccionar Item"><i class="material-icons">done</i></a>
+                            <?php }?></td>
+                          <!-- <td style=" color: #ff0000;" class="libretaDetalles_<?=$j?> td-actions text-right small">
+                            
+                          </td> -->
+                        </tr>
+                      <?php
+                      $index++;
+                      }
+                      $j++;
+                  }
+                }
+                ?>
+              </tbody>
+              <tfoot>
+                <tr style="background:#21618C; color:#fff;">
+                  <th class="text-center" width="3%">#</th>
+                  <th class="small" width="5%"><small>Fecha</small></th>      
+                  <th class="small" width="30%"><small>Información Complementaria</small></th>      
+                  <th class="small" width="5%"><small>Monto</small></th>
+                  <th class="small" width="3%"><small><small>N° Ref</small></small></th>
+                  <th class="small bg-success" width="4%"><small>Fecha<br>Fac.</small></th>
+                  <th class="small bg-success" width="4%"><small>N° Fac.</small></th>      
+                  <th class="small bg-success"><small>Nit Fac.</small></th>
+                  <th class="small bg-success"><small>Razón Social Fac.</small></th>
+                  <th class="small bg-success" width="7%"><small>Monto Fac.</small></th>
+                  <!-- <th class="text-right bg-success" width="3%"></th> -->
+                </tr>
+              </tfoot>
+            </table>
           </div>
         </div>
       </div>
       <div class="modal-footer">
         <!-- <button type="button" class="btn btn-success" id="libreta_bancaria" name="libreta_bancaria">Agregar</button> -->
-        <button type="button" class="btn btn-danger" data-dismiss="modal"> Volver </button>
+        <!-- <button type="button" class="btn btn-danger" data-dismiss="modal"> Volver </button> -->
       </div>
     </div>
   </div>
