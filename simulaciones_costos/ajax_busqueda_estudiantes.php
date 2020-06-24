@@ -7,7 +7,7 @@ require_once '../styles.php';
 require_once '../functionsGeneral.php';
 require_once '../functions.php';
 require_once 'configModule.php';
-require_once '../layouts/bodylogin2.php';
+// require_once '../layouts/bodylogin2.php';
 $dbh = new Conexion();
 $dbhIBNO = new ConexionIBNORCA();
 
@@ -92,6 +92,10 @@ $sql.=" GROUP BY IdCurso Order by aa.FechaInscripcion desc";
           $stmtIBNO->bindColumn('Nombre', $nombre_mod);                                    
           $stmtIBNO->bindColumn('FechaInscripcion_x', $FechaInscripcion);
           while ($rowPre = $stmtIBNO->fetch(PDO::FETCH_ASSOC)){
+            $monto_pagar=($Costo - ($Costo*$descuento/100) )/$CantidadModulos; //monto a pagar del estudiante 
+            $importe_curso=   $Costo*$descuento/100;//importe curso con desuento
+            $importe_curso= $Costo-$importe_curso;//importe curso con desuento       
+
             $cont_total_ws=0;
             $cont_total_pagados=0;
             $sw_aux=true;
@@ -106,7 +110,7 @@ $sql.=" GROUP BY IdCurso Order by aa.FechaInscripcion desc";
                 }
               }
               // echo $cont_total_ws."-".$cont_total_pagados;              
-              if($cont_total_ws==$cont_total_pagados){
+              if($cont_total_ws==$cont_total_pagados || $importe_curso==0){
                 $estado="Pagado<br>total"; //pagado
                 $btnEstado="btn-success";
               }else{
@@ -124,9 +128,7 @@ $sql.=" GROUP BY IdCurso Order by aa.FechaInscripcion desc";
             }
             
 
-            $monto_pagar=($Costo - ($Costo*$descuento/100) )/$CantidadModulos; //monto a pagar del estudiante 
-            $importe_curso=   $Costo*$descuento/100;//importe curso con desuento
-            $importe_curso= $Costo-$importe_curso;//importe curso con desuento            
+                 
             //verificamos si ya tiene factura generada y esta activa                           
             $stmtFact = $dbh->prepare("SELECT codigo from solicitudes_facturacion where tipo_solicitud=2 and cod_cliente=$CiAlumno and cod_simulacion_servicio=$IdCurso");
             $stmtFact->execute();

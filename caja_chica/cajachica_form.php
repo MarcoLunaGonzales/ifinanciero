@@ -77,7 +77,7 @@ if($cod_estado_aux==2 || $cod_estado_aux==null || $codigo>0){
     			  <div class="card-body ">			
                        
                         <div class="row">
-                          <label class="col-sm-2 col-form-label">Tipo de caja chica</label>
+                          <label class="col-sm-2 col-form-label">Instancia caja chica</label>
                           <div class="col-sm-8">
                             <div class="form-group">
                                 <input class="form-control" type="hidden" name="cod_tipocajachica" id="cod_tipocajachica"  value="<?=$cod_tcc;?>" />

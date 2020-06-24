@@ -38,12 +38,23 @@ $IdModulo = $resultSimu['IdModulo'];
 $IdCurso = $resultSimu['IdCurso'];
 $nombreAlumno = $resultSimu['nombreAlumno'];
 $razon_social = $resultSimu['razonsocial'];
-$Abrev = $resultSimu['Abrev'];
+// $Abrev = $resultSimu['Abrev'];
 $Costo = $resultSimu['Costo'];
 $CantidadModulos = $resultSimu['CantidadModulos'];
 $NroModulo = $resultSimu['NroModulo'];
 $Nombre = $resultSimu['Nombre'];
-$monto_pagar=($Costo - ($Costo*$Abrev/100) )/$CantidadModulos; //formula para sacar el monto a pagar del estudiante
+// $monto_pagar=($Costo - ($Costo*$Abrev/100) )/$CantidadModulos; //formula para sacar el monto a pagar del estudiante
+
+$Costo=$Costo/$CantidadModulos;
+$Abrev=trim($resultSimu['Abrev'],'%');
+$descuento_cliente=trim($resultSimu['Abrev'],'%');
+$descuento_bob_cliente=$Costo*trim($resultSimu['Abrev'],'%')/100;
+// $cantidadEPre=$resultSimu['cantidad_editado'];
+$monto_pagar=($Costo - ($Costo*$Abrev)/100 )/$CantidadModulos; //formula para sacar el monto a pagar del estudiante
+$monto_pagar=number_format($monto_pagar,2,".","");;                                            
+
+
+
 
 $Codigo_alterno=obtenerCodigoExternoCurso($IdCurso);
 if($cod_facturacion>0){//editar
@@ -91,7 +102,7 @@ $cod_defecto_deposito_cuenta=obtenerValorConfiguracion(55);
 // $name_area=trim(abrevArea($cod_area),'-');
 $contadorRegistros=0;
 
-$descuento_cliente=0;
+// $descuento_cliente=0;
 ?>
 <script>
   numFilas=<?=$contadorRegistros;?>;
@@ -423,7 +434,8 @@ $descuento_cliente=0;
                                         // echo $queryPr;
                                         $stmt = $dbhIBNO->prepare($queryPr);
                                         $stmt->execute();
-                                        $modal_totalmontopre=0;$modal_totalmontopretotal=0;
+                                        $modal_totalmontopre=0;
+                                        $modal_totalmontopretotal=0;
                                         while ($rowPre = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                             $codigoPre=$rowPre['IdTema'];
                                             //$codCS=430;//defecto
@@ -432,21 +444,21 @@ $descuento_cliente=0;
                                             $tipoPre=$Codigo_alterno." - Mod:".$NroModulo." - ".$rowPre['nombre_tema'];
                                             $CantidadModulos=$rowPre['CantidadModulos'];
                                             $cantidadPre=1;
-
-                                            $Costo=$rowPre['Costo'];
-                                            $Abrev=$rowPre['Abrev'];
-                                            // $cantidadEPre=$rowPre['cantidad_editado'];
-                                            $monto_pagar=($Costo - ($Costo*$Abrev/100) )/$CantidadModulos; //formula para sacar el monto a pagar del estudiante
-                                            $monto_pagar=number_format($monto_pagar,2,".","");;
-                                            $descuento_bob_cliente=$monto_pagar*$descuento_cliente; 
-                                            // $montoPreTotal=$montoPre*$cantidadEPre;
+                                            // $Costo=$rowPre['Costo'];
+                                            // $Abrev=trim($rowPre['Abrev'],'%');
+                                            // $descuento_cliente=trim($rowPre['Abrev'],'%');
+                                            // $descuento_bob_cliente=$Costo*trim($rowPre['Abrev'],'%')/100;
+                                            // // $cantidadEPre=$rowPre['cantidad_editado'];
+                                            // $monto_pagar=($Costo - ($Costo*$Abrev) )/$CantidadModulos; //formula para sacar el monto a pagar del estudiante
+                                            // $monto_pagar=number_format($monto_pagar,2,".","");;                                            
+                                            
                                             $banderaHab=1;
                                             $banderaHab=1;
                                             $codTipoUnidad=1;
-                                            $cod_anio=1;                                      
+                                            $cod_anio=1;
                                             if($banderaHab!=0){
-                                                $descuento_porX=0;
-                                                $descuento_bobX=0;
+                                                $descuento_porX=$descuento_cliente;
+                                                $descuento_bobX=$descuento_bob_cliente;
                                                 $descripcion_alternaX=$tipoPre;
                                                 // $modal_totalmontopre+=$montoPre;                                                
                                                 //parte del controlador de check
@@ -471,6 +483,7 @@ $descuento_cliente=0;
                                                 $montoPagado=0;
                                                 $estadoPagado=0;
                                                 $cod_modulo=0;
+                                                $monto_total_pagado=0;
                                                 $lista=verifica_pago_curso($IdCurso,$ci_estudiante);
                                                 // var_dump($lista);
                                                 if($lista){
@@ -486,6 +499,7 @@ $descuento_cliente=0;
                                                             $codigo_externo=$listas->Codigo;
                                                             $montoPagado=$listas->MontoPagado;
                                                             $monto_total_pagado=$listas->MontoPagado;
+                                                            // $monto_x_pagar=$listas->MontoXPagar;
                                                             // echo $monto_total_pagado."---";
                                                             $saldo=$listas->Saldo;
                                                             break;
@@ -541,7 +555,7 @@ $descuento_cliente=0;
                                                 <input type="hidden" id="servicio<?=$iii?>" name="servicio<?=$iii?>" value="<?=$codCS?>">
                                                 <input type="hidden" id="nombre_servicio<?=$iii?>" name="nombre_servicio<?=$iii?>" value="<?=$tipoPre?>">
                                                 <input type="hidden" id="cantidad<?=$iii?>" name="cantidad<?=$iii?>" value="<?=$cantidadPre?>">
-                                                <input type="hidden" id="importe<?=$iii?>" name="importe<?=$iii?>" value="<?=$monto_pagar?>">
+                                                <input type="hidden" id="importe<?=$iii?>" name="importe<?=$iii?>" value="<?=$Costo?>">
 
                                                 <!-- aqui se captura los servicios activados -->
                                                 <input type="hidden" id="cod_serv_tiposerv_a<?=$iii?>" name="cod_serv_tiposerv_a<?=$iii?>">
@@ -552,7 +566,7 @@ $descuento_cliente=0;
                                                   <!-- <td class="text-left"><?=$cod_anio?> </td> -->
                                                     <td class="text-left" width="35%"><textarea name="descripcion_alterna<?=$iii?>" id="descripcion_alterna<?=$iii?>" class="form-control" onkeyup="javascript:this.value=this.value.toUpperCase();" <?=$sw2?>><?=$descripcion_alternaX?></textarea></td>
                                                     <td class="text-right"><?=$cantidadPre?></td>
-                                                    <td class="text-right"><input type="hidden" step="0.01" id="monto_precio<?=$iii?>" name="monto_precio<?=$iii?>" class="form-control text-primary text-right"  value="<?=$monto_pagar?>" step="0.01" <?=$sw2?> readonly="true"><input type="text" step="0.01" id="monto_precio_a<?=$iii?>" name="monto_precio_a<?=$iii?>" class="form-control text-primary text-right"  value="<?=number_format($monto_pagar,2)?>" <?=$sw2?> readonly="true"></td>
+                                                    <td class="text-right"><input type="hidden" step="0.01" id="monto_precio<?=$iii?>" name="monto_precio<?=$iii?>" class="form-control text-primary text-right"  value="<?=$Costo?>" step="0.01" <?=$sw2?> readonly="true"><input type="text" step="0.01" id="monto_precio_a<?=$iii?>" name="monto_precio_a<?=$iii?>" class="form-control text-primary text-right"  value="<?=number_format($Costo,2)?>" <?=$sw2?> readonly="true"></td>
                                                     <!--  descuentos -->
                                                     <td class="text-right"><input type="number" step="0.01" class="form-control" name="descuento_por<?=$iii?>" id="descuento_por<?=$iii?>" value="<?=$descuento_porX?>" min="0" max="<?=$descuento_cliente?>" onkeyup="descuento_convertir_a_bolivianos(<?=$iii?>)" <?=$sw2?>></td>                                             
                                                     <td class="text-right"><input type="number" class="form-control" name="descuento_bob<?=$iii?>" id="descuento_bob<?=$iii?>" value="<?=$descuento_bobX?>" min="0" max="<?=$descuento_bob_cliente?>" onkeyup="descuento_convertir_a_porcentaje(<?=$iii?>)" <?=$sw2?>></td>                                        

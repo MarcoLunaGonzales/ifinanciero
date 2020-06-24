@@ -155,7 +155,7 @@ $nombreD=$rowArea['nombre'];?>
   			<div class="card">
   			  <div class="card-header <?=$colorCard;?> card-header-text">
     				<div class="card-text">
-    				  <h4 class="card-title"><?php if ($codigo == 0) echo "Registrar Nuevo"; else echo "Editar";?>  Detalle</h4>
+    				  <h4 class="card-title"><?php if ($codigo == 0) echo "Registrar Nuevo"; else echo "Editar";?>  Gasto</h4>
     				</div>
   			  </div>
   			  <div class="card-body ">			           
