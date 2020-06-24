@@ -6411,6 +6411,36 @@ function obtenerDatosProveedoresPagoDetalle($codigo){
    }
    return array(implode(",",array_unique($proveedores)),implode(",",array_unique($detalles)),implode(",",array_unique($fechaSol)),implode(", ",array_unique($numero)),implode(",",array_unique($oficina)),implode("-",array_unique($numeroSolo)));
 }
+
+function obtenerDatosProveedoresPagoDetalleLote($codigo){
+  include 'solicitudes/configModule.php';
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT pd.*,sd.detalle,s.fecha as fecha_sol,s.numero,s.cod_unidadorganizacional,s.codigo as cod_sol from pagos_proveedoresdetalle pd join solicitud_recursosdetalle sd on sd.codigo=pd.cod_solicitudrecursosdetalle join solicitud_recursos s on pd.cod_solicitudrecursos=s.codigo join pagos_proveedores p on p.codigo=pd.cod_pagoproveedor where p.cod_pagolote=$codigo");
+   $stmt->execute();
+   $proveedores=[];
+   $detalles=[];
+   $fechaSol=[];
+   $numero=[];
+   $numeroSolo=[];
+   $oficina=[];
+   $index=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $proveedores[$index]=nameProveedor($row['cod_proveedor']);
+      $detalles[$index]=$row['detalle'];
+      if(($index % 2) == 0){
+        $estiloBoton="btn-warning";
+      }else{
+        $estiloBoton="btn-danger";
+      }
+      $fechaSol[$index]=strftime('%d/%m/%Y',strtotime($row['fecha_sol']));
+      $numero[$index]="<a title='ver Archivos Adjuntos' href='".$urlVer."?cod=".$row['cod_sol']."' target='_blank' class=''>".$row['numero']."</a>";
+      $numeroSolo[$index]=$row['numero'];
+      $oficina[$index]=abrevUnidad_solo($row['cod_unidadorganizacional']);
+      $index++;
+   }
+   return array(implode(", ",array_unique($proveedores)),implode(",",array_unique($detalles)),implode(",",array_unique($fechaSol)),implode(", ",array_unique($numero)),implode(",",array_unique($oficina)),implode("-",array_unique($numeroSolo)));
+}
+
 function listaDetallePagosProveedores($codigo){
    $dbh = new Conexion();
    $stmt = $dbh->prepare("SELECT pd.*,sd.detalle,sd.cod_plancuenta from pagos_proveedoresdetalle pd join solicitud_recursosdetalle sd on pd.cod_solicitudrecursosdetalle=sd.codigo where pd.cod_pagoproveedor=$codigo");

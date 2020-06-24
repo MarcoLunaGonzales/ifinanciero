@@ -15,9 +15,22 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 	fwrite($fh, PHP_EOL);
 }
 fclose($fh);
-$fileName = basename("pagoslote.txt");
+$fileName = basename("pagosebisa.txt");
 $filePath = "data_ebisa.txt";
-    if(!empty($fileName) && file_exists($filePath)){
+
+if($_GET['a']==1){
+    require_once '../layouts/bodylogin.php';
+    require_once '../functionsGeneral.php';
+     $sqlUpdate="UPDATE pagos_proveedores SET  cod_ebisa=1 where codigo=$codigo";
+     $stmtUpdate = $dbh->prepare($sqlUpdate);
+     $flagSuccess=$stmtUpdate->execute();
+      if($flagSuccess==true){
+        showAlertSuccessError(true,"../".$urlListPago); 
+      }else{
+        showAlertSuccessError(false,"../".$urlListPago);
+      }
+}else{
+   if(!empty($fileName) && file_exists($filePath)){
         // Define headers
         header("Cache-Control: public");
         header("Content-Description: File Transfer");
@@ -27,10 +40,10 @@ $filePath = "data_ebisa.txt";
         // Read the file
         readfile($filePath);
         //unlink('data_ebisa.txt');
-        $sqlUpdate="UPDATE pagos_proveedores SET  cod_ebisa=1 where codigo=$codigo";
-        $stmtUpdate = $dbh->prepare($sqlUpdate);
-        $flagSuccess=$stmtUpdate->execute();
+        
         exit;
-}else{
-    echo 'The file does not exist.';
+     }else{
+       echo 'The file does not exist.';
+    }
 }
+    

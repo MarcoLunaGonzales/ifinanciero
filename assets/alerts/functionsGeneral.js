@@ -8031,6 +8031,16 @@ function cambiarDivPlantilla(div,div2,div3){
     $("#button_"+div).addClass("fondo-boton-active");
   }
 }
+function cambiarDosDivPantalla(div,div2){
+  if(!($("#"+div2).hasClass("d-none"))){
+    $("#"+div2).addClass("d-none");  
+    $("#button_"+div2).removeClass("fondo-boton-active"); 
+  }
+  if(($("#"+div).hasClass("d-none"))){
+    $("#"+div).removeClass("d-none");
+    $("#button_"+div).addClass("fondo-boton-active");
+  }
+}
 //funciones despues de cargar pantalla
 window.onload = detectarCarga;
   function detectarCarga(){

@@ -107,6 +107,38 @@ $stmt->bindColumn('cod_ebisa', $cod_ebisa);
                           <td class="text-muted"><?=$estado?></td>
                           <td class="td-actions text-right">
                             <?php 
+                           if(!isset($_GET['codigo'])){
+                            if($cod_ebisa==0){
+                              ?>
+                               <div class="btn-group dropdown">
+                                     <button type="button" class="btn btn-info dropdown-toggle" title="Archivo TXT" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                       <i class="material-icons">note</i>
+                                     </button>
+                                    <div class="dropdown-menu">
+                                             <a href="<?=$urlGenerarEbisa?>?cod=<?=$codigo?>&a=0" class="dropdown-item">
+                                                 <i class="material-icons text-dark">note</i> Descargar Archivo
+                                             </a>
+                                             <a href="<?=$urlGenerarEbisa;?>?cod=<?=$codigo;?>&a=1" onclick="javascript:location.reload(true);" class="dropdown-item">
+                                                 <i class="material-icons text-success">offline_pin</i> Aprobar Ebisa
+                                             </a> 
+                                    </div>
+                                  </div>   
+                              <?php  
+                            }else{
+                              ?>
+                               <div class="btn-group dropdown">
+                                     <button type="button" class="btn <?=$btnEstado?> dropdown-toggle" title="Archivo TXT" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                       <i class="material-icons">offline_pin</i>
+                                     </button>
+                                    <div class="dropdown-menu">
+                                             <a href="<?=$urlGenerarEbisa?>?cod=<?=$codigo?>&a=0" class="dropdown-item">
+                                                 <i class="material-icons text-dark">note</i> Descargar Archivo
+                                             </a>
+                                    </div>
+                                  </div>   
+                              <?php 
+                             }
+                           } 
                             if($codComprobante!=0&&!isset($_GET['codigo'])){
                               ?>
                                <div class="btn-group dropdown">
@@ -151,22 +183,11 @@ $stmt->bindColumn('cod_ebisa', $cod_ebisa);
                                     </a><?php 
                                   }else{
                                     if($codEstado==3){
-                                      if($cod_ebisa!=0){
                                         ?>
                                        <a href="#" onclick="alerts.showSwal('warning-message-crear-comprobante','<?=$urlGenerarComprobante?>?cod=<?=$codigo?>')" class="dropdown-item">
                                        <i class="material-icons text-success">attach_money</i> Generar Comprobante
                                       </a>
-                                      <a href="<?=$urlGenerarEbisa?>?cod=<?=$codigo?>" class="dropdown-item">
-                                       <i class="material-icons text-muted">note</i> Descargar Archivo TXT
-                                      </a>  
                                         <?php
-                                      }else{
-                                        ?>
-                                       <a href="<?=$urlGenerarEbisa?>?cod=<?=$codigo?>" class="dropdown-item">
-                                       <i class="material-icons text-muted">note</i> Generar Archivo TXT
-                                      </a> 
-                                        <?php
-                                      }
                                     }else{
                                       if($codEstado==4){
                                         ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1&admin=0" class="dropdown-item">
@@ -210,6 +231,9 @@ $stmt->bindColumn('cod_ebisa', $cod_ebisa);
               </div>
                <?php 
               }else{
+                if(isset($_GET['admin'])){
+                  $urlListPagoLotes=$urlListPagoAdmin; 
+                }
                 ?>
                 <div class="card-footer fixed-bottom">
                 <a href="<?=$urlListPagoLotes;?>" class="btn btn-danger">Volver</a>
