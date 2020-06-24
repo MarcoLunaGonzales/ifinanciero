@@ -93,9 +93,9 @@ $totalPagadoX=0;
                           <td>
                           	<div class="form-group">
                                <select class="selectpicker form-control form-control-sm" onchange="mostrarDatosChequeDetalle('<?=$index?>PPPP<?=$fila?>')" data-live-search="true" name="tipo_pago<?=$index?>PPPP<?=$fila?>" id="tipo_pago<?=$index?>PPPP<?=$fila?>" data-style="btn btn-danger">
-                                    <option disabled selected="selected" value="">--TIPO--</option>
+                                    <option disabled value="">--TIPO--</option>
                                     <?php 
-                                     $stmt3 = $dbh->prepare("SELECT * from tipos_pagoproveedor where cod_estadoreferencial=1");
+                                     $stmt3 = $dbh->prepare("SELECT * from tipos_pagoproveedor where codigo=2 and cod_estadoreferencial=1");
                                      $stmt3->execute();
                                      while ($rowSel = $stmt3->fetch(PDO::FETCH_ASSOC)) {
                                       $codigoSel=$rowSel['codigo'];
@@ -104,7 +104,7 @@ $totalPagadoX=0;
                                       if($codTipoPago==$codigoSel){
                                          ?><option selected value="<?=$codigoSel;?>"><?=$nombreSelX?></option><?php 
                                       }else{
-                                         ?><option value="<?=$codigoSel;?>"><?=$nombreSelX?></option><?php 
+                                         ?><option value="<?=$codigoSel;?>" selected="selected"><?=$nombreSelX?></option><?php 
                                       } 
                                      }
                                     ?>

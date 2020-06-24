@@ -130,42 +130,42 @@ $stmt->bindColumn('cod_ebisalote', $cod_ebisa);
                                 <i class="material-icons">list</i> <?=$estado;?>
                               </button>
                               <div class="dropdown-menu">
-                                <a href="<?=$urlVerPago?>?cod=<?=$codigo?>" target="_blank" class="dropdown-item">
-                                       <i class="material-icons text-info">payment</i> Ver Pago
+                                <a href="<?=$urlListPago?>&codigo=<?=$codigo?>" class="dropdown-item">
+                                       <i class="material-icons">attach_money</i> Lista Pagos 
                                     </a>
                                 <?php 
                                 if($codEstado!=2){
                                   if($codEstado==1){
-                                    ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=4&admin=0" class="dropdown-item">
-                                       <i class="material-icons text-warning">send</i> Enviar Solicitud
+                                    ?><a href="<?=$urlEdit2Lote?>?cod=<?=$codigo?>&estado=4&admin=0" class="dropdown-item">
+                                       <i class="material-icons text-warning">send</i> Enviar Solicitud Lote
                                     </a><?php 
                                   }else{
                                     if($codEstado==3){
                                       if($cod_ebisa!=0){
                                         ?>
-                                       <a href="#" onclick="alerts.showSwal('warning-message-crear-comprobante','<?=$urlGenerarComprobante?>?cod=<?=$codigo?>')" class="dropdown-item">
-                                       <i class="material-icons text-success">attach_money</i> Generar Comprobante
+                                       <a href="#" onclick="alerts.showSwal('warning-message-crear-comprobante','<?=$urlGenerarComprobanteLote?>?cod=<?=$codigo?>')" class="dropdown-item">
+                                       <i class="material-icons text-success">attach_money</i> Generar Comprobante Lote
                                       </a>
-                                      <a href="<?=$urlGenerarEbisa?>?cod=<?=$codigo?>" class="dropdown-item">
-                                       <i class="material-icons text-muted">note</i> Descargar Archivo TXT
+                                      <a href="<?=$urlGenerarEbisaLote?>?cod=<?=$codigo?>" class="dropdown-item">
+                                       <i class="material-icons text-muted">note</i> Descargar Archivo TXT Lote
                                       </a>  
                                         <?php
                                       }else{
                                         ?>
-                                       <a href="<?=$urlGenerarEbisa?>?cod=<?=$codigo?>" class="dropdown-item">
-                                       <i class="material-icons text-muted">note</i> Generar Archivo TXT
+                                       <a href="<?=$urlGenerarEbisaLote?>?cod=<?=$codigo?>" class="dropdown-item">
+                                       <i class="material-icons text-muted">note</i> Generar Archivo TXT Lote
                                       </a> 
                                         <?php
                                       }
                                     }else{
                                       if($codEstado==4){
-                                        ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1&admin=0" class="dropdown-item">
-                                       <i class="material-icons text-danger">clear</i> Cancelar Envio
+                                        ?><a href="<?=$urlEdit2Lote?>?cod=<?=$codigo?>&estado=1&admin=0" class="dropdown-item">
+                                       <i class="material-icons text-danger">clear</i> Cancelar Envio Lote
                                       </a><?php
                                       }else{
                                         //cod 5 PAGADO
                                         ?><a href="#" class="dropdown-item">
-                                       <i class="material-icons text-info">attach_money</i> Pago Registrado
+                                       <i class="material-icons text-info">attach_money</i> Pago Lote Registrado
                                       </a><?php
                                       }        
                                     }               
