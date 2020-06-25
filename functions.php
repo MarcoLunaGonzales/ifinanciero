@@ -4671,6 +4671,16 @@ $stmt = $dbh->prepare($sql);
   $stmt->execute();
   return $stmt;
 }
+function listaInstanciasEnvio(){
+  $dbh = new Conexion();
+  $sql="SELECT i.descripcion as instancia,CONCAT (p.primer_nombre,' ',p.otros_nombres,' ',p.paterno,' ',p.materno) as personal,p.email_empresa as email,dc.* 
+FROM instancias_envios_correos_detalle dc join personal p on dc.cod_personal=p.codigo join instancias_envios_correos i on i.codigo=dc.cod_instancia_envio
+WHERE dc.cod_estadoreferencial=1 order by i.descripcion;";
+$stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  return $stmt;
+}
+
 function obtenerMontoPagadoDetalleSolicitud($codSol,$codDetalle){
   $dbh = new Conexion();
    $stmt = $dbh->prepare("SELECT c.monto from pagos_proveedoresdetalle c where c.cod_solicitudrecursos=$codSol and c.cod_solicitudrecursosdetalle=$codDetalle");
@@ -6678,6 +6688,26 @@ function ejecutadoEgresosMes($oficina, $anio, $mes, $area, $acumulado, $cuenta){
   $datos=json_decode($remote_server_output);
     return $datos->ejecutado; 
 }
+function presupuestadoEgresosMes($oficina, $anio, $mes, $area, $acumulado, $cuenta){
+  $direccion=obtenerValorConfiguracion(45);//direccion del Server del Servicio
+  $sIde = "monitoreo"; 
+  $sKey="101010"; 
+  if($oficina==0){
+    $oficina=0;
+  }
+  $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "oficina"=>$oficina, "area"=>$area, "anio"=>$anio, "mes"=>$mes, "cuenta"=>$cuenta, "accion"=>"listar"); //
+
+  $parametros=json_encode($parametros);
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL,$direccion."ws/wsPresupuestoGastosCuenta.php");
+  curl_setopt($ch, CURLOPT_POST, TRUE);
+  curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  $remote_server_output = curl_exec ($ch);
+  curl_close ($ch);
+  $datos=json_decode($remote_server_output);
+    return $datos->presupuesto; 
+}
 function obtenerCodigoPrecioSimulacionCosto($codigo){
    $dbh = new Conexion();
    $stmt = $dbh->prepare("SELECT cod_precioplantilla from simulaciones_costos where codigo=$codigo");  
@@ -7191,6 +7221,21 @@ function obtenerDetalleFactura($codigo){
     $valor=$row['nombre'];
   }
   return($valor); 
+}
+
+function obtenerCorreosInstanciaEnvio($codigo){
+  $dbh = new Conexion();
+  $stmt = $dbh->prepare("SELECT p.email_empresa,concat(p.primer_nombre,' ',p.otros_nombres,' ',p.paterno,' ',p.materno) as personal from instancias_envios_correos_detalle i join personal p on p.codigo=i.cod_personal where i.cod_instancia_envio=$codigo and p.email_empresa IS NOT NULL");
+  $stmt->execute();
+  $datos=[];$datos2=[];
+  $index=0;
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $datos[$index]=$row['email_empresa'];
+    $datos2[$index]=$row['personal'];
+    $index++;
+  }
+
+  return array($datos,$datos2); 
 }
 
 function nameLotesPago($codigo){

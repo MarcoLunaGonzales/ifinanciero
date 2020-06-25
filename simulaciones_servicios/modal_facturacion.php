@@ -445,7 +445,7 @@
                 <tr style="background:#21618C; color:#fff;">
                   <th class="text-center" width="3%">#</th>
                   <th class="small" width="5%"><small>Fecha</small></th>      
-                  <th class="small" width="30%"><small>Información Complementaria</small></th>      
+                  <th class="small" width="30%"><small>Descripción</small></th>      
                   <th class="small" width="5%"><small>Monto</small></th>
                   <th class="small" width="3%"><small><small>N° Ref</small></small></th>
                   <th class="small bg-success" width="4%"><small>Fecha Fac.</small></th>
@@ -482,7 +482,7 @@
                         foreach ($detalle as $v_detalle) {
                         $CodLibretaDetalle=$v_detalle->CodLibretaDetalle;
                         $Descripcion=$v_detalle->Descripcion;
-                        $InformacionComplementaria=$v_detalle->InformacionComplementaria;
+                        $InformacionComplementaria=" Info: ".$v_detalle->InformacionComplementaria;
                         $Agencia=$v_detalle->Agencia;
                         $NumeroCheque=$v_detalle->NumeroCheque;
                         $NumeroDocumento=$v_detalle->NumeroDocumento;
@@ -500,7 +500,7 @@
                         <tr>
                           <td style="" class="libretaDetalles_<?=$j?> small" align="center"><?=$index;?></td>
                           <td style="" class="libretaDetalles_<?=$j?> text-center small"><span style="padding:0px;border: 0px;"><?=strftime('%d/%m/%Y',strtotime($FechaHoraCompleta))?><br><?=strftime('%H:%M:%S',strtotime($FechaHoraCompleta))?></span></td>           
-                          <td style="" class="libretaDetalles_<?=$j?> text-left "><small><small><?=$InformacionComplementaria?></small></small></td>
+                          <td style="" class="libretaDetalles_<?=$j?> text-left "><small><small><?=$Descripcion." ".$InformacionComplementaria?></small></small></td>
                           <td style="" class="libretaDetalles_<?=$j?> text-right small"><?=number_format($monto,2)?></td>
                           <td style="" class="libretaDetalles_<?=$j?> text-left small"><?=$NumeroDocumento?></td>
                           <td style=" color: #ff0000;" class="libretaDetalles_<?=$j?> text-center small"><?=$FechaFactura?></td>

@@ -60,7 +60,7 @@ $stmt->bindColumn('cod_factura', $codFactura);
 
             $index=1;$totalMonto=0;$totalMontoFac=0;
                         while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
-                          if($codFactura==""){
+                          if($codFactura==""||$codFactura==0){
                             $tituloEstado="Sin Factura";
                             $facturaFecha="";
                             $facturaNumero="";

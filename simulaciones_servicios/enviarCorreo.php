@@ -8,11 +8,13 @@ $codigo_facturacion=$_POST['codigo_facturacion'];
 $cod_solicitudfacturacion=$_POST['cod_solicitudfacturacion'];
 $nro_factura=$_POST['nro_factura'];
 $correo_destino=$_POST['correo_destino'];
+$listaCorreos=explode(",", $correo_destino);
 $correo_destino=trim($correo_destino,',');
 // echo $correo_destino;
 // $asunto=$_POST['asunto'];
 // $mensaje=$_POST['mensaje'];
 
+$fechaActual=date("Y-m-d H:m:s");
 $asunto="ENVIO FACTURA - IBNORCA";
 $mensaje="Estimado cliente,<br>\n<br>\n adjunto la Factura Nro. ".$nro_factura.".<br>\n<br>\nSaludos.";
 
@@ -53,6 +55,12 @@ if($correo_destino==''||$asunto==''||$mensaje==''){
 		 	$sql="UPDATE facturas_venta set cod_estadofactura='3' where codigo=$codigo_facturacion";
 		    $stmtB = $dbhB->prepare($sql);
 		    $stmtB->execute();
+            for ($crr=0; $crr < count($listaCorreos); $crr++) { 
+            	$corr=$listaCorreos[$crr];
+		        $sqlInsert="INSERT INTO log_instancias_envios_correo(detalle,fecha,cod_alumno,cod_persona,correo) VALUES ('Envio de factura','$fechaActual',0,0,'$corr')";
+		        $stmtBInsert = $dbhB->prepare($sqlInsert);
+		        $stmtBInsert->execute();  	
+            }
 		   
 		}else{//error al enviar el correo
 		 	echo "2$$$".$correo_destino;

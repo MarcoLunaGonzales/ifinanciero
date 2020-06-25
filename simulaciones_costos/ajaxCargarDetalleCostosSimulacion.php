@@ -11,7 +11,8 @@ $dbh = new Conexion();
 $sqlX="SET NAMES 'utf8'";
 $stmtX = $dbh->prepare($sqlX);
 $stmtX->execute();
-
+$globalNombreGestion=$_SESSION["globalNombreGestion"];
+$mesActualConsulta=date("m");
 if(isset($_GET["simulacion"])){
  $codigo=$_GET["simulacion"];
  $montoNorma=obtenerMontoNormaSimulacion($codigo);
@@ -61,6 +62,13 @@ $bgClase="bg-info";
           if(obtenerValorConfiguracion(51)!=1){
             $tituloUnidad=$_GET['unidad_nombre'];
           }
+          $codOficina=0;$codAreaX=0;
+          $datosPlantilla=obtenerPlantillaCostoDatos($codPlan);
+          while ($rowPlantilla = $datosPlantilla->fetch(PDO::FETCH_ASSOC)) {
+            $codOficina=$rowPlantilla['cod_unidadorganizacional'];
+            $codAreaX=$rowPlantilla['cod_area'];
+          }
+
          ?>
           <table class="table table-condensed table-bordered">
             <tr class="text-white <?=$bgClase?>">
@@ -73,6 +81,11 @@ $bgClase="bg-info";
               <td class="text-right"><?=number_format($precioLocalX, 2, '.', ',')?></td>
               <td class="bg-plomo">Porcentaje</td>
               <td class="text-right"><?=number_format($porcentPrecios, 2, '.', ',')?> %</td>
+            </tr>
+            <tr>
+              <td class="bg-plomo">PRESUPUESTO <?=$_GET['area_nombre']?>, <?=$tituloUnidad?> MES (INFORMATIVO)</td>
+              <td class="text-right"><?=number_format(obtenerPresupuestoEjecucionPorArea($codOficina,$codAreaX,$globalNombreGestion,$mesActualConsulta)['presupuesto'], 2, '.', ',')?></td>
+              <td class="bg-plomo" colspan="4"></td>
             </tr>
           </table>
        <?php

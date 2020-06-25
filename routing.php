@@ -470,10 +470,25 @@
         if ($_GET['opcion']=='listChequesEmitidos') {
 			require_once('cheques/listEmitidos.php');
 		}
+		//ENVIOS CORREO INSTANCIAS
+		if ($_GET['opcion']=='listInstanciasEnvio') {
+			require_once('instancias_envio/list.php');
+		}
+		if ($_GET['opcion']=='registerInstanciasEnvio') {
+			require_once('instancias_envio/register.php');
+		}
+		if ($_GET['opcion']=='deleteInstanciasEnvio') {
+			require_once('instancias_envio/saveDelete.php');
+		}
+		if ($_GET['opcion']=='editInstanciasEnvio') {
+			require_once('instancias_envio/edit.php');
+		}
+
         //LIBRETA BANCARIA
         if ($_GET['opcion']=='listLibreta') {
 			require_once('libretas_bancarias/listLibretas.php');
 		}
+
 		if ($_GET['opcion']=='registerLibretaBancaria') {
 			require_once('libretas_bancarias/register.php');
 		}

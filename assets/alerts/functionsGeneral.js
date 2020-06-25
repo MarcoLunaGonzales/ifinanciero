@@ -14473,7 +14473,6 @@ function generarArchivoTxtVariosAjax(){
        reader.readAsText(blob);
       }
     };
-
     xhr.send();
 }
 

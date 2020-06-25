@@ -193,12 +193,45 @@ $globalAdmin=$_SESSION["globalAdmin"];
             </div>
           </div>
         </div>
+
+
         
         <!-- <h6> Asunto : </h6>
         <input class="form-control" type="text" name="asunto" id="asunto" value="<?=$asunto?>" required="true"/>
         <h6> Mensaje : </h6>
         <textarea class="form-control" name="mensaje" id="mensaje" required="true"><?=$texto_cuerpo?></textarea> -->
         <!-- <input class="form-control" type="text" /> -->
+        <?php 
+         $sqlInstancia="SELECT codigo,descripcion from instancias_envios_correos where codigo=1";
+         $stmtInstancia = $dbh->prepare($sqlInstancia);
+         $stmtInstancia->execute();                           
+         while ($row = $stmtInstancia->fetch(PDO::FETCH_ASSOC)) {
+          $datoInstancia=obtenerCorreosInstanciaEnvio($row['codigo']);
+          $correos=implode(",",$datoInstancia[0]);
+          $nombres=implode(",",$datoInstancia[1]);
+            ?>
+         <div class="row">
+          <div class="col-sm-12" >
+            <h6> <?=$row['descripcion']?> (CC): </h6>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12" style="background-color:#FFFFFF">
+            <div class="form-group" >
+              <input type="text" readonly value="<?=$nombres?>" name="nombre_correo" id="nombre_correo" class="form-control">  
+            </div>
+          </div>
+        </div> 
+        <div class="row d-none">
+          <div class="col-sm-12" style="background-color:#FFFFFF">
+            <div class="form-group" >
+              <input type="text" value="<?=$correos?>" name="correo_copia" id="correo_copia" class="form-control tagsinput" data-role="tagsinput" data-color="info" required="true" >  
+            </div>
+          </div>
+        </div> 
+            <?php
+         }   
+        ?>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-success" id="EnviarCorreo" name="EnviarCorreo" data-dismiss="modal">Aceptar</button>
@@ -219,8 +252,14 @@ $globalAdmin=$_SESSION["globalAdmin"];
     $('#EnviarCorreo').click(function(){    
       codigo_facturacion=document.getElementById("codigo_facturacion").value;
       cod_solicitudfacturacion=document.getElementById("cod_solicitudfacturacion").value;
-      nro_factura=document.getElementById("nro_factura").value;      
-      correo_destino=$('#correo_destino').val();
+      nro_factura=document.getElementById("nro_factura").value;
+      correo_copia=$('#correo_copia').val();
+      if(correo_copia!=""){
+        correo_destino=$('#correo_destino').val()+","+correo_copia;        
+      }else{
+        correo_destino=$('#correo_destino').val();        
+      } 
+      
       // asunto=$('#asunto').val();
       // mensaje=$('#mensaje').val();
       asunto=null;
