@@ -37,7 +37,7 @@ from simulaciones_servicios sc
 join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo 
 join clientes c on c.codigo=sc.cod_cliente 
 join plantillas_servicios p on p.codigo=sc.cod_plantillaservicio
-where sc.cod_estadoreferencial=1 and sc.cod_responsable=$globalUser order by sc.fecha desc");
+where sc.cod_estadoreferencial=1 and sc.cod_responsable=$globalUser order by sc.codigo desc");
 }
 
 // Ejecutamos
@@ -55,7 +55,7 @@ $stmt->bindColumn('cliente', $cliente);
 $stmt->bindColumn('idServicio', $idServicioX);
 $stmt->bindColumn('cod_unidadorganizacional', $codUnidadX);
 $stmt->bindColumn('cod_area', $codAreaX);
-
+$stmt->bindColumn('estado_registro', $estadoRegistroX);
 ?>
 
 <div class="content">
@@ -119,6 +119,10 @@ $stmt->bindColumn('cod_area', $codAreaX);
                           if($codEstado==5){
                             $estiloFila="bg-plomo";
                             $iconoAdjudicado="check_circle";
+
+                          }
+                          if($estadoRegistroX==0){
+                            $estado="<b class='text-danger'>Con Errores!</b>";
                           }
 ?>
                         <tr>
@@ -253,19 +257,27 @@ $stmt->bindColumn('cod_area', $codAreaX);
                               }    
                               }else{
                                 if(isset($_GET['q'])){
-                                 ?>
-                                  <a title="Editar Simulación - Detalle" target="_self" href='<?=$urlRegister;?>?cod=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>' class="btn btn-info">
+                                  if($estadoRegistroX!=0){
+                                    ?>
+                                   <a title="Editar Simulación - Detalle" target="_self" href='<?=$urlRegister;?>?cod=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>' class="btn btn-info">
                                     <i class="material-icons"><?=$iconEdit;?></i>
                                   </a>
+                                    <?php 
+                                  }
+                                 ?>
                                   <button title="Eliminar Simulación" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>')">
                                     <i class="material-icons"><?=$iconDelete;?></i>
                                   </button>
                                  <?php 
                                 }else{
-                                 ?>
-                                  <a title="Editar Simulación - Detalle" target="_blank" href='<?=$urlRegister;?>?cod=<?=$codigo;?>' class="btn btn-info">
+                                  if($estadoRegistroX!=0){
+                                    ?>
+                                   <a title="Editar Simulación - Detalle" target="_blank" href='<?=$urlRegister;?>?cod=<?=$codigo;?>' class="btn btn-info">
                                     <i class="material-icons"><?=$iconEdit;?></i>
                                   </a>
+                                    <?php 
+                                  }
+                                 ?>
                                   <button title="Eliminar Simulación" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')">
                                     <i class="material-icons"><?=$iconDelete;?></i>
                                   </button>

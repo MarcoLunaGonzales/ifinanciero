@@ -153,7 +153,10 @@
 			require_once('reportes/reportesLibretasBancarias.php');
 		}
   
-		
+        //Contabilizacion de Libretas
+        if ($_GET['opcion']=='contabilizarLibretasBancarias') {
+			require_once('libretas_bancarias/contaLibretasBancarias.php');
+		}		
 
  		//TIPO DE CAMBIO
 		if ($_GET['opcion']=='tipoDeCambio') {

@@ -1,8 +1,7 @@
 <?php 
 
-$direccion='http://200.105.199.164:8008/ifinanciero/wsifin/';
+$direccion='http://127.0.0.1/ifinanciero/wsifin/';
 //$direccion='http://200.105.199.164:8008/ifinanciero/wsifin/';
-
 $sIde = "libBan";
 $sKey = "89i6u32v7xda12jf96jgi30lh";
 
@@ -14,7 +13,7 @@ $sKey = "89i6u32v7xda12jf96jgi30lh";
 		// abrimos la sesión cURL
 		$ch = curl_init();
 		// definimos la URL a la que hacemos la petición
-		curl_setopt($ch, CURLOPT_URL,$direccion."ws_obtener_libreta_bancaria.php"); 
+		curl_setopt($ch, CURLOPT_URL,$direccion."ws_obtener_libreta_bancaria_2.php"); 
 		// indicamos el tipo de petición: POST
 		curl_setopt($ch, CURLOPT_POST, TRUE);
 		// definimos cada uno de los parámetros

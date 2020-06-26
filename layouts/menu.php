@@ -553,6 +553,12 @@ if($menuModulo==0){
                     <span class="sidebar-normal"> Facturas Generadas</span>
                   </a>
                 </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=contabilizarLibretasBancarias">
+                    <span class="sidebar-mini"> CL </span>
+                    <span class="sidebar-normal"> Contabilizar Libretas</span>
+                  </a>
+                </li>
                 <!--li class="nav-item ">
                   <a class="nav-link" href="?opcion=ListaRendiciones">
                     <span class="sidebar-mini"> MR </span>
