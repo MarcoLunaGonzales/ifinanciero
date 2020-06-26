@@ -144,7 +144,11 @@ try{
                                 //si es de tipo deposito en cuenta insertamos en libreta bancaria
                                 $sqlUpdateLibreta="UPDATE libretas_bancariasdetalle SET cod_factura=$cod_facturaVenta where codigo=$cod_libreta";
                                 $stmtUpdateLibreta = $dbh->prepare($sqlUpdateLibreta);
-                                $flagSuccess=$stmtUpdateLibreta->execute(); 
+                                $flagSuccess=$stmtUpdateLibreta->execute();
+
+                                $sqlUpdateFac="UPDATE facturas_venta SET cod_libretabancariadetalle=$cod_libreta where codigo=$cod_facturaVenta";
+                                $stmtUpdateFac = $dbh->prepare($sqlUpdateFac);
+                                $flagSuccessFac=$stmtUpdateFac->execute(); 
                             }
                             
 
