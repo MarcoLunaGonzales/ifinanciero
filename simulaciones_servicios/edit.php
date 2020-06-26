@@ -101,16 +101,20 @@ if($estado!=1){
     }
 }
 
+if(isset($_GET['r'])){
+    $urlR="&r=".$_GET['r'];
+}
 if(isset($_GET['admin'])){
   $urlList2=$urlList;
+   $urlR="";
   //aprobar mediante servicio web
 }
 
 if(isset($_GET['q'])){
  if($flagSuccess==true){
-	showAlertSuccessError(true,"../".$urlList2."&q=".$_GET['q']."&s=".$_GET['s']."&u=".$_GET['u']);	
+	showAlertSuccessError(true,"../".$urlList2."&q=".$_GET['q']."&s=".$_GET['s']."&u=".$_GET['u'].$urlR);	
  }else{
-	showAlertSuccessError(false,"../".$urlList2."&q=".$_GET['q']."&s=".$_GET['s']."&u=".$_GET['u']);
+	showAlertSuccessError(false,"../".$urlList2."&q=".$_GET['q']."&s=".$_GET['s']."&u=".$_GET['u'].$urlR);
  }
 }else{
  if($flagSuccess==true){

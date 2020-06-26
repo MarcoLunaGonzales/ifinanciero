@@ -187,9 +187,9 @@ $item_1=2707;
                                   <a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=3&q=<?=$q?>" class="dropdown-item">
                                     <i class="material-icons text-success">offline_pin</i> Aprobar Solicitud
                                  </a>
-                                 <a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1&q=<?=$q?>" class="dropdown-item">
-                                    <i class="material-icons text-dark">report</i> Rechazar Solicitud
-                                 </a>
+                                 --><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>" class="dropdown-item">
+                                    <i class="material-icons text-dark">refresh</i> Rechazar Solicitud
+                                 </a><!--
                                  <a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=2&q=<?=$q?>" class="dropdown-item">
                                     <i class="material-icons text-danger">clear</i> Anular Solicitud
                                  </a>--><?php 
@@ -200,9 +200,9 @@ $item_1=2707;
                                 <!--<a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=3" class="dropdown-item">
                                     <i class="material-icons text-success">offline_pin</i> Aprobar Solicitud
                                  </a>
-                                 <a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1" class="dropdown-item">
-                                    <i class="material-icons text-dark">report</i> Rechazar Solicitud
-                                 </a>
+                                 --><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1" class="dropdown-item">
+                                    <i class="material-icons text-dark">refresh</i> Rechazar Solicitud
+                                 </a><!--
                                  <a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=2" class="dropdown-item">
                                     <i class="material-icons text-danger">clear</i> Anular Solicitud
                                  </a>--><?php 

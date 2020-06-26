@@ -2858,8 +2858,11 @@ function guardarSimulacionServicio(){
           iniciarCargaAjax();
         },
         success:  function (resp) {
-         // alert(resp);
           detectarCargaAjax();
+          if(resp=="ERROR"){
+           Swal.fire('Informativo!','Ocurrio un error!','warning'); 
+          }else{
+          //  $("#mensaje").html(resp);
          if(!($("#codigo_servicioibnorca").length)){
             alerts.showSwal('success-message','simulaciones_servicios/registerSimulacion.php?cod='+resp);
           }else{
@@ -2868,6 +2871,9 @@ function guardarSimulacionServicio(){
 
             alerts.showSwal('success-message','simulaciones_servicios/registerSimulacion.php?cod='+resp+'&q='+idServicio+'&s='+s+'&u='+u);
           }
+          }
+         // alert(resp);
+          
          
         }
     });
@@ -2894,6 +2900,9 @@ function guardarSimulacionServicio(){
         },
         success:  function (resp) {
           detectarCargaAjax();
+          if(resp=="ERROR"){
+           Swal.fire('Informativo!','Ocurrio un error!','warning'); 
+          }else{
          if(!($("#codigo_servicioibnorca").length)){
             alerts.showSwal('success-message','simulaciones_servicios/registerSimulacion.php?cod='+resp);
           }else{
@@ -2903,6 +2912,9 @@ function guardarSimulacionServicio(){
               alerts.showSwal('success-message','simulaciones_servicios/registerSimulacion.php?cod='+resp+'&q='+idServicio+'&u='+idPerfil);
             }            
           }
+            
+          }
+          
         }
     });
   }
