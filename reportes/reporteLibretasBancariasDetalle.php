@@ -28,9 +28,9 @@ tfoot input {
           <td class="bg-success">Fecha</td>
           <td class="bg-success">Numero</td>
           <td class="bg-success">NIT</td>
-          <!--<td class="bg-success">Razon Social</td>
+          <td class="bg-success">Razon Social</td>
           <td class="bg-success">Detalle</td>
-          <td class="bg-success">Monto</td>-->
+          <td class="bg-success">Monto</td>
         </tr>
       </thead> 
 
@@ -93,8 +93,9 @@ $stmt->bindColumn('cod_factura', $codFactura);
                             if($codFactura==""||$codFactura==0){
                               ?><?=$descripcion?> info: <?=$informacion_complementaria?><?php
                             }else{
+                              ?><?=$descripcion?> info: <?=$informacion_complementaria?><?php
                             ?>
-                           <div id="accordion<?=$index;?>" role="tablist">
+                           <!--<div id="accordion<?=$index;?>" role="tablist">
                               <div class="card-collapse">
                                 <div class="card-header" role="tab" id="heading<?=$index;?>">
                                   <p class="mb-0">
@@ -148,7 +149,7 @@ $stmt->bindColumn('cod_factura', $codFactura);
                                    </div>
                                  </div>
                                </div>
-                             </div>
+                             </div>-->
                              <?php } ?>
                           </td>      
                           <td class="text-left"><?=$agencia?></td>
@@ -158,9 +159,9 @@ $stmt->bindColumn('cod_factura', $codFactura);
                           <td class="text-right font-weight-bold"><?=$facturaFecha?></td>
                           <td class="text-right font-weight-bold"><?=$facturaNumero?></td>
                           <td class="text-right font-weight-bold"><?=$facturaNit?></td>
-                          <!--<td class="text-right font-weight-bold"><?=$facturaRazonSocial?></td>
+                          <td class="text-right font-weight-bold"><?=$facturaRazonSocial?></td>
                           <td class="text-right font-weight-bold"><?=$facturaDetalle?></td>
-                          <td class="text-right font-weight-bold"><?=$facturaMonto?></td>-->
+                          <td class="text-right font-weight-bold"><?=$facturaMonto?></td>
                       
 <?php
               $index++;
@@ -173,9 +174,9 @@ $stmt->bindColumn('cod_factura', $codFactura);
                           <td class="text-left"></td>
                           <td class="text-left"></td>
                           <td class="text-left"></td>
-                          <!--<td class="text-left"></td>
                           <td class="text-left"></td>
-                          <td class="text-left"><?=number_format($totalMontoFac,2,".",",")?></td>-->
+                          <td class="text-left"></td>
+                          <td class="text-left"><?=number_format($totalMontoFac,2,".",",")?></td>
                         </tr>
 <?php
     $html.=    '</tbody>';
@@ -194,9 +195,9 @@ $stmt->bindColumn('cod_factura', $codFactura);
                 <th class="bg-success">Fecha</th>
                 <th class="bg-success">Numero</th>
                 <th class="bg-success">NIT</th>
-                <!--<th class="bg-success">Razon Social</th>
+                <th class="bg-success">Razon Social</th>
                 <th class="bg-success">Detalle</th>
-                <th class="bg-success">Monto</th>-->
+                <th class="bg-success">Monto</th>
             </tr>
         </tfoot>
       </table>  

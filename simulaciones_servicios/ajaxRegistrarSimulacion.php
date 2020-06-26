@@ -352,8 +352,8 @@ if(isset($_GET['nombre'])){
                  $auditoresSim=obtenerAuditoresSimulacionPorAnio($codSimServ,$yyyy);
                  while ($rowAud = $auditoresSim->fetch(PDO::FETCH_ASSOC)) {
                      $codAuditorSim=$rowAud['codigo'];
-                     $sqlDetalleAtributosAud="INSERT INTO simulaciones_servicios_atributosauditores (cod_simulacionservicioatributo, cod_auditor, cod_anio) 
-                     VALUES ('$codSimulacionServicioAtributo', '$codAuditorSim', '$yyyy')";
+                     $sqlDetalleAtributosAud="INSERT INTO simulaciones_servicios_atributosauditores (cod_simulacionservicioatributo, cod_auditor, cod_anio,estado) 
+                     VALUES ('$codSimulacionServicioAtributo', '$codAuditorSim', '$yyyy',0)";
                      $stmtDetalleAtributosAud = $dbh->prepare($sqlDetalleAtributosAud);
                      $stmtDetalleAtributosAud->execute(); 
                  }
