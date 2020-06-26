@@ -44,8 +44,8 @@ try {//recibiendo datos
     // $estado_ibnorca=0;
     if ($cod_facturacion == 0){//insertamos       
         $nro_correlativo=obtenerCorrelativoSolicitud();//correlativo
-        $stmt = $dbh->prepare("INSERT INTO solicitudes_facturacion(cod_simulacion_servicio,cod_unidadorganizacional,cod_area,fecha_registro,fecha_solicitudfactura,cod_tipoobjeto,cod_tipopago,cod_cliente,cod_personal,razon_social,nit,observaciones,observaciones_2,nro_correlativo,cod_estado,persona_contacto,cod_estadosolicitudfacturacion,codigo_alterno,tipo_solicitud) 
-        values ('$cod_simulacion','$cod_unidadorganizacional','$cod_area','$fecha_registro','$fecha_solicitudfactura','$cod_tipoobjeto','$cod_tipopago','$ci_estudiante','$cod_personal','$razon_social','$nit','$observaciones','$observaciones_2','$nro_correlativo',1,'$persona_contacto',1,'$codigo_alterno',2)");//2 tipo capacitacion
+        $stmt = $dbh->prepare("INSERT INTO solicitudes_facturacion(cod_simulacion_servicio,cod_unidadorganizacional,cod_area,fecha_registro,fecha_solicitudfactura,cod_tipoobjeto,cod_tipopago,cod_cliente,cod_personal,razon_social,nit,observaciones,observaciones_2,nro_correlativo,persona_contacto,cod_estadosolicitudfacturacion,codigo_alterno,tipo_solicitud) 
+        values ('$cod_simulacion','$cod_unidadorganizacional','$cod_area','$fecha_registro','$fecha_solicitudfactura','$cod_tipoobjeto','$cod_tipopago','$ci_estudiante','$cod_personal','$razon_social','$nit','$observaciones','$observaciones_2','$nro_correlativo','$persona_contacto',1,'$codigo_alterno',2)");//2 tipo capacitacion
         $flagSuccess=$stmt->execute();        
         if($flagSuccess){
             //antes de insertar sacamos el codigo de la solicitud para el detalle
@@ -68,7 +68,7 @@ try {//recibiendo datos
                     $descuento_por_Insert=$_POST["descuento_por".$i];
                     $descuento_bob_Insert=$_POST["descuento_bob".$i];
                     $importe_a_pagar_Insert=$_POST["importe_a_pagar".$i];
-                    $monto_pagado=$_POST["modal_importe_pagado_dos_a".$i];
+                    // $monto_pagado=$_POST["modal_importe_pagado_dos_a".$i];
                 }
                 if($servicioInsert!=0 || $servicioInsert!=""){
                     // echo " servicio:".$servicioInsert."<br>";
@@ -79,8 +79,8 @@ try {//recibiendo datos
                     // $estado_x=$datos["estado"];
                     // $mensaje_x=$datos["mensaje"];
                     // if($estado_x){//registro correcto webservice
-                        $stmt = $dbh->prepare("INSERT INTO solicitudes_facturaciondetalle(cod_solicitudfacturacion,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_por,descuento_bob,tipo_item,monto_pagado) 
-                        values ('$cod_facturacion','$servicioInsert','$CantidadInsert','$importe_a_pagar_Insert','$DescricpionInsert','$descuento_por_Insert','$descuento_bob_Insert',1,$monto_pagado)");
+                        $stmt = $dbh->prepare("INSERT INTO solicitudes_facturaciondetalle(cod_solicitudfacturacion,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_por,descuento_bob,tipo_item) 
+                        values ('$cod_facturacion','$servicioInsert','$CantidadInsert','$importe_a_pagar_Insert','$DescricpionInsert','$descuento_por_Insert','$descuento_bob_Insert',1)");
                         $flagSuccess=$stmt->execute();                        
                     // }else{
                     //     $stmtDelte = $dbh->prepare("DELETE from solicitudes_facturacion where codigo=$cod_facturacion");
@@ -281,7 +281,7 @@ try {//recibiendo datos
                     $descuento_por_Insert=$_POST["descuento_por".$i];
                     $descuento_bob_Insert=$_POST["descuento_bob".$i];
                     $importe_a_pagar_Insert=$_POST["importe_a_pagar".$i];
-                    $monto_pagado=$_POST["modal_importe_pagado_dos_a".$i];
+                    // $monto_pagado=$_POST["modal_importe_pagado_dos_a".$i];
                 }
                 if($servicioInsert!=0 || $servicioInsert!=""){
                     // echo " servicio:".$servicioInsert."<br>";
@@ -292,8 +292,8 @@ try {//recibiendo datos
                     // $estado_x=$datos["estado"];
                     // $mensaje_x=$datos["mensaje"];
                     // if($estado_x){//registro correcto webservice
-                        $stmt = $dbh->prepare("INSERT INTO solicitudes_facturaciondetalle(cod_solicitudfacturacion,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_por,descuento_bob,tipo_item,monto_pagado) 
-                        values ('$cod_facturacion','$servicioInsert','$CantidadInsert','$importe_a_pagar_Insert','$DescricpionInsert','$descuento_por_Insert','$descuento_bob_Insert',1,$monto_pagado)");
+                        $stmt = $dbh->prepare("INSERT INTO solicitudes_facturaciondetalle(cod_solicitudfacturacion,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_por,descuento_bob,tipo_item) 
+                        values ('$cod_facturacion','$servicioInsert','$CantidadInsert','$importe_a_pagar_Insert','$DescricpionInsert','$descuento_por_Insert','$descuento_bob_Insert',1)");
                         $flagSuccess=$stmt->execute();                        
                     // }else{
                     //     $stmtDelte = $dbh->prepare("DELETE from solicitudes_facturacion where codigo=$cod_facturacion");

@@ -75,6 +75,7 @@ $name_area=null;
 $contadorRegistros=0;
 $descuento_cliente=obtenerDescuentoCliente($cod_cliente);
 $cod_defecto_deposito_cuenta=obtenerValorConfiguracion(55);
+$cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
 ?>
 <script>
   numFilas=<?=$contadorRegistros;?>;
@@ -96,6 +97,7 @@ $cod_defecto_deposito_cuenta=obtenerValorConfiguracion(55);
                     ?>
                     <input type="hidden" value="-100" id="tipo_documento_otro" name="tipo_documento_otro">
                     <input type="hidden" name="cod_defecto_deposito_cuenta" id="cod_defecto_deposito_cuenta" value="<?=$cod_defecto_deposito_cuenta?>"/>
+                    <input type="hidden" name="cod_defecto_cod_tipo_credito" id="cod_defecto_cod_tipo_credito" value="<?=$cod_defecto_cod_tipo_credito?>"/>
                     <!-- si hubiese bancarizacion -->
                     <input type="hidden" name="nro_contrato" id="nro_contrato" value="0"/>
                     <input type="hidden" name="nro_cuenta_doc" id="nro_cuenta_doc" value="0"/>
@@ -272,8 +274,8 @@ $cod_defecto_deposito_cuenta=obtenerValorConfiguracion(55);
                                     $contUnidades[0]=$ncUnidades;
                                 ?>
                             </div>
-                            <label class="col-sm-2 col-form-label">Tipo Pago</label>
-                            <div class="col-sm-3">
+                            <label class="col-sm-2 col-form-label">Forma de Pago</label>
+                            <div class="col-sm-2">
                                 <div class="form-group" >
                                     <select name="cod_tipopago" id="cod_tipopago" class="selectpicker form-control form-control-sm" data-style="btn btn-info" onChange="ajaxTipoPagoContactoPersonal(this);">
                                         <?php 
@@ -309,8 +311,16 @@ $cod_defecto_deposito_cuenta=obtenerValorConfiguracion(55);
                                         <span id="nfacAreas" class="count bg-warning"></span>
                                      </button>                              
                                 </div>
-                            </div>   
-                            <label class="col-sm-2 col-form-label">Responsable</label>
+                            </div>
+                            <div class="col-sm-2">
+                                <div class="form-group">                                
+                                  <div class="dias_credito_x" style="display: none"><?php $dias_credito=obtenerValorConfiguracion(58)?>
+                                    <span style="color: #ff0000;"><small><?=$dias_credito?> días de crédito</small></span>
+                                    <!-- <input type="text" class="form-control" name="dias_credito" id="dias_credito" value="" readonly> -->
+                                  </div>
+                                </div>
+                            </div>
+                            <label class="col-sm-1 col-form-label">Responsable</label>
                             <div class="col-sm-4">
                                 <div class="form-group">            
                                     <?php  $responsable=namePersonal($cod_personal); ?>
@@ -474,7 +484,7 @@ $cod_defecto_deposito_cuenta=obtenerValorConfiguracion(55);
                                                     // $modal_totalmontopre+=$montoPre;
                                                     $montoPre=number_format($montoPre,2,".","");
                                                     //parte del controlador de check
-                                                    $sqlControlador="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$cod_simulacion and sf.cod_estado=1 and sfd.cod_claservicio=$codCS and sf.codigo=$cod_facturacion";
+                                                    $sqlControlador="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$cod_simulacion and sfd.cod_claservicio=$codCS and sf.codigo=$cod_facturacion";
                                                     // echo $sqlControlador;
                                                     $stmtControlado = $dbh->prepare($sqlControlador);
                                                    $stmtControlado->execute();                                           
@@ -486,7 +496,7 @@ $cod_defecto_deposito_cuenta=obtenerValorConfiguracion(55);
                                                         $descuento_bobX=$rowPre['descuento_bob'];
                                                         $descripcion_alternaX=$rowPre['descripcion_alterna'];
                                                     }
-                                                    $sqlControlador2="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$cod_simulacion and sf.cod_estado=1 and sfd.cod_claservicio=$codCS";
+                                                    $sqlControlador2="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$cod_simulacion and sfd.cod_claservicio=$codCS";
                                                     // echo $sqlControlador2;
                                                     $stmtControlador2 = $dbh->prepare($sqlControlador2);
                                                     $stmtControlador2->execute();                                           

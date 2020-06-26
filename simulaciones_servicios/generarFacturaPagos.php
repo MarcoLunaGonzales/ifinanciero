@@ -167,7 +167,9 @@ try{
                                 $cantidad_x=$row['cantidad'];
                                 $precio_x=$row['precio'];
                                 $descuento_bob_x=$row['descuento_bob'];
+                                $cod_curso_x=$row['cod_curso'];
                                 $precio_x=$importe_pagar;//formula para obtener el monto con el porcentaje a pagar
+                                
                                 if($tipo_solicitud==2){// la solicitud pertence capacitacion
                                     $datos=resgistrar_pago_curso($cod_cliente,$cod_simulacion_servicio,$cod_claservicio_x,$precio_x,$cod_solicitudfacturacion);
                                     $estado_x=$datos["estado"];
@@ -179,6 +181,29 @@ try{
                                         $estado_ibnorca++;
                                         break;
                                     }
+                                }elseif($tipo_solicitud==7){//pago grupal
+                                    //sacamos el listado de estudantes
+                                    $sqlGrupal="SELECT cod_curso,ci_estudiante from solicitudes_facturacion_grupal where cod_solicitudfacturacion=$codigo and cod_curso=$cod_curso_x limit 1";
+                                    $stmtGrupal->execute();
+                                    while ($rowGrupal = $stmtGrupal->fetch()) 
+                                    {
+                                        $cod_curso_x=$rowGrupal['cod_curso'];
+                                        $ci_estudiante_x=$rowGrupal['ci_estudiante'];
+                                        $datos=resgistrar_pago_curso($ci_estudiante_x,$cod_curso_x,$cod_claservicio_x,$precio_x,$codigo);
+                                        $estado_x=$datos["estado"];
+                                        $mensaje_x=$datos["mensaje"];
+                                        if(!$estado_x){//registro correcto webservice
+                                            break;
+                                        }
+                                    }
+                                    if(!$estado_x){//registro correcto webservice
+                                        $estado_ibnorca++;
+                                        $stmtDelte = $dbh->prepare("DELETE from facturas_venta where codigo=$cod_facturaVenta");
+                                        $stmtDelte->execute();
+                                        $estado_ibnorca++;
+                                        break;
+                                    }
+
                                 }
                                 if($estado_ibnorca==0){//sin errores en el servicio web
                                     $descripcion_alterna_x=$row['descripcion_alterna'];            

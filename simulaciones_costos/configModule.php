@@ -23,21 +23,36 @@ $urlSaveDelete="";
 $urlReporteDiario="reportes/reporteDiario.php";
 $urlReporteMayor="reportes/reporteMayor.php";
 
-$urlSolicitudfactura="?opcion=solicitud_facturacion_costos";
+$urlSolicitudfactura="?opcion=solicitud_facturacion_costos";//busacdor costos estudiantes
+$urlSolicitudfactura_empresas="?opcion=solicitud_facturacion_costos_empresas";//busacdor costos empresas
+
 $urlSolicitudfactura_empresa="?opcion=solicitud_facturacion_costos_empresas";
 
 $urlregistro_solicitud_facturacion="?opcion=registro_solicitud_facturacion";
 $urlSave_solicitud_facturacion_costos="simulaciones_costos/save_solicitud_facturacion_costos.php";
 $urlSave_solicitud_facturacion_costos_empresa="simulaciones_costos/save_solicitud_facturacion_costos_empresa.php";
 
+$urlSave_solicitud_facturacion_costos_grupal_estudiantes="../simulaciones_costos/save_solicitud_facturacion_costos_grupal_estudiantes.php";
+
+
+
 $urlGenerarFacturas2="simulaciones_costos/generarFacturas2.php";
 $urlGenerarFacturasPrint="simulaciones_servicios/generarFacturasPrint.php";
 $urlPrintSolicitud="simulaciones_servicios/printSolicitud.php";
-
 $urlregistro_solicitud_facturacion_empresas="?opcion=registro_solicitud_facturacion_empresas";
-
 $urlReportePlan="simulaciones_costos/reportePlanificacion.php";
-
+// $urlSolicitudfactura_grupal_estudiantes="?opcion=solicitudfactura_grupal_estudiantes";
+// $urlSolicitudfactura_grupal_estudiantes="?opcion=solicitudfactura_grupal_estudiantes";
+$urlListFacturasServicios_costos_estudiantes="?opcion=listFacturasServicios_costos_estudiantes";
+$urlListFacturasServicios_costos_estudiantes="?opcion=listFacturasServicios_costos_estudiantes";
 
 $urlListSol="index.php?opcion=listFacturasServicios";
+$urlregistro_solicitud_facturacion_grupal_est="simulaciones_costos/registro_solicitud_facturacion_grupal_estudiantes.php";
+
+$urlListFacturasServicios_costos_empresas="?opcion=listFacturasServicios_costos_empresas";
+
+
+
+
+
 ?>

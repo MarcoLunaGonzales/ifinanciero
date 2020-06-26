@@ -42,13 +42,13 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 		    $importe = $resultInfo['importe'];
 		    $cod_dosificacionfactura = $resultInfo['cod_dosificacionfactura'];
 		    $observaciones = $resultInfo['observaciones'];
+		    $cod_tipopago = $resultInfo['cod_tipopago'];
 		    $nombre_cliente = $razon_social;
 		}elseif($auxiliar==2){
 		    $stmtInfo = $dbh->prepare("SELECT sf.*,DATE_FORMAT(sf.fecha_limite_emision,'%d/%m/%Y')as fecha_limite_emision_x FROM facturas_venta sf  where sf.cod_solicitudfacturacion=$codigo");
 		    $stmtInfo->execute();
 		    $resultInfo = $stmtInfo->fetch();   
 		    $cod_factura = $resultInfo['codigo']; 
-
 		    $cod_solicitudfacturacion = $resultInfo['cod_solicitudfacturacion'];
 		    $cod_unidadorganizacional = $resultInfo['cod_unidadorganizacional'];
 		    $cod_area = $resultInfo['cod_area'];
@@ -65,6 +65,7 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 		    $cod_dosificacionfactura = $resultInfo['cod_dosificacionfactura'];		    
 		    $importe=$importe;
 		    $observaciones = $resultInfo['observaciones'];
+		    $cod_tipopago = $resultInfo['cod_tipopago'];
 		    // $nombre_cliente = $resultInfo['nombre_cliente'];
 		    $nombre_cliente = $razon_social;
 		}else{//para la tiendA
@@ -88,9 +89,11 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 			$cod_dosificacionfactura = $resultInfo['cod_dosificacionfactura'];
 			$importe=$importe;
 			$observaciones = $resultInfo['observaciones'];
+			$cod_tipopago = $resultInfo['cod_tipopago'];
 			// $nombre_cliente = $resultInfo['nombre_cliente'];
 			$nombre_cliente = $razon_social;
 		}		
+		$tipo_pago=nameTipoPagoSolFac($cod_tipopago);
 		$leyenda=obtener_dato_dosificacion($cod_dosificacionfactura);//sacmos la leyenda
 		$nombre_ciudad =  obtenerCiudadDeUnidad(5);//sacmos la ciudad de cod_uo 5(regional La Paz)defecto para todas las fac
 		$cantidad=1;
@@ -135,12 +138,12 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 		                    <span><b><u>
 		                      '.obtenerValorConfiguracionFactura(1).'</u><br>
 		                      '.obtenerValorConfiguracionFactura(2).'</b></span><br>
-		                      <span><small><small><b>
+		                      <span><small><small>
 		                      '.obtenerValorConfiguracionFactura(3).'<br>
 		                      Teléfonos:'.obtenerValorConfiguracionFactura(4).'<br>
 		                      Web:'.obtenerValorConfiguracionFactura(10).' * E-mail:'.obtenerValorConfiguracionFactura(11).'<br>'.obtenerValorConfiguracionFactura(13).' <br>
 		                      '.obtenerValorConfiguracionFactura(14).'
-		                    </b></span></small></small>
+		                    </span></small></small>
 		                </td>
 	                    <td  valign="top" width="26%"><div id="header_titulo_texto_grande" ><br>FACTURA</div></td>
 	                    <td width="37%">
@@ -250,7 +253,9 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
                           if($centavos<10){
                             $centavos="0".$centavos;
                           }
-                          $html.='<p class="bold table-title">Son: '.ucfirst(CifrasEnLetras::convertirNumeroEnLetras($entero)).'      '.$centavos.'/100 Bolivianos</p>'; 
+                          $html.='<br><span class="bold table-title">Son: '.ucfirst(CifrasEnLetras::convertirNumeroEnLetras($entero)).'      '.$centavos.'/100 Bolivianos</span><br>
+                          <span><small><small>Tipo de Pago: '.$tipo_pago.'</small></small></span>
+                          '; 
                           $html.='</td>
                         <td align="right" style="border-left: hidden" rowspan="2" colspan="2"><b>Total Bs &nbsp;&nbsp;&nbsp;&nbsp;'.formatNumberDec($suma_total).'</b></td>
                     </tr>

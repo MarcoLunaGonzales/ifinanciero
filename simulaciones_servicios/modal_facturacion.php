@@ -463,7 +463,7 @@
               </thead>
               <tbody>
                 <?php
-                if($lista->estado==1){
+                // if($lista->estado==1){
                   $j=1;
                     foreach ($lista->libretas as $v) {
                       $Nombre=$v->Nombre;
@@ -592,7 +592,7 @@
                       }
                       $j++;
                   }
-                }
+                // }
                 ?>
               </tbody>
               <tfoot>

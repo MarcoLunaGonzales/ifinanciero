@@ -130,8 +130,8 @@
                                     $contUnidades[0]=$ncUnidades;
                                 ?>
                             </div>
-                            <label class="col-sm-2 col-form-label">Tipo Pago</label>
-                            <div class="col-sm-3">
+                            <label class="col-sm-2 col-form-label">Forma de Pago</label>
+                            <div class="col-sm-2">
                                 <div class="form-group" >
                                     <select name="cod_tipopago" id="cod_tipopago" class="selectpicker form-control form-control-sm" data-style="btn btn-info" onChange="ajaxTipoPagoContactoPersonal(this);">
                                         <?php 
@@ -167,8 +167,16 @@
                                         <span id="nfacAreas" class="count bg-warning"></span>
                                      </button>                              
                                 </div>
-                            </div>         
-                            <label class="col-sm-2 col-form-label">Responsable</label>
+                            </div>  
+                            <div class="col-sm-2">
+                                <div class="form-group">                                
+                                  <div class="dias_credito_x" style="display: none"><?php $dias_credito=obtenerValorConfiguracion(58)?>
+                                    <span style="color: #ff0000;"><small><?=$dias_credito?> días de crédito</small></span>
+                                    <!-- <input type="text" class="form-control" name="dias_credito" id="dias_credito" value="" readonly> -->
+                                  </div>
+                                </div>
+                            </div>
+                            <label class="col-sm-1 col-form-label">Responsable</label>
                             <div class="col-sm-4">
                                 <div class="form-group">            
                                     <?php  $responsable=namePersonal($cod_personal); ?>                    

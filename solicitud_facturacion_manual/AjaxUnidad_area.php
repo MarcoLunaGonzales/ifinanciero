@@ -5,6 +5,13 @@ require_once 'configModule.php';
 //header('Content-Type: application/json');
 
 $codigo_UO = $_GET["codigo_UO"];
+$aux = $_GET["aux"];
+if($aux==1){
+	$cod_area_no=12;
+}elseif($aux==2){
+	$cod_area_no=13;
+}
+
 //ini_set("display_errors", "1");
 $db = new Conexion();
 
@@ -13,7 +20,6 @@ FROM areas_organizacion uo,areas a
 where uo.cod_estadoreferencial=1 and uo.cod_area=a.codigo and a.areas_ingreso=1 and uo.cod_unidad=$codigo_UO order by nombre_area";
 $stmt = $db->prepare($sqlUO);
 $stmt->execute();
-$cod_area_no=12;
 ?>
 <select name="cod_area" id="cod_area" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true" required="true">	
     <?php 

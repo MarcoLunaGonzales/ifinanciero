@@ -78,12 +78,12 @@ $stmtCliente->bindColumn('nombre', $nombre_cli);
                             <th><small>#Sol.</small></th>
                             <th><small>Responsable</small></th>
                             <th><small>Código<br>Servicio</small></th>                            
-                            <th><small>Fecha<br>Registro</small></th>                            
-                            <th style="color:#ff0000;"><small>#Fact</small></th>
+                            <th><small>Fecha<br>Registro</small></th>                                                        
                             <th><small>Importe<br>(BOB)</small></th>  
-                            <th><small>Tipo<br>Pago</small></th>
                             <th><small>Concepto</small></th>
                             <th width="5%"><small>Estado</small></th>
+                            <th style="color:#ff0000;"><small>#Fact</small></th>
+                            <th style="color:#ff0000;"><small>Forma<br>Pago</small></th>
                             <th class="text-right"><small>Actions</small></th>
                           </tr>
                         </thead>
@@ -160,8 +160,14 @@ $stmtCliente->bindColumn('nombre', $nombre_cli);
                             $stmtDetalleSol->execute();
                             $stmtDetalleSol->bindColumn('cantidad', $cantidad);  
                             $stmtDetalleSol->bindColumn('precio', $precio);     
-                            $stmtDetalleSol->bindColumn('descripcion_alterna', $descripcion_alterna);                              
-                            $concepto_contabilizacion=$codigo_alterno." - ";
+                            $stmtDetalleSol->bindColumn('descripcion_alterna', $descripcion_alterna);
+                            if($tipo_solicitud==2 || $tipo_solicitud==6 || $tipo_solicitud==7){
+                              $concepto_contabilizacion="";
+                            }else{
+                              $concepto_contabilizacion=$codigo_alterno." - ";  
+                            }
+
+                            
                             while ($row_det = $stmtDetalleSol->fetch()){
                               $precio_natural=$precio/$cantidad;
                               $concepto_contabilizacion.=$descripcion_alterna." / F ".$nro_fact_x." / ".$razon_social."<br>\n";
@@ -240,18 +246,15 @@ $stmtCliente->bindColumn('nombre', $nombre_cli);
                           <tr>
                             <td align="center"></td>
                             <td><small><?=$nombre_uo;?> - <?=$nombre_area;?></small></td>
-                            
                             <td class="text-right"><small><?=$nro_correlativo;?></small></td>
                             <td><small><?=$responsable;?></small></td>
                             <td><small><?=$codigo_alterno?></small></td>
-                            <td><small><?=$fecha_registro;?></small></td>
-                            <!-- <td><?=$fecha_solicitudfactura;?></small></td>      -->                       
-                            <td style="color:#298A08;"><small><?=$nro_fact_x;?><br><span style="color:#DF0101;"><?=$cadenaFacturasM;?></span></small></td>
-                            <td class="text-right"><small><?=formatNumberDec($sumaTotalImporte) ;?></small></td>
-                            <td class="text-left" style="color:#ff0000;"><small><small><?=$nombre_tipopago;?></small></small></td>
+                            <td><small><?=$fecha_registro;?></small></td>                                                        
+                            <td class="text-right"><small><?=formatNumberDec($sumaTotalImporte) ;?></small></td>                            
                             <td width="35%"><small><?=$concepto_contabilizacion?></small></td>
                             <td><button class="btn <?=$btnEstado?> btn-sm btn-link"><small><?=$estado;?></small></button></td>
-                            <!-- <td><?=$nit;?></td> -->
+                            <td style="color:#298A08;"><small><?=$nro_fact_x;?><br><span style="color:#DF0101;"><?=$cadenaFacturasM;?></span></small></td>
+                            <td class="text-left" style="color:#ff0000;"><small><small><?=$nombre_tipopago;?></small></small></td>
                             <td class="td-actions text-right">
                               <?php
                                 if($globalAdmin==1){ //

@@ -153,7 +153,7 @@ try{
                             
 
                             //insertamos detalle
-                            $stmt = $dbh->prepare("SELECT sf.*,(select t.Descripcion from cla_servicios t where t.IdClaServicio=sf.cod_claservicio) as nombre_serv from solicitudes_facturaciondetalle sf where sf.cod_solicitudfacturacion=$codigo");
+                            $stmt = $dbh->prepare("SELECT sf.* from solicitudes_facturaciondetalle sf where sf.cod_solicitudfacturacion=$codigo");
                             $stmt->execute();
                             while ($row = $stmt->fetch()) 
                             {                 
@@ -161,8 +161,8 @@ try{
                                 $cantidad_x=$row['cantidad'];
                                 $precio_x=$row['precio'];
                                 $descuento_bob_x=$row['descuento_bob'];
-
-                                if($tipo_solicitud==2){// la solicitud pertence capacitacion
+                                $cod_curso_x=$row['cod_curso'];
+                                if($tipo_solicitud==2){// la solicitud pertence capacitacion estudiantes
                                     $datos=resgistrar_pago_curso($cod_cliente,$cod_simulacion_servicio,$cod_claservicio_x,$precio_x,$codigo);
                                     $estado_x=$datos["estado"];
                                     $mensaje_x=$datos["mensaje"];
@@ -173,6 +173,31 @@ try{
                                         $estado_ibnorca++;
                                         break;
                                     }
+                                }elseif($tipo_solicitud==7){//pago grupal
+                                    //sacamos el lisgtadl de estudantes
+                                    $sqlGrupal="SELECT cod_curso,ci_estudiante from solicitudes_facturacion_grupal where cod_solicitudfacturacion=$codigo and cod_curso=$cod_curso_x limit 1";
+                                    // echo $sqlGrupal;
+                                    $stmtGrupal = $dbh->prepare($sqlGrupal);
+                                    $stmtGrupal->execute();
+                                    while ($rowGrupal = $stmtGrupal->fetch()) 
+                                    {
+                                        $cod_curso_x=$rowGrupal['cod_curso'];
+                                        $ci_estudiante_x=$rowGrupal['ci_estudiante'];
+                                        $datos=resgistrar_pago_curso($ci_estudiante_x,$cod_curso_x,$cod_claservicio_x,$precio_x,$codigo);
+                                        $estado_x=$datos["estado"];
+                                        $mensaje_x=$datos["mensaje"];
+                                        if(!$estado_x){//registro correcto webservice
+                                            break;
+                                        }
+                                    }
+                                    if(!$estado_x){//registro correcto webservice
+                                        $estado_ibnorca++;
+                                        $stmtDelte = $dbh->prepare("DELETE from facturas_venta where codigo=$cod_facturaVenta");
+                                        $stmtDelte->execute();
+                                        $estado_ibnorca++;
+                                        break;
+                                    }
+
                                 }
                                 if($estado_ibnorca==0){//sin errores en el servicio web
                                     $precio_x=$precio_x+$descuento_bob_x;//se registró el precio total incluido el descuento, para la factura necesitamos el precio unitario
