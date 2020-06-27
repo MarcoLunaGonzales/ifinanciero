@@ -7,14 +7,12 @@ require_once '../functions.php';
 require_once '../functionsGeneral.php';
 require_once 'configModule.php';
 
-
 setlocale(LC_TIME, "Spanish");
-$dbh = new Conexion();
 
+$dbh = new Conexion();
 $sqlX="SET NAMES 'utf8'";
 $stmtX = $dbh->prepare($sqlX);
 $stmtX->execute();
-
 
 $globalNombreGestion=$_SESSION["globalNombreGestion"];
 $globalUser=$_SESSION["globalUser"];
@@ -27,13 +25,29 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $fechaActual=date("Y-m-d");
 $dbh = new Conexion();
 if(isset($_GET['cod'])){
-	$codigo=$_GET['cod'];
+  $codigo=$_GET['cod'];
   $codigoSimulacionSuper=$_GET['cod'];
 }else{
-	$codigo=0;
+  $codigo=0;
 }
-if(isset($_GET['admin'])){
-	$urlList=$urlList2;
+$lista= obtenerPaisesServicioIbrnorca();
+if(isset($_GET['q'])){
+ $idServicioX=$_GET['q'];
+ $s=$_GET['s'];
+ $u=$_GET['u'];
+ ?>
+  <input type="hidden" name="id_servicioibnored" value="<?=$idServicioX?>" id="id_servicioibnored"/>
+  <input type="hidden" name="id_servicioibnored_s" value="<?=$s?>" id="id_servicioibnored_s"/>
+  <input type="hidden" name="id_servicioibnored_u" value="<?=$u?>" id="id_servicioibnored_u"/>
+ <?php
+ if(isset($_GET['u'])){
+  $u=$_GET['u'];
+ ?>
+  <input type="hidden" name="idPerfil" value="<?=$u?>" id="idPerfil"/>
+ <?php
+ }
+}else{
+  $idServicioX=0; 
 }
 
 /*VARIABLE DE CONVERSION A MODEDA USD*/
@@ -45,6 +59,8 @@ $nombreClienteX=obtenerNombreClienteSimulacion($codigo);
 
 $precioLocalX=obtenerPrecioServiciosSimulacion($codigo);
 $precioLocalInputX=number_format($precioLocalX, 2, '.', '');
+
+$precioLocalInputXUSD=number_format($precioLocalX/$usd, 2, '.', '');
 $alumnosX=obtenerCantidadTotalPersonalSimulacionEditado($codigo);
 
 $costoVariablePersonal=obtenerCostosPersonalSimulacionEditado($codigo);
@@ -62,11 +78,12 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
             $stmt1->bindColumn('dias_auditoria', $diasSimulacion);
             $stmt1->bindColumn('utilidad_minima', $utilidadIbnorcaX);
             $stmt1->bindColumn('productos', $productosX);
-            $stmt1->bindColumn('idServicio', $idServicioX);
+            $stmt1->bindColumn('sitios', $sitiosX);
             $stmt1->bindColumn('anios', $anioX);
             $stmt1->bindColumn('porcentaje_fijo', $porcentajeFijoX);
             $stmt1->bindColumn('afnor', $afnorX);
             $stmt1->bindColumn('porcentaje_afnor', $porcentajeAfnorX);
+            $stmt1->bindColumn('id_tiposervicio', $idTipoServicioX);
 
       while ($row1 = $stmt1->fetch(PDO::FETCH_BOUND)) {
          //plantilla datos      
@@ -97,34 +114,353 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
 
            if($codAreaX==39){
             $valorC=17;
+            $inicioAnio=1;
            }else{
             $valorC=18;
+            $inicioAnio=0;
            }
-      
-      } 
-      while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
-            $codigoPXSS=$codigoPX;
-    }
+           
+           $idTipoServGlobal=$idTipoServicioX;
+           if($idTipoServGlobal==0){
+             $idTipoServGlobal=309;
+           }
+      }    
 ?>
+<script>
+  var itemAtributos=[];
+  var itemAtributosDias=[];
+</script>
+<?php 
+  $stmtAtributos = $dbh->prepare("SELECT * from simulaciones_servicios_atributos where cod_simulacionservicio=$codigo");
+  $stmtAtributos->execute();
+  $codigoFilaAtrib=0;
+  while ($rowAtributo = $stmtAtributos->fetch(PDO::FETCH_ASSOC)) {
+   $codigoXAtrib=$rowAtributo['codigo'];
+   $nombreXAtrib=$rowAtributo['nombre'];
+   $direccionXAtrib=$rowAtributo['direccion'];
+   $normaXAtrib=$rowAtributo['norma'];
+   $marcaXAtrib=$rowAtributo['marca'];
+   $selloXAtrib=$rowAtributo['nro_sello'];
+   $tipoXAtrib=$rowAtributo['cod_tipoatributo'];
+   $paisXAtrib=$rowAtributo['cod_pais'];
+   $estadoXAtrib=$rowAtributo['cod_estado'];
+   $ciudadXAtrib=$rowAtributo['cod_ciudad'];
+
+  if($paisXAtrib==0){
+    $nom_ciudadXAtrib="SIN REGISTRO";
+    $nom_estadoXAtrib="SIN REGISTRO";
+    $nom_paisXAtrib="SIN REGISTRO";
+  }else{
+   $lista= obtenerPaisesServicioIbrnorca();
+   foreach ($lista->lista as $listas) {
+      if($listas->idPais==$paisXAtrib){
+        $nom_paisXAtrib=strtoupper($listas->paisNombre);
+        $lista2= obtenerDepartamentoServicioIbrnorca($paisXAtrib);
+        foreach ($lista2->lista as $listas2) {
+          if($listas2->idEstado==$estadoXAtrib){
+            $nom_estadoXAtrib=strtoupper($listas2->estNombre);
+            $lista3= obtenerCiudadServicioIbrnorca($estadoXAtrib);
+            foreach ($lista3->lista as $listas3) {
+              if($listas3->idCiudad==$ciudadXAtrib){
+                $nom_ciudadXAtrib=strtoupper($listas3->nomCiudad);
+                break;
+              }else{
+                $nom_ciudadXAtrib="SIN REGISTRO";
+              }     
+           }
+           break;
+          }else{
+            $nom_estadoXAtrib="SIN REGISTRO";
+          }
+        }
+       break; 
+      }else{
+       $nom_paisXAtrib="SIN REGISTRO";
+     }
+    }
+    
+  }
+
+//normas 
+  $normaCodXAtrib="";
+  $normaXAtribOtro="";
+  $normaAtrib=explode(",", $normaXAtrib);
+  if($tipoXAtrib==1){
+    $stmtAtributosNorma = $dbh->prepare("SELECT * from simulaciones_servicios_atributosnormas where cod_simulacionservicioatributo=$codigoXAtrib");
+    $stmtAtributosNorma->execute();
+    $ni=0;$normaFila=[];
+    while ($rowAtributoNorma = $stmtAtributosNorma->fetch(PDO::FETCH_ASSOC)) {
+     $normaFila[$ni]=$rowAtributoNorma['cod_norma'];
+     $existeNorma=-1;
+     for ($nr=0; $nr < count($normaAtrib); $nr++) { 
+        if($normaAtrib[$nr]==nameNorma($rowAtributoNorma['cod_norma'])){
+          $existeNorma=$nr; 
+        }
+     }
+     if($existeNorma>=0){
+      unset($normaAtrib[$existeNorma]);
+     }
+     $ni++; 
+    }
+   $normaCodXAtrib=implode(",",$normaFila); 
+   if(count($normaAtrib)>0){
+    $normaXAtribOtro=implode(",",$normaAtrib); 
+   }else{
+    $normaXAtribOtro="";
+   }
+  }else{
+//atributos auditores
+for ($an=0; $an<=$anioGeneral; $an++) { 
+    $sqlAuditoresAtrib="SELECT sa.*,s.descripcion FROM simulaciones_servicios_atributosauditores sa join simulaciones_servicios_auditores s on s.codigo=sa.cod_auditor join tipos_auditor t on s.cod_tipoauditor=t.codigo where s.cod_simulacionservicio=$codigoSimulacionSuper and s.cod_anio=$an and sa.cod_simulacionservicioatributo=$codigoXAtrib order by t.nro_orden";
+    $stmtAuditoresAtrib=$dbh->prepare($sqlAuditoresAtrib);
+    $stmtAuditoresAtrib->execute();
+    ?>
+    <div class="d-none"><select class="form-control selectpicker form-control-sm" data-style="fondo-boton fondo-boton-active" multiple name="auditores<?=$an?>EEEE<?=$codigoFilaAtrib?>[]" id="auditores<?=$an?>EEEE<?=$codigoFilaAtrib?>"><?php
+     while ($rowAuditoresAtrib = $stmtAuditoresAtrib->fetch(PDO::FETCH_ASSOC)) {
+      $codigoTipoEE=$rowAuditoresAtrib['cod_auditor'];
+      $nombreTipoEE=$rowAuditoresAtrib['descripcion'];
+      $habilitadoEE=$rowAuditoresAtrib['estado'];
+      $words = explode(" ", $nombreTipoEE);
+      $acronym = "";
+      foreach ($words as $w) {
+       if(!(strtolower($w)=="de"||strtolower($w)=="el"||strtolower($w)=="la"||strtolower($w)=="y"||strtolower($w)=="en")){
+          $acronym .= $w[0];
+       }        
+      }
+      $abreviatura = $acronym;
+      //$cantidadTipo=$row['cantidad_editado'];
+      if($habilitadoEE==1){
+        ?>
+         <option value="<?=$codigoTipoEE?>" selected><?=$abreviatura?></option>
+       <?php 
+      }else{
+        ?>
+         <option value="<?=$codigoTipoEE?>"><?=$abreviatura?></option>
+       <?php 
+      }
+       
+    }
+   ?></select></div><?php 
+}
+//fin de atributos auditores
+  }
+   ?>
+    <script>
+    var atributo={
+    codigo: '<?=$codigoFilaAtrib?>',  
+    nombre: '<?=$nombreXAtrib?>',
+    direccion: '<?=$direccionXAtrib?>',
+    marca: '<?=$marcaXAtrib?>',
+    norma: '<?=$normaXAtrib?>',
+    norma_cod: '<?=$normaCodXAtrib?>',
+    norma_otro: '<?=$normaXAtribOtro?>',
+    sello: '<?=$selloXAtrib?>',
+    pais: '<?=$paisXAtrib?>',
+    estado: '<?=$estadoXAtrib?>',
+    ciudad: '<?=$ciudadXAtrib?>',
+    nom_pais: '<?=$nom_paisXAtrib?>',
+    nom_estado: '<?=$nom_estadoXAtrib?>',
+    nom_ciudad: '<?=$nom_ciudadXAtrib?>'
+    }
+  itemAtributos.push(atributo);
+    </script>
+   <?php
+   //DIAS DE LOS SITIOS
+   if($tipoXAtrib!=1){
+    $stmtAtributosDias = $dbh->prepare("SELECT * from simulaciones_servicios_atributosdias where cod_simulacionservicioatributo=$codigoXAtrib");
+    $stmtAtributosDias->execute();
+    while ($rowAtributoDias = $stmtAtributosDias->fetch(PDO::FETCH_ASSOC)) {
+      $nombreXAtribDias=$rowAtributoDias['dias'];
+      $anioXAtribDias=$rowAtributoDias['cod_anio'];
+      ?>
+      <script>
+      var atributoDias={
+         codigo_atributo: '<?=$codigoFilaAtrib?>',  
+         dias: '<?=$nombreXAtribDias?>',
+         anio: '<?=$anioXAtribDias?>'
+         }
+       itemAtributosDias.push(atributoDias);
+    </script>
+      <?php
+     } 
+   } 
+   $codigoFilaAtrib++;
+  }
+
+  
+?>
+<input type="hidden" name="anio_servicio" readonly value="<?=$anioX?>" id="anio_servicio"/>
+<input type="hidden" name="porcentaje_fijo" readonly value="<?=$porcentajeFijoSim?>" id="porcentaje_fijo"/>
+<input type="hidden" name="inicio_fijomodal" readonly value="0" id="inicio_fijomodal"/>
+<input type="hidden" name="inicio_variablemodal" readonly value="0" id="inicio_variablemodal"/>
+<input type="hidden" name="cambio_moneda" readonly value="<?=$usd?>" id="cambio_moneda"/>
+<input type="hidden" name="alumnos_plan" readonly value="<?=$alumnosX?>" id="alumnos_plan"/>
+<input type="hidden" name="utilidad_minlocal" readonly value="<?=$utilidadIbnorcaX?>" id="utilidad_minlocal"/>
+
 <div class="cargar">
   <div class="div-loading text-center">
      <h4 class="text-warning font-weight-bold">Procesando Datos</h4>
      <p class="text-white">Aguard&aacute; un momento por favor</p>  
   </div>
 </div>
+<div class="cargar-ajax d-none">
+  <div class="div-loading text-center">
+     <h4 class="text-warning font-weight-bold" id="texto_ajax_titulo">Procesando Datos</h4>
+     <p class="text-white">Aguard&aacute; un momento por favor</p>  
+  </div>
+</div>
 <div class="content">
-	<div id="contListaGrupos" class="container-fluid">
-			<input type="hidden" name="cod_simulacion" id="cod_simulacion" value="<?=$codigo?>">
+  <div id="contListaGrupos" class="container-fluid">
+      <input type="hidden" name="cod_simulacion" id="cod_simulacion" value="<?=$codigo?>">
+      <input type="hidden" name="cod_ibnorca" id="cod_ibnorca" value="1">
+      <div class="row"><div class="card col-sm-5">
+        <div class="card-header card-header-success card-header-text">
+          <div class="card-text">
+            <h4 class="card-title">Informaci&oacute;n general de la Propuesta</h4>
+          </div>
+          <!--<button type="button" onclick="editarDatosSimulacion()" class="btn btn-success btn-sm btn-fab float-right">
+             <i class="material-icons" title="Editar Simulación">edit</i>
+          </button>-->
+        </div>
+        <div class="card-body ">
+          <div class="row">
+          <?php
+                    $responsable=namePersonal($codResponsableX);
+            ?>
+            <div class="col-sm-6">
+              <div class="form-group">
+                  <label class="bmd-label-static">Numero</label>
+                  <input class="form-control" readonly type="text" name="nombre" readonly value="<?=$nombreX?>" id="nombre"/>
+              </div>
+            </div>
+
+            <div class="col-sm-6">
+              <div class="form-group">
+                  <label class="bmd-label-static">Responsable</label>
+                  <input class="form-control" type="text" name="responsable" readonly value="<?=$responsable?>" id="responsable"/>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group">
+                  <label class="bmd-label-static">Fecha</label>
+                  <input class="form-control" type="text" name="fecha" value="<?=$fechaX?>" id="fecha" readonly/>
+              </div>
+            </div>
+
+            <div class="col-sm-6">
+                  <div class="form-group">
+                  <label class="bmd-label-static">Estado</label>
+                  <input class="form-control" type="text" name="estado" value="<?=$estadoX?>" id="estado" readonly/>
+              </div>
+            </div>
+                  <input class="form-control" type="hidden" readonly name="ibnorca" value="<?=$simulacionEn?>" id="ibnorca"/>
+          </div>
+        </div>
+      </div>
+      <div class="card col-sm-7">
+        <div class="card-header card-header-info card-header-text">
+          <div class="card-text">
+            <h4 class="card-title">Informaci&oacute;n a detalle de la Propuesta</h4>
+          </div>
+        </div>
+        <div class="card-body ">
+                     <div class="row">
+          <?php while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+               if($codAreaX==39){
+                $inicioAnio=1;
+                }else{
+                 $inicioAnio=0;
+                }
+            ?>
+          <input type="hidden" name="cod_plantilla" id="cod_plantilla" value="<?=$codigoPX?>">
+
+            <div class="col-sm-6">
+              <div class="form-group">
+                  <label class="bmd-label-static">Cliente</label>
+                  <input class="form-control" type="text" name="nombre_plan" value="<?=$nombreClienteX?>" id="nombre_plan" READONLY />
+              </div>
+            </div>
+             
+            <div class="col-sm-2">
+              <div class="form-group">
+                  <label class="bmd-label-static">Abreviatura</label>
+                  <input class="form-control" type="text" name="abreviatura_plan" value="<?=$abreviaturaX?>" READONLY id="abreviatura_plan"/>
+              </div>
+            </div>
+            
+            <div class="col-sm-2">
+              <div class="form-group">
+                  <label class="bmd-label-static">Unidad</label>
+                  <input class="form-control" type="text" name="unidad_plan" value="<?=$unidadX?>" id="unidad_plan" readonly/>
+              </div>
+            </div>
+
+            <div class="col-sm-2">
+                  <div class="form-group">
+                  <label class="bmd-label-static">Area</label>
+                  <input class="form-control" type="hidden" name="codigo_area" value="<?=$codAreaX?>" id="codigo_area" readonly/>
+                  <input class="form-control" type="text" name="area_plan" value="<?=$areaX?>" id="area_plan" readonly/>
+              </div>
+            </div>
+
+          </div>
+           <div class="row">                
+            <div class="col-sm-2">
+              <div class="form-group">
+                  <label class="bmd-label-static">D&iacute;as Servicio</label>
+                  <input class="form-control" type="text" name="dias_plan" readonly value="<?=$diasSimulacion?>" id="dias_plan"/>
+                  <input class="form-control" type="hidden" name="productos_sim" readonly value="<?=$productosX?>" id="productos_sim"/>
+                  <input class="form-control" type="hidden" name="sitios_sim" readonly value="<?=$sitiosX?>" id="sitios_sim"/>
+              </div>
+            </div>
+            <div class="col-sm-2">
+              <div class="form-group">
+                  <label class="bmd-label-static">AFNOR</label>
+                  <input class="form-control" type="text" name="afnor_titulo" readonly value="<?=$tituloAfnor?>" id="afnor_titulo"/>
+              </div>
+            </div>
+            <div class="col-sm-2">
+              <div class="form-group">
+                  <label class="bmd-label-static">Utilidad M&iacute;n %</label>
+                  <input class="form-control" type="text" name="utilidad_minima_ibnorca" readonly value="<?=$utilidadIbnorcaX?>" id="utilidad_minima_ibnorca"/>
+              </div>
+            </div>
+            <div class="col-sm-2">
+              <div class="form-group">
+                  <label class="bmd-label-static">A&ntilde;os</label>
+                  <input class="form-control" type="text" name="anio_simulacion" readonly value="<?=$anioGeneral?>" id="anio_simulacion"/>
+              </div>
+            </div>
+            <div class="col-sm-2">
+              <div class="form-group">
+                  <label class="bmd-label-static">Precio BOB</label>
+                  <input class="form-control" type="text" name="precio_auditoria_ib" readonly value="<?=$precioLocalInputX?>" id="precio_auditoria_ib"/>
+              </div>
+            </div>
+            <div class="col-sm-2">
+              <div class="form-group">
+                  <label class="bmd-label-static">Precio USD</label>
+                  <input class="form-control" type="text" name="precio_auditoria_ibUSD" readonly value="<?=$precioLocalInputXUSD?>" id="precio_auditoria_ibUSD"/>
+              </div>
+            </div>
+                <?php } ?>
+          </div>      
+             
+        </div>
+      </div>
+       </div>
            <div class="row">
              <div class="col-sm-12">
-			  <div class="card">
-				<div class="card-header card-header-warning card-header-text text-center">
-					<div class="card-text">
-					  <h4 class="card-title"><b><?=$nombreSimulacion?></b></h4>
-					</div>
-				</div>
-				<div class="card-body">
-			<?php
+        <div class="card">
+        <div class="card-header card-header-warning card-header-text text-center">
+          <div class="card-text">
+            <h4 class="card-title"><b id="titulo_curso">N: <?=$nombreSimulacion?></b></h4>
+          </div>
+        </div>
+        <div class="card-body" id="div_simulacion">
+      <?php
         //IVA y IT
         $iva=obtenerValorConfiguracion(1);
         $it=obtenerValorConfiguracion(2);
@@ -143,6 +479,9 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                  //total variable desde simulacion cuentas
                   $totalVariable=obtenerTotalesSimulacionServicio($codigo);
                   //
+                  if($precioLocalX==0){
+                    $precioLocalX=1;
+                  }
                   $alumnosRecoX=ceil((100*(-$totalFijoPlan-$totalVariable[2]))/(($utilidadIbnorcaX*$precioLocalX)-(100*$precioLocalX)+(($iva+$it)*$precioLocalX)));                    
                   //if($alumnosX)
                 $totalVariable[2]=$totalVariable[2]/$alumnosX;
@@ -223,13 +562,62 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
         <input type="hidden" id="cantidad_alibnorca" name="cantidad_alibnorca" readonly value="<?=$alumnosX?>">
         <input type="hidden" id="cantidad_alfuera" name="cantidad_alfuera" readonly value="<?=$alumnosExternoX?>">
         <input type="hidden" id="aprobado" name="aprobado" readonly value="<?=$codEstadoSimulacion?>">
-
+                          <!--<div class="btn-group dropdown">
+                              <button type="button" title="Editar Variables de Costo" class="btn btn-sm btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="material-icons">edit</i>
+                              </button>
+                              <div class="dropdown-menu">
+                                <?php
+                                  for ($an=$inicioAnio; $an<=$anioGeneral; $an++) {
+                                    $tituloItem="Año ".$an;
+                                    if(($an==0||$an==1)&&$codAreaX!=39){
+                                     $tituloItem="Año 1 (ETAPA ".($an+1).")";
+                                   }
+                                      ?>
+                                       <a href="#" onclick="modificarMontosPeriodo(<?=$an?>)"  class="dropdown-item">
+                                           <i class="material-icons">keyboard_arrow_right</i><?=$tituloItem?>
+                                       </a> 
+                                     <?php
+                                  }
+                                  ?>
+                              </div>
+                            </div>-->
+                            <?php 
+                             $primeraVez="";
+                             $funcionBoton="modificarMontosPeriodo(0)";
+                             $tituloBoton="Editar Variables de Costo";
+                             if(obtenerEntradaSimulacionServicio($codigoSimulacionSuper)==1){
+                               $primeraVez="estado";
+                               $tituloBoton="Editar Variables de Costo (Primera Vez)";
+                             }
+                             ?> 
+                          <a href="#" onclick="listarCostosFijosPeriodo(<?=$anioGeneral?>)" class="btn btn-sm btn-info">
+                                           <i class="material-icons">list</i> CF
+                          </a>
+                          <a href="#" onclick="listarCostosVariblesPeriodo(<?=$anioGeneral?>)" class="btn btn-sm btn-info">
+                                           <i class="material-icons">list</i> CV
+                          </a> 
+           <!--<a href="#" title="Listar Detalle Costo Fijo" onclick="listarCostosFijos()" class="btn btn-sm btn-info"><i class="material-icons">list</i> CF</a>-->
           <br>
           <div class="row">
             <p class="font-weight-bold float-left">PRESUPUESTO POR PERIODO DE CERTIFICACION</p>
            <?php 
            $costoFijoPrincipalPeriodo=0;
-           for ($an=1; $an<=$anioGeneral; $an++) { 
+           for ($an=$inicioAnio; $an<=$anioGeneral; $an++) { 
+            if($codAreaX!=39){
+                $tituloItem="Año ".$an."(Seguimiento ".($an-1).")";
+                if(($an==0||$an==1)&&$codAreaX!=39){
+                  if($an==1){
+                    $tituloItem="Año 1 (ETAPA ".($an+1)." / RENOVACIÓN)";
+                  }else{
+                    $tituloItem="Año 1 (ETAPA ".($an+1).")";
+                  }      
+                }
+            }else{
+                $tituloItem="Año ".$an;
+            } 
+           
+            
             $totalIngresoUsd=0;$totalIngreso=0;
             $totalCostoTotalUsd=0;$totalCostoTotal=0;
             $totalUtilidadBrutaUsd=0;$totalUtilidadBruta=0;
@@ -245,7 +633,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                   $rospanAnio="4";
                 }
                 ?>
-                 <td rowspan="<?=$rospanAnio?>" width="6%" class="bg-table-primary text-white font-weight-bold">Año <?=$an?></td>    <!--ROWSPAN = CANTIDAD DE SERVICIOS + 2 -->
+                 <td rowspan="<?=$rospanAnio?>" width="6%" class="bg-table-primary text-white font-weight-bold"><?=$tituloItem?></td>    <!--ROWSPAN = CANTIDAD DE SERVICIOS + 2 -->
                  <td rowspan="2" width="14%" class="bg-table-primary text-white font-weight-bold"></td>
                  <td colspan="2" class="bg-table-primary text-white font-weight-bold">INGRESO</td>
                  <td colspan="2" class="bg-table-primary text-white font-weight-bold">COSTO TOTAL</td>
@@ -267,17 +655,6 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                  <td>BOB</td>
                </tr>
                <?php 
-
-               
-
-               /*if($codAreaX==39){
-                  $codigoAreaServ=108;
-                  $costoTotalAuditoriaUsd=0;
-                  $costoTotalAuditoria=0;
-                }else{
-                  $costoTotalAuditoriaUsd=$costoTotalLocal/$usd;
-                  $costoTotalAuditoria=$costoTotalLocal;
-                }*/
                 $precioLocalXPeriodo=obtenerPrecioServiciosSimulacionPeriodo($codigo,$an);
                 $costoVariablePersonalPeriodo=obtenerCostosPersonalSimulacionEditadoPeriodo($codigo,$an);
                 $totalVariablePeriodo=obtenerTotalesSimulacionServicioPeriodo($codigo,$an);
@@ -286,9 +663,12 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                   $anioGeneral=1;
                 } 
                 //costos fijos porcentaje configuracion ***************************************************************************************
-                $porCreAn=($porcentajeFijoSim/100)*($an-1);
-                $costoFijoInicio=$totalFijoPlan/$anioGeneral;
-                $costoFijoFinal=$costoFijoInicio+($costoFijoInicio*$porCreAn);
+
+                  $sumPrecioRegistrado=$precioRegistrado*(($porcentajeFijoX/100)*($an-1));                  
+
+                 $porcentPreciosPeriodo=($precioLocalXPeriodo*100)/($precioRegistrado+$sumPrecioRegistrado);
+                 $costoFijoFinal=$totalFijo[0]*($porcentPreciosPeriodo/100);
+
                 $costoFijoPrincipalPeriodo+=$costoFijoFinal;
                 //fin datos para costo fijo             ***************************************************************************************
 
@@ -320,6 +700,10 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                 $totalImpuestos+=$impuestosAuditoria;
                 $totalUtilidadNetaUsd+=$utilidadNetaAuditoriaUsd;
                 $totalUtilidadNeta+=$utilidadNetaAuditoria;
+
+                if($totalIngresoUsd==0){
+                  $totalIngresoUsd=1;
+                }
                 ?>
                  <tr>
                  <td class="small text-left">Precio del Servicio</td>
@@ -337,79 +721,6 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                  <td class="small text-right"><?=number_format($utilidadNetaAuditoria, 2, ',', '.')?></td>
                  
                </tr>
-               <?php 
-               /*if($codAreaX==39){
-                  $codigoAreaServ=108;
-                 if($an<=3){
-                   $queryPr="SELECT s.*,t.descripcion as nombre_serv,c.descripcion,c.numero_anio FROM simulaciones_servicios_tiposervicio s, cla_servicios t JOIN configuraciones_servicios c on c.cod_claservicio=t.idclaservicio where s.cod_simulacionservicio=$codigoSimulacionSuper and s.cod_claservicio=t.idclaservicio and c.numero_anio=$an order by c.numero_anio";
-                 }else{
-                   $queryPr="SELECT s.*,t.descripcion as nombre_serv,c.descripcion,c.numero_anio FROM simulaciones_servicios_tiposervicio s, cla_servicios t JOIN configuraciones_servicios c on c.cod_claservicio=t.idclaservicio where s.cod_simulacionservicio=$codigoSimulacionSuper and s.cod_claservicio=t.idclaservicio and c.numero_anio=4 order by c.numero_anio";
-                 } 
-                
-                $stmtCalculo = $dbh->prepare($queryPr);
-                $stmtCalculo->execute();
-                while ($rowCal = $stmtCalculo->fetch(PDO::FETCH_ASSOC)) {
-                  $nombreServicioCal=$rowCal['nombre_serv'];
-
-                  $costoTotalAuditoriaUsd=$costoTotalLocal/$usd;
-                  $costoTotalAuditoria=$costoTotalLocal;
-
-                  $precioAuditoriaUsd=$rowCal['monto']/$usd;
-                  $precioAuditoria=$rowCal['monto'];
-
-                  $utilidadAuditoriaUsd=$precioAuditoriaUsd-$costoTotalAuditoriaUsd;
-                  $utilidadAuditoria=$precioAuditoria-$costoTotalAuditoria;
-
-                  $impuestosAuditoriaUsd=(($iva+$it)/100)*$precioAuditoriaUsd;
-                  $impuestosAuditoria=(($iva+$it)/100)*$precioAuditoria;
-
-                  $utilidadNetaAuditoriaUsd=$utilidadAuditoriaUsd-$impuestosAuditoriaUsd;
-                  $utilidadNetaAuditoria=$utilidadAuditoria-$impuestosAuditoria;*/
-
-                  //suma de totales
-               /* $totalIngresoUsd+=$precioAuditoriaUsd;
-                $totalIngreso+=$precioAuditoria;
-                $totalCostoTotalUsd+=$costoTotalAuditoriaUsd;
-                $totalCostoTotal+=$costoTotalAuditoria;
-                $totalUtilidadBrutaUsd+=$utilidadAuditoriaUsd;
-                $totalUtilidadBruta+=$utilidadAuditoria;
-                $totalImpuestosUsd+=$impuestosAuditoriaUsd;
-                $totalImpuestos+=$impuestosAuditoria;
-                $totalUtilidadNetaUsd+=$utilidadNetaAuditoriaUsd;
-                $totalUtilidadNeta+=$utilidadNetaAuditoria;*/
-                 ?>
-                <!-- <tr>
-                 <td class="small text-left"><?=$nombreServicioCal?></td>
-                 <td class="small text-right"><?=number_format($precioAuditoriaUsd, 2, ',', '.')?></td>
-                 <td class="small text-right"><?=number_format($precioAuditoria, 2, ',', '.')?></td>
-
-                 <td class="small text-right"><?=number_format($costoTotalAuditoriaUsd, 2, ',', '.')?></td>
-                 <td class="small text-right"><?=number_format($costoTotalAuditoria, 2, ',', '.')?></td>
-
-                 <td class="small text-right"><?=number_format($utilidadAuditoriaUsd, 2, ',', '.')?></td>
-                 <td class="small text-right"><?=number_format($utilidadAuditoria, 2, ',', '.')?></td>
-                 <td class="small text-right"><?=number_format($impuestosAuditoriaUsd, 2, ',', '.')?></td>
-                 <td class="small text-right"><?=number_format($impuestosAuditoria, 2, ',', '.')?></td>
-                 <td class="small text-right"><?=number_format($utilidadNetaAuditoriaUsd, 2, ',', '.')?></td>
-                 <td class="small text-right"><?=number_format($utilidadNetaAuditoria, 2, ',', '.')?></td>
-               </tr>-->
-                 <?php
-                // }
-                //}
-                ?>
-               <!--<tr>
-                 <td class="small text-left">Otros</td>
-                 <td class="small text-right">-</td>
-                 <td class="small text-right">-</td>
-                 <td class="small text-right">-</td>
-                 <td class="small text-right">-</td>
-                 <td class="small text-right">-</td>
-                 <td class="small text-right">-</td>
-                 <td class="small text-right">-</td>
-                 <td class="small text-right">-</td>
-                 <td class="small text-right">-</td>
-                 <td class="small text-right">-</td>
-               </tr>-->
                <tr class="bg-plomo">
                  <td class="font-weight-bold small text-left">TOTAL</td>
                  <td class="font-weight-bold small text-right <?=$estiloUtilidadIbnorca?>"><?=number_format($totalIngresoUsd, 2, ',', '.')?></td>
@@ -486,15 +797,15 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                   <td class="text-right font-weight-bold"><?=number_format($costoFijoPrincipalPeriodo/$usd, 2, '.', ',')?></td>
                 </tr>
                 <tr>
-                  <td class="text-left small bg-table-primary text-white">COSTO VARIABLE TOTAL</td>
-                  <td class="text-right font-weight-bold"><?=number_format(($totalVariable[2]*$alumnosX), 2, '.', ',')?></td>
-                  <td class="text-right font-weight-bold"><?=number_format(($totalVariable[2]*$alumnosX)/$usd, 2, '.', ',')?></td>
+                  <td class="text-left small bg-table-primary text-white">COSTO VARIABLE TOTAL + HONORARIOS</td>
+                  <td class="text-right font-weight-bold"><?=number_format((($totalVariable[2]*$alumnosX)+$costoVariablePersonal), 2, '.', ',')?></td>
+                  <td class="text-right font-weight-bold"><?=number_format((($totalVariable[2]*$alumnosX)+$costoVariablePersonal)/$usd, 2, '.', ',')?></td>
                 </tr>
-                <tr>
+                <!--<tr>
                   <td class="text-left small bg-table-primary text-white">COSTO HONORARIOS PERSONAL</td>
                   <td class="text-right font-weight-bold"><?=number_format($costoVariablePersonal, 2, '.', ',')?></td>
                   <td class="text-right font-weight-bold"><?=number_format($costoVariablePersonal/$usd, 2, '.', ',')?></td>
-                </tr>
+                </tr>-->
                 <tr class="bg-warning text-dark">
                   <td class="text-left small">COSTO TOTAL</td>
                   <td class="text-right font-weight-bold"><?=number_format($costoTotalLocal, 2, '.', ',')?></td>
@@ -581,36 +892,47 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
             </table>
             <div class="row div-center">
                <h5><p class="<?=$estiloMensaje?>"><?=$mensajeText?></p></h5>
-            </div>
-					</div>
-
-				  	<div class="card-footer fixed-bottom">
-              <?php 
-            if(isset($_GET['q'])){
-              $q=$_GET['q'];
-              $s=$_GET['s'];
-              $u=$_GET['u'];
+            </div>  
+          </div>
+          </div>
+          
+            <div class="card-footer fixed-bottom">
+            <?php 
+            $urlR="";
+            if(isset($_GET['admin'])){
+              $urlList=$urlList2;
               if(isset($_GET['r'])){
-                $r=$_GET['r'];       
-                 ?>
-              <a href="../<?=$urlList;?>&q=<?=$q?>&r=<?=$r?>&s=<?=$s?>&u=<?=$u?>" class="btn btn-danger">Volver</a>
-              <?php
-              }else{
-              ?>
-              <a href="../<?=$urlList;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>" class="btn btn-danger">Volver</a>
-              <?php   
-                }
-            }else{
-              ?>
-              <a href="../<?=$urlList;?>" class="btn btn-danger">Volver</a>
-              <?php
+                $urlR="&r=".$_GET['r'];  
+              }      
             }
-              ?>
+            if(!(isset($_GET['q']))){
+              if($pUtilidadLocal>0){
+              ?><?php    
+              }else{
+                ?><?php
+              }
+             ?>   
+            <a href="../<?=$urlList;?>" class="btn btn-danger">Volver</a><?php
+            }else{
 
-				  	</div>
-				 </div>
-			    </div><!--div end card-->			
-               </div>
+              if($pUtilidadLocal>0){
+              ?><?php    
+              }else{
+                ?><?php
+              }
+            ?>
+            <a href="../<?=$urlList;?>&q=<?=$idServicioX?>&s=<?=$s?>&u=<?=$u?><?=$urlR?>" class="btn btn-danger">Volver</a><?php
+            }
+            ?>
+             
             </div>
-	</div>
+         </div>
+       </div>
+      </div>
+    </div>
+  </div>
 </div>
+
+<?php
+require_once 'modal.php';
+?>

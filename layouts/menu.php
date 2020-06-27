@@ -724,7 +724,13 @@ if($menuModulo==0){
                     <span class="sidebar-mini">PSR</span>
                     <span class="sidebar-normal">Plan de Cuentas Solicitud de Recursos</span>
                   </a>
-                </li>   
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listInstanciasEnvio">
+                    <span class="sidebar-mini">IE</span>
+                    <span class="sidebar-normal">Instancias De Envio (Correo)</span>
+                  </a>
+                </li>    
               </ul>
             </div>
           </li>    

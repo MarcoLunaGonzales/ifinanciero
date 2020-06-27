@@ -301,7 +301,7 @@
             "order": false,
             "paging":   false,
             "info":     false,          
-            "scrollY":        "200px",
+            "scrollY":        "400px",
             "scrollCollapse": true
         });
 
@@ -309,10 +309,6 @@
            $($.fn.dataTable.tables(true)).DataTable()
               .columns.adjust();
         });
-
-
-
-
         if ($('#cuenta_auto').length) {
           autocompletar("cuenta_auto","cuenta_auto_id",array_cuenta);
         }

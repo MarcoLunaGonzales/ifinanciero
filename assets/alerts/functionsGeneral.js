@@ -2858,8 +2858,11 @@ function guardarSimulacionServicio(){
           iniciarCargaAjax();
         },
         success:  function (resp) {
-         // alert(resp);
           detectarCargaAjax();
+          if(resp=="ERROR"){
+           Swal.fire('Informativo!','Ocurrio un error!','warning'); 
+          }else{
+          //  $("#mensaje").html(resp);
          if(!($("#codigo_servicioibnorca").length)){
             alerts.showSwal('success-message','simulaciones_servicios/registerSimulacion.php?cod='+resp);
           }else{
@@ -2868,6 +2871,9 @@ function guardarSimulacionServicio(){
 
             alerts.showSwal('success-message','simulaciones_servicios/registerSimulacion.php?cod='+resp+'&q='+idServicio+'&s='+s+'&u='+u);
           }
+          }
+         // alert(resp);
+          
          
         }
     });
@@ -2894,6 +2900,9 @@ function guardarSimulacionServicio(){
         },
         success:  function (resp) {
           detectarCargaAjax();
+          if(resp=="ERROR"){
+           Swal.fire('Informativo!','Ocurrio un error!','warning'); 
+          }else{
          if(!($("#codigo_servicioibnorca").length)){
             alerts.showSwal('success-message','simulaciones_servicios/registerSimulacion.php?cod='+resp);
           }else{
@@ -2903,6 +2912,9 @@ function guardarSimulacionServicio(){
               alerts.showSwal('success-message','simulaciones_servicios/registerSimulacion.php?cod='+resp+'&q='+idServicio+'&u='+idPerfil);
             }            
           }
+            
+          }
+          
         }
     });
   }
@@ -8026,6 +8038,16 @@ function cambiarDivPlantilla(div,div2,div3){
       $("#"+div3).addClass("d-none");
       $("#button_"+div3).removeClass("fondo-boton-active");  
     }
+  if(($("#"+div).hasClass("d-none"))){
+    $("#"+div).removeClass("d-none");
+    $("#button_"+div).addClass("fondo-boton-active");
+  }
+}
+function cambiarDosDivPantalla(div,div2){
+  if(!($("#"+div2).hasClass("d-none"))){
+    $("#"+div2).addClass("d-none");  
+    $("#button_"+div2).removeClass("fondo-boton-active"); 
+  }
   if(($("#"+div).hasClass("d-none"))){
     $("#"+div).removeClass("d-none");
     $("#button_"+div).addClass("fondo-boton-active");
@@ -14485,7 +14507,6 @@ function generarArchivoTxtVariosAjax(){
        reader.readAsText(blob);
       }
     };
-
     xhr.send();
 }
 
@@ -14624,3 +14645,13 @@ function botonBuscarLibretaBancariaDetalle(){
   }
   ajax.send(null);
 }
+
+$(document).ready(function() {
+  $(".csp").each(function(){
+    var cantidad =  $(this).attr("colspan");
+    //alert(cantidad);
+    for (var i = 1; i < parseInt(cantidad); i++) {
+       $(this).after("<td class='d-none'></td>");
+    };
+   });
+});

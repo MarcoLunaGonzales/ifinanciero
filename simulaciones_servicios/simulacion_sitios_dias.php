@@ -252,6 +252,7 @@ for ($an=0; $an<=$anioGeneral; $an++) {
   }
 
 ?>
+
 <div class="cargar">
   <div class="div-loading text-center">
      <h4 class="text-warning font-weight-bold">Procesando Datos</h4>
@@ -302,8 +303,5 @@ for ($an=0; $an<=$anioGeneral; $an++) {
   </div>
 </div>   
 <script>
-
-$(document).ready(function() {
-    listarAtributo();
-});
+listarAtributo();
 </script>

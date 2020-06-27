@@ -46,13 +46,11 @@ $stmt->bindColumn('cod_ebisalote', $cod_ebisa);
                     <table class="table table-condesed small" id="tablePaginator">
                       <thead>
                         <tr style="background:#21618C; color:#fff;">
+                          <th>Descripción</th>
                           <th>Proveedor</th>
-                          <th>Detalle</th>
                           <th>Fecha Pago</th>
                           <th>Fecha Sol.</th>
-                          <th># Sol.</th>
                           <th>Oficina</th>
-                          <th>Observaciones</th>
                           <th>Estado</th>
                           <th class="text-right" width="20%">Actions</th>
                         </tr>
@@ -61,7 +59,7 @@ $stmt->bindColumn('cod_ebisalote', $cod_ebisa);
 <?php
             $index=1;
                         while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
-                          $datosArray=obtenerDatosProveedoresPagoDetalle($codigo);
+                          $datosArray=obtenerDatosProveedoresPagoDetalleLote($codigo);
                           $descripcion=obtenerGlosaComprobante($codComprobante);
                           if(strlen($descripcion)>50){
                             $descripcion=substr($descripcion, 0, 50)."...";
@@ -88,17 +86,45 @@ $stmt->bindColumn('cod_ebisalote', $cod_ebisa);
                           }
 ?>
                         <tr>
+                          <td><?=$observaciones?></td>
                           <td><?=$datosArray[0]?></td>
-                          <td><?=$datosArray[1]?></td>
-                          <!--<td><?=$descripcion?></td>-->
                           <td><?=strftime('%d/%m/%Y',strtotime($fecha));?></td>
                           <td><?=$datosArray[2]?></td>
-                          <td><div class="btn-group"><?=$datosArray[3]?></div></td>
                           <td><?=$datosArray[4]?></td>
-                          <td><?=$observaciones;?></td>
                           <td class="text-muted"><?=$estado?></td>
                           <td class="td-actions text-right">
                             <?php 
+                            if($cod_ebisa==0){
+                              ?>
+                               <div class="btn-group dropdown">
+                                     <button type="button" class="btn btn-info dropdown-toggle" title="Archivo TXT" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                       <i class="material-icons">note</i>
+                                     </button>
+                                    <div class="dropdown-menu">
+                                             <a href="<?=$urlGenerarEbisaLote?>?cod=<?=$codigo?>&a=0" class="dropdown-item">
+                                                 <i class="material-icons text-dark">note</i> Descargar Archivo
+                                             </a>
+                                             <a href="<?=$urlGenerarEbisaLote;?>?cod=<?=$codigo;?>&a=1" class="dropdown-item">
+                                                 <i class="material-icons text-success">offline_pin</i> Aprobar Ebisa
+                                             </a> 
+                                    </div>
+                                  </div>   
+                              <?php  
+                            }else{
+                              ?>
+                               <div class="btn-group dropdown">
+                                     <button type="button" class="btn <?=$btnEstado?> dropdown-toggle" title="Archivo TXT" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                       <i class="material-icons">offline_pin</i>
+                                     </button>
+                                    <div class="dropdown-menu">
+                                             <a href="<?=$urlGenerarEbisaLote?>?cod=<?=$codigo?>&a=0" class="dropdown-item">
+                                                 <i class="material-icons text-dark">note</i> Descargar Archivo
+                                             </a>
+                                    </div>
+                                  </div>   
+                              <?php 
+                             }
+
                             if($codComprobante!=0){
                               ?>
                                <div class="btn-group dropdown">
@@ -131,7 +157,7 @@ $stmt->bindColumn('cod_ebisalote', $cod_ebisa);
                               </button>
                               <div class="dropdown-menu">
                                 <a href="<?=$urlListPago?>&codigo=<?=$codigo?>" class="dropdown-item">
-                                       <i class="material-icons">attach_money</i> Lista Pagos 
+                                       <i class="material-icons">list</i> Lista Pagos 
                                     </a>
                                 <?php 
                                 if($codEstado!=2){
@@ -141,22 +167,11 @@ $stmt->bindColumn('cod_ebisalote', $cod_ebisa);
                                     </a><?php 
                                   }else{
                                     if($codEstado==3){
-                                      if($cod_ebisa!=0){
                                         ?>
                                        <a href="#" onclick="alerts.showSwal('warning-message-crear-comprobante','<?=$urlGenerarComprobanteLote?>?cod=<?=$codigo?>')" class="dropdown-item">
                                        <i class="material-icons text-success">attach_money</i> Generar Comprobante Lote
-                                      </a>
-                                      <a href="<?=$urlGenerarEbisaLote?>?cod=<?=$codigo?>" class="dropdown-item">
-                                       <i class="material-icons text-muted">note</i> Descargar Archivo TXT Lote
-                                      </a>  
-                                        <?php
-                                      }else{
-                                        ?>
-                                       <a href="<?=$urlGenerarEbisaLote?>?cod=<?=$codigo?>" class="dropdown-item">
-                                       <i class="material-icons text-muted">note</i> Generar Archivo TXT Lote
                                       </a> 
                                         <?php
-                                      }
                                     }else{
                                       if($codEstado==4){
                                         ?><a href="<?=$urlEdit2Lote?>?cod=<?=$codigo?>&estado=1&admin=0" class="dropdown-item">
@@ -187,7 +202,7 @@ $stmt->bindColumn('cod_ebisalote', $cod_ebisa);
               </div>
               <div class="card-footer fixed-bottom">
               
-                <a href="#" onclick="javascript:window.open('<?=$urlRegisterLote;?>')" class="btn btn-primary"><i class="material-icons">add</i> Nuevon Pago por Lotes</a>
+                <a href="#" onclick="javascript:window.open('<?=$urlRegisterLote;?>')" class="btn btn-primary"><i class="material-icons">add</i> Nuevo Pago por Lotes</a>
                 <!--<a href="#" onclick="javascript:window.open('<?=$urlRegisterLote;?>')" class="btn btn-primary"><i class="material-icons">view_comfy</i> Pagos Por Lotes</a>-->
                 <!--<a href="#" onclick="nuevoArchivoTxtPagoLote()" class="<?=$buttonNormal;?>">Generar Archivo TXT</a>-->
               </div>      
