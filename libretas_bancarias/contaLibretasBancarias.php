@@ -34,7 +34,7 @@ $fechaHasta2=$y."-12-31";
         <div class="card">
           <div class="card-header <?=$colorCard;?> card-header-text">
           <div class="card-text">
-            <h4 class="card-title">Contabilización Libretas Bancarias</h4>
+            <h4 class="card-title">DEPOSITOS NO FACTURADOS</h4>
           </div>
           </div>
           <div class="card-body ">

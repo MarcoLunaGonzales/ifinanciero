@@ -555,8 +555,8 @@ if($menuModulo==0){
                 </li>
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=contabilizarLibretasBancarias">
-                    <span class="sidebar-mini"> CL </span>
-                    <span class="sidebar-normal"> Contabilizar Libretas</span>
+                    <span class="sidebar-mini"> DNF </span>
+                    <span class="sidebar-normal"> Depositos No Facturados</span>
                   </a>
                 </li>
                 <!--li class="nav-item ">

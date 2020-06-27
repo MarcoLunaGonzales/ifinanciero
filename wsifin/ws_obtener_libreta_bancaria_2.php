@@ -95,33 +95,28 @@ FROM libretas_bancariasdetalle ce where ce.cod_libretabancaria=$codigoLib and  c
            $datosDetalle[$index]['Hora']=strftime('%H:%M:%S',strtotime($rowLibDetalle['fecha_hora']));
            $datosDetalle[$index]['FechaHoraCompleta']=$datosDetalle[$index]['Fecha']." ".$datosDetalle[$index]['Hora'];
            $datosDetalle[$index]['monto']=$rowLibDetalle['monto'];
-           $datosDetalle[$index]['CodEstado']=$rowLibDetalle['cod_estado'];
-           $datosDetalle[$index]['DetalleFacturas']=$rowLibDetalle['cod_factura'];
-           /*$datosDetalle[$index]['FechaFactura']=null;
+           $datosDetalle[$index]['CodFactura']=$rowLibDetalle['cod_factura'];
+
+           $datosDetalle[$index]['FechaFactura']=null;
            $datosDetalle[$index]['NumeroFactura']=null;
            $datosDetalle[$index]['NitFactura']=null;
            $datosDetalle[$index]['RSFactura']=null;
            $datosDetalle[$index]['DetalleFactura']=null;
-           $datosDetalle[$index]['MontoFactura']=null;*/
+           $datosDetalle[$index]['MontoFactura']=null;
+
            if($rowLibDetalle['cod_factura']!=""){
-           $sqlFacturaLibreta="SELECT codigo,cod_estadofactura FROM facturas_venta where cod_libretabancariadetalle=".$rowLibDetalle['codigo'];
-           $stmtFacLibreta = $dbh->prepare($sqlFacturaLibreta);
-           $stmtFacLibreta->execute();
-           while ($rowFacLib = $stmtFacLibreta->fetch(PDO::FETCH_ASSOC)) {
-              if($rowFacLib['cod_estadofactura']==1){
-               $datosFacturas=obtenerDatosFacturaVenta($rowFacLib['codigo']);
-               $datosDetalleFac[$index]['FechaFactura']=strftime('%d/%m/%Y',strtotime($datosFacturas[0]));
-               $datosDetalleFac[$index]['NumeroFactura']=$datosFacturas[1];
-               $datosDetalleFac[$index]['NitFactura']=$datosFacturas[2];
-               $datosDetalleFac[$index]['RSFactura']=$datosFacturas[3];
-               $datosDetalleFac[$index]['DetalleFactura']=$datosFacturas[4];
-               $datosDetalleFac[$index]['MontoFactura']=number_format($datosFacturas[5],2,".","");
-              } 
-            }
-            $datosDetalle[$index]['DetalleFacturas']=$datosDetalleFac; 
-           }else{
-            $datosDetalle[$index]['DetalleFacturas']=null;
-           }  
+             if($rowLibDetalle['estado_factura']==1){
+               $datosFacturas=obtenerDatosFacturaVenta($rowLibDetalle['cod_factura']);
+               $datosDetalle[$index]['FechaFactura']=strftime('%d/%m/%Y',strtotime($datosFacturas[0]));
+               $datosDetalle[$index]['NumeroFactura']=$datosFacturas[1];
+               $datosDetalle[$index]['NitFactura']=$datosFacturas[2];
+               $datosDetalle[$index]['RSFactura']=$datosFacturas[3];
+               $datosDetalle[$index]['DetalleFactura']=$datosFacturas[4];
+               $datosDetalle[$index]['MontoFactura']=number_format($datosFacturas[5],2,".","");
+              }else{
+                $datosDetalle[$index]['CodFactura']=null;
+              }
+           }   
            $index++;    
        }
      }

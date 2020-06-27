@@ -13,7 +13,7 @@ $sKey = "89i6u32v7xda12jf96jgi30lh";
 		// abrimos la sesión cURL
 		$ch = curl_init();
 		// definimos la URL a la que hacemos la petición
-		curl_setopt($ch, CURLOPT_URL,$direccion."ws_obtener_libreta_bancaria_2.php"); 
+		curl_setopt($ch, CURLOPT_URL,$direccion."ws_obtener_libreta_bancaria.php"); 
 		// indicamos el tipo de petición: POST
 		curl_setopt($ch, CURLOPT_POST, TRUE);
 		// definimos cada uno de los parámetros

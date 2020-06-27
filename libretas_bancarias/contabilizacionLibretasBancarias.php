@@ -52,7 +52,7 @@ if($filtro==1){
                   <div class="card-icon bg-blanco">
                     <img class="" width="40" height="40" src="../assets/img/logoibnorca.png">
                   </div>           
-                   <h4 class="card-title text-center">LIBRETAS BANCARIAS SIN FACTURAS</h4>
+                   <h4 class="card-title text-center">DEPOSITOS NO FACTURADOS</h4>
                    <!--<div class="float-right col-sm-2"><h6 class="card-title">Exportar como</h6></div>-->
                 </div>
                 <?php
@@ -61,7 +61,7 @@ if($filtro==1){
 
               </div>
               <div class="card-footer fixed-bottom">
-                  <button type="submit" class="btn btn-primary">CONTABILIZAR</button>
+                  <button type="submit" class="btn btn-primary">GENERAR COMPROBANTE</button>
                   <a href="#" class="btn btn-danger">VOLVER</a>  
               </div>
             </form>
