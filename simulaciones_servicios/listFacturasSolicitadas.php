@@ -79,13 +79,13 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                             <th><small>#Sol.</small></th>
                             <th><small>Responsable</small></th>
                             <th><small>Codigo<br>Servicio</small></th>                            
-                            <th><small>Fecha<br>Registro</small></th>                            
-                            <th style="color:#FF0000;"><small>#Fact.</small></th>                            
-                            <th><small>Importe<br>(BOB)</small></th>  
-                            <th><small>Tipo<br>Pago</small></th>
+                            <th><small>Fecha<br>Registro</small></th>
+                            <th><small>Importe<br>(BOB)</small></th>                              
                             <th width="15%"><small>Razón Social</small></th>
                             <th width="35%"><small>Concepto</small></th>                            
                             <th width="15%"><small>Observaciones</small></th>
+                            <th style="color:#ff0000;"><small>#Fact</small></th>
+                            <th style="color:#ff0000;"><small>Forma<br>Pago</small></th>
                             <th class="text-right"><small>Actions</small></th>
                           </tr>
                         </thead>
@@ -146,14 +146,21 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                             }
 
                             //sacamos monto total de la factura para ver si es de tipo factura por pagos
-                            $sqlMontos="SELECT codigo,importe,nro_factura from facturas_venta where cod_solicitudfacturacion=$codigo_facturacion and cod_estadofactura=1 ORDER BY codigo desc";
+                            $sqlMontos="SELECT codigo,importe,nro_factura,cod_estadofactura from facturas_venta where cod_solicitudfacturacion=$codigo_facturacion and cod_estadofactura in (1,4) ORDER BY codigo desc";
                             // echo $sqlMontos;
                             $stmtFactMontoTotal = $dbh->prepare($sqlMontos);
                             $stmtFactMontoTotal->execute();
-                            $importe_fact_x=0;$cont_facturas=0;$cadenaFacturas="";$cadenaCodFacturas="";
+                            $importe_fact_x=0;$cont_facturas=0;$cadenaFacturas="";$cadenaFacturasM="";$cadenaCodFacturas="";
                             while ($row_montos = $stmtFactMontoTotal->fetch()){
+                              $cod_estadofactura=$row_montos['cod_estadofactura'];
+                              if($cod_estadofactura==4){
+                                $btnEstado="btn-warning";
+                                $estado="FACTURA MANUAL";
+                                $cadenaFacturasM.="FM".$row_montos['nro_factura'].",";
+                              }else{
+                                $cadenaFacturas.="F".$row_montos['nro_factura'].",";  
+                              }
                               $importe_fact_x+=$row_montos['importe'];
-                              $cadenaFacturas.="F".$row_montos['nro_factura']." - ";
                               $cadenaCodFacturas.=$row_montos['codigo'].",";
                               $cont_facturas++;
                             }                       
@@ -163,11 +170,15 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                             $stmtDetalleSol->bindColumn('cantidad', $cantidad);  
                             $stmtDetalleSol->bindColumn('precio', $precio);     
                             $stmtDetalleSol->bindColumn('descripcion_alterna', $descripcion_alterna);                
-                                                                                    
-                            $concepto_contabilizacion=$codigo_alterno." - ";
+                            if($tipo_solicitud==2 || $tipo_solicitud==6 || $tipo_solicitud==7){
+                              $concepto_contabilizacion="";
+                            }else{
+                              $concepto_contabilizacion=$codigo_alterno." - ";  
+                            }
                             while ($row_det = $stmtDetalleSol->fetch()){
                               $precio_natural=$precio/$cantidad;
-                              $concepto_contabilizacion.=$descripcion_alterna." / F ".$nro_fact_x." / ".$razon_social."<br>\n";
+                              // $concepto_contabilizacion.=$descripcion_alterna." / F ".$nro_fact_x." / ".$razon_social."<br>\n";
+                              $concepto_contabilizacion.=$descripcion_alterna." / ".trim($cadenaFacturas,',').",".trim($cadenaFacturasM,",")." / ".$razon_social."<br>\n";
                               $concepto_contabilizacion.="Cantidad: ".$cantidad." * ".formatNumberDec($precio_natural)." = ".formatNumberDec($precio)."<br>\n";
                             }
                             $concepto_contabilizacion = (substr($concepto_contabilizacion, 0, 100))."..."; //limite de string
@@ -246,10 +257,11 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                             // $stringCabecera=$nombre_uo."##".$nombre_area."##".$nombre_simulacion."##".$name_area_simulacion."##".$fecha_registro."##".$fecha_solicitudfactura."##".$nit."##".$razon_social;
                             
 
-                            if($cont_facturas>1){                              
-                              $estado="FACTURA <br>PARCIAL";
-                              $nro_fact_x=trim($cadenaFacturas,' - ');
-                            }
+                            if($cont_facturas>1){      
+                                $estado="FACTURA PARCIAL";
+                                $nro_fact_x=trim($cadenaFacturas,',');
+                              }
+                              $cadenaFacturasM=trim($cadenaFacturasM,',');
 
                           ?>
                           <tr>
@@ -259,13 +271,12 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                             <td><small><?=$responsable;?></small></td>
                             <td><small><?=$codigo_alterno?></small></td>
                             <td><small><?=$fecha_registro;?></small></td>
-                            <td style="color:#cc4545;"><small><?=$nro_fact_x;?></small></td>                             
-                            <td class="text-right"><small><?=formatNumberDec($sumaTotalImporte);?></small></td>
-                            <td class="text-left" style="color:#ff0000;"><small><small><?=$nombre_tipopago;?></small></small></td>
+                            <td class="text-right"><small><?=formatNumberDec($sumaTotalImporte);?></small></td>                            
                             <td><small><small><?=$razon_social;?></small></small></td>
                             <td><small><small><?=$concepto_contabilizacion?></small></small></td>
-                            <!-- <td><?=$label?><small><?=$estado;?></small></span></td> -->
                             <td><button class="btn btn-danger btn-sm btn-link" style="padding:0;"><small><?=$obs_devolucion;?></small></button></td>
+                            <td style="color:#298A08;"><small><?=$nro_fact_x;?><br><span style="color:#DF0101;"><?=$cadenaFacturasM;?></span></small></td>
+                            <td class="text-left" style="color:#ff0000;"><small><small><?=$nombre_tipopago;?></small></small></td>
                             <td class="td-actions text-right">                              
                               <button class="btn <?=$btnEstado?> btn-sm btn-link"><small><?=$estado;?></small></button><br>
                               <?php                              
@@ -300,7 +311,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                             if(isset($_GET['q'])){
                                               if($obs_devolucion==null || $obs_devolucion==''){//cuado se hace el rechazo de la fac y volvemos a enviar
                                                 ?>                                             
-                                                <a title="Enviar a Regional(En Revisión)" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=6&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>' class="btn btn-default">
+                                                <a title="Enviar a Regional(En Revisión)" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=6&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>')" href='#' class="btn btn-default">
                                                  <i class="material-icons">send</i>
                                                </a>
                                                 <?php 
@@ -313,7 +324,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                             }else{
                                               if($obs_devolucion==null || $obs_devolucion==''){//cuado se hace el rechazo de la fac y volvemos a enviar
                                                 ?>                                             
-                                                <a title="Enviar a Regional(En Revisión)" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=6&admin=0'  class="btn btn-default">
+                                                <a title="Enviar a Regional(En Revisión)" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=6&admin=0')" href='#'  class="btn btn-default">
                                                    <i class="material-icons">send</i>
                                                 </a>
                                                 <?php 
@@ -329,7 +340,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                             if(isset($_GET['q'])){ 
                                               if($obs_devolucion==null || $obs_devolucion==''){//cuado se hace el rechazo de la fac y volvemos a enviar                                              
                                                 ?>                                             
-                                                <a title="Enviar a contabilidad(Revisado)" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=4&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>' class="btn btn-default">
+                                                <a title="Enviar a contabilidad(Revisado)" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=4&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>')" href='#' class="btn btn-default">
                                                  <i class="material-icons">send</i>
                                                </a>
                                                 <?php 
@@ -342,7 +353,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                             }else{
                                               if($obs_devolucion==null || $obs_devolucion==''){//cuado se hace el rechazo de la fac y volvemos a enviar                                              
                                                 ?>                                             
-                                                <a title="Enviar a contabilidad(Revisado)" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=4&admin=0'  class="btn btn-default">
+                                                <a title="Enviar a contabilidad(Revisado)" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=4&admin=0')" href='#'  class="btn btn-default">
                                                    <i class="material-icons">send</i>
                                                 </a>                                              
                                                 <?php 
@@ -355,8 +366,6 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                             } 
 
                                           }
-
-
                                           if(isset($_GET['q'])){?>
                                             <a title="Editar Solicitud Facturación" href='<?=$urlEditSolicitudfactura;?>&codigo_s=<?=$codigo_facturacion?>&q=<?=$q?>&v=<?=$v?>&s=<?=$s?>&u=<?=$u?>' class="btn btn-success">
                                               <i class="material-icons"><?=$iconEdit;?></i>

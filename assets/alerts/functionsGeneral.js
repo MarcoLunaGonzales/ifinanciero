@@ -9181,7 +9181,7 @@ function calcularTotalFilaServicio2Costos(){
   var comprobante_auxiliar=0;
   for (var i=1;i<=(total-1);i++){          
     var importe_a_pagar=$("#importe_a_pagar"+i).val();
-    var importe=$("#importe"+i).val();
+    var importe=$("#modal_importe"+i).val();
     var modal_importe_pagado_dos_a=$("#modal_importe_pagado_dos_a"+i).val();
     // alert(importe+"-"+modal_importe_pagado_dos_a);
     var saldo=parseFloat(importe)-parseFloat(modal_importe_pagado_dos_a);
@@ -9204,7 +9204,7 @@ function calcularTotalFilaServicio2Costos(){
         document.getElementById("cod_serv_tiposerv_a"+i).value=cod_serv_tiposerv;      
         document.getElementById("servicio_a"+i).value=servicio;
         document.getElementById("cantidad_a"+i).value=cantidad;
-        document.getElementById("importe_a"+i).value=importe;              
+        document.getElementById("importe_a"+i).value=importe;
       }else{ document.getElementById("servicio_a"+i).value="";}  
     }
     
@@ -12103,57 +12103,64 @@ function botonBuscarNormasSolfac(){
   ajax.send(null)
 }
 function botonBuscarEstudiantesCapacitacion(){
-  iniciarCargaAjax();
+  // iniciarCargaAjax();
   var valor_ci_cliente=$("#ci").val();    
   var valor_nombre_cliente=$("#nombreCliente").val();   
   var valor_paterno_cliente=$("#paternoCliente").val();   
   var valor_materno_cliente=$("#maternoCliente").val(); 
+  var valor_nombre_curso= $("#nombre_curso").val(); 
+  var valor_fecha_inscripcion=$("#fecha_inscripcion").val(); 
   var q=$("#q").val();   
-  var r=$("#r").val(); 
-  // alert(valor_nombre_cliente+"-"+valor_paterno_cliente+"-"+valor_materno_cliente);
-  ajax=nuevoAjax();
-  if(q!=0){
-    ajax.open('GET', 'simulaciones_costos/ajax_busqueda_estudiantes.php?ci='+valor_ci_cliente+'&nombre='+valor_nombre_cliente+'&paterno='+valor_paterno_cliente+'&materno='+valor_materno_cliente+'&q='+q+'&r='+r,true);
-  }else{
-    ajax.open('GET', 'simulaciones_costos/ajax_busqueda_estudiantes.php?ci='+valor_ci_cliente+'&nombre='+valor_nombre_cliente+'&paterno='+valor_paterno_cliente+'&materno='+valor_materno_cliente,true);  
+  var r=$("#r").val();   
+  var url='index.php?opcion=listFacturasServicios_costos_estudiantes&ci='+valor_ci_cliente+'&nombre='+valor_nombre_cliente+'&paterno='+valor_paterno_cliente+'&materno='+valor_materno_cliente+'&fecha='+valor_fecha_inscripcion+'&nombre_curso='+valor_nombre_curso;
+  if(q!=0){    
+    location.href=url+'&q='+q+'&r='+r;     
+  }else{    
+    location.href=url;     
   }
-  ajax.onreadystatechange=function() {
-    if (ajax.readyState==4) {
-      var contenedor=$("#contenedor_items_estudiantes");
-      contenedor.html(ajax.responseText);
-      $("#modalBuscador").modal("hide");
-      detectarCargaAjax();
-    }
-  }
-  ajax.send(null)
 }
+function itemsSeleccionados_capacitacion_estudiantes(){  
+  var sumal=0;  
+  var total=$("#total_items").val();
+  var contador_auxiliar=0;
+  // alert(total);
+  for (var i=1;i<=(total-1);i++){              
+    var check=document.getElementById("modal_check_g"+i).checked;
+
+    if(check) {//BUSACMOS LOS CHECK ACTIVOS
+      contador_auxiliar=contador_auxiliar+1;        
+      //sacamos los datos de los items que se activaron
+      var CiAlumno = document.getElementById("CiAlumno"+i).value;      
+      var IdCurso = document.getElementById("IdCurso"+i).value;
+      // aqui se guardan los items activados
+      document.getElementById("CiAlumno_a"+i).value=CiAlumno;
+      document.getElementById("IdCurso_a"+i).value=IdCurso;      
+    }else{
+      document.getElementById("CiAlumno_a"+i).value='';
+      document.getElementById("IdCurso_a"+i).value='';      
+    }    
+  } 
+  // $("#contador_auxiliar").val(contador_auxiliar);
+  document.getElementById("contador_auxiliar").value=contador_auxiliar;//cantidad de items activados
+}
+
+
+
 function botonBuscarEmpresasCapacitacion(){
   iniciarCargaAjax();
+
   var valor_cod_empresa=$("#cod_empresa").val();    
   var valor_glosa=$("#glosa").val();   
   var q=$("#q").val();   
   var r=$("#r").val(); 
 
-  // alert(valor_nombre_cliente+"-"+valor_paterno_cliente+"-"+valor_materno_cliente);
-  ajax=nuevoAjax();
-  if(q!=0){
-    ajax.open('GET', 'simulaciones_costos/ajax_busqueda_empresas.php?cod_empresa='+valor_cod_empresa+'&glosa='+valor_glosa+'&q='+q+'&r='+r,true);
-  }else{
-    ajax.open('GET', 'simulaciones_costos/ajax_busqueda_empresas.php?cod_empresa='+valor_cod_empresa+'&glosa='+valor_glosa,true);
+  var url='index.php?opcion=listFacturasServicios_costos_empresas&cod_empresa='+valor_cod_empresa+'&glosa='+valor_glosa;
+   if(q!=0){    
+    location.href=url+'&q='+q+'&r='+r;     
+  }else{    
+    location.href=url;     
   }
-  
-  ajax.onreadystatechange=function() {
-    if (ajax.readyState==4) {
-      var contenedor=$("#contenedor_items_empresas");
-      contenedor.html(ajax.responseText);
-      $("#modalBuscador").modal("hide");
-      detectarCargaAjax();
-    }
-  }
-  ajax.send(null)
 }
-
-
 
 function actualizarRegistroNormas(){
     var parametros={"codigo":"none"};
@@ -12187,18 +12194,20 @@ function itemsSeleccionados_ventaNormas(){
       var idVentaNormas = document.getElementById("idVentaNormas"+i).value;      
       // aqui se guardan los items activados
       document.getElementById("idVentaNormas_a"+i).value=idVentaNormas;
-    }    
+    }else{
+      document.getElementById("idVentaNormas_a"+i).value='';
+    }
   } 
   document.getElementById("comprobante_auxiliar").value=comprobante_auxiliar;//cantidad de items activados
 }
 
 
-function ajaxUnidadorganizacionalAreaNormas(combo){
+function ajaxUnidadorganizacionalAreaNormas(combo,aux){
   var contenedor;
   var codigo_UO=combo.value;
   contenedor = document.getElementById('div_contenedor_area');
   ajax=nuevoAjax();
-  ajax.open('GET', '../solicitud_facturacion_manual/AjaxUnidad_area.php?codigo_UO='+codigo_UO,true);
+  ajax.open('GET', '../solicitud_facturacion_manual/AjaxUnidad_area.php?codigo_UO='+codigo_UO+'&aux='+aux,true);
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
       contenedor.innerHTML = ajax.responseText;
@@ -12209,6 +12218,7 @@ function ajaxUnidadorganizacionalAreaNormas(combo){
 }//unidad_area-cargo
 
 function ajaxTipoPagoContactoPersonal(combo){
+  verificar_dias_credito();
   var cod_cliente=$("#cod_cliente").val();
   var contenedor;
   var cod_tipo=combo.value;
@@ -12218,12 +12228,13 @@ function ajaxTipoPagoContactoPersonal(combo){
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
       contenedor.innerHTML = ajax.responseText;
-      $('.selectpicker').selectpicker(["refresh"]);        
+      $('.selectpicker').selectpicker(["refresh"]);
     }
   }
   ajax.send(null)  
 }
 function ajaxTipoPagoContactoPersonal_normas(combo){
+  verificar_dias_credito();
   var cod_cliente=$("#cod_cliente").val();
   var contenedor;
   var cod_tipo=combo.value;
@@ -12238,6 +12249,17 @@ function ajaxTipoPagoContactoPersonal_normas(combo){
   }
   ajax.send(null)  
 }
+function verificar_dias_credito(){
+  // alert("entre");
+  var tipopago = document.getElementById("cod_tipopago").value; 
+  var cod_defecto_cod_tipo_credito = document.getElementById("cod_defecto_cod_tipo_credito").value;   
+  if(tipopago==cod_defecto_cod_tipo_credito){//comprobamos el primer digito de la cuenta     
+    $(".dias_credito_x").show();    
+  }else{
+    $(".dias_credito_x").hide();
+  }
+}
+
 
 function botonBuscarSolicitudes_conta(){
   var valor_uo=$("#OficinaBusqueda").val();

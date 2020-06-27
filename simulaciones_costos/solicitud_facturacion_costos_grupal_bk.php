@@ -56,10 +56,8 @@ if($fecha!=""){
 if($nombre_curso!=""){
   $sql.=" and pc.Nombre like '%$nombre_curso%'";
 }
-$sql.=" GROUP BY IdCurso,cpe.clIdentificacion Order by pc.Nombre desc";
+$sql.=" GROUP BY IdCurso Order by aa.FechaInscripcion desc";
 // echo $sql;
-
-
 ?>
 <div class="content">
   <div class="container-fluid">
@@ -77,7 +75,7 @@ $sql.=" GROUP BY IdCurso,cpe.clIdentificacion Order by pc.Nombre desc";
             <div class="card-icon">
               <i class="material-icons">polymer</i>
             </div>
-            <h4 class="card-title"><b>Solicitud de Facturación para Capacitación</b></h4>                    
+            <h4 class="card-title"><b>Solicitud de Facturación Grupal para Capacitación</b></h4>                    
             <h4 class="card-title text-center"><b>Estudiantes</b></h4>            
           </div>          
           <div class="card-body">                      
@@ -85,16 +83,15 @@ $sql.=" GROUP BY IdCurso,cpe.clIdentificacion Order by pc.Nombre desc";
               <thead>
                     <tr>
                       <th class="text-center"></th>                          
-                        <th width="5%"><small>CI Alumno</small></th>
+                        <th><small>CI Alumno</small></th>
                         <th><small>Nombre</small></th>
-                        <th width="3%"><small>Precio <br>curso (BOB)</small></th>                            
-                        <th width="3%"><small>Desc. <br>curso(%)</small></th>                              
-                        <th width="3%"><small>Importe <br>curso(BOB)</small></th>                   
-                        <th><small>Código<br>curso</small></th>                   
-                        <th><small>Nombre Curso</small></th>
-                        <th width="5%"><small>Fecha<br>Inscripción</small></th>
-                        <th width="4%"><small>Estado</small></th>
-                        <th class="text-right" width="5%"><small>Actions</small></th>
+                        <th><small>Precio <br>curso (BOB)</small></th>                            
+                        <th><small>Desc. <br>curso(%)</small></th>                              
+                        <th><small>Importe <br>curso(BOB)</small></th>                   
+                        <th><small>Nombre Curso</small></th>   
+                        <th><small>Fecha Inscripción</small></th>
+                        <th><small>Estado</small></th>
+                        <th class="text-right"><small>Actions</small></th>
                     </tr>
               </thead>
               <tbody>                                
@@ -117,9 +114,6 @@ $sql.=" GROUP BY IdCurso,cpe.clIdentificacion Order by pc.Nombre desc";
                   $stmtIBNO->bindColumn('Nombre', $nombre_mod);                                    
                   $stmtIBNO->bindColumn('FechaInscripcion_x', $FechaInscripcion);
                   while ($rowPre = $stmtIBNO->fetch(PDO::FETCH_ASSOC)){
-                    $codigo_curso=obtenerCodigoExternoCurso($IdCurso);
-
-
                     $monto_pagar=($Costo - ($Costo*$descuento/100) )/$CantidadModulos; //monto a pagar del estudiante 
                     $importe_curso=   $Costo*$descuento/100;//importe curso con desuento
                     $importe_curso= $Costo-$importe_curso;//importe curso con desuento       
@@ -178,19 +172,18 @@ $sql.=" GROUP BY IdCurso,cpe.clIdentificacion Order by pc.Nombre desc";
                       <td class="text-right small"><?=formatNumberDec($Costo) ;?></td>
                       <td class="text-right small"><?=$descuento ;?></td>                          
                       <td class="text-right small"><?=formatNumberDec($importe_curso) ;?></td>              
-                      <td class="text-left small" ><?=$codigo_curso;?></td>
-                      <td class="text-left small" ><?=$nombre_mod;?> / Mod:<?=$CantidadModulos?></td>
+                      <td class="text-left small" ><?=$nombre_mod;?></td>      
                       <td class="text-right small"><?=$FechaInscripcion;?></td>
                       <td><button class="btn <?=$btnEstado?> btn-sm btn-link"><small><?=$estado;?></small></button></td> 
                       <td class="td-actions text-right">
                         <?php
-                          if($sw_aux && $estado!="Pagado<br>total"){
+                          if($sw_aux && $estado!="Pagado<br>total"){                            
                             if(isset($_GET['q'])){ ?>
-                              <a href='<?=$urlregistro_solicitud_facturacion?>&codigo=<?=$CiAlumno?>&cod_simulacion=<?=$codigo_simulacion;?>&IdCurso=<?=$IdCurso;?>&cod_facturacion=0&q=<?=$q?>&r=<?=$r?>' rel="tooltip" class="btn" style="background-color: #0489B1;padding: 3px; font-size:10px;width:23px;height:23px;">
+                              <a href='<?=$urlregistro_solicitud_facturacion?>&codigo=<?=$CiAlumno?>&cod_simulacion=<?=$codigo_simulacion;?>&IdCurso=<?=$IdCurso;?>&cod_facturacion=0&q=<?=$q?>&r=<?=$r?>' rel="tooltip" class="btn" style="background-color: #0489B1;">
                                 <i class="material-icons" title="Solicitar Facturación">receipt</i>
                               </a><?php 
                             }else{ ?>
-                              <a href='<?=$urlregistro_solicitud_facturacion?>&codigo=<?=$CiAlumno?>&cod_simulacion=<?=$codigo_simulacion;?>&IdCurso=<?=$IdCurso;?>&cod_facturacion=0' rel="tooltip" class="btn" style="background-color: #0489B1;padding: 3px; font-size:10px;width:23px;height:23px;">
+                              <a href='<?=$urlregistro_solicitud_facturacion?>&codigo=<?=$CiAlumno?>&cod_simulacion=<?=$codigo_simulacion;?>&IdCurso=<?=$IdCurso;?>&cod_facturacion=0' rel="tooltip" class="btn" style="background-color: #0489B1;">
                                 <i class="material-icons" title="Solicitar Facturación">receipt</i>
                               </a><?php 
                             }
@@ -198,7 +191,8 @@ $sql.=" GROUP BY IdCurso,cpe.clIdentificacion Order by pc.Nombre desc";
                               <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir Solicitud">print</i></a> <?php 
                             }
                           }
-
+                        ?>
+                        <?php
                           if($sw_aux && $estado!="Pagado<br>total"){?>
                             <div class="togglebutton">
                               <label>
@@ -226,12 +220,13 @@ $sql.=" GROUP BY IdCurso,cpe.clIdentificacion Order by pc.Nombre desc";
             </table>         
           </div>
           <div class="card-footer fixed-bottom">
-            <button type="submit" class="btn btn-primary">SOLICITAR FACTURACION GRUPAL</button>
+            
+            <button type="submit" class="btn btn-primary">SOLICITAR FACTURACION</button>
             <?php
             if(isset($_GET['q'])){?>
-              <a href='<?=$urlSolicitudfactura?>&q=<?=$q?>&v=<?=$r?>&u=<?=$r?>&s=<?=$r?>' class="<?=$buttonCancel;?>"><i class="material-icons"  title="Volver Atrás">keyboard_return</i> Volver</a>
+              <a href='<?=$urlListFacturasServicios_costos_estudiantes?>&ci=<?=$ci?>&nombre=<?=$nombre?>&paterno=<?=$paterno?>&materno=<?=$materno?>&fecha=<?=$fecha?>&nombre_curso=<?=$nombre_curso?>&q=<?=$q?>&v=<?=$r?>&u=<?=$r?>&s=<?=$r?>' class="<?=$buttonCancel;?>"><i class="material-icons"  title="Ir A Solicitudes de Facturación">keyboard_return</i> Volver</a>
               <?php }else{?>
-                  <a href='<?=$urlSolicitudfactura?>' class="<?=$buttonCancel;?>"><i class="material-icons"  title="Volver Atrás">keyboard_return</i> Volver</a>                    
+                  <a href='<?=$urlListFacturasServicios_costos_estudiantes?>&ci=<?=$ci?>&nombre=<?=$nombre?>&paterno=<?=$paterno?>&materno=<?=$materno?>&fecha=<?=$fecha?>&nombre_curso=<?=$nombre_curso?>' class="<?=$buttonCancel;?>"><i class="material-icons"  title="Ir A Solicitudes de Facturación">keyboard_return</i> Volver</a>                    
             <?php }                     
               ?> 
           </div>

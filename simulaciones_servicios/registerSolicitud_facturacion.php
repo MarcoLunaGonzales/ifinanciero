@@ -79,6 +79,7 @@ $contadorRegistros=0;
 
 $descuento_cliente=obtenerDescuentoCliente($cod_cliente);
 $cod_defecto_deposito_cuenta=obtenerValorConfiguracion(55);
+$cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
 ?>
 <script>
   numFilas=<?=$contadorRegistros;?>;
@@ -98,6 +99,7 @@ $cod_defecto_deposito_cuenta=obtenerValorConfiguracion(55);
                   }
                   ?> 
                 <input type="hidden" name="cod_defecto_deposito_cuenta" id="cod_defecto_deposito_cuenta" value="<?=$cod_defecto_deposito_cuenta?>"/>
+                <input type="hidden" name="cod_defecto_cod_tipo_credito" id="cod_defecto_cod_tipo_credito" value="<?=$cod_defecto_cod_tipo_credito?>"/>
                 <input type="hidden" name="Codigo_alterno" id="Codigo_alterno" value="<?=$Codigo_alterno;?>"/>  
                 <input type="hidden" name="cod_simulacion" id="cod_simulacion" value="<?=$cod_simulacion;?>"/>
                 <input type="hidden" name="cod_facturacion" id="cod_facturacion" value="<?=$cod_facturacion;?>"/>
@@ -179,7 +181,7 @@ $cod_defecto_deposito_cuenta=obtenerValorConfiguracion(55);
                                                 // $modal_totalmontopre+=$montoPre;
                                                 $montoPre=number_format($montoPre,2,".","");
                                                 //parte del controlador de check
-                                                $sqlControlador="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$cod_simulacion and sf.cod_estado=1 and sfd.cod_claservicio=$codCS and sf.codigo=$cod_facturacion";
+                                                $sqlControlador="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$cod_simulacion and sfd.cod_claservicio=$codCS and sf.codigo=$cod_facturacion";
                                                 // echo $sqlControlador;
                                                 $stmtControlado = $dbh->prepare($sqlControlador);
                                                $stmtControlado->execute();                                           
@@ -191,7 +193,7 @@ $cod_defecto_deposito_cuenta=obtenerValorConfiguracion(55);
                                                     $descuento_bobX=$rowPre['descuento_bob'];
                                                     $descripcion_alternaX=$rowPre['descripcion_alterna'];
                                                 }
-                                                $sqlControlador2="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$cod_simulacion and sf.cod_estado=1 and sfd.cod_claservicio=$codCS";
+                                                $sqlControlador2="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$cod_simulacion and sfd.cod_claservicio=$codCS";
                                                 // echo $sqlControlador2;
                                                 $stmtControlador2 = $dbh->prepare($sqlControlador2);
                                                 $stmtControlador2->execute();                                           
