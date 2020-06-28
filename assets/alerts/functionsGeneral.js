@@ -14605,7 +14605,21 @@ function abrirLibretaBancaria(datos,direccion,indice){
 
   var contenedor = document.getElementById('contenedor_cabecera_libreta_bancaria');    
   ajax=nuevoAjax();
-  ajax.open('GET', 'simulaciones_servicios/ajax_listado_libreta_bancaria.php?saldo='+saldo+'&razon_social='+razon_social,true);
+  ajax.open('GET', 'simulaciones_servicios/ajax_cabecera_modal_libretaBancaria.php?saldo='+saldo+'&razon_social='+razon_social,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;      
+      $('.selectpicker').selectpicker(["refresh"]);
+      ajax_contenedor_tabla_libretaBancaria(saldo);
+      // detectarCargaAjax();      
+    }
+  }
+  ajax.send(null);
+}
+function ajax_contenedor_tabla_libretaBancaria(saldo){
+  var contenedor = document.getElementById('contenedor_tabla_libreta_bancaria');    
+  ajax=nuevoAjax();
+  ajax.open('GET', 'simulaciones_servicios/ajax_listado_libreta_bancaria.php?saldo='+saldo,true);
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
       contenedor.innerHTML = ajax.responseText;      

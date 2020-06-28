@@ -82,8 +82,26 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
 
             }else{
                 $fechaFactura_x=date('Y-m-d H:i:s');
-                //generamos el comprobante
-                $cod_comprobante=ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_correlativo);
+                    
+                if($CodLibretaDetalle>0){
+                    $cod_libreta=$CodLibretaDetalle;
+                    $estado_libreta=obtenerEstadoLibretaBancaria($cod_libreta);
+                    if($estado==0 || $estado==1){
+                        $cod_cuenta=obtenerCuentaLibretaBancaria($cod_libreta);
+                        //generamos el comprobante estado 1 es que va con cod_cuenta para matar o 0 será el por defecto
+                        $cod_comprobante=ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_correlativo,1,$cod_cuenta);                            
+                    }elseif($estado==3){
+                        $cod_contracuenta=obtenerContraCuentaLibretaBancaria($cod_libreta);
+                        //generamos el comprobante
+                        $cod_comprobante=ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_correlativo,1,$cod_contracuenta);
+                    }else{
+                        //generamos el comprobante
+                        $cod_comprobante=ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_correlativo,0,0);    
+                    }
+                }else{
+                    //generamos el comprobante
+                    $cod_comprobante=ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_correlativo,0,0);
+                }
                 if($cod_comprobante==null || $cod_comprobante==''){
                     return "12###";
                 }else{
@@ -118,6 +136,10 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
                             $stmtUpdateLibreta = $dbh->prepare($sqlUpdateLibreta);                            
                             $stmtUpdateLibreta->execute();
                             $number_of_rows  = $stmtUpdateLibreta->rowCount();
+
+                            $sqlUpdateFac="UPDATE facturas_venta SET cod_libretabancariadetalle=$cod_libreta where codigo=$cod_facturaVenta";
+                            $stmtUpdateFac = $dbh->prepare($sqlUpdateFac);
+                            $flagSuccessFac=$stmtUpdateFac->execute(); 
                             
                             if($number_of_rows==0 || $number_of_rows==''){
                                 $sqldeleteCabeceraFactura="DELETE from facturas_venta where codigo=$cod_facturaVenta";

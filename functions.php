@@ -2454,7 +2454,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
 
 function obtenerCorrelativoSolicitud(){
   $dbh = new Conexion(); 
-  $sql="SELECT IFNULL(max(c.nro_correlativo)+1,7000)as correlativo from solicitudes_facturacion c where c.cod_estado=1";
+  $sql="SELECT IFNULL(max(c.nro_correlativo)+1,7000)as correlativo from solicitudes_facturacion c";
   //echo $sql;
   $stmt = $dbh->prepare($sql);
   $stmt->execute();
@@ -7280,6 +7280,41 @@ function obtenerDescripcionestudianteGrupal($IdCurso,$ci_estudiante,$codCS){
       $valor=$row['descripcion_alterna'];
    }
    return($valor);
+}
+
+function obtenerEstadoLibretaBancaria($cod_libreta){
+  $dbh = new Conexion();
+  $valor="";
+  $stmtLibretasDet = $dbh->prepare("SELECT lbd.cod_estado from  libretas_bancariasdetalle lbd where  lbd.codigo=$cod_libreta");
+  $stmtLibretasDet->execute();
+  $resultLibretaDet = $stmtLibretasDet->fetch();   
+  $cod_estado= $resultLibretaDet['cod_estado'];    
+  return($valor);
+}
+function obtenerCuentaLibretaBancaria($cod_libreta){
+  $dbh = new Conexion();
+  $valor="";
+  $stmtLibretasDet = $dbh->prepare("SELECT lb.cod_cuenta from  libretas_bancariasdetalle lbd,libretas_bancarias lb where lb.codigo=lbd.cod_libretabancaria and lbd.codigo=$cod_libreta");
+  $stmtLibretasDet->execute();
+  $resultLibretaDet = $stmtLibretasDet->fetch();
+  $valor= $resultLibretaDet['cod_cuenta'];
+  return($valor);
+}
+function obtenerContraCuentaLibretaBancaria($cod_libreta){
+  $dbh = new Conexion();
+  $valor="";
+  $stmtLibretasDet = $dbh->prepare("SELECT lb.cod_contracuenta from  libretas_bancariasdetalle lbd,libretas_bancarias lb where lb.codigo=lbd.cod_libretabancaria and lbd.codigo=$cod_libreta");
+  $stmtLibretasDet->execute();
+  $resultLibretaDet = $stmtLibretasDet->fetch();  
+  $valor= $resultLibretaDet['cod_contracuenta'];
+  return($valor);
+}
+
+function obtener_Saldo_libretabancaria()
+{
+  $var_PHP = "<script> document.writeln(document.getElementById('saldo_x').value); </script>";
+      return $var_PHP;
+
 }
 
 ?>

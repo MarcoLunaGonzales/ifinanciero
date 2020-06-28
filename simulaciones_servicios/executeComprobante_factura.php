@@ -1,6 +1,6 @@
 <?php //ESTADO FINALIZADO
 
-function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$nro_factura){
+function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$nro_factura,$cod_estado,$cod_cuenta_libreta){
 	require_once __DIR__.'/../conexion.php';
 	require_once '../functions.php';
 	require_once '../assets/libraries/CifrasEnLetras.php';
@@ -103,7 +103,14 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$nro_factura){
 				$stmtDetalleUO->bindColumn('monto', $monto_areas);				
 				while ($row_detAreas = $stmtDetalleUO->fetch()) {
 					$monto_areas_uo=$monto_areas_format*$porcentaje_uo/100;
-					$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_areas,0,$cod_uo_areas,$cod_area_areas,0,$monto_areas_uo,$descripcion,$ordenDetalle);					
+					switch ($cod_estado) {
+						case 0://cuenta normal
+							$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_areas,0,$cod_uo_areas,$cod_area_areas,0,$monto_areas_uo,$descripcion,$ordenDetalle);					
+							break;
+						case 1://cuenta de libreta bancaria
+							$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_libreta,0,$cod_uo_areas,$cod_area_areas,0,$monto_areas_uo,$descripcion,$ordenDetalle);					
+							break;						
+					}					
 		            $ordenDetalle++;
 				}
 			}
@@ -115,7 +122,7 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$nro_factura){
 	    return "";
 	}	
 }
-function ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_factura){
+function ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_factura,$cod_estado,$cod_cuenta_libreta){
 	
 	// session_start();
 	try{
@@ -184,7 +191,16 @@ function ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$
 			$monto_areas_format=$monto_total*$porcentaje_pasivo/100;
 			$descripcion=$concepto_contabilizacion;
 			$cod_cuenta_areas=obtenerCodCuentaArea($cod_area_solicitud);
-			$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_areas,0,$cod_uo_solicitud,$cod_area_solicitud,0,$monto_areas_format,$descripcion,$ordenDetalle);			
+			switch ($cod_estado) {
+				case 0://cuenta normal
+					$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_areas,0,$cod_uo_areas,$cod_area_areas,0,$monto_areas_uo,$descripcion,$ordenDetalle);
+					// $flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_areas,0,$cod_uo_areas,$cod_area_areas,0,$monto_areas_uo,$descripcion,$ordenDetalle);					
+					break;
+				case 1://cuenta de libreta bancaria					
+					$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_libreta,0,$cod_uo_areas,$cod_area_areas,0,$monto_areas_uo,$descripcion,$ordenDetalle);
+					// $flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_libreta,0,$cod_uo_areas,$cod_area_areas,0,$monto_areas_uo,$descripcion,$ordenDetalle);					
+					break;						
+			}
             $ordenDetalle++;				
 			return $codComprobante;
 			// header('Location: ../comprobantes/imp.php?comp='.$codComprobante.'&mon=1');

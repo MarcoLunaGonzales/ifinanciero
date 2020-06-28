@@ -199,36 +199,7 @@ try
             $stmtDel->execute();
             //subir archivos al servidor
             //Como el elemento es un arreglos utilizamos foreach para extraer todos los valores
-            $nArchivosCabecera=$_POST["cantidad_archivosadjuntos"];
-            for ($ar=1; $ar <= $nArchivosCabecera ; $ar++) { 
-                if(isset($_POST['codigo_archivo'.$ar])){
-                    if($_FILES['documentos_cabecera'.$ar]["name"]){
-                      $filename = $_FILES['documentos_cabecera'.$ar]["name"]; //Obtenemos el nombre original del archivos
-                      $source = $_FILES['documentos_cabecera'.$ar]["tmp_name"]; //Obtenemos un nombre temporal del archivos    
-                      $directorio = '../assets/archivos-respaldo/archivos_solicitudes_facturacion/SOLFAC-'.$cod_facturacion; //Declaramos una  variable con la ruta donde guardaremos los archivoss
-                      //Validamos si la ruta de destino existe, en caso de no existir la creamos
-                      if(!file_exists($directorio)){
-                                mkdir($directorio, 0777,true) or die("No se puede crear el directorio de extracci&oacute;n");    
-                      }
-                      $target_path = $directorio.'/'.$filename; //Indicamos la ruta de destino, así como el nombre del archivos
-                      //Movemos y validamos que el archivos se haya cargado correctamente
-                      //El primer campo es el origen y el segundo el destino
-                      if(move_uploaded_file($source, $target_path)) { 
-                        echo "Archivo guargado.";
-                        $tipo=$_POST['codigo_archivo'.$ar];
-                        $descripcion=$_POST['nombre_archivo'.$ar];
-                        // $tipoPadre=2708;
-                        $sqlInsert="INSERT INTO archivos_adjuntos_solicitud_facturacion (cod_tipoarchivo,descripcion,direccion_archivo,cod_solicitud_facturacion) 
-                        VALUES ('$tipo','$descripcion','$target_path','$cod_facturacion')";
-                        $stmtInsert = $dbh->prepare($sqlInsert);
-                        $stmtInsert->execute();    
-                        // print_r($sqlInsert);
-                      }else {    
-                          echo "Error al guardar archivo.";
-                      } 
-                    }
-                }
-            }
+            require_once 'insertar_archivosadjuntos.php';
         }
         //enviar propuestas para la actualizacion de ibnorca
          $fechaHoraActual=date("Y-m-d H:i:s");
@@ -398,36 +369,7 @@ try
             // $stmtDel->execute();
             //subir archivos al servidor
             //Como el elemento es un arreglos utilizamos foreach para extraer todos los valores
-            $nArchivosCabecera=$_POST["cantidad_archivosadjuntos"];
-            for ($ar=1; $ar <= $nArchivosCabecera ; $ar++) { 
-                if(isset($_POST['codigo_archivo'.$ar])){
-                    if($_FILES['documentos_cabecera'.$ar]["name"]){
-                      $filename = $_FILES['documentos_cabecera'.$ar]["name"]; //Obtenemos el nombre original del archivos
-                      $source = $_FILES['documentos_cabecera'.$ar]["tmp_name"]; //Obtenemos un nombre temporal del archivos    
-                      $directorio = '../assets/archivos-respaldo/archivos_solicitudes_facturacion/SOLFAC-'.$cod_facturacion; //Declaramos una  variable con la ruta donde guardaremos los archivoss
-                      //Validamos si la ruta de destino existe, en caso de no existir la creamos
-                      if(!file_exists($directorio)){
-                                mkdir($directorio, 0777,true) or die("No se puede crear el directorio de extracci&oacute;n");    
-                      }
-                      $target_path = $directorio.'/'.$filename; //Indicamos la ruta de destino, así como el nombre del archivos
-                      //Movemos y validamos que el archivos se haya cargado correctamente
-                      //El primer campo es el origen y el segundo el destino
-                      if(move_uploaded_file($source, $target_path)) { 
-                        echo "Archivo guargado.";
-                        $tipo=$_POST['codigo_archivo'.$ar];
-                        $descripcion=$_POST['nombre_archivo'.$ar];
-                        // $tipoPadre=2708;
-                        $sqlInsert="INSERT INTO archivos_adjuntos_solicitud_facturacion (cod_tipoarchivo,descripcion,direccion_archivo,cod_solicitud_facturacion) 
-                        VALUES ('$tipo','$descripcion','$target_path','$cod_facturacion')";
-                        $stmtInsert = $dbh->prepare($sqlInsert);
-                        $stmtInsert->execute();    
-                        // print_r($sqlInsert);
-                      }else {    
-                          echo "Error al guardar archivo.";
-                      } 
-                    }
-                }
-            }
+            require_once 'insertar_archivosadjuntos.php';
         }
         if(isset($_POST['usuario_ibnored'])){
           $q=$_POST['usuario_ibnored'];
