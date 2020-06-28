@@ -48,7 +48,7 @@ if($filtro==1){
   $sqlFiltro="and (ce.cod_factura IS NOT NULL or ce.cod_factura!=0)";
 }else{
   if($filtro==2){
-    $sqlFiltro="and (ce.cod_factura IS NULL or ce.cod_factura=0)";
+    $sqlFiltro="";
   }
 }
 ?>
