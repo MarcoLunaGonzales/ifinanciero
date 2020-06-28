@@ -263,6 +263,6 @@ try{
     }
 } catch(PDOException $ex){
     echo "Un error ocurrio".$ex->getMessage();
-    echo "Error : ".$error;
+    echo "Error : ";
 }
 ?>

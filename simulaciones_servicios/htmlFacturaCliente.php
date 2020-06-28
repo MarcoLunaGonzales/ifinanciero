@@ -253,16 +253,16 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
                           if($centavos<10){
                             $centavos="0".$centavos;
                           }
-                          $html.='<br><span class="bold table-title">Son: '.ucfirst(CifrasEnLetras::convertirNumeroEnLetras($entero)).'      '.$centavos.'/100 Bolivianos</span><br>
-                          <span><small><small>Tipo de Pago: '.$tipo_pago.'</small></small></span>
+                          $html.='<span class="bold table-title"><small>Son: '.ucfirst(CifrasEnLetras::convertirNumeroEnLetras($entero)).'      '.$centavos.'/100 Bolivianos</small></span><br>
+                          <span><small><small>Forma de Pago: '.$tipo_pago.'</small></small></span>
                           '; 
                           $html.='</td>
                         <td align="right" style="border-left: hidden" rowspan="2" colspan="2"><b>Total Bs &nbsp;&nbsp;&nbsp;&nbsp;'.formatNumberDec($suma_total).'</b></td>
                     </tr>
                     <tr></tr>
                     <tr>
-                        <td style="border-right: hidden"><b>CÓDIGO DE CONTROL:&nbsp;&nbsp;&nbsp;&nbsp;</b> '.$codigo_control.'</td>
-                        <td align="right" style="border-left: hidden" colspan="2"><b>FECHA LÍMITE DE EMISIÓN:&nbsp;&nbsp;&nbsp;&nbsp;</b>'.$fecha_limite_emision.'</td> 
+                        <td style="border-right: hidden"><small><b>CÓDIGO DE CONTROL:&nbsp;&nbsp;&nbsp;&nbsp;</b> '.$codigo_control.'</small></td>
+                        <td align="right" style="border-left: hidden" colspan="2"><small><b>FECHA LÍMITE DE EMISIÓN:&nbsp;&nbsp;&nbsp;&nbsp;</b>'.$fecha_limite_emision.'</small></td> 
                     </tr>'.
              
             	'</tbody>'.                        
