@@ -12,6 +12,7 @@
                 </div>
                 <div class="card-body">
                     <input type="hidden" class="form-control" name="anio_personal" id="anio_personal" value="-1">
+                    <input type="hidden" class="form-control" name="valor_personal" id="valor_personal" value="0">
                       <div class="row">
                           <label class="col-sm-2 col-form-label">Personal</label>
                            <div class="col-sm-4">                     
@@ -573,13 +574,36 @@
                         }else{
                             if($codAreaX==38){
                               $cantidadSitios=explode(",",$sitiosX);
+                              
                          ?>
                      <div class="row">
                        <!--<label class="col-sm-2 col-form-label">Sitios <small class="text-muted">(<?=count($cantidadSitios)?>)</small></label>-->
                        <div class="col-sm-12">
-                        <div class="float-right">
-                           <button title="Agregar Sitio" type="button" name="add" class="btn btn-warning btn-round btn-fab" onClick="agregarAtributoAjax()"><i class="material-icons">add</i>
+                          <div class="btn-group  float-right">
+                            <button title="Agregar Sitio" type="button" name="add" class="btn btn-sm btn-warning btn-round btn-fab" onClick="agregarAtributoAjax()"><i class="material-icons">add</i>
                             </button>
+                              <button title="Agregar Auditor" type="button" class="btn btn-sm btn-primary btn-round dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="material-icons">add</i> EA
+                              </button>
+                              <div class="dropdown-menu">
+                                <?php 
+                                for ($i=$inicioAnio; $i <= $anioGeneral; $i++) {
+                                  $etapas="Seg ".($i-1);
+                                  if($i==0||$i==1){
+                                        if($i==1){
+                                          $etapas="Et ".($i+1)." / REN"; 
+                                        }else{
+                                             $etapas="Et ".($i+1)."";                                                  
+                                        }
+                                  }
+                                  ?>
+                                  <a href="#" class="dropdown-item" onClick="mostrarNuevoPersonalModal(<?=$i?>,'<?=$etapas?>',1)">
+                                    <?=$etapas?>
+                                 </a>
+                                  <?php
+                                } ?>
+                               </div>
+                           
                         </div>
                         <div class="" style="border-bottom: 1px solid #CACFD2">
                           <div id="productos_div" class="d-none"></div>

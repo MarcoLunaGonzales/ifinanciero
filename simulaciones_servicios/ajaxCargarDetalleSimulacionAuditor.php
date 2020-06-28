@@ -35,7 +35,7 @@ if(isset($_GET["cod_simulacion"])){
  <h5 class="font-weight-bold"><center><?=$tituloItem?></center></h5>
   <table class="table table-condensed table-bordered">
     <tr class="text-white bg-info">
-        <td colspan="2"><a href="#" onclick="mostrarNuevoPersonalModal(<?=$anio?>,'<?=$tituloItem?>')" class="btn btn-sm btn-default"><i class="material-icons">add</i> AGREGAR</a></td>
+        <td colspan="2"><a href="#" onclick="mostrarNuevoPersonalModal(<?=$anio?>,'<?=$tituloItem?>',0)" class="btn btn-sm btn-default"><i class="material-icons">add</i> AGREGAR</a></td>
         <td colspan="5">HONORARIOS</td>
         <?php 
         for ($i=0; $i < $nroColumnas; $i++) {

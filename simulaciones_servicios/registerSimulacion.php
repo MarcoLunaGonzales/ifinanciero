@@ -222,6 +222,7 @@ for ($an=0; $an<=$anioGeneral; $an++) {
       $nombreTipoEE=$rowAuditoresAtrib['descripcion'];
       $habilitadoEE=$rowAuditoresAtrib['estado'];
       $words = explode(" ", $nombreTipoEE);
+      $numerox = explode("(", $nombreTipoEE);
       $acronym = "";
       foreach ($words as $w) {
        if(!(strtolower($w)=="de"||strtolower($w)=="el"||strtolower($w)=="la"||strtolower($w)=="y"||strtolower($w)=="en")){
@@ -229,6 +230,9 @@ for ($an=0; $an<=$anioGeneral; $an++) {
        }        
       }
       $abreviatura = $acronym;
+      if(count($numerox)>1){
+       $abreviatura.="(".$numerox[1];
+      }
       //$cantidadTipo=$row['cantidad_editado'];
       if($habilitadoEE==1){
         ?>

@@ -2852,30 +2852,41 @@ function guardarSimulacionServicio(){
      $.ajax({
         type: "GET",
         dataType: 'html',
-        url: "simulaciones_servicios/ajaxRegistrarSimulacion.php",
+        url: "simulaciones_servicios/ajaxRegistrarSimulacionBK.php",
         data: parametros,
         beforeSend: function () { 
           iniciarCargaAjax();
         },
-        success:  function (resp) {
+        success:  function (respuesta) {
+          var resp = respuesta.split("####")[1];
+          var log = respuesta.split("####")[0];
           detectarCargaAjax();
           if(resp=="ERROR"){
-           Swal.fire('Informativo!','Ocurrio un error!','warning'); 
+           Swal.fire('Error!','Ocurrio un error!','warning'); 
           }else{
-          //  $("#mensaje").html(resp);
-         if(!($("#codigo_servicioibnorca").length)){
-            alerts.showSwal('success-message','simulaciones_servicios/registerSimulacion.php?cod='+resp);
-          }else{
-            var s=$("#codigo_servicioibnorca_s").val();
-            var u=$("#codigo_servicioibnorca_u").val();
-
-            alerts.showSwal('success-message','simulaciones_servicios/registerSimulacion.php?cod='+resp+'&q='+idServicio+'&s='+s+'&u='+u);
+            if (log.trim()==""){
+              var param={"codigo":resp};
+              $.ajax({
+                 type: "GET",
+                 dataType: 'html',
+                 url: "simulaciones_servicios/ajaxSimulacionExitosa.php",
+                 data: param,
+                 success:  function (x) {
+                  $("#mensaje").html(x);
+                 }
+              });
+              if(!($("#codigo_servicioibnorca").length)){
+                 alerts.showSwal('success-message','simulaciones_servicios/registerSimulacion.php?cod='+resp);
+              }else{
+                var s=$("#codigo_servicioibnorca_s").val();
+                var u=$("#codigo_servicioibnorca_u").val();
+                alerts.showSwal('success-message','simulaciones_servicios/registerSimulacion.php?cod='+resp+'&q='+idServicio+'&s='+s+'&u='+u);
+              }
+            }else{
+              Swal.fire('Error!','Ocurrio un error de envio, verifique su conexión a Internet!','warning'); 
+            }
           }
-          }
-         // alert(resp);
-          
-         
-        }
+        }//fin successs
     });
   }
   }else{
@@ -2892,30 +2903,44 @@ function guardarSimulacionServicio(){
      $.ajax({
         type: "GET",
         dataType: 'html',
-        url: "simulaciones_servicios/ajaxRegistrarSimulacion.php",
+        url: "simulaciones_servicios/ajaxRegistrarSimulacionBK.php",
         data: parametros,
         beforeSend: function () { 
          //Swal.fire("Informativo!", "Procesando datos! espere...", "warning");
           iniciarCargaAjax();
         },
-        success:  function (resp) {
+        success:  function (respuesta) {
+          var resp = respuesta.split("####")[1];
+          var log = respuesta.split("####")[0];
           detectarCargaAjax();
           if(resp=="ERROR"){
-           Swal.fire('Informativo!','Ocurrio un error!','warning'); 
+           Swal.fire('Error!','Ocurrio un error!','warning'); 
           }else{
-         if(!($("#codigo_servicioibnorca").length)){
-            alerts.showSwal('success-message','simulaciones_servicios/registerSimulacion.php?cod='+resp);
-          }else{
-            if(!($("#codigo_servicioibnorca").length>0)){
-               alerts.showSwal('success-message','simulaciones_servicios/registerSimulacion.php?cod='+resp+'&q='+idServicio);
+            if (log.trim()==""){
+              var param={"codigo":resp};
+              $.ajax({
+                 type: "GET",
+                 dataType: 'html',
+                 url: "simulaciones_servicios/ajaxSimulacionExitosa.php",
+                 data: param,
+                 success:  function (x) {
+                  $("#mensaje").html(x);
+                 }
+              });
+              if(!($("#codigo_servicioibnorca").length)){
+               alerts.showSwal('success-message','simulaciones_servicios/registerSimulacion.php?cod='+resp);
+              }else{
+                if(!($("#codigo_servicioibnorca").length>0)){
+                  alerts.showSwal('success-message','simulaciones_servicios/registerSimulacion.php?cod='+resp+'&q='+idServicio);
+                }else{
+                  alerts.showSwal('success-message','simulaciones_servicios/registerSimulacion.php?cod='+resp+'&q='+idServicio+'&u='+idPerfil);
+                }            
+              }
             }else{
-              alerts.showSwal('success-message','simulaciones_servicios/registerSimulacion.php?cod='+resp+'&q='+idServicio+'&u='+idPerfil);
-            }            
+              Swal.fire('Error!','Ocurrio un error de envio, verifique su conexión a Internet!','warning'); 
+            }
           }
-            
-          }
-          
-        }
+        }//fin success
     });
   }
   }
@@ -10840,6 +10865,37 @@ function AjaxGestionFechaDesde(combo){
   ajax.send(null)  
 
 }
+function AjaxGestionFechaDesdeMes(combo){
+  var contenedor;
+  var cod_gestion=combo.value;
+  contenedor= document.getElementById('div_contenedor_fechaI');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'reportes/GestionDesdeAjaxMes.php?cod_gestion='+cod_gestion,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      AjaxGestionFechaHastaMes(cod_gestion);
+    }
+  }
+  ajax.send(null)  
+
+}
+function AjaxGestionFechaHastaMes(cod_gestion){
+  // var cod_uo=$("#cod_unidadorganizacional").val();  
+  // alert(cod_uo);
+
+  var contenedor; 
+  contenedor = document.getElementById('div_contenedor_fechaH');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'reportes/GestionhastaAjaxMes.php?cod_gestion='+cod_gestion,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;      
+    }
+  }
+  ajax.send(null)
+  
+}
 function AjaxGestionFechaHasta(cod_gestion){
   // var cod_uo=$("#cod_unidadorganizacional").val();  
   // alert(cod_uo);
@@ -11882,8 +11938,9 @@ function cargarDatosRegistroComprobantes(){
 
 
 
-function mostrarNuevoPersonalModal(anio,titulo){
+function mostrarNuevoPersonalModal(anio,titulo,valor){
   $("#anio_personal").val(anio);
+  $("#valor_personal").val(valor);
   $("#titulo_modal_honorarios").text(titulo);
   $("#modalNuevoPersonal").modal("show");
 }
@@ -11920,8 +11977,11 @@ function agregarNuevoPersonalSimulacionModal(inicioAnio,ibnorcaC){
            var respuesta=respu.split("###");
            var resp=respuesta[0];
            if(resp==0){
-              cargarDetallesCostosVariablesTodosLosAnios(inicioAnio,ibnorcaC);
-
+            if($("#valor_personal").val()==1){
+              actualizarSimulacionSitios();
+            }else{
+               cargarDetallesCostosVariablesTodosLosAnios(inicioAnio,ibnorcaC);
+            }
            }else{
             Swal.fire("Informativo!", "El personal ya existe!", "warning");
            }

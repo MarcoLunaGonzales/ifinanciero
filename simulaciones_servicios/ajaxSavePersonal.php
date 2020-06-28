@@ -46,6 +46,18 @@ if($existe==0){
        VALUES ('".$codSimulacionServicioAuditor."','".$cod_sim."','".$cod_cla."','".$cant."','".$monto."','".$cant."', 1,'".$dias."',1,'".$anio."','".$nombreTIPA."')";
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
+
+   $sql1="SELECT dd.* from simulaciones_servicios_atributosdias dd join simulaciones_servicios_atributos d on d.codigo=dd.cod_simulacionservicioatributo where d.cod_simulacionservicio=$cod_sim and dd.cod_anio=$anio";
+   $stmt1 = $dbh->prepare($sql1);
+   $stmt1->execute();
+   
+   while ($rowServ = $stmt1->fetch(PDO::FETCH_ASSOC)) {
+      $codSimulacionServicioAtributo=$rowServ['cod_simulacionservicioatributo'];
+      $sqlDetalleAtributosAud="INSERT INTO simulaciones_servicios_atributosauditores (cod_simulacionservicioatributo, cod_auditor, cod_anio,estado) 
+                     VALUES ('$codSimulacionServicioAtributo', '$codSimulacionServicioAuditor', '$anio',0)";
+      $stmtDetalleAtributosAud = $dbh->prepare($sqlDetalleAtributosAud);
+      $stmtDetalleAtributosAud->execute();
+   }
    echo "0###".$codSimulacionServicioAuditor; 
 }else{
   echo "1###NNN"; 
