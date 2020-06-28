@@ -14624,10 +14624,53 @@ function ajax_contenedor_tabla_libretaBancaria(saldo){
     if (ajax.readyState==4) {
       contenedor.innerHTML = ajax.responseText;      
       $('.selectpicker').selectpicker(["refresh"]);
-      // detectarCargaAjax();      
+      cargar_dataTable_ajax('libreta_bancaria_reporte_modal');
+      cargar_filtro_datatable_ajax('modalListaLibretaBancaria');
     }
   }
   ajax.send(null);
+}
+function cargar_dataTable_ajax(tabla){
+  // Setup - add a text input to each footer cell
+  $('#'+tabla+' tfoot th').each( function () {
+      var title = $(this).text();
+      $(this).html( '<input type="text" placeholder="'+title+'" />' );
+  } );
+
+  // DataTable
+  var table = $('#'+tabla+'').DataTable({
+      initComplete: function () {
+          // Apply the search
+          this.api().columns().every( function () {
+              var that = this;
+              $( 'input', this.footer() ).on( 'keyup change clear', function () {
+                  if ( that.search() !== this.value ) {
+                      that
+                          .search( this.value )
+                          .draw();
+                  }
+              });
+          });
+      },
+      "language": {
+              "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+      },
+      fixedHeader: {
+            header: false,
+            footer: false
+      },
+      "order": false,
+      "paging":   false,
+      "info":     false,          
+      "scrollY":        "400px",
+      "scrollCollapse": true
+  });
+}
+function cargar_filtro_datatable_ajax(modal){
+  $('#'+modal).on('shown.bs.modal', function(e){
+     $($.fn.dataTable.tables(true)).DataTable()
+        .columns.adjust();
+  });
 }
 
 function seleccionar_libretaBancaria(cod_libreta){

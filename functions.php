@@ -7308,13 +7308,6 @@ function obtenerContraCuentaLibretaBancaria($cod_libreta){
   $valor= $resultLibretaDet['cod_contracuenta'];
   return($valor);
 }
-
-function obtener_Saldo_libretabancaria()
-{
-  $var_PHP = "<script> document.writeln(document.getElementById('saldo_x').value); </script>";
-      return $var_PHP;
-
-}
 function contarFacturasLibretaBancaria($codigo){
   $dbh = new Conexion();
   $stmt = $dbh->prepare("SELECT * FROM facturas_venta where cod_libretabancariadetalle=$codigo");
