@@ -29,7 +29,7 @@ tfoot input {
           <td class="bg-success">Numero</td>
           <td class="bg-success">NIT</td>
           <td class="bg-success">Razon Social</td>
-          <td class="bg-success">Detalle</td>
+          <td width="10%" class="bg-success">Detalle</td>
           <td class="bg-success">Monto</td>
         </tr>
       </thead> 
@@ -38,13 +38,12 @@ tfoot input {
     $html='<tbody>';
 
 // Preparamos
-    $sqlDetalle="(SELECT * FROM (SELECT ce.*,(SELECT fecha_factura from facturas_venta where codigo=ce.cod_factura) as fecha_fac
+    $sqlDetalle="(SELECT * FROM (SELECT ce.*,(SELECT fecha_factura from facturas_venta where codigo=ce.cod_factura) as fecha_fac,(SELECT sum(importe) from facturas_venta where cod_libretabancariadetalle=ce.codigo) as monto_fac
 FROM libretas_bancariasdetalle ce join libretas_bancarias lb on lb.codigo=ce.cod_libretabancaria where lb.codigo in ($StringEntidadCodigos) and ce.fecha_hora BETWEEN '$fecha 00:00:00' and '$fechaHasta 23:59:59' and  ce.cod_estadoreferencial=1 $sqlFiltro order by ce.codigo) lbd where lbd.fecha_fac BETWEEN '$fecha_fac 00:00:00' and '$fechaHasta_fac 23:59:59')
- UNION (SELECT ce.*,(SELECT fecha_factura from facturas_venta where codigo=ce.cod_factura) as fecha_fac
+ UNION (SELECT ce.*,(SELECT fecha_factura from facturas_venta where codigo=ce.cod_factura) as fecha_fac,(SELECT sum(importe) from facturas_venta where cod_libretabancariadetalle=ce.codigo) as monto_fac
 FROM libretas_bancariasdetalle ce join libretas_bancarias lb on lb.codigo=ce.cod_libretabancaria where lb.codigo in ($StringEntidadCodigos) and ce.fecha_hora BETWEEN '$fecha 00:00:00' and '$fechaHasta 23:59:59' and  ce.cod_estadoreferencial=1 $sqlFiltro order by ce.codigo)";
 $stmt = $dbh->prepare($sqlDetalle);
 //echo $sqlDetalle;
-
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -57,11 +56,33 @@ $stmt->bindColumn('nro_documento', $nro_documento);
 $stmt->bindColumn('fecha_hora', $fecha);
 $stmt->bindColumn('monto', $monto);
 $stmt->bindColumn('cod_factura', $codFactura);
+$stmt->bindColumn('monto_fac', $montoFac);
 
             $index=1;$totalMonto=0;$totalMontoFac=0;
                         while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+                         $entro=0; 
+                         if($filtro==2){
+                          if($montoFac<$monto){
+                           $totalMonto+=$monto;
+                           $entro=1;
+                          }                       
+                         }else{
+                           $totalMonto+=$monto;
+                           $entro=1;
+                         }
+                         if($entro==1){
+?>
+                        <tr>
+                          <td class="text-center font-weight-bold"><?=strftime('%d/%m/%Y',strtotime($fecha))?></td>
+                          <td class="text-center"><?=strftime('%H:%M:%S',strtotime($fecha))?></td>
+                          <td class="text-left">
+                            <?=$descripcion?> info: <?=$informacion_complementaria?>
+                          </td>      
+                          <td class="text-left"><?=$agencia?></td>
+                          <td class="text-right"><?=number_format($monto,2,".",",")?></td>
+                          <td class="text-right"><?=$nro_documento?></td>
+                          <?php 
                           if($codFactura==""||$codFactura==0){
-                            $tituloEstado="Sin Factura";
                             $facturaFecha="";
                             $facturaNumero="";
                             $facturaNit="";
@@ -69,102 +90,53 @@ $stmt->bindColumn('cod_factura', $codFactura);
                             $facturaDetalle="";
                             $facturaMonto="";
                             $totalMontoFac+=0;
+                           ?>
+                            <td class="text-right font-weight-bold"><?=$facturaFecha?></td>
+                            <td class="text-right font-weight-bold"><?=$facturaNumero?></td>
+                            <td class="text-right font-weight-bold"><?=$facturaNit?></td>
+                            <td class="text-right font-weight-bold"><?=$facturaRazonSocial?></td>
+                            <td class="text-right font-weight-bold"><?=$facturaDetalle?></td>
+                            <td class="text-right font-weight-bold"><?=$facturaMonto?></td> 
+                           <?php                          
                           }else{
-                            $tituloEstado="Con Factura";
-                            $datos=obtenerDatosFacturaVenta($codFactura);
-                            $facturaFecha=strftime('%d/%m/%Y',strtotime($datos[0]));
-                            $facturaNumero=$datos[1];
-                            $facturaNit=$datos[2];
-                            $facturaRazonSocial=$datos[3];
-                            $facturaDetalle=$datos[4];
-                            $facturaMonto=number_format($datos[5],2,".",",");
-                            $totalMontoFac+=$datos[5];
-                          }
-                          $totalMonto+=$monto;
-
-
-                           
-?>
-                        <tr>
-                          <td class="text-center font-weight-bold"><?=strftime('%d/%m/%Y',strtotime($fecha))?></td>
-                          <td class="text-center"><?=strftime('%H:%M:%S',strtotime($fecha))?></td>
-                          <td class="text-left">
-                            <?php 
-                            if($codFactura==""||$codFactura==0){
-                              ?><?=$descripcion?> info: <?=$informacion_complementaria?><?php
-                            }else{
-                              ?><?=$descripcion?> info: <?=$informacion_complementaria?><?php
+                           $sqlDetalleX="SELECT * FROM facturas_venta where cod_libretabancariadetalle=$codigo and cod_estadofactura=1 order by codigo desc";                                   
+                           $stmtDetalleX = $dbh->prepare($sqlDetalleX);
+                           $stmtDetalleX->execute();
+                           $stmtDetalleX->bindColumn('fecha_factura', $fechaDetalle);
+                           $stmtDetalleX->bindColumn('nro_factura', $nroDetalle);
+                           $stmtDetalleX->bindColumn('nit', $nitDetalle);
+                           $stmtDetalleX->bindColumn('razon_social', $rsDetalle);
+                           $stmtDetalleX->bindColumn('observaciones', $obsDetalle);
+                           $stmtDetalleX->bindColumn('importe', $impDetalle);
+                           $facturaFecha=[];
+                           $facturaNumero=[];
+                           $facturaNit=[];
+                           $facturaRazonSocial=[];
+                           $facturaDetalle=[];
+                           $facturaMonto=[];
+                           $filaFac=0;  
+                           while ($rowDetalleX = $stmtDetalleX->fetch(PDO::FETCH_BOUND)) {
+                            $totalMontoFac+=$impDetalle;
+                            $facturaFecha[$filaFac]=strftime('%d/%m/%Y',strtotime($fechaDetalle));
+                            $facturaNumero[$filaFac]=$nroDetalle;
+                            $facturaNit[$filaFac]=$nitDetalle;
+                            $facturaRazonSocial[$filaFac]=$rsDetalle;
+                            $facturaDetalle[$filaFac]=$obsDetalle;
+                            $facturaMonto[$filaFac]=number_format($impDetalle,2,".",",");
+                            $filaFac++;
+                           }
                             ?>
-                           <!--<div id="accordion<?=$index;?>" role="tablist">
-                              <div class="card-collapse">
-                                <div class="card-header" role="tab" id="heading<?=$index;?>">
-                                  <p class="mb-0">
-                                    <small>
-                                       <a data-toggle="collapse" href="#collapse<?=$index;?>" aria-expanded="false" aria-controls="collapse<?=$index;?>" class="collapsed">
-                                          <?=$descripcion?> info: <?=$informacion_complementaria?>
-                                          <i class="material-icons">keyboard_arrow_down</i>
-                                       </a>
-                                    </small>
-                                  </p>
-                                </div>
-                                <div id="collapse<?=$index;?>" class="collapse" role="tabpanel" aria-labelledby="heading<?=$index;?>" data-parent="#accordion<?=$index;?>" style="">
-                                  <div class="card-body">
-                                    <?php
-                                          $sqlDetalleX="SELECT * FROM facturas_venta where cod_libretabancariadetalle=$codigo";                                   
-                                          $stmtDetalleX = $dbh->prepare($sqlDetalleX);
-                                          $stmtDetalleX->execute();
-
-                                          $stmtDetalleX->bindColumn('fecha_factura', $fechaDetalle);
-                                          $stmtDetalleX->bindColumn('nro_factura', $nroDetalle);
-                                          $stmtDetalleX->bindColumn('nit', $nitDetalle);
-                                          $stmtDetalleX->bindColumn('razon_social', $rsDetalle);
-                                          $stmtDetalleX->bindColumn('observaciones', $obsDetalle);
-                                          $stmtDetalleX->bindColumn('importe', $impDetalle);
-
-                                     ?>
-                                      <table width="100%">
-                                          <tr class="bg-success text-white">
-                                            <th>Fecha</th>
-                                            <th>Número</th>
-                                            <th>Nit</th>
-                                            <th>Razón Social</th>
-                                            <th>Detalle</th>
-                                            <th>Monto</th>
-                                            </tr>
-                                       <?php
-                                        while ($rowDetalleX = $stmtDetalleX->fetch(PDO::FETCH_BOUND)) {
-                                        ?>
-                                         <tr>
-                                             <td class="text-center small"><?=$fechaDetalle;?></td>
-                                             <td class="text-left small"><?=$nroDetalle;?></td>
-                                             <td class="text-left small"><?=$nitDetalle;?></td>
-                                             <td class="text-left small"><?=$rsDetalle;?></td>
-                                             <td class="text-left small"><?=$obsDetalle;?></td>
-                                             <td class="text-left small"><?=number_format($impDetalle,2,".",",");?></td>
-                                         </tr>
-                                          <?php    
-                                          }
-                                          ?>
-                                      </table>
-                                   </div>
-                                 </div>
-                               </div>
-                             </div>-->
-                             <?php } ?>
-                          </td>      
-                          <td class="text-left"><?=$agencia?></td>
-                          <td class="text-right"><?=number_format($monto,2,".",",")?></td>
-                          <td class="text-right"><?=$nro_documento?></td>
-                          <!--<td class="text-right font-weight-bold"><?=$tituloEstado?></td>-->
-                          <td class="text-right font-weight-bold"><?=$facturaFecha?></td>
-                          <td class="text-right font-weight-bold"><?=$facturaNumero?></td>
-                          <td class="text-right font-weight-bold"><?=$facturaNit?></td>
-                          <td class="text-right font-weight-bold"><?=$facturaRazonSocial?></td>
-                          <td class="text-right font-weight-bold"><?=$facturaDetalle?></td>
-                          <td class="text-right font-weight-bold"><?=$facturaMonto?></td>
-                      
-<?php
-              $index++;
+                            <td class="text-right font-weight-bold" style="vertical-align: top;"><?=implode("<div style='border-bottom:1px solid #26BD3D;'></div>", $facturaFecha)?></td>
+                            <td class="text-right font-weight-bold" style="vertical-align: top;"><?=implode("<div style='border-bottom:1px solid #26BD3D;'></div>", $facturaNumero)?></td>
+                            <td class="text-right font-weight-bold" style="vertical-align: top;"><?=implode("<div style='border-bottom:1px solid #26BD3D;'></div>", $facturaNit)?></td>
+                            <td class="text-right font-weight-bold" style="vertical-align: top;"><?=implode("<div style='border-bottom:1px solid #26BD3D;'></div>", $facturaRazonSocial)?></td>
+                            <td class="text-right font-weight-bold" style="vertical-align: top;"><?=implode("<div style='border-bottom:1px solid #26BD3D;'></div>", $facturaDetalle)?></td>
+                            <td class="text-right font-weight-bold" style="vertical-align: top;"><?=implode("<div style='border-bottom:1px solid #26BD3D;'></div>", $facturaMonto)?></td> 
+                            <?php
+                          }
+                          ?></tr><?php 
+                   $index++;
+               }
             }
             ?>
                         <tr class="font-weight-bold" style="background:#21618C; color:#fff;">

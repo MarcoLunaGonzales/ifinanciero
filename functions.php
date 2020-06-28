@@ -7282,6 +7282,16 @@ function obtenerDescripcionestudianteGrupal($IdCurso,$ci_estudiante,$codCS){
    return($valor);
 }
 
+function contarFacturasLibretaBancaria($codigo){
+  $dbh = new Conexion();
+  $stmt = $dbh->prepare("SELECT * FROM facturas_venta where cod_libretabancariadetalle=$codigo");
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor++;
+   }
+   return($valor);
+}
 ?>
 
 
