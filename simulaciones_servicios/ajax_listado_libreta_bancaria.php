@@ -158,12 +158,15 @@ $saldo=$_GET['saldo'];
                               <td style=" color: #ff0000;" class="libretaDetalles_<?=$j?> text-right small"><?=$NitFactura?></td>
                               <td style=" color: #ff0000;" class="libretaDetalles_<?=$j?> text-left"><small><small><?=$RSFactura?></small></small></td>
                               <td style=" color: #ff0000;" class="libretaDetalles_<?=$j?> text-right small"><?=$MontoFactura?> <?php
-                                if($CodFactura==null || $CodFactura==''||$CodFactura==0){?>
-                                  <a href="#" style="padding: 0;font-size:10px;width:25px;height:25px;" onclick="seleccionar_libretaBancaria(<?=$CodLibretaDetalle?>)" class="btn btn-fab btn-success btn-sm" title="Seleccionar Item"><i class="material-icons">done</i></a>
-                                <?php }else{?>
-                                  <a href="#" style="padding: 0;font-size:10px;width:25px;height:25px;" onclick="seleccionar_libretaBancaria(<?=$CodLibretaDetalle?>)" class="btn btn-fab btn-warning btn-sm" title="Seleccionar Item"><i class="material-icons">done</i></a>
-                                <?php  
-                                }?></td>
+	                            if($monto>$saldo){
+	                              	if($CodFactura==null || $CodFactura==''||$CodFactura==0){?>
+		                                <a href="#" style="padding: 0;font-size:10px;width:25px;height:25px;" onclick="seleccionar_libretaBancaria(<?=$CodLibretaDetalle?>)" class="btn btn-fab btn-success btn-sm" title="Seleccionar Item"><i class="material-icons">done</i></a><?php 
+		                            }else{?>
+		                                <a href="#" style="padding: 0;font-size:10px;width:25px;height:25px;" onclick="seleccionar_libretaBancaria(<?=$CodLibretaDetalle?>)" class="btn btn-fab btn-warning btn-sm" title="Seleccionar Item"><i class="material-icons">done</i></a>
+		                                <?php  
+		                            }
+	                            }
+                                ?></td>
                               <!-- <td style=" color: #ff0000;" class="libretaDetalles_<?=$j?> td-actions text-right small">
                                 
                               </td> -->
