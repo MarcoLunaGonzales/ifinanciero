@@ -109,6 +109,7 @@ FROM libretas_bancariasdetalle ce where ce.cod_libretabancaria=$codigoLib and  c
            $stmtFacLibreta = $dbh->prepare($sqlFacturaLibreta);
            $stmtFacLibreta->execute();
            $sumaImporte=0;
+           $datosDetalleFac='';
            while ($rowFacLib = $stmtFacLibreta->fetch(PDO::FETCH_ASSOC)) {
               if($rowFacLib['cod_estadofactura']==1){
                $datosFacturas=obtenerDatosFacturaVenta($rowFacLib['codigo']);

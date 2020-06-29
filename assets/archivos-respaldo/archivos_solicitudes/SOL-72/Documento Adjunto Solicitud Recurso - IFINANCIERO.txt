@@ -1,1 +1,0 @@
-alter table solicitud_recursosdetalle add  cod_comprobantedetalle int(11);

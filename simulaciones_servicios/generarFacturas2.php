@@ -116,8 +116,36 @@ try{
                         </script>
                         <?php
                     }else{
-                        //generamos el comprobante
-                        $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$nro_correlativo);
+                        $cod_tipopago_defecto=obtenerValorConfiguracion(55);
+                        if($cod_tipopago==$cod_tipopago_defecto){
+                            $cod_libreta=0;
+                            if(isset($_GET["cod_libreta"])){
+                                $cod_libreta=$_GET["cod_libreta"];
+                                $estado_libreta=obtenerEstadoLibretaBancaria($cod_libreta);
+                                if($estado==0 || $estado==1){
+                                    $cod_cuenta=obtenerCuentaLibretaBancaria($cod_libreta);
+                                    //generamos el comprobante
+                                    $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$nro_correlativo,1,$cod_cuenta);
+                                }elseif($estado==3){
+                                    $cod_contracuenta=obtenerContraCuentaLibretaBancaria($cod_libreta);
+                                    //generamos el comprobante
+                                    $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$nro_correlativo,1,$cod_contracuenta);
+                                }else{
+                                    //generamos el comprobante
+                                    $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$nro_correlativo,0,0);    
+                                }
+                            }else{
+                                //generamos el comprobante
+                                $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$nro_correlativo,0,0);
+                            }
+                        }else{
+                            //generamos el comprobante
+                            $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$nro_correlativo,0,0);
+                        }
+                        
+
+                        
+
                         // echo "auto:".$nroAutorizacion." - nro_corr:".$nro_correlativo." - nitCliente:".$nitCliente." - fecha_actual:".$fecha_actual." - totalFinalRedondeado:".$totalFinalRedondeado." - llaveDosificacion:".$llaveDosificacion;
                         $controlCode = new ControlCode();
                         $code = $controlCode->generate($nroAutorizacion,//Numero de autorizacion
