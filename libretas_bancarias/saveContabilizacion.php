@@ -63,7 +63,7 @@ if($filas>0){
         $unidadDetalle=$unidadarea[0];
         $area=$unidadarea[1];
      }
-     $glosa_detalle=$glosa;
+     $glosaDetalle=$glosa;
      $debe=$monto;
      $haber=0;
 
@@ -86,7 +86,7 @@ if($filas>0){
         $unidadDetalle=$unidadarea[0];
         $area=$unidadarea[1];
      }
-     $glosa_detalle=$glosa;
+     $glosaDetalle=$glosa;
      $debe=0;
      $haber=$monto;
     $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
@@ -96,7 +96,6 @@ if($filas>0){
     $flagSuccessDetalle=$stmtDetalle->execute();
 
 }
-
 
 showAlertSuccessError($flagSuccess,"../".$urlList);	
 ?>
