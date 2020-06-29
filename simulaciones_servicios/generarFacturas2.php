@@ -122,24 +122,19 @@ try{
                             if(isset($_GET["cod_libreta"])){
                                 $cod_libreta=$_GET["cod_libreta"];
                                 $estado_libreta=obtenerEstadoLibretaBancaria($cod_libreta);
-                                if($estado==0 || $estado==1){
-                                    $cod_cuenta=obtenerCuentaLibretaBancaria($cod_libreta);
-                                    //generamos el comprobante
+                                if($estado_libreta==0){
+                                    $cod_cuenta=obtenerCuentaLibretaBancaria($cod_libreta);                                    
                                     $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$nro_correlativo,1,$cod_cuenta);
-                                }elseif($estado==3){
-                                    $cod_contracuenta=obtenerContraCuentaLibretaBancaria($cod_libreta);
-                                    //generamos el comprobante
+                                }elseif($estado_libreta==1){
+                                    $cod_contracuenta=obtenerContraCuentaLibretaBancaria($cod_libreta);                                    
                                     $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$nro_correlativo,1,$cod_contracuenta);
-                                }else{
-                                    //generamos el comprobante
+                                }else{                                    
                                     $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$nro_correlativo,0,0);    
                                 }
                             }else{
-                                //generamos el comprobante
                                 $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$nro_correlativo,0,0);
                             }
                         }else{
-                            //generamos el comprobante
                             $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$nro_correlativo,0,0);
                         }
                         
