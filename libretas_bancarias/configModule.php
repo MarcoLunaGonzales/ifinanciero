@@ -6,7 +6,7 @@ $moduleNamePlural="Libretas Bancarias";
 $moduleNamePluralDetalle="Libretas Bancarias - Detalle";
 $urlList="index.php?opcion=listLibreta";
 $urlList2="index.php?opcion=listLibretasDetalle";
-
+$urlList3="index.php?opcion=contabilizarLibretasBancarias";
 $urlEdit="index.php?opcion=editLibretaBancaria";
 //$urlEdit2="tipos_cambios/historial.php";
 

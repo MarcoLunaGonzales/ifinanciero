@@ -70,7 +70,7 @@ if($filtro==1){
               </div>
               <div class="card-footer fixed-bottom">
                   <button type="submit" class="btn btn-primary">GENERAR COMPROBANTE</button>
-                  <a href="#" class="btn btn-danger">VOLVER</a>  
+                  <a href="../<?=$urlList3?>" class="btn btn-danger">VOLVER</a>  
               </div>
             </form>
             </div>
