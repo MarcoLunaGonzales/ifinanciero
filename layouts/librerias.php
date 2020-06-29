@@ -415,8 +415,13 @@
          }
       });
       $("#formSoliFactTcp").submit(function(e) {
-        if($("#total_monto_bob_a_tipopago").val()){//existe array de objetos tipopago          
-          var montoTotalItems=$("#monto_total_a").val();
+        if($("#total_monto_bob_a_tipopago").val()){//existe array de objetos tipopago
+          var tipo_solicitud=$("#tipo_solicitud").val();          
+          if(tipo_solicitud==2){            
+            var montoTotalItems=$("#modal_totalmontoserv_costo_a").val();
+          }else{
+            var montoTotalItems=$("#monto_total_a").val();
+          }
           var monto_modal_por_tipopago=$("#total_monto_bob_a_tipopago").val();
           //si existe array de objetos transformarlo a json
           $('<input />').attr('type', 'hidden')
@@ -425,13 +430,18 @@
             .appendTo('#formSoliFactTcp');
           if(monto_modal_por_tipopago!=0){
             if(montoTotalItems!=monto_modal_por_tipopago){
-              var mensaje="<p>Por favor verifique los montos de la distribución de porcentajes en Tipo de Pago...</p>";
+              var mensaje="<p>Por favor verifique los montos de la distribución de porcentajes en Formas de Pago...</p>";
               $('#msgError').html(mensaje);
               $('#modalAlert').modal('show'); 
               return false;  
             }else{
               if($("#total_monto_bob_a_areas").val()){
-                var montoTotalItems=$("#monto_total_a").val();            
+                var tipo_solicitud=$("#tipo_solicitud").val();          
+                if(tipo_solicitud==2){            
+                  var montoTotalItems=$("#modal_totalmontoserv_costo_a").val();
+                }else{
+                  var montoTotalItems=$("#monto_total_a").val();
+                }
                 var monto_modal_por_area=$("#total_monto_bob_a_areas").val();
                 var sw_x=true;//para ver la cantidad de las unidades
                 var mensaje='<p>Por favor verifique los montos de la distribución de porcentajes en Unidades...<p>';
@@ -480,7 +490,12 @@
           }          
         }else{          
           if($("#total_monto_bob_a_areas").val()){            
-            var montoTotalItems=$("#monto_total_a").val();            
+            var tipo_solicitud=$("#tipo_solicitud").val();          
+            if(tipo_solicitud==2){            
+              var montoTotalItems=$("#modal_totalmontoserv_costo_a").val();
+            }else{
+              var montoTotalItems=$("#monto_total_a").val();
+            }
             var monto_modal_por_area=$("#total_monto_bob_a_areas").val();
             var sw_x=true;//para ver la cantidad de las unidades
             var mensaje='<p>Por favor verifique los montos de la distribución de porcentajes en Unidades...<p>';

@@ -9266,7 +9266,8 @@ function calcularTotalFilaServicio2Costos(){
   } 
 
   var resulta=sumal;  
-  document.getElementById("modal_totalmontoserv_costo").value=number_format(resulta,2);
+  document.getElementById("modal_totalmontoserv_costo").value=number_format(resulta,2);//con formato
+  document.getElementById("modal_totalmontoserv_costo_a").value=resulta;//si formato
   document.getElementById("modal_totalmontoserv_pagado").value=number_format(suma_pagado,2);
   // document.getElementById("modal_totalmontos__costo").value=resulta;//escondido
   // document.getElementById("comprobante_auxiliar_costo").value=comprobante_auxiliar;
@@ -12449,11 +12450,15 @@ function registrarCuentaAsociadaSOLFAC_areas(cod_area,cod_cuenta){
 //tipo pago
 var itemTipoPagos_facturacion=[];
 var itemTipoPagos_facturacion_aux=[];
-function agregarDatosModalTipoPagoFacturacion(){  
+function agregarDatosModalTipoPagoFacturacion(sw_auxiliar){  
   // alert("llege");
   // var d=datos.split('/');
   var cod_tipopago=$("#cod_tipopago").val();
-  var monto_total=$("#monto_total_a").val();  
+  if(sw_auxiliar==2){//capacitacion
+    var monto_total=$("#modal_totalmontoserv_costo_a").val();  
+  }else{
+    var monto_total=$("#monto_total_a").val();    
+  }
   if(monto_total<=0 || monto_total==null || monto_total==''){
     // $('#modalTipoPagoPorcentaje').modal('hide');
     Swal.fire("Informativo!", "El monto Total NO debe ser 0 o número negativo!", "warning");
@@ -12473,11 +12478,16 @@ function agregarDatosModalTipoPagoFacturacion(){
     ajax.send(null)   
   } 
 }
-function agregarDatosModalTipoPagoFacturacionNormas(){  
+function agregarDatosModalTipoPagoFacturacionNormas(sw_auxiliar){   
   // alert("llege");
   // var d=datos.split('/');
   var cod_tipopago=$("#cod_tipopago").val();
-  var monto_total=$("#monto_total_a").val();  
+  
+  if(sw_auxiliar==2){//capacitacion
+    var monto_total=$("#modal_totalmontoserv_costo_a").val();  
+  }else{
+    var monto_total=$("#monto_total_a").val();  
+  }
   if(monto_total<=0 || monto_total==null || monto_total==''){
     // $('#modalTipoPagoPorcentaje').modal('hide');
     Swal.fire("Informativo!", "El monto Total NO debe ser 0 o número negativo!", "warning");
@@ -12655,12 +12665,17 @@ var itemAreas_facturacion=[];//array que contiene objetos agregado
 var itemAreas_facturacion_aux=[];//array que contiene todas las areas de servicios
 var itemUnidades_facturacion=[];//array que contiene objetos agregados a un area
 var itemUnidades_facturacion_aux=[];//array que contiene todas las unidades en general
-function agregarDatosModalAreasFacturacion(){    
+function agregarDatosModalAreasFacturacion(sw_auxiliar){     
   var cod_area=$("#cod_area").val();  
   if(cod_area==null || cod_area==''){    
     Swal.fire("Informativo!", "Area no Encontrada, por favor seleccione Oficina y Area!", "warning");
   }else{
-    var monto_total=$("#monto_total_a").val();    
+    
+    if(sw_auxiliar==2){//capacitacion
+      var monto_total=$("#modal_totalmontoserv_costo_a").val();  
+    }else{
+      var monto_total=$("#monto_total_a").val();
+    }
     if(monto_total<=0){      
       Swal.fire("Informativo!", "El monto Total NO debe ser 0 o número negativo!", "warning");
     }else{
@@ -12739,12 +12754,16 @@ function tablaGeneral_areas_solFac(){
     $('#divResultadoListaModalAreas').html(div);
     calcularTotalFilaAreasModal();
 }
-function agregarDatosModalAreasFacturacionNormas(){    
+function agregarDatosModalAreasFacturacionNormas(sw_auxiliar){     
   var cod_area=$("#cod_area").val();  
   if(cod_area==null || cod_area==''){    
     Swal.fire("Informativo!", "Area no Encontrada, por favor seleccione Oficina y Area!", "warning");
   }else{
-    var monto_total=$("#monto_total_a").val();    
+    if(sw_auxiliar==2){//capacitacion
+      var monto_total=$("#modal_totalmontoserv_costo_a").val();  
+    }else{
+      var monto_total=$("#monto_total_a").val();    
+    }
     if(monto_total<=0){      
       Swal.fire("Informativo!", "El monto Total NO debe ser 0 o número negativo!", "warning");
     }else{

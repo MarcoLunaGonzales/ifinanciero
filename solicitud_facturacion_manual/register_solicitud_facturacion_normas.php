@@ -113,7 +113,8 @@ $contadorRegistros=0;
                 <input type="hidden" name="cod_defecto_cod_tipo_credito" id="cod_defecto_cod_tipo_credito" value="<?=$cod_defecto_cod_tipo_credito?>"/>
                 <input type="hidden" name="cod_simulacion" id="cod_simulacion" value="<?=$cod_simulacion;?>"/>
                 <input type="hidden" name="cod_facturacion" id="cod_facturacion" value="<?=$cod_facturacion;?>"/>
-                <input type="hidden" name="cantidad_filas" id="cantidad_filas" value="<?=$contadorRegistros;?>">                
+                <input type="hidden" name="cantidad_filas" id="cantidad_filas" value="<?=$contadorRegistros;?>">
+                <input type="hidden" name="tipo_solicitud" id="tipo_solicitud" value="1">
 
                 <div class="card">
                   <div class="card-header <?=$colorCard;?> card-header-text">
@@ -304,12 +305,12 @@ $contadorRegistros=0;
                             </div>
                             <div class="col-sm-1">
                                 <div class="form-group" >                                  
-                                     <button type="button" class="btn btn-danger btn-round btn-fab btn-sm" data-toggle="modal" data-target="" onclick="agregarDatosModalTipoPagoFacturacionNormas()">
+                                     <button type="button" class="btn btn-danger btn-round btn-fab btn-sm" data-toggle="modal" data-target="" onclick="agregarDatosModalTipoPagoFacturacionNormas(1)">
                                         <i class="material-icons" title="Tipo Pago Porcentaje">list</i>
                                         <span id="nfac" class="count bg-warning"></span>
                                      </button>
                                      
-                                     <button type="button" class="btn btn-primary btn-round btn-fab btn-sm" data-toggle="modal" data-target="" onclick="agregarDatosModalAreasFacturacionNormas()">
+                                     <button type="button" class="btn btn-primary btn-round btn-fab btn-sm" data-toggle="modal" data-target="" onclick="agregarDatosModalAreasFacturacionNormas(1)">
                                         <i class="material-icons" title="Areas Porcentaje">list</i>
                                         <span id="nfacAreas" class="count bg-warning"></span>
                                      </button>                              

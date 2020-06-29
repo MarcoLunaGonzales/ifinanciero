@@ -158,11 +158,11 @@
                             </div>
                             <div class="col-sm-1">
                                 <div class="form-group" >    
-                                    <button type="button" class="btn btn-danger btn-round btn-fab btn-sm" data-toggle="modal" data-target="" onclick="agregarDatosModalTipoPagoFacturacion()">
+                                    <button type="button" class="btn btn-danger btn-round btn-fab btn-sm" data-toggle="modal" data-target="" onclick="agregarDatosModalTipoPagoFacturacion(1)">
                                         <i class="material-icons" title="Tipo Pago Porcentaje">list</i>
                                         <span id="nfac" class="count bg-warning"></span>
                                      </button>
-                                     <button type="button" class="btn btn-primary btn-round btn-fab btn-sm" data-toggle="modal" data-target="" onclick="agregarDatosModalAreasFacturacion()">
+                                     <button type="button" class="btn btn-primary btn-round btn-fab btn-sm" data-toggle="modal" data-target="" onclick="agregarDatosModalAreasFacturacion(1)">
                                         <i class="material-icons" title="Areas Porcentaje">list</i>
                                         <span id="nfacAreas" class="count bg-warning"></span>
                                      </button>                              

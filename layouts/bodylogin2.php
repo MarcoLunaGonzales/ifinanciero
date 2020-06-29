@@ -220,22 +220,32 @@
 
     $("#formSoliFactNormas").submit(function(e) {
         if($("#total_monto_bob_a_tipopago").val()){//existe array de objetos tipopago          
-          var montoTotalItems=$("#monto_total_a").val();
+          var tipo_solicitud=$("#tipo_solicitud").val();          
+          if(tipo_solicitud==2){            
+            var montoTotalItems=$("#modal_totalmontoserv_costo_a").val();
+          }else{
+            var montoTotalItems=$("#monto_total_a").val();  
+          }
           var monto_modal_por_tipopago=$("#total_monto_bob_a_tipopago").val();
           //si existe array de objetos transformarlo a json
           $('<input />').attr('type', 'hidden')
             .attr('name', 'tiposPago_facturacion')
             .attr('value', JSON.stringify(itemTipoPagos_facturacion))
-            .appendTo('#formSoliFactTcp');
+            .appendTo('#formSoliFactNormas');
           if(monto_modal_por_tipopago!=0){
             if(montoTotalItems!=monto_modal_por_tipopago){
-              var mensaje="<p>Por favor verifique los montos de la distribución de porcentajes en Tipo de Pago...</p>";
+              var mensaje="<p>Por favor verifique los montos de la distribución de porcentajes en Formas de Pago...</p>";
               $('#msgError').html(mensaje);
               $('#modalAlert').modal('show'); 
               return false;  
             }else{
               if($("#total_monto_bob_a_areas").val()){
-                var montoTotalItems=$("#monto_total_a").val();            
+                var tipo_solicitud=$("#tipo_solicitud").val();          
+                if(tipo_solicitud==2){            
+                  var montoTotalItems=$("#modal_totalmontoserv_costo_a").val();
+                }else{
+                  var montoTotalItems=$("#monto_total_a").val();
+                }
                 var monto_modal_por_area=$("#total_monto_bob_a_areas").val();
                 var sw_x=true;//para ver la cantidad de las unidades
                 var mensaje='<p>Por favor verifique los montos de la distribución de porcentajes en Unidades...<p>';
@@ -243,12 +253,12 @@
                 $('<input />').attr('type', 'hidden')
                 .attr('name', 'areas_facturacion')
                 .attr('value', JSON.stringify(itemAreas_facturacion))
-                .appendTo('#formSoliFactTcp');
+                .appendTo('#formSoliFactNormas');
                  //si existe array de objetos unidades//falta hacer sus alertas
                 $('<input />').attr('type', 'hidden')
                 .attr('name', 'unidades_facturacion')
                 .attr('value', JSON.stringify(itemUnidades_facturacion))
-                .appendTo('#formSoliFactTcp');
+                .appendTo('#formSoliFactNormas');
                 for (var i =0;i < itemUnidades_facturacion.length; i++) {              
                   var dato = Object.values(itemUnidades_facturacion[i]);
                   if(dato!=''){                
@@ -284,7 +294,12 @@
           }          
         }else{          
           if($("#total_monto_bob_a_areas").val()){            
-            var montoTotalItems=$("#monto_total_a").val();            
+            var tipo_solicitud=$("#tipo_solicitud").val();          
+            if(tipo_solicitud==2){            
+              var montoTotalItems=$("#modal_totalmontoserv_costo_a").val();
+            }else{
+              var montoTotalItems=$("#monto_total_a").val();
+            }
             var monto_modal_por_area=$("#total_monto_bob_a_areas").val();
             var sw_x=true;//para ver la cantidad de las unidades
             var mensaje='<p>Por favor verifique los montos de la distribución de porcentajes en Unidades...<p>';
@@ -292,12 +307,12 @@
             $('<input />').attr('type', 'hidden')
             .attr('name', 'areas_facturacion')
             .attr('value', JSON.stringify(itemAreas_facturacion))
-            .appendTo('#formSoliFactTcp');
+            .appendTo('#formSoliFactNormas');
             //si existe array de objetos unidades
             $('<input />').attr('type', 'hidden')
             .attr('name', 'unidades_facturacion')
             .attr('value', JSON.stringify(itemUnidades_facturacion))
-            .appendTo('#formSoliFactTcp');
+            .appendTo('#formSoliFactNormas');
             
             for (var i =0;i < itemUnidades_facturacion.length; i++) {              
               var dato = Object.values(itemUnidades_facturacion[i]);

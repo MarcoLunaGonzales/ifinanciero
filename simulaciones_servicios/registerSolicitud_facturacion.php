@@ -105,6 +105,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                 <input type="hidden" name="cod_facturacion" id="cod_facturacion" value="<?=$cod_facturacion;?>"/>
                 <input type="hidden" name="cantidad_filas" id="cantidad_filas" value="<?=$contadorRegistros;?>">
                 <input type="hidden" name="IdTipo" id="IdTipo" value="<?=$id_tiposervicio;?>"><!-- //tipo de servicio -->
+                <input type="hidden" name="tipo_solicitud" id="tipo_solicitud" value="1">
 
                 <div class="card">
                     <div class="card-header <?=$colorCard;?> card-header-text">
