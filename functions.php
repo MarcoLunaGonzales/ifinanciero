@@ -7319,6 +7319,29 @@ function contarFacturasLibretaBancaria($codigo){
    }
    return($valor);
 }
+
+function cuentaLibreta($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT cod_cuenta FROM libretas_bancarias where codigo=:codigo");
+   $stmt->bindParam(':codigo',$codigo);
+   $stmt->execute();
+   $nombreX="";
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $nombreX=$row['cod_cuenta'];
+   }
+   return($nombreX);
+}
+function contraCuentaLibreta($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT cod_contracuenta FROM libretas_bancarias where codigo=:codigo");
+   $stmt->bindParam(':codigo',$codigo);
+   $stmt->execute();
+   $nombreX="";
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $nombreX=$row['cod_contracuenta'];
+   }
+   return($nombreX);
+}
 ?>
 
 

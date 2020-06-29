@@ -15,11 +15,19 @@ $dbh = new Conexion();
 set_time_limit(300);
 $fechaActual=date("Y-m-d");
 
-$fecha=$_POST['fecha_desde'];
+$gestion=nameGestion($_POST['gestion']);
+$mes=$_POST['cod_mes_x'];
+if($mes<10){
+  $mes="0".$mes;
+}
+$mesConta=strtoupper(nameMes($mes));
+$dia=date("d",(mktime(0,0,0,$mes+1,1,$gestion)-1));
+
+$fecha=$gestion."-".$mes."-01";
 $fechaTitulo= explode("-",$fecha);
 $fechaFormateada=$fechaTitulo[2].'/'.$fechaTitulo[1].'/'.$fechaTitulo[0];
 
-$fechaHasta=$_POST['fecha_hasta'];
+$fechaHasta=$gestion."-".$mes."-".$dia;
 $fechaTituloHasta= explode("-",$fechaHasta);
 $fechaFormateadaHasta=$fechaTituloHasta[2].'/'.$fechaTituloHasta[1].'/'.$fechaTituloHasta[0];
 
@@ -62,7 +70,7 @@ if($filtro==1){
               </div>
               <div class="card-footer fixed-bottom">
                   <button type="submit" class="btn btn-primary">GENERAR COMPROBANTE</button>
-                  <a href="#" class="btn btn-danger">VOLVER</a>  
+                  <a href="../<?=$urlList3?>" class="btn btn-danger">VOLVER</a>  
               </div>
             </form>
             </div>
