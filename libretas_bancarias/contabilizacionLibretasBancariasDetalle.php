@@ -113,6 +113,8 @@ $stmt->bindColumn('cod_factura', $codFactura);
       <br><br><br> 
        <input type="hidden" id="monto_contabilizar" name="monto_contabilizar" value="<?=$totalMonto?>">
        <input type="hidden" id="cantidad_filas" name="cantidad_filas" value="<?=($index-1)?>">
+       <input type="hidden" id="mes_conta" name="mes_conta" value="<?=$mesConta?>">
+       <input type="hidden" id="cod_libreta" name="cod_libreta" value="<?=$entidades?>">
   </div>
 </div>
                           

@@ -20,7 +20,7 @@ $mes=$_POST['cod_mes_x'];
 if($mes<10){
   $mes="0".$mes;
 }
-
+$mesConta=strtoupper(nameMes($mes));
 $dia=date("d",(mktime(0,0,0,$mes+1,1,$gestion)-1));
 
 $fecha=$gestion."-".$mes."-01";
