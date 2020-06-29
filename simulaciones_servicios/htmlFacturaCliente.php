@@ -246,20 +246,19 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
                             $html.= '<img src="'.$fileName.'"/>';
                             // echo '<img src="'.$fileName.'"/>';        
                         $html.='</td>
-                        <td style="border-right: hidden" rowspan="2">';
+                        <td style="border-right: hidden;border-bottom: hidden;" valign="bottom" >';
                           $entero=floor($importe);
                           $decimal=$importe-$entero;
                           $centavos=round($decimal*100);
                           if($centavos<10){
                             $centavos="0".$centavos;
                           }
-                          $html.='<span class="bold table-title"><small>Son: '.ucfirst(CifrasEnLetras::convertirNumeroEnLetras($entero)).'      '.$centavos.'/100 Bolivianos</small></span><br>
-                          <span><small><small>Forma de Pago: '.$tipo_pago.'</small></small></span>
+                          $html.='<span class="bold table-title"><small>Son: '.ucfirst(CifrasEnLetras::convertirNumeroEnLetras($entero)).'      '.$centavos.'/100 Bolivianos</small></span>
                           '; 
                           $html.='</td>
-                        <td align="right" style="border-left: hidden" rowspan="2" colspan="2"><b>Total Bs &nbsp;&nbsp;&nbsp;&nbsp;'.formatNumberDec($suma_total).'</b></td>
+                        <td align="right" style="border-left: hidden;border-bottom: hidden;" colspan="2" valign="bottom"><b>Total Bs &nbsp;&nbsp;&nbsp;&nbsp;'.formatNumberDec($suma_total).'</b></td>
                     </tr>
-                    <tr></tr>
+                    <tr><td colspan="3" style="border-top:hidden;" valign="bottom"><span style="padding: 0px;margin: 0px;"><small><small>Forma de Pago: '.$tipo_pago.'</small></small></span></td></tr>
                     <tr>
                         <td style="border-right: hidden"><small><b>CÓDIGO DE CONTROL:&nbsp;&nbsp;&nbsp;&nbsp;</b> '.$codigo_control.'</small></td>
                         <td align="right" style="border-left: hidden" colspan="2"><small><b>FECHA LÍMITE DE EMISIÓN:&nbsp;&nbsp;&nbsp;&nbsp;</b>'.$fecha_limite_emision.'</small></td> 

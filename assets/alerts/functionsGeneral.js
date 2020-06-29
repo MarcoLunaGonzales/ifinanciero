@@ -9221,6 +9221,14 @@ function calcularTotalFilaServicio2(){
   document.getElementById("comprobante_auxiliar").value=comprobante_auxiliar;
   //sumartotalAddServiciosFacturacion(id);
 }
+function verificar_item_activo(index){
+  var check=document.getElementById("modal_check"+index).checked;
+  if(check){
+    calcularTotalFilaServicio2Costos();
+  }else{
+    Swal.fire("Informativo!", "Por favor, active la fila.", "warning");
+  }
+}
 function calcularTotalFilaServicio2Costos(){  
   var sumal=0;  
   var suma_pagado=0;  
@@ -9235,7 +9243,7 @@ function calcularTotalFilaServicio2Costos(){
     var monto_importe_total=parseFloat(importe_a_pagar);
     var check=document.getElementById("modal_check"+i).checked;
     if(monto_importe_total>saldo){
-      Swal.fire("Informativo!", "El Monto Supera al Saldo! ("+number_format(saldo,2)+").", "warning");
+      Swal.fire("Informativo!", "El Monto en la fila "+i+" Supera al Saldo! ("+number_format(saldo,2)+").", "warning");
     }else{
       if(check) {//BUSACMOS LOS CHECK ACTIVOS
         comprobante_auxiliar=comprobante_auxiliar+1;        
