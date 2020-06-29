@@ -103,7 +103,7 @@ FROM libretas_bancariasdetalle ce where ce.cod_libretabancaria=$codigoLib and  c
            $datosDetalle[$index]['RSFactura']=null;
            $datosDetalle[$index]['DetalleFactura']=null;
            $datosDetalle[$index]['MontoFactura']=null;*/
-           $saldoFactura=0;
+           $saldoFactura=$rowLibDetalle['monto'];
            if($rowLibDetalle['cod_factura']!=""){
            $sqlFacturaLibreta="SELECT codigo,cod_estadofactura FROM facturas_venta where cod_libretabancariadetalle=".$rowLibDetalle['codigo'];
            $stmtFacLibreta = $dbh->prepare($sqlFacturaLibreta);

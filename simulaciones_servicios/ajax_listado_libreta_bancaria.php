@@ -5,11 +5,10 @@ require_once '../functions.php';
 require_once '../styles.php';
 require_once '../layouts/librerias.php';
 $dbh = new Conexion();
-$saldo=$_GET['saldo'];
+$saldo_solfac=$_GET['saldo'];
 ?>
 <?php  
-  $lista=obtenerObtenerLibretaBancaria();
-  $saldo_x=$saldo;
+  $lista=obtenerObtenerLibretaBancaria();  
 ?>
 <style>
   tfoot input {
@@ -121,7 +120,7 @@ $saldo=$_GET['saldo'];
                     <!-- <td class="text-right libretaDetalles_<?=$j?>" style="vertical-align: top;"><small><?=implode("<div style='border-bottom:1px solid #26BD3D;'></div>", $facturaDetalle)?></small></td> -->
                     <td class="text-left libretaDetalles_<?=$j?>" style="vertical-align: top;"><small><?=implode("<div style='border-bottom:1px solid #26BD3D;'></div>", $facturaMonto)?></small>
                       <?php
-                      if($monto>$saldo){
+                      if($monto>=$saldo_solfac){
                         if($cont_facturas==0){?>
                           <a href="#" style="padding: 0;font-size:10px;width:25px;height:25px;" onclick="seleccionar_libretaBancaria(<?=$CodLibretaDetalle?>)" class="btn btn-fab btn-success btn-sm" title="Seleccionar Item"><i class="material-icons">done</i></a><?php 
                         }else{?>
@@ -144,7 +143,7 @@ $saldo=$_GET['saldo'];
                     <td style="" class="libretaDetalles_<?=$j?> text-right small"><?=$nitDetalle_x?></td>
                     <td style="" class="libretaDetalles_<?=$j?> text-left"><small><small><?=$rsDetalle_x?></small></small></td>                    
                     <td style="" class="libretaDetalles_<?=$j?> text-right small"><?=$impDetalle_x?> <?php
-                      if($monto>$saldo){
+                      if($monto>=$saldo_solfac){
                         if($cont_facturas==0){?>
                           <a href="#" style="padding: 0;font-size:10px;width:25px;height:25px;" onclick="seleccionar_libretaBancaria(<?=$CodLibretaDetalle?>)" class="btn btn-fab btn-success btn-sm" title="Seleccionar Item"><i class="material-icons">done</i></a><?php 
                         }else{?>
