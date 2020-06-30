@@ -96,7 +96,7 @@ $bgClase="bg-info";
 }
   $stmt = $dbh->prepare($query2);
   $stmt->execute();
-  $html='';$montoTotales=0;$montoTotales2=0;$montoTotales2Alumno=0;
+  $html='';$montoTotales=0;$montoTotales2=0;$montoTotales2Alumno=0;$montoTotalesPresupuesto=0;
   $precioLocalX=obtenerPrecioServiciosSimulacionPorAnio($codigo,$yyyy);
 ?>
        <div class=""><center>
@@ -130,8 +130,12 @@ $bgClase="bg-info";
           }else{
             $porcentPreciosMes=0;
           }
-          
-
+         
+         $valorConfiguracionTCPTCS=obtenerValorConfiguracion(52);
+         $tituloPorpuestaTCPTCS="NACIONAL";
+          if($valorConfiguracionTCPTCS==1){
+            $tituloPorpuestaTCPTCS=$_GET['unidad_nombre'];
+          }
           /* fin de datos */
          ?>
           <table class="table table-condensed table-bordered">
@@ -139,7 +143,7 @@ $bgClase="bg-info";
               <td colspan="6">DATOS</td>
             </tr>
             <tr>
-              <td class="bg-plomo">PRESUPUESTO <?=$_GET['area_nombre']?>, <?=$_GET['unidad_nombre']?> GESTION</td>
+              <td class="bg-plomo">PRESUPUESTO <?=$_GET['area_nombre']?>, <?=$tituloPorpuestaTCPTCS?> GESTION</td>
               <td class="text-right"><?=number_format($precioRegistrado+$sumaPrecioRegistrado, 2, '.', ',')?></td>
               <td class="bg-plomo">Precio</td>
               <td class="text-right"><?=number_format($precioLocalX, 2, '.', ',')?></td>
@@ -147,7 +151,7 @@ $bgClase="bg-info";
               <td class="text-right"><?=number_format($porcentPrecios, 2, '.', ',')?> %</td>
             </tr>
             <tr>
-              <td class="bg-plomo">PRESUPUESTO <?=$_GET['area_nombre']?>, <?=$_GET['unidad_nombre']?> MES (INFORMATIVO)</td>
+              <td class="bg-plomo">PRESUPUESTO <?=$_GET['area_nombre']?>, <?=$tituloPorpuestaTCPTCS?> MES (INFORMATIVO)</td>
               <td class="text-right"><?=number_format($presupuestoMes, 2, '.', ',')?></td>
               <td class="bg-plomo">Precio</td>
               <td class="text-right"><?=number_format($precioLocalX, 2, '.', ',')?></td>
@@ -161,6 +165,10 @@ $bgClase="bg-info";
    <table class="table table-condensed table-bordered">
          <tr class="text-white <?=$bgClase?>">
         <td>Cuenta / Detalle</td>
+        <?php if($tipoCosto==1){
+        ?> <td>Presupuesto BOB</td><?php 
+        }
+        ?>
         <td>Monto x Servicio BOB</td>
         <td>Monto x Servicio USD</td>
         <?php if($tipoCosto!=1){
@@ -176,13 +184,17 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     
     if($tipoCosto==1){
       if($row['calculado']==$row['local']){
+      $montoPresupuestoFila=$row['calculado']*$nAuditorias;
       $montoCalculadoTit=($row['calculado']*$nAuditorias)*($porcentPrecios/100);
     }else{
+      $montoPresupuestoFila=$row['calculado']*$nAuditorias;
       $montoCalculadoTit=($row['local']*$nAuditorias)*($porcentPrecios/100);
     }
       $montoTotales+=$montoCalculadoTit;
+      $montoTotalesPresupuesto+=$montoPresupuestoFila;
        $html.='<tr class="bg-plomo">'.
                       '<td class="font-weight-bold text-left">'.$row['nombre'].'</td>'.
+                      '<td class="text-right font-weight-bold">'.number_format($montoPresupuestoFila, 2, '.', ',').'</td>'.
                       '<td class="text-right font-weight-bold">'.number_format($montoCalculadoTit, 2, '.', ',').'</td>'.
                       '<td class="text-right font-weight-bold">'.number_format($montoCalculadoTit/$usd, 2, '.', ',').'</td>';
       $html.='</tr>';
@@ -207,13 +219,16 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
          if($tipoCosto==1){
         if($row_partidas['tipo_calculo']!=1){
           $numeroCuentas="(Manual)";
+          $montoPresupuestoFila2=$row_partidas['monto_local']*$nAuditorias;
           $montoCalculado=($row_partidas['monto_local']*$nAuditorias)*($porcentPrecios/100);
         }else{
           $numeroCuentas="(".$numeroCuentas.")";
+          $montoPresupuestoFila2=$row_partidas['monto_local']*$nAuditorias;
           $montoCalculado=($row_partidas['monto_calculado']*$nAuditorias)*($porcentPrecios/100);
         }
            $html.='<tr class="bg-info text-white">'.
                       '<td class="font-weight-bold text-left">&nbsp;&nbsp; '.$row_partidas['nombre'].' '.$numeroCuentas.'</td>'.
+                      '<td class="text-right font-weight-bold">'.number_format($montoPresupuestoFila2, 2, '.', ',').'</td>'.
                       '<td class="text-right font-weight-bold">'.number_format($montoCalculado, 2, '.', ',').'</td>'.
                       '<td class="text-right font-weight-bold">'.number_format($montoCalculado/$usd, 2, '.', ',').'</td>';
           $html.='</tr>';
@@ -242,8 +257,11 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 //$montoCal=costoModulo($monto,$mes);
                 $montoCal=$monto*($porcentPrecios/100);
                 $html.='<tr class="">'.
-                      '<td class="font-weight-bold text-left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$row_cuentas['nombre'].'</td>'.
-                      '<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>'.
+                      '<td class="font-weight-bold text-left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$row_cuentas['nombre'].'</td>';
+                    if($tipoCosto==1){
+                      $html.='<td class="text-right text-muted">'.number_format($monto, 2, '.', ',').'</td>';
+                    }  
+                $html.='<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>'.
                       '<td class="text-right text-muted">'.number_format($montoCal/$usd, 2, '.', ',').'</td>';
                 $html.='</tr>';
             }
@@ -277,8 +295,12 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 
                 $montoTotales2Alumno+=$montoCal/$cantidadDetalle;
                 $html.='<tr class="'.$bgFila.'">'.
-                      '<td class="font-weight-bold text-left small">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$row_cuentas['nombre'].' / '.$row_cuentas['glosa'].' ('.$tituloItem.')</td>'.
-                      '<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>'.
+                      '<td class="font-weight-bold text-left small">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$row_cuentas['nombre'].' / '.$row_cuentas['glosa'].' ('.$tituloItem.')</td>';
+               if($tipoCosto==1){
+                 $html.='<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>';
+                }         
+
+               $html.='<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>'.
                       '<td class="text-right text-muted">'.number_format($montoCal/$usd, 2, '.', ',').'</td>';
                       if($tipoCosto!=1){
                         $html.='<td class="text-right text-muted">'.number_format($montoCal/$cantidadDetalle, 2, '.', ',').'</td><td class="text-right text-muted">'.number_format(($montoCal/$cantidadDetalle)/$usd, 2, '.', ',').'</td><td class="text-right text-muted">'.$cantidadDetalle.'</td>';
@@ -294,6 +316,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     if($tipoCosto==1){
            $html.='<tr class="bg-plomo">'.
                       '<td class="font-weight-bold text-left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Total Variables</td>'.
+                      '<td class="text-right text-muted font-weight-bold">'.number_format($montoTotalesPresupuesto, 2, '.', ',').'</td>'.
                       '<td class="text-right text-muted font-weight-bold">'.number_format($montoTotales, 2, '.', ',').'</td>'.
                       '<td class="text-right text-muted font-weight-bold">'.number_format($montoTotales/$usd, 2, '.', ',').'</td>';
                 $html.='</tr>';     

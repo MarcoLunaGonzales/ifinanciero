@@ -64,7 +64,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
                   <div class="card-icon" style="background:rgb(37, 98, 83) !important;">
                     <i class="material-icons">content_paste</i>
                   </div>
-                  <h4 class="card-title"><b><?=$moduleNamePlural?> Regional</b></h4>
+                  <h4 class="card-title"><b><?=$moduleNamePlural?> Dirección</b></h4>
                 </div>
                 <div class="card-body">
                     <table class="table table-condesed" id="tablePaginator">

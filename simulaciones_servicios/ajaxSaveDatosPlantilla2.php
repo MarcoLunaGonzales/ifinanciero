@@ -119,6 +119,7 @@ $stmtDetAt->execute();
                         $stmtDetalleAu = $dbh->prepare($sqlDetalleAu);
                         $stmtDetalleAu->execute();*/
                          //aumentar dias a los auditores
+                        $diasAtributoDiasAux=0;
                          for ($al=0; $al < count($auditoresDias[$jj]); $al++) { 
                           $valorAuditorDia=explode("####",$auditoresDias[$jj][$al]);
                           $codigoAuditor=$valorAuditorDia[0];    
@@ -127,20 +128,32 @@ $stmtDetAt->execute();
                              VALUES ('$codSimulacionServicioAtributo', '$codigoAuditor', '$anioAtributoDias',1)";
                              $stmtDetalleAtributosAud = $dbh->prepare($sqlDetalleAtributosAud);
                              $stmtDetalleAtributosAud->execute();  
+                             $diasAtributoDiasAux=$diasAtributoDias;
+                               
                           }else{
                              $sqlDetalleAtributosAud="INSERT INTO simulaciones_servicios_atributosauditores (cod_simulacionservicioatributo, cod_auditor, cod_anio,estado) 
                              VALUES ('$codSimulacionServicioAtributo', '$codigoAuditor', '$anioAtributoDias',0)";
                              $stmtDetalleAtributosAud = $dbh->prepare($sqlDetalleAtributosAud);
                              $stmtDetalleAtributosAud->execute();
+                             $diasAtributoDiasAux=0;
                           }
                           if(obtenerEntradaSimulacionServicio($codSimulacion)==1){
-                            $cantidadDiasAnterior=obtenerDiasAuditorSimulacionServicio($codigoAuditor);
-                            $cantidadDiasNuevo=$cantidadDiasAnterior+$diasAtributoDias; 
-                            $sqlDetallesAuditores="UPDATE simulaciones_servicios_auditores SET dias=$cantidadDiasNuevo where codigo=$codigoAuditor";
-                            $stmtDetallesAuditores = $dbh->prepare($sqlDetallesAuditores);
-                            $stmtDetallesAuditores->execute();
+                          $cantidadDiasAnterior=obtenerDiasAuditorSimulacionServicio($codigoAuditor);
+                          $cantidadDiasNuevo=$cantidadDiasAnterior+$diasAtributoDiasAux; 
+                          $sqlDetallesAuditores="UPDATE simulaciones_servicios_auditores SET dias=$cantidadDiasNuevo where codigo=$codigoAuditor";
+                          $stmtDetallesAuditores = $dbh->prepare($sqlDetallesAuditores);
+                          $stmtDetallesAuditores->execute();
                           }
                           echo $sqlDetallesAuditores;
+                         }
+                         if(count($auditoresDias[$jj])==0){
+                           if(obtenerEntradaSimulacionServicio($codSimulacion)==1){
+                          $cantidadDiasAnterior=obtenerDiasAuditorSimulacionServicio($codigoAuditor);
+                          $cantidadDiasNuevo=$cantidadDiasAnterior+$diasAtributoDiasAux; 
+                          $sqlDetallesAuditores="UPDATE simulaciones_servicios_auditores SET dias=$cantidadDiasNuevo where codigo=$codigoAuditor";
+                          $stmtDetallesAuditores = $dbh->prepare($sqlDetallesAuditores);
+                          $stmtDetallesAuditores->execute();
+                          }
                          }
                        }           
                     }
@@ -169,9 +182,9 @@ $stmtDetAt->execute();
        $monto=$suma; 
 }*/
 
-$sqlDetallesAuditores="UPDATE simulaciones_servicios_auditores SET dias=1 where cod_simulacionservicio=$codSimulacion and dias=0";
+/*$sqlDetallesAuditores="UPDATE simulaciones_servicios_auditores SET dias=1 where cod_simulacionservicio=$codSimulacion and dias=0";
 $stmtDetallesAuditores = $dbh->prepare($sqlDetallesAuditores);
-$stmtDetallesAuditores->execute();
+$stmtDetallesAuditores->execute();*/
 
 $sqlDetalles="UPDATE simulaciones_servicios_tiposervicio SET observaciones='$obs',cantidad_editado=$cantidad,monto=$monto,habilitado=$habilitado,cod_tipounidad=$unidad,cod_anio=$anio_fila where codigo=$codigo";
 $stmtDetalles = $dbh->prepare($sqlDetalles);

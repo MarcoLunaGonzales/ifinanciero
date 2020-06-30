@@ -1667,7 +1667,11 @@ function obtenerMontoPorCuenta($numero,$unidad,$area,$fecha){
       $numero=trim($row['numero']);
       $cuenta=$row['cod_cuenta'];
       $tipoSim=obtenerValorConfiguracion(13);
-      if($tipoSim==1){
+      $tipoPresupuesto=obtenerValorConfiguracion(52);
+      if($tipoPresupuesto!=1){
+        $unidad=0;
+      }
+      if($tipoPresupuesto!=1){
        $saux= ejecutadoEgresosMes($unidad, $fecha, 12, $area, 1, $numero);
        $saux=$saux/12;
        $sum+=$saux; 
@@ -1696,7 +1700,11 @@ function obtenerMontoPorCuenta($numero,$unidad,$area,$fecha){
       $numero=trim($row['numero']);
       $cuenta=$row['cod_cuenta'];
       $tipoSim=obtenerValorConfiguracion(13);
-      if($tipoSim==1){
+      $tipoPresupuesto=obtenerValorConfiguracion(52);
+      if($tipoPresupuesto!=1){
+        $unidad=0;
+      }
+      if($tipoPresupuesto!=1){
        $saux= ejecutadoEgresosMes($unidad, $fecha, 12, $area, 1, $numero);
        //$saux=$saux/12;
        $sum+=$saux; 
@@ -1720,8 +1728,12 @@ function obtenerMontoPorCuenta($numero,$unidad,$area,$fecha){
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       $numero=trim($row['numero']);
       $cuenta=$row['cod_cuenta'];
+      $tipoPresupuesto=obtenerValorConfiguracion(52);
+      if($tipoPresupuesto!=1){
+        $unidad=0;
+      }
       $tipoSim=obtenerValorConfiguracion(13);
-      if($tipoSim==1){
+      if($tipoPresupuesto!=1){
        $saux= ejecutadoEgresosMes($unidad, $fecha, 12, $area, 1, $numero);
        //$saux=$saux/12;
        $sum+=$saux; 
@@ -6748,7 +6760,7 @@ function ejecutadoEgresosMes($oficina, $anio, $mes, $area, $acumulado, $cuenta){
   $remote_server_output = curl_exec ($ch);
   curl_close ($ch);
   $datos=json_decode($remote_server_output);
-    return $datos->ejecutado; 
+    return $datos->presupuesto; 
 }
 function presupuestadoEgresosMes($oficina, $anio, $mes, $area, $acumulado, $cuenta){
   $direccion=obtenerValorConfiguracion(45);//direccion del Server del Servicio
