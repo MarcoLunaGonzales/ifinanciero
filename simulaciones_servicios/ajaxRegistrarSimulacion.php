@@ -117,8 +117,6 @@ if(isset($_GET['nombre'])){
   $stmtA = $dbhA->prepare($sqlA);
   $stmtA->execute();
 
-  
-
   //seleccionar las partidas variables con montos_ibnorca y fuera
   $partidasPlan=obtenerPartidasPlantillaServicio($plantilla_servicio,2);
   while ($rowPartida = $partidasPlan->fetch(PDO::FETCH_ASSOC)) {
@@ -175,12 +173,25 @@ if(isset($_GET['nombre'])){
 
          $codTIPA=$rowAudPlantilla['cod_tipoauditor'];
          $nombreTIPA=nameTipoAuditor($codTIPA);
+         $nombreTIPAAux=$nombreTIPA;
          $cantidadS=$rowAudPlantilla['cantidad'];
          $montoS=$rowAudPlantilla['monto'];
          $montoSE=$rowAudPlantilla['monto_externo'];
          $codBolLocSE=$cod_region;
          $diasS=$rowAudPlantilla['dias'];
-
+         //para registrar mas auditores 3 auditor y 2 experto tecnico
+         $cantidadAuditores=1;
+         if($codTIPA==2408){
+           $cantidadAuditores=3;
+         }else{
+           if($codTIPA==2412){
+           $cantidadAuditores=2;
+          }
+         }
+        for ($auditorN=1; $auditorN <= $cantidadAuditores; $auditorN++) { 
+          if($auditorN>1){
+            $nombreTIPA=$nombreTIPAAux."(".$auditorN.")";
+          }
          if($anioParaRegistroAuditor!=$i){
             $codigoAuditorSimulacion=obtenerCodigoSimulacionServicioAuditor();
             $dbhAU = new Conexion();
@@ -203,6 +214,7 @@ if(isset($_GET['nombre'])){
          $stmtSS = $dbhSS->prepare($sqlSS);
          $flagsuccess=$stmtSS->execute(); 
           array_push($SQLDATOSINSTERT,$flagsuccess);
+         } 
        }
        $anioParaRegistroAuditor=$i;
        $cantidadPersonal=$monto_generado;

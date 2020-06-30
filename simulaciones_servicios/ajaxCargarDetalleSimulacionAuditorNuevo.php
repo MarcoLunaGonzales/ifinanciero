@@ -126,7 +126,7 @@ for ($nanio=$inicioAnioReal; $nanio <= $aniosReal; $nanio++) {
       }
 
       if($row['cod_tipoauditor']==-100){
-         $nombreTipo="<b class='text-danger'>".$nombreTipo." (CV)</b>";
+         $nombreTipo="<b class='text-danger'>".$nombreTipo."</b>";
       }
       $estiloFilaTextoAud="";
       $existeCostoVariableSolAu=obtenerCostoVariableSolicitadoPropuestaTCPTCS($codSimulacion,$codigoTipo,2);
