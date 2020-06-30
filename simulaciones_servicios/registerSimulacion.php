@@ -418,14 +418,14 @@ for ($an=0; $an<=$anioGeneral; $an++) {
 
           </div>
            <div class="row">                
-            <div class="col-sm-2">
+            <!--<div class="col-sm-2">
               <div class="form-group">
-                  <label class="bmd-label-static">D&iacute;as Servicio</label>
-                  <input class="form-control" type="text" name="dias_plan" readonly value="<?=$diasSimulacion?>" id="dias_plan"/>
+                  <label class="bmd-label-static">D&iacute;as Servicio</label>-->
+                  <input class="form-control" type="hidden" name="dias_plan" readonly value="<?=$diasSimulacion?>" id="dias_plan"/>
                   <input class="form-control" type="hidden" name="productos_sim" readonly value="<?=$productosX?>" id="productos_sim"/>
                   <input class="form-control" type="hidden" name="sitios_sim" readonly value="<?=$sitiosX?>" id="sitios_sim"/>
-              </div>
-            </div>
+              <!--</div>
+            </div>-->
             <div class="col-sm-2">
               <div class="form-group">
                   <label class="bmd-label-static">AFNOR</label>
@@ -444,7 +444,7 @@ for ($an=0; $an<=$anioGeneral; $an++) {
                   <input class="form-control" type="text" name="anio_simulacion" readonly value="<?=$anioGeneral?>" id="anio_simulacion"/>
               </div>
             </div>
-            <div class="col-sm-2">
+            <div class="col-sm-4">
               <div class="form-group">
                   <label class="bmd-label-static">Precio BOB</label>
                   <input class="form-control" type="text" name="precio_auditoria_ib" readonly value="<?=$precioLocalInputX?>" id="precio_auditoria_ib"/>
@@ -482,7 +482,10 @@ for ($an=0; $an<=$anioGeneral; $an++) {
 
                   //total desde la plantilla 
                  $nAuditorias=obtenerCantidadAuditoriasPlantilla($codigoPX); 
-                 $precioRegistrado=obtenerPrecioRegistradoPlantilla($codigoPX);  
+                 $precioRegistrado=obtenerPrecioRegistradoPropuestaTCPTCS($codigoSimulacionSuper);  
+                 if($precioRegistrado==0){
+                  $precioRegistrado=1;
+                 }
                  $totalFijo=obtenerTotalesPlantillaServicio($codigoPX,1,$nAuditorias); //tipo de costo 1:fijo,2:variable desde la plantilla
                  $porcentPrecios=($precioLocalX*100)/$precioRegistrado;
                  $totalFijoPlan=$totalFijo[0]*($porcentPrecios/100);

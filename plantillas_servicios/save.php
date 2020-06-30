@@ -27,14 +27,18 @@ $area=$_POST['area'];
 $q=$_POST['q'];
 $s=$_POST['s'];
 $u=$_POST['u'];
-
+$ingresoPresupuestado=obtenerValorConfiguracion(21);
+  $codOficina=0;
+  if(obtenerValorConfiguracion(52)==1){
+    $codOficina=$unidad;
+  }
 if($area==39){
   $cantidadAuditorias=obtenerValorConfiguracion(17);
-  $ingresoPresupuestado=obtenerValorConfiguracion(21);
 }else{
   $cantidadAuditorias=obtenerValorConfiguracion(18);
-  $ingresoPresupuestado=obtenerValorConfiguracion(22);
 }
+
+$ingresoPresupuestado=obtenerPresupuestoEjecucionPorArea($codOficina,$area,$globalNombreGestion,12)['presupuesto'];
 
 //obtener PRESUPUESTO AREA OFICINA
 //$ingresoPresupuestado=obtenerPresupuestoAreaGestion((int)$globalNombreGestion-1,$area);

@@ -104,7 +104,10 @@ $bgClase="bg-info";
           $porCre=($_GET['porcentaje_fijo']/100)*($yyyy-1);
           /* DATOS PARA PRECIO EN LUGAR DE CANTIDAD AUDITORIAS*/
           $precioLocalX=obtenerPrecioServiciosSimulacionPorAnio($codigo,$yyyy);
-          $precioRegistrado=obtenerPrecioRegistradoPlantilla($codPlan);
+          $precioRegistrado=obtenerPrecioRegistradoPropuestaTCPTCS($codigo);
+          if($precioRegistrado==0){
+             $precioRegistrado=1;
+          }
           $sumaPrecioRegistrado=0;
           if($yyyy>1){
            //$precioLocalX=($precioLocalX*$porCre)+$precioLocalX;
@@ -120,8 +123,14 @@ $bgClase="bg-info";
             $codOficina=$rowPlantilla['cod_unidadorganizacional'];
             $codAreaX=$rowPlantilla['cod_area'];
           }
+
           $presupuestoMes=obtenerPresupuestoEjecucionPorArea($codOficina,$codAreaX,$globalNombreGestion,$mesActualConsulta)['presupuesto'];
-          $porcentPreciosMes=($precioLocalX*100)/($presupuestoMes);
+          if($presupuestoMes>0){
+            $porcentPreciosMes=($precioLocalX*100)/($presupuestoMes);
+          }else{
+            $porcentPreciosMes=0;
+          }
+          
 
           /* fin de datos */
          ?>

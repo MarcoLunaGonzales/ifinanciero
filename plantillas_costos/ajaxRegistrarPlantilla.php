@@ -35,7 +35,7 @@ if(isset($_GET['nombre'])){
   $codPlanCosto=obtenerCodigoPlanCosto();
   $cantidadCursosMes=obtenerValorConfiguracion(6);
   $codOficina=0;
-  if(obtenerValorConfiguracion(52)!=1){
+  if(obtenerValorConfiguracion(52)==1){
     $codOficina=$unidad;
   }
   $ingresoPresupuestado=obtenerPresupuestoEjecucionPorArea($codOficina,$area,$globalNombreGestion,12)['presupuesto'];
