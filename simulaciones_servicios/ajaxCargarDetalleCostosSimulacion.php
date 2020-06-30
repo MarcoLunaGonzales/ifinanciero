@@ -12,7 +12,8 @@ $dbh = new Conexion();
 $sqlX="SET NAMES 'utf8'";
 $stmtX = $dbh->prepare($sqlX);
 $stmtX->execute();
-
+$globalNombreGestion=$_SESSION["globalNombreGestion"];
+$mesActualConsulta=date("m");
 if(isset($_GET["simulacion"])){
  $codigo=$_GET["simulacion"];
  $codPlan=$_GET["plantilla"];
@@ -112,6 +113,16 @@ $bgClase="bg-info";
           $nAuditorias=obtenerCantidadAuditoriasPlantilla($codPlan); 
           
           $porcentPrecios=($precioLocalX*100)/($precioRegistrado+$sumaPrecioRegistrado);  
+
+          $codOficina=0;$codAreaX=0;
+          $datosPlantilla=obtenerPlantillaServicioDatos($codPlan);
+          while ($rowPlantilla = $datosPlantilla->fetch(PDO::FETCH_ASSOC)) {
+            $codOficina=$rowPlantilla['cod_unidadorganizacional'];
+            $codAreaX=$rowPlantilla['cod_area'];
+          }
+          $presupuestoMes=obtenerPresupuestoEjecucionPorArea($codOficina,$codAreaX,$globalNombreGestion,$mesActualConsulta)['presupuesto'];
+          $porcentPreciosMes=($precioLocalX*100)/($presupuestoMes);
+
           /* fin de datos */
          ?>
           <table class="table table-condensed table-bordered">
@@ -125,6 +136,14 @@ $bgClase="bg-info";
               <td class="text-right"><?=number_format($precioLocalX, 2, '.', ',')?></td>
               <td class="bg-plomo">Porcentaje</td>
               <td class="text-right"><?=number_format($porcentPrecios, 2, '.', ',')?> %</td>
+            </tr>
+            <tr>
+              <td class="bg-plomo">PRESUPUESTO <?=$_GET['area_nombre']?>, <?=$_GET['unidad_nombre']?> MES (INFORMATIVO)</td>
+              <td class="text-right"><?=number_format($presupuestoMes, 2, '.', ',')?></td>
+              <td class="bg-plomo">Precio</td>
+              <td class="text-right"><?=number_format($precioLocalX, 2, '.', ',')?></td>
+              <td class="bg-plomo">Porcentaje</td>
+              <td class="text-right"><?=number_format($porcentPreciosMes, 2, '.', ',')?> %</td>
             </tr>
           </table>
        <?php

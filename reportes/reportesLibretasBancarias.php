@@ -104,7 +104,7 @@ $fechaHasta=date("Y-m-d");
                     <select class="selectpicker form-control form-control-sm" name="filtro" id="filtro" data-style="<?=$comboColor;?>" required>                           
                        <option value="0">Ver Todo</option>
                        <option value="1">Ver Facturas Registradas</option>
-                       <option value="2">Ver Sin Facturas</option>  
+                       <option value="2">Ver Depósito de Facturas</option>  
                       </select>
                   </div>
               </div> 

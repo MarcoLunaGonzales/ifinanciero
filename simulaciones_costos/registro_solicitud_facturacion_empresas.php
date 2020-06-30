@@ -108,6 +108,7 @@ $descuento_cliente=0;
                 <input type="hidden" name="cod_facturacion" id="cod_facturacion" value="<?=$cod_facturacion;?>"/>
                 <input type="hidden" name="cantidad_filas" id="cantidad_filas" value="<?=$contadorRegistros;?>">
                 <input type="hidden" name="IdCurso" id="IdCurso" value="<?=$IdCurso;?>">
+                <input type="hidden" name="tipo_solicitud" id="tipo_solicitud" value="2">
                 
                 <div class="card">
                     <div class="card-header <?=$colorCard;?> card-header-text">
@@ -264,7 +265,7 @@ $descuento_cliente=0;
                                 ?>
                             </div>
                             <label class="col-sm-2 col-form-label">Forma de Pago</label>
-                            <div class="col-sm-2">
+                            <div class="col-sm-3">
                                 <div class="form-group" >
                                     <select name="cod_tipopago" id="cod_tipopago" class="selectpicker form-control form-control-sm" data-style="btn btn-info" onChange="ajaxTipoPagoContactoPersonal(this);">
                                         <?php 
@@ -289,26 +290,18 @@ $descuento_cliente=0;
                                     </select>                                     
                                 </div>
                             </div>
-                            <div class="col-sm-1">
+                            <div class="col-sm-2">
                                 <div class="form-group" >    
-                                    <button type="button" class="btn btn-danger btn-round btn-fab btn-sm" data-toggle="modal" data-target="" onclick="agregarDatosModalTipoPagoFacturacion()">
+                                    <button type="button" class="btn btn-danger btn-round btn-fab btn-sm" data-toggle="modal" data-target="" onclick="agregarDatosModalTipoPagoFacturacion(2)">
                                         <i class="material-icons" title="Tipo Pago Porcentaje">list</i>
                                         <span id="nfac" class="count bg-warning"></span>
                                      </button>
-                                     <button type="button" class="btn btn-primary btn-round btn-fab btn-sm" data-toggle="modal" data-target="" onclick="agregarDatosModalAreasFacturacion()">
+                                     <button type="button" class="btn btn-primary btn-round btn-fab btn-sm" data-toggle="modal" data-target="" onclick="agregarDatosModalAreasFacturacion(2)">
                                         <i class="material-icons" title="Areas Porcentaje">list</i>
                                         <span id="nfacAreas" class="count bg-warning"></span>
                                      </button>                              
                                 </div>
-                            </div>  
-                            <div class="col-sm-2">
-                                <div class="form-group">                                
-                                  <div class="dias_credito_x" style="display: none"><?php $dias_credito=obtenerValorConfiguracion(58)?>
-                                    <span style="color: #ff0000;"><small><?=$dias_credito?> días de crédito</small></span>
-                                    <!-- <input type="text" class="form-control" name="dias_credito" id="dias_credito" value="" readonly> -->
-                                  </div>
-                                </div>
-                            </div>
+                            </div>                            
                             <label class="col-sm-1 col-form-label">Responsable</label>
                             <div class="col-sm-4">
                                 <div class="form-group">            
@@ -317,6 +310,15 @@ $descuento_cliente=0;
                                     <input type="text" value="<?=$responsable?>" readonly="true" class="form-control" style="background-color:#E3CEF6;text-align: left">
                                 </div>
                             </div>                             
+                        </div>
+                        <div class="row dias_credito_x" id="" style="display: none">
+                            <?php $dias_credito=obtenerValorConfiguracion(58)?>
+                            <label class="col-sm-2 col-form-label">Días de Crédito</label>
+                            <div class="col-sm-2">
+                                <div class="form-group">                                
+                                    <input type="number" class="form-control" name="dias_credito" id="dias_credito" value="<?=$dias_credito?>">
+                                </div>
+                            </div>                            
                         </div>
                         <!-- fin tipos pago y objeto  -->                                                 
                         <div class="row">
@@ -544,7 +546,7 @@ $descuento_cliente=0;
                                                         <input type="text" class="form-control" name="modal_importe_pagado_dos<?=$iii?>" id="modal_importe_pagado_dos<?=$iii?>" readonly value="<?=number_format($monto_total_pagado,2);?>">
                                                     </td>
                                                     <td>
-                                                        <input type="number" step="0.01" id="importe_a_pagar<?=$iii?>" name="importe_a_pagar<?=$iii?>" class="form-control text-primary text-right"  value="<?=$saldo?>" step="0.01" onkeyup="calcularTotalFilaServicio2Costos()" <?=$sw2?>>
+                                                        <input type="number" step="0.01" id="importe_a_pagar<?=$iii?>" name="importe_a_pagar<?=$iii?>" class="form-control text-primary text-right"  value="<?=$saldo?>" step="0.01" onkeyup="verificar_item_activo(<?=$iii?>)" <?=$sw2?>>
                                                     </td>
 
 
@@ -582,7 +584,9 @@ $descuento_cliente=0;
                                             <td colspan="5">Monto Total</td>
                                             <td><input style="background:#ffffff" class="form-control" type="text" value="0" name="modal_totalmontoserv" id="modal_totalmontoserv" readonly="true" /></td>
                                             <td><input style="background:#ffffff" class="form-control" type="text" value="0" name="modal_totalmontoserv_pagado" id="modal_totalmontoserv_pagado" readonly="true" /></td>
-                                            <td><input style="background:#ffffff" class="form-control" type="text" value="0" name="modal_totalmontoserv_costo" id="modal_totalmontoserv_costo" readonly="true" /></td>
+                                            <td>
+                                                <input type="hidden" value="0" name="modal_totalmontoserv_costo_a" id="modal_totalmontoserv_costo_a"/>
+                                                <input style="background:#ffffff" class="form-control" type="text" value="0" name="modal_totalmontoserv_costo" id="modal_totalmontoserv_costo" readonly="true" /></td>
                                             <td></td>
                                         </tr>
                                     </tbody>

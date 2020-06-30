@@ -164,6 +164,12 @@ $stmt->bindColumn('estado_registro', $estadoRegistroX);
                                    ?><a href="#" onclick="alerts.showSwal('warning-message-crear-servicio','<?=$urlEdit2?>?cod=<?=$codigo?>&estado=5&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>')" class="dropdown-item">
                                     <i class="material-icons text-success">emoji_events</i> ADJUDICAR
                                  </a><?php
+                                  }else{
+                                   ?>
+                                   <a title="Editar Simulación - Detalle" target="_blank" href='<?=$urlRegister;?>?cod=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>' class="dropdown-item">
+                                    <i class="material-icons text-success"><?=$iconEdit;?></i> Editar Propuesta
+                                 </a> 
+                                   <?php  
                                   }
                                  }?>
                                  <a href="<?=$urlVer;?>?cod=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>" class="dropdown-item">
@@ -184,6 +190,12 @@ $stmt->bindColumn('estado_registro', $estadoRegistroX);
                                    ?><a href="#" onclick="alerts.showSwal('warning-message-crear-servicio','<?=$urlEdit2?>?cod=<?=$codigo?>&estado=5&admin=0')" class="dropdown-item">
                                       <i class="material-icons text-success">emoji_events</i> ADJUDICAR
                                    </a><?php
+                                   }else{
+                                    ?>
+                                   <a title="Editar Simulación - Detalle" target="_blank" href='<?=$urlRegister;?>?cod=<?=$codigo;?>' class="dropdown-item">
+                                    <i class="material-icons text-success"><?=$iconEdit;?></i> Editar Propuesta
+                                 </a> 
+                                   <?php
                                    }
                                  }?>
                                  <a href="<?=$urlVer;?>?cod=<?=$codigo;?>" class="dropdown-item">

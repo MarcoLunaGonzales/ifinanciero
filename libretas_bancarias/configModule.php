@@ -6,7 +6,7 @@ $moduleNamePlural="Libretas Bancarias";
 $moduleNamePluralDetalle="Libretas Bancarias - Detalle";
 $urlList="index.php?opcion=listLibreta";
 $urlList2="index.php?opcion=listLibretasDetalle";
-
+$urlList3="index.php?opcion=contabilizarLibretasBancarias";
 $urlEdit="index.php?opcion=editLibretaBancaria";
 //$urlEdit2="tipos_cambios/historial.php";
 
@@ -18,7 +18,13 @@ $urlSaveDelete="";
 
 $urlRegister2="index.php?opcion=registerLibretaBancaria";
 $urlSaveImport="libretas_bancarias/saveImport.php";
-
 $urlContaLibretasBancarias="libretas_bancarias/contabilizacionLibretasBancarias.php";
 $urlSaveContabilizacion="../libretas_bancarias/saveContabilizacion.php";
+
+
+$urlList_2="index.php?opcion=contabilizarLibretasBancarias_lista";
+$urlList_2detalle="index.php?opcion=contabilizarLibretasBancarias_listadetalle";
+
+
+
 ?>

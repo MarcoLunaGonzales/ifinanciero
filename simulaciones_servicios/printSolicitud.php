@@ -31,6 +31,7 @@ try{
   $observaciones = $resultInfo['observaciones'];  
   $nro_correlativo = $resultInfo['nro_correlativo'];  
   $codigo_alterno = $resultInfo['codigo_alterno'];  
+  $tipo_solicitud = $resultInfo['tipo_solicitud'];  
   
 $nombre_unidad=nameUnidad($cod_unidadorganizacional);
 $abrev_area=trim(abrevArea($cod_area),'-');
@@ -112,7 +113,7 @@ $html.=  '<header class="header">'.
                 <td rowspan="2" width="6%" class="text-center"><b>C.Costo</b></td>
                 <td rowspan="2" colspan="2" class="text-center"><b>Detalle</b></td>                
                 <td rowspan="2" width="5%" class="text-center"><b>Cantidad</b></td>
-                <td rowspan="2" width="8%" class="text-center"><b>P.U</b>.</td>
+                <td rowspan="2" width="8%" class="text-center"><b>P.U.</b></td>
                 <td colspan="2" class="text-center"><b>Importe</b></td>
               </tr>
               <tr class="td-color-celeste">
@@ -132,8 +133,10 @@ $html.=  '<header class="header">'.
             $sumaTotal_bob=0;
             $sumaTotal_sus=0;
             while ($row2 = $stmt2->fetch(PDO::FETCH_ASSOC)) {
-              $precio_unitario=$row2["precio"]-$row2["descuento_bob"];
-              if($usd>0)$precio_sus=$row2["precio"]/$usd;
+              if($tipo_solicitud==2 || $tipo_solicitud==6 || $tipo_solicitud==7) $precio_unitario=$row2["precio"];
+              else $precio_unitario=$row2["precio"]-$row2["descuento_bob"];
+              
+              if($usd>0)$precio_sus=$precio_unitario/$usd;
               else $precio_sus=0;
               
               $html.='<tr>
@@ -162,122 +165,105 @@ $html.=  '<header class="header">'.
           '<br>';
 
           //tipos de pago
-          // $cod_tipopago=3;
-          //efectivo
-          if($cod_tipopago==48){
-            $html.='<table class="table" >
-              <tr class="td-color-celeste"><td class="text-center"><b>Forma de Pago</b></td></tr>
-              <tr><td class="text-left">En Efectivo</td></tr>
-            </table><br>';
-            $html.='<table class="table">
-              <tr class="td-color-celeste"><td class="text-center"><b>Observaciones</b></td></tr>
-              <tr><td>&nbsp;'.$observaciones.'</td></tr>
-            </table><br><br><br>';
-          }elseif($cod_tipopago==47){//cheque
-            $html.='<table class="table" >
-              <tr class="td-color-celeste"><td class="text-center"><b>Forma de Pago</b></td></tr>
-              <tr><td class="text-left">Cheque</td></tr>
-            </table><br>';
-            $html.='<table class="table">
-              <tr class="td-color-celeste"><td class="text-center"><b>Observaciones</b></td></tr>
-              <tr><td>&nbsp;'.$observaciones.'</td></tr>
-            </table><br><br><br>';
-          }elseif($cod_tipopago==217){//credito
-            $html.='<table class="table" >
-              <tr class="td-color-celeste"><td class="text-center"><b>Forma de Pago</b></td></tr>
-              <tr>
-                <td>
-                <table class="table">
-                  <tr>
-                    <td class="td-border-none" colspan="2"><b>Crédito</b></td>
-                    <td class="td-border-none" colspan="2">
-                      <table class="table">
-                        <tr>
-                          <td width="5%" class="td-color-celeste"><b>N°:</b></td><td width="20%"></td><td width="10%" class="td-color-celeste"><b>Banco:</b></td><td></td>
-                        </tr>
-                      </table>
-                    </td>
-                  </tr>                  
-                  <tr>
-                    <td class="td-border-none" width="25%">
-                      <table class="table">
-                        <tr>
-                          <td width="60%" class="td-border-none" align="right"><b>Crédito</b></td>
-                          <td></td>
-                        </tr>
-                      </table>
-                    </td>
-                    <td class="td-border-none" width="25%">
-                      <table class="table">
-                        <tr>
-                          <td class="td-border-none" width="30%" align="right"><b>Plazo </b></td>
-                          <td width="20%"></td>
-                          <td class="td-border-none" align="left"> <b> días</b></td>
-                        <tr>
-                      </table>
-                    </td>
-                    <td class="td-border-none" width="15%"><b>Autorizado Por DR:<b></td>
-                    <td class="" width="35%"></td>
-                  </tr>
-                  <tr><td class="td-border-none" colspan="4">Nota: El siguiente espacio se debe llenar en caso de que la factura sea solicitada con crédito.</td></tr>
-                  <tr><td class="td-border-none" colspan="4"><b>DATOS DE LA EMPRESA A LA CUAL SE OTORGA EL CRÉDITO</b></td></tr>
-                  <tr>
-                    <td colspan="4">
+          $sqlTipoPago="SELECT cod_tipopago,porcentaje from solicitudes_facturacion_tipospago where cod_solicitudfacturacion=$codigo_facturacion ";
+          $stmtTipoPago = $dbh->prepare($sqlTipoPago);                                   
+          $stmtTipoPago->execute();          
+          $html.='<table class="table" >
+                  <tr class="td-color-celeste"><td class="text-center"><b>Forma de Pago</b></td></tr>';
+          while ($rowTipoPago = $stmtTipoPago->fetch(PDO::FETCH_ASSOC)) {
+              $cod_tipopago=$rowTipoPago['cod_tipopago'];
+              $porcentaje=$rowTipoPago['porcentaje'];
+              if($cod_tipopago==48){
+                $html.='<tr><td class="text-left">EN EFECTIVO('.$porcentaje.' %)</td></tr>';
+              }elseif($cod_tipopago==47){//cheque
+                $html.='<tr><td class="text-left">CHEQUE('.$porcentaje.' %)</td></tr>';
+              }elseif($cod_tipopago==217){//credito
+                $html.='<tr>
+                  <td>
                     <table class="table">
                       <tr>
-                        <td width="30%"><b>Nombre Persona de Contacto:</b></td>
-                        <td></td>
-                      </tr>
+                        <td class="td-border-none" colspan="2"><b>CRÉDITO('.$porcentaje.' %)</b></td>
+                        <td class="td-border-none" colspan="2">
+                          <table class="table">
+                            <tr>
+                              <td width="5%" class="td-color-celeste"><b>N°:</b></td><td width="20%"></td><td width="10%" class="td-color-celeste"><b>Banco:</b></td><td></td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>                  
                       <tr>
-                        <td><b>Nombre contacto Personal Administrativo:</b></td>
-                        <td></td>
+                        <td class="td-border-none" width="25%">
+                          <table class="table">
+                            <tr>
+                              <td width="60%" class="td-border-none" align="right"><b>Crédito</b></td>
+                              <td></td>
+                            </tr>
+                          </table>
+                        </td>
+                        <td class="td-border-none" width="25%">
+                          <table class="table">
+                            <tr>
+                              <td class="td-border-none" width="30%" align="right"><b>Plazo </b></td>
+                              <td width="20%"></td>
+                              <td class="td-border-none" align="left"> <b> días</b></td>
+                            <tr>
+                          </table>
+                        </td>
+                        <td class="td-border-none" width="15%"><b>Autorizado Por DR:<b></td>
+                        <td class="" width="35%"></td>
                       </tr>
+                      <tr><td class="td-border-none" colspan="4">Nota: El siguiente espacio se debe llenar en caso de que la factura sea solicitada con crédito.</td></tr>
+                      <tr><td class="td-border-none" colspan="4"><b>DATOS DE LA EMPRESA A LA CUAL SE OTORGA EL CRÉDITO</b></td></tr>
                       <tr>
-                        <td><b>Teléfono:</b></td>
-                        <td></td>
-                      </tr>
-                      <tr>
-                        <td><b>Dirección:</b></td>
-                        <td></td>
-                      </tr>
-                      <tr>
-                        <td><b>Correo Electrónico:</b></td>
-                        <td></td>
+                        <td colspan="4">
+                        <table class="table">
+                          <tr>
+                            <td width="30%"><b>Nombre Persona de Contacto:</b></td>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <td><b>Nombre contacto Personal Administrativo:</b></td>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <td><b>Teléfono:</b></td>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <td><b>Dirección:</b></td>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <td><b>Correo Electrónico:</b></td>
+                            <td></td>
+                          </tr>
+                        </table>
+                        </td>
                       </tr>
                     </table>
-                    </td>
-                  </tr>
-                </table>
-                </td>
-              </tr>
-            </table><br>';
-            
-            $html.='<table class="table">
-              <tr style="background-color:#d1dbe3"><td class="text-center"><b>Observaciones</b></td></tr>
-              <tr><td><p>&nbsp;'.$observaciones.'</p></td></tr>
-            </table><br><br><br>';
+                  </td>
+                </tr>';
+                
+                $html.='<table class="table">
+                  <tr style="background-color:#d1dbe3"><td class="text-center"><b>Observaciones</b></td></tr>
+                  <tr><td><p>&nbsp;'.$observaciones.'</p></td></tr>
+                </table><br><br><br>';
 
-          }elseif($cod_tipopago==49){
-            $html.='<table class="table" >
-              <tr class="td-color-celeste"><td class="text-center"><b>Forma de Pago</b></td></tr>
-              <tr><td class="text-left">DEPOSITO EN CUENTA</td></tr>
-            </table><br>';
-            $html.='<table class="table">
-              <tr class="td-color-celeste"><td class="text-center"><b>Observaciones</b></td></tr>
-              <tr><td>&nbsp;'.$observaciones.'</td></tr>
-            </table><br><br><br>';
-
-          }else{
-            $html.='<table class="table" >
-              <tr class="td-color-celeste"><td class="text-center"><b>Forma de Pago</b></td></tr>
-              <tr><td class="text-left">&nbsp</td></tr>
-            </table><br>';
-            $html.='<table class="table">
-              <tr class="td-color-celeste"><td class="text-center"><b>Observaciones</b></td></tr>
-              <tr><td>&nbsp;'.$observaciones.'</td></tr>
-            </table><br><br><br>';
-
+              }elseif($cod_tipopago==49){
+                $html.='<tr><td class="text-left">DEPOSITO EN CUENTA('.$porcentaje.' %)</td></tr>';
+              }else{
+                $html.='<tr><td class="text-left">&nbsp</td></tr>';
+              }    
           }
+          $html.='</table><br>';
+
+          $html.='<table class="table">
+                  <tr class="td-color-celeste"><td class="text-center"><b>Observaciones</b></td></tr>
+                  <tr><td>&nbsp;'.$observaciones.'</td></tr>
+                </table><br><br><br>';
+          // $cod_tipopago=3;
+          //efectivo
+          
           
             
             

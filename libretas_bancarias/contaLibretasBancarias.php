@@ -6,24 +6,41 @@ require_once 'libretas_bancarias/configModule.php';
 require_once 'styles.php';
 require_once 'functions.php';
 require_once 'functionsGeneral.php';
-
 setlocale(LC_TIME, "Spanish");
 
 $dbh = new Conexion();
-$query = "select * from depreciaciones";
-$statement = $dbh->query($query);
+// $query = "SELECT * from depreciaciones";
+// $statement = $dbh->query($query);
+if (isset($_GET['codigo'])) {
+  $codigo=$_GET['codigo'];
+}else{
+  $codigo=0;
+}
 
-$gestionGlobal=$_SESSION['globalGestion'];
+if($codigo>0){
+  $stmt = $dbh->prepare("SELECT * from depositos_no_facturados where codigo=$codigo");
+  $stmt->execute();
+  $result = $stmt->fetch();
+  $cod_libreta_x = $result['cod_libretabancaria'];
+  $cod_gestion_x = $result['cod_gestion'];
+  $cod_mes_x = $result['cod_mes'];
+  // $fecha = $result['fecha'];
+}else{
+  $cod_gestion_x=$_SESSION['globalGestion'];
+  $cod_mes_x=$_SESSION["globalMes"];
+  $cod_libreta_x=0;
 
-$m=date("m");
-$y=date("Y");
-$d=date("d",(mktime(0,0,0,$m,1,$y)-1));
-$ma=date("m",(mktime(0,0,0,$m,1,$y)-1));
-$fechaDesde=$y."-".($ma)."-01";
-$fechaHasta=$y."-".($ma)."-".$d."";
+}
 
-$fechaDesde2=$y."-01-01";
-$fechaHasta2=$y."-12-31";
+// $m=date("m");
+// $y=date("Y");
+// $d=date("d",(mktime(0,0,0,$m,1,$y)-1));
+// $ma=date("m",(mktime(0,0,0,$m,1,$y)-1));
+// $fechaDesde=$y."-".($ma)."-01";
+// $fechaHasta=$y."-".($ma)."-".$d."";
+
+// $fechaDesde2=$y."-01-01";
+// $fechaHasta2=$y."-12-31";
 ?>
 
 <div class="content">
@@ -41,72 +58,64 @@ $fechaHasta2=$y."-12-31";
             <div class="row">
               <label class="col-sm-2 col-form-label">Libretas</label>
               <div class="col-sm-7">
-                <div class="form-group">                            
-                          <!-- <select class="selectpicker form-control form-control-sm" name="entidad" id="entidad" data-style="<?=$comboColor;?>" required onChange="ajax_entidad_Oficina(this)">  -->
-                          <select class="selectpicker form-control form-control-sm" name="libretas" id="libretas" required>                           
-                          <?php
-                          $stmt = $dbh->prepare("SELECT l.*,b.abreviatura as banco from libretas_bancarias l join bancos b on b.codigo=l.cod_banco where l.cod_estadoreferencial=1 order by l.nombre");
-                         $stmt->execute();
-                          while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                            $codigoX=$row['codigo'];
-                            $nombreX=$row['nombre'];
-                            $bancoX=$row['banco'];
-                          ?>
-                       <option value="<?=$codigoX;?>"><?=$nombreX?> - <?=$bancoX?></option>  
-                         <?php
-                           }
-                           ?>
-                      </select>
-                  </div>
+                <div class="form-group">                                                      
+                  <select class="selectpicker form-control form-control-sm" name="libretas" id="libretas" required>                           
+                    <?php
+                    $stmt = $dbh->prepare("SELECT l.*,b.abreviatura as banco from libretas_bancarias l join bancos b on b.codigo=l.cod_banco where l.cod_estadoreferencial=1 order by l.nombre");
+                    $stmt->execute();
+                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                      $codigoX=$row['codigo'];
+                      $nombreX=$row['nombre'];
+                      $bancoX=$row['banco'];?>
+                      <option <?=($codigoX==$cod_libreta_x)?"selected":""?> value="<?=$codigoX;?>"><?=$nombreX?> - <?=$bancoX?></option> <?php
+                    }
+                    ?>
+                  </select>
+                </div>
               </div> 
             </div>
             <div class="row">
-                         <label class="col-sm-2 col-form-label">Gestion</label>
-                         <div class="col-sm-7">
-                          <div class="form-group">
-                                   <select class="selectpicker form-control form-control-sm" name="gestion" id="gestion" data-style="<?=$comboColor;?>" required onChange="AjaxGestionFechaDesdeMes(this)">               
-                                    <?php
-                                    $stmt = $dbh->prepare("SELECT codigo, nombre FROM gestiones where cod_estado=1 order by 2 desc");
-                                   $stmt->execute();
-                                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                                      $codigoX=$row['codigo'];
-                                      $nombreX=$row['nombre'];
-                                    ?>
-                                 <option value="<?=$codigoX;?>"><?=$nombreX?></option>  
-                                   <?php
-                                     }
-                                     ?>
+                    <label class="col-sm-2 col-form-label">Gestión</label>
+                    <div class="col-sm-7">
+                      <div class="form-group">
+                        <select name="gestion" id="gestion" onChange="ajax_mes_de_gestion(this);" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true" required="true">
+                                    <option value=""></option>
+                                    <?php 
+                                    $query = "SELECT codigo,nombre from gestiones where cod_estado=1 ORDER BY nombre desc";
+                                    $stmt = $dbh->query($query);
+                                    while ($row = $stmt->fetch()){ ?>
+                                        <option value="<?=$row["codigo"];?>" <?=($row["codigo"]==$cod_gestion_x)?"selected":""?> ><?=$row["nombre"];?></option>
+                                    <?php } ?>
                                 </select>
-                            </div>
-                          </div>
-                      </div>
-            <div class="row">
-                      <div class="col-sm-5">
-                        <div class="row">
-                         <label class="col-sm-5 col-form-label">Desde</label>
-                         <div class="col-sm-7">
-                          <div class="form-group">
-                            <div id="div_contenedor_fechaI">                              
-                              <input type="date" class="form-control" autocomplete="off" name="fecha_desde" id="fecha_desde" min="<?=$fechaDesde2?>" max="<?=$fechaHasta2?>" value="<?=$fechaDesde?>">  
-                            </div>                                    
-                             </div>
-                          </div>
-                     </div>
-                       </div>
-                      <div class="col-sm-4">
-                        <div class="row">
-                         <label class="col-sm-4 col-form-label">Hasta</label>
-                         <div class="col-sm-8">
-                          <div class="form-group">
-                            <div id="div_contenedor_fechaH">                              
-                              <input type="date" class="form-control" autocomplete="off" name="fecha_hasta" id="fecha_hasta" min="<?=$fechaDesde2?>" max="<?=$fechaHasta2?>" value="<?=$fechaHasta?>">
-                            </div>
-                                   
-                            </div>
-                          </div>
+                         </div>
+                    </div>                     
+                    </div><!--div row-->
+                  <div class="row">
+                     <label class="col-sm-2 col-form-label">Mes</label>
+                     <div class="col-sm-7">
+                      <div class="form-group">
+                        <div id="div_contenedor_mes">   
+                          <?php $sql="SELECT c.cod_mes,(select m.nombre from meses m where m.codigo=c.cod_mes) as nombre_mes from meses_trabajo c where c.cod_gestion=$cod_gestion_x";
+                  $stmtg = $dbh->prepare($sql);
+                  $stmtg->execute();
+                  ?>
+                  <select name="cod_mes_x" id="cod_mes_x" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  required data-live-search="true">
+                  <?php
+                    
+                    while ($rowg = $stmtg->fetch(PDO::FETCH_ASSOC)) {    
+                      $cod_mes=$rowg['cod_mes'];    
+                      $nombre_mes=$rowg['nombre_mes'];    
+                    ?>
+                    <option value="<?=$cod_mes;?>" <?=($cod_mes==$cod_mes_x)?"selected":""?> ><?=$nombre_mes;?></option>
+                    <?php 
+                    }
+                  ?>
+                  </select>
+                          
+                        </div>                                    
+                         </div>
                       </div>
                 </div>
-                  </div><!--div row-->
 
           </div>
           <div class="card-footer ml-auto mr-auto">

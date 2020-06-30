@@ -42,8 +42,8 @@ if($existe==0){
   }
 	
 	$codSimulacionServicioAuditor=obtenerCodigoSimulacionServicioAuditor();
-    $sql="INSERT INTO simulaciones_servicios_auditores (codigo,cod_simulacionservicio, cod_tipoauditor,cantidad,monto,cantidad_editado,cod_estadoreferencial,dias,cod_externolocal,cod_anio,descripcion) 
-       VALUES ('".$codSimulacionServicioAuditor."','".$cod_sim."','".$cod_cla."','".$cant."','".$monto."','".$cant."', 1,'".$dias."',1,'".$anio."','".$nombreTIPA."')";
+    $sql="INSERT INTO simulaciones_servicios_auditores (codigo,cod_simulacionservicio, cod_tipoauditor,cantidad,monto,cantidad_editado,cod_estadoreferencial,dias,cod_externolocal,cod_anio,descripcion,habilitado) 
+       VALUES ('".$codSimulacionServicioAuditor."','".$cod_sim."','".$cod_cla."','".$cant."',0,'".$cant."', 1,'".$dias."',1,'".$anio."','".$nombreTIPA."',0)";
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
 

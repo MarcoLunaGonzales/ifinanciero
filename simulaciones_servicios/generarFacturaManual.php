@@ -114,7 +114,35 @@ try{
 
 				// if($nro_correlativo==null || $nro_correlativo=='')$nro_correlativo=1;   
 				//generamos el comprobante
-				$cod_comprobante=ejecutarComprobanteSolicitud($codigo,$nro_factura);
+				
+                $cod_tipopago_defecto=obtenerValorConfiguracion(55);
+                if($cod_tipopago==$cod_tipopago_defecto){
+                    $cod_libreta=0;
+                    if($_POST["cod_libreta"]>0){
+                        $cod_libreta=$_POST["cod_libreta"];
+                        $estado_libreta=obtenerEstadoLibretaBancaria($cod_libreta);
+                        if($estado_libreta==0){
+                            $cod_cuenta=obtenerCuentaLibretaBancaria($cod_libreta);
+                            //generamos el comprobante estado_libreta 1 es que va con cod_cuenta para matar o 0 será el por defecto
+                            $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$nro_factura,1,$cod_cuenta);
+                            
+                        }elseif($estado_libreta==1){
+                            $cod_contracuenta=obtenerContraCuentaLibretaBancaria($cod_libreta);
+                            //generamos el comprobante
+                            $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$nro_factura,1,$cod_contracuenta);
+                        }else{
+                            //generamos el comprobante
+                            $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$nro_factura,0,0);    
+                        }
+                    }else{
+                        //generamos el comprobante
+                        $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$nro_factura,0,0);
+                    }
+                }else{
+                    //generamos el comprobante
+                    $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$nro_factura,0,0);
+                }
+
 				// echo "auto:".$nroAutorizacion." - nro_corr:".$nro_correlativo." - nitCliente:".$nitCliente." - fecha_actual:".$fecha_actual." - totalFinalRedondeado:".$totalFinalRedondeado." - llaveDosificacion:".$llaveDosificacion;
 				// $controlCode = new ControlCode();
 				// $cod_autorizacion = $controlCode->generate($nroAutorizacion,//Numero de autorizacion
@@ -138,10 +166,14 @@ try{
 					$cod_facturaVenta = $resultNroFact['codigo'];
                     if($_POST["cod_libreta"]>0){
                         $cod_libreta=$_POST["cod_libreta"];
-                        //si es de tipo deposito en cuenta insertamos en libreta bancaria
+                        //si es de tipo deposito en cuenta actualizamos en libreta bancaria
                         $sqlUpdateLibreta="UPDATE libretas_bancariasdetalle SET cod_factura=$cod_facturaVenta where codigo=$cod_libreta";
                         $stmtUpdateLibreta = $dbh->prepare($sqlUpdateLibreta);
-                        $flagSuccess=$stmtUpdateLibreta->execute(); 
+                        $flagSuccess=$stmtUpdateLibreta->execute();
+
+                        $sqlUpdateFac="UPDATE facturas_venta SET cod_libretabancariadetalle=$cod_libreta where codigo=$cod_facturaVenta";
+                        $stmtUpdateFac = $dbh->prepare($sqlUpdateFac);
+                        $flagSuccessFac=$stmtUpdateFac->execute();
                     }
                     
                     $stmt = $dbh->prepare("SELECT sf.* from solicitudes_facturaciondetalle sf where sf.cod_solicitudfacturacion=$codigo");

@@ -24,7 +24,11 @@ if(isset($_GET["cod_simulacion"])){
  $nroColumnas=(count($codigos)-1);
  $tituloItem="Año ".$anio;
  if(($anio==0||$anio==1)&&$codAreaX==38){
-   $tituloItem="Año 1 (Etapa".($anio+1).")";
+  if($anio==0){
+    $tituloItem="Año 1 (Etapa".($anio+1).")";
+  }else{
+    $tituloItem="Año 1 (Etapa".($anio+1)." / Renovación)";
+  }
  }
  if(($anio>1)&&$codAreaX==38){
    $tituloItem="Año ".$anio." (Seguimiento".($anio-1).")";

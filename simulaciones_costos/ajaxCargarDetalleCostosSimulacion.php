@@ -68,7 +68,8 @@ $bgClase="bg-info";
             $codOficina=$rowPlantilla['cod_unidadorganizacional'];
             $codAreaX=$rowPlantilla['cod_area'];
           }
-
+          $presupuestoMes=obtenerPresupuestoEjecucionPorArea($codOficina,$codAreaX,$globalNombreGestion,$mesActualConsulta)['presupuesto'];
+          $porcentPreciosMes=($precioLocalX*100)/($presupuestoMes);
          ?>
           <table class="table table-condensed table-bordered">
             <tr class="text-white <?=$bgClase?>">
@@ -84,8 +85,11 @@ $bgClase="bg-info";
             </tr>
             <tr>
               <td class="bg-plomo">PRESUPUESTO <?=$_GET['area_nombre']?>, <?=$tituloUnidad?> MES (INFORMATIVO)</td>
-              <td class="text-right"><?=number_format(obtenerPresupuestoEjecucionPorArea($codOficina,$codAreaX,$globalNombreGestion,$mesActualConsulta)['presupuesto'], 2, '.', ',')?></td>
-              <td class="bg-plomo" colspan="4"></td>
+              <td class="text-right"><?=number_format($presupuestoMes, 2, '.', ',')?></td>
+              <td class="bg-plomo">Precio</td>
+              <td class="text-right"><?=number_format($precioLocalX, 2, '.', ',')?></td>
+              <td class="bg-plomo">Porcentaje</td>
+              <td class="text-right"><?=number_format($porcentPreciosMes, 2, '.', ',')?> %</td>
             </tr>
           </table>
        <?php

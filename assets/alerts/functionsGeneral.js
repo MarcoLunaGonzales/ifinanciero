@@ -2834,6 +2834,7 @@ function guardarSimulacionServicio(){
   var utilidad=$("#utilidad_minima").val();
   var anios=$("#anios").val();
   var plantilla_servicio=$("#plantilla_servicio").val();
+  var alcance=$("#alcance").val();
   if($("#afnor").length){
     if($("#afnor").is(':checked')){
       var afnor=1;
@@ -2848,11 +2849,11 @@ function guardarSimulacionServicio(){
    Swal.fire('Informativo!','Debe llenar los campos!','warning'); 
   }else{
     var tipoServicio=$("#tipo_servicio").val()[0];
-     var parametros={"id_perfil":idPerfil,"objeto_servicio":objeto,"tipo_servicio":tipoServicio,"id_servicio":idServicio,"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"atributos":JSON.stringify(itemAtributos),"norma":norma,"anios":anios,"afnor":afnor,"tipo_atributo":2};
+     var parametros={"alcance":alcance,"id_perfil":idPerfil,"objeto_servicio":objeto,"tipo_servicio":tipoServicio,"id_servicio":idServicio,"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"atributos":JSON.stringify(itemAtributos),"norma":norma,"anios":anios,"afnor":afnor,"tipo_atributo":2};
      $.ajax({
         type: "GET",
         dataType: 'html',
-        url: "simulaciones_servicios/ajaxRegistrarSimulacionBK.php",
+        url: "simulaciones_servicios/ajaxRegistrarSimulacion.php",
         data: parametros,
         beforeSend: function () { 
           iniciarCargaAjax();
@@ -2899,11 +2900,11 @@ function guardarSimulacionServicio(){
       var iaf_primario=$("#iaf_primario").val();
       var iaf_secundario=$("#iaf_secundario").val();
       objeto=0;
-     var parametros={"iaf_primario":iaf_primario,"iaf_secundario":iaf_secundario,"tipo_cliente":tipoCliente,"region_cliente":regionCliente,"id_perfil":idPerfil,"objeto_servicio":objeto,"id_servicio":idServicio,"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"atributos":JSON.stringify(itemAtributos),"norma":norma,"anios":anios,"afnor":afnor,"tipo_atributo":1};
+     var parametros={"alcance":alcance,"iaf_primario":iaf_primario,"iaf_secundario":iaf_secundario,"tipo_cliente":tipoCliente,"region_cliente":regionCliente,"id_perfil":idPerfil,"objeto_servicio":objeto,"id_servicio":idServicio,"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"atributos":JSON.stringify(itemAtributos),"norma":norma,"anios":anios,"afnor":afnor,"tipo_atributo":1};
      $.ajax({
         type: "GET",
         dataType: 'html',
-        url: "simulaciones_servicios/ajaxRegistrarSimulacionBK.php",
+        url: "simulaciones_servicios/ajaxRegistrarSimulacion.php",
         data: parametros,
         beforeSend: function () { 
          //Swal.fire("Informativo!", "Procesando datos! espere...", "warning");
@@ -5116,23 +5117,24 @@ function activarInputMontoPersonalServicio(anio,fila){
   calcularTotalPersonalServicio(anio,2);
 }
 function activarInputsCostosVariables(anio,fila){
+
   if(!($("#dias_honorario"+anio+"CCCC"+fila).is("[readonly]"))){
-    $("#dias_honorario"+anio+"CCCC"+fila).attr("readonly",true);
-    $("#monto_honorario"+anio+"CCCC"+fila).attr("readonly",true);
-    $("#monto_honorarioUSD"+anio+"CCCC"+fila).attr("readonly",true);
-
+     $("#dias_honorario"+anio+"CCCC"+fila).attr("readonly",true);
+     $("#monto_honorario"+anio+"CCCC"+fila).attr("readonly",true);
+     $("#monto_honorarioUSD"+anio+"CCCC"+fila).attr("readonly",true);
+     if($("#codigo_filatipoauditor"+anio+"CCCC"+fila).val()!=-100){
     //deshabilitar valor 0
-    $("#dias_honorario"+anio+"CCCC"+fila).attr("type","hidden");
-    $("#dias_honorarioOFF"+anio+"CCCC"+fila).attr("type","number");
-    $("#monto_honorario"+anio+"CCCC"+fila).attr("type","hidden");
-    $("#monto_honorarioOFF"+anio+"CCCC"+fila).attr("type","number");
-    $("#monto_honorarioUSD"+anio+"CCCC"+fila).attr("type","hidden");
-    $("#monto_honorarioUSDOFF"+anio+"CCCC"+fila).attr("type","number");
-    $("#monto_honorarioTotal"+anio+"CCCC"+fila).attr("type","hidden");
-    $("#monto_honorarioTotalOFF"+anio+"CCCC"+fila).attr("type","number");
-    $("#monto_honorarioTotalUSD"+anio+"CCCC"+fila).attr("type","hidden");
-    $("#monto_honorarioTotalUSDOFF"+anio+"CCCC"+fila).attr("type","number");
-
+     $("#dias_honorario"+anio+"CCCC"+fila).attr("type","hidden");
+     $("#dias_honorarioOFF"+anio+"CCCC"+fila).attr("type","number");
+     $("#monto_honorario"+anio+"CCCC"+fila).attr("type","hidden");
+     $("#monto_honorarioOFF"+anio+"CCCC"+fila).attr("type","number");
+     $("#monto_honorarioUSD"+anio+"CCCC"+fila).attr("type","hidden");
+     $("#monto_honorarioUSDOFF"+anio+"CCCC"+fila).attr("type","number");
+     $("#monto_honorarioTotal"+anio+"CCCC"+fila).attr("type","hidden");
+     $("#monto_honorarioTotalOFF"+anio+"CCCC"+fila).attr("type","number");
+     $("#monto_honorarioTotalUSD"+anio+"CCCC"+fila).attr("type","hidden");
+     $("#monto_honorarioTotalUSDOFF"+anio+"CCCC"+fila).attr("type","number");   
+     }
     var columnas =$("#cantidad_columnas"+anio+"CCCC"+fila).val();
     for (var j = 1; j <=columnas; j++) {
       $("#modal_dias_personalItem"+anio+"CCCC"+j+"RRR"+fila).attr("readonly",true);
@@ -5142,6 +5144,8 @@ function activarInputsCostosVariables(anio,fila){
 
       $("#monto"+anio+"CCCC"+j+"RRR"+fila).attr("type","hidden");
       $("#montoOFF"+anio+"CCCC"+j+"RRR"+fila).attr("type","number");
+      $("#montoUSD"+anio+"CCCC"+j+"RRR"+fila).attr("type","hidden");
+      $("#montoUSDOFF"+anio+"CCCC"+j+"RRR"+fila).attr("type","number");
       if($("#modal_dias_personalItem"+anio+"CCCC"+j+"RRR"+fila).val()>0){
         
       }
@@ -5152,21 +5156,22 @@ function activarInputsCostosVariables(anio,fila){
     }; 
 
   }else{
-    $("#dias_honorario"+anio+"CCCC"+fila).removeAttr("readonly");
-    $("#monto_honorario"+anio+"CCCC"+fila).removeAttr("readonly");
-    $("#monto_honorarioUSD"+anio+"CCCC"+fila).removeAttr("readonly");
-
+      $("#dias_honorario"+anio+"CCCC"+fila).removeAttr("readonly");
+      $("#monto_honorario"+anio+"CCCC"+fila).removeAttr("readonly");
+      $("#monto_honorarioUSD"+anio+"CCCC"+fila).removeAttr("readonly");
+     if($("#codigo_filatipoauditor"+anio+"CCCC"+fila).val()!=-100){   
     //habilitar valor 0
-    $("#dias_honorario"+anio+"CCCC"+fila).attr("type","number");
-    $("#dias_honorarioOFF"+anio+"CCCC"+fila).attr("type","hidden");
-    $("#monto_honorario"+anio+"CCCC"+fila).attr("type","number");
-    $("#monto_honorarioOFF"+anio+"CCCC"+fila).attr("type","hidden");
-    $("#monto_honorarioUSD"+anio+"CCCC"+fila).attr("type","number");
-    $("#monto_honorarioUSDOFF"+anio+"CCCC"+fila).attr("type","hidden");
-    $("#monto_honorarioTotal"+anio+"CCCC"+fila).attr("type","number");
-    $("#monto_honorarioTotalOFF"+anio+"CCCC"+fila).attr("type","hidden");
-    $("#monto_honorarioTotalUSD"+anio+"CCCC"+fila).attr("type","number");
-    $("#monto_honorarioTotalUSDOFF"+anio+"CCCC"+fila).attr("type","hidden");
+      $("#dias_honorario"+anio+"CCCC"+fila).attr("type","number");
+      $("#dias_honorarioOFF"+anio+"CCCC"+fila).attr("type","hidden");
+      $("#monto_honorario"+anio+"CCCC"+fila).attr("type","number");
+      $("#monto_honorarioOFF"+anio+"CCCC"+fila).attr("type","hidden");
+      $("#monto_honorarioUSD"+anio+"CCCC"+fila).attr("type","number");
+      $("#monto_honorarioUSDOFF"+anio+"CCCC"+fila).attr("type","hidden");
+      $("#monto_honorarioTotal"+anio+"CCCC"+fila).attr("type","number");
+      $("#monto_honorarioTotalOFF"+anio+"CCCC"+fila).attr("type","hidden");
+      $("#monto_honorarioTotalUSD"+anio+"CCCC"+fila).attr("type","number");
+      $("#monto_honorarioTotalUSDOFF"+anio+"CCCC"+fila).attr("type","hidden");    
+     }
 
     var columnas =$("#cantidad_columnas"+anio+"CCCC"+fila).val();
     for (var j = 1; j <=columnas; j++) {
@@ -5176,6 +5181,8 @@ function activarInputsCostosVariables(anio,fila){
 
       $("#monto"+anio+"CCCC"+j+"RRR"+fila).attr("type","number");
       $("#montoOFF"+anio+"CCCC"+j+"RRR"+fila).attr("type","hidden");
+      $("#montoUSD"+anio+"CCCC"+j+"RRR"+fila).attr("type","number");
+      $("#montoUSDOFF"+anio+"CCCC"+j+"RRR"+fila).attr("type","hidden");
       if($("#modal_dias_personalItem"+anio+"CCCC"+j+"RRR"+fila).val()<=0){
         
       }
@@ -6284,6 +6291,7 @@ function cargarDetallesCostosVariablesTodosLosAnios(inicio,ib){
          detectarCargaAjax();
          //results[index] = resp;
           $("#cuentas_simulacionpersonal").html(resp);
+          $('[data-toggle="tooltip"]').tooltip();
           $('.selectpicker').selectpicker("refresh"); 
           // ponerCantidadTotalesVariablesModal(inicio,anio);            
         }
@@ -7552,7 +7560,15 @@ function guardarDatosPlantillaServicioAjax(btn_id){
     var atributosDias=JSON.stringify(itemAtributosDias);
     var auditoresDias=[];
     for (var au = 0; au < itemAtributosDias.length; au++) {
-      auditoresDias[au]=$("#auditores"+au).val();
+      var mySelections = [];
+        $('#auditores'+au+' option').each(function(i) {
+            if (this.selected == true) {
+                mySelections.push(this.value+"####SI");
+            }else{
+                mySelections.push(this.value+"####NO");
+            }
+        });
+      auditoresDias[au]=mySelections;
     };
     auditoresDias=JSON.stringify(auditoresDias);
     console.log(auditoresDias);
@@ -9221,6 +9237,14 @@ function calcularTotalFilaServicio2(){
   document.getElementById("comprobante_auxiliar").value=comprobante_auxiliar;
   //sumartotalAddServiciosFacturacion(id);
 }
+function verificar_item_activo(index){
+  var check=document.getElementById("modal_check"+index).checked;
+  if(check){
+    calcularTotalFilaServicio2Costos();
+  }else{
+    Swal.fire("Informativo!", "Por favor, active la fila.", "warning");
+  }
+}
 function calcularTotalFilaServicio2Costos(){  
   var sumal=0;  
   var suma_pagado=0;  
@@ -9235,7 +9259,7 @@ function calcularTotalFilaServicio2Costos(){
     var monto_importe_total=parseFloat(importe_a_pagar);
     var check=document.getElementById("modal_check"+i).checked;
     if(monto_importe_total>saldo){
-      Swal.fire("Informativo!", "El Monto Supera al Saldo! ("+number_format(saldo,2)+").", "warning");
+      Swal.fire("Informativo!", "El Monto en la fila "+i+" Supera al Saldo! ("+number_format(saldo,2)+").", "warning");
     }else{
       if(check) {//BUSACMOS LOS CHECK ACTIVOS
         comprobante_auxiliar=comprobante_auxiliar+1;        
@@ -9258,7 +9282,8 @@ function calcularTotalFilaServicio2Costos(){
   } 
 
   var resulta=sumal;  
-  document.getElementById("modal_totalmontoserv_costo").value=number_format(resulta,2);
+  document.getElementById("modal_totalmontoserv_costo").value=number_format(resulta,2);//con formato
+  document.getElementById("modal_totalmontoserv_costo_a").value=resulta;//si formato
   document.getElementById("modal_totalmontoserv_pagado").value=number_format(suma_pagado,2);
   // document.getElementById("modal_totalmontos__costo").value=resulta;//escondido
   // document.getElementById("comprobante_auxiliar_costo").value=comprobante_auxiliar;
@@ -9683,7 +9708,7 @@ function filtrarSolicitudRecursosServiciosItems(){
 
 function filtrarSolicitudRecursosDetalleDatos(){
   var tipo = $("#tipo_solicitud").val();
-  if(tipo==1){
+  if(tipo==1||tipo==-1){
     var res=$("#simulaciones").val().split("$$$");
     var cod_sim=res[0];
     if(res[1]=="SIM"){//propuestas SEC
@@ -12441,11 +12466,15 @@ function registrarCuentaAsociadaSOLFAC_areas(cod_area,cod_cuenta){
 //tipo pago
 var itemTipoPagos_facturacion=[];
 var itemTipoPagos_facturacion_aux=[];
-function agregarDatosModalTipoPagoFacturacion(){  
+function agregarDatosModalTipoPagoFacturacion(sw_auxiliar){  
   // alert("llege");
   // var d=datos.split('/');
   var cod_tipopago=$("#cod_tipopago").val();
-  var monto_total=$("#monto_total_a").val();  
+  if(sw_auxiliar==2){//capacitacion
+    var monto_total=$("#modal_totalmontoserv_costo_a").val();  
+  }else{
+    var monto_total=$("#monto_total_a").val();    
+  }
   if(monto_total<=0 || monto_total==null || monto_total==''){
     // $('#modalTipoPagoPorcentaje').modal('hide');
     Swal.fire("Informativo!", "El monto Total NO debe ser 0 o número negativo!", "warning");
@@ -12465,11 +12494,16 @@ function agregarDatosModalTipoPagoFacturacion(){
     ajax.send(null)   
   } 
 }
-function agregarDatosModalTipoPagoFacturacionNormas(){  
+function agregarDatosModalTipoPagoFacturacionNormas(sw_auxiliar){   
   // alert("llege");
   // var d=datos.split('/');
   var cod_tipopago=$("#cod_tipopago").val();
-  var monto_total=$("#monto_total_a").val();  
+  
+  if(sw_auxiliar==2){//capacitacion
+    var monto_total=$("#modal_totalmontoserv_costo_a").val();  
+  }else{
+    var monto_total=$("#monto_total_a").val();  
+  }
   if(monto_total<=0 || monto_total==null || monto_total==''){
     // $('#modalTipoPagoPorcentaje').modal('hide');
     Swal.fire("Informativo!", "El monto Total NO debe ser 0 o número negativo!", "warning");
@@ -12647,12 +12681,17 @@ var itemAreas_facturacion=[];//array que contiene objetos agregado
 var itemAreas_facturacion_aux=[];//array que contiene todas las areas de servicios
 var itemUnidades_facturacion=[];//array que contiene objetos agregados a un area
 var itemUnidades_facturacion_aux=[];//array que contiene todas las unidades en general
-function agregarDatosModalAreasFacturacion(){    
+function agregarDatosModalAreasFacturacion(sw_auxiliar){     
   var cod_area=$("#cod_area").val();  
   if(cod_area==null || cod_area==''){    
     Swal.fire("Informativo!", "Area no Encontrada, por favor seleccione Oficina y Area!", "warning");
   }else{
-    var monto_total=$("#monto_total_a").val();    
+    
+    if(sw_auxiliar==2){//capacitacion
+      var monto_total=$("#modal_totalmontoserv_costo_a").val();  
+    }else{
+      var monto_total=$("#monto_total_a").val();
+    }
     if(monto_total<=0){      
       Swal.fire("Informativo!", "El monto Total NO debe ser 0 o número negativo!", "warning");
     }else{
@@ -12731,12 +12770,16 @@ function tablaGeneral_areas_solFac(){
     $('#divResultadoListaModalAreas').html(div);
     calcularTotalFilaAreasModal();
 }
-function agregarDatosModalAreasFacturacionNormas(){    
+function agregarDatosModalAreasFacturacionNormas(sw_auxiliar){     
   var cod_area=$("#cod_area").val();  
   if(cod_area==null || cod_area==''){    
     Swal.fire("Informativo!", "Area no Encontrada, por favor seleccione Oficina y Area!", "warning");
   }else{
-    var monto_total=$("#monto_total_a").val();    
+    if(sw_auxiliar==2){//capacitacion
+      var monto_total=$("#modal_totalmontoserv_costo_a").val();  
+    }else{
+      var monto_total=$("#monto_total_a").val();    
+    }
     if(monto_total<=0){      
       Swal.fire("Informativo!", "El monto Total NO debe ser 0 o número negativo!", "warning");
     }else{
@@ -14605,16 +14648,93 @@ function abrirLibretaBancaria(datos,direccion,indice){
 
   var contenedor = document.getElementById('contenedor_cabecera_libreta_bancaria');    
   ajax=nuevoAjax();
-  ajax.open('GET', 'simulaciones_servicios/ajax_listado_libreta_bancaria.php?saldo='+saldo+'&razon_social='+razon_social,true);
+  ajax.open('GET', 'simulaciones_servicios/ajax_cabecera_modal_libretaBancaria.php?saldo='+saldo+'&razon_social='+razon_social,true);
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
       contenedor.innerHTML = ajax.responseText;      
       $('.selectpicker').selectpicker(["refresh"]);
+      ajax_contenedor_tabla_libretaBancaria(saldo);
       // detectarCargaAjax();      
     }
   }
   ajax.send(null);
 }
+function ajax_contenedor_tabla_libretaBancaria(saldo){
+  document.getElementById("saldo_x").value=saldo;
+  var contenedor = document.getElementById('contenedor_tabla_libreta_bancaria');    
+  ajax=nuevoAjax();
+  ajax.open('GET', 'simulaciones_servicios/ajax_listado_libreta_bancaria.php?saldo='+saldo+'&tipo_listado=0',true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;      
+      $('.selectpicker').selectpicker(["refresh"]);
+      cargar_dataTable_ajax('libreta_bancaria_reporte_modal');
+      cargar_filtro_datatable_ajax('modalListaLibretaBancaria');
+    }
+  }
+  ajax.send(null);
+}
+function cargar_dataTable_ajax(tabla){
+  // Setup - add a text input to each footer cell
+  $('#'+tabla+' tfoot th').each( function () {
+      var title = $(this).text();
+      $(this).html( '<input type="text" placeholder="'+title+'" />' );
+  } );
+
+  // DataTable
+  var table = $('#'+tabla+'').DataTable({
+      initComplete: function () {
+          // Apply the search
+          this.api().columns().every( function () {
+              var that = this;
+              $( 'input', this.footer() ).on( 'keyup change clear', function () {
+                  if ( that.search() !== this.value ) {
+                      that
+                          .search( this.value )
+                          .draw();
+                  }
+              });
+          });
+      },
+      "language": {
+              "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+      },
+      fixedHeader: {
+            header: false,
+            footer: false
+      },
+      "order": false,
+      "paging":   false,
+      "info":     false,          
+      "scrollY":        "400px",
+      "scrollCollapse": true
+  });
+}
+function cargar_filtro_datatable_ajax(modal){
+  $('#'+modal).on('shown.bs.modal', function(e){
+     $($.fn.dataTable.tables(true)).DataTable()
+        .columns.adjust();
+  });
+}
+
+function ajax_listado_libreta_bancaria_filtrar(){  
+  var saldo=document.getElementById("saldo_x").value;
+  var contenedor = document.getElementById('contenedor_tabla_libreta_bancaria');    
+  // alert(saldo);
+  ajax=nuevoAjax();
+  ajax.open('GET', 'simulaciones_servicios/ajax_listado_libreta_bancaria.php?saldo='+saldo+'&tipo_listado=1',true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;      
+      $('.selectpicker').selectpicker(["refresh"]);
+      cargar_dataTable_ajax('libreta_bancaria_reporte_modal');
+      cargar_filtro_datatable_ajax('modalListaLibretaBancaria');
+    }
+  }
+  ajax.send(null);
+}
+
+
 
 function seleccionar_libretaBancaria(cod_libreta){
   var indice=document.getElementById("indice").value;
@@ -14715,3 +14835,24 @@ $(document).ready(function() {
     };
    });
 });
+
+function limpiarDetalleSolicitud(){
+    Swal.fire({
+        title: '¿Esta Seguro?',
+        text: "Se limpiará los registros del Detalle",
+         type: 'warning',
+        showCancelButton: true,
+        confirmButtonClass: 'btn btn-warning',
+        cancelButtonClass: 'btn btn-danger',
+        confirmButtonText: 'Si',
+        cancelButtonText: 'No',
+        buttonsStyling: false
+       }).then((result) => {
+          if (result.value) {
+               $("#fiel").html("");            
+            return(true);
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            return(false);
+          }
+        });
+}

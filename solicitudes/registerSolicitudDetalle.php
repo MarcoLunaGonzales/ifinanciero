@@ -238,6 +238,9 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                   <a title="Subir Archivos Respaldo (shift+r)" href="#modalFile" data-toggle="modal" data-target="#modalFile" class="btn btn-default btn-sm">Archivos 
                     <i class="material-icons"><?=$iconFile?></i><span id="narch" class="bg-warning"></span>
                   </a>
+                  <a title="Limpiar Detalle" href="#" class="btn btn-warning btn-sm" onclick="limpiarDetalleSolicitud()"> 
+                    <i class="material-icons">format_clear</i>
+                  </a>
                 </div> 
             </div>
           </div>

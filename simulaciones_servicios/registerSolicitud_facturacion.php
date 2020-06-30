@@ -47,6 +47,7 @@ if ($cod_facturacion > 0){
     $nombre_simulacion = $resultServicio['nombre'];
     $id_tiposervicio = $resultServicio['id_tiposervicio'];
     $name_cliente=nameCliente($cod_cliente);
+    $dias_credito=$result['dias_credito'];
 }else {
     $nombre_simulacion = $resultServicio['nombre'];
     if(isset($_POST['q'])){
@@ -69,6 +70,7 @@ if ($cod_facturacion > 0){
     $nit=obtenerNitCliente($cod_cliente);    
     $observaciones = $Codigo_alterno." - ".$name_cliente;
     $persona_contacto=null;
+    $dias_credito=obtenerValorConfiguracion(58);
 }
 $name_tipoPago=obtenerNombreTipoPago($cod_tipoobjeto);
 $name_uo=nameUnidad($cod_uo);
@@ -105,6 +107,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                 <input type="hidden" name="cod_facturacion" id="cod_facturacion" value="<?=$cod_facturacion;?>"/>
                 <input type="hidden" name="cantidad_filas" id="cantidad_filas" value="<?=$contadorRegistros;?>">
                 <input type="hidden" name="IdTipo" id="IdTipo" value="<?=$id_tiposervicio;?>"><!-- //tipo de servicio -->
+                <input type="hidden" name="tipo_solicitud" id="tipo_solicitud" value="1">
 
                 <div class="card">
                     <div class="card-header <?=$colorCard;?> card-header-text">

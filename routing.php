@@ -156,7 +156,13 @@
         //Contabilizacion de Libretas
         if ($_GET['opcion']=='contabilizarLibretasBancarias') {
 			require_once('libretas_bancarias/contaLibretasBancarias.php');
-		}		
+		}
+		if ($_GET['opcion']=='contabilizarLibretasBancarias_lista') {
+			require_once('libretas_bancarias/contabilizacionLibretasBancarias_lista.php');
+		}
+		if ($_GET['opcion']=='contabilizarLibretasBancarias_listadetalle') {
+			require_once('libretas_bancarias/contabilizacionLibretasBancarias_lista_detalle.php');
+		}
 
  		//TIPO DE CAMBIO
 		if ($_GET['opcion']=='tipoDeCambio') {
