@@ -326,7 +326,7 @@ $contadorRegistros=0;
                                      </button>                              
                                 </div>
                             </div>                                    
-                            <label class="col-sm-1 col-form-label">Responsable</label>                             
+                            <label class="col-sm-1 col-form-label"><small>Responsable</small></label>                             
                             <div class="col-sm-4">
                                 <div class="form-group">            
                                     <?php  $responsable=namePersonal($cod_personal); ?>
@@ -502,6 +502,7 @@ $contadorRegistros=0;
                                                 $CantidadModulos=$rowPre['CantidadModulos'];
                                                 $cantidadPre=$CantidadModulos;
                                                 $Costo=$rowPre['Costo']/$CantidadModulos;
+                                                $Costo = number_format($Costo, 2, '.', '');
                                                 $montoPre=$Costo;
                                                 $Abrev=trim($rowPre['Abrev'],'%');
                                                 $descuento_cliente=trim($rowPre['Abrev'],'%');
@@ -569,6 +570,9 @@ $contadorRegistros=0;
                                                             // echo $monto_total_pagado."---";
                                                             $monto_total_pagado2=$monto_total_pagado;
                                                             $saldo=$listas->Saldo;
+                                                            $montoPagado = number_format($montoPagado, 2, '.', '');
+                                                            $monto_total_pagado = number_format($monto_total_pagado, 2, '.', '');
+                                                            $saldo = number_format($saldo, 2, '.', '');
                                                             break;
                                                         }
                                                     }

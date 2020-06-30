@@ -102,7 +102,7 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 		$stmtDesCli->execute();
 		$stmt2DesCli = $dbh->prepare("SELECT sf.descripcion_alterna from facturas_ventadetalle sf where sf.cod_facturaventa=$cod_factura");
 		$stmt2DesCli->execute();
-		$stmt3DesCli = $dbh->prepare("SELECT sf.precio,sf.descuento_bob from facturas_ventadetalle sf where sf.cod_facturaventa=$cod_factura");
+		$stmt3DesCli = $dbh->prepare("SELECT sf.precio,sf.descuento_bob,sf.cantidad from facturas_ventadetalle sf where sf.cod_facturaventa=$cod_factura");
 		$stmt3DesCli->execute();
 		//primero guardamos la factura del cliente
 		$nit_empresa=obtenerValorConfiguracionFactura(9);
@@ -222,10 +222,11 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 							{
 							$precio=$row["precio"];
 							$descuento_bob=$row["descuento_bob"];
+							$cantidad=$row["cantidad"];
 							$precio=$precio-$descuento_bob;
 
 							$html.=formatNumberDec($precio).'<br>';
-							$suma_total+=$precio;
+							$suma_total+=$precio*$cantidad;
 							}
 							$html.='</h5></td>';
 						// } 

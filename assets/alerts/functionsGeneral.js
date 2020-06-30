@@ -9181,11 +9181,13 @@ function calcularTotalFilaServicio2(){
   var sumal=0;  
   var total= $("#modal_numeroservicio").val();
   var comprobante_auxiliar=0;
+  // alert("entre");
   for (var i=1;i<=(total-1);i++){          
     var monto_precio=$("#monto_precio"+i).val();    
-    var descuento_bob=$("#descuento_bob"+i).val();    
+    var descuento_bob=$("#descuento_bob"+i).val();
+    var cantidad_x=document.getElementById("cantidad"+i).value;    
     if(descuento_bob==null ||descuento_bob=='NaN'||descuento_bob==' '||descuento_bob==''){descuento_bob=0;}
-    var monto_importe_total=parseFloat(monto_precio)-parseFloat(descuento_bob);
+    var monto_importe_total=(parseFloat(monto_precio)*parseFloat(cantidad_x))-parseFloat(descuento_bob);
     //alert(monto_importe_total);
     $("#modal_importe"+i).val(monto_importe_total);//irá en hidden 
     $("#modal_importe_dos"+i).val(number_format(monto_importe_total,2));//para mostrar con formato
@@ -9258,7 +9260,7 @@ function calcularTotalFilaServicio2Costos(){
     var saldo=parseFloat(importe)-parseFloat(modal_importe_pagado_dos_a);
     var monto_importe_total=parseFloat(importe_a_pagar);
     var check=document.getElementById("modal_check"+i).checked;
-    if(monto_importe_total>saldo){
+    if(monto_importe_total>saldo){      
       Swal.fire("Informativo!", "El Monto en la fila "+i+" Supera al Saldo! ("+number_format(saldo,2)+").", "warning");
     }else{
       if(check) {//BUSACMOS LOS CHECK ACTIVOS
@@ -14855,4 +14857,76 @@ function limpiarDetalleSolicitud(){
             return(false);
           }
         });
+}
+function eliminarRelacionFactura(codigo){
+  var cod_libreta=document.getElementById("codigo_libreta").value;
+  swal({
+        title: '¿Estás Seguro?',
+        text: "¡No podra revertir el borrado!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonClass: 'btn btn-success',
+        cancelButtonClass: 'btn btn-danger',
+        confirmButtonText: 'Si, Borrar!',
+        cancelButtonText: 'No, Cancelar!',
+        buttonsStyling: false
+      }).then((result) => {
+          if (result.value) {
+            $.ajax({
+              type:"POST",
+              data:"codigo="+codigo,
+              url:"libretas_bancarias/saveDelete_relacion_factura.php",
+              success:function(r){
+                if(r==1){
+                    // alerts.showSwal('success-message',direccion+'?cod='+cod_solicitudfacturacion+'&estado='+estado+'&admin='+admin);
+                    // Swal.fire("satisfecho!", "No se pudo devolver la solicitud.", "success");
+                    alerts.showSwal('success-message','index.php?opcion=listLibretasDetalle&codigo='+cod_libreta);
+                }else{
+                  Swal.fire("A ocurrido un error!", "No se pudo Eliminar la Relación.", "warning");
+                }
+              }
+            });
+            return(true);
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            return(false);
+          }
+        });
+}
+function relacionar_factura_libreta(codigo){  
+  document.getElementById("cod_libretabancariadetalle").value=codigo;
+  $('#modallista_facturas').modal('show');  
+}
+function seleccionar_Factura_relacion(cod_factura){
+  var cod_libreta=document.getElementById("codigo_libreta").value;
+  var cod_libretabancariadetalle=document.getElementById("cod_libretabancariadetalle").value;
+  swal({
+    title: '¿Estás Seguro?',
+    text: "¡No podra revertir el Proceso!",
+    type: 'warning',
+    showCancelButton: true,
+    confirmButtonClass: 'btn btn-success',
+    cancelButtonClass: 'btn btn-danger',
+    confirmButtonText: 'Si, Relacionar!',
+    cancelButtonText: 'No, Cancelar!',
+    buttonsStyling: false
+  }).then((result) => {
+    if (result.value) {
+      $.ajax({
+        type:"POST",
+        data:"cod_factura="+cod_factura+"&cod_libretabancariadetalle="+cod_libretabancariadetalle,
+        url:"libretas_bancarias/saveRelacionFactura.php",
+        success:function(r){
+          if(r==1){              
+              alerts.showSwal('success-message','index.php?opcion=listLibretasDetalle&codigo='+cod_libreta);
+          }else{
+            Swal.fire("A ocurrido un error!", "No se pudo realizar la relación.", "warning");
+          }
+        }
+      });
+      return(true);
+    } else if (result.dismiss === Swal.DismissReason.cancel) {
+      return(false);
+    }
+  });
+  
 }

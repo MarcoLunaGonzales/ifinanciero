@@ -42,6 +42,7 @@ $razon_social = $resultSimu['razonsocial'];
 // $Costo = $resultSimu['Costo'];
 $CantidadModulos = $resultSimu['CantidadModulos'];
 $Costo=$resultSimu['Costo']/$CantidadModulos;
+$Costo = number_format($Costo, 2, '.', '');
 $NroModulo = $resultSimu['NroModulo'];
 $Nombre = $resultSimu['Nombre'];
 // $monto_pagar=($Costo - ($Costo*$Abrev/100) )/$CantidadModulos; //formula para sacar el monto a pagar del estudiante
@@ -353,7 +354,7 @@ $contadorRegistros=0;
                                         
                                 </div>
                             </div>      
-                            <label class="col-sm-2 col-form-label">Responsable</label>
+                            <label class="col-sm-2 col-form-label"><small>Responsable</small></label>
                             <div class="col-sm-4">
                                 <div class="form-group">            
                                     <?php  $responsable=namePersonal($cod_personal); ?>
@@ -452,7 +453,9 @@ $contadorRegistros=0;
                                             //$codCS=430;//defecto
                                             $codCS=$rowPre['IdModulo'];//guardaremos el id de curso en ves de servicio..
                                             $NroModulo=$rowPre['NroModulo'];
-                                            $tipoPre=$Codigo_alterno." - Mod:".$NroModulo." - ".$rowPre['nombre_tema'];
+                                            $nombre_tema=$rowPre['nombre_tema'];
+                                            if($nombre_tema==null || $nombre_tema=='')$nombre_tema=$rowPre['Nombre'];
+                                            $tipoPre=$Codigo_alterno." - Mod:".$NroModulo." - ".$nombre_tema;
                                             $CantidadModulos=$rowPre['CantidadModulos'];
                                             $cantidadPre=1;
                                             // $Costo=$rowPre['Costo'];
@@ -496,6 +499,7 @@ $contadorRegistros=0;
                                                 $estadoPagado=0;
                                                 $cod_modulo=0;
                                                 $monto_total_pagado=0;
+                                                // echo $IdCurso."-".$ci_estudiante;
                                                 $lista=verifica_pago_curso($IdCurso,$ci_estudiante);
                                                 // var_dump($lista);
                                                 if($lista){
@@ -503,7 +507,7 @@ $contadorRegistros=0;
                                                     foreach ($lista->lstModulos as $listas) {
                                                         $cod_modulo=$listas->IdModulo;
                                                         $estadoPagado=$listas->EstadoPagado;
-                                                        if($cod_modulo==$codCS){
+                                                        if($cod_modulo==$codCS){                                                            
                                                             if($estadoPagado==1){
                                                                 $sw2="readonly style='background-color:#cec6d6;'";              
                                                             }
@@ -514,6 +518,12 @@ $contadorRegistros=0;
                                                             // echo $monto_total_pagado."---";
                                                             $monto_total_pagado2=$monto_total_pagado;
                                                             $saldo=$listas->Saldo;
+
+                                                            $montoPagado = number_format($montoPagado, 2, '.', '');
+                                                            $monto_total_pagado = number_format($monto_total_pagado, 2, '.', '');
+                                                            $monto_total_pagado2 = number_format($monto_total_pagado2, 2, '.', '');
+                                                            $saldo = number_format($saldo, 2, '.', '');
+
                                                             break;
                                                         }
                                                     }

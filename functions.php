@@ -7477,6 +7477,18 @@ function obtenerNombreDepositoNoFacturado($codigo){
    }
    return($nombreX);
 }
+
+function obtenerDatosContactoSolFac($codigo){
+  $dbh = new Conexion();
+  $stmt = $dbh->prepare("SELECT CONCAT_WS(' ',nombre,paterno,materno)as nombre_cliente, telefono,correo from clientes_contactos where codigo=$codigo");
+  $stmt->execute();
+  $valor='';
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $valor=$row['nombre_cliente'].'#####'.$row['telefono'].'#####'.$row['correo'];
+  }
+  return($valor);
+}
+
 ?>
 
 

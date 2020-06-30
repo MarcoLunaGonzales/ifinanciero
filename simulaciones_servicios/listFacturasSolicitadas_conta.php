@@ -140,7 +140,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             $stmtDetalleSol = $dbh->prepare("SELECT cantidad,precio,descripcion_alterna from solicitudes_facturaciondetalle where cod_solicitudfacturacion=$codigo_facturacion");
                             $stmtDetalleSol->execute();
                             $stmtDetalleSol->bindColumn('cantidad', $cantidad);  
-                            $stmtDetalleSol->bindColumn('precio', $precio);     
+                            $stmtDetalleSol->bindColumn('precio', $precio_unitario);
                             $stmtDetalleSol->bindColumn('descripcion_alterna', $descripcion_alterna); 
                             if($tipo_solicitud==2 || $tipo_solicitud==6 || $tipo_solicitud==7){
                               $concepto_contabilizacion="";
@@ -148,9 +148,9 @@ $globalAdmin=$_SESSION["globalAdmin"];
                               $concepto_contabilizacion=$codigo_alterno." - ";  
                             }
                             while ($row_det = $stmtDetalleSol->fetch()){
-                              $precio_natural=$precio/$cantidad;
+                              $precio=$precio_unitario*$cantidad;
                               $concepto_contabilizacion.=$descripcion_alterna." / ".trim($cadenaFacturas,',').",".trim($cadenaFacturasM,",")." / ".$razon_social."<br>\n";
-                              $concepto_contabilizacion.="Cantidad: ".$cantidad." * ".formatNumberDec($precio_natural)." = ".formatNumberDec($precio)."<br>\n";
+                              $concepto_contabilizacion.="Cantidad: ".$cantidad." * ".formatNumberDec($precio_unitario)." = ".formatNumberDec($precio)."<br>\n";
                             }
                             $concepto_contabilizacion = (substr($concepto_contabilizacion, 0, 100))."..."; //limite de string
                             $cod_area_simulacion=$cod_area;
@@ -201,8 +201,8 @@ $globalAdmin=$_SESSION["globalAdmin"];
                               $dato = new stdClass();//obejto
                               $codFila=(int)$row2['codigo'];
                               $cod_claservicioX=trim($row2['nombre_serv']);
-                              $cantidadX=trim($row2['cantidad']);
-                              $precioX=trim($row2['precio'])+trim($row2['descuento_bob']);
+                              $cantidadX=trim($row2['cantidad']);                              
+                              $precioX=(trim($row2['precio'])*$cantidadX)+trim($row2['descuento_bob']);
                               $descuento_porX=trim($row2['descuento_por']);
                               $descuento_bobX=trim($row2['descuento_bob']);                             
                               $descripcion_alternaX=trim($row2['descripcion_alterna']);
@@ -304,20 +304,11 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                               <?php                                            
                                                   $cod_tipopago_deposito_cuenta=obtenerValorConfiguracion(55);                                                  
                                                     if($cod_tipopago==$cod_tipopago_deposito_cuenta){//si es deposito en cuenta se activa la libreta bancaria
-                                                      if($tipo_solicitud==2 || $tipo_solicitud==6 || $tipo_solicitud==7){?>
-                                                        <a href='#' title="Generar Factura Parcial" class="dropdown-item" onclick="abrirLibretaBancaria('<?=$datos_FacManual;?>','<?=$urlGenerarFacturas2;?>','2')">
-                                                          <i class="material-icons text-info">receipt</i> <span style="color: #FF0000;">Generar Factura Parcial</span>
-                                                        </a>
-                                                      <?php } ?>
+                                                       ?>
                                                        <a href='#' title="Generar Factura Manual" class="dropdown-item" onclick="abrirLibretaBancaria('<?=$datos_FacManual;?>','<?=$urlGenerarFacturas2;?>','3')">
                                                         <i class="material-icons text-info">receipt</i>Generar Factura Manual
                                                       </a>  
-                                                    <?php }else{
-                                                      if($tipo_solicitud==2 || $tipo_solicitud==6 || $tipo_solicitud==7){?>
-                                                        <button title="Generar Factura Parcial" class="dropdown-item" type="button" data-toggle="modal" data-target="#modalGenerarFacturapagos" onclick="agregaDatosGenerarFactPagos('<?=$datos_FacManual;?>')">
-                                                        <i class="material-icons text-info">receipt</i><span style="color: #FF0000;">Generar Factura Parcial</span>
-                                                       </button>
-                                                      <?php } ?>                                                   
+                                                    <?php }else{ ?>                                                   
                                                        <button title="Generar Factura Manual" class="dropdown-item" type="button" data-toggle="modal" data-target="#modalFacturaManual" onclick="agregaDatosFactManual('<?=$datos_FacManual;?>')">
                                                         <i class="material-icons text-info">receipt</i> Generar Factura Manual
                                                        </button><?php      
@@ -339,28 +330,16 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                               <?php                                                  
                                                 $cod_tipopago_deposito_cuenta=obtenerValorConfiguracion(55);
                                                 if($cod_tipopago==$cod_tipopago_deposito_cuenta){//si es deposito en cuenta se activa la libreta bancaria?>
-                                                  <a href='#' title="Generar Factura Total" class="dropdown-item" onclick="abrirLibretaBancaria('<?=$datos_FacManual;?>','<?=$urlGenerarFacturas2;?>','1')">
-                                                    <i class="material-icons text-success">receipt</i> Generar Factura Total
-                                                  </a><?php
-                                                  if($tipo_solicitud==2 || $tipo_solicitud==6 || $tipo_solicitud==7){?>
-                                                    <a href='#' title="Generar Factura Parcial" class="dropdown-item" onclick="abrirLibretaBancaria('<?=$datos_FacManual;?>','<?=$urlGenerarFacturas2;?>','2')">
-                                                      <i class="material-icons text-info">receipt</i><span style="color: #FF0000;">Generar Factura Parcial</span>
-                                                    </a> 
-                                                  <?php } ?>
+                                                  <a href='#' title="Generar Factura" class="dropdown-item" onclick="abrirLibretaBancaria('<?=$datos_FacManual;?>','<?=$urlGenerarFacturas2;?>','1')">
+                                                    <i class="material-icons text-success">receipt</i> Generar Factura
+                                                  </a>
                                                   <a href='#' title="Generar Factura Manual" class="dropdown-item" onclick="abrirLibretaBancaria('<?=$datos_FacManual;?>','<?=$urlGenerarFacturas2;?>','3')">
                                                     <i class="material-icons text-info">receipt</i>Generar Factura Manual
                                                   </a><?php 
                                                 }else{?>
-                                                  <a href='#' title="Generar Factura Total" class="dropdown-item" onclick="alerts.showSwal('warning-message-and-confirmation-generar-factura','<?=$urlGenerarFacturas2;?>?codigo=<?=$codigo_facturacion;?>')">
-                                                    <i class="material-icons text-success">receipt</i> Generar Factura Total
-                                                  </a>
-                                                  <?php
-                                                  if($tipo_solicitud==2 || $tipo_solicitud==6 || $tipo_solicitud==7){?>
-                                                    <button title="Generar Factura Parcial" class="dropdown-item" type="button" data-toggle="modal" data-target="#modalGenerarFacturapagos" onclick="agregaDatosGenerarFactPagos('<?=$datos_FacManual;?>')">
-                                                    <i class="material-icons text-info">receipt</i><span style="color: #FF0000;">Generar Factura Parcial</span>
-                                                  </button>
-                                                  <?php } ?>
-                                                  
+                                                  <a href='#' title="Generar Factura" class="dropdown-item" onclick="alerts.showSwal('warning-message-and-confirmation-generar-factura','<?=$urlGenerarFacturas2;?>?codigo=<?=$codigo_facturacion;?>')">
+                                                    <i class="material-icons text-success">receipt</i> Generar Factura
+                                                  </a>                                                  
                                                   <button title="Generar Factura Manual" class="dropdown-item" type="button" data-toggle="modal" data-target="#modalFacturaManual" onclick="agregaDatosFactManual('<?=$datos_FacManual;?>')">
                                                     <i class="material-icons text-info">receipt</i> Generar Factura Manual
                                                   </button><?php 
