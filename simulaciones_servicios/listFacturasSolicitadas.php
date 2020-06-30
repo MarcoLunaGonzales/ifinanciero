@@ -168,7 +168,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                             $stmtDetalleSol = $dbh->prepare("SELECT cantidad,precio,descripcion_alterna from solicitudes_facturaciondetalle where cod_solicitudfacturacion=$codigo_facturacion");
                             $stmtDetalleSol->execute();
                             $stmtDetalleSol->bindColumn('cantidad', $cantidad);  
-                            $stmtDetalleSol->bindColumn('precio', $precio);     
+                            $stmtDetalleSol->bindColumn('precio', $precio_unitario);
                             $stmtDetalleSol->bindColumn('descripcion_alterna', $descripcion_alterna);                
                             if($tipo_solicitud==2 || $tipo_solicitud==6 || $tipo_solicitud==7){
                               $concepto_contabilizacion="";
@@ -176,10 +176,10 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                               $concepto_contabilizacion=$codigo_alterno." - ";  
                             }
                             while ($row_det = $stmtDetalleSol->fetch()){
-                              $precio_natural=$precio/$cantidad;
+                              $precio=$precio_unitario*$cantidad;
                               // $concepto_contabilizacion.=$descripcion_alterna." / F ".$nro_fact_x." / ".$razon_social."<br>\n";
                               $concepto_contabilizacion.=$descripcion_alterna." / ".trim($cadenaFacturas,',').",".trim($cadenaFacturasM,",")." / ".$razon_social."<br>\n";
-                              $concepto_contabilizacion.="Cantidad: ".$cantidad." * ".formatNumberDec($precio_natural)." = ".formatNumberDec($precio)."<br>\n";
+                              $concepto_contabilizacion.="Cantidad: ".$cantidad." * ".formatNumberDec($precio_unitario)." = ".formatNumberDec($precio)."<br>\n";
                             }
                             $concepto_contabilizacion = (substr($concepto_contabilizacion, 0, 100))."..."; //limite de string
                             
@@ -234,7 +234,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                               $codFila=(int)$row2['codigo'];
                               $cod_claservicioX=trim($row2['nombre_serv']);
                               $cantidadX=trim($row2['cantidad']);
-                              $precioX=trim($row2['precio'])+trim($row2['descuento_bob']);
+                              $precioX=(trim($row2['precio'])*$cantidadX)+trim($row2['descuento_bob']);
                               $descuento_porX=trim($row2['descuento_por']);
                               $descuento_bobX=trim($row2['descuento_bob']);
                               $descripcion_alternaX=trim($row2['descripcion_alterna']);

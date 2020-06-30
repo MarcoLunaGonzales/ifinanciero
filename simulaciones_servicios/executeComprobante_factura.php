@@ -36,13 +36,17 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$nro_factura,$co
 		$stmtDetalleSol = $dbh->prepare("SELECT cantidad,precio,descripcion_alterna from solicitudes_facturaciondetalle where cod_solicitudfacturacion=$cod_solicitudfacturacion");
 		$stmtDetalleSol->execute();
 		$stmtDetalleSol->bindColumn('cantidad', $cantidad);	 
-		$stmtDetalleSol->bindColumn('precio', $precio);			
-		$stmtDetalleSol->bindColumn('descripcion_alterna', $descripcion_alterna);  
-		$concepto_contabilizacion=$codigo_alterno." - ";
+		$stmtDetalleSol->bindColumn('precio', $precio_unitario);			
+		$stmtDetalleSol->bindColumn('descripcion_alterna', $descripcion_alterna);
+		if($tipo_solicitud==2 || $tipo_solicitud==6 || $tipo_solicitud==7){
+          $concepto_contabilizacion="";
+        }else{
+          $concepto_contabilizacion=$codigo_alterno." - ";
+        }		
 		while ($row_det = $stmtDetalleSol->fetch()){
-			$precio_natural=$precio/$cantidad;
+			$precio=$precio_unitario*$cantidad;
 			$concepto_contabilizacion.=$descripcion_alterna." / ".$nombreComprobante." - F ".$nro_factura." / ".$razon_social."<br>\n";
-			$concepto_contabilizacion.="Cantidad: ".$cantidad." * ".formatNumberDec($precio_natural)." = ".formatNumberDec($precio)."<br>\n";
+			$concepto_contabilizacion.="Cantidad: ".$cantidad." * ".formatNumberDec($precio_unitario)." = ".formatNumberDec($precio)."<br>\n";
 		}
 		$codComprobante=obtenerCodigoComprobante();
 		//insertamos cabecera
@@ -143,7 +147,7 @@ function ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$
 		$numeroX=str_pad($numeroComprobante, 5, "0", STR_PAD_LEFT);	
 		$nombreComprobante=$nombreTipoComprobante."-".$numeroX;
 		//sacamos nombre de los detalles
-		$concepto_contabilizacion=$codigo_alterno." - ";
+		$concepto_contabilizacion=" ";
 		foreach ($items as $valor) {        
             $suscripcionId=$valor['suscripcionId'];
             $pagoCursoId=$valor['pagoCursoId'];

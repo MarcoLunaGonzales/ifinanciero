@@ -53,6 +53,7 @@ $stmtb->bindColumn('nombre', $nombre);
             <div class="col-md-12">
               <div class="card">
                 <div class="card-header <?=$colorCard;?> card-header-icon">
+                  <input type="hidden" name="codigo_libreta" id="codigo_libreta" value="<?=$codigoLibreta?>">
                   <div class="card-icon">
                     <i class="material-icons"><?=$iconCard;?></i>
                   </div>
@@ -66,57 +67,112 @@ $stmtb->bindColumn('nombre', $nombre);
                   }
                   ?>
                 </div>
-                
                 <div class="card-body">
                   <div class="table-responsive">
                     <table id="tablePaginator100" class="table table-condensed small">
                       <thead>
                         <tr style="background:#21618C; color:#fff;">
                           <td class="text-center">#</td>
-                          <td>Fecha</td>
-                          <td>Hora</td>
+                          <td>Fecha<br>Hora</td>                          
                           <td>Descripción</td>
                           <td>Información C.</td>
                           <td>Sucursal</td>
                           <td>Monto</td>
                           <td>Saldo</td>
                           <td>Nro Doc / Nro Ref</td>
+
+                          <th class="small bg-success" width="4%"><small>Fecha Fac.</small></th>
+                          <th class="small bg-success" width="4%"><small>N° Fac.</small></th>      
+                          <th class="small bg-success" width="7%"><small>Nit Fac.</small></th>
+                          <th class="small bg-success" width="7%"><small>Razón Social Fac.</small></th>
+                          <th class="small bg-success" width="5%"><small>Monto Fac.</small></th>                          
+                          <td class="text-right">*</td>
                           <td class="text-right">Acciones</td>
                         </tr>
                       </thead>
                       <tbody>
-<?php
-						$index=1;
-                      	while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
-                           
-?>
-                        <tr>
-                          <td align="center"><?=$index;?></td>
-                          <td class="text-center"><?=strftime('%d/%m/%Y',strtotime($fecha))?></td>
-                          <td class="text-center"><?=strftime('%H:%M:%S',strtotime($fecha))?></td>
-                          <td class="text-left"><?=$descripcion?></td>
-                          <td class="text-left"><?=$informacion_complementaria?></td>      
-                          <td class="text-left"><?=$agencia?></td>
-                          <td class="text-right"><?=number_format($monto,2,".",",")?></td>
-                          <td class="text-right"><?=number_format($saldo,2,".",",")?></td>
-                          <td class="text-left"><?=$nro_documento?></td>
-                          <td class="td-actions text-right">
-                          <?php
-                            if($globalAdmin==1){
-                            ?>
-                            <a href="#" rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDeleteDetalle;?>&codigo=<?=$codigo;?>&c=<?=$codigoLibreta?>')">
-                              <i class="material-icons"><?=$iconDelete;?></i>
-                            </a>
+                        <?php
+                        $index=1;
+                        while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {?>
+                          <tr>
+                            <td align="center"><?=$index;?></td>
+                            <td class="text-center"><?=strftime('%d/%m/%Y',strtotime($fecha))?><br><?=strftime('%H:%M:%S',strtotime($fecha))?></td>
+                            <td class="text-left"><?=$descripcion?></td>
+                            <td class="text-left"><?=$informacion_complementaria?></td>      
+                            <td class="text-left"><?=$agencia?></td>
+                            <td class="text-right"><?=number_format($monto,2,".",",")?></td>
+                            <td class="text-right"><?=number_format($saldo,2,".",",")?></td>
+                            <td class="text-left"><?=$nro_documento?></td>
+
+                            <?php                  
+                              // $cont_facturas=contarFacturasLibretaBancaria($codigo);
+                              // if($cont_facturas>0){
+                                $sqlDetalleX="SELECT * FROM facturas_venta where cod_libretabancariadetalle=$codigo and cod_estadofactura=1 order by codigo desc";
+                                $stmtDetalleX = $dbh->prepare($sqlDetalleX);
+                                $stmtDetalleX->execute();
+                                $stmtDetalleX->bindColumn('codigo', $codigo_factura);
+                                $stmtDetalleX->bindColumn('fecha_factura', $fechaDetalle);
+                                $stmtDetalleX->bindColumn('nro_factura', $nroDetalle);
+                                $stmtDetalleX->bindColumn('nit', $nitDetalle);
+                                $stmtDetalleX->bindColumn('razon_social', $rsDetalle);
+                                $stmtDetalleX->bindColumn('observaciones', $obsDetalle);
+                                $stmtDetalleX->bindColumn('importe', $impDetalle);
+                                $facturaCodigo=[];
+                                $facturaFecha=[];
+                                $facturaNumero=[];
+                                $facturaNit=[];
+                                $facturaRazonSocial=[];
+                                $facturaDetalle=[];
+                                $facturaMonto=[];
+                                $filaFac=0;  
+                                while ($rowDetalleX = $stmtDetalleX->fetch(PDO::FETCH_BOUND)) {                        
+                                  $facturaCodigo[$filaFac]=$codigo_factura;
+                                  $facturaFecha[$filaFac]=strftime('%d/%m/%Y',strtotime($fechaDetalle));
+                                  $facturaNumero[$filaFac]=$nroDetalle;
+                                  $facturaNit[$filaFac]=$nitDetalle;
+                                  $facturaRazonSocial[$filaFac]=$rsDetalle;
+                                  $facturaDetalle[$filaFac]=$obsDetalle;
+                                  $facturaMonto[$filaFac]=number_format($impDetalle,2,".",",");
+                                  $filaFac++;
+                                }?>
+                                <td class="text-right" style="vertical-align: top;"><small><?=implode("<div style='border-bottom:1px solid #26BD3D;'></div>", $facturaFecha)?></small></td>
+                                <td class="text-right" style="vertical-align: top;"><small><?=implode("<div style='border-bottom:1px solid #26BD3D;'></div>", $facturaNumero)?></small></td>
+                                <td class="text-right" style="vertical-align: top;"><small><?=implode("<div style='border-bottom:1px solid #26BD3D;'></div>", $facturaNit)?></small></td>
+                                <td class="text-left" style="vertical-align: top;"><small><small><?=implode("<div style='border-bottom:1px solid #26BD3D;'></div>", $facturaRazonSocial)?></small></small></td>                      
+                                <td class="text-right" style="vertical-align: top;"><small><?=implode("<div style='border-bottom:1px solid #26BD3D;'></div>", $facturaMonto)?></small>
+                                </td>
+                                <td class="text-right" style="vertical-align: top;"><small>
+                                  <?php
+                                  for ($i=0;$i<count($facturaCodigo);$i++){?>
+                                    <div style='border-bottom:1px solid #26BD3D;'>
+                                      <a title="Eliminar relación de Factura" href="#" class="btn btn-danger btn-sm btn-round" style="padding: 0;font-size:8px;width:15px;height:15px;" onclick="eliminarRelacionFactura(<?=$facturaCodigo[$i]?>)"><i class="material-icons">remove</i></a>
+                                    </div>
+                                  <?php }                                   
+                                  ?>
+                                  </small>
+                                </td>
+
+                            <td class="td-actions text-right">
                             <?php
-                            }
-                            ?>
-                            
-                          </td>
-                        </tr>
-<?php
-							$index++;
-						}
-?>
+                              if($globalAdmin==1){
+                              ?>                             
+                              <!-- <button type="button"  title="Relacionar Con Factura" class="btn btn-warning" data-toggle="modal" data-target="#modallista_facturas" onclick="relacionar_factura_libreta(<?=$codigo?>)">
+                                <i class="material-icons">add_circle_outline</i>
+                              </button> -->
+                              <a href="#" title="Relacionar Con Factura" onclick="relacionar_factura_libreta(<?=$codigo?>);return false;"  class="btn btn-warning">
+                                <i class="material-icons">add_circle_outline</i>
+                              </a>
+                              <a href="#" rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDeleteDetalle;?>&codigo=<?=$codigo;?>&c=<?=$codigoLibreta?>')">
+                                <i class="material-icons"><?=$iconDelete;?></i>
+                              </a>
+                              <?php
+                              }
+                              ?>
+                              
+                            </td>
+                          </tr>
+                          <?php $index++;
+                        } ?>
                       </tbody>
                     </table>
                   </div>
@@ -129,17 +185,17 @@ $stmtb->bindColumn('nombre', $nombre);
       				<div class="card-footer fixed-bottom">
                 <button class="<?=$buttonCancel;?>" onClick="location.href='<?=$urlList;?>'">Volver</button>
                 <div class="btn-group dropdown">
-                              <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Cargar Libreta desde Excel
-                              </button>
-                              <div class="dropdown-menu">
-                                <a href="#" onclick="subirArchivoExcelLibretaBancaria(1,'Formato BISA');return false;"  class="dropdown-item">
-                                           <i class="material-icons">keyboard_arrow_right</i>Formato BISA
-                                </a>
-                                <a href="#" onclick="subirArchivoExcelLibretaBancaria(2,'Formato UNION');return false;"  class="dropdown-item">
-                                           <i class="material-icons">keyboard_arrow_right</i>Formato UNION
-                                </a>
-                              </div>
+                      <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Cargar Libreta desde Excel
+                      </button>
+                      <div class="dropdown-menu">
+                        <a href="#" onclick="subirArchivoExcelLibretaBancaria(1,'Formato BISA');return false;"  class="dropdown-item">
+                                   <i class="material-icons">keyboard_arrow_right</i>Formato BISA
+                        </a>
+                        <a href="#" onclick="subirArchivoExcelLibretaBancaria(2,'Formato UNION');return false;"  class="dropdown-item">
+                                   <i class="material-icons">keyboard_arrow_right</i>Formato UNION
+                        </a>
+                      </div>
                   </div>
                 
               </div>
@@ -161,125 +217,185 @@ $stmtb->bindColumn('nombre', $nombre);
 <div class="modal fade modal-arriba modal-primary" id="modalSubirArchivoExcel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-notice" style="max-width: 80% !important;">
     <div class="modal-content card">
-               <div class="card-header card-header-default card-header-text">
-                  <div class="card-text">
-                    <h4 id="formato_texto"></h4>
-                  </div>
-                  <button type="button" class="btn btn-success btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
-                    <i class="material-icons">close</i>
-                  </button>
-                </div>
-                <div class="card-body">
-                  <form action="<?=$urlSaveImport?>" method="post" name="formLibretaBancaria" id="formLibretaBancaria" enctype="multipart/form-data">
-                    <input type="hidden" name="tipo_formato" id="tipo_formato">
-                  <div class="row">
-                       <label class="col-sm-3 col-form-label" style="color:#000000; ">Archivo Excel:</label>
-                       <div class="col-sm-6">
-                         <div class="form-group">
-                          <input type="hidden" class="form-control" name="codigo" id="codigo" value="<?=$codigoLibreta?>">
-                          <small id="label_txt_documentos_excel"></small> 
-                          <span class="input-archivo">
-                            <input type="file" class="archivo" accept=".xls,.xlsx" name="documentos_excel" id="documentos_excel"/>
-                          </span>
-                          <label title="Ningún archivo" for="documentos_excel" id="label_documentos_excel" class="label-archivo btn btn-default btn-sm"><i class="material-icons">publish</i> Subir Archivo
-                          </label>
-                      
-                         </div>
-                       </div>
-                   </div>
-                   <div class="row">     
-                       <label class="col-sm-3 col-form-label" style="color:#000000; ">Observaciones:</label>
-                       <div class="col-sm-6">
-                         <div class="form-group">
-                           <textarea type="text" class="form-control" name="observaciones" id="observaciones" value="" style="background-color:#E3CEF6;text-align: left" ></textarea>
-                         </div>
-                       </div> 
-                   </div>
-                   <div class="row">     
-                       <label class="col-sm-3 col-form-label" style="color:#000000; ">Tipo de Cargado:</label>
-                       <div class="col-sm-6">
-                         <div class="form-group">
-                            <select class="selectpicker form-control" name="tipo_cargado" id="tipo_cargado" data-style="btn btn-default">
-                          <?php
-                             $stmt = $dbh->prepare("SELECT p.codigo,p.nombre FROM tipos_libretabancariacargado p where p.cod_estadoreferencial=1 order by p.codigo desc");
-                             $stmt->execute();
-                             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                               $codigoX=$row['codigo'];
-                               $nombreX=$row['nombre'];
-                             ?>
-                             <option value="<?=$codigoX;?>"><?=$nombreX;?></option>  
-                             <?php
-                               }
-                               ?> 
-                       </select>
-                         </div>
-                       </div> 
-                   </div>
-                   <br><br>
-                   <center><h4 id="tipo_formato_titulo2" class="font-weight-bold"></h4></center>
-                   <div id="tabla_muestra_formato_a">
-                     <table class="table table-bordered small table-condensed">
-                       <thead>
-                         <tr style="background:#F9D820; color:#262C7B;">
-                          <th>Fecha</th>
-                          <th>Hora</th>
-                          <th>Nro Cheque</th>
-                          <th>Descripción</th>
-                          <th>Monto</th>
-                          <th>Saldo</th>
-                          <th>Información C.</th>
-                          <th>Sucursal</th>
-                          <th>Canal</th>
-                          <th>Nro Referencia</th> 
-                          <th>Codigo</th>
-                         </tr>
-                       </thead>
-                       <tbody>
-                         <tr style="background:#262C7B; color:#fff;">
-                          <td>dd-mm-aaaa</td>
-                          <td>HH:mm:ss</td>
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                         </tr>
-                       </tbody>
-                     </table>  
-                   </div>
-                   <div id="tabla_muestra_formato_b" class="d-none">
-                     <table class="table table-bordered table-condensed">
-                       <thead>
-                         <tr style="background:#223BC8; color:#F3F300;">
-                          <th>Fecha</th>
-                          <th>Agencia</th>
-                          <th>Descripción</th>
-                          <th>Nro Documento</th>
-                          <th>Monto</th>
-                          <th>Saldo</th>
-                         </tr>
-                       </thead>
-                       <tbody>
-                         <tr style="background:#F37200; color:#fff;">
-                           <td>dd-mm-aaaa</td>
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                         </tr>
-                       </tbody>
-                     </table>  
-                   </div>
-                <hr>
-                <div class="float-right">
-                  <button type="submit" id="submit" name="import" class="btn btn-success" onclick="iniciarCargaAjax();">Importar Registros</button>
-                </div>
-               </div>  
+      <div class="card-header card-header-default card-header-text">
+        <div class="card-text">
+          <h4 id="formato_texto"></h4>
+        </div>
+        <button type="button" class="btn btn-success btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
+          <i class="material-icons">close</i>
+        </button>
+      </div>
+      <div class="card-body">
+        <form action="<?=$urlSaveImport?>" method="post" name="formLibretaBancaria" id="formLibretaBancaria" enctype="multipart/form-data">
+          <input type="hidden" name="tipo_formato" id="tipo_formato">
+          <div class="row">
+            <label class="col-sm-3 col-form-label" style="color:#000000; ">Archivo Excel:</label>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <input type="hidden" class="form-control" name="codigo" id="codigo" value="<?=$codigoLibreta?>">
+                <small id="label_txt_documentos_excel"></small> 
+                <span class="input-archivo">
+                  <input type="file" class="archivo" accept=".xls,.xlsx" name="documentos_excel" id="documentos_excel"/>
+                </span>
+                <label title="Ningún archivo" for="documentos_excel" id="label_documentos_excel" class="label-archivo btn btn-default btn-sm"><i class="material-icons">publish</i> Subir Archivo
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="row">     
+            <label class="col-sm-3 col-form-label" style="color:#000000; ">Observaciones:</label>
+            <div class="col-sm-6">
+              <div class="form-group">
+                 <textarea type="text" class="form-control" name="observaciones" id="observaciones" value="" style="background-color:#E3CEF6;text-align: left" ></textarea>
+              </div>
+            </div> 
+          </div>
+          <div class="row">     
+            <label class="col-sm-3 col-form-label" style="color:#000000; ">Tipo de Cargado:</label>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <select class="selectpicker form-control" name="tipo_cargado" id="tipo_cargado" data-style="btn btn-default">
+                <?php
+                   $stmt = $dbh->prepare("SELECT p.codigo,p.nombre FROM tipos_libretabancariacargado p where p.cod_estadoreferencial=1 order by p.codigo desc");
+                   $stmt->execute();
+                   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                     $codigoX=$row['codigo'];
+                     $nombreX=$row['nombre'];
+                   ?>
+                   <option value="<?=$codigoX;?>"><?=$nombreX;?></option>  
+                   <?php
+                     }
+                     ?> 
+                </select>
+              </div>
+            </div> 
+          </div>
+          <br><br>
+          <center><h4 id="tipo_formato_titulo2" class="font-weight-bold"></h4></center>
+          <div id="tabla_muestra_formato_a">
+            <table class="table table-bordered small table-condensed">
+              <thead>
+               <tr style="background:#F9D820; color:#262C7B;">
+                <th>Fecha</th>
+                <th>Hora</th>
+                <th>Nro Cheque</th>
+                <th>Descripción</th>
+                <th>Monto</th>
+                <th>Saldo</th>
+                <th>Información C.</th>
+                <th>Sucursal</th>
+                <th>Canal</th>
+                <th>Nro Referencia</th> 
+                <th>Codigo</th>
+               </tr>
+              </thead>
+              <tbody>
+               <tr style="background:#262C7B; color:#fff;">
+                <td>dd-mm-aaaa</td>
+                <td>HH:mm:ss</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+               </tr>
+              </tbody>
+            </table>  
+          </div>
+          <div id="tabla_muestra_formato_b" class="d-none">
+            <table class="table table-bordered table-condensed">
+               <thead>
+                 <tr style="background:#223BC8; color:#F3F300;">
+                  <th>Fecha</th>
+                  <th>Agencia</th>
+                  <th>Descripción</th>
+                  <th>Nro Documento</th>
+                  <th>Monto</th>
+                  <th>Saldo</th>
+                 </tr>
+               </thead>
+               <tbody>
+                 <tr style="background:#F37200; color:#fff;">
+                   <td>dd-mm-aaaa</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                 </tr>
+               </tbody>
+            </table>  
+          </div>
+          <hr>
+          <div class="float-right">
+            <button type="submit" id="submit" name="import" class="btn btn-success" onclick="iniciarCargaAjax();">Importar Registros</button>
+          </div>
+        </form>
+      </div>  
     </div>
   </div>
+</div>
 <!--    end small modal -->
+
+<div class="modal fade modal-arriba modal-primary" id="modallista_facturas" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-notice" style="max-width: 80% !important;">
+    <div class="modal-content card">
+      <div class="card-header card-header-warning card-header-icon">
+        <div class="card-icon">
+          <i class="material-icons">settings_applications</i>
+        </div>
+        <h4 class="card-title">Facturas</h4>
+      </div>
+      <div class="card-body">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+        <i class="material-icons">close</i>
+      </button>
+      <input type="hidden" name="cod_libretabancariadetalle" id="cod_libretabancariadetalle" value="0">
+        <table class="table table-condensed">
+          <thead>
+            <tr style="background:#21618C; color:#fff;">
+              <th>#</th>
+              <th>Fecha</th>
+              <th>N°</th>            
+              <th>Razón Social</th> 
+              <th>Nit</th>
+              <th>Importe</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php
+            $stmt = $dbh->prepare("SELECT codigo,fecha_factura,date_format(fecha_factura,'%d/%m/%Y') as fecha_x,razon_social,nit,nro_factura,importe,cod_libretabancariadetalle from facturas_venta order by codigo desc");
+            $stmt->execute();
+            $stmt->bindColumn('codigo', $codigo_x);
+            $stmt->bindColumn('fecha_x', $fecha_factura_x);
+            $stmt->bindColumn('razon_social', $razon_social_x);
+            $stmt->bindColumn('nit', $nit_x);
+            $stmt->bindColumn('nro_factura', $nro_factura_x);
+            $stmt->bindColumn('importe', $importe_x);
+            $stmt->bindColumn('cod_libretabancariadetalle', $cod_libretabancariadetalle_x);
+            $index=1;
+            while ($rowTC = $stmt->fetch(PDO::FETCH_BOUND)) {
+              $color_tr="";$label="btn btn-fab btn-success btn-sm";
+              if($cod_libretabancariadetalle_x){$color_tr="background-color:#f6ddcc;";$label="btn btn-fab btn-warning btn-sm";}
+              ?>
+              <tr style="<?=$color_tr?>">
+                <td align="text-center small"><?=$index;?></td>
+                <td align="text-center small"><?=$fecha_factura_x;?></td>
+                <td align="text-right small"><?=$nro_factura_x;?></td>
+                <td align="text-left small"><?=$razon_social_x;?></td>
+                <td align="text-right small"><?=$nit_x;?></td>
+                <td align="text-right small"><?=$importe_x;?></td>
+                <td class="td-actions text-right"><a href="#" style="padding: 0;font-size:10px;width:25px;height:25px;" onclick="seleccionar_Factura_relacion(<?=$codigo_x?>)" class="<?=$label?>" title="Seleccionar Factura"><i class="material-icons">done</i></a></td>
+              </tr>
+            <?php $index++;} ?>
+          </tbody>
+        </table>
+      </div>
+    </div>  
+  </div>
+</div>

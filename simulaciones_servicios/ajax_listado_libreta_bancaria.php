@@ -15,7 +15,6 @@ $tipo_listado=$_GET['tipo_listado'];
   tfoot input {
     width: 100%;
     padding: 3px;
-    
   }
 </style> 
 <table id="libreta_bancaria_reporte_modal" class="table table-condensed table-bordered table-sm" style="width:100% !important;">

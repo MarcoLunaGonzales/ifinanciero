@@ -138,9 +138,6 @@ try{
                             $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$nro_correlativo,0,0);
                         }
                         
-
-                        
-
                         // echo "auto:".$nroAutorizacion." - nro_corr:".$nro_correlativo." - nitCliente:".$nitCliente." - fecha_actual:".$fecha_actual." - totalFinalRedondeado:".$totalFinalRedondeado." - llaveDosificacion:".$llaveDosificacion;
                         $controlCode = new ControlCode();
                         $code = $controlCode->generate($nroAutorizacion,//Numero de autorizacion

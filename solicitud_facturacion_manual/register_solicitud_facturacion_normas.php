@@ -318,7 +318,7 @@ $contadorRegistros=0;
                                      </button>                              
                                 </div>
                             </div>                            
-                            <label class="col-sm-1 col-form-label">Responsable</label>
+                            <label class="col-sm-1 col-form-label"><small>Responsable</small></label>
                             <div class="col-sm-4">
                                 <div class="form-group">            
                                     <?php  $responsable=namePersonal($cod_personal); ?>
