@@ -11,5 +11,8 @@ $stmt->execute();
 while ($row = $stmt->fetch()){
 	$nro_autorizacion=$row['nro_autorizacion'];
 }
+
+$valorNoValido="Valor no Válido.";
 ?>
 <input class="form-control" type="text" name="aut_fac" id="aut_fac" required="true" value="<?=$nro_autorizacion?>"/>
+<div class="invalid-feedback"><?=$valorNoValido;?></div>
