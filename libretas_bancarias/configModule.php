@@ -18,7 +18,13 @@ $urlSaveDelete="";
 
 $urlRegister2="index.php?opcion=registerLibretaBancaria";
 $urlSaveImport="libretas_bancarias/saveImport.php";
-
 $urlContaLibretasBancarias="libretas_bancarias/contabilizacionLibretasBancarias.php";
 $urlSaveContabilizacion="../libretas_bancarias/saveContabilizacion.php";
+
+
+$urlList_2="index.php?opcion=contabilizarLibretasBancarias_lista";
+$urlList_2detalle="index.php?opcion=contabilizarLibretasBancarias_listadetalle";
+
+
+
 ?>

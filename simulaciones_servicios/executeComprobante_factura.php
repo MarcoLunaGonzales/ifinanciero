@@ -60,7 +60,15 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$nro_factura,$co
 			while ($row_detTipopago = $stmtDetalleTipoPago->fetch()) {
 				$descripcion=$concepto_contabilizacion;
 				$monto_tipopago_total+=$monto_tipopago;
-				$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_tipopago,0,$descripcion,$ordenDetalle);
+				switch ($cod_estado) {
+					case 0://cuenta normal						
+						$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_tipopago,0,$descripcion,$ordenDetalle);
+						break;
+					case 1://cuenta de libreta bancaria
+						$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_libreta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_tipopago,0,$descripcion,$ordenDetalle);
+						break;						
+				}					
+				
 	            $ordenDetalle++;
 			}			
 			//para IT gasto
@@ -102,15 +110,8 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$nro_factura,$co
 				$stmtDetalleUO->bindColumn('porcentaje', $porcentaje_uo);	
 				$stmtDetalleUO->bindColumn('monto', $monto_areas);				
 				while ($row_detAreas = $stmtDetalleUO->fetch()) {
-					$monto_areas_uo=$monto_areas_format*$porcentaje_uo/100;
-					switch ($cod_estado) {
-						case 0://cuenta normal
-							$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_areas,0,$cod_uo_areas,$cod_area_areas,0,$monto_areas_uo,$descripcion,$ordenDetalle);					
-							break;
-						case 1://cuenta de libreta bancaria
-							$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_libreta,0,$cod_uo_areas,$cod_area_areas,0,$monto_areas_uo,$descripcion,$ordenDetalle);					
-							break;						
-					}					
+					$monto_areas_uo=$monto_areas_format*$porcentaje_uo/100;					
+					$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_areas,0,$cod_uo_areas,$cod_area_areas,0,$monto_areas_uo,$descripcion,$ordenDetalle);					
 		            $ordenDetalle++;
 				}
 			}
@@ -163,7 +164,14 @@ function ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$
 			$cod_tipopago=obtenerValorConfiguracion(55);
 			$cod_cuenta=obtenerCodCuentaTipoPago($cod_tipopago);
 			$descripcion=$concepto_contabilizacion;	
-			$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_total,0,$descripcion,$ordenDetalle);
+			switch ($cod_estado) {
+				case 0://cuenta normal
+					$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_total,0,$descripcion,$ordenDetalle);					
+					break;
+				case 1://cuenta de libreta bancaria					
+					$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_libreta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_total,0,$descripcion,$ordenDetalle);					
+					break;						
+			}
             $ordenDetalle++;			
 			//para IT gasto
 			$cod_cuenta_it_gasto=obtenerValorConfiguracion(49);
@@ -191,16 +199,7 @@ function ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$
 			$monto_areas_format=$monto_total*$porcentaje_pasivo/100;
 			$descripcion=$concepto_contabilizacion;
 			$cod_cuenta_areas=obtenerCodCuentaArea($cod_area_solicitud);
-			switch ($cod_estado) {
-				case 0://cuenta normal
-					$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_areas,0,$cod_uo_areas,$cod_area_areas,0,$monto_areas_uo,$descripcion,$ordenDetalle);
-					// $flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_areas,0,$cod_uo_areas,$cod_area_areas,0,$monto_areas_uo,$descripcion,$ordenDetalle);					
-					break;
-				case 1://cuenta de libreta bancaria					
-					$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_libreta,0,$cod_uo_areas,$cod_area_areas,0,$monto_areas_uo,$descripcion,$ordenDetalle);
-					// $flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_libreta,0,$cod_uo_areas,$cod_area_areas,0,$monto_areas_uo,$descripcion,$ordenDetalle);					
-					break;						
-			}
+			$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_areas,0,$cod_uo_areas,$cod_area_areas,0,$monto_areas_uo,$descripcion,$ordenDetalle);
             $ordenDetalle++;				
 			return $codComprobante;
 			// header('Location: ../comprobantes/imp.php?comp='.$codComprobante.'&mon=1');

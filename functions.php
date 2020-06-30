@@ -7159,7 +7159,8 @@ function obtener_dato_dosificacion($cod_dosificacion){
   return $valor;
 }
 
-function obtenerObtenerLibretaBancaria($codigo){
+function obtenerObtenerLibretaBancaria(){
+  $codigo=0;
   //$direccion='http://127.0.0.1/ifinanciero/wsifin/';
   // $direccion='http://200.105.199.164:8008/ifinanciero/wsifin/';
   $direccion=obtenerValorConfiguracion(56);//direccion del servicio web ifinanciero
@@ -7325,7 +7326,7 @@ function obtenerEstadoLibretaBancaria($cod_libreta){
   $stmtLibretasDet = $dbh->prepare("SELECT lbd.cod_estado from  libretas_bancariasdetalle lbd where  lbd.codigo=$cod_libreta");
   $stmtLibretasDet->execute();
   $resultLibretaDet = $stmtLibretasDet->fetch();   
-  $cod_estado= $resultLibretaDet['cod_estado'];    
+  $valor = $resultLibretaDet['cod_estado'];    
   return($valor);
 }
 function obtenerCuentaLibretaBancaria($cod_libreta){
@@ -7463,6 +7464,18 @@ function obtenerServicioSolicitadoPropuestaTCPTCS($codigo,$detalle){
       $valor++;
    }
    return($valor);
+}
+
+function obtenerNombreDepositoNoFacturado($codigo){
+  $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT l.nombre,b.abreviatura as banco from libretas_bancarias l join bancos b on b.codigo=l.cod_banco where l.cod_estadoreferencial=1 and l.codigo=$codigo");
+   $stmt->bindParam(':codigo',$codigo);
+   $stmt->execute();
+   $nombreX="";
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $nombreX=$row['nombre']." - ".$row['banco'];
+   }
+   return($nombreX);
 }
 ?>
 

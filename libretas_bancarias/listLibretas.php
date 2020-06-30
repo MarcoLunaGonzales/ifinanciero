@@ -36,6 +36,7 @@ $lista=listaLibretasBancarias();
                           <th>Libreta</th>
                           <th>Banco</th>
                           <th>Nro Cuenta</th>
+                          <th>Nro Contra Cuenta</th>
                           <th class="text-right">Actions</th>
                         </tr>
                       </thead>
@@ -48,12 +49,15 @@ $lista=listaLibretasBancarias();
                           $nombre=$row['nombre'];
                           $banco=$row['banco'];
                           $cuenta=$row['nro_cuenta'];
+                          $cod_contraCuenta=$row['cod_contracuenta'];
+                          $ContraCuenta=obtieneNumeroCuenta($cod_contraCuenta);
 ?>
                         <tr>
                           <td align="center"><?=$index;?></td>                          
                           <td class="text-left font-weight-bold"><?=$nombre;?></td>
                           <td><?=$banco;?></td>
                           <td><?=$cuenta;?></td>
+                          <td><?=$ContraCuenta;?></td>
                       
                           <td class="td-actions text-right">
                             <a href='<?=$urlList2;?>&codigo=<?=$codigo;?>' class="<?=$buttonDetailMin;?>">

@@ -554,7 +554,7 @@ if($menuModulo==0){
                   </a>
                 </li>
                 <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=contabilizarLibretasBancarias">
+                  <a class="nav-link" href="?opcion=contabilizarLibretasBancarias_lista">
                     <span class="sidebar-mini"> DNF </span>
                     <span class="sidebar-normal"> Depositos No Facturados</span>
                   </a>

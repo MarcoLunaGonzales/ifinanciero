@@ -9237,6 +9237,14 @@ function calcularTotalFilaServicio2(){
   document.getElementById("comprobante_auxiliar").value=comprobante_auxiliar;
   //sumartotalAddServiciosFacturacion(id);
 }
+function verificar_item_activo(index){
+  var check=document.getElementById("modal_check"+index).checked;
+  if(check){
+    calcularTotalFilaServicio2Costos();
+  }else{
+    Swal.fire("Informativo!", "Por favor, active la fila.", "warning");
+  }
+}
 function calcularTotalFilaServicio2Costos(){  
   var sumal=0;  
   var suma_pagado=0;  
@@ -9251,7 +9259,7 @@ function calcularTotalFilaServicio2Costos(){
     var monto_importe_total=parseFloat(importe_a_pagar);
     var check=document.getElementById("modal_check"+i).checked;
     if(monto_importe_total>saldo){
-      Swal.fire("Informativo!", "El Monto Supera al Saldo! ("+number_format(saldo,2)+").", "warning");
+      Swal.fire("Informativo!", "El Monto en la fila "+i+" Supera al Saldo! ("+number_format(saldo,2)+").", "warning");
     }else{
       if(check) {//BUSACMOS LOS CHECK ACTIVOS
         comprobante_auxiliar=comprobante_auxiliar+1;        
@@ -9274,7 +9282,8 @@ function calcularTotalFilaServicio2Costos(){
   } 
 
   var resulta=sumal;  
-  document.getElementById("modal_totalmontoserv_costo").value=number_format(resulta,2);
+  document.getElementById("modal_totalmontoserv_costo").value=number_format(resulta,2);//con formato
+  document.getElementById("modal_totalmontoserv_costo_a").value=resulta;//si formato
   document.getElementById("modal_totalmontoserv_pagado").value=number_format(suma_pagado,2);
   // document.getElementById("modal_totalmontos__costo").value=resulta;//escondido
   // document.getElementById("comprobante_auxiliar_costo").value=comprobante_auxiliar;
@@ -12457,11 +12466,15 @@ function registrarCuentaAsociadaSOLFAC_areas(cod_area,cod_cuenta){
 //tipo pago
 var itemTipoPagos_facturacion=[];
 var itemTipoPagos_facturacion_aux=[];
-function agregarDatosModalTipoPagoFacturacion(){  
+function agregarDatosModalTipoPagoFacturacion(sw_auxiliar){  
   // alert("llege");
   // var d=datos.split('/');
   var cod_tipopago=$("#cod_tipopago").val();
-  var monto_total=$("#monto_total_a").val();  
+  if(sw_auxiliar==2){//capacitacion
+    var monto_total=$("#modal_totalmontoserv_costo_a").val();  
+  }else{
+    var monto_total=$("#monto_total_a").val();    
+  }
   if(monto_total<=0 || monto_total==null || monto_total==''){
     // $('#modalTipoPagoPorcentaje').modal('hide');
     Swal.fire("Informativo!", "El monto Total NO debe ser 0 o número negativo!", "warning");
@@ -12481,11 +12494,16 @@ function agregarDatosModalTipoPagoFacturacion(){
     ajax.send(null)   
   } 
 }
-function agregarDatosModalTipoPagoFacturacionNormas(){  
+function agregarDatosModalTipoPagoFacturacionNormas(sw_auxiliar){   
   // alert("llege");
   // var d=datos.split('/');
   var cod_tipopago=$("#cod_tipopago").val();
-  var monto_total=$("#monto_total_a").val();  
+  
+  if(sw_auxiliar==2){//capacitacion
+    var monto_total=$("#modal_totalmontoserv_costo_a").val();  
+  }else{
+    var monto_total=$("#monto_total_a").val();  
+  }
   if(monto_total<=0 || monto_total==null || monto_total==''){
     // $('#modalTipoPagoPorcentaje').modal('hide');
     Swal.fire("Informativo!", "El monto Total NO debe ser 0 o número negativo!", "warning");
@@ -12663,12 +12681,17 @@ var itemAreas_facturacion=[];//array que contiene objetos agregado
 var itemAreas_facturacion_aux=[];//array que contiene todas las areas de servicios
 var itemUnidades_facturacion=[];//array que contiene objetos agregados a un area
 var itemUnidades_facturacion_aux=[];//array que contiene todas las unidades en general
-function agregarDatosModalAreasFacturacion(){    
+function agregarDatosModalAreasFacturacion(sw_auxiliar){     
   var cod_area=$("#cod_area").val();  
   if(cod_area==null || cod_area==''){    
     Swal.fire("Informativo!", "Area no Encontrada, por favor seleccione Oficina y Area!", "warning");
   }else{
-    var monto_total=$("#monto_total_a").val();    
+    
+    if(sw_auxiliar==2){//capacitacion
+      var monto_total=$("#modal_totalmontoserv_costo_a").val();  
+    }else{
+      var monto_total=$("#monto_total_a").val();
+    }
     if(monto_total<=0){      
       Swal.fire("Informativo!", "El monto Total NO debe ser 0 o número negativo!", "warning");
     }else{
@@ -12747,12 +12770,16 @@ function tablaGeneral_areas_solFac(){
     $('#divResultadoListaModalAreas').html(div);
     calcularTotalFilaAreasModal();
 }
-function agregarDatosModalAreasFacturacionNormas(){    
+function agregarDatosModalAreasFacturacionNormas(sw_auxiliar){     
   var cod_area=$("#cod_area").val();  
   if(cod_area==null || cod_area==''){    
     Swal.fire("Informativo!", "Area no Encontrada, por favor seleccione Oficina y Area!", "warning");
   }else{
-    var monto_total=$("#monto_total_a").val();    
+    if(sw_auxiliar==2){//capacitacion
+      var monto_total=$("#modal_totalmontoserv_costo_a").val();  
+    }else{
+      var monto_total=$("#monto_total_a").val();    
+    }
     if(monto_total<=0){      
       Swal.fire("Informativo!", "El monto Total NO debe ser 0 o número negativo!", "warning");
     }else{
@@ -14633,9 +14660,10 @@ function abrirLibretaBancaria(datos,direccion,indice){
   ajax.send(null);
 }
 function ajax_contenedor_tabla_libretaBancaria(saldo){
+  document.getElementById("saldo_x").value=saldo;
   var contenedor = document.getElementById('contenedor_tabla_libreta_bancaria');    
   ajax=nuevoAjax();
-  ajax.open('GET', 'simulaciones_servicios/ajax_listado_libreta_bancaria.php?saldo='+saldo,true);
+  ajax.open('GET', 'simulaciones_servicios/ajax_listado_libreta_bancaria.php?saldo='+saldo+'&tipo_listado=0',true);
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
       contenedor.innerHTML = ajax.responseText;      
@@ -14688,6 +14716,25 @@ function cargar_filtro_datatable_ajax(modal){
         .columns.adjust();
   });
 }
+
+function ajax_listado_libreta_bancaria_filtrar(){  
+  var saldo=document.getElementById("saldo_x").value;
+  var contenedor = document.getElementById('contenedor_tabla_libreta_bancaria');    
+  // alert(saldo);
+  ajax=nuevoAjax();
+  ajax.open('GET', 'simulaciones_servicios/ajax_listado_libreta_bancaria.php?saldo='+saldo+'&tipo_listado=1',true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;      
+      $('.selectpicker').selectpicker(["refresh"]);
+      cargar_dataTable_ajax('libreta_bancaria_reporte_modal');
+      cargar_filtro_datatable_ajax('modalListaLibretaBancaria');
+    }
+  }
+  ajax.send(null);
+}
+
+
 
 function seleccionar_libretaBancaria(cod_libreta){
   var indice=document.getElementById("indice").value;

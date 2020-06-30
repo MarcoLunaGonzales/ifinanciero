@@ -5,7 +5,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h3 class="modal-title" id="myModalLabel"><b>Porcentaje de Distribución del Ingreso por Tipo de Pago</b></h3>
+        <h3 class="modal-title" id="myModalLabel"><b>Porcentaje de Distribución del Ingreso por Forma de Pago</b></h3>
       </div>
       <div class="modal-body">
         <!-- <input type="hidden" name="cod_tipopago" id="cod_tipopago" value="0">    -->
@@ -421,6 +421,9 @@
         <div class="card-text">
           <h4>Libreta Bancaria <div id="contenedor_cabecera_libreta_bancaria"></div></h4>      
         </div>
+        <button title="filtrar todo" onclick="ajax_listado_libreta_bancaria_filtrar()" type="button" class="btn btn-warning btn-sm btn-fab float-right" >
+          <i class="material-icons">list</i>
+        </button>
         <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
           <i class="material-icons">close</i>
         </button>
@@ -430,9 +433,7 @@
         <input type="hidden" name="direccion" id="direccion" value="0">
         <input type="hidden" name="datos" id="datos" value="0">
         <input type="hidden" name="indice" id="indice" value="0">
-        <!-- <div id="">
-          
-        </div> -->
+        <input type="hidden" name="saldo_x" id="saldo_x" value="0">        
         <div class="row">          
             <div class="table-responsive" id="contenedor_tabla_libreta_bancaria">
               
@@ -440,48 +441,14 @@
         </div>
       </div>
       <div class="modal-footer">
-        <!-- <button type="button" class="btn btn-success" id="libreta_bancaria" name="libreta_bancaria">Agregar</button> -->
-        <!-- <button type="button" class="btn btn-danger" data-dismiss="modal"> Volver </button> -->
+         <span style="color:  #e59866 ;"><i class="material-icons">check_box</i> registros contabilizados</span><br>
+         <span style="color:  #85929e;"><i class="material-icons">check_box</i> registros No contabilizados</span><br>
       </div>
     </div>
   </div>
 </div>
 
-<!-- bUSCADOR AVANZADO LIBRETA BANCARIA -->
-<div class="modal fade" id="modalBuscadorLibretaBancaria" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Buscador de Detalle Libreta Bancaria</h4>
-      </div>
-      <div class="modal-body ">
-        <div class="row">          
-          <label class="col-sm-5 col-form-label text-center">Información</label>
-          <label class="col-sm-2 col-form-label text-center">Monto</label>
-          <label class="col-sm-5 col-form-label text-center">Razón Social</label>
-        </div> 
-        <div class="row">                    
-          <div class="form-group col-sm-5">
-            <input class="form-control input-sm" type="text" name="informacion_libreta" id="informacion_libreta">
-          </div>           
-          <div class="form-group col-sm-2">
-            <input class="form-control input-sm" type="text" name="monto_libreta" id="monto_libreta"  >
-          </div>           
-          <div class="form-group col-sm-5">
-            <input class="form-control input-sm" type="text" name="razon_social_libreta" id="razon_social_libreta"  >
-          </div>           
-        </div> 
 
-      </div>
-
-      <div class="modal-footer">
-        <button type="button" class="btn btn-success" id="botonBuscarLibretaBancariaDetalle" name="botonBuscarLibretaBancariaDetalle" onclick="botonBuscarLibretaBancariaDetalle()">Buscar</button>
-        <!-- <button type="button" class="btn btn-danger" data-dismiss="modal"> Cerrar </button> -->
-      </div>
-    </div>
-  </div>
-</div>
 <!-- carga datos -->
 <div class="cargar-ajax d-none">
   <div class="div-loading text-center">

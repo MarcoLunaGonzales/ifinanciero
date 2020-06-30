@@ -129,12 +129,12 @@ try{
                         if($_POST["cod_libreta_pagos"]>0){
                             $cod_libreta=$_POST["cod_libreta_pagos"];
                             $estado_libreta=obtenerEstadoLibretaBancaria($cod_libreta);
-                            if($estado==0 || $estado==1){
+                            if($estado_libreta==0){
                                 $cod_cuenta=obtenerCuentaLibretaBancaria($cod_libreta);
-                                //generamos el comprobante estado 1 es que va con cod_cuenta para matar o 0 será el por defecto
+                                //generamos el comprobante estado_libreta 1 es que va con cod_cuenta para matar o 0 será el por defecto
                                 $cod_comprobante=ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$nro_correlativo,1,$cod_cuenta);
                                 // $cod_comprobante=ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$nro_correlativo);
-                            }elseif($estado==3){
+                            }elseif($estado_libreta==1){
                                 $cod_contracuenta=obtenerContraCuentaLibretaBancaria($cod_libreta);
                                 //generamos el comprobante
                                 $cod_comprobante=ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$nro_correlativo,1,$cod_contracuenta);
