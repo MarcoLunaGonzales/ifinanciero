@@ -11,6 +11,9 @@ $stmt->execute();
 while ($row = $stmt->fetch()){
 	$nro_factura=$row['nro_factura'];
 }
+
+$valorNoValido="Valor no Válido.";
 ?>
 
 <input class="form-control" type="number" name="nro_fac" id="nro_fac" required="true" value="<?=$nro_factura?>" />
+<div class="invalid-feedback"><?=$valorNoValido;?></div>

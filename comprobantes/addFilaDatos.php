@@ -15,16 +15,9 @@
 ?>  
 <!-- campo nit -->
 <div class="form-group d-none" id="divNitFactura<?=$idFila;?>">  
-  <input class="form-control" type="number"  onkeyup="llenarFacturaAutomaticamente(this.value,'<?=$idFila;?>',<?=$importe_x?>);">
+  <input class="form-control" name="nit_fac" id="nit_fac" type="number" onblur="llenarFacturaAutomaticamente(this.value,'<?=$idFila;?>',<?=$importe_x?>);">
 </div>
   
-  <!-- campo importe -->
-<!-- <div class="form-group d-none" id="divImporteFactura<?=$idFila;?>">
-  <input class="form-control" type="number" name="imp_fac" id="imp_fac" value="<?=$importe_x?>"/>
-</div> -->
-
-
-
 <div id="div<?=$idFila?>">
  <div class="col-md-12">
   <div class="row">

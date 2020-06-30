@@ -179,10 +179,31 @@ function calcularTotalesComprobante(id,e){
 }
 
 function llenarFacturaAutomaticamente(valor,fila,importe){
-  // var nit =document.getElementById("nit_fac").value
-  // var nit = $("#nit_fac").val();
- ajaxFacturasComprobanteNit(valor,importe); 
-  
+  //ajaxFacturasComprobanteNit(valor,importe);
+  console.log("entro llenar llenarFacturaAutomaticamente");
+  var parametros={"nit":valor,"importe":importe};
+  var nro_factura=0;
+  var nro_autorizacion=0;
+  var razon_social="";
+  $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "../comprobantes/ajaxAutocompletarNit.php",
+        data: parametros,
+        success:  function (resp) {
+          var respuesta=resp.split('@');
+          nro_factura = respuesta[0];
+          razon_social = respuesta[1];
+          nro_autorizacion = respuesta[2];
+          valor=valor.replace(/(\r\n|\n|\r)/gm, "");
+          $('#nit_fac').val(valor);
+          $('#aut_fac').val(nro_autorizacion);
+          $('#razon_fac').val(razon_social);
+          $('#imp_fac').val(importe);
+          console.log("nitfac: "+$('#nit_fac').val());
+          console.log("datosFactura: "+valor+' '+nro_factura+' '+razon_social+' '+nro_autorizacion);     
+        }
+  });   
 }
 
 //este ajax remmplaza al div de nit porque no esta jalando 
@@ -589,62 +610,41 @@ function obtenerImportesFacturaIva(index){
   return total*(configuraciones[0].valor/100);
 }
 function saveFactura(){
-  var index=$('#codCuenta').val();
-  var factura={
-    nit: $('#nit_fac').val(),
-    nroFac: $('#nro_fac').val(),
-    fechaFac: $('#fecha_fac').val(),
-    razonFac: $('#razon_fac').val(),
-    impFac: $('#imp_fac').val(),    
-    autFac: $('#aut_fac').val(),
-    conFac: $('#con_fac').val(),
-    exeFac: $('#exe_fac').val(),
-    iceFac: $('#ice_fac').val(),
-    tazaFac: $('#taza_fac').val(),
-    tipoFac: $('#tipo_fac').val()
-    }
-    
-  var monto_debe_total_comprobante = $("#totaldeb").val();
-  var monto_suma_factura=parseInt($('#imp_fac').val())+parseInt($('#ice_fac').val())+parseInt($('#exe_fac').val());
-  console.log("SUMAS FACTURAS: "+monto_suma_factura+" "+monto_debe_total_comprobante);
-  //if(monto_suma_factura != monto_debe_total_comprobante){
-    //alert("El monto registrado en las facturas difiere del total!");
-  //}else{
-    if($('#nit_fac').val()!=''){
-      if($('#nro_fac').val()!=''){
-        if($('#fecha_fac').val()!=''){        
-            if($('#imp_fac').val()!=''){
-              if($('#aut_fac').val()!=''){              
-                  if($('#razon_fac').val()!=''){
-                    itemFacturas[index-1].push(factura);
-                    limpiarFormFac();
-                    listarFact(index);
-                    //$("#debe"+index).val(anterior+importeIva);
-                    if($("#debe"+index).length){
-                     calcularTotalesComprobante();  
-                    } 
-                    $("#nfac"+index).html(itemFacturas[index-1].length);
-                    $("#link110").addClass("active");$("#link111").removeClass("active");$("#link112").removeClass("active");
-                    $("#nav_boton1").addClass("active");$("#nav_boton2").removeClass("active");$("#nav_boton3").removeClass("active");                
-                  }else{
-                    alert('Campo "Razón Social" Vacío.');
-                  }
-              }else{
-                alert('Campo "Nro. Autorización" Vacío.');
-              }
-            }else{
-              alert('Campo "Importe" Vacío.');
-            }
-        }else{
-          alert('Campo "Fecha" Vacío.');
-        }  
-      }else{
-        alert('Campo "Nro. Factura" Vacío.');
-      }  
-    }else{
-      alert('Campo "NIT" Vacío.');
-    }
- // }
+  var formAValidar = document.getElementById('form_facturas');
+  if (formAValidar.checkValidity() === false) {
+    event.preventDefault();
+    event.stopPropagation();
+    formAValidar.classList.add('was-validated');
+    console.log("VALIDACION FALSE!***");
+  }else{
+    var index=$('#codCuenta').val();
+    var factura={
+      nit: $('#nit_fac').val(),
+      nroFac: $('#nro_fac').val(),
+      fechaFac: $('#fecha_fac').val(),
+      razonFac: $('#razon_fac').val(),
+      impFac: $('#imp_fac').val(),    
+      autFac: $('#aut_fac').val(),
+      conFac: $('#con_fac').val(),
+      exeFac: $('#exe_fac').val(),
+      iceFac: $('#ice_fac').val(),
+      tazaFac: $('#taza_fac').val(),
+      tipoFac: $('#tipo_fac').val()
+    }  
+    var monto_debe_total_comprobante = $("#totaldeb").val();
+    var monto_suma_factura=parseInt($('#imp_fac').val())+parseInt($('#ice_fac').val())+parseInt($('#exe_fac').val());
+    console.log("SUMAS FACTURAS: "+monto_suma_factura+" "+monto_debe_total_comprobante);
+    itemFacturas[index-1].push(factura);
+    limpiarFormFac();
+    listarFact(index);
+    //$("#debe"+index).val(anterior+importeIva);
+    if($("#debe"+index).length){
+     calcularTotalesComprobante();  
+    } 
+    $("#nfac"+index).html(itemFacturas[index-1].length);
+    $("#link110").addClass("active");$("#link111").removeClass("active");$("#link112").removeClass("active");
+    $("#nav_boton1").addClass("active");$("#nav_boton2").removeClass("active");$("#nav_boton3").removeClass("active");
+  }
 }
  function abrirFactura(index,nit,nro,fecha,razon,imp,exe,aut,con,ice,tipocompra,tazacero){
    var factura={
