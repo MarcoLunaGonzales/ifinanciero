@@ -25,7 +25,7 @@ $valor=$_GET['valor'];
 $anio=date("Y");
 $anio_pasado=(int)$anio-1;
  
-$monto = calcularCostosPresupuestariosAuditoria($idp,$unidad,$area,$anio_pasado,$valor);
+$monto = calcularCostosPresupuestariosAuditoria($idp,$unidad,$area,$anio,$valor);
 echo trim($monto);
 ?>
 

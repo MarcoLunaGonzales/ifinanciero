@@ -322,7 +322,14 @@
                              <td class="rexr-right">PERSONAL REGISTRADO</td>
                            </tr>                         
                            <tr>
-                             <td class="text-right small"><?=obtenerValorConfiguracion($valConf2)?></td>
+                            <?php 
+                             $codOficinaPres=0;
+                            if(obtenerValorConfiguracion(52)==1){
+                                 $codOficinaPres=$codUnidadX;
+                            }
+                            $datosPresupuesto=obtenerPresupuestoEjecucionPorArea($codOficinaPres,$codAreaX,$globalNombreGestion,12)['presupuesto'];
+                            ?>
+                             <td class="text-right small"><?=number_format($datosPresupuesto, 2, '.', ',')?></td>
                              <td class="text-right small" id="cantidad_personal"><?=obtenerCantidadPersonalPlantilla($codigo)?></td>
                            </tr>
                          </tbody>
