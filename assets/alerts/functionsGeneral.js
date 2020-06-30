@@ -14644,9 +14644,10 @@ function abrirLibretaBancaria(datos,direccion,indice){
   ajax.send(null);
 }
 function ajax_contenedor_tabla_libretaBancaria(saldo){
+  document.getElementById("saldo_x").value=saldo;
   var contenedor = document.getElementById('contenedor_tabla_libreta_bancaria');    
   ajax=nuevoAjax();
-  ajax.open('GET', 'simulaciones_servicios/ajax_listado_libreta_bancaria.php?saldo='+saldo,true);
+  ajax.open('GET', 'simulaciones_servicios/ajax_listado_libreta_bancaria.php?saldo='+saldo+'&tipo_listado=0',true);
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
       contenedor.innerHTML = ajax.responseText;      
@@ -14699,6 +14700,25 @@ function cargar_filtro_datatable_ajax(modal){
         .columns.adjust();
   });
 }
+
+function ajax_listado_libreta_bancaria_filtrar(){  
+  var saldo=document.getElementById("saldo_x").value;
+  var contenedor = document.getElementById('contenedor_tabla_libreta_bancaria');    
+  // alert(saldo);
+  ajax=nuevoAjax();
+  ajax.open('GET', 'simulaciones_servicios/ajax_listado_libreta_bancaria.php?saldo='+saldo+'&tipo_listado=1',true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;      
+      $('.selectpicker').selectpicker(["refresh"]);
+      cargar_dataTable_ajax('libreta_bancaria_reporte_modal');
+      cargar_filtro_datatable_ajax('modalListaLibretaBancaria');
+    }
+  }
+  ajax.send(null);
+}
+
+
 
 function seleccionar_libretaBancaria(cod_libreta){
   var indice=document.getElementById("indice").value;

@@ -1,6 +1,5 @@
 <script> periodo_mayor='<?=$periodoTitle?>';
-          cuenta_mayor='<?=trim($nombreCuentaTitle)?>';
-          unidad_mayor='<?=$unidadGeneral?>';
+          
  </script>
 <style>
 tfoot input {
@@ -115,6 +114,8 @@ $stmt->bindColumn('cod_factura', $codFactura);
        <input type="hidden" id="cantidad_filas" name="cantidad_filas" value="<?=($index-1)?>">
        <input type="hidden" id="mes_conta" name="mes_conta" value="<?=$mesConta?>">
        <input type="hidden" id="cod_libreta" name="cod_libreta" value="<?=$entidades?>">
+       <input type="hidden" id="cod_gestion_x" name="cod_gestion_x" value="<?=$cod_gestion_x?>">
+       <input type="hidden" id="cod_mes_x" name="cod_mes_x" value="<?=$cod_mes_x?>">
   </div>
 </div>
                           

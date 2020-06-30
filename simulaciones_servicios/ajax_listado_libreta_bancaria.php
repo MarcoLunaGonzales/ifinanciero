@@ -6,6 +6,7 @@ require_once '../styles.php';
 require_once '../layouts/librerias.php';
 $dbh = new Conexion();
 $saldo_solfac=$_GET['saldo'];
+$tipo_listado=$_GET['tipo_listado'];
 ?>
 <?php  
   $lista=obtenerObtenerLibretaBancaria();  
@@ -28,10 +29,10 @@ $saldo_solfac=$_GET['saldo'];
         <th class="small" width="3%"><small><small>N° Ref</small></small></th>
         <th class="small bg-success" width="4%"><small>Fecha Fac.</small></th>
         <th class="small bg-success" width="4%"><small>N° Fac.</small></th>      
-        <th class="small bg-success"><small>Nit Fac.</small></th>
+        <th class="small bg-success" width="7%"><small>Nit Fac.</small></th>
         <th class="small bg-success"><small>Razón Social Fac.</small></th>
-        <th class="small bg-success" width="7%"><small>Monto Fac.</small></th>
-        <!-- <th class="text-right bg-success" width="3%"></th> -->
+        <th class="small bg-success" width="5%"><small>Monto Fac.</small></th>
+        <th class="text-center" width="3%">*</th>
       </tr>
     </thead>
     <tbody>
@@ -54,8 +55,8 @@ $saldo_solfac=$_GET['saldo'];
               <td class="d-none"></td>
               <td class="d-none"></td>
               <td class="d-none"></td>
-              <!-- <td class="d-none"></td> -->
-              <td align="center" colspan="11" style="background:#e58400; color:#fff;"><button title="Detalles" id="botonLibreta<?=$j?>" style="border:none; background:#e58400; color:#fff;" onclick="activardetalleLibreta(<?=$j?>)"><small><?=$Banco;?> - <?=$Nombre;?></small></button></td>
+              <td class="d-none"></td>
+              <td align="center" colspan="12" style="background:#e58400; color:#fff;"><button title="Detalles" id="botonLibreta<?=$j?>" style="border:none; background:#e58400; color:#fff;" onclick="activardetalleLibreta(<?=$j?>)"><small><?=$Banco;?> - <?=$Nombre;?></small></button></td>
             </tr>     
             <?php
               foreach ($detalle as $v_detalle) {
@@ -71,90 +72,92 @@ $saldo_solfac=$_GET['saldo'];
               $monto=$v_detalle->monto;
               $CodEstado=$v_detalle->CodEstado;
               $saldo=$v_detalle->Saldo;
-              if($CodEstado==0)$color_aux="";
-              else $color_aux="color:#5d6d7e;";
-              ?>
-              <tr>
-                <td style="<?=$color_aux?>" class="libretaDetalles_<?=$j?> small" align="center"><?=$index;?></td>
-                <td style="<?=$color_aux?>" class="libretaDetalles_<?=$j?> text-center small"><span style="padding:0px;border: 0px;"><?=strftime('%d/%m/%Y',strtotime($FechaHoraCompleta))?><br><?=strftime('%H:%M:%S',strtotime($FechaHoraCompleta))?></span></td>           
-                <td style="<?=$color_aux?>" class="libretaDetalles_<?=$j?> text-left ">
-                  <small><small><?=$Descripcion." ".$InformacionComplementaria?></small></small>
-                </td>
-                <td style="<?=$color_aux?>" class="libretaDetalles_<?=$j?> text-right small"><?=number_format($monto,2)?></td>
-                <td style="<?=$color_aux?>" class="libretaDetalles_<?=$j?> text-right small"><?=number_format($saldo,2)?></td>
-                <td style="<?=$color_aux?>" class="libretaDetalles_<?=$j?> text-left small"><?=$NumeroDocumento?></td>
+              if($CodEstado==0)$color_aux="background-color: #d6dbdf;";
+              else $color_aux="background-color:#f6ddcc;";
 
-
-                <?php                  
-                  $cont_facturas=contarFacturasLibretaBancaria($CodLibretaDetalle);
-                  if($cont_facturas>0){
-                    $sqlDetalleX="SELECT * FROM facturas_venta where cod_libretabancariadetalle=$CodLibretaDetalle and cod_estadofactura=1 order by codigo desc";
-                    $stmtDetalleX = $dbh->prepare($sqlDetalleX);
-                    $stmtDetalleX->execute();
-                    $stmtDetalleX->bindColumn('fecha_factura', $fechaDetalle);
-                    $stmtDetalleX->bindColumn('nro_factura', $nroDetalle);
-                    $stmtDetalleX->bindColumn('nit', $nitDetalle);
-                    $stmtDetalleX->bindColumn('razon_social', $rsDetalle);
-                    $stmtDetalleX->bindColumn('observaciones', $obsDetalle);
-                    $stmtDetalleX->bindColumn('importe', $impDetalle);
-                    $facturaFecha=[];
-                    $facturaNumero=[];
-                    $facturaNit=[];
-                    $facturaRazonSocial=[];
-                    $facturaDetalle=[];
-                    $facturaMonto=[];
-                    $filaFac=0;  
-                    while ($rowDetalleX = $stmtDetalleX->fetch(PDO::FETCH_BOUND)) {                        
-                      $facturaFecha[$filaFac]=strftime('%d/%m/%Y',strtotime($fechaDetalle));
-                      $facturaNumero[$filaFac]=$nroDetalle;
-                      $facturaNit[$filaFac]=$nitDetalle;
-                      $facturaRazonSocial[$filaFac]=$rsDetalle;
-                      $facturaDetalle[$filaFac]=$obsDetalle;
-                      $facturaMonto[$filaFac]=number_format($impDetalle,2,".",",");
-                      $filaFac++;
-                    }?>
-                    <td class="text-right libretaDetalles_<?=$j?>" style="vertical-align: top;"><small><?=implode("<div style='border-bottom:1px solid #26BD3D;'></div>", $facturaFecha)?></small></td>
-                    <td class="text-right libretaDetalles_<?=$j?>" style="vertical-align: top;"><small><?=implode("<div style='border-bottom:1px solid #26BD3D;'></div>", $facturaNumero)?></small></td>
-                    <td class="text-right libretaDetalles_<?=$j?>" style="vertical-align: top;"><small><?=implode("<div style='border-bottom:1px solid #26BD3D;'></div>", $facturaNit)?></small></td>
-                    <td class="text-left libretaDetalles_<?=$j?>" style="vertical-align: top;"><small><small><?=implode("<div style='border-bottom:1px solid #26BD3D;'></div>", $facturaRazonSocial)?></small></small></td>
-                    <!-- <td class="text-right libretaDetalles_<?=$j?>" style="vertical-align: top;"><small><?=implode("<div style='border-bottom:1px solid #26BD3D;'></div>", $facturaDetalle)?></small></td> -->
-                    <td class="text-left libretaDetalles_<?=$j?>" style="vertical-align: top;"><small><?=implode("<div style='border-bottom:1px solid #26BD3D;'></div>", $facturaMonto)?></small>
+              if($tipo_listado==1 || $saldo>0){//todo ?>
+                <tr style="<?=$color_aux?>">
+                  <td class="libretaDetalles_<?=$j?> small" align="center"><?=$index;?></td>
+                  <td class="libretaDetalles_<?=$j?> text-center small"><span style="padding:0px;border: 0px;"><?=strftime('%d/%m/%Y',strtotime($FechaHoraCompleta))?><br><?=strftime('%H:%M:%S',strtotime($FechaHoraCompleta))?></span></td>           
+                  <td class="libretaDetalles_<?=$j?> text-left ">
+                    <small><small><?=$Descripcion." ".$InformacionComplementaria?></small></small>
+                  </td>
+                  <td class="libretaDetalles_<?=$j?> text-right small"><?=number_format($monto,2)?></td>
+                  <td class="libretaDetalles_<?=$j?> text-right small"><?=number_format($saldo,2)?></td>
+                  <td class="libretaDetalles_<?=$j?> text-left small"><?=$NumeroDocumento?></td>
+                  <?php                  
+                    $cont_facturas=contarFacturasLibretaBancaria($CodLibretaDetalle);
+                    if($cont_facturas>0){
+                      $sqlDetalleX="SELECT * FROM facturas_venta where cod_libretabancariadetalle=$CodLibretaDetalle and cod_estadofactura=1 order by codigo desc";
+                      $stmtDetalleX = $dbh->prepare($sqlDetalleX);
+                      $stmtDetalleX->execute();
+                      $stmtDetalleX->bindColumn('fecha_factura', $fechaDetalle);
+                      $stmtDetalleX->bindColumn('nro_factura', $nroDetalle);
+                      $stmtDetalleX->bindColumn('nit', $nitDetalle);
+                      $stmtDetalleX->bindColumn('razon_social', $rsDetalle);
+                      $stmtDetalleX->bindColumn('observaciones', $obsDetalle);
+                      $stmtDetalleX->bindColumn('importe', $impDetalle);
+                      $facturaFecha=[];
+                      $facturaNumero=[];
+                      $facturaNit=[];
+                      $facturaRazonSocial=[];
+                      $facturaDetalle=[];
+                      $facturaMonto=[];
+                      $filaFac=0;  
+                      while ($rowDetalleX = $stmtDetalleX->fetch(PDO::FETCH_BOUND)) {                        
+                        $facturaFecha[$filaFac]=strftime('%d/%m/%Y',strtotime($fechaDetalle));
+                        $facturaNumero[$filaFac]=$nroDetalle;
+                        $facturaNit[$filaFac]=$nitDetalle;
+                        $facturaRazonSocial[$filaFac]=$rsDetalle;
+                        $facturaDetalle[$filaFac]=$obsDetalle;
+                        $facturaMonto[$filaFac]=number_format($impDetalle,2,".",",");
+                        $filaFac++;
+                      }?>
+                      <td class="text-right libretaDetalles_<?=$j?>" style="vertical-align: top;"><small><?=implode("<div style='border-bottom:1px solid #26BD3D;'></div>", $facturaFecha)?></small></td>
+                      <td class="text-right libretaDetalles_<?=$j?>" style="vertical-align: top;"><small><?=implode("<div style='border-bottom:1px solid #26BD3D;'></div>", $facturaNumero)?></small></td>
+                      <td class="text-right libretaDetalles_<?=$j?>" style="vertical-align: top;"><small><?=implode("<div style='border-bottom:1px solid #26BD3D;'></div>", $facturaNit)?></small></td>
+                      <td class="text-left libretaDetalles_<?=$j?>" style="vertical-align: top;"><small><small><?=implode("<div style='border-bottom:1px solid #26BD3D;'></div>", $facturaRazonSocial)?></small></small></td>                      
+                      <td class="text-right libretaDetalles_<?=$j?>" style="vertical-align: top;"><small><?=implode("<div style='border-bottom:1px solid #26BD3D;'></div>", $facturaMonto)?></small>
+                      </td>
+                      <td class="td-actions text-right libretaDetalles_<?=$j?>">
+                        <?php
+                        if($monto>=$saldo_solfac){
+                          if($cont_facturas==0)$label="btn btn-fab btn-success btn-sm";
+                          else $label="btn btn-fab btn-warning btn-sm";
+                          ?><a href="#" style="padding: 0;font-size:10px;width:25px;height:25px;" onclick="seleccionar_libretaBancaria(<?=$CodLibretaDetalle?>)" class="<?=$label?>" title="Seleccionar Item"><i class="material-icons">done</i></a>
+                            <?php
+                        }?>
+                      </td>
+                      <?php                    
+                    }else{                  
+                      $codFactura="";
+                      $fechaDetalle_x="";
+                      $nroDetalle_x="";
+                      $nitDetalle_x="";
+                      $rsDetalle_x="";
+                      $obsDetalle_x="";
+                      $impDetalle_x="";
+                      ?>
+                      <td style="" class="libretaDetalles_<?=$j?> text-center small"><?=$fechaDetalle_x?></td>
+                      <td style=" " class="libretaDetalles_<?=$j?> text-right small"><?=$nroDetalle_x?></td>            
+                      <td style="" class="libretaDetalles_<?=$j?> text-right small"><?=$nitDetalle_x?></td>
+                      <td style="" class="libretaDetalles_<?=$j?> text-left"><small><small><?=$rsDetalle_x?></small></small></td>                    
+                      <td style="" class="libretaDetalles_<?=$j?> text-right small"><?=$impDetalle_x?></td>
+                      <td class="td-actions text-right libretaDetalles_<?=$j?>">
                       <?php
-                      if($monto>=$saldo_solfac){
-                        if($cont_facturas==0){?>
-                          <a href="#" style="padding: 0;font-size:10px;width:25px;height:25px;" onclick="seleccionar_libretaBancaria(<?=$CodLibretaDetalle?>)" class="btn btn-fab btn-success btn-sm" title="Seleccionar Item"><i class="material-icons">done</i></a><?php 
-                        }else{?>
-                            <a href="#" style="padding: 0;font-size:10px;width:25px;height:25px;" onclick="seleccionar_libretaBancaria(<?=$CodLibretaDetalle?>)" class="btn btn-fab btn-warning btn-sm" title="Seleccionar Item"><i class="material-icons">done</i></a>
-                            <?php  
-                        }
-                      }?>
-                    </td><?php                    
-                  }else{                  
-                    $codFactura="";
-                    $fechaDetalle_x="";
-                    $nroDetalle_x="";
-                    $nitDetalle_x="";
-                    $rsDetalle_x="";
-                    $obsDetalle_x="";
-                    $impDetalle_x="";
-                    ?>
-                    <td style="" class="libretaDetalles_<?=$j?> text-center small"><?=$fechaDetalle_x?></td>
-                    <td style=" " class="libretaDetalles_<?=$j?> text-right small"><?=$nroDetalle_x?></td>            
-                    <td style="" class="libretaDetalles_<?=$j?> text-right small"><?=$nitDetalle_x?></td>
-                    <td style="" class="libretaDetalles_<?=$j?> text-left"><small><small><?=$rsDetalle_x?></small></small></td>                    
-                    <td style="" class="libretaDetalles_<?=$j?> text-right small"><?=$impDetalle_x?> <?php
-                      if($monto>=$saldo_solfac){
-                        if($cont_facturas==0){?>
-                          <a href="#" style="padding: 0;font-size:10px;width:25px;height:25px;" onclick="seleccionar_libretaBancaria(<?=$CodLibretaDetalle?>)" class="btn btn-fab btn-success btn-sm" title="Seleccionar Item"><i class="material-icons">done</i></a><?php 
-                        }else{?>
-                            <a href="#" style="padding: 0;font-size:10px;width:25px;height:25px;" onclick="seleccionar_libretaBancaria(<?=$CodLibretaDetalle?>)" class="btn btn-fab btn-warning btn-sm" title="Seleccionar Item"><i class="material-icons">done</i></a>
-                            <?php  
-                        }
-                      }?>
-                    </td><?php                          
-                  }
-                ?>
-              </tr>
+                        if($monto>=$saldo_solfac){
+                          if($cont_facturas==0)$label="btn btn-fab btn-success btn-sm";
+                          else $label="btn btn-fab btn-warning btn-sm"; ?>
+                          <a href="#" style="padding: 0;font-size:10px;width:25px;height:25px;" onclick="seleccionar_libretaBancaria(<?=$CodLibretaDetalle?>)" class="<?=$label?>" title="Seleccionar Item"><i class="material-icons">done</i></a><?php
+                        }?>
+                      </td><?php                          
+                    }
+                  ?>
+                </tr>
+              <?php }
+              
+              ?>
+
             <?php
             $index++;
             }
@@ -172,10 +175,10 @@ $saldo_solfac=$_GET['saldo'];
         <th class="small" width="3%"><small><small>N° Ref</small></small></th>
         <th class="small bg-success" width="4%"><small>Fecha<br>Fac.</small></th>
         <th class="small bg-success" width="4%"><small>N° Fac.</small></th>      
-        <th class="small bg-success"><small>Nit Fac.</small></th>
+        <th class="small bg-success" width="7%"><small>Nit Fac.</small></th>
         <th class="small bg-success"><small>Razón Social Fac.</small></th>
-        <th class="small bg-success" width="7%"><small>Monto Fac.</small></th>
-        <!-- <th class="text-right bg-success" width="3%"></th> -->
+        <th class="small bg-success" width="5%"><small>Monto Fac.</small></th>
+        <td class="text-center" width="3%">*</td>        
       </tr>
     </tfoot>
 </table>

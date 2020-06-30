@@ -18,14 +18,37 @@ $filas=$_POST['cantidad_filas'];
 $monto=$_POST['monto_contabilizar'];
 $mesLetra=$_POST['mes_conta'];
 $codLibreta=$_POST['cod_libreta'];
+
+
+$cod_gestion_x=$_POST['cod_gestion_x'];
+$cod_mes_x=$_POST['cod_mes_x'];
+$fecha_actual=date('Y-m-d');
+set_time_limit(0);
+//insertamos en tabla
+$sqlInsert="INSERT INTO depositos_no_facturados (cod_libretabancaria, cod_gestion, cod_mes, fecha, cod_estadoreferencial) 
+    VALUES ('$codLibreta', '$cod_gestion_x', '$cod_mes_x', '$fecha_actual','1')";
+$stmtInsert = $dbh->prepare($sqlInsert);
+$flagSuccessComprobante=$stmtInsert->execute();
+$stmtDeposito = $dbh->prepare("SELECT codigo from depositos_no_facturados where cod_gestion=$cod_gestion_x and cod_mes=$cod_mes_x order by codigo desc");
+$stmtDeposito->execute();
+$resultDeposito = $stmtDeposito->fetch();
+$cod_deposito_x = $resultDeposito['codigo'];
+
+
 $flagSuccess=false;
 for ($i=1; $i <=$filas ; $i++) { 
   $codigo=$_POST['cod_libretadetalle'.$i];	
   // Prepare
   $stmt = $dbh->prepare("UPDATE libretas_bancariasdetalle set cod_estado=1 where codigo=:codigo");
-  // Bind
   $stmt->bindParam(':codigo', $codigo);
   $flagSuccess=$stmt->execute();
+
+  
+  $sqlInsertDetalle="INSERT INTO depositos_no_facturados_detalle (cod_depositonofacturado, cod_libretabancariadetalle, monto) 
+    VALUES ('$cod_deposito_x', '$codigo', '$monto')";  
+  $stmtInsertDetalle = $dbh->prepare($sqlInsertDetalle);
+  $stmtInsertDetalle->execute();
+
 }
 if($filas>0){
 	$nombreLibreta=nameLibretas($codLibreta);
@@ -97,5 +120,5 @@ if($filas>0){
 
 }
 
-showAlertSuccessError($flagSuccess,"../".$urlList);	
+showAlertSuccessError($flagSuccess,"../".$urlList_2);	
 ?>

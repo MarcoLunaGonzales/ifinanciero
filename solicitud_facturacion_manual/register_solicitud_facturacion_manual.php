@@ -46,6 +46,7 @@ if ($cod_facturacion > 0){
     $observaciones_2 = $result['observaciones_2'];
     $persona_contacto= $result['persona_contacto'];
     $Codigo_alterno=null;
+    $dias_credito=$result['dias_credito'];
 }else {
     $nombre_simulacion = null;
     $cod_uo = null; 
@@ -69,6 +70,7 @@ if ($cod_facturacion > 0){
     $observaciones_2 = null;
     $persona_contacto=null;
     $Codigo_alterno=null;
+    $dias_credito=obtenerValorConfiguracion(58);
 }
 $name_uo=null;
 $name_area=null;
@@ -276,7 +278,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                 ?>
                             </div>
                             <label class="col-sm-2 col-form-label">Forma de Pago</label>
-                            <div class="col-sm-2">
+                            <div class="col-sm-3">
                                 <div class="form-group" >
                                     <select name="cod_tipopago" id="cod_tipopago" class="selectpicker form-control form-control-sm" data-style="btn btn-info" onChange="ajaxTipoPagoContactoPersonal(this);">
                                         <?php 
@@ -301,7 +303,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                     </select>                                
                                 </div>
                             </div>
-                            <div class="col-sm-1">
+                            <div class="col-sm-2">
                                 <div class="form-group" >
                                     <button type="button" class="btn btn-danger btn-round btn-fab btn-sm" data-toggle="modal" data-target="" onclick="agregarDatosModalTipoPagoFacturacion(1)">
                                         <i class="material-icons" title="Tipo Pago Porcentaje">list</i>
@@ -312,15 +314,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                         <span id="nfacAreas" class="count bg-warning"></span>
                                      </button>                              
                                 </div>
-                            </div>
-                            <div class="col-sm-2">
-                                <div class="form-group">                                
-                                  <div class="dias_credito_x" style="display: none"><?php $dias_credito=obtenerValorConfiguracion(58)?>
-                                    <span style="color: #ff0000;"><small><?=$dias_credito?> días de crédito</small></span>
-                                    <!-- <input type="text" class="form-control" name="dias_credito" id="dias_credito" value="" readonly> -->
-                                  </div>
-                                </div>
-                            </div>
+                            </div>                            
                             <label class="col-sm-1 col-form-label">Responsable</label>
                             <div class="col-sm-4">
                                 <div class="form-group">            
@@ -329,6 +323,14 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                     <input type="text" value="<?=$responsable?>" readonly="true" class="form-control" style="background-color:#E3CEF6;text-align: left">
                                 </div>
                             </div>
+                        </div>
+                         <div class="row dias_credito_x" id="" style="display: none">                            
+                            <label class="col-sm-2 col-form-label">Días de Crédito</label>
+                            <div class="col-sm-2">
+                                <div class="form-group">                                
+                                    <input type="number" class="form-control" name="dias_credito" id="dias_credito" value="<?=$dias_credito?>">
+                                </div>
+                            </div>                            
                         </div>
                         <!-- fin tipos pago y objeto                 -->
                         <div class="row">

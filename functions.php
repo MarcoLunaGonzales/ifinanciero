@@ -7342,6 +7342,17 @@ function contraCuentaLibreta($codigo){
    }
    return($nombreX);
 }
+function obtenerNombreDepositoNoFacturado($codigo){
+  $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT l.nombre,b.abreviatura as banco from libretas_bancarias l join bancos b on b.codigo=l.cod_banco where l.cod_estadoreferencial=1 and l.codigo=$codigo");
+   $stmt->bindParam(':codigo',$codigo);
+   $stmt->execute();
+   $nombreX="";
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $nombreX=$row['nombre']." - ".$row['banco'];
+   }
+   return($nombreX);
+}
 ?>
 
 

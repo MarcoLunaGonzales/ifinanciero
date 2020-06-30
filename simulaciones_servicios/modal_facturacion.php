@@ -5,7 +5,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h3 class="modal-title" id="myModalLabel"><b>Porcentaje de Distribución del Ingreso por Tipo de Pago</b></h3>
+        <h3 class="modal-title" id="myModalLabel"><b>Porcentaje de Distribución del Ingreso por Forma de Pago</b></h3>
       </div>
       <div class="modal-body">
         <!-- <input type="hidden" name="cod_tipopago" id="cod_tipopago" value="0">    -->
@@ -421,6 +421,9 @@
         <div class="card-text">
           <h4>Libreta Bancaria <div id="contenedor_cabecera_libreta_bancaria"></div></h4>      
         </div>
+        <button title="filtrar todo" onclick="ajax_listado_libreta_bancaria_filtrar()" type="button" class="btn btn-warning btn-sm btn-fab float-right" >
+          <i class="material-icons">list</i>
+        </button>
         <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
           <i class="material-icons">close</i>
         </button>
@@ -430,9 +433,7 @@
         <input type="hidden" name="direccion" id="direccion" value="0">
         <input type="hidden" name="datos" id="datos" value="0">
         <input type="hidden" name="indice" id="indice" value="0">
-        <!-- <div id="">
-          
-        </div> -->
+        <input type="hidden" name="saldo_x" id="saldo_x" value="0">        
         <div class="row">          
             <div class="table-responsive" id="contenedor_tabla_libreta_bancaria">
               
@@ -440,8 +441,8 @@
         </div>
       </div>
       <div class="modal-footer">
-         <span style="color: #5d6d7e;"><i class="material-icons">check_box</i> registros contabilizados</span><br>
-         <span><i class="material-icons">check_box</i> registros No contabilizados</span><br>
+         <span style="color:  #e59866 ;"><i class="material-icons">check_box</i> registros contabilizados</span><br>
+         <span style="color:  #85929e;"><i class="material-icons">check_box</i> registros No contabilizados</span><br>
       </div>
     </div>
   </div>

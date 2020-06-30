@@ -309,6 +309,40 @@
            $($.fn.dataTable.tables(true)).DataTable()
               .columns.adjust();
         });
+
+        $('#libreta_bancaria_reporte tfoot th').each( function () {
+            var title = $(this).text();
+            $(this).html( '<input type="text" placeholder="'+title+'" />' );
+        } );
+     
+        // DataTable
+        var table = $('#libreta_bancaria_reporte').DataTable({
+            initComplete: function () {
+                // Apply the search
+                this.api().columns().every( function () {
+                    var that = this;
+                    $( 'input', this.footer() ).on( 'keyup change clear', function () {
+                        if ( that.search() !== this.value ) {
+                            that
+                                .search( this.value )
+                                .draw();
+                        }
+                    });
+                });
+            },
+            "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            fixedHeader: {
+                  header: true,
+                  footer: true
+            },
+            "order": false,
+            "paging":   false,
+            "info":     false
+            //"searching": false
+        });
+
         if ($('#cuenta_auto').length) {
           autocompletar("cuenta_auto","cuenta_auto_id",array_cuenta);
         }

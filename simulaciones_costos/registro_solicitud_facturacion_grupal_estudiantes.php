@@ -288,7 +288,7 @@ $contadorRegistros=0;
                             </div>
 
                             <label class="col-sm-2 col-form-label">Forma de Pago</label>
-                            <div class="col-sm-2">
+                            <div class="col-sm-3">
                                 <div class="form-group" >
                                     <select name="cod_tipopago" id="cod_tipopago" class="selectpicker form-control form-control-sm" data-style="btn btn-info" onChange="ajaxTipoPagoContactoPersonal_normas(this);">
                                         <?php 
@@ -313,7 +313,7 @@ $contadorRegistros=0;
                                     </select>                                
                                 </div>
                             </div>
-                            <div class="col-sm-1">
+                            <div class="col-sm-2">
                                 <div class="form-group" >                                  
                                      <button type="button" class="btn btn-danger btn-round btn-fab btn-sm" data-toggle="modal" data-target="" onclick="agregarDatosModalTipoPagoFacturacionNormas(2)">
                                         <i class="material-icons" title="Tipo Pago Porcentaje">list</i>
@@ -325,15 +325,7 @@ $contadorRegistros=0;
                                         <span id="nfacAreas" class="count bg-warning"></span>
                                      </button>                              
                                 </div>
-                            </div>        
-                            <div class="col-sm-2">
-                                <div class="form-group">                                
-                                  <div class="dias_credito_x" style="display: none"><?php $dias_credito=obtenerValorConfiguracion(58)?>
-                                    <span style="color: #ff0000;"><small><?=$dias_credito?> días de crédito</small></span>
-                                    <!-- <input type="text" class="form-control" name="dias_credito" id="dias_credito" value="" readonly> -->
-                                  </div>
-                                </div>
-                            </div>
+                            </div>                                    
                             <label class="col-sm-1 col-form-label">Responsable</label>                             
                             <div class="col-sm-4">
                                 <div class="form-group">            
@@ -344,6 +336,15 @@ $contadorRegistros=0;
                             </div>                           
                         </div>
                         <!-- fin tipos pago y objeto                 -->
+                        <div class="row dias_credito_x" id="" style="display: none">
+                            <?php $dias_credito=obtenerValorConfiguracion(58)?>
+                            <label class="col-sm-2 col-form-label">Días de Crédito</label>
+                            <div class="col-sm-2">
+                                <div class="form-group">                                
+                                    <input type="number" class="form-control" name="dias_credito" id="dias_credito" value="<?=$dias_credito?>">
+                                </div>
+                            </div>                            
+                        </div>
                         
                         <div class="row">
                             <label class="col-sm-2 col-form-label">Cliente</label>

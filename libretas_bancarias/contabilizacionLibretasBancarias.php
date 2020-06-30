@@ -12,7 +12,7 @@ require_once '../assets/libraries/CifrasEnLetras.php';
 setlocale(LC_TIME, "Spanish");
 
 $dbh = new Conexion();
-set_time_limit(300);
+set_time_limit(0);
 $fechaActual=date("Y-m-d");
 
 $gestion=nameGestion($_POST['gestion']);
@@ -33,6 +33,10 @@ $fechaFormateadaHasta=$fechaTituloHasta[2].'/'.$fechaTituloHasta[1].'/'.$fechaTi
 
 $moneda=1; //$_POST["moneda"];
 $entidades=$_POST['libretas'];
+$cod_gestion_x=$_POST['gestion'];
+$cod_mes_x=$_POST['cod_mes_x'];
+
+
 $StringEntidadCodigos=($entidades);
 
 $stringEntidades="";
