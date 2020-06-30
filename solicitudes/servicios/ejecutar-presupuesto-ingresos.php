@@ -8,7 +8,7 @@ $direccion=obtenerValorConfiguracion(45);//direccion del Server del Servicio
 
 /*PARAMETROS PARA LA OBTENCION DE LISTAS DE PERSONAL*/
 	$oficina="0";
-	$area="13";
+	$area="38";
 	$anio="2020";
 	$mes="12";
 	$cuenta="0";

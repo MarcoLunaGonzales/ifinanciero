@@ -4292,6 +4292,18 @@ function obtenerPrecioRegistradoPlantilla($codigo){
    }
    return($valor);
 }
+
+function obtenerPrecioRegistradoPropuestaTCPTCS($codigo){
+  $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT ingreso_presupuestado from simulaciones_servicios where codigo=$codigo");  
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['ingreso_presupuestado'];
+   }
+   return($valor);
+}
+
 function obtenerCantidadSimulacionDetalleAuditor($codigo,$codAuditor){
     $dbh = new Conexion();
    $valor=0;
@@ -5181,6 +5193,18 @@ function obtenerCodigoAreaPlantillasServicios($codigo){
    $nombreX=0;
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       $nombreX=$row['cod_area'];
+   }
+   return($nombreX);
+}
+
+function obtenerCodigoUnidadPlantillasServicios($codigo){
+   $dbh = new Conexion();
+   $sqlX="SELECT cod_unidadorganizacional FROM plantillas_servicios where codigo='$codigo'";
+   $stmt = $dbh->prepare($sqlX);
+   $stmt->execute();
+   $nombreX=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $nombreX=$row['cod_unidadorganizacional'];
    }
    return($nombreX);
 }

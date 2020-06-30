@@ -482,7 +482,7 @@ for ($an=0; $an<=$anioGeneral; $an++) {
 
                   //total desde la plantilla 
                  $nAuditorias=obtenerCantidadAuditoriasPlantilla($codigoPX); 
-                 $precioRegistrado=obtenerPrecioRegistradoPlantilla($codigoPX);  
+                 $precioRegistrado=obtenerPrecioRegistradoPropuestaTCPTCS($codigoSimulacionSuper);  
                  $totalFijo=obtenerTotalesPlantillaServicio($codigoPX,1,$nAuditorias); //tipo de costo 1:fijo,2:variable desde la plantilla
                  $porcentPrecios=($precioLocalX*100)/$precioRegistrado;
                  $totalFijoPlan=$totalFijo[0]*($porcentPrecios/100);
