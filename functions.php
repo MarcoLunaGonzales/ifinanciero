@@ -2311,6 +2311,30 @@ function obtenerDetalleSolicitudSimulacionCuentaPlantillaServicio($codigo,$codig
    return $stmt;
 }
 
+function obtenerDetalleSolicitudSimulacionCuentaPlantillaServicioCompleto($codigo,$codigoPlan){
+   $dbh = new Conexion();
+   $sql="";
+   $sql="(select * from v_propuestas_detalle_variables  where cod_simulacionservicio=$codigo order by cod_detalle)
+        UNION
+         (select * from v_propuestas_detalle_honorarios  where cod_simulacionservicio=$codigo)
+        order by cod_anio";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+}
+
+function obtenerDetalleSolicitudSimulacionCuentaPlantillaServicioCompletoAnios($codigo,$anio){
+   $dbh = new Conexion();
+   $sql="";
+   $sql="(select * from v_propuestas_detalle_variables  where cod_simulacionservicio=$codigo and cod_anio=$anio order by cod_detalle)
+        UNION
+         (select * from v_propuestas_detalle_honorarios  where cod_simulacionservicio=$codigo and cod_anio=$anio)
+        order by cod_anio";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+}
+
 
 function obtenerDetalleSolicitudProveedor($codigo,$fechai,$fechaf,$estado,$codUsuario){
    $dbh = new Conexion();
@@ -4345,6 +4369,20 @@ function obtenerDiasEspecificoSimulacionDetalleAuditorPeriodo($codigo,$tipo,$cod
   }
   return $valor;
 }
+
+function obtenerCodigoEspecificoSimulacionDetalleAuditorPeriodo($codigo,$tipo,$codAuditor,$anio){
+    $dbh = new Conexion();
+   $valor=0;
+   $sql="SELECT codigo from simulaciones_ssd_ssa p where p.cod_simulacionservicio=$codigo and p.cod_simulacionserviciodetalle=$tipo and p.cod_simulacionservicioauditor=$codAuditor and p.cod_anio=$anio";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['codigo'];
+  }
+  return $valor;
+}
+
+
 function obtenerMontoSimulacionDetalleAuditorExterno($codigo,$tipo,$codAuditor){
     $dbh = new Conexion();
    $valor=0;
@@ -7340,6 +7378,91 @@ function contraCuentaLibreta($codigo){
       $nombreX=$row['cod_contracuenta'];
    }
    return($nombreX);
+}
+
+function obtenerCodigoDetallePorpuestaServicio($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT cod_simulacionserviciodetalle from simulaciones_ssd_ssa where codigo=$codigo");
+   $stmt->execute();
+   $nombreX=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $nombreX=$row['cod_simulacionserviciodetalle'];
+   }
+   return($nombreX);
+}
+
+function obtenerCostoVariableHonorariosSolicitadoPropuestaTCPTCS($codSimulacionServX,$anio,$codDetalle){
+   $existeItem=0;
+   $detalle=obtenerDetalleSolicitudSimulacionCuentaPlantillaServicioCompletoAnios($codSimulacionServX,$anio);
+   while ($row = $detalle->fetch(PDO::FETCH_ASSOC)) {
+    $codigo_fila=explode("###",$row['codigo_detalle']);
+    $cod_plantilladetalle=$codigo_fila[0];
+    if($codigo_fila[1]=="DET-SIM"){
+         $solicitudDetalle=obtenerSolicitudRecursosDetallePlantilla(false,$cod_plantilladetalle);
+    }else{
+         $solicitudDetalle=null;
+    }
+    if($solicitudDetalle!=null){
+      $existe=0;
+     while ($rowDetalles = $solicitudDetalle->fetch(PDO::FETCH_ASSOC)) {
+      $existe++;
+     } 
+     if($existe>0){
+      if(obtenerCodigoDetallePorpuestaServicio($cod_plantilladetalle)==$codDetalle){
+        $existeItem=1; 
+      }
+     }
+    }
+  }
+  return $existeItem;
+}
+
+function obtenerCostoVariableSolicitadoPropuestaTCPTCS($codSimulacionServX,$codigoItemCons,$valorItem){
+   $existeItem=0;$codigoItem=0;
+   $detalle=obtenerDetalleSolicitudSimulacionCuentaPlantillaServicioCompleto($codSimulacionServX,0);
+   while ($row = $detalle->fetch(PDO::FETCH_ASSOC)) {
+    $codigo_fila=explode("###",$row['codigo_detalle']);
+    $cod_plantilladetalle=$codigo_fila[0];
+    if($valorItem==1){
+       if($codigo_fila[1]=="DET-SIM"){
+         $solicitudDetalle=obtenerSolicitudRecursosDetallePlantilla(false,$cod_plantilladetalle);
+       }else{
+         $solicitudDetalle=null;
+       }
+    }else{
+       if($codigo_fila[1]=="DET-SIM"){
+         $solicitudDetalle=null;
+       }else{
+        $solicitudDetalle=obtenerSolicitudRecursosDetallePlantillaAud(false,$cod_plantilladetalle);
+       }
+    }
+
+    $entro=0;
+    if($solicitudDetalle!=null){
+     while ($rowDetalles = $solicitudDetalle->fetch(PDO::FETCH_ASSOC)) {
+      $entro=1;
+      $codigoItem=$cod_plantilladetalle;
+     } 
+    }
+
+    if($entro==1){
+      if($codigoItemCons==$codigoItem){
+        $existeItem=1;
+      }
+     }
+  }
+  return $existeItem;
+}
+
+function obtenerServicioSolicitadoPropuestaTCPTCS($codigo,$detalle){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT sd.* from solicitudes_facturaciondetalle sd join solicitudes_facturacion s on s.codigo=sd.cod_solicitudfacturacion  where s.cod_simulacion_servicio=$codigo and sd.cod_claservicio=$detalle");
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor++;
+   }
+   return($valor);
 }
 ?>
 

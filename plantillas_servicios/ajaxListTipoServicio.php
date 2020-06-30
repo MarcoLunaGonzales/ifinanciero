@@ -18,12 +18,12 @@ $globalUnidad=$_SESSION["globalUnidad"];
 $globalArea=$_SESSION["globalArea"];
 
 $codigo=$_GET['plantilla'];
-$sql1="SELECT s.*,c.descripcion,c.codigo as servicio_cod from plantillas_servicios_tiposervicio s,cla_servicios c where s.cod_plantillaservicio=$codigo and s.cod_claservicio=c.idclaservicio order by c.codigo";
+$sql1="SELECT s.*,c.Descripcion,c.codigo as servicio_cod from plantillas_servicios_tiposervicio s,cla_servicios c where s.cod_plantillaservicio=$codigo and s.cod_claservicio=c.idclaservicio order by c.codigo";
 $stmt1 = $dbh->prepare($sql1);
 $stmt1->execute();
 $index=1;$total=0;
  while ($rowServ = $stmt1->fetch(PDO::FETCH_ASSOC)) {
-    $descripcion=$rowServ['descripcion'];
+    $descripcion=$rowServ['Descripcion'];
     $servicio_cod=$rowServ['servicio_cod'];
     $observaciones=$rowServ['observaciones'];
     $cantidad=$rowServ['cantidad'];

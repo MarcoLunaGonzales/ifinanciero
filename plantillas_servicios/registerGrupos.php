@@ -321,12 +321,12 @@ if(isset($_GET['cod'])){
 			  	              		$codigoAreaServ=0;
 			  	              	}
 			  	              }
-                           $stmt3 = $dbh->prepare("SELECT idclaservicio,descripcion,codigo from cla_servicios where (codigo_n1=108 or codigo_n1=109) and vigente=1 and codigo_n1=$codigoAreaServ");
+                           $stmt3 = $dbh->prepare("SELECT IdClaservicio,Descripcion,Codigo from cla_servicios where (codigo_n1=108 or codigo_n1=109) and vigente=1 and codigo_n1=$codigoAreaServ");
                          $stmt3->execute();
                          while ($rowServ = $stmt3->fetch(PDO::FETCH_ASSOC)) {
-                          $codigoServX=$rowServ['idclaservicio'];
-                          $nombreServX=$rowServ['descripcion'];
-                          $abrevServX=$rowServ['codigo'];
+                          $codigoServX=$rowServ['IdClaservicio'];
+                          $nombreServX=$rowServ['Descripcion'];
+                          $abrevServX=$rowServ['Codigo'];
                           ?><option value="<?=$codigoServX;?>"><?=$abrevServX?> - <?=$nombreServX?></option><?php 
                        } 
                          ?>  
@@ -380,12 +380,12 @@ if(isset($_GET['cod'])){
       	                     		</thead>
       	                     		<tbody id="tabla_servicios">
       	                     			<?php 
-      	                     			$sql11="SELECT s.*,c.descripcion,c.codigo as servicio_cod from plantillas_servicios_tiposervicio s,cla_servicios c where s.cod_plantillaservicio=$codigo and s.cod_claservicio=c.idclaservicio order by c.codigo";
+      	                     			$sql11="SELECT s.*,c.Descripcion,c.codigo as servicio_cod from plantillas_servicios_tiposervicio s,cla_servicios c where s.cod_plantillaservicio=$codigo and s.cod_claservicio=c.idclaservicio order by c.codigo";
                                         $stmt11 = $dbh->prepare($sql11);
                                         $stmt11->execute();
                                         $index11=1;$total11=0;
  while ($rowServ = $stmt11->fetch(PDO::FETCH_ASSOC)) {
-    $descripcion11=$rowServ['descripcion'];
+    $descripcion11=$rowServ['Descripcion'];
     $servicio_cod11=$rowServ['servicio_cod'];
     $observaciones11=$rowServ['observaciones'];
     $cantidad11=$rowServ['cantidad'];

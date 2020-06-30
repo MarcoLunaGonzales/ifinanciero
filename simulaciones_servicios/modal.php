@@ -463,7 +463,7 @@
                         <button class="btn btn-success" id="guardar_cuenta" onclick="guardarCuentasSimulacionAjaxGenericoServicioAuditorTodos(<?=$inicioAnio?>);">Guardar Cambios</button>
                     </div> 
                  </div>
-                 <p class="text-muted"><small>USD: Dólar, BOB: Bolivianos, D: Días, C: Cantidad, T BOB: Total en Bolivianos, T USD: Total en Dólares, Hab/Des: Habilitado/Deshabilitado.</small></p>    
+                 <p class="text-muted"><small>USD: Dólar, BOB: Bolivianos, D: Días, C: Cantidad, T BOB: Total en Bolivianos, T USD: Total en Dólares, Hab/Des: Habilitado/Deshabilitado, <i class="material-icons text-danger small">not_interested</i> : Item Registrado en SR</small></p>    
                 </div>    
       </div>  
     </div>
@@ -582,7 +582,7 @@
                           <div class="btn-group  float-right">
                             <button title="Agregar Sitio" type="button" name="add" class="btn btn-sm btn-warning btn-round btn-fab" onClick="agregarAtributoAjax()"><i class="material-icons">add</i>
                             </button>
-                              <button title="Agregar Auditor" type="button" class="btn btn-sm btn-primary btn-round dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              <button title="Agregar Auditor" type="button" class="btn btn-sm btn-default btn-round dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="material-icons">add</i> EA
                               </button>
                               <div class="dropdown-menu">
@@ -591,7 +591,7 @@
                                   $etapas="Seg ".($i-1);
                                   if($i==0||$i==1){
                                         if($i==1){
-                                          $etapas="Et ".($i+1)." / REN"; 
+                                          $etapas="Et ".($i+1)." / R"; 
                                         }else{
                                              $etapas="Et ".($i+1)."";                                                  
                                         }
@@ -815,11 +815,17 @@
                                   $montoPreTotalUSD=number_format($montoPreTotal/$usd,2,".","");
                                   $montoPre=number_format($montoPre,2,".","");
                                   $montoPreTotal=number_format($montoPreTotal,2,".","");
+                                  
+                                  $estiloFilaTextoSol="";
+                                  $verificarFacturadoServicio=obtenerServicioSolicitadoPropuestaTCPTCS($codigoSimulacionSuper,$codCS);
+                                  if($verificarFacturadoServicio>0){
+                                     $estiloFilaTextoSol=' title="SOLICITUD DE FACTURACIÓN" disabled';
+                                  }
                                    ?>
                                    <tr>
                                      <td><?=$iii?></td>
                                      <td>
-                                        <select class="form-control selectpicker form-control-sm" data-style="fondo-boton fondo-boton-active" name="anio<?=$an?>SSS<?=$iii?>" id="anio<?=$an?>SSS<?=$iii?>">
+                                        <select <?=$estiloFilaTextoSol?> class="form-control selectpicker form-control-sm" data-style="fondo-boton fondo-boton-active" name="anio<?=$an?>SSS<?=$iii?>" id="anio<?=$an?>SSS<?=$iii?>">
                                           <?php 
                                           for ($i=$inicioAnio; $i <= $anioGeneral; $i++) {
                                           if($codAreaX!=39){
@@ -850,13 +856,13 @@
                                      </td>
                                      <td class="text-left"><i class="material-icons text-warning"><?=$iconServ?></i><input type="hidden" id="precio_fijo<?=$an?>SSS<?=$iii?>" value="<?=$iconServ?>"> <?=$tipoPre?></td>
                                      <td class="text-right">
-                                       <input type="text" id="descripcion_servicios<?=$an?>SSS<?=$iii?>" name="descripcion_servicios<?=$an?>SSS<?=$iii?>" class="form-control text-info text-right" value="<?=$tipoPreEdit?>">
+                                       <input type="text" <?=$estiloFilaTextoSol?> id="descripcion_servicios<?=$an?>SSS<?=$iii?>" name="descripcion_servicios<?=$an?>SSS<?=$iii?>" class="form-control text-info text-right" value="<?=$tipoPreEdit?>">
                                      </td>
                                      <td class="text-right">
-                                       <input type="number" min="1" id="cantidad_servicios<?=$an?>SSS<?=$iii?>" name="cantidad_servicios<?=$an?>SSS<?=$iii?>" class="form-control text-info text-right" onchange="calcularTotalFilaServicio(<?=$an?>,2)" onkeyUp="calcularTotalFilaServicio(<?=$an?>,2)" value="<?=$cantidadEPre?>">
+                                       <input type="number" <?=$estiloFilaTextoSol?> min="1" id="cantidad_servicios<?=$an?>SSS<?=$iii?>" name="cantidad_servicios<?=$an?>SSS<?=$iii?>" class="form-control text-info text-right" onchange="calcularTotalFilaServicio(<?=$an?>,2)" onkeyUp="calcularTotalFilaServicio(<?=$an?>,2)" value="<?=$cantidadEPre?>">
                                      </td>
                                      <td>
-                                      <select class="form-control selectpicker form-control-sm" data-style="fondo-boton fondo-boton-active" name="unidad_servicios<?=$an?>SSS<?=$iii?>" id="unidad_servicios<?=$an?>SSS<?=$iii?>" onchange="calcularTotalFilaServicio(<?=$an?>,2)">
+                                      <select <?=$estiloFilaTextoSol?> class="form-control selectpicker form-control-sm" data-style="fondo-boton fondo-boton-active" name="unidad_servicios<?=$an?>SSS<?=$iii?>" id="unidad_servicios<?=$an?>SSS<?=$iii?>" onchange="calcularTotalFilaServicio(<?=$an?>,2)">
                                           <?php 
                                               $queryUnidad="SELECT * FROM tipos_unidad where cod_estadoreferencial=1 order by codigo";
                                               $stmtUnidad = $dbh->prepare($queryUnidad);
@@ -874,23 +880,23 @@
                                       </select>
                                      </td>
                                      <td class="text-right">
-                                       <input type="<?=$claseDeshabilitado?>" id="modal_montoserv<?=$an?>SSS<?=$iii?>" name="modal_montoserv<?=$an?>SSS<?=$iii?>" <?=($banderaHab==0)?"readonly":"";?> class="form-control text-info text-right" onchange="calcularTotalFilaServicio(<?=$an?>,2)" onkeyUp="calcularTotalFilaServicio(<?=$an?>,2)" value="<?=$montoPre?>" step="0.01">
+                                       <input <?=$estiloFilaTextoSol?> type="<?=$claseDeshabilitado?>" id="modal_montoserv<?=$an?>SSS<?=$iii?>" name="modal_montoserv<?=$an?>SSS<?=$iii?>" <?=($banderaHab==0)?"readonly":"";?> class="form-control text-info text-right" onchange="calcularTotalFilaServicio(<?=$an?>,2)" onkeyUp="calcularTotalFilaServicio(<?=$an?>,2)" value="<?=$montoPre?>" step="0.01">
                                        <input type="<?=$claseDeshabilitadoOFF?>" id="modal_montoservOFF<?=$an?>SSS<?=$iii?>" name="modal_montoservOFF<?=$an?>SSS<?=$iii?>" readonly class="form-control text-info text-right" value="0" step="0.01">
                                      </td>
                                      <td class="text-right">
-                                       <input type="<?=$claseDeshabilitado?>" id="modal_montoservUSD<?=$an?>SSS<?=$iii?>" name="modal_montoservUSD<?=$an?>SSS<?=$iii?>" <?=($banderaHab==0)?"readonly":"";?> class="form-control text-info text-right" onchange="calcularTotalFilaServicio(<?=$an?>,4)" onkeyUp="calcularTotalFilaServicio(<?=$an?>,4)" value="<?=$montoPreUSD?>" step="0.01">
+                                       <input <?=$estiloFilaTextoSol?> type="<?=$claseDeshabilitado?>" id="modal_montoservUSD<?=$an?>SSS<?=$iii?>" name="modal_montoservUSD<?=$an?>SSS<?=$iii?>" <?=($banderaHab==0)?"readonly":"";?> class="form-control text-info text-right" onchange="calcularTotalFilaServicio(<?=$an?>,4)" onkeyUp="calcularTotalFilaServicio(<?=$an?>,4)" value="<?=$montoPreUSD?>" step="0.01">
                                        <input type="<?=$claseDeshabilitadoOFF?>" id="modal_montoservUSDOFF<?=$an?>SSS<?=$iii?>" name="modal_montoservUSDOFF<?=$an?>SSS<?=$iii?>" readonly class="form-control text-info text-right" value="0" step="0.01">
                                      </td>
                                      <td class="text-right">
                                        <input type="hidden" id="modal_codigoservicio<?=$an?>SSS<?=$iii?>" value="<?=$codigoPre?>">
-                                       <input type="<?=$claseDeshabilitado?>" id="modal_montoservtotal<?=$an?>SSS<?=$iii?>" name="modal_montoservtotal<?=$an?>SSS<?=$iii?>" <?=($banderaHab==0)?"readonly":"";?> class="form-control text-info text-right"  value="<?=$montoPreTotal?>" step="0.01"> <!-- onchange="calcularTotalFilaServicio(<?=$an?>,1)" onkeyUp="calcularTotalFilaServicio(<?=$an?>,1)"-->
+                                       <input <?=$estiloFilaTextoSol?> type="<?=$claseDeshabilitado?>" id="modal_montoservtotal<?=$an?>SSS<?=$iii?>" name="modal_montoservtotal<?=$an?>SSS<?=$iii?>" <?=($banderaHab==0)?"readonly":"";?> class="form-control text-info text-right"  value="<?=$montoPreTotal?>" step="0.01"> <!-- onchange="calcularTotalFilaServicio(<?=$an?>,1)" onkeyUp="calcularTotalFilaServicio(<?=$an?>,1)"-->
                                        <input type="<?=$claseDeshabilitadoOFF?>" id="modal_montoservtotalOFF<?=$an?>SSS<?=$iii?>" name="modal_montoservtotalOFF<?=$an?>SSS<?=$iii?>" readonly class="form-control text-info text-right" value="0" step="0.01">
                                      </td>        
                                      <td class="text-right">
-                                       <input type="<?=$claseDeshabilitado?>" id="modal_montoservtotalUSD<?=$an?>SSS<?=$iii?>" name="modal_montoservtotalUSD<?=$an?>SSS<?=$iii?>" <?=($banderaHab==0)?"readonly":"";?> class="form-control text-info text-right" value="<?=$montoPreTotalUSD?>" step="0.01"> <!--onchange="calcularTotalFilaServicio(<?=$an?>,3)" onkeyUp="calcularTotalFilaServicio(<?=$an?>,3)" -->
+                                       <input <?=$estiloFilaTextoSol?> type="<?=$claseDeshabilitado?>" id="modal_montoservtotalUSD<?=$an?>SSS<?=$iii?>" name="modal_montoservtotalUSD<?=$an?>SSS<?=$iii?>" <?=($banderaHab==0)?"readonly":"";?> class="form-control text-info text-right" value="<?=$montoPreTotalUSD?>" step="0.01"> <!--onchange="calcularTotalFilaServicio(<?=$an?>,3)" onkeyUp="calcularTotalFilaServicio(<?=$an?>,3)" -->
                                        <input type="<?=$claseDeshabilitadoOFF?>" id="modal_montoservtotalUSDOFF<?=$an?>SSS<?=$iii?>" name="modal_montoservtotalUSDOFF<?=$an?>SSS<?=$iii?>" readonly class="form-control text-info text-right" value="0" step="0.01">
                                      </td>
-                                     <td>
+                                     <td id="solicitado_item<?=$an?>SSS<?=$iii?>">
                                        <div class="togglebutton">
                                                <label>
                                                  <input type="checkbox" <?=($banderaHab==1)?"checked":"";?> id="modal_checkserv<?=$an?>SSS<?=$iii?>" onchange="activarInputMontoFilaServicio(<?=$an?>,'<?=$iii?>')">
@@ -898,7 +904,11 @@
                                                </label>
                                        </div>
                                      </td>
-                                   </tr>
+                                     <?php 
+                                     if($verificarFacturadoServicio>0){  //servicio facturado
+                                          ?><script>$("#solicitado_item"+'<?=$an?>SSS<?=$iii?>').html('<i class="material-icons text-danger">not_interested</i>');</script><?php                         
+                                      }?> 
+                                  </tr>
                                   <?php
                                   $iii++; 
                                   } ?>
@@ -965,7 +975,7 @@
                       <div class="form-group float-right">
                         <button type="button" id="boton_guardarplan" class="btn btn-default" onclick="guardarDatosPlantillaServicio(this.id)">Guardar</button>
                       </div> 
-                <p class="text-muted"><small>USD: Dolar, BOB: Bolivianos, EA: Equipo Auditor.</small></p> 
+                <p class="text-muted"><small>USD: Dolar, BOB: Bolivianos, EA: Equipo Auditor, <i class="material-icons text-danger small">not_interested</i> : Item Registrado en SF</small></p> 
                 </div>
       </div>  
     </div>

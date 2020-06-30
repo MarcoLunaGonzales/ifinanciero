@@ -59,7 +59,10 @@ $j=1;
          } 
 
           $montoDetalleUSD=number_format($montoDetalle/$usd, 2, '.', '');       
-          $montoDetalleAlUSD=number_format($montoDetalleAl/$usd, 2, '.', '');        
+          $montoDetalleAlUSD=number_format($montoDetalleAl/$usd, 2, '.', '');  
+
+          $existeSolicitado=obtenerCostoVariableHonorariosSolicitadoPropuestaTCPTCS($codigo,$ann,$codigoDetalle);
+               
           ?><tr>
               <td class="text-left small font-weight-bold"><input type="hidden" id="codigo_cuenta<?=$ann?>QQQ<?=$j?>RRR<?=$i?>" value="<?=$codigoCuenta?>"><input type="hidden" id="codigo_fila<?=$ann?>QQQ<?=$j?>RRR<?=$i?>" value="<?=$codX?>">[<?=$numX?>] - <?=$nomX?></td>
               <td class="text-left small font-weight-bold"><?=$rowDetalles['glosa']?></td> 
@@ -70,12 +73,21 @@ $j=1;
                 <input type="hidden" id="monto_modal<?=$ann?>QQQ<?=$j?>RRR<?=$i?>" name="monto_modal<?=$ann?>QQQ<?=$j?>RRR<?=$i?>" <?=($bandera==0)?"readonly":"";?> class="form-control text-danger text-right" onchange="calcularTotalPartidaGenericoServicio('<?=$ann?>',<?=$j?>,2)" onkeyUp="calcularTotalPartidaGenericoServicio('<?=$ann?>',<?=$j?>,2)" value="<?=$montoDetalleAl?>" step="0.01">
                 <input type="hidden" id="cantidad_personal<?=$ann?>QQQ<?=$j?>RRR<?=$i?>" name="cantidad_personal<?=$ann?>QQQ<?=$j?>RRR<?=$i?>" value="<?=$cantidadPersonalDetalleE?>">
                 <input type="hidden" id="codigo<?=$ann?>QQQ<?=$j?>RRR<?=$i?>" value="<?=$codigoDetalle?>">
+                <?php 
+               if($existeSolicitado>0){
+                 ?>
+                 <i class="material-icons text-danger">not_interested</i>
+                <?php
+               }else{
+                ?>
                 <div class="togglebutton">
                         <label>
                           <input type="checkbox" data-style="btn btn-primary" <?=($bandera==1)?"checked":"";?> id="habilitar<?=$ann?>QQQ<?=$j?>RRR<?=$i?>" onchange="activarInputMontoGenericoServicio('<?=$ann?>','<?=$j?>RRR<?=$i?>')">
                           <span class="toggle"></span>
                         </label>
-                </div>
+                </div><?php   
+               }  
+                ?>
               
               </td>
              </tr> 

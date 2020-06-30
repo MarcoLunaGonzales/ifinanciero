@@ -91,6 +91,14 @@ $dbh = new Conexion();
                         </div>
                         </div>
                       </div>
+                      <div class="row">
+                       <label class="col-sm-2 col-form-label">Alcance de la Propuesta:</label>
+                       <div class="col-sm-7">
+                        <div class="form-group">
+                          <textarea class="form-control" type="text" name="alcance" id="alcance"></textarea>
+                        </div>
+                        </div>
+                      </div>
                    <div class="row">
                        <label class="col-sm-2 col-form-label">Cliente</label>
                        <div class="col-sm-7">

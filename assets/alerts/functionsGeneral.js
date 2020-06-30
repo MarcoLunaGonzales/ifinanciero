@@ -2834,6 +2834,7 @@ function guardarSimulacionServicio(){
   var utilidad=$("#utilidad_minima").val();
   var anios=$("#anios").val();
   var plantilla_servicio=$("#plantilla_servicio").val();
+  var alcance=$("#alcance").val();
   if($("#afnor").length){
     if($("#afnor").is(':checked')){
       var afnor=1;
@@ -2848,11 +2849,11 @@ function guardarSimulacionServicio(){
    Swal.fire('Informativo!','Debe llenar los campos!','warning'); 
   }else{
     var tipoServicio=$("#tipo_servicio").val()[0];
-     var parametros={"id_perfil":idPerfil,"objeto_servicio":objeto,"tipo_servicio":tipoServicio,"id_servicio":idServicio,"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"atributos":JSON.stringify(itemAtributos),"norma":norma,"anios":anios,"afnor":afnor,"tipo_atributo":2};
+     var parametros={"alcance":alcance,"id_perfil":idPerfil,"objeto_servicio":objeto,"tipo_servicio":tipoServicio,"id_servicio":idServicio,"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"atributos":JSON.stringify(itemAtributos),"norma":norma,"anios":anios,"afnor":afnor,"tipo_atributo":2};
      $.ajax({
         type: "GET",
         dataType: 'html',
-        url: "simulaciones_servicios/ajaxRegistrarSimulacionBK.php",
+        url: "simulaciones_servicios/ajaxRegistrarSimulacion.php",
         data: parametros,
         beforeSend: function () { 
           iniciarCargaAjax();
@@ -2899,11 +2900,11 @@ function guardarSimulacionServicio(){
       var iaf_primario=$("#iaf_primario").val();
       var iaf_secundario=$("#iaf_secundario").val();
       objeto=0;
-     var parametros={"iaf_primario":iaf_primario,"iaf_secundario":iaf_secundario,"tipo_cliente":tipoCliente,"region_cliente":regionCliente,"id_perfil":idPerfil,"objeto_servicio":objeto,"id_servicio":idServicio,"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"atributos":JSON.stringify(itemAtributos),"norma":norma,"anios":anios,"afnor":afnor,"tipo_atributo":1};
+     var parametros={"alcance":alcance,"iaf_primario":iaf_primario,"iaf_secundario":iaf_secundario,"tipo_cliente":tipoCliente,"region_cliente":regionCliente,"id_perfil":idPerfil,"objeto_servicio":objeto,"id_servicio":idServicio,"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"atributos":JSON.stringify(itemAtributos),"norma":norma,"anios":anios,"afnor":afnor,"tipo_atributo":1};
      $.ajax({
         type: "GET",
         dataType: 'html',
-        url: "simulaciones_servicios/ajaxRegistrarSimulacionBK.php",
+        url: "simulaciones_servicios/ajaxRegistrarSimulacion.php",
         data: parametros,
         beforeSend: function () { 
          //Swal.fire("Informativo!", "Procesando datos! espere...", "warning");
@@ -5116,23 +5117,24 @@ function activarInputMontoPersonalServicio(anio,fila){
   calcularTotalPersonalServicio(anio,2);
 }
 function activarInputsCostosVariables(anio,fila){
+
   if(!($("#dias_honorario"+anio+"CCCC"+fila).is("[readonly]"))){
-    $("#dias_honorario"+anio+"CCCC"+fila).attr("readonly",true);
-    $("#monto_honorario"+anio+"CCCC"+fila).attr("readonly",true);
-    $("#monto_honorarioUSD"+anio+"CCCC"+fila).attr("readonly",true);
-
+     $("#dias_honorario"+anio+"CCCC"+fila).attr("readonly",true);
+     $("#monto_honorario"+anio+"CCCC"+fila).attr("readonly",true);
+     $("#monto_honorarioUSD"+anio+"CCCC"+fila).attr("readonly",true);
+     if($("#codigo_filatipoauditor"+anio+"CCCC"+fila).val()!=-100){
     //deshabilitar valor 0
-    $("#dias_honorario"+anio+"CCCC"+fila).attr("type","hidden");
-    $("#dias_honorarioOFF"+anio+"CCCC"+fila).attr("type","number");
-    $("#monto_honorario"+anio+"CCCC"+fila).attr("type","hidden");
-    $("#monto_honorarioOFF"+anio+"CCCC"+fila).attr("type","number");
-    $("#monto_honorarioUSD"+anio+"CCCC"+fila).attr("type","hidden");
-    $("#monto_honorarioUSDOFF"+anio+"CCCC"+fila).attr("type","number");
-    $("#monto_honorarioTotal"+anio+"CCCC"+fila).attr("type","hidden");
-    $("#monto_honorarioTotalOFF"+anio+"CCCC"+fila).attr("type","number");
-    $("#monto_honorarioTotalUSD"+anio+"CCCC"+fila).attr("type","hidden");
-    $("#monto_honorarioTotalUSDOFF"+anio+"CCCC"+fila).attr("type","number");
-
+     $("#dias_honorario"+anio+"CCCC"+fila).attr("type","hidden");
+     $("#dias_honorarioOFF"+anio+"CCCC"+fila).attr("type","number");
+     $("#monto_honorario"+anio+"CCCC"+fila).attr("type","hidden");
+     $("#monto_honorarioOFF"+anio+"CCCC"+fila).attr("type","number");
+     $("#monto_honorarioUSD"+anio+"CCCC"+fila).attr("type","hidden");
+     $("#monto_honorarioUSDOFF"+anio+"CCCC"+fila).attr("type","number");
+     $("#monto_honorarioTotal"+anio+"CCCC"+fila).attr("type","hidden");
+     $("#monto_honorarioTotalOFF"+anio+"CCCC"+fila).attr("type","number");
+     $("#monto_honorarioTotalUSD"+anio+"CCCC"+fila).attr("type","hidden");
+     $("#monto_honorarioTotalUSDOFF"+anio+"CCCC"+fila).attr("type","number");   
+     }
     var columnas =$("#cantidad_columnas"+anio+"CCCC"+fila).val();
     for (var j = 1; j <=columnas; j++) {
       $("#modal_dias_personalItem"+anio+"CCCC"+j+"RRR"+fila).attr("readonly",true);
@@ -5142,6 +5144,8 @@ function activarInputsCostosVariables(anio,fila){
 
       $("#monto"+anio+"CCCC"+j+"RRR"+fila).attr("type","hidden");
       $("#montoOFF"+anio+"CCCC"+j+"RRR"+fila).attr("type","number");
+      $("#montoUSD"+anio+"CCCC"+j+"RRR"+fila).attr("type","hidden");
+      $("#montoUSDOFF"+anio+"CCCC"+j+"RRR"+fila).attr("type","number");
       if($("#modal_dias_personalItem"+anio+"CCCC"+j+"RRR"+fila).val()>0){
         
       }
@@ -5152,21 +5156,22 @@ function activarInputsCostosVariables(anio,fila){
     }; 
 
   }else{
-    $("#dias_honorario"+anio+"CCCC"+fila).removeAttr("readonly");
-    $("#monto_honorario"+anio+"CCCC"+fila).removeAttr("readonly");
-    $("#monto_honorarioUSD"+anio+"CCCC"+fila).removeAttr("readonly");
-
+      $("#dias_honorario"+anio+"CCCC"+fila).removeAttr("readonly");
+      $("#monto_honorario"+anio+"CCCC"+fila).removeAttr("readonly");
+      $("#monto_honorarioUSD"+anio+"CCCC"+fila).removeAttr("readonly");
+     if($("#codigo_filatipoauditor"+anio+"CCCC"+fila).val()!=-100){   
     //habilitar valor 0
-    $("#dias_honorario"+anio+"CCCC"+fila).attr("type","number");
-    $("#dias_honorarioOFF"+anio+"CCCC"+fila).attr("type","hidden");
-    $("#monto_honorario"+anio+"CCCC"+fila).attr("type","number");
-    $("#monto_honorarioOFF"+anio+"CCCC"+fila).attr("type","hidden");
-    $("#monto_honorarioUSD"+anio+"CCCC"+fila).attr("type","number");
-    $("#monto_honorarioUSDOFF"+anio+"CCCC"+fila).attr("type","hidden");
-    $("#monto_honorarioTotal"+anio+"CCCC"+fila).attr("type","number");
-    $("#monto_honorarioTotalOFF"+anio+"CCCC"+fila).attr("type","hidden");
-    $("#monto_honorarioTotalUSD"+anio+"CCCC"+fila).attr("type","number");
-    $("#monto_honorarioTotalUSDOFF"+anio+"CCCC"+fila).attr("type","hidden");
+      $("#dias_honorario"+anio+"CCCC"+fila).attr("type","number");
+      $("#dias_honorarioOFF"+anio+"CCCC"+fila).attr("type","hidden");
+      $("#monto_honorario"+anio+"CCCC"+fila).attr("type","number");
+      $("#monto_honorarioOFF"+anio+"CCCC"+fila).attr("type","hidden");
+      $("#monto_honorarioUSD"+anio+"CCCC"+fila).attr("type","number");
+      $("#monto_honorarioUSDOFF"+anio+"CCCC"+fila).attr("type","hidden");
+      $("#monto_honorarioTotal"+anio+"CCCC"+fila).attr("type","number");
+      $("#monto_honorarioTotalOFF"+anio+"CCCC"+fila).attr("type","hidden");
+      $("#monto_honorarioTotalUSD"+anio+"CCCC"+fila).attr("type","number");
+      $("#monto_honorarioTotalUSDOFF"+anio+"CCCC"+fila).attr("type","hidden");    
+     }
 
     var columnas =$("#cantidad_columnas"+anio+"CCCC"+fila).val();
     for (var j = 1; j <=columnas; j++) {
@@ -5176,6 +5181,8 @@ function activarInputsCostosVariables(anio,fila){
 
       $("#monto"+anio+"CCCC"+j+"RRR"+fila).attr("type","number");
       $("#montoOFF"+anio+"CCCC"+j+"RRR"+fila).attr("type","hidden");
+      $("#montoUSD"+anio+"CCCC"+j+"RRR"+fila).attr("type","number");
+      $("#montoUSDOFF"+anio+"CCCC"+j+"RRR"+fila).attr("type","hidden");
       if($("#modal_dias_personalItem"+anio+"CCCC"+j+"RRR"+fila).val()<=0){
         
       }
@@ -6284,6 +6291,7 @@ function cargarDetallesCostosVariablesTodosLosAnios(inicio,ib){
          detectarCargaAjax();
          //results[index] = resp;
           $("#cuentas_simulacionpersonal").html(resp);
+          $('[data-toggle="tooltip"]').tooltip();
           $('.selectpicker').selectpicker("refresh"); 
           // ponerCantidadTotalesVariablesModal(inicio,anio);            
         }
@@ -7552,7 +7560,15 @@ function guardarDatosPlantillaServicioAjax(btn_id){
     var atributosDias=JSON.stringify(itemAtributosDias);
     var auditoresDias=[];
     for (var au = 0; au < itemAtributosDias.length; au++) {
-      auditoresDias[au]=$("#auditores"+au).val();
+      var mySelections = [];
+        $('#auditores'+au+' option').each(function(i) {
+            if (this.selected == true) {
+                mySelections.push(this.value+"####SI");
+            }else{
+                mySelections.push(this.value+"####NO");
+            }
+        });
+      auditoresDias[au]=mySelections;
     };
     auditoresDias=JSON.stringify(auditoresDias);
     console.log(auditoresDias);
@@ -9683,7 +9699,7 @@ function filtrarSolicitudRecursosServiciosItems(){
 
 function filtrarSolicitudRecursosDetalleDatos(){
   var tipo = $("#tipo_solicitud").val();
-  if(tipo==1){
+  if(tipo==1||tipo==-1){
     var res=$("#simulaciones").val().split("$$$");
     var cod_sim=res[0];
     if(res[1]=="SIM"){//propuestas SEC
@@ -14772,3 +14788,24 @@ $(document).ready(function() {
     };
    });
 });
+
+function limpiarDetalleSolicitud(){
+    Swal.fire({
+        title: '¿Esta Seguro?',
+        text: "Se limpiará los registros del Detalle",
+         type: 'warning',
+        showCancelButton: true,
+        confirmButtonClass: 'btn btn-warning',
+        cancelButtonClass: 'btn btn-danger',
+        confirmButtonText: 'Si',
+        cancelButtonText: 'No',
+        buttonsStyling: false
+       }).then((result) => {
+          if (result.value) {
+               $("#fiel").html("");            
+            return(true);
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            return(false);
+          }
+        });
+}

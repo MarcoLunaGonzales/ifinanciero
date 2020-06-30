@@ -1,3 +1,4 @@
+
 <?php
 set_time_limit (0);
 session_start();
@@ -24,7 +25,7 @@ $globalArea=$_SESSION["globalArea"];
 $globalAdmin=$_SESSION["globalAdmin"];
 
 if(isset($_GET['nombre'])){
-	$nombre=$_GET['nombre'];
+  $nombre=$_GET['nombre'];
   $plantilla_servicio=$_GET['plantilla_servicio'];
   $dias=$_GET['dias'];
   $utilidad=$_GET['utilidad'];
@@ -46,7 +47,6 @@ if(isset($_GET['nombre'])){
   $numeroCorrelativoCliente=obtenerNumeroClienteSimulacion($cliente);
   $nombreSecundario=obtenerNombreCliente($cliente)."(".($numeroCorrelativoCliente+1).")";
   $dbh = new Conexion();
-  $SQLDATOSINSTERT=[];
   if(isset($_GET['tipo_servicio'])){
     $idTipoServicio=$_GET['tipo_servicio'];
   }else{
@@ -73,8 +73,8 @@ if(isset($_GET['nombre'])){
   $sqlInsert="INSERT INTO simulaciones_servicios (codigo, nombre, fecha, cod_plantillaservicio, cod_responsable,dias_auditoria,utilidad_minima,cod_cliente,productos,norma,idServicio,anios,porcentaje_fijo,sitios,afnor,porcentaje_afnor,id_tiposervicio,cod_objetoservicio,cod_tipoclientenacionalidad,cod_iaf_primario,cod_iaf_secundario) 
   VALUES ('".$codSimServ."','".$nombre."','".$fecha."', '".$plantilla_servicio."', '".$globalUser."','".$dias."','".$utilidad."','".$cliente."','".$productos."','".$norma."','".$id_servicio."','".$anios."','".obtenerValorConfiguracion(32)."','".$sitios."','".$afnor."','".obtenerValorConfiguracion(33)."','".$idTipoServicio."','".$objeto_servicio."','".$regionCliente."','".$iafprimario."','".$iafsecundario."')";
   $stmtInsert = $dbh->prepare($sqlInsert);
-  $flagsuccess=$stmtInsert->execute();
-  array_push($SQLDATOSINSTERT,$flagsuccess);
+  $stmtInsert->execute();
+
   //enviar propuestas para la actualizacion de ibnorca
   $fechaHoraActual=date("Y-m-d H:i:s");
   $idTipoObjeto=2707;
@@ -149,8 +149,8 @@ if(isset($_GET['nombre'])){
       $sqlInsertPorcentaje="INSERT INTO cuentas_simulacion (cod_plancuenta, monto_local, monto_externo, porcentaje,cod_partidapresupuestaria,cod_simulacionservicios,cod_anio) 
       VALUES ('".$codCuenta."','".$montoCuenta."','".$montoCuenta."', '".$porcentaje."', '".$idp."','".$codSimServ."','".$i."')";
       $stmtInsertPorcentaje = $dbh->prepare($sqlInsertPorcentaje);
-      $flagsuccess=$stmtInsertPorcentaje->execute();
-      array_push($SQLDATOSINSTERT,$flagsuccess);
+      $stmtInsertPorcentaje->execute();
+
      $detallesPlan=obtenerDetallePlantillaServicioPartida($plantilla_servicio,$idp);
      $cantidadPersonal=obtenerCantidadPersonalPlantilla($plantilla_servicio);
 
@@ -185,9 +185,8 @@ if(isset($_GET['nombre'])){
             $dbhAU = new Conexion();
             $sqlAU="INSERT INTO simulaciones_servicios_auditores (codigo,cod_simulacionservicio,cod_tipoauditor, cantidad, monto,cod_estadoreferencial,cantidad_editado,dias,monto_externo,cod_externolocal,cod_anio,habilitado,descripcion) 
              VALUES ('".$codigoAuditorSimulacion."','".$codSimServ."','".$codTIPA."','".$cantidadS."','0',1,'".$cantidadS."',1,'".$montoSE."','".$codBolLocSE."','".$i."',0,'".$nombreTIPA."')";
-             $stmtAU = $dbhAU->prepare($sqlAU);
-             $flagsuccess=$stmtAU->execute();
-             array_push($SQLDATOSINSTERT,$flagsuccess);
+            $stmtAU = $dbhAU->prepare($sqlAU);
+            $stmtAU->execute();
          }else{
             $codigoAuditorSimulacion=obtenerCodigoSimulacionServicioAuditorTipoAuditor($codSimServ,$codTIPA,$i);
          }
@@ -200,8 +199,7 @@ if(isset($_GET['nombre'])){
          $sqlSS="INSERT INTO simulaciones_ssd_ssa (cod_simulacionservicio,cod_simulacionserviciodetalle,cod_simulacionservicioauditor,monto,dias,cantidad,monto_externo,cod_anio) 
                   VALUES ('".$codSimServ."','".$codigoDetalleSimulacion."','".$codigoAuditorSimulacion."','".$editD."','".$codigoAuditorSimulacionDias."', '".$codigoAuditorSimulacionCantidad."','".$editDE."','".$i."')";
          $stmtSS = $dbhSS->prepare($sqlSS);
-         $flagsuccess=$stmtSS->execute(); 
-          array_push($SQLDATOSINSTERT,$flagsuccess);
+         $stmtSS->execute(); 
        }
        $anioParaRegistroAuditor=$i;
        $cantidadPersonal=$monto_generado;
@@ -209,8 +207,7 @@ if(isset($_GET['nombre'])){
       $sqlID="INSERT INTO simulaciones_serviciodetalle (codigo,cod_simulacionservicio,cod_plantillatcp, cod_partidapresupuestaria, cod_cuenta,glosa,monto_unitario,cantidad,monto_total,cod_estadoreferencial,editado_personal,editado_personalext,monto_totalext,cod_externolocal,cod_anio,habilitado) 
       VALUES ('".$codigoDetalleSimulacion."','".$codSimServ."','".$codPC."','".$codPP."','".$codC."', '".$glosaD."','".$montoD."','".$cantidadPersonal."','".$montoD."',1,'".$editD."','".$editDE."','".$montoDE."','".$codBolLoc."','".$i."',0)";
       $stmtID = $dbhID->prepare($sqlID);
-      $flagsuccess=$stmtID->execute();
-      array_push($SQLDATOSINSTERT,$flagsuccess);
+      $stmtID->execute();
      }
     }//fin de for
    } 
@@ -280,8 +277,7 @@ if(isset($_GET['nombre'])){
       $sqlAU="INSERT INTO simulaciones_servicios_tiposervicio (cod_simulacionservicio,cod_claservicio, observaciones,cantidad, monto,cod_estadoreferencial,cantidad_editado,cod_tipounidad,cod_anio,habilitado) 
       VALUES ('".$codSimServ."','".$codCS."','".$obsCS."','".$cantidadS."','".$montoS."',1,'".$cantidadS."','".$codTipoUnidad."','".$jjjj."',0)";
       $stmtAU = $dbhAU->prepare($sqlAU);
-      $flagsuccess=$stmtAU->execute();
-      array_push($SQLDATOSINSTERT,$flagsuccess);
+      $stmtAU->execute();
      }
 
    //} //fin de for anios  
@@ -311,8 +307,7 @@ if(isset($_GET['nombre'])){
          $sqlFijos="INSERT INTO simulaciones_cf (cod_simulacionservicio, cod_simulacioncosto,cod_partidapresupuestaria,cod_cuenta,monto,cantidad,monto_total,cod_anio) 
          VALUES ('".$codSimServ."',0,'".$codPartidaFijo."','".$codCuentaFijo."','".$montoUnidad."',1,'".$montoUnidad."','".$jjjj."')";
          $stmtFijos = $dbh->prepare($sqlFijos);
-         $flagsuccess=$stmtFijos->execute();
-         array_push($SQLDATOSINSTERT,$flagsuccess);
+         $stmtFijos->execute();
       } 
     } //fin de for anios  
 
@@ -334,8 +329,7 @@ if(isset($_GET['nombre'])){
               $sqlDetalleAtributos="INSERT INTO simulaciones_servicios_atributos (codigo,cod_simulacionservicio, nombre, direccion, cod_tipoatributo,marca,norma,nro_sello,cod_pais,cod_estado,cod_ciudad) 
               VALUES ('$codSimulacionServicioAtributo','$codSimServ', '$nombreAtributo', '$direccionAtributo', '$tipo_atributo','$marcaAtributo','$normaAtributo','$selloAtributo','$paisAtributo','$estadoAtributo','$ciudadAtributo')";
               $stmtDetalleAtributos = $dbh->prepare($sqlDetalleAtributos);
-              $flagsuccess=$stmtDetalleAtributos->execute();
-              array_push($SQLDATOSINSTERT,$flagsuccess);
+              $stmtDetalleAtributos->execute();
 
               if($tipo_atributo==1){
                 $normaCodAtributo=$atributos[$att]->norma_cod;
@@ -345,16 +339,15 @@ if(isset($_GET['nombre'])){
                   $sqlDetalleAtributosNormas="INSERT INTO simulaciones_servicios_atributosnormas (cod_simulacionservicioatributo, cod_norma, precio,cantidad) 
                  VALUES ('$codSimulacionServicioAtributo', '$codNorma', '10',1)";
                  $stmtDetalleAtributosNormas = $dbh->prepare($sqlDetalleAtributosNormas);
-                 $flagsuccess=$stmtDetalleAtributosNormas->execute(); 
-                 array_push($SQLDATOSINSTERT,$flagsuccess);
+                 $stmtDetalleAtributosNormas->execute(); 
                 }
               }else{   
                 for ($yyyy=$inicioAnio; $yyyy<=$anios; $yyyy++) {  
                  $sqlDetalleAtributosDias="INSERT INTO simulaciones_servicios_atributosdias (cod_simulacionservicioatributo, dias, cod_anio) 
                  VALUES ('$codSimulacionServicioAtributo', '0', '$yyyy')";
                  $stmtDetalleAtributosDias = $dbh->prepare($sqlDetalleAtributosDias);
-                 $flagsuccess=$stmtDetalleAtributosDias->execute(); 
-                  array_push($SQLDATOSINSTERT,$flagsuccess);
+                 $stmtDetalleAtributosDias->execute(); 
+
                    
                  //insertar auditores por sitios
                  $auditoresSim=obtenerAuditoresSimulacionPorAnio($codSimServ,$yyyy);
@@ -363,27 +356,15 @@ if(isset($_GET['nombre'])){
                      $sqlDetalleAtributosAud="INSERT INTO simulaciones_servicios_atributosauditores (cod_simulacionservicioatributo, cod_auditor, cod_anio,estado) 
                      VALUES ('$codSimulacionServicioAtributo', '$codAuditorSim', '$yyyy',0)";
                      $stmtDetalleAtributosAud = $dbh->prepare($sqlDetalleAtributosAud);
-                     $flagsuccess=$stmtDetalleAtributosAud->execute(); 
-                     array_push($SQLDATOSINSTERT,$flagsuccess);
+                     $stmtDetalleAtributosAud->execute(); 
                  }
                 }
               }         
               
          }
          //FIN simulaciones_serviciosauditores
-  $flagsuccess=true;
-  for ($flag=0; $flag < count($SQLDATOSINSTERT); $flag++) { 
-    if($SQLDATOSINSTERT[$flag]==false){
-      $flagsuccess=true;
-      break;
-    }
-  }  
-  if($flagsuccess==true){
-   echo "####".$codSimServ;
-  }else{
-   echo "####ERROR";
-  } 
 
+  echo $codSimServ;
 }
 
 ?>

@@ -27,10 +27,11 @@ $atributos= json_decode($_POST['productos']);
 $anio=$_POST['anio'];
 $anio_fila=$_POST['anio_fila'];
 $iteracion=$_POST['iteracion'];
-
-$sqlDetallesAuditores="UPDATE simulaciones_servicios_auditores SET dias=0 where cod_simulacionservicio=$codSimulacion";
-$stmtDetallesAuditores = $dbh->prepare($sqlDetallesAuditores);
-$stmtDetallesAuditores->execute();
+if(obtenerEntradaSimulacionServicio($codSimulacion)==1){
+  $sqlDetallesAuditores="UPDATE simulaciones_servicios_auditores SET dias=0 where cod_simulacionservicio=$codSimulacion";
+  $stmtDetallesAuditores = $dbh->prepare($sqlDetallesAuditores);
+  $stmtDetallesAuditores->execute(); 
+}
 
 if($_POST['tcs']==0){
   $tipo_atributo=1;
@@ -53,6 +54,11 @@ $sqlDetAt="SELECT * FROM simulaciones_servicios_atributos where cod_simulacionse
 $stmtDetAt = $dbh->prepare($sqlDetAt);
 $stmtDetAt->execute();
 
+  $dbhA = new Conexion();
+  $sqlA="DELETE FROM simulaciones_servicios_atributosauditores where cod_simulacionservicioatributo in (SELECT codigo from simulaciones_servicios_atributos where cod_simulacionservicio=$codSimulacion)";
+  $stmtA = $dbhA->prepare($sqlA);
+  $stmtA->execute();
+
   while ($rowPreAt = $stmtDetAt->fetch(PDO::FETCH_ASSOC)) {
     $codigoDetAt=$rowPreAt['codigo'];
     $dbhA = new Conexion();
@@ -64,6 +70,8 @@ $stmtDetAt->execute();
   $sqlA="DELETE FROM simulaciones_servicios_atributos where cod_simulacionservicio=$codSimulacion";
   $stmtA = $dbhA->prepare($sqlA);
   $stmtA->execute();
+
+
   
   //simulaciones_serviciosauditores
           $nC=cantidadF($atributos);
@@ -84,6 +92,7 @@ $stmtDetAt->execute();
               VALUES ('$codSimulacionServicioAtributo','$codSimulacion', '$nombreAtributo', '$direccionAtributo', '$tipo_atributo','$marcaAtributo','$normaAtributo','$selloAtributo','$paisAtributo','$estadoAtributo','$ciudadAtributo')";
               $stmtDetalleAtributos = $dbh->prepare($sqlDetalleAtributos);
               $stmtDetalleAtributos->execute();
+
             if($_POST['tcs']==0){
                 //$direccionAtributo="";
               $normasFila=explode(",",$normaCodAtributo);
@@ -106,27 +115,33 @@ $stmtDetAt->execute();
                         VALUES ('$codSimulacionServicioAtributo', '$diasAtributoDias', '$anioAtributoDias')";
                         $stmtDetalleAtributos = $dbh->prepare($sqlDetalleAtributos);
                         $stmtDetalleAtributos->execute();
-                        $sqlDetalleAu="UPDATE simulaciones_servicios_atributosauditores SET estado=0 where cod_simulacionservicioatributo=$codSimulacionServicioAtributo and cod_anio=$anioAtributoDias";
+                        /*$sqlDetalleAu="UPDATE simulaciones_servicios_atributosauditores SET estado=0 where cod_simulacionservicioatributo=$codSimulacionServicioAtributo and cod_anio=$anioAtributoDias";
                         $stmtDetalleAu = $dbh->prepare($sqlDetalleAu);
-                        $stmtDetalleAu->execute();
-                        if(obtenerEntradaSimulacionServicio($codSimulacion)==1){
+                        $stmtDetalleAu->execute();*/
                          //aumentar dias a los auditores
                          for ($al=0; $al < count($auditoresDias[$jj]); $al++) { 
-                          $codigoAuditor=$auditoresDias[$jj][$al];
-                          $cantidadDiasAnterior=obtenerDiasAuditorSimulacionServicio($codigoAuditor);
-                          $cantidadDiasNuevo=$cantidadDiasAnterior+$diasAtributoDias;
-                          $sqlDetallesAuditores="UPDATE simulaciones_servicios_auditores SET dias=$cantidadDiasNuevo where codigo=$codigoAuditor";
-                          $stmtDetallesAuditores = $dbh->prepare($sqlDetallesAuditores);
-                          $stmtDetallesAuditores->execute();
-
-                          $sqlDetalleAu="UPDATE simulaciones_servicios_atributosauditores SET estado=1 where cod_simulacionservicioatributo=$codSimulacionServicioAtributo and cod_anio=$anioAtributoDias and cod_auditor=$codigoAuditor";
-                          $stmtDetalleAu = $dbh->prepare($sqlDetalleAu);
-                          $stmtDetalleAu->execute();
+                          $valorAuditorDia=explode("####",$auditoresDias[$jj][$al]);
+                          $codigoAuditor=$valorAuditorDia[0];    
+                          if($valorAuditorDia[1]=="SI"){
+                             $sqlDetalleAtributosAud="INSERT INTO simulaciones_servicios_atributosauditores (cod_simulacionservicioatributo, cod_auditor, cod_anio,estado) 
+                             VALUES ('$codSimulacionServicioAtributo', '$codigoAuditor', '$anioAtributoDias',1)";
+                             $stmtDetalleAtributosAud = $dbh->prepare($sqlDetalleAtributosAud);
+                             $stmtDetalleAtributosAud->execute();  
+                          }else{
+                             $sqlDetalleAtributosAud="INSERT INTO simulaciones_servicios_atributosauditores (cod_simulacionservicioatributo, cod_auditor, cod_anio,estado) 
+                             VALUES ('$codSimulacionServicioAtributo', '$codigoAuditor', '$anioAtributoDias',0)";
+                             $stmtDetalleAtributosAud = $dbh->prepare($sqlDetalleAtributosAud);
+                             $stmtDetalleAtributosAud->execute();
+                          }
+                          if(obtenerEntradaSimulacionServicio($codSimulacion)==1){
+                            $cantidadDiasAnterior=obtenerDiasAuditorSimulacionServicio($codigoAuditor);
+                            $cantidadDiasNuevo=$cantidadDiasAnterior+$diasAtributoDias; 
+                            $sqlDetallesAuditores="UPDATE simulaciones_servicios_auditores SET dias=$cantidadDiasNuevo where codigo=$codigoAuditor";
+                            $stmtDetallesAuditores = $dbh->prepare($sqlDetallesAuditores);
+                            $stmtDetallesAuditores->execute();
+                          }
                           echo $sqlDetallesAuditores;
                          }
-                        }
-
-                  
                        }           
                     }
               }         
