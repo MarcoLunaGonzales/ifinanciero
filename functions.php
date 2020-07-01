@@ -5685,6 +5685,16 @@ function obtenerCodigoServicioPorIdServicio($idServicio){
    return($valor);
 }
 
+function obtenerServicioPorPropuesta($simulacion){
+   $dbh = new ConexionIBNORCA();
+   $stmt = $dbh->prepare("SELECT idServicio FROM simulaciones_servicios where codigo=$simulacion");
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['idServicio'];
+   }
+   return($valor);
+}
 
 function descripcionClaServicio($codigo){
    $dbh = new Conexion();

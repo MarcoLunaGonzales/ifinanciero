@@ -3,7 +3,6 @@ set_time_limit(0);
 session_start();
 require_once '../conexion.php';
 require_once '../functionsGeneral.php';
-require_once '../functionsPOSIS.php';
 require_once '../functions.php';
 require_once '../styles.php';
 
@@ -246,11 +245,13 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             while ($row_cuentas = $stmt_cuentas->fetch(PDO::FETCH_ASSOC)) {
                $tipoSim=obtenerValorConfiguracion(13);
                $mesActual=date("m");
-               if($tipoSim==1){
-                $monto=ejecutadoEgresosMes($grupoUnidad,((int)$anio-1),12,$grupoArea,1,$row_cuentas['numero']);
-                $monto=($monto/12);
+                $valorConfiguracionTCPTCS=obtenerValorConfiguracion(52);
+               if($valorConfiguracionTCPTCS!=1){
+                $monto=ejecutadoEgresosMes(0,$anio,12,$grupoArea,0,$row_cuentas['numero']);
+                //$monto=($monto/12);
                }else{
-                $monto=ejecutadoEgresosMes($grupoUnidad,((int)$anio-1),$mesActual,$grupoArea,0,$row_cuentas['numero']);
+                $monto=ejecutadoEgresosMes($grupoUnidad,$anio,$mesActual,$grupoArea,1,$row_cuentas['numero']);
+                //$monto=ejecutadoEgresosMes($grupoUnidad,((int)$anio-1),$mesActual,$grupoArea,0,$row_cuentas['numero']);
                }
                 
                 if($monto==null){$monto=0;}
@@ -315,7 +316,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 }
     if($tipoCosto==1){
            $html.='<tr class="bg-plomo">'.
-                      '<td class="font-weight-bold text-left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Total Variables</td>'.
+                      '<td class="font-weight-bold text-left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Total Fijos</td>'.
                       '<td class="text-right text-muted font-weight-bold">'.number_format($montoTotalesPresupuesto, 2, '.', ',').'</td>'.
                       '<td class="text-right text-muted font-weight-bold">'.number_format($montoTotales, 2, '.', ',').'</td>'.
                       '<td class="text-right text-muted font-weight-bold">'.number_format($montoTotales/$usd, 2, '.', ',').'</td>';
