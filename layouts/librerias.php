@@ -260,7 +260,7 @@
             },
             "ordering": false
         } ).on("draw", function(){
-           $('.card-footer ').bootstrapMaterialDesign();
+           $('.card-footer').bootstrapMaterialDesign();
         });
         $('#tablePaginatorHead').DataTable( {
             "language": {
