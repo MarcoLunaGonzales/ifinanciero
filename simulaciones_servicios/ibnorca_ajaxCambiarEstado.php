@@ -22,6 +22,11 @@ $estado=$_GET["estado"];
 $iEstado=obtenerEstadoIfinancieroPropuestas($estado);
 $fechaHoraActual=date("Y-m-d H:i:s");
 
+if(obtenerServicioPorPropuesta($codigo)!=0){
+  $iEstado=5;
+  $estado=2718;
+}
+
 $sqlUpdate="UPDATE simulaciones_servicios SET  cod_estadosimulacion=$iEstado where codigo=$codigo";
 $stmtUpdate = $dbh->prepare($sqlUpdate);
 $flagSuccess=$stmtUpdate->execute();
@@ -32,7 +37,7 @@ $id_perfil=$_GET["id_perfil"];
     $idTipoObjeto=2707;
     $idObjeto=$estado; //variable desde get
     $obs=$_GET['obs']; //$obs="Registro de propuesta";
-    if($id_perfil==0){
+  if($id_perfil==0){
     actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);
   }else{
     actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$id_perfil,$codigo,$fechaHoraActual,$obs);

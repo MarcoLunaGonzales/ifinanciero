@@ -27,6 +27,7 @@ $totalFilasCorrectas=0;
 $filasErroneas=0;
 $filasErroneasCampos=0;
 $filasErroneasFechas=0;
+$filaArchivo=0;
 $listaFilasFechas=[];
 $listaFilasCampos=[];
 if($tipo_cargado==2){
@@ -47,7 +48,9 @@ $sqlInserts=[];
         for($i=0;$i<$sheetCount;$i++){         
         $Reader->ChangeSheet($i);
         $validacionFila=1;
-            foreach ($Reader as $Row){ 
+           foreach ($Reader as $Row){ 
+             if ($filaArchivo>0){
+
             	if($index==0){
             		// Prepare
                 	$sqlRegistro="INSERT INTO libretas_bancariasregistro (codigo,fecha,cod_personal,observaciones,cod_estadoreferencial) 
@@ -178,7 +181,9 @@ $sqlInserts=[];
                   $filasErroneasCampos++;
                   $filasErroneas++;
                 }
-             }
+              } //fin de if  
+                $filaArchivo++;
+           }//fin foreach
         
          }//fin for
   }
@@ -217,7 +222,7 @@ if($filasErroneas>0){
 }
 
 function verificarFecha($x) {
-    if (date('d-m-Y', strtotime($x)) == $x) {
+    if (date('d-m-Y', strtotime($x)) == $x||date('d/m/Y', strtotime($x)) == $x) {
       return true;
     } else {
       return false;

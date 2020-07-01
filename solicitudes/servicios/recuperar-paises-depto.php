@@ -8,15 +8,15 @@ $sKey = "ce94a8dabdf0b112eafa27a5aa475751";
 
 /*PARAMETROS PARA LA OBTENCION DE LISTADOS*/
 // cambiar esta linea por las demas opciones
-	$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "TipoLista"=>"paises"); //Lista todos los paises
+	//$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "TipoLista"=>"paises"); //Lista todos los paises
 	//$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "TipoLista"=>"estados", "IdPais"=>"26"); // Lista de estados o departamentos de un pais x
-	//$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "TipoLista"=>"ciudades", "IdEstado"=>480); // Lista de las ciudades de un estado x
+	$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "TipoLista"=>"ciudades", "IdEstado"=>484); // Lista de las ciudades de un estado x
 
 		$parametros=json_encode($parametros);
 		// abrimos la sesión cURL
 		$ch = curl_init();
 		// definimos la URL a la que hacemos la petición
-		curl_setopt($ch, CURLOPT_URL,$direccion."clasificador/ws-paises.php"); // OFICIAL
+		curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibno/clasificador/ws-paises.php"); // OFICIAL
 		// curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibnob/clasificador/ws-paises.php"); // PRUEBA
 		// indicamos el tipo de petición: POST
 		curl_setopt($ch, CURLOPT_POST, TRUE);
