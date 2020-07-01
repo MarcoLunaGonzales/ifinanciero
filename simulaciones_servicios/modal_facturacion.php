@@ -441,8 +441,8 @@
         </div>
       </div>
       <div class="modal-footer">
-         <span style="color:  #e59866 ;"><i class="material-icons">check_box</i> registros contabilizados</span><br>
-         <span style="color:  #85929e;"><i class="material-icons">check_box</i> registros No contabilizados</span><br>
+         <span style="color:  #e59866 ;"><i class="material-icons">check_box</i> Registros Contabilizados</span><br>
+         <span style="color:  #85929e;"><i class="material-icons">check_box</i> Registros No Contabilizados</span><br>
       </div>
     </div>
   </div>

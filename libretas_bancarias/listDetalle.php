@@ -159,12 +159,12 @@ $stmtb->bindColumn('nombre', $nombre);
                               <!-- <button type="button"  title="Relacionar Con Factura" class="btn btn-warning" data-toggle="modal" data-target="#modallista_facturas" onclick="relacionar_factura_libreta(<?=$codigo?>)">
                                 <i class="material-icons">add_circle_outline</i>
                               </button> -->
-                              <a href="#" title="Relacionar Con Factura" onclick="relacionar_factura_libreta(<?=$codigo?>);return false;"  class="btn btn-warning">
+                              <a href="#" title="Relacionar Con Factura" onclick="relacionar_factura_libreta(<?=$codigo?>);return false;"  class="btn btn-success">
                                 <i class="material-icons">add_circle_outline</i>
                               </a>
-                              <a href="#" rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDeleteDetalle;?>&codigo=<?=$codigo;?>&c=<?=$codigoLibreta?>')">
+                              <!-- <a href="#" rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDeleteDetalle;?>&codigo=<?=$codigo;?>&c=<?=$codigoLibreta?>')">
                                 <i class="material-icons"><?=$iconDelete;?></i>
-                              </a>
+                              </a> -->
                               <?php
                               }
                               ?>
@@ -352,49 +352,55 @@ $stmtb->bindColumn('nombre', $nombre);
       </div>
       <div class="card-body">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-        <i class="material-icons">close</i>
-      </button>
-      <input type="hidden" name="cod_libretabancariadetalle" id="cod_libretabancariadetalle" value="0">
-        <table class="table table-condensed">
-          <thead>
-            <tr style="background:#21618C; color:#fff;">
-              <th>#</th>
-              <th>Fecha</th>
-              <th>N°</th>            
-              <th>Razón Social</th> 
-              <th>Nit</th>
-              <th>Importe</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <?php
-            $stmt = $dbh->prepare("SELECT codigo,fecha_factura,date_format(fecha_factura,'%d/%m/%Y') as fecha_x,razon_social,nit,nro_factura,importe,cod_libretabancariadetalle from facturas_venta order by codigo desc");
-            $stmt->execute();
-            $stmt->bindColumn('codigo', $codigo_x);
-            $stmt->bindColumn('fecha_x', $fecha_factura_x);
-            $stmt->bindColumn('razon_social', $razon_social_x);
-            $stmt->bindColumn('nit', $nit_x);
-            $stmt->bindColumn('nro_factura', $nro_factura_x);
-            $stmt->bindColumn('importe', $importe_x);
-            $stmt->bindColumn('cod_libretabancariadetalle', $cod_libretabancariadetalle_x);
-            $index=1;
-            while ($rowTC = $stmt->fetch(PDO::FETCH_BOUND)) {
-              $color_tr="";$label="btn btn-fab btn-success btn-sm";
-              if($cod_libretabancariadetalle_x){$color_tr="background-color:#f6ddcc;";$label="btn btn-fab btn-warning btn-sm";}
-              ?>
-              <tr style="<?=$color_tr?>">
-                <td align="text-center small"><?=$index;?></td>
-                <td align="text-center small"><?=$fecha_factura_x;?></td>
-                <td align="text-right small"><?=$nro_factura_x;?></td>
-                <td align="text-left small"><?=$razon_social_x;?></td>
-                <td align="text-right small"><?=$nit_x;?></td>
-                <td align="text-right small"><?=$importe_x;?></td>
-                <td class="td-actions text-right"><a href="#" style="padding: 0;font-size:10px;width:25px;height:25px;" onclick="seleccionar_Factura_relacion(<?=$codigo_x?>)" class="<?=$label?>" title="Seleccionar Factura"><i class="material-icons">done</i></a></td>
+          <i class="material-icons">close</i>
+        </button>
+        <input type="hidden" name="cod_libretabancariadetalle" id="cod_libretabancariadetalle" value="0">
+        <div class="table-responsive">
+          <table id="tablePaginator50" class="table table-condensed small">          
+            <thead>
+              <tr style="background:#21618C; color:#fff;">
+                <th>#</th>
+                <th>Fecha</th>
+                <th>N°</th>            
+                <th>Razón Social</th> 
+                <th>Nit</th>
+                <th>Importe</th>
+                <th></th>
               </tr>
-            <?php $index++;} ?>
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              <?php
+              $stmt = $dbh->prepare("SELECT codigo,fecha_factura,date_format(fecha_factura,'%d/%m/%Y') as fecha_x,razon_social,nit,nro_factura,importe,cod_libretabancariadetalle from facturas_venta order by codigo desc");
+              $stmt->execute();
+              $stmt->bindColumn('codigo', $codigo_x);
+              $stmt->bindColumn('fecha_x', $fecha_factura_x);
+              $stmt->bindColumn('razon_social', $razon_social_x);
+              $stmt->bindColumn('nit', $nit_x);
+              $stmt->bindColumn('nro_factura', $nro_factura_x);
+              $stmt->bindColumn('importe', $importe_x);
+              $stmt->bindColumn('cod_libretabancariadetalle', $cod_libretabancariadetalle_x);
+              $index=1;
+              while ($rowTC = $stmt->fetch(PDO::FETCH_BOUND)) {
+                $color_tr="";$label="btn btn-fab btn-success btn-sm";
+                if($cod_libretabancariadetalle_x){$color_tr="background-color:#f6ddcc;";$label="btn btn-fab btn-warning btn-sm";}
+                ?>
+                <tr style="<?=$color_tr?>">
+                  <td align="text-center small"><?=$index;?></td>
+                  <td align="text-center small"><?=$fecha_factura_x;?></td>
+                  <td align="text-right small"><?=$nro_factura_x;?></td>
+                  <td align="text-left small"><?=$razon_social_x;?></td>
+                  <td align="text-right small"><?=$nit_x;?></td>
+                  <td align="text-right small"><?=number_format($importe_x,2);?></td>
+                  <td class="td-actions text-right"><a href="#" style="padding: 0;font-size:10px;width:25px;height:25px;" onclick="seleccionar_Factura_relacion(<?=$codigo_x?>)" class="<?=$label?>" title="Seleccionar Factura"><i class="material-icons">done</i></a></td>
+                </tr>
+              <?php $index++;} ?>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+         <span style="color:   #ec7063 ;"><i class="material-icons">check_box</i> Facturas Relacionadas</span><br>
+         <!-- <span ><i class="material-icons">check_box</i> Facturas No Relacionadas</span><br> -->
       </div>
     </div>  
   </div>
