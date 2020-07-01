@@ -212,7 +212,6 @@ $stmtb->bindColumn('nombre', $nombre);
         </div>
     </div>
 
-
     <!-- small modal -->
 <div class="modal fade modal-arriba modal-primary" id="modalSubirArchivoExcel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-notice" style="max-width: 80% !important;">
@@ -261,9 +260,16 @@ $stmtb->bindColumn('nombre', $nombre);
                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                      $codigoX=$row['codigo'];
                      $nombreX=$row['nombre'];
-                   ?>
-                   <option value="<?=$codigoX;?>"><?=$nombreX;?></option>  
-                   <?php
+                     if($codigoX==2){
+                      ?>
+                     <option value="<?=$codigoX;?>" selected><?=$nombreX;?></option>  
+                      <?php
+                     }else{
+                      ?>
+                     <option value="<?=$codigoX;?>"><?=$nombreX;?></option>  
+                      <?php
+                     }
+                   
                      }
                      ?> 
                 </select>
