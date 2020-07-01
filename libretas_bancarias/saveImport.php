@@ -63,14 +63,56 @@ $sqlInserts=[];
                 $index++;
                 $fecha_hora = "";
                 if(isset($Row[0])) {
-                	if(verificarFecha(trim($Row[0]))==true){
-                     $fe=explode("-", $Row[0]);
+                  //echo ($Row[0]);
+                  $fechaFila=$Row[0]."";
+                  $fe=explode("-", $fechaFila);
+                  if(count($fe)==3){
+                    if(strlen($fe[2])==2){
+                      $fe[2]="20".$fe[2];
+                      $fechafilaAux=$fe[2]."-".$fe[0]."-".$fe[1];
+                    }else{
+                      $fechafilaAux=$fe[2]."-".$fe[1]."-".$fe[0];
+                    }
+                    
+                    if(verificarFecha(trim($fechafilaAux))==1){
+                       $fecha_hora=$fechafilaAux;
+                    }else{
+                      $verSi=1;
+                    }
+                  }else{
+                    $fe=explode("/", $fechaFila);
+                    if(count($fe)==3){
+                      if(strlen($fe[2])==2){
+                        $fe[2]="20".$fe[2];
+                        $fechafilaAux=$fe[2]."-".$fe[0]."-".$fe[1];
+                      }else{
+                        $fechafilaAux=$fe[2]."-".$fe[1]."-".$fe[0];
+                      }
+                      if(verificarFecha(trim($fechafilaAux))==1){
+                        $fecha_hora=$fechafilaAux;
+                      }else{
+                        $verSi=1;
+                      }
+                    }else{
+                      $verSi=1;
+                      $fechafilaAux=$fe[0]."-".$fe[1]."-".$fe[2];
+                      $fecha_hora=$fechafilaAux;
+                    }
+                  } 
+                	/*if(verificarFecha(trim($fechaFila))==1){
+                     $fe=explode("-", $fechaFila);
                      $fecha_hora=$fe[2]."-".$fe[1]."-".$fe[0];
                 	}else{
-                     $validacionFila=0; 
-                     $fe=explode("-", $Row[0]);
-                     $fecha_hora=$fe[2]."-".$fe[1]."-".$fe[0];
-                	}
+                    if(verificarFecha(trim($fechaFila))==2){
+                       $validacionFila=0; 
+                       $fe=explode("/", $fechaFila);
+                       $fecha_hora=$fe[2]."-".$fe[1]."-".$fe[0];
+                    }else{
+                      $validacionFila=0; 
+                       $verSi=1;
+                    }
+                     
+                	}*/
                 }
                 
                 $hora = "";
@@ -225,11 +267,11 @@ if($filasErroneas>0){
 }
 
 function verificarFecha($x) {
-    if (date('d-m-Y', strtotime($x)) == $x||date('d/m/Y', strtotime($x)) == $x) {
-      return true;
-    } else {
-      return false;
-    }
+    if (date('Y-m-d', strtotime($x)) == $x) {
+      return 1;
+    }else{
+      return 0;
+     } 
 }
 function verificarHora($x) {
     if (date('H:m:s', strtotime($x)) == $x) {
