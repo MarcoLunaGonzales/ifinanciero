@@ -31,7 +31,7 @@ if(isset($_GET['q'])){
   $r=$_GET['r'];  
 }
 // $unidadOrgString=implode(",", $cod_uo);
-$sql="SELECT aa.IdModulo, aa.IdCurso, aa.CiAlumno,DATE_FORMAT(aa.FechaInscripcion,'%d/%m/%Y')as FechaInscripcion_x, concat(cpe.clPaterno,' ',cpe.clMaterno,' ',cpe.clNombreRazon)as nombreAlumno, c.Abrev, c.Auxiliar,
+$sql="SELECT aa.IdModulo, aa.IdCurso,pc.idEmpresa, aa.CiAlumno,DATE_FORMAT(aa.FechaInscripcion,'%d/%m/%Y')as FechaInscripcion_x, concat(cpe.clPaterno,' ',cpe.clMaterno,' ',cpe.clNombreRazon)as nombreAlumno, c.Abrev, c.Auxiliar,
 pc.Costo, pc.CantidadModulos, m.NroModulo, pc.Nombre, m.IdTema
 FROM asignacionalumno aa, dbcliente.cliente_persona_empresa cpe, alumnocurso ac, clasificador c, programas_cursos pc, modulos m 
 where cpe.clIdentificacion=aa.CiAlumno 
@@ -108,6 +108,7 @@ $sql.=" GROUP BY IdCurso,cpe.clIdentificacion Order by pc.Nombre desc";
                   $stmtIBNO->bindColumn('IdModulo', $IdModulo);
                   $stmtIBNO->bindColumn('IdCurso', $IdCurso);
                   $stmtIBNO->bindColumn('CiAlumno', $CiAlumno);
+                  $stmtIBNO->bindColumn('idEmpresa', $idEmpresa);
                   $stmtIBNO->bindColumn('nombreAlumno', $nombreAlumno);
                   $stmtIBNO->bindColumn('Abrev', $descuento);
                   $stmtIBNO->bindColumn('Auxiliar', $Auxiliar);
@@ -123,37 +124,44 @@ $sql.=" GROUP BY IdCurso,cpe.clIdentificacion Order by pc.Nombre desc";
                     $monto_pagar=($Costo - ($Costo*$descuento/100) )/$CantidadModulos; //monto a pagar del estudiante 
                     $importe_curso=   $Costo*$descuento/100;//importe curso con desuento
                     $importe_curso= $Costo-$importe_curso;//importe curso con desuento       
-
-                    $cont_total_ws=0;
-                    $cont_total_pagados=0;
-                    $sw_aux=true;
-                    $verifica=verifica_pago_curso($IdCurso,$CiAlumno);
-                    // var_dump($verifica);
-                    if($verifica){
-                      foreach ($verifica->lstModulos as $listas) {
-                        $cont_total_ws++;
-                        $estadoPagado=$listas->EstadoPagado;              
-                        if($estadoPagado==1){
-                          $cont_total_pagados++;
+                    //verificamos si pertence a empresas
+                    if($idEmpresa==0){
+                      $cont_total_ws=0;
+                      $cont_total_pagados=0;
+                      $sw_aux=true;
+                      $verifica=verifica_pago_curso($IdCurso,$CiAlumno);
+                      // var_dump($verifica);
+                      if($verifica){
+                        foreach ($verifica->lstModulos as $listas) {
+                          $cont_total_ws++;
+                          $estadoPagado=$listas->EstadoPagado;              
+                          if($estadoPagado==1){
+                            $cont_total_pagados++;
+                          }
                         }
-                      }
-                      // echo $cont_total_ws."-".$cont_total_pagados;              
-                      if($cont_total_ws==$cont_total_pagados || $importe_curso==0){
-                        $estado="Pagado<br>total"; //pagado
-                        $btnEstado="btn-success";
+                        // echo $cont_total_ws."-".$cont_total_pagados;              
+                        if($cont_total_ws==$cont_total_pagados || $importe_curso==0){
+                          $estado="Pagado<br>total"; //pagado
+                          $btnEstado="btn-success";
+                        }else{
+                          $estado="Pendiente";//faltan algunos
+                          $btnEstado="btn-warning";
+                        }  
                       }else{
-                        $estado="Pendiente";//faltan algunos
-                        $btnEstado="btn-warning";
-                      }  
+                          $estado="Sin Servicio";//faltan algunos
+                          $btnEstado="btn-danger";
+                      }
+                      if($cont_total_ws==0 && $cont_total_pagados==0){
+                        $sw_aux=false;
+                        $estado="No Encontrado";//faltan algunos
+                        $btnEstado="btn-danger"; 
+                      }
                     }else{
-                        $estado="Sin Servicio";//faltan algunos
-                        $btnEstado="btn-danger";
-                    }
-                    if($cont_total_ws==0 && $cont_total_pagados==0){
                       $sw_aux=false;
-                      $estado="No Encontrado";//faltan algunos
+                      $estado="Facturación Por Empresa";//faltan algunos
                       $btnEstado="btn-danger"; 
                     }
+                    
                     //verificamos si ya tiene factura generada y esta activa                           
                     $stmtFact = $dbh->prepare("SELECT codigo from solicitudes_facturacion where tipo_solicitud=2 and cod_cliente=$CiAlumno and cod_simulacion_servicio=$IdCurso");
                     $stmtFact->execute();
@@ -229,7 +237,7 @@ $sql.=" GROUP BY IdCurso,cpe.clIdentificacion Order by pc.Nombre desc";
             <button type="submit" class="btn btn-primary">SOLICITAR FACTURACION GRUPAL</button>
             <?php
             if(isset($_GET['q'])){?>
-              <a href='<?=$urlSolicitudfactura?>&q=<?=$q?>&v=<?=$r?>&u=<?=$r?>&s=<?=$r?>' class="<?=$buttonCancel;?>"><i class="material-icons"  title="Volver Atrás">keyboard_return</i> Volver</a>
+              <a href='<?=$urlSolicitudfactura?>&q=<?=$q?>&r=<?=$r?>' class="<?=$buttonCancel;?>"><i class="material-icons"  title="Volver Atrás">keyboard_return</i> Volver</a>
               <?php }else{?>
                   <a href='<?=$urlSolicitudfactura?>' class="<?=$buttonCancel;?>"><i class="material-icons"  title="Volver Atrás">keyboard_return</i> Volver</a>                    
             <?php }                     

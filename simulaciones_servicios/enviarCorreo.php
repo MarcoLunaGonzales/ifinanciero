@@ -10,13 +10,13 @@ $nro_factura=$_POST['nro_factura'];
 $correo_destino=$_POST['correo_destino'];
 $listaCorreos=explode(",", $correo_destino);
 $correo_destino=trim($correo_destino,',');
-// echo $correo_destino;
-// $asunto=$_POST['asunto'];
-// $mensaje=$_POST['mensaje'];
 
 $fechaActual=date("Y-m-d H:m:s");
-$asunto="ENVIO FACTURA - IBNORCA";
-$mensaje="Estimado cliente,<br>\n<br>\n adjunto la Factura Nro. ".$nro_factura.".<br>\n<br>\nSaludos.";
+$asunto="Envío de Factura";
+$mensaje="Estimado Cliente,<br>\n<br>\n Adjunto la Factura Nro. ".$nro_factura.".<br>\n<br>\nSaludos.";
+// echo $correo_destino."<br>";
+// echo $asunto."<br>";
+// echo $mensaje."<br>";
 
 if($correo_destino==''||$asunto==''||$mensaje==''){
 	// echo "<script>alert('Los Campos marcados con * son obligatorios');location.href='javascript:history.back()';</script>";

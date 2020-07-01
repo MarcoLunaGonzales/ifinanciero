@@ -262,7 +262,13 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                 $nro_fact_x=trim($cadenaFacturas,',');
                               }
                               $cadenaFacturasM=trim($cadenaFacturasM,',');
-
+                              //datos para el envio de facturas
+                              $cod_factura=verificamosFacturaDuplicada($codigo_facturacion);//codigo de factura
+                              if($tipo_solicitud==2 || $tipo_solicitud==6 || $tipo_solicitud==7){
+                                $correos_string=obtenerCorreoEstudiante($cod_cliente);
+                              }else $correos_string=obtenerCorreosCliente($cod_cliente);
+                              $nro_factura=obtenerNroFactura($cod_factura);
+                              $datos_factura_envio=$cod_factura.'/'.$codigo_facturacion.'/'.$nro_factura.'/'.$correos_string.'/'.$razon_social;
                           ?>
                           <tr>
                             <!-- <td align="center"><?=$index;?></td> -->
@@ -284,6 +290,9 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                   if($codigo_fact_x>0){//print facturas
                                     if($cont_facturas<2){
                                       ?>
+                                      <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalEnviarCorreo" onclick="agregaformEnviarCorreo_solfac('<?=$datos_factura_envio;?>')">
+                                        <i class="material-icons" title="Enviar Correo">email</i>
+                                      </button>
                                       <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=2' target="_blank"><i class="material-icons" title="Imprimir Factura">print</i></a>          
                                       <a href="<?=$urlImp;?>?comp=<?=$cod_comprobante_x;?>&mon=1" target="_blank" class="btn" style="background-color:#3f33ff">
                                       <i class="material-icons" title="Imprimir Comprobante">print</i>
@@ -295,7 +304,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                         <div class="dropdown-menu"><?php 
                                           $arrayCodFacturas = explode(",",trim($cadenaCodFacturas,','));
                                           $arrayFacturas = explode(" - ",trim($cadenaFacturas,' - '));
-                                          for ($i=0; $i < $cont_facturas; $i++) { $cod_factura_x= $arrayCodFacturas[$i];$nro_factura_x= $arrayFacturas[$i];?>
+                                          for ($i=0; $i < $cont_facturas; $i++) { $cod_factura_x= $arrayCodFacturas[$i];$nro_factura_x= $arrayFacturas[$i];?>                                            
                                             <a class="dropdown-item" type="button" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$cod_factura_x;?>&tipo=1' target="_blank"><i class="material-icons text-success" title="Imprimir Factura">print</i> Factura <?=$i+1;?> - Nro <?=$nro_factura_x?></a>                                        
                                             <?php 
 
@@ -400,19 +409,18 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                 <div class="card-footer fixed-bottom">
                   <?php                 
                     if(isset($_GET['q'])){?>
-                      <a href="<?=$urlRegister_solicitudfacturacion_manual;?>&q=<?=$q?>&v=<?=$v?>&s=<?=$s?>&u=<?=$u?>" class="btn btn-primary">Solicitud Fact Manual</a>
-                      <a href="<?=$urlListSolicitud_facturacion_normas;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>" class="btn btn-warning">Solicitud Fact Normas</a>
+                      <a href="<?=$urlRegister_solicitudfacturacion_manual;?>&q=<?=$q?>&v=<?=$v?>&s=<?=$s?>&u=<?=$u?>" class="btn btn-primary">SF Manual</a>
+                      <a href="<?=$urlListSolicitud_facturacion_normas;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>" class="btn btn-warning">SF Normas</a>
 
-                      <a href="<?=$urlSolicitudfactura_estudiante;?>&q=<?=$q?>&r=<?=$s?>" class="btn btn-success">Solicitud Fact Estudiantes</a>
-                      <a href="<?=$urlSolicitudfactura_empresa;?>&q=<?=$q?>&r=<?=$s?>" class="btn btn-danger">Solicitud Fact Empresas</a>
+                      <a href="<?=$urlSolicitudfactura_estudiante;?>&q=<?=$q?>&r=<?=$s?>" class="btn btn-success">SF Estudiantes</a>
+                      <a href="<?=$urlSolicitudfactura_empresa;?>&q=<?=$q?>&r=<?=$s?>" class="btn btn-danger">SF Empresas</a>
 
                       <?php 
                     }else{?>
-                      <a href="<?=$urlRegister_solicitudfacturacion_manual;?>" class="btn btn-primary">Solicitud Fact Manual</a>
-                      <a href="<?=$urlListSolicitud_facturacion_normas;?>" class="btn btn-warning">Solicitud Fact Normas</a>
-
-                      <a href="<?=$urlSolicitudfactura_estudiante;?>" class="btn btn-success">Solicitud Fact Estudiantes</a>
-                      <a href="<?=$urlSolicitudfactura_empresa;?>" class="btn btn-danger">Solicitud Fact Empresas</a>
+                      <a href="<?=$urlRegister_solicitudfacturacion_manual;?>" class="btn btn-primary">SF Manual</a>
+                      <a href="<?=$urlListSolicitud_facturacion_normas;?>" class="btn btn-warning">SF Normas</a>
+                      <a href="<?=$urlSolicitudfactura_estudiante;?>" class="btn btn-success">SF Estudiantes</a>
+                      <a href="<?=$urlSolicitudfactura_empresa;?>" class="btn btn-danger">SF Empresas</a>
 
                       <?php 
                     }              
@@ -428,6 +436,29 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
 <!-- para modal -->
 <script type="text/javascript">
   $(document).ready(function(){
+    $('#EnviarCorreo').click(function(){    
+      codigo_facturacion=document.getElementById("codigo_facturacion_sf").value;
+      cod_solicitudfacturacion=document.getElementById("cod_solicitudfacturacion_sf").value;
+      nro_factura=document.getElementById("nro_factura_sf").value;
+      correo_copia=$('#correo_copia').val();
+      if(correo_copia!=""){
+        correo_destino=$('#correo_destino_sf').val()+","+correo_copia;
+      }else{
+        correo_destino=$('#correo_destino_sf').val();        
+      } 
+      
+      // asunto=$('#asunto').val();
+      // mensaje=$('#mensaje').val();
+      asunto=null;
+      mensaje=null;
+      if(correo_destino==null || correo_destino == "" ||correo_destino == 0){
+        // alert("Por Favor Agregue Un correo para el envío de la Factura!");
+        Swal.fire("Informativo!", "Por Favor Agregue Un correo válido para el envío de la Factura!", "warning");
+      }else{
+        EnviarCorreoAjaxSolFac(codigo_facturacion,nro_factura,cod_solicitudfacturacion,correo_destino,asunto,mensaje);  
+      }
+      
+    });
     $('#rechazarSolicitud').click(function(){      
       var cod_solicitudfacturacion=document.getElementById("cod_solicitudfacturacion").value;
       var estado=document.getElementById("estado").value;
