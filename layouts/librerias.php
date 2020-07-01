@@ -243,6 +243,7 @@
   <!--DEFINIMOS EL DATATABLE PARA LA ORDENACION Y PAGINACION-->
   <script type="text/javascript">
     $(document).ready(function() {
+
         $('#tablePaginator').DataTable( {
             "language": {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
@@ -259,9 +260,8 @@
               footer: true
             },
             "ordering": false
-        } ).on("draw", function(){
-           $('.card-footer').bootstrapMaterialDesign();
-        });
+        } );
+        
         $('#tablePaginatorHead').DataTable( {
             "language": {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"

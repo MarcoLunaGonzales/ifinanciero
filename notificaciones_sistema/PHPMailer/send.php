@@ -57,10 +57,6 @@ function sendemailFiles($mail_username,$mail_userpassword,$mail_setFromEmail,$ma
 	    require 'PHPMailer/src/SMTP.php';
 	}   
 	//recibimos correos
-	
-
-
-
 	$mail = new PHPMailer;
 	$mail->isSMTP();                            // Establecer el correo electrónico para utilizar SMTP
 	$mail->Host = 'smtp.gmail.com';             // Especificar el servidor de correo a utilizar 
