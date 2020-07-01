@@ -77,7 +77,7 @@ $tipo_listado=$_GET['tipo_listado'];
               if($tipo_listado==1 || $saldo>0){//todo ?>
                 <tr style="<?=$color_aux?>">
                   <td class="libretaDetalles_<?=$j?> small" align="center"><?=$index;?></td>
-                  <td class="libretaDetalles_<?=$j?> text-center small"><span style="padding:0px;border: 0px;"><?=strftime('%d/%m/%Y',strtotime($FechaHoraCompleta))?><br><?=strftime('%H:%M:%S',strtotime($FechaHoraCompleta))?></span></td>           
+                  <td class="libretaDetalles_<?=$j?> text-center small"><span style="padding:0px;border: 0px;"><?=$Fecha?><br><?=$Hora?></span></td>           
                   <td class="libretaDetalles_<?=$j?> text-left ">
                     <small><small><?=$Descripcion." ".$InformacionComplementaria?></small></small>
                   </td>
