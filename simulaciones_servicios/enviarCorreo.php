@@ -39,8 +39,8 @@ if($correo_destino==''||$asunto==''||$mensaje==''){
 		// $rutaArchivo = opendir("simulaciones_servicios/facturas/".$nom.".pdf"); //ruta actual
 		$rutaArchivo=$dir.$nom;
 		$nombreArchivo = $nom; //
-		$mail_username="noresponse@minkasoftware.com";//Correo electronico emisor
-		$mail_userpassword="minka@2019";// contraseña correo emisor
+		$mail_username="";//Correo electronico emisor
+		$mail_userpassword="";// contraseña correo emisor
 		$mail_addAddress=$correo_destino;//correo electronico destino
 		$template="../notificaciones_sistema/PHPMailer/email_template.html";//Ruta de la plantilla HTML para enviar nuestro mensaje
 		/*Inicio captura de datos enviados por $_POST para enviar el correo */

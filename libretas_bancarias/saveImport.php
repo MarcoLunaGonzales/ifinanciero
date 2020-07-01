@@ -186,6 +186,9 @@ $sqlInserts=[];
            }//fin foreach
         
          }//fin for
+
+         //eliminarArchivo
+         unlink($targetPath);
   }
   else
   { 

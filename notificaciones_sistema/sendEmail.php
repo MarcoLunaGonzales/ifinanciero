@@ -16,8 +16,8 @@ $mensaje=$_GET['mensaje'];
 $dbhB = new Conexion();
  
     
-    $mail_username="noresponse@minkasoftware.com";//Correo electronico saliente ejemplo: tucorreo@gmail.com
-	$mail_userpassword="minka@2019";//Tu contraseña de gmail
+    $mail_username="";//Correo electronico saliente ejemplo: tucorreo@gmail.com
+	$mail_userpassword="";//Tu contraseña de gmail
 	$mail_addAddress=$correo;//correo electronico que recibira el mensaje
 	$template="PHPMailer/email_template.html";//Ruta de la plantilla HTML para enviar nuestro mensaje
 				
