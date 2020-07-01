@@ -62,10 +62,10 @@ function sendemailFiles($mail_username,$mail_userpassword,$mail_setFromEmail,$ma
 
 	$mail = new PHPMailer;
 	$mail->isSMTP();                            // Establecer el correo electrónico para utilizar SMTP
-	$mail->Host = 'mail.minkasoftware.com';             // Especificar el servidor de correo a utilizar 
+	$mail->Host = 'smtp.gmail.com';             // Especificar el servidor de correo a utilizar 
 	$mail->SMTPAuth = true;                     // Habilitar la autenticacion con SMTP
-	$mail->Username = $mail_username;          // Correo electronico saliente ejemplo: tucorreo@gmail.com
-	$mail->Password = $mail_userpassword; 		// Tu contraseña de gmail
+	$mail->Username = 'ibnored@ibnorca.org';          // Correo electronico saliente ejemplo: tucorreo@gmail.com
+	$mail->Password = 'r3d1bn0na'; 		// Tu contraseña de gmail
 	$mail->SMTPSecure = 'tls';                  // Habilitar encriptacion, `ssl` es aceptada
 	$mail->Port = 587;                          // Puerto TCP  para conectarse 
 	$mail->setFrom($mail_setFromEmail, $mail_setFromName);//Introduzca la dirección de la que debe aparecer el correo electrónico. Puede utilizar cualquier dirección que el servidor SMTP acepte como válida. El segundo parámetro opcional para esta función es el nombre que se mostrará como el remitente en lugar de la dirección de correo electrónico en sí.
