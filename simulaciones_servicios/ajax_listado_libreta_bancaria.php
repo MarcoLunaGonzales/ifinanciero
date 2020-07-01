@@ -120,7 +120,7 @@ $tipo_listado=$_GET['tipo_listado'];
                       </td>
                       <td class="td-actions text-right libretaDetalles_<?=$j?>">
                         <?php
-                        if($monto>=$saldo_solfac){
+                        if($saldo>=$saldo_solfac){
                           if($cont_facturas==0)$label="btn btn-fab btn-success btn-sm";
                           else $label="btn btn-fab btn-warning btn-sm";
                           ?><a href="#" style="padding: 0;font-size:10px;width:25px;height:25px;" onclick="seleccionar_libretaBancaria(<?=$CodLibretaDetalle?>)" class="<?=$label?>" title="Seleccionar Item"><i class="material-icons">done</i></a>

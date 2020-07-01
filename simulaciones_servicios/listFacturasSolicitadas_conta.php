@@ -16,7 +16,7 @@ $globalArea=$_SESSION["globalArea"];
 $globalAdmin=$_SESSION["globalAdmin"];
 //datos registrado de la simulacion en curso
 
-  $stmt = $dbh->prepare("SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')as fecha_registro_x,DATE_FORMAT(sf.fecha_solicitudfactura,'%d/%m/%Y')as fecha_solicitudfactura_x FROM solicitudes_facturacion sf join estados_solicitudfacturacion es on sf.cod_estadosolicitudfacturacion=es.codigo where cod_estadosolicitudfacturacion in (3,4,5) order by codigo desc");
+  $stmt = $dbh->prepare("SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')as fecha_registro_x,DATE_FORMAT(sf.fecha_solicitudfactura,'%d/%m/%Y')as fecha_solicitudfactura_x FROM solicitudes_facturacion sf join estados_solicitudfacturacion es on sf.cod_estadosolicitudfacturacion=es.codigo where cod_estadosolicitudfacturacion in (3,4) order by codigo desc");
 
   $stmt->execute();
   $stmt->bindColumn('codigo', $codigo_facturacion);
@@ -223,7 +223,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             $sumaTotalImporte=$sumaTotalMonto-$sumaTotalDescuento_bob;
                             $cont[$index-1]=$nc;
                             $stringCabecera=$nombre_uo."##".$nombre_area."##".$nombre_simulacion."##".$name_area_simulacion."##".$fecha_registro."##".$fecha_solicitudfactura."##".$nit."##".$razon_social;
-                            if($importe_fact_x!=$sumaTotalImporte && $cod_estado_factura_x!=4){ //para los items de la factura a pagos
+                            // if($importe_fact_x!=$sumaTotalImporte && $cod_estado_factura_x!=4){ //para los items de la factura a pagos
                               ?>
                               <script>var nfac=[];itemGenerar_factura_parcial.push(nfac);</script>
                               <?php
@@ -393,9 +393,9 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                   ?>
                                 </td>
                               </tr>
-                            <?php }else{
-                              $index--;
-                            }
+                            <?php //}else{
+                            //   $index--;
+                            // }
                             ?>                        
                           <?php
                               $index++;
