@@ -421,11 +421,12 @@
         <div class="card-text">
           <h4>Libreta Bancaria <div id="contenedor_cabecera_libreta_bancaria"></div></h4>      
         </div>
-        <button title="filtrar todo" onclick="ajax_listado_libreta_bancaria_filtrar()" type="button" class="btn btn-warning btn-sm btn-fab float-right" >
-          <i class="material-icons">list</i>
-        </button>
-        <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
+        
+        <button title="Cerrar" type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
           <i class="material-icons">close</i>
+        </button>
+        <button title="Listar todo" onclick="ajax_listado_libreta_bancaria_filtrar()" type="button" class="btn btn-warning btn-sm btn-fab float-right" >
+          <i class="material-icons">list</i>
         </button>
       </div>
       <div class="card-body">

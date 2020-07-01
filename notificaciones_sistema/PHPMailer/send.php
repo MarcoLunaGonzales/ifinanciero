@@ -95,7 +95,15 @@ function sendemailFiles($mail_username,$mail_userpassword,$mail_setFromEmail,$ma
 	$message = str_replace('{{customer_email}}', $mail_setFromEmail, $message);
 	$mail->isHTML(true);  // Establecer el formato de correo electrónico en HTML
 	
-	$mail->Subject = $mail_subject;
+
+	$subject = $mail_subject;
+	$subject = utf8_decode($subject);
+	$mail->Subject = $subject;
+	// $mail->Subject = $mail_subject;
+	$mail->CharSet = 'UTF-8';
+
+
+
 	$mail->msgHTML($message);
 
 	if(!$mail->send()){
