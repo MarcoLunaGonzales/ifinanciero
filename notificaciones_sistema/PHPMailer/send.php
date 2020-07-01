@@ -41,7 +41,15 @@ function sendemail($mail_username,$mail_userpassword,$mail_setFromEmail,$mail_se
 	$message = str_replace('{{customer_email}}', $mail_setFromEmail, $message);
 	$mail->isHTML(true);  // Establecer el formato de correo electrónico en HTML
 	
-	$mail->Subject = $mail_subject;
+	// $mail->Subject = $mail_subject;
+	$subject = $mail_subject;
+	$subject = utf8_decode($subject);
+	$mail->Subject = $subject;
+	// $mail->Subject = $mail_subject;
+	$mail->CharSet = 'UTF-8';
+
+
+	
 	$mail->msgHTML($message);
 
 	if(!$mail->send()){
@@ -94,13 +102,21 @@ function sendemailFiles($mail_username,$mail_userpassword,$mail_setFromEmail,$ma
 	$message = str_replace('{{customer_email}}', $mail_setFromEmail, $message);
 	$mail->isHTML(true);  // Establecer el formato de correo electrónico en HTML
 	
+	$subject = $mail_subject;
+	$subject = utf8_decode($subject);
+	$mail->Subject = $subject;
+	// $mail->Subject = $mail_subject;
+	$mail->CharSet = 'UTF-8';
 
-	$mail->Subject = $mail_subject;
+
+
+	// $mail->Subject = $mail_subject;
 	$mail->msgHTML($message);
 
 	if(!$mail->send()){
       // echo 'Message could not be sent.';
-	  echo 'Mailer Error: ' . $mail->ErrorInfo;
+	  // echo 'Mailer Error: ' . $mail->ErrorInfo;
+		return 0;
 	}else{
 	  return 1;
 	}
