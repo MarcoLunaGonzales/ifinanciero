@@ -144,7 +144,7 @@ $sql.=" order by pc.IdCurso desc";
           <div class="card-footer fixed-bottom">            
             <?php
             if(isset($_GET['q'])){?>
-              <a href='<?=$urlSolicitudfactura_empresas?>&q=<?=$q?>&v=<?=$r?>&u=<?=$r?>&s=<?=$r?>' class="<?=$buttonCancel;?>"><i class="material-icons"  title="Volver Atrás">keyboard_return</i> Volver</a>
+              <a href='<?=$urlSolicitudfactura_empresas?>&q=<?=$q?>&r=<?=$r?>' class="<?=$buttonCancel;?>"><i class="material-icons"  title="Volver Atrás">keyboard_return</i> Volver</a>
               <?php }else{?>
                   <a href='<?=$urlSolicitudfactura_empresas?>' class="<?=$buttonCancel;?>"><i class="material-icons"  title="Volver Atrás">keyboard_return</i> Volver</a>                    
             <?php }                     

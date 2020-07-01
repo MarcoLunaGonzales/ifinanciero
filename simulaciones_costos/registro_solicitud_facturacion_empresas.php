@@ -31,6 +31,7 @@ $nombre_curso = $resultNombreCurso['Nombre'];
 $cod_uo = $resultNombreCurso['IdOficina'];
 $cantidadModulos = $resultNombreCurso['CantidadModulos'];
 $Costo = $resultNombreCurso['Costo']/$cantidadModulos;
+$Costo = number_format($Costo, 2, '.', '');
 // $monto_modulos=$Costo/$cantidadModulos;
 
 $nombre_cliente=nameCliente($cod_empresa);
@@ -65,8 +66,8 @@ if($cod_facturacion>0){//editar
     $cod_tipopago=null;
     $persona_contacto= null;
     $cod_tipoobjeto=212;//por defecto}
-    if(isset($_POST['q'])){
-        $cod_personal=$_POST['q'];
+    if(isset($_GET['q'])){
+        $cod_personal=$_GET['q'];
     }else{
         $cod_personal= $globalUser;
     }

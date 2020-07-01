@@ -7524,6 +7524,62 @@ function obtenerDatosContactoSolFac($codigo){
   }
   return($valor);
 }
+function obtenerCorreosCliente($cod_cliente){
+  $dbh = new Conexion();
+  $sqlCorreo="SELECT correo from clientes_contactos where correo!='null' and cod_cliente=$cod_cliente";
+  // echo $sqlCorreo;
+  $stmtCorreos = $dbh->prepare($sqlCorreo);
+  $stmtCorreos->execute();
+  $stmtCorreos->bindColumn('correo', $correo);
+  $correos_string= '';                            
+  while ($row = $stmtCorreos->fetch(PDO::FETCH_BOUND)) {
+    if($correos_string!=null || $correos_string!='' || $correos_string!=' '){
+      $correos_string.=$correo.',';
+    }
+  }
+  return($correos_string);
+}
+function obtenerCorreoEstudiante($ci_estudiante){
+  $dbh = new Conexion();
+  $sqlCorreo="SELECT c.clCorreo as correo from dbcliente.cliente_persona_empresa c where correo!='null' and clIdentificacion=$ci_estudiante";
+  // echo $sqlCorreo;
+  $stmtCorreos = $dbh->prepare($sqlCorreo);
+  $stmtCorreos->execute();
+  $stmtCorreos->bindColumn('correo', $correo);
+  $correos_string= '';                            
+  while ($row = $stmtCorreos->fetch(PDO::FETCH_BOUND)) {
+    if($correos_string!=null || $correos_string!='' || $correos_string!=' '){
+      $correos_string.=$correo.',';
+    }
+  }
+  return($correos_string);
+}
+function obtenerTipoSolicitud($codigo){
+  $dbh = new Conexion();
+  $sql="SELECT s.tipo_solicitud from solicitudes_facturacion s where s.codigo=$codigo";
+  // echo $sql;
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  $stmt->bindColumn('tipo_solicitud', $tipo_solicitud);
+  $valor= '';
+  while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+    $valor=$tipo_solicitud;
+  }
+  return($valor);
+}
+function obtenerNroFactura($codigo){
+  $dbh = new Conexion();
+  $sql="SELECT s.nro_factura from facturas_venta s where s.codigo=$codigo";
+  // echo $sql;
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  $stmt->bindColumn('nro_factura', $nro_factura);
+  $valor= '';
+  while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+    $valor=$nro_factura;
+  }
+  return($valor);
+}
 
 ?>
 
