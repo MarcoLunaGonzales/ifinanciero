@@ -13,17 +13,16 @@ $dbh = new Conexion();
 $dbhIBNO = new ConexionIBNORCA();
 $globalUser=$_SESSION["globalUser"];
 
-
+set_time_limit(0);
 //recibimos las normas seleccionadas a facturar
-if(isset($_GET['q'])){
-  $q=$_GET['q'];
-  $r=$_GET['r'];  
+if(isset($_POST['q'])){
+  $q=$_POST['q'];
+  $r=$_POST['r'];  
 }
 if(isset($_GET['cod_sw'])){//para la parte de editar
     $stringCi=$_GET['codigo_ci'];
     $stringCurso=$_GET['IdCurso'];
     $cod_facturacion=$_GET['cod_facturacion'];
-    
 }else{
     $total_items = $_POST["total_items"];
     $cod_simulacion=0;
@@ -110,7 +109,7 @@ $contadorRegistros=0;
             <div class="col-md-12">
             <form id="formSoliFactNormas" class="form-horizontal" action="<?=$urlSave_solicitud_facturacion_costos_grupal_estudiantes;?>" method="post" onsubmit="return valida(this)" enctype="multipart/form-data">
                 <?php                   
-                if(isset($_GET['q'])){?>
+                if(isset($_POST['q'])){?>
                     <input type="hidden" name="q" id="q" value="<?=$q?>">
                     <input type="hidden" name="r" id="r" value="<?=$r?>">
                 <?php }?>

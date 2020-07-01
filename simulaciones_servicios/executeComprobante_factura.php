@@ -10,7 +10,7 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$nro_factura,$co
 	set_time_limit(3000);
 	// session_start();
 	try{    	
-		$stmtCajaChica = $dbh->prepare("SELECT cod_unidadorganizacional,cod_area,observaciones,codigo_alterno,razon_social from solicitudes_facturacion where codigo=$cod_solicitudfacturacion");
+		$stmtCajaChica = $dbh->prepare("SELECT cod_unidadorganizacional,cod_area,observaciones,codigo_alterno,razon_social,tipo_solicitud from solicitudes_facturacion where codigo=$cod_solicitudfacturacion");
 	    $stmtCajaChica->execute();
 	    $resultCCD = $stmtCajaChica->fetch();
 	    $cod_uo_solicitud = $resultCCD['cod_unidadorganizacional'];    
@@ -18,6 +18,7 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$nro_factura,$co
 	    $observaciones_solicitud = $resultCCD['observaciones'];    
 	    $codigo_alterno = $resultCCD['codigo_alterno'];    
 	    $razon_social = $resultCCD['razon_social'];
+	    $tipo_solicitud = $resultCCD['tipo_solicitud'];
 		//datos para el comprbant
 		$globalUser=$_SESSION["globalUser"];
 		$mesTrabajo=$_SESSION['globalMes'];

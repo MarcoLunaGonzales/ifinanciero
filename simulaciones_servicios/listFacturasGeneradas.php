@@ -70,17 +70,10 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             
                             $cliente=nameCliente($cod_cliente);
                             //correos de contactos
-                            $sqlCorreo="SELECT correo from clientes_contactos where correo!='null' and cod_cliente=$cod_cliente";
-                            // echo $sqlCorreo;
-                            $stmtCorreos = $dbh->prepare($sqlCorreo);
-                            $stmtCorreos->execute();
-                            $stmtCorreos->bindColumn('correo', $correo);
-                            $correos_string= '';                            
-                            while ($row = $stmtCorreos->fetch(PDO::FETCH_BOUND)) {
-                              if($correos_string!=null || $correos_string!='' || $correos_string!=' '){
-                                $correos_string.=$correo.',';
-                              }
-                            }
+                            $tipo_solicitud=obtenerTipoSolicitud($cod_solicitudfacturacion);
+                            if($tipo_solicitud==2 || $tipo_solicitud==6 || $tipo_solicitud==7){
+                              $correos_string=obtenerCorreoEstudiante($cod_cliente);
+                            }else $correos_string=obtenerCorreosCliente($cod_cliente);                            
                             //colores de estados
                             switch ($cod_estadofactura) {
                               case 1://activo
