@@ -184,8 +184,8 @@ $stmtb->bindColumn('nombre', $nombre);
               ?>
       				<div class="card-footer fixed-bottom">
                 <button class="<?=$buttonCancel;?>" onClick="location.href='<?=$urlList;?>'">Volver</button>
-                <div class="btn-group dropdown">
-                      <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <div class="btn-group dropright">
+                      <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="false" aria-expanded="false">
                         Cargar Libreta desde Excel
                       </button>
                       <div class="dropdown-menu">

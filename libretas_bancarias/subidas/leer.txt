@@ -1,0 +1,1 @@
+Carpeta donde se guardan archivos temporales para el cargado del excel en libretas

@@ -7310,7 +7310,7 @@ function obtenerDetalleFactura($codigo){
 
 function obtenerCorreosInstanciaEnvio($codigo){
   $dbh = new Conexion();
-  $stmt = $dbh->prepare("SELECT p.email_empresa,concat(p.primer_nombre,' ',p.otros_nombres,' ',p.paterno,' ',p.materno) as personal from instancias_envios_correos_detalle i join personal p on p.codigo=i.cod_personal where i.cod_instancia_envio=$codigo and p.email_empresa IS NOT NULL");
+  $stmt = $dbh->prepare("SELECT p.email_empresa,concat(p.primer_nombre,' ',p.otros_nombres,' ',p.paterno,' ',p.materno) as personal from instancias_envios_correos_detalle i join personal p on p.codigo=i.cod_personal where i.cod_instancia_envio=$codigo and p.email_empresa IS NOT NULL and i.cod_estadoreferencial=1");
   $stmt->execute();
   $datos=[];$datos2=[];
   $index=0;
