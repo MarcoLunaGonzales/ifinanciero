@@ -63,14 +63,55 @@ $sqlInserts=[];
                 $index++;
                 $fecha_hora = "";
                 if(isset($Row[0])) {
-                	if(verificarFecha(trim($Row[0]))==true){
-                     $fe=explode("-", $Row[0]);
+                  //echo ($Row[0]);
+                  $fechaFila=$Row[0]."";
+                  $fe=explode("-", $fechaFila);
+                  if(count($fe)==3){
+                    if(strlen($fe[2])==2){
+                      $fe[2]="20".$fe[2];
+                      $fechafilaAux=$fe[2]."-".$fe[0]."-".$fe[1];
+                    }else{
+                      $fechafilaAux=$fe[2]."-".$fe[1]."-".$fe[0];
+                    }
+                    
+                    if(verificarFecha(trim($fechafilaAux))==1){
+                       $fecha_hora=$fechafilaAux;
+                    }else{
+                      $verSi=1;
+                    }
+                  }else{
+                    $fe=explode("/", $fechaFila);
+                    if(count($fe)==3){
+                      if(strlen($fe[2])==2){
+                        $fe[2]="20".$fe[2];
+                        $fechafilaAux=$fe[2]."-".$fe[0]."-".$fe[1];
+                      }else{
+                        $fechafilaAux=$fe[2]."-".$fe[1]."-".$fe[0];
+                      }
+                      if(verificarFecha(trim($fechafilaAux))==1){
+                        $fecha_hora=$fechafilaAux;
+                      }else{
+                        $verSi=1;
+                      }
+                    }else{
+                      $verSi=1;
+                      $fechaFila="";
+                    }
+                  } 
+                	/*if(verificarFecha(trim($fechaFila))==1){
+                     $fe=explode("-", $fechaFila);
                      $fecha_hora=$fe[2]."-".$fe[1]."-".$fe[0];
                 	}else{
-                     $validacionFila=0; 
-                     $fe=explode("-", $Row[0]);
-                     $fecha_hora=$fe[2]."-".$fe[1]."-".$fe[0];
-                	}
+                    if(verificarFecha(trim($fechaFila))==2){
+                       $validacionFila=0; 
+                       $fe=explode("/", $fechaFila);
+                       $fecha_hora=$fe[2]."-".$fe[1]."-".$fe[0];
+                    }else{
+                      $validacionFila=0; 
+                       $verSi=1;
+                    }
+                     
+                	}*/
                 }
                 
                 $hora = "";
@@ -96,23 +137,23 @@ $sqlInserts=[];
 
                 $descripcion = "";
                 if(isset($Row[3])&&$tipo_formato==1) {
-                    $descripcion = $Row[3];
+                    $descripcion = trim($Row[3]);
                 }else{
-                    $descripcion = $Row[2];
+                    $descripcion = trim($Row[2]);
                 }
 
                 $monto = "";
                 if(isset($Row[4])&&$tipo_formato==1) {
-                    $monto = $Row[4];
+                    $monto = trim($Row[4]);
                 }else{
-                    $monto = $Row[4];
+                    $monto = trim($Row[4]);
                 }
 
                 $saldo = "";
                 if(isset($Row[5])&&$tipo_formato==1) {
-                    $saldo = $Row[5];
+                    $saldo = trim($Row[5]);
                 }else{
-                    $saldo = $Row[5];
+                    $saldo = trim($Row[5]);
                 }
 
                 $informacion_complementaria = "";
@@ -158,12 +199,17 @@ $sqlInserts=[];
                     //se encontraron fechas mayores a la fila
                   }
                   if($verSi==0){
+                    if($descripcion=="" && ($monto==""||$monto==0)){
+
+                    }else{
                    $totalFilasCorrectas++; 
                 	$sql="INSERT INTO libretas_bancariasdetalle (cod_libretabancaria,fecha_hora,nro_documento,descripcion,informacion_complementaria,agencia,monto,nro_cheque,cod_libretabancariaregistro,cod_estadoreferencial,canal,nro_referencia,codigo_fila,saldo) 
                     	VALUES ('$codigoLibreta','$fecha_hora','$nro_documento','$descripcion','$informacion_complementaria','$agencia','$monto','$nro_cheque','$cod_libretabancariaregistro','$cod_estadoreferencial','$canal','$nro_referencia','$cod_fila','$saldo')";
                    // $stmt = $dbh->prepare($sql);
                     //$flagSuccess=$stmt->execute();
                     $sqlInserts[$index]=$sql;
+                      
+                    }
                     /*if ($flagSuccess==true) {
                         $type = "success";
                         $message = "Excel importado correctamente";
@@ -177,9 +223,13 @@ $sqlInserts=[];
                     $filasErroneasFechas++;
                   }
                 }else{
-                  $listaFilasCampos[$filasErroneasCampos]=$index;
-                  $filasErroneasCampos++;
-                  $filasErroneas++;
+                  if($descripcion=="" && ($monto==""||$monto==0)){
+
+                  }else{
+                     $listaFilasCampos[$filasErroneasCampos]=$index;
+                     $filasErroneasCampos++;
+                     $filasErroneas++;
+                  }  
                 }
               } //fin de if  
                 $filaArchivo++;
@@ -225,11 +275,11 @@ if($filasErroneas>0){
 }
 
 function verificarFecha($x) {
-    if (date('d-m-Y', strtotime($x)) == $x||date('d/m/Y', strtotime($x)) == $x) {
-      return true;
-    } else {
-      return false;
-    }
+    if (date('Y-m-d', strtotime($x)) == $x) {
+      return 1;
+    }else{
+      return 0;
+     } 
 }
 function verificarHora($x) {
     if (date('H:m:s', strtotime($x)) == $x) {
