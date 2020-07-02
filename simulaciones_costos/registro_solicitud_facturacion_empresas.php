@@ -294,7 +294,7 @@ $descuento_cliente=0;
                             <div class="col-sm-2">
                                 <div class="form-group" >    
                                     <button type="button" class="btn btn-danger btn-round btn-fab btn-sm" data-toggle="modal" data-target="" onclick="agregarDatosModalTipoPagoFacturacion(2)">
-                                        <i class="material-icons" title="Tipo Pago Porcentaje">list</i>
+                                        <i class="material-icons" title="Forma de Pago Porcentaje">list</i>
                                         <span id="nfac" class="count bg-warning"></span>
                                      </button>
                                      <button type="button" class="btn btn-primary btn-round btn-fab btn-sm" data-toggle="modal" data-target="" onclick="agregarDatosModalAreasFacturacion(2)">
