@@ -92,8 +92,8 @@ $html.=  '<header class="header">'.
              <tr>
               <td class="td-color-celeste"><b>Cliente:</b></td>';
               $tipo_solicitud = $resultInfo['tipo_solicitud'];  
-              if($tipo_solicitud==2 || $tipo_solicitud==6 || $tipo_solicitud==7){
-                $nombre_cliente=$razon_social;
+              if($tipo_solicitud==2 || $tipo_solicitud==6 || $tipo_solicitud==7){                
+                $nombre_cliente=obtenerNombreEstudiante($cod_cliente);
               }              
               $html.='<td width="10%" colspan="2" align="left">'.$nombre_cliente.'</td>
               <td width="3%" colspan="2" class="td-color-celeste"><b>Tipo Cambio:</b></td>

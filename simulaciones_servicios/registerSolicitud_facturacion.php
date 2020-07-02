@@ -47,7 +47,7 @@ if ($cod_facturacion > 0){
     $nombre_simulacion = $resultServicio['nombre'];
     $id_tiposervicio = $resultServicio['id_tiposervicio'];
     $name_cliente=nameCliente($cod_cliente);
-    $dias_credito=$result['dias_credito'];
+    $dias_credito=$resultServicio['dias_credito'];
 }else {
     $nombre_simulacion = $resultServicio['nombre'];
     if(isset($_POST['q'])){
@@ -372,17 +372,8 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
     </div>
 </div>
 
-
-<!--    end small modal -->
-
-
-<!-- carga de proveedores -->
-<!-- <div class="cargar">
-  <div class="div-loading text-center">
-     <h4 class="text-warning font-weight-bold">Procesando Datos</h4>
-     <p class="text-white">Aguard&aacute; un momento por favor</p>  
-  </div>
-</div> -->
+<!-- añadimos los porcetnajes de distribucion tanto para areas y formas de pago -->
+<?php  require_once 'simulaciones_servicios/objeto_formaspago_areas.php';?>
 
 <script type="text/javascript">
     function valida(f) {

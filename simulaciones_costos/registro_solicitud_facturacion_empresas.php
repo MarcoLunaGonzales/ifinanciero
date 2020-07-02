@@ -55,6 +55,7 @@ if($cod_facturacion>0){//editar
     $descuento_por=$resultSimuFact['descuento_por'];
     $descuento_bob=$resultSimuFact['descuento_bob'];
     $persona_contacto= $resultSimuFact['persona_contacto'];
+    $dias_credito=$resultSimuFact['dias_credito'];
 
 }else{//registrat
     $fecha_registro = date('Y-m-d');
@@ -73,6 +74,7 @@ if($cod_facturacion>0){//editar
     }
     $descuento_por=0;
     $descuento_bob=0;
+    $dias_credito=obtenerValorConfiguracion(58);
 }
 $name_tipoPago=obtenerNombreTipoPago($cod_tipoobjeto);
 $cod_defecto_deposito_cuenta=obtenerValorConfiguracion(55);
@@ -177,51 +179,7 @@ $descuento_cliente=0;
                         <div class="row">          
                             <script>var nfac=[];itemTipoPagos_facturacion.push(nfac);var nfacAreas=[];itemAreas_facturacion.push(nfacAreas);</script>
                              <div class="">
-                                <?php
-                                    //====ingresamos los objetos con porcentajes
-                                    if($cod_facturacion > 0)
-                                    {
-                                        $queryTipopagoEdit="SELECT cod_tipopago,porcentaje,monto from solicitudes_facturacion_tipospago where cod_solicitudfacturacion=$cod_facturacion";
-                                        $stmtTipopagoEdit = $dbh->prepare($queryTipopagoEdit);
-                                        $stmtTipopagoEdit->execute();
-                                        $ncAreas=0;$contAreas= array();
-                                        while ($rowAreas = $stmtTipopagoEdit->fetch(PDO::FETCH_ASSOC)) {
-                                            $datoArea = new stdClass();//obejto
-                                            $codFila=(int)$rowAreas["cod_tipopago"];
-                                            $porcentaje_x=trim($rowAreas['porcentaje']);
-                                            $monto_x=trim($rowAreas['monto']);?>
-                                            <script>
-                                                var tipopago={
-                                                    codigo_tipopago: <?=$codFila?>,
-                                                    monto_porcentaje: <?=$porcentaje_x?>,
-                                                    monto_bob: <?=$monto_x?>
-                                                }
-                                                itemTipoPagos_facturacion[0].push(tipopago);  
-                                            </script>
-                                            <?php
-                                        }
-                                        //para objetos areas                                        
-                                        $queryAreasEdit="SELECT cod_area,porcentaje,monto from solicitudes_facturacion_areas where cod_solicitudfacturacion=$cod_facturacion";
-                                        $stmtAreasEdit = $dbh->prepare($queryAreasEdit);
-                                        $stmtAreasEdit->execute();
-                                        $ncAreas=0;$contAreas= array();
-                                        while ($row = $stmtAreasEdit->fetch(PDO::FETCH_ASSOC)) {
-                                            $datoArea = new stdClass();//obejto
-                                            $codFila=(int)$row["cod_area"];
-                                            $porcentaje_x=trim($row['porcentaje']);
-                                            $monto_x=trim($row['monto']);?>
-                                            <script>
-                                                var area={
-                                                    codigo_areas: <?=$codFila?>,
-                                                    monto_porcentaje: <?=$porcentaje_x?>,
-                                                    monto_bob: <?=$monto_x?>
-                                                }
-                                                itemAreas_facturacion[0].push(area);  
-                                            </script>
-                                            <?php
-                                        }
-                                    }
-                                    //=== termina porcentaje objetos
+                                <?php                                   
                                     $queryAreas="SELECT codigo,nombre,abreviatura from areas where areas_ingreso=1 and cod_estado=1 order by nombre";
                                     $stmtAreas = $dbh->prepare($queryAreas);
                                     $stmtAreas->execute();
@@ -312,8 +270,7 @@ $descuento_cliente=0;
                                 </div>
                             </div>                             
                         </div>
-                        <div class="row dias_credito_x" id="" style="display: none">
-                            <?php $dias_credito=obtenerValorConfiguracion(58)?>
+                        <div class="row dias_credito_x" id="" style="display: none">                            
                             <label class="col-sm-2 col-form-label">Días de Crédito</label>
                             <div class="col-sm-2">
                                 <div class="form-group">                                
@@ -652,7 +609,8 @@ $descuento_cliente=0;
         </div>
     </div>
 </div>
-
+<!-- añadimos los porcetnajes de distribucion tanto para areas y formas de pago -->
+<?php  require_once 'simulaciones_servicios/objeto_formaspago_areas.php';?>
 
 <!-- verifica que esté seleccionado al menos un item -->
 <script type="text/javascript">

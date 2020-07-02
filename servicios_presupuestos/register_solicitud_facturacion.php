@@ -378,7 +378,8 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
   </div>
 
 
-
+<!-- añadimos los porcetnajes de distribucion tanto para areas y formas de pago -->
+<?php  require_once 'simulaciones_servicios/objeto_formaspago_areas.php';?>
 <script type="text/javascript">
 function valida(f) {
     var ok = true;

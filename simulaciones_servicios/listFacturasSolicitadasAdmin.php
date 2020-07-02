@@ -57,6 +57,7 @@ if(isset($_GET['q'])){
   $stmt->bindColumn('nro_correlativo', $nro_correlativo);
   $stmt->bindColumn('persona_contacto', $persona_contacto);
   $stmt->bindColumn('codigo_alterno', $codigo_alterno);
+  $stmt->bindColumn('obs_devolucion', $obs_devolucion);
   $stmt->bindColumn('tipo_solicitud', $tipo_solicitud);//1 tcp - 2 capacitacion - 3 servicios - 4 manual - 5 venta de normas
 $item_1=2709;
   ?>
@@ -75,27 +76,28 @@ $item_1=2709;
                   <div class="card-body">
                       <table class="table" id="tablePaginator">
                         <thead>
-                          <tr>
+                          <tr>                            
                             <th><small>Of - Area</small></th>
                             <th><small>#Sol.</small></th>
                             <th><small>Responsable</small></th>
-                            <th><small>Codigo<br>Servicio</small></th>   
+                            <th><small>Codigo<br>Servicio</small></th>                            
                             <th><small>Fecha<br>Registro</small></th>
-                            <!-- <th><small>Fecha<br>a Facturar</small></th> -->
-                            <th style="color:#cc4545;"><small>#Fact</small></th>
-                            <th><small>Importe<br>(BOB)</small></th>  
-                            <th><small>Tipo<br>Pago</small></th>
-                            <th><small>Concepto</small></th>                            
-                            <th><small>Estado</small></th>
-                            <th class="text-right">Actions</th>
+                            <th><small>Importe<br>(BOB)</small></th>                              
+                            <th width="15%"><small>Razón Social</small></th>
+                            <th width="35%"><small>Concepto</small></th>                            
+                            <th width="12%"><small>Observaciones</small></th>
+                            <th style="color:#ff0000;"><small>#Fact</small></th>
+                            <th style="color:#ff0000;" width="6%"><small>Forma<br>Pago</small></th>
+                            <th class="text-right"><small>Actions</small></th>
                           </tr>
                         </thead>
                         <tbody>
                         <?php
-                          $index=1;
-                          $codigo_fact_x=0;
-                          $cont= array();
-                          while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+                        $index=1;
+                        $codigo_fact_x=0;
+                        $cont= array();
+                        while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+                          $datos_otros=$codigo_facturacion."/0/0/0/".$nit."/".$razon_social;//dato 
                           switch ($codEstado) {
                             case 1:
                               $btnEstado="btn-default";
@@ -140,42 +142,43 @@ $item_1=2709;
                           $concepto_contabilizacion = (substr($concepto_contabilizacion, 0, 100))."..."; //limite de string
 
                             //obtenemos datos de la simulacion
-                            if($tipo_solicitud==1){// la solicitud pertence tcp-tcs
-                                //obtenemos datos de la simulacion TCP
-                                $sql="SELECT sc.nombre,ps.cod_area,ps.cod_unidadorganizacional
-                                from simulaciones_servicios sc,plantillas_servicios ps
-                                where sc.cod_plantillaservicio=ps.codigo and sc.cod_estadoreferencial=1 and sc.codigo=$cod_simulacion_servicio";                            
-                                $stmtSimu = $dbh->prepare($sql);
-                                $stmtSimu->execute();
-                                $resultSimu = $stmtSimu->fetch();
-                                $nombre_simulacion = $resultSimu['nombre'];
-                                $cod_area_simulacion = $resultSimu['cod_area'];
-                            }elseif($tipo_solicitud==2){//  pertence capacitacion
-                                $sqlCostos="SELECT sc.nombre,sc.cod_responsable,ps.cod_area,ps.cod_unidadorganizacional
-                                from simulaciones_costos sc,plantillas_servicios ps
-                                where sc.cod_plantillacosto=ps.codigo and sc.cod_estadoreferencial=1 and sc.codigo=$cod_simulacion_servicio order by sc.codigo";
-                                $stmtSimuCostos = $dbh->prepare($sqlCostos);
-                                $stmtSimuCostos->execute();
-                                $resultSimu = $stmtSimuCostos->fetch();
-                                $nombre_simulacion = $resultSimu['nombre'];
-                                $cod_area_simulacion = $resultSimu['cod_area'];
-                            }elseif($tipo_solicitud==3){// pertence a propuestas y servicios
-                                $sqlCostos="SELECT Descripcion,IdArea,IdOficina from servicios s where s.IdServicio=$cod_simulacion_servicio";
-                                $stmtSimuCostos = $dbh->prepare($sqlCostos);
-                                $stmtSimuCostos->execute();
-                                $resultSimu = $stmtSimuCostos->fetch();
-                                $nombre_simulacion = $resultSimu['Descripcion'];
-                                $cod_area_simulacion = $resultSimu['IdArea'];
-                            }
+                            // if($tipo_solicitud==1){// la solicitud pertence tcp-tcs
+                            //     //obtenemos datos de la simulacion TCP
+                            //     $sql="SELECT sc.nombre,ps.cod_area,ps.cod_unidadorganizacional
+                            //     from simulaciones_servicios sc,plantillas_servicios ps
+                            //     where sc.cod_plantillaservicio=ps.codigo and sc.cod_estadoreferencial=1 and sc.codigo=$cod_simulacion_servicio";                            
+                            //     $stmtSimu = $dbh->prepare($sql);
+                            //     $stmtSimu->execute();
+                            //     $resultSimu = $stmtSimu->fetch();
+                            //     $nombre_simulacion = $resultSimu['nombre'];
+                            //     $cod_area_simulacion = $resultSimu['cod_area'];
+                            // }elseif($tipo_solicitud==2){//  pertence capacitacion
+                            //     $sqlCostos="SELECT sc.nombre,sc.cod_responsable,ps.cod_area,ps.cod_unidadorganizacional
+                            //     from simulaciones_costos sc,plantillas_servicios ps
+                            //     where sc.cod_plantillacosto=ps.codigo and sc.cod_estadoreferencial=1 and sc.codigo=$cod_simulacion_servicio order by sc.codigo";
+                            //     $stmtSimuCostos = $dbh->prepare($sqlCostos);
+                            //     $stmtSimuCostos->execute();
+                            //     $resultSimu = $stmtSimuCostos->fetch();
+                            //     $nombre_simulacion = $resultSimu['nombre'];
+                            //     $cod_area_simulacion = $resultSimu['cod_area'];
+                            // }elseif($tipo_solicitud==3){// pertence a propuestas y servicios
+                            //     $sqlCostos="SELECT Descripcion,IdArea,IdOficina from servicios s where s.IdServicio=$cod_simulacion_servicio";
+                            //     $stmtSimuCostos = $dbh->prepare($sqlCostos);
+                            //     $stmtSimuCostos->execute();
+                            //     $resultSimu = $stmtSimuCostos->fetch();
+                            //     $nombre_simulacion = $resultSimu['Descripcion'];
+                            //     $cod_area_simulacion = $resultSimu['IdArea'];
+                            // }
                             $cod_area_simulacion=$cod_area;
-                            $nombre_simulacion='OTROS';
+                            // $nombre_simulacion='OTROS';
                             $name_area_simulacion=trim(abrevArea($cod_area_simulacion),'-');
 
                             // --------
                             $responsable=namePersonal($cod_personal);//nombre del personal
                             $nombre_area=trim(abrevArea($cod_area),'-');//nombre del area
                             $nombre_uo=trim(abrevUnidad($cod_unidadorganizacional),' - ');//nombre de la oficina
-                            $nombre_tipopago=nameTipoPagoSolFac($cod_tipopago);//
+                            // $nombre_tipopago=nameTipoPagoSolFac($cod_tipopago);//
+                            $string_formaspago=obtnerFormasPago($codigo_facturacion);
 
                             //los registros de la factura
                             $dbh1 = new Conexion();
@@ -212,23 +215,23 @@ $item_1=2709;
                             }
                             $sumaTotalImporte=$sumaTotalMonto-$sumaTotalDescuento_bob;
                             $cont[$index-1]=$nc;
-                            $stringCabecera=$nombre_uo."##".$nombre_area."##".$nombre_simulacion."##".$name_area_simulacion."##".$fecha_registro."##".$fecha_solicitudfactura."##".$nit."##".$razon_social;
+                            // $stringCabecera=$nombre_uo."##".$nombre_area."##".$nombre_simulacion."##".$name_area_simulacion."##".$fecha_registro."##".$fecha_solicitudfactura."##".$nit."##".$razon_social;
 
                             ?>
                           <tr>
-                            <!-- <td align="center"></td> -->
-                            <td><small><?=$nombre_uo;?> - <?=$nombre_area;?></small></td>
+                           <td><small><?=$nombre_uo;?> - <?=$nombre_area;?></small></td>
                             <td class="text-right"><small><?=$nro_correlativo;?></small></td>
                             <td><small><?=$responsable;?></small></td>
                             <td><small><?=$codigo_alterno?></small></td>
                             <td><small><?=$fecha_registro;?></small></td>
-                            <!-- <td><?=$fecha_solicitudfactura;?></td>          -->                   
-                            <td style="color:#cc4545;"><small><?=$nro_fact_x;?></small></td>                             
-                            <td class="text-right"><small><?=formatNumberDec($sumaTotalImporte);?></small></td>
-                            <td class="text-left" style="color:#ff0000;"><small><small><?=$nombre_tipopago;?></small></small></td>                            
-                            <td width="35%"><small><?=$concepto_contabilizacion?></small></td>
-                            <td><button class="btn <?=$btnEstado?> btn-sm btn-link"><small><?=$estado;?></small></button></td>
-                            <td class="td-actions text-right">
+                            <td class="text-right"><small><?=formatNumberDec($sumaTotalImporte);?></small></td>                            
+                            <td><small><small><?=$razon_social;?></small></small></td>
+                            <td><small><small><?=$concepto_contabilizacion?></small></small></td>
+                            <td><button class="btn btn-danger btn-sm btn-link" style="padding:0;"><small><?=$obs_devolucion;?></small></button></td>
+                            <td style="color:#298A08;"><small><?=$nro_fact_x;?><br><span style="color:#DF0101;">-</span></small></td>
+                            <td class="text-left" style="color:#ff0000;"><small><small><?=$string_formaspago;?></small></small></td>
+                            <td class="td-actions text-right">                              
+                              <button class="btn <?=$btnEstado?> btn-sm btn-link"><small><?=$estado;?></small></button><br>
                               <?php
                                 //if($globalAdmin==1){ 
                                   if($codigo_fact_x>0){//print facturas
@@ -255,13 +258,14 @@ $item_1=2709;
                                         <i class="material-icons" title="Devolver Solicitud Facturación">settings_backup_restore</i>
                                       </button>
                                       <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir Solicitud Facturación">print</i></a>
-                                      <a href='#' rel="tooltip" class="btn btn-warning" onclick="filaTablaAGeneral($('#tablasA_registradas'),<?=$index?>,'<?=$stringCabecera?>')">
+                                      <!-- <a href='#' rel="tooltip" class="btn btn-warning" onclick="filaTablaAGeneral($('#tablasA_registradas'),<?=$index?>,'<?=$stringCabecera?>')">
                                         <i class="material-icons" title="Ver Detalle Solicitud">settings_applications</i>
-                                      </a>
+                                      </a> -->
                                    <?php                                      
                                    }                                  
                                 //}
-                              ?>
+                              ?>                            
+                               <a href='#' title="Archivos Adjuntos" class="btn btn-primary" onclick="abrirArchivosAdjuntos('<?=$datos_otros;?>')"><i class="material-icons" ><?=$iconFile?></i></a>
                             </td>
                           </tr>
                           <?php
@@ -276,46 +280,9 @@ $item_1=2709;
           </div>  
     </div>
   </div>
-<!-- small modal -->
-<div class="modal fade modal-primary" id="modalDetalleFac" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl">
-    <div class="modal-content card">
-              <div class="card-header card-header-warning card-header-icon">
-                <div class="card-icon">
-                  <i class="material-icons">settings_applications</i>
-                </div>
-                <h4 class="card-title">Detalle Solicitud</h4>
-              </div>
 
-              <div class="card-body">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                <i class="material-icons">close</i>
-              </button>
-              <div class="row" id="div_cabecera" >
-                    
-              </div>
-                <table class="table table-condensed">
-                  <thead>
-                    <tr class="text-dark bg-plomo">
-                    <th>#</th>
-                    <th>Item</th>
-                    <th>Cantidad</th>
-                    <!-- <th>Precio(BOB)</th>  
-                      <th>Desc(%)</th> 
-                      <th>Desc(BOB)</th>  -->
-                      <th>Importe(BOB)</th>  
-                    <th>Descripción Alterna</th>                    
-                    </tr>
-                  </thead>
-                  <tbody id="tablasA_registradas">
-                    
-                  </tbody>
-                </table>
-              </div>
-    </div>  
-  </div>
-</div>
-<!--    end small modal -->
+<?php  require_once 'simulaciones_servicios/modal_subir_archivos.php';?>
+
 <!-- small modal -->
 <!-- modal devolver solicitud -->
 <div class="modal fade" id="modalDevolverSolicitud_intranet" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">

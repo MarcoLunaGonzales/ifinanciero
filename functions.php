@@ -7590,7 +7590,67 @@ function obtenerNroFactura($codigo){
   }
   return($valor);
 }
+function obtnerFormasPago($codigo){
+  $dbh = new Conexion();
+  $sqlCorreo="SELECT cod_tipopago from solicitudes_facturacion_tipospago where cod_solicitudfacturacion=$codigo";
+  // echo $sqlCorreo;
+  $stmtCorreos = $dbh->prepare($sqlCorreo);
+  $stmtCorreos->execute();
+  $stmtCorreos->bindColumn('cod_tipopago', $cod_tipopago);
+  $correos_string= '';                            
+  while ($row = $stmtCorreos->fetch(PDO::FETCH_BOUND)) {
+      $nombre_tipopago=nameTipoPagoSolFac($cod_tipopago);
+      $correos_string.=$nombre_tipopago.',<br>';
+  }
+  $correos_string=trim($correos_string,',<br>');
+  return($correos_string);
+}
 
+function obtnerFormasPago_codigo($cod_tipopago_cred,$codigo_facturacion){
+  $dbh = new Conexion();
+  $sqlCorreo="SELECT cod_tipopago from solicitudes_facturacion_tipospago where cod_solicitudfacturacion=$codigo_facturacion";
+  // echo $sqlCorreo;
+  $stmtCorreos = $dbh->prepare($sqlCorreo);
+  $stmtCorreos->execute();
+  $stmtCorreos->bindColumn('cod_tipopago', $cod_tipopago);
+  $valor=0;
+  while ($row = $stmtCorreos->fetch(PDO::FETCH_BOUND)) {
+    if($cod_tipopago==$cod_tipopago_cred){
+      $valor=$cod_tipopago_cred;
+    } 
+  }  
+  return($valor);
+}
+
+function obtnerMontoPorcentaje_DepositoCuenta($cod_tipopago_dep,$codigo_facturacion){
+  $dbh = new Conexion();
+  $sqlCorreo="SELECT cod_tipopago from solicitudes_facturacion_tipospago where cod_solicitudfacturacion=$codigo_facturacion";
+  // echo $sqlCorreo;
+  $stmtCorreos = $dbh->prepare($sqlCorreo);
+  $stmtCorreos->execute();
+  $stmtCorreos->bindColumn('cod_tipopago', $cod_tipopago);
+  $valor=0;
+  while ($row = $stmtCorreos->fetch(PDO::FETCH_BOUND)) {
+    if($cod_tipopago==$cod_tipopago_dep){
+      $valor=$cod_tipopago_dep;
+    } 
+  }  
+  return($valor);
+}
+function obtenerNombreEstudiante($ci_estudiante){
+
+  $dbhIBNO = new ConexionIBNORCA();
+  //datos del estudiante y el curso que se encuentra
+  $sqlIBNORCA="SELECT concat(cpe.clPaterno,' ',cpe.clMaterno,' ',cpe.clNombreRazon)as nombreAlumno 
+  FROM dbcliente.cliente_persona_empresa cpe
+  where cpe.clIdentificacion=$ci_estudiante";
+  // echo $sqlIBNORCA;
+  $stmtIbno = $dbhIBNO->prepare($sqlIBNORCA);
+  $stmtIbno->execute();
+  $resultSimu = $stmtIbno->fetch();
+  $valor = $resultSimu['nombreAlumno'];
+  return($valor);
+}
 ?>
 
 

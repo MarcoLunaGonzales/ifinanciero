@@ -136,7 +136,7 @@ $stmtCliente->bindColumn('nombre', $nombre_cli);
                               $datos_FacManual=$cliente_x."/".$razon_social_x."/".$nit_x."/".$nro_fact_x."/".$nro_autorizacion_x."/".$importe_x;
                             }
                             //sacamos monto total de la factura para ver si es de tipo factura por pagos
-                            $sqlMontos="SELECT codigo,importe,nro_factura,cod_estadofactura from facturas_venta where cod_solicitudfacturacion=$codigo_facturacion and cod_estadofactura in (1,4) ORDER BY codigo desc";
+                            $sqlMontos="SELECT codigo,importe,nro_factura,cod_estadofactura from facturas_venta where cod_solicitudfacturacion=$codigo_facturacion ORDER BY codigo desc";
                             // echo $sqlMontos;
                             $stmtFactMontoTotal = $dbh->prepare($sqlMontos);
                             $stmtFactMontoTotal->execute();
@@ -147,6 +147,8 @@ $stmtCliente->bindColumn('nombre', $nombre_cli);
                                 $btnEstado="btn-warning";
                                 $estado="FACTURA MANUAL";
                                 $cadenaFacturasM.="FM".$row_montos['nro_factura'].",";
+                              }elseif($cod_estadofactura==2){
+                                $cadenaFacturas.="FA".$row_montos['nro_factura'].",";  
                               }else{
                                 $cadenaFacturas.="F".$row_montos['nro_factura'].",";  
                               }
