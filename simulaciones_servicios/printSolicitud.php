@@ -92,7 +92,7 @@ $html.=  '<header class="header">'.
              <tr>
               <td class="td-color-celeste"><b>Cliente:</b></td>';
               $tipo_solicitud = $resultInfo['tipo_solicitud'];  
-              if($tipo_solicitud==2 || $tipo_solicitud==6 || $tipo_solicitud==7){                
+              if($tipo_solicitud==2 || $tipo_solicitud==7){                
                 $nombre_cliente=obtenerNombreEstudiante($cod_cliente);
               }              
               $html.='<td width="10%" colspan="2" align="left">'.$nombre_cliente.'</td>
