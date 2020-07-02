@@ -7651,6 +7651,24 @@ function obtenerNombreEstudiante($ci_estudiante){
   $valor = $resultSimu['nombreAlumno'];
   return($valor);
 }
+function obtener_codigo_modulo_IBnorca($cod_modulo){
+  $dbhIBNO = new ConexionIBNORCA();
+  //datos del estudiante y el curso que se encuentra
+  $sqlIBNORCA="SELECT concat(c1.abrev,'-',c.abrev,'-',c2.abrev,'-','G',p.grupo,'-','M',NroModulo,'-',c3.abrev) as programa 
+  from modulos m
+  inner join programas_cursos p on m.idcurso=p.`IdCurso`
+  inner join clasificador c on p.idprograma=c.idclasificador
+  inner join  clasificador c1 on p.`IdOficina`=c1.`IdClasificador`
+  inner join  clasificador c2 on p.`IdTipo`=c2.`IdClasificador`
+  inner join  clasificador c3 on p.`IdGestion`=c3.`IdClasificador` 
+  where m.idmodulo=$cod_modulo";
+  // echo $sqlIBNORCA;
+  $stmtIbno = $dbhIBNO->prepare($sqlIBNORCA);
+  $stmtIbno->execute();
+  $resultSimu = $stmtIbno->fetch();
+  $valor = $resultSimu['programa'];
+  return($valor);
+}
 ?>
 
 

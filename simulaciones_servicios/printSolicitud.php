@@ -130,7 +130,7 @@ $html.=  '<header class="header">'.
             // $sqlA="SELECT sf.*,t.descripcion as nombre_serv ,t.Codigo from solicitudes_facturaciondetalle sf,cla_servicios t 
             //     where sf.cod_claservicio=t.idclaservicio and sf.cod_solicitudfacturacion=$codigo_facturacion";
 
-            $sqlA="SELECT *,(select t.Codigo from cla_servicios t where t.idclaservicio=cod_claservicio) as Codigo  from solicitudes_facturaciondetalle where cod_solicitudfacturacion=$codigo_facturacion";
+            $sqlA="SELECT *,(select t.Codigo from cla_servicios t where t.idclaservicio=cod_claservicio) as Codigo_alterno  from solicitudes_facturaciondetalle where cod_solicitudfacturacion=$codigo_facturacion";
 
             $stmt2 = $dbh->prepare($sqlA);                                   
             $stmt2->execute();
@@ -143,11 +143,16 @@ $html.=  '<header class="header">'.
               
               if($usd>0)$precio_sus=($precio_unitario*$row2["cantidad"])/$usd;
               else $precio_sus=0;
+              if($tipo_solicitud==2 || $tipo_solicitud==6 || $tipo_solicitud==7){
+                $codigo_alterno_detalle=obtener_codigo_modulo_IBnorca($row2['cod_claservicio']);
+              }else{
+                $codigo_alterno_detalle=$row2['Codigo_alterno'];
+              }
               
               $html.='<tr>
                 <td  class="text-center"><b>'.$index.'</b></td>
                 <td  class="text-center">'.$abrev_area.'</td>
-                <td  class="text-left" width="15%">'.$row2['Codigo'].'</td>
+                <td  class="text-left" width="15%">'.$codigo_alterno_detalle.'</td>
                 <td  class="text-left"><small>'.$row2["descripcion_alterna"].'</small></td>
                 <td  class="text-right">'.formatNumberDec($row2["cantidad"]).'</td>
                 <td  class="text-right">'.formatNumberDec($precio_unitario).'</td>
