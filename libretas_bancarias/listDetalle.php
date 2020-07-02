@@ -41,6 +41,11 @@ $stmtb->bindColumn('nro_cuenta', $cuenta);
 $stmtb->bindColumn('nombre', $nombre);
 
 ?>
+<style>
+.menu-fixed {
+    top:-100px !important;
+}
+</style>
 <div class="cargar-ajax d-none">
   <div class="div-loading text-center">
      <h4 class="text-warning font-weight-bold" id="texto_ajax_titulo">Subiendo Archivo Excel</h4>
@@ -184,15 +189,15 @@ $stmtb->bindColumn('nombre', $nombre);
               ?>
       				<div class="card-footer fixed-bottom">
                 <button class="<?=$buttonCancel;?>" onClick="location.href='<?=$urlList;?>'">Volver</button>
-                <div class="btn-group dropright">
-                      <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="false" aria-expanded="false">
+                <div class="btn-group dropdown">
+                      <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Cargar Libreta desde Excel
                       </button>
-                      <div class="dropdown-menu">
-                        <a href="#" onclick="subirArchivoExcelLibretaBancaria(1,'Formato BISA');return false;"  class="dropdown-item">
+                      <div class="dropdown-menu menu-fixed">
+                        <a href="#" onclick="subirArchivoExcelLibretaBancaria(1,'Formato BISA'); return false;"  class="dropdown-item">
                                    <i class="material-icons">keyboard_arrow_right</i>Formato BISA
                         </a>
-                        <a href="#" onclick="subirArchivoExcelLibretaBancaria(2,'Formato UNION');return false;"  class="dropdown-item">
+                        <a href="#" onclick="subirArchivoExcelLibretaBancaria(2,'Formato UNION'); return false;"  class="dropdown-item">
                                    <i class="material-icons">keyboard_arrow_right</i>Formato UNION
                         </a>
                       </div>
@@ -205,13 +210,10 @@ $stmtb->bindColumn('nombre', $nombre);
               ?>
 		  
             </div>
-          </div>  
-              
-
+          </div>
 
         </div>
     </div>
-
     <!-- small modal -->
 <div class="modal fade modal-arriba modal-primary" id="modalSubirArchivoExcel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-notice" style="max-width: 80% !important;">
@@ -260,7 +262,7 @@ $stmtb->bindColumn('nombre', $nombre);
                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                      $codigoX=$row['codigo'];
                      $nombreX=$row['nombre'];
-                     if($codigoX==2){
+                     if($codigoX==1){
                       ?>
                      <option value="<?=$codigoX;?>" selected><?=$nombreX;?></option>  
                       <?php
