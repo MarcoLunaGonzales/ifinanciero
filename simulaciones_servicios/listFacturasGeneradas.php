@@ -92,7 +92,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             ?>
                           <tr>
                             <!-- <td align="center"><?=$index;?></td> -->
-                            <td><?=$nro_factura;?></td>
+                            <td><?=$nro_factura;?> <?=$datos?></td>
                             <!-- <td><?=$sucursal;?></td> -->
                             <td><?=$fecha_factura?><br><?=$hora_factura?></td>
                             <td class="text-left"><small><?=$razon_social;?></small></td>

@@ -7247,9 +7247,9 @@ function obtener_dato_dosificacion($cod_dosificacion){
 
 function obtenerObtenerLibretaBancaria(){
   $codigo=0;
-  //$direccion='http://127.0.0.1/ifinanciero/wsifin/';
+  $direccion='http://127.0.0.1/ifinanciero/wsifin/';
   // $direccion='http://200.105.199.164:8008/ifinanciero/wsifin/';
-  $direccion=obtenerValorConfiguracion(56);//direccion del servicio web ifinanciero
+  //$direccion=obtenerValorConfiguracion(56);//direccion del servicio web ifinanciero
   $sIde = "libBan";
   $sKey = "89i6u32v7xda12jf96jgi30lh";
   //PARAMETROS PARA LA OBTENCION DE ARRAY LIBRETA
@@ -7596,13 +7596,15 @@ function obtenerCorreoEstudiante($ci_estudiante){
   $stmtCorreos = $dbh->prepare($sqlCorreo);
   $stmtCorreos->execute();
   $stmtCorreos->bindColumn('correo', $correo);
-  $correos_string= '';                            
+  $correos_string=[]; 
+  $index=0;                           
   while ($row = $stmtCorreos->fetch(PDO::FETCH_BOUND)) {
-    if($correos_string!=null || $correos_string!='' || $correos_string!=' '){
-      $correos_string.=$correo.',';
+    if($correo!=null || $correo!='' || $correo!=' '){
+      $correos_string[$index]=$correo;
+      $index++;
     }
   }
-  return($correos_string);
+  return implode(",",$correos_string);
 }
 function obtenerTipoSolicitud($codigo){
   $dbh = new Conexion();
