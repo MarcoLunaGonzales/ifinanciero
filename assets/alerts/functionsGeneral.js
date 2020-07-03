@@ -2849,7 +2849,9 @@ function guardarSimulacionServicio(){
    Swal.fire('Informativo!','Debe llenar los campos!','warning'); 
   }else{
     var tipoServicio=$("#tipo_servicio").val();
-     var parametros={"alcance":alcance,"id_perfil":idPerfil,"objeto_servicio":objeto,"tipo_servicio":tipoServicio,"id_servicio":idServicio,"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"atributos":JSON.stringify(itemAtributos),"norma":norma,"anios":anios,"afnor":afnor,"tipo_atributo":2};
+    var normas_tiposervicio=$("#normas_tiposervicio").val();
+    var normas_tiposerviciotext=$("#normas_tiposerviciotext").val();
+     var parametros={"normas_tiposerviciotext":normas_tiposerviciotext,"normas_tiposervicio":JSON.stringify(normas_tiposervicio),"alcance":alcance,"id_perfil":idPerfil,"objeto_servicio":objeto,"tipo_servicio":tipoServicio,"id_servicio":idServicio,"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"atributos":JSON.stringify(itemAtributos),"norma":norma,"anios":anios,"afnor":afnor,"tipo_atributo":2};
      $.ajax({
         type: "GET",
         dataType: 'html',
@@ -15010,4 +15012,19 @@ function seleccionar_Factura_relacion(cod_factura){
     }
   });
   
+}
+
+function ponerSistemasIntegrados(){
+  var tipo_servicio=$("#tipo_servicio").val();
+  if(tipo_servicio==2778){ //codigo Sistemas Integrados
+    if($("#div_normastipo").hasClass("d-none")){
+      $("#div_normastipo").removeClass("d-none");
+      $("#div_normastipotexto").removeClass("d-none");
+    }
+  }else{
+    if(!($("#div_normastipo").hasClass("d-none"))){
+      $("#div_normastipo").addClass("d-none");
+      $("#div_normastipotexto").addClass("d-none");
+    }
+  }
 }

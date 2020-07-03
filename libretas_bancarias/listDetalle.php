@@ -15,7 +15,7 @@ $dbh = new Conexion();
 
 // Preparamos
 $stmt = $dbh->prepare("SELECT ce.*
-FROM libretas_bancariasdetalle ce where ce.cod_libretabancaria=$codigoLibreta and  ce.cod_estadoreferencial=1 order by ce.codigo");
+FROM libretas_bancariasdetalle ce where ce.cod_libretabancaria=$codigoLibreta and  ce.cod_estadoreferencial=1 and ce.cod_estado!=1 order by ce.codigo");
 // Ejecutamos
 $stmt->execute();
 // bindColumn

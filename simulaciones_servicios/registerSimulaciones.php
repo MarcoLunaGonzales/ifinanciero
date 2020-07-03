@@ -143,14 +143,7 @@ $dbh = new Conexion();
                       </div>
                       <div class="" id="lista_precios">
                       </div>
-                      <div class="row">
-                       <label class="col-sm-2 col-form-label">Alcance de la Propuesta:</label>
-                       <div class="col-sm-7">
-                        <div class="form-group">
-                          <textarea class="form-control" type="text" name="alcance" id="alcance"></textarea>
-                        </div>
-                        </div>
-                      </div>
+                      
                       <div id="productos_div" class="d-none">
                         <div class="row">
                        <label class="col-sm-2 col-form-label">Regi&oacute;n</label>
@@ -250,7 +243,14 @@ $dbh = new Conexion();
                         </div>
                        </div>
                       </div><!--row-->
-
+                       <div class="row">
+                       <label class="col-sm-2 col-form-label">Alcance de la Propuesta:</label>
+                       <div class="col-sm-7">
+                        <div class="form-group">
+                          <textarea class="form-control" type="text" name="alcance" id="alcance"></textarea>
+                        </div>
+                        </div>
+                      </div>
                       <br>
                       <div class="row">
                        <label class="col-sm-2 col-form-label">Productos</label>
@@ -301,7 +301,7 @@ $dbh = new Conexion();
                        <label class="col-sm-2 col-form-label">Tipo del Servicio</label>
                        <div class="col-sm-7">
                         <div class="form-group">
-                          <select class="selectpicker form-control" data-size="6" data-live-search="true" multiple name="tipo_servicio" id="tipo_servicio" data-style="btn btn-info"  required>       
+                          <select class="selectpicker form-control" data-size="6" data-live-search="true" name="tipo_servicio" id="tipo_servicio" data-style="btn btn-info"  required onchange="ponerSistemasIntegrados()">       
                                 <?php
                                  $stmt = $dbh->prepare("select DISTINCT codigo_n2,descripcion_n2 from cla_servicios where codigo_n1=109 order by 2");
                                  $stmt->execute();
@@ -317,17 +317,17 @@ $dbh = new Conexion();
                         </div>
                         </div>
                      </div>
-                     <div class="row d-none">
+                     <div class="row d-none" id="div_normastipo">
                        <label class="col-sm-2 col-form-label">Normas</label>
                        <div class="col-sm-7">
                         <div class="form-group">
-                          <select class="selectpicker form-control" data-size="6" data-live-search="true" multiple name="normas_tiposervicio[]" id="normas_tiposervicio" data-style="btn btn-info"  required>       
+                          <select class="selectpicker form-control" data-size="4" data-live-search="true" multiple name="normas_tiposervicio[]" id="normas_tiposervicio" data-style="btn btn-success"  required>       
                                 <?php
-                                 $stmt = $dbh->prepare("select DISTINCT codigo_n2,descripcion_n2 from cla_servicios where codigo_n1=109 order by 2");
+                                 $stmt = $dbh->prepare("SELECT codigo,abreviatura from normas where cod_estado=1 order by 2");
                                  $stmt->execute();
                                   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                                  $codigoX=$row['codigo_n2'];
-                                  $nombreX=$row['descripcion_n2'];
+                                  $codigoX=$row['codigo'];
+                                  $nombreX=$row['abreviatura'];
                                    ?>
                                   <option value="<?=$codigoX;?>"><?=$nombreX;?></option> 
                                   <?php
@@ -337,6 +337,14 @@ $dbh = new Conexion();
                         </div>
                         </div>
                      </div>
+                     <div class="row d-none" id="div_normastipotexto">
+                          <label class="col-sm-2 col-form-label">Otras Normas</label>
+                           <div class="col-sm-9">                     
+                             <div class="form-group" style="border-bottom: 1px solid #CACFD2">       
+                                <input type="text" class="form-control tagsinput" data-role="tagsinput" data-color="info" name="normas_tiposerviciotext" id="normas_tiposerviciotext" value="" onkeyup="javascript:this.value=this.value.toUpperCase();">
+                             </div>
+                           </div>  
+                      </div>
                      <div class="row">
                      <label class="col-sm-2 col-form-label">AFNOR</label>
                            <div class="col-sm-7">
@@ -352,6 +360,14 @@ $dbh = new Conexion();
                                 </div>  
                              </div>     
                         </div> 
+                        <div class="row">
+                       <label class="col-sm-2 col-form-label">Alcance de la Propuesta:</label>
+                       <div class="col-sm-7">
+                        <div class="form-group">
+                          <textarea class="form-control" type="text" name="alcance" id="alcance"></textarea>
+                        </div>
+                        </div>
+                      </div>
                      <br>
                      <div class="row">
                        <label class="col-sm-2 col-form-label">Sitios</label>

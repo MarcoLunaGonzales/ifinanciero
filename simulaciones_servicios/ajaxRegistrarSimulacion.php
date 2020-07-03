@@ -95,6 +95,33 @@ if(isset($_GET['nombre'])){
     actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$id_perfil,$codSimServ,$fechaHoraActual,$obs);
   }
 
+//insertar Normas Propuestas
+  if($idTipoServicio==2778){ //sistemas integrados 
+      $dbhD = new Conexion();
+      $sqlD="DELETE FROM simulaciones_servicios_normas where cod_simulacionservicio=$codSimServ";
+      $stmtD = $dbhD->prepare($sqlD);
+      $stmtD->execute();     
+      if(isset($_GET['normas_tiposervicio'])){ 
+       $normasTipo=json_decode($_GET['normas_tiposervicio']);
+       for ($ntp=0; $ntp < count($normasTipo); $ntp++) { 
+        $codigoNormasTipo=$normasTipo[$ntp];       
+        $sqlInsertNormas="INSERT INTO simulaciones_servicios_normas (cod_simulacionservicio,cod_tiposervicio,cod_norma,observaciones) 
+          VALUES ('".$codSimServ."','".$idTipoServicio."','".$codigoNormasTipo."','')";
+         $stmtInsertNormas = $dbh->prepare($sqlInsertNormas);
+         $flagsuccess=$stmtInsertNormas->execute();
+       }
+       if($_GET['normas_tiposerviciotext']!=""){
+        $normasTipoText=explode(",",$_GET['normas_tiposerviciotext']);
+        for ($ntp=0; $ntp < count($normasTipoText); $ntp++) { 
+        $nombreNormasTipo=$normasTipoText[$ntp];       
+        $sqlInsertNormas="INSERT INTO simulaciones_servicios_normas (cod_simulacionservicio,cod_tiposervicio,cod_norma,observaciones) 
+          VALUES ('".$codSimServ."','".$idTipoServicio."',0,'".$nombreNormasTipo."')";
+         $stmtInsertNormas = $dbh->prepare($sqlInsertNormas);
+         $flagsuccess=$stmtInsertNormas->execute();
+        }    
+       }
+      }
+  }
 
   $dbhD = new Conexion();
   $sqlD="DELETE FROM simulaciones_serviciodetalle where cod_simulacionservicio=$codSimServ";
