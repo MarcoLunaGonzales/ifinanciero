@@ -40,7 +40,7 @@ $stmt->bindColumn('cod_estado', $cod_estado);
                       <thead>
                         <tr>
                           <th>Sucursal</th>                        
-                          <th>Nro. Autorizacióon</th>
+                          <th>Nro. Autorización</th>
                           <th>Llave</th>
                           <th>Fecha Límite<br>Emisión</th>
                           <th>Leyenda</th>
