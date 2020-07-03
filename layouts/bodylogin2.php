@@ -232,6 +232,20 @@
             .attr('name', 'tiposPago_facturacion')
             .attr('value', JSON.stringify(itemTipoPagos_facturacion))
             .appendTo('#formSoliFactNormas');
+          // validamos que obligue insertar archivos en caso de forma de pago deposito
+          var cod_defecto_deposito_cuenta=$("#cod_defecto_deposito_cuenta").val();
+          for(var j = 0; j < itemTipoPagos_facturacion[0].length; j++){
+            var dato = Object.values(itemTipoPagos_facturacion[0][j]);
+            var cod_tipopago_x=dato[0];
+            if(cod_tipopago_x==cod_defecto_deposito_cuenta){
+              if($("#cantidad_archivosadjuntos").val()==0){
+                var msg = "Por favor agregue Archivo Adjunto.";
+                $('#msgError').html(msg);
+                $('#modalAlert').modal('show'); 
+                return false;  
+              }
+            }            
+          }
           if(monto_modal_por_tipopago!=0){
             if(montoTotalItems!=monto_modal_por_tipopago){
               var mensaje="<p>Por favor verifique los montos de la distribución de porcentajes en Formas de Pago...</p>";

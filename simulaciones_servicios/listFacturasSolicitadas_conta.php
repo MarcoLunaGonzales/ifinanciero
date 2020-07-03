@@ -60,14 +60,14 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             <th><small>#Sol.</small></th>
                             <th><small>Responsable</small></th>
                             <th><small>Codigo<br>Servicio</small></th>                            
-                            <th><small>Fecha<br>Registro</small></th>                            
-                            <th><small>Importe<br>(BOB)</small></th>                            
-                            <th width="15%"><small>Razón<br>Social</small></th>
+                            <th><small>Fecha<br>Registro</small></th>
+                            <th><small>Importe<br>(BOB)</small></th>                              
+                            <th width="15%"><small>Razón Social</small></th>
                             <th width="35%"><small>Concepto</small></th>                            
-                            <th width="15%"><small>Observaciones</small></th>
+                            <th width="12%"><small>Observaciones</small></th>
                             <th style="color:#ff0000;"><small>#Fact</small></th>
-                            <th style="color:#ff0000;"><small>Forma<br>Pago</small></th>
-                            <th class="text-right"><small>Actions</small></th>
+                            <th style="color:#ff0000;" width="6%"><small>Forma<br>Pago</small></th>
+                            <th class="text-right"><small>Actions</small></th>                            
                           </tr>
                         </thead>
                         <tbody>
@@ -154,38 +154,39 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             }
                             $concepto_contabilizacion = (substr($concepto_contabilizacion, 0, 100))."..."; //limite de string
                             $cod_area_simulacion=$cod_area;
-                            $nombre_simulacion='OTROS';
-                            if($tipo_solicitud==1){// la solicitud pertence tcp-tcs
-                              //obtenemos datos de la simulacion TCP
-                              $sql="SELECT sc.nombre,ps.cod_area,ps.cod_unidadorganizacional
-                              from simulaciones_servicios sc,plantillas_servicios ps
-                              where sc.cod_plantillaservicio=ps.codigo and sc.cod_estadoreferencial=1 and sc.codigo=$cod_simulacion_servicio";                            
-                              $stmtSimu = $dbh->prepare($sql);
-                              $stmtSimu->execute();
-                              $resultSimu = $stmtSimu->fetch();
-                              $nombre_simulacion = $resultSimu['nombre'];
-                              $cod_area_simulacion = $resultSimu['cod_area'];
-                            }elseif($tipo_solicitud==2){//  pertence capacitacion
-                              $sqlCostos="SELECT sc.nombre,sc.cod_responsable,ps.cod_area,ps.cod_unidadorganizacional
-                              from simulaciones_costos sc,plantillas_servicios ps
-                              where sc.cod_plantillacosto=ps.codigo and sc.cod_estadoreferencial=1 and sc.codigo=$cod_simulacion_servicio order by sc.codigo";
-                              $stmtSimuCostos = $dbh->prepare($sqlCostos);
-                              $stmtSimuCostos->execute();
-                              $resultSimu = $stmtSimuCostos->fetch();
-                              $nombre_simulacion = $resultSimu['nombre'];
-                              $cod_area_simulacion = $resultSimu['cod_area'];
-                            }elseif($tipo_solicitud==3){// pertence a propuestas y servicios
-                              $sqlCostos="SELECT Descripcion,IdArea,IdOficina from servicios s where s.IdServicio=$cod_simulacion_servicio";
-                              $stmtSimuCostos = $dbh->prepare($sqlCostos);
-                              $stmtSimuCostos->execute();
-                              $resultSimu = $stmtSimuCostos->fetch();
-                              $nombre_simulacion = $resultSimu['Descripcion'];
-                              $cod_area_simulacion = $resultSimu['IdArea'];
-                            }
+                            // $nombre_simulacion='OTROS';
+                            // if($tipo_solicitud==1){// la solicitud pertence tcp-tcs
+                            //   //obtenemos datos de la simulacion TCP
+                            //   $sql="SELECT sc.nombre,ps.cod_area,ps.cod_unidadorganizacional
+                            //   from simulaciones_servicios sc,plantillas_servicios ps
+                            //   where sc.cod_plantillaservicio=ps.codigo and sc.cod_estadoreferencial=1 and sc.codigo=$cod_simulacion_servicio";                            
+                            //   $stmtSimu = $dbh->prepare($sql);
+                            //   $stmtSimu->execute();
+                            //   $resultSimu = $stmtSimu->fetch();
+                            //   $nombre_simulacion = $resultSimu['nombre'];
+                            //   $cod_area_simulacion = $resultSimu['cod_area'];
+                            // }elseif($tipo_solicitud==2){//  pertence capacitacion
+                            //   $sqlCostos="SELECT sc.nombre,sc.cod_responsable,ps.cod_area,ps.cod_unidadorganizacional
+                            //   from simulaciones_costos sc,plantillas_servicios ps
+                            //   where sc.cod_plantillacosto=ps.codigo and sc.cod_estadoreferencial=1 and sc.codigo=$cod_simulacion_servicio order by sc.codigo";
+                            //   $stmtSimuCostos = $dbh->prepare($sqlCostos);
+                            //   $stmtSimuCostos->execute();
+                            //   $resultSimu = $stmtSimuCostos->fetch();
+                            //   $nombre_simulacion = $resultSimu['nombre'];
+                            //   $cod_area_simulacion = $resultSimu['cod_area'];
+                            // }elseif($tipo_solicitud==3){// pertence a propuestas y servicios
+                            //   $sqlCostos="SELECT Descripcion,IdArea,IdOficina from servicios s where s.IdServicio=$cod_simulacion_servicio";
+                            //   $stmtSimuCostos = $dbh->prepare($sqlCostos);
+                            //   $stmtSimuCostos->execute();
+                            //   $resultSimu = $stmtSimuCostos->fetch();
+                            //   $nombre_simulacion = $resultSimu['Descripcion'];
+                            //   $cod_area_simulacion = $resultSimu['IdArea'];
+                            // }
                             $name_area_simulacion=trim(abrevArea($cod_area_simulacion),'-');
                             // --------
                             $responsable=namePersonal($cod_personal);//nombre del personal
-                            $nombre_tipopago=nameTipoPagoSolFac($cod_tipopago);
+                            // $nombre_tipopago=nameTipoPagoSolFac($cod_tipopago);
+                            $string_formaspago=obtnerFormasPago($codigo_facturacion);
                             $nombre_area=trim(abrevArea($cod_area),'-');//nombre del area
                             $nombre_uo=trim(abrevUnidad($cod_unidadorganizacional),' - ');//nombre de la oficina
                             //los registros de la factura
@@ -222,7 +223,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             }
                             $sumaTotalImporte=$sumaTotalMonto-$sumaTotalDescuento_bob;
                             $cont[$index-1]=$nc;
-                            $stringCabecera=$nombre_uo."##".$nombre_area."##".$nombre_simulacion."##".$name_area_simulacion."##".$fecha_registro."##".$fecha_solicitudfactura."##".$nit."##".$razon_social;
+                            // $stringCabecera=$nombre_uo."##".$nombre_area."##".$nombre_simulacion."##".$name_area_simulacion."##".$fecha_registro."##".$fecha_solicitudfactura."##".$nit."##".$razon_social;
                             // if($importe_fact_x!=$sumaTotalImporte && $cod_estado_factura_x!=4){ //para los items de la factura a pagos
                               ?>
                               <script>var nfac=[];itemGenerar_factura_parcial.push(nfac);</script>
@@ -287,9 +288,15 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                 <td class="text-right"><small><?=formatNumberDec($sumaTotalImporte);?></small></td>                              
                                 <td class="text-left"><small><small><?=$razon_social;?></small></small></td>
                                 <td class="text-left"><small><?=$concepto_contabilizacion?></small></td>                                
-                                <td><button class="btn btn-danger btn-sm btn-link" style="padding:0;"><small><?=$obs_devolucion;?></small></button></td>
+                                <td>
+                                  <?php if($cod_estado_factura_x==3){
+                                      $estadofactura=obtener_nombreestado_factura($cod_estadofactura);?>
+                                      <span class="badge badge-dark"><small><?=$estadofactura?></small></span><?php
+                                  }else{?><button class="btn btn-danger btn-sm btn-link" style="padding:0;"><small><?=$obs_devolucion;?></small></button><?php 
+                                  }?>
+                                </td>
                                 <td style="color:#298A08;"><small><?=$nro_fact_x;?><br><span style="color:#DF0101;"><?=$cadenaFacturasM;?></span></small></td>
-                                <td class="text-left" style="color:#ff0000;"><small><small><?=$nombre_tipopago;?></small></small></td>
+                                <td class="text-left" style="color:#ff0000;"><small><small><?=$string_formaspago;?></small></small></td>
                                 <td class="td-actions text-right">
                                   <button class="btn <?=$btnEstado?> btn-sm btn-link" style="padding:0;"><small><?=$estado;?></small></button><br>
                                   <?php
@@ -314,9 +321,9 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                                        </button><?php      
                                                       }
                                                     ?>
-                                                <a href='#' rel="tooltip" class="dropdown-item" onclick="filaTablaAGeneral($('#tablasA_registradas'),<?=$index?>,'<?=$stringCabecera?>')">
+                                               <!--  <a href='#' rel="tooltip" class="dropdown-item" onclick="filaTablaAGeneral($('#tablasA_registradas'),<?=$index?>,'<?=$stringCabecera?>')">
                                                   <i class="material-icons text-warning" title="Ver Detalle">settings_applications</i> Ver Detalle
-                                                </a>
+                                                </a> -->
                                             </div>
                                         </div>                                     
                                         <?php 
@@ -329,6 +336,12 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                             <div class="dropdown-menu">
                                               <?php                                                  
                                                 $cod_tipopago_deposito_cuenta=obtenerValorConfiguracion(55);
+                                                $cod_tipopago_aux=obtnerFormasPago_codigo($cod_tipopago_deposito_cuenta,$codigo_facturacion);//verificamos si en nuestra solicitud se hizo alguna distribucion de formas de pago y sacamos el de credito. devolvera 0 en caso de q no exista
+                                                if($cod_tipopago_aux!=0){
+                                                  $cod_tipopago=$cod_tipopago_aux;
+                                                  $saldo_dc=obtenerMontoporcentaje_formapago($cod_tipopago_deposito_cuenta,$codigo_facturacion);//
+                                                  $datos_FacManual=$codigo_facturacion."/0/".$saldo_dc."/".$index."/".$nit."/".$razon_social;//dato para modal
+                                                }
                                                 if($cod_tipopago==$cod_tipopago_deposito_cuenta){//si es deposito en cuenta se activa la libreta bancaria?>
                                                   <a href='#' title="Generar Factura" class="dropdown-item" onclick="abrirLibretaBancaria('<?=$datos_FacManual;?>','<?=$urlGenerarFacturas2;?>','1')">
                                                     <i class="material-icons text-success">receipt</i> Generar Factura
@@ -344,9 +357,9 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                                     <i class="material-icons text-info">receipt</i> Generar Factura Manual
                                                   </button><?php 
                                                 } ?>
-                                                <a href='#' rel="tooltip" class="dropdown-item" onclick="filaTablaAGeneral($('#tablasA_registradas'),<?=$index?>,'<?=$stringCabecera?>')">
+                                               <!--  <a href='#' rel="tooltip" class="dropdown-item" onclick="filaTablaAGeneral($('#tablasA_registradas'),<?=$index?>,'<?=$stringCabecera?>')">
                                                   <i class="material-icons text-warning" title="Ver Detalle">settings_applications</i> Ver Detalle
-                                                </a>
+                                                </a> -->
                                             </div>
                                           </div>                           
                                           <?php 

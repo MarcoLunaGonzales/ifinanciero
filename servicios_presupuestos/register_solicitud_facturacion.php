@@ -376,9 +376,6 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
       </div>  
     </div>
   </div>
-
-
-
 <script type="text/javascript">
 function valida(f) {
     var ok = true;

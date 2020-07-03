@@ -9,8 +9,8 @@ $globalAdmin=$_SESSION["globalAdmin"];
 
 
   //datos registrado de la simulacion en curso
-  $stmt = $dbh->prepare("SELECT f.*,DATE_FORMAT(f.fecha_factura,'%d/%m/%Y')as fecha_factura_x,DATE_FORMAT(f.fecha_factura,'%H:%i:%s')as hora_factura_x,(select s.abreviatura from unidades_organizacionales s where s.cod_sucursal=f.cod_sucursal limit 1)as sucursal,(select t.nombre from estados_factura t where t.codigo=f.cod_estadofactura)as estadofactura 
- from facturas_venta f where cod_estadofactura<>4 order by  f.fecha_factura desc");
+  $stmt = $dbh->prepare("SELECT f.*,DATE_FORMAT(f.fecha_factura,'%d/%m/%Y')as fecha_factura_x,DATE_FORMAT(f.fecha_factura,'%H:%i:%s')as hora_factura_x,(select s.abreviatura from unidades_organizacionales s where s.cod_sucursal=f.cod_sucursal limit 1)as sucursal
+ from facturas_venta f where cod_estadofactura in (1,2,3) order by  f.fecha_factura desc");
   $stmt->execute();
   $stmt->bindColumn('codigo', $codigo_factura);
   $stmt->bindColumn('cod_sucursal', $cod_sucursal);
@@ -32,7 +32,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
   $stmt->bindColumn('cod_estadofactura', $cod_estadofactura);
   $stmt->bindColumn('sucursal', $sucursal);
   // $stmt->bindColumn('cliente', $cliente);
-  $stmt->bindColumn('estadofactura', $estadofactura);
+  // $stmt->bindColumn('estadofactura', $estadofactura);
   $stmt->bindColumn('cod_comprobante', $cod_comprobante);
   ?>
   <div class="content">
@@ -52,14 +52,14 @@ $globalAdmin=$_SESSION["globalAdmin"];
                         <thead>
                           <tr>
                             <!-- <th class="text-center"></th> -->
-                            <th width="8%">#Fac</th>
+                            <th width="6%">#Fac</th>
                             <!-- <th>Sucursal</th> -->
                             <th width="8%">Fecha<br>Factura</th>
                             <th width="25%">Razón Social</th>
-                            <th width="10%">Nit</th>
+                            <th width="9%">Nit</th>
                             <th width="8%">Importe<br>Factura</th>
                             <th>Detalle</th>
-                            <th width="5%">Estado</th>
+                            <th width="12%">Observaciones</th>
                             <th width="10%" class="text-right">Opciones</th>                            
                           </tr>
                         </thead>
@@ -67,25 +67,26 @@ $globalAdmin=$_SESSION["globalAdmin"];
                         <?php
                           $index=1;
                           while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
-                            
+                            $estadofactura=obtener_nombreestado_factura($cod_estadofactura);
                             $cliente=nameCliente($cod_cliente);
                             //correos de contactos
                             $tipo_solicitud=obtenerTipoSolicitud($cod_solicitudfacturacion);
                             if($tipo_solicitud==2 || $tipo_solicitud==6 || $tipo_solicitud==7){
                               $correos_string=obtenerCorreoEstudiante($cod_cliente);
                             }else $correos_string=obtenerCorreosCliente($cod_cliente);                            
-                            //colores de estados
+                            //colores de estados                            
+                            $observaciones_solfac="";
                             switch ($cod_estadofactura) {
                               case 1://activo
-                                $label='<span class="badge badge-success">';
+                                $label='btn-success';
                                 break;
                               case 2://anulado
-                                $label='<span class="badge badge-danger">';
+                                $label='btn-danger';
+                                $observaciones_solfac = obtener_observacion_factura($cod_solicitudfacturacion);
                                 break;
                               case 3://enviado
-                                $label='<span class="badge badge-info" style="">';
+                                $label='btn-info';
                                 break;
-                                                          
                             }
                             $datos=$codigo_factura.'/'.$cod_solicitudfacturacion.'/'.$nro_factura.'/'.$correos_string.'/'.$razon_social;
                             ?>
@@ -98,8 +99,9 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             <td class="text-right"><?=$nit;?></td>
                             <td class="text-right"><?=formatNumberDec($importe);?></td>
                             <td><small><?=$observaciones;?></small></td>                            
-                            <td><?=$label.$estadofactura."</span>";?></td>
+                            <td style="color: #ff0000;"><?=$observaciones_solfac?></td>
                             <td class="td-actions text-right">
+                              <button class="btn <?=$label?> btn-sm btn-link" style="padding:0;"><small><?=$estadofactura;?></small></button><br>
                               <?php
                                 if($globalAdmin==1 and $cod_estadofactura==1 ){?>
                                   <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalEnviarCorreo" onclick="agregaformEnviarCorreo('<?=$datos;?>')">
@@ -116,10 +118,17 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                       <a class="dropdown-item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_factura;?>&tipo=1&admin=2' target="_blank"><i class="material-icons text-success">print</i> Original Cliente</a>
                                       <a class="dropdown-item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_factura;?>&tipo=1&admin=3' target="_blank"><i class="material-icons text-success">print</i>Copia Contabilidad</a>
                                     </div>
-                                  </div>    
-                                  <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation-anular-factura','<?=$urlAnularFactura;?>&codigo=<?=$codigo_factura;?>&cod_solicitudfacturacion=<?=$cod_solicitudfacturacion?>&cod_comprobante=<?=$cod_comprobante?>')">
+                                  </div>
+                                  <?php
+                                   $datos_devolucion=$cod_solicitudfacturacion."###".$nro_factura."###".$razon_social."###".$urllistFacturasServicios."###".$codigo_factura."###".$cod_comprobante;
+                                  ?>
+                                  <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalDevolverSolicitud" onclick="modal_rechazarFactura('<?=$datos_devolucion;?>')">
+                                    <i class="material-icons" title="Anular Factura">clear</i>
+                                  </button>
+                                  <!-- <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation-anular-factura','<?=$urlAnularFactura;?>&codigo=<?=$codigo_factura;?>&cod_solicitudfacturacion=<?=$cod_solicitudfacturacion?>&cod_comprobante=<?=$cod_comprobante?>')">
                                   <i class="material-icons" title="Anular Factura">clear</i>
-                                  </button><?php 
+                                  </button> -->
+                                  <?php 
                                 } ?>
                             </td>
                             
@@ -140,6 +149,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
     </div>
   </div>
 
+<?php  require_once 'simulaciones_servicios/modal_facturacion.php';?>
 <!-- Modal enviar correo-->
 <div class="modal fade" id="modalEnviarCorreo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog modal-lg" role="document">
@@ -263,7 +273,23 @@ $globalAdmin=$_SESSION["globalAdmin"];
       }else{
         EnviarCorreoAjax(codigo_facturacion,nro_factura,cod_solicitudfacturacion,correo_destino,asunto,mensaje);  
       }
-      
     });
+    $('#rechazarSolicitud').click(function(){
+      var q=0;var s=0;var u=0;var v=0;
+      var cod_solicitudfacturacion=document.getElementById("cod_solicitudfacturacion").value;
+      var estado=document.getElementById("estado").value;
+      var admin=document.getElementById("admin").value;
+      var direccion=document.getElementById("direccion").value;
+      var observaciones=$('#observaciones').val();
+      var codigo_factura=$('#codigo_factura').val();
+      var codigo_comprobante=$('#codigo_comprobante').val();
+      var estado_factura=2;
+      if(observaciones==null || observaciones==0 || observaciones=='' || observaciones==' '){
+        Swal.fire("Informativo!", "Por favor introduzca la observación.", "warning");
+      }else{        
+        registrarRechazoFactura(cod_solicitudfacturacion,observaciones,estado,admin,direccion,codigo_factura,codigo_comprobante,estado_factura);
+      }      
+    }); 
+
   });
 </script>

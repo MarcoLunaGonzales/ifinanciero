@@ -78,7 +78,7 @@ if($cod_facturacion>0){//editar
     $persona_contacto= $resultSimuFact['persona_contacto'];
     $cod_uo= $resultSimuFact['cod_unidadorganizacional'];
     $cod_area= $resultSimuFact['cod_area'];
-    $dias_credito=$result['dias_credito'];
+    $dias_credito=$resultSimuFact['dias_credito'];
 
 }else{//registrar
     $fecha_registro = date('Y-m-d');
@@ -208,49 +208,8 @@ $contadorRegistros=0;
                             <script>var nfac=[];itemTipoPagos_facturacion.push(nfac);var nfacAreas=[];itemAreas_facturacion.push(nfacAreas);</script>
                              <div class="">
                                 <?php
-                                    //====ingresamos los objetos con porcentajes
-                                    if($cod_facturacion > 0)
-                                    {
-                                        $queryTipopagoEdit="SELECT cod_tipopago,porcentaje,monto from solicitudes_facturacion_tipospago where cod_solicitudfacturacion=$cod_facturacion";
-                                        $stmtTipopagoEdit = $dbh->prepare($queryTipopagoEdit);
-                                        $stmtTipopagoEdit->execute();
-                                        $ncAreas=0;$contAreas= array();
-                                        while ($rowAreas = $stmtTipopagoEdit->fetch(PDO::FETCH_ASSOC)) {
-                                            $datoArea = new stdClass();//obejto
-                                            $codFila=(int)$rowAreas["cod_tipopago"];
-                                            $porcentaje_x=trim($rowAreas['porcentaje']);
-                                            $monto_x=trim($rowAreas['monto']);?>
-                                            <script>
-                                                var tipopago={
-                                                    codigo_tipopago: <?=$codFila?>,
-                                                    monto_porcentaje: <?=$porcentaje_x?>,
-                                                    monto_bob: <?=$monto_x?>
-                                                }
-                                                itemTipoPagos_facturacion[0].push(tipopago);  
-                                            </script>
-                                            <?php
-                                        }
-                                        //para objetos areas                                        
-                                        $queryAreasEdit="SELECT cod_area,porcentaje,monto from solicitudes_facturacion_areas where cod_solicitudfacturacion=$cod_facturacion";
-                                        $stmtAreasEdit = $dbh->prepare($queryAreasEdit);
-                                        $stmtAreasEdit->execute();
-                                        $ncAreas=0;$contAreas= array();
-                                        while ($row = $stmtAreasEdit->fetch(PDO::FETCH_ASSOC)) {
-                                            $datoArea = new stdClass();//obejto
-                                            $codFila=(int)$row["cod_area"];
-                                            $porcentaje_x=trim($row['porcentaje']);
-                                            $monto_x=trim($row['monto']);?>
-                                            <script>
-                                                var area={
-                                                    codigo_areas: <?=$codFila?>,
-                                                    monto_porcentaje: <?=$porcentaje_x?>,
-                                                    monto_bob: <?=$monto_x?>
-                                                }
-                                                itemAreas_facturacion[0].push(area);  
-                                            </script>
-                                            <?php
-                                        }
-                                    }
+                                    // añadimos los porcetnajes de distribucion tanto para areas y formas de pago 
+                                    require_once 'simulaciones_servicios/objeto_formaspago_areas.php';
                                     //=== termina porcentaje objetos
                                     $queryAreas="SELECT codigo,nombre,abreviatura from areas where areas_ingreso=1 and cod_estado=1 order by nombre";
                                     $stmtAreas = $dbh->prepare($queryAreas);
@@ -324,7 +283,7 @@ $contadorRegistros=0;
                             <div class="col-sm-2">
                                 <div class="form-group" >    
                                     <button type="button" class="btn btn-danger btn-round btn-fab btn-sm" data-toggle="modal" data-target="" onclick="agregarDatosModalTipoPagoFacturacion(2)">
-                                        <i class="material-icons" title="Tipo Pago Porcentaje">list</i>
+                                        <i class="material-icons" title="Forma de Pago Porcentaje">list</i>
                                         <span id="nfac" class="count bg-warning"></span>
                                      </button>
                                      <button type="button" class="btn btn-primary btn-round btn-fab btn-sm" data-toggle="modal" data-target="" onclick="agregarDatosModalAreasFacturacion(2)">
@@ -509,7 +468,7 @@ $contadorRegistros=0;
                                                         $estadoPagado=$listas->EstadoPagado;
                                                         if($cod_modulo==$codCS){                                                            
                                                             if($estadoPagado==1){
-                                                                $sw2="readonly style='background-color:#cec6d6;'";              
+                                                                $sw2="readonly style='background-color:#cec6d6;'";
                                                             }
                                                             $codigo_externo=$listas->Codigo;
                                                             $montoPagado=$listas->MontoPagado;
@@ -527,6 +486,19 @@ $contadorRegistros=0;
                                                             break;
                                                         }
                                                     }
+                                                    //se da el caso de que la factua se anulo                                                    
+                                                    if($cod_facturacion>0){
+                                                        $codigo_factura=verificamosFacturaGenerada($cod_facturacion);
+                                                        if($codigo_factura!=0){
+                                                            $estadoPagado==0;                                                            
+                                                            $montoPagado = $montoPagado-$preciox;
+                                                            $monto_total_pagado = $monto_total_pagado-$preciox;
+                                                            $monto_total_pagado2 = $monto_total_pagado;
+                                                            $saldo = $monto_total_pagado2+$preciox;
+                                                            $sw2="";
+                                                        }
+                                                    }
+                                                    
                                                     if($estadoPagado!=1){
                                                         // if($cod_facturacion==0){
                                                             //parte del controlador de check//impedir los ya registrados
@@ -650,6 +622,7 @@ $contadorRegistros=0;
                                             <script>
                                                 window.onload = activarInputMontoFilaServicio2;
                                                 window.onload = calcularTotalFilaServicio2Costos;
+
                                                 
                                             </script>
 
@@ -720,10 +693,18 @@ $contadorRegistros=0;
 <!-- verifica que esté seleccionado al menos un item -->
 <script type="text/javascript">
     function valida(f) {
-        var ok = true;
-        var msg = "El monto Total no debe ser '0' o 'negativo', Habilite los Items que desee facturar...\n";  
+        // var aux_tes=document.getElementById('nfac').innerHTML; 
+
+        // var cod_facturacion=document.getElementById("cod_facturacion").value;
+        // console.log(aux_tes);
+        // ejecutar_function_objetos_distribucion_formapago();
+        // ejecutar_function_objetos_distribucion_areas();
+        
+
+        var ok = true;    
         if(f.elements["modal_totalmontoserv_costo"].value == 0 || f.elements["modal_totalmontoserv_costo"].value < 0 || f.elements["modal_totalmontoserv_costo"].value == '')
         {    
+            var msg = "El monto Total no debe ser '0' o 'negativo', Habilite los Items que desee facturar...\n";  
             ok = false;
         }
         var cod_tipopago=f.elements["cod_tipopago"].value;
@@ -740,6 +721,13 @@ $contadorRegistros=0;
     }
 </script>
 <?php  require_once 'simulaciones_servicios/modal_facturacion.php';?>
+<script>
+    $(document).ready(function() {
+        tablaGeneral_tipoPagos_solFac();
+        tablaGeneral_areas_solFac();
+        tablaGeneral_areas_solFacNormas();
+    });
+</script>
 <!-- objeto tipo de pago -->
 <?php 
     $lan=sizeof($cont);//filas si lo hubiese         

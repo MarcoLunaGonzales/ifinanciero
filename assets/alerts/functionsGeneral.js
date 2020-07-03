@@ -9246,8 +9246,35 @@ function verificar_item_activo(index){
   }else{
     Swal.fire("Informativo!", "Por favor, active la fila.", "warning");
   }
+
 }
-function calcularTotalFilaServicio2Costos(){  
+function ejecutar_function_objetos_distribucion_formapago(){
+  var tipo_solicitud=document.getElementById("tipo_solicitud").value;
+  var cod_facturacion=document.getElementById("cod_facturacion").value;
+  if(cod_facturacion>0){
+    if(tipo_solicitud==2){
+      agregarDatosModalTipoPagoFacturacion(2);
+      // agregarDatosModalAreasFacturacion(2);
+    }else{
+      agregarDatosModalTipoPagoFacturacion(1);
+      // agregarDatosModalAreasFacturacion(1);
+    }
+  }
+}
+function ejecutar_function_objetos_distribucion_areas(){
+  var tipo_solicitud=document.getElementById("tipo_solicitud").value;
+  var cod_facturacion=document.getElementById("cod_facturacion").value;
+  if(cod_facturacion>0){
+    if(tipo_solicitud==2){
+      // agregarDatosModalTipoPagoFacturacion(2);
+      agregarDatosModalAreasFacturacion(2);
+    }else{
+      // agregarDatosModalTipoPagoFacturacion(1);
+      agregarDatosModalAreasFacturacion(1);
+    }
+  }
+}
+function calcularTotalFilaServicio2Costos(){
   var sumal=0;  
   var suma_pagado=0;  
   var total= $("#modal_numeroservicio").val();
@@ -14000,12 +14027,13 @@ function RegistrarFacturaManual(cod_solicitudfacturacion,nro_factura,nro_autoriz
 }
 function agregaDatosDetalleFactManual(datos){  
   var d=datos.split('/');  
-  document.getElementById("cliente_x").value=d[0];
-  document.getElementById("razon_social").value=d[1];
-  document.getElementById("nit_cliente").value=d[2];
-  document.getElementById("nro_factura").value=d[3];
-  document.getElementById("nro_autorizacion").value=d[4];
-  document.getElementById("importe").value=number_format(d[5],2) ;  
+  document.getElementById("cliente_facmanual").value=d[0];
+  document.getElementById("razon_social_facmanual").value=d[1];
+  document.getElementById("nit_cliente_facmanual").value=d[2];
+  document.getElementById("nro_factura_facmanual").value=d[3];
+  document.getElementById("nro_autorizacion_facmanual").value=d[4];
+  document.getElementById("importe_facmanual").value=number_format(d[5],2);  
+
 }
 var detalle_tabla_general=[];
 var numFilasA=0;
@@ -14409,6 +14437,19 @@ function modalDevolverSolicitud(datos){
   document.getElementById("direccion").value=d[5];  //link destino
   document.getElementById("observaciones").value=d[6];  //obs
 }
+function modal_rechazarFactura(datos){    
+  var d=datos.split('###');  
+  document.getElementById("cod_solicitudfacturacion").value=d[0];
+  document.getElementById("nro_solicitud").value=d[1];
+  document.getElementById("codigo_servicio").value=d[2];  
+  document.getElementById("estado").value=1;  //estado
+  document.getElementById("admin").value=30;  //tipo admin
+  document.getElementById("direccion").value=d[3];  //link destino
+  document.getElementById("codigo_factura").value=d[4];  //codigo factura
+  document.getElementById("codigo_comprobante").value=d[5];  //codigo factura
+  $("#campo_nro_fact").html("<small>Nro.<br>Factua</small>");
+  $("#campo_rs_fact").html("<small>Razón<br>Social</small>");    
+}
 function modalDevolverSolicitud_regional(datos){    
   var d=datos.split('###');  
   document.getElementById("cod_solicitudfacturacion").value=d[0];
@@ -14487,6 +14528,20 @@ function registrarRechazoSolicitud_intranet(cod_solicitudfacturacion,observacion
         
       }else{
         Swal.fire("A ocurrido un error!", "No se pudo devolver la solicitud.", "warning");        
+      }
+    }
+  });
+}
+function registrarRechazoFactura(cod_solicitudfacturacion,observaciones,estado,admin,direccion,codigo_factura,codigo_comprobante,estado_factura){
+  $.ajax({
+    type:"POST",
+    data:"codigo_factura="+codigo_factura+"&cod_solicitudfacturacion="+cod_solicitudfacturacion+"&observaciones="+observaciones+"&codigo_comprobante="+codigo_comprobante+"&estado_factura="+estado_factura,
+    url:"simulaciones_servicios/anular_facturaGenerada.php",
+    success:function(r){
+      if(r==1){        
+          alerts.showSwal('success-message',direccion);        
+      }else{
+        Swal.fire("A ocurrido un error!", "No se pudo Anular la Factura.", "warning");        
       }
     }
   });

@@ -1,25 +1,28 @@
 <?php
-require_once 'layouts/bodylogin.php';
-require_once 'conexion.php';
-require_once 'functions.php';
-require_once 'functionsGeneral.php';
+// require_once 'layouts/bodylogin.php';
+require_once '../conexion.php';
+require_once '../functions.php';
+require_once '../functionsGeneral.php';
 require_once 'configModule.php';
 
 $dbh = new Conexion();
 
 //RECIBIMOS LAS VARIABLES
-$codigo=$codigo;
-$cod_solicitudfacturacion=$cod_solicitudfacturacion;
-$cod_comprobante=$cod_comprobante;
-
+$codigo_factura=$_POST['codigo_factura'];
+$observaciones=$_POST['observaciones'];
+$cod_solicitudfacturacion=$_POST['cod_solicitudfacturacion'];
+$cod_comprobante=$_POST['codigo_comprobante'];
+$estado_factura=$_POST['estado_factura'];
+session_start();
+$globalUser=$_SESSION["globalUser"];
 // Prepare
-$sql="UPDATE facturas_venta set cod_estadofactura='2' where codigo=$codigo";
-echo $sql;
+$sql="UPDATE facturas_venta set cod_estadofactura='$estado_factura' where codigo=$codigo_factura";
+// echo $sql;
 $stmt = $dbh->prepare($sql);
 $flagSuccess=$stmt->execute();
 if($flagSuccess){
 	//volvemos al estado pre aprobacion de la sol fac
-	$sqlUpdate="UPDATE solicitudes_facturacion SET  cod_estadosolicitudfacturacion=6 where codigo=$cod_solicitudfacturacion";
+	$sqlUpdate="UPDATE solicitudes_facturacion SET cod_estadosolicitudfacturacion=1,obs_devolucion='$observaciones' where codigo=$cod_solicitudfacturacion";
 	$stmtUpdate = $dbh->prepare($sqlUpdate);
 	$flagSuccess=$stmtUpdate->execute();
 	$sqlUpdateComprobante="UPDATE comprobantes SET  cod_estadocomprobante=2 where codigo=$cod_comprobante";
@@ -29,15 +32,16 @@ if($flagSuccess){
 	$fechaHoraActual=date("Y-m-d H:i:s");
 	$idTipoObjeto=2709;
 	$idObjeto=2823; //regristado
-	$obs="En Pre Aprobacion Solicitud";
+	$obs="En Registro Solicitud rechazada";
 	if(isset($_GET['u'])){
 		$u=$_GET['u'];
-		actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);    
+		actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$cod_solicitudfacturacion,$fechaHoraActual,$obs);    
 	}else{
-		actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);    
+		actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$cod_solicitudfacturacion,$fechaHoraActual,$obs);    
 	} 
 }
-
-showAlertSuccessError($flagSuccess,$urllistFacturasServicios);	
+if($flagSuccess)echo 1;
+else echo 2;
+// showAlertSuccessError($flagSuccess,$urllistFacturasServicios);	
 
 ?>

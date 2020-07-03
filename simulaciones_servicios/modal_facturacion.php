@@ -331,19 +331,21 @@
         <input type="hidden" name="estado" id="estado" value="0">
         <input type="hidden" name="admin" id="admin" value="0">
         <input type="hidden" name="direccion" id="direccion" value="0">
+        <input type="hidden" name="codigo_factura" id="codigo_factura" value="0">
+        <input type="hidden" name="codigo_comprobante" id="codigo_comprobante" value="0">
         
         <input type="hidden" name="q" value="0" id="q"/>
         <input type="hidden" name="s" value="0" id="s"/>
         <input type="hidden" name="v" value="0" id="v"/>
         <input type="hidden" name="u" value="0" id="u"/>
         <div class="row">
-          <label class="col-sm-1 col-form-label" style="color:#7e7e7e"><small>Nro. Solicitud</small></label>
+          <label class="col-sm-1 col-form-label" style="color:#7e7e7e"><span id="campo_nro_fact"><small>Nro.<br>Solicitud.</small></span></label>
           <div class="col-sm-2">
             <div class="form-group" >
               <input type="text" class="form-control" name="nro_solicitud" id="nro_solicitud" readonly="true" style="background-color:#e2d2e0">              
             </div>
           </div>
-          <label class="col-sm-1 col-form-label" style="color:#7e7e7e"><small>Código<br>Servicio</small></label>
+          <label class="col-sm-1 col-form-label" style="color:#7e7e7e"><span id="campo_rs_fact"><small >Código<br>Servicio</small></span></label>
           <div class="col-sm-8">
             <div class="form-group" >              
               <input type="text" class="form-control" name="codigo_servicio" id="codigo_servicio" readonly="true" style="background-color:#e2d2e0">
@@ -535,6 +537,71 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-success" id="EnviarCorreo" name="EnviarCorreo" data-dismiss="modal">Aceptar</button>
         <button type="button" class="btn btn-danger" data-dismiss="modal"> <-- Volver </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalDetalleFacturaManual" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h3 class="modal-title" id="myModalLabel"><b>Detalle Factura Manual</b></h3>
+      </div>
+      <div class="modal-body">        
+        <div class="row">
+          <label class="col-sm-3 text-right col-form-label" style="color:#424242">Cliente</label>
+          <div class="col-sm-8">
+            <div class="form-group">
+              <input type="text" name="cliente_facmanual" id="cliente_facmanual" readonly="true" style="background-color:#D8CEF6;" class="form-control">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <label class="col-sm-3 text-right col-form-label" style="color:#424242">Numero de Factura: </label>
+          <div class="col-sm-8">
+            <div class="form-group">
+              <input type="text" name="nro_factura_facmanual" id="nro_factura_facmanual" readonly="true" style="background-color:#D8CEF6;" class="form-control">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <label class="col-sm-3 text-right col-form-label" style="color:#424242">Nro de Autorización: </label>
+          <div class="col-sm-8">
+            <div class="form-group">
+              <input type="text" name="nro_autorizacion_facmanual" id="nro_autorizacion_facmanual" readonly="true" style="background-color:#D8CEF6;" class="form-control">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <label class="col-sm-3 text-right col-form-label" style="color:#424242">Nit Cliente </label>
+          <div class="col-sm-8">
+            <div class="form-group">
+              <input type="number" name="nit_cliente_facmanual" id="nit_cliente_facmanual" readonly="true" style="background-color:#D8CEF6;" class="form-control">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <label class="col-sm-3 text-right col-form-label" style="color:#424242">Razón Social </label>
+          <div class="col-sm-8">
+            <div class="form-group">
+              <input type="text" name="razon_social_facmanual" id="razon_social_facmanual" readonly="true" style="background-color:#D8CEF6;" class="form-control">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <label class="col-sm-3 text-right col-form-label" style="color:#424242">Importe</label>
+          <div class="col-sm-8">
+            <div class="form-group">
+              <input type="text" name="importe_facmanual" id="importe_facmanual" readonly="true" style="background-color:#D8CEF6;" class="form-control">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <!-- <button type="button" class="btn btn-success" id="guardarFacturaManual" name="guardarFacturaManual">Agregar</button> -->
+        <button type="button" class="btn btn-danger" data-dismiss="modal"> Volver </button>
       </div>
     </div>
   </div>
