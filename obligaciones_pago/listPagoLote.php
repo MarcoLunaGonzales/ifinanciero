@@ -63,7 +63,7 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
                         <td class="text-right font-weight-bold">Nombre Lote</td>
                         <td class="text-left" width="26%">
                         	<div class="form-group">
-                               <input type="text" class="form-control" value="" name="nombre_lote" id="nombre_lote">
+                               <input type="text" class="form-control" value="" name="nombre_lote" id="nombre_lote" required>
                              </div>
                         </td>
                         <td class="text-right font-weight-bold">Fecha del pago</td>

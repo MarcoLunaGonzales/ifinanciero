@@ -1,23 +1,9 @@
 <?php
-session_start();
-require_once '../conexion.php';
-require_once '../functionsGeneral.php';
-require_once '../functions.php';
-require_once '../styles.php';
-
-$dbh = new Conexion();
-
-$sqlX="SET NAMES 'utf8'";
-$stmtX = $dbh->prepare($sqlX);
-$stmtX->execute();
-$codigo=$_GET['proveedor'];
-
-
-$lista=listaObligacionesPagoDetalleSolicitudRecursosProveedor($codigo);
+$lista=listaObligacionesPagoDetalleSolicitudRecursosProveedorPagos($codigo,$codPago);
 $totalPagadoX=0;
 
 ?>
-                <div class="col-sm-12" id="">
+ <div class="col-sm-12" id="">
                     <table id="" class="table table-condensed small">
                       <thead>
                         <tr>
@@ -56,6 +42,7 @@ $totalPagadoX=0;
                           $codProveedor=$row['cod_proveedor'];
                           $codPlancuenta=$row['cod_plancuenta'];
                           $codSol=$row['cod_solicitudrecurso'];
+                          $monto_pagado=$row['monto_pagado'];
                           $codSolDet=$codDetalle;
 
                           $dias=obtenerCantidadDiasCredito($codProveedor);
@@ -67,15 +54,22 @@ $totalPagadoX=0;
                           }
                           $totalImporte+=$importe;
                           $saldoImporte=abs($pagadoFila-$importe);
+                          $saldoImporte=$saldoImporte+$monto_pagado;
                           $pagado=$importe-$saldoImporte;
                           
                           $numeroComprobante=nombreComprobante($row['cod_comprobante']);
                           $codTipoPago=$row['cod_tipopagoproveedor'];
                           $nomBen=$row['nombre_beneficiario'];
                           $apellBen=$row['apellido_beneficiario'];
+
+                          $fechaPagado=strftime('%d/%m/%Y',strtotime($row['fecha_pagado']));
+
+                          $tipoPagado=$row['tipo_pagado'];
+                          $cod_detallepago=$row['cod_detallepago'];
 ?>
                         <tr>
                           <td class="text-left">
+                            <input type="hidden" value="<?=$cod_detallepago?>" id="codigo_detallepago<?=$index?>" name="codigo_detallepago<?=$index?>">
                             <input type="hidden" value="<?=$detalle?>" id="glosa_detalle<?=$index?>" name="glosa_detalle<?=$index?>">
                             <input type="hidden" value="<?=$codProveedor?>" id="codigo_proveedor<?=$index?>" name="codigo_proveedor<?=$index?>">
                             <input type="hidden" value="<?=$codSol?>" id="codigo_solicitud<?=$index?>" name="codigo_solicitud<?=$index?>">
@@ -102,18 +96,18 @@ $totalPagadoX=0;
                             <?php 
                             if(($importe-$pagado)>0){
                               ?>
-                              <input type="number" step="0.01" class="form-control text-right text-success" value="0" id="monto_pago<?=$index?>" name="monto_pago<?=$index?>">
+                              <input type="number" step="0.01" class="form-control text-right text-success" value="<?=$monto_pagado?>" id="monto_pago<?=$index?>" name="monto_pago<?=$index?>">
                               
                               <?php
                             }else{
                               ?>
-                              <input type="number" step="0.01" class="form-control text-right text-success" readonly value="0" id="monto_pago<?=$index?>" name="monto_pago<?=$index?>">
+                              <input type="number" step="0.01" class="form-control text-right text-success" readonly value="<?=$monto_pagado?>" id="monto_pago<?=$index?>" name="monto_pago<?=$index?>">
                               <?php
                             } 
                             ?>
                             
                           </td>
-                          <td><input type="text" class="form-control datepicker" value="<?=date('d/m/Y')?>" id="fecha_pago<?=$index?>" name="fecha_pago<?=$index?>"></td>
+                          <td><input type="text" class="form-control datepicker" value="<?=$fechaPagado?>" id="fecha_pago<?=$index?>" name="fecha_pago<?=$index?>"></td>
                           <td>
                           	<div class="form-group">
                                <select class="selectpicker form-control form-control-sm" onchange="mostrarDatosChequeDetalle(<?=$index?>)" data-live-search="true" name="tipo_pago<?=$index?>" id="tipo_pago<?=$index?>" data-style="btn btn-danger">
@@ -125,15 +119,14 @@ $totalPagadoX=0;
                                       $codigoSel=$rowSel['codigo'];
                                       $nombreSelX=$rowSel['nombre'];
                                       $abrevSelX=$rowSel['abreviatura'];
-                                      if($codTipoPago==$codigoSel){
+                                      if($tipoPagado==$codigoSel){
                                          ?><option selected value="<?=$codigoSel;?>"><?=$abrevSelX?></option><?php 
-                                      }else{
-                                         ?><option value="<?=$codigoSel;?>"><?=$abrevSelX?></option><?php 
                                       } 
                                      }
                                     ?>
                                   </select>
                              </div>
+
                           </td>
                           <td>
                           	<div class="d-none" id="div_cheques<?=$index?>">                    
@@ -181,10 +174,3 @@ $totalPagadoX=0;
                     </table>
                   </div>
                   <input type="hidden" value="<?=$index-1?>" id="cantidad_filas" name="cantidad_filas">
-   <script type="text/javascript">
-        $(document).ready(function(e) {
-           if(!($("body").hasClass("sidebar-mini"))){
-           	 $("#minimizeSidebar").click()
-           } 
-        });
-    </script>                

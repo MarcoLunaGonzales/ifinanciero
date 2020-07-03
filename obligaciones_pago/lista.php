@@ -62,7 +62,7 @@ $stmt->bindColumn('cod_ebisa', $cod_ebisa);
                           <th>Oficina</th>
                           <th>Observaciones</th>
                           <th>Estado</th>
-                          <th class="text-right" width="20%">Actions</th>
+                          <th class="text-right" width="25%">Actions</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -107,30 +107,33 @@ $stmt->bindColumn('cod_ebisa', $cod_ebisa);
                           <td class="text-muted"><?=$estado?></td>
                           <td class="td-actions text-right">
                             <?php 
-                           if(!isset($_GET['codigo'])){
+                           if(!isset($_GET['codigo'])&&$codComprobante==0){
                             if($cod_ebisa==0){
                               ?>
                                <div class="btn-group dropdown">
-                                     <button type="button" class="btn btn-info dropdown-toggle" title="Archivo TXT" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                     <button type="button" class="btn btn-info dropdown-toggle" title="Sin Cargar en e-banking" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                        <i class="material-icons">note</i>
                                      </button>
                                     <div class="dropdown-menu">
+                                      <h6 class="dropdown-header">Sin cargar a e-banking</h6>
+                                      <a href="<?=$urlGenerarEbisa;?>?cod=<?=$codigo;?>&a=1" onclick="javascript:location.reload(true);" class="dropdown-item">
+                                                 <i class="material-icons text-warning">offline_pin</i> Marcar como cargado en e-banking
+                                             </a>
                                              <a href="<?=$urlGenerarEbisa?>?cod=<?=$codigo?>&a=0" class="dropdown-item">
                                                  <i class="material-icons text-dark">note</i> Descargar Archivo
                                              </a>
-                                             <a href="<?=$urlGenerarEbisa;?>?cod=<?=$codigo;?>&a=1" onclick="javascript:location.reload(true);" class="dropdown-item">
-                                                 <i class="material-icons text-success">offline_pin</i> Aprobar Ebisa
-                                             </a> 
+                                              
                                     </div>
                                   </div>   
                               <?php  
                             }else{
                               ?>
                                <div class="btn-group dropdown">
-                                     <button type="button" class="btn <?=$btnEstado?> dropdown-toggle" title="Archivo TXT" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                     <button type="button" class="btn btn-success dropdown-toggle" title="Cargado en e-banking" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                        <i class="material-icons">offline_pin</i>
                                      </button>
                                     <div class="dropdown-menu">
+                                      <h6 class="dropdown-header">Cargado en e-banking</h6>
                                              <a href="<?=$urlGenerarEbisa?>?cod=<?=$codigo?>&a=0" class="dropdown-item">
                                                  <i class="material-icons text-dark">note</i> Descargar Archivo
                                              </a>
@@ -163,6 +166,13 @@ $stmt->bindColumn('cod_ebisa', $cod_ebisa);
                                     </div>
                                   </div>   
                               <?php  
+                            }
+                            if(!isset($_GET['codigo'])&&$codEstado==1){
+                              ?>
+                                   <a title="Editar Pago - Detalle" target="_self" href='<?=$urlEditPago;?>?cod=<?=$codigo;?>' class="btn btn-info">
+                                    <i class="material-icons"><?=$iconEdit;?></i>
+                                  </a>
+                                    <?php 
                             }
                             ?>
                             <div class="btn-group dropdown">

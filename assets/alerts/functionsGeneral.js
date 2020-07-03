@@ -2848,7 +2848,7 @@ function guardarSimulacionServicio(){
    if(norma==""||itemAtributos.length==0||dias==""||nombre==""||!(plantilla_servicio>0)){
    Swal.fire('Informativo!','Debe llenar los campos!','warning'); 
   }else{
-    var tipoServicio=$("#tipo_servicio").val()[0];
+    var tipoServicio=$("#tipo_servicio").val();
      var parametros={"alcance":alcance,"id_perfil":idPerfil,"objeto_servicio":objeto,"tipo_servicio":tipoServicio,"id_servicio":idServicio,"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"atributos":JSON.stringify(itemAtributos),"norma":norma,"anios":anios,"afnor":afnor,"tipo_atributo":2};
      $.ajax({
         type: "GET",
@@ -14499,11 +14499,16 @@ function cargarLotesPago(){
 function cargarDatosProveedorPagosLote(fila){
   var prov = $("#proveedor").val().split("####");
   var proveedor = prov[0];
+  if($("#cod_pagoloteedit").length>0){
+      var url ="ajaxListPagosLote.php";
+    }else{
+      var url ="obligaciones_pago/ajaxListPagosLote.php";
+    } 
   var parametros={"proveedor":proveedor,"proveedor_nombre":prov[1],"fila":fila};
      $.ajax({
         type: "GET",
         dataType: 'html',
-        url: "obligaciones_pago/ajaxListPagosLote.php",
+        url: url,
         data: parametros,
         beforeSend: function () {
         $("#texto_ajax_titulo").html("Listando Pagos  de "+prov[1]); 
@@ -14531,7 +14536,7 @@ function agregarLotePago(){
   };
 cant++;
   if(existe==0){
-    cargarDatosProveedorPagosLote(cant);
+    cargarDatosProveedorPagosLote(cant);   
   }else{
    Swal.fire("Informativo!", "Ya existe el proveedor en la lista.", "warning");         
   }

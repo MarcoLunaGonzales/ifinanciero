@@ -68,7 +68,7 @@ $fechaActual=date("d/m/Y");
                   $codigoX=$row['codigo'];
                   $nombreX=$row['nombre'];
                 ?>
-                <option value="<?=$codigoX;?>" ><?=$nombreX;?></option>  
+                <option value="<?=$codigoX;?>" ><?=$codigoX?> - <?=$nombreX;?></option>  
                 <?php
                   }
                   ?> 
@@ -88,7 +88,7 @@ $fechaActual=date("d/m/Y");
                   $codigoX=$row['codigo'];
                   $nombreX=$row['nombre'];
                 ?>
-                <option value="<?=$codigoX;?>" ><?=$nombreX;?></option>  
+                <option value="<?=$codigoX;?>" ><?=$codigoX?> - <?=$nombreX;?></option>  
                 <?php
                   }
                   ?> 
