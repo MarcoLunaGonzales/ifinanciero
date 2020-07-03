@@ -51,8 +51,8 @@ $lista=listaLibretasBancarias();
                           $cuenta=$row['nro_cuenta'];
                           $cod_cuenta=$row['cod_cuenta'];
                           $cod_contraCuenta=$row['cod_contracuenta'];
-                          $nombreCuenta=obtieneNumeroCuenta($cod_cuenta);
-                          $ContraCuenta=obtieneNumeroCuenta($cod_contraCuenta);
+                          $nombreCuenta=obtieneNumeroCuenta($cod_cuenta)." ".nameCuenta($cod_cuenta);
+                          $ContraCuenta=obtieneNumeroCuenta($cod_contraCuenta)." ".nameCuenta($cod_contracuenta);
 ?>
                         <tr>
                           <td align="center"><?=$index;?></td>                          
