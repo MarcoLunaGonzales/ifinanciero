@@ -87,7 +87,7 @@ $tipo_listado=$_GET['tipo_listado'];
                   <?php                  
                     $cont_facturas=contarFacturasLibretaBancaria($CodLibretaDetalle);
                     if($cont_facturas>0){
-                      $sqlDetalleX="SELECT * FROM facturas_venta where cod_libretabancariadetalle=$CodLibretaDetalle and cod_estadofactura=1 order by codigo desc";
+                      $sqlDetalleX="SELECT * FROM facturas_venta where cod_libretabancariadetalle=$CodLibretaDetalle and cod_estadofactura in (1,3,4) order by codigo desc";
                       $stmtDetalleX = $dbh->prepare($sqlDetalleX);
                       $stmtDetalleX->execute();
                       $stmtDetalleX->bindColumn('fecha_factura', $fechaDetalle);

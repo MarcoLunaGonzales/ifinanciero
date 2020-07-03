@@ -451,7 +451,7 @@
          }
       });
       $("#formSoliFactTcp").submit(function(e) {        
-        if($("#total_monto_bob_a_tipopago").val()){//existe array de objetos tipopago
+        if($("#total_monto_bob_a_tipopago").val()){//existe array de objetos tipopago          
           var tipo_solicitud=$("#tipo_solicitud").val();          
           if(tipo_solicitud==2){            
             var montoTotalItems=$("#modal_totalmontoserv_costo_a").val();

@@ -22,9 +22,9 @@
             </script>
             <?php
         }?>
-        <script>                                             
+        <!-- <script>                                             
             $("#nfac").html(itemTipoPagos_facturacion[0].length);
-        </script>
+        </script> -->
         <?php 
         //para objetos areas                                        
         $queryAreasEdit="SELECT cod_area,porcentaje,monto from solicitudes_facturacion_areas where cod_solicitudfacturacion=$cod_facturacion";
@@ -46,9 +46,9 @@
             </script>
             <?php
         }?>
-        <script>                                             
-            $("#nfacAreas").html(itemTipoPagos_facturacion[0].length);
-        </script>
+       <!--  <script>                                             
+            $("#nfacAreas").html(itemAreas_facturacion[0].length);
+        </script> -->
         <?php         
     }
 ?>

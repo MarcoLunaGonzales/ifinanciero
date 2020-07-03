@@ -141,8 +141,7 @@ try{
                 }else{
                     //generamos el comprobante
                     $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$nro_factura,0,0);
-                }
-
+                }                
 				// echo "auto:".$nroAutorizacion." - nro_corr:".$nro_correlativo." - nitCliente:".$nitCliente." - fecha_actual:".$fecha_actual." - totalFinalRedondeado:".$totalFinalRedondeado." - llaveDosificacion:".$llaveDosificacion;
 				// $controlCode = new ControlCode();
 				// $cod_autorizacion = $controlCode->generate($nroAutorizacion,//Numero de autorizacion
@@ -154,7 +153,7 @@ try{
 				// );
 				// echo "cod:".$cod_autorizacion;
 				$sql="INSERT INTO facturas_venta(cod_sucursal,cod_solicitudfacturacion,cod_unidadorganizacional,cod_area,fecha_factura,fecha_limite_emision,cod_tipoobjeto,cod_tipopago,cod_cliente,cod_personal,razon_social,nit,cod_dosificacionfactura,nro_factura,nro_autorizacion,codigo_control,importe,observaciones,cod_estadofactura,cod_comprobante) 
-				values ('$cod_sucursal','$codigo','$cod_unidadorganizacional','$cod_area','$fecha_actual_cH',null,'$cod_tipoobjeto','$cod_tipopago','$cod_cliente','$cod_personal','$razon_social','$nitCliente','$cod_dosificacionfactura','$nro_factura','$nroAutorizacion',null,'$monto_total','$observaciones','4',cod_comprobante)";
+				values ('$cod_sucursal','$codigo','$cod_unidadorganizacional','$cod_area','$fecha_actual_cH',null,'$cod_tipoobjeto','$cod_tipopago','$cod_cliente','$cod_personal','$razon_social','$nitCliente','$cod_dosificacionfactura','$nro_factura','$nroAutorizacion',null,'$monto_total','$observaciones','4',$cod_comprobante)";
 				// echo $sql;
 				$stmtInsertSoliFact = $dbh->prepare($sql);
 				$flagSuccess=$stmtInsertSoliFact->execute();

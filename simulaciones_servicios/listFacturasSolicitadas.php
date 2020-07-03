@@ -286,8 +286,10 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                             <td><small><small><?=$razon_social;?></small></small></td>
                             <td><small><small><?=$concepto_contabilizacion?></small></small></td>
                             <td>
-                              <?php if($cod_estado_factura_x==3){?>
-                                  <span class="badge badge-dark"><small>Enviado a Cliente</small></span><?php
+                              <?php if($cod_estado_factura_x==3){
+                                $estadofactura=obtener_nombreestado_factura($cod_estadofactura);
+                                ?>
+                                  <span class="badge badge-dark"><small><?=$estadofactura?></small></span><?php
                                 }else{?><button class="btn btn-danger btn-sm btn-link" style="padding:0;"><small><?=$obs_devolucion;?></small></button><?php 
                               }?>
                             </td>
@@ -298,7 +300,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                               <?php                              
                                 if($cod_estado_factura_x!=4){
                                   // echo $codigo_fact_x."-";
-                                  if($codigo_fact_x>0){//print facturas
+                                  if($codigo_fact_x>0 && $cod_estado_factura_x!=2 && $cod_estado_factura_x!=5){//print facturas
                                     // echo "entra";
                                     if($cont_facturas<2){
                                       if($cod_estado_factura_x==1){//factura aun no se envio ?>
@@ -404,7 +406,8 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                       }
                                     }
                                   }
-                                }else{//factura manual ?>
+                                }else{//factura manual                                   
+                                  ?>
                                   <button title="Detalles" class="btn btn-success" type="button" data-toggle="modal" data-target="#modalDetalleFacturaManual" onclick="agregaDatosDetalleFactManual('<?=$datos_FacManual;?>')">
                                     <i class="material-icons">list</i>
                                   </button>

@@ -28,6 +28,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
   $stmt->bindColumn('nro_correlativo', $nro_correlativo);
   $stmt->bindColumn('persona_contacto', $persona_contacto);
   $stmt->bindColumn('codigo_alterno', $codigo_alterno);
+  $stmt->bindColumn('obs_devolucion', $obs_devolucion);
   $stmt->bindColumn('tipo_solicitud', $tipo_solicitud);//1 tcp - 2 capacitacion - 3 servicios - 4 manual - 5 venta de normas
 
 
@@ -73,17 +74,17 @@ $stmtCliente->bindColumn('nombre', $nombre_cli);
                       <table class="table" id="tablePaginator">
                         <thead>
                           <tr>
-                            <th class="text-center"></th>                          
                             <th><small>Of - Area</small></th>
                             <th><small>#Sol.</small></th>
                             <th><small>Responsable</small></th>
-                            <th><small>Código<br>Servicio</small></th>                            
-                            <th><small>Fecha<br>Registro</small></th>                                                        
-                            <th><small>Importe<br>(BOB)</small></th>  
-                            <th><small>Concepto</small></th>
-                            <th width="5%"><small>Estado</small></th>
+                            <th><small>Codigo<br>Servicio</small></th>                            
+                            <th><small>Fecha<br>Registro</small></th>
+                            <th><small>Importe<br>(BOB)</small></th>                              
+                            <th width="15%"><small>Razón Social</small></th>
+                            <th width="35%"><small>Concepto</small></th>                            
+                            <th width="12%"><small>Observaciones</small></th>
                             <th style="color:#ff0000;"><small>#Fact</small></th>
-                            <th style="color:#ff0000;"><small>Forma<br>Pago</small></th>
+                            <th style="color:#ff0000;" width="6%"><small>Forma<br>Pago</small></th>
                             <th class="text-right"><small>Actions</small></th>
                           </tr>
                         </thead>
@@ -177,41 +178,42 @@ $stmtCliente->bindColumn('nombre', $nombre_cli);
                             }
                             $concepto_contabilizacion = (substr($concepto_contabilizacion, 0, 100))."..."; //limite de string
                             
-                            $cod_area_simulacion=$cod_area;
-                            $nombre_simulacion='OTROS';
-                            if($tipo_solicitud==1){// la solicitud pertence tcp-tcs
-                              //obtenemos datos de la simulacion TCP
-                              $sql="SELECT sc.nombre,ps.cod_area,ps.cod_unidadorganizacional
-                              from simulaciones_servicios sc,plantillas_servicios ps
-                              where sc.cod_plantillaservicio=ps.codigo and sc.cod_estadoreferencial=1 and sc.codigo=$cod_simulacion_servicio";                            
-                              $stmtSimu = $dbh->prepare($sql);
-                              $stmtSimu->execute();
-                              $resultSimu = $stmtSimu->fetch();
-                              $nombre_simulacion = $resultSimu['nombre'];
-                              $cod_area_simulacion = $resultSimu['cod_area'];
-                            }elseif($tipo_solicitud==2){//  pertence capacitacion
-                              $sqlCostos="SELECT sc.nombre,sc.cod_responsable,ps.cod_area,ps.cod_unidadorganizacional
-                              from simulaciones_costos sc,plantillas_servicios ps
-                              where sc.cod_plantillacosto=ps.codigo and sc.cod_estadoreferencial=1 and sc.codigo=$cod_simulacion_servicio order by sc.codigo";
-                              $stmtSimuCostos = $dbh->prepare($sqlCostos);
-                              $stmtSimuCostos->execute();
-                              $resultSimu = $stmtSimuCostos->fetch();
-                              $nombre_simulacion = $resultSimu['nombre'];
-                              $cod_area_simulacion = $resultSimu['cod_area'];
-                            }elseif($tipo_solicitud==3){// pertence a propuestas y servicios
-                              $sqlCostos="SELECT Descripcion,IdArea,IdOficina from servicios s where s.IdServicio=$cod_simulacion_servicio";
-                              $stmtSimuCostos = $dbh->prepare($sqlCostos);
-                              $stmtSimuCostos->execute();
-                              $resultSimu = $stmtSimuCostos->fetch();
-                              $nombre_simulacion = $resultSimu['Descripcion'];
-                              $cod_area_simulacion = $resultSimu['IdArea'];
-                            }
+                            // $cod_area_simulacion=$cod_area;
+                            // $nombre_simulacion='OTROS';
+                            // if($tipo_solicitud==1){// la solicitud pertence tcp-tcs
+                            //   //obtenemos datos de la simulacion TCP
+                            //   $sql="SELECT sc.nombre,ps.cod_area,ps.cod_unidadorganizacional
+                            //   from simulaciones_servicios sc,plantillas_servicios ps
+                            //   where sc.cod_plantillaservicio=ps.codigo and sc.cod_estadoreferencial=1 and sc.codigo=$cod_simulacion_servicio";                            
+                            //   $stmtSimu = $dbh->prepare($sql);
+                            //   $stmtSimu->execute();
+                            //   $resultSimu = $stmtSimu->fetch();
+                            //   $nombre_simulacion = $resultSimu['nombre'];
+                            //   $cod_area_simulacion = $resultSimu['cod_area'];
+                            // }elseif($tipo_solicitud==2){//  pertence capacitacion
+                            //   $sqlCostos="SELECT sc.nombre,sc.cod_responsable,ps.cod_area,ps.cod_unidadorganizacional
+                            //   from simulaciones_costos sc,plantillas_servicios ps
+                            //   where sc.cod_plantillacosto=ps.codigo and sc.cod_estadoreferencial=1 and sc.codigo=$cod_simulacion_servicio order by sc.codigo";
+                            //   $stmtSimuCostos = $dbh->prepare($sqlCostos);
+                            //   $stmtSimuCostos->execute();
+                            //   $resultSimu = $stmtSimuCostos->fetch();
+                            //   $nombre_simulacion = $resultSimu['nombre'];
+                            //   $cod_area_simulacion = $resultSimu['cod_area'];
+                            // }elseif($tipo_solicitud==3){// pertence a propuestas y servicios
+                            //   $sqlCostos="SELECT Descripcion,IdArea,IdOficina from servicios s where s.IdServicio=$cod_simulacion_servicio";
+                            //   $stmtSimuCostos = $dbh->prepare($sqlCostos);
+                            //   $stmtSimuCostos->execute();
+                            //   $resultSimu = $stmtSimuCostos->fetch();
+                            //   $nombre_simulacion = $resultSimu['Descripcion'];
+                            //   $cod_area_simulacion = $resultSimu['IdArea'];
+                            // }
 
-                            $name_area_simulacion=trim(abrevArea($cod_area_simulacion),'-');
+                            // $name_area_simulacion=trim(abrevArea($cod_area_simulacion),'-');
 
                             // --------
                             $responsable=namePersonal($cod_personal);//nombre del personal
-                            $nombre_tipopago=nameTipoPagoSolFac($cod_tipopago);//
+                            // $nombre_tipopago=nameTipoPagoSolFac($cod_tipopago);//
+                            $string_formaspago=obtnerFormasPago($codigo_facturacion);
                             $nombre_area=trim(abrevArea($cod_area),'-');//nombre del area
                             $nombre_uo=trim(abrevUnidad($cod_unidadorganizacional),' - ');//nombre de la oficina
 
@@ -247,18 +249,24 @@ $stmtCliente->bindColumn('nombre', $nombre_cli);
                             $cadenaFacturasM=trim($cadenaFacturasM,',');
                             ?>
                           <tr>
-                            <td align="center"></td>
                             <td><small><?=$nombre_uo;?> - <?=$nombre_area;?></small></td>
                             <td class="text-right"><small><?=$nro_correlativo;?></small></td>
                             <td><small><?=$responsable;?></small></td>
                             <td><small><?=$codigo_alterno?></small></td>
-                            <td><small><?=$fecha_registro;?></small></td>                                                        
-                            <td class="text-right"><small><?=formatNumberDec($sumaTotalImporte) ;?></small></td>                            
-                            <td width="35%"><small><?=$concepto_contabilizacion?></small></td>
-                            <td><button class="btn <?=$btnEstado?> btn-sm btn-link"><small><?=$estado;?></small></button></td>
+                            <td><small><?=$fecha_registro;?></small></td>
+                            <td class="text-right"><small><?=formatNumberDec($sumaTotalImporte);?></small></td>                            
+                            <td><small><small><?=$razon_social;?></small></small></td>
+                            <td><small><small><?=$concepto_contabilizacion?></small></small></td>
+                            <td>
+                              <?php if($cod_estado_factura_x==3){
+                                  $estadofactura=obtener_nombreestado_factura($cod_estadofactura);?>
+                                  <span class="badge badge-dark"><small><?=$estadofactura?></small></span><?php
+                              }else{?><button class="btn btn-danger btn-sm btn-link" style="padding:0;"><small><?=$obs_devolucion;?></small></button><?php 
+                              }?>
+                            </td>
                             <td style="color:#298A08;"><small><?=$nro_fact_x;?><br><span style="color:#DF0101;"><?=$cadenaFacturasM;?></span></small></td>
-                            <td class="text-left" style="color:#ff0000;"><small><small><?=$nombre_tipopago;?></small></small></td>
-                            <td class="td-actions text-right">
+                            <td class="text-left" style="color:#ff0000;"><small><small><?=$string_formaspago;?></small></small></td>
+                            <td class="td-actions text-right"><button class="btn <?=$btnEstado?> btn-sm btn-link"><small><?=$estado;?></small></button><br>
                               <?php
                                 if($globalAdmin==1){ //
                                   if($codigo_fact_x>0 && $cod_estado_factura_x==1 && $cont_facturas<2){//print facturas
@@ -281,7 +289,7 @@ $stmtCliente->bindColumn('nombre', $nombre_cli);
                                       </div>
                                     </div> <?php 
                                   }elseif($cod_estado_factura_x==4){//factura manual ?>
-                                    <button title="Detalles" class="btn btn-success" type="button" data-toggle="modal" data-target="#modalDetalleFacturaManual" onclick="agregaDatosDetalleFactManual('<?=$datos_FacManual;?>')">
+                                    <button title="Detalles Factura Manual" class="btn btn-success" type="button" data-toggle="modal" data-target="#modalDetalleFacturaManual" onclick="agregaDatosDetalleFactManual('<?=$datos_FacManual;?>')">
                                       <i class="material-icons">list</i>
                                     </button> <?php 
                                   }?>
@@ -380,7 +388,7 @@ $stmtCliente->bindColumn('nombre', $nombre_cli);
           <label class="col-sm-3 text-right col-form-label" style="color:#424242">Cliente</label>
           <div class="col-sm-8">
             <div class="form-group">
-              <input type="text" name="cliente_x" id="cliente_x" readonly="true" style="background-color:#D8CEF6;" class="form-control">
+              <input type="text" name="cliente_facmanual" id="cliente_facmanual" readonly="true" style="background-color:#D8CEF6;" class="form-control">
             </div>
           </div>
         </div>
@@ -388,7 +396,7 @@ $stmtCliente->bindColumn('nombre', $nombre_cli);
           <label class="col-sm-3 text-right col-form-label" style="color:#424242">Numero de Factura: </label>
           <div class="col-sm-8">
             <div class="form-group">
-              <input type="number" name="nro_factura" id="nro_factura" readonly="true" style="background-color:#D8CEF6;" class="form-control">
+              <input type="text" name="nro_factura_facmanual" id="nro_factura_facmanual" readonly="true" style="background-color:#D8CEF6;" class="form-control">
             </div>
           </div>
         </div>
@@ -396,7 +404,7 @@ $stmtCliente->bindColumn('nombre', $nombre_cli);
           <label class="col-sm-3 text-right col-form-label" style="color:#424242">Nro de Autorización: </label>
           <div class="col-sm-8">
             <div class="form-group">
-              <input type="number" name="nro_autorizacion" id="nro_autorizacion" readonly="true" style="background-color:#D8CEF6;" class="form-control">
+              <input type="number" name="nro_autorizacion_facmanual" id="nro_autorizacion_facmanual" readonly="true" style="background-color:#D8CEF6;" class="form-control">
             </div>
           </div>
         </div>
@@ -404,7 +412,7 @@ $stmtCliente->bindColumn('nombre', $nombre_cli);
           <label class="col-sm-3 text-right col-form-label" style="color:#424242">Nit Cliente </label>
           <div class="col-sm-8">
             <div class="form-group">
-              <input type="number" name="nit_cliente" id="nit_cliente" readonly="true" style="background-color:#D8CEF6;" class="form-control">
+              <input type="number" name="nit_cliente_facmanual" id="nit_cliente_facmanual" readonly="true" style="background-color:#D8CEF6;" class="form-control">
             </div>
           </div>
         </div>
@@ -412,7 +420,7 @@ $stmtCliente->bindColumn('nombre', $nombre_cli);
           <label class="col-sm-3 text-right col-form-label" style="color:#424242">Razón Social </label>
           <div class="col-sm-8">
             <div class="form-group">
-              <input type="text" name="razon_social" id="razon_social" readonly="true" style="background-color:#D8CEF6;" class="form-control">
+              <input type="text" name="razon_social_facmanual" id="razon_social_facmanual" readonly="true" style="background-color:#D8CEF6;" class="form-control">
             </div>
           </div>
         </div>
@@ -420,7 +428,7 @@ $stmtCliente->bindColumn('nombre', $nombre_cli);
           <label class="col-sm-3 text-right col-form-label" style="color:#424242">Importe</label>
           <div class="col-sm-8">
             <div class="form-group">
-              <input type="text" name="importe" id="importe" readonly="true" style="background-color:#D8CEF6;" class="form-control">
+              <input type="text" name="importe_facmanual" id="importe_facmanual" readonly="true" style="background-color:#D8CEF6;" class="form-control">
             </div>
           </div>
         </div>

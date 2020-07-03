@@ -7194,6 +7194,17 @@ function verificamosFacturaDuplicada($codigo){
   $codigo_facturacion = $resultVerif['codigo'];
   return $codigo_facturacion;
 }
+function verificamosFacturaGenerada($codigo){
+  $dbh = new Conexion();
+  $stmtVerif = $dbh->prepare("SELECT codigo FROM facturas_venta where cod_solicitudfacturacion=$codigo");
+  $stmtVerif->execute();
+  $valor=0;
+  while ($row = $stmtVerif->fetch())    
+  {
+      $valor=$row['codigo'];      
+  }
+  return $valor;  
+}
 
 
 function obtener_dato_dosificacion($cod_dosificacion){
@@ -7395,7 +7406,7 @@ function obtenerContraCuentaLibretaBancaria($cod_libreta){
 }
 function contarFacturasLibretaBancaria($codigo){
   $dbh = new Conexion();
-  $stmt = $dbh->prepare("SELECT * FROM facturas_venta where cod_libretabancariadetalle=$codigo");
+  $stmt = $dbh->prepare("SELECT * FROM facturas_venta where cod_libretabancariadetalle=$codigo and cod_estadofactura in (1,3,4)");
    $stmt->execute();
    $valor=0;
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -7592,13 +7603,13 @@ function obtenerNroFactura($codigo){
 }
 function obtnerFormasPago($codigo){
   $dbh = new Conexion();
-  $sqlCorreo="SELECT cod_tipopago from solicitudes_facturacion_tipospago where cod_solicitudfacturacion=$codigo";
-  // echo $sqlCorreo;
-  $stmtCorreos = $dbh->prepare($sqlCorreo);
-  $stmtCorreos->execute();
-  $stmtCorreos->bindColumn('cod_tipopago', $cod_tipopago);
+  $sql="SELECT cod_tipopago from solicitudes_facturacion_tipospago where cod_solicitudfacturacion=$codigo";
+  // echo $sql;
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  $stmt->bindColumn('cod_tipopago', $cod_tipopago);
   $correos_string= '';                            
-  while ($row = $stmtCorreos->fetch(PDO::FETCH_BOUND)) {
+  while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
       $nombre_tipopago=nameTipoPagoSolFac($cod_tipopago);
       $correos_string.=$nombre_tipopago.',<br>';
   }
@@ -7606,34 +7617,30 @@ function obtnerFormasPago($codigo){
   return($correos_string);
 }
 
-function obtnerFormasPago_codigo($cod_tipopago_cred,$codigo_facturacion){
+function obtnerFormasPago_codigo($cod_tipopago_aux,$codigo_facturacion){
   $dbh = new Conexion();
-  $sqlCorreo="SELECT cod_tipopago from solicitudes_facturacion_tipospago where cod_solicitudfacturacion=$codigo_facturacion";
-  // echo $sqlCorreo;
-  $stmtCorreos = $dbh->prepare($sqlCorreo);
-  $stmtCorreos->execute();
-  $stmtCorreos->bindColumn('cod_tipopago', $cod_tipopago);
+  $sql="SELECT cod_tipopago from solicitudes_facturacion_tipospago where cod_solicitudfacturacion=$codigo_facturacion and cod_tipopago=$cod_tipopago_aux";
+  // echo $sql;
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  $stmt->bindColumn('cod_tipopago', $cod_tipopago);
   $valor=0;
-  while ($row = $stmtCorreos->fetch(PDO::FETCH_BOUND)) {
-    if($cod_tipopago==$cod_tipopago_cred){
-      $valor=$cod_tipopago_cred;
-    } 
+  while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {    
+      $valor=$cod_tipopago_aux;
   }  
   return($valor);
 }
 
-function obtnerMontoPorcentaje_DepositoCuenta($cod_tipopago_dep,$codigo_facturacion){
+function obtenerMontoporcentaje_formapago($cod_tipopago_dep,$codigo_facturacion){
   $dbh = new Conexion();
-  $sqlCorreo="SELECT cod_tipopago from solicitudes_facturacion_tipospago where cod_solicitudfacturacion=$codigo_facturacion";
-  // echo $sqlCorreo;
-  $stmtCorreos = $dbh->prepare($sqlCorreo);
-  $stmtCorreos->execute();
-  $stmtCorreos->bindColumn('cod_tipopago', $cod_tipopago);
+  $sql="SELECT monto from solicitudes_facturacion_tipospago where cod_solicitudfacturacion=$codigo_facturacion and cod_tipopago=$cod_tipopago_dep";
+  // echo $sql;
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  $stmt->bindColumn('monto', $monto);
   $valor=0;
-  while ($row = $stmtCorreos->fetch(PDO::FETCH_BOUND)) {
-    if($cod_tipopago==$cod_tipopago_dep){
-      $valor=$cod_tipopago_dep;
-    } 
+  while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {    
+      $valor=$monto;
   }  
   return($valor);
 }
@@ -7669,6 +7676,31 @@ function obtener_codigo_modulo_IBnorca($cod_modulo){
   $valor = $resultSimu['programa'];
   return($valor);
 }
+function obtener_nombreestado_factura($codigo){
+  $dbh = new Conexion();
+  $sql="SELECT t.nombre from estados_factura t where t.codigo=$codigo";  
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  $stmt->bindColumn('nombre', $nombre);
+  $valor=0;
+  while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {    
+      $valor=$nombre;
+  }  
+  return($valor);
+}
+function obtener_observacion_factura($codigo){
+  $dbh = new Conexion();
+  $sql="SELECT obs_devolucion from solicitudes_facturacion where codigo=$codigo";  
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  $stmt->bindColumn('obs_devolucion', $obs_devolucion);
+  $valor=0;
+  while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {    
+      $valor=$obs_devolucion;
+  }  
+  return($valor);
+}
+
 ?>
 
 

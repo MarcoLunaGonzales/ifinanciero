@@ -189,7 +189,10 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                         <div class="row" >
                             <script>var nfac=[];itemTipoPagos_facturacion.push(nfac);var nfacAreas=[];itemAreas_facturacion.push(nfacAreas);</script>
                             <div class="">
-                                <?php                                    
+                                <?php
+                                    // añadimos los porcetnajes de distribucion tanto para areas y formas de pago 
+                                    require_once 'simulaciones_servicios/objeto_formaspago_areas.php';
+                                    //=== termina porcentaje objetos
                                     $queryAreas="SELECT codigo,nombre,abreviatura from areas where areas_ingreso=1 and cod_estado=1 order by nombre";
                                     $stmtAreas = $dbh->prepare($queryAreas);
                                     $stmtAreas->execute();
@@ -626,9 +629,6 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
       </div>  
     </div>
   </div>
-
-  <!-- añadimos los porcetnajes de distribucion tanto para areas y formas de pago -->
-<?php  require_once 'simulaciones_servicios/objeto_formaspago_areas.php';?>
 <script type="text/javascript">
 function valida(f) {
     //verificamos monto mayor a 50

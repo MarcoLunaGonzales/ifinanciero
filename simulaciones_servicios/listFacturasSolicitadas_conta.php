@@ -60,14 +60,14 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             <th><small>#Sol.</small></th>
                             <th><small>Responsable</small></th>
                             <th><small>Codigo<br>Servicio</small></th>                            
-                            <th><small>Fecha<br>Registro</small></th>                            
-                            <th><small>Importe<br>(BOB)</small></th>                            
-                            <th width="15%"><small>Razón<br>Social</small></th>
+                            <th><small>Fecha<br>Registro</small></th>
+                            <th><small>Importe<br>(BOB)</small></th>                              
+                            <th width="15%"><small>Razón Social</small></th>
                             <th width="35%"><small>Concepto</small></th>                            
-                            <th width="15%"><small>Observaciones</small></th>
+                            <th width="12%"><small>Observaciones</small></th>
                             <th style="color:#ff0000;"><small>#Fact</small></th>
-                            <th style="color:#ff0000;"><small>Forma<br>Pago</small></th>
-                            <th class="text-right"><small>Actions</small></th>
+                            <th style="color:#ff0000;" width="6%"><small>Forma<br>Pago</small></th>
+                            <th class="text-right"><small>Actions</small></th>                            
                           </tr>
                         </thead>
                         <tbody>
@@ -288,7 +288,13 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                 <td class="text-right"><small><?=formatNumberDec($sumaTotalImporte);?></small></td>                              
                                 <td class="text-left"><small><small><?=$razon_social;?></small></small></td>
                                 <td class="text-left"><small><?=$concepto_contabilizacion?></small></td>                                
-                                <td><button class="btn btn-danger btn-sm btn-link" style="padding:0;"><small><?=$obs_devolucion;?></small></button></td>
+                                <td>
+                                  <?php if($cod_estado_factura_x==3){
+                                      $estadofactura=obtener_nombreestado_factura($cod_estadofactura);?>
+                                      <span class="badge badge-dark"><small><?=$estadofactura?></small></span><?php
+                                  }else{?><button class="btn btn-danger btn-sm btn-link" style="padding:0;"><small><?=$obs_devolucion;?></small></button><?php 
+                                  }?>
+                                </td>
                                 <td style="color:#298A08;"><small><?=$nro_fact_x;?><br><span style="color:#DF0101;"><?=$cadenaFacturasM;?></span></small></td>
                                 <td class="text-left" style="color:#ff0000;"><small><small><?=$string_formaspago;?></small></small></td>
                                 <td class="td-actions text-right">
@@ -333,6 +339,8 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                                 $cod_tipopago_aux=obtnerFormasPago_codigo($cod_tipopago_deposito_cuenta,$codigo_facturacion);//verificamos si en nuestra solicitud se hizo alguna distribucion de formas de pago y sacamos el de credito. devolvera 0 en caso de q no exista
                                                 if($cod_tipopago_aux!=0){
                                                   $cod_tipopago=$cod_tipopago_aux;
+                                                  $saldo_dc=obtenerMontoporcentaje_formapago($cod_tipopago_deposito_cuenta,$codigo_facturacion);//
+                                                  $datos_FacManual=$codigo_facturacion."/0/".$saldo_dc."/".$index."/".$nit."/".$razon_social;//dato para modal
                                                 }
                                                 if($cod_tipopago==$cod_tipopago_deposito_cuenta){//si es deposito en cuenta se activa la libreta bancaria?>
                                                   <a href='#' title="Generar Factura" class="dropdown-item" onclick="abrirLibretaBancaria('<?=$datos_FacManual;?>','<?=$urlGenerarFacturas2;?>','1')">
