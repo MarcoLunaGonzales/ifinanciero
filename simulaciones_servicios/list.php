@@ -166,7 +166,7 @@ $stmt->bindColumn('estado_registro', $estadoRegistroX);
                                  </a><?php
                                   }else{
                                    ?>
-                                   <a title="Editar Simulación - Detalle" target="_blank" href='<?=$urlRegister;?>?cod=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>' class="dropdown-item">
+                                   <a title="Editar Propuesta - Detalle" target="_blank" href='<?=$urlRegister;?>?cod=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>' class="dropdown-item">
                                     <i class="material-icons text-success"><?=$iconEdit;?></i> Editar Propuesta
                                  </a> 
                                    <?php  
@@ -192,7 +192,7 @@ $stmt->bindColumn('estado_registro', $estadoRegistroX);
                                    </a><?php
                                    }else{
                                     ?>
-                                   <a title="Editar Simulación - Detalle" target="_blank" href='<?=$urlRegister;?>?cod=<?=$codigo;?>' class="dropdown-item">
+                                   <a title="Editar Propuesta - Detalle" target="_blank" href='<?=$urlRegister;?>?cod=<?=$codigo;?>' class="dropdown-item">
                                     <i class="material-icons text-success"><?=$iconEdit;?></i> Editar Propuesta
                                  </a> 
                                    <?php
@@ -271,26 +271,26 @@ $stmt->bindColumn('estado_registro', $estadoRegistroX);
                                 if(isset($_GET['q'])){
                                   if($estadoRegistroX!=0){
                                     ?>
-                                   <a title="Editar Simulación - Detalle" target="_self" href='<?=$urlRegister;?>?cod=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>' class="btn btn-info">
+                                   <a title="Editar Propuesta - Detalle" target="_self" href='<?=$urlRegister;?>?cod=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>' class="btn btn-info">
                                     <i class="material-icons"><?=$iconEdit;?></i>
                                   </a>
                                     <?php 
                                   }
                                  ?>
-                                  <button title="Eliminar Simulación" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>')">
+                                  <button title="Eliminar Propuesta" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>')">
                                     <i class="material-icons"><?=$iconDelete;?></i>
                                   </button>
                                  <?php 
                                 }else{
                                   if($estadoRegistroX!=0){
                                     ?>
-                                   <a title="Editar Simulación - Detalle" target="_blank" href='<?=$urlRegister;?>?cod=<?=$codigo;?>' class="btn btn-info">
+                                   <a title="Editar Propuesta - Detalle" target="_blank" href='<?=$urlRegister;?>?cod=<?=$codigo;?>' class="btn btn-info">
                                     <i class="material-icons"><?=$iconEdit;?></i>
                                   </a>
                                     <?php 
                                   }
                                  ?>
-                                  <button title="Eliminar Simulación" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')">
+                                  <button title="Eliminar Propuesta" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')">
                                     <i class="material-icons"><?=$iconDelete;?></i>
                                   </button>
                                  <?php  

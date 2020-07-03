@@ -52,7 +52,7 @@ $stmt->bindColumn('cod_ebisalote', $cod_ebisa);
                           <th>Fecha Sol.</th>
                           <th>Oficina</th>
                           <th>Estado</th>
-                          <th class="text-right" width="20%">Actions</th>
+                          <th class="text-right" width="25%">Actions</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -124,7 +124,13 @@ $stmt->bindColumn('cod_ebisalote', $cod_ebisa);
                                   </div>   
                               <?php 
                              }
-
+                            if($codEstado==1){
+                              ?>
+                                   <a title="Editar Pago Lote- Detalle" target="_self" href='<?=$urlEditPagoLote;?>?cod=<?=$codigo;?>' class="btn btn-info">
+                                    <i class="material-icons"><?=$iconEdit;?></i>
+                                  </a>
+                                    <?php 
+                            }
                             if($codComprobante!=0){
                               ?>
                                <div class="btn-group dropdown">

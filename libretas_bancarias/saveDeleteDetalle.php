@@ -9,7 +9,7 @@ $dbh = new Conexion();
 $codigo=$_GET['codigo'];
 $codLibreta=$_GET['c'];
 // Prepare
-$stmt = $dbh->prepare("UPDATE libretas_bancariasdetalle SET cod_estadoreferencial=2 where codigo=:codigo");
+$stmt = $dbh->prepare("UPDATE libretas_bancariasdetalle SET cod_estadoreferencial=2 where codigo=:codigo;UPDATE facturas_venta SET cod_libretabancariadetalle=0 where cod_libretabancariadetalle =:codigo;");
 // Bind
 $stmt->bindParam(':codigo', $codigo);
 $flagSuccess=$stmt->execute();

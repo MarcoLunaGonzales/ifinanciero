@@ -11,8 +11,11 @@ $dbh = new Conexion();
 $codigo=$_POST['codigo'];
 $nombre=$_POST['nombre'];
 $nro_cuenta=$_POST['nro_cuenta'];
+
+$cod_cuenta=$_POST['cod_cuenta'];
+$cod_contracuenta=$_POST['cod_contracuenta'];
 // Prepare
-$stmt = $dbh->prepare("UPDATE $table set nombre='$nombre',nro_cuenta='$nro_cuenta' where codigo=:codigo");
+$stmt = $dbh->prepare("UPDATE $table set nombre='$nombre',nro_cuenta='$nro_cuenta',cod_cuenta='$cod_cuenta',cod_contracuenta='$cod_contracuenta' where codigo=:codigo");
 // Bind
 $stmt->bindParam(':codigo', $codigo);
 $flagSuccess=$stmt->execute();

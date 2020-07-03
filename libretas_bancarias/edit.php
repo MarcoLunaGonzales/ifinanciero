@@ -15,6 +15,8 @@ $stmt->execute();
 
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 	$codigoX=$row['codigo'];
+	$cod_cuentaX=$row['cod_cuenta'];
+	$cod_contracuentaX=$row['cod_contracuenta'];
 	$nombreX=$row['nombre'];
 	$nroCuenta=$row['nro_cuenta'];
 }
@@ -50,7 +52,59 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 					</div>
 				  </div>
 				</div>
-				
+				 <div class="row">
+				  <label class="col-sm-2 col-form-label">Cuenta</label>
+				  <div class="col-sm-7">
+					<div class="form-group">
+					  <select class="selectpicker form-control" name="cod_cuenta" id="cod_cuenta" data-size="6" data-live-search="true" data-style="btn btn-info" required>
+                          <?php
+                  $stmt = $dbh->prepare("SELECT p.codigo,p.nombre FROM plan_cuentas p where p.nivel=5 order by p.codigo");
+                $stmt->execute();
+                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                  $codigoX=$row['codigo'];
+                  $nombreX=$row['nombre'];
+                if($codigoX==$cod_cuentaX){
+                    ?>
+                <option value="<?=$codigoX;?>" selected><?=$nombreX;?></option>  
+                <?php
+                  }else{
+                    ?>
+                <option value="<?=$codigoX;?>" ><?=$nombreX;?></option>  
+                <?php
+                  }
+                  }
+                  ?> 
+                       </select>
+					</div>
+				  </div>
+				</div>
+				<div class="row">
+				  <label class="col-sm-2 col-form-label">Contra Cuenta</label>
+				  <div class="col-sm-7">
+					<div class="form-group">
+					  <select class="selectpicker form-control" name="cod_contracuenta" id="cod_contracuenta" data-size="6" data-live-search="true" data-style="btn btn-warning" required>
+                          <?php
+                  $stmt = $dbh->prepare("SELECT p.codigo,p.nombre FROM plan_cuentas p where p.nivel=5 order by p.codigo");
+                $stmt->execute();
+                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                  $codigoX=$row['codigo'];
+                  $nombreX=$row['nombre'];
+                  if($codigoX==$cod_contracuentaX){
+                    ?>
+                <option value="<?=$codigoX;?>" selected><?=$nombreX;?></option>  
+                <?php
+                  }else{
+                    ?>
+                <option value="<?=$codigoX;?>" ><?=$nombreX;?></option>  
+                <?php
+                  }
+                
+                  }
+                  ?> 
+                       </select>
+					</div>
+				  </div>
+				</div>
 			  </div>
 			  <div  class="card-footer fixed-bottom">
 				<button type="submit" class="<?=$buttonNormal;?>">Guardar</button>
