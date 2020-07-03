@@ -77,7 +77,7 @@ $contadorRegistros=0;
                                   <tbody>                                
                                     <?php 
                                     $iii=1;
-                                    $queryPr="SELECT * from ibnorca.ventanormas where (idSolicitudfactura=0 or idSolicitudfactura is null) order by Fecha desc limit 20";
+                                    $queryPr="SELECT *,DATE_FORMAT(Fecha,'%d/%m/%Y')as Fecha_x from ibnorca.ventanormas where (idSolicitudfactura=0 or idSolicitudfactura is null) order by Fecha desc limit 20";
                                     // echo $queryPr;
                                     $stmt = $dbh->prepare($queryPr);
                                     $stmt->execute();                                        
@@ -87,7 +87,7 @@ $contadorRegistros=0;
                                         $idOficina=$rowPre['idOficina'];
                                         $nombre_oficina=trim(abrevUnidad($idOficina),'-');
                                         $NombreCliente=$rowPre['NombreCliente'];
-                                        $Fecha=$rowPre['Fecha'];
+                                        $Fecha=$rowPre['Fecha_x'];
                                         $idNorma=$rowPre['idNorma'];
                                         $Norma=nameNorma($idNorma);
                                         $Cantidad=$rowPre['Cantidad'];

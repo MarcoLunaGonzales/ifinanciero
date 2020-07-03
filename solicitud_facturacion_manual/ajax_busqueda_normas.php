@@ -28,7 +28,7 @@ $normas=$_GET['normas'];
 
 
 
-$sql="SELECT * from ibnorca.ventanormas where (idSolicitudfactura=0 or idSolicitudfactura is null)";  
+$sql="SELECT *,DATE_FORMAT(Fecha,'%d/%m/%Y')as Fecha_x from ibnorca.ventanormas where (idSolicitudfactura=0 or idSolicitudfactura is null)";  
 
 if($glosa_cliente!=""){
   $sql.=" and NombreCliente like '%$glosa_cliente%'";
@@ -70,7 +70,7 @@ $sql.=" order by Fecha desc;";
             $idOficina=$rowPre['idOficina'];
             $nombre_oficina=trim(abrevUnidad($idOficina),'-');
             $NombreCliente=$rowPre['NombreCliente'];
-            $Fecha=$rowPre['Fecha'];
+            $Fecha=$rowPre['Fecha_x'];
             $idNorma=$rowPre['idNorma'];
             $Norma=nameNorma($idNorma);
             $Cantidad=$rowPre['Cantidad'];

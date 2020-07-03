@@ -32,6 +32,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
   $stmt->bindColumn('razon_social', $razon_social);
   $stmt->bindColumn('nit', $nit);
   $stmt->bindColumn('observaciones', $observaciones);
+  $stmt->bindColumn('observaciones_2', $observaciones_2);
   $stmt->bindColumn('cod_estadosolicitudfacturacion', $codEstado);
   $stmt->bindColumn('estado', $estado);
   $stmt->bindColumn('nro_correlativo', $nro_correlativo);
@@ -77,6 +78,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                           $cont= array();
                           $cont_pagosParciales= array();
                           while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {// para la parte de facturas parciales, items de sol_Fact
+                            $observaciones_string=obtener_string_observaciones($obs_devolucion,$observaciones,$observaciones_2);
                             switch ($codEstado) {
                               case 1:                                
                                 // $label='<span style="padding:1;" class="badge badge-default">';
@@ -292,7 +294,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                   <?php if($cod_estado_factura_x==3){
                                       $estadofactura=obtener_nombreestado_factura($cod_estadofactura);?>
                                       <span class="badge badge-dark"><small><?=$estadofactura?></small></span><?php
-                                  }else{?><button class="btn btn-danger btn-sm btn-link" style="padding:0;"><small><?=$obs_devolucion;?></small></button><?php 
+                                  }else{?><small><?=$observaciones_string;?></small><?php 
                                   }?>
                                 </td>
                                 <td style="color:#298A08;"><small><?=$nro_fact_x;?><br><span style="color:#DF0101;"><?=$cadenaFacturasM;?></span></small></td>

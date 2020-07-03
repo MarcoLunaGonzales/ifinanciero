@@ -371,6 +371,20 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
       </div>  
     </div>
 </div>
+<script>$('.selectpicker').selectpicker("refresh");</script>
+<?php  require_once 'simulaciones_servicios/modal_facturacion.php';?>
+<script>
+    $(document).ready(function() {
+        var cod_facturacion=document.getElementById("cod_facturacion").value;
+        if(cod_facturacion>0){        
+            tablaGeneral_tipoPagos_solFac();
+            tablaGeneral_areas_solFac();
+            // tablaGeneral_areas_solFacNormas();
+            $("#nfac").html(itemTipoPagos_facturacion[0].length);
+            $("#nfacAreas").html(itemAreas_facturacion[0].length);
+        }
+    });
+</script>
 <script type="text/javascript">
     function valida(f) {
         var ok = true;
@@ -396,9 +410,6 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
         return ok;
     }
 </script>
-
-<script>$('.selectpicker').selectpicker("refresh");</script>
-<?php  require_once 'simulaciones_servicios/modal_facturacion.php';?>
 <!-- objeto tipo de pago -->
 <?php 
     $lan=sizeof($cont);//filas si lo hubiese         

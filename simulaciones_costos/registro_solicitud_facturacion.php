@@ -482,7 +482,6 @@ $contadorRegistros=0;
                                                             $monto_total_pagado = number_format($monto_total_pagado, 2, '.', '');
                                                             $monto_total_pagado2 = number_format($monto_total_pagado2, 2, '.', '');
                                                             $saldo = number_format($saldo, 2, '.', '');
-
                                                             break;
                                                         }
                                                     }
@@ -502,12 +501,12 @@ $contadorRegistros=0;
                                                     if($estadoPagado!=1){
                                                         // if($cod_facturacion==0){
                                                             //parte del controlador de check//impedir los ya registrados
-                                                            $sqlControlador2="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$IdCurso  and sfd.cod_claservicio=$codCS";
+                                                            $sqlControlador2="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$IdCurso  and sfd.cod_claservicio=$codCS and sf.cod_cliente=$ci_estudiante";
                                                              // echo $sqlControlador2;
                                                             $stmtControlador2 = $dbh->prepare($sqlControlador2);
                                                             $stmtControlador2->execute();
                                                             //sacamos el monto total
-                                                            $sqlControladorTotal="SELECT SUM(sfd.precio) as precio from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$IdCurso  and sfd.cod_claservicio=$codCS and sf.cod_estadosolicitudfacturacion<>5";
+                                                            $sqlControladorTotal="SELECT SUM(sfd.precio) as precio from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$IdCurso  and sfd.cod_claservicio=$codCS and sf.cod_estadosolicitudfacturacion<>5 and sf.cod_cliente=$ci_estudiante";
                                                              // echo $sqlControladorTotal;
                                                             $stmtControladorTotal = $dbh->prepare($sqlControladorTotal);
                                                             $stmtControladorTotal->execute();
@@ -690,6 +689,19 @@ $contadorRegistros=0;
         </div>
     </div>
 </div>
+<?php  require_once 'simulaciones_servicios/modal_facturacion.php';?>
+<script>
+    $(document).ready(function() {
+        var cod_facturacion=document.getElementById("cod_facturacion").value;
+        if(cod_facturacion>0){        
+            tablaGeneral_tipoPagos_solFac();
+            tablaGeneral_areas_solFac();
+            $("#nfac").html(itemTipoPagos_facturacion[0].length);
+            $("#nfacAreas").html(itemAreas_facturacion[0].length);
+            // tablaGeneral_areas_solFacNormas();
+        }
+    });
+</script>
 <!-- verifica que esté seleccionado al menos un item -->
 <script type="text/javascript">
     function valida(f) {
@@ -719,14 +731,6 @@ $contadorRegistros=0;
           Swal.fire("Informativo!",msg, "warning");
         return ok;
     }
-</script>
-<?php  require_once 'simulaciones_servicios/modal_facturacion.php';?>
-<script>
-    $(document).ready(function() {
-        tablaGeneral_tipoPagos_solFac();
-        tablaGeneral_areas_solFac();
-        tablaGeneral_areas_solFacNormas();
-    });
 </script>
 <!-- objeto tipo de pago -->
 <?php 

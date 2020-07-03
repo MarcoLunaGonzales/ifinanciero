@@ -52,6 +52,7 @@ if(isset($_GET['q'])){
   $stmt->bindColumn('razon_social', $razon_social);
   $stmt->bindColumn('nit', $nit);
   $stmt->bindColumn('observaciones', $observaciones);
+  $stmt->bindColumn('observaciones_2', $observaciones_2);
   $stmt->bindColumn('cod_estadosolicitudfacturacion', $codEstado);
   $stmt->bindColumn('estado', $estado);
   $stmt->bindColumn('nro_correlativo', $nro_correlativo);
@@ -97,6 +98,7 @@ $item_1=2709;
                         $codigo_fact_x=0;
                         $cont= array();
                         while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+                          $observaciones_string=obtener_string_observaciones($obs_devolucion,$observaciones,$observaciones_2);
                           $datos_otros=$codigo_facturacion."/0/0/0/".$nit."/".$razon_social;//dato 
                           switch ($codEstado) {
                             case 1:
@@ -229,7 +231,7 @@ $item_1=2709;
                             <td><small><small><?=$concepto_contabilizacion?></small></small></td>
                             <td><button class="btn btn-danger btn-sm btn-link" style="padding:0;"><small><?=$obs_devolucion;?></small></button></td>
                             <td style="color:#298A08;"><small><?=$nro_fact_x;?><br><span style="color:#DF0101;">-</span></small></td>
-                            <td class="text-left" style="color:#ff0000;"><small><small><?=$string_formaspago;?></small></small></td>
+                            <td class="text-left" style="color:#ff0000;"><small><?=$string_formaspago;?></small></td>
                             <td class="td-actions text-right">                              
                               <button class="btn <?=$btnEstado?> btn-sm btn-link"><small><?=$estado;?></small></button><br>
                               <?php

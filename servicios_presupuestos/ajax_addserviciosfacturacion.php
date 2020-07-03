@@ -15,7 +15,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $idFila=$_GET['idFila'];
 $IdTipo=$_GET['IdTipo'];
 
-$codigoAdministrativos=obtenerValorConfiguracion(43);
+$codigoAdministrativos=obtenerValorConfiguracion(46);
 
 
 ?>
@@ -27,9 +27,9 @@ $codigoAdministrativos=obtenerValorConfiguracion(43);
           <select class="selectpicker form-control form-control-sm" data-live-search="true" name="modal_editservicio<?=$idFila;?>" id="modal_editservicio<?=$idFila;?>" data-style="fondo-boton" required="true">
               <option disabled selected="selected" value="">--SERVICIOS--</option>
               <?php 
-                $sql="SELECT * from cla_servicios where IdTipo=$IdTipo and vigente=1
+                $sql="SELECT IdClaServicio,Descripcion,Codigo from cla_servicios where IdTipo=$IdTipo and vigente=1
                   UNION 
-                  Select * from cla_servicios where codigo_n2=$codigoAdministrativos";
+                  Select IdClaServicio,Descripcion,Codigo from cla_servicios where codigo_n2=$codigoAdministrativos";
                 $stmt3 = $dbh->prepare($sql);
                 echo $sql; 
                 $stmt3->execute();
