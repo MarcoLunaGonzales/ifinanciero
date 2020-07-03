@@ -7647,6 +7647,21 @@ function obtnerFormasPago($codigo){
   $correos_string=trim($correos_string,',<br>');
   return($correos_string);
 }
+function obtnerFormasPago_factura($codigo){
+  $dbh = new Conexion();
+  $sql="SELECT cod_tipopago from solicitudes_facturacion_tipospago where cod_solicitudfacturacion=$codigo";
+  // echo $sql;
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  $stmt->bindColumn('cod_tipopago', $cod_tipopago);
+  $correos_string= '';                            
+  while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+      $nombre_tipopago=nameTipoPagoSolFac($cod_tipopago);
+      $correos_string.=$nombre_tipopago.',';
+  }
+  $correos_string=trim($correos_string,',');
+  return($correos_string);
+}
 
 function obtnerFormasPago_codigo($cod_tipopago_aux,$codigo_facturacion){
   $dbh = new Conexion();
@@ -7731,7 +7746,14 @@ function obtener_observacion_factura($codigo){
   }  
   return($valor);
 }
-
+function obtener_string_observaciones($obs_devolucion,$observaciones,$observaciones_2){
+  $string_obs="";
+  if($obs_devolucion!=null){
+    $string_obs.="<span style='color:#ff0000;'>".$obs_devolucion."</span>,";}
+  if($observaciones!=null) {$string_obs.='<small>'.$observaciones.'</small>';}
+  if($observaciones_2!=null) {$string_obs.=",<span style='color:#431490;'><small>".$observaciones_2."</small></span>";}
+  return $string_obs;
+}
 ?>
 
 

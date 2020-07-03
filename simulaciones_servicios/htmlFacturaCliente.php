@@ -22,7 +22,7 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 	$tipo_impresion=2;//tipo de impresión 1 sin detalles, 2 detalladamente
 	try {
 		if($auxiliar==1){//
-		    $stmtInfo = $dbh->prepare("SELECT sf.*,DATE_FORMAT(sf.fecha_limite_emision,'%d/%m/%Y')as fecha_limite_emision_x FROM facturas_venta sf where sf.codigo=$codigo");
+		    $stmtInfo = $dbh->prepare("SELECT sf.*,DATE_FORMAT(sf.fecha_limite_emision,'%m/%d/%Y')as fecha_limite_emision_x,DATE_FORMAT(sf.fecha_factura,'%Y-%m-%d')as fecha_factura_x FROM facturas_venta sf where sf.codigo=$codigo");
 		    $stmtInfo->execute();
 		    $resultInfo = $stmtInfo->fetch();   
 		    $cod_factura = $resultInfo['codigo']; 
@@ -30,7 +30,7 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 		    $cod_solicitudfacturacion = $resultInfo['cod_solicitudfacturacion'];
 		    $cod_unidadorganizacional = $resultInfo['cod_unidadorganizacional'];
 		    $cod_area = $resultInfo['cod_area'];
-		    $fecha_factura = $resultInfo['fecha_factura'];
+		    $fecha_factura = $resultInfo['fecha_factura_x'];
 		    $fecha_limite_emision = $resultInfo['fecha_limite_emision_x'];
 		    $cod_cliente = $resultInfo['cod_cliente'];
 		    $cod_personal = $resultInfo['cod_personal'];
@@ -45,14 +45,14 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 		    $cod_tipopago = $resultInfo['cod_tipopago'];
 		    $nombre_cliente = $razon_social;
 		}elseif($auxiliar==2){
-		    $stmtInfo = $dbh->prepare("SELECT sf.*,DATE_FORMAT(sf.fecha_limite_emision,'%d/%m/%Y')as fecha_limite_emision_x FROM facturas_venta sf  where sf.cod_solicitudfacturacion=$codigo");
+		    $stmtInfo = $dbh->prepare("SELECT sf.*,DATE_FORMAT(sf.fecha_limite_emision,'%d/%m/%Y')as fecha_limite_emision_x,DATE_FORMAT(sf.fecha_factura,'%Y-%m-%d')as fecha_factura_x FROM facturas_venta sf  where sf.cod_solicitudfacturacion=$codigo");
 		    $stmtInfo->execute();
 		    $resultInfo = $stmtInfo->fetch();   
 		    $cod_factura = $resultInfo['codigo']; 
 		    $cod_solicitudfacturacion = $resultInfo['cod_solicitudfacturacion'];
 		    $cod_unidadorganizacional = $resultInfo['cod_unidadorganizacional'];
 		    $cod_area = $resultInfo['cod_area'];
-		    $fecha_factura = $resultInfo['fecha_factura'];
+		    $fecha_factura = $resultInfo['fecha_factura_x'];
 		    $fecha_limite_emision = $resultInfo['fecha_limite_emision_x'];
 		    $cod_cliente = $resultInfo['cod_cliente'];
 		    $cod_personal = $resultInfo['cod_personal'];
@@ -69,14 +69,14 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 		    // $nombre_cliente = $resultInfo['nombre_cliente'];
 		    $nombre_cliente = $razon_social;
 		}else{//para la tiendA
-			$stmtInfo = $dbh->prepare("SELECT sf.*,DATE_FORMAT(sf.fecha_limite_emision,'%d/%m/%Y')as fecha_limite_emision_x FROM facturas_venta sf  where sf.codigo=$codigo");
+			$stmtInfo = $dbh->prepare("SELECT sf.*,DATE_FORMAT(sf.fecha_limite_emision,'%d/%m/%Y')as fecha_limite_emision_x,DATE_FORMAT(sf.fecha_factura,'%Y-%m-%d')as fecha_factura_x FROM facturas_venta sf  where sf.codigo=$codigo");
 			$stmtInfo->execute();
 			$resultInfo = $stmtInfo->fetch();   
 			$cod_factura = $resultInfo['codigo']; 
 			$cod_solicitudfacturacion = $resultInfo['cod_solicitudfacturacion'];
 			$cod_unidadorganizacional = $resultInfo['cod_unidadorganizacional'];
 			$cod_area = $resultInfo['cod_area'];
-			$fecha_factura = $resultInfo['fecha_factura'];
+			$fecha_factura = $resultInfo['fecha_factura_x'];
 			$fecha_limite_emision = $resultInfo['fecha_limite_emision_x'];
 			$cod_cliente = $resultInfo['cod_cliente'];
 			$cod_personal = $resultInfo['cod_personal'];
@@ -106,6 +106,7 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 		$stmt3DesCli->execute();
 		//primero guardamos la factura del cliente
 		$nit_empresa=obtenerValorConfiguracionFactura(9);
+		$string_formaspago=obtnerFormasPago_factura($cod_solicitudfacturacion);
 		$html = '';
 		if($tipo_admin==1 || $tipo_admin==2 || $tipo_admin==4 || $tipo_admin==5){
 			$html.='<html>'.
@@ -133,7 +134,7 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
               	<thead>
 	                <tr>
 	                  	<td align="center" width="37%">
-		                    <img class="imagen-logo-izq_2" src="../assets/img/logo_ibnorca_origen_2.png">
+		                    <img class="imagen-logo-izq_2" src="../assets/img/logo_ibnorca_origen_3.jpg">
 		                    <br><br>
 		                    <span><b><u>
 		                      '.obtenerValorConfiguracionFactura(1).'</u><br>
@@ -259,7 +260,7 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
                           $html.='</td>
                         <td align="right" style="border-left: hidden;border-bottom: hidden;" colspan="2" valign="bottom"><b>Total Bs &nbsp;&nbsp;&nbsp;&nbsp;'.formatNumberDec($suma_total).'</b></td>
                     </tr>
-                    <tr><td colspan="3" style="border-top:hidden;" valign="bottom"><span style="padding: 0px;margin: 0px;"><small><small>Forma de Pago: '.$tipo_pago.'</small></small></span></td></tr>
+                    <tr><td colspan="3" style="border-top:hidden;" valign="bottom"><span style="padding: 0px;margin: 0px;"><small><small>Forma de Pago: '.$string_formaspago.'</small></small></span></td></tr>
                     <tr>
                         <td style="border-right: hidden"><small><b>CÓDIGO DE CONTROL:&nbsp;&nbsp;&nbsp;&nbsp;</b> '.$codigo_control.'</small></td>
                         <td align="right" style="border-left: hidden" colspan="2"><small><b>FECHA LÍMITE DE EMISIÓN:&nbsp;&nbsp;&nbsp;&nbsp;</b>'.$fecha_limite_emision.'</small></td> 

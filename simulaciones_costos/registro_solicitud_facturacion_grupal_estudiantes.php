@@ -537,12 +537,12 @@ $contadorRegistros=0;
                                                     if($estadoPagado!=1){
                                                         // if($cod_facturacion==0){
                                                             //parte del controlador de check//impedir los ya registrados
-                                                            $sqlControlador2="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$IdCurso and sfd.cod_claservicio=$codCS";
+                                                            $sqlControlador2="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$IdCurso and sfd.cod_claservicio=$codCS and sf.cod_cliente=$ci_estudiante";
                                                              // echo $sqlControlador2;
                                                             $stmtControlador2 = $dbh->prepare($sqlControlador2);
                                                             $stmtControlador2->execute();
                                                             //sacamos el monto total
-                                                            $sqlControladorTotal="SELECT SUM(sfd.precio) as precio from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$IdCurso and sfd.cod_claservicio=$codCS";
+                                                            $sqlControladorTotal="SELECT SUM(sfd.precio) as precio from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$IdCurso and sfd.cod_claservicio=$codCS and sf.cod_cliente=$ci_estudiante";
                                                              // echo $sqlControladorTotal;
                                                             $stmtControladorTotal = $dbh->prepare($sqlControladorTotal);
                                                             $stmtControladorTotal->execute();
@@ -765,7 +765,21 @@ $contadorRegistros=0;
           </div>
       </div>  
     </div>
-  </div>
+</div>
+<?php  require_once '../simulaciones_servicios/modal_facturacion.php';?>
+<script>$('.selectpicker').selectpicker("refresh");</script>
+<script>
+    $(document).ready(function() {
+        var cod_facturacion=document.getElementById("cod_facturacion").value;
+        if(cod_facturacion>0){        
+            tablaGeneral_tipoPagos_solFac();
+            // tablaGeneral_areas_solFac();
+            tablaGeneral_areas_solFacNormas();
+            $("#nfac").html(itemTipoPagos_facturacion[0].length);
+            $("#nfacAreas").html(itemAreas_facturacion[0].length);
+        }
+    });
+</script>
 <script type="text/javascript">
     function valida(f) {
         var ok = true;
@@ -791,9 +805,6 @@ $contadorRegistros=0;
         return ok;
     }
 </script>
-<script>$('.selectpicker').selectpicker("refresh");</script>
-
-<?php  require_once '../simulaciones_servicios/modal_facturacion.php';?>
 <!-- objeto tipo de pago -->
 <?php 
     $lan=sizeof($cont);//filas si lo hubiese        

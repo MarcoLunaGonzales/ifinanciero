@@ -130,7 +130,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
       var observaciones=$('#observaciones').val();
       var codigo_factura=$('#codigo_factura').val();
       var codigo_comprobante=$('#codigo_comprobante').val();
-      var estado_factura=5;//manual anulado
+      var estado_factura=2;//manual anulado
       if(observaciones==null || observaciones==0 || observaciones=='' || observaciones==' '){
         Swal.fire("Informativo!", "Por favor introduzca la observación.", "warning");
       }else{        

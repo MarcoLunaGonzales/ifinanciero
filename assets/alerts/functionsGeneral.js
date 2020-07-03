@@ -9250,32 +9250,6 @@ function verificar_item_activo(index){
   }
 
 }
-function ejecutar_function_objetos_distribucion_formapago(){
-  var tipo_solicitud=document.getElementById("tipo_solicitud").value;
-  var cod_facturacion=document.getElementById("cod_facturacion").value;
-  if(cod_facturacion>0){
-    if(tipo_solicitud==2){
-      agregarDatosModalTipoPagoFacturacion(2);
-      // agregarDatosModalAreasFacturacion(2);
-    }else{
-      agregarDatosModalTipoPagoFacturacion(1);
-      // agregarDatosModalAreasFacturacion(1);
-    }
-  }
-}
-function ejecutar_function_objetos_distribucion_areas(){
-  var tipo_solicitud=document.getElementById("tipo_solicitud").value;
-  var cod_facturacion=document.getElementById("cod_facturacion").value;
-  if(cod_facturacion>0){
-    if(tipo_solicitud==2){
-      // agregarDatosModalTipoPagoFacturacion(2);
-      agregarDatosModalAreasFacturacion(2);
-    }else{
-      // agregarDatosModalTipoPagoFacturacion(1);
-      agregarDatosModalAreasFacturacion(1);
-    }
-  }
-}
 function calcularTotalFilaServicio2Costos(){
   var sumal=0;  
   var suma_pagado=0;  

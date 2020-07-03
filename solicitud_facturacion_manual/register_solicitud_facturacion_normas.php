@@ -191,7 +191,7 @@ $contadorRegistros=0;
                             <div class="">
                                 <?php 
                                     // añadimos los porcetnajes de distribucion tanto para areas y formas de pago 
-                                    require_once 'simulaciones_servicios/objeto_formaspago_areas.php';
+                                    require_once '../simulaciones_servicios/objeto_formaspago_areas.php';
                                     //=== termina porcentaje objetos
                                     $queryAreas="SELECT codigo,nombre,abreviatura from areas where areas_ingreso=1 and cod_estado=1 order by nombre";
                                     $stmtAreas = $dbh->prepare($queryAreas);
@@ -444,7 +444,7 @@ $contadorRegistros=0;
                                                 $codigoPre=$rowPre['IdVentaNormas'];
                                                 $codCS=488;//por defecto
                                                 $tipoPre=descripcionClaServicio($codCS);
-                                                $cantidadPre=$rowPre['Cantidad'];                                            
+                                                $cantidadPre=1;
                                                 $montoPre=$rowPre['Precio'];
                                                 $descuento_bob_cliente=0; //descuento maximo
                                                 $banderaHab=1;                                            
@@ -458,7 +458,7 @@ $contadorRegistros=0;
                                                 $codigoPre=0;
                                                 $codCS=$rowPre['cod_claservicio'];
                                                 $tipoPre=descripcionClaServicio($codCS);
-                                                $cantidadPre=$rowPre['cantidad'];                                                
+                                                $cantidadPre=1;
                                                 $montoPre=$rowPre['precio'];
                                                 $descuento_bob_cliente=0;                                                 
                                                 $banderaHab=1;                                                
@@ -598,7 +598,8 @@ $contadorRegistros=0;
           </div>
       </div>  
     </div>
-  </div>
+</div>
+
 <script type="text/javascript">
     function valida(f) {
         var ok = true;
@@ -624,9 +625,24 @@ $contadorRegistros=0;
         return ok;
     }
 </script>
+
+
+
 <script>$('.selectpicker').selectpicker("refresh");</script>
 
 <?php  require_once '../simulaciones_servicios/modal_facturacion.php';?>
+<script>
+    $(document).ready(function() {
+        var cod_facturacion=document.getElementById("cod_facturacion").value;
+        if(cod_facturacion>0){        
+            tablaGeneral_tipoPagos_solFac();
+            // tablaGeneral_areas_solFac();
+            tablaGeneral_areas_solFacNormas();
+            $("#nfac").html(itemTipoPagos_facturacion[0].length);
+            $("#nfacAreas").html(itemAreas_facturacion[0].length);
+        }
+    });
+</script>
 <!-- objeto tipo de pago -->
 <?php 
     $lan=sizeof($cont);//filas si lo hubiese        

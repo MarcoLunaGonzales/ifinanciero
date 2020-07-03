@@ -149,7 +149,59 @@ $globalAdmin=$_SESSION["globalAdmin"];
     </div>
   </div>
 
-<?php  require_once 'simulaciones_servicios/modal_facturacion.php';?>
+<?php  //require_once 'simulaciones_servicios/modal_facturacion.php';?>
+<!-- modal devolver solicitud -->
+<div class="modal fade" id="modalDevolverSolicitud" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Rechazar Solicitud</h4>
+      </div>
+      <div class="modal-body">        
+        <input type="hidden" name="cod_solicitudfacturacion" id="cod_solicitudfacturacion" value="0">
+        <input type="hidden" name="estado" id="estado" value="0">
+        <input type="hidden" name="admin" id="admin" value="0">
+        <input type="hidden" name="direccion" id="direccion" value="0">
+        <input type="hidden" name="codigo_factura" id="codigo_factura" value="0">
+        <input type="hidden" name="codigo_comprobante" id="codigo_comprobante" value="0">
+        
+        <input type="hidden" name="q" value="0" id="q"/>
+        <input type="hidden" name="s" value="0" id="s"/>
+        <input type="hidden" name="v" value="0" id="v"/>
+        <input type="hidden" name="u" value="0" id="u"/>
+        <div class="row">
+          <label class="col-sm-1 col-form-label" style="color:#7e7e7e"><span id="campo_nro_fact"><small>Nro.<br>Solicitud.</small></span></label>
+          <div class="col-sm-2">
+            <div class="form-group" >
+              <input type="text" class="form-control" name="nro_solicitud" id="nro_solicitud" readonly="true" style="background-color:#e2d2e0">              
+            </div>
+          </div>
+          <label class="col-sm-1 col-form-label" style="color:#7e7e7e"><span id="campo_rs_fact"><small >Código<br>Servicio</small></span></label>
+          <div class="col-sm-8">
+            <div class="form-group" >              
+              <input type="text" class="form-control" name="codigo_servicio" id="codigo_servicio" readonly="true" style="background-color:#e2d2e0">
+            </div>
+          </div>
+        </div>                
+        <div class="row">
+          <label class="col-sm-12 col-form-label" style="color:#7e7e7e"><small>Observaciones</small></label>
+        </div>
+        <div class="row">
+          <div class="col-sm-12" style="background-color:#f9edf7">
+            <div class="form-group" >              
+              <textarea type="text" name="observaciones" id="observaciones" class="form-control" required="true"></textarea>
+            </div>
+          </div>
+        </div>        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" id="rechazarSolicitud" name="rechazarSolicitud" data-dismiss="modal">Aceptar</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal"> <-- Volver </button>
+      </div>
+    </div>
+  </div>
+</div>
 <!-- Modal enviar correo-->
 <div class="modal fade" id="modalEnviarCorreo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog modal-lg" role="document">
