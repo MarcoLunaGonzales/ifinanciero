@@ -167,9 +167,9 @@ $stmtb->bindColumn('nombre', $nombre);
                               <a href="#" title="Relacionar Con Factura" onclick="relacionar_factura_libreta(<?=$codigo?>);return false;"  class="btn btn-success">
                                 <i class="material-icons">add_circle_outline</i>
                               </a>
-                              <!-- <a href="#" rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDeleteDetalle;?>&codigo=<?=$codigo;?>&c=<?=$codigoLibreta?>')">
+                              <a href="#" rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDeleteDetalle;?>&codigo=<?=$codigo;?>&c=<?=$codigoLibreta?>')">
                                 <i class="material-icons"><?=$iconDelete;?></i>
-                              </a> -->
+                              </a>
                               <?php
                               }
                               ?>

@@ -7276,7 +7276,7 @@ function obtenerObtenerLibretaBancaria(){
 
 function verificarFechaMaxDetalleLibreta($fecha,$codigo){
    $dbh = new Conexion();
-   $stmt = $dbh->prepare("SELECT * FROM libretas_bancariasdetalle where cod_libretabancaria=:codigo and fecha_hora >= :fecha");
+   $stmt = $dbh->prepare("SELECT * FROM libretas_bancariasdetalle where cod_libretabancaria=:codigo and fecha_hora >= :fecha and cod_estadoreferencial!=2");
    $stmt->bindParam(':codigo',$codigo);
    $stmt->bindParam(':fecha',$fecha);
    $stmt->execute();

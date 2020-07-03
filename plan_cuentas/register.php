@@ -11,9 +11,11 @@ $codigo=$codigo;
 
 //echo $codigo;
 $cuentaPadre="";
+$codcuentaPadre="";
 $nuevaCuenta="";
 $nivelCuenta=0;
 if($codigo>0){
+	$codcuentaPadre=$codigo;
 	$cuentaPadre=obtieneNumeroCuenta($codigo);
 	$nuevaCuentaFormateada=formateaPuntosPlanCuenta($cuentaPadre);
 	$nivelCuenta=buscarNivelCuenta($nuevaCuentaFormateada);
@@ -57,7 +59,8 @@ if($codigo>0){
 				  <label class="col-sm-2 col-form-label">Cuenta Padre</label>
 				  <div class="col-sm-7">
 					<div class="form-group">
-					  <input class="form-control" type="text" name="padre" id="padre" required="true" readonly="true" value="<?=$cuentaPadre;?>"/>
+					  <input class="form-control" type="text" name="numero_padre" id="numero_padre" required="true" readonly="true" value="<?=$cuentaPadre;?>"/>
+					  <input class="form-control" type="hidden" name="padre" id="padre" required="true" readonly="true" value="<?=$codcuentaPadre;?>"/>
 					</div>
 				  </div>
 				</div>
