@@ -18,8 +18,8 @@ $v=0;
 if(isset($_GET['v'])){
  $v=$_GET['v'];
  if($v!=0){
-  $globalUnidad=obtenerIdUnidadServicioIbnorca($v);
-  $globalArea=obtenerIdAreaServicioIbnorca($v); 
+  //$globalUnidad=obtenerIdUnidadServicioIbnorca($v);
+  //$globalArea=obtenerIdAreaServicioIbnorca($v); 
  }
 }
   ?>
@@ -37,9 +37,9 @@ if(isset($_GET['v'])){
                                     if($codigoX==$globalUnidad){
                                      ?><option selected value="<?=$codigoX;?>"><?=$abrevX;?></option><?php 
                                    }else{
-                                    if($v==0){
+                                    //if($v==0){
                                       ?><option value="<?=$codigoX;?>"><?=$abrevX;?></option><?php
-                                    }      
+                                    //}      
                                    }
                                        
                                       }
@@ -62,9 +62,9 @@ if(isset($_GET['v'])){
                                            if($codigoX==$globalArea){
                                              ?><option selected value="<?=$codigoX;?>"><?=$abrevX;?></option><?php
                                            }else{
-                                            if($v==0){
+                                            //if($v==0){
                                               ?><option value="<?=$codigoX;?>"><?=$abrevX;?></option><?php
-                                            }          
+                                            //}          
                                            }
                                             
                                          } 

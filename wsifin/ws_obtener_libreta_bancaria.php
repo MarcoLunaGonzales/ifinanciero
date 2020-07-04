@@ -105,21 +105,23 @@ FROM libretas_bancariasdetalle ce where ce.cod_libretabancaria=$codigoLib and  c
            $datosDetalle[$index]['MontoFactura']=null;*/
            $saldoFactura=$rowLibDetalle['monto'];
            if($rowLibDetalle['cod_factura']!=""){
-           $sqlFacturaLibreta="SELECT codigo,cod_estadofactura FROM facturas_venta where cod_libretabancariadetalle=".$rowLibDetalle['codigo'];
+           $sqlFacturaLibreta="SELECT * FROM facturas_venta where cod_libretabancariadetalle=".$rowLibDetalle['codigo'];
            $stmtFacLibreta = $dbh->prepare($sqlFacturaLibreta);
            $stmtFacLibreta->execute();
            $sumaImporte=0;
-           $datosDetalleFac='';
+           $datosDetalleFac=[];
+           $indexAux=0;
            while ($rowFacLib = $stmtFacLibreta->fetch(PDO::FETCH_ASSOC)) {
-              if($rowFacLib['cod_estadofactura']==1){
+              if($rowFacLib['cod_estadofactura']!=2){
                $datosFacturas=obtenerDatosFacturaVenta($rowFacLib['codigo']);
-               $datosDetalleFac[$index]['FechaFactura']=strftime('%d/%m/%Y',strtotime($datosFacturas[0]));
-               $datosDetalleFac[$index]['NumeroFactura']=$datosFacturas[1];
-               $datosDetalleFac[$index]['NitFactura']=$datosFacturas[2];
-               $datosDetalleFac[$index]['RSFactura']=$datosFacturas[3];
-               $datosDetalleFac[$index]['DetalleFactura']=$datosFacturas[4];
-               $datosDetalleFac[$index]['MontoFactura']=number_format($datosFacturas[5],2,".","");
+               $datosDetalleFac[$indexAux]['FechaFactura']="";
+               $datosDetalleFac[$indexAux]['NumeroFactura']=$datosFacturas[1];
+               $datosDetalleFac[$indexAux]['NitFactura']=$datosFacturas[2];
+               $datosDetalleFac[$indexAux]['RSFactura']=$datosFacturas[3];
+               $datosDetalleFac[$indexAux]['DetalleFactura']=$datosFacturas[4];
+               $datosDetalleFac[$indexAux]['MontoFactura']=number_format($datosFacturas[5],2,".","");
                $sumaImporte+=$datosFacturas[5];
+               $indexAux++;
               } 
             }
             $saldoFactura=$rowLibDetalle['monto']-$sumaImporte;

@@ -3798,7 +3798,13 @@ function addSolicitudDetalle(obj,tipo) {
       divDetalle=$("#div"+numFilas);
       var url="ajaxSolicitudRecursosDetalleSimulacion.php";
       ajax=nuevoAjax();
-      ajax.open("GET",url+"?idFila="+numFilas+"&codigo="+codigoSol,true);
+      if(tipoSolicitud==3){
+        var unidad = $("#unidad_solicitud").val();
+        var area = $("#area_solicitud").val();
+        ajax.open("GET",url+"?idFila="+numFilas+"&unidad="+unidad+"&area="+area+"&codigo="+codigoSol,true);  
+      }else{
+        ajax.open("GET",url+"?idFila="+numFilas+"&codigo="+codigoSol,true);
+      }
       ajax.onreadystatechange=function(){
         if (ajax.readyState==4) {
           divDetalle.html(ajax.responseText);
