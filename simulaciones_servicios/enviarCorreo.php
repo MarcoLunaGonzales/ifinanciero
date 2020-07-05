@@ -12,7 +12,7 @@ $listaCorreos=explode(",", $correo_destino);
 $correo_destino=trim($correo_destino,',');
 
 $fechaActual=date("Y-m-d H:m:s");
-$asunto="ENVIO DE FACTURA";
+$asunto="Envio De Factura";
 $mensaje="Estimado Cliente,<br>\n<br>\n Adjunto la Factura Nro. ".$nro_factura.".<br>\n<br>\nSaludos.";
 // echo $correo_destino."<br>";
 // echo $asunto."<br>";
