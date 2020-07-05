@@ -4,6 +4,28 @@ set_time_limit(0);
 
 session_start();
 if(isset($_SESSION['logueado'])){
+  if(isset($_GET['q'])){
+    $q=$_GET['q'];
+  $dbh = new Conexion();
+  $sql="SELECT p.codigo,CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre)as nombre, p.cod_area, p.cod_unidadorganizacional, 1 as perfil, 1 as usuario_pon 
+      from personal p
+      where p.codigo='$q'";
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  $stmt->bindColumn('cod_area', $codArea);
+  $stmt->bindColumn('cod_unidadorganizacional', $codUnidad);
+  while ($rowDetalle = $stmt->fetch(PDO::FETCH_BOUND)) {
+  $nombreUnidad=abrevUnidad($codUnidad);
+  $nombreArea=abrevArea($codArea);
+
+  $_SESSION['globalUnidad']=$codUnidad;
+  $_SESSION['globalNombreUnidad']=$nombreUnidad;
+
+  $_SESSION['globalArea']=$codArea;
+  $_SESSION['globalNombreArea']=$nombreArea;
+  }
+ }
+
 	require_once('layouts/layout.php');	
 }else{
 	if(isset($_GET['q'])){

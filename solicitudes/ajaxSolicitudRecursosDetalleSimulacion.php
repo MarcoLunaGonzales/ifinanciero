@@ -23,6 +23,13 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
   $unidadSol=$row['cod_unidadorganizacional'];
   $areaSol=$row['cod_area'];
 }
+
+if(isset($_GET["unidad"])){
+  $globalUnidad = $_GET["unidad"];
+}
+if(isset($_GET["area"])){
+  $globalArea = $_GET["area"];
+}
 ?>
 <div class="form-group d-none" id="divNitFactura<?=$idFila;?>">  
   <input class="form-control" type="number"  onkeyup="llenarFacturaAutomaticamente(this.value,'<?=$idFila;?>',0);">

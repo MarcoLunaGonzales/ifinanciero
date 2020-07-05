@@ -7596,13 +7596,15 @@ function obtenerCorreoEstudiante($ci_estudiante){
   $stmtCorreos = $dbh->prepare($sqlCorreo);
   $stmtCorreos->execute();
   $stmtCorreos->bindColumn('correo', $correo);
-  $correos_string= '';                            
+  $correos_string=[]; 
+  $index=0;                           
   while ($row = $stmtCorreos->fetch(PDO::FETCH_BOUND)) {
-    if($correos_string!=null || $correos_string!='' || $correos_string!=' '){
-      $correos_string.=$correo.',';
+    if($correo!=null || $correo!='' || $correo!=' '){
+      $correos_string[$index]=$correo;
+      $index++;
     }
   }
-  return($correos_string);
+  return implode(",",$correos_string);
 }
 function obtenerTipoSolicitud($codigo){
   $dbh = new Conexion();

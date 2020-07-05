@@ -92,7 +92,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             ?>
                           <tr>
                             <!-- <td align="center"><?=$index;?></td> -->
-                            <td><?=$nro_factura;?></td>
+                            <td><?=$nro_factura;?> <?=$datos?></td>
                             <!-- <td><?=$sucursal;?></td> -->
                             <td><?=$fecha_factura?><br><?=$hora_factura?></td>
                             <td class="text-left"><small><?=$razon_social;?></small></td>
@@ -149,7 +149,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
     </div>
   </div>
 
-<?php  //require_once 'simulaciones_servicios/modal_facturacion.php';?>
+<?php  require_once 'simulaciones_servicios/modal_facturacion.php';?>
 <!-- modal devolver solicitud -->
 <div class="modal fade" id="modalDevolverSolicitud" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog modal-lg" role="document">

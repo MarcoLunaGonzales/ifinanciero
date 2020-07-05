@@ -3798,7 +3798,13 @@ function addSolicitudDetalle(obj,tipo) {
       divDetalle=$("#div"+numFilas);
       var url="ajaxSolicitudRecursosDetalleSimulacion.php";
       ajax=nuevoAjax();
-      ajax.open("GET",url+"?idFila="+numFilas+"&codigo="+codigoSol,true);
+      if(tipoSolicitud==3){
+        var unidad = $("#unidad_solicitud").val();
+        var area = $("#area_solicitud").val();
+        ajax.open("GET",url+"?idFila="+numFilas+"&unidad="+unidad+"&area="+area+"&codigo="+codigoSol,true);  
+      }else{
+        ajax.open("GET",url+"?idFila="+numFilas+"&codigo="+codigoSol,true);
+      }
       ajax.onreadystatechange=function(){
         if (ajax.readyState==4) {
           divDetalle.html(ajax.responseText);
@@ -10742,7 +10748,7 @@ function noSeleccionarTodosChecks(tagName) {
 
 //enviar correo
 //contratos de personal
-function agregaformEnviarCorreo(datos){  
+function agregaformEnviarCorreo(datos){ 
   var d=datos.split('/');  
   document.getElementById("codigo_facturacion").value=d[0];
   document.getElementById("cod_solicitudfacturacion").value=d[1];
@@ -10750,7 +10756,8 @@ function agregaformEnviarCorreo(datos){
   document.getElementById("correo_destino").value=d[3];
   document.getElementById("razon_social").value=d[4];
 }
-function agregaformEnviarCorreo_solfac(datos){  
+function agregaformEnviarCorreo_solfac(datos){ 
+
   var d=datos.split('/');  
   document.getElementById("codigo_facturacion_sf").value=d[0];
   document.getElementById("cod_solicitudfacturacion_sf").value=d[1];
