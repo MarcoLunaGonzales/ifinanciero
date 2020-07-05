@@ -273,7 +273,7 @@ $contadorRegistros=0;
                                             $datos[0][$nc]=$dato;                           
                                             $nc++;
                                             ?>
-                                            <option <?=($cod_tipopago==$row["codigo"])?"selected":"";?>  value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                                            <option <?=($cod_tipopago==$row["codigo"])?"selected":(($cod_facturacion>0)?"disabled":"");?>  value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
                                         <?php } 
                                         $cont[0]=$nc;
                                         ?>
@@ -438,7 +438,7 @@ $contadorRegistros=0;
                                                 //para la parte de editar
                                                 $sw="";
                                                 if($cod_facturacion>0){
-                                                    $sqlControlador="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$IdCurso  and sfd.cod_claservicio=$codCS and sf.codigo=$cod_facturacion";
+                                                    $sqlControlador="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$IdCurso  and sfd.cod_claservicio=$codCS and sf.codigo=$cod_facturacion and tipo_solicitud=2";
                                                     // echo $sqlControlador;
                                                     $stmtControlado = $dbh->prepare($sqlControlador);
                                                    $stmtControlado->execute();                                                   
@@ -501,12 +501,12 @@ $contadorRegistros=0;
                                                     if($estadoPagado!=1){
                                                         // if($cod_facturacion==0){
                                                             //parte del controlador de check//impedir los ya registrados
-                                                            $sqlControlador2="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$IdCurso  and sfd.cod_claservicio=$codCS and sf.cod_cliente=$ci_estudiante";
+                                                            $sqlControlador2="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$IdCurso  and sfd.cod_claservicio=$codCS and sf.cod_cliente=$ci_estudiante and tipo_solicitud=2";
                                                              // echo $sqlControlador2;
                                                             $stmtControlador2 = $dbh->prepare($sqlControlador2);
                                                             $stmtControlador2->execute();
                                                             //sacamos el monto total
-                                                            $sqlControladorTotal="SELECT SUM(sfd.precio) as precio from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$IdCurso  and sfd.cod_claservicio=$codCS and sf.cod_estadosolicitudfacturacion<>5 and sf.cod_cliente=$ci_estudiante";
+                                                            $sqlControladorTotal="SELECT SUM(sfd.precio) as precio from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$IdCurso  and sfd.cod_claservicio=$codCS and sf.cod_estadosolicitudfacturacion<>5 and sf.cod_cliente=$ci_estudiante and tipo_solicitud=2";
                                                              // echo $sqlControladorTotal;
                                                             $stmtControladorTotal = $dbh->prepare($sqlControladorTotal);
                                                             $stmtControladorTotal->execute();
@@ -594,24 +594,24 @@ $contadorRegistros=0;
                                                     <td>
                                                         <input type="number" step="0.01" id="importe_a_pagar<?=$iii?>" name="importe_a_pagar<?=$iii?>" class="form-control text-primary text-right"  value="<?=$saldo?>" step="0.01" onkeyup="verificar_item_activo(<?=$iii?>)" <?=$sw2?>>
                                                     </td>
-                                                  <!-- checkbox -->
-                                                  <td>
-                                                    <?php if($sw2!="readonly style='background-color:#cec6d6;'"){?>
-                                                        <div class="togglebutton">
-                                                           <label>
-                                                             <input type="checkbox"  id="modal_check<?=$iii?>" onchange="calcularTotalFilaServicio2Costos()" <?=$sw?> >
-                                                             <span class="toggle"></span>
-                                                           </label>
-                                                       </div>
-                                                    <?php }else{?>
-                                                      <div class="togglebutton d-none">
-                                                           <label>
-                                                             <input type="checkbox"  id="modal_check<?=$iii?>" >
-                                                             <span class="toggle"></span>
-                                                           </label>
-                                                       </div>                                                
-                                                    <?php }?>
-                                                  </td><!-- fin checkbox -->
+                                                    <!-- checkbox -->
+                                                    <td>
+                                                        <?php if($sw2!="readonly style='background-color:#cec6d6;'"){?>
+                                                            <div class="togglebutton">
+                                                               <label>
+                                                                 <input type="checkbox"  id="modal_check<?=$iii?>" onchange="calcularTotalFilaServicio2Costos()" <?=$sw?> >
+                                                                 <span class="toggle"></span>
+                                                               </label>
+                                                           </div>
+                                                        <?php }else{?>
+                                                          <div class="togglebutton d-none">
+                                                               <label>
+                                                                 <input type="checkbox"  id="modal_check<?=$iii?>" >
+                                                                 <span class="toggle"></span>
+                                                               </label>
+                                                           </div>                                                
+                                                        <?php }?>
+                                                    </td><!-- fin checkbox -->
                                                </tr>
 
                                             <?php   $iii++;  }

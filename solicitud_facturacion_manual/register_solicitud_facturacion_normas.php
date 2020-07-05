@@ -11,16 +11,19 @@ require_once 'configModule.php';
 $dbh = new Conexion();
 $globalUser=$_SESSION["globalUser"];
 //recibimos las normas seleccionadas a facturar
+$cod_personal = $globalUser;
 if(isset($_POST['q'])){
   $q=$_POST['q'];
   $s=$_POST['s'];
   $u=$_POST['u'];
   $v=$_POST['v'];
+  $cod_personal = $q;
 }elseif(isset($_GET['q'])){    
     $q=$_GET['q'];
     $s=$_GET['s'];
     $u=$_GET['u'];
     $v=$_GET['v'];
+    $cod_personal = $q;
 }
 
 if(isset($_GET['cod_f'])){
@@ -63,11 +66,6 @@ if ($cod_facturacion > 0){
     $cod_uo=null;
     $cod_area=null;
     $cod_cliente=null;    
-    if(isset($_POST['q'])){
-        $cod_personal=$_POST['q'];
-    }else{
-        $cod_personal = $globalUser;
-    }
     $fecha_registro =date('Y-m-d');
     $fecha_solicitudfactura=$fecha_registro;
     $cod_tipoobjeto=213;//por defecto}
@@ -255,7 +253,7 @@ $contadorRegistros=0;
                                             $datos[0][$nc]=$dato;                           
                                             $nc++;
                                             ?>
-                                            <option <?=($cod_tipopago==$row["codigo"])?"selected":"";?>  value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                                            <option <?=($cod_tipopago==$row["codigo"])?"selected":(($cod_facturacion>0)?"disabled":"");?>  value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
                                         <?php } 
                                         $cont[0]=$nc;
                                         ?>
@@ -403,15 +401,16 @@ $contadorRegistros=0;
                                 <table class="table table-bordered table-condensed table-sm">
                                      <thead>
                                           <tr class="fondo-boton">
-                                            <th>#</th>                                            
-                                            <th>Item</th>
+                                             <th>#</th>
+                                            <!-- <th >Año</th> -->
+                                            <th width="15%">Item</th>
                                             <th>Cant.</th>
-                                            <th>Precio(BOB)</th>
-                                            <th>Desc(%)</th>
-                                            <th>Desc(BOB)</th>
-                                            <th width="10%">Importe(BOB)</th>
+                                            <th width="8%">Precio<br>(BOB)</th>
+                                            <th width="5%">Desc(%)</th>
+                                            <th width="5%">Desc<br>(BOB)</th>
+                                            <th width="8%">Importe<br>(BOB)</th>
                                             <th width="40%">Glosa</th>
-                                            <th class="small">H/D</th>  
+                                            <th class="small">H/D</th> 
                                           </tr>
                                       </thead>
                                       <tbody>                                
@@ -466,8 +465,6 @@ $contadorRegistros=0;
                                                 $descripcion_alternaX=$rowPre['descripcion_alterna'];
                                             }                                        
                                             if($banderaHab!=0){
-                                                
-                                                
                                                 ?>
                                                 <!-- guardamos las varialbles en un input -->
                                                 <input type="hidden" id="cod_serv_tiposerv<?=$iii?>" name="cod_serv_tiposerv<?=$iii?>" value="<?=$codigoPre?>">
@@ -483,8 +480,8 @@ $contadorRegistros=0;
                                                 <input type="hidden" id="importe_a<?=$iii?>" name="importe_a<?=$iii?>">
                                                 <tr>
                                                   <td><?=$iii?></td>                                                  
-                                                  <td class="text-left"><?=$tipoPre?></td>
-                                                  <td class="text-right"><?=$cantidadPre?></td>
+                                                  <td class="text-left"><small><?=$tipoPre?></small></td>
+                                                  <td class="text-right"><small><?=$cantidadPre?></small></td>
                                                   <td class="text-right"><input type="number" step="0.01" id="monto_precio<?=$iii?>" name="monto_precio<?=$iii?>" class="form-control text-primary text-right"  value="<?=$montoPre?>" step="0.01" onkeyup="activarInputMontoFilaServicio2()"></td>
                                                   <!--  descuentos -->
                                                   <td class="text-right"><input type="number" step="0.01" class="form-control" name="descuento_por<?=$iii?>" id="descuento_por<?=$iii?>" value="<?=$descuento_porX?>" min="0" max="<?=$descuento_cliente?>" onkeyup="descuento_convertir_a_bolivianos(<?=$iii?>)"></td>                                             
@@ -499,7 +496,7 @@ $contadorRegistros=0;
                                                   <td>                                                    
                                                         <div class="togglebutton">
                                                            <label>
-                                                             <input type="checkbox"  id="modal_check<?=$iii?>" onchange="activarInputMontoFilaServicio2()" checked>
+                                                             <input type="checkbox"  id="modal_check<?=$iii?>" onchange="activarInputMontoFilaServicio_manual()" checked>
                                                              <span class="toggle"></span>
                                                            </label>
                                                        </div>                                                    
@@ -512,13 +509,15 @@ $contadorRegistros=0;
                                             ?>
                                             <script>
                                                 window.onload = activarInputMontoFilaServicio2;
+                                                window.onload = activarInputMontoFilaServicio_manual;
                                             </script>
 
                                             <?php
                                         
                                         } ?>                        
                                       </tbody>
-                                </table>
+                                </table>                            
+                                <input type="hidden" value="0" name="modal_totalmontoserv_costo_a" id="modal_totalmontoserv_costo_a"/>
 
                                 <input type="hidden" id="modal_numeroservicio" name="modal_numeroservicio" value="<?=$iii?>">                    
                                 <input type="hidden" id="modal_totalmontos" name="modal_totalmontos">

@@ -119,7 +119,7 @@ $stmtCliente->bindColumn('nombre', $nombre_cli);
                           }
 
                             //verificamos si ya tiene factura generada y esta activa                           
-                            $stmtFact = $dbh->prepare("SELECT codigo,nro_factura,cod_estadofactura,razon_social,nit,nro_autorizacion,importe,cod_comprobante from facturas_venta where cod_solicitudfacturacion=$codigo_facturacion and cod_estadofactura in (1,4)");
+                            $stmtFact = $dbh->prepare("SELECT codigo,nro_factura,cod_estadofactura,razon_social,nit,nro_autorizacion,importe,cod_comprobante from facturas_venta where cod_solicitudfacturacion=$codigo_facturacion order by codigo desc limit 1");
                             $stmtFact->execute();
                             $resultSimu = $stmtFact->fetch();
                             $codigo_fact_x = $resultSimu['codigo'];
@@ -171,8 +171,6 @@ $stmtCliente->bindColumn('nombre', $nombre_cli);
                             }else{
                               $concepto_contabilizacion=$codigo_alterno." - ";  
                             }
-
-                            
                             while ($row_det = $stmtDetalleSol->fetch()){
                               $precio=$precio_unitario*$cantidad;
                               $concepto_contabilizacion.=$descripcion_alterna." / F ".$nro_fact_x." / ".$razon_social."<br>\n";
@@ -271,7 +269,7 @@ $stmtCliente->bindColumn('nombre', $nombre_cli);
                             <td class="td-actions text-right"><button class="btn <?=$btnEstado?> btn-sm btn-link"><small><?=$estado;?></small></button><br>
                               <?php
                                 if($globalAdmin==1){ //
-                                  if($codigo_fact_x>0 && $cod_estado_factura_x==1 && $cont_facturas<2){//print facturas
+                                  if($codigo_fact_x>0 && $cont_facturas<2 && ($cod_estado_factura_x!=2)){//print facturas
                                     ?>
                                     <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=2' target="_blank"><i class="material-icons" title="Imprimir Factura">print</i></a>
                                     <a href="<?=$urlImp;?>?comp=<?=$cod_comprobante_x;?>&mon=1" target="_blank" class="btn" style="background-color:#3f33ff">

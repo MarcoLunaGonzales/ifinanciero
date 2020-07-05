@@ -52,8 +52,8 @@ if ($cod_facturacion > 0){
 
 }else {
     $nombre_simulacion = $resultServicio['Descripcion'];
-     if(isset($_POST['q'])){
-        $cod_personal=$_POST['q'];
+     if(isset($_GET['q'])){
+        $cod_personal=$_GET['q'];
     }else{
         $cod_personal =$_SESSION["globalUser"];
     }
@@ -149,13 +149,24 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                      <thead>
                                           <tr class="fondo-boton">
                                             <th>#</th>                                            
-                                            <th width="35%">Item</th>
+                                            <!-- <th width="35%">Item</th>
                                             <th>Cant.</th>
                                             <th>Precio(BOB)</th>
                                             <th>Desc(%)</th>
                                             <th>Desc(BOB)</th>
                                             <th width="10%">Importe(BOB)</th>
                                             <th width="35%">Glosa</th>
+                                            <th class="small">H/D</th> -->
+
+                                            <th>Item</th>
+                                            <th>Cant.</th>
+                                            <th width="6%">Precio<br>(BOB)</th>
+                                            <th>Desc<br>(%)</th>
+                                            <th>Desc<br>(BOB)</th>                                            
+                                            <th width="6%">Importe<br>(BOB)</th>
+                                            <th width="6%">Importe<br>Pagado</th>
+                                            <th width="6%">Importe<br>a pagar</th>  
+                                            <th width="40%">Glosa</th>
                                             <th class="small">H/D</th>  
                                           </tr>
                                       </thead>
@@ -165,10 +176,8 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                         $queryPr="SELECT s.IdDetServicio,s.IdClaServicio,s.Cantidad,s.PrecioUnitario from ibnorca.serviciopresupuesto s where  s.IdServicio=$IdServicio";
                                         //echo $queryPr;
                                         if ($cod_facturacion > 0){
-                                            $queryPr.=" UNION ";
-                                            //,(select cs.descripcion from cla_servicios cs where cs.IdClaServicio=d.cod_claservicio) as descripcion
+                                            $queryPr.=" UNION ";                                            
                                             $queryPr.="SELECT d.codigo,d.cod_claservicio,d.cantidad,d.precio from solicitudes_facturaciondetalle d where d.tipo_item=2 and d.cod_solicitudfacturacion=$cod_facturacion";
-
                                         }
                                         // echo $queryPr;
                                         $stmt = $dbh->prepare($queryPr);
@@ -186,38 +195,77 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                             // $montoPreTotal=$montoPre*$cantidadEPre;
                                             $banderaHab=1;
                                             $codTipoUnidad=0;
-                                            // $cod_anio=$rowPre['cod_anio'];
+
+                                            $monto_pagar=$montoPre;
+                                            $saldo=$montoPre;
+                                            $monto_total_pagado=0;
                                             if($banderaHab!=0){ 
                                                 $descuento_porX=0;
                                                 $descuento_bobX=0;
                                                 $descripcion_alternaX=$tipoPre;                     
                                                 $montoPre=number_format($montoPre,2,".","");
-                                                //parte del controlador de check //para la parte de editar  
-                                                $sqlControlador="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$IdServicio and sfd.cod_claservicio=$codCS and sf.codigo=$cod_facturacion";
-                                                // echo $sqlControlador;
-                                                $stmtControlado = $dbh->prepare($sqlControlador);
-                                                $stmtControlado->execute();                                           
-                                                $sw="";                                         
-                                                while ($rowPre = $stmtControlado->fetch(PDO::FETCH_ASSOC)) {
-                                                      $sw="checked";
-                                                      $montoPre=$rowPre['precio']+$rowPre['descuento_bob'];
-                                                      $descuento_porX=$rowPre['descuento_por'];
-                                                      $descuento_bobX=$rowPre['descuento_bob'];
-                                                      $descripcion_alternaX=$rowPre['descripcion_alterna'];
+                                                $sw="";
+                                                if($cod_facturacion>0){
+                                                    //parte del controlador de check //para la parte de editar  
+                                                    $sqlControlador="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$IdServicio and sfd.cod_claservicio=$codCS and sf.codigo=$cod_facturacion and tipo_solicitud=3";
+                                                    // echo $sqlControlador;
+                                                    $stmtControlado = $dbh->prepare($sqlControlador);
+                                                    $stmtControlado->execute();
+                                                    while ($rowPre = $stmtControlado->fetch(PDO::FETCH_ASSOC)) {
+                                                          $sw="checked";
+                                                          $montoPre=$rowPre['precio']+$rowPre['descuento_bob'];
+                                                          $preciox=$rowPre['precio'];
+                                                          $descuento_porX=$rowPre['descuento_por'];
+                                                          $descuento_bobX=$rowPre['descuento_bob'];
+                                                          $descripcion_alternaX=$rowPre['descripcion_alterna'];
+                                                    }
                                                 }
                                                 //parte del controlador de check//impedir los ya registrados
-                                                $sqlControlador2="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$IdServicio and sfd.cod_claservicio=$codCS"; 
+                                                $sqlControlador2="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$IdServicio and sfd.cod_claservicio=$codCS and tipo_solicitud=3"; 
                                                 // echo $sqlControlador2;
                                                 $stmtControlador2 = $dbh->prepare($sqlControlador2);
                                                 $stmtControlador2->execute();                                           
                                                 $sw2="";
+                                                //sacamos el monto total
+                                                $sqlControladorTotal="SELECT SUM(sfd.precio) as precio from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$IdServicio  and sfd.cod_claservicio=$codCS and tipo_solicitud=3";
+                                                 // echo $sqlControladorTotal;
+                                                $stmtControladorTotal = $dbh->prepare($sqlControladorTotal);
+                                                $stmtControladorTotal->execute();
+                                                $resultMontoTotal=$stmtControladorTotal->fetch();
+                                                $precio_total_x=$resultMontoTotal['precio'];                                                
+                                                if($precio_total_x>0){
+                                                    $saldo=$monto_pagar-$precio_total_x;                                                    
+                                                }
+                                                if($precio_total_x==null || $precio_total_x=='' || $precio_total_x==' ' || $precio_total_x==0){
+                                                }else $monto_total_pagado=$precio_total_x;
+                                                $cont_items_aux=0;
                                                 while ($rowPre = $stmtControlador2->fetch(PDO::FETCH_ASSOC)) {
-                                                    if($sw!="checked"){
-                                                        $sw2="readonly style='background-color:#cec6d6;'";
-                                                        $montoPre=$rowPre['precio']+$rowPre['descuento_bob'];
+                                                    // if($sw!="checked"){
+                                                    //     $sw2="readonly style='background-color:#cec6d6;'";
+                                                    //     $montoPre=$rowPre['precio']+$rowPre['descuento_bob'];
+                                                    //     $descuento_porX=$rowPre['descuento_por'];
+                                                    //     $descuento_bobX=$rowPre['descuento_bob'];
+                                                    //     $descripcion_alternaX=$rowPre['descripcion_alterna'];
+                                                    // }
+                                                    $cont_items_aux++;
+                                                    if($sw!="checked"){//si el item  es para  editar
+                                                        if($monto_pagar==$monto_total_pagado){
+                                                            $sw2="readonly style='background-color:#cec6d6;'";
+                                                            $saldo=0;
+                                                        }
+                                                        if($rowPre['descuento_bob']==null || $rowPre['descuento_bob']==0 || $rowPre['descuento_bob']=='' || $rowPre['descuento_bob']==' '){
+                                                        }else{
+                                                            // $monto_total_pagado-=$rowPre['descuento_bob'];
+                                                            // echo $monto_pagar."-".$monto_total_pagados;
+                                                            $saldo=$monto_pagar-$monto_total_pagado;
+                                                        }
+                                                        // $montoPre=$rowPre['precio']+$rowPre['descuento_bob'];
                                                         $descuento_porX=$rowPre['descuento_por'];
                                                         $descuento_bobX=$rowPre['descuento_bob'];
                                                         $descripcion_alternaX=$rowPre['descripcion_alterna'];
+                                                    }else{                                                                    
+                                                        $monto_total_pagado=$precio_total_x-$preciox;
+                                                        $saldo=$preciox;
                                                     }
                                                 }
                                             
@@ -227,7 +275,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                                 <input type="hidden" id="servicio<?=$iii?>" name="servicio<?=$iii?>" value="<?=$codCS?>">
                                                  <input type="hidden" id="nombre_servicio<?=$iii?>" name="nombre_servicio<?=$iii?>" value="<?=$tipoPre?>">
                                                 <input type="hidden" id="cantidad<?=$iii?>" name="cantidad<?=$iii?>" value="<?=$cantidadPre?>">
-                                                <input type="hidden" id="importe<?=$iii?>" name="importe<?=$iii?>" value="<?=$montoPre?>">
+                                                <input type="hidden" id="importe<?=$iii?>" name="importe<?=$iii?>" value="<?=$monto_pagar?>">
 
                                                 <!-- aqui se captura los servicios activados con el checkbox -->
                                                 <input type="hidden" id="cod_serv_tiposerv_a<?=$iii?>" name="cod_serv_tiposerv_a<?=$iii?>">
@@ -235,18 +283,27 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                                 <input type="hidden" id="cantidad_a<?=$iii?>" name="cantidad_a<?=$iii?>">
                                                 <input type="hidden" id="importe_a<?=$iii?>" name="importe_a<?=$iii?>">
                                                 <tr>
-                                                    <td><?=$iii?></td>                                              
-                                                    <td class="text-left" ><?=$tipoPre?></td>
-                                                    <td class="text-right"><?=$cantidadPre?></td>
-                                                    <td class="text-right"><input type="number" id="monto_precio<?=$iii?>" name="monto_precio<?=$iii?>" class="form-control text-primary text-right"  value="<?=$montoPre?>" step="0.01" onkeyup="activarInputMontoFilaServicio2()" <?=$sw2?>></td>
+                                                    <td><small><?=$iii?></small></td>
+                                                    <td class="text-left" ><small><?=$tipoPre?></small></td>
+                                                    <td class="text-right"><small><?=$cantidadPre?></small></td>
+                                                    <td class="text-right"><input type="number" id="monto_precio<?=$iii?>" name="monto_precio<?=$iii?>" class="form-control input-sm"  value="<?=$monto_pagar?>" step="0.01" onkeyup="activarInputMontoFilaServicio2()" <?=$sw2?> readonly></td>
                                                     <!--  descuentos -->
-                                                    <td class="text-right"><input type="text" class="form-control" name="descuento_por<?=$iii?>" id="descuento_por<?=$iii?>" value="<?=$descuento_porX?>" onkeyup="descuento_convertir_a_bolivianos(<?=$iii?>)" <?=$sw2?>></td>                                             
-                                                    <td class="text-right"><input type="text" class="form-control" name="descuento_bob<?=$iii?>" id="descuento_bob<?=$iii?>" value="<?=$descuento_bobX?>" onkeyup="descuento_convertir_a_porcentaje(<?=$iii?>)" <?=$sw2?>></td>                                        
+                                                    <td class="text-right"><input type="text" class="form-control input-sm" name="descuento_por<?=$iii?>" id="descuento_por<?=$iii?>" value="<?=$descuento_porX?>" onkeyup="descuento_convertir_a_bolivianos(<?=$iii?>)" <?=$sw2?>></td>                                             
+                                                    <td class="text-right"><input type="text" class="form-control input-sm" name="descuento_bob<?=$iii?>" id="descuento_bob<?=$iii?>" value="<?=$descuento_bobX?>" onkeyup="descuento_convertir_a_porcentaje(<?=$iii?>)" <?=$sw2?>></td>                                        
                                                     <!-- total -->
-                                                    <td class="text-right"><input type="hidden" name="modal_importe<?=$iii?>" id="modal_importe<?=$iii?>"><input type="text" class="form-control" name="modal_importe_dos<?=$iii?>" id="modal_importe_dos<?=$iii?>" style ="background-color: #ffffff;" readonly></td>
+                                                    <td class="text-right"><input type="hidden" name="modal_importe<?=$iii?>" id="modal_importe<?=$iii?>"><input type="text" class="form-control input-sm" name="modal_importe_dos<?=$iii?>" id="modal_importe_dos<?=$iii?>" style ="background-color: #ffffff;" readonly></td>
+
+                                                    <td>
+                                                        <input type="hidden" name="modal_importe_pagado_dos_a<?=$iii?>" id="modal_importe_pagado_dos_a<?=$iii?>" value="<?=$monto_total_pagado;?>">
+                                                        <input type="text" class="form-control" name="modal_importe_pagado_dos<?=$iii?>" id="modal_importe_pagado_dos<?=$iii?>" readonly value="<?=number_format($monto_total_pagado,2);?>">
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" step="0.01" id="importe_a_pagar<?=$iii?>" name="importe_a_pagar<?=$iii?>" class="form-control text-primary text-right"  value="<?=$saldo?>" step="0.01" onkeyup="verificar_item_activo(<?=$iii?>)" <?=$sw2?>>
+                                                    </td>
+
                                                                                               
                                                     <td>
-                                                        <textarea name="descripcion_alterna<?=$iii?>" id="descripcion_alterna<?=$iii?>" class="form-control" onkeyup="javascript:this.value=this.value.toUpperCase();" <?=$sw2?>><?=$descripcion_alternaX?></textarea>
+                                                        <textarea name="descripcion_alterna<?=$iii?>" id="descripcion_alterna<?=$iii?>" class="form-control" <?=$sw2?>><?=$descripcion_alternaX?></textarea>
                                                      <!-- <input type="text" > -->
                                                     </td>
                                                     <!-- checkbox -->
@@ -254,7 +311,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                                         <?php if($sw2!="readonly style='background-color:#cec6d6;'"){?>
                                                             <div class="togglebutton">
                                                                <label>
-                                                                 <input type="checkbox"  id="modal_check<?=$iii?>" onchange="activarInputMontoFilaServicio2()" <?=$sw?> >
+                                                                 <input type="checkbox"  id="modal_check<?=$iii?>" onchange="calcularTotalFilaServicio2Costos()" <?=$sw?> >
                                                                  <span class="toggle"></span>
                                                                </label>
                                                            </div>
@@ -274,10 +331,18 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                             ?>
                                             <script>
                                                 window.onload = activarInputMontoFilaServicio2;
+                                                window.onload = calcularTotalFilaServicio2Costos;
                                             </script>
 
                                             <?php
                                         } ?>
+                                        <tr>
+                                            <td colspan="6">Monto Total</td>
+                                            <td><input style="background:#ffffff" class="form-control" type="text" value="0" name="modal_totalmontoserv" id="modal_totalmontoserv" readonly="true" /></td>
+                                            <td><input style="background:#ffffff" class="form-control" type="text" value="0" name="modal_totalmontoserv_pagado" id="modal_totalmontoserv_pagado" readonly="true" /></td>
+                                            <td><input type="hidden" value="0" name="modal_totalmontoserv_costo_a" id="modal_totalmontoserv_costo_a"/><input style="background:#ffffff" class="form-control" type="text" value="0" name="modal_totalmontoserv_costo" id="modal_totalmontoserv_costo" readonly="true" /></td>
+                                            <td></td>
+                                        </tr>     
                                       </tbody>
                                 </table>
 
@@ -285,14 +350,14 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                 <input type="hidden" id="modal_totalmontos" name="modal_totalmontos">
                                 <!-- <script>activarInputMontoFilaServicio2();</script>   -->
                                 <input type="hidden" id="comprobante_auxiliar" name="comprobante_auxiliar">
-                                <div class="row">
+                                <!-- <div class="row">
                                     <label class="col-sm-5 col-form-label" style="color:#000000">Monto Total</label>
                                     <div class="col-sm-4">
                                         <div class="form-group">                                        
                                             <input style="background:#ffffff" class="form-control" type="text" value="0" name="modal_totalmontoserv" id="modal_totalmontoserv" step="0.01" readonly="true" />                                            
                                         </div>
                                     </div>
-                                </div>
+                                </div> -->
                                 <fieldset id="fiel" style="width:100%;border:0;">
                                     <button title="Agregar Servicios" type="button" id="add_boton" name="add" class="btn btn-warning btn-round btn-fab" onClick="AgregarSeviciosFacturacion2_servicios(this)">
                                         <i class="material-icons">add</i>

@@ -9221,16 +9221,19 @@ function calcularTotalFilaServicio2(){
   var resulta=sumal;
   //sumamos la parte que se adiciona
 
+
+  var costos_total=document.getElementById("modal_totalmontoserv_costo_a").value;//con formato
+  // alert();
   nro_items = document.getElementById("cantidad_filas").value;
   if(nro_items==0){
-    $("#monto_total").val(number_format(resulta,2));
-    $("#monto_total_a").val(resulta);//tipo hidde
+    $("#monto_total").val(number_format(costos_total,2));
+    $("#monto_total_a").val(costos_total);//tipo hidde
   }else{
     var importe_ajax=0;
     for (var j = 1; j <=nro_items; j++) {    
       importe_ajax+=parseFloat(document.getElementById("modal_importe_add"+j).value);
     }
-    var suma_servicios_add=resulta+importe_ajax;
+    var suma_servicios_add=parseFloat(costos_total)+parseFloat(importe_ajax);
     $("#monto_total").val(number_format(suma_servicios_add,2));
     $("#monto_total_a").val(suma_servicios_add);//tipo hidde
     // alert(importe_ajax);
@@ -9249,6 +9252,21 @@ function verificar_item_activo(index){
     Swal.fire("Informativo!", "Por favor, active la fila.", "warning");
   }
 
+}
+function activarInputMontoFilaServicio_manual()
+{ 
+  var sumal=0;  
+  var total= $("#modal_numeroservicio").val();  
+  for (var i=1;i<=(total-1);i++){              
+    var importe=$("#importe"+i).val();    
+    var check=document.getElementById("modal_check"+i).checked;    
+    if(check) {              
+      sumal+=parseFloat(importe);
+    }
+  } 
+  var resulta=sumal;    
+  document.getElementById("modal_totalmontoserv_costo_a").value=resulta;//si formato
+  calcularTotalFilaServicio2();   
 }
 function calcularTotalFilaServicio2Costos(){
   var sumal=0;  
