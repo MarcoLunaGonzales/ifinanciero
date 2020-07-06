@@ -67,6 +67,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                         <?php
                           $index=1;
                           while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+                            $importe=sumatotaldetallefactura($codigo_factura);
                             $estadofactura=obtener_nombreestado_factura($cod_estadofactura);
                             $cliente=nameCliente($cod_cliente);
                             //correos de contactos

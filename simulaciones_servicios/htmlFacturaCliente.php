@@ -22,7 +22,7 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 	$tipo_impresion=2;//tipo de impresión 1 sin detalles, 2 detalladamente
 	try {
 		if($auxiliar==1){//
-		    $stmtInfo = $dbh->prepare("SELECT sf.*,DATE_FORMAT(sf.fecha_limite_emision,'%m/%d/%Y')as fecha_limite_emision_x,DATE_FORMAT(sf.fecha_factura,'%Y-%m-%d')as fecha_factura_x FROM facturas_venta sf where sf.codigo=$codigo");
+		    $stmtInfo = $dbh->prepare("SELECT sf.*,DATE_FORMAT(sf.fecha_limite_emision,'%d/%m/%Y')as fecha_limite_emision_x,DATE_FORMAT(sf.fecha_factura,'%Y-%m-%d')as fecha_factura_x FROM facturas_venta sf where sf.codigo=$codigo");
 		    $stmtInfo->execute();
 		    $resultInfo = $stmtInfo->fetch();   
 		    $cod_factura = $resultInfo['codigo']; 
@@ -62,8 +62,7 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 		    $nro_autorizacion = $resultInfo['nro_autorizacion'];
 		    $codigo_control = $resultInfo['codigo_control'];
 		    $importe = $resultInfo['importe'];
-		    $cod_dosificacionfactura = $resultInfo['cod_dosificacionfactura'];		    
-		    $importe=$importe;
+		    $cod_dosificacionfactura = $resultInfo['cod_dosificacionfactura'];		    		    
 		    $observaciones = $resultInfo['observaciones'];
 		    $cod_tipopago = $resultInfo['cod_tipopago'];
 		    // $nombre_cliente = $resultInfo['nombre_cliente'];
@@ -86,8 +85,7 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 			$nro_autorizacion = $resultInfo['nro_autorizacion'];
 			$codigo_control = $resultInfo['codigo_control'];
 			$importe = $resultInfo['importe'];
-			$cod_dosificacionfactura = $resultInfo['cod_dosificacionfactura'];
-			$importe=$importe;
+			$cod_dosificacionfactura = $resultInfo['cod_dosificacionfactura'];			
 			$observaciones = $resultInfo['observaciones'];
 			$cod_tipopago = $resultInfo['cod_tipopago'];
 			// $nombre_cliente = $resultInfo['nombre_cliente'];
@@ -224,12 +222,13 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 							$precio=$row["precio"];
 							$descuento_bob=$row["descuento_bob"];
 							$cantidad=$row["cantidad"];
-							$precio=$precio-$descuento_bob;
+							$precio=$precio*$cantidad-$descuento_bob;
 
 							$html.=formatNumberDec($precio).'<br>';
-							$suma_total+=$precio*$cantidad;
+							$suma_total+=$precio;
 							}
 							$html.='</h5></td>';
+							$importe=$suma_total;
 						// } 
                 	$html.='</tr>';            
                 	$html.='<tr>

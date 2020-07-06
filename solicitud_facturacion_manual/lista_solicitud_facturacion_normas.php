@@ -91,6 +91,9 @@ $contadorRegistros=0;
                                         $idNorma=$rowPre['idNorma'];
                                         $Norma=nameNorma($idNorma);
                                         $Cantidad=$rowPre['Cantidad'];
+                                        if($Cantidad==null || $Cantidad=='' || $Cantidad==' '){
+                                          $Cantidad=1;
+                                        }
                                         $Precio=$rowPre['Precio'];
                                        ?>
                                         <!-- guardamos todos los items en inputs -->
