@@ -47,8 +47,8 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$nro_factura,$co
         }		
 		while ($row_det = $stmtDetalleSol->fetch()){
 			$precio=$precio_unitario*$cantidad;
-			$concepto_contabilizacion.=$descripcion_alterna." / ".$nombreComprobante." - F ".$nro_factura." / ".$razon_social."<br>\n";
-			$concepto_contabilizacion.="Cantidad: ".$cantidad." * ".formatNumberDec($precio_unitario)." = ".formatNumberDec($precio)."<br>\n";
+			$concepto_contabilizacion.=$descripcion_alterna." / ".$nombreComprobante." - F ".$nro_factura." / ".$razon_social."&#010;";
+			$concepto_contabilizacion.="Cantidad: ".$cantidad." * ".formatNumberDec($precio_unitario)." = ".formatNumberDec($precio)."&#010;";
 		}
 		$codComprobante=obtenerCodigoComprobante();
 		//insertamos cabecera

@@ -201,7 +201,7 @@ $contadorRegistros=0;
                             <div class="">
                                 <?php 
                                     // añadimos los porcetnajes de distribucion tanto para areas y formas de pago 
-                                    require_once 'simulaciones_servicios/objeto_formaspago_areas.php';
+                                    require_once '../simulaciones_servicios/objeto_formaspago_areas.php';
                                     //=== termina porcentaje objetos
                                     $queryAreas="SELECT codigo,nombre,abreviatura from areas where areas_ingreso=1 and cod_estado=1 order by nombre";
                                     $stmtAreas = $dbh->prepare($queryAreas);
