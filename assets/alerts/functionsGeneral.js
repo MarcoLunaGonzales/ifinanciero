@@ -14411,6 +14411,9 @@ function actualizarSimulacionSitios(){
   javascript:location.reload(true);
 }
 
+function actualizarPaginaNuevaP(){
+  javascript:location.reload(true);
+}
 
 function removePlantillaComprobantes(cod_plantilla){  
   $.ajax({
