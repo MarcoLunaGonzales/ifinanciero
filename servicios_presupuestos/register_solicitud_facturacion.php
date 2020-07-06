@@ -191,7 +191,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                             // $cantidadPre=1;
                                             $montoPre=$rowPre['PrecioUnitario']*$rowPre['Cantidad'];
                                             // echo "---cod  :".$codCS;
-                                            $tipoPre=descripcionClaServicio($codCS);
+                                            $tipoPre=$Codigo_alterno." - ".descripcionClaServicio($codCS);
                                             // $montoPreTotal=$montoPre*$cantidadEPre;
                                             $banderaHab=1;
                                             $codTipoUnidad=0;
