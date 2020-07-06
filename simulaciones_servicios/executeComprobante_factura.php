@@ -9,7 +9,8 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$nro_factura,$co
 	$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//try
 	set_time_limit(3000);
 	// session_start();
-	try{    	
+	try{
+		$cod_uo_unico=5;
 		$stmtCajaChica = $dbh->prepare("SELECT cod_unidadorganizacional,cod_area,observaciones,codigo_alterno,razon_social,tipo_solicitud from solicitudes_facturacion where codigo=$cod_solicitudfacturacion");
 	    $stmtCajaChica->execute();
 	    $resultCCD = $stmtCajaChica->fetch();
@@ -51,7 +52,7 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$nro_factura,$co
 		}
 		$codComprobante=obtenerCodigoComprobante();
 		//insertamos cabecera
-		$flagSuccess=insertarCabeceraComprobante($codComprobante,$codEmpresa,$cod_uo_solicitud,$codAnio,$codMoneda,$codEstadoComprobante,$tipoComprobante,$fechaActual,$numeroComprobante,$concepto_contabilizacion,$globalUser,$globalUser);		
+		$flagSuccess=insertarCabeceraComprobante($codComprobante,$codEmpresa,$cod_uo_unico,$codAnio,$codMoneda,$codEstadoComprobante,$tipoComprobante,$fechaActual,$numeroComprobante,$concepto_contabilizacion,$globalUser,$globalUser);		
 		$ordenDetalle=1;//<--
 		if($flagSuccess){
 			//listado del detalle tipo pago
@@ -163,7 +164,7 @@ function ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$
 		$codComprobante=obtenerCodigoComprobante();
 		// echo $numeroComprobante;
 		// informacion solicitudd en curso
-		$flagSuccess=insertarCabeceraComprobante($codComprobante,$codEmpresa,$cod_uo_solicitud,$codAnio,$codMoneda,$codEstadoComprobante,$tipoComprobante,$fechaActual,$numeroComprobante,$concepto_contabilizacion,1,1);		
+		$flagSuccess=insertarCabeceraComprobante($codComprobante,$codEmpresa,$cod_uo_unico,$codAnio,$codMoneda,$codEstadoComprobante,$tipoComprobante,$fechaActual,$numeroComprobante,$concepto_contabilizacion,1,1);		
 		$ordenDetalle=1;//<--
 		if($flagSuccess){	
 			$cod_tipopago=obtenerValorConfiguracion(55);

@@ -52,8 +52,8 @@ if ($cod_facturacion > 0){
     $cod_uo = null; 
     $cod_area = null; 
     $cod_cliente =null;    
-    if(isset($_POST['q'])){
-        $cod_personal=$_POST['q'];
+    if(isset($_GET['q'])){
+        $cod_personal=$_GET['q'];
     }else{
         $cod_personal = $globalUser;
     }
@@ -255,7 +255,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                             $datos[0][$nc]=$dato;                           
                                             $nc++;
                                             ?>
-                                            <option <?=($cod_tipopago==$row["codigo"])?"selected":"";?>  value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                                            <option <?=($cod_tipopago==$row["codigo"])?"selected":(($cod_facturacion>0)?"disabled":"");?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
                                         <?php } 
                                         $cont[0]=$nc;
                                         ?>
@@ -403,13 +403,13 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                          <thead>
                                               <tr class="fondo-boton">
                                                 <th>#</th>
-                                                <th >Año</th>
-                                                <th>Item</th>
+                                                <!-- <th >Año</th> -->
+                                                <th width="15%">Item</th>
                                                 <th>Cant.</th>
-                                                <th>Precio(BOB)</th>
-                                                <th>Desc(%)</th>
-                                                <th>Desc(BOB)</th>
-                                                <th width="10%">Importe(BOB)</th>
+                                                <th width="8%">Precio<br>(BOB)</th>
+                                                <th width="5%">Desc(%)</th>
+                                                <th width="5%">Desc<br>(BOB)</th>
+                                                <th width="8%">Importe<br>(BOB)</th>
                                                 <th width="40%">Glosa</th>
                                                 <th class="small">H/D</th>  
                                               </tr>
@@ -489,9 +489,9 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                                     <input type="hidden" id="importe_a<?=$iii?>" name="importe_a<?=$iii?>">
                                                     <tr>
                                                       <td><?=$iii?></td>
-                                                      <td class="text-left"><?=$cod_anio?> </td>
-                                                      <td class="text-left"><?=$tipoPre?></td>
-                                                      <td class="text-right"><?=$cantidadPre?></td>
+                                                      <!-- <td class="text-left"><?=$cod_anio?> </td> -->
+                                                      <td class="text-left"><small><?=$tipoPre?></small></td>
+                                                      <td class="text-right"><small><?=$cantidadPre?></small></td>
                                                       <td class="text-right"><input type="number" step="0.01" id="monto_precio<?=$iii?>" name="monto_precio<?=$iii?>" class="form-control text-primary text-right"  value="<?=$montoPre?>" onkeyup="activarInputMontoFilaServicio2()" <?=$sw2?>></td>
                                                       <!--  descuentos -->
                                                       <td class="text-right"><input type="number" step="0.01" class="form-control" name="descuento_por<?=$iii?>" id="descuento_por<?=$iii?>" value="<?=$descuento_porX?>" min="0" max="<?=$descuento_cliente?>" onkeyup="descuento_convertir_a_bolivianos(<?=$iii?>)" <?=$sw2?>></td>                                             
@@ -500,6 +500,8 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                                       <td class="text-right"><input type="hidden" name="modal_importe<?=$iii?>" id="modal_importe<?=$iii?>"><input type="text" class="form-control" name="modal_importe_dos<?=$iii?>" id="modal_importe_dos<?=$iii?>" style ="background-color: #ffffff;" readonly></td>
                                                                                                   
                                                       <td>
+                                                        <input type="hidden" id="importe_a_pagar<?=$iii?>" name="importe_a_pagar<?=$iii?>" class="form-control text-primary text-right"  value="0" >
+
                                                         <textarea name="descripcion_alterna<?=$iii?>" id="descripcion_alterna<?=$iii?>" class="form-control" onkeyup="javascript:this.value=this.value.toUpperCase();" <?=$sw2?>><?=$descripcion_alternaX?></textarea>
                                                          <!-- <input type="text" > -->
                                                       </td>
@@ -508,7 +510,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                                         <?php if($sw2!="readonly style='background-color:#cec6d6;'"){?>
                                                             <div class="togglebutton">
                                                                <label>
-                                                                 <input type="checkbox"  id="modal_check<?=$iii?>" onchange="activarInputMontoFilaServicio2()" <?=$sw?> >
+                                                                 <input type="checkbox"  id="modal_check<?=$iii?>" onchange="activarInputMontoFilaServicio_manual()" <?=$sw?> >
                                                                  <span class="toggle"></span>
                                                                </label>
                                                            </div>
@@ -529,13 +531,17 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                                 ?>
                                                 <script>
                                                     window.onload = activarInputMontoFilaServicio2;
+                                                    window.onload = activarInputMontoFilaServicio_manual;
                                                 </script>
 
                                                 <?php
                                             
                                             } ?>                        
                                           </tbody>
-                                    </table>
+                                    </table>                                    
+                                    <input type="hidden" value="0" name="modal_totalmontoserv_costo_a" id="modal_totalmontoserv_costo_a"/>
+
+
                                     <input type="hidden" id="modal_numeroservicio" name="modal_numeroservicio" value="<?=$iii?>">                    
                                     <input type="hidden" id="modal_totalmontos" name="modal_totalmontos">
                                     <!-- <script>activarInputMontoFilaServicio2();</script>   -->
@@ -574,7 +580,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
 
                                 </fieldset>
                                 <div class="row">
-                                    <label class="col-sm-5 col-form-label" style="color:#000000">Monto Total <!-- + Servicios Adicionales --></label>
+                                    <label class="col-sm-5 col-form-label" style="color:#000000">Monto Total  + Servicios Adicionales </label>
                                     <div class="col-sm-4">
                                         <div class="form-group">                                            
                                             <input style="background:#ffffff" class="form-control"  name="monto_total" id="monto_total"  readonly="readonly" value="0" step="0.01" />

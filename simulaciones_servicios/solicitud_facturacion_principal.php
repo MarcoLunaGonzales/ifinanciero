@@ -14,13 +14,14 @@ $u=$u;
 
 //sacamos datos para la facturacion
 if(isset($_GET['v'])){
+  echo "string";
     $idPropuesta=obtenerIdPropuestaServicioIbnorca($v);
     $areaServicio=obtenerIdAreaServicioIbnorca($v);
      if($areaServicio==39||$areaServicio==38){
       $detalle="TCP"; //TCP Y TCS
      }else{
        $detalle="SIM"; // CAPACITACION SEC
-     }
+     }     
     if($idPropuesta!="NONE"){//servicio CON PROPUESTA  ?>
       
       <script type="text/javascript">

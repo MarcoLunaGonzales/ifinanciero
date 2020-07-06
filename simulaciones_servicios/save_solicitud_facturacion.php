@@ -68,6 +68,7 @@ try
                     $DescricpionInsert=$_POST["descripcion_alterna".$i];
                     $descuento_por_Insert=$_POST["descuento_por".$i];
                     $descuento_bob_Insert=$_POST["descuento_bob".$i]; 
+                    $importe_a_pagar_Insert=$_POST["importe_a_pagar".$i];
                 }
                 if($servicioInsert!=0 || $servicioInsert!=""){
                     // echo " servicio:".$servicioInsert."<br>";
@@ -78,7 +79,7 @@ try
                     // echo " descuento_bob_:".$descuento_bob_Insert."<br>";
 
                     $stmt = $dbh->prepare("INSERT INTO solicitudes_facturaciondetalle(cod_solicitudfacturacion,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_por,descuento_bob,tipo_item) 
-                    values ('$cod_facturacion','$servicioInsert','$CantidadInsert','$importeInsert','$DescricpionInsert','$descuento_por_Insert','$descuento_bob_Insert',1)");
+                    values ('$cod_facturacion','$servicioInsert','$CantidadInsert','$importe_a_pagar_Insert','$DescricpionInsert','$descuento_por_Insert','$descuento_bob_Insert',1)");
                     $flagSuccess=$stmt->execute();
                 }
             }
@@ -154,10 +155,11 @@ try
                     $DescricpionInsert=$_POST["descripcion_alterna".$i];
                     $descuento_por_Insert=$_POST["descuento_por".$i];
                     $descuento_bob_Insert=$_POST["descuento_bob".$i];
+                    $importe_a_pagar_Insert=$_POST["importe_a_pagar".$i];
                 }
                 if($servicioInsert!=0 || $servicioInsert!=""){
                     $stmt = $dbh->prepare("INSERT INTO solicitudes_facturaciondetalle(cod_solicitudfacturacion,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_por,descuento_bob,tipo_item) 
-                    values ('$cod_facturacion','$servicioInsert','$CantidadInsert','$importeInsert','$DescricpionInsert','$descuento_por_Insert','$descuento_bob_Insert',1)");
+                    values ('$cod_facturacion','$servicioInsert','$CantidadInsert','$importe_a_pagar_Insert','$DescricpionInsert','$descuento_por_Insert','$descuento_bob_Insert',1)");
                     $flagSuccess=$stmt->execute();
                 }
             }

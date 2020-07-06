@@ -108,7 +108,7 @@
                     $datos[0][$nc]=$dato;                           
                     $nc++;
                     ?>
-                    <option <?=($cod_tipopago==$row["codigo"])?"selected":"";?>  value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                    <option <?=($cod_tipopago==$row["codigo"])?"selected":(($cod_facturacion>0)?"disabled":"");?>   value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
                 <?php } 
                 $cont[0]=$nc;
                 ?>

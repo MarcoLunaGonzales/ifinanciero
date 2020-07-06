@@ -1,5 +1,8 @@
 <?php 
 	//carga la plantilla con la header y el footer
+require_once 'conexion.php';
+require_once 'functions.php';
+require_once 'functionsGeneral.php';
 set_time_limit(0);
 
 session_start();
