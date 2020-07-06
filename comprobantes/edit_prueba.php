@@ -419,7 +419,8 @@ $stmt->execute();
 							<div class="col-sm-9">
 							    <div class="form-group">
 					          		<label for="glosa" class="bmd-label-static">Glosa</label>
-									<input class="form-control" name="glosa" id="glosa" required="true" rows="1" value="<?=$glosaMadre?>"/>
+									<!-- <input class="form-control" name="glosa" id="glosa" required="true" rows="1" value="<?=$glosaMadre?>"/> -->
+									<textarea class="form-control" name="glosa" id="glosa" required="true"><?=$glosaMadre?></textarea>
 								</div>
 							</div>
 							<div class="col-sm-3" align="right">

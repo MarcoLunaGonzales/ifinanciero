@@ -114,7 +114,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                         <div class="card-text">
                           <h4 class="card-title"><?php if ($cod_facturacion == 0) echo "Registrar "; else echo "Editar ";?>Solicitud de Facturación</h4>                      
                         </div>
-                        <h4 class="card-title" align="center"><b>Propuesta/Servicio: <?=$nombre_simulacion?> - <?=$name_area?> / <?=$Codigo_alterno?></b></h4>
+                        <h4 class="card-title" align="center"><b>Propuesta/Servicio: <?=$Codigo_alterno?> - <?=$nombre_simulacion?> - <?=$name_area?></b></h4>
                     </div>
                     <div class="card-body ">
                         <?php require_once 'cabecera_registro_sol_fac.php';?>
@@ -169,7 +169,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                         while ($rowPre = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                             $codigoPre=$rowPre['codigo'];
                                             $codCS=$rowPre['cod_claservicio'];
-                                            $tipoPre=$rowPre['nombre_serv'];
+                                            $tipoPre=$Codigo_alterno." - ".$rowPre['nombre_serv'];
                                             // $cantidadPre=$rowPre['cantidad'];
                                             $cantidadPre=1;
                                             // $cantidadPre_x=$rowPre['cantidad_editado'];

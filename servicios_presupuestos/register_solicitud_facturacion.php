@@ -118,7 +118,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                     <div class="card-text">
                       <h4 class="card-title"><?php if ($cod_facturacion == 0) echo "Registrar "; else echo "Editar ";?>Solicitud de Facturación</h4>                      
                     </div>
-                    <h4 class="card-title" align="center"><b>Propuesta/Servicio: <?=$nombre_simulacion?>  / <?=$Codigo_alterno?></b></h4>
+                    <h4 class="card-title" align="center"><b>Propuesta/Servicio: <?=$Codigo_alterno?> - <?=$nombre_simulacion?></b></h4>
                   </div>
                   <div class="card-body ">
                         <?php require_once 'simulaciones_servicios/cabecera_registro_sol_fac.php';?>

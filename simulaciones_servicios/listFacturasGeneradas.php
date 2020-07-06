@@ -103,12 +103,12 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             <td class="td-actions text-right">
                               <button class="btn <?=$label?> btn-sm btn-link" style="padding:0;"><small><?=$estadofactura;?></small></button><br>
                               <?php
-                                if($globalAdmin==1 and $cod_estadofactura==1 ){?>
+                                if($cod_estadofactura==1 ){?>
                                   <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalEnviarCorreo" onclick="agregaformEnviarCorreo('<?=$datos;?>')">
                                     <i class="material-icons" title="Enviar Correo">email</i>
                                   </button><?php  
                                 }
-                                if($globalAdmin==1 and ($cod_estadofactura==1 || $cod_estadofactura==3)){?>
+                                if(($cod_estadofactura==1 || $cod_estadofactura==3)){?>
                                   <div class="btn-group dropdown">
                                     <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                        <i class="material-icons" title="Imprimir Factura">print</i>
