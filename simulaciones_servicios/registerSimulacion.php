@@ -1,6 +1,7 @@
 <?php
 session_start();
 set_time_limit(0);
+error_reporting(-1);
 require_once '../layouts/bodylogin2.php';
 require_once '../conexion.php';
 require_once '../styles.php';
@@ -185,7 +186,9 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
 //normas 
   $normaCodXAtrib="";
   $normaXAtribOtro="";
+  $normaAtrib=[];
   $normaAtrib=explode(",", $normaXAtrib);
+
   if($tipoXAtrib==1){
     $stmtAtributosNorma = $dbh->prepare("SELECT * from simulaciones_servicios_atributosnormas where cod_simulacionservicioatributo=$codigoXAtrib");
     $stmtAtributosNorma->execute();
@@ -194,9 +197,11 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
      $normaFila[$ni]=$rowAtributoNorma['cod_norma'];
      $existeNorma=-1;
      for ($nr=0; $nr < count($normaAtrib); $nr++) { 
+      if($normaAtrib[$nr]!=null){
         if($normaAtrib[$nr]==nameNorma($rowAtributoNorma['cod_norma'])){
           $existeNorma=$nr; 
         }
+      }    
      }
      if($existeNorma>=0){
       unset($normaAtrib[$existeNorma]);

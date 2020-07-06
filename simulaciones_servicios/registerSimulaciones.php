@@ -243,14 +243,14 @@ $dbh = new Conexion();
                         </div>
                        </div>
                       </div><!--row-->
-                       <div class="row">
+                       <!--<div class="row">
                        <label class="col-sm-2 col-form-label">Alcance de la Propuesta:</label>
                        <div class="col-sm-7">
-                        <div class="form-group">
-                          <textarea class="form-control" type="text" name="alcance" id="alcance"></textarea>
+                        <div class="form-group">-->
+                          <input class="form-control" type="hidden" name="alcance" id="alcance">
+                        <!--</div>
                         </div>
-                        </div>
-                      </div>
+                      </div>-->
                       <br>
                       <div class="row">
                        <label class="col-sm-2 col-form-label">Productos</label>

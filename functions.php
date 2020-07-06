@@ -2905,8 +2905,12 @@ function obtenerCantidadTotalPersonalSimulacionEditado($codigo){
    $num=0;
   while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
   {
-    $cantidad=$row['cantidad_editado']*$row['dias'];
-    //$monto=$row['monto'];
+    if($row['dias']>0){
+      $cantidad=$row['cantidad_editado']*$row['dias'];
+    }else{
+      $cantidad=$row['cantidad_editado'];
+    }
+
     $num+=$cantidad;
   }
   return $num;
@@ -5986,7 +5990,7 @@ function nameNorma($codigo){
    $stmt = $dbh->prepare("SELECT abreviatura FROM normas where codigo=:codigo");
    $stmt->bindParam(':codigo',$codigo);
    $stmt->execute();
-   $valor=null;
+   $valor="";
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       $valor=$row['abreviatura'];
    }
