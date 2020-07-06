@@ -175,18 +175,20 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                             $stmtDetalleSol->bindColumn('cantidad', $cantidad);  
                             $stmtDetalleSol->bindColumn('precio', $precio_unitario);
                             $stmtDetalleSol->bindColumn('descripcion_alterna', $descripcion_alterna);                
-                            if($tipo_solicitud==2 || $tipo_solicitud==6 || $tipo_solicitud==7){
-                              $concepto_contabilizacion="";
-                            }else{
-                              $concepto_contabilizacion=$codigo_alterno." - ";  
-                            }
+                            $concepto_contabilizacion="";
+                            // if($tipo_solicitud==2 || $tipo_solicitud==6 || $tipo_solicitud==7){
+                            //   $concepto_contabilizacion="";
+                            // }else{
+                            //   $concepto_contabilizacion=$codigo_alterno." - ";  
+                            // }
                             while ($row_det = $stmtDetalleSol->fetch()){
                               $precio=$precio_unitario*$cantidad;
                               // $concepto_contabilizacion.=$descripcion_alterna." / F ".$nro_fact_x." / ".$razon_social."<br>\n";
-                              $concepto_contabilizacion.=$descripcion_alterna." / ".trim($cadenaFacturas,',').",".trim($cadenaFacturasM,",")." / ".$razon_social."<br>\n";
-                              $concepto_contabilizacion.="Cantidad: ".$cantidad." * ".formatNumberDec($precio_unitario)." = ".formatNumberDec($precio)."<br>\n";
+                              // $concepto_contabilizacion.=$descripcion_alterna." / ".trim($cadenaFacturas,',').",".trim($cadenaFacturasM,",")." / ".$razon_social."<br>\n";
+                              // $concepto_contabilizacion.="Cantidad: ".$cantidad." * ".formatNumberDec($precio_unitario)." = ".formatNumberDec($precio)."<br>\n";
+                              $concepto_contabilizacion.=$descripcion_alterna."<br>\n";
                             }
-                            $concepto_contabilizacion = (substr($concepto_contabilizacion, 0, 100))."..."; //limite de string
+                            $concepto_contabilizacion = (substr($concepto_contabilizacion, 0, 100)); //limite de string
                             
 
                             // if($tipo_solicitud==1){// la solicitud pertence tcp-tcs

@@ -427,7 +427,7 @@ $contadorRegistros=0;
                                             $stringNormas=implode(",", $ids_normas);
                                             $stringNormas=trim($stringNormas,',');
 
-                                            $queryPr="SELECT * from ibnorca.ventanormas where IdVentaNormas in ($stringNormas)";
+                                            $queryPr="SELECT IdVentaNormas,idNorma,Precio,Cantidad from ibnorca.ventanormas where IdVentaNormas in ($stringNormas)";
                                            // echo $queryPr;
                                             $stmt = $dbh->prepare($queryPr);
                                             $stmt->execute();
@@ -442,8 +442,9 @@ $contadorRegistros=0;
                                             if($cod_facturacion==0){
                                                 $codigoPre=$rowPre['IdVentaNormas'];
                                                 $codCS=488;//por defecto
-                                                $tipoPre=descripcionClaServicio($codCS);
-                                                $cantidadPre=1;
+                                                $tipoPre=descripcionClaServicio($codCS);                                            
+                                                $cantidadPre=$rowPre['Cantidad'];
+                                                if($cantidadPre==null || $cantidadPre=='' || $cantidadPre==' ')$cantidadPre=1;
                                                 $montoPre=$rowPre['Precio'];
                                                 $descuento_bob_cliente=0; //descuento maximo
                                                 $banderaHab=1;                                            
@@ -457,7 +458,7 @@ $contadorRegistros=0;
                                                 $codigoPre=0;
                                                 $codCS=$rowPre['cod_claservicio'];
                                                 $tipoPre=descripcionClaServicio($codCS);
-                                                $cantidadPre=1;
+                                                $cantidadPre=$rowPre['cantidad'];
                                                 $montoPre=$rowPre['precio'];
                                                 $descuento_bob_cliente=0;                                                 
                                                 $banderaHab=1;                                                

@@ -7758,6 +7758,22 @@ function obtener_string_observaciones($obs_devolucion,$observaciones,$observacio
   if($observaciones_2!=null) {$string_obs.=",<span style='color:#431490;'><small>".$observaciones_2."</small></span>";}
   return $string_obs;
 }
+
+function sumatotaldetallefactura($cod_factura){
+  $dbh = new Conexion();
+  $sql="SELECT sf.precio,sf.descuento_bob,sf.cantidad from facturas_ventadetalle sf where sf.cod_facturaventa=$cod_factura";  
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();  
+  $stmt->bindColumn('precio', $precio);
+  $stmt->bindColumn('descuento_bob', $descuento_bob);
+  $stmt->bindColumn('cantidad', $cantidad);
+  $suma_total=0;
+  while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+    $precio=$precio-$descuento_bob;    
+    $suma_total+=$precio*$cantidad;
+  }  
+  return($suma_total);
+}
 ?>
 
 

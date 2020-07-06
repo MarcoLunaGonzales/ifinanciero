@@ -53,7 +53,7 @@ $sql.=" order by Fecha desc;";
               <th>Fecha</th>
               <th width="35%">Cliente</th>
               <th>Norma</th>
-              <th>Cangtidad</th>
+              <th>Cantidad</th>
               <th width="10%">Importe(BOB)</th>                                            
               <th class="small">H/D</th>  
             </tr>
@@ -74,6 +74,9 @@ $sql.=" order by Fecha desc;";
             $idNorma=$rowPre['idNorma'];
             $Norma=nameNorma($idNorma);
             $Cantidad=$rowPre['Cantidad'];
+            if($Cantidad==null || $Cantidad=='' || $Cantidad==' '){
+              $Cantidad=1;
+            }
             $Precio=$rowPre['Precio'];
              ?>
              <!-- guardamos todos los items en inputs -->

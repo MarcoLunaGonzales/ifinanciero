@@ -67,8 +67,9 @@ try {
                     
                     $cod_serv_a=$_POST["cod_serv_tiposerv_a".$i];//idItem
                     $servicioInsert=$_POST["servicio_a".$i];
+                    // $CantidadInsert=$_POST["cantidad_a".$i];
                     $CantidadInsert=$_POST["cantidad_a".$i];
-                    $importeInsert=$_POST["modal_importe".$i];
+                    $importeInsert=$_POST["monto_precio".$i];
                     $DescricpionInsert=$_POST["descripcion_alterna".$i];
                     $descuento_por_Insert=$_POST["descuento_por".$i];
                     $descuento_bob_Insert=$_POST["descuento_bob".$i]; 
@@ -139,8 +140,9 @@ try {
                 $DescricpionInsert="";                
                 if(isset($_POST["servicio".$i])){
                     $servicioInsert=$_POST["servicio_a".$i];
+                    // $CantidadInsert=$_POST["cantidad_a".$i];
                     $CantidadInsert=$_POST["cantidad_a".$i];
-                    $importeInsert=$_POST["modal_importe".$i];
+                    $importeInsert=$_POST["monto_precio".$i];
                     $DescricpionInsert=$_POST["descripcion_alterna".$i];
                     $descuento_por_Insert=$_POST["descuento_por".$i];
                     $descuento_bob_Insert=$_POST["descuento_bob".$i];
