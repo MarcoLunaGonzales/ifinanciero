@@ -25,3 +25,4 @@ if($lista->totalLista>0){
  }
 }
 
+ print_r($lista);

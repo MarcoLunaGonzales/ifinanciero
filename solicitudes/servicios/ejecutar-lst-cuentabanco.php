@@ -10,7 +10,7 @@ $parametros=array();
 
  		$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 
 						"accion"=>"ListaCuentaBancoxCliente",
-						"IdCliente" => 5, //Id del Proveedor o Cliente
+						"IdCliente" => 36241, //Id del Proveedor o Cliente
 						); 
 	
 					
@@ -29,7 +29,7 @@ $parametros=array();
 		$ch = curl_init();
 		// definimos la URL a la que hacemos la petición
 		//curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibno/lista/ws-lst-cuentabanco.php"); // OFFICIAL
-		curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibnob/lista/ws-lst-cuentabanco.php"); // PRUEBA
+		curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibno/lista/ws-lst-cuentabanco.php"); // PRUEBA
 		// indicamos el tipo de petición: POST
 		curl_setopt($ch, CURLOPT_POST, TRUE);
 		// definimos cada uno de los parámetros

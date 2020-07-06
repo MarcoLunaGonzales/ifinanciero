@@ -6279,7 +6279,6 @@ function cargarDetallesCostosVariablesTodosLosAnios(inicio,ib){
     //ajax estado de cuentas
     var parametros={"anios":$("#anio_simulacion").val(),"cod_area":$("#codigo_area").val(),"cod_simulacion":cosSim,"codigo_filas":codigosFilas,"anio":anio,"usd":usd,"monto_filas":montoFilasPersonal};
     results[anio]=parametros;
-
     
   //}
    //}
