@@ -24,7 +24,7 @@
 
 // ejecutarGenerarFactura($sucursalId,$fechaFactura,$nitciCliente,$razonSocial,$importeTotal,$items);
 
-function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciCliente,$razonSocial,$importeTotal,$items,$CodLibretaDetalle){
+function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciCliente,$razonSocial,$importeTotal,$items,$CodLibretaDetalle,$tipoPago){
     require_once __DIR__.'/../conexion.php';
     require '../assets/phpqrcode/qrlib.php';
     include '../assets/controlcode/sin/ControlCode.php';
@@ -82,26 +82,31 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
 
             }else{
                 $fechaFactura_x=date('Y-m-d H:i:s');
-                $fechaFactura_xy=date('Y-m-d');     
-                if($CodLibretaDetalle>0){
-                    $cod_libreta=$CodLibretaDetalle;
-                    $estado_libreta=obtenerEstadoLibretaBancaria($cod_libreta);
-                    if($estado_libreta==0){
-                        $cod_cuenta=obtenerCuentaLibretaBancaria($cod_libreta);
-                        //generamos el comprobante estado_libreta 1 es que va con cod_cuenta para matar o 0 será el por defecto
-                        $cod_comprobante=ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_correlativo,1,$cod_cuenta);                            
-                    }elseif($estado_libreta==1){
-                        $cod_contracuenta=obtenerContraCuentaLibretaBancaria($cod_libreta);
-                        //generamos el comprobante
-                        $cod_comprobante=ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_correlativo,1,$cod_contracuenta);
+                $fechaFactura_xy=date('Y-m-d');
+                if($tipoPago==4){
+                    $cod_comprobante=ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_correlativo,2,0);
+                }else{
+                    if($CodLibretaDetalle>0){
+                        $cod_libreta=$CodLibretaDetalle;
+                        $estado_libreta=obtenerEstadoLibretaBancaria($cod_libreta);
+                        if($estado_libreta==0){
+                            $cod_cuenta=obtenerCuentaLibretaBancaria($cod_libreta);
+                            //generamos el comprobante estado_libreta 1 es que va con cod_cuenta para matar o 0 será el por defecto
+                            $cod_comprobante=ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_correlativo,1,$cod_cuenta);                            
+                        }elseif($estado_libreta==1){
+                            $cod_contracuenta=obtenerContraCuentaLibretaBancaria($cod_libreta);
+                            //generamos el comprobante
+                            $cod_comprobante=ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_correlativo,1,$cod_contracuenta);
+                        }else{
+                            //generamos el comprobante
+                            $cod_comprobante=ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_correlativo,0,0);    
+                        }
                     }else{
                         //generamos el comprobante
-                        $cod_comprobante=ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_correlativo,0,0);    
+                        $cod_comprobante=ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_correlativo,0,0);
                     }
-                }else{
-                    //generamos el comprobante
-                    $cod_comprobante=ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_correlativo,0,0);
                 }
+
                 if($cod_comprobante==null || $cod_comprobante==''){
                     return "12###";
                 }else{
