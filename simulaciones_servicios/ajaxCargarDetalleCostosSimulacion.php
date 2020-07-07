@@ -396,7 +396,7 @@ echo $html;
       <?php }
       ?>    
       <tr>
-         <td class="text-left bg-plomo font-weight-bold">Totales</td>      
+         <td class="text-left bg-plomo font-weight-bold">Totales Honorarios</td>      
          <td class="text-right small bg-plomo font-weight-bold"><?=number_format($totalAuditor,2,".","")?></td>
          <td class="text-right small bg-plomo font-weight-bold"><?=number_format($totalAuditorUSD,2,".","")?></td>
         <tr>
