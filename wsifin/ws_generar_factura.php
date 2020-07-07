@@ -1,4 +1,3 @@
-
 <?php
 require_once 'generar_factura.php';
 require_once '../conexion.php';
@@ -41,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     if(isset($datos['razonSocial'])) $razonSocial=strval($datos['razonSocial']);//recibimos razon social
                     if(isset($datos['importeTotal'])) $importeTotal=$datos['importeTotal'];//recibimos el importe total
                     if(isset($datos['tipoPago'])) $tipoPago=$datos['tipoPago'];//recibimos el tipo de pago
-                    if(isset($datos['CodLibretaDetalle']))$CodLibretaDetalle=$datos['CodLibretaDetalle'];//recibimos el importe total
+                    if(isset($datos['codLibretaDetalle']))$CodLibretaDetalle=$datos['codLibretaDetalle'];//recibimos el importe total
                     if(isset($datos['items'])) $items=$datos['items'];//recibimos array de detalle
                     $cont_items=0;
                     $importeTotal_x=0;

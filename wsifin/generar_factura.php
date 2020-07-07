@@ -82,7 +82,7 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
 
             }else{
                 $fechaFactura_x=date('Y-m-d H:i:s');
-                    
+                $fechaFactura_xy=date('Y-m-d');     
                 if($CodLibretaDetalle>0){
                     $cod_libreta=$CodLibretaDetalle;
                     $estado_libreta=obtenerEstadoLibretaBancaria($cod_libreta);
@@ -126,6 +126,7 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
                     if($flagSuccess){
                         //obtenemos el registro del ultimo insert
                         $stmtNroFac = $dbh->prepare("SELECT codigo from facturas_venta where cod_sucursal=$sucursalId and fecha_factura like '$fechaFactura_x%' and nit=$nitciCliente and razon_social like '%$razonSocial%' order by codigo desc");
+                        //$stmtNroFac = $dbh->prepare("SELECT codigo from facturas_venta where cod_sucursal=$sucursalId and DATE_FORMAT(fecha_factura,'%Y-%m-%d') like '$fechaFactura_xy%' and nit=$nitciCliente and razon_social like '%$razonSocial%' order by codigo desc limit 1");
                         $stmtNroFac->execute();
                         $resultNroFact = $stmtNroFac->fetch();    
                         $cod_facturaVenta = $resultNroFact['codigo'];
