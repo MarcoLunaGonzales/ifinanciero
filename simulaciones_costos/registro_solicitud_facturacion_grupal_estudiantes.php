@@ -454,7 +454,8 @@ $contadorRegistros=0;
                                             // if($cod_facturacion==0){
                                                 $IdCurso=$rowPre['IdCurso'];
                                                 $ci_estudiante=$rowPre['CiAlumno'];
-                                                $nombreAlumno=$rowPre['nombreAlumno'];
+                                                // $nombreAlumno=$rowPre['nombreAlumno'];
+                                                $nombreAlumno=obtnerNombreComprimidoEstudiante($ci_estudiante);
                                                 $Codigo_alterno=obtenerCodigoExternoCurso($IdCurso);
                                                 $codigoPre=$rowPre['IdTema'];
                                                 //$codCS=430;//defecto

@@ -73,6 +73,17 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$nro_factura,$co
 					case 1://cuenta de libreta bancaria
 						$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_libreta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_tipopago,0,$descripcion,$ordenDetalle);
 						break;						
+					case 2://cuenta de tarjeta de credito
+						$cod_cuenta_tarjetacredito=obtenerValorConfiguracion(60);
+						$porcentaje_cuenta_transitoria=obtenerValorConfiguracion(61);
+						$porcentaje_xyz=100-$porcentaje_cuenta_transitoria;
+						$monto_tipopago_1=$monto_tipopago*$porcentaje_xyz/100;
+						$monto_tipopago_2=$monto_tipopago*$porcentaje_cuenta_transitoria/100;
+
+						$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_tipopago_1,0,$descripcion,$ordenDetalle);
+						
+						$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_tarjetacredito,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_tipopago_2,0,$descripcion,$ordenDetalle);
+					break;						
 				}					
 				
 	            $ordenDetalle++;
@@ -176,7 +187,18 @@ function ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$
 					break;
 				case 1://cuenta de libreta bancaria					
 					$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_libreta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_total,0,$descripcion,$ordenDetalle);					
-					break;						
+				break;
+				case 2://cuenta de tarjeta de credito
+					$cod_cuenta_tarjetacredito=obtenerValorConfiguracion(60);
+					$porcentaje_cuenta_transitoria=obtenerValorConfiguracion(61);
+					$porcentaje_xyz=100-$porcentaje_cuenta_transitoria;
+					$monto_tipopago_1=$monto_total*$porcentaje_xyz/100;
+					$monto_tipopago_2=$monto_total*$porcentaje_cuenta_transitoria/100;
+
+					$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_tipopago_1,0,$descripcion,$ordenDetalle);
+					
+					$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_tarjetacredito,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_tipopago_2,0,$descripcion,$ordenDetalle);
+				break;	
 			}
             $ordenDetalle++;			
 			//para IT gasto

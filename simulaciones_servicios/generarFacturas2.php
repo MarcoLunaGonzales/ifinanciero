@@ -114,8 +114,7 @@ try{
                         // }
 
                         //monto total redondeado
-                        $stmtMontoTotal = $dbh->prepare("SELECT sum(sf.precio) as monto from solicitudes_facturaciondetalle sf 
-                        where sf.cod_solicitudfacturacion=$codigo");
+                        $stmtMontoTotal = $dbh->prepare("SELECT sum(sf.precio*sf.cantidad) as monto from solicitudes_facturaciondetalle sf where sf.cod_solicitudfacturacion=$codigo");
                         $stmtMontoTotal->execute();
                         $resultMontoTotal = $stmtMontoTotal->fetch();   
                         $monto_total= $resultMontoTotal['monto'];
@@ -124,6 +123,7 @@ try{
 
                         $nro_correlativo = nro_correlativo_facturas($cod_sucursal);//el que introduciremos
                         $cod_tipopago_defecto=obtenerValorConfiguracion(55);
+                        $cod_tipopago_tarjetadebito=obtenerValorConfiguracion(59);
                         if($cod_tipopago==$cod_tipopago_defecto){
                             $cod_libreta=0;
                             if(isset($_GET["cod_libreta"])){
@@ -141,6 +141,8 @@ try{
                             }else{
                                 $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$nro_correlativo,0,0);
                             }
+                        }elseif($cod_tipopago==$cod_tipopago_tarjetadebito){
+                            $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$nro_correlativo,2,0);
                         }else{
                             $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$nro_correlativo,0,0);
                         }

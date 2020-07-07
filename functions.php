@@ -2477,7 +2477,7 @@ function obtenerCorrelativoComprobante($cod_tipocomprobante, $unidad_organizacio
 
 function obtenerCorrelativoComprobante2($cod_tipocomprobante){
   $dbh = new Conexion(); 
-  $sql="SELECT IFNULL(max(c.numero)+1,1)as codigo from comprobantes c where c.cod_tipocomprobante=$cod_tipocomprobante";
+  $sql="SELECT IFNULL(max(c.numero)+1,1)as codigo from comprobantes c where c.cod_tipocomprobante=$cod_tipocomprobante and c.fecha>='2020-07-01 00:00:00'";
   //echo $sql;
   $stmt = $dbh->prepare($sql);
   $stmt->execute();
@@ -7774,22 +7774,73 @@ function sumatotaldetallefactura($cod_factura){
   }  
   return($suma_total);
 }
+ function obtenerCodigoDetalleSolFac($codigo){
+    $dbh = new Conexion();
+    $sql="SELECT codigo FROM solicitudes_facturaciondetalle where cod_solicitudfacturacion=$codigo";  
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();  
+    $stmt->bindColumn('codigo', $codigo);  
+    $array_cod = array();
+    $contador=0;
+    while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+        $array_cod[$contador]=$codigo;
+        $contador++;
+    }  
+    return($array_cod);
+  }
+  function verificar_pago_servicios_tcp_solfac($idServicio,$idClaServicio){
+    $idTipoObjeto=211;
+    $dbhIBNO = new ConexionIBNORCA();
+    $sql="SELECT sp.idServicio, sp.idclaServicio, sp.cantidad, (( sp.PrecioUnitario )-(( sp.PrecioUnitario )*( co.descuento / 100 ))) AS preciounitario,
+    cs.Descripcion,f.cantidad_f, f.monto_f 
+    FROM
+      `serviciopresupuesto` sp
+      LEFT JOIN (
+        SELECT sf.`IdDetalleServicioCurso` AS IdClaServicio,
+          SUM( sf.cantidad ) AS cantidad_f,
+          sum( sf.cantidad * sf.precio ) AS monto_f 
+        FROM
+          `vw_listasolfacturacion` sf 
+        WHERE
+          sf.idTipoObjeto = $idTipoObjeto 
+          AND sf.idObjeto = $idServicio
+          AND (ifnull( d_auxclasificador ( id_estadoobjeto ( 264, sf.idsolicitudfactura )), '' ) NOT IN ( 'N' )) 
+        GROUP BY
+          1 ) f ON sp.`IdClaServicio` = f.IdClaServicio
+      INNER JOIN cotizaciones co ON sp.`IdCotizacion` = `co`.`IdCotizacion` 
+      AND `id_estadoobjeto` ( 196, co.idCotizacion )= 198
+      INNER JOIN claservicios cs ON sp.IdClaservicio = cs.idClaServicio 
+    WHERE
+      `sp`.`IdServicio` = $idServicio and sp.idClaServicio=$idClaServicio";    
+    // echo $sql."<br><br>";
+    $stmtIbno = $dbhIBNO->prepare($sql);
+    $stmtIbno->execute();
+    $stmtIbno->bindColumn('cantidad', $cantidad);  
+    $stmtIbno->bindColumn('preciounitario', $preciounitario);
+    $stmtIbno->bindColumn('cantidad_f', $cantidad_f);
+    $stmtIbno->bindColumn('monto_f', $monto_f);
+    $valor=0;
+    while ($row = $stmtIbno->fetch(PDO::FETCH_BOUND)) {      
+      // echo "aqou";
+        $valor=$monto_f;
+    }  
+    return($valor);
+  }
+  function obtnerNombreComprimidoEstudiante($ci_estudiante){
+    $dbh = new Conexion();
+    $sql="SELECT concat(cpe.clPaterno,' ',cpe.clNombreRazon)as nombreAlumno
+    FROM dbcliente.cliente_persona_empresa cpe 
+    where cpe.clIdentificacion=$ci_estudiante";  
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    $stmt->bindColumn('nombreAlumno', $nombreAlumno);
+    $valor='';
+    while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {    
+        $valor=$nombreAlumno;
+    }  
+    return($valor);
 
-function obtenerCodigoDetalleSolFac($codigo){
-  $dbh = new Conexion();
-  $sql="SELECT codigo FROM solicitudes_facturaciondetalle where cod_solicitudfacturacion=$codigo";  
-  $stmt = $dbh->prepare($sql);
-  $stmt->execute();  
-  $stmt->bindColumn('codigo', $codigo);  
-  $array_cod = array();
-  $contador=0;
-  while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
-      $array_cod[$contador]=$codigo;
-      $contador++;
-  }  
-  return($array_cod);
-}
-
+  }
 ?>
 
 

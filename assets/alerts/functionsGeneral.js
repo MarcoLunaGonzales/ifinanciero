@@ -9273,10 +9273,12 @@ function activarInputMontoFilaServicio_manual()
   var sumal=0;  
   var total= $("#modal_numeroservicio").val();  
   for (var i=1;i<=(total-1);i++){              
-    var importe=$("#importe"+i).val();    
+    var importe=$("#importe"+i).val();
+    var cantidad_x=document.getElementById("cantidad"+i).value;
+
     var check=document.getElementById("modal_check"+i).checked;    
     if(check) {              
-      sumal+=parseFloat(importe);
+      sumal+=parseFloat(importe)*parseFloat(cantidad_x);
     }
   } 
   var resulta=sumal;    

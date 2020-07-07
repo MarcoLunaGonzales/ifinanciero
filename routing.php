@@ -304,6 +304,9 @@
 		if ($_GET['opcion']=='listFacturasServicios') {
 			require_once('simulaciones_servicios/listFacturasSolicitadas.php');
 		}
+		if ($_GET['opcion']=='listFacturasServiciosAreas') {
+			require_once('simulaciones_servicios/listFacturasSolicitadasArea.php');
+		}
 		if ($_GET['opcion']=='listFacturasServicios_conta') {
 			require_once('simulaciones_servicios/listFacturasSolicitadas_conta.php');
 		}

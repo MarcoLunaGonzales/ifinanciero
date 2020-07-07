@@ -307,15 +307,11 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                   if($codigo_fact_x>0 && $cod_estado_factura_x!=2 && $cod_estado_factura_x!=5){//print facturas
                                     // echo "entra";
                                     if($cont_facturas<2){
-                                      if($cod_estado_factura_x==1){//factura aun no se envio ?>
-                                        <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalEnviarCorreo" onclick="agregaformEnviarCorreo_solfac('<?=$datos_factura_envio;?>')">
-                                          <i class="material-icons" title="Enviar Correo">email</i>
-                                        </button><?php 
-                                      }?>
+                                      ?>
                                       <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=2' target="_blank"><i class="material-icons" title="Imprimir Factura">print</i></a>          
-                                      <a href="<?=$urlImp;?>?comp=<?=$cod_comprobante_x;?>&mon=1" target="_blank" class="btn" style="background-color:#3f33ff">
+                                      <!-- <a href="<?=$urlImp;?>?comp=<?=$cod_comprobante_x;?>&mon=1" target="_blank" class="btn" style="background-color:#3f33ff">
                                       <i class="material-icons" title="Imprimir Comprobante">print</i>
-                                    </a> 
+                                    </a>  -->
                                      <?php               
                                     }elseif($cont_facturas>1){ //para factura parcial?>
                                       <div class="btn-group dropdown">
@@ -408,15 +404,23 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                         </a>
                                       <?php 
                                       }
+                                      ?>
+                                      <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation-anular-factura','<?=$urlAnularFactura;?>&codigo=<?=$codigo_factura;?>&cod_solicitudfacturacion=<?=$cod_solicitudfacturacion?>&cod_comprobante=<?=$cod_comprobante?>')">
+                                        <i class="material-icons" title="Anular Factura">clear</i>
+                                      </button>
+                                      <!-- <a title="Editar Solicitud Facturación" href='<?=$urlEditSolicitudfactura;?>&codigo_s=<?=$codigo_facturacion?>' class="btn btn-success">
+                                        <i class="material-icons"><?=$iconEdit;?></i>
+                                      </a> -->
+                                      <?php 
                                     }
                                   }
                                 }else{//factura manual                                   
                                   ?>
-                                  <button title="Detalles" class="btn btn-success" type="button" data-toggle="modal" data-target="#modalDetalleFacturaManual" onclick="agregaDatosDetalleFactManual('<?=$datos_FacManual;?>')">
+                                  <button title="Detalles Factura Manual" class="btn btn-success" type="button" data-toggle="modal" data-target="#modalDetalleFacturaManual" onclick="agregaDatosDetalleFactManual('<?=$datos_FacManual;?>')">
                                     <i class="material-icons">list</i>
                                   </button>
-                                  <a href="<?=$urlImp;?>?comp=<?=$cod_comprobante_x;?>&mon=1" target="_blank" class="btn" style="background-color:#3f33ff">
-                                      <i class="material-icons" title="Imprimir Comprobante">print</i>
+                                  <!-- <a href="<?=$urlImp;?>?comp=<?=$cod_comprobante_x;?>&mon=1" target="_blank" class="btn" style="background-color:#3f33ff">
+                                      <i class="material-icons" title="Imprimir Comprobante">print</i> -->
                                    <?php 
                                 }
                               ?>
@@ -442,13 +446,14 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                       <a href="<?=$urlSolicitudfactura_estudiante;?>&q=<?=$q?>&r=<?=$s?>" class="btn btn-success">SF Estudiantes</a>
                       <a href="<?=$urlSolicitudfactura_empresa;?>&q=<?=$q?>&r=<?=$s?>" class="btn btn-danger">SF Empresas</a>
 
+                      <a href='<?=$urlSolicitudfacturaAreas;?>&q=<?=$q?>&v=<?=$v?>&s=<?=$s?>&u=<?=$u?>' class="btn btn-default">SF Histórico Area</a>
                       <?php 
                     }else{?>
                       <a href="<?=$urlRegister_solicitudfacturacion_manual;?>" class="btn btn-primary">SF Manual</a>
                       <a href="<?=$urlListSolicitud_facturacion_normas;?>" class="btn btn-warning">SF Normas</a>
                       <a href="<?=$urlSolicitudfactura_estudiante;?>" class="btn btn-success">SF Estudiantes</a>
                       <a href="<?=$urlSolicitudfactura_empresa;?>" class="btn btn-danger">SF Empresas</a>
-
+                      <a href='<?=$urlSolicitudfacturaAreas?>' class="btn btn-default">SF Histórico Area</a>
                       <?php 
                     }              
                   ?>

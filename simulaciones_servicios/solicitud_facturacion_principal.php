@@ -14,7 +14,7 @@ $u=$u;
 
 //sacamos datos para la facturacion
 if(isset($_GET['v'])){
-  echo "string";
+  // echo "string";
     $idPropuesta=obtenerIdPropuestaServicioIbnorca($v);
     $areaServicio=obtenerIdAreaServicioIbnorca($v);
      if($areaServicio==39||$areaServicio==38){
