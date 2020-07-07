@@ -37,6 +37,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
   ?>
   <div class="content">
     <div class="container-fluid">
+      <div style="overflow-y:scroll;">
           <div class="row">
               <div class="col-md-12">
                 <div class="card">
@@ -104,7 +105,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             <td class="td-actions text-right">
                               <button class="btn <?=$label?> btn-sm btn-link" style="padding:0;"><small><?=$estadofactura;?></small></button><br>
                               <?php                                
-                                if(($cod_estadofactura==1 || $cod_estadofactura==3)){?>
+                                if(($cod_estadofactura==1)){?>
                                   <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalEnviarCorreo" onclick="agregaformEnviarCorreo('<?=$datos;?>')">
                                     <i class="material-icons" title="Enviar Correo">email</i>
                                   </button>
@@ -146,6 +147,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                 </div>                
               </div>
           </div>  
+      </div>
     </div>
   </div>
 

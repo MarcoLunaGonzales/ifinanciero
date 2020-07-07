@@ -28,7 +28,21 @@ if(isset($_GET['q'])){
   $u=0;
   $q=0;
   // $sqlAreas="";
-}?>
+}
+// $globalUnidad=$_SESSION["globalUnidad"];
+// $sqlAreas="and sf.cod_area=".$globalUnidad;
+
+// echo $globalUnidad;
+if(isset($_GET['s'])){
+  $s=$_GET['s'];
+  $arraySql=explode("IdArea=",$s);
+  $codigoArea=trim($arraySql[1]);
+  $sqlAreas="and sf.cod_area=".$codigoArea;
+}else{
+  $sqlAreas="";
+}
+
+?>
 <input type="hidden" name="id_servicioibnored" value="<?=$q?>" id="id_servicioibnored"/>
 <input type="hidden" name="id_servicioibnored_rol" value="<?=$item_3?>" id="id_servicioibnored_rol"/>
 <input type="hidden" name="id_servicioibnored_s" value="<?=$s?>" id="id_servicioibnored_s"/>
@@ -38,7 +52,7 @@ if(isset($_GET['q'])){
 
   //datos registrado de la simulacion en curso
 
-  $stmt = $dbh->prepare("SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')as fecha_registro_x,DATE_FORMAT(sf.fecha_solicitudfactura,'%d/%m/%Y')as fecha_solicitudfactura_x FROM solicitudes_facturacion sf join estados_solicitudfacturacion es on sf.cod_estadosolicitudfacturacion=es.codigo where sf.cod_estadosolicitudfacturacion in (6)  order by codigo desc"); /*and sf.cod_estadosolicitudfacturacion!=5*/
+  $stmt = $dbh->prepare("SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')as fecha_registro_x,DATE_FORMAT(sf.fecha_solicitudfactura,'%d/%m/%Y')as fecha_solicitudfactura_x FROM solicitudes_facturacion sf join estados_solicitudfacturacion es on sf.cod_estadosolicitudfacturacion=es.codigo where sf.cod_estadosolicitudfacturacion in (6) $sqlAreas order by codigo desc"); /*and sf.cod_estadosolicitudfacturacion!=5*/
   $stmt->execute();
   $stmt->bindColumn('codigo', $codigo_facturacion);
   $stmt->bindColumn('cod_simulacion_servicio', $cod_simulacion_servicio);

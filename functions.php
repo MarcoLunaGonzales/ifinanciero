@@ -7826,6 +7826,21 @@ function sumatotaldetallefactura($cod_factura){
     }  
     return($valor);
   }
+  function obtnerNombreComprimidoEstudiante($ci_estudiante){
+    $dbh = new Conexion();
+    $sql="SELECT concat(cpe.clPaterno,' ',cpe.clNombreRazon)as nombreAlumno
+    FROM dbcliente.cliente_persona_empresa cpe 
+    where cpe.clIdentificacion=$ci_estudiante";  
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    $stmt->bindColumn('nombreAlumno', $nombreAlumno);
+    $valor='';
+    while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {    
+        $valor=$nombreAlumno;
+    }  
+    return($valor);
+
+  }
 ?>
 
 

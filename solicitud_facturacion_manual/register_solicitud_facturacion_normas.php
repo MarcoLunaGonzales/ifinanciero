@@ -558,7 +558,6 @@ $contadorRegistros=0;
                                 <a href='<?="../".$urlSolicitudfactura?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> IR A SF </a>
                             <?php }    
                         }
-                        
                         ?>
                   </div>
                 </div>
