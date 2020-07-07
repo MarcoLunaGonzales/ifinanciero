@@ -103,10 +103,12 @@ if($banderaLogin==1 || $tipoLogin==1){
 		$_SESSION['logueado']=1;
 		$_SESSION['globalPerfil']=$perfil;
 
-		if($codigo==90 || $codigo==89 || $codigo==227 || $codigo==195 || $codigo==72){
+		if($codigo==90 || $codigo==89 || $codigo==227 || $codigo==195 || $codigo==72 || $codigo==41 || $codigo==50 || $codigo==58){
 			$_SESSION['globalAdmin']=1;
-			$_SESSION['globalUnidad']="5";
-			$_SESSION['globalNombreUnidad']="RLP";
+			if($codigo==90 || $codigo==89 || $codigo==227 || $codigo==195 || $codigo==72){
+				$_SESSION['globalNombreUnidad']="RLP";	
+				$_SESSION['globalUnidad']="5";				
+			}
 		}else{
 			$_SESSION['globalAdmin']=0;	
 		}
