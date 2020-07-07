@@ -84,9 +84,8 @@ try {
                     $stmtIbnorca = $dbh->prepare("UPDATE ibnorca.ventanormas set idSolicitudfactura=$cod_facturacion where IdVentaNormas=$cod_serv_a");//5 tipo solicitud de normas
                     $flagSuccess=$stmtIbnorca->execute();
 
-
-                    $stmt = $dbh->prepare("INSERT INTO solicitudes_facturaciondetalle(cod_solicitudfacturacion,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_por,descuento_bob,tipo_item) 
-                    values ('$cod_facturacion','$servicioInsert','$CantidadInsert','$importeInsert','$DescricpionInsert','$descuento_por_Insert','$descuento_bob_Insert',1)");
+                    $stmt = $dbh->prepare("INSERT INTO solicitudes_facturaciondetalle(cod_solicitudfacturacion,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_por,descuento_bob,tipo_item,cod_curso) 
+                    values ('$cod_facturacion','$servicioInsert','$CantidadInsert','$importeInsert','$DescricpionInsert','$descuento_por_Insert','$descuento_bob_Insert',1,$cod_serv_a)");
                     $flagSuccess=$stmt->execute();
                 }
             }
@@ -139,6 +138,7 @@ try {
                 $importeInsert="";
                 $DescricpionInsert="";                
                 if(isset($_POST["servicio".$i])){
+                    $cod_serv_a=$_POST["cod_serv_tiposerv_a".$i];//idItem
                     $servicioInsert=$_POST["servicio_a".$i];
                     // $CantidadInsert=$_POST["cantidad_a".$i];
                     $CantidadInsert=$_POST["cantidad_a".$i];
@@ -148,8 +148,8 @@ try {
                     $descuento_bob_Insert=$_POST["descuento_bob".$i];
                 }
                 if($servicioInsert!=0 || $servicioInsert!=""){
-                    $stmt = $dbh->prepare("INSERT INTO solicitudes_facturaciondetalle(cod_solicitudfacturacion,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_por,descuento_bob,tipo_item) 
-                    values ('$cod_facturacion','$servicioInsert','$CantidadInsert','$importeInsert','$DescricpionInsert','$descuento_por_Insert','$descuento_bob_Insert',1)");
+                    $stmt = $dbh->prepare("INSERT INTO solicitudes_facturaciondetalle(cod_solicitudfacturacion,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_por,descuento_bob,tipo_item,cod_curso) 
+                    values ('$cod_facturacion','$servicioInsert','$CantidadInsert','$importeInsert','$DescricpionInsert','$descuento_por_Insert','$descuento_bob_Insert',1,$cod_serv_a)");
                     $flagSuccess=$stmt->execute();                    
                 }
             }            

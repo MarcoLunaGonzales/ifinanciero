@@ -232,15 +232,13 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                                         $saldo=0;
                                                     }
                                                 }
-                                                
-
                                                 //parte del controlador de check//impedir los ya registrados
-                                                $sqlControlador2="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$IdServicio and sfd.cod_claservicio=$codCS and tipo_solicitud=3"; 
+                                                $sqlControlador2="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$IdServicio and sfd.cod_claservicio=$codCS and tipo_solicitud=3 and sf.cod_estadosolicitudfacturacion!=2"; 
                                                 // echo $sqlControlador2;
                                                 $stmtControlador2 = $dbh->prepare($sqlControlador2);
                                                 $stmtControlador2->execute();                                                
                                                 //sacamos el monto total
-                                                $sqlControladorTotal="SELECT SUM(sfd.precio) as precio from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$IdServicio  and sfd.cod_claservicio=$codCS and tipo_solicitud=3";
+                                                $sqlControladorTotal="SELECT SUM(sfd.precio) as precio from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$IdServicio  and sfd.cod_claservicio=$codCS and tipo_solicitud=3 and sf.cod_estadosolicitudfacturacion!=2";
                                                  // echo $sqlControladorTotal;
                                                 $stmtControladorTotal = $dbh->prepare($sqlControladorTotal);
                                                 $stmtControladorTotal->execute();

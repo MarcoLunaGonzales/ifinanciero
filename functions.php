@@ -5872,6 +5872,16 @@ function obtenerPersonaCambioEstado($tipo,$objeto,$estado){
    }
    return($valor);
 }
+function obtenerFechaCambioEstado($tipo,$objeto,$estado){
+   $dbh = new ConexionIBNORCA();
+   $stmt = $dbh->prepare("SELECT DATE_FORMAT(FechaEstado,'%d/%m/%Y %H:%i:%s')as fecha_registro_x FROM estadoobjeto where IdTipoObjeto=$tipo and IdObjeto = $objeto and IdEstado=$estado");
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['fecha_registro_x'];
+   }
+   return($valor);
+}
 
 function obtenerIdPropuestaServicioIbnorca($idServicio){
    $dbh = new ConexionIBNORCA();
@@ -7392,7 +7402,7 @@ function obtenerCodigoExternoCurso($codigo){
 
 function obtenermontoestudianteGrupal($IdCurso,$ci_estudiante,$codCS){
   $dbh = new Conexion();
-  $stmt = $dbh->prepare("SELECT SUM(sfd.precio) as precio from solicitudes_facturacion_grupal sfg, solicitudes_facturaciondetalle sfd, solicitudes_facturacion sf where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_estadosolicitudfacturacion<>5 and sfg.cod_solicitudfacturacion=sfd.cod_solicitudfacturacion and sfg.cod_curso=$IdCurso and sfg.ci_estudiante=$ci_estudiante and sfd.cod_claservicio=$codCS");
+  $stmt = $dbh->prepare("SELECT SUM(sfd.precio) as precio from solicitudes_facturacion_grupal sfg, solicitudes_facturaciondetalle sfd, solicitudes_facturacion sf where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_estadosolicitudfacturacion<>5 and sfg.cod_solicitudfacturacion=sfd.cod_solicitudfacturacion and sfg.cod_curso=$IdCurso and sfg.ci_estudiante=$ci_estudiante and sfd.cod_claservicio=$codCS and sf.cod_estadosolicitudfacturacion!=2");
    $stmt->execute();
    $valor=0;
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
