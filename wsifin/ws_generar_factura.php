@@ -111,7 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             }
                         }
                         if($sw_cod_libreta){
-                            $rspString = ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciCliente,$razonSocial,$importeTotal_x,$items,$CodLibretaDetalle);//llamamos a la funcion                 
+                            $rspString = ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciCliente,$razonSocial,$importeTotal_x,$items,$CodLibretaDetalle,$tipoPago);//llamamos a la funcion                 
                             $rspArray = explode("###", $rspString);
                             $rsp=$rspArray[0];
                             $cod_factura=$rspArray[1];

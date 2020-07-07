@@ -313,9 +313,9 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                         </button><?php 
                                       }?>
                                       <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=2' target="_blank"><i class="material-icons" title="Imprimir Factura">print</i></a>          
-                                      <a href="<?=$urlImp;?>?comp=<?=$cod_comprobante_x;?>&mon=1" target="_blank" class="btn" style="background-color:#3f33ff">
+                                      <!-- <a href="<?=$urlImp;?>?comp=<?=$cod_comprobante_x;?>&mon=1" target="_blank" class="btn" style="background-color:#3f33ff">
                                       <i class="material-icons" title="Imprimir Comprobante">print</i>
-                                    </a> 
+                                    </a>  -->
                                      <?php               
                                     }elseif($cont_facturas>1){ //para factura parcial?>
                                       <div class="btn-group dropdown">
@@ -415,8 +415,8 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                   <button title="Detalles" class="btn btn-success" type="button" data-toggle="modal" data-target="#modalDetalleFacturaManual" onclick="agregaDatosDetalleFactManual('<?=$datos_FacManual;?>')">
                                     <i class="material-icons">list</i>
                                   </button>
-                                  <a href="<?=$urlImp;?>?comp=<?=$cod_comprobante_x;?>&mon=1" target="_blank" class="btn" style="background-color:#3f33ff">
-                                      <i class="material-icons" title="Imprimir Comprobante">print</i>
+                                  <!-- <a href="<?=$urlImp;?>?comp=<?=$cod_comprobante_x;?>&mon=1" target="_blank" class="btn" style="background-color:#3f33ff">
+                                      <i class="material-icons" title="Imprimir Comprobante">print</i> -->
                                    <?php 
                                 }
                               ?>
