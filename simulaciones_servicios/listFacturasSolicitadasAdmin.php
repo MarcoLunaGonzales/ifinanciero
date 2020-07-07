@@ -6,27 +6,28 @@ require_once 'styles.php';
 $dbh = new Conexion();
 $globalAdmin=$_SESSION["globalAdmin"];
 if(isset($_GET['q'])){
+
   $q=$_GET['q'];
-  if(isset($_GET['r'])){
-    $item_3=$_GET['r'];
-  }else $item_3=$_GET['v'];
+  $r=$_GET['r'];
+  $s=$_GET['s'];
+  // if(isset($_GET['r'])){
+  $item_3=$_GET['r'];
+  // }else $item_3=$_GET['v'];
 
   $s=$_GET['s'];
-  $u=$_GET['u'];
+  $u=$r;
 
-    $arraySql=explode("IdArea=",$s);
-    $codigoArea=trim($arraySql[1]);
-    $sqlAreas="and sr.cod_area=".$codigoArea;
+    // $arraySql=explode("IdArea=",$s);
+    // $codigoArea=trim($arraySql[1]);
+    // $sqlAreas="and sr.cod_area=".$codigoArea;
 
     // $sqlAreas=""; quitar cuando se registre la unidad y el area de la solicitud propuesta
-  ?>
-<?php
 }else{
   $item_3=0;
   $s=0;
   $u=0;
   $q=0;
-  $sqlAreas="";
+  // $sqlAreas="";
 }?>
 <input type="hidden" name="id_servicioibnored" value="<?=$q?>" id="id_servicioibnored"/>
 <input type="hidden" name="id_servicioibnored_rol" value="<?=$item_3?>" id="id_servicioibnored_rol"/>
@@ -135,11 +136,12 @@ $item_1=2709;
                           $stmtDetalleSol->bindColumn('cantidad', $cantidad);  
                           $stmtDetalleSol->bindColumn('precio', $precio);     
                           $stmtDetalleSol->bindColumn('descripcion_alterna', $descripcion_alterna);  
-                          $concepto_contabilizacion=$codigo_alterno." - ";
+                          $concepto_contabilizacion="";
                           while ($row_det = $stmtDetalleSol->fetch()){
-                            $precio_natural=$precio/$cantidad;
-                            $concepto_contabilizacion.=$descripcion_alterna." / F ".$nro_fact_x." / ".$razon_social."<br>\n";
-                            $concepto_contabilizacion.="Cantidad: ".$cantidad." * ".formatNumberDec($precio_natural)." = ".formatNumberDec($precio)."<br>\n";
+                            // $precio_natural=$precio/$cantidad;
+                            // $concepto_contabilizacion.=$descripcion_alterna." / F ".$nro_fact_x." / ".$razon_social."<br>\n";
+                            $concepto_contabilizacion.=$descripcion_alterna."<br>\n";
+                            // $concepto_contabilizacion.="Cantidad: ".$cantidad." * ".formatNumberDec($precio_natural)." = ".formatNumberDec($precio)."<br>\n";
                           }
                           $concepto_contabilizacion = (substr($concepto_contabilizacion, 0, 100))."..."; //limite de string
 

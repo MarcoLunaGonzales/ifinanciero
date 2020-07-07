@@ -205,7 +205,7 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 								$html.=formatNumberDec($row["cantidad"]).'<br>';
 								$contador_items++;
 							}
-							for($i=$contador_items;$i<18;$i++){
+							for($i=$contador_items;$i<20;$i++){
 								$html.='&nbsp;<br>';
 							}							
 							

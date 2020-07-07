@@ -7774,6 +7774,22 @@ function sumatotaldetallefactura($cod_factura){
   }  
   return($suma_total);
 }
+
+function obtenerCodigoDetalleSolFac($codigo){
+  $dbh = new Conexion();
+  $sql="SELECT codigo FROM solicitudes_facturaciondetalle where cod_solicitudfacturacion=$codigo";  
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();  
+  $stmt->bindColumn('codigo', $codigo);  
+  $array_cod = array();
+  $contador=0;
+  while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+      $array_cod[$contador]=$codigo;
+      $contador++;
+  }  
+  return($array_cod);
+}
+
 ?>
 
 

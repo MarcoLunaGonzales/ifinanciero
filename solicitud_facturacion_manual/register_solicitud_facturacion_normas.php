@@ -549,11 +549,16 @@ $contadorRegistros=0;
                   <div class="card-footer fixed-bottom">
                     <button type="submit" class="<?=$buttonNormal;?>">Guardar</button>
                         <?php
-                        if(isset($_POST['q'])){  ?>
+                        if(isset($_GET['q'])){  ?>
                             <a href='<?="../".$urlSolicitudfactura;?>&q=<?=$q?>&v=<?=$v?>&s=<?=$s?>&u=<?=$u?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> IR A SF </a>
-                        <?php }else{?>
-                            <a href='<?="../".$urlSolicitudfactura?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> IR A SF </a>
-                        <?php }
+                        <?php }else{
+                            if(isset($_POST['q'])){  ?>
+                                <a href='<?="../".$urlSolicitudfactura;?>&q=<?=$q?>&v=<?=$v?>&s=<?=$s?>&u=<?=$u?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> IR A SF </a>
+                            <?php }else{?>
+                                <a href='<?="../".$urlSolicitudfactura?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> IR A SF </a>
+                            <?php }    
+                        }
+                        
                         ?>
                   </div>
                 </div>

@@ -19,7 +19,7 @@ $contador_clientes=0;
 $idUsuario=$_SESSION['globalUser'];
 foreach ($lista->lista as $listaCliente) {
 	if($contador_clientes==0){
-		$sql="DELETE FROM clientes";
+		$sql="DELETE FROM clientes where codigo<>0";
         $stmt = $dbh->prepare($sql);
         $stmt->execute(); 
 	}

@@ -14,8 +14,10 @@ set_time_limit(300);
 
 //lista de contactos
 $lista=obtenerListaClientesWS();
-$contador_contactos=0;
 
+
+
+$contador_contactos=0;
 $cod_cliente=$_GET['cod_cliente'];
 //contactos clientes
 $lista=obtenerListaContactosEmpresaDelServicio($cod_cliente);		
@@ -34,7 +36,8 @@ foreach ($lista->contactos as $listas) {
 		$materno=$listas->MaternoContacto;
 		$cargo=$listas->CargoContacto;
 		$telefono=$listas->FonoContacto;
-		
+		if(isset($listas->Identificacion))$identificacion=$listas->Identificacion;
+		else $identificacion=0;
 		if(isset($listas->Correo))$correo=$listas->Correo;
 		else $correo="";
 
@@ -71,7 +74,7 @@ foreach ($listaPersona->contactos as $listas) {
 	     $contador_contactos++;
 	}
 }
-$contador_clientes++;
+// $contador_clientes++;
 
 
 ?>
