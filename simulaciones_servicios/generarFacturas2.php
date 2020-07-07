@@ -114,8 +114,7 @@ try{
                         // }
 
                         //monto total redondeado
-                        $stmtMontoTotal = $dbh->prepare("SELECT sum(sf.precio) as monto from solicitudes_facturaciondetalle sf 
-                        where sf.cod_solicitudfacturacion=$codigo");
+                        $stmtMontoTotal = $dbh->prepare("SELECT sum(sf.precio*sf.cantidad) as monto from solicitudes_facturaciondetalle sf where sf.cod_solicitudfacturacion=$codigo");
                         $stmtMontoTotal->execute();
                         $resultMontoTotal = $stmtMontoTotal->fetch();   
                         $monto_total= $resultMontoTotal['monto'];

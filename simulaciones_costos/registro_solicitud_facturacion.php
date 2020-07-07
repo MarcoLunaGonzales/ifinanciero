@@ -475,7 +475,7 @@ $contadorRegistros=0;
                                                     foreach ($lista->lstModulos as $listas) {
                                                         $cod_modulo=$listas->IdModulo;
                                                         $estadoPagado=$listas->EstadoPagado;
-                                                        if($cod_modulo==$codCS){                                                            
+                                                        if($cod_modulo==$codCS){
                                                             if($estadoPagado==1){
                                                                 $sw2="readonly style='background-color:#cec6d6;'";
                                                             }

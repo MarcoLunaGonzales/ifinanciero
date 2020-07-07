@@ -8,11 +8,15 @@ require_once 'functionsGeneral.php';
 //$dbh = new Conexion();
 $dbh = new Conexion();
 if(isset($_GET['q'])){
-  $q=$_GET['q'];
-  $s=$_GET['s'];
-  $u=$_GET['u'];
-  $v=$_GET['v'];
+    $q=$_GET['q'];
+    $s=$_GET['s'];
+    $u=$_GET['u'];
+    $v=$_GET['v'];
+    $id_servicio=$v;
+}else{
+    $id_servicio=0;
 }
+
 
 $cod_simulacion=$cod_s;
 $cod_facturacion=$cod_f;
@@ -206,12 +210,23 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                                         $descripcion_alternaX=$rowPre['descripcion_alterna'];
                                                     }
                                                 }
+
+                                                $sw2="";//para registrar nuevos, impedir los ya registrados
+                                                $monto_servicio=verificar_pago_servicios_tcp_solfac($id_servicio,$codCS);
+                                                $monto_servicio=number_format($monto_servicio,2,".","");
+                                                if($monto_servicio!=0){
+                                                    $saldo=$monto_pagar-$monto_servicio;
+                                                    $monto_total_pagado=$monto_servicio;    
+                                                    if($monto_servicio==$montoPre){
+                                                        $sw2="readonly style='background-color:#cec6d6;'";
+                                                        $saldo=0;
+                                                    }
+                                                }
                                                 //impedir ya registrados
                                                 $sqlControlador2="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$cod_simulacion and sfd.cod_claservicio=$codCS and tipo_solicitud=1";
                                                 // echo $sqlControlador2;
                                                 $stmtControlador2 = $dbh->prepare($sqlControlador2);
                                                 $stmtControlador2->execute();                                           
-                                                $sw2="";//para registrar nuevos, impedir los ya registrados
                                                 //sacamos el monto total
                                                 $sqlControladorTotal="SELECT SUM(sfd.precio) as precio from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$cod_simulacion  and sfd.cod_claservicio=$codCS and tipo_solicitud=1";
                                                  // echo $sqlControladorTotal;

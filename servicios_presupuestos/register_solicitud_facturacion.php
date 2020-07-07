@@ -190,6 +190,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                             $cantidadPre=1;
                                             // $cantidadPre=1;
                                             $montoPre=$rowPre['PrecioUnitario']*$rowPre['Cantidad'];
+                                            $montoPre=number_format($montoPre,2,".","");
                                             // echo "---cod  :".$codCS;
                                             $tipoPre=$Codigo_alterno." - ".descripcionClaServicio($codCS);
                                             // $montoPreTotal=$montoPre*$cantidadEPre;
@@ -202,8 +203,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                             if($banderaHab!=0){ 
                                                 $descuento_porX=0;
                                                 $descuento_bobX=0;
-                                                $descripcion_alternaX=$tipoPre;                     
-                                                $montoPre=number_format($montoPre,2,".","");
+                                                $descripcion_alternaX=$tipoPre;                                            
                                                 $sw="";
                                                 if($cod_facturacion>0){
                                                     //parte del controlador de check //para la parte de editar  
@@ -220,12 +220,25 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                                           $descripcion_alternaX=$rowPre['descripcion_alterna'];
                                                     }
                                                 }
+                                                // echo $IdServicio."--".$codCS;
+                                                $sw2="";
+                                                $monto_servicio=verificar_pago_servicios_tcp_solfac($IdServicio,$codCS);
+                                                $monto_servicio=number_format($monto_servicio,2,".","");
+                                                if($monto_servicio!=0){
+                                                    $saldo=$monto_pagar-$monto_servicio;
+                                                    $monto_total_pagado=$monto_servicio;    
+                                                    if($monto_servicio==$montoPre){
+                                                        $sw2="readonly style='background-color:#cec6d6;'";
+                                                        $saldo=0;
+                                                    }
+                                                }
+                                                
+
                                                 //parte del controlador de check//impedir los ya registrados
                                                 $sqlControlador2="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$IdServicio and sfd.cod_claservicio=$codCS and tipo_solicitud=3"; 
                                                 // echo $sqlControlador2;
                                                 $stmtControlador2 = $dbh->prepare($sqlControlador2);
-                                                $stmtControlador2->execute();                                           
-                                                $sw2="";
+                                                $stmtControlador2->execute();                                                
                                                 //sacamos el monto total
                                                 $sqlControladorTotal="SELECT SUM(sfd.precio) as precio from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$IdServicio  and sfd.cod_claservicio=$codCS and tipo_solicitud=3";
                                                  // echo $sqlControladorTotal;

@@ -15,7 +15,7 @@ $auxiliar = $_GET["tipo"];//de donde viene la solicitud para impresión 1=lista 
 if(isset($_GET["admin"])){//formato de factura, 1 original y copia, 2 original, 3 copia
   $admin=$_GET["admin"];
 }else{
-  $admin=0;//
+  $admin=2;//
 }
 try{
   //descarga la facturaa y lo almacena en una carpeta

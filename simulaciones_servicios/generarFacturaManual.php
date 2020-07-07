@@ -100,7 +100,7 @@ try{
                 if($cadenaCodFacturas==""){
                     $cadenaCodFacturas=0;
                 }
-                $stmtMontoTotal = $dbh->prepare("SELECT sum(sf.precio) as monto from solicitudes_facturaciondetalle sf 
+                $stmtMontoTotal = $dbh->prepare("SELECT sum(sf.precio*sf.cantidad) as monto from solicitudes_facturaciondetalle sf 
                 where sf.cod_solicitudfacturacion=$codigo");
                 $stmtMontoTotal->execute();
                 $resultMontoTotal = $stmtMontoTotal->fetch();   
