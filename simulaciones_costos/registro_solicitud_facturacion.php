@@ -24,8 +24,7 @@ $globalUnidad=$_SESSION['globalUnidad'];
 $cod_area=13;
 $dbhIBNO = new ConexionIBNORCA();
 //datos del estudiante y el curso que se encuentra
-$sqlIBNORCA="SELECT aa.IdModulo, aa.IdCurso, aa.CiAlumno, concat(cpe.clPaterno,' ',cpe.clMaterno,' ',cpe.clNombreRazon)as nombreAlumno, concat(cpe.clNombreRazon,' ',cpe.clPaterno,' ',cpe.clMaterno)as razonsocial, c.Abrev, c.Auxiliar,
-pc.Costo, pc.CantidadModulos, m.NroModulo, pc.Nombre, m.IdTema
+$sqlIBNORCA="SELECT aa.IdModulo, aa.IdCurso, aa.CiAlumno, concat(cpe.clPaterno,' ',cpe.clMaterno,' ',cpe.clNombreRazon)as nombreAlumno, c.Abrev, c.Auxiliar,pc.Costo, pc.CantidadModulos, m.NroModulo, pc.Nombre, m.IdTema,cpe.clRazonSocial,cpe.clNit
 FROM asignacionalumno aa, dbcliente.cliente_persona_empresa cpe, alumnocurso ac, clasificador c, programas_cursos pc, modulos m 
 where cpe.clIdentificacion=aa.CiAlumno 
 and ac.IdCurso=aa.IdCurso and ac.CiAlumno=aa.CiAlumno and ac.IdConceptoPago=c.IdClasificador and pc.IdCurso=aa.IdCurso and 
@@ -37,7 +36,6 @@ $resultSimu = $stmtIbno->fetch();
 $IdModulo = $resultSimu['IdModulo'];
 $IdCurso = $resultSimu['IdCurso'];
 $nombreAlumno = $resultSimu['nombreAlumno'];
-$razon_social = $resultSimu['razonsocial'];
 // $Abrev = $resultSimu['Abrev'];
 // $Costo = $resultSimu['Costo'];
 $CantidadModulos = $resultSimu['CantidadModulos'];
@@ -45,6 +43,8 @@ $Costo=$resultSimu['Costo']/$CantidadModulos;
 $Costo = number_format($Costo, 2, '.', '');
 $NroModulo = $resultSimu['NroModulo'];
 $Nombre = $resultSimu['Nombre'];
+$razon_social = $resultSimu['clRazonSocial'];
+$nit = $resultSimu['clNit'];
 // $monto_pagar=($Costo - ($Costo*$Abrev/100) )/$CantidadModulos; //formula para sacar el monto a pagar del estudiante
 
 // $Costo=$Costo/$CantidadModulos;
@@ -81,10 +81,19 @@ if($cod_facturacion>0){//editar
     $dias_credito=$resultSimuFact['dias_credito'];
 
 }else{//registrar
+
+    $sqlFac="SELECT clNit,clRazonSocial from dbcliente.cliente_persona_empresa where codigo ";
+    // echo $sqlFac;
+    $stmtSimuFact = $dbh->prepare($sqlFac);
+    $stmtSimuFact->execute();
+    $resultSimuFact = $stmtSimuFact->fetch();
+    $fecha_registro = $resultSimuFact['fecha_registro'];
+    
+
     $fecha_registro = date('Y-m-d');
-    $fecha_solicitudfactura = date('Y-m-d');
-    $razon_social= $razon_social;
-    $nit = $ci_estudiante;    
+    $fecha_solicitudfactura = date('Y-m-d');    
+    // $razon_social=$razon_social;
+    // $nit = $ci_estudiante;    
     $observaciones = $Codigo_alterno." - ".$nombreAlumno;
     $observaciones_2 = null;
     $cod_tipopago=null;
@@ -160,7 +169,7 @@ $contadorRegistros=0;
                                     $queryUO1 = "SELECT codigo,nombre,abreviatura from unidades_organizacionales where cod_estado=1 order by nombre";
                                     $statementUO1 = $dbh->query($queryUO1);
                                     while ($row = $statementUO1->fetch()){ ?>
-                                        <option <?=($globalUnidad==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>" data-subtext="(<?=$row['codigo']?>)"><?=$row["abreviatura"];?> - <?=$row["nombre"];?></option>
+                                        <option <?=($cod_uo==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>" data-subtext="(<?=$row['codigo']?>)"><?=$row["abreviatura"];?> - <?=$row["nombre"];?></option>
                                     <?php } ?>
                                 </select>
                                
@@ -466,7 +475,7 @@ $contadorRegistros=0;
                                                     foreach ($lista->lstModulos as $listas) {
                                                         $cod_modulo=$listas->IdModulo;
                                                         $estadoPagado=$listas->EstadoPagado;
-                                                        if($cod_modulo==$codCS){                                                            
+                                                        if($cod_modulo==$codCS){
                                                             if($estadoPagado==1){
                                                                 $sw2="readonly style='background-color:#cec6d6;'";
                                                             }

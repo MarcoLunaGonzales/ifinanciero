@@ -103,13 +103,12 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             <td style="color: #ff0000;"><?=$observaciones_solfac?></td>
                             <td class="td-actions text-right">
                               <button class="btn <?=$label?> btn-sm btn-link" style="padding:0;"><small><?=$estadofactura;?></small></button><br>
-                              <?php
-                                if($cod_estadofactura==1 ){?>
+                              <?php                                
+                                if(($cod_estadofactura==1 || $cod_estadofactura==3)){?>
                                   <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalEnviarCorreo" onclick="agregaformEnviarCorreo('<?=$datos;?>')">
                                     <i class="material-icons" title="Enviar Correo">email</i>
-                                  </button><?php  
-                                }
-                                if(($cod_estadofactura==1 || $cod_estadofactura==3)){?>
+                                  </button>
+
                                   <div class="btn-group dropdown">
                                     <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                        <i class="material-icons" title="Imprimir Factura">print</i>

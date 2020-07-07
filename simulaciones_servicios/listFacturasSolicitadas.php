@@ -307,7 +307,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                   if($codigo_fact_x>0 && $cod_estado_factura_x!=2 && $cod_estado_factura_x!=5){//print facturas
                                     // echo "entra";
                                     if($cont_facturas<2){
-                                      if($cod_estado_factura_x==1){//factura aun no se envio ?>
+                                      if($cod_estado_factura_x==1 || $cod_estado_factura_x==3){//factura aun no se envio ?>
                                         <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalEnviarCorreo" onclick="agregaformEnviarCorreo_solfac('<?=$datos_factura_envio;?>')">
                                           <i class="material-icons" title="Enviar Correo">email</i>
                                         </button><?php 

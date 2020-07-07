@@ -15,7 +15,7 @@ $cod_cliente=$_GET['cod_cliente'];
   $stmt->execute();
   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $codigo_contacto=$row['codigo'];    
-    $nombre_conatacto=$rowContacto['nombre']." ".$rowContacto['paterno']." ".$rowContacto['materno'];
+    $nombre_conatacto=$row['nombre']." ".$row['paterno']." ".$row['materno'];
     ?><option value="<?=$codigo_contacto?>" class="text-right"><?=$nombre_conatacto?></option>
    <?php 
    } ?> 

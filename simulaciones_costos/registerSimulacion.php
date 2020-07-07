@@ -503,9 +503,10 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
                   <td class="text-right font-weight-bold"><?=number_format($utilidadIbnorcaX, 2, '.', ',')?> %</td>
                 </tr>
                 <?php
-             $precioVentaUnitario=(($costoTotalLocal/$alumnosX)/(1-($utilidadIbnorcaX/100)));
+             //$precioVentaUnitario=(($costoTotalLocal/$alumnosX)/(1-($utilidadIbnorcaX/100)));
              //;
              //$precioVentaRecomendado=$precioVentaUnitario/(1-(($iva+$it)/100));
+             $precioVentaUnitario=(-($totalVariable[2]*$alumnosX)*$precioRegistrado)/(((((0/100)-1+(($iva+$it)/100))*$precioRegistrado)+$totalFijo[0])*$alumnosX);   
              $precioVentaRecomendado=(-($totalVariable[2]*$alumnosX)*$precioRegistrado)/((((($utilidadIbnorcaX/100)-1+(($iva+$it)/100))*$precioRegistrado)+$totalFijo[0])*$alumnosX);   
 
                 ?>

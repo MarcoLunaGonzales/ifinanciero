@@ -97,18 +97,9 @@ try{
                     </script>
                     <?php
                     //header('Location: ../index.php?opcion=listFacturasServicios');
-                }else{                
-                    //monto total redondeado
-                    $stmtMontoTotal = $dbh->prepare("SELECT sum(sf.precio) as monto from solicitudes_facturaciondetalle sf 
-                    where sf.cod_solicitudfacturacion=$codigo");
-                    $stmtMontoTotal->execute();
-                    $resultMontoTotal = $stmtMontoTotal->fetch();   
-                    $monto_total= $resultMontoTotal['monto'];
-
-                    $totalFinalRedondeado=round($monto_total,0);
-                    // echo "monto total:".$totalFinalRedondeado;
+                }else{                                    
                     //NUMERO CORRELATIVO DE FACTURA                    
-                    $nro_correlativo = nro_correlativo_facturas($cod_sucursal);
+                    $nro_correlativo = nro_correlativo_facturas($cod_sucursal);//solo para verificar
                     if($nro_correlativo==0){
                         ?>
                         <script>                            
@@ -116,6 +107,21 @@ try{
                         </script>
                         <?php
                     }else{
+                        // $array_codigo_detalle=obtenerCodigoDetalleSolFac($codigo);
+                        // $cantidad_items_divisiones_detalle=sizeof($array_codigo_detalle)/20;
+                        // for($i=0;$i<$cantidad_items_divisiones_detalle){
+
+                        // }
+
+                        //monto total redondeado
+                        $stmtMontoTotal = $dbh->prepare("SELECT sum(sf.precio*sf.cantidad) as monto from solicitudes_facturaciondetalle sf where sf.cod_solicitudfacturacion=$codigo");
+                        $stmtMontoTotal->execute();
+                        $resultMontoTotal = $stmtMontoTotal->fetch();   
+                        $monto_total= $resultMontoTotal['monto'];
+                        $totalFinalRedondeado=round($monto_total,0);
+                        // echo "monto total:".$totalFinalRedondeado;
+
+                        $nro_correlativo = nro_correlativo_facturas($cod_sucursal);//el que introduciremos
                         $cod_tipopago_defecto=obtenerValorConfiguracion(55);
                         if($cod_tipopago==$cod_tipopago_defecto){
                             $cod_libreta=0;

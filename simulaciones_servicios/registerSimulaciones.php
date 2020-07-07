@@ -303,7 +303,7 @@ $dbh = new Conexion();
                         <div class="form-group">
                           <select class="selectpicker form-control" data-size="6" data-live-search="true" name="tipo_servicio" id="tipo_servicio" data-style="btn btn-info"  required onchange="ponerSistemasIntegrados()">       
                                 <?php
-                                 $stmt = $dbh->prepare("select DISTINCT codigo_n2,descripcion_n2 from cla_servicios where codigo_n1=109 order by 2");
+                                 $stmt = $dbh->prepare("SELECT DISTINCT codigo_n2,descripcion_n2 from cla_servicios where codigo_n1=109 order by 2");
                                  $stmt->execute();
                                   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                   $codigoX=$row['codigo_n2'];
