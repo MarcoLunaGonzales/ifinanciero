@@ -162,7 +162,7 @@ $stmt->bindColumn('estado_registro', $estadoRegistroX);
                                  }else{
                                   if($codEstado==3){
                                    ?><a href="#" onclick="alerts.showSwal('warning-message-crear-servicio','<?=$urlEdit2?>?cod=<?=$codigo?>&estado=5&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>')" class="dropdown-item">
-                                    <i class="material-icons text-success">emoji_events</i> ADJUDICAR
+                                    <i class="material-icons text-success">emoji_events</i> EJECUTAR
                                  </a><?php
                                   }else{
                                    ?>
@@ -188,7 +188,7 @@ $stmt->bindColumn('estado_registro', $estadoRegistroX);
                                  }else{
                                    if($codEstado==3){
                                    ?><a href="#" onclick="alerts.showSwal('warning-message-crear-servicio','<?=$urlEdit2?>?cod=<?=$codigo?>&estado=5&admin=0')" class="dropdown-item">
-                                      <i class="material-icons text-success">emoji_events</i> ADJUDICAR
+                                      <i class="material-icons text-success">emoji_events</i> EJECUTAR
                                    </a><?php
                                    }else{
                                     ?>

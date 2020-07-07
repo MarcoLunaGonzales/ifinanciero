@@ -59,7 +59,7 @@ $bgClase="bg-info";
 
           /* fin de datos */
           $tituloUnidad="NACIONAL";
-          if(obtenerValorConfiguracion(51)!=1){
+          if(obtenerValorConfiguracion(51)==1){
             $tituloUnidad=$_GET['unidad_nombre'];
           }
           $codOficina=0;$codAreaX=0;

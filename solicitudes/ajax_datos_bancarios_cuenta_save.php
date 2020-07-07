@@ -54,4 +54,4 @@ $direccion=obtenerValorConfiguracion(42);
 
     $datos_respu= json_decode($remote_server_output);
 
-    //print_r($datos_respu);
+    print_r($datos_respu);

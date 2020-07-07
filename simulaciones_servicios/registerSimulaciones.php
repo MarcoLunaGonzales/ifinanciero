@@ -243,14 +243,14 @@ $dbh = new Conexion();
                         </div>
                        </div>
                       </div><!--row-->
-                       <div class="row">
+                       <!--<div class="row">
                        <label class="col-sm-2 col-form-label">Alcance de la Propuesta:</label>
                        <div class="col-sm-7">
-                        <div class="form-group">
-                          <textarea class="form-control" type="text" name="alcance" id="alcance"></textarea>
+                        <div class="form-group">-->
+                          <input class="form-control" type="hidden" name="alcance" id="alcance">
+                        <!--</div>
                         </div>
-                        </div>
-                      </div>
+                      </div>-->
                       <br>
                       <div class="row">
                        <label class="col-sm-2 col-form-label">Productos</label>
@@ -303,7 +303,7 @@ $dbh = new Conexion();
                         <div class="form-group">
                           <select class="selectpicker form-control" data-size="6" data-live-search="true" name="tipo_servicio" id="tipo_servicio" data-style="btn btn-info"  required onchange="ponerSistemasIntegrados()">       
                                 <?php
-                                 $stmt = $dbh->prepare("select DISTINCT codigo_n2,descripcion_n2 from cla_servicios where codigo_n1=109 order by 2");
+                                 $stmt = $dbh->prepare("SELECT DISTINCT codigo_n2,descripcion_n2 from cla_servicios where codigo_n1=109 order by 2");
                                  $stmt->execute();
                                   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                   $codigoX=$row['codigo_n2'];
