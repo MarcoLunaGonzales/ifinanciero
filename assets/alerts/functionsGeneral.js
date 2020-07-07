@@ -6101,14 +6101,14 @@ function cargarListaCostosDetallePeriodoFijo(valor,anio){
         url:url,
         beforeSend: function () { 
           iniciarCargaAjax();
-          $("#texto_ajax_titulo").html("Obteniendo Costos Fijos (Esto demorará una sola vez)");        
+          $("#texto_ajax_titulo").html("Obteniendo Costos Fijos");        
         },
         success:function(resp){
           detectarCargaAjax();
           $("#texto_ajax_titulo").html("Procesando Datos"); 
            $("#lista_detallecosto").html(resp);
           $("#modalCargarDetalleCosto").modal("show");
-          $("#inicio_fijomodal").val(1);
+          $("#inicio_fijomodal").val(0);
         }
       }); 
   }else{
@@ -6127,10 +6127,20 @@ function cargarListaCostosDetallePeriodo(valor,anio){
     }else{
       var alumnos=$("#alumnos_plan_fuera").val();
     }
+
   if($("#cambio_moneda").length){
-    var parametros = {"simulacion":simulacion,"plantilla":plantilla,"tipo":tipo,"al":alumnos,"anio":anio,"usd":$("#cambio_moneda").val()};
+    if($("#input_versimulacion").length>0){
+     var parametros = {"verSim":1,"simulacion":simulacion,"plantilla":plantilla,"tipo":tipo,"al":alumnos,"anio":anio,"usd":$("#cambio_moneda").val()};     
+    }else{
+      var parametros = {"simulacion":simulacion,"plantilla":plantilla,"tipo":tipo,"al":alumnos,"anio":anio,"usd":$("#cambio_moneda").val()};
+    }
   }else{
-    var parametros = {"simulacion":simulacion,"plantilla":plantilla,"tipo":tipo,"al":alumnos,"anio":anio};
+    if($("#input_versimulacion").length>0){
+      var parametros = {"verSim":1,"simulacion":simulacion,"plantilla":plantilla,"tipo":tipo,"al":alumnos,"anio":anio};  
+    }else{
+      var parametros = {"simulacion":simulacion,"plantilla":plantilla,"tipo":tipo,"al":alumnos,"anio":anio};
+    }
+    
   }  
   //para que solo cargue la primera vez inicio_fijomodal=0
   var inicioModal= $("#inicio_variablemodal").val(); 
@@ -6141,14 +6151,14 @@ function cargarListaCostosDetallePeriodo(valor,anio){
         url:url,
         beforeSend: function () { 
           iniciarCargaAjax();
-          $("#texto_ajax_titulo").html("Obteniendo Costos Variables (Esto demorará una sola vez)");        
+          $("#texto_ajax_titulo").html("Obteniendo Costos Variables");        
         },
         success:function(resp){
           detectarCargaAjax();
            $("#lista_detallecosto").html(resp);
           $("#modalCargarDetalleCosto").modal("show");
           $("#texto_ajax_titulo").html("Procesando Datos"); 
-          $("#inicio_variablemodal").val(1);          
+          $("#inicio_variablemodal").val(0);          
         }
       });
     }else{

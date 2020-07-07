@@ -5719,7 +5719,7 @@ function obtenerCodigoServicioPorIdServicio($idServicio){
 }
 
 function obtenerServicioPorPropuesta($simulacion){
-   $dbh = new ConexionIBNORCA();
+   $dbh = new Conexion();
    $stmt = $dbh->prepare("SELECT idServicio FROM simulaciones_servicios where codigo=$simulacion");
    $stmt->execute();
    $valor=0;

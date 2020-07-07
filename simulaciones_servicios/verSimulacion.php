@@ -184,7 +184,9 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
 //normas 
   $normaCodXAtrib="";
   $normaXAtribOtro="";
+  $normaAtrib=[];
   $normaAtrib=explode(",", $normaXAtrib);
+
   if($tipoXAtrib==1){
     $stmtAtributosNorma = $dbh->prepare("SELECT * from simulaciones_servicios_atributosnormas where cod_simulacionservicioatributo=$codigoXAtrib");
     $stmtAtributosNorma->execute();
@@ -193,9 +195,11 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
      $normaFila[$ni]=$rowAtributoNorma['cod_norma'];
      $existeNorma=-1;
      for ($nr=0; $nr < count($normaAtrib); $nr++) { 
+      if($normaAtrib[$nr]!=null){
         if($normaAtrib[$nr]==nameNorma($rowAtributoNorma['cod_norma'])){
           $existeNorma=$nr; 
         }
+      }    
      }
      if($existeNorma>=0){
       unset($normaAtrib[$existeNorma]);
@@ -211,7 +215,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
   }else{
 //atributos auditores
 for ($an=0; $an<=$anioGeneral; $an++) { 
-    $sqlAuditoresAtrib="SELECT sa.*,s.descripcion FROM simulaciones_servicios_atributosauditores sa join simulaciones_servicios_auditores s on s.codigo=sa.cod_auditor join tipos_auditor t on s.cod_tipoauditor=t.codigo where s.cod_simulacionservicio=$codigoSimulacionSuper and s.cod_anio=$an and sa.cod_simulacionservicioatributo=$codigoXAtrib order by t.nro_orden";
+    $sqlAuditoresAtrib="SELECT sa.*,s.descripcion FROM simulaciones_servicios_atributosauditores sa join simulaciones_servicios_auditores s on s.codigo=sa.cod_auditor join tipos_auditor t on s.cod_tipoauditor=t.codigo where s.cod_simulacionservicio=$codigoSimulacionSuper and s.cod_anio=$an and sa.cod_simulacionservicioatributo=$codigoXAtrib and s.cod_tipoauditor!=-100 order by t.nro_orden";
     $stmtAuditoresAtrib=$dbh->prepare($sqlAuditoresAtrib);
     $stmtAuditoresAtrib->execute();
     ?>
@@ -221,6 +225,7 @@ for ($an=0; $an<=$anioGeneral; $an++) {
       $nombreTipoEE=$rowAuditoresAtrib['descripcion'];
       $habilitadoEE=$rowAuditoresAtrib['estado'];
       $words = explode(" ", $nombreTipoEE);
+      $numerox = explode("(", $nombreTipoEE);
       $acronym = "";
       foreach ($words as $w) {
        if(!(strtolower($w)=="de"||strtolower($w)=="el"||strtolower($w)=="la"||strtolower($w)=="y"||strtolower($w)=="en")){
@@ -228,6 +233,9 @@ for ($an=0; $an<=$anioGeneral; $an++) {
        }        
       }
       $abreviatura = $acronym;
+      if(count($numerox)>1){
+       $abreviatura.="(".$numerox[1];
+      }
       //$cantidadTipo=$row['cantidad_editado'];
       if($habilitadoEE==1){
         ?>
@@ -296,7 +304,7 @@ for ($an=0; $an<=$anioGeneral; $an++) {
 <input type="hidden" name="cambio_moneda" readonly value="<?=$usd?>" id="cambio_moneda"/>
 <input type="hidden" name="alumnos_plan" readonly value="<?=$alumnosX?>" id="alumnos_plan"/>
 <input type="hidden" name="utilidad_minlocal" readonly value="<?=$utilidadIbnorcaX?>" id="utilidad_minlocal"/>
-
+<input type="hidden" name="input_versimulacion" readonly value="1" id="input_versimulacion"/>
 <div class="cargar">
   <div class="div-loading text-center">
      <h4 class="text-warning font-weight-bold">Procesando Datos</h4>

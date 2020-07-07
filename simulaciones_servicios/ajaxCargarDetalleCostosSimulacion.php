@@ -330,20 +330,79 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                       '<td class="text-right text-muted font-weight-bold">'.number_format($montoTotales2Alumno/$usd, 2, '.', ',').'</td>'.
                       '<td class="text-right text-muted font-weight-bold"></td>';
                 $html.='</tr>';
-           $html.='<tr class="bg-plomo">'.
+          /* $html.='<tr class="bg-plomo">'.
                       '<td class="font-weight-bold text-left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Total Honorarios</td>'.
                       '<td class="text-right text-muted font-weight-bold"></td>'.
                       '<td class="text-right text-muted font-weight-bold"></td>'.
                       '<td class="text-right text-muted font-weight-bold">'.number_format(costoVariablesHonorariosSimulacionServicio($codigo,$yyyy), 2, '.', ',').'</td>'.
                       '<td class="text-right text-muted font-weight-bold">'.number_format(costoVariablesHonorariosSimulacionServicio($codigo,$yyyy)/$usd, 2, '.', ',').'</td>'.
                       '<td class="text-right text-muted font-weight-bold"></td>';
-                $html.='</tr>';     
+                $html.='</tr>'; */    
          } 
 
 echo $html;
 ?>      
   </table>
-  <?php  
+   
+   <?php 
+    if(isset($_GET['verSim'])){
+      ?>
+     <h4 class="font-weight-bold"><center>HONORARIOS <?=$tituloItem?> </center></h4>  
+     <table class="table table-condensed table-bordered">
+         <tr class="text-white <?=$bgClase?>">
+            <td width="50%">Descripción</td>
+            <td>Monto x Persona BOB</td>
+            <td>Monto x Persona USD</td>
+         </tr>
+      <?php  
+    $sql="SELECT s.*,t.nombre as tipo FROM simulaciones_servicios_auditores s join tipos_auditor t on s.cod_tipoauditor=t.codigo where s.cod_simulacionservicio=$codigo and s.cod_anio=$yyyy and s.habilitado=1 order by t.nro_orden,s.descripcion";
+    $stmt=$dbh->prepare($sql);
+    $stmt->execute();
+    $iii=1;$totalAuditor=0;$totalAuditorUSD=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $codigoTipo=$row['codigo'];
+      $nombreTipo=$row['descripcion']; //$row['tipo'];
+      $cantidadTipo=$row['cantidad_editado'];
+      $diasTipo=$row['dias'];
+      $codExtLoc=$row['cod_externolocal'];
+      $montoAuditorIndUSD=number_format($row['monto']/$usd,2,".","");
+      $montoAuditorInd=number_format($row['monto'],2,".","");
+      $montoAuditor=$row['monto']*$diasTipo;
+      
+      $montoAuditorUSD=number_format($montoAuditor/$usd,2,".","");
+      $montoAuditor=number_format($montoAuditor,2,".","");  
+      $totalAuditor+=$montoAuditor;
+      $totalAuditorUSD+=($montoAuditor/$usd);
+      $cantPre=obtenerCantidadSimulacionDetalleAuditorPeriodo($codigo,$codigoTipo,$anio);
+      $diasPre=obtenerDiasSimulacionDetalleAuditorPeriodo($codigo,$codigoTipo,$anio);
+      if($cantidadTipo<$cantPre){
+        $cantPre=$cantidadTipo;
+      }
+      if($diasTipo<$diasPre){
+        $diasPre=$diasTipo;
+      }
+
+      if($row['cod_tipoauditor']==-100){
+         $nombreTipo="<b class='text-danger'>".$nombreTipo."</b>";
+      }
+      $estiloFilaTextoAud="";
+      $existeCostoVariableSolAu=obtenerCostoVariableSolicitadoPropuestaTCPTCS($codigo,$codigoTipo,2);
+       ?>
+       <tr>
+         <td class="text-left"><?=$nombreTipo?></td>      
+         <td class="text-right small"><?=$montoAuditor?></td>
+         <td class="text-right small"><?=$montoAuditorUSD?></td>
+        <tr> 
+      <?php }
+      ?>    
+      <tr>
+         <td class="text-left bg-plomo font-weight-bold">Totales</td>      
+         <td class="text-right small bg-plomo font-weight-bold"><?=number_format($totalAuditor,2,".","")?></td>
+         <td class="text-right small bg-plomo font-weight-bold"><?=number_format($totalAuditorUSD,2,".","")?></td>
+        <tr>
+     </table>    
+      <?php
+    }  
    if($tipoCosto!=1){
         ?><!--<div class="row div-center"><h4 class="font-weight-bold"><small>N&uacute;mero de personal registrado:</small> <small class="text-success"><?=$alumnos?></small></h4></div>--><?php 
     }
