@@ -10774,15 +10774,15 @@ function agregaformEnviarCorreo(datos){
   $("#correo_destino").tagsinput('add', d[3]);
   document.getElementById("razon_social").value=d[4];
 }
-function agregaformEnviarCorreo_solfac(datos){ 
+// function agregaformEnviarCorreo_solfac(datos){ 
 
-  var d=datos.split('/');  
-  document.getElementById("codigo_facturacion_sf").value=d[0];
-  document.getElementById("cod_solicitudfacturacion_sf").value=d[1];
-  document.getElementById("nro_factura_sf").value=d[2];
-  document.getElementById("correo_destino_sf").value=d[3];
-  document.getElementById("razon_social_sf").value=d[4];
-}
+//   var d=datos.split('/');  
+//   document.getElementById("codigo_facturacion_sf").value=d[0];
+//   document.getElementById("cod_solicitudfacturacion_sf").value=d[1];
+//   document.getElementById("nro_factura_sf").value=d[2];
+//   document.getElementById("correo_destino_sf").value=d[3];
+//   document.getElementById("razon_social_sf").value=d[4];
+// }
 
 function EnviarCorreoAjax(codigo_facturacion,nro_factura,cod_solicitudfacturacion,correo_destino,asunto,mensaje){
   iniciarCargaAjax();
@@ -10811,33 +10811,33 @@ function EnviarCorreoAjax(codigo_facturacion,nro_factura,cod_solicitudfacturacio
     }
   });
 }
-function EnviarCorreoAjaxSolFac(codigo_facturacion,nro_factura,cod_solicitudfacturacion,correo_destino,asunto,mensaje){
-  iniciarCargaAjax();
-  $.ajax({
-    type:"POST",
-    data:"codigo_facturacion="+codigo_facturacion+"&nro_factura="+nro_factura+"&cod_solicitudfacturacion="+cod_solicitudfacturacion+"&correo_destino="+correo_destino+"&asunto="+asunto+"&mensaje="+mensaje,
-    url:"simulaciones_servicios/enviarCorreo.php",
-    success:function(r){
-      var resp = r.split('$$$');
-      var success = resp[0];
-      var correos = resp[1];
-      detectarCargaAjax();
-      if(success==1){
-        alerts.showSwal('success-message','index.php?opcion=listFacturasServicios');
-      }
-      if(success==2){
-        Swal.fire("ERROR! :(", "Ocurrio un error de envío a los correos: <br> "+correos, "warning");
-        // alerts.showSwal('error-messageEnviarCorreo','index.php?opcion=listFacturasServicios');
-      }
-      if(success==3){        
-        alerts.showSwal('error-messageEnviarCorreoAdjunto','index.php?opcion=listFacturasServicios');
-      }
-      if(success==0){
-        alerts.showSwal('error-messageCamposVacios','index.php?opcion=listFacturasServicios');
-      }
-    }
-  });
-}
+// function EnviarCorreoAjaxSolFac(codigo_facturacion,nro_factura,cod_solicitudfacturacion,correo_destino,asunto,mensaje){
+//   iniciarCargaAjax();
+//   $.ajax({
+//     type:"POST",
+//     data:"codigo_facturacion="+codigo_facturacion+"&nro_factura="+nro_factura+"&cod_solicitudfacturacion="+cod_solicitudfacturacion+"&correo_destino="+correo_destino+"&asunto="+asunto+"&mensaje="+mensaje,
+//     url:"simulaciones_servicios/enviarCorreo.php",
+//     success:function(r){
+//       var resp = r.split('$$$');
+//       var success = resp[0];
+//       var correos = resp[1];
+//       detectarCargaAjax();
+//       if(success==1){
+//         alerts.showSwal('success-message','index.php?opcion=listFacturasServicios');
+//       }
+//       if(success==2){
+//         Swal.fire("ERROR! :(", "Ocurrio un error de envío a los correos: <br> "+correos, "warning");
+//         // alerts.showSwal('error-messageEnviarCorreo','index.php?opcion=listFacturasServicios');
+//       }
+//       if(success==3){        
+//         alerts.showSwal('error-messageEnviarCorreoAdjunto','index.php?opcion=listFacturasServicios');
+//       }
+//       if(success==0){
+//         alerts.showSwal('error-messageCamposVacios','index.php?opcion=listFacturasServicios');
+//       }
+//     }
+//   });
+// }
 //entidades 
 var unidades_tabla=[]; 
 var unidades_tabla_general=[];

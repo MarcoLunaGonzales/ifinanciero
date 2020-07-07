@@ -405,12 +405,10 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                       <?php 
                                       }
                                       ?>
-                                      <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation-anular-factura','<?=$urlAnularFactura;?>&codigo=<?=$codigo_factura;?>&cod_solicitudfacturacion=<?=$cod_solicitudfacturacion?>&cod_comprobante=<?=$cod_comprobante?>')">
-                                        <i class="material-icons" title="Anular Factura">clear</i>
+                                      <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlAnular_SoliciutdFacturacion;?>?codigo=<?=$codigo_facturacion;?>')">
+                                        <i class="material-icons" title="Anular Solicitud Facturación">clear</i>
                                       </button>
-                                      <!-- <a title="Editar Solicitud Facturación" href='<?=$urlEditSolicitudfactura;?>&codigo_s=<?=$codigo_facturacion?>' class="btn btn-success">
-                                        <i class="material-icons"><?=$iconEdit;?></i>
-                                      </a> -->
+                                      
                                       <?php 
                                     }
                                   }
@@ -423,9 +421,11 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                       <i class="material-icons" title="Imprimir Comprobante">print</i> -->
                                    <?php 
                                 }
+                                if($codEstado!=2){?>
+                                  <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir Solicitud">print</i></a>
+                                  <a href='#' title="Archivos Adjuntos" class="btn btn-primary" onclick="abrirArchivosAdjuntos('<?=$datos_otros;?>')"><i class="material-icons" ><?=$iconFile?></i></a>
+                                <?php }
                               ?>
-                               <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir Solicitud">print</i></a>
-                               <a href='#' title="Archivos Adjuntos" class="btn btn-primary" onclick="abrirArchivosAdjuntos('<?=$datos_otros;?>')"><i class="material-icons" ><?=$iconFile?></i></a>
                             </td>
                           </tr>
                           <?php

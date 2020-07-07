@@ -9,7 +9,7 @@ $urlRegisterSolicitudfactura="solicitud_facturacion_manual/register_solicitud_fa
 $urlSaveSolicitudfactura_normas="save_solicitud_facturacion_normas.php";
 
 
-$urlSolicitudfacturaAreas="index.php?opcion=listFacturasServiciosAreas";
+// $urlSolicitudfacturaAreas="index.php?opcion=listFacturasServiciosAreas";
 
 
 

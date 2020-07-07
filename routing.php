@@ -238,10 +238,10 @@
 			$cod_comprobante=$_GET['cod_comprobante'];
 			require_once('simulaciones_servicios/anular_facturaGenerada.php');
 		}
-		if ($_GET['opcion']=='anular_SoliciutdFacturacion') {
-			$codigo=$_GET['codigo'];
-			require_once('simulaciones_servicios/anular_SoliciutdFacturacion.php');
-		}
+		// if ($_GET['opcion']=='anular_SoliciutdFacturacion') {
+		// 	$codigo=$_GET['codigo'];
+		// 	require_once('simulaciones_servicios/anular_SoliciutdFacturacion.php');
+		// }
 		// Solicitud facturacion Capacitacion
 		if ($_GET['opcion']=='solicitud_facturacion_costos') {			
 			require_once('simulaciones_costos/solicitud_facturacion_costos.php');

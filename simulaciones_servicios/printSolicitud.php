@@ -252,17 +252,69 @@ $html.=  '<header class="header">'.
           // $cod_tipopago=3;
           //efectivo
           
+
+          $personal_solicitante=namePersonal($cod_personal);
+          $fecha_solicitud=obtenerFechaCambioEstado(2709,$codigo_facturacion,2726);
+
+          $cod_tipopago_cred=obtenerValorConfiguracion(48);
           
-            
-            
+          $userRevision=obtenerPersonaCambioEstado(2709,$codigo_facturacion,2727);  //en aprobacion          
+          if($userRevision==0){
+             $fecha_revision="Sin registro";    
+             $personal_revision="Sin registro";    
+          }else{
+             $personal_revision=namePersonal($userRevision);
+             $fecha_revision=obtenerFechaCambioEstado(2709,$codigo_facturacion,2727);
+          }
+          
+          $userAprobado=obtenerPersonaCambioEstado(2709,$codigo_facturacion,2728);
+          if($userAprobado==0){
+             $fecha_aprobacion="Sin registro";    
+             $personal_aprobacion="Sin registro";    
+          }else{
+             $personal_aprobacion=namePersonal($userAprobado);
+             $fecha_aprobacion=obtenerFechaCambioEstado(2709,$codigo_facturacion,2728);
+          }
+          $userprocesado=obtenerPersonaCambioEstado(2709,$codigo_facturacion,2729);//procesado        
+          if($userprocesado==0){
+             $personal_procesado="Sin registro";    
+             $fecha_procesado="Sin registro";
+          }else{
+             $personal_procesado=namePersonal($userprocesado);    
+             $fecha_procesado=obtenerFechaCambioEstado(2709,$codigo_facturacion,2729);
+          }
 
 
-            $html.='<table style="width:100%">
-              <tr>
-                <td class="text-center"><p>_______________________________<br>Aprobado Por<br></p></td>
-                <td class="text-center"><p>_______________________________<br>Recepción<br>Nombre:</p></td>
-              </tr>              
-            </table><br><br><br>';
+            
+          $html.='
+          <table class="table">
+            <tr>
+                <td class=" text-center" height="80px"></td>
+                <td class=" text-center" height="80px"></td>
+                <td class=" text-center" height="80px"></td>
+                <td class=" text-center" height="80px"></td>
+            </tr>
+            <tr>
+                <td class=" text-center" width="25%">Solicitante: '.$personal_solicitante.'</td>
+                <td class=" text-center" width="25%">Revisión: '.$personal_revision.'</td>
+                <td class=" text-center" width="25%">Aprobación: '.$personal_aprobacion.'</td>
+                <td class=" text-center" width="25%">Procesado:' .$personal_procesado.'</td>
+            </tr>
+            <tr>
+                <td class=" text-left">Fecha: '.$fecha_solicitud.'</td>
+                <td class=" text-left">Fecha: '.$fecha_revision.'</td>
+                <td class=" text-left">Fecha: '.$fecha_aprobacion.'</td>
+                <td class=" text-left">Fecha: '.$fecha_procesado.'</td>
+            </tr>
+         </table>';
+
+
+            // $html.='<table style="width:100%">
+            //   <tr>
+            //     <td class="text-center"><p>_______________________________<br>Aprobado Por<br></p></td>
+            //     <td class="text-center"><p>_______________________________<br>Recepción<br>Nombre:</p></td>
+            //   </tr>              
+            // </table><br><br><br>';
 
 
           '</header>';

@@ -48,7 +48,8 @@ try{
             $cod_tipoobjeto = $resultInfo['cod_tipoobjeto'];
             $cod_tipopago = $resultInfo['cod_tipopago'];
             $cod_cliente = $resultInfo['cod_cliente'];
-            $cod_personal = $resultInfo['cod_personal'];
+            
+            // $cod_personal = $resultInfo['cod_personal'];
             $razon_social = $resultInfo['razon_social'];
             $nitCliente = $resultInfo['nit'];
             $observaciones = $resultInfo['observaciones'];
@@ -64,13 +65,14 @@ try{
                 $cod_tipoobjeto = $resultInfo['cod_tipoobjeto'];
                 $cod_tipopago = $resultInfo['cod_tipopago'];
                 $cod_cliente = $resultInfo['cod_cliente'];
-                $cod_personal = $resultInfo['cod_personal'];
+                // $cod_personal = $resultInfo['cod_personal'];
                 $razon_social = $resultInfo['razon_social'];
                 $nitCliente = $resultInfo['nit'];
                 $observaciones = $resultInfo['observaciones'];
                 $nombre_cliente = $resultInfo['razon_social'];
                 $tipo_solicitud = $resultInfo['tipo_solicitud'];//1 tcp - 2 capacitacion - 3 servicios - 4 manual - 5 venta de normas
             }
+            $cod_personal=$globalUser;
             $cod_sucursal=obtenerSucursalCodUnidad($cod_unidadorganizacional);
             if($cod_sucursal==null || $cod_sucursal==''){//sucursal no encontrado?>
                 <script>                    
@@ -158,7 +160,8 @@ try{
                         );
                         // echo "cod:".$code;
                         $sql="INSERT INTO facturas_venta(cod_sucursal,cod_solicitudfacturacion,cod_unidadorganizacional,cod_area,fecha_factura,fecha_limite_emision,cod_tipoobjeto,cod_tipopago,cod_cliente,cod_personal,razon_social,nit,cod_dosificacionfactura,nro_factura,nro_autorizacion,codigo_control,importe,observaciones,cod_estadofactura,cod_comprobante) 
-                          values ('$cod_sucursal','$codigo','$cod_unidadorganizacional','$cod_area','$fecha_actual_cH','$fecha_limite_emision','$cod_tipoobjeto','$cod_tipopago','$cod_cliente','$cod_personal','$razon_social','$nitCliente','$cod_dosificacionfactura','$nro_correlativo','$nroAutorizacion','$code','$monto_total','$observaciones','1','$cod_comprobante')";
+                          values ('$cod_sucursal','$codigo','$cod_unidadorganizacional','$cod_area','$fecha_actual_cH','$fecha_limite_emision','$cod_tipoobjeto','$cod_tipopago','$cod_cliente','
+                          -- $cod_personal','$razon_social','$nitCliente','$cod_dosificacionfactura','$nro_correlativo','$nroAutorizacion','$code','$monto_total','$observaciones','1','$cod_comprobante')";
                           // echo $sql;
                         $stmtInsertSoliFact = $dbh->prepare($sql);
                         $flagSuccess=$stmtInsertSoliFact->execute();

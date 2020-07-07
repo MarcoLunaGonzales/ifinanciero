@@ -36,7 +36,7 @@ $urlGenerarFacturas2="simulaciones_servicios/generarFacturas2.php";
 $urlRegisterNewServicio="index.php?opcion=crearServicioIbnorca";
 
 $urlAnularFactura="?opcion=anular_facturaGenerada";
-$urlAnular_SoliciutdFacturacion="?opcion=anular_SoliciutdFacturacion";
+// $urlAnular_SoliciutdFacturacion="?opcion=anular_SoliciutdFacturacion";
 
 
 $urllistFacturasServicios="index.php?opcion=listFacturasGeneradas";
@@ -81,5 +81,7 @@ $urlSolicitudfactura_estudiante="?opcion=solicitud_facturacion_costos";
 $urlSolicitudfactura_empresa="?opcion=solicitud_facturacion_costos_empresas";
 $urlregistro_solicitud_facturacion_grupal_est="simulaciones_costos/registro_solicitud_facturacion_grupal_estudiantes.php";
 $urlSolicitudfacturaAreas="index.php?opcion=listFacturasServiciosAreas";
+
+$urlAnular_SoliciutdFacturacion="simulaciones_servicios/anular_SoliciutdFacturacion.php";
 
 ?>

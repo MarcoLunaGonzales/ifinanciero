@@ -43,7 +43,7 @@ if($estado!=1){
       //enviar propuestas para la actualizacion de ibnorca
       $fechaHoraActual=date("Y-m-d H:i:s");
       $idTipoObjeto=2709;
-      $idObjeto=2823; //regristado
+      $idObjeto=2823; //en revison
       $obs="En Pre Aprobacion Solicitud";
       if(isset($_GET['u'])){
         $u=$_GET['u'];
@@ -55,7 +55,7 @@ if($estado!=1){
       //enviar propuestas para la actualizacion de ibnorca
       $fechaHoraActual=date("Y-m-d H:i:s");
       $idTipoObjeto=2709;
-      $idObjeto=2728; //variable desde get
+      $idObjeto=2728; //aprobado
       $obs="Solicitud Aprobada desde Contabilidad"; //$obs="Registro de propuesta";
       if(isset($_GET['u'])){
         $u=$_GET['u'];
