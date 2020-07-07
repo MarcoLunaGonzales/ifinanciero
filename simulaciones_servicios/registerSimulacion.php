@@ -86,6 +86,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
             $stmt1->bindColumn('afnor', $afnorX);
             $stmt1->bindColumn('porcentaje_afnor', $porcentajeAfnorX);
             $stmt1->bindColumn('id_tiposervicio', $idTipoServicioX);
+            $stmt1->bindColumn('alcance_propuesta', $alcanceSimulacionX);
 
       while ($row1 = $stmt1->fetch(PDO::FETCH_BOUND)) {
          //plantilla datos      
@@ -126,6 +127,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
            if($idTipoServGlobal==0){
              $idTipoServGlobal=309;
            }
+           $alcanceSimulacionXX=$alcanceSimulacionX;
       }    
 ?>
 <script>

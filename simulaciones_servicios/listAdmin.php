@@ -51,6 +51,7 @@ $stmt->bindColumn('cliente', $cliente);
 $stmt->bindColumn('idServicio', $idServicioX);
 $stmt->bindColumn('cod_unidadorganizacional', $codUnidadX);
 $stmt->bindColumn('cod_area', $codAreaX);
+$stmt->bindColumn('alcance_propuesta', $alcanceX);
 
 
 //datos para servidor ibnorca
@@ -83,6 +84,7 @@ $item_1=2707;
                           <th class="text-center">#</th>
                           <th class="font-weight-bold">Numero</th>
                           <th>Cliente</th>
+                          <th>Alcance</th>
                           <th>Responsable</th>
                           <th>Fecha</th>
                           <th>Estado</th>
@@ -134,6 +136,7 @@ $item_1=2707;
                           <td align="center"><?=$index;?></td>
                           <td class="font-weight-bold"><?=$nombre;?>  <?=$unidadX?> - <?=$areaX?></td>
                           <td><?=$cliente;?></td>
+                          <td class="text-left small"><small><?=$alcanceX;?></small></td>
                           <td class="text-left">
                                  <img src="assets/img/faces/persona1.png" width="20" height="20"/><?=$responsable;?>
                           </td>

@@ -632,6 +632,21 @@
                         </div>
                         </div>
                       </div>
+
+                      <?php 
+                       if($codAreaX==38){
+                        ?>
+                         <div class="row">
+                       <label class="col-sm-2 col-form-label">Alcance</label>
+                       <div class="col-sm-10">
+                        <div class="form-group">
+                          <textarea class="form-control" name="modal_alcance" id="modal_alcance"><?=$alcanceSimulacionXX?></textarea>                          
+                        </div>
+                        </div>
+                      </div>
+                        <?php
+                       }
+                      ?>
                       <!--<div class="row">
                           <label class="col-sm-3 col-form-label">N&uacute;mero de Personal</label>
                            <div class="col-sm-8">                     

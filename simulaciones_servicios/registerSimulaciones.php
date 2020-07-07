@@ -94,10 +94,10 @@ $dbh = new Conexion();
                       
                    <div class="row">
                        <label class="col-sm-2 col-form-label">Cliente</label>
-                       <div class="col-sm-7">
+                       <div class="col-sm-6">
                         <div class="row">
                           <div class="col-sm-12">
-                            <div class="form-group">
+                            <div class="form-group" id="lista_clientes">
                                 <select class="selectpicker form-control" data-size="4" data-live-search-placeholder="Buscar cliente..." data-live-search="true" name="cliente" id="cliente" data-style="btn btn-info"  required>
           
                                 <!--<option disabled selected="selected" value="">Cliente</option>-->
@@ -117,6 +117,15 @@ $dbh = new Conexion();
                                 </select>
                               </div>
                           </div> 
+                        </div>
+                       </div>
+                       <div class="col-sm-1">
+                        <div class="row">
+                          <div class="form-group">
+                            <a href="#" class="btn btn-warning btn-round btn-fab" onclick=""> <!--actualizarRegistroSoloClientes()-->
+                             <i class="material-icons" title="Actualizar Clientes">update</i>
+                            </a>
+                         </div>
                         </div>
                        </div>
                       </div><!--row-->   
@@ -247,7 +256,7 @@ $dbh = new Conexion();
                        <label class="col-sm-2 col-form-label">Alcance de la Propuesta:</label>
                        <div class="col-sm-7">
                         <div class="form-group">-->
-                          <input class="form-control" type="hidden" name="alcance" id="alcance">
+                        
                         <!--</div>
                         </div>
                       </div>-->

@@ -2834,7 +2834,7 @@ function guardarSimulacionServicio(){
   var utilidad=$("#utilidad_minima").val();
   var anios=$("#anios").val();
   var plantilla_servicio=$("#plantilla_servicio").val();
-  var alcance=$("#alcance").val();
+  var alcance="";
   if($("#afnor").length){
     if($("#afnor").is(':checked')){
       var afnor=1;
@@ -2851,6 +2851,7 @@ function guardarSimulacionServicio(){
     var tipoServicio=$("#tipo_servicio").val();
     var normas_tiposervicio=$("#normas_tiposervicio").val();
     var normas_tiposerviciotext=$("#normas_tiposerviciotext").val();
+    alcance=$("#alcance").val();
      var parametros={"normas_tiposerviciotext":normas_tiposerviciotext,"normas_tiposervicio":JSON.stringify(normas_tiposervicio),"alcance":alcance,"id_perfil":idPerfil,"objeto_servicio":objeto,"tipo_servicio":tipoServicio,"id_servicio":idServicio,"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"atributos":JSON.stringify(itemAtributos),"norma":norma,"anios":anios,"afnor":afnor,"tipo_atributo":2};
      $.ajax({
         type: "GET",
@@ -7646,7 +7647,11 @@ if(!(ut_i==""||dia==""||dia==0||productos.length==0)){
       if($("#modal_montoserv"+anio+"SSS"+i).is("[readonly]")){
         habilitado=0;
       }
-      var parametros = {"auditoresDias":auditoresDias,"descripcion":descripcion,"codigo":codigo,"monto":monto,"simulacion":cod_sim,"sitios_dias":atributosDias,"productos":JSON.stringify(productos),"precio_fijo":precio_fijo,"unidad":unidad,"plantilla":codigo_p,"dia":dia,"utilidad":ut_i,"habilitado":habilitado,"cantidad":cantidad,"anio":anio,"iteracion":i,"tcs":tcs,"anio_fila":anio_fila};
+      var alcance="";
+      if($("#modal_alcance").length>0){
+        alcance=$("#modal_alcance").val();
+      }
+      var parametros = {"alcance":alcance,"auditoresDias":auditoresDias,"descripcion":descripcion,"codigo":codigo,"monto":monto,"simulacion":cod_sim,"sitios_dias":atributosDias,"productos":JSON.stringify(productos),"precio_fijo":precio_fijo,"unidad":unidad,"plantilla":codigo_p,"dia":dia,"utilidad":ut_i,"habilitado":habilitado,"cantidad":cantidad,"anio":anio,"iteracion":i,"tcs":tcs,"anio_fila":anio_fila};
       $.ajax({
         type:"POST",
         data:parametros,
@@ -10764,7 +10769,9 @@ function agregaformEnviarCorreo(datos){
   document.getElementById("codigo_facturacion").value=d[0];
   document.getElementById("cod_solicitudfacturacion").value=d[1];
   document.getElementById("nro_factura").value=d[2];
-  document.getElementById("correo_destino").value=d[3];
+  //document.getElementById("correo_destino").value=d[3];
+  $("#correo_destino").tagsinput('removeAll');
+  $("#correo_destino").tagsinput('add', d[3]);
   document.getElementById("razon_social").value=d[4];
 }
 function agregaformEnviarCorreo_solfac(datos){ 
@@ -11307,6 +11314,19 @@ function actualizarComboBoxAjax_cliente(cod_cliente){
   }
   ajax.send(null)  
 }
+function actualizarComboBoxAjax_SoloCliente(){
+  var contenedor;  
+  contenedor = document.getElementById('lista_clientes');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'simulaciones_servicios/ajax_actualizarComboAjax_SoloCliente.php',true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);             
+    }
+  }
+  ajax.send(null)  
+}
 function cargarDatosRegistroContactoNormas(){
   var cod_cliente=$("#cod_cliente").val();
   var cod_personal=$("#cod_personal").val();  
@@ -11433,6 +11453,25 @@ function actualizarRegistroContacto(){
            // $('.selectpicker').selectpicker("refresh");           
            Swal.fire("Correcto!", "Los datos se actualizaron de forma correcta.", "success");
            actualizarComboBoxAjax_cliente(cod_cliente);
+        }
+    }); 
+}
+function actualizarRegistroSoloClientes(){
+  var parametros={"codigo":"none"};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "simulaciones_servicios/ajaxActualizarClientes.php?",
+        data: parametros,
+        beforeSend: function () {
+        $("#texto_ajax_titulo").html("Actualizando Clientes"); 
+          iniciarCargaAjax();
+        },
+        success:  function (resp) {
+           detectarCargaAjax();
+           $("#texto_ajax_titulo").html("Procesando Datos");          
+           Swal.fire("Correcto!", "Los datos se actualizaron de forma correcta.", "success");
+           actualizarComboBoxAjax_SoloCliente();
         }
     }); 
 }
