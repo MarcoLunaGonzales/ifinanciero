@@ -2477,7 +2477,7 @@ function obtenerCorrelativoComprobante($cod_tipocomprobante, $unidad_organizacio
 
 function obtenerCorrelativoComprobante2($cod_tipocomprobante){
   $dbh = new Conexion(); 
-  $sql="SELECT IFNULL(max(c.numero)+1,1)as codigo from comprobantes c where c.cod_tipocomprobante=$cod_tipocomprobante";
+  $sql="SELECT IFNULL(max(c.numero)+1,1)as codigo from comprobantes c where c.cod_tipocomprobante=$cod_tipocomprobante and c.fecha>='2020-07-01 00:00:00'";
   //echo $sql;
   $stmt = $dbh->prepare($sql);
   $stmt->execute();
