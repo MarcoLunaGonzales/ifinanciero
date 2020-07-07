@@ -69,6 +69,14 @@ if(isset($_GET['q'])){
     <script type="text/javascript">
       location = "<?=$urlregistro_solicitud_facturacion_sec_empresas?>&codigo=<?=$idEmpresa?>&cod_simulacion=<?=$IdCurso;?>&IdCurso=<?=$IdCurso;?>&cod_facturacion=<?=$codigo_facturacion?>&cod_sw=5&q=<?=$q?>&r=<?=$v?>"
     </script><?php
+  }elseif($tipo_solicitud==7){//solicitud capacitacion estudiantes grupal
+    $IdCurso=$cod_simulacion_servicio;
+    $idEmpresa=$cod_cliente;
+    ?>  
+    <script type="text/javascript">
+      location = "<?=$urlregistro_solicitud_facturacion_grupal_est?>?codigo_ci=<?=$string_ci?>&cod_simulacion=0&IdCurso=<?=$string_curso;?>&cod_facturacion=<?=$codigo_facturacion?>&cod_sw=5&q=<?=$q?>&r=<?=$v?>"
+    </script>
+    <?php
   }
 
 }else{
@@ -103,8 +111,6 @@ if(isset($_GET['q'])){
       location = "<?=$urlregistro_solicitud_facturacion_sec_empresas?>&codigo=<?=$idEmpresa?>&cod_simulacion=<?=$IdCurso;?>&IdCurso=<?=$IdCurso;?>&cod_facturacion=<?=$codigo_facturacion?>&cod_sw=5"
     </script><?php
   }elseif($tipo_solicitud==7){//solicitud capacitacion estudiantes grupal
-
-
     $IdCurso=$cod_simulacion_servicio;
     $idEmpresa=$cod_cliente;
     ?>  

@@ -15,6 +15,10 @@ $globalUser=$_SESSION["globalUser"];
 
 set_time_limit(0);
 //recibimos las normas seleccionadas a facturar
+if(isset($_GET['q'])){
+  $q=$_GET['q'];
+  $r=$_GET['r'];  
+}
 if(isset($_POST['q'])){
   $q=$_POST['q'];
   $r=$_POST['r'];  
@@ -462,6 +466,7 @@ $contadorRegistros=0;
                                                 $Costo=$rowPre['Costo']/$CantidadModulos;
                                                 $Costo = number_format($Costo, 2, '.', '');
                                                 $montoPre=$Costo;
+                                                $cantidadPre=1;
                                                 $Abrev=trim($rowPre['Abrev'],'%');
                                                 $descuento_cliente=trim($rowPre['Abrev'],'%');
                                                 $descuento_bob_cliente=($Costo*$descuento_cliente/100);
@@ -715,13 +720,18 @@ $contadorRegistros=0;
                   </div>
                   <div class="card-footer fixed-bottom">
                     <button type="submit" class="<?=$buttonNormal;?>">Guardar</button>
-                        <?php
-                        if(isset($_POST['q'])){  ?>
-                            <a href='<?="../".$urlListSol;?>&q=<?=$q?>&v=<?=$v?>&s=<?=$s?>&u=<?=$u?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> IR A SF </a>
-                        <?php }else{?>
-                            <a href='<?="../".$urlListSol?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> IR A SF </a>
-                        <?php }
-                        ?>
+                        <?php                                    
+                            if(isset($_POST['q'])){?>
+                                <a href='../<?=$urlListSol?>&q=<?=$q?>&v=<?=$r?>&u=<?=$r?>&s=<?=$r?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> IR A SF</a>                    
+                            <?php }else{
+                                if(isset($_GET['q'])){?>
+                                <a href='../<?=$urlListSol?>&q=<?=$q?>&v=<?=$r?>&u=<?=$r?>&s=<?=$r?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> IR A SF</a>                    
+                                <?php }else{?>
+                                    <a href='<?=$urlListSol?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> IR A SF</a>                    
+                                <?php }                         
+                            }
+                            
+                        ?>                         
                   </div>
                 </div>
                 <?php  require_once '../simulaciones_servicios/modal_subir_archivos.php';?>
