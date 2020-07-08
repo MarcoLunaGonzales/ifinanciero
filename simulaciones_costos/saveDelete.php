@@ -15,5 +15,10 @@ $stmt = $dbh->prepare("UPDATE $table set cod_estadoreferencial=2 where codigo=:c
 $stmt->bindParam(':codigo', $codigo);
 
 $flagSuccess=$stmt->execute();
-showAlertSuccessError($flagSuccess,$urlList);
+if(isset($_GET['q'])){
+  showAlertSuccessError($flagSuccess,$urlList."&q=".$_GET['q']."&s=".$_GET['s']."&u=".$_GET['u']);	
+}else{
+  showAlertSuccessError($flagSuccess,$urlList);
+}
+
 ?>
