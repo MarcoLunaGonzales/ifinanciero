@@ -5589,7 +5589,7 @@ function obtenerCodigoEstadoCuentaSolicitudRecursosDetalle($codigo){
 
 function obtenerDatosCompletosPorSimulacionServicios($codigo){
   $dbh = new Conexion();
-  $sql="SELECT p.cod_area,p.cod_unidadorganizacional,s.id_tiposervicio,s.cod_cliente,s.cod_responsable,s.cod_objetoservicio 
+  $sql="SELECT p.cod_area,p.cod_unidadorganizacional,s.id_tiposervicio,s.cod_cliente,s.cod_responsable,s.cod_objetoservicio,s.descripcion_servicio 
   from simulaciones_servicios s join plantillas_servicios p on p.codigo=s.cod_plantillaservicio where s.codigo=$codigo";
   $stmt = $dbh->prepare($sql);
   $stmt->execute();
@@ -7605,7 +7605,7 @@ function obtenerCorreosCliente($cod_cliente){
 }
 function obtenerCorreoEstudiante($ci_estudiante){
   $dbh = new Conexion();
-  $sqlCorreo="SELECT c.clCorreo as correo from dbcliente.cliente_persona_empresa c where c.clCorreo IS NOT NULL and c.idCliente='$ci_estudiante'";
+  $sqlCorreo="SELECT c.clCorreo as correo from dbcliente.cliente_persona_empresa c where c.clCorreo IS NOT NULL and c.clIdentificacion='$ci_estudiante'";
   // echo $sqlCorreo;
   $stmtCorreos = $dbh->prepare($sqlCorreo);
   $stmtCorreos->execute();

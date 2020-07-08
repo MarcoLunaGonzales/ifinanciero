@@ -632,7 +632,14 @@
                         </div>
                         </div>
                       </div>
-
+                      <div class="row">
+                       <label class="col-sm-2 col-form-label">Descripción del Servicio</label>
+                       <div class="col-sm-10">
+                        <div class="form-group">
+                          <input type="text" class="form-control" name="modal_des_serv" id="modal_des_serv" value="<?=$descripcionServSimulacionXX?>">                          
+                        </div>
+                        </div>
+                      </div> 
                       <?php 
                        if($codAreaX==38){
                         ?>

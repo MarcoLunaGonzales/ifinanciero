@@ -122,7 +122,7 @@ $dbh = new Conexion();
                        <div class="col-sm-1">
                         <div class="row">
                           <div class="form-group">
-                            <a href="#" class="btn btn-warning btn-round btn-fab" onclick=""> <!--actualizarRegistroSoloClientes()-->
+                            <a href="#" class="btn btn-warning btn-round btn-fab" onclick="actualizarRegistroSoloClientes()"> <!---->
                              <i class="material-icons" title="Actualizar Clientes">update</i>
                             </a>
                          </div>
@@ -251,7 +251,16 @@ $dbh = new Conexion();
                           </div> 
                         </div>
                        </div>
-                      </div><!--row-->
+                      </div>
+                      <div class="row">
+                       <label class="col-sm-2 col-form-label">Descripción del Servicio:</label>
+                       <div class="col-sm-7">
+                        <div class="form-group">
+                          <input class="form-control" type="text" name="d_servicio_p" id="d_servicio_p" value="<?=strtoupper(obtenerServiciosClaServicioTipoNombre(309))?>">
+                        </div>
+                        </div>
+                      </div>
+                      <!--row-->
                        <!--<div class="row">
                        <label class="col-sm-2 col-form-label">Alcance de la Propuesta:</label>
                        <div class="col-sm-7">
@@ -288,13 +297,19 @@ $dbh = new Conexion();
                         <div class="row">
                           <div class="col-sm-12">
                             <div class="form-group">
-                                <select class="selectpicker form-control" name="objeto_servicio" id="objeto_servicio" data-style="btn btn-info"  required>
+                                <select class="selectpicker form-control" onchange="ponerDescripcionServicio()" name="objeto_servicio" id="objeto_servicio" data-style="btn btn-info"  required>
                                 <?php
+                                $tituloObjeto="";
                                  $stmt = $dbh->prepare("SELECT c.codigo, c.nombre FROM objeto_servicio c where c.cod_estadoreferencial=1 order by 1");
                                  $stmt->execute();
+                                 $indexOb=0;
                                   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                   $codigoX=$row['codigo'];
                                   $nombreX=$row['nombre'];
+                                  if($indexOb==0){
+                                      $tituloObjeto=obtenerServiciosTipoObjetoNombre($codigoX);
+                                  }
+                                  $indexOb++;
                                    ?>
                                   <option value="<?=$codigoX;?>"><?=$nombreX;?></option> 
                                   <?php
@@ -310,13 +325,19 @@ $dbh = new Conexion();
                        <label class="col-sm-2 col-form-label">Tipo del Servicio</label>
                        <div class="col-sm-7">
                         <div class="form-group">
-                          <select class="selectpicker form-control" data-size="6" data-live-search="true" name="tipo_servicio" id="tipo_servicio" data-style="btn btn-info"  required onchange="ponerSistemasIntegrados()">       
+                          <select class="selectpicker form-control" data-size="6" data-live-search="true" name="tipo_servicio" id="tipo_servicio" data-style="btn btn-info"  required onchange="ponerSistemasIntegrados();ponerDescripcionServicio();">       
                                 <?php
+                                $tituloTipoServ="";
+                                $indexOb=0;
                                  $stmt = $dbh->prepare("SELECT DISTINCT codigo_n2,descripcion_n2 from cla_servicios where codigo_n1=109 order by 2");
                                  $stmt->execute();
                                   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                   $codigoX=$row['codigo_n2'];
                                   $nombreX=$row['descripcion_n2'];
+                                  if($indexOb==0){
+                                      $tituloTipoServ=obtenerServiciosClaServicioTipoNombre($codigoX);
+                                  }
+                                  $indexOb++;
                                    ?>
                                   <option value="<?=$codigoX;?>"><?=$nombreX;?></option> 
                                   <?php
@@ -369,7 +390,15 @@ $dbh = new Conexion();
                                 </div>  
                              </div>     
                         </div> 
-                        <div class="row">
+                      <div class="row">
+                       <label class="col-sm-2 col-form-label">Descripción del Servicio:</label>
+                       <div class="col-sm-7">
+                        <div class="form-group">
+                          <input class="form-control" type="text" name="d_servicio" id="d_servicio" value="<?=$tituloTipoServ?> - <?=$tituloObjeto?>">
+                        </div>
+                        </div>
+                      </div>  
+                      <div class="row">
                        <label class="col-sm-2 col-form-label">Alcance de la Propuesta:</label>
                        <div class="col-sm-7">
                         <div class="form-group">

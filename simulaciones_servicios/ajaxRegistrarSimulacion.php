@@ -40,6 +40,7 @@ if(isset($_GET['nombre'])){
   $cod_region=1; //$_GET['local_extranjero']
   $anios=$_GET['anios'];
   $alcance=$_GET['alcance'];
+  $des_serv=$_GET['des_serv'];
   //$anios=obtenerAnioPlantillaServicio($plantilla_servicio);
   $fecha= date("Y-m-d");
 
@@ -77,8 +78,8 @@ if(isset($_GET['nombre'])){
   }
   $ingresoPresupuestado=obtenerPresupuestoEjecucionPorArea($codOficinaPres,$areaGeneralPlantilla,$globalNombreGestion,12)['presupuesto'];
 
-  $sqlInsert="INSERT INTO simulaciones_servicios (codigo, nombre, fecha, cod_plantillaservicio, cod_responsable,dias_auditoria,utilidad_minima,cod_cliente,productos,norma,idServicio,anios,porcentaje_fijo,sitios,afnor,porcentaje_afnor,id_tiposervicio,cod_objetoservicio,cod_tipoclientenacionalidad,cod_iaf_primario,cod_iaf_secundario,alcance_propuesta,ingreso_presupuestado) 
-  VALUES ('".$codSimServ."','".$nombre."','".$fecha."', '".$plantilla_servicio."', '".$globalUser."','".$dias."','".$utilidad."','".$cliente."','".$productos."','".$norma."','".$id_servicio."','".$anios."','".obtenerValorConfiguracion(32)."','".$sitios."','".$afnor."','".obtenerValorConfiguracion(33)."','".$idTipoServicio."','".$objeto_servicio."','".$regionCliente."','".$iafprimario."','".$iafsecundario."','".$alcance."','".$ingresoPresupuestado."')";
+  $sqlInsert="INSERT INTO simulaciones_servicios (codigo, nombre, fecha, cod_plantillaservicio, cod_responsable,dias_auditoria,utilidad_minima,cod_cliente,productos,norma,idServicio,anios,porcentaje_fijo,sitios,afnor,porcentaje_afnor,id_tiposervicio,cod_objetoservicio,cod_tipoclientenacionalidad,cod_iaf_primario,cod_iaf_secundario,alcance_propuesta,ingreso_presupuestado,descripcion_servicio) 
+  VALUES ('".$codSimServ."','".$nombre."','".$fecha."', '".$plantilla_servicio."', '".$globalUser."','".$dias."','".$utilidad."','".$cliente."','".$productos."','".$norma."','".$id_servicio."','".$anios."','".obtenerValorConfiguracion(32)."','".$sitios."','".$afnor."','".obtenerValorConfiguracion(33)."','".$idTipoServicio."','".$objeto_servicio."','".$regionCliente."','".$iafprimario."','".$iafsecundario."','".$alcance."','".$ingresoPresupuestado."','".$des_serv."')";
   $stmtInsert = $dbh->prepare($sqlInsert);
   $flagsuccess=$stmtInsert->execute();
   array_push($SQLDATOSINSTERT,$flagsuccess);
