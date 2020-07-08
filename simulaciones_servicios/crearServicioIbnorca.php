@@ -29,7 +29,10 @@ while ($row = $simulacion->fetch(PDO::FETCH_ASSOC)) {
     $IdTipo=$row['id_tiposervicio'];
     $IdCliente=$row['cod_cliente'];
     $codObjeto=$row['cod_objetoservicio'];
-    $Descripcion=obtenerServiciosClaServicioTipoNombre($IdTipo)."  ".obtenerServiciosTipoObjetoNombre($codObjeto);
+    $Descripcion=$row['descripcion_servicio'];
+    if($Descripcion==""){
+      $Descripcion=obtenerServiciosClaServicioTipoNombre($IdTipo)."  ".obtenerServiciosTipoObjetoNombre($codObjeto);  
+    }
     $IdUsuarioRegistro=$row['cod_responsable'];
     $fecharegistro=date("Y-m-d");
     $idServicio=obtenerCodigoServicioIbnorca();

@@ -5589,7 +5589,7 @@ function obtenerCodigoEstadoCuentaSolicitudRecursosDetalle($codigo){
 
 function obtenerDatosCompletosPorSimulacionServicios($codigo){
   $dbh = new Conexion();
-  $sql="SELECT p.cod_area,p.cod_unidadorganizacional,s.id_tiposervicio,s.cod_cliente,s.cod_responsable,s.cod_objetoservicio 
+  $sql="SELECT p.cod_area,p.cod_unidadorganizacional,s.id_tiposervicio,s.cod_cliente,s.cod_responsable,s.cod_objetoservicio,s.descripcion_servicio 
   from simulaciones_servicios s join plantillas_servicios p on p.codigo=s.cod_plantillaservicio where s.codigo=$codigo";
   $stmt = $dbh->prepare($sql);
   $stmt->execute();
