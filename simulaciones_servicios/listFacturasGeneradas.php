@@ -109,6 +109,8 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                   <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalEnviarCorreo" onclick="agregaformEnviarCorreo('<?=$datos;?>')">
                                     <i class="material-icons" title="Enviar Correo">email</i>
                                   </button>
+                                  <?php
+                                } if($cod_estadofactura!=2){?>  
 
                                   <div class="btn-group dropdown">
                                     <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
