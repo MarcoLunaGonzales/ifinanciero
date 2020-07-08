@@ -54,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $detalle=strval($valor['detalle']);
                         $precioUnitario=$valor['precioUnitario'];
                         $cantidad=$valor['cantidad'];
-                        $importeTotal_x=$importeTotal_x+($precioUnitario*$cantidad);
+                        $importeTotal_x=$importeTotal_x+($precioUnitario*$cantidad);                        
                         // echo $suscripcionId." - ".$pagoCursoId."<br>";
                         if($suscripcionId<=0 && $pagoCursoId<=0 && !is_numeric($suscripcionId) && !is_numeric($pagoCursoId)){
                             $sw=false;
@@ -74,6 +74,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             $mensaje = "algún item con cantidad incorrecta";
                         }
                     }
+                    // $sw=false;
+                    //     $estado=7;
+                    //     $mensaje = $importeTotal_x."omporgte";
+
                     if($sucursalId==null || $sucursalId!=1){
                         $estado=1;
                         $mensaje = "Id Sucural incorrecta";
@@ -92,19 +96,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     }elseif($tipoPago==null || $tipoPago=='' || $tipoPago==' '){
                         $estado=16;
                         $mensaje = "Tipo de Pago no encontrado";
-                    }elseif($CodLibretaDetalle==null || $CodLibretaDetalle=='' || $CodLibretaDetalle==' '){
+                    }elseif(($CodLibretaDetalle==null || $CodLibretaDetalle=='' || $CodLibretaDetalle==' ')&&$CodLibretaDetalle!=0){
                         $estado=17;
-                        $mensaje = "CodLibretaDetalle no encontrado";
+                        $mensaje = "CodLibretaDetalle no encontrado.";
                     }elseif($items==null || $cont_items<=0){
                         $estado=6;
                         $mensaje = "Items Vacío";
                     }elseif(!$sw){
                         //mostrará el error de los items 
                     }else{
-                        if($tipoPago==$cod_tipopago_deposito_cuenta){
+                        if($tipoPago==5 || $tipoPago==6){
                             if($CodLibretaDetalle==0){
                                 $estado=17;
-                                $mensaje = "CodLibretaDetalle no encontrado";
+                                $mensaje = "CodLibretaDetalle no encontrado.";
                                 $sw_cod_libreta=false;
                             }else{
                                 $sw_cod_libreta=true;

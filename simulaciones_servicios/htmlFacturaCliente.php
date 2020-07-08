@@ -104,7 +104,12 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 		$stmt3DesCli->execute();
 		//primero guardamos la factura del cliente
 		$nit_empresa=obtenerValorConfiguracionFactura(9);
-		$string_formaspago=obtnerFormasPago_factura($cod_solicitudfacturacion);
+		if($cod_solicitudfacturacion==-100){
+			$string_formaspago=$tipo_pago;
+		}else{
+			$string_formaspago=obtnerFormasPago_factura($cod_solicitudfacturacion);
+		}
+		
 		$html = '';
 		if($tipo_admin==1 || $tipo_admin==2 || $tipo_admin==4 || $tipo_admin==5){
 			$html.='<html>'.
