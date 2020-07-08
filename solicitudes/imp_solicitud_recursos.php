@@ -113,7 +113,7 @@ $tituloImporte="";
      <table class="table">
          <tr>
             <td class="s1 text-center" colspan="4">INSTITUTO BOLIVIANO DE NORMALIZACION Y CALIDAD</td>
-            <td rowspan="3" class="text-center imagen-td"><img src="../assets/img/ibnorca_sol.png" alt="Ibnorca" width="100" height="90"></td>
+            <td rowspan="3" class="text-center imagen-td"><img class="imagen-logo-izq_2" src="../assets/img/logo_ibnorca_origen_3.jpg" width="90" height="90"></td>
         </tr>
         <tr>
             <td class="s2 text-center" colspan="4">REGISTRO</td>

@@ -18,7 +18,7 @@ $dia=$_POST['dia'];
 $monto=$_POST['monto'];
 $cantidad=$_POST['cantidad'];
 $obs=$_POST['descripcion'];
-
+$alcance=$_POST['alcance'];
 $habilitado=$_POST['habilitado'];
 $unidad=$_POST['unidad'];
 $fijo=$_POST['precio_fijo'];
@@ -35,11 +35,11 @@ if(obtenerEntradaSimulacionServicio($codSimulacion)==1){
 
 if($_POST['tcs']==0){
   $tipo_atributo=1;
-  $sqlUpdatePlantilla="UPDATE simulaciones_servicios SET  utilidad_minima='$ut_i',dias_auditoria='$dia',productos='$productos' where codigo=$codSimulacion";
+  $sqlUpdatePlantilla="UPDATE simulaciones_servicios SET  alcance_propuesta='$alcance', utilidad_minima='$ut_i',dias_auditoria='$dia',productos='$productos' where codigo=$codSimulacion";
 }else{
   $tipo_atributo=2;
   $atributosDias= json_decode($_POST['sitios_dias']);
-  $sqlUpdatePlantilla="UPDATE simulaciones_servicios SET  utilidad_minima='$ut_i',dias_auditoria='$dia',sitios='$productos' where codigo=$codSimulacion";
+  $sqlUpdatePlantilla="UPDATE simulaciones_servicios SET  alcance_propuesta='$alcance', utilidad_minima='$ut_i',dias_auditoria='$dia',sitios='$productos' where codigo=$codSimulacion";
 }
 
 $stmtUpdatePlantilla = $dbh->prepare($sqlUpdatePlantilla);

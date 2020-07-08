@@ -151,7 +151,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
     </div>
   </div>
 
-<?php  require_once 'simulaciones_servicios/modal_facturacion.php';?>
+<?php  //require_once 'simulaciones_servicios/modal_facturacion.php';?>
 <!-- modal devolver solicitud -->
 <div class="modal fade" id="modalDevolverSolicitud" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog modal-lg" role="document">

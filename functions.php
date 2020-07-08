@@ -7605,7 +7605,7 @@ function obtenerCorreosCliente($cod_cliente){
 }
 function obtenerCorreoEstudiante($ci_estudiante){
   $dbh = new Conexion();
-  $sqlCorreo="SELECT c.clCorreo as correo from dbcliente.cliente_persona_empresa c where correo!='null' and clIdentificacion=$ci_estudiante";
+  $sqlCorreo="SELECT c.clCorreo as correo from dbcliente.cliente_persona_empresa c where c.clCorreo IS NOT NULL and c.idCliente='$ci_estudiante'";
   // echo $sqlCorreo;
   $stmtCorreos = $dbh->prepare($sqlCorreo);
   $stmtCorreos->execute();
