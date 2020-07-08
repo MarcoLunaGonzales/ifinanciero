@@ -201,13 +201,13 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 	               		while ($row = $stmtDesCli->fetch()) 
 						{
 							$html.='<tr>';
-							$html.='<td class="text-right" valign="top" style="padding: 0px; border-bottom: hidden;border-top: hidden; font-size: 8px;">';
+							$html.='<td class="text-right" valign="top" style="padding-top: 0px;padding-bottom: 0px; border-bottom: hidden;border-top: hidden; font-size: 8px;">';
 							$html.=formatNumberDec($row["cantidad"]);
 							$html.='</td> 
-							<td valign="top" colspan="2" style="padding: 0px; border-bottom: hidden; border-top: hidden; font-size: 8px;">';
+							<td valign="top" colspan="2" style="padding-top: 0px;padding-bottom: 0px; border-bottom: hidden; border-top: hidden; font-size: 8px;">';
 							$html.=strtoupper($row["descripcion_alterna"]);
 							$html.='</td>                   
-							<td class="text-right" valign="top" style="padding: 0px; border-bottom: hidden; border-top: hidden; font-size: 8px;">';
+							<td class="text-right" valign="top" style="padding-top: 0px;padding-bottom: 0px; border-bottom: hidden; border-top: hidden; font-size: 8px;">';
 							$precio=$row["precio"];
 							$descuento_bob=$row["descuento_bob"];
 							$cantidad=$row["cantidad"];

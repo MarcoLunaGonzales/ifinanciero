@@ -145,6 +145,7 @@ function ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$
 	// session_start();
 	try{
 	    $cod_uo_solicitud = 5;
+	    // $cod_uo_unico=5;
 	    $cod_area_solicitud = 13;
 	    $codigo_alterno = '';
 	    $razon_social = $razonSocial;
@@ -175,7 +176,7 @@ function ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$
 		$codComprobante=obtenerCodigoComprobante();
 		// echo $numeroComprobante;
 		// informacion solicitudd en curso
-		$flagSuccess=insertarCabeceraComprobante($codComprobante,$codEmpresa,$cod_uo_unico,$codAnio,$codMoneda,$codEstadoComprobante,$tipoComprobante,$fechaActual,$numeroComprobante,$concepto_contabilizacion,1,1);		
+		$flagSuccess=insertarCabeceraComprobante($codComprobante,$codEmpresa,$cod_uo_solicitud,$codAnio,$codMoneda,$codEstadoComprobante,$tipoComprobante,$fechaActual,$numeroComprobante,$concepto_contabilizacion,1,1);		
 		$ordenDetalle=1;//<--
 		if($flagSuccess){	
 			$cod_tipopago=obtenerValorConfiguracion(55);
@@ -227,7 +228,7 @@ function ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$
 			$monto_areas_format=$monto_total*$porcentaje_pasivo/100;
 			$descripcion=$concepto_contabilizacion;
 			$cod_cuenta_areas=obtenerCodCuentaArea($cod_area_solicitud);
-			$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_areas,0,$cod_uo_areas,$cod_area_areas,0,$monto_areas_uo,$descripcion,$ordenDetalle);
+			$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_areas,0,$cod_uo_solicitud,$cod_area_solicitud,0,$monto_areas_format,$descripcion,$ordenDetalle);
             $ordenDetalle++;				
 			return $codComprobante;
 			// header('Location: ../comprobantes/imp.php?comp='.$codComprobante.'&mon=1');
