@@ -42,7 +42,7 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
     //$globalUser=$_SESSION["globalUser"];
     //RECIBIMOS LAS VARIABLES    
     try{
-        $cod_solicitudfacturacion = 0;
+        $cod_solicitudfacturacion = -100;//desde la tienda usamos el -100
         $cod_uo_solicitud = 5;
         $cod_area_solicitud = 13;
         if($pasarelaId==1){
@@ -50,7 +50,16 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
         }else{
             $cod_tipoobjeto = 0;
         }
-        $cod_tipopago = 0;
+
+        if($tipoPago==5 || $tipoPago==6){            
+            $cod_tipopago =obtenerValorConfiguracion(55);//deposito en cuenta
+        }elseif($tipoPago==4){
+            $cod_tipopago = obtenerValorConfiguracion(59);//tarjetas
+        }else{
+            $cod_tipopago = 0;
+        }
+        // echo $tipoPago."tipo";
+
         $cod_cliente = 0;
         $cod_personal = 0;
         $razon_social = $razonSocial;
@@ -58,8 +67,11 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
         $observaciones = 'Tienda virtual - RZ: '.$razonSocial;
         $nombre_cliente = $razonSocial;                
         $fechaFactura=$fechaFactura;
+        $fecha_actual=date('Y-m-d');
+        // $sqlInfo="SELECT d.codigo,d.nro_autorizacion, d.llave_dosificacion,d.fecha_limite_emision
+        // from dosificaciones_facturas d where d.cod_sucursal='$sucursalId' and cod_estado=1 order by codigo";
         $sqlInfo="SELECT d.codigo,d.nro_autorizacion, d.llave_dosificacion,d.fecha_limite_emision
-        from dosificaciones_facturas d where d.cod_sucursal='$sucursalId' order by codigo";
+                from dosificaciones_facturas d where d.cod_sucursal='$sucursalId' and d.fecha_limite_emision>='$fecha_actual' and d.cod_estado=1 order by codigo";
         $stmtInfo = $dbh->prepare($sqlInfo);
         // echo $sqlInfo;
         $stmtInfo->execute();
@@ -82,8 +94,9 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
 
             }else{
                 $fechaFactura_x=date('Y-m-d H:i:s');
-                $fechaFactura_xy=date('Y-m-d');
-                if($tipoPago==4){
+                $fechaFactura_xy=date('Y-m-d');            
+                if($tipoPago==4){//aso payme
+
                     $cod_comprobante=ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_correlativo,2,0);
                 }else{
                     if($CodLibretaDetalle>0){
@@ -151,6 +164,12 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
                                 $sqldeleteCabeceraFactura="DELETE from facturas_venta where codigo=$cod_facturaVenta";
                                 $stmtDeleteCAbeceraFactura = $dbh->prepare($sqldeleteCabeceraFactura);
                                 $flagSuccess=$stmtDeleteCAbeceraFactura->execute();
+                                $sqldeletecomprobante="DELETE from comprobantes where codigo=$cod_comprobante";
+                                $stmtDeleteCopmprobante = $dbh->prepare($sqldeletecomprobante);
+                                $flagSuccess=$stmtDeleteCopmprobante->execute();
+                                $sqldeletecomprobanteDet="DELETE from comprobantes_detalle where cod_comprobante=$cod_comprobante";
+                                $stmtDeleteComprobanteDet = $dbh->prepare($sqldeletecomprobanteDet);
+                                $flagSuccess=$stmtDeleteComprobanteDet->execute();
                                 return "17###";
                             }
                         }
@@ -160,7 +179,7 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
                             $detalle=$valor['detalle'];
                             $precioUnitario=$valor['precioUnitario'];
                             $cantidad=$valor['cantidad'];
-                            $precio_x=$cantidad*$precioUnitario;
+                            $precio_x=$precioUnitario;
                             $cod_claservicio_x=$pagoCursoId;
                             $stmtInsertSoliFactDet = $dbh->prepare("INSERT INTO facturas_ventadetalle(cod_facturaventa,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_bob,suscripcionId) 
                              values ('$cod_facturaVenta','$cod_claservicio_x','$cantidad','$precio_x','$detalle',0,$suscripcionId)");

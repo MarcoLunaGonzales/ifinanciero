@@ -43,7 +43,7 @@ $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey,
               "nitciCliente"=>4868422016, //nit o ci de cliente
               "razonSocial"=>'Luna', //razon social
               "importeTotal"=>70, //importe total
-              "tipoPago"=>1, // array con el detalle    
+              "tipoPago"=>5, // array con el detalle    
               "codLibretaDetalle"=>5338, // array con el detalle
               "items"=>$Array // array con el detalle    
               );
