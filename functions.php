@@ -4547,6 +4547,7 @@ function obtenerCodigoSolicitudRecursosSimulacion($claseSim,$codigo){
   }
   return $valor;
 }
+
 function obtenerMontoTarifarioSelloEmpresa($cod_sello,$cod_empresa,$cod_nacionalidad){
    $dbh = new Conexion();
    $valor=0;$codigo=0;
@@ -7603,22 +7604,31 @@ function obtenerCorreosCliente($cod_cliente){
   }
   return($correos_string);
 }
-function obtenerCorreoEstudiante($ci_estudiante){
+function obtenerCorreoEstudiante($nit){
   $dbh = new Conexion();
-  $sqlCorreo="SELECT c.clCorreo as correo from dbcliente.cliente_persona_empresa c where c.clCorreo IS NOT NULL and c.clIdentificacion='$ci_estudiante'";
-  // echo $sqlCorreo;
+  $sqlCorreo2="SELECT c.clCorreo as correo from dbcliente.cliente_persona_empresa c where c.clCorreo IS NOT NULL and c.clIdentificacion='$nit'";
+  $stmtCorreos2 = $dbh->prepare($sqlCorreo2);
+  $stmtCorreos2->execute();
+  $stmtCorreos2->bindColumn('correo', $correo2);
+
+  $sqlCorreo="SELECT c.clCorreo as correo from dbcliente.cliente_persona_empresa c where c.clCorreo IS NOT NULL and c.clNit='$nit'";
   $stmtCorreos = $dbh->prepare($sqlCorreo);
   $stmtCorreos->execute();
   $stmtCorreos->bindColumn('correo', $correo);
-  $correos_string=[]; 
-  $index=0;                           
+  $correos_string="";                           
   while ($row = $stmtCorreos->fetch(PDO::FETCH_BOUND)) {
     if($correo!=null || $correo!='' || $correo!=' '){
-      $correos_string[$index]=$correo;
-      $index++;
+      $correos_string=$correo;
     }
   }
-  return implode(",",$correos_string);
+  if($correos_string==""){
+   while ($row2 = $stmtCorreos2->fetch(PDO::FETCH_BOUND)) {
+    if($correo2!=null || $correo2!='' || $correo2!=' '){
+      $correos_string=$correo2;
+    }
+   }
+  }
+  return $correos_string;
 }
 function obtenerTipoSolicitud($codigo){
   $dbh = new Conexion();

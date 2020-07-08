@@ -6,6 +6,16 @@ require_once 'configModule.php';
 
 setlocale(LC_TIME, "Spanish");
 $dbh = new Conexion();
+$sqlAreas="";
+if(isset($_GET['q'])){
+  $q=$_GET['q'];
+  $s=$_GET['s'];
+  $u=$_GET['u'];
+  if(isset($_GET['u'])){
+    $u=$_GET['u'];
+    ?><input type="hidden" name="idPerfil" id="idPerfil" value="<?=$u?>"/><?php
+  }
+}
 
 $sqlX="SET NAMES 'utf8'";
 $stmtX = $dbh->prepare($sqlX);
@@ -50,6 +60,13 @@ $dbh = new Conexion();
         </div>
         <div class="card-body ">
         
+                  <?php 
+                  if(isset($_GET['q'])){
+                    ?><input class="form-control col-sm-4" type="hidden" name="codigo_servicioibnorca" id="codigo_servicioibnorca" value="<?=$q?>"/>
+                    <input type="hidden" name="codigo_servicioibnorca_s" id="codigo_servicioibnorca_s" value="<?=$s?>"/>
+                    <input type="hidden" name="codigo_servicioibnorca_u" id="codigo_servicioibnorca_u" value="<?=$u?>"/><?php
+                  }
+              ?>
 
                  <div class="row">
                        <label class="col-sm-2 col-form-label">Nombre:</label>
@@ -72,7 +89,7 @@ $dbh = new Conexion();
                                   $nombreX=$row['nombre'];
                                   $abrevX=$row['abreviatura'];
                                    ?>
-                                  <option value="<?=$codigoX;?>"><?=$nombreX;?> @<?=$abrevX?></option> 
+                                  <option value="<?=$codigoX;?>"><?=$nombreX;?></option> 
                                   <?php
                                     }
                                     ?>
@@ -160,8 +177,15 @@ $dbh = new Conexion();
         <br>
         <div id="mensaje"></div>
         <div class="card-footer  ml-auto mr-auto">
-        <button type="button" class="<?=$buttonNormal;?>" onclick="guardarSimulacionCosto()">Guardar</button>
-        <a href="<?=$urlList?>" class="<?=$buttonCancel;?>">Volver</a>
+          <?php 
+          if(isset($_GET['q'])){
+            ?><button type="button" class="<?=$buttonNormal;?>" onclick="guardarSimulacionCosto()">Guardar</button>
+              <a href="<?=$urlList?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>" class="<?=$buttonCancel;?>">Volver</a><?php
+          }else{
+            ?><button type="button" class="<?=$buttonNormal;?>" onclick="guardarSimulacionCosto()">Guardar</button>
+              <a href="<?=$urlList?>" class="<?=$buttonCancel;?>">Volver</a><?php
+          }
+        ?>
         </div>
       </div>
     </div>

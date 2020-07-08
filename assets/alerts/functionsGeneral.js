@@ -2776,6 +2776,11 @@ function alertDatosTabla(){
 
 //funciones simulaciones
 function guardarSimulacionCosto(){
+  if(!($("#codigo_servicioibnorca").length)){
+    var idServicio="";
+  }else{
+    var idServicio=$("#codigo_servicioibnorca").val();
+  }
   var nombre=$("#nombre").val();
   var precio=$("#precio_venta").val();
   var plantilla_costo=$("#plantilla_costo").val();
@@ -2805,7 +2810,14 @@ function guardarSimulacionCosto(){
         },
         success:  function (resp) {
           detectarCargaAjax();
-          alerts.showSwal('success-message','simulaciones_costos/registerSimulacion.php?cod='+resp);
+          if(!($("#codigo_servicioibnorca").length)){
+                 alerts.showSwal('success-message','simulaciones_costos/registerSimulacion.php?cod='+resp);
+              }else{
+                var s=$("#codigo_servicioibnorca_s").val();
+                var u=$("#codigo_servicioibnorca_u").val();
+                alerts.showSwal('success-message','simulaciones_costos/registerSimulacion.php?cod='+resp+'&q='+idServicio+'&s='+s+'&u='+u);
+        }
+       //   alerts.showSwal('success-message','simulaciones_costos/registerSimulacion.php?cod='+resp);
         }
     });
   }
@@ -3105,6 +3117,11 @@ function guardarSimulacionAjax(valor){
 function enviarSimulacionAjax(){
   var codigo=$("#cod_simulacion").val();
   var aprobado=$("#aprobado").val();
+  if(!($("#idPerfil").length>0)){
+      var id_perfil=0;
+  }else{
+    var id_perfil=$("#idPerfil").val();
+  }
   var parametros={"codigo":codigo,"aprobado":aprobado};
      $.ajax({
         type: "GET",
@@ -3118,7 +3135,17 @@ function enviarSimulacionAjax(){
          $("#logo_carga").hide();
          Swal.fire("Envío Exitoso!", "Se registradon los datos exitosamente!", "success")
              .then((value) => {
-             location.href="../index.php?opcion=listSimulacionesCostos";
+              if(!($("#id_servicioibnored").length>0)){
+               location.href="../index.php?opcion=listSimulacionesCostos";
+              }else{
+                var q=$("#id_servicioibnored").val();
+                if(!($("#idPerfil").length>0)){
+                    //location.href="../index.php?opcion=listSimulacionesServ&q="+q;
+                }else{
+                    //location.href="../index.php?opcion=listSimulacionesServ&q="+q+"&u="+id_perfil;
+                }
+                
+              }
          });
          /*$('#msgError4').html("<p class='text-dark font-weight-bold'>"+resp+"Se envio la Simulacion</p>");
          $('#modalSend').modal('show');*/
@@ -7453,8 +7480,16 @@ function guardarDatosPlantilla(btn_id){
     },
     success: function (resp) { 
       detectarCargaAjax();
-      alerts.showSwal('success-message','registerSimulacion.php?cod='+cod_sim);
-     //Swal.fire("Correcto!", "El proceso fue satisfactorio!", "success");
+
+      if(!($("#id_servicioibnored").length)){
+        alerts.showSwal('success-message','registerSimulacion.php?cod='+cod_sim);
+      }else{
+        var q=$("#id_servicioibnored").val();
+        var s=$("#id_servicioibnored_s").val();
+        var u=$("#id_servicioibnored_u").val();
+        alerts.showSwal('success-message','registerSimulacion.php?cod='+cod_sim+'&q='+q+'&s='+s+"&u="+u);
+      } 
+
      $("#"+btn_id).removeAttr("disabled"); 
       var precios=resp.split('$$$');
       $("#precio_local").val(precios[0].trim());

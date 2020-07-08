@@ -3,11 +3,33 @@ require_once 'conexion.php';
 require_once 'configModule.php';
 require_once 'styles.php';
 $globalAdmin=$_SESSION["globalAdmin"];
-
+$globalUser=$_SESSION["globalUser"];
 $dbh = new Conexion();
 
 // Preparamos
-$stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_costos sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo where sc.cod_estadoreferencial=1 order by sc.codigo");
+if(isset($_GET['q'])){
+  $q=$_GET['q'];
+  $s=$_GET['s'];
+  $u=$_GET['u'];
+  if(isset($_GET['s'])){
+    $s=$_GET['s'];
+    $u=$_GET['u'];
+    $arraySql=explode("IdArea=",$_GET['s']);
+    $codigoArea=trim($arraySql[1]);
+
+    $sqlAreas="and p.cod_area=".$codigoArea;
+  }
+  // Preparamos
+$stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_costos sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo where sc.cod_estadoreferencial=1 and sc.cod_responsable=$globalUser order by sc.codigo desc");
+}else{
+  $s=0;
+  $u=0;
+  // Preparamos
+$stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_costos sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo where sc.cod_estadoreferencial=1 and sc.cod_responsable=$globalUser order by sc.codigo desc");
+}
+
+
+
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -80,20 +102,28 @@ $stmt->bindColumn('estado', $estado);
                              </div>
                           </td> 
                           <td class="td-actions text-right">
+                            <a title="Imprimir Propuesta" href='#' onclick="javascript:window.open('simulaciones_costos/imp.php?cod=<?=$codigo;?>')" class="btn btn-success">
+                                     <i class="material-icons"><?=$iconImp;?></i>
+                                 </a>
                             <?php
                               if($codEstado==4||$codEstado==3){
                                 if($codEstado==3){
+                                 $anteriorCod=obtenerCodigoSolicitudRecursosSimulacion(1,$codigo);
+                                 if(isset($_GET['q'])){
+                                  ?>
+                                 <a href="solicitudes/registerSolicitudDetalle.php?sim=<?=$codigo?>&det=1&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=0" target="_blank" title="Solicitud De Recursos"class="btn btn-danger">
+                                    <i class="material-icons">content_paste</i>
+                                 </a>
+                                 <?php
+                                 }else{
                                  ?>
                                  <a href="solicitudes/registerSolicitudDetalle.php?sim=<?=$codigo?>&det=1" target="_blank" title="Solicitud De Recursos"class="btn btn-danger">
                                     <i class="material-icons">content_paste</i>
                                  </a>
-                                 <a href="index.php?opcion=listSolicitudRecursos&cod_sim=<?=$codigo?>" target="_blank" title="Lista Solicitudes Recursos"class="btn btn-info">
-                                    <i class="material-icons">list</i>
-                                 </a>
-                                 <a href="#" target="_blank" title="Reporte Solicitud Recursos"class="btn btn-warning">
-                                    <i class="material-icons">bar_chart</i>
-                                 </a>
+                                  
                                  <?php
+                                  
+                                 } 
                                 }
                             ?>
                             <div class="btn-group dropdown">
@@ -102,14 +132,28 @@ $stmt->bindColumn('estado', $estado);
                               </button>
                               <div class="dropdown-menu">
                                 <?php 
+                                if(isset($_GET['q'])){
                                  if($codEstado==4){
-                                 ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1&admin=0" class="dropdown-item">
+                                 ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>" class="dropdown-item">
+                                    <i class="material-icons text-danger">clear</i> Cancelar solicitud
+                                 </a><?php 
+                                 }?>
+                                 <a href="<?=$urlVer;?>?cod=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>" class="dropdown-item">
+                                    <i class="material-icons text-warning">bar_chart</i> Ver Propuesta
+                                 </a> 
+                                 <?php
+                                }else{
+                                  if($codEstado==4){
+                                  ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1&admin=0" class="dropdown-item">
                                     <i class="material-icons text-danger">clear</i> Cancelar solicitud
                                  </a><?php 
                                  }?>
                                  <a href="<?=$urlVer;?>?cod=<?=$codigo;?>" class="dropdown-item">
                                     <i class="material-icons text-warning">bar_chart</i> Ver Propuesta
                                  </a> 
+                                 <?php 
+                                }
+                                ?>
                               </div>
                             </div>
                             <!-- <a class="btn btn-warning" title="Solicitud de Facturación" href='<?=$urlSolicitudfactura;?>&cod=<?=$codigo;?>'>
@@ -117,20 +161,27 @@ $stmt->bindColumn('estado', $estado);
                              </a>   -->                         
                             <?php    
                               }else{
-                              ?>
-                            <!--<a href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=4&admin=0' itle="Enviar Solicitud" class="btn btn-warning">
-                              <i class="material-icons">send</i>
-                            </a>-->  
+
+                             if(isset($_GET['q'])){
+                                 ?> 
+                            <a title="Editar Propuesta - Detalle" target="_blank" href='<?=$urlRegister;?>?cod=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>' class="btn btn-info">
+                              <i class="material-icons"><?=$iconEdit;?></i>
+                            </a>
+                            <button title="Eliminar Propuesta" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>')">
+                              <i class="material-icons"><?=$iconDelete;?></i>
+                            </button>
+                              <?php 
+                             } else{
+                               ?> 
                             <a title="Editar Propuesta - Detalle" target="_blank" href='<?=$urlRegister;?>?cod=<?=$codigo;?>' class="btn btn-info">
                               <i class="material-icons"><?=$iconEdit;?></i>
                             </a>
-                            <!--<a title="Editar Simulación" href='<?=$urlEdit;?>&codigo=<?=$codigo;?>' class="<?=$buttonEdit;?>">
-                              <i class="material-icons"><?=$iconEdit;?></i>
-                            </a>-->
                             <button title="Eliminar Propuesta" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')">
                               <i class="material-icons"><?=$iconDelete;?></i>
                             </button>
-                              <?php  
+                              <?php 
+                             }  
+                               
                               }
                             ?>
                           </td>
@@ -144,7 +195,14 @@ $stmt->bindColumn('estado', $estado);
                 </div>
               </div>
               <div class="card-footer fixed-bottom">
-                <a href="#" onclick="javascript:window.open('<?=$urlRegister2;?>')" class="<?=$buttonNormal;?>">Registrar</a>
+                <?php
+                if(isset($_GET['q'])){
+                  ?><a href="<?=$urlRegister2;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>" target="_self" class="<?=$buttonNormal;?>">Registrar</a><?php
+                }else{
+                  ?><a href="#" onclick="javascript:window.open('<?=$urlRegister2;?>')" class="<?=$buttonNormal;?>">Registrar</a><?php
+                } 
+                ?>
+                
               </div>      
             </div>
           </div>  

@@ -74,7 +74,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             //correos de contactos
                             $tipo_solicitud=obtenerTipoSolicitud($cod_solicitudfacturacion);
                             if($tipo_solicitud==2 || $tipo_solicitud==6 || $tipo_solicitud==7){
-                              $correos_string=obtenerCorreoEstudiante($cod_cliente);
+                              $correos_string=obtenerCorreoEstudiante($nit);
                             }else $correos_string=obtenerCorreosCliente($cod_cliente);                            
                             //colores de estados                            
                             $observaciones_solfac="";
