@@ -122,7 +122,7 @@ $dbh = new Conexion();
                        <div class="col-sm-1">
                         <div class="row">
                           <div class="form-group">
-                            <a href="#" class="btn btn-warning btn-round btn-fab" onclick=""> <!--actualizarRegistroSoloClientes()-->
+                            <a href="#" class="btn btn-warning btn-round btn-fab" onclick="actualizarRegistroSoloClientes()"> <!---->
                              <i class="material-icons" title="Actualizar Clientes">update</i>
                             </a>
                          </div>
