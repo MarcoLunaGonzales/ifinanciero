@@ -190,6 +190,9 @@ function ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$
 					$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_libreta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_total,0,$descripcion,$ordenDetalle);					
 				break;
 				case 2://cuenta de tarjeta de credito
+					$cod_tipopago_tarjetas=obtenerValorConfiguracion(59);
+					$cod_cuenta=obtenerCodCuentaTipoPago($cod_tipopago_tarjetas);
+					
 					$cod_cuenta_tarjetacredito=obtenerValorConfiguracion(60);
 					$porcentaje_cuenta_transitoria=obtenerValorConfiguracion(61);
 					$porcentaje_xyz=100-$porcentaje_cuenta_transitoria;

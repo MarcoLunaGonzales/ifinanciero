@@ -127,7 +127,7 @@ $stmt->bindColumn('estado_registro', $estadoRegistroX);
 ?>
                         <tr>
                           <td align="center"><?=$index;?></td>
-                          <td class="font-weight-bold"><?=$nombre;?>  <?=$unidadX?> - <?=$areaX?></td>
+                          <td class="font-weight-bold"><?=$nombre;?> - <?=$areaX?></td>
                           <td><?=$cliente?></td>
                           <td>
                                  <img src="assets/img/faces/persona1.png" width="20" height="20"/><?=$responsable;?>

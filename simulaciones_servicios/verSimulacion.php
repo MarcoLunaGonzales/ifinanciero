@@ -84,6 +84,8 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
             $stmt1->bindColumn('afnor', $afnorX);
             $stmt1->bindColumn('porcentaje_afnor', $porcentajeAfnorX);
             $stmt1->bindColumn('id_tiposervicio', $idTipoServicioX);
+            $stmt1->bindColumn('alcance_propuesta', $alcanceSimulacionX);
+            $stmt1->bindColumn('descripcion_servicio', $descripcionServSimulacionX);
 
       while ($row1 = $stmt1->fetch(PDO::FETCH_BOUND)) {
          //plantilla datos      
@@ -124,6 +126,8 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
            if($idTipoServGlobal==0){
              $idTipoServGlobal=309;
            }
+           $alcanceSimulacionXX=$alcanceSimulacionX;
+           $descripcionServSimulacionXX=$descripcionServSimulacionX;
       }    
 ?>
 <script>
@@ -365,6 +369,18 @@ for ($an=0; $an<=$anioGeneral; $an++) {
             </div>
                   <input class="form-control" type="hidden" readonly name="ibnorca" value="<?=$simulacionEn?>" id="ibnorca"/>
           </div>
+          <?php 
+           ?>
+          <div class="row">                
+            <div class="col-sm-12">
+              <div class="form-group">
+                  <label class="bmd-label-static">Alcance de la Propuesta</label>
+                  <textarea name="" class="form-control" readonly><?=$alcanceSimulacionXX?></textarea>
+              </div>
+            </div>    
+          </div>
+          <?php
+          ?>
         </div>
       </div>
       <div class="card col-sm-7">
@@ -413,7 +429,7 @@ for ($an=0; $an<=$anioGeneral; $an++) {
               </div>
             </div>
 
-          </div>
+          </div>      
            <div class="row">                
             <div class="col-sm-2">
               <div class="form-group">
@@ -453,9 +469,16 @@ for ($an=0; $an<=$anioGeneral; $an++) {
                   <input class="form-control" type="text" name="precio_auditoria_ibUSD" readonly value="<?=$precioLocalInputXUSD?>" id="precio_auditoria_ibUSD"/>
               </div>
             </div>
-                <?php } ?>
+          </div>
+          <div class="row">                
+            <div class="col-sm-12">
+              <div class="form-group">
+                  <label class="bmd-label-static">Descripción del Servicio</label>
+                  <textarea name="" class="form-control" readonly><?=$descripcionServSimulacionXX?></textarea>
+              </div>
+            </div>    
           </div>      
-             
+           <?php } ?>  
         </div>
       </div>
        </div>
