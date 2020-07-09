@@ -9,7 +9,7 @@ $cod_solicitudfacturacion=$_POST['cod_solicitudfacturacion'];
 $nro_factura=$_POST['nro_factura'];
 $correo_destino=$_POST['correo_destino'];
 $listaCorreos=explode(",", $correo_destino);
-$correo_destino=trim($correo_destino,',');
+//$correo_destino=trim($correo_destino,',');
 
 $fechaActual=date("Y-m-d H:m:s");
 $asunto="Envio De Factura";
@@ -57,7 +57,7 @@ if($correo_destino==''||$asunto==''||$mensaje==''){
 		    $stmtB->execute();
             for ($crr=0; $crr < count($listaCorreos); $crr++) { 
             	$corr=$listaCorreos[$crr];
-		        $sqlInsert="INSERT INTO log_instancias_envios_correo(detalle,fecha,cod_alumno,cod_persona,correo) VALUES ('Envio de factura','$fechaActual',0,0,'$corr')";
+		        $sqlInsert="INSERT INTO log_instancias_envios_correo(detalle,fecha,cod_alumno,cod_persona,correo,cod_factura) VALUES ('Envio de factura','$fechaActual',0,0,'$corr','$codigo_facturacion')";
 		        $stmtBInsert = $dbhB->prepare($sqlInsert);
 		        $stmtBInsert->execute();  	
             }

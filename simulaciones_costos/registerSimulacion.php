@@ -27,7 +27,14 @@ $globalUnidad=$_SESSION["globalUnidad"];
 $globalNombreUnidad=$_SESSION['globalNombreUnidad'];
 $globalArea=$_SESSION["globalArea"];
 $globalAdmin=$_SESSION["globalAdmin"];
-
+$urlR="";
+            if(isset($_GET['admin'])){
+              $urlList=$urlList2;
+              if(isset($_GET['r'])){
+                $urlR="&r=".$_GET['r'];  
+              }      
+            }
+            
 $fechaActual=date("Y-m-d");
 $dbh = new Conexion();
 if(isset($_GET['cod'])){
@@ -35,6 +42,25 @@ if(isset($_GET['cod'])){
 }else{
 	$codigo=0;
 }
+if(isset($_GET['q'])){
+ $idServicioX=$_GET['q'];
+ $s=$_GET['s'];
+ $u=$_GET['u'];
+ ?>
+  <input type="hidden" name="id_servicioibnored" value="<?=$idServicioX?>" id="id_servicioibnored"/>
+  <input type="hidden" name="id_servicioibnored_s" value="<?=$s?>" id="id_servicioibnored_s"/>
+  <input type="hidden" name="id_servicioibnored_u" value="<?=$u?>" id="id_servicioibnored_u"/>
+ <?php
+ if(isset($_GET['u'])){
+  $u=$_GET['u'];
+ ?>
+  <input type="hidden" name="idPerfil" value="<?=$u?>" id="idPerfil"/>
+ <?php
+ }
+}else{
+  $idServicioX=0; 
+}
+
 $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_externo from simulaciones_costos sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo join precios_simulacioncosto pa on sc.cod_precioplantilla=pa.codigo where sc.cod_estadoreferencial=1 and sc.codigo='$codigo'");
 			$stmt1->execute();
 			$stmt1->bindColumn('codigo', $codigoX);
@@ -615,8 +641,26 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
 			 </div>
        <div class="row div-center">
             <div class="card-footer fixed-bottom">
-            <a onclick="guardarSimulacion()" class="btn btn-success text-white"><i class="material-icons">send</i> Enviar Propuesta</a>
-            <a href="../<?=$urlList;?>" class="btn btn-danger">Volver</a> 
+              <?php 
+            if(!(isset($_GET['q']))){
+              if($pUtilidadLocal>0){
+              ?><a onclick="guardarSimulacion()" class="btn btn-warning text-white"><i class="material-icons">send</i> Enviar Propuesta UT <?=number_format($pUtilidadLocal, 2, '.', ',')?> %</a><?php    
+              }else{
+                ?><a href="#" title="No se puede enviar Propuesta" class="btn btn-danger text-white"><i class="material-icons">warning</i> UTILIDAD NETA <?=number_format($pUtilidadLocal, 2, '.', ',')?> %</a><?php
+              }
+             ?>   
+            <a href="../<?=$urlList;?>" class="btn btn-danger">Volver</a><?php
+            }else{
+              if($pUtilidadLocal>0){
+              ?><a onclick="guardarSimulacion()" class="btn btn-success text-white"><i class="material-icons">send</i> Enviar Propuesta UT <?=number_format($pUtilidadLocal, 2, '.', ',')?> %</a><?php    
+              }else{
+                ?><a href="#" title="No se puede enviar Propuesta" class="btn btn-danger text-white"><i class="material-icons">warning</i> UTILIDAD NETA <?=number_format($pUtilidadLocal, 2, '.', ',')?> %</a><?php
+              }
+            ?>
+            <a href="../<?=$urlList;?>&q=<?=$idServicioX?>&s=<?=$s?>&u=<?=$u?>" class="btn btn-danger">Volver</a><?php
+            }
+            ?>
+
             </div>
          </div>
       </div>

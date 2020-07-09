@@ -4,10 +4,29 @@ require_once 'configModule.php';
 require_once 'styles.php';
 $globalAdmin=$_SESSION["globalAdmin"];
 
+$item_3=0;
+if(isset($_GET['q'])){
+  $q=$_GET['q'];
+  $u=$_GET['u'];
+  $s="";
+  if(isset($_GET['s'])){
+    $s=$_GET['s'];
+  }
+
+  ?>
+  <input type="hidden" name="id_servicioibnored" value="<?=$q?>" id="id_servicioibnored"/>
+  <input type="hidden" name="idPerfil" value="<?=$u?>" id="idPerfil"/>
+  <input type="hidden" name="ss" value="<?=$s?>" id="ss"/>
+  <input type="hidden" name="id_servicioibnored_u" value="<?=$u?>" id="id_servicioibnored_u"/>
+<?php
+
+}else{
+
+}
 $dbh = new Conexion();
 
 // Preparamos
-$stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_costos sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo where sc.cod_estadoreferencial=1 and sc.cod_estadosimulacion!=1 order by codigo");
+$stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_costos sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo where sc.cod_estadoreferencial=1 and sc.cod_estadosimulacion=4 order by codigo desc");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -82,21 +101,55 @@ $stmt->bindColumn('estado', $estado);
                           <td class="td-actions text-right">
                             <?php 
                             if($codEstado==4){
-                             ?>
-                              <a title="Editar Propuesta - Detalle" target="_blank" href='<?=$urlRegister;?>?cod=<?=$codigo;?>&admin=1' class="btn btn-info">
-                                <i class="material-icons"><?=$iconEdit;?></i>
-                              </a>
-                             <?php
+                              if(isset($_GET['q'])){
+                                 ?> 
+                            <a title="Editar Propuesta - Detalle" target="_blank" href='<?=$urlRegister;?>?cod=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&admin=1' class="btn btn-info">
+                              <i class="material-icons"><?=$iconEdit;?></i>
+                            </a>
+                              <?php 
+                             } else{
+                               ?> 
+                            <a title="Editar Propuesta - Detalle" target="_blank" href='<?=$urlRegister;?>?cod=<?=$codigo;?>&admin=1' class="btn btn-info">
+                              <i class="material-icons"><?=$iconEdit;?></i>
+                            </a>
+                              <?php 
+                             }  
                             }?>
                             <div class="btn-group dropdown">
                               <button type="button" class="btn <?=$btnEstado?> dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="material-icons">list</i> <?=$estado;?>
                               </button>
                               <div class="dropdown-menu">
+                               <?php 
+                               if(isset($_GET['q'])){
+                                ?>
+                                <a href="<?=$urlVer;?>?cod=<?=$codigo;?>&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>" class="dropdown-item">
+                                    <i class="material-icons text-info">bar_chart</i> Ver Propuesta
+                                 </a>
+                                <?php 
+                                if($codEstado==4){
+                                 ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=3&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>" class="dropdown-item">
+                                    <i class="material-icons text-success">offline_pin</i> Aprobar Solicitud
+                                 </a>
+                                 <a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>" class="dropdown-item">
+                                    <i class="material-icons text-dark">report</i> Rechazar Solicitud
+                                 </a>
+                                 <a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=2&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>" class="dropdown-item">
+                                    <i class="material-icons text-danger">clear</i> Anular Solicitud
+                                 </a><?php 
+                                }else{
+                                ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=4&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>" class="dropdown-item">
+                                    <i class="material-icons text-dark">reply</i> Deshacer Cambios
+                                 </a>
+                                 <?php 
+                                }
+                                ?>
+                                <?php
+                               }else{
+                                ?>
                                 <a href="<?=$urlVer;?>?cod=<?=$codigo;?>&admin=0" class="dropdown-item">
                                     <i class="material-icons text-info">bar_chart</i> Ver Propuesta
                                  </a>
-                              
                                 <?php 
                                 if($codEstado==4){
                                  ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=3" class="dropdown-item">
@@ -114,7 +167,11 @@ $stmt->bindColumn('estado', $estado);
                                  </a>
                                  <?php 
                                 }
-                                ?>
+                                ?> 
+                                <?php
+                               } 
+                               ?> 
+                                
                               </div>
                              </div>                           
                           </td>
@@ -128,7 +185,13 @@ $stmt->bindColumn('estado', $estado);
                 </div>
               </div>
               <div class="card-footer fixed-bottom">
-                <a href="<?=$urlList2?>" class="btn btn-info"><i class="material-icons">refresh</i> Refrescar</a>
+                <?php 
+                if(isset($_GET['q'])){
+                ?><a href="<?=$urlList2?>&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>" class="btn btn-info"><i class="material-icons">refresh</i> Refrescar</a><?php
+                }else{
+                 ?><a href="<?=$urlList2?>" class="btn btn-info"><i class="material-icons">refresh</i> Refrescar</a><?php
+                } 
+                ?>
               </div>      
             </div>
           </div>  
