@@ -69,6 +69,10 @@ $globalAdmin=$_SESSION["globalAdmin"];
                           $index=1;
                           while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                             $importe=sumatotaldetallefactura($codigo_factura);
+                            $correosEnviados=obtenerCorreosEnviadosFactura($codigo_factura);
+                            if($correosEnviados!=""){
+                              $correosEnviados="\nFactura enviada a: \n *".$correosEnviados;
+                            }
                             $estadofactura=obtener_nombreestado_factura($cod_estadofactura);
                             $cliente=nameCliente($cod_cliente);
                             //correos de contactos
@@ -114,7 +118,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 
                                   <div class="btn-group dropdown">
                                     <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                       <i class="material-icons" title="Imprimir Factura">print</i>
+                                       <i class="material-icons" title="Imprimir Factura <?=$correosEnviados?>">print</i>
                                     </button>
                                     <div class="dropdown-menu">                                      
                                       <a class="dropdown-item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_factura;?>&tipo=1&admin=1' target="_blank"><i class="material-icons text-success">print</i> Original Cliente y Copia Contabilidad</a>

@@ -87,6 +87,8 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
           <div class="card-text">
             <center><h4 class="card-title">Datos de la Propuesta</h4></center>
           </div>
+          <img class="" src="../assets/img/logo_ibnorca_origen_3.jpg" width="70" height="70" style="position:fixed;">
+          <img class="" src="../assets/img/logo_ibnorca_origen_3.jpg" width="70" height="70" style="position:fixed;right:0px;">
         </div>
 
     <table class="table" border="0">
@@ -383,6 +385,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
               </tbody>
             </table>
            </div>
+           <br><br><br><br><br><br><br>
           <div class="col-sm-5 bg-blanco2">
             <p class="font-weight-bold float-left">DATOS DEL CALCULO x MODULO</p>
             <table class="table table-bordered table-condensed" style="font-size:11px;">
@@ -528,9 +531,8 @@ $j=1;
           }
          if($bandera==1){
           $totalMontoDetalle+=$montoDetalle;
-          $totalMontoDetalleAl+=$montoDetalleAl;        
-         } 
-         $montoDetalle=number_format($montoDetalle, 2, '.', '');  
+          $totalMontoDetalleAl+=$montoDetalleAl; 
+           $montoDetalle=number_format($montoDetalle, 2, '.', '');  
           ?><tr>
               <td class="text-left small text-white bg-info"><?=$nomX?></td>
               <td class="text-left small font-weight-bold"><?=strtoupper($rowDetalles['glosa'])?></td>
@@ -539,7 +541,9 @@ $j=1;
               <td class="text-right text-white bg-info"><?=$montoDetalle?></td>  
              </tr> 
            <?php
-           $i++;         
+           $i++;       
+         } 
+                 
         }         
      }
     }
@@ -563,12 +567,7 @@ $j=1;
   </div>
 </div>
 
-
-
-
-
 <!-- FIN CONTENIDO-->
-
 <!-- formato pie fijo para pdf-->  
 </body></html>
 <!-- fin formato pie fijo para pdf-->

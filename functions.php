@@ -7861,6 +7861,19 @@ function sumatotaldetallefactura($cod_factura){
     return($valor);
 
   }
+
+  function obtenerCorreosEnviadosFactura($codigo){
+    $dbh = new Conexion();
+    $sql="SELECT correo from log_instancias_envios_correo where cod_factura=$codigo";  
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    $stmt->bindColumn('correo', $correo);
+    $valor=[];
+    while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { 
+       array_push($valor,$correo);   
+    }  
+    return implode("\n *", $valor);
+  }
 ?>
 
 
