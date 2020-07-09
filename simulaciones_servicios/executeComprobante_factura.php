@@ -140,13 +140,17 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$nro_factura,$co
 	    return "";
 	}	
 }
-function ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_factura,$cod_estado,$cod_cuenta_libreta){
+function ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_factura,$cod_estado,$cod_cuenta_libreta,$normas){
 	
 	// session_start();
 	try{
 	    $cod_uo_solicitud = 5;
-	    // $cod_uo_unico=5;
-	    $cod_area_solicitud = 13;
+	    // $cod_uo_unico=5;	   	 
+	    if($normas==0){
+	    	$cod_area_solicitud = 13;//capacitacion
+	    }else{
+			$cod_area_solicitud = 12;//normas
+	    }
 	    $codigo_alterno = '';
 	    $razon_social = $razonSocial;
 		//datos para el comprbant		
@@ -225,7 +229,7 @@ function ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$
 			$monto_it_pasivo=$porcentaje_it_pasivo*$monto_total/100;
 			$descripcion_it_pasivo=$concepto_contabilizacion;
 			$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_it_pasivo,0,$cod_uo_solicitud,$cod_area_solicitud,0,$monto_it_pasivo,$descripcion_it_pasivo,$ordenDetalle);			
-	        $ordenDetalle++;
+	        $ordenDetalle++;	       
 	        //ingresos por capacitacion	  
 	        $porcentaje_pasivo=100-$porcentaje_debito_iva;
 			$monto_areas_format=$monto_total*$porcentaje_pasivo/100;

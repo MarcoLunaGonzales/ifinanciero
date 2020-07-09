@@ -63,8 +63,8 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
   ?>
   <div class="content">
     <div class="container-fluid">
-          <div class="row">
-              <div class="col-md-12">
+          <div style="overflow-y:scroll;">
+              <!-- <div class="col-md-12"> -->
                 <div class="card">
                   <div class="card-header card-header-warning card-header-icon">
                     <div class="card-icon">
@@ -405,10 +405,6 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                       <?php 
                                       }
                                       ?>
-                                      <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlAnular_SoliciutdFacturacion;?>?codigo=<?=$codigo_facturacion;?>')">
-                                        <i class="material-icons" title="Anular Solicitud Facturación">clear</i>
-                                      </button>
-                                      
                                       <?php 
                                     }
                                   }
@@ -425,6 +421,17 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                   <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir Solicitud">print</i></a>
                                   <a href='#' title="Archivos Adjuntos" class="btn btn-primary" onclick="abrirArchivosAdjuntos('<?=$datos_otros;?>')"><i class="material-icons" ><?=$iconFile?></i></a>
                                 <?php }
+                                if($codEstado==1){
+                                  if(isset($_GET['q'])){?>
+                                    <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlAnular_SoliciutdFacturacion;?>?codigo=<?=$codigo_facturacion;?>&q=<?=$q?>&v=<?=$v?>&s=<?=$s?>&u=<?=$u?>')">
+                                      <i class="material-icons" title="Anular Solicitud Facturación">delete</i>
+                                    </button>
+                                  <?php }else{?>
+                                    <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlAnular_SoliciutdFacturacion;?>?codigo=<?=$codigo_facturacion;?>')">
+                                      <i class="material-icons" title="Anular Solicitud Facturación">delete</i>
+                                    </button>
+                                  <?php }
+                                }
                               ?>
                             </td>
                           </tr>
@@ -444,21 +451,18 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                       <a href="<?=$urlListSolicitud_facturacion_normas;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>" class="btn btn-warning">SF Normas</a>
 
                       <a href="<?=$urlSolicitudfactura_estudiante;?>&q=<?=$q?>&r=<?=$s?>" class="btn btn-success">SF Estudiantes</a>
-                      <a href="<?=$urlSolicitudfactura_empresa;?>&q=<?=$q?>&r=<?=$s?>" class="btn btn-danger">SF Empresas</a>
-
-                      <a href='<?=$urlSolicitudfacturaAreas;?>&q=<?=$q?>&v=<?=$v?>&s=<?=$s?>&u=<?=$u?>' class="btn btn-default">SF Histórico Area</a>
+                      <a href="<?=$urlSolicitudfactura_empresa;?>&q=<?=$q?>&r=<?=$s?>" class="btn btn-danger">SF Empresas</a>                      
                       <?php 
                     }else{?>
                       <a href="<?=$urlRegister_solicitudfacturacion_manual;?>" class="btn btn-primary">SF Manual</a>
                       <a href="<?=$urlListSolicitud_facturacion_normas;?>" class="btn btn-warning">SF Normas</a>
                       <a href="<?=$urlSolicitudfactura_estudiante;?>" class="btn btn-success">SF Estudiantes</a>
-                      <a href="<?=$urlSolicitudfactura_empresa;?>" class="btn btn-danger">SF Empresas</a>
-                      <a href='<?=$urlSolicitudfacturaAreas?>' class="btn btn-default">SF Histórico Area</a>
+                      <a href="<?=$urlSolicitudfactura_empresa;?>" class="btn btn-danger">SF Empresas</a>                      
                       <?php 
                     }              
                   ?>
                 </div>        
-              </div>
+              <!-- </div> -->
           </div>  
     </div>
   </div>

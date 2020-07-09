@@ -97,11 +97,11 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             <td><?=$nro_factura;?></td>
                             <!-- <td><?=$sucursal;?></td> -->
                             <td><?=$fecha_factura?><br><?=$hora_factura?></td>
-                            <td class="text-left"><small><?=$razon_social;?></small></td>
+                            <td class="text-left"><small><?=strtoupper($razon_social);?></small></td>
                             <td class="text-right"><?=$nit;?></td>
                             <td class="text-right"><?=formatNumberDec($importe);?></td>
-                            <td><small><?=$observaciones;?></small></td>                            
-                            <td style="color: #ff0000;"><?=$observaciones_solfac?></td>
+                            <td><small><?=strtoupper($observaciones);?></small></td>                            
+                            <td style="color: #ff0000;"><?=strtoupper($observaciones_solfac)?></td>
                             <td class="td-actions text-right">
                               <button class="btn <?=$label?> btn-sm btn-link" style="padding:0;"><small><?=$estadofactura;?></small></button><br>
                               <?php                                
@@ -126,10 +126,10 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                    $datos_devolucion=$cod_solicitudfacturacion."###".$nro_factura."###".$razon_social."###".$urllistFacturasServicios."###".$codigo_factura."###".$cod_comprobante;
                                   ?>
                                   <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalDevolverSolicitud" onclick="modal_rechazarFactura('<?=$datos_devolucion;?>')">
-                                    <i class="material-icons" title="Anular Factura">clear</i>
+                                    <i class="material-icons" title="Anular Factura">delete</i>
                                   </button>
                                   <!-- <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation-anular-factura','<?=$urlAnularFactura;?>&codigo=<?=$codigo_factura;?>&cod_solicitudfacturacion=<?=$cod_solicitudfacturacion?>&cod_comprobante=<?=$cod_comprobante?>')">
-                                  <i class="material-icons" title="Anular Factura">clear</i>
+                                  <i class="material-icons" title="Anular Factura">delete</i>
                                   </button> -->
                                   <?php 
                                 } ?>

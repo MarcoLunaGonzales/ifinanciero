@@ -182,7 +182,7 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
             $html.='<table class="table">'.
               '<tr class="bold table-title text-left">'.
                   '<td  class="td-border-none text-right" width="12%"><b>Señor(es):</b></td>'.
-                  '<td  class="td-border-none" ><b>'.$nombre_cliente.'</b></td>'.
+                  '<td  class="td-border-none" ><b>'.strtoupper($nombre_cliente).'</b></td>'.
                   '<td  class="td-border-none" width="18%"><b>NIT/CI:</b>&nbsp;'.$nit.'</td>'.
                 '</tr>'.
             '</table>';

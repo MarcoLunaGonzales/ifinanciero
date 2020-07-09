@@ -416,29 +416,26 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                           </thead>
                                           <tbody>                                
                                             <?php 
-                                            $iii=1;
-                                            $queryPr="SELECT s.codigo,s.cod_claservicio,t.Descripcion as nombre_serv,s.cantidad,s.monto,s.habilitado,s.cod_tipounidad,s.cod_anio,s.cantidad_editado FROM simulaciones_servicios_tiposervicio s, cla_servicios t where s.cod_simulacionservicio=$cod_simulacion and s.cod_claservicio=t.IdClaServicio";
-                                            if ($cod_facturacion > 0){
-                                                $queryPr.=" UNION ";
-                                                $queryPr.="SELECT d.codigo,d.cod_claservicio,(select cs.Descripcion from cla_servicios cs where cs.IdClaServicio=d.cod_claservicio) as Descripcion,d.cantidad,d.precio,1,1,null,1 from solicitudes_facturaciondetalle d where d.tipo_item=2 and d.cod_solicitudfacturacion=$cod_facturacion ORDER BY nombre_serv";
+                                            $iii=1;                                            
+                                            if ($cod_facturacion > 0){                                                
+                                                $queryPr="SELECT d.codigo,d.cod_claservicio,(select cs.Descripcion from cla_servicios cs where cs.IdClaServicio=d.cod_claservicio) as nombre_serv,d.cantidad,d.precio as monto,tipo_item from solicitudes_facturaciondetalle d where d.tipo_item=2 and d.cod_solicitudfacturacion=$cod_facturacion";
                                             }
                                            // echo $queryPr;
                                             $stmt = $dbh->prepare($queryPr);
                                             $stmt->execute();
                                             $modal_totalmontopre=0;$modal_totalmontopretotal=0;
                                             while ($rowPre = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                                             
                                                 $codigoPre=$rowPre['codigo'];
                                                 $codCS=$rowPre['cod_claservicio'];
                                                 $tipoPre=$rowPre['nombre_serv'];
                                                 $cantidadPre=$rowPre['cantidad'];
-                                                $cantidadEPre=$rowPre['cantidad_editado'];
+                                                $cantidadEPre=$cantidadPre;
                                                 $montoPre=$rowPre['monto'];
+                                                $tipo_item=$rowPre['tipo_item'];
                                                 $descuento_bob_cliente=$montoPre*$descuento_cliente; 
                                                 // $montoPreTotal=$montoPre*$cantidadEPre;
-                                                $banderaHab=$rowPre['habilitado'];
-                                                $codTipoUnidad=$rowPre['cod_tipounidad'];
-                                                $cod_anio=$rowPre['cod_anio'];                                        
+                                                $banderaHab=1;                                                
+                                                $cod_anio=1;
                                                 if($banderaHab!=0){
                                                     $descuento_porX=0;
                                                     $descuento_bobX=0;
@@ -446,34 +443,27 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                                     // $modal_totalmontopre+=$montoPre;
                                                     $montoPre=number_format($montoPre,2,".","");
                                                     //parte del controlador de check
-                                                    $sqlControlador="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$cod_simulacion and sfd.cod_claservicio=$codCS and sf.codigo=$cod_facturacion";
-                                                    // echo $sqlControlador;
-                                                    $stmtControlado = $dbh->prepare($sqlControlador);
-                                                   $stmtControlado->execute();                                           
-                                                   $sw="";//para la parte de editar
-                                                    while ($rowPre = $stmtControlado->fetch(PDO::FETCH_ASSOC)) {
-                                                        $sw="checked";
-                                                        $montoPre=$rowPre['precio']+$rowPre['descuento_bob'];
-                                                        $descuento_porX=$rowPre['descuento_por'];
-                                                        $descuento_bobX=$rowPre['descuento_bob'];
-                                                        $descripcion_alternaX=$rowPre['descripcion_alterna'];
-                                                    }
-                                                    $sqlControlador2="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$cod_simulacion and sfd.cod_claservicio=$codCS";
-                                                    // echo $sqlControlador2;
-                                                    $stmtControlador2 = $dbh->prepare($sqlControlador2);
-                                                    $stmtControlador2->execute();                                           
+                                                    $sw="";//para la parte de editar
                                                     $sw2="";//para registrar nuevos, impedir los ya registrados
-                                                
-                                                    while ($rowPre = $stmtControlador2->fetch(PDO::FETCH_ASSOC)) {
-                                                      if($sw!="checked"){
-                                                        $sw2="readonly style='background-color:#cec6d6;'";
-                                                        $montoPre=$rowPre['precio']+$rowPre['descuento_bob'];
-                                                        $descuento_porX=$rowPre['descuento_por'];
-                                                        $descuento_bobX=$rowPre['descuento_bob'];
-                                                        $descripcion_alternaX=$rowPre['descripcion_alterna'];
-                                                      }
-                                                    }
-                                                
+                                                    if($cod_facturacion>0){
+                                                        $sqlControlador="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$cod_simulacion and sfd.cod_claservicio=$codCS and sf.codigo=$cod_facturacion and tipo_solicitud=4";
+                                                        // echo $sqlControlador;
+                                                        $stmtControlado = $dbh->prepare($sqlControlador);
+                                                       $stmtControlado->execute();                                           
+                                                        while ($rowPre = $stmtControlado->fetch(PDO::FETCH_ASSOC)) {
+                                                            $sw="checked";
+                                                            $montoPre=$rowPre['precio'];
+                                                            $descuento_porX=$rowPre['descuento_por'];
+                                                            $descuento_bobX=$rowPre['descuento_bob'];
+                                                            $descripcion_alternaX=$rowPre['descripcion_alterna'];
+                                                            if($tipo_item==2){
+                                                                $montoPre=$montoPre+$descuento_bobX/$cantidadPre;
+                                                            }
+                                                        }
+                                                    }                                                    
+                                                    
+
+                                                    
                                                     ?>
                                                     <!-- guardamos las varialbles en un input -->
                                                     <input type="hidden" id="cod_serv_tiposerv<?=$iii?>" name="cod_serv_tiposerv<?=$iii?>" value="<?=$codigoPre?>">
@@ -492,10 +482,10 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                                       <!-- <td class="text-left"><?=$cod_anio?> </td> -->
                                                       <td class="text-left"><small><?=$tipoPre?></small></td>
                                                       <td class="text-right"><small><?=$cantidadPre?></small></td>
-                                                      <td class="text-right"><input type="number" step="0.01" id="monto_precio<?=$iii?>" name="monto_precio<?=$iii?>" class="form-control text-primary text-right"  value="<?=$montoPre?>" onkeyup="activarInputMontoFilaServicio2()" <?=$sw2?>></td>
+                                                      <td class="text-right"><input type="number" step="0.01" id="monto_precio<?=$iii?>" name="monto_precio<?=$iii?>" class="form-control text-primary text-right"  value="<?=$montoPre?>" onkeyup="activarInputMontoFilaServicio_manual()" <?=$sw2?>></td>
                                                       <!--  descuentos -->
-                                                      <td class="text-right"><input type="number" step="0.01" class="form-control" name="descuento_por<?=$iii?>" id="descuento_por<?=$iii?>" value="<?=$descuento_porX?>" min="0" max="<?=$descuento_cliente?>" onkeyup="descuento_convertir_a_bolivianos(<?=$iii?>)" <?=$sw2?>></td>                                             
-                                                      <td class="text-right"><input type="number" class="form-control" name="descuento_bob<?=$iii?>" id="descuento_bob<?=$iii?>" value="<?=$descuento_bobX?>" min="0" max="<?=$descuento_bob_cliente?>" onkeyup="descuento_convertir_a_porcentaje(<?=$iii?>)" <?=$sw2?>></td>                                        
+                                                      <td class="text-right"><input type="number" step="0.01" class="form-control" name="descuento_por<?=$iii?>" id="descuento_por<?=$iii?>" value="<?=$descuento_porX?>" min="0" onkeyup="descuento_convertir_a_bolivianos_manual(<?=$iii?>)" <?=$sw2?>></td>                                             
+                                                      <td class="text-right"><input type="number" class="form-control" name="descuento_bob<?=$iii?>" id="descuento_bob<?=$iii?>" value="<?=$descuento_bobX?>" min="0" onkeyup="descuento_convertir_a_porcentaje_manual(<?=$iii?>)" <?=$sw2?>></td>                                        
                                                       <!-- total -->
                                                       <td class="text-right"><input type="hidden" name="modal_importe<?=$iii?>" id="modal_importe<?=$iii?>"><input type="text" class="form-control" name="modal_importe_dos<?=$iii?>" id="modal_importe_dos<?=$iii?>" style ="background-color: #ffffff;" readonly></td>
                                                                                                   
@@ -530,7 +520,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                                 // $montoPreTotal=number_format($montoPreTotal,2,".","");
                                                 ?>
                                                 <script>
-                                                    window.onload = activarInputMontoFilaServicio2;
+                                                    // window.onload = activarInputMontoFilaServicio2;
                                                     window.onload = activarInputMontoFilaServicio_manual;
                                                 </script>
 
@@ -562,14 +552,14 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                         <i class="material-icons">add</i>
                                     </button><span style="color:#084B8A;"><b> SERVICIOS ADICIONALES</b></span>
                                     <div class="row" style="background-color:#1a2748">
-                                        <th><label class="col-sm-4 col-form-label" style="color:#ff9c14">Servicios</label>
-                                        <label class="col-sm-1 col-form-label" style="color:#ff9c14">Cant</label>
-                                        <label class="col-sm-1 col-form-label" style="color:#ff9c14">Precio(BOB)</label>
-                                        <label class="col-sm-1 col-form-label" style="color:#ff9c14">Desc(%)</label>
-                                        <label class="col-sm-1 col-form-label" style="color:#ff9c14">Desc(BOB)</label>
-                                        <label class="col-sm-1 col-form-label" style="color:#ff9c14">Importe(BOB)</label>
-                                        <label class="col-sm-2 col-form-label" style="color:#ff9c14">Glosa</label>
-                                        <label class="col-sm-1 col-form-label" style="color:#ff9c14">Eliminar</label>
+                                        <label class="col-sm-3 col-form-label" style="color:#ff9c14; text-align: center">Servicios</label>
+                                        <label class="col-sm-1 col-form-label" style="color:#ff9c14; text-align: center">Cant</label>
+                                        <label class="col-sm-1 col-form-label" style="color:#ff9c14; text-align: center">Precio<br>(BOB)</label>
+                                        <label class="col-sm-1 col-form-label" style="color:#ff9c14; text-align: center">Desc<br>(%)</label>
+                                        <label class="col-sm-1 col-form-label" style="color:#ff9c14; text-align: center">Desc<br>(BOB)</label>
+                                        <label class="col-sm-1 col-form-label" style="color:#ff9c14; text-align: center">Importe<br>(BOB)</label>
+                                        <label class="col-sm-3 col-form-label" style="color:#ff9c14;text-align: center;">Glosa</label>
+                                        <label class="col-sm-1 col-form-label" style="color:#ff9c14;text-align: center">Eliminar</label>
                                     </div>
                                     <div id="div<?=$index;?>">  
                                         <div class="h-divider">

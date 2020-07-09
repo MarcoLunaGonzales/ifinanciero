@@ -6,8 +6,8 @@ require_once '../functions.php';
 $sIde = "facifin";
 $sKey = "rrf656nb2396k6g6x44434h56jzx5g6";
 $Objeto_detalle = new stdClass();
-$Objeto_detalle->suscripcionId = 815;
-$Objeto_detalle->pagoCursoId = 0;
+$Objeto_detalle->suscripcionId = 0;
+$Objeto_detalle->pagoCursoId = 123;
 $Objeto_detalle->detalle = "Alimentos en Grano";
 $Objeto_detalle->precioUnitario = 162;
 $Objeto_detalle->cantidad = 1;
@@ -39,7 +39,7 @@ $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey,
               "accion"=>"GenerarFactura", //nombre de la accion
               "sucursalId"=>1, // ID Sucursal
               "pasarelaId"=>1, // ID Pasarela 1 para la tienda
-              "fechaFactura"=>'2020-07-08', // fecha de la factura
+              "fechaFactura"=>'2020-07-09', // fecha de la factura
               "nitciCliente"=>4868422016, //nit o ci de cliente
               "razonSocial"=>'Luna', //razon social
               "importeTotal"=>70, //importe total

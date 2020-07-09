@@ -9,6 +9,8 @@ $globalAdmin=$_SESSION["globalAdmin"];
 if(isset($_GET['q'])){
   $q=$_GET['q'];
   $r=$_GET['r'];  
+  $s=$_GET['s'];
+  $u=$_GET['u'];
 }
 // $sql="SELECT nombre,cod_area,cod_uo from simulaciones_costos where codigo=$codigo_simulacion";
 // $stmtSimu = $dbh->prepare($sql);
@@ -38,8 +40,13 @@ if(isset($_GET['q'])){
             if(isset($_GET['q'])){?>
               <input type="hidden" name="q" id="q" value="<?=$q?>">
               <input type="hidden" name="r" id="r" value="<?=$r?>">
+              <input type="hidden" name="s" id="s" value="<?=$s?>">
+              <input type="hidden" name="u" id="u" value="<?=$u?>">
+
             <?php }else{?>
               <input type="hidden" name="q" id="q" value="0">
+              <input type="hidden" name="u" id="u" value="0">
+              <input type="hidden" name="s" id="s" value="0">
               <input type="hidden" name="r" id="r" value="0">
             <?php }
             ?>              
@@ -78,7 +85,7 @@ if(isset($_GET['q'])){
           <button type="button" class="btn btn-primary" id="botonBuscarEmpresas" name="botonBuscarEmpresas" title="Buscar" onclick="botonBuscarEmpresasCapacitacion()">Buscar</button>             
             <?php                                    
                 if(isset($_GET['q'])){?>
-                    <a href='<?=$urlListSol?>&q=<?=$q?>&v=<?=$r?>&u=<?=$r?>&s=<?=$r?>' class="<?=$buttonCancel;?>" title="Ir A Solicitudes de Facturación"><i class="material-icons">keyboard_return</i> IR A SF</a>
+                    <a href='<?=$urlListSol?>&q=<?=$q?>&v=<?=$r?>&u=<?=$u?>&s=<?=$s?>' class="<?=$buttonCancel;?>" title="Ir A Solicitudes de Facturación"><i class="material-icons">keyboard_return</i> IR A SF</a>
                 <?php }else{?>
                     <a href='<?=$urlListSol?>' class="<?=$buttonCancel;?>" title="Ir A Solicitudes de Facturación"><i class="material-icons">keyboard_return</i> IR A SF</a>                    
                 <?php }                     

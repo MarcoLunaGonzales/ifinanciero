@@ -18,10 +18,14 @@ set_time_limit(0);
 if(isset($_GET['q'])){
   $q=$_GET['q'];
   $r=$_GET['r'];  
+  $s=$_GET['s']; 
+  $u=$_GET['u']; 
 }
 if(isset($_POST['q'])){
   $q=$_POST['q'];
   $r=$_POST['r'];  
+  $s=$_POST['s'];  
+  $u=$_POST['u'];  
 }
 if(isset($_GET['cod_sw'])){//para la parte de editar
     $stringCi=$_GET['codigo_ci'];
@@ -118,6 +122,8 @@ $contadorRegistros=0;
                 if(isset($_POST['q'])){?>
                     <input type="hidden" name="q" id="q" value="<?=$q?>">
                     <input type="hidden" name="r" id="r" value="<?=$r?>">
+                    <input type="hidden" name="s" id="s" value="<?=$s?>">
+                    <input type="hidden" name="u" id="u" value="<?=$u?>">
                 <?php }?>
                 <input type="hidden" name="cod_defecto_deposito_cuenta" id="cod_defecto_deposito_cuenta" value="<?=$cod_defecto_deposito_cuenta?>"/>
                 <input type="hidden" name="cod_defecto_cod_tipo_credito" id="cod_defecto_cod_tipo_credito" value="<?=$cod_defecto_cod_tipo_credito?>"/>
@@ -723,10 +729,10 @@ $contadorRegistros=0;
                     <button type="submit" class="<?=$buttonNormal;?>">Guardar</button>
                         <?php                                    
                             if(isset($_POST['q'])){?>
-                                <a href='../<?=$urlListSol?>&q=<?=$q?>&v=<?=$r?>&u=<?=$r?>&s=<?=$r?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> IR A SF</a>                    
+                                <a href='../<?=$urlListSol?>&q=<?=$q?>&v=<?=$r?>&u=<?=$u?>&s=<?=$s?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> IR A SF</a>                    
                             <?php }else{
                                 if(isset($_GET['q'])){?>
-                                <a href='../<?=$urlListSol?>&q=<?=$q?>&v=<?=$r?>&u=<?=$r?>&s=<?=$r?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> IR A SF</a>                    
+                                <a href='../<?=$urlListSol?>&q=<?=$q?>&v=<?=$r?>&u=<?=$u?>&s=<?=$s?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> IR A SF</a>                    
                                 <?php }else{?>
                                     <a href='<?=$urlListSol?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> IR A SF</a>                    
                                 <?php }                         

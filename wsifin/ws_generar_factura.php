@@ -11,6 +11,7 @@ function check($x) {
 }
 function insertarlogFacturas($cod_error,$detalle_error,$json){
     $dbh = new Conexion();
+    date_default_timezone_set('America/La_Paz');
     $fecha =date('Y-m-d H:i:s');
     $sql="INSERT INTO log_facturas(fecha,cod_error,detalle_error,json) values('$fecha','$cod_error','$detalle_error','$json')";
     $stmt = $dbh->prepare($sql);
@@ -45,12 +46,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $cont_items=0;
                     $importeTotal_x=0;
                     $sw=true;
+                    date_default_timezone_set('America/La_Paz');
                     $fechaFactura_actual=date('Y-m-d');
                     $cod_tipopago_deposito_cuenta=obtenerValorConfiguracion(55);
+                    $normas=0;
                     foreach ($items as $valor) {  
                         $cont_items++;
                         $suscripcionId=$valor['suscripcionId'];
-                        $pagoCursoId=$valor['pagoCursoId'];
+                        $pagoCursoId=$valor['pagoCursoId'];                    
                         $detalle=strval($valor['detalle']);
                         $precioUnitario=$valor['precioUnitario'];
                         $cantidad=$valor['cantidad'];
@@ -72,6 +75,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             $sw=false;
                             $estado=10;
                             $mensaje = "algún item con cantidad incorrecta";
+                        }
+                        if($suscripcionId>0 || $pagoCursoId==0){
+                            $normas=1;
                         }
                     }
                     // $sw=false;
@@ -114,8 +120,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 $sw_cod_libreta=true;
                             }
                         }
-                        if($sw_cod_libreta){
-                            $rspString = ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciCliente,$razonSocial,$importeTotal_x,$items,$CodLibretaDetalle,$tipoPago);//llamamos a la funcion                 
+                        if($sw_cod_libreta){                            
+                            $rspString = ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciCliente,$razonSocial,$importeTotal_x,$items,$CodLibretaDetalle,$tipoPago,$normas);//llamamos a la funcion                 
                             $rspArray = explode("###", $rspString);
                             $rsp=$rspArray[0];
                             $cod_factura=$rspArray[1];

@@ -9173,26 +9173,69 @@ function cambiarTituloPersonalModal(anio){
 function descuento_convertir_a_porcentaje(id){
   var monto_precio=$("#monto_precio"+id).val();// precio de item
   var descuento_bob=$("#descuento_bob"+id).val();//monto de descuento Bob
+  var cantidad_x=$("#cantidad"+id).val();
   if(monto_precio<0 || monto_precio==0 || monto_precio==null){
     Swal.fire("Informativo!", "El Precio del Item NO debe ser 0 o número negativo!", "warning");
   }else{
-    var numero_porcentaje=parseFloat(descuento_bob)*100/parseFloat(monto_precio);
-    //alert(numero_porcentaje);
-    $("#descuento_por"+id).val(numero_porcentaje.toFixed(2));
-    calcularTotalFilaServicio2();
+    if(cantidad_x<0 || cantidad_x==0 || cantidad_x==null){
+      Swal.fire("Informativo!", "La cantidad NO debe ser 0 o número negativo!", "warning");
+    }else{
+      var numero_porcentaje=parseFloat(descuento_bob)*100/parseFloat(monto_precio)/parseFloat(cantidad_x);
+      //alert(numero_porcentaje);
+      $("#descuento_por"+id).val(numero_porcentaje.toFixed(2));
+      calcularTotalFilaServicio2();      
+    }
   }
 }
 function descuento_convertir_a_bolivianos(id){
   var monto_precio=$("#monto_precio"+id).val();// precio de item
   var descuento_por=$("#descuento_por"+id).val();//monto de descuento %
-
+  var cantidad_x=$("#cantidad"+id).val();
   if(monto_precio<0 || monto_precio==0 || monto_precio==null){
     Swal.fire("Informativo!", "El Precio del Item NO debe ser 0 o número negativo!", "warning");
   }else{
-    var monto_bob_porcentaje=parseFloat(descuento_por)*parseFloat(monto_precio)/100;
+    if(cantidad_x<0 || cantidad_x==0 || cantidad_x==null){
+      Swal.fire("Informativo!", "La cantidad NO debe ser 0 o número negativo!", "warning");
+    }else{      
+    var monto_bob_porcentaje=parseFloat(descuento_por)*parseFloat(monto_precio)*parseFloat(cantidad_x)/100;
     //alert(monto_bob_porcentaje);
     $("#descuento_bob"+id).val(monto_bob_porcentaje.toFixed(2));
     calcularTotalFilaServicio2();
+    }
+  }
+}
+function descuento_convertir_a_porcentaje_manual(id){
+  var monto_precio=$("#monto_precio"+id).val();// precio de item
+  var descuento_bob=$("#descuento_bob"+id).val();//monto de descuento Bob
+  var cantidad_x=$("#cantidad"+id).val();
+  if(monto_precio<0 || monto_precio==0 || monto_precio==null){
+    Swal.fire("Informativo!", "El Precio del Item NO debe ser 0 o número negativo!", "warning");
+  }else{
+    if(cantidad_x<0 || cantidad_x==0 || cantidad_x==null){
+      Swal.fire("Informativo!", "La cantidad NO debe ser 0 o número negativo!", "warning");
+    }else{
+      var numero_porcentaje=parseFloat(descuento_bob)*100/parseFloat(monto_precio)/parseFloat(cantidad_x);
+      //alert(numero_porcentaje);
+      $("#descuento_por"+id).val(numero_porcentaje.toFixed(2));
+      activarInputMontoFilaServicio_manual();    
+    }
+  }
+}
+function descuento_convertir_a_bolivianos_manual(id){
+  var monto_precio=$("#monto_precio"+id).val();// precio de item
+  var descuento_por=$("#descuento_por"+id).val();//monto de descuento %
+  var cantidad_x=$("#cantidad"+id).val();
+  if(monto_precio<0 || monto_precio==0 || monto_precio==null){
+    Swal.fire("Informativo!", "El Precio del Item NO debe ser 0 o número negativo!", "warning");
+  }else{
+    if(cantidad_x<0 || cantidad_x==0 || cantidad_x==null){
+      Swal.fire("Informativo!", "La cantidad NO debe ser 0 o número negativo!", "warning");
+    }else{      
+    var monto_bob_porcentaje=parseFloat(descuento_por)*parseFloat(monto_precio)*parseFloat(cantidad_x)/100;
+    //alert(monto_bob_porcentaje);
+    $("#descuento_bob"+id).val(monto_bob_porcentaje.toFixed(2));
+    activarInputMontoFilaServicio_manual();
+    }
   }
 }
 
@@ -9278,20 +9321,22 @@ function verificar_item_activo(index){
 }
 function activarInputMontoFilaServicio_manual()
 { 
+  
+  // alert("1s");
   var sumal=0;  
   var total= $("#modal_numeroservicio").val();  
   for (var i=1;i<=(total-1);i++){              
-    var importe=$("#importe"+i).val();
+    var importe=$("#monto_precio"+i).val();
     var cantidad_x=document.getElementById("cantidad"+i).value;
-
     var check=document.getElementById("modal_check"+i).checked;    
+    var descuento_bob=$("#descuento_bob"+i).val();//monto de descuento Bob
     if(check) {              
-      sumal+=parseFloat(importe)*parseFloat(cantidad_x);
+      sumal+=parseFloat(importe)*parseFloat(cantidad_x)-parseFloat(descuento_bob);
     }
   } 
-  var resulta=sumal;    
+  var resulta=sumal;
   document.getElementById("modal_totalmontoserv_costo_a").value=resulta;//si formato
-  calcularTotalFilaServicio2();   
+  calcularTotalFilaServicio2();
 }
 function calcularTotalFilaServicio2Costos(){
   var sumal=0;  
@@ -9308,6 +9353,7 @@ function calcularTotalFilaServicio2Costos(){
     var check=document.getElementById("modal_check"+i).checked;
     if(monto_importe_total>saldo){      
       Swal.fire("Informativo!", "El Monto en la fila "+i+" Supera al Saldo! ("+number_format(saldo,2)+").", "warning");
+      $("#importe_a_pagar"+i).val(0);
     }else{
       if(check) {//BUSACMOS LOS CHECK ACTIVOS
         comprobante_auxiliar=comprobante_auxiliar+1;        
@@ -9534,37 +9580,47 @@ function AgregarSeviciosFacturacion2_servicios(obj) {
 function descuento_convertir_a_porcentaje_add(id){
   var monto_precio=$("#modal_montoserv"+id).val();// precio de item
   var descuento_bob=$("#descuento_bob_add"+id).val();//monto de descuento Bob
+  var cantidad=$("#cantidad_servicios"+id).val();//
   if(monto_precio<0 || monto_precio==0 || monto_precio==null){
     Swal.fire("Informativo!", "El Precio del Item NO debe ser 0 o número negativo!", "warning");
   }else{
-    var numero_porcentaje=parseFloat(descuento_bob)*100/parseFloat(monto_precio);
-    //alert(numero_porcentaje);
-    $("#descuento_por_add"+id).val(numero_porcentaje.toFixed(2));
-    //agregamos al total
-    var importe_total=parseFloat(monto_precio)-parseFloat(descuento_bob);    
-    $("#modal_importe_add"+id).val(importe_total);//irá en hidden 
-    $("#modal_importe_dos_add"+id).val(number_format(importe_total,2));//para mostrar con formato
-    sumartotalAddServiciosFacturacion(id);
+     if(cantidad<0 || cantidad==0 || cantidad==null){
+      Swal.fire("Informativo!", "La cantidad NO debe ser 0 o número negativo!", "warning");
+    }else{
+      var numero_porcentaje=parseFloat(descuento_bob)*100/parseFloat(monto_precio)/parseFloat(cantidad);
+      //alert(numero_porcentaje);
+      $("#descuento_por_add"+id).val(numero_porcentaje.toFixed(2));
+      //agregamos al total
+      var importe_total=parseFloat(monto_precio)*parseFloat(cantidad)-parseFloat(descuento_bob);    
+      $("#modal_importe_add"+id).val(importe_total);//irá en hidden 
+      $("#modal_importe_dos_add"+id).val(number_format(importe_total,2));//para mostrar con formato
+      sumartotalAddServiciosFacturacion(id); 
+    }
   }
 }
-function descuento_convertir_a_bolivianos_add(id){
+function descuento_convertir_a_bolivianos_add(id){ 
   var monto_precio=$("#modal_montoserv"+id).val();// precio de item
   var descuento_por=$("#descuento_por_add"+id).val();//monto de descuento %
-
+  var cantidad=$("#cantidad_servicios"+id).val();//
   if(monto_precio<0 || monto_precio==0 || monto_precio==null){
     Swal.fire("Informativo!", "El Precio del Item NO debe ser 0 o número negativo!", "warning");
   }else{
-    var monto_bob_porcentaje=parseFloat(descuento_por)*parseFloat(monto_precio)/100;
-    //alert(monto_bob_porcentaje);
-    $("#descuento_bob_add"+id).val(monto_bob_porcentaje.toFixed(2));
+      if(cantidad<0 || cantidad==0 || cantidad==null){
+        Swal.fire("Informativo!", "La cantidad NO debe ser 0 o número negativo!", "warning");
+      }else{        
+        var monto_bob_porcentaje=parseFloat(descuento_por)*parseFloat(monto_precio)*parseFloat(cantidad)/100;
+        //alert(monto_bob_porcentaje);
+        $("#descuento_bob_add"+id).val(monto_bob_porcentaje.toFixed(2));
 
-     //agregamos al total
-    var importe_total=parseFloat(monto_precio)-parseFloat(monto_bob_porcentaje);    
-    $("#modal_importe_add"+id).val(importe_total);//irá en hidden 
-    $("#modal_importe_dos_add"+id).val(number_format(importe_total,2));//para mostrar con formato
-     sumartotalAddServiciosFacturacion(id);
+         //agregamos al total
+        var importe_total=parseFloat(monto_precio)*parseFloat(cantidad)-parseFloat(monto_bob_porcentaje);    
+        $("#modal_importe_add"+id).val(importe_total);//irá en hidden 
+        $("#modal_importe_dos_add"+id).val(number_format(importe_total,2));//para mostrar con formato
+         sumartotalAddServiciosFacturacion(id);
+      }
   }  
 }
+
 
 function sumartotalAddServiciosFacturacion(id){
   var sumatotal=0;
@@ -9587,38 +9643,87 @@ function sumartotalAddServiciosFacturacion(id){
   $("#monto_total_a").val(monto_Total);  
   // $("#monto_faltante").val(monto_faltante);  
 }
+function cantidad_por_importe_manual_sf(id){
+  var monto_precio=$("#modal_montoserv"+id).val();// precio de item
+  var descuento_bob=$("#descuento_bob_add"+id).val();//monto de descuento %
+  var cantidad=$("#cantidad_servicios"+id).val();//
+  if(monto_precio<0 || monto_precio==0 || monto_precio==null){
+    Swal.fire("Informativo!", "El Precio del Item NO debe ser 0 o número negativo!", "warning");
+  }else{
+    if(cantidad<0 || cantidad==0 || cantidad==null){
+      Swal.fire("Informativo!", "La cantidad NO debe ser 0 o número negativo!", "warning");
+    }else{
+      var monto_bob_porcentaje=parseFloat(monto_precio)*parseFloat(cantidad)-parseFloat(descuento_bob);
+       //agregamos al total      
+      $("#modal_importe_add"+id).val(monto_bob_porcentaje);//irá en hidden 
+      $("#modal_importe_dos_add"+id).val(number_format(monto_bob_porcentaje,2));//para mostrar con formato
+       sumartotalAddServiciosFacturacion_manual(id);
+    }
+  }  
+}
+function cantidad_por_importe_servicio_sf(id){  
+  var monto_precio=$("#modal_montoserv"+id).val();// precio de item
+  var descuento_bob=$("#descuento_bob_add"+id).val();//monto de descuento %
+  var cantidad=$("#cantidad_servicios"+id).val();//
+  if(monto_precio<0 || monto_precio==0 || monto_precio==null){
+    Swal.fire("Informativo!", "El Precio del Item NO debe ser 0 o número negativo!", "warning");
+  }else{
+    if(cantidad<0 || cantidad==0 || cantidad==null){
+      Swal.fire("Informativo!", "La cantidad NO debe ser 0 o número negativo!", "warning");
+    }else{
+      var monto_bob_porcentaje=parseFloat(monto_precio)*parseFloat(cantidad)-parseFloat(descuento_bob);
+       //agregamos al total      
+      $("#modal_importe_add"+id).val(monto_bob_porcentaje);//irá en hidden 
+      $("#modal_importe_dos_add"+id).val(number_format(monto_bob_porcentaje,2));//para mostrar con formato
+       sumartotalAddServiciosFacturacion(id);
+    }
+  }  
+}
 function descuento_convertir_a_porcentaje_add_manual(id){
   var monto_precio=$("#modal_montoserv"+id).val();// precio de item
   var descuento_bob=$("#descuento_bob_add"+id).val();//monto de descuento Bob
+  var cantidad=$("#cantidad_servicios"+id).val();//
   if(monto_precio<0 || monto_precio==0 || monto_precio==null){
     Swal.fire("Informativo!", "El Precio del Item NO debe ser 0 o número negativo!", "warning");
   }else{
-    var numero_porcentaje=parseFloat(descuento_bob)*100/parseFloat(monto_precio);
-    //alert(numero_porcentaje);
-    $("#descuento_por_add"+id).val(numero_porcentaje.toFixed(2));
-    //agregamos al total
-    var importe_total=parseFloat(monto_precio)-parseFloat(descuento_bob);    
-    $("#modal_importe_add"+id).val(importe_total);//irá en hidden 
-    $("#modal_importe_dos_add"+id).val(number_format(importe_total,2));//para mostrar con formato
-    sumartotalAddServiciosFacturacion_manual(id);
+    if(cantidad<0 || cantidad==0 || cantidad==null){
+      Swal.fire("Informativo!", "La cantidad NO debe ser 0 o número negativo!", "warning");
+    }else{
+      var numero_porcentaje=parseFloat(descuento_bob)*100/parseFloat(monto_precio)/parseFloat(cantidad);
+      //alert(numero_porcentaje);
+      $("#descuento_por_add"+id).val(numero_porcentaje.toFixed(2));
+      //agregamos al total
+      var importe_total=parseFloat(monto_precio)*parseFloat(cantidad)-parseFloat(descuento_bob);    
+      $("#modal_importe_add"+id).val(importe_total);//irá en hidden 
+      $("#modal_importe_dos_add"+id).val(number_format(importe_total,2));//para mostrar con formato
+      sumartotalAddServiciosFacturacion_manual(id);
+    }
+    
   }
 }
+
+
 function descuento_convertir_a_bolivianos_add_manual(id){
   var monto_precio=$("#modal_montoserv"+id).val();// precio de item
   var descuento_por=$("#descuento_por_add"+id).val();//monto de descuento %
+  var cantidad=$("#cantidad_servicios"+id).val();//
 
   if(monto_precio<0 || monto_precio==0 || monto_precio==null){
     Swal.fire("Informativo!", "El Precio del Item NO debe ser 0 o número negativo!", "warning");
   }else{
-    var monto_bob_porcentaje=parseFloat(descuento_por)*parseFloat(monto_precio)/100;
-    //alert(monto_bob_porcentaje);
-    $("#descuento_bob_add"+id).val(monto_bob_porcentaje.toFixed(2));
+    if(cantidad<0 || cantidad==0 || cantidad==null){
+      Swal.fire("Informativo!", "La cantidad NO debe ser 0 o número negativo!", "warning");
+    }else{
+      var monto_bob_porcentaje=parseFloat(descuento_por)*parseFloat(monto_precio)*parseFloat(cantidad)/100;
+      //alert(monto_bob_porcentaje);
+      $("#descuento_bob_add"+id).val(monto_bob_porcentaje.toFixed(2));
 
-     //agregamos al total
-    var importe_total=parseFloat(monto_precio)-parseFloat(monto_bob_porcentaje);    
-    $("#modal_importe_add"+id).val(importe_total);//irá en hidden 
-    $("#modal_importe_dos_add"+id).val(number_format(importe_total,2));//para mostrar con formato
-     sumartotalAddServiciosFacturacion_manual(id);
+       //agregamos al total
+      var importe_total=parseFloat(monto_precio)*parseFloat(cantidad)-parseFloat(monto_bob_porcentaje);    
+      $("#modal_importe_add"+id).val(importe_total);//irá en hidden 
+      $("#modal_importe_dos_add"+id).val(number_format(importe_total,2));//para mostrar con formato
+       sumartotalAddServiciosFacturacion_manual(id);
+    }
   }  
 }
 

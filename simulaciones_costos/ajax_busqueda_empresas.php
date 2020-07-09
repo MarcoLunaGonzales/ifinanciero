@@ -30,6 +30,8 @@ $codigo_simulacion=0;//codigo de simulacion
 if(isset($_GET['q'])){
   $q=$_GET['q'];
   $r=$_GET['r'];  
+  $s=$_GET['s'];  
+  $u=$_GET['u'];  
 }
 
 $sql="SELECT *,DATE_FORMAT(FechaRegistro,'%d/%m/%Y')as FechaRegistro_x from programas_cursos pc where (pc.idEmpresa<>0 || pc.idEmpresa<>null)";  
@@ -51,6 +53,8 @@ $sql.=" order by pc.IdCurso desc";
             if(isset($_GET['q'])){?>
               <input type="hidden" name="q" id="q" value="<?=$q?>">
               <input type="hidden" name="r" id="r" value="<?=$r?>">
+              <input type="hidden" name="s" id="s" value="<?=$s?>">
+              <input type="hidden" name="u" id="u" value="<?=$u?>">
             <?php }
             ?>     
         <div class="card">
@@ -144,7 +148,7 @@ $sql.=" order by pc.IdCurso desc";
           <div class="card-footer fixed-bottom">            
             <?php
             if(isset($_GET['q'])){?>
-              <a href='<?=$urlSolicitudfactura_empresas?>&q=<?=$q?>&r=<?=$r?>' class="<?=$buttonCancel;?>"><i class="material-icons"  title="Volver Atrás">keyboard_return</i> Volver</a>
+              <a href='<?=$urlSolicitudfactura_empresas?>&q=<?=$q?>&r=<?=$r?>&s=<?=$s?>&u=<?=$u?>' class="<?=$buttonCancel;?>"><i class="material-icons"  title="Volver Atrás">keyboard_return</i> Volver</a>
               <?php }else{?>
                   <a href='<?=$urlSolicitudfactura_empresas?>' class="<?=$buttonCancel;?>"><i class="material-icons"  title="Volver Atrás">keyboard_return</i> Volver</a>                    
             <?php }                     
