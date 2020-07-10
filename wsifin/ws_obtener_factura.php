@@ -2,6 +2,7 @@
 // SERVICIO WEB PARA FACTURAS
 
 //estados
+require '../functions.php.php';
 require '../simulaciones_servicios/htmlFacturaCliente.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {

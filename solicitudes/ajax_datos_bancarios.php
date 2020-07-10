@@ -19,8 +19,10 @@ if($lista->totalLista>0){
     $cuenta=$listas->NroCuenta;
     $banco=$listas->Banco;
     $cbanco=$listas->IdCuentaBanco;
+    $nombreBen=$listas->BeneficiarioNombre;
+    $apellidoBen=$listas->BeneficiarioApellido;
     ?>
-    <option value="<?=$cbanco?>"><?=$banco?> - (<?=$cuenta?>)</option>
+    <option value="<?=$cbanco?>"><?=$banco?> - [<?=$cuenta?>] - <?=$nombreBen?> <?=$apellidoBen?></option>
     <?php
  }
 }
