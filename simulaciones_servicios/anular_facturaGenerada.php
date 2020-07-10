@@ -29,12 +29,12 @@ while ($row = $stmtFActuras->fetch()) {
 		$sqlUpdateComprobante="UPDATE comprobantes SET  cod_estadocomprobante=2 where codigo=$cod_comprobante";
 		$stmtUpdateComprobante = $dbh->prepare($sqlUpdateComprobante);
 		$flagSuccess=$stmtUpdateComprobante->execute();
-		//actualizamos facturas
-		$sql="UPDATE facturas_venta set cod_estadofactura='2' where codigo = $codigo_factura";
-		// echo $sql;
-		$stmt = $dbh->prepare($sql);
-		$flagSuccess=$stmt->execute();
+		//actualizamos facturas	
 	}
+	$sql="UPDATE facturas_venta set cod_estadofactura='2' where codigo = $codigo_factura";
+	// echo $sql;
+	$stmt = $dbh->prepare($sql);
+	$flagSuccess=$stmt->execute();
 }
 $cadenaFacturas=trim($cadenaFacturas,", ");
 if($estado_factura==2){ //tipo devolucion tiene contabilizacion
