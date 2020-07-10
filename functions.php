@@ -7874,6 +7874,25 @@ function sumatotaldetallefactura($cod_factura){
     }  
     return implode("\n *", $valor);
   }
+  function obtenerIdRolDeIbnorca($codigo){
+    $dbh = new Conexion();
+    $stmt = $dbh->prepare("SELECT IdRol FROM ibnorca.personarol WHERE IdPersona = '$codigo' and pordefecto=1 and ibnorca.PersonaRol(IdPersona)>4");
+    $stmt->execute();
+    $valor=0;
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {    
+        $valor=$row['IdRol'];
+    }  
+    return($valor);
+  }
+
+  function obtenerCantidadFacturasLibretaBancariaDetalle($codigo,$sqlFiltro2){
+  $dbh = new Conexion();
+  $stmtVerif = $dbh->prepare("SELECT count(*) as cantidad FROM facturas_venta where cod_libretabancariadetalle=$codigo and cod_estadofactura!=2 $sqlFiltro2 order by codigo desc");
+  $stmtVerif->execute();
+  $resultVerif = $stmtVerif->fetch();    
+  $valor = $resultVerif['cantidad'];
+  return $valor;
+}
 ?>
 
 

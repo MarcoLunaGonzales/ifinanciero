@@ -35,7 +35,7 @@ if(isset($_GET['cod_sim'])){
 // Preparamos
 $stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area 
   from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo 
-  where sr.cod_estadoreferencial=1 and (sr.cod_estadosolicitudrecurso!=2 and sr.cod_estadosolicitudrecurso!=6) $sqlServicio $sqlSimCosto and sr.cod_personal='$globalUser' order by sr.numero desc");
+  where sr.cod_estadoreferencial=1 and (sr.cod_estadosolicitudrecurso in (1)) $sqlServicio $sqlSimCosto and sr.cod_personal='$globalUser' order by sr.numero desc");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -334,7 +334,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
 <?php
 $stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area 
   from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo 
-  where sr.cod_estadoreferencial=2 $sqlServicio $sqlSimCosto and sr.cod_personal='$globalUser' order by sr.numero desc");
+  where sr.cod_estadoreferencial=2 $sqlServicio $sqlSimCosto and sr.cod_personal='$globalUser' sr.cod_estadosolicitudrecurso=1 order by sr.numero desc");
 // Ejecutamos
 $stmt->execute();
 // bindColumn

@@ -437,7 +437,25 @@
         <input type="hidden" name="datos" id="datos" value="0">
         <input type="hidden" name="indice" id="indice" value="0">
         <input type="hidden" name="saldo_x" id="saldo_x" value="0">        
-        <div class="row">          
+        <div class="row">
+        <div class="btn-group">
+          <a href="#" class="btn btn-sm fila-button" onclick="ajax_contenedor_tabla_libretaBancariaIndividual(0)">Todas</a>
+          <?php 
+            $lista=obtenerObtenerLibretaBancaria();
+            foreach ($lista->libretas as $v) {
+              $CodLibreta=$v->CodLibreta;
+              $Nombre=$v->Nombre;
+              $Banco=$v->Banco;
+              $nombreBan=nameBancos($v->CodBanco);
+              if($nombreBan==""){
+                $nombreBan=$Banco." - ".$Nombre;
+              }else{
+                $nombreBan=$nombreBan." - ".$Nombre;  
+              }
+              ?><a href="#" class="btn btn-sm fila-button" onclick="ajax_contenedor_tabla_libretaBancariaIndividual(<?=$CodLibreta?>)"><?=$nombreBan?></a><?php
+            }
+          ?>
+        </div>          
             <div class="table-responsive" id="contenedor_tabla_libreta_bancaria">
               
             </div>          

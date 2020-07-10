@@ -8699,14 +8699,17 @@ function guardarDatosProveedor(){
                 $("#texto_ajax_titulo").html("Enviando datos al servidor..."); 
                   iniciarCargaAjax();
                 },
-               success:  function (resp) {
-                  actualizarRegistroProveedor();
+               success:  function (resp) { 
                   detectarCargaAjax();
                   $("#texto_ajax_titulo").html("Procesando Datos"); 
                   if(resp.trim()=="1"){
-                    alerts.showSwal('success-message','registerSolicitud.php?cod='+codigo);
+                   actualizarRegistroProveedor();
                   }else{
-                    Swal.fire("Error!", "Ocurrio un error de envio", "warning");
+                    if(resp.trim()=="0"){
+                      Swal.fire("Error!", "Ocurrio un error de envio", "warning");  
+                    }else{
+                      Swal.fire("Error!", "El proveedor ya existe", "warning");
+                    }     
                   }
                }
              });  
@@ -8992,10 +8995,44 @@ function actualizarRegistroProveedor(){
         success:  function (resp) {
            detectarCargaAjax();
            $("#texto_ajax_titulo").html("Procesando Datos"); 
-           alerts.showSwal('success-message','registerSolicitud.php?cod='+codigo);
+           actualizarCombosProveedores();
+           //alerts.showSwal('success-message','registerSolicitud.php?cod='+codigo);
         }
     });  
 }
+
+function actualizarCombosProveedores(){
+  var parametros={"codigo":"none"};
+  $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxActualizarProveedoresCombo.php",
+        data: parametros,
+        beforeSend: function () {
+        $("#texto_ajax_titulo").html("Cargando proveedores a la lista..."); 
+          iniciarCargaAjax();
+        },
+        success:  function (resp) {
+           detectarCargaAjax();
+           $("#texto_ajax_titulo").html("Procesando Datos");
+           if($("#proveedores").length>0){
+             $("#proveedores").html(resp);
+           }  
+           if($("#cantidad_filas").length>0){
+             var filas = $("#cantidad_filas").val();
+             for (var i = 1; i <= filas; i++) {
+               if($("#proveedor"+i).length>0){
+                  $("#proveedor"+i).html(resp);
+               }
+             };
+           }
+           $('.selectpicker').selectpicker("refresh"); 
+           Swal.fire("Correcto!", "Los datos se actualizaron de forma correcta.", "success");
+        }
+    }); 
+
+}
+
 function calcularMontoFilaPersonalServicio(fila){
   var cantidad =$("#cantidad_personal"+fila).val();
   var dias =$("#dias_personal"+fila).val();
@@ -14836,19 +14873,52 @@ function abrirLibretaBancaria(datos,direccion,indice){
 }
 function ajax_contenedor_tabla_libretaBancaria(saldo){
   document.getElementById("saldo_x").value=saldo;
-  var contenedor = document.getElementById('contenedor_tabla_libreta_bancaria');    
-  ajax=nuevoAjax();
-  ajax.open('GET', 'simulaciones_servicios/ajax_listado_libreta_bancaria.php?saldo='+saldo+'&tipo_listado=0',true);
-  ajax.onreadystatechange=function() {
-    if (ajax.readyState==4) {
-      contenedor.innerHTML = ajax.responseText;      
-      $('.selectpicker').selectpicker(["refresh"]);
-      cargar_dataTable_ajax('libreta_bancaria_reporte_modal');
-      cargar_filtro_datatable_ajax('modalListaLibretaBancaria');
-    }
-  }
-  ajax.send(null);
+  var contenedor = document.getElementById('contenedor_tabla_libreta_bancaria');
+  var parametros={"saldo":saldo,"tipo_listado":0};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "simulaciones_servicios/ajax_listado_libreta_bancaria.php",
+        data: parametros,
+        beforeSend: function () {
+        $("#texto_ajax_titulo").html("Listando las libretas bancarias..."); 
+          iniciarCargaAjax();
+        },        
+        success:  function (resp) {
+          detectarCargaAjax();
+           $("#texto_ajax_titulo").html("Procesando Datos");
+          contenedor.innerHTML = resp;      
+          $('.selectpicker').selectpicker(["refresh"]);
+          cargar_dataTable_ajax('libreta_bancaria_reporte_modal');
+          cargar_filtro_datatable_ajax('modalListaLibretaBancaria');
+        }
+      });
 }
+
+function ajax_contenedor_tabla_libretaBancariaIndividual(idLib){
+  var saldo=$("#saldo_x").val();
+  var contenedor = document.getElementById('contenedor_tabla_libreta_bancaria');
+  var parametros={"saldo":saldo,"tipo_listado":0,"codigo_lib":idLib};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "simulaciones_servicios/ajax_listado_libreta_bancaria.php",
+        data: parametros,
+        beforeSend: function () {
+        $("#texto_ajax_titulo").html("Listando las libretas bancarias..."); 
+          iniciarCargaAjax();
+        },        
+        success:  function (resp) {
+          detectarCargaAjax();
+           $("#texto_ajax_titulo").html("Procesando Datos");
+          contenedor.innerHTML = resp;      
+          $('.selectpicker').selectpicker(["refresh"]);
+          cargar_dataTable_ajax('libreta_bancaria_reporte_modal');
+          cargar_filtro_datatable_ajax('modalListaLibretaBancaria');
+        }
+      });
+}
+
 function cargar_dataTable_ajax(tabla){
   // Setup - add a text input to each footer cell
   $('#'+tabla+' tfoot th').each( function () {
@@ -14908,7 +14978,6 @@ function ajax_listado_libreta_bancaria_filtrar(){
   }
   ajax.send(null);
 }
-
 
 
 function seleccionar_libretaBancaria(cod_libreta){

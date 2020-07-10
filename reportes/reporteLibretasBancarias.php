@@ -43,13 +43,18 @@ $periodoTitle= "Del ".$fechaFormateada.' al '.$fechaFormateadaHasta;
 $periodoTitleFac= "Del ".$fechaFormateadaFac.' al '.$fechaFormateadaHastaFac;  
 
 $filtro=$_POST['filtro'];
-$sqlFiltro="";
-if($filtro==1){
+
+/*if($filtro==1){
   $sqlFiltro="and (ce.cod_factura IS NOT NULL or ce.cod_factura!=0)";
 }else{
   if($filtro==2){
     $sqlFiltro="";
   }
+}*/
+$sqlFiltro="";
+$sqlFiltro2="and fecha_factura BETWEEN '$fecha_fac 00:00:00' and '$fechaHasta_fac 23:59:59'";
+if($filtro==1){
+  $sqlFiltro="and (ce.cod_factura IS NOT NULL or ce.cod_factura!=0)";
 }
 ?>
 <div class="content">
