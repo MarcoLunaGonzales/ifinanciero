@@ -7,6 +7,7 @@ require_once '../layouts/librerias.php';
 $dbh = new Conexion();
 $saldo_solfac=$_GET['saldo'];
 $tipo_listado=$_GET['tipo_listado'];
+$listarLib=1;
 ?>
 <?php  
   $lista=obtenerObtenerLibretaBancaria();  
@@ -42,7 +43,20 @@ $tipo_listado=$_GET['tipo_listado'];
             $Nombre=$v->Nombre;
             $Banco=$v->Banco;
             $detalle=$v->detalle;
-            $index=1;?>
+            $index=1;
+            if(isset($_GET['codigo_lib'])){
+              if($v->CodLibreta==$_GET['codigo_lib']){
+                $listarLib=1;
+              }else{
+                if($_GET['codigo_lib']==0){
+                 $listarLib=1;
+                }else{
+                  $listarLib=0; 
+                }
+              }
+             }
+             if($listarLib==1){
+            ?>            
             <tr>
               <td class="d-none"></td>
               <td class="d-none"></td>
@@ -154,7 +168,7 @@ $tipo_listado=$_GET['tipo_listado'];
                   ?>
                 </tr>
               <?php }
-              
+              }//if listarLib
               ?>
 
             <?php

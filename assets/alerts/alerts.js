@@ -335,6 +335,26 @@ alerts = {
           }
         })
     }
+     else if (type == 'contabilizar-solicitud-recurso') {
+      swal({
+        title: '¿Estás Seguro?',
+        text: "Se procederá con la contabilización y la creación del Comprobante",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonClass: 'btn btn-info',
+        cancelButtonClass: 'btn btn-danger',
+        confirmButtonText: 'Si, Continuar!',
+        cancelButtonText: 'No, Cancelar!',
+        buttonsStyling: false
+      }).then((result) => {
+          if (result.value) {
+            location.href=url; 
+            return(true);
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            return(false);
+          }
+        })
+    }
     else if (type == 'error-message-filas-libreta') {
       var url2=url.split("####");
       swal("Errores encontrados!", "No se guardaron los cambios! <br> "+url2[1], "error")
