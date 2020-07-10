@@ -13962,6 +13962,7 @@ function guardarNuevoBeneficiario(){
     data: parametros,
     success:  function (resp) {       
       $(".mensaje").html(resp);
+      $(".mensaje").html("");
       Swal.fire('Correcto!','Se actualizaron los datos del Beneficiario!','success');
       $("#modalNuevoCuentaBeneficiario").modal("hide");
     }

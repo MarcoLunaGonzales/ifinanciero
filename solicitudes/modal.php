@@ -109,7 +109,7 @@
                 <label class="col-sm-2 col-form-label" style="color: #4a148c;">Cuentas Bancarias</label>
                 <div class="col-sm-4">
                   <div class="form-group">
-                     <select class="selectpicker form-control form-control-sm" onchange="cargarDatosCuentaBancariaProveedor()" name="cuenta_bancaria" id="cuenta_bancaria" data-style="btn btn-primary">
+                     <select class="selectpicker form-control form-control-sm" onchange="cargarDatosCuentaBancariaProveedor()" name="cuenta_bancaria" id="cuenta_bancaria" data-size="6" data-live-search="true" data-style="btn btn-primary">
                        
                     </select>
                   </div>
