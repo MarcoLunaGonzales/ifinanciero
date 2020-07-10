@@ -52,8 +52,8 @@ $stmtCliente->bindColumn('nombre', $nombre_cli);
   ?>
   <div class="content">
     <div class="container-fluid">
-          <div class="row">
-              <div class="col-md-12">
+          <div style="overflow-y:scroll;">
+              <!-- <div class="col-md-12"> -->
                 <div class="card">
                   <div class="card-header card-header-warning card-header-icon">
                     <div class="card-icon">
@@ -232,7 +232,7 @@ $stmtCliente->bindColumn('nombre', $nombre_cli);
                               $cod_claservicioX=trim($row2['nombre_serv']);
                               $cantidadX=trim($row2['cantidad']);
                               // $precioX=trim($row2['precio'])+trim($row2['descuento_bob']);
-                              $precioX=(trim($row2['precio'])*$cantidadX)+trim($row2['descuento_bob']);
+                              $precioX=(trim($row2['precio'])*$cantidadX)+trim($row2['descuento_bob']);                              
                               $descuento_porX=trim($row2['descuento_por']);
                               $descuento_bobX=trim($row2['descuento_bob']);                             
                               $descripcion_alternaX=trim($row2['descripcion_alterna']);
@@ -314,7 +314,7 @@ $stmtCliente->bindColumn('nombre', $nombre_cli);
                   </div>    
                 </div>                   
                 </div>     
-              </div>
+              <!-- </div> -->
           </div>  
     </div>
   </div>

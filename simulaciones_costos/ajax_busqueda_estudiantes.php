@@ -28,7 +28,9 @@ $codigo_simulacion=0;//codigo de simulacion
 set_time_limit(1000);
 if(isset($_GET['q'])){
   $q=$_GET['q'];
-  $r=$_GET['r'];  
+  $r=$_GET['r'];
+  $s=$_GET['s'];
+  $u=$_GET['u'];
 }
 // $unidadOrgString=implode(",", $cod_uo);
 $sql="SELECT aa.IdModulo, aa.IdCurso,pc.idEmpresa, aa.CiAlumno,DATE_FORMAT(aa.FechaInscripcion,'%d/%m/%Y')as FechaInscripcion_x, concat(cpe.clPaterno,' ',cpe.clMaterno,' ',cpe.clNombreRazon)as nombreAlumno, c.Abrev, c.Auxiliar,
@@ -70,6 +72,8 @@ $sql.=" GROUP BY IdCurso,cpe.clIdentificacion Order by pc.Nombre desc";
             if(isset($_GET['q'])){?>
               <input type="hidden" name="q" id="q" value="<?=$q?>">
               <input type="hidden" name="r" id="r" value="<?=$r?>">
+              <input type="hidden" name="s" id="s" value="<?=$s?>">
+              <input type="hidden" name="u" id="u" value="<?=$u?>">
             <?php }
             ?>     
         <div class="card">
@@ -237,7 +241,7 @@ $sql.=" GROUP BY IdCurso,cpe.clIdentificacion Order by pc.Nombre desc";
             <button type="submit" class="btn btn-primary">SOLICITAR FACTURACION GRUPAL</button>
             <?php
             if(isset($_GET['q'])){?>
-              <a href='<?=$urlSolicitudfactura?>&q=<?=$q?>&r=<?=$r?>' class="<?=$buttonCancel;?>"><i class="material-icons"  title="Volver Atrás">keyboard_return</i> Volver</a>
+              <a href='<?=$urlSolicitudfactura?>&q=<?=$q?>&r=<?=$r?>&s=<?=$s?>&u=<?=$u?>' class="<?=$buttonCancel;?>"><i class="material-icons"  title="Volver Atrás">keyboard_return</i> Volver</a>
               <?php }else{?>
                   <a href='<?=$urlSolicitudfactura?>' class="<?=$buttonCancel;?>"><i class="material-icons"  title="Volver Atrás">keyboard_return</i> Volver</a>                    
             <?php }                     

@@ -15,7 +15,9 @@ $globalUser=$_SESSION["globalUser"];
 $globalUnidad=$_SESSION['globalUnidad'];
 if(isset($_GET['q'])){
   $q=$_GET['q'];
-  $r=$_GET['r'];  
+  $r=$_GET['r'];
+  $s=$_GET['s'];
+  $u=$_GET['u'];
 }
 if(isset($_GET['cod_sw'])){
   $cod_sw=$_GET['cod_sw'];  
@@ -97,6 +99,8 @@ $descuento_cliente=0;
                 <?php
                 if(isset($_GET['q'])){?>
                     <input type="hidden" name="q" id="q" value="<?=$q?>">
+                    <input type="hidden" name="s" id="s" value="<?=$s?>">
+                    <input type="hidden" name="u" id="u" value="<?=$u?>">
                     <input type="hidden" name="r" id="r" value="<?=$r?>">
                 <?php }
                 if(isset($_GET['cod_sw'])){?>
@@ -463,7 +467,7 @@ $descuento_cliente=0;
                                                             $descuento_bobX=$rowPre['descuento_bob'];
                                                             $descripcion_alternaX=$rowPre['descripcion_alterna'];
                                                         }else{
-                                                            $monto_total_pagado=$precio_total_x-$preciox;
+                                                            $monto_total_pagado=$precio_total_x-$preciox;                   
                                                             $saldo=$preciox;
                                                         }
                                                     }
@@ -596,7 +600,7 @@ $descuento_cliente=0;
                         <?php                     
 
                             if(isset($_GET['q'])){?>
-                                <a href='<?=$urlListSol?>&q=<?=$q?>&v=<?=$r?>&u=<?=$r?>&s=<?=$r?>' class="<?=$buttonCancel;?>" title="Ir a Solicitudes de Facturación"> IR A SF </a>
+                                <a href='<?=$urlListSol?>&q=<?=$q?>&v=<?=$r?>&u=<?=$u?>&s=<?=$s?>' class="<?=$buttonCancel;?>" title="Ir a Solicitudes de Facturación"> IR A SF </a>
                                 <!-- <a href='<?=$urlListFacturasServicios_costos_empresas?>&q=<?=$q?>&r=<?=$r?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a> -->
                                 <?php }else{?>
                             

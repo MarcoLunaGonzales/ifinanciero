@@ -17,6 +17,8 @@ $cod_uo = $resultSimu['cod_uo'];
 if(isset($_GET['q'])){
   $q=$_GET['q'];
   $r=$_GET['r'];  
+  $u=$_GET['u'];
+  $s=$_GET['s'];
 }
 
 
@@ -45,9 +47,13 @@ if(isset($_GET['q'])){
                       if(isset($_GET['q'])){?>
                         <input type="hidden" name="q" id="q" value="<?=$q?>">
                         <input type="hidden" name="r" id="r" value="<?=$r?>">
+                        <input type="hidden" name="s" id="s" value="<?=$s?>">
+                        <input type="hidden" name="u" id="u" value="<?=$u?>">
                       <?php }else{?>
                         <input type="hidden" name="q" id="q" value="0">
                         <input type="hidden" name="r" id="r" value="0">
+                        <input type="hidden" name="s" id="s" value="0">
+                        <input type="hidden" name="u" id="u" value="0">
                       <?php }
                       ?>
                     </div>
@@ -92,7 +98,7 @@ if(isset($_GET['q'])){
                       <button type="button" class="btn btn-primary" id="botonBuscarEstudiantes" name="botonBuscarEstudiantes"  title="Buscar" onclick="botonBuscarEstudiantesCapacitacion()">Buscar</button>
                       <?php                                    
                         if(isset($_GET['q'])){?>
-                            <a href='<?=$urlListSol?>&q=<?=$q?>&v=<?=$r?>&u=<?=$r?>&s=<?=$r?>' class="<?=$buttonCancel;?>"><i class="material-icons"  title="Ir A Solicitudes de Facturación">keyboard_return</i> IR A SF</a>
+                            <a href='<?=$urlListSol?>&q=<?=$q?>&v=<?=$r?>&u=<?=$u?>&s=<?=$s?>' class="<?=$buttonCancel;?>"><i class="material-icons"  title="Ir A Solicitudes de Facturación">keyboard_return</i> IR A SF</a>
                         <?php }else{?>
                             <a href='<?=$urlListSol?>' class="<?=$buttonCancel;?>"><i class="material-icons"  title="Ir A Solicitudes de Facturación">keyboard_return</i> IR A SF</a>                    
                         <?php }                     

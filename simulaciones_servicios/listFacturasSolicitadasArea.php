@@ -21,8 +21,24 @@ if(isset($_GET['q'])){
   $s=0;
   $u=0;
 }
-$globalAre=$_SESSION["globalArea"];
-$sqlAreas=" sf.cod_area=".$globalAre;
+if(isset($_GET['s'])){
+  $s=$_GET['s'];
+  // $sqlFilter1 = str_replace("IdOficina", "p.cod_unidadorganizacional", $_GET['s']);
+  // $sqlFilter2 = "and ".str_replace("IdArea", "p.cod_area", $sqlFilter1);
+  $arraySql=explode("IdArea",$s);
+  $codigoArea=0;
+  if(isset($arraySql[1])){
+    $codigoArea=trim($arraySql[1]);
+  }
+  if($codigoArea==null || $codigoArea=='' || $codigoArea==0){
+    $sqlAreas="and sf.cod_area=0";
+  }else{
+    $sqlAreas="and sf.cod_area ".$codigoArea;  
+  } 
+}else{
+  $globalArea=$_SESSION["globalArea"];
+  $sqlAreas="and sf.cod_area =".$globalArea;
+}
 // echo $sqlAreas;
 ?>
 <input type="hidden" name="q" value="<?=$q?>" id="q"/>
@@ -33,7 +49,7 @@ $sqlAreas=" sf.cod_area=".$globalAre;
 <?php
 
 //datos registrado de la simulacion en curso
-$sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')as fecha_registro_x,DATE_FORMAT(sf.fecha_solicitudfactura,'%d/%m/%Y')as fecha_solicitudfactura_x FROM solicitudes_facturacion sf join estados_solicitudfacturacion es on sf.cod_estadosolicitudfacturacion=es.codigo where  $sqlAreas order by codigo desc ";
+$sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')as fecha_registro_x,DATE_FORMAT(sf.fecha_solicitudfactura,'%d/%m/%Y')as fecha_solicitudfactura_x FROM solicitudes_facturacion sf join estados_solicitudfacturacion es on sf.cod_estadosolicitudfacturacion=es.codigo where $sqlAreas order by codigo desc ";
   $stmt = $dbh->prepare($sqlDatos);
 
   $stmt->execute();
@@ -67,8 +83,8 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
   ?>
   <div class="content">
     <div class="container-fluid">
-          <div class="row">
-              <div class="col-md-12">
+          <div style="overflow-y:scroll;">
+              <!-- <div class="col-md-12"> -->
                 <div class="card">
                   <div class="card-header card-header-warning card-header-icon">
                     <div class="card-icon">
@@ -288,7 +304,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                   </div>
                 </div> 
                
-              </div>
+              <!-- </div> -->
           </div>  
     </div>
   </div>

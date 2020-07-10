@@ -139,7 +139,7 @@ $html.=  '<header class="header">'.
             $sumaTotal_sus=0;
             while ($row2 = $stmt2->fetch(PDO::FETCH_ASSOC)) {
               if($tipo_solicitud==2 || $tipo_solicitud==6 || $tipo_solicitud==7) $precio_unitario=$row2["precio"];
-              else $precio_unitario=$row2["precio"]-$row2["descuento_bob"];
+              else $precio_unitario=$row2["precio"];
               
               if($usd>0)$precio_sus=($precio_unitario*$row2["cantidad"])/$usd;
               else $precio_sus=0;

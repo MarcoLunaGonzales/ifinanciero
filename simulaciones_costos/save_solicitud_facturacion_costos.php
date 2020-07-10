@@ -121,8 +121,8 @@ try {//recibiendo datos
 
             if(isset($_POST['q'])){
               $q=$_POST['q'];
-              $s=$_POST['r'];
-              $u=$_POST['r'];
+              $s=$_POST['s'];
+              $u=$_POST['u'];
               $v=$_POST['r'];
               showAlertSuccessError($flagSuccess,"../".$urlListSol."&q=".$q."&s=".$s."&u=".$u."&v=".$v);
             }else{
@@ -203,8 +203,8 @@ try {//recibiendo datos
         }
         if(isset($_POST['q'])){
           $q=$_POST['q'];
-          $s=$_POST['r'];
-          $u=$_POST['r'];
+          $s=$_POST['s'];
+          $u=$_POST['u'];
           $v=$_POST['r'];
           showAlertSuccessError($flagSuccess,"../".$urlListSol."&q=".$q."&s=".$s."&u=".$u."&v=".$v);
         }else{

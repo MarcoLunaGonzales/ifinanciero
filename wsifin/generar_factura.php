@@ -24,7 +24,7 @@
 
 // ejecutarGenerarFactura($sucursalId,$fechaFactura,$nitciCliente,$razonSocial,$importeTotal,$items);
 
-function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciCliente,$razonSocial,$importeTotal,$items,$CodLibretaDetalle,$tipoPago){
+function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciCliente,$razonSocial,$importeTotal,$items,$CodLibretaDetalle,$tipoPago,$normas){
     require_once __DIR__.'/../conexion.php';
     require '../assets/phpqrcode/qrlib.php';
     include '../assets/controlcode/sin/ControlCode.php';
@@ -42,6 +42,8 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
     //$globalUser=$_SESSION["globalUser"];
     //RECIBIMOS LAS VARIABLES    
     try{
+        date_default_timezone_set('America/La_Paz');
+
         $cod_solicitudfacturacion = -100;//desde la tienda usamos el -100
         $cod_uo_solicitud = 5;
         $cod_area_solicitud = 13;
@@ -68,6 +70,8 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
         $nombre_cliente = $razonSocial;                
         $fechaFactura=$fechaFactura;
         $fecha_actual=date('Y-m-d');
+        $fechaFactura_x=date('Y-m-d H:i:s');
+        // $fechaFactura_xy=date('Y-m-d');            
         // $sqlInfo="SELECT d.codigo,d.nro_autorizacion, d.llave_dosificacion,d.fecha_limite_emision
         // from dosificaciones_facturas d where d.cod_sucursal='$sucursalId' and cod_estado=1 order by codigo";
         $sqlInfo="SELECT d.codigo,d.nro_autorizacion, d.llave_dosificacion,d.fecha_limite_emision
@@ -92,12 +96,9 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
             if($nro_correlativo==0){                
                 return "11###";//No tiene registrado La dosificación para la facturación
 
-            }else{
-                $fechaFactura_x=date('Y-m-d H:i:s');
-                $fechaFactura_xy=date('Y-m-d');            
+            }else{            
                 if($tipoPago==4){//aso payme
-
-                    $cod_comprobante=ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_correlativo,2,0);
+                    $cod_comprobante=ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_correlativo,2,0,$normas);
                 }else{
                     if($CodLibretaDetalle>0){
                         $cod_libreta=$CodLibretaDetalle;
@@ -105,18 +106,18 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
                         if($estado_libreta==0){
                             $cod_cuenta=obtenerCuentaLibretaBancaria($cod_libreta);
                             //generamos el comprobante estado_libreta 1 es que va con cod_cuenta para matar o 0 será el por defecto
-                            $cod_comprobante=ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_correlativo,1,$cod_cuenta);                            
+                            $cod_comprobante=ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_correlativo,1,$cod_cuenta,$normas);                            
                         }elseif($estado_libreta==1){
                             $cod_contracuenta=obtenerContraCuentaLibretaBancaria($cod_libreta);
                             //generamos el comprobante
-                            $cod_comprobante=ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_correlativo,1,$cod_contracuenta);
+                            $cod_comprobante=ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_correlativo,1,$cod_contracuenta,$normas);
                         }else{
                             //generamos el comprobante
-                            $cod_comprobante=ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_correlativo,0,0);    
+                            $cod_comprobante=ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_correlativo,0,0,$normas);    
                         }
                     }else{
                         //generamos el comprobante
-                        $cod_comprobante=ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_correlativo,0,0);
+                        $cod_comprobante=ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_correlativo,0,0,$normas);
                     }
                 }
 

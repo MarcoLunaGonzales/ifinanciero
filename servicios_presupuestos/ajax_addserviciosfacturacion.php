@@ -47,13 +47,13 @@ $codigoAdministrativos=obtenerValorConfiguracion(46);
 		<div class="col-sm-1">
       <div class="form-group">
         
-        <input type="number" min="1" id="cantidad_servicios<?=$idFila;?>" name="cantidad_servicios<?=$idFila;?>" class="form-control text-primary text-right" value="1" required="true">
+        <input type="number" min="1" id="cantidad_servicios<?=$idFila;?>" name="cantidad_servicios<?=$idFila;?>" class="form-control text-primary text-right" value="1" required="true" onkeyup="cantidad_por_importe_servicio_sf(<?=$idFila?>)">
 			</div>
     </div>
     <div class="col-sm-1">
         <div class="form-group">
         	
-      		<input type="number" id="modal_montoserv<?=$idFila;?>" name="modal_montoserv<?=$idFila;?>" class="form-control text-primary text-right"   step="0.01" onkeyup="descuento_convertir_a_bolivianos_add(<?=$idFila?>)"  value="0" required="true">
+      		<input type="number" id="modal_montoserv<?=$idFila;?>" name="modal_montoserv<?=$idFila;?>" class="form-control text-primary text-right"   step="0.01" onkeyup="cantidad_por_importe_servicio_sf(<?=$idFila?>)"  value="0" required="true">
 			</div>
     </div>
     <div class="col-sm-1">

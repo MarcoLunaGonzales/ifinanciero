@@ -14,16 +14,11 @@ $stmtX->execute();
 $globalAdmin=$_SESSION["globalAdmin"];
 $codigoAdministrativos=obtenerValorConfiguracion(46);
 $idFila=$_GET['idFila'];
-
-
-
-
-
 ?>
 <div id="comp_row" class="col-md-12">
   <div class="row">
 
-    <div class="col-sm-4">
+    <div class="col-sm-3">
       <div class="form-group">
         <?php          
           ?>
@@ -49,13 +44,13 @@ $idFila=$_GET['idFila'];
    <div class="col-sm-1">
       <div class="form-group">
         
-        <input type="number" min="1" id="cantidad_servicios<?=$idFila;?>" name="cantidad_servicios<?=$idFila;?>" class="form-control text-primary text-right" value="1" required="true">
+        <input type="number" min="1" id="cantidad_servicios<?=$idFila;?>" name="cantidad_servicios<?=$idFila;?>" class="form-control text-primary text-right" value="1" required="true" onkeyup="cantidad_por_importe_manual_sf(<?=$idFila?>)">
       </div>
     </div>
     <div class="col-sm-1">
         <div class="form-group">
           
-          <input type="number" id="modal_montoserv<?=$idFila;?>" name="modal_montoserv<?=$idFila;?>" class="form-control text-primary text-right"   step="0.01" onkeyup="descuento_convertir_a_bolivianos_add_manual(<?=$idFila?>)"  value="0" required="true">
+          <input type="number" id="modal_montoserv<?=$idFila;?>" name="modal_montoserv<?=$idFila;?>" class="form-control text-primary text-right"   step="0.01" onkeyup="cantidad_por_importe_manual_sf(<?=$idFila?>)"  value="0" required="true">
       </div>
     </div>
     <div class="col-sm-1">
@@ -78,7 +73,7 @@ $idFila=$_GET['idFila'];
       </div>
     </div>
 
-    <div class="col-sm-2">
+    <div class="col-sm-3">
       <div class="form-group">
         
         <textarea id="descripcion<?=$idFila;?>" name="descripcion<?=$idFila;?>" class="form-control text-primary" onkeyup="javascript:this.value=this.value.toUpperCase();" required></textarea>

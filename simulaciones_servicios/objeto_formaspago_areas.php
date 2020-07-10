@@ -48,9 +48,9 @@
                <script>
 
             //         var unidad={
-            //             codigo_unidad: <?=$codUnidad?>,
-            //             monto_porcentaje: <?=$porcentaje_x?>,
-            //             monto_bob: <?=$monto_x?>
+            //             codigo_unidad: codUnidad,
+            //             monto_porcentaje: porcentaje_x,
+            //             monto_bob: $monto_x
             //         }
             //         itemUnidades_facturacion[<?=$ncAreas?>].push(unidad);
             //         console.log(itemUnidades_facturacion);

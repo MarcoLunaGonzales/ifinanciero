@@ -43,9 +43,9 @@ $globalAdmin=$_SESSION["globalAdmin"];
   ?>
   <div class="content">
     <div class="container-fluid">
-      <!-- <div style="overflow-y:scroll;"> -->
-          <div class="row"  >
-              <div class="col-md-12">
+      <div style="overflow-y:scroll;">
+          <!-- <div class="row"  > -->
+              <!-- <div class="col-md-12"> -->
                 <div class="card">
                   <div class="card-header card-header-warning card-header-icon">
                     <div class="card-icon">
@@ -205,6 +205,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                               $codFila=(int)$row2['codigo'];
                               $cod_claservicioX=trim($row2['nombre_serv']);
                               $cantidadX=trim($row2['cantidad']);                              
+                              // $precioX=(trim($row2['precio'])*$cantidadX);
                               $precioX=(trim($row2['precio'])*$cantidadX)+trim($row2['descuento_bob']);
                               $descuento_porX=trim($row2['descuento_por']);
                               $descuento_bobX=trim($row2['descuento_bob']);                             
@@ -423,9 +424,9 @@ $globalAdmin=$_SESSION["globalAdmin"];
                     <a href='<?=$urlListHistoricoContabilidad;?>' class="btn btn-info float-right"><i class="material-icons">history</i> Histórico</a>
                   </div>    
                 </div>     
-              </div>
-          </div>  
-      <!-- </div> -->
+              <!-- </div> -->
+         <!--  </div>  --> 
+      </div>
     </div>
   </div>
 <?php  require_once 'simulaciones_servicios/modal_facturacion.php';?>
