@@ -127,7 +127,7 @@ try{
                                     $cadena_cod_facdet_1.=$array_codigo_detalle[$j].",";                                    
                                 }
                                 $variable_controlador=1;//indica la vez que entra a la funcion
-                                $codigo_error=generar_factura($codigo,trim($cadena_cod_facdet_1,','),$cod_tipopago,$cod_sucursal,$cod_libreta,$nroAutorizacion,$nitCliente,$fecha_actual,$llaveDosificacion,$cod_unidadorganizacional,$cod_area,$fecha_limite_emision,$cod_tipoobjeto,$cod_cliente,$cod_personal,$razon_social,$cod_dosificacionfactura,$observaciones,$globalUser,$tipo_solicitud,$variable_controlador);
+                                $codigo_error=generar_factura($codigo,trim($cadena_cod_facdet_1,','),$cod_tipopago,$cod_sucursal,$cod_libreta,$nroAutorizacion,$nitCliente,$fecha_actual,$llaveDosificacion,$cod_unidadorganizacional,$cod_area,$fecha_limite_emision,$cod_tipoobjeto,$cod_cliente,$cod_personal,$razon_social,$cod_dosificacionfactura,$observaciones,$globalUser,$tipo_solicitud,$cod_simulacion_servicio,$variable_controlador);
                                 
                             break;
                             case 2:
@@ -136,14 +136,14 @@ try{
                                     $cadena_cod_facdet_1.=$array_codigo_detalle[$i].",";
                                 }
                                 $variable_controlador=1;//indica la vez que entra a la funcion
-                                $codigo_error=generar_factura($codigo,trim($cadena_cod_facdet_1,','),$cod_tipopago,$cod_sucursal,$cod_libreta,$nroAutorizacion,$nitCliente,$fecha_actual,$llaveDosificacion,$cod_unidadorganizacional,$cod_area,$fecha_limite_emision,$cod_tipoobjeto,$cod_cliente,$cod_personal,$razon_social,$cod_dosificacionfactura,$observaciones,$globalUser,$tipo_solicitud,$variable_controlador);
+                                $codigo_error=generar_factura($codigo,trim($cadena_cod_facdet_1,','),$cod_tipopago,$cod_sucursal,$cod_libreta,$nroAutorizacion,$nitCliente,$fecha_actual,$llaveDosificacion,$cod_unidadorganizacional,$cod_area,$fecha_limite_emision,$cod_tipoobjeto,$cod_cliente,$cod_personal,$razon_social,$cod_dosificacionfactura,$observaciones,$globalUser,$tipo_solicitud,$cod_simulacion_servicio,$variable_controlador);
                                 $cadena_cod_facdet_2="";
                                 for($j=$i;$j<$cant_items_sfd;$j++){
                                     $cadena_cod_facdet_2.=$array_codigo_detalle[$j].",";
                                 }
                                 if($codigo_error==0){
                                     $variable_controlador=2;//indica la vez que entra a la funcion
-                                    $codigo_error=generar_factura($codigo,trim($cadena_cod_facdet_2,','),$cod_tipopago,$cod_sucursal,$cod_libreta,$nroAutorizacion,$nitCliente,$fecha_actual,$llaveDosificacion,$cod_unidadorganizacional,$cod_area,$fecha_limite_emision,$cod_tipoobjeto,$cod_cliente,$cod_personal,$razon_social,$cod_dosificacionfactura,$observaciones,$globalUser,$tipo_solicitud,$variable_controlador);
+                                    $codigo_error=generar_factura($codigo,trim($cadena_cod_facdet_2,','),$cod_tipopago,$cod_sucursal,$cod_libreta,$nroAutorizacion,$nitCliente,$fecha_actual,$llaveDosificacion,$cod_unidadorganizacional,$cod_area,$fecha_limite_emision,$cod_tipoobjeto,$cod_cliente,$cod_personal,$razon_social,$cod_dosificacionfactura,$observaciones,$globalUser,$tipo_solicitud,$cod_simulacion_servicio,$variable_controlador);
                                 }
                             break;
                             case 3:
@@ -152,14 +152,14 @@ try{
                                     $cadena_cod_facdet_1.=$array_codigo_detalle[$i].",";                                    
                                 }
                                 $variable_controlador=1;//indica la vez que entra a la funcion
-                                $codigo_error=generar_factura($codigo,trim($cadena_cod_facdet_1,','),$cod_tipopago,$cod_sucursal,$cod_libreta,$nroAutorizacion,$nitCliente,$fecha_actual,$llaveDosificacion,$cod_unidadorganizacional,$cod_area,$fecha_limite_emision,$cod_tipoobjeto,$cod_cliente,$cod_personal,$razon_social,$cod_dosificacionfactura,$observaciones,$globalUser,$tipo_solicitud,$variable_controlador);
+                                $codigo_error=generar_factura($codigo,trim($cadena_cod_facdet_1,','),$cod_tipopago,$cod_sucursal,$cod_libreta,$nroAutorizacion,$nitCliente,$fecha_actual,$llaveDosificacion,$cod_unidadorganizacional,$cod_area,$fecha_limite_emision,$cod_tipoobjeto,$cod_cliente,$cod_personal,$razon_social,$cod_dosificacionfactura,$observaciones,$globalUser,$tipo_solicitud,$cod_simulacion_servicio,$variable_controlador);
                                 $cadena_cod_facdet_2="";
                                 for($j=$i;$j<40;$j++){
                                     $cadena_cod_facdet_2.=$array_codigo_detalle[$j].",";                                    
                                 }
                                 if($codigo_error==0){
                                     $variable_controlador=2;//indica la vez que entra a la funcion
-                                    $codigo_error=generar_factura($codigo,trim($cadena_cod_facdet_2,','),$cod_tipopago,$cod_sucursal,$cod_libreta,$nroAutorizacion,$nitCliente,$fecha_actual,$llaveDosificacion,$cod_unidadorganizacional,$cod_area,$fecha_limite_emision,$cod_tipoobjeto,$cod_cliente,$cod_personal,$razon_social,$cod_dosificacionfactura,$observaciones,$globalUser,$tipo_solicitud,$variable_controlador);
+                                    $codigo_error=generar_factura($codigo,trim($cadena_cod_facdet_2,','),$cod_tipopago,$cod_sucursal,$cod_libreta,$nroAutorizacion,$nitCliente,$fecha_actual,$llaveDosificacion,$cod_unidadorganizacional,$cod_area,$fecha_limite_emision,$cod_tipoobjeto,$cod_cliente,$cod_personal,$razon_social,$cod_dosificacionfactura,$observaciones,$globalUser,$tipo_solicitud,$cod_simulacion_servicio,$variable_controlador);
                                 }
                                 $cadena_cod_facdet_3="";
                                 for($k=$j;$k<$cant_items_sfd;$k++){
@@ -167,7 +167,7 @@ try{
                                 }
                                 if($codigo_error==0){
                                     $variable_controlador=3;//indica la vez que entra a la funcion
-                                    $codigo_error=generar_factura($codigo,trim($cadena_cod_facdet_3,','),$cod_tipopago,$cod_sucursal,$cod_libreta,$nroAutorizacion,$nitCliente,$fecha_actual,$llaveDosificacion,$cod_unidadorganizacional,$cod_area,$fecha_limite_emision,$cod_tipoobjeto,$cod_cliente,$cod_personal,$razon_social,$cod_dosificacionfactura,$observaciones,$globalUser,$tipo_solicitud,$variable_controlador);
+                                    $codigo_error=generar_factura($codigo,trim($cadena_cod_facdet_3,','),$cod_tipopago,$cod_sucursal,$cod_libreta,$nroAutorizacion,$nitCliente,$fecha_actual,$llaveDosificacion,$cod_unidadorganizacional,$cod_area,$fecha_limite_emision,$cod_tipoobjeto,$cod_cliente,$cod_personal,$razon_social,$cod_dosificacionfactura,$observaciones,$globalUser,$tipo_solicitud,$cod_simulacion_servicio,$variable_controlador);
                                 }
 
                             break;

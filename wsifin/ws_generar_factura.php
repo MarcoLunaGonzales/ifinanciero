@@ -9,9 +9,16 @@ function check($x) {
       return false;
     }
 }
-function insertarlogFacturas($cod_error,$detalle_error,$json){
+function insertarlogFacturas_entrada($json,$mensaje){
     $dbh = new Conexion();
     date_default_timezone_set('America/La_Paz');
+    $fecha =date('Y-m-d H:i:s');
+    $sql="INSERT INTO log_facturas(fecha,detalle_error,json) values('$fecha','$mensaje','$json')";
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();    
+}
+function InsertlogFacturas_salida($cod_error,$detalle_error,$json){  
+    $dbh = new Conexion();
     $fecha =date('Y-m-d H:i:s');
     $sql="INSERT INTO log_facturas(fecha,cod_error,detalle_error,json) values('$fecha','$cod_error','$detalle_error','$json')";
     $stmt = $dbh->prepare($sql);
@@ -20,6 +27,7 @@ function insertarlogFacturas($cod_error,$detalle_error,$json){
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Decodificando formato Json
     $json=file_get_contents("php://input");
+    insertarlogFacturas_entrada($json,'Entrada json');
     $datos = json_decode($json, true);    
     //Parametros de consulta
     $accion=NULL;
@@ -157,7 +165,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $estado=15;
         $mensaje="Error en las credenciales sKey y sIde";
     }
-    insertarlogFacturas($estado,$mensaje,$json);
+    if(isset($cod_factura)){
+        $mensaje.=" IdFactura".$cod_factura;
+    }
+    InsertlogFacturas_salida($estado,$mensaje,$json);
     if($estado=='0'){$resultado=array("estado"=>$estado,"mensaje"=>$mensaje,"IdFactura"=>$cod_factura);}
     else $resultado=array("estado"=>$estado,"mensaje"=>$mensaje);
     header('Content-type: application/json');
@@ -166,7 +177,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $estado=15;
     $mensaje="Error en las credenciales sKey y sIde";
     $json="";
-    insertarlogFacturas($estado,$mensaje,$json);
+    insertarlogFacturas_entrada($json,$mensaje);    
     $resp=array("estado"=>$estado, 
                 "mensaje"=>$mensaje);
     header('Content-type: application/json');

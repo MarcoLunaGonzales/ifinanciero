@@ -9,8 +9,9 @@ $dbh = new Conexion();
 $mes_comprobante=$_GET['mes'];
 $nro_comprobante=$_GET['nro'];
 $tipo_comprobante=$_GET['tipo'];
+$unidad=$_GET['unidad'];
 
-$query="SELECT numero,MONTH(fecha) as mes,DATE_FORMAT(fecha,'%d/%m/%Y')as fecha_x,glosa from comprobantes where cod_tipocomprobante=$tipo_comprobante and numero=$nro_comprobante and MONTH(fecha)=$mes_comprobante";
+$query="SELECT numero,MONTH(fecha) as mes,DATE_FORMAT(fecha,'%d/%m/%Y')as fecha_x,glosa from comprobantes where cod_tipocomprobante=$tipo_comprobante and numero=$nro_comprobante and MONTH(fecha)=$mes_comprobante and cod_unidadorganizacional=$unidad";
 // echo $query;
 $stmt = $dbh->prepare($query);
 $stmt->execute();

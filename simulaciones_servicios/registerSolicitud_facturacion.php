@@ -363,9 +363,9 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                 </table>
 
                                 <input type="hidden" id="modal_numeroservicio" name="modal_numeroservicio" value="<?=$iii?>">                    
-                                <input type="hidden" id="modal_totalmontos" name="modal_totalmontos">
+                                <input type="hidden" id="modal_totalmontos" name="modal_totalmontos" value="0">
                                 <!-- <script>activarInputMontoFilaServicio2();</script>   -->
-                                <input type="hidden" id="comprobante_auxiliar" name="comprobante_auxiliar">
+                                <input type="hidden" id="comprobante_auxiliar" name="comprobante_auxiliar" value="0">
                                <!--  <div class="row">
                                     <label class="col-sm-5 col-form-label" style="color:#000000">Monto Total</label>
                                     <div class="col-sm-4">
@@ -475,12 +475,14 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
     function valida(f) {
         var ok = true;
         var msg = "El monto Total no debe ser '0' o 'negativo', Habilite los Items que desee facturar...\n";  
+        var coprobante_auxiliar = f.elements["monto_total_a"].value;
+        
         if(f.elements["comprobante_auxiliar"].value == 0 || f.elements["comprobante_auxiliar"].value < 0 || f.elements["comprobante_auxiliar"].value == '')
-        {    
+        {                
             ok = false;
         }
-        if(f.elements["monto_total"].value>0)
-        {    
+        if(f.elements["monto_total_a"].value>0)
+        {            
             ok = true;
         }
         var cod_tipopago=f.elements["cod_tipopago"].value;

@@ -240,6 +240,28 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
               </select>
             </div>
           </div>
+        </div>
+        <div class="row">
+          <label class="col-sm-4 text-right col-form-label" style="color:#424242">Unidad</label>
+          <div class="col-sm-6">
+            <div class="form-group">            
+              <select class="selectpicker form-control form-control-sm" name="unidad" id="unidad" data-style="<?=$comboColor;?>">
+                    <option disabled selected value="">Tipo</option>
+                  <?php
+                  $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM unidades_organizacionales where cod_estado=1 order by 1");
+                $stmt->execute();
+                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                  $codigoX=$row['codigo'];
+                  $nombreX=$row['nombre'];
+                  $abrevX=$row['abreviatura'];
+                ?>
+                <option value="<?=$codigoX;?>"><?=$nombreX;?> - <?=$abrevX;?></option>  
+                <?php
+                  }
+                  ?>
+              </select>
+            </div>
+          </div>
         </div>  
         <div class="row">
           <label class="col-sm-4 text-right col-form-label" style="color:#424242">Número de Comprobante</label>
